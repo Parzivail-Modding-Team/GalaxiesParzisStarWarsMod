@@ -1,0 +1,51 @@
+[20:04:01] [main/INFO]: Setting user: SWG
+[20:04:02] [Client thread/INFO]: LWJGL Version: 2.9.1
+[20:04:10] [Client thread/INFO]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:pswg
+[20:04:11] [Sound Library Loader/INFO]: Sound engine started
+[20:04:12] [Client thread/INFO]: Created: 32x32 textures/blocks-atlas
+[20:04:12] [Client thread/INFO]: Created: 16x16 textures/items-atlas
+[20:04:12] [Client thread/INFO]: Reloading ResourceManager: Default, FMLFileResourcePack:Forge Mod Loader, FMLFileResourcePack:Minecraft Forge, FMLFileResourcePack:pswg
+[20:04:12] [Client thread/INFO]: Created: 1024x512 textures/blocks-atlas
+[20:04:12] [Client thread/INFO]: Created: 256x256 textures/items-atlas
+[20:04:13] [Sound Library Loader/INFO]: Sound engine started
+[20:04:30] [Server thread/INFO]: Starting integrated minecraft server version 1.7.10
+[20:04:30] [Server thread/INFO]: Generating keypair
+[20:04:30] [Server thread/INFO]: Converting map!
+[20:04:30] [Server thread/INFO]: Scanning folders...
+[20:04:30] [Server thread/INFO]: Total conversion count is 0
+[20:04:31] [Server thread/WARN]: Unable to find spawn biome
+[20:04:32] [Server thread/INFO]: Preparing start region for level 0
+[20:04:32] [Server thread/INFO]: Changing view distance to 12, from 10
+[20:04:32] [Server thread/INFO]: SWG[local:E:722d3c40] logged in with entity id 24 at (1242.5, 4.0, -395.5)
+[20:04:33] [Server thread/INFO]: SWG joined the game
+[20:04:35] [Server thread/INFO]: Saving and pausing game...
+[20:04:35] [Server thread/INFO]: Saving chunks for level 'World 1'/Overworld
+[20:04:36] [Server thread/INFO]: Saving chunks for level 'World 1'/Nether
+[20:04:36] [Server thread/INFO]: Saving chunks for level 'World 1'/The End
+[20:04:36] [Server thread/INFO]: Saving chunks for level 'World 1'/Tatooine
+[20:04:40] [Client thread/INFO]: [CHAT] commands.swg.cdim.usage
+[20:05:14] [Server thread/INFO]: Saving and pausing game...
+[20:05:14] [Server thread/INFO]: Saving chunks for level 'World 1'/Overworld
+[20:05:14] [Server thread/INFO]: Saving chunks for level 'World 1'/Nether
+[20:05:14] [Server thread/INFO]: Saving chunks for level 'World 1'/The End
+[20:05:14] [Server thread/INFO]: Saving chunks for level 'World 1'/Tatooine
+[20:07:27] [Server thread/INFO]: Saving and pausing game...
+[20:07:27] [Server thread/INFO]: Saving chunks for level 'World 1'/Overworld
+[20:07:28] [Server thread/INFO]: Saving chunks for level 'World 1'/Nether
+[20:07:28] [Server thread/INFO]: Saving chunks for level 'World 1'/The End
+[20:07:28] [Server thread/INFO]: Saving chunks for level 'World 1'/Tatooine
+[20:07:29] [Server thread/INFO]: SWG has just earned the achievement [Taking Inventory]
+[20:07:29] [Client thread/INFO]: [CHAT] SWG has just earned the achievement [Taking Inventory]
+[20:08:44] [Server thread/INFO]: Saving and pausing game...
+[20:08:44] [Server thread/INFO]: Saving chunks for level 'World 1'/Overworld
+[20:08:44] [Server thread/INFO]: Saving chunks for level 'World 1'/Nether
+[20:08:44] [Server thread/INFO]: Saving chunks for level 'World 1'/The End
+[20:08:44] [Server thread/INFO]: Saving chunks for level 'World 1'/Tatooine
+[20:08:45] [Server thread/INFO]: Stopping server
+[20:08:45] [Server thread/INFO]: Saving players
+[20:08:45] [Server thread/INFO]: Saving worlds
+[20:08:45] [Server thread/INFO]: Saving chunks for level 'World 1'/Overworld
+[20:08:45] [Server thread/INFO]: Saving chunks for level 'World 1'/Nether
+[20:08:45] [Server thread/INFO]: Saving chunks for level 'World 1'/The End
+[20:08:45] [Server thread/INFO]: Saving chunks for level 'World 1'/Tatooine
+[20:08:46] [Client thread/INFO]: Stopping!
