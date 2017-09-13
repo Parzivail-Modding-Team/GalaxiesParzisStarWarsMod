@@ -81,3 +81,4 @@ resourcepacks/
 saves/
 src/main/java/com/beust/
 /logs/
+/config/splash.properties

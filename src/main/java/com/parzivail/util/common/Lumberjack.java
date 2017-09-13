@@ -1,5 +1,6 @@
 package com.parzivail.util.common;
 
+import com.parzivail.swg.Resources;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +10,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class Lumberjack
 {
-	public static final Logger logger = LogManager.getLogger("SWG");
+	public static final Logger logger = LogManager.getLogger(Resources.MODID.toUpperCase());
 
 	/**
 	 * Prints a message to log only in Debug mode

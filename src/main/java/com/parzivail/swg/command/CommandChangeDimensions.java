@@ -34,7 +34,7 @@ public class CommandChangeDimensions extends CommandBase
 	{
 		Args args = CommandParser.parse(new Args(), parameters);
 		if (args == null)
-			throw new WrongUsageException("commands.swg.cdim.usage");
+			throw new WrongUsageException(getCommandUsage(sender));
 		else
 		{
 			Entity player = getCommandSenderAsPlayer(sender);

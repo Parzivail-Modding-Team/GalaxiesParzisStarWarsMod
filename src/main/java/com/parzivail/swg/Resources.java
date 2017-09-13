@@ -15,4 +15,5 @@ public class Resources
 
 	public static Minecraft mc;
 	public static int dimIdTatooine = 2;
+	public static int biomeIdTatooineDunes = 100;
 }

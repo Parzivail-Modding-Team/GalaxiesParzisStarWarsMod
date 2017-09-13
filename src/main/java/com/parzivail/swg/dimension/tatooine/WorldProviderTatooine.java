@@ -1,19 +1,20 @@
-package com.parzivail.swg.dimension;
+package com.parzivail.swg.dimension.tatooine;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.dimension.SWGChunkManager;
+import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.sky.RenderSkyTatooine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldProvider;
-import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.client.IRenderHandler;
 
 /**
  * Created by colby on 9/10/2017.
  */
-public class TatooineProvider extends WorldProvider
+public class WorldProviderTatooine extends WorldProvider
 {
 	public static String dimName = "Tatooine";
 
@@ -71,7 +72,7 @@ public class TatooineProvider extends WorldProvider
 	@Override
 	protected void registerWorldChunkManager()
 	{
-		this.worldChunkMgr = new SWGChunkManager(BiomeGenBase.desert, 0.0F);
+		this.worldChunkMgr = new SWGChunkManager(WorldRegister.biomeTatooineDunes, 0.0F);
 		this.dimensionId = Resources.dimIdTatooine;
 	}
 

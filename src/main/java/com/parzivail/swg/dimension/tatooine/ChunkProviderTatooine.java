@@ -1,4 +1,4 @@
-package com.parzivail.swg.dimension;
+package com.parzivail.swg.dimension.tatooine;
 
 import com.parzivail.util.world.CompositeTerrain;
 import com.parzivail.util.world.ITerrainHeightmap;
