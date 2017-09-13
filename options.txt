@@ -28,7 +28,7 @@ fullscreen:false
 enableVsync:false
 hideServerAddress:false
 advancedItemTooltips:false
-pauseOnLostFocus:true
+pauseOnLostFocus:false
 showCape:true
 touchscreen:false
 overrideWidth:0

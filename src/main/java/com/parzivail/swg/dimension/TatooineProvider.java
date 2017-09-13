@@ -1,12 +1,12 @@
 package com.parzivail.swg.dimension;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.render.sky.RenderSkyTatooine;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.WorldChunkManagerHell;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.client.IRenderHandler;
 
@@ -44,14 +44,14 @@ public class TatooineProvider extends WorldProvider
 		return null;
 	}
 
-//	@Override
-//	@SideOnly(Side.CLIENT)
-//	public IRenderHandler getSkyRenderer()
-//	{
-//		if (this.skyRenderer == null)
-//			this.skyRenderer = new DrawTatooineSky();
-//		return this.skyRenderer;
-//	}
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IRenderHandler getSkyRenderer()
+	{
+		if (this.skyRenderer == null)
+			this.skyRenderer = new RenderSkyTatooine();
+		return this.skyRenderer;
+	}
 
 	@Override
 	public ChunkCoordinates getSpawnPoint()
@@ -71,7 +71,7 @@ public class TatooineProvider extends WorldProvider
 	@Override
 	protected void registerWorldChunkManager()
 	{
-		this.worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.desert, 0.0F);
+		this.worldChunkMgr = new SWGChunkManager(BiomeGenBase.desert, 0.0F);
 		this.dimensionId = Resources.dimIdTatooine;
 	}
 
