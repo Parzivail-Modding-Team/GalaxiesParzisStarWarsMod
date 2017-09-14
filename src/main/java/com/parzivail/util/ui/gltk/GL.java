@@ -8,6 +8,7 @@ import java.util.EnumSet;
 
 
 /**
+ * Simple port of OpenTK's GL wrapper for LWJGL because I like OpenTK's methodology better
  * Created by colby on 9/13/2017.
  */
 public class GL
@@ -32,7 +33,7 @@ public class GL
 		GL11.glVertex3f(x, y, z);
 	}
 
-	public static void Vertex3(double x, double y, float z)
+	public static void Vertex3(double x, double y, double z)
 	{
 		GL11.glVertex3d(x, y, z);
 	}
@@ -62,7 +63,7 @@ public class GL
 		GL11.glNormal3f(x, y, z);
 	}
 
-	public static void Normal3(double x, double y, float z)
+	public static void Normal3(double x, double y, double z)
 	{
 		GL11.glNormal3d(x, y, z);
 	}
@@ -77,7 +78,7 @@ public class GL
 		GL11.glTranslatef(x, y, z);
 	}
 
-	public static void Translate(double x, double y, float z)
+	public static void Translate(double x, double y, double z)
 	{
 		GL11.glTranslated(x, y, z);
 	}
@@ -102,7 +103,7 @@ public class GL
 		GL11.glScalef(x, y, z);
 	}
 
-	public static void Scale(double x, double y, float z)
+	public static void Scale(double x, double y, double z)
 	{
 		GL11.glScaled(x, y, z);
 	}
@@ -137,6 +138,11 @@ public class GL
 		GL11.glPushAttrib(AttribMask.encode(masks));
 	}
 
+	public static void PushAttrib(AttribMask mask)
+	{
+		GL11.glPushAttrib(mask.getGlValue());
+	}
+
 	public static void PopAttrib()
 	{
 		GL11.glPopAttrib();
@@ -155,6 +161,11 @@ public class GL
 	public static void NewList(int list, ListMode mode)
 	{
 		GL11.glNewList(list, mode.getGlValue());
+	}
+
+	public static void EndList()
+	{
+		GL11.glEndList();
 	}
 
 	public static void CallList(int list)

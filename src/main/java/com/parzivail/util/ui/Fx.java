@@ -74,7 +74,7 @@ public class Fx
 
 		public static void DrawSolidRectangle(float x, float y, float w, float h)
 		{
-			Rectangle(x, y, w, h, PrimitiveType.QuadStrip);
+			Rectangle(x, y, w, h, PrimitiveType.Quads);
 		}
 
 		public static void DrawWireCircle(float x, float y, float radius)

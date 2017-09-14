@@ -1,11 +1,14 @@
 package com.parzivail.swg.render.sky;
 
+import com.parzivail.util.ui.gltk.EnableCap;
+import com.parzivail.util.ui.gltk.GL;
+import com.parzivail.util.ui.gltk.ListMode;
+import com.parzivail.util.ui.gltk.PrimitiveType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
@@ -29,14 +32,13 @@ public class RenderSkyTatooine extends IRenderHandler
 	static
 	{
 		starGLCallList = GLAllocation.generateDisplayLists(3);
-		GL11.glPushMatrix();
-		GL11.glNewList(starGLCallList, GL11.GL_COMPILE);
+		GL.PushMatrix();
+		GL.NewList(starGLCallList, ListMode.Compile);
 		renderStars();
-		GL11.glEndList();
-		GL11.glPopMatrix();
-		Tessellator tessellator = Tessellator.instance;
+		GL.EndList();
+		GL.PopMatrix();
 		glSkyList = starGLCallList + 1;
-		GL11.glNewList(glSkyList, GL11.GL_COMPILE);
+		GL.NewList(glSkyList, ListMode.Compile);
 		byte b2 = 64;
 		int i = 256 / b2 + 2;
 		float f = 16.0F;
@@ -47,41 +49,41 @@ public class RenderSkyTatooine extends IRenderHandler
 		{
 			for (k = -b2 * i; k <= b2 * i; k += b2)
 			{
-				tessellator.startDrawingQuads();
-				tessellator.addVertex((double)(j + 0), (double)f, (double)(k + 0));
-				tessellator.addVertex((double)(j + b2), (double)f, (double)(k + 0));
-				tessellator.addVertex((double)(j + b2), (double)f, (double)(k + b2));
-				tessellator.addVertex((double)(j + 0), (double)f, (double)(k + b2));
-				tessellator.draw();
+				GL.Begin(PrimitiveType.Quads);
+				GL.Vertex3((double)(j + 0), (double)f, (double)(k + 0));
+				GL.Vertex3((double)(j + b2), (double)f, (double)(k + 0));
+				GL.Vertex3((double)(j + b2), (double)f, (double)(k + b2));
+				GL.Vertex3((double)(j + 0), (double)f, (double)(k + b2));
+				GL.End();
 			}
 		}
 
-		GL11.glEndList();
+		GL.EndList();
 		glSkyList2 = starGLCallList + 2;
 		GL11.glNewList(glSkyList2, GL11.GL_COMPILE);
 		f = -16.0F;
-		tessellator.startDrawingQuads();
+		GL.Begin(PrimitiveType.Quads);
 
 		for (j = -b2 * i; j <= b2 * i; j += b2)
 		{
 			for (k = -b2 * i; k <= b2 * i; k += b2)
 			{
-				tessellator.addVertex((double)(j + b2), (double)f, (double)(k + 0));
-				tessellator.addVertex((double)(j + 0), (double)f, (double)(k + 0));
-				tessellator.addVertex((double)(j + 0), (double)f, (double)(k + b2));
-				tessellator.addVertex((double)(j + b2), (double)f, (double)(k + b2));
+				GL.Vertex3((double)(j + b2), (double)f, (double)(k + 0));
+				GL.Vertex3((double)(j + 0), (double)f, (double)(k + 0));
+				GL.Vertex3((double)(j + 0), (double)f, (double)(k + b2));
+				GL.Vertex3((double)(j + b2), (double)f, (double)(k + b2));
 			}
 		}
 
-		tessellator.draw();
-		GL11.glEndList();
+		GL.End();
+		GL.EndList();
 	}
 
 	private static void renderStars()
 	{
 		Random random = new Random(10842L);
-		GL11.glPushMatrix();
-		GL11.glBegin(GL11.GL_POINTS);
+		GL.PushMatrix();
+		GL.Begin(PrimitiveType.Points);
 
 		float[][] colorBank = new float[256][3];
 		for (int i = 0; i < 256; i++)
@@ -118,7 +120,7 @@ public class RenderSkyTatooine extends IRenderHandler
 				double d16 = Math.cos(d14);
 
 				GL11.glColor4f(colorBank[randColorIdx][0], colorBank[randColorIdx][1], colorBank[randColorIdx][2], 1);
-				GL11.glVertex3d(d5, d6, d7);
+				GL.Vertex3(d5, d6, d7);
 
 				//				for (int j = 0; j < 4; ++j)
 				//				{
@@ -136,14 +138,14 @@ public class RenderSkyTatooine extends IRenderHandler
 			}
 		}
 
-		GL11.glEnd();
-		GL11.glPopMatrix();
+		GL.End();
+		GL.PopMatrix();
 	}
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc)
 	{
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL.Disable(EnableCap.Texture2D);
 		Vec3 vec3 = world.getSkyColor(mc.renderViewEntity, partialTicks);
 		float skyR = (float)vec3.xCoord;
 		float skyG = (float)vec3.yCoord;

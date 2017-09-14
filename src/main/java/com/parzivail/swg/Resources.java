@@ -1,7 +1,5 @@
 package com.parzivail.swg;
 
-import net.minecraft.client.Minecraft;
-
 /**
  * Created by colby on 9/10/2017.
  */
@@ -13,7 +11,6 @@ public class Resources
 	public static final String VERSION = MAJOR + "." + MINOR + "." + PATCH;
 	public static final String MODID = "pswg";
 
-	public static Minecraft mc;
 	public static int dimIdTatooine = 2;
 	public static int biomeIdTatooineDunes = 100;
 }
