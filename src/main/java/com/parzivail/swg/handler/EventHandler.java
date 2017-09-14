@@ -37,8 +37,9 @@ public class EventHandler
 
 		GL.PushMatrix();
 		GL.Disable(EnableCap.Texture2D);
+		GL.Scale(0.25f);
 		GL11.glColor3f(1, 1, 1);
-		Fx.D2.DrawSolidRectangle(mc.displayWidth / 16f, mc.displayHeight / 16f, mc.displayWidth / 8f, mc.displayHeight / 8f);
+		Fx.D2.DrawSolidRectangle(mc.displayWidth / 4f, mc.displayHeight / 4f, mc.displayWidth / 2f, mc.displayHeight / 2f);
 		GL.Enable(EnableCap.Texture2D);
 		GL.PopMatrix();
 	}
