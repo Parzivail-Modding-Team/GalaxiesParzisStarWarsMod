@@ -3,6 +3,7 @@ package com.parzivail.swg.render.entity;
 import com.parzivail.swg.Resources;
 import com.parzivail.util.binary.SwgModel;
 import com.parzivail.util.binary.SwgPart;
+import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.entity.Render;
@@ -32,12 +33,28 @@ public class RenderTest extends Render
 
 		GL.Translate(x, y, z);
 		GL.Rotate(-90, 1, 0, 0);
-		GL.Scale(0.0001f);
+
+		float t = Fx.Util.HzPercent(1);
 
 		for (SwgPart p : model.parts)
 		{
+			GL.PushMatrix();
+			if (p.name.equals("x_wing01") || p.name.equals("x_wing04"))
+			{
+				GL.Translate(0, 0, 0.2f);
+				GL.Rotate(-13 * t, 1, 0, 0);
+				GL.Translate(0, 0, -0.2f);
+			}
+			if (p.name.equals("x_wing02") || p.name.equals("x_wing03"))
+			{
+				GL.Translate(0, 0, 0.2f);
+				GL.Rotate(13 * t, 1, 0, 0);
+				GL.Translate(0, 0, -0.2f);
+			}
 			bindTexture(p.textures[frame].texture);
+			GL.Scale(0.0001f);
 			GL.CallList(model.partRenderLists.get(p.name)[frame]);
+			GL.PopMatrix();
 		}
 
 		GL.PopMatrix();
