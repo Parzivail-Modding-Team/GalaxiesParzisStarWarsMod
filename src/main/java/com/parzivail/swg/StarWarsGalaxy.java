@@ -30,6 +30,8 @@ public class StarWarsGalaxy
 		FMLCommonHandler.instance().bus().register(eventHandler);
 		MinecraftForge.EVENT_BUS.register(eventHandler);
 
+		proxy.doSidedThings();
+
 		WorldRegister.register();
 	}
 
