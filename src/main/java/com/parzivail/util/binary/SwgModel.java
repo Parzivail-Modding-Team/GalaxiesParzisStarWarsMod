@@ -53,29 +53,34 @@ public class SwgModel
 				int list = GL11.glGenLists(1);
 				frameLists[frame] = list;
 				GL11.glNewList(list, GL11.GL_COMPILE);
-				GL.Begin(PrimitiveType.Triangles);
-				for (int j = 0; j < parts[i].triangles.length; j++)
-				{
-					FacePointer face = parts[i].triangles[j];
-
-					GL.Normal3(parts[i].verts[frame][face.a].normal);
-					GL.TexCoord2(parts[i].verts[frame][face.a].textureCoord);
-					GL.Vertex3(parts[i].verts[frame][face.a].position);
-
-					GL.Normal3(parts[i].verts[frame][face.b].normal);
-					GL.TexCoord2(parts[i].verts[frame][face.b].textureCoord);
-					GL.Vertex3(parts[i].verts[frame][face.b].position);
-
-					GL.Normal3(parts[i].verts[frame][face.c].normal);
-					GL.TexCoord2(parts[i].verts[frame][face.c].textureCoord);
-					GL.Vertex3(parts[i].verts[frame][face.c].position);
-				}
-				GL.End();
+				renderPart(parts[i], frame);
 				GL.EndList();
 			}
 			partRenderLists.put(parts[i].name, frameLists);
 		}
 		Lumberjack.log("Built %s part lists each with %s frames (%s total)", parts.length, animationLength, parts.length * animationLength);
+	}
+
+	public static void renderPart(SwgPart part, int frame)
+	{
+		GL.Begin(PrimitiveType.Triangles);
+		for (int j = 0; j < part.triangles.length; j++)
+		{
+			FacePointer face = part.triangles[j];
+
+			GL.Normal3(part.verts[frame][face.a].normal);
+			GL.TexCoord2(part.verts[frame][face.a].textureCoord);
+			GL.Vertex3(part.verts[frame][face.a].position);
+
+			GL.Normal3(part.verts[frame][face.b].normal);
+			GL.TexCoord2(part.verts[frame][face.b].textureCoord);
+			GL.Vertex3(part.verts[frame][face.b].position);
+
+			GL.Normal3(part.verts[frame][face.c].normal);
+			GL.TexCoord2(part.verts[frame][face.c].textureCoord);
+			GL.Vertex3(part.verts[frame][face.c].position);
+		}
+		GL.End();
 	}
 
 	public static SwgModel Load(ResourceLocation filename)
