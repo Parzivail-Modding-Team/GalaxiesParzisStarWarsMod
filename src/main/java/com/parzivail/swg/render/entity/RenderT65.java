@@ -22,7 +22,7 @@ public class RenderT65 extends RenderBasicFlightModel
 
 	public RenderT65()
 	{
-		super(0.864f);
+		super(1.684f);
 	}
 
 	@Override
