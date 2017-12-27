@@ -42,6 +42,11 @@ public class Fx
 			return new Vector2f((float)x, (float)y);
 		}
 
+		public static float Hz(float hz)
+		{
+			return MathHelper.sin((float)((System.currentTimeMillis() % (long)(1000 / hz)) / (1000 / hz) * Math.PI));
+		}
+
 		public static float HzPercent(float hz)
 		{
 			return (System.currentTimeMillis() % (long)(1000 / hz)) / (1000 / hz);

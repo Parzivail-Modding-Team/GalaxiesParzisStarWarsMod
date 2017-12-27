@@ -5,7 +5,6 @@ import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -14,11 +13,19 @@ import org.lwjgl.opengl.GL11;
  */
 public abstract class RenderBasicFlightModel extends Render
 {
-	private final float verticalCenteringOffset;
+	/**
+	 * Distance from the bottom of the model to the "center" of it, from which it will rotate in a roll
+	 */
+	protected final float verticalCenteringOffset;
+	/**
+	 * Distance we need to translate the model up to make sure the bottom is in line with the entity bottom
+	 */
+	protected final float verticalGroundingOffset;
 
-	public RenderBasicFlightModel(float verticalCenteringOffset)
+	public RenderBasicFlightModel(float verticalCenteringOffset, float verticalGroundingOffset)
 	{
 		this.verticalCenteringOffset = verticalCenteringOffset;
+		this.verticalGroundingOffset = verticalGroundingOffset;
 	}
 
 	@Override
@@ -29,24 +36,27 @@ public abstract class RenderBasicFlightModel extends Render
 
 		BasicFlightModel ship = (BasicFlightModel)entity;
 		GL.Disable(EnableCap.CullFace);
+		GL.Enable(EnableCap.Normalize);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		GL.PushMatrix();
 		GL.Translate(x, y, z);
-		GL.Rotate(-90, 1, 0, 0);
 
-		GL.Translate(0, 0, verticalCenteringOffset);
-		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
-		float dPitch = MathHelper.wrapAngleTo180_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
-		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
-		GL11.glRotatef(180F - ship.previousOrientation.getYaw() - dYaw * partialTicks, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(ship.previousOrientation.getPitch() + dPitch * partialTicks + 180, 0.0F, 0.0F, 1.0F);
-		GL11.glRotatef(-(ship.previousOrientation.getRoll() + dRoll * partialTicks) + 180, 1.0F, 0.0F, 0.0F);
-		GL.Translate(0, 0, -verticalCenteringOffset);
+		GL.Translate(0, verticalCenteringOffset, 0);
+		float dYaw = ship.orientation.getYaw() - ship.previousOrientation.getYaw();
+		float dPitch = ship.orientation.getPitch() - ship.previousOrientation.getPitch();
+		float dRoll = ship.orientation.getRoll() - ship.previousOrientation.getRoll();
+		GL11.glRotatef(180 - (ship.previousOrientation.getYaw() + dYaw * partialTicks), 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(-(ship.previousOrientation.getPitch() + dPitch * partialTicks), 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(-(ship.previousOrientation.getRoll() + dRoll * partialTicks), 0.0F, 0.0F, 1.0F);
+		GL.Translate(0, -verticalCenteringOffset, 0);
+
+		GL.Translate(0, verticalGroundingOffset, 0);
 
 		doRender(ship, partialTicks);
 
 		GL.PopMatrix();
 		GL11.glShadeModel(GL11.GL_FLAT);
+		GL.Disable(EnableCap.Normalize);
 		GL.Enable(EnableCap.CullFace);
 	}
 
