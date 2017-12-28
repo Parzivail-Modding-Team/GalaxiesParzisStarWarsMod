@@ -45,7 +45,7 @@ public abstract class RenderBasicFlightModel extends Render
 		float dYaw = ship.orientation.getYaw() - ship.previousOrientation.getYaw();
 		float dPitch = ship.orientation.getPitch() - ship.previousOrientation.getPitch();
 		float dRoll = ship.orientation.getRoll() - ship.previousOrientation.getRoll();
-		GL11.glRotatef(180 - (ship.previousOrientation.getYaw() + dYaw * partialTicks), 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef((ship.previousOrientation.getYaw() + dYaw * partialTicks), 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-(ship.previousOrientation.getPitch() + dPitch * partialTicks), 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(-(ship.previousOrientation.getRoll() + dRoll * partialTicks), 0.0F, 0.0F, 1.0F);
 		GL.Translate(0, -verticalCenteringOffset, 0);

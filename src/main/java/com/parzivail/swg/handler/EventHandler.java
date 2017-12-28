@@ -30,10 +30,10 @@ public class EventHandler
 				{
 					FxMC.changeCameraDist(10);
 					FxMC.changeCameraRoll(ship.orientation.getRoll());
-					ship.rotationYaw = ship.orientation.getYaw();
+					ship.rotationYaw = 180 - ship.orientation.getYaw();
 					ship.rotationPitch = ship.orientation.getPitch();
 					FxMC.changePrevCameraRoll(ship.previousOrientation.getRoll());
-					ship.prevRotationYaw = ship.previousOrientation.getYaw();
+					ship.prevRotationYaw = 180 - ship.previousOrientation.getYaw();
 					ship.prevRotationPitch = ship.previousOrientation.getPitch();
 					StarWarsGalaxy.mc.renderViewEntity = ship;
 				}
