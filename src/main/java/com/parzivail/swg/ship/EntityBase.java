@@ -1,5 +1,6 @@
 package com.parzivail.swg.ship;
 
+import com.parzivail.util.item.ItemUtils;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.EntityLivingBase;
@@ -85,13 +86,13 @@ public abstract class EntityBase extends EntityLivingBase
 	@Override
 	public ItemStack getHeldItem()
 	{
-		return null;
+		return ItemUtils.ITEMSTACK_EMPTY;
 	}
 
 	@Override
 	public ItemStack getEquipmentInSlot(int p_71124_1_)
 	{
-		return null;
+		return ItemUtils.ITEMSTACK_EMPTY;
 	}
 
 	@Override
@@ -103,6 +104,6 @@ public abstract class EntityBase extends EntityLivingBase
 	@Override
 	public ItemStack[] getLastActiveItems()
 	{
-		return null;
+		return ItemUtils.ITEMSTACK_EMPTY_ARRAY;
 	}
 }

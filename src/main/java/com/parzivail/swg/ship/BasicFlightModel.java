@@ -86,6 +86,14 @@ public abstract class BasicFlightModel extends EntityBase
 	}
 
 	@Override
+	public void setDead()
+	{
+		for (Seat s : seats)
+			s.setDead();
+		super.setDead();
+	}
+
+	@Override
 	public void onUpdate()
 	{
 		if (this.posY < -64.0D)

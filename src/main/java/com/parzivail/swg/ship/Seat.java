@@ -1,8 +1,11 @@
 package com.parzivail.swg.ship;
 
+import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -10,12 +13,18 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class Seat extends EntityBase
 {
-	private final BasicFlightModel ship;
-	private final Vector3f offset;
+	private BasicFlightModel ship;
+	private Vector3f offset;
+
+	public Seat(World world)
+	{
+		super(world);
+	}
 
 	public Seat(BasicFlightModel ship, Vector3f offset)
 	{
-		super(ship.worldObj);
+		this(ship.worldObj);
+		setSize(0.5F, 0.5F);
 		this.ship = ship;
 		this.offset = offset;
 	}
@@ -24,6 +33,27 @@ public class Seat extends EntityBase
 	public float getShadowSize()
 	{
 		return 0.0F;
+	}
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound tag)
+	{
+		if (this.ship != null)
+			tag.setInteger("shipId", this.ship.getEntityId());
+		else
+			tag.setInteger("shipId", -1);
+		tag.setFloat("offsetX", offset.x);
+		tag.setFloat("offsetY", offset.y);
+		tag.setFloat("offsetZ", offset.z);
+	}
+
+	@Override
+	public void readEntityFromNBT(NBTTagCompound tag)
+	{
+		int id = tag.getInteger("shipId");
+		if (id != -1)
+			this.ship = (BasicFlightModel)this.worldObj.getEntityByID(id);
+		this.offset = new Vector3f(tag.getFloat("offsetX"), tag.getFloat("offsetY"), tag.getFloat("offsetZ"));
 	}
 
 	public boolean canBeCollidedWith()
@@ -51,15 +81,22 @@ public class Seat extends EntityBase
 		if (this.posY < -64.0D)
 			this.setDead();
 
-		this.moveEntity(ship.motionX, ship.motionY, ship.motionZ);
-
-		// if we're over 3 blocks away from where we should be, snap back
-		Vector3f nextPosition = ship.orientation.findLocalVectorGlobally(offset);
-		if (Math.pow(nextPosition.x - posX, 2) + Math.pow(nextPosition.x - posX, 2) + Math.pow(nextPosition.x - posX, 2) > 9)
+		if (this.ship != null)
 		{
-			this.posX = nextPosition.x;
-			this.posY = nextPosition.y;
-			this.posZ = nextPosition.z;
+			this.moveEntity(ship.motionX, ship.motionY, ship.motionZ);
+
+			// if we're over 3 blocks away from where we should be, snap back
+			Vector3f nextPosition = ship.orientation.findLocalVectorGlobally(offset);
+			if (Math.pow(nextPosition.x - posX, 2) + Math.pow(nextPosition.x - posX, 2) + Math.pow(nextPosition.x - posX, 2) > 9)
+			{
+				this.posX = nextPosition.x;
+				this.posY = nextPosition.y;
+				this.posZ = nextPosition.z;
+			}
+		}
+		else
+		{
+			Lumberjack.log("Ship is null, worldObj.isRemote=%s", this.worldObj.isRemote);
 		}
 
 		if (!this.worldObj.isRemote)
