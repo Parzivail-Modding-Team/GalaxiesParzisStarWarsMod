@@ -14,7 +14,7 @@ public class VehicleT65 extends BasicFlightModel
 	}
 
 	@Override
-	void createSeats()
+	protected void createSeats()
 	{
 		seats = new Seat[1];
 		seats[0] = new Seat(this, new Vector3f(0, 1, 0));

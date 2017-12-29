@@ -5,6 +5,8 @@ import com.parzivail.util.math.RotatedAxes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.IEntityMultiPart;
+import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -13,12 +15,12 @@ import org.lwjgl.util.vector.Vector3f;
 /**
  * Created by colby on 12/26/2017.
  */
-public abstract class BasicFlightModel extends EntityBase
+public abstract class BasicFlightModel extends EntityBase implements IEntityMultiPart
 {
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
 	public Vector3f angularMomentum;
-	public Seat[] seats = new Seat[0];
+	public Seat[] seats;
 
 	public BasicFlightModel(World world)
 	{
@@ -36,15 +38,21 @@ public abstract class BasicFlightModel extends EntityBase
 		createSeats();
 	}
 
-	abstract void createSeats();
-
-	public void spawnSeats()
+	protected void createSeats()
 	{
-		for (Seat s : seats)
-		{
-			s.setLocationAndAngles(this);
-			this.worldObj.spawnEntityInWorld(s);
-		}
+		seats = new Seat[0];
+	}
+
+	@Override
+	public World func_82194_d()
+	{
+		return this.worldObj;
+	}
+
+	@Override
+	public boolean attackEntityFromPart(EntityDragonPart p_70965_1_, DamageSource p_70965_2_, float p_70965_3_)
+	{
+		return false;
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -116,12 +124,23 @@ public abstract class BasicFlightModel extends EntityBase
 		this.angularMomentum.y *= 0.7;
 		this.angularMomentum.z *= 0.7;
 
+		for (Seat s : seats)
+		{
+			s.onUpdate();
+			s.setLocationAndAngles(this);
+		}
+
 		if (!this.worldObj.isRemote)
 		{
 			if (this.riddenByEntity != null && this.riddenByEntity.isDead)
 				this.riddenByEntity = null;
 		}
-		//orientation = previousOrientation = new RotatedAxes();
+	}
+
+	@Override
+	public Entity[] getParts()
+	{
+		return seats;
 	}
 
 	public void acceptInput(ShipInput input)

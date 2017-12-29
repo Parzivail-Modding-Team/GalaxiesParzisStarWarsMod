@@ -1,113 +1,75 @@
 package com.parzivail.swg.ship;
 
-import com.parzivail.util.common.Lumberjack;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.util.DamageSource;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Created by colby on 12/27/2017.
  */
-public class Seat extends EntityBase
+public class Seat extends Entity
 {
 	private BasicFlightModel ship;
-	private Vector3f offset;
-
-	public Seat(World world)
-	{
-		super(world);
-	}
+	public Vector3f offset;
 
 	public Seat(BasicFlightModel ship, Vector3f offset)
 	{
-		this(ship.worldObj);
+		super(ship.worldObj);
 		setSize(0.5F, 0.5F);
 		this.ship = ship;
 		this.offset = offset;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public float getShadowSize()
+	protected void entityInit()
 	{
-		return 0.0F;
 	}
 
-	@Override
-	public void writeEntityToNBT(NBTTagCompound tag)
+	/**
+	 * (abstract) Protected helper method to read subclass entity data from NBT.
+	 */
+	protected void readEntityFromNBT(NBTTagCompound t)
 	{
-		if (this.ship != null)
-			tag.setInteger("shipId", this.ship.getEntityId());
-		else
-			tag.setInteger("shipId", -1);
-		tag.setFloat("offsetX", offset.x);
-		tag.setFloat("offsetY", offset.y);
-		tag.setFloat("offsetZ", offset.z);
+		this.offset = new Vector3f(t.getFloat("ox"), t.getFloat("oy"), t.getFloat("oz"));
 	}
 
-	@Override
-	public void readEntityFromNBT(NBTTagCompound tag)
+	/**
+	 * (abstract) Protected helper method to write subclass entity data to NBT.
+	 */
+	protected void writeEntityToNBT(NBTTagCompound t)
 	{
-		int id = tag.getInteger("shipId");
-		if (id != -1)
-			this.ship = (BasicFlightModel)this.worldObj.getEntityByID(id);
-		this.offset = new Vector3f(tag.getFloat("offsetX"), tag.getFloat("offsetY"), tag.getFloat("offsetZ"));
+		t.setFloat("ox", offset.x);
+		t.setFloat("oy", offset.y);
+		t.setFloat("oz", offset.z);
 	}
 
+	/**
+	 * Returns true if other Entities should be prevented from moving through this Entity.
+	 */
 	public boolean canBeCollidedWith()
 	{
 		return true;
 	}
 
-	public void applyEntityCollision(Entity other)
+	/**
+	 * Called when the entity is attacked.
+	 */
+	public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_)
 	{
+		return !this.isEntityInvulnerable();
 	}
 
-	public void updateRiderPosition()
+	/**
+	 * Returns true if Entity argument is equal to this Entity
+	 */
+	public boolean isEntityEqual(Entity other)
 	{
-		if (this.riddenByEntity != null)
-		{
-			double d0 = Math.cos((double)this.rotationYaw * Math.PI / 180.0D) * 0.4D;
-			double d1 = Math.sin((double)this.rotationYaw * Math.PI / 180.0D) * 0.4D;
-			this.riddenByEntity.setPosition(this.posX - (this.boundingBox.maxX - this.boundingBox.minX) / 2f + d0, this.posY + this.getMountedYOffset() + this.riddenByEntity.getYOffset(), this.posZ - (this.boundingBox.maxZ - this.boundingBox.minZ) / 2f + d1);
-		}
-	}
-
-	@Override
-	public void onUpdate()
-	{
-		if (this.posY < -64.0D)
-			this.setDead();
-
-		if (this.ship != null)
-		{
-			this.moveEntity(ship.motionX, ship.motionY, ship.motionZ);
-
-			// if we're over 3 blocks away from where we should be, snap back
-			Vector3f nextPosition = ship.orientation.findLocalVectorGlobally(offset);
-			if (Math.pow(nextPosition.x - posX, 2) + Math.pow(nextPosition.x - posX, 2) + Math.pow(nextPosition.x - posX, 2) > 9)
-			{
-				this.posX = nextPosition.x;
-				this.posY = nextPosition.y;
-				this.posZ = nextPosition.z;
-			}
-		}
-		else
-		{
-			Lumberjack.log("Ship is null, worldObj.isRemote=%s", this.worldObj.isRemote);
-		}
-
-		if (!this.worldObj.isRemote)
-		{
-			if (this.riddenByEntity != null && this.riddenByEntity.isDead)
-				this.riddenByEntity = null;
-		}
+		return this == other || this.ship == other;
 	}
 
 	void setLocationAndAngles(BasicFlightModel ship)
 	{
-		this.setLocationAndAngles(ship.posX + offset.x, ship.posY + offset.y, ship.posZ + offset.z, 0, 0);
+		Vector3f o = ship.orientation.findLocalVectorGlobally(offset);
+		this.setLocationAndAngles(ship.posX + o.x, ship.posY + o.y, ship.posZ + o.z, 0, 0);
 	}
 }

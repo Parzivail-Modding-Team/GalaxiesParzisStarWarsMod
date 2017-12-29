@@ -86,13 +86,13 @@ public abstract class EntityBase extends EntityLivingBase
 	@Override
 	public ItemStack getHeldItem()
 	{
-		return ItemUtils.ITEMSTACK_EMPTY;
+		return null;
 	}
 
 	@Override
 	public ItemStack getEquipmentInSlot(int p_71124_1_)
 	{
-		return ItemUtils.ITEMSTACK_EMPTY;
+		return null;
 	}
 
 	@Override
