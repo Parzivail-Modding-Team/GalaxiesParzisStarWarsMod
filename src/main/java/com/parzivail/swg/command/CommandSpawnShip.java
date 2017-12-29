@@ -51,6 +51,7 @@ public class CommandSpawnShip extends CommandBase
 	{
 		e.setLocationAndAngles(player.posX, player.posY, player.posZ, 0, 0);
 		player.worldObj.spawnEntityInWorld(e);
+		e.spawnSeats();
 	}
 
 	public class Args

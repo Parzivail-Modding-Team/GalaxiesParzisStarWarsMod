@@ -49,6 +49,32 @@ public class EventHandler
 				StarWarsGalaxy.mc.renderViewEntity = StarWarsGalaxy.mc.thePlayer;
 			}
 		}
+		//		else if (StarWarsGalaxy.mc.gameSettings.showDebugInfo)
+		//		{
+		//			GL.PushMatrix();
+		//			GL.Translate(event.x, event.y + (event.entity.boundingBox.maxY - event.entity.boundingBox.minY) + 1, event.z);
+		//
+		//			float f = 0.025f;
+		//			String n = event.entity.getClass().getSimpleName();
+		//
+		//			FontRenderer fontrenderer = StarWarsGalaxy.mc.fontRenderer;
+		//			GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+		//			GL11.glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
+		//			GL11.glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
+		//			GL11.glScalef(-f, -f, f);
+		//			GL11.glDisable(GL11.GL_LIGHTING);
+		//			GL11.glDepthMask(false);
+		//			GL11.glDisable(GL11.GL_DEPTH_TEST);
+		//			GL11.glEnable(GL11.GL_BLEND);
+		//			fontrenderer.drawString(n, -fontrenderer.getStringWidth(n) / 2, 0, 0x40ffffff);
+		//			GL11.glEnable(GL11.GL_DEPTH_TEST);
+		//			GL11.glDepthMask(true);
+		//			fontrenderer.drawString(n, -fontrenderer.getStringWidth(n) / 2, 0, 0xffffffff);
+		//			GL11.glEnable(GL11.GL_LIGHTING);
+		//			GL11.glDisable(GL11.GL_BLEND);
+		//
+		//			GL.PopMatrix();
+		//		}
 	}
 
 	@SubscribeEvent

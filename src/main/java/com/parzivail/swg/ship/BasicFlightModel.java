@@ -5,9 +5,8 @@ import com.parzivail.util.math.RotatedAxes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.IEntityMultiPart;
-import net.minecraft.entity.boss.EntityDragonPart;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import org.lwjgl.util.vector.Vector3f;
@@ -15,7 +14,7 @@ import org.lwjgl.util.vector.Vector3f;
 /**
  * Created by colby on 12/26/2017.
  */
-public abstract class BasicFlightModel extends EntityBase implements IEntityMultiPart
+public abstract class BasicFlightModel extends EntityBase
 {
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
@@ -43,16 +42,13 @@ public abstract class BasicFlightModel extends EntityBase implements IEntityMult
 		seats = new Seat[0];
 	}
 
-	@Override
-	public World func_82194_d()
+	public void spawnSeats()
 	{
-		return this.worldObj;
-	}
-
-	@Override
-	public boolean attackEntityFromPart(EntityDragonPart p_70965_1_, DamageSource p_70965_2_, float p_70965_3_)
-	{
-		return false;
+		for (Seat s : seats)
+		{
+			s.setLocationAndAngles(this);
+			this.worldObj.spawnEntityInWorld(s);
+		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -70,19 +66,26 @@ public abstract class BasicFlightModel extends EntityBase implements IEntityMult
 	{
 	}
 
+	@Override
+	public void writeEntityToNBT(NBTTagCompound tag)
+	{
+	}
+
+	@Override
+	public void readEntityFromNBT(NBTTagCompound tag)
+	{
+	}
+
 	/**
 	 * First layer of player interaction
 	 */
 	public boolean interactFirst(EntityPlayer player)
 	{
-		for (Seat s : seats)
+		if (this.riddenByEntity == null)
 		{
-			if (s.riddenByEntity == null)
-			{
-				if (!s.worldObj.isRemote)
-					player.mountEntity(s);
-				return true;
-			}
+			if (!this.worldObj.isRemote)
+				player.mountEntity(this);
+			return true;
 		}
 		return true;
 	}
@@ -124,23 +127,14 @@ public abstract class BasicFlightModel extends EntityBase implements IEntityMult
 		this.angularMomentum.y *= 0.7;
 		this.angularMomentum.z *= 0.7;
 
-		for (Seat s : seats)
-		{
-			s.onUpdate();
-			s.setLocationAndAngles(this);
-		}
+		//for (Seat s : seats)
+		//	s.setLocationAndAngles(this);
 
 		if (!this.worldObj.isRemote)
 		{
 			if (this.riddenByEntity != null && this.riddenByEntity.isDead)
 				this.riddenByEntity = null;
 		}
-	}
-
-	@Override
-	public Entity[] getParts()
-	{
-		return seats;
 	}
 
 	public void acceptInput(ShipInput input)

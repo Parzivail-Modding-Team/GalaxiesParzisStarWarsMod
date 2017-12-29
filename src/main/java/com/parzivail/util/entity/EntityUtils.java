@@ -2,6 +2,7 @@ package com.parzivail.util.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.ship.BasicFlightModel;
+import com.parzivail.swg.ship.Seat;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
@@ -10,9 +11,11 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class EntityUtils
 {
@@ -135,8 +138,19 @@ public class EntityUtils
 
 	public static BasicFlightModel getShipRiding(Entity entity)
 	{
-		if (!(entity.ridingEntity instanceof BasicFlightModel))
+		if (!(entity.ridingEntity instanceof Seat))
 			return null;
-		return ((BasicFlightModel)entity.ridingEntity);
+		return ((Seat)entity.ridingEntity).ship;
+	}
+
+	public static Entity getEntityByUuid(World world, UUID uuid)
+	{
+		for (Object e : world.getLoadedEntityList())
+		{
+			Entity entity = (Entity)e;
+			if (entity.getUniqueID().equals(uuid))
+				return entity;
+		}
+		return null;
 	}
 }

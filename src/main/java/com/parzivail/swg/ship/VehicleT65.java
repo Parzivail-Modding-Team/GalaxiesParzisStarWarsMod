@@ -16,7 +16,18 @@ public class VehicleT65 extends BasicFlightModel
 	@Override
 	protected void createSeats()
 	{
-		seats = new Seat[1];
-		seats[0] = new Seat(this, new Vector3f(0, 1, 0));
+		seats = new Seat[2];
+		/*
+
+		this.ship = ship;
+		this.offset = offset;
+
+		BasicFlightModel ship, Vector3f offset
+		 */
+		seats[0] = new Seat(this.worldObj);
+		seats[0].attachToShip(this, new Vector3f(0, 1, -1));
+
+		seats[1] = new Seat(this.worldObj);
+		seats[1].attachToShip(this, new Vector3f(0, 1, 1));
 	}
 }
