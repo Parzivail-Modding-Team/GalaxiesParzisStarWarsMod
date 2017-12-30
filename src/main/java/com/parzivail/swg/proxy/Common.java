@@ -26,6 +26,11 @@ public class Common
 		return false;
 	}
 
+	public boolean isServer()
+	{
+		return true;
+	}
+
 	public MinecraftServer getMCServer() {
 		return FMLCommonHandler.instance().getMinecraftServerInstance();
 	}

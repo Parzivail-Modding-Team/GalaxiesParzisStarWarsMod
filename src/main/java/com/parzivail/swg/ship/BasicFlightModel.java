@@ -1,6 +1,9 @@
 package com.parzivail.swg.ship;
 
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.handler.KeyHandler;
+import com.parzivail.swg.network.MessageFlightModelUpdate;
+import com.parzivail.swg.network.MessageSeatInit;
 import com.parzivail.util.math.RotatedAxes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -44,10 +47,14 @@ public abstract class BasicFlightModel extends EntityBase
 
 	public void spawnSeats()
 	{
-		for (Seat s : seats)
+		if (worldObj.isRemote)
+			return;
+
+		for (int i = 0; i < seats.length; i++)
 		{
-			s.setLocationAndAngles(this);
-			this.worldObj.spawnEntityInWorld(s);
+			seats[i].setLocationAndAngles(this);
+			this.worldObj.spawnEntityInWorld(seats[i]);
+			StarWarsGalaxy.network.sendToAll(new MessageSeatInit(this, seats[i], i));
 		}
 	}
 
@@ -127,8 +134,8 @@ public abstract class BasicFlightModel extends EntityBase
 		this.angularMomentum.y *= 0.7;
 		this.angularMomentum.z *= 0.7;
 
-		//for (Seat s : seats)
-		//	s.setLocationAndAngles(this);
+		for (Seat s : seats)
+			s.setLocationAndAngles(this);
 
 		if (!this.worldObj.isRemote)
 		{
@@ -173,5 +180,6 @@ public abstract class BasicFlightModel extends EntityBase
 			case SpecialWeapon:
 				break;
 		}
+		StarWarsGalaxy.network.sendToServer(new MessageFlightModelUpdate(this));
 	}
 }

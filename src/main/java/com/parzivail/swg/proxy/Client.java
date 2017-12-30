@@ -24,4 +24,10 @@ public class Client extends Common
 
 		Lumberjack.log("Client proxy loaded!");
 	}
+
+	@Override
+	public boolean isServer()
+	{
+		return false;
+	}
 }
