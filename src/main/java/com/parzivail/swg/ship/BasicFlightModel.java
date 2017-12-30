@@ -2,8 +2,8 @@ package com.parzivail.swg.ship;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.handler.KeyHandler;
-import com.parzivail.swg.network.MessageFlightModelUpdate;
 import com.parzivail.swg.network.MessageSeatInit;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.math.RotatedAxes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,6 +22,9 @@ public abstract class BasicFlightModel extends EntityBase
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
 	public Vector3f angularMomentum;
+	public float throttle;
+
+	public ShipData data;
 	public Seat[] seats;
 
 	public BasicFlightModel(World world)
@@ -38,11 +41,17 @@ public abstract class BasicFlightModel extends EntityBase
 		angularMomentum = new Vector3f();
 
 		createSeats();
+		createData();
 	}
 
 	protected void createSeats()
 	{
 		seats = new Seat[0];
+	}
+
+	protected void createData()
+	{
+		data = new ShipData();
 	}
 
 	public void spawnSeats()
@@ -122,10 +131,13 @@ public abstract class BasicFlightModel extends EntityBase
 		if (this.worldObj.isRemote)
 			KeyHandler.handleVehicleMovement();
 
-		if (!this.onGround)
-			this.motionY -= 9.8f / 100f;
+		//if (!this.onGround)
+		//	this.motionY -= 9.8f / 100f;
 
-		this.moveEntity(this.motionX, this.motionY, this.motionZ);
+		Vector3f forward = this.orientation.findLocalVectorGlobally(new Vector3f(0, 0, -1));
+		//Lumberjack.log(this.throttle);
+		this.moveEntity(this.motionX + forward.x * throttle, this.motionY + forward.y * throttle, this.motionZ + forward.z * throttle);
+		//this.moveEntity(this.motionX, this.motionY, this.motionZ);
 		this.orientation.rotateLocalPitch(this.angularMomentum.x);
 		this.orientation.rotateLocalYaw(this.angularMomentum.y);
 		this.orientation.rotateLocalRoll(this.angularMomentum.z);
@@ -134,52 +146,21 @@ public abstract class BasicFlightModel extends EntityBase
 		this.angularMomentum.y *= 0.7;
 		this.angularMomentum.z *= 0.7;
 
-		for (Seat s : seats)
-			s.setLocationAndAngles(this);
+		if (Math.abs(this.angularMomentum.x) < 0.001f)
+			this.angularMomentum.x = 0;
+		if (Math.abs(this.angularMomentum.y) < 0.001f)
+			this.angularMomentum.y = 0;
+		if (Math.abs(this.angularMomentum.z) < 0.001f)
+			this.angularMomentum.z = 0;
+
+		//for (Seat s : seats)
+		//	s.setLocationAndAngles(this);
+		Lumberjack.log("%s\t%s", forward, throttle);
 
 		if (!this.worldObj.isRemote)
 		{
 			if (this.riddenByEntity != null && this.riddenByEntity.isDead)
 				this.riddenByEntity = null;
 		}
-	}
-
-	public void acceptInput(ShipInput input)
-	{
-		// TODO: seats and delegate input to seats
-		switch (input)
-		{
-			case RollLeft:
-				this.angularMomentum.z -= 4;
-				break;
-			case RollRight:
-				this.angularMomentum.z += 4;
-				break;
-			case PitchUp:
-				this.angularMomentum.x += 2;
-				break;
-			case PitchDown:
-				this.angularMomentum.x -= 2;
-				break;
-			case YawLeft:
-				break;
-			case YawRight:
-				break;
-			case ThrottleUp:
-				//this.parent.throttle += this.parent.data.maxThrottle * this.parent.data.throttleStep;
-				//this.parent.throttle = MathHelper.clamp_float(this.parent.throttle, 0, this.parent.data.maxThrottle);
-				break;
-			case ThrottleDown:
-				//this.parent.throttle -= this.parent.data.maxThrottle * this.parent.data.throttleStep;
-				//this.parent.throttle = MathHelper.clamp_float(this.parent.throttle, 0, this.parent.data.maxThrottle);
-				break;
-			case BlasterFire:
-				break;
-			case SpecialAesthetic:
-				break;
-			case SpecialWeapon:
-				break;
-		}
-		StarWarsGalaxy.network.sendToServer(new MessageFlightModelUpdate(this));
 	}
 }

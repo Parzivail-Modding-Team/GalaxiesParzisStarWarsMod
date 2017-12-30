@@ -4,6 +4,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.common.Pair;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -136,11 +137,11 @@ public class EntityUtils
 	//		return !(entity == null || entity.ridingEntity == null) && (clazz.isInstance(entity.ridingEntity) || (entity.ridingEntity instanceof EntitySeat && clazz.isInstance(((EntitySeat)entity.ridingEntity).parent)));
 	//	}
 
-	public static BasicFlightModel getShipRiding(Entity entity)
+	public static Pair<BasicFlightModel, Seat> getShipRiding(Entity entity)
 	{
 		if (!(entity.ridingEntity instanceof Seat))
 			return null;
-		return ((Seat)entity.ridingEntity).ship;
+		return new Pair<>(((Seat)entity.ridingEntity).ship, (Seat)entity.ridingEntity);
 	}
 
 	public static Entity getEntityByUuid(World world, UUID uuid)

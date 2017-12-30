@@ -6,6 +6,7 @@ import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.MinecraftServer;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -13,30 +14,33 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class MessageFlightModelUpdate extends PMessage<MessageFlightModelUpdate>
 {
-	public Entity ship;
-	public RotatedAxes orientation;
+	public int shipId;
+	public int shipDim;
 	public Vector3f angularMomentum;
+	public RotatedAxes orientation;
+	public float throttle;
 
 	public MessageFlightModelUpdate()
 	{
-
 	}
 
 	public MessageFlightModelUpdate(BasicFlightModel ship)
 	{
-		this.orientation = ship.orientation;
 		this.angularMomentum = ship.angularMomentum;
-		this.ship = ship;
+		this.orientation = ship.orientation;
+		this.throttle = ship.throttle;
+		this.shipId = ship.getEntityId();
+		this.shipDim = ship.dimension;
 	}
 
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		if (this.orientation == null || this.ship == null)
-			return null;
+		Entity ship = MinecraftServer.getServer().worldServerForDimension(this.shipDim).getEntityByID(this.shipId);
 
-		//((BasicFlightModel)this.ship).orientation = this.orientation;
-		((BasicFlightModel)this.ship).angularMomentum = this.angularMomentum;
+		((BasicFlightModel)ship).angularMomentum = this.angularMomentum;
+		((BasicFlightModel)ship).orientation = this.orientation;
+		((BasicFlightModel)ship).throttle = this.throttle;
 
 		return null;
 	}

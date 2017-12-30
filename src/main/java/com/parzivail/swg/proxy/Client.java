@@ -8,6 +8,7 @@ import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 
 /**
  * Created by colby on 9/10/2017.
@@ -29,5 +30,11 @@ public class Client extends Common
 	public boolean isServer()
 	{
 		return false;
+	}
+
+	@Override
+	public Entity getEntityById(int dim, int id)
+	{
+		return Minecraft.getMinecraft().theWorld.getEntityByID(id);
 	}
 }

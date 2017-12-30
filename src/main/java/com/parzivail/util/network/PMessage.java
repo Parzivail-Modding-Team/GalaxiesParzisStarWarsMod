@@ -1,15 +1,11 @@
 package com.parzivail.util.network;
 
-import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.util.math.RotatedAxes;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -47,16 +43,11 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 		map(NBTTagCompound.class, PMessage::readNBT, PMessage::writeNBT);
 		map(ItemStack.class, PMessage::readItemStack, PMessage::writeItemStack);
 
-		map(EntityPlayer.class, PMessage::readPlayer, PMessage::writePlayer);
-		map(Entity.class, PMessage::readEntity, PMessage::writeEntity);
 		map(Vec3.class, PMessage::readVec3, PMessage::writeVec3);
 		map(Vector3f.class, PMessage::readVec3f, PMessage::writeVec3f);
-		//map(EntityCooldownEntry.class, PMessage::readEntityCooldownEntry, PMessage::writeEntityCooldownEntry);
 		map(Color.class, PMessage::readColor, PMessage::writeColor);
 		map(World.class, PMessage::readWorld, PMessage::writeWorld);
 		map(ItemStack[].class, PMessage::readItemStacks, PMessage::writeItemStacks);
-		//map(EntitySeat[].class, PMessage::readSeats, PMessage::writeSeats);
-		//map(ShipData.class, PMessage::readShipData, PMessage::writeShipData);
 		map(RotatedAxes.class, PMessage::readRAxes, PMessage::writeRAxes);
 	}
 
@@ -117,147 +108,6 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 		return buf.readDouble();
 	}
 
-	//	private static ShipData readShipData(ByteBuf buf)
-	//	{
-	//		ShipData data = new ShipData();
-	//		data.numPassengers = readInt(buf);
-	//		//Brute keep data.seatInfo
-	//
-	//		data.cameraDistance = readFloat(buf);
-	//		data.cameraDistanceMax = readFloat(buf);
-	//		data.cameraFloatDampening = readFloat(buf);
-	//
-	//		data.angularDragCoefficient = readFloat(buf);
-	//		data.maxThrottle = readFloat(buf);
-	//		data.throttleStep = readFloat(buf);
-	//
-	//		data.energyWeaponData = readEnergyWeaponData(buf);
-	//		data.physicalWeaponData = readPhysicalWeaponData(buf);
-	//
-	//		data.cloakingActive = readBoolean(buf);
-	//
-	//		data.shipHealth = readFloat(buf);
-	//		data.shieldHealth = readFloat(buf);
-	//		data.shipHealthMax = readFloat(buf);
-	//		data.shieldHealthMax = readFloat(buf);
-	//
-	//		data.energyTotalPercentage = readFloat(buf);
-	//		data.energyPercentDrainPerMinute = readFloat(buf);
-	//		return data;
-	//	}
-
-	//	private static PhysicalWeaponData[] readPhysicalWeaponData(ByteBuf buf)
-	//	{
-	//		int amount = readInt(buf);
-	//		PhysicalWeaponData[] data = new PhysicalWeaponData[amount];
-	//		for (int i = 0; i < amount; i++)
-	//		{
-	//			data[i] = new PhysicalWeaponData();
-	//			data[i].amountRemaining = readInt(buf);
-	//		}
-	//		return data;
-	//	}
-
-	//	private static EnergyWeaponData[] readEnergyWeaponData(ByteBuf buf)
-	//	{
-	//		int amount = readInt(buf);
-	//		EnergyWeaponData[] data = new EnergyWeaponData[amount];
-	//		for (int i = 0; i < amount; i++)
-	//		{
-	//			data[i] = new EnergyWeaponData();
-	//			data[i].enabled = readBoolean(buf);
-	//			data[i].overheatTimer = readFloat(buf);
-	//		}
-	//		return data;
-	//	}
-
-	//	public static void writeShipData(ShipData data, ByteBuf buf)
-	//	{
-	//		writeInt(data.numPassengers, buf);
-	//		//Brute keep data.seatInfo
-	//
-	//		writeFloat(data.cameraDistance, buf);
-	//		writeFloat(data.cameraDistanceMax, buf);
-	//		writeFloat(data.cameraFloatDampening, buf);
-	//
-	//		writeFloat(data.angularDragCoefficient, buf);
-	//		writeFloat(data.maxThrottle, buf);
-	//		writeFloat(data.throttleStep, buf);
-	//
-	//		writeEnergyWeaponData(data.energyWeaponData, buf);
-	//		writePhysicalWeaponData(data.physicalWeaponData, buf);
-	//
-	//		writeBoolean(data.cloakingActive, buf);
-	//
-	//		writeFloat(data.shipHealth, buf);
-	//		writeFloat(data.shieldHealth, buf);
-	//		writeFloat(data.shipHealthMax, buf);
-	//		writeFloat(data.shieldHealthMax, buf);
-	//
-	//		writeFloat(data.energyTotalPercentage, buf);
-	//		writeFloat(data.energyPercentDrainPerMinute, buf);
-	//	}
-
-	//	private static void writePhysicalWeaponData(PhysicalWeaponData[] data, ByteBuf buf)
-	//	{
-	//		writeInt(data.length, buf);
-	//		for (PhysicalWeaponData aData : data)
-	//		{
-	//			writeInt(aData.amountRemaining, buf);
-	//		}
-	//	}
-
-	//	private static void writeEnergyWeaponData(EnergyWeaponData[] data, ByteBuf buf)
-	//	{
-	//		writeInt(data.length, buf);
-	//		for (EnergyWeaponData aData : data)
-	//		{
-	//			writeBoolean(aData.enabled, buf);
-	//			writeFloat(aData.overheatTimer, buf);
-	//		}
-	//	}
-
-	private static Entity readEntity(ByteBuf buf)
-	{
-		int dim = buf.readInt();
-		int id = buf.readInt();
-		if (!StarWarsGalaxy.proxy.isServer())
-			return Minecraft.getMinecraft().theWorld.getEntityByID(id);
-		return MinecraftServer.getServer().worldServerForDimension(dim).getEntityByID(id);
-	}
-
-	//	private static EntitySeat readEntitySeat(ByteBuf buf)
-	//	{
-	//		int dim = buf.readInt();
-	//		int id = buf.readInt();
-	//		EntitySeat seat;
-	//		if (MinecraftServer.getServer() == null)
-	//		{
-	//			seat = (EntitySeat)Minecraft.getMinecraft().theWorld.getEntityByID(id);
-	//		}
-	//		else
-	//		{
-	//			seat = (EntitySeat)MinecraftServer.getServer().worldServerForDimension(dim).getEntityByID(id);
-	//		}
-	//		//seat.parentId = buf.readInt();
-	//		//seat.seatID = buf.readInt();
-	//		seat.parent = (Pilotable)readEntity(buf);
-	//		//seat.driver = buf.readBoolean();
-	//		seat.playerPosX = (int)buf.readDouble();
-	//		seat.playerPosY = (int)buf.readDouble();
-	//		seat.playerPosZ = (int)buf.readDouble();
-	//		//seat.riderId = buf.readInt();
-	//		return seat;
-	//	}
-
-	//	private static EntityCooldownEntry readEntityCooldownEntry(ByteBuf buf)
-	//	{
-	//		Entity e = readEntity(buf);
-	//		String name = ByteBufUtils.readUTF8String(buf);
-	//		int cooldownLeft = buf.readInt();
-	//		return new EntityCooldownEntry(e, name, cooldownLeft);
-	//	}
-
 	private static float readFloat(ByteBuf buf)
 	{
 		return buf.readFloat();
@@ -306,15 +156,6 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 		return stacks.toArray(new ItemStack[count]);
 	}
 
-	//	private static EntitySeat[] readSeats(ByteBuf buf)
-	//	{
-	//		ArrayList<EntitySeat> stacks = new ArrayList<>();
-	//		int count = readInt(buf);
-	//		for (int i = 0; i < count; i++)
-	//			stacks.add(readEntitySeat(buf));
-	//		return stacks.toArray(new EntitySeat[count]);
-	//	}
-
 	private static long readLong(ByteBuf buf)
 	{
 		return buf.readLong();
@@ -323,15 +164,6 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 	private static NBTTagCompound readNBT(ByteBuf buf)
 	{
 		return ByteBufUtils.readTag(buf);
-	}
-
-	private static EntityPlayer readPlayer(ByteBuf buf)
-	{
-		// int dim = buf.readInt();
-		// String uname = ByteBufUtils.readUTF8String(buf);
-		// return
-		// MinecraftServer.getServer().worldServerForDimension(dim).getPlayerEntityByName(uname);
-		return (EntityPlayer)readEntity(buf);
 	}
 
 	private static short readShort(ByteBuf buf)
@@ -417,39 +249,6 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 		buf.writeFloat(mat.m33);
 	}
 
-	private static void writeEntity(Entity entity, ByteBuf buf)
-	{
-		if (entity == null)
-		{
-			buf.writeInt(0);
-			buf.writeInt(0);
-			return;
-		}
-		buf.writeInt(entity.dimension);
-		buf.writeInt(entity.getEntityId());
-	}
-
-	//	private static void writeEntitySeat(EntitySeat entity, ByteBuf buf)
-	//	{
-	//		buf.writeInt(entity.dimension);
-	//		buf.writeInt(entity.getEntityId());
-	//		//buf.writeInt(entity.parentId);
-	//		//buf.writeInt(entity.seatID);
-	//		writeEntity(entity.parent, buf);
-	//		//buf.writeBoolean(entity.driver);
-	//		buf.writeDouble(entity.playerPosX);
-	//		buf.writeDouble(entity.playerPosY);
-	//		buf.writeDouble(entity.playerPosZ);
-	//		//buf.writeInt(entity.riderId);
-	//	}
-
-	//	private static void writeEntityCooldownEntry(EntityCooldownEntry entry, ByteBuf buf)
-	//	{
-	//		writeEntity(entry.entity, buf);
-	//		ByteBufUtils.writeUTF8String(buf, entry.effect);
-	//		buf.writeInt(entry.cooldownLeft);
-	//	}
-
 	private static void writeFloat(float f, ByteBuf buf)
 	{
 		buf.writeFloat(f);
@@ -472,13 +271,6 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 			ByteBufUtils.writeItemStack(buf, stack1);
 	}
 
-	//	private static void writeSeats(EntitySeat[] stack, ByteBuf buf)
-	//	{
-	//		writeInt(stack.length, buf);
-	//		for (EntitySeat stack1 : stack)
-	//			writeEntitySeat(stack1, buf);
-	//	}
-
 	private static void writeLong(long l, ByteBuf buf)
 	{
 		buf.writeLong(l);
@@ -487,13 +279,6 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 	private static void writeNBT(NBTTagCompound cmp, ByteBuf buf)
 	{
 		ByteBufUtils.writeTag(buf, cmp);
-	}
-
-	private static void writePlayer(EntityPlayer player, ByteBuf buf)
-	{
-		// buf.writeInt(ship.dimension);
-		// ByteBufUtils.writeUTF8String(buf, ship.getCommandSenderName());
-		writeEntity(player, buf);
 	}
 
 	private static void writeShort(short s, ByteBuf buf)

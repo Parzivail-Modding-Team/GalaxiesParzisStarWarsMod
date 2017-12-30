@@ -5,6 +5,7 @@ import com.parzivail.swg.ship.Seat;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -13,8 +14,8 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class MessageSeatInit extends PMessage<MessageSeatInit>
 {
-	public Entity ship;
-	public Entity seat;
+	public int shipId;
+	public int seatId;
 	public Vector3f seatOffset;
 	public int seatIdx;
 
@@ -25,8 +26,8 @@ public class MessageSeatInit extends PMessage<MessageSeatInit>
 
 	public MessageSeatInit(BasicFlightModel ship, Seat seat, int seatIdx)
 	{
-		this.ship = ship;
-		this.seat = seat;
+		this.shipId = ship.getEntityId();
+		this.seatId = seat.getEntityId();
 		this.seatOffset = seat.offset;
 		this.seatIdx = seatIdx;
 	}
@@ -34,11 +35,11 @@ public class MessageSeatInit extends PMessage<MessageSeatInit>
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		if (this.seat == null || this.ship == null)
-			return null;
+		Entity ship = Minecraft.getMinecraft().theWorld.getEntityByID(this.shipId);
+		Entity seat = Minecraft.getMinecraft().theWorld.getEntityByID(this.seatId);
 
-		((BasicFlightModel)this.ship).seats[this.seatIdx] = (Seat)seat;
-		((Seat)seat).attachToShip((BasicFlightModel)this.ship, this.seatOffset);
+		((BasicFlightModel)ship).seats[this.seatIdx] = (Seat)seat;
+		((Seat)seat).attachToShip((BasicFlightModel)ship, this.seatOffset, this.seatIdx);
 
 		return null;
 	}

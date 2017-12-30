@@ -2,7 +2,9 @@ package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.ship.BasicFlightModel;
+import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.ShipInput;
+import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.settings.KeyBinding;
@@ -19,26 +21,26 @@ public class KeyHandler
 
 	public static void handleVehicleMovement()
 	{
-		BasicFlightModel ship = EntityUtils.getShipRiding(StarWarsGalaxy.mc.thePlayer);
-		if (StarWarsGalaxy.mc.thePlayer != null && ship != null)
+		Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(StarWarsGalaxy.mc.thePlayer);
+		if (StarWarsGalaxy.mc.thePlayer != null && pair != null && pair.left != null && pair.right.idx == 0)
 		{
 			if ($(StarWarsGalaxy.mc.gameSettings.keyBindLeft))
-				ship.acceptInput(ShipInput.RollLeft);
+				pair.right.acceptInput(ShipInput.RollLeft);
 
 			if ($(StarWarsGalaxy.mc.gameSettings.keyBindRight))
-				ship.acceptInput(ShipInput.RollRight);
+				pair.right.acceptInput(ShipInput.RollRight);
 
 			if ($(StarWarsGalaxy.mc.gameSettings.keyBindForward))
-				ship.acceptInput(ShipInput.PitchDown);
+				pair.right.acceptInput(ShipInput.PitchDown);
 
 			if ($(StarWarsGalaxy.mc.gameSettings.keyBindBack))
-				ship.acceptInput(ShipInput.PitchUp);
+				pair.right.acceptInput(ShipInput.PitchUp);
 
 			if ($(StarWarsGalaxy.mc.gameSettings.keyBindJump))
-				ship.acceptInput(ShipInput.ThrottleUp);
+				pair.right.acceptInput(ShipInput.ThrottleUp);
 
 			if ($(StarWarsGalaxy.mc.gameSettings.keyBindSprint))
-				ship.acceptInput(ShipInput.ThrottleDown);
+				pair.right.acceptInput(ShipInput.ThrottleDown);
 		}
 	}
 

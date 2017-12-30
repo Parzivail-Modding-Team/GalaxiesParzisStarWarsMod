@@ -2,6 +2,8 @@ package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.ship.BasicFlightModel;
+import com.parzivail.swg.ship.Seat;
+import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -22,9 +24,10 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			BasicFlightModel ship = EntityUtils.getShipRiding(event.entity);
-			if (ship != null && event.isCancelable())
+			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(event.entity);
+			if (pair != null && pair.left != null && event.isCancelable())
 			{
+				BasicFlightModel ship = pair.left;
 				event.setCanceled(true);
 				if (event.entity == StarWarsGalaxy.mc.thePlayer)
 				{
