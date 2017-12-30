@@ -123,7 +123,7 @@ public class Seat extends EntityBase
 	{
 		Vector3f o = ship.orientation.findLocalVectorGlobally(offset);
 		// TODO: add vertical centering offset to posY here (1.684f for xwing), need to store that in a static somewhere other than render!
-		this.setLocationAndAngles(ship.posX + o.x, ship.posY + o.y, ship.posZ + o.z, 0, 0);
+		this.setLocationAndAngles(ship.posX + o.x, ship.posY + o.y /*+ 1.684f*/, ship.posZ + o.z, 0, 0);
 	}
 
 	public void attachToShip(BasicFlightModel ship, Vector3f offset)

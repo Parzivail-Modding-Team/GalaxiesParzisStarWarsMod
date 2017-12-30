@@ -25,9 +25,9 @@ public class VehicleT65 extends BasicFlightModel
 		BasicFlightModel ship, Vector3f offset
 		 */
 		seats[0] = new Seat(this.worldObj);
-		seats[0].attachToShip(this, new Vector3f(0, 1, -1));
+		seats[0].attachToShip(this, new Vector3f(0, 0, -1));
 
 		seats[1] = new Seat(this.worldObj);
-		seats[1].attachToShip(this, new Vector3f(0, 1, 1));
+		seats[1].attachToShip(this, new Vector3f(0, 0, 1));
 	}
 }
