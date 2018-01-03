@@ -38,7 +38,7 @@ public class MessageSeatInit extends PMessage<MessageSeatInit>
 		Entity ship = Minecraft.getMinecraft().theWorld.getEntityByID(this.shipId);
 		Entity seat = Minecraft.getMinecraft().theWorld.getEntityByID(this.seatId);
 
-		((BasicFlightModel)ship).seats[this.seatIdx] = (Seat)seat;
+		//((BasicFlightModel)ship).seats[this.seatIdx] = (Seat)seat;
 		((Seat)seat).attachToShip((BasicFlightModel)ship, this.seatOffset, this.seatIdx);
 
 		return null;

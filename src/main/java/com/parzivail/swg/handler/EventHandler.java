@@ -29,7 +29,7 @@ public class EventHandler
 			{
 				BasicFlightModel ship = pair.left;
 				event.setCanceled(true);
-				if (event.entity == StarWarsGalaxy.mc.thePlayer)
+				if (event.entity == StarWarsGalaxy.mc.thePlayer && false)
 				{
 					FxMC.changeCameraDist(10);
 					FxMC.changeCameraRoll(ship.orientation.getRoll());

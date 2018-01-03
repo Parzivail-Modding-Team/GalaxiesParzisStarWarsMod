@@ -11,6 +11,7 @@ public class VehicleT65 extends BasicFlightModel
 	public VehicleT65(World world)
 	{
 		super(world);
+		setPivots(1.684f, 0.82f);
 	}
 
 	@Override

@@ -13,19 +13,8 @@ import org.lwjgl.opengl.GL11;
  */
 public abstract class RenderBasicFlightModel extends Render
 {
-	/**
-	 * Distance from the bottom of the model to the "center" of it, from which it will rotate in a roll
-	 */
-	protected final float verticalCenteringOffset;
-	/**
-	 * Distance we need to translate the model up to make sure the bottom is in line with the entity bottom
-	 */
-	protected final float verticalGroundingOffset;
-
-	public RenderBasicFlightModel(float verticalCenteringOffset, float verticalGroundingOffset)
+	public RenderBasicFlightModel()
 	{
-		this.verticalCenteringOffset = verticalCenteringOffset;
-		this.verticalGroundingOffset = verticalGroundingOffset;
 	}
 
 	@Override
@@ -41,16 +30,16 @@ public abstract class RenderBasicFlightModel extends Render
 		GL.PushMatrix();
 		GL.Translate(x, y, z);
 
-		GL.Translate(0, verticalCenteringOffset, 0);
+		GL.Translate(0, ship.verticalCenteringOffset, 0);
 		float dYaw = ship.orientation.getYaw() - ship.previousOrientation.getYaw();
 		float dPitch = ship.orientation.getPitch() - ship.previousOrientation.getPitch();
 		float dRoll = ship.orientation.getRoll() - ship.previousOrientation.getRoll();
 		GL11.glRotatef((ship.previousOrientation.getYaw() + dYaw * partialTicks), 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-(ship.previousOrientation.getPitch() + dPitch * partialTicks), 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(-(ship.previousOrientation.getRoll() + dRoll * partialTicks), 0.0F, 0.0F, 1.0F);
-		GL.Translate(0, -verticalCenteringOffset, 0);
+		GL.Translate(0, -ship.verticalCenteringOffset, 0);
 
-		GL.Translate(0, verticalGroundingOffset, 0);
+		GL.Translate(0, ship.verticalGroundingOffset, 0);
 
 		doRender(ship, partialTicks);
 
