@@ -88,12 +88,12 @@ public class Seat extends EntityBase
 	@Override
 	public void onUpdate()
 	{
-		if (this.ship != null)
-		{
-			this.motionX = this.ship.motionX;
-			this.motionY = this.ship.motionY;
-			this.motionZ = this.ship.motionZ;
-		}
+		//		if (this.ship != null)
+		//		{
+		//			this.motionX = this.ship.motionX;
+		//			this.motionY = this.ship.motionY;
+		//			this.motionZ = this.ship.motionZ;
+		//		}
 
 		if (!this.worldObj.isRemote)
 		{
