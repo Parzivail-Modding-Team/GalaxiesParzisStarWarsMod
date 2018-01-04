@@ -18,6 +18,7 @@ public class VehicleT65 extends BasicFlightModel
 	protected void createSeats()
 	{
 		seats = new Seat[2];
+		seatOffsets = new Vector3f[2];
 		/*
 
 		this.ship = ship;
@@ -26,9 +27,11 @@ public class VehicleT65 extends BasicFlightModel
 		BasicFlightModel ship, Vector3f offset
 		 */
 		seats[0] = new Seat(this.worldObj);
-		seats[0].attachToShip(this, new Vector3f(0, 0, -1), 0);
+		seats[0].attachToShip(this, 0);
+		seatOffsets[0] = new Vector3f(0, 0, -1);
 
 		seats[1] = new Seat(this.worldObj);
-		seats[1].attachToShip(this, new Vector3f(0, 0, 1), 1);
+		seats[1].attachToShip(this, 1);
+		seatOffsets[1] = new Vector3f(0, 0, 1);
 	}
 }

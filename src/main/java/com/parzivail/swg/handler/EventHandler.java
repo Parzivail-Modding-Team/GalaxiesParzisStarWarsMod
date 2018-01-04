@@ -11,6 +11,7 @@ import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 
 /**
@@ -26,31 +27,7 @@ public class EventHandler
 		{
 			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(event.entity);
 			if (pair != null && pair.left != null && event.isCancelable())
-			{
-				BasicFlightModel ship = pair.left;
 				event.setCanceled(true);
-				if (event.entity == StarWarsGalaxy.mc.thePlayer && false)
-				{
-					FxMC.changeCameraDist(10);
-					FxMC.changeCameraRoll(ship.orientation.getRoll());
-					ship.rotationYaw = 180 - ship.orientation.getYaw();
-					ship.rotationPitch = ship.orientation.getPitch();
-					FxMC.changePrevCameraRoll(ship.previousOrientation.getRoll());
-					ship.prevRotationYaw = 180 - ship.previousOrientation.getYaw();
-					ship.prevRotationPitch = ship.previousOrientation.getPitch();
-					StarWarsGalaxy.mc.renderViewEntity = ship;
-				}
-				else
-				{
-					FxMC.changeCameraRoll(0);
-					StarWarsGalaxy.mc.renderViewEntity = StarWarsGalaxy.mc.thePlayer;
-				}
-			}
-			else
-			{
-				FxMC.changeCameraRoll(0);
-				StarWarsGalaxy.mc.renderViewEntity = StarWarsGalaxy.mc.thePlayer;
-			}
 		}
 		//		else if (StarWarsGalaxy.mc.gameSettings.showDebugInfo)
 		//		{
@@ -78,6 +55,29 @@ public class EventHandler
 		//
 		//			GL.PopMatrix();
 		//		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onRenderGui(RenderGameOverlayEvent.Pre event)
+	{
+		if (StarWarsGalaxy.mc.thePlayer != null)
+		{
+			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(StarWarsGalaxy.mc.thePlayer);
+			if (pair != null && pair.left != null)
+			{
+				BasicFlightModel ship = pair.left;
+				FxMC.changeCameraDist(10);
+				FxMC.changeCameraRoll(ship.orientation.getRoll());
+				FxMC.changePrevCameraRoll(ship.previousOrientation.getRoll());
+				StarWarsGalaxy.mc.renderViewEntity = ship;
+			}
+			else
+			{
+				FxMC.changeCameraRoll(0);
+				StarWarsGalaxy.mc.renderViewEntity = StarWarsGalaxy.mc.thePlayer;
+			}
+		}
 	}
 
 	@SubscribeEvent

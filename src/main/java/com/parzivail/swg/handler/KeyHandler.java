@@ -22,7 +22,7 @@ public class KeyHandler
 	public static void handleVehicleMovement()
 	{
 		Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(StarWarsGalaxy.mc.thePlayer);
-		if (StarWarsGalaxy.mc.thePlayer != null && pair != null && pair.left != null && pair.right.idx == 0)
+		if (StarWarsGalaxy.mc.thePlayer != null && pair != null && pair.left != null && pair.right.getIdx() == 0)
 		{
 			if ($(StarWarsGalaxy.mc.gameSettings.keyBindLeft))
 				pair.right.acceptInput(ShipInput.RollLeft);

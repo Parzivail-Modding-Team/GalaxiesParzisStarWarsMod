@@ -14,7 +14,7 @@ fboEnable:true
 difficulty:0
 fancyGraphics:true
 ao:2
-clouds:true
+clouds:false
 resourcePacks:[]
 lastServer:
 lang:en_US

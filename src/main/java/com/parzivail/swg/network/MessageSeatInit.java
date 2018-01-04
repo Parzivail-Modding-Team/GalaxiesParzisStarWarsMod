@@ -28,7 +28,6 @@ public class MessageSeatInit extends PMessage<MessageSeatInit>
 	{
 		this.shipId = ship.getEntityId();
 		this.seatId = seat.getEntityId();
-		this.seatOffset = seat.offset;
 		this.seatIdx = seatIdx;
 	}
 
@@ -39,7 +38,7 @@ public class MessageSeatInit extends PMessage<MessageSeatInit>
 		Entity seat = Minecraft.getMinecraft().theWorld.getEntityByID(this.seatId);
 
 		//((BasicFlightModel)ship).seats[this.seatIdx] = (Seat)seat;
-		((Seat)seat).attachToShip((BasicFlightModel)ship, this.seatOffset, this.seatIdx);
+		((Seat)seat).attachToShip((BasicFlightModel)ship, this.seatIdx);
 
 		return null;
 	}

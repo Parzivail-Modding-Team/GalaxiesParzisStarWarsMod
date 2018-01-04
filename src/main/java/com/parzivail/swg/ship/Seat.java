@@ -17,14 +17,21 @@ import org.lwjgl.util.vector.Vector3f;
  */
 public class Seat extends EntityBase
 {
+	private static final int DATA_SEATIDX = 12;
 	public BasicFlightModel ship;
-	public Vector3f offset;
-	public int idx;
+	private int idx;
 
 	public Seat(World world)
 	{
 		super(world);
 		setSize(0.5F, 0.5F);
+	}
+
+	@Override
+	protected void entityInit()
+	{
+		super.entityInit();
+		this.dataWatcher.addObject(DATA_SEATIDX, this.idx);
 	}
 
 	/**
@@ -33,7 +40,7 @@ public class Seat extends EntityBase
 	public void readEntityFromNBT(NBTTagCompound t)
 	{
 		this.idx = t.getInteger("idx");
-		this.offset = new Vector3f(t.getFloat("ox"), t.getFloat("oy"), t.getFloat("oz"));
+		this.dataWatcher.updateObject(DATA_SEATIDX, this.idx);
 	}
 
 	/**
@@ -42,9 +49,6 @@ public class Seat extends EntityBase
 	public void writeEntityToNBT(NBTTagCompound t)
 	{
 		t.setInteger("idx", this.idx);
-		t.setFloat("ox", this.offset.x);
-		t.setFloat("oy", this.offset.y);
-		t.setFloat("oz", this.offset.z);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -100,15 +104,20 @@ public class Seat extends EntityBase
 
 	void setLocationAndAngles(BasicFlightModel ship)
 	{
-		Vector3f o = ship.orientation.findLocalVectorGlobally(offset);
+		Vector3f o = ship.orientation.findLocalVectorGlobally(ship.seatOffsets[this.getIdx()]);
 		this.setLocationAndAngles(ship.posX + o.x, ship.posY + o.y + ship.verticalCenteringOffset, ship.posZ + o.z, 0, 0);
 	}
 
-	public void attachToShip(BasicFlightModel ship, Vector3f offset, int idx)
+	public void attachToShip(BasicFlightModel ship, int idx)
 	{
 		this.ship = ship;
-		this.offset = offset;
 		this.idx = idx;
+		this.dataWatcher.updateObject(DATA_SEATIDX, idx);
+	}
+
+	public int getIdx()
+	{
+		return this.dataWatcher.getWatchableObjectInt(DATA_SEATIDX);
 	}
 
 	public void acceptInput(ShipInput input)

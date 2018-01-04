@@ -43,6 +43,7 @@ public abstract class BasicFlightModel extends EntityBase
 
 	public ShipData data;
 	protected Seat[] seats;
+	protected Vector3f[] seatOffsets;
 
 	public BasicFlightModel(World world)
 	{
@@ -90,6 +91,11 @@ public abstract class BasicFlightModel extends EntityBase
 	public Seat getSeat(int seatIdx)
 	{
 		return (Seat)this.worldObj.getEntityByID(this.dataWatcher.getWatchableObjectInt(DATA_SEATID + seatIdx));
+	}
+
+	public void setSeat(int seatIdx, Seat seat)
+	{
+		this.dataWatcher.updateObject(DATA_SEATID + seatIdx, seat.getEntityId());
 	}
 
 	public int getNumSeats()
@@ -186,8 +192,8 @@ public abstract class BasicFlightModel extends EntityBase
 	@Override
 	public void setDead()
 	{
-		for (Seat s : seats)
-			s.setDead();
+		for (int i = 0; i < this.seats.length; i++)
+			this.getSeat(i).setDead();
 		super.setDead();
 	}
 
@@ -196,6 +202,11 @@ public abstract class BasicFlightModel extends EntityBase
 	{
 		if (this.posY < -64.0D)
 			this.setDead();
+
+		this.rotationYaw = 180 - this.orientation.getYaw();
+		this.rotationPitch = this.orientation.getPitch();
+		this.prevRotationYaw = 180 - this.previousOrientation.getYaw();
+		this.prevRotationPitch = this.previousOrientation.getPitch();
 
 		previousOrientation = orientation.clone();
 
@@ -222,18 +233,24 @@ public abstract class BasicFlightModel extends EntityBase
 		}
 
 		for (int i = 0; i < this.seats.length; i++)
+		{
 			this.getSeat(i).ship = this;
+			this.getSeat(i).setLocationAndAngles(this);
+		}
+
+		//Lumberjack.log(this.getPosition(0));
 
 		//if (!this.onGround)
 		//	this.motionY -= 9.8f / 100f;
 
-		if (this.seats != null && this.seats[0] != null && this.seats[0].riddenByEntity instanceof EntityLivingBase)
+		if (this.getSeat(0) != null && this.getSeat(0).riddenByEntity instanceof EntityLivingBase)
 		{
 			Vector3f forward = this.orientation.findLocalVectorGlobally(new Vector3f(0, 0, -1));
 			//Lumberjack.log(this.throttle);
 			this.moveEntity(this.motionX + forward.x * throttle, this.motionY + forward.y * throttle, this.motionZ + forward.z * throttle);
 		}
-		//this.moveEntity(this.motionX, this.motionY, this.motionZ);
+		else
+			this.moveEntity(this.motionX, this.motionY, this.motionZ);
 		this.orientation.rotateLocalPitch(this.angularMomentum.x);
 		this.orientation.rotateLocalYaw(this.angularMomentum.y);
 		this.orientation.rotateLocalRoll(this.angularMomentum.z);
@@ -248,9 +265,6 @@ public abstract class BasicFlightModel extends EntityBase
 			this.angularMomentum.y = 0;
 		if (Math.abs(this.angularMomentum.z) < 0.001f)
 			this.angularMomentum.z = 0;
-
-		for (Seat s : seats)
-			s.setLocationAndAngles(this);
 
 		//Lumberjack.log("%s\t%s", forward, throttle);
 
