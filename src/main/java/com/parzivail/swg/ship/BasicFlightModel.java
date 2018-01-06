@@ -203,6 +203,10 @@ public abstract class BasicFlightModel extends EntityBase
 		if (this.posY < -64.0D)
 			this.setDead();
 
+		this.prevPosX = this.lastTickPosX = this.posX;
+		this.prevPosY = this.lastTickPosY = this.posY;
+		this.prevPosZ = this.lastTickPosZ = this.posZ;
+
 		this.rotationYaw = 180 - this.orientation.getYaw();
 		this.rotationPitch = this.orientation.getPitch();
 		this.prevRotationYaw = 180 - this.previousOrientation.getYaw();
