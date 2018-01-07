@@ -1,5 +1,6 @@
 package com.parzivail.swg.proxy;
 
+import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.entity.Entity;
@@ -39,5 +40,9 @@ public class Common
 
 	public MinecraftServer getMCServer() {
 		return FMLCommonHandler.instance().getMinecraftServerInstance();
+	}
+
+	public void setupShipRender(BasicFlightModel ship)
+	{
 	}
 }

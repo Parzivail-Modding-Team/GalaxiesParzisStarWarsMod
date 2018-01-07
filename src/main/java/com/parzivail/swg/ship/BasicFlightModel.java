@@ -1,5 +1,6 @@
 package com.parzivail.swg.ship;
 
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
@@ -214,8 +215,11 @@ public abstract class BasicFlightModel extends EntityBase
 
 		previousOrientation = orientation.clone();
 
-		if (this.worldObj.isRemote)
+		if (this.worldObj.isRemote && EntityUtils.isPlayerControlled(this))
+		{
 			KeyHandler.handleVehicleMovement();
+			StarWarsGalaxy.proxy.setupShipRender(this);
+		}
 
 		if (searchingSeats != null && searchingSeats.size() > 0)
 		{

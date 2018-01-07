@@ -64,15 +64,7 @@ public class EventHandler
 		if (StarWarsGalaxy.mc.thePlayer != null)
 		{
 			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(StarWarsGalaxy.mc.thePlayer);
-			if (pair != null && pair.left != null)
-			{
-				BasicFlightModel ship = pair.left;
-				FxMC.changeCameraDist(10);
-				FxMC.changeCameraRoll(ship.orientation.getRoll());
-				FxMC.changePrevCameraRoll(ship.previousOrientation.getRoll());
-				StarWarsGalaxy.mc.renderViewEntity = ship;
-			}
-			else
+			if (pair == null || pair.left == null)
 			{
 				FxMC.changeCameraRoll(0);
 				StarWarsGalaxy.mc.renderViewEntity = StarWarsGalaxy.mc.thePlayer;
