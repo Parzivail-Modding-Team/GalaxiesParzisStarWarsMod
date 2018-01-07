@@ -155,7 +155,7 @@ public class EntityUtils
 		return null;
 	}
 
-	public static boolean isPlayerControlled(BasicFlightModel ship)
+	public static boolean isClientControlled(BasicFlightModel ship)
 	{
 		Pair<BasicFlightModel, Seat> pair = getShipRiding(StarWarsGalaxy.mc.thePlayer);
 		return pair != null && pair.left != null && pair.left.equals(ship);

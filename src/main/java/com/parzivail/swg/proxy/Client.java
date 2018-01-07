@@ -4,11 +4,9 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.render.PEntityRenderer;
 import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
-import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.common.Lumberjack;
-import com.parzivail.util.ui.FxMC;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -35,15 +33,6 @@ public class Client extends Common
 	public boolean isServer()
 	{
 		return false;
-	}
-
-	@Override
-	public void setupShipRender(BasicFlightModel ship)
-	{
-		FxMC.changeCameraDist(10);
-		float r = ship.orientation.getRoll();
-		FxMC.changeCameraRoll(r);
-		StarWarsGalaxy.mc.renderViewEntity = ship;
 	}
 
 	@Override

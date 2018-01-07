@@ -69,6 +69,13 @@ public class EventHandler
 				FxMC.changeCameraRoll(0);
 				StarWarsGalaxy.mc.renderViewEntity = StarWarsGalaxy.mc.thePlayer;
 			}
+			else
+			{
+				FxMC.changeCameraDist(10);
+				float r = pair.left.orientation.getRoll();
+				FxMC.changeCameraRoll(r);
+				StarWarsGalaxy.mc.renderViewEntity = pair.left;
+			}
 		}
 	}
 
