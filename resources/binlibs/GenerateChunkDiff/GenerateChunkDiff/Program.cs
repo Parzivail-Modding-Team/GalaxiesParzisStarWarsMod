@@ -14,18 +14,18 @@ namespace GenerateChunkDiff
     {
         static void Main(string[] args)
         {
-            var world = AnvilWorld.Open(@"E:\MultiMC\instances\Forge 1.7.10\minecraft\saves\ChunkDiff1");
-            var worldOriginal = AnvilWorld.Open(@"E:\MultiMC\instances\Forge 1.7.10\minecraft\saves\ChunkDiff1_Original");
+            var world = AnvilWorld.Open(@"E:\Forge\Mods\StarWarsGalaxy\saves\ChunkDiff1");
+            var worldOriginal = AnvilWorld.Open(@"E:\Forge\Mods\StarWarsGalaxy\saves\ChunkDiff1_Original");
 
-            const int dim = 0;
+            const int dim = 2;
             var manager = world.GetChunkManager(dim);
             var managerOriginal = worldOriginal.GetChunkManager(dim);
             var numChunks = managerOriginal.Count();
 
-            const int chunkMinX = -3; // 14,9
-            const int chunkMinZ = 13; // 15, 10
+            const int chunkMinX = -4;
+            const int chunkMinZ = 2;
             const int chunkMaxX = -3;
-            const int chunkMaxZ = 13;
+            const int chunkMaxZ = 2;
 
             var diff = new ChunkDiff();
 
@@ -63,7 +63,11 @@ namespace GenerateChunkDiff
                                 if (blockIdOriginal == blockId)
                                     continue;
 
-                                diff.Add(pos, new BlockPosition(x, y, z), new BlockDiff(blockId));
+                                NbtTree nbt = null;
+                                var te = chunk.Blocks.GetTileEntity(x, y, z);
+                                if (te != null)
+                                    nbt = new NbtTree(te.Source, "tile");
+                                diff.Add(pos, new BlockPosition(x, y, z), new BlockDiff(blockId, chunk.Blocks.GetData(x, y, z), nbt));
                             }
                         }
                     }
@@ -113,7 +117,19 @@ namespace GenerateChunkDiff
                         if (block.Value.Flags.HasFlag(BlockDiff.BlockFlags.HasMetadata))
                             f.Write(block.Value.Metadata);
                         if (block.Value.Flags.HasFlag(BlockDiff.BlockFlags.HasTileNbt))
-                            block.Value.TileData.WriteTo(f.BaseStream);
+                        {
+                            using (var memstream = new MemoryStream())
+                            {
+                                // Terrible hack to make the NBT in the format that MC likes
+                                block.Value.TileData.WriteTo(memstream);
+                                memstream.Seek(0, SeekOrigin.Begin);
+                                var len = memstream.Length;
+                                f.Write((int)len);
+                                var b = new byte[(int) len];
+                                memstream.Read(b, 0, (int) len);
+                                f.Write(b);
+                            }
+                        }
                     }
                 }
             }

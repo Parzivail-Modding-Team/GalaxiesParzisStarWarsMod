@@ -8,6 +8,7 @@ import com.parzivail.swg.network.MessageSeatInit;
 import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.registry.EntityRegister;
 import com.parzivail.swg.registry.ItemRegister;
+import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -90,6 +91,7 @@ public class StarWarsGalaxy
 
 		ItemRegister.register();
 		WorldRegister.register();
+		StructureRegister.register();
 		EntityRegister.register();
 
 		proxy.doSidedThings();
