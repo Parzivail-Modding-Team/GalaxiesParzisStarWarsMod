@@ -15,7 +15,7 @@ difficulty:0
 fancyGraphics:true
 ao:2
 clouds:true
-resourcePacks:[]
+resourcePacks:["faithful32pack_1_7_x.zip"]
 lastServer:
 lang:en_US
 chatVisibility:0

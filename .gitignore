@@ -79,7 +79,9 @@ eclipse/
 mods/
 resourcepacks/
 saves/
-src/main/java/com/beust/
 /logs/
-/config/splash.properties
 /screenshots/
+/journeymap/
+/usernamecache.json
+/asm/
+/config/
