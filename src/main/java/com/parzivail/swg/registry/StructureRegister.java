@@ -12,6 +12,5 @@ public class StructureRegister
 	public static void register()
 	{
 		test = ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/test.cdf"));
-		testNbt = ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/test_nbt.cdf"));
 	}
 }

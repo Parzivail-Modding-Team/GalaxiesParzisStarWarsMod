@@ -23,6 +23,8 @@ import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 
+import java.util.Random;
+
 /**
  * Created by colby on 9/10/2017.
  */
@@ -38,6 +40,7 @@ public class StarWarsGalaxy
 
 	public static Minecraft mc;
 	public static EventHandler eventHandler;
+	public static Random random = new Random();
 
 	public static SimpleNetworkWrapper network;
 	private static int packetId = 0;

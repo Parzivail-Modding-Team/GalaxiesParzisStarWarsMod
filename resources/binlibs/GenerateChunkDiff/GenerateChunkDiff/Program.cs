@@ -39,14 +39,14 @@ namespace GenerateChunkDiff
             {
                 foreach (var chunk in manager)
                 {
-                    pbar.Tick();
-
                     if (chunk.X > chunkMaxX || 
                         chunk.X < chunkMinX || 
                         chunk.Z > chunkMaxZ || 
                         chunk.Z < chunkMinZ || 
                         !managerOriginal.ChunkExists(chunk.X, chunk.Z))
                         continue;
+
+                    pbar.Tick();
 
                     var pos = new ChunkPosition(chunk.X, chunk.Z);
                     var otherChunk = managerOriginal.GetChunk(chunk.X, chunk.Z);
@@ -109,9 +109,10 @@ namespace GenerateChunkDiff
                     // Write out each block's position and data
                     foreach (var block in pair.Value)
                     {
-                        f.Write(block.Key.X);
-                        f.Write(block.Key.Y);
-                        f.Write(block.Key.Z);
+                        var x = (byte)(block.Key.X - pair.Key.X * 16) & 0x0F;
+                        var z = (byte)(block.Key.Z - pair.Key.Z * 16) & 0x0F;
+                        f.Write((byte)((x << 4) | z));
+                        f.Write((byte)block.Key.Y);
                         f.Write(block.Value.Id);
                         f.Write((byte)block.Value.Flags);
                         if (block.Value.Flags.HasFlag(BlockDiff.BlockFlags.HasMetadata))

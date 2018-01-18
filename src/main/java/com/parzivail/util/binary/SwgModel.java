@@ -31,7 +31,7 @@ public class SwgModel
 	 */
 	public HashMap<String, Integer[]> partRenderLists;
 
-	public SwgModel(int version, String modelName, int flags, int animationLength, SwgTag[] tags, SwgPart[] parts)
+	private SwgModel(int version, String modelName, int flags, int animationLength, SwgTag[] tags, SwgPart[] parts)
 	{
 		this.version = version;
 		this.modelName = modelName;

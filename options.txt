@@ -27,7 +27,7 @@ snooperEnabled:true
 fullscreen:false
 enableVsync:false
 hideServerAddress:false
-advancedItemTooltips:false
+advancedItemTooltips:true
 pauseOnLostFocus:false
 showCape:true
 touchscreen:false
@@ -90,7 +90,7 @@ key_WorldEdit Reference:38
 key_key.journeymap.map_toggle:36
 key_key.journeymap.zoom_in:13
 key_key.journeymap.zoom_out:12
-key_key.journeymap.minimap_type:26
+key_key.journeymap.minimap_type:27
 key_key.journeymap.minimap_type:27
 key_key.journeymap.minimap_preset:43
 key_key.journeymap.create_waypoint:48

@@ -1,9 +1,14 @@
 package com.parzivail.swg.dimension.tatooine;
 
+import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.registry.StructureRegister;
+import com.parzivail.util.binary.ChunkDiff;
+import com.parzivail.util.common.Pair;
 import com.parzivail.util.world.CompositeTerrain;
 import com.parzivail.util.world.ITerrainHeightmap;
 import com.parzivail.util.world.MultiCompositeTerrain;
 import com.parzivail.util.world.TerrainLayer;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
@@ -14,6 +19,8 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -45,32 +52,59 @@ public class ChunkProviderTatooine implements IChunkProvider
 	public Chunk provideChunk(int cx, int cz)
 	{
 		Chunk chunk = new Chunk(this.worldObj, cx, cz);
+		long cPos = ChunkDiff.getChunkPos(cx, cz);
+		HashMap<Integer, ChunkDiff.BlockInfo> diffMap = StructureRegister.test.diffMap.get(cPos);
 		for (int x = 0; x < 16; x++)
 		{
 			for (int z = 0; z < 16; z++)
 			{
 				double height = terrain.getHeightAt((cx * 16 + x), (cz * 16 + z)) + 60;
 				int finalHeight = (int)height;
-				for (int y = 1; y <= finalHeight; y++)
+				for (int y = 1; y < 256; y++)
 				{
-					int l = y >> 4;
-					ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
-
-					if (extendedblockstorage == null)
+					int bPos = ChunkDiff.getBlockPos(x, y, z);
+					ChunkDiff.BlockInfo block = diffMap == null ? null : diffMap.get(bPos);
+					if (block != null)
 					{
-						extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
-						chunk.getBlockStorageArray()[l] = extendedblockstorage;
+						int l = y >> 4;
+						ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
+
+						if (extendedblockstorage == null)
+						{
+							extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
+							chunk.getBlockStorageArray()[l] = extendedblockstorage;
+						}
+
+						extendedblockstorage.func_150818_a(x, y & 15, z, Block.getBlockById(block.id));
+						extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
+
+						if (block.tileData != null)
+						{
+							StructureRegister.test.tileInfoCache.putIfAbsent(cPos, new ArrayList<>());
+							StructureRegister.test.tileInfoCache.get(cPos).add(new Pair<>(bPos, block.tileData));
+						}
 					}
+					else if (y <= finalHeight)
+					{
+						int l = y >> 4;
+						ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
 
-					double sandThreshold = height * 0.9;
-					double sandstoneThreshold = height * 0.6;
+						if (extendedblockstorage == null)
+						{
+							extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
+							chunk.getBlockStorageArray()[l] = extendedblockstorage;
+						}
 
-					if (y >= sandThreshold)
-						extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.sand);
-					else if (y >= sandstoneThreshold && y < sandThreshold)
-						extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.sandstone);
-					else
-						extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.stone);
+						double sandThreshold = height * 0.9;
+						double sandstoneThreshold = height * 0.6;
+
+						if (y >= sandThreshold)
+							extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.sand);
+						else if (y >= sandstoneThreshold && y < sandThreshold)
+							extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.sandstone);
+						else
+							extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.stone);
+					}
 				}
 			}
 		}
@@ -98,9 +132,12 @@ public class ChunkProviderTatooine implements IChunkProvider
 	/**
 	 * Populates chunk with ores etc etc
 	 */
-	public void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_)
+	public void populate(IChunkProvider chunk, int chunkX, int chunkZ)
 	{
-
+		int k = chunkX * 16;
+		int l = chunkZ * 16;
+		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(k + 16, l + 16);
+		biomegenbase.decorate(this.worldObj, StarWarsGalaxy.random, k, l);
 	}
 
 	/**
