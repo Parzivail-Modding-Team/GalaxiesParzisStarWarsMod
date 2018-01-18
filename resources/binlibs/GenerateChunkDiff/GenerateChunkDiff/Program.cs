@@ -58,16 +58,23 @@ namespace GenerateChunkDiff
                             for (var z = 0; z < 16; z++)
                             {
                                 var blockId = chunk.Blocks.GetID(x, y, z);
-                                var blockIdOriginal = otherChunk.Blocks.GetID(x, y, z);
-
-                                if (blockIdOriginal == blockId)
-                                    continue;
-
+                                var blockData = chunk.Blocks.GetData(x, y, z);
                                 NbtTree nbt = null;
                                 var te = chunk.Blocks.GetTileEntity(x, y, z);
                                 if (te != null)
                                     nbt = new NbtTree(te.Source, "tile");
-                                diff.Add(pos, new BlockPosition(x, y, z), new BlockDiff(blockId, chunk.Blocks.GetData(x, y, z), nbt));
+
+                                var blockIdOriginal = otherChunk.Blocks.GetID(x, y, z);
+                                var blockDataOriginal = otherChunk.Blocks.GetData(x, y, z);
+                                NbtTree nbtOriginal = null;
+                                var teOriginal = chunk.Blocks.GetTileEntity(x, y, z);
+                                if (teOriginal != null)
+                                    nbtOriginal = new NbtTree(teOriginal.Source, "tile");
+
+                                if (blockIdOriginal == blockId && blockDataOriginal == blockData && nbt == nbtOriginal)
+                                    continue;
+
+                                diff.Add(pos, new BlockPosition(x, y, z), new BlockDiff(blockId, blockData, nbt));
                             }
                         }
                     }
