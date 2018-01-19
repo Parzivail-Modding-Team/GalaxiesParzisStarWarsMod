@@ -2,7 +2,8 @@ package com.parzivail.swg.dimension.tatooine;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.registry.StructureRegister;
-import com.parzivail.util.binary.ChunkDiff;
+import com.parzivail.util.binary.Cdf.BlockInfo;
+import com.parzivail.util.binary.Cdf.ChunkDiff;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.world.CompositeTerrain;
 import com.parzivail.util.world.ITerrainHeightmap;
@@ -53,7 +54,7 @@ public class ChunkProviderTatooine implements IChunkProvider
 	{
 		Chunk chunk = new Chunk(this.worldObj, cx, cz);
 		long cPos = ChunkDiff.getChunkPos(cx, cz);
-		HashMap<Integer, ChunkDiff.BlockInfo> diffMap = StructureRegister.test.diffMap.get(cPos);
+		HashMap<Short, BlockInfo> diffMap = StructureRegister.test.diffMap.get(cPos);
 		for (int x = 0; x < 16; x++)
 		{
 			for (int z = 0; z < 16; z++)
@@ -62,8 +63,8 @@ public class ChunkProviderTatooine implements IChunkProvider
 				int finalHeight = (int)height;
 				for (int y = 1; y < 256; y++)
 				{
-					int bPos = ChunkDiff.getBlockPos(x, y, z);
-					ChunkDiff.BlockInfo block = diffMap == null ? null : diffMap.get(bPos);
+					short bPos = ChunkDiff.getBlockPos((byte)x, (byte)y, (byte)z);
+					BlockInfo block = diffMap == null ? null : diffMap.get(bPos);
 					if (block != null)
 					{
 						int l = y >> 4;

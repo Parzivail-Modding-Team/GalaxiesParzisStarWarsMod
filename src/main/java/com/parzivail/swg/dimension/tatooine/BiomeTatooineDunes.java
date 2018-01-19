@@ -1,7 +1,7 @@
 package com.parzivail.swg.dimension.tatooine;
 
 import com.parzivail.swg.registry.StructureRegister;
-import com.parzivail.util.binary.ChunkDiff;
+import com.parzivail.util.binary.Cdf.ChunkDiff;
 import com.parzivail.util.common.Pair;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -27,14 +27,11 @@ public class BiomeTatooineDunes extends BiomeGenBase
 	public void decorate(World world, Random rand, int worldX, int worldZ)
 	{
 		long cPos = ChunkDiff.getChunkPos(worldX >> 4, worldZ >> 4);
-		ArrayList<Pair<Integer, NBTTagCompound>> tileCache = StructureRegister.test.tileInfoCache.get(cPos);
+		ArrayList<Pair<Short, NBTTagCompound>> tileCache = StructureRegister.test.tileInfoCache.get(cPos);
 
 		if (tileCache != null)
-			for (Pair<Integer, NBTTagCompound> pair : tileCache)
+			for (Pair<Short, NBTTagCompound> pair : tileCache)
 			{
-				//			int x = (pair.left >> 16) & 0xFF;
-				//			int y = (pair.left >> 8) & 0xFF;
-				//			int z = pair.left & 0xFF;
 				TileEntity te = world.getTileEntity(pair.right.getInteger("x"), pair.right.getInteger("y"), pair.right.getInteger("z"));
 				if (te != null)
 					te.readFromNBT(pair.right);

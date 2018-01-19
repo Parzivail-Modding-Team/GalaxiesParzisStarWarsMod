@@ -1,4 +1,4 @@
-package com.parzivail.util.binary;
+package com.parzivail.util.binary.Swg3;
 
 import com.parzivail.swg.Resources;
 import net.minecraft.util.ResourceLocation;

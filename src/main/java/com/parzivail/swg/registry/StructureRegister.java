@@ -1,7 +1,7 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.util.binary.ChunkDiff;
+import com.parzivail.util.binary.Cdf.ChunkDiff;
 import net.minecraft.util.ResourceLocation;
 
 public class StructureRegister

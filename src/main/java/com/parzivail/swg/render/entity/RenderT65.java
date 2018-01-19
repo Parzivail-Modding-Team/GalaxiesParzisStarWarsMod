@@ -2,8 +2,8 @@ package com.parzivail.swg.render.entity;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.ship.BasicFlightModel;
-import com.parzivail.util.binary.SwgModel;
-import com.parzivail.util.binary.SwgPart;
+import com.parzivail.util.binary.Swg3.SwgModel;
+import com.parzivail.util.binary.Swg3.SwgPart;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.util.ResourceLocation;
 

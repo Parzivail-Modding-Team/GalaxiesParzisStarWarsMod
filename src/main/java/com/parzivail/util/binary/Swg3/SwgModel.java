@@ -1,6 +1,7 @@
-package com.parzivail.util.binary;
+package com.parzivail.util.binary.Swg3;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.parzivail.util.binary.PIO;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;

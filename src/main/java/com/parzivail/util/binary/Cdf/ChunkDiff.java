@@ -1,18 +1,15 @@
-package com.parzivail.util.binary;
+package com.parzivail.util.binary.Cdf;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.parzivail.util.binary.PIO;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
 import com.sun.media.sound.InvalidDataException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,10 +17,10 @@ import java.util.HashMap;
 public class ChunkDiff
 {
 	private final int version;
-	public final HashMap<Long, HashMap<Integer, BlockInfo>> diffMap;
-	public HashMap<Long, ArrayList<Pair<Integer, NBTTagCompound>>> tileInfoCache = new HashMap<>();
+	public final HashMap<Long, HashMap<Short, BlockInfo>> diffMap;
+	public HashMap<Long, ArrayList<Pair<Short, NBTTagCompound>>> tileInfoCache = new HashMap<>();
 
-	private ChunkDiff(int version, HashMap<Long, HashMap<Integer, BlockInfo>> diffMap)
+	private ChunkDiff(int version, HashMap<Long, HashMap<Short, BlockInfo>> diffMap)
 	{
 		this.version = version;
 		this.diffMap = diffMap;
@@ -46,7 +43,7 @@ public class ChunkDiff
 			int version = s.readInt();
 			int numChunks = s.readInt();
 
-			HashMap<Long, HashMap<Integer, BlockInfo>> diffMap = new HashMap<>();
+			HashMap<Long, HashMap<Short, BlockInfo>> diffMap = new HashMap<>();
 
 			for (int i = 0; i < numChunks; i++)
 			{
@@ -56,7 +53,7 @@ public class ChunkDiff
 
 				long pos = getChunkPos(chunkX, chunkZ);
 
-				HashMap<Integer, BlockInfo> blocks = new HashMap<>();
+				HashMap<Short, BlockInfo> blocks = new HashMap<>();
 
 				for (int j = 0; j < numBlocks; j++)
 				{
@@ -75,17 +72,8 @@ public class ChunkDiff
 					if ((flags & 0b10) == 0b10) // Has TileNBT
 					{
 						int len = s.readInt();
-
 						if (len >= 0)
-						{
-							byte[] bytesNbt = new byte[len];
-							int readNbt = s.read(bytesNbt);
-							if (readNbt != bytesNbt.length)
-								throw new InvalidDataException("Corrupt NBT tag present");
-							DataInputStream stream = new DataInputStream(new ByteArrayInputStream(bytesNbt));
-							tileTag = CompressedStreamTools.func_152456_a(stream, new NBTSizeTracker(2097152L));
-							stream.close();
-						}
+							tileTag = PIO.readUncompressedNbt(s, len);
 					}
 					blocks.put(getBlockPos(x, y, z), new BlockInfo(id, metadata, tileTag));
 				}
@@ -103,27 +91,31 @@ public class ChunkDiff
 		}
 	}
 
+	/**
+	 * Packs a chunk X and Z (in chunk coordinates) Int32s into an Int64
+	 *
+	 * @param x Chunk X position
+	 * @param z Chunk Z position
+	 * @return Packed long
+	 */
 	public static long getChunkPos(int x, int z)
 	{
 		return (((long)x) << 32) | (z & 0xffffffffL);
 	}
 
-	public static int getBlockPos(int x, int y, int z)
+	/**
+	 * Packs a Y, chunk-local X and chunk-local Z bytes into a Int16
+	 *
+	 * @param x 0<=x<16 local position
+	 * @param y 0<=y<256 local position
+	 * @param z 0<=z<16 local position
+	 * @return Packed short
+	 */
+	public static short getBlockPos(byte x, byte y, byte z)
 	{
-		return (z & 0xFF) | ((y & 0xFF) << 8) | ((x & 0xFF) << 16);
+		if (x >= 16 || z >= 16)
+			Lumberjack.err("X and Z must satisfy 0<=n<16");
+		return (short)((x & 0x0F) | ((z & 0x0F) << 4) | ((y & 0xFF) << 8));
 	}
 
-	public static class BlockInfo
-	{
-		public final int id;
-		public final int metadata;
-		public final NBTTagCompound tileData;
-
-		public BlockInfo(int id, int metadata, NBTTagCompound tileData)
-		{
-			this.id = id;
-			this.metadata = metadata;
-			this.tileData = tileData;
-		}
-	}
 }

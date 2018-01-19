@@ -1,4 +1,4 @@
-package com.parzivail.util.binary;
+package com.parzivail.util.binary.Swg3;
 
 import org.lwjgl.util.vector.Vector3f;
 

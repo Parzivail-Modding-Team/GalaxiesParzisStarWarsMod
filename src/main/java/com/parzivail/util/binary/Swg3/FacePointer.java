@@ -1,4 +1,4 @@
-package com.parzivail.util.binary;
+package com.parzivail.util.binary.Swg3;
 
 /**
  * Created by colby on 12/25/2017.
