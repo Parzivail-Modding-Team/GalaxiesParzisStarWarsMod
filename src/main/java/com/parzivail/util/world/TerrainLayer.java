@@ -173,6 +173,43 @@ public class TerrainLayer
 
 				iklump *= range;
 				return iklump;
+			case HiLoPass:
+				raw = (raw + 1) / 2;
+				double hlp = Math.pow(raw, Math.sin(Math.PI * raw));
+
+				if (hlp < 0)
+					hlp = 0;
+				if (hlp > 1)
+					hlp = 1;
+
+				hlp *= range;
+				return hlp;
+			case InvHiLoPass:
+				raw = (raw + 1) / 2;
+				double ihlp = Math.pow(raw, Math.sin(Math.PI * raw));
+
+				if (ihlp < 0)
+					ihlp = 0;
+				if (ihlp > 1)
+					ihlp = 1;
+
+				ihlp = 1 - ihlp;
+
+				ihlp *= range;
+				return ihlp;
+			case MidWave:
+				raw = (raw + 1) / 2;
+				double midwave = raw + (Math.sin(raw * Math.PI * 2) + 1) / 2 - 0.5;
+
+				if (midwave < 0)
+					midwave = 0;
+				if (midwave > 1)
+					midwave = 1;
+
+				midwave *= range;
+				return midwave;
+			case Constant:
+				return range;
 			default:
 				return 0;
 		}
@@ -185,6 +222,6 @@ public class TerrainLayer
 
 	public enum Function
 	{
-		Simplex, Turbulent, InvTurbulent, NCTurbulent, InvNCTurbulent, Midpoint, InvMidpoint, FilmMelt, Warble, InvWarble, Klump, InvKlump
+		Simplex, Turbulent, InvTurbulent, NCTurbulent, InvNCTurbulent, Midpoint, InvMidpoint, FilmMelt, Warble, InvWarble, Klump, InvKlump, HiLoPass, InvHiLoPass, MidWave, Constant
 	}
 }

@@ -19,7 +19,7 @@ public class BiomeTatooineDunes extends BiomeGenBase
 	public BiomeTatooineDunes(int biomeId)
 	{
 		super(biomeId);
-		this.setBiomeName("Tatooine Dunes");
+		this.setBiomeName("Tatooine");
 		this.spawnableCreatureList.clear();
 	}
 

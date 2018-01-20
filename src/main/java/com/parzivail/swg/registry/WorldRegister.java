@@ -1,6 +1,8 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.dimension.naboo.BiomeNaboo;
+import com.parzivail.swg.dimension.naboo.WorldProviderNaboo;
 import com.parzivail.swg.dimension.tatooine.BiomeTatooineDunes;
 import com.parzivail.swg.dimension.tatooine.WorldProviderTatooine;
 import com.parzivail.util.world.WorldUtils;
@@ -12,12 +14,17 @@ import net.minecraftforge.common.BiomeManager;
 public class WorldRegister
 {
 	public static BiomeTatooineDunes biomeTatooineDunes;
+	public static BiomeNaboo biomeNaboo;
 
 	public static void register()
 	{
 		biomeTatooineDunes = new BiomeTatooineDunes(Resources.biomeIdTatooineDunes);
 		BiomeManager.removeSpawnBiome(biomeTatooineDunes);
 
+		biomeNaboo = new BiomeNaboo(Resources.biomeIdNaboo);
+		BiomeManager.removeSpawnBiome(biomeNaboo);
+
 		WorldUtils.registerDimension(Resources.dimIdTatooine, WorldProviderTatooine.class);
+		WorldUtils.registerDimension(Resources.dimIdNaboo, WorldProviderNaboo.class);
 	}
 }

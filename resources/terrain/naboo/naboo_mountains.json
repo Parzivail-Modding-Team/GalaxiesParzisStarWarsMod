@@ -1,0 +1,33 @@
+{
+  "TerrainData": [
+    {
+      "Method": 0,
+      "Function": 14,
+      "Scale": 100.0,
+      "Range": 70.0
+    },
+    {
+      "Method": 2,
+      "Function": 1,
+      "Scale": 200.0,
+      "Range": 1.0
+    },
+    {
+      "Method": 0,
+      "Function": 10,
+      "Scale": 50.0,
+      "Range": 20.0
+    },
+    {
+      "Method": 0,
+      "Function": 15,
+      "Scale": 200.0,
+      "Range": 30.0
+    }
+  ],
+  "WaterLevel": 36,
+  "TreesPerChunk": 0,
+  "TreesBelowWaterLevel": false,
+  "ThLayer1": 0.6,
+  "ThLayer2": 0.6
+}
