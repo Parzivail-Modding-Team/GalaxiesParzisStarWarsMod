@@ -3,10 +3,11 @@ package com.parzivail.swg.dimension.tatooine;
 import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.binary.Cdf.ChunkDiff;
 import com.parzivail.util.common.Pair;
+import com.parzivail.util.world.PBiomeGenBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.IChunkProvider;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -14,7 +15,7 @@ import java.util.Random;
 /**
  * Created by colby on 9/13/2017.
  */
-public class BiomeTatooineDunes extends BiomeGenBase
+public class BiomeTatooineDunes extends PBiomeGenBase
 {
 	public BiomeTatooineDunes(int biomeId)
 	{
@@ -24,7 +25,7 @@ public class BiomeTatooineDunes extends BiomeGenBase
 	}
 
 	@Override
-	public void decorate(World world, Random rand, int worldX, int worldZ)
+	public void decorate(IChunkProvider provider, World world, Random rand, int worldX, int worldZ)
 	{
 		long cPos = ChunkDiff.getChunkPos(worldX >> 4, worldZ >> 4);
 		ArrayList<Pair<Short, NBTTagCompound>> tileCache = StructureRegister.test.tileInfoCache.get(cPos);

@@ -5,10 +5,7 @@ import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.binary.Cdf.BlockInfo;
 import com.parzivail.util.binary.Cdf.ChunkDiff;
 import com.parzivail.util.common.Pair;
-import com.parzivail.util.world.CompositeTerrain;
-import com.parzivail.util.world.ITerrainHeightmap;
-import com.parzivail.util.world.MultiCompositeTerrain;
-import com.parzivail.util.world.TerrainLayer;
+import com.parzivail.util.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -137,8 +134,11 @@ public class ChunkProviderTatooine implements IChunkProvider
 	{
 		int k = chunkX * 16;
 		int l = chunkZ * 16;
-		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(k + 16, l + 16);
-		biomegenbase.decorate(this.worldObj, StarWarsGalaxy.random, k, l);
+		BiomeGenBase b = this.worldObj.getBiomeGenForCoords(k + 16, l + 16);
+		if (!(b instanceof PBiomeGenBase))
+			return;
+		PBiomeGenBase biomegenbase = (PBiomeGenBase)b;
+		biomegenbase.decorate(this, this.worldObj, StarWarsGalaxy.random, k, l);
 	}
 
 	/**
