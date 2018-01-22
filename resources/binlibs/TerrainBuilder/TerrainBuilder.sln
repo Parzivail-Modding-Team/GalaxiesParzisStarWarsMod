@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TerrainBuilder", "TerrainBuilder\TerrainBuilder.csproj", "{0CCAE42C-0EB0-4072-942F-978D7CE83BB5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PFX", "PFX\PFX.csproj", "{4ECCD5A4-2F81-4693-BCAB-2306BB96A1DA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +17,15 @@ Global
 		{0CCAE42C-0EB0-4072-942F-978D7CE83BB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0CCAE42C-0EB0-4072-942F-978D7CE83BB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0CCAE42C-0EB0-4072-942F-978D7CE83BB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ECCD5A4-2F81-4693-BCAB-2306BB96A1DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ECCD5A4-2F81-4693-BCAB-2306BB96A1DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ECCD5A4-2F81-4693-BCAB-2306BB96A1DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ECCD5A4-2F81-4693-BCAB-2306BB96A1DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {18C56FE5-97E1-4BE4-BB57-9120559BA071}
 	EndGlobalSection
 EndGlobal

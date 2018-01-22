@@ -3,11 +3,15 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using MoonSharp.Interpreter;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using PFX;
+using PFX.BmFont;
 
 namespace TerrainBuilder
 {
@@ -17,19 +21,22 @@ namespace TerrainBuilder
         private double _angle = 45;
         private double _angleY = 160;
         private bool _shouldDie;
-        private TerrainLayerList terrainLayerList;
-        private OpenSimplexNoise caveNoise = new OpenSimplexNoise(0);
-        private HaltonSequence halton = new HaltonSequence();
+        private readonly TerrainLayerList _terrainLayerList;
+        private readonly HaltonSequence _halton = new HaltonSequence();
 
-        public static Vector3 UpVector = new Vector3(0, 1, 0);
-        public static Vector3 PosXVector = new Vector3(1, 0, 0);
-        public static Vector3 NegXVector = new Vector3(-1, 0, 0);
-        public static Vector3 PosZVector = new Vector3(0, 0, 1);
-        public static Vector3 NegZVector = new Vector3(0, 0, -1);
+        private static int _stringHash;
+        private string _scriptToLoad;
+        private FileSystemWatcher _watcher;
 
-        public static int LIST_TERRAIN = 1;
-        public static int LIST_DECOR = 3;
-        public static int LIST_BLOCK = 4;
+        public static Vector3 UpVector = Vector3.UnitY;
+        public static Vector3 PosXVector = Vector3.UnitX;
+        public static Vector3 NegXVector = -PosXVector;
+        public static Vector3 PosZVector = Vector3.UnitZ;
+        public static Vector3 NegZVector = -PosZVector;
+
+        public static int ListTerrain = 1;
+        public static int ListDecor = 3;
+        public static int ListBlock = 4;
 
         public static double[,] Heightmap;
 
@@ -60,8 +67,8 @@ namespace TerrainBuilder
 
             MouseWheel += WindowVisualize_MouseWheel;
 
-            terrainLayerList = new TerrainLayerList(this);
-            terrainLayerList.Show();
+            _terrainLayerList = new TerrainLayerList(this);
+            _terrainLayerList.Show();
             Title = "TerrainViewer | Unsaved File";
         }
 
@@ -69,10 +76,9 @@ namespace TerrainBuilder
 
         public int SideLength
         {
-            get { return _sideLength; }
-            set { _sideLength = (int) (value/2f); }
+            get => _sideLength;
+            set => _sideLength = (int) (value / 2f);
         }
-        public int WaterLevel { get; set; } = 0;
 
         private void WindowVisualize_MouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -87,13 +93,13 @@ namespace TerrainBuilder
         private void CloseHandler(object sender, CancelEventArgs e)
         {
             if (!_shouldDie)
-                terrainLayerList?.Close();
+                _terrainLayerList?.Close();
         }
 
         private void LoadHandler(object sender, EventArgs e)
         {
-            float[] mat_diffuse = { 1.0f, 1.0f, 1.0f };
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.AmbientAndDiffuse, mat_diffuse);
+            float[] matDiffuse = { 1.0f, 1.0f, 1.0f };
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.AmbientAndDiffuse, matDiffuse);
             GL.Light(LightName.Light0, LightParameter.Position, new[] { 0.0f, 0.0f, 0.0f, 1.0f });
             GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { 0.75f, 0.75f, 0.75f, 0.75f });
 
@@ -102,7 +108,7 @@ namespace TerrainBuilder
             GL.Enable(EnableCap.ColorMaterial);
             GL.Enable(EnableCap.DepthTest);
 
-            GL.NewList(LIST_BLOCK, ListMode.Compile);
+            GL.NewList(ListBlock, ListMode.Compile);
             var v = new float[8, 3];
             int i;
 
@@ -128,6 +134,91 @@ namespace TerrainBuilder
             ReRender();
         }
 
+        public void WatchTerrainScript(string filename)
+        {
+            filename = Path.GetFullPath(filename);
+            // Create a new FileSystemWatcher and set its properties.
+            _watcher?.Dispose();
+            _watcher = new FileSystemWatcher
+            {
+                Path = Path.GetDirectoryName(filename),
+                NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.DirectoryName,
+                Filter = Path.GetFileName(filename)
+            };
+
+            // Add event handlers.
+            _watcher.Changed += OnChanged;
+            _watcher.Deleted += OnDeleted;
+            _watcher.Renamed += OnRenamed;
+
+            // Begin watching.
+            _watcher.EnableRaisingEvents = true;
+            LoadScript(filename);
+        }
+
+        private void OnRenamed(object sender, RenamedEventArgs e)
+        {
+        }
+
+        private void OnDeleted(object sender, FileSystemEventArgs e)
+        {
+        }
+
+        private void OnChanged(object sender, FileSystemEventArgs e)
+        {
+            _scriptToLoad = e.FullPath;
+        }
+
+        private void LoadScript(string filename)
+        {
+            var fs = WaitForFile(filename, FileMode.Open, FileAccess.Read, FileShare.Read);
+            if (fs == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Failed to gain exclusive lock to read script!");
+                Console.ResetColor();
+                return;
+            }
+
+            string scriptCode;
+            using (var reader = new StreamReader(fs))
+                scriptCode = reader.ReadToEnd();
+
+            if (scriptCode.GetHashCode() == _stringHash)
+                return;
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"Reloaded {filename}");
+            Console.ResetColor();
+
+            _stringHash = scriptCode.GetHashCode();
+            var script = new Script { Options = { DebugPrint = Console.WriteLine } };
+
+            _terrainLayerList.ScriptedTerrainGenerator.LoadScript(script, scriptCode);
+            _terrainLayerList.ReRenderNoiseImage();
+            ReRender();
+        }
+
+        static FileStream WaitForFile(string fullPath, FileMode mode, FileAccess access, FileShare share)
+        {
+            for (var numTries = 0; numTries < 10; numTries++)
+            {
+                FileStream fs = null;
+                try
+                {
+                    fs = new FileStream(fullPath, mode, access, share);
+                    return fs;
+                }
+                catch (IOException)
+                {
+                    fs?.Dispose();
+                    Thread.Sleep(50);
+                }
+            }
+
+            return null;
+        }
+
         private void ResizeHandler(object sender, EventArgs e)
         {
             GL.Viewport(ClientRectangle);
@@ -142,18 +233,24 @@ namespace TerrainBuilder
         {
             if (_shouldDie)
                 Exit();
+
+            if (_scriptToLoad != null)
+            {
+                LoadScript(_scriptToLoad);
+                _scriptToLoad = null;
+            }
         }
 
         public void ReRender()
         {
-            if (terrainLayerList == null)
+            if (_terrainLayerList == null)
                 return;
 
-            if (terrainLayerList.rbHeightmap.Checked)
+            if (_terrainLayerList.rbHeightmap.Checked)
             {
                 RenderHeightmap();
             }
-            else if (terrainLayerList.rbInterior.Checked)
+            else if (_terrainLayerList.rbInterior.Checked)
             {
                 RenderInterior();
             }
@@ -161,7 +258,7 @@ namespace TerrainBuilder
 
         private void RenderInterior()
         {
-            GL.NewList(LIST_TERRAIN, ListMode.Compile);
+            GL.NewList(ListTerrain, ListMode.Compile);
             GL.Translate(-8, -30, -8);
             for (var x = 0; x < 16; x++)
                 for (var z = 0; z < 16; z++)
@@ -171,15 +268,13 @@ namespace TerrainBuilder
                     var finalHeight = (int)height;
                     for (var y = 1; y <= finalHeight; y++)
                     {
-                        //if (caveNoise.eval(x / (double)terrainLayerList.nudCaveScale.Value, y / (double)terrainLayerList.nudCaveScale.Value, z / (double)terrainLayerList.nudCaveScale.Value) > (double)terrainLayerList.nudCaveThreshold.Value)
-                        //    continue;
-                        var thLayer2 = height * (float)terrainLayerList.nudLayer1.Value;
-                        var thLayer3 = height * (float)terrainLayerList.nudLayer2.Value;
+                        var thLayer2 = height * _terrainLayerList.ScriptedTerrainGenerator.ThLayer1;
+                        var thLayer3 = height * _terrainLayerList.ScriptedTerrainGenerator.ThLayer2;
 
                         if (y >= thLayer2)
                             RenderBlock(x, y, z, BlockLayer.Layer2);
                         else if (y >= thLayer3 && y < thLayer2)
-                           RenderBlock(x, y, z, BlockLayer.Layer1);
+                            RenderBlock(x, y, z, BlockLayer.Layer1);
                         else
                             RenderBlock(x, y, z, BlockLayer.Layer0);
                     }
@@ -212,22 +307,9 @@ namespace TerrainBuilder
             GL.PopMatrix();
         }
 
-        private void Blur(ref double[,] target, int w, int h, int r)
-        {
-            for (var x = 0; x < w; x++)
-            for (var y = 0; y < h; y++)
-            {
-                double total = 0;
-                for (var rx = -r / 2; rx < r / 2; rx++)
-                for (var ry = -r / 2; ry < r / 2; ry++)
-                    total += GetValueAt(x + rx, y + ry);
-                target[x, y] = Floor(total / (r * r));
-            }
-        }
-
         private void RenderHeightmap()
         {
-            GL.NewList(LIST_TERRAIN, ListMode.Compile);
+            GL.NewList(ListTerrain, ListMode.Compile);
 
             Heightmap = new double[2 * SideLength + 2, 2 * SideLength + 2];
             var colorMinY = double.MaxValue;
@@ -259,7 +341,7 @@ namespace TerrainBuilder
                     var colorMult = (valueA.Y - colorMinY) / colorRangeY;
                     GL.Color3(colorR, colorG / 255f + (255 - colorG) * colorMult / 255, colorB / 255f + (255 - colorB) * colorMult / 255);
 
-                    if (!terrainLayerList.cbBlockApproximation.Checked)
+                    if (!_terrainLayerList.cbBlockApproximation.Checked)
                     {
                         var minY = Min(Heightmap[nx + 1, nz], Heightmap[nx, nz], Heightmap[nx - 1, nz], Heightmap[nx + 1, nz + 1], Heightmap[nx - 1, nz + 1], Heightmap[nx + 1, nz - 1], Heightmap[nx, nz - 1], Heightmap[nx - 1, nz - 1]);
 
@@ -308,97 +390,7 @@ namespace TerrainBuilder
 
             GL.EndList();
 
-            //if (terrainLayerList.cbRelaxedFeatures.Checked)
-            //    RenderRelaxedHeightmap();
-
             ReDecorate(Heightmap);
-        }
-
-        private void RenderRelaxedHeightmap()
-        {
-            GL.NewList(LIST_TERRAIN + 1, ListMode.Compile);
-
-            var target = new double[2 * SideLength + 2, 2 * SideLength + 2];
-            Blur(ref target, 2 * SideLength + 2, 2 * SideLength + 2, 10);
-
-            var colorMinY = double.MaxValue;
-            var colorMaxY = double.MinValue;
-            for (var x = 0; x < 2 * SideLength + 2; x++)
-                for (var z = 0; z < 2 * SideLength + 2; z++)
-                {
-                    colorMaxY = Math.Max(target[x, z], colorMaxY);
-                    colorMinY = Math.Min(target[x, z], colorMinY);
-                }
-            var colorRangeY = colorMaxY - colorMinY;
-
-            const int colorR = 0;
-            const int colorG = 18;
-            const int colorB = 137;
-            GL.Begin(PrimitiveType.Quads);
-
-            for (var x = -SideLength; x < SideLength; x++)
-                for (var z = -SideLength; z < SideLength; z++)
-                {
-                    var nx = x + SideLength + 1;
-                    var nz = z + SideLength + 1;
-                    var valueA = new Vector3d(x, target[nx, nz], z);
-                    var valueB = new Vector3d(x - 1, target[nx - 1, nz], z);
-                    var valueC = new Vector3d(x, target[nx, nz - 1], z - 1);
-                    var valueD = new Vector3d(x - 1, target[nx - 1, nz - 1], z - 1);
-
-                    var colorMult = (valueA.Y - colorMinY) / colorRangeY;
-                    GL.Color3(colorR, colorG / 255f + (255 - colorG) * colorMult / 255, colorB / 255f + (255 - colorB) * colorMult / 255);
-
-                    if (!terrainLayerList.cbBlockApproximation.Checked)
-                    {
-                        var minY = Min(target[nx + 1, nz], target[nx, nz], target[nx - 1, nz], target[nx + 1, nz + 1], target[nx - 1, nz + 1], target[nx + 1, nz - 1], target[nx, nz - 1], target[nx - 1, nz - 1]);
-
-                        GL.Normal3(UpVector);
-                        GL.Vertex3(x, valueA.Y, z);
-                        GL.Vertex3(x - 1, valueA.Y, z);
-                        GL.Vertex3(x - 1, valueA.Y, z - 1);
-                        GL.Vertex3(x, valueA.Y, z - 1);
-
-                        GL.Normal3(PosZVector);
-                        GL.Vertex3(x, valueA.Y, z);
-                        GL.Vertex3(x, minY, z);
-                        GL.Vertex3(x - 1, minY, z);
-                        GL.Vertex3(x - 1, valueA.Y, z);
-
-                        GL.Normal3(NegZVector);
-                        GL.Vertex3(x, valueA.Y, z - 1);
-                        GL.Vertex3(x, minY, z - 1);
-                        GL.Vertex3(x - 1, minY, z - 1);
-                        GL.Vertex3(x - 1, valueA.Y, z - 1);
-
-                        GL.Normal3(PosXVector);
-                        GL.Vertex3(x, valueA.Y, z);
-                        GL.Vertex3(x, minY, z);
-                        GL.Vertex3(x, minY, z - 1);
-                        GL.Vertex3(x, valueA.Y, z - 1);
-
-                        GL.Normal3(NegXVector);
-                        GL.Vertex3(x - 1, valueA.Y, z);
-                        GL.Vertex3(x - 1, minY, z);
-                        GL.Vertex3(x - 1, minY, z - 1);
-                        GL.Vertex3(x - 1, valueA.Y, z - 1);
-                    }
-                    else
-                    {
-                        var dirA = Vector3d.Cross(valueB - valueA, valueC - valueA);
-                        var normA = Vector3d.Normalize(dirA);
-                        GL.Normal3(-normA);
-                        GL.Vertex3(valueA);
-                        GL.Vertex3(valueB);
-                        GL.Vertex3(valueD);
-                        GL.Vertex3(valueC);
-                    }
-                }
-            GL.End();
-
-            GL.EndList();
-
-            ReDecorate(target);
         }
 
         private double Min(params double[] values)
@@ -410,9 +402,9 @@ namespace TerrainBuilder
         {
             if (heightmap == null)
                 heightmap = Heightmap;
-            GL.NewList(LIST_DECOR, ListMode.Compile);
+            GL.NewList(ListDecor, ListMode.Compile);
 
-            halton.Reset();
+            _halton.Reset();
             GL.Color3(137 / 255f, 18 / 255f, 0);
             for (var x = -(float)(SideLength) / 16; x < (float)(SideLength) / 16; x++)
                 for (var z = -(float)(SideLength) / 16; z < (float)(SideLength) / 16; z++)
@@ -425,21 +417,21 @@ namespace TerrainBuilder
 
         private double Floor(double getValueAt)
         {
-            return terrainLayerList.cbBlockRounding.Checked ? (int)getValueAt : getValueAt;
+            return _terrainLayerList.cbBlockRounding.Checked ? (int)getValueAt : getValueAt;
         }
 
         private void PopulateChunk(float x, float z, double[,] heightmap)
         {
             var nx = x * 16 + SideLength + 1;
             var nz = z * 16 + SideLength + 1;
-            for (var i = 0; i < terrainLayerList.nudTreesPerChunk.Value; i++)
+            for (var i = 0; i < _terrainLayerList.ScriptedTerrainGenerator.TreesPerChunk; i++)
             {
-                halton.Increment();
-                var pos = halton.MCurrentPos;
+                _halton.Increment();
+                var pos = _halton.MCurrentPos;
                 pos *= 16;
                 pos += new Vector3(nx, 0, nz);
-                var val = heightmap[(int) pos.X, (int) pos.Z];
-                if (val < WaterLevel && !terrainLayerList.cbSubmarineTrees.Checked) continue;
+                var val = heightmap[(int)pos.X, (int)pos.Z];
+                if (val <= _terrainLayerList.ScriptedTerrainGenerator.WaterLevel && !_terrainLayerList.ScriptedTerrainGenerator.TreesBelowWaterLevel) continue;
                 GL.PushMatrix();
                 GL.Translate((int)pos.X - SideLength - 1.5, val + 0.5, (int)pos.Z - SideLength - 1.5);
                 DrawBox(1);
@@ -475,58 +467,40 @@ namespace TerrainBuilder
             GL.Rotate(_angleY, 1.0f, 0.0f, 0.0f);
             GL.Rotate(_angle, 0.0f, 1.0f, 0.0f);
 
-            GL.PolygonMode(MaterialFace.FrontAndBack, terrainLayerList.cbWireframe.Checked ? PolygonMode.Line : PolygonMode.Fill);
+            GL.PolygonMode(MaterialFace.FrontAndBack, _terrainLayerList.cbWireframe.Checked ? PolygonMode.Line : PolygonMode.Fill);
 
-            GL.CallList(LIST_TERRAIN);
-            GL.CallList(LIST_TERRAIN + 1);
+            GL.CallList(ListTerrain);
+            GL.CallList(ListTerrain + 1);
 
-            if (terrainLayerList.rbHeightmap.Checked)
+            if (_terrainLayerList.rbHeightmap.Checked)
             {
-                GL.CallList(LIST_DECOR);
+                GL.CallList(ListDecor);
 
-                GL.Color3(0, 70/255f, 200/255f);
+                GL.Color3(0, 70 / 255f, 200 / 255f);
 
                 GL.Begin(PrimitiveType.TriangleStrip);
                 GL.Normal3(UpVector);
-                GL.Vertex3(-SideLength, WaterLevel - 0.1, -SideLength);
-                GL.Vertex3(SideLength, WaterLevel - 0.1, -SideLength);
-                GL.Vertex3(-SideLength, WaterLevel - 0.1, SideLength);
+                GL.Vertex3(-SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, -SideLength);
+                GL.Vertex3(SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, -SideLength);
+                GL.Vertex3(-SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
 
-                GL.Vertex3(SideLength, WaterLevel - 0.1, -SideLength);
-                GL.Vertex3(-SideLength, WaterLevel - 0.1, SideLength);
-                GL.Vertex3(SideLength, WaterLevel - 0.1, SideLength);
+                GL.Vertex3(SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, -SideLength);
+                GL.Vertex3(-SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
+                GL.Vertex3(SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
                 GL.End();
             }
 
             SwapBuffers();
         }
 
-        private double GetValueAt(int x, int z)
+        public double GetValueAt(int x, int z)
         {
-            var value = 0d;
-            foreach (var terrainLayer in terrainLayerList.Layers)
-            {
-                var tval = terrainLayer.GetValue(x, z);
-                switch (terrainLayer.Method)
-                {
-                    case Method.Add:
-                        value += tval;
-                        break;
-                    case Method.Subtract:
-                        value -= tval;
-                        break;
-                    case Method.Multiply:
-                        value *= tval;
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
+            var value = _terrainLayerList.ScriptedTerrainGenerator.GetValue(x, z);
 
-            if (value < -60)
-                value = -60;
-            if (value > 195)
-                value = 195;
+            if (value < 0)
+                value = 0;
+            if (value > 255)
+                value = 255;
 
             return value;
         }
@@ -535,7 +509,7 @@ namespace TerrainBuilder
         {
             GL.PushMatrix();
             GL.Scale(size, size, size);
-            GL.CallList(LIST_BLOCK);
+            GL.CallList(ListBlock);
             GL.PopMatrix();
         }
 

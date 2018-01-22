@@ -8,7 +8,6 @@ namespace TerrainBuilder
 {
     class TerrainStore
     {
-        public List<TerrainLayer> TerrainData { get; set; }
         public int WaterLevel { get; set; }
         public int TreesPerChunk { get; set; }
         public bool TreesBelowWaterLevel { get; set; }

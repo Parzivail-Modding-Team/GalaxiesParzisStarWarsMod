@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using MoonSharp.Interpreter;
 
 namespace TerrainBuilder
 {
@@ -14,7 +17,7 @@ namespace TerrainBuilder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            new WindowVisualize().Run(30);
+            new WindowVisualize().Run(60, 30);
         }
     }
 }
