@@ -4,12 +4,12 @@ namespace TerrainBuilder
 {
     public class HaltonSequence
     {
-        public Vector3 MCurrentPos = new Vector3(0.0f, 0.0f, 0.0f);
-        long _mBase2;
-        long _mBase3;
-        long _mBase5;
+        private Vector3 _currentPos = new Vector3(0.0f, 0.0f, 0.0f);
+        private long _mBase2;
+        private long _mBase3;
+        private long _mBase5;
 
-        public long Increment()
+        public Vector3 Increment()
         {
             const float fOneOver3 = 1.0f / 3.0f;
             const float fOneOver5 = 1.0f / 5.0f;
@@ -23,9 +23,9 @@ namespace TerrainBuilder
             do
             {
                 if ((oldBase2 & 1) == 1)
-                    MCurrentPos.X -= s;
+                    _currentPos.X -= s;
                 else
-                    MCurrentPos.X += s;
+                    _currentPos.X += s;
 
                 s *= 0.5f;
 
@@ -45,7 +45,7 @@ namespace TerrainBuilder
                 if ((_mBase3 & bitmask) == bitmask)
                 {
                     _mBase3 += bitadd;
-                    MCurrentPos.Y -= 2 * s;
+                    _currentPos.Y -= 2 * s;
 
                     bitmask = bitmask << 2;
                     bitadd = bitadd << 2;
@@ -54,7 +54,7 @@ namespace TerrainBuilder
                 }
                 else
                 {
-                    MCurrentPos.Y += s;
+                    _currentPos.Y += s;
                     break;
                 }
             }
@@ -71,7 +71,7 @@ namespace TerrainBuilder
                 if ((_mBase5 & bitmask) == dmax)
                 {
                     _mBase5 += bitadd;
-                    MCurrentPos.Z -= 4 * s;
+                    _currentPos.Z -= 4 * s;
 
                     bitmask = bitmask << 3;
                     dmax = dmax << 3;
@@ -81,19 +81,19 @@ namespace TerrainBuilder
                 }
                 else
                 {
-                    MCurrentPos.Z += s;
+                    _currentPos.Z += s;
                     break;
                 }
             }
 
-            return _mBase2;
+            return _currentPos;
         }
 
         public void Reset()
         {
-            MCurrentPos.X = 0.0f;
-            MCurrentPos.Y = 0.0f;
-            MCurrentPos.Z = 0.0f;
+            _currentPos.X = 0.0f;
+            _currentPos.Y = 0.0f;
+            _currentPos.Z = 0.0f;
             _mBase2 = 0;
             _mBase3 = 0;
             _mBase5 = 0;

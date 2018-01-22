@@ -32,6 +32,7 @@ namespace TerrainBuilder
         public void LoadScript(Script script, string scriptCode)
         {
             script.Globals["noise"] = (Func<double, double, double>)GetNoise;
+            script.Globals["rawnoise"] = (Func<double, double, double>)GetRawNoise;
 
             try
             {
@@ -77,6 +78,11 @@ namespace TerrainBuilder
         private double GetNoise(double x, double z)
         {
             return (_noise.eval(x, z) + 1) / 2;
+        }
+
+        private double GetRawNoise(double x, double z)
+        {
+            return _noise.eval(x, z);
         }
 
         public void SetSeed(long nudSeedValue)

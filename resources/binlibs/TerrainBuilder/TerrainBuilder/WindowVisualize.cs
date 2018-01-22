@@ -426,8 +426,7 @@ namespace TerrainBuilder
             var nz = z * 16 + SideLength + 1;
             for (var i = 0; i < _terrainLayerList.ScriptedTerrainGenerator.TreesPerChunk; i++)
             {
-                _halton.Increment();
-                var pos = _halton.MCurrentPos;
+                var pos = _halton.Increment();
                 pos *= 16;
                 pos += new Vector3(nx, 0, nz);
                 var val = heightmap[(int)pos.X, (int)pos.Z];
