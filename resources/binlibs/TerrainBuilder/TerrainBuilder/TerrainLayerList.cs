@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json;
 
 namespace TerrainBuilder
 {
@@ -25,7 +19,7 @@ namespace TerrainBuilder
         {
             _parent = parent;
             InitializeComponent();
-
+            
             nudSeed.Minimum = 0;
             nudSeed.Maximum = int.MaxValue;
             nudSeed.Value = _random.Next();
@@ -37,9 +31,6 @@ namespace TerrainBuilder
         private void bRandomize_Click(object sender, EventArgs e)
         {
             nudSeed.Value = _random.Next();
-            ScriptedTerrainGenerator.SetSeed((long)nudSeed.Value);
-            _parent.ReRender();
-            ReRenderNoiseImage();
         }
 
         private void TerrainLayerList_FormClosing(object sender, FormClosingEventArgs e)
@@ -53,21 +44,17 @@ namespace TerrainBuilder
             _parent.ReRender();
         }
 
-        private void bSave_Click(object sender, EventArgs e)
-        {
-            var sfd = new SaveFileDialog {Filter = "Java Files|*.java"};
-
-            if (sfd.ShowDialog() != DialogResult.Cancel)
-            {
-                Exporter.Export(this, sfd.FileName);
-            }
-        }
-
         private void nudSeed_ValueChanged(object sender, EventArgs e)
         {
+            if (_parent.IsRendering())
+            {
+                Lumberjack.Warn("Seed change request denied, render thread busy");
+                return;
+            }
+
             ScriptedTerrainGenerator.SetSeed((long)nudSeed.Value);
-            _parent.ReRender();
             ReRenderNoiseImage();
+            _parent.ReRender();
         }
 
         public void ReRenderNoiseImage()
@@ -87,44 +74,6 @@ namespace TerrainBuilder
                     bmp.SetPixel(x, y, Colors[(int)n]);
                 }
             pbNoise.Image = bmp;
-        }
-
-        private void cbBlockRounding_CheckedChanged(object sender, EventArgs e)
-        {
-            cbBlockApproximation.Enabled = cbBlockRounding.Checked;
-            _parent.ReRender();
-        }
-
-        private void cbRealBlock_CheckedChanged(object sender, EventArgs e)
-        {
-            _parent.ReRender();
-        }
-
-        private void rbHeightmap_CheckedChanged(object sender, EventArgs e)
-        {
-            _parent.ReRender();
-        }
-
-        private void nudCaveThreshold_ValueChanged(object sender, EventArgs e)
-        {
-            if (rbInterior.Checked)
-                _parent.ReRender();
-        }
-
-        private void nudCaveScale_ValueChanged(object sender, EventArgs e)
-        {
-            if (rbInterior.Checked)
-                _parent.ReRender();
-        }
-
-        private void rbInterior_CheckedChanged_1(object sender, EventArgs e)
-        {
-            _parent.ReRender();
-        }
-
-        private void cbRelaxedFeatures_CheckedChanged(object sender, EventArgs e)
-        {
-            _parent.ReRender();
         }
 
         private void bCreateTerrain_Click(object sender, EventArgs e)
@@ -147,6 +96,11 @@ namespace TerrainBuilder
 
             _parent.WatchTerrainScript(ofd.FileName);
             _parent.Title = $"TerrainViewer | {ofd.FileName}";
+        }
+
+        private void bCancelGen_Click(object sender, EventArgs e)
+        {
+            _parent.CancelRender();
         }
     }
 }

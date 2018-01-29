@@ -1,31 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TerrainBuilder
 {
+    [Obsolete("Left for implementation reference only", true)]
     public class TerrainLayer
     {
-        public Method Method { get; set; } = Method.Add;
-        public NoiseFunction Function { get; set; } = NoiseFunction.Simplex;
-        public float Scale { get; set; } = 200;
-        public float Range { get; set; } = 20;
-        private OpenSimplexNoise _noise;
-        private Guid _guid;
-
-        public TerrainLayer(Guid newGuid, long seed)
-        {
-            _guid = newGuid;
-            _noise = new OpenSimplexNoise(seed + newGuid.GetHashCode());
-        }
-
+        [Obsolete("Left for implementation reference only", true)]
         public double GetValue(double x, double y)
         {
-            var raw = _noise.eval(x/Scale, y/Scale);
+            var function = NoiseFunction.None;
 
-            switch (Function)
+            var raw = 0;
+            const int range = 0;
+
+            switch (function)
             {
                 case NoiseFunction.Simplex:
                     var simplex = raw + 0.5;
@@ -35,22 +23,22 @@ namespace TerrainBuilder
                     if (simplex > 1)
                         simplex = 1;
 
-                    simplex *= Range;
+                    simplex *= range;
                     return simplex;
                 case NoiseFunction.Turbulent:
                     var turb = -0.5;
-                    turb += Math.Abs(raw)*2;
+                    turb += Math.Abs(raw) * 2;
 
                     if (turb < 0)
                         turb = 0;
                     if (turb > 1)
                         turb = 1;
 
-                    turb *= Range;
+                    turb *= range;
                     return turb;
                 case NoiseFunction.InvTurbulent:
                     var iturb = -0.5;
-                    iturb += Math.Abs(raw)*2;
+                    iturb += Math.Abs(raw) * 2;
 
                     if (iturb < 0)
                         iturb = 0;
@@ -59,9 +47,9 @@ namespace TerrainBuilder
 
                     iturb = 1 - iturb;
 
-                    iturb *= Range;
+                    iturb *= range;
                     return iturb;
-                case NoiseFunction.NCTurbulent:
+                case NoiseFunction.NcTurbulent:
                     var ncturb = Math.Abs(raw);
 
                     if (ncturb < 0)
@@ -69,9 +57,9 @@ namespace TerrainBuilder
                     if (ncturb > 1)
                         ncturb = 1;
 
-                    ncturb *= Range;
+                    ncturb *= range;
                     return ncturb;
-                case NoiseFunction.InvNCTurbulent:
+                case NoiseFunction.InvNcTurbulent:
                     var incturb = Math.Abs(raw);
 
                     if (incturb < 0)
@@ -81,20 +69,20 @@ namespace TerrainBuilder
 
                     incturb = 1 - incturb;
 
-                    incturb *= Range;
+                    incturb *= range;
                     return incturb;
                 case NoiseFunction.Midpoint:
-                    var midpt = -Math.Abs(2*raw - 1) + 1;
+                    var midpt = -Math.Abs(2 * raw - 1) + 1;
 
                     if (midpt < 0)
                         midpt = 0;
                     if (midpt > 1)
                         midpt = 1;
 
-                    midpt *= Range;
+                    midpt *= range;
                     return midpt;
                 case NoiseFunction.InvMidpoint:
-                    var imidpt = -Math.Abs(2*raw - 1) + 1;
+                    var imidpt = -Math.Abs(2 * raw - 1) + 1;
 
                     if (imidpt < 0)
                         imidpt = 0;
@@ -103,7 +91,7 @@ namespace TerrainBuilder
 
                     imidpt = 1 - imidpt;
 
-                    imidpt *= Range;
+                    imidpt *= range;
                     return imidpt;
                 case NoiseFunction.FilmMelt:
                     var t = raw;
@@ -117,7 +105,7 @@ namespace TerrainBuilder
                     if (filmmelt > 1)
                         filmmelt = 1;
 
-                    filmmelt *= Range;
+                    filmmelt *= range;
                     return filmmelt;
                 case NoiseFunction.Warble:
                     raw = (raw + 1) / 2;
@@ -128,7 +116,7 @@ namespace TerrainBuilder
                     if (warble > 1)
                         warble = 1;
 
-                    warble *= Range;
+                    warble *= range;
                     return warble;
                 case NoiseFunction.InvWarble:
                     raw = (raw + 1) / 2;
@@ -141,7 +129,7 @@ namespace TerrainBuilder
 
                     iwarble = 1 - iwarble;
 
-                    iwarble *= Range;
+                    iwarble *= range;
                     return iwarble;
                 case NoiseFunction.Klump:
                     raw = (raw + 1) / 2;
@@ -152,7 +140,7 @@ namespace TerrainBuilder
                     if (klump > 1)
                         klump = 1;
 
-                    klump *= Range;
+                    klump *= range;
                     return klump;
                 case NoiseFunction.InvKlump:
                     raw = (raw + 1) / 2;
@@ -165,7 +153,7 @@ namespace TerrainBuilder
 
                     iklump = 1 - iklump;
 
-                    iklump *= Range;
+                    iklump *= range;
                     return iklump;
                 case NoiseFunction.HiLoPass:
                     raw = (raw + 1) / 2;
@@ -176,7 +164,7 @@ namespace TerrainBuilder
                     if (hlp > 1)
                         hlp = 1;
 
-                    hlp *= Range;
+                    hlp *= range;
                     return hlp;
                 case NoiseFunction.InvHiLoPass:
                     raw = (raw + 1) / 2;
@@ -189,7 +177,7 @@ namespace TerrainBuilder
 
                     ihlp = 1 - ihlp;
 
-                    ihlp *= Range;
+                    ihlp *= range;
                     return ihlp;
                 case NoiseFunction.MidWave:
                     raw = (raw + 1) / 2;
@@ -200,18 +188,36 @@ namespace TerrainBuilder
                     if (midwave > 1)
                         midwave = 1;
 
-                    midwave *= Range;
+                    midwave *= range;
                     return midwave;
                 case NoiseFunction.Constant:
-                    return Range;
+                    return range;
+                case NoiseFunction.None:
+                    return 0;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
 
-        public void SetSeed(long nudSeedValue)
+        public enum NoiseFunction
         {
-            _noise = new OpenSimplexNoise(nudSeedValue);
+            None,
+            Simplex,
+            Turbulent,
+            InvTurbulent,
+            NcTurbulent,
+            InvNcTurbulent,
+            Midpoint,
+            InvMidpoint,
+            FilmMelt,
+            Warble,
+            InvWarble,
+            Klump,
+            InvKlump,
+            HiLoPass,
+            InvHiLoPass,
+            MidWave,
+            Constant
         }
     }
 }
