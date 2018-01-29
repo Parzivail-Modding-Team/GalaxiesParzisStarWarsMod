@@ -121,4 +121,28 @@
   <data name="terrain" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>terrain.lua;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
+  <data name="AppName" xml:space="preserve">
+    <value>TerrainViewer</value>
+  </data>
+  <data name="Status_Ready" xml:space="preserve">
+    <value>Ready</value>
+  </data>
+  <data name="Title_Unsaved" xml:space="preserve">
+    <value>Unsaved File</value>
+  </data>
+  <data name="Info_FileReloaded" xml:space="preserve">
+    <value>Reloaded {0}</value>
+  </data>
+  <data name="Info_CancellingPreviousRenderOp" xml:space="preserve">
+    <value>Cancelling previous render operation</value>
+  </data>
+  <data name="Status_GenHeightmap" xml:space="preserve">
+    <value>Generating heightmap</value>
+  </data>
+  <data name="Status_UploadVBO" xml:space="preserve">
+    <value>Uploading VBO</value>
+  </data>
+  <data name="Info_WindowLoaded" xml:space="preserve">
+    <value>Window loaded</value>
+  </data>
 </root>

@@ -24,8 +24,11 @@ namespace TerrainBuilder
             nudSeed.Maximum = int.MaxValue;
             nudSeed.Value = _random.Next();
 
+            Text = EmbeddedFiles.AppName;
+
             for (var i = 0; i < 256; i++)
                 Colors.Add(i, Color.FromArgb(i, i, i));
+
         }
 
         private void bRandomize_Click(object sender, EventArgs e)
@@ -85,7 +88,7 @@ namespace TerrainBuilder
             File.WriteAllText(sfd.FileName, EmbeddedFiles.terrain);
             Process.Start(sfd.FileName);
             _parent.WatchTerrainScript(sfd.FileName);
-            _parent.Title = $"TerrainViewer | {sfd.FileName}";
+            _parent.Title = $"{EmbeddedFiles.AppName} | {sfd.FileName}";
         }
 
         private void bOpenTerrain_Click(object sender, EventArgs e)
@@ -95,7 +98,7 @@ namespace TerrainBuilder
             if (ofd.ShowDialog() == DialogResult.Cancel) return;
 
             _parent.WatchTerrainScript(ofd.FileName);
-            _parent.Title = $"TerrainViewer | {ofd.FileName}";
+            _parent.Title = $"{EmbeddedFiles.AppName} | {ofd.FileName}";
         }
 
         private void bCancelGen_Click(object sender, EventArgs e)

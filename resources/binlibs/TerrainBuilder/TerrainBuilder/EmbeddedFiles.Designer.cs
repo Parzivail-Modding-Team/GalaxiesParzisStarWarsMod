@@ -61,6 +61,69 @@ namespace TerrainBuilder {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to TerrainViewer.
+        /// </summary>
+        internal static string AppName {
+            get {
+                return ResourceManager.GetString("AppName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancelling previous render operation.
+        /// </summary>
+        internal static string Info_CancellingPreviousRenderOp {
+            get {
+                return ResourceManager.GetString("Info_CancellingPreviousRenderOp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reloaded {0}.
+        /// </summary>
+        internal static string Info_FileReloaded {
+            get {
+                return ResourceManager.GetString("Info_FileReloaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Window loaded.
+        /// </summary>
+        internal static string Info_WindowLoaded {
+            get {
+                return ResourceManager.GetString("Info_WindowLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generating heightmap.
+        /// </summary>
+        internal static string Status_GenHeightmap {
+            get {
+                return ResourceManager.GetString("Status_GenHeightmap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ready.
+        /// </summary>
+        internal static string Status_Ready {
+            get {
+                return ResourceManager.GetString("Status_Ready", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Uploading VBO.
+        /// </summary>
+        internal static string Status_UploadVBO {
+            get {
+                return ResourceManager.GetString("Status_UploadVBO", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to -- Controls the Y at which water starts
         ///waterLevel = 0
         ///
@@ -81,6 +144,15 @@ namespace TerrainBuilder {
         internal static string terrain {
             get {
                 return ResourceManager.GetString("terrain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unsaved File.
+        /// </summary>
+        internal static string Title_Unsaved {
+            get {
+                return ResourceManager.GetString("Title_Unsaved", resourceCulture);
             }
         }
     }

@@ -7,6 +7,9 @@ using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
+using PFX;
+using PFX.BmFont;
+using PFX.Util;
 
 namespace TerrainBuilder
 {
@@ -35,6 +38,7 @@ namespace TerrainBuilder
         private double _angleY = 160;
         public static int ListDecor;
         public static int ListBlock;
+        private static BitmapFont font;
         private readonly HaltonSequence _halton = new HaltonSequence();
         private readonly SimpleVertexBuffer _tvbo = new SimpleVertexBuffer();
         private readonly BackgroundWorker _backgroundRenderer = new BackgroundWorker();
@@ -55,6 +59,8 @@ namespace TerrainBuilder
          * Window-related
          */
         private bool _shouldDie;
+        private readonly Profiler _profiler = new Profiler();
+        private Dictionary<string, TimeSpan> _profile = new Dictionary<string, TimeSpan>();
 
         public WindowVisualize() : base(800, 600)
         {
@@ -79,7 +85,7 @@ namespace TerrainBuilder
             // Load UI window
             _terrainLayerList = new TerrainLayerList(this);
             _terrainLayerList.Show();
-            Title = "TerrainViewer | Unsaved File";
+            Title = $"{EmbeddedFiles.AppName} | {EmbeddedFiles.Title_Unsaved}";
         }
 
         private static void LoadHandler(object sender, EventArgs e)
@@ -99,7 +105,9 @@ namespace TerrainBuilder
 
             GL.ClearColor(Color.FromArgb(255, 13, 13, 13));
 
-            Lumberjack.Info("Window loaded");
+            font = BitmapFont.LoadBinaryFont("dina", FontBank.FontDina, FontBank.BmDina);
+
+            Lumberjack.Info(EmbeddedFiles.Info_WindowLoaded);
         }
 
         private void WindowVisualize_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -140,7 +148,7 @@ namespace TerrainBuilder
 
         private void ScriptWatcherOnFileChanged(object sender, ScriptChangedEventArgs e)
         {
-            Lumberjack.Info($"Reloaded {e.Filename}");
+            Lumberjack.Info(string.Format(EmbeddedFiles.Info_FileReloaded, e.Filename));
             _terrainLayerList.ScriptedTerrainGenerator.LoadScript(e.Script, e.ScriptCode);
             _dirty = true;
         }
@@ -152,7 +160,7 @@ namespace TerrainBuilder
 
         public void CancelRender()
         {
-            Lumberjack.Warn("Cancelling previous render operation");
+            Lumberjack.Warn(EmbeddedFiles.Info_CancellingPreviousRenderOp);
             _backgroundRenderer.CancelAsync();
 
             while (IsRendering())
@@ -189,7 +197,7 @@ namespace TerrainBuilder
             _terrainLayerList.pbRenderStatus.Visible = false;
 
             _terrainLayerList.bCancelRender.Enabled = false;
-            _terrainLayerList.lRenderStatus.Text = "Ready";
+            _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
             _terrainLayerList.pbRenderStatus.Value = 0;
 
             if (_scriptWatcher.GetScriptId() == 0 || e.Cancelled)
@@ -197,6 +205,7 @@ namespace TerrainBuilder
 
             var result = (BackgroundRenderResult)e.Result;
             _tvbo.InitializeVbo(result.Vertices, result.Normals, result.Colors, result.Indices);
+            GC.Collect();
 
             ReDecorate();
         }
@@ -220,7 +229,7 @@ namespace TerrainBuilder
 
             var worker = (BackgroundWorker)sender;
 
-            worker.ReportProgress(0, "Generating heightmap");
+            worker.ReportProgress(0, EmbeddedFiles.Status_GenHeightmap);
 
             Heightmap = new double[2 * SideLength + 2, 2 * SideLength + 2];
             var globalMinY = double.MaxValue;
@@ -243,7 +252,7 @@ namespace TerrainBuilder
                 worker.ReportProgress((int)(x / (2f * SideLength + 2) * 50));
             }
 
-            worker.ReportProgress(50, "Uploading VBO");
+            worker.ReportProgress(50, EmbeddedFiles.Status_UploadVBO);
 
             var globalRangeY = globalMaxY - globalMinY;
 
@@ -356,6 +365,8 @@ namespace TerrainBuilder
 
         private void UpdateHandler(object sender, FrameEventArgs e)
         {
+            var kbd = Keyboard.GetState();
+
             if (_shouldDie)
                 Exit();
 
@@ -367,15 +378,16 @@ namespace TerrainBuilder
             }
 
             var delta = e.Time;
+            var amount = kbd[Key.LShift] || kbd[Key.RShift] ? 180 : 90;
 
             if (Keyboard[Key.Left])
-                _angle += 90 * delta;
+                _angle += amount * delta;
             if (Keyboard[Key.Right])
-                _angle -= 90 * delta;
+                _angle -= amount * delta;
             if (Keyboard[Key.Up])
-                _angleY += 90 * delta;
+                _angleY += amount * delta;
             if (Keyboard[Key.Down])
-                _angleY -= 90 * delta;
+                _angleY -= amount * delta;
         }
 
         public void ReDecorate()
@@ -415,9 +427,36 @@ namespace TerrainBuilder
 
         private void RenderHandler(object sender, FrameEventArgs e)
         {
+            _profiler.Start("render");
+
             GL.Clear(ClearBufferMask.ColorBufferBit |
                      ClearBufferMask.DepthBufferBit |
                      ClearBufferMask.StencilBufferBit);
+
+            
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, Width, Height, 0, 1, -1);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            GL.Enable(EnableCap.Texture2D);
+            GL.Disable(EnableCap.Lighting);
+            GL.Color3(Color.White);
+
+            if (_profile.ContainsKey("render"))
+            {
+                var ms = _profile["render"].TotalMilliseconds;
+                font.RenderString($"FPS: {((int)(1000 / ms)).ToString().PadRight(4)} ({(int)ms}ms)");
+            }
+
+            GL.Enable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Texture2D);
+
+            var aspectRatio = Width / (float)Height;
+            var projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1, 1024);
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadMatrix(ref projection);
 
             var lookat = Matrix4.LookAt(0, 128, 256, 0, 0, 0, 0, 1, 0);
             GL.MatrixMode(MatrixMode.Modelview);
@@ -436,7 +475,7 @@ namespace TerrainBuilder
             _tvbo.Render();
             GL.CallList(ListDecor);
 
-            GL.Color3(0, 70 / 255f, 200 / 255f);
+            GL.Color3(0, 0.27f, 0.78f);
 
             GL.Begin(PrimitiveType.Quads);
             GL.Normal3(UpVector);
@@ -447,6 +486,8 @@ namespace TerrainBuilder
             GL.End();
 
             SwapBuffers();
+            _profiler.End();
+            _profile = _profiler.Reset();
         }
 
         private static void DrawBox(float size)
