@@ -45,8 +45,8 @@ namespace TerrainBuilder
         private int _sideLength = 64;
         public int SideLength
         {
-            get => _sideLength;
-            set => _sideLength = (int)(value / 2f);
+            get { return _sideLength; }
+            set { _sideLength = (int)(value / 2f); }
         }
         public static double[,] Heightmap;
         private readonly TerrainLayerList _terrainLayerList;
@@ -161,20 +161,36 @@ namespace TerrainBuilder
 
         public void ReRender()
         {
+            if (_terrainLayerList == null)
+                return;
+
             if (IsRendering())
                 CancelRender();
+
+            _terrainLayerList.bCancelRender.Enabled = true;
+
+            _terrainLayerList.bCancelRender.Visible = true;
+            _terrainLayerList.pbRenderStatus.Visible = true;
 
             _backgroundRenderer.RunWorkerAsync();
         }
 
         private void DoBackgroundRenderProgress(object sender, ProgressChangedEventArgs progressChangedEventArgs)
         {
-            _terrainLayerList.pbRender.Value = progressChangedEventArgs.ProgressPercentage;
+            _terrainLayerList.pbRenderStatus.Value = progressChangedEventArgs.ProgressPercentage;
+            var s = progressChangedEventArgs.UserState as string;
+            if (s != null)
+                _terrainLayerList.lRenderStatus.Text = s;
         }
 
         private void DoBackgroundRenderComplete(object sender, RunWorkerCompletedEventArgs e)
         {
-            _terrainLayerList.pbRender.Value = 0;
+            _terrainLayerList.bCancelRender.Visible = false;
+            _terrainLayerList.pbRenderStatus.Visible = false;
+
+            _terrainLayerList.bCancelRender.Enabled = false;
+            _terrainLayerList.lRenderStatus.Text = "Ready";
+            _terrainLayerList.pbRenderStatus.Value = 0;
 
             if (_scriptWatcher.GetScriptId() == 0 || e.Cancelled)
                 return;
@@ -182,7 +198,7 @@ namespace TerrainBuilder
             var result = (BackgroundRenderResult)e.Result;
             _tvbo.InitializeVbo(result.Vertices, result.Normals, result.Colors, result.Indices);
 
-            ReDecorate(Heightmap);
+            ReDecorate();
         }
 
         public double GetValueAt(int x, int z)
@@ -203,6 +219,8 @@ namespace TerrainBuilder
                 return;
 
             var worker = (BackgroundWorker)sender;
+
+            worker.ReportProgress(0, "Generating heightmap");
 
             Heightmap = new double[2 * SideLength + 2, 2 * SideLength + 2];
             var globalMinY = double.MaxValue;
@@ -225,6 +243,8 @@ namespace TerrainBuilder
                 worker.ReportProgress((int)(x / (2f * SideLength + 2) * 50));
             }
 
+            worker.ReportProgress(50, "Uploading VBO");
+
             var globalRangeY = globalMaxY - globalMinY;
 
             var vertices = new List<Vector3>();
@@ -245,88 +265,83 @@ namespace TerrainBuilder
 
                     var nx = x + SideLength + 1;
                     var nz = z + SideLength + 1;
-                    var valueA = new Vector3d(x, Heightmap[nx, nz], z);
 
-                    var colorMult = (float)((valueA.Y - globalMinY) / globalRangeY);
+                    var valueHere = new Vector3d(x, Heightmap[nx, nz], z);
+
+                    var valuePosX = new Vector3d(x, Heightmap[nx + 1, nz], z);
+                    var valueNegX = new Vector3d(x, Heightmap[nx - 1, nz], z);
+                    var valuePosZ = new Vector3d(x, Heightmap[nx, nz + 1], z);
+                    var valueNegZ = new Vector3d(x, Heightmap[nx, nz - 1], z);
+
+                    var colorMult = (float)((valueHere.Y - globalMinY) / globalRangeY);
                     var color = Util.RgbToInt(colorMult * 0.25f, 0.25f * colorMult + 0.5f, colorMult * 0.25f);
 
-                    var minY = Util.Min(
-                        Heightmap[nx + 1, nz],
-                        Heightmap[nx, nz],
-                        Heightmap[nx - 1, nz],
-                        Heightmap[nx + 1, nz + 1],
-                        Heightmap[nx - 1, nz + 1],
-                        Heightmap[nx + 1, nz - 1],
-                        Heightmap[nx, nz - 1],
-                        Heightmap[nx - 1, nz - 1]
-                    );
-
-                    vertices.Add(new Vector3(x, (float)valueA.Y, z));
+                    vertices.Add(new Vector3(x, (float)valueHere.Y, z));
                     normals.Add(UpVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueA.Y, z));
+                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
                     normals.Add(UpVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueA.Y, z - 1));
+                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
                     normals.Add(UpVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)valueA.Y, z - 1));
+                    vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
                     normals.Add(UpVector);
                     colors.Add(color);
                     indices.AddRange(new List<int> { i++, i++, i++, i++ });
 
-                    vertices.Add(new Vector3(x, (float)valueA.Y, z));
+                    vertices.Add(new Vector3(x, (float)valueHere.Y, z));
                     normals.Add(PosZVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)minY, z));
+                    vertices.Add(new Vector3(x, (float)valuePosZ.Y, z));
                     normals.Add(PosZVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)minY, z));
+                    vertices.Add(new Vector3(x - 1, (float)valuePosZ.Y, z));
                     normals.Add(PosZVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueA.Y, z));
+                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
                     normals.Add(PosZVector);
                     colors.Add(color);
                     indices.AddRange(new List<int> { i++, i++, i++, i++ });
 
-                    vertices.Add(new Vector3(x, (float)valueA.Y, z - 1));
+                    vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
                     normals.Add(NegZVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)minY, z - 1));
+                    vertices.Add(new Vector3(x, (float)valueNegZ.Y, z - 1));
                     normals.Add(NegZVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)minY, z - 1));
+                    vertices.Add(new Vector3(x - 1, (float)valueNegZ.Y, z - 1));
                     normals.Add(NegZVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueA.Y, z - 1));
+                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
                     normals.Add(NegZVector);
                     colors.Add(color);
                     indices.AddRange(new List<int> { i++, i++, i++, i++ });
 
-                    vertices.Add(new Vector3(x, (float)valueA.Y, z));
+                    vertices.Add(new Vector3(x, (float)valueHere.Y, z));
                     normals.Add(PosXVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)minY, z));
+                    vertices.Add(new Vector3(x, (float)valuePosX.Y, z));
                     normals.Add(PosXVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)minY, z - 1));
+                    vertices.Add(new Vector3(x, (float)valuePosX.Y, z - 1));
                     normals.Add(PosXVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)valueA.Y, z - 1));
+                    vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
                     normals.Add(PosXVector);
                     colors.Add(color);
                     indices.AddRange(new List<int> { i++, i++, i++, i++ });
 
-                    vertices.Add(new Vector3(x - 1, (float)valueA.Y, z));
+                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
                     normals.Add(NegXVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)minY, z));
+                    vertices.Add(new Vector3(x - 1, (float)valueNegX.Y, z));
                     normals.Add(NegXVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)minY, z - 1));
+                    vertices.Add(new Vector3(x - 1, (float)valueNegX.Y, z - 1));
                     normals.Add(NegXVector);
                     colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueA.Y, z - 1));
+                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
                     normals.Add(NegXVector);
                     colors.Add(color);
                     indices.AddRange(new List<int> { i++, i++, i++, i++ });
@@ -363,10 +378,8 @@ namespace TerrainBuilder
                 _angleY -= 90 * delta;
         }
 
-        public void ReDecorate(double[,] heightmap = null)
+        public void ReDecorate()
         {
-            if (heightmap == null)
-                heightmap = Heightmap;
             if (ListDecor == 0)
                 ListDecor = GL.GenLists(1);
 
@@ -376,12 +389,12 @@ namespace TerrainBuilder
             GL.Color3(137 / 255f, 18 / 255f, 0);
             for (var x = -(float)SideLength / 16; x < (float)SideLength / 16; x++)
                 for (var z = -(float)SideLength / 16; z < (float)SideLength / 16; z++)
-                    PopulateChunk(x, z, heightmap);
+                    PopulateChunk(x, z);
 
             GL.EndList();
         }
 
-        private void PopulateChunk(float x, float z, double[,] heightmap)
+        private void PopulateChunk(float x, float z)
         {
             var nx = x * 16 + SideLength + 1;
             var nz = z * 16 + SideLength + 1;
@@ -390,7 +403,7 @@ namespace TerrainBuilder
                 var pos = _halton.Increment();
                 pos *= 16;
                 pos += new Vector3(nx, 0, nz);
-                var val = heightmap[(int)pos.X, (int)pos.Z];
+                var val = Heightmap[(int)pos.X, (int)pos.Z];
                 if (val <= _terrainLayerList.ScriptedTerrainGenerator.WaterLevel &&
                     !_terrainLayerList.ScriptedTerrainGenerator.TreesBelowWaterLevel) continue;
                 GL.PushMatrix();

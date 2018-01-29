@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TerrainLayerList));
             this.nudSeed = new System.Windows.Forms.NumericUpDown();
             this.bRandomize = new System.Windows.Forms.Button();
             this.lSeed = new System.Windows.Forms.Label();
@@ -38,13 +39,15 @@
             this.cbWireframe = new System.Windows.Forms.CheckBox();
             this.bCreateTerrain = new System.Windows.Forms.Button();
             this.bOpenTerrain = new System.Windows.Forms.Button();
-            this.pbRender = new System.Windows.Forms.ProgressBar();
-            this.LRenderStatus = new System.Windows.Forms.Label();
-            this.bCancelGen = new System.Windows.Forms.Button();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lRenderStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.pbRenderStatus = new System.Windows.Forms.ToolStripProgressBar();
+            this.bCancelRender = new System.Windows.Forms.ToolStripSplitButton();
             ((System.ComponentModel.ISupportInitialize)(this.nudSeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbNoise)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // nudSeed
@@ -128,14 +131,14 @@
             // 
             this.pbNoise.Location = new System.Drawing.Point(12, 156);
             this.pbNoise.Name = "pbNoise";
-            this.pbNoise.Size = new System.Drawing.Size(245, 245);
+            this.pbNoise.Size = new System.Drawing.Size(232, 232);
             this.pbNoise.TabIndex = 3;
             this.pbNoise.TabStop = false;
             // 
             // cbWireframe
             // 
             this.cbWireframe.AutoSize = true;
-            this.cbWireframe.Location = new System.Drawing.Point(263, 156);
+            this.cbWireframe.Location = new System.Drawing.Point(250, 156);
             this.cbWireframe.Name = "cbWireframe";
             this.cbWireframe.Size = new System.Drawing.Size(74, 17);
             this.cbWireframe.TabIndex = 0;
@@ -166,42 +169,49 @@
             this.bOpenTerrain.UseVisualStyleBackColor = true;
             this.bOpenTerrain.Click += new System.EventHandler(this.bOpenTerrain_Click);
             // 
-            // pbRender
+            // statusStrip1
             // 
-            this.pbRender.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.pbRender.Location = new System.Drawing.Point(263, 378);
-            this.pbRender.Name = "pbRender";
-            this.pbRender.Size = new System.Drawing.Size(197, 23);
-            this.pbRender.TabIndex = 20;
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lRenderStatus,
+            this.pbRenderStatus,
+            this.bCancelRender});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 391);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(472, 22);
+            this.statusStrip1.TabIndex = 23;
+            this.statusStrip1.Text = "statusStrip1";
             // 
-            // LRenderStatus
+            // lRenderStatus
             // 
-            this.LRenderStatus.AutoSize = true;
-            this.LRenderStatus.Location = new System.Drawing.Point(263, 333);
-            this.LRenderStatus.Name = "LRenderStatus";
-            this.LRenderStatus.Size = new System.Drawing.Size(103, 13);
-            this.LRenderStatus.TabIndex = 21;
-            this.LRenderStatus.Text = "Generation Progress";
+            this.lRenderStatus.Name = "lRenderStatus";
+            this.lRenderStatus.Size = new System.Drawing.Size(39, 17);
+            this.lRenderStatus.Text = "Ready";
             // 
-            // bCancelGen
+            // pbRenderStatus
             // 
-            this.bCancelGen.Location = new System.Drawing.Point(263, 349);
-            this.bCancelGen.Name = "bCancelGen";
-            this.bCancelGen.Size = new System.Drawing.Size(75, 23);
-            this.bCancelGen.TabIndex = 22;
-            this.bCancelGen.Text = "Cancel Gen";
-            this.bCancelGen.UseVisualStyleBackColor = true;
-            this.bCancelGen.Click += new System.EventHandler(this.bCancelGen_Click);
+            this.pbRenderStatus.Name = "pbRenderStatus";
+            this.pbRenderStatus.Size = new System.Drawing.Size(100, 16);
+            this.pbRenderStatus.Visible = false;
+            // 
+            // bCancelRender
+            // 
+            this.bCancelRender.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.bCancelRender.DropDownButtonWidth = 0;
+            this.bCancelRender.Enabled = false;
+            this.bCancelRender.Image = ((System.Drawing.Image)(resources.GetObject("bCancelRender.Image")));
+            this.bCancelRender.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.bCancelRender.Name = "bCancelRender";
+            this.bCancelRender.Size = new System.Drawing.Size(109, 20);
+            this.bCancelRender.Text = "Cancel Generation";
+            this.bCancelRender.Visible = false;
+            this.bCancelRender.ButtonClick += new System.EventHandler(this.bCancelGen_Click);
             // 
             // TerrainLayerList
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(472, 413);
-            this.Controls.Add(this.bCancelGen);
-            this.Controls.Add(this.LRenderStatus);
-            this.Controls.Add(this.pbRender);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.pbNoise);
             this.Controls.Add(this.bOpenTerrain);
             this.Controls.Add(this.bCreateTerrain);
@@ -216,6 +226,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbNoise)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -232,8 +244,9 @@
         private System.Windows.Forms.PictureBox pbNoise;
         private System.Windows.Forms.Button bCreateTerrain;
         private System.Windows.Forms.Button bOpenTerrain;
-        internal System.Windows.Forms.ProgressBar pbRender;
-        private System.Windows.Forms.Label LRenderStatus;
-        private System.Windows.Forms.Button bCancelGen;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        public System.Windows.Forms.ToolStripProgressBar pbRenderStatus;
+        public System.Windows.Forms.ToolStripStatusLabel lRenderStatus;
+        public System.Windows.Forms.ToolStripSplitButton bCancelRender;
     }
 }
