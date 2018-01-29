@@ -87,7 +87,13 @@ namespace TerrainBuilder
                 return;
 
             _stringHash = scriptCode.GetHashCode();
-            var script = new Script { Options = { DebugPrint = s => { Console.WriteLine($"[LUA] {s}"); } } };
+            var script = new Script
+            {
+                Options =
+                {
+                    DebugPrint = s => { Lumberjack.Log(s, ConsoleColor.Cyan, "LUA"); }
+                }
+            };
 
             OnFileChanged(new ScriptChangedEventArgs
             {

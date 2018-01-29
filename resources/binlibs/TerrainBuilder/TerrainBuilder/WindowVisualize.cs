@@ -102,6 +102,9 @@ namespace TerrainBuilder
             GL.Enable(EnableCap.ColorMaterial);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.RescaleNormal);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             GL.ClearColor(Color.FromArgb(255, 13, 13, 13));
 
@@ -167,9 +170,9 @@ namespace TerrainBuilder
                 Application.DoEvents();
         }
 
-        public void ReRender()
+        public void ReRender(bool manualOverride = false)
         {
-            if (_terrainLayerList == null)
+            if (_terrainLayerList == null || _terrainLayerList.cbPauseGen.Checked && !manualOverride)
                 return;
 
             if (IsRendering())
@@ -185,10 +188,12 @@ namespace TerrainBuilder
 
         private void DoBackgroundRenderProgress(object sender, ProgressChangedEventArgs progressChangedEventArgs)
         {
-            _terrainLayerList.pbRenderStatus.Value = progressChangedEventArgs.ProgressPercentage;
-            var s = progressChangedEventArgs.UserState as string;
-            if (s != null)
-                _terrainLayerList.lRenderStatus.Text = s;
+            _terrainLayerList.Invoke((MethodInvoker) delegate
+            {
+                _terrainLayerList.pbRenderStatus.Value = progressChangedEventArgs.ProgressPercentage;
+                if (progressChangedEventArgs.UserState is string s)
+                    _terrainLayerList.lRenderStatus.Text = s;
+            });
         }
 
         private void DoBackgroundRenderComplete(object sender, RunWorkerCompletedEventArgs e)
@@ -299,61 +304,73 @@ namespace TerrainBuilder
                     colors.Add(color);
                     indices.AddRange(new List<int> { i++, i++, i++, i++ });
 
-                    vertices.Add(new Vector3(x, (float)valueHere.Y, z));
-                    normals.Add(PosZVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)valuePosZ.Y, z));
-                    normals.Add(PosZVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valuePosZ.Y, z));
-                    normals.Add(PosZVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
-                    normals.Add(PosZVector);
-                    colors.Add(color);
-                    indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                    if (valuePosZ.Y < valueHere.Y)
+                    {
+                        vertices.Add(new Vector3(x, (float)valueHere.Y, z));
+                        normals.Add(PosZVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x, (float)valuePosZ.Y, z));
+                        normals.Add(PosZVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x - 1, (float)valuePosZ.Y, z));
+                        normals.Add(PosZVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
+                        normals.Add(PosZVector);
+                        colors.Add(color);
+                        indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                    }
 
-                    vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
-                    normals.Add(NegZVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)valueNegZ.Y, z - 1));
-                    normals.Add(NegZVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueNegZ.Y, z - 1));
-                    normals.Add(NegZVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
-                    normals.Add(NegZVector);
-                    colors.Add(color);
-                    indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                    if (valueNegZ.Y < valueHere.Y)
+                    {
+                        vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
+                        normals.Add(NegZVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x, (float)valueNegZ.Y, z - 1));
+                        normals.Add(NegZVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x - 1, (float)valueNegZ.Y, z - 1));
+                        normals.Add(NegZVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
+                        normals.Add(NegZVector);
+                        colors.Add(color);
+                        indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                    }
 
-                    vertices.Add(new Vector3(x, (float)valueHere.Y, z));
-                    normals.Add(PosXVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)valuePosX.Y, z));
-                    normals.Add(PosXVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)valuePosX.Y, z - 1));
-                    normals.Add(PosXVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
-                    normals.Add(PosXVector);
-                    colors.Add(color);
-                    indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                    if (valuePosX.Y < valueHere.Y)
+                    {
+                        vertices.Add(new Vector3(x, (float)valueHere.Y, z));
+                        normals.Add(PosXVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x, (float)valuePosX.Y, z));
+                        normals.Add(PosXVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x, (float)valuePosX.Y, z - 1));
+                        normals.Add(PosXVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
+                        normals.Add(PosXVector);
+                        colors.Add(color);
+                        indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                    }
 
-                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
-                    normals.Add(NegXVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueNegX.Y, z));
-                    normals.Add(NegXVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueNegX.Y, z - 1));
-                    normals.Add(NegXVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
-                    normals.Add(NegXVector);
-                    colors.Add(color);
-                    indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                    if (valueNegX.Y < valueHere.Y)
+                    {
+                        vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
+                        normals.Add(NegXVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x - 1, (float)valueNegX.Y, z));
+                        normals.Add(NegXVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x - 1, (float)valueNegX.Y, z - 1));
+                        normals.Add(NegXVector);
+                        colors.Add(color);
+                        vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
+                        normals.Add(NegXVector);
+                        colors.Add(color);
+                        indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                    }
                 }
 
                 worker.ReportProgress((int)((x + SideLength) / (SideLength * 2f) * 50) + 50);
@@ -378,7 +395,7 @@ namespace TerrainBuilder
             }
 
             var delta = e.Time;
-            var amount = kbd[Key.LShift] || kbd[Key.RShift] ? 180 : 90;
+            var amount = kbd[Key.LShift] || kbd[Key.RShift] ? 45 : 90;
 
             if (Keyboard[Key.Left])
                 _angle += amount * delta;
@@ -433,26 +450,6 @@ namespace TerrainBuilder
                      ClearBufferMask.DepthBufferBit |
                      ClearBufferMask.StencilBufferBit);
 
-            
-            GL.MatrixMode(MatrixMode.Projection);
-            GL.LoadIdentity();
-            GL.Ortho(0, Width, Height, 0, 1, -1);
-            GL.MatrixMode(MatrixMode.Modelview);
-            GL.LoadIdentity();
-
-            GL.Enable(EnableCap.Texture2D);
-            GL.Disable(EnableCap.Lighting);
-            GL.Color3(Color.White);
-
-            if (_profile.ContainsKey("render"))
-            {
-                var ms = _profile["render"].TotalMilliseconds;
-                font.RenderString($"FPS: {((int)(1000 / ms)).ToString().PadRight(4)} ({(int)ms}ms)");
-            }
-
-            GL.Enable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Texture2D);
-
             var aspectRatio = Width / (float)Height;
             var projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1, 1024);
             GL.MatrixMode(MatrixMode.Projection);
@@ -484,6 +481,31 @@ namespace TerrainBuilder
             GL.Vertex3(SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
             GL.Vertex3(-SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
             GL.End();
+            
+            GL.MatrixMode(MatrixMode.Projection);
+            GL.LoadIdentity();
+            GL.Ortho(0, Width, Height, 0, 1, -1);
+            GL.MatrixMode(MatrixMode.Modelview);
+            GL.LoadIdentity();
+
+            GL.PushMatrix();
+
+            GL.Enable(EnableCap.Blend);
+            GL.Enable(EnableCap.Texture2D);
+            GL.Disable(EnableCap.Lighting);
+            GL.Color3(Color.White);
+
+            if (_profile.ContainsKey("render"))
+            {
+                var ms = _profile["render"].TotalMilliseconds;
+                font.RenderString($"FPS: {((int)Math.Ceiling(ms) != 0 ? ((int)Math.Ceiling(1000 / ms)).ToString() : "INF").PadRight(4)} ({(int)Math.Ceiling(ms)}ms)");
+            }
+
+            GL.Enable(EnableCap.Lighting);
+            GL.Disable(EnableCap.Texture2D);
+            GL.Disable(EnableCap.Blend);
+
+            GL.PopMatrix();
 
             SwapBuffers();
             _profiler.End();

@@ -105,5 +105,15 @@ namespace TerrainBuilder
         {
             _parent.CancelRender();
         }
+
+        private void bManuallyGenerate_Click(object sender, EventArgs e)
+        {
+            _parent.ReRender(true);
+        }
+
+        private void cbPauseGen_CheckedChanged(object sender, EventArgs e)
+        {
+            bManuallyGenerate.Enabled = cbPauseGen.Checked;
+        }
     }
 }

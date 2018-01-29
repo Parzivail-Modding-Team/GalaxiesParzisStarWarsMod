@@ -142,4 +142,7 @@
   <data name="FontWebslinger" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>Resources\webslinger.fnt;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="Log_Format" xml:space="preserve">
+    <value>[{0}{1}] {2}</value>
+  </data>
 </root>
