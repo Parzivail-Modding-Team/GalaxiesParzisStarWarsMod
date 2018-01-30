@@ -26,6 +26,8 @@ namespace TerrainBuilder
 
             Text = EmbeddedFiles.AppName;
 
+            pbTerrainColor.BackColor = _parent.TintColor;
+
             for (var i = 0; i < 256; i++)
                 Colors.Add(i, Color.FromArgb(i, i, i));
 
@@ -114,6 +116,15 @@ namespace TerrainBuilder
         private void cbPauseGen_CheckedChanged(object sender, EventArgs e)
         {
             bManuallyGenerate.Enabled = cbPauseGen.Checked;
+        }
+
+        private void pbMinColor_Click(object sender, EventArgs e)
+        {
+            if (colorPicker.ShowDialog() != DialogResult.OK)
+                return;
+
+            _parent.TintColor = colorPicker.Color;
+            pbTerrainColor.BackColor = _parent.TintColor;
         }
     }
 }

@@ -74,6 +74,9 @@
     </Compile>
     <Compile Include="ScriptedTerrainGenerator.cs" />
     <Compile Include="ScriptWatcher.cs" />
+    <Compile Include="Shader\DefaultShaderProgram.cs" />
+    <Compile Include="Shader\ShaderProgram.cs" />
+    <Compile Include="Shader\Uniform.cs" />
     <Compile Include="TerrainStore.cs" />
     <Compile Include="TerrainLayer.cs" />
     <Compile Include="TerrainLayerList.cs">
@@ -90,6 +93,9 @@
     <None Include="App.config" />
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
+    <None Include="Shaders\default.fs">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="terrain.lua">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

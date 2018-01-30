@@ -10,6 +10,7 @@ using OpenTK.Input;
 using PFX;
 using PFX.BmFont;
 using PFX.Util;
+using TerrainBuilder.Shader;
 
 namespace TerrainBuilder
 {
@@ -38,7 +39,11 @@ namespace TerrainBuilder
         private double _angleY = 160;
         public static int ListDecor;
         public static int ListBlock;
-        private static BitmapFont font;
+        private static BitmapFont _font;
+        private static ShaderProgram _shaderProgram;
+        public Color TintColor = Color.LimeGreen;
+        private static readonly List<Uniform> Uniforms = new List<Uniform>();
+        private static readonly Uniform TintUniform = new Uniform("tint");
         private readonly HaltonSequence _halton = new HaltonSequence();
         private readonly SimpleVertexBuffer _tvbo = new SimpleVertexBuffer();
         private readonly BackgroundWorker _backgroundRenderer = new BackgroundWorker();
@@ -109,9 +114,12 @@ namespace TerrainBuilder
 
             GL.ClearColor(Color.FromArgb(255, 13, 13, 13));
 
-            font = BitmapFont.LoadBinaryFont("dina", FontBank.FontDina, FontBank.BmDina);
+            _font = BitmapFont.LoadBinaryFont("dina", FontBank.FontDina, FontBank.BmDina);
 
             _keyboard = Keyboard.GetState();
+
+            _shaderProgram = new DefaultShaderProgram("shaders/default");
+            _shaderProgram.InitProgram();
 
             Lumberjack.Info(EmbeddedFiles.Info_WindowLoaded);
         }
@@ -301,16 +309,26 @@ namespace TerrainBuilder
                     var isNegXHigher = valueNegX > valueHere;
                     var isPosZHigher = valuePosZ > valueHere;
                     var isNegZHigher = valueNegZ > valueHere;
+                    
+                    var isPosXLower = valuePosX < valueHere;
+                    var isNegXLower = valueNegX < valueHere;
+                    var isPosZLower = valuePosZ < valueHere;
+                    var isNegZLower = valueNegZ < valueHere;
 
                     var isPosXPosZHigher = valuePosXPosZ > valueHere; 
                     var isNegXPosZHigher = valueNegXPosZ > valueHere;
                     var isPosXNegZHigher = valuePosXNegZ > valueHere;
                     var isNegXNegZHigher = valueNegXNegZ > valueHere;
 
+                    var isPosXPosZLower = valuePosXPosZ < valueHere; 
+                    var isNegXPosZLower = valueNegXPosZ < valueHere;
+                    var isPosXNegZLower = valuePosXNegZ < valueHere;
+                    var isNegXNegZLower = valueNegXNegZ < valueHere;
+
                     var colorMult = (float)((valueHere - globalMinY) / globalRangeY);
-                    var color = Util.RgbToInt(colorMult * 0.25f, 0.25f * colorMult + 0.5f, colorMult * 0.25f);
+                    var color = Util.RgbToInt(1, 1, 1);
                     const float occludedScalar = 0.8f;
-                    var occludedColor = Util.RgbToInt(colorMult * 0.25f * occludedScalar, (0.25f * colorMult + 0.5f) * occludedScalar, colorMult * 0.25f * occludedScalar);
+                    var occludedColor = Util.RgbToInt(occludedScalar, occludedScalar, occludedScalar);
 
                     vertices.Add(new Vector3(x, (float)valueHere, z));
                     normals.Add(UpVector);
@@ -333,10 +351,10 @@ namespace TerrainBuilder
                         colors.Add(color);
                         vertices.Add(new Vector3(x, (float)valuePosZ, z));
                         normals.Add(PosZVector);
-                        colors.Add(color);
+                        colors.Add(isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color);
                         vertices.Add(new Vector3(x - 1, (float)valuePosZ, z));
                         normals.Add(PosZVector);
-                        colors.Add(color);
+                        colors.Add(isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color);
                         vertices.Add(new Vector3(x - 1, (float)valueHere, z));
                         normals.Add(PosZVector);
                         colors.Add(color);
@@ -490,8 +508,15 @@ namespace TerrainBuilder
 
             GL.PolygonMode(MaterialFace.FrontAndBack,
                 _terrainLayerList.cbWireframe.Checked ? PolygonMode.Line : PolygonMode.Fill);
+            
+            Uniforms.Clear();
 
+            TintUniform.Value = new Vector3(TintColor.R / 255f, TintColor.G / 255f, TintColor.B / 255f);
+            Uniforms.Add(TintUniform);
+
+            _shaderProgram.Use(Uniforms);
             _tvbo.Render();
+            GL.UseProgram(0);
             GL.CallList(ListDecor);
 
             GL.Color3(0, 0.27f, 0.78f);
@@ -520,7 +545,7 @@ namespace TerrainBuilder
             if (_profile.ContainsKey("render"))
             {
                 var ms = _profile["render"].TotalMilliseconds;
-                font.RenderString($"FPS: {((int)Math.Ceiling(ms) != 0 ? ((int)Math.Ceiling(1000 / ms)).ToString() : "INF").PadRight(4)} ({(int)Math.Ceiling(ms)}ms)");
+                _font.RenderString($"FPS: {((int)Math.Ceiling(ms) != 0 ? ((int)Math.Ceiling(1000 / ms)).ToString() : "INF").PadRight(4)} ({(int)Math.Ceiling(ms)}ms)");
             }
 
             GL.Enable(EnableCap.Lighting);
