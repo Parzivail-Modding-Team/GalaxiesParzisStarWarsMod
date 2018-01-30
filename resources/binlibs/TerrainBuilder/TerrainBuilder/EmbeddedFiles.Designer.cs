@@ -61,7 +61,7 @@ namespace TerrainBuilder {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to TerrainViewer.
+        ///   Looks up a localized string similar to Nublar.
         /// </summary>
         internal static string AppName {
             get {
@@ -100,6 +100,21 @@ namespace TerrainBuilder {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to #version 120
+        ///
+        ///uniform vec3 tint;
+        ///
+        ///void main() { 
+        ///	gl_FragColor = vec4(gl_Color.rgb * tint, 1);
+        ///}.
+        /// </summary>
+        internal static string default_fs {
+            get {
+                return ResourceManager.GetString("default_fs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap folder_brick {
@@ -133,6 +148,16 @@ namespace TerrainBuilder {
         internal static string Info_WindowLoaded {
             get {
                 return ResourceManager.GetString("Info_WindowLoaded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon logo {
+            get {
+                object obj = ResourceManager.GetObject("logo", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
             }
         }
         

@@ -95,6 +95,7 @@ namespace TerrainBuilder
             _terrainLayerList = new TerrainLayerList(this);
             _terrainLayerList.Show();
             Title = $"{EmbeddedFiles.AppName} | {EmbeddedFiles.Title_Unsaved}";
+            Icon = EmbeddedFiles.logo;
         }
 
         private void LoadHandler(object sender, EventArgs e)
@@ -124,7 +125,7 @@ namespace TerrainBuilder
 
             _keyboard = Keyboard.GetState();
 
-            _shaderProgram = new DefaultShaderProgram("shaders/default");
+            _shaderProgram = new DefaultShaderProgram(EmbeddedFiles.default_fs);
             _shaderProgram.InitProgram();
 
             Lumberjack.Info(EmbeddedFiles.Info_WindowLoaded);

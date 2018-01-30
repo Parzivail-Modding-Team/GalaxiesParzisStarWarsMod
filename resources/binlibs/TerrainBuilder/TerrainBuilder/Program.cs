@@ -10,6 +10,7 @@ namespace TerrainBuilder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            Console.Title = EmbeddedFiles.AppName;
             new WindowVisualize().Run(40, 60);
         }
     }

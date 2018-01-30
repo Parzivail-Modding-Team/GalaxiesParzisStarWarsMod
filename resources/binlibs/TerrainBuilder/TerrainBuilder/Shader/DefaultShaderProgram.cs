@@ -15,8 +15,7 @@ namespace TerrainBuilder.Shader
 
         protected override void Init()
         {
-            LoadShader(File.ReadAllText(_program + ".fs"), ShaderType.FragmentShader, PgmId, out FsId);
-            //LoadShader(File.ReadAllText(_program + ".vs"), ShaderType.VertexShader, PgmId, out VsId);
+            LoadShader(_program, ShaderType.FragmentShader, PgmId, out FsId);
 
             GL.LinkProgram(PgmId);
             Log(GL.GetProgramInfoLog(PgmId));

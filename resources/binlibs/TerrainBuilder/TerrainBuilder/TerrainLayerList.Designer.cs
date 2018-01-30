@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TerrainLayerList));
             this.nudSeed = new System.Windows.Forms.NumericUpDown();
             this.bRandomize = new System.Windows.Forms.Button();
             this.lSeed = new System.Windows.Forms.Label();
@@ -42,12 +43,12 @@
             this.bCancelRender = new System.Windows.Forms.ToolStripSplitButton();
             this.cbPauseGen = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.pbTerrainColor = new System.Windows.Forms.PictureBox();
+            this.lTerrainColor = new System.Windows.Forms.Label();
             this.bManuallyGenerate = new System.Windows.Forms.Button();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.bCreate = new System.Windows.Forms.ToolStripButton();
             this.bOpen = new System.Windows.Forms.ToolStripButton();
-            this.lTerrainColor = new System.Windows.Forms.Label();
-            this.pbTerrainColor = new System.Windows.Forms.PictureBox();
             this.colorPicker = new System.Windows.Forms.ColorDialog();
             ((System.ComponentModel.ISupportInitialize)(this.nudSeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).BeginInit();
@@ -55,8 +56,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.pbNoise)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTerrainColor)).BeginInit();
+            this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // nudSeed
@@ -222,6 +223,27 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Render";
             // 
+            // pbTerrainColor
+            // 
+            this.pbTerrainColor.BackColor = System.Drawing.SystemColors.Control;
+            this.pbTerrainColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.pbTerrainColor.Cursor = System.Windows.Forms.Cursors.Cross;
+            this.pbTerrainColor.Location = new System.Drawing.Point(9, 107);
+            this.pbTerrainColor.Name = "pbTerrainColor";
+            this.pbTerrainColor.Size = new System.Drawing.Size(100, 50);
+            this.pbTerrainColor.TabIndex = 28;
+            this.pbTerrainColor.TabStop = false;
+            this.pbTerrainColor.Click += new System.EventHandler(this.pbMinColor_Click);
+            // 
+            // lTerrainColor
+            // 
+            this.lTerrainColor.AutoSize = true;
+            this.lTerrainColor.Location = new System.Drawing.Point(6, 91);
+            this.lTerrainColor.Name = "lTerrainColor";
+            this.lTerrainColor.Size = new System.Drawing.Size(67, 13);
+            this.lTerrainColor.TabIndex = 26;
+            this.lTerrainColor.Text = "Terrain Color";
+            // 
             // bManuallyGenerate
             // 
             this.bManuallyGenerate.Enabled = false;
@@ -263,27 +285,6 @@
             this.bOpen.Text = "&Open Terrain";
             this.bOpen.Click += new System.EventHandler(this.bOpenTerrain_Click);
             // 
-            // lTerrainColor
-            // 
-            this.lTerrainColor.AutoSize = true;
-            this.lTerrainColor.Location = new System.Drawing.Point(6, 91);
-            this.lTerrainColor.Name = "lTerrainColor";
-            this.lTerrainColor.Size = new System.Drawing.Size(67, 13);
-            this.lTerrainColor.TabIndex = 26;
-            this.lTerrainColor.Text = "Terrain Color";
-            // 
-            // pbTerrainColor
-            // 
-            this.pbTerrainColor.BackColor = System.Drawing.SystemColors.Control;
-            this.pbTerrainColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pbTerrainColor.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.pbTerrainColor.Location = new System.Drawing.Point(9, 107);
-            this.pbTerrainColor.Name = "pbTerrainColor";
-            this.pbTerrainColor.Size = new System.Drawing.Size(100, 50);
-            this.pbTerrainColor.TabIndex = 28;
-            this.pbTerrainColor.TabStop = false;
-            this.pbTerrainColor.Click += new System.EventHandler(this.pbMinColor_Click);
-            // 
             // colorPicker
             // 
             this.colorPicker.AnyColor = true;
@@ -300,6 +301,7 @@
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.pbNoise);
             this.Controls.Add(this.groupBox1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(488, 452);
             this.Name = "TerrainLayerList";
             this.Text = "TerrainLayerList";
@@ -313,9 +315,9 @@
             this.statusStrip1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbTerrainColor)).EndInit();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbTerrainColor)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
