@@ -64,6 +64,11 @@ namespace TerrainBuilder
          * Window-related
          */
         private bool _shouldDie;
+        private int _currentFps;
+        private int _frameCounter;
+        private DateTime _lastFpsCheck = DateTime.MinValue;
+        private readonly List<float> _renderTimes = new List<float>();
+        private readonly List<int> _renderFps = new List<int>();
         private readonly Profiler _profiler = new Profiler();
         private static KeyboardState _keyboard;
         private Dictionary<string, TimeSpan> _profile = new Dictionary<string, TimeSpan>();
@@ -325,7 +330,7 @@ namespace TerrainBuilder
                     var isPosXNegZLower = valuePosXNegZ < valueHere;
                     var isNegXNegZLower = valueNegXNegZ < valueHere;
 
-                    var colorMult = (float)((valueHere - globalMinY) / globalRangeY);
+                    //var colorMult = (float)((valueHere - globalMinY) / globalRangeY);
                     var color = Util.RgbToInt(1, 1, 1);
                     const float occludedScalar = 0.8f;
                     var occludedColor = Util.RgbToInt(occludedScalar, occludedScalar, occludedScalar);
@@ -368,10 +373,10 @@ namespace TerrainBuilder
                         colors.Add(color);
                         vertices.Add(new Vector3(x, (float)valueNegZ, z - 1));
                         normals.Add(NegZVector);
-                        colors.Add(color);
+                        colors.Add(isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color);
                         vertices.Add(new Vector3(x - 1, (float)valueNegZ, z - 1));
                         normals.Add(NegZVector);
-                        colors.Add(color);
+                        colors.Add(isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color);
                         vertices.Add(new Vector3(x - 1, (float)valueHere, z - 1));
                         normals.Add(NegZVector);
                         colors.Add(color);
@@ -385,10 +390,10 @@ namespace TerrainBuilder
                         colors.Add(color);
                         vertices.Add(new Vector3(x, (float)valuePosX, z));
                         normals.Add(PosXVector);
-                        colors.Add(color);
+                        colors.Add(isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color);
                         vertices.Add(new Vector3(x, (float)valuePosX, z - 1));
                         normals.Add(PosXVector);
-                        colors.Add(color);
+                        colors.Add(isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color);
                         vertices.Add(new Vector3(x, (float)valueHere, z - 1));
                         normals.Add(PosXVector);
                         colors.Add(color);
@@ -402,10 +407,10 @@ namespace TerrainBuilder
                         colors.Add(color);
                         vertices.Add(new Vector3(x - 1, (float)valueNegX, z));
                         normals.Add(NegXVector);
-                        colors.Add(color);
+                        colors.Add(isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color);
                         vertices.Add(new Vector3(x - 1, (float)valueNegX, z - 1));
                         normals.Add(NegXVector);
-                        colors.Add(color);
+                        colors.Add(isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color);
                         vertices.Add(new Vector3(x - 1, (float)valueHere, z - 1));
                         normals.Add(NegXVector);
                         colors.Add(color);
@@ -485,6 +490,16 @@ namespace TerrainBuilder
         private void RenderHandler(object sender, FrameEventArgs e)
         {
             _profiler.Start("render");
+            _frameCounter++;
+
+            var now = DateTime.Now;
+            if ((now - _lastFpsCheck).TotalMilliseconds >= 1000)
+            {
+                _renderFps.Add(_frameCounter);
+                _currentFps = _frameCounter;
+                _frameCounter = 0;
+                _lastFpsCheck = now;
+            }
 
             GL.Clear(ClearBufferMask.ColorBufferBit |
                      ClearBufferMask.DepthBufferBit |
@@ -519,7 +534,7 @@ namespace TerrainBuilder
             GL.UseProgram(0);
             GL.CallList(ListDecor);
 
-            GL.Color3(0, 0.27f, 0.78f);
+            GL.Color3(Color.MediumBlue);
 
             GL.Begin(PrimitiveType.Quads);
             GL.Normal3(UpVector);
@@ -528,7 +543,7 @@ namespace TerrainBuilder
             GL.Vertex3(SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
             GL.Vertex3(-SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
             GL.End();
-            
+
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0, Width, Height, 0, 1, -1);
@@ -538,18 +553,55 @@ namespace TerrainBuilder
             GL.PushMatrix();
 
             GL.Enable(EnableCap.Blend);
-            GL.Enable(EnableCap.Texture2D);
             GL.Disable(EnableCap.Lighting);
             GL.Color3(Color.White);
 
-            if (_profile.ContainsKey("render"))
+            if (_keyboard[Key.D])
             {
-                var ms = _profile["render"].TotalMilliseconds;
-                _font.RenderString($"FPS: {((int)Math.Ceiling(ms) != 0 ? ((int)Math.Ceiling(1000 / ms)).ToString() : "INF").PadRight(4)} ({(int)Math.Ceiling(ms)}ms)");
+                GL.Enable(EnableCap.Texture2D);
+                if (_profile.ContainsKey("render"))
+                {
+                    _renderTimes.Add((float) _profile["render"].TotalMilliseconds);
+                    while (_renderTimes.Count > 50)
+                        _renderTimes.RemoveAt(0);
+
+                    var ms = _profile["render"].TotalMilliseconds;
+                    _font.RenderString($"FPS: {_currentFps:D3}");
+                }
+                var s = $"{_renderTimes.Count} frames;0-50ms";
+                var size = _font.MeasureString(s);
+                GL.PushMatrix();
+                GL.Translate(Width - size.Width - 3 - _renderTimes.Count, 0, 0);
+                _font.RenderString(s);
+                GL.PopMatrix();
+                GL.Disable(EnableCap.Texture2D);
+
+                var c = _renderTimes.Count;
+                if (c > 0)
+                {
+                    const int maxRenderTime = 50;
+                    var scalar = (float)_font.Common.LineHeight / maxRenderTime;
+                    GL.LineWidth(1);
+                    GL.Begin(PrimitiveType.Lines);
+                    for (var x = 0; x < c; x++)
+                    {
+                        GL.Vertex2(Width - (c - x), _font.Common.LineHeight);
+                        GL.Vertex2(Width - (c - x), _font.Common.LineHeight - scalar * _renderTimes[x]);
+                    }
+                    GL.End();
+                }
+            }
+            else
+            {
+                GL.Enable(EnableCap.Texture2D);
+                GL.PushMatrix();
+                GL.Translate(0, Height - _font.Common.LineHeight, 0);
+                _font.RenderString("PRESS 'D' FOR DIAGNOSTICS");
+                GL.PopMatrix();
+                GL.Disable(EnableCap.Texture2D);
             }
 
             GL.Enable(EnableCap.Lighting);
-            GL.Disable(EnableCap.Texture2D);
             GL.Disable(EnableCap.Blend);
 
             GL.PopMatrix();

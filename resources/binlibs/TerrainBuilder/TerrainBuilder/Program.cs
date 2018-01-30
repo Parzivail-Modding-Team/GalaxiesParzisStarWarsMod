@@ -10,7 +10,7 @@ namespace TerrainBuilder
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            new WindowVisualize().Run(60, 30);
+            new WindowVisualize().Run(20, 60);
         }
     }
 }
