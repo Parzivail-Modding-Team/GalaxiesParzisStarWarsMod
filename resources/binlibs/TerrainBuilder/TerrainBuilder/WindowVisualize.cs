@@ -39,9 +39,7 @@ namespace TerrainBuilder
         private double _angleY = 160;
         public static int ListDecor;
         public static int ListBlock;
-        private static BitmapFont _font;
         private static ShaderProgram _shaderProgram;
-        public Color TintColor = Color.LimeGreen;
         private static readonly List<Uniform> Uniforms = new List<Uniform>();
         private static readonly Uniform TintUniform = new Uniform("tint");
         private readonly HaltonSequence _halton = new HaltonSequence();
@@ -51,6 +49,8 @@ namespace TerrainBuilder
         /*
          * Terrain-related
          */
+        private int _numVerts;
+        public Color TintColor = Color.LimeGreen;
         private int _sideLength = 64;
         public int SideLength
         {
@@ -64,13 +64,11 @@ namespace TerrainBuilder
          * Window-related
          */
         private bool _shouldDie;
-        private int _currentFps;
-        private int _frameCounter;
-        private DateTime _lastFpsCheck = DateTime.MinValue;
-        private readonly List<float> _renderTimes = new List<float>();
-        private readonly List<int> _renderFps = new List<int>();
+        private Sparkline _fpsSparkline;
+        private Sparkline _renderTimeSparkline;
         private readonly Profiler _profiler = new Profiler();
         private static KeyboardState _keyboard;
+        private static BitmapFont _font;
         private Dictionary<string, TimeSpan> _profile = new Dictionary<string, TimeSpan>();
 
         public WindowVisualize() : base(800, 600)
@@ -101,7 +99,7 @@ namespace TerrainBuilder
 
         private void LoadHandler(object sender, EventArgs e)
         {
-            const float diffuse = 0.65f;
+            const float diffuse = 1f;
             float[] matDiffuse = { diffuse, diffuse, diffuse };
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.AmbientAndDiffuse, matDiffuse);
             GL.Light(LightName.Light0, LightParameter.Position, new[] { 0.0f, 0.0f, 0.0f, 10.0f });
@@ -120,6 +118,9 @@ namespace TerrainBuilder
             GL.ClearColor(Color.FromArgb(255, 13, 13, 13));
 
             _font = BitmapFont.LoadBinaryFont("dina", FontBank.FontDina, FontBank.BmDina);
+
+            _fpsSparkline = new Sparkline(_font, $"0-{(int)TargetRenderFrequency}fps", 50, (float) TargetRenderFrequency, Sparkline.SparklineStyle.Area);
+            _renderTimeSparkline = new Sparkline(_font, "0-50ms", 50, 50, Sparkline.SparklineStyle.Area);
 
             _keyboard = Keyboard.GetState();
 
@@ -204,12 +205,12 @@ namespace TerrainBuilder
 
         private void DoBackgroundRenderProgress(object sender, ProgressChangedEventArgs progressChangedEventArgs)
         {
-            _terrainLayerList.Invoke((MethodInvoker) delegate
-            {
-                _terrainLayerList.pbRenderStatus.Value = progressChangedEventArgs.ProgressPercentage;
-                if (progressChangedEventArgs.UserState is string s)
-                    _terrainLayerList.lRenderStatus.Text = s;
-            });
+            _terrainLayerList.Invoke((MethodInvoker)delegate
+           {
+               _terrainLayerList.pbRenderStatus.Value = progressChangedEventArgs.ProgressPercentage;
+               if (progressChangedEventArgs.UserState is string s)
+                   _terrainLayerList.lRenderStatus.Text = s;
+           });
         }
 
         private void DoBackgroundRenderComplete(object sender, RunWorkerCompletedEventArgs e)
@@ -225,6 +226,7 @@ namespace TerrainBuilder
                 return;
 
             var result = (BackgroundRenderResult)e.Result;
+            _numVerts = result.Vertices.Length;
             _tvbo.InitializeVbo(result.Vertices, result.Normals, result.Colors, result.Indices);
             GC.Collect();
 
@@ -275,7 +277,7 @@ namespace TerrainBuilder
 
             worker.ReportProgress(50, EmbeddedFiles.Status_UploadVBO);
 
-            var globalRangeY = globalMaxY - globalMinY;
+            //var globalRangeY = globalMaxY - globalMinY;
 
             var vertices = new List<Vector3>();
             var normals = new List<Vector3>();
@@ -309,23 +311,23 @@ namespace TerrainBuilder
                     var valueNegXPosZ = Heightmap[nx - 1, nz + 1];
                     var valuePosXNegZ = Heightmap[nx + 1, nz - 1];
                     var valueNegXNegZ = Heightmap[nx - 1, nz - 1];
-                    
+
                     var isPosXHigher = valuePosX > valueHere;
                     var isNegXHigher = valueNegX > valueHere;
                     var isPosZHigher = valuePosZ > valueHere;
                     var isNegZHigher = valueNegZ > valueHere;
-                    
+
                     var isPosXLower = valuePosX < valueHere;
                     var isNegXLower = valueNegX < valueHere;
                     var isPosZLower = valuePosZ < valueHere;
                     var isNegZLower = valueNegZ < valueHere;
 
-                    var isPosXPosZHigher = valuePosXPosZ > valueHere; 
+                    var isPosXPosZHigher = valuePosXPosZ > valueHere;
                     var isNegXPosZHigher = valueNegXPosZ > valueHere;
                     var isPosXNegZHigher = valuePosXNegZ > valueHere;
                     var isNegXNegZHigher = valueNegXNegZ > valueHere;
 
-                    var isPosXPosZLower = valuePosXPosZ < valueHere; 
+                    var isPosXPosZLower = valuePosXPosZ < valueHere;
                     var isNegXPosZLower = valueNegXPosZ < valueHere;
                     var isPosXNegZLower = valuePosXNegZ < valueHere;
                     var isNegXNegZLower = valueNegXNegZ < valueHere;
@@ -490,16 +492,11 @@ namespace TerrainBuilder
         private void RenderHandler(object sender, FrameEventArgs e)
         {
             _profiler.Start("render");
-            _frameCounter++;
 
-            var now = DateTime.Now;
-            if ((now - _lastFpsCheck).TotalMilliseconds >= 1000)
-            {
-                _renderFps.Add(_frameCounter);
-                _currentFps = _frameCounter;
-                _frameCounter = 0;
-                _lastFpsCheck = now;
-            }
+            if (_profile.ContainsKey("render"))
+                _renderTimeSparkline.Enqueue((float)_profile["render"].TotalMilliseconds);
+
+            _fpsSparkline.Enqueue((float) RenderFrequency);
 
             GL.Clear(ClearBufferMask.ColorBufferBit |
                      ClearBufferMask.DepthBufferBit |
@@ -523,7 +520,7 @@ namespace TerrainBuilder
 
             GL.PolygonMode(MaterialFace.FrontAndBack,
                 _terrainLayerList.cbWireframe.Checked ? PolygonMode.Line : PolygonMode.Fill);
-            
+
             Uniforms.Clear();
 
             TintUniform.Value = new Vector3(TintColor.R / 255f, TintColor.G / 255f, TintColor.B / 255f);
@@ -556,50 +553,28 @@ namespace TerrainBuilder
             GL.Disable(EnableCap.Lighting);
             GL.Color3(Color.White);
 
+            GL.Enable(EnableCap.Texture2D);
             if (_keyboard[Key.D])
             {
-                GL.Enable(EnableCap.Texture2D);
-                if (_profile.ContainsKey("render"))
-                {
-                    _renderTimes.Add((float) _profile["render"].TotalMilliseconds);
-                    while (_renderTimes.Count > 50)
-                        _renderTimes.RemoveAt(0);
-
-                    var ms = _profile["render"].TotalMilliseconds;
-                    _font.RenderString($"FPS: {_currentFps:D3}");
-                }
-                var s = $"{_renderTimes.Count} frames;0-50ms";
-                var size = _font.MeasureString(s);
                 GL.PushMatrix();
-                GL.Translate(Width - size.Width - 3 - _renderTimes.Count, 0, 0);
-                _font.RenderString(s);
+                _font.RenderString($"FPS: {(int)Math.Ceiling(RenderFrequency)}");
+                GL.Translate(0, _font.Common.LineHeight, 0);
+                _font.RenderString($"Verts: {_numVerts}");
                 GL.PopMatrix();
-                GL.Disable(EnableCap.Texture2D);
 
-                var c = _renderTimes.Count;
-                if (c > 0)
-                {
-                    const int maxRenderTime = 50;
-                    var scalar = (float)_font.Common.LineHeight / maxRenderTime;
-                    GL.LineWidth(1);
-                    GL.Begin(PrimitiveType.Lines);
-                    for (var x = 0; x < c; x++)
-                    {
-                        GL.Vertex2(Width - (c - x), _font.Common.LineHeight);
-                        GL.Vertex2(Width - (c - x), _font.Common.LineHeight - scalar * _renderTimes[x]);
-                    }
-                    GL.End();
-                }
+                GL.Translate(0, Height - _font.Common.LineHeight * 1.4f * 2, 0);
+                _fpsSparkline.Render();
+                GL.Translate(0, _font.Common.LineHeight * 1.4f, 0);
+                _renderTimeSparkline.Render();
             }
             else
             {
-                GL.Enable(EnableCap.Texture2D);
                 GL.PushMatrix();
                 GL.Translate(0, Height - _font.Common.LineHeight, 0);
                 _font.RenderString("PRESS 'D' FOR DIAGNOSTICS");
                 GL.PopMatrix();
-                GL.Disable(EnableCap.Texture2D);
             }
+            GL.Disable(EnableCap.Texture2D);
 
             GL.Enable(EnableCap.Lighting);
             GL.Disable(EnableCap.Blend);

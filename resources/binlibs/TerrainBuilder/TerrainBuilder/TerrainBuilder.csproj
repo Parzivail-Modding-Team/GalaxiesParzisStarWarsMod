@@ -77,6 +77,7 @@
     <Compile Include="Shader\DefaultShaderProgram.cs" />
     <Compile Include="Shader\ShaderProgram.cs" />
     <Compile Include="Shader\Uniform.cs" />
+    <Compile Include="Sparkline.cs" />
     <Compile Include="TerrainStore.cs" />
     <Compile Include="TerrainLayer.cs" />
     <Compile Include="TerrainLayerList.cs">
