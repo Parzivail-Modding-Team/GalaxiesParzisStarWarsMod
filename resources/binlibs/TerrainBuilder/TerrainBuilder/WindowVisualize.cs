@@ -60,6 +60,7 @@ namespace TerrainBuilder
          */
         private bool _shouldDie;
         private readonly Profiler _profiler = new Profiler();
+        private static KeyboardState _keyboard;
         private Dictionary<string, TimeSpan> _profile = new Dictionary<string, TimeSpan>();
 
         public WindowVisualize() : base(800, 600)
@@ -88,12 +89,12 @@ namespace TerrainBuilder
             Title = $"{EmbeddedFiles.AppName} | {EmbeddedFiles.Title_Unsaved}";
         }
 
-        private static void LoadHandler(object sender, EventArgs e)
+        private void LoadHandler(object sender, EventArgs e)
         {
             const float diffuse = 0.65f;
             float[] matDiffuse = { diffuse, diffuse, diffuse };
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.AmbientAndDiffuse, matDiffuse);
-            GL.Light(LightName.Light0, LightParameter.Position, new[] { 0.0f, 0.0f, 0.0f, 1.0f });
+            GL.Light(LightName.Light0, LightParameter.Position, new[] { 0.0f, 0.0f, 0.0f, 10.0f });
             GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { diffuse, diffuse, diffuse, diffuse });
 
             GL.Enable(EnableCap.Lighting);
@@ -109,6 +110,8 @@ namespace TerrainBuilder
             GL.ClearColor(Color.FromArgb(255, 13, 13, 13));
 
             font = BitmapFont.LoadBinaryFont("dina", FontBank.FontDina, FontBank.BmDina);
+
+            _keyboard = Keyboard.GetState();
 
             Lumberjack.Info(EmbeddedFiles.Info_WindowLoaded);
         }
@@ -280,93 +283,112 @@ namespace TerrainBuilder
                     var nx = x + SideLength + 1;
                     var nz = z + SideLength + 1;
 
-                    var valueHere = new Vector3d(x, Heightmap[nx, nz], z);
+                    // This heightmap position
+                    var valueHere = Heightmap[nx, nz];
 
-                    var valuePosX = new Vector3d(x, Heightmap[nx + 1, nz], z);
-                    var valueNegX = new Vector3d(x, Heightmap[nx - 1, nz], z);
-                    var valuePosZ = new Vector3d(x, Heightmap[nx, nz + 1], z);
-                    var valueNegZ = new Vector3d(x, Heightmap[nx, nz - 1], z);
+                    // Neighboring positions
+                    var valuePosX = Heightmap[nx + 1, nz];
+                    var valueNegX = Heightmap[nx - 1, nz];
+                    var valuePosZ = Heightmap[nx, nz + 1];
+                    var valueNegZ = Heightmap[nx, nz - 1];
 
-                    var colorMult = (float)((valueHere.Y - globalMinY) / globalRangeY);
+                    var valuePosXPosZ = Heightmap[nx + 1, nz + 1];
+                    var valueNegXPosZ = Heightmap[nx - 1, nz + 1];
+                    var valuePosXNegZ = Heightmap[nx + 1, nz - 1];
+                    var valueNegXNegZ = Heightmap[nx - 1, nz - 1];
+                    
+                    var isPosXHigher = valuePosX > valueHere;
+                    var isNegXHigher = valueNegX > valueHere;
+                    var isPosZHigher = valuePosZ > valueHere;
+                    var isNegZHigher = valueNegZ > valueHere;
+
+                    var isPosXPosZHigher = valuePosXPosZ > valueHere; 
+                    var isNegXPosZHigher = valueNegXPosZ > valueHere;
+                    var isPosXNegZHigher = valuePosXNegZ > valueHere;
+                    var isNegXNegZHigher = valueNegXNegZ > valueHere;
+
+                    var colorMult = (float)((valueHere - globalMinY) / globalRangeY);
                     var color = Util.RgbToInt(colorMult * 0.25f, 0.25f * colorMult + 0.5f, colorMult * 0.25f);
+                    const float occludedScalar = 0.8f;
+                    var occludedColor = Util.RgbToInt(colorMult * 0.25f * occludedScalar, (0.25f * colorMult + 0.5f) * occludedScalar, colorMult * 0.25f * occludedScalar);
 
-                    vertices.Add(new Vector3(x, (float)valueHere.Y, z));
+                    vertices.Add(new Vector3(x, (float)valueHere, z));
                     normals.Add(UpVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
+                    colors.Add(isPosXHigher || isPosZHigher || isPosXPosZHigher ? occludedColor : color);
+                    vertices.Add(new Vector3(x - 1, (float)valueHere, z));
                     normals.Add(UpVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
+                    colors.Add(isNegXHigher || isPosZHigher || isNegXPosZHigher ? occludedColor : color);
+                    vertices.Add(new Vector3(x - 1, (float)valueHere, z - 1));
                     normals.Add(UpVector);
-                    colors.Add(color);
-                    vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
+                    colors.Add(isNegXHigher || isNegZHigher || isNegXNegZHigher ? occludedColor : color);
+                    vertices.Add(new Vector3(x, (float)valueHere, z - 1));
                     normals.Add(UpVector);
-                    colors.Add(color);
+                    colors.Add(isPosXHigher || isNegZHigher || isPosXNegZHigher ? occludedColor : color);
                     indices.AddRange(new List<int> { i++, i++, i++, i++ });
 
-                    if (valuePosZ.Y < valueHere.Y)
+                    if (valuePosZ < valueHere)
                     {
-                        vertices.Add(new Vector3(x, (float)valueHere.Y, z));
+                        vertices.Add(new Vector3(x, (float)valueHere, z));
                         normals.Add(PosZVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x, (float)valuePosZ.Y, z));
+                        vertices.Add(new Vector3(x, (float)valuePosZ, z));
                         normals.Add(PosZVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x - 1, (float)valuePosZ.Y, z));
+                        vertices.Add(new Vector3(x - 1, (float)valuePosZ, z));
                         normals.Add(PosZVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
+                        vertices.Add(new Vector3(x - 1, (float)valueHere, z));
                         normals.Add(PosZVector);
                         colors.Add(color);
                         indices.AddRange(new List<int> { i++, i++, i++, i++ });
                     }
 
-                    if (valueNegZ.Y < valueHere.Y)
+                    if (valueNegZ < valueHere)
                     {
-                        vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
+                        vertices.Add(new Vector3(x, (float)valueHere, z - 1));
                         normals.Add(NegZVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x, (float)valueNegZ.Y, z - 1));
+                        vertices.Add(new Vector3(x, (float)valueNegZ, z - 1));
                         normals.Add(NegZVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x - 1, (float)valueNegZ.Y, z - 1));
+                        vertices.Add(new Vector3(x - 1, (float)valueNegZ, z - 1));
                         normals.Add(NegZVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
+                        vertices.Add(new Vector3(x - 1, (float)valueHere, z - 1));
                         normals.Add(NegZVector);
                         colors.Add(color);
                         indices.AddRange(new List<int> { i++, i++, i++, i++ });
                     }
 
-                    if (valuePosX.Y < valueHere.Y)
+                    if (valuePosX < valueHere)
                     {
-                        vertices.Add(new Vector3(x, (float)valueHere.Y, z));
+                        vertices.Add(new Vector3(x, (float)valueHere, z));
                         normals.Add(PosXVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x, (float)valuePosX.Y, z));
+                        vertices.Add(new Vector3(x, (float)valuePosX, z));
                         normals.Add(PosXVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x, (float)valuePosX.Y, z - 1));
+                        vertices.Add(new Vector3(x, (float)valuePosX, z - 1));
                         normals.Add(PosXVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x, (float)valueHere.Y, z - 1));
+                        vertices.Add(new Vector3(x, (float)valueHere, z - 1));
                         normals.Add(PosXVector);
                         colors.Add(color);
                         indices.AddRange(new List<int> { i++, i++, i++, i++ });
                     }
 
-                    if (valueNegX.Y < valueHere.Y)
+                    if (valueNegX < valueHere)
                     {
-                        vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z));
+                        vertices.Add(new Vector3(x - 1, (float)valueHere, z));
                         normals.Add(NegXVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x - 1, (float)valueNegX.Y, z));
+                        vertices.Add(new Vector3(x - 1, (float)valueNegX, z));
                         normals.Add(NegXVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x - 1, (float)valueNegX.Y, z - 1));
+                        vertices.Add(new Vector3(x - 1, (float)valueNegX, z - 1));
                         normals.Add(NegXVector);
                         colors.Add(color);
-                        vertices.Add(new Vector3(x - 1, (float)valueHere.Y, z - 1));
+                        vertices.Add(new Vector3(x - 1, (float)valueHere, z - 1));
                         normals.Add(NegXVector);
                         colors.Add(color);
                         indices.AddRange(new List<int> { i++, i++, i++, i++ });
@@ -382,7 +404,7 @@ namespace TerrainBuilder
 
         private void UpdateHandler(object sender, FrameEventArgs e)
         {
-            var kbd = Keyboard.GetState();
+            _keyboard = Keyboard.GetState();
 
             if (_shouldDie)
                 Exit();
@@ -395,7 +417,7 @@ namespace TerrainBuilder
             }
 
             var delta = e.Time;
-            var amount = kbd[Key.LShift] || kbd[Key.RShift] ? 45 : 90;
+            var amount = _keyboard[Key.LShift] || _keyboard[Key.RShift] ? 45 : 90;
 
             if (Keyboard[Key.Left])
                 _angle += amount * delta;
