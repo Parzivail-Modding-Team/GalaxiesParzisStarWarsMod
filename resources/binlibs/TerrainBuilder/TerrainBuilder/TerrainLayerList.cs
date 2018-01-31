@@ -26,6 +26,7 @@ namespace TerrainBuilder
             nudSeed.Value = _random.Next();
 
             Text = EmbeddedFiles.AppName;
+            Icon = EmbeddedFiles.logo;
 
             pbTerrainColor.BackColor = _parent.TintColor;
 

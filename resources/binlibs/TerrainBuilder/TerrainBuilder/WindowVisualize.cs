@@ -236,7 +236,7 @@ namespace TerrainBuilder
 
         public double GetValueAt(int x, int z)
         {
-            var value = _terrainLayerList.ScriptedTerrainGenerator.GetValue(x, z);
+            var value = _terrainLayerList.ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
 
             if (value < 0)
                 value = 0;
