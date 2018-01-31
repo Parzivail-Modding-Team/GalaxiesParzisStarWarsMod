@@ -100,31 +100,41 @@ namespace TerrainBuilder
 
         private void LoadHandler(object sender, EventArgs e)
         {
+            // Set up lights
             const float diffuse = 1f;
             float[] matDiffuse = { diffuse, diffuse, diffuse };
             GL.Material(MaterialFace.FrontAndBack, MaterialParameter.AmbientAndDiffuse, matDiffuse);
             GL.Light(LightName.Light0, LightParameter.Position, new[] { 0.0f, 0.0f, 0.0f, 10.0f });
             GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { diffuse, diffuse, diffuse, diffuse });
 
+            // Set up lighting
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
             GL.ShadeModel(ShadingModel.Smooth);
             GL.Enable(EnableCap.ColorMaterial);
+
+            // Set up caps
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.RescaleNormal);
-            GL.Enable(EnableCap.DepthTest);
+
+            // Set up blending
             GL.Enable(EnableCap.Blend);
             GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
+            // Set background color
             GL.ClearColor(Color.FromArgb(255, 13, 13, 13));
 
+            // Load fonts
             _font = BitmapFont.LoadBinaryFont("dina", FontBank.FontDina, FontBank.BmDina);
 
+            // Load sparklines
             _fpsSparkline = new Sparkline(_font, $"0-{(int)TargetRenderFrequency}fps", 50, (float) TargetRenderFrequency, Sparkline.SparklineStyle.Area);
             _renderTimeSparkline = new Sparkline(_font, "0-50ms", 50, 50, Sparkline.SparklineStyle.Area);
 
+            // Init keyboard to ensure first frame won't NPE
             _keyboard = Keyboard.GetState();
 
+            // Load shaders
             _shaderProgram = new DefaultShaderProgram(EmbeddedFiles.default_fs);
             _shaderProgram.InitProgram();
 
@@ -134,7 +144,7 @@ namespace TerrainBuilder
         private void WindowVisualize_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             _zoom -= e.DeltaPrecise / 4f;
-
+            
             if (_zoom < 0.5f)
                 _zoom = 0.5f;
             if (_zoom > 20)
@@ -190,24 +200,30 @@ namespace TerrainBuilder
 
         public void ReRender(bool manualOverride = false)
         {
+            // Make sure the render requirements are met
             if (_terrainLayerList == null || _terrainLayerList.cbPauseGen.Checked && !manualOverride)
                 return;
 
+            // If there's an ongoing render, cancel it
             if (IsRendering())
                 CancelRender();
 
+            // Enable the render statusbar
             _terrainLayerList.bCancelRender.Enabled = true;
-
             _terrainLayerList.bCancelRender.Visible = true;
+
             _terrainLayerList.pbRenderStatus.Visible = true;
 
+            // Fire up the render
             _backgroundRenderer.RunWorkerAsync();
         }
 
         private void DoBackgroundRenderProgress(object sender, ProgressChangedEventArgs progressChangedEventArgs)
         {
+            // Render thread says something
             _terrainLayerList.Invoke((MethodInvoker)delegate
            {
+               // Invoke changes on form thread
                _terrainLayerList.pbRenderStatus.Value = progressChangedEventArgs.ProgressPercentage;
                if (progressChangedEventArgs.UserState is string s)
                    _terrainLayerList.lRenderStatus.Text = s;
@@ -216,26 +232,32 @@ namespace TerrainBuilder
 
         private void DoBackgroundRenderComplete(object sender, RunWorkerCompletedEventArgs e)
         {
+            // Render done, reset statusbar
             _terrainLayerList.bCancelRender.Visible = false;
-            _terrainLayerList.pbRenderStatus.Visible = false;
-
             _terrainLayerList.bCancelRender.Enabled = false;
-            _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
+
+            _terrainLayerList.pbRenderStatus.Visible = false;
             _terrainLayerList.pbRenderStatus.Value = 0;
 
+            _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
+
+            // If the render was manually cancelled, go no further
             if (_scriptWatcher.GetScriptId() == 0 || e.Cancelled)
                 return;
 
+            // Take the render result and upload it to the VBO
             var result = (BackgroundRenderResult)e.Result;
             _numVerts = result.Vertices.Length;
             _tvbo.InitializeVbo(result.Vertices, result.Normals, result.Colors, result.Indices);
             GC.Collect();
 
+            // Add chunk decor
             ReDecorate();
         }
 
         public double GetValueAt(int x, int z)
         {
+            // Invoke the script to get the terrain height at (x, z)
             var value = _terrainLayerList.ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
 
             if (value < 0)
@@ -248,58 +270,67 @@ namespace TerrainBuilder
 
         private void DoBackgroundRender(object sender, DoWorkEventArgs e)
         {
+            // Make sure the render requirements are met
             if (_scriptWatcher.GetScriptId() == 0)
+            {
+                Lumberjack.Warn("Can't render, no terrain loaded.");
                 return;
+            }
 
+            // Grab worker and report progress
             var worker = (BackgroundWorker)sender;
-
             worker.ReportProgress(0, EmbeddedFiles.Status_GenHeightmap);
 
+            // Init a new heightmap
             Heightmap = new double[2 * SideLength + 2, 2 * SideLength + 2];
-            var globalMinY = double.MaxValue;
-            var globalMaxY = double.MinValue;
+
+            // Iterate over the map
             for (var x = 0; x < 2 * SideLength + 2; x++)
             {
                 for (var z = 0; z < 2 * SideLength + 2; z++)
                 {
+                    // Cancel if requested
                     if (worker.CancellationPending)
                     {
                         e.Cancel = true;
                         return;
                     }
 
+                    // Set the heightmap at (x, z)
                     Heightmap[x, z] = (int)GetValueAt(x, z);
-                    globalMaxY = Math.Max(Heightmap[x, z], globalMaxY);
-                    globalMinY = Math.Min(Heightmap[x, z], globalMinY);
                 }
 
+                // Report progress every "scanline"
                 worker.ReportProgress((int)(x / (2f * SideLength + 2) * 50));
             }
 
+            // Report progress with a new status message
             worker.ReportProgress(50, EmbeddedFiles.Status_UploadVBO);
 
-            //var globalRangeY = globalMaxY - globalMinY;
-
+            // Init VBO-needed lists
             var vertices = new List<Vector3>();
             var normals = new List<Vector3>();
             var indices = new List<int>();
             var colors = new List<int>();
             var i = 0;
 
+            // Iterate over the heightmap
             for (var x = -SideLength; x < SideLength; x++)
             {
                 for (var z = -SideLength; z < SideLength; z++)
                 {
+                    // Cancel if requested
                     if (worker.CancellationPending)
                     {
                         e.Cancel = true;
                         return;
                     }
 
+                    // Get the current internal array position
                     var nx = x + SideLength + 1;
                     var nz = z + SideLength + 1;
 
-                    // This heightmap position
+                    // Heightmap value here
                     var valueHere = Heightmap[nx, nz];
 
                     // Neighboring positions
@@ -313,6 +344,7 @@ namespace TerrainBuilder
                     var valuePosXNegZ = Heightmap[nx + 1, nz - 1];
                     var valueNegXNegZ = Heightmap[nx - 1, nz - 1];
 
+                    // Comparisons used in cheap AO
                     var isPosXHigher = valuePosX > valueHere;
                     var isNegXHigher = valueNegX > valueHere;
                     var isPosZHigher = valuePosZ > valueHere;
@@ -332,12 +364,13 @@ namespace TerrainBuilder
                     var isNegXPosZLower = valueNegXPosZ < valueHere;
                     var isPosXNegZLower = valuePosXNegZ < valueHere;
                     var isNegXNegZLower = valueNegXNegZ < valueHere;
-
-                    //var colorMult = (float)((valueHere - globalMinY) / globalRangeY);
+                    
+                    // Set up the colors we'll be using for terrain
                     var color = Util.RgbToInt(1, 1, 1);
                     const float occludedScalar = 0.8f;
                     var occludedColor = Util.RgbToInt(occludedScalar, occludedScalar, occludedScalar);
 
+                    // Always draw a top face for a block
                     vertices.Add(new Vector3(x, (float)valueHere, z));
                     normals.Add(UpVector);
                     colors.Add(isPosXHigher || isPosZHigher || isPosXPosZHigher ? occludedColor : color);
@@ -352,6 +385,7 @@ namespace TerrainBuilder
                     colors.Add(isPosXHigher || isNegZHigher || isPosXNegZHigher ? occludedColor : color);
                     indices.AddRange(new List<int> { i++, i++, i++, i++ });
 
+                    // Try and draw the PosZ face
                     if (valuePosZ < valueHere)
                     {
                         vertices.Add(new Vector3(x, (float)valueHere, z));
@@ -369,6 +403,7 @@ namespace TerrainBuilder
                         indices.AddRange(new List<int> { i++, i++, i++, i++ });
                     }
 
+                    // Try and draw the NegZ face
                     if (valueNegZ < valueHere)
                     {
                         vertices.Add(new Vector3(x, (float)valueHere, z - 1));
@@ -386,6 +421,7 @@ namespace TerrainBuilder
                         indices.AddRange(new List<int> { i++, i++, i++, i++ });
                     }
 
+                    // Try and draw the PosX face
                     if (valuePosX < valueHere)
                     {
                         vertices.Add(new Vector3(x, (float)valueHere, z));
@@ -403,6 +439,7 @@ namespace TerrainBuilder
                         indices.AddRange(new List<int> { i++, i++, i++, i++ });
                     }
 
+                    // Try and draw the NegX face
                     if (valueNegX < valueHere)
                     {
                         vertices.Add(new Vector3(x - 1, (float)valueHere, z));
@@ -421,20 +458,24 @@ namespace TerrainBuilder
                     }
                 }
 
+                // Report progress every "scanline"
                 worker.ReportProgress((int)((x + SideLength) / (SideLength * 2f) * 50) + 50);
             }
 
+            // Send the result back to the worker
             e.Result = new BackgroundRenderResult(vertices.ToArray(), normals.ToArray(), colors.ToArray(),
                 indices.ToArray());
         }
 
         private void UpdateHandler(object sender, FrameEventArgs e)
         {
-            _keyboard = Keyboard.GetState();
-
             if (_shouldDie)
                 Exit();
 
+            // Grab the new keyboard state
+            _keyboard = Keyboard.GetState();
+
+            // Request a render if there are pending changes
             if (_dirty)
             {
                 _terrainLayerList.ReRenderNoiseImage();
@@ -442,6 +483,7 @@ namespace TerrainBuilder
                 _dirty = false;
             }
 
+            // Compute input-based rotations
             var delta = e.Time;
             var amount = _keyboard[Key.LShift] || _keyboard[Key.RShift] ? 45 : 90;
 
@@ -457,27 +499,35 @@ namespace TerrainBuilder
 
         public void ReDecorate()
         {
+            // Generate the display list if none exists
             if (ListDecor == 0)
                 ListDecor = GL.GenLists(1);
 
+            // Start compiling a new list
             GL.NewList(ListDecor, ListMode.Compile);
 
+            // Populate the chunks
             _halton.Reset();
             GL.Color3(137 / 255f, 18 / 255f, 0);
             for (var x = -(float)SideLength / 16; x < (float)SideLength / 16; x++)
                 for (var z = -(float)SideLength / 16; z < (float)SideLength / 16; z++)
                     PopulateChunk(x, z);
 
+            // Stop compiling list
             GL.EndList();
         }
 
         private void PopulateChunk(float x, float z)
         {
+            // Convert chunk pos back into world pos
             var nx = x * 16 + SideLength + 1;
             var nz = z * 16 + SideLength + 1;
+
+            // Generate some trees
             for (var i = 0; i < _terrainLayerList.ScriptedTerrainGenerator.TreesPerChunk; i++)
             {
                 var pos = _halton.Increment();
+                // Convert from normal to world space
                 pos *= 16;
                 pos += new Vector3(nx, 0, nz);
                 var val = Heightmap[(int)pos.X, (int)pos.Z];
@@ -492,17 +542,21 @@ namespace TerrainBuilder
 
         private void RenderHandler(object sender, FrameEventArgs e)
         {
+            // Start profiling
             _profiler.Start("render");
 
+            // Update sparklines
             if (_profile.ContainsKey("render"))
                 _renderTimeSparkline.Enqueue((float)_profile["render"].TotalMilliseconds);
 
             _fpsSparkline.Enqueue((float) RenderFrequency);
 
+            // Reset the view
             GL.Clear(ClearBufferMask.ColorBufferBit |
                      ClearBufferMask.DepthBufferBit |
                      ClearBufferMask.StencilBufferBit);
 
+            // Reload the projection matrix
             var aspectRatio = Width / (float)Height;
             var projection = Matrix4.CreatePerspectiveFieldOfView(MathHelper.PiOver4, aspectRatio, 1, 1024);
             GL.MatrixMode(MatrixMode.Projection);
@@ -512,26 +566,35 @@ namespace TerrainBuilder
             GL.MatrixMode(MatrixMode.Modelview);
             GL.LoadMatrix(ref lookat);
 
+            // "Center" the terrain
             GL.Translate(0, -25, 0);
 
+            // Zoom and scale the terrain
             var scale = new Vector3(4 * (1 / _zoom), -4 * (1 / _zoom), 4 * (1 / _zoom));
             GL.Scale(scale);
             GL.Rotate(_angleY, 1.0f, 0.0f, 0.0f);
             GL.Rotate(_angle, 0.0f, 1.0f, 0.0f);
 
+            // Wireframe mode if selected
             GL.PolygonMode(MaterialFace.FrontAndBack,
                 _terrainLayerList.cbWireframe.Checked ? PolygonMode.Line : PolygonMode.Fill);
 
+            // Reset the frag shader uniforms
             Uniforms.Clear();
 
+            // Set up uniforms
             TintUniform.Value = new Vector3(TintColor.R / 255f, TintColor.G / 255f, TintColor.B / 255f);
             Uniforms.Add(TintUniform);
 
+            // Engage shader, render, disengage
             _shaderProgram.Use(Uniforms);
             _tvbo.Render();
             GL.UseProgram(0);
+
+            // Render decor
             GL.CallList(ListDecor);
 
+            // Render the ocean
             GL.Color3(Color.MediumBlue);
 
             GL.Begin(PrimitiveType.Quads);
@@ -542,6 +605,7 @@ namespace TerrainBuilder
             GL.Vertex3(-SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
             GL.End();
 
+            // Set up 2D mode
             GL.MatrixMode(MatrixMode.Projection);
             GL.LoadIdentity();
             GL.Ortho(0, Width, Height, 0, 1, -1);
@@ -554,15 +618,18 @@ namespace TerrainBuilder
             GL.Disable(EnableCap.Lighting);
             GL.Color3(Color.White);
 
+            // Render diagnostic data
             GL.Enable(EnableCap.Texture2D);
             if (_keyboard[Key.D])
             {
+                // Static diagnostic header
                 GL.PushMatrix();
                 _font.RenderString($"FPS: {(int)Math.Ceiling(RenderFrequency)}");
                 GL.Translate(0, _font.Common.LineHeight, 0);
                 _font.RenderString($"Verts: {_numVerts}");
                 GL.PopMatrix();
 
+                // Sparklines
                 GL.Translate(0, Height - _font.Common.LineHeight * 1.4f * 2, 0);
                 _fpsSparkline.Render();
                 GL.Translate(0, _font.Common.LineHeight * 1.4f, 0);
@@ -570,6 +637,7 @@ namespace TerrainBuilder
             }
             else
             {
+                // Info footer
                 GL.PushMatrix();
                 GL.Translate(0, Height - _font.Common.LineHeight, 0);
                 _font.RenderString("PRESS 'D' FOR DIAGNOSTICS");
@@ -582,7 +650,10 @@ namespace TerrainBuilder
 
             GL.PopMatrix();
 
+            // Swap the graphics buffer
             SwapBuffers();
+
+            // Stop profiling and get the results
             _profiler.End();
             _profile = _profiler.Reset();
         }
