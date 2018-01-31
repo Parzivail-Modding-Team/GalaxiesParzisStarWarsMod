@@ -18,9 +18,8 @@ namespace TerrainBuilder
         private static readonly Dictionary<string, DataType> RequiredTopLevelObjects = new Dictionary<string, DataType>
         {
             {"waterLevel", DataType.Number},
-            {"treesPerChunk", DataType.Number},
-            {"treesBelowWaterLevel", DataType.Boolean},
-            {"terrain", DataType.Function}
+            {"terrain", DataType.Function},
+            {"tree", DataType.Function}
         };
 
         public void LoadScript(Script script, string scriptCode)
@@ -48,10 +47,11 @@ namespace TerrainBuilder
 
                 // Validate that the main method works
                 var dummy = script.Call(script.Globals["terrain"], 0, 0);
+                dummy = script.Call(script.Globals["tree"], 0, 0, 0);
 
                 WaterLevel = (int) script.Globals.Get("waterLevel").Number;
-                TreesPerChunk = (int) script.Globals.Get("treesPerChunk").Number;
-                TreesBelowWaterLevel = script.Globals.Get("treesBelowWaterLevel").Boolean;
+                TreesPerChunk = 0;//(int) script.Globals.Get("treesPerChunk").Number;
+                TreesBelowWaterLevel = false;//script.Globals.Get("treesBelowWaterLevel").Boolean;
 
                 _script = script;
             }
