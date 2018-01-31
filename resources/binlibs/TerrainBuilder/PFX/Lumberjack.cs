@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using PFX;
 
-namespace TerrainBuilder
+namespace PFX
 {
-    class Lumberjack
+    public class Lumberjack
     {
         public static void Log(string message)
         {
@@ -32,11 +27,11 @@ namespace TerrainBuilder
         public static void Log(string message, ConsoleColor color, string header = "")
         {
             if (Console.ForegroundColor == color)
-                Console.WriteLine(FontBank.Log_Format, DateTime.Now, header.Length > 0 ? " " + header : header, message);
+                Console.WriteLine(Resources.Log_Format, DateTime.Now, header.Length > 0 ? " " + header : header, message);
             else
             {
                 Console.ForegroundColor = color;
-                Console.WriteLine(FontBank.Log_Format, DateTime.Now, header.Length > 0 ? " " + header : header, message);
+                Console.WriteLine(Resources.Log_Format, DateTime.Now, header.Length > 0 ? " " + header : header, message);
             }
         }
     }

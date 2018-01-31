@@ -1,31 +1,20 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenTK.Graphics.OpenGL;
 using PFX.BmFont;
 
-namespace TerrainBuilder
+namespace PFX
 {
-    class Sparkline : ConcurrentQueue<float>
+    public class Sparkline : ConcurrentQueue<float>
     {
-        internal enum SparklineStyle
-        {
-            Area,
-            Line
-        }
-
-        private readonly object _syncObject = new object();
-
         private readonly BitmapFont _font;
         private readonly string _label;
         private readonly float _maxValue;
         private readonly SparklineStyle _style;
 
-        public int MaxEntries { get; }
+        private readonly object _syncObject = new object();
 
         public Sparkline(BitmapFont font, string label, int maxEntries, float maxValue, SparklineStyle style)
         {
@@ -35,6 +24,8 @@ namespace TerrainBuilder
             _maxValue = maxValue;
             _style = style;
         }
+
+        public int MaxEntries { get; }
 
         public void Render(params object[] formatArgs)
         {
@@ -56,6 +47,7 @@ namespace TerrainBuilder
                         GL.Vertex2(i, _font.Common.LineHeight);
                         GL.Vertex2(i, _font.Common.LineHeight - scalar * this.ElementAt(i) - 1);
                     }
+
                     GL.End();
                     break;
                 case SparklineStyle.Line:
@@ -84,8 +76,16 @@ namespace TerrainBuilder
         {
             base.Enqueue(obj);
             lock (_syncObject)
+            {
                 while (Count > MaxEntries)
                     TryDequeue(out var outObj);
+            }
+        }
+
+        public enum SparklineStyle
+        {
+            Area,
+            Line
         }
     }
 }

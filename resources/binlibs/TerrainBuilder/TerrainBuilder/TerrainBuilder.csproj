@@ -72,8 +72,6 @@
     <Compile Include="BackgroundRenderResult.cs" />
     <Compile Include="Exporter.cs" />
     <Compile Include="HaltonSequence.cs" />
-    <Compile Include="Lumberjack.cs" />
-    <Compile Include="OpenSimplexNoise.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="EmbeddedFiles.Designer.cs">
@@ -83,10 +81,6 @@
     </Compile>
     <Compile Include="ScriptedTerrainGenerator.cs" />
     <Compile Include="ScriptWatcher.cs" />
-    <Compile Include="Shader\DefaultShaderProgram.cs" />
-    <Compile Include="Shader\ShaderProgram.cs" />
-    <Compile Include="Shader\Uniform.cs" />
-    <Compile Include="Sparkline.cs" />
     <Compile Include="TerrainStore.cs" />
     <Compile Include="TerrainLayer.cs" />
     <Compile Include="TerrainLayerList.cs">
@@ -95,7 +89,6 @@
     <Compile Include="TerrainLayerList.Designer.cs">
       <DependentUpon>TerrainLayerList.cs</DependentUpon>
     </Compile>
-    <Compile Include="SimpleVertexBuffer.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WindowVisualize.cs" />
   </ItemGroup>

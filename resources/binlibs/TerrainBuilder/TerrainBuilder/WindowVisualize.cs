@@ -9,8 +9,8 @@ using OpenTK.Graphics.OpenGL;
 using OpenTK.Input;
 using PFX;
 using PFX.BmFont;
+using PFX.Shader;
 using PFX.Util;
-using TerrainBuilder.Shader;
 
 namespace TerrainBuilder
 {

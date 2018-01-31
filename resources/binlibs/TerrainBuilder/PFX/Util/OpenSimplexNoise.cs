@@ -389,7 +389,7 @@ namespace PFX.Util
             _permGradIndex3D = new short[256];
 
             for (var i = 0; i < 256; i++)
-                _permGradIndex3D[i] = (short)(perm[i] % (Gradients3D.Length / 3) * 3);
+                _permGradIndex3D[i] = (short) (perm[i] % (Gradients3D.Length / 3) * 3);
         }
 
         //Initializes the class using a permutation array generated from a 64-bit seed.
@@ -408,11 +408,11 @@ namespace PFX.Util
             for (var i = 255; i >= 0; i--)
             {
                 seed = seed * 6364136223846793005L + 1442695040888963407L;
-                var r = (int)((seed + 31) % (i + 1));
+                var r = (int) ((seed + 31) % (i + 1));
                 if (r < 0)
                     r += i + 1;
                 _perm[i] = source[r];
-                _permGradIndex3D[i] = (short)(_perm[i] % (Gradients3D.Length / 3) * 3);
+                _permGradIndex3D[i] = (short) (_perm[i] % (Gradients3D.Length / 3) * 3);
                 source[r] = source[i];
             }
         }
@@ -532,6 +532,7 @@ namespace PFX.Util
                     xsvExt = xsb;
                     ysvExt = ysb;
                 }
+
                 xsb += 1;
                 ysb += 1;
                 dx0 = dx0 - 1 - 2 * SquishConstant_2D;
@@ -675,7 +676,7 @@ namespace PFX.Util
                 else
                 {
                     //(0,0,0) is not one of the closest two tetrahedral vertices.
-                    var c = (byte)(aPoint | bPoint); //Our two extra vertices are determined by the closest two.
+                    var c = (byte) (aPoint | bPoint); //Our two extra vertices are determined by the closest two.
 
                     if ((c & 0x01) == 0)
                     {
@@ -839,7 +840,7 @@ namespace PFX.Util
                 else
                 {
                     //(1,1,1) is not one of the closest two tetrahedral vertices.
-                    var c = (byte)(aPoint & bPoint); //Our two extra vertices are determined by the closest two.
+                    var c = (byte) (aPoint & bPoint); //Our two extra vertices are determined by the closest two.
 
                     if ((c & 0x01) != 0)
                     {
@@ -1019,7 +1020,7 @@ namespace PFX.Util
                         zsvExt0 = zsb + 1;
 
                         //Other extra point is based on the shared axis.
-                        var c = (byte)(aPoint & bPoint);
+                        var c = (byte) (aPoint & bPoint);
                         if ((c & 0x01) != 0)
                         {
                             dxExt1 = dx0 - 2 - 2 * SquishConstant_3D;
@@ -1061,7 +1062,7 @@ namespace PFX.Util
                         zsvExt0 = zsb;
 
                         //Other extra point is based on the omitted axis.
-                        var c = (byte)(aPoint | bPoint);
+                        var c = (byte) (aPoint | bPoint);
                         if ((c & 0x01) == 0)
                         {
                             dxExt1 = dx0 + 1 - SquishConstant_3D;
@@ -1311,6 +1312,7 @@ namespace PFX.Util
                     aScore = zins;
                     aPoint = 0x04;
                 }
+
                 if (aScore >= bScore && wins > bScore)
                 {
                     bScore = wins;
@@ -1408,7 +1410,7 @@ namespace PFX.Util
                 else
                 {
                     //(0,0,0,0) is not one of the closest two pentachoron vertices.
-                    var c = (byte)(aPoint | bPoint); //Our three extra vertices are determined by the closest two.
+                    var c = (byte) (aPoint | bPoint); //Our three extra vertices are determined by the closest two.
 
                     if ((c & 0x01) == 0)
                     {
@@ -1561,6 +1563,7 @@ namespace PFX.Util
                     aScore = zins;
                     aPoint = 0x0B;
                 }
+
                 if (aScore <= bScore && wins < bScore)
                 {
                     bScore = wins;
@@ -1659,7 +1662,7 @@ namespace PFX.Util
                 else
                 {
                     //(1,1,1,1) is not one of the closest two pentachoron vertices.
-                    var c = (byte)(aPoint & bPoint); //Our three extra vertices are determined by the closest two.
+                    var c = (byte) (aPoint & bPoint); //Our three extra vertices are determined by the closest two.
 
                     if ((c & 0x01) != 0)
                     {
@@ -1928,8 +1931,8 @@ namespace PFX.Util
                     if (aIsBiggerSide)
                     {
                         //Both closest points on the bigger side
-                        var c1 = (byte)(aPoint | bPoint);
-                        var c2 = (byte)(aPoint & bPoint);
+                        var c1 = (byte) (aPoint | bPoint);
+                        var c2 = (byte) (aPoint & bPoint);
                         if ((c1 & 0x01) == 0)
                         {
                             xsvExt0 = xsb;
@@ -2030,7 +2033,7 @@ namespace PFX.Util
                         dwExt2 = dw0;
 
                         //Other two points are based on the omitted axes.
-                        var c = (byte)(aPoint | bPoint);
+                        var c = (byte) (aPoint | bPoint);
 
                         if ((c & 0x01) == 0)
                         {
@@ -2466,8 +2469,8 @@ namespace PFX.Util
                     if (aIsBiggerSide)
                     {
                         //Both closest points on the bigger side
-                        var c1 = (byte)(aPoint & bPoint);
-                        var c2 = (byte)(aPoint | bPoint);
+                        var c1 = (byte) (aPoint & bPoint);
+                        var c2 = (byte) (aPoint | bPoint);
 
                         //Two contributions are permutations of (0,0,0,1) and (0,0,0,2) based on c1
                         xsvExt0 = xsvExt1 = xsb;
@@ -2555,7 +2558,7 @@ namespace PFX.Util
                         dwExt2 = dw0 - 1 - 4 * SquishConstant_4D;
 
                         //Other two points are based on the shared axes.
-                        var c = (byte)(aPoint & bPoint);
+                        var c = (byte) (aPoint & bPoint);
 
                         if ((c & 0x01) != 0)
                         {
@@ -2913,7 +2916,7 @@ namespace PFX.Util
 
         private static int FastFloor(double x)
         {
-            var xi = (int)x;
+            var xi = (int) x;
             return x < xi ? xi - 1 : xi;
         }
     }

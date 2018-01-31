@@ -57,12 +57,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FontBank.resx</DependentUpon>
     </Compile>
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Shader\DefaultShaderProgram.cs" />
+    <Compile Include="Lumberjack.cs" />
+    <Compile Include="Shader\ShaderProgram.cs" />
+    <Compile Include="Shader\Uniform.cs" />
+    <Compile Include="Sparkline.cs" />
     <Compile Include="Util\E.cs" />
     <Compile Include="Util\Fx.cs" />
     <Compile Include="Util\HSLColor.cs" />
     <Compile Include="Util\MathUtil.cs" />
     <Compile Include="Util\OpenSimplexNoise.cs" />
     <Compile Include="Util\Profiler.cs" />
+    <Compile Include="Util\SimpleVertexBuffer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />
@@ -82,6 +93,11 @@
     <EmbeddedResource Include="FontBank.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>FontBank.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

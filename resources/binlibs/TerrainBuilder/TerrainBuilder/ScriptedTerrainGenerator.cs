@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using MoonSharp.Interpreter;
+using PFX;
+using PFX.Util;
 
 namespace TerrainBuilder
 {
@@ -61,12 +63,12 @@ namespace TerrainBuilder
 
         private double GetNoise(double x, double z)
         {
-            return (_noise.eval(x, z) + 1) / 2;
+            return (_noise.Eval(x, z) + 1) / 2;
         }
 
         private double GetRawNoise(double x, double z)
         {
-            return _noise.eval(x, z);
+            return _noise.Eval(x, z);
         }
 
         public void SetSeed(long nudSeedValue)

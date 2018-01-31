@@ -139,14 +139,5 @@ namespace PFX {
                 return ((byte[])(obj));
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to [{0}{1}] {2}.
-        /// </summary>
-        public static string Log_Format {
-            get {
-                return ResourceManager.GetString("Log_Format", resourceCulture);
-            }
-        }
     }
 }

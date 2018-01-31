@@ -13,7 +13,7 @@ namespace PFX.Util
         {
             public static int GetRgb(int r, int g, int b)
             {
-                int rgb = r;
+                var rgb = r;
                 rgb = (rgb << 8) + g;
                 rgb = (rgb << 8) + b;
                 return rgb;
@@ -21,7 +21,7 @@ namespace PFX.Util
 
             public static int GetRgba(int r, int g, int b, int a)
             {
-                int rgba = a;
+                var rgba = a;
                 rgba = (rgba << 8) + r;
                 rgba = (rgba << 8) + g;
                 rgba = (rgba << 8) + b;
@@ -35,8 +35,8 @@ namespace PFX.Util
 
             public static Vector2 Lerp(Vector2 a, Vector2 b, float f)
             {
-                double x = Lerp(a.X, b.X, f);
-                double y = Lerp(a.Y, b.Y, f);
+                var x = Lerp(a.X, b.X, f);
+                var y = Lerp(a.Y, b.Y, f);
                 return new Vector2((float) x, (float) y);
             }
 
@@ -52,23 +52,25 @@ namespace PFX.Util
 
             public static float HzPercent(float hz)
             {
-                return (DateTime.Now.Ticks % (long)(1000 / hz)) / (1000 / hz);
+                return DateTime.Now.Ticks % (long) (1000 / hz) / (1000 / hz);
             }
 
             /// <summary>
-            /// Creates color with corrected brightness.
+            ///     Creates color with corrected brightness.
             /// </summary>
             /// <param name="color">Color to correct.</param>
-            /// <param name="correctionFactor">The brightness correction factor. Must be between -1 and 1. 
-            /// Negative values produce darker colors.</param>
+            /// <param name="correctionFactor">
+            ///     The brightness correction factor. Must be between -1 and 1.
+            ///     Negative values produce darker colors.
+            /// </param>
             /// <returns>
-            /// Corrected <see cref="Color"/> structure.
+            ///     Corrected <see cref="Color" /> structure.
             /// </returns>
             public static Color ChangeColorBrightness(Color color, float correctionFactor)
             {
-                float red = (float)color.R;
-                float green = (float)color.G;
-                float blue = (float)color.B;
+                var red = (float) color.R;
+                var green = (float) color.G;
+                var blue = (float) color.B;
 
                 if (correctionFactor < 0)
                 {
@@ -84,33 +86,33 @@ namespace PFX.Util
                     blue = (255 - blue) * correctionFactor + blue;
                 }
 
-                return Color.FromArgb(color.A, (int)red, (int)green, (int)blue);
+                return Color.FromArgb(color.A, (int)red, (int) green, (int) blue);
             }
 
             public static byte[] MakeStipple(string imagePath)
             {
-                var img = (Bitmap)Image.FromFile(imagePath);
+                var img = (Bitmap) Image.FromFile(imagePath);
                 if (img.Width != 32 || img.Height != 32)
                     throw new ArgumentException("Image must be exactly 32x32!");
 
                 var bytes = new List<byte>();
                 for (var y = 0; y < 32; y++)
-                    for (var x = 0; x < 32; x += 8)
-                        bytes.Add((byte)(((img.GetPixel(x, y).R > 0 ? 1 : 0) << 7) +
-                            ((img.GetPixel(x + 1, y).R > 0 ? 1 : 0) << 6) +
-                            ((img.GetPixel(x + 2, y).R > 0 ? 1 : 0) << 5) +
-                            ((img.GetPixel(x + 3, y).R > 0 ? 1 : 0) << 4) +
-                            ((img.GetPixel(x + 4, y).R > 0 ? 1 : 0) << 3) +
-                            ((img.GetPixel(x + 5, y).R > 0 ? 1 : 0) << 2) +
-                            ((img.GetPixel(x + 6, y).R > 0 ? 1 : 0) << 1) +
-                            (img.GetPixel(x + 7, y).R > 0 ? 1 : 0)));
+                for (var x = 0; x < 32; x += 8)
+                    bytes.Add((byte) (((img.GetPixel(x, y).R > 0 ? 1 : 0) << 7) +
+                                      ((img.GetPixel(x + 1, y).R > 0 ? 1 : 0) << 6) +
+                                      ((img.GetPixel(x + 2, y).R > 0 ? 1 : 0) << 5) +
+                                      ((img.GetPixel(x + 3, y).R > 0 ? 1 : 0) << 4) +
+                                      ((img.GetPixel(x + 4, y).R > 0 ? 1 : 0) << 3) +
+                                      ((img.GetPixel(x + 5, y).R > 0 ? 1 : 0) << 2) +
+                                      ((img.GetPixel(x + 6, y).R > 0 ? 1 : 0) << 1) +
+                                      (img.GetPixel(x + 7, y).R > 0 ? 1 : 0)));
                 return bytes.ToArray();
             }
 
             public static Vector2d Lerp(Vector2d a, Vector2d b, double f)
             {
-                double x = Lerp(a.X, b.X, f);
-                double y = Lerp(a.Y, b.Y, f);
+                var x = Lerp(a.X, b.X, f);
+                var y = Lerp(a.Y, b.Y, f);
                 return new Vector2d(x, y);
             }
         }
@@ -178,7 +180,7 @@ namespace PFX.Util
                 Private Methods
              */
 
-            static void Rectangle(float x, float y, float w, float h, PrimitiveType mode)
+            private static void Rectangle(float x, float y, float w, float h, PrimitiveType mode)
             {
                 GL.Begin(mode);
                 GL.Vertex3(x, y, 0);
@@ -188,19 +190,20 @@ namespace PFX.Util
                 GL.End();
             }
 
-            static void Circle(float x, float y, float radius, PrimitiveType mode)
+            private static void Circle(float x, float y, float radius, PrimitiveType mode)
             {
                 GL.Begin(mode);
-                for (int i = 0; i <= 360; i++)
+                for (var i = 0; i <= 360; i++)
                 {
-                    double nx = Math.Sin(i * 3.141526f / 180) * radius;
-                    double ny = Math.Cos(i * 3.141526f / 180) * radius;
+                    var nx = Math.Sin(i * 3.141526f / 180) * radius;
+                    var ny = Math.Cos(i * 3.141526f / 180) * radius;
                     GL.Vertex2(nx + x, ny + y);
                 }
+
                 GL.End();
             }
 
-            static void Triangle(float x, float y, float sideLen, PrimitiveType mode)
+            private static void Triangle(float x, float y, float sideLen, PrimitiveType mode)
             {
                 GL.Begin(mode);
                 GL.Vertex2(x, y - sideLen / 2);
@@ -209,16 +212,17 @@ namespace PFX.Util
                 GL.End();
             }
 
-            static void Pie(float x, float y, float radius, float percent, PrimitiveType mode)
+            private static void Pie(float x, float y, float radius, float percent, PrimitiveType mode)
             {
                 GL.Begin(mode);
                 GL.Vertex2(x, y);
-                for (int i = 0; i <= 360 * percent; i++)
+                for (var i = 0; i <= 360 * percent; i++)
                 {
-                    double nx = Math.Sin(i * 3.141526f / 180) * radius;
-                    double ny = Math.Cos(i * 3.141526f / 180) * radius;
+                    var nx = Math.Sin(i * 3.141526f / 180) * radius;
+                    var ny = Math.Cos(i * 3.141526f / 180) * radius;
                     GL.Vertex2(nx + x, ny + y);
                 }
+
                 GL.End();
             }
 
@@ -244,7 +248,8 @@ namespace PFX.Util
                 CentripetalCatmullRomToVertexOnly(p0.X, p0.Y, p1.X, p1.Y, p2.X, p2.Y, p3.X, p3.Y, numSamplePoints);
             }
 
-            public static void CentripetalCatmullRomToVertexOnly(float p0X, float p0Y, float p1X, float p1Y, float p2X, float p2Y,
+            public static void CentripetalCatmullRomToVertexOnly(float p0X, float p0Y, float p1X, float p1Y, float p2X,
+                float p2Y,
                 float p3X, float p3Y, float numSamplePoints)
             {
                 for (var i = 0; i <= numSamplePoints; i++)
@@ -252,7 +257,8 @@ namespace PFX.Util
                         i / numSamplePoints));
             }
 
-            public static Vector2 EvalCentripetalCatmullRom(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, float percentageAcross)
+            public static Vector2 EvalCentripetalCatmullRom(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3,
+                float percentageAcross)
             {
                 return EvalCentripetalCatmullRom(p0.X, p0.Y, p1.X, p1.Y, p2.X, p2.Y, p3.X, p3.Y, percentageAcross);
             }
@@ -285,17 +291,17 @@ namespace PFX.Util
                 double t = percentageAcross,
                     t2 = t * t,
                     t3 = t2 * t;
-                return new Vector2((float)(c0X + c1X * t + c2X * t2 + c3X * t3),
-                    (float)(c0Y + c1Y * t + c2Y * t2 + c3Y * t3));
+                return new Vector2((float) (c0X + c1X * t + c2X * t2 + c3X * t3),
+                    (float) (c0Y + c1Y * t + c2Y * t2 + c3Y * t3));
             }
         }
 
         public static class D3
         {
             private static bool _isInit;
-            private static double[,] _vertsBox = new double[8, 3];
+            private static readonly double[,] _vertsBox = new double[8, 3];
 
-            private static double[,] _normalsBox =
+            private static readonly double[,] _normalsBox =
             {
                 {-1.0, 0.0, 0.0},
                 {0.0, 1.0, 0.0},
@@ -305,12 +311,12 @@ namespace PFX.Util
                 {0.0, 0.0, -1.0}
             };
 
-            private static int[,] _facesBox =
+            private static readonly int[,] _facesBox =
             {
                 {0, 1, 2, 3}, {3, 2, 6, 7}, {7, 6, 5, 4}, {4, 5, 1, 0}, {5, 6, 2, 1}, {7, 4, 0, 3}
             };
 
-            private static double[,] _dodec = new double[20, 3];
+            private static readonly double[,] _dodec = new double[20, 3];
 
             public static void Init()
             {
@@ -466,7 +472,7 @@ namespace PFX.Util
 
             private static void Crossprod(double[] v1, double[] v2, ref double[] prod)
             {
-                double[] p = new double[3]; /* in case prod == v1 or v2 */
+                var p = new double[3]; /* in case prod == v1 or v2 */
 
                 p[0] = v1[1] * v2[2] - v2[1] * v1[2];
                 p[1] = v1[2] * v2[0] - v2[2] * v1[0];
@@ -478,11 +484,8 @@ namespace PFX.Util
 
             private static void Normalize(double[] v)
             {
-                double d = Math.Sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
-                if (d == 0.0)
-                {
-                    v[0] = d = 1.0;
-                }
+                var d = Math.Sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+                if (d == 0.0) v[0] = d = 1.0;
                 d = 1 / d;
                 v[0] *= d;
                 v[1] *= d;
@@ -495,7 +498,7 @@ namespace PFX.Util
 
             private static void Box(PrimitiveType type)
             {
-                for (int i = 5; i >= 0; i--)
+                for (var i = 5; i >= 0; i--)
                 {
                     GL.Begin(type);
                     GL.Normal3(_normalsBox[i, 0], _normalsBox[i, 1], _normalsBox[i, 2]);
@@ -528,8 +531,8 @@ namespace PFX.Util
                 for (i = rings - 1; i >= 0; i--)
                 {
                     theta1 = theta + ringDelta;
-                    cosTheta1 = Math.Cos((float)theta1);
-                    sinTheta1 = Math.Sin((float)theta1);
+                    cosTheta1 = Math.Cos((float) theta1);
+                    sinTheta1 = Math.Sin((float) theta1);
                     GL.Begin(type);
                     phi = 0.0;
                     for (j = nsides; j >= 0; j--)
@@ -537,8 +540,8 @@ namespace PFX.Util
                         double cosPhi, sinPhi, dist;
 
                         phi += sideDelta;
-                        cosPhi = Math.Cos((float)phi);
-                        sinPhi = Math.Sin((float)phi);
+                        cosPhi = Math.Cos((float) phi);
+                        sinPhi = Math.Sin((float) phi);
                         dist = rOuter + r * cosPhi;
 
                         GL.Normal3(cosTheta1 * cosPhi, -sinTheta1 * cosPhi, sinPhi);
@@ -546,6 +549,7 @@ namespace PFX.Util
                         GL.Normal3(cosTheta * cosPhi, -sinTheta * cosPhi, sinPhi);
                         GL.Vertex3(cosTheta * dist, -sinTheta * dist, r * sinPhi);
                     }
+
                     GL.End();
                     theta = theta1;
                     cosTheta = cosTheta1;
@@ -557,8 +561,10 @@ namespace PFX.Util
             {
                 double[] n0 = new double[3], d1 = new double[3], d2 = new double[3];
 
-                Diff3(_dodec.Cast<double>().Skip(19 * a).Take(3).ToArray(), _dodec.Cast<double>().Skip(19 * b).Take(3).ToArray(), ref d1);
-                Diff3(_dodec.Cast<double>().Skip(19 * b).Take(3).ToArray(), _dodec.Cast<double>().Skip(19 * c).Take(3).ToArray(), ref d2);
+                Diff3(_dodec.Cast<double>().Skip(19 * a).Take(3).ToArray(),
+                    _dodec.Cast<double>().Skip(19 * b).Take(3).ToArray(), ref d1);
+                Diff3(_dodec.Cast<double>().Skip(19 * b).Take(3).ToArray(),
+                    _dodec.Cast<double>().Skip(19 * c).Take(3).ToArray(), ref d2);
                 Crossprod(d1, d2, ref n0);
                 Normalize(n0);
 

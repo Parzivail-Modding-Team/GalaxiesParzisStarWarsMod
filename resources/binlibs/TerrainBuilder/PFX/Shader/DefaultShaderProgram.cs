@@ -1,10 +1,8 @@
-﻿using System;
-using System.IO;
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 
-namespace TerrainBuilder.Shader
+namespace PFX.Shader
 {
-    class DefaultShaderProgram : ShaderProgram
+    public class DefaultShaderProgram : ShaderProgram
     {
         private readonly string _program;
 

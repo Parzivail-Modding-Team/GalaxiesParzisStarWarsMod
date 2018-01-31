@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenTK;
-using GL = OpenTK.Graphics.OpenGL.GL;
-using ShaderType = OpenTK.Graphics.OpenGL.ShaderType;
+using OpenTK.Graphics.OpenGL;
 
-namespace TerrainBuilder.Shader
+namespace PFX.Shader
 {
-    abstract class ShaderProgram
+    public abstract class ShaderProgram
     {
+        protected Dictionary<string, int> CacheLoc;
         protected int FsId;
         protected int PgmId;
         protected int VsId;
-
-        protected Dictionary<string, int> CacheLoc;
 
         protected ShaderProgram()
         {
@@ -41,25 +39,35 @@ namespace TerrainBuilder.Shader
                 var val = uniform.GetValue();
                 var type = val.GetType();
                 if (type == typeof(float))
-                    GL.Uniform1(loc, (float)val);
+                {
+                    GL.Uniform1(loc, (float) val);
+                }
                 else if (type == typeof(double))
-                    GL.Uniform1(loc, (double)val);
+                {
+                    GL.Uniform1(loc, (double) val);
+                }
                 else if (type == typeof(int))
-                    GL.Uniform1(loc, (int)val);
+                {
+                    GL.Uniform1(loc, (int) val);
+                }
                 else if (type == typeof(uint))
-                    GL.Uniform1(loc, (uint)val);
+                {
+                    GL.Uniform1(loc, (uint) val);
+                }
                 else if (type == typeof(Vector2))
                 {
-                    var vec2 = (Vector2)val;
+                    var vec2 = (Vector2) val;
                     GL.Uniform2(loc, vec2.X, vec2.Y);
                 }
                 else if (type == typeof(Vector3))
                 {
-                    var vec3 = (Vector3)val;
+                    var vec3 = (Vector3) val;
                     GL.Uniform3(loc, vec3.X, vec3.Y, vec3.Z);
                 }
                 else
+                {
                     throw new ArgumentException($"Unsupported uniform type: {type}");
+                }
             }
         }
 

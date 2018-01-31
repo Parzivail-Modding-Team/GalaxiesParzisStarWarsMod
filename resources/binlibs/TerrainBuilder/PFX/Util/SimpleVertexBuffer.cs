@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 
-namespace TerrainBuilder
+namespace PFX.Util
 {
-    class SimpleVertexBuffer
+    public class SimpleVertexBuffer
     {
-        public int VertexBufferId;
-        public int ColorBufferId;
-        public int NormalBufferId;
-        public int ElementBufferId;
-        public int NumElements;
-
-        private readonly List<Vector3> _vertices = new List<Vector3>();
-        private readonly List<Vector3> _normals = new List<Vector3>();
         private readonly List<int> _colors = new List<int>();
         private readonly List<int> _indices = new List<int>();
+        private readonly List<Vector3> _normals = new List<Vector3>();
+
+        private readonly List<Vector3> _vertices = new List<Vector3>();
+        public int ColorBufferId;
+        public int ElementBufferId;
+        public int NormalBufferId;
+        public int NumElements;
+        public int VertexBufferId;
 
         public void AddVertex(Vector3 pos)
         {
@@ -62,7 +62,8 @@ namespace TerrainBuilder
                 GL.BindBuffer(BufferTarget.ArrayBuffer, ColorBufferId);
 
                 // Send data to buffer
-                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertexColors.Length * sizeof(int)), vertexColors, BufferUsageHint.StaticDraw);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) (vertexColors.Length * sizeof(int)), vertexColors,
+                    BufferUsageHint.StaticDraw);
 
                 // Validate that the buffer is the correct size
                 GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out bufferSize);
@@ -83,7 +84,8 @@ namespace TerrainBuilder
                 GL.BindBuffer(BufferTarget.ArrayBuffer, NormalBufferId);
 
                 // Send data to buffer
-                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertexNormals.Length * Vector3.SizeInBytes), vertexNormals, BufferUsageHint.StaticDraw);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) (vertexNormals.Length * Vector3.SizeInBytes),
+                    vertexNormals, BufferUsageHint.StaticDraw);
 
                 // Validate that the buffer is the correct size
                 GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out bufferSize);
@@ -103,7 +105,8 @@ namespace TerrainBuilder
                 GL.BindBuffer(BufferTarget.ArrayBuffer, VertexBufferId);
 
                 // Send data to buffer
-                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertices.Length * Vector3.SizeInBytes), vertices, BufferUsageHint.DynamicDraw);
+                GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr) (vertices.Length * Vector3.SizeInBytes), vertices,
+                    BufferUsageHint.DynamicDraw);
 
                 // Validate that the buffer is the correct size
                 GL.GetBufferParameter(BufferTarget.ArrayBuffer, BufferParameterName.BufferSize, out bufferSize);
@@ -123,7 +126,8 @@ namespace TerrainBuilder
                 GL.BindBuffer(BufferTarget.ElementArrayBuffer, ElementBufferId);
 
                 // Send data to buffer
-                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(indices.Length * sizeof(int)), indices, BufferUsageHint.StaticDraw);
+                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr) (indices.Length * sizeof(int)), indices,
+                    BufferUsageHint.StaticDraw);
 
                 // Validate that the buffer is the correct size
                 GL.GetBufferParameter(BufferTarget.ElementArrayBuffer, BufferParameterName.BufferSize, out bufferSize);

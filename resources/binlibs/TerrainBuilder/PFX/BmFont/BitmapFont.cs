@@ -8,6 +8,9 @@ namespace PFX.BmFont
 {
     public class BitmapFont
     {
+        private readonly Dictionary<string, int> _cacheTextList = new Dictionary<string, int>();
+
+        private readonly Dictionary<string, SizeF> _cacheTextSize = new Dictionary<string, SizeF>();
         public string Filename { get; set; }
         public FontInfo Info { get; set; }
         public FontCommon Common { get; set; }
@@ -15,9 +18,6 @@ namespace PFX.BmFont
         public List<FontChar> Characters { get; set; }
         public List<FontKerning> KerningPairs { get; set; }
         public FontChar MissingCharacter { get; set; }
-
-        private readonly Dictionary<string, SizeF> _cacheTextSize = new Dictionary<string, SizeF>();
-        private readonly Dictionary<string, int> _cacheTextList = new Dictionary<string, int>();
 
         public void RenderString(string s, bool cache = true)
         {
@@ -209,7 +209,7 @@ namespace PFX.BmFont
                 font.Pages.PageNames = new List<string>();
                 for (var i = 0; i < font.Common.Pages; i++)
                     font.Pages.PageNames.Add(r.ReadNullTermString());
-                
+
                 FontChar.BlockType = r.ReadByte();
                 FontChar.BlockSize = r.ReadUInt32();
 
@@ -234,14 +234,18 @@ namespace PFX.BmFont
                 font.MissingCharacter = font.Characters.First(fC => fC.Id == '?');
 
                 if (pages.Length == 0)
+                {
                     font.LoadPageBitmaps();
+                }
                 else
                 {
                     font.Pages.PageBitmaps = new List<Bitmap>();
                     font.Pages.PageBitmaps.AddRange(pages);
                     if (font.Pages.PageBitmaps.Count != font.Pages.PageNames.Count)
-                        throw new FileLoadException($"Number of page bitmaps provided ({pages.Length}) did not match expected ({font.Pages.PageBitmaps.Count}).");
+                        throw new FileLoadException(
+                            $"Number of page bitmaps provided ({pages.Length}) did not match expected ({font.Pages.PageBitmaps.Count}).");
                 }
+
                 font.LoadCharacterBitmapData();
 
                 if (sr.Position == sr.Length) return font;
