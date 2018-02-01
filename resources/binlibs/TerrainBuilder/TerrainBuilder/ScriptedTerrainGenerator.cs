@@ -74,7 +74,14 @@ namespace TerrainBuilder
 
         public double GetValue(double x, double z)
         {
-            return _script?.Globals["terrain"] == null ? 0 : _script.Call(_script.Globals["terrain"], x, z).Number;
+            var value = _script?.Globals["terrain"] == null ? 0 : _script.Call(_script.Globals["terrain"], x, z).Number;
+
+            if (value < 0)
+                value = 0;
+            if (value > 255)
+                value = 255;
+
+            return value;
         }
 
         public int GetTree(double x, double y, double z)

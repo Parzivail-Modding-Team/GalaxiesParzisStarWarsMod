@@ -13,7 +13,6 @@ namespace TerrainBuilder
         private readonly WindowVisualize _parent;
         private readonly Random _random = new Random();
 
-        public ScriptedTerrainGenerator ScriptedTerrainGenerator = new ScriptedTerrainGenerator();
         public Dictionary<int, Color> Colors = new Dictionary<int, Color>();
 
         public TerrainLayerList(WindowVisualize parent)
@@ -59,7 +58,7 @@ namespace TerrainBuilder
                 return;
             }
 
-            ScriptedTerrainGenerator.SetSeed((long)nudSeed.Value);
+            _parent.ScriptedTerrainGenerator.SetSeed((long)nudSeed.Value);
             ReRenderNoiseImage();
             _parent.ReRender();
         }
@@ -73,7 +72,7 @@ namespace TerrainBuilder
             for (var x = 0; x < pbNoise.Width; x++)
                 for (var y = 0; y < pbNoise.Height; y++)
                 {
-                    var n = _parent.GetValueAt(x, y);
+                    var n = _parent.ScriptedTerrainGenerator.GetValue(x, y);
                     if (n > 255)
                         n = 255;
                     if (n < 0)

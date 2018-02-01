@@ -60,6 +60,7 @@ namespace TerrainBuilder
          * Script-related
          */
         private bool _dirty;
+        public ScriptedTerrainGenerator ScriptedTerrainGenerator = new ScriptedTerrainGenerator();
         private readonly ScriptWatcher _scriptWatcher = new ScriptWatcher();
 
         /*
@@ -83,13 +84,24 @@ namespace TerrainBuilder
          * Terrain-related
          */
         private int _numVerts;
-        public Color TintColor = Color.LimeGreen;
+        private Color _tintColor;
+        private Vector3 _tintColorVector;
         private int _sideLength = 64;
 
         public int SideLength
         {
             get { return _sideLength; }
             set { _sideLength = (int)(value / 2f); }
+        }
+
+        public Color TintColor
+        {
+            get { return _tintColor; }
+            set
+            {
+                _tintColor = value;
+                _tintColorVector = new Vector3(value.R / 255f, value.G / 255f, value.B / 255f);
+            }
         }
 
         public static double[,] Heightmap;
@@ -132,6 +144,8 @@ namespace TerrainBuilder
 
             // Wire up file watcher
             _scriptWatcher.FileChanged += ScriptWatcherOnFileChanged;
+
+            TintColor = Color.LimeGreen;
 
             // Load UI window
             _terrainLayerList = new TerrainLayerList(this);
@@ -223,7 +237,7 @@ namespace TerrainBuilder
         private void ScriptWatcherOnFileChanged(object sender, ScriptChangedEventArgs e)
         {
             Lumberjack.Info(string.Format(EmbeddedFiles.Info_FileReloaded, e.Filename));
-            _terrainLayerList.ScriptedTerrainGenerator.LoadScript(e.Script, e.ScriptCode);
+            ScriptedTerrainGenerator.LoadScript(e.Script, e.ScriptCode);
             _dirty = true;
         }
 
@@ -284,16 +298,16 @@ namespace TerrainBuilder
         private void DoBackgroundRenderComplete(object sender, RunWorkerCompletedEventArgs e)
         {
             // Render done, reset statusbar 
-            _terrainLayerList.Invoke((MethodInvoker) delegate
-            {
-                _terrainLayerList.bCancelRender.Visible = false;
-                _terrainLayerList.bCancelRender.Enabled = false;
+            _terrainLayerList.Invoke((MethodInvoker)delegate
+           {
+               _terrainLayerList.bCancelRender.Visible = false;
+               _terrainLayerList.bCancelRender.Enabled = false;
 
-                _terrainLayerList.pbRenderStatus.Visible = false;
-                _terrainLayerList.pbRenderStatus.Value = 0;
+               _terrainLayerList.pbRenderStatus.Visible = false;
+               _terrainLayerList.pbRenderStatus.Value = 0;
 
-                _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
-            });
+               _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
+           });
 
             // If the render was manually cancelled, go no further
             if (_scriptWatcher.GetScriptId() == 0 || e.Cancelled)
@@ -342,7 +356,7 @@ namespace TerrainBuilder
                     }
 
                     // Set the heightmap at (x, z)
-                    Heightmap[x, z] = (int)GetValueAt(x, z);
+                    Heightmap[x, z] = (int)ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
                 }
 
                 // Report progress every "scanline"
@@ -595,6 +609,13 @@ namespace TerrainBuilder
             {
                 for (var z = 0; z < 2 * SideLength + 2; z++)
                 {
+                    // Cancel if requested
+                    if (worker.CancellationPending)
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+
                     var worldX = x - SideLength - 1;
                     var worldY = (int)Heightmap[x, z];
                     var worldZ = z - SideLength - 1;
@@ -616,16 +637,16 @@ namespace TerrainBuilder
         private void DoBackgroundDecorateComplete(object sender, RunWorkerCompletedEventArgs e)
         {
             // Render done, reset statusbar
-            _terrainLayerList.Invoke((MethodInvoker) delegate
-            {
-                _terrainLayerList.bCancelRender.Visible = false;
-                _terrainLayerList.bCancelRender.Enabled = false;
+            _terrainLayerList.Invoke((MethodInvoker)delegate
+           {
+               _terrainLayerList.bCancelRender.Visible = false;
+               _terrainLayerList.bCancelRender.Enabled = false;
 
-                _terrainLayerList.pbRenderStatus.Visible = false;
-                _terrainLayerList.pbRenderStatus.Value = 0;
+               _terrainLayerList.pbRenderStatus.Visible = false;
+               _terrainLayerList.pbRenderStatus.Value = 0;
 
-                _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
-            });
+               _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
+           });
 
             // If the decorate was manually cancelled, go no further
             if (_scriptWatcher.GetScriptId() == 0 || e.Cancelled)
@@ -637,22 +658,9 @@ namespace TerrainBuilder
             GC.Collect();
         }
 
-        public double GetValueAt(int x, int z)
-        {
-            // Invoke the script to get the terrain height at (x, z)
-            var value = _terrainLayerList.ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
-
-            if (value < 0)
-                value = 0;
-            if (value > 255)
-                value = 255;
-
-            return value;
-        }
-
         private int GetTreeAt(int worldX, int worldY, int worldZ)
         {
-            return _terrainLayerList.ScriptedTerrainGenerator.GetTree(worldX, worldY, worldZ);
+            return ScriptedTerrainGenerator.GetTree(worldX, worldY, worldZ);
         }
 
         private void UpdateHandler(object sender, FrameEventArgs e)
@@ -705,29 +713,6 @@ namespace TerrainBuilder
             _backgroundDecorator.RunWorkerAsync();
         }
 
-        //private void PopulateChunk(float x, float z)
-        //{
-        //    // Convert chunk pos back into world pos
-        //    var nx = x * 16 + SideLength + 1;
-        //    var nz = z * 16 + SideLength + 1;
-
-        //    // Generate some trees
-        //    for (var i = 0; i < _terrainLayerList.ScriptedTerrainGenerator.TreesPerChunk; i++)
-        //    {
-        //        var pos = _halton.Increment();
-        //        // Convert from normal to world space
-        //        pos *= 16;
-        //        pos += new Vector3(nx, 0, nz);
-        //        var val = Heightmap[(int)pos.X, (int)pos.Z];
-        //        if (val <= _terrainLayerList.ScriptedTerrainGenerator.WaterLevel &&
-        //            !_terrainLayerList.ScriptedTerrainGenerator.TreesBelowWaterLevel) continue;
-        //        GL.PushMatrix();
-        //        GL.Translate((int)pos.X - SideLength - 1.5, val + 0.5, (int)pos.Z - SideLength - 1.5);
-        //        DrawBox(1);
-        //        GL.PopMatrix();
-        //    }
-        //}
-
         private void RenderHandler(object sender, FrameEventArgs e)
         {
             // Start profiling
@@ -771,7 +756,7 @@ namespace TerrainBuilder
             Uniforms.Clear();
 
             // Set up uniforms
-            TintUniform.Value = new Vector3(TintColor.R / 255f, TintColor.G / 255f, TintColor.B / 255f);
+            TintUniform.Value = _tintColorVector;
             Uniforms.Add(TintUniform);
 
             // Engage shader, render, disengage
@@ -786,10 +771,10 @@ namespace TerrainBuilder
 
             GL.Begin(PrimitiveType.Quads);
             GL.Normal3(UpVector);
-            GL.Vertex3(-SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, -SideLength);
-            GL.Vertex3(SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, -SideLength);
-            GL.Vertex3(SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
-            GL.Vertex3(-SideLength, _terrainLayerList.ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
+            GL.Vertex3(-SideLength, ScriptedTerrainGenerator.WaterLevel - 0.1, -SideLength);
+            GL.Vertex3(SideLength, ScriptedTerrainGenerator.WaterLevel - 0.1, -SideLength);
+            GL.Vertex3(SideLength, ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
+            GL.Vertex3(-SideLength, ScriptedTerrainGenerator.WaterLevel - 0.1, SideLength);
             GL.End();
 
             // Set up 2D mode
@@ -846,14 +831,14 @@ namespace TerrainBuilder
             _profile = _profiler.Reset();
         }
 
-        private static void DrawBox(VertexBufferInitializer vbi, Vector3 position)
+        public static void DrawBox(VertexBufferInitializer vbi, Vector3 position, int color = 0xFF0000)
         {
             for (var i = 5; i >= 0; i--)
             {
-                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 0]], _boxNormals[i], Util.RgbToInt(1, 0, 0));
-                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 1]], _boxNormals[i], Util.RgbToInt(1, 0, 0));
-                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 2]], _boxNormals[i], Util.RgbToInt(1, 0, 0));
-                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 3]], _boxNormals[i], Util.RgbToInt(1, 0, 0));
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 0]], _boxNormals[i], color);
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 1]], _boxNormals[i], color);
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 2]], _boxNormals[i], color);
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 3]], _boxNormals[i], color);
             }
         }
     }
