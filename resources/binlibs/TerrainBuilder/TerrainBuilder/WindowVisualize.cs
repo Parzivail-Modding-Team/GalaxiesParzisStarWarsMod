@@ -758,6 +758,8 @@ namespace TerrainBuilder
             // Set up uniforms
             TintUniform.Value = _tintColorVector;
             Uniforms.Add(TintUniform);
+            
+            GL.Color3(Color.White);
 
             // Engage shader, render, disengage
             _shaderProgram.Use(Uniforms);

@@ -15,18 +15,16 @@ namespace TerrainBuilder.WorldGen
 
         protected override void Generate(VertexBufferInitializer vbi, Vector3 pos)
         {
-            var i = Rand.Next(3) + _minTreeHeight;
-            var flag = true;
+            var treeHeight = Rand.Next(3) + _minTreeHeight;
 
-            if (pos.Y < 1 || pos.Y + i + 1 > 256) return;
+            if (pos.Y < 1 || pos.Y + treeHeight + 1 > 256) return;
 
-            const int k2 = 3;
-            const int l2 = 0;
+            const int leavesHeight = 3;
 
-            for (var y = pos.Y - k2 + i; y <= pos.Y + i; ++y)
+            for (var y = pos.Y - leavesHeight + treeHeight; y <= pos.Y + treeHeight; ++y)
             {
-                var nY = y - (pos.Y + i);
-                var expansionSize = l2 + 1 - nY / 2;
+                var nY = y - (pos.Y + treeHeight);
+                var expansionSize = 1 - nY / 2;
 
                 for (var x = pos.X - expansionSize; x <= pos.X + expansionSize; ++x)
                 {
@@ -44,7 +42,7 @@ namespace TerrainBuilder.WorldGen
                 }
             }
 
-            for (var j3 = 0; j3 < i; ++j3)
+            for (var j3 = 0; j3 < treeHeight; ++j3)
             {
                 SetBlock(vbi, Intify(pos + Vector3.UnitY * j3), ColorWood);
             }
