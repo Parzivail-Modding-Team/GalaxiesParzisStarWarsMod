@@ -7,8 +7,8 @@ namespace TerrainBuilder.WorldGen
 {
     abstract class TreeDecorator
     {
-        protected static readonly int ColorLeaves = 0x0000AA;
-        protected static readonly int ColorWood = 0xFF0000;
+        protected static readonly int ColorLeaves = 0x18bd4c;
+        protected static readonly int ColorWood = 0x83652c;
         protected static readonly Random Rand = new Random();
 
         protected static readonly Tree Tree = new Tree(6);

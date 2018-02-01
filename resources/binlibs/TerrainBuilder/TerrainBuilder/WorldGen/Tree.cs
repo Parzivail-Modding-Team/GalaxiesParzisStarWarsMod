@@ -18,62 +18,41 @@ namespace TerrainBuilder.WorldGen
             var i = Rand.Next(3) + _minTreeHeight;
             var flag = true;
 
-            if ((int) pos.Y < 1 || (int) pos.Y + i + 1 > 256) return;
-
-            for (var j = (int)pos.Y; j <= (int)pos.Y + 1 + i; ++j)
-            {
-                var k = 1;
-
-                if (j == (int)pos.Y)
-                {
-                    k = 0;
-                }
-
-                if (j >= (int)pos.Y + 1 + i - 2)
-                {
-                    k = 2;
-                }
-
-                for (var l = (int)pos.X - k; l <= (int)pos.X + k && flag; ++l)
-                {
-                    for (var i1 = (int)pos.Z - k; i1 <= (int)pos.Z + k && flag; ++i1)
-                    {
-                        if (j < 0 || j >= 256)
-                            flag = false;
-                    }
-                }
-            }
-
-            if (!flag) return;
+            if (pos.Y < 1 || pos.Y + i + 1 > 256) return;
 
             const int k2 = 3;
             const int l2 = 0;
 
-            for (var i3 = (int) pos.Y - k2 + i; i3 <= (int) pos.Y + i; ++i3)
+            for (var y = pos.Y - k2 + i; y <= pos.Y + i; ++y)
             {
-                var i4 = i3 - ((int) pos.Y + i);
-                var j1 = l2 + 1 - i4 / 2;
+                var nY = y - (pos.Y + i);
+                var expansionSize = l2 + 1 - nY / 2;
 
-                for (var k1 = (int) pos.X - j1; k1 <= (int) pos.X + j1; ++k1)
+                for (var x = pos.X - expansionSize; x <= pos.X + expansionSize; ++x)
                 {
-                    var l1 = k1 - (int) pos.X;
+                    var nX = x - pos.X;
 
-                    for (var i2 = (int) pos.Z - j1; i2 <= (int) pos.Z + j1; ++i2)
+                    for (var z = pos.Z - expansionSize; z <= pos.Z + expansionSize; ++z)
                     {
-                        var j2 = i2 - (int) pos.Z;
+                        var nZ = z - pos.Z;
 
-                        if (Math.Abs(l1) == j1 && Math.Abs(j2) == j1 && (Rand.Next(2) == 0 || i4 == 0))
+                        if (Math.Abs(Math.Abs(nX) - expansionSize) < 0.1f && Math.Abs(Math.Abs(nZ) - expansionSize) < 0.1f && (Rand.Next(2) == 0 || Math.Abs(nY) < 0.1f))
                             continue;
                             
-                        SetBlock(vbi, new Vector3(k1, i3, i2), ColorLeaves);
+                        SetBlock(vbi, new Vector3((int)x, (int)y, (int)z), ColorLeaves);
                     }
                 }
             }
 
             for (var j3 = 0; j3 < i; ++j3)
             {
-                SetBlock(vbi, pos + Vector3.UnitY * j3, ColorWood);
+                SetBlock(vbi, Intify(pos + Vector3.UnitY * j3), ColorWood);
             }
+        }
+
+        private static Vector3 Intify(Vector3 v)
+        {
+            return new Vector3((int)v.X, (int)v.Y, (int)v.Z);
         }
     }
 }
