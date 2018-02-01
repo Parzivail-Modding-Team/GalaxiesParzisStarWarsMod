@@ -11,6 +11,7 @@ using PFX;
 using PFX.BmFont;
 using PFX.Shader;
 using PFX.Util;
+using TerrainBuilder.WorldGen;
 
 namespace TerrainBuilder
 {
@@ -624,8 +625,7 @@ namespace TerrainBuilder
                     if (treeHere == 0)
                         continue;
 
-                    // note: `treehere` is type of tree, use that somewhere
-                    DrawBox(vbi, new Vector3(worldX - 0.5f, worldY + 0.5f, worldZ - 0.5f));
+                    TreeDecorator.BuildTree(vbi, new Vector3(worldX - 0.5f, worldY + 0.5f, worldZ - 0.5f), treeHere);
                 }
 
                 worker.ReportProgress((int)(x / (2 * SideLength + 2f) * 100));

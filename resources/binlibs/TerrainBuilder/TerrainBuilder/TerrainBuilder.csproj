@@ -101,9 +101,10 @@
     <Compile Include="TerrainLayerList.Designer.cs">
       <DependentUpon>TerrainLayerList.cs</DependentUpon>
     </Compile>
-    <Compile Include="TreeDecorator.cs" />
+    <Compile Include="WorldGen\TreeDecorator.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WindowVisualize.cs" />
+    <Compile Include="WorldGen\Tree.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
