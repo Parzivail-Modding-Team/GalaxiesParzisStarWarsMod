@@ -25,6 +25,37 @@ namespace TerrainBuilder
         public static Vector3 PosZVector = Vector3.UnitZ;
         public static Vector3 NegZVector = -PosZVector;
 
+        private static readonly Vector3[] _boxNormals = {
+            new Vector3(-1.0f, 0.0f, 0.0f),
+            new Vector3(0.0f, 1.0f, 0.0f),
+            new Vector3(1.0f, 0.0f, 0.0f),
+            new Vector3(0.0f, -1.0f, 0.0f),
+            new Vector3(0.0f, 0.0f, 1.0f),
+            new Vector3(0.0f, 0.0f, -1.0f)
+        };
+
+        private static readonly int[,] _boxFaces =
+        {
+            {0, 1, 2, 3},
+            {3, 2, 6, 7},
+            {7, 6, 5, 4},
+            {4, 5, 1, 0},
+            {5, 6, 2, 1},
+            {7, 4, 0, 3}
+        };
+
+        private static readonly Vector3[] _boxVerts =
+        {
+            new Vector3(-0.5f, -0.5f, -0.5f),
+            new Vector3(-0.5f, -0.5f, 0.5f),
+            new Vector3(-0.5f, 0.5f, 0.5f),
+            new Vector3(-0.5f, 0.5f,-0.5f),
+            new Vector3(0.5f, -0.5f, -0.5f),
+            new Vector3(0.5f, -0.5f, 0.5f),
+            new Vector3(0.5f, 0.5f, 0.5f),
+            new Vector3(0.5f, 0.5f, -0.5f)
+        };
+
         /*
          * Script-related
          */
@@ -37,14 +68,16 @@ namespace TerrainBuilder
         private float _zoom = 1;
         private double _angle = 45;
         private double _angleY = 160;
-        public static int ListDecor;
-        public static int ListBlock;
+
         private static ShaderProgram _shaderProgram;
         private static readonly List<Uniform> Uniforms = new List<Uniform>();
         private static readonly Uniform TintUniform = new Uniform("tint");
-        private readonly HaltonSequence _halton = new HaltonSequence();
-        private readonly SimpleVertexBuffer _tvbo = new SimpleVertexBuffer();
+
+        private readonly SimpleVertexBuffer _terrainVbo = new SimpleVertexBuffer();
         private readonly BackgroundWorker _backgroundRenderer = new BackgroundWorker();
+
+        private readonly SimpleVertexBuffer _decorVbo = new SimpleVertexBuffer();
+        private readonly BackgroundWorker _backgroundDecorator = new BackgroundWorker();
 
         /*
          * Terrain-related
@@ -52,11 +85,13 @@ namespace TerrainBuilder
         private int _numVerts;
         public Color TintColor = Color.LimeGreen;
         private int _sideLength = 64;
+
         public int SideLength
         {
             get { return _sideLength; }
             set { _sideLength = (int)(value / 2f); }
         }
+
         public static double[,] Heightmap;
         private readonly TerrainLayerList _terrainLayerList;
 
@@ -87,6 +122,13 @@ namespace TerrainBuilder
             _backgroundRenderer.DoWork += DoBackgroundRender;
             _backgroundRenderer.ProgressChanged += DoBackgroundRenderProgress;
             _backgroundRenderer.RunWorkerCompleted += DoBackgroundRenderComplete;
+
+            // Wire up background worker
+            _backgroundDecorator.WorkerReportsProgress = true;
+            _backgroundDecorator.WorkerSupportsCancellation = true;
+            _backgroundDecorator.DoWork += DoBackgroundDecorate;
+            _backgroundDecorator.ProgressChanged += DoBackgroundDecorateProgress;
+            _backgroundDecorator.RunWorkerCompleted += DoBackgroundDecorateComplete;
 
             // Wire up file watcher
             _scriptWatcher.FileChanged += ScriptWatcherOnFileChanged;
@@ -128,7 +170,8 @@ namespace TerrainBuilder
             _font = BitmapFont.LoadBinaryFont("dina", FontBank.FontDina, FontBank.BmDina);
 
             // Load sparklines
-            _fpsSparkline = new Sparkline(_font, $"0-{(int)TargetRenderFrequency}fps", 50, (float) TargetRenderFrequency, Sparkline.SparklineStyle.Area);
+            _fpsSparkline = new Sparkline(_font, $"0-{(int)TargetRenderFrequency}fps", 50,
+                (float)TargetRenderFrequency, Sparkline.SparklineStyle.Area);
             _renderTimeSparkline = new Sparkline(_font, "0-50ms", 50, 50, Sparkline.SparklineStyle.Area);
 
             // Init keyboard to ensure first frame won't NPE
@@ -144,7 +187,7 @@ namespace TerrainBuilder
         private void WindowVisualize_MouseWheel(object sender, MouseWheelEventArgs e)
         {
             _zoom -= e.DeltaPrecise / 4f;
-            
+
             if (_zoom < 0.5f)
                 _zoom = 0.5f;
             if (_zoom > 20)
@@ -198,6 +241,14 @@ namespace TerrainBuilder
                 Application.DoEvents();
         }
 
+        public void CancelBackgroundTasks()
+        {
+            if (IsRendering())
+                CancelRender();
+            if (IsDecorating())
+                CancelDecorate();
+        }
+
         public void ReRender(bool manualOverride = false)
         {
             // Make sure the render requirements are met
@@ -246,26 +297,17 @@ namespace TerrainBuilder
                 return;
 
             // Take the render result and upload it to the VBO
-            var result = (BackgroundRenderResult)e.Result;
-            _numVerts = result.Vertices.Length;
-            _tvbo.InitializeVbo(result.Vertices, result.Normals, result.Colors, result.Indices);
+            var result = (VertexBufferInitializer)e.Result;
+            _numVerts = result.Vertices.Count;
+            _terrainVbo.InitializeVbo(result);
             GC.Collect();
+
+            // Wait for render thread to exit
+            while (IsRendering())
+                Application.DoEvents();
 
             // Add chunk decor
             ReDecorate();
-        }
-
-        public double GetValueAt(int x, int z)
-        {
-            // Invoke the script to get the terrain height at (x, z)
-            var value = _terrainLayerList.ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
-
-            if (value < 0)
-                value = 0;
-            if (value > 255)
-                value = 255;
-
-            return value;
         }
 
         private void DoBackgroundRender(object sender, DoWorkEventArgs e)
@@ -308,11 +350,7 @@ namespace TerrainBuilder
             worker.ReportProgress(50, EmbeddedFiles.Status_UploadVBO);
 
             // Init VBO-needed lists
-            var vertices = new List<Vector3>();
-            var normals = new List<Vector3>();
-            var indices = new List<int>();
-            var colors = new List<int>();
-            var i = 0;
+            var vbi = new VertexBufferInitializer();
 
             // Iterate over the heightmap
             for (var x = -SideLength; x < SideLength; x++)
@@ -364,97 +402,147 @@ namespace TerrainBuilder
                     var isNegXPosZLower = valueNegXPosZ < valueHere;
                     var isPosXNegZLower = valuePosXNegZ < valueHere;
                     var isNegXNegZLower = valueNegXNegZ < valueHere;
-                    
+
                     // Set up the colors we'll be using for terrain
                     var color = Util.RgbToInt(1, 1, 1);
                     const float occludedScalar = 0.8f;
                     var occludedColor = Util.RgbToInt(occludedScalar, occludedScalar, occludedScalar);
 
                     // Always draw a top face for a block
-                    vertices.Add(new Vector3(x, (float)valueHere, z));
-                    normals.Add(UpVector);
-                    colors.Add(isPosXHigher || isPosZHigher || isPosXPosZHigher ? occludedColor : color);
-                    vertices.Add(new Vector3(x - 1, (float)valueHere, z));
-                    normals.Add(UpVector);
-                    colors.Add(isNegXHigher || isPosZHigher || isNegXPosZHigher ? occludedColor : color);
-                    vertices.Add(new Vector3(x - 1, (float)valueHere, z - 1));
-                    normals.Add(UpVector);
-                    colors.Add(isNegXHigher || isNegZHigher || isNegXNegZHigher ? occludedColor : color);
-                    vertices.Add(new Vector3(x, (float)valueHere, z - 1));
-                    normals.Add(UpVector);
-                    colors.Add(isPosXHigher || isNegZHigher || isPosXNegZHigher ? occludedColor : color);
-                    indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                    vbi.AddVertex(
+                        new Vector3(x, (float)valueHere, z),
+                        UpVector,
+                        isPosXHigher || isPosZHigher || isPosXPosZHigher ? occludedColor : color
+                    );
+
+                    vbi.AddVertex(
+                        new Vector3(x - 1, (float)valueHere, z),
+                        UpVector,
+                        isNegXHigher || isPosZHigher || isNegXPosZHigher ? occludedColor : color
+                    );
+
+                    vbi.AddVertex(
+                        new Vector3(x - 1, (float)valueHere, z - 1),
+                        UpVector,
+                        isNegXHigher || isNegZHigher || isNegXNegZHigher ? occludedColor : color
+                    );
+
+                    vbi.AddVertex(
+                        new Vector3(x, (float)valueHere, z - 1),
+                        UpVector,
+                        isPosXHigher || isNegZHigher || isPosXNegZHigher ? occludedColor : color
+                    );
 
                     // Try and draw the PosZ face
                     if (valuePosZ < valueHere)
                     {
-                        vertices.Add(new Vector3(x, (float)valueHere, z));
-                        normals.Add(PosZVector);
-                        colors.Add(color);
-                        vertices.Add(new Vector3(x, (float)valuePosZ, z));
-                        normals.Add(PosZVector);
-                        colors.Add(isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color);
-                        vertices.Add(new Vector3(x - 1, (float)valuePosZ, z));
-                        normals.Add(PosZVector);
-                        colors.Add(isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color);
-                        vertices.Add(new Vector3(x - 1, (float)valueHere, z));
-                        normals.Add(PosZVector);
-                        colors.Add(color);
-                        indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                        vbi.AddVertex(
+                            new Vector3(x, (float)valueHere, z),
+                            PosZVector,
+                            color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x, (float)valuePosZ, z),
+                            PosZVector,
+                            isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x - 1, (float)valuePosZ, z),
+                            PosZVector,
+                            isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x - 1, (float)valueHere, z),
+                            PosZVector,
+                            color
+                        );
                     }
 
                     // Try and draw the NegZ face
                     if (valueNegZ < valueHere)
                     {
-                        vertices.Add(new Vector3(x, (float)valueHere, z - 1));
-                        normals.Add(NegZVector);
-                        colors.Add(color);
-                        vertices.Add(new Vector3(x, (float)valueNegZ, z - 1));
-                        normals.Add(NegZVector);
-                        colors.Add(isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color);
-                        vertices.Add(new Vector3(x - 1, (float)valueNegZ, z - 1));
-                        normals.Add(NegZVector);
-                        colors.Add(isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color);
-                        vertices.Add(new Vector3(x - 1, (float)valueHere, z - 1));
-                        normals.Add(NegZVector);
-                        colors.Add(color);
-                        indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                        vbi.AddVertex(
+                            new Vector3(x, (float)valueHere, z - 1),
+                            NegZVector,
+                            color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x, (float)valueNegZ, z - 1),
+                            NegZVector,
+                            isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x - 1, (float)valueNegZ, z - 1),
+                            NegZVector,
+                            isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x - 1, (float)valueHere, z - 1),
+                            NegZVector,
+                            color
+                        );
                     }
 
                     // Try and draw the PosX face
                     if (valuePosX < valueHere)
                     {
-                        vertices.Add(new Vector3(x, (float)valueHere, z));
-                        normals.Add(PosXVector);
-                        colors.Add(color);
-                        vertices.Add(new Vector3(x, (float)valuePosX, z));
-                        normals.Add(PosXVector);
-                        colors.Add(isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color);
-                        vertices.Add(new Vector3(x, (float)valuePosX, z - 1));
-                        normals.Add(PosXVector);
-                        colors.Add(isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color);
-                        vertices.Add(new Vector3(x, (float)valueHere, z - 1));
-                        normals.Add(PosXVector);
-                        colors.Add(color);
-                        indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                        vbi.AddVertex(
+                            new Vector3(x, (float)valueHere, z),
+                            PosXVector,
+                            color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x, (float)valuePosX, z),
+                            PosXVector,
+                            isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x, (float)valuePosX, z - 1),
+                            PosXVector,
+                            isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x, (float)valueHere, z - 1),
+                            PosXVector,
+                            color
+                        );
                     }
 
                     // Try and draw the NegX face
                     if (valueNegX < valueHere)
                     {
-                        vertices.Add(new Vector3(x - 1, (float)valueHere, z));
-                        normals.Add(NegXVector);
-                        colors.Add(color);
-                        vertices.Add(new Vector3(x - 1, (float)valueNegX, z));
-                        normals.Add(NegXVector);
-                        colors.Add(isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color);
-                        vertices.Add(new Vector3(x - 1, (float)valueNegX, z - 1));
-                        normals.Add(NegXVector);
-                        colors.Add(isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color);
-                        vertices.Add(new Vector3(x - 1, (float)valueHere, z - 1));
-                        normals.Add(NegXVector);
-                        colors.Add(color);
-                        indices.AddRange(new List<int> { i++, i++, i++, i++ });
+                        vbi.AddVertex(
+                            new Vector3(x - 1, (float)valueHere, z),
+                            NegXVector,
+                            color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x - 1, (float)valueNegX, z),
+                            NegXVector,
+                            isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x - 1, (float)valueNegX, z - 1),
+                            NegXVector,
+                            isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color
+                        );
+
+                        vbi.AddVertex(
+                            new Vector3(x - 1, (float)valueHere, z - 1),
+                            NegXVector,
+                            color
+                        );
                     }
                 }
 
@@ -463,8 +551,102 @@ namespace TerrainBuilder
             }
 
             // Send the result back to the worker
-            e.Result = new BackgroundRenderResult(vertices.ToArray(), normals.ToArray(), colors.ToArray(),
-                indices.ToArray());
+            e.Result = vbi;
+        }
+
+        public bool IsDecorating()
+        {
+            return _backgroundDecorator.IsBusy;
+        }
+
+        public void CancelDecorate()
+        {
+            Lumberjack.Warn(EmbeddedFiles.Info_CancellingPreviousRenderOp);
+            _backgroundDecorator.CancelAsync();
+
+            while (IsDecorating())
+                Application.DoEvents();
+        }
+
+        private void DoBackgroundDecorateProgress(object sender, ProgressChangedEventArgs progressChangedEventArgs)
+        {
+            // Decorate thread says something
+            _terrainLayerList.Invoke((MethodInvoker)delegate
+           {
+               // Invoke changes on form thread
+               _terrainLayerList.pbRenderStatus.Value = progressChangedEventArgs.ProgressPercentage;
+               if (progressChangedEventArgs.UserState is string s)
+                   _terrainLayerList.lRenderStatus.Text = s;
+           });
+        }
+
+        private void DoBackgroundDecorate(object sender, DoWorkEventArgs e)
+        {
+            var vbi = new VertexBufferInitializer();
+
+            // Grab worker and report progress
+            var worker = (BackgroundWorker)sender;
+            worker.ReportProgress(0, "Decorating");
+
+            for (var x = 0; x < 2 * SideLength + 2; x++)
+            {
+                for (var z = 0; z < 2 * SideLength + 2; z++)
+                {
+                    var worldX = x - SideLength - 1;
+                    var worldY = (int)Heightmap[x, z];
+                    var worldZ = z - SideLength - 1;
+
+                    var treeHere = GetTreeAt(worldX, worldY, worldZ);
+                    if (treeHere == 0)
+                        continue;
+
+                    // note: `treehere` is type of tree, use that somewhere
+                    DrawBox(vbi, new Vector3(worldX - 0.5f, worldY + 0.5f, worldZ - 0.5f));
+                }
+
+                worker.ReportProgress((int)(x / (2 * SideLength + 2f) * 100));
+            }
+
+            e.Result = vbi;
+        }
+
+        private void DoBackgroundDecorateComplete(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // Render done, reset statusbar
+            _terrainLayerList.bCancelRender.Visible = false;
+            _terrainLayerList.bCancelRender.Enabled = false;
+
+            _terrainLayerList.pbRenderStatus.Visible = false;
+            _terrainLayerList.pbRenderStatus.Value = 0;
+
+            _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
+
+            // If the decorate was manually cancelled, go no further
+            if (_scriptWatcher.GetScriptId() == 0 || e.Cancelled)
+                return;
+
+            // Take the render result and upload it to the VBO
+            var result = (VertexBufferInitializer)e.Result;
+            _decorVbo.InitializeVbo(result);
+            GC.Collect();
+        }
+
+        public double GetValueAt(int x, int z)
+        {
+            // Invoke the script to get the terrain height at (x, z)
+            var value = _terrainLayerList.ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
+
+            if (value < 0)
+                value = 0;
+            if (value > 255)
+                value = 255;
+
+            return value;
+        }
+
+        private int GetTreeAt(int worldX, int worldY, int worldZ)
+        {
+            return _terrainLayerList.ScriptedTerrainGenerator.GetTree(worldX, worldY, worldZ);
         }
 
         private void UpdateHandler(object sender, FrameEventArgs e)
@@ -499,46 +681,46 @@ namespace TerrainBuilder
 
         public void ReDecorate()
         {
-            // Generate the display list if none exists
-            if (ListDecor == 0)
-                ListDecor = GL.GenLists(1);
+            // Make sure the render requirements are met
+            if (_terrainLayerList == null || _terrainLayerList.cbPauseGen.Checked)
+                return;
 
-            // Start compiling a new list
-            GL.NewList(ListDecor, ListMode.Compile);
+            // If there's an ongoing render, cancel it
+            if (IsDecorating())
+                CancelDecorate();
 
-            // Populate the chunks
-            _halton.Reset();
-            GL.Color3(137 / 255f, 18 / 255f, 0);
-            for (var x = -(float)SideLength / 16; x < (float)SideLength / 16; x++)
-                for (var z = -(float)SideLength / 16; z < (float)SideLength / 16; z++)
-                    PopulateChunk(x, z);
+            // Enable the render statusbar
+            _terrainLayerList.bCancelRender.Enabled = true;
+            _terrainLayerList.bCancelRender.Visible = true;
 
-            // Stop compiling list
-            GL.EndList();
+            _terrainLayerList.pbRenderStatus.Visible = true;
+
+            // Fire up the render
+            _backgroundDecorator.RunWorkerAsync();
         }
 
-        private void PopulateChunk(float x, float z)
-        {
-            // Convert chunk pos back into world pos
-            var nx = x * 16 + SideLength + 1;
-            var nz = z * 16 + SideLength + 1;
+        //private void PopulateChunk(float x, float z)
+        //{
+        //    // Convert chunk pos back into world pos
+        //    var nx = x * 16 + SideLength + 1;
+        //    var nz = z * 16 + SideLength + 1;
 
-            // Generate some trees
-            for (var i = 0; i < _terrainLayerList.ScriptedTerrainGenerator.TreesPerChunk; i++)
-            {
-                var pos = _halton.Increment();
-                // Convert from normal to world space
-                pos *= 16;
-                pos += new Vector3(nx, 0, nz);
-                var val = Heightmap[(int)pos.X, (int)pos.Z];
-                if (val <= _terrainLayerList.ScriptedTerrainGenerator.WaterLevel &&
-                    !_terrainLayerList.ScriptedTerrainGenerator.TreesBelowWaterLevel) continue;
-                GL.PushMatrix();
-                GL.Translate((int)pos.X - SideLength - 1.5, val + 0.5, (int)pos.Z - SideLength - 1.5);
-                DrawBox(1);
-                GL.PopMatrix();
-            }
-        }
+        //    // Generate some trees
+        //    for (var i = 0; i < _terrainLayerList.ScriptedTerrainGenerator.TreesPerChunk; i++)
+        //    {
+        //        var pos = _halton.Increment();
+        //        // Convert from normal to world space
+        //        pos *= 16;
+        //        pos += new Vector3(nx, 0, nz);
+        //        var val = Heightmap[(int)pos.X, (int)pos.Z];
+        //        if (val <= _terrainLayerList.ScriptedTerrainGenerator.WaterLevel &&
+        //            !_terrainLayerList.ScriptedTerrainGenerator.TreesBelowWaterLevel) continue;
+        //        GL.PushMatrix();
+        //        GL.Translate((int)pos.X - SideLength - 1.5, val + 0.5, (int)pos.Z - SideLength - 1.5);
+        //        DrawBox(1);
+        //        GL.PopMatrix();
+        //    }
+        //}
 
         private void RenderHandler(object sender, FrameEventArgs e)
         {
@@ -549,7 +731,7 @@ namespace TerrainBuilder
             if (_profile.ContainsKey("render"))
                 _renderTimeSparkline.Enqueue((float)_profile["render"].TotalMilliseconds);
 
-            _fpsSparkline.Enqueue((float) RenderFrequency);
+            _fpsSparkline.Enqueue((float)RenderFrequency);
 
             // Reset the view
             GL.Clear(ClearBufferMask.ColorBufferBit |
@@ -588,11 +770,10 @@ namespace TerrainBuilder
 
             // Engage shader, render, disengage
             _shaderProgram.Use(Uniforms);
-            _tvbo.Render();
+            _terrainVbo.Render();
             GL.UseProgram(0);
 
-            // Render decor
-            GL.CallList(ListDecor);
+            _decorVbo.Render();
 
             // Render the ocean
             GL.Color3(Color.MediumBlue);
@@ -643,6 +824,7 @@ namespace TerrainBuilder
                 _font.RenderString("PRESS 'D' FOR DIAGNOSTICS");
                 GL.PopMatrix();
             }
+
             GL.Disable(EnableCap.Texture2D);
 
             GL.Enable(EnableCap.Lighting);
@@ -658,59 +840,15 @@ namespace TerrainBuilder
             _profile = _profiler.Reset();
         }
 
-        private static void DrawBox(float size)
+        private static void DrawBox(VertexBufferInitializer vbi, Vector3 position)
         {
-            if (ListBlock == 0)
+            for (var i = 5; i >= 0; i--)
             {
-                ListBlock = GL.GenLists(1);
-                GL.NewList(ListBlock, ListMode.Compile);
-
-                float[,] boxNormals =
-                {
-                    {-1.0f, 0.0f, 0.0f},
-                    {0.0f, 1.0f, 0.0f},
-                    {1.0f, 0.0f, 0.0f},
-                    {0.0f, -1.0f, 0.0f},
-                    {0.0f, 0.0f, 1.0f},
-                    {0.0f, 0.0f, -1.0f}
-                };
-
-                int[,] boxFaces =
-                {
-                    {0, 1, 2, 3},
-                    {3, 2, 6, 7},
-                    {7, 6, 5, 4},
-                    {4, 5, 1, 0},
-                    {5, 6, 2, 1},
-                    {7, 4, 0, 3}
-                };
-
-                var boxVertices = new float[8, 3];
-                boxVertices[0, 0] = boxVertices[1, 0] = boxVertices[2, 0] = boxVertices[3, 0] = -0.5f;
-                boxVertices[4, 0] = boxVertices[5, 0] = boxVertices[6, 0] = boxVertices[7, 0] = 0.5f;
-                boxVertices[0, 1] = boxVertices[1, 1] = boxVertices[4, 1] = boxVertices[5, 1] = -0.5f;
-                boxVertices[2, 1] = boxVertices[3, 1] = boxVertices[6, 1] = boxVertices[7, 1] = 0.5f;
-                boxVertices[0, 2] = boxVertices[3, 2] = boxVertices[4, 2] = boxVertices[7, 2] = -0.5f;
-                boxVertices[1, 2] = boxVertices[2, 2] = boxVertices[5, 2] = boxVertices[6, 2] = 0.5f;
-
-                GL.Begin(PrimitiveType.Quads);
-                for (var i = 5; i >= 0; i--)
-                {
-                    GL.Normal3(ref boxNormals[i, 0]);
-                    GL.Vertex3(ref boxVertices[boxFaces[i, 0], 0]);
-                    GL.Vertex3(ref boxVertices[boxFaces[i, 1], 0]);
-                    GL.Vertex3(ref boxVertices[boxFaces[i, 2], 0]);
-                    GL.Vertex3(ref boxVertices[boxFaces[i, 3], 0]);
-                }
-
-                GL.End();
-                GL.EndList();
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 0]], _boxNormals[i], Util.RgbToInt(1, 0, 0));
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 1]], _boxNormals[i], Util.RgbToInt(1, 0, 0));
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 2]], _boxNormals[i], Util.RgbToInt(1, 0, 0));
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 3]], _boxNormals[i], Util.RgbToInt(1, 0, 0));
             }
-
-            GL.PushMatrix();
-            GL.Scale(size, size, size);
-            GL.CallList(ListBlock);
-            GL.PopMatrix();
         }
     }
 }

@@ -7,11 +7,11 @@ namespace PFX.Util
 {
     public class SimpleVertexBuffer
     {
-        private readonly List<int> _colors = new List<int>();
-        private readonly List<int> _indices = new List<int>();
-        private readonly List<Vector3> _normals = new List<Vector3>();
+        private List<int> _colors = new List<int>();
+        private List<int> _indices = new List<int>();
+        private List<Vector3> _normals = new List<Vector3>();
+        private List<Vector3> _vertices = new List<Vector3>();
 
-        private readonly List<Vector3> _vertices = new List<Vector3>();
         public int ColorBufferId;
         public int ElementBufferId;
         public int NormalBufferId;
@@ -43,6 +43,15 @@ namespace PFX.Util
             _normals.Clear();
             _indices.Clear();
             _colors.Clear();
+        }
+
+        public void InitializeVbo(VertexBufferInitializer vbi)
+        {
+            _vertices = vbi.Vertices;
+            _normals = vbi.Normals;
+            _indices = vbi.Indices;
+            _colors = vbi.Colors;
+            InitializeVbo();
         }
 
         public void InitializeVbo(Vector3[] vertices, Vector3[] vertexNormals, int[] vertexColors, int[] indices)

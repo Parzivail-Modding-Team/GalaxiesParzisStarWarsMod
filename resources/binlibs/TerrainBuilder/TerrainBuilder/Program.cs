@@ -8,9 +8,9 @@ namespace TerrainBuilder
         [STAThread]
         static void Main(string[] args)
         {
+            Console.Title = EmbeddedFiles.AppName;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Console.Title = EmbeddedFiles.AppName;
             new WindowVisualize().Run(40, 60);
         }
     }

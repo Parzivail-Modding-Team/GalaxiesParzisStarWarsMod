@@ -18,20 +18,21 @@ end
 
 -- This function determines if a tree should be
 -- present at the current (x, y, z) during the
--- decoration phase. Return `false` if no tree
+-- decoration phase. Return `0` if no tree
 -- should be present. Otherwise, return the tree
 -- type ID (i.e. `1`, `2`, etc.)
 function tree(x, y, z)
 	-- In this example, no trees should be present
 	-- underwater
-	if (y < waterLevel)
-		return false
+	if (y < waterLevel) then
+		return 0
+	end
 
 	-- trees should be present roughly every 
 	-- chunk, so only one in (16x16) blocks should
 	-- contain a tree
-	if (math.random(256) != 0)
-		return
+	if (math.random(256) != 1) then
+		return 0
 	end
 
 	-- For example, ID-1 trees should be present where

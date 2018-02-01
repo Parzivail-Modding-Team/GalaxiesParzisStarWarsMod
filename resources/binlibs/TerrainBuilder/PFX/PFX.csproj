@@ -74,6 +74,7 @@
     <Compile Include="Util\OpenSimplexNoise.cs" />
     <Compile Include="Util\Profiler.cs" />
     <Compile Include="Util\SimpleVertexBuffer.cs" />
+    <Compile Include="Util\VertexBufferInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />

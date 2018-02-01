@@ -107,7 +107,7 @@ namespace TerrainBuilder
 
         private void bCancelGen_Click(object sender, EventArgs e)
         {
-            _parent.CancelRender();
+            _parent.CancelBackgroundTasks();
         }
 
         private void bManuallyGenerate_Click(object sender, EventArgs e)

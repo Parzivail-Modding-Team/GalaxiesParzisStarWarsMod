@@ -12,8 +12,6 @@ namespace TerrainBuilder
         private Script _script;
 
         public int WaterLevel { get; set; }
-        public int TreesPerChunk { get; set; }
-        public bool TreesBelowWaterLevel { get; set; }
 
         private static readonly Dictionary<string, DataType> RequiredTopLevelObjects = new Dictionary<string, DataType>
         {
@@ -50,8 +48,6 @@ namespace TerrainBuilder
                 dummy = script.Call(script.Globals["tree"], 0, 0, 0);
 
                 WaterLevel = (int) script.Globals.Get("waterLevel").Number;
-                TreesPerChunk = 0;//(int) script.Globals.Get("treesPerChunk").Number;
-                TreesBelowWaterLevel = false;//script.Globals.Get("treesBelowWaterLevel").Boolean;
 
                 _script = script;
             }
@@ -79,6 +75,11 @@ namespace TerrainBuilder
         public double GetValue(double x, double z)
         {
             return _script?.Globals["terrain"] == null ? 0 : _script.Call(_script.Globals["terrain"], x, z).Number;
+        }
+
+        public int GetTree(double x, double y, double z)
+        {
+            return _script?.Globals["tree"] == null ? 0 : (int)_script.Call(_script.Globals["tree"], x, y, z).Number;
         }
     }
 }
