@@ -4,11 +4,11 @@ using PFX.Util;
 
 namespace TerrainBuilder.WorldGen
 {
-    internal class Tree : TreeDecorator
+    internal class DefaultTree : TreeDecorator
     {
         private readonly int _minTreeHeight;
 
-        public Tree(int minTreeHeight)
+        public DefaultTree(int minTreeHeight)
         {
             _minTreeHeight = minTreeHeight;
         }

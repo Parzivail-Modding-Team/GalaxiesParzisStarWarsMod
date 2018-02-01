@@ -52,9 +52,6 @@ namespace PFX.Util
             _indices = vbi.Indices;
             _colors = vbi.Colors;
             InitializeVbo();
-
-            vbi = null;
-            GC.Collect();
         }
 
         public void InitializeVbo(Vector3[] vertices, Vector3[] vertexNormals, int[] vertexColors, int[] indices)

@@ -104,7 +104,7 @@
     <Compile Include="WorldGen\TreeDecorator.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WindowVisualize.cs" />
-    <Compile Include="WorldGen\Tree.cs" />
+    <Compile Include="WorldGen\DefaultTree.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

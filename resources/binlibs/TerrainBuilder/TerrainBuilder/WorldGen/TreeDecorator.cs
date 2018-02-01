@@ -12,14 +12,14 @@ namespace TerrainBuilder.WorldGen
         protected static readonly int ColorWood = 0x2f4a58;
         protected static readonly Random Rand = new Random();
 
-        protected static readonly Tree Tree = new Tree(6);
+        protected static readonly DefaultTree DefaultTree = new DefaultTree(6);
 
         public static void BuildTree(VertexBufferInitializer vbi, Vector3 pos, int type)
         {
             switch (type)
             {
                 case 1:
-                    Tree.Generate(vbi, pos);
+                    DefaultTree.Generate(vbi, pos);
                     break;
                 default:
                     Lumberjack.Warn($"Unimplemented tree type: {type}");
