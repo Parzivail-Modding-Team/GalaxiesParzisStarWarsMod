@@ -39,10 +39,10 @@ namespace PFX.Util
         public void InitializeVbo()
         {
             InitializeVbo(_vertices.ToArray(), _normals.ToArray(), _colors.ToArray(), _indices.ToArray());
-            _vertices.Clear();
-            _normals.Clear();
-            _indices.Clear();
-            _colors.Clear();
+            _vertices = new List<Vector3>();
+            _normals = new List<Vector3>();
+            _indices = new List<int>();
+            _colors = new List<int>();
         }
 
         public void InitializeVbo(VertexBufferInitializer vbi)
@@ -52,6 +52,9 @@ namespace PFX.Util
             _indices = vbi.Indices;
             _colors = vbi.Colors;
             InitializeVbo();
+
+            vbi = null;
+            GC.Collect();
         }
 
         public void InitializeVbo(Vector3[] vertices, Vector3[] vertexNormals, int[] vertexColors, int[] indices)
