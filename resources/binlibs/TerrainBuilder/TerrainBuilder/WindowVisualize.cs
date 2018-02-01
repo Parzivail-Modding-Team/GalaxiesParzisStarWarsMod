@@ -283,14 +283,17 @@ namespace TerrainBuilder
 
         private void DoBackgroundRenderComplete(object sender, RunWorkerCompletedEventArgs e)
         {
-            // Render done, reset statusbar
-            _terrainLayerList.bCancelRender.Visible = false;
-            _terrainLayerList.bCancelRender.Enabled = false;
+            // Render done, reset statusbar 
+            _terrainLayerList.Invoke((MethodInvoker) delegate
+            {
+                _terrainLayerList.bCancelRender.Visible = false;
+                _terrainLayerList.bCancelRender.Enabled = false;
 
-            _terrainLayerList.pbRenderStatus.Visible = false;
-            _terrainLayerList.pbRenderStatus.Value = 0;
+                _terrainLayerList.pbRenderStatus.Visible = false;
+                _terrainLayerList.pbRenderStatus.Value = 0;
 
-            _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
+                _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
+            });
 
             // If the render was manually cancelled, go no further
             if (_scriptWatcher.GetScriptId() == 0 || e.Cancelled)
@@ -613,13 +616,16 @@ namespace TerrainBuilder
         private void DoBackgroundDecorateComplete(object sender, RunWorkerCompletedEventArgs e)
         {
             // Render done, reset statusbar
-            _terrainLayerList.bCancelRender.Visible = false;
-            _terrainLayerList.bCancelRender.Enabled = false;
+            _terrainLayerList.Invoke((MethodInvoker) delegate
+            {
+                _terrainLayerList.bCancelRender.Visible = false;
+                _terrainLayerList.bCancelRender.Enabled = false;
 
-            _terrainLayerList.pbRenderStatus.Visible = false;
-            _terrainLayerList.pbRenderStatus.Value = 0;
+                _terrainLayerList.pbRenderStatus.Visible = false;
+                _terrainLayerList.pbRenderStatus.Value = 0;
 
-            _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
+                _terrainLayerList.lRenderStatus.Text = EmbeddedFiles.Status_Ready;
+            });
 
             // If the decorate was manually cancelled, go no further
             if (_scriptWatcher.GetScriptId() == 0 || e.Cancelled)

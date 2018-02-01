@@ -13,7 +13,7 @@ function terrain(x, z)
 	-- Then, we scale the resulting noise by 10, creating a
 	-- maximum elevation change of 10 blocks, and return it
 	-- back to the terrain generator.
-	return h * 10;
+	return h * 10
 end
 
 -- This function determines if a tree should be
@@ -31,7 +31,7 @@ function tree(x, y, z)
 	-- trees should be present roughly every 
 	-- chunk, so only one in (16x16) blocks should
 	-- contain a tree
-	if (math.random(256) != 1) then
+	if (math.random(256) ~= 1) then
 		return 0
 	end
 
@@ -39,9 +39,9 @@ function tree(x, y, z)
 	-- y > 100, but ID-0 trees should be present elsewhere.
 	-- Simply put, use any means necessary to determine tree
 	-- or no tree.
-	if (y > 100)
+	if (y > 100) then
 		return 1
-	else
-		return 0
 	end
+
+	return 0
 end
