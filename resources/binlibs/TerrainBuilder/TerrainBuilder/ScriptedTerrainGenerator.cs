@@ -25,6 +25,10 @@ namespace TerrainBuilder
             script.Globals["noise"] = (Func<double, double, double>)GetNoise;
             script.Globals["rawnoise"] = (Func<double, double, double>)GetRawNoise;
 
+            script.Globals["TREE_NONE"] = 0;
+            script.Globals["TREE_MC"] = 1;
+            script.Globals["TREE_REDWOOD"] = 2;
+
             try
             {
                 script.DoString(scriptCode);

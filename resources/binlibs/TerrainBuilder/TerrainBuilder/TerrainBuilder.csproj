@@ -101,6 +101,7 @@
     <Compile Include="TerrainLayerList.Designer.cs">
       <DependentUpon>TerrainLayerList.cs</DependentUpon>
     </Compile>
+    <Compile Include="WorldGen\RedwoodTree.cs" />
     <Compile Include="WorldGen\TreeDecorator.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="WindowVisualize.cs" />

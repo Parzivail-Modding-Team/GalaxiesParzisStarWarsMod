@@ -12,7 +12,8 @@ namespace TerrainBuilder.WorldGen
         protected static readonly int ColorWood = 0x2f4a58;
         protected static readonly Random Rand = new Random();
 
-        protected static readonly DefaultTree DefaultTree = new DefaultTree(6);
+        protected static readonly TreeDecorator DefaultTree = new DefaultTree(6);
+        protected static readonly TreeDecorator RedwoodTree = new RedwoodTree(10, 10);
 
         public static void BuildTree(VertexBufferInitializer vbi, Vector3 pos, int type)
         {
@@ -20,6 +21,9 @@ namespace TerrainBuilder.WorldGen
             {
                 case 1:
                     DefaultTree.Generate(vbi, pos);
+                    break;
+                case 2:
+                    RedwoodTree.Generate(vbi, pos);
                     break;
                 default:
                     Lumberjack.Warn($"Unimplemented tree type: {type}");
@@ -32,6 +36,11 @@ namespace TerrainBuilder.WorldGen
         protected void SetBlock(VertexBufferInitializer vbi, Vector3 pos, int color)
         {
             WindowVisualize.DrawBox(vbi, pos, color);
+        }
+
+        protected static Vector3 Intify(Vector3 v)
+        {
+            return new Vector3((int)v.X, (int)v.Y, (int)v.Z);
         }
     }
 }

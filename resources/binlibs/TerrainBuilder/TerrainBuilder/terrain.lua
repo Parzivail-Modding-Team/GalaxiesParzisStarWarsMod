@@ -18,30 +18,30 @@ end
 
 -- This function determines if a tree should be
 -- present at the current (x, y, z) during the
--- decoration phase. Return `0` if no tree
+-- decoration phase. Return `TREE_NONE` if no tree
 -- should be present. Otherwise, return the tree
--- type ID (i.e. `1`, `2`, etc.)
+-- type ID (i.e. `TREE_MC`, `TREE_REDWOOD`, etc.)
 function tree(x, y, z)
 	-- In this example, no trees should be present
 	-- underwater
 	if (y < waterLevel) then
-		return 0
+		return TREE_NONE
 	end
 
 	-- trees should be present roughly every 
 	-- chunk, so only one in (16x16) blocks should
 	-- contain a tree
 	if (math.random(256) ~= 1) then
-		return 0
+		return TREE_NONE
 	end
 
-	-- For example, ID-1 trees should be present where
-	-- y > 100, but ID-0 trees should be present elsewhere.
+	-- For example, Minecraft trees should be present where
+	-- y > 100, but no trees should be present elsewhere.
 	-- Simply put, use any means necessary to determine tree
 	-- or no tree.
 	if (y > 100) then
-		return 1
+		return TREE_MC
 	end
 
-	return 0
+	return TREE_NONE
 end

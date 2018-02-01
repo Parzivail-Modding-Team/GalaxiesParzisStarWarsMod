@@ -47,10 +47,5 @@ namespace TerrainBuilder.WorldGen
                 SetBlock(vbi, Intify(pos + Vector3.UnitY * j3), ColorWood);
             }
         }
-
-        private static Vector3 Intify(Vector3 v)
-        {
-            return new Vector3((int)v.X, (int)v.Y, (int)v.Z);
-        }
     }
 }

@@ -71,6 +71,8 @@ namespace TerrainBuilder
         private double _angle = 45;
         private double _angleY = 160;
 
+        private bool _realistic;
+
         private static ShaderProgram _shaderProgram;
         private static readonly List<Uniform> Uniforms = new List<Uniform>();
         private static readonly Uniform TintUniform = new Uniform("tint");
@@ -625,7 +627,7 @@ namespace TerrainBuilder
                     if (treeHere == 0)
                         continue;
 
-                    TreeDecorator.BuildTree(vbi, new Vector3(worldX - 0.5f, worldY + 0.5f, worldZ - 0.5f), treeHere);
+                    TreeDecorator.BuildTree(vbi, new Vector3(worldX, worldY, worldZ), treeHere);
                 }
 
                 worker.ReportProgress((int)(x / (2 * SideLength + 2f) * 100));
@@ -835,6 +837,9 @@ namespace TerrainBuilder
 
         public static void DrawBox(VertexBufferInitializer vbi, Vector3 position, int color = 0xFF0000)
         {
+            position.X -= 0.5f;
+            position.Y += 0.5f;
+            position.Z -= 0.5f;
             for (var i = 5; i >= 0; i--)
             {
                 vbi.AddVertex(position + _boxVerts[_boxFaces[i, 0]], _boxNormals[i], color);
