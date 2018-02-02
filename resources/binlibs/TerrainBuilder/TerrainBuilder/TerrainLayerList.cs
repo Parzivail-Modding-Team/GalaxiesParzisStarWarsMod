@@ -73,10 +73,6 @@ namespace TerrainBuilder
                 for (var y = 0; y < pbNoise.Height; y++)
                 {
                     var n = _parent.ScriptedTerrainGenerator.GetValue(x, y);
-                    if (n > 255)
-                        n = 255;
-                    if (n < 0)
-                        n = 0;
                     bmp.SetPixel(x, y, Colors[(int)n]);
                 }
             pbNoise.Image = bmp;

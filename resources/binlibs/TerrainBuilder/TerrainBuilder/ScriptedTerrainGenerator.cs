@@ -25,6 +25,12 @@ namespace TerrainBuilder
             script.Globals["noise"] = (Func<double, double, double>)GetNoise;
             script.Globals["rawnoise"] = (Func<double, double, double>)GetRawNoise;
 
+            script.Globals["noise3"] = (Func<double, double, double, double>)GetNoise;
+            script.Globals["rawnoise3"] = (Func<double, double, double, double>)GetRawNoise;
+
+            script.Globals["noise4"] = (Func<double, double, double, double, double>)GetNoise;
+            script.Globals["rawnoise4"] = (Func<double, double, double, double, double>)GetRawNoise;
+
             script.Globals["TREE_NONE"] = 0;
             script.Globals["TREE_MC"] = 1;
 
@@ -65,9 +71,29 @@ namespace TerrainBuilder
             return (_noise.Eval(x, z) + 1) / 2;
         }
 
+        private double GetNoise(double x, double y, double z)
+        {
+            return (_noise.Eval(x, y, z) + 1) / 2;
+        }
+
+        private double GetNoise(double x, double y, double z, double w)
+        {
+            return (_noise.Eval(x, y, z, w) + 1) / 2;
+        }
+
         private double GetRawNoise(double x, double z)
         {
             return _noise.Eval(x, z);
+        }
+
+        private double GetRawNoise(double x, double y, double z)
+        {
+            return _noise.Eval(x, y, z);
+        }
+
+        private double GetRawNoise(double x, double y, double z, double w)
+        {
+            return _noise.Eval(x, y, z, w);
         }
 
         public void SetSeed(long nudSeedValue)
@@ -79,7 +105,7 @@ namespace TerrainBuilder
         {
             var value = _script?.Globals["terrain"] == null ? 0 : _script.Call(_script.Globals["terrain"], x, z).Number;
 
-            if (value < 0)
+            if (value < 0 || double.IsNaN(value))
                 value = 0;
             if (value > 255)
                 value = 255;

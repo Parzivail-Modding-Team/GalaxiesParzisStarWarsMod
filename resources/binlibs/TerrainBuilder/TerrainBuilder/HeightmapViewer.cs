@@ -89,10 +89,6 @@ namespace TerrainBuilder
                 for (var y = 0; y < bmp.Height; y++)
                 {
                     var n = ScriptedTerrainGenerator.GetValue(x, y);
-                    if (n > 255)
-                        n = 255;
-                    if (n < 0 || double.IsNaN(n))
-                        n = 0;
                     bmp.SetPixel(x, y, Colors[(int)n]);
                 }
             pbHeightmap.Image = bmp;
