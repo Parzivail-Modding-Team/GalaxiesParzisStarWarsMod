@@ -27,7 +27,6 @@ namespace TerrainBuilder
 
             script.Globals["TREE_NONE"] = 0;
             script.Globals["TREE_MC"] = 1;
-            script.Globals["TREE_REDWOOD"] = 2;
 
             try
             {

@@ -20,7 +20,7 @@ end
 -- present at the current (x, y, z) during the
 -- decoration phase. Return `TREE_NONE` if no tree
 -- should be present. Otherwise, return the tree
--- type ID (i.e. `TREE_MC`, `TREE_REDWOOD`, etc.)
+-- type ID (i.e. `TREE_MC`)
 function tree(x, y, z)
 	-- In this example, no trees should be present
 	-- underwater

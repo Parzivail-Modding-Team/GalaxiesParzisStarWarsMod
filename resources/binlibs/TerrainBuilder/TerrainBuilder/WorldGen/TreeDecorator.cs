@@ -13,7 +13,6 @@ namespace TerrainBuilder.WorldGen
         protected static readonly Random Rand = new Random();
 
         protected static readonly TreeDecorator DefaultTree = new DefaultTree(6);
-        protected static readonly TreeDecorator RedwoodTree = new RedwoodTree(10, 10);
 
         public static void BuildTree(VertexBufferInitializer vbi, Vector3 pos, int type)
         {
@@ -21,9 +20,6 @@ namespace TerrainBuilder.WorldGen
             {
                 case 1:
                     DefaultTree.Generate(vbi, pos);
-                    break;
-                case 2:
-                    RedwoodTree.Generate(vbi, pos);
                     break;
                 default:
                     Lumberjack.Warn($"Unimplemented tree type: {type}");

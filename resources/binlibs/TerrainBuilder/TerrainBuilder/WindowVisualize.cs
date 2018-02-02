@@ -815,6 +815,7 @@ namespace TerrainBuilder
             {
                 // Info footer
                 GL.PushMatrix();
+                _font.RenderString($"{EmbeddedFiles.AppName} - Development Build");
                 GL.Translate(0, Height - _font.Common.LineHeight, 0);
                 _font.RenderString("PRESS 'D' FOR DIAGNOSTICS");
                 GL.PopMatrix();
