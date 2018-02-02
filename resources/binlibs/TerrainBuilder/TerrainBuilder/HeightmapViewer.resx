@@ -117,53 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="terrain" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>terrain.lua;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="AppName" xml:space="preserve">
-    <value>Nublar</value>
-  </data>
-  <data name="Status_Ready" xml:space="preserve">
-    <value>Ready</value>
-  </data>
-  <data name="Title_Unsaved" xml:space="preserve">
-    <value>Unsaved File</value>
-  </data>
-  <data name="Info_FileReloaded" xml:space="preserve">
-    <value>Reloaded {0}</value>
-  </data>
-  <data name="Info_CancellingPreviousRenderOp" xml:space="preserve">
-    <value>Cancelling previous render operation</value>
-  </data>
-  <data name="Status_GenHeightmap" xml:space="preserve">
-    <value>Generating heightmap</value>
-  </data>
-  <data name="Status_UploadVBO" xml:space="preserve">
-    <value>Uploading VBO</value>
-  </data>
-  <data name="Info_WindowLoaded" xml:space="preserve">
-    <value>Window loaded</value>
-  </data>
-  <data name="cancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\cancel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="brick_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\brick_edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="folder_brick" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\folder_brick.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow_switch" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\arrow_switch.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="default_fs" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>shaders\default.fs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
-  </data>
-  <data name="logo" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\logo.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="wrench" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>Resources\wrench.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
+  <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>

@@ -49,6 +49,8 @@
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.bCreate = new System.Windows.Forms.ToolStripButton();
             this.bOpen = new System.Windows.Forms.ToolStripButton();
+            this.ddTools = new System.Windows.Forms.ToolStripDropDownButton();
+            this.heightmapViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorPicker = new System.Windows.Forms.ColorDialog();
             ((System.ComponentModel.ISupportInitialize)(this.nudSeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).BeginInit();
@@ -260,7 +262,8 @@
             this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.bCreate,
-            this.bOpen});
+            this.bOpen,
+            this.ddTools});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(472, 25);
@@ -284,6 +287,23 @@
             this.bOpen.Size = new System.Drawing.Size(95, 22);
             this.bOpen.Text = "&Open Terrain";
             this.bOpen.Click += new System.EventHandler(this.bOpenTerrain_Click);
+            // 
+            // ddTools
+            // 
+            this.ddTools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.heightmapViewerToolStripMenuItem});
+            this.ddTools.Image = global::TerrainBuilder.EmbeddedFiles.wrench;
+            this.ddTools.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.ddTools.Name = "ddTools";
+            this.ddTools.Size = new System.Drawing.Size(64, 22);
+            this.ddTools.Text = "Tools";
+            // 
+            // heightmapViewerToolStripMenuItem
+            // 
+            this.heightmapViewerToolStripMenuItem.Name = "heightmapViewerToolStripMenuItem";
+            this.heightmapViewerToolStripMenuItem.Size = new System.Drawing.Size(172, 22);
+            this.heightmapViewerToolStripMenuItem.Text = "Heightmap Viewer";
+            this.heightmapViewerToolStripMenuItem.Click += new System.EventHandler(this.heightmapViewerToolStripMenuItem_Click);
             // 
             // colorPicker
             // 
@@ -345,5 +365,7 @@
         private System.Windows.Forms.PictureBox pbTerrainColor;
         private System.Windows.Forms.Label lTerrainColor;
         private System.Windows.Forms.ColorDialog colorPicker;
+        private System.Windows.Forms.ToolStripDropDownButton ddTools;
+        private System.Windows.Forms.ToolStripMenuItem heightmapViewerToolStripMenuItem;
     }
 }

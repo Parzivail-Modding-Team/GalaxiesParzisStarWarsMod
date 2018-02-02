@@ -192,11 +192,6 @@ namespace TerrainBuilder {
         ///   Looks up a localized string similar to -- Controls the Y at which water starts
         ///waterLevel = 0
         ///
-        ///-- Controls the number of trees per chunk
-        ///treesPerChunk = 0
-        ///-- Controls if trees generate underwater or not
-        ///treesBelowWaterLevel = false
-        ///
         ///-- This is the main method that gets called to
         ///-- find the height of the terrain at each point.
         ///function terrain(x, z)
@@ -204,7 +199,11 @@ namespace TerrainBuilder {
         ///	-- First, we sample the noise with a scale factor of 100.
         ///	-- The global function `noise` returns a sampled Simplex
         ///	-- heightmap with values between 0 and 1.
-        ///	local h = noise(x / 10 [rest of string was truncated]&quot;;.
+        ///	local h = noise(x / 100, z / 100);
+        ///
+        ///	-- Then, we scale the resulting noise by 10, creating a
+        ///	-- maximum elevation change of 10 blocks, and return it
+        ///	-- back to [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string terrain {
             get {
@@ -218,6 +217,16 @@ namespace TerrainBuilder {
         internal static string Title_Unsaved {
             get {
                 return ResourceManager.GetString("Title_Unsaved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap wrench {
+            get {
+                object obj = ResourceManager.GetObject("wrench", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

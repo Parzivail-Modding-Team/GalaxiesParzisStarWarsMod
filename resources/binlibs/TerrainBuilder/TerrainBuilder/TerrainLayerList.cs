@@ -127,5 +127,10 @@ namespace TerrainBuilder
             _parent.TintColor = colorPicker.Color;
             pbTerrainColor.BackColor = _parent.TintColor;
         }
+
+        private void heightmapViewerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new HeightmapViewer().Show(this);
+        }
     }
 }
