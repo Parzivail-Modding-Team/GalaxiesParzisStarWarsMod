@@ -37,11 +37,16 @@
             this.lSeed = new System.Windows.Forms.Label();
             this.nudSideLength = new System.Windows.Forms.NumericUpDown();
             this.lSideLen = new System.Windows.Forms.Label();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.lRenderStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.pbRenderStatus = new System.Windows.Forms.ToolStripProgressBar();
+            this.bCancelRender = new System.Windows.Forms.ToolStripSplitButton();
             this.pbHeightmap = new TerrainBuilder.PictureBoxWithInterpolationMode();
             this.toolStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).BeginInit();
+            this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHeightmap)).BeginInit();
             this.SuspendLayout();
             // 
@@ -155,6 +160,43 @@
             this.lSideLen.TabIndex = 6;
             this.lSideLen.Text = "Image SIze";
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.lRenderStatus,
+            this.pbRenderStatus,
+            this.bCancelRender});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 542);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(468, 22);
+            this.statusStrip1.TabIndex = 4;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // lRenderStatus
+            // 
+            this.lRenderStatus.Name = "lRenderStatus";
+            this.lRenderStatus.Size = new System.Drawing.Size(39, 17);
+            this.lRenderStatus.Text = "Ready";
+            // 
+            // pbRenderStatus
+            // 
+            this.pbRenderStatus.Name = "pbRenderStatus";
+            this.pbRenderStatus.Size = new System.Drawing.Size(100, 16);
+            this.pbRenderStatus.Visible = false;
+            // 
+            // bCancelRender
+            // 
+            this.bCancelRender.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.bCancelRender.DropDownButtonWidth = 0;
+            this.bCancelRender.Enabled = false;
+            this.bCancelRender.Image = global::TerrainBuilder.EmbeddedFiles.cancel;
+            this.bCancelRender.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.bCancelRender.Name = "bCancelRender";
+            this.bCancelRender.Size = new System.Drawing.Size(21, 20);
+            this.bCancelRender.Text = "Cancel Generation";
+            this.bCancelRender.Visible = false;
+            this.bCancelRender.ButtonClick += new System.EventHandler(this.bCancelRender_ButtonClick);
+            // 
             // pbHeightmap
             // 
             this.pbHeightmap.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -164,7 +206,7 @@
             this.pbHeightmap.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             this.pbHeightmap.Location = new System.Drawing.Point(12, 114);
             this.pbHeightmap.Name = "pbHeightmap";
-            this.pbHeightmap.Size = new System.Drawing.Size(438, 438);
+            this.pbHeightmap.Size = new System.Drawing.Size(438, 425);
             this.pbHeightmap.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbHeightmap.TabIndex = 3;
             this.pbHeightmap.TabStop = false;
@@ -174,6 +216,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(468, 564);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.pbHeightmap);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.toolStrip1);
@@ -186,6 +229,8 @@
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudSeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).EndInit();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbHeightmap)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -204,5 +249,9 @@
         private System.Windows.Forms.NumericUpDown nudSideLength;
         private System.Windows.Forms.Label lSideLen;
         private PictureBoxWithInterpolationMode pbHeightmap;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        public System.Windows.Forms.ToolStripStatusLabel lRenderStatus;
+        public System.Windows.Forms.ToolStripProgressBar pbRenderStatus;
+        public System.Windows.Forms.ToolStripSplitButton bCancelRender;
     }
 }

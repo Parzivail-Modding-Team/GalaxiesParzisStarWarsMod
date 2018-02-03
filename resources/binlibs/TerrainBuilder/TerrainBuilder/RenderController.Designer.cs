@@ -42,6 +42,7 @@
             this.bCancelRender = new System.Windows.Forms.ToolStripSplitButton();
             this.cbPauseGen = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.cbVoxels = new System.Windows.Forms.CheckBox();
             this.pbTerrainColor = new System.Windows.Forms.PictureBox();
             this.lTerrainColor = new System.Windows.Forms.Label();
             this.bManuallyGenerate = new System.Windows.Forms.Button();
@@ -51,7 +52,6 @@
             this.ddTools = new System.Windows.Forms.ToolStripDropDownButton();
             this.heightmapViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorPicker = new System.Windows.Forms.ColorDialog();
-            this.cbVoxels = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudSeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -216,6 +216,19 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Render";
             // 
+            // cbVoxels
+            // 
+            this.cbVoxels.AutoSize = true;
+            this.cbVoxels.Checked = true;
+            this.cbVoxels.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbVoxels.Location = new System.Drawing.Point(6, 42);
+            this.cbVoxels.Name = "cbVoxels";
+            this.cbVoxels.Size = new System.Drawing.Size(57, 17);
+            this.cbVoxels.TabIndex = 29;
+            this.cbVoxels.Text = "Voxels";
+            this.cbVoxels.UseVisualStyleBackColor = true;
+            this.cbVoxels.CheckedChanged += new System.EventHandler(this.cbVoxels_CheckedChanged);
+            // 
             // pbTerrainColor
             // 
             this.pbTerrainColor.BackColor = System.Drawing.SystemColors.Control;
@@ -301,19 +314,6 @@
             this.colorPicker.AnyColor = true;
             this.colorPicker.Color = System.Drawing.Color.LimeGreen;
             this.colorPicker.FullOpen = true;
-            // 
-            // cbVoxels
-            // 
-            this.cbVoxels.AutoSize = true;
-            this.cbVoxels.Checked = true;
-            this.cbVoxels.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbVoxels.Location = new System.Drawing.Point(6, 42);
-            this.cbVoxels.Name = "cbVoxels";
-            this.cbVoxels.Size = new System.Drawing.Size(57, 17);
-            this.cbVoxels.TabIndex = 29;
-            this.cbVoxels.Text = "Voxels";
-            this.cbVoxels.UseVisualStyleBackColor = true;
-            this.cbVoxels.CheckedChanged += new System.EventHandler(this.cbVoxels_CheckedChanged);
             // 
             // RenderController
             // 

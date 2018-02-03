@@ -266,7 +266,7 @@ namespace TerrainBuilder
                 CancelDecorate();
         }
 
-        public void ReRender(bool manualOverride = false)
+        public void ReRender(bool manualOverride = false, bool regenHeightmap = true)
         {
             // Make sure the render requirements are met
             if (_terrainLayerList == null || _terrainLayerList.cbPauseGen.Checked && !manualOverride)
@@ -283,7 +283,7 @@ namespace TerrainBuilder
             _terrainLayerList.pbRenderStatus.Visible = true;
 
             // Fire up the render
-            _backgroundRenderer.RunWorkerAsync(new BackgroundRenderArgs(_voxels));
+            _backgroundRenderer.RunWorkerAsync(new BackgroundRenderArgs(_voxels, regenHeightmap));
         }
 
         private void DoBackgroundRenderProgress(object sender, ProgressChangedEventArgs progressChangedEventArgs)
@@ -344,29 +344,33 @@ namespace TerrainBuilder
                 // Grab worker and report progress
                 var worker = (BackgroundWorker) sender;
                 var args = (BackgroundRenderArgs) e.Argument;
-                worker.ReportProgress(0, EmbeddedFiles.Status_GenHeightmap);
 
-                // Init a new heightmap
-                Heightmap = new double[2 * SideLength + 2, 2 * SideLength + 2];
-
-                // Iterate over the map
-                for (var x = 0; x < 2 * SideLength + 2; x++)
+                if (args.RegenHeightmap)
                 {
-                    for (var z = 0; z < 2 * SideLength + 2; z++)
+                    worker.ReportProgress(0, EmbeddedFiles.Status_GenHeightmap);
+
+                    // Init a new heightmap
+                    Heightmap = new double[2 * SideLength + 2, 2 * SideLength + 2];
+
+                    // Iterate over the map
+                    for (var x = 0; x < 2 * SideLength + 2; x++)
                     {
-                        // Cancel if requested
-                        if (worker.CancellationPending)
+                        for (var z = 0; z < 2 * SideLength + 2; z++)
                         {
-                            e.Cancel = true;
-                            return;
+                            // Cancel if requested
+                            if (worker.CancellationPending)
+                            {
+                                e.Cancel = true;
+                                return;
+                            }
+
+                            // Set the heightmap at (x, z)
+                            Heightmap[x, z] = (int) ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
                         }
 
-                        // Set the heightmap at (x, z)
-                        Heightmap[x, z] = (int) ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
+                        // Report progress every "scanline"
+                        worker.ReportProgress((int) (x / (2f * SideLength + 2) * 50));
                     }
-
-                    // Report progress every "scanline"
-                    worker.ReportProgress((int) (x / (2f * SideLength + 2) * 50));
                 }
 
                 // Report progress with a new status message
@@ -904,7 +908,7 @@ namespace TerrainBuilder
         public void SetVoxels(bool voxels)
         {
             _voxels = voxels;
-            ReRender(true);
+            ReRender(true, false);
         }
     }
 }

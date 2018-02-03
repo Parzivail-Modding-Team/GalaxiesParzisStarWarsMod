@@ -21,11 +21,24 @@ end
 
 function octave(x, z, numOctaves)
 	if (numOctaves <= 1) then
-		return nnoise(x, z) / 2
+		return f(nnoise(x, z), x, z) / 2
 	end
-	return nnoise(x, z) / 2 + octave((x + numOctaves * 100) * 2, (z + numOctaves * 100) * 2, numOctaves - 1) / 2
+	return f(nnoise(x, z), x, z) / 2 + octave((x + numOctaves * 100) * 2, (z + numOctaves * 100) * 2, numOctaves - 1) / 2
 end
 
 function tree(x, y, z)
 	return TREE_NONE
+end
+
+function f(h, x, z)
+	return (math.sin(h * 2 * math.pi) + 1) / 2
+	--return 1 - (-sqrt(2 * (x - 0.5)) - sqrt(2 * (-x + 0.5)) + 1)
+	--return (math.cos(x * 2 * math.pi) + 1) / 2
+end
+
+function sqrt(x)
+	if (x < 0) then
+		return 0
+	end
+	return math.sqrt(x)
 end
