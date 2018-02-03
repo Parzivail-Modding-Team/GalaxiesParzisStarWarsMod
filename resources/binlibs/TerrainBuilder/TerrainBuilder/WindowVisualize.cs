@@ -70,8 +70,8 @@ namespace TerrainBuilder
         private float _zoom = 1;
         private double _angle = 45;
         private double _angleY = 160;
-
-        private bool _realistic;
+        
+        private bool _voxels = true;
 
         private static ShaderProgram _shaderProgram;
         private static readonly List<Uniform> Uniforms = new List<Uniform>();
@@ -108,7 +108,7 @@ namespace TerrainBuilder
         }
 
         public static double[,] Heightmap;
-        private readonly TerrainLayerList _terrainLayerList;
+        private readonly RenderController _terrainLayerList;
 
         /*
          * Window-related
@@ -151,7 +151,7 @@ namespace TerrainBuilder
             TintColor = Color.LimeGreen;
 
             // Load UI window
-            _terrainLayerList = new TerrainLayerList(this);
+            _terrainLayerList = new RenderController(this);
             _terrainLayerList.Show();
             Title = $"{EmbeddedFiles.AppName} | {EmbeddedFiles.Title_Unsaved}";
             Icon = EmbeddedFiles.logo;
@@ -169,7 +169,7 @@ namespace TerrainBuilder
             // Set up lighting
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
-            GL.ShadeModel(ShadingModel.Smooth);
+            GL.ShadeModel(ShadingModel.Flat);
             GL.Enable(EnableCap.ColorMaterial);
 
             // Set up caps
@@ -283,7 +283,7 @@ namespace TerrainBuilder
             _terrainLayerList.pbRenderStatus.Visible = true;
 
             // Fire up the render
-            _backgroundRenderer.RunWorkerAsync();
+            _backgroundRenderer.RunWorkerAsync(new BackgroundRenderArgs(_voxels));
         }
 
         private void DoBackgroundRenderProgress(object sender, ProgressChangedEventArgs progressChangedEventArgs)
@@ -332,246 +332,294 @@ namespace TerrainBuilder
 
         private void DoBackgroundRender(object sender, DoWorkEventArgs e)
         {
-            // Make sure the render requirements are met
-            if (_scriptWatcher.GetScriptId() == 0)
+            try
             {
-                Lumberjack.Warn("Can't render, no terrain loaded.");
-                return;
-            }
-
-            // Grab worker and report progress
-            var worker = (BackgroundWorker)sender;
-            worker.ReportProgress(0, EmbeddedFiles.Status_GenHeightmap);
-
-            // Init a new heightmap
-            Heightmap = new double[2 * SideLength + 2, 2 * SideLength + 2];
-
-            // Iterate over the map
-            for (var x = 0; x < 2 * SideLength + 2; x++)
-            {
-                for (var z = 0; z < 2 * SideLength + 2; z++)
+                // Make sure the render requirements are met
+                if (_scriptWatcher.GetScriptId() == 0)
                 {
-                    // Cancel if requested
-                    if (worker.CancellationPending)
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-
-                    // Set the heightmap at (x, z)
-                    Heightmap[x, z] = (int)ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
+                    Lumberjack.Warn("Can't render, no terrain loaded.");
+                    return;
                 }
 
-                // Report progress every "scanline"
-                worker.ReportProgress((int)(x / (2f * SideLength + 2) * 50));
-            }
+                // Grab worker and report progress
+                var worker = (BackgroundWorker) sender;
+                var args = (BackgroundRenderArgs) e.Argument;
+                worker.ReportProgress(0, EmbeddedFiles.Status_GenHeightmap);
 
-            // Report progress with a new status message
-            worker.ReportProgress(50, EmbeddedFiles.Status_UploadVBO);
+                // Init a new heightmap
+                Heightmap = new double[2 * SideLength + 2, 2 * SideLength + 2];
 
-            // Init VBO-needed lists
-            var vbi = new VertexBufferInitializer();
-
-            // Iterate over the heightmap
-            for (var x = -SideLength; x < SideLength; x++)
-            {
-                for (var z = -SideLength; z < SideLength; z++)
+                // Iterate over the map
+                for (var x = 0; x < 2 * SideLength + 2; x++)
                 {
-                    // Cancel if requested
-                    if (worker.CancellationPending)
+                    for (var z = 0; z < 2 * SideLength + 2; z++)
                     {
-                        e.Cancel = true;
-                        return;
+                        // Cancel if requested
+                        if (worker.CancellationPending)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+
+                        // Set the heightmap at (x, z)
+                        Heightmap[x, z] = (int) ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
                     }
 
-                    // Get the current internal array position
-                    var nx = x + SideLength + 1;
-                    var nz = z + SideLength + 1;
-
-                    // Heightmap value here
-                    var valueHere = Heightmap[nx, nz];
-
-                    // Neighboring positions
-                    var valuePosX = Heightmap[nx + 1, nz];
-                    var valueNegX = Heightmap[nx - 1, nz];
-                    var valuePosZ = Heightmap[nx, nz + 1];
-                    var valueNegZ = Heightmap[nx, nz - 1];
-
-                    var valuePosXPosZ = Heightmap[nx + 1, nz + 1];
-                    var valueNegXPosZ = Heightmap[nx - 1, nz + 1];
-                    var valuePosXNegZ = Heightmap[nx + 1, nz - 1];
-                    var valueNegXNegZ = Heightmap[nx - 1, nz - 1];
-
-                    // Comparisons used in cheap AO
-                    var isPosXHigher = valuePosX > valueHere;
-                    var isNegXHigher = valueNegX > valueHere;
-                    var isPosZHigher = valuePosZ > valueHere;
-                    var isNegZHigher = valueNegZ > valueHere;
-
-                    var isPosXLower = valuePosX < valueHere;
-                    var isNegXLower = valueNegX < valueHere;
-                    var isPosZLower = valuePosZ < valueHere;
-                    var isNegZLower = valueNegZ < valueHere;
-
-                    var isPosXPosZHigher = valuePosXPosZ > valueHere;
-                    var isNegXPosZHigher = valueNegXPosZ > valueHere;
-                    var isPosXNegZHigher = valuePosXNegZ > valueHere;
-                    var isNegXNegZHigher = valueNegXNegZ > valueHere;
-
-                    var isPosXPosZLower = valuePosXPosZ < valueHere;
-                    var isNegXPosZLower = valueNegXPosZ < valueHere;
-                    var isPosXNegZLower = valuePosXNegZ < valueHere;
-                    var isNegXNegZLower = valueNegXNegZ < valueHere;
-
-                    // Set up the colors we'll be using for terrain
-                    var color = Util.RgbToInt(1, 1, 1);
-                    const float occludedScalar = 0.8f;
-                    var occludedColor = Util.RgbToInt(occludedScalar, occludedScalar, occludedScalar);
-
-                    // Always draw a top face for a block
-                    vbi.AddVertex(
-                        new Vector3(x, (float)valueHere, z),
-                        UpVector,
-                        isPosXHigher || isPosZHigher || isPosXPosZHigher ? occludedColor : color
-                    );
-
-                    vbi.AddVertex(
-                        new Vector3(x - 1, (float)valueHere, z),
-                        UpVector,
-                        isNegXHigher || isPosZHigher || isNegXPosZHigher ? occludedColor : color
-                    );
-
-                    vbi.AddVertex(
-                        new Vector3(x - 1, (float)valueHere, z - 1),
-                        UpVector,
-                        isNegXHigher || isNegZHigher || isNegXNegZHigher ? occludedColor : color
-                    );
-
-                    vbi.AddVertex(
-                        new Vector3(x, (float)valueHere, z - 1),
-                        UpVector,
-                        isPosXHigher || isNegZHigher || isPosXNegZHigher ? occludedColor : color
-                    );
-
-                    // Try and draw the PosZ face
-                    if (valuePosZ < valueHere)
-                    {
-                        vbi.AddVertex(
-                            new Vector3(x, (float)valueHere, z),
-                            PosZVector,
-                            color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x, (float)valuePosZ, z),
-                            PosZVector,
-                            isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x - 1, (float)valuePosZ, z),
-                            PosZVector,
-                            isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x - 1, (float)valueHere, z),
-                            PosZVector,
-                            color
-                        );
-                    }
-
-                    // Try and draw the NegZ face
-                    if (valueNegZ < valueHere)
-                    {
-                        vbi.AddVertex(
-                            new Vector3(x, (float)valueHere, z - 1),
-                            NegZVector,
-                            color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x, (float)valueNegZ, z - 1),
-                            NegZVector,
-                            isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x - 1, (float)valueNegZ, z - 1),
-                            NegZVector,
-                            isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x - 1, (float)valueHere, z - 1),
-                            NegZVector,
-                            color
-                        );
-                    }
-
-                    // Try and draw the PosX face
-                    if (valuePosX < valueHere)
-                    {
-                        vbi.AddVertex(
-                            new Vector3(x, (float)valueHere, z),
-                            PosXVector,
-                            color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x, (float)valuePosX, z),
-                            PosXVector,
-                            isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x, (float)valuePosX, z - 1),
-                            PosXVector,
-                            isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x, (float)valueHere, z - 1),
-                            PosXVector,
-                            color
-                        );
-                    }
-
-                    // Try and draw the NegX face
-                    if (valueNegX < valueHere)
-                    {
-                        vbi.AddVertex(
-                            new Vector3(x - 1, (float)valueHere, z),
-                            NegXVector,
-                            color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x - 1, (float)valueNegX, z),
-                            NegXVector,
-                            isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x - 1, (float)valueNegX, z - 1),
-                            NegXVector,
-                            isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color
-                        );
-
-                        vbi.AddVertex(
-                            new Vector3(x - 1, (float)valueHere, z - 1),
-                            NegXVector,
-                            color
-                        );
-                    }
+                    // Report progress every "scanline"
+                    worker.ReportProgress((int) (x / (2f * SideLength + 2) * 50));
                 }
 
-                // Report progress every "scanline"
-                worker.ReportProgress((int)((x + SideLength) / (SideLength * 2f) * 50) + 50);
-            }
+                // Report progress with a new status message
+                worker.ReportProgress(50, EmbeddedFiles.Status_UploadVBO);
 
-            // Send the result back to the worker
-            e.Result = vbi;
+                // Init VBO-needed lists
+                var vbi = new VertexBufferInitializer();
+
+                // Iterate over the heightmap
+                for (var x = -SideLength; x < SideLength; x++)
+                {
+                    for (var z = -SideLength; z < SideLength; z++)
+                    {
+                        // Cancel if requested
+                        if (worker.CancellationPending)
+                        {
+                            e.Cancel = true;
+                            return;
+                        }
+
+                        // Get the current internal array position
+                        var nx = x + SideLength + 1;
+                        var nz = z + SideLength + 1;
+
+                        // Heightmap value here
+                        var valueHere = Heightmap[nx, nz];
+
+                        // Neighboring positions
+                        var valuePosX = Heightmap[nx + 1, nz];
+                        var valueNegX = Heightmap[nx - 1, nz];
+                        var valuePosZ = Heightmap[nx, nz + 1];
+                        var valueNegZ = Heightmap[nx, nz - 1];
+
+                        var valuePosXPosZ = Heightmap[nx + 1, nz + 1];
+                        var valueNegXPosZ = Heightmap[nx - 1, nz + 1];
+                        var valuePosXNegZ = Heightmap[nx + 1, nz - 1];
+                        var valueNegXNegZ = Heightmap[nx - 1, nz - 1];
+
+                        // Comparisons used in cheap AO
+                        var isPosXHigher = valuePosX > valueHere;
+                        var isNegXHigher = valueNegX > valueHere;
+                        var isPosZHigher = valuePosZ > valueHere;
+                        var isNegZHigher = valueNegZ > valueHere;
+
+                        var isPosXLower = valuePosX < valueHere;
+                        var isNegXLower = valueNegX < valueHere;
+                        var isPosZLower = valuePosZ < valueHere;
+                        var isNegZLower = valueNegZ < valueHere;
+
+                        var isPosXPosZHigher = valuePosXPosZ > valueHere;
+                        var isNegXPosZHigher = valueNegXPosZ > valueHere;
+                        var isPosXNegZHigher = valuePosXNegZ > valueHere;
+                        var isNegXNegZHigher = valueNegXNegZ > valueHere;
+
+                        var isPosXPosZLower = valuePosXPosZ < valueHere;
+                        var isNegXPosZLower = valueNegXPosZ < valueHere;
+                        var isPosXNegZLower = valuePosXNegZ < valueHere;
+                        var isNegXNegZLower = valueNegXNegZ < valueHere;
+
+                        // Set up the colors we'll be using for terrain
+                        var color = Util.RgbToInt(1, 1, 1);
+                        const float occludedScalar = 0.8f;
+                        var occludedColor = Util.RgbToInt(occludedScalar, occludedScalar, occludedScalar);
+
+                        if (args.Voxels)
+                        {
+
+                            // Always draw a top face for a block
+                            vbi.AddVertex(
+                                new Vector3(x, (float) valueHere, z),
+                                UpVector,
+                                isPosXHigher || isPosZHigher || isPosXPosZHigher ? occludedColor : color
+                            );
+
+                            vbi.AddVertex(
+                                new Vector3(x - 1, (float) valueHere, z),
+                                UpVector,
+                                isNegXHigher || isPosZHigher || isNegXPosZHigher ? occludedColor : color
+                            );
+
+                            vbi.AddVertex(
+                                new Vector3(x - 1, (float) valueHere, z - 1),
+                                UpVector,
+                                isNegXHigher || isNegZHigher || isNegXNegZHigher ? occludedColor : color
+                            );
+
+                            vbi.AddVertex(
+                                new Vector3(x, (float) valueHere, z - 1),
+                                UpVector,
+                                isPosXHigher || isNegZHigher || isPosXNegZHigher ? occludedColor : color
+                            );
+
+                            // Try and draw the PosZ face
+                            if (valuePosZ < valueHere)
+                            {
+                                vbi.AddVertex(
+                                    new Vector3(x, (float) valueHere, z),
+                                    PosZVector,
+                                    color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x, (float) valuePosZ, z),
+                                    PosZVector,
+                                    isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x - 1, (float) valuePosZ, z),
+                                    PosZVector,
+                                    isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x - 1, (float) valueHere, z),
+                                    PosZVector,
+                                    color
+                                );
+                            }
+
+                            // Try and draw the NegZ face
+                            if (valueNegZ < valueHere)
+                            {
+                                vbi.AddVertex(
+                                    new Vector3(x, (float) valueHere, z - 1),
+                                    NegZVector,
+                                    color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x, (float) valueNegZ, z - 1),
+                                    NegZVector,
+                                    isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x - 1, (float) valueNegZ, z - 1),
+                                    NegZVector,
+                                    isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x - 1, (float) valueHere, z - 1),
+                                    NegZVector,
+                                    color
+                                );
+                            }
+
+                            // Try and draw the PosX face
+                            if (valuePosX < valueHere)
+                            {
+                                vbi.AddVertex(
+                                    new Vector3(x, (float) valueHere, z),
+                                    PosXVector,
+                                    color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x, (float) valuePosX, z),
+                                    PosXVector,
+                                    isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x, (float) valuePosX, z - 1),
+                                    PosXVector,
+                                    isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x, (float) valueHere, z - 1),
+                                    PosXVector,
+                                    color
+                                );
+                            }
+
+                            // Try and draw the NegX face
+                            if (valueNegX < valueHere)
+                            {
+                                vbi.AddVertex(
+                                    new Vector3(x - 1, (float) valueHere, z),
+                                    NegXVector,
+                                    color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x - 1, (float) valueNegX, z),
+                                    NegXVector,
+                                    isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x - 1, (float) valueNegX, z - 1),
+                                    NegXVector,
+                                    isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color
+                                );
+
+                                vbi.AddVertex(
+                                    new Vector3(x - 1, (float) valueHere, z - 1),
+                                    NegXVector,
+                                    color
+                                );
+                            }
+                        }
+                        else
+                        {
+                            var valueA = new Vector3(x, (float) valueHere, z);
+                            var valueB = new Vector3(x - 1, (float)valueNegX, z);
+                            var valueC = new Vector3(x, (float)valueNegZ, z - 1);
+                            var valueD = new Vector3(x - 1, (float)valueNegXNegZ, z - 1);
+
+                            var dirA = Vector3.Cross(valueB - valueA, valueD - valueA);
+                            var normA = Vector3.Normalize(dirA);
+                            var norm = -normA;
+
+                            vbi.AddVertex(
+                                valueA,
+                                norm,
+                                color
+                            );
+
+                            vbi.AddVertex(
+                                valueB,
+                                norm,
+                                color
+                            );
+
+                            vbi.AddVertex(
+                                valueD,
+                                norm,
+                                color
+                            );
+
+                            vbi.AddVertex(
+                                valueC,
+                                norm,
+                                color
+                            );
+                        }
+                    }
+
+                    // Report progress every "scanline"
+                    worker.ReportProgress((int) ((x + SideLength) / (SideLength * 2f) * 50) + 50);
+                }
+
+                // Send the result back to the worker
+                e.Result = vbi;
+            }
+            catch (Exception ex)
+            {
+                Lumberjack.Error(ex.Message);
+                e.Result = new VertexBufferInitializer();
+            }
         }
 
         public bool IsDecorating()
@@ -848,6 +896,12 @@ namespace TerrainBuilder
                 vbi.AddVertex(position + _boxVerts[_boxFaces[i, 2]], _boxNormals[i], color);
                 vbi.AddVertex(position + _boxVerts[_boxFaces[i, 3]], _boxNormals[i], color);
             }
+        }
+
+        public void SetVoxels(bool voxels)
+        {
+            _voxels = voxels;
+            _dirty = true;
         }
     }
 }

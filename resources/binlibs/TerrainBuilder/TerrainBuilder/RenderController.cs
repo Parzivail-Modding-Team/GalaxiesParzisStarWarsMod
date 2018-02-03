@@ -8,14 +8,14 @@ using PFX;
 
 namespace TerrainBuilder
 {
-    public partial class TerrainLayerList : Form
+    public partial class RenderController : Form
     {
         private readonly WindowVisualize _parent;
         private readonly Random _random = new Random();
 
         public Dictionary<int, Color> Colors = new Dictionary<int, Color>();
 
-        public TerrainLayerList(WindowVisualize parent)
+        public RenderController(WindowVisualize parent)
         {
             _parent = parent;
             InitializeComponent();
@@ -127,6 +127,11 @@ namespace TerrainBuilder
         private void heightmapViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
             new HeightmapViewer().Show(this);
+        }
+
+        private void cbVoxels_CheckedChanged(object sender, EventArgs e)
+        {
+            _parent.SetVoxels(cbVoxels.Checked);
         }
     }
 }

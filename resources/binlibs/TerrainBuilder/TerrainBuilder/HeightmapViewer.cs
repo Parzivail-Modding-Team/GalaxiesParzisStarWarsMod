@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PFX;
+using PFX.Util;
 
 namespace TerrainBuilder
 {
@@ -84,14 +85,22 @@ namespace TerrainBuilder
             if (Colors.Count == 0)
                 return;
 
-            var bmp = new Bitmap((int)nudSideLength.Value, (int)nudSideLength.Value);
-            for (var x = 0; x < bmp.Width; x++)
+            try
+            {
+                var bmp = new Bitmap((int) nudSideLength.Value, (int) nudSideLength.Value);
+                for (var x = 0; x < bmp.Width; x++)
                 for (var y = 0; y < bmp.Height; y++)
                 {
                     var n = ScriptedTerrainGenerator.GetValue(x, y);
-                    bmp.SetPixel(x, y, Colors[(int)n]);
+                    bmp.SetPixel(x, y, Colors[(int) n]);
                 }
-            pbHeightmap.Image = bmp;
+
+                pbHeightmap.Image = bmp;
+            }
+            catch (Exception ex)
+            {
+                Lumberjack.Error(ex.Message);
+            }
         }
 
         private void HeightmapViewer_Load(object sender, EventArgs e)

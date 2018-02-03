@@ -1,6 +1,6 @@
 ﻿namespace TerrainBuilder
 {
-    partial class TerrainLayerList
+    partial class RenderController
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TerrainLayerList));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RenderController));
             this.nudSeed = new System.Windows.Forms.NumericUpDown();
             this.bRandomize = new System.Windows.Forms.Button();
             this.lSeed = new System.Windows.Forms.Label();
@@ -52,6 +52,7 @@
             this.ddTools = new System.Windows.Forms.ToolStripDropDownButton();
             this.heightmapViewerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.colorPicker = new System.Windows.Forms.ColorDialog();
+            this.cbVoxels = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.nudSeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).BeginInit();
             this.groupBox1.SuspendLayout();
@@ -201,7 +202,7 @@
             // cbPauseGen
             // 
             this.cbPauseGen.AutoSize = true;
-            this.cbPauseGen.Location = new System.Drawing.Point(6, 42);
+            this.cbPauseGen.Location = new System.Drawing.Point(6, 65);
             this.cbPauseGen.Name = "cbPauseGen";
             this.cbPauseGen.Size = new System.Drawing.Size(163, 17);
             this.cbPauseGen.TabIndex = 24;
@@ -213,6 +214,7 @@
             // 
             this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.cbVoxels);
             this.groupBox2.Controls.Add(this.pbTerrainColor);
             this.groupBox2.Controls.Add(this.lTerrainColor);
             this.groupBox2.Controls.Add(this.bManuallyGenerate);
@@ -230,7 +232,7 @@
             this.pbTerrainColor.BackColor = System.Drawing.SystemColors.Control;
             this.pbTerrainColor.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.pbTerrainColor.Cursor = System.Windows.Forms.Cursors.Cross;
-            this.pbTerrainColor.Location = new System.Drawing.Point(9, 107);
+            this.pbTerrainColor.Location = new System.Drawing.Point(9, 130);
             this.pbTerrainColor.Name = "pbTerrainColor";
             this.pbTerrainColor.Size = new System.Drawing.Size(100, 50);
             this.pbTerrainColor.TabIndex = 28;
@@ -240,7 +242,7 @@
             // lTerrainColor
             // 
             this.lTerrainColor.AutoSize = true;
-            this.lTerrainColor.Location = new System.Drawing.Point(6, 91);
+            this.lTerrainColor.Location = new System.Drawing.Point(6, 114);
             this.lTerrainColor.Name = "lTerrainColor";
             this.lTerrainColor.Size = new System.Drawing.Size(67, 13);
             this.lTerrainColor.TabIndex = 26;
@@ -249,7 +251,7 @@
             // bManuallyGenerate
             // 
             this.bManuallyGenerate.Enabled = false;
-            this.bManuallyGenerate.Location = new System.Drawing.Point(6, 65);
+            this.bManuallyGenerate.Location = new System.Drawing.Point(6, 88);
             this.bManuallyGenerate.Name = "bManuallyGenerate";
             this.bManuallyGenerate.Size = new System.Drawing.Size(169, 23);
             this.bManuallyGenerate.TabIndex = 25;
@@ -311,7 +313,20 @@
             this.colorPicker.Color = System.Drawing.Color.LimeGreen;
             this.colorPicker.FullOpen = true;
             // 
-            // TerrainLayerList
+            // cbVoxels
+            // 
+            this.cbVoxels.AutoSize = true;
+            this.cbVoxels.Checked = true;
+            this.cbVoxels.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbVoxels.Location = new System.Drawing.Point(6, 42);
+            this.cbVoxels.Name = "cbVoxels";
+            this.cbVoxels.Size = new System.Drawing.Size(57, 17);
+            this.cbVoxels.TabIndex = 29;
+            this.cbVoxels.Text = "Voxels";
+            this.cbVoxels.UseVisualStyleBackColor = true;
+            this.cbVoxels.CheckedChanged += new System.EventHandler(this.cbVoxels_CheckedChanged);
+            // 
+            // RenderController
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -323,8 +338,8 @@
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(488, 452);
-            this.Name = "TerrainLayerList";
-            this.Text = "TerrainLayerList";
+            this.Name = "RenderController";
+            this.Text = "RenderController";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TerrainLayerList_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.nudSeed)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).EndInit();
@@ -367,5 +382,6 @@
         private System.Windows.Forms.ColorDialog colorPicker;
         private System.Windows.Forms.ToolStripDropDownButton ddTools;
         private System.Windows.Forms.ToolStripMenuItem heightmapViewerToolStripMenuItem;
+        public System.Windows.Forms.CheckBox cbVoxels;
     }
 }

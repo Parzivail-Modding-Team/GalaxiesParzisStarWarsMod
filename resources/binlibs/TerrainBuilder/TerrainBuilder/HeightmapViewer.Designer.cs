@@ -161,7 +161,7 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pbHeightmap.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pbHeightmap.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.pbHeightmap.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             this.pbHeightmap.Location = new System.Drawing.Point(12, 114);
             this.pbHeightmap.Name = "pbHeightmap";
             this.pbHeightmap.Size = new System.Drawing.Size(438, 438);

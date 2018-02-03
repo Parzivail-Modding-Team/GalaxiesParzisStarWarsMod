@@ -8,7 +8,7 @@ namespace TerrainBuilder
 {
     class ScriptWatcher
     {
-        private static int _stringHash;
+        private int _stringHash;
         private FileSystemWatcher _watcher;
 
         public delegate void FileChangedEventHandler(object sender, ScriptChangedEventArgs e);
