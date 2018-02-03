@@ -59,23 +59,23 @@ namespace TerrainBuilder
             }
 
             _parent.ScriptedTerrainGenerator.SetSeed((long)nudSeed.Value);
-            ReRenderNoiseImage();
+            //ReRenderNoiseImage();
             _parent.ReRender();
         }
 
         public void ReRenderNoiseImage()
         {
-            if (Colors.Count == 0)
-                return;
+            //if (Colors.Count == 0)
+            //    return;
             
-            var bmp = new Bitmap(pbNoise.Width, pbNoise.Height);
-            for (var x = 0; x < pbNoise.Width; x++)
-                for (var y = 0; y < pbNoise.Height; y++)
-                {
-                    var n = _parent.ScriptedTerrainGenerator.GetValue(x, y);
-                    bmp.SetPixel(x, y, Colors[(int)n]);
-                }
-            pbNoise.Image = bmp;
+            //var bmp = new Bitmap(pbNoise.Width, pbNoise.Height);
+            //for (var x = 0; x < pbNoise.Width; x++)
+            //    for (var y = 0; y < pbNoise.Height; y++)
+            //    {
+            //        var n = _parent.ScriptedTerrainGenerator.GetValue(x, y);
+            //        bmp.SetPixel(x, y, Colors[(int)n]);
+            //    }
+            //pbNoise.Image = bmp;
         }
 
         private void bCreateTerrain_Click(object sender, EventArgs e)
@@ -126,7 +126,7 @@ namespace TerrainBuilder
 
         private void heightmapViewerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new HeightmapViewer().Show(this);
+            new HeightmapViewer().Show();
         }
 
         private void cbVoxels_CheckedChanged(object sender, EventArgs e)

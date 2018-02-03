@@ -169,7 +169,7 @@ namespace TerrainBuilder
             // Set up lighting
             GL.Enable(EnableCap.Lighting);
             GL.Enable(EnableCap.Light0);
-            GL.ShadeModel(ShadingModel.Flat);
+            GL.ShadeModel(ShadingModel.Smooth);
             GL.Enable(EnableCap.ColorMaterial);
 
             // Set up caps
@@ -753,11 +753,14 @@ namespace TerrainBuilder
             if (IsDecorating())
                 CancelDecorate();
 
-            // Enable the render statusbar
-            _terrainLayerList.bCancelRender.Enabled = true;
-            _terrainLayerList.bCancelRender.Visible = true;
+            _terrainLayerList.Invoke((MethodInvoker) delegate
+            {
+                // Enable the render statusbar
+                _terrainLayerList.bCancelRender.Enabled = true;
+                _terrainLayerList.bCancelRender.Visible = true;
 
-            _terrainLayerList.pbRenderStatus.Visible = true;
+                _terrainLayerList.pbRenderStatus.Visible = true;
+            });
 
             // Fire up the render
             _backgroundDecorator.RunWorkerAsync();
@@ -901,7 +904,7 @@ namespace TerrainBuilder
         public void SetVoxels(bool voxels)
         {
             _voxels = voxels;
-            _dirty = true;
+            ReRender(true);
         }
     }
 }

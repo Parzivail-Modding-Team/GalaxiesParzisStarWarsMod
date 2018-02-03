@@ -35,7 +35,6 @@
             this.nudSideLength = new System.Windows.Forms.NumericUpDown();
             this.lSideLen = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.pbNoise = new System.Windows.Forms.PictureBox();
             this.cbWireframe = new System.Windows.Forms.CheckBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lRenderStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -56,7 +55,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudSeed)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).BeginInit();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbNoise)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbTerrainColor)).BeginInit();
@@ -143,15 +141,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Terrain";
             // 
-            // pbNoise
-            // 
-            this.pbNoise.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.pbNoise.Location = new System.Drawing.Point(12, 114);
-            this.pbNoise.Name = "pbNoise";
-            this.pbNoise.Size = new System.Drawing.Size(261, 261);
-            this.pbNoise.TabIndex = 3;
-            this.pbNoise.TabStop = false;
-            // 
             // cbWireframe
             // 
             this.cbWireframe.AutoSize = true;
@@ -220,9 +209,9 @@
             this.groupBox2.Controls.Add(this.bManuallyGenerate);
             this.groupBox2.Controls.Add(this.cbWireframe);
             this.groupBox2.Controls.Add(this.cbPauseGen);
-            this.groupBox2.Location = new System.Drawing.Point(279, 114);
+            this.groupBox2.Location = new System.Drawing.Point(12, 114);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(181, 261);
+            this.groupBox2.Size = new System.Drawing.Size(448, 261);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Render";
@@ -334,7 +323,6 @@
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.statusStrip1);
-            this.Controls.Add(this.pbNoise);
             this.Controls.Add(this.groupBox1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(488, 452);
@@ -345,7 +333,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.nudSideLength)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbNoise)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -366,7 +353,6 @@
         private System.Windows.Forms.Label lSideLen;
         private System.Windows.Forms.GroupBox groupBox1;
         public System.Windows.Forms.CheckBox cbWireframe;
-        private System.Windows.Forms.PictureBox pbNoise;
         private System.Windows.Forms.StatusStrip statusStrip1;
         public System.Windows.Forms.ToolStripProgressBar pbRenderStatus;
         public System.Windows.Forms.ToolStripStatusLabel lRenderStatus;
