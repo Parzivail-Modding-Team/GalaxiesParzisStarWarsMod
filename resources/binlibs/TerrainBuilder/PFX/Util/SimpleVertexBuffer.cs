@@ -158,7 +158,7 @@ namespace PFX.Util
             NumElements = indices.Length;
         }
 
-        public void Render()
+        public void Render(PrimitiveType type = PrimitiveType.Quads)
         {
             // Push current Array Buffer state so we can restore it later
             GL.PushClientAttrib(ClientAttribMask.ClientVertexArrayBit);
@@ -211,7 +211,7 @@ namespace PFX.Util
 
                 // Draw the elements in the element array buffer
                 // Draws up items in the Color, Vertex, TexCoordinate, and Normal Buffers using indices in the ElementArrayBuffer
-                GL.DrawElements(PrimitiveType.Quads, NumElements, DrawElementsType.UnsignedInt, IntPtr.Zero);
+                GL.DrawElements(type, NumElements, DrawElementsType.UnsignedInt, IntPtr.Zero);
 
                 // Could also call GL.DrawArrays which would ignore the ElementArrayBuffer and just use primitives
                 // Of course we would have to reorder our data to be in the correct primitive order
