@@ -160,9 +160,9 @@ namespace TerrainBuilder
         private void LoadHandler(object sender, EventArgs e)
         {
             // Set up lights
-            const float diffuse = 1f;
+            const float diffuse = 0.9f;
             float[] matDiffuse = { diffuse, diffuse, diffuse };
-            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.AmbientAndDiffuse, matDiffuse);
+            GL.Material(MaterialFace.FrontAndBack, MaterialParameter.Diffuse, matDiffuse);
             GL.Light(LightName.Light0, LightParameter.Position, new[] { 0.0f, 0.0f, 0.0f, 10.0f });
             GL.Light(LightName.Light0, LightParameter.Diffuse, new[] { diffuse, diffuse, diffuse, diffuse });
 
@@ -379,6 +379,11 @@ namespace TerrainBuilder
                 // Init VBO-needed lists
                 var vbi = new VertexBufferInitializer();
 
+                // Set up the colors we'll be using for terrain
+                const int color = 0xFFFFFF;
+                const float occludedScalar = 0.75f;
+                var occludedColor = Util.RgbToInt(occludedScalar, occludedScalar, occludedScalar);
+
                 // Iterate over the heightmap
                 for (var x = -SideLength; x < SideLength; x++)
                 {
@@ -396,7 +401,7 @@ namespace TerrainBuilder
                         var nz = z + SideLength + 1;
 
                         // Heightmap value here
-                        var valueHere = Heightmap[nx, nz];
+                        var valueHere = (float)Heightmap[nx, nz];
 
                         // Neighboring positions
                         var valuePosX = Heightmap[nx + 1, nz];
@@ -430,35 +435,29 @@ namespace TerrainBuilder
                         var isPosXNegZLower = valuePosXNegZ < valueHere;
                         var isNegXNegZLower = valueNegXNegZ < valueHere;
 
-                        // Set up the colors we'll be using for terrain
-                        var color = Util.RgbToInt(1, 1, 1);
-                        const float occludedScalar = 0.8f;
-                        var occludedColor = Util.RgbToInt(occludedScalar, occludedScalar, occludedScalar);
-
                         if (args.Voxels)
                         {
-
                             // Always draw a top face for a block
                             vbi.AddVertex(
-                                new Vector3(x, (float) valueHere, z),
+                                new Vector3(x, valueHere, z),
                                 UpVector,
                                 isPosXHigher || isPosZHigher || isPosXPosZHigher ? occludedColor : color
                             );
 
                             vbi.AddVertex(
-                                new Vector3(x - 1, (float) valueHere, z),
+                                new Vector3(x - 1, valueHere, z),
                                 UpVector,
                                 isNegXHigher || isPosZHigher || isNegXPosZHigher ? occludedColor : color
                             );
 
                             vbi.AddVertex(
-                                new Vector3(x - 1, (float) valueHere, z - 1),
+                                new Vector3(x - 1, valueHere, z - 1),
                                 UpVector,
                                 isNegXHigher || isNegZHigher || isNegXNegZHigher ? occludedColor : color
                             );
 
                             vbi.AddVertex(
-                                new Vector3(x, (float) valueHere, z - 1),
+                                new Vector3(x, valueHere, z - 1),
                                 UpVector,
                                 isPosXHigher || isNegZHigher || isPosXNegZHigher ? occludedColor : color
                             );
@@ -467,7 +466,7 @@ namespace TerrainBuilder
                             if (valuePosZ < valueHere)
                             {
                                 vbi.AddVertex(
-                                    new Vector3(x, (float) valueHere, z),
+                                    new Vector3(x, valueHere, z),
                                     PosZVector,
                                     color
                                 );
@@ -485,7 +484,7 @@ namespace TerrainBuilder
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x - 1, (float) valueHere, z),
+                                    new Vector3(x - 1, valueHere, z),
                                     PosZVector,
                                     color
                                 );
@@ -495,7 +494,7 @@ namespace TerrainBuilder
                             if (valueNegZ < valueHere)
                             {
                                 vbi.AddVertex(
-                                    new Vector3(x, (float) valueHere, z - 1),
+                                    new Vector3(x, valueHere, z - 1),
                                     NegZVector,
                                     color
                                 );
@@ -513,7 +512,7 @@ namespace TerrainBuilder
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x - 1, (float) valueHere, z - 1),
+                                    new Vector3(x - 1, valueHere, z - 1),
                                     NegZVector,
                                     color
                                 );
@@ -523,7 +522,7 @@ namespace TerrainBuilder
                             if (valuePosX < valueHere)
                             {
                                 vbi.AddVertex(
-                                    new Vector3(x, (float) valueHere, z),
+                                    new Vector3(x, valueHere, z),
                                     PosXVector,
                                     color
                                 );
@@ -541,7 +540,7 @@ namespace TerrainBuilder
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x, (float) valueHere, z - 1),
+                                    new Vector3(x, valueHere, z - 1),
                                     PosXVector,
                                     color
                                 );
@@ -551,7 +550,7 @@ namespace TerrainBuilder
                             if (valueNegX < valueHere)
                             {
                                 vbi.AddVertex(
-                                    new Vector3(x - 1, (float) valueHere, z),
+                                    new Vector3(x - 1, valueHere, z),
                                     NegXVector,
                                     color
                                 );
@@ -569,7 +568,7 @@ namespace TerrainBuilder
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x - 1, (float) valueHere, z - 1),
+                                    new Vector3(x - 1, valueHere, z - 1),
                                     NegXVector,
                                     color
                                 );
@@ -577,7 +576,7 @@ namespace TerrainBuilder
                         }
                         else
                         {
-                            var valueA = new Vector3(x, (float) valueHere, z);
+                            var valueA = new Vector3(x, valueHere, z);
                             var valueB = new Vector3(x - 1, (float)valueNegX, z);
                             var valueC = new Vector3(x, (float)valueNegZ, z - 1);
                             var valueD = new Vector3(x - 1, (float)valueNegXNegZ, z - 1);
