@@ -175,6 +175,7 @@ namespace TerrainBuilder
                 // Grab worker and report progress
                 var worker = (BackgroundWorker)sender;
                 var bitmap = (Bitmap)e.Argument;
+                var v = (double) (nudSideLength.Value / 2);
                 worker.ReportProgress(0, EmbeddedFiles.Status_GenHeightmap);
 
                 for (var x = 0; x < bitmap.Width; x++)
@@ -188,7 +189,7 @@ namespace TerrainBuilder
                             return;
                         }
 
-                        var n = ScriptedTerrainGenerator.GetValue(x, y);
+                        var n = ScriptedTerrainGenerator.GetValue(x - v, y - v);
                         bitmap.SetPixel(x, y, Colors[(int) n]);
                     }
                     worker.ReportProgress((int) (x / (float)bitmap.Width * 100));
@@ -200,7 +201,7 @@ namespace TerrainBuilder
             catch (Exception ex)
             {
                 Lumberjack.Error(ex.Message);
-                e.Result = new VertexBufferInitializer();
+                e.Result = (Bitmap)e.Argument;
             }
         }
 

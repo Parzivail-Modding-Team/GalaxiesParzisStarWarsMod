@@ -30,8 +30,8 @@ namespace PFX.Util
                 var px = Math.Floor(nx) + x;
                 var py = Math.Floor(ny) + y;
                     
-                var rx = Math.Abs(Math.Cos((px * 23.62 - 300.0 + py * 34.35) * 89.42) * 343.42) % 1;
-                var ry = Math.Abs(Math.Cos((px * 45.13 + 256.0 + py * 38.89) * 89.42) * 343.42) % 1;
+                var rx = Math.Abs(Math.Cos((px * 23.62 - 300.0 + py * 34.35) * 89.42) * 343.42 % 1);
+                var ry = Math.Abs(Math.Cos((px * 45.13 + 256.0 + py * 38.89) * 89.42) * 343.42 % 1);
                     
                 var d = Math.Sqrt(Math.Pow(rx + x - nx % 1, 2) + Math.Pow(ry + y - ny % 1, 2));
                     
