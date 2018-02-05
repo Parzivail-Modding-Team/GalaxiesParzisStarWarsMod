@@ -35,6 +35,9 @@ namespace TerrainBuilder
             script.Globals["worley"] = (Func<double, double, double>)GetWorleyNoise;
             script.Globals["rawworley"] = (Func<double, double, double>)GetRawWorleyNoise;
 
+            script.Globals["worley3"] = (Func<double, double, double, double>)GetWorleyNoise;
+            script.Globals["rawworley3"] = (Func<double, double, double, double>)GetRawWorleyNoise;
+
             script.Globals["TREE_NONE"] = 0;
             script.Globals["TREE_MC"] = 1;
 
@@ -78,6 +81,16 @@ namespace TerrainBuilder
         private double GetRawWorleyNoise(double x, double z)
         {
             return _worley.Eval(x, z) * 2 - 1;
+        }
+
+        private double GetWorleyNoise(double x, double y, double z)
+        {
+            return _worley.Eval(x, y, z);
+        }
+
+        private double GetRawWorleyNoise(double x, double y, double z)
+        {
+            return _worley.Eval(x, y, z) * 2 - 1;
         }
 
         private double GetNoise(double x, double z)
