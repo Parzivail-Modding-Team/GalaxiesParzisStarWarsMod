@@ -70,6 +70,7 @@
     <Compile Include="Util\E.cs" />
     <Compile Include="Util\Fx.cs" />
     <Compile Include="Util\HSLColor.cs" />
+    <Compile Include="Util\InfiniteWorleyNoise.cs" />
     <Compile Include="Util\MathUtil.cs" />
     <Compile Include="Util\OpenSimplexNoise.cs" />
     <Compile Include="Util\Profiler.cs" />

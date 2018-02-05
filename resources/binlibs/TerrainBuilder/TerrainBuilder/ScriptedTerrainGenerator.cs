@@ -8,7 +8,8 @@ namespace TerrainBuilder
 {
     public class ScriptedTerrainGenerator
     {
-        private OpenSimplexNoise _noise = new OpenSimplexNoise(0);
+        private OpenSimplexNoise _noise = new OpenSimplexNoise();
+        private InfiniteWorleyNoise _worley = new InfiniteWorleyNoise();
         private Script _script;
 
         public int WaterLevel { get; set; }
@@ -30,6 +31,9 @@ namespace TerrainBuilder
 
             script.Globals["noise4"] = (Func<double, double, double, double, double>)GetNoise;
             script.Globals["rawnoise4"] = (Func<double, double, double, double, double>)GetRawNoise;
+
+            script.Globals["worley"] = (Func<double, double, double>)GetWorleyNoise;
+            script.Globals["rawworley"] = (Func<double, double, double>)GetRawWorleyNoise;
 
             script.Globals["TREE_NONE"] = 0;
             script.Globals["TREE_MC"] = 1;
@@ -66,6 +70,16 @@ namespace TerrainBuilder
             }
         }
 
+        private double GetWorleyNoise(double x, double z)
+        {
+            return _worley.Eval(x, z);
+        }
+
+        private double GetRawWorleyNoise(double x, double z)
+        {
+            return _worley.Eval(x, z) * 2 - 1;
+        }
+
         private double GetNoise(double x, double z)
         {
             return (_noise.Eval(x, z) + 1) / 2;
@@ -99,6 +113,7 @@ namespace TerrainBuilder
         public void SetSeed(long nudSeedValue)
         {
             _noise = new OpenSimplexNoise(nudSeedValue);
+            _worley = new InfiniteWorleyNoise(nudSeedValue);
         }
 
         public double GetValue(double x, double z)
