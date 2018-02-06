@@ -23,21 +23,36 @@ namespace TerrainBuilder
 
         public void LoadScript(Script script, string scriptCode)
         {
+            // 2d noise
             script.Globals["noise"] = (Func<double, double, double>)GetNoise;
             script.Globals["rawnoise"] = (Func<double, double, double>)GetRawNoise;
 
+            // 3d noise
             script.Globals["noise3"] = (Func<double, double, double, double>)GetNoise;
             script.Globals["rawnoise3"] = (Func<double, double, double, double>)GetRawNoise;
 
+            // 4d noise
             script.Globals["noise4"] = (Func<double, double, double, double, double>)GetNoise;
             script.Globals["rawnoise4"] = (Func<double, double, double, double, double>)GetRawNoise;
 
+            // 2d worley noise
             script.Globals["worley"] = (Func<double, double, double>)GetWorleyNoise;
             script.Globals["rawworley"] = (Func<double, double, double>)GetRawWorleyNoise;
 
+            // 3d worley noise
             script.Globals["worley3"] = (Func<double, double, double, double>)GetWorleyNoise;
             script.Globals["rawworley3"] = (Func<double, double, double, double>)GetRawWorleyNoise;
 
+            // 2d noise derivs
+            script.Globals["noiseDx"] = (Func<double, double, double>)GetNoiseDx;
+            script.Globals["noiseDz"] = (Func<double, double, double>)GetNoiseDz;
+
+            // noise octaves
+            script.Globals["octNoise"] = (Func<double, double, int, double>)GetOctaveNoise;
+            script.Globals["octWorley"] = (Func<double, double, int, double>)GetOctaveWorley;
+            script.Globals["octInvWorley"] = (Func<double, double, int, double>)GetOctaveInvWorley;
+
+            // constants
             script.Globals["TREE_NONE"] = 0;
             script.Globals["TREE_MC"] = 1;
 
@@ -73,6 +88,30 @@ namespace TerrainBuilder
             }
         }
 
+        private double GetOctaveNoise(double x, double z, int octaves)
+        {
+            var n = GetNoise(x, z) / 2;
+            if (octaves <= 1)
+                return n;
+            return n + GetOctaveNoise((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
+        }
+
+        private double GetOctaveWorley(double x, double z, int octaves)
+        {
+            var n = GetWorleyNoise(x, z) / 2;
+            if (octaves <= 1)
+                return n;
+            return n + GetOctaveNoise((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
+        }
+
+        private double GetOctaveInvWorley(double x, double z, int octaves)
+        {
+            var n = (1 - GetWorleyNoise(x, z)) / 2;
+            if (octaves <= 1)
+                return n;
+            return n + GetOctaveInvWorley((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
+        }
+
         private double GetWorleyNoise(double x, double z)
         {
             return _worley.Eval(x, z);
@@ -91,6 +130,20 @@ namespace TerrainBuilder
         private double GetRawWorleyNoise(double x, double y, double z)
         {
             return _worley.Eval(x, y, z) * 2 - 1;
+        }
+
+        private double GetNoiseDx(double x, double z)
+        {
+            var n = GetNoise(x, z) / 2;
+            const double d = 0.001;
+            return (GetNoise(x + d, z) - n) / d;
+        }
+
+        private double GetNoiseDz(double x, double z)
+        {
+            var n = GetNoise(x, z) / 2;
+            const double d = 0.001;
+            return (GetNoise(x, z + d) - n) / d;
         }
 
         private double GetNoise(double x, double z)
