@@ -84,20 +84,20 @@ namespace TerrainBuilder
 
             try
             {
-                var bmp = new Bitmap((int) nudSideLength.Value, (int) nudSideLength.Value);
-                
+                var bmp = new Bitmap((int)nudSideLength.Value, (int)nudSideLength.Value);
+
                 // If there's an ongoing render, cancel it
                 if (IsRendering())
                     CancelRender();
-                
-                // Enable the render statusbar
-                Invoke((MethodInvoker) delegate
-                {
-                    bCancelRender.Enabled = true;
-                    bCancelRender.Visible = true;
 
-                    pbRenderStatus.Visible = true;
-                });
+                // Enable the render statusbar
+                Invoke((MethodInvoker)delegate
+               {
+                   bCancelRender.Enabled = true;
+                   bCancelRender.Visible = true;
+
+                   pbRenderStatus.Visible = true;
+               });
 
                 // Fire up the render
                 _backgroundRenderer.RunWorkerAsync(bmp);
@@ -175,7 +175,7 @@ namespace TerrainBuilder
                 // Grab worker and report progress
                 var worker = (BackgroundWorker)sender;
                 var bitmap = (Bitmap)e.Argument;
-                var v = (double) (nudSideLength.Value / 2);
+                var v = (double)(nudSideLength.Value / 2);
                 worker.ReportProgress(0, EmbeddedFiles.Status_GenHeightmap);
 
                 for (var x = 0; x < bitmap.Width; x++)
@@ -190,9 +190,9 @@ namespace TerrainBuilder
                         }
 
                         var n = ScriptedTerrainGenerator.GetValue(x - v, y - v);
-                        bitmap.SetPixel(x, y, Colors[(int) n]);
+                        bitmap.SetPixel(x, y, Colors[(int)n]);
                     }
-                    worker.ReportProgress((int) (x / (float)bitmap.Width * 100));
+                    worker.ReportProgress((int)(x / (float)bitmap.Width * 100));
                 }
 
                 // Send the result back to the worker
@@ -220,8 +220,8 @@ namespace TerrainBuilder
         private void ScriptWatcherOnFileChanged(object sender, ScriptChangedEventArgs e)
         {
             Lumberjack.Info(string.Format(EmbeddedFiles.Info_FileReloaded, e.Filename));
-            ScriptedTerrainGenerator.LoadScript(e.Script, e.ScriptCode);
-            ReRenderNoiseImage();
+            if (ScriptedTerrainGenerator.LoadScript(e.Script, e.ScriptCode))
+                ReRenderNoiseImage();
         }
 
         private void bCancelRender_ButtonClick(object sender, EventArgs e)

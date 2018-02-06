@@ -11,6 +11,7 @@ namespace TerrainBuilder
         private OpenSimplexNoise _noise = new OpenSimplexNoise();
         private InfiniteWorleyNoise _worley = new InfiniteWorleyNoise();
         private Script _script;
+        private long _seed;
 
         public int WaterLevel { get; set; }
 
@@ -21,7 +22,7 @@ namespace TerrainBuilder
             {"tree", DataType.Function}
         };
 
-        public void LoadScript(Script script, string scriptCode)
+        public bool LoadScript(Script script, string scriptCode)
         {
             // 2d noise
             script.Globals["noise"] = (Func<double, double, double>)GetNoise;
@@ -52,6 +53,10 @@ namespace TerrainBuilder
             script.Globals["octWorley"] = (Func<double, double, int, double>)GetOctaveWorley;
             script.Globals["octInvWorley"] = (Func<double, double, int, double>)GetOctaveInvWorley;
 
+            // 2d hash functions
+            script.Globals["hashA"] = (Func<double, double, double>)GetHashA;
+            script.Globals["hashB"] = (Func<double, double, double>)GetHashB;
+
             // constants
             script.Globals["TREE_NONE"] = 0;
             script.Globals["TREE_MC"] = 1;
@@ -67,11 +72,11 @@ namespace TerrainBuilder
                         if (script.Globals.Get(requiredTopLevelObject.Key).Type == requiredTopLevelObject.Value)
                             continue;
                         Lumberjack.Error($"Expected top-level object `{requiredTopLevelObject.Key}` to be of type {requiredTopLevelObject.Value}, was instead {script.Globals.Get(requiredTopLevelObject.Key).Type}.");
-                        return;
+                        return false;
                     }
 
                     Lumberjack.Error($"Couldn't find top-level object `{requiredTopLevelObject.Key}`");
-                    return;
+                    return false;
                 }
 
                 // Validate that the main method works
@@ -81,11 +86,23 @@ namespace TerrainBuilder
                 WaterLevel = (int) script.Globals.Get("waterLevel").Number;
 
                 _script = script;
+                return true;
             }
             catch (Exception e)
             {
                 Lumberjack.Error($"{e.GetType()}: {e.Message}");
+                return false;
             }
+        }
+
+        private double GetHashA(double x, double z)
+        {
+            return MathUtil.Fract(Math.Sin(MathUtil.Seed(x - 173.37, _seed) * 7441.35 - 4113.21 * Math.Cos(x * z) + MathUtil.Seed(z - 1743.7, _seed) * 1727.93 * 1291.27) * 2853.85 + MathUtil.OneOverGoldenRatio);
+        }
+
+        private double GetHashB(double x, double z)
+        {
+            return MathUtil.Fract(Math.Cos(MathUtil.Seed(z - 143.37, _seed) * 4113.21 - 2853.85 * Math.Sin(x * z) + MathUtil.Seed(x - 743.37, _seed) * 1291.27 * 1727.93) * 4113.21 + MathUtil.OneOverGoldenRatio);
         }
 
         private double GetOctaveNoise(double x, double z, int octaves)
@@ -178,6 +195,7 @@ namespace TerrainBuilder
 
         public void SetSeed(long nudSeedValue)
         {
+            _seed = nudSeedValue;
             _noise = new OpenSimplexNoise(nudSeedValue);
             _worley = new InfiniteWorleyNoise(nudSeedValue);
         }

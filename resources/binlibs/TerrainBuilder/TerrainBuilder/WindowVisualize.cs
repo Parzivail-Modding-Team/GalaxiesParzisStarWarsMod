@@ -240,8 +240,7 @@ namespace TerrainBuilder
         private void ScriptWatcherOnFileChanged(object sender, ScriptChangedEventArgs e)
         {
             Lumberjack.Info(string.Format(EmbeddedFiles.Info_FileReloaded, e.Filename));
-            ScriptedTerrainGenerator.LoadScript(e.Script, e.ScriptCode);
-            _dirty = true;
+            _dirty = ScriptedTerrainGenerator.LoadScript(e.Script, e.ScriptCode);
         }
 
         public bool IsRendering()

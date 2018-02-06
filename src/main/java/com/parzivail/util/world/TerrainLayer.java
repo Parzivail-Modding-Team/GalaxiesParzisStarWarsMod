@@ -1,7 +1,6 @@
 package com.parzivail.util.world;
 
 import com.parzivail.util.common.OpenSimplexNoise;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Created by colby on 12/27/2016.
@@ -31,8 +30,6 @@ public class TerrainLayer
 	public double GetValue(double x, double y)
 	{
 		double raw = noise.eval(x / scale, y / scale);
-
-		GL11.glFog();
 
 		switch (function)
 		{
