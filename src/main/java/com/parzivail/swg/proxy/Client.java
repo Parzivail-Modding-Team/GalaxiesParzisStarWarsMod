@@ -1,8 +1,10 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.entity.EntityRover;
 import com.parzivail.swg.render.PEntityRenderer;
 import com.parzivail.swg.render.entity.RenderNothing;
+import com.parzivail.swg.render.entity.RenderRover;
 import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
@@ -23,6 +25,7 @@ public class Client extends Common
 
 		StarWarsGalaxy.mc.entityRenderer = new PEntityRenderer(StarWarsGalaxy.mc, StarWarsGalaxy.mc.getResourceManager());
 
+		RenderingRegistry.registerEntityRenderingHandler(EntityRover.class, new RenderRover());
 		RenderingRegistry.registerEntityRenderingHandler(VehicleT65.class, new RenderT65());
 		RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
 

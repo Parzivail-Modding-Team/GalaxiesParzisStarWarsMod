@@ -238,6 +238,8 @@ public abstract class BasicFlightModel extends EntityBase
 
 		for (int i = 0; i < this.seats.length; i++)
 		{
+			if (this.getSeat(i) == null)
+				continue;
 			this.getSeat(i).ship = this;
 			this.getSeat(i).setLocationAndAngles(this);
 		}
