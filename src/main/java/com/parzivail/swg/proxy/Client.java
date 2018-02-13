@@ -2,6 +2,7 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.PEntityRenderer;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
 import com.parzivail.swg.render.entity.RenderNothing;
@@ -20,7 +21,7 @@ import net.minecraft.entity.Entity;
 public class Client extends Common
 {
 	@Override
-	public void doSidedThings()
+	public void init()
 	{
 		StarWarsGalaxy.mc = Minecraft.getMinecraft();
 
@@ -33,6 +34,12 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
 		Lumberjack.log("Client proxy loaded!");
+	}
+
+	@Override
+	public void postInit()
+	{
+		KeybindRegistry.registerAll();
 	}
 
 	@Override

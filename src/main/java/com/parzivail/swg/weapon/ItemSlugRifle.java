@@ -3,10 +3,13 @@ package com.parzivail.swg.weapon;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.registry.KeybindRegistry;
+import com.parzivail.swg.render.ClientRenderState;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -32,6 +35,25 @@ public class ItemSlugRifle extends PItem
 	}
 
 	@Override
+	public void onUpdate(ItemStack itemStack, World world, Entity entity, int par4, boolean par5)
+	{
+		if (world.isRemote && entity instanceof EntityPlayerSP)
+		{
+			ItemStack heldItem = ((EntityPlayerSP)entity).getHeldItem();
+			if (KeybindRegistry.keyAttack != null)
+				KeybindRegistry.keyAttack.setInterceptionActive(heldItem != null && heldItem.getItem() == this);
+
+			if (heldItem != null && heldItem.getItem() == this)
+			{
+				if (!ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
+					ClientRenderState.renderState.add(ClientRenderState.SniperThermal);
+			}
+			else
+				ClientRenderState.renderState.remove(ClientRenderState.SniperThermal);
+		}
+	}
+
+	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		if (!world.isRemote)
@@ -42,7 +64,7 @@ public class ItemSlugRifle extends PItem
 			float s = 2;
 			//StarWarsGalaxy.proxy.spawnParticle(world, "flame", player.posX, player.posY + player.getEyeHeight(), player.posZ, look.xCoord * s, look.yCoord * s, look.zCoord * s);
 
-			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, s, 0xFF0000);
+			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, s, 0x00FFFF);
 			e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
 			world.spawnEntityInWorld(e);
 

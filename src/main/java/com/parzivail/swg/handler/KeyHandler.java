@@ -1,9 +1,11 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.ShipInput;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -15,8 +17,13 @@ import org.lwjgl.input.Keyboard;
  */
 public class KeyHandler
 {
-	public static void onKeyInput(InputEvent.KeyInputEvent event)
+	public static void onInput(InputEvent.KeyInputEvent event)
 	{
+	}
+
+	public static void onInput(InputEvent.MouseInputEvent event)
+	{
+		Lumberjack.log(KeybindRegistry.keyAttack.retrieveClick());
 	}
 
 	public static void handleVehicleMovement()

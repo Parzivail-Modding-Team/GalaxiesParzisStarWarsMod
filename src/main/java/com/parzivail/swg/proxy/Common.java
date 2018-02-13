@@ -17,7 +17,7 @@ public class Common
 {
 	private MinecraftServer MCServer;
 
-	public void doSidedThings()
+	public void init()
 	{
 		Lumberjack.log("Server proxy loaded!");
 	}
@@ -51,6 +51,10 @@ public class Common
 	}
 
 	public void setupShipRender(BasicFlightModel ship)
+	{
+	}
+
+	public void postInit()
 	{
 	}
 }

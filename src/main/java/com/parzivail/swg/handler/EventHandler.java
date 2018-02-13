@@ -1,15 +1,18 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.render.ClientRenderState;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
+import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
@@ -29,8 +32,8 @@ public class EventHandler
 			if (pair != null && pair.left != null && event.isCancelable())
 				event.setCanceled(true);
 		}
-		//else if (event.entity instanceof EntityLiving && StarWarsGalaxy.mc.thePlayer.getHeldItem().getItem() == ItemRegister.slugRifle)
-		//	ShaderHelper.useShader(ShaderHelper.entityGlow);
+		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
+			ShaderHelper.useShader(ShaderHelper.entityGlow);
 	}
 
 	@SubscribeEvent
@@ -43,8 +46,8 @@ public class EventHandler
 			if (pair != null && pair.left != null && event.isCancelable())
 				event.setCanceled(true);
 		}
-		//else if (event.entity instanceof EntityLiving && StarWarsGalaxy.mc.thePlayer.getHeldItem().getItem() == ItemRegister.slugRifle)
-		//	ShaderHelper.releaseShader();
+		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
+			ShaderHelper.releaseShader();
 	}
 
 	@SubscribeEvent
@@ -73,6 +76,13 @@ public class EventHandler
 	@SideOnly(Side.CLIENT)
 	public void onKeyInput(InputEvent.KeyInputEvent event)
 	{
-		KeyHandler.onKeyInput(event);
+		KeyHandler.onInput(event);
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onKeyInput(InputEvent.MouseInputEvent event)
+	{
+		KeyHandler.onInput(event);
 	}
 }
