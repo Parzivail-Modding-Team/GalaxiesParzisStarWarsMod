@@ -5,6 +5,7 @@ import com.parzivail.swg.command.CommandSpawnShip;
 import com.parzivail.swg.handler.EventHandler;
 import com.parzivail.swg.network.MessageFlightModelUpdate;
 import com.parzivail.swg.network.MessageSeatInit;
+import com.parzivail.swg.network.MessageSpawnParticle;
 import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.registry.EntityRegister;
 import com.parzivail.swg.registry.ItemRegister;
@@ -22,6 +23,7 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.Random;
 
@@ -31,8 +33,7 @@ import java.util.Random;
 @Mod(modid = Resources.MODID, version = Resources.VERSION)
 public class StarWarsGalaxy
 {
-	@SidedProxy(clientSide = "com.parzivail.swg.proxy.Client",
-			serverSide = "com.parzivail.swg.proxy.Common")
+	@SidedProxy(clientSide = "com.parzivail.swg.proxy.Client", serverSide = "com.parzivail.swg.proxy.Common")
 	public static Common proxy;
 
 	@Mod.Instance(Resources.MODID)
@@ -44,6 +45,9 @@ public class StarWarsGalaxy
 
 	public static SimpleNetworkWrapper network;
 	private static int packetId = 0;
+
+	public Vector3f traceStart = new Vector3f(0, 0, 0);
+	public Vector3f traceEnd = new Vector3f(0, 0, 0);
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
@@ -58,6 +62,7 @@ public class StarWarsGalaxy
 		registerMessageServer(MessageFlightModelUpdate.class);
 
 		registerMessageClient(MessageSeatInit.class);
+		registerMessageClient(MessageSpawnParticle.class);
 	}
 
 	@SuppressWarnings("unchecked")

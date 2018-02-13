@@ -29,32 +29,22 @@ public class EventHandler
 			if (pair != null && pair.left != null && event.isCancelable())
 				event.setCanceled(true);
 		}
-		//		else if (StarWarsGalaxy.mc.gameSettings.showDebugInfo)
-		//		{
-		//			GL.PushMatrix();
-		//			GL.Translate(event.x, event.y + (event.entity.boundingBox.maxY - event.entity.boundingBox.minY) + 1, event.z);
-		//
-		//			float f = 0.025f;
-		//			String n = event.entity.getClass().getSimpleName();
-		//
-		//			FontRenderer fontrenderer = StarWarsGalaxy.mc.fontRenderer;
-		//			GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-		//			GL11.glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
-		//			GL11.glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
-		//			GL11.glScalef(-f, -f, f);
-		//			GL11.glDisable(GL11.GL_LIGHTING);
-		//			GL11.glDepthMask(false);
-		//			GL11.glDisable(GL11.GL_DEPTH_TEST);
-		//			GL11.glEnable(GL11.GL_BLEND);
-		//			fontrenderer.drawString(n, -fontrenderer.getStringWidth(n) / 2, 0, 0x40ffffff);
-		//			GL11.glEnable(GL11.GL_DEPTH_TEST);
-		//			GL11.glDepthMask(true);
-		//			fontrenderer.drawString(n, -fontrenderer.getStringWidth(n) / 2, 0, 0xffffffff);
-		//			GL11.glEnable(GL11.GL_LIGHTING);
-		//			GL11.glDisable(GL11.GL_BLEND);
-		//
-		//			GL.PopMatrix();
-		//		}
+		//else if (event.entity instanceof EntityLiving && StarWarsGalaxy.mc.thePlayer.getHeldItem().getItem() == ItemRegister.slugRifle)
+		//	ShaderHelper.useShader(ShaderHelper.entityGlow);
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onRender(RenderLivingEvent.Post event)
+	{
+		if (event.entity instanceof EntityPlayer)
+		{
+			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(event.entity);
+			if (pair != null && pair.left != null && event.isCancelable())
+				event.setCanceled(true);
+		}
+		//else if (event.entity instanceof EntityLiving && StarWarsGalaxy.mc.thePlayer.getHeldItem().getItem() == ItemRegister.slugRifle)
+		//	ShaderHelper.releaseShader();
 	}
 
 	@SubscribeEvent
@@ -85,11 +75,4 @@ public class EventHandler
 	{
 		KeyHandler.onKeyInput(event);
 	}
-
-	//	@SubscribeEvent
-	//	@SideOnly(Side.CLIENT)
-	//	public void onRenderGui(RenderGameOverlayEvent.Post event)
-	//	{
-	//		Minecraft mc = Minecraft.getMinecraft();
-	//	}
 }

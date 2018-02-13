@@ -16,4 +16,19 @@ public class Resources
 
 	public static int dimIdNaboo = 3;
 	public static int biomeIdNaboo = 101;
+
+	public static String itemDot(String name)
+	{
+		return String.format("item.%s.%s", MODID, name);
+	}
+
+	public static String modColon(String name)
+	{
+		return String.format("%s:%s", MODID, name);
+	}
+
+	public static String itemDot(String name, String variant)
+	{
+		return String.format("item.%s.%s.%s", MODID, name, variant);
+	}
 }
