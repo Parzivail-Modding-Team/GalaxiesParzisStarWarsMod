@@ -36,6 +36,18 @@ public class PItem extends Item
 		return Resources.itemDot(this.name, this.variants[stack.getItemDamage()]);
 	}
 
+	@SideOnly(Side.CLIENT)
+	public boolean capturesLeftClick()
+	{
+		return false;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public boolean shouldRequestRenderState()
+	{
+		return false;
+	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister)

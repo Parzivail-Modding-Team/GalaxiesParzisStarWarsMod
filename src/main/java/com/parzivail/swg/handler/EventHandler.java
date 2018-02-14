@@ -1,6 +1,8 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.ClientRenderState;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
@@ -14,6 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 
@@ -68,6 +71,28 @@ public class EventHandler
 				float r = pair.left.orientation.getRoll();
 				FxMC.changeCameraRoll(r);
 				StarWarsGalaxy.mc.renderViewEntity = pair.left;
+			}
+
+			ItemStack heldItem = StarWarsGalaxy.mc.thePlayer.getHeldItem();
+
+			if (heldItem != null && heldItem.getItem() instanceof PItem)
+				KeybindRegistry.keyAttack.setInterceptionActive(((PItem)heldItem.getItem()).capturesLeftClick());
+			else
+				KeybindRegistry.keyAttack.setInterceptionActive(false);
+
+			if (heldItem == null || !(heldItem.getItem() instanceof PItem) || !(((PItem)heldItem.getItem()).shouldRequestRenderState()))
+				ClientRenderState.renderState.removeAll(ClientRenderState.renderStateRequest.values());
+			else
+			{
+
+				if (ClientRenderState.renderStateRequest.keySet().contains(heldItem.getItem().getClass()))
+				{
+					ClientRenderState request = ClientRenderState.renderStateRequest.get(heldItem.getItem().getClass());
+					if (request != null && !ClientRenderState.renderState.contains(request))
+						ClientRenderState.renderState.add(request);
+				}
+				else
+					ClientRenderState.renderState.removeAll(ClientRenderState.renderStateRequest.values());
 			}
 		}
 	}

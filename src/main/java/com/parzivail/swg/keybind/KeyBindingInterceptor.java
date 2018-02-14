@@ -45,6 +45,8 @@ public class KeyBindingInterceptor extends KeyBinding
 
 	protected KeyBinding interceptedKeyBinding;
 	private boolean interceptionActive;
+
+	private boolean interceptedPressed;
 	private int interceptedPressTime;
 
 	/**
@@ -89,10 +91,11 @@ public class KeyBindingInterceptor extends KeyBinding
 		interceptionActive = newMode;
 	}
 
+	@Override
 	public boolean getIsKeyPressed()
 	{
 		copyKeyCodeToOriginal();
-		return interceptedKeyBinding.getIsKeyPressed();
+		return !this.interceptionActive && super.getIsKeyPressed();
 	}
 
 	/**
@@ -142,15 +145,7 @@ public class KeyBindingInterceptor extends KeyBinding
 		}
 		else
 		{
-			if (this.getPressTime() == 0)
-			{
-				return false;
-			}
-			else
-			{
-				this.setPressTime(this.getPressTime() - 1);
-				return true;
-			}
+			return super.isPressed();
 		}
 	}
 
@@ -166,17 +161,44 @@ public class KeyBindingInterceptor extends KeyBinding
 
 	private int getPressTime(KeyBinding k)
 	{
-		return ReflectionHelper.getPrivateValue(KeyBinding.class, k, REFL_PRESS_TIME);
+		if ((k instanceof KeyBindingInterceptor) && ((KeyBindingInterceptor)k).interceptionActive)
+			return ((KeyBindingInterceptor)k).interceptedPressTime;
+		else
+			return ReflectionHelper.getPrivateValue(KeyBinding.class, k, REFL_PRESS_TIME);
 	}
 
 	private void setPressTime(KeyBinding k, int n)
 	{
-		ReflectionHelper.setPrivateValue(KeyBinding.class, k, n, REFL_PRESS_TIME);
+		if ((k instanceof KeyBindingInterceptor) && ((KeyBindingInterceptor)k).interceptionActive)
+			((KeyBindingInterceptor)k).interceptedPressTime = n;
+		else
+			ReflectionHelper.setPrivateValue(KeyBinding.class, k, n, REFL_PRESS_TIME);
 	}
 
 	private void setPressed(boolean n)
 	{
-		ReflectionHelper.setPrivateValue(KeyBinding.class, this, n, REFL_PRESSED);
+		setPressed(this, n);
+	}
+
+	private void setPressed(KeyBinding k, boolean n)
+	{
+		if ((k instanceof KeyBindingInterceptor) && ((KeyBindingInterceptor)k).interceptionActive)
+			((KeyBindingInterceptor)k).interceptedPressed = n;
+		else
+			ReflectionHelper.setPrivateValue(KeyBinding.class, k, n, REFL_PRESSED);
+	}
+
+	private boolean getPressed()
+	{
+		return getPressed(this);
+	}
+
+	private boolean getPressed(KeyBinding k)
+	{
+		if ((k instanceof KeyBindingInterceptor) && ((KeyBindingInterceptor)k).interceptionActive)
+			return ((KeyBindingInterceptor)k).interceptedPressed;
+		else
+			return ReflectionHelper.getPrivateValue(KeyBinding.class, k, REFL_PRESSED);
 	}
 
 	public KeyBinding getOriginalKeyBinding()
@@ -189,7 +211,7 @@ public class KeyBindingInterceptor extends KeyBinding
 		this.setPressTime(this.getPressTime() + getPressTime(interceptedKeyBinding));
 		this.interceptedPressTime += getPressTime(interceptedKeyBinding);
 		setPressTime(interceptedKeyBinding, 0);
-		this.setPressed(interceptedKeyBinding.getIsKeyPressed());
+		this.setPressed(getPressed(interceptedKeyBinding));
 	}
 
 	protected void copyKeyCodeToOriginal()

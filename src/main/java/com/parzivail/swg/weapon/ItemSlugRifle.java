@@ -3,13 +3,12 @@ package com.parzivail.swg.weapon;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.PItem;
-import com.parzivail.swg.registry.KeybindRegistry;
-import com.parzivail.swg.render.ClientRenderState;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
-import net.minecraft.client.entity.EntityPlayerSP;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -34,23 +33,16 @@ public class ItemSlugRifle extends PItem
 		return true;
 	}
 
-	@Override
-	public void onUpdate(ItemStack itemStack, World world, Entity entity, int par4, boolean par5)
+	@SideOnly(Side.CLIENT)
+	public boolean capturesLeftClick()
 	{
-		if (world.isRemote && entity instanceof EntityPlayerSP)
-		{
-			ItemStack heldItem = ((EntityPlayerSP)entity).getHeldItem();
-			if (KeybindRegistry.keyAttack != null)
-				KeybindRegistry.keyAttack.setInterceptionActive(heldItem != null && heldItem.getItem() == this);
+		return true;
+	}
 
-			if (heldItem != null && heldItem.getItem() == this)
-			{
-				if (!ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
-					ClientRenderState.renderState.add(ClientRenderState.SniperThermal);
-			}
-			else
-				ClientRenderState.renderState.remove(ClientRenderState.SniperThermal);
-		}
+	@Override
+	public boolean shouldRequestRenderState()
+	{
+		return true;
 	}
 
 	@Override

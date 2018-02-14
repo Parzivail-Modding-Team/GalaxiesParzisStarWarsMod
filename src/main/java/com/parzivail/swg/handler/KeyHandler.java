@@ -19,11 +19,18 @@ public class KeyHandler
 {
 	public static void onInput(InputEvent.KeyInputEvent event)
 	{
+		onInput();
 	}
 
 	public static void onInput(InputEvent.MouseInputEvent event)
 	{
-		Lumberjack.log(KeybindRegistry.keyAttack.retrieveClick());
+		onInput();
+	}
+
+	private static void onInput()
+	{
+		if (KeybindRegistry.keyAttack.retrieveClick())
+			Lumberjack.log("Fire");
 	}
 
 	public static void handleVehicleMovement()
