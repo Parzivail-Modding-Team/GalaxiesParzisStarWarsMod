@@ -29,7 +29,7 @@ public class KeyHandler
 
 	private static void onInput()
 	{
-		if (KeybindRegistry.keyAttack.retrieveClick())
+		if (KeybindRegistry.keyAttack.interceptedIsPressed())
 			Lumberjack.log("Fire");
 	}
 

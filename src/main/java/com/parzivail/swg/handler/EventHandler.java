@@ -76,9 +76,9 @@ public class EventHandler
 			ItemStack heldItem = StarWarsGalaxy.mc.thePlayer.getHeldItem();
 
 			if (heldItem != null && heldItem.getItem() instanceof PItem)
-				KeybindRegistry.keyAttack.setInterceptionActive(((PItem)heldItem.getItem()).capturesLeftClick());
+				KeybindRegistry.keyAttack.setIntercepting(((PItem)heldItem.getItem()).capturesLeftClick());
 			else
-				KeybindRegistry.keyAttack.setInterceptionActive(false);
+				KeybindRegistry.keyAttack.setIntercepting(false);
 
 			if (heldItem == null || !(heldItem.getItem() instanceof PItem) || !(((PItem)heldItem.getItem()).shouldRequestRenderState()))
 				ClientRenderState.renderState.removeAll(ClientRenderState.renderStateRequest.values());
