@@ -62,11 +62,16 @@ namespace BuildMod
             var buildVersion = $"{cfg.Major}.{cfg.Minor}.{cfg.Patch}";
             Console.WriteLine($"INFO: New version: {buildVersion}");
 
-            if (File.Exists("gradlew.bat"))
+            var modid = GetModId();
+
+            if (modid == null)
+                Console.WriteLine("CRIT: Unable to locate mcmod.info!");
+            else if (File.Exists("./gradlew.bat"))
             {
+                Console.WriteLine($"INFO: Mod ID: {modid}");
                 var process = new Process
                 {
-                    StartInfo = new ProcessStartInfo("gradlew.bat", "build")
+                    StartInfo = new ProcessStartInfo("./gradlew.bat", "build")
                     {
                         UseShellExecute = false,
                         RedirectStandardError = true,
@@ -77,22 +82,35 @@ namespace BuildMod
                 process.Start();
                 process.WaitForExit();
                 Console.WriteLine(process.StandardOutput.ReadToEnd());
-                var destFileName = $"builds/pswg-{buildVersion}.jar";
+                var destFileName = $"./builds/{modid}-{buildVersion}.jar";
                 Console.WriteLine($"INFO: Moving jar: {destFileName}");
-                if (File.Exists("build/libs/pswg-TEMP.jar"))
+                if (File.Exists($"./build/libs/{modid}-TEMP.jar"))
                 {
                     if (!File.Exists(destFileName))
-                        File.Move("build/libs/pswg-TEMP.jar", destFileName);
+                        File.Move($"./build/libs/{modid}-TEMP.jar", destFileName);
                     else
                         Console.WriteLine("WARN: Did not copy file, destination exists");
-                    Console.WriteLine("INFO: Done.");
                 }
                 else
                     Console.WriteLine("CRIT: Unable to locate compiled jar!");
             }
             else
                 Console.WriteLine("CRIT: Unable to locate gradlew.bat!");
+
+            Console.WriteLine("INFO: Done.");
             Console.ReadKey();
+        }
+
+        private static string GetModId()
+        {
+            const string path = "./src/main/resources/mcmod.info";
+
+            if (!File.Exists(path))
+                return null;
+
+            var mcmodinfo = McModInfo.FromJson(File.ReadAllText(path));
+
+            return mcmodinfo.Count == 0 ? null : mcmodinfo[0].Modid;
         }
     }
 }
