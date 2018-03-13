@@ -83,11 +83,15 @@ namespace BuildMod
                 process.WaitForExit();
                 Console.WriteLine(process.StandardOutput.ReadToEnd());
                 var destFileName = $"./builds/{modid}-{buildVersion}.jar";
+                var destChangelogFileName = $"./builds/{modid}-{buildVersion}-changelog.md";
                 Console.WriteLine($"INFO: Moving jar: {destFileName}");
                 if (File.Exists($"./build/libs/{modid}-TEMP.jar"))
                 {
                     if (!File.Exists(destFileName))
+                    {
                         File.Move($"./build/libs/{modid}-TEMP.jar", destFileName);
+                        File.WriteAllText(destChangelogFileName, $"# {buildVersion}\nChangelog:");
+                    }
                     else
                         Console.WriteLine("WARN: Did not copy file, destination exists");
                 }
