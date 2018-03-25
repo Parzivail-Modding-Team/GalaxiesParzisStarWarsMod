@@ -3,6 +3,7 @@ package com.parzivail.swg.weapon;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.util.audio.SoundHandler;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
@@ -13,6 +14,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
@@ -56,7 +58,9 @@ public class ItemSlugRifle extends PItem
 			float s = 2;
 			//StarWarsGalaxy.proxy.spawnParticle(world, "flame", player.posX, player.posY + player.getEyeHeight(), player.posZ, look.xCoord * s, look.yCoord * s, look.zCoord * s);
 
-			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, s, 0x00FFFF);
+			SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifle", player.posX, player.posY, player.posZ, 1, 1);
+
+			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, s, 0x0000FF);
 			e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
 			world.spawnEntityInWorld(e);
 

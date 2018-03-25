@@ -1,6 +1,5 @@
 package com.parzivail.swg.render;
 
-import com.parzivail.swg.weapon.ItemSlugRifle;
 import net.minecraft.item.Item;
 
 import java.util.EnumSet;
@@ -16,6 +15,6 @@ public enum ClientRenderState
 	static
 	{
 		renderStateRequest = new HashMap<>();
-		renderStateRequest.put(ItemSlugRifle.class, SniperThermal);
+		//renderStateRequest.put(ItemSlugRifle.class, SniperThermal);
 	}
 }

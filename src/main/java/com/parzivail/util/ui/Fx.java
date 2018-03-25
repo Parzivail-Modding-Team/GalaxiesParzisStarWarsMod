@@ -79,6 +79,52 @@ public class Fx
 			DrawLine(a.x, a.y, b.x, b.y);
 		}
 
+		public static void DrawSmoothLine(float thickness, Vector2f[] segments, PrimitiveType mode)
+		{
+			for (int i = 0; i < segments.length - 1; i++)
+				DrawSmoothLineSegment(thickness, i == 0 ? null : segments[i - 1], segments[i], segments[i + 1], i == segments.length - 2 ? null : segments[i + 2], mode);
+		}
+
+		private static void DrawSmoothLineSegment(float thickness, Vector2f p0, Vector2f p1, Vector2f p2, Vector2f p3, PrimitiveType mode)
+		{
+			if (p1.equals(p2))
+				return;
+
+			Vector2f line = Vector2f.sub(p2, p1, null).normalise(null);
+			Vector2f normal = new Vector2f(-line.y, line.x).normalise(null);
+
+			Vector2f tangent1 = p0 == null ? line : Vector2f.add(Vector2f.sub(p1, p0, null).normalise(null), line, null).normalise(null);
+			Vector2f tangent2 = p3 == null ? line : Vector2f.add(Vector2f.sub(p3, p2, null).normalise(null), line, null).normalise(null);
+
+			Vector2f miter1 = new Vector2f(-tangent1.y, tangent1.x);
+			Vector2f miter2 = new Vector2f(-tangent2.y, tangent2.x);
+
+			float length1 = thickness / Vector2f.dot(normal, miter1);
+			float length2 = thickness / Vector2f.dot(normal, miter2);
+
+			GL.Begin(mode);
+
+			if (p0 == null)
+			{
+				GL.Vertex2(p1.x - length1 * miter1.x, p1.y - length1 * miter1.y);
+				GL.Vertex2(p1.x + length1 * miter1.x, p1.y + length1 * miter1.y);
+			}
+
+			if (p3 == null)
+			{
+				GL.Vertex2(p2.x + length2 * miter2.x, p2.y + length2 * miter2.y);
+				GL.Vertex2(p2.x - length2 * miter2.x, p2.y - length2 * miter2.y);
+			}
+
+			GL.Vertex2(p2.x - length2 * miter2.x, p2.y - length2 * miter2.y);
+			GL.Vertex2(p1.x - length1 * miter1.x, p1.y - length1 * miter1.y);
+
+			GL.Vertex2(p2.x + length2 * miter2.x, p2.y + length2 * miter2.y);
+			GL.Vertex2(p1.x + length1 * miter1.x, p1.y + length1 * miter1.y);
+
+			GL.End();
+		}
+
 		public static void DrawWireRectangle(float x, float y, float w, float h)
 		{
 			Rectangle(x, y, w, h, PrimitiveType.LineLoop);
