@@ -1,7 +1,6 @@
 package com.parzivail.swg.ship;
 
 import com.parzivail.swg.handler.KeyHandler;
-import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RotatedAxes;
@@ -156,7 +155,7 @@ public abstract class BasicFlightModel extends EntityBase
 			Entity eSeat = EntityUtils.getEntityByUuid(this.worldObj, uuid);
 			if (eSeat != null)
 			{
-				Lumberjack.debug("Found seat %s at NBT load.", i);
+				//Lumberjack.debug("Found seat %s at NBT load.", i);
 				this.seats[i] = (Seat)eSeat;
 				this.dataWatcher.updateObject(DATA_SEATID + i, eSeat.getEntityId());
 			}
@@ -225,14 +224,14 @@ public abstract class BasicFlightModel extends EntityBase
 				Entity eSeat = EntityUtils.getEntityByUuid(this.worldObj, pair.right);
 				if (eSeat != null)
 				{
-					Lumberjack.debug("Found seat %s at update query.", pair.left);
+					//Lumberjack.debug("Found seat %s at update query.", pair.left);
 					this.seats[pair.left] = (Seat)eSeat;
 					this.seats[pair.left].ship = this;
 					this.dataWatcher.updateObject(DATA_SEATID + pair.left, eSeat.getEntityId());
 					i.remove();
 				}
-				else
-					Lumberjack.debug("Still lost seat %s at update query.", pair.left);
+				//				else
+				//					Lumberjack.debug("Still lost seat %s at update query.", pair.left);
 			}
 		}
 

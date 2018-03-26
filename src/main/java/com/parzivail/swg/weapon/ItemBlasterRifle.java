@@ -68,14 +68,14 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	@Override
 	public boolean shouldUsePrecisionMovement(ItemStack stack, World world, EntityPlayer player)
 	{
-		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		BlasterData bd = new BlasterData(stack);
 		return bd.isAimingDownSights;
 	}
 
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		BlasterData bd = new BlasterData(stack);
 
 		if (player.isSneaking())
 		{
@@ -100,7 +100,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	public void drawCrosshair(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
 		float expansion = 32 * avExpansion.animateTo(getSpreadAmount(stack, player), Ease::outQuad) + 5;
-		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		BlasterData bd = new BlasterData(stack);
 		Minecraft mc = Minecraft.getMinecraft();
 
 		if (bd.isAimingDownSights)
@@ -151,7 +151,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		if (spread == 0)
 			return 0;
 
-		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		BlasterData bd = new BlasterData(stack);
 		if (bd.isAimingDownSights)
 			return 0;
 
@@ -162,7 +162,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	@Override
 	public void onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		BlasterData bd = new BlasterData(stack);
 		if (bd.shotsRemaining <= 0)
 		{
 			if (!world.isRemote)

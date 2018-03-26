@@ -1,6 +1,7 @@
 package com.parzivail.util.item;
 
 import com.parzivail.util.common.Enumerable;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -94,9 +95,10 @@ public class NbtSerializable<T extends NbtSerializable>
 		compound.setBoolean(s, aBoolean);
 	}
 
-	public NbtSerializable(NBTTagCompound compound)
+	public NbtSerializable(ItemStack stack)
 	{
-		deserialize(compound);
+		ItemUtils.ensureNbt(stack);
+		deserialize(stack.stackTagCompound);
 	}
 
 	public void deserialize(NBTTagCompound compound)
