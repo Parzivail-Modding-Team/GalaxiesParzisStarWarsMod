@@ -48,9 +48,16 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	}
 
 	@Override
-	public boolean shouldRequestRenderState()
+	public boolean shouldRequestRenderState(ItemStack stack, World world, EntityPlayer player)
 	{
 		return true;
+	}
+
+	@Override
+	public boolean shouldUsePrecisionMovement(ItemStack stack, World world, EntityPlayer player)
+	{
+		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		return bd.isAimingDownSights;
 	}
 
 	@Override
@@ -63,6 +70,12 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 
 		bd.serialize(stack.stackTagCompound);
 		return super.onItemRightClick(stack, world, player);
+	}
+
+	@Override
+	public float getZoomLevel(ItemStack stack, World world, EntityPlayer player)
+	{
+		return 0.5f;
 	}
 
 	@Override

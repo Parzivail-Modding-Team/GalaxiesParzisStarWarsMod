@@ -31,7 +31,7 @@ public class AnimatedValue
 			return next;
 
 		long timeDiff = (nextTime - timeHere);
-		float timeLerp = timeDiff / msToTake;
+		float timeLerp = timeDiff / (float)msToTake;
 
 		return next * (1 - timeLerp) + previous * timeLerp;
 	}

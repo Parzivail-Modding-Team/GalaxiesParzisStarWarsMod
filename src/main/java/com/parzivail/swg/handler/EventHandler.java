@@ -16,6 +16,7 @@ import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import org.lwjgl.opengl.GL11;
@@ -34,7 +36,7 @@ public class EventHandler
 {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onRender(RenderLivingEvent.Pre event)
+	public void on(RenderLivingEvent.Pre event)
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
@@ -48,7 +50,7 @@ public class EventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onRender(RenderLivingEvent.Post event)
+	public void on(RenderLivingEvent.Post event)
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
@@ -62,7 +64,20 @@ public class EventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onRenderGui(RenderGameOverlayEvent.Pre event)
+	public void on(FOVUpdateEvent event)
+	{
+		ItemStack stack = event.entity.getHeldItem();
+		if (stack != null && stack.getItem() instanceof PItem)
+		{
+			PItem i = ((PItem)stack.getItem());
+			if (i.shouldUsePrecisionMovement(stack, event.entity.worldObj, event.entity))
+				event.newfov = event.fov /* * 1.334f*/ * i.getZoomLevel(stack, event.entity.worldObj, event.entity);
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void on(RenderGameOverlayEvent.Pre event)
 	{
 		if (StarWarsGalaxy.mc.thePlayer != null)
 		{
@@ -112,7 +127,7 @@ public class EventHandler
 
 			KeybindRegistry.keyAttack.setIntercepting(heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor);
 
-			if (heldItem == null || !(heldItem.getItem() instanceof PItem) || !(((PItem)heldItem.getItem()).shouldRequestRenderState()))
+			if (heldItem == null || !(heldItem.getItem() instanceof PItem) || !(((PItem)heldItem.getItem()).shouldRequestRenderState(heldItem, StarWarsGalaxy.mc.thePlayer.worldObj, StarWarsGalaxy.mc.thePlayer)))
 				ClientRenderState.renderState.removeAll(ClientRenderState.renderStateRequest.values());
 			else
 			{
@@ -130,15 +145,28 @@ public class EventHandler
 	}
 
 	@SubscribeEvent
+	public void on(TickEvent.PlayerTickEvent event)
+	{
+		ItemStack stack = event.player.getHeldItem();
+		if (stack != null && stack.getItem() instanceof PItem)
+		{
+			PItem i = ((PItem)stack.getItem());
+			PItem.applyPrecisionMovement(event.player, i.shouldUsePrecisionMovement(stack, event.player.worldObj, event.player));
+		}
+		else
+			PItem.applyPrecisionMovement(event.player, false);
+	}
+
+	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onKeyInput(InputEvent.KeyInputEvent event)
+	public void on(InputEvent.KeyInputEvent event)
 	{
 		KeyHandler.onInput(event);
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void onKeyInput(InputEvent.MouseInputEvent event)
+	public void on(InputEvent.MouseInputEvent event)
 	{
 		KeyHandler.onInput(event);
 	}
