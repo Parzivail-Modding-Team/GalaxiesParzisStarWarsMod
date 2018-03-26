@@ -10,10 +10,15 @@ import cpw.mods.fml.common.registry.GameRegistry;
  */
 public class ItemRegister
 {
-	public static PItem slugRifle;
+	public static PItem rifleE11;
 
 	public static void register()
 	{
-		GameRegistry.registerItem(slugRifle = new ItemBlasterRifle(), slugRifle.name, Resources.MODID);
+		register(rifleE11 = new ItemBlasterRifle("e11", 3, 1, 100, 25, 0xFF0000));
+	}
+
+	private static void register(PItem item)
+	{
+		GameRegistry.registerItem(item, item.name, Resources.MODID);
 	}
 }

@@ -7,13 +7,16 @@ import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.data.BlasterData;
 import com.parzivail.util.audio.SoundHandler;
+import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.entity.EntityUtils;
-import com.parzivail.util.item.ItemUtils;
+import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
-import com.parzivail.util.ui.AnimatedValue;
 import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.gltk.EnableCap;
+import com.parzivail.util.ui.gltk.GL;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -28,17 +31,26 @@ import org.lwjgl.opengl.GL11;
 
 public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftClickInterceptor
 {
-	private AnimatedValue avExpansion;
-	private final float recoil;
+	public final float damage;
+	public final float spread;
+	public final int maxDistance;
+	public final int maxClipSize;
+	public final int boltColor;
 
-	public ItemBlasterRifle()
+	private AnimatedValue avExpansion;
+
+	public ItemBlasterRifle(String name, float damage, float spread, int maxDistance, int maxClipSize, int boltColor)
 	{
-		super("slugRifle");
+		super("rifle." + name);
+		this.damage = damage;
+		this.spread = spread;
+		this.maxDistance = maxDistance;
+		this.maxClipSize = maxClipSize;
+		this.boltColor = boltColor;
 		this.setCreativeTab(CreativeTabs.tabCombat);
 		this.maxStackSize = 1;
 
 		avExpansion = new AnimatedValue(-2, 100);
-		recoil = 2f;
 	}
 
 	@Override
@@ -63,13 +75,19 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		ItemUtils.ensureNbt(stack);
 		BlasterData bd = new BlasterData(stack.stackTagCompound);
 
-		bd.isAimingDownSights = !bd.isAimingDownSights;
+		if (player.isSneaking())
+		{
+			bd.shotsRemaining = maxClipSize;
+			if (!world.isRemote)
+				SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleReload", player.posX, player.posY, player.posZ, 1, 1);
+		}
+		else
+			bd.isAimingDownSights = !bd.isAimingDownSights;
 
 		bd.serialize(stack.stackTagCompound);
-		return super.onItemRightClick(stack, world, player);
+		return stack;
 	}
 
 	@Override
@@ -81,67 +99,96 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	@Override
 	public void drawCrosshair(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
-		float expansion = 80 * avExpansion.animateTo(getSpreadAmount(stack, player)) - 2;
+		float expansion = 32 * avExpansion.animateTo(getSpreadAmount(stack, player), Ease::outQuad) + 5;
 		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		Minecraft mc = Minecraft.getMinecraft();
+
 		if (bd.isAimingDownSights)
 		{
-			GL11.glLineWidth(2);
+			GL11.glLineWidth(4);
+			GL11.glColor4f(0, 0, 0, 1);
 			Fx.D2.DrawWireCircle(0, 0, sr.getScaledHeight() / 3);
+
+			GL11.glLineWidth(2);
+			GL11.glColor4f(1, 1, 1, 1);
+			Fx.D2.DrawWireCircle(0, 0, sr.getScaledHeight() / 3);
+			GL11.glColor4f(1, 0, 0, 1);
 			Fx.D2.DrawLine(0, 0, 0, sr.getScaledHeight() / 3);
 		}
 		else
 		{
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0, 0, 0, 1);
-			Fx.D2.DrawLine(0, 5 + expansion, 0, 10 + expansion);
-			Fx.D2.DrawLine(0, -5 - expansion, 0, -10 - expansion);
-			Fx.D2.DrawLine(5 + expansion, 0, 10 + expansion, 0);
-			Fx.D2.DrawLine(-5 - expansion, 0, -10 - expansion, 0);
+			Fx.D2.DrawLine(0, expansion, 0, 5 + expansion);
+			Fx.D2.DrawLine(0, -expansion, 0, -5 - expansion);
+			Fx.D2.DrawLine(expansion, 0, 5 + expansion, 0);
+			Fx.D2.DrawLine(-expansion, 0, -5 - expansion, 0);
 
 			GL11.glLineWidth(2);
 			GL11.glColor4f(1, 1, 1, 1);
-			Fx.D2.DrawLine(0, 5 + expansion, 0, 10 + expansion);
-			Fx.D2.DrawLine(0, -5 - expansion, 0, -10 - expansion);
-			Fx.D2.DrawLine(5 + expansion, 0, 10 + expansion, 0);
-			Fx.D2.DrawLine(-5 - expansion, 0, -10 - expansion, 0);
+			Fx.D2.DrawLine(0, expansion, 0, 5 + expansion);
+			Fx.D2.DrawLine(0, -expansion, 0, -5 - expansion);
+			Fx.D2.DrawLine(expansion, 0, 5 + expansion, 0);
+			Fx.D2.DrawLine(-expansion, 0, -5 - expansion, 0);
 		}
+
+		GL.Enable(EnableCap.Texture2D);
+		GL.PushMatrix();
+		GL.Translate(sr.getScaledWidth_double() / 2, sr.getScaledHeight_double() / 2, 0);
+
+		String remaining = String.format("%s/%s", bd.shotsRemaining, maxClipSize);
+		int w = mc.fontRenderer.getStringWidth(remaining);
+		int h = mc.fontRenderer.FONT_HEIGHT;
+
+		GL.Translate(-w - 1, -h - 1, 0);
+		mc.fontRenderer.drawString(remaining, 0, 0, 0xFFFFFF);
+
+		GL.PopMatrix();
 	}
 
 	private float getSpreadAmount(ItemStack stack, EntityPlayer player)
 	{
+		if (spread == 0)
+			return 0;
+
 		BlasterData bd = new BlasterData(stack.stackTagCompound);
 		if (bd.isAimingDownSights)
 			return 0;
 
 		double movement = Math.sqrt(player.moveForward * player.moveForward + player.moveStrafing * player.moveStrafing);
-		return 0.1f * (float)movement + 0.01f;
+		return spread * (0.5f * (float)movement + 0.05f);
 	}
 
 	@Override
 	public void onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
 	{
+		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		if (bd.shotsRemaining <= 0)
+		{
+			if (!world.isRemote)
+				SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleDryfire", player.posX, player.posY, player.posZ, 1, 1);
+			return;
+		}
+
 		if (!world.isRemote)
 		{
 			float spread = getSpreadAmount(stack, player);
 			Vec3 look = player.getLook(0);
-			look.xCoord += world.rand.nextGaussian() * spread;
-			look.yCoord += world.rand.nextGaussian() * spread;
-			look.zCoord += world.rand.nextGaussian() * spread;
-			RaytraceHit hit = EntityUtils.rayTrace(look, 50, player, new Entity[0], true);
+			look.xCoord += (world.rand.nextFloat() * 2 - 1) * spread;
+			look.yCoord += (world.rand.nextFloat() * 2 - 1) * spread;
+			look.zCoord += (world.rand.nextFloat() * 2 - 1) * spread;
+			RaytraceHit hit = EntityUtils.rayTrace(look, maxDistance, player, new Entity[0], true);
 
-			float s = 2;
-			//StarWarsGalaxy.proxy.spawnParticle(world, "flame", player.posX, player.posY + player.getEyeHeight(), player.posZ, look.xCoord * s, look.yCoord * s, look.zCoord * s);
+			SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx." + name, player.posX, player.posY, player.posZ, 1 + (float)world.rand.nextGaussian() / 10, 1);
 
-			SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifle", player.posX, player.posY, player.posZ, 1, 1);
-
-			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, s, 0xFF0000);
+			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, damage, boltColor);
 			e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
 			world.spawnEntityInWorld(e);
 
 			if (hit instanceof RaytraceHitEntity && ((RaytraceHitEntity)hit).entity instanceof EntityLiving)
 			{
 				EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
-				entity.attackEntityFrom(DamageSource.causePlayerDamage(player), 3);
+				entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
 			}
 
 			if (hit instanceof RaytraceHitBlock)
@@ -152,7 +199,12 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 			}
 		}
 
-		player.rotationPitch -= recoil * (1 + world.rand.nextGaussian() / 2);
-		player.rotationYaw += recoil / 10 * world.rand.nextGaussian();
+		bd.shotsRemaining--;
+
+		bd.serialize(stack.stackTagCompound);
+
+		// Recoil
+		player.rotationPitch -= damage / 2;
+		player.rotationYaw += damage / 20 * world.rand.nextGaussian();
 	}
 }

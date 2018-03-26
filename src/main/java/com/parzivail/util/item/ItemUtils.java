@@ -14,8 +14,15 @@ public class ItemUtils
 
 	public static void ensureNbt(ItemStack stack)
 	{
-		if (stack == null || stack.stackTagCompound != null)
+		if (stack == null)
 			return;
-		stack.stackTagCompound = new NBTTagCompound();
+		stack.stackTagCompound = ensureNbt(stack.stackTagCompound);
+	}
+
+	public static NBTTagCompound ensureNbt(NBTTagCompound tag)
+	{
+		if (tag != null)
+			return tag;
+		return new NBTTagCompound();
 	}
 }

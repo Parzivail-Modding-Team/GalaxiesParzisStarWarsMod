@@ -1,5 +1,17 @@
 {
-  "swg.fx.rifle": {
+  "swg.fx.rifleReload": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/reload"
+    ]
+  },
+  "swg.fx.rifleDryfire": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/dryfire"
+    ]
+  },
+  "swg.fx.rifle.e11": {
     "category": "neutral",
     "sounds": [
       "rifle/e11"

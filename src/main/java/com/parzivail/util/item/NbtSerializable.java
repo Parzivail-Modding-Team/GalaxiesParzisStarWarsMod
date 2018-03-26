@@ -101,6 +101,7 @@ public class NbtSerializable<T extends NbtSerializable>
 
 	public void deserialize(NBTTagCompound compound)
 	{
+		compound = ItemUtils.ensureNbt(compound);
 		Field[] fields = getClassFields(this.getClass());
 		try
 		{
@@ -115,6 +116,9 @@ public class NbtSerializable<T extends NbtSerializable>
 
 	public void serialize(NBTTagCompound compound)
 	{
+		if (compound == null)
+			return;
+
 		Field[] fields = getClassFields(this.getClass());
 		try
 		{
@@ -130,6 +134,8 @@ public class NbtSerializable<T extends NbtSerializable>
 	private void readField(Field f, Class clazz, NBTTagCompound buf) throws IllegalArgumentException, IllegalAccessException
 	{
 		Pair<Reader, Writer> handler = getHandler(clazz);
+		if (!buf.hasKey(f.getName()))
+			return;
 		f.set(this, handler.getLeft().read(f.getName(), buf));
 	}
 

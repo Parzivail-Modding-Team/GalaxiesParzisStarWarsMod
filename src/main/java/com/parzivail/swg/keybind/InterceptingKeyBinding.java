@@ -40,6 +40,6 @@ public class InterceptingKeyBinding extends KeyBinding
 
 	public boolean interceptedIsPressed()
 	{
-		return super.isPressed();
+		return isIntercepting && super.isPressed();
 	}
 }

@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 public class BlasterData extends NbtSerializable<BlasterData>
 {
 	public boolean isAimingDownSights;
+	public int shotsRemaining;
 
 	public BlasterData(NBTTagCompound compound)
 	{

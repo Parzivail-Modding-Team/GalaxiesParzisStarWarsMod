@@ -1,4 +1,9 @@
-package com.parzivail.util.ui;
+package com.parzivail.util.common;
+
+import com.parzivail.util.math.Ease;
+import com.parzivail.util.ui.Fx;
+
+import java.util.function.Function;
 
 public class AnimatedValue
 {
@@ -17,6 +22,11 @@ public class AnimatedValue
 
 	public float animateTo(float value)
 	{
+		return animateTo(value, Ease::linear);
+	}
+
+	public float animateTo(float value, Function<Float, Float> interpolation)
+	{
 		long timeHere = Fx.Util.GetMillis();
 
 		if (value != next)
@@ -31,7 +41,7 @@ public class AnimatedValue
 			return next;
 
 		long timeDiff = (nextTime - timeHere);
-		float timeLerp = timeDiff / (float)msToTake;
+		float timeLerp = interpolation.apply(timeDiff / (float)msToTake);
 
 		return next * (1 - timeLerp) + previous * timeLerp;
 	}
