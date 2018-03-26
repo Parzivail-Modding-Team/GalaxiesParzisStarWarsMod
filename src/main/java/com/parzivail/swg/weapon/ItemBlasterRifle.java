@@ -5,8 +5,10 @@ import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.item.data.BlasterData;
 import com.parzivail.util.audio.SoundHandler;
 import com.parzivail.util.entity.EntityUtils;
+import com.parzivail.util.item.ItemUtils;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
@@ -27,6 +29,7 @@ import org.lwjgl.opengl.GL11;
 public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftClickInterceptor
 {
 	private AnimatedValue avExpansion;
+	private final float recoil;
 
 	public ItemBlasterRifle()
 	{
@@ -34,7 +37,8 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		this.setCreativeTab(CreativeTabs.tabCombat);
 		this.maxStackSize = 1;
 
-		avExpansion = new AnimatedValue(-2);
+		avExpansion = new AnimatedValue(-2, 100);
+		recoil = 2f;
 	}
 
 	@Override
@@ -52,33 +56,52 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		return stack;
+		ItemUtils.ensureNbt(stack);
+		BlasterData bd = new BlasterData(stack.stackTagCompound);
+
+		bd.isAimingDownSights = !bd.isAimingDownSights;
+
+		bd.serialize(stack.stackTagCompound);
+		return super.onItemRightClick(stack, world, player);
 	}
 
 	@Override
-	public void drawCrosshair(ScaledResolution sr, EntityPlayer player)
+	public void drawCrosshair(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
-		float expansion = avExpansion.animateToward(100 * getSpreadAmount(player) - 2, 100);
+		float expansion = 80 * avExpansion.animateTo(getSpreadAmount(stack, player)) - 2;
+		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		if (bd.isAimingDownSights)
+		{
+			GL11.glLineWidth(2);
+			Fx.D2.DrawWireCircle(0, 0, sr.getScaledHeight() / 3);
+			Fx.D2.DrawLine(0, 0, 0, sr.getScaledHeight() / 3);
+		}
+		else
+		{
+			GL11.glLineWidth(4);
+			GL11.glColor4f(0, 0, 0, 1);
+			Fx.D2.DrawLine(0, 5 + expansion, 0, 10 + expansion);
+			Fx.D2.DrawLine(0, -5 - expansion, 0, -10 - expansion);
+			Fx.D2.DrawLine(5 + expansion, 0, 10 + expansion, 0);
+			Fx.D2.DrawLine(-5 - expansion, 0, -10 - expansion, 0);
 
-		GL11.glLineWidth(4);
-		GL11.glColor4f(0, 0, 0, 1);
-		Fx.D2.DrawLine(0, 5 + expansion, 0, 10 + expansion);
-		Fx.D2.DrawLine(0, -5 - expansion, 0, -10 - expansion);
-		Fx.D2.DrawLine(5 + expansion, 0, 10 + expansion, 0);
-		Fx.D2.DrawLine(-5 - expansion, 0, -10 - expansion, 0);
-
-		GL11.glLineWidth(2);
-		GL11.glColor4f(1, 1, 1, 1);
-		Fx.D2.DrawLine(0, 5 + expansion, 0, 10 + expansion);
-		Fx.D2.DrawLine(0, -5 - expansion, 0, -10 - expansion);
-		Fx.D2.DrawLine(5 + expansion, 0, 10 + expansion, 0);
-		Fx.D2.DrawLine(-5 - expansion, 0, -10 - expansion, 0);
+			GL11.glLineWidth(2);
+			GL11.glColor4f(1, 1, 1, 1);
+			Fx.D2.DrawLine(0, 5 + expansion, 0, 10 + expansion);
+			Fx.D2.DrawLine(0, -5 - expansion, 0, -10 - expansion);
+			Fx.D2.DrawLine(5 + expansion, 0, 10 + expansion, 0);
+			Fx.D2.DrawLine(-5 - expansion, 0, -10 - expansion, 0);
+		}
 	}
 
-	private float getSpreadAmount(EntityPlayer player)
+	private float getSpreadAmount(ItemStack stack, EntityPlayer player)
 	{
+		BlasterData bd = new BlasterData(stack.stackTagCompound);
+		if (bd.isAimingDownSights)
+			return 0;
+
 		double movement = Math.sqrt(player.moveForward * player.moveForward + player.moveStrafing * player.moveStrafing);
-		return 0.04f * (float)movement + 0.01f;
+		return 0.1f * (float)movement + 0.01f;
 	}
 
 	@Override
@@ -86,8 +109,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	{
 		if (!world.isRemote)
 		{
-
-			float spread = getSpreadAmount(player);
+			float spread = getSpreadAmount(stack, player);
 			Vec3 look = player.getLook(0);
 			look.xCoord += world.rand.nextGaussian() * spread;
 			look.yCoord += world.rand.nextGaussian() * spread;
@@ -116,5 +138,8 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 					StarWarsGalaxy.proxy.spawnParticle(world, "smoke", block.hitVec.xCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.yCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.zCoord + (world.rand.nextDouble() * 0.2 - 0.1), 0, world.rand.nextDouble() * 0.2, 0);
 			}
 		}
+
+		player.rotationPitch -= recoil * (1 + world.rand.nextGaussian() / 2);
+		player.rotationYaw += recoil / 10 * world.rand.nextGaussian();
 	}
 }

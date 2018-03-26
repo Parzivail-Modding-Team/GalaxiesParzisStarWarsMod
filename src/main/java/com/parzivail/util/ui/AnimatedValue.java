@@ -4,16 +4,18 @@ public class AnimatedValue
 {
 	private float previous;
 	private float next;
-
 	private long nextTime;
 
-	public AnimatedValue(float value)
+	private final int msToTake;
+
+	public AnimatedValue(float value, int msToTake)
 	{
 		this.previous = value;
 		this.next = value;
+		this.msToTake = msToTake;
 	}
 
-	public float animateToward(float value, float msToTake)
+	public float animateTo(float value)
 	{
 		long timeHere = Fx.Util.GetMillis();
 
@@ -22,7 +24,7 @@ public class AnimatedValue
 			previous = next;
 			next = value;
 
-			nextTime = (long)(timeHere + msToTake);
+			nextTime = timeHere + msToTake;
 		}
 
 		if (timeHere > nextTime)

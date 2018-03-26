@@ -101,7 +101,7 @@ public class EventHandler
 					GL.Disable(EnableCap.Blend);
 					GL.Disable(EnableCap.Texture2D);
 
-					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(sr, StarWarsGalaxy.mc.thePlayer);
+					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(sr, StarWarsGalaxy.mc.thePlayer, heldItem);
 
 					GL.PopMatrix();
 					GL11.glColor4f(1, 1, 1, 1);
