@@ -12,15 +12,20 @@ import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.ShaderHelper;
+import com.parzivail.util.ui.gltk.EnableCap;
+import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Created by colby on 9/13/2017.
@@ -83,7 +88,26 @@ public class EventHandler
 					event.setCanceled(true);
 
 				if (event.type == RenderGameOverlayEvent.ElementType.TEXT)
-					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(StarWarsGalaxy.mc.thePlayer);
+				{
+					GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+					GL11.glPushAttrib(GL11.GL_LINE_BIT);
+
+					GL.PushMatrix();
+					Minecraft mc = Minecraft.getMinecraft();
+					ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+					GL.Translate(sr.getScaledWidth_double() / 2, sr.getScaledHeight_double() / 2, 0);
+					mc.entityRenderer.disableLightmap(0);
+					GL.Disable(EnableCap.Lighting);
+					GL.Disable(EnableCap.Blend);
+					GL.Disable(EnableCap.Texture2D);
+
+					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(sr, StarWarsGalaxy.mc.thePlayer);
+
+					GL.PopMatrix();
+					GL11.glColor4f(1, 1, 1, 1);
+					GL11.glPopAttrib();
+					GL11.glPopAttrib();
+				}
 			}
 
 			KeybindRegistry.keyAttack.setIntercepting(heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor);

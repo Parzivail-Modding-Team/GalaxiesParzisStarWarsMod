@@ -12,9 +12,6 @@ import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
 import com.parzivail.util.ui.AnimatedValue;
 import com.parzivail.util.ui.Fx;
-import com.parzivail.util.ui.gltk.EnableCap;
-import com.parzivail.util.ui.gltk.GL;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -59,20 +56,8 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	}
 
 	@Override
-	public void drawCrosshair(EntityPlayer player)
+	public void drawCrosshair(ScaledResolution sr, EntityPlayer player)
 	{
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-		GL11.glPushAttrib(GL11.GL_LINE_BIT);
-
-		GL.PushMatrix();
-		Minecraft mc = Minecraft.getMinecraft();
-		ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
-		GL.Translate(sr.getScaledWidth_double() / 2, sr.getScaledHeight_double() / 2, 0);
-		mc.entityRenderer.disableLightmap(0);
-		GL.Disable(EnableCap.Lighting);
-		GL.Disable(EnableCap.Blend);
-		GL.Disable(EnableCap.Texture2D);
-
 		float expansion = avExpansion.animateToward(100 * getSpreadAmount(player) - 2, 100);
 
 		GL11.glLineWidth(4);
@@ -88,11 +73,6 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		Fx.D2.DrawLine(0, -5 - expansion, 0, -10 - expansion);
 		Fx.D2.DrawLine(5 + expansion, 0, 10 + expansion, 0);
 		Fx.D2.DrawLine(-5 - expansion, 0, -10 - expansion, 0);
-
-		GL.PopMatrix();
-		GL11.glColor4f(1, 1, 1, 1);
-		GL11.glPopAttrib();
-		GL11.glPopAttrib();
 	}
 
 	private float getSpreadAmount(EntityPlayer player)
