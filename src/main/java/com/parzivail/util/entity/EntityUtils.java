@@ -45,7 +45,7 @@ public class EntityUtils
 	 *                   inequality between two entity pointers)
 	 * @return Returns the entity the trace hit, or null if none is hit
 	 */
-	public static RaytraceHit rayTrace(double distance, EntityLivingBase fromEntity, Entity[] exclude, boolean includeBlocks)
+	public static RaytraceHit rayTrace(Vec3 fromDir, double distance, EntityLivingBase fromEntity, Entity[] exclude, boolean includeBlocks)
 	{
 		if (fromEntity == null || fromEntity.worldObj == null)
 			return null;
@@ -53,7 +53,6 @@ public class EntityUtils
 		Entity pointedEntity = null;
 		RaytraceHitBlock rhb = null;
 		Vec3 startPos = fromEntity.getPosition(0).addVector(0, fromEntity.getEyeHeight(), 0);
-		Vec3 fromDir = fromEntity.getLook(0);
 		Vec3 endPos = startPos.addVector(fromDir.xCoord * distance, fromDir.yCoord * distance, fromDir.zCoord * distance);
 		List list = fromEntity.worldObj.getEntitiesWithinAABBExcludingEntity(fromEntity, fromEntity.boundingBox.addCoord(fromDir.xCoord * distance, fromDir.yCoord * distance, fromDir.zCoord * distance).expand(1, 1, 1));
 

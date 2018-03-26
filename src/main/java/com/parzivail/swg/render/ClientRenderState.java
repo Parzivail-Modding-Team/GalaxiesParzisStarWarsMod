@@ -15,6 +15,6 @@ public enum ClientRenderState
 	static
 	{
 		renderStateRequest = new HashMap<>();
-		//renderStateRequest.put(ItemSlugRifle.class, SniperThermal);
+		//renderStateRequest.put(ItemBlasterRifle.class, SniperThermal);
 	}
 }

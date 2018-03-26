@@ -1,15 +1,17 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.item.ILeftClickInterceptor;
+import com.parzivail.swg.network.MessageItemLeftClick;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.ShipInput;
-import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -29,8 +31,13 @@ public class KeyHandler
 
 	private static void onInput()
 	{
-		if (KeybindRegistry.keyAttack.interceptedIsPressed())
-			Lumberjack.log("Fire");
+		ItemStack heldItem = StarWarsGalaxy.mc.thePlayer.getHeldItem();
+
+		if (KeybindRegistry.keyAttack.interceptedIsPressed() && heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor)
+		{
+			((ILeftClickInterceptor)heldItem.getItem()).onItemLeftClick(heldItem, StarWarsGalaxy.mc.thePlayer.worldObj, StarWarsGalaxy.mc.thePlayer);
+			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(StarWarsGalaxy.mc.thePlayer));
+		}
 	}
 
 	public static void handleVehicleMovement()

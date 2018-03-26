@@ -6,6 +6,7 @@ import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
@@ -38,6 +39,7 @@ public class RenderBlasterBolt extends Render
 		GL.Disable(EnableCap.Lighting);
 		GL.Disable(EnableCap.Texture2D);
 		GL.Disable(EnableCap.Blend);
+		Minecraft.getMinecraft().entityRenderer.disableLightmap(0);
 
 		GL11.glLineWidth(5);
 

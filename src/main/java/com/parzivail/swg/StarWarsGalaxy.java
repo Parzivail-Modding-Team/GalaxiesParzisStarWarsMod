@@ -4,6 +4,7 @@ import com.parzivail.swg.command.CommandChangeDimensions;
 import com.parzivail.swg.command.CommandSpawnShip;
 import com.parzivail.swg.handler.EventHandler;
 import com.parzivail.swg.network.MessageFlightModelUpdate;
+import com.parzivail.swg.network.MessageItemLeftClick;
 import com.parzivail.swg.network.MessageSeatInit;
 import com.parzivail.swg.network.MessageSpawnParticle;
 import com.parzivail.swg.proxy.Common;
@@ -61,6 +62,7 @@ public class StarWarsGalaxy
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(Resources.MODID + "." + "chan");
 
 		registerMessageServer(MessageFlightModelUpdate.class);
+		registerMessageServer(MessageItemLeftClick.class);
 
 		registerMessageClient(MessageSeatInit.class);
 		registerMessageClient(MessageSpawnParticle.class);

@@ -4,6 +4,7 @@ import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
@@ -57,6 +58,11 @@ public class Fx
 		public static Vector3f Vector3f(Vec3 startPos)
 		{
 			return new Vector3f((float)startPos.xCoord, (float)startPos.yCoord, (float)startPos.zCoord);
+		}
+
+		public static long GetMillis()
+		{
+			return Sys.getTime() * 1000L / Sys.getTimerResolution();
 		}
 	}
 

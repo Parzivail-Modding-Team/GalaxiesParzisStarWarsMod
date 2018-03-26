@@ -2,7 +2,7 @@ package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.PItem;
-import com.parzivail.swg.weapon.ItemSlugRifle;
+import com.parzivail.swg.weapon.ItemBlasterRifle;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
@@ -14,6 +14,6 @@ public class ItemRegister
 
 	public static void register()
 	{
-		GameRegistry.registerItem(slugRifle = new ItemSlugRifle(), slugRifle.name, Resources.MODID);
+		GameRegistry.registerItem(slugRifle = new ItemBlasterRifle(), slugRifle.name, Resources.MODID);
 	}
 }

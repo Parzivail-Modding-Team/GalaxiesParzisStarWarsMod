@@ -1,6 +1,8 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.item.ICustomCrosshair;
+import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.ClientRenderState;
@@ -8,11 +10,8 @@ import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
-import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.ShaderHelper;
-import com.parzivail.util.ui.gltk.GL;
-import com.parzivail.util.ui.gltk.PrimitiveType;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -22,8 +21,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
 
 /**
  * Created by colby on 9/13/2017.
@@ -58,24 +55,10 @@ public class EventHandler
 			ShaderHelper.releaseShader();
 	}
 
-	private static final Vector2f[] lines = new Vector2f[] {
-			new Vector2f(10, 10),
-			new Vector2f(20, 10),
-			new Vector2f(10, 20),
-			new Vector2f(20, 20)
-	};
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void onRenderGui(RenderGameOverlayEvent.Pre event)
 	{
-		GL.PushMatrix();
-		GL.Translate(20, 20, 0);
-		GL11.glColor3f(0, 0, 0);
-		Fx.D2.DrawSmoothLine(2, lines, PrimitiveType.TriangleStrip);
-		GL11.glColor3f(0, 1f, 0);
-		Fx.D2.DrawSmoothLine(1.5f, lines, PrimitiveType.TriangleStrip);
-		GL.PopMatrix();
-
 		if (StarWarsGalaxy.mc.thePlayer != null)
 		{
 			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(StarWarsGalaxy.mc.thePlayer);
@@ -94,10 +77,16 @@ public class EventHandler
 
 			ItemStack heldItem = StarWarsGalaxy.mc.thePlayer.getHeldItem();
 
-			if (heldItem != null && heldItem.getItem() instanceof PItem)
-				KeybindRegistry.keyAttack.setIntercepting(((PItem)heldItem.getItem()).capturesLeftClick());
-			else
-				KeybindRegistry.keyAttack.setIntercepting(false);
+			if (heldItem != null && heldItem.getItem() instanceof ICustomCrosshair)
+			{
+				if (event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS && event.isCancelable())
+					event.setCanceled(true);
+
+				if (event.type == RenderGameOverlayEvent.ElementType.TEXT)
+					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(StarWarsGalaxy.mc.thePlayer);
+			}
+
+			KeybindRegistry.keyAttack.setIntercepting(heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor);
 
 			if (heldItem == null || !(heldItem.getItem() instanceof PItem) || !(((PItem)heldItem.getItem()).shouldRequestRenderState()))
 				ClientRenderState.renderState.removeAll(ClientRenderState.renderStateRequest.values());

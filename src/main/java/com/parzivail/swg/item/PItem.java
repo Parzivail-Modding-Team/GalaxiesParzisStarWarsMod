@@ -37,12 +37,6 @@ public class PItem extends Item
 	}
 
 	@SideOnly(Side.CLIENT)
-	public boolean capturesLeftClick()
-	{
-		return false;
-	}
-
-	@SideOnly(Side.CLIENT)
 	public boolean shouldRequestRenderState()
 	{
 		return false;
