@@ -143,12 +143,17 @@ public class Fx
 
 		public static void DrawWireCircle(float x, float y, float radius)
 		{
-			Circle(x, y, radius, PrimitiveType.LineLoop);
+			Arc(x, y, radius, 0, 360, PrimitiveType.LineLoop);
+		}
+
+		public static void DrawWireArc(float x, float y, float radius, float fromAngle, float toAngle)
+		{
+			Arc(x, y, radius, fromAngle, toAngle, PrimitiveType.LineStrip);
 		}
 
 		public static void DrawSolidCircle(float x, float y, float radius)
 		{
-			Circle(x, y, radius, PrimitiveType.TriangleFan);
+			Arc(x, y, radius, 0, 360, PrimitiveType.TriangleFan);
 		}
 
 		public static void DrawWirePieSlice(float x, float y, float radius, float percent)
@@ -185,10 +190,10 @@ public class Fx
 			GL.End();
 		}
 
-		static void Circle(float x, float y, float radius, PrimitiveType mode)
+		static void Arc(float x, float y, float radius, float fromAngle, float toAngle, PrimitiveType mode)
 		{
 			GL.Begin(mode);
-			for (int i = 0; i <= 360; i++)
+			for (float i = fromAngle; i <= toAngle; i++)
 			{
 				float nx = MathHelper.sin(i * 3.141526f / 180) * radius;
 				float ny = MathHelper.cos(i * 3.141526f / 180) * radius;

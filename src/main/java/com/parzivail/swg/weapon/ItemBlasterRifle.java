@@ -5,7 +5,8 @@ import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
-import com.parzivail.swg.item.data.BlasterData;
+import com.parzivail.swg.weapon.blastermodule.BlasterData;
+import com.parzivail.swg.weapon.blastermodule.BlasterScopes;
 import com.parzivail.util.audio.SoundHandler;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.entity.EntityUtils;
@@ -82,6 +83,9 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 			bd.shotsRemaining = maxClipSize;
 			if (!world.isRemote)
 				SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleReload", player.posX, player.posY, player.posZ, 1, 1);
+
+			bd.scope++;
+			bd.scope %= BlasterScopes.SCOPES.length;
 		}
 		else
 			bd.isAimingDownSights = !bd.isAimingDownSights;
@@ -103,33 +107,30 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		BlasterData bd = new BlasterData(stack);
 		Minecraft mc = Minecraft.getMinecraft();
 
+		float size = 2;
+
 		if (bd.isAimingDownSights)
 		{
-			GL11.glLineWidth(4);
-			GL11.glColor4f(0, 0, 0, 1);
-			Fx.D2.DrawWireCircle(0, 0, sr.getScaledHeight() / 3);
-
-			GL11.glLineWidth(2);
-			GL11.glColor4f(1, 1, 1, 1);
-			Fx.D2.DrawWireCircle(0, 0, sr.getScaledHeight() / 3);
-			GL11.glColor4f(1, 0, 0, 1);
-			Fx.D2.DrawLine(0, 0, 0, sr.getScaledHeight() / 3);
+			GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+			GL.Enable(EnableCap.LineSmooth);
+			if (bd.scope >= 0 && BlasterScopes.SCOPES.length > bd.scope)
+				BlasterScopes.SCOPES[bd.scope].draw(sr, player, stack);
 		}
 		else
 		{
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0, 0, 0, 1);
-			Fx.D2.DrawLine(0, expansion, 0, 5 + expansion);
-			Fx.D2.DrawLine(0, -expansion, 0, -5 - expansion);
-			Fx.D2.DrawLine(expansion, 0, 5 + expansion, 0);
-			Fx.D2.DrawLine(-expansion, 0, -5 - expansion, 0);
+			Fx.D2.DrawLine(0, expansion, 0, size + expansion);
+			Fx.D2.DrawLine(0, -expansion, 0, -size - expansion);
+			Fx.D2.DrawLine(expansion, 0, size + expansion, 0);
+			Fx.D2.DrawLine(-expansion, 0, -size - expansion, 0);
 
 			GL11.glLineWidth(2);
 			GL11.glColor4f(1, 1, 1, 1);
-			Fx.D2.DrawLine(0, expansion, 0, 5 + expansion);
-			Fx.D2.DrawLine(0, -expansion, 0, -5 - expansion);
-			Fx.D2.DrawLine(expansion, 0, 5 + expansion, 0);
-			Fx.D2.DrawLine(-expansion, 0, -5 - expansion, 0);
+			Fx.D2.DrawLine(0, expansion, 0, size + expansion);
+			Fx.D2.DrawLine(0, -expansion, 0, -size - expansion);
+			Fx.D2.DrawLine(expansion, 0, size + expansion, 0);
+			Fx.D2.DrawLine(-expansion, 0, -size - expansion, 0);
 		}
 
 		GL.Enable(EnableCap.Texture2D);

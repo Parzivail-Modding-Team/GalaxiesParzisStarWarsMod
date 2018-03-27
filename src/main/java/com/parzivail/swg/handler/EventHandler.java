@@ -113,8 +113,8 @@ public class EventHandler
 					GL.Translate(sr.getScaledWidth_double() / 2, sr.getScaledHeight_double() / 2, 0);
 					mc.entityRenderer.disableLightmap(0);
 					GL.Disable(EnableCap.Lighting);
-					GL.Disable(EnableCap.Blend);
 					GL.Disable(EnableCap.Texture2D);
+					GL.Enable(EnableCap.Blend);
 
 					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(sr, StarWarsGalaxy.mc.thePlayer, heldItem);
 
