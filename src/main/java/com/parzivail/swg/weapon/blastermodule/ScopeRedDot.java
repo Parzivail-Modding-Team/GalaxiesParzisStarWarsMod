@@ -12,7 +12,7 @@ public class ScopeRedDot implements IBlasterScope
 	public void draw(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
 		GL11.glColor4f(1, 0, 0, 1);
-		Fx.D2.DrawSolidCircle(0, 0, 1);
+		Fx.D2.DrawPoint(0, 0, 5);
 	}
 
 	@Override

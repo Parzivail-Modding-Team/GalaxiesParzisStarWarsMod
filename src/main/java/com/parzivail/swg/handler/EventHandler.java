@@ -115,6 +115,7 @@ public class EventHandler
 				{
 					GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
 					GL11.glPushAttrib(GL11.GL_LINE_BIT);
+					GL11.glPushAttrib(GL11.GL_POINT_BIT);
 
 					GL.PushMatrix();
 					Minecraft mc = Minecraft.getMinecraft();
@@ -124,11 +125,14 @@ public class EventHandler
 					GL.Disable(EnableCap.Lighting);
 					GL.Disable(EnableCap.Texture2D);
 					GL.Enable(EnableCap.Blend);
+					GL.Enable(EnableCap.PointSmooth);
+					GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
 
 					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(sr, StarWarsGalaxy.mc.thePlayer, heldItem);
 
 					GL.PopMatrix();
 					GL11.glColor4f(1, 1, 1, 1);
+					GL11.glPopAttrib();
 					GL11.glPopAttrib();
 					GL11.glPopAttrib();
 				}

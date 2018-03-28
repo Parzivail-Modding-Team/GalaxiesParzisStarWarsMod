@@ -22,9 +22,19 @@ public class Resources
 		return String.format("item.%s.%s", MODID, name);
 	}
 
+	public static String blockDot(String name)
+	{
+		return String.format("block.%s.%s", MODID, name);
+	}
+
 	public static String modColon(String name)
 	{
 		return String.format("%s:%s", MODID, name);
+	}
+
+	public static String modDot(String name)
+	{
+		return String.format("%s.%s", MODID, name);
 	}
 
 	public static String itemDot(String name, String variant)

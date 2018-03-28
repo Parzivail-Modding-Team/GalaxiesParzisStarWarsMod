@@ -5,10 +5,7 @@ import com.parzivail.swg.command.CommandSpawnShip;
 import com.parzivail.swg.handler.EventHandler;
 import com.parzivail.swg.network.*;
 import com.parzivail.swg.proxy.Common;
-import com.parzivail.swg.registry.EntityRegister;
-import com.parzivail.swg.registry.ItemRegister;
-import com.parzivail.swg.registry.StructureRegister;
-import com.parzivail.swg.registry.WorldRegister;
+import com.parzivail.swg.registry.*;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -98,6 +95,7 @@ public class StarWarsGalaxy
 		FMLCommonHandler.instance().bus().register(eventHandler);
 		MinecraftForge.EVENT_BUS.register(eventHandler);
 
+		BlockRegister.register();
 		ItemRegister.register();
 		WorldRegister.register();
 		StructureRegister.register();

@@ -1,5 +1,6 @@
 package com.parzivail.util.ui;
 
+import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
 import net.minecraft.util.MathHelper;
@@ -156,6 +157,11 @@ public class Fx
 			Arc(x, y, radius, 0, 360, PrimitiveType.TriangleFan);
 		}
 
+		public static void DrawPoint(float x, float y, float size)
+		{
+			Point(x, y, size);
+		}
+
 		public static void DrawWirePieSlice(float x, float y, float radius, float percent)
 		{
 			Pie(x, y, radius, percent, PrimitiveType.LineLoop);
@@ -180,20 +186,35 @@ public class Fx
                 Private Methods
              */
 
+		static void Point(float x, float y, float size)
+		{
+			GL.PushAttrib(AttribMask.PointBit);
+			GL11.glPointSize(size);
+			GL.Begin(PrimitiveType.Points);
+			GL.Vertex2(x, y);
+			GL.End();
+			GL.PopAttrib();
+		}
+
 		static void Rectangle(float x, float y, float w, float h, PrimitiveType mode)
 		{
 			GL.Begin(mode);
+			GL.TexCoord2(0, 0);
 			GL.Vertex3(x, y, 0);
+			GL.TexCoord2(0, 1);
 			GL.Vertex3(x, y + h, 0);
+			GL.TexCoord2(1, 1);
 			GL.Vertex3(x + w, y + h, 0);
+			GL.TexCoord2(1, 0);
 			GL.Vertex3(x + w, y, 0);
 			GL.End();
 		}
 
 		static void Arc(float x, float y, float radius, float fromAngle, float toAngle, PrimitiveType mode)
 		{
+			float step = 45 / radius;
 			GL.Begin(mode);
-			for (float i = fromAngle; i <= toAngle; i++)
+			for (float i = fromAngle; i <= toAngle; i += step)
 			{
 				float nx = MathHelper.sin(i * 3.141526f / 180) * radius;
 				float ny = MathHelper.cos(i * 3.141526f / 180) * radius;

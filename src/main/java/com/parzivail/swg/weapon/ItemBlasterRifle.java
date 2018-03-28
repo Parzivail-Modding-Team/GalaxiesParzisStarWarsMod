@@ -117,8 +117,8 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 
 		if (bd.isAimingDownSights)
 		{
-			GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
 			GL.Enable(EnableCap.LineSmooth);
+			GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
 			IBlasterScope scope = BlasterScopes.getScope(bd.scope);
 			if (scope != null)
 				scope.draw(sr, player, stack);
@@ -204,7 +204,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 				RaytraceHitBlock block = (RaytraceHitBlock)hit;
 				for (int i = 0; i < 10; i++)
 					StarWarsGalaxy.proxy.spawnParticle(world, "smoke", block.hitVec.xCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.yCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.zCoord + (world.rand.nextDouble() * 0.2 - 0.1), 0, world.rand.nextDouble() * 0.2, 0);
-				StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, block.sideHitFace);
+				StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, 1, block.sideHitFace);
 			}
 		}
 
@@ -214,6 +214,6 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 
 		// Recoil
 		player.rotationPitch -= damage / 2;
-		player.rotationYaw += damage / 20 * world.rand.nextGaussian();
+		player.rotationYaw += damage / 5 * world.rand.nextGaussian();
 	}
 }

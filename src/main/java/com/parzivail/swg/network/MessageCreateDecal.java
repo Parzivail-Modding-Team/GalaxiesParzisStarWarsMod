@@ -18,26 +18,28 @@ public class MessageCreateDecal extends PMessage<MessageCreateDecal>
 	public float x;
 	public float y;
 	public float z;
+	public float size;
 
 	public MessageCreateDecal()
 	{
 
 	}
 
-	public MessageCreateDecal(int dimension, int type, float x, float y, float z, EnumFacing direction)
+	public MessageCreateDecal(int dimension, int type, float x, float y, float z, float size, EnumFacing direction)
 	{
 		this.dimension = dimension;
 		this.type = type;
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.size = size;
 		this.direction = direction;
 	}
 
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		WorldDecals.create(this.dimension, new Decal(type, x, y, z, direction));
+		WorldDecals.create(this.dimension, new Decal(type, x, y, z, size, direction));
 		return null;
 	}
 }
