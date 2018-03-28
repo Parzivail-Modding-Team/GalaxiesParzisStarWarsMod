@@ -7,4 +7,8 @@ import net.minecraft.item.ItemStack;
 public interface IBlasterScope
 {
 	void draw(ScaledResolution sr, EntityPlayer player, ItemStack stack);
+
+	float getZoomLevel();
+
+	String getName();
 }

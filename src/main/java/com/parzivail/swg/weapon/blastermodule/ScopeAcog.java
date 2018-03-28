@@ -27,4 +27,16 @@ public class ScopeAcog implements IBlasterScope
 		Fx.D2.DrawLine(0, -ohSixD, ohSixD, 0);
 		Fx.D2.DrawLine(-ohSixD, 0, 0, -ohSixD);
 	}
+
+	@Override
+	public float getZoomLevel()
+	{
+		return 0.4f;
+	}
+
+	@Override
+	public String getName()
+	{
+		return "ACOG";
+	}
 }

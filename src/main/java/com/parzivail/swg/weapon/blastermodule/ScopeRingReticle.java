@@ -26,4 +26,16 @@ public class ScopeRingReticle implements IBlasterScope
 		Fx.D2.DrawLine(-d / 2, 0, d / 2, 0);
 		Fx.D2.DrawLine(0, -d / 2, 0, d / 2);
 	}
+
+	@Override
+	public float getZoomLevel()
+	{
+		return 0.1f;
+	}
+
+	@Override
+	public String getName()
+	{
+		return "Sniper Ring Reticle";
+	}
 }

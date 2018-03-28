@@ -14,4 +14,16 @@ public class ScopeRedDot implements IBlasterScope
 		GL11.glColor4f(1, 0, 0, 1);
 		Fx.D2.DrawSolidCircle(0, 0, 1);
 	}
+
+	@Override
+	public float getZoomLevel()
+	{
+		return 1;
+	}
+
+	@Override
+	public String getName()
+	{
+		return "Red Dot";
+	}
 }

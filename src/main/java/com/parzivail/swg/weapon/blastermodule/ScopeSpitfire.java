@@ -15,16 +15,28 @@ public class ScopeSpitfire implements IBlasterScope
 		GL11.glLineWidth(2);
 		Fx.D2.DrawWireCircle(0, 0, d);
 
-		float ohSixD = 0.06f * d;
+		float lineDist = 0.08f * d;
 
-		Fx.D2.DrawLine(0, -ohSixD, 0, d);
-		Fx.D2.DrawLine(-ohSixD, 0, ohSixD, 0);
-		Fx.D2.DrawLine(-0.035f * d, ohSixD, 0.035f * d, ohSixD);
-		Fx.D2.DrawLine(-0.025f * d, ohSixD * 2, 0.025f * d, ohSixD * 2);
-		Fx.D2.DrawLine(-0.0185f * d, ohSixD * 3, 0.0185f * d, ohSixD * 3);
+		Fx.D2.DrawLine(0, -lineDist, 0, d);
+		Fx.D2.DrawLine(-lineDist, 0, lineDist, 0);
+		Fx.D2.DrawLine(-0.04f * d, lineDist, 0.04f * d, lineDist);
+		Fx.D2.DrawLine(-0.03f * d, lineDist * 2, 0.03f * d, lineDist * 2);
+		Fx.D2.DrawLine(-0.02f * d, lineDist * 3, 0.02f * d, lineDist * 3);
 
-		Fx.D2.DrawWireArc(0, 0, d / 4, -130, -50);
-		Fx.D2.DrawWireArc(0, 0, d / 4, -220, -140);
-		Fx.D2.DrawWireArc(0, 0, d / 4, -310, -230);
+		Fx.D2.DrawWireArc(0, 0, d / 3, -130, -50);
+		Fx.D2.DrawWireArc(0, 0, d / 3, -220, -140);
+		Fx.D2.DrawWireArc(0, 0, d / 3, -310, -230);
+	}
+
+	@Override
+	public float getZoomLevel()
+	{
+		return 0.4f;
+	}
+
+	@Override
+	public String getName()
+	{
+		return "Spitfire";
 	}
 }

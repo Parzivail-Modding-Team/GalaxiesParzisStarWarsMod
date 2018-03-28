@@ -21,4 +21,16 @@ public class ScopeReflex implements IBlasterScope
 		Fx.D2.DrawLine(d, 0, d + 1.5f, 0);
 		Fx.D2.DrawLine(-d, 0, -d - 1.5f, 0);
 	}
+
+	@Override
+	public float getZoomLevel()
+	{
+		return 1;
+	}
+
+	@Override
+	public String getName()
+	{
+		return "Reflex";
+	}
 }

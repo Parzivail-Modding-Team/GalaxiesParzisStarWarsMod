@@ -192,7 +192,11 @@ public abstract class BasicFlightModel extends EntityBase
 	public void setDead()
 	{
 		for (int i = 0; i < this.seats.length; i++)
-			this.getSeat(i).setDead();
+		{
+			Entity s = this.getSeat(i);
+			if (s != null)
+				s.setDead();
+		}
 		super.setDead();
 	}
 

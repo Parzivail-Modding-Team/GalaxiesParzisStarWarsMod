@@ -267,8 +267,10 @@ public class RenderSkyTatooine extends IRenderHandler
 
 		if (starBrightness > 0.3F)
 		{
-			GL11.glPointSize(1);
+			GL11.glEnable(GL11.GL_BLEND);
+			//GL11.glBlendFunc(GL11.GL_ONE_MINUS_DST_ALPHA, GL11.GL_DST_ALPHA);
 			GL11.glEnable(GL11.GL_POINT_SMOOTH);
+			GL11.glPointSize(1);
 			GL11.glCallList(starGLCallList);
 			//renderStars(starBrightness); // SLOW! find way to mult alpha from list.
 			//                                Done. just upp'd when it stops rendering. good enough.
