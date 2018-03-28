@@ -6,6 +6,7 @@ import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.ClientRenderState;
+import com.parzivail.swg.render.WorldDecals;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.util.common.Pair;
@@ -27,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -60,6 +62,13 @@ public class EventHandler
 		}
 		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
 			ShaderHelper.releaseShader();
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void on(RenderWorldLastEvent event)
+	{
+		WorldDecals.render(Minecraft.getMinecraft().thePlayer.dimension, event.partialTicks);
 	}
 
 	@SubscribeEvent

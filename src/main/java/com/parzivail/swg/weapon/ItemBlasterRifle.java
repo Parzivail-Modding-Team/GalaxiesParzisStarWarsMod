@@ -5,6 +5,7 @@ import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.render.Decal;
 import com.parzivail.swg.weapon.blastermodule.BlasterData;
 import com.parzivail.swg.weapon.blastermodule.BlasterScopes;
 import com.parzivail.swg.weapon.blastermodule.IBlasterScope;
@@ -203,6 +204,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 				RaytraceHitBlock block = (RaytraceHitBlock)hit;
 				for (int i = 0; i < 10; i++)
 					StarWarsGalaxy.proxy.spawnParticle(world, "smoke", block.hitVec.xCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.yCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.zCoord + (world.rand.nextDouble() * 0.2 - 0.1), 0, world.rand.nextDouble() * 0.2, 0);
+				StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, block.sideHitFace);
 			}
 		}
 

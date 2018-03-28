@@ -3,10 +3,7 @@ package com.parzivail.swg;
 import com.parzivail.swg.command.CommandChangeDimensions;
 import com.parzivail.swg.command.CommandSpawnShip;
 import com.parzivail.swg.handler.EventHandler;
-import com.parzivail.swg.network.MessageFlightModelUpdate;
-import com.parzivail.swg.network.MessageItemLeftClick;
-import com.parzivail.swg.network.MessageSeatInit;
-import com.parzivail.swg.network.MessageSpawnParticle;
+import com.parzivail.swg.network.*;
 import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.registry.EntityRegister;
 import com.parzivail.swg.registry.ItemRegister;
@@ -66,6 +63,7 @@ public class StarWarsGalaxy
 
 		registerMessageClient(MessageSeatInit.class);
 		registerMessageClient(MessageSpawnParticle.class);
+		registerMessageClient(MessageCreateDecal.class);
 	}
 
 	@SuppressWarnings("unchecked")

@@ -9,6 +9,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
@@ -49,6 +50,17 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 		map(World.class, PMessage::readWorld, PMessage::writeWorld);
 		map(ItemStack[].class, PMessage::readItemStacks, PMessage::writeItemStacks);
 		map(RotatedAxes.class, PMessage::readRAxes, PMessage::writeRAxes);
+		map(EnumFacing.class, PMessage::readEnumFacing, PMessage::writeEnumFacing);
+	}
+
+	private static void writeEnumFacing(EnumFacing enumFacing, ByteBuf byteBuf)
+	{
+		byteBuf.writeInt(enumFacing.ordinal());
+	}
+
+	private static EnumFacing readEnumFacing(ByteBuf byteBuf)
+	{
+		return EnumFacing.values()[byteBuf.readInt()];
 	}
 
 	private static boolean acceptField(Field f, Class<?> type)

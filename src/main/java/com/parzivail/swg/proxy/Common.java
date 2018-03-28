@@ -1,13 +1,16 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.network.MessageCreateDecal;
 import com.parzivail.swg.network.MessageSpawnParticle;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.NetworkRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 /**
@@ -39,6 +42,11 @@ public class Common
 	public void spawnParticle(World world, String name, double x, double y, double z, double vx, double vy, double vz)
 	{
 		StarWarsGalaxy.network.sendToDimension(new MessageSpawnParticle(world.provider.dimensionId, name, x, y, z, vx, vy, vz), world.provider.dimensionId);
+	}
+
+	public void createDecal(World world, int type, float x, float y, float z, EnumFacing direction)
+	{
+		StarWarsGalaxy.network.sendToAllAround(new MessageCreateDecal(world.provider.dimensionId, type, x, y, z, direction), new NetworkRegistry.TargetPoint(world.provider.dimensionId, x, y, z, 50));
 	}
 
 	public Entity getEntityById(int dim, int id)
