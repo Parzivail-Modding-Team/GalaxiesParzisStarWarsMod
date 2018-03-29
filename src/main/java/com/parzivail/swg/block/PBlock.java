@@ -20,4 +20,10 @@ public class PBlock extends Block
 		this.setBlockName(Resources.modDot(this.name));
 		this.setBlockTextureName(Resources.modColon(this.name));
 	}
+
+	public PBlock setAlpha()
+	{
+		this.setBlockTextureName(Resources.modColon("alpha"));
+		return this;
+	}
 }

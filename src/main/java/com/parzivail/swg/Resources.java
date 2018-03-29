@@ -19,26 +19,36 @@ public class Resources
 
 	public static String itemDot(String name)
 	{
-		return String.format("item.%s.%s", MODID, name);
+		return dot("item", MODID, name);
 	}
 
 	public static String blockDot(String name)
 	{
-		return String.format("block.%s.%s", MODID, name);
+		return dot("block", MODID, name);
+	}
+
+	public static String modDot(String name)
+	{
+		return dot(MODID, name);
+	}
+
+	public static String modDot(String... name)
+	{
+		return dot(MODID, dot(name));
+	}
+
+	public static String itemDot(String name, String variant)
+	{
+		return dot("item", MODID, name, variant);
+	}
+
+	public static String dot(String... params)
+	{
+		return String.join(".", params);
 	}
 
 	public static String modColon(String name)
 	{
 		return String.format("%s:%s", MODID, name);
-	}
-
-	public static String modDot(String name)
-	{
-		return String.format("%s.%s", MODID, name);
-	}
-
-	public static String itemDot(String name, String variant)
-	{
-		return String.format("item.%s.%s.%s", MODID, name, variant);
 	}
 }

@@ -1,5 +1,7 @@
 package com.parzivail.util.item;
 
+import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
+import com.parzivail.swg.weapon.blastermodule.BlasterAttachments;
 import com.parzivail.util.common.Enumerable;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,6 +27,35 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(float.class, NbtSerializable::readFloat, NbtSerializable::writeFloat);
 		map(double.class, NbtSerializable::readDouble, NbtSerializable::writeDouble);
 		map(boolean.class, NbtSerializable::readBoolean, NbtSerializable::writeBoolean);
+
+		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
+		map(BlasterAttachment[].class, NbtSerializable::readBlasterAttachments, NbtSerializable::writeBlasterAttachments);
+	}
+
+	private static BlasterAttachment readBlasterAttachment(String s, NBTTagCompound compound)
+	{
+		return BlasterAttachments.ATTACHMENTS.get(compound.getInteger(s));
+	}
+
+	private static void writeBlasterAttachment(String s, BlasterAttachment blasterAttachment, NBTTagCompound compound)
+	{
+		compound.setInteger(s, BlasterAttachments.ATTACHMENTS.indexOf(blasterAttachment));
+	}
+
+	private static BlasterAttachment[] readBlasterAttachments(String s, NBTTagCompound compound)
+	{
+		int len = compound.getInteger(s + "-len");
+		BlasterAttachment[] a = new BlasterAttachment[len];
+		for (int i = 0; i < len; i++)
+			a[i] = readBlasterAttachment(s + "-" + i, compound);
+		return a;
+	}
+
+	private static void writeBlasterAttachments(String s, BlasterAttachment[] blasterAttachments, NBTTagCompound compound)
+	{
+		compound.setInteger(s + "-len", blasterAttachments.length);
+		for (int i = 0; i < blasterAttachments.length; i++)
+			writeBlasterAttachment(s + "-" + i, blasterAttachments[i], compound);
 	}
 
 	private static Double readDouble(String s, NBTTagCompound compound)

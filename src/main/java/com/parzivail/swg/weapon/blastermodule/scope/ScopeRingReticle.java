@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon.blastermodule;
+package com.parzivail.swg.weapon.blastermodule.scope;
 
 import com.parzivail.util.ui.Fx;
 import net.minecraft.client.gui.ScaledResolution;
@@ -6,8 +6,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
-public class ScopeRingReticle implements IBlasterScope
+public class ScopeRingReticle extends BlasterScope
 {
+	public ScopeRingReticle()
+	{
+		super("ringReticle");
+	}
+
 	@Override
 	public void draw(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
@@ -33,11 +38,5 @@ public class ScopeRingReticle implements IBlasterScope
 	public float getZoomLevel()
 	{
 		return 0.1f;
-	}
-
-	@Override
-	public String getName()
-	{
-		return "Sniper Ring Reticle";
 	}
 }

@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon.blastermodule;
+package com.parzivail.swg.weapon.blastermodule.scope;
 
 import com.parzivail.util.ui.Fx;
 import net.minecraft.client.gui.ScaledResolution;
@@ -6,8 +6,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
-public class ScopeSpitfire implements IBlasterScope
+public class ScopeSpitfire extends BlasterScope
 {
+	public ScopeSpitfire()
+	{
+		super("spitfire");
+	}
+
 	@Override
 	public void draw(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
@@ -34,11 +39,5 @@ public class ScopeSpitfire implements IBlasterScope
 	public float getZoomLevel()
 	{
 		return 0.4f;
-	}
-
-	@Override
-	public String getName()
-	{
-		return "Spitfire";
 	}
 }

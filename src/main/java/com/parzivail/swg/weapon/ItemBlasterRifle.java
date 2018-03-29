@@ -7,8 +7,7 @@ import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.render.Decal;
 import com.parzivail.swg.weapon.blastermodule.BlasterData;
-import com.parzivail.swg.weapon.blastermodule.BlasterScopes;
-import com.parzivail.swg.weapon.blastermodule.IBlasterScope;
+import com.parzivail.swg.weapon.blastermodule.scope.BlasterScope;
 import com.parzivail.util.audio.SoundHandler;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.entity.EntityUtils;
@@ -85,11 +84,8 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 			bd.shotsRemaining = maxClipSize;
 			if (!world.isRemote)
 				SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleReload", player.posX, player.posY, player.posZ, 1, 1);
-
-			bd.scope++;
-			bd.scope %= BlasterScopes.NUM_SCOPES;
 		}
-		else
+		else if (bd.getScope() != null)
 			bd.isAimingDownSights = !bd.isAimingDownSights;
 
 		bd.serialize(stack.stackTagCompound);
@@ -100,7 +96,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	public float getZoomLevel(ItemStack stack, World world, EntityPlayer player)
 	{
 		BlasterData bd = new BlasterData(stack);
-		IBlasterScope scope = BlasterScopes.getScope(bd.scope);
+		BlasterScope scope = bd.getScope();
 		if (scope != null)
 			return scope.getZoomLevel();
 		return 0.4f;
@@ -119,7 +115,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		{
 			GL.Enable(EnableCap.LineSmooth);
 			GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
-			IBlasterScope scope = BlasterScopes.getScope(bd.scope);
+			BlasterScope scope = bd.getScope();
 			if (scope != null)
 				scope.draw(sr, player, stack);
 		}

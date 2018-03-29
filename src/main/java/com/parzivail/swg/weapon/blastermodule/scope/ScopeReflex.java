@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon.blastermodule;
+package com.parzivail.swg.weapon.blastermodule.scope;
 
 import com.parzivail.util.ui.Fx;
 import net.minecraft.client.gui.ScaledResolution;
@@ -6,8 +6,13 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
-public class ScopeReflex implements IBlasterScope
+public class ScopeReflex extends BlasterScope
 {
+	public ScopeReflex()
+	{
+		super("reflex");
+	}
+
 	@Override
 	public void draw(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
@@ -28,11 +33,5 @@ public class ScopeReflex implements IBlasterScope
 	public float getZoomLevel()
 	{
 		return 1;
-	}
-
-	@Override
-	public String getName()
-	{
-		return "Reflex";
 	}
 }
