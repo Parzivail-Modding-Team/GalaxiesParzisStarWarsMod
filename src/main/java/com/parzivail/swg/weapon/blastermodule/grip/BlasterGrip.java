@@ -7,7 +7,7 @@ public abstract class BlasterGrip extends BlasterAttachment
 {
 	public BlasterGrip(String name)
 	{
-		super(Resources.modDot("grip", name));
+		super(Resources.modDot("blaster", "grip", name));
 	}
 
 	public abstract float getVerticalRecoilReduction();

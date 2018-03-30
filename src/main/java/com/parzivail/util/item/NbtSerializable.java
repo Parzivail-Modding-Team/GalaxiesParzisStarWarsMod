@@ -3,6 +3,7 @@ package com.parzivail.util.item;
 import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
 import com.parzivail.swg.weapon.blastermodule.BlasterAttachments;
 import com.parzivail.util.common.Enumerable;
+import com.parzivail.util.common.Lumberjack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -29,17 +30,23 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(boolean.class, NbtSerializable::readBoolean, NbtSerializable::writeBoolean);
 
 		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
-		map(BlasterAttachment[].class, NbtSerializable::readBlasterAttachments, NbtSerializable::writeBlasterAttachments);
+		//		map(BlasterAttachment[].class, NbtSerializable::readBlasterAttachments, NbtSerializable::writeBlasterAttachments);
 	}
 
 	private static BlasterAttachment readBlasterAttachment(String s, NBTTagCompound compound)
 	{
-		return BlasterAttachments.ATTACHMENTS.get(compound.getInteger(s));
+		int i = compound.getInteger(s);
+		if (i == 0)
+			return null;
+		return BlasterAttachments.ATTACHMENTS.get(i);
 	}
 
 	private static void writeBlasterAttachment(String s, BlasterAttachment blasterAttachment, NBTTagCompound compound)
 	{
-		compound.setInteger(s, BlasterAttachments.ATTACHMENTS.indexOf(blasterAttachment));
+		if (blasterAttachment == null)
+			compound.setInteger(s, 0);
+		else
+			compound.setInteger(s, blasterAttachment.getId());
 	}
 
 	private static BlasterAttachment[] readBlasterAttachments(String s, NBTTagCompound compound)
@@ -196,15 +203,16 @@ public class NbtSerializable<T extends NbtSerializable>
 
 	private static Field[] getClassFields(Class<?> clazz)
 	{
-		if (fieldCache.containsValue(clazz))
+		if (fieldCache.containsKey(clazz))
 			return fieldCache.get(clazz);
 		else
 		{
 			Field[] fArr = clazz.getFields();
 			Enumerable<Field> fields = Enumerable.from(fArr);
 			fields = fields.where(NbtSerializable::isValidField);
-			fArr = fields.toArray(fArr);
+			fArr = fields.toArray(new Field[fields.size()]);
 			fieldCache.put(clazz, fArr);
+			Lumberjack.log(fArr.length);
 			return fArr;
 		}
 	}
@@ -212,7 +220,7 @@ public class NbtSerializable<T extends NbtSerializable>
 	private static boolean isValidField(Field f)
 	{
 		int mods = f.getModifiers();
-		return !Modifier.isFinal(mods) && !Modifier.isStatic(mods) && !Modifier.isTransient(mods) && Modifier.isPublic(mods) && handlers.containsKey(f.getType());
+		return !Modifier.isFinal(mods) && !Modifier.isStatic(mods) && !Modifier.isTransient(mods) && handlers.containsKey(f.getType());
 	}
 
 	public interface Reader<T1 extends Object>

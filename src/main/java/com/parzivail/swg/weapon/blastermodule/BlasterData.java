@@ -8,9 +8,16 @@ import net.minecraft.item.ItemStack;
 
 public class BlasterData extends NbtSerializable<BlasterData>
 {
-	public boolean isAimingDownSights = false;
-	public int shotsRemaining = 0;
-	public BlasterAttachment[] attachments = new BlasterAttachment[0];
+	public boolean isAimingDownSights;
+	public int shotsRemaining;
+
+	// These are not actually deprecated, just a reminder to use the getter instead which does safe casts
+	@Deprecated
+	public BlasterAttachment scope;
+	@Deprecated
+	public BlasterAttachment grip;
+	@Deprecated
+	public BlasterAttachment barrel;
 
 	public BlasterData(ItemStack stack)
 	{
@@ -19,25 +26,31 @@ public class BlasterData extends NbtSerializable<BlasterData>
 
 	public BlasterScope getScope()
 	{
-		for (BlasterAttachment attachment : attachments)
-			if (attachment instanceof BlasterScope)
-				return (BlasterScope)attachment;
-		return null;
+		return scope == null ? BlasterAttachments.scopeIronsights : (BlasterScope)scope;
+	}
+
+	public void setScope(BlasterScope scope)
+	{
+		this.scope = scope;
 	}
 
 	public BlasterGrip getGrip()
 	{
-		for (BlasterAttachment attachment : attachments)
-			if (attachment instanceof BlasterGrip)
-				return (BlasterGrip)attachment;
-		return null;
+		return grip == null ? BlasterAttachments.gripNone : (BlasterGrip)grip;
+	}
+
+	public void setGrip(BlasterGrip grip)
+	{
+		this.grip = grip;
 	}
 
 	public BlasterBarrel getBarrel()
 	{
-		for (BlasterAttachment attachment : attachments)
-			if (attachment instanceof BlasterBarrel)
-				return (BlasterBarrel)attachment;
-		return null;
+		return barrel == null ? BlasterAttachments.barrelDefault : (BlasterBarrel)barrel;
+	}
+
+	public void setBarrel(BlasterBarrel barrel)
+	{
+		this.barrel = barrel;
 	}
 }
