@@ -1,5 +1,7 @@
 package com.parzivail.swg;
 
+import net.minecraft.util.ResourceLocation;
+
 /**
  * Created by colby on 9/10/2017.
  */
@@ -10,6 +12,9 @@ public class Resources
 	private static final int PATCH = 1;
 	public static final String VERSION = MAJOR + "." + MINOR + "." + PATCH;
 	public static final String MODID = "pswg";
+
+	private static int guiIdx = 1;
+	public static final int GUI_BLASTER_WORKBENCH = guiIdx++;
 
 	public static int dimIdTatooine = 2;
 	public static int biomeIdTatooineDunes = 100;
@@ -42,6 +47,16 @@ public class Resources
 		return dot("item", MODID, name, variant);
 	}
 
+	public static String containerDot(String name)
+	{
+		return dot("container", name);
+	}
+
+	public static String tileDot(String name)
+	{
+		return dot("tile", name);
+	}
+
 	public static String dot(String... params)
 	{
 		return String.join(".", params);
@@ -50,5 +65,10 @@ public class Resources
 	public static String modColon(String name)
 	{
 		return String.format("%s:%s", MODID, name);
+	}
+
+	public static ResourceLocation location(String path)
+	{
+		return new ResourceLocation(MODID, path);
 	}
 }

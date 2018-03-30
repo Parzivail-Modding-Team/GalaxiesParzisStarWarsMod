@@ -5,7 +5,6 @@ import com.parzivail.util.binary.PIO;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
-import com.sun.media.sound.InvalidDataException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
@@ -14,6 +13,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.io.InputStream;
+import java.io.InvalidObjectException;
 import java.util.HashMap;
 
 /**
@@ -96,7 +96,7 @@ public class SwgModel
 			int read = s.read(identr);
 			String ident = new String(identr);
 			if (!ident.equals("SWG3") || read != identr.length)
-				throw new InvalidDataException("Input file not SWG3 model");
+				throw new InvalidObjectException("Input file not SWG3 model");
 
 			int version = s.readInt();
 			String modelName = PIO.readNullTerminatedString(s);

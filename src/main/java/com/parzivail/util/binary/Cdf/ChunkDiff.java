@@ -4,13 +4,13 @@ import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.util.binary.PIO;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
-import com.sun.media.sound.InvalidDataException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.InputStream;
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,7 +38,7 @@ public class ChunkDiff
 			int read = s.read(identr);
 			String ident = new String(identr);
 			if (!ident.equals("CDF") || read != identr.length)
-				throw new InvalidDataException("Input file not CDF structure");
+				throw new InvalidObjectException("Input file not CDF structure");
 
 			int version = s.readInt();
 			int numChunks = s.readInt();

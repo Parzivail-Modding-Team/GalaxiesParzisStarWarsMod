@@ -119,7 +119,7 @@ public class EntityUtils
 		while (EntityList.getClassFromID(mobId) != null)
 			mobId += 1;
 		EntityRegistry.registerModEntity(entityClass, entityName, mobId, StarWarsGalaxy.instance, 80, 1, true);
-		EntityList.IDtoClassMapping.put(mobId, entityClass);
+		EntityList.idToClassMap.put(mobId, entityClass);
 		Lumberjack.debug("Registered entity \"" + entityName + "\" as ID " + String.valueOf(mobId));
 	}
 
@@ -136,7 +136,7 @@ public class EntityUtils
 		while (EntityList.getClassFromID(mobId) != null)
 			mobId += 1;
 		EntityRegistry.registerModEntity(mobClass, mobName, mobId, StarWarsGalaxy.instance, 80, 1, true);
-		EntityList.IDtoClassMapping.put(mobId, mobClass);
+		EntityList.idToClassMap.put(mobId, mobClass);
 		EntityList.entityEggs.put(mobId, new EntityList.EntityEggInfo(mobId, bgColor, fgColor));
 		Lumberjack.debug("Registered entity (and egg) \"" + mobName + "\" as ID " + String.valueOf(mobId));
 	}

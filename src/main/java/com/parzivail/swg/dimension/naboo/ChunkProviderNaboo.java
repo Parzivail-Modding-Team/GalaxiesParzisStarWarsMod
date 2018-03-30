@@ -80,7 +80,7 @@ public class ChunkProviderNaboo implements IChunkProvider
 					BlockInfo block = diffMap == null ? null : diffMap.get(bPos);
 					if (block != null)
 					{
-						extendedblockstorage.func_150818_a(x, y & 15, z, Block.getBlockById(block.id));
+						extendedblockstorage.setExtBlockID(x, y & 15, z, Block.getBlockById(block.id));
 						extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
 
 						if (block.tileData != null)
@@ -92,18 +92,18 @@ public class ChunkProviderNaboo implements IChunkProvider
 					else
 					{
 						if (y > finalHeight && y <= waterLevel)
-							extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.water);
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.water);
 						else if (y <= finalHeight)
 						{
 							double sandThreshold = height * 0.9;
 							double sandstoneThreshold = height * 0.6;
 
 							if (y >= sandThreshold)
-								extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.grass);
+								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.grass);
 							else if (y >= sandstoneThreshold && y < sandThreshold)
-								extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.dirt);
+								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.dirt);
 							else
-								extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.stone);
+								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
 						}
 					}
 				}
@@ -194,7 +194,7 @@ public class ChunkProviderNaboo implements IChunkProvider
 		return biomegenbase.getSpawnableList(p_73155_1_);
 	}
 
-	public ChunkPosition func_147416_a(World p_147416_1_, String p_147416_2_, int p_147416_3_, int p_147416_4_, int p_147416_5_)
+	public ChunkPosition findClosestStructure(World p_147416_1_, String p_147416_2_, int p_147416_3_, int p_147416_4_, int p_147416_5_)
 	{
 		return null;
 	}

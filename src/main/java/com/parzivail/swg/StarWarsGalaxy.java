@@ -3,9 +3,11 @@ package com.parzivail.swg;
 import com.parzivail.swg.command.CommandChangeDimensions;
 import com.parzivail.swg.command.CommandSpawnShip;
 import com.parzivail.swg.handler.EventHandler;
+import com.parzivail.swg.handler.GuiHandler;
 import com.parzivail.swg.network.*;
 import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.registry.*;
+import com.parzivail.swg.tab.PTab;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
@@ -18,6 +20,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.client.Minecraft;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -34,6 +37,8 @@ public class StarWarsGalaxy
 
 	@Mod.Instance(Resources.MODID)
 	public static StarWarsGalaxy instance;
+
+	public static CreativeTabs tab;
 
 	public static Minecraft mc;
 	public static EventHandler eventHandler;
@@ -91,9 +96,13 @@ public class StarWarsGalaxy
 	{
 		instance = this;
 
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+
 		eventHandler = new EventHandler();
 		FMLCommonHandler.instance().bus().register(eventHandler);
 		MinecraftForge.EVENT_BUS.register(eventHandler);
+
+		tab = new PTab();
 
 		BlockRegister.register();
 		ItemRegister.register();

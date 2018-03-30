@@ -46,7 +46,7 @@ public class PItem extends Item
 	{
 		if (this.variants.length == 0)
 			return Resources.itemDot(this.name);
-		return Resources.itemDot(this.name, this.variants[stack.getItemDamage()]);
+		return Resources.itemDot(this.name, this.variants[stack.getMetadata()]);
 	}
 
 	@SideOnly(Side.CLIENT)

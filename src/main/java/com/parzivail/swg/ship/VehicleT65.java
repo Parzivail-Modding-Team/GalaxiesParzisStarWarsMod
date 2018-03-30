@@ -1,5 +1,6 @@
 package com.parzivail.swg.ship;
 
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -12,6 +13,12 @@ public class VehicleT65 extends BasicFlightModel
 	{
 		super(world);
 		setPivots(1.684f, 0.82f);
+	}
+
+	@Override
+	public ItemStack[] getInventory()
+	{
+		return new ItemStack[0];
 	}
 
 	@Override

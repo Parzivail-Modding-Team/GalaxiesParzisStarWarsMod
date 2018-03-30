@@ -1,6 +1,5 @@
 package com.parzivail.swg.ship;
 
-import com.parzivail.util.item.ItemUtils;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.entity.EntityLivingBase;
@@ -60,7 +59,7 @@ public abstract class EntityBase extends EntityLivingBase
 
 		try
 		{
-			this.func_145775_I();
+			this.doBlockCollisions();
 		}
 		catch (Throwable throwable)
 		{
@@ -99,11 +98,5 @@ public abstract class EntityBase extends EntityLivingBase
 	public void setCurrentItemOrArmor(int p_70062_1_, ItemStack p_70062_2_)
 	{
 
-	}
-
-	@Override
-	public ItemStack[] getLastActiveItems()
-	{
-		return ItemUtils.ITEMSTACK_EMPTY_ARRAY;
 	}
 }

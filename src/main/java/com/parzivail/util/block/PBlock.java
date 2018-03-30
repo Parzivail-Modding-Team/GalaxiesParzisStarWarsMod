@@ -1,4 +1,4 @@
-package com.parzivail.swg.block;
+package com.parzivail.util.block;
 
 import com.parzivail.swg.Resources;
 import net.minecraft.block.Block;
@@ -17,13 +17,13 @@ public class PBlock extends Block
 	{
 		super(material);
 		this.name = name;
-		this.setBlockName(Resources.modDot(this.name));
-		this.setBlockTextureName(Resources.modColon(this.name));
+		this.setUnlocalizedName(Resources.modDot(this.name));
+		this.setTextureName(Resources.modColon(this.name));
 	}
 
 	public PBlock setAlpha()
 	{
-		this.setBlockTextureName(Resources.modColon("alpha"));
+		this.setTextureName(Resources.modColon("alpha"));
 		return this;
 	}
 }

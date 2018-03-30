@@ -73,7 +73,7 @@ public class ChunkProviderTatooine implements IChunkProvider
 							chunk.getBlockStorageArray()[l] = extendedblockstorage;
 						}
 
-						extendedblockstorage.func_150818_a(x, y & 15, z, Block.getBlockById(block.id));
+						extendedblockstorage.setExtBlockID(x, y & 15, z, Block.getBlockById(block.id));
 						extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
 
 						if (block.tileData != null)
@@ -97,11 +97,11 @@ public class ChunkProviderTatooine implements IChunkProvider
 						double sandstoneThreshold = height * 0.6;
 
 						if (y >= sandThreshold)
-							extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.sand);
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.sand);
 						else if (y >= sandstoneThreshold && y < sandThreshold)
-							extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.sandstone);
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.sandstone);
 						else
-							extendedblockstorage.func_150818_a(x, y & 15, z, Blocks.stone);
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
 					}
 				}
 			}
@@ -191,7 +191,8 @@ public class ChunkProviderTatooine implements IChunkProvider
 		return biomegenbase.getSpawnableList(p_73155_1_);
 	}
 
-	public ChunkPosition func_147416_a(World p_147416_1_, String p_147416_2_, int p_147416_3_, int p_147416_4_, int p_147416_5_)
+	@Override
+	public ChunkPosition findClosestStructure(World p_147416_1_, String p_147416_2_, int p_147416_3_, int p_147416_4_, int p_147416_5_)
 	{
 		return null;
 	}

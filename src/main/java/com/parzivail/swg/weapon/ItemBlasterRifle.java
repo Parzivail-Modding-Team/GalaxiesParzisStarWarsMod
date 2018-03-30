@@ -19,7 +19,6 @@ import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +47,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		this.maxDistance = maxDistance;
 		this.maxClipSize = maxClipSize;
 		this.boltColor = boltColor;
-		this.setCreativeTab(CreativeTabs.tabCombat);
+		this.setCreativeTab(StarWarsGalaxy.tab);
 		this.maxStackSize = 1;
 
 		avExpansion = new AnimatedValue(-2, 100);
@@ -135,11 +134,11 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		GL.Translate(sr.getScaledWidth_double() / 2, sr.getScaledHeight_double() / 2, 0);
 
 		String remaining = String.format("%s/%s", bd.shotsRemaining, maxClipSize);
-		int w = mc.fontRenderer.getStringWidth(remaining);
-		int h = mc.fontRenderer.FONT_HEIGHT;
+		int w = mc.fontRendererObj.getStringWidth(remaining);
+		int h = mc.fontRendererObj.FONT_HEIGHT;
 
 		GL.Translate(-w - 1, -h - 1, 0);
-		mc.fontRenderer.drawString(remaining, 0, 0, 0xFFFFFF);
+		mc.fontRendererObj.drawString(remaining, 0, 0, 0xFFFFFF);
 
 		GL.PopMatrix();
 	}
