@@ -17,7 +17,7 @@ public class TileBlasterWorkbench extends TileEntity implements IInventory
 	@Override
 	public int getSizeInventory()
 	{
-		return 1;
+		return 4;
 	}
 
 	@Override

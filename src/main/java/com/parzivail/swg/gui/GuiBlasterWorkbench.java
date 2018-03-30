@@ -20,6 +20,16 @@ public class GuiBlasterWorkbench extends GuiContainer
 		this.tile = tile;
 	}
 
+	@Override
+	public void initGui()
+	{
+		this.xSize = 256;
+		this.ySize = 241;
+
+		super.initGui();
+		this.buttonList.clear();
+	}
+
 	/**
 	 * Draw the foreground layer for the GuiContainer (everything in front of the items)
 	 */
@@ -27,7 +37,9 @@ public class GuiBlasterWorkbench extends GuiContainer
 	{
 		String s = I18n.format(this.tile.getInventoryName());
 		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
+		this.fontRendererObj.drawString(I18n.format("container.inventory"), 47, this.ySize - 96 + 2, 4210752);
+
+		//this.fontRendererObj.drawString(I18n.format(Resources.modDot("scope")), 28, 21, 4210752);
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
