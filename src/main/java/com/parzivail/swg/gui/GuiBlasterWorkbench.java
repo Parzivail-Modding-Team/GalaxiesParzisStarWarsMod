@@ -3,6 +3,8 @@ package com.parzivail.swg.gui;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.container.ContainerBlasterWorkbench;
 import com.parzivail.tile.TileBlasterWorkbench;
+import com.parzivail.util.ui.GLPalette;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -30,14 +32,16 @@ public class GuiBlasterWorkbench extends GuiContainer
 		this.buttonList.clear();
 
 		this.buttonList.add(new PGuiButton(0, this.guiLeft + 40, this.guiTop + 6, 50, 20, I18n.format(Resources.modDot("scope"))));
-		this.buttonList.add(new PGuiButton(1, this.guiLeft + 100, this.guiTop + 6, 50, 20, I18n.format(Resources.modDot("barrel"))));
-		this.buttonList.add(new PGuiButton(2, this.guiLeft + 160, this.guiTop + 6, 50, 20, I18n.format(Resources.modDot("grip"))));
+		this.buttonList.add(new PGuiButton(1, this.guiLeft + 102, this.guiTop + 6, 50, 20, I18n.format(Resources.modDot("barrel"))));
+		this.buttonList.add(new PGuiButton(2, this.guiLeft + 164, this.guiTop + 6, 50, 20, I18n.format(Resources.modDot("grip"))));
 
 		this.buttonList.add(new PGuiButton(3, this.guiLeft + 40, this.guiTop + 61, 10, 20, I18n.format("◀")));
-		this.buttonList.add(new PGuiButton(4, this.guiLeft + 200, this.guiTop + 61, 10, 20, I18n.format("▶")));
+		this.buttonList.add(new PGuiButton(4, this.guiLeft + 204, this.guiTop + 61, 10, 20, I18n.format("▶")));
 
-		this.buttonList.add(new PGuiButton(5, this.guiLeft + 40, this.guiTop + 115, 50, 20, I18n.format(Resources.modDot("equip"))));
-		this.buttonList.add(new PGuiButton(5, this.guiLeft + 160, this.guiTop + 115, 50, 20, I18n.format(Resources.modDot("buy"))));
+		GuiButton b = new PGuiButton(5, this.guiLeft + 40, this.guiTop + 115, 50, 20, I18n.format(Resources.modDot("equip")));
+		b.enabled = false;
+		this.buttonList.add(b);
+		this.buttonList.add(new PGuiButton(5, this.guiLeft + 164, this.guiTop + 115, 50, 20, I18n.format(Resources.modDot("buy"))));
 	}
 
 	/**
@@ -46,6 +50,13 @@ public class GuiBlasterWorkbench extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 47, this.ySize - 96 + 2, 4210752);
+
+		String s = "Spitfire Scope";
+		this.fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.guiTop + 25, GLPalette.ELECTRIC_BLUE);
+		s = "1.5x zoom";
+		this.fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.guiTop + 108, 4210752);
+		s = "$800";
+		this.fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.guiTop + 118, 4210752);
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
