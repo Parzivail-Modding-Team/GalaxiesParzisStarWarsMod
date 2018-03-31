@@ -28,6 +28,16 @@ public class GuiBlasterWorkbench extends GuiContainer
 
 		super.initGui();
 		this.buttonList.clear();
+
+		this.buttonList.add(new PGuiButton(0, this.guiLeft + 40, this.guiTop + 6, 50, 20, I18n.format(Resources.modDot("scope"))));
+		this.buttonList.add(new PGuiButton(1, this.guiLeft + 100, this.guiTop + 6, 50, 20, I18n.format(Resources.modDot("barrel"))));
+		this.buttonList.add(new PGuiButton(2, this.guiLeft + 160, this.guiTop + 6, 50, 20, I18n.format(Resources.modDot("grip"))));
+
+		this.buttonList.add(new PGuiButton(3, this.guiLeft + 40, this.guiTop + 61, 10, 20, I18n.format("◀")));
+		this.buttonList.add(new PGuiButton(4, this.guiLeft + 200, this.guiTop + 61, 10, 20, I18n.format("▶")));
+
+		this.buttonList.add(new PGuiButton(5, this.guiLeft + 40, this.guiTop + 115, 50, 20, I18n.format(Resources.modDot("equip"))));
+		this.buttonList.add(new PGuiButton(5, this.guiLeft + 160, this.guiTop + 115, 50, 20, I18n.format(Resources.modDot("buy"))));
 	}
 
 	/**
@@ -35,11 +45,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 	 */
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		String s = I18n.format(this.tile.getInventoryName());
-		this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory"), 47, this.ySize - 96 + 2, 4210752);
-
-		//this.fontRendererObj.drawString(I18n.format(Resources.modDot("scope")), 28, 21, 4210752);
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
