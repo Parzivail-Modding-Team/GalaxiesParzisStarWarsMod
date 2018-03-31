@@ -5,6 +5,7 @@ import com.parzivail.swg.command.CommandSpawnShip;
 import com.parzivail.swg.handler.EventHandler;
 import com.parzivail.swg.handler.GuiHandler;
 import com.parzivail.swg.network.*;
+import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.registry.*;
 import com.parzivail.swg.tab.PTab;
@@ -19,7 +20,6 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.util.vector.Vector3f;
@@ -40,7 +40,6 @@ public class StarWarsGalaxy
 
 	public static CreativeTabs tab;
 
-	public static Minecraft mc;
 	public static EventHandler eventHandler;
 	public static Random random = new Random();
 
@@ -101,6 +100,7 @@ public class StarWarsGalaxy
 		eventHandler = new EventHandler();
 		FMLCommonHandler.instance().bus().register(eventHandler);
 		MinecraftForge.EVENT_BUS.register(eventHandler);
+		PswgExtProp.register();
 
 		tab = new PTab();
 

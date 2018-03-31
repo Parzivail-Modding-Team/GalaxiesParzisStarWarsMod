@@ -3,6 +3,7 @@ package com.parzivail.swg.handler;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.network.MessageItemLeftClick;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
@@ -31,36 +32,36 @@ public class KeyHandler
 
 	private static void onInput()
 	{
-		ItemStack heldItem = StarWarsGalaxy.mc.thePlayer.getHeldItem();
+		ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
 
 		if (KeybindRegistry.keyAttack.interceptedIsPressed() && heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor)
 		{
-			((ILeftClickInterceptor)heldItem.getItem()).onItemLeftClick(heldItem, StarWarsGalaxy.mc.thePlayer.worldObj, StarWarsGalaxy.mc.thePlayer);
-			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(StarWarsGalaxy.mc.thePlayer));
+			((ILeftClickInterceptor)heldItem.getItem()).onItemLeftClick(heldItem, Client.mc.thePlayer.worldObj, Client.mc.thePlayer);
+			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(Client.mc.thePlayer));
 		}
 	}
 
 	public static void handleVehicleMovement()
 	{
-		Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(StarWarsGalaxy.mc.thePlayer);
-		if (StarWarsGalaxy.mc.thePlayer != null && pair != null && pair.left != null && pair.right.getIdx() == 0)
+		Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(Client.mc.thePlayer);
+		if (Client.mc.thePlayer != null && pair != null && pair.left != null && pair.right.getIdx() == 0)
 		{
-			if ($(StarWarsGalaxy.mc.gameSettings.keyBindLeft))
+			if ($(Client.mc.gameSettings.keyBindLeft))
 				pair.right.acceptInput(ShipInput.RollLeft);
 
-			if ($(StarWarsGalaxy.mc.gameSettings.keyBindRight))
+			if ($(Client.mc.gameSettings.keyBindRight))
 				pair.right.acceptInput(ShipInput.RollRight);
 
-			if ($(StarWarsGalaxy.mc.gameSettings.keyBindForward))
+			if ($(Client.mc.gameSettings.keyBindForward))
 				pair.right.acceptInput(ShipInput.PitchDown);
 
-			if ($(StarWarsGalaxy.mc.gameSettings.keyBindBack))
+			if ($(Client.mc.gameSettings.keyBindBack))
 				pair.right.acceptInput(ShipInput.PitchUp);
 
-			if ($(StarWarsGalaxy.mc.gameSettings.keyBindJump))
+			if ($(Client.mc.gameSettings.keyBindJump))
 				pair.right.acceptInput(ShipInput.ThrottleUp);
 
-			if ($(StarWarsGalaxy.mc.gameSettings.keyBindSprint))
+			if ($(Client.mc.gameSettings.keyBindSprint))
 				pair.right.acceptInput(ShipInput.ThrottleDown);
 		}
 	}

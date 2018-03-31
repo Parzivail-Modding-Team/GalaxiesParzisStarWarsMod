@@ -1,6 +1,6 @@
 package com.parzivail.util.ui;
 
-import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -14,8 +14,8 @@ public class FxMC
 	{
 		try
 		{
-			ReflectionHelper.setPrivateValue(EntityRenderer.class, StarWarsGalaxy.mc.entityRenderer, dist, "thirdPersonDistance", "field_78490_B", "E");
-			ReflectionHelper.setPrivateValue(EntityRenderer.class, StarWarsGalaxy.mc.entityRenderer, dist, "thirdPersonDistanceTemp", "field_78491_C", "F");
+			ReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistance", "field_78490_B", "E");
+			ReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistanceTemp", "field_78491_C", "F");
 		}
 		catch (Exception e)
 		{
@@ -28,7 +28,7 @@ public class FxMC
 	{
 		try
 		{
-			ReflectionHelper.setPrivateValue(EntityRenderer.class, StarWarsGalaxy.mc.entityRenderer, roll, "camRoll", "field_78495_O", "R");
+			ReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "camRoll", "field_78495_O", "R");
 		}
 		catch (Exception e)
 		{
@@ -41,7 +41,7 @@ public class FxMC
 	{
 		try
 		{
-			ReflectionHelper.setPrivateValue(EntityRenderer.class, StarWarsGalaxy.mc.entityRenderer, roll, "prevCamRoll", "field_78505_P", "S");
+			ReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "prevCamRoll", "field_78505_P", "S");
 		}
 		catch (Exception e)
 		{

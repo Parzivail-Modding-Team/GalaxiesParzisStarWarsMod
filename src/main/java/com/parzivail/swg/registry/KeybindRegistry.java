@@ -1,8 +1,8 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.keybind.InterceptingKeyBinding;
+import com.parzivail.swg.proxy.Client;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -20,7 +20,7 @@ public class KeybindRegistry
 	{
 		//KeybindRegistry.keyShootVehicle = registerKeybind("shootVehicle", Keyboard.KEY_F);
 
-		StarWarsGalaxy.mc.gameSettings.keyBindAttack = KeybindRegistry.keyAttack = new InterceptingKeyBinding(StarWarsGalaxy.mc.gameSettings.keyBindAttack);
+		Client.mc.gameSettings.keyBindAttack = KeybindRegistry.keyAttack = new InterceptingKeyBinding(Client.mc.gameSettings.keyBindAttack);
 	}
 
 	private static KeyBinding registerKeybind(String keyName, int keyCode)

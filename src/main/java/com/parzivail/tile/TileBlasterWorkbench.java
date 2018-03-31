@@ -27,6 +27,11 @@ public class TileBlasterWorkbench extends TileEntity implements IInventory
 		return stacks[slot];
 	}
 
+	public ItemStack getBlaster()
+	{
+		return stacks[0];
+	}
+
 	@Override
 	public ItemStack decrStackSize(int slot, int amount)
 	{

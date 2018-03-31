@@ -8,7 +8,7 @@ public class ScopeIronsights extends BlasterScope
 {
 	public ScopeIronsights()
 	{
-		super("ironsight");
+		super("ironsight", 0);
 	}
 
 	@Override

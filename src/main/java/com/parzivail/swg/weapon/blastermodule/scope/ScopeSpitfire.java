@@ -10,7 +10,7 @@ public class ScopeSpitfire extends BlasterScope
 {
 	public ScopeSpitfire()
 	{
-		super("spitfire");
+		super("spitfire", 250);
 	}
 
 	@Override

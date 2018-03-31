@@ -4,8 +4,6 @@ import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
 import com.parzivail.swg.weapon.blastermodule.BlasterAttachments;
 import com.parzivail.util.common.Enumerable;
 import com.parzivail.util.common.Lumberjack;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -17,7 +15,6 @@ public class NbtSerializable<T extends NbtSerializable>
 {
 	private static final HashMap<Class, Pair<Reader, Writer>> handlers = new HashMap<>();
 	private static final HashMap<Class, Field[]> fieldCache = new HashMap<>();
-	private static final HashMap<Item, NbtSerializable> pools = new HashMap<>();
 
 	static
 	{
@@ -135,13 +132,7 @@ public class NbtSerializable<T extends NbtSerializable>
 		compound.setBoolean(s, aBoolean);
 	}
 
-	public NbtSerializable(ItemStack stack)
-	{
-		ItemUtils.ensureNbt(stack);
-		deserialize(stack.stackTagCompound);
-	}
-
-	private void deserialize(NBTTagCompound compound)
+	protected void deserialize(NBTTagCompound compound)
 	{
 		compound = ItemUtils.ensureNbt(compound);
 		Field[] fields = getClassFields(this.getClass());

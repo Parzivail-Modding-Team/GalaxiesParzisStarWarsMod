@@ -10,7 +10,7 @@ public class ScopeRedDot extends BlasterScope
 {
 	public ScopeRedDot()
 	{
-		super("redDot");
+		super("redDot", 200);
 	}
 
 	@Override

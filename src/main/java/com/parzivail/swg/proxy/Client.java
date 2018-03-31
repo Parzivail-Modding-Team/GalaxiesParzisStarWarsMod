@@ -1,6 +1,6 @@
 package com.parzivail.swg.proxy;
 
-import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.PEntityRenderer;
@@ -13,6 +13,8 @@ import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.Entity;
 
 /**
@@ -20,20 +22,49 @@ import net.minecraft.entity.Entity;
  */
 public class Client extends Common
 {
+	public static Minecraft mc;
+
+	//public static FontRenderer frSansSerif;
+	//public static FontRenderer frSerif;
+
+	public static FontRenderer frNaboo;
+	public static FontRenderer frAurebesh;
+	public static FontRenderer frDroid;
+	public static FontRenderer frEwok;
+	public static FontRenderer frHuttese;
+	public static FontRenderer frMassassi;
+
 	@Override
 	public void init()
 	{
-		StarWarsGalaxy.mc = Minecraft.getMinecraft();
+		mc = Minecraft.getMinecraft();
 
 		ShaderHelper.initShaders();
 
-		StarWarsGalaxy.mc.entityRenderer = new PEntityRenderer(StarWarsGalaxy.mc, StarWarsGalaxy.mc.getResourceManager());
+		mc.entityRenderer = new PEntityRenderer(mc, mc.getResourceManager());
+
+		//frSansSerif = createFont("sansserif");
+		//frSerif = createFont("serif");
+
+		frNaboo = createFont("naboo");
+		frAurebesh = createFont("aurebesh");
+		frDroid = createFont("droid");
+		frEwok = createFont("ewok");
+		frHuttese = createFont("huttese");
+		frMassassi = createFont("massassi");
 
 		RenderingRegistry.registerEntityRenderingHandler(VehicleT65.class, new RenderT65());
 		RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
 		Lumberjack.log("Client proxy loaded!");
+	}
+
+	private static FontRenderer createFont(String file)
+	{
+		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
+		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
+		return renderer;
 	}
 
 	@Override

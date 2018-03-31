@@ -1,0 +1,11 @@
+pswg.gui.scope=Scope
+pswg.gui.barrel=Barrel
+pswg.gui.grip=Grip
+pswg.gui.scopes=Scopes
+pswg.gui.barrels=Barrels
+pswg.gui.grips=Grips
+pswg.gui.equip=Equip
+pswg.gui.buy=Buy
+pswg.gui.reticle=Reticle
+pswg.gui.xzoom=%sx zoom
+pswg.gui.recoilReduction=%s VRR/%s HRR

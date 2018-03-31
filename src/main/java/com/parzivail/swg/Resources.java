@@ -42,6 +42,11 @@ public class Resources
 		return dot(MODID, dot(name));
 	}
 
+	public static String guiDot(String name)
+	{
+		return dot(MODID, dot("gui", name));
+	}
+
 	public static String itemDot(String name, String variant)
 	{
 		return dot("item", MODID, name, variant);

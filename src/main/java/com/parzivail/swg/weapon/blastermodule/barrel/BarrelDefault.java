@@ -4,6 +4,6 @@ public class BarrelDefault extends BlasterBarrel
 {
 	public BarrelDefault()
 	{
-		super("default");
+		super("default", 0);
 	}
 }

@@ -89,7 +89,10 @@ public abstract class BasicFlightModel extends EntityBase
 
 	public Seat getSeat(int seatIdx)
 	{
-		return (Seat)this.worldObj.getEntityByID(this.dataWatcher.getWatchableObjectInt(DATA_SEATID + seatIdx));
+		Entity e = this.worldObj.getEntityByID(this.dataWatcher.getWatchableObjectInt(DATA_SEATID + seatIdx));
+		if (!(e instanceof Seat))
+			return null;
+		return (Seat)e;
 	}
 
 	public void setSeat(int seatIdx, Seat seat)

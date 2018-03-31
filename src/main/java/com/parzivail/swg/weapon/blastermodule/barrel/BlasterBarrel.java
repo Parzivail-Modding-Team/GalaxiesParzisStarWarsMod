@@ -5,8 +5,14 @@ import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
 
 public abstract class BlasterBarrel extends BlasterAttachment
 {
-	public BlasterBarrel(String name)
+	public BlasterBarrel(String name, int price)
 	{
-		super(Resources.modDot("blaster", "barrel", name));
+		super(Resources.modDot("blaster", "barrel", name), price);
+	}
+
+	@Override
+	public String getInfoText()
+	{
+		return "";
 	}
 }

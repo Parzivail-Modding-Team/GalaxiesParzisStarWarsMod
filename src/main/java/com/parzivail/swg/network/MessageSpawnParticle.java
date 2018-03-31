@@ -1,6 +1,6 @@
 package com.parzivail.swg.network;
 
-import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -39,7 +39,7 @@ public class MessageSpawnParticle extends PMessage<MessageSpawnParticle>
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		StarWarsGalaxy.mc.theWorld.spawnParticle(name, x, y, z, vx, vy, vz);
+		Client.mc.theWorld.spawnParticle(name, x, y, z, vx, vy, vz);
 		return null;
 	}
 }

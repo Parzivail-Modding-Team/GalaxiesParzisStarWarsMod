@@ -10,7 +10,7 @@ public class ScopeRingReticle extends BlasterScope
 {
 	public ScopeRingReticle()
 	{
-		super("ringReticle");
+		super("ringReticle", 400);
 	}
 
 	@Override

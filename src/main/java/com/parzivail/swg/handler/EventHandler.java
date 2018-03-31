@@ -1,9 +1,9 @@
 package com.parzivail.swg.handler;
 
-import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.ClientRenderState;
 import com.parzivail.swg.render.WorldDecals;
@@ -88,23 +88,23 @@ public class EventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(RenderGameOverlayEvent.Pre event)
 	{
-		if (StarWarsGalaxy.mc.thePlayer != null)
+		if (Client.mc.thePlayer != null)
 		{
-			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(StarWarsGalaxy.mc.thePlayer);
+			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(Client.mc.thePlayer);
 			if (pair == null || pair.left == null)
 			{
 				FxMC.changeCameraRoll(0);
-				StarWarsGalaxy.mc.renderViewEntity = StarWarsGalaxy.mc.thePlayer;
+				Client.mc.renderViewEntity = Client.mc.thePlayer;
 			}
 			else
 			{
 				FxMC.changeCameraDist(10);
 				float r = pair.left.orientation.getRoll();
 				FxMC.changeCameraRoll(r);
-				StarWarsGalaxy.mc.renderViewEntity = pair.left;
+				Client.mc.renderViewEntity = pair.left;
 			}
 
-			ItemStack heldItem = StarWarsGalaxy.mc.thePlayer.getHeldItem();
+			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
 
 			if (heldItem != null && heldItem.getItem() instanceof ICustomCrosshair)
 			{
@@ -128,7 +128,7 @@ public class EventHandler
 					GL.Enable(EnableCap.PointSmooth);
 					GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
 
-					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(sr, StarWarsGalaxy.mc.thePlayer, heldItem);
+					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(sr, Client.mc.thePlayer, heldItem);
 
 					GL.PopMatrix();
 					GL11.glColor4f(1, 1, 1, 1);
@@ -140,7 +140,7 @@ public class EventHandler
 
 			KeybindRegistry.keyAttack.setIntercepting(heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor);
 
-			if (heldItem == null || !(heldItem.getItem() instanceof PItem) || !(((PItem)heldItem.getItem()).shouldRequestRenderState(heldItem, StarWarsGalaxy.mc.thePlayer.worldObj, StarWarsGalaxy.mc.thePlayer)))
+			if (heldItem == null || !(heldItem.getItem() instanceof PItem) || !(((PItem)heldItem.getItem()).shouldRequestRenderState(heldItem, Client.mc.thePlayer.worldObj, Client.mc.thePlayer)))
 				ClientRenderState.renderState.removeAll(ClientRenderState.renderStateRequest.values());
 			else
 			{

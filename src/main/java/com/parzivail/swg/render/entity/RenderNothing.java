@@ -1,6 +1,6 @@
 package com.parzivail.swg.render.entity;
 
-import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.Render;
@@ -20,7 +20,7 @@ public class RenderNothing extends Render
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float unknown, float partialTicks)
 	{
-		if (!StarWarsGalaxy.mc.gameSettings.showDebugInfo)
+		if (!Client.mc.gameSettings.showDebugInfo)
 			return;
 
 		GL.PushMatrix();

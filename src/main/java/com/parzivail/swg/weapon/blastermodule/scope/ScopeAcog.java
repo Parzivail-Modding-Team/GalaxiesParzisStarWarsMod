@@ -10,7 +10,7 @@ public class ScopeAcog extends BlasterScope
 {
 	public ScopeAcog()
 	{
-		super("acog");
+		super("acog", 250);
 	}
 
 	@Override
@@ -27,8 +27,8 @@ public class ScopeAcog extends BlasterScope
 		Fx.D2.DrawLine(-2, 2 * d / 3f, 2, 2 * d / 3f);
 
 		GL11.glColor4f(1, 0, 0, 1);
-		Fx.D2.DrawLine(-2, d / 3f, 2, d / 3f);
-		Fx.D2.DrawLine(-2, d / 6f, 2, d / 6f);
+		Fx.D2.DrawLine(-d / 10f, d / 3f, d / 10f, d / 3f);
+		Fx.D2.DrawLine(-d / 10f, d / 6f, d / 10f, d / 6f);
 
 		Fx.D2.DrawLine(0, -ohSixD, 0, d / 3f);
 		Fx.D2.DrawLine(0, -ohSixD, ohSixD, 0);

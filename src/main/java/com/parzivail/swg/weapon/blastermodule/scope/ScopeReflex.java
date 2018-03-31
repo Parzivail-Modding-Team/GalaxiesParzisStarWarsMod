@@ -10,7 +10,7 @@ public class ScopeReflex extends BlasterScope
 {
 	public ScopeReflex()
 	{
-		super("reflex");
+		super("reflex", 150);
 	}
 
 	@Override

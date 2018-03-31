@@ -1,6 +1,7 @@
 package com.parzivail.util.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.util.common.Lumberjack;
@@ -166,7 +167,7 @@ public class EntityUtils
 
 	public static boolean isClientControlled(BasicFlightModel ship)
 	{
-		Pair<BasicFlightModel, Seat> pair = getShipRiding(StarWarsGalaxy.mc.thePlayer);
+		Pair<BasicFlightModel, Seat> pair = getShipRiding(Client.mc.thePlayer);
 		return pair != null && pair.left != null && pair.left.equals(ship);
 	}
 }

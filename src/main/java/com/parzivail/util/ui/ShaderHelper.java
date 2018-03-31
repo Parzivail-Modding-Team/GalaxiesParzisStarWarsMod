@@ -1,7 +1,7 @@
 package com.parzivail.util.ui;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.Lumberjack;
 import net.minecraft.client.renderer.OpenGlHelper;
 import org.lwjgl.opengl.*;
@@ -64,7 +64,7 @@ public final class ShaderHelper
 		if (shader != 0)
 		{
 			int time = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
-			ARBShaderObjects.glUniform1iARB(time, StarWarsGalaxy.mc.thePlayer.ticksExisted);
+			ARBShaderObjects.glUniform1iARB(time, Client.mc.thePlayer.ticksExisted);
 
 			if (shader == entityGlow)
 			{

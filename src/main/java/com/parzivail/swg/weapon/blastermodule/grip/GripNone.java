@@ -4,7 +4,7 @@ public class GripNone extends BlasterGrip
 {
 	public GripNone()
 	{
-		super("none");
+		super("none", 0);
 	}
 
 	@Override

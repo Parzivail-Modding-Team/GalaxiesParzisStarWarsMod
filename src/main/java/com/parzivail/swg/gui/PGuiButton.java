@@ -31,11 +31,11 @@ public class PGuiButton extends GuiButton
 			this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
 			int k = this.getHoverState(this.hovered); // 0->disabled, 1->normal, 2->hover
 
-			int textColor = 0xe0e0e0;
+			int textColor = GLPalette.WHITE;
 			if (!this.enabled)
-				textColor = 0xa0a0a0;
+				textColor = GLPalette.MEDIUM_GREY;
 			else if (this.hovered)
-				textColor = 0xffffa0;
+				textColor = GLPalette.BUTTER_YELLOW;
 
 			GL.PushAttrib(EnumSet.of(AttribMask.EnableBit, AttribMask.LineBit));
 			GL.Enable(EnableCap.Blend);
@@ -47,7 +47,7 @@ public class PGuiButton extends GuiButton
 			GL.Enable(EnableCap.Texture2D);
 
 			FontRenderer fontrenderer = mc.fontRendererObj;
-			this.drawCenteredString(fontrenderer, this.displayString, this.xPosition + this.width / 2, this.yPosition + (this.height - 8) / 2, textColor);
+			fontrenderer.drawString(this.displayString, this.xPosition + this.width / 2 - fontrenderer.getStringWidth(this.displayString) / 2, this.yPosition + (this.height - 8) / 2, textColor);
 			GL.PopAttrib();
 		}
 	}
