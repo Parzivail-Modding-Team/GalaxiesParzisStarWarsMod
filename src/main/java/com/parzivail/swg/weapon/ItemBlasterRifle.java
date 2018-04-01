@@ -5,6 +5,7 @@ import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.render.Decal;
 import com.parzivail.swg.weapon.blastermodule.BlasterData;
 import com.parzivail.util.audio.SoundHandler;
@@ -81,7 +82,14 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		{
 			bd.shotsRemaining = maxClipSize;
 			if (!world.isRemote)
+			{
 				SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleReload", player.posX, player.posY, player.posZ, 1, 1);
+
+				// TODO: remove
+				PswgExtProp props = PswgExtProp.get(player);
+				if (props != null)
+					props.addCreditBalance(10);
+			}
 		}
 		else
 			bd.isAimingDownSights = !bd.isAimingDownSights;

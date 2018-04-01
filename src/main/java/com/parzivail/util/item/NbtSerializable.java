@@ -3,7 +3,6 @@ package com.parzivail.util.item;
 import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
 import com.parzivail.swg.weapon.blastermodule.BlasterAttachments;
 import com.parzivail.util.common.Enumerable;
-import com.parzivail.util.common.Lumberjack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -203,7 +202,6 @@ public class NbtSerializable<T extends NbtSerializable>
 			fields = fields.where(NbtSerializable::isValidField);
 			fArr = fields.toArray(new Field[fields.size()]);
 			fieldCache.put(clazz, fArr);
-			Lumberjack.log(fArr.length);
 			return fArr;
 		}
 	}

@@ -65,6 +65,7 @@ public class StarWarsGalaxy
 		registerMessageClient(MessageSeatInit.class);
 		registerMessageClient(MessageSpawnParticle.class);
 		registerMessageClient(MessageCreateDecal.class);
+		registerMessageClient(MessagePswgExtPropSync.class);
 	}
 
 	@SuppressWarnings("unchecked")

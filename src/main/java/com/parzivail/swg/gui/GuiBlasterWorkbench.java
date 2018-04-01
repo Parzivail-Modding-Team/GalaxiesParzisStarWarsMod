@@ -13,8 +13,10 @@ import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 {
 	private static final ResourceLocation guiTexture = Resources.location("textures/container/blasterWorkbench.png");
 	private TileBlasterWorkbench tile;
+	private EntityPlayer player;
 
 	private List<BlasterAttachment> attachmentsInTab;
 	private int attachmentIdx;
@@ -42,6 +45,11 @@ public class GuiBlasterWorkbench extends GuiContainer
 	{
 		super(new ContainerBlasterWorkbench(inventoryPlayer, tile));
 		this.tile = tile;
+
+		// We have to use this awful hack because the EntityPlayer that's provided to
+		// the Gui through the InventoryPlayer is a strictly client-based player instance
+		// and isn't the real one.
+		player = (EntityPlayer)DimensionManager.getWorld(inventoryPlayer.player.dimension).getEntityByID(inventoryPlayer.player.getEntityId());
 	}
 
 	@Override
@@ -135,7 +143,10 @@ public class GuiBlasterWorkbench extends GuiContainer
 
 	private int getPlayerMoneyBalance()
 	{
-		return 0;
+		PswgExtProp props = PswgExtProp.get(player);
+		if (props == null)
+			return 0;
+		return props.getCreditBalance();
 	}
 
 	private void equipSelectedItem()
@@ -179,10 +190,6 @@ public class GuiBlasterWorkbench extends GuiContainer
 		GL.Translate(this.xSize / 2, this.ySize - 170, 0);
 		a.drawInfoCard(new FixedResolution(Client.mc, (int)(this.xSize / 3.4f), this.ySize / 2), Client.mc.thePlayer, tile.getBlaster());
 		GL.PopMatrix();
-
-		PswgExtProp props = PswgExtProp.get(Client.mc.thePlayer);
-		if (props != null)
-			fontRendererObj.drawString(String.format("$%s", props.creditBalance), 10, this.ySize - 200, GLPalette.ELECTRIC_BLUE);
 
 		String s = a.name;
 		fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.ySize - 212, GLPalette.ELECTRIC_BLUE);

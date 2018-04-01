@@ -22,11 +22,19 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	private transient Entity entity;
 	private transient World world;
 
+	@Deprecated
 	public int creditBalance;
 
 	public static void register()
 	{
 		MinecraftForge.EVENT_BUS.register(new PswgExtPropHandler());
+	}
+
+	@Override
+	public void init(Entity entity, World world)
+	{
+		this.entity = entity;
+		this.world = world;
 	}
 
 	public static PswgExtProp get(Entity p)
@@ -38,28 +46,35 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	public void saveNBTData(NBTTagCompound compound)
 	{
 		NBTTagCompound data = new NBTTagCompound();
-
 		serialize(data);
-
 		compound.setTag(PROP_NAME, data);
 	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound)
 	{
-		if (compound.hasKey(PROP_NAME, Constants.NBT.TAG_COMPOUND))
-		{
-			NBTTagCompound data = compound.getCompoundTag(PROP_NAME);
+		if (!compound.hasKey(PROP_NAME, Constants.NBT.TAG_COMPOUND))
+			return;
 
-			deserialize(data);
-		}
+		NBTTagCompound data = compound.getCompoundTag(PROP_NAME);
+		deserialize(data);
 	}
 
-	@Override
-	public void init(Entity entity, World world)
+	public void setCreditBalance(int creditBalance)
 	{
-		this.entity = entity;
-		this.world = world;
+		this.creditBalance = creditBalance;
+		dataChanged();
+	}
+
+	public void addCreditBalance(int delta)
+	{
+		this.creditBalance += delta;
+		dataChanged();
+	}
+
+	public int getCreditBalance()
+	{
+		return creditBalance;
 	}
 
 	void dataChanged()
@@ -70,6 +85,7 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 		EntityTracker tracker = ((WorldServer)world).getEntityTracker();
 		MessagePswgExtPropSync message = new MessagePswgExtPropSync((EntityPlayer)entity, this);
 
+		StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entity);
 		for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(entity))
 			StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entityPlayer);
 
