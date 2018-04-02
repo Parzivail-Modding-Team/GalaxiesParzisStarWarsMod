@@ -6,7 +6,7 @@ import com.parzivail.swg.weapon.blastermodule.barrel.BlasterBarrel;
 import com.parzivail.swg.weapon.blastermodule.grip.BlasterGrip;
 import com.parzivail.swg.weapon.blastermodule.grip.GripNone;
 import com.parzivail.swg.weapon.blastermodule.powerpack.BlasterPowerPack;
-import com.parzivail.swg.weapon.blastermodule.powerpack.PowerPackNone;
+import com.parzivail.swg.weapon.blastermodule.powerpack.PowerPackSmallGasCanister;
 import com.parzivail.swg.weapon.blastermodule.scope.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,7 +27,7 @@ public class BlasterAttachments
 	public static BlasterScope scopeIronsights = new ScopeIronsights();
 	public static BlasterGrip gripNone = new GripNone();
 	public static BlasterBarrel barrelDefault = new BarrelDefault();
-	public static BlasterPowerPack packNone = new PowerPackNone();
+	public static BlasterPowerPack packNone = new PowerPackSmallGasCanister();
 
 	static
 	{

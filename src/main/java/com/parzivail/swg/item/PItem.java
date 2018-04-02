@@ -1,6 +1,7 @@
 package com.parzivail.swg.item;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.StarWarsGalaxy;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -31,6 +32,7 @@ public class PItem extends Item
 	public PItem(String name)
 	{
 		this(name, new String[0]);
+		this.setCreativeTab(StarWarsGalaxy.tab);
 	}
 
 	public PItem(String name, String[] variants)

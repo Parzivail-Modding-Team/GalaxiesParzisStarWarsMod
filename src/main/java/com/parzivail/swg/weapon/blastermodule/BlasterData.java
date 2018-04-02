@@ -2,7 +2,6 @@ package com.parzivail.swg.weapon.blastermodule;
 
 import com.parzivail.swg.weapon.blastermodule.barrel.BlasterBarrel;
 import com.parzivail.swg.weapon.blastermodule.grip.BlasterGrip;
-import com.parzivail.swg.weapon.blastermodule.powerpack.BlasterPowerPack;
 import com.parzivail.swg.weapon.blastermodule.scope.BlasterScope;
 import com.parzivail.util.item.ItemUtils;
 import com.parzivail.util.item.NbtSerializable;
@@ -20,8 +19,6 @@ public class BlasterData extends NbtSerializable<BlasterData>
 	public BlasterAttachment grip;
 	@Deprecated
 	public BlasterAttachment barrel;
-	@Deprecated
-	public BlasterAttachment powerPack;
 
 	public BlasterData(ItemStack stack)
 	{
@@ -57,15 +54,5 @@ public class BlasterData extends NbtSerializable<BlasterData>
 	public void setBarrel(BlasterBarrel barrel)
 	{
 		this.barrel = barrel;
-	}
-
-	public BlasterPowerPack getPowerPack()
-	{
-		return powerPack == null ? BlasterAttachments.packNone : (BlasterPowerPack)powerPack;
-	}
-
-	public void setPowerPack(BlasterPowerPack powerPack)
-	{
-		this.powerPack = powerPack;
 	}
 }

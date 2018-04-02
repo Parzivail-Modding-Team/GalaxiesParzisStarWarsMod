@@ -9,8 +9,10 @@ import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.render.Decal;
 import com.parzivail.swg.weapon.blastermodule.BlasterData;
+import com.parzivail.swg.weapon.blastermodule.powerpack.BlasterPowerPack;
 import com.parzivail.util.audio.SoundHandler;
 import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.RaytraceHit;
@@ -50,7 +52,6 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		this.spread = spread;
 		this.maxDistance = maxDistance;
 		this.boltColor = boltColor;
-		this.setCreativeTab(StarWarsGalaxy.tab);
 		this.maxStackSize = 1;
 
 		avExpansion = new AnimatedValue(-2, 100);
@@ -180,27 +181,28 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	public void onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		BlasterData bd = new BlasterData(stack);
+
 		if (bd.shotsRemaining <= 0)
 		{
-			if (!world.isRemote)
-			{
-				int nextPackIdx = getAnotherPack(player);
-				ItemStack nextPack = player.inventory.getStackInSlot(nextPackIdx);
+			Pair<Integer, BlasterPowerPack> nextPack = getAnotherPack(player);
 
-				if (nextPack == null)
+			if (nextPack == null)
+			{
+				if (!world.isRemote)
 					SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleDryfire", player.posX, player.posY, player.posZ, 1, 1);
-				else
-				{
-					bd.shotsRemaining = 0; //  TODO: bd.shotsRemaining = nextPack.getNumShots();
-					player.inventory.decrStackSize(nextPackIdx, 1);
-					SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleReload", player.posX, player.posY, player.posZ, 1, 1);
-				}
 				return;
+			}
+			else if (!world.isRemote)
+			{
+				bd.shotsRemaining = nextPack.right.getNumShots();
+				player.inventory.decrStackSize(nextPack.left, 1);
+				SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleReload", player.posX, player.posY, player.posZ, 1, 1);
 			}
 		}
 
 		if (!world.isRemote)
 		{
+
 			float spread = getSpreadAmount(stack, player);
 			Vec3 look = player.getLook(0);
 			look.xCoord += (world.rand.nextFloat() * 2 - 1) * spread;
@@ -227,20 +229,28 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 					StarWarsGalaxy.proxy.spawnParticle(world, "smoke", block.hitVec.xCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.yCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.zCoord + (world.rand.nextDouble() * 0.2 - 0.1), 0, world.rand.nextDouble() * 0.2, 0);
 				StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, 1, block.sideHitFace);
 			}
+
+			bd.shotsRemaining--;
+
+			bd.serialize(stack.stackTagCompound);
 		}
-
-		bd.shotsRemaining--;
-
-		bd.serialize(stack.stackTagCompound);
 
 		// Recoil
 		player.rotationPitch -= damage / 2;
 		player.rotationYaw += damage / 5 * world.rand.nextGaussian();
 	}
 
-	private int getAnotherPack(EntityPlayer player)
+	private Pair<Integer, BlasterPowerPack> getAnotherPack(EntityPlayer player)
 	{
-		// TODO: return slot idx of another pack
-		return 0;
+		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+		{
+			ItemStack s = player.inventory.getStackInSlot(i);
+			BlasterPowerPack a = BlasterPowerPack.getPackForItem(s);
+			if (a == null)
+				continue;
+
+			return new Pair<>(i, a);
+		}
+		return null;
 	}
 }
