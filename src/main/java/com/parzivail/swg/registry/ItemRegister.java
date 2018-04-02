@@ -14,7 +14,7 @@ public class ItemRegister
 
 	public static void register()
 	{
-		register(rifleE11 = new ItemBlasterRifle("e11", 3, 1, 100, 25, 0xFF0000));
+		register(rifleE11 = new ItemBlasterRifle("e11", 3, 1, 100, 0xFF0000));
 	}
 
 	private static void register(PItem item)

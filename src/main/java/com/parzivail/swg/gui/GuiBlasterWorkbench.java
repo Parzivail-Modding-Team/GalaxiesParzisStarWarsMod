@@ -210,10 +210,10 @@ public class GuiBlasterWorkbench extends GuiContainer
 		fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.ySize - 212, GLPalette.ELECTRIC_BLUE);
 		s = a.getInfoText();
 		fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.ySize - 135, 0x404040);
-		s = String.format("$%s", a.price);
+		s = String.format("$%d", a.price);
 		Client.frAurebesh.drawString(s, this.xSize / 2 - Client.frAurebesh.getStringWidth(s) / 2, this.ySize - 120, canAffordSelectedItem() ? 0x404040 : GLPalette.ANALOG_RED);
 
-		s = String.format("$%s", getPlayerMoneyBalance());
+		s = String.format("$%d", getPlayerMoneyBalance());
 		Client.frAurebesh.drawString(s, this.xSize / 2 - Client.frAurebesh.getStringWidth(s) / 2, this.ySize - 105, GLPalette.ELECTRIC_BLUE);
 	}
 

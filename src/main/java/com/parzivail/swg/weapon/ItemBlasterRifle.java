@@ -39,18 +39,16 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	public final float damage;
 	public final float spread;
 	public final int maxDistance;
-	public final int maxClipSize;
 	public final int boltColor;
 
 	private AnimatedValue avExpansion;
 
-	public ItemBlasterRifle(String name, float damage, float spread, int maxDistance, int maxClipSize, int boltColor)
+	public ItemBlasterRifle(String name, float damage, float spread, int maxDistance, int boltColor)
 	{
 		super("rifle." + name);
 		this.damage = damage;
 		this.spread = spread;
 		this.maxDistance = maxDistance;
-		this.maxClipSize = maxClipSize;
 		this.boltColor = boltColor;
 		this.setCreativeTab(StarWarsGalaxy.tab);
 		this.maxStackSize = 1;
@@ -97,11 +95,8 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 
 		if (player.isSneaking())
 		{
-			bd.shotsRemaining = maxClipSize;
 			if (!world.isRemote)
 			{
-				SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleReload", player.posX, player.posY, player.posZ, 1, 1);
-
 				// TODO: remove
 				PswgExtProp props = PswgExtProp.get(player);
 				if (props != null)
@@ -158,7 +153,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		GL.PushMatrix();
 		GL.Translate(sr.getScaledWidth_double() / 2, sr.getScaledHeight_double() / 2, 0);
 
-		String remaining = String.format("%s/%s", bd.shotsRemaining, maxClipSize);
+		String remaining = String.format("%s", bd.shotsRemaining);
 		int w = mc.fontRendererObj.getStringWidth(remaining);
 		int h = mc.fontRendererObj.FONT_HEIGHT;
 
@@ -188,8 +183,20 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		if (bd.shotsRemaining <= 0)
 		{
 			if (!world.isRemote)
-				SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleDryfire", player.posX, player.posY, player.posZ, 1, 1);
-			return;
+			{
+				int nextPackIdx = getAnotherPack(player);
+				ItemStack nextPack = player.inventory.getStackInSlot(nextPackIdx);
+
+				if (nextPack == null)
+					SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleDryfire", player.posX, player.posY, player.posZ, 1, 1);
+				else
+				{
+					bd.shotsRemaining = 0; //  TODO: bd.shotsRemaining = nextPack.getNumShots();
+					player.inventory.decrStackSize(nextPackIdx, 1);
+					SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx.rifleReload", player.posX, player.posY, player.posZ, 1, 1);
+				}
+				return;
+			}
 		}
 
 		if (!world.isRemote)
@@ -229,5 +236,11 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		// Recoil
 		player.rotationPitch -= damage / 2;
 		player.rotationYaw += damage / 5 * world.rand.nextGaussian();
+	}
+
+	private int getAnotherPack(EntityPlayer player)
+	{
+		// TODO: return slot idx of another pack
+		return 0;
 	}
 }

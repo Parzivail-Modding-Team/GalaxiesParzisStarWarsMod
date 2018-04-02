@@ -5,6 +5,8 @@ import com.parzivail.swg.weapon.blastermodule.barrel.BarrelDefault;
 import com.parzivail.swg.weapon.blastermodule.barrel.BlasterBarrel;
 import com.parzivail.swg.weapon.blastermodule.grip.BlasterGrip;
 import com.parzivail.swg.weapon.blastermodule.grip.GripNone;
+import com.parzivail.swg.weapon.blastermodule.powerpack.BlasterPowerPack;
+import com.parzivail.swg.weapon.blastermodule.powerpack.PowerPackNone;
 import com.parzivail.swg.weapon.blastermodule.scope.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -20,10 +22,12 @@ public class BlasterAttachments
 	public static final List<BlasterAttachment> SCOPES = new ArrayList<>();
 	public static final List<BlasterAttachment> BARRELS = new ArrayList<>();
 	public static final List<BlasterAttachment> GRIPS = new ArrayList<>();
+	public static final List<BlasterAttachment> POWERPACKS = new ArrayList<>();
 
 	public static BlasterScope scopeIronsights = new ScopeIronsights();
 	public static BlasterGrip gripNone = new GripNone();
 	public static BlasterBarrel barrelDefault = new BarrelDefault();
+	public static BlasterPowerPack packNone = new PowerPackNone();
 
 	static
 	{
@@ -37,6 +41,8 @@ public class BlasterAttachments
 		register(barrelDefault, BARRELS);
 
 		register(gripNone, GRIPS);
+
+		register(packNone, POWERPACKS);
 	}
 
 	private static void register(BlasterAttachment attachment, List<BlasterAttachment> collection)
