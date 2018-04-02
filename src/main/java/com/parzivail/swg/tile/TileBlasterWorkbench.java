@@ -1,4 +1,4 @@
-package com.parzivail.tile;
+package com.parzivail.swg.tile;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.registry.BlockRegister;

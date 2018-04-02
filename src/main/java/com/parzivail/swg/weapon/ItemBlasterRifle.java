@@ -1,5 +1,6 @@
 package com.parzivail.swg.weapon;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.ICustomCrosshair;
@@ -20,6 +21,7 @@ import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,6 +31,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftClickInterceptor
 {
@@ -74,6 +78,19 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	}
 
 	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List text, boolean advancedItemTooltips)
+	{
+		BlasterData bd = new BlasterData(stack);
+
+		if (bd.getScope() != null)
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("scope")), bd.getScope().localizedName));
+		if (bd.getBarrel() != null)
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("barrel")), bd.getBarrel().localizedName));
+		if (bd.getGrip() != null)
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("grip")), bd.getGrip().localizedName));
+	}
+
+	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		BlasterData bd = new BlasterData(stack);
@@ -88,7 +105,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 				// TODO: remove
 				PswgExtProp props = PswgExtProp.get(player);
 				if (props != null)
-					props.addCreditBalance(10);
+					props.addCreditBalance(1000);
 			}
 		}
 		else

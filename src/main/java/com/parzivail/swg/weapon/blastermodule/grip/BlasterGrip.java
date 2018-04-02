@@ -2,6 +2,7 @@ package com.parzivail.swg.weapon.blastermodule.grip;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
+import com.parzivail.swg.weapon.blastermodule.BlasterAttachmentType;
 import com.parzivail.util.math.MathFormat;
 import net.minecraft.client.resources.I18n;
 
@@ -9,7 +10,7 @@ public abstract class BlasterGrip extends BlasterAttachment
 {
 	public BlasterGrip(String name, int price)
 	{
-		super(Resources.modDot("blaster", "grip", name), price);
+		super(BlasterAttachmentType.GRIP, Resources.modDot("blaster", "grip", name), price);
 	}
 
 	@Override

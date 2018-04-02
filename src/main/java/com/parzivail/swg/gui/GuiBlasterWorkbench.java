@@ -2,11 +2,15 @@ package com.parzivail.swg.gui;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.container.ContainerBlasterWorkbench;
+import com.parzivail.swg.network.TransactionRegistry;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.swg.tile.TileBlasterWorkbench;
+import com.parzivail.swg.transaction.TransactionDeductCredits;
+import com.parzivail.swg.transaction.TransactionEquipAttachment;
+import com.parzivail.swg.transaction.TransactionUnlockAttachment;
 import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
 import com.parzivail.swg.weapon.blastermodule.BlasterAttachments;
-import com.parzivail.tile.TileBlasterWorkbench;
 import com.parzivail.util.ui.FixedResolution;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.GL;
@@ -63,15 +67,15 @@ public class GuiBlasterWorkbench extends GuiContainer
 
 		attachmentsInTab = BlasterAttachments.SCOPES;
 
-		this.buttonList.add(bScopes = new PGuiButton(0, this.guiLeft + 40, this.guiTop + 6, 50, 20, I18n.format(Resources.guiDot("scopes"))));
-		this.buttonList.add(bBarrels = new PGuiButton(1, this.guiLeft + 104, this.guiTop + 6, 50, 20, I18n.format(Resources.guiDot("barrels"))));
-		this.buttonList.add(bGrips = new PGuiButton(2, this.guiLeft + 166, this.guiTop + 6, 50, 20, I18n.format(Resources.guiDot("grips"))));
+		this.buttonList.add(bScopes = new PGuiButton(0, this.guiLeft + 40, this.guiTop + 6, 50, 15, I18n.format(Resources.guiDot("scopes"))));
+		this.buttonList.add(bBarrels = new PGuiButton(1, this.guiLeft + 104, this.guiTop + 6, 50, 15, I18n.format(Resources.guiDot("barrels"))));
+		this.buttonList.add(bGrips = new PGuiButton(2, this.guiLeft + 166, this.guiTop + 6, 50, 15, I18n.format(Resources.guiDot("grips"))));
 
 		this.buttonList.add(bPrev = new PGuiButton(3, this.guiLeft + 40, this.guiTop + 61, 10, 20, "◀"));
 		this.buttonList.add(bNext = new PGuiButton(4, this.guiLeft + 206, this.guiTop + 61, 10, 20, "▶"));
 
-		this.buttonList.add(bEquip = new PGuiButton(5, this.guiLeft + 40, this.guiTop + 115, 50, 20, textEquip));
-		this.buttonList.add(bBuy = new PGuiButton(5, this.guiLeft + 166, this.guiTop + 115, 50, 20, I18n.format(Resources.guiDot("buy"))));
+		this.buttonList.add(bEquip = new PGuiButton(5, this.guiLeft + 40, this.guiTop + 115, 50, 15, textEquip));
+		this.buttonList.add(bBuy = new PGuiButton(6, this.guiLeft + 166, this.guiTop + 115, 50, 15, I18n.format(Resources.guiDot("buy"))));
 
 		bEquip.enabled = false;
 
@@ -106,7 +110,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 	{
 		int money = getPlayerMoneyBalance();
 		BlasterAttachment attachment = getSelectedAttachment();
-		boolean alreadyOwns = BlasterAttachments.doesPlayerOwn(Client.mc.thePlayer, attachment);
+		boolean alreadyOwns = BlasterAttachments.doesPlayerOwn(player, attachment);
 		boolean equipped = BlasterAttachments.isEquipped(tile.getBlaster(), attachment);
 		bEquip.displayString = textEquip;
 		if (alreadyOwns)
@@ -121,6 +125,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 				bEquip.enabled = true;
 			return;
 		}
+
 		bEquip.enabled = false;
 		bBuy.enabled = money >= attachment.price;
 	}
@@ -151,10 +156,20 @@ public class GuiBlasterWorkbench extends GuiContainer
 
 	private void equipSelectedItem()
 	{
+		BlasterAttachment s = getSelectedAttachment();
+		if (s == null)
+			return;
+
+		TransactionRegistry.dispatch(new TransactionEquipAttachment(tile, s));
 	}
 
 	private void buySelectedItem()
 	{
+		BlasterAttachment s = getSelectedAttachment();
+		if (s == null)
+			return;
+
+		TransactionRegistry.dispatch(new TransactionDeductCredits(player, s.price), new TransactionUnlockAttachment(player, s));
 	}
 
 	@Override
@@ -188,15 +203,18 @@ public class GuiBlasterWorkbench extends GuiContainer
 
 		GL.PushMatrix();
 		GL.Translate(this.xSize / 2, this.ySize - 170, 0);
-		a.drawInfoCard(new FixedResolution(Client.mc, (int)(this.xSize / 3.4f), this.ySize / 2), Client.mc.thePlayer, tile.getBlaster());
+		a.drawInfoCard(new FixedResolution(Client.mc, (int)(this.xSize / 3.4f), this.ySize / 2), player, tile.getBlaster());
 		GL.PopMatrix();
 
-		String s = a.name;
+		String s = a.localizedName;
 		fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.ySize - 212, GLPalette.ELECTRIC_BLUE);
 		s = a.getInfoText();
 		fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.ySize - 135, 0x404040);
 		s = String.format("$%s", a.price);
 		Client.frAurebesh.drawString(s, this.xSize / 2 - Client.frAurebesh.getStringWidth(s) / 2, this.ySize - 120, canAffordSelectedItem() ? 0x404040 : GLPalette.ANALOG_RED);
+
+		s = String.format("$%s", getPlayerMoneyBalance());
+		Client.frAurebesh.drawString(s, this.xSize / 2 - Client.frAurebesh.getStringWidth(s) / 2, this.ySize - 105, GLPalette.ELECTRIC_BLUE);
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)

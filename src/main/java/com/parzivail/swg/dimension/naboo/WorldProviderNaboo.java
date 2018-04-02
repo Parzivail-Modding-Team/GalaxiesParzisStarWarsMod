@@ -31,7 +31,7 @@ public class WorldProviderNaboo extends WorldProvider
 	}
 
 	/**
-	 * Returns the dimension's name, e.g. "The End", "Nether", or "Overworld".
+	 * Returns the dimension's id, e.g. "The End", "Nether", or "Overworld".
 	 */
 	@Override
 	public String getDimensionName()

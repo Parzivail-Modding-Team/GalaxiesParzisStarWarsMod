@@ -1,5 +1,6 @@
 package com.parzivail.swg.weapon.blastermodule;
 
+import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.weapon.blastermodule.barrel.BarrelDefault;
 import com.parzivail.swg.weapon.blastermodule.barrel.BlasterBarrel;
 import com.parzivail.swg.weapon.blastermodule.grip.BlasterGrip;
@@ -46,15 +47,27 @@ public class BlasterAttachments
 
 	public static boolean doesPlayerOwn(EntityPlayer player, BlasterAttachment attachment)
 	{
-		return attachment == scopeIronsights || attachment == gripNone || attachment == barrelDefault;
+		if (attachment == scopeIronsights || attachment == gripNone || attachment == barrelDefault)
+			return true;
 
-		// TODO: check ownership
+		PswgExtProp props = PswgExtProp.get(player);
+		return props != null && props.isBlasterAttachmentUnlocked(attachment.getId());
 
 	}
 
 	public static boolean isEquipped(ItemStack blaster, BlasterAttachment attachment)
 	{
-		// TODO: check equipment
+		BlasterData bd = new BlasterData(blaster);
+
+		switch (attachment.type)
+		{
+			case SCOPE:
+				return bd.getScope() == attachment;
+			case BARREL:
+				return bd.getBarrel() == attachment;
+			case GRIP:
+				return bd.getGrip() == attachment;
+		}
 		return false;
 	}
 }

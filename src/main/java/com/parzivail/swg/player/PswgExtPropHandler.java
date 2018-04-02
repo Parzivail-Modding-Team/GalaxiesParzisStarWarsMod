@@ -24,7 +24,7 @@ public class PswgExtPropHandler
 
 		PswgExtProp data = PswgExtProp.get(e.entity);
 		if (data != null)
-			data.dataChanged();
+			data.sync();
 	}
 
 	@SubscribeEvent

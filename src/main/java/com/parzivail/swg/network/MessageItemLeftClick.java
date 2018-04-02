@@ -4,7 +4,6 @@ import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,7 +22,7 @@ public class MessageItemLeftClick extends PMessage<MessageItemLeftClick>
 
 	}
 
-	public MessageItemLeftClick(EntityClientPlayerMP thePlayer)
+	public MessageItemLeftClick(EntityPlayer thePlayer)
 	{
 		this.playerDim = thePlayer.dimension;
 		this.playerId = thePlayer.getEntityId();

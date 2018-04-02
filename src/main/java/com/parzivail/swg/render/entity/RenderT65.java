@@ -36,13 +36,13 @@ public class RenderT65 extends RenderBasicFlightModel
 		for (SwgPart p : model.parts)
 		{
 			GL.PushMatrix();
-			//			if (p.name.equals("x_wing01") || p.name.equals("x_wing04"))
+			//			if (p.id.equals("x_wing01") || p.id.equals("x_wing04"))
 			//			{
 			//				GL.Translate(0, 0, verticalCenteringOffset - verticalGroundingOffset);
 			//				GL.Rotate(-13 * Fx.Util.Hz(0.5f), 1, 0, 0);
 			//				GL.Translate(0, 0, -verticalCenteringOffset + verticalGroundingOffset);
 			//			}
-			//			if (p.name.equals("x_wing02") || p.name.equals("x_wing03"))
+			//			if (p.id.equals("x_wing02") || p.id.equals("x_wing03"))
 			//			{
 			//				GL.Translate(0, 0, verticalCenteringOffset - verticalGroundingOffset);
 			//				GL.Rotate(13 * Fx.Util.Hz(0.5f), 1, 0, 0);

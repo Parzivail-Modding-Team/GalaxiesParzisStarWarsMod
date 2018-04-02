@@ -3,7 +3,7 @@ package com.parzivail.swg.handler;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.container.ContainerBlasterWorkbench;
 import com.parzivail.swg.gui.GuiBlasterWorkbench;
-import com.parzivail.tile.TileBlasterWorkbench;
+import com.parzivail.swg.tile.TileBlasterWorkbench;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;

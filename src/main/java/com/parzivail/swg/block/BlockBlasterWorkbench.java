@@ -2,7 +2,7 @@ package com.parzivail.swg.block;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.tile.TileBlasterWorkbench;
+import com.parzivail.swg.tile.TileBlasterWorkbench;
 import com.parzivail.util.block.PBlockContainer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

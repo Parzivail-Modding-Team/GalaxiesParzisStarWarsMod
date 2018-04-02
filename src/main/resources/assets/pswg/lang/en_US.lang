@@ -5,7 +5,19 @@ pswg.gui.scopes=Scopes
 pswg.gui.barrels=Barrels
 pswg.gui.grips=Grips
 pswg.gui.equip=Equip
+pswg.gui.equipped=Equipped
 pswg.gui.buy=Buy
 pswg.gui.reticle=Reticle
 pswg.gui.xzoom=%sx zoom
 pswg.gui.recoilReduction=%s VRR/%s HRR
+
+pswg.blaster.scope.ironsight=Ironsights
+pswg.blaster.scope.redDot=Red Dot Sight
+pswg.blaster.scope.reflex=Reflex Sight
+pswg.blaster.scope.ringReticle=Sniper Scope
+pswg.blaster.scope.acog=ACOG Scope
+pswg.blaster.scope.spitfire=Spitfire Scope
+
+pswg.blaster.barrel.default=Standard Barrel
+
+pswg.blaster.grip.none=No Grip

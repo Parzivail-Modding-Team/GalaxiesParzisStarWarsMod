@@ -3,6 +3,7 @@ package com.parzivail.swg.weapon.blastermodule.scope;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
+import com.parzivail.swg.weapon.blastermodule.BlasterAttachmentType;
 import com.parzivail.util.math.MathFormat;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
@@ -21,7 +22,7 @@ public abstract class BlasterScope extends BlasterAttachment
 {
 	public BlasterScope(String name, int price)
 	{
-		super(Resources.modDot("blaster", "scope", name), price);
+		super(BlasterAttachmentType.SCOPE, Resources.modDot("blaster", "scope", name), price);
 	}
 
 	@Override

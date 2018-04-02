@@ -14,6 +14,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtendedEntityProperties
 {
@@ -24,6 +25,9 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 
 	@Deprecated
 	public int creditBalance;
+
+	@Deprecated
+	public int[] unlockedBlasterAttachments;
 
 	public static void register()
 	{
@@ -63,13 +67,13 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	public void setCreditBalance(int creditBalance)
 	{
 		this.creditBalance = creditBalance;
-		dataChanged();
+		sync();
 	}
 
 	public void addCreditBalance(int delta)
 	{
 		this.creditBalance += delta;
-		dataChanged();
+		sync();
 	}
 
 	public int getCreditBalance()
@@ -77,7 +81,18 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 		return creditBalance;
 	}
 
-	void dataChanged()
+	public void unlockBlasterAttachment(int attachmentId)
+	{
+		unlockedBlasterAttachments = ArrayUtils.add(unlockedBlasterAttachments, attachmentId);
+		sync();
+	}
+
+	public boolean isBlasterAttachmentUnlocked(int attachmentId)
+	{
+		return ArrayUtils.contains(unlockedBlasterAttachments, attachmentId);
+	}
+
+	void sync()
 	{
 		if (world.isRemote)
 			return;

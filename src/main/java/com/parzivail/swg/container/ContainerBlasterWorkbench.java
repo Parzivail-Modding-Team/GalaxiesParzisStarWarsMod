@@ -1,8 +1,8 @@
 package com.parzivail.swg.container;
 
 
+import com.parzivail.swg.tile.TileBlasterWorkbench;
 import com.parzivail.swg.weapon.ItemBlasterRifle;
-import com.parzivail.tile.TileBlasterWorkbench;
 import com.parzivail.util.ui.SpecificSlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

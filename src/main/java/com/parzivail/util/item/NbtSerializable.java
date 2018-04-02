@@ -24,9 +24,23 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(float.class, NbtSerializable::readFloat, NbtSerializable::writeFloat);
 		map(double.class, NbtSerializable::readDouble, NbtSerializable::writeDouble);
 		map(boolean.class, NbtSerializable::readBoolean, NbtSerializable::writeBoolean);
+		map(int[].class, NbtSerializable::readListInteger, NbtSerializable::writeListInteger);
 
 		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
 		//		map(BlasterAttachment[].class, NbtSerializable::readBlasterAttachments, NbtSerializable::writeBlasterAttachments);
+	}
+
+	private static int[] readListInteger(String s, NBTTagCompound compound)
+	{
+		return compound.getIntArray(s);
+	}
+
+	private static void writeListInteger(String s, int[] integers, NBTTagCompound compound)
+	{
+		if (integers == null)
+			integers = new int[0];
+
+		compound.setIntArray(s, integers);
 	}
 
 	private static BlasterAttachment readBlasterAttachment(String s, NBTTagCompound compound)
@@ -131,7 +145,7 @@ public class NbtSerializable<T extends NbtSerializable>
 		compound.setBoolean(s, aBoolean);
 	}
 
-	protected void deserialize(NBTTagCompound compound)
+	public void deserialize(NBTTagCompound compound)
 	{
 		compound = ItemUtils.ensureNbt(compound);
 		Field[] fields = getClassFields(this.getClass());

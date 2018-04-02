@@ -46,8 +46,11 @@ public class PGuiButton extends GuiButton
 			Fx.D2.DrawWireRectangle(this.xPosition, this.yPosition, this.width, this.height);
 			GL.Enable(EnableCap.Texture2D);
 
+			GL.PushMatrix();
+			GL.Translate(0, 0.5f, 0); // This is fine if you don't play on Small gui scale. I'm OK with that tradeoff.
 			FontRenderer fontrenderer = mc.fontRendererObj;
-			fontrenderer.drawString(this.displayString, this.xPosition + this.width / 2 - fontrenderer.getStringWidth(this.displayString) / 2, this.yPosition + (this.height - 8) / 2, textColor);
+			fontrenderer.drawString(this.displayString, this.xPosition + this.width / 2 - fontrenderer.getStringWidth(this.displayString) / 2, this.yPosition + this.height / 2 - fontrenderer.FONT_HEIGHT / 2, textColor);
+			GL.PopMatrix();
 			GL.PopAttrib();
 		}
 	}
