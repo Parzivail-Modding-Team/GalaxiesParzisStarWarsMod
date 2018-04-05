@@ -12,11 +12,23 @@ import cpw.mods.fml.common.registry.GameRegistry;
 public class BlockRegister
 {
 	public static PBlock labWall;
+	public static PBlock tatooineSand;
+	public static PBlock tatooineSandstone;
+	public static PBlock oxidizedSand;
+	public static PBlock oxidizedSandStone;
+	public static PBlock paleStone;
+
 	public static PBlockContainer blasterWorkbench;
 
 	public static void register()
 	{
 		register(labWall = new PBlock("labWall"));
+		register(tatooineSand = new PBlock("tatooineSand"));
+		register(tatooineSandstone = new PBlock("tatooineSandstone"));
+		register(oxidizedSand = new PBlock("oxidizedSand"));
+		register(oxidizedSandStone = new PBlock("oxidizedSandStone"));
+		register(paleStone = new PBlock("paleStone"));
+
 		register(blasterWorkbench = new BlockBlasterWorkbench());
 	}
 
