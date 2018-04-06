@@ -1,5 +1,6 @@
 package com.parzivail.swg.render.sky;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.ListMode;
@@ -27,7 +28,7 @@ public class RenderSkyTatooine extends IRenderHandler
 	private static int starGLCallList;
 
 	private static final ResourceLocation locationMoonPhasesPng = new ResourceLocation("textures/environment/moon_phases.png");
-	private static final ResourceLocation locationSunPng = new ResourceLocation("textures/environment/sun.png");
+	private static final ResourceLocation locationSunPng = Resources.location("textures/environment/sun_tatooine.png");
 
 	static
 	{
