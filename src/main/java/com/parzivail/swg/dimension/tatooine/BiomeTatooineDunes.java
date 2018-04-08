@@ -22,6 +22,9 @@ public class BiomeTatooineDunes extends PBiomeGenBase
 		super(biomeId);
 		this.setBiomeName("Tatooine");
 		this.spawnableCreatureList.clear();
+
+		this.enableRain = false;
+		this.enableSnow = false;
 	}
 
 	@Override
