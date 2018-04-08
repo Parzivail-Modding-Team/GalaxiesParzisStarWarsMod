@@ -106,6 +106,7 @@ public class EventHandler
 
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
 
+			ScaledResolution sr = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
 			if (heldItem != null && heldItem.getItem() instanceof ICustomCrosshair)
 			{
 				if (event.type == RenderGameOverlayEvent.ElementType.CROSSHAIRS && event.isCancelable())
@@ -118,10 +119,8 @@ public class EventHandler
 					GL11.glPushAttrib(GL11.GL_POINT_BIT);
 
 					GL.PushMatrix();
-					Minecraft mc = Minecraft.getMinecraft();
-					ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
 					GL.Translate(sr.getScaledWidth_double() / 2, sr.getScaledHeight_double() / 2, 0);
-					mc.entityRenderer.disableLightmap(0);
+					Client.mc.entityRenderer.disableLightmap(0);
 					GL.Disable(EnableCap.Lighting);
 					GL.Disable(EnableCap.Texture2D);
 					GL.Enable(EnableCap.Blend);
@@ -136,6 +135,28 @@ public class EventHandler
 					GL11.glPopAttrib();
 					GL11.glPopAttrib();
 				}
+			}
+
+			if (event.type == RenderGameOverlayEvent.ElementType.TEXT)
+			{
+				//				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+				//				GL11.glPushAttrib(GL11.GL_LINE_BIT);
+				//				GL11.glPushAttrib(GL11.GL_POINT_BIT);
+				//				GL.PushMatrix();
+				//				Client.mc.entityRenderer.disableLightmap(0);
+				//				GL.Disable(EnableCap.Lighting);
+				//				GL.Disable(EnableCap.Texture2D);
+				//				GL.Enable(EnableCap.Blend);
+				//				GL.Enable(EnableCap.PointSmooth);
+				//				GL.Enable(EnableCap.LineSmooth);
+				//				GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
+				//				GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+				//				GuiHyperdrive.draw(sr, Client.mc.thePlayer);
+				//				GL.PopMatrix();
+				//				GL11.glColor4f(1, 1, 1, 1);
+				//				GL11.glPopAttrib();
+				//				GL11.glPopAttrib();
+				//				GL11.glPopAttrib();
 			}
 
 			KeybindRegistry.keyAttack.setIntercepting(heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor);

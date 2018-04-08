@@ -151,16 +151,16 @@ namespace TerrainBuilder
 
         private double GetNoiseDx(double x, double z)
         {
-            var n = GetNoise(x, z) / 2;
+            var n = GetNoise(x, z);
             const double d = 0.001;
-            return (GetNoise(x + d, z) - n) / d;
+            return GetNoise(x + d, z) - n;
         }
 
         private double GetNoiseDz(double x, double z)
         {
-            var n = GetNoise(x, z) / 2;
+            var n = GetNoise(x, z);
             const double d = 0.001;
-            return (GetNoise(x, z + d) - n) / d;
+            return GetNoise(x, z + d) - n;
         }
 
         private double GetNoise(double x, double z)

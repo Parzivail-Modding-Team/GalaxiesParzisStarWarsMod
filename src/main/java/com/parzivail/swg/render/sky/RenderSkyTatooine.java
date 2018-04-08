@@ -27,7 +27,7 @@ public class RenderSkyTatooine extends IRenderHandler
 	private static int glSkyList2;
 	private static int starGLCallList;
 
-	private static final ResourceLocation locationMoonPhasesPng = new ResourceLocation("textures/environment/moon_phases.png");
+	private static final ResourceLocation locationMoonPhasesPng = Resources.location("textures/environment/moon_tatooine.png");
 	private static final ResourceLocation locationSunPng = Resources.location("textures/environment/sun_tatooine.png");
 
 	static
@@ -232,7 +232,7 @@ public class RenderSkyTatooine extends IRenderHandler
 		GL11.glTranslatef(sunsetG, sunsetB, tempA);
 		GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(world.getCelestialAngle(partialTicks) * 360.0F, 1.0F, 0.0F, 0.0F);
-		tempB = 30.0F;
+		tempB = 15;
 		mc.renderEngine.bindTexture(locationSunPng);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2d(0.0D, 0.0D);
@@ -244,25 +244,22 @@ public class RenderSkyTatooine extends IRenderHandler
 		GL11.glTexCoord2d(0.0D, 1.0D);
 		GL11.glVertex3d((double)(-tempB), 100.0D, (double)tempB);
 		GL11.glEnd();
-		tempB = 20.0F;
-		mc.renderEngine.bindTexture(locationMoonPhasesPng);
-		int moonPhase = world.getMoonPhase();
-		int moonPhaseIdx = moonPhase % 4;
-		int moonHalfPhaseIdx = moonPhase / 4 % 2;
-		float leftU = (float)(moonPhaseIdx + 0) / 4.0F;
-		float leftV = (float)(moonHalfPhaseIdx + 0) / 2.0F;
-		float rightU = (float)(moonPhaseIdx + 1) / 4.0F;
-		float rightV = (float)(moonHalfPhaseIdx + 1) / 2.0F;
+		GL.PushMatrix();
+		GL11.glRotatef(7, 0.0F, 0.0F, 1.0F);
+		GL11.glRotatef(8, 1.0F, 0.0F, 0.0F);
+		tempB = 15;
 		GL11.glBegin(GL11.GL_QUADS);
-		GL11.glTexCoord2d((double)rightU, (double)rightV);
-		GL11.glVertex3d((double)(-tempB), -100.0D, (double)tempB);
-		GL11.glTexCoord2d((double)leftU, (double)rightV);
-		GL11.glVertex3d((double)tempB, -100.0D, (double)tempB);
-		GL11.glTexCoord2d((double)leftU, (double)leftV);
-		GL11.glVertex3d((double)tempB, -100.0D, (double)(-tempB));
-		GL11.glTexCoord2d((double)rightU, (double)leftV);
-		GL11.glVertex3d((double)(-tempB), -100.0D, (double)(-tempB));
+		GL11.glTexCoord2d(0.0D, 0.0D);
+		GL11.glVertex3d((double)(-tempB), 100.0D, (double)(-tempB));
+		GL11.glTexCoord2d(1.0D, 0.0D);
+		GL11.glVertex3d((double)tempB, 100.0D, (double)(-tempB));
+		GL11.glTexCoord2d(1.0D, 1.0D);
+		GL11.glVertex3d((double)tempB, 100.0D, (double)tempB);
+		GL11.glTexCoord2d(0.0D, 1.0D);
+		GL11.glVertex3d((double)(-tempB), 100.0D, (double)tempB);
 		GL11.glEnd();
+		GL.PopMatrix();
+
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		float starBrightness = world.getStarBrightness(partialTicks) * sunsetR;
 
@@ -273,10 +270,64 @@ public class RenderSkyTatooine extends IRenderHandler
 			GL11.glEnable(GL11.GL_POINT_SMOOTH);
 			GL11.glPointSize(1);
 			GL11.glCallList(starGLCallList);
-			//renderStars(starBrightness); // SLOW! find way to mult alpha from list.
-			//                                Done. just upp'd when it stops rendering. good enough.
 			GL11.glDisable(GL11.GL_POINT_SMOOTH);
 		}
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		tempB = 12.0F;
+		mc.renderEngine.bindTexture(locationMoonPhasesPng);
+		int moonPhase = world.getMoonPhase();
+		int moonPhaseIdx = moonPhase % 4;
+		int moonHalfPhaseIdx = moonPhase / 4 % 2;
+		float leftU = (float)(moonPhaseIdx) / 4.0F;
+		float leftV = (float)(moonHalfPhaseIdx) / 2.0F;
+		float rightU = (float)(moonPhaseIdx + 1) / 4.0F;
+		float rightV = (float)(moonHalfPhaseIdx + 1) / 2.0F;
+
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2d((double)rightU, (double)rightV);
+		GL11.glVertex3d((double)(-tempB), -100.0D, (double)tempB);
+		GL11.glTexCoord2d((double)leftU, (double)rightV);
+		GL11.glVertex3d((double)tempB, -100.0D, (double)tempB);
+		GL11.glTexCoord2d((double)leftU, (double)leftV);
+		GL11.glVertex3d((double)tempB, -100.0D, (double)(-tempB));
+		GL11.glTexCoord2d((double)rightU, (double)leftV);
+		GL11.glVertex3d((double)(-tempB), -100.0D, (double)(-tempB));
+		GL11.glEnd();
+
+		tempB = 8.0F;
+		GL.PushMatrix();
+		GL.Rotate(4, 0, 0, 1);
+		GL.Rotate(-1, 1, 0, 0);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2d((double)rightU, (double)rightV);
+		GL11.glVertex3d((double)(-tempB), -100.0D, (double)tempB);
+		GL11.glTexCoord2d((double)leftU, (double)rightV);
+		GL11.glVertex3d((double)tempB, -100.0D, (double)tempB);
+		GL11.glTexCoord2d((double)leftU, (double)leftV);
+		GL11.glVertex3d((double)tempB, -100.0D, (double)(-tempB));
+		GL11.glTexCoord2d((double)rightU, (double)leftV);
+		GL11.glVertex3d((double)(-tempB), -100.0D, (double)(-tempB));
+		GL11.glEnd();
+		GL.PopMatrix();
+
+		tempB = 30.0F;
+		GL.PushMatrix();
+		GL.Rotate(-12, 0, 0, 1);
+		GL.Rotate(7, 1, 0, 0);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2d((double)rightU, (double)rightV);
+		GL11.glVertex3d((double)(-tempB), -100.0D, (double)tempB);
+		GL11.glTexCoord2d((double)leftU, (double)rightV);
+		GL11.glVertex3d((double)tempB, -100.0D, (double)tempB);
+		GL11.glTexCoord2d((double)leftU, (double)leftV);
+		GL11.glVertex3d((double)tempB, -100.0D, (double)(-tempB));
+		GL11.glTexCoord2d((double)rightU, (double)leftV);
+		GL11.glVertex3d((double)(-tempB), -100.0D, (double)(-tempB));
+		GL11.glEnd();
+		GL.PopMatrix();
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_BLEND);
