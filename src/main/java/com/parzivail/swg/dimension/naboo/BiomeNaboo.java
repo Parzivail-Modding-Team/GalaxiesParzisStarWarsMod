@@ -46,11 +46,11 @@ public class BiomeNaboo extends PBiomeGenBase
 			wgForest.generate(world, rand, k, world.getHeightValue(k, l), l);
 		}
 
-		for (int i = 0; i < weights[2] * 10 + weights[1] * 5; i++)
-		{
-			int k = worldX + rand.nextInt(16) + 8;
-			int l = worldZ + rand.nextInt(16) + 8;
-			wgGrass.generate(world, rand, k, world.getHeightValue(k, l), l);
-		}
+		//		for (int i = 0; i < weights[2] * 10 + weights[1] * 5; i++)
+		//		{
+		//			int k = worldX + rand.nextInt(16) + 8;
+		//			int l = worldZ + rand.nextInt(16) + 8;
+		//			wgGrass.generate(world, rand, k, world.getHeightValue(k, l), l);
+		//		}
 	}
 }

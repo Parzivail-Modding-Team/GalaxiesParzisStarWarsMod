@@ -5,7 +5,8 @@ import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.binary.Cdf.BlockInfo;
 import com.parzivail.util.binary.Cdf.ChunkDiff;
 import com.parzivail.util.common.Pair;
-import com.parzivail.util.world.*;
+import com.parzivail.util.world.ITerrainHeightmap;
+import com.parzivail.util.world.PBiomeGenBase;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -33,13 +34,14 @@ public class ChunkProviderNaboo implements IChunkProvider
 	public ChunkProviderNaboo(World worldObj, long seed)
 	{
 		this.worldObj = worldObj;
-		terrain = new MultiCompositeTerrain(seed, 800,
-				// Naboo Mountains
-				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 70), new TerrainLayer(seed + 1, TerrainLayer.Function.Turbulent, TerrainLayer.Method.Multiply, 200, 1), new TerrainLayer(seed + 2, TerrainLayer.Function.Klump, TerrainLayer.Method.Add, 50, 20), new TerrainLayer(seed + 3, TerrainLayer.Function.Constant, TerrainLayer.Method.Add, 200, 30)),
-				// Naboo Hills
-				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 80), new TerrainLayer(seed + 1, TerrainLayer.Function.Midpoint, TerrainLayer.Method.Add, 50, 20)),
-				// Naboo Plains
-				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 10), new TerrainLayer(seed + 1, TerrainLayer.Function.Constant, TerrainLayer.Method.Add, 200, 40)));
+		//		terrain = new MultiCompositeTerrain(seed, 800,
+		//				// Naboo Mountains
+		//				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 70), new TerrainLayer(seed + 1, TerrainLayer.Function.Turbulent, TerrainLayer.Method.Multiply, 200, 1), new TerrainLayer(seed + 2, TerrainLayer.Function.Klump, TerrainLayer.Method.Add, 50, 20), new TerrainLayer(seed + 3, TerrainLayer.Function.Constant, TerrainLayer.Method.Add, 200, 30)),
+		//				// Naboo Hills
+		//				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 80), new TerrainLayer(seed + 1, TerrainLayer.Function.Midpoint, TerrainLayer.Method.Add, 50, 20)),
+		//				// Naboo Plains
+		//				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 10), new TerrainLayer(seed + 1, TerrainLayer.Function.Constant, TerrainLayer.Method.Add, 200, 40)));
+		terrain = new SwissTurb(seed);
 	}
 
 	/**
@@ -58,28 +60,28 @@ public class ChunkProviderNaboo implements IChunkProvider
 	{
 		Chunk chunk = new Chunk(this.worldObj, cx, cz);
 		long cPos = ChunkDiff.getChunkPos(cx, cz);
-		HashMap<Short, BlockInfo> diffMap = null;//StructureRegister.test.diffMap.get(cPos);
+		HashMap<Short, BlockInfo> diffMap = StructureRegister.test.diffMap.get(cPos);
 		for (int x = 0; x < 16; x++)
 		{
 			for (int z = 0; z < 16; z++)
 			{
-				double height = terrain.getHeightAt((cx * 16 + x), (cz * 16 + z));
+				double height = terrain.getHeightAt((cx * 16 + x), (cz * 16 + z)) + 60;
 				int finalHeight = (int)height;
 				for (int y = 1; y < 256; y++)
 				{
-					int l = y >> 4;
-					ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
-
-					if (extendedblockstorage == null)
-					{
-						extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
-						chunk.getBlockStorageArray()[l] = extendedblockstorage;
-					}
-
 					short bPos = ChunkDiff.getBlockPos((byte)x, (byte)y, (byte)z);
 					BlockInfo block = diffMap == null ? null : diffMap.get(bPos);
 					if (block != null)
 					{
+						int l = y >> 4;
+						ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
+
+						if (extendedblockstorage == null)
+						{
+							extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
+							chunk.getBlockStorageArray()[l] = extendedblockstorage;
+						}
+
 						extendedblockstorage.setExtBlockID(x, y & 15, z, Block.getBlockById(block.id));
 						extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
 
@@ -89,22 +91,26 @@ public class ChunkProviderNaboo implements IChunkProvider
 							StructureRegister.test.tileInfoCache.get(cPos).add(new Pair<>(bPos, block.tileData));
 						}
 					}
-					else
+					else if (y <= finalHeight)
 					{
-						if (y > finalHeight && y <= waterLevel)
-							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.water);
-						else if (y <= finalHeight)
-						{
-							double sandThreshold = height * 0.9;
-							double sandstoneThreshold = height * 0.6;
+						int l = y >> 4;
+						ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
 
-							if (y >= sandThreshold)
-								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.grass);
-							else if (y >= sandstoneThreshold && y < sandThreshold)
-								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.dirt);
-							else
-								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
+						if (extendedblockstorage == null)
+						{
+							extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
+							chunk.getBlockStorageArray()[l] = extendedblockstorage;
 						}
+
+						double sandThreshold = height * 0.9;
+						double sandstoneThreshold = height * 0.6;
+
+						if (y >= sandThreshold)
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.hardened_clay);
+						else if (y >= sandstoneThreshold && y < sandThreshold)
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.dirt);
+						else
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
 					}
 				}
 			}
