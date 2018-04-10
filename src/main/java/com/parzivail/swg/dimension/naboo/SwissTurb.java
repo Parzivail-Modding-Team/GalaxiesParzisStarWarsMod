@@ -15,7 +15,7 @@ public class SwissTurb implements ITerrainHeightmap
 	@Override
 	public double getHeightAt(int x, int z)
 	{
-		return swissTurbulence(x / 300f, z / 300f, 4, 3, 0.5, 0.25) * 100;
+		return swissTurbulence(x / 200f, z / 200f, 4, 3, 0.5, 0.25) * 70;
 	}
 
 	private double swissTurbulence(double pX, double pY, int octaves, double lacunarity, double gain, double warp)
