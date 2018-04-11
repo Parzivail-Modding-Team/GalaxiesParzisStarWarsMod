@@ -1,6 +1,7 @@
 package com.parzivail.swg.dimension.naboo;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.binary.Cdf.BlockInfo;
 import com.parzivail.util.binary.Cdf.ChunkDiff;
@@ -28,8 +29,9 @@ import java.util.List;
 public class ChunkProviderNaboo implements IChunkProvider
 {
 	private World worldObj;
-	ITerrainHeightmap terrain;
-	private final int waterLevel = 36;
+	private final int waterLevel = 100;
+
+	public ITerrainHeightmap terrain;
 
 	public ChunkProviderNaboo(World worldObj, long seed)
 	{
@@ -71,17 +73,17 @@ public class ChunkProviderNaboo implements IChunkProvider
 				{
 					short bPos = ChunkDiff.getBlockPos((byte)x, (byte)y, (byte)z);
 					BlockInfo block = diffMap == null ? null : diffMap.get(bPos);
+					int l = y >> 4;
+					ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
+
+					if (extendedblockstorage == null)
+					{
+						extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
+						chunk.getBlockStorageArray()[l] = extendedblockstorage;
+					}
+
 					if (block != null)
 					{
-						int l = y >> 4;
-						ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
-
-						if (extendedblockstorage == null)
-						{
-							extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
-							chunk.getBlockStorageArray()[l] = extendedblockstorage;
-						}
-
 						extendedblockstorage.setExtBlockID(x, y & 15, z, Block.getBlockById(block.id));
 						extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
 
@@ -91,27 +93,19 @@ public class ChunkProviderNaboo implements IChunkProvider
 							StructureRegister.test.tileInfoCache.get(cPos).add(new Pair<>(bPos, block.tileData));
 						}
 					}
+					else if (y == finalHeight)
+						extendedblockstorage.setExtBlockID(x, y & 15, z, BlockRegister.fastGrass);
 					else if (y <= finalHeight)
 					{
-						int l = y >> 4;
-						ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
+						double sandThreshold = (int)(height * 0.9);
 
-						if (extendedblockstorage == null)
-						{
-							extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
-							chunk.getBlockStorageArray()[l] = extendedblockstorage;
-						}
-
-						double sandThreshold = height * 0.9;
-						double sandstoneThreshold = height * 0.6;
-
-						if (y >= sandThreshold)
-							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.hardened_clay);
-						else if (y >= sandstoneThreshold && y < sandThreshold)
+						if (y < sandThreshold)
 							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.dirt);
 						else
 							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
 					}
+					else if (y <= waterLevel)
+						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.water);
 				}
 			}
 		}

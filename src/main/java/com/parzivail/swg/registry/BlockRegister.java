@@ -2,6 +2,7 @@ package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.block.BlockBlasterWorkbench;
+import com.parzivail.swg.block.BlockFastGrass;
 import com.parzivail.util.block.PBlock;
 import com.parzivail.util.block.PBlockContainer;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -11,6 +12,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
  */
 public class BlockRegister
 {
+	public static PBlock fastGrass;
 	public static PBlock labWall;
 	public static PBlock tatooineSand;
 	public static PBlock tatooineSandstone;
@@ -22,6 +24,7 @@ public class BlockRegister
 
 	public static void register()
 	{
+		register(fastGrass = new BlockFastGrass());
 		register(labWall = new PBlock("labWall"));
 		register(tatooineSand = new PBlock("tatooineSand"));
 		register(tatooineSandstone = new PBlock("tatooineSandstone"));

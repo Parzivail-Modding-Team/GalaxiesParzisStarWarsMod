@@ -1,10 +1,11 @@
 package com.parzivail.swg.dimension.naboo;
 
+import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.util.world.PBiomeGenBase;
+import com.parzivail.worldgen.WorldGenBetterForest;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenForest;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
 
 import java.util.Random;
@@ -14,7 +15,7 @@ import java.util.Random;
  */
 public class BiomeNaboo extends PBiomeGenBase
 {
-	protected static final WorldGenForest wgForest = new WorldGenForest(false, false);
+	private WorldGenBetterForest worldGenBetterForest = new WorldGenBetterForest(BlockRegister.fastGrass);
 	protected static final WorldGenTallGrass wgGrass = new WorldGenTallGrass(Blocks.tallgrass, 1);
 
 	public BiomeNaboo(int biomeId)
@@ -39,18 +40,11 @@ public class BiomeNaboo extends PBiomeGenBase
 		//					te.readFromNBT(pair.right);
 		//			}
 
-		for (int i = 0; i < weights[0] * 4; i++)
+		for (int i = 0; i < weights[0] * 8; i++)
 		{
 			int k = worldX + rand.nextInt(16) + 8;
 			int l = worldZ + rand.nextInt(16) + 8;
-			wgForest.generate(world, rand, k, world.getHeightValue(k, l), l);
+			worldGenBetterForest.generate(world, rand, k, world.getHeightValue(k, l), l);
 		}
-
-		//		for (int i = 0; i < weights[2] * 10 + weights[1] * 5; i++)
-		//		{
-		//			int k = worldX + rand.nextInt(16) + 8;
-		//			int l = worldZ + rand.nextInt(16) + 8;
-		//			wgGrass.generate(world, rand, k, world.getHeightValue(k, l), l);
-		//		}
 	}
 }
