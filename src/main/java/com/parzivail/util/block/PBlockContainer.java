@@ -19,4 +19,10 @@ public abstract class PBlockContainer extends BlockContainer
 		this.name = name;
 		this.setUnlocalizedName(Resources.modDot(this.name));
 	}
+
+	public PBlockContainer setAlpha()
+	{
+		this.setTextureName(Resources.modColon("alpha"));
+		return this;
+	}
 }

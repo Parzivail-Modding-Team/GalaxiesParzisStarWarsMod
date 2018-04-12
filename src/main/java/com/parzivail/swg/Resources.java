@@ -19,8 +19,8 @@ public class Resources
 	public static int dimIdTatooine = 2;
 	public static int biomeIdTatooineDunes = 100;
 
-	public static int dimIdNaboo = 3;
-	public static int biomeIdNaboo = 101;
+	public static int dimIdEndor = 3;
+	public static int biomeIdEndor = 101;
 
 	public static String itemDot(String name)
 	{

@@ -1,4 +1,4 @@
-package com.parzivail.swg.dimension.naboo;
+package com.parzivail.swg.dimension.endor;
 
 import com.parzivail.util.world.ITerrainHeightmap;
 import com.parzivail.util.world.ProcNoise;

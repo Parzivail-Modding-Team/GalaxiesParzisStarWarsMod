@@ -16,11 +16,17 @@ public class PBlock extends Block
 
 	public PBlock(String name, Material material)
 	{
+		this(name, material, true);
+	}
+
+	public PBlock(String name, Material material, boolean setTexture)
+	{
 		super(material);
 		this.name = name;
 		this.setCreativeTab(StarWarsGalaxy.tab);
 		this.setUnlocalizedName(Resources.modDot(this.name));
-		this.setTextureName(Resources.modColon(this.name));
+		if (setTexture)
+			this.setTextureName(Resources.modColon(this.name));
 	}
 
 	public PBlock setAlpha()

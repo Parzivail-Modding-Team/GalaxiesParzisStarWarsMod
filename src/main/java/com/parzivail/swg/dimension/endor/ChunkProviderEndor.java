@@ -1,4 +1,4 @@
-package com.parzivail.swg.dimension.naboo;
+package com.parzivail.swg.dimension.endor;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.registry.BlockRegister;
@@ -6,8 +6,7 @@ import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.binary.Cdf.BlockInfo;
 import com.parzivail.util.binary.Cdf.ChunkDiff;
 import com.parzivail.util.common.Pair;
-import com.parzivail.util.world.ITerrainHeightmap;
-import com.parzivail.util.world.PBiomeGenBase;
+import com.parzivail.util.world.*;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -26,24 +25,23 @@ import java.util.List;
 /**
  * Created by colby on 9/10/2017.
  */
-public class ChunkProviderNaboo implements IChunkProvider
+public class ChunkProviderEndor implements IChunkProvider
 {
 	private World worldObj;
 	private final int waterLevel = 100;
 
 	public ITerrainHeightmap terrain;
 
-	public ChunkProviderNaboo(World worldObj, long seed)
+	public ChunkProviderEndor(World worldObj, long seed)
 	{
 		this.worldObj = worldObj;
-		//		terrain = new MultiCompositeTerrain(seed, 800,
-		//				// Naboo Mountains
-		//				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 70), new TerrainLayer(seed + 1, TerrainLayer.Function.Turbulent, TerrainLayer.Method.Multiply, 200, 1), new TerrainLayer(seed + 2, TerrainLayer.Function.Klump, TerrainLayer.Method.Add, 50, 20), new TerrainLayer(seed + 3, TerrainLayer.Function.Constant, TerrainLayer.Method.Add, 200, 30)),
-		//				// Naboo Hills
-		//				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 80), new TerrainLayer(seed + 1, TerrainLayer.Function.Midpoint, TerrainLayer.Method.Add, 50, 20)),
-		//				// Naboo Plains
-		//				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 10), new TerrainLayer(seed + 1, TerrainLayer.Function.Constant, TerrainLayer.Method.Add, 200, 40)));
-		terrain = new SwissTurb(seed);
+		terrain = new MultiCompositeTerrain(seed, 800,
+				// Naboo Mountains
+				new SwissTurb(seed),
+				// Naboo Hills
+				//new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 80), new TerrainLayer(seed + 1, TerrainLayer.Function.Midpoint, TerrainLayer.Method.Add, 50, 20)),
+				// Naboo Plains
+				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 10), new TerrainLayer(seed + 1, TerrainLayer.Function.Constant, TerrainLayer.Method.Add, 200, 40)));
 	}
 
 	/**

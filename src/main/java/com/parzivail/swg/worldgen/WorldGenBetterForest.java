@@ -1,7 +1,6 @@
-package com.parzivail.worldgen;
+package com.parzivail.swg.worldgen;
 
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
@@ -9,11 +8,15 @@ import java.util.Random;
 
 public class WorldGenBetterForest extends WorldGenAbstractTree
 {
+	private final Block log;
+	private final Block leaves;
 	private final Block spawnOnBlock;
 
-	public WorldGenBetterForest(Block spawnOnBlock)
+	public WorldGenBetterForest(Block log, Block leaves, Block spawnOnBlock)
 	{
 		super(true);
+		this.log = log;
+		this.leaves = leaves;
 		this.spawnOnBlock = spawnOnBlock;
 	}
 
@@ -96,7 +99,7 @@ public class WorldGenBetterForest extends WorldGenAbstractTree
 
 									if (block1.isAir(world, l2, k2, i2) || block1.isLeaves(world, l2, k2, i2))
 									{
-										this.setBlockAndNotifyAdequately(world, l2, k2, i2, Blocks.leaves, metadata);
+										this.setBlockAndNotifyAdequately(world, l2, k2, i2, leaves, metadata);
 									}
 								}
 							}
@@ -109,7 +112,7 @@ public class WorldGenBetterForest extends WorldGenAbstractTree
 
 						if (block3.isAir(world, x, y + k2, z) || block3.isLeaves(world, x, y + k2, z))
 						{
-							this.setBlockAndNotifyAdequately(world, x, y + k2, z, Blocks.log, metadata);
+							this.setBlockAndNotifyAdequately(world, x, y + k2, z, log, metadata);
 						}
 					}
 

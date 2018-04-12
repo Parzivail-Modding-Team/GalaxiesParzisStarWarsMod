@@ -1,4 +1,4 @@
-package com.parzivail.swg.dimension.naboo;
+package com.parzivail.swg.dimension.endor;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.dimension.SWGChunkManager;
@@ -14,9 +14,9 @@ import net.minecraftforge.client.IRenderHandler;
 /**
  * Created by colby on 9/10/2017.
  */
-public class WorldProviderNaboo extends WorldProvider
+public class WorldProviderEndor extends WorldProvider
 {
-	public static String dimName = "Naboo";
+	public static String dimName = "Endor";
 
 	@SideOnly(Side.CLIENT)
 	private IRenderHandler skyRenderer;
@@ -27,7 +27,7 @@ public class WorldProviderNaboo extends WorldProvider
 	@Override
 	public IChunkProvider createChunkGenerator()
 	{
-		return new ChunkProviderNaboo(this.worldObj, /*this.getSeed()*/0);
+		return new ChunkProviderEndor(this.worldObj, /*this.getSeed()*/0);
 	}
 
 	/**
@@ -72,8 +72,8 @@ public class WorldProviderNaboo extends WorldProvider
 	@Override
 	protected void registerWorldChunkManager()
 	{
-		this.worldChunkMgr = new SWGChunkManager(WorldRegister.biomeNaboo, 0.0F);
-		this.dimensionId = Resources.dimIdNaboo;
+		this.worldChunkMgr = new SWGChunkManager(WorldRegister.biomeEndor, 0.0F);
+		this.dimensionId = Resources.dimIdEndor;
 	}
 
 	@Override
