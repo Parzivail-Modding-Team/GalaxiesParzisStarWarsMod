@@ -7,6 +7,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
+import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.util.Random;
 
@@ -16,7 +17,6 @@ import java.util.Random;
 public class BiomeEndor extends PBiomeGenBase
 {
 	private WorldGenBetterForest worldGenBetterForest = new WorldGenBetterForest(BlockRegister.endorLog, Blocks.leaves, BlockRegister.fastGrass);
-	protected static final WorldGenTallGrass wgGrass = new WorldGenTallGrass(Blocks.tallgrass, 1);
 
 	public BiomeEndor(int biomeId)
 	{
@@ -40,11 +40,24 @@ public class BiomeEndor extends PBiomeGenBase
 		//					te.readFromNBT(pair.right);
 		//			}
 
+		//		for (int i = 0; i < 32; i++)
+		//		{
+		//			int k = worldX + rand.nextInt(16) + 8;
+		//			int l = worldZ + rand.nextInt(16) + 8;
+		//			WorldGenerator worldgenerator = this.getRandomWorldGenForGrass(rand);
+		//			worldgenerator.generate(world, rand, k, world.getHeightValue(k, l), l);
+		//		}
+
 		for (int i = 0; i < weights[0] * 8; i++)
 		{
 			int k = worldX + rand.nextInt(16) + 8;
 			int l = worldZ + rand.nextInt(16) + 8;
 			worldGenBetterForest.generate(world, rand, k, world.getHeightValue(k, l), l, 15, 5, 0);
 		}
+	}
+
+	public WorldGenerator getRandomWorldGenForGrass(Random p_76730_1_)
+	{
+		return p_76730_1_.nextInt(4) == 0 ? new WorldGenTallGrass(Blocks.tallgrass, 2) : new WorldGenTallGrass(Blocks.tallgrass, 1);
 	}
 }

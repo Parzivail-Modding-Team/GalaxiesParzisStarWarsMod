@@ -46,7 +46,7 @@ public class Client extends Common
 		//frSansSerif = createFont("sansserif");
 		//frSerif = createFont("serif");
 
-		frNaboo = createFont("endor");
+		frNaboo = createFont("naboo");
 		frAurebesh = createFont("aurebesh");
 		frDroid = createFont("droid");
 		frEwok = createFont("ewok");
