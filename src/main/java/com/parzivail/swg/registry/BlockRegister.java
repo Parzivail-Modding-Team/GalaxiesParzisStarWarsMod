@@ -45,9 +45,12 @@ public class BlockRegister
 		register(endorLog = new BlockEndorLog());
 
 		register(labWall = new PBlock("labWall"));
-		register(dynamicTest = new PBlockDynamic("dynamicTest", new String[] {
-				"stonebrick", "stonebrick", "stonebrick_mossy", "stonebrick_cracked",
-		}));
+		//		register(dynamicTest = new PBlockDynamic("dynamicTest", new String[] {
+		//				Resources.modColon("yavinBricksClean"),
+		//				Resources.modColon("yavinBricksRough"),
+		//				Resources.modColon("yavinBricksCracked"),
+		//				Resources.modColon("yavinBricksCrackedMossy"),
+		//		}));
 
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
 	}
