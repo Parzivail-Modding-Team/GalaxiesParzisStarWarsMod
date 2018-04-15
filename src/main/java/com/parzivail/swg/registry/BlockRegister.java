@@ -6,7 +6,7 @@ import com.parzivail.swg.block.BlockEndorLog;
 import com.parzivail.swg.block.BlockFastGrass;
 import com.parzivail.util.block.PBlock;
 import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.PBlockDynamic;
+import com.parzivail.util.block.PBlockEnviromap;
 import com.parzivail.util.block.PBlockLog;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -27,7 +27,7 @@ public class BlockRegister
 	public static PBlockLog endorLog;
 
 	public static PBlock labWall;
-	public static PBlockDynamic dynamicTest;
+	public static PBlockEnviromap dynamicTest;
 
 	public static PBlockContainer blasterWorkbench;
 
@@ -51,6 +51,19 @@ public class BlockRegister
 		//				Resources.modColon("yavinBricksCracked"),
 		//				Resources.modColon("yavinBricksCrackedMossy"),
 		//		}));
+		register(dynamicTest = new PBlockEnviromap("dynamicTest", new String[][] {
+				new String[] {
+						Resources.modColon("large/stone_0_0"),
+						Resources.modColon("large/stone_1_0"),
+						Resources.modColon("large/stone_2_0"),
+						Resources.modColon("large/stone_3_0")
+				}, new String[] {
+				Resources.modColon("large/stone_0_1"),
+				Resources.modColon("large/stone_1_1"),
+				Resources.modColon("large/stone_2_1"),
+				Resources.modColon("large/stone_3_1")
+		}
+		}));
 
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
 	}
