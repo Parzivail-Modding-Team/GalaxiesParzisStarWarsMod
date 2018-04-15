@@ -51,19 +51,7 @@ public class BlockRegister
 		//				Resources.modColon("yavinBricksCracked"),
 		//				Resources.modColon("yavinBricksCrackedMossy"),
 		//		}));
-		register(dynamicTest = new PBlockEnviromap("dynamicTest", new String[][] {
-				new String[] {
-						Resources.modColon("large/stone_0_0"),
-						Resources.modColon("large/stone_1_0"),
-						Resources.modColon("large/stone_2_0"),
-						Resources.modColon("large/stone_3_0")
-				}, new String[] {
-				Resources.modColon("large/stone_0_1"),
-				Resources.modColon("large/stone_1_1"),
-				Resources.modColon("large/stone_2_1"),
-				Resources.modColon("large/stone_3_1")
-		}
-		}));
+		register(dynamicTest = new PBlockEnviromap("dynamicTest", Resources.modColon("large/yavinrock"), 7, 3));
 
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
 	}

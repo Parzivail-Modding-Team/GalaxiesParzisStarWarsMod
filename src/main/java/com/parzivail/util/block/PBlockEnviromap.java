@@ -9,25 +9,32 @@ import net.minecraft.world.IBlockAccess;
 public class PBlockEnviromap extends PBlock
 {
 	private final String[][] variants;
+	private final int width;
+	private final int height;
 	private IIcon[][] icons;
 
-	public PBlockEnviromap(String name, String[][] variants)
+	public PBlockEnviromap(String name, String texturePrefix, int width, int height)
 	{
-		this(name, Material.ground, variants);
+		this(name, Material.ground, texturePrefix, width, height);
 	}
 
-	public PBlockEnviromap(String name, Material material, String[][] variants)
+	public PBlockEnviromap(String name, Material material, String texturePrefix, int width, int height)
 	{
 		super(name, material);
-		this.variants = variants;
+		this.variants = new String[width][height];
+		for (int i = 0; i < width; i++)
+			for (int j = 0; j < height; j++)
+				variants[i][j] = String.format("%s_%s_%s", texturePrefix, i, j);
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override
 	public void registerIcons(IIconRegister reg)
 	{
-		icons = new IIcon[variants.length][variants[0].length];
-		for (int i = 0; i < variants.length; i++)
-			for (int j = 0; j < variants[0].length; j++)
+		icons = new IIcon[width][height];
+		for (int i = 0; i < width; i++)
+			for (int j = 0; j < height; j++)
 				icons[i][j] = reg.registerIcon(variants[i][j]);
 	}
 
@@ -38,13 +45,15 @@ public class PBlockEnviromap extends PBlock
 		{
 			case 0:
 			case 1:
-				return icons[Math.abs(x) % variants.length][Math.abs(z) % variants[0].length];
+				return icons[width - 1 - Math.abs(x) % width][Math.abs(z) % height];
 			case 2:
+				return icons[Math.abs(x) % width][height - 1 - Math.abs(z + y) % height];
 			case 3:
-				return icons[Math.abs(x + 1) % variants.length][Math.abs(z + y + 1) % variants[0].length];
+				return icons[width - 1 - Math.abs(x) % width][height - 1 - Math.abs(z + y) % height];
 			case 4:
+				return icons[Math.abs(x + z) % width][height - 1 - Math.abs(y) % height];
 			case 5:
-				return icons[Math.abs(x + z) % variants.length][Math.abs(y + 1) % variants[0].length];
+				return icons[width - 1 - Math.abs(x + z) % width][height - 1 - Math.abs(y) % height];
 			default:
 				return Blocks.dirt.getIcon(worldIn, x, y, z, side);
 		}
