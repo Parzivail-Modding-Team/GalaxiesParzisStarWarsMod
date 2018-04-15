@@ -1,0 +1,11 @@
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\bin\Debug\SplitLargeTexture.exe.config
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\bin\Debug\SplitLargeTexture.exe
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\bin\Debug\SplitLargeTexture.pdb
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\bin\Debug\CommandLine.dll
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\bin\Debug\System.Console.dll
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\bin\Debug\System.Reflection.TypeExtensions.dll
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\obj\Debug\SplitLargeTexture.csprojResolveAssemblyReference.cache
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\obj\Debug\SplitLargeTexture.csproj.CoreCompileInputs.cache
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\obj\Debug\SplitLargeTexture.csproj.CopyComplete
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\obj\Debug\SplitLargeTexture.exe
+E:\Forge\Mods\StarWarsGalaxy\resources\binlibs\SplitLargeTexture\SplitLargeTexture\obj\Debug\SplitLargeTexture.pdb
