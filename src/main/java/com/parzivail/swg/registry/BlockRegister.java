@@ -51,7 +51,7 @@ public class BlockRegister
 		//				Resources.modColon("yavinBricksCracked"),
 		//				Resources.modColon("yavinBricksCrackedMossy"),
 		//		}));
-		register(dynamicTest = new PBlockEnviromap("dynamicTest", Resources.modColon("large/yavinrock"), 7, 3));
+		//register(dynamicTest = new PBlockEnviromap("dynamicTest", Resources.modColon("large/yavinrock"), 7, 3));
 
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
 	}
