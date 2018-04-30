@@ -1,14 +1,12 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.block.BlockBlasterWorkbench;
-import com.parzivail.swg.block.BlockEndorLog;
-import com.parzivail.swg.block.BlockFastGrass;
+import com.parzivail.swg.block.*;
 import com.parzivail.util.block.PBlock;
 import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.PBlockEnviromap;
-import com.parzivail.util.block.PBlockLog;
+import com.parzivail.util.block.PBlockPillar;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.block.Block;
 
 /**
  * Created by colby on 12/26/2017.
@@ -17,41 +15,71 @@ public class BlockRegister
 {
 	public static PBlock fastGrass;
 
-	public static PBlock tatooineSand;
-	public static PBlock tatooineSandstone;
-
 	public static PBlock oxidizedSand;
 	public static PBlock oxidizedSandStone;
-	public static PBlock paleStone;
+	public static PBlock hothStone;
 
-	public static PBlockLog endorLog;
+	public static PBlockPillar endorLog;
 
 	public static PBlock labWall;
-	public static PBlockEnviromap dynamicTest;
 
 	public static PBlockContainer blasterWorkbench;
+
+	public static PBlock white;
+	public static PBlock gray;
+	public static PBlock grayBevel;
+	public static PBlockPillar grayLight;
+	public static PBlock darkGray;
+	public static PBlockPillar darkGrayLight;
+	public static PBlock black;
+	public static PBlock caution;
+
+	public static PBlock crate;
+	public static PBlock hardpackSnow;
+	public static PBlock hothDoor;
+	public static PBlock hothSnowCut;
+	public static PBlock mud;
+	public static PBlock templeStone;
+	public static PBlock templeStoneBrick;
+	public static PBlock templeStoneBrickFancy;
+	public static PBlock templeStoneSlab;
+	public static PBlock templeStoneSlabTop;
+	public static PBlock templeStoneSlabTopDark;
 
 	public static void register()
 	{
 		register(fastGrass = new BlockFastGrass());
 
-		register(tatooineSand = new PBlock("tatooineSand"));
-		register(tatooineSandstone = new PBlock("tatooineSandstone"));
-
 		register(oxidizedSand = new PBlock("oxidizedSand"));
 		register(oxidizedSandStone = new PBlock("oxidizedSandStone"));
-		register(paleStone = new PBlock("paleStone"));
+		register(hothStone = new PBlock("hothStone"));
+
+		register(white = (PBlock)new PBlock("metalWhite", "white").setStepSound(Block.soundTypeMetal));
+		register(gray = (PBlock)new PBlock("metalGray", "gray").setStepSound(Block.soundTypeMetal));
+		register(grayBevel = (PBlock)new PBlock("metalGrayBevel", "grayBevel").setStepSound(Block.soundTypeMetal));
+		register(darkGray = (PBlock)new PBlock("metalDarkGray", "darkGray").setStepSound(Block.soundTypeMetal));
+		register(black = (PBlock)new PBlock("metalBlack", "black").setStepSound(Block.soundTypeMetal));
+		register(caution = (PBlock)new PBlock("metalCaution", "caution").setStepSound(Block.soundTypeMetal));
+
+		register(grayLight = (PBlockPillar)new BlockGrayLight().setStepSound(Block.soundTypeMetal));
+		register(darkGrayLight = (PBlockPillar)new BlockDarkGrayLight().setStepSound(Block.soundTypeMetal));
+
+		register(crate = new PBlock("crate"));
+		register(hardpackSnow = new PBlock("hardpackSnow"));
+		register(hothDoor = new PBlock("hothDoor"));
+		register(hothSnowCut = new PBlock("hothSnowCut"));
+		register(mud = new PBlock("mud"));
+
+		register(templeStone = new PBlock("templeStone"));
+		register(templeStoneBrick = new PBlock("templeStoneBrick"));
+		register(templeStoneBrickFancy = new PBlock("templeStoneBrickFancy"));
+		register(templeStoneSlab = new PBlock("templeStoneSlab"));
+		register(templeStoneSlabTop = new PBlock("templeStoneSlabTop"));
+		register(templeStoneSlabTopDark = new PBlock("templeStoneSlabTopDark"));
 
 		register(endorLog = new BlockEndorLog());
 
 		register(labWall = new PBlock("labWall"));
-		//		register(dynamicTest = new PBlockDynamic("dynamicTest", new String[] {
-		//				Resources.modColon("yavinBricksClean"),
-		//				Resources.modColon("yavinBricksRough"),
-		//				Resources.modColon("yavinBricksCracked"),
-		//				Resources.modColon("yavinBricksCrackedMossy"),
-		//		}));
-		//register(dynamicTest = new PBlockEnviromap("dynamicTest", Resources.modColon("large/yavinrock"), 7, 3));
 
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
 	}
@@ -61,7 +89,7 @@ public class BlockRegister
 		GameRegistry.registerBlock(item, item.name);
 	}
 
-	private static void register(PBlockLog item)
+	private static void register(PBlockPillar item)
 	{
 		GameRegistry.registerBlock(item, item.name);
 	}
