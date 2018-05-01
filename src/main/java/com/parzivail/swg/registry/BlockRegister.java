@@ -3,10 +3,12 @@ package com.parzivail.swg.registry;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.block.*;
 import com.parzivail.util.block.PBlock;
+import com.parzivail.util.block.PBlockConnected;
 import com.parzivail.util.block.PBlockContainer;
 import com.parzivail.util.block.PBlockPillar;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 
 /**
  * Created by colby on 12/26/2017.
@@ -28,10 +30,15 @@ public class BlockRegister
 	public static PBlock white;
 	public static PBlock gray;
 	public static PBlock grayBevel;
+	public static PBlockConnected grayGrate;
 	public static PBlockPillar grayLight;
+	public static PBlockPillar grayLightVert;
 	public static PBlock darkGray;
+	public static PBlockConnected darkGrayGrate;
 	public static PBlockPillar darkGrayLight;
+	public static PBlockPillar darkGrayLightVert;
 	public static PBlock black;
+	public static PBlockConnected blackGrate;
 	public static PBlock caution;
 
 	public static PBlock crate;
@@ -61,8 +68,14 @@ public class BlockRegister
 		register(black = (PBlock)new PBlock("metalBlack", "black").setStepSound(Block.soundTypeMetal));
 		register(caution = (PBlock)new PBlock("metalCaution", "caution").setStepSound(Block.soundTypeMetal));
 
+		register(grayGrate = (PBlockConnected)new PBlockConnected("grateLightGray", "grateLightGray", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
+		register(darkGrayGrate = (PBlockConnected)new PBlockConnected("grateDarkGray", "grateDarkGray", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
+		register(blackGrate = (PBlockConnected)new PBlockConnected("grateBlack", "grateBlack", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
+
 		register(grayLight = (PBlockPillar)new BlockGrayLight().setStepSound(Block.soundTypeMetal));
 		register(darkGrayLight = (PBlockPillar)new BlockDarkGrayLight().setStepSound(Block.soundTypeMetal));
+		register(grayLightVert = (PBlockPillar)new BlockGrayLightVertical().setStepSound(Block.soundTypeMetal));
+		register(darkGrayLightVert = (PBlockPillar)new BlockDarkGrayLightVertical().setStepSound(Block.soundTypeMetal));
 
 		register(crate = new PBlock("crate"));
 		register(hardpackSnow = new PBlock("hardpackSnow"));
