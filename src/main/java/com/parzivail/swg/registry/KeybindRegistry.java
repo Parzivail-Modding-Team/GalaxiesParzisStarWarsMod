@@ -7,6 +7,7 @@ import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.settings.KeyBinding;
+import org.lwjgl.input.Keyboard;
 
 public class KeybindRegistry
 {
@@ -16,9 +17,13 @@ public class KeybindRegistry
 	@SideOnly(Side.CLIENT)
 	public static InterceptingKeyBinding keyAttack;
 
+	@SideOnly(Side.CLIENT)
+	public static KeyBinding keyDebug;
+
 	public static void registerAll()
 	{
 		//KeybindRegistry.keyShootVehicle = registerKeybind("shootVehicle", Keyboard.KEY_F);
+		KeybindRegistry.keyDebug = registerKeybind("keyDebug", Keyboard.KEY_N);
 
 		Client.mc.gameSettings.keyBindAttack = KeybindRegistry.keyAttack = new InterceptingKeyBinding(Client.mc.gameSettings.keyBindAttack);
 	}

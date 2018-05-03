@@ -1,6 +1,7 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.gui.GuiScreenModelBuilder;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.network.MessageItemLeftClick;
 import com.parzivail.swg.proxy.Client;
@@ -38,6 +39,11 @@ public class KeyHandler
 		{
 			((ILeftClickInterceptor)heldItem.getItem()).onItemLeftClick(heldItem, Client.mc.thePlayer.worldObj, Client.mc.thePlayer);
 			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(Client.mc.thePlayer));
+		}
+
+		if (KeybindRegistry.keyDebug.getIsKeyPressed())
+		{
+			Client.mc.displayGuiScreen(new GuiScreenModelBuilder());
 		}
 	}
 
