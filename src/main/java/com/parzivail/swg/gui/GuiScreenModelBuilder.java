@@ -1,6 +1,7 @@
 package com.parzivail.swg.gui;
 
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.util.ui.maui.MauiButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
@@ -15,6 +16,7 @@ public class GuiScreenModelBuilder extends GuiScreen
 
 	public void initGui()
 	{
+		this.buttonList.add(new MauiButton(1, 10, 10, 50, 20, "Hello, World!"));
 	}
 
 	protected void actionPerformed(GuiButton button)

@@ -192,4 +192,38 @@ public class GL
 	{
 		GL11.glEnd();
 	}
+
+	public static void Color(byte r, byte g, byte b)
+	{
+		GL11.glColor3b(r, g, b);
+	}
+
+	public static void Color(double r, double g, double b)
+	{
+		GL11.glColor3d(r, g, b);
+	}
+
+	public static void Color(byte r, byte g, byte b, byte a)
+	{
+		GL11.glColor4b(r, g, b, a);
+	}
+
+	public static void Color(double r, double g, double b, byte a)
+	{
+		GL11.glColor4d(r, g, b, a);
+	}
+
+	public static void Color(int argb)
+	{
+		byte alpha = (byte)(argb >> 24 & 0xFF);
+		Color(argb, alpha);
+	}
+
+	public static void Color(int rgb, byte a)
+	{
+		byte red = (byte)(rgb >> 16 & 0xFF);
+		byte green = (byte)(rgb >> 8 & 0xFF);
+		byte blue = (byte)(rgb & 0xFF);
+		GL11.glColor4b(red, green, blue, a);
+	}
 }

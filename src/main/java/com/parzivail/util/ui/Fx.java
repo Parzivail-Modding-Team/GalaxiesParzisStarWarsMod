@@ -65,6 +65,11 @@ public class Fx
 		{
 			return Sys.getTime() * 1000L / Sys.getTimerResolution();
 		}
+
+		public static boolean RectangleIntersects(int x, int y, int w, int h, int xT, int yT)
+		{
+			return xT >= x && yT >= y && xT < x + w && yT < y + h;
+		}
 	}
 
 	public static class D2
@@ -139,7 +144,7 @@ public class Fx
 
 		public static void DrawSolidRectangle(float x, float y, float w, float h)
 		{
-			Rectangle(x, y, w, h, PrimitiveType.Quads);
+			Rectangle(x, y, w, h, PrimitiveType.TriangleFan);
 		}
 
 		public static void DrawWireCircle(float x, float y, float radius)
@@ -210,9 +215,40 @@ public class Fx
 			GL.End();
 		}
 
+		public static void RoundRectangle(float x, float y, float w, float h, float radiusTopLeft, float radiusTopRight, float radiusBottomLeft, float radiusBottomRight, PrimitiveType mode)
+		{
+			float step = 100 / Math.max(radiusTopLeft, Math.max(radiusTopRight, Math.max(radiusBottomLeft, radiusBottomRight)));
+			GL.Begin(mode);
+			for (float i = -90; i <= 0; i += step)
+			{
+				float nx = MathHelper.sin(i * 3.141526f / 180) * radiusBottomLeft + radiusBottomLeft;
+				float ny = MathHelper.cos(i * 3.141526f / 180) * radiusBottomLeft + h - radiusBottomLeft;
+				GL.Vertex2(nx + x, ny + y);
+			}
+			for (float i = 0; i <= 90; i += step)
+			{
+				float nx = MathHelper.sin(i * 3.141526f / 180) * radiusBottomRight + w - radiusBottomRight;
+				float ny = MathHelper.cos(i * 3.141526f / 180) * radiusBottomRight + h - radiusBottomRight;
+				GL.Vertex2(nx + x, ny + y);
+			}
+			for (float i = 90; i <= 180; i += step)
+			{
+				float nx = MathHelper.sin(i * 3.141526f / 180) * radiusTopRight + w - radiusTopRight;
+				float ny = MathHelper.cos(i * 3.141526f / 180) * radiusTopRight + radiusTopRight;
+				GL.Vertex2(nx + x, ny + y);
+			}
+			for (float i = 180; i <= 270; i += step)
+			{
+				float nx = MathHelper.sin(i * 3.141526f / 180) * radiusTopLeft + radiusTopLeft;
+				float ny = MathHelper.cos(i * 3.141526f / 180) * radiusTopLeft + radiusTopLeft;
+				GL.Vertex2(nx + x, ny + y);
+			}
+			GL.End();
+		}
+
 		static void Arc(float x, float y, float radius, float fromAngle, float toAngle, PrimitiveType mode)
 		{
-			float step = 45 / radius;
+			float step = 100 / radius;
 			GL.Begin(mode);
 			for (float i = fromAngle; i <= toAngle; i += step)
 			{
