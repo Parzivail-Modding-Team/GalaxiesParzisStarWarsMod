@@ -215,15 +215,15 @@ public class GL
 
 	public static void Color(int argb)
 	{
-		byte alpha = (byte)(argb >> 24 & 0xFF);
-		Color(argb, alpha);
+		int alpha = argb >> 24 & 0xFF;
+		Color(argb & 0xFFFFFF, alpha);
 	}
 
-	public static void Color(int rgb, byte a)
+	public static void Color(int rgb, int a)
 	{
-		byte red = (byte)(rgb >> 16 & 0xFF);
-		byte green = (byte)(rgb >> 8 & 0xFF);
-		byte blue = (byte)(rgb & 0xFF);
-		GL11.glColor4b(red, green, blue, a);
+		int red = rgb >> 16 & 0xFF;
+		int green = rgb >> 8 & 0xFF;
+		int blue = rgb & 0xFF;
+		GL11.glColor4f(red / 255f, green / 255f, blue / 255f, a / 255f);
 	}
 }

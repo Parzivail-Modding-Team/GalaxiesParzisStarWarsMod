@@ -16,7 +16,7 @@ public class GuiScreenModelBuilder extends GuiScreen
 
 	public void initGui()
 	{
-		this.buttonList.add(new MauiButton(1, 10, 10, 50, 20, "Hello, World!"));
+		this.buttonList.add(new MauiButton(10, 10, 10, 35, 6, "Hello, World!"));
 	}
 
 	protected void actionPerformed(GuiButton button)
@@ -32,7 +32,7 @@ public class GuiScreenModelBuilder extends GuiScreen
 
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
-		this.drawBackground(0);
+		//this.drawBackground(0);
 		//this.drawCenteredString(this.fontRendererObj, I18n.format("resourcePack.title", new Object[0]), this.width / 2, 16, 16777215);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}

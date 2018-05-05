@@ -218,6 +218,8 @@ public class Fx
 		public static void RoundRectangle(float x, float y, float w, float h, float radiusTopLeft, float radiusTopRight, float radiusBottomLeft, float radiusBottomRight, PrimitiveType mode)
 		{
 			float step = 100 / Math.max(radiusTopLeft, Math.max(radiusTopRight, Math.max(radiusBottomLeft, radiusBottomRight)));
+			if (step > 45)
+				step = 45;
 			GL.Begin(mode);
 			for (float i = -90; i <= 0; i += step)
 			{
@@ -249,6 +251,8 @@ public class Fx
 		static void Arc(float x, float y, float radius, float fromAngle, float toAngle, PrimitiveType mode)
 		{
 			float step = 100 / radius;
+			if (step > 45)
+				step = 45;
 			GL.Begin(mode);
 			for (float i = fromAngle; i <= toAngle; i += step)
 			{
