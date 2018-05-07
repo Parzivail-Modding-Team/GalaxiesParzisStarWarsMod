@@ -16,7 +16,7 @@ public class GuiScreenModelBuilder extends GuiScreen
 
 	public void initGui()
 	{
-		this.buttonList.add(new MauiButton(10, 10, 10, 35, 6, "Hello, World!"));
+		this.buttonList.add(new MauiButton(10, 10, 10, 30, 5, "Hovered"));
 	}
 
 	protected void actionPerformed(GuiButton button)

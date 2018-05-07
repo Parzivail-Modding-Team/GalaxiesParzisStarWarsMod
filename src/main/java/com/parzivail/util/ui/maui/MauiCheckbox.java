@@ -46,6 +46,11 @@ public class MauiCheckbox extends GuiButton
 		GL.PopAttrib();
 	}
 
+	public void toggle()
+	{
+		this.checked = !this.checked;
+	}
+
 	@Override
 	public void drawButtonForegroundLayer(int mouseX, int mouseY)
 	{
