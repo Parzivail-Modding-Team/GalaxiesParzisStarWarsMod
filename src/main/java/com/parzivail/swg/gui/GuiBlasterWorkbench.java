@@ -71,8 +71,8 @@ public class GuiBlasterWorkbench extends GuiContainer
 		this.buttonList.add(bBarrels = new PGuiButton(1, this.guiLeft + 104, this.guiTop + 6, 50, 15, I18n.format(Resources.guiDot("barrels"))));
 		this.buttonList.add(bGrips = new PGuiButton(2, this.guiLeft + 166, this.guiTop + 6, 50, 15, I18n.format(Resources.guiDot("grips"))));
 
-		this.buttonList.add(bPrev = new PGuiButton(3, this.guiLeft + 40, this.guiTop + 61, 10, 20, "◀"));
-		this.buttonList.add(bNext = new PGuiButton(4, this.guiLeft + 206, this.guiTop + 61, 10, 20, "▶"));
+		this.buttonList.add(bPrev = new PGuiButton(3, this.guiLeft + 40, this.guiTop + 61, 10, 20, "<"));
+		this.buttonList.add(bNext = new PGuiButton(4, this.guiLeft + 206, this.guiTop + 61, 10, 20, ">"));
 
 		this.buttonList.add(bEquip = new PGuiButton(5, this.guiLeft + 40, this.guiTop + 115, 50, 15, textEquip));
 		this.buttonList.add(bBuy = new PGuiButton(6, this.guiLeft + 166, this.guiTop + 115, 50, 15, I18n.format(Resources.guiDot("buy"))));

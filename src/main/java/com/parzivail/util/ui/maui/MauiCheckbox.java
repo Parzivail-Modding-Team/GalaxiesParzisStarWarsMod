@@ -29,7 +29,7 @@ public class MauiCheckbox extends GuiButton
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY)
 	{
-		this.displayString = checked ? "⨯" : "";
+		this.displayString = checked ? "X" : "";
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL.Disable(EnableCap.CullFace);
 		GL.PushMatrix();

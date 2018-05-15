@@ -23,7 +23,7 @@ public class KeybindRegistry
 	public static void registerAll()
 	{
 		//KeybindRegistry.keyShootVehicle = registerKeybind("shootVehicle", Keyboard.KEY_F);
-		KeybindRegistry.keyDebug = registerKeybind("keyDebug", Keyboard.KEY_N);
+		KeybindRegistry.keyDebug = registerKeybind("keyDebug", Keyboard.KEY_NONE);
 
 		Client.mc.gameSettings.keyBindAttack = KeybindRegistry.keyAttack = new InterceptingKeyBinding(Client.mc.gameSettings.keyBindAttack);
 	}
