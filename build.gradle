@@ -35,6 +35,7 @@ dependencies {
     // or you may define them like so..
     //compile "some.group:artifact:version:classifier"
     //compile "some.group:artifact:version"
+    compile files('lib/slick-util.jar')
 
     // real examples
     //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
@@ -45,6 +46,13 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
 }
+
+jar {
+    from {
+        zipTree("lib/slick-util.jar")
+    }
+}
+
 
 processResources
 {
