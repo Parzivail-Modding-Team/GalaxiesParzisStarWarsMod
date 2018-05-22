@@ -33,31 +33,26 @@ public class MauiButton extends GuiButton
 	private static final NinePatchResource texBothHover = new NinePatchResource(Resources.location("textures/maui/buttonConnected/both_hover.png"), 16, 23, 6, 6, 4, 10);
 	private static final NinePatchResource texBothActive = new NinePatchResource(Resources.location("textures/maui/buttonConnected/both_active.png"), 16, 23, 6, 6, 4, 10);
 
-	private static final HashMap<ConnectedState, NinePatchResource[]> connectedStateMap = new HashMap<>();
+	private static final HashMap<MauiConnectedState, NinePatchResource[]> connectedStateMap = new HashMap<>();
 
 	static
 	{
-		connectedStateMap.put(ConnectedState.None, new NinePatchResource[] {
+		connectedStateMap.put(MauiConnectedState.None, new NinePatchResource[] {
 				texDefault, texHover, texActive
 		});
-		connectedStateMap.put(ConnectedState.Left, new NinePatchResource[] {
+		connectedStateMap.put(MauiConnectedState.Left, new NinePatchResource[] {
 				texLeftDefault, texLeftHover, texLeftActive
 		});
-		connectedStateMap.put(ConnectedState.Right, new NinePatchResource[] {
+		connectedStateMap.put(MauiConnectedState.Right, new NinePatchResource[] {
 				texRightDefault, texRightHover, texRightActive
 		});
-		connectedStateMap.put(ConnectedState.Both, new NinePatchResource[] {
+		connectedStateMap.put(MauiConnectedState.Both, new NinePatchResource[] {
 				texBothDefault, texBothHover, texBothActive
 		});
 	}
 
-	public enum ConnectedState
-	{
-		None, Left, Right, Both
-	}
-
 	public Consumer<MauiButton> onClick;
-	public ConnectedState connectedState = ConnectedState.None;
+	public MauiConnectedState connectedState = MauiConnectedState.None;
 
 	public MauiButton(int buttonId, int x, int y, int w, int h, String buttonText)
 	{

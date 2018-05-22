@@ -9,7 +9,6 @@ import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.ScaledResolution;
-import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.opengl.TextureImpl;
 
 import java.util.function.Consumer;
@@ -20,24 +19,28 @@ public class MauiSlider extends GuiButton
 	private static final NinePatchResource texHover = new NinePatchResource(Resources.location("textures/maui/slider/hover.png"), 21, 21, 10, 10, 1, 1);
 	private static final NinePatchResource texActive = new NinePatchResource(Resources.location("textures/maui/slider/active.png"), 21, 21, 10, 10, 1, 1);
 
-	private boolean intMode;
+	private final float min;
+	private final float max;
+	private final String formatString;
+	private float decMultiplier = 1;
+
 	private boolean isDragging;
+	private float value;
 
 	public Consumer<MauiSlider> onChange;
 
-	private final float min;
-	private final float max;
-	public float value;
 
-	public MauiSlider(int buttonId, int x, int y, int w, int h, String buttonText, float min, float max, float value)
+	public MauiSlider(int buttonId, int x, int y, int w, int h, String buttonText, float min, float max, float value, int decimalPlaces)
 	{
 		super(buttonId, x, y, w, h, buttonText);
 		this.min = min;
 		this.max = max;
+		formatString = buttonText;
 		this.value = value;
-		intMode = false;
+		this.decMultiplier = (int)Math.pow(10, decimalPlaces);
 		onChange = (dummy) -> {
 		};
+		this.displayString = String.format(this.formatString, value);
 	}
 
 	public MauiSlider(int buttonId, int x, int y, int w, int h, String buttonText, int min, int max, int value)
@@ -45,10 +48,11 @@ public class MauiSlider extends GuiButton
 		super(buttonId, x, y, w, h, buttonText);
 		this.min = min;
 		this.max = max;
+		formatString = buttonText;
 		this.value = value;
-		intMode = true;
 		onChange = (dummy) -> {
 		};
+		this.displayString = String.format(this.formatString, value);
 	}
 
 	@Override
@@ -69,10 +73,16 @@ public class MauiSlider extends GuiButton
 
 		if (isDragging)
 		{
-			float percent = (mouseX - xPosition) / ((float)this.width - 1);
-			this.value = (max - min) * percent + min;
+			boolean hover = Fx.Util.RectangleIntersects(xPosition, yPosition, width, height, mouseX, mouseY);
+			if (hover)
+			{
+				float percent = (mouseX - xPosition) / ((float)this.width - 1);
+				percent = Math.round(percent * decMultiplier) / decMultiplier;
+				this.value = (max - min) * percent + min;
+				this.displayString = String.format(this.formatString, this.value);
+				onChange.accept(this);
+			}
 			isDragging = false;
-			onChange.accept(this);
 		}
 	}
 
@@ -86,7 +96,9 @@ public class MauiSlider extends GuiButton
 		if (isDragging && hover)
 		{
 			float percent = (mouseX - xPosition) / ((float)this.width - 1);
+			percent = Math.round(percent * decMultiplier) / decMultiplier;
 			this.value = (max - min) * percent + min;
+			this.displayString = String.format(this.formatString, this.value);
 		}
 
 		GL.PushAttrib(AttribMask.EnableBit);
@@ -97,9 +109,9 @@ public class MauiSlider extends GuiButton
 		NinePatchResource texture = hover ? texHover : texDefault;
 		texture.draw(width, height);
 		GL.Enable(EnableCap.ScissorTest);
-		GL11.glScissor((int)Math.floor((double)xPosition * scale), (int)Math.floor((double)mc.displayHeight - (double)(yPosition + height) * scale), (int)Math.floor(((double)(xPosition + width) * scale - (double)xPosition * scale) * (value - min) / (max - min)), (int)Math.floor((double)mc.displayHeight - (double)yPosition * scale) - (int)Math.floor((double)mc.displayHeight - (double)(yPosition + height) * scale));
+		GL.Scissor(xPosition - 1, yPosition, (int)(width * (value - min) / (max - min)) + 1, height);
 		texActive.draw(width, height);
-		GL.Disable(EnableCap.ScissorTest);
+		GL.EndScissor();
 		float width = Maui.deJaVuSans.getWidth(this.displayString);
 		GL.Scale(1f / scale);
 		GL.Translate(Math.round((this.width * sr.getScaleFactor() - width) / 2f), Math.round((this.height * sr.getScaleFactor() - Maui.deJaVuSans.getHeight()) / 2f), 0);
@@ -112,5 +124,15 @@ public class MauiSlider extends GuiButton
 	@Override
 	public void drawButtonForegroundLayer(int mouseX, int mouseY)
 	{
+	}
+
+	public float getValue()
+	{
+		return value;
+	}
+
+	public void setValue(float value)
+	{
+		this.value = Math.round(value / decMultiplier) * decMultiplier;
 	}
 }
