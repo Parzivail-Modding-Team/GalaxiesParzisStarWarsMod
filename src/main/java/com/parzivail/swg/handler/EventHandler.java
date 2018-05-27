@@ -39,8 +39,11 @@ public class EventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(GuiScreenEvent.InitGuiEvent event)
 	{
-		if (event.gui instanceof GuiMainMenu)
+		if (event.gui instanceof GuiMainMenu && !GuiScreenTrailer.hasBeenShown)
+		{
 			Client.mc.displayGuiScreen(new GuiScreenTrailer());
+			GuiScreenTrailer.hasBeenShown = true;
+		}
 	}
 
 	@SubscribeEvent

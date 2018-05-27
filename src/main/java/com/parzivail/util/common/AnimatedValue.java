@@ -45,4 +45,35 @@ public class AnimatedValue
 
 		return next * (1 - timeLerp) + previous * timeLerp;
 	}
+
+	public void queueAnimatingTo(float value)
+	{
+		long timeHere = Fx.Util.GetMillis();
+
+		if (value != next)
+		{
+			previous = next;
+			next = value;
+
+			nextTime = timeHere + msToTake;
+		}
+	}
+
+	public float getValue()
+	{
+		return getValue(Ease::linear);
+	}
+
+	public float getValue(Function<Float, Float> interpolation)
+	{
+		long timeHere = Fx.Util.GetMillis();
+
+		if (timeHere > nextTime)
+			return next;
+
+		long timeDiff = (nextTime - timeHere);
+		float timeLerp = interpolation.apply(timeDiff / (float)msToTake);
+
+		return next * (1 - timeLerp) + previous * timeLerp;
+	}
 }

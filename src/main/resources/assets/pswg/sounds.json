@@ -1,4 +1,13 @@
 {
+  "swg.music.title": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "music/title",
+        "stream": true
+      }
+    ]
+  },
   "swg.fx.rifleReload": {
     "category": "neutral",
     "sounds": [
