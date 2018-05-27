@@ -1,5 +1,6 @@
 package com.parzivail.swg.handler;
 
+import com.parzivail.swg.gui.PswgMenuVector;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
@@ -18,24 +19,38 @@ import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.FOVUpdateEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.*;
 import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 /**
  * Created by colby on 9/13/2017.
  */
 public class EventHandler
 {
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void on(GuiScreenEvent.InitGuiEvent event)
+	{
+		if (event.gui instanceof GuiMainMenu)
+		{
+			String[] search = { "buttonList", "field_146292_n", "n" };
+			List buttons = ReflectionHelper.getPrivateValue(GuiScreen.class, event.gui, search);
+			buttons.add(new PswgMenuVector("PswgMenuVector".hashCode(), 0, 0, "PswgMenuVector"));
+		}
+	}
+
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void on(RenderLivingEvent.Pre event)

@@ -84,7 +84,7 @@ public class GuiScreenModelBuilder extends GuiScreen
 	{
 		if (keyCode == 1)
 		{
-			this.mc.displayGuiScreen(null);
+			this.mc.displayGuiScreen(returnScreen);
 			this.mc.setIngameFocus();
 		}
 		else if (keyCode != 28 && keyCode != 156)
