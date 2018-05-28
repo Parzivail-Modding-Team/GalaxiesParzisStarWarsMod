@@ -27,23 +27,8 @@ public class AnimatedValue
 
 	public float animateTo(float value, Function<Float, Float> interpolation)
 	{
-		long timeHere = Fx.Util.GetMillis();
-
-		if (value != next)
-		{
-			previous = next;
-			next = value;
-
-			nextTime = timeHere + msToTake;
-		}
-
-		if (timeHere > nextTime)
-			return next;
-
-		long timeDiff = (nextTime - timeHere);
-		float timeLerp = interpolation.apply(timeDiff / (float)msToTake);
-
-		return next * (1 - timeLerp) + previous * timeLerp;
+		this.queueAnimatingTo(value);
+		return this.getValue(interpolation);
 	}
 
 	public void queueAnimatingTo(float value)

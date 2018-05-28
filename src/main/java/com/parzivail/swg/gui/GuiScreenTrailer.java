@@ -54,10 +54,11 @@ public class GuiScreenTrailer extends GuiScreen
 	private TrailerPhase phase = TrailerPhase.LONGTIMEAGO;
 
 	private ResourceLocation brandLogo = Resources.location("textures/brand/logo.png");
+	private ResourceLocation crawlPanBottom = Resources.location("textures/environment/openingCrawlPanBottom.png");
 
 	private AnimatedValue longTimeAgoOpacity = new AnimatedValue(0, 1000);
-	private AnimatedValue logoScale = new AnimatedValue(1, 10500);
-	private AnimatedValue crawlTranslate = new AnimatedValue(0, 75000);
+	private AnimatedValue logoScale = new AnimatedValue(1, 8500);
+	private AnimatedValue crawlTranslate = new AnimatedValue(0, 85000);
 	private AnimatedValue crawlOpacity = new AnimatedValue(1, 2000);
 	private AnimatedValue panTranslate = new AnimatedValue(0, 7500);
 
@@ -80,7 +81,7 @@ public class GuiScreenTrailer extends GuiScreen
 			this.logoScale.queueAnimatingTo(0);
 			Client.mc.getSoundHandler().playSound(titleMusic);
 		}));
-		events.add(new TimelineEvent(15500, (t) -> {
+		events.add(new TimelineEvent(11500, (t) -> {
 			this.phase = TrailerPhase.CRAWL;
 			this.crawlTranslate.animateTo(500);
 		}));
@@ -91,7 +92,7 @@ public class GuiScreenTrailer extends GuiScreen
 			this.phase = TrailerPhase.PAN;
 			this.panTranslate.queueAnimatingTo(1);
 		}));
-		events.add(new TimelineEvent(98000, (t) -> {
+		events.add(new TimelineEvent(100000, (t) -> {
 			this.close();
 		}));
 		timeline = new Timeline(events);
@@ -108,9 +109,7 @@ public class GuiScreenTrailer extends GuiScreen
 	protected void keyTyped(char typedChar, int keyCode)
 	{
 		if (keyCode == Keyboard.KEY_ESCAPE)
-		{
 			close();
-		}
 	}
 
 	private void close()
@@ -140,11 +139,15 @@ public class GuiScreenTrailer extends GuiScreen
 			int color = Fx.Util.GetRgb((int)(lerp * 2f / 255), (int)(lerp * 214f / 255), (int)(lerp * 247f / 255));
 			String s = "A long time ago in a galaxy far,";
 			String s2 = "far away. . . .";
+			GL.PushMatrix();
 			int textWidth = this.fontRendererObj.getStringWidth(s);
-			int xPos = this.width / 2 - textWidth / 2;
-			int yPos = this.height / 2 - this.fontRendererObj.FONT_HEIGHT;
+			int xPos = -textWidth / 2;
+			int yPos = -this.fontRendererObj.FONT_HEIGHT;
+			GL.Translate(this.width / 2, this.height / 2, 0);
+			GL.Scale(2);
 			this.fontRendererObj.drawString(s, xPos, yPos, color);
 			this.fontRendererObj.drawString(s2, xPos, yPos + this.fontRendererObj.FONT_HEIGHT, color);
+			GL.PopMatrix();
 		}
 		else
 		{
@@ -161,29 +164,34 @@ public class GuiScreenTrailer extends GuiScreen
 				GL.Color(s.color, 128);
 
 				GL.Begin(PrimitiveType.Points);
-				GL.Vertex2(s.pos.x * (float)width, wrapHeight(s.pos.y * (float)height - lerp * height / 2f));
+				GL.Vertex2(s.pos.x * (float)width, wrapHeight(s.pos.y * (float)height - lerp * height / 1.5f));
 				GL.End();
 			}
 			GL.PopAttrib();
 
-			String s = "[PLANET OR SOMETHING]";
-			int textWidth = this.fontRendererObj.getStringWidth(s);
-			int xPos = this.width / 2 - textWidth / 2;
-			int yPos = this.height - this.fontRendererObj.FONT_HEIGHT * 4;
-			this.fontRendererObj.drawString(s, xPos, (int)(yPos + (1 - lerp) * height / 2f), GLPalette.WHITE);
+			GL.Color(GLPalette.WHITE);
+			GL.Enable(EnableCap.Blend);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-			if (phase == TrailerPhase.STARWARS)
+			float textureSize = 425;
+			float xPos = this.width / 2 - textureSize / 2;
+			float yPos = this.height - textureSize;
+			GL.PushMatrix();
+			GL.Translate(xPos, yPos + (1 - lerp) * height / 1.5f, 0);
+			Client.mc.renderEngine.bindTexture(crawlPanBottom);
+			Fx.D2.DrawSolidRectangle(0, 0, textureSize, textureSize);
+			GL.PopMatrix();
+
+			if (logoScale.getValue() != 0)
 			{
-				GL.Color(GLPalette.WHITE);
-				GL.Enable(EnableCap.Blend);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				Client.mc.renderEngine.bindTexture(brandLogo);
 				GL.Translate(this.width / 2, this.height / 2, 0);
-				GL.Scale(logoScale.getValue());
+				GL.Scale(logoScale.getValue(Ease::inQuad));
 				GL.Translate(-150, -150, 0);
 				Fx.D2.DrawSolidRectangle(0, 0, 300, 300);
 			}
-			else if (phase == TrailerPhase.CRAWL)
+
+			if (phase == TrailerPhase.CRAWL)
 			{
 				GL11.glMatrixMode(GL11.GL_PROJECTION);
 				GL11.glLoadIdentity();
@@ -191,7 +199,7 @@ public class GuiScreenTrailer extends GuiScreen
 				GL11.glMatrixMode(GL11.GL_MODELVIEW);
 				GL11.glLoadIdentity();
 
-				int w = this.fontRendererObj.getStringWidth("spies managed to steal secret");
+				int w = 165;
 				int i = 0;
 
 				GL.Scale(1, -1, -1);
@@ -201,27 +209,27 @@ public class GuiScreenTrailer extends GuiScreen
 
 				GL.Translate(0, 75 - crawlTranslate.getValue(), 0);
 
-				drawJustifiedLine("It is a period of civil war.", w, i++, true);
-				drawJustifiedLine("Rebel spaceships, striking", w, i++, true);
-				drawJustifiedLine("from a hidden base, have won", w, i++, true);
-				drawJustifiedLine("their first victory against", w, i++, true);
-				drawJustifiedLine("the evil Galactic Empire.", w, i++, false);
+				drawCenteredLine("PSWG", w, i++);
+				drawCenteredLine("AN EMPIRE DIVIDED", w, i++);
 				i++;
-				drawJustifiedLine("During the battle, Rebel", w, i++, true);
-				drawJustifiedLine("spies managed to steal secret", w, i++, true);
-				drawJustifiedLine("plans to the Empire's", w, i++, true);
-				drawJustifiedLine("ultimate weapon, the DEATH", w, i++, true);
-				drawJustifiedLine("STAR, an armored space", w, i++, true);
-				drawJustifiedLine("station with enough power to", w, i++, true);
-				drawJustifiedLine("destroy an entire planet.", w, i++, false);
+				drawJustifiedLine("There is great tension in", w, i++, true);
+				drawJustifiedLine("the galaxy. Rumors of a new", w, i++, true);
+				drawJustifiedLine("SUPERWEAPON under construction", w, i++, true);
+				drawJustifiedLine("by the Empire stretch from the", w, i++, true);
+				drawJustifiedLine("core planets to the Outer Rim.", w, i++, false);
 				i++;
-				drawJustifiedLine("Pursued by the Empire's", w, i++, true);
-				drawJustifiedLine("sinister agents, Princess", w, i++, true);
-				drawJustifiedLine("Leia races home aboard her", w, i++, true);
-				drawJustifiedLine("starship, custodian of the", w, i++, true);
-				drawJustifiedLine("stolen plans that can save", w, i++, true);
-				drawJustifiedLine("her people and restore", w, i++, true);
-				drawJustifiedLine("freedom to the galaxy.....", w, i++, false);
+				drawJustifiedLine("The days of unity and prosperity", w, i++, true);
+				drawJustifiedLine("are gone. Crime syndicates,", w, i++, true);
+				drawJustifiedLine("warlords, and pirates target", w, i++, true);
+				drawJustifiedLine("peaceful planets and strongarm", w, i++, true);
+				drawJustifiedLine("them for dwindling resources.", w, i++, false);
+				i++;
+				drawJustifiedLine("But there remains hope yet.", w, i++, true);
+				drawJustifiedLine("A mysterious band of SMUGGLERS,", w, i++, true);
+				drawJustifiedLine("notorious in the underworld,", w, i++, true);
+				drawJustifiedLine("have come across secret", w, i++, true);
+				drawJustifiedLine("information that may bring", w, i++, true);
+				drawJustifiedLine("harmony to the galaxy....", w, i++, false);
 			}
 		}
 
@@ -237,26 +245,41 @@ public class GuiScreenTrailer extends GuiScreen
 
 	private void drawJustifiedLine(String line, int width, int yOffset, boolean justify)
 	{
-		int y = (int)(yOffset * this.fontRendererObj.FONT_HEIGHT * 1.25f);
+		GL.PushMatrix();
+		float y = yOffset * this.fontRendererObj.FONT_HEIGHT * 1.25f;
+		GL.Translate(0, y, 0);
 		float lerp = crawlOpacity.getValue() * 255;
 		int color = Fx.Util.GetRgb((int)(lerp * 255f / 255), (int)(lerp * 212f / 255), (int)(lerp * 0f / 255));
 
 		if (!justify)
 		{
-			this.fontRendererObj.drawString(line, 0, y, color);
+			this.fontRendererObj.drawString(line, 0, 0, color);
+			GL.PopMatrix();
 			return;
 		}
 
 		char[] characters = line.toCharArray();
 		float scalar = width / (float)this.fontRendererObj.getStringWidth(line);
 
-		float x = 0;
 		for (char c : characters)
 		{
 			int charWidth = this.fontRendererObj.getCharWidth(c);
-			this.fontRendererObj.drawString(String.valueOf(c), (int)x, y, color);
-			x += charWidth * scalar;
+			this.fontRendererObj.drawString(String.valueOf(c), 0, 0, color);
+			GL.Translate(charWidth * scalar, 0, 0);
 		}
+		GL.PopMatrix();
+	}
+
+	private void drawCenteredLine(String line, int blockWidth, int yOffset)
+	{
+		int aedWidth = this.fontRendererObj.getStringWidth(line);
+		int x = blockWidth / 2 - aedWidth / 2;
+
+		int y = (int)(yOffset * this.fontRendererObj.FONT_HEIGHT * 1.25f);
+		float lerp = crawlOpacity.getValue() * 255;
+		int color = Fx.Util.GetRgb((int)(lerp * 255f / 255), (int)(lerp * 212f / 255), (int)(lerp * 0f / 255));
+
+		this.fontRendererObj.drawString(line, x, y, color);
 	}
 
 	private static class Star
