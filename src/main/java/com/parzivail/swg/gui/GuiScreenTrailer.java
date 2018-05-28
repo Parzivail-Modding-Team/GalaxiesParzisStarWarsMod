@@ -3,6 +3,7 @@ package com.parzivail.swg.gui;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.math.Ease;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.Timeline;
@@ -58,7 +59,7 @@ public class GuiScreenTrailer extends GuiScreen
 	private AnimatedValue logoScale = new AnimatedValue(1, 10500);
 	private AnimatedValue crawlTranslate = new AnimatedValue(0, 75000);
 	private AnimatedValue crawlOpacity = new AnimatedValue(1, 2000);
-	private AnimatedValue panTranslate = new AnimatedValue(0, 5000);
+	private AnimatedValue panTranslate = new AnimatedValue(0, 7500);
 
 	public GuiScreenTrailer()
 	{
@@ -152,13 +153,15 @@ public class GuiScreenTrailer extends GuiScreen
 			GL.Enable(EnableCap.Blend);
 			GL.Enable(EnableCap.PointSmooth);
 			GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
+
+			float lerp = panTranslate.getValue(Ease::inOutQuad);
 			for (Star s : stars)
 			{
-				GL11.glPointSize(s.size * width / (float)1920);
+				GL11.glPointSize(1);
 				GL.Color(s.color, 128);
 
 				GL.Begin(PrimitiveType.Points);
-				GL.Vertex2(s.pos.x * (float)width, s.pos.y * (float)height);
+				GL.Vertex2(s.pos.x * (float)width, wrapHeight(s.pos.y * (float)height - lerp * height / 2f));
 				GL.End();
 			}
 			GL.PopAttrib();
@@ -186,10 +189,11 @@ public class GuiScreenTrailer extends GuiScreen
 				int i = 0;
 
 				GL.Scale(1, -1, -1);
-				GL.Translate(-w / 2f, 0, 100);
+
+				GL.Translate(-w / 2f, 0, 120);
 				GL.Rotate(-55, 1, 0, 0);
 
-				GL.Translate(0, 65 - crawlTranslate.getValue(), 0);
+				GL.Translate(0, 75 - crawlTranslate.getValue(), 0);
 
 				drawJustifiedLine("It is a period of civil war.", w, i++, true);
 				drawJustifiedLine("Rebel spaceships, striking", w, i++, true);
@@ -216,6 +220,13 @@ public class GuiScreenTrailer extends GuiScreen
 		}
 
 		GL.PopMatrix();
+	}
+
+	private float wrapHeight(float v)
+	{
+		if (v < 0)
+			return height + v;
+		return v;
 	}
 
 	private void drawJustifiedLine(String line, int width, int yOffset, boolean justify)
