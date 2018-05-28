@@ -166,6 +166,12 @@ public class GuiScreenTrailer extends GuiScreen
 			}
 			GL.PopAttrib();
 
+			String s = "[PLANET OR SOMETHING]";
+			int textWidth = this.fontRendererObj.getStringWidth(s);
+			int xPos = this.width / 2 - textWidth / 2;
+			int yPos = this.height - this.fontRendererObj.FONT_HEIGHT * 4;
+			this.fontRendererObj.drawString(s, xPos, (int)(yPos + (1 - lerp) * height / 2f), GLPalette.WHITE);
+
 			if (phase == TrailerPhase.STARWARS)
 			{
 				GL.Color(GLPalette.WHITE);
