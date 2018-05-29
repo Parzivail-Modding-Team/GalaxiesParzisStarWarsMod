@@ -1,5 +1,6 @@
 package com.parzivail.swg.handler;
 
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.gui.GuiScreenTrailer;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
@@ -39,10 +40,10 @@ public class EventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(GuiScreenEvent.InitGuiEvent event)
 	{
-		if (event.gui instanceof GuiMainMenu && !GuiScreenTrailer.hasBeenShown)
+		if (event.gui instanceof GuiMainMenu && !StarWarsGalaxy.config.getHasSeenIntroCrawl())
 		{
 			Client.mc.displayGuiScreen(new GuiScreenTrailer());
-			GuiScreenTrailer.hasBeenShown = true;
+			StarWarsGalaxy.config.setHasSeenIntroCrawl(true);
 		}
 	}
 

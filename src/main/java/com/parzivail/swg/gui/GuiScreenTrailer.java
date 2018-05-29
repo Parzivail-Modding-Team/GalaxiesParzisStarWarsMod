@@ -27,7 +27,6 @@ import java.util.Random;
 
 public class GuiScreenTrailer extends GuiScreen
 {
-	public static boolean hasBeenShown = false;
 	private static List<Star> stars = new ArrayList<>();
 
 	static

@@ -2,6 +2,7 @@ package com.parzivail.swg;
 
 import com.parzivail.swg.command.CommandChangeDimensions;
 import com.parzivail.swg.command.CommandSpawnShip;
+import com.parzivail.swg.config.Config;
 import com.parzivail.swg.handler.EventHandler;
 import com.parzivail.swg.handler.GuiHandler;
 import com.parzivail.swg.network.*;
@@ -38,6 +39,8 @@ public class StarWarsGalaxy
 	@Mod.Instance(Resources.MODID)
 	public static StarWarsGalaxy instance;
 
+	public static Config config;
+
 	public static CreativeTabs tab;
 
 	public static EventHandler eventHandler;
@@ -52,6 +55,7 @@ public class StarWarsGalaxy
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		config = new Config(event.getSuggestedConfigurationFile());
 		setupNetworking();
 	}
 
