@@ -135,8 +135,8 @@ public class GuiScreenTrailer extends GuiScreen
 
 		if (phase == TrailerPhase.LONGTIMEAGO)
 		{
-			float lerp = longTimeAgoOpacity.getValue() * 255;
-			int color = Fx.Util.GetRgb((int)(lerp * 2f / 255), (int)(lerp * 214f / 255), (int)(lerp * 247f / 255));
+			float lerp = longTimeAgoOpacity.getValue();
+			int color = GLPalette.getLerpColor2(lerp, GLPalette.ALMOST_BLACK, 0xFF02D6F7);
 			String s = "A long time ago in a galaxy far,";
 			String s2 = "far away. . . .";
 			GL.PushMatrix();
@@ -187,15 +187,15 @@ public class GuiScreenTrailer extends GuiScreen
 				Client.mc.renderEngine.bindTexture(brandLogo);
 				GL.Translate(this.width / 2, this.height / 2, 0);
 				GL.Scale(logoScale.getValue(Ease::inQuad));
-				GL.Translate(-150, -150, 0);
-				Fx.D2.DrawSolidRectangle(0, 0, 300, 300);
+				GL.Translate(-300, -300, 0);
+				Fx.D2.DrawSolidRectangle(0, 0, 600, 600);
 			}
 
 			if (phase == TrailerPhase.CRAWL)
 			{
 				GL11.glMatrixMode(GL11.GL_PROJECTION);
 				GL11.glLoadIdentity();
-				GLU.gluPerspective(70, width / (float)height, 0.1f, 1000);
+				GLU.gluPerspective(80, width / (float)height, 0.1f, 1000);
 				GL11.glMatrixMode(GL11.GL_MODELVIEW);
 				GL11.glLoadIdentity();
 
@@ -207,7 +207,7 @@ public class GuiScreenTrailer extends GuiScreen
 				GL.Translate(-w / 2f, 0, 120);
 				GL.Rotate(-55, 1, 0, 0);
 
-				GL.Translate(0, 75 - crawlTranslate.getValue(), 0);
+				GL.Translate(0, 85 - crawlTranslate.getValue(), 0);
 
 				drawCenteredLine("PSWG", w, i++);
 				drawCenteredLine("AN EMPIRE DIVIDED", w, i++);
@@ -248,8 +248,8 @@ public class GuiScreenTrailer extends GuiScreen
 		GL.PushMatrix();
 		float y = yOffset * this.fontRendererObj.FONT_HEIGHT * 1.25f;
 		GL.Translate(0, y, 0);
-		float lerp = crawlOpacity.getValue() * 255;
-		int color = Fx.Util.GetRgb((int)(lerp * 255f / 255), (int)(lerp * 212f / 255), (int)(lerp * 0f / 255));
+		float lerp = crawlOpacity.getValue();
+		int color = GLPalette.getLerpColor2(lerp, GLPalette.ALMOST_BLACK, GLPalette.SW_YELLOW);
 
 		if (!justify)
 		{
@@ -276,8 +276,8 @@ public class GuiScreenTrailer extends GuiScreen
 		int x = blockWidth / 2 - aedWidth / 2;
 
 		int y = (int)(yOffset * this.fontRendererObj.FONT_HEIGHT * 1.25f);
-		float lerp = crawlOpacity.getValue() * 255;
-		int color = Fx.Util.GetRgb((int)(lerp * 255f / 255), (int)(lerp * 212f / 255), (int)(lerp * 0f / 255));
+		float lerp = crawlOpacity.getValue();
+		int color = GLPalette.getLerpColor2(lerp, GLPalette.ALMOST_BLACK, GLPalette.SW_YELLOW);
 
 		this.fontRendererObj.drawString(line, x, y, color);
 	}

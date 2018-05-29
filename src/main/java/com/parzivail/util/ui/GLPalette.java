@@ -1052,9 +1052,28 @@ public class GLPalette
 		int bgreen = cb >> 8 & 0xFF;
 		int bblue = cb & 0xFF;
 
-		double r = ared * percent + bred * v;
-		double g = agreen * percent + bgreen * v;
-		double b = ablue * percent + bblue * v;
+		double r = ared * v + bred * percent;
+		double g = agreen * v + bgreen * percent;
+		double b = ablue * v + bblue * percent;
 		GL11.glColor4d(r / 255f, g / 255f, b / 255f, 1f);
+	}
+
+	public static int getLerpColor2(double percent, int ca, int cb)
+	{
+		double v = 1 - percent;
+
+		int ared = ca >> 16 & 0xFF;
+		int agreen = ca >> 8 & 0xFF;
+		int ablue = ca & 0xFF;
+
+		int bred = cb >> 16 & 0xFF;
+		int bgreen = cb >> 8 & 0xFF;
+		int bblue = cb & 0xFF;
+
+		double r = ared * v + bred * percent;
+		double g = agreen * v + bgreen * percent;
+		double b = ablue * v + bblue * percent;
+
+		return Fx.Util.GetRgb((int)r, (int)g, (int)b);
 	}
 }
