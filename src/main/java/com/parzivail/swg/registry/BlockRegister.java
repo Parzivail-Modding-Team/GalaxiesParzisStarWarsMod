@@ -47,6 +47,7 @@ public class BlockRegister
 	public static PBlock hothDoor;
 	public static PBlock hothSnowCut;
 	public static PBlock mud;
+	public static PBlock tatooineSand;
 	public static PBlock templeStone;
 	public static PBlock templeStoneBrick;
 	public static PBlock templeStoneBrickFancy;
@@ -94,6 +95,8 @@ public class BlockRegister
 		register(endorLog = new BlockEndorLog());
 
 		register(labWall = new PBlock("labWall"));
+
+		register(tatooineSand = new PBlock("tatooineSand"));
 
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
 		register(sabaccTable = new BlockSabaccTable().setAlpha());
