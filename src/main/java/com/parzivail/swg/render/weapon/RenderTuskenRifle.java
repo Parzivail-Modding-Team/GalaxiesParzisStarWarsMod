@@ -65,7 +65,7 @@ public class RenderTuskenRifle implements IItemRenderer
 				float ads = rifle.getAdsLerp(item, player.worldObj, player);
 				float notAds = 1 - ads;
 				GL.Rotate(-40 * notAds + 0 * ads, 0, 0, 1);
-				GL.Translate(2.7 * ads, -2 * notAds + -5.84 * ads, 2 * notAds + -1.56 * ads);
+				GL.Translate(2.7 * ads, -2 * notAds + -5.84 * ads, 2 * notAds + -1.6 * ads);
 				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glPopMatrix();
 				break;
