@@ -19,7 +19,8 @@ public class Config extends Configuration
 	{
 		super.load();
 
-		hasSeenIntroCrawlProp = get(CATEGORY_GENERAL, "hasSeenIntroCrawl", false, "True if the user has seen the intro crawl before");
+		// TODO: change to false when it's ready to be shown in a release
+		hasSeenIntroCrawlProp = get(CATEGORY_GENERAL, "hasSeenIntroCrawl", true, "True if the user has seen the intro crawl before");
 
 		if (hasChanged())
 			save();

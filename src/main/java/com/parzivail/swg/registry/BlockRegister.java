@@ -26,6 +26,7 @@ public class BlockRegister
 	public static PBlock labWall;
 
 	public static PBlockContainer blasterWorkbench;
+	public static PBlockContainer sabaccTable;
 
 	public static PBlock white;
 	public static PBlock gray;
@@ -95,6 +96,7 @@ public class BlockRegister
 		register(labWall = new PBlock("labWall"));
 
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
+		register(sabaccTable = new BlockSabaccTable().setAlpha());
 	}
 
 	private static void register(PBlock item)

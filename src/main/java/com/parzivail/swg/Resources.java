@@ -15,6 +15,7 @@ public class Resources
 
 	private static int guiIdx = 1;
 	public static final int GUI_BLASTER_WORKBENCH = guiIdx++;
+	public static final int GUI_SABACC_TABLE = guiIdx++;
 
 	public static int dimIdTatooine = 2;
 	public static int biomeIdTatooineDunes = 100;
