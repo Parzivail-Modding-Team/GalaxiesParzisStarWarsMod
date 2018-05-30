@@ -44,6 +44,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	public final int boltColor;
 
 	private AnimatedValue avExpansion;
+	private AnimatedValue avAds;
 
 	public ItemBlasterRifle(String name, float damage, float spread, int maxDistance, int boltColor)
 	{
@@ -55,6 +56,13 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		this.maxStackSize = 1;
 
 		avExpansion = new AnimatedValue(-2, 100);
+		avAds = new AnimatedValue(0, 100);
+	}
+
+	public float getAdsLerp(ItemStack stack, World world, EntityPlayer player)
+	{
+		BlasterData bd = new BlasterData(stack);
+		return avAds.animateTo(bd.isAimingDownSights ? 1 : 0);
 	}
 
 	@Override

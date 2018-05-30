@@ -2,11 +2,13 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.registry.ItemRegister;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.PEntityRenderer;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
 import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
+import com.parzivail.swg.render.weapon.RenderTuskenRifle;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.common.Lumberjack;
@@ -16,6 +18,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.client.MinecraftForgeClient;
 
 /**
  * Created by colby on 9/10/2017.
@@ -56,6 +59,8 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(VehicleT65.class, new RenderT65());
 		RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
+
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleE11, new RenderTuskenRifle());
 
 		Lumberjack.log("Client proxy loaded!");
 	}
