@@ -60,7 +60,6 @@ public class RenderTuskenRifle implements IItemRenderer
 				GL.Scale(0.3f);
 				GL.Rotate(180, 1, 0, 0);
 				GL.Rotate(140, 0, 1, 0);
-				//				GL.Rotate(10, 0, 0, 1);
 				ItemBlasterRifle rifle = (ItemBlasterRifle)item.getItem();
 				float ads = rifle.getAdsLerp(item, player.worldObj, player);
 				float notAds = 1 - ads;
