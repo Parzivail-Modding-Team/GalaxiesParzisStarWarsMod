@@ -1,6 +1,7 @@
 package com.parzivail.swg.render.weapon;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.model.weapon.ModelTuskenRifle;
 import com.parzivail.swg.weapon.ItemBlasterRifle;
 import com.parzivail.util.ui.gltk.GL;
@@ -55,6 +56,8 @@ public class RenderTuskenRifle implements IItemRenderer
 				GL11.glPopMatrix();
 				break;
 			case EQUIPPED_FIRST_PERSON:
+				if (Client.mc.gameSettings.viewBobbing)
+					Client.revertViewBobbing(Client.renderPartialTicks);
 				EntityPlayer player = (EntityPlayer)data[1];
 				GL11.glPushMatrix();
 				GL.Scale(0.3f);

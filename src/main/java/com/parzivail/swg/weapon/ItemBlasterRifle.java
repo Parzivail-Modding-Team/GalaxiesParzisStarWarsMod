@@ -143,12 +143,14 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		}
 		else
 		{
+			float onePixel = 1f / sr.getScaleFactor();
+
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0, 0, 0, 1);
-			Fx.D2.DrawLine(0, expansion, 0, size + expansion);
-			Fx.D2.DrawLine(0, -expansion, 0, -size - expansion);
-			Fx.D2.DrawLine(expansion, 0, size + expansion, 0);
-			Fx.D2.DrawLine(-expansion, 0, -size - expansion, 0);
+			Fx.D2.DrawLine(0, expansion - onePixel, 0, size + expansion + onePixel);
+			Fx.D2.DrawLine(0, -expansion + onePixel, 0, -size - expansion - onePixel);
+			Fx.D2.DrawLine(expansion - onePixel, 0, size + expansion + onePixel, 0);
+			Fx.D2.DrawLine(-expansion + onePixel, 0, -size - expansion - onePixel, 0);
 
 			GL11.glLineWidth(2);
 			GL11.glColor4f(1, 1, 1, 1);

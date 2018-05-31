@@ -37,6 +37,8 @@ public class Client extends Common
 	public static FontRenderer frHuttese;
 	public static FontRenderer frMassassi;
 
+	public static float renderPartialTicks;
+
 	@Override
 	public void init()
 	{
@@ -88,5 +90,9 @@ public class Client extends Common
 	public Entity getEntityById(int dim, int id)
 	{
 		return Minecraft.getMinecraft().theWorld.getEntityByID(id);
+	}
+
+	public static void revertViewBobbing(float p)
+	{
 	}
 }

@@ -18,7 +18,7 @@ public class ScopeAcog extends BlasterScope
 	{
 		GL11.glColor4f(0.1f, 0.1f, 0.1f, 1);
 
-		float d = (float)(sr.getScaledHeight_double() / 6);
+		float d = (float)(sr.getScaledHeight_double() / 7);
 		GL11.glLineWidth(2);
 		Fx.D2.DrawWireCircle(0, 0, d);
 

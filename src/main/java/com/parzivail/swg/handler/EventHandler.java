@@ -49,6 +49,16 @@ public class EventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
+	public void on(TickEvent.RenderTickEvent event)
+	{
+		if (event.phase != TickEvent.Phase.START)
+			return;
+
+		Client.renderPartialTicks = event.renderTickTime;
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void on(RenderLivingEvent.Pre event)
 	{
 		if (event.entity instanceof EntityPlayer)
