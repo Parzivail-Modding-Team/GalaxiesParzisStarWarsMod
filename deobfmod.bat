@@ -1,0 +1,2 @@
+set _inputfile=%1
+java -jar simpledeobf-0.6.jar --input "%_inputfile%" --output "%_inputfile:~0,-4%-deobf.jar" --mapFile C:\Users\Administrator\.gradle\caches\minecraft\net\minecraftforge\forge\1.7.10-10.13.2.1236\srgs\notch-mcp.srg --ref C:\Users\Administrator\.gradle\caches\minecraft\net\minecraft\minecraft_merged\1.7.10\minecraft_merged-1.7.10.jar

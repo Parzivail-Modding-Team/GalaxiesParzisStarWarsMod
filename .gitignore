@@ -85,3 +85,4 @@ saves/
 /usernamecache.json
 /asm/
 /config/
+!/simpledeobf-0.6.jar
