@@ -12,7 +12,9 @@ public class BlasterData extends NbtSerializable<BlasterData>
 	public boolean isAimingDownSights;
 	public int shotsRemaining;
 
-	// These are not actually deprecated, just a reminder to use the getter instead which does safe casts
+	// These are not actually deprecated, just a reminder to use
+	// the getter instead which does safe casts. They need to be
+	// public for the deserialzer.
 	@Deprecated
 	public BlasterAttachment scope;
 	@Deprecated

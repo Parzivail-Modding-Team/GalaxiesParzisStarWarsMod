@@ -17,6 +17,6 @@ public class PTab extends CreativeTabs
 	@SideOnly(Side.CLIENT)
 	public Item getTabIconItem()
 	{
-		return ItemRegister.rifleE11;
+		return ItemRegister.rifleA280;
 	}
 }

@@ -9,6 +9,7 @@ import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.render.Decal;
 import com.parzivail.swg.weapon.blastermodule.BlasterData;
+import com.parzivail.swg.weapon.blastermodule.BlasterDescriptor;
 import com.parzivail.swg.weapon.blastermodule.powerpack.BlasterPowerPack;
 import com.parzivail.util.audio.SoundHandler;
 import com.parzivail.util.common.AnimatedValue;
@@ -23,6 +24,7 @@ import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -38,25 +40,24 @@ import java.util.List;
 
 public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftClickInterceptor
 {
-	public final float damage;
-	public final float spread;
-	public final int maxDistance;
-	public final int boltColor;
+	private final BlasterDescriptor descriptor;
 
 	private AnimatedValue avExpansion;
 	private AnimatedValue avAds;
 
-	public ItemBlasterRifle(String name, float damage, float spread, int maxDistance, int boltColor)
+	public ItemBlasterRifle(BlasterDescriptor descriptor)
 	{
-		super("rifle." + name);
-		this.damage = damage;
-		this.spread = spread;
-		this.maxDistance = maxDistance;
-		this.boltColor = boltColor;
+		super("rifle." + descriptor.name);
+		this.descriptor = descriptor;
 		this.maxStackSize = 1;
 
 		avExpansion = new AnimatedValue(-2, 100);
 		avAds = new AnimatedValue(0, 100);
+	}
+
+	@Override
+	public void registerIcons(IIconRegister iconRegister)
+	{
 	}
 
 	public float getAdsLerp(ItemStack stack, World world, EntityPlayer player)
@@ -176,7 +177,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 
 	private float getSpreadAmount(ItemStack stack, EntityPlayer player)
 	{
-		if (spread == 0)
+		if (descriptor.spread == 0)
 			return 0;
 
 		BlasterData bd = new BlasterData(stack);
@@ -184,7 +185,7 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 			return 0;
 
 		double movement = Math.sqrt(player.moveForward * player.moveForward + player.moveStrafing * player.moveStrafing);
-		return spread * (0.5f * (float)movement + 0.05f);
+		return descriptor.spread * (0.5f * (float)movement + 0.05f);
 	}
 
 	@Override
@@ -218,18 +219,18 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 			look.xCoord += (world.rand.nextFloat() * 2 - 1) * spread;
 			look.yCoord += (world.rand.nextFloat() * 2 - 1) * spread;
 			look.zCoord += (world.rand.nextFloat() * 2 - 1) * spread;
-			RaytraceHit hit = EntityUtils.rayTrace(look, maxDistance, player, new Entity[0], true);
+			RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range, player, new Entity[0], true);
 
 			SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx." + name, player.posX, player.posY, player.posZ, 1 + (float)world.rand.nextGaussian() / 10, 1);
 
-			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, damage, boltColor);
+			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, descriptor.damage, descriptor.boltColor);
 			e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
 			world.spawnEntityInWorld(e);
 
 			if (hit instanceof RaytraceHitEntity && ((RaytraceHitEntity)hit).entity instanceof EntityLiving)
 			{
 				EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
-				entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
+				entity.attackEntityFrom(DamageSource.causePlayerDamage(player), descriptor.damage);
 			}
 
 			if (hit instanceof RaytraceHitBlock)
@@ -246,8 +247,8 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 		}
 
 		// Recoil
-		player.rotationPitch -= damage / 2;
-		player.rotationYaw += damage / 5 * world.rand.nextGaussian();
+		player.rotationPitch -= descriptor.damage / 2;
+		player.rotationYaw += descriptor.damage / 5 * world.rand.nextGaussian();
 	}
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(EntityPlayer player)

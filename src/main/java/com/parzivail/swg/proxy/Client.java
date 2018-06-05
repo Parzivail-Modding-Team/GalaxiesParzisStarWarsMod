@@ -8,7 +8,7 @@ import com.parzivail.swg.render.PEntityRenderer;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
 import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
-import com.parzivail.swg.render.weapon.RenderTuskenRifle;
+import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.common.Lumberjack;
@@ -62,7 +62,20 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleE11, new RenderTuskenRifle());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleA280, new RenderA280());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleBowcaster, new RenderBowcaster());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleCycler, new RenderCycler());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDefender, new RenderDefender());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDh17, new RenderDH17());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDl18, new RenderDL18());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDl21, new RenderDL21());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDlt19, new RenderDlt19());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleE11, new RenderE11());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleIonization, new RenderIonization());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleRt97c, new RenderRT97C());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleScout, new RenderScout());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleSe14c, new RenderSE14C());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleT21, new RenderT21());
 
 		Lumberjack.log("Client proxy loaded!");
 	}
