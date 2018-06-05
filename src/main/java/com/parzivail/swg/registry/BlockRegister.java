@@ -2,6 +2,7 @@ package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.block.*;
+import com.parzivail.swg.block.console.*;
 import com.parzivail.util.block.PBlock;
 import com.parzivail.util.block.PBlockConnected;
 import com.parzivail.util.block.PBlockContainer;
@@ -27,6 +28,13 @@ public class BlockRegister
 
 	public static PBlockContainer blasterWorkbench;
 	public static PBlockContainer sabaccTable;
+
+	public static PBlockContainer consoleHoth1;
+	public static PBlockContainer consoleHothCurved1;
+	public static PBlockContainer consoleHothCurved2;
+	public static PBlockContainer consoleHothCurved3;
+	public static PBlockContainer consoleHothMedical1;
+	public static PBlockContainer consoleHothMedical2;
 
 	public static PBlock white;
 	public static PBlock gray;
@@ -100,6 +108,13 @@ public class BlockRegister
 
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
 		register(sabaccTable = new BlockSabaccTable().setAlpha());
+
+		register(consoleHoth1 = new BlockPanelHoth());
+		register(consoleHothCurved1 = new BlockConsoleHoth1());
+		register(consoleHothCurved2 = new BlockConsoleHoth2());
+		register(consoleHothCurved3 = new BlockConsoleHoth3());
+		register(consoleHothMedical1 = new BlockMedicalConsole());
+		register(consoleHothMedical2 = new BlockMedicalConsole2());
 	}
 
 	private static void register(PBlock item)

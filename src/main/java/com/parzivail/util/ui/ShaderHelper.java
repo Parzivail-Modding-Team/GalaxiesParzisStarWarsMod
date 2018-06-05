@@ -18,6 +18,7 @@ public final class ShaderHelper
 	private static final int FRAG = ARBFragmentShader.GL_FRAGMENT_SHADER_ARB;
 
 	public static int entityGlow = 0;
+	public static int glowSolid = 1;
 
 	private static int previousShader = 0;
 
@@ -49,6 +50,7 @@ public final class ShaderHelper
 			return;
 
 		entityGlow = createProgramFor("entityGlow");
+		glowSolid = createProgramFor("glowSolid");
 	}
 
 	public static void useShader(int shader)
@@ -66,19 +68,19 @@ public final class ShaderHelper
 			int time = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
 			ARBShaderObjects.glUniform1iARB(time, Client.mc.thePlayer.ticksExisted);
 
-			if (shader == entityGlow)
+			if (shader == glowSolid)
 			{
-				//				int r0 = ARBShaderObjects.glGetUniformLocationARB(shader, "r");
-				//				ARBShaderObjects.glUniform1fARB(r0, r);
-				//
-				//				int g0 = ARBShaderObjects.glGetUniformLocationARB(shader, "g");
-				//				ARBShaderObjects.glUniform1fARB(g0, g);
-				//
-				//				int b0 = ARBShaderObjects.glGetUniformLocationARB(shader, "b");
-				//				ARBShaderObjects.glUniform1fARB(b0, b);
-				//
-				//				int a0 = ARBShaderObjects.glGetUniformLocationARB(shader, "a");
-				//				ARBShaderObjects.glUniform1fARB(a0, a);
+				int r0 = ARBShaderObjects.glGetUniformLocationARB(shader, "r");
+				ARBShaderObjects.glUniform1fARB(r0, r);
+
+				int g0 = ARBShaderObjects.glGetUniformLocationARB(shader, "g");
+				ARBShaderObjects.glUniform1fARB(g0, g);
+
+				int b0 = ARBShaderObjects.glGetUniformLocationARB(shader, "b");
+				ARBShaderObjects.glUniform1fARB(b0, b);
+
+				int a0 = ARBShaderObjects.glGetUniformLocationARB(shader, "a");
+				ARBShaderObjects.glUniform1fARB(a0, a);
 			}
 		}
 	}

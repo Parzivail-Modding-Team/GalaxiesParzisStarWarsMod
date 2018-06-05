@@ -13,6 +13,8 @@ public class Resources
 	public static final String VERSION = MAJOR + "." + MINOR + "." + PATCH;
 	public static final String MODID = "pswg";
 
+	public static final int[] PANEL_LIGHT_COLORS = { 0xF8E443, 0x0050A1, 0x4ACBFF, 0xD1A250, 0x42A904, 0xFB4B33 };
+
 	private static int guiIdx = 1;
 	public static final int GUI_BLASTER_WORKBENCH = guiIdx++;
 	public static final int GUI_SABACC_TABLE = guiIdx++;

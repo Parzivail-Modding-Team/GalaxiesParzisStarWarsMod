@@ -2,22 +2,28 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.ItemRegister;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.PEntityRenderer;
+import com.parzivail.swg.render.console.*;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
 import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
+import com.parzivail.swg.render.itemblock.*;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
+import com.parzivail.swg.tile.console.*;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.ShaderHelper;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
 import net.minecraftforge.client.MinecraftForgeClient;
 
 /**
@@ -76,6 +82,22 @@ public class Client extends Common
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleScout, new RenderScout());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleSe14c, new RenderSE14C());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleT21, new RenderT21());
+
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleT21, new RenderT21());
+
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHoth1), new RenderItemPanelHoth());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved1), new RenderItemConsoleHoth1());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved2), new RenderItemConsoleHoth2());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved3), new RenderItemConsoleHoth3());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothMedical1), new RenderItemMedicalConsole());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothMedical2), new RenderItemMedicalConsole2());
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth1.class, new RenderConsoleHoth1());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth2.class, new RenderConsoleHoth2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth3.class, new RenderConsoleHoth3());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMedicalConsole.class, new RenderMedicalConsole());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMedicalConsole2.class, new RenderMedicalConsole2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPanelHoth.class, new RenderPanelHoth());
 
 		Lumberjack.log("Client proxy loaded!");
 	}

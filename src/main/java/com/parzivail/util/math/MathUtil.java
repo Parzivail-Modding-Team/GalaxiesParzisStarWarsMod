@@ -3,8 +3,12 @@ package com.parzivail.util.math;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.util.Random;
+
 public class MathUtil
 {
+	private static final Random _rand = new Random();
+
 	public static final double oneOverGoldenRatio = 0.61803398875;
 
 	public static double fract(double d)
@@ -45,5 +49,39 @@ public class MathUtil
 		v.y = (float)Math.floor(v.y);
 		v.z = (float)Math.floor(v.z);
 		return v;
+	}
+
+	/**
+	 * Gets a random value from an array
+	 *
+	 * @param array The array to pull items from
+	 * @param <T>   The inferred type of value to operate with
+	 * @return A random element of the supplied array
+	 */
+	public static <T> T getRandomElement(T[] array)
+	{
+		return array[_rand.nextInt(array.length)];
+	}
+
+	/**
+	 * Gets a random primitive int value from an array
+	 *
+	 * @param array The array to pull items from
+	 * @return A random element of the supplied array
+	 */
+	public static int getRandomElement(int[] array)
+	{
+		return array[_rand.nextInt(array.length)];
+	}
+
+	/**
+	 * Returns a random boolean with a one-in-n chance of being true
+	 *
+	 * @param n The chance
+	 * @return The random boolean
+	 */
+	public static boolean oneIn(int n)
+	{
+		return _rand.nextInt(n) == 0;
 	}
 }
