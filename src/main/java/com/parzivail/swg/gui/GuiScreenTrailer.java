@@ -209,7 +209,7 @@ public class GuiScreenTrailer extends GuiScreen
 				GL.Translate(0, 85 - crawlTranslate.getValue(), 0);
 
 				drawCenteredLine("PSWG", w, i++);
-				drawCenteredLine("AN EMPIRE DIVIDED", w, i++);
+				//				drawCenteredLine("AN EMPIRE DIVIDED", w, i++);
 				i++;
 				drawJustifiedLine("There is great tension in", w, i++, true);
 				drawJustifiedLine("the galaxy. Rumors of a new", w, i++, true);
