@@ -2,7 +2,7 @@ package com.parzivail.swg.block.mv;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.mv.TileEntityMV;
+import com.parzivail.swg.tile.mv.TileMV;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockContainer;
 import net.minecraft.block.material.Material;
@@ -28,7 +28,7 @@ public class BlockMV extends PBlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileEntityMV();
+		return new TileMV();
 	}
 
 	@Override
@@ -47,9 +47,9 @@ public class BlockMV extends PBlockContainer
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityMV)
+		if (tile instanceof TileMV)
 		{
-			TileEntityMV vap = (TileEntityMV)tile;
+			TileMV vap = (TileMV)tile;
 			int l = MathHelper.floor_double(player.rotationYaw * 8.0F / 360.0F + 0.5D) & 0x3;
 			vap.setFacing(l);
 		}

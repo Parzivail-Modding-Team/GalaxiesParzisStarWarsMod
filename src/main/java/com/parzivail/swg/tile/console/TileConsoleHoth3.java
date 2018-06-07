@@ -8,7 +8,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityConsoleHoth3 extends TileEntity
+public class TileConsoleHoth3 extends TileEntity
 {
 	int facing = 0;
 

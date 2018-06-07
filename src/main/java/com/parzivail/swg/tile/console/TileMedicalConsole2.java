@@ -4,7 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.util.block.TileEntityRotate;
 import com.parzivail.util.math.MathUtil;
 
-public class TileEntityMedicalConsole2 extends TileEntityRotate
+public class TileMedicalConsole2 extends TileEntityRotate
 {
 	public int color1 = 0;
 	public int color2 = 0;

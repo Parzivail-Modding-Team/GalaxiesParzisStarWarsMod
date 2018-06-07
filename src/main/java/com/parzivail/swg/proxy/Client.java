@@ -22,16 +22,16 @@ import com.parzivail.swg.render.mv.RenderMV2;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
-import com.parzivail.swg.tile.TileEntityGunRack;
-import com.parzivail.swg.tile.TileEntityLadder;
+import com.parzivail.swg.tile.TileGunRack;
+import com.parzivail.swg.tile.TileLadder;
 import com.parzivail.swg.tile.console.*;
 import com.parzivail.swg.tile.crate.*;
-import com.parzivail.swg.tile.light.TileEntityFloorLight;
-import com.parzivail.swg.tile.light.TileEntityFloorLight2;
-import com.parzivail.swg.tile.light.TileEntityHothCeilingLight;
-import com.parzivail.swg.tile.light.TileEntityHothCeilingLight2;
-import com.parzivail.swg.tile.mv.TileEntityMV;
-import com.parzivail.swg.tile.mv.TileEntityMV2;
+import com.parzivail.swg.tile.light.TileFloorLight;
+import com.parzivail.swg.tile.light.TileFloorLight2;
+import com.parzivail.swg.tile.light.TileHothCeilingLight;
+import com.parzivail.swg.tile.light.TileHothCeilingLight2;
+import com.parzivail.swg.tile.mv.TileMV;
+import com.parzivail.swg.tile.mv.TileMV2;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -124,28 +124,28 @@ public class Client extends Common
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.ladder), new RenderItemLadder());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.moistureVaporator), new RenderItemMV());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth1.class, new RenderConsoleHothCurved1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth2.class, new RenderConsoleHothCurved2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth3.class, new RenderConsoleHothCurved3());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMedicalConsole.class, new RenderMedicalConsole());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMedicalConsole2.class, new RenderMedicalConsole2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPanelHoth.class, new RenderConsoleHoth1());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth1.class, new RenderConsoleHothCurved1());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth2.class, new RenderConsoleHothCurved2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth3.class, new RenderConsoleHothCurved3());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole.class, new RenderMedicalConsole());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole2.class, new RenderMedicalConsole2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TilePanelHoth.class, new RenderConsoleHoth1());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate1.class, new RenderCrate1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateHoth1.class, new RenderCrate4());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateHoth2.class, new RenderCrate5());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateMosEspa.class, new RenderCrate2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateVilla.class, new RenderCrate3());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth1.class, new RenderCrate4());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth2.class, new RenderCrate5());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateMosEspa.class, new RenderCrate2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateVilla.class, new RenderCrate3());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFloorLight.class, new RenderFloorLight());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFloorLight2.class, new RenderFloorLight2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHothCeilingLight.class, new RenderCeilingLight());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHothCeilingLight2.class, new RenderCeilingLight2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLight.class, new RenderFloorLight());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLight2.class, new RenderFloorLight2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileHothCeilingLight.class, new RenderCeilingLight());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileHothCeilingLight2.class, new RenderCeilingLight2());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGunRack.class, new RenderGunRack());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLadder.class, new RenderLadder());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMV.class, new RenderMV());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMV2.class, new RenderMV2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileGunRack.class, new RenderGunRack());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileLadder.class, new RenderLadder());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileMV.class, new RenderMV());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileMV2.class, new RenderMV2());
 
 		Lumberjack.log("Client proxy loaded!");
 	}

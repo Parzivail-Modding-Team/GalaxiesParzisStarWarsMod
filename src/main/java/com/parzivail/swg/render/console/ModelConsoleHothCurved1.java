@@ -1,6 +1,6 @@
 package com.parzivail.swg.render.console;
 
-import com.parzivail.swg.tile.console.TileEntityConsoleHoth1;
+import com.parzivail.swg.tile.console.TileConsoleHoth1;
 import com.parzivail.util.entity.EntityTilePassthrough;
 import com.parzivail.util.ui.ShaderHelper;
 import net.minecraft.client.model.ModelBase;
@@ -138,9 +138,9 @@ public class ModelConsoleHothCurved1 extends ModelBase
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
 		GL11.glPushMatrix();
-		if (entity instanceof EntityTilePassthrough && ((EntityTilePassthrough)entity).tileEntity instanceof TileEntityConsoleHoth1)
+		if (entity instanceof EntityTilePassthrough && ((EntityTilePassthrough)entity).tileEntity instanceof TileConsoleHoth1)
 		{
-			TileEntityConsoleHoth1 console = (TileEntityConsoleHoth1)((EntityTilePassthrough)entity).tileEntity;
+			TileConsoleHoth1 console = (TileConsoleHoth1)((EntityTilePassthrough)entity).tileEntity;
 
 			ShaderHelper.setColor(console.color1);
 			ShaderHelper.useShader(ShaderHelper.glowSolid);

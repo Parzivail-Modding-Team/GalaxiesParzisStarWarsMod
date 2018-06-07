@@ -2,7 +2,7 @@ package com.parzivail.swg.block;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.TileEntityGunRack;
+import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockContainer;
 import com.parzivail.util.block.TileEntityRotate;
@@ -28,7 +28,7 @@ public class BlockGunRack extends PBlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileEntityGunRack();
+		return new TileGunRack();
 	}
 
 	@Override
@@ -47,7 +47,7 @@ public class BlockGunRack extends PBlockContainer
 	//	@Override
 	//	public void breakBlock(World world, int x, int y, int z, Block block, int wut)
 	//	{
-	//		TileEntityGunRack rack = (TileEntityGunRack)world.getTileEntity(x, y, z);
+	//		TileGunRack rack = (TileGunRack)world.getTileEntity(x, y, z);
 	//		if (rack != null)
 	//		{
 	//			for (ItemStack gun : rack.getGuns())
@@ -72,7 +72,7 @@ public class BlockGunRack extends PBlockContainer
 	//		{
 	//			if (player.getHeldItem() == null)
 	//			{
-	//				TileEntityGunRack gunRack = (TileEntityGunRack)world.getTileEntity(x, y, z);
+	//				TileGunRack gunRack = (TileGunRack)world.getTileEntity(x, y, z);
 	//				ItemStack itemStack = gunRack.popGun();
 	//				player.inventory.mainInventory[player.inventory.currentItem] = itemStack;
 	//			}
@@ -80,7 +80,7 @@ public class BlockGunRack extends PBlockContainer
 	//			{
 	//				if (!(player.getHeldItem().getItemDamage() == 2 && player.getHeldItem().getItem() instanceof ItemBlasterRifle))
 	//				{
-	//					TileEntityGunRack gunRack = (TileEntityGunRack)world.getTileEntity(x, y, z);
+	//					TileGunRack gunRack = (TileGunRack)world.getTileEntity(x, y, z);
 	//					if (gunRack.pushGun(player.getHeldItem()))
 	//						player.inventory.mainInventory[player.inventory.currentItem] = null;
 	//				}

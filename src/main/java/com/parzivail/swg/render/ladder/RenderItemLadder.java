@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.ladder;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.TileEntityLadder;
+import com.parzivail.swg.tile.TileLadder;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public class RenderItemLadder implements IItemRenderer
 	public RenderItemLadder()
 	{
 		render = new RenderLadder();
-		tile = new TileEntityLadder();
+		tile = new TileLadder();
 		tile.setWorldObj(Client.mc.theWorld);
 	}
 

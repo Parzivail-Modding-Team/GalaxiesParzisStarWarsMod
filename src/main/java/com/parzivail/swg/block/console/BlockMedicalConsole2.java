@@ -2,7 +2,7 @@ package com.parzivail.swg.block.console;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.console.TileEntityMedicalConsole2;
+import com.parzivail.swg.tile.console.TileMedicalConsole2;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockContainer;
 import com.parzivail.util.block.TileEntityRotate;
@@ -28,7 +28,7 @@ public class BlockMedicalConsole2 extends PBlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileEntityMedicalConsole2();
+		return new TileMedicalConsole2();
 	}
 
 	@Override

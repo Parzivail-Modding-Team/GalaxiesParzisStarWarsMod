@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.mv;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.mv.TileEntityMV;
+import com.parzivail.swg.tile.mv.TileMV;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,7 +16,7 @@ public class RenderItemMV implements IItemRenderer
 	public RenderItemMV()
 	{
 		render = new RenderMV();
-		tile = new TileEntityMV();
+		tile = new TileMV();
 		tile.setWorldObj(Client.mc.theWorld);
 	}
 

@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.console;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.console.TileEntityMedicalConsole;
+import com.parzivail.swg.tile.console.TileMedicalConsole;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,7 +16,7 @@ public class RenderItemMedicalConsole implements IItemRenderer
 	public RenderItemMedicalConsole()
 	{
 		render = new RenderMedicalConsole();
-		tile = new TileEntityMedicalConsole();
+		tile = new TileMedicalConsole();
 		tile.setWorldObj(Client.mc.theWorld);
 	}
 

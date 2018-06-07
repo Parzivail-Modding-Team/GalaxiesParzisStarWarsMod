@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.light;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.light.TileEntityHothCeilingLight;
+import com.parzivail.swg.tile.light.TileHothCeilingLight;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public class RenderItemCeilingLight implements IItemRenderer
 	public RenderItemCeilingLight()
 	{
 		render = new RenderCeilingLight();
-		tile = new TileEntityHothCeilingLight();
+		tile = new TileHothCeilingLight();
 		tile.setWorldObj(Client.mc.theWorld);
 	}
 

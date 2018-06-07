@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.console;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.console.TileEntityPanelHoth;
+import com.parzivail.swg.tile.console.TilePanelHoth;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public class RenderItemConsoleHoth1 implements IItemRenderer
 	public RenderItemConsoleHoth1()
 	{
 		render = new RenderConsoleHoth1();
-		tile = new TileEntityPanelHoth();
+		tile = new TilePanelHoth();
 		tile.setWorldObj(Client.mc.theWorld);
 	}
 

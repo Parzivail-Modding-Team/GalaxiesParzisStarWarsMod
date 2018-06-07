@@ -2,7 +2,7 @@ package com.parzivail.swg.block.light;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.light.TileEntityHothCeilingLight2;
+import com.parzivail.swg.tile.light.TileHothCeilingLight2;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockContainer;
 import com.parzivail.util.block.TileEntityRotate;
@@ -29,7 +29,7 @@ public class BlockHothCeilingLight2 extends PBlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileEntityHothCeilingLight2();
+		return new TileHothCeilingLight2();
 	}
 
 	@Override

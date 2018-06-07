@@ -41,9 +41,9 @@ public class RenderGunRack extends TileEntitySpecialRenderer
 		this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 
 		// TODO
-		//		if (te instanceof TileEntityGunRack)
+		//		if (te instanceof TileGunRack)
 		//		{
-		//			TileEntityGunRack gunRack = (TileEntityGunRack)te;
+		//			TileGunRack gunRack = (TileGunRack)te;
 		//
 		//			int i = 0;
 		//			for (ItemStack gun : gunRack.getGuns())
@@ -55,7 +55,7 @@ public class RenderGunRack extends TileEntitySpecialRenderer
 		GL11.glPopMatrix();
 	}
 
-	//	private void renderGun(TileEntityGunRack rack, ItemStack gun, int index)
+	//	private void renderGun(TileGunRack rack, ItemStack gun, int index)
 	//	{
 	//		if (gun == null)
 	//			return;

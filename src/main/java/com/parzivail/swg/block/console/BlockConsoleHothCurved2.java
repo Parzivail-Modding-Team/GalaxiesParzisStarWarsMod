@@ -2,7 +2,7 @@ package com.parzivail.swg.block.console;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.console.TileEntityConsoleHoth2;
+import com.parzivail.swg.tile.console.TileConsoleHoth2;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockContainer;
 import net.minecraft.block.material.Material;
@@ -28,9 +28,9 @@ public class BlockConsoleHothCurved2 extends PBlockContainer
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityConsoleHoth2)
+		if (tile instanceof TileConsoleHoth2)
 		{
-			TileEntityConsoleHoth2 te = (TileEntityConsoleHoth2)tile;
+			TileConsoleHoth2 te = (TileConsoleHoth2)tile;
 			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
 			te.setFacing(l);
 		}
@@ -39,7 +39,7 @@ public class BlockConsoleHothCurved2 extends PBlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileEntityConsoleHoth2();
+		return new TileConsoleHoth2();
 	}
 
 	@Override

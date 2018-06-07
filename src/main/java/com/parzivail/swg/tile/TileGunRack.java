@@ -2,7 +2,7 @@ package com.parzivail.swg.tile;
 
 import com.parzivail.util.block.TileEntityRotate;
 
-public class TileEntityGunRack extends TileEntityRotate
+public class TileGunRack extends TileEntityRotate
 {
 	//	private ItemStack[] guns = new ItemStack[12];
 	//

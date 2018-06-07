@@ -8,7 +8,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityConsoleHoth2 extends TileEntity
+public class TileConsoleHoth1 extends TileEntity
 {
 	int facing = 0;
 
@@ -18,7 +18,6 @@ public class TileEntityConsoleHoth2 extends TileEntity
 	public int color4 = 0;
 	public int color5 = 0;
 	public int color6 = 0;
-	public int color7 = 0;
 
 	@Override
 	public void updateEntity()
@@ -35,8 +34,6 @@ public class TileEntityConsoleHoth2 extends TileEntity
 			color5 = MathUtil.getRandomElement(Resources.PANEL_LIGHT_COLORS);
 		if (MathUtil.oneIn(120))
 			color6 = MathUtil.getRandomElement(Resources.PANEL_LIGHT_COLORS);
-		if (MathUtil.oneIn(120))
-			color7 = MathUtil.getRandomElement(Resources.PANEL_LIGHT_COLORS);
 	}
 
 	@Override

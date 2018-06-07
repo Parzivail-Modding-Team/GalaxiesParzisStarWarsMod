@@ -2,7 +2,7 @@ package com.parzivail.swg.block.mv;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.mv.TileEntityMV2;
+import com.parzivail.swg.tile.mv.TileMV2;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockContainer;
 import com.parzivail.util.block.TileEntityRotate;
@@ -29,7 +29,7 @@ public class BlockMV2 extends PBlockContainer
 	//	@Override
 	//	public void breakBlock(World world, int x, int y, int z, Block block, int wut)
 	//	{
-	//		TileEntityMV2 moistureVap = (TileEntityMV2)world.getTileEntity(x, y, z);
+	//		TileMV2 moistureVap = (TileMV2)world.getTileEntity(x, y, z);
 	//		if (moistureVap != null)
 	//		{
 	//			ItemStack itemstack = moistureVap.getStackInSlot(0);
@@ -48,7 +48,7 @@ public class BlockMV2 extends PBlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileEntityMV2();
+		return new TileMV2();
 	}
 
 	@Override

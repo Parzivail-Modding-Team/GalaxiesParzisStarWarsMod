@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.crate;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.crate.TileEntityCrate1;
+import com.parzivail.swg.tile.crate.TileCrate1;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public class RenderItemCrate1 implements IItemRenderer
 	public RenderItemCrate1()
 	{
 		render = new RenderCrate1();
-		tile = new TileEntityCrate1();
+		tile = new TileCrate1();
 		tile.setWorldObj(Client.mc.theWorld);
 	}
 

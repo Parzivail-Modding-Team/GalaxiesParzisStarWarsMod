@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.mv;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.tile.mv.TileEntityMV;
+import com.parzivail.swg.tile.mv.TileMV;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -28,7 +28,7 @@ public class RenderMV extends TileEntitySpecialRenderer
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float tickTime)
 	{
 		GL11.glPushMatrix();
-		TileEntityMV mv = (TileEntityMV)te;
+		TileMV mv = (TileMV)te;
 		GL11.glTranslatef((float)x + 0.5F, (float)y + 1.8F, (float)z + 0.5F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		GL11.glPushMatrix();

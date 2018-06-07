@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.light;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.light.TileEntityFloorLight;
+import com.parzivail.swg.tile.light.TileFloorLight;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,7 +16,7 @@ public class RenderItemFloorLight implements IItemRenderer
 	public RenderItemFloorLight()
 	{
 		render = new RenderFloorLight();
-		tile = new TileEntityFloorLight();
+		tile = new TileFloorLight();
 		tile.setWorldObj(Client.mc.theWorld);
 	}
 

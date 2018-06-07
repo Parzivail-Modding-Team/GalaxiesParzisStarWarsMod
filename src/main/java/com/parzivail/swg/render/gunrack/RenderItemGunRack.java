@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.gunrack;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.TileEntityGunRack;
+import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public class RenderItemGunRack implements IItemRenderer
 	public RenderItemGunRack()
 	{
 		render = new RenderGunRack();
-		tile = new TileEntityGunRack();
+		tile = new TileGunRack();
 		tile.setWorldObj(Client.mc.theWorld);
 	}
 

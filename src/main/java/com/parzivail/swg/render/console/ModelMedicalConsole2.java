@@ -1,6 +1,6 @@
 package com.parzivail.swg.render.console;
 
-import com.parzivail.swg.tile.console.TileEntityMedicalConsole2;
+import com.parzivail.swg.tile.console.TileMedicalConsole2;
 import com.parzivail.util.entity.EntityTilePassthrough;
 import com.parzivail.util.ui.ShaderHelper;
 import net.minecraft.client.model.ModelBase;
@@ -151,9 +151,9 @@ public class ModelMedicalConsole2 extends ModelBase
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
 		GL11.glPushMatrix();
-		if (entity instanceof EntityTilePassthrough && ((EntityTilePassthrough)entity).tileEntity instanceof TileEntityMedicalConsole2)
+		if (entity instanceof EntityTilePassthrough && ((EntityTilePassthrough)entity).tileEntity instanceof TileMedicalConsole2)
 		{
-			TileEntityMedicalConsole2 console = (TileEntityMedicalConsole2)((EntityTilePassthrough)entity).tileEntity;
+			TileMedicalConsole2 console = (TileMedicalConsole2)((EntityTilePassthrough)entity).tileEntity;
 
 			ShaderHelper.setColor(console.color1);
 			ShaderHelper.useShader(ShaderHelper.glowSolid);

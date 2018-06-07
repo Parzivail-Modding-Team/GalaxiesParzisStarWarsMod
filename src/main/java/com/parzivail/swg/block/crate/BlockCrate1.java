@@ -2,7 +2,7 @@ package com.parzivail.swg.block.crate;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.crate.TileEntityCrate1;
+import com.parzivail.swg.tile.crate.TileCrate1;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockContainer;
 import net.minecraft.block.material.Material;
@@ -24,7 +24,7 @@ public class BlockCrate1 extends PBlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileEntityCrate1();
+		return new TileCrate1();
 	}
 
 	@Override
