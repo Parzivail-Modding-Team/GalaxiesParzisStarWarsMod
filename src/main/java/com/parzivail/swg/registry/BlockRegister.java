@@ -2,6 +2,7 @@ package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.block.*;
+import com.parzivail.swg.block.atmosphere.BlockSoundHothTelemetry;
 import com.parzivail.swg.block.console.*;
 import com.parzivail.swg.block.crate.*;
 import com.parzivail.swg.block.light.BlockFloorLight;
@@ -58,6 +59,8 @@ public class BlockRegister
 	public static PBlockContainer ladder;
 	public static PBlockContainer moistureVaporator;
 	public static PBlockContainer moistureVaporator2;
+
+	public static PBlockContainer soundHothTelemetry;
 
 	public static PBlock white;
 	public static PBlock gray;
@@ -154,6 +157,8 @@ public class BlockRegister
 		register(ladder = new BlockLadder());
 		register(moistureVaporator = new BlockMV());
 		register(moistureVaporator2 = new BlockMV2());
+
+		register(soundHothTelemetry = new BlockSoundHothTelemetry());
 	}
 
 	private static void register(PBlock item)

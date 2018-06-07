@@ -8,6 +8,15 @@
       }
     ]
   },
+  "swg.atmo.hothTelemetry": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "atmo/hothTelemetry",
+        "stream": true
+      }
+    ]
+  },
   "swg.fx.rifleReload": {
     "category": "neutral",
     "sounds": [

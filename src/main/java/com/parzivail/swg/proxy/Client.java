@@ -110,8 +110,8 @@ public class Client extends Common
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothMedical2), new RenderItemMedicalConsole2());
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crate1), new RenderItemCrate1());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth1), new RenderItemCrate4());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth2), new RenderItemCrate5());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth1), new RenderItemHothCrate1());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth2), new RenderItemHothCrate2());
 		//		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateMosEspa), new RenderItemX());
 		//		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateVilla), new RenderItemX());
 
@@ -132,10 +132,10 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePanelHoth.class, new RenderConsoleHoth1());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth1.class, new RenderCrate4());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth2.class, new RenderCrate5());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateMosEspa.class, new RenderCrate2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateVilla.class, new RenderCrate3());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth1.class, new RenderHothCrate1());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth2.class, new RenderHothCrate2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateMosEspa.class, new RenderCrateMosEspa());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateVilla.class, new RenderCrateVilla());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLight.class, new RenderFloorLight());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLight2.class, new RenderFloorLight2());

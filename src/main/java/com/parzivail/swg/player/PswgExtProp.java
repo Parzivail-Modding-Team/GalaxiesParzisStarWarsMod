@@ -43,6 +43,8 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 
 	public static PswgExtProp get(Entity p)
 	{
+		if (p == null)
+			return null;
 		return (PswgExtProp)p.getExtendedProperties(PROP_NAME);
 	}
 
