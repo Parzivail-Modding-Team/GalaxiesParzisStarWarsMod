@@ -7,7 +7,7 @@ import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.player.PswgExtProp;
-import com.parzivail.swg.render.Decal;
+import com.parzivail.swg.render.decal.Decal;
 import com.parzivail.swg.weapon.blastermodule.BlasterData;
 import com.parzivail.swg.weapon.blastermodule.BlasterDescriptor;
 import com.parzivail.swg.weapon.blastermodule.powerpack.BlasterPowerPack;

@@ -3,6 +3,13 @@ package com.parzivail.swg.registry;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.block.*;
 import com.parzivail.swg.block.console.*;
+import com.parzivail.swg.block.crate.*;
+import com.parzivail.swg.block.light.BlockFloorLight;
+import com.parzivail.swg.block.light.BlockFloorLight2;
+import com.parzivail.swg.block.light.BlockHothCeilingLight;
+import com.parzivail.swg.block.light.BlockHothCeilingLight2;
+import com.parzivail.swg.block.mv.BlockMV;
+import com.parzivail.swg.block.mv.BlockMV2;
 import com.parzivail.util.block.PBlock;
 import com.parzivail.util.block.PBlockConnected;
 import com.parzivail.util.block.PBlockContainer;
@@ -35,6 +42,22 @@ public class BlockRegister
 	public static PBlockContainer consoleHothCurved3;
 	public static PBlockContainer consoleHothMedical1;
 	public static PBlockContainer consoleHothMedical2;
+
+	public static PBlockContainer crate1;
+	public static PBlockContainer crateHoth1;
+	public static PBlockContainer crateHoth2;
+	public static PBlockContainer crateMosEspa;
+	public static PBlockContainer crateVilla;
+
+	public static PBlockContainer floorLight;
+	public static PBlockContainer floorLight2;
+	public static PBlockContainer ceilingLight;
+	public static PBlockContainer ceilingLight2;
+
+	public static PBlockContainer gunRack;
+	public static PBlockContainer ladder;
+	public static PBlockContainer moistureVaporator;
+	public static PBlockContainer moistureVaporator2;
 
 	public static PBlock white;
 	public static PBlock gray;
@@ -115,6 +138,22 @@ public class BlockRegister
 		register(consoleHothCurved3 = new BlockConsoleHoth3());
 		register(consoleHothMedical1 = new BlockMedicalConsole());
 		register(consoleHothMedical2 = new BlockMedicalConsole2());
+
+		register(crate1 = new BlockCrateMass1());
+		register(crateHoth1 = new BlockCrateHoth1());
+		register(crateHoth2 = new BlockCrateHoth2());
+		register(crateMosEspa = new BlockCrateMosEspa());
+		register(crateVilla = new BlockCrateVilla());
+
+		register(floorLight = new BlockFloorLight());
+		register(floorLight2 = new BlockFloorLight2());
+		register(ceilingLight = new BlockHothCeilingLight());
+		register(ceilingLight2 = new BlockHothCeilingLight2());
+
+		register(gunRack = new BlockGunRack());
+		register(ladder = new BlockLadder());
+		register(moistureVaporator = new BlockMV());
+		register(moistureVaporator2 = new BlockMV2());
 	}
 
 	private static void register(PBlock item)

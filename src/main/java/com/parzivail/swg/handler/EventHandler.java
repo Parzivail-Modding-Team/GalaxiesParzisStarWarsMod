@@ -8,7 +8,7 @@ import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.ClientRenderState;
-import com.parzivail.swg.render.WorldDecals;
+import com.parzivail.swg.render.decal.WorldDecals;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.util.common.Pair;

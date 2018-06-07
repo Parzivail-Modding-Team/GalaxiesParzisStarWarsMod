@@ -1,7 +1,6 @@
 package com.parzivail.swg.render.console;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.render.model.console.ModelMedicalConsole;
 import com.parzivail.util.block.TileEntityRotate;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;

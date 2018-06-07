@@ -1,7 +1,6 @@
 package com.parzivail.swg.render.weapon;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.render.model.weapon.ModelDefender;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

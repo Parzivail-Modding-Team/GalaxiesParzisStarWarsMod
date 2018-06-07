@@ -1,7 +1,6 @@
 package com.parzivail.swg.render.console;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.render.model.console.ModelMedicalConsole2;
 import com.parzivail.util.block.TileEntityRotate;
 import com.parzivail.util.entity.EntityTilePassthrough;
 import com.parzivail.util.ui.gltk.GL;
