@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
  * HothCeilingLight2 - Weaston
  * Created using P-Tabula 4.1.1
  */
-public class ModelHothCeilingLight2 extends ModelBase
+public class ModelCeilingLight2 extends ModelBase
 {
 	public ModelRenderer shape1;
 	public ModelRenderer Light1;
@@ -25,7 +25,7 @@ public class ModelHothCeilingLight2 extends ModelBase
 	public ModelRenderer shape6;
 	public ModelRenderer shape7;
 
-	public ModelHothCeilingLight2()
+	public ModelCeilingLight2()
 	{
 		this.textureWidth = 512;
 		this.textureHeight = 512;

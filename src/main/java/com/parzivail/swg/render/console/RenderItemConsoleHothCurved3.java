@@ -9,14 +9,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
-public class RenderItemConsoleHoth3 implements IItemRenderer
+public class RenderItemConsoleHothCurved3 implements IItemRenderer
 {
 	private TileEntitySpecialRenderer render;
 	private TileEntity tile;
 
-	public RenderItemConsoleHoth3()
+	public RenderItemConsoleHothCurved3()
 	{
-		render = new RenderConsoleHoth3();
+		render = new RenderConsoleHothCurved3();
 		tile = new TileEntityConsoleHoth3();
 		tile.setWorldObj(Client.mc.theWorld);
 	}

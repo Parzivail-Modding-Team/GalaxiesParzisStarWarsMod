@@ -102,45 +102,45 @@ public class Client extends Common
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleT21, new RenderT21());
 
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHoth1), new RenderItemPanelHoth());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved1), new RenderItemConsoleHoth1());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved2), new RenderItemConsoleHoth2());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved3), new RenderItemConsoleHoth3());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHoth1), new RenderItemConsoleHoth1());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved1), new RenderItemConsoleHothCurved1());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved2), new RenderItemConsoleHothCurved2());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved3), new RenderItemConsoleHothCurved3());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothMedical1), new RenderItemMedicalConsole());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothMedical2), new RenderItemMedicalConsole2());
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crate1), new RenderItemCrate1());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth1), new RenderItemHothCrate1());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth2), new RenderItemHothCrate2());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth1), new RenderItemCrate4());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth2), new RenderItemCrate5());
 		//		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateMosEspa), new RenderItemX());
 		//		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateVilla), new RenderItemX());
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.floorLight), new RenderItemFloorLight());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.floorLight2), new RenderItemFloorLight2());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.ceilingLight), new RenderItemHothCeilingLight());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.ceilingLight2), new RenderItemHothCeilingLight2());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.ceilingLight), new RenderItemCeilingLight());
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.ceilingLight2), new RenderItemCeilingLight2());
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.gunRack), new RenderItemGunRack());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.ladder), new RenderItemLadder());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.moistureVaporator), new RenderItemMV());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth1.class, new RenderConsoleHoth1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth2.class, new RenderConsoleHoth2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth3.class, new RenderConsoleHoth3());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth1.class, new RenderConsoleHothCurved1());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth2.class, new RenderConsoleHothCurved2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConsoleHoth3.class, new RenderConsoleHothCurved3());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMedicalConsole.class, new RenderMedicalConsole());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMedicalConsole2.class, new RenderMedicalConsole2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPanelHoth.class, new RenderPanelHoth());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPanelHoth.class, new RenderConsoleHoth1());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrate1.class, new RenderCrate1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateHoth1.class, new RenderHothCrate1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateHoth2.class, new RenderHothCrate2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateMosEspa.class, new RenderCrateMosEspa());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateVilla.class, new RenderCrateVilla());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateHoth1.class, new RenderCrate4());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateHoth2.class, new RenderCrate5());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateMosEspa.class, new RenderCrate2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrateVilla.class, new RenderCrate3());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFloorLight.class, new RenderFloorLight());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityFloorLight2.class, new RenderFloorLight2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHothCeilingLight.class, new RenderCeilingLightHoth());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHothCeilingLight2.class, new RenderHothCeilingLight2());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHothCeilingLight.class, new RenderCeilingLight());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityHothCeilingLight2.class, new RenderCeilingLight2());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGunRack.class, new RenderGunRack());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityLadder.class, new RenderLadder());

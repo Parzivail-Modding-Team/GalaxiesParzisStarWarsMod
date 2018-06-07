@@ -18,7 +18,7 @@ public class RenderCrate1 extends TileEntitySpecialRenderer
 
 	public RenderCrate1()
 	{
-		this.model = new ModelCrateMass1();
+		this.model = new ModelCrate1();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)

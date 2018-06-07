@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.console;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.console.TileEntityConsoleHoth1;
+import com.parzivail.swg.tile.console.TileEntityPanelHoth;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public class RenderItemConsoleHoth1 implements IItemRenderer
 	public RenderItemConsoleHoth1()
 	{
 		render = new RenderConsoleHoth1();
-		tile = new TileEntityConsoleHoth1();
+		tile = new TileEntityPanelHoth();
 		tile.setWorldObj(Client.mc.theWorld);
 	}
 
@@ -32,15 +32,14 @@ public class RenderItemConsoleHoth1 implements IItemRenderer
 	{
 		GL11.glPushMatrix();
 		this.tile.setWorldObj(Client.mc.theWorld);
-		this.tile.updateEntity();
 		switch (type)
 		{
 			case INVENTORY:
 				GL11.glPushMatrix();
 				GL11.glDisable(GL11.GL_CULL_FACE);
-				GL11.glTranslatef(0.32f, -0.34f, 0.28f);
+				GL11.glTranslatef(0.32f, -0.33f, 0.28f);
 				GL11.glRotatef(90, 0, 1, 0);
-				GL.Scale(0.52f);
+				GL.Scale(0.43f);
 				GL11.glScalef(1, 1, -1);
 				GL11.glTranslatef(-.03f, -.6f, 0);
 				this.render.renderTileEntityAt(tile, 0, 0, 0, 0);
@@ -52,7 +51,7 @@ public class RenderItemConsoleHoth1 implements IItemRenderer
 				GL11.glDisable(GL11.GL_CULL_FACE);
 				GL11.glRotatef(45, 0, 1, 0);
 				GL11.glScalef(0.35f, 0.35f, -0.35f);
-				GL11.glTranslatef(0.5f, 0, -3);
+				GL11.glTranslatef(0.5f, 0.25f, -3);
 				GL11.glRotatef(45, 1, 0, 0);
 				GL11.glRotatef(180, 0, 1, 0);
 				this.render.renderTileEntityAt(tile, 0, 0, 0, 0);

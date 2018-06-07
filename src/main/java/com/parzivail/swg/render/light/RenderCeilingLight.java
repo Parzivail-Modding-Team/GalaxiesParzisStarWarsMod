@@ -1,7 +1,6 @@
-package com.parzivail.swg.render.console;
+package com.parzivail.swg.render.light;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.tile.console.TileEntityPanelHoth;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -11,15 +10,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-public class RenderPanelHoth extends TileEntitySpecialRenderer
+public class RenderCeilingLight extends TileEntitySpecialRenderer
 {
-	public static ResourceLocation texture = Resources.location("textures/model/consoleHoth1.png");
+	public static ResourceLocation texture = new ResourceLocation(Resources.MODID + ":" + "textures/model/hothCeilingLight.png");
 
 	private final ModelBase model;
 
-	public RenderPanelHoth()
+	public RenderCeilingLight()
 	{
-		this.model = new ModelConsoleHoth1();
+		this.model = new ModelCeilingLight();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -34,7 +33,6 @@ public class RenderPanelHoth extends TileEntitySpecialRenderer
 		GL11.glTranslated(x + 0.5f, y + 1.5f, z + 0.5f);
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
 		GL.Scale(1.25f);
-		GL11.glRotatef(90 * ((TileEntityPanelHoth)te).getFacing(), 0, 1, 0);
 		this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 		GL11.glPopMatrix();
 	}

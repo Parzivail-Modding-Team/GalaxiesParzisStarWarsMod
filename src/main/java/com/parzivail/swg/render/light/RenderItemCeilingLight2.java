@@ -9,14 +9,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
-public class RenderItemHothCeilingLight2 implements IItemRenderer
+public class RenderItemCeilingLight2 implements IItemRenderer
 {
 	private TileEntitySpecialRenderer render;
 	private TileEntity tile;
 
-	public RenderItemHothCeilingLight2()
+	public RenderItemCeilingLight2()
 	{
-		render = new RenderHothCeilingLight2();
+		render = new RenderCeilingLight2();
 		tile = new TileEntityHothCeilingLight2();
 		tile.setWorldObj(Client.mc.theWorld);
 	}

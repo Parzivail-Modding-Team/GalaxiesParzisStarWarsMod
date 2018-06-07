@@ -132,14 +132,14 @@ public class BlockRegister
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
 		register(sabaccTable = new BlockSabaccTable().setAlpha());
 
-		register(consoleHoth1 = new BlockPanelHoth());
-		register(consoleHothCurved1 = new BlockConsoleHoth1());
-		register(consoleHothCurved2 = new BlockConsoleHoth2());
-		register(consoleHothCurved3 = new BlockConsoleHoth3());
+		register(consoleHoth1 = new BlockConsoleHoth1());
+		register(consoleHothCurved1 = new BlockConsoleHothCurved1());
+		register(consoleHothCurved2 = new BlockConsoleHothCurved2());
+		register(consoleHothCurved3 = new BlockConsoleHothCurved3());
 		register(consoleHothMedical1 = new BlockMedicalConsole());
 		register(consoleHothMedical2 = new BlockMedicalConsole2());
 
-		register(crate1 = new BlockCrateMass1());
+		register(crate1 = new BlockCrate1());
 		register(crateHoth1 = new BlockCrateHoth1());
 		register(crateHoth2 = new BlockCrateHoth2());
 		register(crateMosEspa = new BlockCrateMosEspa());

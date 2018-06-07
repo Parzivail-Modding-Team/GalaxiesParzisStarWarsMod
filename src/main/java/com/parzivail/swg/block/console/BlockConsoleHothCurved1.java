@@ -2,7 +2,7 @@ package com.parzivail.swg.block.console;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.console.TileEntityConsoleHoth3;
+import com.parzivail.swg.tile.console.TileEntityConsoleHoth1;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockContainer;
 import net.minecraft.block.material.Material;
@@ -13,11 +13,11 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class BlockConsoleHoth3 extends PBlockContainer
+public class BlockConsoleHothCurved1 extends PBlockContainer
 {
-	public BlockConsoleHoth3()
+	public BlockConsoleHothCurved1()
 	{
-		super("blockConsoleHoth3", Material.iron);
+		super("blockConsoleHoth1", Material.iron);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0, 0, 0, 1, 2.5f, 1);
 		setHardness(50.0F);
@@ -28,9 +28,9 @@ public class BlockConsoleHoth3 extends PBlockContainer
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityConsoleHoth3)
+		if (tile instanceof TileEntityConsoleHoth1)
 		{
-			TileEntityConsoleHoth3 te = (TileEntityConsoleHoth3)tile;
+			TileEntityConsoleHoth1 te = (TileEntityConsoleHoth1)tile;
 			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
 			te.setFacing(l);
 		}
@@ -39,7 +39,7 @@ public class BlockConsoleHoth3 extends PBlockContainer
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileEntityConsoleHoth3();
+		return new TileEntityConsoleHoth1();
 	}
 
 	@Override

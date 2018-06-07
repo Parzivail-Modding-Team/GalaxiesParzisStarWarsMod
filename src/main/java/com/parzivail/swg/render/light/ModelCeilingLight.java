@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
  * HothCeilingLight - Weaston
  * Created using Tabula 4.1.1
  */
-public class ModelHothCeilingLight extends ModelBase
+public class ModelCeilingLight extends ModelBase
 {
 	public ModelRenderer shape1;
 	public ModelRenderer Light;
@@ -19,7 +19,7 @@ public class ModelHothCeilingLight extends ModelBase
 	public ModelRenderer shape1_2;
 	public ModelRenderer shape1_3;
 
-	public ModelHothCeilingLight()
+	public ModelCeilingLight()
 	{
 		this.textureWidth = 512;
 		this.textureHeight = 512;

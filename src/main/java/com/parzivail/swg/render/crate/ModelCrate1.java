@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
  * CrateMass1 - Weaston
  * Created using Tabula 4.1.1
  */
-public class ModelCrateMass1 extends ModelBase
+public class ModelCrate1 extends ModelBase
 {
 	public ModelRenderer shape1;
 	public ModelRenderer shape1_1;
@@ -23,7 +23,7 @@ public class ModelCrateMass1 extends ModelBase
 	public ModelRenderer shape1_10;
 	public ModelRenderer shape1_11;
 
-	public ModelCrateMass1()
+	public ModelCrate1()
 	{
 		this.textureWidth = 512;
 		this.textureHeight = 512;

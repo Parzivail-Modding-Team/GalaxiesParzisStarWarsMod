@@ -1,8 +1,7 @@
 package com.parzivail.swg.render.console;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.tile.console.TileEntityConsoleHoth1;
-import com.parzivail.util.entity.EntityTilePassthrough;
+import com.parzivail.swg.tile.console.TileEntityPanelHoth;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -14,13 +13,13 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderConsoleHoth1 extends TileEntitySpecialRenderer
 {
-	public static ResourceLocation texture = Resources.location("textures/model/consoleHothCurved1.png");
+	public static ResourceLocation texture = Resources.location("textures/model/consoleHoth1.png");
 
 	private final ModelBase model;
 
 	public RenderConsoleHoth1()
 	{
-		this.model = new ModelConsoleHothCurved1();
+		this.model = new ModelConsoleHoth1();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -35,8 +34,8 @@ public class RenderConsoleHoth1 extends TileEntitySpecialRenderer
 		GL11.glTranslated(x + 0.5f, y + 1.5f, z + 0.5f);
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
 		GL.Scale(1.25f);
-		GL11.glRotatef(90 * ((TileEntityConsoleHoth1)te).getFacing(), 0, 1, 0);
-		this.model.render(new EntityTilePassthrough(te), 0, 0, 0, 0.0F, 0.0F, 0.05F);
+		GL11.glRotatef(90 * ((TileEntityPanelHoth)te).getFacing(), 0, 1, 0);
+		this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 		GL11.glPopMatrix();
 	}
 }
