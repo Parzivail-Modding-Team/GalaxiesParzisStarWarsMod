@@ -1,4 +1,4 @@
-package com.parzivail.swg.tile.mv;
+package com.parzivail.swg.tile.machine;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.util.block.TileRotatable;

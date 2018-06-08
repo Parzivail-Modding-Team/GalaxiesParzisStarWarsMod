@@ -2,15 +2,17 @@ package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.block.*;
+import com.parzivail.swg.block.antenna.BlockAntennaThin;
+import com.parzivail.swg.block.antenna.BlockSatelliteDish;
 import com.parzivail.swg.block.atmosphere.BlockSoundHothTelemetry;
 import com.parzivail.swg.block.console.*;
 import com.parzivail.swg.block.crate.*;
-import com.parzivail.swg.block.light.BlockFloorLight;
-import com.parzivail.swg.block.light.BlockFloorLight2;
-import com.parzivail.swg.block.light.BlockHothCeilingLight;
-import com.parzivail.swg.block.light.BlockHothCeilingLight2;
-import com.parzivail.swg.block.mv.BlockMV;
-import com.parzivail.swg.block.mv.BlockMV2;
+import com.parzivail.swg.block.light.*;
+import com.parzivail.swg.block.machine.BlockMV;
+import com.parzivail.swg.block.machine.BlockMV2;
+import com.parzivail.swg.block.machine.BlockSpokedMachine;
+import com.parzivail.swg.block.pipe.BlockPipeSmallBent;
+import com.parzivail.swg.block.pipe.BlockQuadVentPipe;
 import com.parzivail.util.block.PBlock;
 import com.parzivail.util.block.PBlockConnected;
 import com.parzivail.util.block.PBlockContainer;
@@ -43,6 +45,7 @@ public class BlockRegister
 	public static PBlockContainer consoleHothCurved3;
 	public static PBlockContainer consoleHothMedical1;
 	public static PBlockContainer consoleHothMedical2;
+	public static PBlockContainer wallControlPanel;
 
 	public static PBlockContainer crate1;
 	public static PBlockContainer crateHoth1;
@@ -54,11 +57,20 @@ public class BlockRegister
 	public static PBlockContainer floorLight2;
 	public static PBlockContainer ceilingLight;
 	public static PBlockContainer ceilingLight2;
+	public static PBlockContainer angledWallLight;
 
 	public static PBlockContainer gunRack;
 	public static PBlockContainer ladder;
+
+	public static PBlockContainer antennaThin;
+	public static PBlockContainer satelliteDish;
+
 	public static PBlockContainer moistureVaporator;
 	public static PBlockContainer moistureVaporator2;
+	public static PBlockContainer spokedMachine;
+
+	public static PBlockContainer pipeSmallBent;
+	public static PBlockContainer quadVentPipe;
 
 	public static PBlockContainer soundHothTelemetry;
 
@@ -141,6 +153,7 @@ public class BlockRegister
 		register(consoleHothCurved3 = new BlockConsoleHothCurved3());
 		register(consoleHothMedical1 = new BlockMedicalConsole());
 		register(consoleHothMedical2 = new BlockMedicalConsole2());
+		register(wallControlPanel = new BlockWallControlPanel());
 
 		register(crate1 = new BlockCrate1());
 		register(crateHoth1 = new BlockCrateHoth1());
@@ -152,11 +165,20 @@ public class BlockRegister
 		register(floorLight2 = new BlockFloorLight2());
 		register(ceilingLight = new BlockHothCeilingLight());
 		register(ceilingLight2 = new BlockHothCeilingLight2());
+		register(angledWallLight = new BlockAngledWallLight());
 
 		register(gunRack = new BlockGunRack());
 		register(ladder = new BlockLadder());
+
+		register(antennaThin = new BlockAntennaThin());
+		register(satelliteDish = new BlockSatelliteDish());
+
 		register(moistureVaporator = new BlockMV());
 		register(moistureVaporator2 = new BlockMV2());
+		register(spokedMachine = new BlockSpokedMachine());
+
+		register(pipeSmallBent = new BlockPipeSmallBent());
+		register(quadVentPipe = new BlockQuadVentPipe());
 
 		register(soundHothTelemetry = new BlockSoundHothTelemetry());
 	}

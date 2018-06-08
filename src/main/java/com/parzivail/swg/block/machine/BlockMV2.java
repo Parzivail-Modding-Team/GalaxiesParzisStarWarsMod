@@ -1,8 +1,8 @@
-package com.parzivail.swg.block.mv;
+package com.parzivail.swg.block.machine;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.mv.TileMV2;
+import com.parzivail.swg.tile.machine.TileMV2;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;

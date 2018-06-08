@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 
 public abstract class PBlockRotate extends PBlockContainer
 {
-	private int snapAngles;
+	protected int snapAngles;
 
 	public PBlockRotate(String name)
 	{

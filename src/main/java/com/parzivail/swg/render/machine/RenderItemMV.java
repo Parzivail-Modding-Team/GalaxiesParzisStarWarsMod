@@ -1,7 +1,7 @@
-package com.parzivail.swg.render.mv;
+package com.parzivail.swg.render.machine;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.tile.mv.TileMV;
+import com.parzivail.swg.tile.machine.TileMV;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;

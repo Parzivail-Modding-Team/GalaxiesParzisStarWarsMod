@@ -1,4 +1,4 @@
-package com.parzivail.swg.render.mv;
+package com.parzivail.swg.render.machine;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
