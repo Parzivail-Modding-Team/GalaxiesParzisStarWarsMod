@@ -1,9 +1,9 @@
 package com.parzivail.swg.block.atmosphere;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.atmosphere.TileAtmoSound;
 import com.parzivail.swg.tile.atmosphere.TileSoundHothTelemetry;
 import com.parzivail.util.block.PBlockContainer;
+import com.parzivail.util.block.TileAtmoSound;
 import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

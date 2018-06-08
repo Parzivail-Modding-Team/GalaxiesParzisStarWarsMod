@@ -1,8 +1,8 @@
 package com.parzivail.swg.tile.mv;
 
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.TileRotatable;
 
-public class TileMV2 extends TileEntityRotate
+public class TileMV2 extends TileRotatable
 {
 	public int frame;
 

@@ -4,18 +4,14 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.mv.TileMV2;
 import com.parzivail.util.block.HarvestLevel;
-import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockMV2 extends PBlockContainer
+public class BlockMV2 extends PBlockRotate
 {
 	public BlockMV2()
 	{
@@ -70,18 +66,6 @@ public class BlockMV2 extends PBlockContainer
 	//			player.openGui(StarWarsMod.instance, Resources.GUI_MV, world, x, y, z);
 	//		return true;
 	//	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
-	{
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityRotate)
-		{
-			TileEntityRotate vap = (TileEntityRotate)tile;
-			int l = MathHelper.floor_double(player.rotationYaw * 8.0F / 360.0F + 0.5D) & 0x3;
-			vap.setFacing(l);
-		}
-	}
 
 	@Override
 	public void registerIcons(IIconRegister icon)

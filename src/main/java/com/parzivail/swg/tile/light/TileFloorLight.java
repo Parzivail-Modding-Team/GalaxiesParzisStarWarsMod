@@ -1,7 +1,7 @@
 package com.parzivail.swg.tile.light;
 
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.TileRotatable;
 
-public class TileFloorLight extends TileEntityRotate
+public class TileFloorLight extends TileRotatable
 {
 }

@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.ladder;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.TileRotatable;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -36,7 +36,7 @@ public class RenderLadder extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5f, y + 1.5f, z + 0.5f);
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-		GL11.glRotatef(90 * ((TileEntityRotate)te).getFacing(), 0, 1, 0);
+		GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
 		GL.Scale(1.25f);
 		if (te.getWorld().getBlock(te.xCoord, te.yCoord + 1, te.zCoord) == Blocks.air)
 		{

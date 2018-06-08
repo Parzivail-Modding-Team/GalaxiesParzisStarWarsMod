@@ -4,36 +4,21 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.console.TilePanelHoth;
 import com.parzivail.util.block.HarvestLevel;
-import com.parzivail.util.block.PBlockContainer;
+import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class BlockConsoleHoth1 extends PBlockContainer
+public class BlockConsoleHoth1 extends PBlockRotate
 {
 	public BlockConsoleHoth1()
 	{
-		super("blockPanelHoth", Material.iron);
+		super("blockPanelHoth", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0, 0, 0, 1, 3f, 1);
 		setHardness(50.0F);
 		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
-	{
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TilePanelHoth)
-		{
-			TilePanelHoth te = (TilePanelHoth)tile;
-			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
-			te.setFacing(l);
-		}
 	}
 
 	@Override

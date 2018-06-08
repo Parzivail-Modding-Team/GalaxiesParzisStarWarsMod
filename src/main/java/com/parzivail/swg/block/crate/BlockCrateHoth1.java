@@ -4,22 +4,18 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.crate.TileCrateHoth1;
 import com.parzivail.util.block.HarvestLevel;
-import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockCrateHoth1 extends PBlockContainer
+public class BlockCrateHoth1 extends PBlockRotate
 {
 	public BlockCrateHoth1()
 	{
-		super("crateHoth1", Material.iron);
+		super("crateHoth1", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
 		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
@@ -53,18 +49,6 @@ public class BlockCrateHoth1 extends PBlockContainer
 	public void registerIcons(IIconRegister icon)
 	{
 		blockIcon = icon.registerIcon(Resources.MODID + ":" + "blank");
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
-	{
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityRotate)
-		{
-			TileEntityRotate te = (TileEntityRotate)tile;
-			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
-			te.setFacing(l);
-		}
 	}
 
 	@Override

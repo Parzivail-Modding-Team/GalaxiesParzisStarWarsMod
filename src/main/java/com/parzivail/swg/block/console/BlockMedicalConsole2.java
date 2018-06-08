@@ -4,22 +4,19 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.console.TileMedicalConsole2;
 import com.parzivail.util.block.HarvestLevel;
-import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.PBlockRotate;
+import com.parzivail.util.block.TileRotatable;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockMedicalConsole2 extends PBlockContainer
+public class BlockMedicalConsole2 extends PBlockRotate
 {
 	public BlockMedicalConsole2()
 	{
-		super("medicalConsole2", Material.iron);
+		super("medicalConsole2", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
 		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
@@ -46,7 +43,7 @@ public class BlockMedicalConsole2 extends PBlockContainer
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
 	{
-		int face = ((TileEntityRotate)p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_)).getFacing();
+		int face = (int)((TileRotatable)p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_)).getFacing();
 
 		switch (face)
 		{
@@ -69,18 +66,6 @@ public class BlockMedicalConsole2 extends PBlockContainer
 	public void registerIcons(IIconRegister icon)
 	{
 		blockIcon = icon.registerIcon(Resources.MODID + ":" + "blank");
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
-	{
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityRotate)
-		{
-			TileEntityRotate te = (TileEntityRotate)tile;
-			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
-			te.setFacing(l);
-		}
 	}
 
 	@Override

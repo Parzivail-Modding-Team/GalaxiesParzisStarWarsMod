@@ -1,4 +1,4 @@
-package com.parzivail.swg.tile.atmosphere;
+package com.parzivail.util.block;
 
 import com.parzivail.util.sound.AtmoSound;
 import cpw.mods.fml.client.FMLClientHandler;

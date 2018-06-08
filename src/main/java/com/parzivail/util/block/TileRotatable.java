@@ -4,11 +4,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityRotate extends TileEntity
+public class TileRotatable extends TileAtmoSound
 {
-	private int facing = 0;
+	private float facing = 0;
 
 	@Override
 	public Packet getDescriptionPacket()
@@ -29,15 +28,15 @@ public class TileEntityRotate extends TileEntity
 	public void writeToNBT(NBTTagCompound tag)
 	{
 		super.writeToNBT(tag);
-		tag.setInteger("facing", getFacing());
+		tag.setFloat("facing", getFacing());
 	}
 
-	public int getFacing()
+	public float getFacing()
 	{
 		return facing;
 	}
 
-	public void setFacing(int facing)
+	public void setFacing(float facing)
 	{
 		this.facing = facing;
 	}
@@ -46,6 +45,6 @@ public class TileEntityRotate extends TileEntity
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		this.setFacing(tag.getInteger("facing"));
+		this.setFacing(tag.getFloat("facing"));
 	}
 }

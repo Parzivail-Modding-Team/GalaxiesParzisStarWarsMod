@@ -5,7 +5,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.TileRotatable;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -93,9 +93,9 @@ public class BlockGunRack extends PBlockContainer
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
 	{
-		if (p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_) instanceof TileEntityRotate)
+		if (p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_) instanceof TileRotatable)
 		{
-			int meta = ((TileEntityRotate)p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_)).getFacing();
+			int meta = (int)((TileRotatable)p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_)).getFacing();
 			if (meta % 2 == 0)
 				setBlockBounds(0, 0, 0.2f, 1, 1.3f, 0.8f);
 			else
@@ -113,9 +113,9 @@ public class BlockGunRack extends PBlockContainer
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
 	{
 		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityRotate)
+		if (tile instanceof TileRotatable)
 		{
-			TileEntityRotate te = (TileEntityRotate)tile;
+			TileRotatable te = (TileRotatable)tile;
 			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
 			te.setFacing(l);
 		}

@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.gunrack;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.TileRotatable;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -35,8 +35,8 @@ public class RenderGunRack extends TileEntitySpecialRenderer
 		GL11.glTranslated(x + 0.5f, y + 0.95f, z + 0.5f);
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
 		GL.Scale(0.8f);
-		if (te instanceof TileEntityRotate)
-			GL11.glRotatef(90 * ((TileEntityRotate)te).getFacing(), 0, 1, 0);
+		if (te instanceof TileRotatable)
+			GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
 
 		this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 

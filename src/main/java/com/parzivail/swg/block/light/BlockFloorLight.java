@@ -4,21 +4,17 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.light.TileFloorLight;
 import com.parzivail.util.block.HarvestLevel;
-import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class BlockFloorLight extends PBlockContainer
+public class BlockFloorLight extends PBlockRotate
 {
 	public BlockFloorLight()
 	{
-		super("floorLight", Material.iron);
+		super("floorLight", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0.2F, 0.0F, 0.2F, 0.8F, 0.5F, 0.8F);
 		setHardness(50.0F);
@@ -48,18 +44,6 @@ public class BlockFloorLight extends PBlockContainer
 	public void registerIcons(IIconRegister icon)
 	{
 		blockIcon = icon.registerIcon(Resources.MODID + ":" + "blank");
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
-	{
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityRotate)
-		{
-			TileEntityRotate te = (TileEntityRotate)tile;
-			int l = MathHelper.floor_double(player.rotationYaw * 8.0F / 360.0F + 0.5D) & 0x7;
-			te.setFacing(l);
-		}
 	}
 
 	@Override

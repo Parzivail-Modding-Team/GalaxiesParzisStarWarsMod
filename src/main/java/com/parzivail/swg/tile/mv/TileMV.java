@@ -1,9 +1,13 @@
 package com.parzivail.swg.tile.mv;
 
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.swg.Resources;
+import com.parzivail.util.block.TileRotatable;
+import net.minecraft.util.ResourceLocation;
 
-public class TileMV extends TileEntityRotate
+public class TileMV extends TileRotatable
 {
+	private static final ResourceLocation sound = Resources.location("swg.mech.vaporator");
+
 	public int frame;
 
 	public TileMV()
@@ -14,6 +18,13 @@ public class TileMV extends TileEntityRotate
 	@Override
 	public void updateEntity()
 	{
+		super.updateEntity();
 		this.frame++;
+	}
+
+	@Override
+	public ResourceLocation getSound()
+	{
+		return sound;
 	}
 }

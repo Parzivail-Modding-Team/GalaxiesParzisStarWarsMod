@@ -17,6 +17,15 @@
       }
     ]
   },
+  "swg.mech.vaporator": {
+    "category": "neutral",
+    "sounds": [
+      {
+        "name": "mech/vaporator",
+        "stream": true
+      }
+    ]
+  },
   "swg.fx.rifleReload": {
     "category": "neutral",
     "sounds": [

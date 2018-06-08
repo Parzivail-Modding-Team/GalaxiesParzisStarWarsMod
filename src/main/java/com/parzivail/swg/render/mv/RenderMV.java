@@ -2,6 +2,7 @@ package com.parzivail.swg.render.mv;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.tile.mv.TileMV;
+import com.parzivail.util.block.TileRotatable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -34,8 +35,8 @@ public class RenderMV extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL11.glScalef(1.5F, 1.5F, 1.5F);
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-		GL11.glRotatef(mv.getFacing() * 45, 0.0F, 1.0F, 0.0F);
-		float r = (float)(mv.frame / 180f * Math.PI) * 5;
+		GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
+		float r = (float)((mv.frame + tickTime) / 180f * Math.PI) * 5;
 		this.model.windVane1.rotateAngleY = r;
 		this.model.windVane2.rotateAngleY = r;
 		this.model.windVaneRod1.rotateAngleY = r;

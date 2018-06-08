@@ -4,17 +4,17 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.crate.TileCrate1;
 import com.parzivail.util.block.HarvestLevel;
-import com.parzivail.util.block.PBlockContainer;
+import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockCrate1 extends PBlockContainer
+public class BlockCrate1 extends PBlockRotate
 {
 	public BlockCrate1()
 	{
-		super("crate1", Material.iron);
+		super("crate1", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0, 0, 0, 1, 2, 1);
 		setHardness(50.0F);

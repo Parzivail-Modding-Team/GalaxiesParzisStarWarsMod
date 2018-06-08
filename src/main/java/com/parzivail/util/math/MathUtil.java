@@ -84,4 +84,9 @@ public class MathUtil
 	{
 		return _rand.nextInt(n) == 0;
 	}
+
+	public static float roundToNearest(float x, float nearest)
+	{
+		return Math.round(x / nearest) * nearest;
+	}
 }

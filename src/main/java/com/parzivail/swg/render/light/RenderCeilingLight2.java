@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.light;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.TileRotatable;
 import com.parzivail.util.entity.EntityTilePassthrough;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.GL;
@@ -36,8 +36,8 @@ public class RenderCeilingLight2 extends TileEntitySpecialRenderer
 		GL11.glTranslated(x + 0.5f, y + 1.5f, z + 0.5f);
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
 
-		if (te instanceof TileEntityRotate)
-			GL11.glRotatef(90 * ((TileEntityRotate)te).getFacing(), 0, 1, 0);
+		if (te instanceof TileRotatable)
+			GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
 
 		GL11.glPushMatrix();
 		GL.Scale(1.25f);

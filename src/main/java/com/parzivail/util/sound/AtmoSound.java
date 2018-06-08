@@ -16,6 +16,7 @@ public class AtmoSound extends PositionedSound implements ITickableSound
 		this.volume = volume;
 		this.pitch = pitch;
 		this.repeat = true;
+		//this.attenuationType = AttenuationType.NONE;
 	}
 
 	@Override

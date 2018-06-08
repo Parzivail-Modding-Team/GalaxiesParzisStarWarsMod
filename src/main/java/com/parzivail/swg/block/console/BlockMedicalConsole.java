@@ -4,21 +4,17 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.console.TileMedicalConsole;
 import com.parzivail.util.block.HarvestLevel;
-import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.TileEntityRotate;
+import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
-public class BlockMedicalConsole extends PBlockContainer
+public class BlockMedicalConsole extends PBlockRotate
 {
 	public BlockMedicalConsole()
 	{
-		super("medicalConsole", Material.iron);
+		super("medicalConsole", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
 		this.setBlockBounds(0.2f, 0, 0.2f, 0.8f, 1, 0.8f);
@@ -47,18 +43,6 @@ public class BlockMedicalConsole extends PBlockContainer
 	public void registerIcons(IIconRegister icon)
 	{
 		blockIcon = icon.registerIcon(Resources.MODID + ":" + "blank");
-	}
-
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
-	{
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileEntityRotate)
-		{
-			TileEntityRotate te = (TileEntityRotate)tile;
-			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
-			te.setFacing(l);
-		}
 	}
 
 	@Override
