@@ -1,6 +1,5 @@
 package com.parzivail.swg.block.antenna;
 
-import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
 import com.parzivail.util.block.HarvestLevel;
@@ -8,7 +7,6 @@ import com.parzivail.util.block.PBlockRotate;
 import com.parzivail.util.block.Tile2DofGimbal;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -54,12 +52,6 @@ public class BlockSatelliteDish extends PBlockRotate
 	public boolean isOpaqueCube()
 	{
 		return false;
-	}
-
-	@Override
-	public void registerIcons(IIconRegister icon)
-	{
-		blockIcon = icon.registerIcon(Resources.MODID + ":" + "iconMoistureVaporator");
 	}
 
 	@Override

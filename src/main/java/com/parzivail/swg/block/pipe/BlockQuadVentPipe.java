@@ -1,12 +1,10 @@
 package com.parzivail.swg.block.pipe;
 
-import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.pipe.TileQuadVentPipe;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
@@ -37,12 +35,6 @@ public class BlockQuadVentPipe extends PBlockRotate
 	public boolean isOpaqueCube()
 	{
 		return false;
-	}
-
-	@Override
-	public void registerIcons(IIconRegister icon)
-	{
-		blockIcon = icon.registerIcon(Resources.MODID + ":" + "blank");
 	}
 
 	@Override

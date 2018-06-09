@@ -4,4 +4,9 @@ import com.parzivail.util.block.TileRotatable;
 
 public class TileCrateHoth1 extends TileRotatable
 {
+	@Override
+	public boolean canUpdate()
+	{
+		return false;
+	}
 }

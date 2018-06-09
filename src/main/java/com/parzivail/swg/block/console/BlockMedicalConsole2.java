@@ -1,13 +1,11 @@
 package com.parzivail.swg.block.console;
 
-import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.console.TileMedicalConsole2;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockRotate;
 import com.parzivail.util.block.TileRotatable;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -60,12 +58,6 @@ public class BlockMedicalConsole2 extends PBlockRotate
 				setBlockBounds(0.35f, 0, 0, 1, 3, 1);
 				break;
 		}
-	}
-
-	@Override
-	public void registerIcons(IIconRegister icon)
-	{
-		blockIcon = icon.registerIcon(Resources.MODID + ":" + "blank");
 	}
 
 	@Override

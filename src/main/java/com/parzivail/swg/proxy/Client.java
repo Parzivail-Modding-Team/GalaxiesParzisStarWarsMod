@@ -18,13 +18,11 @@ import com.parzivail.swg.render.gunrack.RenderItemGunRack;
 import com.parzivail.swg.render.ladder.RenderItemLadder;
 import com.parzivail.swg.render.ladder.RenderLadder;
 import com.parzivail.swg.render.light.*;
-import com.parzivail.swg.render.machine.RenderItemMV;
-import com.parzivail.swg.render.machine.RenderMV;
-import com.parzivail.swg.render.machine.RenderMV2;
-import com.parzivail.swg.render.machine.RenderSpokedMachine;
+import com.parzivail.swg.render.machine.*;
 import com.parzivail.swg.render.pipe.RenderPipeSmallBent;
 import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
 import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
+import com.parzivail.swg.render.pipe.RenderWallPipeLarge;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
@@ -37,10 +35,12 @@ import com.parzivail.swg.tile.crate.*;
 import com.parzivail.swg.tile.light.*;
 import com.parzivail.swg.tile.machine.TileMV;
 import com.parzivail.swg.tile.machine.TileMV2;
+import com.parzivail.swg.tile.machine.TileSpokedMachine;
+import com.parzivail.swg.tile.machine.TileTubeMachine;
 import com.parzivail.swg.tile.pipe.TilePipeSmallBent;
 import com.parzivail.swg.tile.pipe.TileQuadVentPipe;
-import com.parzivail.swg.tile.pipe.TileSpokedMachine;
 import com.parzivail.swg.tile.pipe.TileTallVentedPipe;
+import com.parzivail.swg.tile.pipe.TileWallPipeLarge;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -140,12 +140,14 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole2.class, new RenderMedicalConsole2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePanelHoth.class, new RenderConsoleHoth1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanel.class, new RenderWallControlPanel());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanelTall.class, new RenderWallControlPanelTall());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth1.class, new RenderHothCrate1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth2.class, new RenderHothCrate2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateMosEspa.class, new RenderCrateMosEspa());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateVilla.class, new RenderCrateVilla());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileAirTank.class, new RenderAirTank());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLight.class, new RenderFloorLight());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLight2.class, new RenderFloorLight2());
@@ -165,10 +167,12 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileMV.class, new RenderMV());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileMV2.class, new RenderMV2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSpokedMachine.class, new RenderSpokedMachine());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTubeMachine.class, new RenderTubeMachine());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePipeSmallBent.class, new RenderPipeSmallBent());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileQuadVentPipe.class, new RenderQuadVentPipe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTallVentedPipe.class, new RenderTallVentedPipe());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileWallPipeLarge.class, new RenderWallPipeLarge());
 
 		Lumberjack.log("Client proxy loaded!");
 	}

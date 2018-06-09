@@ -11,9 +11,11 @@ import com.parzivail.swg.block.light.*;
 import com.parzivail.swg.block.machine.BlockMV;
 import com.parzivail.swg.block.machine.BlockMV2;
 import com.parzivail.swg.block.machine.BlockSpokedMachine;
+import com.parzivail.swg.block.machine.BlockTubeMachine;
 import com.parzivail.swg.block.pipe.BlockPipeSmallBent;
 import com.parzivail.swg.block.pipe.BlockQuadVentPipe;
 import com.parzivail.swg.block.pipe.BlockTallVentedPipe;
+import com.parzivail.swg.block.pipe.BlockWallPipeLarge;
 import com.parzivail.util.block.PBlock;
 import com.parzivail.util.block.PBlockConnected;
 import com.parzivail.util.block.PBlockContainer;
@@ -47,12 +49,14 @@ public class BlockRegister
 	public static PBlockContainer consoleHothMedical1;
 	public static PBlockContainer consoleHothMedical2;
 	public static PBlockContainer wallControlPanel;
+	public static PBlockContainer wallControlPanelTall;
 
 	public static PBlockContainer crate1;
 	public static PBlockContainer crateHoth1;
 	public static PBlockContainer crateHoth2;
 	public static PBlockContainer crateMosEspa;
 	public static PBlockContainer crateVilla;
+	public static PBlockContainer airTank;
 
 	public static PBlockContainer floorLight;
 	public static PBlockContainer floorLight2;
@@ -72,10 +76,12 @@ public class BlockRegister
 	public static PBlockContainer moistureVaporator;
 	public static PBlockContainer moistureVaporator2;
 	public static PBlockContainer spokedMachine;
+	public static PBlockContainer tubeMachine;
 
 	public static PBlockContainer pipeSmallBent;
 	public static PBlockContainer quadVentPipe;
 	public static PBlockContainer tallVentedPipe;
+	public static PBlockContainer wallPipeLarge;
 
 	public static PBlockContainer soundHothTelemetry;
 
@@ -159,12 +165,14 @@ public class BlockRegister
 		register(consoleHothMedical1 = new BlockMedicalConsole());
 		register(consoleHothMedical2 = new BlockMedicalConsole2());
 		register(wallControlPanel = new BlockWallControlPanel());
+		register(wallControlPanelTall = new BlockWallControlPanelTall());
 
 		register(crate1 = new BlockCrate1());
 		register(crateHoth1 = new BlockCrateHoth1());
 		register(crateHoth2 = new BlockCrateHoth2());
 		register(crateMosEspa = new BlockCrateMosEspa());
 		register(crateVilla = new BlockCrateVilla());
+		register(airTank = new BlockAirTank());
 
 		register(floorLight = new BlockFloorLight());
 		register(floorLight2 = new BlockFloorLight2());
@@ -184,10 +192,12 @@ public class BlockRegister
 		register(moistureVaporator = new BlockMV());
 		register(moistureVaporator2 = new BlockMV2());
 		register(spokedMachine = new BlockSpokedMachine());
+		register(tubeMachine = new BlockTubeMachine());
 
 		register(pipeSmallBent = new BlockPipeSmallBent());
 		register(quadVentPipe = new BlockQuadVentPipe());
 		register(tallVentedPipe = new BlockTallVentedPipe());
+		register(wallPipeLarge = new BlockWallPipeLarge());
 
 		register(soundHothTelemetry = new BlockSoundHothTelemetry());
 	}

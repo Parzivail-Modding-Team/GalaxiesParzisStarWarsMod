@@ -1,12 +1,10 @@
 package com.parzivail.swg.block.machine;
 
-import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.machine.TileMV2;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -66,12 +64,6 @@ public class BlockMV2 extends PBlockRotate
 	//			player.openGui(StarWarsMod.instance, Resources.GUI_MV, world, x, y, z);
 	//		return true;
 	//	}
-
-	@Override
-	public void registerIcons(IIconRegister icon)
-	{
-		blockIcon = icon.registerIcon(Resources.MODID + ":" + "iconBlank");
-	}
 
 	@Override
 	public boolean renderAsNormalBlock()
