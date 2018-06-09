@@ -33,7 +33,7 @@ public class RenderFloorLight extends TileEntitySpecialRenderer
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		GL11.glTranslated(x + 0.5f, y + 1.5f, z + 0.5f);
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-		GL11.glRotatef(45 * ((TileFloorLight)te).getFacing(), 0, 1, 0);
+		GL11.glRotatef(90 * ((TileFloorLight)te).getFacing(), 0, 1, 0);
 		GL.Scale(1.25f);
 		this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 		GL11.glPopMatrix();

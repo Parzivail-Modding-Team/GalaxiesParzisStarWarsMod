@@ -1,8 +1,8 @@
-package com.parzivail.swg.block.console;
+package com.parzivail.swg.block.light;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.console.TileWallControlPanel;
+import com.parzivail.swg.tile.light.TileWallIndicatorCluster;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockRotate;
 import com.parzivail.util.block.TileRotatable;
@@ -12,14 +12,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockWallControlPanel extends PBlockRotate
+public class BlockWallIndicatorCluster extends PBlockRotate
 {
-	public BlockWallControlPanel()
+	public BlockWallIndicatorCluster()
 	{
-		super("wallControlPanel", Material.iron);
+		super("wallIndicatorCluster", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
-		setBlockBounds(0, 0, 0, 1, 2.5f, 1);
 		setHardness(50.0F);
+		setLightLevel(0.2f);
 		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
@@ -50,7 +50,7 @@ public class BlockWallControlPanel extends PBlockRotate
 	@Override
 	public TileEntity createNewTileEntity(World world, int meta)
 	{
-		return new TileWallControlPanel();
+		return new TileWallIndicatorCluster();
 	}
 
 	@Override

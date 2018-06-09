@@ -15,7 +15,7 @@ public class BlockHothCeilingLight2 extends PBlockRotate
 {
 	public BlockHothCeilingLight2()
 	{
-		super("hothCeilingLight2", Material.iron);
+		super("hothCeilingLight2", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
 		setLightLevel(1);

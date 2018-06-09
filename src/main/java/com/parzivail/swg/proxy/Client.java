@@ -24,6 +24,7 @@ import com.parzivail.swg.render.machine.RenderMV2;
 import com.parzivail.swg.render.machine.RenderSpokedMachine;
 import com.parzivail.swg.render.pipe.RenderPipeSmallBent;
 import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
+import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
@@ -39,6 +40,7 @@ import com.parzivail.swg.tile.machine.TileMV2;
 import com.parzivail.swg.tile.pipe.TilePipeSmallBent;
 import com.parzivail.swg.tile.pipe.TileQuadVentPipe;
 import com.parzivail.swg.tile.pipe.TileSpokedMachine;
+import com.parzivail.swg.tile.pipe.TileTallVentedPipe;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -150,6 +152,9 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileHothCeilingLight.class, new RenderCeilingLight());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileHothCeilingLight2.class, new RenderCeilingLight2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAngledWallLight.class, new RenderAngledWallLamp());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLightDome.class, new RenderFloorLightDome());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileWallIndicator.class, new RenderWallIndicator());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileWallIndicatorCluster.class, new RenderWallIndicatorCluster());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileGunRack.class, new RenderGunRack());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLadder.class, new RenderLadder());
@@ -163,6 +168,7 @@ public class Client extends Common
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePipeSmallBent.class, new RenderPipeSmallBent());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileQuadVentPipe.class, new RenderQuadVentPipe());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTallVentedPipe.class, new RenderTallVentedPipe());
 
 		Lumberjack.log("Client proxy loaded!");
 	}

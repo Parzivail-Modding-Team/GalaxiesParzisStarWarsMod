@@ -1,4 +1,4 @@
-package com.parzivail.swg.render.pipe;
+package com.parzivail.swg.render.light;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.util.block.TileRotatable;
@@ -11,15 +11,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-public class RenderQuadVentPipe extends TileEntitySpecialRenderer
+public class RenderFloorLightDome extends TileEntitySpecialRenderer
 {
-	public static ResourceLocation texture = Resources.location("textures/model/quadVentPipe.png");
+	public static ResourceLocation texture = new ResourceLocation(Resources.MODID + ":" + "textures/model/floorLightDome.png");
 
 	private final ModelBase model;
 
-	public RenderQuadVentPipe()
+	public RenderFloorLightDome()
 	{
-		this.model = new ModelQuadVentPipe();
+		this.model = new ModelFloorLightDome();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -33,9 +33,9 @@ public class RenderQuadVentPipe extends TileEntitySpecialRenderer
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		GL11.glTranslated(x + 0.5f, y + 1.5f, z + 0.5f);
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-		GL.Scale(1.25f);
 		GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
-		this.model.render(null, 0, 0, 0, 0.0F, 0.0F, 0.05F);
+		GL.Scale(1.25f);
+		this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 		GL11.glPopMatrix();
 	}
 }

@@ -11,15 +11,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-public class RenderQuadVentPipe extends TileEntitySpecialRenderer
+public class RenderTallVentedPipe extends TileEntitySpecialRenderer
 {
-	public static ResourceLocation texture = Resources.location("textures/model/quadVentPipe.png");
+	public static ResourceLocation texture = Resources.location("textures/model/tallVentedPipe.png");
 
 	private final ModelBase model;
 
-	public RenderQuadVentPipe()
+	public RenderTallVentedPipe()
 	{
-		this.model = new ModelQuadVentPipe();
+		this.model = new ModelTallVentedPipe();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)

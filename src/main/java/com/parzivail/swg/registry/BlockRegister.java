@@ -13,6 +13,7 @@ import com.parzivail.swg.block.machine.BlockMV2;
 import com.parzivail.swg.block.machine.BlockSpokedMachine;
 import com.parzivail.swg.block.pipe.BlockPipeSmallBent;
 import com.parzivail.swg.block.pipe.BlockQuadVentPipe;
+import com.parzivail.swg.block.pipe.BlockTallVentedPipe;
 import com.parzivail.util.block.PBlock;
 import com.parzivail.util.block.PBlockConnected;
 import com.parzivail.util.block.PBlockContainer;
@@ -58,6 +59,9 @@ public class BlockRegister
 	public static PBlockContainer ceilingLight;
 	public static PBlockContainer ceilingLight2;
 	public static PBlockContainer angledWallLight;
+	public static PBlockContainer floorLightDome;
+	public static PBlockContainer wallIndicatorLight;
+	public static PBlockContainer wallIndicatorLightCluster;
 
 	public static PBlockContainer gunRack;
 	public static PBlockContainer ladder;
@@ -71,6 +75,7 @@ public class BlockRegister
 
 	public static PBlockContainer pipeSmallBent;
 	public static PBlockContainer quadVentPipe;
+	public static PBlockContainer tallVentedPipe;
 
 	public static PBlockContainer soundHothTelemetry;
 
@@ -166,6 +171,9 @@ public class BlockRegister
 		register(ceilingLight = new BlockHothCeilingLight());
 		register(ceilingLight2 = new BlockHothCeilingLight2());
 		register(angledWallLight = new BlockAngledWallLight());
+		register(floorLightDome = new BlockFloorLightDome());
+		register(wallIndicatorLight = new BlockWallIndicator());
+		register(wallIndicatorLightCluster = new BlockWallIndicatorCluster());
 
 		register(gunRack = new BlockGunRack());
 		register(ladder = new BlockLadder());
@@ -179,6 +187,7 @@ public class BlockRegister
 
 		register(pipeSmallBent = new BlockPipeSmallBent());
 		register(quadVentPipe = new BlockQuadVentPipe());
+		register(tallVentedPipe = new BlockTallVentedPipe());
 
 		register(soundHothTelemetry = new BlockSoundHothTelemetry());
 	}
