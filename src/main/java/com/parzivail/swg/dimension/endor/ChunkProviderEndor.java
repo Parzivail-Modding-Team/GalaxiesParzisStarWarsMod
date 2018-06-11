@@ -3,11 +3,7 @@ package com.parzivail.swg.dimension.endor;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.StructureRegister;
-import com.parzivail.util.binary.Cdf.BlockInfo;
-import com.parzivail.util.binary.Cdf.ChunkDiff;
-import com.parzivail.util.common.Pair;
 import com.parzivail.util.world.*;
-import net.minecraft.block.Block;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
@@ -18,7 +14,6 @@ import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -58,8 +53,6 @@ public class ChunkProviderEndor implements IChunkProvider
 	public Chunk provideChunk(int cx, int cz)
 	{
 		Chunk chunk = new Chunk(this.worldObj, cx, cz);
-		long cPos = ChunkDiff.getChunkPos(cx, cz);
-		ChunkDiff[] diffs = StructureRegister.getStructuresForDimension(this.worldObj.provider.dimensionId);
 		for (int x = 0; x < 16; x++)
 		{
 			for (int z = 0; z < 16; z++)
@@ -68,7 +61,6 @@ public class ChunkProviderEndor implements IChunkProvider
 				int finalHeight = (int)height;
 				for (int y = 1; y < 256; y++)
 				{
-					boolean hadStructure = false;
 					int l = y >> 4;
 					ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
 
@@ -78,24 +70,7 @@ public class ChunkProviderEndor implements IChunkProvider
 						chunk.getBlockStorageArray()[l] = extendedblockstorage;
 					}
 
-					for (ChunkDiff cdiff : diffs)
-					{
-						short bPos = ChunkDiff.getBlockPos((byte)x, (byte)y, (byte)z);
-						BlockInfo block = cdiff.diffMap.get(cPos) == null ? null : cdiff.diffMap.get(cPos).get(bPos);
-						if (block != null)
-						{
-							hadStructure = true;
-
-							extendedblockstorage.setExtBlockID(x, y & 15, z, Block.getBlockFromName(block.id));
-							extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
-
-							if (block.tileData != null)
-							{
-								cdiff.tileInfoCache.putIfAbsent(cPos, new ArrayList<>());
-								cdiff.tileInfoCache.get(cPos).add(new Pair<>(bPos, block.tileData));
-							}
-						}
-					}
+					boolean hadStructure = StructureRegister.genStructure(this.worldObj.provider.dimensionId, cx, cz, x, z, y, extendedblockstorage);
 
 					if (!hadStructure)
 					{
