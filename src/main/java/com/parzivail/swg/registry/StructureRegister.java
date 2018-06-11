@@ -3,7 +3,6 @@ package com.parzivail.swg.registry;
 import com.parzivail.swg.Resources;
 import com.parzivail.util.binary.Cdf.BlockInfo;
 import com.parzivail.util.binary.Cdf.ChunkDiff;
-import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
@@ -48,7 +47,6 @@ public class StructureRegister
 			{
 				hadStructure = true;
 
-				Lumberjack.log("Looking for %s", block.id);
 				extendedblockstorage.setExtBlockID(blockX, blockZ & 15, blockY, Block.getBlockFromName(block.id));
 				extendedblockstorage.setExtBlockMetadata(blockX, blockZ & 15, blockY, block.metadata);
 

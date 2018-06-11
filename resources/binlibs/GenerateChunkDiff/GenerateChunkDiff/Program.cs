@@ -15,7 +15,7 @@ namespace GenerateChunkDiff
     {
         static void Main(string[] args)
         {
-            var world = AnvilWorld.Open(@"E:\Forge\Mods\StarWarsGalaxy\eclipse\saves\New World-20180501-183728");
+            var world = AnvilWorld.Open(@"E:\Forge\Mods\StarWarsGalaxy\eclipse\saves\CDF");
             var donorWorld = AnvilWorld.Open(@"E:\Forge\Mods\StarWarsGalaxy\eclipse\saves\ChunkDiffDonor");
 
             const int dim = 2;
@@ -98,7 +98,7 @@ namespace GenerateChunkDiff
 
             Console.WriteLine($"Diffed {diffed} chunks, skipped {skipped}");
 
-            diff.Save("diff.cdf", NbtMap.Load(@"E:\Forge\Mods\StarWarsGalaxy\eclipse\config\Dev World-map.nbt"));
+            diff.Save("diff.cdf", NbtMap.Load(@"E:\Forge\Mods\StarWarsGalaxy\eclipse\config\Cdf-map.nbt"));
         }
     }
 
