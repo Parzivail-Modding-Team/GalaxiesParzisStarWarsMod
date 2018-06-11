@@ -49,11 +49,11 @@ public class EventHandler
 	@SubscribeEvent
 	public void on(WorldEvent.Load loadEvent)
 	{
-		File dir = StarWarsGalaxy.configDir;
+		File dir = loadEvent.world.getSaveHandler().getWorldDirectory();
 
 		try
 		{
-			FileHandler.saveNbtMappings(new File(dir, loadEvent.world.getSaveHandler().loadWorldInfo().getWorldName() + "-map.nbt"));
+			FileHandler.saveNbtMappings(new File(dir, "cdfidmap.nbt"));
 		}
 		catch (NullPointerException e)
 		{
