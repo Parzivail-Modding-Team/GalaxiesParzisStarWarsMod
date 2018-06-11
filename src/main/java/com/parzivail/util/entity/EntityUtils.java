@@ -3,9 +3,7 @@ package com.parzivail.util.entity;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.ship.BasicFlightModel;
-import com.parzivail.swg.ship.Seat;
 import com.parzivail.util.common.Lumberjack;
-import com.parzivail.util.common.Pair;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
@@ -147,11 +145,11 @@ public class EntityUtils
 	//		return !(entity == null || entity.ridingEntity == null) && (clazz.isInstance(entity.ridingEntity) || (entity.ridingEntity instanceof EntitySeat && clazz.isInstance(((EntitySeat)entity.ridingEntity).parent)));
 	//	}
 
-	public static Pair<BasicFlightModel, Seat> getShipRiding(Entity entity)
+	public static BasicFlightModel getShipRiding(Entity entity)
 	{
-		if (!(entity.ridingEntity instanceof Seat))
+		if (!(entity.ridingEntity instanceof BasicFlightModel))
 			return null;
-		return new Pair<>(((Seat)entity.ridingEntity).ship, (Seat)entity.ridingEntity);
+		return (BasicFlightModel)entity.ridingEntity;
 	}
 
 	public static Entity getEntityByUuid(World world, UUID uuid)
@@ -165,9 +163,9 @@ public class EntityUtils
 		return null;
 	}
 
-	public static boolean isClientControlled(BasicFlightModel ship)
+	public static boolean isClientControlled(BasicFlightModel query)
 	{
-		Pair<BasicFlightModel, Seat> pair = getShipRiding(Client.mc.thePlayer);
-		return pair != null && pair.left != null && pair.left.equals(ship);
+		BasicFlightModel ship = getShipRiding(Client.mc.thePlayer);
+		return ship != null && ship.equals(query);
 	}
 }

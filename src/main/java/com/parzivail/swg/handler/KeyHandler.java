@@ -6,9 +6,7 @@ import com.parzivail.swg.network.MessageItemLeftClick;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.ship.BasicFlightModel;
-import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.ShipInput;
-import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import net.minecraft.client.settings.KeyBinding;
@@ -47,26 +45,26 @@ public class KeyHandler
 
 	public static void handleVehicleMovement()
 	{
-		Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(Client.mc.thePlayer);
-		if (Client.mc.thePlayer != null && pair != null && pair.left != null && pair.right.getIdx() == 0)
+		BasicFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
+		if (Client.mc.thePlayer != null && ship != null)
 		{
 			if ($(Client.mc.gameSettings.keyBindLeft))
-				pair.right.acceptInput(ShipInput.RollLeft);
+				ship.acceptInput(ShipInput.RollLeft);
 
 			if ($(Client.mc.gameSettings.keyBindRight))
-				pair.right.acceptInput(ShipInput.RollRight);
+				ship.acceptInput(ShipInput.RollRight);
 
 			if ($(Client.mc.gameSettings.keyBindForward))
-				pair.right.acceptInput(ShipInput.PitchDown);
+				ship.acceptInput(ShipInput.PitchDown);
 
 			if ($(Client.mc.gameSettings.keyBindBack))
-				pair.right.acceptInput(ShipInput.PitchUp);
+				ship.acceptInput(ShipInput.PitchUp);
 
 			if ($(Client.mc.gameSettings.keyBindJump))
-				pair.right.acceptInput(ShipInput.ThrottleUp);
+				ship.acceptInput(ShipInput.ThrottleUp);
 
 			if ($(Client.mc.gameSettings.keyBindSprint))
-				pair.right.acceptInput(ShipInput.ThrottleDown);
+				ship.acceptInput(ShipInput.ThrottleDown);
 		}
 	}
 

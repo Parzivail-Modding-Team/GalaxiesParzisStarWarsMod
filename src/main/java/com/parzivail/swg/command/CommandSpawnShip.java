@@ -1,7 +1,6 @@
 package com.parzivail.swg.command;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.VehicleT65;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -47,11 +46,10 @@ public class CommandSpawnShip extends CommandBase
 		}
 	}
 
-	private void spawn(BasicFlightModel e, Entity player)
+	private void spawn(Entity e, Entity player)
 	{
 		e.setLocationAndAngles(player.posX, player.posY, player.posZ, 0, 0);
 		player.worldObj.spawnEntityInWorld(e);
-		e.spawnSeats();
 	}
 
 	public class Args

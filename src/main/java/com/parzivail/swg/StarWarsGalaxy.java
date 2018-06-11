@@ -25,6 +25,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.io.File;
 import java.util.Random;
 
 /**
@@ -40,6 +41,7 @@ public class StarWarsGalaxy
 	public static StarWarsGalaxy instance;
 
 	public static Config config;
+	public static File configDir;
 
 	public static CreativeTabs tab;
 
@@ -55,6 +57,7 @@ public class StarWarsGalaxy
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
+		configDir = event.getModConfigurationDirectory();
 		config = new Config(event.getSuggestedConfigurationFile());
 		setupNetworking();
 	}
@@ -67,7 +70,6 @@ public class StarWarsGalaxy
 		registerMessageServer(MessageItemLeftClick.class);
 		registerMessageServer(MessageTransaction.class);
 
-		registerMessageClient(MessageSeatInit.class);
 		registerMessageClient(MessageSpawnParticle.class);
 		registerMessageClient(MessageCreateDecal.class);
 		registerMessageClient(MessagePswgExtPropSync.class);

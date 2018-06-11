@@ -51,12 +51,6 @@ public class PItem extends Item
 		return Resources.itemDot(this.name, this.variants[stack.getMetadata()]);
 	}
 
-	@SideOnly(Side.CLIENT)
-	public boolean shouldRequestRenderState(ItemStack stack, World world, EntityPlayer player)
-	{
-		return false;
-	}
-
 	public boolean shouldUsePrecisionMovement(ItemStack stack, World world, EntityPlayer player)
 	{
 		return false;

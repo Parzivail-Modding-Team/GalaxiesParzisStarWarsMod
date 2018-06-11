@@ -4,6 +4,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.binary.Cdf.BlockInfo;
 import com.parzivail.util.binary.Cdf.ChunkDiff;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.world.*;
 import net.minecraft.block.Block;
@@ -18,7 +19,6 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -51,7 +51,7 @@ public class ChunkProviderTatooine implements IChunkProvider
 	{
 		Chunk chunk = new Chunk(this.worldObj, cx, cz);
 		long cPos = ChunkDiff.getChunkPos(cx, cz);
-		HashMap<Short, BlockInfo> diffMap = StructureRegister.test.diffMap.get(cPos);
+		ChunkDiff[] diffs = StructureRegister.getStructuresForDimension(this.worldObj.provider.dimensionId);
 		for (int x = 0; x < 16; x++)
 		{
 			for (int z = 0; z < 16; z++)
@@ -60,39 +60,38 @@ public class ChunkProviderTatooine implements IChunkProvider
 				int finalHeight = (int)height;
 				for (int y = 1; y < 256; y++)
 				{
-					short bPos = ChunkDiff.getBlockPos((byte)x, (byte)y, (byte)z);
-					BlockInfo block = diffMap == null ? null : diffMap.get(bPos);
-					if (block != null)
+					boolean hadStructure = false;
+					int l = y >> 4;
+					ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
+
+					if (extendedblockstorage == null)
 					{
-						int l = y >> 4;
-						ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
+						extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
+						chunk.getBlockStorageArray()[l] = extendedblockstorage;
+					}
 
-						if (extendedblockstorage == null)
+					for (ChunkDiff cdiff : diffs)
+					{
+						short bPos = ChunkDiff.getBlockPos((byte)x, (byte)y, (byte)z);
+						BlockInfo block = cdiff.diffMap.get(cPos) == null ? null : cdiff.diffMap.get(cPos).get(bPos);
+						if (block != null)
 						{
-							extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
-							chunk.getBlockStorageArray()[l] = extendedblockstorage;
-						}
+							hadStructure = true;
 
-						extendedblockstorage.setExtBlockID(x, y & 15, z, Block.getBlockById(block.id));
-						extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
+							Lumberjack.log("Looking for %s", block.id);
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Block.getBlockFromName(block.id));
+							extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
 
-						if (block.tileData != null)
-						{
-							StructureRegister.test.tileInfoCache.putIfAbsent(cPos, new ArrayList<>());
-							StructureRegister.test.tileInfoCache.get(cPos).add(new Pair<>(bPos, block.tileData));
+							if (block.tileData != null)
+							{
+								cdiff.tileInfoCache.putIfAbsent(cPos, new ArrayList<>());
+								cdiff.tileInfoCache.get(cPos).add(new Pair<>(bPos, block.tileData));
+							}
 						}
 					}
-					else if (y <= finalHeight)
+
+					if (!hadStructure && y <= finalHeight)
 					{
-						int l = y >> 4;
-						ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
-
-						if (extendedblockstorage == null)
-						{
-							extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
-							chunk.getBlockStorageArray()[l] = extendedblockstorage;
-						}
-
 						double sandThreshold = height * 0.9;
 						double sandstoneThreshold = height * 0.6;
 

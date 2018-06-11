@@ -9,6 +9,7 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
@@ -42,6 +43,16 @@ public class ChunkDiff
 
 			int version = s.readInt();
 			int numChunks = s.readInt();
+			int numIdMapEntries = s.readInt();
+
+			HashMap<Integer, String> idMap = new HashMap<>();
+
+			for (int j = 0; j < numIdMapEntries; j++)
+			{
+				int id = s.readInt();
+				String name = PIO.readNullTerminatedString(s);
+				idMap.put(id, name);
+			}
 
 			HashMap<Long, HashMap<Short, BlockInfo>> diffMap = new HashMap<>();
 
@@ -52,7 +63,6 @@ public class ChunkDiff
 				int numBlocks = s.readInt();
 
 				long pos = getChunkPos(chunkX, chunkZ);
-
 				HashMap<Short, BlockInfo> blocks = new HashMap<>();
 
 				for (int j = 0; j < numBlocks; j++)
@@ -75,18 +85,40 @@ public class ChunkDiff
 						if (len >= 0)
 							tileTag = PIO.readUncompressedNbt(s, len);
 					}
-					blocks.put(getBlockPos(x, y, z), new BlockInfo(id, metadata, tileTag));
+					String name = "minecraft:air";
+					if (idMap.get(id) != null)
+						name = idMap.get(id);
+					else
+						Lumberjack.log("[CDF] Skipped block with ID %s", id);
+					blocks.put(getBlockPos(x, y, z), new BlockInfo(name, metadata, tileTag));
 				}
 
 				diffMap.put(pos, blocks);
 			}
 
-			Lumberjack.log("Built chunkdiff %s", filename.getResourcePath());
+			Lumberjack.log("[CDF] Built chunkdiff `%s`", filename.getResourcePath());
 			return new ChunkDiff(version, diffMap);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private static String readLenPrefStr(LittleEndianDataInputStream s)
+	{
+		try
+		{
+			int len = s.readInt();
+			byte[] bytes = new byte[len];
+			int read = s.read(bytes);
+			if (read != bytes.length)
+				return null;
+			return new String(bytes);
+		}
+		catch (IOException e)
+		{
 			return null;
 		}
 	}

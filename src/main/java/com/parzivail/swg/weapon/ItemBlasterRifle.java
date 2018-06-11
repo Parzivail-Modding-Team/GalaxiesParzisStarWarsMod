@@ -73,12 +73,6 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 	}
 
 	@Override
-	public boolean shouldRequestRenderState(ItemStack stack, World world, EntityPlayer player)
-	{
-		return true;
-	}
-
-	@Override
 	public boolean shouldUsePrecisionMovement(ItemStack stack, World world, EntityPlayer player)
 	{
 		BlasterData bd = new BlasterData(stack);

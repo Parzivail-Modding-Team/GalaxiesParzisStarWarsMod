@@ -1,7 +1,6 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.entity.EntityBlasterBolt;
-import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.entity.EntityUtils;
 
@@ -13,7 +12,7 @@ public class EntityRegister
 	public static void register()
 	{
 		EntityUtils.registerEntity(VehicleT65.class, "t65");
-		EntityUtils.registerEntity(Seat.class, "seat");
+
 		EntityUtils.registerEntity(EntityBlasterBolt.class, "blasterBolt");
 	}
 }

@@ -7,14 +7,11 @@ import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
-import com.parzivail.swg.render.ClientRenderState;
 import com.parzivail.swg.render.decal.WorldDecals;
 import com.parzivail.swg.ship.BasicFlightModel;
-import com.parzivail.swg.ship.Seat;
-import com.parzivail.util.common.Pair;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
-import com.parzivail.util.ui.ShaderHelper;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -25,11 +22,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
+
+import java.io.File;
 
 /**
  * Created by colby on 9/13/2017.
@@ -44,6 +43,21 @@ public class EventHandler
 		{
 			Client.mc.displayGuiScreen(new GuiScreenTrailer());
 			StarWarsGalaxy.config.setHasSeenIntroCrawl(true);
+		}
+	}
+
+	@SubscribeEvent
+	public void on(WorldEvent.Load loadEvent)
+	{
+		File dir = StarWarsGalaxy.configDir;
+
+		try
+		{
+			FileHandler.saveNbtMappings(new File(dir, loadEvent.world.getSaveHandler().loadWorldInfo().getWorldName() + "-map.nbt"));
+		}
+		catch (NullPointerException e)
+		{
+			Lumberjack.debug("Couldn't save NBT map. Probably connecting to a server.");
 		}
 	}
 
@@ -63,12 +77,12 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(event.entity);
-			if (pair != null && pair.left != null && event.isCancelable())
+			BasicFlightModel ship = EntityUtils.getShipRiding(event.entity);
+			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 		}
-		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
-			ShaderHelper.useShader(ShaderHelper.entityGlow);
+		//		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
+		//			ShaderHelper.useShader(ShaderHelper.entityGlow);
 	}
 
 	@SubscribeEvent
@@ -77,12 +91,12 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(event.entity);
-			if (pair != null && pair.left != null && event.isCancelable())
+			BasicFlightModel ship = EntityUtils.getShipRiding(event.entity);
+			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 		}
-		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
-			ShaderHelper.releaseShader();
+		//		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
+		//			ShaderHelper.releaseShader();
 	}
 
 	@SubscribeEvent
@@ -111,8 +125,8 @@ public class EventHandler
 	{
 		if (Client.mc.thePlayer != null)
 		{
-			Pair<BasicFlightModel, Seat> pair = EntityUtils.getShipRiding(Client.mc.thePlayer);
-			if (pair == null || pair.left == null)
+			BasicFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
+			if (ship == null)
 			{
 				FxMC.changeCameraRoll(0);
 				Client.mc.renderViewEntity = Client.mc.thePlayer;
@@ -120,9 +134,9 @@ public class EventHandler
 			else
 			{
 				FxMC.changeCameraDist(10);
-				float r = pair.left.orientation.getRoll();
+				float r = ship.orientation.getRoll();
 				FxMC.changeCameraRoll(r);
-				Client.mc.renderViewEntity = pair.left;
+				Client.mc.renderViewEntity = ship;
 			}
 
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
@@ -158,44 +172,29 @@ public class EventHandler
 				}
 			}
 
-			if (event.type == RenderGameOverlayEvent.ElementType.TEXT)
-			{
-				//				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-				//				GL11.glPushAttrib(GL11.GL_LINE_BIT);
-				//				GL11.glPushAttrib(GL11.GL_POINT_BIT);
-				//				GL.PushMatrix();
-				//				Client.mc.entityRenderer.disableLightmap(0);
-				//				GL.Disable(EnableCap.Lighting);
-				//				GL.Disable(EnableCap.Texture2D);
-				//				GL.Enable(EnableCap.Blend);
-				//				GL.Enable(EnableCap.PointSmooth);
-				//				GL.Enable(EnableCap.LineSmooth);
-				//				GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
-				//				GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
-				//				GuiHyperdrive.draw(sr, Client.mc.thePlayer);
-				//				GL.PopMatrix();
-				//				GL11.glColor4f(1, 1, 1, 1);
-				//				GL11.glPopAttrib();
-				//				GL11.glPopAttrib();
-				//				GL11.glPopAttrib();
-			}
+			//			if (event.type == RenderGameOverlayEvent.ElementType.TEXT)
+			//			{
+			//				GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+			//				GL11.glPushAttrib(GL11.GL_LINE_BIT);
+			//				GL11.glPushAttrib(GL11.GL_POINT_BIT);
+			//				GL.PushMatrix();
+			//				Client.mc.entityRenderer.disableLightmap(0);
+			//				GL.Disable(EnableCap.Lighting);
+			//				GL.Disable(EnableCap.Texture2D);
+			//				GL.Enable(EnableCap.Blend);
+			//				GL.Enable(EnableCap.PointSmooth);
+			//				GL.Enable(EnableCap.LineSmooth);
+			//				GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
+			//				GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
+			//				GuiHyperdrive.draw(sr, Client.mc.thePlayer);
+			//				GL.PopMatrix();
+			//				GL11.glColor4f(1, 1, 1, 1);
+			//				GL11.glPopAttrib();
+			//				GL11.glPopAttrib();
+			//				GL11.glPopAttrib();
+			//			}
 
 			KeybindRegistry.keyAttack.setIntercepting(heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor);
-
-			if (heldItem == null || !(heldItem.getItem() instanceof PItem) || !(((PItem)heldItem.getItem()).shouldRequestRenderState(heldItem, Client.mc.thePlayer.worldObj, Client.mc.thePlayer)))
-				ClientRenderState.renderState.removeAll(ClientRenderState.renderStateRequest.values());
-			else
-			{
-
-				if (ClientRenderState.renderStateRequest.keySet().contains(heldItem.getItem().getClass()))
-				{
-					ClientRenderState request = ClientRenderState.renderStateRequest.get(heldItem.getItem().getClass());
-					if (request != null && !ClientRenderState.renderState.contains(request))
-						ClientRenderState.renderState.add(request);
-				}
-				else
-					ClientRenderState.renderState.removeAll(ClientRenderState.renderStateRequest.values());
-			}
 		}
 	}
 

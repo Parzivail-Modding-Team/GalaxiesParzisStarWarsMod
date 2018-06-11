@@ -19,7 +19,6 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -60,7 +59,7 @@ public class ChunkProviderEndor implements IChunkProvider
 	{
 		Chunk chunk = new Chunk(this.worldObj, cx, cz);
 		long cPos = ChunkDiff.getChunkPos(cx, cz);
-		HashMap<Short, BlockInfo> diffMap = StructureRegister.test.diffMap.get(cPos);
+		ChunkDiff[] diffs = StructureRegister.getStructuresForDimension(this.worldObj.provider.dimensionId);
 		for (int x = 0; x < 16; x++)
 		{
 			for (int z = 0; z < 16; z++)
@@ -69,8 +68,7 @@ public class ChunkProviderEndor implements IChunkProvider
 				int finalHeight = (int)height;
 				for (int y = 1; y < 256; y++)
 				{
-					short bPos = ChunkDiff.getBlockPos((byte)x, (byte)y, (byte)z);
-					BlockInfo block = diffMap == null ? null : diffMap.get(bPos);
+					boolean hadStructure = false;
 					int l = y >> 4;
 					ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
 
@@ -80,30 +78,41 @@ public class ChunkProviderEndor implements IChunkProvider
 						chunk.getBlockStorageArray()[l] = extendedblockstorage;
 					}
 
-					if (block != null)
+					for (ChunkDiff cdiff : diffs)
 					{
-						extendedblockstorage.setExtBlockID(x, y & 15, z, Block.getBlockById(block.id));
-						extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
-
-						if (block.tileData != null)
+						short bPos = ChunkDiff.getBlockPos((byte)x, (byte)y, (byte)z);
+						BlockInfo block = cdiff.diffMap.get(cPos) == null ? null : cdiff.diffMap.get(cPos).get(bPos);
+						if (block != null)
 						{
-							StructureRegister.test.tileInfoCache.putIfAbsent(cPos, new ArrayList<>());
-							StructureRegister.test.tileInfoCache.get(cPos).add(new Pair<>(bPos, block.tileData));
+							hadStructure = true;
+
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Block.getBlockFromName(block.id));
+							extendedblockstorage.setExtBlockMetadata(x, y & 15, z, block.metadata);
+
+							if (block.tileData != null)
+							{
+								cdiff.tileInfoCache.putIfAbsent(cPos, new ArrayList<>());
+								cdiff.tileInfoCache.get(cPos).add(new Pair<>(bPos, block.tileData));
+							}
 						}
 					}
-					else if (y == finalHeight)
-						extendedblockstorage.setExtBlockID(x, y & 15, z, BlockRegister.fastGrass);
-					else if (y <= finalHeight)
-					{
-						double sandThreshold = (int)(height * 0.9);
 
-						if (y < sandThreshold)
-							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.dirt);
-						else
-							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
+					if (!hadStructure)
+					{
+						if (y == finalHeight)
+							extendedblockstorage.setExtBlockID(x, y & 15, z, BlockRegister.fastGrass);
+						else if (y <= finalHeight)
+						{
+							double sandThreshold = (int)(height * 0.9);
+
+							if (y < sandThreshold)
+								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.dirt);
+							else
+								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
+						}
+						else if (y <= waterLevel)
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.water);
 					}
-					else if (y <= waterLevel)
-						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.water);
 				}
 			}
 		}

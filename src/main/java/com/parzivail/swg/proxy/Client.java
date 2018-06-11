@@ -11,7 +11,6 @@ import com.parzivail.swg.render.antenna.RenderSatelliteDish;
 import com.parzivail.swg.render.console.*;
 import com.parzivail.swg.render.crate.*;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
-import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
 import com.parzivail.swg.render.gunrack.RenderItemGunRack;
@@ -24,7 +23,6 @@ import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
 import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
 import com.parzivail.swg.render.pipe.RenderWallPipeLarge;
 import com.parzivail.swg.render.weapon.*;
-import com.parzivail.swg.ship.Seat;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.swg.tile.TileLadder;
@@ -91,7 +89,7 @@ public class Client extends Common
 		frMassassi = createFont("massassi");
 
 		RenderingRegistry.registerEntityRenderingHandler(VehicleT65.class, new RenderT65());
-		RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
+		//RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleA280, new RenderA280());

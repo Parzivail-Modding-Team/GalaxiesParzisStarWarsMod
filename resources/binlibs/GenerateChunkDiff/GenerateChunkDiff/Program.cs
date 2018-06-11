@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ShellProgressBar;
 using Substrate;
+using Substrate.Core;
 using Substrate.Nbt;
 
 namespace GenerateChunkDiff
@@ -14,18 +15,19 @@ namespace GenerateChunkDiff
     {
         static void Main(string[] args)
         {
-            var world = AnvilWorld.Open(@"E:\Forge\Mods\StarWarsGalaxy\saves\ChunkDiff1");
-            var worldOriginal = AnvilWorld.Open(@"E:\Forge\Mods\StarWarsGalaxy\saves\ChunkDiff1_Original");
+            var world = AnvilWorld.Open(@"E:\Forge\Mods\StarWarsGalaxy\eclipse\saves\New World-20180501-183728");
+            var donorWorld = AnvilWorld.Open(@"E:\Forge\Mods\StarWarsGalaxy\eclipse\saves\ChunkDiffDonor");
 
             const int dim = 2;
             var manager = world.GetChunkManager(dim);
-            var managerOriginal = worldOriginal.GetChunkManager(dim);
-            var numChunks = managerOriginal.Count();
+            var donorManager = donorWorld.GetChunkManager(dim);
+            var numChunks = donorManager.Count();
 
-            const int chunkMinX = -4;
-            const int chunkMinZ = 2;
-            const int chunkMaxX = -3;
-            const int chunkMaxZ = 2;
+            var checkBounds = false;
+            const int chunkMinX = -100;
+            const int chunkMinZ = 100;
+            const int chunkMaxX = -100;
+            const int chunkMaxZ = 100;
 
             var diff = new ChunkDiff();
 
@@ -35,21 +37,29 @@ namespace GenerateChunkDiff
                 BackgroundColor = ConsoleColor.DarkGray
             };
 
+            var diffed = 0;
+            var skipped = 0;
+
             using (var pbar = new ProgressBar(numChunks, "Chunks Processed", options))
             {
                 foreach (var chunk in manager)
                 {
-                    if (chunk.X > chunkMaxX || 
-                        chunk.X < chunkMinX || 
-                        chunk.Z > chunkMaxZ || 
-                        chunk.Z < chunkMinZ || 
-                        !managerOriginal.ChunkExists(chunk.X, chunk.Z))
+                    if (!donorManager.ChunkExists(chunk.X, chunk.Z) ||
+                        checkBounds && (chunk.X > chunkMaxX ||
+                                        chunk.X < chunkMinX ||
+                                        chunk.Z > chunkMaxZ ||
+                                        chunk.Z < chunkMinZ))
+                    {
+                        skipped++;
                         continue;
+                    }
+
+                    diffed++;
 
                     pbar.Tick();
 
                     var pos = new ChunkPosition(chunk.X, chunk.Z);
-                    var otherChunk = managerOriginal.GetChunk(chunk.X, chunk.Z);
+                    var otherChunk = donorManager.GetChunk(chunk.X, chunk.Z);
 
                     for (var y = 0; y < 256; y++)
                     {
@@ -85,16 +95,18 @@ namespace GenerateChunkDiff
 
                 pbar.Tick();
             }
-            
-            diff.Save("diff.cdf");
+
+            Console.WriteLine($"Diffed {diffed} chunks, skipped {skipped}");
+
+            diff.Save("diff.cdf", NbtMap.Load(@"E:\Forge\Mods\StarWarsGalaxy\eclipse\config\Dev World-map.nbt"));
         }
     }
 
     internal class ChunkDiff : Dictionary<ChunkPosition, List<KeyValuePair<BlockPosition, BlockDiff>>>
     {
-        public readonly int Version = 1;
+        public readonly int Version = 2;
 
-        public void Save(string filename)
+        public void Save(string filename, NbtMap map)
         {
             var sw = new StreamWriter(filename);
             using (var f = new BinaryWriter(sw.BaseStream))
@@ -104,7 +116,17 @@ namespace GenerateChunkDiff
                 f.Write(ident);
                 f.Write(Version);
                 f.Write(Keys.Count); // Keys = Chunks
-                
+                f.Write(map.Keys.Count);
+
+                foreach (var pair in map)
+                {
+                    f.Write(pair.Key);
+
+                    var buffer = Encoding.UTF8.GetBytes(pair.Value);
+                    f.Write(buffer);
+                    f.Write((byte)0);
+                }
+
                 // For each chunk
                 foreach (var pair in this)
                 {
@@ -124,19 +146,19 @@ namespace GenerateChunkDiff
                         f.Write((byte)block.Value.Flags);
                         if (block.Value.Flags.HasFlag(BlockDiff.BlockFlags.HasMetadata))
                             f.Write(block.Value.Metadata);
-                        if (block.Value.Flags.HasFlag(BlockDiff.BlockFlags.HasTileNbt))
+
+                        if (!block.Value.Flags.HasFlag(BlockDiff.BlockFlags.HasTileNbt)) continue;
+
+                        using (var memstream = new MemoryStream())
                         {
-                            using (var memstream = new MemoryStream())
-                            {
-                                // Terrible hack to make the NBT in the format that MC likes
-                                block.Value.TileData.WriteTo(memstream);
-                                memstream.Seek(0, SeekOrigin.Begin);
-                                var len = memstream.Length;
-                                f.Write((int)len);
-                                var b = new byte[(int) len];
-                                memstream.Read(b, 0, (int) len);
-                                f.Write(b);
-                            }
+                            // Terrible hack to make the NBT in the format that MC likes
+                            block.Value.TileData.WriteTo(memstream);
+                            memstream.Seek(0, SeekOrigin.Begin);
+                            var len = memstream.Length;
+                            f.Write((int)len);
+                            var b = new byte[(int)len];
+                            memstream.Read(b, 0, (int)len);
+                            f.Write(b);
                         }
                     }
                 }
@@ -145,6 +167,7 @@ namespace GenerateChunkDiff
 
         public static ChunkDiff Load(string filename)
         {
+            // TODO
             return new ChunkDiff();
         }
 
@@ -154,6 +177,34 @@ namespace GenerateChunkDiff
             if (!ContainsKey(chunk))
                 Add(chunk, new List<KeyValuePair<BlockPosition, BlockDiff>>());
             this[chunk].Add(entry);
+        }
+    }
+
+    internal class NbtMap : Dictionary<int, string>
+    {
+        public static NbtMap Load(string filename)
+        {
+            var map = new NbtMap();
+
+            var nf = new NBTFile(filename);
+
+            using (var nbtstr = nf.GetDataInputStream())
+            {
+                var tree = new NbtTree(nbtstr);
+
+                var root = tree.Root["map"];
+                var list = root.ToTagList();
+
+                foreach (var tag in list)
+                {
+                    var k = tag.ToTagCompound()["k"].ToTagString();
+                    var v = tag.ToTagCompound()["v"].ToTagInt();
+                    if (!map.ContainsKey(v))
+                        map.Add(v, k);
+                }
+
+                return map;
+            }
         }
     }
 
@@ -177,7 +228,7 @@ namespace GenerateChunkDiff
             Id = id;
             Metadata = metdata;
             TileData = tileData;
-            Flags = (Metadata == 0 ? BlockFlags.None : BlockFlags.HasMetadata) | 
+            Flags = (Metadata == 0 ? BlockFlags.None : BlockFlags.HasMetadata) |
                     (TileData == null ? BlockFlags.None : BlockFlags.HasTileNbt);
         }
     }
