@@ -23,7 +23,8 @@ public class StructureRegister
 	{
 		structures.put(Resources.dimIdTatooine, new ChunkDiff[] {
 				//ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/test.cdf"))
-				ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/diff.cdf"))
+				//ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/diff.cdf"))
+				ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/out.cdf"))
 		});
 	}
 
