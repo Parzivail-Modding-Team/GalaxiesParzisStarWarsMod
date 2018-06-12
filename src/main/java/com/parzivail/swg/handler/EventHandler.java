@@ -1,6 +1,7 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.gui.GuiScreenPlanetEnter;
 import com.parzivail.swg.gui.GuiScreenTrailer;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
@@ -20,6 +21,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,12 +39,17 @@ public class EventHandler
 {
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void on(GuiScreenEvent.InitGuiEvent event)
+	public void on(GuiScreenEvent.InitGuiEvent.Pre event)
 	{
 		if (event.gui instanceof GuiMainMenu && !StarWarsGalaxy.config.getHasSeenIntroCrawl())
 		{
 			Client.mc.displayGuiScreen(new GuiScreenTrailer());
 			StarWarsGalaxy.config.setHasSeenIntroCrawl(true);
+		}
+
+		if (event.gui instanceof GuiDownloadTerrain)
+		{
+			Client.mc.displayGuiScreen(new GuiScreenPlanetEnter(Client.mc.getNetHandler(), Client.mc.thePlayer.dimension));
 		}
 	}
 

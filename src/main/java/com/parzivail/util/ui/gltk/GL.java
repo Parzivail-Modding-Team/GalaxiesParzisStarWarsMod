@@ -2,10 +2,14 @@ package com.parzivail.util.ui.gltk;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.glu.GLUtessellator;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 
@@ -15,14 +19,35 @@ import java.util.EnumSet;
  */
 public class GL
 {
+	private static GLUtessellator t;
+	private static ArrayList<ArrayList<Double>> contours = new ArrayList<>();
+	private static Object polygonData;
+
 	public static void Vertex2(float x, float y)
 	{
-		GL11.glVertex2f(x, y);
+		if (t != null)
+			pushContourPoint(x, y, 0);
+		else
+			GL11.glVertex2f(x, y);
+	}
+
+	private static void pushContourPoint(double x, double y, double z)
+	{
+		int s = contours.size();
+		if (s == 0)
+			throw new IllegalStateException("Not contouring");
+		ArrayList<Double> contour = contours.get(s - 1);
+		contour.add(x);
+		contour.add(y);
+		contour.add(z);
 	}
 
 	public static void Vertex2(double x, double y)
 	{
-		GL11.glVertex2d(x, y);
+		if (t != null)
+			pushContourPoint(x, y, 0);
+		else
+			GL11.glVertex2d(x, y);
 	}
 
 	public static void Vertex2(Vector2f v)
@@ -32,12 +57,18 @@ public class GL
 
 	public static void Vertex3(float x, float y, float z)
 	{
-		GL11.glVertex3f(x, y, z);
+		if (t != null)
+			pushContourPoint(x, y, z);
+		else
+			GL11.glVertex3f(x, y, z);
 	}
 
 	public static void Vertex3(double x, double y, double z)
 	{
-		GL11.glVertex3d(x, y, z);
+		if (t != null)
+			pushContourPoint(x, y, z);
+		else
+			GL11.glVertex3d(x, y, z);
 	}
 
 	public static void Vertex3(Vector3f v)
@@ -210,7 +241,7 @@ public class GL
 		GL11.glColor4b(r, g, b, a);
 	}
 
-	public static void Color(double r, double g, double b, byte a)
+	public static void Color(double r, double g, double b, double a)
 	{
 		GL11.glColor4d(r, g, b, a);
 	}
@@ -255,5 +286,42 @@ public class GL
 	public static void EndScissor()
 	{
 		GL.Disable(EnableCap.ScissorTest);
+	}
+
+	public static void TessBeginPolygon(Object data)
+	{
+		polygonData = data;
+		contours.clear();
+
+		t = GLU.gluNewTess();
+		t.gluTessCallback(GLU.GLU_TESS_BEGIN, TessCallback.INSTANCE);
+		t.gluTessCallback(GLU.GLU_TESS_END, TessCallback.INSTANCE);
+		t.gluTessCallback(GLU.GLU_TESS_VERTEX, TessCallback.INSTANCE);
+		t.gluTessCallback(GLU.GLU_TESS_COMBINE, TessCallback.INSTANCE);
+		t.gluTessCallback(GLU.GLU_TESS_ERROR, TessCallback.INSTANCE);
+	}
+
+	public static void TessNextContour()
+	{
+		contours.add(new ArrayList<>());
+	}
+
+	public static void TessEndPolygon()
+	{
+		t.gluTessBeginPolygon(polygonData);
+
+		for (ArrayList<Double> contour : contours)
+		{
+			double[] verts = ArrayUtils.toPrimitive(contour.toArray(new Double[contour.size()]));
+			t.gluTessBeginContour();
+			for (int i = 0; i < verts.length; i += 3)
+				t.gluTessVertex(verts, i, new double[] { verts[i], verts[i + 1], verts[i + 2] });
+			t.gluTessEndContour();
+		}
+
+		t.gluTessEndPolygon();
+		t.gluDeleteTess();
+		contours.clear();
+		t = null;
 	}
 }

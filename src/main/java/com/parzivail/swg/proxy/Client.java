@@ -40,9 +40,11 @@ import com.parzivail.swg.tile.pipe.TileQuadVentPipe;
 import com.parzivail.swg.tile.pipe.TileTallVentedPipe;
 import com.parzivail.swg.tile.pipe.TileWallPipeLarge;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.ui.PFramebuffer;
 import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -77,6 +79,8 @@ public class Client extends Common
 		ShaderHelper.initShaders();
 
 		mc.entityRenderer = new PEntityRenderer(mc, mc.getResourceManager());
+
+		ReflectionHelper.setPrivateValue(Minecraft.class, mc, new PFramebuffer(mc.displayWidth, mc.displayHeight, true), "framebufferMc", "field_147124_at", "au");
 
 		//frSansSerif = createFont("sansserif");
 		//frSerif = createFont("serif");

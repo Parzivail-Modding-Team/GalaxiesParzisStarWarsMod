@@ -2,7 +2,6 @@ package com.parzivail.util.ui.gltk;
 
 import com.parzivail.util.common.Lumberjack;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.GLUtessellatorCallbackAdapter;
 
 public class TessCallback extends GLUtessellatorCallbackAdapter
@@ -42,6 +41,6 @@ public class TessCallback extends GLUtessellatorCallbackAdapter
 	@Override
 	public void error(int errnum)
 	{
-		Lumberjack.log("GLUTess Error: %s", GLU.gluErrorString(errnum));
+		Lumberjack.log("GLUTess Error: %s", errnum);
 	}
 }

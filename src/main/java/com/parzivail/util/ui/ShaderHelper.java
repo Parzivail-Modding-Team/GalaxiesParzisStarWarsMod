@@ -19,6 +19,7 @@ public final class ShaderHelper
 
 	public static int entityGlow = 0;
 	public static int glowSolid = 1;
+	public static int blur = 2;
 
 	private static int previousShader = 0;
 
@@ -51,6 +52,7 @@ public final class ShaderHelper
 
 		entityGlow = createProgramFor("entityGlow");
 		glowSolid = createProgramFor("glowSolid");
+		blur = createProgramFor("blur");
 	}
 
 	public static void useShader(int shader)
@@ -65,8 +67,11 @@ public final class ShaderHelper
 
 		if (shader != 0)
 		{
-			int time = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
-			ARBShaderObjects.glUniform1iARB(time, Client.mc.thePlayer.ticksExisted);
+			if (Client.mc != null && Client.mc.thePlayer != null)
+			{
+				int time = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
+				ARBShaderObjects.glUniform1iARB(time, Client.mc.thePlayer.ticksExisted);
+			}
 
 			if (shader == glowSolid)
 			{
@@ -81,6 +86,18 @@ public final class ShaderHelper
 
 				int a0 = ARBShaderObjects.glGetUniformLocationARB(shader, "a");
 				ARBShaderObjects.glUniform1fARB(a0, a);
+			}
+
+			if (shader == blur)
+			{
+				int res0 = ARBShaderObjects.glGetUniformLocationARB(shader, "iResolution");
+				ARBShaderObjects.glUniform3fARB(res0, Client.mc.getFramebuffer().framebufferTextureWidth, Client.mc.getFramebuffer().framebufferTextureHeight, 0);
+
+				int chan0 = ARBShaderObjects.glGetUniformLocationARB(shader, "iChannel0");
+				ARBShaderObjects.glUniform1iARB(chan0, 0);
+
+				//				int flip0 = ARBShaderObjects.glGetUniformLocationARB(shader, "flip");
+				//				ARBShaderObjects.glUniform1iARB(flip0, 0);
 			}
 		}
 	}
