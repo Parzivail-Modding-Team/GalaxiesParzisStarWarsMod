@@ -9,18 +9,20 @@ public class Timeline
 {
 	private boolean running;
 	private long startTime;
-	private final ArrayList<TimelineEvent> events;
+	private final ArrayList<TimelineEvent> staticevents;
+	private ArrayList<TimelineEvent> events;
 
 	public final float length;
 
 	public Timeline(ArrayList<TimelineEvent> events)
 	{
-		this.events = events;
+		this.events = this.staticevents = events;
 		this.length = Enumerable.from(events).max((e) -> (float)e.time);
 	}
 
 	public void start()
 	{
+		this.events = (ArrayList<TimelineEvent>)this.staticevents.clone();
 		this.startTime = Fx.Util.GetMillis();
 		this.running = true;
 	}
@@ -45,5 +47,7 @@ public class Timeline
 				i.remove();
 			}
 		}
+		if (delta > length)
+			this.running = false;
 	}
 }
