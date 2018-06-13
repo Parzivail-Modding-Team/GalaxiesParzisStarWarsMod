@@ -1,6 +1,5 @@
 package com.parzivail.util.ui;
 
-import com.parzivail.swg.proxy.Client;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -65,14 +64,14 @@ public class PFramebuffer extends Framebuffer
 		}
 	}
 
-	@Override
-	public void bindFramebuffer(boolean p_147610_1_)
-	{
-		super.bindFramebuffer(p_147610_1_);
-
-		if (!(Client.mc.loadingScreen instanceof PLoadingScreenRenderer))
-			Client.mc.loadingScreen = new PLoadingScreenRenderer(Client.mc);
-	}
+	//	@Override
+	//	public void bindFramebuffer(boolean p_147610_1_)
+	//	{
+	//		super.bindFramebuffer(p_147610_1_);
+	//
+	//		if (!(Client.mc.loadingScreen instanceof PLoadingScreenRenderer))
+	//			Client.mc.loadingScreen = new PLoadingScreenRenderer(Client.mc);
+	//	}
 
 	@Override
 	public void framebufferRender(int width, int height)
