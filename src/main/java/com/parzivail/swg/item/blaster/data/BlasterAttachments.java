@@ -1,13 +1,13 @@
-package com.parzivail.swg.weapon.blastermodule;
+package com.parzivail.swg.item.blaster.data;
 
+import com.parzivail.swg.item.blaster.data.barrel.BarrelDefault;
+import com.parzivail.swg.item.blaster.data.barrel.BlasterBarrel;
+import com.parzivail.swg.item.blaster.data.grip.BlasterGrip;
+import com.parzivail.swg.item.blaster.data.grip.GripNone;
+import com.parzivail.swg.item.blaster.data.powerpack.BlasterPowerPack;
+import com.parzivail.swg.item.blaster.data.powerpack.PowerPackSmallGasCanister;
+import com.parzivail.swg.item.blaster.data.scope.*;
 import com.parzivail.swg.player.PswgExtProp;
-import com.parzivail.swg.weapon.blastermodule.barrel.BarrelDefault;
-import com.parzivail.swg.weapon.blastermodule.barrel.BlasterBarrel;
-import com.parzivail.swg.weapon.blastermodule.grip.BlasterGrip;
-import com.parzivail.swg.weapon.blastermodule.grip.GripNone;
-import com.parzivail.swg.weapon.blastermodule.powerpack.BlasterPowerPack;
-import com.parzivail.swg.weapon.blastermodule.powerpack.PowerPackSmallGasCanister;
-import com.parzivail.swg.weapon.blastermodule.scope.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 

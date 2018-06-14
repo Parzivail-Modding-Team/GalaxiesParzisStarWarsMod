@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderScout implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/rifle.scout.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.scout.png");
 
 	private ModelScout model;
 

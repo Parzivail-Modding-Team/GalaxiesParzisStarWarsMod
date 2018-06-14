@@ -1,8 +1,8 @@
 package com.parzivail.swg.tile;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.item.blaster.ItemBlasterRifle;
 import com.parzivail.swg.registry.BlockRegister;
-import com.parzivail.swg.weapon.ItemBlasterRifle;
 import com.parzivail.util.block.BlockUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

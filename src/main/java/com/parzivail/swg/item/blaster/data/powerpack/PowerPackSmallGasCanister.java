@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon.blastermodule.powerpack;
+package com.parzivail.swg.item.blaster.data.powerpack;
 
 public class PowerPackSmallGasCanister extends BlasterPowerPack
 {

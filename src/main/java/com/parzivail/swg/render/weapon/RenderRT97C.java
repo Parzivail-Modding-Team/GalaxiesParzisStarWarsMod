@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderRT97C implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/rifle.rt97c.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.rt97c.png");
 
 	private ModelRT97C model;
 

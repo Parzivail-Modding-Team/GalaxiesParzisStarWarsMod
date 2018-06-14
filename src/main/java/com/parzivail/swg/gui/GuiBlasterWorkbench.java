@@ -2,6 +2,8 @@ package com.parzivail.swg.gui;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.container.ContainerBlasterWorkbench;
+import com.parzivail.swg.item.blaster.data.BlasterAttachment;
+import com.parzivail.swg.item.blaster.data.BlasterAttachments;
 import com.parzivail.swg.network.TransactionRegistry;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
@@ -9,8 +11,6 @@ import com.parzivail.swg.tile.TileBlasterWorkbench;
 import com.parzivail.swg.transaction.TransactionDeductCredits;
 import com.parzivail.swg.transaction.TransactionEquipAttachment;
 import com.parzivail.swg.transaction.TransactionUnlockAttachment;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachments;
 import com.parzivail.util.ui.FixedResolution;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.GL;

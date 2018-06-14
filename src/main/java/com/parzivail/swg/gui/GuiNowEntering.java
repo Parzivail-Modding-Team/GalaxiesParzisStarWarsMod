@@ -2,7 +2,7 @@ package com.parzivail.swg.gui;
 
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.AnimatedValue;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.Timeline;
 import com.parzivail.util.ui.TimelineEvent;
 import com.parzivail.util.ui.gltk.AttribMask;
@@ -53,11 +53,6 @@ public class GuiNowEntering
 				showingZone = zone;
 				break;
 			}
-			//			else if (!zone.contains(pos) && zone.contains(prevPos))
-			//			{
-			//				leftZone = true;
-			//				break;
-			//			}
 		}
 		prevPos = pos;
 
@@ -74,26 +69,32 @@ public class GuiNowEntering
 		GL.Enable(EnableCap.Blend);
 
 		FontRenderer f = Client.mc.fontRendererObj;
-		int width = sr.getScaledWidth();
-		int height = sr.getScaledHeight();
 
-		int alpha = (int)(textFadeOutValue.getValue() * 255);
-		int color = Fx.Util.GetRgba(255, 255, 255, alpha);
+		String str = scrambleString(String.format("Now entering\n§o%s", zone.name), textFadeOutValue.getValue());
 
-		if (alpha > 5)
+		int x = f.FONT_HEIGHT;
+		int y = sr.getScaledHeight() - f.FONT_HEIGHT * 3;
+
+		String[] parts = str.split("\n");
+		int yDiff = 0;
+		for (String part : parts)
 		{
-			String text = "Now entering";
-			int strW = f.getStringWidth(text);
-			f.drawString(text, width / 2 - strW / 2, 2, color, false);
-
-			int planetW = f.getStringWidth(zone.name);
-			GL.Translate(width / 2 - planetW, 4 + f.FONT_HEIGHT, 0);
-			GL.Scale(2);
-			f.drawString(zone.name, 0, 0, color, false);
+			f.drawString(part, x, y + yDiff, GLPalette.WHITE);
+			yDiff += f.FONT_HEIGHT;
 		}
 
 		GL.PopAttrib();
 		GL.PopMatrix();
+	}
+
+	private static String scrambleString(String s, double percent)
+	{
+		if (percent > 1)
+			percent = 1;
+		if (percent < 0)
+			percent = 0;
+
+		return s.substring(0, (int)(s.length() * percent)) + (percent < 1 ? "§kM§r" : "");
 	}
 
 	private static class Zone

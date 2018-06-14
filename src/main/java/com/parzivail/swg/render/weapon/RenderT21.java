@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderT21 implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/rifle.t21.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.t21.png");
 
 	private ModelT21 model;
 

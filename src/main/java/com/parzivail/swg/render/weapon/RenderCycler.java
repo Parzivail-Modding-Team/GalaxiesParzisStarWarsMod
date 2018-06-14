@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderCycler implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/rifle.cycler.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.cycler.png");
 
 	private ModelCycler model;
 

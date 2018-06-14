@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderSpear implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/melee.spear.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/melee.spear.png");
 
 	private ModelSpear model;
 

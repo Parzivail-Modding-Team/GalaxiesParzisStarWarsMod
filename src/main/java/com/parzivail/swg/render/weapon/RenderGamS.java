@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderGamS implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/melee.gamS.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/melee.gamS.png");
 
 	private ModelGamS model;
 

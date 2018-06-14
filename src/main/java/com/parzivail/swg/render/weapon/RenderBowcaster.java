@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderBowcaster implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/rifle.bowcaster.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.bowcaster.png");
 
 	private ModelBowcaster model;
 

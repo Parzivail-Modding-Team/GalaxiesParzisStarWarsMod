@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon.blastermodule.scope;
+package com.parzivail.swg.item.blaster.data.scope;
 
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;

@@ -1,8 +1,8 @@
-package com.parzivail.swg.weapon.blastermodule.barrel;
+package com.parzivail.swg.item.blaster.data.barrel;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachmentType;
+import com.parzivail.swg.item.blaster.data.BlasterAttachment;
+import com.parzivail.swg.item.blaster.data.BlasterAttachmentType;
 
 public abstract class BlasterBarrel extends BlasterAttachment
 {

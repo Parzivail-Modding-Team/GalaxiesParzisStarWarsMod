@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderGaffi implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/melee.gaffi.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/melee.gaffi.png");
 
 	private ModelGaffi model;
 

@@ -4,6 +4,7 @@ import cpw.mods.fml.common.registry.GameData;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -12,8 +13,11 @@ import java.io.OutputStream;
 
 public class FileHandler
 {
-	public static void saveNbtMappings(File file)
+	public static void saveNbtMappings(World world)
 	{
+		File dir = world.getSaveHandler().getWorldDirectory();
+		File file = new File(dir, "cdfidmap.nbt");
+
 		NBTTagCompound compound = new NBTTagCompound();
 		NBTTagList blockMap = new NBTTagList();
 

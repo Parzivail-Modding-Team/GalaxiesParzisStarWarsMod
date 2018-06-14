@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderVibro implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/melee.vibro.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/melee.vibro.png");
 
 	private ModelVibro model;
 

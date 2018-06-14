@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon;
+package com.parzivail.swg.item.blaster;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
@@ -6,11 +6,11 @@ import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.item.blaster.data.BlasterData;
+import com.parzivail.swg.item.blaster.data.BlasterDescriptor;
+import com.parzivail.swg.item.blaster.data.powerpack.BlasterPowerPack;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.render.decal.Decal;
-import com.parzivail.swg.weapon.blastermodule.BlasterData;
-import com.parzivail.swg.weapon.blastermodule.BlasterDescriptor;
-import com.parzivail.swg.weapon.blastermodule.powerpack.BlasterPowerPack;
 import com.parzivail.util.audio.SoundHandler;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.common.Pair;

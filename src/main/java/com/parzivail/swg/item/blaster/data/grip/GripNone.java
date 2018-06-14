@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon.blastermodule.grip;
+package com.parzivail.swg.item.blaster.data.grip;
 
 public class GripNone extends BlasterGrip
 {

@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon.blastermodule;
+package com.parzivail.swg.item.blaster.data;
 
 public enum BlasterAttachmentType
 {

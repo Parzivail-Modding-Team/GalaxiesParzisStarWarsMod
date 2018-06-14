@@ -29,8 +29,6 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
-import java.io.File;
-
 /**
  * Created by colby on 9/13/2017.
  */
@@ -55,11 +53,9 @@ public class EventHandler
 	@SubscribeEvent
 	public void on(WorldEvent.Load loadEvent)
 	{
-		File dir = loadEvent.world.getSaveHandler().getWorldDirectory();
-
 		try
 		{
-			FileHandler.saveNbtMappings(new File(dir, "cdfidmap.nbt"));
+			FileHandler.saveNbtMappings(loadEvent.world);
 		}
 		catch (NullPointerException e)
 		{
@@ -150,7 +146,9 @@ public class EventHandler
 			ScaledResolution sr = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
 
 			if (event.type == RenderGameOverlayEvent.ElementType.TEXT)
+			{
 				GuiNowEntering.draw(sr, Client.mc.thePlayer);
+			}
 
 			if (heldItem != null && heldItem.getItem() instanceof ICustomCrosshair)
 			{

@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon.blastermodule.barrel;
+package com.parzivail.swg.item.blaster.data.barrel;
 
 public class BarrelDefault extends BlasterBarrel
 {

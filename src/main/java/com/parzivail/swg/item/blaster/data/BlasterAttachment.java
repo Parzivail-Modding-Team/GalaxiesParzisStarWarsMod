@@ -1,4 +1,4 @@
-package com.parzivail.swg.weapon.blastermodule;
+package com.parzivail.swg.item.blaster.data;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

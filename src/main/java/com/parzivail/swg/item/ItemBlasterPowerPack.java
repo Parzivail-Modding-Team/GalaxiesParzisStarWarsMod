@@ -1,9 +1,9 @@
 package com.parzivail.swg.item;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachments;
-import com.parzivail.swg.weapon.blastermodule.powerpack.BlasterPowerPack;
+import com.parzivail.swg.item.blaster.data.BlasterAttachment;
+import com.parzivail.swg.item.blaster.data.BlasterAttachments;
+import com.parzivail.swg.item.blaster.data.powerpack.BlasterPowerPack;
 
 import java.util.HashMap;
 

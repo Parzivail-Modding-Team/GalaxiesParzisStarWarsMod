@@ -9,7 +9,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderDL18 implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/rifle.dl18.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.dl18.png");
 
 	private ModelDL18 model;
 

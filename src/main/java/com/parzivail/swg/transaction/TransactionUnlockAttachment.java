@@ -1,8 +1,8 @@
 package com.parzivail.swg.transaction;
 
+import com.parzivail.swg.item.blaster.data.BlasterAttachment;
 import com.parzivail.swg.network.Transaction;
 import com.parzivail.swg.player.PswgExtProp;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.DimensionManager;

@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderDefender implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/weapon/rifle.defender.png");
+	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.defender.png");
 
 	private ModelDefender model;
 

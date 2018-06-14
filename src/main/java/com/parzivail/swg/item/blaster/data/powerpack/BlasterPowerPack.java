@@ -1,9 +1,9 @@
-package com.parzivail.swg.weapon.blastermodule.powerpack;
+package com.parzivail.swg.item.blaster.data.powerpack;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.ItemBlasterPowerPack;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachmentType;
+import com.parzivail.swg.item.blaster.data.BlasterAttachment;
+import com.parzivail.swg.item.blaster.data.BlasterAttachmentType;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 

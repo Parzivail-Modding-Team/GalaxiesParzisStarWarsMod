@@ -1,8 +1,8 @@
-package com.parzivail.swg.weapon.blastermodule.grip;
+package com.parzivail.swg.item.blaster.data.grip;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachmentType;
+import com.parzivail.swg.item.blaster.data.BlasterAttachment;
+import com.parzivail.swg.item.blaster.data.BlasterAttachmentType;
 import com.parzivail.util.math.MathFormat;
 import net.minecraft.client.resources.I18n;
 

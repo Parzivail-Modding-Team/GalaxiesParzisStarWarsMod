@@ -1,13 +1,13 @@
 package com.parzivail.swg.transaction;
 
+import com.parzivail.swg.item.blaster.data.BlasterAttachment;
+import com.parzivail.swg.item.blaster.data.BlasterAttachments;
+import com.parzivail.swg.item.blaster.data.BlasterData;
+import com.parzivail.swg.item.blaster.data.barrel.BlasterBarrel;
+import com.parzivail.swg.item.blaster.data.grip.BlasterGrip;
+import com.parzivail.swg.item.blaster.data.scope.BlasterScope;
 import com.parzivail.swg.network.Transaction;
 import com.parzivail.swg.tile.TileBlasterWorkbench;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachment;
-import com.parzivail.swg.weapon.blastermodule.BlasterAttachments;
-import com.parzivail.swg.weapon.blastermodule.BlasterData;
-import com.parzivail.swg.weapon.blastermodule.barrel.BlasterBarrel;
-import com.parzivail.swg.weapon.blastermodule.grip.BlasterGrip;
-import com.parzivail.swg.weapon.blastermodule.scope.BlasterScope;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.DimensionManager;

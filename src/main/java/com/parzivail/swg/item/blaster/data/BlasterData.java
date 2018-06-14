@@ -1,8 +1,8 @@
-package com.parzivail.swg.weapon.blastermodule;
+package com.parzivail.swg.item.blaster.data;
 
-import com.parzivail.swg.weapon.blastermodule.barrel.BlasterBarrel;
-import com.parzivail.swg.weapon.blastermodule.grip.BlasterGrip;
-import com.parzivail.swg.weapon.blastermodule.scope.BlasterScope;
+import com.parzivail.swg.item.blaster.data.barrel.BlasterBarrel;
+import com.parzivail.swg.item.blaster.data.grip.BlasterGrip;
+import com.parzivail.swg.item.blaster.data.scope.BlasterScope;
 import com.parzivail.util.item.ItemUtils;
 import com.parzivail.util.item.NbtSerializable;
 import net.minecraft.item.ItemStack;
