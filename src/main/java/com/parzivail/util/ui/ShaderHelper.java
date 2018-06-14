@@ -17,9 +17,12 @@ public final class ShaderHelper
 	private static final int VERT = ARBVertexShader.GL_VERTEX_SHADER_ARB;
 	private static final int FRAG = ARBFragmentShader.GL_FRAGMENT_SHADER_ARB;
 
-	public static int entityGlow = 0;
-	public static int glowSolid = 1;
-	public static int blur = 2;
+	public static int entityGlow;
+	public static int glowSolid;
+	public static int blur;
+	public static int vhs;
+
+	public static int framebufferShader;
 
 	private static int previousShader = 0;
 
@@ -28,6 +31,13 @@ public final class ShaderHelper
 	private static float g;
 	private static float b;
 	private static float a;
+
+	private static long timerOffset;
+
+	public static void tareTimer()
+	{
+		timerOffset = Fx.Util.GetMillis();
+	}
 
 	public static void setColor(float r, float g, float b, float a)
 	{
@@ -53,10 +63,12 @@ public final class ShaderHelper
 		entityGlow = createProgramFor("entityGlow");
 		glowSolid = createProgramFor("glowSolid");
 		blur = createProgramFor("blur");
+		vhs = createProgramFor("vhs");
 	}
 
 	public static void useShader(int shader)
 	{
+
 		if (!useShaders())
 			return;
 
@@ -70,7 +82,7 @@ public final class ShaderHelper
 			if (Client.mc != null && Client.mc.thePlayer != null)
 			{
 				int time = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
-				ARBShaderObjects.glUniform1iARB(time, Client.mc.thePlayer.ticksExisted);
+				ARBShaderObjects.glUniform1fARB(time, (Fx.Util.GetMillis() - timerOffset) / 1000f);
 			}
 
 			if (shader == glowSolid)
@@ -88,16 +100,16 @@ public final class ShaderHelper
 				ARBShaderObjects.glUniform1fARB(a0, a);
 			}
 
-			if (shader == blur)
+			if (shader == blur || shader == vhs)
 			{
 				int res0 = ARBShaderObjects.glGetUniformLocationARB(shader, "iResolution");
-				ARBShaderObjects.glUniform3fARB(res0, Client.mc.getFramebuffer().framebufferTextureWidth, Client.mc.getFramebuffer().framebufferTextureHeight, 0);
+				ARBShaderObjects.glUniform3fARB(res0, (float)Client.mc.getFramebuffer().framebufferTextureWidth, (float)Client.mc.getFramebuffer().framebufferTextureHeight, 0f);
 
 				int chan0 = ARBShaderObjects.glGetUniformLocationARB(shader, "iChannel0");
 				ARBShaderObjects.glUniform1iARB(chan0, 0);
 
-				//				int flip0 = ARBShaderObjects.glGetUniformLocationARB(shader, "flip");
-				//				ARBShaderObjects.glUniform1iARB(flip0, 0);
+				int chan1 = ARBShaderObjects.glGetUniformLocationARB(shader, "iChannel1");
+				ARBShaderObjects.glUniform1iARB(chan1, 1);
 			}
 		}
 	}

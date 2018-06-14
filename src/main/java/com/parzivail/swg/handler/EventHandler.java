@@ -5,6 +5,7 @@ import com.parzivail.swg.gui.GuiNowEntering;
 import com.parzivail.swg.gui.GuiScreenTrailer;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
+import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
@@ -13,6 +14,7 @@ import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
+import com.parzivail.util.ui.ShaderHelper;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -149,6 +151,11 @@ public class EventHandler
 			{
 				GuiNowEntering.draw(sr, Client.mc.thePlayer);
 			}
+
+			if (heldItem != null && heldItem.getItem() instanceof IScreenShader)
+				ShaderHelper.framebufferShader = ((IScreenShader)heldItem.getItem()).requestShader(Client.mc.thePlayer, heldItem);
+			else
+				ShaderHelper.framebufferShader = 0;
 
 			if (heldItem != null && heldItem.getItem() instanceof ICustomCrosshair)
 			{

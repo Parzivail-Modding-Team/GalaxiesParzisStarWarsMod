@@ -1,10 +1,12 @@
 package com.parzivail.util.ui;
 
+import com.parzivail.swg.proxy.Client;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.shader.Framebuffer;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 
 import java.nio.ByteBuffer;
 
@@ -94,8 +96,13 @@ public class PFramebuffer extends Framebuffer
 			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			this.bindFramebufferTexture();
-			//ShaderHelper.useShader(ShaderHelper.blur);
+			GL13.glActiveTexture(GL13.GL_TEXTURE1);
+			this.bindFramebufferTexture();
+			GL13.glActiveTexture(GL13.GL_TEXTURE0);
+			if (ShaderHelper.framebufferShader != 0 && Client.mc != null && Client.mc.thePlayer != null)
+				ShaderHelper.useShader(ShaderHelper.framebufferShader);
 			float f = (float)width;
 			float f1 = (float)height;
 			float f2 = (float)this.framebufferWidth / (float)this.framebufferTextureWidth;
@@ -109,7 +116,8 @@ public class PFramebuffer extends Framebuffer
 			tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, (double)f3);
 			tessellator.draw();
 			this.unbindFramebufferTexture();
-			//ShaderHelper.releaseShader();
+			if (ShaderHelper.framebufferShader != 0 && Client.mc != null && Client.mc.thePlayer != null)
+				ShaderHelper.releaseShader();
 			GL11.glDepthMask(true);
 			GL11.glColorMask(true, true, true, true);
 		}

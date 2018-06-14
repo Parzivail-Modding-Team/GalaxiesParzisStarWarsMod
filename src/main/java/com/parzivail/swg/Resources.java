@@ -33,6 +33,8 @@ public class Resources
 	public static int dimIdEndor = 3;
 	public static int biomeIdEndor = 101;
 
+	public static ResourceLocation resBlack = location("textures/environment/black.png");
+
 	public static String itemDot(String name)
 	{
 		return dot("item", MODID, name);

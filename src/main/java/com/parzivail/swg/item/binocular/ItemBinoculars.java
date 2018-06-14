@@ -3,10 +3,12 @@ package com.parzivail.swg.item.binocular;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.ICustomCrosshair;
 import com.parzivail.swg.item.ILeftClickInterceptor;
+import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.binocular.data.BinocularData;
 import com.parzivail.swg.item.binocular.data.BinocularDescriptor;
 import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.ui.ShaderHelper;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.gui.ScaledResolution;
@@ -18,7 +20,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClickInterceptor
+public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClickInterceptor, IScreenShader
 {
 	private final BinocularDescriptor descriptor;
 
@@ -62,6 +64,9 @@ public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClic
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
+		if (world.isRemote)
+			ShaderHelper.tareTimer();
+
 		BinocularData bd = new BinocularData(stack);
 
 		bd.isZooming = !bd.isZooming;
@@ -128,11 +133,24 @@ public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClic
 	public void onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		BinocularData bd = new BinocularData(stack);
+		if (!bd.isZooming)
+			return;
+
+		if (world.isRemote)
+			ShaderHelper.tareTimer();
+
 
 		bd.zoomLevel--;
 		if (bd.zoomLevel < 0)
 			bd.zoomLevel = 4;
 
 		bd.serialize(stack.stackTagCompound);
+	}
+
+	@Override
+	public int requestShader(EntityPlayer player, ItemStack stack)
+	{
+		BinocularData bd = new BinocularData(stack);
+		return bd.isZooming ? ShaderHelper.vhs : 0;
 	}
 }
