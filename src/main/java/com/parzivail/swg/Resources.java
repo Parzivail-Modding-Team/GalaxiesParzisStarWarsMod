@@ -1,5 +1,7 @@
 package com.parzivail.swg;
 
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -88,5 +90,10 @@ public class Resources
 	public static ResourceLocation location(String path)
 	{
 		return new ResourceLocation(MODID, path);
+	}
+
+	public static String getKeyName(KeyBinding keyBinding)
+	{
+		return GameSettings.getKeyDisplayString(keyBinding.getKeyCode());
 	}
 }

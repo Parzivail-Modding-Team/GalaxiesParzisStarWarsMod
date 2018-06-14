@@ -203,6 +203,12 @@ public class Fx
 		static void Rectangle(float x, float y, float w, float h, PrimitiveType mode)
 		{
 			GL.Begin(mode);
+			BufferRectangle(x, y, w, h);
+			GL.End();
+		}
+
+		public static void BufferRectangle(float x, float y, float w, float h)
+		{
 			GL.TexCoord2(0, 0);
 			GL.Vertex3(x, y, 0);
 			GL.TexCoord2(0, 1);
@@ -211,7 +217,6 @@ public class Fx
 			GL.Vertex3(x + w, y + h, 0);
 			GL.TexCoord2(1, 0);
 			GL.Vertex3(x + w, y, 0);
-			GL.End();
 		}
 
 		public static void RoundRectangle(float x, float y, float w, float h, float radiusTopLeft, float radiusTopRight, float radiusBottomLeft, float radiusBottomRight, PrimitiveType mode)
@@ -220,6 +225,12 @@ public class Fx
 			if (step > 45)
 				step = 45;
 			GL.Begin(mode);
+			BufferRoundRectangle(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomLeft, radiusBottomRight, step);
+			GL.End();
+		}
+
+		public static void BufferRoundRectangle(float x, float y, float w, float h, float radiusTopLeft, float radiusTopRight, float radiusBottomLeft, float radiusBottomRight, float step)
+		{
 			for (float i = -90; i <= 0; i += step)
 			{
 				float nx = MathHelper.sin(i * 3.141526f / 180) * radiusBottomLeft + radiusBottomLeft;
@@ -244,36 +255,49 @@ public class Fx
 				float ny = MathHelper.cos(i * 3.141526f / 180) * radiusTopLeft + radiusTopLeft;
 				GL.Vertex2(nx + x, ny + y);
 			}
-			GL.End();
 		}
 
 		static void Arc(float x, float y, float radius, float fromAngle, float toAngle, PrimitiveType mode)
 		{
-			float step = 100 / radius;
-			if (step > 45)
-				step = 45;
+			float step = radius / (toAngle - fromAngle) * 2;
 			GL.Begin(mode);
+			BufferArc(x, y, radius, fromAngle, toAngle, step);
+			GL.End();
+		}
+
+		public static void BufferArc(float x, float y, float radius, float fromAngle, float toAngle, float step)
+		{
 			for (float i = fromAngle; i <= toAngle; i += step)
 			{
-				float nx = MathHelper.sin(i * 3.141526f / 180) * radius;
-				float ny = MathHelper.cos(i * 3.141526f / 180) * radius;
-				GL.Vertex2(nx + x, ny + y);
+				float nx = MathHelper.cos((float)(i / 180 * Math.PI)) * radius;
+				float ny = MathHelper.sin((float)(i / 180 * Math.PI)) * radius;
+				GL.Vertex2(nx + x, -ny + y);
 			}
-			GL.End();
 		}
 
 		static void Triangle(float x, float y, float sideLen, PrimitiveType mode)
 		{
 			GL.Begin(mode);
+			BufferTriangle(x, y, sideLen);
+			GL.End();
+		}
+
+		public static void BufferTriangle(float x, float y, float sideLen)
+		{
 			GL.Vertex2(x, y - sideLen / 2);
 			GL.Vertex2(x - sideLen / 2, y + sideLen / 2);
 			GL.Vertex2(x + sideLen / 2, y + sideLen / 2);
-			GL.End();
 		}
 
 		static void Pie(float x, float y, float radius, float percent, PrimitiveType mode)
 		{
 			GL.Begin(mode);
+			BufferPie(x, y, radius, percent);
+			GL.End();
+		}
+
+		public static void BufferPie(float x, float y, float radius, float percent)
+		{
 			GL.Vertex2(x, y);
 			for (int i = 0; i <= 360 * percent; i++)
 			{
@@ -281,7 +305,6 @@ public class Fx
 				float ny = MathHelper.cos(i * 3.141526f / 180) * radius;
 				GL.Vertex2(nx + x, ny + y);
 			}
-			GL.End();
 		}
 
 		public static void CentripetalCatmullRomTo(Vector2f p0, Vector2f p1, Vector2f p2, Vector2f p3, float numSamplePoints)
@@ -292,20 +315,19 @@ public class Fx
 		public static void CentripetalCatmullRomTo(float p0X, float p0Y, float p1X, float p1Y, float p2X, float p2Y, float p3X, float p3Y, float numSamplePoints)
 		{
 			GL.Begin(PrimitiveType.LineStrip);
-			for (int i = 0; i <= numSamplePoints; i++)
-				GL.Vertex2(EvalCentripetalCatmullRom(p0X, p0Y, p1X, p1Y, p2X, p2Y, p3X, p3Y, i / numSamplePoints));
+			BufferCentripetalCatmullRomTo(p0X, p0Y, p1X, p1Y, p2X, p2Y, p3X, p3Y, numSamplePoints);
 			GL.End();
 		}
 
-		public static void CentripetalCatmullRomToVertexOnly(Vector2f p0, Vector2f p1, Vector2f p2, Vector2f p3, float numSamplePoints)
-		{
-			CentripetalCatmullRomToVertexOnly(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, numSamplePoints);
-		}
-
-		public static void CentripetalCatmullRomToVertexOnly(float p0X, float p0Y, float p1X, float p1Y, float p2X, float p2Y, float p3X, float p3Y, float numSamplePoints)
+		public static void BufferCentripetalCatmullRomTo(float p0X, float p0Y, float p1X, float p1Y, float p2X, float p2Y, float p3X, float p3Y, float numSamplePoints)
 		{
 			for (int i = 0; i <= numSamplePoints; i++)
 				GL.Vertex2(EvalCentripetalCatmullRom(p0X, p0Y, p1X, p1Y, p2X, p2Y, p3X, p3Y, i / numSamplePoints));
+		}
+
+		public static void BufferCentripetalCatmullRomTo(Vector2f p0, Vector2f p1, Vector2f p2, Vector2f p3, float numSamplePoints)
+		{
+			BufferCentripetalCatmullRomTo(p0.x, p0.y, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y, numSamplePoints);
 		}
 
 		public static Vector2f EvalCentripetalCatmullRom(Vector2f p0, Vector2f p1, Vector2f p2, Vector2f p3, float percentageAcross)
