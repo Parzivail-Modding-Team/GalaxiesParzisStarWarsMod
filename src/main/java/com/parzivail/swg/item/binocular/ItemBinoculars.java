@@ -155,8 +155,6 @@ public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClic
 		}
 		else
 		{
-			float onePixel = 1f / sr.getScaleFactor();
-
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0, 0, 0, 1);
 			Fx.D2.DrawWireArc(0, 0, 6, -25, 85);
