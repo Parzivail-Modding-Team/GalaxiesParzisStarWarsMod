@@ -217,7 +217,6 @@ public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClic
 		if (world.isRemote)
 			ShaderHelper.tareTimer();
 
-
 		bd.zoomLevel--;
 		if (bd.zoomLevel < 0)
 			bd.zoomLevel = 4;
