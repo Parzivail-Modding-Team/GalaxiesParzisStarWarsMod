@@ -40,7 +40,7 @@ public class NinePatchResource
 	{
 		Client.mc.renderEngine.bindTexture(resourceLocation);
 
-		ScaledResolution r = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
+		ScaledResolution r = Client.resolution;
 		float factor = r.getScaleFactor();
 
 		GL.PushMatrix();

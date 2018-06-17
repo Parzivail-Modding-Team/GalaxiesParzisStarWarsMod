@@ -47,10 +47,17 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
+import org.newdawn.slick.TrueTypeFont;
+
+import java.awt.*;
+import java.io.InputStream;
 
 /**
  * Created by colby on 9/10/2017.
@@ -70,6 +77,10 @@ public class Client extends Common
 	public static FontRenderer frMassassi;
 
 	public static float renderPartialTicks;
+
+	private static ResourceLocation brandonRegResource = Resources.location("font/BrandonReg.ttf");
+	public static TrueTypeFont brandonReg;
+	public static ScaledResolution resolution;
 
 	@Override
 	public void init()
@@ -91,6 +102,21 @@ public class Client extends Common
 		frEwok = createFont("ewok");
 		frHuttese = createFont("huttese");
 		frMassassi = createFont("massassi");
+
+		try
+		{
+			IResource res = Minecraft.getMinecraft().getResourceManager().getResource(brandonRegResource);
+			InputStream inputStream = res.getInputStream();
+
+			Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+			awtFont2 = awtFont2.deriveFont(24f); // set font size
+			brandonReg = new TrueTypeFont(awtFont2, true);
+
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 
 		RenderingRegistry.registerEntityRenderingHandler(VehicleT65.class, new RenderT65());
 		//RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());

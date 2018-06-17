@@ -9,6 +9,9 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.Color;
+
+import java.util.HashMap;
 
 /**
  * Created by colby on 9/13/2017.
@@ -17,6 +20,7 @@ public class Fx
 {
 	public static class Util
 	{
+		private static final HashMap<Integer, Color> COLOR_HASH_MAP = new HashMap<>();
 		public static int GetRgb(int r, int g, int b)
 		{
 			int rgb = r;
@@ -32,6 +36,14 @@ public class Fx
 			rgba = (rgba << 8) + g;
 			rgba = (rgba << 8) + b;
 			return rgba;
+		}
+
+		public static Color GetColor(int color)
+		{
+			if (COLOR_HASH_MAP.containsKey(color))
+				return COLOR_HASH_MAP.get(color);
+
+			return COLOR_HASH_MAP.put(color, new Color(color));
 		}
 
 		public static double Lerp(double a, double b, double f)
@@ -146,6 +158,16 @@ public class Fx
 			Rectangle(x, y, w, h, PrimitiveType.TriangleFan);
 		}
 
+		public static void DrawWireRoundRectangle(float x, float y, float w, float h, float borderRadius)
+		{
+			RoundRectangle(x, y, w, h, borderRadius, borderRadius, borderRadius, borderRadius, PrimitiveType.LineLoop);
+		}
+
+		public static void DrawSolidRoundRectangle(float x, float y, float w, float h, float borderRadius)
+		{
+			RoundRectangle(x, y, w, h, borderRadius, borderRadius, borderRadius, borderRadius, PrimitiveType.TriangleFan);
+		}
+
 		public static void DrawWireCircle(float x, float y, float radius)
 		{
 			Arc(x, y, radius, 0, 360, PrimitiveType.LineLoop);
@@ -221,9 +243,10 @@ public class Fx
 
 		public static void RoundRectangle(float x, float y, float w, float h, float radiusTopLeft, float radiusTopRight, float radiusBottomLeft, float radiusBottomRight, PrimitiveType mode)
 		{
-			float step = 100 / Math.max(radiusTopLeft, Math.max(radiusTopRight, Math.max(radiusBottomLeft, radiusBottomRight)));
-			if (step > 45)
-				step = 45;
+			float step = 25f;
+			//			float step = 45 / Math.max(radiusTopLeft, Math.max(radiusTopRight, Math.max(radiusBottomLeft, radiusBottomRight)));
+			//			if (step > 45)
+			//				step = 45;
 			GL.Begin(mode);
 			BufferRoundRectangle(x, y, w, h, radiusTopLeft, radiusTopRight, radiusBottomLeft, radiusBottomRight, step);
 			GL.End();

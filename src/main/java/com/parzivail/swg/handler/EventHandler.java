@@ -146,6 +146,7 @@ public class EventHandler
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
 
 			ScaledResolution sr = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
+			Client.resolution = sr;
 
 			if (event.type == RenderGameOverlayEvent.ElementType.TEXT)
 			{

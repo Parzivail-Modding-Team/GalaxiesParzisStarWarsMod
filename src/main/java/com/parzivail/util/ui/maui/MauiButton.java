@@ -1,6 +1,7 @@
 package com.parzivail.util.ui.maui;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
@@ -64,7 +65,7 @@ public class MauiButton extends GuiButton
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY)
 	{
-		ScaledResolution sr = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		ScaledResolution sr = Client.resolution;
 
 		NinePatchResource[] states = connectedStateMap.get(connectedState);
 

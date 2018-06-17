@@ -110,11 +110,11 @@ public class MauiTextbox extends Gui
 	//		boolean active = hover && Mouse.isButtonDown(0);
 	//		NinePatchResource texture = active ? states[2] : hover ? states[1] : states[0];
 	//		texture.draw(width, height);
-	//		float width = Maui.deJaVuSans.getWidth(this.);
+	//		float width = Maui.brandonReg.getWidth(this.);
 	//		GL.Scale(1f / sr.getScaleFactor());
-	//		GL.Translate(Math.round((this.width * sr.getScaleFactor() - width) / 2f), Math.round((this.height * sr.getScaleFactor() - Maui.deJaVuSans.getHeight()) / 2f), 0);
+	//		GL.Translate(Math.round((this.width * sr.getScaleFactor() - width) / 2f), Math.round((this.height * sr.getScaleFactor() - Maui.brandonReg.getHeight()) / 2f), 0);
 	//		TextureImpl.bindNone();
-	//		Maui.deJaVuSans.drawString(0, 0, this.displayString, org.newdawn.slick.Color.black);
+	//		Maui.brandonReg.drawString(0, 0, this.displayString, org.newdawn.slick.Color.black);
 	//		GL.PopMatrix();
 	//		GL.PopAttrib();
 	//	}
@@ -630,7 +630,7 @@ public class MauiTextbox extends Gui
 
 	private int drawStringWithShadow(String str, int x, int y, int color)
 	{
-		ScaledResolution sr = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
+		ScaledResolution sr = Client.resolution;
 		float scale = sr.getScaleFactor();
 
 		GL.PushAttrib(AttribMask.EnableBit);

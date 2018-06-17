@@ -1,5 +1,6 @@
 package com.parzivail.util.ui.gltk;
 
+import com.parzivail.swg.proxy.Client;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import org.apache.commons.lang3.ArrayUtils;
@@ -263,7 +264,7 @@ public class GL
 	public static void Scissor(int x, int y, int width, int height)
 	{
 		Minecraft mc = Minecraft.getMinecraft();
-		ScaledResolution reso = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
+		ScaledResolution reso = Client.resolution;
 		double scaleW = (double)mc.displayWidth / reso.getScaledWidth_double();
 		double scaleH = (double)mc.displayHeight / reso.getScaledHeight_double();
 		if (width > 0 && height > 0)

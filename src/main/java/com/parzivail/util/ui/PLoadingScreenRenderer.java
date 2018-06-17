@@ -51,7 +51,7 @@ public class PLoadingScreenRenderer extends LoadingScreenRenderer
 		if (j - this.time >= 100L)
 		{
 			this.time = j;
-			ScaledResolution scaledresolution = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
+			ScaledResolution scaledresolution = Client.resolution;
 			int k = scaledresolution.getScaleFactor();
 			int l = scaledresolution.getScaledWidth();
 			int i1 = scaledresolution.getScaledHeight();
