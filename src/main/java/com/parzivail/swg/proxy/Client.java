@@ -2,6 +2,7 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.ItemRegister;
 import com.parzivail.swg.registry.KeybindRegistry;
@@ -53,6 +54,7 @@ import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.newdawn.slick.TrueTypeFont;
 
@@ -230,7 +232,9 @@ public class Client extends Common
 		return Minecraft.getMinecraft().theWorld.getEntityByID(id);
 	}
 
-	public static void revertViewBobbing(float p)
+	@Override
+	public void spawnSmokeParticle(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
 	{
+		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSmoke(world, x, y, z, velocityX, velocityY, velocityZ));
 	}
 }

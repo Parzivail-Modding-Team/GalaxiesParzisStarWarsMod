@@ -1,6 +1,8 @@
 package com.parzivail.swg.gui.modern;
 
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.math.Ease;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
@@ -26,7 +28,8 @@ public class ModernScrollbar extends GuiButton
 	private boolean isDragging;
 	private float dragOffset;
 
-	private final float minScrollbarSize = 2;
+	private AnimatedValue windowRenderPosition = new AnimatedValue(0, 50);
+
 	private final float maxScrollbarSize;
 
 	public ModernScrollbar(int id, int x, int y, int h)
@@ -52,17 +55,17 @@ public class ModernScrollbar extends GuiButton
 
 	public float getWindowPosition()
 	{
-		return windowPosition;
+		return windowRenderPosition.animateTo(windowPosition, Ease::outQuad);
 	}
 
 	private float getScrollbarPosition()
 	{
-		return windowPosition / (contentSize - windowSize) * (this.height - 2 - getScrollbarSize());
+		return getWindowPosition() / (contentSize - windowSize) * (this.height - 2 - getScrollbarSize());
 	}
 
 	private float getScrollbarSize()
 	{
-		return MathHelper.clamp_float(getViewportRatio() * maxScrollbarSize, minScrollbarSize, maxScrollbarSize);
+		return MathHelper.clamp_float(getViewportRatio() * maxScrollbarSize, 2, maxScrollbarSize);
 	}
 
 	private float getViewportRatio()
@@ -122,7 +125,7 @@ public class ModernScrollbar extends GuiButton
 
 			this.hovered = (mouseX >= this.xPosition + 1 && mouseX <= this.xPosition + 2) && (mouseY >= scrollY && mouseY <= scrollY + scrollbarSize);
 			boolean hoveredBar = (mouseX >= this.xPosition && mouseX <= this.xPosition + this.width) && (mouseY >= this.yPosition && mouseY <= this.yPosition + this.height);
-			int k = this.getHoverState(this.hovered); // 0->disabled, 1->normal, 2->hover
+			int k = this.getHoverState(this.hovered || isDragging); // 0->disabled, 1->normal, 2->hover
 
 			ScaledResolution sr = Client.resolution;
 			float oneOverSr = 1f / sr.getScaleFactor();

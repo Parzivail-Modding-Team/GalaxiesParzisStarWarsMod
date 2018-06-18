@@ -16,10 +16,7 @@ import com.parzivail.swg.block.pipe.BlockPipeSmallBent;
 import com.parzivail.swg.block.pipe.BlockQuadVentPipe;
 import com.parzivail.swg.block.pipe.BlockTallVentedPipe;
 import com.parzivail.swg.block.pipe.BlockWallPipeLarge;
-import com.parzivail.util.block.PBlock;
-import com.parzivail.util.block.PBlockConnected;
-import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.PBlockPillar;
+import com.parzivail.util.block.*;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -31,7 +28,7 @@ public class BlockRegister
 {
 	public static PBlock fastGrass;
 
-	public static PBlock oxidizedSand;
+	public static PBlockSand oxidizedSand;
 	public static PBlock oxidizedSandStone;
 	public static PBlock hothStone;
 
@@ -104,7 +101,7 @@ public class BlockRegister
 	public static PBlock hothDoor;
 	public static PBlock hothSnowCut;
 	public static PBlock mud;
-	public static PBlock tatooineSand;
+	public static PBlockSand tatooineSand;
 	public static PBlock templeStone;
 	public static PBlock templeStoneBrick;
 	public static PBlock templeStoneBrickFancy;
@@ -116,7 +113,7 @@ public class BlockRegister
 	{
 		register(fastGrass = new BlockFastGrass());
 
-		register(oxidizedSand = new PBlock("oxidizedSand"));
+		register(oxidizedSand = new PBlockSand("oxidizedSand"));
 		register(oxidizedSandStone = new PBlock("oxidizedSandStone"));
 		register(hothStone = new PBlock("hothStone"));
 
@@ -153,7 +150,7 @@ public class BlockRegister
 
 		register(labWall = new PBlock("labWall"));
 
-		register(tatooineSand = new PBlock("tatooineSand"));
+		register(tatooineSand = new PBlockSand("tatooineSand"));
 
 		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
 		register(sabaccTable = new BlockSabaccTable().setAlpha());
@@ -203,6 +200,11 @@ public class BlockRegister
 	}
 
 	private static void register(PBlock item)
+	{
+		GameRegistry.registerBlock(item, item.name);
+	}
+
+	private static void register(PBlockSand item)
 	{
 		GameRegistry.registerBlock(item, item.name);
 	}

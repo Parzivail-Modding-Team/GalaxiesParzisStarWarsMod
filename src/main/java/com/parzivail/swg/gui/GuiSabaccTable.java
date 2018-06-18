@@ -77,8 +77,8 @@ public class GuiSabaccTable extends GuiContainer
 		GL.Scale(oneOverSr);
 
 		TextureImpl.bindNone();
-		fontrenderer.drawString(0, fH * 0, "Hello, World!", Color.white);
-		fontrenderer.drawString(0, fH * 1, "Here, we're using Brandon Grotesque", Color.white);
+		fontrenderer.drawString(0, 0, "Hello, World!", Color.white);
+		fontrenderer.drawString(0, fH, "Here, we're using Brandon Grotesque", Color.white);
 		fontrenderer.drawString(0, fH * 2, "Regular to simulate the font used", Color.white);
 		fontrenderer.drawString(0, fH * 3, "in Battlefront 2015. Other UI styles", Color.white);
 		fontrenderer.drawString(0, fH * 4, "were based on the designs of", Color.white);

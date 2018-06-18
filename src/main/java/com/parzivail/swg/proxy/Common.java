@@ -3,7 +3,6 @@ package com.parzivail.swg.proxy;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.MessageCreateDecal;
 import com.parzivail.swg.network.MessageSpawnParticle;
-import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -58,11 +57,11 @@ public class Common
 		return FMLCommonHandler.instance().getMinecraftServerInstance();
 	}
 
-	public void setupShipRender(BasicFlightModel ship)
+	public void postInit()
 	{
 	}
 
-	public void postInit()
+	public void spawnSmokeParticle(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
 	{
 	}
 }

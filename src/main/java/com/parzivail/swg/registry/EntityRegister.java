@@ -1,6 +1,8 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.entity.EntitySmokeGrenade;
+import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.entity.EntityUtils;
 
@@ -14,5 +16,7 @@ public class EntityRegister
 		EntityUtils.registerEntity(VehicleT65.class, "t65");
 
 		EntityUtils.registerEntity(EntityBlasterBolt.class, "blasterBolt");
+		EntityUtils.registerEntity(EntityThermalDetonator.class, "thermalDetonator");
+		EntityUtils.registerEntity(EntitySmokeGrenade.class, "smokeGrenade");
 	}
 }

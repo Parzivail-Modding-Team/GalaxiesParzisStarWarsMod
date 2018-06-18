@@ -32,7 +32,7 @@ public class Decal
 	public final EnumFacing direction;
 
 	private final int type;
-	private final int tetxureIdx;
+	private final int textureIdx;
 
 	private long deathTime;
 
@@ -46,7 +46,7 @@ public class Decal
 
 		int hash = Math.abs(hashCode());
 		this.type = type;
-		this.tetxureIdx = hash % decalTextures.get(type).length;
+		this.textureIdx = hash % decalTextures.get(type).length;
 		this.rotation = hash % 360;
 
 		deathTime = Fx.Util.GetMillis() + 20000;
@@ -59,7 +59,7 @@ public class Decal
 
 	public void render()
 	{
-		Minecraft.getMinecraft().renderEngine.bindTexture(decalTextures.get(type)[this.tetxureIdx]);
+		Minecraft.getMinecraft().renderEngine.bindTexture(decalTextures.get(type)[this.textureIdx]);
 		Fx.D2.DrawSolidRectangle(-1, -1, 2, 2);
 	}
 

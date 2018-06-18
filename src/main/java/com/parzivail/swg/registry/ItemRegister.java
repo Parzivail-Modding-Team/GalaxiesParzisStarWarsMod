@@ -7,6 +7,8 @@ import com.parzivail.swg.item.binocular.ItemBinoculars;
 import com.parzivail.swg.item.binocular.data.BinocularDescriptor;
 import com.parzivail.swg.item.blaster.ItemBlasterRifle;
 import com.parzivail.swg.item.blaster.data.BlasterDescriptor;
+import com.parzivail.swg.item.grenade.ItemSmokeGrenade;
+import com.parzivail.swg.item.grenade.ItemThermalDetonator;
 import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -37,6 +39,9 @@ public class ItemRegister
 	public static PItem meleeSpear;
 	public static PItem meleeVibro;
 
+	public static PItem grenadeThermalDetonator;
+	public static PItem grenadeSmoke;
+
 	public static PItem powerPackSmallGasCanister;
 
 	public static PItem binocularsMb450;
@@ -59,6 +64,9 @@ public class ItemRegister
 		register(rifleT21 = new ItemBlasterRifle(new BlasterDescriptor("t21", 8, 1, 200, 2000, 4.5f, 30, GLPalette.ANALOG_RED)));
 
 		register(powerPackSmallGasCanister = new ItemBlasterSmallGasCanister());
+
+		register(grenadeThermalDetonator = new ItemThermalDetonator());
+		register(grenadeSmoke = new ItemSmokeGrenade());
 
 		register(binocularsMb450 = new ItemBinoculars(new BinocularDescriptor("mb450", 0.1f)));
 	}
