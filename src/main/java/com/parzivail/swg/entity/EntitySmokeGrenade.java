@@ -31,7 +31,7 @@ public class EntitySmokeGrenade extends EntityThrowable
 
 		if (worldObj.isRemote && this.ticksExisted > 30 && this.ticksExisted % 2 == 0)
 		{
-			for (int i = 0; i < 100; ++i)
+			for (int i = 0; i < Math.min(Math.pow(this.ticksExisted / 10, 2), 100); ++i)
 			{
 				double gaussX = (this.rand.nextGaussian() * 2 - 1);
 				double gaussY = this.rand.nextGaussian() * 2;
@@ -45,7 +45,7 @@ public class EntitySmokeGrenade extends EntityThrowable
 			}
 		}
 
-		if (!this.worldObj.isRemote && this.ticksExisted > 200)
+		if (!this.worldObj.isRemote && this.ticksExisted > 300)
 			this.setDead();
 	}
 }
