@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class ParticleSmoke extends EntityFX
 {
-	private static final ResourceLocation smokeTexture = Resources.location("textures/particle/smoke.png");
+	private static final ResourceLocation smokeTexture = Resources.location("textures/particle/puff.png");
 
 	public ParticleSmoke(World parWorld, double parX, double parY, double parZ, double parMotionX, double parMotionY, double parMotionZ)
 	{
@@ -25,16 +25,25 @@ public class ParticleSmoke extends EntityFX
 
 	public void renderParticle(Tessellator p_70539_1_, float p_70539_2_, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_)
 	{
-		float x = this.particleAge / (float)this.particleMaxAge;
-		this.particleScale = (float)(1 / ((1 + Math.pow(2, -(40 * x - 10))) * (1 + Math.pow(2, 40 * x - 32))));
-		float f10 = 1.5f;
+		float a = this.particleAge / (float)this.particleMaxAge;
+		this.particleScale = (float)(1 / ((1 + Math.pow(2, -(40 * a - 10))) * (1 + Math.pow(2, 40 * a - 32))));
+		float f10 = 2f;
 
-		int id = this.getEntityId() % 4;
+		int atlasCol = 4;
+		int atlasRow = 8;
 
-		float f6 = 0.5f * (id / 2); // Min U
-		float f7 = 0.5f + 0.5f * (id / 2); // Max U
-		float f8 = 0.5f * (id % 2); // Min V
-		float f9 = 0.5f + 0.5f * (id % 2); // Max V
+		int frame = Math.round(a * atlasCol * atlasRow);
+
+		float oneOverAtlasCol = 1f / atlasCol;
+		float oneOverAtlasRow = 1f / atlasRow;
+
+		float x = (frame % atlasCol) * oneOverAtlasCol;
+		float y = (float)(Math.floor(frame / (float)atlasCol) * oneOverAtlasRow);
+
+		float f6 = x; // Min U
+		float f7 = x + oneOverAtlasCol; // Max U
+		float f8 = y; // Min V
+		float f9 = y + oneOverAtlasRow; // Max V
 
 		float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)p_70539_2_ - interpPosX);
 		float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)p_70539_2_ - interpPosY);
@@ -42,7 +51,7 @@ public class ParticleSmoke extends EntityFX
 
 		Client.mc.renderEngine.bindTexture(smokeTexture);
 		GL.Enable(EnableCap.Blend);
-		GL.Disable(EnableCap.Lighting);
+		Client.mc.entityRenderer.disableLightmap(0);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		p_70539_1_.setColorRGBA(255, 255, 255, (int)(255 * this.particleScale));
 		p_70539_1_.addVertexWithUV((double)(f11 - p_70539_3_ * f10 - p_70539_6_ * f10), (double)(f12 - p_70539_4_ * f10), (double)(f13 - p_70539_5_ * f10 - p_70539_7_ * f10), (double)f7, (double)f9);

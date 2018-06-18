@@ -31,15 +31,15 @@ public class EntitySmokeGrenade extends EntityThrowable
 
 		if (worldObj.isRemote && this.ticksExisted > 30 && this.ticksExisted % 2 == 0)
 		{
-			for (int i = 0; i < 50; ++i)
+			for (int i = 0; i < 100; ++i)
 			{
 				double gaussX = (this.rand.nextGaussian() * 2 - 1);
 				double gaussY = this.rand.nextGaussian() * 2;
 				double gaussZ = (this.rand.nextGaussian() * 2 - 1);
 
-				double gaussMx = (this.rand.nextGaussian() * 2 - 1) / 20;
-				double gaussMy = (this.rand.nextGaussian() * 2 - 1) / 20;
-				double gaussMz = (this.rand.nextGaussian() * 2 - 1) / 20;
+				double gaussMx = (this.rand.nextGaussian() * 2 - 1) / 20 * gaussX;
+				double gaussMy = (this.rand.nextGaussian() * 2 - 1) / 20 * gaussY;
+				double gaussMz = (this.rand.nextGaussian() * 2 - 1) / 20 * gaussZ;
 
 				StarWarsGalaxy.proxy.spawnSmokeParticle(this.worldObj, this.posX + gaussX, this.posY + gaussY, this.posZ + gaussZ, gaussMx, gaussMy, gaussMz);
 			}
