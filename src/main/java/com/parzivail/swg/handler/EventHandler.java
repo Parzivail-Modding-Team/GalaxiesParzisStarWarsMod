@@ -1,6 +1,7 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.gui.GuiNowEntering;
 import com.parzivail.swg.gui.GuiScreenTrailer;
 import com.parzivail.swg.item.ICustomCrosshair;
@@ -9,6 +10,7 @@ import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
+import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.util.common.Lumberjack;
@@ -28,6 +30,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.*;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -73,6 +76,16 @@ public class EventHandler
 			return;
 
 		Client.renderPartialTicks = event.renderTickTime;
+	}
+
+	@SubscribeEvent
+	public void on(LivingEvent.LivingJumpEvent event)
+	{
+		if (WorldRegister.planetDescriptorHashMap.containsKey(event.entity.worldObj.provider.dimensionId))
+		{
+			PlanetDescriptor planetDescriptor = WorldRegister.planetDescriptorHashMap.get(event.entity.worldObj.provider.dimensionId);
+			event.entity.motionY /= Math.sqrt(planetDescriptor.gravity);
+		}
 	}
 
 	@SubscribeEvent
@@ -203,6 +216,15 @@ public class EventHandler
 		}
 		else
 			PItem.applyPrecisionMovement(event.player, false);
+
+		if (event.phase != TickEvent.Phase.END)
+			return;
+
+		if (WorldRegister.planetDescriptorHashMap.containsKey(event.player.worldObj.provider.dimensionId) && !event.player.onGround && event.player.motionY < 0)
+		{
+			PlanetDescriptor planetDescriptor = WorldRegister.planetDescriptorHashMap.get(event.player.worldObj.provider.dimensionId);
+			event.player.motionY += 0.08D * 0.9800000190734863D * (1 - planetDescriptor.gravity);
+		}
 	}
 
 	@SubscribeEvent

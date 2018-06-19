@@ -32,7 +32,7 @@ public class WorldRegister
 		WorldUtils.registerDimension(Resources.dimIdTatooine, WorldProviderTatooine.class);
 		WorldUtils.registerDimension(Resources.dimIdEndor, WorldProviderEndor.class);
 
-		planetDescriptorHashMap.put(Resources.dimIdTatooine, new PlanetDescriptor("Tatooine"));
-		planetDescriptorHashMap.put(Resources.dimIdEndor, new PlanetDescriptor("The Forest Moon of Endor"));
+		planetDescriptorHashMap.put(Resources.dimIdTatooine, new PlanetDescriptor("Tatooine", 23, 10465, 1));
+		planetDescriptorHashMap.put(Resources.dimIdEndor, new PlanetDescriptor("The Forest Moon of Endor", 18, 4900, 0.85f));
 	}
 }

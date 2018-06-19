@@ -1,84 +1,33 @@
 package com.parzivail.swg.dimension.endor;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.dimension.PlanetWorldProvider;
 import com.parzivail.swg.dimension.SWGChunkManager;
 import com.parzivail.swg.registry.WorldRegister;
-import com.parzivail.swg.render.sky.RenderSkyTatooine;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.client.IRenderHandler;
 
 /**
  * Created by colby on 9/10/2017.
  */
-public class WorldProviderEndor extends WorldProvider
+public class WorldProviderEndor extends PlanetWorldProvider
 {
-	public static String dimName = "Endor";
-
-	@SideOnly(Side.CLIENT)
-	private IRenderHandler skyRenderer;
-
-	/**
-	 * Returns a new chunk provider which generates chunks for this world
-	 */
-	@Override
-	public IChunkProvider createChunkGenerator()
+	public WorldProviderEndor()
 	{
-		return new ChunkProviderEndor(this.worldObj, /*this.getSeed()*/0);
-	}
-
-	/**
-	 * Returns the dimension's id, e.g. "The End", "Nether", or "Overworld".
-	 */
-	@Override
-	public String getDimensionName()
-	{
-		return dimName;
+		super(Resources.dimIdEndor, new SWGChunkManager(WorldRegister.biomeEndor, 0));
 	}
 
 	@Override
-	public ChunkCoordinates getEntrancePortalLocation()
+	public IChunkProvider createChunkProvider()
 	{
-		return null;
+		return new ChunkProviderEndor(this.worldObj, 0);
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IRenderHandler getSkyRenderer()
-	{
-		if (this.skyRenderer == null)
-			this.skyRenderer = new RenderSkyTatooine();
-		return this.skyRenderer;
-	}
-
-	@Override
-	public ChunkCoordinates getSpawnPoint()
-	{
-		return new ChunkCoordinates(0, this.worldObj.getHeightValue(0, 0), 0);
-	}
-
-	@Override
-	public boolean isSurfaceWorld()
-	{
-		return false;
-	}
-
-	/**
-	 * creates a new world chunk manager for WorldProvider
-	 */
-	@Override
-	protected void registerWorldChunkManager()
-	{
-		this.worldChunkMgr = new SWGChunkManager(WorldRegister.biomeEndor, 0.0F);
-		this.dimensionId = Resources.dimIdEndor;
-	}
-
-	@Override
-	public boolean shouldMapSpin(String entity, double x, double y, double z)
-	{
-		return false;
-	}
+	//	@Override
+	//	@SideOnly(Side.CLIENT)
+	//	public IRenderHandler getSkyRenderer()
+	//	{
+	//		if (this.skyRenderer == null)
+	//			this.skyRenderer = new RenderSkyTatooine();
+	//		return this.skyRenderer;
+	//	}
 }
