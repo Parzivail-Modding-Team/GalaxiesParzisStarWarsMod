@@ -3,11 +3,16 @@ package com.parzivail.swg.block;
 import com.parzivail.util.block.PBlock;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockBush;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
@@ -64,5 +69,29 @@ public class BlockFastGrass extends PBlock
 		}
 
 		return (l / 9 & 255) << 16 | (i1 / 9 & 255) << 8 | j1 / 9 & 255;
+	}
+
+	public boolean canSustainPlant(IBlockAccess world, int x, int y, int z, ForgeDirection direction, IPlantable plantable)
+	{
+		Block plant = plantable.getPlant(world, x, y + 1, z);
+		EnumPlantType plantType = plantable.getPlantType(world, x, y + 1, z);
+
+		if (plantable instanceof BlockBush)
+			return true;
+
+		switch (plantType)
+		{
+			case Desert:
+			case Nether:
+			case Water:
+			case Crop:
+				return false;
+			case Cave:
+			case Beach:
+			case Plains:
+				return true;
+		}
+
+		return false;
 	}
 }

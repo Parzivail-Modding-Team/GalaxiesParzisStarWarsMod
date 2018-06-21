@@ -59,6 +59,9 @@ public class ChunkProviderEndor implements IChunkProvider
 			{
 				double height = terrain.getHeightAt((cx * 16 + x), (cz * 16 + z)) + 60;
 				int finalHeight = (int)height;
+
+				if (chunk.getBlockStorageArray()[0] == null)
+					chunk.getBlockStorageArray()[0] = new ExtendedBlockStorage(0, !this.worldObj.provider.hasNoSky);
 				chunk.getBlockStorageArray()[0].setExtBlockID(x, 0, z, Blocks.bedrock);
 
 				for (int y = 1; y < 256; y++)

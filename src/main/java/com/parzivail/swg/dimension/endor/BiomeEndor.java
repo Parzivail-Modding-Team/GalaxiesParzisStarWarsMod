@@ -7,6 +7,7 @@ import com.parzivail.util.world.PBiomeGenBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.feature.WorldGenDoublePlant;
 import net.minecraft.world.gen.feature.WorldGenTallGrass;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
@@ -18,6 +19,7 @@ import java.util.Random;
 public class BiomeEndor extends PBiomeGenBase
 {
 	private WorldGenBetterForest worldGenBetterForest = new WorldGenBetterForest(BlockRegister.endorLog, Blocks.leaves, BlockRegister.fastGrass);
+	private WorldGenThiccTree worldGenThiccTree = new WorldGenThiccTree(BlockRegister.endorLog, Blocks.leaves, BlockRegister.fastGrass);
 
 	public BiomeEndor(int biomeId)
 	{
@@ -32,16 +34,31 @@ public class BiomeEndor extends PBiomeGenBase
 		StructureRegister.genTiles(world, worldX, worldZ);
 
 		double[] weights = ((ChunkProviderEndor)provider).terrain.getBiomeWeightsAt(worldX, worldZ);
-		for (int i = 0; i < weights[0] * 8; i++)
+
+		for (int i = 0; i < weights[1] * 4 + 4; i++)
 		{
 			int k = worldX + rand.nextInt(16) + 8;
 			int l = worldZ + rand.nextInt(16) + 8;
-			worldGenBetterForest.generate(world, rand, k, world.getHeightValue(k, l), l, 15, 5, 0);
+			if (rand.nextInt(10) == 0)
+				worldGenBetterForest.generate(world, rand, k, world.getHeightValue(k, l), l, 15, 5, 0);
+			else
+				worldGenThiccTree.generate(world, rand, k, world.getHeightValue(k, l), l, 20, 8);
+		}
+
+		for (int i = 0; i < 50; i++)
+		{
+			WorldGenerator grass = getRandomWorldGenForGrass(rand);
+
+			int k = worldX + rand.nextInt(16) + 8;
+			int l = worldZ + rand.nextInt(16) + 8;
+			if (grass instanceof WorldGenDoublePlant)
+				((WorldGenDoublePlant)grass).func_150548_a(rand.nextInt(2) + 2);
+			grass.generate(world, rand, k, world.getHeightValue(k, l), l);
 		}
 	}
 
-	public WorldGenerator getRandomWorldGenForGrass(Random p_76730_1_)
+	public WorldGenerator getRandomWorldGenForGrass(Random rand)
 	{
-		return p_76730_1_.nextInt(4) == 0 ? new WorldGenTallGrass(Blocks.tallgrass, 2) : new WorldGenTallGrass(Blocks.tallgrass, 1);
+		return rand.nextInt(4) == 0 ? new WorldGenDoublePlant() : new WorldGenTallGrass(Blocks.tallgrass, rand.nextInt(2) + 1);
 	}
 }
