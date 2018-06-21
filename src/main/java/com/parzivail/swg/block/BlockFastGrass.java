@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
+import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -35,6 +36,12 @@ public class BlockFastGrass extends PBlock
 		double d0 = 0.5D;
 		double d1 = 1.0D;
 		return ColorizerGrass.getGrassColor(d0, d1);
+	}
+
+	@Override
+	public MapColor getMapColor(int meta)
+	{
+		return MapColor.grassColor;
 	}
 
 	/**

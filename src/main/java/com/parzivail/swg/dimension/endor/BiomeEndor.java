@@ -45,7 +45,7 @@ public class BiomeEndor extends PBiomeGenBase
 				worldGenThiccTree.generate(world, rand, k, world.getHeightValue(k, l), l, 20, 8);
 		}
 
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i < 10; i++)
 		{
 			WorldGenerator grass = getRandomWorldGenForGrass(rand);
 

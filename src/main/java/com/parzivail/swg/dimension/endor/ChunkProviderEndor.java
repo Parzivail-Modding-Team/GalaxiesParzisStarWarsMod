@@ -79,7 +79,9 @@ public class ChunkProviderEndor implements IChunkProvider
 
 					if (!hadStructure)
 					{
-						if (y == finalHeight)
+						if (y <= waterLevel + 1 && y == finalHeight)
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.sand);
+						else if (y == finalHeight)
 							extendedblockstorage.setExtBlockID(x, y & 15, z, BlockRegister.fastGrass);
 						else if (y <= finalHeight)
 						{
