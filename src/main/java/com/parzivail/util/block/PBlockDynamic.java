@@ -1,5 +1,6 @@
 package com.parzivail.util.block;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.util.common.OpenSimplexNoise;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -12,15 +13,17 @@ public class PBlockDynamic extends PBlock
 	private final String[] variants;
 	private IIcon[] icons;
 
-	public PBlockDynamic(String name, String[] variants)
+	public PBlockDynamic(String name, int numVariants)
 	{
-		this(name, Material.ground, variants);
+		this(name, Material.ground, numVariants);
 	}
 
-	public PBlockDynamic(String name, Material material, String[] variants)
+	public PBlockDynamic(String name, Material material, int numVariants)
 	{
 		super(name, material);
-		this.variants = variants;
+		this.variants = new String[numVariants];
+		for (int i = 0; i < numVariants; i++)
+			this.variants[i] = Resources.modColon(String.format("var/%s/%d", name, i));
 	}
 
 	@Override

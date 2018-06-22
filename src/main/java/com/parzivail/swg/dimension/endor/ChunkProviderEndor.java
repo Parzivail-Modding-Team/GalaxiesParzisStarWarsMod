@@ -13,8 +13,10 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.world.gen.feature.WorldGenLakes;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by colby on 9/10/2017.
@@ -24,11 +26,14 @@ public class ChunkProviderEndor implements IChunkProvider
 	private World worldObj;
 	private final int waterLevel = 100;
 
+	private WorldGenLakes waterLakeGenerator;
+
 	public ITerrainHeightmap terrain;
 
 	public ChunkProviderEndor(World worldObj, long seed)
 	{
 		this.worldObj = worldObj;
+		this.waterLakeGenerator = new WorldGenLakes(Blocks.water);
 		terrain = new MultiCompositeTerrain(seed, 800,
 				// Naboo Mountains
 				new SwissTurb(seed),
@@ -126,6 +131,17 @@ public class ChunkProviderEndor implements IChunkProvider
 	{
 		int k = chunkX * 16;
 		int l = chunkZ * 16;
+
+		Random random = new Random((k * 31) ^ l);
+
+		if (this.waterLakeGenerator != null && random.nextInt(4) == 0)
+		{
+			int l1 = k + random.nextInt(16) + 8;
+			int i2 = random.nextInt(256);
+			int j2 = l + random.nextInt(16) + 8;
+			this.waterLakeGenerator.generate(this.worldObj, random, l1, i2, j2);
+		}
+
 		BiomeGenBase b = this.worldObj.getBiomeGenForCoords(k + 16, l + 16);
 		if (!(b instanceof PBiomeGenBase))
 			return;
