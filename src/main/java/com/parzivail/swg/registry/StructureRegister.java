@@ -44,7 +44,7 @@ public class StructureRegister
 			{
 				hadStructure = true;
 
-				extendedblockstorage.setExtBlockID(blockX, blockZ & 15, blockY, Block.getBlockFromName(block.id));
+				extendedblockstorage.setExtBlockID(blockX, blockZ & 15, blockY, Block.getBlockFromName(cdiff.idMap.get(block.id)));
 				extendedblockstorage.setExtBlockMetadata(blockX, blockZ & 15, blockY, block.metadata);
 
 				if (block.tileData != null)

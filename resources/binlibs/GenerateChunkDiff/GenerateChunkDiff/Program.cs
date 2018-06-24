@@ -124,14 +124,14 @@ namespace GenerateChunkDiff
                     {
                         for (var z = 0; z < 16; z++)
                         {
-                            var blockId = chunk.Blocks.GetID(x, y, z);
+                            var blockId = (short)chunk.Blocks.GetID(x, y, z);
                             var blockData = chunk.Blocks.GetData(x, y, z);
                             NbtTree nbt = null;
                             var te = chunk.Blocks.GetTileEntity(x, y, z);
                             if (te != null)
                                 nbt = new NbtTree(te.Source, "tile");
 
-                            var blockIdOriginal = otherChunk.Blocks.GetID(x, y, z);
+                            var blockIdOriginal = (short)otherChunk.Blocks.GetID(x, y, z);
                             var blockDataOriginal = otherChunk.Blocks.GetData(x, y, z);
                             NbtTree nbtOriginal = null;
                             var teOriginal = chunk.Blocks.GetTileEntity(x, y, z);

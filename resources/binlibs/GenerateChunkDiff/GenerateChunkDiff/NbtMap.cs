@@ -4,7 +4,7 @@ using Substrate.Nbt;
 
 namespace GenerateChunkDiff
 {
-    internal class NbtMap : Dictionary<int, string>
+    internal class NbtMap : Dictionary<short, string>
     {
         public static NbtMap Load(string filename)
         {
@@ -22,7 +22,7 @@ namespace GenerateChunkDiff
                 foreach (var tag in list)
                 {
                     var k = tag.ToTagCompound()["k"].ToTagString();
-                    var v = tag.ToTagCompound()["v"].ToTagInt();
+                    var v = (short)tag.ToTagCompound()["v"].ToTagInt();
                     if (!map.ContainsKey(v))
                         map.Add(v, k);
                 }

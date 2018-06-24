@@ -8,7 +8,7 @@ namespace GenerateChunkDiff
 {
     internal class ChunkDiff : Dictionary<ChunkPosition, List<KeyValuePair<BlockPosition, BlockDiff>>>
     {
-        public readonly int Version = 3;
+        public readonly int Version = 4;
 
         public void Save(string filename, NbtMap map)
         {
