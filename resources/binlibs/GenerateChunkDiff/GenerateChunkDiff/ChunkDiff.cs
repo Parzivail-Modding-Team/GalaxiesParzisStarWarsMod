@@ -1,17 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Text;
+using Brotli;
 
 namespace GenerateChunkDiff
 {
     internal class ChunkDiff : Dictionary<ChunkPosition, List<KeyValuePair<BlockPosition, BlockDiff>>>
     {
-        public readonly int Version = 2;
+        public readonly int Version = 3;
 
         public void Save(string filename, NbtMap map)
         {
-            var sw = new StreamWriter(filename);
-            using (var f = new BinaryWriter(sw.BaseStream))
+            using (var fs = File.OpenWrite(filename))
+            using (var bs = new BrotliStream(fs, CompressionMode.Compress))
+            using (var f = new BinaryWriter(bs))
             {
                 var ident = "CDF".ToCharArray();
 
@@ -44,10 +47,10 @@ namespace GenerateChunkDiff
                         var z = (byte)(block.Key.Z - pair.Key.Z * 16) & 0x0F;
                         f.Write((byte)((x << 4) | z));
                         f.Write((byte)block.Key.Y);
-                        f.Write(block.Value.Id);
+                        f.Write((short)block.Value.Id);
                         f.Write((byte)block.Value.Flags);
                         if (block.Value.Flags.HasFlag(BlockDiff.BlockFlags.HasMetadata))
-                            f.Write(block.Value.Metadata);
+                            f.Write((byte)block.Value.Metadata);
 
                         if (!block.Value.Flags.HasFlag(BlockDiff.BlockFlags.HasTileNbt)) continue;
 

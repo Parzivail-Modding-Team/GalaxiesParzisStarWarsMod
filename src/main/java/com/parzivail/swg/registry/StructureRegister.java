@@ -1,13 +1,11 @@
 package com.parzivail.swg.registry;
 
-import com.parzivail.swg.Resources;
 import com.parzivail.util.binary.Cdf.BlockInfo;
 import com.parzivail.util.binary.Cdf.ChunkDiff;
 import com.parzivail.util.common.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
@@ -21,12 +19,9 @@ public class StructureRegister
 
 	public static void register()
 	{
-		structures.put(Resources.dimIdTatooine, new ChunkDiff[] {
-				//ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/test.cdf"))
-				//ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/diff.cdf"))
-				ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/out.cdf")),
-				//ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/interdictor.cdf"))
-		});
+		//		structures.put(0, new ChunkDiff[] {
+		//				ChunkDiff.Load(new ResourceLocation(Resources.MODID, "structures/interdictor.cdf"))
+		//		});
 	}
 
 	private static ChunkDiff[] getStructuresForDimension(int dim)

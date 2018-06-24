@@ -1,6 +1,5 @@
 package com.parzivail.util.binary;
 
-import com.google.common.io.LittleEndianDataInputStream;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,7 +11,7 @@ import java.io.*;
  */
 public class PIO
 {
-	public static String readNullTerminatedString(LittleEndianDataInputStream s)
+	public static String readNullTerminatedString(DataInput s)
 	{
 		StringBuilder str = new StringBuilder();
 		try
@@ -34,13 +33,12 @@ public class PIO
 
 	public static NBTTagCompound readUncompressedNbt(InputStream s, int len) throws IOException
 	{
-		NBTTagCompound tag = null;
 		byte[] bytesNbt = new byte[len];
 		int readNbt = s.read(bytesNbt);
 		if (readNbt != bytesNbt.length)
-			throw new InvalidObjectException("Corrupt NBT tag present");
+			return null;
 		DataInputStream stream = new DataInputStream(new ByteArrayInputStream(bytesNbt));
-		tag = CompressedStreamTools.func_152456_a(stream, new NBTSizeTracker(2097152L));
+		NBTTagCompound tag = CompressedStreamTools.func_152456_a(stream, new NBTSizeTracker(2097152L));
 		stream.close();
 		return tag;
 	}

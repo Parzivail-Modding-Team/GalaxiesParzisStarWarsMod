@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import org.brotli.dec.BrotliInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,7 +34,8 @@ public class ChunkDiff
 		{
 			IResource res = Minecraft.getMinecraft().getResourceManager().getResource(filename);
 			InputStream fs = res.getInputStream();
-			LittleEndianDataInputStream s = new LittleEndianDataInputStream(fs);
+			BrotliInputStream bis = new BrotliInputStream(fs);
+			LittleEndianDataInputStream s = new LittleEndianDataInputStream(bis);
 
 			byte[] identr = new byte[3];
 			int read = s.read(identr);
@@ -73,12 +75,12 @@ public class ChunkDiff
 					byte x = (byte)((blockPos & 0xF0) >> 4);
 					byte z = (byte)(blockPos & 0x0F);
 					byte y = s.readByte();
-					int id = s.readInt();
+					int id = s.readShort();
 					int flags = s.readByte();
 					int metadata = 0;
 					NBTTagCompound tileTag = null;
 					if ((flags & 0b01) == 0b01) // Has metadata
-						metadata = s.readInt();
+						metadata = s.readByte();
 					if ((flags & 0b10) == 0b10) // Has TileNBT
 					{
 						int len = s.readInt();
