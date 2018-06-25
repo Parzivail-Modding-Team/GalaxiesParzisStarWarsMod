@@ -24,9 +24,7 @@ public class Pair<T, T1>
 
 		Pair<?, ?> pair = (Pair<?, ?>)o;
 
-		if (left != null ? !left.equals(pair.left) : pair.left != null)
-			return false;
-		return right != null ? right.equals(pair.right) : pair.right == null;
+		return (left != null ? left.equals(pair.left) : pair.left == null) && (right != null ? right.equals(pair.right) : pair.right == null);
 	}
 
 	@Override

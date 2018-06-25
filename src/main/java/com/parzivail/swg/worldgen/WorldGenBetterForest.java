@@ -14,7 +14,7 @@ public class WorldGenBetterForest extends WorldGenAbstractTree
 
 	public WorldGenBetterForest(Block log, Block leaves, Block spawnOnBlock)
 	{
-		super(true);
+		super(false);
 		this.log = log;
 		this.leaves = leaves;
 		this.spawnOnBlock = spawnOnBlock;

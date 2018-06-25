@@ -3,6 +3,9 @@ package com.parzivail.swg.dimension.endor;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.swg.worldgen.WorldGenBetterForest;
+import com.parzivail.swg.worldgen.WorldGenFallenLog;
+import com.parzivail.swg.worldgen.WorldGenThiccTree;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.world.PBiomeGenBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -20,6 +23,7 @@ public class BiomeEndor extends PBiomeGenBase
 {
 	private WorldGenBetterForest worldGenBetterForest = new WorldGenBetterForest(BlockRegister.endorLog, Blocks.leaves, BlockRegister.fastGrass);
 	private WorldGenThiccTree worldGenThiccTree = new WorldGenThiccTree(BlockRegister.endorLog, Blocks.leaves, BlockRegister.fastGrass);
+	private WorldGenFallenLog worldGenFallenLog = new WorldGenFallenLog(BlockRegister.endorLog);
 
 	public BiomeEndor(int biomeId)
 	{
@@ -35,14 +39,25 @@ public class BiomeEndor extends PBiomeGenBase
 
 		double[] weights = ((ChunkProviderEndor)provider).terrain.getBiomeWeightsAt(worldX, worldZ);
 
-		for (int i = 0; i < weights[1] * 4 + 4; i++)
+		for (int i = 0; i < weights[1] * 2 + 1; i++)
 		{
 			int k = worldX + rand.nextInt(16) + 8;
 			int l = worldZ + rand.nextInt(16) + 8;
-			if (rand.nextInt(10) == 0)
-				worldGenBetterForest.generate(world, rand, k, world.getHeightValue(k, l), l, 15, 5, 0);
-			else
-				worldGenThiccTree.generate(world, rand, k, world.getHeightValue(k, l), l, 20, 8);
+			//			if (rand.nextInt(10) == 0)
+			//				worldGenBetterForest.generate(world, rand, k, world.getHeightValue(k, l), l, 15, 5, 0);
+			//			else
+			worldGenThiccTree.generate(world, rand, k, world.getHeightValue(k, l), l, 20, 10);
+		}
+
+		if (MathUtil.oneIn(5))
+		{
+			int sk = worldX + rand.nextInt(16) + 8;
+			int sl = worldZ + rand.nextInt(16) + 8;
+
+			int ek = worldX + rand.nextInt(16) + 8;
+			int el = worldZ + rand.nextInt(16) + 8;
+
+			worldGenFallenLog.generate(world, rand, sk, 255, sl, ek, 255, el);
 		}
 
 		for (int i = 0; i < 10; i++)

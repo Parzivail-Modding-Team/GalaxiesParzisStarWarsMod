@@ -40,12 +40,8 @@ public class BlockEndorLog extends PBlockPillar
 	{
 		int meta = worldIn.getBlockMetadata(x, y, z);
 		int k = meta & 12;
-		int l = meta & 3;
-
-		if (y <= 0 || meta != 0)
-			return k == 0 && (side == 1 || side == 0) ? this.getTopIcon(l) : (k == 4 && (side == 5 || side == 4) ? this.getTopIcon(l) : (k == 8 && (side == 2 || side == 3) ? this.getTopIcon(l) : this.getSideIcon(l)));
-
-		return k == 0 && (side == 1 || side == 0) ? this.getTopIcon(l) : (k == 4 && (side == 5 || side == 4) ? this.getTopIcon(l) : (k == 8 && (side == 2 || side == 3) ? this.getTopIcon(l) : this.getSideIcon(l, worldIn, x, y, z)));
+		int l = meta & 1;
+		return k == 0 && (side == 1 || side == 0) ? this.getTopIcon(l) : (k == 4 && (side == 5 || side == 4) ? this.getTopIcon(l) : (k == 8 && (side == 2 || side == 3) ? this.getTopIcon(l) : this.getSideIcon(l)));
 	}
 
 	private IIcon getSideIcon(int icon, IBlockAccess worldIn, int x, int y, int z)

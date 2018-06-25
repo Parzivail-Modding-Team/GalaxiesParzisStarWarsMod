@@ -1,8 +1,9 @@
-package com.parzivail.swg.dimension.endor;
+package com.parzivail.swg.worldgen;
 
 import net.minecraft.block.Block;
 import net.minecraft.util.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 
 import java.util.Random;
@@ -15,7 +16,7 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 
 	public WorldGenThiccTree(Block log, Block leaves, Block spawnOnBlock)
 	{
-		super(true);
+		super(false);
 		this.log = log;
 		this.leaves = leaves;
 		this.spawnOnBlock = spawnOnBlock;
@@ -24,6 +25,40 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 	public boolean generate(World world, Random rand, int x, int y, int z, int height, int heightRandomness)
 	{
 		int treeHeight = rand.nextInt(heightRandomness) + height;
+		//		float leavesBeginPercent = rand.nextFloat() * 0.4f + 0.2f;
+		//
+		//		while (!world.getBlock(x, y, z).isSideSolid(world, x, y, z, ForgeDirection.UP) && y > 0)
+		//			y--;
+		//
+		//		if (world.getBlock(x, y, z) != spawnOnBlock)
+		//			return false;
+		//
+		//		for (int i = 0; i < treeHeight; i++)
+		//		{
+		//			world.setBlock(x, y + i, z, log, 0, 2);
+		//			world.setBlock(x + 1, y + i, z, log, 0, 2);
+		//			world.setBlock(x, y + i, z + 1, log, 0, 2);
+		//			world.setBlock(x + 1, y + i, z + 1, log, 0, 2);
+		//
+		//			if (i > treeHeight * leavesBeginPercent)
+		//			{
+		//				Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+		//				for (double angle = 0; angle < 180; angle += 45)
+		//				{
+		//					float rNoise = 1;//rand.nextFloat() * 0.2f + 0.8f;
+		//					float width = rNoise * (float)Math.floorMod(treeHeight - i, 9);
+		//					for (int radius = 0; radius < width; radius++)
+		//					{
+		//						int leavesX = x + Math.round(radius * MathHelper.cos((float)(angle / 180 * Math.PI)));
+		//						int leavesZ = z + Math.round(radius * MathHelper.sin((float)(angle / 180 * Math.PI)));
+		//						chunk.setBlockIDWithMetadata(leavesX & 15, y + i, leavesZ & 15, Blocks.gold_block, 0);
+		//					}
+		//				}
+		//			}
+		//		}
+		//
+		//		return true;
+
 		boolean flag = true;
 
 		if (y >= 1 && y + treeHeight + 1 <= 256)
@@ -45,8 +80,6 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 					for (k1 = z - b0; k1 <= z + b0 && flag; ++k1)
 						if (i1 >= 0 && i1 < 256)
 						{
-							Block block = world.getBlock(j1, i1, k1);
-
 							if (!this.isReplaceable(world, j1, i1, k1))
 								flag = false;
 						}
@@ -63,10 +96,6 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 				boolean isSoil = block2 == spawnOnBlock;
 				if (isSoil && y < 256 - treeHeight - 1)
 				{
-					onPlantGrow(world, x, y - 1, z, x, y, z);
-					onPlantGrow(world, x + 1, y - 1, z, x, y, z);
-					onPlantGrow(world, x + 1, y - 1, z + 1, x, y, z);
-					onPlantGrow(world, x, y - 1, z + 1, x, y, z);
 					int j3 = rand.nextInt(4);
 					j1 = treeHeight - rand.nextInt(4);
 					k1 = 2 - rand.nextInt(3);
@@ -184,12 +213,10 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 		Block block = world.getBlock(x, y, z);
 
 		if (block.isAir(world, x, y, z))
-			this.setBlockAndNotifyAdequately(world, x, y, z, leaves, 0);
-	}
-
-	//Just a helper macro
-	private void onPlantGrow(World world, int x, int y, int z, int sourceX, int sourceY, int sourceZ)
-	{
-		world.getBlock(x, y, z).onPlantGrow(world, x, y, z, sourceX, sourceY, sourceZ);
+		{
+			Chunk chunk = world.getChunkFromChunkCoords(x >> 4, z >> 4);
+			//this.setBlockAndNotifyAdequately(world, x, y, z, leaves, 0);
+			chunk.setBlockIDWithMetadata(x & 15, y, z & 15, leaves, 0);
+		}
 	}
 }
