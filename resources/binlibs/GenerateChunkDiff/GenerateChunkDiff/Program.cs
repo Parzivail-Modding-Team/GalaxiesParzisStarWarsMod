@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using CommandLine;
@@ -61,7 +60,9 @@ namespace GenerateChunkDiff
 
             var diff = new ChunkDiff();
 
+            Console.Clear();
             var cgui = new ConsoleGui();
+
             var pbChunks = new ConsoleGuiProgressBar(0, 0, Console.WindowWidth, 0, 1)
             {
                 ForegroundColor = ConsoleColor.Green,
@@ -92,8 +93,6 @@ namespace GenerateChunkDiff
             var diffedChunks = 0;
             var diffedBlocks = 0;
             var skipped = 0;
-
-            var lastTime = DateTime.Now;
 
             lStatus.Value = "Processing...";
 

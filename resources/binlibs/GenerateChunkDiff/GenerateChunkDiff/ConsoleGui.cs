@@ -123,6 +123,14 @@ namespace GenerateChunkDiff
         public float Max { get; set; }
         public float Value { get; set; }
 
+        private static readonly char[] BlockPercentFill =
+        {
+            ' ',
+            '░',
+            '▒',
+            '▓'
+        };
+
         public ConsoleGuiProgressBar(int x, int y, int width, float min, float max) : base(x, y, width, 1)
         {
             Min = min;
@@ -134,7 +142,8 @@ namespace GenerateChunkDiff
             base.Render();
 
             var p = (Value - Min) / (Max - Min);
-            var w = (int) Math.Round(p * Width);
+            var w = (int) Math.Floor(p * Width);
+            var fractW = (int) Math.Floor((p * Width - w) * BlockPercentFill.Length);
 
             var str = $"{Math.Round(p * 100):N0}%";
             var strLeft = str.Length > w ? str.Substring(0, w) : str;
@@ -148,7 +157,7 @@ namespace GenerateChunkDiff
 
             Console.ForegroundColor = ForegroundColor;
             Console.BackgroundColor = BackgroundColor;
-            Console.Write(strRight.PadRight(Width - w));
+            Console.Write((strRight.Length == 0 ? BlockPercentFill[fractW].ToString() : "") + strRight.PadRight(Width - w));
         }
     }
 
