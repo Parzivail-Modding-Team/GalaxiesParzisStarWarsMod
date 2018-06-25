@@ -18,9 +18,7 @@ public class MathUtil
 
 	public static Vector2f fract(Vector2f v)
 	{
-		v.x = (float)fract(v.x);
-		v.y = (float)fract(v.y);
-		return v;
+		return new Vector2f((float)fract(v.x), (float)fract(v.y));
 	}
 
 	public static Vector3f fract(Vector3f v)
@@ -38,9 +36,7 @@ public class MathUtil
 
 	public static Vector2f floor(Vector2f v)
 	{
-		v.x = (float)Math.floor(v.x);
-		v.y = (float)Math.floor(v.y);
-		return v;
+		return new Vector2f((float)Math.floor(v.x), (float)Math.floor(v.y));
 	}
 
 	public static Vector3f floor(Vector3f v)

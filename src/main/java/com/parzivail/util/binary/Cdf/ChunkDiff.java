@@ -6,7 +6,10 @@ import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import org.brotli.dec.BrotliInputStream;
 
@@ -39,10 +42,10 @@ public class ChunkDiff
 			BrotliInputStream bis = new BrotliInputStream(fs);
 			LittleEndianDataInputStream s = new LittleEndianDataInputStream(bis);
 
-			byte[] identr = new byte[3];
-			int read = s.read(identr);
-			String ident = new String(identr);
-			if (!ident.equals("CDF") || read != identr.length)
+			byte[] identBytes = new byte[3];
+			int read = s.read(identBytes);
+			String ident = new String(identBytes);
+			if (!ident.equals("CDF") || read != identBytes.length)
 				throw new InvalidObjectException("Input file not CDF structure");
 
 			int version = s.readInt();
@@ -51,7 +54,7 @@ public class ChunkDiff
 
 			HashMap<Short, String> idMap = new HashMap<>();
 
-			for (int j = 0; j < numIdMapEntries; j++)
+			for (int entry = 0; entry < numIdMapEntries; entry++)
 			{
 				short id = s.readShort();
 				String name = PIO.readNullTerminatedString(s);
@@ -60,16 +63,16 @@ public class ChunkDiff
 
 			HashMap<Long, HashMap<Short, BlockInfo>> diffMap = new HashMap<>();
 
-			for (int i = 0; i < numChunks; i++)
+			for (int chunk = 0; chunk < numChunks; chunk++)
 			{
 				int chunkX = s.readInt();
 				int chunkZ = s.readInt();
 				int numBlocks = s.readInt();
 
-				long pos = getChunkPos(chunkX, chunkZ);
+				long chunkPos = getChunkPos(chunkX, chunkZ);
 				HashMap<Short, BlockInfo> blocks = new HashMap<>();
 
-				for (int j = 0; j < numBlocks; j++)
+				for (int block = 0; block < numBlocks; block++)
 				{
 					byte blockPos = s.readByte(); // Format:
 					// 0x 0000 1111
@@ -98,16 +101,19 @@ public class ChunkDiff
 						Lumberjack.log("[CDF] Skipped block with ID %s", id);
 				}
 
-				diffMap.put(pos, blocks);
+				diffMap.put(chunkPos, blocks);
 			}
+			s.close();
 
 			Lumberjack.log("[CDF] Built chunkdiff `%s`", filename.getResourcePath());
 			return new ChunkDiff(version, diffMap, idMap);
 		}
 		catch (Exception e)
 		{
-			e.printStackTrace();
-			return null;
+			CrashReport crashreport = CrashReport.makeCrashReport(e, "Loading CDF structure");
+			CrashReportCategory crashreportcategory = crashreport.makeCategory("CDF being loaded");
+			crashreportcategory.addCrashSection("CDF filename", filename.toString());
+			throw new ReportedException(crashreport);
 		}
 	}
 

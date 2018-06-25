@@ -45,7 +45,7 @@ public class InfiniteWorleyNoise
 
 	private double worley(Vector2f n)
 	{
-		double dis = 2d;
+		double dis = 2;
 		for (int x = -1; x <= 1; x++)
 		{
 			for (int y = -1; y <= 1; y++)
@@ -54,7 +54,7 @@ public class InfiniteWorleyNoise
 				Vector2f p = Vector2f.add(MathUtil.floor(n), q, null);
 				double d = Vector2f.sub(Vector2f.add(r(p), q, null), MathUtil.fract(n), null).length();
 
-				if (!(dis > d))
+				if (dis <= d)
 					continue;
 
 				dis = d;

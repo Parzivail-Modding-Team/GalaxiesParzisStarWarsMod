@@ -38,7 +38,8 @@ function terrain(x, z)
 	-- Then, we scale the resulting noise by 10, creating a
 	-- maximum elevation change of 10 blocks, and return it
 	-- back to the terrain generator.
-	return (h * 0.5 + noise(x / 200 + 2000, z / 200) * 0.5) * (j + 10);
+	--return (h * 0.5 + noise(x / 200 + 2000, z / 200) * 0.5) * (j + 10);
+	return get(x / s, z / s) * 50
 end
 
 function octave(x, z, numOctaves)
