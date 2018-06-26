@@ -30,7 +30,7 @@ public class TerrainTatooineCanyons implements ITerrainHeightmap
 		h = MathHelper.clamp_double(h, 0, 1);
 		double j = octave(x / 200f, z / 200f, 6) * 90;
 
-		return (h * 0.8 + _noise.noise(x / 200f + 2000, z / 200f) * 0.8) * (j + 10);
+		return (h * 0.8 + octave(x / 200f, z / 200f, 3) * 0.8) * (j + 10);
 	}
 
 	private double octave(double x, double z, int numOctaves)
