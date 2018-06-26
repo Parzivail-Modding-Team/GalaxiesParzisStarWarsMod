@@ -23,10 +23,7 @@ public class MathUtil
 
 	public static Vector3f fract(Vector3f v)
 	{
-		v.x = (float)fract(v.x);
-		v.y = (float)fract(v.y);
-		v.z = (float)fract(v.z);
-		return v;
+		return new Vector3f((float)fract(v.x), (float)fract(v.y), (float)fract(v.z));
 	}
 
 	public static double seed(double d, long seed)
@@ -41,10 +38,7 @@ public class MathUtil
 
 	public static Vector3f floor(Vector3f v)
 	{
-		v.x = (float)Math.floor(v.x);
-		v.y = (float)Math.floor(v.y);
-		v.z = (float)Math.floor(v.z);
-		return v;
+		return new Vector3f((float)Math.floor(v.x), (float)Math.floor(v.y), (float)Math.floor(v.z));
 	}
 
 	/**

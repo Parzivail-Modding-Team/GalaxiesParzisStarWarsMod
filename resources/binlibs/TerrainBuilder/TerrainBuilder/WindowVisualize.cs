@@ -70,7 +70,7 @@ namespace TerrainBuilder
         private float _zoom = 1;
         private double _angle = 45;
         private double _angleY = 160;
-        
+
         private bool _voxels = true;
 
         private static ShaderProgram _shaderProgram;
@@ -341,8 +341,8 @@ namespace TerrainBuilder
                 }
 
                 // Grab worker and report progress
-                var worker = (BackgroundWorker) sender;
-                var args = (BackgroundRenderArgs) e.Argument;
+                var worker = (BackgroundWorker)sender;
+                var args = (BackgroundRenderArgs)e.Argument;
 
                 if (args.RegenHeightmap)
                 {
@@ -364,11 +364,11 @@ namespace TerrainBuilder
                             }
 
                             // Set the heightmap at (x, z)
-                            Heightmap[x, z] = (int) ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
+                            Heightmap[x, z] = (int)ScriptedTerrainGenerator.GetValue(x - _sideLength, z - _sideLength);
                         }
 
                         // Report progress every "scanline"
-                        worker.ReportProgress((int) (x / (2f * SideLength + 2) * 50));
+                        worker.ReportProgress((int)(x / (2f * SideLength + 2) * 50));
                     }
                 }
 
@@ -440,24 +440,28 @@ namespace TerrainBuilder
                             vbi.AddVertex(
                                 new Vector3(x, valueHere, z),
                                 UpVector,
+                                Vector2.Zero,
                                 isPosXHigher || isPosZHigher || isPosXPosZHigher ? occludedColor : color
                             );
 
                             vbi.AddVertex(
                                 new Vector3(x - 1, valueHere, z),
                                 UpVector,
+                                Vector2.Zero,
                                 isNegXHigher || isPosZHigher || isNegXPosZHigher ? occludedColor : color
                             );
 
                             vbi.AddVertex(
                                 new Vector3(x - 1, valueHere, z - 1),
                                 UpVector,
+                                Vector2.Zero,
                                 isNegXHigher || isNegZHigher || isNegXNegZHigher ? occludedColor : color
                             );
 
                             vbi.AddVertex(
                                 new Vector3(x, valueHere, z - 1),
                                 UpVector,
+                                Vector2.Zero,
                                 isPosXHigher || isNegZHigher || isPosXNegZHigher ? occludedColor : color
                             );
 
@@ -467,24 +471,28 @@ namespace TerrainBuilder
                                 vbi.AddVertex(
                                     new Vector3(x, valueHere, z),
                                     PosZVector,
+                                    Vector2.Zero,
                                     color
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x, (float) valuePosZ, z),
+                                    new Vector3(x, (float)valuePosZ, z),
                                     PosZVector,
+                                    Vector2.Zero,
                                     isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x - 1, (float) valuePosZ, z),
+                                    new Vector3(x - 1, (float)valuePosZ, z),
                                     PosZVector,
+                                    Vector2.Zero,
                                     isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color
                                 );
 
                                 vbi.AddVertex(
                                     new Vector3(x - 1, valueHere, z),
                                     PosZVector,
+                                    Vector2.Zero,
                                     color
                                 );
                             }
@@ -495,24 +503,28 @@ namespace TerrainBuilder
                                 vbi.AddVertex(
                                     new Vector3(x, valueHere, z - 1),
                                     NegZVector,
+                                    Vector2.Zero,
                                     color
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x, (float) valueNegZ, z - 1),
+                                    new Vector3(x, (float)valueNegZ, z - 1),
                                     NegZVector,
+                                    Vector2.Zero,
                                     isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x - 1, (float) valueNegZ, z - 1),
+                                    new Vector3(x - 1, (float)valueNegZ, z - 1),
                                     NegZVector,
+                                    Vector2.Zero,
                                     isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color
                                 );
 
                                 vbi.AddVertex(
                                     new Vector3(x - 1, valueHere, z - 1),
                                     NegZVector,
+                                    Vector2.Zero,
                                     color
                                 );
                             }
@@ -523,24 +535,28 @@ namespace TerrainBuilder
                                 vbi.AddVertex(
                                     new Vector3(x, valueHere, z),
                                     PosXVector,
+                                    Vector2.Zero,
                                     color
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x, (float) valuePosX, z),
+                                    new Vector3(x, (float)valuePosX, z),
                                     PosXVector,
+                                    Vector2.Zero,
                                     isPosXLower || isPosZLower || isPosXPosZLower ? occludedColor : color
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x, (float) valuePosX, z - 1),
+                                    new Vector3(x, (float)valuePosX, z - 1),
                                     PosXVector,
+                                    Vector2.Zero,
                                     isPosXLower || isNegZLower || isPosXNegZLower ? occludedColor : color
                                 );
 
                                 vbi.AddVertex(
                                     new Vector3(x, valueHere, z - 1),
                                     PosXVector,
+                                    Vector2.Zero,
                                     color
                                 );
                             }
@@ -551,24 +567,28 @@ namespace TerrainBuilder
                                 vbi.AddVertex(
                                     new Vector3(x - 1, valueHere, z),
                                     NegXVector,
+                                    Vector2.Zero,
                                     color
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x - 1, (float) valueNegX, z),
+                                    new Vector3(x - 1, (float)valueNegX, z),
                                     NegXVector,
+                                    Vector2.Zero,
                                     isNegXLower || isPosZLower || isNegXPosZLower ? occludedColor : color
                                 );
 
                                 vbi.AddVertex(
-                                    new Vector3(x - 1, (float) valueNegX, z - 1),
+                                    new Vector3(x - 1, (float)valueNegX, z - 1),
                                     NegXVector,
+                                    Vector2.Zero,
                                     isNegXLower || isNegZLower || isNegXNegZLower ? occludedColor : color
                                 );
 
                                 vbi.AddVertex(
                                     new Vector3(x - 1, valueHere, z - 1),
                                     NegXVector,
+                                    Vector2.Zero,
                                     color
                                 );
                             }
@@ -587,31 +607,35 @@ namespace TerrainBuilder
                             vbi.AddVertex(
                                 valueA,
                                 norm,
+                                Vector2.Zero,
                                 color
                             );
 
                             vbi.AddVertex(
                                 valueB,
                                 norm,
+                                Vector2.Zero,
                                 color
                             );
 
                             vbi.AddVertex(
                                 valueD,
                                 norm,
+                                Vector2.Zero,
                                 color
                             );
 
                             vbi.AddVertex(
                                 valueC,
                                 norm,
+                                Vector2.Zero,
                                 color
                             );
                         }
                     }
 
                     // Report progress every "scanline"
-                    worker.ReportProgress((int) ((x + SideLength) / (SideLength * 2f) * 50) + 50);
+                    worker.ReportProgress((int)((x + SideLength) / (SideLength * 2f) * 50) + 50);
                 }
 
                 // Send the result back to the worker
@@ -755,14 +779,14 @@ namespace TerrainBuilder
             if (IsDecorating())
                 CancelDecorate();
 
-            _terrainLayerList.Invoke((MethodInvoker) delegate
-            {
-                // Enable the render statusbar
-                _terrainLayerList.bCancelRender.Enabled = true;
-                _terrainLayerList.bCancelRender.Visible = true;
+            _terrainLayerList.Invoke((MethodInvoker)delegate
+           {
+               // Enable the render statusbar
+               _terrainLayerList.bCancelRender.Enabled = true;
+               _terrainLayerList.bCancelRender.Visible = true;
 
-                _terrainLayerList.pbRenderStatus.Visible = true;
-            });
+               _terrainLayerList.pbRenderStatus.Visible = true;
+           });
 
             // Fire up the render
             _backgroundDecorator.RunWorkerAsync();
@@ -813,7 +837,7 @@ namespace TerrainBuilder
             // Set up uniforms
             TintUniform.Value = _tintColorVector;
             Uniforms.Add(TintUniform);
-            
+
             GL.Color3(Color.White);
 
             // Engage shader, render, disengage
@@ -896,10 +920,10 @@ namespace TerrainBuilder
             position.Z -= 0.5f;
             for (var i = 5; i >= 0; i--)
             {
-                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 0]], _boxNormals[i], color);
-                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 1]], _boxNormals[i], color);
-                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 2]], _boxNormals[i], color);
-                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 3]], _boxNormals[i], color);
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 0]], _boxNormals[i], Vector2.Zero, color);
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 1]], _boxNormals[i], Vector2.Zero, color);
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 2]], _boxNormals[i], Vector2.Zero, color);
+                vbi.AddVertex(position + _boxVerts[_boxFaces[i, 3]], _boxNormals[i], Vector2.Zero, color);
             }
         }
 
