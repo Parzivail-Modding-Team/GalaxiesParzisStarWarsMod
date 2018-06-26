@@ -50,7 +50,6 @@ namespace PFX.Util
         private double Worley(Vector2d n)
         {
             var dis = 2d;
-            var id = 0;
             for (var x = -1; x <= 1; x++)
             {
                 for (var y = -1; y <= 1; y++)
@@ -58,11 +57,11 @@ namespace PFX.Util
                     var q = new Vector2d(x, y);
                     var p = MathUtil.Floor(n) + q;
                     var d = (R(p) + q - MathUtil.Fract(n)).Length;
-
-                    if (!(dis > d)) continue;
+                    
+                    if (dis <= d)
+                        continue;
 
                     dis = d;
-                    //id = Math.Abs(R(p).ToString().GetHashCode()) % 10;
                 }
             }
             return dis;
@@ -71,7 +70,6 @@ namespace PFX.Util
         private double Worley(Vector3d n)
         {
             var dis = 2d;
-            var id = 0;
             for (var x = -1; x <= 1; x++)
             {
                 for (var y = -1; y <= 1; y++)

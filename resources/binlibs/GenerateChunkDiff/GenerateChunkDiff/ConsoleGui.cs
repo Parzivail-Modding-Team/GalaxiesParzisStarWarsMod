@@ -145,7 +145,7 @@ namespace GenerateChunkDiff
             var w = (int) Math.Floor(p * Width);
             var fractW = (int) Math.Floor((p * Width - w) * BlockPercentFill.Length);
 
-            var str = $"{Math.Round(p * 100):N0}%";
+            var str = $"{Math.Round(p * 10000)/100:N2}%";
             var strLeft = str.Length > w ? str.Substring(0, w) : str;
             var strRight = str.Length > w ? str.Substring(w, str.Length - w) : "";
 
