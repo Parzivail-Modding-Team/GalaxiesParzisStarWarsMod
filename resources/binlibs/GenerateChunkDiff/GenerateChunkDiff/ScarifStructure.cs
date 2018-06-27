@@ -6,9 +6,9 @@ using Brotli;
 
 namespace GenerateChunkDiff
 {
-    internal class ChunkDiff : Dictionary<ChunkPosition, List<KeyValuePair<BlockPosition, BlockDiff>>>
+    internal class ScarifStructure : Dictionary<ChunkPosition, List<KeyValuePair<BlockPosition, BlockDiff>>>
     {
-        public readonly int Version = 4;
+        public readonly int Version = 1;
 
         public void Save(string filename, NbtMap map)
         {
@@ -16,7 +16,7 @@ namespace GenerateChunkDiff
             using (var bs = new BrotliStream(fs, CompressionMode.Compress))
             using (var f = new BinaryWriter(bs))
             {
-                var ident = "CDF".ToCharArray();
+                var ident = "SCRF".ToCharArray();
 
                 f.Write(ident);
                 f.Write(Version);
@@ -70,10 +70,10 @@ namespace GenerateChunkDiff
             }
         }
 
-        public static ChunkDiff Load(string filename)
+        public static ScarifStructure Load(string filename)
         {
             // TODO
-            return new ChunkDiff();
+            return new ScarifStructure();
         }
 
         public void Add(ChunkPosition chunk, BlockPosition pos, BlockDiff block)

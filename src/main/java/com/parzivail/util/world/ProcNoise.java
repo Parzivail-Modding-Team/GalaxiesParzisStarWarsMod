@@ -49,23 +49,23 @@ public class ProcNoise
 
 	public double worley(double x, double z)
 	{
-		return (_worley.eval((float)x, (float)z) + 1) / 2;
+		return (_worley.eval(x, z) + 1) / 2;
 	}
 
 	public double rawworley(double x, double z)
 	{
-		return _worley.eval((float)x, (float)z);
+		return _worley.eval(x, z);
 	}
 
-	public double worley3(double x, double y, double z)
-	{
-		return (_worley.eval((float)x, (float)y, (float)z) + 1) / 2;
-	}
-
-	public double rawworley3(double x, double y, double z)
-	{
-		return _worley.eval((float)x, (float)y, (float)z);
-	}
+	//	public double worley3(double x, double y, double z)
+	//	{
+	//		return (_worley.eval((float)x, (float)y, (float)z) + 1) / 2;
+	//	}
+	//
+	//	public double rawworley3(double x, double y, double z)
+	//	{
+	//		return _worley.eval((float)x, (float)y, (float)z);
+	//	}
 
 	public double noiseDx(double x, double z)
 	{

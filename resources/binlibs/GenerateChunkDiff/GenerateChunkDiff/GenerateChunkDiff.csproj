@@ -84,7 +84,7 @@
     <Compile Include="BlockDiff.cs" />
     <Compile Include="BlockPosition.cs" />
     <Compile Include="ChunkBounds.cs" />
-    <Compile Include="ChunkDiff.cs" />
+    <Compile Include="ScarifStructure.cs" />
     <Compile Include="ChunkPosition.cs" />
     <Compile Include="ChunkSchematic.cs" />
     <Compile Include="ConsoleGui.cs" />

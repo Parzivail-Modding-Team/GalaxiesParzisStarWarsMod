@@ -16,6 +16,9 @@ namespace GenerateChunkDiff
         [Value(1, MetaName = "world", HelpText = "World to diff")]
         public string WorldPath { get; set; }
 
+        [Value(1, MetaName = "world", HelpText = "Dimension to diff")]
+        public int WorldDim { get; set; }
+
         [Value(2, MetaName = "output", HelpText = "Output diff file")]
         public string DiffOutput { get; set; }
 
@@ -43,7 +46,7 @@ namespace GenerateChunkDiff
             var world = AnvilWorld.Open(opts.WorldPath);
             var donorWorld = AnvilWorld.Open(opts.OriginalPath);
 
-            const int dim = 0;
+            var dim = opts.WorldDim;
             var manager = world.GetChunkManager(dim).ToList();
             var donorManager = donorWorld.GetChunkManager(dim);
 
@@ -58,7 +61,7 @@ namespace GenerateChunkDiff
                 return;
             }
 
-            var diff = new ChunkDiff();
+            var diff = new ScarifStructure();
 
             Console.Clear();
             var cgui = new ConsoleGui();

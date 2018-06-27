@@ -1,8 +1,5 @@
 package com.parzivail.util.math;
 
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
-
 import java.util.Random;
 
 public class MathUtil
@@ -16,14 +13,11 @@ public class MathUtil
 		return d - Math.floor(d);
 	}
 
-	public static Vector2f fract(Vector2f v)
+	public static double[] fract(double[] v)
 	{
-		return new Vector2f((float)fract(v.x), (float)fract(v.y));
-	}
-
-	public static Vector3f fract(Vector3f v)
-	{
-		return new Vector3f((float)fract(v.x), (float)fract(v.y), (float)fract(v.z));
+		for (int i = 0; i < v.length; i++)
+			v[i] = fract(v[i]);
+		return v;
 	}
 
 	public static double seed(double d, long seed)
@@ -31,14 +25,11 @@ public class MathUtil
 		return Double.longBitsToDouble(Double.doubleToLongBits(d) ^ seed);
 	}
 
-	public static Vector2f floor(Vector2f v)
+	public static double[] floor(double[] v)
 	{
-		return new Vector2f((float)Math.floor(v.x), (float)Math.floor(v.y));
-	}
-
-	public static Vector3f floor(Vector3f v)
-	{
-		return new Vector3f((float)Math.floor(v.x), (float)Math.floor(v.y), (float)Math.floor(v.z));
+		for (int i = 0; i < v.length; i++)
+			v[i] = Math.floor(v[i]);
+		return v;
 	}
 
 	/**

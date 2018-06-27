@@ -35,7 +35,7 @@ public class BiomeEndor extends PBiomeGenBase
 	@Override
 	public void decorate(IChunkProvider provider, World world, Random rand, int worldX, int worldZ)
 	{
-		StructureRegister.genTiles(world, worldX, worldZ);
+		StructureRegister.structureEngine.genTiles(world, worldX, worldZ);
 
 		double[] weights = ((ChunkProviderEndor)provider).terrain.getBiomeWeightsAt(worldX, worldZ);
 

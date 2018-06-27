@@ -58,9 +58,9 @@ public class ChunkProviderEndor implements IChunkProvider
 	public Chunk provideChunk(int cx, int cz)
 	{
 		Chunk chunk = new Chunk(this.worldObj, cx, cz);
-		for (int x = 0; x < 16; x++)
+		for (short x = 0; x < 16; x++)
 		{
-			for (int z = 0; z < 16; z++)
+			for (short z = 0; z < 16; z++)
 			{
 				double height = terrain.getHeightAt((cx * 16 + x), (cz * 16 + z)) + 60;
 				int finalHeight = (int)height;
@@ -69,40 +69,37 @@ public class ChunkProviderEndor implements IChunkProvider
 					chunk.getBlockStorageArray()[0] = new ExtendedBlockStorage(0, !this.worldObj.provider.hasNoSky);
 				chunk.getBlockStorageArray()[0].setExtBlockID(x, 0, z, Blocks.bedrock);
 
-				for (int y = 1; y < 256; y++)
+				for (short y = 1; y <= finalHeight; y++)
 				{
 					int l = y >> 4;
 					ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
 
 					if (extendedblockstorage == null)
 					{
-						extendedblockstorage = new ExtendedBlockStorage(y, !this.worldObj.provider.hasNoSky);
+						extendedblockstorage = new ExtendedBlockStorage(l << 4, !this.worldObj.provider.hasNoSky);
 						chunk.getBlockStorageArray()[l] = extendedblockstorage;
 					}
 
-					boolean hadStructure = StructureRegister.genStructure(this.worldObj.provider.dimensionId, cx, cz, x, z, y, extendedblockstorage);
-
-					if (!hadStructure)
+					if (y <= waterLevel + 1 && y == finalHeight)
+						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.sand);
+					else if (y == finalHeight)
+						extendedblockstorage.setExtBlockID(x, y & 15, z, BlockRegister.fastGrass);
+					else if (y <= finalHeight)
 					{
-						if (y <= waterLevel + 1 && y == finalHeight)
-							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.sand);
-						else if (y == finalHeight)
-							extendedblockstorage.setExtBlockID(x, y & 15, z, BlockRegister.fastGrass);
-						else if (y <= finalHeight)
-						{
-							double sandThreshold = (int)(height * 0.9);
+						double sandThreshold = (int)(height * 0.9);
 
-							if (y < sandThreshold)
-								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.dirt);
-							else
-								extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
-						}
-						else if (y <= waterLevel)
-							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.water);
+						if (y < sandThreshold)
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.dirt);
+						else
+							extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
 					}
+					else if (y <= waterLevel)
+						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.water);
 				}
 			}
 		}
+
+		StructureRegister.structureEngine.genStructure(chunk);
 
 		BiomeGenBase[] abiomegenbase = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(null, cx * 16, cz * 16, 16, 16);
 		byte[] abyte = chunk.getBiomeArray();
