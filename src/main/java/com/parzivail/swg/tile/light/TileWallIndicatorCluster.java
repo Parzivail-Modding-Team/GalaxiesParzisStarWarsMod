@@ -6,9 +6,9 @@ import com.parzivail.util.math.MathUtil;
 
 public class TileWallIndicatorCluster extends TileRotatable
 {
-	public int color1 = 0;
-	public int color2 = 0;
-	public int color3 = 0;
+	public int color1;
+	public int color2;
+	public int color3;
 
 	@Override
 	public void updateEntity()

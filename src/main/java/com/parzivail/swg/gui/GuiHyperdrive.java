@@ -1,6 +1,7 @@
 package com.parzivail.swg.gui;
 
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D2;
+import com.parzivail.util.ui.Fx.Util;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
@@ -15,7 +16,7 @@ import java.util.Random;
 
 public class GuiHyperdrive
 {
-	private static List<Star> stars = new ArrayList<>();
+	private static final List<Star> stars = new ArrayList<>();
 
 	static
 	{
@@ -32,7 +33,7 @@ public class GuiHyperdrive
 			float dX = (x - 0.5f) / s;
 			float dY = (y - 0.5f) / s;
 
-			stars.add(new Star(new Vector2f(x, y), new Vector2f(dX, dY), r.nextFloat() * 1.5f + 0.5f, Fx.Util.GetRgba(c, c, c, 255)));
+			stars.add(new Star(new Vector2f(x, y), new Vector2f(dX, dY), r.nextFloat() * 1.5f + 0.5f, Util.GetRgba(c, c, c, 255)));
 		}
 	}
 
@@ -43,7 +44,7 @@ public class GuiHyperdrive
 
 	public static void draw(ScaledResolution sr, EntityPlayer player)
 	{
-		float t = (Fx.Util.GetMillis() % 3000) / 1000f;
+		float t = (Util.GetMillis() % 3000) / 1000f;
 		float l = getScaleFactor(t);
 		for (Star s : stars)
 		{
@@ -61,7 +62,7 @@ public class GuiHyperdrive
 		if (t >= 2)
 		{
 			GL11.glColor4f(1, 1, 1, getScaleFactor((t - 2) * 2));
-			Fx.D2.DrawSolidRectangle(0, 0, (float)sr.getScaledWidth_double(), (float)sr.getScaledHeight_double());
+			D2.DrawSolidRectangle(0, 0, (float)sr.getScaledWidth_double(), (float)sr.getScaledHeight_double());
 		}
 	}
 

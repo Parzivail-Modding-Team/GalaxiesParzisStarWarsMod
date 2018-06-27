@@ -23,53 +23,53 @@ public class ModelCrateMosEspa extends ModelBase
 
 	public ModelCrateMosEspa()
 	{
-		this.textureWidth = 512;
-		this.textureHeight = 512;
-		this.shape7 = new ModelRenderer(this, 264, 0);
-		this.shape7.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.shape7.addBox(-5.0F, -6.0F, -4.0F, 10, 12, 5, 0.0F);
-		this.shape2 = new ModelRenderer(this, 152, 0);
-		this.shape2.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.shape2.addBox(-7.0F, -4.0F, -10.0F, 14, 8, 5, 0.0F);
-		this.shape9 = new ModelRenderer(this, 328, 0);
-		this.shape9.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.shape9.addBox(-5.0F, -6.0F, 8.0F, 10, 12, 5, 0.0F);
-		this.shape8 = new ModelRenderer(this, 296, 0);
-		this.shape8.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.shape8.addBox(-5.0F, -6.0F, 2.0F, 10, 12, 5, 0.0F);
-		this.shape3 = new ModelRenderer(this, 152, 15);
-		this.shape3.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.shape3.addBox(-7.0F, -4.0F, -4.0F, 14, 8, 5, 0.0F);
-		this.shape4 = new ModelRenderer(this, 192, 0);
-		this.shape4.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.shape4.addBox(-7.0F, -4.0F, 2.0F, 14, 8, 5, 0.0F);
-		this.shape5 = new ModelRenderer(this, 192, 15);
-		this.shape5.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.shape5.addBox(-7.0F, -4.0F, 8.0F, 14, 8, 5, 0.0F);
-		this.shape10 = new ModelRenderer(this, 76, 0);
-		this.shape10.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.shape10.addBox(-5.0F, -4.0F, -12.0F, 10, 8, 27, 0.0F);
-		this.shape6 = new ModelRenderer(this, 232, 0);
-		this.shape6.setRotationPoint(0.0F, 0.0F, 0.0F);
-		this.shape6.addBox(-5.0F, -6.0F, -10.0F, 10, 12, 5, 0.0F);
-		this.shape1 = new ModelRenderer(this, 0, 0);
-		this.shape1.setRotationPoint(0.0F, 18.0F, -1.5F);
-		this.shape1.addBox(-6.0F, -5.0F, -11.0F, 12, 10, 25, 0.0F);
-		this.shape1.addChild(this.shape7);
-		this.shape1.addChild(this.shape2);
-		this.shape1.addChild(this.shape9);
-		this.shape1.addChild(this.shape8);
-		this.shape1.addChild(this.shape3);
-		this.shape1.addChild(this.shape4);
-		this.shape1.addChild(this.shape5);
-		this.shape1.addChild(this.shape10);
-		this.shape1.addChild(this.shape6);
+		textureWidth = 512;
+		textureHeight = 512;
+		shape7 = new ModelRenderer(this, 264, 0);
+		shape7.setRotationPoint(0.0F, 0.0F, 0.0F);
+		shape7.addBox(-5.0F, -6.0F, -4.0F, 10, 12, 5, 0.0F);
+		shape2 = new ModelRenderer(this, 152, 0);
+		shape2.setRotationPoint(0.0F, 0.0F, 0.0F);
+		shape2.addBox(-7.0F, -4.0F, -10.0F, 14, 8, 5, 0.0F);
+		shape9 = new ModelRenderer(this, 328, 0);
+		shape9.setRotationPoint(0.0F, 0.0F, 0.0F);
+		shape9.addBox(-5.0F, -6.0F, 8.0F, 10, 12, 5, 0.0F);
+		shape8 = new ModelRenderer(this, 296, 0);
+		shape8.setRotationPoint(0.0F, 0.0F, 0.0F);
+		shape8.addBox(-5.0F, -6.0F, 2.0F, 10, 12, 5, 0.0F);
+		shape3 = new ModelRenderer(this, 152, 15);
+		shape3.setRotationPoint(0.0F, 0.0F, 0.0F);
+		shape3.addBox(-7.0F, -4.0F, -4.0F, 14, 8, 5, 0.0F);
+		shape4 = new ModelRenderer(this, 192, 0);
+		shape4.setRotationPoint(0.0F, 0.0F, 0.0F);
+		shape4.addBox(-7.0F, -4.0F, 2.0F, 14, 8, 5, 0.0F);
+		shape5 = new ModelRenderer(this, 192, 15);
+		shape5.setRotationPoint(0.0F, 0.0F, 0.0F);
+		shape5.addBox(-7.0F, -4.0F, 8.0F, 14, 8, 5, 0.0F);
+		shape10 = new ModelRenderer(this, 76, 0);
+		shape10.setRotationPoint(0.0F, 0.0F, 0.0F);
+		shape10.addBox(-5.0F, -4.0F, -12.0F, 10, 8, 27, 0.0F);
+		shape6 = new ModelRenderer(this, 232, 0);
+		shape6.setRotationPoint(0.0F, 0.0F, 0.0F);
+		shape6.addBox(-5.0F, -6.0F, -10.0F, 10, 12, 5, 0.0F);
+		shape1 = new ModelRenderer(this, 0, 0);
+		shape1.setRotationPoint(0.0F, 18.0F, -1.5F);
+		shape1.addBox(-6.0F, -5.0F, -11.0F, 12, 10, 25, 0.0F);
+		shape1.addChild(shape7);
+		shape1.addChild(shape2);
+		shape1.addChild(shape9);
+		shape1.addChild(shape8);
+		shape1.addChild(shape3);
+		shape1.addChild(shape4);
+		shape1.addChild(shape5);
+		shape1.addChild(shape10);
+		shape1.addChild(shape6);
 	}
 
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
-		this.shape1.render(f5);
+		shape1.render(f5);
 	}
 
 	/**

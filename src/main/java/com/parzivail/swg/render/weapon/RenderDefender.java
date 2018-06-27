@@ -10,13 +10,13 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderDefender implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.defender.png");
+	private static final ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.defender.png");
 
-	private ModelDefender model;
+	private final ModelDefender model;
 
 	public RenderDefender()
 	{
-		this.model = new ModelDefender();
+		model = new ModelDefender();
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class RenderDefender implements IItemRenderer
 				GL11.glTranslatef(-4, -4f, 1f);
 				GL11.glRotatef(25, 0, 0, 1);
 				GL11.glTranslatef(0, -5, 2);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -52,7 +52,7 @@ public class RenderDefender implements IItemRenderer
 				GL11.glTranslatef(11, -2, 0);
 				GL11.glRotatef(90, 0, 0, -1);
 				GL11.glTranslatef(-4, 3, 0);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -78,7 +78,7 @@ public class RenderDefender implements IItemRenderer
 					GL11.glRotatef(180, 1, 0, 0);
 					GL11.glTranslatef(0, 0, -6);
 				}
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -88,7 +88,7 @@ public class RenderDefender implements IItemRenderer
 				GL11.glScalef(0.05F, -0.05F, 0.05F);
 				GL11.glTranslatef(0, -8, 0);
 				GL11.glScalef(1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;

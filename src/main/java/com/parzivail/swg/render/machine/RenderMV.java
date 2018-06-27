@@ -18,7 +18,7 @@ public class RenderMV extends TileEntitySpecialRenderer
 
 	public RenderMV()
 	{
-		this.model = new ModelMV();
+		model = new ModelMV();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -37,11 +37,11 @@ public class RenderMV extends TileEntitySpecialRenderer
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
 		GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
 		float r = (float)((mv.frame + tickTime) / 180f * Math.PI) * 5;
-		this.model.windVane1.rotateAngleY = r;
-		this.model.windVane2.rotateAngleY = r;
-		this.model.windVaneRod1.rotateAngleY = r;
-		this.model.windVaneRod2.rotateAngleY = r;
-		this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
+		model.windVane1.rotateAngleY = r;
+		model.windVane2.rotateAngleY = r;
+		model.windVaneRod1.rotateAngleY = r;
+		model.windVaneRod2.rotateAngleY = r;
+		model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
 	}

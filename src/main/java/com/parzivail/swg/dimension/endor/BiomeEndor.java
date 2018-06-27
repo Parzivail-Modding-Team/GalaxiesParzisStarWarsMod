@@ -2,7 +2,6 @@ package com.parzivail.swg.dimension.endor;
 
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.StructureRegister;
-import com.parzivail.swg.worldgen.WorldGenBetterForest;
 import com.parzivail.swg.worldgen.WorldGenFallenLog;
 import com.parzivail.swg.worldgen.WorldGenThiccTree;
 import com.parzivail.util.math.MathUtil;
@@ -21,15 +20,15 @@ import java.util.Random;
  */
 public class BiomeEndor extends PBiomeGenBase
 {
-	private WorldGenBetterForest worldGenBetterForest = new WorldGenBetterForest(BlockRegister.endorLog, Blocks.leaves, BlockRegister.fastGrass);
-	private WorldGenThiccTree worldGenThiccTree = new WorldGenThiccTree(BlockRegister.endorLog, Blocks.leaves, BlockRegister.fastGrass);
-	private WorldGenFallenLog worldGenFallenLog = new WorldGenFallenLog(BlockRegister.endorLog);
+	//private final WorldGenBetterForest worldGenBetterForest = new WorldGenBetterForest(BlockRegister.endorLog, Blocks.leaves, BlockRegister.fastGrass);
+	private final WorldGenThiccTree worldGenThiccTree = new WorldGenThiccTree(BlockRegister.endorLog, Blocks.leaves, BlockRegister.fastGrass);
+	private final WorldGenFallenLog worldGenFallenLog = new WorldGenFallenLog(BlockRegister.endorLog);
 
 	public BiomeEndor(int biomeId)
 	{
 		super(biomeId);
-		this.setBiomeName("The Forest Moon of Endor");
-		this.spawnableCreatureList.clear();
+		setBiomeName("The Forest Moon of Endor");
+		spawnableCreatureList.clear();
 	}
 
 	@Override

@@ -10,7 +10,7 @@ import com.parzivail.swg.item.binocular.data.BinocularDescriptor;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.math.MathUtil;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.ShaderHelper;
 import com.parzivail.util.ui.gltk.AttribMask;
@@ -31,13 +31,13 @@ public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClic
 {
 	private final BinocularDescriptor descriptor;
 
-	private AnimatedValue avZoomLevel;
+	private final AnimatedValue avZoomLevel;
 
 	public ItemBinoculars(BinocularDescriptor descriptor)
 	{
 		super("binoc." + descriptor.name);
 		this.descriptor = descriptor;
-		this.maxStackSize = 1;
+		maxStackSize = 1;
 
 		avZoomLevel = new AnimatedValue(0, 500);
 	}
@@ -120,7 +120,7 @@ public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClic
 
 			GL.TessNextContour();
 
-			Fx.D2.BufferRoundRectangle(-160, -80, 320, 160, 15, 15, 15, 15, 15f);
+			D2.BufferRoundRectangle(-160, -80, 320, 160, 15, 15, 15, 15, 15f);
 
 			GL.TessNextContour();
 			GL.Vertex2(-160, -8);
@@ -141,31 +141,31 @@ public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClic
 			GL.Vertex2(-70, 80);
 
 			GL.TessNextContour();
-			Fx.D2.BufferRoundRectangle(-40, 75, 80, 12, 3, 3, 3, 3, 15f);
+			D2.BufferRoundRectangle(-40, 75, 80, 12, 3, 3, 3, 3, 15f);
 
 			GL.TessEndPolygon();
 
 			GL.Color(GLPalette.VERY_DARK_GREEN);
 			GL.Begin(PrimitiveType.TriangleFan);
-			Fx.D2.BufferRoundRectangle(-40, 75, 80, 12, 3, 3, 3, 3, 15f);
+			D2.BufferRoundRectangle(-40, 75, 80, 12, 3, 3, 3, 3, 15f);
 			GL.End();
 
 			GL.Color(GLPalette.DARK_YELLOW_GREEN);
-			Fx.D2.RoundRectangle(-20, 76, 40, 10, 3, 3, 3, 3, PrimitiveType.TriangleFan);
+			D2.RoundRectangle(-20, 76, 40, 10, 3, 3, 3, 3, PrimitiveType.TriangleFan);
 		}
 		else
 		{
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0, 0, 0, 1);
-			Fx.D2.DrawWireArc(0, 0, 6, -25, 85);
-			Fx.D2.DrawWireArc(0, 0, 6, 95, 205);
-			Fx.D2.DrawWireArc(0, 0, 6, 215, 325);
+			D2.DrawWireArc(0, 0, 6, -25, 85);
+			D2.DrawWireArc(0, 0, 6, 95, 205);
+			D2.DrawWireArc(0, 0, 6, 215, 325);
 
 			GL11.glLineWidth(2);
 			GL11.glColor4f(1, 1, 1, 1);
-			Fx.D2.DrawWireArc(0, 0, 6, -25, 85);
-			Fx.D2.DrawWireArc(0, 0, 6, 95, 205);
-			Fx.D2.DrawWireArc(0, 0, 6, 215, 325);
+			D2.DrawWireArc(0, 0, 6, -25, 85);
+			D2.DrawWireArc(0, 0, 6, 95, 205);
+			D2.DrawWireArc(0, 0, 6, 215, 325);
 		}
 		GL.PopMatrix();
 

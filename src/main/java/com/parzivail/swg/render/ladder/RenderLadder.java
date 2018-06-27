@@ -22,8 +22,8 @@ public class RenderLadder extends TileEntitySpecialRenderer
 
 	public RenderLadder()
 	{
-		this.model = new ModelLadder();
-		this.modelTop = new ModelLadderTop();
+		model = new ModelLadder();
+		modelTop = new ModelLadderTop();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -41,12 +41,12 @@ public class RenderLadder extends TileEntitySpecialRenderer
 		if (te.getWorld().getBlock(te.xCoord, te.yCoord + 1, te.zCoord) == Blocks.air)
 		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(textureTop);
-			this.modelTop.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
+			modelTop.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 		}
 		else
 		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-			this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
+			model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 		}
 		GL11.glPopMatrix();
 	}

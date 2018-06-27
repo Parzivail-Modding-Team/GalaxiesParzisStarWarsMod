@@ -9,13 +9,13 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderDL21 implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.dl21.png");
+	private static final ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.dl21.png");
 
-	private ModelDL21 model;
+	private final ModelDL21 model;
 
 	public RenderDL21()
 	{
-		this.model = new ModelDL21();
+		model = new ModelDL21();
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class RenderDL21 implements IItemRenderer
 				GL11.glRotatef(25, 0, 0, 1);
 				GL11.glTranslatef(8, -7, 3);
 				GL11.glScalef(1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -55,7 +55,7 @@ public class RenderDL21 implements IItemRenderer
 				GL11.glRotatef(180, 0, 1, 0);
 				GL11.glScalef(1, 1, -1);
 				GL11.glTranslatef(-3, 4, 0);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -71,7 +71,7 @@ public class RenderDL21 implements IItemRenderer
 				GL11.glRotatef(30, 0, 1, 0);
 				GL11.glRotatef(180, 0, 1, 0);
 				GL11.glScalef(1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -81,7 +81,7 @@ public class RenderDL21 implements IItemRenderer
 				GL11.glScalef(0.05F, -0.05F, 0.05F);
 				GL11.glTranslatef(0, -8, 0);
 				GL11.glScalef(1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;

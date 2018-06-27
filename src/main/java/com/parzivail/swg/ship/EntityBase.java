@@ -30,42 +30,42 @@ public abstract class EntityBase extends EntityLivingBase
 		double tempDY = dy;
 		double tempDZ = dz;
 
-		List nearAABBs = this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox.addCoord(dx, dy, dz));
+		List nearAABBs = worldObj.getCollidingBoundingBoxes(this, boundingBox.addCoord(dx, dy, dz));
 
 		for (Object nearAABB : nearAABBs)
 		{
-			dy = ((AxisAlignedBB)nearAABB).calculateYOffset(this.boundingBox, dy);
-			dx = ((AxisAlignedBB)nearAABB).calculateXOffset(this.boundingBox, dx);
-			dz = ((AxisAlignedBB)nearAABB).calculateZOffset(this.boundingBox, dz);
+			dy = ((AxisAlignedBB)nearAABB).calculateYOffset(boundingBox, dy);
+			dx = ((AxisAlignedBB)nearAABB).calculateXOffset(boundingBox, dx);
+			dz = ((AxisAlignedBB)nearAABB).calculateZOffset(boundingBox, dz);
 		}
-		this.boundingBox.offset(dx, dy, dz);
+		boundingBox.offset(dx, dy, dz);
 
-		this.posX += dx;
-		this.posY += dy;
-		this.posZ += dz;
-		this.isCollidedHorizontally = tempDX != dx || tempDZ != dz;
-		this.isCollidedVertically = tempDY != dy;
-		this.onGround = tempDY != dy && tempDY < 0.0D;
-		this.isCollided = this.isCollidedHorizontally || this.isCollidedVertically;
+		posX += dx;
+		posY += dy;
+		posZ += dz;
+		isCollidedHorizontally = tempDX != dx || tempDZ != dz;
+		isCollidedVertically = tempDY != dy;
+		onGround = tempDY != dy && tempDY < 0.0D;
+		isCollided = isCollidedHorizontally || isCollidedVertically;
 
 		if (tempDX != dx)
-			this.motionX = 0.0D;
+			motionX = 0.0D;
 
 		if (tempDY != dy)
-			this.motionY = 0.0D;
+			motionY = 0.0D;
 
 		if (tempDZ != dz)
-			this.motionZ = 0.0D;
+			motionZ = 0.0D;
 
 		try
 		{
-			this.doBlockCollisions();
+			doBlockCollisions();
 		}
 		catch (Throwable throwable)
 		{
 			CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Checking entity block collision");
 			CrashReportCategory crashreportcategory = crashreport.makeCategory("Entity being checked for collision");
-			this.addEntityCrashInfo(crashreportcategory);
+			addEntityCrashInfo(crashreportcategory);
 			throw new ReportedException(crashreport);
 		}
 	}

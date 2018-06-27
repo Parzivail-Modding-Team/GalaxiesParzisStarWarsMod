@@ -70,7 +70,7 @@ public class Rift
 		Entity mount = entity.ridingEntity;
 		if (entity.ridingEntity != null)
 		{
-			entity.mountEntity((Entity)null);
+			entity.mountEntity(null);
 			mount = teleportEntity(newworld, mount, dimension, spawn, yaw);
 		}
 

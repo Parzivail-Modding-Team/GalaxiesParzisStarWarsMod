@@ -25,7 +25,7 @@ public interface ITerrainHeightmap
 
 	/**
 	 * Gets the weight (0<=x<=1) of each biome in the terrain for the specified position.
-	 *
+	 * <p>
 	 * Use this in the future to determine mob spawns, etc.
 	 * Say, if the mountain biome [length - 1], which *should* be the tallest, has a lerp
 	 * value > 0.8, meaning the current position is > 80% that biome, spawn some mountain-faring

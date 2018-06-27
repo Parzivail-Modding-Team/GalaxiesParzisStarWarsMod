@@ -7,13 +7,15 @@ import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.Util;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -59,7 +61,7 @@ public class EntityUtils
 		{
 			Vec3 newEnd = Vec3.createVectorHelper(startPos.xCoord, startPos.yCoord, startPos.zCoord);
 			MovingObjectPosition mop = fromEntity.worldObj.rayTraceBlocks(newEnd, endPos);
-			if (mop != null && mop.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+			if (mop != null && mop.typeOfHit == MovingObjectType.BLOCK)
 			{
 				rhb = new RaytraceHitBlock(mop.hitVec, mop.blockX, mop.blockY, mop.blockZ, mop.sideHit);
 				distance = mop.hitVec.distanceTo(startPos);
@@ -69,8 +71,8 @@ public class EntityUtils
 
 		if (!fromEntity.worldObj.isRemote)
 		{
-			StarWarsGalaxy.instance.traceStart = Fx.Util.Vector3f(startPos);
-			StarWarsGalaxy.instance.traceEnd = Fx.Util.Vector3f(endPos);
+			StarWarsGalaxy.instance.traceStart = Util.Vector3f(startPos);
+			StarWarsGalaxy.instance.traceEnd = Util.Vector3f(endPos);
 		}
 
 		for (Object e : list)
@@ -136,7 +138,7 @@ public class EntityUtils
 			mobId += 1;
 		EntityRegistry.registerModEntity(mobClass, mobName, mobId, StarWarsGalaxy.instance, 80, 1, true);
 		EntityList.idToClassMap.put(mobId, mobClass);
-		EntityList.entityEggs.put(mobId, new EntityList.EntityEggInfo(mobId, bgColor, fgColor));
+		EntityList.entityEggs.put(mobId, new EntityEggInfo(mobId, bgColor, fgColor));
 		Lumberjack.debug("Registered entity (and egg) \"" + mobName + "\" as ID " + String.valueOf(mobId));
 	}
 

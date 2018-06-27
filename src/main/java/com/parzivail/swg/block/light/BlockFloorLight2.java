@@ -16,8 +16,8 @@ public class BlockFloorLight2 extends PBlockRotate
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
 		setLightLevel(1);
-		this.setBlockBounds(0.1f, 0, 0.1f, 0.9f, 0.4f, 0.9f);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setBlockBounds(0.1f, 0, 0.1f, 0.9f, 0.4f, 0.9f);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

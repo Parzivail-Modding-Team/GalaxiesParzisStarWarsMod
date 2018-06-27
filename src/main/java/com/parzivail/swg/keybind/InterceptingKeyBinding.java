@@ -4,7 +4,7 @@ import net.minecraft.client.settings.KeyBinding;
 
 public class InterceptingKeyBinding extends KeyBinding
 {
-	private boolean isIntercepting = false;
+	private boolean isIntercepting;
 
 	public InterceptingKeyBinding(KeyBinding keyBinding)
 	{

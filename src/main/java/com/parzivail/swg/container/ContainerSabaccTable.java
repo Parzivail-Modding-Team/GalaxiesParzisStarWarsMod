@@ -8,7 +8,7 @@ import net.minecraft.inventory.IInventory;
 
 public class ContainerSabaccTable extends Container
 {
-	private TileSabaccTable tile;
+	private final TileSabaccTable tile;
 
 	public ContainerSabaccTable(IInventory playerInventory, TileSabaccTable tile)
 	{

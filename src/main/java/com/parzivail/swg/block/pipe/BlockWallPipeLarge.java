@@ -16,7 +16,7 @@ public class BlockWallPipeLarge extends PBlockRotate
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0.2f, 0, 0.2f, 0.8f, 0.5f, 0.8f);
 		setHardness(50.0F);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

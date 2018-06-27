@@ -8,12 +8,12 @@ public class TileMV2 extends TileRotatable
 
 	public TileMV2()
 	{
-		this.frame = 0;
+		frame = 0;
 	}
 
 	@Override
 	public void updateEntity()
 	{
-		this.frame++;
+		frame++;
 	}
 }

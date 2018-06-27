@@ -5,13 +5,8 @@ import net.minecraft.util.Vec3;
 
 public class RaytraceHitBlock extends RaytraceHit
 {
-	private static final EnumFacing[] faceDecode = new EnumFacing[] {
-			EnumFacing.DOWN,
-			EnumFacing.UP,
-			EnumFacing.NORTH,
-			EnumFacing.SOUTH,
-			EnumFacing.WEST,
-			EnumFacing.EAST
+	private static final EnumFacing[] faceDecode = {
+			EnumFacing.DOWN, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.SOUTH, EnumFacing.WEST, EnumFacing.EAST
 	};
 
 	public final Vec3 hitVec;

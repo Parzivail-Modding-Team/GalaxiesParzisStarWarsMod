@@ -14,7 +14,7 @@ import java.util.List;
 
 public class WorldDecals
 {
-	private static HashMap<Integer, List<Decal>> allDecals = new HashMap<>();
+	private static final HashMap<Integer, List<Decal>> allDecals = new HashMap<>();
 
 	public static void create(int dim, Decal d)
 	{

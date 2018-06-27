@@ -19,7 +19,7 @@ public class RenderGunRack extends TileEntitySpecialRenderer
 
 	public RenderGunRack()
 	{
-		this.model = new ModelGunRack();
+		model = new ModelGunRack();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -38,7 +38,7 @@ public class RenderGunRack extends TileEntitySpecialRenderer
 		if (te instanceof TileRotatable)
 			GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
 
-		this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
+		model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 
 		// TODO
 		//		if (te instanceof TileGunRack)

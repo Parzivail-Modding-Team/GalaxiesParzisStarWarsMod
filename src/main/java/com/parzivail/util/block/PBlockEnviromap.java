@@ -21,7 +21,7 @@ public class PBlockEnviromap extends PBlock
 	public PBlockEnviromap(String name, Material material, String texturePrefix, int width, int height)
 	{
 		super(name, material);
-		this.variants = new String[width][height];
+		variants = new String[width][height];
 		for (int i = 0; i < width; i++)
 			for (int j = 0; j < height; j++)
 				variants[i][j] = String.format("%s_%s_%s", texturePrefix, i, j);

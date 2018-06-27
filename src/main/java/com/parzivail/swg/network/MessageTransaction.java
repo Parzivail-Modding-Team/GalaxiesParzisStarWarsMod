@@ -31,7 +31,7 @@ public class MessageTransaction extends PMessage<MessageTransaction>
 	public IMessage handleMessage(MessageContext context)
 	{
 		String opcode = transaction.getString("opcode");
-		NBTTagCompound data = this.transaction.getCompoundTag("payload");
+		NBTTagCompound data = transaction.getCompoundTag("payload");
 		TransactionRegistry.consume(opcode, data);
 		return null;
 	}

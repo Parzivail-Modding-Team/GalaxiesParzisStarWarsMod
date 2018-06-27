@@ -10,7 +10,7 @@ public class SwgSt
 
 	public SwgSt(float a, float b)
 	{
-		this.s = a;
-		this.t = b;
+		s = a;
+		t = b;
 	}
 }

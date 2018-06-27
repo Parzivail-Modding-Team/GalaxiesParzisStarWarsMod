@@ -24,14 +24,14 @@ public class MessageItemLeftClick extends PMessage<MessageItemLeftClick>
 
 	public MessageItemLeftClick(EntityPlayer thePlayer)
 	{
-		this.playerDim = thePlayer.dimension;
-		this.playerId = thePlayer.getEntityId();
+		playerDim = thePlayer.dimension;
+		playerId = thePlayer.getEntityId();
 	}
 
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		Entity ePlayer = MinecraftServer.getServer().worldServerForDimension(this.playerDim).getEntityByID(this.playerId);
+		Entity ePlayer = MinecraftServer.getServer().worldServerForDimension(playerDim).getEntityByID(playerId);
 		if (!(ePlayer instanceof EntityPlayer))
 			return null;
 

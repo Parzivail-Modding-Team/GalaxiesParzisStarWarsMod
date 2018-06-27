@@ -5,8 +5,8 @@ public class TickComparator
 	/**
 	 * Set this every tick to whatever you're checking
 	 **/
-	public boolean is = false;
-	private boolean was = false;
+	public boolean is;
+	private boolean was;
 
 	/**
 	 * Checks if there was a change from true to false
@@ -15,7 +15,7 @@ public class TickComparator
 	 */
 	public boolean changeFalse()
 	{
-		return !this.is && this.was;
+		return !is && was;
 	}
 
 	/**
@@ -25,7 +25,7 @@ public class TickComparator
 	 */
 	public boolean changeTrue()
 	{
-		return this.is && !this.was;
+		return is && !was;
 	}
 
 	/**
@@ -33,6 +33,6 @@ public class TickComparator
 	 */
 	public void swap()
 	{
-		this.was = this.is;
+		was = is;
 	}
 }

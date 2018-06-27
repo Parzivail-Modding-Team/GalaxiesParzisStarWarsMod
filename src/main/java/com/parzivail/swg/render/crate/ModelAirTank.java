@@ -16,25 +16,25 @@ public class ModelAirTank extends ModelBase
 
 	public ModelAirTank()
 	{
-		this.textureWidth = 64;
-		this.textureHeight = 64;
-		this.exterior = new ModelRenderer(this, 0, 0);
-		this.exterior.setRotationPoint(-3.0F, -2.4F, -3.0F);
-		this.exterior.addBox(0.0F, 0.0F, 0.0F, 6, 26, 6, 0.0F);
-		this.interior = new ModelRenderer(this, 0, 34);
-		this.interior.setRotationPoint(-1.5F, -7.0F, -1.5F);
-		this.interior.addBox(0.0F, 0.0F, 0.0F, 3, 7, 3, 0.0F);
-		this.interiorFillet = new ModelRenderer(this, 26, 0);
-		this.interiorFillet.setRotationPoint(-2.5F, -3.0F, -2.5F);
-		this.interiorFillet.addBox(0.0F, 0.0F, 0.0F, 5, 27, 5, 0.0F);
+		textureWidth = 64;
+		textureHeight = 64;
+		exterior = new ModelRenderer(this, 0, 0);
+		exterior.setRotationPoint(-3.0F, -2.4F, -3.0F);
+		exterior.addBox(0.0F, 0.0F, 0.0F, 6, 26, 6, 0.0F);
+		interior = new ModelRenderer(this, 0, 34);
+		interior.setRotationPoint(-1.5F, -7.0F, -1.5F);
+		interior.addBox(0.0F, 0.0F, 0.0F, 3, 7, 3, 0.0F);
+		interiorFillet = new ModelRenderer(this, 26, 0);
+		interiorFillet.setRotationPoint(-2.5F, -3.0F, -2.5F);
+		interiorFillet.addBox(0.0F, 0.0F, 0.0F, 5, 27, 5, 0.0F);
 	}
 
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
-		this.exterior.render(f5);
-		this.interior.render(f5);
-		this.interiorFillet.render(f5);
+		exterior.render(f5);
+		interior.render(f5);
+		interiorFillet.render(f5);
 	}
 
 	/**

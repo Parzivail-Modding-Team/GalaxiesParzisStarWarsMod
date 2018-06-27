@@ -7,21 +7,21 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 
 public class TileRotatable extends TileAtmoSound
 {
-	private float facing = 0;
+	private float facing;
 
 	@Override
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
-		this.writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 64537, tag);
+		writeToNBT(tag);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 64537, tag);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
 		super.onDataPacket(net, packet);
-		this.readFromNBT(packet.getNbtCompound());
+		readFromNBT(packet.getNbtCompound());
 	}
 
 	@Override
@@ -45,6 +45,6 @@ public class TileRotatable extends TileAtmoSound
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		this.setFacing(tag.getFloat("facing"));
+		setFacing(tag.getFloat("facing"));
 	}
 }

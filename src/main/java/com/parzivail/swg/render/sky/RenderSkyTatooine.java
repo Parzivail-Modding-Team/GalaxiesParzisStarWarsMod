@@ -23,9 +23,9 @@ import java.util.Random;
  */
 public class RenderSkyTatooine extends IRenderHandler
 {
-	private static int glSkyList;
-	private static int glSkyList2;
-	private static int starGLCallList;
+	private static final int glSkyList;
+	private static final int glSkyList2;
+	private static final int starGLCallList;
 
 	private static final ResourceLocation locationMoonPhasesPng = Resources.location("textures/environment/moon_tatooine.png");
 	private static final ResourceLocation locationSunPng = Resources.location("textures/environment/sun_tatooine.png");

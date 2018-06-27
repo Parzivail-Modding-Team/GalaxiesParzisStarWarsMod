@@ -20,7 +20,7 @@ public class BlockSatelliteDish extends PBlockRotate
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5f, 1.0F);
 		setHardness(50.0F);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

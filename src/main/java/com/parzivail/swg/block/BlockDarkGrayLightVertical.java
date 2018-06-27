@@ -19,14 +19,14 @@ public class BlockDarkGrayLightVertical extends PBlockPillar
 	public void registerIcons(IIconRegister reg)
 	{
 		// side icon
-		this.field_150167_a = new IIcon[3];
+		field_150167_a = new IIcon[3];
 
 		// top icon
-		this.field_150166_b = new IIcon[1];
+		field_150166_b = new IIcon[1];
 
-		this.field_150167_a[0] = reg.registerIcon(Resources.modColon("darkGrayLightVertical"));
+		field_150167_a[0] = reg.registerIcon(Resources.modColon("darkGrayLightVertical"));
 
-		this.field_150166_b[0] = reg.registerIcon(Resources.modColon("darkGray"));
+		field_150166_b[0] = reg.registerIcon(Resources.modColon("darkGray"));
 	}
 
 	@Override
@@ -38,9 +38,9 @@ public class BlockDarkGrayLightVertical extends PBlockPillar
 		int l = meta & 3;
 
 		if (y <= 0 || meta != 0)
-			return k == 0 && (side == 1 || side == 0) ? this.getTopIcon(l) : (k == 4 && (side == 5 || side == 4) ? this.getTopIcon(l) : (k == 8 && (side == 2 || side == 3) ? this.getTopIcon(l) : this.getSideIcon(l)));
+			return k == 0 && (side == 1 || side == 0) ? getTopIcon(l) : (k == 4 && (side == 5 || side == 4) ? getTopIcon(l) : (k == 8 && (side == 2 || side == 3) ? getTopIcon(l) : getSideIcon(l)));
 
-		return k == 0 && (side == 1 || side == 0) ? this.getTopIcon(l) : (k == 4 && (side == 5 || side == 4) ? this.getTopIcon(l) : (k == 8 && (side == 2 || side == 3) ? this.getTopIcon(l) : this.getSideIcon(l, worldIn, x, y, z)));
+		return k == 0 && (side == 1 || side == 0) ? getTopIcon(l) : (k == 4 && (side == 5 || side == 4) ? getTopIcon(l) : (k == 8 && (side == 2 || side == 3) ? getTopIcon(l) : getSideIcon(l, worldIn, x, y, z)));
 	}
 
 	private IIcon getSideIcon(int icon, IBlockAccess worldIn, int x, int y, int z)

@@ -22,16 +22,16 @@ public class BlockEndorLog extends PBlockPillar
 	public void registerIcons(IIconRegister reg)
 	{
 		// side icon
-		this.field_150167_a = new IIcon[3];
+		field_150167_a = new IIcon[3];
 
 		// top icon
-		this.field_150166_b = new IIcon[1];
+		field_150166_b = new IIcon[1];
 
-		this.field_150167_a[0] = reg.registerIcon(Resources.modColon(name + "_sideClean"));
-		this.field_150167_a[1] = reg.registerIcon(Resources.modColon(name + "_sideBlend"));
-		this.field_150167_a[2] = reg.registerIcon(Resources.modColon(name + "_sideFlora"));
+		field_150167_a[0] = reg.registerIcon(Resources.modColon(name + "_sideClean"));
+		field_150167_a[1] = reg.registerIcon(Resources.modColon(name + "_sideBlend"));
+		field_150167_a[2] = reg.registerIcon(Resources.modColon(name + "_sideFlora"));
 
-		this.field_150166_b[0] = reg.registerIcon(Resources.modColon(name + "_top"));
+		field_150166_b[0] = reg.registerIcon(Resources.modColon(name + "_top"));
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class BlockEndorLog extends PBlockPillar
 		int meta = worldIn.getBlockMetadata(x, y, z);
 		int k = meta & 12;
 		int l = meta & 1;
-		return k == 0 && (side == 1 || side == 0) ? this.getTopIcon(l) : (k == 4 && (side == 5 || side == 4) ? this.getTopIcon(l) : (k == 8 && (side == 2 || side == 3) ? this.getTopIcon(l) : this.getSideIcon(l)));
+		return k == 0 && (side == 1 || side == 0) ? getTopIcon(l) : (k == 4 && (side == 5 || side == 4) ? getTopIcon(l) : (k == 8 && (side == 2 || side == 3) ? getTopIcon(l) : getSideIcon(l)));
 	}
 
 	private IIcon getSideIcon(int icon, IBlockAccess worldIn, int x, int y, int z)

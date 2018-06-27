@@ -7,9 +7,7 @@ import org.lwjgl.opengl.GL11;
  */
 public enum PolygonMode
 {
-	Point(GL11.GL_POINT),
-	Line(GL11.GL_LINE),
-	Fill(GL11.GL_FILL);
+	Point(GL11.GL_POINT), Line(GL11.GL_LINE), Fill(GL11.GL_FILL);
 
 	private final int glValue;
 

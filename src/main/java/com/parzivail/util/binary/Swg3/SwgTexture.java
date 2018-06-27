@@ -13,7 +13,7 @@ public class SwgTexture
 
 	public SwgTexture(String name)
 	{
-		this.textureName = name;
-		this.texture = new ResourceLocation(Resources.MODID, "textures/model/" + textureName);
+		textureName = name;
+		texture = new ResourceLocation(Resources.MODID, "textures/model/" + textureName);
 	}
 }

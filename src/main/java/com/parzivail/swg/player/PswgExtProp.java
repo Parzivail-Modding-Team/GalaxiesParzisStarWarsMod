@@ -3,6 +3,7 @@ package com.parzivail.swg.player;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.MessagePswgExtPropSync;
+import com.parzivail.util.item.NbtSave;
 import com.parzivail.util.item.NbtSerializable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
@@ -13,32 +14,24 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.Constants.NBT;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtendedEntityProperties
 {
-	public static transient final String PROP_NAME = Resources.MODID + "_eep";
+	public static final String PROP_NAME = Resources.MODID + "_eep";
 
-	private transient Entity entity;
-	private transient World world;
+	@NbtSave
+	protected int creditBalance;
+	@NbtSave
+	protected int[] unlockedBlasterAttachments;
 
-	@Deprecated
-	public int creditBalance;
-
-	@Deprecated
-	public int[] unlockedBlasterAttachments;
+	private Entity entity;
+	private World world;
 
 	public static void register()
 	{
 		MinecraftForge.EVENT_BUS.register(new PswgExtPropHandler());
-	}
-
-	@Override
-	public void init(Entity entity, World world)
-	{
-		this.entity = entity;
-		this.world = world;
 	}
 
 	public static PswgExtProp get(Entity p)
@@ -46,6 +39,13 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 		if (p == null)
 			return null;
 		return (PswgExtProp)p.getExtendedProperties(PROP_NAME);
+	}
+
+	@Override
+	public void init(Entity entity, World world)
+	{
+		this.entity = entity;
+		this.world = world;
 	}
 
 	@Override
@@ -59,28 +59,28 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	@Override
 	public void loadNBTData(NBTTagCompound compound)
 	{
-		if (!compound.hasKey(PROP_NAME, Constants.NBT.TAG_COMPOUND))
+		if (!compound.hasKey(PROP_NAME, NBT.TAG_COMPOUND))
 			return;
 
 		NBTTagCompound data = compound.getCompoundTag(PROP_NAME);
 		deserialize(data);
 	}
 
-	public void setCreditBalance(int creditBalance)
-	{
-		this.creditBalance = creditBalance;
-		sync();
-	}
-
 	public void addCreditBalance(int delta)
 	{
-		this.creditBalance += delta;
+		creditBalance += delta;
 		sync();
 	}
 
 	public int getCreditBalance()
 	{
 		return creditBalance;
+	}
+
+	public void setCreditBalance(int creditBalance)
+	{
+		this.creditBalance = creditBalance;
+		sync();
 	}
 
 	public void unlockBlasterAttachment(int attachmentId)

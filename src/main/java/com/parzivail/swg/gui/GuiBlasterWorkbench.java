@@ -28,12 +28,12 @@ import java.util.List;
 public class GuiBlasterWorkbench extends GuiContainer
 {
 	private static final ResourceLocation guiTexture = Resources.location("textures/container/blasterWorkbench.png");
-	private TileBlasterWorkbench tile;
-	private EntityPlayer player;
-
+	private static final String textEquip = I18n.format(Resources.guiDot("equip"));
+	private static final String textEquipped = I18n.format(Resources.guiDot("equipped"));
+	private final TileBlasterWorkbench tile;
+	private final EntityPlayer player;
 	private List<BlasterAttachment> attachmentsInTab;
 	private int attachmentIdx;
-
 	private GuiButton bScopes;
 	private GuiButton bBarrels;
 	private GuiButton bGrips;
@@ -41,9 +41,6 @@ public class GuiBlasterWorkbench extends GuiContainer
 	private GuiButton bNext;
 	private GuiButton bEquip;
 	private GuiButton bBuy;
-
-	private static String textEquip = I18n.format(Resources.guiDot("equip"));
-	private static String textEquipped = I18n.format(Resources.guiDot("equipped"));
 
 	public GuiBlasterWorkbench(InventoryPlayer inventoryPlayer, TileBlasterWorkbench tile)
 	{
@@ -59,23 +56,23 @@ public class GuiBlasterWorkbench extends GuiContainer
 	@Override
 	public void initGui()
 	{
-		this.xSize = 256;
-		this.ySize = 241;
+		xSize = 256;
+		ySize = 241;
 
 		super.initGui();
-		this.buttonList.clear();
+		buttonList.clear();
 
 		attachmentsInTab = BlasterAttachments.SCOPES;
 
-		this.buttonList.add(bScopes = new PGuiButton(0, this.guiLeft + 40, this.guiTop + 6, 50, 15, I18n.format(Resources.guiDot("scopes"))));
-		this.buttonList.add(bBarrels = new PGuiButton(1, this.guiLeft + 104, this.guiTop + 6, 50, 15, I18n.format(Resources.guiDot("barrels"))));
-		this.buttonList.add(bGrips = new PGuiButton(2, this.guiLeft + 166, this.guiTop + 6, 50, 15, I18n.format(Resources.guiDot("grips"))));
+		buttonList.add(bScopes = new PGuiButton(0, guiLeft + 40, guiTop + 6, 50, 15, I18n.format(Resources.guiDot("scopes"))));
+		buttonList.add(bBarrels = new PGuiButton(1, guiLeft + 104, guiTop + 6, 50, 15, I18n.format(Resources.guiDot("barrels"))));
+		buttonList.add(bGrips = new PGuiButton(2, guiLeft + 166, guiTop + 6, 50, 15, I18n.format(Resources.guiDot("grips"))));
 
-		this.buttonList.add(bPrev = new PGuiButton(3, this.guiLeft + 40, this.guiTop + 61, 10, 20, "<"));
-		this.buttonList.add(bNext = new PGuiButton(4, this.guiLeft + 206, this.guiTop + 61, 10, 20, ">"));
+		buttonList.add(bPrev = new PGuiButton(3, guiLeft + 40, guiTop + 61, 10, 20, "<"));
+		buttonList.add(bNext = new PGuiButton(4, guiLeft + 206, guiTop + 61, 10, 20, ">"));
 
-		this.buttonList.add(bEquip = new PGuiButton(5, this.guiLeft + 40, this.guiTop + 115, 50, 15, textEquip));
-		this.buttonList.add(bBuy = new PGuiButton(6, this.guiLeft + 166, this.guiTop + 115, 50, 15, I18n.format(Resources.guiDot("buy"))));
+		buttonList.add(bEquip = new PGuiButton(5, guiLeft + 40, guiTop + 115, 50, 15, textEquip));
+		buttonList.add(bBuy = new PGuiButton(6, guiLeft + 166, guiTop + 115, 50, 15, I18n.format(Resources.guiDot("buy"))));
 
 		bEquip.enabled = false;
 
@@ -85,20 +82,20 @@ public class GuiBlasterWorkbench extends GuiContainer
 	private void setAttachmentsInTab(List<BlasterAttachment> attachmentsInTab)
 	{
 		this.attachmentsInTab = attachmentsInTab;
-		this.attachmentIdx = 0;
+		attachmentIdx = 0;
 	}
 
 	private void nextAttachment()
 	{
-		this.attachmentIdx++;
-		this.attachmentIdx %= this.attachmentsInTab.size();
+		attachmentIdx++;
+		attachmentIdx %= attachmentsInTab.size();
 	}
 
 	private void prevAttachment()
 	{
-		this.attachmentIdx--;
+		attachmentIdx--;
 		if (attachmentIdx < 0)
-			attachmentIdx = this.attachmentsInTab.size() - 1;
+			attachmentIdx = attachmentsInTab.size() - 1;
 	}
 
 	public BlasterAttachment getSelectedAttachment()
@@ -197,32 +194,32 @@ public class GuiBlasterWorkbench extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		checkHasBlaster();
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 47, this.ySize - 96 + 2, 4210752);
+		fontRendererObj.drawString(I18n.format("container.inventory"), 47, ySize - 96 + 2, 4210752);
 
 		BlasterAttachment a = getSelectedAttachment();
 
 		GL.PushMatrix();
-		GL.Translate(this.xSize / 2, this.ySize - 170, 0);
-		a.drawInfoCard(new FixedResolution(Client.mc, (int)(this.xSize / 3.4f), this.ySize / 2), player, tile.getBlaster());
+		GL.Translate(xSize / 2, ySize - 170, 0);
+		a.drawInfoCard(new FixedResolution(Client.mc, (int)(xSize / 3.4f), ySize / 2), player, tile.getBlaster());
 		GL.PopMatrix();
 
 		String s = a.localizedName;
-		fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.ySize - 212, GLPalette.ELECTRIC_BLUE);
+		fontRendererObj.drawString(s, xSize / 2 - fontRendererObj.getStringWidth(s) / 2, ySize - 212, GLPalette.ELECTRIC_BLUE);
 		s = a.getInfoText();
-		fontRendererObj.drawString(s, this.xSize / 2 - fontRendererObj.getStringWidth(s) / 2, this.ySize - 135, 0x404040);
+		fontRendererObj.drawString(s, xSize / 2 - fontRendererObj.getStringWidth(s) / 2, ySize - 135, 0x404040);
 		s = String.format("$%d", a.price);
-		Client.frAurebesh.drawString(s, this.xSize / 2 - Client.frAurebesh.getStringWidth(s) / 2, this.ySize - 120, canAffordSelectedItem() ? 0x404040 : GLPalette.ANALOG_RED);
+		Client.frAurebesh.drawString(s, xSize / 2 - Client.frAurebesh.getStringWidth(s) / 2, ySize - 120, canAffordSelectedItem() ? 0x404040 : GLPalette.ANALOG_RED);
 
 		s = String.format("$%d", getPlayerMoneyBalance());
-		Client.frAurebesh.drawString(s, this.xSize / 2 - Client.frAurebesh.getStringWidth(s) / 2, this.ySize - 105, GLPalette.ELECTRIC_BLUE);
+		Client.frAurebesh.drawString(s, xSize / 2 - Client.frAurebesh.getStringWidth(s) / 2, ySize - 105, GLPalette.ELECTRIC_BLUE);
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.mc.getTextureManager().bindTexture(guiTexture);
-		int k = (this.width - this.xSize) / 2;
-		int l = (this.height - this.ySize) / 2;
-		this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+		mc.getTextureManager().bindTexture(guiTexture);
+		int k = (width - xSize) / 2;
+		int l = (height - ySize) / 2;
+		drawTexturedModalRect(k, l, 0, 0, xSize, ySize);
 	}
 }

@@ -9,13 +9,13 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderGaffi implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/melee.gaffi.png");
+	private static final ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/melee.gaffi.png");
 
-	private ModelGaffi model;
+	private final ModelGaffi model;
 
 	public RenderGaffi()
 	{
-		this.model = new ModelGaffi();
+		model = new ModelGaffi();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class RenderGaffi implements IItemRenderer
 				GL11.glRotatef(180, 0, 1, 0);
 				GL11.glTranslatef(-10, 0, 0);
 				GL11.glScalef(1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -55,7 +55,7 @@ public class RenderGaffi implements IItemRenderer
 				GL11.glTranslatef(15, -11, 0);
 				GL11.glScalef(-1, -1, 1);
 				GL11.glRotatef(90, 0, 0, 1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -68,7 +68,7 @@ public class RenderGaffi implements IItemRenderer
 				GL11.glTranslatef(8, 10, 6);
 				GL11.glScalef(-1, -1, -1);
 				GL11.glRotatef(-30, 1, 0.1f, 0);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -78,7 +78,7 @@ public class RenderGaffi implements IItemRenderer
 				GL11.glScalef(0.07F, -0.07F, 0.07F);
 				GL11.glRotatef(90, 0, 0, 1);
 				GL11.glTranslatef(-25, -2, -2);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;

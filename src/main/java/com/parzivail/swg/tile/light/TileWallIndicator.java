@@ -8,13 +8,13 @@ public class TileWallIndicator extends TileRotatable
 
 	public TileWallIndicator()
 	{
-		this.frame = 0;
+		frame = 0;
 	}
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		this.frame++;
+		frame++;
 	}
 }

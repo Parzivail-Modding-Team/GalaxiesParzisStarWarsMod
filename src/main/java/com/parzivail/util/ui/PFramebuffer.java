@@ -20,49 +20,49 @@ public class PFramebuffer extends Framebuffer
 	@Override
 	public void createFramebuffer(int p_147605_1_, int p_147605_2_)
 	{
-		this.framebufferWidth = p_147605_1_;
-		this.framebufferHeight = p_147605_2_;
-		this.framebufferTextureWidth = p_147605_1_;
-		this.framebufferTextureHeight = p_147605_2_;
+		framebufferWidth = p_147605_1_;
+		framebufferHeight = p_147605_2_;
+		framebufferTextureWidth = p_147605_1_;
+		framebufferTextureHeight = p_147605_2_;
 
 		if (!OpenGlHelper.isFramebufferEnabled())
 		{
-			this.framebufferClear();
+			framebufferClear();
 		}
 		else
 		{
-			this.framebufferObject = OpenGlHelper.func_153165_e();
-			this.framebufferTexture = TextureUtil.glGenTextures();
+			framebufferObject = OpenGlHelper.func_153165_e();
+			framebufferTexture = TextureUtil.glGenTextures();
 
-			if (this.useDepth)
+			if (useDepth)
 			{
-				this.depthBuffer = OpenGlHelper.func_153185_f();
+				depthBuffer = OpenGlHelper.func_153185_f();
 			}
 
-			this.setFramebufferFilter(GL11.GL_LINEAR);
-			GL11.glBindTexture(GL11.GL_TEXTURE_2D, this.framebufferTexture);
-			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, this.framebufferTextureWidth, this.framebufferTextureHeight, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer)null);
-			OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, this.framebufferObject);
-			OpenGlHelper.func_153188_a(OpenGlHelper.field_153198_e, OpenGlHelper.field_153200_g, 3553, this.framebufferTexture, 0);
+			setFramebufferFilter(GL11.GL_LINEAR);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, framebufferTexture);
+			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, framebufferTextureWidth, framebufferTextureHeight, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, (ByteBuffer)null);
+			OpenGlHelper.func_153171_g(OpenGlHelper.field_153198_e, framebufferObject);
+			OpenGlHelper.func_153188_a(OpenGlHelper.field_153198_e, OpenGlHelper.field_153200_g, 3553, framebufferTexture, 0);
 
-			if (this.useDepth)
+			if (useDepth)
 			{
-				OpenGlHelper.func_153176_h(OpenGlHelper.field_153199_f, this.depthBuffer);
+				OpenGlHelper.func_153176_h(OpenGlHelper.field_153199_f, depthBuffer);
 				if (net.minecraftforge.client.MinecraftForgeClient.getStencilBits() == 0)
 				{
-					OpenGlHelper.func_153186_a(OpenGlHelper.field_153199_f, 33190, this.framebufferTextureWidth, this.framebufferTextureHeight);
-					OpenGlHelper.func_153190_b(OpenGlHelper.field_153198_e, OpenGlHelper.field_153201_h, OpenGlHelper.field_153199_f, this.depthBuffer);
+					OpenGlHelper.func_153186_a(OpenGlHelper.field_153199_f, 33190, framebufferTextureWidth, framebufferTextureHeight);
+					OpenGlHelper.func_153190_b(OpenGlHelper.field_153198_e, OpenGlHelper.field_153201_h, OpenGlHelper.field_153199_f, depthBuffer);
 				}
 				else
 				{
-					OpenGlHelper.func_153186_a(OpenGlHelper.field_153199_f, org.lwjgl.opengl.EXTPackedDepthStencil.GL_DEPTH24_STENCIL8_EXT, this.framebufferTextureWidth, this.framebufferTextureHeight);
-					OpenGlHelper.func_153190_b(OpenGlHelper.field_153198_e, org.lwjgl.opengl.EXTFramebufferObject.GL_DEPTH_ATTACHMENT_EXT, OpenGlHelper.field_153199_f, this.depthBuffer);
-					OpenGlHelper.func_153190_b(OpenGlHelper.field_153198_e, org.lwjgl.opengl.EXTFramebufferObject.GL_STENCIL_ATTACHMENT_EXT, OpenGlHelper.field_153199_f, this.depthBuffer);
+					OpenGlHelper.func_153186_a(OpenGlHelper.field_153199_f, org.lwjgl.opengl.EXTPackedDepthStencil.GL_DEPTH24_STENCIL8_EXT, framebufferTextureWidth, framebufferTextureHeight);
+					OpenGlHelper.func_153190_b(OpenGlHelper.field_153198_e, org.lwjgl.opengl.EXTFramebufferObject.GL_DEPTH_ATTACHMENT_EXT, OpenGlHelper.field_153199_f, depthBuffer);
+					OpenGlHelper.func_153190_b(OpenGlHelper.field_153198_e, org.lwjgl.opengl.EXTFramebufferObject.GL_STENCIL_ATTACHMENT_EXT, OpenGlHelper.field_153199_f, depthBuffer);
 				}
 			}
 
-			this.framebufferClear();
-			this.unbindFramebufferTexture();
+			framebufferClear();
+			unbindFramebufferTexture();
 		}
 	}
 
@@ -97,16 +97,16 @@ public class PFramebuffer extends Framebuffer
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GL11.glEnable(GL11.GL_COLOR_MATERIAL);
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			this.bindFramebufferTexture();
+			bindFramebufferTexture();
 			GL13.glActiveTexture(GL13.GL_TEXTURE1);
-			this.bindFramebufferTexture();
+			bindFramebufferTexture();
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
 			if (ShaderHelper.framebufferShader != 0 && Client.mc != null && Client.mc.thePlayer != null)
 				ShaderHelper.useShader(ShaderHelper.framebufferShader);
 			float f = (float)width;
 			float f1 = (float)height;
-			float f2 = (float)this.framebufferWidth / (float)this.framebufferTextureWidth;
-			float f3 = (float)this.framebufferHeight / (float)this.framebufferTextureHeight;
+			float f2 = (float)framebufferWidth / (float)framebufferTextureWidth;
+			float f3 = (float)framebufferHeight / (float)framebufferTextureHeight;
 			Tessellator tessellator = Tessellator.instance;
 			tessellator.startDrawingQuads();
 			tessellator.setColorOpaque_I(-1);
@@ -115,7 +115,7 @@ public class PFramebuffer extends Framebuffer
 			tessellator.addVertexWithUV((double)f, 0.0D, 0.0D, (double)f2, (double)f3);
 			tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, (double)f3);
 			tessellator.draw();
-			this.unbindFramebufferTexture();
+			unbindFramebufferTexture();
 			if (ShaderHelper.framebufferShader != 0 && Client.mc != null && Client.mc.thePlayer != null)
 				ShaderHelper.releaseShader();
 			GL11.glDepthMask(true);

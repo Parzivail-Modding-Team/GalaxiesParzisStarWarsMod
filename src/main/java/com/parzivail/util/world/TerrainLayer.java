@@ -7,11 +7,11 @@ import com.parzivail.util.common.OpenSimplexNoise;
  */
 public class TerrainLayer
 {
+	private final OpenSimplexNoise noise;
 	public Function function = Function.Simplex;
-	public Method method = TerrainLayer.Method.Add;
+	public Method method = Method.Add;
 	public double scale = 200;
 	public double range = 20;
-	private OpenSimplexNoise noise;
 
 	public TerrainLayer(long seed, Function function, Method method, double scale, double range)
 	{

@@ -19,7 +19,7 @@ public class WorldProviderEndor extends PlanetWorldProvider
 	@Override
 	public IChunkProvider createChunkProvider()
 	{
-		return new ChunkProviderEndor(this.worldObj, 0);
+		return new ChunkProviderEndor(worldObj, 0);
 	}
 
 	//	@Override

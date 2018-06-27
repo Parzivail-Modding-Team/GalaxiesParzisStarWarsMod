@@ -15,11 +15,11 @@ public class BiomeTatooineDunes extends PBiomeGenBase
 	public BiomeTatooineDunes(int biomeId)
 	{
 		super(biomeId);
-		this.setBiomeName("Tatooine");
-		this.spawnableCreatureList.clear();
+		setBiomeName("Tatooine");
+		spawnableCreatureList.clear();
 
-		this.enableRain = false;
-		this.enableSnow = false;
+		enableRain = false;
+		enableSnow = false;
 	}
 
 	@Override

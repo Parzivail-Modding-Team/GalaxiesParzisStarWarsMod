@@ -322,13 +322,13 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 	{
 		try
 		{
-			Class<?> clazz = this.getClass();
+			Class<?> clazz = getClass();
 			Field[] clFields = getClassFields(clazz);
 			for (Field f : clFields)
 			{
 				Class<?> type = f.getType();
 				if (acceptField(f, type))
-					this.readField(f, type, buf);
+					readField(f, type, buf);
 			}
 		}
 		catch (Exception e)
@@ -360,13 +360,13 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 	{
 		try
 		{
-			Class<?> clazz = this.getClass();
+			Class<?> clazz = getClass();
 			Field[] clFields = getClassFields(clazz);
 			for (Field f : clFields)
 			{
 				Class<?> type = f.getType();
 				if (acceptField(f, type))
-					this.writeField(f, type, buf);
+					writeField(f, type, buf);
 			}
 		}
 		catch (Exception e)

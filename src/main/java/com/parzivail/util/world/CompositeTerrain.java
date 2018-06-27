@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class CompositeTerrain implements ITerrainHeightmap
 {
-	private List<TerrainLayer> layers;
+	private final List<TerrainLayer> layers;
 
 	public CompositeTerrain()
 	{

@@ -18,7 +18,7 @@ public class BlockWallIndicator extends PBlockRotate
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
 		setLightLevel(0.2f);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

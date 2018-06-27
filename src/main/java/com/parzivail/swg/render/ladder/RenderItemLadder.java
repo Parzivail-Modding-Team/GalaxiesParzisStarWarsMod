@@ -11,8 +11,8 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderItemLadder implements IItemRenderer
 {
-	private TileEntitySpecialRenderer render;
-	private TileEntity tile;
+	private final TileEntitySpecialRenderer render;
+	private final TileEntity tile;
 
 	public RenderItemLadder()
 	{
@@ -31,8 +31,8 @@ public class RenderItemLadder implements IItemRenderer
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
 		GL11.glPushMatrix();
-		this.tile.setWorldObj(Client.mc.theWorld);
-		this.tile.updateEntity();
+		tile.setWorldObj(Client.mc.theWorld);
+		tile.updateEntity();
 		switch (type)
 		{
 			case INVENTORY:
@@ -43,7 +43,7 @@ public class RenderItemLadder implements IItemRenderer
 				GL.Scale(1f);
 				GL11.glScalef(1, 1, -1);
 				GL11.glTranslatef(-.03f, -.6f, 0);
-				this.render.renderTileEntityAt(tile, 0, 0, 0, 0);
+				render.renderTileEntityAt(tile, 0, 0, 0, 0);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -55,7 +55,7 @@ public class RenderItemLadder implements IItemRenderer
 				GL11.glTranslatef(.5f, 0.5f, -2);
 				GL11.glRotatef(45, 1, 0, 0);
 				GL11.glRotatef(-180, 0, 1, 0);
-				this.render.renderTileEntityAt(tile, 0, 0, 0, 0);
+				render.renderTileEntityAt(tile, 0, 0, 0, 0);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -65,7 +65,7 @@ public class RenderItemLadder implements IItemRenderer
 				GL11.glScalef(1.5f, 1.5f, -1.5f);
 				GL11.glTranslatef(3, -1, 0.5f);
 				GL11.glRotatef(135, 0, 1, 0);
-				this.render.renderTileEntityAt(tile, 0, 0, 0, 0);
+				render.renderTileEntityAt(tile, 0, 0, 0, 0);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -75,7 +75,7 @@ public class RenderItemLadder implements IItemRenderer
 				GL11.glRotatef(90, 0, 1, 0);
 				GL11.glScalef(0.85f, 0.85f, -0.85f);
 				GL11.glTranslatef(-0.5f, 0.4f, -0.5f);
-				this.render.renderTileEntityAt(tile, 0, 0, 0, 0);
+				render.renderTileEntityAt(tile, 0, 0, 0, 0);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 		}

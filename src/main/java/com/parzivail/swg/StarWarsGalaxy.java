@@ -13,6 +13,7 @@ import com.parzivail.swg.tab.PTab;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -37,7 +38,7 @@ public class StarWarsGalaxy
 	@SidedProxy(clientSide = "com.parzivail.swg.proxy.Client", serverSide = "com.parzivail.swg.proxy.Common")
 	public static Common proxy;
 
-	@Mod.Instance(Resources.MODID)
+	@Instance(Resources.MODID)
 	public static StarWarsGalaxy instance;
 
 	public static Config config;
@@ -49,7 +50,7 @@ public class StarWarsGalaxy
 	public static Random random = new Random();
 
 	public static SimpleNetworkWrapper network;
-	private static int packetId = 0;
+	private static int packetId;
 
 	public Vector3f traceStart = new Vector3f(0, 0, 0);
 	public Vector3f traceEnd = new Vector3f(0, 0, 0);

@@ -19,7 +19,7 @@ public abstract class PlanetWorldProvider extends WorldProvider
 
 	public PlanetWorldProvider(int dimId, SWGChunkManager chunkManager)
 	{
-		this.planetDescriptor = WorldRegister.planetDescriptorHashMap.get(dimId);
+		planetDescriptor = WorldRegister.planetDescriptorHashMap.get(dimId);
 		this.dimId = dimId;
 		this.chunkManager = chunkManager;
 	}
@@ -79,7 +79,7 @@ public abstract class PlanetWorldProvider extends WorldProvider
 	@Override
 	public ChunkCoordinates getSpawnPoint()
 	{
-		return new ChunkCoordinates(0, this.worldObj.getHeightValue(0, 0), 0);
+		return new ChunkCoordinates(0, worldObj.getHeightValue(0, 0), 0);
 	}
 
 	@Override
@@ -94,8 +94,8 @@ public abstract class PlanetWorldProvider extends WorldProvider
 	@Override
 	protected void registerWorldChunkManager()
 	{
-		this.worldChunkMgr = chunkManager;
-		this.dimensionId = dimId;
+		worldChunkMgr = chunkManager;
+		dimensionId = dimId;
 	}
 
 	@Override

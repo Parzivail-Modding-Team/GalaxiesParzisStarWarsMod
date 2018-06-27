@@ -6,11 +6,11 @@ import com.parzivail.util.math.MathUtil;
 
 public class TileMedicalConsole2 extends TileRotatable
 {
-	public int color1 = 0;
-	public int color2 = 0;
-	public int color3 = 0;
-	public int color4 = 0;
-	public int color5 = 0;
+	public int color1;
+	public int color2;
+	public int color3;
+	public int color4;
+	public int color5;
 
 	@Override
 	public void updateEntity()

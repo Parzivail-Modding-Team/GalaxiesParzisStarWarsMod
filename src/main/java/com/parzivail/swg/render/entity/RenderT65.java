@@ -12,7 +12,7 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderT65 extends RenderBasicFlightModel
 {
-	private static SwgModel model;
+	private static final SwgModel model;
 
 	static
 	{

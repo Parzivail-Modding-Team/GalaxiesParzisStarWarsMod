@@ -47,6 +47,7 @@ public class MauiTextbox extends Gui
 	 */
 	public int width;
 	public int height;
+	public Consumer<MauiTextbox> onTextChange;
 	/**
 	 * Has the current text being edited on the textbox.
 	 */
@@ -82,14 +83,12 @@ public class MauiTextbox extends Gui
 	 */
 	private boolean visible = true;
 
-	public Consumer<MauiTextbox> onTextChange;
-
 	public MauiTextbox(int x, int y, int w, int h)
 	{
-		this.xPosition = x;
-		this.yPosition = y;
-		this.width = w;
-		this.height = h;
+		xPosition = x;
+		yPosition = y;
+		width = w;
+		height = h;
 		onTextChange = (dummy) -> {
 		};
 	}
@@ -124,24 +123,7 @@ public class MauiTextbox extends Gui
 	 */
 	public void updateCursorCounter()
 	{
-		++this.cursorCounter;
-	}
-
-	/**
-	 * Sets the text of the textbox
-	 */
-	public void setText(String p_146180_1_)
-	{
-		if (p_146180_1_.length() > this.maxStringLength)
-		{
-			this.text = p_146180_1_.substring(0, this.maxStringLength);
-		}
-		else
-		{
-			this.text = p_146180_1_;
-		}
-
-		this.setCursorPositionEnd();
+		++cursorCounter;
 	}
 
 	/**
@@ -149,7 +131,24 @@ public class MauiTextbox extends Gui
 	 */
 	public String getText()
 	{
-		return this.text;
+		return text;
+	}
+
+	/**
+	 * Sets the text of the textbox
+	 */
+	public void setText(String p_146180_1_)
+	{
+		if (p_146180_1_.length() > maxStringLength)
+		{
+			text = p_146180_1_.substring(0, maxStringLength);
+		}
+		else
+		{
+			text = p_146180_1_;
+		}
+
+		setCursorPositionEnd();
 	}
 
 	/**
@@ -157,9 +156,9 @@ public class MauiTextbox extends Gui
 	 */
 	public String getSelectedText()
 	{
-		int i = this.cursorPosition < this.selectionEnd ? this.cursorPosition : this.selectionEnd;
-		int j = this.cursorPosition < this.selectionEnd ? this.selectionEnd : this.cursorPosition;
-		return this.text.substring(i, j);
+		int i = cursorPosition < selectionEnd ? cursorPosition : selectionEnd;
+		int j = cursorPosition < selectionEnd ? selectionEnd : cursorPosition;
+		return text.substring(i, j);
 	}
 
 	/**
@@ -169,14 +168,14 @@ public class MauiTextbox extends Gui
 	{
 		String s1 = "";
 		String s2 = ChatAllowedCharacters.filterAllowedCharacters(p_146191_1_);
-		int i = this.cursorPosition < this.selectionEnd ? this.cursorPosition : this.selectionEnd;
-		int j = this.cursorPosition < this.selectionEnd ? this.selectionEnd : this.cursorPosition;
-		int k = this.maxStringLength - this.text.length() - (i - this.selectionEnd);
+		int i = cursorPosition < selectionEnd ? cursorPosition : selectionEnd;
+		int j = cursorPosition < selectionEnd ? selectionEnd : cursorPosition;
+		int k = maxStringLength - text.length() - (i - selectionEnd);
 		boolean flag = false;
 
-		if (this.text.length() > 0)
+		if (text.length() > 0)
 		{
-			s1 = s1 + this.text.substring(0, i);
+			s1 = s1 + text.substring(0, i);
 		}
 
 		int l;
@@ -192,13 +191,13 @@ public class MauiTextbox extends Gui
 			l = s2.length();
 		}
 
-		if (this.text.length() > 0 && j < this.text.length())
+		if (text.length() > 0 && j < text.length())
 		{
-			s1 = s1 + this.text.substring(j);
+			s1 = s1 + text.substring(j);
 		}
 
-		this.text = s1;
-		this.moveCursorBy(i - this.selectionEnd + l);
+		text = s1;
+		moveCursorBy(i - selectionEnd + l);
 	}
 
 	/**
@@ -207,15 +206,15 @@ public class MauiTextbox extends Gui
 	 */
 	public void deleteWords(int p_146177_1_)
 	{
-		if (this.text.length() != 0)
+		if (text.length() != 0)
 		{
-			if (this.selectionEnd != this.cursorPosition)
+			if (selectionEnd != cursorPosition)
 			{
-				this.writeText("");
+				writeText("");
 			}
 			else
 			{
-				this.deleteFromCursor(this.getNthWordFromCursor(p_146177_1_) - this.cursorPosition);
+				deleteFromCursor(getNthWordFromCursor(p_146177_1_) - cursorPosition);
 			}
 		}
 	}
@@ -225,34 +224,34 @@ public class MauiTextbox extends Gui
 	 */
 	public void deleteFromCursor(int p_146175_1_)
 	{
-		if (this.text.length() != 0)
+		if (text.length() != 0)
 		{
-			if (this.selectionEnd != this.cursorPosition)
+			if (selectionEnd != cursorPosition)
 			{
-				this.writeText("");
+				writeText("");
 			}
 			else
 			{
 				boolean flag = p_146175_1_ < 0;
-				int j = flag ? this.cursorPosition + p_146175_1_ : this.cursorPosition;
-				int k = flag ? this.cursorPosition : this.cursorPosition + p_146175_1_;
+				int j = flag ? cursorPosition + p_146175_1_ : cursorPosition;
+				int k = flag ? cursorPosition : cursorPosition + p_146175_1_;
 				String s = "";
 
 				if (j >= 0)
 				{
-					s = this.text.substring(0, j);
+					s = text.substring(0, j);
 				}
 
-				if (k < this.text.length())
+				if (k < text.length())
 				{
-					s = s + this.text.substring(k);
+					s = s + text.substring(k);
 				}
 
-				this.text = s;
+				text = s;
 
 				if (flag)
 				{
-					this.moveCursorBy(p_146175_1_);
+					moveCursorBy(p_146175_1_);
 				}
 			}
 		}
@@ -263,7 +262,7 @@ public class MauiTextbox extends Gui
 	 */
 	public int getNthWordFromCursor(int p_146187_1_)
 	{
-		return this.getNthWordFromPos(p_146187_1_, this.getCursorPosition());
+		return getNthWordFromPos(p_146187_1_, getCursorPosition());
 	}
 
 	/**
@@ -271,7 +270,7 @@ public class MauiTextbox extends Gui
 	 */
 	public int getNthWordFromPos(int p_146183_1_, int p_146183_2_)
 	{
-		return this.func_146197_a(p_146183_1_, this.getCursorPosition(), true);
+		return func_146197_a(p_146183_1_, getCursorPosition(), true);
 	}
 
 	public int func_146197_a(int p_146197_1_, int p_146197_2_, boolean p_146197_3_)
@@ -284,20 +283,20 @@ public class MauiTextbox extends Gui
 		{
 			if (flag1)
 			{
-				while (p_146197_3_ && k > 0 && this.text.charAt(k - 1) == 32)
+				while (p_146197_3_ && k > 0 && text.charAt(k - 1) == 32)
 				{
 					--k;
 				}
 
-				while (k > 0 && this.text.charAt(k - 1) != 32)
+				while (k > 0 && text.charAt(k - 1) != 32)
 				{
 					--k;
 				}
 			}
 			else
 			{
-				int j1 = this.text.length();
-				k = this.text.indexOf(32, k);
+				int j1 = text.length();
+				k = text.indexOf(32, k);
 
 				if (k == -1)
 				{
@@ -305,7 +304,7 @@ public class MauiTextbox extends Gui
 				}
 				else
 				{
-					while (p_146197_3_ && k < j1 && this.text.charAt(k) == 32)
+					while (p_146197_3_ && k < j1 && text.charAt(k) == 32)
 					{
 						++k;
 					}
@@ -321,28 +320,7 @@ public class MauiTextbox extends Gui
 	 */
 	public void moveCursorBy(int p_146182_1_)
 	{
-		this.setCursorPosition(this.selectionEnd + p_146182_1_);
-	}
-
-	/**
-	 * sets the position of the cursor to the provided index
-	 */
-	public void setCursorPosition(int p_146190_1_)
-	{
-		this.cursorPosition = p_146190_1_;
-		int j = this.text.length();
-
-		if (this.cursorPosition < 0)
-		{
-			this.cursorPosition = 0;
-		}
-
-		if (this.cursorPosition > j)
-		{
-			this.cursorPosition = j;
-		}
-
-		this.setSelectionPos(this.cursorPosition);
+		setCursorPosition(selectionEnd + p_146182_1_);
 	}
 
 	/**
@@ -350,7 +328,7 @@ public class MauiTextbox extends Gui
 	 */
 	public void setCursorPositionZero()
 	{
-		this.setCursorPosition(0);
+		setCursorPosition(0);
 	}
 
 	/**
@@ -358,7 +336,7 @@ public class MauiTextbox extends Gui
 	 */
 	public void setCursorPositionEnd()
 	{
-		this.setCursorPosition(this.text.length());
+		setCursorPosition(text.length());
 	}
 
 	/**
@@ -366,7 +344,7 @@ public class MauiTextbox extends Gui
 	 */
 	public boolean textboxKeyTyped(char p_146201_1_, int p_146201_2_)
 	{
-		if (!this.isFocused)
+		if (!isFocused)
 		{
 			return false;
 		}
@@ -375,25 +353,25 @@ public class MauiTextbox extends Gui
 			switch (p_146201_1_)
 			{
 				case 1:
-					this.setCursorPositionEnd();
-					this.setSelectionPos(0);
+					setCursorPositionEnd();
+					setSelectionPos(0);
 					return true;
 				case 3:
-					GuiScreen.setClipboardString(this.getSelectedText());
+					GuiScreen.setClipboardString(getSelectedText());
 					return true;
 				case 22:
-					if (this.isEnabled)
+					if (isEnabled)
 					{
-						this.writeText(GuiScreen.getClipboardString());
+						writeText(GuiScreen.getClipboardString());
 					}
 
 					return true;
 				case 24:
-					GuiScreen.setClipboardString(this.getSelectedText());
+					GuiScreen.setClipboardString(getSelectedText());
 
-					if (this.isEnabled)
+					if (isEnabled)
 					{
-						this.writeText("");
+						writeText("");
 					}
 
 					return true;
@@ -403,25 +381,25 @@ public class MauiTextbox extends Gui
 						case 14:
 							if (GuiScreen.isCtrlKeyDown())
 							{
-								if (this.isEnabled)
+								if (isEnabled)
 								{
-									this.deleteWords(-1);
+									deleteWords(-1);
 								}
 							}
-							else if (this.isEnabled)
+							else if (isEnabled)
 							{
-								this.deleteFromCursor(-1);
+								deleteFromCursor(-1);
 							}
 
 							return true;
 						case 199:
 							if (GuiScreen.isShiftKeyDown())
 							{
-								this.setSelectionPos(0);
+								setSelectionPos(0);
 							}
 							else
 							{
-								this.setCursorPositionZero();
+								setCursorPositionZero();
 							}
 
 							return true;
@@ -430,20 +408,20 @@ public class MauiTextbox extends Gui
 							{
 								if (GuiScreen.isCtrlKeyDown())
 								{
-									this.setSelectionPos(this.getNthWordFromPos(-1, this.getSelectionEnd()));
+									setSelectionPos(getNthWordFromPos(-1, getSelectionEnd()));
 								}
 								else
 								{
-									this.setSelectionPos(this.getSelectionEnd() - 1);
+									setSelectionPos(getSelectionEnd() - 1);
 								}
 							}
 							else if (GuiScreen.isCtrlKeyDown())
 							{
-								this.setCursorPosition(this.getNthWordFromCursor(-1));
+								setCursorPosition(getNthWordFromCursor(-1));
 							}
 							else
 							{
-								this.moveCursorBy(-1);
+								moveCursorBy(-1);
 							}
 
 							return true;
@@ -452,54 +430,54 @@ public class MauiTextbox extends Gui
 							{
 								if (GuiScreen.isCtrlKeyDown())
 								{
-									this.setSelectionPos(this.getNthWordFromPos(1, this.getSelectionEnd()));
+									setSelectionPos(getNthWordFromPos(1, getSelectionEnd()));
 								}
 								else
 								{
-									this.setSelectionPos(this.getSelectionEnd() + 1);
+									setSelectionPos(getSelectionEnd() + 1);
 								}
 							}
 							else if (GuiScreen.isCtrlKeyDown())
 							{
-								this.setCursorPosition(this.getNthWordFromCursor(1));
+								setCursorPosition(getNthWordFromCursor(1));
 							}
 							else
 							{
-								this.moveCursorBy(1);
+								moveCursorBy(1);
 							}
 
 							return true;
 						case 207:
 							if (GuiScreen.isShiftKeyDown())
 							{
-								this.setSelectionPos(this.text.length());
+								setSelectionPos(text.length());
 							}
 							else
 							{
-								this.setCursorPositionEnd();
+								setCursorPositionEnd();
 							}
 
 							return true;
 						case 211:
 							if (GuiScreen.isCtrlKeyDown())
 							{
-								if (this.isEnabled)
+								if (isEnabled)
 								{
-									this.deleteWords(1);
+									deleteWords(1);
 								}
 							}
-							else if (this.isEnabled)
+							else if (isEnabled)
 							{
-								this.deleteFromCursor(1);
+								deleteFromCursor(1);
 							}
 
 							return true;
 						default:
 							if (ChatAllowedCharacters.isAllowedCharacter(p_146201_1_))
 							{
-								if (this.isEnabled)
+								if (isEnabled)
 								{
-									this.writeText(Character.toString(p_146201_1_));
+									writeText(Character.toString(p_146201_1_));
 								}
 
 								return true;
@@ -518,24 +496,24 @@ public class MauiTextbox extends Gui
 	 */
 	public void mouseClicked(int p_146192_1_, int p_146192_2_, int p_146192_3_)
 	{
-		boolean flag = p_146192_1_ >= this.xPosition && p_146192_1_ < this.xPosition + this.width && p_146192_2_ >= this.yPosition && p_146192_2_ < this.yPosition + this.height;
+		boolean flag = p_146192_1_ >= xPosition && p_146192_1_ < xPosition + width && p_146192_2_ >= yPosition && p_146192_2_ < yPosition + height;
 
-		if (this.canLoseFocus)
+		if (canLoseFocus)
 		{
-			this.setFocused(flag);
+			setFocused(flag);
 		}
 
-		if (this.isFocused && p_146192_3_ == 0)
+		if (isFocused && p_146192_3_ == 0)
 		{
-			int l = p_146192_1_ - this.xPosition;
+			int l = p_146192_1_ - xPosition;
 
-			if (this.enableBackgroundDrawing)
+			if (enableBackgroundDrawing)
 			{
 				l -= 4;
 			}
 
-			String s = trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
-			this.setCursorPosition(trimStringToWidth(s, l).length() + this.lineScrollOffset);
+			String s = trimStringToWidth(text.substring(lineScrollOffset), getWidth());
+			setCursorPosition(trimStringToWidth(s, l).length() + lineScrollOffset);
 		}
 	}
 
@@ -544,22 +522,22 @@ public class MauiTextbox extends Gui
 	 */
 	public void drawTextBox()
 	{
-		if (this.getVisible())
+		if (getVisible())
 		{
-			if (this.getEnableBackgroundDrawing())
+			if (getEnableBackgroundDrawing())
 			{
-				drawRect(this.xPosition - 1, this.yPosition - 1, this.xPosition + this.width + 1, this.yPosition + this.height + 1, -6250336);
-				drawRect(this.xPosition, this.yPosition, this.xPosition + this.width, this.yPosition + this.height, -16777216);
+				Gui.drawRect(xPosition - 1, yPosition - 1, xPosition + width + 1, yPosition + height + 1, -6250336);
+				Gui.drawRect(xPosition, yPosition, xPosition + width, yPosition + height, -16777216);
 			}
 
-			int i = this.isEnabled ? this.enabledColor : this.disabledColor;
-			int j = this.cursorPosition - this.lineScrollOffset;
-			int k = this.selectionEnd - this.lineScrollOffset;
-			String s = trimStringToWidth(this.text.substring(this.lineScrollOffset), this.getWidth());
+			int i = isEnabled ? enabledColor : disabledColor;
+			int j = cursorPosition - lineScrollOffset;
+			int k = selectionEnd - lineScrollOffset;
+			String s = trimStringToWidth(text.substring(lineScrollOffset), getWidth());
 			boolean flag = j >= 0 && j <= s.length();
-			boolean flag1 = this.isFocused && this.cursorCounter / 6 % 2 == 0 && flag;
-			int l = this.enableBackgroundDrawing ? this.xPosition + 4 : this.xPosition;
-			int i1 = this.enableBackgroundDrawing ? this.yPosition + (this.height - 8) / 2 : this.yPosition;
+			boolean flag1 = isFocused && cursorCounter / 6 % 2 == 0 && flag;
+			int l = enableBackgroundDrawing ? xPosition + 4 : xPosition;
+			int i1 = enableBackgroundDrawing ? yPosition + (height - 8) / 2 : yPosition;
 			int j1 = l;
 
 			if (k > s.length())
@@ -573,12 +551,12 @@ public class MauiTextbox extends Gui
 				j1 = drawStringWithShadow(s1, l, i1, i);
 			}
 
-			boolean flag2 = this.cursorPosition < this.text.length() || this.text.length() >= this.getMaxStringLength();
+			boolean flag2 = cursorPosition < text.length() || text.length() >= getMaxStringLength();
 			int k1 = j1;
 
 			if (!flag)
 			{
-				k1 = j > 0 ? l + this.width : l;
+				k1 = j > 0 ? l + width : l;
 			}
 			else if (flag2)
 			{
@@ -606,7 +584,7 @@ public class MauiTextbox extends Gui
 			if (k != j)
 			{
 				int l1 = l + Maui.deJaVuSans.getWidth(s.substring(0, k));
-				this.drawCursorVertical(k1, i1 - 1, l1 - 1, i1 + 1 + Maui.deJaVuSans.getHeight());
+				drawCursorVertical(k1, i1 - 1, l1 - 1, i1 + 1 + Maui.deJaVuSans.getHeight());
 			}
 		}
 	}
@@ -668,14 +646,14 @@ public class MauiTextbox extends Gui
 			p_146188_4_ = i1;
 		}
 
-		if (p_146188_3_ > this.xPosition + this.width)
+		if (p_146188_3_ > xPosition + width)
 		{
-			p_146188_3_ = this.xPosition + this.width;
+			p_146188_3_ = xPosition + width;
 		}
 
-		if (p_146188_1_ > this.xPosition + this.width)
+		if (p_146188_1_ > xPosition + width)
 		{
-			p_146188_1_ = this.xPosition + this.width;
+			p_146188_1_ = xPosition + width;
 		}
 
 		Tessellator tessellator = Tessellator.instance;
@@ -693,22 +671,22 @@ public class MauiTextbox extends Gui
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
-	public void setMaxStringLength(int p_146203_1_)
-	{
-		this.maxStringLength = p_146203_1_;
-
-		if (this.text.length() > p_146203_1_)
-		{
-			this.text = this.text.substring(0, p_146203_1_);
-		}
-	}
-
 	/**
 	 * returns the maximum number of character that can be contained in this textbox
 	 */
 	public int getMaxStringLength()
 	{
-		return this.maxStringLength;
+		return maxStringLength;
+	}
+
+	public void setMaxStringLength(int p_146203_1_)
+	{
+		maxStringLength = p_146203_1_;
+
+		if (text.length() > p_146203_1_)
+		{
+			text = text.substring(0, p_146203_1_);
+		}
 	}
 
 	/**
@@ -716,7 +694,28 @@ public class MauiTextbox extends Gui
 	 */
 	public int getCursorPosition()
 	{
-		return this.cursorPosition;
+		return cursorPosition;
+	}
+
+	/**
+	 * sets the position of the cursor to the provided index
+	 */
+	public void setCursorPosition(int p_146190_1_)
+	{
+		cursorPosition = p_146190_1_;
+		int j = text.length();
+
+		if (cursorPosition < 0)
+		{
+			cursorPosition = 0;
+		}
+
+		if (cursorPosition > j)
+		{
+			cursorPosition = j;
+		}
+
+		setSelectionPos(cursorPosition);
 	}
 
 	/**
@@ -724,7 +723,7 @@ public class MauiTextbox extends Gui
 	 */
 	public boolean getEnableBackgroundDrawing()
 	{
-		return this.enableBackgroundDrawing;
+		return enableBackgroundDrawing;
 	}
 
 	/**
@@ -732,7 +731,7 @@ public class MauiTextbox extends Gui
 	 */
 	public void setEnableBackgroundDrawing(boolean p_146185_1_)
 	{
-		this.enableBackgroundDrawing = p_146185_1_;
+		enableBackgroundDrawing = p_146185_1_;
 	}
 
 	/**
@@ -740,25 +739,12 @@ public class MauiTextbox extends Gui
 	 */
 	public void setTextColor(int p_146193_1_)
 	{
-		this.enabledColor = p_146193_1_;
+		enabledColor = p_146193_1_;
 	}
 
 	public void setDisabledTextColour(int p_146204_1_)
 	{
-		this.disabledColor = p_146204_1_;
-	}
-
-	/**
-	 * Sets focus to this gui element
-	 */
-	public void setFocused(boolean p_146195_1_)
-	{
-		if (p_146195_1_ && !this.isFocused)
-		{
-			this.cursorCounter = 0;
-		}
-
-		this.isFocused = p_146195_1_;
+		disabledColor = p_146204_1_;
 	}
 
 	/**
@@ -766,12 +752,25 @@ public class MauiTextbox extends Gui
 	 */
 	public boolean isFocused()
 	{
-		return this.isFocused;
+		return isFocused;
+	}
+
+	/**
+	 * Sets focus to this gui element
+	 */
+	public void setFocused(boolean p_146195_1_)
+	{
+		if (p_146195_1_ && !isFocused)
+		{
+			cursorCounter = 0;
+		}
+
+		isFocused = p_146195_1_;
 	}
 
 	public void setEnabled(boolean p_146184_1_)
 	{
-		this.isEnabled = p_146184_1_;
+		isEnabled = p_146184_1_;
 	}
 
 	/**
@@ -779,7 +778,7 @@ public class MauiTextbox extends Gui
 	 */
 	public int getSelectionEnd()
 	{
-		return this.selectionEnd;
+		return selectionEnd;
 	}
 
 	/**
@@ -787,7 +786,7 @@ public class MauiTextbox extends Gui
 	 */
 	public int getWidth()
 	{
-		return this.getEnableBackgroundDrawing() ? this.width - 8 : this.width;
+		return getEnableBackgroundDrawing() ? width - 8 : width;
 	}
 
 	/**
@@ -795,7 +794,7 @@ public class MauiTextbox extends Gui
 	 */
 	public void setSelectionPos(int p_146199_1_)
 	{
-		int j = this.text.length();
+		int j = text.length();
 
 		if (p_146199_1_ > j)
 		{
@@ -807,39 +806,39 @@ public class MauiTextbox extends Gui
 			p_146199_1_ = 0;
 		}
 
-		this.selectionEnd = p_146199_1_;
+		selectionEnd = p_146199_1_;
 
-		if (this.lineScrollOffset > j)
+		if (lineScrollOffset > j)
 		{
-			this.lineScrollOffset = j;
+			lineScrollOffset = j;
 		}
 
-		int k = this.getWidth();
-		String s = trimStringToWidth(this.text.substring(this.lineScrollOffset), k);
-		int l = s.length() + this.lineScrollOffset;
+		int k = getWidth();
+		String s = trimStringToWidth(text.substring(lineScrollOffset), k);
+		int l = s.length() + lineScrollOffset;
 
-		if (p_146199_1_ == this.lineScrollOffset)
+		if (p_146199_1_ == lineScrollOffset)
 		{
-			this.lineScrollOffset -= trimStringToWidth(this.text, k).length();
+			lineScrollOffset -= trimStringToWidth(text, k).length();
 		}
 
 		if (p_146199_1_ > l)
 		{
-			this.lineScrollOffset += p_146199_1_ - l;
+			lineScrollOffset += p_146199_1_ - l;
 		}
-		else if (p_146199_1_ <= this.lineScrollOffset)
+		else if (p_146199_1_ <= lineScrollOffset)
 		{
-			this.lineScrollOffset -= this.lineScrollOffset - p_146199_1_;
-		}
-
-		if (this.lineScrollOffset < 0)
-		{
-			this.lineScrollOffset = 0;
+			lineScrollOffset -= lineScrollOffset - p_146199_1_;
 		}
 
-		if (this.lineScrollOffset > j)
+		if (lineScrollOffset < 0)
 		{
-			this.lineScrollOffset = j;
+			lineScrollOffset = 0;
+		}
+
+		if (lineScrollOffset > j)
+		{
+			lineScrollOffset = j;
 		}
 	}
 
@@ -848,7 +847,7 @@ public class MauiTextbox extends Gui
 	 */
 	public void setCanLoseFocus(boolean p_146205_1_)
 	{
-		this.canLoseFocus = p_146205_1_;
+		canLoseFocus = p_146205_1_;
 	}
 
 	/**
@@ -856,7 +855,7 @@ public class MauiTextbox extends Gui
 	 */
 	public boolean getVisible()
 	{
-		return this.visible;
+		return visible;
 	}
 
 	/**
@@ -864,6 +863,6 @@ public class MauiTextbox extends Gui
 	 */
 	public void setVisible(boolean p_146189_1_)
 	{
-		this.visible = p_146189_1_;
+		visible = p_146189_1_;
 	}
 }

@@ -16,7 +16,7 @@ public class BlockPipeSmallBent extends PBlockRotate
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0.4f, 0, 0.4f, 0.6f, 0.75f, 0.6f);
 		setHardness(50.0F);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

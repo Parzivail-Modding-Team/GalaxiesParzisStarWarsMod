@@ -1,6 +1,6 @@
 package com.parzivail.swg.item.blaster.data.scope;
 
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D2;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public class ScopeRedDot extends BlasterScope
 	public void draw(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
 		GL11.glColor4f(1, 0, 0, 1);
-		Fx.D2.DrawPoint(0, 0, 5);
+		D2.DrawPoint(0, 0, 5);
 	}
 
 	@Override

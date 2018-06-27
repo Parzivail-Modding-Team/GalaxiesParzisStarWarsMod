@@ -6,14 +6,14 @@ import com.parzivail.util.math.MathUtil;
 
 public class TileWallControlPanelTall extends TileRotatable
 {
-	public int color1 = 0;
-	public int color2 = 0;
-	public int color3 = 0;
-	public int color4 = 0;
-	public int color5 = 0;
-	public int color6 = 0;
-	public int color7 = 0;
-	public int color8 = 0;
+	public int color1;
+	public int color2;
+	public int color3;
+	public int color4;
+	public int color5;
+	public int color6;
+	public int color7;
+	public int color8;
 
 	@Override
 	public void updateEntity()

@@ -15,8 +15,8 @@ public class BlockMedicalConsole extends PBlockRotate
 		super("medicalConsole", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
-		this.setBlockBounds(0.2f, 0, 0.2f, 0.8f, 1, 0.8f);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setBlockBounds(0.2f, 0, 0.2f, 0.8f, 1, 0.8f);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

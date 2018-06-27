@@ -79,11 +79,11 @@ final class State
 
 	State()
 	{
-		this.ringBuffer = new byte[0];
-		this.rings = new int[10];
-		this.rings[0] = 16;
-		this.rings[1] = 15;
-		this.rings[2] = 11;
-		this.rings[3] = 4;
+		ringBuffer = new byte[0];
+		rings = new int[10];
+		rings[0] = 16;
+		rings[1] = 15;
+		rings[2] = 11;
+		rings[3] = 4;
 	}
 }

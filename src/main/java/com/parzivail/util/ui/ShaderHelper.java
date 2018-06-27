@@ -3,8 +3,12 @@ package com.parzivail.util.ui;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.ui.Fx.Util;
 import net.minecraft.client.renderer.OpenGlHelper;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.ARBFragmentShader;
+import org.lwjgl.opengl.ARBShaderObjects;
+import org.lwjgl.opengl.ARBVertexShader;
+import org.lwjgl.opengl.GL20;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -24,7 +28,7 @@ public final class ShaderHelper
 
 	public static int framebufferShader;
 
-	private static int previousShader = 0;
+	private static int previousShader;
 
 	// lightsaber color
 	private static float r;
@@ -36,7 +40,7 @@ public final class ShaderHelper
 
 	public static void tareTimer()
 	{
-		timerOffset = Fx.Util.GetMillis();
+		timerOffset = Util.GetMillis();
 	}
 
 	public static void setColor(float r, float g, float b, float a)
@@ -82,7 +86,7 @@ public final class ShaderHelper
 			if (Client.mc != null && Client.mc.thePlayer != null)
 			{
 				int time = ARBShaderObjects.glGetUniformLocationARB(shader, "time");
-				ARBShaderObjects.glUniform1fARB(time, (Fx.Util.GetMillis() - timerOffset) / 1000f);
+				ARBShaderObjects.glUniform1fARB(time, (Util.GetMillis() - timerOffset) / 1000f);
 			}
 
 			if (shader == glowSolid)
@@ -118,10 +122,10 @@ public final class ShaderHelper
 	{
 		boolean result;
 		int v;
-		v = GL11.glGetInteger(GL_LIST_INDEX);
+		v = glGetInteger(GL_LIST_INDEX);
 		if (v != 0) // we are building a display list
 		{
-			v = GL11.glGetInteger(GL_LIST_MODE);
+			v = glGetInteger(GL_LIST_MODE);
 			result = v == GL_COMPILE;
 		}
 		else
@@ -163,14 +167,14 @@ public final class ShaderHelper
 			ARBShaderObjects.glAttachObjectARB(program, fragId);
 
 		ARBShaderObjects.glLinkProgramARB(program);
-		if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL11.GL_FALSE)
+		if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_LINK_STATUS_ARB) == GL_FALSE)
 		{
 			Lumberjack.debug(getLogInfo(program));
 			return 0;
 		}
 
 		ARBShaderObjects.glValidateProgramARB(program);
-		if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL11.GL_FALSE)
+		if (ARBShaderObjects.glGetObjectParameteriARB(program, ARBShaderObjects.GL_OBJECT_VALIDATE_STATUS_ARB) == GL_FALSE)
 		{
 			Lumberjack.debug(getLogInfo(program));
 			return 0;
@@ -222,7 +226,7 @@ public final class ShaderHelper
 			ARBShaderObjects.glShaderSourceARB(shader, readFileAsString(filename));
 			ARBShaderObjects.glCompileShaderARB(shader);
 
-			if (ARBShaderObjects.glGetObjectParameteriARB(shader, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL11.GL_FALSE)
+			if (ARBShaderObjects.glGetObjectParameteriARB(shader, ARBShaderObjects.GL_OBJECT_COMPILE_STATUS_ARB) == GL_FALSE)
 				throw new RuntimeException("Error creating shader: " + getLogInfo(shader));
 
 			return shader;

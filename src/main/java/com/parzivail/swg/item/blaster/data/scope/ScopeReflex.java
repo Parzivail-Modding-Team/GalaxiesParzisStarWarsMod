@@ -1,6 +1,6 @@
 package com.parzivail.swg.item.blaster.data.scope;
 
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -24,13 +24,13 @@ public class ScopeReflex extends BlasterScope
 
 		float d = 3;
 		GL11.glLineWidth(2);
-		Fx.D2.DrawWireCircle(0, 0, d);
-		Fx.D2.DrawPoint(0, 0, 5);
+		D2.DrawWireCircle(0, 0, d);
+		D2.DrawPoint(0, 0, 5);
 
-		Fx.D2.DrawLine(0, d, 0, d + 1.5f);
-		Fx.D2.DrawLine(0, -d, 0, -d - 1.5f);
-		Fx.D2.DrawLine(d, 0, d + 1.5f, 0);
-		Fx.D2.DrawLine(-d, 0, -d - 1.5f, 0);
+		D2.DrawLine(0, d, 0, d + 1.5f);
+		D2.DrawLine(0, -d, 0, -d - 1.5f);
+		D2.DrawLine(d, 0, d + 1.5f, 0);
+		D2.DrawLine(-d, 0, -d - 1.5f, 0);
 
 		// Type 2
 		GL.PushAttrib(AttribMask.EnableBit);

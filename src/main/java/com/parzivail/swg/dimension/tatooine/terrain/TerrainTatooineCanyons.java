@@ -6,7 +6,7 @@ import net.minecraft.util.MathHelper;
 
 public class TerrainTatooineCanyons implements ITerrainHeightmap
 {
-	private ProcNoise _noise = new ProcNoise(0);
+	private final ProcNoise _noise = new ProcNoise(0);
 
 	@Override
 	public double getHeightAt(int x, int z)

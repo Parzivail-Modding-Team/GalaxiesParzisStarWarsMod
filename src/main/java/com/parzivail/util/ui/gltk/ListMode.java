@@ -7,8 +7,7 @@ import org.lwjgl.opengl.GL11;
  */
 public enum ListMode
 {
-	Compile(GL11.GL_COMPILE),
-	CompileAndExecute(GL11.GL_COMPILE_AND_EXECUTE);
+	Compile(GL11.GL_COMPILE), CompileAndExecute(GL11.GL_COMPILE_AND_EXECUTE);
 
 	private final int glValue;
 

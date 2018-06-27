@@ -13,7 +13,7 @@ public class SpecificSlot extends Slot
 	public SpecificSlot(IInventory inventory, int id, int x, int y, Function<ItemStack, Boolean> isItemValid)
 	{
 		super(inventory, id, x, y);
-		this.funcIsItemValid = isItemValid;
+		funcIsItemValid = isItemValid;
 	}
 
 	/**

@@ -26,21 +26,21 @@ public class MessageFlightModelUpdate extends PMessage<MessageFlightModelUpdate>
 
 	public MessageFlightModelUpdate(BasicFlightModel ship)
 	{
-		this.angularMomentum = ship.angularMomentum;
-		this.orientation = ship.orientation;
-		this.throttle = ship.throttle;
-		this.shipId = ship.getEntityId();
-		this.shipDim = ship.dimension;
+		angularMomentum = ship.angularMomentum;
+		orientation = ship.orientation;
+		throttle = ship.throttle;
+		shipId = ship.getEntityId();
+		shipDim = ship.dimension;
 	}
 
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		Entity ship = MinecraftServer.getServer().worldServerForDimension(this.shipDim).getEntityByID(this.shipId);
+		Entity ship = MinecraftServer.getServer().worldServerForDimension(shipDim).getEntityByID(shipId);
 
-		((BasicFlightModel)ship).angularMomentum = this.angularMomentum;
-		((BasicFlightModel)ship).orientation = this.orientation;
-		((BasicFlightModel)ship).throttle = this.throttle;
+		((BasicFlightModel)ship).angularMomentum = angularMomentum;
+		((BasicFlightModel)ship).orientation = orientation;
+		((BasicFlightModel)ship).throttle = throttle;
 
 		return null;
 	}

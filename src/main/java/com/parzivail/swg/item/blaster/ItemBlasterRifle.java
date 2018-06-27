@@ -19,7 +19,7 @@ import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
@@ -42,14 +42,14 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 {
 	private final BlasterDescriptor descriptor;
 
-	private AnimatedValue avExpansion;
-	private AnimatedValue avAds;
+	private final AnimatedValue avExpansion;
+	private final AnimatedValue avAds;
 
 	public ItemBlasterRifle(BlasterDescriptor descriptor)
 	{
 		super("rifle." + descriptor.name);
 		this.descriptor = descriptor;
-		this.maxStackSize = 1;
+		maxStackSize = 1;
 
 		avExpansion = new AnimatedValue(-2, 100);
 		avAds = new AnimatedValue(0, 100);
@@ -142,17 +142,17 @@ public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftCl
 
 			GL11.glLineWidth(4);
 			GL11.glColor4f(0, 0, 0, 1);
-			Fx.D2.DrawLine(0, expansion - onePixel, 0, size + expansion + onePixel);
-			Fx.D2.DrawLine(0, -expansion + onePixel, 0, -size - expansion - onePixel);
-			Fx.D2.DrawLine(expansion - onePixel, 0, size + expansion + onePixel, 0);
-			Fx.D2.DrawLine(-expansion + onePixel, 0, -size - expansion - onePixel, 0);
+			D2.DrawLine(0, expansion - onePixel, 0, size + expansion + onePixel);
+			D2.DrawLine(0, -expansion + onePixel, 0, -size - expansion - onePixel);
+			D2.DrawLine(expansion - onePixel, 0, size + expansion + onePixel, 0);
+			D2.DrawLine(-expansion + onePixel, 0, -size - expansion - onePixel, 0);
 
 			GL11.glLineWidth(2);
 			GL11.glColor4f(1, 1, 1, 1);
-			Fx.D2.DrawLine(0, expansion, 0, size + expansion);
-			Fx.D2.DrawLine(0, -expansion, 0, -size - expansion);
-			Fx.D2.DrawLine(expansion, 0, size + expansion, 0);
-			Fx.D2.DrawLine(-expansion, 0, -size - expansion, 0);
+			D2.DrawLine(0, expansion, 0, size + expansion);
+			D2.DrawLine(0, -expansion, 0, -size - expansion);
+			D2.DrawLine(expansion, 0, size + expansion, 0);
+			D2.DrawLine(-expansion, 0, -size - expansion, 0);
 		}
 
 		GL.Enable(EnableCap.Texture2D);

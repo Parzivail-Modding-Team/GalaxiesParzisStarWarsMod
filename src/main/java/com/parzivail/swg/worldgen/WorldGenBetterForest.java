@@ -53,7 +53,7 @@ public class WorldGenBetterForest extends WorldGenAbstractTree
 						{
 							Block block = world.getBlock(temp1, y1, temp2);
 
-							if (!this.isReplaceable(world, temp1, y1, temp2))
+							if (!isReplaceable(world, temp1, y1, temp2))
 							{
 								canGrow = false;
 							}
@@ -99,7 +99,7 @@ public class WorldGenBetterForest extends WorldGenAbstractTree
 
 									if (block1.isAir(world, l2, k2, i2) || block1.isLeaves(world, l2, k2, i2))
 									{
-										this.setBlockAndNotifyAdequately(world, l2, k2, i2, leaves, metadata);
+										setBlockAndNotifyAdequately(world, l2, k2, i2, leaves, metadata);
 									}
 								}
 							}
@@ -112,7 +112,7 @@ public class WorldGenBetterForest extends WorldGenAbstractTree
 
 						if (block3.isAir(world, x, y + k2, z) || block3.isLeaves(world, x, y + k2, z))
 						{
-							this.setBlockAndNotifyAdequately(world, x, y + k2, z, log, metadata);
+							setBlockAndNotifyAdequately(world, x, y + k2, z, log, metadata);
 						}
 					}
 
@@ -133,6 +133,6 @@ public class WorldGenBetterForest extends WorldGenAbstractTree
 	@Override
 	public boolean generate(World world, Random random, int x, int y, int z)
 	{
-		return this.generate(world, random, x, y, z, 5, 1, 0);
+		return generate(world, random, x, y, z, 5, 1, 0);
 	}
 }

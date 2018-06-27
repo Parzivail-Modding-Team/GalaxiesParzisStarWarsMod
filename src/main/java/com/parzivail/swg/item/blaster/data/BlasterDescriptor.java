@@ -8,8 +8,8 @@ public class BlasterDescriptor
 	public final int range;
 	public final int cost;
 	public final float weight;
-	private final int clipSize;
 	public final int boltColor;
+	private final int clipSize;
 
 	public BlasterDescriptor(String name, float damage, float spread, int range, int cost, float weight, int clipSize, int boltColor)
 	{

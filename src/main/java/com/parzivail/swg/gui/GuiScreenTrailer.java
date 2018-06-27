@@ -4,7 +4,8 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.math.Ease;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D2;
+import com.parzivail.util.ui.Fx.Util;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.Timeline;
 import com.parzivail.util.ui.TimelineEvent;
@@ -27,7 +28,7 @@ import java.util.Random;
 
 public class GuiScreenTrailer extends GuiScreen
 {
-	private static List<Star> stars = new ArrayList<>();
+	private static final List<Star> stars = new ArrayList<>();
 
 	static
 	{
@@ -44,22 +45,20 @@ public class GuiScreenTrailer extends GuiScreen
 			float dX = (x - 0.5f) / s;
 			float dY = (y - 0.5f) / s;
 
-			stars.add(new Star(new Vector2f(x, y), new Vector2f(dX, dY), r.nextFloat() * 1.5f + 0.5f, Fx.Util.GetRgb(c, c, c)));
+			stars.add(new Star(new Vector2f(x, y), new Vector2f(dX, dY), r.nextFloat() * 1.5f + 0.5f, Util.GetRgb(c, c, c)));
 		}
 	}
 
-	private Timeline timeline;
+	private final Timeline timeline;
+	private final ResourceLocation brandLogo = Resources.location("textures/brand/logo.png");
+	private final ResourceLocation crawlPanBottom = Resources.location("textures/environment/openingCrawlPanBottom.png");
+	private final AnimatedValue longTimeAgoOpacity = new AnimatedValue(0, 1000);
+	private final AnimatedValue logoScale = new AnimatedValue(1, 8500);
+	private final AnimatedValue crawlTranslate = new AnimatedValue(0, 85000);
+	private final AnimatedValue crawlOpacity = new AnimatedValue(1, 2000);
+	private final AnimatedValue panTranslate = new AnimatedValue(0, 7500);
 	private ISound titleMusic;
 	private TrailerPhase phase = TrailerPhase.LONGTIMEAGO;
-
-	private ResourceLocation brandLogo = Resources.location("textures/brand/logo.png");
-	private ResourceLocation crawlPanBottom = Resources.location("textures/environment/openingCrawlPanBottom.png");
-
-	private AnimatedValue longTimeAgoOpacity = new AnimatedValue(0, 1000);
-	private AnimatedValue logoScale = new AnimatedValue(1, 8500);
-	private AnimatedValue crawlTranslate = new AnimatedValue(0, 85000);
-	private AnimatedValue crawlOpacity = new AnimatedValue(1, 2000);
-	private AnimatedValue panTranslate = new AnimatedValue(0, 7500);
 
 	public GuiScreenTrailer()
 	{
@@ -69,31 +68,23 @@ public class GuiScreenTrailer extends GuiScreen
 		titleMusic = new PositionedSoundRecord(res, 1, 1, 0, 0, 0);
 
 		ArrayList<TimelineEvent> events = new ArrayList<>();
-		events.add(new TimelineEvent(0, (t) -> {
-			this.longTimeAgoOpacity.queueAnimatingTo(1);
-		}));
-		events.add(new TimelineEvent(4000, (t) -> {
-			this.longTimeAgoOpacity.queueAnimatingTo(0);
-		}));
+		events.add(new TimelineEvent(0, (t) -> longTimeAgoOpacity.queueAnimatingTo(1)));
+		events.add(new TimelineEvent(4000, (t) -> longTimeAgoOpacity.queueAnimatingTo(0)));
 		events.add(new TimelineEvent(5000, (t) -> {
-			this.phase = TrailerPhase.STARWARS;
-			this.logoScale.queueAnimatingTo(0);
+			phase = TrailerPhase.STARWARS;
+			logoScale.queueAnimatingTo(0);
 			Client.mc.getSoundHandler().playSound(titleMusic);
 		}));
 		events.add(new TimelineEvent(11500, (t) -> {
-			this.phase = TrailerPhase.CRAWL;
-			this.crawlTranslate.animateTo(500);
+			phase = TrailerPhase.CRAWL;
+			crawlTranslate.animateTo(500);
 		}));
-		events.add(new TimelineEvent(88500, (t) -> {
-			this.crawlOpacity.queueAnimatingTo(0);
-		}));
+		events.add(new TimelineEvent(88500, (t) -> crawlOpacity.queueAnimatingTo(0)));
 		events.add(new TimelineEvent(90500, (t) -> {
-			this.phase = TrailerPhase.PAN;
-			this.panTranslate.queueAnimatingTo(1);
+			phase = TrailerPhase.PAN;
+			panTranslate.queueAnimatingTo(1);
 		}));
-		events.add(new TimelineEvent(100000, (t) -> {
-			this.close();
-		}));
+		events.add(new TimelineEvent(100000, (t) -> close()));
 		timeline = new Timeline(events);
 		timeline.start();
 	}
@@ -125,10 +116,10 @@ public class GuiScreenTrailer extends GuiScreen
 		GL.Disable(EnableCap.Texture2D);
 
 		GL.Color(GLPalette.ALMOST_BLACK);
-		Fx.D2.DrawSolidRectangle(0, 0, this.width, this.height);
+		D2.DrawSolidRectangle(0, 0, width, height);
 
 		GL.Color(GLPalette.WHITE);
-		Fx.D2.DrawSolidRectangle(0, this.height - 1, this.width * timeline.getPosition(), 1);
+		D2.DrawSolidRectangle(0, height - 1, width * timeline.getPosition(), 1);
 
 		GL.Enable(EnableCap.Texture2D);
 
@@ -139,13 +130,13 @@ public class GuiScreenTrailer extends GuiScreen
 			String s = "A long time ago in a galaxy far,";
 			String s2 = "far away. . . .";
 			GL.PushMatrix();
-			int textWidth = this.fontRendererObj.getStringWidth(s);
+			int textWidth = fontRendererObj.getStringWidth(s);
 			int xPos = -textWidth / 2;
-			int yPos = -this.fontRendererObj.FONT_HEIGHT;
-			GL.Translate(this.width / 2, this.height / 2, 0);
+			int yPos = -fontRendererObj.FONT_HEIGHT;
+			GL.Translate(width / 2, height / 2, 0);
 			GL.Scale(2);
-			this.fontRendererObj.drawString(s, xPos, yPos, color);
-			this.fontRendererObj.drawString(s2, xPos, yPos + this.fontRendererObj.FONT_HEIGHT, color);
+			fontRendererObj.drawString(s, xPos, yPos, color);
+			fontRendererObj.drawString(s2, xPos, yPos + fontRendererObj.FONT_HEIGHT, color);
 			GL.PopMatrix();
 		}
 		else
@@ -173,21 +164,21 @@ public class GuiScreenTrailer extends GuiScreen
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 			float textureSize = 425;
-			float xPos = this.width / 2 - textureSize / 2;
-			float yPos = this.height - textureSize;
+			float xPos = width / 2 - textureSize / 2;
+			float yPos = height - textureSize;
 			GL.PushMatrix();
 			GL.Translate(xPos, yPos + (1 - lerp) * height / 1.5f, 0);
 			Client.mc.renderEngine.bindTexture(crawlPanBottom);
-			Fx.D2.DrawSolidRectangle(0, 0, textureSize, textureSize);
+			D2.DrawSolidRectangle(0, 0, textureSize, textureSize);
 			GL.PopMatrix();
 
 			if (logoScale.getValue() != 0)
 			{
 				Client.mc.renderEngine.bindTexture(brandLogo);
-				GL.Translate(this.width / 2, this.height / 2, 0);
+				GL.Translate(width / 2, height / 2, 0);
 				GL.Scale(logoScale.getValue(Ease::inQuad));
 				GL.Translate(-300, -300, 0);
-				Fx.D2.DrawSolidRectangle(0, 0, 600, 600);
+				D2.DrawSolidRectangle(0, 0, 600, 600);
 			}
 
 			if (phase == TrailerPhase.CRAWL)
@@ -245,25 +236,25 @@ public class GuiScreenTrailer extends GuiScreen
 	private void drawJustifiedLine(String line, int width, int yOffset, boolean justify)
 	{
 		GL.PushMatrix();
-		float y = yOffset * this.fontRendererObj.FONT_HEIGHT * 1.25f;
+		float y = yOffset * fontRendererObj.FONT_HEIGHT * 1.25f;
 		GL.Translate(0, y, 0);
 		float lerp = crawlOpacity.getValue();
 		int color = GLPalette.getLerpColor2(lerp, GLPalette.ALMOST_BLACK, GLPalette.SW_YELLOW);
 
 		if (!justify)
 		{
-			this.fontRendererObj.drawString(line, 0, 0, color);
+			fontRendererObj.drawString(line, 0, 0, color);
 			GL.PopMatrix();
 			return;
 		}
 
 		char[] characters = line.toCharArray();
-		float scalar = width / (float)this.fontRendererObj.getStringWidth(line);
+		float scalar = width / (float)fontRendererObj.getStringWidth(line);
 
 		for (char c : characters)
 		{
-			int charWidth = this.fontRendererObj.getCharWidth(c);
-			this.fontRendererObj.drawString(String.valueOf(c), 0, 0, color);
+			int charWidth = fontRendererObj.getCharWidth(c);
+			fontRendererObj.drawString(String.valueOf(c), 0, 0, color);
 			GL.Translate(charWidth * scalar, 0, 0);
 		}
 		GL.PopMatrix();
@@ -271,14 +262,19 @@ public class GuiScreenTrailer extends GuiScreen
 
 	private void drawCenteredLine(String line, int blockWidth, int yOffset)
 	{
-		int aedWidth = this.fontRendererObj.getStringWidth(line);
+		int aedWidth = fontRendererObj.getStringWidth(line);
 		int x = blockWidth / 2 - aedWidth / 2;
 
-		int y = (int)(yOffset * this.fontRendererObj.FONT_HEIGHT * 1.25f);
+		int y = (int)(yOffset * fontRendererObj.FONT_HEIGHT * 1.25f);
 		float lerp = crawlOpacity.getValue();
 		int color = GLPalette.getLerpColor2(lerp, GLPalette.ALMOST_BLACK, GLPalette.SW_YELLOW);
 
-		this.fontRendererObj.drawString(line, x, y, color);
+		fontRendererObj.drawString(line, x, y, color);
+	}
+
+	private enum TrailerPhase
+	{
+		LONGTIMEAGO, STARWARS, CRAWL, PAN
 	}
 
 	private static class Star
@@ -295,10 +291,5 @@ public class GuiScreenTrailer extends GuiScreen
 			this.size = size;
 			this.color = color;
 		}
-	}
-
-	private enum TrailerPhase
-	{
-		LONGTIMEAGO, STARWARS, CRAWL, PAN
 	}
 }

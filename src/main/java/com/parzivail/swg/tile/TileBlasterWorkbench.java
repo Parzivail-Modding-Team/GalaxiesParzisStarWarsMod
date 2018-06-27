@@ -35,26 +35,26 @@ public class TileBlasterWorkbench extends TileEntity implements IInventory
 	@Override
 	public ItemStack decrStackSize(int slot, int amount)
 	{
-		if (this.stacks[slot] == null)
+		if (stacks[slot] == null)
 			return null;
 
 		ItemStack itemstack;
 
-		if (this.stacks[slot].stackSize <= amount)
+		if (stacks[slot].stackSize <= amount)
 		{
-			itemstack = this.stacks[slot];
-			this.stacks[slot] = null;
-			this.markDirty();
+			itemstack = stacks[slot];
+			stacks[slot] = null;
+			markDirty();
 			return itemstack;
 		}
 		else
 		{
-			itemstack = this.stacks[slot].splitStack(amount);
+			itemstack = stacks[slot].splitStack(amount);
 
-			if (this.stacks[slot].stackSize == 0)
-				this.stacks[slot] = null;
+			if (stacks[slot].stackSize == 0)
+				stacks[slot] = null;
 
-			this.markDirty();
+			markDirty();
 			return itemstack;
 		}
 	}
@@ -62,23 +62,23 @@ public class TileBlasterWorkbench extends TileEntity implements IInventory
 	@Override
 	public ItemStack getStackInSlotOnClosing(int slot)
 	{
-		if (this.stacks[slot] == null)
+		if (stacks[slot] == null)
 			return null;
 
-		ItemStack itemstack = this.stacks[slot];
-		this.stacks[slot] = null;
+		ItemStack itemstack = stacks[slot];
+		stacks[slot] = null;
 		return itemstack;
 	}
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack contents)
 	{
-		this.stacks[slot] = contents;
+		stacks[slot] = contents;
 
-		if (contents != null && contents.stackSize > this.getInventoryStackLimit())
-			contents.stackSize = this.getInventoryStackLimit();
+		if (contents != null && contents.stackSize > getInventoryStackLimit())
+			contents.stackSize = getInventoryStackLimit();
 
-		this.markDirty();
+		markDirty();
 	}
 
 	@Override
@@ -128,16 +128,16 @@ public class TileBlasterWorkbench extends TileEntity implements IInventory
 		super.readFromNBT(tag);
 
 		NBTTagList nbttaglist = tag.getTagList("Items", 10);
-		this.stacks = new ItemStack[this.getSizeInventory()];
+		stacks = new ItemStack[getSizeInventory()];
 
 		for (int i = 0; i < nbttaglist.tagCount(); ++i)
 		{
 			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
 			byte b0 = nbttagcompound1.getByte("Slot");
 
-			if (b0 >= 0 && b0 < this.stacks.length)
+			if (b0 >= 0 && b0 < stacks.length)
 			{
-				this.stacks[b0] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+				stacks[b0] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
 	}
@@ -148,13 +148,13 @@ public class TileBlasterWorkbench extends TileEntity implements IInventory
 
 		NBTTagList nbttaglist = new NBTTagList();
 
-		for (int i = 0; i < this.stacks.length; ++i)
+		for (int i = 0; i < stacks.length; ++i)
 		{
-			if (this.stacks[i] != null)
+			if (stacks[i] != null)
 			{
 				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				nbttagcompound1.setByte("Slot", (byte)i);
-				this.stacks[i].writeToNBT(nbttagcompound1);
+				stacks[i].writeToNBT(nbttagcompound1);
 				nbttaglist.appendTag(nbttagcompound1);
 			}
 		}

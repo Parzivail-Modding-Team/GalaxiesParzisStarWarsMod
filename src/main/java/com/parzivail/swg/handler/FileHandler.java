@@ -1,6 +1,7 @@
 package com.parzivail.swg.handler;
 
 import cpw.mods.fml.common.registry.GameData;
+import cpw.mods.fml.common.registry.GameData.GameDataSnapshot;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -21,7 +22,7 @@ public class FileHandler
 		NBTTagCompound compound = new NBTTagCompound();
 		NBTTagList blockMap = new NBTTagList();
 
-		GameData.GameDataSnapshot gameDataSnapshot = GameData.buildItemDataList();
+		GameDataSnapshot gameDataSnapshot = GameData.buildItemDataList();
 
 		for (String key : gameDataSnapshot.idMap.keySet())
 		{

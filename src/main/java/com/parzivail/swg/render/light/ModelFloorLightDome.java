@@ -25,31 +25,31 @@ public class ModelFloorLightDome extends ModelBase
 
 	public ModelFloorLightDome()
 	{
-		this.textureWidth = 64;
-		this.textureHeight = 32;
-		this.stemRing = new ModelRenderer(this, 34, 9);
-		this.stemRing.setRotationPoint(-0.5F, 2.0F, -0.5F);
-		this.stemRing.addBox(0.0F, 0.0F, 0.0F, 3, 1, 3, 0.0F);
-		this.stem = new ModelRenderer(this, 34, 24);
-		this.stem.setRotationPoint(-1.0F, 20.0F, -1.0F);
-		this.stem.addBox(0.0F, 0.0F, 0.0F, 2, 4, 2, 0.0F);
-		this.domeProtector = new ModelRenderer(this, 0, 12);
-		this.domeProtector.setRotationPoint(-2.5F, -8.001F, -2.5F);
-		this.domeProtector.addBox(0.0F, 0.0F, 0.0F, 7, 6, 7, 0.0F);
-		this.reflector = new ModelRenderer(this, 0, 0);
-		this.reflector.setRotationPoint(-3.0F, -2.0F, -3.0F);
-		this.reflector.addBox(0.0F, 0.0F, 0.0F, 8, 2, 8, 0.0F);
-		this.reflectorFillet = new ModelRenderer(this, 34, 0);
-		this.reflectorFillet.setRotationPoint(-2.0F, 0.0F, -2.0F);
-		this.reflectorFillet.addBox(0.0F, 0.0F, 0.0F, 6, 1, 6, 0.0F);
-		this.bulb = new ShaderModelRenderer(this, 34, 15, ShaderHelper.glowSolid);
-		this.bulb.setRotationPoint(-0.5F, -3.0F, -0.5F);
-		this.bulb.addBox(0.0F, -3.0F, 0.0F, 3, 4, 3, 0.0F);
-		this.stem.addChild(this.stemRing);
-		this.stem.addChild(this.reflector);
-		this.stem.addChild(this.reflectorFillet);
-		this.stem.addChild(this.bulb);
-		this.stem.addChild(this.domeProtector);
+		textureWidth = 64;
+		textureHeight = 32;
+		stemRing = new ModelRenderer(this, 34, 9);
+		stemRing.setRotationPoint(-0.5F, 2.0F, -0.5F);
+		stemRing.addBox(0.0F, 0.0F, 0.0F, 3, 1, 3, 0.0F);
+		stem = new ModelRenderer(this, 34, 24);
+		stem.setRotationPoint(-1.0F, 20.0F, -1.0F);
+		stem.addBox(0.0F, 0.0F, 0.0F, 2, 4, 2, 0.0F);
+		domeProtector = new ModelRenderer(this, 0, 12);
+		domeProtector.setRotationPoint(-2.5F, -8.001F, -2.5F);
+		domeProtector.addBox(0.0F, 0.0F, 0.0F, 7, 6, 7, 0.0F);
+		reflector = new ModelRenderer(this, 0, 0);
+		reflector.setRotationPoint(-3.0F, -2.0F, -3.0F);
+		reflector.addBox(0.0F, 0.0F, 0.0F, 8, 2, 8, 0.0F);
+		reflectorFillet = new ModelRenderer(this, 34, 0);
+		reflectorFillet.setRotationPoint(-2.0F, 0.0F, -2.0F);
+		reflectorFillet.addBox(0.0F, 0.0F, 0.0F, 6, 1, 6, 0.0F);
+		bulb = new ShaderModelRenderer(this, 34, 15, ShaderHelper.glowSolid);
+		bulb.setRotationPoint(-0.5F, -3.0F, -0.5F);
+		bulb.addBox(0.0F, -3.0F, 0.0F, 3, 4, 3, 0.0F);
+		stem.addChild(stemRing);
+		stem.addChild(reflector);
+		stem.addChild(reflectorFillet);
+		stem.addChild(bulb);
+		stem.addChild(domeProtector);
 	}
 
 	@Override
@@ -59,7 +59,7 @@ public class ModelFloorLightDome extends ModelBase
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL.Disable(EnableCap.CullFace);
 		GL.Enable(EnableCap.Blend);
-		this.stem.render(f5);
+		stem.render(f5);
 		GL.PopAttrib();
 	}
 

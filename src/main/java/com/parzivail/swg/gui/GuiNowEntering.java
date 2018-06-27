@@ -17,11 +17,11 @@ import java.util.ArrayList;
 
 public class GuiNowEntering
 {
+	private static final ArrayList<Zone> zones = new ArrayList<>();
+	private static final Timeline textFadeOut;
 	private static Vector3f prevPos = new Vector3f(0, 0, 0);
-	private static ArrayList<Zone> zones = new ArrayList<>();
-	private static Timeline textFadeOut;
 	private static AnimatedValue textFadeOutValue;
-	private static Zone showingZone = null;
+	private static Zone showingZone;
 
 	static
 	{
@@ -32,12 +32,8 @@ public class GuiNowEntering
 			textFadeOutValue = new AnimatedValue(0, 1000);
 			textFadeOutValue.queueAnimatingTo(1);
 		}));
-		keyframes.add(new TimelineEvent(3000, timelineEvent -> {
-			textFadeOutValue.queueAnimatingTo(0);
-		}));
-		keyframes.add(new TimelineEvent(4000, timelineEvent -> {
-			showingZone = null;
-		}));
+		keyframes.add(new TimelineEvent(3000, timelineEvent -> textFadeOutValue.queueAnimatingTo(0)));
+		keyframes.add(new TimelineEvent(4000, timelineEvent -> showingZone = null));
 		textFadeOut = new Timeline(keyframes);
 	}
 

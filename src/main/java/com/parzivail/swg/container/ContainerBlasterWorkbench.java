@@ -14,7 +14,7 @@ public class ContainerBlasterWorkbench extends Container
 {
 	public static final int SLOT_BLASTER = 0;
 
-	private TileBlasterWorkbench tile;
+	private final TileBlasterWorkbench tile;
 	private final SpecificSlot blasterSlot;
 
 	public ContainerBlasterWorkbench(IInventory playerInventory, TileBlasterWorkbench tile)
@@ -24,20 +24,20 @@ public class ContainerBlasterWorkbench extends Container
 		int j;
 
 		// container inventory
-		this.addSlotToContainer(blasterSlot = new SpecificSlot(tile, SLOT_BLASTER, 14, 63, s -> s.getItem() instanceof ItemBlasterRifle));
+		addSlotToContainer(blasterSlot = new SpecificSlot(tile, SLOT_BLASTER, 14, 63, s -> s.getItem() instanceof ItemBlasterRifle));
 
 		// player inventory
 		for (i = 0; i < 3; ++i)
 			for (j = 0; j < 9; ++j)
-				this.addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 48 + j * 18, 159 + i * 18));
+				addSlotToContainer(new Slot(playerInventory, j + i * 9 + 9, 48 + j * 18, 159 + i * 18));
 
 		for (i = 0; i < 9; ++i)
-			this.addSlotToContainer(new Slot(playerInventory, i, 48 + i * 18, 217));
+			addSlotToContainer(new Slot(playerInventory, i, 48 + i * 18, 217));
 	}
 
 	public boolean canInteractWith(EntityPlayer player)
 	{
-		return this.tile.isUseableByPlayer(player);
+		return tile.isUseableByPlayer(player);
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class ContainerBlasterWorkbench extends Container
 	 */
 	public ItemStack transferStackInSlot(EntityPlayer player, int slotIdx)
 	{
-		Slot slot = (Slot)this.inventorySlots.get(slotIdx);
+		Slot slot = (Slot)inventorySlots.get(slotIdx);
 
 		if (slot == null || !slot.getHasStack())
 			return null;
@@ -57,12 +57,12 @@ public class ContainerBlasterWorkbench extends Container
 		if (slotIdx < tile.getSizeInventory())
 		{
 			int maxSlotId = tile.getSizeInventory();
-			if (!this.mergeItemStack(itemstack1, maxSlotId, maxSlotId + 36, true))
+			if (!mergeItemStack(itemstack1, maxSlotId, maxSlotId + 36, true))
 				return null;
 		}
-		else if (!this.blasterSlot.getHasStack() && this.blasterSlot.isItemValid(itemstack1) && itemstack1.stackSize == 1)
+		else if (!blasterSlot.getHasStack() && blasterSlot.isItemValid(itemstack1) && itemstack1.stackSize == 1)
 		{
-			if (!this.mergeItemStack(itemstack1, blasterSlot.slotNumber, 1, false))
+			if (!mergeItemStack(itemstack1, blasterSlot.slotNumber, 1, false))
 				return null;
 		}
 

@@ -21,9 +21,9 @@ public class PBlockDynamic extends PBlock
 	public PBlockDynamic(String name, Material material, int numVariants)
 	{
 		super(name, material);
-		this.variants = new String[numVariants];
+		variants = new String[numVariants];
 		for (int i = 0; i < numVariants; i++)
-			this.variants[i] = Resources.modColon(String.format("var/%s/%d", name, i));
+			variants[i] = Resources.modColon(String.format("var/%s/%d", name, i));
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class PBlockDynamic extends PBlock
 	@Override
 	public IIcon getIcon(IBlockAccess worldIn, int x, int y, int z, int side)
 	{
-		final double s = 3;
+		double s = 3;
 		double n = (noise.eval(x / s, y / s, z / s) + 1) / 2;
 		return icons[(int)Math.floor(n * icons.length)];
 	}

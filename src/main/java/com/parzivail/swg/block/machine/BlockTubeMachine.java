@@ -16,7 +16,7 @@ public class BlockTubeMachine extends PBlockRotate
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0.1F, 0.0F, 0.1F, 0.9F, 1.5f, 0.9F);
 		setHardness(50.0F);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

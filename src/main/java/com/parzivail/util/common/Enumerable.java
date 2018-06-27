@@ -12,12 +12,6 @@ import java.util.function.Function;
  */
 public class Enumerable<T> extends ArrayList<T>
 {
-	@FunctionalInterface
-	interface DualFunction<A, B, R>
-	{
-		R apply(A one, B two);
-	}
-
 	private Enumerable()
 	{
 	}
@@ -63,7 +57,7 @@ public class Enumerable<T> extends ArrayList<T>
 
 	public Enumerable<T> skip(int amount)
 	{
-		Enumerable<T> result = Enumerable.empty();
+		Enumerable<T> result = empty();
 		for (int i = amount; i < size(); i++)
 			result.add(get(i));
 		return result;
@@ -248,5 +242,11 @@ public class Enumerable<T> extends ArrayList<T>
 		if (size() == 0)
 			throw new IllegalArgumentException();
 		return sum(f) / size();
+	}
+
+	@FunctionalInterface
+	interface DualFunction<A, B, R>
+	{
+		R apply(A one, B two);
 	}
 }

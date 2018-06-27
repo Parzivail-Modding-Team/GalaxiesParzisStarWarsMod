@@ -3,7 +3,7 @@ package com.parzivail.swg.render.light;
 import com.parzivail.swg.Resources;
 import com.parzivail.util.block.TileRotatable;
 import com.parzivail.util.entity.EntityTilePassthrough;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D3;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
@@ -21,7 +21,7 @@ public class RenderCeilingLight2 extends TileEntitySpecialRenderer
 
 	public RenderCeilingLight2()
 	{
-		this.model = new ModelCeilingLight2();
+		model = new ModelCeilingLight2();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -42,7 +42,7 @@ public class RenderCeilingLight2 extends TileEntitySpecialRenderer
 		GL11.glPushMatrix();
 		GL.Scale(1.25f);
 
-		this.model.render(te == null ? null : new EntityTilePassthrough(te), 0, 0, 0, 0.0F, 0.0F, 0.05F);
+		model.render(te == null ? null : new EntityTilePassthrough(te), 0, 0, 0, 0.0F, 0.0F, 0.05F);
 		GL11.glPopMatrix();
 
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
@@ -67,8 +67,8 @@ public class RenderCeilingLight2 extends TileEntitySpecialRenderer
 			{
 				GL11.glColor4f(0, 0, 0, 1);
 				GL11.glLineWidth((float)(30 / Math.sqrt(x * x + y * y + z * z)));
-				Fx.D3.DrawLine(0, 0.5f, 0.4f, 0, -i + 1, 0.4f);
-				Fx.D3.DrawLine(0, 0.5f, -0.4f, 0, -i + 1, -0.4f);
+				D3.DrawLine(0, 0.5f, 0.4f, 0, -i + 1, 0.4f);
+				D3.DrawLine(0, 0.5f, -0.4f, 0, -i + 1, -0.4f);
 			}
 		}
 		GL11.glPopAttrib();

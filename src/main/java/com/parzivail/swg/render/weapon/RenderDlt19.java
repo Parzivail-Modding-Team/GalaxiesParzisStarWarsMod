@@ -9,13 +9,13 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderDlt19 implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.dlt19.png");
+	private static final ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.dlt19.png");
 
-	private ModelDlt19 model;
+	private final ModelDlt19 model;
 
 	public RenderDlt19()
 	{
-		this.model = new ModelDlt19();
+		model = new ModelDlt19();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class RenderDlt19 implements IItemRenderer
 				GL11.glRotatef(180, 0, 1, 0);
 				GL11.glTranslatef(-10, 0, 0);
 				GL11.glScalef(-1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -55,7 +55,7 @@ public class RenderDlt19 implements IItemRenderer
 				GL11.glTranslatef(6, -23, 0);
 				GL11.glScalef(1, 1, -1);
 				GL11.glTranslatef(-4, 4, 0);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -70,7 +70,7 @@ public class RenderDlt19 implements IItemRenderer
 				GL11.glRotatef(90, 0, 0, -1);
 				GL11.glRotatef(30, 0, 1, 0);
 				GL11.glScalef(-1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -80,7 +80,7 @@ public class RenderDlt19 implements IItemRenderer
 				GL11.glScalef(0.08F, -0.08F, 0.08F);
 				GL11.glTranslatef(0, -8, 0);
 				GL11.glScalef(1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;

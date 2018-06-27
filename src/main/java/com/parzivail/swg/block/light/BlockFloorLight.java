@@ -17,7 +17,7 @@ public class BlockFloorLight extends PBlockRotate
 		setBlockBounds(0.2F, 0.0F, 0.2F, 0.8F, 0.5F, 0.8F);
 		setHardness(50.0F);
 		setLightLevel(1);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ public class BlockHothCeilingLight2 extends PBlockRotate
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
 		setLightLevel(1);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

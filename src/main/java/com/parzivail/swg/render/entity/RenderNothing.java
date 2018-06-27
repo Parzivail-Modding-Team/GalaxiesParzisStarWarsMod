@@ -29,10 +29,10 @@ public class RenderNothing extends Render
 		float f = 0.025f;
 		String n = entity.getClass().getSimpleName();
 
-		FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
+		FontRenderer fontrenderer = getFontRendererFromRenderManager();
 		GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		GL11.glScalef(-f, -f, f);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glDepthMask(false);

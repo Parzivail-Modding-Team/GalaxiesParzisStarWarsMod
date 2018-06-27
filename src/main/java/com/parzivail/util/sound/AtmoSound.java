@@ -8,40 +8,47 @@ public class AtmoSound extends PositionedSound implements ITickableSound
 {
 	private boolean donePlaying;
 
-	public AtmoSound(ResourceLocation sound, float x, float y, float z, float volume, float pitch) {
+	public AtmoSound(ResourceLocation sound, float x, float y, float z, float volume, float pitch)
+	{
 		super(sound);
-		this.xPosF = x;
-		this.yPosF = y;
-		this.zPosF = z;
+		xPosF = x;
+		yPosF = y;
+		zPosF = z;
 		this.volume = volume;
 		this.pitch = pitch;
-		this.repeat = true;
+		repeat = true;
 		//this.attenuationType = AttenuationType.NONE;
 	}
 
 	@Override
-	public void update() {
+	public void update()
+	{
 	}
 
 	@Override
-	public boolean isDonePlaying() {
+	public boolean isDonePlaying()
+	{
 		return donePlaying;
 	}
 
-	public void endPlaying() {
+	public void endPlaying()
+	{
 		donePlaying = true;
 	}
 
-	public void startPlaying() {
+	public void startPlaying()
+	{
 		donePlaying = false;
 	}
 
-	public AtmoSound setVolume(float vol) {
-		this.volume = vol;
+	public AtmoSound setVolume(float vol)
+	{
+		volume = vol;
 		return this;
 	}
 
-	public AtmoSound setPitch(float pitch) {
+	public AtmoSound setPitch(float pitch)
+	{
 		this.pitch = pitch;
 		return this;
 	}

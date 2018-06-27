@@ -11,7 +11,7 @@ public class PBlockPillar extends BlockLog
 	public PBlockPillar(String name)
 	{
 		this.name = name;
-		this.setCreativeTab(StarWarsGalaxy.tab);
-		this.setUnlocalizedName(Resources.modDot(this.name));
+		setCreativeTab(StarWarsGalaxy.tab);
+		setUnlocalizedName(Resources.modDot(this.name));
 	}
 }

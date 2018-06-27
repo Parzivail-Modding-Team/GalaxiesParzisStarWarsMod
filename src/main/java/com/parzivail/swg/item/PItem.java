@@ -18,9 +18,6 @@ import java.util.UUID;
 
 public class PItem extends Item
 {
-	/**
-	 * Movement bonus for wearing Pegasus Boots
-	 */
 	private static final UUID precisionMovementSlowdownUUID = UUID.fromString("65a1759e-43ea-476f-85d1-717fc2a573f7");
 	private static final AttributeModifier precisionMovementSlowdown = (new AttributeModifier(precisionMovementSlowdownUUID, "Precise Movement", -0.5D, 2)).setSaved(false);
 
@@ -32,33 +29,15 @@ public class PItem extends Item
 	public PItem(String name)
 	{
 		this(name, new String[0]);
-		this.setCreativeTab(StarWarsGalaxy.tab);
+		setCreativeTab(StarWarsGalaxy.tab);
 	}
 
 	public PItem(String name, String[] variants)
 	{
 		this.name = name;
 		this.variants = variants;
-		this.setHasSubtypes(variants.length != 0);
-		this.setTextureName(Resources.modColon(this.name));
-	}
-
-	@Override
-	public String getUnlocalizedName(ItemStack stack)
-	{
-		if (this.variants.length == 0)
-			return Resources.itemDot(this.name);
-		return Resources.itemDot(this.name, this.variants[stack.getMetadata()]);
-	}
-
-	public boolean shouldUsePrecisionMovement(ItemStack stack, World world, EntityPlayer player)
-	{
-		return false;
-	}
-
-	public float getZoomLevel(ItemStack stack, World world, EntityPlayer player)
-	{
-		return 1;
+		setHasSubtypes(variants.length != 0);
+		setTextureName(Resources.modColon(this.name));
 	}
 
 	public static void applyPrecisionMovement(EntityPlayer player, boolean apply)
@@ -78,17 +57,35 @@ public class PItem extends Item
 	}
 
 	@Override
+	public String getUnlocalizedName(ItemStack stack)
+	{
+		if (variants.length == 0)
+			return Resources.itemDot(name);
+		return Resources.itemDot(name, variants[stack.getMetadata()]);
+	}
+
+	public boolean shouldUsePrecisionMovement(ItemStack stack, World world, EntityPlayer player)
+	{
+		return false;
+	}
+
+	public float getZoomLevel(ItemStack stack, World world, EntityPlayer player)
+	{
+		return 1;
+	}
+
+	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister)
 	{
-		if (this.variants.length == 0)
+		if (variants.length == 0)
 		{
 			super.registerIcons(iconRegister);
 			return;
 		}
 
-		this.icons = new IIcon[this.variants.length];
-		for (int i = 0; i < this.icons.length; i++)
-			this.icons[i] = iconRegister.registerIcon(Resources.MODID + ":" + this.name + "_" + variants[i]);
+		icons = new IIcon[variants.length];
+		for (int i = 0; i < icons.length; i++)
+			icons[i] = iconRegister.registerIcon(Resources.MODID + ":" + name + "_" + variants[i]);
 	}
 }

@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 public class NbtSerializable<T extends NbtSerializable>
@@ -145,10 +144,43 @@ public class NbtSerializable<T extends NbtSerializable>
 		compound.setBoolean(s, aBoolean);
 	}
 
+	private static Pair<Reader, Writer> getHandler(Class<?> clazz)
+	{
+		Pair<Reader, Writer> pair = handlers.get(clazz);
+		if (pair == null)
+			throw new RuntimeException("No R/W handler for  " + clazz);
+		return pair;
+	}
+
+	private static <T> void map(Class<T> type, Reader<T> reader, Writer<T> writer)
+	{
+		handlers.put(type, Pair.of(reader, writer));
+	}
+
+	private static Field[] getClassFields(Class<?> clazz)
+	{
+		if (fieldCache.containsKey(clazz))
+			return fieldCache.get(clazz);
+		else
+		{
+			Field[] fArr = clazz.getDeclaredFields();
+			Enumerable<Field> fields = Enumerable.from(fArr);
+			fields = fields.where(NbtSerializable::isValidField);
+			fArr = fields.toArray(new Field[fields.size()]);
+			fieldCache.put(clazz, fArr);
+			return fArr;
+		}
+	}
+
+	private static boolean isValidField(Field f)
+	{
+		return f.isAnnotationPresent(NbtSave.class) && handlers.containsKey(f.getType());
+	}
+
 	public void deserialize(NBTTagCompound compound)
 	{
 		compound = ItemUtils.ensureNbt(compound);
-		Field[] fields = getClassFields(this.getClass());
+		Field[] fields = getClassFields(getClass());
 		try
 		{
 			for (Field f : fields)
@@ -165,7 +197,7 @@ public class NbtSerializable<T extends NbtSerializable>
 		if (compound == null)
 			return;
 
-		Field[] fields = getClassFields(this.getClass());
+		Field[] fields = getClassFields(getClass());
 		try
 		{
 			for (Field f : fields)
@@ -189,49 +221,16 @@ public class NbtSerializable<T extends NbtSerializable>
 	private void writeField(Field f, Class clazz, NBTTagCompound buf) throws IllegalArgumentException, IllegalAccessException
 	{
 		Pair<Reader, Writer> handler = getHandler(clazz);
+		f.setAccessible(true);
 		handler.getRight().write(f.getName(), f.get(this), buf);
 	}
 
-	private static Pair<Reader, Writer> getHandler(Class<?> clazz)
-	{
-		Pair<Reader, Writer> pair = handlers.get(clazz);
-		if (pair == null)
-			throw new RuntimeException("No R/W handler for  " + clazz);
-		return pair;
-	}
-
-	private static <T extends Object> void map(Class<T> type, Reader<T> reader, Writer<T> writer)
-	{
-		handlers.put(type, Pair.of(reader, writer));
-	}
-
-	private static Field[] getClassFields(Class<?> clazz)
-	{
-		if (fieldCache.containsKey(clazz))
-			return fieldCache.get(clazz);
-		else
-		{
-			Field[] fArr = clazz.getFields();
-			Enumerable<Field> fields = Enumerable.from(fArr);
-			fields = fields.where(NbtSerializable::isValidField);
-			fArr = fields.toArray(new Field[fields.size()]);
-			fieldCache.put(clazz, fArr);
-			return fArr;
-		}
-	}
-
-	private static boolean isValidField(Field f)
-	{
-		int mods = f.getModifiers();
-		return !Modifier.isFinal(mods) && !Modifier.isStatic(mods) && !Modifier.isTransient(mods) && handlers.containsKey(f.getType());
-	}
-
-	public interface Reader<T1 extends Object>
+	public interface Reader<T1>
 	{
 		T1 read(String property, NBTTagCompound buf);
 	}
 
-	public interface Writer<T1 extends Object>
+	public interface Writer<T1>
 	{
 		void write(String property, T1 t, NBTTagCompound buf);
 	}

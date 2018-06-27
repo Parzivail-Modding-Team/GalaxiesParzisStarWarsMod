@@ -12,14 +12,14 @@ public class TileMV extends TileRotatable
 
 	public TileMV()
 	{
-		this.frame = 0;
+		frame = 0;
 	}
 
 	@Override
 	public void updateEntity()
 	{
 		super.updateEntity();
-		this.frame++;
+		frame++;
 	}
 
 	@Override

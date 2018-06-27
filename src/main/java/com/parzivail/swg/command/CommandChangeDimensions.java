@@ -37,13 +37,14 @@ public class CommandChangeDimensions extends CommandBase
 			throw new WrongUsageException(getCommandUsage(sender));
 		else
 		{
-			Entity player = getCommandSenderAsPlayer(sender);
+			Entity player = CommandBase.getCommandSenderAsPlayer(sender);
 			Rift.travelEntity(player.worldObj, player, args.dimension);
 		}
 	}
 
-	public class Args {
+	public class Args
+	{
 		@Parameter(index = 0)
-		public int dimension = 0;
+		public int dimension;
 	}
 }

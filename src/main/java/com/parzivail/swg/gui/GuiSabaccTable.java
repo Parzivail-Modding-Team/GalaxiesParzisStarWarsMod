@@ -5,7 +5,7 @@ import com.parzivail.swg.gui.modern.ModernButton;
 import com.parzivail.swg.gui.modern.ModernScrollbar;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.tile.TileSabaccTable;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -21,8 +21,8 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 public class GuiSabaccTable extends GuiContainer
 {
-	private TileSabaccTable tile;
-	private EntityPlayer player;
+	private final TileSabaccTable tile;
+	private final EntityPlayer player;
 
 	private ModernScrollbar scrollbar;
 
@@ -42,8 +42,8 @@ public class GuiSabaccTable extends GuiContainer
 	{
 		super.initGui();
 
-		this.buttonList.add(new ModernButton(0, 10, 10, 30, 10, "EQUIP"));
-		this.buttonList.add(scrollbar = new ModernScrollbar(0, 10, 30, 100));
+		buttonList.add(new ModernButton(0, 10, 10, 30, 10, "EQUIP"));
+		buttonList.add(scrollbar = new ModernScrollbar(0, 10, 30, 100));
 
 		scrollbar.setContentSize(Client.brandonReg.getHeight() * 11f / Client.resolution.getScaleFactor());
 		scrollbar.setWindowSize(60);
@@ -60,7 +60,7 @@ public class GuiSabaccTable extends GuiContainer
 		GL.Disable(EnableCap.Texture2D);
 
 		GL.Color(GLPalette.WHITE);
-		Fx.D2.DrawWireRectangle(30, 40, 120, 60);
+		D2.DrawWireRectangle(30, 40, 120, 60);
 		GL.Scissor(30, 40, 120, 60);
 
 		GL.Enable(EnableCap.Texture2D);
@@ -100,7 +100,7 @@ public class GuiSabaccTable extends GuiContainer
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL.Disable(EnableCap.Texture2D);
 		GL.Color(GLPalette.ALMOST_BLACK);
-		Fx.D2.DrawSolidRectangle(0, 0, sr.getScaledWidth(), sr.getScaledHeight());
+		D2.DrawSolidRectangle(0, 0, sr.getScaledWidth(), sr.getScaledHeight());
 		GL.PopAttrib();
 	}
 }

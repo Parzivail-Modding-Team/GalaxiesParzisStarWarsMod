@@ -20,8 +20,8 @@ import java.util.EnumSet;
  */
 public class GL
 {
+	private static final ArrayList<ArrayList<Double>> contours = new ArrayList<>();
 	private static GLUtessellator t;
-	private static ArrayList<ArrayList<Double>> contours = new ArrayList<>();
 	private static Object polygonData;
 
 	public static void Vertex2(float x, float y)
@@ -279,14 +279,14 @@ public class GL
 				y = 0;
 			}
 
-			GL.Enable(EnableCap.ScissorTest);
+			Enable(EnableCap.ScissorTest);
 			GL11.glScissor((int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.displayHeight - (double)(y + height) * scaleH), (int)Math.floor((double)(x + width) * scaleW) - (int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.displayHeight - (double)y * scaleH) - (int)Math.floor((double)mc.displayHeight - (double)(y + height) * scaleH));
 		}
 	}
 
 	public static void EndScissor()
 	{
-		GL.Disable(EnableCap.ScissorTest);
+		Disable(EnableCap.ScissorTest);
 	}
 
 	public static void TessBeginPolygon(Object data)

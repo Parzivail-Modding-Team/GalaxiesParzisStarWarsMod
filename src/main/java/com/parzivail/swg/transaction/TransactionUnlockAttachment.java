@@ -3,14 +3,18 @@ package com.parzivail.swg.transaction;
 import com.parzivail.swg.item.blaster.data.BlasterAttachment;
 import com.parzivail.swg.network.Transaction;
 import com.parzivail.swg.player.PswgExtProp;
+import com.parzivail.util.item.NbtSave;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.DimensionManager;
 
 public class TransactionUnlockAttachment extends Transaction<TransactionUnlockAttachment>
 {
+	@NbtSave
 	public int playerDim;
+	@NbtSave
 	public int playerId;
+	@NbtSave
 	public int attachmentId;
 
 	public TransactionUnlockAttachment()
@@ -20,9 +24,9 @@ public class TransactionUnlockAttachment extends Transaction<TransactionUnlockAt
 
 	public TransactionUnlockAttachment(EntityPlayer player, BlasterAttachment attachment)
 	{
-		this.playerDim = player.dimension;
-		this.playerId = player.getEntityId();
-		this.attachmentId = attachment.getId();
+		playerDim = player.dimension;
+		playerId = player.getEntityId();
+		attachmentId = attachment.getId();
 	}
 
 	@Override

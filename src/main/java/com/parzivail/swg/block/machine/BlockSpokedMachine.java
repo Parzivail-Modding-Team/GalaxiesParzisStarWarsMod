@@ -16,7 +16,7 @@ public class BlockSpokedMachine extends PBlockRotate
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0.4F, 0.0F, 0.4F, 0.6F, 1.5f, 0.6F);
 		setHardness(50.0F);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

@@ -570,7 +570,7 @@ final class Decode
 		if (numTrees == 1)
 		{
 			Utils.fillBytesWithZeroes(contextMap, 0, contextMapSize);
-			return numTrees;
+			return 1;
 		}
 
 		BitReader.fillBitWindow(s);
@@ -623,8 +623,8 @@ final class Decode
 
 	private static int decodeBlockTypeAndLength(State s, int treeType, int numBlockTypes)
 	{
-		final int[] ringBuffers = s.rings;
-		final int offset = 4 + treeType * 2;
+		int[] ringBuffers = s.rings;
+		int offset = 4 + treeType * 2;
 		BitReader.fillBitWindow(s);
 		int blockType = readSymbol(s.blockTrees, treeType * HUFFMAN_TABLE_SIZE, s);
 		int result = readBlockLength(s.blockTrees, (treeType + 3) * HUFFMAN_TABLE_SIZE, s);
@@ -827,7 +827,7 @@ final class Decode
 
 	private static void copyUncompressedData(State s)
 	{
-		final byte[] ringBuffer = s.ringBuffer;
+		byte[] ringBuffer = s.ringBuffer;
 
 		// Could happen if block ends at ring buffer end.
 		if (s.metaBlockLength <= 0)
@@ -879,7 +879,7 @@ final class Decode
 		for (int i = 0; i < n; i++)
 		{
 			group[i] = next;
-			Decode.readHuffmanCode(alphabetSize, group, next, s);
+			readHuffmanCode(alphabetSize, group, next, s);
 			next += HUFFMAN_TABLE_SIZE;
 		}
 		return group;

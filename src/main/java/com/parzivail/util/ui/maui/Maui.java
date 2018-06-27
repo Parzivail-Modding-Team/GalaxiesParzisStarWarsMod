@@ -11,7 +11,7 @@ import java.io.InputStream;
 
 public class Maui
 {
-	private static ResourceLocation deJaVuSansResource = Resources.location("font/DejaVuSans.ttf");
+	private static final ResourceLocation deJaVuSansResource = Resources.location("font/DejaVuSans.ttf");
 	public static TrueTypeFont deJaVuSans;
 
 	static

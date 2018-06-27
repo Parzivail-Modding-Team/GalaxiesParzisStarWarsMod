@@ -40,12 +40,12 @@ public class TileAtmoSound extends TileEntity
 
 	private void updateSound()
 	{
-		final ResourceLocation soundRL = getSound();
+		ResourceLocation soundRL = getSound();
 		if (!isInvalid() && soundRL != null)
 		{
 			SoundHandler sh = FMLClientHandler.instance().getClient().getSoundHandler();
 			if (sound == null || !sh.isSoundPlaying(sound))
-				sh.playSound(sound = new AtmoSound(soundRL, this.xCoord + 0.5f, this.yCoord + 0.5f, this.zCoord + 0.5f, 1, 1));
+				sh.playSound(sound = new AtmoSound(soundRL, xCoord + 0.5f, yCoord + 0.5f, zCoord + 0.5f, 1, 1));
 		}
 		else if (sound != null)
 		{
@@ -56,7 +56,7 @@ public class TileAtmoSound extends TileEntity
 
 	public void stopSound()
 	{
-		final ResourceLocation soundRL = getSound();
+		ResourceLocation soundRL = getSound();
 		if (soundRL != null)
 			FMLClientHandler.instance().getClient().getSoundHandler().stopSound(sound);
 	}

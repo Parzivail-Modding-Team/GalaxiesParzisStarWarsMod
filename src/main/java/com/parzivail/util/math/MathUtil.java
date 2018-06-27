@@ -4,9 +4,8 @@ import java.util.Random;
 
 public class MathUtil
 {
-	private static final Random _rand = new Random();
-
 	public static final double oneOverGoldenRatio = 0.61803398875;
+	private static final Random _rand = new Random();
 
 	public static double fract(double d)
 	{

@@ -20,20 +20,20 @@ public class ShaderModelRenderer extends ModelRenderer
 	@Override
 	public void render(float p)
 	{
-		ShaderHelper.setColor(this.color);
+		ShaderHelper.setColor(color);
 		ShaderHelper.useShader(shaderId);
 		super.render(p);
 		ShaderHelper.releaseShader();
 
 		GL.PushMatrix();
-		GL.Translate(this.rotationPointX * p, this.rotationPointY * p, this.rotationPointZ * p);
+		GL.Translate(rotationPointX * p, rotationPointY * p, rotationPointZ * p);
 
-		GL.Rotate(this.rotateAngleZ * (180F / (float)Math.PI), 0.0F, 0.0F, 1.0F);
-		GL.Rotate(this.rotateAngleY * (180F / (float)Math.PI), 0.0F, 1.0F, 0.0F);
-		GL.Rotate(this.rotateAngleX * (180F / (float)Math.PI), 1.0F, 0.0F, 0.0F);
+		GL.Rotate(rotateAngleZ * (180F / (float)Math.PI), 0.0F, 0.0F, 1.0F);
+		GL.Rotate(rotateAngleY * (180F / (float)Math.PI), 0.0F, 1.0F, 0.0F);
+		GL.Rotate(rotateAngleX * (180F / (float)Math.PI), 1.0F, 0.0F, 0.0F);
 
-		if (this.childModels != null)
-			for (Object childModel : this.childModels)
+		if (childModels != null)
+			for (Object childModel : childModels)
 				((ModelRenderer)childModel).render(p);
 
 		GL.PopMatrix();

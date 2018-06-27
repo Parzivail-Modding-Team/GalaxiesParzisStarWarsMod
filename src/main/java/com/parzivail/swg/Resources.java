@@ -9,33 +9,22 @@ import net.minecraft.util.ResourceLocation;
  */
 public class Resources
 {
+	public static final String MODID = "pswg";
+	public static final int[] PANEL_LIGHT_COLORS = {
+			0xF8E443, 0x0050A1, 0x4ACBFF, 0xD1A250, 0x42A904, 0xFB4B33, 0x000000
+	};
 	private static final int MAJOR = 0;
 	private static final int MINOR = 0;
 	private static final int PATCH = 1;
 	public static final String VERSION = MAJOR + "." + MINOR + "." + PATCH;
-	public static final String MODID = "pswg";
-
-	public static final int[] PANEL_LIGHT_COLORS = {
-			0xF8E443,
-			0x0050A1,
-			0x4ACBFF,
-			0xD1A250,
-			0x42A904,
-			0xFB4B33,
-			0x000000
-	};
-
+	public static int dimIdTatooine = 2;
+	public static int biomeIdTatooineDunes = 100;
+	public static int dimIdEndor = 3;
+	public static int biomeIdEndor = 101;
+	public static ResourceLocation resBlack = location("textures/environment/black.png");
 	private static int guiIdx = 1;
 	public static final int GUI_BLASTER_WORKBENCH = guiIdx++;
 	public static final int GUI_SABACC_TABLE = guiIdx++;
-
-	public static int dimIdTatooine = 2;
-	public static int biomeIdTatooineDunes = 100;
-
-	public static int dimIdEndor = 3;
-	public static int biomeIdEndor = 101;
-
-	public static ResourceLocation resBlack = location("textures/environment/black.png");
 
 	public static String itemDot(String name)
 	{

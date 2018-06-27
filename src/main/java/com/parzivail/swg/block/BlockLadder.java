@@ -21,7 +21,7 @@ public class BlockLadder extends PBlockContainer
 		super("ladder", Material.iron);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

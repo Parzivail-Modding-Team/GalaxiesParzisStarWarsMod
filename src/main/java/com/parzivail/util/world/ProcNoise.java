@@ -6,9 +6,9 @@ import com.parzivail.util.math.MathUtil;
 
 public class ProcNoise
 {
-	private OpenSimplexNoise _noise;
-	private InfiniteWorleyNoise _worley;
-	private long _seed;
+	private final OpenSimplexNoise _noise;
+	private final InfiniteWorleyNoise _worley;
+	private final long _seed;
 
 	public ProcNoise(long seed)
 	{
@@ -70,14 +70,14 @@ public class ProcNoise
 	public double noiseDx(double x, double z)
 	{
 		double n = noise(x, z);
-		final double d = 0.001;
+		double d = 0.001;
 		return noise(x, z + d) - n;
 	}
 
 	public double noiseDz(double x, double z)
 	{
 		double n = noise(x, z);
-		final double d = 0.001;
+		double d = 0.001;
 		return noise(x + d, z) - n;
 	}
 

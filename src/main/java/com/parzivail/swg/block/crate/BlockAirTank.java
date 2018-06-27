@@ -14,9 +14,9 @@ public class BlockAirTank extends PBlockRotate
 	{
 		super("airTank", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
-		this.setBlockBounds(0.3f, 0, 0.3f, 0.7f, 1.7f, 0.7f);
+		setBlockBounds(0.3f, 0, 0.3f, 0.7f, 1.7f, 0.7f);
 		setHardness(50.0F);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

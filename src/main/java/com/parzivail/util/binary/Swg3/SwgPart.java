@@ -14,8 +14,8 @@ public class SwgPart
 
 	public SwgPart(String partName, int partFlags, SwgTexture[] textures, FacePointer[] triangles, SwgSt[] stPairs, Vertex[][] verts)
 	{
-		this.name = partName;
-		this.flags = partFlags;
+		name = partName;
+		flags = partFlags;
 		this.textures = textures;
 		this.triangles = triangles;
 		this.stPairs = stPairs;

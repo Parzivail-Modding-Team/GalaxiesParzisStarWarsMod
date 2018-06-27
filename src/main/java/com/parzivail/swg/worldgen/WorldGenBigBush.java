@@ -10,9 +10,9 @@ import java.util.Random;
 
 public class WorldGenBigBush
 {
-	private Block leaves;
-	private int minWidth;
-	private int maxWidth;
+	private final Block leaves;
+	private final int minWidth;
+	private final int maxWidth;
 
 	public WorldGenBigBush(Block leaves, int minWidth, int maxWidth)
 	{
@@ -23,7 +23,7 @@ public class WorldGenBigBush
 
 	private void setLeaves(World world, int x, int y, int z)
 	{
-		world.setBlock(x, y, z, this.leaves, 2, 2);
+		world.setBlock(x, y, z, leaves, 2, 2);
 	}
 
 	public boolean generate(World world, Random random, int x, int y, int z)
@@ -40,7 +40,7 @@ public class WorldGenBigBush
 			{
 				int leavesX = x + Math.round(radius * MathHelper.cos((float)angle));
 				int leavesZ = z + Math.round(radius * MathHelper.sin((float)angle));
-				this.setLeaves(world, leavesX, y, leavesZ);
+				setLeaves(world, leavesX, y, leavesZ);
 			}
 
 			for (int radius = 0; radius < width / 2f; radius++)
@@ -48,7 +48,7 @@ public class WorldGenBigBush
 				{
 					int leavesX = x + Math.round(radius * MathHelper.cos((float)angle));
 					int leavesZ = z + Math.round(radius * MathHelper.sin((float)angle));
-					this.setLeaves(world, leavesX, y + 1, leavesZ);
+					setLeaves(world, leavesX, y + 1, leavesZ);
 				}
 		}
 

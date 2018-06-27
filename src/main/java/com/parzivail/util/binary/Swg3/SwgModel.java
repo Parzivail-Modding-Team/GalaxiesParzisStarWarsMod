@@ -43,25 +43,6 @@ public class SwgModel
 		BuildRenderLists();
 	}
 
-	private void BuildRenderLists()
-	{
-		partRenderLists = new HashMap<>();
-		for (int i = 0; i < parts.length; i++)
-		{
-			Integer[] frameLists = new Integer[animationLength];
-			for (int frame = 0; frame < animationLength; frame++)
-			{
-				int list = GL11.glGenLists(1);
-				frameLists[frame] = list;
-				GL11.glNewList(list, GL11.GL_COMPILE);
-				renderPart(parts[i], frame);
-				GL.EndList();
-			}
-			partRenderLists.put(parts[i].name, frameLists);
-		}
-		Lumberjack.log("Built %s part lists each with %s frames (%s total)", parts.length, animationLength, parts.length * animationLength);
-	}
-
 	public static void renderPart(SwgPart part, int frame)
 	{
 		GL.Begin(PrimitiveType.Triangles);
@@ -180,5 +161,24 @@ public class SwgModel
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	private void BuildRenderLists()
+	{
+		partRenderLists = new HashMap<>();
+		for (int i = 0; i < parts.length; i++)
+		{
+			Integer[] frameLists = new Integer[animationLength];
+			for (int frame = 0; frame < animationLength; frame++)
+			{
+				int list = GL11.glGenLists(1);
+				frameLists[frame] = list;
+				GL11.glNewList(list, GL11.GL_COMPILE);
+				renderPart(parts[i], frame);
+				GL.EndList();
+			}
+			partRenderLists.put(parts[i].name, frameLists);
+		}
+		Lumberjack.log("Built %s part lists each with %s frames (%s total)", parts.length, animationLength, parts.length * animationLength);
 	}
 }

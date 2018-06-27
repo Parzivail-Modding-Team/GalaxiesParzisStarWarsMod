@@ -8,7 +8,8 @@ import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.ship.BasicFlightModel;
 import com.parzivail.swg.ship.ShipInput;
 import com.parzivail.util.entity.EntityUtils;
-import cpw.mods.fml.common.gameevent.InputEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
+import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
@@ -18,12 +19,12 @@ import org.lwjgl.input.Keyboard;
  */
 public class KeyHandler
 {
-	public static void onInput(InputEvent.KeyInputEvent event)
+	public static void onInput(KeyInputEvent event)
 	{
 		onInput();
 	}
 
-	public static void onInput(InputEvent.MouseInputEvent event)
+	public static void onInput(MouseInputEvent event)
 	{
 		onInput();
 	}
@@ -38,9 +39,9 @@ public class KeyHandler
 			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(Client.mc.thePlayer));
 		}
 
-		if (KeybindRegistry.keyDebug.getIsKeyPressed())
-		{
-		}
+		//		if (KeybindRegistry.keyDebug.getIsKeyPressed())
+		//		{
+		//		}
 	}
 
 	public static void handleVehicleMovement()

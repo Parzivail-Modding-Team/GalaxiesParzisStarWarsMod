@@ -11,9 +11,9 @@ import net.minecraft.world.IBlockAccess;
 
 public class PBlockConnected extends PBlock
 {
+	private final String folder;
+	private final String texture;
 	protected IIcon[] icons = new IIcon[16];
-	private String folder;
-	private String texture;
 
 	public PBlockConnected(String name, Material mat)
 	{
@@ -28,7 +28,7 @@ public class PBlockConnected extends PBlock
 	public PBlockConnected(String unlocalName, String folder, String name, Material mat)
 	{
 		super(unlocalName, mat);
-		this.texture = name;
+		texture = name;
 		this.folder = folder;
 	}
 
@@ -40,16 +40,16 @@ public class PBlockConnected extends PBlock
 		{
 			case 0:
 			case 1:
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 - 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 - 1, par3, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 - 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 - 1, par3, par4)))
 					isOpenDown = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 + 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 + 1, par3, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 + 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 + 1, par3, par4)))
 					isOpenUp = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 - 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 - 1)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 - 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 - 1)))
 					isOpenLeft = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 + 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 + 1)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 + 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 + 1)))
 					isOpenRight = true;
 
 				if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
@@ -84,16 +84,16 @@ public class PBlockConnected extends PBlock
 					return icons[1];
 				break;
 			case 2:
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
 					isOpenDown = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 + 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 + 1, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 + 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 + 1, par4)))
 					isOpenUp = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 - 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 - 1, par3, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 - 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 - 1, par3, par4)))
 					isOpenLeft = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 + 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 + 1, par3, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 + 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 + 1, par3, par4)))
 					isOpenRight = true;
 
 				if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
@@ -128,16 +128,16 @@ public class PBlockConnected extends PBlock
 					return icons[3];
 				break;
 			case 3:
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
 					isOpenDown = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 + 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 + 1, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 + 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 + 1, par4)))
 					isOpenUp = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 - 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 - 1, par3, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 - 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 - 1, par3, par4)))
 					isOpenLeft = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 + 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 + 1, par3, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 + 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 + 1, par3, par4)))
 					isOpenRight = true;
 
 				if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
@@ -172,16 +172,16 @@ public class PBlockConnected extends PBlock
 					return icons[4];
 				break;
 			case 4:
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
 					isOpenDown = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 + 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 + 1, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 + 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 + 1, par4)))
 					isOpenUp = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 - 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 - 1)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 - 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 - 1)))
 					isOpenLeft = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 + 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 + 1)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 + 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 + 1)))
 					isOpenRight = true;
 
 				if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
@@ -216,16 +216,16 @@ public class PBlockConnected extends PBlock
 					return icons[4];
 				break;
 			case 5:
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
 					isOpenDown = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 + 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 + 1, par4)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 + 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 + 1, par4)))
 					isOpenUp = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 - 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 - 1)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 - 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 - 1)))
 					isOpenLeft = true;
 
-				if (this.shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 + 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 + 1)))
+				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 + 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 + 1)))
 					isOpenRight = true;
 
 				if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
@@ -268,35 +268,35 @@ public class PBlockConnected extends PBlock
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
 	{
-		return par1IBlockAccess.getBlockMetadata(par2, par3, par4) == 15 ? this.icons[0] : this.getConnectedBlockTexture(par1IBlockAccess, par2, par3, par4, par5, this.icons);
+		return par1IBlockAccess.getBlockMetadata(par2, par3, par4) == 15 ? icons[0] : getConnectedBlockTexture(par1IBlockAccess, par2, par3, par4, par5, icons);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(int par1, int par2)
 	{
-		return this.icons[0];
+		return icons[0];
 	}
 
 	@Override
 	public void registerIcons(IIconRegister reg)
 	{
-		this.icons[0] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture);
-		this.icons[1] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_1_d");
-		this.icons[2] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_1_u");
-		this.icons[3] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_1_l");
-		this.icons[4] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_1_r");
-		this.icons[5] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_2_h");
-		this.icons[6] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_2_v");
-		this.icons[7] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_2_dl");
-		this.icons[8] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_2_dr");
-		this.icons[9] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_2_ul");
-		this.icons[10] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_2_ur");
-		this.icons[11] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_3_d");
-		this.icons[12] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_3_u");
-		this.icons[13] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_3_l");
-		this.icons[14] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_3_r");
-		this.icons[15] = reg.registerIcon(Resources.MODID + ":" + "connected/" + this.folder + "/" + this.texture + "_4");
+		icons[0] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture);
+		icons[1] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_1_d");
+		icons[2] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_1_u");
+		icons[3] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_1_l");
+		icons[4] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_1_r");
+		icons[5] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_2_h");
+		icons[6] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_2_v");
+		icons[7] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_2_dl");
+		icons[8] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_2_dr");
+		icons[9] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_2_ul");
+		icons[10] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_2_ur");
+		icons[11] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_3_d");
+		icons[12] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_3_u");
+		icons[13] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_3_l");
+		icons[14] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_3_r");
+		icons[15] = reg.registerIcon(Resources.MODID + ":" + "connected/" + folder + "/" + texture + "_4");
 	}
 
 	/**

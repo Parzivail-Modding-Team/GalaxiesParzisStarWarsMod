@@ -9,13 +9,13 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderBowcaster implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.bowcaster.png");
+	private static final ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/rifle.bowcaster.png");
 
-	private ModelBowcaster model;
+	private final ModelBowcaster model;
 
 	public RenderBowcaster()
 	{
-		this.model = new ModelBowcaster();
+		model = new ModelBowcaster();
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class RenderBowcaster implements IItemRenderer
 				GL11.glRotatef(180, 0, 1, 0);
 				GL11.glTranslatef(5, -2, 0);
 				GL11.glScalef(-1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -54,7 +54,7 @@ public class RenderBowcaster implements IItemRenderer
 				GL11.glRotatef(90, 0, 0, -1);
 				GL11.glTranslatef(0, -22, 0);
 				GL11.glTranslatef(-5, 4, 0);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -69,7 +69,7 @@ public class RenderBowcaster implements IItemRenderer
 				GL11.glRotatef(90, 0, 0, -1);
 				GL11.glRotatef(30, 0, 1, 0);
 				GL11.glScalef(-1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -80,7 +80,7 @@ public class RenderBowcaster implements IItemRenderer
 				GL11.glTranslatef(0, -8, 0);
 				GL11.glScalef(1, 1, -1);
 				GL11.glRotatef(90, 0, 1, 0);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;

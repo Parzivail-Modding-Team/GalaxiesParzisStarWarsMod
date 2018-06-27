@@ -17,12 +17,12 @@ public abstract class PBlockContainer extends BlockContainer
 	{
 		super(material);
 		this.name = name;
-		this.setUnlocalizedName(Resources.modDot(this.name));
+		setUnlocalizedName(Resources.modDot(this.name));
 	}
 
 	public PBlockContainer setAlpha()
 	{
-		this.setTextureName(Resources.modColon("alpha"));
+		setTextureName(Resources.modColon("alpha"));
 		return this;
 	}
 }

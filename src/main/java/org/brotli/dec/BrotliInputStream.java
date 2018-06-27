@@ -22,7 +22,7 @@ public class BrotliInputStream extends InputStream
 	/**
 	 * Internal buffer used for efficient byte-by-byte reading.
 	 */
-	private byte[] buffer;
+	private final byte[] buffer;
 
 	/**
 	 * Number of decoded but still unused bytes in internal buffer.
@@ -80,9 +80,9 @@ public class BrotliInputStream extends InputStream
 		{
 			throw new IllegalArgumentException("source is null");
 		}
-		this.buffer = new byte[byteReadBufferSize];
-		this.remainingBufferBytes = 0;
-		this.bufferOffset = 0;
+		buffer = new byte[byteReadBufferSize];
+		remainingBufferBytes = 0;
+		bufferOffset = 0;
 		try
 		{
 			Decode.initState(state, source);

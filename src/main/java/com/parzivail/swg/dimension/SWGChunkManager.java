@@ -16,15 +16,15 @@ public class SWGChunkManager extends WorldChunkManager
 	/**
 	 * The biome generator object.
 	 */
-	private BiomeGenBase biomeGenerator;
+	private final BiomeGenBase biomeGenerator;
 	/**
 	 * The rainfall in the world
 	 */
-	private float rainfall;
+	private final float rainfall;
 
 	public SWGChunkManager(BiomeGenBase biome, float rainfall)
 	{
-		this.biomeGenerator = biome;
+		biomeGenerator = biome;
 		this.rainfall = rainfall;
 	}
 
@@ -33,7 +33,7 @@ public class SWGChunkManager extends WorldChunkManager
 	 */
 	public BiomeGenBase getBiomeGenAt(int x, int z)
 	{
-		return this.biomeGenerator;
+		return biomeGenerator;
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class SWGChunkManager extends WorldChunkManager
 			biomes = new BiomeGenBase[width * length];
 		}
 
-		Arrays.fill(biomes, 0, width * length, this.biomeGenerator);
+		Arrays.fill(biomes, 0, width * length, biomeGenerator);
 		return biomes;
 	}
 
@@ -60,7 +60,7 @@ public class SWGChunkManager extends WorldChunkManager
 			listToReuse = new float[width * length];
 		}
 
-		Arrays.fill(listToReuse, 0, width * length, this.rainfall);
+		Arrays.fill(listToReuse, 0, width * length, rainfall);
 		return listToReuse;
 	}
 
@@ -75,7 +75,7 @@ public class SWGChunkManager extends WorldChunkManager
 			oldBiomeList = new BiomeGenBase[width * length];
 		}
 
-		Arrays.fill(oldBiomeList, 0, width * length, this.biomeGenerator);
+		Arrays.fill(oldBiomeList, 0, width * length, biomeGenerator);
 		return oldBiomeList;
 	}
 
@@ -85,12 +85,12 @@ public class SWGChunkManager extends WorldChunkManager
 	 */
 	public BiomeGenBase[] getBiomeGenAt(BiomeGenBase[] listToReuse, int x, int z, int width, int length, boolean checkCache)
 	{
-		return this.loadBlockGeneratorData(listToReuse, x, z, width, length);
+		return loadBlockGeneratorData(listToReuse, x, z, width, length);
 	}
 
 	public ChunkPosition findBiomePosition(int x, int y, int z, List biomeHaystack, Random rand)
 	{
-		return biomeHaystack.contains(this.biomeGenerator) ? new ChunkPosition(x - z + rand.nextInt(z * 2 + 1), 0, y - z + rand.nextInt(z * 2 + 1)) : null;
+		return biomeHaystack.contains(biomeGenerator) ? new ChunkPosition(x - z + rand.nextInt(z * 2 + 1), 0, y - z + rand.nextInt(z * 2 + 1)) : null;
 	}
 
 	/**
@@ -98,6 +98,6 @@ public class SWGChunkManager extends WorldChunkManager
 	 */
 	public boolean areBiomesViable(int x, int y, int z, List biomeHaystack)
 	{
-		return biomeHaystack.contains(this.biomeGenerator);
+		return biomeHaystack.contains(biomeGenerator);
 	}
 }

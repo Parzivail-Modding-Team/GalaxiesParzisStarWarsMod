@@ -39,7 +39,7 @@ public class MessageCreateDecal extends PMessage<MessageCreateDecal>
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		WorldDecals.create(this.dimension, new Decal(type, x, y, z, size, direction));
+		WorldDecals.create(dimension, new Decal(type, x, y, z, size, direction));
 		return null;
 	}
 }

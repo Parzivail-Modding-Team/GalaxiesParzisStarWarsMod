@@ -44,8 +44,8 @@ public class NinePatchResource
 		float factor = r.getScaleFactor();
 
 		GL.PushMatrix();
-		float xScale = (width * factor - leftEdgeSize - rightEdgeSize) / (float)this.contentCenterWidth;
-		float yScale = (height * factor - topEdgeSize - bottomEdgeSize) / (float)this.contentCenterHeight;
+		float xScale = (width * factor - leftEdgeSize - rightEdgeSize) / (float)contentCenterWidth;
+		float yScale = (height * factor - topEdgeSize - bottomEdgeSize) / (float)contentCenterHeight;
 
 		GL.Scale(1f / factor);
 

@@ -5,7 +5,7 @@ import com.parzivail.util.world.ProcNoise;
 
 public class TerrainSwissHills implements ITerrainHeightmap
 {
-	private ProcNoise pNoise;
+	private final ProcNoise pNoise;
 
 	public TerrainSwissHills(long seed)
 	{

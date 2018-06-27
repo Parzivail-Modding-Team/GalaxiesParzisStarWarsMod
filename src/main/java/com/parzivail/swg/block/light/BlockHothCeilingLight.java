@@ -18,7 +18,7 @@ public class BlockHothCeilingLight extends PBlockRotate
 		setBlockBounds(0.4f, 0.8f, 0.4f, 0.6f, 1, 0.6f);
 		setHardness(50.0F);
 		setLightLevel(1);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

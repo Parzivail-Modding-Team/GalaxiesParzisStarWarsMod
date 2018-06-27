@@ -106,9 +106,9 @@ public abstract class BasicFlightModel extends EntityBase
 	 */
 	public boolean interactFirst(EntityPlayer player)
 	{
-		if (this.riddenByEntity == null)
+		if (riddenByEntity == null)
 		{
-			if (!this.worldObj.isRemote)
+			if (!worldObj.isRemote)
 				player.mountEntity(this);
 			return true;
 		}
@@ -117,57 +117,57 @@ public abstract class BasicFlightModel extends EntityBase
 
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
-		this.setDead();
+		setDead();
 		return true;
 	}
 
 	@Override
 	public void onUpdate()
 	{
-		if (this.posY < -64.0D)
-			this.setDead();
+		if (posY < -64.0D)
+			setDead();
 
-		this.prevPosX = this.lastTickPosX = this.posX;
-		this.prevPosY = this.lastTickPosY = this.posY;
-		this.prevPosZ = this.lastTickPosZ = this.posZ;
+		prevPosX = lastTickPosX = posX;
+		prevPosY = lastTickPosY = posY;
+		prevPosZ = lastTickPosZ = posZ;
 
-		this.rotationYaw = 180 - this.orientation.getYaw();
-		this.rotationPitch = this.orientation.getPitch();
-		this.prevRotationYaw = 180 - this.previousOrientation.getYaw();
-		this.prevRotationPitch = this.previousOrientation.getPitch();
+		rotationYaw = 180 - orientation.getYaw();
+		rotationPitch = orientation.getPitch();
+		prevRotationYaw = 180 - previousOrientation.getYaw();
+		prevRotationPitch = previousOrientation.getPitch();
 
 		previousOrientation = orientation.clone();
 
-		if (this.worldObj.isRemote && EntityUtils.isClientControlled(this))
+		if (worldObj.isRemote && EntityUtils.isClientControlled(this))
 			KeyHandler.handleVehicleMovement();
 
-		if (this.riddenByEntity instanceof EntityLivingBase)
+		if (riddenByEntity instanceof EntityLivingBase)
 		{
-			Vector3f forward = this.orientation.findLocalVectorGlobally(new Vector3f(0, 0, -1));
+			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, -1));
 			//Lumberjack.log(this.throttle);
-			this.moveEntity(this.motionX + forward.x * throttle, this.motionY + forward.y * throttle, this.motionZ + forward.z * throttle);
+			moveEntity(motionX + forward.x * throttle, motionY + forward.y * throttle, motionZ + forward.z * throttle);
 		}
 		else
-			this.moveEntity(this.motionX, this.motionY, this.motionZ);
-		this.orientation.rotateLocalPitch(this.angularMomentum.x);
-		this.orientation.rotateLocalYaw(this.angularMomentum.y);
-		this.orientation.rotateLocalRoll(this.angularMomentum.z);
+			moveEntity(motionX, motionY, motionZ);
+		orientation.rotateLocalPitch(angularMomentum.x);
+		orientation.rotateLocalYaw(angularMomentum.y);
+		orientation.rotateLocalRoll(angularMomentum.z);
 
-		this.angularMomentum.x *= 0.7;
-		this.angularMomentum.y *= 0.7;
-		this.angularMomentum.z *= 0.7;
+		angularMomentum.x *= 0.7;
+		angularMomentum.y *= 0.7;
+		angularMomentum.z *= 0.7;
 
-		if (Math.abs(this.angularMomentum.x) < 0.001f)
-			this.angularMomentum.x = 0;
-		if (Math.abs(this.angularMomentum.y) < 0.001f)
-			this.angularMomentum.y = 0;
-		if (Math.abs(this.angularMomentum.z) < 0.001f)
-			this.angularMomentum.z = 0;
+		if (Math.abs(angularMomentum.x) < 0.001f)
+			angularMomentum.x = 0;
+		if (Math.abs(angularMomentum.y) < 0.001f)
+			angularMomentum.y = 0;
+		if (Math.abs(angularMomentum.z) < 0.001f)
+			angularMomentum.z = 0;
 
-		if (!this.worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
-			if (this.riddenByEntity != null && this.riddenByEntity.isDead)
-				this.riddenByEntity = null;
+			if (riddenByEntity != null && riddenByEntity.isDead)
+				riddenByEntity = null;
 		}
 	}
 
@@ -177,28 +177,28 @@ public abstract class BasicFlightModel extends EntityBase
 		switch (input)
 		{
 			case RollLeft:
-				this.angularMomentum.z -= 4;
+				angularMomentum.z -= 4;
 				break;
 			case RollRight:
-				this.angularMomentum.z += 4;
+				angularMomentum.z += 4;
 				break;
 			case PitchUp:
-				this.angularMomentum.x += 2;
+				angularMomentum.x += 2;
 				break;
 			case PitchDown:
-				this.angularMomentum.x -= 2;
+				angularMomentum.x -= 2;
 				break;
 			case YawLeft:
 				break;
 			case YawRight:
 				break;
 			case ThrottleUp:
-				this.throttle += this.data.maxThrottle * this.data.acceleration;
-				this.throttle = MathHelper.clamp_float(this.throttle, 0, this.data.maxThrottle);
+				throttle += data.maxThrottle * data.acceleration;
+				throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
 				break;
 			case ThrottleDown:
-				this.throttle -= this.data.maxThrottle * this.data.acceleration;
-				this.throttle = MathHelper.clamp_float(this.throttle, 0, this.data.maxThrottle);
+				throttle -= data.maxThrottle * data.acceleration;
+				throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
 				break;
 			case BlasterFire:
 				break;

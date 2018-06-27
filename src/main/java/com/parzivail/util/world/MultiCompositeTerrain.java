@@ -1,5 +1,6 @@
 package com.parzivail.util.world;
 
+import com.parzivail.util.world.TerrainLayer.Method;
 import net.minecraft.util.MathHelper;
 
 /**
@@ -13,9 +14,9 @@ public class MultiCompositeTerrain implements ITerrainHeightmap
 
 	public MultiCompositeTerrain(long seed, int noiseScale, ITerrainHeightmap... terrains)
 	{
-		this.lerpNoise = new TerrainLayer(seed, TerrainLayer.Method.Add, noiseScale, 1);
+		lerpNoise = new TerrainLayer(seed, Method.Add, noiseScale, 1);
 		this.terrains = terrains;
-		this.n = terrains.length - 1;
+		n = terrains.length - 1;
 	}
 
 	public double getHeightAt(int x, int z)

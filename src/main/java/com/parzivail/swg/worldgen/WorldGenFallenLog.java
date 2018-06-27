@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class WorldGenFallenLog
 {
-	private Block log;
+	private final Block log;
 
 	public WorldGenFallenLog(Block log)
 	{
@@ -19,13 +19,13 @@ public class WorldGenFallenLog
 
 	private void setLog(World world, int x, int y, int z, int metadata)
 	{
-		world.setBlock(x, y, z, this.log, metadata, 2);
-		world.setBlock(x - 1, y, z, this.log, metadata, 2);
-		world.setBlock(x + 1, y, z, this.log, metadata, 2);
-		world.setBlock(x, y, z - 1, this.log, metadata, 2);
-		world.setBlock(x, y, z + 1, this.log, metadata, 2);
-		world.setBlock(x, y - 1, z, this.log, metadata, 2);
-		world.setBlock(x, y + 1, z, this.log, metadata, 2);
+		world.setBlock(x, y, z, log, metadata, 2);
+		world.setBlock(x - 1, y, z, log, metadata, 2);
+		world.setBlock(x + 1, y, z, log, metadata, 2);
+		world.setBlock(x, y, z - 1, log, metadata, 2);
+		world.setBlock(x, y, z + 1, log, metadata, 2);
+		world.setBlock(x, y - 1, z, log, metadata, 2);
+		world.setBlock(x, y + 1, z, log, metadata, 2);
 	}
 
 	public void generate(World world, Random random, int sx, int sy, int sz, int ex, int ey, int ez)

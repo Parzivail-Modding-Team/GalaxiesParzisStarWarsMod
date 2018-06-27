@@ -1,7 +1,8 @@
 package com.parzivail.swg.render.decal;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D2;
+import com.parzivail.util.ui.Fx.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
@@ -34,7 +35,7 @@ public class Decal
 	private final int type;
 	private final int textureIdx;
 
-	private long deathTime;
+	private final long deathTime;
 
 	public Decal(int type, float x, float y, float z, float size, EnumFacing direction)
 	{
@@ -46,21 +47,21 @@ public class Decal
 
 		int hash = Math.abs(hashCode());
 		this.type = type;
-		this.textureIdx = hash % decalTextures.get(type).length;
-		this.rotation = hash % 360;
+		textureIdx = hash % decalTextures.get(type).length;
+		rotation = hash % 360;
 
-		deathTime = Fx.Util.GetMillis() + 20000;
+		deathTime = Util.GetMillis() + 20000;
 	}
 
 	public boolean shouldDie()
 	{
-		return Fx.Util.GetMillis() >= deathTime;
+		return Util.GetMillis() >= deathTime;
 	}
 
 	public void render()
 	{
-		Minecraft.getMinecraft().renderEngine.bindTexture(decalTextures.get(type)[this.textureIdx]);
-		Fx.D2.DrawSolidRectangle(-1, -1, 2, 2);
+		Minecraft.getMinecraft().renderEngine.bindTexture(decalTextures.get(type)[textureIdx]);
+		D2.DrawSolidRectangle(-1, -1, 2, 2);
 	}
 
 	@Override

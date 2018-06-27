@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.*;
 
-public class ScarifUtil
+class ScarifUtil
 {
 	public static String readNullTerminatedString(DataInput s)
 	{

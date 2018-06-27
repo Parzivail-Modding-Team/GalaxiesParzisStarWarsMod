@@ -5,7 +5,7 @@ import com.parzivail.swg.network.MessageCreateDecal;
 import com.parzivail.swg.network.MessageSpawnParticle;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
@@ -45,7 +45,7 @@ public class Common
 
 	public void createDecal(World world, int type, float x, float y, float z, float size, EnumFacing direction)
 	{
-		StarWarsGalaxy.network.sendToAllAround(new MessageCreateDecal(world.provider.dimensionId, type, x, y, z, size, direction), new NetworkRegistry.TargetPoint(world.provider.dimensionId, x, y, z, 100));
+		StarWarsGalaxy.network.sendToAllAround(new MessageCreateDecal(world.provider.dimensionId, type, x, y, z, size, direction), new TargetPoint(world.provider.dimensionId, x, y, z, 100));
 	}
 
 	public Entity getEntityById(int dim, int id)
@@ -53,7 +53,8 @@ public class Common
 		return MinecraftServer.getServer().worldServerForDimension(dim).getEntityByID(id);
 	}
 
-	public MinecraftServer getMCServer() {
+	public MinecraftServer getMCServer()
+	{
 		return FMLCommonHandler.instance().getMinecraftServerInstance();
 	}
 

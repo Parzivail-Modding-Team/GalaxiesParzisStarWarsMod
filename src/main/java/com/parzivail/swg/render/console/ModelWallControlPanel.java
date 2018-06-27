@@ -25,39 +25,39 @@ public class ModelWallControlPanel extends ModelBase
 
 	public ModelWallControlPanel()
 	{
-		this.textureWidth = 64;
-		this.textureHeight = 32;
-		this.button = new ShaderModelRenderer(this, 12, 8, ShaderHelper.glowSolid);
-		this.button.setRotationPoint(0.5F, 0.5F, -0.3F);
-		this.button.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
-		this.screen = new ModelRenderer(this, 0, 8);
-		this.screen.setRotationPoint(3.5F, 0.5F, -0.3F);
-		this.screen.addBox(0.0F, 0.0F, 0.0F, 4, 4, 1, 0.0F);
-		this.button_4 = new ShaderModelRenderer(this, 0, 27, ShaderHelper.glowSolid);
-		this.button_4.setRotationPoint(2.0F, 2.0F, -0.3F);
-		this.button_4.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
-		this.button_3 = new ShaderModelRenderer(this, 0, 23, ShaderHelper.glowSolid);
-		this.button_3.setRotationPoint(2.0F, 0.5F, -0.3F);
-		this.button_3.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
-		this.base = new ModelRenderer(this, 0, 0);
-		this.base.setRotationPoint(-4.0F, 13.0F, 7.0F);
-		this.base.addBox(0.0F, 0.0F, 0.0F, 8, 5, 1, 0.0F);
-		this.button_2 = new ShaderModelRenderer(this, 0, 19, ShaderHelper.glowSolid);
-		this.button_2.setRotationPoint(0.5F, 3.5F, -0.3F);
-		this.button_2.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
-		this.button_1 = new ShaderModelRenderer(this, 0, 15, ShaderHelper.glowSolid);
-		this.button_1.setRotationPoint(0.5F, 2.0F, -0.3F);
-		this.button_1.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
-		this.button_5 = new ShaderModelRenderer(this, 6, 15, ShaderHelper.glowSolid);
-		this.button_5.setRotationPoint(2.0F, 3.5F, -0.3F);
-		this.button_5.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
-		this.base.addChild(this.button);
-		this.base.addChild(this.screen);
-		this.base.addChild(this.button_4);
-		this.base.addChild(this.button_3);
-		this.base.addChild(this.button_2);
-		this.base.addChild(this.button_1);
-		this.base.addChild(this.button_5);
+		textureWidth = 64;
+		textureHeight = 32;
+		button = new ShaderModelRenderer(this, 12, 8, ShaderHelper.glowSolid);
+		button.setRotationPoint(0.5F, 0.5F, -0.3F);
+		button.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
+		screen = new ModelRenderer(this, 0, 8);
+		screen.setRotationPoint(3.5F, 0.5F, -0.3F);
+		screen.addBox(0.0F, 0.0F, 0.0F, 4, 4, 1, 0.0F);
+		button_4 = new ShaderModelRenderer(this, 0, 27, ShaderHelper.glowSolid);
+		button_4.setRotationPoint(2.0F, 2.0F, -0.3F);
+		button_4.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
+		button_3 = new ShaderModelRenderer(this, 0, 23, ShaderHelper.glowSolid);
+		button_3.setRotationPoint(2.0F, 0.5F, -0.3F);
+		button_3.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
+		base = new ModelRenderer(this, 0, 0);
+		base.setRotationPoint(-4.0F, 13.0F, 7.0F);
+		base.addBox(0.0F, 0.0F, 0.0F, 8, 5, 1, 0.0F);
+		button_2 = new ShaderModelRenderer(this, 0, 19, ShaderHelper.glowSolid);
+		button_2.setRotationPoint(0.5F, 3.5F, -0.3F);
+		button_2.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
+		button_1 = new ShaderModelRenderer(this, 0, 15, ShaderHelper.glowSolid);
+		button_1.setRotationPoint(0.5F, 2.0F, -0.3F);
+		button_1.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
+		button_5 = new ShaderModelRenderer(this, 6, 15, ShaderHelper.glowSolid);
+		button_5.setRotationPoint(2.0F, 3.5F, -0.3F);
+		button_5.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1, 0.0F);
+		base.addChild(button);
+		base.addChild(screen);
+		base.addChild(button_4);
+		base.addChild(button_3);
+		base.addChild(button_2);
+		base.addChild(button_1);
+		base.addChild(button_5);
 	}
 
 	@Override
@@ -74,7 +74,7 @@ public class ModelWallControlPanel extends ModelBase
 			((ShaderModelRenderer)button_4).color = console.color5;
 			((ShaderModelRenderer)button_5).color = console.color6;
 		}
-		this.base.render(f5);
+		base.render(f5);
 	}
 
 	/**

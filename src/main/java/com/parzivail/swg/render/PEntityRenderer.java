@@ -38,7 +38,7 @@ public class PEntityRenderer extends EntityRenderer
 
 	public void useCamera(double x, double y, double z, float pitch, float yaw)
 	{
-		this.usingCamera = true;
+		usingCamera = true;
 		camera.setPosition(x, y, z);
 
 		camera.rotationYaw = yaw % 360.0F;

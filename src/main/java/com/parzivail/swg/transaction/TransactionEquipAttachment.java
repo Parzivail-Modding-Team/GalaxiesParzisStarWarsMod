@@ -8,16 +8,22 @@ import com.parzivail.swg.item.blaster.data.grip.BlasterGrip;
 import com.parzivail.swg.item.blaster.data.scope.BlasterScope;
 import com.parzivail.swg.network.Transaction;
 import com.parzivail.swg.tile.TileBlasterWorkbench;
+import com.parzivail.util.item.NbtSave;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.DimensionManager;
 
 public class TransactionEquipAttachment extends Transaction<TransactionEquipAttachment>
 {
+	@NbtSave
 	public int workbenchDim;
+	@NbtSave
 	public int workbenchX;
+	@NbtSave
 	public int workbenchY;
+	@NbtSave
 	public int workbenchZ;
+	@NbtSave
 	public int attachmentId;
 
 	public TransactionEquipAttachment()
@@ -31,7 +37,7 @@ public class TransactionEquipAttachment extends Transaction<TransactionEquipAtta
 		workbenchX = workbench.xCoord;
 		workbenchY = workbench.yCoord;
 		workbenchZ = workbench.zCoord;
-		this.attachmentId = attachment.getId();
+		attachmentId = attachment.getId();
 	}
 
 	@Override

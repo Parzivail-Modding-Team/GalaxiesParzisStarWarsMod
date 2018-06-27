@@ -5,6 +5,8 @@ import com.parzivail.swg.dimension.endor.terrain.TerrainSwissHills;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.world.*;
+import com.parzivail.util.world.TerrainLayer.Function;
+import com.parzivail.util.world.TerrainLayer.Method;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
@@ -24,24 +26,24 @@ import java.util.Random;
  */
 public class ChunkProviderEndor implements IChunkProvider
 {
-	private World worldObj;
+	private final World worldObj;
 	private final int waterLevel = 100;
 
-	private WorldGenLakes waterLakeGenerator;
+	private final WorldGenLakes waterLakeGenerator;
 
 	public ITerrainHeightmap terrain;
 
 	public ChunkProviderEndor(World worldObj, long seed)
 	{
 		this.worldObj = worldObj;
-		this.waterLakeGenerator = new WorldGenLakes(Blocks.water);
+		waterLakeGenerator = new WorldGenLakes(Blocks.water);
 		terrain = new MultiCompositeTerrain(seed, 800,
 				// Naboo Mountains
 				new TerrainSwissHills(seed),
 				// Naboo Hills
 				//new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 80), new TerrainLayer(seed + 1, TerrainLayer.Function.Midpoint, TerrainLayer.Method.Add, 50, 20)),
 				// Naboo Plains
-				new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 10), new TerrainLayer(seed + 1, TerrainLayer.Function.Constant, TerrainLayer.Method.Add, 200, 40)));
+				new CompositeTerrain(new TerrainLayer(seed, Function.MidWave, Method.Add, 100, 10), new TerrainLayer(seed + 1, Function.Constant, Method.Add, 200, 40)));
 	}
 
 	/**
@@ -49,7 +51,7 @@ public class ChunkProviderEndor implements IChunkProvider
 	 */
 	public Chunk loadChunk(int x, int z)
 	{
-		return this.provideChunk(x, z);
+		return provideChunk(x, z);
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class ChunkProviderEndor implements IChunkProvider
 	 */
 	public Chunk provideChunk(int cx, int cz)
 	{
-		Chunk chunk = new Chunk(this.worldObj, cx, cz);
+		Chunk chunk = new Chunk(worldObj, cx, cz);
 		for (short x = 0; x < 16; x++)
 		{
 			for (short z = 0; z < 16; z++)
@@ -67,7 +69,7 @@ public class ChunkProviderEndor implements IChunkProvider
 				int finalHeight = (int)height;
 
 				if (chunk.getBlockStorageArray()[0] == null)
-					chunk.getBlockStorageArray()[0] = new ExtendedBlockStorage(0, !this.worldObj.provider.hasNoSky);
+					chunk.getBlockStorageArray()[0] = new ExtendedBlockStorage(0, !worldObj.provider.hasNoSky);
 				chunk.getBlockStorageArray()[0].setExtBlockID(x, 0, z, Blocks.bedrock);
 
 				for (short y = 1; y <= finalHeight; y++)
@@ -77,7 +79,7 @@ public class ChunkProviderEndor implements IChunkProvider
 
 					if (extendedblockstorage == null)
 					{
-						extendedblockstorage = new ExtendedBlockStorage(l << 4, !this.worldObj.provider.hasNoSky);
+						extendedblockstorage = new ExtendedBlockStorage(l << 4, !worldObj.provider.hasNoSky);
 						chunk.getBlockStorageArray()[l] = extendedblockstorage;
 					}
 
@@ -102,7 +104,7 @@ public class ChunkProviderEndor implements IChunkProvider
 
 		StructureRegister.structureEngine.genStructure(chunk);
 
-		BiomeGenBase[] abiomegenbase = this.worldObj.getWorldChunkManager().loadBlockGeneratorData(null, cx * 16, cz * 16, 16, 16);
+		BiomeGenBase[] abiomegenbase = worldObj.getWorldChunkManager().loadBlockGeneratorData(null, cx * 16, cz * 16, 16, 16);
 		byte[] abyte = chunk.getBiomeArray();
 
 		for (int l = 0; l < abyte.length; ++l)
@@ -132,19 +134,19 @@ public class ChunkProviderEndor implements IChunkProvider
 
 		Random random = new Random((k * 31) ^ l);
 
-		if (this.waterLakeGenerator != null && random.nextInt(4) == 0)
+		if (random.nextInt(4) == 0)
 		{
 			int l1 = k + random.nextInt(16) + 8;
 			int i2 = random.nextInt(256);
 			int j2 = l + random.nextInt(16) + 8;
-			this.waterLakeGenerator.generate(this.worldObj, random, l1, i2, j2);
+			waterLakeGenerator.generate(worldObj, random, l1, i2, j2);
 		}
 
-		BiomeGenBase b = this.worldObj.getBiomeGenForCoords(k + 16, l + 16);
+		BiomeGenBase b = worldObj.getBiomeGenForCoords(k + 16, l + 16);
 		if (!(b instanceof PBiomeGenBase))
 			return;
 		PBiomeGenBase biomegenbase = (PBiomeGenBase)b;
-		biomegenbase.decorate(this, this.worldObj, StarWarsGalaxy.random, k, l);
+		biomegenbase.decorate(this, worldObj, StarWarsGalaxy.random, k, l);
 	}
 
 	/**
@@ -193,7 +195,7 @@ public class ChunkProviderEndor implements IChunkProvider
 	 */
 	public List getPossibleCreatures(EnumCreatureType p_73155_1_, int p_73155_2_, int p_73155_3_, int p_73155_4_)
 	{
-		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(p_73155_2_, p_73155_4_);
+		BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(p_73155_2_, p_73155_4_);
 		return biomegenbase.getSpawnableList(p_73155_1_);
 	}
 

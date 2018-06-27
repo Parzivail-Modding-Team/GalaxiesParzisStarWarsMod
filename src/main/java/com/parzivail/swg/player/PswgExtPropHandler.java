@@ -3,14 +3,15 @@ package com.parzivail.swg.player;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.Clone;
+import net.minecraftforge.event.entity.player.PlayerEvent.StartTracking;
 
 public class PswgExtPropHandler
 {
 	@SubscribeEvent
-	public void entityConstruct(EntityEvent.EntityConstructing e)
+	public void entityConstruct(EntityConstructing e)
 	{
 		if (e.entity instanceof EntityPlayer && e.entity.getExtendedProperties(PswgExtProp.PROP_NAME) == null)
 			e.entity.registerExtendedProperties(PswgExtProp.PROP_NAME, new PswgExtProp());
@@ -28,7 +29,7 @@ public class PswgExtPropHandler
 	}
 
 	@SubscribeEvent
-	public void playerStartedTracking(PlayerEvent.StartTracking e)
+	public void playerStartedTracking(StartTracking e)
 	{
 		if (!(e.entity instanceof EntityPlayer))
 			return;
@@ -39,7 +40,7 @@ public class PswgExtPropHandler
 	}
 
 	@SubscribeEvent
-	public void onClonePlayer(PlayerEvent.Clone e)
+	public void onClonePlayer(Clone e)
 	{
 		if (!(e.entity instanceof EntityPlayer))
 			return;

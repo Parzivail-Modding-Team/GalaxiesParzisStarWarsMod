@@ -20,7 +20,7 @@ public class RenderWallIndicatorCluster extends TileEntitySpecialRenderer
 
 	public RenderWallIndicatorCluster()
 	{
-		this.model = new ModelWallIndicatorCluster();
+		model = new ModelWallIndicatorCluster();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -36,7 +36,7 @@ public class RenderWallIndicatorCluster extends TileEntitySpecialRenderer
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
 		GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
 		GL.Scale(1.25f);
-		this.model.render(new EntityTilePassthrough(te), 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
+		model.render(new EntityTilePassthrough(te), 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 		GL11.glPopMatrix();
 	}
 }

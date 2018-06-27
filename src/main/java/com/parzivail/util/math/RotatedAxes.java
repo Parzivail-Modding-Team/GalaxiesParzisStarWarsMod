@@ -5,6 +5,11 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class RotatedAxes
 {
+	private float rotationYaw;
+	private float rotationPitch;
+	private float rotationRoll;
+	private Matrix4f rotationMatrix;
+
 	public RotatedAxes()
 	{
 		//Load identity
@@ -222,9 +227,4 @@ public class RotatedAxes
 	{
 		return "RotatedAxes[Yaw = " + getYaw() + ", Pitch = " + getPitch() + ", Roll = " + getRoll() + "]";
 	}
-
-	private float rotationYaw;
-	private float rotationPitch;
-	private float rotationRoll;
-	private Matrix4f rotationMatrix;
 }

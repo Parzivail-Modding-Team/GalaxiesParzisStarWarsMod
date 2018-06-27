@@ -17,9 +17,8 @@ import org.lwjgl.opengl.GL11;
 
 public class PLoadingScreenRenderer extends LoadingScreenRenderer
 {
-	private long time = Minecraft.getSystemTime();
-
 	Framebuffer fb;
+	private long time = Minecraft.getSystemTime();
 
 	public PLoadingScreenRenderer(Minecraft mc)
 	{
@@ -37,8 +36,8 @@ public class PLoadingScreenRenderer extends LoadingScreenRenderer
 		if (Client.mc.getNetHandler() != null)
 			worldEntering = ReflectionHelper.getPrivateValue(NetHandlerPlayClient.class, Client.mc.getNetHandler(), "clientWorldController", "field_147300_g", "g");
 
-		String c = this.getCurrentlyDisplayedText();
-		String fd = this.getField_73727_a();
+		String c = getCurrentlyDisplayedText();
+		String fd = getField_73727_a();
 
 		if (worldEntering == null || !WorldRegister.planetDescriptorHashMap.containsKey(worldEntering.provider.dimensionId) || (!c.equals(I18n.format("menu.loadingLevel")) && !c.equals("")))
 		{
@@ -48,9 +47,9 @@ public class PLoadingScreenRenderer extends LoadingScreenRenderer
 
 		long j = Minecraft.getSystemTime();
 
-		if (j - this.time >= 100L)
+		if (j - time >= 100L)
 		{
-			this.time = j;
+			time = j;
 			ScaledResolution scaledresolution = Client.resolution;
 			int k = scaledresolution.getScaleFactor();
 			int l = scaledresolution.getScaledWidth();

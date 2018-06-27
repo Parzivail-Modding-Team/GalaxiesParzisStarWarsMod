@@ -14,9 +14,9 @@ public class BlockCrateHoth1 extends PBlockRotate
 	{
 		super("crateHoth1", Material.iron, 8);
 		setCreativeTab(StarWarsGalaxy.tab);
-		this.setBlockBounds(0.1f, 0, 0.1f, 0.9f, 0.8f, 0.9f);
+		setBlockBounds(0.1f, 0, 0.1f, 0.9f, 0.8f, 0.9f);
 		setHardness(50.0F);
-		this.setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
 	@Override

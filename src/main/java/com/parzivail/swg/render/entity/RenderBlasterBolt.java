@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.entity;
 
 import com.parzivail.swg.entity.EntityBlasterBolt;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D3;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -50,7 +50,7 @@ public class RenderBlasterBolt extends Render
 		float dz = e.getDz();
 		float len = e.getLength();
 
-		Fx.D3.DrawLine(0, 0, 0, dx * len, dy * len, dz * len);
+		D3.DrawLine(0, 0, 0, dx * len, dy * len, dz * len);
 
 		GL.PopAttrib();
 		GL.PopAttrib();

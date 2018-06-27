@@ -19,7 +19,7 @@ public abstract class BlasterAttachment
 	{
 		this.type = type;
 		this.name = name;
-		this.localizedName = I18n.format(name);
+		localizedName = I18n.format(name);
 		this.price = price;
 	}
 

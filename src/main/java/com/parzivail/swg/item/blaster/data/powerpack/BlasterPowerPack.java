@@ -14,6 +14,13 @@ public abstract class BlasterPowerPack extends BlasterAttachment
 		super(BlasterAttachmentType.POWERPACK, Resources.modDot("blaster", "powerpack", name), price);
 	}
 
+	public static BlasterPowerPack getPackForItem(ItemStack stack)
+	{
+		if (stack == null || !(stack.getItem() instanceof ItemBlasterPowerPack))
+			return null;
+		return ItemBlasterPowerPack.itemStackAttachmentTypes.get(stack.getItem());
+	}
+
 	@Override
 	public String getInfoText()
 	{
@@ -21,11 +28,4 @@ public abstract class BlasterPowerPack extends BlasterAttachment
 	}
 
 	public abstract int getNumShots();
-
-	public static BlasterPowerPack getPackForItem(ItemStack stack)
-	{
-		if (stack == null || !(stack.getItem() instanceof ItemBlasterPowerPack))
-			return null;
-		return ItemBlasterPowerPack.itemStackAttachmentTypes.get(stack.getItem());
-	}
 }

@@ -12,7 +12,7 @@ public class SwgTag
 
 	public SwgTag(String tagName, Vector3f origin)
 	{
-		this.name = tagName;
+		name = tagName;
 		this.origin = origin;
 	}
 }

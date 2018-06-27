@@ -66,23 +66,27 @@ import java.io.InputStream;
  */
 public class Client extends Common
 {
-	public static Minecraft mc;
+	private static final ResourceLocation brandonRegResource = Resources.location("font/BrandonReg.ttf");
 
 	//public static FontRenderer frSansSerif;
 	//public static FontRenderer frSerif;
-
+	public static Minecraft mc;
 	public static FontRenderer frNaboo;
 	public static FontRenderer frAurebesh;
 	public static FontRenderer frDroid;
 	public static FontRenderer frEwok;
 	public static FontRenderer frHuttese;
 	public static FontRenderer frMassassi;
-
 	public static float renderPartialTicks;
-
-	private static ResourceLocation brandonRegResource = Resources.location("font/BrandonReg.ttf");
 	public static TrueTypeFont brandonReg;
 	public static ScaledResolution resolution;
+
+	private static FontRenderer createFont(String file)
+	{
+		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
+		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
+		return renderer;
+	}
 
 	@Override
 	public void init()
@@ -205,13 +209,6 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallPipeLarge.class, new RenderWallPipeLarge());
 
 		Lumberjack.log("Client proxy loaded!");
-	}
-
-	private static FontRenderer createFont(String file)
-	{
-		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
-		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
-		return renderer;
 	}
 
 	@Override

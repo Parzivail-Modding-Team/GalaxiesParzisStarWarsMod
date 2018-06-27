@@ -7,21 +7,21 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 
 public class Tile2DofGimbal extends TileRotatable
 {
-	private float pitch = 0;
+	private float pitch;
 
 	@Override
 	public Packet getDescriptionPacket()
 	{
 		NBTTagCompound tag = new NBTTagCompound();
-		this.writeToNBT(tag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 64537, tag);
+		writeToNBT(tag);
+		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 64537, tag);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet)
 	{
 		super.onDataPacket(net, packet);
-		this.readFromNBT(packet.getNbtCompound());
+		readFromNBT(packet.getNbtCompound());
 	}
 
 	@Override
@@ -45,6 +45,6 @@ public class Tile2DofGimbal extends TileRotatable
 	public void readFromNBT(NBTTagCompound tag)
 	{
 		super.readFromNBT(tag);
-		this.setPitch(tag.getFloat("pitch"));
+		setPitch(tag.getFloat("pitch"));
 	}
 }

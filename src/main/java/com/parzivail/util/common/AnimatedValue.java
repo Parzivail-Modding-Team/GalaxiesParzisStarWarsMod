@@ -1,22 +1,21 @@
 package com.parzivail.util.common;
 
 import com.parzivail.util.math.Ease;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.Util;
 
 import java.util.function.Function;
 
 public class AnimatedValue
 {
+	private final int msToTake;
 	private float previous;
 	private float next;
 	private long nextTime;
 
-	private final int msToTake;
-
 	public AnimatedValue(float value, int msToTake)
 	{
-		this.previous = value;
-		this.next = value;
+		previous = value;
+		next = value;
 		this.msToTake = msToTake;
 	}
 
@@ -27,13 +26,13 @@ public class AnimatedValue
 
 	public float animateTo(float value, Function<Float, Float> interpolation)
 	{
-		this.queueAnimatingTo(value);
-		return this.getValue(interpolation);
+		queueAnimatingTo(value);
+		return getValue(interpolation);
 	}
 
 	public void queueAnimatingTo(float value)
 	{
-		long timeHere = Fx.Util.GetMillis();
+		long timeHere = Util.GetMillis();
 
 		if (value != next)
 		{
@@ -51,7 +50,7 @@ public class AnimatedValue
 
 	public float getValue(Function<Float, Float> interpolation)
 	{
-		long timeHere = Fx.Util.GetMillis();
+		long timeHere = Util.GetMillis();
 
 		if (timeHere > nextTime)
 			return next;

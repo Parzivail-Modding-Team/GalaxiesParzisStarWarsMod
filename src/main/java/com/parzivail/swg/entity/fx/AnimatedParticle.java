@@ -25,13 +25,13 @@ public class AnimatedParticle extends EntityFX
 		this.texture = texture;
 		this.rows = rows;
 		this.cols = cols;
-		this.oneOverRows = 1f / this.rows;
-		this.oneOverCols = 1f / this.cols;
+		oneOverRows = 1f / this.rows;
+		oneOverCols = 1f / this.cols;
 	}
 
 	public void renderParticle(Tessellator tessellator, float partialTicks, float rX, float rXZ, float rZ, float rYZ, float rXY)
 	{
-		float life = (this.particleAge + partialTicks) / (float)this.particleMaxAge;
+		float life = (particleAge + partialTicks) / (float)particleMaxAge;
 		float opacity = getOpacity(life, partialTicks);
 		float scale = getScale(life, partialTicks);
 
@@ -43,9 +43,9 @@ public class AnimatedParticle extends EntityFX
 		float uMax = u + oneOverCols;
 		float vMax = v + oneOverRows;
 
-		float f11 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)partialTicks - interpPosX);
-		float f12 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)partialTicks - interpPosY);
-		float f13 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partialTicks - interpPosZ);
+		float f11 = (float)(prevPosX + (posX - prevPosX) * (double)partialTicks - EntityFX.interpPosX);
+		float f12 = (float)(prevPosY + (posY - prevPosY) * (double)partialTicks - EntityFX.interpPosY);
+		float f13 = (float)(prevPosZ + (posZ - prevPosZ) * (double)partialTicks - EntityFX.interpPosZ);
 
 		GL.Enable(EnableCap.Blend);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

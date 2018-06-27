@@ -1,6 +1,6 @@
 package com.parzivail.swg.item.blaster.data.scope;
 
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.D2;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -20,18 +20,18 @@ public class ScopeRingReticle extends BlasterScope
 
 		float d = (float)(sr.getScaledHeight_double() / 7);
 		GL11.glLineWidth(2);
-		Fx.D2.DrawWireCircle(0, 0, d);
+		D2.DrawWireCircle(0, 0, d);
 
-		Fx.D2.DrawLine(-d, 0, -d / 2, 0);
-		Fx.D2.DrawLine(d, 0, d / 2, 0);
+		D2.DrawLine(-d, 0, -d / 2, 0);
+		D2.DrawLine(d, 0, d / 2, 0);
 
-		Fx.D2.DrawLine(0, -d, 0, -d / 2);
-		Fx.D2.DrawLine(0, d, 0, d / 2);
+		D2.DrawLine(0, -d, 0, -d / 2);
+		D2.DrawLine(0, d, 0, d / 2);
 
 		GL11.glLineWidth(1);
 
-		Fx.D2.DrawLine(-d / 2, 0, d / 2, 0);
-		Fx.D2.DrawLine(0, -d / 2, 0, d / 2);
+		D2.DrawLine(-d / 2, 0, d / 2, 0);
+		D2.DrawLine(0, -d / 2, 0, d / 2);
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class TransactionRegistry
 
 	public static void consume(String opcode, NBTTagCompound data)
 	{
-		Transaction t = TransactionRegistry.transactionFor(opcode);
+		Transaction t = transactionFor(opcode);
 		if (t == null)
 			return;
 

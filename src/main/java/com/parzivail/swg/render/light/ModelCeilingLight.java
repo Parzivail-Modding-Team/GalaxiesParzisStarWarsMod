@@ -21,32 +21,32 @@ public class ModelCeilingLight extends ModelBase
 
 	public ModelCeilingLight()
 	{
-		this.textureWidth = 512;
-		this.textureHeight = 512;
-		this.shape1_1 = new ModelRenderer(this, 39, 0);
-		this.shape1_1.setRotationPoint(4.0F, 0.0F, 0.0F);
-		this.shape1_1.addBox(-0.5F, -0.5F, -2.5F, 1, 1, 5, 0.0F);
-		this.shape1 = new ModelRenderer(this, 0, 0);
-		this.shape1.setRotationPoint(-2.0F, 8.5F, 0.0F);
-		this.shape1.addBox(-0.5F, -0.5F, -2.5F, 1, 1, 5, 0.0F);
-		this.Light = new ModelRenderer(this, 0, 73);
-		this.Light.setRotationPoint(1.0F, 0.5F, 0.0F);
-		this.Light.addBox(-2.5F, 8.0F, -1.5F, 3, 1, 3, 0.0F);
-		this.shape1_3 = new ModelRenderer(this, 0, 38);
-		this.shape1_3.setRotationPoint(1.0F, 0.0F, 0.0F);
-		this.shape1_3.addBox(-0.5F, -0.5F, 1.5F, 3, 1, 1, 0.0F);
-		this.shape1_2 = new ModelRenderer(this, 79, 0);
-		this.shape1_2.setRotationPoint(1.0F, 0.0F, 0.0F);
-		this.shape1_2.addBox(-0.5F, -0.5F, -2.5F, 3, 1, 1, 0.0F);
-		this.shape1.addChild(this.shape1_1);
-		this.shape1.addChild(this.shape1_3);
-		this.shape1.addChild(this.shape1_2);
+		textureWidth = 512;
+		textureHeight = 512;
+		shape1_1 = new ModelRenderer(this, 39, 0);
+		shape1_1.setRotationPoint(4.0F, 0.0F, 0.0F);
+		shape1_1.addBox(-0.5F, -0.5F, -2.5F, 1, 1, 5, 0.0F);
+		shape1 = new ModelRenderer(this, 0, 0);
+		shape1.setRotationPoint(-2.0F, 8.5F, 0.0F);
+		shape1.addBox(-0.5F, -0.5F, -2.5F, 1, 1, 5, 0.0F);
+		Light = new ModelRenderer(this, 0, 73);
+		Light.setRotationPoint(1.0F, 0.5F, 0.0F);
+		Light.addBox(-2.5F, 8.0F, -1.5F, 3, 1, 3, 0.0F);
+		shape1_3 = new ModelRenderer(this, 0, 38);
+		shape1_3.setRotationPoint(1.0F, 0.0F, 0.0F);
+		shape1_3.addBox(-0.5F, -0.5F, 1.5F, 3, 1, 1, 0.0F);
+		shape1_2 = new ModelRenderer(this, 79, 0);
+		shape1_2.setRotationPoint(1.0F, 0.0F, 0.0F);
+		shape1_2.addBox(-0.5F, -0.5F, -2.5F, 3, 1, 1, 0.0F);
+		shape1.addChild(shape1_1);
+		shape1.addChild(shape1_3);
+		shape1.addChild(shape1_2);
 	}
 
 	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
 	{
-		this.shape1.render(f5);
+		shape1.render(f5);
 
 		GL11.glPushMatrix();
 		if (MathUtil.oneIn(50))
@@ -54,7 +54,7 @@ public class ModelCeilingLight extends ModelBase
 		else
 			ShaderHelper.setColor(0.9f, 0.9f, 1, 1);
 		ShaderHelper.useShader(ShaderHelper.glowSolid);
-		this.Light.render(f5);
+		Light.render(f5);
 		ShaderHelper.releaseShader();
 		GL11.glPopMatrix();
 	}

@@ -14,6 +14,6 @@ public class ParticleSmoke extends AnimatedParticle
 	public ParticleSmoke(World parWorld, double parX, double parY, double parZ, double parMotionX, double parMotionY, double parMotionZ)
 	{
 		super(parWorld, parX, parY, parZ, parMotionX, parMotionY, parMotionZ, smokeTexture, 8, 4);
-		this.particleMaxAge = 20;
+		particleMaxAge = 20;
 	}
 }

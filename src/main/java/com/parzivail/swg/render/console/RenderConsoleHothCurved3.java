@@ -20,7 +20,7 @@ public class RenderConsoleHothCurved3 extends TileEntitySpecialRenderer
 
 	public RenderConsoleHothCurved3()
 	{
-		this.model = new ModelConsoleHothCurved3();
+		model = new ModelConsoleHothCurved3();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -36,7 +36,7 @@ public class RenderConsoleHothCurved3 extends TileEntitySpecialRenderer
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
 		GL.Scale(1.25f);
 		GL11.glRotatef(90 * ((TileConsoleHoth3)te).getFacing(), 0, 1, 0);
-		this.model.render(new EntityTilePassthrough(te), 0, 0, 0, 0.0F, 0.0F, 0.05F);
+		model.render(new EntityTilePassthrough(te), 0, 0, 0, 0.0F, 0.0F, 0.05F);
 		GL11.glPopMatrix();
 	}
 }

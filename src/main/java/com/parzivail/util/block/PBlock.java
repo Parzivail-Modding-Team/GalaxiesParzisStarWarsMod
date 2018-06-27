@@ -33,15 +33,15 @@ public class PBlock extends Block
 	{
 		super(material);
 		this.name = name;
-		this.setCreativeTab(StarWarsGalaxy.tab);
-		this.setUnlocalizedName(Resources.modDot(this.name));
+		setCreativeTab(StarWarsGalaxy.tab);
+		setUnlocalizedName(Resources.modDot(this.name));
 		if (setTexture)
-			this.setTextureName(Resources.modColon(textureName));
+			setTextureName(Resources.modColon(textureName));
 	}
 
 	public PBlock setAlpha()
 	{
-		this.setTextureName(Resources.modColon("alpha"));
+		setTextureName(Resources.modColon("alpha"));
 		return this;
 	}
 }

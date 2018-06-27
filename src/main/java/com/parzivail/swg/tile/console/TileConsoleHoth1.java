@@ -6,12 +6,12 @@ import com.parzivail.util.math.MathUtil;
 
 public class TileConsoleHoth1 extends TileRotatable
 {
-	public int color1 = 0;
-	public int color2 = 0;
-	public int color3 = 0;
-	public int color4 = 0;
-	public int color5 = 0;
-	public int color6 = 0;
+	public int color1;
+	public int color2;
+	public int color3;
+	public int color4;
+	public int color5;
+	public int color6;
 
 	@Override
 	public void updateEntity()

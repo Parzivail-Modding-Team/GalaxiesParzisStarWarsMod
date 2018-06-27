@@ -10,13 +10,13 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderSpear implements IItemRenderer
 {
-	private static ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/melee.spear.png");
+	private static final ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/blaster/melee.spear.png");
 
-	private ModelSpear model;
+	private final ModelSpear model;
 
 	public RenderSpear()
 	{
-		this.model = new ModelSpear();
+		model = new ModelSpear();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class RenderSpear implements IItemRenderer
 				GL11.glRotatef(180, 0, 1, 0);
 				GL11.glTranslatef(-10, 0, 0);
 				GL11.glScalef(-1, 1, -1);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -76,7 +76,7 @@ public class RenderSpear implements IItemRenderer
 				GL11.glTranslatef(22, -3, 0);
 				GL11.glRotatef(90, 0, 0, 1);
 				GL11.glRotatef(-90, 1, 0, 0);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 			}
@@ -97,7 +97,7 @@ public class RenderSpear implements IItemRenderer
 					GL11.glTranslatef(8, 0, 0);
 					GL11.glRotatef(-90, 1, 0, 0);
 				}
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
@@ -107,7 +107,7 @@ public class RenderSpear implements IItemRenderer
 				GL11.glScalef(0.04F, -0.04F, 0.04F);
 				GL11.glRotatef(90, 0, 0, 1);
 				GL11.glTranslatef(-25, -2, -2);
-				this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
+				model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.625F);
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;

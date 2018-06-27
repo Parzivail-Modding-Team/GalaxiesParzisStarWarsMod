@@ -37,7 +37,7 @@ public class CommandSpawnShip extends CommandBase
 			throw new WrongUsageException(getCommandUsage(sender));
 		else
 		{
-			Entity player = getCommandSenderAsPlayer(sender);
+			Entity player = CommandBase.getCommandSenderAsPlayer(sender);
 			switch (args.ship)
 			{
 				case "xwing":

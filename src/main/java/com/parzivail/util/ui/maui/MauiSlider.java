@@ -2,7 +2,7 @@ package com.parzivail.util.ui.maui;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.Util;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -23,12 +23,10 @@ public class MauiSlider extends GuiButton
 	private final float min;
 	private final float max;
 	private final String formatString;
+	public Consumer<MauiSlider> onChange;
 	private float decMultiplier = 1;
-
 	private boolean isDragging;
 	private float value;
-
-	public Consumer<MauiSlider> onChange;
 
 
 	public MauiSlider(int buttonId, int x, int y, int w, int h, String buttonText, float min, float max, float value, int decimalPlaces)
@@ -38,10 +36,10 @@ public class MauiSlider extends GuiButton
 		this.max = max;
 		formatString = buttonText;
 		this.value = value;
-		this.decMultiplier = (int)Math.pow(10, decimalPlaces);
+		decMultiplier = (int)Math.pow(10, decimalPlaces);
 		onChange = (dummy) -> {
 		};
-		this.displayString = String.format(this.formatString, value);
+		displayString = String.format(formatString, value);
 	}
 
 	public MauiSlider(int buttonId, int x, int y, int w, int h, String buttonText, int min, int max, int value)
@@ -53,7 +51,7 @@ public class MauiSlider extends GuiButton
 		this.value = value;
 		onChange = (dummy) -> {
 		};
-		this.displayString = String.format(this.formatString, value);
+		displayString = String.format(formatString, value);
 	}
 
 	@Override
@@ -74,13 +72,13 @@ public class MauiSlider extends GuiButton
 
 		if (isDragging)
 		{
-			boolean hover = Fx.Util.RectangleIntersects(xPosition, yPosition, width, height, mouseX, mouseY);
+			boolean hover = Util.RectangleIntersects(xPosition, yPosition, width, height, mouseX, mouseY);
 			if (hover)
 			{
-				float percent = (mouseX - xPosition) / ((float)this.width - 1);
+				float percent = (mouseX - xPosition) / ((float)width - 1);
 				percent = Math.round(percent * decMultiplier) / decMultiplier;
-				this.value = (max - min) * percent + min;
-				this.displayString = String.format(this.formatString, this.value);
+				value = (max - min) * percent + min;
+				displayString = String.format(formatString, value);
 				onChange.accept(this);
 			}
 			isDragging = false;
@@ -92,14 +90,14 @@ public class MauiSlider extends GuiButton
 	{
 		ScaledResolution sr = Client.resolution;
 		float scale = sr.getScaleFactor();
-		boolean hover = Fx.Util.RectangleIntersects(xPosition, yPosition, width, height, mouseX, mouseY);
+		boolean hover = Util.RectangleIntersects(xPosition, yPosition, width, height, mouseX, mouseY);
 
 		if (isDragging && hover)
 		{
-			float percent = (mouseX - xPosition) / ((float)this.width - 1);
+			float percent = (mouseX - xPosition) / ((float)width - 1);
 			percent = Math.round(percent * decMultiplier) / decMultiplier;
-			this.value = (max - min) * percent + min;
-			this.displayString = String.format(this.formatString, this.value);
+			value = (max - min) * percent + min;
+			displayString = String.format(formatString, value);
 		}
 
 		GL.PushAttrib(AttribMask.EnableBit);
@@ -113,11 +111,11 @@ public class MauiSlider extends GuiButton
 		GL.Scissor(xPosition - 1, yPosition, (int)(width * (value - min) / (max - min)) + 1, height);
 		texActive.draw(width, height);
 		GL.EndScissor();
-		float width = Maui.deJaVuSans.getWidth(this.displayString);
+		float width = Maui.deJaVuSans.getWidth(displayString);
 		GL.Scale(1f / scale);
-		GL.Translate(Math.round((this.width * sr.getScaleFactor() - width) / 2f), Math.round((this.height * sr.getScaleFactor() - Maui.deJaVuSans.getHeight()) / 2f), 0);
+		GL.Translate(Math.round((this.width * sr.getScaleFactor() - width) / 2f), Math.round((height * sr.getScaleFactor() - Maui.deJaVuSans.getHeight()) / 2f), 0);
 		TextureImpl.bindNone();
-		Maui.deJaVuSans.drawString(0, 0, this.displayString, org.newdawn.slick.Color.black);
+		Maui.deJaVuSans.drawString(0, 0, displayString, org.newdawn.slick.Color.black);
 		GL.PopMatrix();
 		GL.PopAttrib();
 	}

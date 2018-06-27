@@ -21,6 +21,7 @@ public class Fx
 	public static class Util
 	{
 		private static final HashMap<Integer, Color> COLOR_HASH_MAP = new HashMap<>();
+
 		public static int GetRgb(int r, int g, int b)
 		{
 			int rgb = r;
@@ -86,9 +87,9 @@ public class Fx
 
 	public static class D2
 	{
-	        /*
-	            Public Methods
-             */
+		/*
+			Public Methods
+		 */
 		public static void DrawLine(float x1, float y1, float x2, float y2)
 		{
 			GL.Begin(PrimitiveType.LineStrip);
@@ -391,9 +392,9 @@ public class Fx
 
 	public static class D3
 	{
-		private static double[][] _vertsBox = new double[8][3];
+		private static final double[][] _vertsBox = new double[8][3];
 
-		private static double[][] _normalsBox = {
+		private static final double[][] _normalsBox = {
 				{ -1.0, 0.0, 0.0 },
 				{ 0.0, 1.0, 0.0 },
 				{ 1.0, 0.0, 0.0 },
@@ -402,11 +403,11 @@ public class Fx
 				{ 0.0, 0.0, -1.0 }
 		};
 
-		private static int[][] _facesBox = {
+		private static final int[][] _facesBox = {
 				{ 0, 1, 2, 3 }, { 3, 2, 6, 7 }, { 7, 6, 5, 4 }, { 4, 5, 1, 0 }, { 5, 6, 2, 1 }, { 7, 4, 0, 3 }
 		};
 
-		private static double[][] _dodec = new double[20][3];
+		private static final double[][] _dodec = new double[20][3];
 
 		static
 		{

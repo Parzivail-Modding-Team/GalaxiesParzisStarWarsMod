@@ -22,7 +22,7 @@ public class BlockFastGrass extends PBlock
 	public BlockFastGrass()
 	{
 		super("fastgrass", Material.grass);
-		this.setStepSound(soundTypeGrass);
+		setStepSound(Block.soundTypeGrass);
 	}
 
 	public Item getItemDropped(int meta, Random random, int fortune)
@@ -50,7 +50,7 @@ public class BlockFastGrass extends PBlock
 	@SideOnly(Side.CLIENT)
 	public int getRenderColor(int meta)
 	{
-		return this.getBlockColor();
+		return getBlockColor();
 	}
 
 	/**

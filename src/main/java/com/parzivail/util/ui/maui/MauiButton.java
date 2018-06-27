@@ -2,7 +2,7 @@ package com.parzivail.util.ui.maui;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.Fx.Util;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -74,15 +74,15 @@ public class MauiButton extends GuiButton
 		GL.PushMatrix();
 		GL.Color(GLPalette.WHITE);
 		GL.Translate(xPosition, yPosition, 0);
-		boolean hover = Fx.Util.RectangleIntersects(xPosition, yPosition, width, height, mouseX, mouseY);
+		boolean hover = Util.RectangleIntersects(xPosition, yPosition, width, height, mouseX, mouseY);
 		boolean active = hover && Mouse.isButtonDown(0);
 		NinePatchResource texture = active ? states[2] : hover ? states[1] : states[0];
 		texture.draw(width, height);
-		float width = Maui.deJaVuSans.getWidth(this.displayString);
+		float width = Maui.deJaVuSans.getWidth(displayString);
 		GL.Scale(1f / sr.getScaleFactor());
-		GL.Translate(Math.round((this.width * sr.getScaleFactor() - width) / 2f), Math.round((this.height * sr.getScaleFactor() - Maui.deJaVuSans.getHeight()) / 2f), 0);
+		GL.Translate(Math.round((this.width * sr.getScaleFactor() - width) / 2f), Math.round((height * sr.getScaleFactor() - Maui.deJaVuSans.getHeight()) / 2f), 0);
 		TextureImpl.bindNone();
-		Maui.deJaVuSans.drawString(0, 0, this.displayString, org.newdawn.slick.Color.black);
+		Maui.deJaVuSans.drawString(0, 0, displayString, org.newdawn.slick.Color.black);
 		GL.PopMatrix();
 		GL.PopAttrib();
 	}

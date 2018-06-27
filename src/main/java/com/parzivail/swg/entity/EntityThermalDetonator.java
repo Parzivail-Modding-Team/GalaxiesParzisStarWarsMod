@@ -3,6 +3,7 @@ package com.parzivail.swg.entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
@@ -23,34 +24,34 @@ public class EntityThermalDetonator extends EntityThrowable
 	{
 		for (int i = 0; i < 8; ++i)
 		{
-			this.worldObj.spawnParticle("smoke", this.posX, this.posY, this.posZ, 0.0D, 0.0D, 0.0D);
+			worldObj.spawnParticle("smoke", posX, posY, posZ, 0.0D, 0.0D, 0.0D);
 		}
 
-		if (!this.worldObj.isRemote)
+		if (!worldObj.isRemote)
 		{
-			if (hit.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+			if (hit.typeOfHit == MovingObjectType.BLOCK)
 			{
 				switch (hit.sideHit)
 				{
 					case 0:
 					case 1:
-						this.motionY = -this.motionY * 0.2;
+						motionY = -motionY * 0.2;
 						break;
 					case 2:
 					case 3:
-						this.motionZ = -this.motionZ * 0.2;
+						motionZ = -motionZ * 0.2;
 						break;
 					case 4:
 					case 5:
-						this.motionX = -this.motionX * 0.2;
+						motionX = -motionX * 0.2;
 						break;
 				}
 			}
 
-			if (this.motionY * this.motionY < 0.005f)
+			if (motionY * motionY < 0.005f)
 			{
-				Explosion e = this.worldObj.createExplosion(this, this.posX, this.posY, this.posZ, 2, true);
-				this.setDead();
+				Explosion e = worldObj.createExplosion(this, posX, posY, posZ, 2, true);
+				setDead();
 			}
 		}
 	}

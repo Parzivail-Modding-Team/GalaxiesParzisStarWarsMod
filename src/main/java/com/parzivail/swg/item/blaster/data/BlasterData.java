@@ -4,23 +4,23 @@ import com.parzivail.swg.item.blaster.data.barrel.BlasterBarrel;
 import com.parzivail.swg.item.blaster.data.grip.BlasterGrip;
 import com.parzivail.swg.item.blaster.data.scope.BlasterScope;
 import com.parzivail.util.item.ItemUtils;
+import com.parzivail.util.item.NbtSave;
 import com.parzivail.util.item.NbtSerializable;
 import net.minecraft.item.ItemStack;
 
 public class BlasterData extends NbtSerializable<BlasterData>
 {
+	@NbtSave
 	public boolean isAimingDownSights;
+	@NbtSave
 	public int shotsRemaining;
 
-	// These are not actually deprecated, just a reminder to use
-	// the getter instead which does safe casts. They need to be
-	// public for the deserialzer.
-	@Deprecated
-	public BlasterAttachment scope;
-	@Deprecated
-	public BlasterAttachment grip;
-	@Deprecated
-	public BlasterAttachment barrel;
+	@NbtSave
+	protected BlasterAttachment scope;
+	@NbtSave
+	protected BlasterAttachment grip;
+	@NbtSave
+	protected BlasterAttachment barrel;
 
 	public BlasterData(ItemStack stack)
 	{

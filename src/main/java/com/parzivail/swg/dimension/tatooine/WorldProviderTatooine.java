@@ -23,15 +23,15 @@ public class WorldProviderTatooine extends PlanetWorldProvider
 	@Override
 	public IChunkProvider createChunkProvider()
 	{
-		return new ChunkProviderTatooine(this.worldObj, 0);
+		return new ChunkProviderTatooine(worldObj, 0);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public IRenderHandler getSkyRenderer()
 	{
-		if (this.skyRenderer == null)
-			this.skyRenderer = new RenderSkyTatooine();
-		return this.skyRenderer;
+		if (skyRenderer == null)
+			skyRenderer = new RenderSkyTatooine();
+		return skyRenderer;
 	}
 }

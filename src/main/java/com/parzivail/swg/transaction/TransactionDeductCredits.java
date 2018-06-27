@@ -2,14 +2,18 @@ package com.parzivail.swg.transaction;
 
 import com.parzivail.swg.network.Transaction;
 import com.parzivail.swg.player.PswgExtProp;
+import com.parzivail.util.item.NbtSave;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.DimensionManager;
 
 public class TransactionDeductCredits extends Transaction<TransactionDeductCredits>
 {
+	@NbtSave
 	public int playerDim;
+	@NbtSave
 	public int playerId;
+	@NbtSave
 	public int price;
 
 	public TransactionDeductCredits()
@@ -19,8 +23,8 @@ public class TransactionDeductCredits extends Transaction<TransactionDeductCredi
 
 	public TransactionDeductCredits(EntityPlayer player, int price)
 	{
-		this.playerDim = player.dimension;
-		this.playerId = player.getEntityId();
+		playerDim = player.dimension;
+		playerId = player.getEntityId();
 		this.price = price;
 	}
 

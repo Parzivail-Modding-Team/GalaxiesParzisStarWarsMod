@@ -80,7 +80,7 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 					for (k1 = z - b0; k1 <= z + b0 && flag; ++k1)
 						if (i1 >= 0 && i1 < 256)
 						{
-							if (!this.isReplaceable(world, j1, i1, k1))
+							if (!isReplaceable(world, j1, i1, k1))
 								flag = false;
 						}
 						else
@@ -120,10 +120,10 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 
 						if (block1.isAir(world, x1, k2, z1) || block1.isLeaves(world, x1, k2, z1))
 						{
-							this.setBlockAndNotifyAdequately(world, x1, k2, z1, log, 0);
-							this.setBlockAndNotifyAdequately(world, x1 + 1, k2, z1, log, 0);
-							this.setBlockAndNotifyAdequately(world, x1, k2, z1 + 1, log, 0);
-							this.setBlockAndNotifyAdequately(world, x1 + 1, k2, z1 + 1, log, 0);
+							setBlockAndNotifyAdequately(world, x1, k2, z1, log, 0);
+							setBlockAndNotifyAdequately(world, x1 + 1, k2, z1, log, 0);
+							setBlockAndNotifyAdequately(world, x1, k2, z1 + 1, log, 0);
+							setBlockAndNotifyAdequately(world, x1 + 1, k2, z1 + 1, log, 0);
 							treeTopY = k2;
 						}
 
@@ -135,16 +135,16 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 
 					if (rand.nextBoolean())
 					{
-						this.setLeaves(world, x1, treeTopY + 2, z1);
-						this.setLeaves(world, x1 + 1, treeTopY + 2, z1);
-						this.setLeaves(world, x1 + 1, treeTopY + 2, z1 + 1);
-						this.setLeaves(world, x1, treeTopY + 2, z1 + 1);
+						setLeaves(world, x1, treeTopY + 2, z1);
+						setLeaves(world, x1 + 1, treeTopY + 2, z1);
+						setLeaves(world, x1 + 1, treeTopY + 2, z1 + 1);
+						setLeaves(world, x1, treeTopY + 2, z1 + 1);
 					}
 
 					for (currentTreeY = -3; currentTreeY <= 4; ++currentTreeY)
 						for (k2 = -3; k2 <= 4; ++k2)
 							if ((currentTreeY != -3 || k2 != -3) && (currentTreeY != -3 || k2 != 4) && (currentTreeY != 4 || k2 != -3) && (currentTreeY != 4 || k2 != 4) && (Math.abs(currentTreeY) < 3 || Math.abs(k2) < 3))
-								this.setLeaves(world, x1 + currentTreeY, treeTopY, z1 + k2);
+								setLeaves(world, x1 + currentTreeY, treeTopY, z1 + k2);
 
 					for (currentTreeY = -1; currentTreeY <= 2; ++currentTreeY)
 						for (k2 = -1; k2 <= 2; ++k2)
@@ -154,18 +154,18 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 								int l2;
 
 								for (l2 = 0; l2 < l3; ++l2)
-									this.setBlockAndNotifyAdequately(world, x + currentTreeY, treeTopY - l2 - 1, z + k2, log, 0);
+									setBlockAndNotifyAdequately(world, x + currentTreeY, treeTopY - l2 - 1, z + k2, log, 0);
 
 								int i3;
 
 								for (l2 = -1; l2 <= 1; ++l2)
 									for (i3 = -1; i3 <= 1; ++i3)
-										this.setLeaves(world, x1 + currentTreeY + l2, treeTopY, z1 + k2 + i3);
+										setLeaves(world, x1 + currentTreeY + l2, treeTopY, z1 + k2 + i3);
 
 								for (l2 = -2; l2 <= 2; ++l2)
 									for (i3 = -2; i3 <= 2; ++i3)
 										if (Math.abs(l2) != 2 || Math.abs(i3) != 2)
-											this.setLeaves(world, x1 + currentTreeY + l2, treeTopY - 1, z1 + k2 + i3);
+											setLeaves(world, x1 + currentTreeY + l2, treeTopY - 1, z1 + k2 + i3);
 							}
 
 					return true;
@@ -185,18 +185,18 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 			for (int dZ = -expand; dZ <= 0; ++dZ)
 			{
 				byte b1 = -1;
-				this.setLeaves(world, x + dX, treeTopY + b1, z + dZ);
-				this.setLeaves(world, 1 + x - dX, treeTopY + b1, z + dZ);
-				this.setLeaves(world, x + dX, treeTopY + b1, 1 + z - dZ);
-				this.setLeaves(world, 1 + x - dX, treeTopY + b1, 1 + z - dZ);
+				setLeaves(world, x + dX, treeTopY + b1, z + dZ);
+				setLeaves(world, 1 + x - dX, treeTopY + b1, z + dZ);
+				setLeaves(world, x + dX, treeTopY + b1, 1 + z - dZ);
+				setLeaves(world, 1 + x - dX, treeTopY + b1, 1 + z - dZ);
 
 				if ((dX > -2 || dZ > -1) && (dX != -1 || dZ != -2))
 				{
 					byte b2 = 1;
-					this.setLeaves(world, x + dX, treeTopY + b2, z + dZ);
-					this.setLeaves(world, 1 + x - dX, treeTopY + b2, z + dZ);
-					this.setLeaves(world, x + dX, treeTopY + b2, 1 + z - dZ);
-					this.setLeaves(world, 1 + x - dX, treeTopY + b2, 1 + z - dZ);
+					setLeaves(world, x + dX, treeTopY + b2, z + dZ);
+					setLeaves(world, 1 + x - dX, treeTopY + b2, z + dZ);
+					setLeaves(world, x + dX, treeTopY + b2, 1 + z - dZ);
+					setLeaves(world, 1 + x - dX, treeTopY + b2, 1 + z - dZ);
 				}
 			}
 	}
@@ -205,7 +205,7 @@ public class WorldGenThiccTree extends WorldGenAbstractTree
 	@Override
 	public boolean generate(World world, Random random, int x, int y, int z)
 	{
-		return this.generate(world, random, x, y, z, 5, 1);
+		return generate(world, random, x, y, z, 5, 1);
 	}
 
 	private void setLeaves(World world, int x, int y, int z)

@@ -18,7 +18,7 @@ public class RenderCrateMosEspa extends TileEntitySpecialRenderer
 
 	public RenderCrateMosEspa()
 	{
-		this.model = new ModelCrateMosEspa();
+		model = new ModelCrateMosEspa();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z)
@@ -35,7 +35,7 @@ public class RenderCrateMosEspa extends TileEntitySpecialRenderer
 		if (te instanceof TileRotatable)
 			GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
 		GL.Scale(1.25f);
-		this.model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
+		model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);
 		GL11.glPopMatrix();
 	}
 }
