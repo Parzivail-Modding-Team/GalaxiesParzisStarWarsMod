@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.*;
 
-public class ScarifIO
+public class ScarifUtil
 {
 	public static String readNullTerminatedString(DataInput s)
 	{
@@ -38,5 +38,30 @@ public class ScarifIO
 		NBTTagCompound tag = CompressedStreamTools.func_152456_a(stream, NBTSizeTracker.INFINITE);
 		stream.close();
 		return tag;
+	}
+
+	/**
+	 * Packs a chunk X and Z (in chunk coordinates) Int32s into an Int64
+	 *
+	 * @param x Chunk X position
+	 * @param z Chunk Z position
+	 * @return Packed long
+	 */
+	public static long getChunkPos(int x, int z)
+	{
+		return (((long)x) << 32) | (z & 0xffffffffL);
+	}
+
+	/**
+	 * Packs a Y, chunk-local X and chunk-local Z bytes into a Int16
+	 *
+	 * @param x 0<=x<16 local position
+	 * @param y 0<=y<256 local position
+	 * @param z 0<=z<16 local position
+	 * @return Packed short
+	 */
+	public static short getBlockPos(short x, short y, short z)
+	{
+		return (short)((x & 0x0F) | ((z & 0x0F) << 4) | ((y & 0xFF) << 8));
 	}
 }

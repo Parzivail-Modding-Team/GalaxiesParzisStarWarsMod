@@ -49,7 +49,7 @@ public class ScarifStructure
 		for (int entry = 0; entry < numIdMapEntries; entry++)
 		{
 			short id = s.readShort();
-			String name = ScarifIO.readNullTerminatedString(s);
+			String name = ScarifUtil.readNullTerminatedString(s);
 			idMap.put(id, name);
 		}
 
@@ -61,7 +61,7 @@ public class ScarifStructure
 			int chunkZ = s.readInt();
 			int numBlocks = s.readInt();
 
-			long chunkPos = getChunkPos(chunkX, chunkZ);
+			long chunkPos = ScarifUtil.getChunkPos(chunkX, chunkZ);
 			HashMap<Short, ScarifBlock> blocks = new HashMap<>();
 
 			for (int block = 0; block < numBlocks; block++)
@@ -84,11 +84,11 @@ public class ScarifStructure
 				{
 					int len = s.readInt();
 					if (len >= 0)
-						tileTag = ScarifIO.readUncompressedNbt(s, len);
+						tileTag = ScarifUtil.readUncompressedNbt(s, len);
 				}
 
 				if (idMap.containsKey(id))
-					blocks.put(getBlockPos(x, y, z), new ScarifBlock(id, metadata, tileTag));
+					blocks.put(ScarifUtil.getBlockPos(x, y, z), new ScarifBlock(id, metadata, tileTag));
 				else
 					throw new IOException(String.format("Unknown block ID found: %s", id));
 			}
@@ -98,30 +98,5 @@ public class ScarifStructure
 		s.close();
 
 		return new ScarifStructure(version, diffMap, idMap);
-	}
-
-	/**
-	 * Packs a chunk X and Z (in chunk coordinates) Int32s into an Int64
-	 *
-	 * @param x Chunk X position
-	 * @param z Chunk Z position
-	 * @return Packed long
-	 */
-	public static long getChunkPos(int x, int z)
-	{
-		return (((long)x) << 32) | (z & 0xffffffffL);
-	}
-
-	/**
-	 * Packs a Y, chunk-local X and chunk-local Z bytes into a Int16
-	 *
-	 * @param x 0<=x<16 local position
-	 * @param y 0<=y<256 local position
-	 * @param z 0<=z<16 local position
-	 * @return Packed short
-	 */
-	public static short getBlockPos(short x, short y, short z)
-	{
-		return (short)((x & 0x0F) | ((z & 0x0F) << 4) | ((y & 0xFF) << 8));
 	}
 }
