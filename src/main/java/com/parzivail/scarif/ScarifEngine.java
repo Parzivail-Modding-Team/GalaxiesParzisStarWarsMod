@@ -75,14 +75,13 @@ public class ScarifEngine
 
 			hadStructure = true;
 
-			HashMap<Short, ScarifBlock> blocks = structure.chunks.get(chunkPos);
-			for (HashMap.Entry<Short, ScarifBlock> blockEntry : blocks.entrySet())
+			ArrayList<ScarifBlock> blocks = structure.chunks.get(chunkPos);
+			for (ScarifBlock block : blocks)
 			{
-				ScarifBlock block = blockEntry.getValue();
-				short key = blockEntry.getKey();
-				int blockX = key & 0x0F;
-				int blockZ = (key >> 4) & 0x0F;
-				int blockY = (key >> 8) & 0xFF;
+				short pos = block.pos;
+				int blockX = pos & 0x0F;
+				int blockZ = (pos >> 4) & 0x0F;
+				int blockY = (pos >> 8) & 0xFF;
 
 				int l = blockY >> 4;
 				ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];

@@ -15,12 +15,12 @@ import java.util.HashMap;
 public class ScarifStructure
 {
 	public final int version;
-	public final HashMap<Long, HashMap<Short, ScarifBlock>> chunks;
+	public final HashMap<Long, ArrayList<ScarifBlock>> chunks;
 	public final HashMap<Short, String> idMap;
 
 	public HashMap<Long, ArrayList<NBTTagCompound>> tileInfoCache = new HashMap<>();
 
-	private ScarifStructure(int version, HashMap<Long, HashMap<Short, ScarifBlock>> chunks, HashMap<Short, String> idMap)
+	private ScarifStructure(int version, HashMap<Long, ArrayList<ScarifBlock>> chunks, HashMap<Short, String> idMap)
 	{
 		this.version = version;
 		this.chunks = chunks;
@@ -53,7 +53,7 @@ public class ScarifStructure
 			idMap.put(id, name);
 		}
 
-		HashMap<Long, HashMap<Short, ScarifBlock>> diffMap = new HashMap<>();
+		HashMap<Long, ArrayList<ScarifBlock>> diffMap = new HashMap<>();
 
 		for (int chunk = 0; chunk < numChunks; chunk++)
 		{
@@ -62,7 +62,7 @@ public class ScarifStructure
 			int numBlocks = s.readInt();
 
 			long chunkPos = ScarifUtil.getChunkPos(chunkX, chunkZ);
-			HashMap<Short, ScarifBlock> blocks = new HashMap<>();
+			ArrayList<ScarifBlock> blocks = new ArrayList<>();
 
 			for (int block = 0; block < numBlocks; block++)
 			{
@@ -88,7 +88,7 @@ public class ScarifStructure
 				}
 
 				if (idMap.containsKey(id))
-					blocks.put(ScarifUtil.getBlockPos(x, y, z), new ScarifBlock(id, metadata, tileTag));
+					blocks.add(new ScarifBlock(id, metadata, tileTag, ScarifUtil.getBlockPos(x, y, z)));
 				else
 					throw new IOException(String.format("Unknown block ID found: %s", id));
 			}
