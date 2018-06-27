@@ -1,6 +1,7 @@
 package com.parzivail.swg.dimension.endor;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.dimension.endor.terrain.TerrainSwissHills;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.world.*;
@@ -36,7 +37,7 @@ public class ChunkProviderEndor implements IChunkProvider
 		this.waterLakeGenerator = new WorldGenLakes(Blocks.water);
 		terrain = new MultiCompositeTerrain(seed, 800,
 				// Naboo Mountains
-				new SwissTurb(seed),
+				new TerrainSwissHills(seed),
 				// Naboo Hills
 				//new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 80), new TerrainLayer(seed + 1, TerrainLayer.Function.Midpoint, TerrainLayer.Method.Add, 50, 20)),
 				// Naboo Plains
@@ -184,7 +185,7 @@ public class ChunkProviderEndor implements IChunkProvider
 	 */
 	public String makeString()
 	{
-		return "NabooLevelSource";
+		return "EndorLevelSource";
 	}
 
 	/**

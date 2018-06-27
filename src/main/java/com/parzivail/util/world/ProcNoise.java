@@ -114,4 +114,28 @@ public class ProcNoise
 	{
 		return MathUtil.fract(Math.cos(MathUtil.seed(z - 143.37, _seed) * 4113.21 - 2853.85 * Math.sin(x * z) + MathUtil.seed(x - 743.37, _seed) * 1291.27 * 1727.93) * 4113.21 + MathUtil.oneOverGoldenRatio);
 	}
+
+	public double swissTurbulence(double pX, double pY, int octaves, double lacunarity, double gain, double warp)
+	{
+		double sum = 0;
+		double freq = 1;
+		double amp = 1;
+		double dSumX = 0;
+		double dSumY = 0;
+
+		for (int i = 0; i < octaves; i++)
+		{
+			double nX = noise((pX + warp * dSumX) * freq + i * 1000, (pY + warp * dSumY) * freq + i * 1000);
+			double nY = noiseDx((pX + warp * dSumX) * freq + i * 1000, (pY + warp * dSumY) * freq + i * 1000);
+			double nZ = noiseDz((pX + warp * dSumX) * freq + i * 1000, (pY + warp * dSumY) * freq + i * 1000);
+
+			sum = sum + amp * (1 - Math.abs(nX));
+			dSumX = dSumX + amp * nY * -nX;
+			dSumY = dSumY + amp * nZ * -nX;
+			freq = freq * lacunarity;
+			amp = amp * gain * MathUtil.clamp(sum);
+		}
+
+		return sum;
+	}
 }

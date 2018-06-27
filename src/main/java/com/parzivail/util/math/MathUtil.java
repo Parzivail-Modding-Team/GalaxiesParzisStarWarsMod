@@ -32,6 +32,15 @@ public class MathUtil
 		return v;
 	}
 
+	public static double clamp(double x)
+	{
+		if (x > 1)
+			return 1;
+		if (x < 0)
+			return 0;
+		return x;
+	}
+
 	/**
 	 * Gets a random value from an array
 	 *

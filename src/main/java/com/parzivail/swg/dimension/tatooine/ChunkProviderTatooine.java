@@ -1,6 +1,7 @@
 package com.parzivail.swg.dimension.tatooine;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.dimension.tatooine.terrain.TerrainTatooineCanyons;
 import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.world.*;
 import net.minecraft.entity.EnumCreatureType;
