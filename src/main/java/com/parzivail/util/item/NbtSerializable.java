@@ -212,6 +212,8 @@ public class NbtSerializable<T extends NbtSerializable>
 	private void readField(Field f, Class clazz, NBTTagCompound buf) throws IllegalArgumentException, IllegalAccessException
 	{
 		Pair<Reader, Writer> handler = getHandler(clazz);
+		if (!f.isAccessible())
+			f.setAccessible(true);
 		if (!buf.hasKey(f.getName()))
 			return;
 		f.set(this, handler.getLeft().read(f.getName(), buf));
@@ -221,7 +223,8 @@ public class NbtSerializable<T extends NbtSerializable>
 	private void writeField(Field f, Class clazz, NBTTagCompound buf) throws IllegalArgumentException, IllegalAccessException
 	{
 		Pair<Reader, Writer> handler = getHandler(clazz);
-		f.setAccessible(true);
+		if (!f.isAccessible())
+			f.setAccessible(true);
 		handler.getRight().write(f.getName(), f.get(this), buf);
 	}
 

@@ -35,7 +35,7 @@ public class ScarifEngine
 	{
 		try
 		{
-			ScarifStructure s = ScarifStructure.load(filename);
+			ScarifStructure s = ScarifStructure.read(filename);
 			addToDimension(dimension, s);
 			logger.info(String.format("Loaded %s", filename.getResourcePath()));
 		}
@@ -62,13 +62,10 @@ public class ScarifEngine
 
 	public boolean genStructure(Chunk chunk)
 	{
-		int dimension = chunk.worldObj.provider.dimensionId;
-		int cx = chunk.xPosition;
-		int cz = chunk.zPosition;
-		long chunkPos = ScarifUtil.getChunkPos(cx, cz);
+		long chunkPos = ScarifUtil.encodeChunkPos(chunk.xPosition, chunk.zPosition);
 		boolean hadStructure = false;
 
-		for (ScarifStructure structure : getStructuresForDimension(dimension))
+		for (ScarifStructure structure : getStructuresForDimension(chunk.worldObj.provider.dimensionId))
 		{
 			if (!structure.chunks.containsKey(chunkPos))
 				continue;
@@ -107,7 +104,7 @@ public class ScarifEngine
 
 	public void genTiles(World world, int worldX, int worldZ)
 	{
-		long cPos = ScarifUtil.getChunkPos(worldX >> 4, worldZ >> 4);
+		long cPos = ScarifUtil.encodeChunkPos(worldX >> 4, worldZ >> 4);
 		for (ScarifStructure diff : getStructuresForDimension(world.provider.dimensionId))
 		{
 			ArrayList<NBTTagCompound> tileCache = diff.tileInfoCache.get(cPos);

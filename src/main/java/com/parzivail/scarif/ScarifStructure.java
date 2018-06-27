@@ -27,7 +27,7 @@ public class ScarifStructure
 		this.idMap = idMap;
 	}
 
-	public static ScarifStructure load(ResourceLocation filename) throws IOException
+	public static ScarifStructure read(ResourceLocation filename) throws IOException
 	{
 		IResource res = Minecraft.getMinecraft().getResourceManager().getResource(filename);
 		InputStream fs = res.getInputStream();
@@ -61,7 +61,7 @@ public class ScarifStructure
 			int chunkZ = s.readInt();
 			int numBlocks = s.readInt();
 
-			long chunkPos = ScarifUtil.getChunkPos(chunkX, chunkZ);
+			long chunkPos = ScarifUtil.encodeChunkPos(chunkX, chunkZ);
 			ArrayList<ScarifBlock> blocks = new ArrayList<>();
 
 			for (int block = 0; block < numBlocks; block++)
@@ -88,7 +88,7 @@ public class ScarifStructure
 				}
 
 				if (idMap.containsKey(id))
-					blocks.add(new ScarifBlock(id, metadata, tileTag, ScarifUtil.getBlockPos(x, y, z)));
+					blocks.add(new ScarifBlock(ScarifUtil.encodeBlockPos(x, y, z), id, metadata, tileTag));
 				else
 					throw new IOException(String.format("Unknown block ID found: %s", id));
 			}
