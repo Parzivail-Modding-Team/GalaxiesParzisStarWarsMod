@@ -15,12 +15,12 @@ import java.util.HashMap;
 public class ScarifStructure
 {
 	public final int version;
-	public final HashMap<Long, ArrayList<ScarifBlock>> chunks;
+	public final HashMap<Long, ScarifBlock[]> chunks;
 	public final HashMap<Short, String> idMap;
 
 	public HashMap<Long, ArrayList<NBTTagCompound>> tileInfoCache = new HashMap<>();
 
-	private ScarifStructure(int version, HashMap<Short, String> idMap, HashMap<Long, ArrayList<ScarifBlock>> chunks)
+	private ScarifStructure(int version, HashMap<Short, String> idMap, HashMap<Long, ScarifBlock[]> chunks)
 	{
 		this.version = version;
 		this.chunks = chunks;
@@ -35,7 +35,7 @@ public class ScarifStructure
 		LittleEndianDataInputStream s = new LittleEndianDataInputStream(bis);
 
 		HashMap<Short, String> idMap = new HashMap<>();
-		HashMap<Long, ArrayList<ScarifBlock>> diffMap = new HashMap<>();
+		HashMap<Long, ScarifBlock[]> diffMap = new HashMap<>();
 
 		byte[] identBytes = new byte[4];
 		int read = s.read(identBytes);
@@ -60,8 +60,7 @@ public class ScarifStructure
 			int chunkZ = s.readInt();
 			int numBlocks = s.readInt();
 
-			long chunkPos = ScarifUtil.encodeChunkPos(chunkX, chunkZ);
-			ArrayList<ScarifBlock> blocks = new ArrayList<>();
+			ScarifBlock[] blocks = new ScarifBlock[numBlocks];
 
 			for (int block = 0; block < numBlocks; block++)
 			{
@@ -83,7 +82,7 @@ public class ScarifStructure
 
 				if ((flags & 0b01) == 0b01) // Has metadata
 					metadata = s.readByte();
-				if ((flags & 0b10) == 0b10) // Has TileNBT
+				if ((flags & 0b10) == 0b10) // Has tile NBT
 				{
 					int len = s.readInt();
 					if (len >= 0)
@@ -91,12 +90,12 @@ public class ScarifStructure
 				}
 
 				if (idMap.containsKey(id))
-					blocks.add(new ScarifBlock(ScarifUtil.encodeBlockPos(x, y, z), id, metadata, tileTag));
+					blocks[block] = new ScarifBlock(ScarifUtil.encodeBlockPos(x, y, z), id, metadata, tileTag);
 				else
 					throw new IOException(String.format("Unknown block ID found: %s", id));
 			}
 
-			diffMap.put(chunkPos, blocks);
+			diffMap.put(ScarifUtil.encodeChunkPos(chunkX, chunkZ), blocks);
 		}
 		s.close();
 

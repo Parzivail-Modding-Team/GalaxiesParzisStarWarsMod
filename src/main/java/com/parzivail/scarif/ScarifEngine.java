@@ -72,7 +72,7 @@ public class ScarifEngine
 
 			hadStructure = true;
 
-			ArrayList<ScarifBlock> blocks = structure.chunks.get(chunkPos);
+			ScarifBlock[] blocks = structure.chunks.get(chunkPos);
 			for (ScarifBlock block : blocks)
 			{
 				short pos = block.pos;
