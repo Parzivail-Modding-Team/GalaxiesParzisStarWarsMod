@@ -20,7 +20,7 @@ public class ScarifStructure
 
 	public HashMap<Long, ArrayList<NBTTagCompound>> tileInfoCache = new HashMap<>();
 
-	private ScarifStructure(int version, HashMap<Long, ArrayList<ScarifBlock>> chunks, HashMap<Short, String> idMap)
+	private ScarifStructure(int version, HashMap<Short, String> idMap, HashMap<Long, ArrayList<ScarifBlock>> chunks)
 	{
 		this.version = version;
 		this.chunks = chunks;
@@ -34,6 +34,9 @@ public class ScarifStructure
 		BrotliInputStream bis = new BrotliInputStream(fs);
 		LittleEndianDataInputStream s = new LittleEndianDataInputStream(bis);
 
+		HashMap<Short, String> idMap = new HashMap<>();
+		HashMap<Long, ArrayList<ScarifBlock>> diffMap = new HashMap<>();
+
 		byte[] identBytes = new byte[4];
 		int read = s.read(identBytes);
 		String ident = new String(identBytes);
@@ -44,16 +47,12 @@ public class ScarifStructure
 		int numChunks = s.readInt();
 		int numIdMapEntries = s.readInt();
 
-		HashMap<Short, String> idMap = new HashMap<>();
-
 		for (int entry = 0; entry < numIdMapEntries; entry++)
 		{
 			short id = s.readShort();
 			String name = ScarifUtil.readNullTerminatedString(s);
 			idMap.put(id, name);
 		}
-
-		HashMap<Long, ArrayList<ScarifBlock>> diffMap = new HashMap<>();
 
 		for (int chunk = 0; chunk < numChunks; chunk++)
 		{
@@ -66,12 +65,16 @@ public class ScarifStructure
 
 			for (int block = 0; block < numBlocks; block++)
 			{
-				byte blockPos = s.readByte(); // Format:
+				// Format:
 				// 0x 0000 1111
 				//    xxxx yyyy
+				byte blockPos = s.readByte();
+
 				byte x = (byte)((blockPos & 0xF0) >> 4);
 				byte z = (byte)(blockPos & 0x0F);
+
 				byte y = s.readByte();
+
 				short id = s.readShort();
 				byte flags = s.readByte();
 
@@ -97,6 +100,6 @@ public class ScarifStructure
 		}
 		s.close();
 
-		return new ScarifStructure(version, diffMap, idMap);
+		return new ScarifStructure(version, idMap, diffMap);
 	}
 }
