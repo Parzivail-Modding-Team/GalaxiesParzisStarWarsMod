@@ -198,7 +198,6 @@ public class Rift
 			world.loadedEntityList.remove(entity);
 			world.onEntityRemoved(entity);
 		}
-
 	}
 
 	private static List getCollidingWorldGeometry(World world, AxisAlignedBB axisalignedbb, Entity entity)

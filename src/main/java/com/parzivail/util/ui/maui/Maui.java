@@ -24,7 +24,6 @@ public class Maui
 			Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
 			awtFont2 = awtFont2.deriveFont(11f); // set font size
 			deJaVuSans = new TrueTypeFont(awtFont2, true);
-
 		}
 		catch (Exception e)
 		{

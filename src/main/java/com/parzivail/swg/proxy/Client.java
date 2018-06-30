@@ -117,7 +117,6 @@ public class Client extends Common
 			Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
 			awtFont2 = awtFont2.deriveFont(24f); // set font size
 			brandonReg = new TrueTypeFont(awtFont2, true);
-
 		}
 		catch (Exception e)
 		{

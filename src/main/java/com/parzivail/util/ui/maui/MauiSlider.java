@@ -28,7 +28,6 @@ public class MauiSlider extends GuiButton
 	private boolean isDragging;
 	private float value;
 
-
 	public MauiSlider(int buttonId, int x, int y, int w, int h, String buttonText, float min, float max, float value, int decimalPlaces)
 	{
 		super(buttonId, x, y, w, h, buttonText);

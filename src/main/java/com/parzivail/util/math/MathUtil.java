@@ -45,6 +45,7 @@ public class MathUtil
 	 *
 	 * @param array The array to pull items from
 	 * @param <T>   The inferred type of value to operate with
+	 *
 	 * @return A random element of the supplied array
 	 */
 	public static <T> T getRandomElement(T[] array)
@@ -56,6 +57,7 @@ public class MathUtil
 	 * Gets a random primitive int value from an array
 	 *
 	 * @param array The array to pull items from
+	 *
 	 * @return A random element of the supplied array
 	 */
 	public static int getRandomElement(int[] array)
@@ -67,6 +69,7 @@ public class MathUtil
 	 * Returns a random boolean with a one-in-n chance of being true
 	 *
 	 * @param n The chance
+	 *
 	 * @return The random boolean
 	 */
 	public static boolean oneIn(int n)

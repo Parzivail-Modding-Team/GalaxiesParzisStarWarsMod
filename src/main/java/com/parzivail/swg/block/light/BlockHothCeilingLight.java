@@ -1,6 +1,5 @@
 package com.parzivail.swg.block.light;
 
-
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.light.TileHothCeilingLight;
 import com.parzivail.util.block.HarvestLevel;

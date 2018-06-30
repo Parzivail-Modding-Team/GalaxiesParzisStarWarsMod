@@ -58,7 +58,6 @@ public class BlasterAttachments
 
 		PswgExtProp props = PswgExtProp.get(player);
 		return props != null && props.isBlasterAttachmentUnlocked(attachment.getId());
-
 	}
 
 	public static boolean isEquipped(ItemStack blaster, BlasterAttachment attachment)

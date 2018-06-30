@@ -978,6 +978,7 @@ public class GLPalette
 	 * Turns a packed RGB color into a Color
 	 *
 	 * @param rgb The color to unpack
+	 *
 	 * @return The new Color
 	 */
 	public static Color intToColor(int rgb)
@@ -992,6 +993,7 @@ public class GLPalette
 	 * Turns a Color into a packed RGB int
 	 *
 	 * @param c The color to pack
+	 *
 	 * @return The packed int
 	 */
 	public static int colorToInt(Color c)
@@ -1006,6 +1008,7 @@ public class GLPalette
 	 * Makes an RGB packed int opaque in the A channel
 	 *
 	 * @param rgb The color to make opaque
+	 *
 	 * @return The opaque color
 	 */
 	public static int makeOpaque(int rgb)

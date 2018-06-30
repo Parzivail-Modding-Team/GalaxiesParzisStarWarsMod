@@ -23,21 +23,18 @@ public class BrotliInputStream extends InputStream
 	 * Internal buffer used for efficient byte-by-byte reading.
 	 */
 	private final byte[] buffer;
-
-	/**
-	 * Number of decoded but still unused bytes in internal buffer.
-	 */
-	private int remainingBufferBytes;
-
-	/**
-	 * Next unused byte offset.
-	 */
-	private int bufferOffset;
-
 	/**
 	 * Decoder state.
 	 */
 	private final State state = new State();
+	/**
+	 * Number of decoded but still unused bytes in internal buffer.
+	 */
+	private int remainingBufferBytes;
+	/**
+	 * Next unused byte offset.
+	 */
+	private int bufferOffset;
 
 	/**
 	 * Creates a {@link InputStream} wrapper that decompresses brotli data.
@@ -49,6 +46,7 @@ public class BrotliInputStream extends InputStream
 	 * are available.
 	 *
 	 * @param source underlying data source
+	 *
 	 * @throws IOException in case of corrupted data or source stream problems
 	 */
 	public BrotliInputStream(InputStream source) throws IOException
@@ -68,6 +66,7 @@ public class BrotliInputStream extends InputStream
 	 * @param source             compressed data source
 	 * @param byteReadBufferSize size of internal buffer used in case of
 	 *                           byte-by-byte reading
+	 *
 	 * @throws IOException in case of corrupted data or source stream problems
 	 */
 	public BrotliInputStream(InputStream source, int byteReadBufferSize) throws IOException

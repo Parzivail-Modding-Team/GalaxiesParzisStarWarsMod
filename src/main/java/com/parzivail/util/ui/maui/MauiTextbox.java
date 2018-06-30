@@ -39,7 +39,6 @@ public class MauiTextbox extends Gui
 	//
 	//	public MauiConnectedState connectedState = MauiConnectedState.None;
 
-
 	public int xPosition;
 	public int yPosition;
 	/**

@@ -55,7 +55,6 @@ public class BlockEndorLog extends PBlockPillar
 			Block blockBelowThat = worldIn.getBlock(x, y - 2, z);
 			if (blockBelowThat == Blocks.grass || blockBelowThat == BlockRegister.fastGrass)
 				return field_150167_a[1];
-
 		}
 		if (blockBelow == Blocks.grass || blockBelow == BlockRegister.fastGrass)
 			return field_150167_a[2];

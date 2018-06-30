@@ -7,7 +7,16 @@ import org.lwjgl.opengl.GL11;
  */
 public enum PrimitiveType
 {
-	Points(GL11.GL_POINTS), Lines(GL11.GL_LINES), LineLoop(GL11.GL_LINE_LOOP), LineStrip(GL11.GL_LINE_STRIP), Triangles(GL11.GL_TRIANGLES), TriangleStrip(GL11.GL_TRIANGLE_STRIP), TriangleFan(GL11.GL_TRIANGLE_FAN), Quads(GL11.GL_QUADS), QuadStrip(GL11.GL_QUAD_STRIP), Polygon(GL11.GL_POLYGON);
+	Points(GL11.GL_POINTS),
+	Lines(GL11.GL_LINES),
+	LineLoop(GL11.GL_LINE_LOOP),
+	LineStrip(GL11.GL_LINE_STRIP),
+	Triangles(GL11.GL_TRIANGLES),
+	TriangleStrip(GL11.GL_TRIANGLE_STRIP),
+	TriangleFan(GL11.GL_TRIANGLE_FAN),
+	Quads(GL11.GL_QUADS),
+	QuadStrip(GL11.GL_QUAD_STRIP),
+	Polygon(GL11.GL_POLYGON);
 
 	private final int glValue;
 

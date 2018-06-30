@@ -311,5 +311,4 @@ public final class ShaderHelper
 
 		return source.toString();
 	}
-
 }

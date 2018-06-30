@@ -222,6 +222,21 @@ public class TerrainLayer
 
 	public enum Function
 	{
-		Simplex, Turbulent, InvTurbulent, NCTurbulent, InvNCTurbulent, Midpoint, InvMidpoint, FilmMelt, Warble, InvWarble, Klump, InvKlump, HiLoPass, InvHiLoPass, MidWave, Constant
+		Simplex,
+		Turbulent,
+		InvTurbulent,
+		NCTurbulent,
+		InvNCTurbulent,
+		Midpoint,
+		InvMidpoint,
+		FilmMelt,
+		Warble,
+		InvWarble,
+		Klump,
+		InvKlump,
+		HiLoPass,
+		InvHiLoPass,
+		MidWave,
+		Constant
 	}
 }

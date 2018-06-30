@@ -390,5 +390,4 @@ public class PMessage<REQ extends PMessage> implements Serializable, IMessage, I
 	{
 		void write(T t, ByteBuf buf);
 	}
-
 }

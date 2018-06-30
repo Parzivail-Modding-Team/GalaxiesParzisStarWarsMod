@@ -105,7 +105,6 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 		StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entity);
 		for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(entity))
 			StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entityPlayer);
-
 	}
 
 	void playerStartedTracking(EntityPlayer entityPlayer)

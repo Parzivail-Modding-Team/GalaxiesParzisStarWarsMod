@@ -308,6 +308,7 @@ public class PBlockConnected extends PBlock
 	 * @param par5 ID this block is asking to connect to (may be 0 if there is no
 	 *             block)
 	 * @param par6 Metadata of the block this block is trying to connect to
+	 *
 	 * @return true if should connect
 	 */
 	private boolean shouldConnectToBlock(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, Block par5, int par6)

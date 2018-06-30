@@ -21,6 +21,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 *
 	 * @param l   The collection of items
 	 * @param <T> List content type
+	 *
 	 * @return A new Enumerable
 	 */
 	public static <T> Enumerable<T> from(Collection<T> l)
@@ -35,6 +36,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 *
 	 * @param l   The collection of items
 	 * @param <T> List content type
+	 *
 	 * @return A new Enumerable
 	 */
 	public static <T> Enumerable<T> from(T[] l)
@@ -48,6 +50,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * Creates a new empty enumerable
 	 *
 	 * @param <T> List content type
+	 *
 	 * @return A new Enumerable
 	 */
 	public static <T> Enumerable<T> empty()
@@ -68,6 +71,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 *
 	 * @param f   The query
 	 * @param <R> The type of the selected value
+	 *
 	 * @return A list of the selected values
 	 */
 	public <R> Enumerable<R> select(Function<T, R> f)
@@ -82,6 +86,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * Returns the first value that satisfies <code>f</code>
 	 *
 	 * @param f The query
+	 *
 	 * @return The first value that satisfies <code>f</code>
 	 */
 	public T first(Function<T, Boolean> f)
@@ -111,6 +116,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 *
 	 * @param f   The query
 	 * @param <R> The type of the selected value
+	 *
 	 * @return A list of the selected values
 	 */
 	public <R> Enumerable<R> selectMany(Function<T, Collection<R>> f)
@@ -125,6 +131,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * Returns a list of only the items which satisfy <code>f</code>
 	 *
 	 * @param f The query
+	 *
 	 * @return A list of the filtered values
 	 */
 	public Enumerable<T> where(Function<T, Boolean> f)
@@ -140,6 +147,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * Query if any item within the list satisfies <code>f</code>
 	 *
 	 * @param f The query
+	 *
 	 * @return <code>true</code> of any item is satisfactory
 	 */
 	public boolean any(Function<T, Boolean> f)
@@ -154,6 +162,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * Query if all items within the list satisfy <code>f</code>
 	 *
 	 * @param f The query
+	 *
 	 * @return <code>true</code> of all items are satisfactory
 	 */
 	public boolean all(Function<T, Boolean> f)
@@ -168,6 +177,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * Returns the maximum of a list of values
 	 *
 	 * @param f The query
+	 *
 	 * @return The max value of the list
 	 */
 	public float max(Function<T, Float> f)
@@ -184,6 +194,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * Returns the minimum of a list of values
 	 *
 	 * @param f The query
+	 *
 	 * @return The min value of the list
 	 */
 	public float min(Function<T, Float> f)
@@ -203,6 +214,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * on the list [1, 2, 3, 4, 5], the following groupings would occur: ((((1 + 2) + 3) + 4) + 5)
 	 *
 	 * @param f The query
+	 *
 	 * @return The aggregated value
 	 */
 	public T aggregate(DualFunction<T, T, T> f)
@@ -219,6 +231,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * Computes the sum of a list of values
 	 *
 	 * @param f The query
+	 *
 	 * @return The sum of the list
 	 */
 	public float sum(Function<T, Float> f)
@@ -235,6 +248,7 @@ public class Enumerable<T> extends ArrayList<T>
 	 * Computes the average of a list of values
 	 *
 	 * @param f The query
+	 *
 	 * @return The average of the list
 	 */
 	public float average(Function<T, Float> f)

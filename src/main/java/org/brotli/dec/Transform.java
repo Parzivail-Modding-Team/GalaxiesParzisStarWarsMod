@@ -23,6 +23,11 @@ final class Transform
 	private static final String PREFIX_SUFFIX_SRC = "# #s #, #e #.# the #.com/#\u00C2\u00A0# of # and" + " # in # to #\"#\">#\n#]# for # a # that #. # with #'# from # by #. The # on # as # is #ing" + " #\n\t#:#ed #(# at #ly #=\"# of the #. This #,# not #er #al #='#ful #ive #less #est #ize #" + "ous #";
 	private static final String TRANSFORMS_SRC = "     !! ! ,  *!  &!  \" !  ) *   * -  ! # !  #!*!  " + "+  ,$ !  -  %  .  / #   0  1 .  \"   2  3!*   4%  ! # /   5  6  7  8 0  1 &   $   9 +   : " + " ;  < '  !=  >  ?! 4  @ 4  2  &   A *# (   B  C& ) %  ) !*# *-% A +! *.  D! %'  & E *6  F " + " G% ! *A *%  H! D  I!+!  J!+   K +- *4! A  L!*4  M  N +6  O!*% +.! K *G  P +%(  ! G *D +D " + " Q +# *K!*G!+D!+# +G +A +4!+% +K!+4!*D!+K!*K";
 
+	static
+	{
+		unpackTransforms(PREFIX_SUFFIX, PREFIX_SUFFIX_HEADS, TRANSFORMS, PREFIX_SUFFIX_SRC, TRANSFORMS_SRC);
+	}
+
 	private static void unpackTransforms(byte[] prefixSuffix, int[] prefixSuffixHeads, int[] transforms, String prefixSuffixSrc, String transformsSrc)
 	{
 		int n = prefixSuffixSrc.length();
@@ -42,11 +47,6 @@ final class Transform
 		{
 			transforms[i] = transformsSrc.charAt(i) - 32;
 		}
-	}
-
-	static
-	{
-		unpackTransforms(PREFIX_SUFFIX, PREFIX_SUFFIX_HEADS, TRANSFORMS, PREFIX_SUFFIX_SRC, TRANSFORMS_SRC);
 	}
 
 	static int transformDictionaryWord(byte[] dst, int dstOffset, ByteBuffer data, int wordOffset, int len, int transformIndex)

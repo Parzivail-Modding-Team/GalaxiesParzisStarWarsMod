@@ -44,6 +44,7 @@ public class EntityUtils
 	 * @param fromEntity The POV entity
 	 * @param exclude    The entity references to exclude (Note: not classes, but
 	 *                   inequality between two entity pointers)
+	 *
 	 * @return Returns the entity the trace hit, or null if none is hit
 	 */
 	public static RaytraceHit rayTrace(Vec3 fromDir, double distance, EntityLivingBase fromEntity, Entity[] exclude, boolean includeBlocks)

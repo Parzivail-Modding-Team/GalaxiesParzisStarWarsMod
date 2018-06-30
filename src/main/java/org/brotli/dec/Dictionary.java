@@ -21,6 +21,29 @@ public final class Dictionary
 {
 	private static volatile ByteBuffer data;
 
+	public static ByteBuffer getData()
+	{
+		if (data != null)
+		{
+			return data;
+		}
+		if (!DataLoader.OK)
+		{
+			throw new BrotliRuntimeException("brotli dictionary is not set");
+		}
+		/* Might have been set when {@link DictionaryData} was loaded.*/
+		return data;
+	}
+
+	public static void setData(ByteBuffer data)
+	{
+		if (!data.isDirect() || !data.isReadOnly())
+		{
+			throw new BrotliRuntimeException("data must be a direct read-only byte buffer");
+		}
+		Dictionary.data = data;
+	}
+
 	private static class DataLoader
 	{
 		static final boolean OK;
@@ -38,28 +61,5 @@ public final class Dictionary
 			}
 			OK = ok;
 		}
-	}
-
-	public static void setData(ByteBuffer data)
-	{
-		if (!data.isDirect() || !data.isReadOnly())
-		{
-			throw new BrotliRuntimeException("data must be a direct read-only byte buffer");
-		}
-		Dictionary.data = data;
-	}
-
-	public static ByteBuffer getData()
-	{
-		if (data != null)
-		{
-			return data;
-		}
-		if (!DataLoader.OK)
-		{
-			throw new BrotliRuntimeException("brotli dictionary is not set");
-		}
-		/* Might have been set when {@link DictionaryData} was loaded.*/
-		return data;
 	}
 }

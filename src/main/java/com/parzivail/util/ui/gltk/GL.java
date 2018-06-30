@@ -13,7 +13,6 @@ import org.lwjgl.util.vector.Vector3f;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-
 /**
  * Simple port of OpenTK's GL wrapper for LWJGL because I like OpenTK's methodology better
  * Created by colby on 9/13/2017.

@@ -34,7 +34,7 @@ public class OpenSimplexNoise
 	//vertices of an octagon from the center.
 	private static final byte[] gradients2D = {
 			5, 2, 2, 5, -5, 2, -2, 5, 5, -2, 2, -5, -5, -2, -2, -5,
-	};
+			};
 	//Gradients for 3D. They approximate the directions to the
 	//vertices of a rhombicuboctahedron from the center, skewed so
 	//that the triangular and square facets can be inscribed inside
@@ -112,7 +112,7 @@ public class OpenSimplexNoise
 			4,
 			-4,
 			-11,
-	};
+			};
 	//Gradients for 4D. They approximate the directions to the
 	//vertices of a disprismatotesseractihexadecachoron from the center,
 	//skewed so that the tetrahedral and cubic facets can be inscribed inside
@@ -374,7 +374,7 @@ public class OpenSimplexNoise
 			-1,
 			-1,
 			-3,
-	};
+			};
 	private final short[] perm;
 	private final short[] permGradIndex3D;
 
@@ -2003,7 +2003,6 @@ public class OpenSimplexNoise
 						wsv_ext2 += 2;
 						dw_ext2 -= 2;
 					}
-
 				}
 				else
 				{ //Both closest clothPoints on the smaller side
@@ -2087,7 +2086,6 @@ public class OpenSimplexNoise
 						wsv_ext0 = wsv_ext1 = wsb + 1;
 						dw_ext0 = dw_ext1 = dw0 - 1 - SQUISH_CONSTANT_4D;
 					}
-
 				}
 			}
 			else

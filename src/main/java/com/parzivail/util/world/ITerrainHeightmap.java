@@ -10,6 +10,7 @@ public interface ITerrainHeightmap
 	 *
 	 * @param x The x position
 	 * @param z The y position
+	 *
 	 * @return The height of the basic at (x, z)
 	 */
 	double getHeightAt(int x, int z);
@@ -19,6 +20,7 @@ public interface ITerrainHeightmap
 	 *
 	 * @param x The x position
 	 * @param z The y position
+	 *
 	 * @return biome noise interpolation value of the basic at (x, z)
 	 */
 	double getBiomeLerpAmount(int x, int z);
@@ -33,6 +35,7 @@ public interface ITerrainHeightmap
 	 *
 	 * @param x The x position
 	 * @param z The y position
+	 *
 	 * @return biome weight value of the basic at (x, z)
 	 */
 	double[] getBiomeWeightsAt(int x, int z);

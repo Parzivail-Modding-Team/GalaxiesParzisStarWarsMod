@@ -1,6 +1,5 @@
 package com.parzivail.swg.container;
 
-
 import com.parzivail.swg.item.blaster.ItemBlasterRifle;
 import com.parzivail.swg.tile.TileBlasterWorkbench;
 import com.parzivail.util.ui.SpecificSlot;

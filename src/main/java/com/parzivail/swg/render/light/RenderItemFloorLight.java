@@ -76,7 +76,6 @@ public class RenderItemFloorLight implements IItemRenderer
 				GL11.glEnable(GL11.GL_CULL_FACE);
 				GL11.glPopMatrix();
 				break;
-
 		}
 		GL11.glPopMatrix();
 	}

@@ -185,7 +185,6 @@ public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClic
 			GL.Enable(EnableCap.ScissorTest);
 			GL.Translate(-w + diff / 50f * Client.mc.fontRendererObj.getStringWidth(" - " + zoomRound + " - "), 77, 101);
 
-
 			GL.Scissor(-40 + sr.getScaledWidth() / 2, 75 + sr.getScaledHeight() / 2, 80, 12);
 			Client.mc.fontRendererObj.drawString(s, 0, 0, GLPalette.DARK_YELLOW_GREEN);
 

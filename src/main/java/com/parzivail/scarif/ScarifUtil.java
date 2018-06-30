@@ -45,6 +45,7 @@ class ScarifUtil
 	 *
 	 * @param x Chunk X position
 	 * @param z Chunk Z position
+	 *
 	 * @return Packed long
 	 */
 	public static long encodeChunkPos(int x, int z)
@@ -58,6 +59,7 @@ class ScarifUtil
 	 * @param x 0<=x<16 local position
 	 * @param y 0<=y<256 local position
 	 * @param z 0<=z<16 local position
+	 *
 	 * @return Packed short
 	 */
 	public static short encodeBlockPos(short x, short y, short z)

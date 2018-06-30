@@ -5,6 +5,16 @@ package com.parzivail.swg.ship;
  */
 public enum ShipInput
 {
-	RollLeft, RollRight, PitchUp, PitchDown, YawLeft, YawRight, ThrottleUp, ThrottleDown, BlasterFire, SpecialAesthetic, SpecialWeapon
+	RollLeft,
+	RollRight,
+	PitchUp,
+	PitchDown,
+	YawLeft,
+	YawRight,
+	ThrottleUp,
+	ThrottleDown,
+	BlasterFire,
+	SpecialAesthetic,
+	SpecialWeapon
 }
 

@@ -38,12 +38,12 @@ public class ChunkProviderEndor implements IChunkProvider
 		this.worldObj = worldObj;
 		waterLakeGenerator = new WorldGenLakes(Blocks.water);
 		terrain = new MultiCompositeTerrain(seed, 800,
-				// Naboo Mountains
-				new TerrainSwissHills(seed),
-				// Naboo Hills
-				//new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 80), new TerrainLayer(seed + 1, TerrainLayer.Function.Midpoint, TerrainLayer.Method.Add, 50, 20)),
-				// Naboo Plains
-				new CompositeTerrain(new TerrainLayer(seed, Function.MidWave, Method.Add, 100, 10), new TerrainLayer(seed + 1, Function.Constant, Method.Add, 200, 40)));
+		                                    // Naboo Mountains
+		                                    new TerrainSwissHills(seed),
+		                                    // Naboo Hills
+		                                    //new CompositeTerrain(new TerrainLayer(seed, TerrainLayer.Function.MidWave, TerrainLayer.Method.Add, 100, 80), new TerrainLayer(seed + 1, TerrainLayer.Function.Midpoint, TerrainLayer.Method.Add, 50, 20)),
+		                                    // Naboo Plains
+		                                    new CompositeTerrain(new TerrainLayer(seed, Function.MidWave, Method.Add, 100, 10), new TerrainLayer(seed + 1, Function.Constant, Method.Add, 200, 40)));
 	}
 
 	/**
