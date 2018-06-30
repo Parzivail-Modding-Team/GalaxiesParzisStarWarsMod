@@ -67,12 +67,12 @@ public class ScarifEngine
 
 		for (ScarifStructure structure : getStructuresForDimension(chunk.worldObj.provider.dimensionId))
 		{
-			if (!structure.chunks.containsKey(chunkPos))
+			if (!structure.hasChunk(chunkPos))
 				continue;
 
 			hadStructure = true;
 
-			ScarifBlock[] blocks = structure.chunks.get(chunkPos);
+			ScarifBlock[] blocks = structure.getChunk(chunkPos);
 			for (ScarifBlock block : blocks)
 			{
 				short pos = block.pos;
@@ -89,14 +89,11 @@ public class ScarifEngine
 					chunk.getBlockStorageArray()[l] = extendedblockstorage;
 				}
 
-				extendedblockstorage.setExtBlockID(blockX, blockY & 15, blockZ, Block.getBlockFromName(structure.idMap.get(block.id)));
+				extendedblockstorage.setExtBlockID(blockX, blockY & 15, blockZ, Block.getBlockFromName(structure.getBlockById(block.id)));
 				extendedblockstorage.setExtBlockMetadata(blockX, blockY & 15, blockZ, block.metadata);
 
 				if (block.tileData != null)
-				{
-					structure.tileInfoCache.computeIfAbsent(chunkPos, k -> new ArrayList<>());
-					structure.tileInfoCache.get(chunkPos).add(block.tileData);
-				}
+					structure.cacheTile(chunkPos, block.tileData);
 			}
 		}
 		return hadStructure;
@@ -105,17 +102,21 @@ public class ScarifEngine
 	public void genTiles(World world, int worldX, int worldZ)
 	{
 		long cPos = ScarifUtil.encodeChunkPos(worldX >> 4, worldZ >> 4);
-		for (ScarifStructure diff : getStructuresForDimension(world.provider.dimensionId))
+		for (ScarifStructure structure : getStructuresForDimension(world.provider.dimensionId))
 		{
-			ArrayList<NBTTagCompound> tileCache = diff.tileInfoCache.get(cPos);
+			ArrayList<NBTTagCompound> tileCache = structure.getCachedTiles(cPos);
 
 			if (tileCache != null)
+			{
 				for (NBTTagCompound pair : tileCache)
 				{
 					TileEntity te = world.getTileEntity(pair.getInteger("x"), pair.getInteger("y"), pair.getInteger("z"));
 					if (te != null)
 						te.readFromNBT(pair);
 				}
+
+				tileCache.clear();
+			}
 		}
 	}
 }

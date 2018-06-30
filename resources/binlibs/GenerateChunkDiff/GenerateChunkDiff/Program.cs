@@ -80,6 +80,7 @@ namespace GenerateChunkDiff
             var lChunksSkipped = new ConsoleGuiLabel(Console.WindowWidth / 2, 2, "Skipped Chunks   : {0}");
             var lChunksDiffed = new ConsoleGuiLabel(Console.WindowWidth / 2, 3, "Diffed Chunks    : {0}");
             var lBlocksDiffed = new ConsoleGuiLabel(Console.WindowWidth / 2, 4, "Diffed Blocks    : {0}");
+            var lTilesDiffed = new ConsoleGuiLabel(Console.WindowWidth / 2, 5, "Diffed TEs       : {0}");
 
             cgui.Add(pbChunks);
 
@@ -91,10 +92,12 @@ namespace GenerateChunkDiff
             cgui.Add(lChunksSkipped);
             cgui.Add(lChunksDiffed);
             cgui.Add(lBlocksDiffed);
+            cgui.Add(lTilesDiffed);
 
             var processedChunks = 0;
             var diffedChunks = 0;
             var diffedBlocks = 0;
+            var diffedTiles = 0;
             var skipped = 0;
 
             lStatus.Value = "Processing...";
@@ -136,12 +139,15 @@ namespace GenerateChunkDiff
                             var blockIdOriginal = (short)otherChunk.Blocks.GetID(x, y, z);
                             var blockDataOriginal = otherChunk.Blocks.GetData(x, y, z);
                             NbtTree nbtOriginal = null;
-                            var teOriginal = chunk.Blocks.GetTileEntity(x, y, z);
+                            var teOriginal = otherChunk.Blocks.GetTileEntity(x, y, z);
                             if (teOriginal != null)
                                 nbtOriginal = new NbtTree(teOriginal.Source, "tile");
 
                             if (inputMap[blockIdOriginal] == outputMap[blockId] && blockDataOriginal == blockData && nbtOriginal == nbt)
                                 continue;
+
+                            if (nbtOriginal != nbt)
+                                diffedTiles++;
 
                             diffedBlocks++;
                             diff.Add(pos, new BlockPosition(x, y, z), new BlockDiff(blockId, blockData, nbt));
@@ -157,6 +163,7 @@ namespace GenerateChunkDiff
 
                 lChunksProcessed.Value = processedChunks.ToString("N0");
                 lBlocksDiffed.Value = diffedBlocks.ToString("N0");
+                lTilesDiffed.Value = diffedTiles.ToString("N0");
                 lChunksDiffed.Value = diffedChunks.ToString("N0");
                 lChunksSkipped.Value = skipped.ToString("N0");
 
