@@ -3,6 +3,7 @@ package com.parzivail.swg.proxy;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
+import com.parzivail.swg.entity.multipart.EntityMultipart;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.ItemRegister;
 import com.parzivail.swg.registry.KeybindRegistry;
@@ -12,6 +13,7 @@ import com.parzivail.swg.render.antenna.RenderSatelliteDish;
 import com.parzivail.swg.render.console.*;
 import com.parzivail.swg.render.crate.*;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
+import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
 import com.parzivail.swg.render.gunrack.RenderItemGunRack;
@@ -126,6 +128,8 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(VehicleT65.class, new RenderT65());
 		//RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
+
+		RenderingRegistry.registerEntityRenderingHandler(EntityMultipart.class, new RenderNothing());
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleA280, new RenderA280());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleBowcaster, new RenderBowcaster());

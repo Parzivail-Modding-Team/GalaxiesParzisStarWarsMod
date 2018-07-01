@@ -1,6 +1,7 @@
 package com.parzivail.swg.command;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.entity.multipart.EntityMultipart;
 import com.parzivail.swg.ship.VehicleT65;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -42,6 +43,10 @@ public class CommandSpawnShip extends CommandBase
 			{
 				case "xwing":
 					spawn(new VehicleT65(player.worldObj), player);
+					break;
+				case "multitest":
+					spawn(new EntityMultipart(player.worldObj), player);
+					break;
 			}
 		}
 	}

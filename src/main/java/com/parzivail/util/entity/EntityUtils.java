@@ -25,7 +25,7 @@ import java.util.UUID;
 
 public class EntityUtils
 {
-	private static int mobId = 300;
+	private static int mobId;
 
 	/**
 	 * Gets the last used Mob ID
@@ -118,11 +118,9 @@ public class EntityUtils
 	 */
 	public static void registerEntity(Class<? extends Entity> entityClass, String entityName)
 	{
-		while (EntityList.getClassFromID(mobId) != null)
-			mobId += 1;
+		mobId++;
 		EntityRegistry.registerModEntity(entityClass, entityName, mobId, StarWarsGalaxy.instance, 80, 1, true);
-		EntityList.idToClassMap.put(mobId, entityClass);
-		Lumberjack.debug("Registered entity \"" + entityName + "\" as ID " + String.valueOf(mobId));
+		Lumberjack.debug("Registered entity \"" + entityName + "\" as ID " + mobId);
 	}
 
 	/**
@@ -135,10 +133,8 @@ public class EntityUtils
 	 */
 	public static void registerWithSpawnEgg(Class<? extends Entity> mobClass, String mobName, int bgColor, int fgColor)
 	{
-		while (EntityList.getClassFromID(mobId) != null)
-			mobId += 1;
+		mobId++;
 		EntityRegistry.registerModEntity(mobClass, mobName, mobId, StarWarsGalaxy.instance, 80, 1, true);
-		EntityList.idToClassMap.put(mobId, mobClass);
 		EntityList.entityEggs.put(mobId, new EntityEggInfo(mobId, bgColor, fgColor));
 		Lumberjack.debug("Registered entity (and egg) \"" + mobName + "\" as ID " + String.valueOf(mobId));
 	}

@@ -21,7 +21,21 @@ public class RenderNothing extends Render
 	public void doRender(Entity entity, double x, double y, double z, float unknown, float partialTicks)
 	{
 		if (!Client.mc.gameSettings.showDebugInfo)
+		{
+			GL11.glPushMatrix();
+			renderOffsetAABB(entity.boundingBox, x - entity.lastTickPosX, y - entity.lastTickPosY, z - entity.lastTickPosZ);
+			GL11.glPopMatrix();
+
+			for (Entity part : entity.getParts())
+			{
+				GL11.glPushMatrix();
+				GL.Translate(part.posX - entity.posX, part.posY - entity.posY, part.posZ - entity.posZ);
+				renderOffsetAABB(part.boundingBox, x - part.lastTickPosX, y - part.lastTickPosY, z - part.lastTickPosZ);
+				GL11.glPopMatrix();
+			}
+
 			return;
+		}
 
 		GL.PushMatrix();
 		GL.Translate(x, y + (entity.boundingBox.maxY - entity.boundingBox.minY) / 2f, z);
