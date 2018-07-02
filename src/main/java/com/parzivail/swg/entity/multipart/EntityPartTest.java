@@ -1,6 +1,7 @@
 package com.parzivail.swg.entity.multipart;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class EntityPartTest extends EntityPart
 {
@@ -19,5 +20,26 @@ public class EntityPartTest extends EntityPart
 	public boolean hitByEntity(Entity entityIn)
 	{
 		return super.hitByEntity(entityIn);
+	}
+
+	public void updateRiderPosition()
+	{
+		if (riddenByEntity != null)
+		{
+			riddenByEntity.setPosition(posX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ);
+		}
+	}
+
+	@Override
+	public boolean interactFirst(EntityPlayer player)
+	{
+		if (riddenByEntity != null && riddenByEntity instanceof EntityPlayer && riddenByEntity != player)
+			return true;
+		else
+		{
+			player.mountEntity(this);
+
+			return true;
+		}
 	}
 }
