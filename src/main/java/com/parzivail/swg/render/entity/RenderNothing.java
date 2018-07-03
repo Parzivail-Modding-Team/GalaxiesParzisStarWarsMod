@@ -25,15 +25,6 @@ public class RenderNothing extends Render
 			GL11.glPushMatrix();
 			renderOffsetAABB(entity.boundingBox, x - entity.lastTickPosX, y - entity.lastTickPosY, z - entity.lastTickPosZ);
 			GL11.glPopMatrix();
-
-			for (Entity part : entity.getParts())
-			{
-				GL11.glPushMatrix();
-				GL.Translate(part.posX - entity.posX, part.posY - entity.posY, part.posZ - entity.posZ);
-				renderOffsetAABB(part.boundingBox, x - part.lastTickPosX, y - part.lastTickPosY, z - part.lastTickPosZ);
-				GL11.glPopMatrix();
-			}
-
 			return;
 		}
 

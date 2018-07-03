@@ -4,7 +4,7 @@ import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.entity.multipart.EntityMultipart;
-import com.parzivail.swg.entity.multipart.EntityPartTest;
+import com.parzivail.swg.entity.multipart.EntitySeat;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.entity.EntityUtils;
 
@@ -22,6 +22,6 @@ public class EntityRegister
 		EntityUtils.registerEntity(EntitySmokeGrenade.class, "smokeGrenade");
 
 		EntityUtils.registerEntity(EntityMultipart.class, "multitest");
-		EntityUtils.registerEntity(EntityPartTest.class, "parttest");
+		EntityUtils.registerEntity(EntitySeat.class, "seat");
 	}
 }
