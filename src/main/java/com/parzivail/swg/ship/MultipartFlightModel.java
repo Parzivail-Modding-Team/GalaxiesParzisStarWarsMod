@@ -3,24 +3,24 @@ package com.parzivail.swg.ship;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.swg.network.MessageFlightModelUpdate;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RotatedAxes;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import org.lwjgl.util.vector.Vector3f;
 
-/**
- * Created by colby on 12/26/2017.
- */
-public abstract class BasicFlightModel extends EntityBase
+import java.util.UUID;
+
+public class MultipartFlightModel extends Entity
 {
+	private EntitySeat[] seats;
+	private UUID[] searchingSeats;
+
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
 	public Vector3f angularMomentum;
@@ -36,13 +36,11 @@ public abstract class BasicFlightModel extends EntityBase
 	public float verticalGroundingOffset;
 
 	public ShipData data;
-	protected Vector3f[] seatOffsets;
 
-	public BasicFlightModel(World world)
+	public MultipartFlightModel(World world)
 	{
 		super(world);
-
-		setSize(0.5F, 0.5F);
+		setSize(1, 2);
 
 		preventEntitySpawning = true;
 		ignoreFrustumCheck = true;
@@ -50,11 +48,6 @@ public abstract class BasicFlightModel extends EntityBase
 
 		orientation = previousOrientation = new RotatedAxes();
 		angularMomentum = new Vector3f();
-
-		//		createSeats();
-		//
-		//		for (int i = 0; i < this.seats.length; i++)
-		//			this.dataWatcher.addObject(DATA_SEATID + i, 0);
 
 		createData();
 	}
@@ -65,53 +58,13 @@ public abstract class BasicFlightModel extends EntityBase
 		this.verticalGroundingOffset = verticalGroundingOffset;
 	}
 
-	@Override
-	protected void entityInit()
-	{
-		super.entityInit();
-	}
-
 	protected void createData()
 	{
 		data = new ShipData();
 	}
 
-	@SideOnly(Side.CLIENT)
-	public float getShadowSize()
-	{
-		return 0.0F;
-	}
-
 	public boolean canBeCollidedWith()
 	{
-		return true;
-	}
-
-	public void applyEntityCollision(Entity other)
-	{
-	}
-
-	@Override
-	public void writeEntityToNBT(NBTTagCompound tag)
-	{
-	}
-
-	@Override
-	public void readEntityFromNBT(NBTTagCompound tag)
-	{
-	}
-
-	/**
-	 * First layer of player interaction
-	 */
-	public boolean interactFirst(EntityPlayer player)
-	{
-		if (riddenByEntity == null)
-		{
-			if (!worldObj.isRemote)
-				player.mountEntity(this);
-			return true;
-		}
 		return true;
 	}
 
@@ -121,11 +74,20 @@ public abstract class BasicFlightModel extends EntityBase
 		return true;
 	}
 
+	private EntitySeat[] createSeats()
+	{
+		return new EntitySeat[] {
+				new EntitySeat(this, "Basic Seat", SeatRole.Driver, new Vector3f(0, 0, 2))
+		};
+	}
+
 	@Override
 	public void onUpdate()
 	{
 		if (posY < -64.0D)
 			setDead();
+
+		partWatchdog();
 
 		prevPosX = lastTickPosX = posX;
 		prevPosY = lastTickPosY = posY;
@@ -173,7 +135,6 @@ public abstract class BasicFlightModel extends EntityBase
 
 	public void acceptInput(ShipInput input)
 	{
-		// TODO: seats and delegate input to seats
 		switch (input)
 		{
 			case RollLeft:
@@ -208,5 +169,109 @@ public abstract class BasicFlightModel extends EntityBase
 				break;
 		}
 		StarWarsGalaxy.network.sendToServer(new MessageFlightModelUpdate(this));
+	}
+
+	private void partWatchdog()
+	{
+		if (!worldObj.isRemote)
+		{
+			if (seats == null)
+				seats = createSeats();
+
+			for (int i = 0; i < seats.length; i++)
+			{
+				EntitySeat part = seats[i];
+				if (part == null)
+				{
+					setSeat(searchingSeats[i], i);
+					continue;
+				}
+
+				part.setLocation();
+
+				if (worldObj.getEntityByID(part.getEntityId()) == null)
+					worldObj.spawnEntityInWorld(part);
+			}
+		}
+	}
+
+	@Override
+	public void setDead()
+	{
+		super.setDead();
+
+		if (seats != null)
+			for (EntitySeat part : seats)
+				part.setDead();
+	}
+
+	@Override
+	protected void entityInit()
+	{
+
+	}
+
+	@Override
+	protected void readEntityFromNBT(NBTTagCompound tagCompound)
+	{
+		String seatsString = tagCompound.getString("seats");
+		String[] seatsPairs = seatsString.split(";");
+
+		seats = new EntitySeat[seatsPairs.length];
+		searchingSeats = new UUID[seatsPairs.length];
+		for (int i = 0; i < seatsPairs.length; i++)
+		{
+			String[] pair = seatsPairs[i].split("\\|");
+			long lsb = Long.parseLong(pair[0]);
+			long msb = Long.parseLong(pair[1]);
+			UUID uuid = new UUID(msb, lsb);
+			searchingSeats[i] = uuid;
+		}
+	}
+
+	@Override
+	protected void writeEntityToNBT(NBTTagCompound tagCompound)
+	{
+		if (seats == null)
+		{
+			tagCompound.setString("seats", "");
+			return;
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		for (EntitySeat part : seats)
+			sb.append(part.getUniqueID().getLeastSignificantBits()).append("|").append(part.getUniqueID().getMostSignificantBits()).append(";");
+
+		tagCompound.setString("seats", sb.toString());
+	}
+
+	public void setSeat(UUID seatId, int seatIdx)
+	{
+		Entity entity = EntityUtils.getEntityByUuid(worldObj, seatId);
+
+		if (entity == null)
+		{
+			Lumberjack.warn("Parent failed to locate part with UUID " + seatId);
+			//setDead();
+		}
+		else
+		{
+			if (!(entity instanceof EntitySeat))
+				return;
+
+			seats[seatIdx] = (EntitySeat)entity;
+			seats[seatIdx].setParent(getEntityId());
+			Lumberjack.warn("Parent located part");
+		}
+	}
+
+	public boolean isControlling(Entity thePlayer)
+	{
+		if (seats != null)
+			for (EntitySeat seat : seats)
+				if (seat.role == SeatRole.Driver && seat.riddenByEntity == thePlayer)
+					return true;
+		return false;
 	}
 }

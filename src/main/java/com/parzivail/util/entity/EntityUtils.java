@@ -2,7 +2,8 @@ package com.parzivail.util.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.ship.BasicFlightModel;
+import com.parzivail.swg.ship.EntitySeat;
+import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
@@ -144,11 +145,11 @@ public class EntityUtils
 	//		return !(entity == null || entity.ridingEntity == null) && (clazz.isInstance(entity.ridingEntity) || (entity.ridingEntity instanceof EntitySeat && clazz.isInstance(((EntitySeat)entity.ridingEntity).parent)));
 	//	}
 
-	public static BasicFlightModel getShipRiding(Entity entity)
+	public static MultipartFlightModel getShipRiding(Entity entity)
 	{
-		if (!(entity.ridingEntity instanceof BasicFlightModel))
+		if (!(entity.ridingEntity instanceof EntitySeat))
 			return null;
-		return (BasicFlightModel)entity.ridingEntity;
+		return ((EntitySeat)entity.ridingEntity).parent;
 	}
 
 	public static Entity getEntityByUuid(World world, UUID uuid)
@@ -162,9 +163,9 @@ public class EntityUtils
 		return null;
 	}
 
-	public static boolean isClientControlled(BasicFlightModel query)
+	public static boolean isClientControlled(MultipartFlightModel query)
 	{
-		BasicFlightModel ship = getShipRiding(Client.mc.thePlayer);
-		return ship != null && ship.equals(query);
+		MultipartFlightModel ship = getShipRiding(Client.mc.thePlayer);
+		return ship != null && ship.equals(query) && ship.isControlling(Client.mc.thePlayer);
 	}
 }

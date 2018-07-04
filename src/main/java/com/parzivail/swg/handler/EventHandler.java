@@ -12,7 +12,7 @@ import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
-import com.parzivail.swg.ship.BasicFlightModel;
+import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
@@ -103,7 +103,7 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			BasicFlightModel ship = EntityUtils.getShipRiding(event.entity);
+			MultipartFlightModel ship = EntityUtils.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 		}
@@ -117,7 +117,7 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			BasicFlightModel ship = EntityUtils.getShipRiding(event.entity);
+			MultipartFlightModel ship = EntityUtils.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 		}
@@ -151,7 +151,7 @@ public class EventHandler
 	{
 		if (Client.mc.thePlayer != null)
 		{
-			BasicFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
+			MultipartFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
 			if (ship == null)
 			{
 				FxMC.changeCameraRoll(0);
@@ -162,7 +162,8 @@ public class EventHandler
 				FxMC.changeCameraDist(10);
 				float r = ship.orientation.getRoll();
 				FxMC.changeCameraRoll(r);
-				Client.mc.renderViewEntity = ship;
+				// TODO: make EntityLiving that boxes the ship so the camera inherits the angles
+				//Client.mc.renderViewEntity = ship;
 			}
 
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();

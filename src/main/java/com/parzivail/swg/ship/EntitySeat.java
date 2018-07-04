@@ -1,19 +1,21 @@
-package com.parzivail.swg.entity.multipart;
+package com.parzivail.swg.ship;
 
 import com.parzivail.util.common.Lumberjack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import org.lwjgl.util.vector.Vector3f;
 
 public class EntitySeat extends Entity
 {
 	/**
 	 * The dragon entity this dragon part belongs to
 	 */
-	public EntityMultipart parent;
+	public MultipartFlightModel parent;
 	public String name;
 	public SeatRole role;
+	private Vector3f position;
 
 	public EntitySeat(World world)
 	{
@@ -22,12 +24,18 @@ public class EntitySeat extends Entity
 		noClip = true;
 	}
 
-	public EntitySeat(EntityMultipart parent, String name, SeatRole role)
+	public EntitySeat(MultipartFlightModel parent, String name, SeatRole role, Vector3f position)
 	{
 		this(parent.worldObj);
 		this.parent = parent;
 		this.name = name;
 		this.role = role;
+		this.position = position;
+	}
+
+	public boolean canBeCollidedWith()
+	{
+		return true;
 	}
 
 	protected void entityInit()
@@ -48,6 +56,7 @@ public class EntitySeat extends Entity
 	{
 		name = tagCompound.getString("name");
 		role = SeatRole.valueOf(tagCompound.getString("role"));
+		position = new Vector3f(tagCompound.getFloat("pX"), tagCompound.getFloat("pY"), tagCompound.getFloat("pZ"));
 	}
 
 	/**
@@ -57,6 +66,9 @@ public class EntitySeat extends Entity
 	{
 		tagCompound.setString("name", name);
 		tagCompound.setString("role", role.toString());
+		tagCompound.setFloat("pX", position.x);
+		tagCompound.setFloat("pY", position.y);
+		tagCompound.setFloat("pZ", position.z);
 	}
 
 	/**
@@ -70,7 +82,7 @@ public class EntitySeat extends Entity
 	public void setLocation()
 	{
 		if (parent != null)
-			setLocationAndAngles(parent.posX, parent.posY + 2.5f, parent.posZ, 0, 0);
+			setLocationAndAngles(parent.posX + position.x, parent.posY + position.y, parent.posZ + position.z, 0, 0);
 	}
 
 	public void setParent(int parentId)
@@ -84,10 +96,10 @@ public class EntitySeat extends Entity
 		}
 		else
 		{
-			if (!(entity instanceof EntityMultipart))
+			if (!(entity instanceof MultipartFlightModel))
 				return;
 
-			parent = (EntityMultipart)entity;
+			parent = (MultipartFlightModel)entity;
 			Lumberjack.warn("Part located parent");
 		}
 	}

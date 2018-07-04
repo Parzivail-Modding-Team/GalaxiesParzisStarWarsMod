@@ -3,8 +3,7 @@ package com.parzivail.swg.registry;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
-import com.parzivail.swg.entity.multipart.EntityMultipart;
-import com.parzivail.swg.entity.multipart.EntitySeat;
+import com.parzivail.swg.ship.EntitySeat;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.entity.EntityUtils;
 
@@ -16,12 +15,10 @@ public class EntityRegister
 	public static void register()
 	{
 		EntityUtils.registerEntity(VehicleT65.class, "t65");
+		EntityUtils.registerEntity(EntitySeat.class, "seat");
 
 		EntityUtils.registerEntity(EntityBlasterBolt.class, "blasterBolt");
 		EntityUtils.registerEntity(EntityThermalDetonator.class, "thermalDetonator");
 		EntityUtils.registerEntity(EntitySmokeGrenade.class, "smokeGrenade");
-
-		EntityUtils.registerEntity(EntityMultipart.class, "multitest");
-		EntityUtils.registerEntity(EntitySeat.class, "seat");
 	}
 }

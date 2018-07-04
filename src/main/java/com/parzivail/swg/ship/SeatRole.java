@@ -1,4 +1,4 @@
-package com.parzivail.swg.entity.multipart;
+package com.parzivail.swg.ship;
 
 public enum SeatRole
 {

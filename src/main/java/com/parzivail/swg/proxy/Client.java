@@ -3,7 +3,6 @@ package com.parzivail.swg.proxy;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
-import com.parzivail.swg.entity.multipart.EntityMultipart;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.ItemRegister;
 import com.parzivail.swg.registry.KeybindRegistry;
@@ -26,6 +25,7 @@ import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
 import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
 import com.parzivail.swg.render.pipe.RenderWallPipeLarge;
 import com.parzivail.swg.render.weapon.*;
+import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.swg.tile.TileLadder;
@@ -129,7 +129,7 @@ public class Client extends Common
 		//RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
-		RenderingRegistry.registerEntityRenderingHandler(EntityMultipart.class, new RenderNothing());
+		RenderingRegistry.registerEntityRenderingHandler(MultipartFlightModel.class, new RenderNothing());
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleA280, new RenderA280());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleBowcaster, new RenderBowcaster());

@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.entity;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.ship.BasicFlightModel;
+import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.util.binary.Swg3.SwgModel;
 import com.parzivail.util.binary.Swg3.SwgPart;
 import com.parzivail.util.ui.gltk.GL;
@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * Created by colby on 12/25/2017.
  */
-public class RenderT65 extends RenderBasicFlightModel
+public class RenderT65 extends RenderStarfighter
 {
 	private static final SwgModel model;
 
@@ -25,7 +25,7 @@ public class RenderT65 extends RenderBasicFlightModel
 	}
 
 	@Override
-	public void doRender(BasicFlightModel ship, float partialTicks)
+	public void doRender(MultipartFlightModel ship, float partialTicks)
 	{
 		int frame = 0;
 

@@ -5,7 +5,7 @@ import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.network.MessageItemLeftClick;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
-import com.parzivail.swg.ship.BasicFlightModel;
+import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.ship.ShipInput;
 import com.parzivail.util.entity.EntityUtils;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
@@ -46,7 +46,7 @@ public class KeyHandler
 
 	public static void handleVehicleMovement()
 	{
-		BasicFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
+		MultipartFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
 		if (Client.mc.thePlayer != null && ship != null)
 		{
 			if ($(Client.mc.gameSettings.keyBindLeft))
