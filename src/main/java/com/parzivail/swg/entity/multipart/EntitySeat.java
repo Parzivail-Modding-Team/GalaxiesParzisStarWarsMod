@@ -13,6 +13,7 @@ public class EntitySeat extends Entity
 	 */
 	public EntityMultipart parent;
 	public String name;
+	public SeatRole role;
 
 	public EntitySeat(World world)
 	{
@@ -21,11 +22,12 @@ public class EntitySeat extends Entity
 		noClip = true;
 	}
 
-	public EntitySeat(EntityMultipart parent, String name)
+	public EntitySeat(EntityMultipart parent, String name, SeatRole role)
 	{
 		this(parent.worldObj);
 		this.parent = parent;
 		this.name = name;
+		this.role = role;
 	}
 
 	protected void entityInit()
@@ -42,10 +44,10 @@ public class EntitySeat extends Entity
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
-	protected void readEntityFromNBT(NBTTagCompound tagCompund)
+	protected void readEntityFromNBT(NBTTagCompound tagCompound)
 	{
-		name = tagCompund.getString("name");
-		//		setParent(tagCompund.getInteger("parent"));
+		name = tagCompound.getString("name");
+		role = SeatRole.valueOf(tagCompound.getString("role"));
 	}
 
 	/**
@@ -54,16 +56,7 @@ public class EntitySeat extends Entity
 	protected void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
 		tagCompound.setString("name", name);
-		//		if (parent != null)
-		//			tagCompound.setInteger("parent", parent.getEntityId());
-	}
-
-	/**
-	 * Returns true if other Entities should be prevented from moving through this Entity.
-	 */
-	public boolean canBeCollidedWith()
-	{
-		return true;
+		tagCompound.setString("role", role.toString());
 	}
 
 	/**
@@ -101,10 +94,10 @@ public class EntitySeat extends Entity
 
 	public void updateRiderPosition()
 	{
-		if (riddenByEntity != null)
-		{
-			riddenByEntity.setPosition(posX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ);
-		}
+		if (riddenByEntity == null)
+			return;
+
+		riddenByEntity.setPosition(posX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ);
 	}
 
 	@Override

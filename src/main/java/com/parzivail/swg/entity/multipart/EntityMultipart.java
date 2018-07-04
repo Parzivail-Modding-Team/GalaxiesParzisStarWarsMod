@@ -23,7 +23,7 @@ public class EntityMultipart extends Entity
 	private EntitySeat[] createParts()
 	{
 		return new EntitySeat[] {
-				new EntitySeat(this, "Test seat")
+				new EntitySeat(this, "Test seat", SeatRole.Driver)
 		};
 	}
 
