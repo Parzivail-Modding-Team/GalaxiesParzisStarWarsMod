@@ -15,7 +15,7 @@ public class EntitySeat extends Entity
 	public MultipartFlightModel parent;
 	public String name;
 	public SeatRole role;
-	private Vector3f position;
+	public Vector3f position;
 
 	public EntitySeat(World world)
 	{

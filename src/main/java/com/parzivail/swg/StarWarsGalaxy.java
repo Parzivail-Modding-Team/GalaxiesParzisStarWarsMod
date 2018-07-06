@@ -71,6 +71,7 @@ public class StarWarsGalaxy
 		registerMessageServer(MessageItemLeftClick.class);
 		registerMessageServer(MessageTransaction.class);
 
+		registerMessageClient(MessageFlightModelClientUpdate.class);
 		registerMessageClient(MessageSpawnParticle.class);
 		registerMessageClient(MessageCreateDecal.class);
 		registerMessageClient(MessagePswgExtPropSync.class);

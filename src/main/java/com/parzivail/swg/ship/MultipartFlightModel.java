@@ -2,6 +2,7 @@ package com.parzivail.swg.ship;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.handler.KeyHandler;
+import com.parzivail.swg.network.MessageFlightModelClientUpdate;
 import com.parzivail.swg.network.MessageFlightModelUpdate;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
@@ -20,6 +21,8 @@ public class MultipartFlightModel extends Entity
 {
 	private EntitySeat[] seats;
 	private UUID[] searchingSeats;
+	private int[] clientSearchingSeats;
+	private boolean doesClientKnowSeats;
 
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
@@ -36,6 +39,8 @@ public class MultipartFlightModel extends Entity
 	public float verticalGroundingOffset;
 
 	public ShipData data;
+	private SeatData[] seatData;
+	private Entity driver;
 
 	public MultipartFlightModel(World world)
 	{
@@ -61,6 +66,7 @@ public class MultipartFlightModel extends Entity
 	protected void createData()
 	{
 		data = new ShipData();
+		seatData = createSeats();
 	}
 
 	public boolean canBeCollidedWith()
@@ -74,10 +80,10 @@ public class MultipartFlightModel extends Entity
 		return true;
 	}
 
-	private EntitySeat[] createSeats()
+	private SeatData[] createSeats()
 	{
-		return new EntitySeat[] {
-				new EntitySeat(this, "Basic Seat", SeatRole.Driver, new Vector3f(0, 0, 2))
+		return new SeatData[] {
+				new SeatData("Basic Seat", SeatRole.Driver, new Vector3f(0, 0, 2))
 		};
 	}
 
@@ -103,7 +109,7 @@ public class MultipartFlightModel extends Entity
 		if (worldObj.isRemote && EntityUtils.isClientControlled(this))
 			KeyHandler.handleVehicleMovement();
 
-		if (riddenByEntity instanceof EntityLivingBase)
+		if (getDriver() instanceof EntityLivingBase)
 		{
 			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, -1));
 			//Lumberjack.log(this.throttle);
@@ -173,26 +179,55 @@ public class MultipartFlightModel extends Entity
 
 	private void partWatchdog()
 	{
-		if (!worldObj.isRemote)
+		if (seats == null && !worldObj.isRemote)
 		{
-			if (seats == null)
-				seats = createSeats();
+			seats = new EntitySeat[seatData.length];
+			for (int i = 0; i < seatData.length; i++)
+				seats[i] = new EntitySeat(this, seatData[i].name, seatData[i].role, seatData[i].pos);
+		}
 
-			for (int i = 0; i < seats.length; i++)
+		if (!doesClientKnowSeats && !worldObj.isRemote && knowsAllSeats())
+		{
+			StarWarsGalaxy.network.sendToDimension(new MessageFlightModelClientUpdate(this), dimension);
+			doesClientKnowSeats = true;
+		}
+
+		if (seats == null)
+			return;
+
+		for (int i = 0; i < seats.length; i++)
+		{
+			EntitySeat part = seats[i];
+			if (part == null)
 			{
-				EntitySeat part = seats[i];
-				if (part == null)
-				{
+				if (!worldObj.isRemote)
 					setSeat(searchingSeats[i], i);
-					continue;
-				}
+				else
+					setSeat(clientSearchingSeats[i], i);
+				continue;
+			}
+			part.parent = this;
 
+			if (!worldObj.isRemote)
+			{
 				part.setLocation();
 
 				if (worldObj.getEntityByID(part.getEntityId()) == null)
 					worldObj.spawnEntityInWorld(part);
 			}
 		}
+	}
+
+	private boolean knowsAllSeats()
+	{
+		if (seats == null)
+			return false;
+
+		for (EntitySeat s : seats)
+			if (s == null)
+				return false;
+
+		return true;
 	}
 
 	@Override
@@ -214,8 +249,12 @@ public class MultipartFlightModel extends Entity
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound tagCompound)
 	{
-		String seatsString = tagCompound.getString("seats");
-		String[] seatsPairs = seatsString.split(";");
+		loadSeatsFromUuids(tagCompound.getString("seats"));
+	}
+
+	public void loadSeatsFromUuids(String uuids)
+	{
+		String[] seatsPairs = uuids.split(";");
 
 		seats = new EntitySeat[seatsPairs.length];
 		searchingSeats = new UUID[seatsPairs.length];
@@ -229,6 +268,16 @@ public class MultipartFlightModel extends Entity
 		}
 	}
 
+	public void loadSeatsFromIds(String uuids)
+	{
+		String[] seatsPairs = uuids.split(";");
+
+		seats = new EntitySeat[seatsPairs.length];
+		clientSearchingSeats = new int[seatsPairs.length];
+		for (int i = 0; i < seatsPairs.length; i++)
+			clientSearchingSeats[i] = Integer.parseInt(seatsPairs[i]);
+	}
+
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
@@ -238,21 +287,46 @@ public class MultipartFlightModel extends Entity
 			return;
 		}
 
+		tagCompound.setString("seats", getSeatUuids());
+	}
+
+	public String getSeatUuids()
+	{
 		StringBuilder sb = new StringBuilder();
 
 		for (EntitySeat part : seats)
 			sb.append(part.getUniqueID().getLeastSignificantBits()).append("|").append(part.getUniqueID().getMostSignificantBits()).append(";");
 
-		tagCompound.setString("seats", sb.toString());
+		return sb.toString();
+	}
+
+	public String getSeatIds()
+	{
+		StringBuilder sb = new StringBuilder();
+
+		for (EntitySeat part : seats)
+			sb.append(part.getEntityId()).append(";");
+
+		return sb.toString();
 	}
 
 	public void setSeat(UUID seatId, int seatIdx)
 	{
 		Entity entity = EntityUtils.getEntityByUuid(worldObj, seatId);
+		setSeat(seatId.toString(), seatIdx, entity);
+	}
 
+	public void setSeat(int seatId, int seatIdx)
+	{
+		Entity entity = worldObj.getEntityByID(seatId);
+		setSeat(String.valueOf(seatId), seatIdx, entity);
+	}
+
+	void setSeat(String seatId, int seatIdx, Entity entity)
+	{
 		if (entity == null)
 		{
-			Lumberjack.warn("Parent failed to locate part with UUID " + seatId);
+			Lumberjack.warn("Parent failed to locate part with ID " + seatId);
 			//setDead();
 		}
 		else
@@ -262,6 +336,9 @@ public class MultipartFlightModel extends Entity
 
 			seats[seatIdx] = (EntitySeat)entity;
 			seats[seatIdx].setParent(getEntityId());
+			seats[seatIdx].name = seatData[seatIdx].name;
+			seats[seatIdx].role = seatData[seatIdx].role;
+			seats[seatIdx].position = seatData[seatIdx].pos;
 			Lumberjack.warn("Parent located part");
 		}
 	}
@@ -273,5 +350,17 @@ public class MultipartFlightModel extends Entity
 				if (seat.role == SeatRole.Driver && seat.riddenByEntity == thePlayer)
 					return true;
 		return false;
+	}
+
+	public Entity getDriver()
+	{
+		if (seats == null)
+			return null;
+
+		for (EntitySeat seat : seats)
+			if (seat != null && seat.role == SeatRole.Driver && seat.riddenByEntity != null)
+				return seat.riddenByEntity;
+
+		return null;
 	}
 }
