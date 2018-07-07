@@ -2,6 +2,7 @@ package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetDescriptor;
+import com.parzivail.swg.entity.EntityLivingWraper;
 import com.parzivail.swg.gui.GuiNowEntering;
 import com.parzivail.swg.gui.GuiScreenTrailer;
 import com.parzivail.swg.item.ICustomCrosshair;
@@ -162,8 +163,7 @@ public class EventHandler
 				FxMC.changeCameraDist(10);
 				float r = ship.orientation.getRoll();
 				FxMC.changeCameraRoll(r);
-				// TODO: make EntityLiving that boxes the ship so the camera inherits the angles
-				//Client.mc.renderViewEntity = ship;
+				Client.mc.renderViewEntity = new EntityLivingWraper(ship);
 			}
 
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
