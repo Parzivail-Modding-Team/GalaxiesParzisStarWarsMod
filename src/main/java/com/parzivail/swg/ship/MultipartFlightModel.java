@@ -1,6 +1,7 @@
 package com.parzivail.swg.ship;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.entity.EntityCameraWrapper;
 import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.swg.network.MessageFlightModelClientUpdate;
 import com.parzivail.swg.network.MessageFlightModelUpdate;
@@ -19,6 +20,8 @@ import java.util.UUID;
 
 public class MultipartFlightModel extends Entity
 {
+	public EntityCameraWrapper camera;
+
 	private EntitySeat[] seats;
 	private UUID[] searchingSeats;
 	private int[] clientSearchingSeats;
@@ -55,6 +58,8 @@ public class MultipartFlightModel extends Entity
 		angularMomentum = new Vector3f();
 
 		createData();
+
+		camera = new EntityCameraWrapper(this);
 	}
 
 	protected void setPivots(float verticalCenteringOffset, float verticalGroundingOffset)
@@ -95,14 +100,18 @@ public class MultipartFlightModel extends Entity
 
 		partWatchdog();
 
-		prevPosX = lastTickPosX = posX;
-		prevPosY = lastTickPosY = posY;
-		prevPosZ = lastTickPosZ = posZ;
+		prevPosX = posX;
+		prevPosY = posY;
+		prevPosZ = posZ;
 
-		rotationYaw = 180 - orientation.getYaw();
-		rotationPitch = orientation.getPitch();
-		prevRotationYaw = 180 - previousOrientation.getYaw();
-		prevRotationPitch = previousOrientation.getPitch();
+		camera.posX = camera.lastTickPosX = posX;
+		camera.posY = camera.lastTickPosY = posY;
+		camera.posZ = camera.lastTickPosZ = posZ;
+
+		camera.rotationYaw = rotationYaw = 180 - orientation.getYaw();
+		camera.rotationPitch = rotationPitch = orientation.getPitch();
+		camera.prevRotationYaw = prevRotationYaw = 180 - previousOrientation.getYaw();
+		camera.prevRotationPitch = prevRotationPitch = previousOrientation.getPitch();
 
 		previousOrientation = orientation.clone();
 

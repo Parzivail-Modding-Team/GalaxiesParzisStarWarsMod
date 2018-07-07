@@ -4,12 +4,11 @@ import com.parzivail.swg.ship.MultipartFlightModel;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 
-public class EntityLivingWraper extends EntityLivingBase
+public class EntityCameraWrapper extends EntityLivingBase
 {
-	public EntityLivingWraper(MultipartFlightModel ship)
+	public EntityCameraWrapper(MultipartFlightModel ship)
 	{
 		super(ship.worldObj);
-		copyLocationAndAnglesFrom(ship);
 	}
 
 	@Override
