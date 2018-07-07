@@ -159,7 +159,6 @@ public class EventHandler
 			}
 			else
 			{
-				FxMC.changeCameraDist(10);
 				float r = ship.orientation.getRoll();
 				FxMC.changeCameraRoll(r);
 				Client.mc.renderViewEntity = ship.camera;

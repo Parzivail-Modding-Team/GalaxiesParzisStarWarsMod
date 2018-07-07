@@ -1,13 +1,17 @@
 package com.parzivail.swg.ship;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.entity.EntityCameraWrapper;
+import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.swg.network.MessageFlightModelClientUpdate;
 import com.parzivail.swg.network.MessageFlightModelUpdate;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RotatedAxes;
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,9 +22,10 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.util.UUID;
 
-public class MultipartFlightModel extends Entity
+public class MultipartFlightModel extends Entity implements IEntityAdditionalSpawnData
 {
-	public EntityCameraWrapper camera;
+	@SideOnly(Side.CLIENT)
+	public EntityCinematicCamera camera;
 
 	private EntitySeat[] seats;
 	private UUID[] searchingSeats;
@@ -58,8 +63,6 @@ public class MultipartFlightModel extends Entity
 		angularMomentum = new Vector3f();
 
 		createData();
-
-		camera = new EntityCameraWrapper(this);
 	}
 
 	protected void setPivots(float verticalCenteringOffset, float verticalGroundingOffset)
@@ -104,15 +107,6 @@ public class MultipartFlightModel extends Entity
 		prevPosY = posY;
 		prevPosZ = posZ;
 
-		camera.posX = camera.lastTickPosX = posX;
-		camera.posY = camera.lastTickPosY = posY;
-		camera.posZ = camera.lastTickPosZ = posZ;
-
-		camera.rotationYaw = rotationYaw = 180 - orientation.getYaw();
-		camera.rotationPitch = rotationPitch = orientation.getPitch();
-		camera.prevRotationYaw = prevRotationYaw = 180 - previousOrientation.getYaw();
-		camera.prevRotationPitch = prevRotationPitch = previousOrientation.getPitch();
-
 		previousOrientation = orientation.clone();
 
 		if (worldObj.isRemote && EntityUtils.isClientControlled(this))
@@ -122,10 +116,14 @@ public class MultipartFlightModel extends Entity
 		{
 			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, -1));
 			//Lumberjack.log(this.throttle);
-			moveEntity(motionX + forward.x * throttle, motionY + forward.y * throttle, motionZ + forward.z * throttle);
-		}
-		else
+
+			motionX = forward.x * throttle;
+			motionY = forward.y * throttle;
+			motionZ = forward.z * throttle;
+
 			moveEntity(motionX, motionY, motionZ);
+		}
+
 		orientation.rotateLocalPitch(angularMomentum.x);
 		orientation.rotateLocalYaw(angularMomentum.y);
 		orientation.rotateLocalRoll(angularMomentum.z);
@@ -195,19 +193,19 @@ public class MultipartFlightModel extends Entity
 				seats[i] = new EntitySeat(this, seatData[i].name, seatData[i].role, seatData[i].pos);
 		}
 
+		if (seats == null)
+			return;
+
 		if (!doesClientKnowSeats && !worldObj.isRemote && knowsAllSeats())
 		{
 			StarWarsGalaxy.network.sendToDimension(new MessageFlightModelClientUpdate(this), dimension);
 			doesClientKnowSeats = true;
 		}
 
-		if (seats == null)
-			return;
-
 		for (int i = 0; i < seats.length; i++)
 		{
-			EntitySeat part = seats[i];
-			if (part == null)
+			EntitySeat seat = seats[i];
+			if (seat == null)
 			{
 				if (!worldObj.isRemote)
 					setSeat(searchingSeats[i], i);
@@ -215,14 +213,15 @@ public class MultipartFlightModel extends Entity
 					setSeat(clientSearchingSeats[i], i);
 				continue;
 			}
-			part.parent = this;
+
+			seat.parent = this;
 
 			if (!worldObj.isRemote)
 			{
-				part.setLocation();
+				seat.setLocation();
 
-				if (worldObj.getEntityByID(part.getEntityId()) == null)
-					worldObj.spawnEntityInWorld(part);
+				if (worldObj.getEntityByID(seat.getEntityId()) == null)
+					worldObj.spawnEntityInWorld(seat);
 			}
 		}
 	}
@@ -247,6 +246,9 @@ public class MultipartFlightModel extends Entity
 		if (seats != null)
 			for (EntitySeat part : seats)
 				part.setDead();
+
+		if (worldObj.isRemote)
+			camera.setDead();
 	}
 
 	@Override
@@ -371,5 +373,65 @@ public class MultipartFlightModel extends Entity
 				return seat.riddenByEntity;
 
 		return null;
+	}
+
+	@Override
+	public void writeSpawnData(ByteBuf buffer)
+	{
+		/*
+			ByteBufUtils.writeUTF8String(data, driveableType);
+
+			NBTTagCompound tag = new NBTTagCompound();
+			driveableData.writeToNBT(tag);
+			ByteBufUtils.writeTag(data, tag);
+
+			data.writeFloat(axes.getYaw());
+			data.writeFloat(axes.getPitch());
+			data.writeFloat(axes.getRoll());
+
+			//Write damage
+	        for(EnumDriveablePart ep : EnumDriveablePart.values())
+	        {
+	            DriveablePart part = getDriveableData().parts.get(ep);
+	            data.writeShort((short)part.health);
+	            data.writeBoolean(part.onFire);
+	        }
+		 */
+	}
+
+	@Override
+	public void readSpawnData(ByteBuf buffer)
+	{
+		/*
+			try
+			{
+				driveableType = ByteBufUtils.readUTF8String(data);
+				driveableData = new DriveableData(ByteBufUtils.readTag(data));
+				initType(getDriveableType(), true);
+
+				axes.setAngles(data.readFloat(), data.readFloat(), data.readFloat());
+				prevRotationYaw = axes.getYaw();
+				prevRotationPitch = axes.getPitch();
+				prevRotationRoll = axes.getRoll();
+
+				//Read damage
+	            for(EnumDriveablePart ep : EnumDriveablePart.values())
+	            {
+	                DriveablePart part = getDriveableData().parts.get(ep);
+	                part.health = data.readShort();
+	                part.onFire = data.readBoolean();
+	            }
+
+			}
+			catch(Exception e)
+			{
+				FlansMod.log("Failed to retreive plane type from server.");
+				super.setDead();
+				e.printStackTrace();
+			}
+		 */
+
+		camera = new EntityCinematicCamera(this);
+		worldObj.spawnEntityInWorld(camera);
 	}
 }

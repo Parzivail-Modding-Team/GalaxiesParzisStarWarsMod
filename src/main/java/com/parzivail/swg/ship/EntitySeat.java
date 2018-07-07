@@ -45,7 +45,9 @@ public class EntitySeat extends Entity
 	@Override
 	public void onUpdate()
 	{
-		//setDead();
+		//		if (ticksExisted > 20 && parent == null)
+		//			setDead();
+
 		super.onUpdate();
 	}
 
