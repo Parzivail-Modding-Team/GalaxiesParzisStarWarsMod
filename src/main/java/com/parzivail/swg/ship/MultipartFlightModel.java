@@ -13,7 +13,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -112,10 +111,9 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 		if (worldObj.isRemote && EntityUtils.isClientControlled(this))
 			KeyHandler.handleVehicleMovement();
 
-		if (getDriver() instanceof EntityLivingBase)
+		if (getDriver() != null)
 		{
 			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, -1));
-			//Lumberjack.log(this.throttle);
 
 			motionX = forward.x * throttle;
 			motionY = forward.y * throttle;
