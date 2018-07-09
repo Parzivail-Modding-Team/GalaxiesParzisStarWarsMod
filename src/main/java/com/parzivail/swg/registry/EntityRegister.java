@@ -18,6 +18,7 @@ public class EntityRegister
 		EntityUtils.registerEntity(EntitySeat.class, "seat");
 
 		EntityUtils.registerEntity(EntityBlasterBolt.class, "blasterBolt");
+
 		EntityUtils.registerEntity(EntityThermalDetonator.class, "thermalDetonator");
 		EntityUtils.registerEntity(EntitySmokeGrenade.class, "smokeGrenade");
 	}
