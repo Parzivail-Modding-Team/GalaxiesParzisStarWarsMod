@@ -13,7 +13,6 @@ import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
 import com.parzivail.swg.ship.MultipartFlightModel;
-import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.ShaderHelper;
@@ -57,11 +56,6 @@ public class EventHandler
 			Client.mc.displayGuiScreen(new GuiScreenTrailer());
 			StarWarsGalaxy.config.setHasSeenIntroCrawl(true);
 		}
-
-		//		if (event.gui instanceof GuiDownloadTerrain)
-		//		{
-		//			Client.mc.displayGuiScreen(new GuiScreenPlanetEnter(Client.mc.getNetHandler(), Client.mc.thePlayer.dimension));
-		//		}
 	}
 
 	@SubscribeEvent
@@ -71,9 +65,8 @@ public class EventHandler
 		{
 			FileHandler.saveNbtMappings(loadEvent.world);
 		}
-		catch (NullPointerException e)
+		catch (Exception ignored)
 		{
-			Lumberjack.debug("Couldn't save NBT map. Probably connecting to a server.");
 		}
 	}
 
@@ -231,7 +224,8 @@ public class EventHandler
 		if (WorldRegister.planetDescriptorHashMap.containsKey(event.player.worldObj.provider.dimensionId) && !event.player.onGround && event.player.motionY < 0)
 		{
 			PlanetDescriptor planetDescriptor = WorldRegister.planetDescriptorHashMap.get(event.player.worldObj.provider.dimensionId);
-			event.player.motionY += 0.08D * 0.9800000190734863D * (1 - planetDescriptor.gravity);
+			if (planetDescriptor.gravity != 1)
+				event.player.motionY += 0.08D * 0.9800000190734863D * (1 - planetDescriptor.gravity);
 		}
 	}
 
