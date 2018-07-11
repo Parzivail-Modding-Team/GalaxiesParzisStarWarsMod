@@ -159,12 +159,11 @@ public class EventHandler
 
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
 
-			ScaledResolution sr = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
-			Client.resolution = sr;
+			Client.resolution = new ScaledResolution(Client.mc, Client.mc.displayWidth, Client.mc.displayHeight);
 
 			if (event.type == ElementType.TEXT)
 			{
-				GuiNowEntering.draw(sr, Client.mc.thePlayer);
+				GuiNowEntering.draw(Client.mc.thePlayer);
 			}
 
 			if (heldItem != null && heldItem.getItem() instanceof IScreenShader)
@@ -184,7 +183,7 @@ public class EventHandler
 					GL11.glPushAttrib(GL11.GL_POINT_BIT);
 
 					GL.PushMatrix();
-					GL.Translate(sr.getScaledWidth_double() / 2, sr.getScaledHeight_double() / 2, 0);
+					GL.Translate(Client.resolution.getScaledWidth_double() / 2, Client.resolution.getScaledHeight_double() / 2, 0);
 					Client.mc.entityRenderer.disableLightmap(0);
 					GL.Disable(EnableCap.Lighting);
 					GL.Disable(EnableCap.Texture2D);
@@ -192,7 +191,7 @@ public class EventHandler
 					GL.Enable(EnableCap.PointSmooth);
 					GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
 
-					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(sr, Client.mc.thePlayer, heldItem);
+					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(Client.resolution, Client.mc.thePlayer, heldItem);
 
 					GL.PopMatrix();
 					GL11.glColor4f(1, 1, 1, 1);

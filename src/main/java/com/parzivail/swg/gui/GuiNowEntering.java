@@ -9,7 +9,6 @@ import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -37,7 +36,7 @@ public class GuiNowEntering
 		textFadeOut = new Timeline(keyframes);
 	}
 
-	public static void draw(ScaledResolution sr, EntityPlayer player)
+	public static void draw(EntityPlayer player)
 	{
 		Vector3f pos = new Vector3f((float)player.posX, (float)player.posY, (float)player.posZ);
 
@@ -55,10 +54,10 @@ public class GuiNowEntering
 		textFadeOut.tick();
 
 		if (showingZone != null)
-			showEnterZone(sr, showingZone);
+			showEnterZone(showingZone);
 	}
 
-	private static void showEnterZone(ScaledResolution sr, Zone zone)
+	private static void showEnterZone(Zone zone)
 	{
 		GL.PushMatrix();
 		GL.PushAttrib(AttribMask.EnableBit);
@@ -69,7 +68,7 @@ public class GuiNowEntering
 		String str = scrambleString(String.format("Now entering\n§o%s", zone.name), textFadeOutValue.getValue());
 
 		int x = f.FONT_HEIGHT;
-		int y = sr.getScaledHeight() - f.FONT_HEIGHT * 3;
+		int y = Client.resolution.getScaledHeight() - f.FONT_HEIGHT * 3;
 
 		String[] parts = str.split("\n");
 		int yDiff = 0;
