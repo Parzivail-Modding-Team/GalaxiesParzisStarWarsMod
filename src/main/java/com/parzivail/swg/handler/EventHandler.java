@@ -33,13 +33,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.FOVUpdateEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.Pre;
 import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderLivingEvent.Post;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
-import net.minecraftforge.event.world.WorldEvent.Load;
+import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -59,7 +58,7 @@ public class EventHandler
 	}
 
 	@SubscribeEvent
-	public void on(Load loadEvent)
+	public void on(WorldEvent.Load loadEvent)
 	{
 		try
 		{
@@ -106,7 +105,7 @@ public class EventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void on(Post event)
+	public void on(RenderLivingEvent.Post event)
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
@@ -140,7 +139,7 @@ public class EventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
-	public void on(Pre event)
+	public void on(RenderGameOverlayEvent.Pre event)
 	{
 		if (Client.mc.thePlayer != null)
 		{
