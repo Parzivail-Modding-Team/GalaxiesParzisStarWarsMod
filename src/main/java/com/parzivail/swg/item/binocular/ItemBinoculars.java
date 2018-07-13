@@ -1,7 +1,7 @@
 package com.parzivail.swg.item.binocular;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.item.ICustomCrosshair;
+import com.parzivail.swg.item.IGuiOverlay;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
@@ -27,7 +27,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class ItemBinoculars extends PItem implements ICustomCrosshair, ILeftClickInterceptor, IScreenShader
+public class ItemBinoculars extends PItem implements IGuiOverlay, ILeftClickInterceptor, IScreenShader
 {
 	private final BinocularDescriptor descriptor;
 

@@ -3,7 +3,7 @@ package com.parzivail.swg.item.blaster;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityBlasterBolt;
-import com.parzivail.swg.item.ICustomCrosshair;
+import com.parzivail.swg.item.IGuiOverlay;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.blaster.data.BlasterData;
@@ -38,7 +38,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class ItemBlasterRifle extends PItem implements ICustomCrosshair, ILeftClickInterceptor
+public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickInterceptor
 {
 	private final BlasterDescriptor descriptor;
 

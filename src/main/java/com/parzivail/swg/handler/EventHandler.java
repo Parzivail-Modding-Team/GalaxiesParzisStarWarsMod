@@ -4,7 +4,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.gui.GuiNowEntering;
 import com.parzivail.swg.gui.GuiScreenTrailer;
-import com.parzivail.swg.item.ICustomCrosshair;
+import com.parzivail.swg.item.IGuiOverlay;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
@@ -171,7 +171,7 @@ public class EventHandler
 			else
 				ShaderHelper.framebufferShader = 0;
 
-			if (heldItem != null && heldItem.getItem() instanceof ICustomCrosshair)
+			if (heldItem != null && heldItem.getItem() instanceof IGuiOverlay)
 			{
 				if (event.type == ElementType.CROSSHAIRS && event.isCancelable())
 					event.setCanceled(true);
@@ -191,7 +191,7 @@ public class EventHandler
 					GL.Enable(EnableCap.PointSmooth);
 					GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
 
-					((ICustomCrosshair)heldItem.getItem()).drawCrosshair(Client.resolution, Client.mc.thePlayer, heldItem);
+					((IGuiOverlay)heldItem.getItem()).drawCrosshair(Client.resolution, Client.mc.thePlayer, heldItem);
 
 					GL.PopMatrix();
 					GL11.glColor4f(1, 1, 1, 1);
