@@ -16,10 +16,10 @@ namespace GenerateChunkDiff
         [Value(1, MetaName = "world", HelpText = "World to diff")]
         public string WorldPath { get; set; }
 
-        [Value(1, MetaName = "world", HelpText = "Dimension to diff")]
+        [Value(2, MetaName = "world", HelpText = "Dimension to diff")]
         public int WorldDim { get; set; }
 
-        [Value(2, MetaName = "output", HelpText = "Output diff file")]
+        [Value(3, MetaName = "output", HelpText = "Output diff file")]
         public string DiffOutput { get; set; }
 
         [Option('b', "bounds", HelpText = "Chunk boundaries (format: \"xmin:xmax:zmin:zmax\")")]
