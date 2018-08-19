@@ -41,10 +41,10 @@ public class Fx
 
 		public static Color GetColor(int color)
 		{
-			if (COLOR_HASH_MAP.containsKey(color))
-				return COLOR_HASH_MAP.get(color);
+			if (!COLOR_HASH_MAP.containsKey(color))
+				COLOR_HASH_MAP.put(color, new Color(color));
 
-			return COLOR_HASH_MAP.put(color, new Color(color));
+			return COLOR_HASH_MAP.get(color);
 		}
 
 		public static double Lerp(double a, double b, double f)

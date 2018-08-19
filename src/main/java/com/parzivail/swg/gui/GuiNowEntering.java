@@ -2,6 +2,7 @@ package com.parzivail.swg.gui;
 
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.Timeline;
 import com.parzivail.util.ui.TimelineEvent;
@@ -9,10 +10,14 @@ import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.util.vector.Vector3f;
+import org.newdawn.slick.Color;
+import org.newdawn.slick.opengl.TextureImpl;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 
 public class GuiNowEntering
 {
@@ -65,7 +70,7 @@ public class GuiNowEntering
 
 		FontRenderer f = Client.mc.fontRendererObj;
 
-		String str = scrambleString(String.format("Now entering\n§o%s", zone.name), textFadeOutValue.getValue());
+		String str = scrambleString(String.format("Now entering\n%s", zone.name), textFadeOutValue.getValue());
 
 		int x = f.FONT_HEIGHT;
 		int y = Client.resolution.getScaledHeight() - f.FONT_HEIGHT * 3;
@@ -74,12 +79,30 @@ public class GuiNowEntering
 		int yDiff = 0;
 		for (String part : parts)
 		{
-			f.drawString(part, x, y + yDiff, GLPalette.WHITE);
+			drawStringWithShadow(part, x, y + yDiff, GLPalette.WHITE);
 			yDiff += f.FONT_HEIGHT;
 		}
 
 		GL.PopAttrib();
 		GL.PopMatrix();
+	}
+
+	private static void drawStringWithShadow(String text, int x, int y, int color)
+	{
+		ScaledResolution sr = Client.resolution;
+		float oneOverSr = 1f / sr.getScaleFactor();
+
+		GL.PushAttrib(EnumSet.of(AttribMask.EnableBit, AttribMask.LineBit));
+		GL.Enable(EnableCap.Blend);
+		GL.Enable(EnableCap.Texture2D);
+		GL.PushMatrix();
+		GL.Translate(x, y, 0);
+		GL.Scale(oneOverSr);
+		TextureImpl.bindNone();
+		Client.latoSemibold.drawString(2, 2, text, Color.black);
+		Client.latoSemibold.drawString(0, 0, text, Fx.Util.GetColor(color));
+		GL.PopMatrix();
+		GL.PopAttrib();
 	}
 
 	private static String scrambleString(String s, double percent)
@@ -89,7 +112,7 @@ public class GuiNowEntering
 		if (percent < 0)
 			percent = 0;
 
-		return s.substring(0, (int)(s.length() * percent)) + (percent < 1 ? "§kM§r" : "");
+		return s.substring(0, (int)(s.length() * percent)) + (percent < 1 ? "_" : "");
 	}
 
 	private static class Zone

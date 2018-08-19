@@ -68,8 +68,6 @@ import java.io.InputStream;
  */
 public class Client extends Common
 {
-	private static final ResourceLocation brandonRegResource = Resources.location("font/BrandonReg.ttf");
-
 	//public static FontRenderer frSansSerif;
 	//public static FontRenderer frSerif;
 	public static Minecraft mc;
@@ -79,16 +77,13 @@ public class Client extends Common
 	public static FontRenderer frEwok;
 	public static FontRenderer frHuttese;
 	public static FontRenderer frMassassi;
+
 	public static float renderPartialTicks;
-	public static TrueTypeFont brandonReg;
+
 	public static ScaledResolution resolution;
 
-	private static FontRenderer createFont(String file)
-	{
-		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
-		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
-		return renderer;
-	}
+	public static TrueTypeFont brandonReg;
+	public static TrueTypeFont latoSemibold;
 
 	@Override
 	public void init()
@@ -111,19 +106,8 @@ public class Client extends Common
 		frHuttese = createFont("huttese");
 		frMassassi = createFont("massassi");
 
-		try
-		{
-			IResource res = Minecraft.getMinecraft().getResourceManager().getResource(brandonRegResource);
-			InputStream inputStream = res.getInputStream();
-
-			Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
-			awtFont2 = awtFont2.deriveFont(24f); // set font size
-			brandonReg = new TrueTypeFont(awtFont2, true);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		brandonReg = createTrueTypeFont(24, Resources.location("font/BrandonReg.ttf"));
+		latoSemibold = createTrueTypeFont(24, Resources.location("font/LatoSemibold.ttf"));
 
 		RenderingRegistry.registerEntityRenderingHandler(VehicleT65.class, new RenderT65());
 		//RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
@@ -212,6 +196,31 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallPipeLarge.class, new RenderWallPipeLarge());
 
 		Lumberjack.log("Client proxy loaded!");
+	}
+
+	TrueTypeFont createTrueTypeFont(float size, ResourceLocation filename)
+	{
+		try
+		{
+			IResource res = Minecraft.getMinecraft().getResourceManager().getResource(filename);
+			InputStream inputStream = res.getInputStream();
+
+			Font awtFont2 = Font.createFont(Font.TRUETYPE_FONT, inputStream);
+			awtFont2 = awtFont2.deriveFont(size); // set font size
+			return new TrueTypeFont(awtFont2, true);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private static FontRenderer createFont(String file)
+	{
+		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
+		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
+		return renderer;
 	}
 
 	@Override

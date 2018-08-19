@@ -26,6 +26,11 @@ public class ModernButton extends GuiButton
 		super(id, x, y, w, h, text);
 	}
 
+	public void setText(String text)
+	{
+		displayString = text;
+	}
+
 	/**
 	 * Draws this button to the screen.
 	 */
