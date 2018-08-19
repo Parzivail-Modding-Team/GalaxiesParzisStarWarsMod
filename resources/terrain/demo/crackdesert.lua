@@ -35,9 +35,6 @@ function terrain(x, z)
 	
 	local j = octave(x / 200, z / 200, 6) * 90
 
-	-- Then, we scale the resulting noise by 10, creating a
-	-- maximum elevation change of 10 blocks, and return it
-	-- back to the terrain generator.
 	return (h * 0.5 + noise(x / 200 + 2000, z / 200) * 0.5) * (j + 10);
 end
 
@@ -52,9 +49,6 @@ function get(x, z)
 	local offsetX = noise(x / 10, z / 10 - 1000) / 10;
 	local offsetY = noise(x / 10 + 1000, z / 10) / 10;
 
-	-- First, we sample the noise with a scale factor of 100.
-	-- The global function `noise` returns a sampled Simplex
-	-- heightmap with values between 0 and 1.
 	return worley(x / 50 + offsetX, z / 50 + offsetY);
 end
 
