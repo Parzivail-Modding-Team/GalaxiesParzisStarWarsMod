@@ -1,6 +1,7 @@
 package com.parzivail.swg.gui;
 
 import com.parzivail.swg.container.ContainerSabaccTable;
+import com.parzivail.swg.gui.modern.ModernArrowButton;
 import com.parzivail.swg.gui.modern.ModernButton;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.QuestRegister;
@@ -37,12 +38,12 @@ public class GuiSabaccTable extends GuiContainer
 	private final Timeline textFadeOut;
 	private AnimatedValue textFadeOutValue = new AnimatedValue(0, 500);
 
-	private ModernButton button0;
-	private ModernButton button1;
-	private ModernButton button2;
-	private ModernButton button3;
-	private ModernButton button4;
-	private ModernButton button5;
+	private ModernButton bOpt1;
+	private ModernButton bOpt2;
+	private ModernButton bOpt3;
+	private ModernButton bOpt4;
+	private ModernArrowButton bNext;
+	private ModernButton bExit;
 	private final ModernButton[] options = new ModernButton[4];
 
 	private String npcDialogue = "";
@@ -61,8 +62,8 @@ public class GuiSabaccTable extends GuiContainer
 
 		ArrayList<TimelineEvent> keyframes = new ArrayList<>();
 		keyframes.add(new TimelineEvent(0, timelineEvent -> {
-			button0.visible = button1.visible = button2.visible = button3.visible = false;
-			button4.visible = false;
+			bOpt1.visible = bOpt2.visible = bOpt3.visible = bOpt4.visible = false;
+			bNext.visible = false;
 
 			textFadeOutValue = new AnimatedValue(0, Math.min(npcDialogue.length() * 10, 500));
 			textFadeOutValue.queueAnimatingTo(1);
@@ -75,8 +76,8 @@ public class GuiSabaccTable extends GuiContainer
 	{
 		if (interaction.getNextNode(0).type == NodeType.NpcDialogue)
 		{
-			button0.visible = button1.visible = button2.visible = button3.visible = false;
-			button4.visible = true;
+			bOpt1.visible = bOpt2.visible = bOpt3.visible = bOpt4.visible = false;
+			bNext.visible = true;
 		}
 		else
 			movePastNpcDialogue();
@@ -87,24 +88,24 @@ public class GuiSabaccTable extends GuiContainer
 	{
 		super.initGui();
 
-		options[0] = button0 = new ModernButton(0, (width - 150) / 2, 25, 150, 10, "OPT1");
-		options[1] = button1 = new ModernButton(1, (width - 150) / 2, 40, 150, 10, "OPT2");
-		options[2] = button2 = new ModernButton(2, (width - 150) / 2, 55, 150, 10, "OPT3");
-		options[3] = button3 = new ModernButton(3, (width - 150) / 2, 70, 150, 10, "OPT4");
+		options[0] = bOpt1 = new ModernButton(0, (width - 150) / 2, 25, 150, 10, "OPT1");
+		options[1] = bOpt2 = new ModernButton(1, (width - 150) / 2, 40, 150, 10, "OPT2");
+		options[2] = bOpt3 = new ModernButton(2, (width - 150) / 2, 55, 150, 10, "OPT3");
+		options[3] = bOpt4 = new ModernButton(3, (width - 150) / 2, 70, 150, 10, "OPT4");
 
-		button4 = new ModernButton(4, (width - 150) / 2, 80, 150, 10, "Next");
-		button5 = new ModernButton(5, (width - 150) / 2, 95, 150, 10, "Exit");
+		bNext = new ModernArrowButton(4, (width - 5) / 2, 80);
+		bExit = new ModernButton(5, (width - 150) / 2, 95, 150, 10, "Exit");
 
-		buttonList.add(button0);
-		buttonList.add(button1);
-		buttonList.add(button2);
-		buttonList.add(button3);
+		buttonList.add(bOpt1);
+		buttonList.add(bOpt2);
+		buttonList.add(bOpt3);
+		buttonList.add(bOpt4);
 
-		buttonList.add(button4);
-		buttonList.add(button5);
+		buttonList.add(bNext);
+		buttonList.add(bExit);
 
-		button0.visible = button1.visible = button2.visible = button3.visible = false;
-		button4.visible = false;
+		bOpt1.visible = bOpt2.visible = bOpt3.visible = bOpt4.visible = false;
+		bNext.visible = false;
 
 		refreshDisplay();
 	}
@@ -165,7 +166,7 @@ public class GuiSabaccTable extends GuiContainer
 		if (interaction.node == null)
 			return;
 
-		button5.visible = false;
+		bExit.visible = false;
 
 		if (interaction.node.type == NodeType.NpcDialogue)
 		{
@@ -174,8 +175,8 @@ public class GuiSabaccTable extends GuiContainer
 		}
 		else if (interaction.node.type == NodeType.PlayerDialogue)
 		{
-			button0.visible = button1.visible = button2.visible = button3.visible = false;
-			button4.visible = false;
+			bOpt1.visible = bOpt2.visible = bOpt3.visible = bOpt4.visible = false;
+			bNext.visible = false;
 			NedNode nextNode = interaction.node;
 
 			for (int i = 0; i < nextNode.outputs.size(); i++)
@@ -186,8 +187,8 @@ public class GuiSabaccTable extends GuiContainer
 		}
 		else if (interaction.node.type == NodeType.End)
 		{
-			button0.visible = button1.visible = button2.visible = button3.visible = button4.visible = false;
-			button5.visible = true;
+			bOpt1.visible = bOpt2.visible = bOpt3.visible = bOpt4.visible = bNext.visible = false;
+			bExit.visible = true;
 		}
 	}
 

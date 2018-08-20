@@ -61,7 +61,7 @@ public class Fx
 
 		public static float Hz(float hz)
 		{
-			return MathHelper.sin((float)((System.currentTimeMillis() % (long)(1000 / hz)) / (1000 / hz) * Math.PI));
+			return MathHelper.sin((float)((System.currentTimeMillis() % (long)(1000 / hz)) / (1000 / hz) * Math.PI * 2));
 		}
 
 		public static float HzPercent(float hz)
