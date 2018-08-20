@@ -29,7 +29,7 @@ public class EntitySmokeGrenade extends EntityThrowable
 	{
 		super.onUpdate();
 
-		if (worldObj.isRemote && ticksExisted > 30 && ticksExisted % 2 == 0)
+		if (worldObj.isRemote && ticksExisted > 30 && ticksExisted % 5 == 0)
 		{
 			for (int i = 0; i < Math.min(Math.pow(ticksExisted / 10, 2), 100); ++i)
 			{

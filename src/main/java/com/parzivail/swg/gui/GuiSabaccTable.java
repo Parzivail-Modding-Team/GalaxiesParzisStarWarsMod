@@ -50,7 +50,7 @@ public class GuiSabaccTable extends GuiContainer
 		// and isn't the real one.
 		player = (EntityPlayer)DimensionManager.getWorld(inventoryPlayer.player.dimension).getEntityByID(inventoryPlayer.player.getEntityId());
 
-		interaction = QuestRegister.complexQuest.createInteraction(player);
+		interaction = QuestRegister.testQuest.createInteraction(player);
 	}
 
 	@Override
@@ -58,13 +58,13 @@ public class GuiSabaccTable extends GuiContainer
 	{
 		super.initGui();
 
-		options[0] = button0 = new ModernButton(0, 10, 10, 30, 10, "OPT1");
-		options[1] = button1 = new ModernButton(1, 10, 25, 30, 10, "OPT2");
-		options[2] = button2 = new ModernButton(2, 10, 40, 30, 10, "OPT3");
-		options[3] = button3 = new ModernButton(3, 10, 55, 30, 10, "OPT4");
+		options[0] = button0 = new ModernButton(0, (width - 150) / 2, 25, 150, 10, "OPT1");
+		options[1] = button1 = new ModernButton(1, (width - 150) / 2, 40, 150, 10, "OPT2");
+		options[2] = button2 = new ModernButton(2, (width - 150) / 2, 55, 150, 10, "OPT3");
+		options[3] = button3 = new ModernButton(3, (width - 150) / 2, 70, 150, 10, "OPT4");
 
-		button4 = new ModernButton(4, 10, 70, 30, 10, "Next");
-		button5 = new ModernButton(5, 10, 85, 30, 10, "Exit");
+		button4 = new ModernButton(4, (width - 150) / 2, 80, 150, 10, "Next");
+		button5 = new ModernButton(5, (width - 150) / 2, 95, 150, 10, "Exit");
 
 		buttonList.add(button0);
 		buttonList.add(button1);
@@ -82,17 +82,15 @@ public class GuiSabaccTable extends GuiContainer
 	{
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
-		ScaledResolution sr = Client.resolution;
-		float oneOverSr = 1f / sr.getScaleFactor();
-
 		GL.PushAttrib(EnumSet.of(AttribMask.EnableBit, AttribMask.LineBit));
 		GL.Enable(EnableCap.Blend);
 		GL.Enable(EnableCap.Texture2D);
 		GL.PushMatrix();
-		GL.Translate(60, 10, 0);
-		GL.Scale(oneOverSr);
+		int w = Client.brandonReg.getWidth(npcDialogue) / 4;
+		GL.Translate((width - w) / 2, 10, 0);
+		GL.Scale(0.25f);
 		TextureImpl.bindNone();
-		Client.latoSemibold.drawString(0, 0, npcDialogue, Color.white);
+		Client.brandonReg.drawString(0, 0, npcDialogue, Color.white);
 		GL.PopMatrix();
 		GL.PopAttrib();
 	}

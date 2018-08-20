@@ -9,7 +9,6 @@ import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.ScaledResolution;
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.TrueTypeFont;
@@ -43,8 +42,7 @@ public class ModernButton extends GuiButton
 			hovered = mouseX >= xPosition && mouseY >= yPosition && mouseX < xPosition + width && mouseY < yPosition + height;
 			int k = getHoverState(hovered); // 0->disabled, 1->normal, 2->hover
 
-			ScaledResolution sr = Client.resolution;
-			float oneOverSr = 1f / sr.getScaleFactor();
+			float oneOverSr = 1f / 4;
 
 			//			int textColor = GLPalette.WHITE;
 			//			if (!this.enabled)
@@ -59,7 +57,7 @@ public class ModernButton extends GuiButton
 			GL.Disable(EnableCap.Texture2D);
 			GL.Enable(EnableCap.LineSmooth);
 			GL.Color(stateColor[k]);
-			GL11.glLineWidth(2);
+			GL11.glLineWidth(1);
 			if (inverted)
 				D2.DrawSolidRoundRectangle(xPosition, yPosition, width, height, 7 * oneOverSr);
 			else
