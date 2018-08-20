@@ -2,6 +2,7 @@ package com.parzivail.swg.gui;
 
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.common.TextUtils;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.Timeline;
@@ -70,7 +71,7 @@ public class GuiNowEntering
 
 		FontRenderer f = Client.mc.fontRendererObj;
 
-		String str = scrambleString(String.format("Now entering\n%s", zone.name), textFadeOutValue.getValue());
+		String str = TextUtils.scrambleString(String.format("Now entering\n%s", zone.name), textFadeOutValue.getValue());
 
 		int x = f.FONT_HEIGHT;
 		int y = Client.resolution.getScaledHeight() - f.FONT_HEIGHT * 3;
@@ -103,16 +104,6 @@ public class GuiNowEntering
 		Client.latoSemibold.drawString(0, 0, text, Fx.Util.GetColor(color));
 		GL.PopMatrix();
 		GL.PopAttrib();
-	}
-
-	private static String scrambleString(String s, double percent)
-	{
-		if (percent > 1)
-			percent = 1;
-		if (percent < 0)
-			percent = 0;
-
-		return s.substring(0, (int)(s.length() * percent)) + (percent < 1 ? "_" : "");
 	}
 
 	private static class Zone

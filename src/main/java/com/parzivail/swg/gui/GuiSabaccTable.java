@@ -8,8 +8,12 @@ import com.parzivail.swg.tile.TileSabaccTable;
 import com.parzivail.util.binary.ned.NedInteraction;
 import com.parzivail.util.binary.ned.NedNode;
 import com.parzivail.util.binary.ned.NodeType;
+import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.common.TextUtils;
 import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.GLPalette;
+import com.parzivail.util.ui.Timeline;
+import com.parzivail.util.ui.TimelineEvent;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -22,6 +26,7 @@ import net.minecraftforge.common.DimensionManager;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.TextureImpl;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 
 public class GuiSabaccTable extends GuiContainer
@@ -29,6 +34,8 @@ public class GuiSabaccTable extends GuiContainer
 	private final TileSabaccTable tile;
 	private final EntityPlayer player;
 	private final NedInteraction interaction;
+	private final Timeline textFadeOut;
+	private AnimatedValue textFadeOutValue = new AnimatedValue(0, 500);
 
 	private ModernButton button0;
 	private ModernButton button1;
@@ -50,7 +57,29 @@ public class GuiSabaccTable extends GuiContainer
 		// and isn't the real one.
 		player = (EntityPlayer)DimensionManager.getWorld(inventoryPlayer.player.dimension).getEntityByID(inventoryPlayer.player.getEntityId());
 
-		interaction = QuestRegister.testQuest.createInteraction(player);
+		interaction = QuestRegister.complexQuest.createInteraction(player);
+
+		ArrayList<TimelineEvent> keyframes = new ArrayList<>();
+		keyframes.add(new TimelineEvent(0, timelineEvent -> {
+			button0.visible = button1.visible = button2.visible = button3.visible = false;
+			button4.visible = false;
+
+			textFadeOutValue = new AnimatedValue(0, Math.min(npcDialogue.length() * 10, 500));
+			textFadeOutValue.queueAnimatingTo(1);
+		}));
+		keyframes.add(new TimelineEvent(500, timelineEvent -> showButtons()));
+		textFadeOut = new Timeline(keyframes);
+	}
+
+	private void showButtons()
+	{
+		if (interaction.getNextNode(0).type == NodeType.NpcDialogue)
+		{
+			button0.visible = button1.visible = button2.visible = button3.visible = false;
+			button4.visible = true;
+		}
+		else
+			movePastNpcDialogue();
 	}
 
 	@Override
@@ -74,7 +103,18 @@ public class GuiSabaccTable extends GuiContainer
 		buttonList.add(button4);
 		buttonList.add(button5);
 
+		button0.visible = button1.visible = button2.visible = button3.visible = false;
+		button4.visible = false;
+
 		refreshDisplay();
+	}
+
+	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+
+		textFadeOut.tick();
 	}
 
 	@Override
@@ -90,7 +130,7 @@ public class GuiSabaccTable extends GuiContainer
 		GL.Translate((width - w) / 2, 10, 0);
 		GL.Scale(0.25f);
 		TextureImpl.bindNone();
-		Client.brandonReg.drawString(0, 0, npcDialogue, Color.white);
+		Client.brandonReg.drawString(0, 0, TextUtils.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.white);
 		GL.PopMatrix();
 		GL.PopAttrib();
 	}
@@ -130,15 +170,7 @@ public class GuiSabaccTable extends GuiContainer
 		if (interaction.node.type == NodeType.NpcDialogue)
 		{
 			npcDialogue = interaction.node.outputs.get(0).text;
-			if (interaction.getNextNode(0).type == NodeType.NpcDialogue)
-			{
-				button0.visible = button1.visible = button2.visible = button3.visible = false;
-				button4.visible = true;
-
-				npcDialogue = interaction.node.outputs.get(0).text;
-			}
-			else
-				movePastNpcDialogue();
+			textFadeOut.start();
 		}
 		else if (interaction.node.type == NodeType.PlayerDialogue)
 		{
