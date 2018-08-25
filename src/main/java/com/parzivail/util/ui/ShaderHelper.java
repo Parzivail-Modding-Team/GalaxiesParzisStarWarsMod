@@ -67,7 +67,7 @@ public final class ShaderHelper
 		entityGlow = createProgramFor("entityGlow");
 		glowSolid = createProgramFor("glowSolid");
 		blur = createProgramFor("blur");
-		vhs = createProgramFor("vhs");
+		vhs = createProgramFor("ntsc");
 	}
 
 	public static void useShader(int shader)
