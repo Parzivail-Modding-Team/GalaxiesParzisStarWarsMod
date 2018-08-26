@@ -38,10 +38,106 @@
       "rifle/dryfire"
     ]
   },
+  "swg.fx.rifle.a280": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/a280"
+    ]
+  },
+  "swg.fx.rifle.bike": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/bike"
+    ]
+  },
+  "swg.fx.rifle.bowcaster": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/bowcaster"
+    ]
+  },
+  "swg.fx.rifle.cycler": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/cycler"
+    ]
+  },
+  "swg.fx.rifle.dh17": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/dh17"
+    ]
+  },
+  "swg.fx.rifle.dl44": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/dl44"
+    ]
+  },
+  "swg.fx.rifle.dlt19": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/dlt19"
+    ]
+  },
   "swg.fx.rifle.e11": {
     "category": "neutral",
     "sounds": [
       "rifle/e11"
+    ]
+  },
+  "swg.fx.rifle.eweb": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/eweb"
+    ]
+  },
+  "swg.fx.rifle.ionization": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/ion"
+    ]
+  },
+  "swg.fx.rifle.rt97c": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/rt97c"
+    ]
+  },
+  "swg.fx.rifle.t21": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/t21"
+    ]
+  },
+  "swg.fx.rifle.se14c": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/se14c"
+    ]
+  },
+  "swg.fx.rifle.dl18": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/dl18"
+    ]
+  },
+  "swg.fx.rifle.scout": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/dl44"
+    ]
+  },
+  "swg.fx.rifle.defender": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/dl44"
+    ]
+  },
+  "swg.fx.rifle.dl21": {
+    "category": "neutral",
+    "sounds": [
+      "rifle/dl44"
     ]
   }
 }

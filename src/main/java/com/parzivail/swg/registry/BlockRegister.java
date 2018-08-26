@@ -36,6 +36,11 @@ public class BlockRegister
 
 	public static PBlock labWall;
 
+	public static PBlock oreChromium;
+	public static PBlock oreTitanium;
+	public static PBlock oreRubindum;
+	public static PBlock oreCortosis;
+
 	public static PBlockContainer blasterWorkbench;
 	public static PBlockContainer sabaccTable;
 
@@ -149,6 +154,11 @@ public class BlockRegister
 		register(endorLog = new BlockEndorLog());
 
 		register(labWall = new PBlock("labWall"));
+
+		register(oreChromium = new PBlock("chromium"));
+		register(oreTitanium = new PBlock("titanium"));
+		register(oreRubindum = new PBlock("rubindum"));
+		register(oreCortosis = new PBlock("cortosis"));
 
 		register(tatooineSand = new PBlockSand("tatooineSand"));
 

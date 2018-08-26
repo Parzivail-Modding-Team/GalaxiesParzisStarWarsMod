@@ -69,8 +69,8 @@ public class ChunkProviderTatooine implements IChunkProvider
 						chunk.getBlockStorageArray()[l] = extendedblockstorage;
 					}
 
-					double sandThreshold = height * 0.9;
-					double sandstoneThreshold = height * 0.6;
+					double sandThreshold = height * 0.95;
+					double sandstoneThreshold = height * 0.85;
 
 					if (y >= sandThreshold)
 						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.sand);
