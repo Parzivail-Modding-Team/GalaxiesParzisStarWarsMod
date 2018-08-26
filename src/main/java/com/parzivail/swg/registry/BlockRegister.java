@@ -105,6 +105,7 @@ public class BlockRegister
 	public static PBlock hardpackSnow;
 	public static PBlock hothDoor;
 	public static PBlock hothSnowCut;
+	public static PBlock hothSandbag;
 	public static PBlock mud;
 	public static PBlockSand tatooineSand;
 	public static PBlock templeStone;
@@ -142,6 +143,7 @@ public class BlockRegister
 		register(hardpackSnow = new PBlock("hardpackSnow"));
 		register(hothDoor = new PBlock("hothDoor"));
 		register(hothSnowCut = new PBlock("hothSnowCut"));
+		register(hothSandbag = new PBlockConnected("hothSandbag", "hothSandbag", Material.snow));
 		register(mud = new PBlock("mud"));
 
 		register(templeStone = new PBlock("templeStone"));
