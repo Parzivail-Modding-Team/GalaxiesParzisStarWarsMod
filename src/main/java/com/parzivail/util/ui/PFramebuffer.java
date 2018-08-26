@@ -80,6 +80,7 @@ public class PFramebuffer extends Framebuffer
 	{
 		if (OpenGlHelper.isFramebufferEnabled())
 		{
+			boolean usingShader = ShaderHelper.framebufferShader != 0 && Client.mc != null && Client.mc.thePlayer != null && Client.mc.currentScreen == null;
 			GL11.glColorMask(true, true, true, false);
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glDepthMask(false);
@@ -101,7 +102,7 @@ public class PFramebuffer extends Framebuffer
 			GL13.glActiveTexture(GL13.GL_TEXTURE1);
 			bindFramebufferTexture();
 			GL13.glActiveTexture(GL13.GL_TEXTURE0);
-			if (ShaderHelper.framebufferShader != 0 && Client.mc != null && Client.mc.thePlayer != null)
+			if (usingShader)
 				ShaderHelper.useShader(ShaderHelper.framebufferShader);
 			float f = (float)width;
 			float f1 = (float)height;
@@ -116,7 +117,7 @@ public class PFramebuffer extends Framebuffer
 			tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, (double)f3);
 			tessellator.draw();
 			unbindFramebufferTexture();
-			if (ShaderHelper.framebufferShader != 0 && Client.mc != null && Client.mc.thePlayer != null)
+			if (usingShader)
 				ShaderHelper.releaseShader();
 			GL11.glDepthMask(true);
 			GL11.glColorMask(true, true, true, true);
