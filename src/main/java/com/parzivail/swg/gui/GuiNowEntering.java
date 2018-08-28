@@ -1,6 +1,7 @@
 package com.parzivail.swg.gui;
 
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.swg.registry.ZoneRegistry;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.common.TextUtils;
 import com.parzivail.util.ui.Fx;
@@ -10,6 +11,7 @@ import com.parzivail.util.ui.TimelineEvent;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
+import com.parzivail.util.world.Zone;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,7 +24,6 @@ import java.util.EnumSet;
 
 public class GuiNowEntering
 {
-	private static final ArrayList<Zone> zones = new ArrayList<>();
 	private static final Timeline textFadeOut;
 	private static Vector3f prevPos = new Vector3f(0, 0, 0);
 	private static AnimatedValue textFadeOutValue;
@@ -30,8 +31,6 @@ public class GuiNowEntering
 
 	static
 	{
-		zones.add(new Zone(-63, 63, 59, -44, 75, 83, "The Mos Eisley Spaceport"));
-
 		ArrayList<TimelineEvent> keyframes = new ArrayList<>();
 		keyframes.add(new TimelineEvent(0, timelineEvent -> {
 			textFadeOutValue = new AnimatedValue(0, 1000);
@@ -46,7 +45,7 @@ public class GuiNowEntering
 	{
 		Vector3f pos = new Vector3f((float)player.posX, (float)player.posY, (float)player.posZ);
 
-		for (Zone zone : zones)
+		for (Zone zone : ZoneRegistry.zones)
 		{
 			if (zone.contains(pos) && !zone.contains(prevPos))
 			{
@@ -104,32 +103,5 @@ public class GuiNowEntering
 		Client.latoSemibold.drawString(0, 0, text, Fx.Util.GetColor(color));
 		GL.PopMatrix();
 		GL.PopAttrib();
-	}
-
-	private static class Zone
-	{
-		private final int minX;
-		private final int minY;
-		private final int minZ;
-		private final int maxX;
-		private final int maxY;
-		private final int maxZ;
-		private final String name;
-
-		public Zone(int minX, int minY, int minZ, int maxX, int maxY, int maxZ, String name)
-		{
-			this.minX = minX;
-			this.minY = minY;
-			this.minZ = minZ;
-			this.maxX = maxX;
-			this.maxY = maxY;
-			this.maxZ = maxZ;
-			this.name = name;
-		}
-
-		public boolean contains(Vector3f pos)
-		{
-			return pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY && pos.z >= minZ && pos.z <= maxZ;
-		}
 	}
 }

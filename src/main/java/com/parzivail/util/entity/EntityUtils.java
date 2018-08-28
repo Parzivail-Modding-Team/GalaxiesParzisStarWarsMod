@@ -12,7 +12,6 @@ import com.parzivail.util.ui.Fx.Util;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityList.EntityEggInfo;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
@@ -26,7 +25,7 @@ import java.util.UUID;
 
 public class EntityUtils
 {
-	private static int mobId;
+	private static int mobId = 300;
 
 	/**
 	 * Gets the last used Mob ID
@@ -119,9 +118,11 @@ public class EntityUtils
 	 */
 	public static void registerEntity(Class<? extends Entity> entityClass, String entityName)
 	{
-		mobId++;
+		while (EntityList.getClassFromID(mobId) != null)
+			mobId++;
 		EntityRegistry.registerModEntity(entityClass, entityName, mobId, StarWarsGalaxy.instance, 80, 1, true);
-		Lumberjack.debug("Registered entity \"" + entityName + "\" as ID " + mobId);
+		EntityList.idToClassMap.put(Integer.valueOf(mobId), entityClass);
+		Lumberjack.debug("Registered entity \"" + entityName + "\" as ID " + String.valueOf(mobId));
 	}
 
 	/**
@@ -134,9 +135,11 @@ public class EntityUtils
 	 */
 	public static void registerWithSpawnEgg(Class<? extends Entity> mobClass, String mobName, int bgColor, int fgColor)
 	{
-		mobId++;
+		while (EntityList.getClassFromID(mobId) != null)
+			mobId++;
 		EntityRegistry.registerModEntity(mobClass, mobName, mobId, StarWarsGalaxy.instance, 80, 1, true);
-		EntityList.entityEggs.put(mobId, new EntityEggInfo(mobId, bgColor, fgColor));
+		EntityList.idToClassMap.put(Integer.valueOf(mobId), mobClass);
+		EntityList.entityEggs.put(Integer.valueOf(mobId), new EntityList.EntityEggInfo(mobId, bgColor, fgColor));
 		Lumberjack.debug("Registered entity (and egg) \"" + mobName + "\" as ID " + String.valueOf(mobId));
 	}
 
