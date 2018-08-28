@@ -2,8 +2,11 @@ package com.parzivail.swg.render.npc;
 
 import com.parzivail.swg.npc.NpcBasic;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,11 +14,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
 public class RenderNpc extends RendererLivingEntity
 {
-	private static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
 	public ModelBiped modelBipedMain;
 	public ModelBiped modelArmorChestplate;
 	public ModelBiped modelArmor;
@@ -60,7 +64,67 @@ public class RenderNpc extends RendererLivingEntity
 	 */
 	protected boolean canRenderName(EntityLivingBase targetEntity)
 	{
-		return false;
+		return false;//Client.mc.gameSettings.showDebugInfo;
+	}
+
+	protected void passSpecialRender(EntityLivingBase entity, double x, double y, double z)
+	{
+		if (MinecraftForge.EVENT_BUS.post(new RenderLivingEvent.Specials.Pre(entity, this, x, y, z)))
+			return;
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
+
+		NpcBasic npc = (NpcBasic)entity;
+
+		if (canRenderName(entity))
+		{
+			float f = 1.6F;
+			float f1 = 0.016666668F * f;
+			double d3 = entity.getDistanceSqToEntity(renderManager.livingPlayer);
+			float f2 = entity.isSneaking() ? NAME_TAG_RANGE_SNEAK : NAME_TAG_RANGE;
+
+			if (d3 < (double)(f2 * f2))
+			{
+				String s = String.format("type: §a§l%s§r, height: §a§l%s§r", npc.getProfession(), npc.getHeight()); //entity.getFormattedCommandSenderName().getFormattedText();
+
+				if (entity.isSneaking())
+				{
+					FontRenderer fontrenderer = getFontRendererFromRenderManager();
+					GL11.glPushMatrix();
+					GL11.glTranslatef((float)x + 0.0F, (float)y + entity.height + 0.5F, (float)z);
+					GL11.glNormal3f(0.0F, 1.0F, 0.0F);
+					GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+					GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+					GL11.glScalef(-f1, -f1, f1);
+					GL11.glDisable(GL11.GL_LIGHTING);
+					GL11.glTranslatef(0.0F, 0.25F / f1, 0.0F);
+					GL11.glDepthMask(false);
+					GL11.glEnable(GL11.GL_BLEND);
+					OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+					Tessellator tessellator = Tessellator.instance;
+					GL11.glDisable(GL11.GL_TEXTURE_2D);
+					tessellator.startDrawingQuads();
+					int i = fontrenderer.getStringWidth(s) / 2;
+					tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
+					tessellator.addVertex((double)(-i - 1), -1.0D, 0.0D);
+					tessellator.addVertex((double)(-i - 1), 8.0D, 0.0D);
+					tessellator.addVertex((double)(i + 1), 8.0D, 0.0D);
+					tessellator.addVertex((double)(i + 1), -1.0D, 0.0D);
+					tessellator.draw();
+					GL11.glEnable(GL11.GL_TEXTURE_2D);
+					GL11.glDepthMask(true);
+					fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, 553648127);
+					GL11.glEnable(GL11.GL_LIGHTING);
+					GL11.glDisable(GL11.GL_BLEND);
+					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					GL11.glPopMatrix();
+				}
+				else
+				{
+					renderOffsetLivingLabel(entity, x, y, z, s, f1, d3);
+				}
+			}
+		}
+		MinecraftForge.EVENT_BUS.post(new RenderLivingEvent.Specials.Post(entity, this, x, y, z));
 	}
 
 	/**
@@ -68,7 +132,7 @@ public class RenderNpc extends RendererLivingEntity
 	 */
 	protected ResourceLocation getEntityTexture(NpcBasic p_110775_1_)
 	{
-		return steveTextures;
+		return NpcBasic.genericSkins[p_110775_1_.getSkin()];
 	}
 
 	protected void renderEquippedItems(NpcBasic p_77029_1_, float p_77029_2_)
@@ -170,6 +234,8 @@ public class RenderNpc extends RendererLivingEntity
 	protected void preRenderCallback(NpcBasic p_77041_1_, float p_77041_2_)
 	{
 		float f1 = 0.9375F;
+		float p = (p_77041_1_.getHeight()) / 4f;
+		f1 -= p / 10;
 		GL11.glScalef(f1, f1, f1);
 	}
 
