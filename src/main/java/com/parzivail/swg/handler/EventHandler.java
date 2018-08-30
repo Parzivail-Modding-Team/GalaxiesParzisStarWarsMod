@@ -1,6 +1,7 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.audio.AmbientSounds;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.gui.GuiNowEntering;
 import com.parzivail.swg.gui.GuiScreenTrailer;
@@ -21,6 +22,7 @@ import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
@@ -46,6 +48,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class EventHandler
 {
+
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void on(InitGuiEvent.Pre event)
@@ -225,6 +228,13 @@ public class EventHandler
 			if (planetDescriptor.gravity != 1)
 				event.player.motionY += 0.08D * 0.9800000190734863D * (1 - planetDescriptor.gravity);
 		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void on(TickEvent.ClientTickEvent event)
+	{
+		AmbientSounds.tick(event);
 	}
 
 	@SubscribeEvent

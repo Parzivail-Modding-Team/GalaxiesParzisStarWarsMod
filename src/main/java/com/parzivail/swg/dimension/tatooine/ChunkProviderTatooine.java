@@ -24,7 +24,7 @@ import java.util.List;
 public class ChunkProviderTatooine implements IChunkProvider
 {
 	private final World worldObj;
-	private final ITerrainHeightmap terrain;
+	public final ITerrainHeightmap terrain;
 
 	public ChunkProviderTatooine(World worldObj, long seed)
 	{
