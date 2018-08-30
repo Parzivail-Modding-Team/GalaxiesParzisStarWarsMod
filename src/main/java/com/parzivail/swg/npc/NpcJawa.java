@@ -1,55 +1,33 @@
 package com.parzivail.swg.npc;
 
-import com.parzivail.swg.Resources;
 import com.parzivail.swg.npc.ai.AiBetterWander;
-import com.parzivail.swg.npc.ai.AiOpenGate;
 import com.parzivail.swg.npc.ai.AiStayWithinBounds;
 import com.parzivail.swg.registry.ZoneRegistry;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIOpenDoor;
-import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityAIWatchClosest2;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
-public class NpcBasic extends EntityCreature
+public class NpcJawa extends EntityCreature
 {
-	public static final ResourceLocation[] genericSkins = {
-			Resources.location("textures/npc/genericmale1.png"),
-			Resources.location("textures/npc/genericmale2.png"),
-			Resources.location("textures/npc/genericfem1.png"),
-			Resources.location("textures/npc/genericfem2.png"),
-			};
-
-	private static final int DW_PROFESSION = 16;
 	private static final int DW_HEIGHT = 17;
-	private static final int DW_SKIN = 18;
 
-	public NpcBasic(World world)
-	{
-		this(world, world.rand.nextInt(5));
-	}
-
-	public NpcBasic(World world, int profession)
+	public NpcJawa(World world)
 	{
 		super(world);
-		setProfession(profession);
-		setSkin(world.rand.nextInt(genericSkins.length));
-		setHeight(world.rand.nextInt(7));
-		setSize(0.6F, 1.8F);
+		setHeight(world.rand.nextInt(3));
+		setSize(0.6F, 1.2F);
 		getNavigator().setBreakDoors(true);
 		getNavigator().setAvoidsWater(true);
-		tasks.addTask(0, new EntityAISwimming(this));
 		tasks.addTask(1, new AiStayWithinBounds(this, ZoneRegistry.zoneExperimentPaddockA, 0.6D));
 		tasks.addTask(2, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
-		tasks.addTask(2, new EntityAIWatchClosest2(this, NpcBasic.class, 5.0F, 0.02F));
+		tasks.addTask(2, new EntityAIWatchClosest2(this, NpcJawa.class, 5.0F, 0.02F));
 		tasks.addTask(4, new EntityAIOpenDoor(this, true));
-		tasks.addTask(4, new AiOpenGate(this, true));
 		tasks.addTask(5, new AiBetterWander(this, 0.6D));
 		tasks.addTask(6, new EntityAIWatchClosest(this, EntityLiving.class, 8.0F));
 	}
@@ -92,9 +70,7 @@ public class NpcBasic extends EntityCreature
 	protected void entityInit()
 	{
 		super.entityInit();
-		dataWatcher.addObject(DW_PROFESSION, 0);
 		dataWatcher.addObject(DW_HEIGHT, 0);
-		dataWatcher.addObject(DW_SKIN, 0);
 	}
 
 	/**
@@ -103,9 +79,7 @@ public class NpcBasic extends EntityCreature
 	public void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeEntityToNBT(tagCompound);
-		tagCompound.setInteger("Profession", getProfession());
 		tagCompound.setInteger("height", getHeight());
-		tagCompound.setInteger("skin", getSkin());
 	}
 
 	/**
@@ -114,9 +88,7 @@ public class NpcBasic extends EntityCreature
 	public void readEntityFromNBT(NBTTagCompound tagCompund)
 	{
 		super.readEntityFromNBT(tagCompund);
-		setProfession(tagCompund.getInteger("Profession"));
 		setHeight(tagCompund.getInteger("height"));
-		setSkin(tagCompund.getInteger("skin"));
 	}
 
 	/**
@@ -151,16 +123,6 @@ public class NpcBasic extends EntityCreature
 		return "mob.villager.death";
 	}
 
-	public void setProfession(int p_70938_1_)
-	{
-		dataWatcher.updateObject(DW_PROFESSION, p_70938_1_);
-	}
-
-	public int getProfession()
-	{
-		return dataWatcher.getWatchableObjectInt(DW_PROFESSION);
-	}
-
 	public void setHeight(int p_70938_1_)
 	{
 		dataWatcher.updateObject(DW_HEIGHT, p_70938_1_);
@@ -169,16 +131,6 @@ public class NpcBasic extends EntityCreature
 	public int getHeight()
 	{
 		return dataWatcher.getWatchableObjectInt(DW_HEIGHT);
-	}
-
-	public void setSkin(int p_70938_1_)
-	{
-		dataWatcher.updateObject(DW_SKIN, p_70938_1_);
-	}
-
-	public int getSkin()
-	{
-		return dataWatcher.getWatchableObjectInt(DW_SKIN);
 	}
 
 	public boolean allowLeashing()

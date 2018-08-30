@@ -30,10 +30,8 @@ public class AiStayWithinBounds extends EntityAIBase
 	 */
 	public boolean shouldExecute()
 	{
-		if (zone.contains(theEntity))
-		{
+		if (zone.dimension != theEntity.dimension || zone.contains(theEntity))
 			return false;
-		}
 		else
 		{
 			Vector3f chunkcoordinates = zone.getCenter();

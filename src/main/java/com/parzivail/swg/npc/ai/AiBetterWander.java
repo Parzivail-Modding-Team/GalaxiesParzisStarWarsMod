@@ -26,13 +26,13 @@ public class AiBetterWander extends EntityAIBase
 	 */
 	public boolean shouldExecute()
 	{
-		if (entity.getRNG().nextInt(10) != 0)
+		if (entity.getRNG().nextInt(5) != 0)
 		{
 			return false;
 		}
 		else
 		{
-			Vec3 vec3 = RandomPositionGenerator.findRandomTarget(entity, 10, 7);
+			Vec3 vec3 = RandomPositionGenerator.findRandomTarget(entity, 25, 7);
 
 			if (vec3 == null)
 			{

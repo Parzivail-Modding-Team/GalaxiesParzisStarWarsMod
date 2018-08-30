@@ -3,7 +3,8 @@ package com.parzivail.swg.proxy;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
-import com.parzivail.swg.npc.NpcBasic;
+import com.parzivail.swg.npc.NpcJawa;
+import com.parzivail.swg.npc.NpcMerchant;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.ItemRegister;
 import com.parzivail.swg.registry.KeybindRegistry;
@@ -21,7 +22,8 @@ import com.parzivail.swg.render.ladder.RenderItemLadder;
 import com.parzivail.swg.render.ladder.RenderLadder;
 import com.parzivail.swg.render.light.*;
 import com.parzivail.swg.render.machine.*;
-import com.parzivail.swg.render.npc.RenderNpc;
+import com.parzivail.swg.render.npc.RenderJawa;
+import com.parzivail.swg.render.npc.RenderMerchant;
 import com.parzivail.swg.render.pipe.RenderPipeSmallBent;
 import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
 import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
@@ -117,7 +119,8 @@ public class Client extends Common
 
 		RenderingRegistry.registerEntityRenderingHandler(MultipartFlightModel.class, new RenderNothing());
 
-		RenderingRegistry.registerEntityRenderingHandler(NpcBasic.class, new RenderNpc());
+		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());
+		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleA280, new RenderA280());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleBowcaster, new RenderBowcaster());

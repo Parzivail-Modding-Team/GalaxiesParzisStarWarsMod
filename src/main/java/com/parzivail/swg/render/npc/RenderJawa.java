@@ -1,6 +1,7 @@
 package com.parzivail.swg.render.npc;
 
-import com.parzivail.swg.npc.NpcBasic;
+import com.parzivail.swg.Resources;
+import com.parzivail.swg.npc.NpcJawa;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.model.ModelBiped;
@@ -18,14 +19,15 @@ import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import org.lwjgl.opengl.GL11;
 
-public class RenderNpc extends RendererLivingEntity
+public class RenderJawa extends RendererLivingEntity
 {
+	private static final ResourceLocation texture = Resources.location("textures/npc/jawa.png");
+
 	public ModelBiped modelBipedMain;
 	public ModelBiped modelArmorChestplate;
 	public ModelBiped modelArmor;
-	private static final String __OBFID = "CL_00001020";
 
-	public RenderNpc()
+	public RenderJawa()
 	{
 		super(new ModelBiped(0.0F), 0.5F);
 		modelBipedMain = (ModelBiped)mainModel;
@@ -39,7 +41,7 @@ public class RenderNpc extends RendererLivingEntity
 	 * (Render<T extends Entity) and this method has signature public void func_76986_a(T entity, double d, double d1,
 	 * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
 	 */
-	public void doRender(NpcBasic p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
+	public void doRender(NpcJawa p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
 	{
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		ItemStack itemstack = p_76986_1_.getHeldItem();
@@ -73,7 +75,7 @@ public class RenderNpc extends RendererLivingEntity
 			return;
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
 
-		NpcBasic npc = (NpcBasic)entity;
+		NpcJawa npc = (NpcJawa)entity;
 
 		if (canRenderName(entity))
 		{
@@ -84,7 +86,7 @@ public class RenderNpc extends RendererLivingEntity
 
 			if (d3 < (double)(f2 * f2))
 			{
-				String s = String.format("type: §a§l%s§r, height: §a§l%s§r", npc.getProfession(), npc.getHeight()); //entity.getFormattedCommandSenderName().getFormattedText();
+				String s = String.format("height: §a§l%s§r", npc.getHeight()); //entity.getFormattedCommandSenderName().getFormattedText();
 
 				if (entity.isSneaking())
 				{
@@ -130,12 +132,12 @@ public class RenderNpc extends RendererLivingEntity
 	/**
 	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
 	 */
-	protected ResourceLocation getEntityTexture(NpcBasic p_110775_1_)
+	protected ResourceLocation getEntityTexture(NpcJawa p_110775_1_)
 	{
-		return NpcBasic.genericSkins[p_110775_1_.getSkin()];
+		return texture;
 	}
 
-	protected void renderEquippedItems(NpcBasic p_77029_1_, float p_77029_2_)
+	protected void renderEquippedItems(NpcJawa p_77029_1_, float p_77029_2_)
 	{
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		super.renderEquippedItems(p_77029_1_, p_77029_2_);
@@ -231,12 +233,22 @@ public class RenderNpc extends RendererLivingEntity
 	 * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
 	 * entityLiving, partialTickTime
 	 */
-	protected void preRenderCallback(NpcBasic p_77041_1_, float p_77041_2_)
+	protected void preRenderCallback(NpcJawa p_77041_1_, float p_77041_2_)
 	{
-		float f1 = 0.9375F;
-		float p = (p_77041_1_.getHeight()) / 4f;
-		f1 -= p / 10;
-		GL11.glScalef(f1, f1, f1);
+		float f1 = 0.5f;
+		switch (p_77041_1_.getHeight())
+		{
+			case 0:
+				f1 = 0.7f;
+				break;
+			case 1:
+				f1 = 0.6f;
+				break;
+			case 2:
+				f1 = 0.5f;
+				break;
+		}
+		GL11.glScalef(f1 * 1.1f, f1, f1 * 1.1f);
 	}
 
 	/**
@@ -245,12 +257,12 @@ public class RenderNpc extends RendererLivingEntity
 	 */
 	protected void preRenderCallback(EntityLivingBase p_77041_1_, float p_77041_2_)
 	{
-		preRenderCallback((NpcBasic)p_77041_1_, p_77041_2_);
+		preRenderCallback((NpcJawa)p_77041_1_, p_77041_2_);
 	}
 
 	protected void renderEquippedItems(EntityLivingBase p_77029_1_, float p_77029_2_)
 	{
-		renderEquippedItems((NpcBasic)p_77029_1_, p_77029_2_);
+		renderEquippedItems((NpcJawa)p_77029_1_, p_77029_2_);
 	}
 
 	/**
@@ -261,7 +273,7 @@ public class RenderNpc extends RendererLivingEntity
 	 */
 	public void doRender(EntityLivingBase p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
 	{
-		doRender((NpcBasic)p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+		doRender((NpcJawa)p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
 	}
 
 	/**
@@ -269,7 +281,7 @@ public class RenderNpc extends RendererLivingEntity
 	 */
 	protected ResourceLocation getEntityTexture(Entity p_110775_1_)
 	{
-		return getEntityTexture((NpcBasic)p_110775_1_);
+		return getEntityTexture((NpcJawa)p_110775_1_);
 	}
 
 	/**
@@ -280,6 +292,6 @@ public class RenderNpc extends RendererLivingEntity
 	 */
 	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
 	{
-		doRender((NpcBasic)p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+		doRender((NpcJawa)p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
 	}
 }

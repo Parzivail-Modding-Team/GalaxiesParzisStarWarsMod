@@ -11,10 +11,13 @@ public class Zone
 	private final int maxX;
 	private final int maxY;
 	private final int maxZ;
+
+	public final int dimension;
 	public final String name;
 
-	public Zone(int minX, int minY, int minZ, int maxX, int maxY, int maxZ, String name)
+	public Zone(int dimension, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, String name)
 	{
+		this.dimension = dimension;
 		this.minX = Math.min(minX, maxX);
 		this.minY = Math.min(minY, maxY);
 		this.minZ = Math.min(minZ, maxZ);

@@ -3,7 +3,8 @@ package com.parzivail.swg.registry;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
-import com.parzivail.swg.npc.NpcBasic;
+import com.parzivail.swg.npc.NpcJawa;
+import com.parzivail.swg.npc.NpcMerchant;
 import com.parzivail.swg.ship.EntitySeat;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.entity.EntityUtils;
@@ -23,6 +24,7 @@ public class EntityRegister
 		EntityUtils.registerEntity(EntityThermalDetonator.class, "thermalDetonator");
 		EntityUtils.registerEntity(EntitySmokeGrenade.class, "smokeGrenade");
 
-		EntityUtils.registerWithSpawnEgg(NpcBasic.class, "testNpc", 0xFF0000, 0x0000FF);
+		EntityUtils.registerWithSpawnEgg(NpcMerchant.class, "testNpc", 0x6AC8D8, 0x6BD67B);
+		EntityUtils.registerWithSpawnEgg(NpcJawa.class, "jawa", 0xFF0000, 0x9B6C00);
 	}
 }
