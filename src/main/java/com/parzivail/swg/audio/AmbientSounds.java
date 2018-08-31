@@ -20,8 +20,8 @@ public class AmbientSounds
 		resetCountdown();
 
 		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.bantha"));
-		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.warbles", AmbientSounds::isPlayerInCanyon));
-		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.rocks", AmbientSounds::isPlayerInCanyon));
+		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.warble", AmbientSounds::isPlayerInCanyon));
+		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.rock", AmbientSounds::isPlayerInCanyon));
 		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.wind"));
 	}
 
@@ -35,7 +35,7 @@ public class AmbientSounds
 		if (Client.mc == null || Client.mc.theWorld == null)
 			return;
 
-		ambientTickCountdown--;
+		ambientTickCountdown -= 100;
 
 		if (ambientTickCountdown <= 0)
 		{
@@ -59,8 +59,7 @@ public class AmbientSounds
 	{
 		if (entityPlayer.dimension == Resources.dimIdTatooine)
 		{
-			ChunkProviderTatooine chunks = (ChunkProviderTatooine)entityPlayer.worldObj.getChunkProvider();
-			double[] weights = chunks.terrain.getBiomeWeightsAt((int)entityPlayer.posX, (int)entityPlayer.posZ);
+			double[] weights = ChunkProviderTatooine.terrain.getBiomeWeightsAt((int)entityPlayer.posX, (int)entityPlayer.posZ);
 
 			return weights[0] > 0.5;
 		}
@@ -98,7 +97,7 @@ public class AmbientSounds
 			double oY = player.worldObj.rand.nextDouble() * 20 - 10;
 			double oZ = player.worldObj.rand.nextDouble() * 20 - 10;
 
-			player.worldObj.playSoundEffect(player.posX + 0.5D + oX, player.posY + 0.5D + oY, player.posY + 0.5D + oZ, name, 0.7F, 0.8F + player.worldObj.rand.nextFloat() * 0.2F);
+			player.worldObj.playSoundEffect(player.posX + 0.5D + oX, player.posY + 0.5D + oY, player.posZ + 0.5D + oZ, "random.click", 0.7F, 0.8F + player.worldObj.rand.nextFloat() * 0.2F);
 			return true;
 		}
 	}
