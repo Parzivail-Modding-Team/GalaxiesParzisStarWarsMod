@@ -35,7 +35,7 @@ public class AmbientSounds
 		if (Client.mc == null || Client.mc.theWorld == null)
 			return;
 
-		ambientTickCountdown -= 100;
+		ambientTickCountdown--;
 
 		if (ambientTickCountdown <= 0)
 		{
@@ -93,11 +93,7 @@ public class AmbientSounds
 			if (condition != null && !condition.apply(player))
 				return false;
 
-			double oX = player.worldObj.rand.nextDouble() * 20 - 10;
-			double oY = player.worldObj.rand.nextDouble() * 20 - 10;
-			double oZ = player.worldObj.rand.nextDouble() * 20 - 10;
-
-			player.worldObj.playSoundEffect(player.posX + 0.5D + oX, player.posY + 0.5D + oY, player.posZ + 0.5D + oZ, "random.click", 0.7F, 0.8F + player.worldObj.rand.nextFloat() * 0.2F);
+			player.playSound("pswg:" + name, 0.7F, 0.8F + player.worldObj.rand.nextFloat() * 0.2F);
 			return true;
 		}
 	}
