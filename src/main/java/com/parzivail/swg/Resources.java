@@ -24,7 +24,7 @@ public class Resources
 	public static ResourceLocation resBlack = location("textures/environment/black.png");
 	private static int guiIdx = 1;
 	public static final int GUI_BLASTER_WORKBENCH = guiIdx++;
-	public static final int GUI_SABACC_TABLE = guiIdx++;
+	public static final int GUI_DIALOGUE = guiIdx++;
 
 	public static String itemDot(String name)
 	{

@@ -1,6 +1,7 @@
 package com.parzivail.swg.npc;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.npc.ai.AiBetterWander;
 import com.parzivail.swg.npc.ai.AiOpenGate;
 import com.parzivail.swg.npc.ai.AiStayWithinBounds;
@@ -71,21 +72,19 @@ public class NpcMerchant extends EntityCreature
 	/**
 	 * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
 	 */
-	public boolean interact(EntityPlayer p_70085_1_)
+	public boolean interact(EntityPlayer player)
 	{
-		if (isEntityAlive() && !p_70085_1_.isSneaking())
+		if (isEntityAlive() && !player.isSneaking())
 		{
 			if (!worldObj.isRemote)
-			{
-				// TODO: display gui
-				//p_70085_1_.displayGUIMerchant(this, this.getCustomNameTag());
-			}
+				// yes, I'm passing the entity ID as a position. Sue me.
+				player.openGui(StarWarsGalaxy.instance, Resources.GUI_DIALOGUE, worldObj, getEntityId(), 0, 0);
 
 			return true;
 		}
 		else
 		{
-			return super.interact(p_70085_1_);
+			return super.interact(player);
 		}
 	}
 

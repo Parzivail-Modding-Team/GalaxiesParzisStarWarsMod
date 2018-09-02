@@ -32,7 +32,7 @@ public class BlockSabaccTable extends PBlockContainer
 			TileSabaccTable tile = (TileSabaccTable)worldIn.getTileEntity(x, y, z);
 
 			if (tile != null)
-				player.openGui(StarWarsGalaxy.instance, Resources.GUI_SABACC_TABLE, worldIn, x, y, z);
+				player.openGui(StarWarsGalaxy.instance, Resources.GUI_DIALOGUE, worldIn, x, y, z);
 
 			return true;
 		}

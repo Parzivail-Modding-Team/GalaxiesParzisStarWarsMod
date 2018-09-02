@@ -1,26 +1,23 @@
 package com.parzivail.swg.gui;
 
-import com.parzivail.swg.container.ContainerSabaccTable;
+import com.parzivail.swg.container.ContainerDialogue;
 import com.parzivail.swg.gui.modern.ModernArrowButton;
 import com.parzivail.swg.gui.modern.ModernButton;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.QuestRegister;
-import com.parzivail.swg.tile.TileSabaccTable;
 import com.parzivail.util.binary.ned.NedInteraction;
 import com.parzivail.util.binary.ned.NedNode;
 import com.parzivail.util.binary.ned.NodeType;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.common.TextUtils;
-import com.parzivail.util.ui.Fx.D2;
-import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.Timeline;
 import com.parzivail.util.ui.TimelineEvent;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.common.DimensionManager;
@@ -30,9 +27,9 @@ import org.newdawn.slick.opengl.TextureImpl;
 import java.util.ArrayList;
 import java.util.EnumSet;
 
-public class GuiSabaccTable extends GuiContainer
+public class GuiDialogue extends GuiContainer
 {
-	private final TileSabaccTable tile;
+	private final Entity target;
 	private final EntityPlayer player;
 	private final NedInteraction interaction;
 	private final Timeline textFadeOut;
@@ -48,14 +45,14 @@ public class GuiSabaccTable extends GuiContainer
 
 	private String npcDialogue = "";
 
-	public GuiSabaccTable(InventoryPlayer inventoryPlayer, TileSabaccTable tile)
+	public GuiDialogue(InventoryPlayer inventoryPlayer, Entity target)
 	{
-		super(new ContainerSabaccTable(inventoryPlayer, tile));
-		this.tile = tile;
+		super(new ContainerDialogue(inventoryPlayer, target));
+		this.target = target;
 
 		// We have to use this awful hack because the EntityPlayer that's provided to
 		// the Gui through the InventoryPlayer is a strictly client-based player instance
-		// and isn't the real one.
+		// and isn't the one we want.
 		player = (EntityPlayer)DimensionManager.getWorld(inventoryPlayer.player.dimension).getEntityByID(inventoryPlayer.player.getEntityId());
 
 		interaction = QuestRegister.complexQuest.createInteraction(player);
@@ -150,6 +147,10 @@ public class GuiSabaccTable extends GuiContainer
 			case 4:
 				movePastNpcDialogue();
 				break;
+			case 5:
+				mc.displayGuiScreen(null);
+				mc.setIngameFocus();
+				break;
 			default:
 				break;
 		}
@@ -201,11 +202,11 @@ public class GuiSabaccTable extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
-		ScaledResolution sr = Client.resolution;
-		GL.PushAttrib(AttribMask.EnableBit);
-		GL.Disable(EnableCap.Texture2D);
-		GL.Color(GLPalette.ALMOST_BLACK);
-		D2.DrawSolidRectangle(0, 0, sr.getScaledWidth(), sr.getScaledHeight());
-		GL.PopAttrib();
+		//		ScaledResolution sr = Client.resolution;
+		//		GL.PushAttrib(AttribMask.EnableBit);
+		//		GL.Disable(EnableCap.Texture2D);
+		//		GL.Color(GLPalette.ALMOST_BLACK);
+		//		D2.DrawSolidRectangle(0, 0, sr.getScaledWidth(), sr.getScaledHeight());
+		//		GL.PopAttrib();
 	}
 }

@@ -1,17 +1,17 @@
 package com.parzivail.swg.container;
 
-import com.parzivail.swg.tile.TileSabaccTable;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 
-public class ContainerSabaccTable extends Container
+public class ContainerDialogue extends Container
 {
-	private final TileSabaccTable tile;
+	private final Entity target;
 
-	public ContainerSabaccTable(IInventory playerInventory, TileSabaccTable tile)
+	public ContainerDialogue(IInventory playerInventory, Entity target)
 	{
-		this.tile = tile;
+		this.target = target;
 	}
 
 	public boolean canInteractWith(EntityPlayer player)
