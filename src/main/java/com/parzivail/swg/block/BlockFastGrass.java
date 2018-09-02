@@ -53,6 +53,22 @@ public class BlockFastGrass extends PBlock
 		return getBlockColor();
 	}
 
+	//	@Override
+	//	public int getRenderType()
+	//	{
+	//		return 123;
+	//	}
+	//
+	//	public boolean renderAsNormalBlock()
+	//	{
+	//		return false;
+	//	}
+	//
+	//	public boolean isOpaqueCube()
+	//	{
+	//		return false;
+	//	}
+
 	/**
 	 * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color. Note only called
 	 * when first determining what to render.

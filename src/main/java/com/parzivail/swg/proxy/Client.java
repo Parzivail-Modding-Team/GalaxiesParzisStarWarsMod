@@ -202,6 +202,8 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTallVentedPipe.class, new RenderTallVentedPipe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallPipeLarge.class, new RenderWallPipeLarge());
 
+		//RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(123));
+
 		Lumberjack.log("Client proxy loaded!");
 	}
 
