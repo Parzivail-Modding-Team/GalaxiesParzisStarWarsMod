@@ -9,6 +9,8 @@ import com.parzivail.util.binary.ned.NedInteraction;
 import com.parzivail.util.binary.ned.NodeType;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.common.TextUtils;
+import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.TtfUtil;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -21,8 +23,6 @@ import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.input.Keyboard;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.TextureImpl;
-
-import java.util.EnumSet;
 
 public class GuiDialogue extends GuiContainer
 {
@@ -58,12 +58,12 @@ public class GuiDialogue extends GuiContainer
 	{
 		super.initGui();
 
-		options[0] = bOpt1 = new ModernButton(0, (width - 150) / 2, height - 70, 150, 10, "OPT1");
-		options[1] = bOpt2 = new ModernButton(1, (width - 150) / 2, height - 55, 150, 10, "OPT2");
-		options[2] = bOpt3 = new ModernButton(2, (width - 150) / 2, height - 40, 150, 10, "OPT3");
-		options[3] = bOpt4 = new ModernButton(3, (width - 150) / 2, height - 25, 150, 10, "OPT4");
+		options[0] = bOpt1 = new ModernButton(0, (width - 150) / 2, height - 95, 150, 10, "OPT1");
+		options[1] = bOpt2 = new ModernButton(1, (width - 150) / 2, height - 80, 150, 10, "OPT2");
+		options[2] = bOpt3 = new ModernButton(2, (width - 150) / 2, height - 65, 150, 10, "OPT3");
+		options[3] = bOpt4 = new ModernButton(3, (width - 150) / 2, height - 50, 150, 10, "OPT4");
 
-		bNext = new ModernArrowButton(4, (width - 150) / 2 + 160, height - 25);
+		bNext = new ModernArrowButton(4, (width - 150) / 2 + 160, height - 50);
 
 		buttonList.add(bOpt1);
 		buttonList.add(bOpt2);
@@ -71,9 +71,6 @@ public class GuiDialogue extends GuiContainer
 		buttonList.add(bOpt4);
 
 		buttonList.add(bNext);
-
-		bOpt1.visible = bOpt2.visible = bOpt3.visible = bOpt4.visible = false;
-		bNext.visible = false;
 
 		refreshDisplay();
 	}
@@ -85,15 +82,19 @@ public class GuiDialogue extends GuiContainer
 
 		if (interaction.node.type == NodeType.NpcDialogue)
 		{
-			GL.PushAttrib(EnumSet.of(AttribMask.EnableBit, AttribMask.LineBit));
+			GL.PushAttrib(AttribMask.EnableBit);
 			GL.Enable(EnableCap.Blend);
+			GL.Disable(EnableCap.Lighting);
 			GL.Enable(EnableCap.Texture2D);
 			GL.PushMatrix();
-			int w = Client.brandonReg.getWidth(npcDialogue) / 4;
-			GL.Translate((int)((width - w) / 2f), height - 42, 0);
+
+			int w = TtfUtil.getWidth(Client.brandonReg, npcDialogue) / 4;
+			int h = TtfUtil.getHeight(Client.brandonReg, npcDialogue) / 4;
+			GL.Translate((int)((width - w) / 2f), height - 100 + (65 - h) / 2f, 0);
 			GL.Scale(0.25f);
 			TextureImpl.bindNone();
-			Client.brandonReg.drawString(0, 0, TextUtils.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.white);
+			TtfUtil.drawString(Client.brandonReg, 2, 2, TextUtils.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.black);
+			TtfUtil.drawString(Client.brandonReg, 0, 0, TextUtils.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.white);
 			GL.PopMatrix();
 			GL.PopAttrib();
 		}
@@ -179,6 +180,12 @@ public class GuiDialogue extends GuiContainer
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
 	{
-		drawGradientRect(5, height - 75, width - 5, height - 5, 0xDD000000, 0xAA000000);
+		GL.PushAttrib(AttribMask.EnableBit);
+		GL.Disable(EnableCap.Texture2D);
+		GL.Color(0xCC000000);
+		Fx.D2.DrawSolidRoundRectangle((width - 200) / 2f, height - 100, 200, 65, 2);
+		GL.Color(0xFF000000);
+		Fx.D2.DrawWireRoundRectangle((width - 200) / 2f, height - 100, 200, 65, 2);
+		GL.PopAttrib();
 	}
 }

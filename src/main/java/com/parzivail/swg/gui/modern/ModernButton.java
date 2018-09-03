@@ -55,22 +55,31 @@ public class ModernButton extends GuiButton
 			GL.PushAttrib(EnumSet.of(AttribMask.EnableBit, AttribMask.LineBit));
 			GL.Enable(EnableCap.Blend);
 			GL.Disable(EnableCap.Texture2D);
+			GL.Disable(EnableCap.Lighting);
 			GL.Enable(EnableCap.LineSmooth);
-			GL.Color(stateColor[k]);
 			GL11.glLineWidth(1);
 			if (inverted)
+			{
+				GL.Color(stateColor[k]);
 				D2.DrawSolidRoundRectangle(xPosition, yPosition, width, height, 7 * oneOverSr);
+			}
 			else
-				D2.DrawWireRoundRectangle(xPosition, yPosition, width, height, 7 * oneOverSr);
-			//GLPalette.glColorI(stateColor[k], 192);
-			//			Fx.D2.DrawWireRectangle(this.xPosition, this.yPosition, this.width, this.height);
-			GL.Enable(EnableCap.Texture2D);
+			{
+				GL.Color(stateColor[k] & 0x00FFFFFF | 0x22000000);
+				D2.DrawSolidRoundRectangle(xPosition, yPosition, width, height, 7 * oneOverSr);
 
+				GL.Color(stateColor[k]);
+				D2.DrawWireRoundRectangle(xPosition, yPosition, width, height, 7 * oneOverSr);
+			}
+
+			GL.Enable(EnableCap.Texture2D);
 			GL.PushMatrix();
 			TrueTypeFont fontrenderer = Client.brandonReg;
 			GL.Translate(xPosition + width / 2 - fontrenderer.getWidth(displayString) / 2 * oneOverSr, yPosition + height / 2 - fontrenderer.getHeight() / 2 * oneOverSr, 0);
 			GL.Scale(oneOverSr);
 			TextureImpl.bindNone();
+			if (!inverted)
+				fontrenderer.drawString(2, 2, displayString, Color.black);
 			fontrenderer.drawString(0, 0, displayString, inverted ? Util.GetColor(0x0D0D0D) : Color.white);
 			GL.PopMatrix();
 			GL.PopAttrib();

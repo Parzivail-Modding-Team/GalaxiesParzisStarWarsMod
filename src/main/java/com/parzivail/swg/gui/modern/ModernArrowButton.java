@@ -55,9 +55,13 @@ public class ModernArrowButton extends GuiButton
 			GL11.glLineWidth(1);
 			GL.PushMatrix();
 
-			GL.Translate(xPosition + width / 2 + Fx.Util.Hz(1) * 0.5f + 1, yPosition + height / 2, 0);
+			GL.Translate(xPosition + width / 2f + Fx.Util.Hz(1) * 0.5f + 1, yPosition + height / 2f, 0);
 			GL.Rotate(90, 0, 0, 1);
 
+			GL.Color(0xFF000000);
+			Fx.D2.DrawSolidTriangle(0.5f, -0.5f, width);
+
+			GL.Color(stateColor[k]);
 			Fx.D2.DrawSolidTriangle(0, 0, width);
 
 			GL.PopMatrix();
