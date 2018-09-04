@@ -33,6 +33,7 @@ public class ScopeSpitfire extends BlasterScope
 		D2.DrawWireArc(0, 0, d / 3, -130, -50);
 		D2.DrawWireArc(0, 0, d / 3, -220, -140);
 		D2.DrawWireArc(0, 0, d / 3, -310, -230);
+		D2.DrawWireArc(0, 0, d / 3, -40, 40);
 	}
 
 	@Override

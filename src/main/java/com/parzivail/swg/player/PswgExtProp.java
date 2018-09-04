@@ -25,6 +25,10 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	protected int creditBalance;
 	@NbtSave
 	protected int[] unlockedBlasterAttachments;
+	@NbtSave
+	protected String[] activeQuests;
+	@NbtSave
+	protected String[] completedQuests;
 
 	private Entity entity;
 	private World world;
@@ -39,6 +43,47 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 		if (p == null)
 			return null;
 		return (PswgExtProp)p.getExtendedProperties(PROP_NAME);
+	}
+
+	public boolean isBlasterAttachmentUnlocked(int attachmentId)
+	{
+		return ArrayUtils.contains(unlockedBlasterAttachments, attachmentId);
+	}
+
+	public int getCreditBalance()
+	{
+		return creditBalance;
+	}
+
+	public void addCreditBalance(int delta)
+	{
+		creditBalance += delta;
+		sync();
+	}
+
+	public void setCreditBalance(int creditBalance)
+	{
+		this.creditBalance = creditBalance;
+		sync();
+	}
+
+	public void unlockBlasterAttachment(int attachmentId)
+	{
+		unlockedBlasterAttachments = ArrayUtils.add(unlockedBlasterAttachments, attachmentId);
+		sync();
+	}
+
+	public void startQuest(String quest)
+	{
+		activeQuests = ArrayUtils.add(activeQuests, quest);
+		sync();
+	}
+
+	public void completeQuest(String quest)
+	{
+		activeQuests = ArrayUtils.removeElement(activeQuests, quest);
+		completedQuests = ArrayUtils.add(completedQuests, quest);
+		sync();
 	}
 
 	@Override
@@ -64,34 +109,6 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 
 		NBTTagCompound data = compound.getCompoundTag(PROP_NAME);
 		deserialize(data);
-	}
-
-	public void addCreditBalance(int delta)
-	{
-		creditBalance += delta;
-		sync();
-	}
-
-	public int getCreditBalance()
-	{
-		return creditBalance;
-	}
-
-	public void setCreditBalance(int creditBalance)
-	{
-		this.creditBalance = creditBalance;
-		sync();
-	}
-
-	public void unlockBlasterAttachment(int attachmentId)
-	{
-		unlockedBlasterAttachments = ArrayUtils.add(unlockedBlasterAttachments, attachmentId);
-		sync();
-	}
-
-	public boolean isBlasterAttachmentUnlocked(int attachmentId)
-	{
-		return ArrayUtils.contains(unlockedBlasterAttachments, attachmentId);
 	}
 
 	void sync()

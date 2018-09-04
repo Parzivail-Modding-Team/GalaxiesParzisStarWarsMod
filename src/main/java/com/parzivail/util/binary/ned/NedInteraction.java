@@ -1,5 +1,6 @@
 package com.parzivail.util.binary.ned;
 
+import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.util.common.Lumberjack;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -96,11 +97,33 @@ public class NedInteraction
 	private void completeQuest(NedNode node)
 	{
 		Lumberjack.log("completeQuest %s", node.outputs.get(0).text);
+
+		if (!player.worldObj.isRemote)
+		{
+			PswgExtProp props = PswgExtProp.get(player);
+			if (props != null)
+				props.completeQuest(node.outputs.get(0).text);
+		}
+		else
+		{
+			// show "achievement get" thing for completing quest
+		}
 	}
 
 	private void startQuest(NedNode node)
 	{
 		Lumberjack.log("startQuest %s", node.outputs.get(0).text);
+
+		if (!player.worldObj.isRemote)
+		{
+			PswgExtProp props = PswgExtProp.get(player);
+			if (props != null)
+				props.startQuest(node.outputs.get(0).text);
+		}
+		else
+		{
+			// show "achievement get" thing for starting quest
+		}
 	}
 
 	private boolean hasQuest(NedNode node)

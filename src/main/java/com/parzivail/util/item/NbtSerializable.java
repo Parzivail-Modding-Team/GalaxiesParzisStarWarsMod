@@ -1,5 +1,6 @@
 package com.parzivail.util.item;
 
+import com.google.gson.Gson;
 import com.parzivail.swg.item.blaster.data.BlasterAttachment;
 import com.parzivail.swg.item.blaster.data.BlasterAttachments;
 import com.parzivail.util.common.Enumerable;
@@ -24,6 +25,7 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(double.class, NbtSerializable::readDouble, NbtSerializable::writeDouble);
 		map(boolean.class, NbtSerializable::readBoolean, NbtSerializable::writeBoolean);
 		map(int[].class, NbtSerializable::readListInteger, NbtSerializable::writeListInteger);
+		map(String[].class, NbtSerializable::readListString, NbtSerializable::writeListString);
 
 		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
 		//		map(BlasterAttachment[].class, NbtSerializable::readBlasterAttachments, NbtSerializable::writeBlasterAttachments);
@@ -40,6 +42,19 @@ public class NbtSerializable<T extends NbtSerializable>
 			integers = new int[0];
 
 		compound.setIntArray(s, integers);
+	}
+
+	private static String[] readListString(String s, NBTTagCompound compound)
+	{
+		return new Gson().fromJson(compound.getString(s), String[].class);
+	}
+
+	private static void writeListString(String s, String[] strings, NBTTagCompound compound)
+	{
+		if (strings == null)
+			strings = new String[0];
+
+		compound.setString(s, new Gson().toJson(strings));
 	}
 
 	private static BlasterAttachment readBlasterAttachment(String s, NBTTagCompound compound)
