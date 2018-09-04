@@ -29,6 +29,8 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	protected String[] activeQuests;
 	@NbtSave
 	protected String[] completedQuests;
+	@NbtSave
+	protected String[] flags;
 
 	private Entity entity;
 	private World world;
@@ -48,6 +50,16 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	public boolean isBlasterAttachmentUnlocked(int attachmentId)
 	{
 		return ArrayUtils.contains(unlockedBlasterAttachments, attachmentId);
+	}
+
+	public boolean hasQuest(String quest)
+	{
+		return ArrayUtils.contains(activeQuests, quest) || ArrayUtils.contains(completedQuests, quest);
+	}
+
+	public boolean hasFlag(String flag)
+	{
+		return ArrayUtils.contains(flags, flag);
 	}
 
 	public int getCreditBalance()
@@ -83,6 +95,18 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	{
 		activeQuests = ArrayUtils.removeElement(activeQuests, quest);
 		completedQuests = ArrayUtils.add(completedQuests, quest);
+		sync();
+	}
+
+	public void setFlag(String flag)
+	{
+		flags = ArrayUtils.add(flags, flag);
+		sync();
+	}
+
+	public void clearFlag(String flag)
+	{
+		flags = ArrayUtils.removeElement(flags, flag);
 		sync();
 	}
 

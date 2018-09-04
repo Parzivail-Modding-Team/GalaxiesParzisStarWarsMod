@@ -128,21 +128,37 @@ public class NedInteraction
 
 	private boolean hasQuest(NedNode node)
 	{
+		PswgExtProp props = PswgExtProp.get(player);
+		if (props != null)
+			return props.hasQuest(node.outputs.get(0).text);
 		return false;
 	}
 
 	private void clearFlag(NedNode node)
 	{
-		Lumberjack.log("clearFlag %s", node.outputs.get(0).text);
+		if (!player.worldObj.isRemote)
+		{
+			PswgExtProp props = PswgExtProp.get(player);
+			if (props != null)
+				props.clearFlag(node.outputs.get(0).text);
+		}
 	}
 
 	private void setFlag(NedNode node)
 	{
-		Lumberjack.log("setFlag %s", node.outputs.get(0).text);
+		if (!player.worldObj.isRemote)
+		{
+			PswgExtProp props = PswgExtProp.get(player);
+			if (props != null)
+				props.setFlag(node.outputs.get(0).text);
+		}
 	}
 
 	private boolean hasFlag(NedNode node)
 	{
+		PswgExtProp props = PswgExtProp.get(player);
+		if (props != null)
+			return props.hasFlag(node.outputs.get(0).text);
 		return false;
 	}
 }
