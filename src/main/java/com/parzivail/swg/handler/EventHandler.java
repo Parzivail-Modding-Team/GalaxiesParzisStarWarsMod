@@ -144,6 +144,8 @@ public class EventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(RenderGameOverlayEvent.Pre event)
 	{
+		Client.guiQuestNotification.update();
+
 		if (Client.mc.thePlayer != null)
 		{
 			MultipartFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);

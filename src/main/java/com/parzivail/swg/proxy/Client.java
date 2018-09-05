@@ -3,6 +3,7 @@ package com.parzivail.swg.proxy;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
+import com.parzivail.swg.gui.GuiQuestNotification;
 import com.parzivail.swg.npc.NpcJawa;
 import com.parzivail.swg.npc.NpcMerchant;
 import com.parzivail.swg.registry.BlockRegister;
@@ -89,6 +90,8 @@ public class Client extends Common
 	public static TrueTypeFont brandonReg;
 	public static TrueTypeFont latoSemibold;
 
+	public static GuiQuestNotification guiQuestNotification;
+
 	@Override
 	public void init()
 	{
@@ -99,6 +102,8 @@ public class Client extends Common
 		mc.entityRenderer = new PEntityRenderer(mc, mc.getResourceManager());
 
 		ReflectionHelper.setPrivateValue(Minecraft.class, mc, new PFramebuffer(mc.displayWidth, mc.displayHeight, true), "framebufferMc", "field_147124_at", "au");
+
+		guiQuestNotification = new GuiQuestNotification();
 
 		//frSansSerif = createFont("sansserif");
 		//frSerif = createFont("serif");

@@ -39,6 +39,11 @@ public class KeyHandler
 			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(Client.mc.thePlayer));
 		}
 
+		if (Keyboard.isKeyDown(Keyboard.KEY_I))
+		{
+			Client.guiQuestNotification.show();
+		}
+
 		//		if (KeybindRegistry.keyDebug.getIsKeyPressed())
 		//		{
 		//		}
