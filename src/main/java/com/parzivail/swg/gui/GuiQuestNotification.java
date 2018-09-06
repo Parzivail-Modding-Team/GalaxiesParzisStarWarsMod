@@ -1,5 +1,6 @@
 package com.parzivail.swg.gui;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.relauncher.Side;
@@ -13,7 +14,7 @@ import org.lwjgl.opengl.GL11;
 @SideOnly(Side.CLIENT)
 public class GuiQuestNotification extends Gui
 {
-	private static final ResourceLocation achievementBg = new ResourceLocation("textures/gui/achievement/achievement_background.png");
+	private static final ResourceLocation achievementBg = Resources.location("textures/gui/questnotif.png");
 	private int width;
 	private String achievementTitle;
 	private String achievementDescription;
@@ -83,7 +84,7 @@ public class GuiQuestNotification extends Gui
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			Client.mc.getTextureManager().bindTexture(achievementBg);
 			GL11.glDisable(GL11.GL_LIGHTING);
-			drawTexturedModalRect(i, j, 96, 202, 160, 32);
+			drawTexturedModalRect(i, j, 0, 0, 160, 32);
 
 			if (permanentNotification)
 			{
