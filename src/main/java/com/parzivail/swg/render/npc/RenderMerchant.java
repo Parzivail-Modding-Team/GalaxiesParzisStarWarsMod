@@ -1,9 +1,9 @@
 package com.parzivail.swg.render.npc;
 
 import com.parzivail.swg.npc.NpcMerchant;
+import com.parzivail.swg.npc.NpcProfession;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -20,17 +20,16 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderMerchant extends RendererLivingEntity
 {
-	public ModelBiped modelBipedMain;
-	public ModelBiped modelArmorChestplate;
-	public ModelBiped modelArmor;
-	private static final String __OBFID = "CL_00001020";
+	public ModelPlayer modelBipedMain;
+	public ModelPlayer modelArmorChestplate;
+	public ModelPlayer modelArmor;
 
 	public RenderMerchant()
 	{
-		super(new ModelBiped(0.0F), 0.5F);
-		modelBipedMain = (ModelBiped)mainModel;
-		modelArmorChestplate = new ModelBiped(1.0F);
-		modelArmor = new ModelBiped(0.5F);
+		super(new ModelPlayer(0.0F, false), 0.5F);
+		modelBipedMain = (ModelPlayer)mainModel;
+		modelArmorChestplate = new ModelPlayer(1.0F, false);
+		modelArmor = new ModelPlayer(0.5F, false);
 	}
 
 	/**
@@ -132,7 +131,7 @@ public class RenderMerchant extends RendererLivingEntity
 	 */
 	protected ResourceLocation getEntityTexture(NpcMerchant p_110775_1_)
 	{
-		return NpcMerchant.genericSkins[p_110775_1_.getSkin()];
+		return NpcMerchant.professionSkins.get(NpcProfession.fromIndex(p_110775_1_.getProfession()))[p_110775_1_.getSkin()];
 	}
 
 	protected void renderEquippedItems(NpcMerchant p_77029_1_, float p_77029_2_)

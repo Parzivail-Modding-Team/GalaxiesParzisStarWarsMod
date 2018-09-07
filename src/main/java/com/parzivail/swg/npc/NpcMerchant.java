@@ -18,14 +18,26 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import java.util.HashMap;
+
 public class NpcMerchant extends EntityCreature
 {
-	public static final ResourceLocation[] genericSkins = {
-			Resources.location("textures/npc/genericmale1.png"),
-			Resources.location("textures/npc/genericmale2.png"),
-			Resources.location("textures/npc/genericfem1.png"),
-			Resources.location("textures/npc/genericfem2.png"),
-			};
+	public static final HashMap<NpcProfession, ResourceLocation[]> professionSkins = new HashMap<>();
+
+	static
+	{
+		professionSkins.put(NpcProfession.Merchant, new ResourceLocation[] {
+				Resources.location("textures/npc/moseisleymerchant1.png"),
+				Resources.location("textures/npc/moseisleymerchant2.png"),
+				Resources.location("textures/npc/moseisleymerchant3.png"),
+				});
+		professionSkins.put(NpcProfession.Gunsmith, new ResourceLocation[] {
+				Resources.location("textures/npc/gunsmoth1.png")
+		});
+		professionSkins.put(NpcProfession.VehicleSalesman, new ResourceLocation[] {
+				Resources.location("textures/npc/vehicledealer.png")
+		});
+	}
 
 	private static final int DW_PROFESSION = 16;
 	private static final int DW_HEIGHT = 17;
@@ -33,14 +45,14 @@ public class NpcMerchant extends EntityCreature
 
 	public NpcMerchant(World world)
 	{
-		this(world, world.rand.nextInt(5));
+		this(world, world.rand.nextInt(professionSkins.size()));
 	}
 
 	public NpcMerchant(World world, int profession)
 	{
 		super(world);
 		setProfession(profession);
-		setSkin(world.rand.nextInt(genericSkins.length));
+		setSkin(world.rand.nextInt(professionSkins.get(NpcProfession.fromIndex(profession)).length));
 		setHeight(world.rand.nextInt(7));
 		setSize(0.6F, 1.8F);
 		getNavigator().setBreakDoors(true);

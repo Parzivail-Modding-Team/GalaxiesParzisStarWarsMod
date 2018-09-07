@@ -6,6 +6,7 @@ import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.IGuiOverlay;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.item.blaster.data.BlasterAttachments;
 import com.parzivail.swg.item.blaster.data.BlasterData;
 import com.parzivail.swg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.swg.item.blaster.data.powerpack.BlasterPowerPack;
@@ -130,7 +131,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 
 		float size = 2;
 
-		if (bd.isAimingDownSights)
+		if (bd.isAimingDownSights && bd.getScope() != BlasterAttachments.scopeIronsights)
 		{
 			GL.Enable(EnableCap.LineSmooth);
 			GL11.glHint(GL11.GL_LINE_SMOOTH_HINT, GL11.GL_NICEST);
@@ -187,7 +188,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 	{
 		BlasterData bd = new BlasterData(stack);
 
-		if (bd.shotsRemaining <= 0)
+		if (bd.shotsRemaining <= 0 && !player.capabilities.isCreativeMode)
 		{
 			Pair<Integer, BlasterPowerPack> nextPack = getAnotherPack(player);
 
@@ -207,7 +208,6 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 
 		if (!world.isRemote)
 		{
-
 			float spread = getSpreadAmount(stack, player);
 			Vec3 look = player.getLook(0);
 			look.xCoord += (world.rand.nextFloat() * 2 - 1) * spread;
@@ -235,7 +235,8 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 				StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, 1, block.sideHitFace);
 			}
 
-			bd.shotsRemaining--;
+			if (!player.capabilities.isCreativeMode)
+				bd.shotsRemaining--;
 
 			bd.serialize(stack.stackTagCompound);
 		}
