@@ -32,7 +32,7 @@ public class NpcMerchant extends EntityCreature
 				Resources.location("textures/npc/moseisleymerchant3.png"),
 				});
 		professionSkins.put(NpcProfession.Gunsmith, new ResourceLocation[] {
-				Resources.location("textures/npc/gunsmoth1.png")
+				Resources.location("textures/npc/gunsmith1.png"), Resources.location("textures/npc/gunsmith2.png")
 		});
 		professionSkins.put(NpcProfession.VehicleSalesman, new ResourceLocation[] {
 				Resources.location("textures/npc/vehicledealer.png")
