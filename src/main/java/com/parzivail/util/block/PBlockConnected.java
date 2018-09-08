@@ -96,37 +96,7 @@ public class PBlockConnected extends PBlock
 				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 + 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 + 1, par3, par4)))
 					isOpenRight = true;
 
-				if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
-					return icons[15];
-				else if (isOpenUp && isOpenDown && isOpenLeft)
-					return icons[13];
-				else if (isOpenUp && isOpenDown && isOpenRight)
-					return icons[14];
-				else if (isOpenUp && isOpenLeft && isOpenRight)
-					return icons[11];
-				else if (isOpenDown && isOpenLeft && isOpenRight)
-					return icons[12];
-				else if (isOpenDown && isOpenUp)
-					return icons[6];
-				else if (isOpenLeft && isOpenRight)
-					return icons[5];
-				else if (isOpenDown && isOpenLeft)
-					return icons[9];
-				else if (isOpenDown && isOpenRight)
-					return icons[10];
-				else if (isOpenUp && isOpenLeft)
-					return icons[7];
-				else if (isOpenUp && isOpenRight)
-					return icons[8];
-				else if (isOpenDown)
-					return icons[1];
-				else if (isOpenUp)
-					return icons[2];
-				else if (isOpenLeft)
-					return icons[4];
-				else if (isOpenRight)
-					return icons[3];
-				break;
+				return getIconFor(icons, isOpenUp, isOpenDown, isOpenLeft, isOpenRight);
 			case 3:
 				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
 					isOpenDown = true;
@@ -140,37 +110,7 @@ public class PBlockConnected extends PBlock
 				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2 + 1, par3, par4), par1IBlockAccess.getBlockMetadata(par2 + 1, par3, par4)))
 					isOpenRight = true;
 
-				if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
-					return icons[15];
-				else if (isOpenUp && isOpenDown && isOpenLeft)
-					return icons[14];
-				else if (isOpenUp && isOpenDown && isOpenRight)
-					return icons[13];
-				else if (isOpenUp && isOpenLeft && isOpenRight)
-					return icons[11];
-				else if (isOpenDown && isOpenLeft && isOpenRight)
-					return icons[12];
-				else if (isOpenDown && isOpenUp)
-					return icons[6];
-				else if (isOpenLeft && isOpenRight)
-					return icons[5];
-				else if (isOpenDown && isOpenLeft)
-					return icons[10];
-				else if (isOpenDown && isOpenRight)
-					return icons[9];
-				else if (isOpenUp && isOpenLeft)
-					return icons[8];
-				else if (isOpenUp && isOpenRight)
-					return icons[7];
-				else if (isOpenDown)
-					return icons[1];
-				else if (isOpenUp)
-					return icons[2];
-				else if (isOpenLeft)
-					return icons[3];
-				else if (isOpenRight)
-					return icons[4];
-				break;
+				return getIconFor(icons, isOpenUp, isOpenDown, isOpenLeft, isOpenRight);
 			case 4:
 				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
 					isOpenDown = true;
@@ -184,37 +124,7 @@ public class PBlockConnected extends PBlock
 				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 + 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 + 1)))
 					isOpenRight = true;
 
-				if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
-					return icons[15];
-				else if (isOpenUp && isOpenDown && isOpenLeft)
-					return icons[14];
-				else if (isOpenUp && isOpenDown && isOpenRight)
-					return icons[13];
-				else if (isOpenUp && isOpenLeft && isOpenRight)
-					return icons[11];
-				else if (isOpenDown && isOpenLeft && isOpenRight)
-					return icons[12];
-				else if (isOpenDown && isOpenUp)
-					return icons[6];
-				else if (isOpenLeft && isOpenRight)
-					return icons[5];
-				else if (isOpenDown && isOpenLeft)
-					return icons[10];
-				else if (isOpenDown && isOpenRight)
-					return icons[9];
-				else if (isOpenUp && isOpenLeft)
-					return icons[8];
-				else if (isOpenUp && isOpenRight)
-					return icons[7];
-				else if (isOpenDown)
-					return icons[1];
-				else if (isOpenUp)
-					return icons[2];
-				else if (isOpenLeft)
-					return icons[3];
-				else if (isOpenRight)
-					return icons[4];
-				break;
+				return getIconFor(icons, isOpenUp, isOpenDown, isOpenLeft, isOpenRight);
 			case 5:
 				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3 - 1, par4), par1IBlockAccess.getBlockMetadata(par2, par3 - 1, par4)))
 					isOpenDown = true;
@@ -228,39 +138,44 @@ public class PBlockConnected extends PBlock
 				if (shouldConnectToBlock(par1IBlockAccess, par2, par3, par4, par1IBlockAccess.getBlock(par2, par3, par4 + 1), par1IBlockAccess.getBlockMetadata(par2, par3, par4 + 1)))
 					isOpenRight = true;
 
-				if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
-					return icons[15];
-				else if (isOpenUp && isOpenDown && isOpenLeft)
-					return icons[13];
-				else if (isOpenUp && isOpenDown && isOpenRight)
-					return icons[14];
-				else if (isOpenUp && isOpenLeft && isOpenRight)
-					return icons[11];
-				else if (isOpenDown && isOpenLeft && isOpenRight)
-					return icons[12];
-				else if (isOpenDown && isOpenUp)
-					return icons[6];
-				else if (isOpenLeft && isOpenRight)
-					return icons[5];
-				else if (isOpenDown && isOpenLeft)
-					return icons[9];
-				else if (isOpenDown && isOpenRight)
-					return icons[10];
-				else if (isOpenUp && isOpenLeft)
-					return icons[7];
-				else if (isOpenUp && isOpenRight)
-					return icons[8];
-				else if (isOpenDown)
-					return icons[1];
-				else if (isOpenUp)
-					return icons[2];
-				else if (isOpenLeft)
-					return icons[4];
-				else if (isOpenRight)
-					return icons[3];
-				break;
+				return getIconFor(icons, isOpenUp, isOpenDown, isOpenLeft, isOpenRight);
 		}
 
+		return icons[0];
+	}
+
+	IIcon getIconFor(IIcon[] icons, boolean isOpenUp, boolean isOpenDown, boolean isOpenLeft, boolean isOpenRight)
+	{
+		if (isOpenUp && isOpenDown && isOpenLeft && isOpenRight)
+			return icons[15];
+		else if (isOpenUp && isOpenDown && isOpenLeft)
+			return icons[13];
+		else if (isOpenUp && isOpenDown && isOpenRight)
+			return icons[14];
+		else if (isOpenUp && isOpenLeft && isOpenRight)
+			return icons[11];
+		else if (isOpenDown && isOpenLeft && isOpenRight)
+			return icons[12];
+		else if (isOpenDown && isOpenUp)
+			return icons[6];
+		else if (isOpenLeft && isOpenRight)
+			return icons[5];
+		else if (isOpenDown && isOpenLeft)
+			return icons[9];
+		else if (isOpenDown && isOpenRight)
+			return icons[10];
+		else if (isOpenUp && isOpenLeft)
+			return icons[7];
+		else if (isOpenUp && isOpenRight)
+			return icons[8];
+		else if (isOpenDown)
+			return icons[1];
+		else if (isOpenUp)
+			return icons[2];
+		else if (isOpenLeft)
+			return icons[4];
+		else if (isOpenRight)
+			return icons[3];
 		return icons[0];
 	}
 

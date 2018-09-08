@@ -143,7 +143,7 @@ public class BlockRegister
 		register(hardpackSnow = new PBlock("hardpackSnow"));
 		register(hothDoor = new PBlock("hothDoor"));
 		register(hothSnowCut = new PBlock("hothSnowCut"));
-		register(hothSandbag = new PBlockConnected("hothSandbag", "hothSandbag", Material.snow));
+		register(hothSandbag = new PBlockConnected("hothSandbag", "hothSandbag", Material.craftedSnow));
 		register(mud = new PBlock("mud"));
 
 		register(templeStone = new PBlock("templeStone"));

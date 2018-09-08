@@ -114,7 +114,7 @@ public class NpcMerchant extends EntityCreature
 	public void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
 		super.writeEntityToNBT(tagCompound);
-		tagCompound.setInteger("Profession", getProfession());
+		tagCompound.setInteger("profession", getProfession());
 		tagCompound.setInteger("height", getHeight());
 		tagCompound.setInteger("skin", getSkin());
 	}
@@ -125,7 +125,7 @@ public class NpcMerchant extends EntityCreature
 	public void readEntityFromNBT(NBTTagCompound tagCompund)
 	{
 		super.readEntityFromNBT(tagCompund);
-		setProfession(tagCompund.getInteger("Profession"));
+		setProfession(tagCompund.getInteger("profession"));
 		setHeight(tagCompund.getInteger("height"));
 		setSkin(tagCompund.getInteger("skin"));
 	}
