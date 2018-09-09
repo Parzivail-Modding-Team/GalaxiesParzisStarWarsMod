@@ -1,6 +1,9 @@
 package com.parzivail.swg.render.light;
 
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.tile.light.TileWallIndicator;
+import com.parzivail.swg.world.PswgWorldData;
+import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.entity.EntityTilePassthrough;
 import com.parzivail.util.render.ShaderModelRenderer;
 import com.parzivail.util.ui.Fx.Util;
@@ -53,7 +56,12 @@ public class ModelWallIndicator extends ModelBase
 			float g = (float)(1 / (Math.E - h));
 			float breath = (float)((Math.exp(Math.sin(frame / 16f)) - h) * g);
 
-			((ShaderModelRenderer)bulb).color = Util.GetRgb((int)(breath * 255), 0, 0);
+			PswgWorldData data = PswgWorldDataHandler.get(Client.mc.theWorld).data;
+
+			if (data.getIsImperialMeltdown())
+				((ShaderModelRenderer)bulb).color = Util.GetRgb((int)(breath * 255), 0, 0);
+			else
+				((ShaderModelRenderer)bulb).color = 0xFFFFFF;
 		}
 		wallMount.render(f5);
 	}

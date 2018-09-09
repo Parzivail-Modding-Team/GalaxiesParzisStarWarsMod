@@ -9,11 +9,13 @@ import com.parzivail.swg.item.IGuiOverlay;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.network.MessagePswgWorldDataSync;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
 import com.parzivail.swg.ship.MultipartFlightModel;
+import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.ShaderHelper;
@@ -22,6 +24,7 @@ import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
@@ -48,7 +51,6 @@ import org.lwjgl.opengl.GL11;
  */
 public class EventHandler
 {
-
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void on(InitGuiEvent.Pre event)
@@ -70,6 +72,12 @@ public class EventHandler
 		catch (Exception ignored)
 		{
 		}
+	}
+
+	@SubscribeEvent
+	public void on(PlayerEvent.PlayerLoggedInEvent event)
+	{
+		StarWarsGalaxy.network.sendToAll(new MessagePswgWorldDataSync(PswgWorldDataHandler.get(event.player.worldObj)));
 	}
 
 	@SubscribeEvent

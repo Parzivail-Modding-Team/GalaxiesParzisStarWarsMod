@@ -75,6 +75,7 @@ public class StarWarsGalaxy
 		registerMessageClient(MessageSpawnParticle.class);
 		registerMessageClient(MessageCreateDecal.class);
 		registerMessageClient(MessagePswgExtPropSync.class);
+		registerMessageClient(MessagePswgWorldDataSync.class);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -91,13 +92,6 @@ public class StarWarsGalaxy
 		network.registerMessage(messageHandler, messageHandler, packetId, Side.CLIENT);
 		Lumberjack.debug("Registered client packet \"" + messageHandler + "\" as packet ID " + packetId);
 		packetId++;
-	}
-
-	@SuppressWarnings("unchecked")
-	private void registerMessageDual(Class messageHandler)
-	{
-		registerMessageClient(messageHandler);
-		registerMessageServer(messageHandler);
 	}
 
 	@Mod.EventHandler
