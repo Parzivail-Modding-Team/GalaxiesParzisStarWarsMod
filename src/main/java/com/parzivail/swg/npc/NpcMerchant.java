@@ -23,6 +23,9 @@ import java.util.HashMap;
 public class NpcMerchant extends EntityCreature
 {
 	public static final HashMap<NpcProfession, ResourceLocation[]> professionSkins = new HashMap<>();
+	private static final int DW_PROFESSION = 16;
+	private static final int DW_HEIGHT = 17;
+	private static final int DW_SKIN = 18;
 
 	static
 	{
@@ -38,10 +41,6 @@ public class NpcMerchant extends EntityCreature
 				Resources.location("textures/npc/vehicledealer.png")
 		});
 	}
-
-	private static final int DW_PROFESSION = 16;
-	private static final int DW_HEIGHT = 17;
-	private static final int DW_SKIN = 18;
 
 	public NpcMerchant(World world)
 	{
@@ -162,19 +161,14 @@ public class NpcMerchant extends EntityCreature
 		return "mob.villager.death";
 	}
 
-	public void setProfession(int p_70938_1_)
-	{
-		dataWatcher.updateObject(DW_PROFESSION, p_70938_1_);
-	}
-
 	public int getProfession()
 	{
 		return dataWatcher.getWatchableObjectInt(DW_PROFESSION);
 	}
 
-	public void setHeight(int p_70938_1_)
+	public void setProfession(int p_70938_1_)
 	{
-		dataWatcher.updateObject(DW_HEIGHT, p_70938_1_);
+		dataWatcher.updateObject(DW_PROFESSION, p_70938_1_);
 	}
 
 	public int getHeight()
@@ -182,14 +176,19 @@ public class NpcMerchant extends EntityCreature
 		return dataWatcher.getWatchableObjectInt(DW_HEIGHT);
 	}
 
-	public void setSkin(int p_70938_1_)
+	public void setHeight(int p_70938_1_)
 	{
-		dataWatcher.updateObject(DW_SKIN, p_70938_1_);
+		dataWatcher.updateObject(DW_HEIGHT, p_70938_1_);
 	}
 
 	public int getSkin()
 	{
 		return dataWatcher.getWatchableObjectInt(DW_SKIN);
+	}
+
+	public void setSkin(int p_70938_1_)
+	{
+		dataWatcher.updateObject(DW_SKIN, p_70938_1_);
 	}
 
 	public boolean allowLeashing()

@@ -12,8 +12,8 @@ import java.util.function.Function;
 
 public class AmbientSounds
 {
-	private static int ambientTickCountdown = -1;
 	private static final ArrayList<AmbientSoundEntry> sounds = new ArrayList<>();
+	private static int ambientTickCountdown = -1;
 
 	static
 	{

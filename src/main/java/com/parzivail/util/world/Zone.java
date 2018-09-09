@@ -5,15 +5,14 @@ import org.lwjgl.util.vector.Vector3f;
 
 public class Zone
 {
+	public final int dimension;
+	public final String name;
 	private final int minX;
 	private final int minY;
 	private final int minZ;
 	private final int maxX;
 	private final int maxY;
 	private final int maxZ;
-
-	public final int dimension;
-	public final String name;
 
 	public Zone(int dimension, int minX, int minY, int minZ, int maxX, int maxY, int maxZ, String name)
 	{

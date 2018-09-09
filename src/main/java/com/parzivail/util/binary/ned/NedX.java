@@ -23,27 +23,6 @@ public class NedX
 		this.nodes = nodes;
 	}
 
-	public NedInteraction createInteraction(EntityPlayer player)
-	{
-		return new NedInteraction(player, this, getStartNode());
-	}
-
-	public NedNode getStartNode()
-	{
-		for (NedNode node : nodes)
-			if (node.type.equals(NodeType.Start))
-				return node;
-		return null;
-	}
-
-	public NedNode getNodeById(UUID id)
-	{
-		for (NedNode node : nodes)
-			if (node.id.equals(id))
-				return node;
-		return null;
-	}
-
 	public static NedX Load(ResourceLocation filename)
 	{
 		try
@@ -94,5 +73,26 @@ public class NedX
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	public NedInteraction createInteraction(EntityPlayer player)
+	{
+		return new NedInteraction(player, this, getStartNode());
+	}
+
+	public NedNode getStartNode()
+	{
+		for (NedNode node : nodes)
+			if (node.type.equals(NodeType.Start))
+				return node;
+		return null;
+	}
+
+	public NedNode getNodeById(UUID id)
+	{
+		for (NedNode node : nodes)
+			if (node.id.equals(id))
+				return node;
+		return null;
 	}
 }

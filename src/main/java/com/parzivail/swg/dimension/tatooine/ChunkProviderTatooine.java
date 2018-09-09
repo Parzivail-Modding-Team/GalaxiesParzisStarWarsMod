@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class ChunkProviderTatooine implements IChunkProvider
 {
-	private final World worldObj;
 	public static final ITerrainHeightmap terrain = new MultiCompositeTerrain(0, 800, new TerrainTatooineCanyons(), new CompositeTerrain(new TerrainLayer(0, Function.NCTurbulent, Method.Add, 300, 50), new TerrainLayer(1, Function.NCTurbulent, Method.Multiply, 300, 4), new TerrainLayer(2, Function.Simplex, Method.Add, 400, 25), new TerrainLayer(3, Function.Simplex, Method.Add, 50, 30), new TerrainLayer(4, Function.InvNCTurbulent, Method.Multiply, 100, 0.15)), new CompositeTerrain(new TerrainLayer(0, Function.NCTurbulent, Method.Add, 150, 10), new TerrainLayer(1, Function.NCTurbulent, Method.Multiply, 150, 5), new TerrainLayer(2, Function.Simplex, Method.Add, 100, 20), new TerrainLayer(3, Function.Simplex, Method.Add, 100, 20), new TerrainLayer(4, Function.InvNCTurbulent, Method.Multiply, 40, 0.5)), new CompositeTerrain(new TerrainLayer(0, Function.NCTurbulent, Method.Add, 300, 10), new TerrainLayer(1, Function.NCTurbulent, Method.Multiply, 300, 5), new TerrainLayer(2, Function.Simplex, Method.Add, 400, 25), new TerrainLayer(3, Function.Simplex, Method.Add, 50, 25), new TerrainLayer(4, Function.InvNCTurbulent, Method.Multiply, 70, 0.8)), new CompositeTerrain(new TerrainLayer(0, Function.NCTurbulent, Method.Add, 300, 50), new TerrainLayer(1, Function.NCTurbulent, Method.Multiply, 300, 4), new TerrainLayer(2, Function.Simplex, Method.Add, 400, 25), new TerrainLayer(3, Function.Simplex, Method.Add, 50, 25), new TerrainLayer(4, Function.InvNCTurbulent, Method.Multiply, 100, 0.8)));
+	private final World worldObj;
 
 	public ChunkProviderTatooine(World worldObj, long seed)
 	{

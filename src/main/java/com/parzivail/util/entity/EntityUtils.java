@@ -122,7 +122,7 @@ public class EntityUtils
 			mobId++;
 		EntityRegistry.registerModEntity(entityClass, entityName, mobId, StarWarsGalaxy.instance, 80, 1, true);
 		EntityList.idToClassMap.put(Integer.valueOf(mobId), entityClass);
-		Lumberjack.debug("Registered entity \"" + entityName + "\" as ID " + String.valueOf(mobId));
+		Lumberjack.debug("Registered entity \"" + entityName + "\" as ID " + mobId);
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class EntityUtils
 		EntityRegistry.registerModEntity(mobClass, mobName, mobId, StarWarsGalaxy.instance, 80, 1, true);
 		EntityList.idToClassMap.put(Integer.valueOf(mobId), mobClass);
 		EntityList.entityEggs.put(Integer.valueOf(mobId), new EntityList.EntityEggInfo(mobId, bgColor, fgColor));
-		Lumberjack.debug("Registered entity (and egg) \"" + mobName + "\" as ID " + String.valueOf(mobId));
+		Lumberjack.debug("Registered entity (and egg) \"" + mobName + "\" as ID " + mobId);
 	}
 
 	//	public static boolean isRiding(Entity entity, Class<? extends Entity> clazz)

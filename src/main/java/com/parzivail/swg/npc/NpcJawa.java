@@ -123,14 +123,14 @@ public class NpcJawa extends EntityCreature
 		return "mob.villager.death";
 	}
 
-	public void setHeight(int p_70938_1_)
-	{
-		dataWatcher.updateObject(DW_HEIGHT, p_70938_1_);
-	}
-
 	public int getHeight()
 	{
 		return dataWatcher.getWatchableObjectInt(DW_HEIGHT);
+	}
+
+	public void setHeight(int p_70938_1_)
+	{
+		dataWatcher.updateObject(DW_HEIGHT, p_70938_1_);
 	}
 
 	public boolean allowLeashing()

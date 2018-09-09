@@ -67,15 +67,15 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 		return creditBalance;
 	}
 
-	public void addCreditBalance(int delta)
-	{
-		creditBalance += delta;
-		sync();
-	}
-
 	public void setCreditBalance(int creditBalance)
 	{
 		this.creditBalance = creditBalance;
+		sync();
+	}
+
+	public void addCreditBalance(int delta)
+	{
+		creditBalance += delta;
 		sync();
 	}
 

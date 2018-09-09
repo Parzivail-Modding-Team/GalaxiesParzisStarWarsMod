@@ -10,14 +10,14 @@ import net.minecraft.entity.Entity;
 @SideOnly(Side.CLIENT)
 public class ModelPlayer extends ModelBiped
 {
+	private final ModelRenderer field_178729_w;
+	private final ModelRenderer field_178736_x;
+	private final boolean field_178735_y;
 	public ModelRenderer bipedLeftArmwear;
 	public ModelRenderer bipedRightArmwear;
 	public ModelRenderer bipedLeftLegwear;
 	public ModelRenderer bipedRightLegwear;
 	public ModelRenderer bipedBodyWear;
-	private final ModelRenderer field_178729_w;
-	private final ModelRenderer field_178736_x;
-	private final boolean field_178735_y;
 
 	public ModelPlayer(float scaleFactor, boolean smallArms)
 	{

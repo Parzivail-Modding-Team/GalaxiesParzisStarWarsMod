@@ -11,11 +11,6 @@ public enum NpcProfession
 		this.index = index;
 	}
 
-	public int getIndex()
-	{
-		return index;
-	}
-
 	public static NpcProfession fromIndex(int index)
 	{
 		for (NpcProfession p : NpcProfession.values())
@@ -24,5 +19,10 @@ public enum NpcProfession
 				return p;
 		}
 		return null;
+	}
+
+	public int getIndex()
+	{
+		return index;
 	}
 }

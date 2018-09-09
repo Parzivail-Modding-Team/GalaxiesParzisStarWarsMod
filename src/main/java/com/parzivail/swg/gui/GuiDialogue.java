@@ -29,15 +29,13 @@ public class GuiDialogue extends GuiContainer
 	private final Entity target;
 	private final EntityPlayer player;
 	private final NedInteraction interaction;
+	private final ModernButton[] options = new ModernButton[4];
 	private AnimatedValue textFadeOutValue = new AnimatedValue(0, 500);
-
 	private ModernButton bOpt1;
 	private ModernButton bOpt2;
 	private ModernButton bOpt3;
 	private ModernButton bOpt4;
 	private ModernArrowButton bNext;
-	private final ModernButton[] options = new ModernButton[4];
-
 	private String npcDialogue = "";
 
 	public GuiDialogue(InventoryPlayer inventoryPlayer, Entity target)

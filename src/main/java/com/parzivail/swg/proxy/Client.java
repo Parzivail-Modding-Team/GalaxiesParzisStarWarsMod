@@ -92,6 +92,13 @@ public class Client extends Common
 
 	public static GuiQuestNotification guiQuestNotification;
 
+	private static FontRenderer createFont(String file)
+	{
+		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
+		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
+		return renderer;
+	}
+
 	@Override
 	public void init()
 	{
@@ -228,13 +235,6 @@ public class Client extends Common
 			e.printStackTrace();
 		}
 		return null;
-	}
-
-	private static FontRenderer createFont(String file)
-	{
-		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
-		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
-		return renderer;
 	}
 
 	@Override

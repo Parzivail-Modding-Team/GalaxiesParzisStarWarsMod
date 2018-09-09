@@ -25,17 +25,10 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 {
 	@SideOnly(Side.CLIENT)
 	public EntityCinematicCamera camera;
-
-	private EntitySeat[] seats;
-	private UUID[] searchingSeats;
-	private int[] clientSearchingSeats;
-	private boolean doesClientKnowSeats;
-
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
 	public Vector3f angularMomentum;
 	public float throttle;
-
 	/**
 	 * Distance from the bottom of the model to the "center" of it, from which it will rotate in a roll
 	 */
@@ -44,8 +37,11 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	 * Distance we need to translate the model up to make sure the bottom is in line with the entity bottom
 	 */
 	public float verticalGroundingOffset;
-
 	public ShipData data;
+	private EntitySeat[] seats;
+	private UUID[] searchingSeats;
+	private int[] clientSearchingSeats;
+	private boolean doesClientKnowSeats;
 	private SeatData[] seatData;
 	private Entity driver;
 
