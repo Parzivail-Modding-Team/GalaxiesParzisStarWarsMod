@@ -11,8 +11,6 @@ import com.parzivail.swg.item.blaster.data.BlasterData;
 import com.parzivail.swg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.swg.item.blaster.data.powerpack.BlasterPowerPack;
 import com.parzivail.swg.render.decal.Decal;
-import com.parzivail.swg.world.PswgWorldData;
-import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.audio.SoundHandler;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.common.Pair;
@@ -99,20 +97,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 	{
 		BlasterData bd = new BlasterData(stack);
 
-		if (player.isSneaking())
-		{
-			if (!world.isRemote)
-			{
-				// TODO: remove
-				//				PswgExtProp props = PswgExtProp.get(player);
-				//				if (props != null)
-				//					props.addCreditBalance(1000);
-				PswgWorldData data = PswgWorldDataHandler.get(world).data;
-				data.setIsImperialMeltdown(!data.getIsImperialMeltdown());
-			}
-		}
-		else
-			bd.isAimingDownSights = !bd.isAimingDownSights;
+		bd.isAimingDownSights = !bd.isAimingDownSights;
 
 		bd.serialize(stack.stackTagCompound);
 		return stack;
