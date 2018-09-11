@@ -9,7 +9,8 @@ pswg.gui.equipped=Equipped
 pswg.gui.buy=Buy
 pswg.gui.reticle=Reticle
 pswg.gui.xzoom=%sx zoom
-pswg.gui.recoilReduction=%s VRR/%s HRR
+pswg.gui.gripStats=%s VRR/%s HRR
+pswg.gui.barrelStats=%s VRR/%s HRR/%s VSR/%s HSR/%s NR/%s RI
 
 pswg.blaster.scope.ironsight=Ironsights
 pswg.blaster.scope.redDot=Red Dot Sight
@@ -19,5 +20,37 @@ pswg.blaster.scope.acog=ACOG Scope
 pswg.blaster.scope.spitfire=Spitfire Scope
 
 pswg.blaster.barrel.default=Standard Barrel
+pswg.blaster.barrel.compensator=Compensator
+pswg.blaster.barrel.extended=Extended
+pswg.blaster.barrel.laser=Laser Underbarrel
+pswg.blaster.barrel.brake=Muzzle Brake
+pswg.blaster.barrel.suppressor=Suppressor
 
 pswg.blaster.grip.none=No Grip
+pswg.blaster.grip.fore=Foregrip
+
+item.pswg.rifle.a280.name=§oBlasTech§r A-280
+item.pswg.rifle.bowcaster.name=Wookiee Bowcaster
+item.pswg.rifle.cycler.name=Tusken Cycler
+item.pswg.rifle.defender.name=§oDDC§r Defender
+item.pswg.rifle.dh17.name=§oBlasTech§r DH-17
+item.pswg.rifle.dl18.name=§oBlasTech§r DL-18
+item.pswg.rifle.dl21.name=§oBlasTech§r DL-21
+item.pswg.rifle.dlt19.name=§oBlasTech§r DLT-19
+item.pswg.rifle.e11.name=§oBlasTech§r E-11
+item.pswg.rifle.ionization.name=Jawa Ionization Blaster
+item.pswg.rifle.rt97c.name=§oBlasTech§r RT-97C
+item.pswg.rifle.scout.name=§oBlasTech§r EC-17
+item.pswg.rifle.se14c.name=§oBlasTech§r SE-14C
+item.pswg.rifle.t21.name=§oBlasTech§r T-21
+
+item.pswg.binoc.mb450.name=§oLydree§r MB450 Macrobinoculars
+
+item.pswg.pack.smallGasCanister.name=Small Tibanna Gas Canister
+
+item.pswg.thermalDetonator.name=Thermal Detonator
+item.pswg.smokeGrenade.name=Smoke Grenade
+
+item.pswg.debugWizard.name=§aDebug Wizard§r
+
+tile.pswg.XXXX.name=XXXX

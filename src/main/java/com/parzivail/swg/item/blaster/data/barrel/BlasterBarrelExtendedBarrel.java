@@ -1,10 +1,10 @@
 package com.parzivail.swg.item.blaster.data.barrel;
 
-public class BarrelDefault extends BlasterBarrel
+public class BlasterBarrelExtendedBarrel extends BlasterBarrel
 {
-	public BarrelDefault()
+	public BlasterBarrelExtendedBarrel()
 	{
-		super("default", 0);
+		super("extended", 450);
 	}
 
 	@Override
@@ -34,12 +34,12 @@ public class BarrelDefault extends BlasterBarrel
 	@Override
 	public float getNoiseReduction()
 	{
-		return 0;
+		return 0.8f;
 	}
 
 	@Override
 	public float getRangeIncrease()
 	{
-		return 0;
+		return 0.5f;
 	}
 }

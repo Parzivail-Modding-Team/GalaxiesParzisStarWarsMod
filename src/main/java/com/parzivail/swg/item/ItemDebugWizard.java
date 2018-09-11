@@ -1,10 +1,8 @@
 package com.parzivail.swg.item;
 
-import com.parzivail.swg.world.PswgWorldData;
-import com.parzivail.swg.world.PswgWorldDataHandler;
+import com.parzivail.swg.player.PswgExtProp;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 public class ItemDebugWizard extends PItem
@@ -19,18 +17,12 @@ public class ItemDebugWizard extends PItem
 	{
 		if (player.isSneaking())
 		{
-			PswgWorldData data = PswgWorldDataHandler.get(world).data;
 			if (!world.isRemote)
 			{
 				// TODO: remove
-				//				PswgExtProp props = PswgExtProp.get(player);
-				//				if (props != null)
-				//					props.addCreditBalance(1000);
-				data.setIsImperialMeltdown(!data.getIsImperialMeltdown());
-			}
-			else
-			{
-				player.addChatMessage(new ChatComponentText(String.format("Is imperial meltdown: %s", !data.getIsImperialMeltdown())));
+				PswgExtProp props = PswgExtProp.get(player);
+				if (props != null)
+					props.addCreditBalance(1000);
 			}
 		}
 

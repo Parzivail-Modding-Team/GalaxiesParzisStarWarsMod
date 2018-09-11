@@ -1,10 +1,10 @@
 package com.parzivail.swg.item.blaster.data.barrel;
 
-public class BarrelDefault extends BlasterBarrel
+public class BlasterBarrelMuzzleBrake extends BlasterBarrel
 {
-	public BarrelDefault()
+	public BlasterBarrelMuzzleBrake()
 	{
-		super("default", 0);
+		super("brake", 450);
 	}
 
 	@Override
@@ -22,13 +22,13 @@ public class BarrelDefault extends BlasterBarrel
 	@Override
 	public float getVerticalRecoilReduction()
 	{
-		return 0;
+		return 0.6f;
 	}
 
 	@Override
 	public float getVerticalSpreadReduction()
 	{
-		return 0;
+		return 0.6f;
 	}
 
 	@Override

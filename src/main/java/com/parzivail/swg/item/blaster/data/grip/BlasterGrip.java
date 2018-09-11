@@ -18,7 +18,7 @@ public abstract class BlasterGrip extends BlasterAttachment
 	{
 		float vRR = getVerticalRecoilReduction();
 		float hRR = getHorizontalRecoilReduction();
-		return I18n.format(Resources.guiDot("recoilReduction"), MathFormat.DEC2.format(vRR), MathFormat.DEC2.format(hRR));
+		return I18n.format(Resources.guiDot("gripStats"), MathFormat.DEC2.format(vRR), MathFormat.DEC2.format(hRR));
 	}
 
 	public abstract float getVerticalRecoilReduction();

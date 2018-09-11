@@ -1,8 +1,8 @@
 package com.parzivail.swg.item.blaster.data;
 
-import com.parzivail.swg.item.blaster.data.barrel.BarrelDefault;
-import com.parzivail.swg.item.blaster.data.barrel.BlasterBarrel;
+import com.parzivail.swg.item.blaster.data.barrel.*;
 import com.parzivail.swg.item.blaster.data.grip.BlasterGrip;
+import com.parzivail.swg.item.blaster.data.grip.GripFore;
 import com.parzivail.swg.item.blaster.data.grip.GripNone;
 import com.parzivail.swg.item.blaster.data.powerpack.BlasterPowerPack;
 import com.parzivail.swg.item.blaster.data.powerpack.PowerPackSmallGasCanister;
@@ -39,10 +39,17 @@ public class BlasterAttachments
 		register(new ScopeSpitfire(), SCOPES);
 
 		register(barrelDefault, BARRELS);
+		register(new BlasterBarrelCompensator(), BARRELS);
+		register(new BlasterBarrelExtendedBarrel(), BARRELS);
+		register(new BlasterBarrelLaserUnderbarrel(), BARRELS);
+		register(new BlasterBarrelMuzzleBrake(), BARRELS);
+		register(new BlasterBarrelSuppressor(), BARRELS);
 
 		register(gripNone, GRIPS);
+		register(new GripFore(), GRIPS);
 
 		register(packNone, POWERPACKS);
+		register(new PowerPackSmallGasCanister(), POWERPACKS);
 	}
 
 	private static void register(BlasterAttachment attachment, List<BlasterAttachment> collection)

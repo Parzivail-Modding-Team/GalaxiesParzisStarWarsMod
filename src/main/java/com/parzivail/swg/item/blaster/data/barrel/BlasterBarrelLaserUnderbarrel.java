@@ -1,10 +1,10 @@
 package com.parzivail.swg.item.blaster.data.barrel;
 
-public class BarrelDefault extends BlasterBarrel
+public class BlasterBarrelLaserUnderbarrel extends BlasterBarrel
 {
-	public BarrelDefault()
+	public BlasterBarrelLaserUnderbarrel()
 	{
-		super("default", 0);
+		super("laser", 325);
 	}
 
 	@Override
@@ -16,7 +16,7 @@ public class BarrelDefault extends BlasterBarrel
 	@Override
 	public float getHorizontalSpreadReduction()
 	{
-		return 0;
+		return 0.5f;
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class BarrelDefault extends BlasterBarrel
 	@Override
 	public float getVerticalSpreadReduction()
 	{
-		return 0;
+		return 0.5f;
 	}
 
 	@Override

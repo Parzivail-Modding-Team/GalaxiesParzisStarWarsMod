@@ -5,6 +5,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.IGuiOverlay;
 import com.parzivail.swg.item.ILeftClickInterceptor;
+import com.parzivail.swg.item.ItemBlasterPowerPack;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.blaster.data.BlasterAttachments;
 import com.parzivail.swg.item.blaster.data.BlasterData;
@@ -15,10 +16,7 @@ import com.parzivail.util.audio.SoundHandler;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
-import com.parzivail.util.math.Ease;
-import com.parzivail.util.math.RaytraceHit;
-import com.parzivail.util.math.RaytraceHitBlock;
-import com.parzivail.util.math.RaytraceHitEntity;
+import com.parzivail.util.math.*;
 import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -168,7 +166,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			return 0;
 
 		double movement = Math.sqrt(player.moveForward * player.moveForward + player.moveStrafing * player.moveStrafing);
-		return descriptor.spread * (0.5f * (float)movement + 0.05f);
+		return descriptor.spread * (0.5f * (float)movement + 0.05f) * 2;
 	}
 
 	@Override
@@ -197,13 +195,21 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 		if (!world.isRemote)
 		{
 			float spread = getSpreadAmount(stack, player);
-			Vec3 look = player.getLook(0);
-			look.xCoord += (world.rand.nextFloat() * 2 - 1) * spread;
-			look.yCoord += (world.rand.nextFloat() * 2 - 1) * spread;
-			look.zCoord += (world.rand.nextFloat() * 2 - 1) * spread;
-			RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range, player, new Entity[0], true);
+			RotatedAxes ra = new RotatedAxes(270 - player.rotationYaw, -player.rotationPitch, 0);
 
-			SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx." + name, player.posX, player.posY, player.posZ, 1 + (float)world.rand.nextGaussian() / 10, 1);
+			float hS = (world.rand.nextFloat() * 2 - 1) * spread;
+			float vS = (world.rand.nextFloat() * 2 - 1) * spread;
+
+			float hSR = 1 - bd.getBarrel().getHorizontalSpreadReduction();
+			float vSR = 1 - bd.getBarrel().getVerticalSpreadReduction();
+
+			ra.rotateGlobalYaw(hS * hSR);
+			ra.rotateGlobalPitch(vS * vSR);
+
+			Vec3 look = Vec3.createVectorHelper(Math.cos(ra.getPitch() / 180f * Math.PI) * Math.cos(ra.getYaw() / 180f * Math.PI), Math.sin(ra.getPitch() / 180f * Math.PI), Math.cos(ra.getPitch() / 180f * Math.PI) * Math.sin(-ra.getYaw() / 180f * Math.PI));
+			RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * bd.getBarrel().getRangeIncrease(), player, new Entity[0], true);
+
+			SoundHandler.playSound((EntityPlayerMP)player, "pswg:swg.fx." + name, player.posX, player.posY, player.posZ, 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
 
 			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, descriptor.damage, descriptor.boltColor);
 			e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
@@ -230,8 +236,8 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 		}
 
 		// Recoil
-		player.rotationPitch -= descriptor.damage / 2;
-		player.rotationYaw += descriptor.damage / 5 * world.rand.nextGaussian();
+		player.rotationPitch -= (descriptor.damage / 2) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());
+		player.rotationYaw += (descriptor.damage / 5 * world.rand.nextGaussian()) * (1 - bd.getBarrel().getHorizontalRecoilReduction()) * (1 - bd.getGrip().getHorizontalRecoilReduction());
 	}
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(EntityPlayer player)
@@ -239,7 +245,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
 		{
 			ItemStack s = player.inventory.getStackInSlot(i);
-			BlasterPowerPack a = BlasterPowerPack.getPackForItem(s);
+			BlasterPowerPack a = ItemBlasterPowerPack.getPackType(s);
 			if (a == null)
 				continue;
 
