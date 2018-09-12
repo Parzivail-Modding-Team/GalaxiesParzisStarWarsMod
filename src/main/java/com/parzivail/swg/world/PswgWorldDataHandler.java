@@ -25,6 +25,17 @@ public class PswgWorldDataHandler extends WorldSavedData
 		data = new PswgWorldData(this);
 	}
 
+	public static PswgWorldDataHandler get(World world)
+	{
+		PswgWorldDataHandler data = (PswgWorldDataHandler)world.loadItemData(PswgWorldDataHandler.class, IDENTIFIER);
+		if (data == null)
+		{
+			data = new PswgWorldDataHandler();
+			world.setItemData(IDENTIFIER, data);
+		}
+		return data;
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt)
 	{
@@ -47,16 +58,5 @@ public class PswgWorldDataHandler extends WorldSavedData
 	{
 		markDirty();
 		StarWarsGalaxy.network.sendToAll(new MessagePswgWorldDataSync(this));
-	}
-
-	public static PswgWorldDataHandler get(World world)
-	{
-		PswgWorldDataHandler data = (PswgWorldDataHandler)world.loadItemData(PswgWorldDataHandler.class, IDENTIFIER);
-		if (data == null)
-		{
-			data = new PswgWorldDataHandler();
-			world.setItemData(IDENTIFIER, data);
-		}
-		return data;
 	}
 }
