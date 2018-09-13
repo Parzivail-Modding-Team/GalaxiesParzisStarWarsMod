@@ -1,6 +1,6 @@
 package com.parzivail.swg.dimension.tatooine;
 
-import com.parzivail.swg.Resources;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetWorldProvider;
 import com.parzivail.swg.dimension.SWGChunkManager;
 import com.parzivail.swg.registry.WorldRegister;
@@ -17,7 +17,7 @@ public class WorldProviderTatooine extends PlanetWorldProvider
 {
 	public WorldProviderTatooine()
 	{
-		super(Resources.dimIdTatooine, new SWGChunkManager(WorldRegister.biomeTatooineDunes, 0));
+		super(StarWarsGalaxy.config.getDimIdTatooine(), new SWGChunkManager(WorldRegister.biomeTatooineDunes, 0));
 	}
 
 	@Override

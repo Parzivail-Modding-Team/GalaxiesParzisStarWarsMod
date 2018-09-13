@@ -1,8 +1,8 @@
 [
 {
   "modid": "pswg",
-  "name": "Star Wars: Galaxy",
-  "description": "Exploration. Adventure. Star Wars: Galaxy.",
+  "name": "Galaxies: Parzi's Star Wars Mod",
+  "description": "Exploration. Adventure. Galaxies: Parzi's Star Wars Mod.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",

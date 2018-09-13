@@ -1,6 +1,7 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.dimension.endor.BiomeEndor;
 import com.parzivail.swg.dimension.endor.WorldProviderEndor;
@@ -29,10 +30,10 @@ public class WorldRegister
 		biomeEndor = new BiomeEndor(Resources.biomeIdEndor);
 		BiomeManager.removeSpawnBiome(biomeEndor);
 
-		WorldUtils.registerDimension(Resources.dimIdTatooine, WorldProviderTatooine.class);
-		WorldUtils.registerDimension(Resources.dimIdEndor, WorldProviderEndor.class);
+		WorldUtils.registerDimension(StarWarsGalaxy.config.getDimIdTatooine(), WorldProviderTatooine.class);
+		WorldUtils.registerDimension(StarWarsGalaxy.config.getDimIdEndor(), WorldProviderEndor.class);
 
-		planetDescriptorHashMap.put(Resources.dimIdTatooine, new PlanetDescriptor("Tatooine", 23, 10465, 1));
-		planetDescriptorHashMap.put(Resources.dimIdEndor, new PlanetDescriptor("The Forest Moon of Endor", 18, 4900, 0.85f));
+		planetDescriptorHashMap.put(StarWarsGalaxy.config.getDimIdTatooine(), new PlanetDescriptor("Tatooine", 23, 10465, 1));
+		planetDescriptorHashMap.put(StarWarsGalaxy.config.getDimIdEndor(), new PlanetDescriptor("The Forest Moon of Endor", 18, 4900, 0.85f));
 	}
 }

@@ -1,6 +1,5 @@
 package com.parzivail.swg.audio;
 
-import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.tatooine.ChunkProviderTatooine;
 import com.parzivail.swg.proxy.Client;
@@ -19,10 +18,10 @@ public class AmbientSounds
 	{
 		resetCountdown();
 
-		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.bantha"));
-		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.warble", AmbientSounds::isPlayerInCanyon));
-		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.rock", AmbientSounds::isPlayerInCanyon));
-		sounds.add(new AmbientSoundEntry(Resources.dimIdTatooine, "swg.amb.wind"));
+		sounds.add(new AmbientSoundEntry(StarWarsGalaxy.config.getDimIdTatooine(), "swg.amb.bantha"));
+		sounds.add(new AmbientSoundEntry(StarWarsGalaxy.config.getDimIdTatooine(), "swg.amb.warble", AmbientSounds::isPlayerInCanyon));
+		sounds.add(new AmbientSoundEntry(StarWarsGalaxy.config.getDimIdTatooine(), "swg.amb.rock", AmbientSounds::isPlayerInCanyon));
+		sounds.add(new AmbientSoundEntry(StarWarsGalaxy.config.getDimIdTatooine(), "swg.amb.wind"));
 	}
 
 	private static void resetCountdown()
@@ -57,7 +56,7 @@ public class AmbientSounds
 
 	private static boolean isPlayerInCanyon(EntityPlayer entityPlayer)
 	{
-		if (entityPlayer.dimension == Resources.dimIdTatooine)
+		if (entityPlayer.dimension == StarWarsGalaxy.config.getDimIdTatooine())
 		{
 			double[] weights = ChunkProviderTatooine.terrain.getBiomeWeightsAt((int)entityPlayer.posX, (int)entityPlayer.posZ);
 

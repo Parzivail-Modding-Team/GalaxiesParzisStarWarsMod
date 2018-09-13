@@ -1,6 +1,6 @@
 package com.parzivail.swg.dimension.endor;
 
-import com.parzivail.swg.Resources;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetWorldProvider;
 import com.parzivail.swg.dimension.SWGChunkManager;
 import com.parzivail.swg.registry.WorldRegister;
@@ -13,7 +13,7 @@ public class WorldProviderEndor extends PlanetWorldProvider
 {
 	public WorldProviderEndor()
 	{
-		super(Resources.dimIdEndor, new SWGChunkManager(WorldRegister.biomeEndor, 0));
+		super(StarWarsGalaxy.config.getDimIdEndor(), new SWGChunkManager(WorldRegister.biomeEndor, 0));
 	}
 
 	@Override
