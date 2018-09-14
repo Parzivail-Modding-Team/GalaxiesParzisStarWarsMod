@@ -1,5 +1,6 @@
 package com.parzivail.swg.gui;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.ZoneRegistry;
 import com.parzivail.util.common.AnimatedValue;
@@ -14,6 +15,7 @@ import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.world.Zone;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.Color;
@@ -70,7 +72,7 @@ public class GuiNowEntering
 
 		FontRenderer f = Client.mc.fontRendererObj;
 
-		String str = TextUtils.scrambleString(String.format("Now entering\n%s", zone.name), textFadeOutValue.getValue());
+		String str = TextUtils.scrambleString(String.format(I18n.format(Resources.modDot("zone", "common.entering")) + "\n%s", I18n.format(zone.name)), textFadeOutValue.getValue());
 
 		int x = f.FONT_HEIGHT;
 		int y = Client.resolution.getScaledHeight() - f.FONT_HEIGHT * 3;

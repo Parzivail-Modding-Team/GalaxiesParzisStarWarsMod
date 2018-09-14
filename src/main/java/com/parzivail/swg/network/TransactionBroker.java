@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.HashMap;
 
-public class TransactionRegistry
+public class TransactionBroker
 {
 	private static final HashMap<String, Class<? extends Transaction>> transactions = new HashMap<>();
 

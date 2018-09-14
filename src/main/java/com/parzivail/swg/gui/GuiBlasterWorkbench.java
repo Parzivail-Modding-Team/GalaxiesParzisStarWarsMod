@@ -4,7 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.container.ContainerBlasterWorkbench;
 import com.parzivail.swg.item.blaster.data.BlasterAttachment;
 import com.parzivail.swg.item.blaster.data.BlasterAttachments;
-import com.parzivail.swg.network.TransactionRegistry;
+import com.parzivail.swg.network.TransactionBroker;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.tile.TileBlasterWorkbench;
@@ -157,7 +157,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 		if (s == null)
 			return;
 
-		TransactionRegistry.dispatch(new TransactionEquipAttachment(tile, s));
+		TransactionBroker.dispatch(new TransactionEquipAttachment(tile, s));
 	}
 
 	private void buySelectedItem()
@@ -166,7 +166,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 		if (s == null)
 			return;
 
-		TransactionRegistry.dispatch(new TransactionDeductCredits(player, s.price), new TransactionUnlockAttachment(player, s));
+		TransactionBroker.dispatch(new TransactionDeductCredits(player, s.price), new TransactionUnlockAttachment(player, s));
 	}
 
 	@Override

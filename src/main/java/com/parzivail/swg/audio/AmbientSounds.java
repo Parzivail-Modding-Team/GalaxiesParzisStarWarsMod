@@ -45,13 +45,8 @@ public class AmbientSounds
 
 	private static void playAmbientSound(TickEvent.ClientTickEvent event)
 	{
-		// try up to 5 times to find a sound that can be played here
-		for (int i = 0; i < 5; i++)
-		{
-			AmbientSoundEntry entry = sounds.get(Client.mc.theWorld.rand.nextInt(sounds.size()));
-			if (entry.play(Client.mc.thePlayer))
-				return;
-		}
+		AmbientSoundEntry entry = sounds.get(Client.mc.theWorld.rand.nextInt(sounds.size()));
+		entry.play(Client.mc.thePlayer);
 	}
 
 	private static boolean isPlayerInCanyon(EntityPlayer entityPlayer)

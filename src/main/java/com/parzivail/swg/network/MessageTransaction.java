@@ -32,7 +32,7 @@ public class MessageTransaction extends PMessage<MessageTransaction>
 	{
 		String opcode = transaction.getString("opcode");
 		NBTTagCompound data = transaction.getCompoundTag("payload");
-		TransactionRegistry.consume(opcode, data);
+		TransactionBroker.consume(opcode, data);
 		return null;
 	}
 }
