@@ -3,6 +3,7 @@ package com.parzivail.swg.registry;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.ItemBlasterSmallGasCanister;
 import com.parzivail.swg.item.ItemDebugWizard;
+import com.parzivail.swg.item.ItemPersonalDatapad;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.binocular.ItemBinoculars;
 import com.parzivail.swg.item.binocular.data.BinocularDescriptor;
@@ -45,6 +46,8 @@ public class ItemRegister
 
 	public static PItem powerPackSmallGasCanister;
 
+	public static PItem personalDatapad;
+
 	public static PItem binocularsMb450;
 
 	public static PItem debugWizard;
@@ -67,6 +70,8 @@ public class ItemRegister
 		register(rifleT21 = new ItemBlasterRifle(new BlasterDescriptor("t21", 8, 1, 200, 2000, 4.5f, 30, GLPalette.ANALOG_RED)));
 
 		register(powerPackSmallGasCanister = new ItemBlasterSmallGasCanister());
+
+		register(personalDatapad = new ItemPersonalDatapad());
 
 		register(grenadeThermalDetonator = new ItemThermalDetonator());
 		register(grenadeSmoke = new ItemSmokeGrenade());

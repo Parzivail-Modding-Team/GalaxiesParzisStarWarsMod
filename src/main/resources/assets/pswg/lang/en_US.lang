@@ -12,6 +12,8 @@ pswg.gui.xzoom=%sx zoom
 pswg.gui.gripStats=%s VRR/%s HRR
 pswg.gui.barrelStats=%s VRR/%s HRR/%s VSR/%s HSR/%s NR/%s RI
 
+pswg.gui.datapad.logotype=NOVAWELL Personal Datapad
+
 pswg.zone.common.entering=Now Entering
 pswg.zone.moseisley=The Mos Eisley Spaceport
 pswg.zone.paddock=Experiment Paddock A

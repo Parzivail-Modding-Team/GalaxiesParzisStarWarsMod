@@ -28,8 +28,6 @@ import java.util.List;
 public class GuiBlasterWorkbench extends GuiContainer
 {
 	private static final ResourceLocation guiTexture = Resources.location("textures/container/blasterWorkbench.png");
-	private static final String textEquip = I18n.format(Resources.guiDot("equip"));
-	private static final String textEquipped = I18n.format(Resources.guiDot("equipped"));
 	private final TileBlasterWorkbench tile;
 	private final EntityPlayer player;
 	private List<BlasterAttachment> attachmentsInTab;
@@ -71,7 +69,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 		buttonList.add(bPrev = new PGuiButton(3, guiLeft + 40, guiTop + 61, 10, 20, "<"));
 		buttonList.add(bNext = new PGuiButton(4, guiLeft + 206, guiTop + 61, 10, 20, ">"));
 
-		buttonList.add(bEquip = new PGuiButton(5, guiLeft + 40, guiTop + 115, 50, 15, textEquip));
+		buttonList.add(bEquip = new PGuiButton(5, guiLeft + 40, guiTop + 115, 50, 15, I18n.format(Resources.guiDot("equip"))));
 		buttonList.add(bBuy = new PGuiButton(6, guiLeft + 166, guiTop + 115, 50, 15, I18n.format(Resources.guiDot("buy"))));
 
 		bEquip.enabled = false;
@@ -109,14 +107,14 @@ public class GuiBlasterWorkbench extends GuiContainer
 		BlasterAttachment attachment = getSelectedAttachment();
 		boolean alreadyOwns = BlasterAttachments.doesPlayerOwn(player, attachment);
 		boolean equipped = BlasterAttachments.isEquipped(tile.getBlaster(), attachment);
-		bEquip.displayString = textEquip;
+		bEquip.displayString = I18n.format(Resources.guiDot("equip"));
 		if (alreadyOwns)
 		{
 			bBuy.enabled = false;
 			if (equipped)
 			{
 				bEquip.enabled = false;
-				bEquip.displayString = textEquipped;
+				bEquip.displayString = I18n.format(Resources.guiDot("equipped"));
 			}
 			else
 				bEquip.enabled = true;
