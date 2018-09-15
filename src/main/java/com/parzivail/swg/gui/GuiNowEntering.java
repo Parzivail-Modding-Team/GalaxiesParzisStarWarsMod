@@ -4,11 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.ZoneRegistry;
 import com.parzivail.util.common.AnimatedValue;
-import com.parzivail.util.common.TextUtils;
-import com.parzivail.util.ui.Fx;
-import com.parzivail.util.ui.GLPalette;
-import com.parzivail.util.ui.Timeline;
-import com.parzivail.util.ui.TimelineEvent;
+import com.parzivail.util.ui.*;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -72,7 +68,7 @@ public class GuiNowEntering
 
 		FontRenderer f = Client.mc.fontRendererObj;
 
-		String str = TextUtils.scrambleString(String.format(I18n.format(Resources.modDot("zone", "common.entering")) + "\n%s", I18n.format(zone.name)), textFadeOutValue.getValue());
+		String str = TextUtil.scrambleString(String.format(I18n.format(Resources.modDot("zone", "common.entering")) + "\n%s", I18n.format(zone.name)), textFadeOutValue.getValue());
 
 		int x = f.FONT_HEIGHT;
 		int y = Client.resolution.getScaledHeight() - f.FONT_HEIGHT * 3;

@@ -2,7 +2,7 @@ package com.parzivail.swg.npc;
 
 public enum NpcProfession
 {
-	Merchant(0), Gunsmith(1), VehicleSalesman(2);
+	Merchant(0), Gunsmith(1), VehicleSalesman(2), Bartender(3), Hermit(4), Tailor(5);
 
 	private final int index;
 

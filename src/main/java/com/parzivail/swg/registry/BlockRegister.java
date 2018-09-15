@@ -31,8 +31,11 @@ public class BlockRegister
 	public static PBlockSand oxidizedSand;
 	public static PBlock oxidizedSandStone;
 	public static PBlock hothStone;
+	public static PBlock concrete;
 
 	public static PBlockPillar endorLog;
+	public static PBlockPillar endorFallenLog;
+	public static PBlockPillar palmLog;
 
 	public static PBlock labWall;
 
@@ -122,6 +125,7 @@ public class BlockRegister
 		register(oxidizedSand = new PBlockSand("oxidizedSand"));
 		register(oxidizedSandStone = new PBlock("oxidizedSandStone"));
 		register(hothStone = new PBlock("hothStone"));
+		register(concrete = new PBlock("concrete"));
 
 		register(white = (PBlock)new PBlock("metalWhite", "white").setStepSound(Block.soundTypeMetal));
 		register(gray = (PBlock)new PBlock("metalGray", "gray").setStepSound(Block.soundTypeMetal));
@@ -154,6 +158,8 @@ public class BlockRegister
 		register(templeStoneSlabTopDark = new PBlock("templeStoneSlabTopDark"));
 
 		register(endorLog = new BlockEndorLog());
+		register(endorFallenLog = new BlockEndorFallenLog());
+		register(palmLog = new BlockPalmLog());
 
 		register(labWall = new PBlock("labWall"));
 

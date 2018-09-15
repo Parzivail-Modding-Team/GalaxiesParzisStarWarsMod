@@ -8,8 +8,8 @@ import com.parzivail.swg.registry.QuestRegister;
 import com.parzivail.util.binary.ned.NedInteraction;
 import com.parzivail.util.binary.ned.NodeType;
 import com.parzivail.util.common.AnimatedValue;
-import com.parzivail.util.common.TextUtils;
 import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.TextUtil;
 import com.parzivail.util.ui.TtfUtil;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -91,8 +91,8 @@ public class GuiDialogue extends GuiContainer
 			GL.Translate((int)((width - w) / 2f), height - 100 + (65 - h) / 2f, 0);
 			GL.Scale(0.25f);
 			TextureImpl.bindNone();
-			TtfUtil.drawString(Client.brandonReg, 2, 2, TextUtils.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.black);
-			TtfUtil.drawString(Client.brandonReg, 0, 0, TextUtils.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.white);
+			TtfUtil.drawString(Client.brandonReg, 2, 2, TextUtil.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.black);
+			TtfUtil.drawString(Client.brandonReg, 0, 0, TextUtil.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.white);
 			GL.PopMatrix();
 			GL.PopAttrib();
 		}

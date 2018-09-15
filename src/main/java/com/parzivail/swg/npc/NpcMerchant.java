@@ -40,6 +40,15 @@ public class NpcMerchant extends EntityCreature
 		professionSkins.put(NpcProfession.VehicleSalesman, new ResourceLocation[] {
 				Resources.location("textures/npc/vehicledealer.png")
 		});
+		professionSkins.put(NpcProfession.Bartender, new ResourceLocation[] {
+				Resources.location("textures/npc/bartender.png")
+		});
+		professionSkins.put(NpcProfession.Tailor, new ResourceLocation[] {
+				Resources.location("textures/npc/tailor.png")
+		});
+		professionSkins.put(NpcProfession.Hermit, new ResourceLocation[] {
+				Resources.location("textures/npc/hermit1.png"), Resources.location("textures/npc/hermit2.png")
+		});
 	}
 
 	public NpcMerchant(World world)

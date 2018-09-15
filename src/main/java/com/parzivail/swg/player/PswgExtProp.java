@@ -110,6 +110,21 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 		sync();
 	}
 
+	public String[] getActiveQuests()
+	{
+		return activeQuests;
+	}
+
+	public String[] getCompletedQuests()
+	{
+		return completedQuests;
+	}
+
+	public String[] getFlags()
+	{
+		return flags;
+	}
+
 	@Override
 	public void init(Entity entity, World world)
 	{

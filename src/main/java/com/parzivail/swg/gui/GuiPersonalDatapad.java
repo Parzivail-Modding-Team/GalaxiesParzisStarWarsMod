@@ -4,7 +4,12 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.container.ContainerNothing;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.GLPalette;
+import com.parzivail.util.ui.TextUtil;
+import com.parzivail.util.ui.gltk.AttribMask;
+import com.parzivail.util.ui.gltk.EnableCap;
+import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
@@ -13,6 +18,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.opengl.GL11;
+
+import java.util.EnumSet;
 
 public class GuiPersonalDatapad extends GuiContainer
 {
@@ -58,10 +65,29 @@ public class GuiPersonalDatapad extends GuiContainer
 	 */
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
-		fontRendererObj.drawString(I18n.format(Resources.guiDot("datapad.logotype")), 47, 139, 0x0D0D0D);
+		String title = I18n.format(Resources.guiDot("datapad.logotype"));
+		fontRendererObj.drawString(title, (xSize - fontRendererObj.getStringWidth(title)) / 2, 139, 0x0D0D0D);
 
-		String s = String.format("$%d", getPlayerMoneyBalance());
-		Client.frAurebesh.drawString(s, 7, 7, GLPalette.ANALOG_GREEN);
+		Client.frAurebesh.drawString(String.format("$%d", getPlayerMoneyBalance()), 7, 7, GLPalette.ANALOG_GREEN);
+
+		StringBuilder s = new StringBuilder();
+
+		PswgExtProp props = PswgExtProp.get(player);
+		if (props != null)
+		{
+			for (String s1 : props.getActiveQuests())
+				s.append(s1).append("\n");
+		}
+
+		TextUtil.drawString(fontRendererObj, s.toString(), 7, 17, GLPalette.ANALOG_GREEN);
+
+		GL.PushAttrib(EnumSet.of(AttribMask.EnableBit, AttribMask.LineBit));
+		GL.Disable(EnableCap.Texture2D);
+		GL11.glLineWidth(2);
+
+		Fx.D2.DrawLine(54, 7, 54, 15);
+		Fx.D2.DrawLine(7, 15, 249, 15);
+		GL.PopAttrib();
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
