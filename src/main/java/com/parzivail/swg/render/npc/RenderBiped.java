@@ -1,6 +1,5 @@
 package com.parzivail.swg.render.npc;
 
-import com.parzivail.swg.npc.NpcMerchant;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -72,7 +71,7 @@ public abstract class RenderBiped<T extends EntityLiving> extends RendererLiving
 			return;
 		GL11.glAlphaFunc(GL11.GL_GREATER, 0.1F);
 
-		NpcMerchant npc = (NpcMerchant)entity;
+		T npc = (T)entity;
 
 		if (canRenderName(entity))
 		{
@@ -83,7 +82,7 @@ public abstract class RenderBiped<T extends EntityLiving> extends RendererLiving
 
 			if (d3 < (double)(f2 * f2))
 			{
-				String s = String.format("type: §a§l%s§r, height: §a§l%s§r", npc.getProfession(), npc.getHeight()); //entity.getFormattedCommandSenderName().getFormattedText();
+				String s = "Entity"; //entity.getFormattedCommandSenderName().getFormattedText();
 
 				if (entity.isSneaking())
 				{
@@ -270,6 +269,6 @@ public abstract class RenderBiped<T extends EntityLiving> extends RendererLiving
 	 */
 	public void doRender(Entity p_76986_1_, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_)
 	{
-		doRender((NpcMerchant)p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+		doRender((T)p_76986_1_, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
 	}
 }
