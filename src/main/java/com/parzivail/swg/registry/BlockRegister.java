@@ -30,8 +30,13 @@ public class BlockRegister
 
 	public static PBlockSand oxidizedSand;
 	public static PBlock oxidizedSandStone;
+	public static PBlockSand irradiatedSand;
+	public static PBlockSand rhodocrositeSand;
 	public static PBlock hothStone;
 	public static PBlock concrete;
+	public static PBlock lavaRock;
+	public static PBlock oldBrick;
+	public static PBlockLayer salt;
 
 	public static PBlockPillar endorLog;
 	public static PBlockPillar endorFallenLog;
@@ -124,8 +129,13 @@ public class BlockRegister
 
 		register(oxidizedSand = new PBlockSand("oxidizedSand"));
 		register(oxidizedSandStone = new PBlock("oxidizedSandStone"));
+		register(irradiatedSand = new PBlockSand("irradiatedSand"));
+		register(rhodocrositeSand = new PBlockSand("rhodocrositeSand"));
 		register(hothStone = new PBlock("hothStone"));
 		register(concrete = new PBlock("concrete"));
+		register(lavaRock = new PBlock("lavaRock"));
+		register(oldBrick = new PBlock("oldBrick"));
+		register(salt = new PBlockLayer("salt"));
 
 		register(white = (PBlock)new PBlock("metalWhite", "white").setStepSound(Block.soundTypeMetal));
 		register(gray = (PBlock)new PBlock("metalGray", "gray").setStepSound(Block.soundTypeMetal));
@@ -223,6 +233,11 @@ public class BlockRegister
 	}
 
 	private static void register(PBlockSand item)
+	{
+		GameRegistry.registerBlock(item, item.name);
+	}
+
+	private static void register(PBlockLayer item)
 	{
 		GameRegistry.registerBlock(item, item.name);
 	}
