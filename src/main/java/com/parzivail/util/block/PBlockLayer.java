@@ -7,7 +7,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.EnumSkyBlock;
@@ -94,7 +93,7 @@ public class PBlockLayer extends Block
 
 	public Item getItemDropped(int meta, Random random, int fortune)
 	{
-		return Items.snowball;
+		return Item.getItemFromBlock(this);
 	}
 
 	/**
