@@ -108,8 +108,8 @@ public class StarWarsGalaxy
 
 		tab = new PTab();
 
-		BlockRegister.register();
 		ItemRegister.register();
+		BlockRegister.register();
 		WorldRegister.register();
 		StructureRegister.register();
 		QuestRegister.register();

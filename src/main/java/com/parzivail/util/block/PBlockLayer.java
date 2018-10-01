@@ -9,7 +9,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -18,11 +17,13 @@ import java.util.Random;
 public class PBlockLayer extends Block
 {
 	public final String name;
+	private final Item droppedItem;
 
-	public PBlockLayer(String name)
+	public PBlockLayer(String name, Item droppedItem)
 	{
 		super(Material.snow);
 		this.name = name;
+		this.droppedItem = droppedItem == null ? Item.getItemFromBlock(this) : droppedItem;
 		setCreativeTab(StarWarsGalaxy.tab);
 		setUnlocalizedName(Resources.modDot(this.name));
 		setTextureName(Resources.modColon(name));
@@ -30,6 +31,12 @@ public class PBlockLayer extends Block
 		setStepSound(Block.soundTypeSnow);
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
 		func_150154_b(0);
+		setHarvestLevel("shovel", HarvestLevel.WOOD);
+	}
+
+	public PBlockLayer(String name)
+	{
+		this(name, null);
 	}
 
 	/**
@@ -93,7 +100,7 @@ public class PBlockLayer extends Block
 
 	public Item getItemDropped(int meta, Random random, int fortune)
 	{
-		return Item.getItemFromBlock(this);
+		return droppedItem;
 	}
 
 	/**
@@ -109,8 +116,6 @@ public class PBlockLayer extends Block
 	 */
 	public void updateTick(World worldIn, int x, int y, int z, Random random)
 	{
-		if (worldIn.getSavedLightValue(EnumSkyBlock.Block, x, y, z) > 11)
-			worldIn.setBlockToAir(x, y, z);
 	}
 
 	/**

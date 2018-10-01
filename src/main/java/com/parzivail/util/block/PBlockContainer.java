@@ -20,7 +20,7 @@ public abstract class PBlockContainer extends BlockContainer
 		setUnlocalizedName(Resources.modDot(this.name));
 	}
 
-	public PBlockContainer setAlpha()
+	public PBlockContainer withPlaceholderTexture()
 	{
 		setTextureName(Resources.modColon("alpha"));
 		return this;

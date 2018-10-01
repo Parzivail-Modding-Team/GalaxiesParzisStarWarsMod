@@ -135,7 +135,7 @@ public class BlockRegister
 		register(concrete = new PBlock("concrete"));
 		register(lavaRock = new PBlock("lavaRock"));
 		register(oldBrick = new PBlock("oldBrick"));
-		register(salt = new PBlockLayer("salt"));
+		register(salt = new PBlockLayer("salt", ItemRegister.saltPile));
 
 		register(white = (PBlock)new PBlock("metalWhite", "white").setStepSound(Block.soundTypeMetal));
 		register(gray = (PBlock)new PBlock("metalGray", "gray").setStepSound(Block.soundTypeMetal));
@@ -158,7 +158,7 @@ public class BlockRegister
 		register(hothDoor = new PBlock("hothDoor"));
 		register(hothSnowCut = new PBlock("hothSnowCut"));
 		register(hothSandbag = new PBlockConnected("hothSandbag", "hothSandbag", Material.craftedSnow));
-		register(mud = new PBlock("mud"));
+		register(mud = new PBlock("mud").withHarvestLevel("shovel", HarvestLevel.STONE));
 
 		register(templeStone = new PBlock("templeStone"));
 		register(templeStoneBrick = new PBlock("templeStoneBrick"));
@@ -180,8 +180,8 @@ public class BlockRegister
 
 		register(tatooineSand = new PBlockSand("tatooineSand"));
 
-		register(blasterWorkbench = new BlockBlasterWorkbench().setAlpha());
-		register(sabaccTable = new BlockSabaccTable().setAlpha());
+		register(blasterWorkbench = new BlockBlasterWorkbench().withPlaceholderTexture());
+		register(sabaccTable = new BlockSabaccTable().withPlaceholderTexture());
 
 		register(consoleHoth1 = new BlockConsoleHoth1());
 		register(consoleHothCurved1 = new BlockConsoleHothCurved1());

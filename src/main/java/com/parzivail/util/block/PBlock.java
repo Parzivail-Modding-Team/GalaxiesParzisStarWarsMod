@@ -35,6 +35,9 @@ public class PBlock extends Block
 		this.name = name;
 		setCreativeTab(StarWarsGalaxy.tab);
 		setUnlocalizedName(Resources.modDot(this.name));
+		setHardness(1.5F);
+		setResistance(10.0F);
+		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 		if (setTexture)
 			setTextureName(Resources.modColon(textureName));
 	}
@@ -42,6 +45,12 @@ public class PBlock extends Block
 	public PBlock setAlpha()
 	{
 		setTextureName(Resources.modColon("alpha"));
+		return this;
+	}
+
+	public PBlock withHarvestLevel(String item, int level)
+	{
+		setHarvestLevel(item, level);
 		return this;
 	}
 }

@@ -14,7 +14,7 @@ public class BlockSoundHothTelemetry extends PBlockContainer
 	{
 		super("soundHothTelemetry");
 		setCreativeTab(StarWarsGalaxy.tab);
-		setAlpha();
+		withPlaceholderTexture();
 	}
 
 	@Override

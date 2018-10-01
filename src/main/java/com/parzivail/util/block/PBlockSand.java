@@ -16,6 +16,7 @@ public class PBlockSand extends BlockFalling
 		setUnlocalizedName(Resources.modDot(this.name));
 		setTextureName(Resources.modColon(name));
 		setHardness(0.5F);
+		setHarvestLevel("shovel", HarvestLevel.WOOD);
 		setStepSound(Block.soundTypeSand);
 	}
 }

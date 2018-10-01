@@ -41,13 +41,13 @@ public class ItemRegister
 	public static PItem meleeSpear;
 	public static PItem meleeVibro;
 
+	public static PItem powerPackSmallGasCanister;
 	public static PItem grenadeThermalDetonator;
 	public static PItem grenadeSmoke;
 
-	public static PItem powerPackSmallGasCanister;
+	public static PItem saltPile;
 
 	public static PItem personalDatapad;
-
 	public static PItem binocularsMb450;
 
 	public static PItem debugWizard;
@@ -70,15 +70,16 @@ public class ItemRegister
 		register(rifleT21 = new ItemBlasterRifle(new BlasterDescriptor("t21", 8, 1, 200, 2000, 4.5f, 30, GLPalette.ANALOG_RED)));
 
 		register(powerPackSmallGasCanister = new ItemBlasterSmallGasCanister());
-
-		register(personalDatapad = new ItemPersonalDatapad());
-
 		register(grenadeThermalDetonator = new ItemThermalDetonator());
 		register(grenadeSmoke = new ItemSmokeGrenade());
 
+		register(saltPile = new PItem("saltPile"));
+
+		register(personalDatapad = new ItemPersonalDatapad());
+		register(binocularsMb450 = new ItemBinoculars(new BinocularDescriptor("mb450", 0.1f)));
+
 		register(debugWizard = new ItemDebugWizard());
 
-		register(binocularsMb450 = new ItemBinoculars(new BinocularDescriptor("mb450", 0.1f)));
 	}
 
 	private static void register(PItem item)
