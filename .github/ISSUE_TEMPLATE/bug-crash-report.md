@@ -21,6 +21,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Please complete the following information:**
+ - Mod Version [e.g. 1.3.0]:
  - Minecraft Version [i.e. 1.7.10]:
  - Forge Version [e.g. 10.13.4.1558]
  - Java Version [e.g. 8]
