@@ -79,7 +79,6 @@ public class ItemRegister
 		register(binocularsMb450 = new ItemBinoculars(new BinocularDescriptor("mb450", 0.1f)));
 
 		register(debugWizard = new ItemDebugWizard());
-
 	}
 
 	private static void register(PItem item)

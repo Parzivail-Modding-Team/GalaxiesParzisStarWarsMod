@@ -38,6 +38,13 @@ public class Config extends Configuration
 		return hasSeenIntroCrawlProp.getBoolean();
 	}
 
+	public void setHasSeenIntroCrawl(boolean hasSeenIntroCrawl)
+	{
+		hasSeenIntroCrawlProp.set(hasSeenIntroCrawl);
+		if (hasChanged())
+			save();
+	}
+
 	public int getDimIdTatooine()
 	{
 		return dimIdTatooine.getInt();
@@ -46,12 +53,5 @@ public class Config extends Configuration
 	public int getDimIdEndor()
 	{
 		return dimIdEndor.getInt();
-	}
-
-	public void setHasSeenIntroCrawl(boolean hasSeenIntroCrawl)
-	{
-		hasSeenIntroCrawlProp.set(hasSeenIntroCrawl);
-		if (hasChanged())
-			save();
 	}
 }
