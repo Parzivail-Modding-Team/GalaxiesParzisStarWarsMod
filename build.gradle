@@ -9,12 +9,18 @@ buildscript {
             name = "sonatype"
             url = "https://oss.sonatype.org/content/repositories/snapshots/"
         }
+        maven {
+            name = "johnrengelman"
+            url "https://dl.bintray.com/johnrengelman/gradle-plugins"
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'org.gradle.plugins:shadow:0.7.4'
     }
 }
 
+apply plugin: 'shadow'
 apply plugin: 'forge'
 
 version = "TEMP"
@@ -30,11 +36,6 @@ minecraft {
     mappings = 'stable_12'
 }
 
-configurations {
-    // configuration that holds jars to include in the jar
-    extraLibs
-}
-
 repositories {
     maven {
         url = "http://clojars.org/repo/"
@@ -43,14 +44,7 @@ repositories {
 
 dependencies {
     // Depend on, compile and package Slick-Util
-    extraLibs "slick-util:slick-util:1.0.0"
-    configurations.compile.extendsFrom(configurations.extraLibs)
-}
-
-jar {
-    from {
-        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
-    }
+    compile "slick-util:slick-util:1.0.0"
 }
 
 processResources
