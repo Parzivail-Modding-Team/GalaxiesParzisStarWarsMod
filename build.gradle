@@ -30,26 +30,26 @@ minecraft {
     mappings = 'stable_12'
 }
 
+configurations {
+    // configuration that holds jars to include in the jar
+    extraLibs
+}
+
+repositories {
+    maven {
+        url = "http://clojars.org/repo/"
+    }
+}
+
 dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-    compile files('lib/slick-util.jar')
-
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
-
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+    // Depend on, compile and package Slick-Util
+    extraLibs "slick-util:slick-util:1.0.0"
+    configurations.compile.extendsFrom(configurations.extraLibs)
 }
 
 jar {
     from {
-        zipTree("lib/slick-util.jar")
+        configurations.extraLibs.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 
