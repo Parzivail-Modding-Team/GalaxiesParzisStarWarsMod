@@ -10,7 +10,16 @@ You can join the community in [the Discord server](https://discord.gg/54MVQZZ).
 
 If you'd like to help support the mod, please [consider becoming a donor](https://www.patreon.com/parzi)!
 
-### License
+## Building
+PSWG runs on the (Forge) Gradle build system. Simply import the gradle project and build. If IntelliJ fails to run the mod because of a texture error, make sure under Project Structure > Modules > StarWarsGalaxy_Main that it **inherits projects compile output path**.
+
+All dependencies are met with Maven and are subsequently compiled into the resulting jarfile.
+
+Compile normally with `./gradlew build` to produce `pswg-TEMP.jar` in `./build/libs`. 
+
+`BuildMod.exe` is a .NET/Mono utility that simply runs `./gradlew build`, moves `./build/libs/pswg-TEMP.jar` to `./builds/pswg-<version>.jar` and creates a sidecar markdown template of the same name for changelogs.
+
+## License
 Code and most assets Copyright (C) 2016-2018 Colby Newman
 
 Other assets and ideas and concepts Copyright or Trademark Lucasfilm LTD., LucasArts, and Disney.
