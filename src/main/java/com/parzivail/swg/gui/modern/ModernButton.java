@@ -2,17 +2,14 @@ package com.parzivail.swg.gui.modern;
 
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx.D2;
-import com.parzivail.util.ui.Fx.Util;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import org.lwjgl.opengl.GL11;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.opengl.TextureImpl;
 
 import java.util.EnumSet;
 
@@ -74,13 +71,12 @@ public class ModernButton extends GuiButton
 
 			GL.Enable(EnableCap.Texture2D);
 			GL.PushMatrix();
-			TrueTypeFont fontrenderer = Client.brandonReg;
-			GL.Translate(xPosition + width / 2 - fontrenderer.getWidth(displayString) / 2 * oneOverSr, yPosition + height / 2 - fontrenderer.getHeight() / 2 * oneOverSr, 0);
+			FontRenderer fontrenderer = Client.mc.fontRendererObj;
+			GL.Translate((int)(xPosition + width / 2f - fontrenderer.getStringWidth(displayString) / 2f * oneOverSr), (int)(yPosition + height / 2f - fontrenderer.FONT_HEIGHT / 2f * oneOverSr), 0);
 			GL.Scale(oneOverSr);
-			TextureImpl.bindNone();
 			if (!inverted)
-				fontrenderer.drawString(2, 2, displayString, Color.black);
-			fontrenderer.drawString(0, 0, displayString, inverted ? Util.GetColor(0x0D0D0D) : Color.white);
+				fontrenderer.drawString(displayString, 2, 2, GLPalette.BLACK);
+			fontrenderer.drawString(displayString, 0, 0, inverted ? GLPalette.ALMOST_BLACK : GLPalette.WHITE);
 			GL.PopMatrix();
 			GL.PopAttrib();
 		}

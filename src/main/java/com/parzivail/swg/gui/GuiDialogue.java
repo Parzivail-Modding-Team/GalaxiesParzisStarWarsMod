@@ -9,8 +9,8 @@ import com.parzivail.util.binary.ned.NedInteraction;
 import com.parzivail.util.binary.ned.NodeType;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.ui.Fx;
+import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.TextUtil;
-import com.parzivail.util.ui.TtfUtil;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -21,8 +21,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.input.Keyboard;
-import org.newdawn.slick.Color;
-import org.newdawn.slick.opengl.TextureImpl;
 
 public class GuiDialogue extends GuiContainer
 {
@@ -86,13 +84,12 @@ public class GuiDialogue extends GuiContainer
 			GL.Enable(EnableCap.Texture2D);
 			GL.PushMatrix();
 
-			int w = TtfUtil.getWidth(Client.brandonReg, npcDialogue) / 4;
-			int h = TtfUtil.getHeight(Client.brandonReg, npcDialogue) / 4;
+			int w = TextUtil.getWidth(Client.mc.fontRendererObj, npcDialogue);
+			int h = TextUtil.getHeight(Client.mc.fontRendererObj, npcDialogue);
 			GL.Translate((int)((width - w) / 2f), height - 100 + (65 - h) / 2f, 0);
 			GL.Scale(0.25f);
-			TextureImpl.bindNone();
-			TtfUtil.drawString(Client.brandonReg, 2, 2, TextUtil.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.black);
-			TtfUtil.drawString(Client.brandonReg, 0, 0, TextUtil.scrambleString(npcDialogue, textFadeOutValue.getValue()), Color.white);
+			TextUtil.drawString(Client.mc.fontRendererObj, TextUtil.scrambleString(npcDialogue, textFadeOutValue.getValue()), 2, 2, GLPalette.BLACK);
+			TextUtil.drawString(Client.mc.fontRendererObj, TextUtil.scrambleString(npcDialogue, textFadeOutValue.getValue()), 0, 0, GLPalette.WHITE);
 			GL.PopMatrix();
 			GL.PopAttrib();
 		}

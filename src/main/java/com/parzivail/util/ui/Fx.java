@@ -9,9 +9,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import org.newdawn.slick.Color;
-
-import java.util.HashMap;
 
 /**
  * Created by colby on 9/13/2017.
@@ -20,8 +17,6 @@ public class Fx
 {
 	public static class Util
 	{
-		private static final HashMap<Integer, Color> COLOR_HASH_MAP = new HashMap<>();
-
 		public static int GetRgb(int r, int g, int b)
 		{
 			int rgb = r;
@@ -37,14 +32,6 @@ public class Fx
 			rgba = (rgba << 8) + g;
 			rgba = (rgba << 8) + b;
 			return rgba;
-		}
-
-		public static Color GetColor(int color)
-		{
-			if (!COLOR_HASH_MAP.containsKey(color))
-				COLOR_HASH_MAP.put(color, new Color(color));
-
-			return COLOR_HASH_MAP.get(color);
 		}
 
 		public static double Lerp(double a, double b, double f)
