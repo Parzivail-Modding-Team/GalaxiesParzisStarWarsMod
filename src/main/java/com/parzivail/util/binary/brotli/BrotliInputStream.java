@@ -4,7 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-package org.brotli.dec;
+package com.parzivail.util.binary.brotli;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +17,7 @@ import java.io.InputStream;
 public class BrotliInputStream extends InputStream
 {
 
-	public static final int DEFAULT_INTERNAL_BUFFER_SIZE = 256;
+	private static final int DEFAULT_INTERNAL_BUFFER_SIZE = 256;
 
 	/**
 	 * Internal buffer used for efficient byte-by-byte reading.
@@ -69,7 +69,7 @@ public class BrotliInputStream extends InputStream
 	 *
 	 * @throws IOException in case of corrupted data or source stream problems
 	 */
-	public BrotliInputStream(InputStream source, int byteReadBufferSize) throws IOException
+	private BrotliInputStream(InputStream source, int byteReadBufferSize) throws IOException
 	{
 		if (byteReadBufferSize <= 0)
 		{
@@ -90,11 +90,6 @@ public class BrotliInputStream extends InputStream
 		{
 			throw new IOException("Brotli decoder initialization failed", ex);
 		}
-	}
-
-	public void setEager(boolean eager)
-	{
-		state.isEager = eager ? 1 : 0;
 	}
 
 	/**

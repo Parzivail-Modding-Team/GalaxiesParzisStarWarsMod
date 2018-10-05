@@ -4,7 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-package org.brotli.dec;
+package com.parzivail.util.binary.brotli;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,8 +19,8 @@ final class Decode
 	 * Maximum possible Huffman table size for an alphabet size of 704, max code length 15 and root
 	 * table bits 8.
 	 */
-	static final int HUFFMAN_TABLE_SIZE = 1080;
-	static final int[] DICTIONARY_OFFSETS_BY_LENGTH = {
+	private static final int HUFFMAN_TABLE_SIZE = 1080;
+	private static final int[] DICTIONARY_OFFSETS_BY_LENGTH = {
 			0,
 			0,
 			0,
@@ -47,16 +47,16 @@ final class Decode
 			121280,
 			122016
 	};
-	static final int[] DICTIONARY_SIZE_BITS_BY_LENGTH = {
+	private static final int[] DICTIONARY_SIZE_BITS_BY_LENGTH = {
 			0, 0, 0, 0, 10, 10, 11, 11, 10, 10, 10, 10, 10, 9, 9, 8, 7, 7, 8, 7, 7, 6, 6, 5, 5
 	};
-	static final int MIN_WORD_LENGTH = 4;
-	static final int MAX_WORD_LENGTH = 24;
-	static final int MAX_TRANSFORMED_WORD_LENGTH = 5 + MAX_WORD_LENGTH + 8;
+	private static final int MIN_WORD_LENGTH = 4;
+	private static final int MAX_WORD_LENGTH = 24;
+	private static final int MAX_TRANSFORMED_WORD_LENGTH = 5 + MAX_WORD_LENGTH + 8;
 	//----------------------------------------------------------------------------
 	// Prefix code LUT.
 	//----------------------------------------------------------------------------
-	static final int[] BLOCK_LENGTH_OFFSET = {
+	private static final int[] BLOCK_LENGTH_OFFSET = {
 			1,
 			5,
 			9,
@@ -84,25 +84,25 @@ final class Decode
 			8433,
 			16625
 	};
-	static final int[] BLOCK_LENGTH_N_BITS = {
+	private static final int[] BLOCK_LENGTH_N_BITS = {
 			2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 24
 	};
-	static final int[] INSERT_LENGTH_OFFSET = {
+	private static final int[] INSERT_LENGTH_OFFSET = {
 			0, 1, 2, 3, 4, 5, 6, 8, 10, 14, 18, 26, 34, 50, 66, 98, 130, 194, 322, 578, 1090, 2114, 6210, 22594
 	};
-	static final int[] INSERT_LENGTH_N_BITS = {
+	private static final int[] INSERT_LENGTH_N_BITS = {
 			0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 8, 9, 10, 12, 14, 24
 	};
-	static final int[] COPY_LENGTH_OFFSET = {
+	private static final int[] COPY_LENGTH_OFFSET = {
 			2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 18, 22, 30, 38, 54, 70, 102, 134, 198, 326, 582, 1094, 2118
 	};
-	static final int[] COPY_LENGTH_N_BITS = {
+	private static final int[] COPY_LENGTH_N_BITS = {
 			0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 8, 9, 10, 24
 	};
-	static final int[] INSERT_RANGE_LUT = {
+	private static final int[] INSERT_RANGE_LUT = {
 			0, 0, 8, 8, 0, 16, 8, 16, 16
 	};
-	static final int[] COPY_RANGE_LUT = {
+	private static final int[] COPY_RANGE_LUT = {
 			0, 8, 0, 8, 16, 0, 16, 8, 16
 	};
 	//----------------------------------------------------------------------------
@@ -443,7 +443,7 @@ final class Decode
 		Utils.fillIntsWithZeroes(codeLengths, symbol, numSymbols);
 	}
 
-	static int checkDupes(int[] symbols, int length)
+	private static int checkDupes(int[] symbols, int length)
 	{
 		for (int i = 0; i < length - 1; ++i)
 		{
@@ -459,7 +459,7 @@ final class Decode
 	}
 
 	// TODO: Use specialized versions for smaller tables.
-	static void readHuffmanCode(int alphabetSize, int[] table, int offset, State s)
+	private static void readHuffmanCode(int alphabetSize, int[] table, int offset, State s)
 	{
 		int ok = 1;
 		int simpleCodeOrSkip;

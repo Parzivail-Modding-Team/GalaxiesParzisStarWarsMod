@@ -4,7 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-package org.brotli.dec;
+package com.parzivail.util.binary.brotli;
 
 import java.nio.ByteBuffer;
 
@@ -17,7 +17,7 @@ import java.nio.ByteBuffer;
  * <p>One possible drawback is that multiple threads that need dictionary data may be blocked (only
  * once in each classworld). To avoid this, it is enough to call {@link #getData()} proactively.
  */
-public final class Dictionary
+final class Dictionary
 {
 	private static volatile ByteBuffer data;
 

@@ -4,7 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-package org.brotli.dec;
+package com.parzivail.util.binary.brotli;
 
 import java.io.InputStream;
 
@@ -20,7 +20,7 @@ final class State
 	short[] shortBuffer; // BitReader
 
 	int[] intBuffer;  // BitReader
-	int[] rings;
+	final int[] rings;
 	int[] blockTrees;
 	int[] hGroup0;
 	int[] hGroup1;

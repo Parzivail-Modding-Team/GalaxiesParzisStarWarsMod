@@ -1,11 +1,11 @@
 package com.parzivail.scarif;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.parzivail.util.binary.brotli.BrotliInputStream;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import org.brotli.dec.BrotliInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;

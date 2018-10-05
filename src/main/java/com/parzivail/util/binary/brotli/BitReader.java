@@ -4,14 +4,13 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-package org.brotli.dec;
+package com.parzivail.util.binary.brotli;
 
 /**
  * Bit reading helpers.
  */
 final class BitReader
 {
-
 	// Possible values: {5, 6}.  5 corresponds to 32-bit build, 6 to 64-bit. This value is used for
 	// conditional compilation -> produced artifacts might be binary INCOMPATIBLE (JLS 13.2).
 	private static final int LOG_BITNESS = 6;
@@ -52,7 +51,7 @@ final class BitReader
 		}
 	}
 
-	static void doReadMoreInput(State s)
+	private static void doReadMoreInput(State s)
 	{
 		if (s.endOfStreamReached != 0)
 		{
@@ -217,7 +216,7 @@ final class BitReader
 		}
 	}
 
-	static int halfAvailable(State s)
+	private static int halfAvailable(State s)
 	{
 		int limit = HALVES_CAPACITY;
 		if (s.endOfStreamReached != 0)
@@ -293,7 +292,7 @@ final class BitReader
 	/**
 	 * Translates bytes to halves (int/short).
 	 */
-	static void bytesToNibbles(State s, int byteLen)
+	private static void bytesToNibbles(State s, int byteLen)
 	{
 		byte[] byteBuffer = s.byteBuffer;
 		int halfLen = byteLen >> LOG_HALF_SIZE;
