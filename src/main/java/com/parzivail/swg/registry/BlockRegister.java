@@ -37,6 +37,15 @@ public class BlockRegister
 	public static PBlock lavaRock;
 	public static PBlock oldBrick;
 	public static PBlockLayer salt;
+	public static PBlock bespinElevator;
+	public static PBlock pumice;
+	public static PBlock crate;
+	public static PBlock hardpackSnow;
+	public static PBlock hothDoor;
+	public static PBlock hothSnowCut;
+	public static PBlock hothSandbag;
+	public static PBlock mud;
+	public static PBlockSand tatooineSand;
 
 	public static PBlockPillar endorLog;
 	public static PBlockPillar endorFallenLog;
@@ -108,14 +117,6 @@ public class BlockRegister
 	public static PBlock black;
 	public static PBlockConnected blackGrate;
 	public static PBlock caution;
-
-	public static PBlock crate;
-	public static PBlock hardpackSnow;
-	public static PBlock hothDoor;
-	public static PBlock hothSnowCut;
-	public static PBlock hothSandbag;
-	public static PBlock mud;
-	public static PBlockSand tatooineSand;
 	public static PBlock templeStone;
 	public static PBlock templeStoneBrick;
 	public static PBlock templeStoneBrickFancy;
@@ -136,6 +137,14 @@ public class BlockRegister
 		register(lavaRock = new PBlock("lavaRock"));
 		register(oldBrick = new PBlock("oldBrick"));
 		register(salt = new PBlockLayer("salt", ItemRegister.saltPile));
+		register(bespinElevator = new PBlock("bespinElevator"));
+		register(pumice = new PBlock("pumice"));
+		register(crate = new PBlock("crate"));
+		register(hardpackSnow = new PBlock("hardpackSnow"));
+		register(hothDoor = new PBlock("hothDoor"));
+		register(hothSnowCut = new PBlock("hothSnowCut"));
+		register(hothSandbag = new PBlockConnected("hothSandbag", "hothSandbag", Material.craftedSnow));
+		register(mud = new PBlock("mud").withHarvestLevel("shovel", HarvestLevel.STONE));
 
 		register(white = (PBlock)new PBlock("metalWhite", "white").setStepSound(Block.soundTypeMetal));
 		register(gray = (PBlock)new PBlock("metalGray", "gray").setStepSound(Block.soundTypeMetal));
@@ -152,13 +161,6 @@ public class BlockRegister
 		register(darkGrayLight = (PBlockPillar)new BlockDarkGrayLight().setStepSound(Block.soundTypeMetal));
 		register(grayLightVert = (PBlockPillar)new BlockGrayLightVertical().setStepSound(Block.soundTypeMetal));
 		register(darkGrayLightVert = (PBlockPillar)new BlockDarkGrayLightVertical().setStepSound(Block.soundTypeMetal));
-
-		register(crate = new PBlock("crate"));
-		register(hardpackSnow = new PBlock("hardpackSnow"));
-		register(hothDoor = new PBlock("hothDoor"));
-		register(hothSnowCut = new PBlock("hothSnowCut"));
-		register(hothSandbag = new PBlockConnected("hothSandbag", "hothSandbag", Material.craftedSnow));
-		register(mud = new PBlock("mud").withHarvestLevel("shovel", HarvestLevel.STONE));
 
 		register(templeStone = new PBlock("templeStone"));
 		register(templeStoneBrick = new PBlock("templeStoneBrick"));

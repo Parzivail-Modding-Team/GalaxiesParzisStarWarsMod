@@ -11,6 +11,6 @@ public class StructureRegister
 	{
 		structureEngine = new ScarifEngine(Resources.MODID);
 
-		//structureEngine.load(Resources.dimIdTatooine, Resources.location("structures/interdictor.scrf"));
+		//structureEngine.load(StarWarsGalaxy.config.getDimIdTatooine(), Resources.location("structures/interdictor.scrf"));
 	}
 }
