@@ -32,7 +32,16 @@ public class BlockRegister
 	public static PBlock oxidizedSandStone;
 	public static PBlockSand irradiatedSand;
 	public static PBlockSand rhodocrositeSand;
+	public static PBlockSand tatooineSand;
+
 	public static PBlock hothStone;
+	public static PBlock templeStone;
+	public static PBlock templeStoneBrick;
+	public static PBlock templeStoneBrickFancy;
+	public static PBlock templeStoneSlab;
+	public static PBlock templeStoneSlabTop;
+	public static PBlock templeStoneSlabTopDark;
+
 	public static PBlock concrete;
 	public static PBlock lavaRock;
 	public static PBlock oldBrick;
@@ -45,11 +54,24 @@ public class BlockRegister
 	public static PBlock hothSnowCut;
 	public static PBlock hothSandbag;
 	public static PBlock mud;
-	public static PBlockSand tatooineSand;
 
 	public static PBlockPillar endorLog;
 	public static PBlockPillar endorFallenLog;
 	public static PBlockPillar palmLog;
+
+	public static PBlock white;
+	public static PBlock gray;
+	public static PBlock grayBevel;
+	public static PBlockConnected grayGrate;
+	public static PBlockPillar grayLight;
+	public static PBlockPillar grayLightVert;
+	public static PBlock darkGray;
+	public static PBlockConnected darkGrayGrate;
+	public static PBlockPillar darkGrayLight;
+	public static PBlockPillar darkGrayLightVert;
+	public static PBlock black;
+	public static PBlockConnected blackGrate;
+	public static PBlock caution;
 
 	public static PBlock labWall;
 
@@ -67,15 +89,12 @@ public class BlockRegister
 	public static PBlockContainer consoleHothCurved3;
 	public static PBlockContainer consoleHothMedical1;
 	public static PBlockContainer consoleHothMedical2;
-	public static PBlockContainer wallControlPanel;
-	public static PBlockContainer wallControlPanelTall;
 
 	public static PBlockContainer crate1;
 	public static PBlockContainer crateHoth1;
 	public static PBlockContainer crateHoth2;
 	public static PBlockContainer crateMosEspa;
 	public static PBlockContainer crateVilla;
-	public static PBlockContainer airTank;
 
 	public static PBlockContainer floorLight;
 	public static PBlockContainer floorLight2;
@@ -86,11 +105,15 @@ public class BlockRegister
 	public static PBlockContainer wallIndicatorLight;
 	public static PBlockContainer wallIndicatorLightCluster;
 
+	public static PBlockContainer wallControlPanel;
+	public static PBlockContainer wallControlPanelTall;
+
 	public static PBlockContainer gunRack;
 	public static PBlockContainer ladder;
 
 	public static PBlockContainer antennaThin;
 	public static PBlockContainer satelliteDish;
+	public static PBlockContainer airTank;
 
 	public static PBlockContainer moistureVaporator;
 	public static PBlockContainer moistureVaporator2;
@@ -103,26 +126,6 @@ public class BlockRegister
 	public static PBlockContainer wallPipeLarge;
 
 	public static PBlockContainer soundHothTelemetry;
-
-	public static PBlock white;
-	public static PBlock gray;
-	public static PBlock grayBevel;
-	public static PBlockConnected grayGrate;
-	public static PBlockPillar grayLight;
-	public static PBlockPillar grayLightVert;
-	public static PBlock darkGray;
-	public static PBlockConnected darkGrayGrate;
-	public static PBlockPillar darkGrayLight;
-	public static PBlockPillar darkGrayLightVert;
-	public static PBlock black;
-	public static PBlockConnected blackGrate;
-	public static PBlock caution;
-	public static PBlock templeStone;
-	public static PBlock templeStoneBrick;
-	public static PBlock templeStoneBrickFancy;
-	public static PBlock templeStoneSlab;
-	public static PBlock templeStoneSlabTop;
-	public static PBlock templeStoneSlabTopDark;
 
 	public static void register()
 	{
