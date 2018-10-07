@@ -84,11 +84,11 @@ public class GuiDialogue extends GuiContainer
 			GL.Enable(EnableCap.Texture2D);
 			GL.PushMatrix();
 
-			int w = TextUtil.getWidth(Client.mc.fontRendererObj, npcDialogue);
-			int h = TextUtil.getHeight(Client.mc.fontRendererObj, npcDialogue);
+			float w = TextUtil.getWidth(Client.mc.fontRendererObj, npcDialogue) / 2f;
+			float h = TextUtil.getHeight(Client.mc.fontRendererObj, npcDialogue) / 2f;
 			GL.Translate((int)((width - w) / 2f), height - 100 + (65 - h) / 2f, 0);
-			GL.Scale(0.25f);
-			TextUtil.drawString(Client.mc.fontRendererObj, TextUtil.scrambleString(npcDialogue, textFadeOutValue.getValue()), 2, 2, GLPalette.BLACK);
+			GL.Scale(0.5f);
+			TextUtil.drawString(Client.mc.fontRendererObj, TextUtil.scrambleString(npcDialogue, textFadeOutValue.getValue()), 1, 1, GLPalette.BLACK);
 			TextUtil.drawString(Client.mc.fontRendererObj, TextUtil.scrambleString(npcDialogue, textFadeOutValue.getValue()), 0, 0, GLPalette.WHITE);
 			GL.PopMatrix();
 			GL.PopAttrib();

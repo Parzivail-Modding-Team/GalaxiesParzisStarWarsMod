@@ -72,10 +72,10 @@ public class ModernButton extends GuiButton
 			GL.Enable(EnableCap.Texture2D);
 			GL.PushMatrix();
 			FontRenderer fontrenderer = Client.mc.fontRendererObj;
-			GL.Translate((int)(xPosition + width / 2f - fontrenderer.getStringWidth(displayString) / 2f * oneOverSr), (int)(yPosition + height / 2f - fontrenderer.FONT_HEIGHT / 2f * oneOverSr), 0);
-			GL.Scale(oneOverSr);
+			GL.Translate((int)(xPosition + width / 2f - fontrenderer.getStringWidth(displayString) / 4f), (int)(yPosition + height / 2f - fontrenderer.FONT_HEIGHT / 4f) + 1, 0);
+			GL.Scale(0.5f);
 			if (!inverted)
-				fontrenderer.drawString(displayString, 2, 2, GLPalette.BLACK);
+				fontrenderer.drawString(displayString, 1, 1, GLPalette.BLACK);
 			fontrenderer.drawString(displayString, 0, 0, inverted ? GLPalette.ALMOST_BLACK : GLPalette.WHITE);
 			GL.PopMatrix();
 			GL.PopAttrib();
