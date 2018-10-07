@@ -2,6 +2,7 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.gui.GuiQuestNotification;
 import com.parzivail.swg.npc.NpcJawa;
@@ -29,7 +30,9 @@ import com.parzivail.swg.render.pipe.RenderPipeSmallBent;
 import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
 import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
 import com.parzivail.swg.render.pipe.RenderWallPipeLarge;
+import com.parzivail.swg.render.util.EntityRenderDroppedItem;
 import com.parzivail.swg.render.weapon.*;
+import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.tile.TileGunRack;
@@ -59,6 +62,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -122,6 +126,8 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());
 		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());
 
+		RenderingRegistry.registerEntityRenderingHandler(EntitySmokeGrenade.class, new EntityRenderDroppedItem(new RenderSmokeGrenade(), new ItemStack(ItemRegister.grenadeSmoke)));
+
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleA280, new RenderA280());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleBowcaster, new RenderBowcaster());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleCycler, new RenderCycler());
@@ -137,7 +143,7 @@ public class Client extends Common
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleSe14c, new RenderSE14C());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleT21, new RenderT21());
 
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleT21, new RenderT21());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.grenadeSmoke, new RenderSmokeGrenade());
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHoth1), new RenderItemConsoleHoth1());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved1), new RenderItemConsoleHothCurved1());
