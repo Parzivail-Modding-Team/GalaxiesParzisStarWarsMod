@@ -1,10 +1,7 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.item.ItemBlasterSmallGasCanister;
-import com.parzivail.swg.item.ItemDebugWizard;
-import com.parzivail.swg.item.ItemPersonalDatapad;
-import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.item.*;
 import com.parzivail.swg.item.binocular.ItemBinoculars;
 import com.parzivail.swg.item.binocular.data.BinocularDescriptor;
 import com.parzivail.swg.item.blaster.ItemBlasterRifle;
@@ -47,6 +44,8 @@ public class ItemRegister
 
 	public static PItem saltPile;
 
+	public static PItemFood joganFruit;
+
 	public static PItem personalDatapad;
 	public static PItem binocularsMb450;
 
@@ -75,6 +74,8 @@ public class ItemRegister
 
 		register(saltPile = new PItem("saltPile"));
 
+		register(joganFruit = new PItemFood("joganFruit", 4, 0.3F));
+
 		register(personalDatapad = new ItemPersonalDatapad());
 		register(binocularsMb450 = new ItemBinoculars(new BinocularDescriptor("mb450", 0.1f)));
 
@@ -82,6 +83,11 @@ public class ItemRegister
 	}
 
 	private static void register(PItem item)
+	{
+		GameRegistry.registerItem(item, item.name, Resources.MODID);
+	}
+
+	private static void register(PItemFood item)
 	{
 		GameRegistry.registerItem(item, item.name, Resources.MODID);
 	}

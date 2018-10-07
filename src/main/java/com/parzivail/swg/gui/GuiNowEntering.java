@@ -76,6 +76,7 @@ public class GuiNowEntering
 		int yDiff = 0;
 		for (String part : parts)
 		{
+			Client.mc.fontRendererObj.drawString(part, x + 1, y + yDiff + 1, GLPalette.DARK_GREY);
 			Client.mc.fontRendererObj.drawString(part, x, y + yDiff, GLPalette.WHITE);
 			yDiff += f.FONT_HEIGHT;
 		}
