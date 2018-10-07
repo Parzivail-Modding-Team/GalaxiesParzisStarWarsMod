@@ -36,12 +36,9 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.FOVUpdateEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderLivingEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
@@ -150,6 +147,23 @@ public class EventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
+	public void on(RenderHandEvent event)
+	{
+		if (Client.mc.thePlayer != null)
+		{
+			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
+
+			if (heldItem != null && heldItem.getItem() instanceof IGuiOverlay)
+			{
+				IGuiOverlay overlay = (IGuiOverlay)heldItem.getItem();
+				if (overlay.shouldHideHand(Client.mc.thePlayer, heldItem) && event.isCancelable())
+					event.setCanceled(true);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void on(RenderGameOverlayEvent.Pre event)
 	{
 		Client.guiQuestNotification.update();
@@ -203,7 +217,7 @@ public class EventHandler
 					GL.Enable(EnableCap.PointSmooth);
 					GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
 
-					((IGuiOverlay)heldItem.getItem()).drawCrosshair(Client.resolution, Client.mc.thePlayer, heldItem);
+					((IGuiOverlay)heldItem.getItem()).drawOverlay(Client.resolution, Client.mc.thePlayer, heldItem);
 
 					GL.PopMatrix();
 					GL11.glColor4f(1, 1, 1, 1);

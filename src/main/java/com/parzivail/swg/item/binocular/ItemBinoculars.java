@@ -93,7 +93,7 @@ public class ItemBinoculars extends PItem implements IGuiOverlay, ILeftClickInte
 	}
 
 	@Override
-	public void drawCrosshair(ScaledResolution sr, EntityPlayer player, ItemStack stack)
+	public void drawOverlay(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
 		BinocularData bd = new BinocularData(stack);
 
@@ -194,6 +194,13 @@ public class ItemBinoculars extends PItem implements IGuiOverlay, ILeftClickInte
 			GL.PopMatrix();
 		}
 		GL.PopAttrib();
+	}
+
+	@Override
+	public boolean shouldHideHand(EntityPlayer player, ItemStack item)
+	{
+		BinocularData bd = new BinocularData(item);
+		return bd.isZooming;
 	}
 
 	private String getMeterCenteredOn(int center)

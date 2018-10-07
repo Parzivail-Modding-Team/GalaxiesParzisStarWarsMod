@@ -6,5 +6,7 @@ import net.minecraft.item.ItemStack;
 
 public interface IGuiOverlay
 {
-	void drawCrosshair(ScaledResolution sr, EntityPlayer player, ItemStack item);
+	void drawOverlay(ScaledResolution sr, EntityPlayer player, ItemStack item);
+
+	boolean shouldHideHand(EntityPlayer player, ItemStack item);
 }

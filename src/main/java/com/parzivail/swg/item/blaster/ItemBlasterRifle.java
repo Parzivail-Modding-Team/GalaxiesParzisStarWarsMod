@@ -109,7 +109,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 	}
 
 	@Override
-	public void drawCrosshair(ScaledResolution sr, EntityPlayer player, ItemStack stack)
+	public void drawOverlay(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
 		float expansion = 32 * avExpansion.animateTo(getSpreadAmount(stack, player), Ease::outQuad) + 5;
 		BlasterData bd = new BlasterData(stack);
@@ -154,6 +154,12 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 		mc.fontRendererObj.drawString(remaining, 0, 0, 0xFFFFFF);
 
 		GL.PopMatrix();
+	}
+
+	@Override
+	public boolean shouldHideHand(EntityPlayer player, ItemStack item)
+	{
+		return false;
 	}
 
 	private float getSpreadAmount(ItemStack stack, EntityPlayer player)
