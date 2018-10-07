@@ -3,6 +3,7 @@ package com.parzivail.swg.proxy;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
+import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.gui.GuiQuestNotification;
 import com.parzivail.swg.npc.NpcJawa;
@@ -33,6 +34,7 @@ import com.parzivail.swg.render.pipe.RenderWallPipeLarge;
 import com.parzivail.swg.render.util.EntityRenderDroppedItem;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;
+import com.parzivail.swg.render.weapon.grenades.RenderThermalDetonator;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.tile.TileGunRack;
@@ -127,6 +129,7 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntitySmokeGrenade.class, new EntityRenderDroppedItem(new RenderSmokeGrenade(), new ItemStack(ItemRegister.grenadeSmoke)));
+		RenderingRegistry.registerEntityRenderingHandler(EntityThermalDetonator.class, new EntityRenderDroppedItem(new RenderThermalDetonator(), new ItemStack(ItemRegister.grenadeThermalDetonator)));
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleA280, new RenderA280());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleBowcaster, new RenderBowcaster());
@@ -144,6 +147,7 @@ public class Client extends Common
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleT21, new RenderT21());
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.grenadeSmoke, new RenderSmokeGrenade());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.grenadeThermalDetonator, new RenderThermalDetonator());
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHoth1), new RenderItemConsoleHoth1());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved1), new RenderItemConsoleHothCurved1());
