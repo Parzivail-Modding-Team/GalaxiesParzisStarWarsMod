@@ -14,6 +14,7 @@ import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.PEntityRenderer;
 import com.parzivail.swg.render.antenna.RenderAntennaThin;
 import com.parzivail.swg.render.antenna.RenderSatelliteDish;
+import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
 import com.parzivail.swg.render.console.*;
 import com.parzivail.swg.render.crate.*;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
@@ -148,6 +149,8 @@ public class Client extends Common
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.grenadeSmoke, new RenderSmokeGrenade());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.grenadeThermalDetonator, new RenderThermalDetonator());
+
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.binocularsMb450, new RenderMacrobinoculars());
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHoth1), new RenderItemConsoleHoth1());
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved1), new RenderItemConsoleHothCurved1());
