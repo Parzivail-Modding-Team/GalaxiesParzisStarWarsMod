@@ -45,6 +45,8 @@ public class ItemRegister
 	public static PItem saltPile;
 
 	public static PItemFood joganFruit;
+	public static PItemFood meiloorun;
+	public static PItemFood mynockWing;
 
 	public static PItem personalDatapad;
 	public static PItem binocularsMb450;
@@ -75,6 +77,9 @@ public class ItemRegister
 		register(saltPile = new PItem("saltPile"));
 
 		register(joganFruit = new PItemFood("joganFruit", 4, 0.3F));
+		register(meiloorun = new PItemFood("meiloorun", 4, 0.3F));
+
+		register(mynockWing = new PItemFood("mynockWing", 2, 0.15F));
 
 		register(personalDatapad = new ItemPersonalDatapad());
 		register(binocularsMb450 = new ItemBinoculars(new BinocularDescriptor("mb450", 0.1f)));
