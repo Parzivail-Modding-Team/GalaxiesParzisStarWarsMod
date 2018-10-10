@@ -6,6 +6,7 @@ import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.gui.GuiQuestNotification;
+import com.parzivail.swg.mob.MobGizka;
 import com.parzivail.swg.npc.NpcJawa;
 import com.parzivail.swg.npc.NpcMerchant;
 import com.parzivail.swg.registry.BlockRegister;
@@ -26,6 +27,7 @@ import com.parzivail.swg.render.ladder.RenderItemLadder;
 import com.parzivail.swg.render.ladder.RenderLadder;
 import com.parzivail.swg.render.light.*;
 import com.parzivail.swg.render.machine.*;
+import com.parzivail.swg.render.mob.RenderGizka;
 import com.parzivail.swg.render.npc.RenderJawa;
 import com.parzivail.swg.render.npc.RenderMerchant;
 import com.parzivail.swg.render.pipe.RenderPipeSmallBent;
@@ -128,6 +130,8 @@ public class Client extends Common
 
 		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());
 		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());
+
+		RenderingRegistry.registerEntityRenderingHandler(MobGizka.class, new RenderGizka());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntitySmokeGrenade.class, new EntityRenderDroppedItem(new RenderSmokeGrenade(), new ItemStack(ItemRegister.grenadeSmoke)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityThermalDetonator.class, new EntityRenderDroppedItem(new RenderThermalDetonator(), new ItemStack(ItemRegister.grenadeThermalDetonator)));

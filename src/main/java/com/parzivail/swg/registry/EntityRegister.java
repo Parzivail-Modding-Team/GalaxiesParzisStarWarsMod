@@ -3,6 +3,7 @@ package com.parzivail.swg.registry;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
+import com.parzivail.swg.mob.MobGizka;
 import com.parzivail.swg.npc.NpcJawa;
 import com.parzivail.swg.npc.NpcMerchant;
 import com.parzivail.swg.ship.EntitySeat;
@@ -26,5 +27,7 @@ public class EntityRegister
 
 		EntityUtils.registerWithSpawnEgg(NpcMerchant.class, "testNpc", 0x6AC8D8, 0x6BD67B);
 		EntityUtils.registerWithSpawnEgg(NpcJawa.class, "jawa", 0xFF0000, 0x9B6C00);
+
+		EntityUtils.registerWithSpawnEgg(MobGizka.class, "gizka", 0xFFC291, 0x72BC4D);
 	}
 }
