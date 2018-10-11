@@ -10,17 +10,15 @@ import java.io.InputStream;
 
 final class State
 {
+	final int[] rings;
 	byte[] ringBuffer;
 	byte[] contextModes;
 	byte[] contextMap;
 	byte[] distContextMap;
 	byte[] output;
 	byte[] byteBuffer;  // BitReader
-
 	short[] shortBuffer; // BitReader
-
 	int[] intBuffer;  // BitReader
-	final int[] rings;
 	int[] blockTrees;
 	int[] hGroup0;
 	int[] hGroup1;
