@@ -55,6 +55,10 @@ public class ItemRegister
 	public static PItemFood gizkaChop;
 	public static PItemFood gizkaSteak;
 
+	public static PItemFood blueMilk;
+	public static PItemFood bluePuffCube;
+	public static PItemFood blueYogurt;
+
 	public static PItem personalDatapad;
 	public static PItem binocularsMb450;
 
@@ -93,6 +97,10 @@ public class ItemRegister
 		register(nerfSteak = new PItemFood("nerfSteak", 8, 0.8F));
 		register(gizkaChop = new PItemFood("gizkaChop", 3, 0.3F));
 		register(gizkaSteak = new PItemFood("gizkaSteak", 8, 0.8F));
+
+		register(blueMilk = new PItemFood("blueMilk", 4, 0.3F));
+		register(bluePuffCube = new PItemFood("bluePuffCube", 1, 0.3F));
+		register(blueYogurt = new PItemFood("blueYogurt", 4, 0.3F));
 
 		register(personalDatapad = new ItemPersonalDatapad());
 		register(binocularsMb450 = new ItemBinoculars(new BinocularDescriptor("mb450", 0.1f)));
