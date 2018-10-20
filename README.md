@@ -15,7 +15,7 @@ Today, I'm working again to create the **next generation** of mods which push th
 You can join the community in [the Discord server!](https://discord.gg/54MVQZZ)
 
 ## Support
-If you'd like to help support the mod, please consider becoming a donor!
+If you'd like to help support and sustain the mod, please consider becoming a donor!
 
 [![Become a donor!](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=8079542)
 
