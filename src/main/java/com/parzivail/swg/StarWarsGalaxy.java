@@ -110,6 +110,7 @@ public class StarWarsGalaxy
 
 		ItemRegister.register();
 		BlockRegister.register();
+		CraftingRegistry.register();
 		WorldRegister.register();
 		StructureRegister.register();
 		QuestRegister.register();
