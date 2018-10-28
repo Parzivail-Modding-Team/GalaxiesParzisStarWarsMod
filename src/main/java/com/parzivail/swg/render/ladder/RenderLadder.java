@@ -38,7 +38,7 @@ public class RenderLadder extends TileEntitySpecialRenderer
 		GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
 		GL11.glRotatef(90 * ((TileRotatable)te).getFacing(), 0, 1, 0);
 		GL.Scale(1.25f);
-		if (te.getWorld().getBlock(te.xCoord, te.yCoord + 1, te.zCoord) == Blocks.air)
+		if (te.getWorld() == null || te.getWorld().getBlock(te.xCoord, te.yCoord + 1, te.zCoord) == Blocks.air)
 		{
 			Minecraft.getMinecraft().renderEngine.bindTexture(textureTop);
 			modelTop.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.05F);

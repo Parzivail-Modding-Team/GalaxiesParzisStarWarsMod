@@ -53,9 +53,9 @@ public class RenderCeilingLight2 extends TileEntitySpecialRenderer
 
 			int i = 1;
 			boolean flag = false;
-			while (i <= 50)
+			while (i <= 2)
 			{
-				if (!te.getWorld().isAirBlock(te.xCoord, te.yCoord + i, te.zCoord))
+				if (te.getWorld() == null || !te.getWorld().isAirBlock(te.xCoord, te.yCoord + i, te.zCoord))
 				{
 					flag = true;
 					break;

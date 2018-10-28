@@ -13,6 +13,7 @@ import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.ItemRegister;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.PEntityRenderer;
+import com.parzivail.swg.render.RenderBasicTileItem;
 import com.parzivail.swg.render.antenna.RenderAntennaThin;
 import com.parzivail.swg.render.antenna.RenderSatelliteDish;
 import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
@@ -22,11 +23,12 @@ import com.parzivail.swg.render.entity.RenderBlasterBolt;
 import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
-import com.parzivail.swg.render.gunrack.RenderItemGunRack;
-import com.parzivail.swg.render.ladder.RenderItemLadder;
 import com.parzivail.swg.render.ladder.RenderLadder;
 import com.parzivail.swg.render.light.*;
-import com.parzivail.swg.render.machine.*;
+import com.parzivail.swg.render.machine.RenderMV;
+import com.parzivail.swg.render.machine.RenderMV2;
+import com.parzivail.swg.render.machine.RenderSpokedMachine;
+import com.parzivail.swg.render.machine.RenderTubeMachine;
 import com.parzivail.swg.render.mob.RenderGizka;
 import com.parzivail.swg.render.npc.RenderJawa;
 import com.parzivail.swg.render.npc.RenderMerchant;
@@ -61,6 +63,7 @@ import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -156,28 +159,6 @@ public class Client extends Common
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.binocularsMb450, new RenderMacrobinoculars());
 
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHoth1), new RenderItemConsoleHoth1());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved1), new RenderItemConsoleHothCurved1());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved2), new RenderItemConsoleHothCurved2());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothCurved3), new RenderItemConsoleHothCurved3());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothMedical1), new RenderItemMedicalConsole());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.consoleHothMedical2), new RenderItemMedicalConsole2());
-
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crate1), new RenderItemCrate1());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth1), new RenderItemHothCrate1());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateHoth2), new RenderItemHothCrate2());
-		//		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateMosEspa), new RenderItemX());
-		//		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.crateVilla), new RenderItemX());
-
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.floorLight), new RenderItemFloorLight());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.floorLight2), new RenderItemFloorLight2());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.ceilingLight), new RenderItemCeilingLight());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.ceilingLight2), new RenderItemCeilingLight2());
-
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.gunRack), new RenderItemGunRack());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.ladder), new RenderItemLadder());
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(BlockRegister.moistureVaporator), new RenderItemMV());
-
 		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth1.class, new RenderConsoleHothCurved1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth2.class, new RenderConsoleHothCurved2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth3.class, new RenderConsoleHothCurved3());
@@ -219,9 +200,55 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTallVentedPipe.class, new RenderTallVentedPipe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallPipeLarge.class, new RenderWallPipeLarge());
 
+		registerBasicTileItem(BlockRegister.consoleHothCurved1, 0.5f);
+		registerBasicTileItem(BlockRegister.consoleHothCurved2, 0.5f);
+		registerBasicTileItem(BlockRegister.consoleHothCurved3, 0.5f);
+		registerBasicTileItem(BlockRegister.consoleHothMedical1, 1);
+		registerBasicTileItem(BlockRegister.consoleHothMedical2, 0.5f);
+		registerBasicTileItem(BlockRegister.consoleHoth1, 0.5f);
+		registerBasicTileItem(BlockRegister.wallControlPanel, 1);
+		registerBasicTileItem(BlockRegister.wallControlPanelTall, 1);
+
+		registerBasicTileItem(BlockRegister.crate1, 0.8f);
+		registerBasicTileItem(BlockRegister.crateHoth1, 1);
+		registerBasicTileItem(BlockRegister.crateHoth2, 1);
+		registerBasicTileItem(BlockRegister.crateMosEspa, 0.9f);
+		registerBasicTileItem(BlockRegister.crateVilla, 0.8f);
+		registerBasicTileItem(BlockRegister.airTank, 0.7f);
+
+		registerBasicTileItem(BlockRegister.floorLight, 1);
+		registerBasicTileItem(BlockRegister.floorLight2, 1);
+		registerBasicTileItem(BlockRegister.ceilingLight, 1);
+		registerBasicTileItem(BlockRegister.ceilingLight2, 0.8f);
+		registerBasicTileItem(BlockRegister.angledWallLight, 1);
+		registerBasicTileItem(BlockRegister.floorLightDome, 1);
+		registerBasicTileItem(BlockRegister.wallIndicatorLight, 1);
+		registerBasicTileItem(BlockRegister.wallIndicatorLightCluster, 1);
+
+		registerBasicTileItem(BlockRegister.gunRack, 0.8f);
+		registerBasicTileItem(BlockRegister.ladder, 1);
+
+		registerBasicTileItem(BlockRegister.antennaThin, 0.4f);
+		registerBasicTileItem(BlockRegister.satelliteDish, 0.4f);
+
+		registerBasicTileItem(BlockRegister.moistureVaporator, 0.3f);
+		registerBasicTileItem(BlockRegister.moistureVaporator2, 0.4f);
+		registerBasicTileItem(BlockRegister.spokedMachine, 0.9f);
+		registerBasicTileItem(BlockRegister.tubeMachine, 0.3f);
+
+		registerBasicTileItem(BlockRegister.pipeSmallBent, 1);
+		registerBasicTileItem(BlockRegister.quadVentPipe, 0.5f);
+		registerBasicTileItem(BlockRegister.tallVentedPipe, 0.8f);
+		registerBasicTileItem(BlockRegister.wallPipeLarge, 1);
+
 		//RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(123));
 
 		Lumberjack.log("Client proxy loaded!");
+	}
+
+	private void registerBasicTileItem(Block block, float scale)
+	{
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), new RenderBasicTileItem(block, scale));
 	}
 
 	@Override
