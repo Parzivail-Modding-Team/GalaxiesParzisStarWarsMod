@@ -46,6 +46,7 @@ public class ItemRegister
 	public static PItem saltPile;
 
 	public static PItemFood joganFruit;
+	public static PItemFood chasuka;
 	public static PItemFood meiloorun;
 	public static PItemFood mynockWing;
 	public static PItemFood friedMynockWing;
@@ -97,6 +98,7 @@ public class ItemRegister
 		register(saltPile = new PItem("saltPile"));
 
 		register(joganFruit = new PItemFood("joganFruit", 4, 0.3F));
+		register(chasuka = new PItemFood("chasuka", 4, 0.3F));
 		register(meiloorun = new PItemFood("meiloorun", 4, 0.3F));
 		register(mynockWing = new PItemFood("mynockWing", 3, 0.3F));
 		register(friedMynockWing = new PItemFood("friedMynockWing", 8, 0.8F));
