@@ -10,6 +10,7 @@ import com.parzivail.swg.item.grenade.ItemSmokeGrenade;
 import com.parzivail.swg.item.grenade.ItemThermalDetonator;
 import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.common.registry.GameRegistry;
+import net.minecraft.potion.Potion;
 
 /**
  * Created by colby on 12/26/2017.
@@ -54,6 +55,8 @@ public class ItemRegister
 	public static PItemFood nerfSteak;
 	public static PItemFood gizkaChop;
 	public static PItemFood gizkaSteak;
+	public static PItemFood flangthPlate;
+	public static PItemFood flangthTakeout;
 
 	public static PItemFood blueMilk;
 	public static PItemFood bluePuffCube;
@@ -61,6 +64,9 @@ public class ItemRegister
 
 	public static PItemFood qrikkiBread;
 	public static PItemFood qrikkiWaffle;
+
+	public static PItemFood redDeathStick;
+	public static PItemFood yellowDeathStick;
 
 	public static PItem personalDatapad;
 	public static PItem binocularsMb450;
@@ -100,6 +106,11 @@ public class ItemRegister
 		register(nerfSteak = new PItemFood("nerfSteak", 8, 0.8F));
 		register(gizkaChop = new PItemFood("gizkaChop", 3, 0.3F));
 		register(gizkaSteak = new PItemFood("gizkaSteak", 8, 0.8F));
+		register(flangthTakeout = new PItemFood("flangthTakeout", 3, 0.3F));
+		register(flangthPlate = new PItemFood("flangthPlate", 8, 0.8F));
+
+		register(redDeathStick = (PItemFood)new PItemFood("redDeathStick", 3, 0.3F).setPotionEffect(Potion.heal.id, 10, 0, 0.8F));
+		register(yellowDeathStick = (PItemFood)new PItemFood("yellowDeathStick", 3, 0.3F).setPotionEffect(Potion.moveSpeed.id, 10, 0, 0.8F));
 
 		register(blueMilk = new PItemFood("blueMilk", 4, 0.3F));
 		register(bluePuffCube = new PItemFood("bluePuffCube", 1, 0.3F));
