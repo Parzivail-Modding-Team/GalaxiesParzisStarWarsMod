@@ -37,20 +37,23 @@ public class RenderBasicTileItem implements IItemRenderer
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
 		GL.PushMatrix();
+		if (type == ItemRenderType.INVENTORY)
+		{
+			GL.Translate(0, 0.8 * (scale - 1), 0);
+			GL.Scale(scale);
+		}
 		switch (type)
 		{
 			case EQUIPPED_FIRST_PERSON:
 				GL.Rotate(90, 0, 1, 0);
 				break;
-			case FIRST_PERSON_MAP:
-			case ENTITY:
 			case EQUIPPED:
 			case INVENTORY:
+			case FIRST_PERSON_MAP:
+			case ENTITY:
 				GL.Rotate(-90, 0, 1, 0);
 				break;
 		}
-		GL.Translate(0, 0.8 * (scale - 1), 0);
-		GL.Scale(scale);
 		tesr.renderTileEntityAt(tile, -0.5f, -0.5f, -0.5f, 0);
 		GL.PopMatrix();
 	}
