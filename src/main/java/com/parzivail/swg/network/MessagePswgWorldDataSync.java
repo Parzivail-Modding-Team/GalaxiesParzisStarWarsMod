@@ -1,6 +1,6 @@
 package com.parzivail.swg.network;
 
-import com.parzivail.swg.proxy.Client;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -28,7 +28,7 @@ public class MessagePswgWorldDataSync extends PMessage<MessagePswgWorldDataSync>
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		PswgWorldDataHandler.get(Client.mc.theWorld).readFromNBT(worldData);
+		StarWarsGalaxy.proxy.handleWorldDataSync(worldData);
 		return null;
 	}
 }

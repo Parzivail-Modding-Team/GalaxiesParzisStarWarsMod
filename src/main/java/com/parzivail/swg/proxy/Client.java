@@ -57,6 +57,7 @@ import com.parzivail.swg.tile.pipe.TilePipeSmallBent;
 import com.parzivail.swg.tile.pipe.TileQuadVentPipe;
 import com.parzivail.swg.tile.pipe.TileTallVentedPipe;
 import com.parzivail.swg.tile.pipe.TileWallPipeLarge;
+import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.PFramebuffer;
 import com.parzivail.util.ui.ShaderHelper;
@@ -71,6 +72,7 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 
@@ -273,5 +275,11 @@ public class Client extends Common
 	public void spawnSmokeParticle(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
 	{
 		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSmoke(world, x, y, z, velocityX, velocityY, velocityZ));
+	}
+
+	@Override
+	public void handleWorldDataSync(NBTTagCompound worldData)
+	{
+		PswgWorldDataHandler.get(mc.theWorld).readFromNBT(worldData);
 	}
 }
