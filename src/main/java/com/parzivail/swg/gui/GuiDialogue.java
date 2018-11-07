@@ -18,8 +18,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.input.Keyboard;
 
 public class GuiDialogue extends GuiContainer
@@ -36,15 +34,11 @@ public class GuiDialogue extends GuiContainer
 	private ModernArrowButton bNext;
 	private String npcDialogue = "";
 
-	public GuiDialogue(InventoryPlayer inventoryPlayer, Entity target)
+	public GuiDialogue(EntityPlayer player, Entity target)
 	{
-		super(new ContainerDialogue(inventoryPlayer, target));
+		super(new ContainerDialogue(target));
 		this.target = target;
-
-		// We have to use this awful hack because the EntityPlayer that's provided to
-		// the Gui through the InventoryPlayer is a strictly client-based player instance
-		// and isn't the one we want.
-		player = (EntityPlayer)DimensionManager.getWorld(inventoryPlayer.player.dimension).getEntityByID(inventoryPlayer.player.getEntityId());
+		this.player = player;
 
 		interaction = QuestRegister.complexQuest.createInteraction(player);
 	}

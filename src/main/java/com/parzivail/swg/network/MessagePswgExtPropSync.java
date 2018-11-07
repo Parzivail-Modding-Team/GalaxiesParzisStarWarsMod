@@ -1,13 +1,15 @@
 package com.parzivail.swg.network;
 
 import com.parzivail.swg.player.PswgExtProp;
+import com.parzivail.swg.proxy.Client;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.DimensionManager;
+import net.minecraft.world.World;
 
 /**
  * Created by colby on 12/29/2017.
@@ -34,7 +36,15 @@ public class MessagePswgExtPropSync extends PMessage<MessagePswgExtPropSync>
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		Entity e = DimensionManager.getWorld(dimension).getEntityByID(entityId);
+		World w = Client.mc.theWorld;
+		if (w == null)
+		{
+			Lumberjack.warn("Recieved null world for MessagePswgExtPropSync::handleMessage");
+			return null;
+		}
+		else
+			Lumberjack.info("Created player properties");
+		Entity e = w.getEntityByID(entityId);
 		PswgExtProp.get(e).loadNBTData(ieep);
 		return null;
 	}

@@ -14,9 +14,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.opengl.GL11;
 
 import java.util.EnumSet;
@@ -27,14 +25,10 @@ public class GuiPersonalDatapad extends GuiContainer
 	private final EntityPlayer player;
 	private int attachmentIdx;
 
-	public GuiPersonalDatapad(InventoryPlayer inventoryPlayer)
+	public GuiPersonalDatapad(EntityPlayer player)
 	{
 		super(new ContainerNothing());
-
-		// We have to use this awful hack because the EntityPlayer that's provided to
-		// the Gui through the InventoryPlayer is a strictly client-based player instance
-		// and isn't the real one.
-		player = (EntityPlayer)DimensionManager.getWorld(inventoryPlayer.player.dimension).getEntityByID(inventoryPlayer.player.getEntityId());
+		this.player = player;
 	}
 
 	@Override

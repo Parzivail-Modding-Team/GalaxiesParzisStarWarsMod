@@ -18,11 +18,11 @@ public class GuiHandler implements IGuiHandler
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z)
 	{
 		if (id == Resources.GUI_BLASTER_WORKBENCH)
-			return new GuiBlasterWorkbench(player.inventory, (TileBlasterWorkbench)world.getTileEntity(x, y, z));
+			return new GuiBlasterWorkbench(player, player.inventory, (TileBlasterWorkbench)world.getTileEntity(x, y, z));
 		if (id == Resources.GUI_DIALOGUE)
-			return new GuiDialogue(player.inventory, world.getEntityByID(x));
+			return new GuiDialogue(player, world.getEntityByID(x));
 		if (id == Resources.GUI_PERSONAL_DATAPAD)
-			return new GuiPersonalDatapad(player.inventory);
+			return new GuiPersonalDatapad(player);
 		return null;
 	}
 
@@ -32,7 +32,7 @@ public class GuiHandler implements IGuiHandler
 		if (id == Resources.GUI_BLASTER_WORKBENCH)
 			return new ContainerBlasterWorkbench(player.inventory, (TileBlasterWorkbench)world.getTileEntity(x, y, z));
 		if (id == Resources.GUI_DIALOGUE)
-			return new ContainerDialogue(player.inventory, world.getEntityByID(x));
+			return new ContainerDialogue(world.getEntityByID(x));
 		if (id == Resources.GUI_PERSONAL_DATAPAD)
 			return new ContainerNothing();
 		return null;

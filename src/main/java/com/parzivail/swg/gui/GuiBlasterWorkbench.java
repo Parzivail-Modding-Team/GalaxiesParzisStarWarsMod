@@ -20,7 +20,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.DimensionManager;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -40,15 +39,11 @@ public class GuiBlasterWorkbench extends GuiContainer
 	private GuiButton bEquip;
 	private GuiButton bBuy;
 
-	public GuiBlasterWorkbench(InventoryPlayer inventoryPlayer, TileBlasterWorkbench tile)
+	public GuiBlasterWorkbench(EntityPlayer player, InventoryPlayer inventoryPlayer, TileBlasterWorkbench tile)
 	{
 		super(new ContainerBlasterWorkbench(inventoryPlayer, tile));
 		this.tile = tile;
-
-		// We have to use this awful hack because the EntityPlayer that's provided to
-		// the Gui through the InventoryPlayer is a strictly client-based player instance
-		// and isn't the real one.
-		player = (EntityPlayer)DimensionManager.getWorld(inventoryPlayer.player.dimension).getEntityByID(inventoryPlayer.player.getEntityId());
+		this.player = player;
 	}
 
 	@Override
