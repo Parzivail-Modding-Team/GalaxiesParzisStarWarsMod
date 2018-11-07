@@ -2,12 +2,12 @@ package com.parzivail.swg.network;
 
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
-import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Created by colby on 12/29/2017.

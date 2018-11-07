@@ -1,9 +1,12 @@
 package com.parzivail.util.sound;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.audio.ITickableSound;
 import net.minecraft.client.audio.PositionedSound;
 import net.minecraft.util.ResourceLocation;
 
+@SideOnly(Side.CLIENT)
 public class AtmoSound extends PositionedSound implements ITickableSound
 {
 	private boolean donePlaying;

@@ -201,7 +201,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 		a.drawInfoCard(new FixedResolution(Client.mc, (int)(xSize / 3.4f), ySize / 2), player, tile.getBlaster());
 		GL.PopMatrix();
 
-		String s = a.localizedName;
+		String s = I18n.format(a.name);
 		fontRendererObj.drawString(s, xSize / 2 - fontRendererObj.getStringWidth(s) / 2, ySize - 212, GLPalette.ELECTRIC_BLUE);
 		s = a.getInfoText();
 		fontRendererObj.drawString(s, xSize / 2 - fontRendererObj.getStringWidth(s) / 2, ySize - 135, 0x404040);

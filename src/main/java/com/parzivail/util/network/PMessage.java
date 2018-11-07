@@ -1,6 +1,8 @@
 package com.parzivail.util.network;
 
 import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.util.math.lwjgl.Matrix4f;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -13,8 +15,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.awt.*;
 import java.io.Serializable;

@@ -1,8 +1,8 @@
 package com.parzivail.util.math;
 
+import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Vec3;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.List;

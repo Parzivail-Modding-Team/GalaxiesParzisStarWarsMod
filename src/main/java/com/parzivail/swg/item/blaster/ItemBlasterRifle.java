@@ -83,11 +83,11 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 		BlasterData bd = new BlasterData(stack);
 
 		if (bd.getScope() != null)
-			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("scope")), bd.getScope().localizedName));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("scope")), I18n.format(bd.getScope().name)));
 		if (bd.getBarrel() != null)
-			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("barrel")), bd.getBarrel().localizedName));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("barrel")), I18n.format(bd.getBarrel().name)));
 		if (bd.getGrip() != null)
-			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("grip")), bd.getGrip().localizedName));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("grip")), I18n.format(bd.getGrip().name)));
 	}
 
 	@Override

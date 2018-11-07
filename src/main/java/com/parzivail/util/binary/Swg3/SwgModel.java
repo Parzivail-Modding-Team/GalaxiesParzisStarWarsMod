@@ -3,14 +3,14 @@ package com.parzivail.util.binary.Swg3;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.util.binary.PIO;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.math.lwjgl.Vector2f;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.io.InputStream;
 import java.io.InvalidObjectException;

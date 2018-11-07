@@ -1,7 +1,6 @@
 package com.parzivail.util.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.ship.EntitySeat;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.util.common.Lumberjack;
@@ -157,11 +156,5 @@ public class EntityUtils
 				return entity;
 		}
 		return null;
-	}
-
-	public static boolean isClientControlled(MultipartFlightModel query)
-	{
-		MultipartFlightModel ship = getShipRiding(Client.mc.thePlayer);
-		return ship != null && ship.equals(query) && ship.isControlling(Client.mc.thePlayer);
 	}
 }

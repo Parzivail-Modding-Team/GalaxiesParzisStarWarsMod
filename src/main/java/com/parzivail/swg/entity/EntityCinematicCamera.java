@@ -1,10 +1,10 @@
 package com.parzivail.swg.entity;
 
 import com.parzivail.swg.ship.MultipartFlightModel;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import org.lwjgl.util.vector.Vector3f;
 
 public class EntityCinematicCamera extends EntityLivingBase
 {

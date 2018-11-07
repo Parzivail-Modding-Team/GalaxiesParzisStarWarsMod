@@ -1,5 +1,6 @@
 package com.parzivail.swg.gui;
 
+import com.parzivail.util.math.lwjgl.Vector2f;
 import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.Fx.Util;
 import com.parzivail.util.ui.GLPalette;
@@ -8,7 +9,6 @@ import com.parzivail.util.ui.gltk.PrimitiveType;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;

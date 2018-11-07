@@ -1,6 +1,6 @@
 package com.parzivail.util.binary.Swg3;
 
-import org.lwjgl.util.vector.Vector3f;
+import com.parzivail.util.math.lwjgl.Vector3f;
 
 /**
  * Created by colby on 12/25/2017.

@@ -1,5 +1,7 @@
 package com.parzivail.util.ui;
 
+import com.parzivail.util.math.lwjgl.Vector2f;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
@@ -7,8 +9,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Created by colby on 9/13/2017.

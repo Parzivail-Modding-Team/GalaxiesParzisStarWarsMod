@@ -4,6 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.lwjgl.Vector2f;
 import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.Fx.Util;
 import com.parzivail.util.ui.GLPalette;
@@ -20,7 +21,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
-import org.lwjgl.util.vector.Vector2f;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -33,11 +33,13 @@ public class TileAtmoSound extends TileEntity
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void updateEntityClient()
 	{
 		updateSound();
 	}
 
+	@SideOnly(Side.CLIENT)
 	private void updateSound()
 	{
 		ResourceLocation soundRL = getSound();
@@ -54,6 +56,7 @@ public class TileAtmoSound extends TileEntity
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	public void stopSound()
 	{
 		ResourceLocation soundRL = getSound();

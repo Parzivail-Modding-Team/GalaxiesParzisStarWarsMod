@@ -1,14 +1,14 @@
 package com.parzivail.util.ui.gltk;
 
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.util.math.lwjgl.Vector2f;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.GLUtessellator;
-import org.lwjgl.util.vector.Vector2f;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.EnumSet;

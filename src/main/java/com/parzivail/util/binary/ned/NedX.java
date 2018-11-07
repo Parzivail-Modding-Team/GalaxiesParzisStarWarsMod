@@ -1,9 +1,8 @@
 package com.parzivail.util.binary.ned;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.util.binary.PIO;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -27,8 +26,7 @@ public class NedX
 	{
 		try
 		{
-			IResource res = Minecraft.getMinecraft().getResourceManager().getResource(filename);
-			InputStream fs = res.getInputStream();
+			InputStream fs = PIO.getResource(StarWarsGalaxy.class, filename);
 			LittleEndianDataInputStream s = new LittleEndianDataInputStream(fs);
 
 			byte[] identr = new byte[4];

@@ -1,7 +1,7 @@
 package com.parzivail.util.math;
 
-import org.lwjgl.util.vector.Matrix4f;
-import org.lwjgl.util.vector.Vector3f;
+import com.parzivail.util.math.lwjgl.Matrix4f;
+import com.parzivail.util.math.lwjgl.Vector3f;
 
 public class RotatedAxes
 {

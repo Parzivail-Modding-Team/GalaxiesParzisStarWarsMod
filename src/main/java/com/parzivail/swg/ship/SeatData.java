@@ -1,6 +1,6 @@
 package com.parzivail.swg.ship;
 
-import org.lwjgl.util.vector.Vector3f;
+import com.parzivail.util.math.lwjgl.Vector3f;
 
 public class SeatData
 {

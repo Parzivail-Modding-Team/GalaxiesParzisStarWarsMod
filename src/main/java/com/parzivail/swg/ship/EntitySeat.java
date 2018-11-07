@@ -1,11 +1,11 @@
 package com.parzivail.swg.ship;
 
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import org.lwjgl.util.vector.Vector3f;
 
 public class EntitySeat extends Entity
 {

@@ -8,6 +8,7 @@ import com.parzivail.swg.network.MessageFlightModelUpdate;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,7 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.util.UUID;
 
@@ -104,7 +104,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 
 		previousOrientation = orientation.clone();
 
-		if (worldObj.isRemote && EntityUtils.isClientControlled(this))
+		if (worldObj.isRemote && StarWarsGalaxy.proxy.isClientControlled(this))
 			KeyHandler.handleVehicleMovement();
 
 		if (getDriver() != null)

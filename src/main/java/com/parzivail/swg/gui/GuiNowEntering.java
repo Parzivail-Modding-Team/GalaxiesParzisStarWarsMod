@@ -4,6 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.ZoneRegistry;
 import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.TextUtil;
 import com.parzivail.util.ui.Timeline;
@@ -15,7 +16,6 @@ import com.parzivail.util.world.Zone;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 

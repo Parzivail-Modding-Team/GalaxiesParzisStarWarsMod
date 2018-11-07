@@ -1,11 +1,11 @@
 package com.parzivail.swg.npc.ai;
 
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.world.Zone;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.Vec3;
-import org.lwjgl.util.vector.Vector3f;
 
 public class AiStayWithinBounds extends EntityAIBase
 {

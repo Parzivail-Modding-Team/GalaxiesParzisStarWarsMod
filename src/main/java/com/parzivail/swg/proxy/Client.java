@@ -59,6 +59,7 @@ import com.parzivail.swg.tile.pipe.TileTallVentedPipe;
 import com.parzivail.swg.tile.pipe.TileWallPipeLarge;
 import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.PFramebuffer;
 import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -281,5 +282,12 @@ public class Client extends Common
 	public void handleWorldDataSync(NBTTagCompound worldData)
 	{
 		PswgWorldDataHandler.get(mc.theWorld).readFromNBT(worldData);
+	}
+
+	@Override
+	public boolean isClientControlled(MultipartFlightModel query)
+	{
+		MultipartFlightModel ship = EntityUtils.getShipRiding(mc.thePlayer);
+		return ship != null && ship.equals(query) && ship.isControlling(mc.thePlayer);
 	}
 }

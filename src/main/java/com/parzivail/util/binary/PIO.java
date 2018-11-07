@@ -3,6 +3,7 @@ package com.parzivail.util.binary;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 import java.io.*;
 import java.util.UUID;
@@ -112,5 +113,10 @@ public class PIO
 			lsb = (lsb << 8) | (id[i] & 0xff);
 
 		return new UUID(msb, lsb);
+	}
+
+	public static InputStream getResource(Class reference, ResourceLocation resourceLocation)
+	{
+		return reference.getClassLoader().getResourceAsStream("assets/" + resourceLocation.getResourceDomain() + "/" + resourceLocation.getResourcePath());
 	}
 }

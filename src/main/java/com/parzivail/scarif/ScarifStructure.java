@@ -1,9 +1,9 @@
 package com.parzivail.scarif;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.util.binary.PIO;
 import com.parzivail.util.binary.brotli.BrotliInputStream;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IResource;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
@@ -32,8 +32,7 @@ public class ScarifStructure
 
 	public static ScarifStructure read(ResourceLocation filename) throws IOException
 	{
-		IResource res = Minecraft.getMinecraft().getResourceManager().getResource(filename);
-		InputStream fs = res.getInputStream();
+		InputStream fs = PIO.getResource(StarWarsGalaxy.class, filename);
 		BrotliInputStream bis = new BrotliInputStream(fs);
 		LittleEndianDataInputStream s = new LittleEndianDataInputStream(bis);
 
