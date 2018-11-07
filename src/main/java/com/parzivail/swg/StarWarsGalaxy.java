@@ -24,7 +24,6 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.MinecraftForge;
-import org.lwjgl.util.vector.Vector3f;
 
 import java.io.File;
 import java.util.Random;
@@ -51,9 +50,6 @@ public class StarWarsGalaxy
 
 	public static SimpleNetworkWrapper network;
 	private static int packetId;
-
-	public Vector3f traceStart = new Vector3f(0, 0, 0);
-	public Vector3f traceEnd = new Vector3f(0, 0, 0);
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)

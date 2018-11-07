@@ -8,7 +8,6 @@ import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
-import com.parzivail.util.ui.Fx.Util;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -68,12 +67,6 @@ public class EntityUtils
 				distance = mop.hitVec.distanceTo(startPos);
 				endPos = newEnd;
 			}
-		}
-
-		if (!fromEntity.worldObj.isRemote)
-		{
-			StarWarsGalaxy.instance.traceStart = Util.Vector3f(startPos);
-			StarWarsGalaxy.instance.traceEnd = Util.Vector3f(endPos);
 		}
 
 		for (Object e : list)
