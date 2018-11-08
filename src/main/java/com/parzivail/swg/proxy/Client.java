@@ -9,6 +9,7 @@ import com.parzivail.swg.gui.GuiQuestNotification;
 import com.parzivail.swg.mob.MobGizka;
 import com.parzivail.swg.npc.NpcJawa;
 import com.parzivail.swg.npc.NpcMerchant;
+import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.ItemRegister;
 import com.parzivail.swg.registry.KeybindRegistry;
@@ -282,6 +283,21 @@ public class Client extends Common
 	public void handleWorldDataSync(NBTTagCompound worldData)
 	{
 		PswgWorldDataHandler.get(mc.theWorld).readFromNBT(worldData);
+	}
+
+	@Override
+	public void handlePlayerDataSync(int entityId, NBTTagCompound ieep)
+	{
+		World w = mc.theWorld;
+		if (w == null)
+		{
+			Lumberjack.warn("Recieved null world for MessagePswgExtPropSync::handleMessage");
+			return;
+		}
+		else
+			Lumberjack.info("Created player properties");
+		Entity e = w.getEntityByID(entityId);
+		PswgExtProp.get(e).loadNBTData(ieep);
 	}
 
 	@Override

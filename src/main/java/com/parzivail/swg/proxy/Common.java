@@ -72,6 +72,10 @@ public class Common
 	{
 	}
 
+	public void handlePlayerDataSync(int entityId, NBTTagCompound ieep)
+	{
+	}
+
 	public boolean isClientControlled(MultipartFlightModel multipartFlightModel)
 	{
 		return false;
