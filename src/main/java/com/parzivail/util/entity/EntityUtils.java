@@ -52,7 +52,7 @@ public class EntityUtils
 
 		Entity pointedEntity = null;
 		RaytraceHitBlock rhb = null;
-		Vec3 startPos = fromEntity.getPosition(0).addVector(0, fromEntity.getEyeHeight(), 0);
+		Vec3 startPos = Vec3.createVectorHelper(fromEntity.posX, fromEntity.posY, fromEntity.posZ).addVector(0, fromEntity.getEyeHeight(), 0);
 		Vec3 endPos = startPos.addVector(fromDir.xCoord * distance, fromDir.yCoord * distance, fromDir.zCoord * distance);
 		List list = fromEntity.worldObj.getEntitiesWithinAABBExcludingEntity(fromEntity, fromEntity.boundingBox.addCoord(fromDir.xCoord * distance, fromDir.yCoord * distance, fromDir.zCoord * distance).expand(1, 1, 1));
 
