@@ -38,4 +38,12 @@ public class BlockUtils
 			}
 		}
 	}
+
+	public static float getTileRotation(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
+	{
+		TileEntity tile = p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_);
+		if (!(tile instanceof TileRotatable))
+			return 0;
+		return ((TileRotatable)tile).getFacing();
+	}
 }

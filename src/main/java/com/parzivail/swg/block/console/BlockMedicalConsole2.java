@@ -2,9 +2,9 @@ package com.parzivail.swg.block.console;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.console.TileMedicalConsole2;
+import com.parzivail.util.block.BlockUtils;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockRotate;
-import com.parzivail.util.block.TileRotatable;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
@@ -48,7 +48,7 @@ public class BlockMedicalConsole2 extends PBlockRotate
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
 	{
-		float face = ((TileRotatable)p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_)).getFacing();
+		float face = BlockUtils.getTileRotation(p_149719_1_, p_149719_2_, p_149719_3_, p_149719_4_);
 		if (face == 0.5f || face == 4f)
 		{
 			setBlockBounds(0, 0, 0.35f, 1, 3, 1);

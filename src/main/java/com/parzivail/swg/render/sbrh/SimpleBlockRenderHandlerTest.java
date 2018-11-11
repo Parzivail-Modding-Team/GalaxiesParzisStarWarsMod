@@ -1,6 +1,7 @@
 package com.parzivail.swg.render.sbrh;
 
-import com.parzivail.swg.render.machine.ModelMV;
+import com.parzivail.util.block.PBlockContainer;
+import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
@@ -8,30 +9,32 @@ import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 
 public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandler
 {
 	private final int id;
+	private final ModelBase model;
 
-	public SimpleBlockRenderHandlerTest(int id)
+	public SimpleBlockRenderHandlerTest(PBlockContainer block, ModelBase model)
 	{
-		this.id = id;
+		id = block.name.hashCode();
+		this.model = model;
 	}
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
-
 	}
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
+		RenderBlocks.getInstance().setRenderBoundsFromBlock(block);
 		Tessellator tessellator = Tessellator.instance;
 
-		ModelBase m = new ModelMV();
 		IIcon icon = block.getIcon(0, 0);
 		float minu = icon.getMinU();
 		float maxu = icon.getMaxU();
@@ -39,7 +42,7 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 		float maxv = icon.getMaxV();
 
 		tessellator.addTranslation(x + 0.5f, y + 1.5f, z + 0.5f);
-		for (Object o : m.boxList)
+		for (Object o : model.boxList)
 		{
 			ModelRenderer modelRenderer = (ModelRenderer)o;
 			int s = ReflectionHelper.getPrivateValue(ModelRenderer.class, modelRenderer, "textureOffsetX");
@@ -52,13 +55,13 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 				// x' = -x
 				// y' = -y
 
-				float posX1 = -(box.posX1 + modelRenderer.rotationPointX);
+				float posX1 = (box.posX1 + modelRenderer.rotationPointX);
 				float posY1 = -(box.posY1 + modelRenderer.rotationPointY);
 				float posZ1 = box.posZ1 + modelRenderer.rotationPointZ;
-				float posX2 = -(box.posX2 + modelRenderer.rotationPointX);
+				float posX2 = (box.posX2 + modelRenderer.rotationPointX);
 				float posY2 = -(box.posY2 + modelRenderer.rotationPointY);
 				float posZ2 = box.posZ2 + modelRenderer.rotationPointZ;
-				int width = -(int)(posX2 - posX1);
+				int width = (int)(posX2 - posX1);
 				int height = -(int)(posY2 - posY1);
 				int depth = (int)(posZ2 - posZ1);
 
@@ -105,13 +108,25 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 					Vec3 vec31 = texturedQuad.vertexPositions[1].vector3D.subtract(texturedQuad.vertexPositions[2].vector3D);
 					Vec3 vec32 = vec31.crossProduct(vec3).normalize();
 
-					tessellator.setNormal((float)vec32.xCoord, (float)vec32.yCoord, (float)vec32.zCoord);
+					Vec3 lightDir = Vec3.createVectorHelper(1, 1, 1);
+					int brightness = (int)(MathHelper.clamp_double(vec32.dotProduct(lightDir) * 128, 0, 128));
+					lightDir = Vec3.createVectorHelper(-1, 1, 1);
+					brightness += (int)(MathHelper.clamp_double(vec32.dotProduct(lightDir) * 128, 0, 128));
+
+					brightness += 255;
+
+					int mixBrightness = block.getMixedBrightnessForBlock(world, x, y, z);
+					tessellator.setBrightness(mixBrightness);
+
+					//tessellator.setNormal((float)vec32.xCoord, (float)vec32.yCoord, (float)vec32.zCoord);
+					int c = GLPalette.colorToInt(brightness, brightness, brightness);
+					tessellator.setColorOpaque_I(c);
 
 					for (int i1 = 0; i1 < 4; ++i1)
 					{
 						PositionTextureVertex positiontexturevertex = texturedQuad.vertexPositions[i1];
-						float tu = minu + (maxu - minu) * positiontexturevertex.texturePositionX;
-						float tv = minv + (maxv - minv) * positiontexturevertex.texturePositionY;
+						float tu = minu + (maxu - minu) * positiontexturevertex.texturePositionX / 2;
+						float tv = minv + (maxv - minv) * (positiontexturevertex.texturePositionY / 4f);
 						tessellator.addVertexWithUV((double)((float)positiontexturevertex.vector3D.xCoord * sc), (double)((float)positiontexturevertex.vector3D.yCoord * sc), (double)((float)positiontexturevertex.vector3D.zCoord * sc), tu, tv);
 					}
 				}

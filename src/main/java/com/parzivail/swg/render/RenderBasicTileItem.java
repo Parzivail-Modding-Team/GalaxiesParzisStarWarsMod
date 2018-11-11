@@ -36,6 +36,9 @@ public class RenderBasicTileItem implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
+		if (tesr == null)
+			return;
+
 		GL.PushMatrix();
 		if (type == ItemRenderType.INVENTORY)
 		{

@@ -1005,6 +1005,21 @@ public class GLPalette
 	}
 
 	/**
+	 * Turns a Color into a packed RGB int
+	 *
+	 * @param c The color to pack
+	 *
+	 * @return The packed int
+	 */
+	public static int colorToInt(int r, int g, int b)
+	{
+		int rgb = (r & 0xFF);
+		rgb = (rgb << 8) + (g & 0xFF);
+		rgb = (rgb << 8) + (b & 0xFF);
+		return rgb;
+	}
+
+	/**
 	 * Makes an RGB packed int opaque in the A channel
 	 *
 	 * @param rgb The color to make opaque

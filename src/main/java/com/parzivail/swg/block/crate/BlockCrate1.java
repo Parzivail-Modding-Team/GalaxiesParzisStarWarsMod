@@ -1,5 +1,6 @@
 package com.parzivail.swg.block.crate;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.crate.TileCrate1;
 import com.parzivail.util.block.HarvestLevel;
@@ -17,6 +18,7 @@ public class BlockCrate1 extends PBlockRotate
 		setBlockBounds(0, 0, 0, 1, 2, 1);
 		setHardness(50.0F);
 		setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setTextureName(Resources.modColon("crate1"));
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class BlockCrate1 extends PBlockRotate
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+		return name.hashCode();
 	}
 
 	@Override
