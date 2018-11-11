@@ -26,7 +26,10 @@ import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
 import com.parzivail.swg.render.ladder.RenderLadder;
 import com.parzivail.swg.render.light.*;
-import com.parzivail.swg.render.machine.*;
+import com.parzivail.swg.render.machine.RenderMV;
+import com.parzivail.swg.render.machine.RenderMV2;
+import com.parzivail.swg.render.machine.RenderSpokedMachine;
+import com.parzivail.swg.render.machine.RenderTubeMachine;
 import com.parzivail.swg.render.mob.RenderGizka;
 import com.parzivail.swg.render.npc.RenderJawa;
 import com.parzivail.swg.render.npc.RenderMerchant;
@@ -34,7 +37,6 @@ import com.parzivail.swg.render.pipe.RenderPipeSmallBent;
 import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
 import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
 import com.parzivail.swg.render.pipe.RenderWallPipeLarge;
-import com.parzivail.swg.render.sbrh.SimpleBlockRenderHandlerTest;
 import com.parzivail.swg.render.util.EntityRenderDroppedItem;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;
@@ -170,7 +172,7 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanel.class, new RenderWallControlPanel());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanelTall.class, new RenderWallControlPanelTall());
 
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth1.class, new RenderHothCrate1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth2.class, new RenderHothCrate2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateMosEspa.class, new RenderCrateMosEspa());
@@ -243,8 +245,8 @@ public class Client extends Common
 		registerBasicTileItem(BlockRegister.tallVentedPipe, 0.8f);
 		registerBasicTileItem(BlockRegister.wallPipeLarge, 1);
 
-		RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(BlockRegister.moistureVaporator, new ModelMV()));
-		RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(BlockRegister.crate1, new ModelCrate1()));
+		//		RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(BlockRegister.moistureVaporator, new ModelMV()));
+		//		RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(BlockRegister.crate1, new ModelCrate1()));
 
 		Lumberjack.log("Client proxy loaded!");
 	}
