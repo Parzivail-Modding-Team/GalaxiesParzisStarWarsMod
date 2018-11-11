@@ -160,10 +160,10 @@ public class BlockRegister
 		register(darkGrayGrate = (PBlockConnected)new PBlockConnected("grateDarkGray", "grateDarkGray", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
 		register(blackGrate = (PBlockConnected)new PBlockConnected("grateBlack", "grateBlack", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
 
-		register(grayLight = (PBlockPillar)new BlockGrayLight().setStepSound(Block.soundTypeMetal));
-		register(darkGrayLight = (PBlockPillar)new BlockDarkGrayLight().setStepSound(Block.soundTypeMetal));
-		register(grayLightVert = (PBlockPillar)new BlockGrayLightVertical().setStepSound(Block.soundTypeMetal));
-		register(darkGrayLightVert = (PBlockPillar)new BlockDarkGrayLightVertical().setStepSound(Block.soundTypeMetal));
+		register(grayLight = new BlockGrayLight());
+		register(darkGrayLight = new BlockDarkGrayLight());
+		register(grayLightVert = new BlockGrayLightVertical());
+		register(darkGrayLightVert = new BlockDarkGrayLightVertical());
 
 		register(templeStone = new PBlock("templeStone"));
 		register(templeStoneBrick = new PBlock("templeStoneBrick"));
