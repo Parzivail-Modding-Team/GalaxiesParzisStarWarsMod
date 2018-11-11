@@ -9,6 +9,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -58,6 +59,12 @@ public class BlockLadder extends PBlockContainer
 			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
 			te.setFacing(l);
 		}
+	}
+
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World worldIn, int x, int y, int z)
+	{
+		setBlockBoundsBasedOnState(worldIn, x, y, z);
+		return super.getCollisionBoundingBoxFromPool(worldIn, x, y, z);
 	}
 
 	@Override

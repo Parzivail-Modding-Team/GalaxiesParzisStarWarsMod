@@ -50,25 +50,13 @@ public class RenderCeilingLight2 extends TileEntitySpecialRenderer
 
 		if (te != null)
 		{
-
-			int i = 1;
-			boolean flag = false;
-			while (i <= 2)
-			{
-				if (te.getWorld() == null || !te.getWorld().isAirBlock(te.xCoord, te.yCoord + i, te.zCoord))
-				{
-					flag = true;
-					break;
-				}
-				i++;
-			}
-
-			if (flag)
+			double d = x * x + y * y + z * z;
+			if (d != 0.75f)
 			{
 				GL11.glColor4f(0, 0, 0, 1);
-				GL11.glLineWidth((float)(30 / Math.sqrt(x * x + y * y + z * z)));
-				D3.DrawLine(0, 0.5f, 0.4f, 0, -i + 1, 0.4f);
-				D3.DrawLine(0, 0.5f, -0.4f, 0, -i + 1, -0.4f);
+				GL11.glLineWidth((float)(30 / Math.sqrt(d)));
+				D3.DrawLine(0, 0.5f, 0.4f, 0, -2, 0.4f);
+				D3.DrawLine(0, 0.5f, -0.4f, 0, -2, -0.4f);
 			}
 		}
 		GL11.glPopAttrib();

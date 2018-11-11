@@ -2,11 +2,12 @@ package com.parzivail.swg.block.light;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.light.TileWallIndicator;
+import com.parzivail.util.block.BlockUtils;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockRotate;
-import com.parzivail.util.block.TileRotatable;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -21,28 +22,16 @@ public class BlockWallIndicator extends PBlockRotate
 		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 	}
 
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World worldIn, int x, int y, int z)
+	{
+		setBlockBoundsBasedOnState(worldIn, x, y, z);
+		return super.getCollisionBoundingBoxFromPool(worldIn, x, y, z);
+	}
+
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
 	{
-		if (p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_) instanceof TileRotatable)
-		{
-			int meta = Math.abs((int)((TileRotatable)p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_)).getFacing()) % 4;
-			switch (meta)
-			{
-				case 0:
-					setBlockBounds(0.2f, 0.35f, 0.9f, 0.8f, 0.7f, 1f);
-					break;
-				case 1:
-					setBlockBounds(0.9f, 0.35f, 0.2f, 1f, 0.7f, 0.8f);
-					break;
-				case 2:
-					setBlockBounds(0.2f, 0.35f, 0f, 0.8f, 0.7f, 0.1f);
-					break;
-				case 3:
-					setBlockBounds(0f, 0.35f, 0.2f, 0.1f, 0.7f, 0.8f);
-					break;
-			}
-		}
+		BlockUtils.setSmall8SidedBounds(p_149719_1_, this, p_149719_2_, p_149719_3_, p_149719_4_);
 	}
 
 	@Override

@@ -16,8 +16,10 @@ import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.world.PswgWorldDataHandler;
+import com.parzivail.util.block.TileRotatable;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
+import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.ShaderHelper;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -31,11 +33,13 @@ import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -190,6 +194,20 @@ public class EventHandler
 			if (event.type == ElementType.TEXT)
 			{
 				GuiNowEntering.draw(Client.mc.thePlayer);
+
+				if (Client.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+				{
+					Block block = Client.mc.theWorld.getBlock(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
+					if (block.hasTileEntity(0))
+					{
+						TileRotatable tile = (TileRotatable)Client.mc.theWorld.getTileEntity(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
+
+						GL.PushMatrix();
+						GL.Scale(0.5);
+						Client.mc.fontRendererObj.drawStringWithShadow(String.format("Facing: %s", tile.getFacing()), Client.resolution.getScaledWidth(), Client.resolution.getScaledHeight() - Client.mc.fontRendererObj.FONT_HEIGHT, GLPalette.WHITE);
+						GL.PopMatrix();
+					}
+				}
 			}
 
 			if (heldItem != null && heldItem.getItem() instanceof IScreenShader)

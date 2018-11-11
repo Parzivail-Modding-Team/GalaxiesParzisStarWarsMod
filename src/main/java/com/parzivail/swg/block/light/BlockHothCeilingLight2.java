@@ -6,7 +6,6 @@ import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 public class BlockHothCeilingLight2 extends PBlockRotate
@@ -18,6 +17,7 @@ public class BlockHothCeilingLight2 extends PBlockRotate
 		setHardness(50.0F);
 		setLightLevel(1);
 		setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setBlockBounds(0, 0.5f, 0, 1, 1, 1);
 	}
 
 	@Override
@@ -36,12 +36,6 @@ public class BlockHothCeilingLight2 extends PBlockRotate
 	public boolean isOpaqueCube()
 	{
 		return false;
-	}
-
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
-	{
-		setBlockBounds(0, 0.5f, 0, 1, 1, 1);
 	}
 
 	@Override
