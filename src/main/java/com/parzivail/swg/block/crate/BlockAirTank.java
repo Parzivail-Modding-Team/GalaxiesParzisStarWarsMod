@@ -1,5 +1,6 @@
 package com.parzivail.swg.block.crate;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.crate.TileAirTank;
 import com.parzivail.util.block.HarvestLevel;
@@ -17,6 +18,7 @@ public class BlockAirTank extends PBlockRotate
 		setBlockBounds(0.3f, 0, 0.3f, 0.7f, 1.7f, 0.7f);
 		setHardness(50.0F);
 		setHarvestLevel("pickaxe", HarvestLevel.IRON);
+		setTextureName(Resources.modColon("moistureVaporator"));
 	}
 
 	@Override
@@ -28,7 +30,7 @@ public class BlockAirTank extends PBlockRotate
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+		return 123; // -1;
 	}
 
 	@Override

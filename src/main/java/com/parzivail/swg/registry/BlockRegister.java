@@ -137,7 +137,7 @@ public class BlockRegister
 		register(rhodocrositeSand = new PBlockSand("rhodocrositeSand"));
 		register(hothStone = new PBlock("hothStone"));
 		register(concrete = new PBlock("concrete"));
-		register(lavaRock = new PBlock("lavaRock"));
+		register(lavaRock = (PBlock)new PBlock("lavaRock").setLightLevel(0.625f));
 		register(oldBrick = new PBlock("oldBrick"));
 		register(salt = new PBlockLayer("salt", ItemRegister.saltPile));
 		register(bespinElevator = new PBlock("bespinElevator"));

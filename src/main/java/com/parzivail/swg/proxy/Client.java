@@ -37,6 +37,7 @@ import com.parzivail.swg.render.pipe.RenderPipeSmallBent;
 import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
 import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
 import com.parzivail.swg.render.pipe.RenderWallPipeLarge;
+import com.parzivail.swg.render.sbrh.SimpleBlockRenderHandlerTest;
 import com.parzivail.swg.render.util.EntityRenderDroppedItem;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;
@@ -245,7 +246,7 @@ public class Client extends Common
 		registerBasicTileItem(BlockRegister.tallVentedPipe, 0.8f);
 		registerBasicTileItem(BlockRegister.wallPipeLarge, 1);
 
-		//RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(123));
+		RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(123));
 
 		Lumberjack.log("Client proxy loaded!");
 	}

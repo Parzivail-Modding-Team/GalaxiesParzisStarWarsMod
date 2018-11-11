@@ -1,8 +1,8 @@
 package com.parzivail.swg.render.sbrh;
 
-import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.render.machine.ModelMV;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.model.*;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -31,15 +31,20 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 	{
 		Tessellator tessellator = Tessellator.instance;
 
-		double scale = 1.0;
-		IIcon icon = BlockRegister.fastGrass.getIcon(0, 0);
-
 		ModelBase m = new ModelMV();
+		IIcon icon = block.getIcon(0, 0);
+		float minu = icon.getMinU();
+		float maxu = icon.getMaxU();
+		float minv = icon.getMinV();
+		float maxv = icon.getMaxV();
 
 		tessellator.addTranslation(x + 0.5f, y + 1.5f, z + 0.5f);
 		for (Object o : m.boxList)
 		{
 			ModelRenderer modelRenderer = (ModelRenderer)o;
+			int s = ReflectionHelper.getPrivateValue(ModelRenderer.class, modelRenderer, "textureOffsetX");
+			int t = ReflectionHelper.getPrivateValue(ModelRenderer.class, modelRenderer, "textureOffsetY");
+
 			for (int i = 0; i < modelRenderer.cubeList.size(); ++i)
 			{
 				ModelBox box = ((ModelBox)modelRenderer.cubeList.get(i));
@@ -47,17 +52,15 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 				// x' = -x
 				// y' = -y
 
-				float posX1 = -box.posX1;
-				float posY1 = -box.posY1;
-				float posZ1 = box.posZ1;
-				float posX2 = -box.posX2;
-				float posY2 = -box.posY2;
-				float posZ2 = box.posZ2;
+				float posX1 = -(box.posX1 + modelRenderer.rotationPointX);
+				float posY1 = -(box.posY1 + modelRenderer.rotationPointY);
+				float posZ1 = box.posZ1 + modelRenderer.rotationPointZ;
+				float posX2 = -(box.posX2 + modelRenderer.rotationPointX);
+				float posY2 = -(box.posY2 + modelRenderer.rotationPointY);
+				float posZ2 = box.posZ2 + modelRenderer.rotationPointZ;
 				int width = -(int)(posX2 - posX1);
 				int height = -(int)(posY2 - posY1);
 				int depth = (int)(posZ2 - posZ1);
-				int s = 0;
-				int t = 0;
 
 				if (modelRenderer.mirror)
 				{
@@ -69,7 +72,7 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 				TexturedQuad[] quadList = new TexturedQuad[6];
 
 				PositionTextureVertex positiontexturevertex7 = new PositionTextureVertex(posX1, posY1, posZ1, 0.0F, 0.0F);
-				PositionTextureVertex positiontexturevertex = new PositionTextureVertex(posX2, posY1, posZ1, 0.0F, 8.0F);
+				PositionTextureVertex positiontexturevertex0 = new PositionTextureVertex(posX2, posY1, posZ1, 0.0F, 8.0F);
 				PositionTextureVertex positiontexturevertex1 = new PositionTextureVertex(posX2, posY2, posZ1, 8.0F, 8.0F);
 				PositionTextureVertex positiontexturevertex2 = new PositionTextureVertex(posX1, posY2, posZ1, 8.0F, 0.0F);
 				PositionTextureVertex positiontexturevertex3 = new PositionTextureVertex(posX1, posY1, posZ2, 0.0F, 0.0F);
@@ -77,26 +80,41 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 				PositionTextureVertex positiontexturevertex5 = new PositionTextureVertex(posX2, posY2, posZ2, 8.0F, 8.0F);
 				PositionTextureVertex positiontexturevertex6 = new PositionTextureVertex(posX1, posY2, posZ2, 8.0F, 0.0F);
 				quadList[0] = new TexturedQuad(new PositionTextureVertex[] {
-						positiontexturevertex4, positiontexturevertex, positiontexturevertex1, positiontexturevertex5
+						positiontexturevertex4, positiontexturevertex0, positiontexturevertex1, positiontexturevertex5
 				}, s + depth + width, t + depth, s + depth + width + depth, t + depth + height, modelRenderer.textureWidth, modelRenderer.textureHeight);
 				quadList[1] = new TexturedQuad(new PositionTextureVertex[] {
 						positiontexturevertex7, positiontexturevertex3, positiontexturevertex6, positiontexturevertex2
 				}, s, t + depth, s + depth, t + depth + height, modelRenderer.textureWidth, modelRenderer.textureHeight);
 				quadList[2] = new TexturedQuad(new PositionTextureVertex[] {
-						positiontexturevertex4, positiontexturevertex3, positiontexturevertex7, positiontexturevertex
+						positiontexturevertex4, positiontexturevertex3, positiontexturevertex7, positiontexturevertex0
 				}, s + depth, t, s + depth + width, t + depth, modelRenderer.textureWidth, modelRenderer.textureHeight);
 				quadList[3] = new TexturedQuad(new PositionTextureVertex[] {
 						positiontexturevertex1, positiontexturevertex2, positiontexturevertex6, positiontexturevertex5
 				}, s + depth + width, t + depth, s + depth + width + width, t, modelRenderer.textureWidth, modelRenderer.textureHeight);
 				quadList[4] = new TexturedQuad(new PositionTextureVertex[] {
-						positiontexturevertex, positiontexturevertex7, positiontexturevertex2, positiontexturevertex1
+						positiontexturevertex0, positiontexturevertex7, positiontexturevertex2, positiontexturevertex1
 				}, s + depth, t + depth, s + depth + width, t + depth + height, modelRenderer.textureWidth, modelRenderer.textureHeight);
 				quadList[5] = new TexturedQuad(new PositionTextureVertex[] {
 						positiontexturevertex3, positiontexturevertex4, positiontexturevertex5, positiontexturevertex6
 				}, s + depth + width + depth, t + depth, s + depth + width + depth + width, t + depth + height, modelRenderer.textureWidth, modelRenderer.textureHeight);
 
-				for (TexturedQuad aQuadList : quadList)
-					draw(aQuadList, tessellator);
+				for (TexturedQuad texturedQuad : quadList)
+				{
+					float sc = 0.0625f;
+					Vec3 vec3 = texturedQuad.vertexPositions[1].vector3D.subtract(texturedQuad.vertexPositions[0].vector3D);
+					Vec3 vec31 = texturedQuad.vertexPositions[1].vector3D.subtract(texturedQuad.vertexPositions[2].vector3D);
+					Vec3 vec32 = vec31.crossProduct(vec3).normalize();
+
+					tessellator.setNormal((float)vec32.xCoord, (float)vec32.yCoord, (float)vec32.zCoord);
+
+					for (int i1 = 0; i1 < 4; ++i1)
+					{
+						PositionTextureVertex positiontexturevertex = texturedQuad.vertexPositions[i1];
+						float tu = minu + (maxu - minu) * positiontexturevertex.texturePositionX;
+						float tv = minv + (maxv - minv) * positiontexturevertex.texturePositionY;
+						tessellator.addVertexWithUV((double)((float)positiontexturevertex.vector3D.xCoord * sc), (double)((float)positiontexturevertex.vector3D.yCoord * sc), (double)((float)positiontexturevertex.vector3D.zCoord * sc), tu, tv);
+					}
+				}
 			}
 		}
 		tessellator.addTranslation(-(x + 0.5f), -(y + 1.5f), -(z + 0.5f));
