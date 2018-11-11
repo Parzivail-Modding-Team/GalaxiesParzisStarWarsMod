@@ -60,6 +60,13 @@ public class EventHandler
 	}
 
 	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void on(TextureStitchEvent.Post event)
+	{
+		//Client.saveTextureAtlas(event.map);
+	}
+
+	@SubscribeEvent
 	public void on(WorldEvent.Load loadEvent)
 	{
 		try
