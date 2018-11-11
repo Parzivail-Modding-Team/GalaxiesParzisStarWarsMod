@@ -9,6 +9,7 @@ import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import org.lwjgl.opengl.GL11;
 
 /**
  * ModelFloorLightDome - parzi
@@ -57,6 +58,7 @@ public class ModelFloorLightDome extends ModelBase
 	{
 		((ShaderModelRenderer)bulb).color = GLPalette.WHITE;
 		GL.PushAttrib(AttribMask.EnableBit);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL.Disable(EnableCap.CullFace);
 		GL.Enable(EnableCap.Blend);
 		stem.render(f5);
