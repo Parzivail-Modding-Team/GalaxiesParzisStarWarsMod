@@ -5,7 +5,6 @@ import com.google.gson.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nullable;
@@ -114,16 +113,7 @@ public class BlockPart
 
 		private float parseAngle(JsonObject object)
 		{
-			float f = JsonUtils.getFloat(object, "angle");
-
-			if (f != 0.0F && MathHelper.abs(f) != 22.5F && MathHelper.abs(f) != 45.0F)
-			{
-				throw new JsonParseException("Invalid rotation " + f + " found, only -45/-22.5/0/22.5/45 allowed");
-			}
-			else
-			{
-				return f;
-			}
+			return JsonUtils.getFloat(object, "angle");
 		}
 
 		private EnumFacingAxis parseAxis(JsonObject object)

@@ -182,13 +182,13 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth1.class, new RenderConsoleHothCurved1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth2.class, new RenderConsoleHothCurved2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth3.class, new RenderConsoleHothCurved3());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole.class, new RenderMedicalConsole());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole.class, new RenderMedicalConsole());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole2.class, new RenderMedicalConsole2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePanelHoth.class, new RenderConsoleHoth1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanel.class, new RenderWallControlPanel());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanelTall.class, new RenderWallControlPanelTall());
 
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth1.class, new RenderHothCrate1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth2.class, new RenderHothCrate2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateMosEspa.class, new RenderCrateMosEspa());
@@ -263,7 +263,7 @@ public class Client extends Common
 
 		//		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, new ModelMV()));
 
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crate1, Resources.location("models/test.json")));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothMedical1, Resources.location("models/test.json")));
 
 		Lumberjack.log("Client proxy loaded!");
 	}

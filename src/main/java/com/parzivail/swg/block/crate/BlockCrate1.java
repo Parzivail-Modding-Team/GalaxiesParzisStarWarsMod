@@ -30,7 +30,7 @@ public class BlockCrate1 extends PBlockRotate
 	@Override
 	public int getRenderType()
 	{
-		return name.hashCode();
+		return -1;
 	}
 
 	@Override
