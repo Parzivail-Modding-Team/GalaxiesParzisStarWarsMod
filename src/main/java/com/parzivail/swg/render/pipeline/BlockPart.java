@@ -4,7 +4,6 @@ import com.google.common.collect.Maps;
 import com.google.gson.*;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.util.EnumFacing;
 import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nullable;
@@ -102,7 +101,7 @@ public class BlockPart
 				JsonObject jsonobject = JsonUtils.getJsonObject(object, "rotation");
 				Vector3f vector3f = parsePosition(jsonobject, "origin");
 				vector3f.scale(0.0625F);
-				EnumFacingAxis enumfacing$axis = parseAxis(jsonobject);
+				EnumFacing.Axis enumfacing$axis = parseAxis(jsonobject);
 				float f = parseAngle(jsonobject);
 				boolean flag = JsonUtils.getBoolean(jsonobject, "rescale", false);
 				blockpartrotation = new BlockPartRotation(vector3f, enumfacing$axis, f, flag);
@@ -116,10 +115,10 @@ public class BlockPart
 			return JsonUtils.getFloat(object, "angle");
 		}
 
-		private EnumFacingAxis parseAxis(JsonObject object)
+		private EnumFacing.Axis parseAxis(JsonObject object)
 		{
 			String s = JsonUtils.getString(object, "axis");
-			EnumFacingAxis enumfacing$axis = EnumFacingAxis.byName(s.toLowerCase(Locale.ROOT));
+			EnumFacing.Axis enumfacing$axis = EnumFacing.Axis.byName(s.toLowerCase(Locale.ROOT));
 
 			if (enumfacing$axis == null)
 			{

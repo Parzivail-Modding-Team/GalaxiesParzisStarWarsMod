@@ -8,11 +8,11 @@ import org.lwjgl.util.vector.Vector3f;
 public class BlockPartRotation
 {
 	public final Vector3f origin;
-	public final EnumFacingAxis axis;
+	public final EnumFacing.Axis axis;
 	public final float angle;
 	public final boolean rescale;
 
-	public BlockPartRotation(Vector3f originIn, EnumFacingAxis axisIn, float angleIn, boolean rescaleIn)
+	public BlockPartRotation(Vector3f originIn, EnumFacing.Axis axisIn, float angleIn, boolean rescaleIn)
 	{
 		origin = originIn;
 		axis = axisIn;

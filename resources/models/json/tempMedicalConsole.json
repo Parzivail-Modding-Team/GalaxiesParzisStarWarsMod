@@ -1,13 +1,13 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "resources:blocks/model/cyan",
+      "0": "pswg:blocks/model/cyan",
 		"1": "pswg:blocks/model/darkGray",
 		"2": "pswg:blocks/model/grayAccordion",
 		"3": "pswg:blocks/model/gunmetalGray",
 		"4": "pswg:blocks/model/lightGray",
 		"5": "pswg:blocks/model/white",
-		"particle": "resources:blocks/model/cyan"
+      "particle": "pswg:blocks/model/cyan"
 	},
 	"elements": [
 		{
@@ -92,8 +92,16 @@
 		},
 		{
 			"name": "handle1",
-			"from": [-1, 14.5, 6],
-			"to": [2, 16.5, 13],
+          "from": [
+            0,
+            15.5,
+            7.25
+          ],
+          "to": [
+            2,
+            16.5,
+            12.25
+          ],
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 19, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 3, 7], "texture": "#1"},
@@ -106,8 +114,16 @@
 		},
 		{
 			"name": "handle2",
-			"from": [14, 14.5, 6],
-			"to": [17, 16.5, 13],
+          "from": [
+            14,
+            15.5,
+            7.25
+          ],
+          "to": [
+            16,
+            16.5,
+            12.25
+          ],
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 19, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 3, 7], "texture": "#1"},
@@ -120,8 +136,16 @@
 		},
 		{
 			"name": "button1",
-			"from": [0, 15, 3],
-			"to": [1, 16, 8],
+          "from": [
+            0.5,
+            15,
+            4
+          ],
+          "to": [
+            1.5,
+            16,
+            7
+          ],
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 1, 5], "texture": "#0"},
@@ -134,8 +158,16 @@
 		},
 		{
 			"name": "button2",
-			"from": [15, 15, 3],
-			"to": [16, 16, 8],
+          "from": [
+            14.5,
+            15,
+            4
+          ],
+          "to": [
+            15.5,
+            16,
+            7
+          ],
 			"rotation": {"angle": 22.5, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 1, 5], "texture": "#0"},

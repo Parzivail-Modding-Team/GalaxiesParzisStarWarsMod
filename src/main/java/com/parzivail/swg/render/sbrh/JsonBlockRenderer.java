@@ -11,7 +11,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
@@ -38,7 +37,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
-		drawBlock(block);
+		drawBlock(block, ModelRotation.X0_Y0);
 	}
 
 	@Override
@@ -48,13 +47,13 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		tessellator.addTranslation(x, y, z);
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
 
-		drawBlock(block);
+		drawBlock(block, ModelRotation.X0_Y180);
 
 		tessellator.addTranslation(-x, -y, -z);
 		return true;
 	}
 
-	private void drawBlock(Block block)
+	private void drawBlock(Block block, ITransformation modelRotationIn)
 	{
 		RenderBlocks.getInstance().setRenderBoundsFromBlock(block);
 		for (BlockPart blockpart : model.getElements())
@@ -64,7 +63,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 				BlockPartFace blockpartface = blockpart.mapFaces.get(enumfacing);
 				TextureAtlasSprite textureatlassprite1 = Client.mc.getTextureMapBlocks().getAtlasSprite(translateTextureName(model.resolveTextureName(blockpartface.texture)));
 
-				drawQuad(blockpartface.blockFaceUV, textureatlassprite1, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation);
+				drawQuad(blockpartface.blockFaceUV, textureatlassprite1, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation, modelRotationIn);
 			}
 		}
 	}
@@ -97,18 +96,20 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		return afloat;
 	}
 
-	private void drawQuad(BlockFaceUV uvs, TextureAtlasSprite sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation)
+	private void drawQuad(BlockFaceUV uvs, TextureAtlasSprite sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation, ITransformation transformation)
 	{
 		for (int i = 0; i < 4; ++i)
-			drawVertex(i, orientation, uvs, p_188012_4_, sprite, partRotation);
+			drawVertex(i, orientation, uvs, p_188012_4_, sprite, partRotation, transformation);
 	}
 
-	private void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, TextureAtlasSprite sprite, BlockPartRotation rotation)
+	private void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, TextureAtlasSprite sprite, BlockPartRotation rotation, ITransformation transformation)
 	{
-		int shadeColor = getFaceShadeColor(facing);
+		EnumFacing enumfacing = transformation.rotate(facing);
+		int shadeColor = getFaceShadeColor(enumfacing);
 		EnumFaceDirection.VertexInformation vertexInformation = EnumFaceDirection.getFacing(facing).getVertexInformation(storeIndex);
 		Vector3f position = new Vector3f(p_188015_5_[vertexInformation.xIndex], p_188015_5_[vertexInformation.yIndex], p_188015_5_[vertexInformation.zIndex]);
 		rotatePart(position, rotation);
+		rotateVertex(position, facing, storeIndex, transformation);
 		int[] faceData = new int[28];
 		storeVertexData(faceData, storeIndex, storeIndex, position, shadeColor, sprite, faceUV);
 
@@ -124,6 +125,28 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		Tessellator.instance.setNormal(v1.x, v1.y, v1.z);
 		Tessellator.instance.setColorOpaque_I(shadeColor);
 		Tessellator.instance.addVertexWithUV(position.x, position.y, position.z, sprite.getInterpolatedU((double)faceUV.getVertexU(storeIndex) * .999 + faceUV.getVertexU((storeIndex + 2) % 4) * .001), sprite.getInterpolatedV((double)faceUV.getVertexV(storeIndex) * .999 + faceUV.getVertexV((storeIndex + 2) % 4) * .001));
+	}
+
+	public int rotateVertex(Vector3f p_188011_1_, EnumFacing p_188011_2_, int p_188011_3_, ITransformation p_188011_4_)
+	{
+		if (p_188011_4_ == ModelRotation.X0_Y0)
+		{
+			return p_188011_3_;
+		}
+		else
+		{
+			transform(p_188011_1_, p_188011_4_.getMatrix());
+			return p_188011_4_.rotate(p_188011_2_, p_188011_3_);
+		}
+	}
+
+	public static void transform(org.lwjgl.util.vector.Vector3f vec, javax.vecmath.Matrix4f m)
+	{
+		javax.vecmath.Vector4f tmp = new javax.vecmath.Vector4f(vec.x, vec.y, vec.z, 1f);
+		m.transform(tmp);
+		if (Math.abs(tmp.w - 1f) > 1e-5)
+			tmp.scale(1f / tmp.w);
+		vec.set(tmp.x, tmp.y, tmp.z);
 	}
 
 	private void storeVertexData(int[] faceData, int storeIndex, int vertexIndex, Vector3f position, int shadeColor, TextureAtlasSprite sprite, BlockFaceUV faceUV)

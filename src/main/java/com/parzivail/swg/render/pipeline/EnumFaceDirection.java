@@ -2,7 +2,6 @@ package com.parzivail.swg.render.pipeline;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.util.EnumFacing;
 
 @SideOnly(Side.CLIENT)
 public enum EnumFaceDirection
@@ -44,7 +43,7 @@ public enum EnumFaceDirection
 
 	public static EnumFaceDirection getFacing(EnumFacing facing)
 	{
-		return FACINGS[facing.ordinal()];
+		return FACINGS[facing.getIndex()];
 	}
 
 	EnumFaceDirection(EnumFaceDirection.VertexInformation[] vertexInfosIn)
@@ -70,12 +69,12 @@ public enum EnumFaceDirection
 	@SideOnly(Side.CLIENT)
 	public static final class Constants
 	{
-		public static final int SOUTH_INDEX = EnumFacing.SOUTH.ordinal();
-		public static final int UP_INDEX = EnumFacing.UP.ordinal();
-		public static final int EAST_INDEX = EnumFacing.EAST.ordinal();
-		public static final int NORTH_INDEX = EnumFacing.NORTH.ordinal();
-		public static final int DOWN_INDEX = EnumFacing.DOWN.ordinal();
-		public static final int WEST_INDEX = EnumFacing.WEST.ordinal();
+		public static final int SOUTH_INDEX = EnumFacing.SOUTH.getIndex();
+		public static final int UP_INDEX = EnumFacing.UP.getIndex();
+		public static final int EAST_INDEX = EnumFacing.EAST.getIndex();
+		public static final int NORTH_INDEX = EnumFacing.NORTH.getIndex();
+		public static final int DOWN_INDEX = EnumFacing.DOWN.getIndex();
+		public static final int WEST_INDEX = EnumFacing.WEST.getIndex();
 	}
 
 	@SideOnly(Side.CLIENT)
