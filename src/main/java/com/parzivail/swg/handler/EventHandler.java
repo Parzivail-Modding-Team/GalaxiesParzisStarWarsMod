@@ -207,7 +207,7 @@ public class EventHandler
 				//
 				//						GL.PushMatrix();
 				//						GL.Scale(0.5);
-				//						Client.mc.fontRendererObj.drawStringWithShadow(String.format("Facing: %s", tile.getFacing()), Client.resolution.getScaledWidth(), Client.resolution.getScaledHeight() - Client.mc.fontRendererObj.FONT_HEIGHT, GLPalette.WHITE);
+				//						Client.mc.fontRendererObj.drawStringWithShadow(String.format("16: %s", tile.getFacing()), Client.resolution.getScaledWidth(), Client.resolution.getScaledHeight() - Client.mc.fontRendererObj.FONT_HEIGHT, GLPalette.WHITE);
 				//						GL.PopMatrix();
 				//					}
 				//				}

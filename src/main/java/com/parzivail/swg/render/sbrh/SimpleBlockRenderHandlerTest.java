@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -44,14 +43,16 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.addTranslation(x, y, z);
 
-		SimpleBakedModel.Builder simplebakedmodel$builder = (new SimpleBakedModel.Builder(model));
+		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
+
 		for (BlockPart blockpart : model.getElements())
 		{
 			for (EnumFacing enumfacing : blockpart.mapFaces.keySet())
 			{
 				BlockPartFace blockpartface = blockpart.mapFaces.get(enumfacing);
 				TextureAtlasSprite textureatlassprite1 = Client.mc.getTextureMapBlocks().getAtlasSprite(translateTextureName(model.resolveTextureName(blockpartface.texture)));
-				simplebakedmodel$builder.addGeneralQuad(makeBakedQuad(blockpart, blockpartface, textureatlassprite1, enumfacing));
+
+				drawQuad(blockpartface.blockFaceUV, textureatlassprite1, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation);
 			}
 		}
 
@@ -64,50 +65,6 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 		return name.replace("blocks/", "");
 	}
 
-	private BakedQuad makeBakedQuad(BlockPart blockpart, BlockPartFace blockpartface, TextureAtlasSprite textureatlassprite1, EnumFacing enumfacing)
-	{
-		return makeBakedQuad(blockpart.positionFrom, blockpart.positionTo, blockpartface, textureatlassprite1, enumfacing, blockpart.partRotation, true);
-	}
-
-	public BakedQuad makeBakedQuad(Vector3f posFrom, Vector3f posTo, BlockPartFace face, TextureAtlasSprite sprite, EnumFacing facing, BlockPartRotation partRotation, boolean shade)
-	{
-		BlockFaceUV blockfaceuv = face.blockFaceUV;
-
-		int[] aint = makeQuadVertexData(blockfaceuv, sprite, facing, getPositionsDiv16(posFrom, posTo), partRotation, false);
-		EnumFacing enumfacing = getFacingFromVertexData(aint);
-
-		if (partRotation == null)
-		{
-			applyFacing(aint, enumfacing);
-		}
-
-		fillNormal(aint, enumfacing);
-		return new BakedQuad(aint, face.tintIndex, enumfacing, sprite, shade);
-	}
-
-	public static void fillNormal(int[] faceData, EnumFacing facing)
-	{
-		javax.vecmath.Vector3f v1 = getVertexPos(faceData, 3);
-		javax.vecmath.Vector3f t = getVertexPos(faceData, 1);
-		javax.vecmath.Vector3f v2 = getVertexPos(faceData, 2);
-		v1.sub(t);
-		t.set(getVertexPos(faceData, 0));
-		v2.sub(t);
-		v1.cross(v2, v1);
-		v1.normalize();
-
-		int x = ((byte)Math.round(v1.x * 127)) & 0xFF;
-		int y = ((byte)Math.round(v1.y * 127)) & 0xFF;
-		int z = ((byte)Math.round(v1.z * 127)) & 0xFF;
-
-		int normal = x | (y << 0x08) | (z << 0x10);
-
-		for (int i = 0; i < 4; i++)
-		{
-			faceData[i * 7 + 6] = normal;
-		}
-	}
-
 	private static javax.vecmath.Vector3f getVertexPos(int[] data, int vertex)
 	{
 		int idx = vertex * 7;
@@ -117,151 +74,6 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 		float z = Float.intBitsToFloat(data[idx + 2]);
 
 		return new javax.vecmath.Vector3f(x, y, z);
-	}
-
-	private void applyFacing(int[] p_178408_1_, EnumFacing p_178408_2_)
-	{
-		int[] aint = new int[p_178408_1_.length];
-		System.arraycopy(p_178408_1_, 0, aint, 0, p_178408_1_.length);
-		float[] afloat = new float[EnumFacing.values().length];
-		afloat[EnumFaceDirection.Constants.WEST_INDEX] = 999.0F;
-		afloat[EnumFaceDirection.Constants.DOWN_INDEX] = 999.0F;
-		afloat[EnumFaceDirection.Constants.NORTH_INDEX] = 999.0F;
-		afloat[EnumFaceDirection.Constants.EAST_INDEX] = -999.0F;
-		afloat[EnumFaceDirection.Constants.UP_INDEX] = -999.0F;
-		afloat[EnumFaceDirection.Constants.SOUTH_INDEX] = -999.0F;
-
-		for (int i = 0; i < 4; ++i)
-		{
-			int j = 7 * i;
-			float f = Float.intBitsToFloat(aint[j]);
-			float f1 = Float.intBitsToFloat(aint[j + 1]);
-			float f2 = Float.intBitsToFloat(aint[j + 2]);
-
-			if (f < afloat[EnumFaceDirection.Constants.WEST_INDEX])
-			{
-				afloat[EnumFaceDirection.Constants.WEST_INDEX] = f;
-			}
-
-			if (f1 < afloat[EnumFaceDirection.Constants.DOWN_INDEX])
-			{
-				afloat[EnumFaceDirection.Constants.DOWN_INDEX] = f1;
-			}
-
-			if (f2 < afloat[EnumFaceDirection.Constants.NORTH_INDEX])
-			{
-				afloat[EnumFaceDirection.Constants.NORTH_INDEX] = f2;
-			}
-
-			if (f > afloat[EnumFaceDirection.Constants.EAST_INDEX])
-			{
-				afloat[EnumFaceDirection.Constants.EAST_INDEX] = f;
-			}
-
-			if (f1 > afloat[EnumFaceDirection.Constants.UP_INDEX])
-			{
-				afloat[EnumFaceDirection.Constants.UP_INDEX] = f1;
-			}
-
-			if (f2 > afloat[EnumFaceDirection.Constants.SOUTH_INDEX])
-			{
-				afloat[EnumFaceDirection.Constants.SOUTH_INDEX] = f2;
-			}
-		}
-
-		EnumFaceDirection enumfacedirection = EnumFaceDirection.getFacing(p_178408_2_);
-
-		for (int i1 = 0; i1 < 4; ++i1)
-		{
-			int j1 = 7 * i1;
-			EnumFaceDirection.VertexInformation enumfacedirection$vertexinformation = enumfacedirection.getVertexInformation(i1);
-			float f8 = afloat[enumfacedirection$vertexinformation.xIndex];
-			float f3 = afloat[enumfacedirection$vertexinformation.yIndex];
-			float f4 = afloat[enumfacedirection$vertexinformation.zIndex];
-			p_178408_1_[j1] = Float.floatToRawIntBits(f8);
-			p_178408_1_[j1 + 1] = Float.floatToRawIntBits(f3);
-			p_178408_1_[j1 + 2] = Float.floatToRawIntBits(f4);
-
-			for (int k = 0; k < 4; ++k)
-			{
-				int l = 7 * k;
-				float f5 = Float.intBitsToFloat(aint[l]);
-				float f6 = Float.intBitsToFloat(aint[l + 1]);
-				float f7 = Float.intBitsToFloat(aint[l + 2]);
-
-				if (epsilonEquals(f8, f5) && epsilonEquals(f3, f6) && epsilonEquals(f4, f7))
-				{
-					p_178408_1_[j1 + 4] = aint[l + 4];
-					p_178408_1_[j1 + 4 + 1] = aint[l + 4 + 1];
-				}
-			}
-		}
-	}
-
-	public static boolean epsilonEquals(float p_180185_0_, float p_180185_1_)
-	{
-		return Math.abs(p_180185_1_ - p_180185_0_) < 1.0E-5F;
-	}
-
-	public static EnumFacing getFacingFromVertexData(int[] faceData)
-	{
-		Vector3f vector3f = new Vector3f(Float.intBitsToFloat(faceData[0]), Float.intBitsToFloat(faceData[1]), Float.intBitsToFloat(faceData[2]));
-		Vector3f vector3f1 = new Vector3f(Float.intBitsToFloat(faceData[7]), Float.intBitsToFloat(faceData[8]), Float.intBitsToFloat(faceData[9]));
-		Vector3f vector3f2 = new Vector3f(Float.intBitsToFloat(faceData[14]), Float.intBitsToFloat(faceData[15]), Float.intBitsToFloat(faceData[16]));
-		Vector3f vector3f3 = new Vector3f();
-		Vector3f vector3f4 = new Vector3f();
-		Vector3f vector3f5 = new Vector3f();
-		Vector3f.sub(vector3f, vector3f1, vector3f3);
-		Vector3f.sub(vector3f2, vector3f1, vector3f4);
-		Vector3f.cross(vector3f4, vector3f3, vector3f5);
-		float f = (float)Math.sqrt((double)(vector3f5.x * vector3f5.x + vector3f5.y * vector3f5.y + vector3f5.z * vector3f5.z));
-		vector3f5.x /= f;
-		vector3f5.y /= f;
-		vector3f5.z /= f;
-		EnumFacing enumfacing = null;
-		float f1 = 0.0F;
-
-		for (EnumFacing enumfacing1 : EnumFacing.values())
-		{
-			Vec3 vec3i = getDirectionVec(enumfacing1);
-			Vector3f vector3f6 = new Vector3f((float)vec3i.xCoord, (float)vec3i.yCoord, (float)vec3i.zCoord);
-			float f2 = Vector3f.dot(vector3f5, vector3f6);
-
-			if (f2 >= 0.0F && f2 > f1)
-			{
-				f1 = f2;
-				enumfacing = enumfacing1;
-			}
-		}
-
-		if (enumfacing == null)
-		{
-			return EnumFacing.UP;
-		}
-		else
-		{
-			return enumfacing;
-		}
-	}
-
-	private static Vec3 getDirectionVec(EnumFacing enumfacing1)
-	{
-		switch (enumfacing1)
-		{
-			case DOWN:
-				return Vec3.createVectorHelper(0, -1, 0);
-			case UP:
-				return Vec3.createVectorHelper(0, 1, 0);
-			case NORTH:
-				return Vec3.createVectorHelper(0, 0, -1);
-			case SOUTH:
-				return Vec3.createVectorHelper(0, 0, 1);
-			case WEST:
-				return Vec3.createVectorHelper(-1, 0, 0);
-			case EAST:
-				return Vec3.createVectorHelper(1, 0, 0);
-		}
-		return null;
 	}
 
 	private float[] getPositionsDiv16(Vector3f pos1, Vector3f pos2)
@@ -276,26 +88,33 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 		return afloat;
 	}
 
-	private int[] makeQuadVertexData(BlockFaceUV uvs, TextureAtlasSprite sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation, boolean shade)
+	private void drawQuad(BlockFaceUV uvs, TextureAtlasSprite sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation)
 	{
-		int[] aint = new int[28];
-
 		for (int i = 0; i < 4; ++i)
-		{
-			fillVertexData(aint, i, orientation, uvs, p_188012_4_, sprite, partRotation, shade);
-		}
-
-		return aint;
+			drawVertex(i, orientation, uvs, p_188012_4_, sprite, partRotation);
 	}
 
-	private void fillVertexData(int[] p_188015_1_, int p_188015_2_, EnumFacing p_188015_3_, BlockFaceUV p_188015_4_, float[] p_188015_5_, TextureAtlasSprite p_188015_6_, BlockPartRotation p_188015_8_, boolean p_188015_9_)
+	private void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, TextureAtlasSprite sprite, BlockPartRotation rotation)
 	{
-		EnumFacing enumfacing = p_188015_3_;
-		int i = p_188015_9_ ? getFaceShadeColor(enumfacing) : -1;
-		EnumFaceDirection.VertexInformation enumfacedirection$vertexinformation = EnumFaceDirection.getFacing(p_188015_3_).getVertexInformation(p_188015_2_);
-		Vector3f vector3f = new Vector3f(p_188015_5_[enumfacedirection$vertexinformation.xIndex], p_188015_5_[enumfacedirection$vertexinformation.yIndex], p_188015_5_[enumfacedirection$vertexinformation.zIndex]);
-		rotatePart(vector3f, p_188015_8_);
-		storeVertexData(p_188015_1_, p_188015_2_, p_188015_2_, vector3f, i, p_188015_6_, p_188015_4_);
+		int shadeColor = getFaceShadeColor(facing);
+		EnumFaceDirection.VertexInformation vertexInformation = EnumFaceDirection.getFacing(facing).getVertexInformation(storeIndex);
+		Vector3f position = new Vector3f(p_188015_5_[vertexInformation.xIndex], p_188015_5_[vertexInformation.yIndex], p_188015_5_[vertexInformation.zIndex]);
+		rotatePart(position, rotation);
+		int[] faceData = new int[28];
+		storeVertexData(faceData, storeIndex, storeIndex, position, shadeColor, sprite, faceUV);
+
+		javax.vecmath.Vector3f v1 = getVertexPos(faceData, 3);
+		javax.vecmath.Vector3f t = getVertexPos(faceData, 1);
+		javax.vecmath.Vector3f v2 = getVertexPos(faceData, 2);
+		v1.sub(t);
+		t.set(getVertexPos(faceData, 0));
+		v2.sub(t);
+		v1.cross(v2, v1);
+		v1.normalize();
+
+		Tessellator.instance.setNormal(v1.x, v1.y, v1.z);
+		Tessellator.instance.setColorOpaque_I(shadeColor);
+		Tessellator.instance.addVertexWithUV(position.x, position.y, position.z, sprite.getInterpolatedU((double)faceUV.getVertexU(storeIndex) * .999 + faceUV.getVertexU((storeIndex + 2) % 4) * .001), sprite.getInterpolatedV((double)faceUV.getVertexV(storeIndex) * .999 + faceUV.getVertexV((storeIndex + 2) % 4) * .001));
 	}
 
 	private void storeVertexData(int[] faceData, int storeIndex, int vertexIndex, Vector3f position, int shadeColor, TextureAtlasSprite sprite, BlockFaceUV faceUV)
@@ -307,8 +126,6 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 		faceData[i + 3] = shadeColor;
 		faceData[i + 4] = Float.floatToRawIntBits(sprite.getInterpolatedU((double)faceUV.getVertexU(vertexIndex) * .999 + faceUV.getVertexU((vertexIndex + 2) % 4) * .001));
 		faceData[i + 4 + 1] = Float.floatToRawIntBits(sprite.getInterpolatedV((double)faceUV.getVertexV(vertexIndex) * .999 + faceUV.getVertexV((vertexIndex + 2) % 4) * .001));
-		Tessellator.instance.setColorOpaque_I(shadeColor);
-		Tessellator.instance.addVertexWithUV(position.x, position.y, position.z, sprite.getInterpolatedU((double)faceUV.getVertexU(vertexIndex) * .999 + faceUV.getVertexU((vertexIndex + 2) % 4) * .001), sprite.getInterpolatedV((double)faceUV.getVertexV(vertexIndex) * .999 + faceUV.getVertexV((vertexIndex + 2) % 4) * .001));
 	}
 
 	private void rotatePart(Vector3f p_178407_1_, @Nullable BlockPartRotation partRotation)
