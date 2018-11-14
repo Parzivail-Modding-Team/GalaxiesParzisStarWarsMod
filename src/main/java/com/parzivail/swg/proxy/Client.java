@@ -1,7 +1,6 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
@@ -38,8 +37,7 @@ import com.parzivail.swg.render.pipe.RenderPipeSmallBent;
 import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
 import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
 import com.parzivail.swg.render.pipe.RenderWallPipeLarge;
-import com.parzivail.swg.render.pipeline.ModelBlock;
-import com.parzivail.swg.render.sbrh.SimpleBlockRenderHandlerTest;
+import com.parzivail.swg.render.sbrh.JsonBlockRenderer;
 import com.parzivail.swg.render.util.EntityRenderDroppedItem;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;
@@ -62,7 +60,6 @@ import com.parzivail.swg.tile.pipe.TileQuadVentPipe;
 import com.parzivail.swg.tile.pipe.TileTallVentedPipe;
 import com.parzivail.swg.tile.pipe.TileWallPipeLarge;
 import com.parzivail.swg.world.PswgWorldDataHandler;
-import com.parzivail.util.binary.PIO;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.PFramebuffer;
@@ -70,7 +67,6 @@ import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
-import jdk.internal.util.xml.impl.ReaderUTF8;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -265,10 +261,9 @@ public class Client extends Common
 		registerBasicTileItem(BlockRegister.tallVentedPipe, 0.8f);
 		registerBasicTileItem(BlockRegister.wallPipeLarge, 1);
 
-		//		RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(BlockRegister.moistureVaporator, new ModelMV()));
+		//		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, new ModelMV()));
 
-		ModelBlock block = ModelBlock.deserialize(new ReaderUTF8(PIO.getResource(StarWarsGalaxy.class, Resources.location("models/test.json"))));
-		RenderingRegistry.registerBlockHandler(new SimpleBlockRenderHandlerTest(BlockRegister.crate1, block));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crate1, Resources.location("models/test.json")));
 
 		Lumberjack.log("Client proxy loaded!");
 	}

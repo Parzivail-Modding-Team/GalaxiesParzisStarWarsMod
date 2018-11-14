@@ -1,15 +1,19 @@
 package com.parzivail.swg.render.sbrh;
 
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.pipeline.*;
+import com.parzivail.util.binary.PIO;
 import com.parzivail.util.block.PBlockContainer;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import jdk.internal.util.xml.impl.ReaderUTF8;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
@@ -17,7 +21,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import javax.annotation.Nullable;
 
-public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandler
+public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 {
 	private static final float SCALE_ROTATION_22_5 = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
 	private static final float SCALE_ROTATION_GENERAL = 1.0F / (float)Math.cos((Math.PI / 4D)) - 1.0F;
@@ -25,26 +29,34 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 	private final int id;
 	private final ModelBlock model;
 
-	public SimpleBlockRenderHandlerTest(PBlockContainer block, ModelBlock model)
+	public JsonBlockRenderer(PBlockContainer block, ResourceLocation modelLocation)
 	{
 		id = block.name.hashCode();
-		this.model = model;
+		model = ModelBlock.deserialize(new ReaderUTF8(PIO.getResource(StarWarsGalaxy.class, modelLocation)));
 	}
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
+		drawBlock(block);
 	}
 
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer)
 	{
-		RenderBlocks.getInstance().setRenderBoundsFromBlock(block);
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.addTranslation(x, y, z);
-
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
 
+		drawBlock(block);
+
+		tessellator.addTranslation(-x, -y, -z);
+		return true;
+	}
+
+	private void drawBlock(Block block)
+	{
+		RenderBlocks.getInstance().setRenderBoundsFromBlock(block);
 		for (BlockPart blockpart : model.getElements())
 		{
 			for (EnumFacing enumfacing : blockpart.mapFaces.keySet())
@@ -55,9 +67,6 @@ public class SimpleBlockRenderHandlerTest implements ISimpleBlockRenderingHandle
 				drawQuad(blockpartface.blockFaceUV, textureatlassprite1, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation);
 			}
 		}
-
-		tessellator.addTranslation(-x, -y, -z);
-		return true;
 	}
 
 	private String translateTextureName(String name)
