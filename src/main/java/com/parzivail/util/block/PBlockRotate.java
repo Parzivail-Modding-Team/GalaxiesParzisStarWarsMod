@@ -43,4 +43,9 @@ public abstract class PBlockRotate extends PBlockContainer
 			vap.setFacing(l);
 		}
 	}
+
+	public int getSnapAngles()
+	{
+		return snapAngles;
+	}
 }

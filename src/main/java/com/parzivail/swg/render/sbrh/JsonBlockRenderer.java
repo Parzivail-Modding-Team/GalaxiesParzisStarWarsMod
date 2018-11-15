@@ -5,12 +5,15 @@ import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.pipeline.*;
 import com.parzivail.util.binary.PIO;
 import com.parzivail.util.block.PBlockContainer;
+import com.parzivail.util.block.PBlockRotate;
+import com.parzivail.util.block.TileRotatable;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import jdk.internal.util.xml.impl.ReaderUTF8;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
@@ -47,7 +50,18 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		tessellator.addTranslation(x, y, z);
 		tessellator.setBrightness(block.getMixedBrightnessForBlock(world, x, y, z));
 
-		drawBlock(block, ModelRotation.X0_Y180);
+		ModelRotation rotation = ModelRotation.X0_Y0;
+
+		TileEntity te = world.getTileEntity(x, y, z);
+		if (te instanceof TileRotatable && block instanceof PBlockRotate)
+		{
+			TileRotatable tile = (TileRotatable)te;
+			float angle = 90 * tile.getFacing() + 180;
+
+			rotation = new ModelRotation(0, (int)angle);
+		}
+
+		drawBlock(block, rotation);
 
 		tessellator.addTranslation(-x, -y, -z);
 		return true;
