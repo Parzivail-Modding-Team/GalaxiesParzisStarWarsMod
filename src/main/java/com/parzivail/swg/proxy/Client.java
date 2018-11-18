@@ -270,7 +270,7 @@ public class Client extends Common
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothMedical1, Resources.location("models/blocks/medicalConsole.json")));
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth1, Resources.location("models/blocks/crateHoth1.json")));
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth2, Resources.location("models/blocks/crateHoth2.json")));
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, Resources.location("models/blocks/mv.json")));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, Resources.location("models/blocks/moistureVaporatorClassic.json")));
 
 		Lumberjack.log("Client proxy loaded!");
 	}
