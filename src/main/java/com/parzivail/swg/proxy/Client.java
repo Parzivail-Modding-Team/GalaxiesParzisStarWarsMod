@@ -227,7 +227,7 @@ public class Client extends Common
 		registerBasicTileItem(BlockRegister.consoleHothCurved1, 0.5f);
 		registerBasicTileItem(BlockRegister.consoleHothCurved2, 0.5f);
 		registerBasicTileItem(BlockRegister.consoleHothCurved3, 0.5f);
-		registerBasicTileItem(BlockRegister.consoleHothMedical1, 1);
+		//registerBasicTileItem(BlockRegister.consoleHothMedical1, 1);
 		registerBasicTileItem(BlockRegister.consoleHothMedical2, 0.5f);
 		registerBasicTileItem(BlockRegister.consoleHoth1, 0.5f);
 		registerBasicTileItem(BlockRegister.wallControlPanel, 1);

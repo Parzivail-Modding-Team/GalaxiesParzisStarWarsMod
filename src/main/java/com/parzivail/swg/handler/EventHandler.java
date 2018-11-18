@@ -39,6 +39,7 @@ import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
@@ -207,12 +208,16 @@ public class EventHandler
 					Block block = Client.mc.theWorld.getBlock(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
 					if (block.hasTileEntity(0))
 					{
-						TileRotatable tile = (TileRotatable)Client.mc.theWorld.getTileEntity(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
+						TileEntity te = Client.mc.theWorld.getTileEntity(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
+						if (te instanceof TileRotatable)
+						{
+							TileRotatable tile = (TileRotatable)te;
 
-						GL.PushMatrix();
-						GL.Scale(0.5);
-						Client.mc.fontRendererObj.drawStringWithShadow(String.format("Facing: %s", tile.getFacing()), Client.resolution.getScaledWidth(), Client.resolution.getScaledHeight() - Client.mc.fontRendererObj.FONT_HEIGHT, GLPalette.WHITE);
-						GL.PopMatrix();
+							GL.PushMatrix();
+							GL.Scale(0.5);
+							Client.mc.fontRendererObj.drawStringWithShadow(String.format("Facing: %s", tile.getFacing()), Client.resolution.getScaledWidth(), Client.resolution.getScaledHeight() - Client.mc.fontRendererObj.FONT_HEIGHT, GLPalette.WHITE);
+							GL.PopMatrix();
+						}
 					}
 				}
 			}

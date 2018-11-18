@@ -5,12 +5,12 @@ import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.pipeline.*;
 import com.parzivail.util.binary.PIO;
 import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.PBlockRotate;
 import com.parzivail.util.block.TileRotatable;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import jdk.internal.util.xml.impl.ReaderUTF8;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.tileentity.TileEntity;
@@ -40,11 +40,12 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
+		RenderHelper.disableStandardItemLighting();
 		Tessellator tessellator = Tessellator.instance;
-		tessellator.setBrightness(0xf00000);
 		tessellator.startDrawingQuads();
 		drawBlock(block, ModelRotation.X0_Y0);
 		tessellator.draw();
+		RenderHelper.enableStandardItemLighting();
 	}
 
 	@Override
@@ -57,7 +58,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		ModelRotation rotation = ModelRotation.X0_Y0;
 
 		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof TileRotatable && block instanceof PBlockRotate)
+		if (te instanceof TileRotatable)
 		{
 			TileRotatable tile = (TileRotatable)te;
 			float angle = 90 * tile.getFacing() + 180;
