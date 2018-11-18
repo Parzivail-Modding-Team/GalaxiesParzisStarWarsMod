@@ -1,10 +1,12 @@
 package com.parzivail.swg.block.machine;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.machine.TileMV;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlockRotate;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -29,7 +31,7 @@ public class BlockMV extends PBlockRotate
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+		return name.hashCode();
 	}
 
 	@Override
@@ -42,6 +44,14 @@ public class BlockMV extends PBlockRotate
 	public boolean renderAsNormalBlock()
 	{
 		return false;
+	}
+
+	@Override
+	public void registerIcons(IIconRegister reg)
+	{
+		reg.registerIcon(Resources.modColon("model/tan"));
+		reg.registerIcon(Resources.modColon("model/lightTan"));
+		reg.registerIcon(Resources.modColon("model/darkTan"));
 	}
 
 	@Override

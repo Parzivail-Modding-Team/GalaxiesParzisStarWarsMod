@@ -165,30 +165,12 @@ public class BlockPart
 
 		private Vector3f parsePositionTo(JsonObject object)
 		{
-			Vector3f vector3f = parsePosition(object, "to");
-
-			if (vector3f.x >= -16.0F && vector3f.y >= -16.0F && vector3f.z >= -16.0F && vector3f.x <= 32.0F && vector3f.y <= 32.0F && vector3f.z <= 32.0F)
-			{
-				return vector3f;
-			}
-			else
-			{
-				throw new JsonParseException("'to' specifier exceeds the allowed boundaries: " + vector3f);
-			}
+			return parsePosition(object, "to");
 		}
 
 		private Vector3f parsePositionFrom(JsonObject object)
 		{
-			Vector3f vector3f = parsePosition(object, "from");
-
-			if (vector3f.x >= -16.0F && vector3f.y >= -16.0F && vector3f.z >= -16.0F && vector3f.x <= 32.0F && vector3f.y <= 32.0F && vector3f.z <= 32.0F)
-			{
-				return vector3f;
-			}
-			else
-			{
-				throw new JsonParseException("'from' specifier exceeds the allowed boundaries: " + vector3f);
-			}
+			return parsePosition(object, "from");
 		}
 
 		private Vector3f parsePosition(JsonObject object, String memberName)

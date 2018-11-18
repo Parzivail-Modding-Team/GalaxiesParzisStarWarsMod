@@ -40,7 +40,11 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
+		Tessellator tessellator = Tessellator.instance;
+		tessellator.setBrightness(0xf00000);
+		tessellator.startDrawingQuads();
 		drawBlock(block, ModelRotation.X0_Y0);
+		tessellator.draw();
 	}
 
 	@Override

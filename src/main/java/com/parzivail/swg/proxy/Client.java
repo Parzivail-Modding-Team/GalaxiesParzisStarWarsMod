@@ -19,14 +19,16 @@ import com.parzivail.swg.render.antenna.RenderAntennaThin;
 import com.parzivail.swg.render.antenna.RenderSatelliteDish;
 import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
 import com.parzivail.swg.render.console.*;
-import com.parzivail.swg.render.crate.*;
+import com.parzivail.swg.render.crate.RenderAirTank;
+import com.parzivail.swg.render.crate.RenderCrate1;
+import com.parzivail.swg.render.crate.RenderCrateMosEspa;
+import com.parzivail.swg.render.crate.RenderCrateVilla;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
 import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
 import com.parzivail.swg.render.ladder.RenderLadder;
 import com.parzivail.swg.render.light.*;
-import com.parzivail.swg.render.machine.RenderMV;
 import com.parzivail.swg.render.machine.RenderMV2;
 import com.parzivail.swg.render.machine.RenderSpokedMachine;
 import com.parzivail.swg.render.machine.RenderTubeMachine;
@@ -49,9 +51,11 @@ import com.parzivail.swg.tile.TileLadder;
 import com.parzivail.swg.tile.antenna.TileAntennaThin;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
 import com.parzivail.swg.tile.console.*;
-import com.parzivail.swg.tile.crate.*;
+import com.parzivail.swg.tile.crate.TileAirTank;
+import com.parzivail.swg.tile.crate.TileCrate1;
+import com.parzivail.swg.tile.crate.TileCrateMosEspa;
+import com.parzivail.swg.tile.crate.TileCrateVilla;
 import com.parzivail.swg.tile.light.*;
-import com.parzivail.swg.tile.machine.TileMV;
 import com.parzivail.swg.tile.machine.TileMV2;
 import com.parzivail.swg.tile.machine.TileSpokedMachine;
 import com.parzivail.swg.tile.machine.TileTubeMachine;
@@ -189,8 +193,8 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanelTall.class, new RenderWallControlPanelTall());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth1.class, new RenderHothCrate1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth2.class, new RenderHothCrate2());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth1.class, new RenderHothCrate1());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth2.class, new RenderHothCrate2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateMosEspa.class, new RenderCrateMosEspa());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateVilla.class, new RenderCrateVilla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAirTank.class, new RenderAirTank());
@@ -210,7 +214,7 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAntennaThin.class, new RenderAntennaThin());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSatelliteDish.class, new RenderSatelliteDish());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileMV.class, new RenderMV());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileMV.class, new RenderMV());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileMV2.class, new RenderMV2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSpokedMachine.class, new RenderSpokedMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTubeMachine.class, new RenderTubeMachine());
@@ -230,8 +234,8 @@ public class Client extends Common
 		registerBasicTileItem(BlockRegister.wallControlPanelTall, 1);
 
 		registerBasicTileItem(BlockRegister.crate1, 0.8f);
-		registerBasicTileItem(BlockRegister.crateHoth1, 1);
-		registerBasicTileItem(BlockRegister.crateHoth2, 1);
+		//registerBasicTileItem(BlockRegister.crateHoth1, 1);
+		//registerBasicTileItem(BlockRegister.crateHoth2, 1);
 		registerBasicTileItem(BlockRegister.crateMosEspa, 0.9f);
 		registerBasicTileItem(BlockRegister.crateVilla, 0.8f);
 		registerBasicTileItem(BlockRegister.airTank, 0.7f);
@@ -251,7 +255,7 @@ public class Client extends Common
 		registerBasicTileItem(BlockRegister.antennaThin, 0.4f);
 		registerBasicTileItem(BlockRegister.satelliteDish, 0.4f);
 
-		registerBasicTileItem(BlockRegister.moistureVaporator, 0.3f);
+		//registerBasicTileItem(BlockRegister.moistureVaporator, 0.3f);
 		registerBasicTileItem(BlockRegister.moistureVaporator2, 0.4f);
 		registerBasicTileItem(BlockRegister.spokedMachine, 0.9f);
 		registerBasicTileItem(BlockRegister.tubeMachine, 0.3f);
@@ -264,6 +268,9 @@ public class Client extends Common
 		//		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, new ModelMV()));
 
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothMedical1, Resources.location("models/blocks/medicalConsole.json")));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth1, Resources.location("models/blocks/crateHoth1.json")));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth2, Resources.location("models/blocks/crateHoth2.json")));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, Resources.location("models/blocks/mv.json")));
 
 		Lumberjack.log("Client proxy loaded!");
 	}
