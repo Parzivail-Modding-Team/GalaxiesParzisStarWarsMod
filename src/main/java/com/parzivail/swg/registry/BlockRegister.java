@@ -83,7 +83,7 @@ public class BlockRegister
 	public static PBlockContainer blasterWorkbench;
 	public static PBlockContainer sabaccTable;
 
-	public static PBlockContainer consoleHoth1;
+	public static PBlockContainer panelHoth;
 	public static PBlockContainer consoleHothCurved1;
 	public static PBlockContainer consoleHothCurved2;
 	public static PBlockContainer consoleHothCurved3;
@@ -188,7 +188,7 @@ public class BlockRegister
 		register(blasterWorkbench = new BlockBlasterWorkbench().withPlaceholderTexture());
 		register(sabaccTable = new BlockSabaccTable().withPlaceholderTexture());
 
-		register(consoleHoth1 = new BlockConsoleHoth1());
+		register(panelHoth = new BlockConsoleHoth1());
 		register(consoleHothCurved1 = new BlockConsoleHothCurved1());
 		register(consoleHothCurved2 = new BlockConsoleHothCurved2());
 		register(consoleHothCurved3 = new BlockConsoleHothCurved3());

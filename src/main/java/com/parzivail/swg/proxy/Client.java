@@ -183,7 +183,7 @@ public class Client extends Common
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.binocularsMb450, new RenderMacrobinoculars());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth1.class, new RenderConsoleHothCurved1());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth1.class, new RenderConsoleHothCurved1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth2.class, new RenderConsoleHothCurved2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth3.class, new RenderConsoleHothCurved3());
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole.class, new RenderMedicalConsole());
@@ -224,12 +224,12 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTallVentedPipe.class, new RenderTallVentedPipe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallPipeLarge.class, new RenderWallPipeLarge());
 
-		registerBasicTileItem(BlockRegister.consoleHothCurved1, 0.5f);
+		//registerBasicTileItem(BlockRegister.consoleHothCurved1, 0.5f);
 		registerBasicTileItem(BlockRegister.consoleHothCurved2, 0.5f);
 		registerBasicTileItem(BlockRegister.consoleHothCurved3, 0.5f);
 		//registerBasicTileItem(BlockRegister.consoleHothMedical1, 1);
 		registerBasicTileItem(BlockRegister.consoleHothMedical2, 0.5f);
-		registerBasicTileItem(BlockRegister.consoleHoth1, 0.5f);
+		registerBasicTileItem(BlockRegister.panelHoth, 0.5f);
 		registerBasicTileItem(BlockRegister.wallControlPanel, 1);
 		registerBasicTileItem(BlockRegister.wallControlPanelTall, 1);
 
@@ -271,6 +271,7 @@ public class Client extends Common
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth1, Resources.location("models/blocks/crateHoth1.json")));
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth2, Resources.location("models/blocks/crateHoth2.json")));
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, Resources.location("models/blocks/moistureVaporatorClassic.json")));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothCurved1, Resources.location("models/blocks/consoleHoth.json")));
 
 		Lumberjack.log("Client proxy loaded!");
 	}

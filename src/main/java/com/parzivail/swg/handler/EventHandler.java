@@ -203,7 +203,7 @@ public class EventHandler
 			{
 				GuiNowEntering.draw(Client.mc.thePlayer);
 
-				if (Client.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+				if (Client.mc.objectMouseOver != null && Client.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
 				{
 					Block block = Client.mc.theWorld.getBlock(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
 					if (block.hasTileEntity(0))
