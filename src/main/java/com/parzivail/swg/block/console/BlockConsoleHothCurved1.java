@@ -51,6 +51,6 @@ public class BlockConsoleHothCurved1 extends PBlockRotate
 		reg.registerIcon(Resources.modColon("model/darkGray"));
 		reg.registerIcon(Resources.modColon("model/veryDarkGray"));
 		reg.registerIcon(Resources.modColon("model/gunmetalGray"));
-		reg.registerIcon(Resources.modColon("model/special_lit"));
+		reg.registerIcon(Resources.modColon("model/special_lit_white"));
 	}
 }

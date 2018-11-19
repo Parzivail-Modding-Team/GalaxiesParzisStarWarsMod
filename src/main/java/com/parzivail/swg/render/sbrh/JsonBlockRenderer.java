@@ -27,6 +27,8 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 {
 	private static final float SCALE_ROTATION_22_5 = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
 	private static final float SCALE_ROTATION_GENERAL = 1.0F / (float)Math.cos((Math.PI / 4D)) - 1.0F;
+	private static final int DEFAULT_BRIGHTNESS = 0x1fffff;
+	private static final int MAX_BRIGHTNESS = 0xf00000;
 
 	private final int id;
 	private final ModelBlock model;
@@ -43,7 +45,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		RenderHelper.disableStandardItemLighting();
 		Tessellator tessellator = Tessellator.instance;
 		tessellator.startDrawingQuads();
-		drawBlock(block, ModelRotation.X0_Y0, 0x1fffff);
+		drawBlock(block, ModelRotation.X0_Y270, DEFAULT_BRIGHTNESS);
 		tessellator.draw();
 		RenderHelper.enableStandardItemLighting();
 	}
@@ -84,7 +86,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 				TextureAtlasSprite textureatlassprite1 = Client.mc.getTextureMapBlocks().getAtlasSprite(texName);
 				PartType type = PartType.Textured;
 
-				if (texName.equals("pswg:model/special_lit"))
+				if (texName.startsWith("pswg:model/special_lit"))
 					type = PartType.Lit;
 
 				drawQuad(blockpartface.blockFaceUV, textureatlassprite1, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation, modelRotationIn, brightness, type);
@@ -149,7 +151,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		Tessellator.instance.setNormal(v1.x, v1.y, v1.z);
 		Tessellator.instance.setColorOpaque_I(shadeColor);
 		if (type == PartType.Lit)
-			Tessellator.instance.setBrightness(0xdfffff);
+			Tessellator.instance.setBrightness(MAX_BRIGHTNESS);
 		else
 			Tessellator.instance.setBrightness(brightness);
 		Tessellator.instance.addVertexWithUV(position.x, position.y, position.z, sprite.getInterpolatedU((double)faceUV.getVertexU(storeIndex) * .999 + faceUV.getVertexU((storeIndex + 2) % 4) * .001), sprite.getInterpolatedV((double)faceUV.getVertexV(storeIndex) * .999 + faceUV.getVertexV((storeIndex + 2) % 4) * .001));

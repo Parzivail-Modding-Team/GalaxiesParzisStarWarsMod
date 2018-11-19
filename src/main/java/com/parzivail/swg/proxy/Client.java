@@ -18,7 +18,10 @@ import com.parzivail.swg.render.RenderBasicTileItem;
 import com.parzivail.swg.render.antenna.RenderAntennaThin;
 import com.parzivail.swg.render.antenna.RenderSatelliteDish;
 import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
-import com.parzivail.swg.render.console.*;
+import com.parzivail.swg.render.console.RenderConsoleHoth1;
+import com.parzivail.swg.render.console.RenderMedicalConsole2;
+import com.parzivail.swg.render.console.RenderWallControlPanel;
+import com.parzivail.swg.render.console.RenderWallControlPanelTall;
 import com.parzivail.swg.render.crate.RenderAirTank;
 import com.parzivail.swg.render.crate.RenderCrate1;
 import com.parzivail.swg.render.crate.RenderCrateMosEspa;
@@ -50,7 +53,10 @@ import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.swg.tile.TileLadder;
 import com.parzivail.swg.tile.antenna.TileAntennaThin;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
-import com.parzivail.swg.tile.console.*;
+import com.parzivail.swg.tile.console.TileMedicalConsole2;
+import com.parzivail.swg.tile.console.TilePanelHoth;
+import com.parzivail.swg.tile.console.TileWallControlPanel;
+import com.parzivail.swg.tile.console.TileWallControlPanelTall;
 import com.parzivail.swg.tile.crate.TileAirTank;
 import com.parzivail.swg.tile.crate.TileCrate1;
 import com.parzivail.swg.tile.crate.TileCrateMosEspa;
@@ -183,18 +189,12 @@ public class Client extends Common
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.binocularsMb450, new RenderMacrobinoculars());
 
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth1.class, new RenderConsoleHothCurved1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth2.class, new RenderConsoleHothCurved2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileConsoleHoth3.class, new RenderConsoleHothCurved3());
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole.class, new RenderMedicalConsole());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole2.class, new RenderMedicalConsole2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TilePanelHoth.class, new RenderConsoleHoth1());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanel.class, new RenderWallControlPanel());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanelTall.class, new RenderWallControlPanelTall());
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth1.class, new RenderHothCrate1());
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileCrateHoth2.class, new RenderHothCrate2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateMosEspa.class, new RenderCrateMosEspa());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateVilla.class, new RenderCrateVilla());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAirTank.class, new RenderAirTank());
@@ -214,7 +214,6 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileAntennaThin.class, new RenderAntennaThin());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSatelliteDish.class, new RenderSatelliteDish());
 
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileMV.class, new RenderMV());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileMV2.class, new RenderMV2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSpokedMachine.class, new RenderSpokedMachine());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTubeMachine.class, new RenderTubeMachine());
@@ -224,18 +223,12 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTallVentedPipe.class, new RenderTallVentedPipe());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileWallPipeLarge.class, new RenderWallPipeLarge());
 
-		//registerBasicTileItem(BlockRegister.consoleHothCurved1, 0.5f);
-		registerBasicTileItem(BlockRegister.consoleHothCurved2, 0.5f);
-		registerBasicTileItem(BlockRegister.consoleHothCurved3, 0.5f);
-		//registerBasicTileItem(BlockRegister.consoleHothMedical1, 1);
 		registerBasicTileItem(BlockRegister.consoleHothMedical2, 0.5f);
 		registerBasicTileItem(BlockRegister.panelHoth, 0.5f);
 		registerBasicTileItem(BlockRegister.wallControlPanel, 1);
 		registerBasicTileItem(BlockRegister.wallControlPanelTall, 1);
 
 		registerBasicTileItem(BlockRegister.crate1, 0.8f);
-		//registerBasicTileItem(BlockRegister.crateHoth1, 1);
-		//registerBasicTileItem(BlockRegister.crateHoth2, 1);
 		registerBasicTileItem(BlockRegister.crateMosEspa, 0.9f);
 		registerBasicTileItem(BlockRegister.crateVilla, 0.8f);
 		registerBasicTileItem(BlockRegister.airTank, 0.7f);
@@ -255,7 +248,6 @@ public class Client extends Common
 		registerBasicTileItem(BlockRegister.antennaThin, 0.4f);
 		registerBasicTileItem(BlockRegister.satelliteDish, 0.4f);
 
-		//registerBasicTileItem(BlockRegister.moistureVaporator, 0.3f);
 		registerBasicTileItem(BlockRegister.moistureVaporator2, 0.4f);
 		registerBasicTileItem(BlockRegister.spokedMachine, 0.9f);
 		registerBasicTileItem(BlockRegister.tubeMachine, 0.3f);
@@ -265,13 +257,13 @@ public class Client extends Common
 		registerBasicTileItem(BlockRegister.tallVentedPipe, 0.8f);
 		registerBasicTileItem(BlockRegister.wallPipeLarge, 1);
 
-		//		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, new ModelMV()));
-
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothMedical1, Resources.location("models/blocks/medicalConsole.json")));
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth1, Resources.location("models/blocks/crateHoth1.json")));
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth2, Resources.location("models/blocks/crateHoth2.json")));
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, Resources.location("models/blocks/moistureVaporatorClassic.json")));
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothCurved1, Resources.location("models/blocks/consoleHoth.json")));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothCurved1, Resources.location("models/blocks/consoleHoth1.json")));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothCurved2, Resources.location("models/blocks/consoleHoth2.json")));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothCurved3, Resources.location("models/blocks/consoleHoth3.json")));
 
 		Lumberjack.log("Client proxy loaded!");
 	}
