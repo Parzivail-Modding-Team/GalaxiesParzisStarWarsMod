@@ -196,9 +196,9 @@ public class BlockRegister
 
 		registerDecoration("crate1", "model/darkGray");
 		registerDecoration("crateHoth1", "model/white", "model/lightGray", "model/darkGray");
-		registerDecoration("crateHoth2");
-		registerDecoration("crateMosEspa");
-		registerDecoration("crateVilla");
+		registerDecoration("crateHoth2", "model/white", "model/lightGray", "model/darkGray");
+		registerDecoration("crateMosEspa", "model/rust");
+		registerDecoration("crateVilla", "model/darkBeige", "model/darkTan");
 
 		registerDecoration("wallIndicator");
 		registerDecoration("wallIndicatorCluster");
