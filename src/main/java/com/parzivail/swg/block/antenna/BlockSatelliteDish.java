@@ -3,7 +3,7 @@ package com.parzivail.swg.block.antenna;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
 import com.parzivail.util.block.HarvestLevel;
-import com.parzivail.util.block.PBlockRotate;
+import com.parzivail.util.block.PBlockContainer;
 import com.parzivail.util.block.Tile2DofGimbal;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.block.material.Material;
@@ -12,11 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-public class BlockSatelliteDish extends PBlockRotate
+public class BlockSatelliteDish extends PBlockContainer
 {
 	public BlockSatelliteDish()
 	{
-		super("satelliteDish", Material.iron, 8);
+		super("satelliteDish", Material.iron);
 		setCreativeTab(StarWarsGalaxy.tab);
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5f, 1.0F);
 		setHardness(50.0F);
@@ -31,7 +31,7 @@ public class BlockSatelliteDish extends PBlockRotate
 		if (tile instanceof Tile2DofGimbal)
 		{
 			Tile2DofGimbal vap = (Tile2DofGimbal)tile;
-			float l = MathUtil.roundToNearest((-90 + player.rotationPitch) % 180, 360f / (snapAngles * 2)) / 90f;
+			float l = MathUtil.roundToNearest((-90 + player.rotationPitch) % 180, 360f / (8 * 2)) / 90f;
 			vap.setPitch(l);
 		}
 	}

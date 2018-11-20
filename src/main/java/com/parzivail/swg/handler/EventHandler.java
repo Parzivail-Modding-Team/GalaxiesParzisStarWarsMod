@@ -16,7 +16,6 @@ import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.world.PswgWorldDataHandler;
-import com.parzivail.util.block.TileRotatable;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.GLPalette;
@@ -33,13 +32,11 @@ import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
@@ -205,20 +202,11 @@ public class EventHandler
 
 				if (Client.mc.objectMouseOver != null && Client.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
 				{
-					Block block = Client.mc.theWorld.getBlock(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
-					if (block.hasTileEntity(0))
-					{
-						TileEntity te = Client.mc.theWorld.getTileEntity(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
-						if (te instanceof TileRotatable)
-						{
-							TileRotatable tile = (TileRotatable)te;
-
-							GL.PushMatrix();
-							GL.Scale(0.5);
-							Client.mc.fontRendererObj.drawStringWithShadow(String.format("Facing: %s", tile.getFacing()), Client.resolution.getScaledWidth(), Client.resolution.getScaledHeight() - Client.mc.fontRendererObj.FONT_HEIGHT, GLPalette.WHITE);
-							GL.PopMatrix();
-						}
-					}
+					int damage = Client.mc.theWorld.getBlockMetadata(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
+					GL.PushMatrix();
+					GL.Scale(0.5);
+					Client.mc.fontRendererObj.drawStringWithShadow(String.format("Metadata: %s", damage), Client.resolution.getScaledWidth(), Client.resolution.getScaledHeight() - Client.mc.fontRendererObj.FONT_HEIGHT, GLPalette.WHITE);
+					GL.PopMatrix();
 				}
 			}
 

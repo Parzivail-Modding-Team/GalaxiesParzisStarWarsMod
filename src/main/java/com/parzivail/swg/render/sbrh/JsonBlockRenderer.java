@@ -4,8 +4,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.pipeline.*;
 import com.parzivail.util.binary.PIO;
-import com.parzivail.util.block.PBlockContainer;
-import com.parzivail.util.block.TileRotatable;
+import com.parzivail.util.block.PDecorativeBlock;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import jdk.internal.util.xml.impl.ReaderUTF8;
 import net.minecraft.block.Block;
@@ -13,7 +12,6 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
@@ -22,6 +20,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
 
 import javax.annotation.Nullable;
+import java.io.InputStream;
 
 public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 {
@@ -29,14 +28,20 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	private static final float SCALE_ROTATION_GENERAL = 1.0F / (float)Math.cos((Math.PI / 4D)) - 1.0F;
 	private static final int DEFAULT_BRIGHTNESS = 0x1fffff;
 	private static final int MAX_BRIGHTNESS = 0xf00000;
+	private static final String MISSING_MODEL_MESH = "{    'textures': {       'particle': 'missingno',       'missingno': 'missingno'    },    'elements': [         {  'from': [ 0, 0, 0 ],            'to': [ 16, 16, 16 ],            'faces': {                'down':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'down',  'texture': '#missingno' },                'up':    { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'up',    'texture': '#missingno' },                'north': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'north', 'texture': '#missingno' },                'south': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'south', 'texture': '#missingno' },                'west':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'west',  'texture': '#missingno' },                'east':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'east',  'texture': '#missingno' }            }        }    ]}".replaceAll("'", "\"");
 
 	private final int id;
 	private final ModelBlock model;
 
-	public JsonBlockRenderer(PBlockContainer block, ResourceLocation modelLocation)
+	public JsonBlockRenderer(PDecorativeBlock block, ResourceLocation modelLocation)
 	{
 		id = block.name.hashCode();
-		model = ModelBlock.deserialize(new ReaderUTF8(PIO.getResource(StarWarsGalaxy.class, modelLocation)));
+
+		InputStream resource = PIO.getResource(StarWarsGalaxy.class, modelLocation);
+		if (resource == null)
+			model = ModelBlock.deserialize(MISSING_MODEL_MESH);
+		else
+			model = ModelBlock.deserialize(new ReaderUTF8(resource));
 	}
 
 	@Override
@@ -59,12 +64,9 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 
 		ModelRotation rotation = ModelRotation.X0_Y0;
 
-		TileEntity te = world.getTileEntity(x, y, z);
-		if (te instanceof TileRotatable)
+		if (block instanceof PDecorativeBlock)
 		{
-			TileRotatable tile = (TileRotatable)te;
-			float angle = 90 * tile.getFacing() + 180;
-
+			float angle = world.getBlockMetadata(x, y, z) * 45 + 180;
 			rotation = new ModelRotation(0, (int)angle);
 		}
 

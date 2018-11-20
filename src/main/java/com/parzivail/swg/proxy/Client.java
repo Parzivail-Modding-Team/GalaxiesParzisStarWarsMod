@@ -15,33 +15,15 @@ import com.parzivail.swg.registry.ItemRegister;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.PEntityRenderer;
 import com.parzivail.swg.render.RenderBasicTileItem;
-import com.parzivail.swg.render.antenna.RenderAntennaThin;
 import com.parzivail.swg.render.antenna.RenderSatelliteDish;
 import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
-import com.parzivail.swg.render.console.RenderConsoleHoth1;
-import com.parzivail.swg.render.console.RenderMedicalConsole2;
-import com.parzivail.swg.render.console.RenderWallControlPanel;
-import com.parzivail.swg.render.console.RenderWallControlPanelTall;
-import com.parzivail.swg.render.crate.RenderAirTank;
-import com.parzivail.swg.render.crate.RenderCrate1;
-import com.parzivail.swg.render.crate.RenderCrateMosEspa;
-import com.parzivail.swg.render.crate.RenderCrateVilla;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
 import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
-import com.parzivail.swg.render.ladder.RenderLadder;
-import com.parzivail.swg.render.light.*;
-import com.parzivail.swg.render.machine.RenderMV2;
-import com.parzivail.swg.render.machine.RenderSpokedMachine;
-import com.parzivail.swg.render.machine.RenderTubeMachine;
 import com.parzivail.swg.render.mob.RenderGizka;
 import com.parzivail.swg.render.npc.RenderJawa;
 import com.parzivail.swg.render.npc.RenderMerchant;
-import com.parzivail.swg.render.pipe.RenderPipeSmallBent;
-import com.parzivail.swg.render.pipe.RenderQuadVentPipe;
-import com.parzivail.swg.render.pipe.RenderTallVentedPipe;
-import com.parzivail.swg.render.pipe.RenderWallPipeLarge;
 import com.parzivail.swg.render.sbrh.JsonBlockRenderer;
 import com.parzivail.swg.render.util.EntityRenderDroppedItem;
 import com.parzivail.swg.render.weapon.*;
@@ -50,26 +32,9 @@ import com.parzivail.swg.render.weapon.grenades.RenderThermalDetonator;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.tile.TileGunRack;
-import com.parzivail.swg.tile.TileLadder;
-import com.parzivail.swg.tile.antenna.TileAntennaThin;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
-import com.parzivail.swg.tile.console.TileMedicalConsole2;
-import com.parzivail.swg.tile.console.TilePanelHoth;
-import com.parzivail.swg.tile.console.TileWallControlPanel;
-import com.parzivail.swg.tile.console.TileWallControlPanelTall;
-import com.parzivail.swg.tile.crate.TileAirTank;
-import com.parzivail.swg.tile.crate.TileCrate1;
-import com.parzivail.swg.tile.crate.TileCrateMosEspa;
-import com.parzivail.swg.tile.crate.TileCrateVilla;
-import com.parzivail.swg.tile.light.*;
-import com.parzivail.swg.tile.machine.TileMV2;
-import com.parzivail.swg.tile.machine.TileSpokedMachine;
-import com.parzivail.swg.tile.machine.TileTubeMachine;
-import com.parzivail.swg.tile.pipe.TilePipeSmallBent;
-import com.parzivail.swg.tile.pipe.TileQuadVentPipe;
-import com.parzivail.swg.tile.pipe.TileTallVentedPipe;
-import com.parzivail.swg.tile.pipe.TileWallPipeLarge;
 import com.parzivail.swg.world.PswgWorldDataHandler;
+import com.parzivail.util.block.PDecorativeBlock;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.PFramebuffer;
@@ -189,83 +154,19 @@ public class Client extends Common
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.binocularsMb450, new RenderMacrobinoculars());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileMedicalConsole2.class, new RenderMedicalConsole2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TilePanelHoth.class, new RenderConsoleHoth1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanel.class, new RenderWallControlPanel());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileWallControlPanelTall.class, new RenderWallControlPanelTall());
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCrate1.class, new RenderCrate1());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateMosEspa.class, new RenderCrateMosEspa());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileCrateVilla.class, new RenderCrateVilla());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileAirTank.class, new RenderAirTank());
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLight.class, new RenderFloorLight());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLight2.class, new RenderFloorLight2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileHothCeilingLight.class, new RenderCeilingLight());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileHothCeilingLight2.class, new RenderCeilingLight2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileAngledWallLight.class, new RenderAngledWallLamp());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileFloorLightDome.class, new RenderFloorLightDome());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileWallIndicator.class, new RenderWallIndicator());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileWallIndicatorCluster.class, new RenderWallIndicatorCluster());
-
 		ClientRegistry.bindTileEntitySpecialRenderer(TileGunRack.class, new RenderGunRack());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileLadder.class, new RenderLadder());
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileAntennaThin.class, new RenderAntennaThin());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSatelliteDish.class, new RenderSatelliteDish());
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileMV2.class, new RenderMV2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSpokedMachine.class, new RenderSpokedMachine());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTubeMachine.class, new RenderTubeMachine());
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TilePipeSmallBent.class, new RenderPipeSmallBent());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileQuadVentPipe.class, new RenderQuadVentPipe());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileTallVentedPipe.class, new RenderTallVentedPipe());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileWallPipeLarge.class, new RenderWallPipeLarge());
-
-		registerBasicTileItem(BlockRegister.consoleHothMedical2, 0.5f);
-		registerBasicTileItem(BlockRegister.panelHoth, 0.5f);
-		registerBasicTileItem(BlockRegister.wallControlPanel, 1);
-		registerBasicTileItem(BlockRegister.wallControlPanelTall, 1);
-
-		registerBasicTileItem(BlockRegister.crate1, 0.8f);
-		registerBasicTileItem(BlockRegister.crateMosEspa, 0.9f);
-		registerBasicTileItem(BlockRegister.crateVilla, 0.8f);
-		registerBasicTileItem(BlockRegister.airTank, 0.7f);
-
-		registerBasicTileItem(BlockRegister.floorLight, 1);
-		registerBasicTileItem(BlockRegister.floorLight2, 1);
-		registerBasicTileItem(BlockRegister.ceilingLight, 1);
-		registerBasicTileItem(BlockRegister.ceilingLight2, 0.8f);
-		registerBasicTileItem(BlockRegister.angledWallLight, 1);
-		registerBasicTileItem(BlockRegister.floorLightDome, 1);
-		registerBasicTileItem(BlockRegister.wallIndicatorLight, 1);
-		registerBasicTileItem(BlockRegister.wallIndicatorLightCluster, 1);
-
 		registerBasicTileItem(BlockRegister.gunRack, 0.8f);
-		registerBasicTileItem(BlockRegister.ladder, 1);
-
-		registerBasicTileItem(BlockRegister.antennaThin, 0.4f);
 		registerBasicTileItem(BlockRegister.satelliteDish, 0.4f);
 
-		registerBasicTileItem(BlockRegister.moistureVaporator2, 0.4f);
-		registerBasicTileItem(BlockRegister.spokedMachine, 0.9f);
-		registerBasicTileItem(BlockRegister.tubeMachine, 0.3f);
-
-		registerBasicTileItem(BlockRegister.pipeSmallBent, 1);
-		registerBasicTileItem(BlockRegister.quadVentPipe, 0.5f);
-		registerBasicTileItem(BlockRegister.tallVentedPipe, 0.8f);
-		registerBasicTileItem(BlockRegister.wallPipeLarge, 1);
-
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothMedical1, Resources.location("models/blocks/medicalConsole.json")));
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth1, Resources.location("models/blocks/crateHoth1.json")));
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.crateHoth2, Resources.location("models/blocks/crateHoth2.json")));
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.moistureVaporator, Resources.location("models/blocks/moistureVaporatorClassic.json")));
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothCurved1, Resources.location("models/blocks/consoleHoth1.json")));
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothCurved2, Resources.location("models/blocks/consoleHoth2.json")));
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(BlockRegister.consoleHothCurved3, Resources.location("models/blocks/consoleHoth3.json")));
-
 		Lumberjack.log("Client proxy loaded!");
+	}
+
+	@Override
+	public void registerModel(PDecorativeBlock block)
+	{
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(block, Resources.location(String.format("models/blocks/%s.json", block.name))));
 	}
 
 	public static void saveTextureAtlas(TextureMap map)

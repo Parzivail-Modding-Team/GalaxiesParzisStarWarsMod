@@ -4,6 +4,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.MessageCreateDecal;
 import com.parzivail.swg.network.MessageSpawnParticle;
 import com.parzivail.swg.ship.MultipartFlightModel;
+import com.parzivail.util.block.PDecorativeBlock;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
@@ -79,5 +80,9 @@ public class Common
 	public boolean isClientControlled(MultipartFlightModel multipartFlightModel)
 	{
 		return false;
+	}
+
+	public void registerModel(PDecorativeBlock block)
+	{
 	}
 }

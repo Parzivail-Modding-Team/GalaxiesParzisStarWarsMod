@@ -1,9 +1,8 @@
 package com.parzivail.swg.block;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.tile.TileLadder;
 import com.parzivail.util.block.HarvestLevel;
-import com.parzivail.util.block.PBlockContainer;
+import com.parzivail.util.block.PBlock;
 import com.parzivail.util.block.TileRotatable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,7 +13,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockLadder extends PBlockContainer
+public class BlockLadder extends PBlock
 {
 	public BlockLadder()
 	{
@@ -23,12 +22,6 @@ public class BlockLadder extends PBlockContainer
 		setCreativeTab(StarWarsGalaxy.tab);
 		setHardness(50.0F);
 		setHarvestLevel("pickaxe", HarvestLevel.IRON);
-	}
-
-	@Override
-	public TileEntity createNewTileEntity(World world, int meta)
-	{
-		return new TileLadder();
 	}
 
 	@Override

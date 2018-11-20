@@ -8,6 +8,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 public class TileRotatable extends TileAtmoSound
 {
 	private float facing;
+	private boolean didConvertRotationFormat;
 
 	@Override
 	public Packet getDescriptionPacket()
@@ -15,6 +16,21 @@ public class TileRotatable extends TileAtmoSound
 		NBTTagCompound tag = new NBTTagCompound();
 		writeToNBT(tag);
 		return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 64537, tag);
+	}
+
+	@Override
+	public void updateEntity()
+	{
+		super.updateEntity();
+
+		if (!didConvertRotationFormat && !worldObj.isRemote)
+		{
+			int l = (int)(facing * 90 / 45f);
+			if (l < 0)
+				l += 8;
+			worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, l, 3);
+			didConvertRotationFormat = true;
+		}
 	}
 
 	@Override
