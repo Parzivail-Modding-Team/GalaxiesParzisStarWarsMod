@@ -200,15 +200,15 @@ public class BlockRegister
 		registerDecoration("crateMosEspa", "model/rust");
 		registerDecoration("crateVilla", "model/darkBeige", "model/darkTan");
 
-		registerDecoration("wallIndicator");
-		registerDecoration("wallIndicatorCluster");
-		registerDecoration("wallControlPanel");
-		registerDecoration("wallControlPanelTall");
+		registerDecoration("wallIndicator", "model/gunmetalGray", "model/lightGray", "model/special_lit_white");
+		registerDecoration("wallIndicatorCluster", "model/gunmetalGray", "model/lightGray", "model/special_lit_white");
+		registerDecoration("wallControlPanel", "model/rust", "model/special_lit_green");
+		registerDecoration("wallControlPanelTall", "model/darkGray", "model/special_lit_red");
 
-		registerLitDecoration("floorLight");
-		registerLitDecoration("floorLight2");
-		registerLitDecoration("hothCeilingLight");
-		registerLitDecoration("hothCeilingLight2");
+		registerLitDecoration("floorLight", "model/darkGray", "model/special_lit_white");
+		registerLitDecoration("floorLight2", "model/darkGray", "model/special_lit_white");
+		registerLitDecoration("hothCeilingLight", "model/darkGray", "model/special_lit_white");
+		registerLitDecoration("hothCeilingLight2", "model/darkGray", "model/special_lit_white", "model/veryDarkGray");
 		registerLitDecoration("angledWallLight");
 		registerLitDecoration("floorLightDome");
 

@@ -133,7 +133,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	private void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, TextureAtlasSprite sprite, BlockPartRotation rotation, ITransformation transformation, int brightness, PartType type)
 	{
 		EnumFacing enumfacing = transformation.rotate(facing);
-		int shadeColor = type == PartType.Lit ? 0xFFFFFF : getFaceShadeColor(enumfacing);
+		int shadeColor = getFaceShadeColor(enumfacing);
 		EnumFaceDirection.VertexInformation vertexInformation = EnumFaceDirection.getFacing(facing).getVertexInformation(storeIndex);
 		Vector3f position = new Vector3f(p_188015_5_[vertexInformation.xIndex], p_188015_5_[vertexInformation.yIndex], p_188015_5_[vertexInformation.zIndex]);
 		rotatePart(position, rotation);
@@ -151,11 +151,16 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		v1.normalize();
 
 		Tessellator.instance.setNormal(v1.x, v1.y, v1.z);
-		Tessellator.instance.setColorOpaque_I(shadeColor);
 		if (type == PartType.Lit)
-			Tessellator.instance.setBrightness(MAX_BRIGHTNESS);
+		{
+			Tessellator.instance.setBrightness(208);
+			Tessellator.instance.setColorOpaque_I(0xFFFFFF);
+		}
 		else
+		{
 			Tessellator.instance.setBrightness(brightness);
+			Tessellator.instance.setColorOpaque_I(shadeColor);
+		}
 		Tessellator.instance.addVertexWithUV(position.x, position.y, position.z, sprite.getInterpolatedU((double)faceUV.getVertexU(storeIndex) * .999 + faceUV.getVertexU((storeIndex + 2) % 4) * .001), sprite.getInterpolatedV((double)faceUV.getVertexV(storeIndex) * .999 + faceUV.getVertexV((storeIndex + 2) % 4) * .001));
 	}
 
