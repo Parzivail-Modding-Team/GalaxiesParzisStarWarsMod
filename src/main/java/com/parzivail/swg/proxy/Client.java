@@ -24,7 +24,7 @@ import com.parzivail.swg.render.gunrack.RenderGunRack;
 import com.parzivail.swg.render.mob.RenderGizka;
 import com.parzivail.swg.render.npc.RenderJawa;
 import com.parzivail.swg.render.npc.RenderMerchant;
-import com.parzivail.swg.render.sbrh.JsonBlockRenderer;
+import com.parzivail.swg.render.pipeline.JsonBlockRenderer;
 import com.parzivail.swg.render.util.EntityRenderDroppedItem;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;

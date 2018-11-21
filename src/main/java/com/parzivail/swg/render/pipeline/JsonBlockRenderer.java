@@ -1,8 +1,7 @@
-package com.parzivail.swg.render.sbrh;
+package com.parzivail.swg.render.pipeline;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.render.pipeline.*;
 import com.parzivail.util.binary.PIO;
 import com.parzivail.util.block.PDecorativeBlock;
 import com.parzivail.util.common.Lumberjack;
