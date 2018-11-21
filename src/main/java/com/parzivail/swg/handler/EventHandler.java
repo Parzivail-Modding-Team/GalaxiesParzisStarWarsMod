@@ -14,6 +14,7 @@ import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
+import com.parzivail.swg.render.sbrh.JsonBlockRenderer;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.entity.EntityUtils;
@@ -64,6 +65,14 @@ public class EventHandler
 	public void on(TextureStitchEvent.Post event)
 	{
 		//Client.saveTextureAtlas(event.map);
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void on(TextureStitchEvent.Pre event)
+	{
+		if (event.map.getTextureType() == 0)
+			JsonBlockRenderer.loadTextures(event.map);
 	}
 
 	@SubscribeEvent

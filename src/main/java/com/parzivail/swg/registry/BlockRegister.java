@@ -188,35 +188,35 @@ public class BlockRegister
 
 		// Decoration blocks
 		registerDecoration("blockPanelHoth");
-		registerDecoration("blockConsoleHoth1", "model/darkGray", "model/veryDarkGray", "model/gunmetalGray", "model/special_lit_white");
-		registerDecoration("blockConsoleHoth2", "model/darkGray", "model/veryDarkGray", "model/gunmetalGray", "model/special_lit_white", "model/special_lit_green", "model/special_lit_lightblue", "model/special_lit_red", "model/special_lit_off");
-		registerDecoration("blockConsoleHoth3", "model/darkGray", "model/veryDarkGray", "model/gunmetalGray", "model/special_lit_off");
-		registerDecoration("medicalConsole", "model/cyan", "model/darkGray", "model/grayAccordion", "model/gunmetalGray", "model/lightGray", "model/white");
+		registerDecoration("blockConsoleHoth1");
+		registerDecoration("blockConsoleHoth2");
+		registerDecoration("blockConsoleHoth3");
+		registerDecoration("medicalConsole");
 		registerDecoration("medicalConsole2");
 
-		registerDecoration("crate1", "model/darkGray");
-		registerDecoration("crateHoth1", "model/white", "model/lightGray", "model/darkGray");
-		registerDecoration("crateHoth2", "model/white", "model/lightGray", "model/darkGray");
-		registerDecoration("crateMosEspa", "model/rust");
-		registerDecoration("crateVilla", "model/darkBeige", "model/darkTan");
+		registerDecoration("crate1");
+		registerDecoration("crateHoth1");
+		registerDecoration("crateHoth2");
+		registerDecoration("crateMosEspa");
+		registerDecoration("crateVilla");
 
-		registerDecoration("wallIndicator", "model/gunmetalGray", "model/lightGray", "model/special_lit_white");
-		registerDecoration("wallIndicatorCluster", "model/gunmetalGray", "model/lightGray", "model/special_lit_white");
-		registerDecoration("wallControlPanel", "model/darkGray", "model/special_lit_green", "model/gunmetalGray");
-		registerDecoration("wallControlPanelTall", "model/darkGray", "model/special_lit_red");
+		registerDecoration("wallIndicator");
+		registerDecoration("wallIndicatorCluster");
+		registerDecoration("wallControlPanel");
+		registerDecoration("wallControlPanelTall");
 
-		registerLitDecoration("floorLight", "model/darkGray", "model/special_lit_white");
-		registerLitDecoration("floorLight2", "model/darkGray", "model/special_lit_white");
-		registerLitDecoration("hothCeilingLight", "model/darkGray", "model/special_lit_white");
-		registerLitDecoration("hothCeilingLight2", "model/darkGray", "model/special_lit_white", "model/veryDarkGray");
-		registerLitDecoration("angledWallLight", "model/gunmetalGray", "model/special_lit_white", "model/gunmetalGray");
-		registerLitTransparentDecoration("floorLightDome", "model/glass", "model/special_lit_white", "model/cautionYellow", "model/gunmetalGray");
+		registerLitDecoration("floorLight");
+		registerLitDecoration("floorLight2");
+		registerLitDecoration("hothCeilingLight");
+		registerLitDecoration("hothCeilingLight2");
+		registerLitDecoration("angledWallLight");
+		registerLitTransparentDecoration("floorLightDome");
 
-		registerDecoration("antennaThin", "model/lightGray", "model/rust");
-		registerDecoration("airTank", "model/lightGray", "model/darkGray", "model/gunmetalGray");
+		registerDecoration("antennaThin");
+		registerDecoration("airTank");
 
-		registerDecoration("moistureVaporator", "model/tan", "model/darkTan", "model/lightTan");
-		registerDecoration("moistureVaporator2", "model/tan", "model/darkTan");
+		registerDecoration("moistureVaporator");
+		registerDecoration("moistureVaporator2");
 		registerDecoration("spokedMachine");
 		registerDecoration("tubeMachine");
 
@@ -226,19 +226,19 @@ public class BlockRegister
 		registerDecoration("wallPipeLarge");
 	}
 
-	private static void registerDecoration(String name, String... associatedTextures)
+	private static void registerDecoration(String name)
 	{
-		registerDecoration(new PDecorativeBlock(name, associatedTextures));
+		registerDecoration(new PDecorativeBlock(name));
 	}
 
-	private static void registerLitDecoration(String name, String... associatedTextures)
+	private static void registerLitDecoration(String name)
 	{
-		registerDecoration((PDecorativeBlock)new PDecorativeBlock(name, associatedTextures).setLightLevel(1));
+		registerDecoration((PDecorativeBlock)new PDecorativeBlock(name).setLightLevel(1));
 	}
 
-	private static void registerLitTransparentDecoration(String name, String... associatedTextures)
+	private static void registerLitTransparentDecoration(String name)
 	{
-		registerDecoration((PDecorativeBlock)new PDecorativeBlock(name, associatedTextures).setTransparent().setLightLevel(1));
+		registerDecoration((PDecorativeBlock)new PDecorativeBlock(name).setTransparent().setLightLevel(1));
 	}
 
 	private static void registerDecoration(PDecorativeBlock block)

@@ -5,8 +5,11 @@ import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.pipeline.*;
 import com.parzivail.util.binary.PIO;
 import com.parzivail.util.block.PDecorativeBlock;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import jdk.internal.util.xml.impl.ReaderUTF8;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GLAllocation;
@@ -14,6 +17,7 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
@@ -24,7 +28,10 @@ import org.lwjgl.util.vector.Vector4f;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Map;
 
+@SideOnly(Side.CLIENT)
 public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 {
 	private static final float SCALE_ROTATION_22_5 = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
@@ -32,6 +39,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	private static final int DEFAULT_BRIGHTNESS = 0x1fffff;
 	private static final int MAX_BRIGHTNESS = 0xf0;
 	private static final String MISSING_MODEL_MESH = "{    'textures': {       'particle': 'missingno',       'missingno': 'missingno'    },    'elements': [         {  'from': [ 0, 0, 0 ],            'to': [ 16, 16, 16 ],            'faces': {                'down':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'down',  'texture': '#missingno' },                'up':    { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'up',    'texture': '#missingno' },                'north': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'north', 'texture': '#missingno' },                'south': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'south', 'texture': '#missingno' },                'west':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'west',  'texture': '#missingno' },                'east':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'east',  'texture': '#missingno' }            }        }    ]}".replaceAll("'", "\"");
+	private static final ArrayList<String> unloadedTextures = new ArrayList<>();
 
 	private final int id;
 	private final ModelBlock model;
@@ -47,6 +55,23 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 			model = ModelBlock.deserialize(MISSING_MODEL_MESH);
 		else
 			model = ModelBlock.deserialize(new ReaderUTF8(resource));
+
+		block.setTextureName(translateTextureName(model.textures.get("particle")));
+
+		for (Map.Entry<String, String> entry : model.textures.entrySet())
+		{
+			String tex = translateTextureName(entry.getValue());
+			if (!unloadedTextures.contains(tex))
+				unloadedTextures.add(tex);
+		}
+	}
+
+	public static void loadTextures(TextureMap map)
+	{
+		for (String tex : unloadedTextures)
+			map.registerIcon(tex);
+		Lumberjack.debug("Registered %s JSON model icons", unloadedTextures.size());
+		unloadedTextures.clear();
 	}
 
 	@Override

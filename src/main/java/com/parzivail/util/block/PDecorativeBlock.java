@@ -6,19 +6,16 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 
 public class PDecorativeBlock extends Block
 {
 	public final String name;
-	private final String[] associatedTextures;
 	private boolean transparent;
 
-	public PDecorativeBlock(String name, String... associatedTextures)
+	public PDecorativeBlock(String name)
 	{
 		super(Material.iron);
 		this.name = name;
-		this.associatedTextures = associatedTextures;
 		setUnlocalizedName(Resources.modDot(this.name));
 		setHardness(1.5F);
 		setResistance(10.0F);
@@ -51,13 +48,6 @@ public class PDecorativeBlock extends Block
 	public boolean renderAsNormalBlock()
 	{
 		return false;
-	}
-
-	@Override
-	public void registerIcons(IIconRegister reg)
-	{
-		for (String associatedTexture : associatedTextures)
-			reg.registerIcon(Resources.modColon(associatedTexture));
 	}
 
 	public PDecorativeBlock setTransparent()
