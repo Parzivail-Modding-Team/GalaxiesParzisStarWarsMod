@@ -9,6 +9,7 @@ import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import jdk.internal.util.xml.impl.ReaderUTF8;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -16,6 +17,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
+import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.util.vector.Vector4f;
@@ -33,6 +35,8 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 
 	private final int id;
 	private final ModelBlock model;
+	private int displayList;
+	private boolean compiled;
 
 	public JsonBlockRenderer(PDecorativeBlock block, ResourceLocation modelLocation)
 	{
@@ -49,10 +53,22 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
 		RenderHelper.disableStandardItemLighting();
-		Tessellator tessellator = Tessellator.instance;
-		tessellator.startDrawingQuads();
-		drawBlock(block, ModelRotation.X0_Y270, DEFAULT_BRIGHTNESS);
-		tessellator.draw();
+		if (!compiled)
+		{
+			displayList = GLAllocation.generateDisplayLists(1);
+			GL11.glNewList(displayList, GL11.GL_COMPILE);
+
+			Tessellator tessellator = Tessellator.instance;
+			tessellator.startDrawingQuads();
+			drawBlock(block, ModelRotation.X0_Y270, DEFAULT_BRIGHTNESS);
+			tessellator.draw();
+
+			GL11.glEndList();
+
+			compiled = true;
+		}
+		else
+			GL11.glCallList(displayList);
 		RenderHelper.enableStandardItemLighting();
 	}
 
