@@ -16,8 +16,8 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.IBlockAccess;
@@ -85,7 +85,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 
 			Tessellator tessellator = Tessellator.instance;
 			tessellator.startDrawingQuads();
-			drawBlock(block, ModelRotation.X0_Y270, DEFAULT_BRIGHTNESS);
+			drawBlock(null, 0, 0, 0, block, ModelRotation.X0_Y270, DEFAULT_BRIGHTNESS);
 			tessellator.draw();
 
 			GL11.glEndList();
@@ -112,13 +112,13 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 			rotation = new ModelRotation(0, (int)angle);
 		}
 
-		drawBlock(block, rotation, brightness);
+		drawBlock(world, x, y, z, block, rotation, brightness);
 
 		tessellator.addTranslation(-x, -y, -z);
 		return true;
 	}
 
-	private void drawBlock(Block block, ITransformation modelRotationIn, int brightness)
+	private void drawBlock(IBlockAccess world, int x, int y, int z, Block block, ITransformation modelRotationIn, int brightness)
 	{
 		RenderBlocks.getInstance().setRenderBoundsFromBlock(block);
 		for (BlockPart blockpart : model.getElements())
@@ -127,13 +127,24 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 			{
 				BlockPartFace blockpartface = blockpart.mapFaces.get(enumfacing);
 				String texName = translateTextureName(model.resolveTextureName(blockpartface.texture));
-				TextureAtlasSprite textureatlassprite1 = Client.mc.getTextureMapBlocks().getAtlasSprite(texName);
+				IIcon sprite = Client.mc.getTextureMapBlocks().getAtlasSprite(texName);
 				PartType type = PartType.Textured;
 
 				if (texName.startsWith("pswg:model/special_lit"))
 					type = PartType.Lit;
+				else if (texName.equals("pswg:model/special_inheritBelow"))
+				{
+					type = PartType.Hidden;
+					if (world != null && !world.isAirBlock(x, y - 1, z))
+					{
+						type = PartType.InheritBelow;
+						int metadata = world.getBlockMetadata(x, y - 1, z);
+						sprite = world.getBlock(x, y - 1, z).getIcon(1, metadata);
+					}
+				}
 
-				drawQuad(blockpartface.blockFaceUV, textureatlassprite1, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation, modelRotationIn, brightness, type);
+				if (type != PartType.Hidden)
+					drawQuad(blockpartface.blockFaceUV, sprite, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation, modelRotationIn, brightness, type);
 			}
 		}
 	}
@@ -166,13 +177,13 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		return afloat;
 	}
 
-	private static void drawQuad(BlockFaceUV uvs, TextureAtlasSprite sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation, ITransformation transformation, int brightness, PartType type)
+	private static void drawQuad(BlockFaceUV uvs, IIcon sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation, ITransformation transformation, int brightness, PartType type)
 	{
 		for (int i = 0; i < 4; ++i)
 			drawVertex(i, orientation, uvs, p_188012_4_, sprite, partRotation, transformation, brightness, type);
 	}
 
-	private static void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, TextureAtlasSprite sprite, BlockPartRotation rotation, ITransformation transformation, int brightness, PartType type)
+	private static void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, IIcon sprite, BlockPartRotation rotation, ITransformation transformation, int brightness, PartType type)
 	{
 		EnumFacing enumfacing = transformation.rotate(facing);
 		int shadeColor = getFaceShadeColor(enumfacing);
@@ -224,7 +235,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		vec.set(tmp.x, tmp.y, tmp.z);
 	}
 
-	private static void storeVertexData(int[] faceData, int storeIndex, int vertexIndex, Vector3f position, int shadeColor, TextureAtlasSprite sprite, BlockFaceUV faceUV)
+	private static void storeVertexData(int[] faceData, int storeIndex, int vertexIndex, Vector3f position, int shadeColor, IIcon sprite, BlockFaceUV faceUV)
 	{
 		int i = storeIndex * 7;
 		faceData[i] = Float.floatToRawIntBits(position.x);
