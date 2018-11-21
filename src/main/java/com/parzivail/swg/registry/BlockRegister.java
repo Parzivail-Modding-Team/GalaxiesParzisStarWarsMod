@@ -202,18 +202,18 @@ public class BlockRegister
 
 		registerDecoration("wallIndicator", "model/gunmetalGray", "model/lightGray", "model/special_lit_white");
 		registerDecoration("wallIndicatorCluster", "model/gunmetalGray", "model/lightGray", "model/special_lit_white");
-		registerDecoration("wallControlPanel", "model/rust", "model/special_lit_green");
+		registerDecoration("wallControlPanel", "model/darkGray", "model/special_lit_green", "model/gunmetalGray");
 		registerDecoration("wallControlPanelTall", "model/darkGray", "model/special_lit_red");
 
 		registerLitDecoration("floorLight", "model/darkGray", "model/special_lit_white");
 		registerLitDecoration("floorLight2", "model/darkGray", "model/special_lit_white");
 		registerLitDecoration("hothCeilingLight", "model/darkGray", "model/special_lit_white");
 		registerLitDecoration("hothCeilingLight2", "model/darkGray", "model/special_lit_white", "model/veryDarkGray");
-		registerLitDecoration("angledWallLight");
-		registerLitDecoration("floorLightDome");
+		registerLitDecoration("angledWallLight", "model/gunmetalGray", "model/special_lit_white", "model/gunmetalGray");
+		registerLitTransparentDecoration("floorLightDome", "model/glass", "model/special_lit_white", "model/cautionYellow", "model/gunmetalGray");
 
-		registerDecoration("antennaThin");
-		registerDecoration("airTank");
+		registerDecoration("antennaThin", "model/lightGray", "model/rust");
+		registerDecoration("airTank", "model/lightGray", "model/darkGray", "model/gunmetalGray");
 
 		registerDecoration("moistureVaporator", "model/tan", "model/darkTan", "model/lightTan");
 		registerDecoration("moistureVaporator2", "model/tan", "model/darkTan");
@@ -234,6 +234,11 @@ public class BlockRegister
 	private static void registerLitDecoration(String name, String... associatedTextures)
 	{
 		registerDecoration((PDecorativeBlock)new PDecorativeBlock(name, associatedTextures).setLightLevel(1));
+	}
+
+	private static void registerLitTransparentDecoration(String name, String... associatedTextures)
+	{
+		registerDecoration((PDecorativeBlock)new PDecorativeBlock(name, associatedTextures).setTransparent().setLightLevel(1));
 	}
 
 	private static void registerDecoration(PDecorativeBlock block)

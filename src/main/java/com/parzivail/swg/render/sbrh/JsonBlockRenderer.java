@@ -5,6 +5,7 @@ import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.pipeline.*;
 import com.parzivail.util.binary.PIO;
 import com.parzivail.util.block.PDecorativeBlock;
+import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import jdk.internal.util.xml.impl.ReaderUTF8;
 import net.minecraft.block.Block;
@@ -27,7 +28,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	private static final float SCALE_ROTATION_22_5 = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
 	private static final float SCALE_ROTATION_GENERAL = 1.0F / (float)Math.cos((Math.PI / 4D)) - 1.0F;
 	private static final int DEFAULT_BRIGHTNESS = 0x1fffff;
-	private static final int MAX_BRIGHTNESS = 0xf00000;
+	private static final int MAX_BRIGHTNESS = 0xf0;
 	private static final String MISSING_MODEL_MESH = "{    'textures': {       'particle': 'missingno',       'missingno': 'missingno'    },    'elements': [         {  'from': [ 0, 0, 0 ],            'to': [ 16, 16, 16 ],            'faces': {                'down':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'down',  'texture': '#missingno' },                'up':    { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'up',    'texture': '#missingno' },                'north': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'north', 'texture': '#missingno' },                'south': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'south', 'texture': '#missingno' },                'west':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'west',  'texture': '#missingno' },                'east':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'east',  'texture': '#missingno' }            }        }    ]}".replaceAll("'", "\"");
 
 	private final int id;
@@ -96,7 +97,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		}
 	}
 
-	private String translateTextureName(String name)
+	private static String translateTextureName(String name)
 	{
 		return name.replace("blocks/", "");
 	}
@@ -112,7 +113,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		return new javax.vecmath.Vector3f(x, y, z);
 	}
 
-	private float[] getPositionsDiv16(Vector3f pos1, Vector3f pos2)
+	private static float[] getPositionsDiv16(Vector3f pos1, Vector3f pos2)
 	{
 		float[] afloat = new float[EnumFacing.values().length];
 		afloat[EnumFaceDirection.Constants.WEST_INDEX] = pos1.x / 16.0F;
@@ -124,13 +125,13 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		return afloat;
 	}
 
-	private void drawQuad(BlockFaceUV uvs, TextureAtlasSprite sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation, ITransformation transformation, int brightness, PartType type)
+	private static void drawQuad(BlockFaceUV uvs, TextureAtlasSprite sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation, ITransformation transformation, int brightness, PartType type)
 	{
 		for (int i = 0; i < 4; ++i)
 			drawVertex(i, orientation, uvs, p_188012_4_, sprite, partRotation, transformation, brightness, type);
 	}
 
-	private void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, TextureAtlasSprite sprite, BlockPartRotation rotation, ITransformation transformation, int brightness, PartType type)
+	private static void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, TextureAtlasSprite sprite, BlockPartRotation rotation, ITransformation transformation, int brightness, PartType type)
 	{
 		EnumFacing enumfacing = transformation.rotate(facing);
 		int shadeColor = getFaceShadeColor(enumfacing);
@@ -153,8 +154,8 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		Tessellator.instance.setNormal(v1.x, v1.y, v1.z);
 		if (type == PartType.Lit)
 		{
-			Tessellator.instance.setBrightness(208);
-			Tessellator.instance.setColorOpaque_I(0xFFFFFF);
+			Tessellator.instance.setBrightness(MAX_BRIGHTNESS);
+			Tessellator.instance.setColorOpaque_I(GLPalette.WHITE);
 		}
 		else
 		{
@@ -164,20 +165,16 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		Tessellator.instance.addVertexWithUV(position.x, position.y, position.z, sprite.getInterpolatedU((double)faceUV.getVertexU(storeIndex) * .999 + faceUV.getVertexU((storeIndex + 2) % 4) * .001), sprite.getInterpolatedV((double)faceUV.getVertexV(storeIndex) * .999 + faceUV.getVertexV((storeIndex + 2) % 4) * .001));
 	}
 
-	public int rotateVertex(Vector3f p_188011_1_, EnumFacing p_188011_2_, int p_188011_3_, ITransformation p_188011_4_)
+	private static void rotateVertex(Vector3f p_188011_1_, EnumFacing p_188011_2_, int p_188011_3_, ITransformation p_188011_4_)
 	{
-		if (p_188011_4_ == ModelRotation.X0_Y0)
-		{
-			return p_188011_3_;
-		}
-		else
+		if (p_188011_4_ != ModelRotation.X0_Y0)
 		{
 			transform(p_188011_1_, p_188011_4_.getMatrix());
-			return p_188011_4_.rotate(p_188011_2_, p_188011_3_);
+			p_188011_4_.rotate(p_188011_2_, p_188011_3_);
 		}
 	}
 
-	public static void transform(org.lwjgl.util.vector.Vector3f vec, javax.vecmath.Matrix4f m)
+	private static void transform(org.lwjgl.util.vector.Vector3f vec, javax.vecmath.Matrix4f m)
 	{
 		javax.vecmath.Vector4f tmp = new javax.vecmath.Vector4f(vec.x, vec.y, vec.z, 1f);
 		m.transform(tmp);
@@ -186,7 +183,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		vec.set(tmp.x, tmp.y, tmp.z);
 	}
 
-	private void storeVertexData(int[] faceData, int storeIndex, int vertexIndex, Vector3f position, int shadeColor, TextureAtlasSprite sprite, BlockFaceUV faceUV)
+	private static void storeVertexData(int[] faceData, int storeIndex, int vertexIndex, Vector3f position, int shadeColor, TextureAtlasSprite sprite, BlockFaceUV faceUV)
 	{
 		int i = storeIndex * 7;
 		faceData[i] = Float.floatToRawIntBits(position.x);
@@ -197,7 +194,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		faceData[i + 4 + 1] = Float.floatToRawIntBits(sprite.getInterpolatedV((double)faceUV.getVertexV(vertexIndex) * .999 + faceUV.getVertexV((vertexIndex + 2) % 4) * .001));
 	}
 
-	private void rotatePart(Vector3f p_178407_1_, @Nullable BlockPartRotation partRotation)
+	private static void rotatePart(Vector3f p_178407_1_, @Nullable BlockPartRotation partRotation)
 	{
 		if (partRotation != null)
 		{
@@ -241,7 +238,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		}
 	}
 
-	private void rotateScale(Vector3f position, Vector3f rotationOrigin, Matrix4f rotationMatrix, Vector3f scale)
+	private static void rotateScale(Vector3f position, Vector3f rotationOrigin, Matrix4f rotationMatrix, Vector3f scale)
 	{
 		Vector4f vector4f = new Vector4f(position.x - rotationOrigin.x, position.y - rotationOrigin.y, position.z - rotationOrigin.z, 1.0F);
 		Matrix4f.transform(rotationMatrix, vector4f, vector4f);
@@ -251,21 +248,21 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		position.set(vector4f.x + rotationOrigin.x, vector4f.y + rotationOrigin.y, vector4f.z + rotationOrigin.z);
 	}
 
-	private Matrix4f getMatrixIdentity()
+	private static Matrix4f getMatrixIdentity()
 	{
 		Matrix4f matrix4f = new Matrix4f();
 		matrix4f.setIdentity();
 		return matrix4f;
 	}
 
-	private int getFaceShadeColor(EnumFacing facing)
+	private static int getFaceShadeColor(EnumFacing facing)
 	{
 		float f = getFaceBrightness(facing);
 		int i = MathHelper.clamp_int((int)(f * 255.0F), 0, 255);
 		return -16777216 | i << 16 | i << 8 | i;
 	}
 
-	private float getFaceBrightness(EnumFacing facing)
+	private static float getFaceBrightness(EnumFacing facing)
 	{
 		switch (facing)
 		{
