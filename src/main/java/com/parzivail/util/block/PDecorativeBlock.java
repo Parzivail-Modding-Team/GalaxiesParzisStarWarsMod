@@ -6,12 +6,16 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.ArrayUtils;
 
 public class PDecorativeBlock extends Block
 {
 	public final String name;
 	private boolean transparent;
+	private boolean passable;
 	private boolean connectsToWires;
 	private Block[] connectsTo;
 
@@ -65,9 +69,26 @@ public class PDecorativeBlock extends Block
 		return false;
 	}
 
+	@Override
+	public boolean isPassable(IBlockAccess worldIn, int x, int y, int z)
+	{
+		return passable || super.isPassable(worldIn, x, y, z);
+	}
+
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World worldIn, int x, int y, int z)
+	{
+		return passable ? null : super.getCollisionBoundingBoxFromPool(worldIn, x, y, z);
+	}
+
 	public PDecorativeBlock setTransparent()
 	{
 		transparent = true;
+		return this;
+	}
+
+	public PDecorativeBlock setPassible()
+	{
+		passable = true;
 		return this;
 	}
 
