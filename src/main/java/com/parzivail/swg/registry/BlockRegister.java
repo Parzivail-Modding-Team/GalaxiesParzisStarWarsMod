@@ -76,45 +76,7 @@ public class BlockRegister
 	public static PBlockContainer gunRack;
 	public static PBlockContainer satelliteDish;
 
-	public static PDecorativeBlock panelHoth;
-	public static PDecorativeBlock consoleHothCurved1;
-	public static PDecorativeBlock consoleHothCurved2;
-	public static PDecorativeBlock consoleHothCurved3;
-	public static PDecorativeBlock consoleHothMedical1;
-	public static PDecorativeBlock consoleHothMedical2;
-
-	public static PDecorativeBlock crate1;
-	public static PDecorativeBlock crateHoth1;
-	public static PDecorativeBlock crateHoth2;
-	public static PDecorativeBlock crateMosEspa;
-	public static PDecorativeBlock crateVilla;
-
-	public static PDecorativeBlock floorLight;
-	public static PDecorativeBlock floorLight2;
-	public static PDecorativeBlock ceilingLight;
-	public static PDecorativeBlock ceilingLight2;
-	public static PDecorativeBlock angledWallLight;
-	public static PDecorativeBlock floorLightDome;
-	public static PDecorativeBlock wallIndicatorLight;
-	public static PDecorativeBlock wallIndicatorLightCluster;
-
-	public static PDecorativeBlock wallControlPanel;
-	public static PDecorativeBlock wallControlPanelTall;
-
 	public static PBlock ladder;
-
-	public static PDecorativeBlock antennaThin;
-	public static PDecorativeBlock airTank;
-
-	public static PDecorativeBlock moistureVaporator;
-	public static PDecorativeBlock moistureVaporator2;
-	public static PDecorativeBlock spokedMachine;
-	public static PDecorativeBlock tubeMachine;
-
-	public static PDecorativeBlock pipeSmallBent;
-	public static PDecorativeBlock quadVentPipe;
-	public static PDecorativeBlock tallVentedPipe;
-	public static PDecorativeBlock wallPipeLarge;
 
 	public static void register()
 	{
@@ -184,7 +146,7 @@ public class BlockRegister
 		register(satelliteDish = new BlockSatelliteDish());
 
 		// Specialty decoration blocks
-		register(ladder = new BlockLadder());
+		registerWithModel(ladder = new BlockLadder());
 
 		// Decoration blocks
 		registerDecoration("blockPanelHoth").setBlockBounds(1, 2);
@@ -246,6 +208,12 @@ public class BlockRegister
 		StarWarsGalaxy.proxy.registerModel(block);
 		GameRegistry.registerBlock(block, block.name);
 		return block;
+	}
+
+	private static <T extends Block & INameProvider> void registerWithModel(T item)
+	{
+		StarWarsGalaxy.proxy.registerModel(item);
+		GameRegistry.registerBlock(item, PItemBlockDecoration.class, item.getName());
 	}
 
 	private static void register(PBlock item)

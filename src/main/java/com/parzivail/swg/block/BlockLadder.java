@@ -3,17 +3,13 @@ package com.parzivail.swg.block;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.util.block.HarvestLevel;
 import com.parzivail.util.block.PBlock;
-import com.parzivail.util.block.TileRotatable;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockLadder extends PBlock
+public class BlockLadder extends PBlock implements IRotatingBlock
 {
 	public BlockLadder()
 	{
@@ -27,7 +23,7 @@ public class BlockLadder extends PBlock
 	@Override
 	public int getRenderType()
 	{
-		return -1;
+		return name.hashCode();
 	}
 
 	@Override
@@ -42,18 +38,6 @@ public class BlockLadder extends PBlock
 		return true;
 	}
 
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack item)
-	{
-		TileEntity tile = world.getTileEntity(x, y, z);
-		if (tile instanceof TileRotatable)
-		{
-			TileRotatable te = (TileRotatable)tile;
-			int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 0x3;
-			te.setFacing(l);
-		}
-	}
-
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World worldIn, int x, int y, int z)
 	{
 		setBlockBoundsBasedOnState(worldIn, x, y, z);
@@ -61,16 +45,13 @@ public class BlockLadder extends PBlock
 	}
 
 	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_)
+	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z)
 	{
-		if (p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_) instanceof TileRotatable)
-		{
-			int meta = (int)((TileRotatable)p_149719_1_.getTileEntity(p_149719_2_, p_149719_3_, p_149719_4_)).getFacing();
-			if (meta % 2 == 0)
-				setBlockBounds(0, 0, 0.4f, 1, 1, 0.6f);
-			else
-				setBlockBounds(0.4f, 0, 0, 0.6f, 1, 1);
-		}
+		int meta = world.getBlockMetadata(x, y, z);
+		if ((meta / 2) % 2 == 0)
+			setBlockBounds(0, 0, 0.4f, 1, 1, 0.6f);
+		else
+			setBlockBounds(0.4f, 0, 0, 0.6f, 1, 1);
 	}
 
 	@Override

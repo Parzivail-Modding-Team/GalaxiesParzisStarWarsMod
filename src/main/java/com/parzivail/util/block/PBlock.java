@@ -5,7 +5,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 
-public class PBlock extends Block
+public class PBlock extends Block implements INameProvider
 {
 	public final String name;
 
@@ -52,5 +52,11 @@ public class PBlock extends Block
 	{
 		setHarvestLevel(item, level);
 		return this;
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
 	}
 }

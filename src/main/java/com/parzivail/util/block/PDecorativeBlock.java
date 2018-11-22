@@ -2,6 +2,7 @@ package com.parzivail.util.block;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.block.IRotatingBlock;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -11,7 +12,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.ArrayUtils;
 
-public class PDecorativeBlock extends Block
+public class PDecorativeBlock extends Block implements INameProvider, IRotatingBlock
 {
 	public final String name;
 	private boolean transparent;
@@ -28,6 +29,12 @@ public class PDecorativeBlock extends Block
 		setResistance(10.0F);
 		setHarvestLevel("pickaxe", HarvestLevel.IRON);
 		setCreativeTab(StarWarsGalaxy.tab);
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
 	}
 
 	public PDecorativeBlock setBlockBounds(float width, float height)

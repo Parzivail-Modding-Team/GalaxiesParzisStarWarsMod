@@ -34,7 +34,7 @@ import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
 import com.parzivail.swg.world.PswgWorldDataHandler;
-import com.parzivail.util.block.PDecorativeBlock;
+import com.parzivail.util.block.INameProvider;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.ui.PFramebuffer;
@@ -164,9 +164,9 @@ public class Client extends Common
 	}
 
 	@Override
-	public void registerModel(PDecorativeBlock block)
+	public <T extends Block & INameProvider> void registerModel(T block)
 	{
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(block, Resources.location(String.format("models/blocks/%s.json", block.name))));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(block, Resources.location(String.format("models/blocks/%s.json", block.getName()))));
 	}
 
 	public static void saveTextureAtlas(TextureMap map)

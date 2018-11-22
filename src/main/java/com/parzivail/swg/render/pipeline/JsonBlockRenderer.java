@@ -1,8 +1,10 @@
 package com.parzivail.swg.render.pipeline;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.block.IRotatingBlock;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.binary.PIO;
+import com.parzivail.util.block.INameProvider;
 import com.parzivail.util.block.PDecorativeBlock;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.GLPalette;
@@ -45,9 +47,9 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	private int displayList;
 	private boolean compiled;
 
-	public JsonBlockRenderer(PDecorativeBlock block, ResourceLocation modelLocation)
+	public <T extends Block & INameProvider> JsonBlockRenderer(T block, ResourceLocation modelLocation)
 	{
-		id = block.name.hashCode();
+		id = block.getName().hashCode();
 
 		InputStream resource = PIO.getResource(StarWarsGalaxy.class, modelLocation);
 		if (resource == null)
@@ -105,7 +107,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 
 		ModelRotation rotation = ModelRotation.X0_Y0;
 
-		if (block instanceof PDecorativeBlock)
+		if (block instanceof IRotatingBlock)
 		{
 			float angle = world.getBlockMetadata(x, y, z) * 45 + 180;
 			rotation = new ModelRotation(0, (int)angle);
@@ -156,6 +158,13 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 				{
 					Block b = world.getBlock(x, y + 1, z);
 					if (shouldntConnectTo(block, b))
+						continue;
+				}
+
+				if (blockpart.name.endsWith("!neverup"))
+				{
+					Block b = world.getBlock(x, y + 1, z);
+					if (!shouldntConnectTo(block, b))
 						continue;
 				}
 

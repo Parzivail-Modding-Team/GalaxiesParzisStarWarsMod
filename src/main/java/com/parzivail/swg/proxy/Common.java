@@ -4,10 +4,11 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.MessageCreateDecal;
 import com.parzivail.swg.network.MessageSpawnParticle;
 import com.parzivail.swg.ship.MultipartFlightModel;
-import com.parzivail.util.block.PDecorativeBlock;
+import com.parzivail.util.block.INameProvider;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -82,7 +83,7 @@ public class Common
 		return false;
 	}
 
-	public void registerModel(PDecorativeBlock block)
+	public <T extends Block & INameProvider> void registerModel(T block)
 	{
 	}
 }
