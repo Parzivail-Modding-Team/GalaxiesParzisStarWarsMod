@@ -122,6 +122,53 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		RenderBlocks.getInstance().setRenderBoundsFromBlock(block);
 		for (BlockPart blockpart : model.getElements())
 		{
+			if (world != null)
+			{
+				if (blockpart.name.endsWith("!onlynorth"))
+				{
+					Block b = world.getBlock(x, y, z + 1);
+					if (shouldntConnectTo(block, b))
+						continue;
+				}
+
+				if (blockpart.name.endsWith("!onlysouth"))
+				{
+					Block b = world.getBlock(x, y, z - 1);
+					if (shouldntConnectTo(block, b))
+						continue;
+				}
+
+				if (blockpart.name.endsWith("!onlyeast"))
+				{
+					Block b = world.getBlock(x - 1, y, z);
+					if (shouldntConnectTo(block, b))
+						continue;
+				}
+
+				if (blockpart.name.endsWith("!onlywest"))
+				{
+					Block b = world.getBlock(x + 1, y, z);
+					if (shouldntConnectTo(block, b))
+						continue;
+				}
+
+				if (blockpart.name.endsWith("!onlyup"))
+				{
+					Block b = world.getBlock(x, y + 1, z);
+					if (shouldntConnectTo(block, b))
+						continue;
+				}
+
+				if (blockpart.name.endsWith("!onlydown"))
+				{
+					Block b = world.getBlock(x, y - 1, z);
+					if (shouldntConnectTo(block, b))
+						continue;
+				}
+			}
+			else if (blockpart.name.contains("!only"))
+				continue;
+
 			for (EnumFacing enumfacing : blockpart.mapFaces.keySet())
 			{
 				BlockPartFace blockpartface = blockpart.mapFaces.get(enumfacing);
@@ -146,6 +193,14 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 					drawQuad(blockpartface.blockFaceUV, sprite, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation, modelRotationIn, brightness, type);
 			}
 		}
+	}
+
+	private boolean shouldntConnectTo(Block block, Block otherBlock)
+	{
+		if (block instanceof PDecorativeBlock)
+			return !((PDecorativeBlock)block).doesConnectTo(otherBlock);
+		else
+			return otherBlock != block;
 	}
 
 	private static String translateTextureName(String name)

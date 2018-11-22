@@ -6,11 +6,14 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class PDecorativeBlock extends Block
 {
 	public final String name;
 	private boolean transparent;
+	private boolean connectsToWires;
+	private Block[] connectsTo;
 
 	public PDecorativeBlock(String name)
 	{
@@ -60,5 +63,15 @@ public class PDecorativeBlock extends Block
 	public boolean canRenderInPass(int pass)
 	{
 		return pass == 0 || transparent;
+	}
+
+	public void setConnectsTo(Block[] connectsTo)
+	{
+		this.connectsTo = connectsTo;
+	}
+
+	public boolean doesConnectTo(Block other)
+	{
+		return other == this || ArrayUtils.contains(connectsTo, other);
 	}
 }

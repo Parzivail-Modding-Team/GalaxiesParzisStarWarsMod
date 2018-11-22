@@ -19,14 +19,16 @@ public class BlockPart
 	public final Map<EnumFacing, BlockPartFace> mapFaces;
 	public final BlockPartRotation partRotation;
 	public final boolean shade;
+	public final String name;
 
-	public BlockPart(Vector3f positionFromIn, Vector3f positionToIn, Map<EnumFacing, BlockPartFace> mapFacesIn, @Nullable BlockPartRotation partRotationIn, boolean shadeIn)
+	public BlockPart(Vector3f positionFromIn, Vector3f positionToIn, Map<EnumFacing, BlockPartFace> mapFacesIn, @Nullable BlockPartRotation partRotationIn, boolean shadeIn, String name)
 	{
 		positionFrom = positionFromIn;
 		positionTo = positionToIn;
 		mapFaces = mapFacesIn;
 		partRotation = partRotationIn;
 		shade = shadeIn;
+		this.name = name;
 		setDefaultUvs();
 	}
 
@@ -79,6 +81,7 @@ public class BlockPart
 			Vector3f vector3f1 = parsePositionTo(jsonobject);
 			BlockPartRotation blockpartrotation = parseRotation(jsonobject);
 			Map<EnumFacing, BlockPartFace> map = parseFacesCheck(p_deserialize_3_, jsonobject);
+			String name = parseName(jsonobject);
 
 			if (jsonobject.has("shade") && !JsonUtils.isBoolean(jsonobject, "shade"))
 			{
@@ -87,8 +90,15 @@ public class BlockPart
 			else
 			{
 				boolean flag = JsonUtils.getBoolean(jsonobject, "shade", true);
-				return new BlockPart(vector3f, vector3f1, map, blockpartrotation, flag);
+				return new BlockPart(vector3f, vector3f1, map, blockpartrotation, flag, name);
 			}
+		}
+
+		private String parseName(JsonObject object)
+		{
+			if (!JsonUtils.hasField(object, "name"))
+				return "cube";
+			return JsonUtils.getString(object, "name");
 		}
 
 		@Nullable

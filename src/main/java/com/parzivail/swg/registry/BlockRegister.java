@@ -184,7 +184,7 @@ public class BlockRegister
 		register(satelliteDish = new BlockSatelliteDish());
 
 		// Specialty decoration blocks
-		registerBackedDecoration(ladder = new BlockLadder());
+		register(ladder = new BlockLadder());
 
 		// Decoration blocks
 		registerDecoration("blockPanelHoth");
@@ -217,39 +217,48 @@ public class BlockRegister
 
 		registerDecoration("moistureVaporator");
 		registerDecoration("moistureVaporator2");
-		registerDecoration("spokedMachine");
+		Block spokedMachine = registerDecoration("spokedMachine");
 		registerDecoration("tubeMachine");
 
 		registerDecoration("pipeSmallBent");
 		registerDecoration("quadVentPipe");
 		registerDecoration("tallVentedPipe");
 		registerDecoration("wallPipeLarge");
+
+		registerConnectingDecoration("groundCable", spokedMachine);
+
+		//registerDecoration("clampedCable");
 	}
 
-	private static void registerDecoration(String name)
+	private static PDecorativeBlock registerDecoration(String name)
 	{
-		registerDecoration(new PDecorativeBlock(name));
+		return registerDecoration(new PDecorativeBlock(name));
 	}
 
-	private static void registerLitDecoration(String name)
+	private static PDecorativeBlock registerLitDecoration(String name)
 	{
-		registerDecoration((PDecorativeBlock)new PDecorativeBlock(name).setLightLevel(1));
+		return registerDecoration((PDecorativeBlock)new PDecorativeBlock(name).setLightLevel(1));
 	}
 
-	private static void registerLitTransparentDecoration(String name)
+	private static PDecorativeBlock registerLitTransparentDecoration(String name)
 	{
-		registerDecoration((PDecorativeBlock)new PDecorativeBlock(name).setTransparent().setLightLevel(1));
+		return registerDecoration((PDecorativeBlock)new PDecorativeBlock(name).setTransparent().setLightLevel(1));
 	}
 
-	private static void registerDecoration(PDecorativeBlock block)
+	private static PDecorativeBlock registerDecoration(PDecorativeBlock block)
 	{
 		StarWarsGalaxy.proxy.registerModel(block);
 		GameRegistry.registerBlock(block, PItemBlockDecoration.class, block.name);
+		return block;
 	}
 
-	private static void registerBackedDecoration(PBlock block)
+	private static PDecorativeBlock registerConnectingDecoration(String name, Block... connectsTo)
 	{
+		PDecorativeBlock block = new PDecorativeBlock(name);
+		block.setConnectsTo(connectsTo);
+		StarWarsGalaxy.proxy.registerModel(block);
 		GameRegistry.registerBlock(block, block.name);
+		return block;
 	}
 
 	private static void register(PBlock item)
