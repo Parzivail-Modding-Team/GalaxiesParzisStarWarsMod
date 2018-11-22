@@ -190,7 +190,7 @@ public class BlockRegister
 		//registerDecoration("clampedCable");
 		registerDecoration("yavinGenerator");
 
-		registerConnectingDecoration("groundCable").setPassible().setBlockBounds(1, 0.2f);
+		registerConnectingDecoration("groundCable").setBlockBounds(1, 0.2f);
 	}
 
 	private static PDecorativeBlock registerDecoration(String name)

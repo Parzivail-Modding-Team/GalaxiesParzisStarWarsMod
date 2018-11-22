@@ -5,7 +5,7 @@
     "1": "pswg:blocks/model/special_lit_white",
     "2": "pswg:blocks/model/cautionYellow",
     "3": "pswg:blocks/model/gunmetalGray",
-    "particle": "blocks/model/glass"
+    "particle": "pswg:blocks/model/cautionYellow"
   },
   "elements": [
     {
