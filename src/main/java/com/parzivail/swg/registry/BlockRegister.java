@@ -191,62 +191,49 @@ public class BlockRegister
 		registerDecoration("blockConsoleHoth1");
 		registerDecoration("blockConsoleHoth2");
 		registerDecoration("blockConsoleHoth3");
-		registerDecoration("medicalConsole");
+		registerDecoration("medicalConsole").setBlockBounds(0.8f, 1);
 		registerDecoration("medicalConsole2");
 
-		registerDecoration("crate1");
+		registerDecoration("crate1").setBlockBounds(0.9f, 1);
 		registerDecoration("crateHoth1");
 		registerDecoration("crateHoth2");
-		registerDecoration("crateMosEspa");
-		registerDecoration("crateVilla");
+		registerDecoration("crateMosEspa").setBlockBounds(0.8f, 1);
+		registerDecoration("crateVilla").setBlockBounds(0.5f, 1);
 
-		registerDecoration("wallIndicator");
-		registerDecoration("wallIndicatorCluster");
-		registerDecoration("wallControlPanel");
-		registerDecoration("wallControlPanelTall");
+		registerDecoration("wallIndicator").setBlockBounds(0.5f, 0.25f, 0.5f);
+		registerDecoration("wallIndicatorCluster").setBlockBounds(0.5f, 0.25f, 0.5f);
+		registerDecoration("wallControlPanel").setBlockBounds(0.5f, 0.25f, 0.5f);
+		registerDecoration("wallControlPanelTall").setBlockBounds(0.5f, 0.25f, 0.5f);
 
-		registerLitDecoration("floorLight");
-		registerLitDecoration("floorLight2");
-		registerLitDecoration("hothCeilingLight");
-		registerLitDecoration("hothCeilingLight2");
-		registerLitDecoration("angledWallLight");
-		registerLitTransparentDecoration("floorLightDome");
+		registerDecoration("floorLight").setBlockBounds(0.5f, 0.25f).setLightLevel(1);
+		registerDecoration("floorLight2").setBlockBounds(0.7f, 0.4f).setLightLevel(1);
+		registerDecoration("hothCeilingLight").setBlockBounds(0.25f, 0.85f, 0.15f).setLightLevel(1);
+		registerDecoration("hothCeilingLight2").setLightLevel(1);
+		registerDecoration("angledWallLight").setBlockBounds(0.5f, 0.25f, 0.5f).setLightLevel(1);
+		registerDecoration("floorLightDome").setBlockBounds(0.5f, 0.5f).setTransparent().setLightLevel(1);
 
-		registerDecoration("antennaThin");
-		registerDecoration("airTank");
+		registerDecoration("antennaThin").setBlockBounds(0.125f, 1);
+		registerDecoration("airTank").setBlockBounds(0.8f, 1);
 
 		registerDecoration("moistureVaporator");
 		registerDecoration("moistureVaporator2");
-		Block spokedMachine = registerDecoration("spokedMachine");
+		registerDecoration("spokedMachine");
 		registerDecoration("tubeMachine");
 
-		registerDecoration("pipeSmallBent");
+		registerDecoration("pipeSmallBent").setBlockBounds(0.5f, 0.5f);
 		registerDecoration("quadVentPipe");
 		registerDecoration("tallVentedPipe");
-		registerDecoration("wallPipeLarge");
-
-		registerConnectingDecoration("groundCable", spokedMachine);
+		registerDecoration("wallPipeLarge").setBlockBounds(0.5f, 0.5f);
 
 		//registerDecoration("clampedCable");
+		registerDecoration("yavinGenerator");
+
+		registerConnectingDecoration("groundCable").setBlockBounds(1, 0.2f);
 	}
 
 	private static PDecorativeBlock registerDecoration(String name)
 	{
-		return registerDecoration(new PDecorativeBlock(name));
-	}
-
-	private static PDecorativeBlock registerLitDecoration(String name)
-	{
-		return registerDecoration((PDecorativeBlock)new PDecorativeBlock(name).setLightLevel(1));
-	}
-
-	private static PDecorativeBlock registerLitTransparentDecoration(String name)
-	{
-		return registerDecoration((PDecorativeBlock)new PDecorativeBlock(name).setTransparent().setLightLevel(1));
-	}
-
-	private static PDecorativeBlock registerDecoration(PDecorativeBlock block)
-	{
+		PDecorativeBlock block = new PDecorativeBlock(name);
 		StarWarsGalaxy.proxy.registerModel(block);
 		GameRegistry.registerBlock(block, PItemBlockDecoration.class, block.name);
 		return block;

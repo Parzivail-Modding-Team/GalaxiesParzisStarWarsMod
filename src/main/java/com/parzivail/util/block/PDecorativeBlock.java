@@ -26,6 +26,18 @@ public class PDecorativeBlock extends Block
 		setCreativeTab(StarWarsGalaxy.tab);
 	}
 
+	public PDecorativeBlock setBlockBounds(float width, float height)
+	{
+		return setBlockBounds(width, 0, height);
+	}
+
+	public PDecorativeBlock setBlockBounds(float width, float minY, float height)
+	{
+		width /= 2;
+		setBlockBounds(0.5f - width, minY, 0.5f - width, 0.5f + width, minY + height, 0.5f + width);
+		return this;
+	}
+
 	@Override
 	public int getRenderType()
 	{
