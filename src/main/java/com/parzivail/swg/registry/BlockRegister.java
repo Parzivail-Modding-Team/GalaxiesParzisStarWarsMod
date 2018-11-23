@@ -9,6 +9,7 @@ import com.parzivail.util.block.*;
 import com.parzivail.util.item.PItemBlockDecoration;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 
 /**
@@ -17,53 +18,7 @@ import net.minecraft.block.material.Material;
 public class BlockRegister
 {
 	public static PBlock fastGrass;
-
-	public static PBlockSand oxidizedSand;
-	public static PBlock oxidizedSandStone;
-	public static PBlockSand irradiatedSand;
-	public static PBlockSand rhodocrositeSand;
-	public static PBlockSand tatooineSand;
-
-	public static PBlock hothStone;
-	public static PBlock templeStone;
-	public static PBlock templeStoneBrick;
-	public static PBlock templeStoneBrickFancy;
-	public static PBlock templeStoneSlab;
-	public static PBlock templeStoneSlabTop;
-	public static PBlock templeStoneSlabTopDark;
-
-	public static PBlock concrete;
-	public static PBlock lavaRock;
-	public static PBlock oldBrick;
-	public static PBlockLayer salt;
-	public static PBlock bespinElevator;
-	public static PBlock pumice;
-	public static PBlock crate;
-	public static PBlock hardpackSnow;
-	public static PBlock hothDoor;
-	public static PBlock hothSnowCut;
-	public static PBlock hothSandbag;
-	public static PBlock mud;
-
 	public static PBlockPillar endorLog;
-	public static PBlockPillar endorFallenLog;
-	public static PBlockPillar palmLog;
-
-	public static PBlock white;
-	public static PBlock gray;
-	public static PBlock grayBevel;
-	public static PBlockConnected grayGrate;
-	public static PBlockPillar grayLight;
-	public static PBlockPillar grayLightVert;
-	public static PBlock darkGray;
-	public static PBlockConnected darkGrayGrate;
-	public static PBlockPillar darkGrayLight;
-	public static PBlockPillar darkGrayLightVert;
-	public static PBlock black;
-	public static PBlockConnected blackGrate;
-	public static PBlock caution;
-
-	public static PBlock labWall;
 
 	public static PBlock oreChromium;
 	public static PBlock oreTitanium;
@@ -71,82 +26,82 @@ public class BlockRegister
 	public static PBlock oreCortosis;
 
 	public static PBlockContainer blasterWorkbench;
-	public static PBlockContainer sabaccTable;
-	public static PBlockContainer soundHothTelemetry;
+
 	public static PBlockContainer gunRack;
 	public static PBlockContainer satelliteDish;
-
-	public static PBlock ladder;
 
 	public static void register()
 	{
 		register(fastGrass = new BlockFastGrass());
 
-		register(oxidizedSand = new PBlockSand("oxidizedSand"));
-		register(oxidizedSandStone = new PBlock("oxidizedSandStone"));
-		register(irradiatedSand = new PBlockSand("irradiatedSand"));
-		register(rhodocrositeSand = new PBlockSand("rhodocrositeSand"));
-		register(hothStone = new PBlock("hothStone"));
-		register(concrete = new PBlock("concrete"));
-		register(lavaRock = (PBlock)new PBlock("lavaRock").setLightLevel(0.625f));
-		register(oldBrick = new PBlock("oldBrick"));
-		register(salt = new PBlockLayer("salt", ItemRegister.saltPile));
-		register(bespinElevator = new PBlock("bespinElevator"));
-		register(pumice = new PBlock("pumice"));
-		register(crate = new PBlock("crate"));
-		register(hardpackSnow = new PBlock("hardpackSnow"));
-		register(hothDoor = new PBlock("hothDoor"));
-		register(hothSnowCut = new PBlock("hothSnowCut"));
-		register(hothSandbag = new PBlockConnected("hothSandbag", "hothSandbag", Material.craftedSnow));
-		register(mud = new PBlock("mud").withHarvestLevel("shovel", HarvestLevel.STONE));
+		register(new PBlockSand("oxidizedSand"));
+		register(new PBlock("oxidizedSandStone"));
+		register(new PBlockSand("irradiatedSand"));
+		register(new PBlockSand("rhodocrositeSand"));
+		register(new PBlock("hothStone"));
+		register(new PBlock("concrete"));
+		register((PBlock)new PBlock("lavaRock").setLightLevel(0.625f));
+		register(new PBlock("oldBrick"));
+		register(new PBlockLayer("salt", ItemRegister.saltPile));
+		register(new PBlock("bespinElevator"));
+		register(new PBlock("pumice"));
+		register(new PBlock("crate"));
+		register(new PBlock("hardpackSnow"));
+		register(new PBlock("hothDoor"));
+		register(new PBlock("hothSnowCut"));
+		register(new PBlockConnected("hothSandbag", "hothSandbag", Material.craftedSnow));
+		register(new PBlock("mud").withHarvestLevel("shovel", HarvestLevel.STONE));
 
-		register(white = (PBlock)new PBlock("metalWhite", "white").setStepSound(Block.soundTypeMetal));
-		register(gray = (PBlock)new PBlock("metalGray", "gray").setStepSound(Block.soundTypeMetal));
-		register(grayBevel = (PBlock)new PBlock("metalGrayBevel", "grayBevel").setStepSound(Block.soundTypeMetal));
-		register(darkGray = (PBlock)new PBlock("metalDarkGray", "darkGray").setStepSound(Block.soundTypeMetal));
-		register(black = (PBlock)new PBlock("metalBlack", "black").setStepSound(Block.soundTypeMetal));
-		register(caution = (PBlock)new PBlock("metalCaution", "caution").setStepSound(Block.soundTypeMetal));
+		register((PBlock)new PBlock("metalWhite", "white").setStepSound(Block.soundTypeMetal));
+		register((PBlock)new PBlock("metalGray", "gray").setStepSound(Block.soundTypeMetal));
+		register((PBlock)new PBlock("metalGrayBevel", "grayBevel").setStepSound(Block.soundTypeMetal));
+		register((PBlock)new PBlock("metalDarkGray", "darkGray").setStepSound(Block.soundTypeMetal));
+		register((PBlock)new PBlock("metalBlack", "black").setStepSound(Block.soundTypeMetal));
+		register((PBlock)new PBlock("metalCaution", "caution").setStepSound(Block.soundTypeMetal));
 
-		register(grayGrate = (PBlockConnected)new PBlockConnected("grateLightGray", "grateLightGray", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
-		register(darkGrayGrate = (PBlockConnected)new PBlockConnected("grateDarkGray", "grateDarkGray", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
-		register(blackGrate = (PBlockConnected)new PBlockConnected("grateBlack", "grateBlack", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
+		register((PBlockConnected)new PBlockConnected("grateLightGray", "grateLightGray", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
+		register((PBlockConnected)new PBlockConnected("grateDarkGray", "grateDarkGray", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
+		register((PBlockConnected)new PBlockConnected("grateBlack", "grateBlack", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
 
-		register(grayLight = new BlockGrayLight());
-		register(darkGrayLight = new BlockDarkGrayLight());
-		register(grayLightVert = new BlockGrayLightVertical());
-		register(darkGrayLightVert = new BlockDarkGrayLightVertical());
+		register(new BlockGrayLight());
+		register(new BlockDarkGrayLight());
+		register(new BlockGrayLightVertical());
+		register(new BlockDarkGrayLightVertical());
 
-		register(templeStone = new PBlock("templeStone"));
-		register(templeStoneBrick = new PBlock("templeStoneBrick"));
-		register(templeStoneBrickFancy = new PBlock("templeStoneBrickFancy"));
-		register(templeStoneSlab = new PBlock("templeStoneSlab"));
-		register(templeStoneSlabTop = new PBlock("templeStoneSlabTop"));
-		register(templeStoneSlabTopDark = new PBlock("templeStoneSlabTopDark"));
+		register(new PBlock("templeStone"));
+		register(new PBlock("templeStoneBrick"));
+		register(new PBlock("templeStoneBrickFancy"));
+		register(new PBlock("templeStoneSlab"));
+		register(new PBlock("templeStoneSlabTop"));
+		register(new PBlock("templeStoneSlabTopDark"));
 
 		register(endorLog = new BlockEndorLog());
-		register(endorFallenLog = new BlockEndorFallenLog());
-		register(palmLog = new BlockPalmLog());
+		register(new BlockEndorFallenLog());
+		register(new BlockPalmLog());
 
-		register(labWall = new PBlock("labWall"));
+		register(new PBlock("labWall"));
 
 		register(oreChromium = new PBlock("chromium"));
 		register(oreTitanium = new PBlock("titanium"));
 		register(oreRubindum = new PBlock("rubindum"));
 		register(oreCortosis = new PBlock("cortosis"));
 
-		register(tatooineSand = new PBlockSand("tatooineSand"));
+		register(new PBlockSand("tatooineSand"));
+		PBlock pourstone;
+		register(pourstone = new PBlock("pourstone"));
+		register(new PBlockStairs("pourstoneStairs", pourstone, 0));
 
 		// Normal tile entities
-		register(blasterWorkbench = new BlockBlasterWorkbench().withPlaceholderTexture());
-		register(sabaccTable = new BlockSabaccTable().withPlaceholderTexture());
-		register(soundHothTelemetry = new BlockSoundHothTelemetry());
+		registerWithTile(blasterWorkbench = new BlockBlasterWorkbench().withPlaceholderTexture());
+		registerWithTile(new BlockSabaccTable().withPlaceholderTexture());
+		registerWithTile(new BlockSoundHothTelemetry());
 
 		// Tile entities that need to keep a TESR
-		register(gunRack = new BlockGunRack());
-		register(satelliteDish = new BlockSatelliteDish());
+		registerWithTile(gunRack = new BlockGunRack());
+		registerWithTile(satelliteDish = new BlockSatelliteDish());
 
 		// Specialty decoration blocks
-		registerWithModel(ladder = new BlockLadder());
+		registerWithModel(new BlockLadder());
 
 		// Decoration blocks
 		registerDecoration("blockPanelHoth").setTransparent().setBlockBounds(1, 2);
@@ -216,29 +171,14 @@ public class BlockRegister
 		GameRegistry.registerBlock(item, PItemBlockDecoration.class, item.getName());
 	}
 
-	private static void register(PBlock item)
+	private static <T extends Block & INameProvider> void register(T item)
 	{
-		GameRegistry.registerBlock(item, item.name);
+		GameRegistry.registerBlock(item, item.getName());
 	}
 
-	private static void register(PBlockSand item)
+	private static <T extends BlockContainer & INameProvider> void registerWithTile(T item)
 	{
-		GameRegistry.registerBlock(item, item.name);
-	}
-
-	private static void register(PBlockLayer item)
-	{
-		GameRegistry.registerBlock(item, item.name);
-	}
-
-	private static void register(PBlockPillar item)
-	{
-		GameRegistry.registerBlock(item, item.name);
-	}
-
-	private static void register(PBlockContainer item)
-	{
-		GameRegistry.registerBlock(item, item.name);
-		GameRegistry.registerTileEntity(item.createNewTileEntity(null, 0).getClass(), Resources.tileDot(item.name));
+		GameRegistry.registerBlock(item, item.getName());
+		GameRegistry.registerTileEntity(item.createNewTileEntity(null, 0).getClass(), Resources.tileDot(item.getName()));
 	}
 }

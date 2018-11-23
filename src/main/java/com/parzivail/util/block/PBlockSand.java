@@ -5,7 +5,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 
-public class PBlockSand extends BlockFalling
+public class PBlockSand extends BlockFalling implements INameProvider
 {
 	public final String name;
 
@@ -18,5 +18,11 @@ public class PBlockSand extends BlockFalling
 		setHardness(0.5F);
 		setHarvestLevel("shovel", HarvestLevel.WOOD);
 		setStepSound(Block.soundTypeSand);
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
 	}
 }

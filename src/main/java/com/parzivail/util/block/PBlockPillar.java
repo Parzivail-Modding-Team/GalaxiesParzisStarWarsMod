@@ -4,7 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import net.minecraft.block.BlockLog;
 
-public class PBlockPillar extends BlockLog
+public class PBlockPillar extends BlockLog implements INameProvider
 {
 	public final String name;
 
@@ -13,5 +13,11 @@ public class PBlockPillar extends BlockLog
 		this.name = name;
 		setCreativeTab(StarWarsGalaxy.tab);
 		setUnlocalizedName(Resources.modDot(this.name));
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
 	}
 }

@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 
 import java.util.Random;
 
-public class PBlockLayer extends Block
+public class PBlockLayer extends Block implements INameProvider
 {
 	public final String name;
 	private final Item droppedItem;
@@ -37,6 +37,12 @@ public class PBlockLayer extends Block
 	public PBlockLayer(String name)
 	{
 		this(name, null);
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
 	}
 
 	/**

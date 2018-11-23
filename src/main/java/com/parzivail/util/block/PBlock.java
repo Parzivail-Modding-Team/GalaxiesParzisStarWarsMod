@@ -59,4 +59,14 @@ public class PBlock extends Block implements INameProvider
 	{
 		return name;
 	}
+
+	protected float getBlockHardness()
+	{
+		return blockHardness;
+	}
+
+	protected float getBlockResistance()
+	{
+		return blockResistance;
+	}
 }

@@ -4,7 +4,7 @@ import com.parzivail.swg.Resources;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 
-public abstract class PBlockContainer extends BlockContainer
+public abstract class PBlockContainer extends BlockContainer implements INameProvider
 {
 	public final String name;
 
@@ -24,5 +24,11 @@ public abstract class PBlockContainer extends BlockContainer
 	{
 		setTextureName(Resources.modColon("alpha"));
 		return this;
+	}
+
+	@Override
+	public String getName()
+	{
+		return name;
 	}
 }
