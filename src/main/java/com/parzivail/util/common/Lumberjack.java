@@ -19,6 +19,8 @@ public class Lumberjack
 	 */
 	public static void debug(Object message, Object... params)
 	{
+		if (!Resources.IS_DEBUG)
+			return;
 		StackTraceElement[] trace = Thread.currentThread().getStackTrace();
 		if (trace.length >= 3)
 		{

@@ -15,6 +15,8 @@ public class Resources
 			0xF8E443, 0x0050A1, 0x4ACBFF, 0xD1A250, 0x42A904, 0xFB4B33, 0x000000
 	};
 
+	public static final boolean IS_DEBUG = System.getenv("PSWG_DEBUG") != null && Boolean.parseBoolean(System.getenv("PSWG_DEBUG"));
+
 	private static final int MAJOR = 1;
 	private static final int MINOR = 0;
 	private static final int PATCH = 0;

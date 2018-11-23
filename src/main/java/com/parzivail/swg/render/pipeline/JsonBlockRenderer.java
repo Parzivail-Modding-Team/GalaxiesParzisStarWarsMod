@@ -51,6 +51,8 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 	{
 		id = block.getName().hashCode();
 
+		Lumberjack.debug(modelLocation);
+
 		InputStream resource = PIO.getResource(StarWarsGalaxy.class, modelLocation);
 		if (resource == null)
 			model = ModelBlock.deserialize(MISSING_MODEL_MESH);

@@ -149,7 +149,7 @@ public class BlockRegister
 		registerWithModel(ladder = new BlockLadder());
 
 		// Decoration blocks
-		registerDecoration("blockPanelHoth").setBlockBounds(1, 2);
+		registerDecoration("blockPanelHoth").setTransparent().setBlockBounds(1, 2);
 		registerDecoration("blockConsoleHoth1").setBlockBounds(1, 2);
 		registerDecoration("blockConsoleHoth2").setBlockBounds(1, 2);
 		registerDecoration("blockConsoleHoth3").setBlockBounds(1, 2);
@@ -184,7 +184,7 @@ public class BlockRegister
 
 		registerDecoration("pipeSmallBent").setBlockBounds(0.5f, 0.5f);
 		registerDecoration("quadVentPipe").setBlockBounds(1, 2);
-		registerDecoration("tallVentedPipe");
+		registerDecoration("tallVentedPipe").setBlockBounds(0.5f, 0.5f);
 		registerDecoration("wallPipeLarge").setBlockBounds(0.5f, 0.5f);
 
 		//registerDecoration("clampedCable");
