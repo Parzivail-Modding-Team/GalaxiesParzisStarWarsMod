@@ -11,7 +11,6 @@ import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import jdk.internal.util.xml.impl.ReaderUTF8;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -29,6 +28,7 @@ import org.lwjgl.util.vector.Vector4f;
 
 import javax.annotation.Nullable;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -57,7 +57,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		if (resource == null)
 			model = ModelBlock.deserialize(MISSING_MODEL_MESH);
 		else
-			model = ModelBlock.deserialize(new ReaderUTF8(resource));
+			model = ModelBlock.deserialize(new InputStreamReader(resource));
 
 		block.setTextureName(translateTextureName(model.textures.get("particle")));
 
