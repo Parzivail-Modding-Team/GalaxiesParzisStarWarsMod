@@ -23,4 +23,10 @@ public class PBlockStairs extends BlockStairs implements INameProvider
 	{
 		return name;
 	}
+
+	@Override
+	public boolean getUseNeighborBrightness()
+	{
+		return true;
+	}
 }
