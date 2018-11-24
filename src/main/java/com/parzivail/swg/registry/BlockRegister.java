@@ -5,12 +5,14 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.block.*;
 import com.parzivail.swg.block.antenna.BlockSatelliteDish;
 import com.parzivail.swg.block.atmosphere.BlockSoundHothTelemetry;
+import com.parzivail.swg.item.ItemPourstoneSlab;
 import com.parzivail.util.block.*;
 import com.parzivail.util.item.PItemBlockDecoration;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.ItemBlock;
 
 /**
  * Created by colby on 12/26/2017.
@@ -24,6 +26,9 @@ public class BlockRegister
 	public static PBlock oreTitanium;
 	public static PBlock oreRubindum;
 	public static PBlock oreCortosis;
+
+	public static PBlockSlab pourstoneSlab;
+	public static PBlockSlab pourstoneDoubleSlab;
 
 	public static PBlockContainer blasterWorkbench;
 
@@ -90,6 +95,10 @@ public class BlockRegister
 		PBlock pourstone;
 		register(pourstone = new PBlock("pourstone"));
 		register(new PBlockStairs("pourstoneStairs", pourstone, 0));
+		pourstoneSlab = new PBlockSlab("pourstoneSlab", pourstone, 0, false);
+		pourstoneDoubleSlab = new PBlockSlab("pourstoneDoubleSlab", pourstone, 0, true);
+		registerWithItem(pourstoneSlab, ItemPourstoneSlab.class);
+		registerWithItem(pourstoneDoubleSlab, ItemPourstoneSlab.class);
 
 		// Normal tile entities
 		registerWithTile(blasterWorkbench = new BlockBlasterWorkbench().withPlaceholderTexture());
@@ -169,6 +178,11 @@ public class BlockRegister
 	{
 		StarWarsGalaxy.proxy.registerModel(item);
 		GameRegistry.registerBlock(item, PItemBlockDecoration.class, item.getName());
+	}
+
+	private static <T extends Block & INameProvider> void registerWithItem(T item, Class<? extends ItemBlock> clazz)
+	{
+		GameRegistry.registerBlock(item, clazz, item.getName());
 	}
 
 	private static <T extends Block & INameProvider> void register(T item)
