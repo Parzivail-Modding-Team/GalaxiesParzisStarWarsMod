@@ -35,6 +35,7 @@ public class Decal
 	private final int type;
 	private final int textureIdx;
 
+	private final long createTime;
 	private final long deathTime;
 
 	public Decal(int type, float x, float y, float z, float size, EnumFacing direction)
@@ -50,12 +51,18 @@ public class Decal
 		textureIdx = hash % decalTextures.get(type).length;
 		rotation = hash % 360;
 
-		deathTime = Util.GetMillis() + 20000;
+		createTime = Util.GetMillis();
+		deathTime = 20000;
 	}
 
 	public boolean shouldDie()
 	{
-		return Util.GetMillis() >= deathTime;
+		return getLifeRemaining() <= 0;
+	}
+
+	public float getLifeRemaining()
+	{
+		return 1 - (Util.GetMillis() - createTime) / (float)deathTime;
 	}
 
 	public void render()

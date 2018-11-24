@@ -49,11 +49,14 @@ public class WorldDecals
 
 			GL.PushMatrix();
 			GL.Translate(d.x - playerPos.xCoord, d.y - playerPos.yCoord, d.z - playerPos.zCoord);
+			GL.Color(1f, 1f, 1f, d.getLifeRemaining());
 			rotateToFace(d.direction);
-			GL.Translate(0, 0, -0.0001f); // Back it off the block slightly to avoid z-fighting with the block
+			GL.Enable(EnableCap.PolygonOffsetFill);
+			GL11.glPolygonOffset(-2, -1);
 			GL.Rotate(d.rotation, 0, 0, 1);
 			GL.Scale(0.05f * d.size);
 			d.render();
+			GL.Disable(EnableCap.PolygonOffsetFill);
 			GL.PopMatrix();
 		}
 	}
