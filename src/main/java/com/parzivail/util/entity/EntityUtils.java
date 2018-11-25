@@ -10,7 +10,6 @@ import com.parzivail.util.math.RaytraceHitEntity;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
@@ -45,7 +44,7 @@ public class EntityUtils
 	 *
 	 * @return Returns the entity the trace hit, or null if none is hit
 	 */
-	public static RaytraceHit rayTrace(Vec3 fromDir, double distance, EntityLivingBase fromEntity, Entity[] exclude, boolean includeBlocks)
+	public static RaytraceHit rayTrace(Vec3 fromDir, double distance, Entity fromEntity, Entity[] exclude, boolean includeBlocks)
 	{
 		if (fromEntity == null || fromEntity.worldObj == null)
 			return null;
@@ -100,6 +99,11 @@ public class EntityUtils
 			return new RaytraceHitEntity(pointedEntity);
 
 		return rhb;
+	}
+
+	public static RaytraceHit rayTrace(Entity from, double distance)
+	{
+		return rayTrace(from.getLookVec(), distance, from, new Entity[0], false);
 	}
 
 	/**

@@ -10,15 +10,19 @@ import com.parzivail.swg.item.IGuiOverlay;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
+import com.parzivail.swg.item.blaster.ItemBlasterRifle;
 import com.parzivail.swg.network.MessagePswgWorldDataSync;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
+import com.parzivail.swg.render.overlay.OverlayHealthBar;
 import com.parzivail.swg.render.pipeline.JsonBlockRenderer;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.entity.EntityUtils;
+import com.parzivail.util.math.RaytraceHit;
+import com.parzivail.util.math.RaytraceHitEntity;
 import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.ShaderHelper;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -36,6 +40,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.*;
@@ -140,6 +146,17 @@ public class EventHandler
 		}
 		//		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
 		//			ShaderHelper.releaseShader();
+
+		if (ItemBlasterRifle.isHoldingBlaster(Client.mc.thePlayer))
+		{
+			RaytraceHit target = EntityUtils.rayTrace(Client.mc.thePlayer, 30);
+			if (target instanceof RaytraceHitEntity)
+			{
+				Entity hitEntity = ((RaytraceHitEntity)target).entity;
+				if (hitEntity == event.entity && hitEntity instanceof EntityLivingBase)
+					OverlayHealthBar.instance.render((EntityLivingBase)hitEntity);
+			}
+		}
 	}
 
 	@SubscribeEvent

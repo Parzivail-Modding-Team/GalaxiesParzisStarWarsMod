@@ -53,6 +53,11 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 		avAds = new AnimatedValue(0, 100);
 	}
 
+	public static boolean isHoldingBlaster(EntityPlayer player)
+	{
+		return player.getHeldItem() != null && player.getHeldItem().getItem() instanceof ItemBlasterRifle;
+	}
+
 	@Override
 	public void registerIcons(IIconRegister iconRegister)
 	{
