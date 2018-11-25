@@ -3,6 +3,7 @@ package com.parzivail.swg.handler;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.audio.AmbientSounds;
 import com.parzivail.swg.dimension.PlanetDescriptor;
+import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.gui.GuiNowEntering;
 import com.parzivail.swg.gui.GuiScreenTrailer;
 import com.parzivail.swg.item.IGuiOverlay;
@@ -187,12 +188,12 @@ public class EventHandler
 		if (Client.mc.thePlayer != null)
 		{
 			MultipartFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
-			if (ship == null)
+			if (ship == null && Client.mc.renderViewEntity instanceof EntityCinematicCamera)
 			{
 				FxMC.changeCameraRoll(0);
 				Client.mc.renderViewEntity = Client.mc.thePlayer;
 			}
-			else
+			else if (ship != null)
 			{
 				float r = ship.orientation.getRoll();
 				FxMC.changeCameraRoll(r);

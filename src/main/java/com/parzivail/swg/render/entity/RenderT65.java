@@ -36,18 +36,18 @@ public class RenderT65 extends RenderStarfighter
 		for (SwgPart p : model.parts)
 		{
 			GL.PushMatrix();
-			//			if (p.id.equals("x_wing01") || p.id.equals("x_wing04"))
-			//			{
-			//				GL.Translate(0, 0, verticalCenteringOffset - verticalGroundingOffset);
-			//				GL.Rotate(-13 * Fx.Util.Hz(0.5f), 1, 0, 0);
-			//				GL.Translate(0, 0, -verticalCenteringOffset + verticalGroundingOffset);
-			//			}
-			//			if (p.id.equals("x_wing02") || p.id.equals("x_wing03"))
-			//			{
-			//				GL.Translate(0, 0, verticalCenteringOffset - verticalGroundingOffset);
-			//				GL.Rotate(13 * Fx.Util.Hz(0.5f), 1, 0, 0);
-			//				GL.Translate(0, 0, -verticalCenteringOffset + verticalGroundingOffset);
-			//			}
+			//if (p.name.equals("x_wing01") || p.name.equals("x_wing04"))
+			//{
+			//	GL.Translate(0, 0, ship.verticalCenteringOffset - ship.verticalGroundingOffset);
+			//	GL.Rotate(-Math.abs(13 * Fx.Util.Hz(0.5f)), 1, 0, 0);
+			//	GL.Translate(0, 0, -ship.verticalCenteringOffset + ship.verticalGroundingOffset);
+			//}
+			//if (p.name.equals("x_wing02") || p.name.equals("x_wing03"))
+			//{
+			//	GL.Translate(0, 0, ship.verticalCenteringOffset - ship.verticalGroundingOffset);
+			//	GL.Rotate(Math.abs(13 * Fx.Util.Hz(0.5f)), 1, 0, 0);
+			//	GL.Translate(0, 0, -ship.verticalCenteringOffset + ship.verticalGroundingOffset);
+			//}
 			bindTexture(p.textures[frame].texture);
 			GL.Scale(0.0004f);
 			GL.CallList(model.partRenderLists.get(p.name)[frame]);

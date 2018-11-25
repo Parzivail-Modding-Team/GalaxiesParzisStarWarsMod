@@ -93,9 +93,6 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	@Override
 	public void onUpdate()
 	{
-		if (posY < -64.0D)
-			setDead();
-
 		partWatchdog();
 
 		prevPosX = posX;

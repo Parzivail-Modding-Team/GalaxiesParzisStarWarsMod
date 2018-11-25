@@ -28,6 +28,7 @@ public abstract class RenderStarfighter extends Render
 		GL.Enable(EnableCap.Normalize);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 		GL.PushMatrix();
+
 		GL.Translate(x, y, z);
 
 		GL.Translate(0, ship.verticalCenteringOffset, 0);
