@@ -14,6 +14,10 @@ public class BlasterData extends NbtSerializable<BlasterData>
 	public boolean isAimingDownSights;
 	@NbtSave
 	public int shotsRemaining;
+	@NbtSave
+	public int shotTimer;
+	@NbtSave
+	public int cooldownTimer;
 
 	@NbtSave
 	protected BlasterAttachment scope;
@@ -56,5 +60,10 @@ public class BlasterData extends NbtSerializable<BlasterData>
 	public void setBarrel(BlasterBarrel barrel)
 	{
 		this.barrel = barrel;
+	}
+
+	public boolean isCoolingDown()
+	{
+		return cooldownTimer > 0;
 	}
 }

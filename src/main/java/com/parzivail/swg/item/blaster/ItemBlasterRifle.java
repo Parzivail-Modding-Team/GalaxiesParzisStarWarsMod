@@ -17,7 +17,9 @@ import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.*;
+import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.Fx.D2;
+import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
@@ -42,6 +44,8 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 
 	private final AnimatedValue avExpansion;
 	private final AnimatedValue avAds;
+	private final AnimatedValue avHeatup;
+	private final AnimatedValue avCooldown;
 
 	public ItemBlasterRifle(BlasterDescriptor descriptor)
 	{
@@ -51,6 +55,9 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 
 		avExpansion = new AnimatedValue(-2, 100);
 		avAds = new AnimatedValue(0, 100);
+
+		avHeatup = new AnimatedValue(0, 50);
+		avCooldown = new AnimatedValue(0, 50);
 	}
 
 	public static boolean isHoldingBlaster(EntityPlayer player)
@@ -98,11 +105,14 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		BlasterData bd = new BlasterData(stack);
+		if (!world.isRemote)
+		{
+			BlasterData bd = new BlasterData(stack);
 
-		bd.isAimingDownSights = !bd.isAimingDownSights;
+			bd.isAimingDownSights = !bd.isAimingDownSights;
 
-		bd.serialize(stack.stackTagCompound);
+			bd.serialize(stack.stackTagCompound);
+		}
 		return stack;
 	}
 
@@ -147,11 +157,48 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			D2.DrawLine(-expansion, 0, -size - expansion, 0);
 		}
 
+		if (bd.isCoolingDown())
+		{
+			float cooldown = avCooldown.animateTo(60 * bd.cooldownTimer / (float)descriptor.cooldownTimeTicks);
+			float red = Math.min(10, cooldown);
+			float yellow = Math.min(red + 10, cooldown);
+			float blue = Math.min(yellow + 40, cooldown);
+
+			GL11.glColor4f(0, 0, 0, 0.5f);
+			Fx.D2.DrawSolidRectangle(-30, 30, 60, 1.5f);
+
+			GL.Color(GLPalette.ELECTRIC_BLUE);
+			Fx.D2.DrawSolidRectangle(-30, 30, blue, 1.5f);
+
+			GL.Color(GLPalette.SW_YELLOW);
+			Fx.D2.DrawSolidRectangle(-30, 30, yellow, 1.5f);
+
+			GL.Color(GLPalette.ANALOG_RED);
+			Fx.D2.DrawSolidRectangle(-30, 30, red, 1.5f);
+
+			GL.Color(GLPalette.WHITE);
+			Fx.D2.DrawSolidTriangle(-30 + cooldown, 33, 2);
+			Fx.D2.DrawSolidTriangle(-30 + cooldown, 28.75f, -2);
+
+			GL11.glLineWidth(1);
+			Fx.D2.DrawLine(-30f + cooldown, 33, -30f + cooldown, 28.75f);
+		}
+		else if (bd.shotTimer != 0)
+		{
+			GL11.glColor4f(0, 0, 0, 0.5f);
+			Fx.D2.DrawSolidRectangle(-30, 30, 60, 1.5f);
+
+			GL11.glColor4f(1, 1, 1, 1);
+			Fx.D2.DrawSolidRectangle(29, 30, 1, 1.5f);
+
+			Fx.D2.DrawSolidRectangle(-30, 30, avHeatup.animateTo(60 * bd.shotTimer / (float)(10 * descriptor.roundsBeforeOverheat)), 1.5f);
+		}
+
 		GL.Enable(EnableCap.Texture2D);
 		GL.PushMatrix();
 		GL.Translate(sr.getScaledWidth_double() / 2, sr.getScaledHeight_double() / 2, 0);
 
-		String remaining = String.format("%s", bd.shotsRemaining);
+		String remaining = String.format("Rounds: %s", bd.shotsRemaining);
 		int w = mc.fontRendererObj.getStringWidth(remaining);
 		int h = mc.fontRendererObj.FONT_HEIGHT;
 
@@ -181,6 +228,27 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 	}
 
 	@Override
+	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int p_77663_4_, boolean p_77663_5_)
+	{
+		if (!worldIn.isRemote)
+		{
+			BlasterData bd = new BlasterData(stack);
+
+			if (bd.isCoolingDown())
+				bd.cooldownTimer--;
+			else
+				bd.cooldownTimer = 0;
+
+			if (bd.shotTimer > 0)
+				bd.shotTimer--;
+			else
+				bd.shotTimer = 0;
+
+			bd.serialize(stack.stackTagCompound);
+		}
+	}
+
+	@Override
 	public void onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		BlasterData bd = new BlasterData(stack);
@@ -203,52 +271,62 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			}
 		}
 
-		if (!world.isRemote)
+		if (!bd.isCoolingDown())
 		{
-			float spread = getSpreadAmount(stack, player);
-			RotatedAxes ra = new RotatedAxes(270 - player.rotationYaw, -player.rotationPitch, 0);
-
-			float hS = (world.rand.nextFloat() * 2 - 1) * spread;
-			float vS = (world.rand.nextFloat() * 2 - 1) * spread;
-
-			float hSR = 1 - bd.getBarrel().getHorizontalSpreadReduction();
-			float vSR = 1 - bd.getBarrel().getVerticalSpreadReduction();
-
-			ra.rotateGlobalYaw(hS * hSR);
-			ra.rotateGlobalPitch(vS * vSR);
-
-			Vec3 look = Vec3.createVectorHelper(Math.cos(ra.getPitch() / 180f * Math.PI) * Math.cos(ra.getYaw() / 180f * Math.PI), Math.sin(ra.getPitch() / 180f * Math.PI), Math.cos(ra.getPitch() / 180f * Math.PI) * Math.sin(-ra.getYaw() / 180f * Math.PI));
-			RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * bd.getBarrel().getRangeIncrease(), player, new Entity[0], true);
-
-			SoundHandler.playSound((EntityPlayerMP)player, Resources.modColon("swg.fx." + name), player.posX, player.posY, player.posZ, 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
-
-			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, descriptor.damage, descriptor.boltColor);
-			e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-			world.spawnEntityInWorld(e);
-
-			if (hit instanceof RaytraceHitEntity && ((RaytraceHitEntity)hit).entity instanceof EntityLiving)
+			if (!world.isRemote)
 			{
-				EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
-				entity.attackEntityFrom(DamageSource.causePlayerDamage(player), descriptor.damage);
+				float spread = getSpreadAmount(stack, player);
+				RotatedAxes ra = new RotatedAxes(270 - player.rotationYaw, -player.rotationPitch, 0);
+
+				float hS = (world.rand.nextFloat() * 2 - 1) * spread;
+				float vS = (world.rand.nextFloat() * 2 - 1) * spread;
+
+				float hSR = 1 - bd.getBarrel().getHorizontalSpreadReduction();
+				float vSR = 1 - bd.getBarrel().getVerticalSpreadReduction();
+
+				ra.rotateGlobalYaw(hS * hSR);
+				ra.rotateGlobalPitch(vS * vSR);
+
+				Vec3 look = Vec3.createVectorHelper(Math.cos(ra.getPitch() / 180f * Math.PI) * Math.cos(ra.getYaw() / 180f * Math.PI), Math.sin(ra.getPitch() / 180f * Math.PI), Math.cos(ra.getPitch() / 180f * Math.PI) * Math.sin(-ra.getYaw() / 180f * Math.PI));
+				RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * bd.getBarrel().getRangeIncrease(), player, new Entity[0], true);
+
+				SoundHandler.playSound((EntityPlayerMP)player, Resources.modColon("swg.fx." + name), player.posX, player.posY, player.posZ, 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
+
+				Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, descriptor.damage, descriptor.boltColor);
+				e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+				world.spawnEntityInWorld(e);
+
+				if (hit instanceof RaytraceHitEntity && ((RaytraceHitEntity)hit).entity instanceof EntityLiving)
+				{
+					EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
+					entity.attackEntityFrom(DamageSource.causePlayerDamage(player), descriptor.damage);
+				}
+
+				if (hit instanceof RaytraceHitBlock)
+				{
+					RaytraceHitBlock block = (RaytraceHitBlock)hit;
+					for (int i = 0; i < 10; i++)
+						StarWarsGalaxy.proxy.spawnParticle(world, "smoke", block.hitVec.xCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.yCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.zCoord + (world.rand.nextDouble() * 0.2 - 0.1), 0, world.rand.nextDouble() * 0.2, 0);
+					StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, 1, block.sideHitFace);
+				}
+
+				if (!player.capabilities.isCreativeMode)
+					bd.shotsRemaining--;
+
+				bd.shotTimer += 10;
+				if (bd.shotTimer >= 10 * descriptor.roundsBeforeOverheat)
+				{
+					bd.shotTimer = 0;
+					bd.cooldownTimer = descriptor.cooldownTimeTicks;
+				}
+
+				bd.serialize(stack.stackTagCompound);
 			}
 
-			if (hit instanceof RaytraceHitBlock)
-			{
-				RaytraceHitBlock block = (RaytraceHitBlock)hit;
-				for (int i = 0; i < 10; i++)
-					StarWarsGalaxy.proxy.spawnParticle(world, "smoke", block.hitVec.xCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.yCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.zCoord + (world.rand.nextDouble() * 0.2 - 0.1), 0, world.rand.nextDouble() * 0.2, 0);
-				StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, 1, block.sideHitFace);
-			}
-
-			if (!player.capabilities.isCreativeMode)
-				bd.shotsRemaining--;
-
-			bd.serialize(stack.stackTagCompound);
+			// Recoil
+			player.rotationPitch -= (descriptor.damage / 2) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());
+			player.rotationYaw += (descriptor.damage / 5 * world.rand.nextGaussian()) * (1 - bd.getBarrel().getHorizontalRecoilReduction()) * (1 - bd.getGrip().getHorizontalRecoilReduction());
 		}
-
-		// Recoil
-		player.rotationPitch -= (descriptor.damage / 2) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());
-		player.rotationYaw += (descriptor.damage / 5 * world.rand.nextGaussian()) * (1 - bd.getBarrel().getHorizontalRecoilReduction()) * (1 - bd.getGrip().getHorizontalRecoilReduction());
 	}
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(EntityPlayer player)
