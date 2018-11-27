@@ -37,7 +37,6 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 {
 	private static final float SCALE_ROTATION_22_5 = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
 	private static final float SCALE_ROTATION_GENERAL = 1.0F / (float)Math.cos((Math.PI / 4D)) - 1.0F;
-	private static final int DEFAULT_BRIGHTNESS = 0x1fffff;
 	private static final int MAX_BRIGHTNESS = 0xf0;
 	private static final String MISSING_MODEL_MESH = "{    'textures': {       'particle': 'missingno',       'missingno': 'missingno'    },    'elements': [         {  'from': [ 0, 0, 0 ],            'to': [ 16, 16, 16 ],            'faces': {                'down':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'down',  'texture': '#missingno' },                'up':    { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'up',    'texture': '#missingno' },                'north': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'north', 'texture': '#missingno' },                'south': { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'south', 'texture': '#missingno' },                'west':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'west',  'texture': '#missingno' },                'east':  { 'uv': [ 0, 0, 16, 16 ], 'cullface': 'east',  'texture': '#missingno' }            }        }    ]}".replaceAll("'", "\"");
 	private static final ArrayList<String> unloadedTextures = new ArrayList<>();
@@ -88,7 +87,7 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 
 			Tessellator tessellator = Tessellator.instance;
 			tessellator.startDrawingQuads();
-			drawBlock(null, 0, 0, 0, block, ModelRotation.X0_Y270, DEFAULT_BRIGHTNESS);
+			drawBlock(null, 0, 0, 0, block, ModelRotation.X0_Y270, MAX_BRIGHTNESS);
 			tessellator.draw();
 
 			GL11.glEndList();
