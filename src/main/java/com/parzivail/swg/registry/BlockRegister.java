@@ -7,7 +7,8 @@ import com.parzivail.swg.block.antenna.BlockSatelliteDish;
 import com.parzivail.swg.block.atmosphere.BlockSoundHothTelemetry;
 import com.parzivail.swg.item.ItemPourstoneSlab;
 import com.parzivail.util.block.*;
-import com.parzivail.util.item.PItemBlockDecoration;
+import com.parzivail.util.item.PItemBlockCardinalDecoration;
+import com.parzivail.util.item.PItemBlockSubcardinalDecoration;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -71,7 +72,7 @@ public class BlockRegister
 		register(new BlockGrayLight());
 		register(new BlockDarkGrayLight());
 		register(new BlockGrayLightVertical());
-		register(new BlockDarkGrayLightVertical());
+		//register(new BlockDarkGrayLightVertical());
 
 		register(new PBlock("templeStone"));
 		register(new PBlock("templeStoneBrick"));
@@ -155,13 +156,32 @@ public class BlockRegister
 		registerDecoration("yavinGenerator");
 
 		registerConnectingDecoration("groundCable").setBlockBounds(1, 0.2f);
+
+		registerStaticDecoration("darkGrayLightVertical");
+		registerStaticDecoration("darkGrayLightVertical2");
 	}
 
 	private static PDecorativeBlock registerDecoration(String name)
 	{
 		PDecorativeBlock block = new PDecorativeBlock(name);
 		StarWarsGalaxy.proxy.registerModel(block);
-		GameRegistry.registerBlock(block, PItemBlockDecoration.class, block.name);
+		GameRegistry.registerBlock(block, PItemBlockSubcardinalDecoration.class, block.name);
+		return block;
+	}
+
+	private static PDecorativeBlock registerCardinalDecoration(String name)
+	{
+		PDecorativeBlock block = new PDecorativeBlock(name);
+		StarWarsGalaxy.proxy.registerModel(block);
+		GameRegistry.registerBlock(block, PItemBlockCardinalDecoration.class, block.name);
+		return block;
+	}
+
+	private static PDecorativeBlock registerStaticDecoration(String name)
+	{
+		PDecorativeBlock block = new PDecorativeBlock(name);
+		StarWarsGalaxy.proxy.registerModel(block);
+		GameRegistry.registerBlock(block, PItemBlockCardinalDecoration.class, block.name);
 		return block;
 	}
 
@@ -177,7 +197,7 @@ public class BlockRegister
 	private static <T extends Block & INameProvider> void registerWithModel(T item)
 	{
 		StarWarsGalaxy.proxy.registerModel(item);
-		GameRegistry.registerBlock(item, PItemBlockDecoration.class, item.getName());
+		GameRegistry.registerBlock(item, PItemBlockSubcardinalDecoration.class, item.getName());
 	}
 
 	private static <T extends Block & INameProvider> void registerWithItem(T item, Class<? extends ItemBlock> clazz)

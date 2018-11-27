@@ -3,16 +3,14 @@ package com.parzivail.util.item;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class PItemBlockDecoration extends ItemBlock
+public class PItemBlockSubcardinalDecoration extends PItemBlockStaticDecoration
 {
-	public PItemBlockDecoration(Block block)
+	public PItemBlockSubcardinalDecoration(Block block)
 	{
 		super(block);
-		maxStackSize = 64;
 	}
 
 	/**
@@ -30,15 +28,6 @@ public class PItemBlockDecoration extends ItemBlock
 			l += 8;
 		metadata = l;
 
-		if (!world.setBlock(x, y, z, blockInstance, metadata, 3))
-			return false;
-
-		if (world.getBlock(x, y, z) == blockInstance)
-		{
-			blockInstance.onBlockPlacedBy(world, x, y, z, player, stack);
-			blockInstance.onPostBlockPlaced(world, x, y, z, metadata);
-		}
-
-		return true;
+		return super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata);
 	}
 }
