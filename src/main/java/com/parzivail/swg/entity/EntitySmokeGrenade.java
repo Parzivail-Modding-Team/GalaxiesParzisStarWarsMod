@@ -21,7 +21,9 @@ public class EntitySmokeGrenade extends EntityThrowable
 	@Override
 	protected void onImpact(MovingObjectPosition hit)
 	{
-		setVelocity(0, 0, 0);
+		motionX = 0;
+		motionY = 0;
+		motionZ = 0;
 	}
 
 	@Override
