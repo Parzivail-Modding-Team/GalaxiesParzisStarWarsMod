@@ -1,12 +1,15 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.gui.GuiQuestNotification;
+import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.mob.MobGizka;
+import com.parzivail.swg.network.MessageItemLeftClick;
 import com.parzivail.swg.npc.NpcJawa;
 import com.parzivail.swg.npc.NpcMerchant;
 import com.parzivail.swg.player.PswgExtProp;
@@ -95,6 +98,24 @@ public class Client extends Common
 		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
 		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
 		return renderer;
+	}
+
+	public void checkLeftClickPressed(boolean selfReported)
+	{
+		ItemStack heldItem = mc.thePlayer.getHeldItem();
+		if (heldItem == null || !(heldItem.getItem() instanceof ILeftClickInterceptor))
+			return;
+		ILeftClickInterceptor item = ((ILeftClickInterceptor)heldItem.getItem());
+
+		boolean pressed = item.doesSelfReportClick() ? (KeybindRegistry.keyAttack.interceptedIsPressed() || KeybindRegistry.keyAttack.getInterceptedIsKeyPressed()) : KeybindRegistry.keyAttack.interceptedIsPressed();
+
+		if (pressed)
+		{
+			if (item.doesSelfReportClick() && !selfReported)
+				return;
+			item.onItemLeftClick(heldItem, mc.thePlayer.worldObj, mc.thePlayer);
+			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(mc.thePlayer));
+		}
 	}
 
 	@Override

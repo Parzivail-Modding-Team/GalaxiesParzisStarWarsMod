@@ -182,7 +182,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			GL11.glLineWidth(1);
 			Fx.D2.DrawLine(-30f + cooldown, 33, -30f + cooldown, 28.75f);
 		}
-		else if (bd.shotTimer != 0)
+		else if (bd.heat != 0)
 		{
 			GL11.glColor4f(0, 0, 0, 0.5f);
 			Fx.D2.DrawSolidRectangle(-30, 30, 60, 1.5f);
@@ -190,7 +190,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			GL11.glColor4f(1, 1, 1, 1);
 			Fx.D2.DrawSolidRectangle(29, 30, 1, 1.5f);
 
-			Fx.D2.DrawSolidRectangle(-30, 30, avHeatup.animateTo(60 * bd.shotTimer / (float)(10 * descriptor.roundsBeforeOverheat)), 1.5f);
+			Fx.D2.DrawSolidRectangle(-30, 30, avHeatup.animateTo(60 * bd.heat / (float)(10 * descriptor.roundsBeforeOverheat)), 1.5f);
 		}
 
 		GL.Enable(EnableCap.Texture2D);
@@ -229,14 +229,19 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int p_77663_4_, boolean p_77663_5_)
 	{
+		BlasterData bd = new BlasterData(stack);
+
 		if (!worldIn.isRemote)
 		{
-			BlasterData bd = new BlasterData(stack);
-
 			if (bd.isCoolingDown())
 				bd.cooldownTimer--;
 			else
 				bd.cooldownTimer = 0;
+
+			if (bd.heat > 0)
+				bd.heat--;
+			else
+				bd.heat = 0;
 
 			if (bd.shotTimer > 0)
 				bd.shotTimer--;
@@ -245,6 +250,14 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 
 			bd.serialize(stack.stackTagCompound);
 		}
+		else if (bd.shotTimer == 0)
+			StarWarsGalaxy.proxy.checkLeftClickPressed(true);
+	}
+
+	@Override
+	public boolean doesSelfReportClick()
+	{
+		return true;
 	}
 
 	@Override
@@ -270,7 +283,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			}
 		}
 
-		if (!bd.isCoolingDown())
+		if (!bd.isCoolingDown() && bd.isReady())
 		{
 			if (!world.isRemote)
 			{
@@ -311,16 +324,16 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 
 				if (!player.capabilities.isCreativeMode)
 					bd.shotsRemaining--;
-
-				bd.shotTimer += 10;
-				if (bd.shotTimer >= 10 * descriptor.roundsBeforeOverheat)
-				{
-					bd.shotTimer = 0;
-					bd.cooldownTimer = descriptor.cooldownTimeTicks;
-				}
-
-				bd.serialize(stack.stackTagCompound);
 			}
+
+			bd.shotTimer += descriptor.autofireTimeTicks;
+			bd.heat += 10;
+			if (bd.heat >= 10 * descriptor.roundsBeforeOverheat)
+			{
+				bd.heat = 0;
+				bd.cooldownTimer = descriptor.cooldownTimeTicks;
+			}
+			bd.serialize(stack.stackTagCompound);
 
 			// Recoil
 			player.rotationPitch -= (descriptor.damage / 2) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());

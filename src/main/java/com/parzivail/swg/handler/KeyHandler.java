@@ -1,17 +1,13 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.item.ILeftClickInterceptor;
-import com.parzivail.swg.network.MessageItemLeftClick;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.ship.ShipInput;
 import com.parzivail.util.entity.EntityUtils;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.item.ItemStack;
 import org.lwjgl.input.Keyboard;
 
 /**
@@ -31,13 +27,7 @@ public class KeyHandler
 
 	private static void onInput()
 	{
-		ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
-
-		if (KeybindRegistry.keyAttack.interceptedIsPressed() && heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor)
-		{
-			((ILeftClickInterceptor)heldItem.getItem()).onItemLeftClick(heldItem, Client.mc.thePlayer.worldObj, Client.mc.thePlayer);
-			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(Client.mc.thePlayer));
-		}
+		StarWarsGalaxy.proxy.checkLeftClickPressed(false);
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_I))
 		{

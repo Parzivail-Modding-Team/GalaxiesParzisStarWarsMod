@@ -12,8 +12,9 @@ public class BlasterDescriptor
 	public final int clipSize;
 	public final int roundsBeforeOverheat;
 	public final int cooldownTimeTicks;
+	public final int autofireTimeTicks;
 
-	public BlasterDescriptor(String name, float damage, float spread, int range, int cost, float weight, int clipSize, int boltColor, int roundsBeforeOverheat, int cooldownTimeTicks)
+	public BlasterDescriptor(String name, float damage, float spread, int range, int cost, float weight, int clipSize, int boltColor, int roundsBeforeOverheat, int cooldownTimeTicks, int autofireTimeTicks)
 	{
 		this.name = name;
 		this.damage = damage;
@@ -25,5 +26,6 @@ public class BlasterDescriptor
 		this.boltColor = boltColor;
 		this.roundsBeforeOverheat = roundsBeforeOverheat;
 		this.cooldownTimeTicks = cooldownTimeTicks;
+		this.autofireTimeTicks = autofireTimeTicks;
 	}
 }

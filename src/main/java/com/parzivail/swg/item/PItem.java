@@ -37,6 +37,7 @@ public class PItem extends Item
 		this.name = name;
 		this.variants = variants;
 		setHasSubtypes(variants.length != 0);
+		setUnlocalizedName(name);
 		setTextureName(Resources.modColon(this.name));
 	}
 

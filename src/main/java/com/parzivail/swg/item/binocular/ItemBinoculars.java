@@ -231,6 +231,12 @@ public class ItemBinoculars extends PItem implements IGuiOverlay, ILeftClickInte
 	}
 
 	@Override
+	public boolean doesSelfReportClick()
+	{
+		return false;
+	}
+
+	@Override
 	public int requestShader(EntityPlayer player, ItemStack stack)
 	{
 		BinocularData bd = new BinocularData(stack);

@@ -57,6 +57,11 @@ public class Common
 		return MinecraftServer.getServer().worldServerForDimension(dim).getEntityByID(id);
 	}
 
+	public void checkLeftClickPressed(boolean selfReported)
+	{
+
+	}
+
 	public MinecraftServer getMCServer()
 	{
 		return FMLCommonHandler.instance().getMinecraftServerInstance();

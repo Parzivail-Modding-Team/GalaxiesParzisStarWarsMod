@@ -14,6 +14,7 @@ public class PItemFood extends ItemFood
 		super(food, sat, false);
 		this.name = name;
 		setCreativeTab(StarWarsGalaxy.tab);
+		setUnlocalizedName(name);
 		setTextureName(Resources.modColon(this.name));
 	}
 
