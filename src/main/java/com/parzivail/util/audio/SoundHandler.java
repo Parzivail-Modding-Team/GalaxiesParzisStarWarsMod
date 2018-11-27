@@ -1,7 +1,6 @@
 package com.parzivail.util.audio;
 
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.network.play.server.S29PacketSoundEffect;
+import net.minecraft.entity.Entity;
 
 public class SoundHandler
 {
@@ -9,8 +8,8 @@ public class SoundHandler
 	{
 	}
 
-	public static void playSound(EntityPlayerMP source, String name, double x, double y, double z, float pitch, float volume)
+	public static void playSound(Entity source, String name, float pitch, float volume)
 	{
-		source.playerNetServerHandler.sendPacket(new S29PacketSoundEffect(name, x, y, z, volume, pitch));
+		source.worldObj.playSoundAtEntity(source, name, pitch, volume);
 	}
 }

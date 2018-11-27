@@ -29,7 +29,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
@@ -260,14 +259,14 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			if (nextPack == null)
 			{
 				if (!world.isRemote)
-					SoundHandler.playSound((EntityPlayerMP)player, Resources.modColon("swg.fx.rifleDryfire"), player.posX, player.posY, player.posZ, 1, 1);
+					SoundHandler.playSound(player, Resources.modColon("swg.fx.rifleDryfire"), 1, 1);
 				return;
 			}
 			else if (!world.isRemote)
 			{
 				bd.shotsRemaining = nextPack.right.getNumShots();
 				player.inventory.decrStackSize(nextPack.left, 1);
-				SoundHandler.playSound((EntityPlayerMP)player, Resources.modColon("swg.fx.rifleReload"), player.posX, player.posY, player.posZ, 1, 1);
+				SoundHandler.playSound(player, Resources.modColon("swg.fx.rifleReload"), 1, 1);
 			}
 		}
 
@@ -290,7 +289,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 				Vec3 look = Vec3.createVectorHelper(Math.cos(ra.getPitch() / 180f * Math.PI) * Math.cos(ra.getYaw() / 180f * Math.PI), Math.sin(ra.getPitch() / 180f * Math.PI), Math.cos(ra.getPitch() / 180f * Math.PI) * Math.sin(-ra.getYaw() / 180f * Math.PI));
 				RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * bd.getBarrel().getRangeIncrease(), player, new Entity[0], true);
 
-				SoundHandler.playSound((EntityPlayerMP)player, Resources.modColon("swg.fx." + name), player.posX, player.posY, player.posZ, 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
+				SoundHandler.playSound(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
 
 				Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, descriptor.damage, descriptor.boltColor);
 				e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
