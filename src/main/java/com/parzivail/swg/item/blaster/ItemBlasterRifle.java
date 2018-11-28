@@ -29,7 +29,9 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -250,20 +252,21 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 
 			bd.serialize(stack.stackTagCompound);
 		}
-		else if (bd.shotTimer == 0)
-			StarWarsGalaxy.proxy.checkLeftClickPressed(true);
 	}
 
 	@Override
-	public boolean doesSelfReportClick()
+	public boolean isLeftClickRepeatable()
 	{
 		return true;
 	}
 
 	@Override
-	public void onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
+	public boolean onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		BlasterData bd = new BlasterData(stack);
+
+		if (!bd.isReady())
+			return false;
 
 		if (bd.shotsRemaining <= 0 && !player.capabilities.isCreativeMode)
 		{
@@ -273,7 +276,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			{
 				if (!world.isRemote)
 					SoundHandler.playSound(player, Resources.modColon("swg.fx.rifleDryfire"), 1, 1);
-				return;
+				return false;
 			}
 			else if (!world.isRemote)
 			{
@@ -283,7 +286,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			}
 		}
 
-		if (!bd.isCoolingDown() && bd.isReady())
+		if (!bd.isCoolingDown())
 		{
 			if (!world.isRemote)
 			{
@@ -324,21 +327,28 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 
 				if (!player.capabilities.isCreativeMode)
 					bd.shotsRemaining--;
+
+				bd.shotTimer += descriptor.autofireTimeTicks;
+				bd.heat += 10;
+				if (bd.heat >= 10 * descriptor.roundsBeforeOverheat)
+				{
+					bd.heat = 0;
+					bd.cooldownTimer = descriptor.cooldownTimeTicks;
+				}
+
+				bd.serialize(stack.stackTagCompound);
+
+				// Recoil
+				player.rotationPitch -= (descriptor.damage / 2) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());
+				player.rotationYaw += (descriptor.damage / 5 * world.rand.nextGaussian()) * (1 - bd.getBarrel().getHorizontalRecoilReduction()) * (1 - bd.getGrip().getHorizontalRecoilReduction());
+
+				if (player instanceof EntityPlayerMP)
+					((EntityPlayerMP)player).playerNetServerHandler.sendPacket(new S08PacketPlayerPosLook(player.posX, player.posY + 1.6200000047683716D, player.posZ, player.rotationYaw, player.rotationPitch, false));
 			}
 
-			bd.shotTimer += descriptor.autofireTimeTicks;
-			bd.heat += 10;
-			if (bd.heat >= 10 * descriptor.roundsBeforeOverheat)
-			{
-				bd.heat = 0;
-				bd.cooldownTimer = descriptor.cooldownTimeTicks;
-			}
-			bd.serialize(stack.stackTagCompound);
-
-			// Recoil
-			player.rotationPitch -= (descriptor.damage / 2) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());
-			player.rotationYaw += (descriptor.damage / 5 * world.rand.nextGaussian()) * (1 - bd.getBarrel().getHorizontalRecoilReduction()) * (1 - bd.getGrip().getHorizontalRecoilReduction());
+			return true;
 		}
+		return false;
 	}
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(EntityPlayer player)

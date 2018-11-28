@@ -301,7 +301,22 @@ public class EventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(TickEvent.ClientTickEvent event)
 	{
+		if (event.phase != Phase.START)
+			return;
+
 		AmbientSounds.tick(event);
+
+		if (Client.leftClickDelayTimer > 0)
+			Client.leftClickDelayTimer--;
+		else
+			Client.leftClickDelayTimer = 0;
+
+		if (Client.doesPlayerExist())
+		{
+			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
+			if (heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor)
+				StarWarsGalaxy.proxy.checkLeftClickPressed(true);
+		}
 	}
 
 	@SubscribeEvent

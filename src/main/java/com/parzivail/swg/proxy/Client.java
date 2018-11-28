@@ -87,6 +87,8 @@ public class Client extends Common
 	public static FontRenderer frHuttese;
 	public static FontRenderer frMassassi;
 
+	public static int leftClickDelayTimer;
+
 	public static float renderPartialTicks;
 
 	public static ScaledResolution resolution;
@@ -100,19 +102,33 @@ public class Client extends Common
 		return renderer;
 	}
 
+	public static boolean doesPlayerExist()
+	{
+		return mc != null && mc.thePlayer != null;
+	}
+
 	public void checkLeftClickPressed(boolean selfReported)
 	{
+		if (leftClickDelayTimer > 0)
+			return;
+
 		ItemStack heldItem = mc.thePlayer.getHeldItem();
 		if (heldItem == null || !(heldItem.getItem() instanceof ILeftClickInterceptor))
 			return;
 		ILeftClickInterceptor item = ((ILeftClickInterceptor)heldItem.getItem());
 
-		boolean pressed = item.doesSelfReportClick() ? (KeybindRegistry.keyAttack.interceptedIsPressed() || KeybindRegistry.keyAttack.getInterceptedIsKeyPressed()) : KeybindRegistry.keyAttack.interceptedIsPressed();
+		boolean risingEdge = KeybindRegistry.keyAttack.interceptedIsPressed();
+		boolean holding = KeybindRegistry.keyAttack.getInterceptedIsKeyPressed();
+
+		boolean pressed = item.isLeftClickRepeatable() ? (selfReported && (risingEdge || holding)) : risingEdge;
+
+		if (item.isLeftClickRepeatable())
+			while (KeybindRegistry.keyAttack.interceptedIsPressed())
+				; // tick down the press count, if there is any
 
 		if (pressed)
 		{
-			if (item.doesSelfReportClick() && !selfReported)
-				return;
+			leftClickDelayTimer = 2;
 			item.onItemLeftClick(heldItem, mc.thePlayer.worldObj, mc.thePlayer);
 			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(mc.thePlayer));
 		}

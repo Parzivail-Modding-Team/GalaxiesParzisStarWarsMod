@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 public interface ILeftClickInterceptor
 {
-	void onItemLeftClick(ItemStack stack, World world, EntityPlayer player);
+	boolean onItemLeftClick(ItemStack stack, World world, EntityPlayer player);
 
-	boolean doesSelfReportClick();
+	boolean isLeftClickRepeatable();
 }

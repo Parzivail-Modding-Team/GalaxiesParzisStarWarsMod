@@ -214,11 +214,11 @@ public class ItemBinoculars extends PItem implements IGuiOverlay, ILeftClickInte
 	}
 
 	@Override
-	public void onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
+	public boolean onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
 	{
 		BinocularData bd = new BinocularData(stack);
 		if (!bd.isZooming)
-			return;
+			return false;
 
 		if (world.isRemote)
 			ShaderHelper.tareTimer();
@@ -228,10 +228,12 @@ public class ItemBinoculars extends PItem implements IGuiOverlay, ILeftClickInte
 			bd.zoomLevel = 4;
 
 		bd.serialize(stack.stackTagCompound);
+
+		return true;
 	}
 
 	@Override
-	public boolean doesSelfReportClick()
+	public boolean isLeftClickRepeatable()
 	{
 		return false;
 	}

@@ -25,7 +25,7 @@ public class Lumberjack
 		if (trace.length >= 3)
 		{
 			StackTraceElement stack = trace[2];
-			log("<%s@%s> %s", stack.getMethodName(), stack.getClassName(), String.format(String.valueOf(message), params));
+			log("<%s::%s> %s", stack.getClassName(), stack.getMethodName(), String.format(String.valueOf(message), params));
 		}
 		else
 		{
