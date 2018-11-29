@@ -265,90 +265,88 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 	{
 		BlasterData bd = new BlasterData(stack);
 
-		if (!bd.isReady())
+		if (!bd.isReady() || bd.isCoolingDown())
 			return false;
 
-		if (bd.shotsRemaining <= 0 && !player.capabilities.isCreativeMode)
+		if (!player.capabilities.isCreativeMode)
 		{
-			Pair<Integer, BlasterPowerPack> nextPack = getAnotherPack(player);
+			if (bd.shotsRemaining <= 0)
+			{
+				Pair<Integer, BlasterPowerPack> nextPack = getAnotherPack(player);
 
-			if (nextPack == null)
-			{
-				if (!world.isRemote)
-					SoundHandler.playSound(player, Resources.modColon("swg.fx.rifleDryfire"), 1, 1);
-				return false;
+				if (nextPack == null)
+				{
+					if (!world.isRemote)
+						SoundHandler.playSound(player, Resources.modColon("swg.fx.rifleDryfire"), 1, 1);
+					return false;
+				}
+				else if (!world.isRemote)
+				{
+					bd.shotsRemaining = nextPack.right.getNumShots();
+					player.inventory.decrStackSize(nextPack.left, 1);
+					SoundHandler.playSound(player, Resources.modColon("swg.fx.rifleReload"), 1, 1);
+				}
 			}
-			else if (!world.isRemote)
-			{
-				bd.shotsRemaining = nextPack.right.getNumShots();
-				player.inventory.decrStackSize(nextPack.left, 1);
-				SoundHandler.playSound(player, Resources.modColon("swg.fx.rifleReload"), 1, 1);
-			}
+
+			bd.shotsRemaining--;
 		}
 
-		if (!bd.isCoolingDown())
+		if (!world.isRemote)
 		{
-			if (!world.isRemote)
+			float spread = getSpreadAmount(stack, player);
+			RotatedAxes ra = new RotatedAxes(270 - player.rotationYaw, -player.rotationPitch, 0);
+
+			float hS = (world.rand.nextFloat() * 2 - 1) * spread;
+			float vS = (world.rand.nextFloat() * 2 - 1) * spread;
+
+			float hSR = 1 - bd.getBarrel().getHorizontalSpreadReduction();
+			float vSR = 1 - bd.getBarrel().getVerticalSpreadReduction();
+
+			ra.rotateGlobalYaw(hS * hSR);
+			ra.rotateGlobalPitch(vS * vSR);
+
+			Vec3 look = Vec3.createVectorHelper(Math.cos(ra.getPitch() / 180f * Math.PI) * Math.cos(ra.getYaw() / 180f * Math.PI), Math.sin(ra.getPitch() / 180f * Math.PI), Math.cos(ra.getPitch() / 180f * Math.PI) * Math.sin(-ra.getYaw() / 180f * Math.PI));
+			RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * bd.getBarrel().getRangeIncrease(), player, new Entity[0], true);
+
+			SoundHandler.playSound(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
+
+			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, descriptor.damage, descriptor.boltColor);
+			e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+			world.spawnEntityInWorld(e);
+
+			if (hit instanceof RaytraceHitEntity && ((RaytraceHitEntity)hit).entity instanceof EntityLiving)
 			{
-				float spread = getSpreadAmount(stack, player);
-				RotatedAxes ra = new RotatedAxes(270 - player.rotationYaw, -player.rotationPitch, 0);
-
-				float hS = (world.rand.nextFloat() * 2 - 1) * spread;
-				float vS = (world.rand.nextFloat() * 2 - 1) * spread;
-
-				float hSR = 1 - bd.getBarrel().getHorizontalSpreadReduction();
-				float vSR = 1 - bd.getBarrel().getVerticalSpreadReduction();
-
-				ra.rotateGlobalYaw(hS * hSR);
-				ra.rotateGlobalPitch(vS * vSR);
-
-				Vec3 look = Vec3.createVectorHelper(Math.cos(ra.getPitch() / 180f * Math.PI) * Math.cos(ra.getYaw() / 180f * Math.PI), Math.sin(ra.getPitch() / 180f * Math.PI), Math.cos(ra.getPitch() / 180f * Math.PI) * Math.sin(-ra.getYaw() / 180f * Math.PI));
-				RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * bd.getBarrel().getRangeIncrease(), player, new Entity[0], true);
-
-				SoundHandler.playSound(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
-
-				Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, descriptor.damage, descriptor.boltColor);
-				e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-				world.spawnEntityInWorld(e);
-
-				if (hit instanceof RaytraceHitEntity && ((RaytraceHitEntity)hit).entity instanceof EntityLiving)
-				{
-					EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
-					entity.attackEntityFrom(DamageSource.causePlayerDamage(player), descriptor.damage);
-				}
-
-				if (hit instanceof RaytraceHitBlock)
-				{
-					RaytraceHitBlock block = (RaytraceHitBlock)hit;
-					for (int i = 0; i < 10; i++)
-						StarWarsGalaxy.proxy.spawnParticle(world, "smoke", block.hitVec.xCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.yCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.zCoord + (world.rand.nextDouble() * 0.2 - 0.1), 0, world.rand.nextDouble() * 0.2, 0);
-					StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, 1, block.sideHitFace);
-				}
-
-				if (!player.capabilities.isCreativeMode)
-					bd.shotsRemaining--;
-
-				bd.shotTimer += descriptor.autofireTimeTicks;
-				bd.heat += 10;
-				if (bd.heat >= 10 * descriptor.roundsBeforeOverheat)
-				{
-					bd.heat = 0;
-					bd.cooldownTimer = descriptor.cooldownTimeTicks;
-				}
-
-				bd.serialize(stack.stackTagCompound);
-
-				// Recoil
-				player.rotationPitch -= (descriptor.damage / 2) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());
-				player.rotationYaw += (descriptor.damage / 5 * world.rand.nextGaussian()) * (1 - bd.getBarrel().getHorizontalRecoilReduction()) * (1 - bd.getGrip().getHorizontalRecoilReduction());
-
-				if (player instanceof EntityPlayerMP)
-					((EntityPlayerMP)player).playerNetServerHandler.sendPacket(new S08PacketPlayerPosLook(player.posX, player.posY + 1.6200000047683716D, player.posZ, player.rotationYaw, player.rotationPitch, false));
+				EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
+				entity.attackEntityFrom(DamageSource.causePlayerDamage(player), descriptor.damage);
 			}
 
-			return true;
+			if (hit instanceof RaytraceHitBlock)
+			{
+				RaytraceHitBlock block = (RaytraceHitBlock)hit;
+				for (int i = 0; i < 10; i++)
+					StarWarsGalaxy.proxy.spawnParticle(world, "smoke", block.hitVec.xCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.yCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.zCoord + (world.rand.nextDouble() * 0.2 - 0.1), 0, world.rand.nextDouble() * 0.2, 0);
+				StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, 1, block.sideHitFace);
+			}
+
+			bd.shotTimer += descriptor.autofireTimeTicks;
+			bd.heat += 10;
+			if (bd.heat >= 10 * descriptor.roundsBeforeOverheat)
+			{
+				bd.heat = 0;
+				bd.cooldownTimer = descriptor.cooldownTimeTicks;
+			}
+
+			bd.serialize(stack.stackTagCompound);
+
+			// Recoil
+			player.rotationPitch -= (descriptor.damage / 2) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());
+			player.rotationYaw += (descriptor.damage / 5 * world.rand.nextGaussian()) * (1 - bd.getBarrel().getHorizontalRecoilReduction()) * (1 - bd.getGrip().getHorizontalRecoilReduction());
+
+			if (player instanceof EntityPlayerMP)
+				((EntityPlayerMP)player).playerNetServerHandler.sendPacket(new S08PacketPlayerPosLook(player.posX, player.posY + 1.6200000047683716D, player.posZ, player.rotationYaw, player.rotationPitch, false));
 		}
-		return false;
+
+		return true;
 	}
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(EntityPlayer player)
