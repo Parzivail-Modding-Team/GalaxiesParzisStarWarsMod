@@ -14,6 +14,9 @@ Today, I'm working again to create the **next generation** of mods which push th
 ## Discord
 You can join the community in [the Discord server!](https://discord.gg/54MVQZZ)
 
+## Suggestions
+Please add your suggestions (not issues) to our [suggestion tracker](https://pswg.nolt.io/)!
+
 ## Support
 If you'd like to help support and sustain the mod, please consider becoming a donor!
 
