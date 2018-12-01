@@ -27,6 +27,7 @@ import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.ShaderHelper;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
+import com.parzivail.util.ui.gltk.PrimitiveType;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
@@ -235,6 +236,23 @@ public class EventHandler
 				//				}
 			}
 
+			if (event.type == ElementType.CROSSHAIRS && Client.mc.gameSettings.showDebugInfo)
+			{
+				float l = Client.resolution.getScaledWidth();
+				float i1 = Client.resolution.getScaledHeight();
+				GL.PushMatrix();
+				GL.Translate((l / 2f), (i1 / 2f), 0);
+				Entity entity = Client.mc.renderViewEntity;
+				GL.Rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * event.partialTicks, -1.0F, 0.0F, 0.0F);
+				GL.Rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * event.partialTicks, 0.0F, 1.0F, 0.0F);
+				GL.Scale(-1.0F, -1.0F, -1.0F);
+				renderDirections();
+				GL.PopMatrix();
+
+				if (event.isCancelable())
+					event.setCanceled(true);
+			}
+
 			if (heldItem != null && heldItem.getItem() instanceof IScreenShader)
 				ShaderHelper.framebufferShader = ((IScreenShader)heldItem.getItem()).requestShader(Client.mc.thePlayer, heldItem);
 			else
@@ -272,6 +290,50 @@ public class EventHandler
 
 			KeybindRegistry.keyAttack.setIntercepting(heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor);
 		}
+	}
+
+	private static void renderDirections()
+	{
+		GL.Disable(EnableCap.Texture2D);
+		GL.Enable(EnableCap.ColorMaterial);
+		GL11.glDepthMask(false);
+		GL11.glLineWidth(4.0F);
+		GL.Begin(PrimitiveType.LineStrip);
+		GL.Color(0, 0, 0);
+
+		GL.Vertex3(0.0D, 0.0D, 0.0D);
+		GL.Vertex3((double)10, 0.0D, 0.0D);
+
+		GL.Vertex3(0.0D, 0.0D, 0.0D);
+		GL.Vertex3(0.0D, (double)10, 0.0D);
+
+		GL.Vertex3(0.0D, 0.0D, 0.0D);
+		GL.Vertex3(0.0D, 0.0D, (double)10);
+		GL.End();
+
+		GL11.glLineWidth(2.0F);
+
+		GL.Color(1f, 0, 0);
+		GL.Begin(PrimitiveType.LineStrip);
+		GL.Vertex3(0.0D, 0.0D, 0.0D);
+		GL.Vertex3((double)10, 0.0D, 0.0D);
+		GL.End();
+
+		GL.Color(0, 1f, 0);
+		GL.Begin(PrimitiveType.LineStrip);
+		GL.Vertex3(0.0D, 0.0D, 0.0D);
+		GL.Vertex3(0.0D, (double)10, 0.0D);
+		GL.End();
+
+		GL.Color(0, 0, 1f);
+		GL.Begin(PrimitiveType.LineStrip);
+		GL.Vertex3(0.0D, 0.0D, 0.0D);
+		GL.Vertex3(0.0D, 0.0D, (double)10);
+		GL.End();
+
+		GL11.glLineWidth(1.0F);
+		GL11.glDepthMask(true);
+		GL.Enable(EnableCap.Texture2D);
 	}
 
 	@SubscribeEvent
