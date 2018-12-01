@@ -203,7 +203,7 @@ public class Client extends Common
 	@Override
 	public <T extends Block & INameProvider> void registerModel(T block)
 	{
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(block, Resources.location(String.format("models/blocks/%s.json", block.getName()))));
+		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(block, Resources.location(String.format("models/block/%s.json", block.getName()))));
 	}
 
 	public static void saveTextureAtlas(TextureMap map)
