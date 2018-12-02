@@ -281,6 +281,7 @@ public class EventHandler
 
 					GL.PopMatrix();
 					GL11.glColor4f(1, 1, 1, 1);
+
 					GL11.glPopAttrib();
 					GL11.glPopAttrib();
 					GL11.glPopAttrib();
