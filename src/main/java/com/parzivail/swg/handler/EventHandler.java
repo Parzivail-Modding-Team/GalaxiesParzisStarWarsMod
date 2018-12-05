@@ -12,6 +12,8 @@ import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.blaster.ItemBlasterRifle;
 import com.parzivail.swg.network.MessagePswgWorldDataSync;
+import com.parzivail.swg.player.PswgExtProp;
+import com.parzivail.swg.player.PswgExtPropFlags;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.registry.WorldRegister;
@@ -48,6 +50,7 @@ import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -191,6 +194,23 @@ public class EventHandler
 			{
 				IGuiOverlay overlay = (IGuiOverlay)heldItem.getItem();
 				if (overlay.shouldHideHand(Client.mc.thePlayer, heldItem) && event.isCancelable())
+					event.setCanceled(true);
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void on(LivingFallEvent event)
+	{
+		if (event.entity instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer)event.entity;
+			PswgExtProp props = PswgExtProp.get(player);
+			if (props != null && props.hasFlag(PswgExtPropFlags.IS_FORCEJUMPING))
+			{
+				if (!event.entity.worldObj.isRemote)
+					props.clearFlag(PswgExtPropFlags.IS_FORCEJUMPING);
+				if (event.isCancelable())
 					event.setCanceled(true);
 			}
 		}

@@ -111,6 +111,7 @@ public class StarWarsGalaxy
 		StructureRegister.register();
 		QuestRegister.register();
 		EntityRegister.register();
+		ForceRegistry.register();
 
 		proxy.init();
 	}

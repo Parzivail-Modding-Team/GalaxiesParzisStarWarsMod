@@ -100,6 +100,8 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 
 	public void setFlag(String flag)
 	{
+		if (hasFlag(flag))
+			return;
 		flags = ArrayUtils.add(flags, flag);
 		sync();
 	}

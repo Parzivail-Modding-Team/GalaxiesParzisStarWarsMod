@@ -314,8 +314,6 @@ public class Client extends Common
 			Lumberjack.warn("Recieved null world for MessagePswgExtPropSync::handleMessage");
 			return;
 		}
-		else
-			Lumberjack.info("Created player properties");
 		Entity e = w.getEntityByID(entityId);
 		PswgExtProp.get(e).loadNBTData(ieep);
 	}
