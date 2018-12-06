@@ -19,8 +19,6 @@ public class ForcePowerJump implements IForcePower
 	{
 		//player.worldObj.playSound(player.posX, player.posY, player.posZ, Resources.MODID + ":" + "force.push", 1, 1, true);
 
-		player.motionY = 0.41999998688697815D;
-
 		float power = 5;
 		player.motionY += power * 0.11F;
 
