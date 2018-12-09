@@ -49,9 +49,14 @@ public class EntityUtils
 		if (fromEntity == null || fromEntity.worldObj == null)
 			return null;
 
+		Vec3 startPos = Vec3.createVectorHelper(fromEntity.posX, fromEntity.posY, fromEntity.posZ).addVector(0, fromEntity.getEyeHeight(), 0);
+		return rayTraceFromPosition(startPos, fromDir, distance, fromEntity, exclude, includeBlocks);
+	}
+
+	private static RaytraceHit rayTraceFromPosition(Vec3 startPos, Vec3 fromDir, double distance, Entity fromEntity, Entity[] exclude, boolean includeBlocks)
+	{
 		Entity pointedEntity = null;
 		RaytraceHitBlock rhb = null;
-		Vec3 startPos = Vec3.createVectorHelper(fromEntity.posX, fromEntity.posY, fromEntity.posZ).addVector(0, fromEntity.getEyeHeight(), 0);
 		Vec3 endPos = startPos.addVector(fromDir.xCoord * distance, fromDir.yCoord * distance, fromDir.zCoord * distance);
 		List list = fromEntity.worldObj.getEntitiesWithinAABBExcludingEntity(fromEntity, fromEntity.boundingBox.addCoord(fromDir.xCoord * distance, fromDir.yCoord * distance, fromDir.zCoord * distance).expand(1, 1, 1));
 

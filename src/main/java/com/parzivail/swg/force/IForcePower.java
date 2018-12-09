@@ -9,5 +9,7 @@ public interface IForcePower
 
 	boolean use(World world, EntityPlayer player);
 
+	void tick(World world, EntityPlayer player);
+
 	String getId();
 }

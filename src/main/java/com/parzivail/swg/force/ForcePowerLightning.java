@@ -1,7 +1,6 @@
 package com.parzivail.swg.force;
 
 import com.parzivail.swg.registry.ForceRegistry;
-import com.parzivail.util.common.Lumberjack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
@@ -23,9 +22,13 @@ public class ForcePowerLightning implements IForcePower
 		else
 			Cron.setActive(player, ForceRegistry.fpLightning);
 
-		Lumberjack.debug("Lightning: %s", Cron.isActive(player, ForceRegistry.fpLightning));
-
 		return true;
+	}
+
+	@Override
+	public void tick(World world, EntityPlayer player)
+	{
+
 	}
 
 	@Override

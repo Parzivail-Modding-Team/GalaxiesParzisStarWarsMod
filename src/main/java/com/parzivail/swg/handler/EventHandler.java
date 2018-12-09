@@ -134,6 +134,8 @@ public class EventHandler
 			MultipartFlightModel ship = EntityUtils.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
+
+			RenderLightning.render((EntityPlayer)event.entity);
 		}
 		//		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
 		//			ShaderHelper.useShader(ShaderHelper.entityGlow);
@@ -169,7 +171,11 @@ public class EventHandler
 	public void on(RenderWorldLastEvent event)
 	{
 		WorldDecals.render(Minecraft.getMinecraft().thePlayer.dimension, event.partialTicks);
-		RenderLightning.render();
+		if (Client.mc.gameSettings.thirdPersonView == 0)
+		{
+			// RenderLivingEvent.Pre doesn't get called for the player in first person so we have to call some things manually
+			RenderLightning.render(Client.mc.thePlayer);
+		}
 	}
 
 	@SubscribeEvent

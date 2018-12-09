@@ -40,6 +40,11 @@ public class ForcePowerJump implements IForcePower
 	}
 
 	@Override
+	public void tick(World world, EntityPlayer player)
+	{
+	}
+
+	@Override
 	public String getId()
 	{
 		return "jump";

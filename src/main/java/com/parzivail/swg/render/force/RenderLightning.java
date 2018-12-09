@@ -6,61 +6,60 @@ import com.parzivail.swg.registry.ForceRegistry;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitEntity;
+import com.parzivail.util.ui.gltk.AttribMask;
+import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 import java.util.Random;
 
 public class RenderLightning
 {
-	public static void render()
+	public static void render(EntityPlayer player)
 	{
-		for (Object entity : Client.mc.theWorld.playerEntities)
+		boolean active = Cron.isActive(player, ForceRegistry.fpLightning);
+		RaytraceHit hit = EntityUtils.rayTrace(player, 10);
+
+		if (active && hit instanceof RaytraceHitEntity)
 		{
-			EntityPlayer player = (EntityPlayer)entity;
+			Entity e = ((RaytraceHitEntity)hit).entity;
 
-			boolean active = Cron.isActive(player, ForceRegistry.fpLightning);
-			RaytraceHit hit = EntityUtils.rayTrace(player, 10);
+			float dx = MathHelper.cos((float)Math.toRadians(player.rotationYaw)) / 2;
+			float dz = MathHelper.sin((float)Math.toRadians(player.rotationYaw)) / 2;
 
-			if (active && hit instanceof RaytraceHitEntity)
+			Random r = new Random(e.ticksExisted * 4);
+			Vec3 pos = player.getPosition(Client.renderPartialTicks);
+			float posX2 = (float)e.posX;
+			float posY2 = (float)e.posY + 2;
+			float posZ2 = (float)e.posZ;
+			for (int i = 0; i < 4; i++)
 			{
-				Entity e = ((RaytraceHitEntity)hit).entity;
+				posX2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxX - e.boundingBox.minX) / 2;
+				posY2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxY - e.boundingBox.minY) / 2;
+				posZ2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxZ - e.boundingBox.minZ) / 2;
 
-				float dx = MathHelper.cos((float)Math.toRadians(player.rotationYaw)) / 2;
-				float dz = MathHelper.sin((float)Math.toRadians(player.rotationYaw)) / 2;
+				if (player == Client.mc.thePlayer)
+					renderLightning(r, posX2 - 0.5f, posY2 - 1f, posZ2 - 0.5f, (float)(pos.xCoord - 0.5f + dx), (float)pos.yCoord - 1, (float)(pos.zCoord - 0.5f + dz), 8, 0.15f);
+				else
+					renderLightning(r, posX2 - 0.5f, posY2 - 2.5f, posZ2 - 0.5f, (float)(pos.xCoord + dx), (float)pos.yCoord + 0.5f, (float)(pos.zCoord + dz), 8, 0.15f);
+			}
 
-				Random r = new Random(e.ticksExisted * 4);
-				float posX2 = (float)e.posX;
-				float posY2 = (float)e.posY + 2;
-				float posZ2 = (float)e.posZ;
-				for (int i = 0; i < 4; i++)
-				{
-					posX2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxX - e.boundingBox.minX) / 2;
-					posY2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxY - e.boundingBox.minY) / 2;
-					posZ2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxZ - e.boundingBox.minZ) / 2;
+			posX2 = (float)e.posX;
+			posY2 = (float)e.posY + 2;
+			posZ2 = (float)e.posZ;
+			for (int i = 0; i < 4; i++)
+			{
+				posX2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxX - e.boundingBox.minX) / 2;
+				posY2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxY - e.boundingBox.minY) / 2;
+				posZ2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxZ - e.boundingBox.minZ) / 2;
 
-					if (player == Client.mc.thePlayer)
-						renderLightning(r, posX2 - 0.5f, posY2 - 1f, posZ2 - 0.5f, (float)(player.posX - 0.5f + dx), (float)player.posY - 1, (float)(player.posZ - 0.5f + dz), 8, 0.15f);
-					else
-						renderLightning(r, posX2 - 0.5f, posY2 - 2.5f, posZ2 - 0.5f, (float)(player.posX + dx), (float)player.posY + 0.5f, (float)(player.posZ + dz), 8, 0.15f);
-				}
-
-				posX2 = (float)e.posX;
-				posY2 = (float)e.posY + 2;
-				posZ2 = (float)e.posZ;
-				for (int i = 0; i < 4; i++)
-				{
-					posX2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxX - e.boundingBox.minX) / 2;
-					posY2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxY - e.boundingBox.minY) / 2;
-					posZ2 += (r.nextFloat() - 0.5f) * (e.boundingBox.maxZ - e.boundingBox.minZ) / 2;
-
-					if (player == Client.mc.thePlayer)
-						renderLightning(r, posX2 - 0.5f, posY2 - 1f, posZ2 - 0.5f, (float)(player.posX - 0.5f - dx), (float)player.posY - 1, (float)(player.posZ - 0.5f - dz), 8, 0.15f);
-					else
-						renderLightning(r, posX2 - 0.5f, posY2 - 2.5f, posZ2 - 0.5f, (float)(player.posX + dx * 2), (float)player.posY + 0.5f, (float)(player.posZ + dz * 2), 8, 0.15f);
-				}
+				if (player == Client.mc.thePlayer)
+					renderLightning(r, posX2 - 0.5f, posY2 - 1f, posZ2 - 0.5f, (float)(pos.xCoord - 0.5f - dx), (float)pos.yCoord - 1, (float)(pos.zCoord - 0.5f - dz), 8, 0.15f);
+				else
+					renderLightning(r, posX2 - 0.5f, posY2 - 2.5f, posZ2 - 0.5f, (float)(pos.xCoord + dx * 2), (float)pos.yCoord + 0.5f, (float)(pos.zCoord + dz * 2), 8, 0.15f);
 			}
 		}
 	}
@@ -69,11 +68,15 @@ public class RenderLightning
 	{
 		if (distance < curDetail)
 		{
+			Vec3 pos = Client.mc.thePlayer.getPosition(Client.renderPartialTicks);
+
 			GL11.glPushMatrix();
+			GL.PushAttrib(AttribMask.EnableBit);
 			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_LINE_SMOOTH);
-			GL11.glTranslated(-(Client.mc.thePlayer.posX - 0.5), -(Client.mc.thePlayer.posY - 0.5f), -(Client.mc.thePlayer.posZ - 0.5));
+			GL11.glTranslated(-(pos.xCoord - 0.5), -(pos.yCoord - 0.5f), -(pos.zCoord - 0.5));
 
 			GL11.glLineWidth(8);
 			GL11.glColor3f(0f, 0f, 1f);
@@ -99,10 +102,8 @@ public class RenderLightning
 			GL11.glVertex3d(posX2, posY2, posZ2);
 			GL11.glEnd();
 
-			GL11.glDisable(GL11.GL_LINE_SMOOTH);
-			GL11.glEnable(GL11.GL_TEXTURE_2D); // end of fix
-			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glColor3f(1, 1, 1);
+			GL.PopAttrib();
 			GL11.glPopMatrix();
 		}
 		else

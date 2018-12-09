@@ -315,7 +315,9 @@ public class Client extends Common
 			return;
 		}
 		Entity e = w.getEntityByID(entityId);
-		PswgExtProp.get(e).loadNBTData(ieep);
+		PswgExtProp props = PswgExtProp.get(e);
+		props.loadNBTData(ieep);
+		Lumberjack.debug("player=%s props=%s", e.getCommandSenderName(), props);
 	}
 
 	@Override
