@@ -1,5 +1,6 @@
 package com.parzivail.swg.item;
 
+import com.parzivail.swg.force.Cron;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.registry.ForceRegistry;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +28,7 @@ public class ItemDebugWizard extends PItem
 			}
 		}
 
-		ForceRegistry.fpLightning.use(world, player);
+		Cron.usePower(player, ForceRegistry.fpLightning);
 
 		return stack;
 	}

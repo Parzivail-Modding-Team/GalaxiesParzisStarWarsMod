@@ -37,4 +37,12 @@ public class Cron
 			props.updatePower(desc);
 		}
 	}
+
+	public static void usePower(EntityPlayer player, IForcePower power)
+	{
+		if (power.canUse(player.worldObj, player))
+		{
+			power.use(player.worldObj, player);
+		}
+	}
 }
