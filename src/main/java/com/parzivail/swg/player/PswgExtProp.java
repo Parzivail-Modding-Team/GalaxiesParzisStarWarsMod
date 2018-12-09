@@ -2,6 +2,8 @@ package com.parzivail.swg.player;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.force.ForcePowerDescriptor;
+import com.parzivail.swg.force.IForcePower;
 import com.parzivail.swg.network.MessagePswgExtPropSync;
 import com.parzivail.util.item.NbtSave;
 import com.parzivail.util.item.NbtSerializable;
@@ -31,6 +33,8 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	protected String[] completedQuests;
 	@NbtSave
 	protected String[] flags;
+	@NbtSave
+	protected ForcePowerDescriptor[] forcePowers = new ForcePowerDescriptor[0];
 
 	private Entity entity;
 	private World world;
@@ -125,6 +129,34 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	public String[] getFlags()
 	{
 		return flags;
+	}
+
+	public ForcePowerDescriptor[] getPowers()
+	{
+		return forcePowers;
+	}
+
+	public ForcePowerDescriptor getPower(IForcePower power)
+	{
+		// TODO: return null if not force sensitive
+		ForcePowerDescriptor[] powers = getPowers();
+		for (ForcePowerDescriptor descriptor : powers)
+		{
+			if (descriptor.describes(power))
+				return descriptor;
+		}
+		ForcePowerDescriptor desc = new ForcePowerDescriptor(power);
+		updatePower(desc);
+		return desc;
+	}
+
+	public void updatePower(ForcePowerDescriptor descriptor)
+	{
+		// This simple remove-add works because the equality of two descriptors
+		// is solely based on the ID of the described power
+		forcePowers = ArrayUtils.removeElement(forcePowers, descriptor);
+		forcePowers = ArrayUtils.add(forcePowers, descriptor);
+		sync();
 	}
 
 	@Override

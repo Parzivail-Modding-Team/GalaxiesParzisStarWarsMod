@@ -1,7 +1,6 @@
 package com.parzivail.swg.force;
 
-import com.parzivail.swg.player.PswgExtProp;
-import com.parzivail.swg.player.PswgExtPropFlags;
+import com.parzivail.swg.registry.ForceRegistry;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -35,12 +34,7 @@ public class ForcePowerJump implements IForcePower
 		player.fallDistance = 0.0f;
 		player.onGround = false;
 
-		if (!world.isRemote)
-		{
-			PswgExtProp props = PswgExtProp.get(player);
-			if (props != null)
-				props.setFlag(PswgExtPropFlags.IS_FORCEJUMPING);
-		}
+		Cron.setActive(player, ForceRegistry.fpJump);
 
 		return true;
 	}

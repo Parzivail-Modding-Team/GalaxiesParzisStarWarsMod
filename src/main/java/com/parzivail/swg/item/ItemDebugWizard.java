@@ -27,7 +27,7 @@ public class ItemDebugWizard extends PItem
 			}
 		}
 
-		ForceRegistry.fpJump.use(world, player);
+		ForceRegistry.fpLightning.use(world, player);
 
 		return stack;
 	}

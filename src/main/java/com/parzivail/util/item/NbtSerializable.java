@@ -1,6 +1,7 @@
 package com.parzivail.util.item;
 
 import com.google.gson.Gson;
+import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.item.blaster.data.BlasterAttachment;
 import com.parzivail.swg.item.blaster.data.BlasterAttachments;
 import com.parzivail.util.common.Enumerable;
@@ -28,6 +29,7 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(String[].class, NbtSerializable::readListString, NbtSerializable::writeListString);
 
 		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
+		map(ForcePowerDescriptor[].class, NbtSerializable::readForcePowerDescriptors, NbtSerializable::writeForcePowerDescriptors);
 		//		map(BlasterAttachment[].class, NbtSerializable::readBlasterAttachments, NbtSerializable::writeBlasterAttachments);
 	}
 
@@ -71,6 +73,19 @@ public class NbtSerializable<T extends NbtSerializable>
 			compound.setInteger(s, 0);
 		else
 			compound.setInteger(s, blasterAttachment.getId());
+	}
+
+	private static ForcePowerDescriptor[] readForcePowerDescriptors(String s, NBTTagCompound compound)
+	{
+		return new Gson().fromJson(compound.getString(s), ForcePowerDescriptor[].class);
+	}
+
+	private static void writeForcePowerDescriptors(String s, ForcePowerDescriptor[] forcePowerDescriptor, NBTTagCompound compound)
+	{
+		if (forcePowerDescriptor == null)
+			forcePowerDescriptor = new ForcePowerDescriptor[0];
+
+		compound.setString(s, new Gson().toJson(forcePowerDescriptor));
 	}
 
 	private static BlasterAttachment[] readBlasterAttachments(String s, NBTTagCompound compound)

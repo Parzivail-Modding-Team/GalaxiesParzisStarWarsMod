@@ -4,6 +4,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.audio.AmbientSounds;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.entity.EntityCinematicCamera;
+import com.parzivail.swg.force.Cron;
 import com.parzivail.swg.gui.GuiNowEntering;
 import com.parzivail.swg.gui.GuiScreenTrailer;
 import com.parzivail.swg.item.IGuiOverlay;
@@ -12,12 +13,12 @@ import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.blaster.ItemBlasterRifle;
 import com.parzivail.swg.network.MessagePswgWorldDataSync;
-import com.parzivail.swg.player.PswgExtProp;
-import com.parzivail.swg.player.PswgExtPropFlags;
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.swg.registry.ForceRegistry;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
+import com.parzivail.swg.render.force.RenderLightning;
 import com.parzivail.swg.render.overlay.OverlayHealthBar;
 import com.parzivail.swg.render.pipeline.JsonBlockRenderer;
 import com.parzivail.swg.ship.MultipartFlightModel;
@@ -51,6 +52,7 @@ import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
@@ -167,6 +169,7 @@ public class EventHandler
 	public void on(RenderWorldLastEvent event)
 	{
 		WorldDecals.render(Minecraft.getMinecraft().thePlayer.dimension, event.partialTicks);
+		RenderLightning.render();
 	}
 
 	@SubscribeEvent
@@ -202,18 +205,29 @@ public class EventHandler
 	@SubscribeEvent
 	public void on(LivingFallEvent event)
 	{
-		if (event.entity instanceof EntityPlayer)
+		if (disableForceJump(event.entity) && event.isCancelable())
+			event.setCanceled(true);
+	}
+
+	@SubscribeEvent
+	public void on(PlayerFlyableFallEvent event)
+	{
+		// No need to cancel, you're in Creative, so you're not taking fall damage
+		disableForceJump(event.entity);
+	}
+
+	private boolean disableForceJump(Entity e)
+	{
+		if (e instanceof EntityPlayer)
 		{
-			EntityPlayer player = (EntityPlayer)event.entity;
-			PswgExtProp props = PswgExtProp.get(player);
-			if (props != null && props.hasFlag(PswgExtPropFlags.IS_FORCEJUMPING))
+			EntityPlayer player = (EntityPlayer)e;
+			if (Cron.isActive(player, ForceRegistry.fpJump))
 			{
-				if (!event.entity.worldObj.isRemote)
-					props.clearFlag(PswgExtPropFlags.IS_FORCEJUMPING);
-				if (event.isCancelable())
-					event.setCanceled(true);
+				Cron.deactivate(player, ForceRegistry.fpJump);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	@SubscribeEvent
