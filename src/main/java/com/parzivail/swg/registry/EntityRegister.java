@@ -1,6 +1,7 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.entity.EntityChair;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.mob.MobGizka;
@@ -19,6 +20,8 @@ public class EntityRegister
 	{
 		EntityUtils.registerEntity(VehicleT65.class, "t65");
 		EntityUtils.registerEntity(EntitySeat.class, "seat");
+
+		EntityUtils.registerEntity(EntityChair.class, "chair");
 
 		EntityUtils.registerEntity(EntityBlasterBolt.class, "blasterBolt");
 

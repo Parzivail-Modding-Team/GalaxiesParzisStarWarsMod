@@ -92,6 +92,8 @@ public class BlockRegister
 		register(oreRubindum = new PBlock("rubindum"));
 		register(oreCortosis = new PBlock("cortosis"));
 
+		register(new BlockChair("chairTest"));
+
 		register(new PBlockSand("tatooineSand"));
 		PBlock pourstone;
 		register(pourstone = new PBlock("pourstone"));
