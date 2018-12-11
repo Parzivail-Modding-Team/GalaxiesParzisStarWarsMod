@@ -2,7 +2,6 @@ package com.parzivail.swg.ship;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityCinematicCamera;
-import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.swg.network.MessageFlightModelClientUpdate;
 import com.parzivail.swg.network.MessageFlightModelUpdate;
 import com.parzivail.util.common.Lumberjack;
@@ -50,9 +49,10 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 		super(world);
 		setSize(1, 2);
 
-		preventEntitySpawning = true;
+		preventEntitySpawning = false;
 		ignoreFrustumCheck = true;
 		renderDistanceWeight = 200D;
+		noClip = true;
 
 		orientation = previousOrientation = new RotatedAxes();
 		angularMomentum = new Vector3f();
@@ -95,14 +95,10 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	{
 		partWatchdog();
 
-		prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;
-
 		previousOrientation = orientation.clone();
 
-		if (worldObj.isRemote && StarWarsGalaxy.proxy.isClientControlled(this))
-			KeyHandler.handleVehicleMovement();
+		if (StarWarsGalaxy.proxy.isClientControlled(this))
+			StarWarsGalaxy.proxy.handleVehicleMovement();
 
 		if (getDriver() != null)
 		{
@@ -130,11 +126,8 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 		if (Math.abs(angularMomentum.z) < 0.001f)
 			angularMomentum.z = 0;
 
-		if (!worldObj.isRemote)
-		{
-			if (riddenByEntity != null && riddenByEntity.isDead)
-				riddenByEntity = null;
-		}
+		if (riddenByEntity != null && riddenByEntity.isDead)
+			riddenByEntity = null;
 	}
 
 	public void acceptInput(ShipInput input)
@@ -215,6 +208,19 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 					worldObj.spawnEntityInWorld(seat);
 			}
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int rotationIncrements)
+	{
+		setPosition(x, y, z);
+		setRotation(yaw, pitch);
+	}
+
+	@Override
+	protected boolean shouldSetPosAfterLoading()
+	{
+		return false;
 	}
 
 	private boolean knowsAllSeats()

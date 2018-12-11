@@ -91,4 +91,8 @@ public class Common
 	public <T extends Block & INameProvider> void registerModel(T block)
 	{
 	}
+
+	public void handleVehicleMovement()
+	{
+	}
 }

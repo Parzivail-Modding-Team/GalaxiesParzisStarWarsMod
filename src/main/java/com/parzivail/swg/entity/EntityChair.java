@@ -16,7 +16,7 @@ public class EntityChair extends Entity
 	public EntityChair(World worldIn)
 	{
 		super(worldIn);
-		setSize(0.8f, 1.1f);
+		setSize(0.8f, 0.8f);
 		noClip = true;
 	}
 
@@ -26,7 +26,7 @@ public class EntityChair extends Entity
 		px = x;
 		py = y;
 		pz = z;
-		setPosition(x + 0.5, y, z + 0.5);
+		setPosition(x + 0.5, y + 0.1f, z + 0.5);
 	}
 
 	@Override

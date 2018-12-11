@@ -2,6 +2,8 @@ package com.parzivail.swg.ship;
 
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.math.lwjgl.Vector3f;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,22 +35,30 @@ public class EntitySeat extends Entity
 		this.position = position;
 	}
 
-	public boolean canBeCollidedWith()
-	{
-		return true;
-	}
-
 	protected void entityInit()
 	{
 	}
 
 	@Override
+	public boolean canBeCollidedWith()
+	{
+		return true;
+	}
+
+	@Override
 	public void onUpdate()
 	{
-		//		if (ticksExisted > 20 && parent == null)
-		//			setDead();
+		if (ridingEntity != null && ridingEntity.isDead)
+			ridingEntity = null;
 
-		super.onUpdate();
+		if (posY < -64.0D)
+			kill();
+
+		prevPosX = posX;
+		prevPosY = posY;
+		prevPosZ = posZ;
+		prevRotationPitch = rotationPitch;
+		prevRotationYaw = rotationYaw;
 	}
 
 	/**
@@ -87,6 +97,19 @@ public class EntitySeat extends Entity
 			setLocationAndAngles(parent.posX + position.x, parent.posY + position.y, parent.posZ + position.z, 0, 0);
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int rotationIncrements)
+	{
+		setPosition(x, y, z);
+		setRotation(yaw, pitch);
+	}
+
+	@Override
+	protected boolean shouldSetPosAfterLoading()
+	{
+		return false;
+	}
+
 	public void setParent(int parentId)
 	{
 		Entity entity = worldObj.getEntityByID(parentId);
@@ -117,7 +140,7 @@ public class EntitySeat extends Entity
 	@Override
 	public boolean interactFirst(EntityPlayer player)
 	{
-		if (riddenByEntity != null && riddenByEntity instanceof EntityPlayer && riddenByEntity != player)
+		if (riddenByEntity instanceof EntityPlayer && riddenByEntity != player)
 			return true;
 		else
 		{

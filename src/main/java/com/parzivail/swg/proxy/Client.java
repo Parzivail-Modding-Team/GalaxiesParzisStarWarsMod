@@ -7,6 +7,7 @@ import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.gui.GuiQuestNotification;
+import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.mob.MobGizka;
 import com.parzivail.swg.network.MessageItemLeftClick;
@@ -303,6 +304,12 @@ public class Client extends Common
 	public void handleWorldDataSync(NBTTagCompound worldData)
 	{
 		PswgWorldDataHandler.get(mc.theWorld).readFromNBT(worldData);
+	}
+
+	@Override
+	public void handleVehicleMovement()
+	{
+		KeyHandler.handleVehicleMovement();
 	}
 
 	@Override
