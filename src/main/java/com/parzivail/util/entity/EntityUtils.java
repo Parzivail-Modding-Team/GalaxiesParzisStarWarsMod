@@ -151,6 +151,9 @@ public class EntityUtils
 
 	public static MultipartFlightModel getShipRiding(Entity entity)
 	{
+		if (entity == null)
+			return null;
+
 		if (!(entity.ridingEntity instanceof EntitySeat))
 			return null;
 		return ((EntitySeat)entity.ridingEntity).parent;

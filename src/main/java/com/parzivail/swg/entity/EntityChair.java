@@ -63,7 +63,7 @@ public class EntityChair extends Entity
 	@Override
 	protected boolean shouldSetPosAfterLoading()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
@@ -75,10 +75,16 @@ public class EntityChair extends Entity
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound tagCompound)
 	{
+		px = tagCompound.getInteger("px");
+		py = tagCompound.getInteger("py");
+		pz = tagCompound.getInteger("pz");
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
+		tagCompound.setInteger("px", px);
+		tagCompound.setInteger("py", py);
+		tagCompound.setInteger("pz", pz);
 	}
 }
