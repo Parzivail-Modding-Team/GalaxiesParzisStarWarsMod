@@ -34,12 +34,11 @@ PSWG runs on the (Forge) Gradle build system. I recommend you use IntelliJ as an
     * `gradlew setupDecompWorkspace`
     * `gradlew idea`
 * All dependencies are met with Maven and are subsequently compiled into the resulting jarfile.
-* Build a jarfile with `gradlew build` to produce `pswg-TEMP.jar` in `./build/libs`. 
+* Build a jarfile with `gradlew build` to produce `pswg-<version>.jar` in `./build/libs`. 
 
 Extra Info:
 
 * If IntelliJ fails to run the mod because of a texture error, make sure under Project Structure > Modules > StarWarsGalaxy_Main that the **inherits project compile output path** option is selected.
-* `BuildMod.exe` is a .NET/Mono utility that simply runs `gradlew build`, moves `./build/libs/pswg-TEMP.jar` to `./builds/pswg-<version>.jar` and creates a sidecar markdown template of the same name for changelogs.
 
 ## Contributing
 Please only create pull requests for content additions or bugfixes.
