@@ -1,3 +1,6 @@
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+
 buildscript {
     repositories {
         mavenCentral()
@@ -12,12 +15,13 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath 'org.eclipse.jgit:org.eclipse.jgit:5.2.0.201812061821-r'
     }
 }
 
 apply plugin: 'forge'
 
-version = "TEMP"
+version = new Git(new FileRepositoryBuilder().readEnvironment().findGitDir(projectDir).build()).describe().setTags(true).call()
 group = "com.parzivail.pswg" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "pswg"
 
