@@ -1,8 +1,6 @@
 package com.parzivail.swg.npc;
 
 import com.parzivail.swg.npc.ai.AiBetterWander;
-import com.parzivail.swg.npc.ai.AiStayWithinBounds;
-import com.parzivail.swg.registry.ZoneRegistry;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -24,7 +22,7 @@ public class NpcJawa extends EntityCreature
 		setSize(0.6F, 1.2F);
 		getNavigator().setBreakDoors(true);
 		getNavigator().setAvoidsWater(true);
-		tasks.addTask(1, new AiStayWithinBounds(this, ZoneRegistry.zoneExperimentPaddockA, 0.6D));
+		//tasks.addTask(1, new AiStayWithinBounds(this, ZoneRegistry.zoneExperimentPaddockA, 0.6D));
 		tasks.addTask(2, new EntityAIWatchClosest2(this, EntityPlayer.class, 3.0F, 1.0F));
 		tasks.addTask(2, new EntityAIWatchClosest2(this, NpcJawa.class, 5.0F, 0.02F));
 		tasks.addTask(4, new EntityAIOpenDoor(this, true));

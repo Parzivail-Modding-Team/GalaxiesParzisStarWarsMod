@@ -73,7 +73,6 @@ public class JsonBlockRenderer implements ISimpleBlockRenderingHandler
 		for (String tex : unloadedTextures)
 			map.registerIcon(tex);
 		Lumberjack.debug("Registered %s JSON model icons", unloadedTextures.size());
-		unloadedTextures.clear();
 	}
 
 	@Override

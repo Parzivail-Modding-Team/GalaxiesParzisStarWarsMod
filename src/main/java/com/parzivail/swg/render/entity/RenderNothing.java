@@ -22,9 +22,9 @@ public class RenderNothing extends Render
 	{
 		if (!Client.mc.gameSettings.showDebugInfo)
 		{
-			GL11.glPushMatrix();
-			renderOffsetAABB(entity.boundingBox, x - entity.lastTickPosX, y - entity.lastTickPosY, z - entity.lastTickPosZ);
-			GL11.glPopMatrix();
+			//			GL11.glPushMatrix();
+			//			renderOffsetAABB(entity.boundingBox, x - entity.lastTickPosX, y - entity.lastTickPosY, z - entity.lastTickPosZ);
+			//			GL11.glPopMatrix();
 			return;
 		}
 
