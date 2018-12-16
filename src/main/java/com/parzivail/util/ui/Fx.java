@@ -380,6 +380,7 @@ public class Fx
 	public static class D3
 	{
 		private static final double[][] _vertsBox = new double[8][3];
+		private static final double[][] _vertsBoxSkew;
 
 		private static final double[][] _normalsBox = {
 				{ -1.0, 0.0, 0.0 },
@@ -405,6 +406,7 @@ public class Fx
 			_vertsBox[2][1] = _vertsBox[3][1] = _vertsBox[6][1] = _vertsBox[7][1] = 0.5f;
 			_vertsBox[0][2] = _vertsBox[3][2] = _vertsBox[4][2] = _vertsBox[7][2] = -0.5f;
 			_vertsBox[1][2] = _vertsBox[2][2] = _vertsBox[5][2] = _vertsBox[6][2] = 0.5f;
+			_vertsBoxSkew = deepCopyIntMatrix(_vertsBox);
 
 			// dodec
 			double alpha;
@@ -475,6 +477,18 @@ public class Fx
 			_dodec[19][2] = -alpha;
 		}
 
+		private static double[][] deepCopyIntMatrix(double[][] input)
+		{
+			if (input == null)
+				return null;
+			double[][] result = new double[input.length][];
+			for (int r = 0; r < input.length; r++)
+			{
+				result[r] = input[r].clone();
+			}
+			return result;
+		}
+
             /*
                 Public Methods
              */
@@ -492,9 +506,62 @@ public class Fx
 			Box(GL11.GL_LINE_LOOP);
 		}
 
+		public static void DrawWireBoxSkew(double thickness, double topX, double topY, double topZ, double bottomX, double bottomY, double bottomZ)
+		{
+			Box(GL11.GL_LINE_LOOP, thickness, topX, topY, topZ, bottomX, bottomY, bottomZ);
+		}
+
 		public static void DrawSolidBox()
 		{
 			Box(GL11.GL_QUADS);
+		}
+
+		public static void DrawSolidBoxSkew(double thickness, double topX, double topY, double topZ, double bottomX, double bottomY, double bottomZ)
+		{
+			Box(GL11.GL_QUADS, thickness, topX, topY, topZ, bottomX, bottomY, bottomZ);
+		}
+
+		private static void Box(int type, double thickness, double topX, double topY, double topZ, double bottomX, double bottomY, double bottomZ)
+		{
+			_vertsBoxSkew[0][0] = _vertsBoxSkew[1][0] = -thickness + bottomX;
+			_vertsBoxSkew[2][0] = _vertsBoxSkew[3][0] = -thickness + topX;
+			_vertsBoxSkew[4][0] = _vertsBoxSkew[5][0] = thickness + bottomX;
+			_vertsBoxSkew[6][0] = _vertsBoxSkew[7][0] = thickness + topX;
+
+			_vertsBoxSkew[0][1] = _vertsBoxSkew[1][1] = -thickness + bottomY;
+			_vertsBoxSkew[4][1] = _vertsBoxSkew[5][1] = -thickness + bottomY;
+			_vertsBoxSkew[2][1] = _vertsBoxSkew[3][1] = thickness + topY;
+			_vertsBoxSkew[6][1] = _vertsBoxSkew[7][1] = thickness + topY;
+
+			_vertsBoxSkew[0][2] = -thickness + bottomZ;
+			_vertsBoxSkew[7][2] = -thickness + topZ;
+			_vertsBoxSkew[4][2] = -thickness + bottomZ;
+			_vertsBoxSkew[3][2] = -thickness + topZ;
+			_vertsBoxSkew[1][2] = thickness + bottomZ;
+			_vertsBoxSkew[6][2] = thickness + topZ;
+			_vertsBoxSkew[5][2] = thickness + bottomZ;
+			_vertsBoxSkew[2][2] = thickness + topZ;
+
+			Box(type, _vertsBoxSkew);
+		}
+
+		private static void Box(int type, double[][] verts)
+		{
+			for (int i = 5; i >= 0; i--)
+			{
+				GL11.glBegin(type);
+				GL11.glNormal3d(_normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2]);
+				GL11.glVertex3d(verts[_facesBox[i][0]][0], verts[_facesBox[i][0]][1], verts[_facesBox[i][0]][2]);
+				GL11.glVertex3d(verts[_facesBox[i][1]][0], verts[_facesBox[i][1]][1], verts[_facesBox[i][1]][2]);
+				GL11.glVertex3d(verts[_facesBox[i][2]][0], verts[_facesBox[i][2]][1], verts[_facesBox[i][2]][2]);
+				GL11.glVertex3d(verts[_facesBox[i][3]][0], verts[_facesBox[i][3]][1], verts[_facesBox[i][3]][2]);
+				GL11.glEnd();
+			}
+		}
+
+		private static void Box(int type)
+		{
+			Box(type, _vertsBox);
 		}
 
 		public static void DrawWireTorus(double innerRadius, double outerRadius, int nsides, int rings)
@@ -508,24 +575,6 @@ public class Fx
 		public static void DrawSolidTorus(double innerRadius, double outerRadius, int nsides, int rings)
 		{
 			Doughnut(innerRadius, outerRadius, nsides, rings, GL11.GL_QUAD_STRIP);
-		}
-
-            /*
-                Private Methods
-             */
-
-		private static void Box(int type)
-		{
-			for (int i = 5; i >= 0; i--)
-			{
-				GL11.glBegin(type);
-				GL11.glNormal3d(_normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2]);
-				GL11.glVertex3d(_vertsBox[_facesBox[i][0]][0], _vertsBox[_facesBox[i][0]][1], _vertsBox[_facesBox[i][0]][2]);
-				GL11.glVertex3d(_vertsBox[_facesBox[i][1]][0], _vertsBox[_facesBox[i][1]][1], _vertsBox[_facesBox[i][1]][2]);
-				GL11.glVertex3d(_vertsBox[_facesBox[i][2]][0], _vertsBox[_facesBox[i][2]][1], _vertsBox[_facesBox[i][2]][2]);
-				GL11.glVertex3d(_vertsBox[_facesBox[i][3]][0], _vertsBox[_facesBox[i][3]][1], _vertsBox[_facesBox[i][3]][2]);
-				GL11.glEnd();
-			}
 		}
 
 		private static void Doughnut(double r, double rOuter, int nsides, int rings, int type)

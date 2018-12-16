@@ -31,31 +31,24 @@ public class RenderLightsaber implements IItemRenderer
 
 		GL11.glDepthMask(false);
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
-
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		GL11.glDisable(GL11.GL_CULL_FACE);
 
-		GL.Translate(0, 1, 0);
+		float r = 1f;
+		float g = 1f;
+		float b = 1f;
 
-		for (int layer = 0; layer < 10; layer++)
+		int numLayers = 20;
+		GL.Color(r, g, b, 1f / numLayers);
+		for (int layer = 0; layer < numLayers; layer++)
 		{
-			GL.Color(0, 0, 1, 0.005 * layer);
-
-			GL.PushMatrix();
-			GL.Scale(1 - 0.05f * layer);
-			Fx.D3.DrawSolidBox();
-			GL.PopMatrix();
+			GL.Color(r, g, b, 0.1f / numLayers * layer);
+			Fx.D3.DrawSolidBoxSkew(0.22 - (0.12f / numLayers) * layer, 0, 0.3, 0, 0, -0.3, 0);
 		}
 
-		GL.Color(1, 1, 1, 0.95);
+		GL.Color(0.05f, 0.05f, 0.05f, 1);
+		Fx.D3.DrawSolidBoxSkew(0.1f, 0, 0.3, 0, 0, -0.3, 0);
 
-		GL.PushMatrix();
-		GL.Scale(1 - 0.05f * 10);
-		Fx.D3.DrawSolidBox();
-		GL.PopMatrix();
-
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glDepthMask(true);
 		GL.PopAttrib();
 		GL11.glPopMatrix();
 	}

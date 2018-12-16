@@ -40,7 +40,7 @@ Each new update will contain the associated items, blocks, ships, NPCs, and ques
   * Mos Espa
   * Mos Espa Grand Arena
 ## 1.7: *Paonga Tide* Update
-* New planet: Nabooo
+* New planet: Naboo
 * New landmarks
   * Theed Royal Palace
   * Otoh Gunga
