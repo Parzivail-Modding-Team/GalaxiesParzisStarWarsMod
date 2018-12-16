@@ -1,5 +1,6 @@
 package com.parzivail.swg.render.lightsaber;
 
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.GL;
@@ -33,8 +34,10 @@ public class RenderLightsaber implements IItemRenderer
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
-		float r = 1f;
-		float g = 1f;
+		Client.mc.entityRenderer.disableLightmap(0);
+
+		float r = 0.3f;
+		float g = 0.3f;
 		float b = 1f;
 
 		int numLayers = 20;
@@ -45,7 +48,7 @@ public class RenderLightsaber implements IItemRenderer
 			Fx.D3.DrawSolidBoxSkew(0.22 - (0.12f / numLayers) * layer, 0, 0.3, 0, 0, -0.3, 0);
 		}
 
-		GL.Color(0.05f, 0.05f, 0.05f, 1);
+		GL.Color(1, 1, 1, 1);
 		Fx.D3.DrawSolidBoxSkew(0.1f, 0, 0.3, 0, 0, -0.3, 0);
 
 		GL11.glDepthMask(true);
