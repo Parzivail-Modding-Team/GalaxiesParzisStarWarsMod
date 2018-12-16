@@ -74,6 +74,8 @@ public class ItemRegister
 
 	public static PItem debugWizard;
 
+	public static PItem lightsaber;
+
 	public static void register()
 	{
 		register(rifleA280 = new ItemBlasterRifle(new BlasterDescriptor("a280", 8, 1, 300, 1300, 6.7f, 25, GLPalette.ANALOG_RED, 10, 30, 4)));
@@ -125,6 +127,8 @@ public class ItemRegister
 		register(binocularsMb450 = new ItemBinoculars(new BinocularDescriptor("mb450", 0.1f)));
 
 		register(debugWizard = new ItemDebugWizard());
+
+		register(lightsaber = new ItemLightsaber());
 	}
 
 	private static void register(PItem item)
