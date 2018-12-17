@@ -40,16 +40,17 @@ public class RenderLightsaber implements IItemRenderer
 		float g = 0.3f;
 		float b = 1f;
 
-		int numLayers = 20;
-		GL.Color(r, g, b, 1f / numLayers);
-		for (int layer = 0; layer < numLayers; layer++)
+		float length = 2;
+
+		GL.Color(r, g, b, 1f / 20);
+		for (int layer = 0; layer < 20; layer++)
 		{
-			GL.Color(r, g, b, 0.1f / numLayers * layer);
-			Fx.D3.DrawSolidBoxSkew(0.22 - (0.12f / numLayers) * layer, 0, 0.3, 0, 0, -0.3, 0);
+			GL.Color(r, g, b, 0.1f / 20 * layer);
+			Fx.D3.DrawSolidBoxSkew(0.18 - (0.1f / 20) * layer, 0, length, 0, 0, 0, 0);
 		}
 
 		GL.Color(1, 1, 1, 1);
-		Fx.D3.DrawSolidBoxSkew(0.1f, 0, 0.3, 0, 0, -0.3, 0);
+		Fx.D3.DrawSolidBoxSkew(0.06f, 0, length, 0, 0, 0, 0);
 
 		GL11.glDepthMask(true);
 		GL.PopAttrib();
