@@ -64,3 +64,9 @@ processResources
         exclude 'mcmod.info'
     }
 }
+
+jar {
+    manifest {
+        attributes("Main-Class": "com.parzivail.swg.NotAGameMain")
+    }
+}
