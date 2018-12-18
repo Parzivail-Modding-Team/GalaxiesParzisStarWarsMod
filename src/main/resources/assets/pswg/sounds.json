@@ -171,5 +171,107 @@
     "sounds": [
       "rifle/dl44"
     ]
+  },
+  "swg.fx.saber.block": {
+    "category": "player",
+    "sounds": [
+      "saber/block"
+    ]
+  },
+  "swg.fx.saber.spark": {
+    "category": "player",
+    "sounds": [
+      "saber/block_spark"
+    ]
+  },
+  "swg.fx.saber.deflect": {
+    "category": "player",
+    "sounds": [
+      "saber/deflect"
+    ]
+  },
+  "swg.fx.saber.idle": {
+    "category": "player",
+    "sounds": [
+      "saber/idle_classic"
+    ]
+  },
+  "swg.fx.saber.idle.dark": {
+    "category": "player",
+    "sounds": [
+      "saber/idle_dark"
+    ]
+  },
+  "swg.fx.saber.idle.fire": {
+    "category": "player",
+    "sounds": [
+      "saber/idle_fire"
+    ]
+  },
+  "swg.fx.saber.idle.green": {
+    "category": "player",
+    "sounds": [
+      "saber/idle_green"
+    ]
+  },
+  "swg.fx.saber.start": {
+    "category": "player",
+    "sounds": [
+      "saber/start_classic"
+    ]
+  },
+  "swg.fx.saber.start.dark": {
+    "category": "player",
+    "sounds": [
+      "saber/start_dark"
+    ]
+  },
+  "swg.fx.saber.start.fire": {
+    "category": "player",
+    "sounds": [
+      "saber/start_fire"
+    ]
+  },
+  "swg.fx.saber.start.green": {
+    "category": "player",
+    "sounds": [
+      "saber/start_green"
+    ]
+  },
+  "swg.fx.saber.stop": {
+    "category": "player",
+    "sounds": [
+      "saber/stop_classic"
+    ]
+  },
+  "swg.fx.saber.stop.dark": {
+    "category": "player",
+    "sounds": [
+      "saber/stop_dark"
+    ]
+  },
+  "swg.fx.saber.stop.fire": {
+    "category": "player",
+    "sounds": [
+      "saber/stop_fire"
+    ]
+  },
+  "swg.fx.saber.stop.green": {
+    "category": "player",
+    "sounds": [
+      "saber/stop_green"
+    ]
+  },
+  "swg.fx.saber.swing": {
+    "category": "player",
+    "sounds": [
+      "saber/swing"
+    ]
+  },
+  "swg.fx.saber.swing.fire": {
+    "category": "player",
+    "sounds": [
+      "saber/swing_fire"
+    ]
   }
 }

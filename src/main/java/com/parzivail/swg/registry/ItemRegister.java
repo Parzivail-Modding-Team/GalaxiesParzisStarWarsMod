@@ -8,6 +8,7 @@ import com.parzivail.swg.item.blaster.ItemBlasterRifle;
 import com.parzivail.swg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.swg.item.grenade.ItemSmokeGrenade;
 import com.parzivail.swg.item.grenade.ItemThermalDetonator;
+import com.parzivail.swg.item.lightsaber.ItemLightsaber;
 import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.potion.Potion;
