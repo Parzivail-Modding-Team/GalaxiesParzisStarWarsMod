@@ -30,7 +30,6 @@ Each new update will contain the associated items, blocks, ships, NPCs, and ques
 * New landmarks
   * Cloud City
   * BesGas Three
-  * Shuttle *Tydirium* landing site
 ## 1.5: *Dragonsnake Dawn* Update
 * New planet: Dagobah
 * New landmarks
