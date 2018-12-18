@@ -79,11 +79,11 @@ public class RenderLightsaber implements IItemRenderer
 		for (int layer = 0; layer < 20; layer++)
 		{
 			GL.Color(bladeColor, (int)(1.275f * layer));
-			Fx.D3.DrawSolidBoxSkew(0.17 - 0.0058f * layer, 0, length, 0, 0, 0, 0);
+			Fx.D3.DrawSolidBoxSkew(0.16 - 0.0058f * layer, 0, length, 0, 0, 0, 0);
 		}
 
 		GL.Color(coreColor);
-		Fx.D3.DrawSolidBoxSkew(0.05f, 0, length, 0, 0, 0, 0);
+		Fx.D3.DrawSolidBoxSkew(0.035f, 0, length, 0, 0, 0, 0);
 
 		GL11.glDepthMask(true);
 		GL.PopAttrib();
