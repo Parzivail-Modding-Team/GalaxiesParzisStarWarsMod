@@ -508,7 +508,12 @@ public class Fx
 
 		public static void DrawWireBoxSkew(double thickness, double topX, double topY, double topZ, double bottomX, double bottomY, double bottomZ)
 		{
-			Box(GL11.GL_LINE_LOOP, thickness, topX, topY, topZ, bottomX, bottomY, bottomZ);
+			Box(GL11.GL_LINE_LOOP, thickness, thickness, topX, topY, topZ, bottomX, bottomY, bottomZ);
+		}
+
+		public static void DrawWireBoxSkewTaper(double thicknessTop, double thicknessBottom, double topX, double topY, double topZ, double bottomX, double bottomY, double bottomZ)
+		{
+			Box(GL11.GL_LINE_LOOP, thicknessTop, thicknessBottom, topX, topY, topZ, bottomX, bottomY, bottomZ);
 		}
 
 		public static void DrawSolidBox()
@@ -518,29 +523,34 @@ public class Fx
 
 		public static void DrawSolidBoxSkew(double thickness, double topX, double topY, double topZ, double bottomX, double bottomY, double bottomZ)
 		{
-			Box(GL11.GL_QUADS, thickness, topX, topY, topZ, bottomX, bottomY, bottomZ);
+			Box(GL11.GL_QUADS, thickness, thickness, topX, topY, topZ, bottomX, bottomY, bottomZ);
 		}
 
-		private static void Box(int type, double thickness, double topX, double topY, double topZ, double bottomX, double bottomY, double bottomZ)
+		public static void DrawSolidBoxSkewTaper(double thicknessTop, double thicknessBottom, double topX, double topY, double topZ, double bottomX, double bottomY, double bottomZ)
 		{
-			_vertsBoxSkew[0][0] = _vertsBoxSkew[1][0] = -thickness + bottomX;
-			_vertsBoxSkew[2][0] = _vertsBoxSkew[3][0] = -thickness + topX;
-			_vertsBoxSkew[4][0] = _vertsBoxSkew[5][0] = thickness + bottomX;
-			_vertsBoxSkew[6][0] = _vertsBoxSkew[7][0] = thickness + topX;
+			Box(GL11.GL_QUADS, thicknessTop, thicknessBottom, topX, topY, topZ, bottomX, bottomY, bottomZ);
+		}
 
-			_vertsBoxSkew[0][1] = _vertsBoxSkew[1][1] = -thickness + bottomY;
-			_vertsBoxSkew[4][1] = _vertsBoxSkew[5][1] = -thickness + bottomY;
-			_vertsBoxSkew[2][1] = _vertsBoxSkew[3][1] = thickness + topY;
-			_vertsBoxSkew[6][1] = _vertsBoxSkew[7][1] = thickness + topY;
+		private static void Box(int type, double thicknessTop, double thicknessBottom, double topX, double topY, double topZ, double bottomX, double bottomY, double bottomZ)
+		{
+			_vertsBoxSkew[0][0] = _vertsBoxSkew[1][0] = -thicknessBottom + bottomX;
+			_vertsBoxSkew[2][0] = _vertsBoxSkew[3][0] = -thicknessTop + topX;
+			_vertsBoxSkew[4][0] = _vertsBoxSkew[5][0] = thicknessBottom + bottomX;
+			_vertsBoxSkew[6][0] = _vertsBoxSkew[7][0] = thicknessTop + topX;
 
-			_vertsBoxSkew[0][2] = -thickness + bottomZ;
-			_vertsBoxSkew[7][2] = -thickness + topZ;
-			_vertsBoxSkew[4][2] = -thickness + bottomZ;
-			_vertsBoxSkew[3][2] = -thickness + topZ;
-			_vertsBoxSkew[1][2] = thickness + bottomZ;
-			_vertsBoxSkew[6][2] = thickness + topZ;
-			_vertsBoxSkew[5][2] = thickness + bottomZ;
-			_vertsBoxSkew[2][2] = thickness + topZ;
+			_vertsBoxSkew[0][1] = _vertsBoxSkew[1][1] = -thicknessBottom + bottomY;
+			_vertsBoxSkew[4][1] = _vertsBoxSkew[5][1] = -thicknessBottom + bottomY;
+			_vertsBoxSkew[2][1] = _vertsBoxSkew[3][1] = thicknessTop + topY;
+			_vertsBoxSkew[6][1] = _vertsBoxSkew[7][1] = thicknessTop + topY;
+
+			_vertsBoxSkew[0][2] = -thicknessBottom + bottomZ;
+			_vertsBoxSkew[7][2] = -thicknessTop + topZ;
+			_vertsBoxSkew[4][2] = -thicknessBottom + bottomZ;
+			_vertsBoxSkew[3][2] = -thicknessTop + topZ;
+			_vertsBoxSkew[1][2] = thicknessBottom + bottomZ;
+			_vertsBoxSkew[6][2] = thicknessTop + topZ;
+			_vertsBoxSkew[5][2] = thicknessBottom + bottomZ;
+			_vertsBoxSkew[2][2] = thicknessTop + topZ;
 
 			Box(type, _vertsBoxSkew);
 		}
