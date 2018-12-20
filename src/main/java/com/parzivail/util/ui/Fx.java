@@ -538,10 +538,10 @@ public class Fx
 			_vertsBoxSkew[4][0] = _vertsBoxSkew[5][0] = thicknessBottom + bottomX;
 			_vertsBoxSkew[6][0] = _vertsBoxSkew[7][0] = thicknessTop + topX;
 
-			_vertsBoxSkew[0][1] = _vertsBoxSkew[1][1] = -thicknessBottom + bottomY;
-			_vertsBoxSkew[4][1] = _vertsBoxSkew[5][1] = -thicknessBottom + bottomY;
-			_vertsBoxSkew[2][1] = _vertsBoxSkew[3][1] = thicknessTop + topY;
-			_vertsBoxSkew[6][1] = _vertsBoxSkew[7][1] = thicknessTop + topY;
+			_vertsBoxSkew[0][1] = _vertsBoxSkew[1][1] = bottomY;
+			_vertsBoxSkew[4][1] = _vertsBoxSkew[5][1] = bottomY;
+			_vertsBoxSkew[2][1] = _vertsBoxSkew[3][1] = topY;
+			_vertsBoxSkew[6][1] = _vertsBoxSkew[7][1] = topY;
 
 			_vertsBoxSkew[0][2] = -thicknessBottom + bottomZ;
 			_vertsBoxSkew[7][2] = -thicknessTop + topZ;

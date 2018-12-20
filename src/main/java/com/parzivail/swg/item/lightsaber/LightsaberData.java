@@ -14,6 +14,8 @@ public class LightsaberData extends NbtSerializable<BlasterData>
 	public int openingState;
 	@NbtSave
 	public int openAnimation;
+	@NbtSave
+	public LightsaberDescriptor descriptor;
 
 	public LightsaberData(ItemStack stack)
 	{

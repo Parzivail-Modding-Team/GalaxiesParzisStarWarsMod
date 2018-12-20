@@ -11,6 +11,7 @@ import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.registry.*;
 import com.parzivail.swg.tab.PTab;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.common.OpenSimplexNoise;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
@@ -47,6 +48,7 @@ public class StarWarsGalaxy
 
 	public static EventHandler eventHandler;
 	public static Random random = new Random();
+	public static OpenSimplexNoise simplexNoise = new OpenSimplexNoise();
 
 	public static SimpleNetworkWrapper network;
 	private static int packetId;

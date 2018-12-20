@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.item.blaster.data.BlasterAttachment;
 import com.parzivail.swg.item.blaster.data.BlasterAttachments;
+import com.parzivail.swg.item.lightsaber.LightsaberDescriptor;
 import com.parzivail.util.common.Enumerable;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,6 +30,7 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(String[].class, NbtSerializable::readListString, NbtSerializable::writeListString);
 
 		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
+		map(LightsaberDescriptor.class, NbtSerializable::readLightsaberDescriptor, NbtSerializable::writeLightsaberDescriptor);
 		map(ForcePowerDescriptor[].class, NbtSerializable::readForcePowerDescriptors, NbtSerializable::writeForcePowerDescriptors);
 		//		map(BlasterAttachment[].class, NbtSerializable::readBlasterAttachments, NbtSerializable::writeBlasterAttachments);
 	}
@@ -73,6 +75,31 @@ public class NbtSerializable<T extends NbtSerializable>
 			compound.setInteger(s, 0);
 		else
 			compound.setInteger(s, blasterAttachment.getId());
+	}
+
+	private static LightsaberDescriptor readLightsaberDescriptor(String s, NBTTagCompound compound)
+	{
+		LightsaberDescriptor ld = new LightsaberDescriptor();
+		if (!compound.hasKey(s))
+			return ld;
+		NBTTagCompound ldCompound = compound.getCompoundTag(s);
+		ld.bladeColor = ldCompound.getInteger("bladeColor");
+		ld.bladeLength = ldCompound.getFloat("bladeLength");
+		ld.coreColor = ldCompound.getInteger("coreColor");
+		ld.unstable = ldCompound.getBoolean("unstable");
+		return ld;
+	}
+
+	private static void writeLightsaberDescriptor(String s, LightsaberDescriptor ld, NBTTagCompound compound)
+	{
+		if (ld == null)
+			ld = new LightsaberDescriptor();
+		NBTTagCompound ldCompound = new NBTTagCompound();
+		ldCompound.setInteger("bladeColor", ld.bladeColor);
+		ldCompound.setFloat("bladeLength", ld.bladeLength);
+		ldCompound.setInteger("coreColor", ld.coreColor);
+		ldCompound.setBoolean("unstable", ld.unstable);
+		compound.setTag(s, ldCompound);
 	}
 
 	private static ForcePowerDescriptor[] readForcePowerDescriptors(String s, NBTTagCompound compound)
@@ -209,7 +236,8 @@ public class NbtSerializable<T extends NbtSerializable>
 
 	public void deserialize(NBTTagCompound compound)
 	{
-		compound = ItemUtils.ensureNbt(compound);
+		if (compound == null)
+			throw new IllegalArgumentException();
 		Field[] fields = getClassFields(getClass());
 		try
 		{

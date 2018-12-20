@@ -1,9 +1,10 @@
 package com.parzivail.swg.render.lightsaber;
 
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.item.lightsaber.LightsaberData;
+import com.parzivail.swg.item.lightsaber.LightsaberDescriptor;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx;
-import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.item.ItemStack;
@@ -30,9 +31,10 @@ public class RenderLightsaber implements IItemRenderer
 	{
 		LightsaberData bd = new LightsaberData(item);
 
-		int bladeColor = GLPalette.ELECTRIC_BLUE;
-		int coreColor = GLPalette.WHITE;
-		float length = 3 * MathHelper.clamp_float((bd.openAnimation + Client.renderPartialTicks * bd.openingState - bd.openingState) / 4f, 0, 1);
+		if (bd.descriptor == null)
+			return;
+
+		float length = bd.descriptor.bladeLength * MathHelper.clamp_float((bd.openAnimation + Client.renderPartialTicks * bd.openingState - bd.openingState) / 4f, 0, 1);
 
 		switch (type)
 		{
@@ -57,12 +59,18 @@ public class RenderLightsaber implements IItemRenderer
 				break;
 		}
 
-		renderBlade(bladeColor, coreColor, length);
+		if (bd.openingState != 0)
+		{
+			double dX = StarWarsGalaxy.random.nextGaussian() * (4 - bd.openAnimation) * 0.004f;
+			double dY = StarWarsGalaxy.random.nextGaussian() * (4 - bd.openAnimation) * 0.004f;
+			GL.Translate(dX, 0, dY);
+		}
+		renderBlade(length, bd.descriptor);
 	}
 
-	private static void renderBlade(int bladeColor, int coreColor, float length)
+	private static void renderBlade(float bladeLength, LightsaberDescriptor saberData)
 	{
-		if (length == 0)
+		if (bladeLength == 0)
 			return;
 
 		GL11.glPushMatrix();
@@ -76,15 +84,35 @@ public class RenderLightsaber implements IItemRenderer
 
 		Client.mc.entityRenderer.disableLightmap(0);
 
+		boolean stable = !saberData.unstable;
+		int segments = stable ? 1 : 15;
+		float dSegments = 1f / segments;
+		float dLength = bladeLength / segments;
+		float topThickness = 0.022f;
+		float bottomThickness = 0.035f;
+		double offset = StarWarsGalaxy.random.nextGaussian();
+
 		for (int layer = 0; layer < 20; layer++)
 		{
-			GL.Color(bladeColor, (int)(1.275f * layer));
-			Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, length + 0.015f * (layer - 10), 0, 0, 0, 0);
+			GL.Color(saberData.bladeColor, (int)(1.275f * layer));
+			Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, bladeLength + 0.01f * (layer - 5), 0, 0, -(20 - layer) * 0.005f, 0);
 		}
 
-		GL.Color(coreColor);
-		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f, 0, length + 0.07f, 0, 0, length + 0.044f, 0);
-		Fx.D3.DrawSolidBoxSkewTaper(0.022f, 0.035f, 0, length, 0, 0, 0, 0);
+		GL.Color(saberData.coreColor);
+		double dTRoundBottom = stable ? 0 : StarWarsGalaxy.simplexNoise.eval(offset, dLength * (segments + 1)) * 0.005f;
+		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.07f, 0, 0, bladeLength, 0);
+		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.07f, 0, 0, bladeLength, 0);
+
+		for (int i = 0; i < segments; i++)
+		{
+			float topThicknessLerp = (float)Fx.Util.Lerp(bottomThickness, topThickness, dSegments * (i + 1));
+			float bottomThicknessLerp = (float)Fx.Util.Lerp(bottomThickness, topThickness, dSegments * i);
+
+			double dTTop = stable ? 0 : StarWarsGalaxy.simplexNoise.eval(offset, dLength * (i + 1)) * 0.005f;
+			double dTBottom = stable ? 0 : StarWarsGalaxy.simplexNoise.eval(offset, dLength * i) * 0.005f;
+
+			Fx.D3.DrawSolidBoxSkewTaper(topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
+		}
 
 		Client.mc.entityRenderer.enableLightmap(0);
 		GL.PopAttrib();

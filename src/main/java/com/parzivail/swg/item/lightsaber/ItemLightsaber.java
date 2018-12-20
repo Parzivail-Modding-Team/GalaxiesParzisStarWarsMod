@@ -22,14 +22,17 @@ public class ItemLightsaber extends PItem
 		{
 			LightsaberData bd = new LightsaberData(stack);
 
-			bd.isOpen = !bd.isOpen;
-
-			if (!world.isRemote)
+			if (bd.openingState == 0)
 			{
-				if (bd.isOpen)
-					SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.start"), 1, 1);
-				else
-					SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.stop"), 1, 1);
+				bd.isOpen = !bd.isOpen;
+
+				if (!world.isRemote)
+				{
+					if (bd.isOpen)
+						SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.start"), 1, 1);
+					else
+						SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.stop"), 1, 1);
+				}
 			}
 
 			bd.serialize(stack.stackTagCompound);
