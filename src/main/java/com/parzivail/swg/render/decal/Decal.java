@@ -28,6 +28,9 @@ public class Decal
 	public final float x;
 	public final float y;
 	public final float z;
+	public final int blockX;
+	public final int blockY;
+	public final int blockZ;
 	public final float size;
 	public final float rotation;
 	public final EnumFacing direction;
@@ -38,8 +41,11 @@ public class Decal
 	private final long createTime;
 	private final long deathTime;
 
-	public Decal(int type, float x, float y, float z, float size, EnumFacing direction)
+	public Decal(int type, int blockX, int blockY, int blockZ, float x, float y, float z, float size, EnumFacing direction)
 	{
+		this.blockX = blockX;
+		this.blockY = blockY;
+		this.blockZ = blockZ;
 		this.x = x;
 		this.y = y;
 		this.z = z;

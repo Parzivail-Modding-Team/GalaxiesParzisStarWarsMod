@@ -57,6 +57,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -108,6 +109,13 @@ public class Client extends Common
 	public static boolean doesPlayerExist()
 	{
 		return mc != null && mc.thePlayer != null;
+	}
+
+	public static EntityPlayer getPlayer()
+	{
+		if (!doesPlayerExist())
+			return null;
+		return mc.thePlayer;
 	}
 
 	public void checkLeftClickPressed(boolean selfReported)

@@ -325,7 +325,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 				RaytraceHitBlock block = (RaytraceHitBlock)hit;
 				for (int i = 0; i < 10; i++)
 					StarWarsGalaxy.proxy.spawnParticle(world, "smoke", block.hitVec.xCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.yCoord + (world.rand.nextDouble() * 0.2 - 0.1), block.hitVec.zCoord + (world.rand.nextDouble() * 0.2 - 0.1), 0, world.rand.nextDouble() * 0.2, 0);
-				StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, 1, block.sideHitFace);
+				StarWarsGalaxy.proxy.createDecal(world, Decal.BULLET_IMPACT, block.blockX, block.blockY, block.blockZ, (float)block.hitVec.xCoord, (float)block.hitVec.yCoord, (float)block.hitVec.zCoord, 1, block.sideHitFace);
 			}
 
 			bd.shotTimer += descriptor.autofireTimeTicks;

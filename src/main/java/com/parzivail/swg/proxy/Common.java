@@ -47,9 +47,9 @@ public class Common
 		StarWarsGalaxy.network.sendToDimension(new MessageSpawnParticle(world.provider.dimensionId, name, x, y, z, vx, vy, vz), world.provider.dimensionId);
 	}
 
-	public void createDecal(World world, int type, float x, float y, float z, float size, EnumFacing direction)
+	public void createDecal(World world, int type, int blockX, int blockY, int blockZ, float x, float y, float z, float size, EnumFacing direction)
 	{
-		StarWarsGalaxy.network.sendToAllAround(new MessageCreateDecal(world.provider.dimensionId, type, x, y, z, size, direction), new TargetPoint(world.provider.dimensionId, x, y, z, 100));
+		StarWarsGalaxy.network.sendToAllAround(new MessageCreateDecal(world.provider.dimensionId, type, blockX, blockY, blockZ, x, y, z, size, direction), new TargetPoint(world.provider.dimensionId, x, y, z, 100));
 	}
 
 	public Entity getEntityById(int dim, int id)

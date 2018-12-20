@@ -1,5 +1,6 @@
 package com.parzivail.swg.render.decal;
 
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
@@ -9,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class WorldDecals
@@ -38,15 +38,8 @@ public class WorldDecals
 		GL.Disable(EnableCap.CullFace);
 		GL.Enable(EnableCap.Blend);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		for (Iterator<Decal> iD = decals.iterator(); iD.hasNext(); )
+		for (Decal d : decals)
 		{
-			Decal d = iD.next();
-			if (d.shouldDie() || Math.pow(d.x - playerPos.xCoord, 2) + Math.pow(d.y - playerPos.yCoord, 2) + Math.pow(d.z - playerPos.zCoord, 2) > 10000)
-			{
-				iD.remove();
-				continue;
-			}
-
 			GL.PushMatrix();
 			GL.Translate(d.x - playerPos.xCoord, d.y - playerPos.yCoord, d.z - playerPos.zCoord);
 			GL.Color(1f, 1f, 1f, d.getLifeRemaining());
@@ -83,5 +76,16 @@ public class WorldDecals
 				GL.Rotate(90, 0, 1, 0);
 				break;
 		}
+	}
+
+	public static void tick(int dim)
+	{
+		if (!allDecals.containsKey(dim))
+			return;
+
+		Vec3 playerPos = Minecraft.getMinecraft().thePlayer.getPosition(0);
+		List<Decal> decals = allDecals.get(dim);
+		// Remove if expired, out of range, or parent block removed
+		decals.removeIf(d -> d.shouldDie() || Client.mc.theWorld.isAirBlock(d.blockX, d.blockY, d.blockZ) || Math.pow(d.x - playerPos.xCoord, 2) + Math.pow(d.y - playerPos.yCoord, 2) + Math.pow(d.z - playerPos.zCoord, 2) > 10000);
 	}
 }

@@ -363,6 +363,7 @@ public class EventHandler
 			return;
 
 		AmbientSounds.tick(event);
+		WorldDecals.tick(Client.getPlayer() == null ? 0 : Client.getPlayer().dimension);
 
 		if (Client.leftClickDelayTimer > 0)
 			Client.leftClickDelayTimer--;
