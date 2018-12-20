@@ -3,8 +3,10 @@ package com.parzivail.swg.item.lightsaber;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.util.audio.SoundHandler;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
@@ -18,25 +20,30 @@ public class ItemLightsaber extends PItem
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
 	{
-		if (!world.isRemote)
+		if (player.isSneaking())
 		{
-			LightsaberData bd = new LightsaberData(stack);
-
-			if (bd.openingState == 0)
+			if (!world.isRemote)
 			{
-				bd.isOpen = !bd.isOpen;
+				LightsaberData bd = new LightsaberData(stack);
 
-				if (!world.isRemote)
+				if (bd.openingState == 0)
 				{
-					if (bd.isOpen)
-						SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.start"), 1, 1);
-					else
-						SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.stop"), 1, 1);
-				}
-			}
+					bd.isOpen = !bd.isOpen;
 
-			bd.serialize(stack.stackTagCompound);
+					if (!world.isRemote)
+					{
+						if (bd.isOpen)
+							SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.start"), 1, 1);
+						else
+							SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.stop"), 1, 1);
+					}
+				}
+
+				bd.serialize(stack.stackTagCompound);
+			}
 		}
+		else
+			player.setItemInUse(stack, getMaxItemUseDuration(stack));
 		return stack;
 	}
 
@@ -73,5 +80,20 @@ public class ItemLightsaber extends PItem
 		}
 
 		bd.serialize(stack.stackTagCompound);
+	}
+
+	public EnumAction getItemUseAction(ItemStack stack)
+	{
+		return EnumAction.block;
+	}
+
+	public int getMaxItemUseDuration(ItemStack p_77626_1_)
+	{
+		return 72000;
+	}
+
+	public boolean canItemHarvestBlock(Block p_150897_1_)
+	{
+		return false;
 	}
 }

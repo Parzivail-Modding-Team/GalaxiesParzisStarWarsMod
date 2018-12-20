@@ -7,6 +7,7 @@ import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.GL;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.IItemRenderer;
@@ -59,12 +60,20 @@ public class RenderLightsaber implements IItemRenderer
 				break;
 		}
 
-		if (bd.openingState != 0)
+		double dX = StarWarsGalaxy.random.nextGaussian() * (4.1f - bd.openAnimation) * 0.004f;
+		double dY = StarWarsGalaxy.random.nextGaussian() * (4.1f - bd.openAnimation) * 0.004f;
+		GL.Translate(dX, 0, dY);
+
+		if (data.length >= 2 && data[1] instanceof EntityPlayer)
 		{
-			double dX = StarWarsGalaxy.random.nextGaussian() * (4 - bd.openAnimation) * 0.004f;
-			double dY = StarWarsGalaxy.random.nextGaussian() * (4 - bd.openAnimation) * 0.004f;
-			GL.Translate(dX, 0, dY);
+			EntityPlayer player = (EntityPlayer)data[1];
+			if (player.getItemInUse() == item && player.getItemInUseDuration() > 0)
+			{
+				GL.Translate(0.3f, -0.2f, 0);
+				GL.Rotate(-75, 0, 0, 1);
+			}
 		}
+
 		renderBlade(length, bd.descriptor);
 	}
 
