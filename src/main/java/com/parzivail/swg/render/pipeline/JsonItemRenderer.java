@@ -1,5 +1,7 @@
 package com.parzivail.swg.render.pipeline;
 
+import com.parzivail.util.ui.gltk.AttribMask;
+import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -30,6 +32,7 @@ public class JsonItemRenderer extends JsonModelRenderer implements IItemRenderer
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
+		GL.PushAttrib(AttribMask.EnableBit);
 		RenderHelper.disableStandardItemLighting();
 		if (!compiled)
 		{
@@ -47,6 +50,6 @@ public class JsonItemRenderer extends JsonModelRenderer implements IItemRenderer
 		}
 		else
 			GL11.glCallList(displayList);
-		RenderHelper.enableStandardItemLighting();
+		GL.PopAttrib();
 	}
 }

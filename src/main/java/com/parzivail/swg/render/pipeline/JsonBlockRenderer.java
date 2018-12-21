@@ -2,6 +2,8 @@ package com.parzivail.swg.render.pipeline;
 
 import com.parzivail.swg.block.IRotatingBlock;
 import com.parzivail.util.block.INameProvider;
+import com.parzivail.util.ui.gltk.AttribMask;
+import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -29,6 +31,7 @@ public class JsonBlockRenderer extends JsonModelRenderer implements ISimpleBlock
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer)
 	{
+		GL.PushAttrib(AttribMask.EnableBit);
 		RenderHelper.disableStandardItemLighting();
 		if (!compiled)
 		{
@@ -46,7 +49,7 @@ public class JsonBlockRenderer extends JsonModelRenderer implements ISimpleBlock
 		}
 		else
 			GL11.glCallList(displayList);
-		RenderHelper.enableStandardItemLighting();
+		GL.PopAttrib();
 	}
 
 	@Override
