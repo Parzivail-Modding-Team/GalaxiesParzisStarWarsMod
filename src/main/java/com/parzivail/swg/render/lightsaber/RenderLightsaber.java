@@ -70,7 +70,7 @@ public class RenderLightsaber extends JsonItemRenderer
 		if (data.length >= 2 && data[1] instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)data[1];
-			if (player.getItemInUse() == item && player.getItemInUseDuration() > 0)
+			if (player.getItemInUse() == item && player.getItemInUseDuration() > 0 && type == ItemRenderType.EQUIPPED)
 			{
 				GL.Translate(0.3f, -0.2f, 0);
 				GL.Rotate(-75, 0, 0, 1);

@@ -89,13 +89,13 @@ public class JsonModelRenderer
 		return afloat;
 	}
 
-	private static void drawQuad(BlockFaceUV uvs, IIcon sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation, ITransformation transformation, int brightness, PartType type)
+	private static void drawQuad(BlockFaceUV uvs, IIcon sprite, EnumFacing orientation, float[] p_188012_4_, BlockPartRotation partRotation, ITransformation transformation, int brightness, PartType type, boolean forceAmbientBrightness)
 	{
 		for (int i = 0; i < 4; ++i)
-			drawVertex(i, orientation, uvs, p_188012_4_, sprite, partRotation, transformation, brightness, type);
+			drawVertex(i, orientation, uvs, p_188012_4_, sprite, partRotation, transformation, brightness, type, forceAmbientBrightness);
 	}
 
-	private static void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, IIcon sprite, BlockPartRotation rotation, ITransformation transformation, int brightness, PartType type)
+	private static void drawVertex(int storeIndex, EnumFacing facing, BlockFaceUV faceUV, float[] p_188015_5_, IIcon sprite, BlockPartRotation rotation, ITransformation transformation, int brightness, PartType type, boolean forceAmbientBrightness)
 	{
 		EnumFacing enumfacing = transformation.rotate(facing);
 		int shadeColor = getFaceShadeColor(enumfacing);
@@ -123,7 +123,8 @@ public class JsonModelRenderer
 		}
 		else
 		{
-			Tessellator.instance.setBrightness(brightness);
+			if (forceAmbientBrightness)
+				Tessellator.instance.setBrightness(brightness);
 			Tessellator.instance.setColorOpaque_I(shadeColor);
 		}
 		Tessellator.instance.addVertexWithUV(position.x, position.y, position.z, sprite.getInterpolatedU((double)faceUV.getVertexU(storeIndex) * .999 + faceUV.getVertexU((storeIndex + 2) % 4) * .001), sprite.getInterpolatedV((double)faceUV.getVertexV(storeIndex) * .999 + faceUV.getVertexV((storeIndex + 2) % 4) * .001));
@@ -325,7 +326,7 @@ public class JsonModelRenderer
 				}
 
 				if (type != PartType.Hidden)
-					drawQuad(blockpartface.blockFaceUV, sprite, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation, modelRotationIn, brightness, type);
+					drawQuad(blockpartface.blockFaceUV, sprite, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation, modelRotationIn, brightness, type, true);
 			}
 		}
 	}
@@ -350,7 +351,7 @@ public class JsonModelRenderer
 					type = PartType.Hidden;
 
 				if (type != PartType.Hidden)
-					drawQuad(blockpartface.blockFaceUV, sprite, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation, modelRotationIn, brightness, type);
+					drawQuad(blockpartface.blockFaceUV, sprite, enumfacing, getPositionsDiv16(blockpart.positionFrom, blockpart.positionTo), blockpart.partRotation, modelRotationIn, brightness, type, false);
 			}
 		}
 	}
