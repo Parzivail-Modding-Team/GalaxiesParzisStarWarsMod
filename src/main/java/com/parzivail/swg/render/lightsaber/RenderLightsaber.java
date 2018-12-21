@@ -4,17 +4,24 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.item.lightsaber.LightsaberData;
 import com.parzivail.swg.item.lightsaber.LightsaberDescriptor;
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.swg.render.pipeline.JsonItemRenderer;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.GL;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.client.IItemRenderer;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-public class RenderLightsaber implements IItemRenderer
+public class RenderLightsaber extends JsonItemRenderer
 {
+	public RenderLightsaber(ResourceLocation modelLocation)
+	{
+		super(modelLocation);
+	}
+
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type)
 	{
@@ -59,6 +66,13 @@ public class RenderLightsaber implements IItemRenderer
 				GL.Translate(-0.75f, 0.5f, 0);
 				break;
 		}
+
+		GL.PushMatrix();
+		GL.Translate(-0.5f, 0, -0.5f);
+
+		Client.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+		super.renderItem(type, item, data);
+		GL.PopMatrix();
 
 		double dX = StarWarsGalaxy.random.nextGaussian() * (4.1f - bd.openAnimation) * 0.004f;
 		double dY = StarWarsGalaxy.random.nextGaussian() * (4.1f - bd.openAnimation) * 0.004f;

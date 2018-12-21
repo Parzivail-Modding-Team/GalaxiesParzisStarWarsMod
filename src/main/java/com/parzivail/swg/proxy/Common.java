@@ -88,7 +88,7 @@ public class Common
 		return false;
 	}
 
-	public <T extends Block & INameProvider> void registerModel(T block)
+	public <T extends Block & INameProvider> void registerBlockModel(T block)
 	{
 	}
 

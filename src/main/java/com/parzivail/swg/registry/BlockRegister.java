@@ -166,7 +166,7 @@ public class BlockRegister
 	private static PDecorativeBlock registerDecoration(String name)
 	{
 		PDecorativeBlock block = new PDecorativeBlock(name);
-		StarWarsGalaxy.proxy.registerModel(block);
+		StarWarsGalaxy.proxy.registerBlockModel(block);
 		GameRegistry.registerBlock(block, PItemBlockSubcardinalDecoration.class, block.name);
 		return block;
 	}
@@ -174,7 +174,7 @@ public class BlockRegister
 	private static PDecorativeBlock registerCardinalDecoration(String name)
 	{
 		PDecorativeBlock block = new PDecorativeBlock(name);
-		StarWarsGalaxy.proxy.registerModel(block);
+		StarWarsGalaxy.proxy.registerBlockModel(block);
 		GameRegistry.registerBlock(block, PItemBlockCardinalDecoration.class, block.name);
 		return block;
 	}
@@ -182,7 +182,7 @@ public class BlockRegister
 	private static PDecorativeBlock registerStaticDecoration(String name)
 	{
 		PDecorativeBlock block = new PDecorativeBlock(name);
-		StarWarsGalaxy.proxy.registerModel(block);
+		StarWarsGalaxy.proxy.registerBlockModel(block);
 		GameRegistry.registerBlock(block, PItemBlockCardinalDecoration.class, block.name);
 		return block;
 	}
@@ -191,14 +191,14 @@ public class BlockRegister
 	{
 		PDecorativeBlock block = new PDecorativeBlock(name);
 		block.setConnectsTo(connectsTo);
-		StarWarsGalaxy.proxy.registerModel(block);
+		StarWarsGalaxy.proxy.registerBlockModel(block);
 		GameRegistry.registerBlock(block, block.name);
 		return block;
 	}
 
 	private static <T extends Block & INameProvider> void registerWithModel(T item)
 	{
-		StarWarsGalaxy.proxy.registerModel(item);
+		StarWarsGalaxy.proxy.registerBlockModel(item);
 		GameRegistry.registerBlock(item, PItemBlockSubcardinalDecoration.class, item.getName());
 	}
 

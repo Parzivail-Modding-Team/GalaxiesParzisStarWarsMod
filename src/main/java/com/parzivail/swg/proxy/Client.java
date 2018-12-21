@@ -200,7 +200,7 @@ public class Client extends Common
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.grenadeSmoke, new RenderSmokeGrenade());
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.grenadeThermalDetonator, new RenderThermalDetonator());
 
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.lightsaber, new RenderLightsaber());
+		MinecraftForgeClient.registerItemRenderer(ItemRegister.lightsaber, new RenderLightsaber(Resources.location("models/item/lightsaber/luke.json")));
 
 		MinecraftForgeClient.registerItemRenderer(ItemRegister.binocularsMb450, new RenderMacrobinoculars());
 
@@ -214,7 +214,7 @@ public class Client extends Common
 	}
 
 	@Override
-	public <T extends Block & INameProvider> void registerModel(T block)
+	public <T extends Block & INameProvider> void registerBlockModel(T block)
 	{
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(block, Resources.location(String.format("models/block/%s.json", block.getName()))));
 	}

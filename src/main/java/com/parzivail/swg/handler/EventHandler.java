@@ -20,7 +20,7 @@ import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
 import com.parzivail.swg.render.force.RenderLightning;
 import com.parzivail.swg.render.overlay.OverlayHealthBar;
-import com.parzivail.swg.render.pipeline.JsonBlockRenderer;
+import com.parzivail.swg.render.pipeline.JsonModelRenderer;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.entity.EntityUtils;
@@ -84,7 +84,7 @@ public class EventHandler
 	public void on(TextureStitchEvent.Pre event)
 	{
 		if (event.map.getTextureType() == 0)
-			JsonBlockRenderer.loadTextures(event.map);
+			JsonModelRenderer.loadTextures(event.map);
 	}
 
 	@SubscribeEvent
