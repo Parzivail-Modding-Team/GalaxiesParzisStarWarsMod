@@ -67,6 +67,16 @@ public class RenderLightsaber extends JsonItemRenderer
 				break;
 		}
 
+		if (data.length >= 2 && data[1] instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer)data[1];
+			if (player.getItemInUse() == item && player.getItemInUseDuration() > 0)
+			{
+				GL.Translate(0.3f, -0.2f, 0);
+				GL.Rotate(-75, 0, 0, 1);
+			}
+		}
+
 		GL.PushMatrix();
 		GL.Translate(-0.5f, 0, -0.5f);
 
@@ -77,16 +87,6 @@ public class RenderLightsaber extends JsonItemRenderer
 		double dX = StarWarsGalaxy.random.nextGaussian() * (4.1f - bd.openAnimation) * 0.004f;
 		double dY = StarWarsGalaxy.random.nextGaussian() * (4.1f - bd.openAnimation) * 0.004f;
 		GL.Translate(dX, 0, dY);
-
-		if (data.length >= 2 && data[1] instanceof EntityPlayer)
-		{
-			EntityPlayer player = (EntityPlayer)data[1];
-			if (player.getItemInUse() == item && player.getItemInUseDuration() > 0)
-			{
-				GL.Translate(0.3f, -0.2f, 0);
-				GL.Rotate(-75, 0, 0, 1);
-			}
-		}
 
 		renderBlade(length, bd.descriptor);
 	}
