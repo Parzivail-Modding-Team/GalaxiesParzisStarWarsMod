@@ -10,6 +10,7 @@ import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.gui.GuiQuestNotification;
 import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.swg.item.ILeftClickInterceptor;
+import com.parzivail.swg.item.lightsaber.LightsaberData;
 import com.parzivail.swg.mob.MobGizka;
 import com.parzivail.swg.network.MessageItemLeftClick;
 import com.parzivail.swg.npc.NpcJawa;
@@ -40,6 +41,7 @@ import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
 import com.parzivail.swg.world.PswgWorldDataHandler;
+import com.parzivail.util.audio.ClientSoundHandler;
 import com.parzivail.util.block.INameProvider;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
@@ -211,6 +213,16 @@ public class Client extends Common
 		registerBasicTileItem(BlockRegister.satelliteDish, 0.4f);
 
 		Lumberjack.log("Client proxy loaded!");
+	}
+
+	@Override
+	public void tickLightsaberSounds(EntityPlayer player, ItemStack heldItem)
+	{
+		LightsaberData ld = new LightsaberData(heldItem);
+		if (ld.isOpen)
+			ClientSoundHandler.playLightsaberSound(player);
+		else
+			ClientSoundHandler.stopLightsaberSound(player);
 	}
 
 	@Override

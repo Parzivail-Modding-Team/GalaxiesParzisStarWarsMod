@@ -11,6 +11,7 @@ import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumFacing;
@@ -93,6 +94,10 @@ public class Common
 	}
 
 	public void handleVehicleMovement()
+	{
+	}
+
+	public void tickLightsaberSounds(EntityPlayer player, ItemStack heldItem)
 	{
 	}
 }

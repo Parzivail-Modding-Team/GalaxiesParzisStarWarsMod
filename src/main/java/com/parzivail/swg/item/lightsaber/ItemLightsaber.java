@@ -30,13 +30,10 @@ public class ItemLightsaber extends PItem
 				{
 					bd.isOpen = !bd.isOpen;
 
-					if (!world.isRemote)
-					{
-						if (bd.isOpen)
-							SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.start"), 1, 1);
-						else
-							SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.stop"), 1, 1);
-					}
+					if (bd.isOpen)
+						SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.start"), 1, 1);
+					else
+						SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.stop"), 1, 1);
 				}
 
 				bd.serialize(stack.stackTagCompound);
@@ -45,6 +42,19 @@ public class ItemLightsaber extends PItem
 		else
 			player.setItemInUse(stack, getMaxItemUseDuration(stack));
 		return stack;
+	}
+
+	@Override
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ)
+	{
+		if (!world.isRemote)
+		{
+			LightsaberData bd = new LightsaberData(stack);
+
+			if (bd.isOpen)
+				SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.swing"), 1, 1);
+		}
+		return super.onItemUse(stack, player, world, x, y, z, side, subX, subY, subZ);
 	}
 
 	@Override

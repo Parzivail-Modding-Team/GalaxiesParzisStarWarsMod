@@ -12,6 +12,7 @@ import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.blaster.ItemBlasterRifle;
+import com.parzivail.swg.item.lightsaber.ItemLightsaber;
 import com.parzivail.swg.network.MessagePswgWorldDataSync;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.ForceRegistry;
@@ -335,6 +336,9 @@ public class EventHandler
 	@SubscribeEvent
 	public void on(PlayerTickEvent event)
 	{
+		if (event.phase != Phase.START)
+			return;
+
 		ItemStack stack = event.player.getHeldItem();
 		if (stack != null && stack.getItem() instanceof PItem)
 		{
@@ -344,14 +348,20 @@ public class EventHandler
 		else
 			PItem.applyPrecisionMovement(event.player, false);
 
-		if (event.phase != Phase.END)
-			return;
-
 		if (WorldRegister.planetDescriptorHashMap.containsKey(event.player.worldObj.provider.dimensionId) && !event.player.onGround && event.player.motionY < 0)
 		{
 			PlanetDescriptor planetDescriptor = WorldRegister.planetDescriptorHashMap.get(event.player.worldObj.provider.dimensionId);
 			if (planetDescriptor.gravity != 1)
 				event.player.motionY += 0.08D * 0.9800000190734863D * (1 - planetDescriptor.gravity);
+		}
+
+		if (event.player.worldObj.isRemote)
+		{
+			ItemStack heldItem = event.player.getHeldItem();
+			if (heldItem != null && heldItem.getItem() instanceof ItemLightsaber)
+			{
+				StarWarsGalaxy.proxy.tickLightsaberSounds(event.player, heldItem);
+			}
 		}
 	}
 
