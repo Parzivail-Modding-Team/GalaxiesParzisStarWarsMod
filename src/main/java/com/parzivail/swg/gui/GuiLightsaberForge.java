@@ -21,7 +21,7 @@ public class GuiLightsaberForge extends GuiContainer
 
 	private LightsaberData lightsaberData;
 
-	private GuiCheckBox
+	private GuiCheckBox cbSaberStable;
 
 	public GuiLightsaberForge(EntityPlayer player, InventoryPlayer inventoryPlayer, TileLightsaberForge tile)
 	{
