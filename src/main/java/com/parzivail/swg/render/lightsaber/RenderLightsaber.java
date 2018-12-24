@@ -94,7 +94,7 @@ public class RenderLightsaber extends JsonItemRenderer
 		}
 	}
 
-	private static void renderBlade(float bladeLength, float shake, LightsaberDescriptor saberData)
+	public static void renderBlade(float bladeLength, float shake, LightsaberDescriptor saberData)
 	{
 		if (bladeLength == 0)
 			return;

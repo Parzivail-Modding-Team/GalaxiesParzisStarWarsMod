@@ -10,6 +10,7 @@ import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.gui.GuiQuestNotification;
 import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.swg.item.ILeftClickInterceptor;
+import com.parzivail.swg.item.lightsaber.ItemLightsaber;
 import com.parzivail.swg.item.lightsaber.LightsaberData;
 import com.parzivail.swg.mob.MobGizka;
 import com.parzivail.swg.network.MessageItemLeftClick;
@@ -218,9 +219,14 @@ public class Client extends Common
 	@Override
 	public void tickLightsaberSounds(EntityPlayer player, ItemStack heldItem)
 	{
-		LightsaberData ld = new LightsaberData(heldItem);
-		if (ld.isOpen)
-			ClientSoundHandler.playLightsaberSound(player);
+		if (heldItem != null && heldItem.getItem() instanceof ItemLightsaber)
+		{
+			LightsaberData ld = new LightsaberData(heldItem);
+			if (ld.isOpen)
+				ClientSoundHandler.playLightsaberSound(player);
+			else
+				ClientSoundHandler.stopLightsaberSound(player);
+		}
 		else
 			ClientSoundHandler.stopLightsaberSound(player);
 	}

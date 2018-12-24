@@ -5,6 +5,7 @@ import com.parzivail.swg.container.ContainerLightsaberForge;
 import com.parzivail.swg.item.lightsaber.LightsaberData;
 import com.parzivail.swg.item.lightsaber.LightsaberDescriptor;
 import com.parzivail.swg.network.TransactionBroker;
+import com.parzivail.swg.render.lightsaber.RenderLightsaber;
 import com.parzivail.swg.tile.TileLightsaberForge;
 import com.parzivail.swg.transaction.TransactionSetLightsaberDescriptor;
 import com.parzivail.util.ui.Fx;
@@ -56,8 +57,8 @@ public class GuiLightsaberForge extends GuiContainer
 		buttonList.add(sRed = new GuiSlider(1, guiLeft + 47, guiTop + 30, 128, 20, "R: ", "", 0, 255, 0, false, true));
 		buttonList.add(sGreen = new GuiSlider(2, guiLeft + 47, guiTop + 51, 128, 20, "G: ", "", 0, 255, 0, false, true));
 		buttonList.add(sBlue = new GuiSlider(3, guiLeft + 47, guiTop + 72, 128, 20, "B: ", "", 0, 255, 0, false, true));
-		buttonList.add(bSetBladeColor = new GuiButton(4, guiLeft + 47, guiTop + 93, 63, 20, "Set Blade"));
-		buttonList.add(bSetCoreColor = new GuiButton(5, guiLeft + 113, guiTop + 93, 63, 20, "Set Core"));
+		buttonList.add(bSetBladeColor = new PGuiButton(4, guiLeft + 47, guiTop + 93, 63, 20, "Set Glow"));
+		buttonList.add(bSetCoreColor = new PGuiButton(5, guiLeft + 112, guiTop + 93, 63, 20, "Set Core"));
 
 		lightsaberData = null;
 		setButtonsEnabled(false);
@@ -106,12 +107,12 @@ public class GuiLightsaberForge extends GuiContainer
 		}
 		else if (button.id == bSetBladeColor.id)
 		{
-			lightsaberData.descriptor.bladeColor = Fx.Util.GetRgb(sRed.getValueInt(), sGreen.getValueInt(), sBlue.getValueInt());
+			lightsaberData.descriptor.bladeColor = Fx.Util.GetRgb(sRed.getValueInt(), sGreen.getValueInt(), sBlue.getValueInt()) | 0xFF000000;
 			writeDescriptor();
 		}
 		else if (button.id == bSetCoreColor.id)
 		{
-			lightsaberData.descriptor.coreColor = Fx.Util.GetRgb(sRed.getValueInt(), sGreen.getValueInt(), sBlue.getValueInt());
+			lightsaberData.descriptor.coreColor = Fx.Util.GetRgb(sRed.getValueInt(), sGreen.getValueInt(), sBlue.getValueInt()) | 0xFF000000;
 			writeDescriptor();
 		}
 	}
@@ -130,20 +131,39 @@ public class GuiLightsaberForge extends GuiContainer
 
 		if (lightsaberData != null)
 		{
-			fontRendererObj.drawString("sabers!", 47, 5, 4210752);
-		}
+			GL.Disable(EnableCap.Texture2D);
+			drawRgbPreview(sRed.getValueInt() / 255f, sGreen.getValueInt() / 255f, sBlue.getValueInt() / 255f, true);
 
-		GL.Disable(EnableCap.Texture2D);
-		GL.Color(GLPalette.BLACK);
-		Fx.D2.DrawSolidRectangle(179, 29, 64, 64);
-		GL.Color(sRed.getValueInt() / 255f, sGreen.getValueInt() / 255f, sBlue.getValueInt() / 255f);
-		Fx.D2.DrawSolidRectangle(180, 30, 62, 62);
-		GL.Enable(EnableCap.Texture2D);
+			GL.PushMatrix();
+			GL.Translate(47, 125, 20);
+			GL.Rotate(-90, 0, 0, 1);
+			GL.Scale(53);
+			RenderLightsaber.renderBlade(3, 0, lightsaberData.descriptor);
+			GL.PopMatrix();
+			GL.Enable(EnableCap.Texture2D);
+		}
+		else
+		{
+			GL.Disable(EnableCap.Texture2D);
+			drawRgbPreview(1, 1, 1, false);
+			GL.Enable(EnableCap.Texture2D);
+		}
 
 		//		ArrayList<String> lines = new ArrayList<>();
 		//		lines.add(String.valueOf(mouseX - guiLeft));
 		//		lines.add(String.valueOf(mouseY - guiTop));
 		//		drawHoveringText(lines, mouseX - guiLeft, mouseY - guiTop);
+	}
+
+	private void drawRgbPreview(float r, float g, float b, boolean enabled)
+	{
+		GL.Color(enabled ? GLPalette.BLACK : GLPalette.GREY);
+		Fx.D2.DrawSolidRectangle(179, 29, 64, 64);
+		if (enabled)
+		{
+			GL.Color(r, g, b);
+			Fx.D2.DrawSolidRectangle(180, 30, 62, 62);
+		}
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)

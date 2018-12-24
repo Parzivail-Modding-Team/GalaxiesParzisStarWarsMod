@@ -12,7 +12,6 @@ import com.parzivail.swg.item.ILeftClickInterceptor;
 import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.blaster.ItemBlasterRifle;
-import com.parzivail.swg.item.lightsaber.ItemLightsaber;
 import com.parzivail.swg.network.MessagePswgWorldDataSync;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.ForceRegistry;
@@ -358,10 +357,7 @@ public class EventHandler
 		if (event.player.worldObj.isRemote)
 		{
 			ItemStack heldItem = event.player.getHeldItem();
-			if (heldItem != null && heldItem.getItem() instanceof ItemLightsaber)
-			{
-				StarWarsGalaxy.proxy.tickLightsaberSounds(event.player, heldItem);
-			}
+			StarWarsGalaxy.proxy.tickLightsaberSounds(event.player, heldItem);
 		}
 	}
 
