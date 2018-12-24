@@ -3,7 +3,9 @@ package com.parzivail.swg.gui;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.container.ContainerLightsaberForge;
 import com.parzivail.swg.item.lightsaber.LightsaberData;
+import com.parzivail.swg.network.TransactionBroker;
 import com.parzivail.swg.tile.TileLightsaberForge;
+import com.parzivail.swg.transaction.TransactionSetLightsaberDescriptor;
 import cpw.mods.fml.client.config.GuiCheckBox;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
@@ -21,7 +23,7 @@ public class GuiLightsaberForge extends GuiContainer
 
 	private LightsaberData lightsaberData;
 
-	private GuiCheckBox cbSaberStable;
+	private GuiCheckBox cbSaberUnstable;
 
 	public GuiLightsaberForge(EntityPlayer player, InventoryPlayer inventoryPlayer, TileLightsaberForge tile)
 	{
@@ -39,7 +41,10 @@ public class GuiLightsaberForge extends GuiContainer
 		super.initGui();
 		buttonList.clear();
 
+		buttonList.add(cbSaberUnstable = new GuiCheckBox(0, guiLeft + 47, guiTop + 15, "Unstable", false));
+
 		lightsaberData = null;
+		setButtonsEnabled(false);
 	}
 
 	@Override
@@ -47,10 +52,25 @@ public class GuiLightsaberForge extends GuiContainer
 	{
 		super.updateScreen();
 
-		if (tile.getStackInSlot(ContainerLightsaberForge.SLOT_SABER) != null)
-			lightsaberData = new LightsaberData(tile.getStackInSlot(ContainerLightsaberForge.SLOT_SABER));
+		if (tile.getLightsaber() != null)
+		{
+			if (lightsaberData == null)
+				lightsaberData = new LightsaberData(tile.getLightsaber());
+
+			cbSaberUnstable.setIsChecked(lightsaberData.descriptor.unstable);
+			setButtonsEnabled(true);
+		}
 		else
+		{
+			if (lightsaberData != null)
+				setButtonsEnabled(false);
 			lightsaberData = null;
+		}
+	}
+
+	private void setButtonsEnabled(boolean enabled)
+	{
+		cbSaberUnstable.enabled = enabled;
 	}
 
 	@Override
@@ -58,6 +78,16 @@ public class GuiLightsaberForge extends GuiContainer
 	{
 		//		if (button.id == bScopes.id)
 		//			setAttachmentsInTab(BlasterAttachments.SCOPES);
+		if (button.id == cbSaberUnstable.id)
+		{
+			lightsaberData.descriptor.unstable = cbSaberUnstable.isChecked();
+			writeDescriptor();
+		}
+	}
+
+	private void writeDescriptor()
+	{
+		TransactionBroker.dispatch(new TransactionSetLightsaberDescriptor(tile, lightsaberData.descriptor));
 	}
 
 	/**
@@ -71,6 +101,11 @@ public class GuiLightsaberForge extends GuiContainer
 		{
 			fontRendererObj.drawString("sabers!", 47, 5, 4210752);
 		}
+
+		//		ArrayList<String> lines = new ArrayList<>();
+		//		lines.add(String.valueOf(mouseX - guiLeft));
+		//		lines.add(String.valueOf(mouseY - guiTop));
+		//		drawHoveringText(lines, mouseX - guiLeft, mouseY - guiTop);
 	}
 
 	protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)

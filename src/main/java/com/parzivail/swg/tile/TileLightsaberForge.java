@@ -1,6 +1,7 @@
 package com.parzivail.swg.tile;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.container.ContainerLightsaberForge;
 import com.parzivail.swg.item.lightsaber.ItemLightsaber;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.util.block.BlockUtils;
@@ -27,9 +28,9 @@ public class TileLightsaberForge extends TileEntity implements IInventory
 		return stacks[slot];
 	}
 
-	public ItemStack getBlaster()
+	public ItemStack getLightsaber()
 	{
-		return stacks[0];
+		return stacks[ContainerLightsaberForge.SLOT_SABER];
 	}
 
 	@Override

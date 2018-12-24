@@ -38,11 +38,12 @@ public class RenderLightsaber extends JsonItemRenderer
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data)
 	{
 		LightsaberData bd = new LightsaberData(item);
+		LightsaberDescriptor d = bd.descriptor;
 
-		if (bd.descriptor == null)
-			return;
+		if (d == null)
+			d = LightsaberDescriptor.BLANK;
 
-		float length = bd.descriptor.bladeLength * MathHelper.clamp_float((bd.openAnimation + Client.renderPartialTicks * bd.openingState - bd.openingState) / 4f, 0, 1);
+		boolean renderBlade = true;
 
 		switch (type)
 		{
@@ -64,6 +65,8 @@ public class RenderLightsaber extends JsonItemRenderer
 				GL.Scale(15);
 				GL.Rotate(-135, 0, 0, 1);
 				GL.Translate(-0.75f, 0.5f, 0);
+				GL.Rotate(135, 0, 1, 0);
+				renderBlade = false;
 				break;
 		}
 
@@ -84,14 +87,14 @@ public class RenderLightsaber extends JsonItemRenderer
 		super.renderItem(type, item, data);
 		GL.PopMatrix();
 
-		double dX = StarWarsGalaxy.random.nextGaussian() * (4.1f - bd.openAnimation) * 0.004f;
-		double dY = StarWarsGalaxy.random.nextGaussian() * (4.1f - bd.openAnimation) * 0.004f;
-		GL.Translate(dX, 0, dY);
-
-		renderBlade(length, bd.descriptor);
+		if (renderBlade)
+		{
+			float length = d.bladeLength * MathHelper.clamp_float((bd.openAnimation + Client.renderPartialTicks * bd.openingState - bd.openingState) / 4f, 0, 1);
+			renderBlade(length, (4.1f - bd.openAnimation) * 0.004f, d);
+		}
 	}
 
-	private static void renderBlade(float bladeLength, LightsaberDescriptor saberData)
+	private static void renderBlade(float bladeLength, float shake, LightsaberDescriptor saberData)
 	{
 		if (bladeLength == 0)
 			return;
@@ -114,6 +117,10 @@ public class RenderLightsaber extends JsonItemRenderer
 		float topThickness = 0.022f;
 		float bottomThickness = 0.035f;
 		double offset = StarWarsGalaxy.random.nextGaussian();
+
+		double dX = StarWarsGalaxy.random.nextGaussian() * shake;
+		double dY = StarWarsGalaxy.random.nextGaussian() * shake;
+		GL.Translate(dX, 0, dY);
 
 		for (int layer = 0; layer < 20; layer++)
 		{

@@ -3,6 +3,7 @@ package com.parzivail.swg.network;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.transaction.TransactionDeductCredits;
 import com.parzivail.swg.transaction.TransactionEquipAttachment;
+import com.parzivail.swg.transaction.TransactionSetLightsaberDescriptor;
 import com.parzivail.swg.transaction.TransactionUnlockAttachment;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -17,6 +18,7 @@ public class TransactionBroker
 		register(TransactionDeductCredits.class);
 		register(TransactionUnlockAttachment.class);
 		register(TransactionEquipAttachment.class);
+		register(TransactionSetLightsaberDescriptor.class);
 	}
 
 	private static void register(Class<? extends Transaction> t)

@@ -4,12 +4,15 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.util.audio.SoundHandler;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class ItemLightsaber extends PItem
 {
@@ -44,6 +47,33 @@ public class ItemLightsaber extends PItem
 		else
 			player.setItemInUse(stack, getMaxItemUseDuration(stack));
 		return stack;
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, EntityPlayer player, List text, boolean advancedItemTooltips)
+	{
+		LightsaberData ld = new LightsaberData(stack);
+		LightsaberDescriptor d = ld.descriptor;
+
+		if (d == null)
+		{
+			text.add(I18n.format(Resources.guiDot("lightsaber.blank")));
+		}
+		else
+		{
+			int cCoreR = (d.coreColor & 0xFF0000) >> 16;
+			int cCoreG = (d.coreColor & 0xFF00) >> 8;
+			int cCoreB = (d.coreColor & 0xFF);
+
+			int cBladeR = (d.bladeColor & 0xFF0000) >> 16;
+			int cBladeG = (d.bladeColor & 0xFF00) >> 8;
+			int cBladeB = (d.bladeColor & 0xFF);
+
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.coreColor")), String.format("(%s, %s, %s)", cCoreR, cCoreG, cCoreB)));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.bladeColor")), String.format("(%s, %s, %s)", cBladeR, cBladeG, cBladeB)));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.bladeLength")), d.bladeLength));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.unstable")), d.unstable));
+		}
 	}
 
 	@Override
