@@ -30,6 +30,7 @@ public class Resources
 	public static final int GUI_BLASTER_WORKBENCH = guiIdx++;
 	public static final int GUI_DIALOGUE = guiIdx++;
 	public static final int GUI_PERSONAL_DATAPAD = guiIdx++;
+	public static final int GUI_LIGHTSABER_FORGE = guiIdx++;
 
 	public static String itemDot(String name)
 	{

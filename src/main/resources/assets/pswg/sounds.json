@@ -265,7 +265,9 @@
   "swg.fx.saber.swing": {
     "category": "player",
     "sounds": [
-      "saber/swing"
+      "saber/swing1",
+      "saber/swing2",
+      "saber/swing3"
     ]
   },
   "swg.fx.saber.swing.fire": {

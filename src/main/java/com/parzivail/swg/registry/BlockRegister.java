@@ -32,6 +32,7 @@ public class BlockRegister
 	public static PBlockSlab pourstoneDoubleSlab;
 
 	public static PBlockContainer blasterWorkbench;
+	public static PBlockContainer lightsaberForge;
 
 	public static PBlockContainer gunRack;
 	public static PBlockContainer satelliteDish;
@@ -105,8 +106,9 @@ public class BlockRegister
 
 		// Normal tile entities
 		registerWithTile(blasterWorkbench = new BlockBlasterWorkbench().withPlaceholderTexture());
+		registerWithTile(lightsaberForge = new BlockLightsaberForge().withPlaceholderTexture());
 		registerWithTile(new BlockSabaccTable().withPlaceholderTexture());
-		registerWithTile(new BlockSoundHothTelemetry());
+		registerWithTile(new BlockSoundHothTelemetry().withPlaceholderTexture());
 
 		// Tile entities that need to keep a TESR
 		registerWithTile(gunRack = new BlockGunRack());

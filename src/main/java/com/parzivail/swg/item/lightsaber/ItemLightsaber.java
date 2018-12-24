@@ -5,6 +5,7 @@ import com.parzivail.swg.item.PItem;
 import com.parzivail.util.audio.SoundHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
@@ -15,6 +16,7 @@ public class ItemLightsaber extends PItem
 	public ItemLightsaber()
 	{
 		super("lightsaber");
+		maxStackSize = 1;
 	}
 
 	@Override
@@ -45,16 +47,16 @@ public class ItemLightsaber extends PItem
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float subX, float subY, float subZ)
+	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
 	{
-		if (!world.isRemote)
+		if (!entityLiving.worldObj.isRemote)
 		{
 			LightsaberData bd = new LightsaberData(stack);
 
 			if (bd.isOpen)
-				SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.swing"), 1, 1);
+				SoundHandler.playSound(entityLiving, Resources.modColon("swg.fx.saber.swing"), 0.6f, (float)(0.95 + entityLiving.worldObj.rand.nextGaussian() * 0.1));
 		}
-		return super.onItemUse(stack, player, world, x, y, z, side, subX, subY, subZ);
+		return super.onEntitySwing(entityLiving, stack);
 	}
 
 	@Override
