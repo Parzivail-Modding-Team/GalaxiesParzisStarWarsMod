@@ -77,6 +77,8 @@ public class ItemRegister
 
 	public static PItem lightsaber;
 
+	public static PItem chromiumIngot;
+
 	public static void register()
 	{
 		register(rifleA280 = new ItemBlasterRifle(new BlasterDescriptor("a280", 8, 1, 300, 1300, 6.7f, 25, GLPalette.ANALOG_RED, 10, 30, 4)));
@@ -130,6 +132,8 @@ public class ItemRegister
 		register(debugWizard = new ItemDebugWizard());
 
 		register(lightsaber = new ItemLightsaber());
+
+		register(chromiumIngot = new PItem("chromiumIngot"));
 	}
 
 	private static void register(PItem item)

@@ -12,5 +12,7 @@ public class CraftingRegistry
 		GameRegistry.addSmelting(ItemRegister.nerfChop, new ItemStack(ItemRegister.nerfSteak, 1), 0.2F);
 		GameRegistry.addSmelting(ItemRegister.mynockWing, new ItemStack(ItemRegister.friedMynockWing, 1), 0.2F);
 		GameRegistry.addSmelting(ItemRegister.qrikkiBread, new ItemStack(ItemRegister.qrikkiWaffle, 1), 0.2F);
+
+		GameRegistry.addSmelting(BlockRegister.oreChromium, new ItemStack(ItemRegister.chromiumIngot), 1.0F);
 	}
 }
