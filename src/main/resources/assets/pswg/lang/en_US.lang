@@ -59,4 +59,7 @@ item.pswg.smokeGrenade.name=Smoke Grenade
 
 item.pswg.debugWizard.name=§aDebug Wizard§r
 
+item.pswg.chromiumIngot.name=Chromium Ingot
+
 tile.pswg.XXXX.name=XXXX
+tile.pswg.chromiumOre.name=Chromium Ore
