@@ -54,6 +54,8 @@ public class RenderLightsaber extends JsonItemRenderer
 				GL.Rotate(15.5f, 1, 0, 0);
 				GL.Rotate(10f, 0, 1, 0);
 				GL.Translate(0.425f, 0.2f, 0);
+
+				//Client.debugPos = Client.getLocalToWorldPos();
 				break;
 			case EQUIPPED_FIRST_PERSON:
 				GL.Rotate(20, 0, 0, 1);
@@ -110,6 +112,20 @@ public class RenderLightsaber extends JsonItemRenderer
 
 		Client.mc.entityRenderer.disableLightmap(0);
 
+		double dX = StarWarsGalaxy.random.nextGaussian() * shake;
+		double dY = StarWarsGalaxy.random.nextGaussian() * shake;
+		GL.Translate(dX, 0, dY);
+
+		// draw glow
+		for (int layer = 0; layer < 20; layer++)
+		{
+			GL.Color(saberData.bladeColor, (int)(1.275f * layer));
+			Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, bladeLength + 0.01f * (layer - 5), 0, 0, -(20 - layer) * 0.005f, 0);
+		}
+
+		// draw core
+		GL.Color(saberData.coreColor);
+
 		boolean stable = !saberData.unstable;
 		int segments = stable ? 1 : 15;
 		float dSegments = 1f / segments;
@@ -118,17 +134,6 @@ public class RenderLightsaber extends JsonItemRenderer
 		float bottomThickness = 0.035f;
 		double offset = StarWarsGalaxy.random.nextGaussian();
 
-		double dX = StarWarsGalaxy.random.nextGaussian() * shake;
-		double dY = StarWarsGalaxy.random.nextGaussian() * shake;
-		GL.Translate(dX, 0, dY);
-
-		for (int layer = 0; layer < 20; layer++)
-		{
-			GL.Color(saberData.bladeColor, (int)(1.275f * layer));
-			Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, bladeLength + 0.01f * (layer - 5), 0, 0, -(20 - layer) * 0.005f, 0);
-		}
-
-		GL.Color(saberData.coreColor);
 		double dTRoundBottom = stable ? 0 : StarWarsGalaxy.simplexNoise.eval(offset, dLength * (segments + 1)) * 0.005f;
 		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.07f, 0, 0, bladeLength, 0);
 		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.07f, 0, 0, bladeLength, 0);

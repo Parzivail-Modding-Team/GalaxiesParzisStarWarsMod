@@ -176,6 +176,15 @@ public class EventHandler
 			// RenderLivingEvent.Pre doesn't get called for the player in first person so we have to call some things manually
 			RenderLightning.render(Client.mc.thePlayer);
 		}
+
+		//		GL.PushAttrib(AttribMask.EnableBit);
+		//		GL.Disable(EnableCap.Texture2D);
+		//		GL11.glPushMatrix();
+		//		GL.Translate(Client.debugPos.x, Client.debugPos.y, Client.debugPos.z);
+		//		GL.Scale(0.1f);
+		//		Fx.D3.DrawSolidBox();
+		//		GL.PopMatrix();
+		//		GL.PopAttrib();
 	}
 
 	@SubscribeEvent

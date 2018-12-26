@@ -4,7 +4,7 @@ import com.parzivail.swg.gui.GuiScreenPlanetEnter;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.WorldRegister;
 import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import net.minecraft.client.LoadingScreenRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -24,7 +24,7 @@ public class PLoadingScreenRenderer extends LoadingScreenRenderer
 	{
 		super(mc);
 
-		fb = ReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "field_146588_g", "g");
+		fb = ObfuscationReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "field_146588_g");
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class PLoadingScreenRenderer extends LoadingScreenRenderer
 	{
 		World worldEntering = Client.mc.theWorld;
 		if (Client.mc.getNetHandler() != null)
-			worldEntering = ReflectionHelper.getPrivateValue(NetHandlerPlayClient.class, Client.mc.getNetHandler(), "clientWorldController", "field_147300_g", "g");
+			worldEntering = ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayClient.class, Client.mc.getNetHandler(), "clientWorldController");
 
 		String c = getCurrentlyDisplayedText();
 		String fd = getField_73727_a();
@@ -113,11 +113,11 @@ public class PLoadingScreenRenderer extends LoadingScreenRenderer
 
 	private String getCurrentlyDisplayedText()
 	{
-		return ReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "currentlyDisplayedText", "field_73726_c", "c");
+		return ObfuscationReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "currentlyDisplayedText");
 	}
 
 	private String getField_73727_a()
 	{
-		return ReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "field_73727_a", "a");
+		return ObfuscationReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "field_73727_a");
 	}
 }

@@ -5,7 +5,7 @@ import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
-import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -20,8 +20,8 @@ public class FxMC
 	{
 		try
 		{
-			ReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistance", "field_78490_B", "E");
-			ReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistanceTemp", "field_78491_C", "F");
+			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistance");
+			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistanceTemp");
 		}
 		catch (Exception e)
 		{
@@ -34,7 +34,7 @@ public class FxMC
 	{
 		try
 		{
-			ReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "camRoll", "field_78495_O", "R");
+			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "camRoll");
 		}
 		catch (Exception e)
 		{
@@ -47,7 +47,7 @@ public class FxMC
 	{
 		try
 		{
-			ReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "prevCamRoll", "field_78505_P", "S");
+			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "prevCamRoll");
 		}
 		catch (Exception e)
 		{

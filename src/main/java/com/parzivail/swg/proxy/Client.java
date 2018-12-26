@@ -46,15 +46,20 @@ import com.parzivail.util.audio.ClientSoundHandler;
 import com.parzivail.util.block.INameProvider;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
+import com.parzivail.util.math.BufferMatrix;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.PFramebuffer;
 import com.parzivail.util.ui.ShaderHelper;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -74,6 +79,7 @@ import org.lwjgl.opengl.GL12;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -102,11 +108,29 @@ public class Client extends Common
 
 	public static GuiQuestNotification guiQuestNotification;
 
+	private static final FloatBuffer l2WTempInputBuffer = GLAllocation.createDirectFloatBuffer(16);
+	private static final float[] l2WTempMatrixArray = new float[16];
+	private static final FloatBuffer l2WTempOutputBuffer = FloatBuffer.allocate(16);
+	public static Vector3f debugPos = new Vector3f(0, 0, 0);
+
 	private static FontRenderer createFont(String file)
 	{
 		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
 		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
 		return renderer;
+	}
+
+	public static Vector3f getLocalToWorldPos()
+	{
+		FloatBuffer camMat = ObfuscationReflectionHelper.getPrivateValue(ActiveRenderInfo.class, null, "modelview");
+		FloatBuffer clone = camMat.duplicate();
+		BufferMatrix.invertMatrix(clone, clone);
+
+		l2WTempInputBuffer.clear();
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, l2WTempInputBuffer);
+		BufferMatrix.multiply(l2WTempInputBuffer, clone, l2WTempOutputBuffer);
+		l2WTempOutputBuffer.get(l2WTempMatrixArray);
+		return new Vector3f(l2WTempMatrixArray[12], l2WTempMatrixArray[13], l2WTempMatrixArray[14]);
 	}
 
 	public static boolean doesPlayerExist()
@@ -157,7 +181,7 @@ public class Client extends Common
 
 		mc.entityRenderer = new PEntityRenderer(mc, mc.getResourceManager());
 
-		ReflectionHelper.setPrivateValue(Minecraft.class, mc, new PFramebuffer(mc.displayWidth, mc.displayHeight, true), "framebufferMc", "field_147124_at", "au");
+		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, new PFramebuffer(mc.displayWidth, mc.displayHeight, true), "framebufferMc");
 
 		guiQuestNotification = new GuiQuestNotification();
 

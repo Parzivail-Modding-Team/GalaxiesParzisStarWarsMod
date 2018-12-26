@@ -93,6 +93,8 @@ public class GuiLightsaberForge extends GuiContainer
 		sRed.enabled = enabled;
 		sGreen.enabled = enabled;
 		sBlue.enabled = enabled;
+		bSetBladeColor.enabled = enabled;
+		bSetCoreColor.enabled = enabled;
 	}
 
 	@Override
