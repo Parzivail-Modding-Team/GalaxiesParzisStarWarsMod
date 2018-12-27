@@ -147,7 +147,7 @@ public class Client extends Common
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, l2WTempInputBuffer1);
 		BufferMatrix.multiply(l2WTempInputBuffer1, l2WTempInputBuffer2, l2WTempOutputBuffer);
 		l2WTempOutputBuffer.get(l2WTempMatrixArray);
-		Vec3 playerPos = mc.thePlayer.getPosition(renderPartialTicks);
+		Vec3 playerPos = mc.renderViewEntity.getPosition(renderPartialTicks);
 		return new Vector3f(l2WTempMatrixArray[12] + (float)playerPos.xCoord, l2WTempMatrixArray[13] + (float)playerPos.yCoord, l2WTempMatrixArray[14] + (float)playerPos.zCoord);
 	}
 
