@@ -5,6 +5,7 @@ import com.parzivail.swg.item.lightsaber.LightsaberData;
 import com.parzivail.swg.item.lightsaber.LightsaberDescriptor;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.pipeline.JsonItemRenderer;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.GL;
@@ -54,8 +55,6 @@ public class RenderLightsaber extends JsonItemRenderer
 				GL.Rotate(15.5f, 1, 0, 0);
 				GL.Rotate(10f, 0, 1, 0);
 				GL.Translate(0.425f, 0.2f, 0);
-
-				//Client.debugPos = Client.getLocalToWorldPos();
 				break;
 			case EQUIPPED_FIRST_PERSON:
 				GL.Rotate(20, 0, 0, 1);
@@ -72,9 +71,12 @@ public class RenderLightsaber extends JsonItemRenderer
 				break;
 		}
 
+		EntityPlayer player = null;
 		if (data.length >= 2 && data[1] instanceof EntityPlayer)
+			player = (EntityPlayer)data[1];
+
+		if (player != null)
 		{
-			EntityPlayer player = (EntityPlayer)data[1];
 			if (player.getItemInUse() == item && player.getItemInUseDuration() > 0 && type == ItemRenderType.EQUIPPED)
 			{
 				GL.Translate(0.3f, -0.2f, 0);
@@ -92,6 +94,17 @@ public class RenderLightsaber extends JsonItemRenderer
 		if (renderBlade)
 		{
 			float length = d.bladeLength * MathHelper.clamp_float((bd.openAnimation + Client.renderPartialTicks * bd.openingState - bd.openingState) / 4f, 0, 1);
+
+			if (player != null && type == ItemRenderType.EQUIPPED)
+			{
+				GL.PushMatrix();
+				Vector3f pBase = Client.getLocalToWorldPos();
+				GL.Translate(0, length, 0);
+				Vector3f pEnd = Client.getLocalToWorldPos();
+				Client.addLightsaberTrail(player, d.bladeColor, pBase, pEnd);
+				GL.PopMatrix();
+			}
+
 			renderBlade(length, (4.1f - bd.openAnimation) * 0.004f, d);
 		}
 	}

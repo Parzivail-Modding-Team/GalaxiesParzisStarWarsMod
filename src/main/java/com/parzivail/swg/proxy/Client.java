@@ -50,6 +50,10 @@ import com.parzivail.util.math.BufferMatrix;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.PFramebuffer;
 import com.parzivail.util.ui.ShaderHelper;
+import com.parzivail.util.ui.gltk.AttribMask;
+import com.parzivail.util.ui.gltk.EnableCap;
+import com.parzivail.util.ui.gltk.GL;
+import com.parzivail.util.ui.gltk.PrimitiveType;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
@@ -69,6 +73,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.apache.commons.io.FileUtils;
@@ -84,6 +89,7 @@ import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * Created by colby on 9/10/2017.
@@ -108,10 +114,12 @@ public class Client extends Common
 
 	public static GuiQuestNotification guiQuestNotification;
 
-	private static final FloatBuffer l2WTempInputBuffer = GLAllocation.createDirectFloatBuffer(16);
+	private static final FloatBuffer l2WTempInputBuffer1 = GLAllocation.createDirectFloatBuffer(16);
+	private static final FloatBuffer l2WTempInputBuffer2 = GLAllocation.createDirectFloatBuffer(16);
 	private static final float[] l2WTempMatrixArray = new float[16];
 	private static final FloatBuffer l2WTempOutputBuffer = FloatBuffer.allocate(16);
-	public static Vector3f debugPos = new Vector3f(0, 0, 0);
+
+	private static final HashMap<EntityPlayer, LightsaberTrail> PLAYER_LIGHTSABER_TRAIL_MAP = new HashMap<>();
 
 	private static FontRenderer createFont(String file)
 	{
@@ -122,15 +130,18 @@ public class Client extends Common
 
 	public static Vector3f getLocalToWorldPos()
 	{
-		FloatBuffer camMat = ObfuscationReflectionHelper.getPrivateValue(ActiveRenderInfo.class, null, "modelview");
-		FloatBuffer clone = camMat.duplicate();
-		BufferMatrix.invertMatrix(clone, clone);
+		l2WTempInputBuffer1.clear();
+		l2WTempInputBuffer2.clear();
+		l2WTempOutputBuffer.clear();
 
-		l2WTempInputBuffer.clear();
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, l2WTempInputBuffer);
-		BufferMatrix.multiply(l2WTempInputBuffer, clone, l2WTempOutputBuffer);
+		FloatBuffer camMat = ObfuscationReflectionHelper.getPrivateValue(ActiveRenderInfo.class, null, "modelview");
+		BufferMatrix.invertMatrix(camMat, l2WTempInputBuffer2);
+
+		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, l2WTempInputBuffer1);
+		BufferMatrix.multiply(l2WTempInputBuffer1, l2WTempInputBuffer2, l2WTempOutputBuffer);
 		l2WTempOutputBuffer.get(l2WTempMatrixArray);
-		return new Vector3f(l2WTempMatrixArray[12], l2WTempMatrixArray[13], l2WTempMatrixArray[14]);
+		Vec3 playerPos = mc.thePlayer.getPosition(renderPartialTicks);
+		return new Vector3f(l2WTempMatrixArray[12] + (float)playerPos.xCoord, l2WTempMatrixArray[13] + (float)playerPos.yCoord, l2WTempMatrixArray[14] + (float)playerPos.zCoord);
 	}
 
 	public static boolean doesPlayerExist()
@@ -143,6 +154,62 @@ public class Client extends Common
 		if (!doesPlayerExist())
 			return null;
 		return mc.thePlayer;
+	}
+
+	public static void addLightsaberTrail(EntityPlayer player, int color, Vector3f pBase, Vector3f pEnd)
+	{
+		LightsaberTrail trail;
+		if (!PLAYER_LIGHTSABER_TRAIL_MAP.containsKey(player))
+			PLAYER_LIGHTSABER_TRAIL_MAP.put(player, trail = new LightsaberTrail());
+		else
+			trail = PLAYER_LIGHTSABER_TRAIL_MAP.get(player);
+
+		trail.addPointSet(color, pBase, pEnd);
+	}
+
+	public static void renderLightsaberTrail(EntityPlayer player)
+	{
+		if (!PLAYER_LIGHTSABER_TRAIL_MAP.containsKey(player))
+			return;
+		LightsaberTrail trail = PLAYER_LIGHTSABER_TRAIL_MAP.get(player);
+
+		GL.PushAttrib(AttribMask.EnableBit);
+		GL.Disable(EnableCap.Texture2D);
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+
+		GL.PushMatrix();
+		Vec3 playerPos = mc.thePlayer.getPosition(renderPartialTicks);
+		GL.Translate(-playerPos.xCoord, -playerPos.yCoord, -playerPos.zCoord);
+
+		GL.Begin(PrimitiveType.Quads);
+		for (int i = 1; i < trail.points.size(); i++)
+		{
+			LightsaberTrail.PointSet pointsPrev = trail.points.get(i - 1);
+			LightsaberTrail.PointSet pointsHere = trail.points.get(i);
+			float p = (float)i / trail.points.size();
+
+			GL.Vertex3(pointsPrev.pEnd.x, pointsPrev.pEnd.y, pointsPrev.pEnd.z);
+			GL.Vertex3(pointsPrev.pBase.x, pointsPrev.pBase.y, pointsPrev.pBase.z);
+
+			GL.Color(pointsHere.color, (int)(p * 128));
+			GL.Vertex3(pointsHere.pBase.x, pointsHere.pBase.y, pointsHere.pBase.z);
+			GL.Vertex3(pointsHere.pEnd.x, pointsHere.pEnd.y, pointsHere.pEnd.z);
+		}
+		GL.End();
+
+		GL11.glDepthMask(true);
+		GL.PopMatrix();
+		GL.PopAttrib();
+	}
+
+	public static void tickLightsaberTrails()
+	{
+		for (HashMap.Entry<EntityPlayer, LightsaberTrail> entry : PLAYER_LIGHTSABER_TRAIL_MAP.entrySet())
+			entry.getValue().tick();
 	}
 
 	public void checkLeftClickPressed(boolean selfReported)

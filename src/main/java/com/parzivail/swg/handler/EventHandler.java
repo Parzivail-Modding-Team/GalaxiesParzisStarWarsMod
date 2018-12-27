@@ -150,6 +150,8 @@ public class EventHandler
 			MultipartFlightModel ship = EntityUtils.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
+
+			Client.renderLightsaberTrail((EntityPlayer)event.entity);
 		}
 		//		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
 		//			ShaderHelper.releaseShader();
@@ -175,16 +177,10 @@ public class EventHandler
 		{
 			// RenderLivingEvent.Pre doesn't get called for the player in first person so we have to call some things manually
 			RenderLightning.render(Client.mc.thePlayer);
+			Client.renderLightsaberTrail(Client.mc.thePlayer);
 		}
 
-		//		GL.PushAttrib(AttribMask.EnableBit);
-		//		GL.Disable(EnableCap.Texture2D);
-		//		GL11.glPushMatrix();
-		//		GL.Translate(Client.debugPos.x, Client.debugPos.y, Client.debugPos.z);
-		//		GL.Scale(0.1f);
-		//		Fx.D3.DrawSolidBox();
-		//		GL.PopMatrix();
-		//		GL.PopAttrib();
+		Client.tickLightsaberTrails();
 	}
 
 	@SubscribeEvent
