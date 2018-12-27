@@ -19,8 +19,9 @@ import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.decal.WorldDecals;
 import com.parzivail.swg.render.force.RenderLightning;
-import com.parzivail.swg.render.overlay.OverlayHealthBar;
 import com.parzivail.swg.render.pipeline.JsonModelRenderer;
+import com.parzivail.swg.render.worldext.RenderExtHealthBar;
+import com.parzivail.swg.render.worldext.RenderExtLightsaberTrail;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.entity.EntityUtils;
@@ -151,7 +152,7 @@ public class EventHandler
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 
-			Client.renderLightsaberTrail((EntityPlayer)event.entity);
+			RenderExtLightsaberTrail.render((EntityPlayer)event.entity);
 		}
 		//		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
 		//			ShaderHelper.releaseShader();
@@ -163,7 +164,7 @@ public class EventHandler
 			{
 				Entity hitEntity = ((RaytraceHitEntity)target).entity;
 				if (hitEntity == event.entity && hitEntity instanceof EntityLivingBase)
-					OverlayHealthBar.instance.render((EntityLivingBase)hitEntity);
+					RenderExtHealthBar.render((EntityLivingBase)hitEntity);
 			}
 		}
 	}
@@ -177,10 +178,10 @@ public class EventHandler
 		{
 			// RenderLivingEvent.Pre doesn't get called for the player in first person so we have to call some things manually
 			RenderLightning.render(Client.mc.thePlayer);
-			Client.renderLightsaberTrail(Client.mc.thePlayer);
+			RenderExtLightsaberTrail.render(Client.mc.thePlayer);
 		}
 
-		Client.tickLightsaberTrails();
+		RenderExtLightsaberTrail.tick();
 	}
 
 	@SubscribeEvent

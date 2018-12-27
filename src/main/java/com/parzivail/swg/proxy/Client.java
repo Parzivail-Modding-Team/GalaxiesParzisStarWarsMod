@@ -50,14 +50,12 @@ import com.parzivail.util.math.BufferMatrix;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.PFramebuffer;
 import com.parzivail.util.ui.ShaderHelper;
-import com.parzivail.util.ui.gltk.AttribMask;
-import com.parzivail.util.ui.gltk.EnableCap;
-import com.parzivail.util.ui.gltk.GL;
-import com.parzivail.util.ui.gltk.PrimitiveType;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -89,15 +87,12 @@ import java.nio.IntBuffer;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 
 /**
  * Created by colby on 9/10/2017.
  */
 public class Client extends Common
 {
-	//public static FontRenderer frSansSerif;
-	//public static FontRenderer frSerif;
 	public static Minecraft mc;
 	public static FontRenderer frNaboo;
 	public static FontRenderer frAurebesh;
@@ -119,8 +114,14 @@ public class Client extends Common
 	private static final float[] l2WTempMatrixArray = new float[16];
 	private static final FloatBuffer l2WTempOutputBuffer = FloatBuffer.allocate(16);
 
-	private static final HashMap<EntityPlayer, LightsaberTrail> PLAYER_LIGHTSABER_TRAIL_MAP = new HashMap<>();
-
+	/**
+	 * Creates a Minecraft FontRenderer for the given font asset name
+	 *
+	 * @param file Font asset name
+	 *
+	 * @return A new FontRenderer
+	 */
+	@SideOnly(Side.CLIENT)
 	private static FontRenderer createFont(String file)
 	{
 		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
@@ -128,6 +129,12 @@ public class Client extends Common
 		return renderer;
 	}
 
+	/**
+	 * Gets the current absolute world position represented by the local GL model matrix
+	 *
+	 * @return Absolute world position
+	 */
+	@SideOnly(Side.CLIENT)
 	public static Vector3f getLocalToWorldPos()
 	{
 		l2WTempInputBuffer1.clear();
@@ -144,11 +151,21 @@ public class Client extends Common
 		return new Vector3f(l2WTempMatrixArray[12] + (float)playerPos.xCoord, l2WTempMatrixArray[13] + (float)playerPos.yCoord, l2WTempMatrixArray[14] + (float)playerPos.zCoord);
 	}
 
+	/**
+	 * Tests if the player exists
+	 * @return True if the client player has been initialized
+	 */
+	@SideOnly(Side.CLIENT)
 	public static boolean doesPlayerExist()
 	{
 		return mc != null && mc.thePlayer != null;
 	}
 
+	/**
+	 * Gets the client player or null if Minecraft or the player does not exist
+	 * @return A client player
+	 */
+	@SideOnly(Side.CLIENT)
 	public static EntityPlayer getPlayer()
 	{
 		if (!doesPlayerExist())
@@ -156,63 +173,12 @@ public class Client extends Common
 		return mc.thePlayer;
 	}
 
-	public static void addLightsaberTrail(EntityPlayer player, int color, Vector3f pBase, Vector3f pEnd)
-	{
-		LightsaberTrail trail;
-		if (!PLAYER_LIGHTSABER_TRAIL_MAP.containsKey(player))
-			PLAYER_LIGHTSABER_TRAIL_MAP.put(player, trail = new LightsaberTrail());
-		else
-			trail = PLAYER_LIGHTSABER_TRAIL_MAP.get(player);
-
-		trail.addPointSet(color, pBase, pEnd);
-	}
-
-	public static void renderLightsaberTrail(EntityPlayer player)
-	{
-		if (!PLAYER_LIGHTSABER_TRAIL_MAP.containsKey(player))
-			return;
-		LightsaberTrail trail = PLAYER_LIGHTSABER_TRAIL_MAP.get(player);
-
-		GL.PushAttrib(AttribMask.EnableBit);
-		GL.Disable(EnableCap.Texture2D);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-
-		GL.PushMatrix();
-		Vec3 playerPos = mc.thePlayer.getPosition(renderPartialTicks);
-		GL.Translate(-playerPos.xCoord, -playerPos.yCoord, -playerPos.zCoord);
-
-		GL.Begin(PrimitiveType.Quads);
-		for (int i = 1; i < trail.points.size(); i++)
-		{
-			LightsaberTrail.PointSet pointsPrev = trail.points.get(i - 1);
-			LightsaberTrail.PointSet pointsHere = trail.points.get(i);
-			float p = (float)i / trail.points.size();
-
-			GL.Vertex3(pointsPrev.pEnd.x, pointsPrev.pEnd.y, pointsPrev.pEnd.z);
-			GL.Vertex3(pointsPrev.pBase.x, pointsPrev.pBase.y, pointsPrev.pBase.z);
-
-			GL.Color(pointsHere.color, (int)(p * 128));
-			GL.Vertex3(pointsHere.pBase.x, pointsHere.pBase.y, pointsHere.pBase.z);
-			GL.Vertex3(pointsHere.pEnd.x, pointsHere.pEnd.y, pointsHere.pEnd.z);
-		}
-		GL.End();
-
-		GL11.glDepthMask(true);
-		GL.PopMatrix();
-		GL.PopAttrib();
-	}
-
-	public static void tickLightsaberTrails()
-	{
-		for (HashMap.Entry<EntityPlayer, LightsaberTrail> entry : PLAYER_LIGHTSABER_TRAIL_MAP.entrySet())
-			entry.getValue().tick();
-	}
-
-	public void checkLeftClickPressed(boolean selfReported)
+	/**
+	 * Queries the "attack" keybind and processes items who consume the associated action
+	 *
+	 * @param passive False if the event was triggered by a keybind or mouse click, true if it was triggered by the tick handler
+	 */
+	public void checkLeftClickPressed(boolean passive)
 	{
 		if (leftClickDelayTimer > 0)
 			return;
@@ -225,7 +191,7 @@ public class Client extends Common
 		boolean risingEdge = KeybindRegistry.keyAttack.interceptedIsPressed();
 		boolean holding = KeybindRegistry.keyAttack.getInterceptedIsKeyPressed();
 
-		boolean pressed = item.isLeftClickRepeatable() ? (selfReported && (risingEdge || holding)) : risingEdge;
+		boolean pressed = item.isLeftClickRepeatable() ? (passive && (risingEdge || holding)) : risingEdge;
 
 		if (item.isLeftClickRepeatable())
 			while (KeybindRegistry.keyAttack.interceptedIsPressed())
@@ -301,8 +267,8 @@ public class Client extends Common
 		ClientRegistry.bindTileEntitySpecialRenderer(TileGunRack.class, new RenderGunRack());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileSatelliteDish.class, new RenderSatelliteDish());
 
-		registerBasicTileItem(BlockRegister.gunRack, 0.8f);
-		registerBasicTileItem(BlockRegister.satelliteDish, 0.4f);
+		registerBasicTileItemRenderer(BlockRegister.gunRack, 0.8f);
+		registerBasicTileItemRenderer(BlockRegister.satelliteDish, 0.4f);
 
 		Lumberjack.log("Client proxy loaded!");
 	}
@@ -328,9 +294,13 @@ public class Client extends Common
 		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(block, Resources.location(String.format("models/block/%s.json", block.getName()))));
 	}
 
+	/**
+	 * Saves the provided texture atlas as a file in the "atlases" directory
+	 * @param map The texture atlas to save
+	 */
+	@SideOnly(Side.CLIENT)
 	public static void saveTextureAtlas(TextureMap map)
 	{
-		// this.displayWidth, this.displayHeight, this.framebufferMc
 		try
 		{
 			int texId = ReflectionHelper.getPrivateValue(AbstractTexture.class, map, "glTextureId", "field_110553_a", "a");
@@ -369,6 +339,7 @@ public class Client extends Common
 		}
 		catch (Exception exception)
 		{
+			Lumberjack.err("Failed to write texture atlas");
 		}
 	}
 
@@ -392,7 +363,8 @@ public class Client extends Common
 		}
 	}
 
-	private void registerBasicTileItem(Block block, float scale)
+	@SideOnly(Side.CLIENT)
+	private void registerBasicTileItemRenderer(Block block, float scale)
 	{
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), new RenderBasicTileItem(block, scale));
 	}

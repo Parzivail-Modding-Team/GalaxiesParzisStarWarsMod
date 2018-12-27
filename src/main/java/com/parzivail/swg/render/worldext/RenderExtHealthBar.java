@@ -1,4 +1,4 @@
-package com.parzivail.swg.render.overlay;
+package com.parzivail.swg.render.worldext;
 
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx;
@@ -13,11 +13,9 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class OverlayHealthBar
+public class RenderExtHealthBar
 {
-	public static final OverlayHealthBar instance = new OverlayHealthBar();
-
-	public void render(EntityLivingBase e)
+	public static void render(EntityLivingBase e)
 	{
 		Minecraft m = Minecraft.getMinecraft();
 

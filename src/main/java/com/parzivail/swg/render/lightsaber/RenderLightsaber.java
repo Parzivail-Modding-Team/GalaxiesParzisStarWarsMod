@@ -5,6 +5,7 @@ import com.parzivail.swg.item.lightsaber.LightsaberData;
 import com.parzivail.swg.item.lightsaber.LightsaberDescriptor;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.pipeline.JsonItemRenderer;
+import com.parzivail.swg.render.worldext.RenderExtLightsaberTrail;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
@@ -101,7 +102,7 @@ public class RenderLightsaber extends JsonItemRenderer
 				Vector3f pBase = Client.getLocalToWorldPos();
 				GL.Translate(0, length, 0);
 				Vector3f pEnd = Client.getLocalToWorldPos();
-				Client.addLightsaberTrail(player, d.bladeColor, pBase, pEnd);
+				RenderExtLightsaberTrail.addTrailComponent(player, d.bladeColor, pBase, pEnd);
 				GL.PopMatrix();
 			}
 

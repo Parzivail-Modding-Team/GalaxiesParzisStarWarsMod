@@ -1,37 +1,41 @@
 package com.parzivail.swg.proxy;
 
+import com.parzivail.swg.render.worldext.LightsaberTrailComponent;
 import com.parzivail.util.math.lwjgl.Vector3f;
-import org.lwjgl.Sys;
+import com.parzivail.util.ui.gltk.GL;
+import com.parzivail.util.ui.gltk.PrimitiveType;
 
 import java.util.ArrayList;
 
 public class LightsaberTrail
 {
-	public ArrayList<PointSet> points = new ArrayList<>();
+	public ArrayList<LightsaberTrailComponent> points = new ArrayList<>();
 
-	public void addPointSet(int color, Vector3f pBase, Vector3f pEnd)
+	public void addPointSet(int color, int life, Vector3f pBase, Vector3f pEnd)
 	{
-		points.add(new PointSet(color, pBase, pEnd));
+		points.add(new LightsaberTrailComponent(color, life, pBase, pEnd));
 	}
 
 	public void tick()
 	{
-		points.removeIf(set -> set.age + 60 < Sys.getTime());
+		points.removeIf(LightsaberTrailComponent::shouldDie);
 	}
 
-	public class PointSet
+	public void render()
 	{
-		public final long age;
-		public final int color;
-		public final Vector3f pBase;
-		public final Vector3f pEnd;
-
-		PointSet(int color, Vector3f pBase, Vector3f pEnd)
+		GL.Begin(PrimitiveType.TriangleStrip);
+		for (int i = 0; i < points.size(); i++)
 		{
-			age = Sys.getTime();
-			this.color = color;
-			this.pBase = pBase;
-			this.pEnd = pEnd;
+			LightsaberTrailComponent pointsHere = points.get(i);
+			float p = (float)i / points.size();
+
+			Vector3f hereBase = pointsHere.getBasePos();
+			Vector3f hereEnd = pointsHere.getEndPos();
+
+			GL.Color(pointsHere.getColor(), (int)(p * 128));
+			GL.Vertex3(hereBase.x, hereBase.y, hereBase.z);
+			GL.Vertex3(hereEnd.x, hereEnd.y, hereEnd.z);
 		}
+		GL.End();
 	}
 }
