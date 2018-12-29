@@ -82,7 +82,8 @@ public class ItemLightsaber extends PItem
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
 	{
-		// TODO: make reach dependent on blade length
+		// TODO: make reach dependent on blade lengthdontuse32bit
+
 		if (!entityLiving.worldObj.isRemote)
 		{
 			LightsaberData bd = new LightsaberData(stack);

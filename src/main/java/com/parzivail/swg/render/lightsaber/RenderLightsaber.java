@@ -48,6 +48,7 @@ public class RenderLightsaber extends JsonItemRenderer
 
 		boolean renderBlade = true;
 
+		GL.PushAttrib(AttribMask.EnableBit);
 		switch (type)
 		{
 			case ENTITY:
@@ -60,8 +61,6 @@ public class RenderLightsaber extends JsonItemRenderer
 				break;
 			case EQUIPPED_FIRST_PERSON:
 				GL.Rotate(20, 0, 0, 1);
-				//				GL.Rotate(10.5f, 1, 0, 0);
-				//				GL.Rotate(10f, 0, 1, 0);
 				GL.Translate(0.6f, 0.6f, 0);
 				break;
 			case INVENTORY:
@@ -70,6 +69,7 @@ public class RenderLightsaber extends JsonItemRenderer
 				GL.Translate(-0.75f, 0.5f, 0);
 				GL.Rotate(135, 0, 1, 0);
 				renderBlade = false;
+				GL.Disable(EnableCap.CullFace);
 				break;
 		}
 
@@ -109,6 +109,7 @@ public class RenderLightsaber extends JsonItemRenderer
 
 			renderBlade(length, (4.1f - bd.openAnimation) * 0.004f, d);
 		}
+		GL.PopAttrib();
 	}
 
 	public static void renderBlade(float bladeLength, float shake, LightsaberDescriptor saberData)
@@ -122,7 +123,8 @@ public class RenderLightsaber extends JsonItemRenderer
 		GL.Disable(EnableCap.Texture2D);
 		GL.Disable(EnableCap.AlphaTest);
 		GL.Enable(EnableCap.Blend);
-		GL11.glDepthMask(false);
+		GL.Enable(EnableCap.CullFace);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		Client.mc.entityRenderer.disableLightmap(0);
 
@@ -131,14 +133,15 @@ public class RenderLightsaber extends JsonItemRenderer
 		GL.Translate(dX, 0, dY);
 
 		// draw glow
+		GL11.glDepthMask(false);
 		for (int layer = 19; layer >= 0; layer--)
 		{
 			GL.Color(saberData.bladeColor, (int)(1.275f * layer));
 			Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, bladeLength + 0.01f * (layer - 5), 0, 0, -(20 - layer) * 0.005f, 0);
 		}
+		GL11.glDepthMask(true);
 
 		// draw core
-		GL11.glDepthMask(true);
 		GL.Color(saberData.coreColor);
 
 		boolean stable = !saberData.unstable;
@@ -166,7 +169,6 @@ public class RenderLightsaber extends JsonItemRenderer
 
 		Client.mc.entityRenderer.enableLightmap(0);
 		GL.PopAttrib();
-		GL11.glDepthMask(true);
 		GL11.glPopMatrix();
 	}
 }
