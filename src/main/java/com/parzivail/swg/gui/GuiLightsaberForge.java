@@ -36,6 +36,8 @@ public class GuiLightsaberForge extends GuiContainer
 	private GuiSlider sBlue;
 	private GuiButton bSetBladeColor;
 	private GuiButton bSetCoreColor;
+	private GuiSlider sLength;
+	private GuiButton bSetLength;
 
 	public GuiLightsaberForge(EntityPlayer player, InventoryPlayer inventoryPlayer, TileLightsaberForge tile)
 	{
@@ -53,12 +55,14 @@ public class GuiLightsaberForge extends GuiContainer
 		super.initGui();
 		buttonList.clear();
 
-		buttonList.add(cbSaberUnstable = new GuiCheckBox(0, guiLeft + 47, guiTop + 15, "Unstable", false));
-		buttonList.add(sRed = new GuiSlider(1, guiLeft + 47, guiTop + 30, 128, 20, "R: ", "", 0, 255, 0, false, true));
-		buttonList.add(sGreen = new GuiSlider(2, guiLeft + 47, guiTop + 51, 128, 20, "G: ", "", 0, 255, 0, false, true));
-		buttonList.add(sBlue = new GuiSlider(3, guiLeft + 47, guiTop + 72, 128, 20, "B: ", "", 0, 255, 0, false, true));
-		buttonList.add(bSetBladeColor = new PGuiButton(4, guiLeft + 47, guiTop + 93, 63, 20, "Set Glow"));
-		buttonList.add(bSetCoreColor = new PGuiButton(5, guiLeft + 112, guiTop + 93, 63, 20, "Set Core"));
+		buttonList.add(cbSaberUnstable = new GuiCheckBox(0, guiLeft + 47, guiTop + 5, "Unstable", false));
+		buttonList.add(sRed = new GuiSlider(1, guiLeft + 47, guiTop + 20, 128, 20, "R: ", "", 0, 255, 0, false, true));
+		buttonList.add(sGreen = new GuiSlider(2, guiLeft + 47, guiTop + 41, 128, 20, "G: ", "", 0, 255, 0, false, true));
+		buttonList.add(sBlue = new GuiSlider(3, guiLeft + 47, guiTop + 62, 128, 20, "B: ", "", 0, 255, 0, false, true));
+		buttonList.add(bSetBladeColor = new PGuiButton(4, guiLeft + 47, guiTop + 83, 63, 20, "Set Glow"));
+		buttonList.add(bSetCoreColor = new PGuiButton(5, guiLeft + 112, guiTop + 83, 63, 20, "Set Core"));
+		buttonList.add(sLength = new GuiSlider(6, guiLeft + 47, guiTop + 104, 128, 20, "Length: ", "", 0, 5, 3, true, true));
+		buttonList.add(bSetLength = new PGuiButton(7, guiLeft + 176, guiTop + 104, 63, 20, "Set"));
 
 		lightsaberData = null;
 		setButtonsEnabled(false);
@@ -95,6 +99,8 @@ public class GuiLightsaberForge extends GuiContainer
 		sBlue.enabled = enabled;
 		bSetBladeColor.enabled = enabled;
 		bSetCoreColor.enabled = enabled;
+		sLength.enabled = enabled;
+		bSetLength.enabled = enabled;
 	}
 
 	@Override
@@ -117,6 +123,11 @@ public class GuiLightsaberForge extends GuiContainer
 			lightsaberData.descriptor.coreColor = Fx.Util.GetRgb(sRed.getValueInt(), sGreen.getValueInt(), sBlue.getValueInt()) | 0xFF000000;
 			writeDescriptor();
 		}
+		else if (button.id == bSetLength.id)
+		{
+			lightsaberData.descriptor.bladeLength = (float)(Math.floor(sLength.getValue() * 10) / 10f);
+			writeDescriptor();
+		}
 	}
 
 	private void writeDescriptor()
@@ -137,7 +148,7 @@ public class GuiLightsaberForge extends GuiContainer
 			drawRgbPreview(sRed.getValueInt() / 255f, sGreen.getValueInt() / 255f, sBlue.getValueInt() / 255f, true);
 
 			GL.PushMatrix();
-			GL.Translate(47, 125, 20);
+			GL.Translate(47, 135, 20);
 			GL.Rotate(-90, 0, 0, 1);
 			GL.Scale(53);
 			RenderLightsaber.renderBlade(3, 0, lightsaberData.descriptor);

@@ -9,6 +9,7 @@ import com.parzivail.swg.render.worldext.RenderExtLightsaberTrail;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
+import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
@@ -117,12 +118,11 @@ public class RenderLightsaber extends JsonItemRenderer
 
 		GL11.glPushMatrix();
 		GL.PushAttrib(AttribMask.EnableBit);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-
+		GL.Disable(EnableCap.Lighting);
+		GL.Disable(EnableCap.Texture2D);
+		GL.Disable(EnableCap.AlphaTest);
+		GL.Enable(EnableCap.Blend);
 		GL11.glDepthMask(false);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
 
 		Client.mc.entityRenderer.disableLightmap(0);
 
@@ -131,13 +131,14 @@ public class RenderLightsaber extends JsonItemRenderer
 		GL.Translate(dX, 0, dY);
 
 		// draw glow
-		for (int layer = 0; layer < 20; layer++)
+		for (int layer = 19; layer >= 0; layer--)
 		{
 			GL.Color(saberData.bladeColor, (int)(1.275f * layer));
 			Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, bladeLength + 0.01f * (layer - 5), 0, 0, -(20 - layer) * 0.005f, 0);
 		}
 
 		// draw core
+		GL11.glDepthMask(true);
 		GL.Color(saberData.coreColor);
 
 		boolean stable = !saberData.unstable;

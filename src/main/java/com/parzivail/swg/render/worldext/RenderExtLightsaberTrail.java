@@ -1,7 +1,6 @@
 package com.parzivail.swg.render.worldext;
 
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.proxy.LightsaberTrail;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -49,9 +48,10 @@ public class RenderExtLightsaberTrail
 		Vec3 playerPos = Client.mc.thePlayer.getPosition(Client.renderPartialTicks);
 		GL.Translate(-playerPos.xCoord, -playerPos.yCoord, -playerPos.zCoord);
 
+		GL11.glDepthMask(false);
 		trail.render();
-
 		GL11.glDepthMask(true);
+
 		GL.PopMatrix();
 		GL.PopAttrib();
 	}

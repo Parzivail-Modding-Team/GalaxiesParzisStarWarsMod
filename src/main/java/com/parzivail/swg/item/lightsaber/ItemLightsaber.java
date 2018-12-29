@@ -1,5 +1,6 @@
 package com.parzivail.swg.item.lightsaber;
 
+import com.google.common.collect.Multimap;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.util.audio.SoundHandler;
@@ -7,6 +8,8 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
@@ -61,24 +64,25 @@ public class ItemLightsaber extends PItem
 		}
 		else
 		{
-			int cCoreR = (d.coreColor & 0xFF0000) >> 16;
-			int cCoreG = (d.coreColor & 0xFF00) >> 8;
-			int cCoreB = (d.coreColor & 0xFF);
-
-			int cBladeR = (d.bladeColor & 0xFF0000) >> 16;
-			int cBladeG = (d.bladeColor & 0xFF00) >> 8;
-			int cBladeB = (d.bladeColor & 0xFF);
-
-			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.coreColor")), String.format("(%s, %s, %s)", cCoreR, cCoreG, cCoreB)));
-			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.bladeColor")), String.format("(%s, %s, %s)", cBladeR, cBladeG, cBladeB)));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.coreColor")), String.format("#%06X", d.coreColor & 0xFFFFFF)));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.bladeColor")), String.format("#%06X", d.bladeColor & 0xFFFFFF)));
 			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.bladeLength")), d.bladeLength));
 			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.unstable")), d.unstable));
 		}
 	}
 
+	@SuppressWarnings("deprecation")
+	public Multimap getItemAttributeModifiers()
+	{
+		Multimap multimap = super.getItemAttributeModifiers();
+		multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Tool modifier", (double)15, 0));
+		return multimap;
+	}
+
 	@Override
 	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
 	{
+		// TODO: make reach dependent on blade length
 		if (!entityLiving.worldObj.isRemote)
 		{
 			LightsaberData bd = new LightsaberData(stack);

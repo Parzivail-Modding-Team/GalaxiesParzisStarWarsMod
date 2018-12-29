@@ -1,6 +1,5 @@
-package com.parzivail.swg.proxy;
+package com.parzivail.swg.render.worldext;
 
-import com.parzivail.swg.render.worldext.LightsaberTrailComponent;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
