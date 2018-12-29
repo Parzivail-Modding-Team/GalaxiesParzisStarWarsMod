@@ -20,8 +20,8 @@ public class FxMC
 	{
 		try
 		{
-			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistance");
-			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistanceTemp");
+			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistance", "field_78490_B", "E");
+			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistanceTemp", "field_78491_C", "F");
 		}
 		catch (Exception e)
 		{
@@ -34,7 +34,7 @@ public class FxMC
 	{
 		try
 		{
-			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "camRoll");
+			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "camRoll", "field_78495_O", "R");
 		}
 		catch (Exception e)
 		{
@@ -47,7 +47,7 @@ public class FxMC
 	{
 		try
 		{
-			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "prevCamRoll");
+			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, roll, "prevCamRoll", "field_78505_P", "S");
 		}
 		catch (Exception e)
 		{

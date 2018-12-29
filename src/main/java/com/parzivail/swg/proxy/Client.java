@@ -200,7 +200,7 @@ public class Client extends Common
 
 		mc.entityRenderer = new PEntityRenderer(mc, mc.getResourceManager());
 
-		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, new PFramebuffer(mc.displayWidth, mc.displayHeight, true), "framebufferMc");
+		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, new PFramebuffer(mc.displayWidth, mc.displayHeight, true), "framebufferMc", "field_147124_at", "au");
 
 		guiQuestNotification = new GuiQuestNotification();
 
