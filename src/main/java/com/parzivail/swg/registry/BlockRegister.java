@@ -93,7 +93,7 @@ public class BlockRegister
 		register(oreRubindum = new PBlock("rubindum"));
 		register(oreCortosis = new PBlock("cortosis"));
 
-		register(new BlockChair("chairTest"));
+		registerDecoration(new BlockChair("chairBasic"));
 
 		register(new PBlockSand("tatooineSand"));
 		PBlock pourstone;
@@ -168,6 +168,13 @@ public class BlockRegister
 	private static PDecorativeBlock registerDecoration(String name)
 	{
 		PDecorativeBlock block = new PDecorativeBlock(name);
+		StarWarsGalaxy.proxy.registerBlockModel(block);
+		GameRegistry.registerBlock(block, PItemBlockSubcardinalDecoration.class, block.name);
+		return block;
+	}
+
+	private static PDecorativeBlock registerDecoration(PDecorativeBlock block)
+	{
 		StarWarsGalaxy.proxy.registerBlockModel(block);
 		GameRegistry.registerBlock(block, PItemBlockSubcardinalDecoration.class, block.name);
 		return block;

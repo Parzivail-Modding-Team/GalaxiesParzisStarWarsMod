@@ -2,7 +2,7 @@ package com.parzivail.swg.block;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityChair;
-import com.parzivail.util.block.PBlock;
+import com.parzivail.util.block.PDecorativeBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
@@ -10,25 +10,12 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class BlockChair extends PBlock
+public class BlockChair extends PDecorativeBlock
 {
 	public BlockChair(String name)
 	{
 		super(name);
 		setCreativeTab(StarWarsGalaxy.tab);
-		setAlpha();
-	}
-
-	@Override
-	public boolean renderAsNormalBlock()
-	{
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube()
-	{
-		return false;
 	}
 
 	@Override
