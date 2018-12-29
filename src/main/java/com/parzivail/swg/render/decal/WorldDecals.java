@@ -80,10 +80,10 @@ public class WorldDecals
 
 	public static void tick(int dim)
 	{
-		if (!allDecals.containsKey(dim))
+		if (!allDecals.containsKey(dim) || Client.getPlayer() == null)
 			return;
 
-		Vec3 playerPos = Minecraft.getMinecraft().thePlayer.getPosition(0);
+		Vec3 playerPos = Client.getPlayer().getPosition(0);
 		List<Decal> decals = allDecals.get(dim);
 		// Remove if expired, out of range, or parent block removed
 		decals.removeIf(d -> d.shouldDie() || Client.mc.theWorld.isAirBlock(d.blockX, d.blockY, d.blockZ) || Math.pow(d.x - playerPos.xCoord, 2) + Math.pow(d.y - playerPos.yCoord, 2) + Math.pow(d.z - playerPos.zCoord, 2) > 10000);

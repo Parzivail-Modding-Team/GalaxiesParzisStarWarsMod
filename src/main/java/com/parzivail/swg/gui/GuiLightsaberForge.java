@@ -106,8 +106,6 @@ public class GuiLightsaberForge extends GuiContainer
 	@Override
 	protected void actionPerformed(GuiButton button)
 	{
-		//		if (button.id == bScopes.id)
-		//			setAttachmentsInTab(BlasterAttachments.SCOPES);
 		if (button.id == cbSaberUnstable.id)
 		{
 			lightsaberData.descriptor.unstable = cbSaberUnstable.isChecked();
