@@ -127,7 +127,7 @@ public class Client extends Common
 		l2WTempInputBuffer2.clear();
 		l2WTempOutputBuffer.clear();
 
-		FloatBuffer camMat = ObfuscationReflectionHelper.getPrivateValue(ActiveRenderInfo.class, null, "modelview");
+		FloatBuffer camMat = ObfuscationReflectionHelper.getPrivateValue(ActiveRenderInfo.class, null, "modelview", "field_74594_j", "j");
 		BufferMatrix.invertMatrix(camMat, l2WTempInputBuffer2);
 
 		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, l2WTempInputBuffer1);

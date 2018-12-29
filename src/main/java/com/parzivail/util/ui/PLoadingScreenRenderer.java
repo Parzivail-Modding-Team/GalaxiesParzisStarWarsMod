@@ -24,7 +24,7 @@ public class PLoadingScreenRenderer extends LoadingScreenRenderer
 	{
 		super(mc);
 
-		fb = ObfuscationReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "field_146588_g");
+		fb = ObfuscationReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "field_146588_g", "g");
 	}
 
 	/**
@@ -34,7 +34,7 @@ public class PLoadingScreenRenderer extends LoadingScreenRenderer
 	{
 		World worldEntering = Client.mc.theWorld;
 		if (Client.mc.getNetHandler() != null)
-			worldEntering = ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayClient.class, Client.mc.getNetHandler(), "clientWorldController");
+			worldEntering = ObfuscationReflectionHelper.getPrivateValue(NetHandlerPlayClient.class, Client.mc.getNetHandler(), "clientWorldController", "field_147300_g", "g");
 
 		String c = getCurrentlyDisplayedText();
 		String fd = getField_73727_a();
@@ -113,11 +113,11 @@ public class PLoadingScreenRenderer extends LoadingScreenRenderer
 
 	private String getCurrentlyDisplayedText()
 	{
-		return ObfuscationReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "currentlyDisplayedText");
+		return ObfuscationReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "currentlyDisplayedText", "field_73726_c", "c");
 	}
 
 	private String getField_73727_a()
 	{
-		return ObfuscationReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "field_73727_a");
+		return ObfuscationReflectionHelper.getPrivateValue(LoadingScreenRenderer.class, this, "field_73727_a", "a");
 	}
 }
