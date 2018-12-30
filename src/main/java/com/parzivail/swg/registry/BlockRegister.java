@@ -22,6 +22,7 @@ public class BlockRegister
 {
 	public static PBlock fastGrass;
 	public static PBlockPillar endorLog;
+	public static PBlockSand tatooineSand;
 
 	public static PBlock oreChromium;
 	public static PBlock oreTitanium;
@@ -59,12 +60,23 @@ public class BlockRegister
 		register(new PBlockConnected("hothSandbag", "hothSandbag", Material.craftedSnow));
 		register(new PBlock("mud").withHarvestLevel("shovel", HarvestLevel.STONE));
 
-		register((PBlock)new PBlock("metalWhite", "white").setStepSound(Block.soundTypeMetal));
-		register((PBlock)new PBlock("metalGray", "gray").setStepSound(Block.soundTypeMetal));
+		PBlock metalWhite;
+		PBlock metalGray;
+		PBlock metalDarkGray;
+		PBlock metalBlack;
+		PBlock metalCaution;
+		register(metalWhite = (PBlock)new PBlock("metalWhite", "white").setStepSound(Block.soundTypeMetal));
+		register(metalGray = (PBlock)new PBlock("metalGray", "gray").setStepSound(Block.soundTypeMetal));
 		register((PBlock)new PBlock("metalGrayBevel", "grayBevel").setStepSound(Block.soundTypeMetal));
-		register((PBlock)new PBlock("metalDarkGray", "darkGray").setStepSound(Block.soundTypeMetal));
-		register((PBlock)new PBlock("metalBlack", "black").setStepSound(Block.soundTypeMetal));
-		register((PBlock)new PBlock("metalCaution", "caution").setStepSound(Block.soundTypeMetal));
+		register(metalDarkGray = (PBlock)new PBlock("metalDarkGray", "darkGray").setStepSound(Block.soundTypeMetal));
+		register(metalBlack = (PBlock)new PBlock("metalBlack", "black").setStepSound(Block.soundTypeMetal));
+		register(metalCaution = (PBlock)new PBlock("metalCaution", "caution").setStepSound(Block.soundTypeMetal));
+
+		register(new PBlockStairs("metalWhiteStairs", metalWhite, 0));
+		register(new PBlockStairs("metalGrayStairs", metalGray, 0));
+		register(new PBlockStairs("metalDarkGrayStairs", metalDarkGray, 0));
+		register(new PBlockStairs("metalBlackStairs", metalBlack, 0));
+		register(new PBlockStairs("metalCautionStairs", metalCaution, 0));
 
 		register((PBlockConnected)new PBlockConnected("grateLightGray", "grateLightGray", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
 		register((PBlockConnected)new PBlockConnected("grateDarkGray", "grateDarkGray", "grate", Material.iron).setStepSound(Block.soundTypeMetal));
@@ -95,7 +107,7 @@ public class BlockRegister
 
 		registerDecoration(new BlockChair("chairBasic"));
 
-		register(new PBlockSand("tatooineSand"));
+		register(tatooineSand = new PBlockSand("tatooineSand"));
 		PBlock pourstone;
 		register(pourstone = new PBlock("pourstone"));
 		register(new PBlockStairs("pourstoneStairs", pourstone, 0));

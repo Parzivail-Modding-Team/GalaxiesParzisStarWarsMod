@@ -2,6 +2,7 @@ package com.parzivail.swg.dimension.tatooine;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.tatooine.terrain.TerrainTatooineCanyons;
+import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.StructureRegister;
 import com.parzivail.util.world.*;
 import com.parzivail.util.world.TerrainLayer.Function;
@@ -72,7 +73,7 @@ public class ChunkProviderTatooine implements IChunkProvider
 					double sandstoneThreshold = height * 0.85;
 
 					if (y >= sandThreshold)
-						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.sand);
+						extendedblockstorage.setExtBlockID(x, y & 15, z, BlockRegister.tatooineSand);
 					else if (y >= sandstoneThreshold && y < sandThreshold)
 						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.sandstone);
 					else
