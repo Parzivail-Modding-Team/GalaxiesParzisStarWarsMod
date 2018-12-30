@@ -12,6 +12,7 @@ import com.parzivail.swg.item.lightsaber.ItemLightsaber;
 import com.parzivail.util.ui.GLPalette;
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.potion.Potion;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by colby on 12/26/2017.
@@ -133,7 +134,8 @@ public class ItemRegister
 
 		register(lightsaber = new ItemLightsaber());
 
-		register(chromiumIngot = new PItem("chromiumIngot"));
+		register(chromiumIngot = new PItem("chromiumIngot")); // XXX(kaeptmblaubaer1000): Migrate this to ingotChromium somehow
+		OreDictionary.registerOre("ingotChromium", chromiumIngot);
 	}
 
 	private static void register(PItem item)
