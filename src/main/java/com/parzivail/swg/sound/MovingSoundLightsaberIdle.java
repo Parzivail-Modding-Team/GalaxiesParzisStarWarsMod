@@ -3,7 +3,6 @@ package com.parzivail.swg.sound;
 import com.parzivail.swg.Resources;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.MovingSound;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -16,7 +15,7 @@ public class MovingSoundLightsaberIdle extends MovingSound
 	{
 		super(Resources.location("swg.fx.saber.idle"));
 		this.player = player;
-		attenuationType = ISound.AttenuationType.NONE;
+		attenuationType = AttenuationType.LINEAR;
 		repeat = true;
 		repeatDelay = 0;
 	}
@@ -25,5 +24,9 @@ public class MovingSoundLightsaberIdle extends MovingSound
 	{
 		if (player.isDead)
 			donePlaying = true;
+
+		xPosF = (float)player.posX;
+		yPosF = (float)player.posY;
+		zPosF = (float)player.posZ;
 	}
 }
