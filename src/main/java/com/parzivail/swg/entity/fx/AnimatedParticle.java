@@ -35,7 +35,7 @@ public class AnimatedParticle extends EntityFX
 		float opacity = getOpacity(life, partialTicks);
 		float scale = getScale(life, partialTicks);
 
-		int frame = Math.round(life * cols * rows);
+		int frame = Math.round(life * (cols - 1) * (rows - 1));
 
 		float u = (frame % cols) * oneOverCols;
 		float v = (float)(Math.floor(frame / (float)cols) * oneOverRows);
@@ -47,10 +47,13 @@ public class AnimatedParticle extends EntityFX
 		float f12 = (float)(prevPosY + (posY - prevPosY) * (double)partialTicks - EntityFX.interpPosY);
 		float f13 = (float)(prevPosZ + (posZ - prevPosZ) * (double)partialTicks - EntityFX.interpPosZ);
 
+		GL.PushAttrib(AttribMask.EnableBit);
+		GL.PushAttrib(AttribMask.TextureBit);
+
+		GL.Disable(EnableCap.Lighting);
 		GL.Enable(EnableCap.Blend);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		GL.PushAttrib(AttribMask.TextureBit);
 		Client.mc.renderEngine.bindTexture(texture);
 		Client.mc.entityRenderer.disableLightmap(0);
 
@@ -69,6 +72,8 @@ public class AnimatedParticle extends EntityFX
 		GL.TexCoord2((double)u, (double)vMax);
 		GL.Vertex3((double)(f11 + rX * scale - rYZ * scale), (double)(f12 - rXZ * scale), (double)(f13 + rZ * scale - rXY * scale));
 		GL.End();
+
+		GL.PopAttrib();
 		GL.PopAttrib();
 	}
 
