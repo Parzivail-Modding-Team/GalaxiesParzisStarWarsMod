@@ -16,7 +16,7 @@ final class Huffman
 
 	/**
 	 * Returns reverse(reverse(key, len) + 1, len).
-	 * <p>
+	 *
 	 * <p> reverse(key, len) is the bit-wise reversal of the len least significant bits of key.
 	 */
 	private static int getNextKey(int key, int len)
@@ -31,7 +31,7 @@ final class Huffman
 
 	/**
 	 * Stores {@code item} in {@code table[0], table[step], table[2 * step] .., table[end]}.
-	 * <p>
+	 *
 	 * <p> Assumes that end is an integer multiple of step.
 	 */
 	private static void replicateValue(int[] table, int offset, int step, int end, int item)

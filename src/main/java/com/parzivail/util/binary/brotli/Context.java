@@ -17,11 +17,6 @@ final class Context
 	private static final String UTF_MAP = "         !!  !                  \"#$##%#$&'##(#)#+++++++++" + "+((&*'##,---,---,-----,-----,-----&#'###.///.///./////./////./////&#'# ";
 	private static final String UTF_RLE = "A/*  ':  & : $  \u0081 @";
 
-	static
-	{
-		unpackLookupTable(LOOKUP, UTF_MAP, UTF_RLE);
-	}
-
 	private static void unpackLookupTable(int[] lookup, String map, String rle)
 	{
 		// LSB6, MSB6, SIGNED
@@ -63,5 +58,10 @@ final class Context
 		{
 			lookup[1536 + i] = lookup[1792 + i] << 3;
 		}
+	}
+
+	static
+	{
+		unpackLookupTable(LOOKUP, UTF_MAP, UTF_RLE);
 	}
 }

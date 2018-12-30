@@ -8,6 +8,8 @@ package com.parzivail.util.binary.brotli;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
+import java.nio.charset.StandardCharsets;
 
 /**
  * A set of utility methods.
@@ -21,7 +23,7 @@ final class Utils
 
 	/**
 	 * Fills byte array with zeroes.
-	 * <p>
+	 *
 	 * <p> Current implementation uses {@link System#arraycopy}, so it should be used for length not
 	 * less than 16.
 	 *
@@ -42,7 +44,7 @@ final class Utils
 
 	/**
 	 * Fills int array with zeroes.
-	 * <p>
+	 *
 	 * <p> Current implementation uses {@link System#arraycopy}, so it should be used for length not
 	 * less than 16.
 	 *
@@ -81,5 +83,18 @@ final class Utils
 	static void closeInput(InputStream src) throws IOException
 	{
 		src.close();
+	}
+
+	static byte[] toUsAsciiBytes(String src)
+	{
+		// NB: String#getBytes(String) is present in JDK 1.1, while other variants require JDK 1.6 and
+		// above.
+		return src.getBytes(StandardCharsets.US_ASCII);
+	}
+
+	// Crazy pills factory: code compiled for JDK8 does not work on JRE9.
+	static void flipBuffer(Buffer buffer)
+	{
+		buffer.flip();
 	}
 }

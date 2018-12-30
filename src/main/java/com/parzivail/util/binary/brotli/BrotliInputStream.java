@@ -11,37 +11,40 @@ import java.io.InputStream;
 
 /**
  * {@link InputStream} decorator that decompresses brotli data.
- * <p>
+ *
  * <p> Not thread-safe.
  */
 public class BrotliInputStream extends InputStream
 {
 
-	private static final int DEFAULT_INTERNAL_BUFFER_SIZE = 256;
+	public static final int DEFAULT_INTERNAL_BUFFER_SIZE = 256;
 
 	/**
 	 * Internal buffer used for efficient byte-by-byte reading.
 	 */
 	private final byte[] buffer;
-	/**
-	 * Decoder state.
-	 */
-	private final State state = new State();
+
 	/**
 	 * Number of decoded but still unused bytes in internal buffer.
 	 */
 	private int remainingBufferBytes;
+
 	/**
 	 * Next unused byte offset.
 	 */
 	private int bufferOffset;
 
 	/**
+	 * Decoder state.
+	 */
+	private final State state = new State();
+
+	/**
 	 * Creates a {@link InputStream} wrapper that decompresses brotli data.
-	 * <p>
+	 *
 	 * <p> For byte-by-byte reading ({@link #read()}) internal buffer with
 	 * {@link #DEFAULT_INTERNAL_BUFFER_SIZE} size is allocated and used.
-	 * <p>
+	 *
 	 * <p> Will block the thread until first {@link BitReader#CAPACITY} bytes of data of source
 	 * are available.
 	 *
@@ -56,10 +59,10 @@ public class BrotliInputStream extends InputStream
 
 	/**
 	 * Creates a {@link InputStream} wrapper that decompresses brotli data.
-	 * <p>
+	 *
 	 * <p> For byte-by-byte reading ({@link #read()}) internal buffer of specified size is
 	 * allocated and used.
-	 * <p>
+	 *
 	 * <p> Will block the thread until first {@link BitReader#CAPACITY} bytes of data of source
 	 * are available.
 	 *
@@ -69,7 +72,7 @@ public class BrotliInputStream extends InputStream
 	 *
 	 * @throws IOException in case of corrupted data or source stream problems
 	 */
-	private BrotliInputStream(InputStream source, int byteReadBufferSize) throws IOException
+	public BrotliInputStream(InputStream source, int byteReadBufferSize) throws IOException
 	{
 		if (byteReadBufferSize <= 0)
 		{
@@ -89,6 +92,25 @@ public class BrotliInputStream extends InputStream
 		catch (BrotliRuntimeException ex)
 		{
 			throw new IOException("Brotli decoder initialization failed", ex);
+		}
+	}
+
+	public void setEager(boolean eager)
+	{
+		boolean isEager = (state.isEager != 0);
+		if (eager == isEager)
+		{
+			/* Shortcut for no-op change. */
+			return;
+		}
+		if (eager)
+		{
+			Decode.setEager(state);
+		}
+		else
+		{
+			/* Once decoder is "eager", there is no way back. */
+			throw new IllegalStateException("Brotli decoder has been already switched to eager mode");
 		}
 	}
 

@@ -15,12 +15,78 @@ import java.io.InputStream;
 final class Decode
 {
 
+	//----------------------------------------------------------------------------
+	// RunningState
+	//----------------------------------------------------------------------------
+	private static final int UNINITIALIZED = 0;
+	private static final int INITIALIZED = 1;
+	private static final int BLOCK_START = 2;
+	private static final int COMPRESSED_BLOCK_START = 3;
+	private static final int MAIN_LOOP = 4;
+	private static final int READ_METADATA = 5;
+	private static final int COPY_UNCOMPRESSED = 6;
+	private static final int INSERT_LOOP = 7;
+	private static final int COPY_LOOP = 8;
+	private static final int TRANSFORM = 9;
+	private static final int FINISHED = 10;
+	private static final int CLOSED = 11;
+	private static final int INIT_WRITE = 12;
+	private static final int WRITE = 13;
+
+	private static final int DEFAULT_CODE_LENGTH = 8;
+	private static final int CODE_LENGTH_REPEAT_CODE = 16;
+	private static final int NUM_LITERAL_CODES = 256;
+	private static final int NUM_INSERT_AND_COPY_CODES = 704;
+	private static final int NUM_BLOCK_LENGTH_CODES = 26;
+	private static final int LITERAL_CONTEXT_BITS = 6;
+	private static final int DISTANCE_CONTEXT_BITS = 2;
+
+	private static final int HUFFMAN_TABLE_BITS = 8;
+	private static final int HUFFMAN_TABLE_MASK = 0xFF;
+
 	/**
 	 * Maximum possible Huffman table size for an alphabet size of 704, max code length 15 and root
 	 * table bits 8.
 	 */
-	private static final int HUFFMAN_TABLE_SIZE = 1080;
-	private static final int[] DICTIONARY_OFFSETS_BY_LENGTH = {
+	static final int HUFFMAN_TABLE_SIZE = 1080;
+
+	private static final int CODE_LENGTH_CODES = 18;
+	private static final int[] CODE_LENGTH_CODE_ORDER = {
+			1, 2, 3, 4, 0, 5, 17, 6, 16, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+			};
+
+	private static final int NUM_DISTANCE_SHORT_CODES = 16;
+	private static final int[] DISTANCE_SHORT_CODE_INDEX_OFFSET = {
+			3, 2, 1, 0, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2
+	};
+
+	private static final int[] DISTANCE_SHORT_CODE_VALUE_OFFSET = {
+			0, 0, 0, 0, -1, 1, -2, 2, -3, 3, -1, 1, -2, 2, -3, 3
+	};
+
+	/**
+	 * Static Huffman code for the code length code lengths.
+	 */
+	private static final int[] FIXED_TABLE = {
+			0x020000,
+			0x020004,
+			0x020003,
+			0x030002,
+			0x020000,
+			0x020004,
+			0x020003,
+			0x040001,
+			0x020000,
+			0x020004,
+			0x020003,
+			0x030002,
+			0x020000,
+			0x020004,
+			0x020003,
+			0x040005
+	};
+
+	static final int[] DICTIONARY_OFFSETS_BY_LENGTH = {
 			0,
 			0,
 			0,
@@ -47,16 +113,21 @@ final class Decode
 			121280,
 			122016
 	};
-	private static final int[] DICTIONARY_SIZE_BITS_BY_LENGTH = {
+
+	static final int[] DICTIONARY_SIZE_BITS_BY_LENGTH = {
 			0, 0, 0, 0, 10, 10, 11, 11, 10, 10, 10, 10, 10, 9, 9, 8, 7, 7, 8, 7, 7, 6, 6, 5, 5
 	};
-	private static final int MIN_WORD_LENGTH = 4;
-	private static final int MAX_WORD_LENGTH = 24;
-	private static final int MAX_TRANSFORMED_WORD_LENGTH = 5 + MAX_WORD_LENGTH + 8;
+
+	static final int MIN_WORD_LENGTH = 4;
+
+	static final int MAX_WORD_LENGTH = 24;
+
+	static final int MAX_TRANSFORMED_WORD_LENGTH = 5 + MAX_WORD_LENGTH + 8;
+
 	//----------------------------------------------------------------------------
 	// Prefix code LUT.
 	//----------------------------------------------------------------------------
-	private static final int[] BLOCK_LENGTH_OFFSET = {
+	static final int[] BLOCK_LENGTH_OFFSET = {
 			1,
 			5,
 			9,
@@ -84,83 +155,33 @@ final class Decode
 			8433,
 			16625
 	};
-	private static final int[] BLOCK_LENGTH_N_BITS = {
+
+	static final int[] BLOCK_LENGTH_N_BITS = {
 			2, 2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 6, 6, 7, 8, 9, 10, 11, 12, 13, 24
 	};
-	private static final int[] INSERT_LENGTH_OFFSET = {
+
+	static final int[] INSERT_LENGTH_OFFSET = {
 			0, 1, 2, 3, 4, 5, 6, 8, 10, 14, 18, 26, 34, 50, 66, 98, 130, 194, 322, 578, 1090, 2114, 6210, 22594
 	};
-	private static final int[] INSERT_LENGTH_N_BITS = {
+
+	static final int[] INSERT_LENGTH_N_BITS = {
 			0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 8, 9, 10, 12, 14, 24
 	};
-	private static final int[] COPY_LENGTH_OFFSET = {
+
+	static final int[] COPY_LENGTH_OFFSET = {
 			2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 14, 18, 22, 30, 38, 54, 70, 102, 134, 198, 326, 582, 1094, 2118
 	};
-	private static final int[] COPY_LENGTH_N_BITS = {
+
+	static final int[] COPY_LENGTH_N_BITS = {
 			0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 7, 8, 9, 10, 24
 	};
-	private static final int[] INSERT_RANGE_LUT = {
+
+	static final int[] INSERT_RANGE_LUT = {
 			0, 0, 8, 8, 0, 16, 8, 16, 16
 	};
-	private static final int[] COPY_RANGE_LUT = {
+
+	static final int[] COPY_RANGE_LUT = {
 			0, 8, 0, 8, 16, 0, 16, 8, 16
-	};
-	//----------------------------------------------------------------------------
-	// RunningState
-	//----------------------------------------------------------------------------
-	private static final int UNINITIALIZED = 0;
-	private static final int BLOCK_START = 1;
-	private static final int COMPRESSED_BLOCK_START = 2;
-	private static final int MAIN_LOOP = 3;
-	private static final int READ_METADATA = 4;
-	private static final int COPY_UNCOMPRESSED = 5;
-	private static final int INSERT_LOOP = 6;
-	private static final int COPY_LOOP = 7;
-	private static final int TRANSFORM = 8;
-	private static final int FINISHED = 9;
-	private static final int CLOSED = 10;
-	private static final int INIT_WRITE = 11;
-	private static final int WRITE = 12;
-	private static final int DEFAULT_CODE_LENGTH = 8;
-	private static final int CODE_LENGTH_REPEAT_CODE = 16;
-	private static final int NUM_LITERAL_CODES = 256;
-	private static final int NUM_INSERT_AND_COPY_CODES = 704;
-	private static final int NUM_BLOCK_LENGTH_CODES = 26;
-	private static final int LITERAL_CONTEXT_BITS = 6;
-	private static final int DISTANCE_CONTEXT_BITS = 2;
-	private static final int HUFFMAN_TABLE_BITS = 8;
-	private static final int HUFFMAN_TABLE_MASK = 0xFF;
-	private static final int CODE_LENGTH_CODES = 18;
-	private static final int[] CODE_LENGTH_CODE_ORDER = {
-			1, 2, 3, 4, 0, 5, 17, 6, 16, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-			};
-	private static final int NUM_DISTANCE_SHORT_CODES = 16;
-	private static final int[] DISTANCE_SHORT_CODE_INDEX_OFFSET = {
-			3, 2, 1, 0, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2
-	};
-	private static final int[] DISTANCE_SHORT_CODE_VALUE_OFFSET = {
-			0, 0, 0, 0, -1, 1, -2, 2, -3, 3, -1, 1, -2, 2, -3, 3
-	};
-	/**
-	 * Static Huffman code for the code length code lengths.
-	 */
-	private static final int[] FIXED_TABLE = {
-			0x020000,
-			0x020004,
-			0x020003,
-			0x030002,
-			0x020000,
-			0x020004,
-			0x020003,
-			0x040001,
-			0x020000,
-			0x020004,
-			0x020003,
-			0x030002,
-			0x020000,
-			0x020004,
-			0x020003,
-			0x040005
 	};
 
 	private static int decodeWindowBits(State s)
@@ -184,6 +205,22 @@ final class Decode
 	}
 
 	/**
+	 * Switch decoder to "eager" mode.
+	 *
+	 * In "eager" mode decoder returns as soon as there is enough data to fill output buffer.
+	 *
+	 * @param s initialized state, before any read is performed.
+	 */
+	static void setEager(State s)
+	{
+		if (s.runningState != INITIALIZED)
+		{
+			throw new IllegalStateException("State MUST be freshly initialized");
+		}
+		s.isEager = 1;
+	}
+
+	/**
 	 * Associate input with decoder state.
 	 *
 	 * @param s     uninitialized state without associated input
@@ -198,14 +235,7 @@ final class Decode
 		s.blockTrees = new int[6 * HUFFMAN_TABLE_SIZE];
 		s.input = input;
 		BitReader.initBitReader(s);
-		int windowBits = decodeWindowBits(s);
-		if (windowBits == 9)
-		{ /* Reserved case for future expansion. */
-			throw new BrotliRuntimeException("Invalid 'windowBits' code");
-		}
-		s.maxRingBufferSize = 1 << windowBits;
-		s.maxBackwardDistance = s.maxRingBufferSize - 16;
-		s.runningState = BLOCK_START;
+		s.runningState = INITIALIZED;
 	}
 
 	static void close(State s) throws IOException
@@ -443,7 +473,7 @@ final class Decode
 		Utils.fillIntsWithZeroes(codeLengths, symbol, numSymbols);
 	}
 
-	private static int checkDupes(int[] symbols, int length)
+	static int checkDupes(int[] symbols, int length)
 	{
 		for (int i = 0; i < length - 1; ++i)
 		{
@@ -459,7 +489,7 @@ final class Decode
 	}
 
 	// TODO: Use specialized versions for smaller tables.
-	private static void readHuffmanCode(int alphabetSize, int[] table, int offset, State s)
+	static void readHuffmanCode(int alphabetSize, int[] table, int offset, State s)
 	{
 		int ok = 1;
 		int simpleCodeOrSkip;
@@ -889,6 +919,18 @@ final class Decode
 		{
 			throw new IllegalStateException("Can't decompress after close");
 		}
+		if (s.runningState == INITIALIZED)
+		{
+			int windowBits = decodeWindowBits(s);
+			if (windowBits == 9)
+			{  /* Reserved case for future expansion. */
+				throw new BrotliRuntimeException("Invalid 'windowBits' code");
+			}
+			s.maxRingBufferSize = 1 << windowBits;
+			s.maxBackwardDistance = s.maxRingBufferSize - 16;
+			s.runningState = BLOCK_START;
+		}
+
 		int fence = calculateFence(s);
 		int ringBufferMask = s.ringBufferSize - 1;
 		byte[] ringBuffer = s.ringBuffer;
@@ -1125,9 +1167,9 @@ final class Decode
 						int wordIdx = wordId & mask;
 						int transformIdx = wordId >>> shift;
 						offset += wordIdx * s.copyLength;
-						if (transformIdx < Transform.NUM_TRANSFORMS)
+						if (transformIdx < Transform.NUM_RFC_TRANSFORMS)
 						{
-							int len = Transform.transformDictionaryWord(ringBuffer, s.pos, Dictionary.getData(), offset, s.copyLength, transformIdx);
+							int len = Transform.transformDictionaryWord(ringBuffer, s.pos, Dictionary.getData(), offset, s.copyLength, Transform.RFC_TRANSFORMS, transformIdx);
 							s.pos += len;
 							s.metaBlockLength -= len;
 							if (s.pos >= fence)
