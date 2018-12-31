@@ -71,11 +71,16 @@ public class ItemLightsaber extends PItem
 		}
 	}
 
-	@SuppressWarnings("deprecation")
-	public Multimap getItemAttributeModifiers()
+	@Override
+	public Multimap getAttributeModifiers(ItemStack stack)
 	{
-		Multimap multimap = super.getItemAttributeModifiers();
-		multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Tool modifier", (double)15, 0));
+		Multimap multimap = super.getAttributeModifiers(stack);
+		LightsaberData bd = new LightsaberData(stack);
+
+		if (bd.isOpen)
+			multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Tool modifier", (double)15, 0));
+		else
+			multimap.put(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName(), new AttributeModifier(itemModifierUUID, "Tool modifier", (double)1, 0));
 		return multimap;
 	}
 
