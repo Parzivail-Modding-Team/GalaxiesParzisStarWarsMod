@@ -78,7 +78,7 @@ public class ItemRegister
 
 	public static PItem lightsaber;
 
-	public static PItem chromiumIngot;
+	public static PItem ingotChromium;
 
 	public static void register()
 	{
@@ -134,8 +134,8 @@ public class ItemRegister
 
 		register(lightsaber = new ItemLightsaber());
 
-		register(chromiumIngot = new PItem("chromiumIngot")); // XXX(kaeptmblaubaer1000): Migrate this to ingotChromium somehow
-		OreDictionary.registerOre("ingotChromium", chromiumIngot);
+		register(ingotChromium = new PItem("ingotChromium"));
+		OreDictionary.registerOre("ingotChromium", ingotChromium);
 	}
 
 	private static void register(PItem item)

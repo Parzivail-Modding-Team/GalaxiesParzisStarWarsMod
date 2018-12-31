@@ -101,14 +101,14 @@ public class BlockRegister
 
 		register(new PBlock("labWall"));
 
-		register(oreChromium = new PBlock("chromium")); // XXX(kaeptmblaubaer1000): ores should be renamed (with auto-migration to new name) to match ore dictionary names
+		register(oreChromium = new PBlock("oreChromium")); // XXX(kaeptmblaubaer1000): ores should be renamed (with auto-migration to new name) to match ore dictionary names
 								// Then it would be possible to get ores automatically registered in the ore dictionary
 		OreDictionary.registerOre("oreChromium", oreChromium);
-		register(oreTitanium = new PBlock("titanium"));
+		register(oreTitanium = new PBlock("oreTitanium"));
 		OreDictionary.registerOre("oreTitanium", oreTitanium);
-		register(oreRubindum = new PBlock("rubindum"));
+		register(oreRubindum = new PBlock("oreRubindum"));
 		OreDictionary.registerOre("oreRubindum", oreRubindum);
-		register(oreCortosis = new PBlock("cortosis"));
+		register(oreCortosis = new PBlock("oreCortosis"));
 		OreDictionary.registerOre("oreCortosis", oreCortosis);
 
 		registerDecoration(new BlockChair("chairBasic"));
