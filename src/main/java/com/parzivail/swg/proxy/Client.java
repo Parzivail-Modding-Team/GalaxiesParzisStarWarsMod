@@ -181,7 +181,7 @@ public class Client extends Common
 
 		if (item.isLeftClickRepeatable())
 			while (KeybindRegistry.keyAttack.interceptedIsPressed())
-				; // tick down the press count, if there is any
+				;
 
 		if (pressed)
 		{

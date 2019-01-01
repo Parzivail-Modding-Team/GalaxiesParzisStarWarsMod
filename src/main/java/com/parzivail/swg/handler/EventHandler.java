@@ -24,6 +24,7 @@ import com.parzivail.swg.render.worldext.RenderExtHealthBar;
 import com.parzivail.swg.render.worldext.RenderExtLightsaberTrail;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.world.PswgWorldDataHandler;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitEntity;
@@ -68,6 +69,7 @@ public class EventHandler
 	{
 		if (event.gui instanceof GuiMainMenu && !StarWarsGalaxy.config.getHasSeenIntroCrawl())
 		{
+			Lumberjack.debug("Showing intro crawl");
 			Client.mc.displayGuiScreen(new GuiScreenTrailer());
 			StarWarsGalaxy.config.setHasSeenIntroCrawl(true);
 		}
@@ -85,7 +87,10 @@ public class EventHandler
 	public void on(TextureStitchEvent.Pre event)
 	{
 		if (event.map.getTextureType() == 0)
+		{
 			JsonModelRenderer.loadTextures(event.map);
+			Lumberjack.debug("Reloaded JSON texture map");
+		}
 	}
 
 	@SubscribeEvent
@@ -248,7 +253,7 @@ public class EventHandler
 	{
 		Client.guiQuestNotification.update();
 
-		if (Client.mc.thePlayer != null)
+		if (Client.getPlayer() != null)
 		{
 			MultipartFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
 			if (ship == null && Client.mc.renderViewEntity instanceof EntityCinematicCamera)
