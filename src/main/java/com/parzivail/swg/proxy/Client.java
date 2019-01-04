@@ -204,9 +204,6 @@ public class Client extends Common
 
 		guiQuestNotification = new GuiQuestNotification();
 
-		//frSansSerif = createFont("sansserif");
-		//frSerif = createFont("serif");
-
 		frNaboo = createFont("naboo");
 		frAurebesh = createFont("aurebesh");
 		frDroid = createFont("droid");

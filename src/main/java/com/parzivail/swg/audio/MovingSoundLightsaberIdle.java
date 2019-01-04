@@ -1,4 +1,4 @@
-package com.parzivail.swg.sound;
+package com.parzivail.swg.audio;
 
 import com.parzivail.swg.Resources;
 import cpw.mods.fml.relauncher.Side;

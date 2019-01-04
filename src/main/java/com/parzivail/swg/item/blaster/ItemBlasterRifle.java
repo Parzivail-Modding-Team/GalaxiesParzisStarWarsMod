@@ -12,7 +12,7 @@ import com.parzivail.swg.item.blaster.data.BlasterData;
 import com.parzivail.swg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.swg.item.blaster.data.powerpack.BlasterPowerPack;
 import com.parzivail.swg.render.decal.Decal;
-import com.parzivail.util.audio.SoundHandler;
+import com.parzivail.util.audio.Sfx;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
@@ -277,14 +277,14 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 				if (nextPack == null)
 				{
 					if (!world.isRemote)
-						SoundHandler.playSound(player, Resources.modColon("swg.fx.rifleDryfire"), 1, 1);
+						Sfx.play(player, Resources.modColon("swg.fx.rifleDryfire"), 1, 1);
 					return false;
 				}
 				else if (!world.isRemote)
 				{
 					bd.shotsRemaining = nextPack.right.getNumShots();
 					player.inventory.decrStackSize(nextPack.left, 1);
-					SoundHandler.playSound(player, Resources.modColon("swg.fx.rifleReload"), 1, 1);
+					Sfx.play(player, Resources.modColon("swg.fx.rifleReload"), 1, 1);
 				}
 			}
 
@@ -308,7 +308,7 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			Vec3 look = Vec3.createVectorHelper(Math.cos(ra.getPitch() / 180f * Math.PI) * Math.cos(ra.getYaw() / 180f * Math.PI), Math.sin(ra.getPitch() / 180f * Math.PI), Math.cos(ra.getPitch() / 180f * Math.PI) * Math.sin(-ra.getYaw() / 180f * Math.PI));
 			RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * bd.getBarrel().getRangeIncrease(), player, new Entity[0], true);
 
-			SoundHandler.playSound(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
+			Sfx.play(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
 
 			Entity e = new EntityBlasterBolt(world, (float)look.xCoord, (float)look.yCoord, (float)look.zCoord, descriptor.damage, descriptor.boltColor);
 			e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);

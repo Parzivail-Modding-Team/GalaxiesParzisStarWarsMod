@@ -43,9 +43,9 @@ public class TileAtmoSound extends TileEntity
 		//		ResourceLocation soundRL = getSound();
 		//		if (!isInvalid() && soundRL != null)
 		//		{
-		//			SoundHandler sh = FMLClientHandler.instance().getClient().getSoundHandler();
+		//			Sfx sh = FMLClientHandler.instance().getClient().getSoundHandler();
 		//			if (sound == null || !sh.isSoundPlaying(sound))
-		//				sh.playSound(sound = new AtmoSound(soundRL, xCoord + 0.5f, yCoord + 0.5f, zCoord + 0.5f, 1, 1));
+		//				sh.play(sound = new AtmoSound(soundRL, xCoord + 0.5f, yCoord + 0.5f, zCoord + 0.5f, 1, 1));
 		//		}
 		//		else if (sound != null)
 		//		{

@@ -1,7 +1,6 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.audio.AmbientSounds;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.force.Cron;
@@ -379,7 +378,7 @@ public class EventHandler
 		if (event.phase != Phase.START)
 			return;
 
-		AmbientSounds.tick(event);
+		SoundHandler.tick(event);
 		WorldDecals.tick(Client.getPlayer() == null ? 0 : Client.getPlayer().dimension);
 
 		if (Client.leftClickDelayTimer > 0)

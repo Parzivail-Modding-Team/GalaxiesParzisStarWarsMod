@@ -1,6 +1,6 @@
 package com.parzivail.util.audio;
 
-import com.parzivail.swg.sound.MovingSoundLightsaberIdle;
+import com.parzivail.swg.audio.MovingSoundLightsaberIdle;
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.entity.player.EntityPlayer;

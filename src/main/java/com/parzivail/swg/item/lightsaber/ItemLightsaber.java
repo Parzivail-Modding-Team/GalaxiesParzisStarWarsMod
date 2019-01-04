@@ -3,7 +3,7 @@ package com.parzivail.swg.item.lightsaber;
 import com.google.common.collect.Multimap;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.PItem;
-import com.parzivail.util.audio.SoundHandler;
+import com.parzivail.util.audio.Sfx;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
@@ -39,9 +39,9 @@ public class ItemLightsaber extends PItem
 					bd.isOpen = !bd.isOpen;
 
 					if (bd.isOpen)
-						SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.start"), 1, 1);
+						Sfx.play(player, Resources.modColon("swg.fx.saber.start"), 1, 1);
 					else
-						SoundHandler.playSound(player, Resources.modColon("swg.fx.saber.stop"), 1, 1);
+						Sfx.play(player, Resources.modColon("swg.fx.saber.stop"), 1, 1);
 				}
 
 				bd.serialize(stack.stackTagCompound);
@@ -93,7 +93,7 @@ public class ItemLightsaber extends PItem
 			LightsaberData bd = new LightsaberData(stack);
 
 			if (bd.isOpen)
-				SoundHandler.playSound(entityLiving, Resources.modColon("swg.fx.saber.swing"), 0.6f, (float)(0.95 + entityLiving.worldObj.rand.nextGaussian() * 0.1));
+				Sfx.play(entityLiving, Resources.modColon("swg.fx.saber.swing"), 0.6f, (float)(0.95 + entityLiving.worldObj.rand.nextGaussian() * 0.1));
 		}
 		return super.onEntitySwing(entityLiving, stack);
 	}

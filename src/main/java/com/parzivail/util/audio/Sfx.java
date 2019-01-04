@@ -2,13 +2,9 @@ package com.parzivail.util.audio;
 
 import net.minecraft.entity.Entity;
 
-public class SoundHandler
+public class Sfx
 {
-	public SoundHandler()
-	{
-	}
-
-	public static void playSound(Entity source, String name, float pitch, float volume)
+	public static void play(Entity source, String name, float pitch, float volume)
 	{
 		source.worldObj.playSoundAtEntity(source, name, pitch, volume);
 	}
