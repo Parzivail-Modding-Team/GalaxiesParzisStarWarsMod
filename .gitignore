@@ -86,3 +86,7 @@ saves/
 /asm/
 /config/
 !/simpledeobf-0.6.jar
+
+
+# Vim swap files
+*.sw[op]

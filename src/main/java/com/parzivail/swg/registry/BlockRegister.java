@@ -14,6 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Created by colby on 12/26/2017.
@@ -100,10 +101,14 @@ public class BlockRegister
 
 		register(new PBlock("labWall"));
 
-		register(oreChromium = new PBlock("chromium"));
-		register(oreTitanium = new PBlock("titanium"));
-		register(oreRubindum = new PBlock("rubindum"));
-		register(oreCortosis = new PBlock("cortosis"));
+		register(oreChromium = new PBlock("oreChromium"));
+		OreDictionary.registerOre("oreChromium", oreChromium);
+		register(oreTitanium = new PBlock("oreTitanium"));
+		OreDictionary.registerOre("oreTitanium", oreTitanium);
+		register(oreRubindum = new PBlock("oreRubindum"));
+		OreDictionary.registerOre("oreRubindum", oreRubindum);
+		register(oreCortosis = new PBlock("oreCortosis"));
+		OreDictionary.registerOre("oreCortosis", oreCortosis);
 
 		registerDecoration(new BlockChair("chairBasic"));
 
