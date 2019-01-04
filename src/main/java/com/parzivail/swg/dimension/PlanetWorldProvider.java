@@ -1,6 +1,7 @@
 package com.parzivail.swg.dimension;
 
 import com.parzivail.swg.registry.WorldRegister;
+import com.parzivail.util.dimension.SingleBiomeChunkGenerator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.ChunkCoordinates;
@@ -12,12 +13,12 @@ public abstract class PlanetWorldProvider extends WorldProvider
 {
 	private final PlanetDescriptor planetDescriptor;
 	private final int dimId;
-	private final SWGChunkManager chunkManager;
+	private final SingleBiomeChunkGenerator chunkManager;
 
 	@SideOnly(Side.CLIENT)
 	protected IRenderHandler skyRenderer;
 
-	public PlanetWorldProvider(int dimId, SWGChunkManager chunkManager)
+	public PlanetWorldProvider(int dimId, SingleBiomeChunkGenerator chunkManager)
 	{
 		planetDescriptor = WorldRegister.planetDescriptorHashMap.get(dimId);
 		this.dimId = dimId;

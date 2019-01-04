@@ -1,16 +1,17 @@
 package com.parzivail.swg.gui;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.container.ContainerBlasterWorkbench;
 import com.parzivail.swg.item.blaster.data.BlasterAttachment;
 import com.parzivail.swg.item.blaster.data.BlasterAttachments;
-import com.parzivail.swg.network.TransactionBroker;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.tile.TileBlasterWorkbench;
 import com.parzivail.swg.transaction.TransactionDeductCredits;
 import com.parzivail.swg.transaction.TransactionEquipAttachment;
 import com.parzivail.swg.transaction.TransactionUnlockAttachment;
+import com.parzivail.util.gui.PGuiButton;
 import com.parzivail.util.ui.FixedResolution;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.GL;
@@ -150,7 +151,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 		if (s == null)
 			return;
 
-		TransactionBroker.dispatch(new TransactionEquipAttachment(tile, s));
+		StarWarsGalaxy.transactionBroker.dispatch(new TransactionEquipAttachment(tile, s));
 	}
 
 	private void buySelectedItem()
@@ -159,7 +160,7 @@ public class GuiBlasterWorkbench extends GuiContainer
 		if (s == null)
 			return;
 
-		TransactionBroker.dispatch(new TransactionDeductCredits(player, s.price), new TransactionUnlockAttachment(player, s));
+		StarWarsGalaxy.transactionBroker.dispatch(new TransactionDeductCredits(player, s.price), new TransactionUnlockAttachment(player, s));
 	}
 
 	@Override

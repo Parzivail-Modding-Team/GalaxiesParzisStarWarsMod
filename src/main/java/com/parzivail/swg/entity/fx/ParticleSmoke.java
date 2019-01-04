@@ -1,6 +1,7 @@
 package com.parzivail.swg.entity.fx;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.util.fx.AnimatedParticle;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.ResourceLocation;

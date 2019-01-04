@@ -10,8 +10,16 @@ import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.registry.*;
 import com.parzivail.swg.tab.PTab;
+import com.parzivail.swg.transaction.TransactionDeductCredits;
+import com.parzivail.swg.transaction.TransactionEquipAttachment;
+import com.parzivail.swg.transaction.TransactionSetLightsaberDescriptor;
+import com.parzivail.swg.transaction.TransactionUnlockAttachment;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.OpenSimplexNoise;
+import com.parzivail.util.network.MessageCreateDecal;
+import com.parzivail.util.network.MessageItemLeftClick;
+import com.parzivail.util.network.MessageSpawnParticle;
+import com.parzivail.util.network.TransactionBroker;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
@@ -50,6 +58,7 @@ public class StarWarsGalaxy
 	public static Random random = new Random();
 	public static OpenSimplexNoise simplexNoise = new OpenSimplexNoise();
 
+	public static TransactionBroker transactionBroker;
 	public static SimpleNetworkWrapper network;
 	private static int packetId;
 
@@ -64,6 +73,7 @@ public class StarWarsGalaxy
 	private void setupNetworking()
 	{
 		network = NetworkRegistry.INSTANCE.newSimpleChannel(Resources.MODID + "." + "chan");
+		transactionBroker = new TransactionBroker(network);
 
 		registerMessageServer(MessageFlightModelUpdate.class);
 		registerMessageServer(MessageItemLeftClick.class);
@@ -74,6 +84,11 @@ public class StarWarsGalaxy
 		registerMessageClient(MessageCreateDecal.class);
 		registerMessageClient(MessagePswgExtPropSync.class);
 		registerMessageClient(MessagePswgWorldDataSync.class);
+
+		transactionBroker.register(TransactionDeductCredits.class);
+		transactionBroker.register(TransactionUnlockAttachment.class);
+		transactionBroker.register(TransactionEquipAttachment.class);
+		transactionBroker.register(TransactionSetLightsaberDescriptor.class);
 	}
 
 	@SuppressWarnings("unchecked")

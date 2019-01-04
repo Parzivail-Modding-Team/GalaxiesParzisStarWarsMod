@@ -1,11 +1,11 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.network.MessageCreateDecal;
-import com.parzivail.swg.network.MessageSpawnParticle;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.util.block.INameProvider;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.network.MessageCreateDecal;
+import com.parzivail.util.network.MessageSpawnParticle;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.block.Block;

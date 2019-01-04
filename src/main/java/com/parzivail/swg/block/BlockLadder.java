@@ -2,6 +2,7 @@ package com.parzivail.swg.block;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.util.block.HarvestLevel;
+import com.parzivail.util.block.IBlockMetadataRotate;
 import com.parzivail.util.block.PBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
@@ -9,7 +10,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockLadder extends PBlock implements IRotatingBlock
+public class BlockLadder extends PBlock implements IBlockMetadataRotate
 {
 	public BlockLadder()
 	{

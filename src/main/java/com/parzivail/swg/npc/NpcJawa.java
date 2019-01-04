@@ -1,6 +1,6 @@
 package com.parzivail.swg.npc;
 
-import com.parzivail.swg.npc.ai.AiBetterWander;
+import com.parzivail.util.ai.AiBetterWander;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;

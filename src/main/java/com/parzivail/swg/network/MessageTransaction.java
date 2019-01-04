@@ -1,6 +1,8 @@
 package com.parzivail.swg.network;
 
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.util.network.PMessage;
+import com.parzivail.util.network.Transaction;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,25 +16,17 @@ public class MessageTransaction extends PMessage<MessageTransaction>
 
 	public MessageTransaction()
 	{
-
 	}
 
 	public MessageTransaction(Transaction t)
 	{
-		transaction = new NBTTagCompound();
-		transaction.setString("opcode", t.getClass().getSimpleName());
-
-		NBTTagCompound data = new NBTTagCompound();
-		t.serialize(data);
-		transaction.setTag("payload", data);
+		transaction = StarWarsGalaxy.transactionBroker.create(t);
 	}
 
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		String opcode = transaction.getString("opcode");
-		NBTTagCompound data = transaction.getCompoundTag("payload");
-		TransactionBroker.consume(opcode, data);
+		StarWarsGalaxy.transactionBroker.consume(transaction);
 		return null;
 	}
 }

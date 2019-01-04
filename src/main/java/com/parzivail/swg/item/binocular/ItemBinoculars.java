@@ -1,14 +1,14 @@
 package com.parzivail.swg.item.binocular;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.item.IGuiOverlay;
-import com.parzivail.swg.item.ILeftClickInterceptor;
-import com.parzivail.swg.item.IScreenShader;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.binocular.data.BinocularData;
 import com.parzivail.swg.item.binocular.data.BinocularDescriptor;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.item.IGuiOverlay;
+import com.parzivail.util.item.ILeftClickInterceptor;
+import com.parzivail.util.item.IScreenShader;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.GLPalette;

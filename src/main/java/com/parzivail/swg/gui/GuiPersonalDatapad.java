@@ -1,9 +1,9 @@
 package com.parzivail.swg.gui;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.container.ContainerNothing;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.util.container.ContainerNothing;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.TextUtil;

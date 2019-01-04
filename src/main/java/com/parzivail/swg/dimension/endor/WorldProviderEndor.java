@@ -2,8 +2,8 @@ package com.parzivail.swg.dimension.endor;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetWorldProvider;
-import com.parzivail.swg.dimension.SWGChunkManager;
 import com.parzivail.swg.registry.WorldRegister;
+import com.parzivail.util.dimension.SingleBiomeChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 
 /**
@@ -13,7 +13,7 @@ public class WorldProviderEndor extends PlanetWorldProvider
 {
 	public WorldProviderEndor()
 	{
-		super(StarWarsGalaxy.config.getDimIdEndor(), new SWGChunkManager(WorldRegister.biomeEndor, 0));
+		super(StarWarsGalaxy.config.getDimIdEndor(), new SingleBiomeChunkGenerator(WorldRegister.biomeEndor, 0));
 	}
 
 	@Override

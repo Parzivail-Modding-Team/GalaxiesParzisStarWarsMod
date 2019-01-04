@@ -1,6 +1,8 @@
 package com.parzivail.swg.command;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.util.command.CommandParser;
+import com.parzivail.util.command.Parameter;
 import com.parzivail.util.dimension.Rift;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;

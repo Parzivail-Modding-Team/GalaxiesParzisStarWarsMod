@@ -2,8 +2,8 @@ package com.parzivail.swg.npc;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.npc.ai.AiBetterWander;
-import com.parzivail.swg.npc.ai.AiOpenGate;
+import com.parzivail.util.ai.AiBetterWander;
+import com.parzivail.util.ai.AiOpenGate;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.SharedMonsterAttributes;

@@ -1,8 +1,8 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.keybind.InterceptingKeyBinding;
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.util.keybind.InterceptingKeyBinding;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

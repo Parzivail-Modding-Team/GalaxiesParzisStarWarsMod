@@ -3,6 +3,8 @@ package com.parzivail.swg.command;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.ship.VehicleT65;
+import com.parzivail.util.command.CommandParser;
+import com.parzivail.util.command.Parameter;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;

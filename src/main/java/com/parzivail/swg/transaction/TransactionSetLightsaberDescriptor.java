@@ -2,9 +2,9 @@ package com.parzivail.swg.transaction;
 
 import com.parzivail.swg.item.lightsaber.LightsaberData;
 import com.parzivail.swg.item.lightsaber.LightsaberDescriptor;
-import com.parzivail.swg.network.Transaction;
 import com.parzivail.swg.tile.TileLightsaberForge;
 import com.parzivail.util.item.NbtSave;
+import com.parzivail.util.network.Transaction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.DimensionManager;

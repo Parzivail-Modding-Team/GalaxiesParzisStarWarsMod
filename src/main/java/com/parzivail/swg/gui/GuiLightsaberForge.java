@@ -1,13 +1,14 @@
 package com.parzivail.swg.gui;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.container.ContainerLightsaberForge;
 import com.parzivail.swg.item.lightsaber.LightsaberData;
 import com.parzivail.swg.item.lightsaber.LightsaberDescriptor;
-import com.parzivail.swg.network.TransactionBroker;
 import com.parzivail.swg.render.lightsaber.RenderLightsaber;
 import com.parzivail.swg.tile.TileLightsaberForge;
 import com.parzivail.swg.transaction.TransactionSetLightsaberDescriptor;
+import com.parzivail.util.gui.PGuiButton;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -130,7 +131,7 @@ public class GuiLightsaberForge extends GuiContainer
 
 	private void writeDescriptor()
 	{
-		TransactionBroker.dispatch(new TransactionSetLightsaberDescriptor(tile, lightsaberData.descriptor));
+		StarWarsGalaxy.transactionBroker.dispatch(new TransactionSetLightsaberDescriptor(tile, lightsaberData.descriptor));
 	}
 
 	/**
