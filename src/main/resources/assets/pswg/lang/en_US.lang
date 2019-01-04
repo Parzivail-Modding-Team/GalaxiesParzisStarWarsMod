@@ -57,6 +57,17 @@ item.pswg.pack.smallGasCanister.name=Small Tibanna Gas Canister
 item.pswg.thermalDetonator.name=Thermal Detonator
 item.pswg.smokeGrenade.name=Smoke Grenade
 
+item.pswg.blueMilk.name=Blue Milk
+item.pswg.bluePuffCube.name=Blue Puff Cube
+item.pswg.blueYogurt.name=Blue Yogurt
+
+#TODO: check if this is correct
+item.pswg.qrikkiBread.name=Qrikki Bread
+item.pswg.qrikkiWaffle.name=Qrikki Waffle
+
+item.pswg.personalDatapad=Personal Datapad
+#TODO: add mb450 binoculars name
+
 item.pswg.debugWizard.name=§aDebug Wizard§r
 
 itwm.pswg.lightsaber.name=Lightsaber
