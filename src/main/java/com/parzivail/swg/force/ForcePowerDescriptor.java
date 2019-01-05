@@ -3,7 +3,7 @@ package com.parzivail.swg.force;
 public class ForcePowerDescriptor
 {
 	private final String id;
-	private int cooldownTime;
+	private long cooldownTime;
 	private boolean isActive;
 
 	public ForcePowerDescriptor(IForcePower power)
@@ -33,7 +33,7 @@ public class ForcePowerDescriptor
 		return obj.getId().equals(id);
 	}
 
-	public void setCooldownTime(int cooldownTime)
+	public void setCooldownTime(long cooldownTime)
 	{
 		this.cooldownTime = cooldownTime;
 	}
@@ -43,7 +43,7 @@ public class ForcePowerDescriptor
 		isActive = active;
 	}
 
-	public int getCooldownTime()
+	public long getCooldownTime()
 	{
 		return cooldownTime;
 	}

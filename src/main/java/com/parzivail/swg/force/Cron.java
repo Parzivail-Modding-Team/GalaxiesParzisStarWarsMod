@@ -23,6 +23,7 @@ public class Cron
 		if (desc != null)
 		{
 			desc.setActive(true);
+			desc.setCooldownTime(System.currentTimeMillis() + power.getCooldownLength(player.worldObj, player));
 			props.updatePower(desc);
 		}
 	}
@@ -34,15 +35,19 @@ public class Cron
 		if (desc != null)
 		{
 			desc.setActive(false);
+			desc.setCooldownTime(0);
 			props.updatePower(desc);
 		}
 	}
 
 	public static void usePower(EntityPlayer player, IForcePower power)
 	{
-		if (power.canUse(player.worldObj, player))
+		PswgExtProp props = PswgExtProp.get(player);
+		ForcePowerDescriptor desc = props.getPower(power);
+		if (desc != null)
 		{
-			power.use(player.worldObj, player);
+			if (System.currentTimeMillis() >= desc.getCooldownTime() && power.canUse(player.worldObj, player))
+				power.use(player.worldObj, player);
 		}
 	}
 }

@@ -32,6 +32,18 @@ public class ForcePowerLightning implements IForcePower
 	}
 
 	@Override
+	public int getCooldownLength(World world, EntityPlayer player)
+	{
+		return 1000;
+	}
+
+	@Override
+	public int getDuration(World world, EntityPlayer player)
+	{
+		return -1;
+	}
+
+	@Override
 	public String getId()
 	{
 		return "lightning";

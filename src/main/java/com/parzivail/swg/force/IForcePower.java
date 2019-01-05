@@ -11,5 +11,9 @@ public interface IForcePower
 
 	void tick(World world, EntityPlayer player);
 
+	int getCooldownLength(World world, EntityPlayer player);
+
+	int getDuration(World world, EntityPlayer player);
+
 	String getId();
 }
