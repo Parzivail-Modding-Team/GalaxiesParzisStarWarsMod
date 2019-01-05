@@ -23,7 +23,7 @@ public class Cron
 		if (desc != null)
 		{
 			desc.setActive(true);
-			desc.setCooldownTime(System.currentTimeMillis() + power.getCooldownLength(player.worldObj, player));
+			desc.setCooldownTime(0);
 			props.updatePower(desc);
 		}
 	}
@@ -35,7 +35,7 @@ public class Cron
 		if (desc != null)
 		{
 			desc.setActive(false);
-			desc.setCooldownTime(0);
+			desc.setCooldownTime(System.currentTimeMillis() + power.getCooldownLength(player.worldObj, player));
 			props.updatePower(desc);
 		}
 	}
