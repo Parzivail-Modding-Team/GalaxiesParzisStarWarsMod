@@ -32,7 +32,7 @@ public class RenderExtHealthBar
 		GL.Disable(EnableCap.Blend);
 		GL.Disable(EnableCap.Texture2D);
 
-		Vec3 playerPos = m.thePlayer.getPosition(Client.renderPartialTicks);
+		Vec3 playerPos = m.renderViewEntity.getPosition(Client.renderPartialTicks);
 		GL.Translate(e.posX - playerPos.xCoord, e.posY - playerPos.yCoord, e.posZ - playerPos.zCoord);
 
 		/*

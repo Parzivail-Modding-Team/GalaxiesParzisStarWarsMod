@@ -45,7 +45,7 @@ public class RenderExtLightsaberTrail
 		GL11.glDisable(GL11.GL_CULL_FACE);
 
 		GL.PushMatrix();
-		Vec3 playerPos = Client.mc.thePlayer.getPosition(Client.renderPartialTicks);
+		Vec3 playerPos = Client.mc.renderViewEntity.getPosition(Client.renderPartialTicks);
 		GL.Translate(-playerPos.xCoord, -playerPos.yCoord, -playerPos.zCoord);
 
 		GL11.glDepthMask(false);

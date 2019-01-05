@@ -31,9 +31,10 @@ public class WorldDecals
 	{
 		if (!allDecals.containsKey(dim))
 			return;
+		Minecraft mc = Minecraft.getMinecraft();
 
 		List<Decal> decals = allDecals.get(dim);
-		Vec3 playerPos = Minecraft.getMinecraft().thePlayer.getPosition(partialTicks);
+		Vec3 playerPos = mc.renderViewEntity.getPosition(partialTicks);
 		GL.Disable(EnableCap.CullFace);
 		GL.Enable(EnableCap.Blend);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

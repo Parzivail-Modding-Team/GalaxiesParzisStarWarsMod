@@ -336,7 +336,7 @@ public class RenderSkyTatooine extends IRenderHandler
 		GL11.glPopMatrix();
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glColor3f(0.0F, 0.0F, 0.0F);
-		double playerYAboveHorizon = mc.thePlayer.getPosition(partialTicks).yCoord - world.getHorizon();
+		double playerYAboveHorizon = mc.renderViewEntity.getPosition(partialTicks).yCoord - world.getHorizon();
 
 		if (playerYAboveHorizon < 0.0D)
 		{

@@ -68,7 +68,7 @@ public class RenderLightning
 	{
 		if (distance < curDetail)
 		{
-			Vec3 pos = Client.mc.thePlayer.getPosition(Client.renderPartialTicks);
+			Vec3 pos = Client.mc.renderViewEntity.getPosition(Client.renderPartialTicks);
 
 			GL11.glPushMatrix();
 			GL.PushAttrib(AttribMask.EnableBit);
