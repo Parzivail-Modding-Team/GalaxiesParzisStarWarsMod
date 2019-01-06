@@ -357,10 +357,10 @@ public class Fx
 		public static void BufferPie(float x, float y, float radius, float percent)
 		{
 			GL.Vertex2(x, y);
-			for (int i = 0; i <= 360 * percent; i++)
+			for (int i = (int)(360 * percent); i > 0; i--)
 			{
-				float nx = MathHelper.sin(i * 3.141526f / 180) * radius;
-				float ny = MathHelper.cos(i * 3.141526f / 180) * radius;
+				float nx = MathHelper.sin((180 - i) * 3.141526f / 180) * radius;
+				float ny = MathHelper.cos((180 - i) * 3.141526f / 180) * radius;
 				GL.Vertex2(nx + x, ny + y);
 			}
 		}

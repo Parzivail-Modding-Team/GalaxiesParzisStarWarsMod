@@ -18,7 +18,7 @@ public class ForcePowerJump implements IForcePower
 	{
 		//player.worldObj.play(player.posX, player.posY, player.posZ, Resources.MODID + ":" + "force.push", 1, 1, true);
 
-		float power = 5;
+		float power = 10;
 		player.motionY += power * 0.11F;
 
 		double motion = Math.sqrt(player.motionX * player.motionX + player.motionZ * player.motionZ);
@@ -34,7 +34,7 @@ public class ForcePowerJump implements IForcePower
 		player.fallDistance = 0.0f;
 		player.onGround = false;
 
-		Cron.setActive(player, ForceRegistry.fpJump);
+		Cron.activate(player, ForceRegistry.fpJump);
 
 		return true;
 	}

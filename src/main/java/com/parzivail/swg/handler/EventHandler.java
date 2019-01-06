@@ -275,12 +275,29 @@ public class EventHandler
 			{
 				GuiNowEntering.draw(Client.mc.thePlayer);
 
-				//				if (Client.mc.objectMouseOver != null && Client.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK)
+				// TODO: make this draw the cooldowns for all force powers which are cooling
+				//				PswgExtProp props = PswgExtProp.get(Client.mc.thePlayer);
+				//				ForcePowerDescriptor desc = props.getPower(ForceRegistry.fpJump);
+				//				if (desc != null)
 				//				{
-				//					int damage = Client.mc.theWorld.getBlockMetadata(Client.mc.objectMouseOver.blockX, Client.mc.objectMouseOver.blockY, Client.mc.objectMouseOver.blockZ);
+				//					long nowTime = System.currentTimeMillis();
+				//					long endTime = desc.getCooldownTime();
+				//					long lenTime = ForceRegistry.fpJump.getCooldownLength(Client.mc.thePlayer.worldObj, Client.mc.thePlayer);
+				//					double through = (endTime - nowTime) / (double)lenTime;
+				//
+				//					float h = Client.resolution.getScaledHeight();
 				//					GL.PushMatrix();
-				//					GL.Scale(0.5);
-				//					Client.mc.fontRendererObj.drawStringWithShadow(String.format("Metadata: %s", damage), Client.resolution.getScaledWidth(), Client.resolution.getScaledHeight() - Client.mc.fontRendererObj.FONT_HEIGHT, GLPalette.WHITE);
+				//					GL.PushAttrib(AttribMask.EnableBit);
+				//					GL.Disable(EnableCap.Texture2D);
+				//
+				//					GL.Color(GLPalette.BLACK);
+				//					Fx.D2.DrawSolidCircle(20, h - 20, 11);
+				//					GL.Color(GLPalette.WHITE);
+				//					Fx.D2.DrawSolidPieSlice(20, h - 20, 10, (float)through);
+				//					GL.Color(GLPalette.BLACK);
+				//					Fx.D2.DrawSolidCircle(20, h - 20, 9);
+				//
+				//					GL.PopAttrib();
 				//					GL.PopMatrix();
 				//				}
 			}

@@ -20,7 +20,7 @@ public class ForcePowerLightning implements IForcePower
 		if (Cron.isActive(player, ForceRegistry.fpLightning))
 			Cron.deactivate(player, ForceRegistry.fpLightning);
 		else
-			Cron.setActive(player, ForceRegistry.fpLightning);
+			Cron.activate(player, ForceRegistry.fpLightning);
 
 		return true;
 	}

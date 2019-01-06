@@ -16,7 +16,7 @@ public class Cron
 		return false;
 	}
 
-	public static void setActive(EntityPlayer player, IForcePower power)
+	public static void activate(EntityPlayer player, IForcePower power)
 	{
 		PswgExtProp props = PswgExtProp.get(player);
 		ForcePowerDescriptor desc = props.getPower(power);
@@ -46,7 +46,7 @@ public class Cron
 		ForcePowerDescriptor desc = props.getPower(power);
 		if (desc != null)
 		{
-			if (System.currentTimeMillis() >= desc.getCooldownTime() && power.canUse(player.worldObj, player))
+			if (!desc.isActive() && System.currentTimeMillis() >= desc.getCooldownTime() && power.canUse(player.worldObj, player))
 				power.use(player.worldObj, player);
 		}
 	}
