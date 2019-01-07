@@ -29,6 +29,7 @@ import com.parzivail.util.render.decal.WorldDecals;
 import com.parzivail.util.render.pipeline.JsonModelRenderer;
 import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.ShaderHelper;
+import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -56,6 +57,8 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.PlayerFlyableFallEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
+
+import java.util.EnumSet;
 
 /**
  * Created by colby on 9/13/2017.
@@ -331,9 +334,7 @@ public class EventHandler
 
 				if (event.type == ElementType.TEXT)
 				{
-					GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-					GL11.glPushAttrib(GL11.GL_LINE_BIT);
-					GL11.glPushAttrib(GL11.GL_POINT_BIT);
+					GL.PushAttrib(EnumSet.of(AttribMask.EnableBit, AttribMask.LineBit, AttribMask.PointBit));
 
 					GL.PushMatrix();
 					GL.Translate(Client.resolution.getScaledWidth_double() / 2, Client.resolution.getScaledHeight_double() / 2, 0);
@@ -349,9 +350,7 @@ public class EventHandler
 					GL.PopMatrix();
 					GL11.glColor4f(1, 1, 1, 1);
 
-					GL11.glPopAttrib();
-					GL11.glPopAttrib();
-					GL11.glPopAttrib();
+					GL.PopAttrib();
 				}
 			}
 
