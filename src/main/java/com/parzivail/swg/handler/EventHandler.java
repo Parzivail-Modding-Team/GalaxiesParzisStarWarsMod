@@ -1,14 +1,17 @@
 package com.parzivail.swg.handler;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.force.Cron;
+import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.gui.GuiNowEntering;
 import com.parzivail.swg.gui.GuiScreenTrailer;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.blaster.ItemBlasterRifle;
 import com.parzivail.swg.network.MessagePswgWorldDataSync;
+import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.ForceRegistry;
 import com.parzivail.swg.registry.KeybindRegistry;
@@ -27,7 +30,9 @@ import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitEntity;
 import com.parzivail.util.render.decal.WorldDecals;
 import com.parzivail.util.render.pipeline.JsonModelRenderer;
+import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.FxMC;
+import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.ShaderHelper;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -45,10 +50,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -278,31 +285,44 @@ public class EventHandler
 			{
 				GuiNowEntering.draw(Client.mc.thePlayer);
 
-				// TODO: make this draw the cooldowns for all force powers which are cooling
-				//				PswgExtProp props = PswgExtProp.get(Client.mc.thePlayer);
-				//				ForcePowerDescriptor desc = props.getPower(ForceRegistry.fpJump);
-				//				if (desc != null)
-				//				{
-				//					long nowTime = System.currentTimeMillis();
-				//					long endTime = desc.getCooldownTime();
-				//					long lenTime = ForceRegistry.fpJump.getCooldownLength(Client.mc.thePlayer.worldObj, Client.mc.thePlayer);
-				//					double through = (endTime - nowTime) / (double)lenTime;
-				//
-				//					float h = Client.resolution.getScaledHeight();
-				//					GL.PushMatrix();
-				//					GL.PushAttrib(AttribMask.EnableBit);
-				//					GL.Disable(EnableCap.Texture2D);
-				//
-				//					GL.Color(GLPalette.BLACK);
-				//					Fx.D2.DrawSolidCircle(20, h - 20, 11);
-				//					GL.Color(GLPalette.WHITE);
-				//					Fx.D2.DrawSolidPieSlice(20, h - 20, 10, (float)through);
-				//					GL.Color(GLPalette.BLACK);
-				//					Fx.D2.DrawSolidCircle(20, h - 20, 9);
-				//
-				//					GL.PopAttrib();
-				//					GL.PopMatrix();
-				//				}
+				PswgExtProp props = PswgExtProp.get(Client.mc.thePlayer);
+				ForcePowerDescriptor[] descs = props.getPowers();
+				if (descs != null)
+				{
+					float h = Client.resolution.getScaledHeight();
+					GL.PushMatrix();
+					GL.PushAttrib(AttribMask.EnableBit);
+
+					int n = 0;
+					for (ForcePowerDescriptor desc : descs)
+					{
+						long nowTime = System.currentTimeMillis();
+						long endTime = desc.getCooldownTime();
+						long lenTime = ForceRegistry.fpJump.getCooldownLength(Client.mc.thePlayer.worldObj, Client.mc.thePlayer);
+						double through = (endTime - nowTime) / (double)lenTime;
+
+						if (!desc.isActive() && through <= 0)
+							continue;
+
+						n++;
+						float r = (float)(10 * MathHelper.clamp_double(desc.isActive() ? 1 : through, 0, 1));
+
+						GL.Disable(EnableCap.Texture2D);
+						GL.Color(GLPalette.ALMOST_BLACK);
+						Fx.D2.DrawSolidCircle(20, h - 20 * n, r + 1);
+						GL.Color(GLPalette.WHITE);
+						Fx.D2.DrawSolidCircle(20, h - 20 * n, r);
+
+						GL.Enable(EnableCap.Texture2D);
+						GL.PushMatrix();
+						GL.Translate(25 + r, h - 20 * n - Client.mc.fontRendererObj.FONT_HEIGHT / 2f, 0);
+						Client.mc.fontRendererObj.drawString(I18n.format(Resources.forceDot(desc.getId())), 0, 0, GLPalette.ALMOST_BLACK);
+						GL.PopMatrix();
+					}
+
+					GL.PopAttrib();
+					GL.PopMatrix();
+				}
 			}
 
 			if (event.type == ElementType.CROSSHAIRS && Client.mc.gameSettings.showDebugInfo)

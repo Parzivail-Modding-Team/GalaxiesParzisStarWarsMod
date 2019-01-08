@@ -318,6 +318,8 @@ public class Fx
 		static void Arc(float x, float y, float radius, float fromAngle, float toAngle, PrimitiveType mode)
 		{
 			float step = radius / (toAngle - fromAngle) * 2;
+			if (step < 0.001f)
+				return;
 			GL.Begin(mode);
 			BufferArc(x, y, radius, fromAngle, toAngle, step);
 			GL.End();

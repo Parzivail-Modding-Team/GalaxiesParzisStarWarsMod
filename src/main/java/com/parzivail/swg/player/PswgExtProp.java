@@ -141,10 +141,8 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 		// TODO: return null if not force sensitive
 		ForcePowerDescriptor[] powers = getPowers();
 		for (ForcePowerDescriptor descriptor : powers)
-		{
 			if (descriptor.describes(power))
 				return descriptor;
-		}
 		ForcePowerDescriptor desc = new ForcePowerDescriptor(power);
 		updatePower(desc);
 		return desc;
