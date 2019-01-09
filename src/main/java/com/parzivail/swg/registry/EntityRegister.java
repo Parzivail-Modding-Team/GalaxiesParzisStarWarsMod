@@ -1,15 +1,12 @@
 package com.parzivail.swg.registry;
 
-import com.parzivail.swg.entity.EntityBlasterBolt;
-import com.parzivail.swg.entity.EntityChair;
-import com.parzivail.swg.entity.EntitySmokeGrenade;
-import com.parzivail.swg.entity.EntityThermalDetonator;
+import com.parzivail.swg.entity.*;
 import com.parzivail.swg.mob.MobGizka;
 import com.parzivail.swg.npc.NpcJawa;
 import com.parzivail.swg.npc.NpcMerchant;
 import com.parzivail.swg.ship.EntitySeat;
 import com.parzivail.swg.ship.VehicleT65;
-import com.parzivail.util.entity.EntityUtils;
+import com.parzivail.swg.util.SwgEntityUtil;
 
 /**
  * Created by colby on 12/26/2017.
@@ -18,19 +15,21 @@ public class EntityRegister
 {
 	public static void register()
 	{
-		EntityUtils.registerEntity(VehicleT65.class, "t65");
-		EntityUtils.registerEntity(EntitySeat.class, "seat");
+		SwgEntityUtil.registerEntity(VehicleT65.class, "t65");
+		SwgEntityUtil.registerEntity(EntitySeat.class, "seat");
 
-		EntityUtils.registerEntity(EntityChair.class, "chair");
+		SwgEntityUtil.registerEntity(EntityShipParentTest.class, "espt");
 
-		EntityUtils.registerEntity(EntityBlasterBolt.class, "blasterBolt");
+		SwgEntityUtil.registerEntity(EntityChair.class, "chair");
 
-		EntityUtils.registerEntity(EntityThermalDetonator.class, "thermalDetonator");
-		EntityUtils.registerEntity(EntitySmokeGrenade.class, "smokeGrenade");
+		SwgEntityUtil.registerEntity(EntityBlasterBolt.class, "blasterBolt");
 
-		EntityUtils.registerWithSpawnEgg(NpcMerchant.class, "testNpc", 0x6AC8D8, 0x6BD67B);
-		EntityUtils.registerWithSpawnEgg(NpcJawa.class, "jawa", 0xFF0000, 0x9B6C00);
+		SwgEntityUtil.registerEntity(EntityThermalDetonator.class, "thermalDetonator");
+		SwgEntityUtil.registerEntity(EntitySmokeGrenade.class, "smokeGrenade");
 
-		EntityUtils.registerWithSpawnEgg(MobGizka.class, "gizka", 0xFFC291, 0x72BC4D);
+		SwgEntityUtil.registerWithSpawnEgg(NpcMerchant.class, "testNpc", 0x6AC8D8, 0x6BD67B);
+		SwgEntityUtil.registerWithSpawnEgg(NpcJawa.class, "jawa", 0xFF0000, 0x9B6C00);
+
+		SwgEntityUtil.registerWithSpawnEgg(MobGizka.class, "gizka", 0xFFC291, 0x72BC4D);
 	}
 }

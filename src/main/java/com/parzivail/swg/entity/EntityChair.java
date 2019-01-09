@@ -60,6 +60,12 @@ public class EntityChair extends Entity
 		setRotation(yaw, pitch);
 	}
 
+	public void updateRiderPosition()
+	{
+		if (riddenByEntity != null)
+			riddenByEntity.setPosition(posX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ);
+	}
+
 	@Override
 	public double getMountedYOffset()
 	{

@@ -4,7 +4,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.ship.ShipInput;
-import com.parzivail.util.entity.EntityUtils;
+import com.parzivail.swg.util.SwgEntityUtil;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import net.minecraft.client.settings.KeyBinding;
@@ -41,7 +41,7 @@ public class KeyHandler
 
 	public static void handleVehicleMovement()
 	{
-		MultipartFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
+		MultipartFlightModel ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
 		if (Client.mc.thePlayer != null && ship != null)
 		{
 			if ($(Client.mc.gameSettings.keyBindLeft))

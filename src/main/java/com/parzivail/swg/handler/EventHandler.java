@@ -20,6 +20,7 @@ import com.parzivail.swg.render.force.RenderLightning;
 import com.parzivail.swg.render.worldext.RenderExtHealthBar;
 import com.parzivail.swg.render.worldext.RenderExtLightsaberTrail;
 import com.parzivail.swg.ship.MultipartFlightModel;
+import com.parzivail.swg.util.SwgEntityUtil;
 import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
@@ -146,7 +147,7 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			MultipartFlightModel ship = EntityUtils.getShipRiding(event.entity);
+			MultipartFlightModel ship = SwgEntityUtil.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 
@@ -162,7 +163,7 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			MultipartFlightModel ship = EntityUtils.getShipRiding(event.entity);
+			MultipartFlightModel ship = SwgEntityUtil.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 
@@ -264,7 +265,7 @@ public class EventHandler
 
 		if (Client.getPlayer() != null)
 		{
-			MultipartFlightModel ship = EntityUtils.getShipRiding(Client.mc.thePlayer);
+			MultipartFlightModel ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
 			if (ship == null && Client.mc.renderViewEntity instanceof EntityCinematicCamera)
 			{
 				FxMC.changeCameraRoll(0);
