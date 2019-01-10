@@ -7,6 +7,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public class EntityShipParentTest extends Entity
@@ -15,6 +16,12 @@ public class EntityShipParentTest extends Entity
 	public RotatedAxes previousOrientation;
 	public Vector3f angularMomentum;
 	public float throttle;
+	@SideOnly(Side.CLIENT)
+	private double velocityX;
+	@SideOnly(Side.CLIENT)
+	private double velocityY;
+	@SideOnly(Side.CLIENT)
+	private double velocityZ;
 
 	public EntityShipParentTest(World worldIn)
 	{
@@ -36,6 +43,25 @@ public class EntityShipParentTest extends Entity
 	{
 	}
 
+	@SideOnly(Side.CLIENT)
+	public void setVelocity(double x, double y, double z)
+	{
+		velocityX = motionX = x;
+		velocityY = motionY = y;
+		velocityZ = motionZ = z;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int rotationIncrements)
+	{
+		if (!worldObj.isRemote)
+			setPosition(x, y, z);
+		setRotation(yaw, pitch);
+		motionX = velocityX;
+		motionY = velocityY;
+		motionZ = velocityZ;
+	}
+
 	@Override
 	public void onUpdate()
 	{
@@ -51,6 +77,23 @@ public class EntityShipParentTest extends Entity
 		prevRotationPitch = rotationPitch;
 		prevRotationYaw = rotationYaw;
 		previousOrientation = orientation;
+
+		if (riddenByEntity instanceof EntityPlayer)
+		{
+			EntityPlayer player = (EntityPlayer)riddenByEntity;
+			float a = (float)((player.rotationYaw + 90) / 180 * Math.PI);
+			motionX = player.moveForward * MathHelper.cos(a);
+			motionY = 0;
+			motionZ = player.moveForward * MathHelper.sin(a);
+		}
+		else
+		{
+			motionX = 0;
+			motionY = 0;
+			motionZ = 0;
+		}
+
+		moveEntity(motionX, motionY, motionZ);
 	}
 
 	public void updateRiderPosition()
@@ -82,13 +125,6 @@ public class EntityShipParentTest extends Entity
 	public boolean canBePushed()
 	{
 		return true;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int rotationIncrements)
-	{
-		setPosition(x, y, z);
-		setRotation(yaw, pitch);
 	}
 
 	@Override

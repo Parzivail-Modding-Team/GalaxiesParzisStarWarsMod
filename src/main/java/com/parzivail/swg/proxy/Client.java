@@ -2,10 +2,7 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.entity.EntityBlasterBolt;
-import com.parzivail.swg.entity.EntityChair;
-import com.parzivail.swg.entity.EntitySmokeGrenade;
-import com.parzivail.swg.entity.EntityThermalDetonator;
+import com.parzivail.swg.entity.*;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.gui.GuiQuestNotification;
 import com.parzivail.swg.handler.KeyHandler;
@@ -21,6 +18,7 @@ import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.antenna.RenderSatelliteDish;
 import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
+import com.parzivail.swg.render.entity.RenderDebug;
 import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
@@ -216,6 +214,7 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityChair.class, new RenderNothing());
+		RenderingRegistry.registerEntityRenderingHandler(EntityShipParentTest.class, new RenderDebug());
 
 		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());
 		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());
