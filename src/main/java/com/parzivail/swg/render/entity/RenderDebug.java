@@ -1,5 +1,6 @@
 package com.parzivail.swg.render.entity;
 
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -24,7 +25,11 @@ public class RenderDebug extends Render
 		GL11.glPushMatrix();
 		GL.PushAttrib(AttribMask.EnableBit);
 
-		GL.Translate(x, y + 0.5f, z);
+		if (entity.riddenByEntity == Client.getPlayer())
+			GL.Translate(0, -1.75f, 0);
+		else
+			GL.Translate(x, y, z);
+		GL.Translate(0, 0.5f, 0);
 		GL.Disable(EnableCap.Texture2D);
 		Fx.D3.DrawSolidBox();
 

@@ -16,12 +16,6 @@ public class EntityShipParentTest extends Entity
 	public RotatedAxes previousOrientation;
 	public Vector3f angularMomentum;
 	public float throttle;
-	@SideOnly(Side.CLIENT)
-	private double velocityX;
-	@SideOnly(Side.CLIENT)
-	private double velocityY;
-	@SideOnly(Side.CLIENT)
-	private double velocityZ;
 
 	public EntityShipParentTest(World worldIn)
 	{
@@ -44,22 +38,10 @@ public class EntityShipParentTest extends Entity
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setVelocity(double x, double y, double z)
-	{
-		velocityX = motionX = x;
-		velocityY = motionY = y;
-		velocityZ = motionZ = z;
-	}
-
-	@SideOnly(Side.CLIENT)
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int rotationIncrements)
 	{
-		if (!worldObj.isRemote)
-			setPosition(x, y, z);
+		setPosition(x, y, z);
 		setRotation(yaw, pitch);
-		//		motionX = velocityX;
-		//		motionY = velocityY;
-		//		motionZ = velocityZ;
 	}
 
 	@Override
@@ -81,10 +63,12 @@ public class EntityShipParentTest extends Entity
 		if (riddenByEntity instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)riddenByEntity;
-			float a = (float)((player.rotationYaw + 90) / 180 * Math.PI);
+			float a = (float)((rotationYaw + 90) / 180 * Math.PI);
 			motionX = player.moveForward * MathHelper.cos(a);
 			motionY = 0;
 			motionZ = player.moveForward * MathHelper.sin(a);
+
+			rotationYaw += player.moveStrafing * 10;
 		}
 		else
 		{
