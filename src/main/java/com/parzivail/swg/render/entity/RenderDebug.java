@@ -24,7 +24,7 @@ public class RenderDebug extends Render
 		GL11.glPushMatrix();
 		GL.PushAttrib(AttribMask.EnableBit);
 
-		GL.Translate(x, y, z);
+		GL.Translate(x, y + 0.5f, z);
 		GL.Disable(EnableCap.Texture2D);
 		Fx.D3.DrawSolidBox();
 

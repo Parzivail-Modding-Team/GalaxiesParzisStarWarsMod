@@ -57,9 +57,9 @@ public class EntityShipParentTest extends Entity
 		if (!worldObj.isRemote)
 			setPosition(x, y, z);
 		setRotation(yaw, pitch);
-		motionX = velocityX;
-		motionY = velocityY;
-		motionZ = velocityZ;
+		//		motionX = velocityX;
+		//		motionY = velocityY;
+		//		motionZ = velocityZ;
 	}
 
 	@Override
