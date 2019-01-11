@@ -44,6 +44,24 @@ public class RotatedAxes
 		convertAnglesToMatrix();
 	}
 
+	public void setYaw(float yaw)
+	{
+		rotationYaw = yaw;
+		convertAnglesToMatrix();
+	}
+
+	public void setPitch(float pitch)
+	{
+		rotationPitch = pitch;
+		convertAnglesToMatrix();
+	}
+
+	public void setRoll(float roll)
+	{
+		rotationRoll = roll;
+		convertAnglesToMatrix();
+	}
+
 	public float getYaw()
 	{
 		return rotationYaw;

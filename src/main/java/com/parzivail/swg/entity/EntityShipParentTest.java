@@ -1,14 +1,20 @@
 package com.parzivail.swg.entity;
 
+import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.network.MessageShipOrientation;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public class EntityShipParentTest extends Entity
 {
@@ -58,17 +64,30 @@ public class EntityShipParentTest extends Entity
 		prevPosZ = posZ;
 		prevRotationPitch = rotationPitch;
 		prevRotationYaw = rotationYaw;
-		previousOrientation = orientation;
+		previousOrientation = orientation.clone();
 
 		if (riddenByEntity instanceof EntityPlayer)
 		{
 			EntityPlayer player = (EntityPlayer)riddenByEntity;
-			float a = (float)((rotationYaw + 90) / 180 * Math.PI);
-			motionX = player.moveForward * MathHelper.cos(a);
-			motionY = 0;
-			motionZ = player.moveForward * MathHelper.sin(a);
 
-			rotationYaw += player.moveStrafing * 10;
+			throttle += player.moveForward / 10f;
+			throttle = MathHelper.clamp_float(throttle, 0, 1);
+			//orientation.rotateLocalYaw(player.moveStrafing * 10);
+			orientation.setAngles(-player.rotationYaw, -player.rotationPitch, 0);
+
+			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, 1));
+
+			if (ticksExisted % 5 == 0 && !worldObj.isRemote)
+			{
+				EntityTracker tracker = ((WorldServer)worldObj).getEntityTracker();
+				IMessage message = new MessageShipOrientation(this);
+				for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(this))
+					StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entityPlayer);
+			}
+
+			motionX = forward.x * throttle;
+			motionY = forward.y * throttle;
+			motionZ = forward.z * throttle;
 		}
 		else
 		{
