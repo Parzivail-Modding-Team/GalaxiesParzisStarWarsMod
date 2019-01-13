@@ -137,7 +137,7 @@ public class RenderLightsaber extends JsonItemRenderer
 		for (int layer = 19; layer >= 0; layer--)
 		{
 			GL.Color(saberData.bladeColor, (int)(1.275f * layer));
-			Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, bladeLength + 0.01f * (layer - 5), 0, 0, -(20 - layer) * 0.005f, 0);
+			Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, bladeLength - 0.13f + 0.2f * Math.sqrt(1 - Math.pow(1 - layer / 19f, 2)), 0, 0, -(20 - layer) * 0.005f, 0);
 		}
 		GL11.glDepthMask(true);
 
@@ -153,7 +153,7 @@ public class RenderLightsaber extends JsonItemRenderer
 		double offset = StarWarsGalaxy.random.nextGaussian();
 
 		double dTRoundBottom = stable ? 0 : StarWarsGalaxy.simplexNoise.eval(offset, dLength * (segments + 1)) * 0.005f;
-		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.07f, 0, 0, bladeLength, 0);
+		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.02f, 0, 0, bladeLength, 0);
 
 		for (int i = 0; i < segments; i++)
 		{
