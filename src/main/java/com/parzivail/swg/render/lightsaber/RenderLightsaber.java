@@ -154,7 +154,6 @@ public class RenderLightsaber extends JsonItemRenderer
 
 		double dTRoundBottom = stable ? 0 : StarWarsGalaxy.simplexNoise.eval(offset, dLength * (segments + 1)) * 0.005f;
 		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.07f, 0, 0, bladeLength, 0);
-		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.07f, 0, 0, bladeLength, 0);
 
 		for (int i = 0; i < segments; i++)
 		{

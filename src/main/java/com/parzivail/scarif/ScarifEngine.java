@@ -1,5 +1,6 @@
 package com.parzivail.scarif;
 
+import com.parzivail.util.common.Lumberjack;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
@@ -89,7 +90,11 @@ public class ScarifEngine
 					chunk.getBlockStorageArray()[l] = extendedblockstorage;
 				}
 
-				extendedblockstorage.setExtBlockID(blockX, blockY & 15, blockZ, Block.getBlockFromName(structure.getBlockById(block.id)));
+				Block b = Block.getBlockFromName(structure.getBlockById(block.id));
+				if (b == null)
+					Lumberjack.debug(structure.getBlockById(block.id));
+
+				extendedblockstorage.setExtBlockID(blockX, blockY & 15, blockZ, b);
 				extendedblockstorage.setExtBlockMetadata(blockX, blockY & 15, blockZ, block.metadata);
 
 				if (block.tileData != null)
