@@ -18,8 +18,8 @@ import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.render.antenna.RenderSatelliteDish;
 import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
-import com.parzivail.swg.render.entity.RenderDebug;
 import com.parzivail.swg.render.entity.RenderNothing;
+import com.parzivail.swg.render.entity.RenderShipParentTest;
 import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
 import com.parzivail.swg.render.lightsaber.RenderLightsaber;
@@ -214,7 +214,7 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityChair.class, new RenderNothing());
-		RenderingRegistry.registerEntityRenderingHandler(EntityShipParentTest.class, new RenderDebug());
+		RenderingRegistry.registerEntityRenderingHandler(EntityShipParentTest.class, new RenderShipParentTest());
 
 		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());
 		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());

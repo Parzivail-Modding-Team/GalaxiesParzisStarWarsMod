@@ -1,6 +1,5 @@
 package com.parzivail.swg.render.entity;
 
-import com.parzivail.swg.entity.EntityShipParentTest;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
@@ -16,16 +15,16 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by colby on 12/26/2017.
  */
-public class RenderDebug extends Render
+public class RenderShipParentTest extends Render
 {
-	public RenderDebug()
+	public RenderShipParentTest()
 	{
 	}
 
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float unknown, float partialTicks)
 	{
-		if (!(entity instanceof EntityShipParentTest))
+		if (!(entity instanceof com.parzivail.swg.entity.EntityShipParentTest))
 			return;
 
 		GL11.glPushMatrix();
@@ -38,14 +37,11 @@ public class RenderDebug extends Render
 		GL.Translate(0, 0.5f, 0);
 		GL.Disable(EnableCap.Texture2D);
 
-		EntityShipParentTest ship = (EntityShipParentTest)entity;
+		com.parzivail.swg.entity.EntityShipParentTest ship = (com.parzivail.swg.entity.EntityShipParentTest)entity;
 
-		float dYaw = ship.orientation.getYaw() - ship.previousOrientation.getYaw();
-		float dPitch = ship.orientation.getPitch() - ship.previousOrientation.getPitch();
-		float dRoll = ship.orientation.getRoll() - ship.previousOrientation.getRoll();
-		dYaw = MathHelper.wrapAngleTo180_float(dYaw);
-		dPitch = MathHelper.wrapAngleTo180_float(dPitch);
-		dRoll = MathHelper.wrapAngleTo180_float(dRoll);
+		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
+		float dPitch = MathHelper.wrapAngleTo180_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
+		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
 		GL11.glRotatef((ship.previousOrientation.getYaw() + dYaw * partialTicks), 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-(ship.previousOrientation.getPitch() + dPitch * partialTicks), 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(-(ship.previousOrientation.getRoll() + dRoll * partialTicks), 0.0F, 0.0F, 1.0F);
