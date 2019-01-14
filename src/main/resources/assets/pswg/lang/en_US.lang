@@ -21,7 +21,7 @@ pswg.gui.lightsaber.blank=Blank
 pswg.gui.lightsaber.bladeColor=Glow Color
 pswg.gui.lightsaber.bladeLength=Blade Length
 pswg.gui.lightsaber.coreColor=Core Color
-pswg.gui.lightsabed.unstable=Unstable
+pswg.gui.lightsaber.unstable=Unstable
 
 pswg.zone.common.entering=Now Entering
 pswg.zone.moseisley=The Mos Eisley Spaceport
