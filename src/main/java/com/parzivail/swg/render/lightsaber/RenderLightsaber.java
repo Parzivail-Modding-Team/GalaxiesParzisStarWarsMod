@@ -144,15 +144,15 @@ public class RenderLightsaber extends JsonItemRenderer
 		// draw core
 		GL.Color(saberData.coreColor);
 
-		boolean stable = !saberData.unstable;
-		int segments = stable ? 1 : 15;
+		boolean unstable = saberData.unstable;
+		int segments = unstable ? 15 : 1;
 		float dSegments = 1f / segments;
 		float dLength = bladeLength / segments;
 		float topThickness = 0.022f;
 		float bottomThickness = 0.035f;
 		double offset = StarWarsGalaxy.random.nextGaussian();
 
-		double dTRoundBottom = stable ? 0 : StarWarsGalaxy.simplexNoise.eval(offset, dLength * (segments + 1)) * 0.005f;
+		double dTRoundBottom = unstable ? StarWarsGalaxy.simplexNoise.eval(offset, dLength * (segments + 1)) * 0.005f : 0;
 		Fx.D3.DrawSolidBoxSkewTaper(0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.02f, 0, 0, bladeLength, 0);
 
 		for (int i = 0; i < segments; i++)
@@ -160,8 +160,8 @@ public class RenderLightsaber extends JsonItemRenderer
 			float topThicknessLerp = (float)Fx.Util.Lerp(bottomThickness, topThickness, dSegments * (i + 1));
 			float bottomThicknessLerp = (float)Fx.Util.Lerp(bottomThickness, topThickness, dSegments * i);
 
-			double dTTop = stable ? 0 : StarWarsGalaxy.simplexNoise.eval(offset, dLength * (i + 1)) * 0.005f;
-			double dTBottom = stable ? 0 : StarWarsGalaxy.simplexNoise.eval(offset, dLength * i) * 0.005f;
+			double dTTop = unstable ? StarWarsGalaxy.simplexNoise.eval(offset, dLength * (i + 1)) * 0.005f : 0;
+			double dTBottom = unstable ? StarWarsGalaxy.simplexNoise.eval(offset, dLength * i) * 0.005f : 0;
 
 			Fx.D3.DrawSolidBoxSkewTaper(topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
 		}
