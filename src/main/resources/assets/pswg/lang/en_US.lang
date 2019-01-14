@@ -14,6 +14,15 @@ pswg.gui.barrelStats=%s VRR/%s HRR/%s VSR/%s HSR/%s NR/%s RI
 
 pswg.gui.datapad.logotype=NOVAWELL Personal Datapad
 
+pswg.gui.use=Use
+pswg.gui.reticle=Reticle
+
+pswg.gui.lightsaber.blank=Blank
+pswg.gui.lightsaber.bladeColor=Glow Color
+pswg.gui.lightsaber.bladeLength=Blade Length
+pswg.gui.lightsaber.coreColor=Core Color
+pswg.gui.lightsaber.unstable=Unstable
+
 pswg.zone.common.entering=Now Entering
 pswg.zone.moseisley=The Mos Eisley Spaceport
 pswg.zone.paddock=Experiment Paddock A
@@ -57,7 +66,38 @@ item.pswg.pack.smallGasCanister.name=Small Tibanna Gas Canister
 item.pswg.thermalDetonator.name=Thermal Detonator
 item.pswg.smokeGrenade.name=Smoke Grenade
 
+item.pswg.saltPile.name=Salt Pile
+
+item.pswg.joganFruit.name=Jogan Fruit
+item.pswg.chasuka.name=Chasuka
+item.pswg.meiloorun.name=Meiloorun
+item.pswg.mynockWing.name=Mynock Wing
+item.pswg.friedMynockWing.name=Fried Mynock Wing
+item.pswg.banthaChop.name=Bantha Chop
+item.pswg.banthaSteak.name=Bantha Steak
+item.pswg.nerfChop.name=Nerf Chop
+item.pswg.nerfSteak.name=Nerf Steak
+item.pswg.gizkaChop.name=Gizka Chop
+item.pswg.gizkaSteak.name=Gizka Steak
+item.pswg.flangthTakeout.name=Flangth Takeout
+item.pswg.flangthPlate.name=Flangth Plate
+
+item.pswg.redDeathStick.name=Red Death Stick
+item.pswg.yellowDeathStick.name=Yellow Death Stick
+
+item.pswg.blueMilk.name=Blue Milk
+item.pswg.bluePuffCube.name=Blue Puff Cube
+item.pswg.blueYogurt.name=Blue Yogurt
+
+#TODO: check if this is correct
+item.pswg.qrikkiBread.name=Qrikki Bread
+item.pswg.qrikkiWaffle.name=Qrikki Waffle
+
+item.pswg.personalDatapad=Personal Datapad
+
 item.pswg.debugWizard.name=§aDebug Wizard§r
+
+itwm.pswg.lightsaber.name=Lightsaber
 
 item.pswg.ingotChromium.name=Chromium Ingot
 
