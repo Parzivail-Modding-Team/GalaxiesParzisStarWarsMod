@@ -14,6 +14,15 @@ pswg.gui.barrelStats=%s VRR/%s HRR/%s VSR/%s HSR/%s NR/%s RI
 
 pswg.gui.datapad.logotype=NOVAWELL Personal Datapad
 
+pswg.gui.use=Use
+pswg.gui.reticle=Reticle
+
+pswg.gui.lightsaber.blank=Blank
+pswg.gui.lightsaber.bladeColor=Glow Color
+pswg.gui.lightsaber.bladeLength=Blade Length
+pswg.gui.lightsaber.coreColor=Core Color
+pswg.gui.lightsabed.unstable=Unstable
+
 pswg.zone.common.entering=Now Entering
 pswg.zone.moseisley=The Mos Eisley Spaceport
 pswg.zone.paddock=Experiment Paddock A
