@@ -150,7 +150,7 @@ public class GuiLightsaberForge extends GuiContainer
 			GL.Translate(47, 135, 20);
 			GL.Rotate(-90, 0, 0, 1);
 			GL.Scale(53);
-			RenderLightsaber.renderBlade(3, 0, lightsaberData.descriptor);
+			RenderLightsaber.renderBlade(3, 0, lightsaberData.descriptor.bladeColor, lightsaberData.descriptor.coreColor, lightsaberData.descriptor.unstable);
 			GL.PopMatrix();
 			GL.Enable(EnableCap.Texture2D);
 		}

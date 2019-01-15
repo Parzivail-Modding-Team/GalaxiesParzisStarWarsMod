@@ -107,12 +107,12 @@ public class RenderLightsaber extends JsonItemRenderer
 				GL.PopMatrix();
 			}
 
-			renderBlade(length, (4.1f - bd.openAnimation) * 0.004f, d);
+			renderBlade(length, (4.1f - bd.openAnimation) * 0.004f, d.bladeColor, d.coreColor, d.unstable);
 		}
 		GL.PopAttrib();
 	}
 
-	public static void renderBlade(float bladeLength, float shake, LightsaberDescriptor saberData)
+	public static void renderBlade(float bladeLength, float shake, int bladeColor, int coreColor, boolean unstable)
 	{
 		if (bladeLength == 0)
 			return;
@@ -136,15 +136,14 @@ public class RenderLightsaber extends JsonItemRenderer
 		GL11.glDepthMask(false);
 		for (int layer = 19; layer >= 0; layer--)
 		{
-			GL.Color(saberData.bladeColor, (int)(1.275f * layer));
+			GL.Color(bladeColor, (int)(1.275f * layer));
 			Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, bladeLength - 0.13f + 0.2f * Math.sqrt(1 - Math.pow(1 - layer / 19f, 2)), 0, 0, -(20 - layer) * 0.005f, 0);
 		}
 		GL11.glDepthMask(true);
 
 		// draw core
-		GL.Color(saberData.coreColor);
+		GL.Color(coreColor);
 
-		boolean unstable = saberData.unstable;
 		int segments = unstable ? 15 : 1;
 		float dSegments = 1f / segments;
 		float dLength = bladeLength / segments;

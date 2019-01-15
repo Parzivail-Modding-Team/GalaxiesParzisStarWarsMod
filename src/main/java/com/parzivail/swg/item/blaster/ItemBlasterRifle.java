@@ -29,9 +29,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -127,11 +125,13 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 	@Override
 	public void drawOverlay(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
-		float expansion = 32 * avExpansion.animateTo(getSpreadAmount(stack, player), Ease::outQuad) + 5;
+		float spread = getSpreadAmount(stack, player);
+		float expansionPerc = avExpansion.animateTo(spread, Ease::outQuad);
+		float expansion = 32 * expansionPerc + 5;
 		BlasterData bd = new BlasterData(stack);
 		Minecraft mc = Minecraft.getMinecraft();
 
-		float size = 2;
+		float size = 4;
 
 		if (bd.isAimingDownSights && bd.getScope() != BlasterAttachments.scopeIronsights)
 		{
@@ -149,6 +149,8 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			D2.DrawLine(0, -expansion + onePixel, 0, -size - expansion - onePixel);
 			D2.DrawLine(expansion - onePixel, 0, size + expansion + onePixel, 0);
 			D2.DrawLine(-expansion + onePixel, 0, -size - expansion - onePixel, 0);
+			if (bd.isAimingDownSights)
+				D2.DrawSolidCircle(0, 0, 3 * onePixel);
 
 			GL11.glLineWidth(2);
 			GL11.glColor4f(1, 1, 1, 1);
@@ -156,8 +158,12 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			D2.DrawLine(0, -expansion, 0, -size - expansion);
 			D2.DrawLine(expansion, 0, size + expansion, 0);
 			D2.DrawLine(-expansion, 0, -size - expansion, 0);
+			if (bd.isAimingDownSights)
+				D2.DrawSolidCircle(0, 0, 2 * onePixel);
 		}
 
+		GL.PushMatrix();
+		GL.Translate(0, 50, 0);
 		if (bd.isCoolingDown())
 		{
 			float cooldown = avCooldown.animateTo(60 * bd.cooldownTimer / (float)descriptor.cooldownTimeTicks);
@@ -166,34 +172,35 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			float blue = Math.min(yellow + 40, cooldown);
 
 			GL11.glColor4f(0, 0, 0, 0.5f);
-			Fx.D2.DrawSolidRectangle(-30, 30, 60, 1.5f);
+			Fx.D2.DrawSolidRectangle(-30, 0, 60, 1.5f);
 
 			GL.Color(GLPalette.ELECTRIC_BLUE);
-			Fx.D2.DrawSolidRectangle(-30, 30, blue, 1.5f);
+			Fx.D2.DrawSolidRectangle(-30, 0, blue, 1.5f);
 
 			GL.Color(GLPalette.SW_YELLOW);
-			Fx.D2.DrawSolidRectangle(-30, 30, yellow, 1.5f);
+			Fx.D2.DrawSolidRectangle(-30, 0, yellow, 1.5f);
 
 			GL.Color(GLPalette.ANALOG_RED);
-			Fx.D2.DrawSolidRectangle(-30, 30, red, 1.5f);
+			Fx.D2.DrawSolidRectangle(-30, 0, red, 1.5f);
 
 			GL.Color(GLPalette.WHITE);
-			Fx.D2.DrawSolidTriangle(-30 + cooldown, 33, 2);
-			Fx.D2.DrawSolidTriangle(-30 + cooldown, 28.75f, -2);
+			Fx.D2.DrawSolidTriangle(-30 + cooldown, 3, 2);
+			Fx.D2.DrawSolidTriangle(-30 + cooldown, -1.25f, -2);
 
 			GL11.glLineWidth(1);
-			Fx.D2.DrawLine(-30f + cooldown, 33, -30f + cooldown, 28.75f);
+			Fx.D2.DrawLine(-30f + cooldown, 3, -30f + cooldown, -1.25f);
 		}
 		else if (bd.heat != 0)
 		{
 			GL11.glColor4f(0, 0, 0, 0.5f);
-			Fx.D2.DrawSolidRectangle(-30, 30, 60, 1.5f);
+			Fx.D2.DrawSolidRectangle(-30, 0, 60, 1.5f);
 
 			GL11.glColor4f(1, 1, 1, 1);
-			Fx.D2.DrawSolidRectangle(29, 30, 1, 1.5f);
+			Fx.D2.DrawSolidRectangle(29, 0, 1, 1.5f);
 
-			Fx.D2.DrawSolidRectangle(-30, 30, avHeatup.animateTo(60 * bd.heat / (float)(10 * descriptor.roundsBeforeOverheat)), 1.5f);
+			Fx.D2.DrawSolidRectangle(-30, 0, avHeatup.animateTo(60 * bd.heat / (float)(10 * descriptor.roundsBeforeOverheat)), 1.5f);
 		}
+		GL.PopMatrix();
 
 		GL.Enable(EnableCap.Texture2D);
 		GL.PushMatrix();
@@ -337,14 +344,12 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 			}
 
 			bd.serialize(stack.stackTagCompound);
-
-			// Recoil
-			player.rotationPitch -= (descriptor.damage / 2) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());
-			player.rotationYaw += (descriptor.damage / 5 * world.rand.nextGaussian()) * (1 - bd.getBarrel().getHorizontalRecoilReduction()) * (1 - bd.getGrip().getHorizontalRecoilReduction());
-
-			if (player instanceof EntityPlayerMP)
-				((EntityPlayerMP)player).playerNetServerHandler.sendPacket(new S08PacketPlayerPosLook(player.posX, player.posY + 1.6200000047683716D, player.posZ, player.rotationYaw, player.rotationPitch, false));
 		}
+
+		// TODO: implement recoil in a smooth and cross-sided manner
+		// Recoil
+		//player.rotationPitch -= (descriptor.damage / 4) * (1 - bd.getBarrel().getVerticalRecoilReduction()) * (1 - bd.getGrip().getVerticalRecoilReduction());
+		//player.rotationYaw += (descriptor.damage / 7 * world.rand.nextGaussian()) * (1 - bd.getBarrel().getHorizontalRecoilReduction()) * (1 - bd.getGrip().getHorizontalRecoilReduction());
 
 		return true;
 	}
