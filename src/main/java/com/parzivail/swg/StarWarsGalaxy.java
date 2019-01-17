@@ -40,7 +40,7 @@ import java.util.Random;
 /**
  * Created by colby on 9/10/2017.
  */
-@Mod(modid = Resources.MODID, version = Resources.VERSION)
+@Mod(modid = Resources.MODID, version = Version.VERSION)
 public class StarWarsGalaxy
 {
 	@SidedProxy(clientSide = "com.parzivail.swg.proxy.Client", serverSide = "com.parzivail.swg.proxy.Common")

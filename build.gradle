@@ -45,6 +45,39 @@ minecraft {
 //    compile "slick-util:slick-util:1.0.0"
 //}
 
+class GenerateVersionJava extends DefaultTask {
+    GenerateVersionJava() {
+        inputs.property "version", project.version
+    }
+
+    @OutputDirectory
+    public File outputDirectory = new File(new File(new File(new File(project.buildDir, "generated"), "version"), "main"), "java")
+
+    @OutputFile
+    public File output = new File(new File(new File(new File(outputDirectory, "com"), "parzivail"), "swg"), "Version.java")
+
+    @TaskAction
+    public void doTask() {
+        output.parentFile.mkdirs()
+        output.text = """\
+package com.parzivail.swg;
+
+public final class Version {
+    private Version() {}
+
+    public static final String VERSION = "${project.version}";
+}"""
+    }
+}
+
+task generateVersionJava(type: GenerateVersionJava)
+
+sourceSets.main.java.srcDirs += generateVersionJava.outputDirectory
+compileJava {
+    dependsOn generateVersionJava
+}
+
+
 processResources
 {
     // this will ensure that this task is redone when the versions change.
