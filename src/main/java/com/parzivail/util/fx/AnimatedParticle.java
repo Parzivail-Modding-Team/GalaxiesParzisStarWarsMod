@@ -27,6 +27,9 @@ public class AnimatedParticle extends EntityFX
 		this.cols = cols;
 		oneOverRows = 1f / this.rows;
 		oneOverCols = 1f / this.cols;
+		motionX = parMotionX;
+		motionY = parMotionY;
+		motionZ = parMotionZ;
 	}
 
 	public void renderParticle(Tessellator tessellator, float partialTicks, float rX, float rXZ, float rZ, float rYZ, float rXY)

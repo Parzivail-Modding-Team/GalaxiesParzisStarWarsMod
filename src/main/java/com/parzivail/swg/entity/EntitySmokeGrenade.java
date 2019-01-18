@@ -35,9 +35,11 @@ public class EntitySmokeGrenade extends EntityThrowable
 		{
 			for (int i = 0; i < Math.min(Math.pow(ticksExisted / 10f, 2), 75); ++i)
 			{
-				double gaussMx = (rand.nextGaussian() * 2 - 1) / 2;
-				double gaussMy = (rand.nextGaussian() * 2) / 2;
-				double gaussMz = (rand.nextGaussian() * 2 - 1) / 2;
+				double speed = 0.03f;
+				double baseSpeed = 0.3f;
+				double gaussMx = ((baseSpeed + rand.nextGaussian()) * 2 - 1) * speed;
+				double gaussMy = ((baseSpeed + rand.nextGaussian()) * 2) * speed;
+				double gaussMz = ((baseSpeed + rand.nextGaussian()) * 2 - 1) * speed;
 
 				StarWarsGalaxy.proxy.spawnSmokeParticle(worldObj, posX, posY, posZ, gaussMx, gaussMy, gaussMz);
 			}
