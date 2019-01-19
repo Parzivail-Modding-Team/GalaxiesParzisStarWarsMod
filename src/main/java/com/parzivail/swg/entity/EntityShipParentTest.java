@@ -2,7 +2,6 @@ package com.parzivail.swg.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.MessageShipOrientation;
-import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -46,6 +45,8 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	@Override
 	protected void entityInit()
 	{
+		if (!worldObj.isRemote)
+			initShip();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -185,7 +186,6 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	private void initShip()
 	{
 		seats = new EntityShipChildTest[1];
-		Lumberjack.log("Created seat array");
 		if (!worldObj.isRemote)
 		{
 			for (int i = 0; i < seats.length; i++)

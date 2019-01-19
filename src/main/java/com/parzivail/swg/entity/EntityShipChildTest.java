@@ -1,6 +1,5 @@
 package com.parzivail.swg.entity;
 
-import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -95,7 +94,6 @@ public class EntityShipChildTest extends Entity implements IEntityAdditionalSpaw
 	public void writeSpawnData(ByteBuf buffer)
 	{
 		buffer.writeInt(parentId);
-		Lumberjack.log("Wrote parent ID %s", parentId);
 		buffer.writeInt(seatIdx);
 	}
 
@@ -103,7 +101,6 @@ public class EntityShipChildTest extends Entity implements IEntityAdditionalSpaw
 	public void readSpawnData(ByteBuf buffer)
 	{
 		parentId = buffer.readInt();
-		Lumberjack.log("Read parent ID %s", parentId);
 		parent = (EntityShipParentTest)worldObj.getEntityByID(parentId);
 		seatIdx = buffer.readInt();
 		if (parent != null)
