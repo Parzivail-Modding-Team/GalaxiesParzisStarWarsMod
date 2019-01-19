@@ -19,6 +19,7 @@ public class EntityRegister
 		SwgEntityUtil.registerEntity(EntitySeat.class, "seat");
 
 		SwgEntityUtil.registerEntity(EntityShipParentTest.class, "espt");
+		SwgEntityUtil.registerEntity(EntityShipChildTest.class, "esct");
 
 		SwgEntityUtil.registerEntity(EntityChair.class, "chair");
 

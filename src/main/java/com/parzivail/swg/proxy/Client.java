@@ -215,6 +215,7 @@ public class Client extends Common
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityChair.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntityShipParentTest.class, new RenderShipParentTest());
+		RenderingRegistry.registerEntityRenderingHandler(EntityShipChildTest.class, new RenderNothing());
 
 		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());
 		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());

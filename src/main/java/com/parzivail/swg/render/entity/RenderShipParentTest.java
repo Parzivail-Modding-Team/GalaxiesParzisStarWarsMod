@@ -1,5 +1,6 @@
 package com.parzivail.swg.render.entity;
 
+import com.parzivail.swg.entity.EntityShipParentTest;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
@@ -24,20 +25,20 @@ public class RenderShipParentTest extends Render
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float unknown, float partialTicks)
 	{
-		if (!(entity instanceof com.parzivail.swg.entity.EntityShipParentTest))
+		if (!(entity instanceof EntityShipParentTest))
 			return;
 
 		GL11.glPushMatrix();
 		GL.PushAttrib(AttribMask.EnableBit);
 
-		if (entity.riddenByEntity == Client.getPlayer())
+		EntityShipParentTest ship = (EntityShipParentTest)entity;
+
+		if (ship.riddenByEntity == Client.getPlayer() || (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer()))
 			GL.Translate(0, -1.75f, 0);
 		else
 			GL.Translate(x, y, z);
 		GL.Translate(0, 0.5f, 0);
 		GL.Disable(EnableCap.Texture2D);
-
-		com.parzivail.swg.entity.EntityShipParentTest ship = (com.parzivail.swg.entity.EntityShipParentTest)entity;
 
 		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
 		float dPitch = MathHelper.wrapAngleTo180_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
