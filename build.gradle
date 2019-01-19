@@ -73,7 +73,16 @@ public final class Version {
 task generateVersionJava(type: GenerateVersionJava)
 
 sourceSets.main.java.srcDirs += generateVersionJava.outputDirectory
+idea {
+    module {
+        generatedSourceDirs += generateVersionJava.outputDirectory
+    }
+}
 compileJava {
+    dependsOn generateVersionJava
+}
+
+sourceMainJava {
     dependsOn generateVersionJava
 }
 
