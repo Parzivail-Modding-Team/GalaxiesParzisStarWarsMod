@@ -17,12 +17,6 @@ public class Resources
 
 	public static final boolean IS_DEBUG = System.getenv("PSWG_DEBUG") != null && Boolean.parseBoolean(System.getenv("PSWG_DEBUG"));
 
-	private static final int MAJOR = 1;
-	private static final int MINOR = 0;
-	private static final int PATCH = 0;
-
-	public static final String VERSION = MAJOR + "." + MINOR + "." + PATCH;
-
 	public static int biomeIdTatooineDunes = 100;
 	public static int biomeIdEndor = 101;
 
