@@ -47,18 +47,10 @@ minecraft {
 
 apply {
     File outputDirectory = new File(new File(new File(new File(project.buildDir, "generated"), "version"), "main"), "java")
-
     File output = new File(new File(new File(new File(outputDirectory, "com"), "parzivail"), "swg"), "Version.java")
 
     output.parentFile.mkdirs()
-    output.text = """\
-package com.parzivail.swg;
-
-public final class Version {
-    private Version() {}
-
-    public static final String VERSION = "${project.version}";
-}"""
+    output.text = """package com.parzivail.swg; public final class Version { public static final String VERSION = "${project.version}"; }"""
 
     sourceSets.main.java.srcDirs += outputDirectory
     idea {
@@ -67,7 +59,6 @@ public final class Version {
         }
     }
 }
-
 
 processResources {
     // this will ensure that this task is redone when the versions change.
