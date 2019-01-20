@@ -45,21 +45,13 @@ minecraft {
 //    compile "slick-util:slick-util:1.0.0"
 //}
 
-class GenerateVersionJava extends DefaultTask {
-    GenerateVersionJava() {
-        inputs.property "version", project.version
-    }
+apply {
+    File outputDirectory = new File(new File(new File(new File(project.buildDir, "generated"), "version"), "main"), "java")
 
-    @OutputDirectory
-    public File outputDirectory = new File(new File(new File(new File(project.buildDir, "generated"), "version"), "main"), "java")
+    File output = new File(new File(new File(new File(outputDirectory, "com"), "parzivail"), "swg"), "Version.java")
 
-    @OutputFile
-    public File output = new File(new File(new File(new File(outputDirectory, "com"), "parzivail"), "swg"), "Version.java")
-
-    @TaskAction
-    public void doTask() {
-        output.parentFile.mkdirs()
-        output.text = """\
+    output.parentFile.mkdirs()
+    output.text = """\
 package com.parzivail.swg;
 
 public final class Version {
@@ -67,28 +59,17 @@ public final class Version {
 
     public static final String VERSION = "${project.version}";
 }"""
+
+    sourceSets.main.java.srcDirs += outputDirectory
+    idea {
+        module {
+            generatedSourceDirs += outputDirectory
+        }
     }
 }
 
-task generateVersionJava(type: GenerateVersionJava)
 
-sourceSets.main.java.srcDirs += generateVersionJava.outputDirectory
-idea {
-    module {
-        generatedSourceDirs += generateVersionJava.outputDirectory
-    }
-}
-compileJava {
-    dependsOn generateVersionJava
-}
-
-sourceMainJava {
-    dependsOn generateVersionJava
-}
-
-
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
@@ -98,7 +79,7 @@ processResources
         include 'mcmod.info'
 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.minecraft.version
     }
 
     // copy everything else, thats not the mcmod.info
