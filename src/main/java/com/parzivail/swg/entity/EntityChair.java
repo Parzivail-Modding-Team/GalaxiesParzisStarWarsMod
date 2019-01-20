@@ -1,6 +1,5 @@
 package com.parzivail.swg.entity;
 
-import com.parzivail.swg.block.BlockChair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
@@ -43,7 +42,7 @@ public class EntityChair extends Entity
 		if (posY < -64.0D)
 			kill();
 
-		if (!worldObj.isRemote && riddenByEntity == null && !(worldObj.getBlock(px, py, pz) instanceof BlockChair))
+		if (!worldObj.isRemote && riddenByEntity == null)
 			kill();
 
 		prevPosX = posX;

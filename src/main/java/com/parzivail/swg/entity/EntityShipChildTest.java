@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 public class EntityShipChildTest extends Entity implements IEntityAdditionalSpawnData
@@ -42,6 +43,14 @@ public class EntityShipChildTest extends Entity implements IEntityAdditionalSpaw
 	}
 
 	@Override
+	public boolean attackEntityFrom(DamageSource source, float amount)
+	{
+		if (parent != null)
+			parent.setDead();
+		return false;
+	}
+
+	@Override
 	public void onUpdate()
 	{
 		if (worldObj.isRemote && isOrphan)
@@ -52,6 +61,8 @@ public class EntityShipChildTest extends Entity implements IEntityAdditionalSpaw
 			parent.seats[seatIdx] = this;
 			isOrphan = false;
 		}
+		else if (isOrphan)
+			isOrphan = false;
 
 		if (parentId == 0 && ticksExisted > 20)
 			setDead();

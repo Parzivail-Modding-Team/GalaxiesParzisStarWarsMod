@@ -14,7 +14,6 @@ import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -26,6 +25,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	public Vector3f angularMomentum;
 	public float throttle;
 	public EntityShipChildTest[] seats;
+	public boolean isInitialized;
 
 	public EntityShipParentTest(World worldIn)
 	{
@@ -46,7 +46,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	protected void entityInit()
 	{
 		if (!worldObj.isRemote)
-			initShip();
+			createChildren();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -77,6 +77,12 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 
 		if (posY < -64.0D)
 			kill();
+
+		if (!isInitialized)
+		{
+			spawnChildren();
+			isInitialized = true;
+		}
 
 		prevPosX = posX;
 		prevPosY = posY;
@@ -116,26 +122,19 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 			motionZ = 0;
 		}
 
-		if (!worldObj.isRemote && seats != null)
-		{
-			for (int i = 0; i < seats.length; i++)
-			{
-				if (seats[i] == null || !seats[i].addedToChunk)
-				{
-					seats[i] = new EntityShipChildTest(worldObj, this, i);
-					worldObj.spawnEntityInWorld(seats[i]);
-				}
-			}
-		}
-
 		moveEntity(motionX, motionY, motionZ);
 	}
 
-	@Override
-	public boolean attackEntityFrom(DamageSource source, float amount)
+	private void spawnChildren()
 	{
-		setDead();
-		return false;
+		if (worldObj.isRemote)
+			return;
+
+		for (int i = 0; i < seats.length; i++)
+		{
+			seats[i] = new EntityShipChildTest(worldObj, this, i);
+			worldObj.spawnEntityInWorld(seats[i]);
+		}
 	}
 
 	public void updateRiderPosition()
@@ -150,19 +149,11 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	public boolean interactFirst(EntityPlayer player)
 	{
 		return false;
-		//		if (riddenByEntity instanceof EntityPlayer && riddenByEntity != player)
-		//			return true;
-		//		else
-		//		{
-		//			if (!worldObj.isRemote)
-		//				player.mountEntity(this);
-		//			return true;
-		//		}
 	}
 
 	public boolean canBeCollidedWith()
 	{
-		return !isDead;
+		return false;
 	}
 
 	public boolean canBePushed()
@@ -180,20 +171,13 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	protected void readEntityFromNBT(NBTTagCompound tagCompound)
 	{
 		throttle = tagCompound.getFloat("throttle");
-		initShip();
+		createChildren();
 	}
 
-	private void initShip()
+	private void createChildren()
 	{
+		//spawnCamera();
 		seats = new EntityShipChildTest[1];
-		if (!worldObj.isRemote)
-		{
-			for (int i = 0; i < seats.length; i++)
-			{
-				seats[i] = new EntityShipChildTest(worldObj, this, i);
-				worldObj.spawnEntityInWorld(seats[i]);
-			}
-		}
 	}
 
 	@Override
@@ -210,8 +194,6 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	@Override
 	public void readSpawnData(ByteBuf additionalData)
 	{
-		initShip();
-
-		//spawnCamera();
+		createChildren();
 	}
 }
