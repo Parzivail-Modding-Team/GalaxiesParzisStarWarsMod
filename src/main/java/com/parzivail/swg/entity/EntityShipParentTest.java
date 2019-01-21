@@ -2,6 +2,7 @@ package com.parzivail.swg.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.MessageShipOrientation;
+import com.parzivail.swg.ship.ShipData;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
@@ -30,6 +31,8 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	public float throttle;
 	public EntityShipChildTest[] seats;
 	public boolean isInitialized;
+	public ShipData data;
+	private ShipType type;
 
 	public EntityShipParentTest(World worldIn)
 	{
@@ -40,9 +43,11 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 		throttle = 0;
 	}
 
-	public EntityShipParentTest(World worldIn, int x, int y, int z)
+	public EntityShipParentTest(World worldIn, int x, int y, int z, ShipType type)
 	{
 		this(worldIn);
+		data = ShipData.create(type);
+		this.type = type;
 		setPosition(x + 0.5, y + 0.5f, z + 0.5);
 	}
 
@@ -100,8 +105,8 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 		{
 			EntityPlayer player = (EntityPlayer)driver;
 
-			throttle += player.moveForward / 10f;
-			throttle = MathHelper.clamp_float(throttle, 0, 1);
+			throttle += player.moveForward * data.acceleration;
+			throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
 			//orientation.rotateLocalYaw(player.moveStrafing * 10);
 			orientation.setAngles(-player.rotationYaw, -player.rotationPitch, 0);
 
@@ -227,11 +232,14 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	@Override
 	public void writeSpawnData(ByteBuf buffer)
 	{
+		buffer.writeInt(type.ordinal());
 	}
 
 	@Override
-	public void readSpawnData(ByteBuf additionalData)
+	public void readSpawnData(ByteBuf buffer)
 	{
+		type = ShipType.values()[buffer.readInt()];
+		data = ShipData.create(type);
 		createChildren();
 	}
 }
