@@ -126,15 +126,17 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 			motionZ = 0;
 		}
 
-		float distance = 1.5f;
+		float distanceMin = 1.5f;
+		float distanceMax = 2.5f;
 		float force = 1;
-		boolean distanceMax = false;
-		List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distance, 0).addCoord(0, distance * 2, 0));
+		boolean hasMinDistance = false;
+		boolean hasMaxDistance = false;
 
-		if (distanceMax)
+		// max distance
+		if (hasMaxDistance)
 		{
-			List<AxisAlignedBB> aabbBig = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distance + 1, 0).addCoord(0, (distance + 1) * 2, 0));
-			// max distance
+			List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distanceMax, 0).addCoord(0, distanceMax * 2, 0));
+			List<AxisAlignedBB> aabbBig = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distanceMax + 1, 0).addCoord(0, (distanceMax + 1) * 2, 0));
 			if (aabb.isEmpty())
 			{
 				if (aabbBig.isEmpty())
@@ -143,10 +145,12 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 					motionY = motionY > 0 ? 0 : motionY;
 			}
 		}
-		else
+
+		// min distance
+		if (hasMinDistance)
 		{
-			List<AxisAlignedBB> aabbSmall = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distance - 1, 0).addCoord(0, (distance - 1) * 2, 0));
-			// max distance
+			List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distanceMin, 0).addCoord(0, distanceMin * 2, 0));
+			List<AxisAlignedBB> aabbSmall = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distanceMin - 1, 0).addCoord(0, (distanceMin - 1) * 2, 0));
 			if (!aabb.isEmpty())
 			{
 				if (aabbSmall.isEmpty())
