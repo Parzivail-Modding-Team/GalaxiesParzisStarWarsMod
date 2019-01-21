@@ -126,23 +126,37 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 			motionZ = 0;
 		}
 
-		List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, 5, 0).addCoord(0, 5, 0));
-		//		double closest = 6;
-		//		if (!aabb.isEmpty())
-		//		{
-		//			for (AxisAlignedBB bb : aabb)
-		//				closest = Math.abs(posY - bb.maxY);
-		//		}
-		//		if (closest > 5)
-		//		{
-		//			moveEntity(0, -closest / 2, 0);
-		//		}
-		if (aabb.isEmpty())
+		float distance = 1.5f;
+		float force = 1;
+		boolean distanceMax = false;
+		List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distance, 0).addCoord(0, distance * 2, 0));
+
+		if (distanceMax)
 		{
-			moveEntity(motionX, motionY > 0 ? -motionY * 2 : -1, motionZ);
+			List<AxisAlignedBB> aabbBig = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distance + 1, 0).addCoord(0, (distance + 1) * 2, 0));
+			// max distance
+			if (aabb.isEmpty())
+			{
+				if (aabbBig.isEmpty())
+					motionY = motionY > 0 ? -force : motionY;
+				else
+					motionY = motionY > 0 ? 0 : motionY;
+			}
 		}
 		else
-			moveEntity(motionX, motionY, motionZ);
+		{
+			List<AxisAlignedBB> aabbSmall = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distance - 1, 0).addCoord(0, (distance - 1) * 2, 0));
+			// max distance
+			if (!aabb.isEmpty())
+			{
+				if (aabbSmall.isEmpty())
+					motionY = motionY < 0 ? 0 : motionY;
+				else
+					motionY = motionY < 0 ? force : motionY;
+			}
+		}
+
+		moveEntity(motionX, motionY, motionZ);
 	}
 
 	private void spawnChildren()
