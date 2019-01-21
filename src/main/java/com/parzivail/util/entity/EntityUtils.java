@@ -3,13 +3,17 @@ package com.parzivail.util.entity;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -91,6 +95,45 @@ public class EntityUtils
 	public static RaytraceHit rayTrace(Entity from, double distance)
 	{
 		return rayTrace(from.getLookVec(), distance, from, new Entity[0], false);
+	}
+
+	public static List<AxisAlignedBB> getBlockAABBs(World world, AxisAlignedBB aabb)
+	{
+		List<AxisAlignedBB> collidingBoundingBoxes = new ArrayList<>();
+
+		int i = MathHelper.floor_double(aabb.minX);
+		int j = MathHelper.floor_double(aabb.maxX + 1.0D);
+		int k = MathHelper.floor_double(aabb.minY);
+		int l = MathHelper.floor_double(aabb.maxY + 1.0D);
+		int i1 = MathHelper.floor_double(aabb.minZ);
+		int j1 = MathHelper.floor_double(aabb.maxZ + 1.0D);
+
+		for (int k1 = i; k1 < j; ++k1)
+		{
+			for (int l1 = i1; l1 < j1; ++l1)
+			{
+				if (world.blockExists(k1, 64, l1))
+				{
+					for (int i2 = k - 1; i2 < l; ++i2)
+					{
+						Block block;
+
+						if (k1 >= -30000000 && k1 < 30000000 && l1 >= -30000000 && l1 < 30000000)
+						{
+							block = world.getBlock(k1, i2, l1);
+						}
+						else
+						{
+							block = Blocks.stone;
+						}
+
+						block.addCollisionBoxesToList(world, k1, i2, l1, aabb, collidingBoundingBoxes, null);
+					}
+				}
+			}
+		}
+
+		return collidingBoundingBoxes;
 	}
 
 	//	public static boolean isRiding(Entity entity, Class<? extends Entity> clazz)

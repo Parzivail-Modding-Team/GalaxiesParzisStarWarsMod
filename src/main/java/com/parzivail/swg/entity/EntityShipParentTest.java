@@ -2,6 +2,7 @@ package com.parzivail.swg.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.MessageShipOrientation;
+import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -14,9 +15,12 @@ import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+
+import java.util.List;
 
 public class EntityShipParentTest extends Entity implements IEntityAdditionalSpawnData
 {
@@ -122,7 +126,23 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 			motionZ = 0;
 		}
 
-		moveEntity(motionX, motionY, motionZ);
+		List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, 5, 0).addCoord(0, 5, 0));
+		//		double closest = 6;
+		//		if (!aabb.isEmpty())
+		//		{
+		//			for (AxisAlignedBB bb : aabb)
+		//				closest = Math.abs(posY - bb.maxY);
+		//		}
+		//		if (closest > 5)
+		//		{
+		//			moveEntity(0, -closest / 2, 0);
+		//		}
+		if (aabb.isEmpty())
+		{
+			moveEntity(motionX, motionY > 0 ? -motionY * 2 : -1, motionZ);
+		}
+		else
+			moveEntity(motionX, motionY, motionZ);
 	}
 
 	private void spawnChildren()
