@@ -15,7 +15,7 @@ public class ForcePowerLightning implements IForcePower
 	@Override
 	public boolean use(World world, EntityPlayer player)
 	{
-		//player.worldObj.play(player.posX, player.posY, player.posZ, Resources.MODID + ":" + "force.push", 1, 1, true);
+		//player.worldObj.play(player.posX, player.posY, player.posZ, Resources.MODID + ":" + "repulsorliftForce.push", 1, 1, true);
 
 		if (Cron.isActive(player, ForceRegistry.fpLightning))
 			Cron.deactivate(player, ForceRegistry.fpLightning);

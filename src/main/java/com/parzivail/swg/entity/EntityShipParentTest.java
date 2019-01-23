@@ -131,37 +131,31 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 			motionZ = 0;
 		}
 
-		float distanceMin = 1.5f;
-		float distanceMax = 2.5f;
-		float force = 1;
-		boolean hasMinDistance = false;
-		boolean hasMaxDistance = false;
-
 		// max distance
-		if (hasMaxDistance)
+		if (data.hasMaxDistance)
 		{
-			List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distanceMax, 0).addCoord(0, distanceMax * 2, 0));
-			List<AxisAlignedBB> aabbBig = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distanceMax + 1, 0).addCoord(0, (distanceMax + 1) * 2, 0));
+			List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMax, 0).addCoord(0, data.distanceMax * 2, 0));
+			List<AxisAlignedBB> aabbBig = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMax + 1, 0).addCoord(0, (data.distanceMax + 1) * 2, 0));
 			if (aabb.isEmpty())
 			{
 				if (aabbBig.isEmpty())
-					motionY = motionY > 0 ? -force : motionY;
+					motionY = motionY > 0 ? -data.repulsorliftForce : motionY;
 				else
 					motionY = motionY > 0 ? 0 : motionY;
 			}
 		}
 
 		// min distance
-		if (hasMinDistance)
+		if (data.hasMinDistance)
 		{
-			List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distanceMin, 0).addCoord(0, distanceMin * 2, 0));
-			List<AxisAlignedBB> aabbSmall = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, distanceMin - 1, 0).addCoord(0, (distanceMin - 1) * 2, 0));
+			List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMin, 0).addCoord(0, data.distanceMin * 2, 0));
+			List<AxisAlignedBB> aabbSmall = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMin - 1, 0).addCoord(0, (data.distanceMin - 1) * 2, 0));
 			if (!aabb.isEmpty())
 			{
 				if (aabbSmall.isEmpty())
 					motionY = motionY < 0 ? 0 : motionY;
 				else
-					motionY = motionY < 0 ? force : motionY;
+					motionY = motionY < 0 ? data.repulsorliftForce : motionY;
 			}
 		}
 
@@ -175,6 +169,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 
 		for (int i = 0; i < seats.length; i++)
 		{
+			// TODO: seat roles
 			seats[i] = new EntityShipChildTest(worldObj, this, i);
 			worldObj.spawnEntityInWorld(seats[i]);
 		}
