@@ -43,12 +43,10 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 		throttle = 0;
 	}
 
-	public EntityShipParentTest(World worldIn, int x, int y, int z, ShipType type)
+	public EntityShipParentTest(World worldIn, ShipType type)
 	{
 		this(worldIn);
-		data = ShipData.create(type);
 		this.type = type;
-		setPosition(x + 0.5, y + 0.5f, z + 0.5);
 	}
 
 	@Override
@@ -209,6 +207,9 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	protected void readEntityFromNBT(NBTTagCompound tagCompound)
 	{
 		throttle = tagCompound.getFloat("throttle");
+		orientation = new RotatedAxes(tagCompound.getFloat("yaw"), tagCompound.getFloat("pitch"), tagCompound.getFloat("roll"));
+		type = ShipType.values()[tagCompound.getInteger("type")];
+		data = ShipData.create(type);
 		createChildren();
 	}
 
@@ -222,12 +223,19 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	protected void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
 		tagCompound.setFloat("throttle", throttle);
+		tagCompound.setFloat("yaw", orientation.getYaw());
+		tagCompound.setFloat("pitch", orientation.getPitch());
+		tagCompound.setFloat("roll", orientation.getRoll());
+		tagCompound.setInteger("type", type.ordinal());
 	}
 
 	@Override
 	public void writeSpawnData(ByteBuf buffer)
 	{
 		buffer.writeInt(type.ordinal());
+		buffer.writeFloat(orientation.getYaw());
+		buffer.writeFloat(orientation.getPitch());
+		buffer.writeFloat(orientation.getRoll());
 	}
 
 	@Override
@@ -235,6 +243,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	{
 		type = ShipType.values()[buffer.readInt()];
 		data = ShipData.create(type);
+		orientation = new RotatedAxes(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
 		createChildren();
 	}
 }
