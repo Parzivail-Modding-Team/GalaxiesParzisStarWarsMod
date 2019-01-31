@@ -76,7 +76,7 @@ public class SwgModel
 			byte[] identr = new byte[4];
 			int read = s.read(identr);
 			String ident = new String(identr);
-			if (!ident.equals("SWG3") || read != identr.length)
+			if (!"SWG3".equals(ident) || read != identr.length)
 				throw new InvalidObjectException("Input file not SWG3 model");
 
 			int version = s.readInt();

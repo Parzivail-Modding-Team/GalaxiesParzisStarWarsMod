@@ -1,12 +1,13 @@
 package com.parzivail.swg.render.entity;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityShipParentTest;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.util.ui.Fx;
+import com.parzivail.util.binary.Swg3.SwgModel;
+import com.parzivail.util.binary.Swg3.SwgPart;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
-import com.parzivail.util.ui.gltk.PrimitiveType;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
@@ -18,6 +19,14 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderShipParentTest extends Render
 {
+	private static final SwgModel model;
+
+	static
+	{
+		ResourceLocation r = new ResourceLocation(Resources.MODID, "models/test.swg3");
+		model = SwgModel.Load(r);
+	}
+
 	public RenderShipParentTest()
 	{
 	}
@@ -27,6 +36,8 @@ public class RenderShipParentTest extends Render
 	{
 		if (!(entity instanceof EntityShipParentTest))
 			return;
+
+		int frame = 0;
 
 		GL11.glPushMatrix();
 		GL.PushAttrib(AttribMask.EnableBit);
@@ -47,30 +58,51 @@ public class RenderShipParentTest extends Render
 		GL11.glRotatef(-(ship.previousOrientation.getPitch() + dPitch * partialTicks), 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(-(ship.previousOrientation.getRoll() + dRoll * partialTicks), 0.0F, 0.0F, 1.0F);
 
-		Fx.D3.DrawSolidBox();
+		for (SwgPart p : model.parts)
+		{
+			GL.PushMatrix();
+			//if (p.name.equals("x_wing01") || p.name.equals("x_wing04"))
+			//{
+			//	GL.Translate(0, 0, ship.verticalCenteringOffset - ship.verticalGroundingOffset);
+			//	GL.Rotate(-Math.abs(13 * Fx.Util.Hz(0.5f)), 1, 0, 0);
+			//	GL.Translate(0, 0, -ship.verticalCenteringOffset + ship.verticalGroundingOffset);
+			//}
+			//if (p.name.equals("x_wing02") || p.name.equals("x_wing03"))
+			//{
+			//	GL.Translate(0, 0, ship.verticalCenteringOffset - ship.verticalGroundingOffset);
+			//	GL.Rotate(Math.abs(13 * Fx.Util.Hz(0.5f)), 1, 0, 0);
+			//	GL.Translate(0, 0, -ship.verticalCenteringOffset + ship.verticalGroundingOffset);
+			//}
+			bindTexture(p.textures[frame].texture);
+			GL.Scale(0.0004f);
+			GL.CallList(model.partRenderLists.get(p.name)[frame]);
+			GL.PopMatrix();
+		}
 
-		GL.Disable(EnableCap.Lighting);
-		GL.PushMatrix();
-		GL.Scale(0.25f);
-		GL11.glLineWidth(2);
-		GL.Color(1f, 0, 0);
-		GL.Begin(PrimitiveType.LineStrip);
-		GL.Vertex3(0.0D, 0.0D, 0.0D);
-		GL.Vertex3((double)10, 0.0D, 0.0D);
-		GL.End();
-
-		GL.Color(0, 1f, 0);
-		GL.Begin(PrimitiveType.LineStrip);
-		GL.Vertex3(0.0D, 0.0D, 0.0D);
-		GL.Vertex3(0.0D, (double)10, 0.0D);
-		GL.End();
-
-		GL.Color(0, 0, 1f);
-		GL.Begin(PrimitiveType.LineStrip);
-		GL.Vertex3(0.0D, 0.0D, 0.0D);
-		GL.Vertex3(0.0D, 0.0D, (double)10);
-		GL.End();
-		GL.PopMatrix();
+		//		Fx.D3.DrawSolidBox();
+		//
+		//		GL.Disable(EnableCap.Lighting);
+		//		GL.PushMatrix();
+		//		GL.Scale(0.25f);
+		//		GL11.glLineWidth(2);
+		//		GL.Color(1f, 0, 0);
+		//		GL.Begin(PrimitiveType.LineStrip);
+		//		GL.Vertex3(0.0D, 0.0D, 0.0D);
+		//		GL.Vertex3((double)10, 0.0D, 0.0D);
+		//		GL.End();
+		//
+		//		GL.Color(0, 1f, 0);
+		//		GL.Begin(PrimitiveType.LineStrip);
+		//		GL.Vertex3(0.0D, 0.0D, 0.0D);
+		//		GL.Vertex3(0.0D, (double)10, 0.0D);
+		//		GL.End();
+		//
+		//		GL.Color(0, 0, 1f);
+		//		GL.Begin(PrimitiveType.LineStrip);
+		//		GL.Vertex3(0.0D, 0.0D, 0.0D);
+		//		GL.Vertex3(0.0D, 0.0D, (double)10);
+		//		GL.End();
+		//		GL.PopMatrix();
 
 		GL.PopAttrib();
 		GL11.glPopMatrix();

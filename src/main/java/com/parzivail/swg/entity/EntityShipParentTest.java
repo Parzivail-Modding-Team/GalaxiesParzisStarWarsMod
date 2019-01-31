@@ -47,6 +47,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	{
 		this(worldIn);
 		this.type = type;
+		data = ShipData.create(type);
 	}
 
 	@Override
