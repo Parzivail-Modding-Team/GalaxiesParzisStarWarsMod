@@ -50,17 +50,17 @@ public class SwgModel
 		{
 			FacePointer face = part.triangles[j];
 
-			GL.Normal3(part.verts[frame][face.a].normal);
-			GL.TexCoord2(part.verts[frame][face.a].textureCoord);
-			GL.Vertex3(part.verts[frame][face.a].position);
+			GL.Normal3(part.verts[frame][face.c].normal);
+			GL.TexCoord2(part.verts[frame][face.c].textureCoord);
+			GL.Vertex3(part.verts[frame][face.c].position);
 
 			GL.Normal3(part.verts[frame][face.b].normal);
 			GL.TexCoord2(part.verts[frame][face.b].textureCoord);
 			GL.Vertex3(part.verts[frame][face.b].position);
 
-			GL.Normal3(part.verts[frame][face.c].normal);
-			GL.TexCoord2(part.verts[frame][face.c].textureCoord);
-			GL.Vertex3(part.verts[frame][face.c].position);
+			GL.Normal3(part.verts[frame][face.a].normal);
+			GL.TexCoord2(part.verts[frame][face.a].textureCoord);
+			GL.Vertex3(part.verts[frame][face.a].position);
 		}
 		GL.End();
 	}

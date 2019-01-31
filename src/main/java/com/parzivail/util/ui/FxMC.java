@@ -9,6 +9,7 @@ import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.entity.Entity;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -99,5 +100,29 @@ public class FxMC
 		GL11.glLineWidth(1.0F);
 		GL11.glDepthMask(true);
 		GL.Enable(EnableCap.Texture2D);
+	}
+
+	public static void enableSunBasedLighting(Entity entity, float partialTicks)
+	{
+		GL.Disable(EnableCap.Light0);
+		GL.Disable(EnableCap.Light1);
+		GL.Enable(EnableCap.Light7);
+		double angle = entity.worldObj.getCelestialAngleRadians(partialTicks) + Math.PI / 2;
+		float f1 = 1.0f;
+		float f2 = 0.0f;
+		float lX = (float)(100 * Math.cos(angle) + entity.posX);
+		float lY = (float)(100 * Math.sin(angle) + entity.posY);
+		float lZ = (float)entity.posZ;
+		GL11.glLight(GL11.GL_LIGHT7, GL11.GL_POSITION, BufferUtil.setColorBuffer(lX, lY, lZ, 0.0D));
+		GL11.glLight(GL11.GL_LIGHT7, GL11.GL_DIFFUSE, BufferUtil.setColorBuffer(f1, f1, f1, 1.0F));
+		GL11.glLight(GL11.GL_LIGHT7, GL11.GL_AMBIENT, BufferUtil.setColorBuffer(0.0F, 0.0F, 0.0F, 1.0F));
+		GL11.glLight(GL11.GL_LIGHT7, GL11.GL_SPECULAR, BufferUtil.setColorBuffer(f2, f2, f2, 1.0F));
+	}
+
+	public static void disableSunBasedLighting()
+	{
+		GL.Enable(EnableCap.Light0);
+		GL.Enable(EnableCap.Light1);
+		GL.Disable(EnableCap.Light7);
 	}
 }

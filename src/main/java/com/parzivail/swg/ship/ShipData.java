@@ -14,6 +14,8 @@ public class ShipData
 	public float repulsorliftForce = 1;
 	public boolean hasMinDistance;
 	public boolean hasMaxDistance;
+	public float verticalCenteringOffset = 1.684f;
+	public float verticalGroundingOffset = 0.82f;
 
 	public static ShipData create(ShipType type)
 	{

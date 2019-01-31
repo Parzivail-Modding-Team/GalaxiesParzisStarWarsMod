@@ -5,6 +5,7 @@ import com.parzivail.swg.entity.EntityShipParentTest;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.binary.Swg3.SwgModel;
 import com.parzivail.util.binary.Swg3.SwgPart;
+import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -41,6 +42,7 @@ public class RenderShipParentTest extends Render
 
 		GL11.glPushMatrix();
 		GL.PushAttrib(AttribMask.EnableBit);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
 
 		EntityShipParentTest ship = (EntityShipParentTest)entity;
 
@@ -48,15 +50,24 @@ public class RenderShipParentTest extends Render
 			GL.Translate(0, -1.75f, 0);
 		else
 			GL.Translate(x, y, z);
-		GL.Translate(0, 0.5f, 0);
-		GL.Disable(EnableCap.Texture2D);
+		GL.Enable(EnableCap.Texture2D);
+		//GL.Disable(EnableCap.CullFace);
 
+		FxMC.enableSunBasedLighting(ship, partialTicks);
+
+		GL.Translate(0, ship.data.verticalCenteringOffset, 0);
 		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
 		float dPitch = MathHelper.wrapAngleTo180_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
 		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
 		GL11.glRotatef((ship.previousOrientation.getYaw() + dYaw * partialTicks), 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-(ship.previousOrientation.getPitch() + dPitch * partialTicks), 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(-(ship.previousOrientation.getRoll() + dRoll * partialTicks), 0.0F, 0.0F, 1.0F);
+		GL.Translate(0, -ship.data.verticalCenteringOffset, 0);
+
+		GL.Translate(0, ship.data.verticalGroundingOffset, 0);
+
+		GL.Rotate(-90, 1, 0, 0);
+		GL.Rotate(-90, 0, 0, 1);
 
 		for (SwgPart p : model.parts)
 		{
