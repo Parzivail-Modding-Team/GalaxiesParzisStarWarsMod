@@ -11,8 +11,11 @@ import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -46,12 +49,17 @@ public class RenderShipParentTest extends Render
 
 		EntityShipParentTest ship = (EntityShipParentTest)entity;
 
-		if (ship.riddenByEntity == Client.getPlayer() || (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer()))
-			GL.Translate(0, -1.75f, 0);
+		if (Client.getPlayer() != null && ship.riddenByEntity == Client.getPlayer() || (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer()))
+		{
+			EntityPlayer player = Client.getPlayer();
+			EntityLivingBase view = Client.mc.renderViewEntity;
+			Vec3 pos = player.getPosition(partialTicks);
+			Vec3 viewPos = view.getPosition(partialTicks);
+			GL.Translate(pos.xCoord - viewPos.xCoord, pos.yCoord - viewPos.yCoord - 1.75f, pos.zCoord - viewPos.zCoord);
+		}
 		else
 			GL.Translate(x, y, z);
 		GL.Enable(EnableCap.Texture2D);
-		//GL.Disable(EnableCap.CullFace);
 
 		FxMC.enableSunBasedLighting(ship, partialTicks);
 

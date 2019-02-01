@@ -4,6 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.entity.EntityCinematicCamera;
+import com.parzivail.swg.entity.EntityShipParentTest;
 import com.parzivail.swg.force.Cron;
 import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.gui.GuiNowEntering;
@@ -19,7 +20,6 @@ import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.force.RenderLightning;
 import com.parzivail.swg.render.worldext.RenderExtHealthBar;
 import com.parzivail.swg.render.worldext.RenderExtLightsaberTrail;
-import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.util.SwgEntityUtil;
 import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.common.Lumberjack;
@@ -147,7 +147,7 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			MultipartFlightModel ship = SwgEntityUtil.getShipRiding(event.entity);
+			EntityShipParentTest ship = SwgEntityUtil.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 
@@ -163,7 +163,7 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			MultipartFlightModel ship = SwgEntityUtil.getShipRiding(event.entity);
+			EntityShipParentTest ship = SwgEntityUtil.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 
@@ -265,7 +265,7 @@ public class EventHandler
 
 		if (Client.getPlayer() != null)
 		{
-			MultipartFlightModel ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
+			EntityShipParentTest ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
 			if (ship == null && Client.mc.renderViewEntity instanceof EntityCinematicCamera)
 			{
 				FxMC.changeCameraRoll(0);
@@ -275,7 +275,7 @@ public class EventHandler
 			{
 				float r = ship.orientation.getRoll();
 				FxMC.changeCameraRoll(r);
-				Client.mc.renderViewEntity = ship.camera;
+				Client.mc.renderViewEntity = ship.getCamera();
 			}
 
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();

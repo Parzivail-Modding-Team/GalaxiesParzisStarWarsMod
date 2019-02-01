@@ -1,6 +1,5 @@
 package com.parzivail.swg.entity;
 
-import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -8,7 +7,7 @@ import net.minecraft.world.World;
 
 public class EntityCinematicCamera extends EntityLivingBase
 {
-	public MultipartFlightModel driveable;
+	public EntityShipParentTest parent;
 
 	public EntityCinematicCamera(World world)
 	{
@@ -16,10 +15,10 @@ public class EntityCinematicCamera extends EntityLivingBase
 		setSize(0F, 0F);
 	}
 
-	public EntityCinematicCamera(MultipartFlightModel d)
+	public EntityCinematicCamera(EntityShipParentTest d)
 	{
 		this(d.worldObj);
-		driveable = d;
+		parent = d;
 		setPosition(d.posX, d.posY, d.posZ);
 	}
 
@@ -30,19 +29,19 @@ public class EntityCinematicCamera extends EntityLivingBase
 		prevPosY = posY;
 		prevPosZ = posZ;
 
-		Vector3f cameraPosition = new Vector3f(0, 0, 15);
-		cameraPosition = driveable.orientation.findLocalVectorGlobally(cameraPosition);
+		Vector3f cameraPosition = new Vector3f(0, 0, -15);
+		cameraPosition = parent.orientation.findLocalVectorGlobally(cameraPosition);
 
-		double dX = driveable.posX + cameraPosition.x - posX;
-		double dY = driveable.posY + cameraPosition.y - posY;
-		double dZ = driveable.posZ + cameraPosition.z - posZ;
+		double dX = parent.posX + cameraPosition.x - posX;
+		double dY = parent.posY + cameraPosition.y - posY;
+		double dZ = parent.posZ + cameraPosition.z - posZ;
 
-		float lerpAmount = 0.3F;
+		float lerpAmount = 0.5F;
 
 		setPosition(posX + dX * lerpAmount, posY + dY * lerpAmount, posZ + dZ * lerpAmount);
 
-		rotationYaw = 180 - driveable.orientation.getYaw();
-		rotationPitch = driveable.orientation.getPitch();
+		rotationYaw = -parent.orientation.getYaw();
+		rotationPitch = -parent.orientation.getPitch();
 	}
 
 	@Override

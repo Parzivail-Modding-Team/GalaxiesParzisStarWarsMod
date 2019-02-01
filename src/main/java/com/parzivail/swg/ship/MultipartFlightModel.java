@@ -97,8 +97,8 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 
 		previousOrientation = orientation.clone();
 
-		if (StarWarsGalaxy.proxy.isClientControlled(this))
-			StarWarsGalaxy.proxy.handleVehicleMovement();
+		//		if (StarWarsGalaxy.proxy.isClientControlled(this))
+		//			StarWarsGalaxy.proxy.handleVehicleMovement();
 
 		if (getDriver() != null)
 		{
@@ -428,7 +428,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 			}
 		 */
 
-		camera = new EntityCinematicCamera(this);
-		worldObj.spawnEntityInWorld(camera);
+		//		camera = new EntityCinematicCamera(this);
+		//		worldObj.spawnEntityInWorld(camera);
 	}
 }

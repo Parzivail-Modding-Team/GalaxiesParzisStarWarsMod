@@ -29,7 +29,6 @@ import com.parzivail.swg.render.npc.RenderMerchant;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;
 import com.parzivail.swg.render.weapon.grenades.RenderThermalDetonator;
-import com.parzivail.swg.ship.MultipartFlightModel;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
@@ -334,9 +333,9 @@ public class Client extends Common
 	}
 
 	@Override
-	public boolean isClientControlled(MultipartFlightModel query)
+	public boolean isClientControlled(EntityShipParentTest query)
 	{
-		MultipartFlightModel ship = SwgEntityUtil.getShipRiding(mc.thePlayer);
-		return ship != null && ship.equals(query) && ship.isControlling(mc.thePlayer);
+		EntityShipParentTest ship = SwgEntityUtil.getShipRiding(mc.thePlayer);
+		return ship != null && ship.equals(query) && ship.canBeControlledBy(mc.thePlayer);
 	}
 }

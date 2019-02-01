@@ -71,6 +71,11 @@ public class EntityShipChildTest extends Entity implements IEntityAdditionalSpaw
 			setPosition(parent.posX, parent.posY, parent.posZ);
 	}
 
+	public EntityShipParentTest getParent()
+	{
+		return parent;
+	}
+
 	public boolean canBeCollidedWith()
 	{
 		return !isDead;

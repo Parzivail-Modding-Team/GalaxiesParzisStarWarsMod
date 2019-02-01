@@ -1,8 +1,8 @@
 package com.parzivail.swg.util;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.ship.EntitySeat;
-import com.parzivail.swg.ship.MultipartFlightModel;
+import com.parzivail.swg.entity.EntityShipChildTest;
+import com.parzivail.swg.entity.EntityShipParentTest;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;
@@ -55,13 +55,13 @@ public class SwgEntityUtil
 		Lumberjack.debug("Registered entity (and egg) \"" + mobName + "\" as ID " + mobId);
 	}
 
-	public static MultipartFlightModel getShipRiding(Entity entity)
+	public static EntityShipParentTest getShipRiding(Entity entity)
 	{
 		if (entity == null)
 			return null;
 
-		if (!(entity.ridingEntity instanceof EntitySeat))
+		if (!(entity.ridingEntity instanceof EntityShipChildTest))
 			return null;
-		return ((EntitySeat)entity.ridingEntity).parent;
+		return ((EntityShipChildTest)entity.ridingEntity).getParent();
 	}
 }

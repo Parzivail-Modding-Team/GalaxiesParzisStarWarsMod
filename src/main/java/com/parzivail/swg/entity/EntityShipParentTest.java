@@ -33,6 +33,8 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	public boolean isInitialized;
 	public ShipData data;
 	private ShipType type;
+	@SideOnly(Side.CLIENT)
+	private EntityCinematicCamera camera;
 
 	public EntityShipParentTest(World worldIn)
 	{
@@ -69,12 +71,24 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	{
 		super.setDead();
 
-		//		if (worldObj.isRemote)
-		//			camera.setDead();
+		if (worldObj.isRemote)
+			killCamera();
 
 		for (EntityShipChildTest seat : seats)
 			if (seat != null)
 				seat.setDead();
+	}
+
+	private void killCamera()
+	{
+		if (camera != null)
+			camera.setDead();
+	}
+
+	@SideOnly(Side.CLIENT)
+	public EntityCinematicCamera getCamera()
+	{
+		return camera;
 	}
 
 	@Override
@@ -164,7 +178,10 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	private void spawnChildren()
 	{
 		if (worldObj.isRemote)
+		{
+			spawnCamera();
 			return;
+		}
 
 		for (int i = 0; i < seats.length; i++)
 		{
@@ -216,8 +233,13 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 
 	private void createChildren()
 	{
-		//spawnCamera();
 		seats = new EntityShipChildTest[1];
+	}
+
+	private void spawnCamera()
+	{
+		camera = new EntityCinematicCamera(this);
+		worldObj.spawnEntityInWorld(camera);
 	}
 
 	@Override
@@ -246,5 +268,11 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 		data = ShipData.create(type);
 		orientation = new RotatedAxes(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
 		createChildren();
+	}
+
+	public boolean canBeControlledBy(EntityPlayer thePlayer)
+	{
+		// TODO:
+		return true;
 	}
 }
