@@ -23,9 +23,9 @@ public class LightsaberTrail
 
 	public void render()
 	{
-		float outlineOffset = 0.33f;
+		float outlineOffset = 0.1f;
 
-		GL.Begin(PrimitiveType.TriangleStrip);
+		GL.Begin(PrimitiveType.Quads);
 		for (int i = 1; i < points.size(); i++)
 		{
 			LightsaberTrailComponent pointsHere = points.get(i);
@@ -51,23 +51,24 @@ public class LightsaberTrail
 			GL.Color(pointsHere.getColor(), (int)(p * 128));
 
 			GL.Vertex3(prevEnd);
+			GL.Vertex3(coreStartPrev);
+			GL.Vertex3(coreStartHere);
 			GL.Vertex3(hereEnd);
-			GL.Vertex3(coreStartPrev);
-			GL.Vertex3(coreStartHere);
 
-			GL.Color(pointsHere.getCoreColor(), (int)(p * 128));
+			if (i > 7)
+				GL.Color(pointsHere.getCoreColor(), (int)(p * 128));
 
 			GL.Vertex3(coreStartPrev);
-			GL.Vertex3(coreStartHere);
 			GL.Vertex3(coreEndPrev);
 			GL.Vertex3(coreEndHere);
+			GL.Vertex3(coreStartHere);
 
 			GL.Color(pointsHere.getColor(), (int)(p * 128));
 
 			GL.Vertex3(coreEndPrev);
-			GL.Vertex3(coreEndHere);
 			GL.Vertex3(prevBase);
 			GL.Vertex3(hereBase);
+			GL.Vertex3(coreEndHere);
 		}
 		GL.End();
 	}
