@@ -18,7 +18,7 @@ public class RenderExtLightsaberTrail
 {
 	private static final HashMap<EntityPlayer, LightsaberTrail> PLAYER_LIGHTSABER_TRAIL_MAP = new HashMap<>();
 
-	public static void addTrailComponent(EntityPlayer player, int color, Vector3f pBase, Vector3f pEnd)
+	public static void addTrailComponent(EntityPlayer player, int bladeColor, int coreColor, float bladeLength, Vector3f pBase, Vector3f pEnd)
 	{
 		LightsaberTrail trail;
 		if (!PLAYER_LIGHTSABER_TRAIL_MAP.containsKey(player))
@@ -26,7 +26,7 @@ public class RenderExtLightsaberTrail
 		else
 			trail = PLAYER_LIGHTSABER_TRAIL_MAP.get(player);
 
-		trail.addPointSet(color, 60, pBase, pEnd);
+		trail.addPointSet(bladeColor, coreColor, bladeLength, 60, pBase, pEnd);
 	}
 
 	public static void render(EntityPlayer player)

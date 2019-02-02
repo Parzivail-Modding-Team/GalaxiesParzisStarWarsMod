@@ -6,16 +6,20 @@ import org.lwjgl.Sys;
 public class LightsaberTrailComponent
 {
 	private final long createTime;
+	private final int coreColor;
+	private final float bladeLength;
 	private final int life;
 	private final int color;
 	private final Vector3f pBase;
 	private final Vector3f pEnd;
 
-	public LightsaberTrailComponent(int color, int life, Vector3f pBase, Vector3f pEnd)
+	public LightsaberTrailComponent(int bladeColor, int coreColor, float bladeLength, int life, Vector3f pBase, Vector3f pEnd)
 	{
+		this.coreColor = coreColor;
+		this.bladeLength = bladeLength;
 		this.life = life;
 		createTime = Sys.getTime();
-		this.color = color;
+		color = bladeColor;
 		this.pBase = pBase;
 		this.pEnd = pEnd;
 	}
@@ -38,5 +42,15 @@ public class LightsaberTrailComponent
 	public int getColor()
 	{
 		return color;
+	}
+
+	public int getCoreColor()
+	{
+		return coreColor;
+	}
+
+	public float getBladeLength()
+	{
+		return bladeLength;
 	}
 }

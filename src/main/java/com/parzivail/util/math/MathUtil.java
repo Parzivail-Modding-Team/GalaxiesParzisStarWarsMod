@@ -1,5 +1,7 @@
 package com.parzivail.util.math;
 
+import com.parzivail.util.math.lwjgl.Vector3f;
+
 import java.util.Random;
 
 public class MathUtil
@@ -17,6 +19,16 @@ public class MathUtil
 		for (int i = 0; i < v.length; i++)
 			v[i] = fract(v[i]);
 		return v;
+	}
+
+	public static Vector3f lerp(float t, Vector3f a, Vector3f b)
+	{
+		return new Vector3f(lerp(t, a.x, b.x), lerp(t, a.y, b.y), lerp(t, a.z, b.z));
+	}
+
+	public static float lerp(float t, float a, float b)
+	{
+		return t * b + (1 - t) * a;
 	}
 
 	public static double seed(double d, long seed)
