@@ -101,7 +101,8 @@ public class RenderLightsaber extends JsonItemRenderer
 			{
 				GL.PushMatrix();
 				Vector3f pBase = Client.getLocalToWorldPos();
-				GL.Translate(0, length, 0);
+				float bladeGlowYOffset = 0.06f;
+				GL.Translate(0, length + bladeGlowYOffset, 0);
 				Vector3f pEnd = Client.getLocalToWorldPos();
 				RenderExtLightsaberTrail.addTrailComponent(player, d.bladeColor, d.coreColor, d.bladeLength, pBase, pEnd);
 				GL.PopMatrix();

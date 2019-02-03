@@ -23,7 +23,17 @@ public class LightsaberTrail
 
 	public void render()
 	{
-		float outlineOffset = 0.1f;
+		if (points.size() < 2)
+			return;
+
+		float outlineOffset = 0.04f;
+
+		Vector3f start = points.get(0).getEndPos();
+		Vector3f end = points.get(points.size() - 1).getEndPos();
+
+		float totalLen = Math.abs(Vector3f.sub(end, start, null).lengthSquared());
+		if (totalLen < 0.02f)
+			return;
 
 		GL.Begin(PrimitiveType.Quads);
 		for (int i = 1; i < points.size(); i++)
@@ -55,8 +65,8 @@ public class LightsaberTrail
 			GL.Vertex3(coreStartHere);
 			GL.Vertex3(hereEnd);
 
-			if (i > 7)
-				GL.Color(pointsHere.getCoreColor(), (int)(p * 128));
+			if (i > points.size() * 0.3)
+				GL.Color(pointsHere.getCoreColor(), 255);
 
 			GL.Vertex3(coreStartPrev);
 			GL.Vertex3(coreEndPrev);

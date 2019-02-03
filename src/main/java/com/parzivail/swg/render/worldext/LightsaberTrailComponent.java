@@ -1,7 +1,6 @@
 package com.parzivail.swg.render.worldext;
 
 import com.parzivail.util.math.lwjgl.Vector3f;
-import org.lwjgl.Sys;
 
 public class LightsaberTrailComponent
 {
@@ -18,7 +17,7 @@ public class LightsaberTrailComponent
 		this.coreColor = coreColor;
 		this.bladeLength = bladeLength;
 		this.life = life;
-		createTime = Sys.getTime();
+		createTime = System.currentTimeMillis();
 		color = bladeColor;
 		this.pBase = pBase;
 		this.pEnd = pEnd;
@@ -26,7 +25,7 @@ public class LightsaberTrailComponent
 
 	public boolean shouldDie()
 	{
-		return createTime + life < Sys.getTime();
+		return createTime + life < System.currentTimeMillis();
 	}
 
 	public Vector3f getBasePos()

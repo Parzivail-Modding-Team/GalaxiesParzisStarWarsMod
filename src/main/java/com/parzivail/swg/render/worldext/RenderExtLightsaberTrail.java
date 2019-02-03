@@ -26,7 +26,7 @@ public class RenderExtLightsaberTrail
 		else
 			trail = PLAYER_LIGHTSABER_TRAIL_MAP.get(player);
 
-		trail.addPointSet(bladeColor, coreColor, bladeLength, 60, pBase, pEnd);
+		trail.addPointSet(bladeColor, coreColor, bladeLength, 40, pBase, pEnd);
 	}
 
 	public static void render(EntityPlayer player)
