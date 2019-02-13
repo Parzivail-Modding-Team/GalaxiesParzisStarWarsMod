@@ -1,12 +1,13 @@
 package com.parzivail.swg.network;
 
 import com.parzivail.swg.entity.EntityShipParentTest;
-import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldServer;
 
 /**
  * Created by colby on 12/29/2017.
@@ -31,10 +32,11 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		if (shipDim != Client.mc.theWorld.provider.dimensionId)
+		WorldServer dim = MinecraftServer.getServer().worldServerForDimension(shipDim);
+		if (dim == null)
 			return null;
 
-		Entity ship = Client.mc.theWorld.getEntityByID(shipId);
+		Entity ship = dim.getEntityByID(shipId);
 		((EntityShipParentTest)ship).orientation = orientation.clone();
 
 		return null;

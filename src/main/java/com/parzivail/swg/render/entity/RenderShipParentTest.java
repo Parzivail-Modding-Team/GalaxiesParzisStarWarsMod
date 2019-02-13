@@ -5,17 +5,16 @@ import com.parzivail.swg.entity.EntityShipParentTest;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.binary.Swg3.SwgModel;
 import com.parzivail.util.binary.Swg3.SwgPart;
+import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -48,14 +47,23 @@ public class RenderShipParentTest extends Render
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
 		EntityShipParentTest ship = (EntityShipParentTest)entity;
+		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
+		float dPitch = MathHelper.wrapAngleTo180_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
+		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
+		float yaw = (ship.previousOrientation.getYaw() + dYaw * partialTicks);
+		float pitch = (ship.previousOrientation.getPitch() + dPitch * partialTicks);
+		float roll = (ship.previousOrientation.getRoll() + dRoll * partialTicks);
+
+		float slidYaw = ship.slidingYaw.slide(yaw);
+		float slidPitch = ship.slidingPitch.slide(pitch);
 
 		if (Client.getPlayer() != null && ship.riddenByEntity == Client.getPlayer() || (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer()))
 		{
-			EntityPlayer player = Client.getPlayer();
-			EntityLivingBase view = Client.mc.renderViewEntity;
-			Vec3 pos = player.getPosition(partialTicks);
-			Vec3 viewPos = view.getPosition(partialTicks);
-			GL.Translate(pos.xCoord - viewPos.xCoord, pos.yCoord - viewPos.yCoord - 1.75f, pos.zCoord - viewPos.zCoord);
+			Vector3f seatOffset = new Vector3f(0, 0, 0);
+
+			float camDist = 15;
+			Vector3f forward = new RotatedAxes(slidYaw, slidPitch, roll).findLocalVectorGlobally(new Vector3f(0, 0, 1));
+			GL.Translate(seatOffset.x + camDist * forward.x, seatOffset.y + camDist * forward.y, seatOffset.z + camDist * forward.z);
 		}
 		else
 			GL.Translate(x, y, z);
@@ -64,12 +72,9 @@ public class RenderShipParentTest extends Render
 		FxMC.enableSunBasedLighting(ship, partialTicks);
 
 		GL.Translate(0, ship.data.verticalCenteringOffset, 0);
-		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
-		float dPitch = MathHelper.wrapAngleTo180_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
-		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
-		GL11.glRotatef((ship.previousOrientation.getYaw() + dYaw * partialTicks), 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-(ship.previousOrientation.getPitch() + dPitch * partialTicks), 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(-(ship.previousOrientation.getRoll() + dRoll * partialTicks), 0.0F, 0.0F, 1.0F);
+		GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(-pitch, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(-roll, 0.0F, 0.0F, 1.0F);
 		GL.Translate(0, -ship.data.verticalCenteringOffset, 0);
 
 		GL.Translate(0, ship.data.verticalGroundingOffset, 0);

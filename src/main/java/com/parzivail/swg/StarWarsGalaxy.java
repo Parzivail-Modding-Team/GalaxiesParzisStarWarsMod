@@ -78,13 +78,13 @@ public class StarWarsGalaxy
 		registerMessageServer(MessageFlightModelUpdate.class);
 		registerMessageServer(MessageItemLeftClick.class);
 		registerMessageServer(MessageTransaction.class);
+		registerMessageServer(MessageShipOrientation.class);
 
 		registerMessageClient(MessageFlightModelClientUpdate.class);
 		registerMessageClient(MessageSpawnParticle.class);
 		registerMessageClient(MessageCreateDecal.class);
 		registerMessageClient(MessagePswgExtPropSync.class);
 		registerMessageClient(MessagePswgWorldDataSync.class);
-		registerMessageClient(MessageShipOrientation.class);
 
 		transactionBroker.register(TransactionDeductCredits.class);
 		transactionBroker.register(TransactionUnlockAttachment.class);

@@ -5,21 +5,18 @@ import com.parzivail.swg.network.MessageShipOrientation;
 import com.parzivail.swg.ship.ShipData;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.util.math.SlidingWindow;
 import com.parzivail.util.math.lwjgl.Vector3f;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.List;
 
@@ -33,8 +30,13 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	public boolean isInitialized;
 	public ShipData data;
 	private ShipType type;
+
 	@SideOnly(Side.CLIENT)
 	private EntityCinematicCamera camera;
+	@SideOnly(Side.CLIENT)
+	public SlidingWindow slidingPitch = new SlidingWindow(10);
+	@SideOnly(Side.CLIENT)
+	public SlidingWindow slidingYaw = new SlidingWindow(10);
 
 	public EntityShipParentTest(World worldIn)
 	{
@@ -125,13 +127,8 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 
 			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, 1));
 
-			if (ticksExisted % 5 == 0 && !worldObj.isRemote)
-			{
-				EntityTracker tracker = ((WorldServer)worldObj).getEntityTracker();
-				IMessage message = new MessageShipOrientation(this);
-				for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(this))
-					StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entityPlayer);
-			}
+			if (ticksExisted % 5 == 0 && worldObj.isRemote)
+				StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
 
 			motionX = forward.x * throttle;
 			motionY = forward.y * throttle;
