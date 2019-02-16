@@ -55,8 +55,10 @@ public class RenderShipParentTest extends Render
 		float roll = MathHelper.wrapAngleTo180_float(ship.previousOrientation.getRoll() + dRoll * partialTicks);
 
 		// keep camera from doing a 360 in one tick (0-1 partialTicks) when (yaw - prevYaw) ~ 360deg
-		float slidDYaw = ship.slidingYaw.slide(dYaw);
-		float slidDPitch = ship.slidingPitch.slide(dPitch);
+		float slidDYaw = ship.slidingYaw.getOldAverage() + (ship.slidingYaw.getAverage() - ship.slidingYaw.getOldAverage()) * partialTicks;
+		float slidDPitch = ship.slidingPitch.getOldAverage() + (ship.slidingPitch.getAverage() - ship.slidingPitch.getOldAverage()) * partialTicks;
+
+		roll += slidDYaw;
 
 		if (Client.getPlayer() != null && ship.riddenByEntity == Client.getPlayer() || (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer()))
 		{

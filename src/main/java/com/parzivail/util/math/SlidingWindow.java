@@ -8,6 +8,7 @@ public class SlidingWindow
 	private int readIndex;
 	private float total;
 	private float average;
+	private float oldAverage;
 
 	public SlidingWindow(int length)
 	{
@@ -20,6 +21,11 @@ public class SlidingWindow
 	public float getAverage()
 	{
 		return average;
+	}
+
+	public float getOldAverage()
+	{
+		return oldAverage;
 	}
 
 	public float slide(float nextValue)
@@ -39,6 +45,7 @@ public class SlidingWindow
 			readIndex = 0;
 		}
 
+		oldAverage = average;
 		// calculate the average:
 		average = total / length;
 		return average;

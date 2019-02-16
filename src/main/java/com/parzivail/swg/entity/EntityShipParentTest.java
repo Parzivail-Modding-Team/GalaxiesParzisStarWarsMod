@@ -34,9 +34,9 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	@SideOnly(Side.CLIENT)
 	private EntityCinematicCamera camera;
 	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingPitch = new SlidingWindow(10);
+	public SlidingWindow slidingPitch = new SlidingWindow(5);
 	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingYaw = new SlidingWindow(10);
+	public SlidingWindow slidingYaw = new SlidingWindow(5);
 
 	public EntityShipParentTest(World worldIn)
 	{
@@ -135,6 +135,11 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 
 			rotationPitch = orientation.getPitch();
 			rotationYaw = orientation.getYaw();
+
+			float dYaw = MathHelper.wrapAngleTo180_float(orientation.getYaw() - previousOrientation.getYaw());
+			slidingYaw.slide(dYaw);
+			float dPitch = MathHelper.wrapAngleTo180_float(orientation.getPitch() - previousOrientation.getPitch());
+			slidingPitch.slide(dPitch);
 
 			motionX = forward.x * throttle;
 			motionY = forward.y * throttle;
