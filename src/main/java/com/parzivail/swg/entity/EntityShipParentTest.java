@@ -122,13 +122,19 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 
 			throttle += player.moveForward * data.acceleration;
 			throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
-			//orientation.rotateLocalYaw(player.moveStrafing * 10);
-			orientation.setAngles(-player.rotationYaw, -player.rotationPitch, 0);
+
+			// Ok, player.rotationPitch * 0.999999f is a fun one. So, when pitch = -90 or 90, the math makes a lot of
+			// assumptions the matrices should be in (since any yaw with pitch = [-90, 90] is the same location so to
+			// combat that we don't let it hit 90, just 89.99991 which is close enough and won't bother anyone.
+			orientation.setAngles(-player.rotationYaw, -player.rotationPitch * 0.999999f, 0);
 
 			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, 1));
 
 			if (ticksExisted % 5 == 0 && worldObj.isRemote)
 				StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
+
+			rotationPitch = orientation.getPitch();
+			rotationYaw = orientation.getYaw();
 
 			motionX = forward.x * throttle;
 			motionY = forward.y * throttle;

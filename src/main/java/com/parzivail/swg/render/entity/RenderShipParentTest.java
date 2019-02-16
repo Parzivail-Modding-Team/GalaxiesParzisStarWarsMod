@@ -48,21 +48,22 @@ public class RenderShipParentTest extends Render
 
 		EntityShipParentTest ship = (EntityShipParentTest)entity;
 		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
-		float dPitch = MathHelper.wrapAngleTo180_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
+		float dPitch = ship.orientation.getPitch() - ship.previousOrientation.getPitch();
 		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
-		float yaw = (ship.previousOrientation.getYaw() + dYaw * partialTicks);
-		float pitch = (ship.previousOrientation.getPitch() + dPitch * partialTicks);
-		float roll = (ship.previousOrientation.getRoll() + dRoll * partialTicks);
+		float yaw = MathHelper.wrapAngleTo180_float(ship.previousOrientation.getYaw() + dYaw * partialTicks);
+		float pitch = ship.previousOrientation.getPitch() + dPitch * partialTicks;
+		float roll = MathHelper.wrapAngleTo180_float(ship.previousOrientation.getRoll() + dRoll * partialTicks);
 
-		float slidYaw = ship.slidingYaw.slide(yaw);
-		float slidPitch = ship.slidingPitch.slide(pitch);
+		// keep camera from doing a 360 in one tick (0-1 partialTicks) when (yaw - prevYaw) ~ 360deg
+		float slidDYaw = ship.slidingYaw.slide(dYaw);
+		float slidDPitch = ship.slidingPitch.slide(dPitch);
 
 		if (Client.getPlayer() != null && ship.riddenByEntity == Client.getPlayer() || (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer()))
 		{
 			Vector3f seatOffset = new Vector3f(0, 0, 0);
 
 			float camDist = 15;
-			Vector3f forward = new RotatedAxes(slidYaw, slidPitch, roll).findLocalVectorGlobally(new Vector3f(0, 0, 1));
+			Vector3f forward = new RotatedAxes(yaw - slidDYaw, pitch - slidDPitch, roll).findLocalVectorGlobally(new Vector3f(0, 0, 1));
 			GL.Translate(seatOffset.x + camDist * forward.x, seatOffset.y + camDist * forward.y, seatOffset.z + camDist * forward.z);
 		}
 		else

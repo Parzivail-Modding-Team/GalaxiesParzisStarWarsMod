@@ -274,7 +274,13 @@ public class EventHandler
 			else if (ship != null)
 			{
 				float r = ship.orientation.getRoll();
+				float pR = ship.previousOrientation.getRoll();
+				if (r - pR >= 180)
+					pR = r;
+				if (r - pR <= -180)
+					pR = r;
 				FxMC.changeCameraRoll(r);
+				FxMC.changePrevCameraRoll(pR);
 				Client.mc.renderViewEntity = ship.getCamera();
 			}
 
