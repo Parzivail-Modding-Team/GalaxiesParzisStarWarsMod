@@ -43,10 +43,23 @@ public class EntityCinematicCamera extends EntityLivingBase
 		rotationYaw = -parent.orientation.getYaw();
 		rotationPitch = -parent.orientation.getPitch();
 
-		if (rotationYaw - prevRotationYaw >= 180)
-			prevRotationYaw += 360;
-		if (rotationYaw - prevRotationYaw <= -180)
-			prevRotationYaw -= 360;
+		while (rotationYaw - prevRotationYaw < -180.0F)
+			prevRotationYaw -= 360.0F;
+
+		while (rotationYaw - prevRotationYaw >= 180.0F)
+			prevRotationYaw += 360.0F;
+
+		while (renderYawOffset - prevRenderYawOffset < -180.0F)
+			prevRenderYawOffset -= 360.0F;
+
+		while (renderYawOffset - prevRenderYawOffset >= 180.0F)
+			prevRenderYawOffset += 360.0F;
+
+		while (rotationPitch - prevRotationPitch < -180.0F)
+			prevRotationPitch -= 360.0F;
+
+		while (rotationPitch - prevRotationPitch >= 180.0F)
+			prevRotationPitch += 360.0F;
 	}
 
 	@Override

@@ -48,10 +48,10 @@ public class RenderShipParentTest extends Render
 
 		EntityShipParentTest ship = (EntityShipParentTest)entity;
 		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
-		float dPitch = ship.orientation.getPitch() - ship.previousOrientation.getPitch();
+		float dPitch = wrapAngleTo90_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
 		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
 		float yaw = MathHelper.wrapAngleTo180_float(ship.previousOrientation.getYaw() + dYaw * partialTicks);
-		float pitch = ship.previousOrientation.getPitch() + dPitch * partialTicks;
+		float pitch = wrapAngleTo90_float(ship.previousOrientation.getPitch() + dPitch * partialTicks);
 		float roll = MathHelper.wrapAngleTo180_float(ship.previousOrientation.getRoll() + dRoll * partialTicks);
 
 		// keep camera from doing a 360 in one tick (0-1 partialTicks) when (yaw - prevYaw) ~ 360deg
@@ -133,6 +133,19 @@ public class RenderShipParentTest extends Render
 
 		GL.PopAttrib();
 		GL11.glPopMatrix();
+	}
+
+	public static float wrapAngleTo90_float(float a)
+	{
+		a %= 180.0F;
+
+		if (a >= 90)
+			a -= 180;
+
+		if (a < -90)
+			a += 180;
+
+		return a;
 	}
 
 	@Override

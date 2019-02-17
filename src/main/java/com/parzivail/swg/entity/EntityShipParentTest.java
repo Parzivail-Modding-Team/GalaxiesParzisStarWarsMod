@@ -34,9 +34,9 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	@SideOnly(Side.CLIENT)
 	private EntityCinematicCamera camera;
 	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingPitch = new SlidingWindow(5);
+	public SlidingWindow slidingPitch = new SlidingWindow(4);
 	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingYaw = new SlidingWindow(5);
+	public SlidingWindow slidingYaw = new SlidingWindow(3);
 
 	public EntityShipParentTest(World worldIn)
 	{
@@ -127,6 +127,9 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 			// assumptions the matrices should be in (since any yaw with pitch = [-90, 90] is the same location so to
 			// combat that we don't let it hit 90, just 89.99991 which is close enough and won't bother anyone.
 			orientation.setAngles(-player.rotationYaw, -player.rotationPitch * 0.999999f, 0);
+
+			//			if (player.moveForward != 0)
+			//				orientation.rotateLocalPitch(player.moveForward);
 
 			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, 1));
 
