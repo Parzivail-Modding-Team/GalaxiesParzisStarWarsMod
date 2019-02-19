@@ -20,13 +20,13 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityShipParentTest extends Entity implements IEntityAdditionalSpawnData
+public class EntityShip extends Entity implements IEntityAdditionalSpawnData
 {
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
 	public Vector3f angularMomentum;
 	public float throttle;
-	public EntityShipChildTest[] seats;
+	public EntitySeat[] seats;
 	public boolean isInitialized;
 	public ShipData data;
 	private ShipType type;
@@ -38,7 +38,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 	@SideOnly(Side.CLIENT)
 	public SlidingWindow slidingYaw = new SlidingWindow(3);
 
-	public EntityShipParentTest(World worldIn)
+	public EntityShip(World worldIn)
 	{
 		super(worldIn);
 		setSize(1, 1);
@@ -47,7 +47,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 		throttle = 0;
 	}
 
-	public EntityShipParentTest(World worldIn, ShipType type)
+	public EntityShip(World worldIn, ShipType type)
 	{
 		this(worldIn);
 		this.type = type;
@@ -76,7 +76,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 		if (worldObj.isRemote)
 			killCamera();
 
-		for (EntityShipChildTest seat : seats)
+		for (EntitySeat seat : seats)
 			if (seat != null)
 				seat.setDead();
 	}
@@ -197,7 +197,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 		for (int i = 0; i < seats.length; i++)
 		{
 			// TODO: seat roles
-			seats[i] = new EntityShipChildTest(worldObj, this, i);
+			seats[i] = new EntitySeat(worldObj, this, i);
 			worldObj.spawnEntityInWorld(seats[i]);
 		}
 	}
@@ -244,7 +244,7 @@ public class EntityShipParentTest extends Entity implements IEntityAdditionalSpa
 
 	private void createChildren()
 	{
-		seats = new EntityShipChildTest[1];
+		seats = new EntitySeat[1];
 	}
 
 	private void spawnCamera()

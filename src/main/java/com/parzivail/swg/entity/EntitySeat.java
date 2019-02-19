@@ -10,15 +10,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class EntityShipChildTest extends Entity implements IEntityAdditionalSpawnData
+public class EntitySeat extends Entity implements IEntityAdditionalSpawnData
 {
 	@SideOnly(Side.CLIENT)
 	public boolean isOrphan = true;
-	private EntityShipParentTest parent;
+	private EntityShip parent;
 	private int parentId;
 	private int seatIdx;
 
-	public EntityShipChildTest(World world)
+	public EntitySeat(World world)
 	{
 		super(world);
 		setSize(1F, 1F);
@@ -27,7 +27,7 @@ public class EntityShipChildTest extends Entity implements IEntityAdditionalSpaw
 	/**
 	 * Server side seat constructor
 	 */
-	public EntityShipChildTest(World world, EntityShipParentTest parent, int seatIdx)
+	public EntitySeat(World world, EntityShip parent, int seatIdx)
 	{
 		this(world);
 		this.parent = parent;
@@ -55,7 +55,7 @@ public class EntityShipChildTest extends Entity implements IEntityAdditionalSpaw
 	{
 		if (worldObj.isRemote && isOrphan)
 		{
-			parent = (EntityShipParentTest)worldObj.getEntityByID(parentId);
+			parent = (EntityShip)worldObj.getEntityByID(parentId);
 			if (parent == null)
 				return;
 			parent.seats[seatIdx] = this;
@@ -71,7 +71,7 @@ public class EntityShipChildTest extends Entity implements IEntityAdditionalSpaw
 			setPosition(parent.posX, parent.posY, parent.posZ);
 	}
 
-	public EntityShipParentTest getParent()
+	public EntityShip getParent()
 	{
 		return parent;
 	}
@@ -117,7 +117,7 @@ public class EntityShipChildTest extends Entity implements IEntityAdditionalSpaw
 	public void readSpawnData(ByteBuf buffer)
 	{
 		parentId = buffer.readInt();
-		parent = (EntityShipParentTest)worldObj.getEntityByID(parentId);
+		parent = (EntityShip)worldObj.getEntityByID(parentId);
 		seatIdx = buffer.readInt();
 		if (parent != null)
 		{

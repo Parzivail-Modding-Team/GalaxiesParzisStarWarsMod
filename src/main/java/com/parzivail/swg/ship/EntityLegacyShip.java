@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 
 import java.util.UUID;
 
-public class MultipartFlightModel extends Entity implements IEntityAdditionalSpawnData
+public class EntityLegacyShip extends Entity implements IEntityAdditionalSpawnData
 {
 	@SideOnly(Side.CLIENT)
 	public EntityCinematicCamera camera;
@@ -37,14 +37,14 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	 */
 	public float verticalGroundingOffset;
 	public ShipData data;
-	private EntitySeat[] seats;
+	private EntityLegacySeat[] seats;
 	private UUID[] searchingSeats;
 	private int[] clientSearchingSeats;
 	private boolean doesClientKnowSeats;
 	private SeatData[] seatData;
 	private Entity driver;
 
-	public MultipartFlightModel(World world)
+	public EntityLegacyShip(World world)
 	{
 		super(world);
 		setSize(1, 2);
@@ -172,9 +172,9 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	{
 		if (seats == null && !worldObj.isRemote)
 		{
-			seats = new EntitySeat[seatData.length];
+			seats = new EntityLegacySeat[seatData.length];
 			for (int i = 0; i < seatData.length; i++)
-				seats[i] = new EntitySeat(this, seatData[i].name, seatData[i].role, seatData[i].pos);
+				seats[i] = new EntityLegacySeat(this, seatData[i].name, seatData[i].role, seatData[i].pos);
 		}
 
 		if (seats == null)
@@ -188,7 +188,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 
 		for (int i = 0; i < seats.length; i++)
 		{
-			EntitySeat seat = seats[i];
+			EntityLegacySeat seat = seats[i];
 			if (seat == null)
 			{
 				if (!worldObj.isRemote)
@@ -228,7 +228,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 		if (seats == null)
 			return false;
 
-		for (EntitySeat s : seats)
+		for (EntityLegacySeat s : seats)
 			if (s == null)
 				return false;
 
@@ -241,7 +241,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 		super.setDead();
 
 		if (seats != null)
-			for (EntitySeat part : seats)
+			for (EntityLegacySeat part : seats)
 				part.setDead();
 
 		if (worldObj.isRemote)
@@ -264,7 +264,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	{
 		String[] seatsPairs = uuids.split(";");
 
-		seats = new EntitySeat[seatsPairs.length];
+		seats = new EntityLegacySeat[seatsPairs.length];
 		searchingSeats = new UUID[seatsPairs.length];
 		for (int i = 0; i < seatsPairs.length; i++)
 		{
@@ -280,7 +280,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	{
 		String[] seatsPairs = uuids.split(";");
 
-		seats = new EntitySeat[seatsPairs.length];
+		seats = new EntityLegacySeat[seatsPairs.length];
 		clientSearchingSeats = new int[seatsPairs.length];
 		for (int i = 0; i < seatsPairs.length; i++)
 			clientSearchingSeats[i] = Integer.parseInt(seatsPairs[i]);
@@ -302,7 +302,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (EntitySeat part : seats)
+		for (EntityLegacySeat part : seats)
 			sb.append(part.getUniqueID().getLeastSignificantBits()).append("|").append(part.getUniqueID().getMostSignificantBits()).append(";");
 
 		return sb.toString();
@@ -312,7 +312,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	{
 		StringBuilder sb = new StringBuilder();
 
-		for (EntitySeat part : seats)
+		for (EntityLegacySeat part : seats)
 			sb.append(part.getEntityId()).append(";");
 
 		return sb.toString();
@@ -339,10 +339,10 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 		}
 		else
 		{
-			if (!(entity instanceof EntitySeat))
+			if (!(entity instanceof EntityLegacySeat))
 				return;
 
-			seats[seatIdx] = (EntitySeat)entity;
+			seats[seatIdx] = (EntityLegacySeat)entity;
 			seats[seatIdx].setParent(getEntityId());
 			seats[seatIdx].name = seatData[seatIdx].name;
 			seats[seatIdx].role = seatData[seatIdx].role;
@@ -354,7 +354,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 	public boolean isControlling(Entity thePlayer)
 	{
 		if (seats != null)
-			for (EntitySeat seat : seats)
+			for (EntityLegacySeat seat : seats)
 				if (seat.role == SeatRole.Driver && seat.riddenByEntity == thePlayer)
 					return true;
 		return false;
@@ -365,7 +365,7 @@ public class MultipartFlightModel extends Entity implements IEntityAdditionalSpa
 		if (seats == null)
 			return null;
 
-		for (EntitySeat seat : seats)
+		for (EntityLegacySeat seat : seats)
 			if (seat != null && seat.role == SeatRole.Driver && seat.riddenByEntity != null)
 				return seat.riddenByEntity;
 

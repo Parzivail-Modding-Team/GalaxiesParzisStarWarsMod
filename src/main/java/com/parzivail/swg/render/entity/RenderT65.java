@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.entity;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.ship.MultipartFlightModel;
+import com.parzivail.swg.ship.EntityLegacyShip;
 import com.parzivail.util.binary.Swg3.SwgModel;
 import com.parzivail.util.binary.Swg3.SwgPart;
 import com.parzivail.util.ui.gltk.GL;
@@ -25,7 +25,7 @@ public class RenderT65 extends RenderStarfighter
 	}
 
 	@Override
-	public void doRender(MultipartFlightModel ship, float partialTicks)
+	public void doRender(EntityLegacyShip ship, float partialTicks)
 	{
 		int frame = 0;
 

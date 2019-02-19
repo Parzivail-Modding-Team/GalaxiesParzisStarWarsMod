@@ -1,6 +1,6 @@
 package com.parzivail.swg.network;
 
-import com.parzivail.swg.ship.MultipartFlightModel;
+import com.parzivail.swg.ship.EntityLegacyShip;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.network.PMessage;
@@ -24,7 +24,7 @@ public class MessageFlightModelUpdate extends PMessage<MessageFlightModelUpdate>
 	{
 	}
 
-	public MessageFlightModelUpdate(MultipartFlightModel ship)
+	public MessageFlightModelUpdate(EntityLegacyShip ship)
 	{
 		angularMomentum = ship.angularMomentum;
 		orientation = ship.orientation;
@@ -38,9 +38,9 @@ public class MessageFlightModelUpdate extends PMessage<MessageFlightModelUpdate>
 	{
 		Entity ship = MinecraftServer.getServer().worldServerForDimension(shipDim).getEntityByID(shipId);
 
-		((MultipartFlightModel)ship).angularMomentum = angularMomentum;
-		((MultipartFlightModel)ship).orientation = orientation;
-		((MultipartFlightModel)ship).throttle = throttle;
+		((EntityLegacyShip)ship).angularMomentum = angularMomentum;
+		((EntityLegacyShip)ship).orientation = orientation;
+		((EntityLegacyShip)ship).throttle = throttle;
 
 		return null;
 	}

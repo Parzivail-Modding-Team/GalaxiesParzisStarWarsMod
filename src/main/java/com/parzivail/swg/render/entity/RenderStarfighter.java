@@ -1,6 +1,6 @@
 package com.parzivail.swg.render.entity;
 
-import com.parzivail.swg.ship.MultipartFlightModel;
+import com.parzivail.swg.ship.EntityLegacyShip;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.entity.Render;
@@ -20,10 +20,10 @@ public abstract class RenderStarfighter extends Render
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float unknown, float partialTicks)
 	{
-		if (!(entity instanceof MultipartFlightModel))
+		if (!(entity instanceof EntityLegacyShip))
 			return;
 
-		MultipartFlightModel ship = (MultipartFlightModel)entity;
+		EntityLegacyShip ship = (EntityLegacyShip)entity;
 		GL.Disable(EnableCap.CullFace);
 		GL.Enable(EnableCap.Normalize);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -50,7 +50,7 @@ public abstract class RenderStarfighter extends Render
 		GL.Enable(EnableCap.CullFace);
 	}
 
-	public abstract void doRender(MultipartFlightModel ship, float partialTicks);
+	public abstract void doRender(EntityLegacyShip ship, float partialTicks);
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity p_110775_1_)

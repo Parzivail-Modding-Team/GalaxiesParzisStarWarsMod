@@ -1,6 +1,6 @@
 package com.parzivail.swg.network;
 
-import com.parzivail.swg.ship.MultipartFlightModel;
+import com.parzivail.swg.ship.EntityLegacyShip;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
@@ -20,7 +20,7 @@ public class MessageFlightModelClientUpdate extends PMessage<MessageFlightModelC
 	{
 	}
 
-	public MessageFlightModelClientUpdate(MultipartFlightModel ship)
+	public MessageFlightModelClientUpdate(EntityLegacyShip ship)
 	{
 		shipId = ship.getEntityId();
 		shipDim = ship.dimension;
@@ -34,7 +34,7 @@ public class MessageFlightModelClientUpdate extends PMessage<MessageFlightModelC
 			return null;
 
 		Entity ship = Minecraft.getMinecraft().theWorld.getEntityByID(shipId);
-		((MultipartFlightModel)ship).loadSeatsFromIds(seatIds);
+		((EntityLegacyShip)ship).loadSeatsFromIds(seatIds);
 
 		return null;
 	}

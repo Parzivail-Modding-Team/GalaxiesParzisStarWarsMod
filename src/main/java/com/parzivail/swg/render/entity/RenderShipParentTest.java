@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.entity;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.entity.EntityShipParentTest;
+import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.binary.Swg3.SwgModel;
 import com.parzivail.util.binary.Swg3.SwgPart;
@@ -37,7 +37,7 @@ public class RenderShipParentTest extends Render
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float unknown, float partialTicks)
 	{
-		if (!(entity instanceof EntityShipParentTest))
+		if (!(entity instanceof EntityShip))
 			return;
 
 		int frame = 0;
@@ -46,7 +46,7 @@ public class RenderShipParentTest extends Render
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
-		EntityShipParentTest ship = (EntityShipParentTest)entity;
+		EntityShip ship = (EntityShip)entity;
 		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
 		float dPitch = wrapAngleTo90_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
 		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
@@ -60,7 +60,7 @@ public class RenderShipParentTest extends Render
 
 		roll += slidDYaw;
 
-		if (Client.getPlayer() != null && ship.riddenByEntity == Client.getPlayer() || (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer()))
+		if (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer())
 		{
 			Vector3f seatOffset = new Vector3f(0, 0, 0);
 

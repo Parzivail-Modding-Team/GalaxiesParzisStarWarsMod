@@ -9,24 +9,24 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
-public class EntitySeat extends Entity
+public class EntityLegacySeat extends Entity
 {
 	/**
 	 * The dragon entity this dragon part belongs to
 	 */
-	public MultipartFlightModel parent;
+	public EntityLegacyShip parent;
 	public String name;
 	public SeatRole role;
 	public Vector3f position;
 
-	public EntitySeat(World world)
+	public EntityLegacySeat(World world)
 	{
 		super(world);
 		setSize(0.5f, 0.5f);
 		noClip = true;
 	}
 
-	public EntitySeat(MultipartFlightModel parent, String name, SeatRole role, Vector3f position)
+	public EntityLegacySeat(EntityLegacyShip parent, String name, SeatRole role, Vector3f position)
 	{
 		this(parent.worldObj);
 		this.parent = parent;
@@ -121,10 +121,10 @@ public class EntitySeat extends Entity
 		}
 		else
 		{
-			if (!(entity instanceof MultipartFlightModel))
+			if (!(entity instanceof EntityLegacyShip))
 				return;
 
-			parent = (MultipartFlightModel)entity;
+			parent = (EntityLegacyShip)entity;
 			Lumberjack.warn("Part located parent");
 		}
 	}

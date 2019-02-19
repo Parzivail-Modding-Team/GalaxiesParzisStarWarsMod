@@ -4,7 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.entity.EntityCinematicCamera;
-import com.parzivail.swg.entity.EntityShipParentTest;
+import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.force.Cron;
 import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.gui.GuiNowEntering;
@@ -147,7 +147,7 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			EntityShipParentTest ship = SwgEntityUtil.getShipRiding(event.entity);
+			EntityShip ship = SwgEntityUtil.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 
@@ -163,7 +163,7 @@ public class EventHandler
 	{
 		if (event.entity instanceof EntityPlayer)
 		{
-			EntityShipParentTest ship = SwgEntityUtil.getShipRiding(event.entity);
+			EntityShip ship = SwgEntityUtil.getShipRiding(event.entity);
 			if (ship != null && event.isCancelable())
 				event.setCanceled(true);
 
@@ -265,7 +265,7 @@ public class EventHandler
 
 		if (Client.getPlayer() != null)
 		{
-			EntityShipParentTest ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
+			EntityShip ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
 			if (ship == null && Client.mc.renderViewEntity instanceof EntityCinematicCamera)
 			{
 				FxMC.changeCameraRoll(0);

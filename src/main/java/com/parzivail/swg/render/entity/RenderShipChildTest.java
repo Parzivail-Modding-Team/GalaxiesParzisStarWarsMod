@@ -1,6 +1,6 @@
 package com.parzivail.swg.render.entity;
 
-import com.parzivail.swg.entity.EntityShipChildTest;
+import com.parzivail.swg.entity.EntitySeat;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -22,7 +22,7 @@ public class RenderShipChildTest extends Render
 	@Override
 	public void doRender(Entity entity, double x, double y, double z, float unknown, float partialTicks)
 	{
-		if (!(entity instanceof EntityShipChildTest))
+		if (!(entity instanceof EntitySeat))
 			return;
 
 		GL11.glPushMatrix();

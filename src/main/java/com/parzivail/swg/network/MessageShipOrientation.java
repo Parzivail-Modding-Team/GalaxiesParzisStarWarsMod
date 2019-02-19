@@ -1,6 +1,6 @@
 package com.parzivail.swg.network;
 
-import com.parzivail.swg.entity.EntityShipParentTest;
+import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -22,7 +22,7 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 	{
 	}
 
-	public MessageShipOrientation(EntityShipParentTest ship)
+	public MessageShipOrientation(EntityShip ship)
 	{
 		shipId = ship.getEntityId();
 		shipDim = ship.dimension;
@@ -37,7 +37,7 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 			return null;
 
 		Entity ship = dim.getEntityByID(shipId);
-		((EntityShipParentTest)ship).orientation = orientation.clone();
+		((EntityShip)ship).orientation = orientation.clone();
 
 		return null;
 	}

@@ -213,8 +213,8 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityChair.class, new RenderNothing());
-		RenderingRegistry.registerEntityRenderingHandler(EntityShipParentTest.class, new RenderShipParentTest());
-		RenderingRegistry.registerEntityRenderingHandler(EntityShipChildTest.class, new RenderNothing());
+		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, new RenderShipParentTest());
+		RenderingRegistry.registerEntityRenderingHandler(EntitySeat.class, new RenderNothing());
 
 		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());
 		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());
@@ -333,9 +333,9 @@ public class Client extends Common
 	}
 
 	@Override
-	public boolean isClientControlled(EntityShipParentTest query)
+	public boolean isClientControlled(EntityShip query)
 	{
-		EntityShipParentTest ship = SwgEntityUtil.getShipRiding(mc.thePlayer);
+		EntityShip ship = SwgEntityUtil.getShipRiding(mc.thePlayer);
 		return ship != null && ship.equals(query) && ship.canBeControlledBy(mc.thePlayer);
 	}
 }

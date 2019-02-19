@@ -138,7 +138,7 @@ public class EntityUtils
 
 	//	public static boolean isRiding(Entity entity, Class<? extends Entity> clazz)
 	//	{
-	//		return !(entity == null || entity.ridingEntity == null) && (clazz.isInstance(entity.ridingEntity) || (entity.ridingEntity instanceof EntitySeat && clazz.isInstance(((EntitySeat)entity.ridingEntity).parent)));
+	//		return !(entity == null || entity.ridingEntity == null) && (clazz.isInstance(entity.ridingEntity) || (entity.ridingEntity instanceof EntityLegacySeat && clazz.isInstance(((EntityLegacySeat)entity.ridingEntity).parent)));
 	//	}
 
 	public static Entity getEntityByUuid(World world, UUID uuid)

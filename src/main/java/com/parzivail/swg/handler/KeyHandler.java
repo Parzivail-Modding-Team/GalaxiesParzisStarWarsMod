@@ -39,7 +39,7 @@ public class KeyHandler
 	public static void handleVehicleMovement()
 	{
 		// TODO
-		//		EntityShipParentTest ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
+		//		EntityShip ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
 		//		if (Client.mc.thePlayer != null && ship != null)
 		//		{
 		//			if ($(Client.mc.gameSettings.keyBindLeft))

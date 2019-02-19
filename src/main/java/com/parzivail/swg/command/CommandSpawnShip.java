@@ -1,7 +1,7 @@
 package com.parzivail.swg.command;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.entity.EntityShipParentTest;
+import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.entity.ShipType;
 import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.util.command.CommandParser;
@@ -49,7 +49,7 @@ public class CommandSpawnShip extends CommandBase
 					break;
 				case "multitest":
 					if (Resources.IS_DEBUG)
-						spawn(new EntityShipParentTest(player.worldObj, ShipType.T65Xwing), player);
+						spawn(new EntityShip(player.worldObj, ShipType.T65Xwing), player);
 					break;
 			}
 		}

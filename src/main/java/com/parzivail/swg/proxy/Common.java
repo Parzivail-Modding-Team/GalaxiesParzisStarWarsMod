@@ -1,7 +1,7 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.entity.EntityShipParentTest;
+import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.util.block.INameProvider;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.network.MessageCreateDecal;
@@ -84,7 +84,7 @@ public class Common
 	{
 	}
 
-	public boolean isClientControlled(EntityShipParentTest multipartFlightModel)
+	public boolean isClientControlled(EntityShip multipartFlightModel)
 	{
 		return false;
 	}

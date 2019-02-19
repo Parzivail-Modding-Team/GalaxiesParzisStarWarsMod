@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 /**
  * Created by colby on 12/26/2017.
  */
-public class VehicleT65 extends MultipartFlightModel
+public class VehicleT65 extends EntityLegacyShip
 {
 	public VehicleT65(World world)
 	{

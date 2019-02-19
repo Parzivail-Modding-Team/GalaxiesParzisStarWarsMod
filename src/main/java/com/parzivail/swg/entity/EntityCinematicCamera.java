@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 
 public class EntityCinematicCamera extends EntityLivingBase
 {
-	public EntityShipParentTest parent;
+	public EntityShip parent;
 
 	public EntityCinematicCamera(World world)
 	{
@@ -15,7 +15,7 @@ public class EntityCinematicCamera extends EntityLivingBase
 		setSize(0F, 0F);
 	}
 
-	public EntityCinematicCamera(EntityShipParentTest d)
+	public EntityCinematicCamera(EntityShip d)
 	{
 		this(d.worldObj);
 		parent = d;
