@@ -93,13 +93,15 @@ item.pswg.blueYogurt.name=Blue Yogurt
 item.pswg.qrikkiBread.name=Qrikki Bread
 item.pswg.qrikkiWaffle.name=Qrikki Waffle
 
-item.pswg.personalDatapad=Personal Datapad
+item.pswg.personalDatapad.name=Personal Datapad
 
 item.pswg.debugWizard.name=§aDebug Wizard§r
 
-itwm.pswg.lightsaber.name=Lightsaber
+item.pswg.lightsaber.name=Lightsaber
 
 item.pswg.ingotChromium.name=Chromium Ingot
+
+itemGroup.tabPswg=Galaxies: Parzi's Star Wars Mod
 
 tile.pswg.XXXX.name=XXXX
 tile.pswg.oreChromium.name=Chromium Ore
