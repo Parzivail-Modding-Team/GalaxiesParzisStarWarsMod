@@ -1,5 +1,6 @@
 package com.parzivail.swg.entity;
 
+import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;

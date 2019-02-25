@@ -1,4 +1,4 @@
-package com.parzivail.swg.entity;
+package com.parzivail.swg.entity.ship;
 
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;

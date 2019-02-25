@@ -1,8 +1,9 @@
 package com.parzivail.swg.render.entity;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.swg.ship.ShipData;
 import com.parzivail.util.binary.Swg3.SwgModel;
 import com.parzivail.util.binary.Swg3.SwgPart;
 import com.parzivail.util.math.RotatedAxes;
@@ -20,7 +21,7 @@ import org.lwjgl.opengl.GL11;
 /**
  * Created by colby on 12/26/2017.
  */
-public class RenderShipParentTest extends Render
+public class RenderShip extends Render
 {
 	private static final SwgModel model;
 
@@ -30,7 +31,7 @@ public class RenderShipParentTest extends Render
 		model = SwgModel.Load(r);
 	}
 
-	public RenderShipParentTest()
+	public RenderShip()
 	{
 	}
 
@@ -74,13 +75,15 @@ public class RenderShipParentTest extends Render
 
 		FxMC.enableSunBasedLighting(ship, partialTicks);
 
-		GL.Translate(0, ship.data.verticalCenteringOffset, 0);
+		ShipData data = ship.getData();
+
+		GL.Translate(0, data.verticalCenteringOffset, 0);
 		GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-pitch, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(-roll, 0.0F, 0.0F, 1.0F);
-		GL.Translate(0, -ship.data.verticalCenteringOffset, 0);
+		GL.Translate(0, -data.verticalCenteringOffset, 0);
 
-		GL.Translate(0, ship.data.verticalGroundingOffset, 0);
+		GL.Translate(0, data.verticalGroundingOffset, 0);
 
 		GL.Rotate(-90, 1, 0, 0);
 		GL.Rotate(-90, 0, 0, 1);

@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL20;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -256,7 +257,7 @@ public final class ShaderHelper
 
 		try
 		{
-			reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+			reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
 			Exception innerExc = null;
 			try

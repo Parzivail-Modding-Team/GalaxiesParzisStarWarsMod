@@ -1,11 +1,14 @@
 package com.parzivail.swg.registry;
 
-import com.parzivail.swg.entity.*;
+import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.entity.EntityChair;
+import com.parzivail.swg.entity.EntitySmokeGrenade;
+import com.parzivail.swg.entity.EntityThermalDetonator;
+import com.parzivail.swg.entity.ship.EntitySeat;
+import com.parzivail.swg.entity.ship.EntityT65;
 import com.parzivail.swg.mob.MobGizka;
 import com.parzivail.swg.npc.NpcJawa;
 import com.parzivail.swg.npc.NpcMerchant;
-import com.parzivail.swg.ship.EntityLegacySeat;
-import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.util.SwgEntityUtil;
 
 /**
@@ -15,11 +18,11 @@ public class EntityRegister
 {
 	public static void register()
 	{
-		SwgEntityUtil.registerEntity(VehicleT65.class, "t65");
-		SwgEntityUtil.registerEntity(EntityLegacySeat.class, "seat");
+		SwgEntityUtil.registerEntity(EntityT65.class, "t65");
+		SwgEntityUtil.registerEntity(EntitySeat.class, "seat");
 
-		SwgEntityUtil.registerEntity(EntityShip.class, "espt");
-		SwgEntityUtil.registerEntity(EntitySeat.class, "esct");
+		//		SwgEntityUtil.registerEntity(EntityShip.class, "espt");
+		//		SwgEntityUtil.registerEntity(EntitySeat.class, "esct");
 
 		SwgEntityUtil.registerEntity(EntityChair.class, "chair");
 

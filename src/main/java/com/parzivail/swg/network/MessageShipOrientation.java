@@ -1,6 +1,6 @@
 package com.parzivail.swg.network;
 
-import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;

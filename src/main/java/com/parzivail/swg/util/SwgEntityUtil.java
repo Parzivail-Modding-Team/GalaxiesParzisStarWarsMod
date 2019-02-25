@@ -1,8 +1,8 @@
 package com.parzivail.swg.util;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.entity.EntitySeat;
-import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.entity.ship.EntitySeat;
+import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.util.common.Lumberjack;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.entity.Entity;

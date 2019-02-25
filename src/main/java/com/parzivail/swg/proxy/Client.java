@@ -2,8 +2,13 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.entity.*;
+import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.entity.EntityChair;
+import com.parzivail.swg.entity.EntitySmokeGrenade;
+import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
+import com.parzivail.swg.entity.ship.EntitySeat;
+import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.swg.gui.GuiQuestNotification;
 import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.swg.item.lightsaber.ItemLightsaber;
@@ -19,7 +24,7 @@ import com.parzivail.swg.render.antenna.RenderSatelliteDish;
 import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
 import com.parzivail.swg.render.entity.RenderNothing;
-import com.parzivail.swg.render.entity.RenderShipParentTest;
+import com.parzivail.swg.render.entity.RenderShip;
 import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
 import com.parzivail.swg.render.lightsaber.RenderLightsaber;
@@ -213,7 +218,7 @@ public class Client extends Common
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityChair.class, new RenderNothing());
-		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, new RenderShipParentTest());
+		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, new RenderShip());
 		RenderingRegistry.registerEntityRenderingHandler(EntitySeat.class, new RenderNothing());
 
 		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());

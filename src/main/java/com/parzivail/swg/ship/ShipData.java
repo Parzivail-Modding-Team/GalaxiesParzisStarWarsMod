@@ -1,7 +1,5 @@
 package com.parzivail.swg.ship;
 
-import com.parzivail.swg.entity.ShipType;
-
 /**
  * Created by colby on 12/30/2017.
  */
@@ -16,10 +14,5 @@ public class ShipData
 	public boolean hasMaxDistance;
 	public float verticalCenteringOffset = 1.684f;
 	public float verticalGroundingOffset = 0.82f;
-
-	public static ShipData create(ShipType type)
-	{
-		// TODO: ship data per ship type
-		return new ShipData();
-	}
+	public boolean isAirVehicle = true;
 }

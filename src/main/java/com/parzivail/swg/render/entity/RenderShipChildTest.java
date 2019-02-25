@@ -1,6 +1,6 @@
 package com.parzivail.swg.render.entity;
 
-import com.parzivail.swg.entity.EntitySeat;
+import com.parzivail.swg.entity.ship.EntitySeat;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;

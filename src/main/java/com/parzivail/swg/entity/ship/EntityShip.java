@@ -1,6 +1,7 @@
-package com.parzivail.swg.entity;
+package com.parzivail.swg.entity.ship;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.network.MessageShipOrientation;
 import com.parzivail.swg.ship.ShipData;
 import com.parzivail.util.entity.EntityUtils;
@@ -20,7 +21,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class EntityShip extends Entity implements IEntityAdditionalSpawnData
+public abstract class EntityShip extends Entity implements IEntityAdditionalSpawnData
 {
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
@@ -28,8 +29,6 @@ public class EntityShip extends Entity implements IEntityAdditionalSpawnData
 	public float throttle;
 	public EntitySeat[] seats;
 	public boolean isInitialized;
-	public ShipData data;
-	private ShipType type;
 
 	@SideOnly(Side.CLIENT)
 	private EntityCinematicCamera camera;
@@ -47,13 +46,6 @@ public class EntityShip extends Entity implements IEntityAdditionalSpawnData
 		throttle = 0;
 	}
 
-	public EntityShip(World worldIn, ShipType type)
-	{
-		this(worldIn);
-		this.type = type;
-		data = ShipData.create(type);
-	}
-
 	@Override
 	protected void entityInit()
 	{
@@ -67,6 +59,8 @@ public class EntityShip extends Entity implements IEntityAdditionalSpawnData
 		setPosition(x, y, z);
 		setRotation(yaw, pitch);
 	}
+
+	public abstract ShipData getData();
 
 	@Override
 	public void setDead()
@@ -99,6 +93,8 @@ public class EntityShip extends Entity implements IEntityAdditionalSpawnData
 		if (ridingEntity != null && ridingEntity.isDead)
 			ridingEntity = null;
 
+		ShipData data = getData();
+
 		if (posY < -64.0D)
 			kill();
 
@@ -123,10 +119,14 @@ public class EntityShip extends Entity implements IEntityAdditionalSpawnData
 			throttle += player.moveForward * data.acceleration;
 			throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
 
+			float p = 0;
+
 			// Ok, player.rotationPitch * 0.999999f is a fun one. So, when pitch = -90 or 90, the math makes a lot of
 			// assumptions the matrices should be in (since any yaw with pitch = [-90, 90] is the same location so to
 			// combat that we don't let it hit 90, just 89.99991 which is close enough and won't bother anyone.
-			orientation.setAngles(-player.rotationYaw, -player.rotationPitch * 0.999999f, 0);
+			if (data.isAirVehicle)
+				p = -player.rotationPitch * 0.999999f;
+			orientation.setAngles(-player.rotationYaw, p, 0);
 
 			//			if (player.moveForward != 0)
 			//				orientation.rotateLocalPitch(player.moveForward);
@@ -237,8 +237,6 @@ public class EntityShip extends Entity implements IEntityAdditionalSpawnData
 	{
 		throttle = tagCompound.getFloat("throttle");
 		orientation = new RotatedAxes(tagCompound.getFloat("yaw"), tagCompound.getFloat("pitch"), tagCompound.getFloat("roll"));
-		type = ShipType.values()[tagCompound.getInteger("type")];
-		data = ShipData.create(type);
 		createChildren();
 	}
 
@@ -260,13 +258,11 @@ public class EntityShip extends Entity implements IEntityAdditionalSpawnData
 		tagCompound.setFloat("yaw", orientation.getYaw());
 		tagCompound.setFloat("pitch", orientation.getPitch());
 		tagCompound.setFloat("roll", orientation.getRoll());
-		tagCompound.setInteger("type", type.ordinal());
 	}
 
 	@Override
 	public void writeSpawnData(ByteBuf buffer)
 	{
-		buffer.writeInt(type.ordinal());
 		buffer.writeFloat(orientation.getYaw());
 		buffer.writeFloat(orientation.getPitch());
 		buffer.writeFloat(orientation.getRoll());
@@ -275,8 +271,6 @@ public class EntityShip extends Entity implements IEntityAdditionalSpawnData
 	@Override
 	public void readSpawnData(ByteBuf buffer)
 	{
-		type = ShipType.values()[buffer.readInt()];
-		data = ShipData.create(type);
 		orientation = new RotatedAxes(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
 		createChildren();
 	}
