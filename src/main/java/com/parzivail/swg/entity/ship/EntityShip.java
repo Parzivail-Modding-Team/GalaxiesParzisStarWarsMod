@@ -3,7 +3,6 @@ package com.parzivail.swg.entity.ship;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.network.MessageShipOrientation;
-import com.parzivail.swg.ship.ShipData;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.SlidingWindow;

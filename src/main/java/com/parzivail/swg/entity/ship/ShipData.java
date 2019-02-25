@@ -1,4 +1,4 @@
-package com.parzivail.swg.ship;
+package com.parzivail.swg.entity.ship;
 
 /**
  * Created by colby on 12/30/2017.

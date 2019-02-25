@@ -9,6 +9,7 @@ import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.entity.ship.EntitySeat;
 import com.parzivail.swg.entity.ship.EntityShip;
+import com.parzivail.swg.entity.ship.EntityT65;
 import com.parzivail.swg.gui.GuiQuestNotification;
 import com.parzivail.swg.handler.KeyHandler;
 import com.parzivail.swg.item.lightsaber.ItemLightsaber;
@@ -25,7 +26,6 @@ import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
 import com.parzivail.swg.render.entity.RenderBlasterBolt;
 import com.parzivail.swg.render.entity.RenderNothing;
 import com.parzivail.swg.render.entity.RenderShip;
-import com.parzivail.swg.render.entity.RenderT65;
 import com.parzivail.swg.render.gunrack.RenderGunRack;
 import com.parzivail.swg.render.lightsaber.RenderLightsaber;
 import com.parzivail.swg.render.mob.RenderGizka;
@@ -34,7 +34,6 @@ import com.parzivail.swg.render.npc.RenderMerchant;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;
 import com.parzivail.swg.render.weapon.grenades.RenderThermalDetonator;
-import com.parzivail.swg.ship.VehicleT65;
 import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
 import com.parzivail.swg.util.SwgEntityUtil;
@@ -213,12 +212,12 @@ public class Client extends Common
 		frHuttese = createFont("huttese");
 		frMassassi = createFont("massassi");
 
-		RenderingRegistry.registerEntityRenderingHandler(VehicleT65.class, new RenderT65());
+		// TODO: abstract out ship render types for models etc.
+		RenderingRegistry.registerEntityRenderingHandler(EntityT65.class, new RenderShip());
 		//RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityChair.class, new RenderNothing());
-		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, new RenderShip());
 		RenderingRegistry.registerEntityRenderingHandler(EntitySeat.class, new RenderNothing());
 
 		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());

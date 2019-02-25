@@ -1,6 +1,5 @@
 package com.parzivail.swg.entity.ship;
 
-import com.parzivail.swg.ship.ShipData;
 import net.minecraft.world.World;
 
 public class EntityT65 extends EntityShip

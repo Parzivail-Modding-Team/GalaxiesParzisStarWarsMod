@@ -43,6 +43,7 @@ public class GuiDialogue extends GuiContainer
 		interaction = QuestRegister.complexQuest.createInteraction(player);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void initGui()
 	{

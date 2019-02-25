@@ -2,8 +2,8 @@ package com.parzivail.swg.render.entity;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.ship.EntityShip;
+import com.parzivail.swg.entity.ship.ShipData;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.ship.ShipData;
 import com.parzivail.util.binary.Swg3.SwgModel;
 import com.parzivail.util.binary.Swg3.SwgPart;
 import com.parzivail.util.math.RotatedAxes;
