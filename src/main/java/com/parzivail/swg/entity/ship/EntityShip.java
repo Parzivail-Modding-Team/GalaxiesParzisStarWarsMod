@@ -35,6 +35,8 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	public SlidingWindow slidingPitch = new SlidingWindow(4);
 	@SideOnly(Side.CLIENT)
 	public SlidingWindow slidingYaw = new SlidingWindow(3);
+	@SideOnly(Side.CLIENT)
+	public SlidingWindow slidingThrottle = new SlidingWindow(8);
 
 	public EntityShip(World worldIn)
 	{
@@ -142,6 +144,8 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			slidingYaw.slide(dYaw);
 			float dPitch = MathHelper.wrapAngleTo180_float(orientation.getPitch() - previousOrientation.getPitch());
 			slidingPitch.slide(dPitch);
+
+			slidingThrottle.slide(throttle);
 
 			motionX = forward.x * throttle;
 			motionY = forward.y * throttle;
