@@ -281,7 +281,7 @@ public class EventHandler
 					pR += 360.0F;
 				FxMC.changeCameraRoll(r);
 				FxMC.changePrevCameraRoll(pR);
-				Client.mc.renderViewEntity = ship.getCamera();
+				Client.mc.renderViewEntity = ship.camera;
 			}
 
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();

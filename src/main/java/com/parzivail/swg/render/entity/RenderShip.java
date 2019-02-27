@@ -65,11 +65,11 @@ public class RenderShip extends Render
 		{
 			Vector3f seatOffset = new Vector3f(0, 0, 0);
 
-			float dist = ship.slidingThrottle.getAverage() + (ship.slidingThrottle.getAverage() - ship.slidingThrottle.getOldAverage()) * partialTicks;
+			float camDist = ship.camera.getCamDist(partialTicks);
+			RotatedAxes ra = new RotatedAxes(yaw - slidDYaw, pitch - slidDPitch, roll);
+			Vector3f forward = ra.findLocalVectorGlobally(new Vector3f(0, 0, camDist));
 
-			float camDist = 10 + 3 * dist;
-			Vector3f forward = new RotatedAxes(yaw - slidDYaw, pitch - slidDPitch, roll).findLocalVectorGlobally(new Vector3f(0, 0, 1));
-			GL.Translate(seatOffset.x + camDist * forward.x, seatOffset.y + camDist * forward.y, seatOffset.z + camDist * forward.z);
+			GL.Translate(seatOffset.x + forward.x, seatOffset.y + forward.y, seatOffset.z + forward.z);
 		}
 		else
 			GL.Translate(x, y, z);

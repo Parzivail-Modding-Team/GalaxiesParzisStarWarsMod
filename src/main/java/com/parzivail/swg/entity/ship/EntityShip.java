@@ -30,7 +30,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	public boolean isInitialized;
 
 	@SideOnly(Side.CLIENT)
-	private EntityCinematicCamera camera;
+	public EntityCinematicCamera camera;
 	@SideOnly(Side.CLIENT)
 	public SlidingWindow slidingPitch = new SlidingWindow(4);
 	@SideOnly(Side.CLIENT)
@@ -80,12 +80,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	{
 		if (camera != null)
 			camera.setDead();
-	}
-
-	@SideOnly(Side.CLIENT)
-	public EntityCinematicCamera getCamera()
-	{
-		return camera;
 	}
 
 	@Override

@@ -30,14 +30,15 @@ public class EntityCinematicCamera extends EntityLivingBase
 		prevPosY = posY;
 		prevPosZ = posZ;
 
-		Vector3f cameraPosition = new Vector3f(0, 0, -15);
+		float camDist = getCamDist(0.5f);
+		Vector3f cameraPosition = new Vector3f(0, 0, -camDist);
 		cameraPosition = parent.orientation.findLocalVectorGlobally(cameraPosition);
 
 		double dX = parent.posX + cameraPosition.x - posX;
 		double dY = parent.posY + cameraPosition.y - posY;
 		double dZ = parent.posZ + cameraPosition.z - posZ;
 
-		float lerpAmount = 0.5F;
+		float lerpAmount = 0.8F;
 
 		setPosition(posX + dX * lerpAmount, posY + dY * lerpAmount, posZ + dZ * lerpAmount);
 
@@ -61,6 +62,12 @@ public class EntityCinematicCamera extends EntityLivingBase
 
 		while (rotationPitch - prevRotationPitch >= 180.0F)
 			prevRotationPitch += 360.0F;
+	}
+
+	public float getCamDist(float partialTicks)
+	{
+		float throttle = parent.slidingThrottle.getOldAverage() + (parent.slidingThrottle.getAverage() - parent.slidingThrottle.getOldAverage()) * partialTicks;
+		return 10 + 3 * throttle;
 	}
 
 	@Override
