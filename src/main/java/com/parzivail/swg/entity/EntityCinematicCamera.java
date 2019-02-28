@@ -66,6 +66,27 @@ public class EntityCinematicCamera extends EntityLivingBase
 
 	public float getCamDist(float partialTicks)
 	{
+		float tempDistance = getCamDistTarget(partialTicks);
+
+		//		Vector3f cameraPosition = new Vector3f(0, 0, -tempDistance);
+		//		cameraPosition = parent.orientation.findLocalVectorGlobally(cameraPosition);
+		//
+		//		Vec3 shipPos = Vec3.createVectorHelper(parent.posX, parent.posY, parent.posZ);
+		//		Vec3 camPos = Vec3.createVectorHelper(parent.posX + cameraPosition.x, parent.posY + cameraPosition.y, parent.posZ + cameraPosition.z);
+		//		MovingObjectPosition mop = worldObj.rayTraceBlocks(camPos, shipPos);
+		//
+		//		if (mop != null)
+		//		{
+		//			double mopDistance = mop.hitVec.distanceTo(shipPos);
+		//			if (mopDistance < tempDistance)
+		//				return (float)mopDistance;
+		//		}
+
+		return tempDistance;
+	}
+
+	private float getCamDistTarget(float partialTicks)
+	{
 		float throttle = parent.slidingThrottle.getOldAverage() + (parent.slidingThrottle.getAverage() - parent.slidingThrottle.getOldAverage()) * partialTicks;
 		return 10 + 3 * throttle;
 	}
