@@ -93,18 +93,18 @@ public class RenderShip extends Render
 		for (SwgPart p : model.parts)
 		{
 			GL.PushMatrix();
-			//if (p.name.equals("x_wing01") || p.name.equals("x_wing04"))
-			//{
-			//	GL.Translate(0, 0, ship.verticalCenteringOffset - ship.verticalGroundingOffset);
-			//	GL.Rotate(-Math.abs(13 * Fx.Util.Hz(0.5f)), 1, 0, 0);
-			//	GL.Translate(0, 0, -ship.verticalCenteringOffset + ship.verticalGroundingOffset);
-			//}
-			//if (p.name.equals("x_wing02") || p.name.equals("x_wing03"))
-			//{
-			//	GL.Translate(0, 0, ship.verticalCenteringOffset - ship.verticalGroundingOffset);
-			//	GL.Rotate(Math.abs(13 * Fx.Util.Hz(0.5f)), 1, 0, 0);
-			//	GL.Translate(0, 0, -ship.verticalCenteringOffset + ship.verticalGroundingOffset);
-			//}
+			//			if (p.name.equals("x_wing01") || p.name.equals("x_wing04"))
+			//			{
+			//				GL.Translate(0, 0, data.verticalCenteringOffset - data.verticalGroundingOffset);
+			//				GL.Rotate(-13, 1, 0, 0);
+			//				GL.Translate(0, 0, -data.verticalCenteringOffset + data.verticalGroundingOffset);
+			//			}
+			//			if (p.name.equals("x_wing02") || p.name.equals("x_wing03"))
+			//			{
+			//				GL.Translate(0, 0, data.verticalCenteringOffset - data.verticalGroundingOffset);
+			//				GL.Rotate(13, 1, 0, 0);
+			//				GL.Translate(0, 0, -data.verticalCenteringOffset + data.verticalGroundingOffset);
+			//			}
 			bindTexture(p.textures[frame].texture);
 			GL.Scale(0.0004f);
 			GL.CallList(model.partRenderLists.get(p.name)[frame]);

@@ -32,9 +32,9 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	@SideOnly(Side.CLIENT)
 	public EntityCinematicCamera camera;
 	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingPitch = new SlidingWindow(4);
+	public SlidingWindow slidingPitch = new SlidingWindow(6);
 	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingYaw = new SlidingWindow(3);
+	public SlidingWindow slidingYaw = new SlidingWindow(5);
 	@SideOnly(Side.CLIENT)
 	public SlidingWindow slidingThrottle = new SlidingWindow(8);
 
