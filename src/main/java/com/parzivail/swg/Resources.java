@@ -17,9 +17,6 @@ public class Resources
 
 	public static final boolean IS_DEBUG = System.getenv("PSWG_DEBUG") != null && Boolean.parseBoolean(System.getenv("PSWG_DEBUG"));
 
-	public static int biomeIdTatooineDunes = 100;
-	public static int biomeIdEndor = 101;
-
 	private static int guiIdx = 1;
 	public static final int GUI_BLASTER_WORKBENCH = guiIdx++;
 	public static final int GUI_DIALOGUE = guiIdx++;

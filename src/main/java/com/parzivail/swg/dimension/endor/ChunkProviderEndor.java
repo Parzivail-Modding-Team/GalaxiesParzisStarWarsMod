@@ -1,6 +1,5 @@
 package com.parzivail.swg.dimension.endor;
 
-import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.endor.terrain.TerrainSwissHills;
 import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.StructureRegister;
@@ -146,7 +145,7 @@ public class ChunkProviderEndor implements IChunkProvider
 		if (!(b instanceof PBiomeGenBase))
 			return;
 		PBiomeGenBase biomegenbase = (PBiomeGenBase)b;
-		biomegenbase.decorate(this, worldObj, StarWarsGalaxy.random, k, l);
+		biomegenbase.decorate(this, worldObj, random, k, l);
 	}
 
 	/**

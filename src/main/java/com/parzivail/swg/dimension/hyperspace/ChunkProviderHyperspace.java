@@ -1,20 +1,14 @@
-package com.parzivail.swg.dimension.tatooine;
+package com.parzivail.swg.dimension.hyperspace;
 
-import com.parzivail.swg.dimension.tatooine.terrain.TerrainTatooineCanyons;
-import com.parzivail.swg.registry.BlockRegister;
 import com.parzivail.swg.registry.StructureRegister;
-import com.parzivail.util.world.*;
-import com.parzivail.util.world.TerrainLayer.Function;
-import com.parzivail.util.world.TerrainLayer.Method;
+import com.parzivail.util.world.PBiomeGenBase;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
 
 import java.util.List;
 import java.util.Random;
@@ -22,12 +16,11 @@ import java.util.Random;
 /**
  * Created by colby on 9/10/2017.
  */
-public class ChunkProviderTatooine implements IChunkProvider
+public class ChunkProviderHyperspace implements IChunkProvider
 {
-	public static final ITerrainHeightmap terrain = new MultiCompositeTerrain(0, 800, new TerrainTatooineCanyons(), new CompositeTerrain(new TerrainLayer(0, Function.NCTurbulent, Method.Add, 300, 50), new TerrainLayer(1, Function.NCTurbulent, Method.Multiply, 300, 4), new TerrainLayer(2, Function.Simplex, Method.Add, 400, 25), new TerrainLayer(3, Function.Simplex, Method.Add, 50, 30), new TerrainLayer(4, Function.InvNCTurbulent, Method.Multiply, 100, 0.15)), new CompositeTerrain(new TerrainLayer(0, Function.NCTurbulent, Method.Add, 150, 10), new TerrainLayer(1, Function.NCTurbulent, Method.Multiply, 150, 5), new TerrainLayer(2, Function.Simplex, Method.Add, 100, 20), new TerrainLayer(3, Function.Simplex, Method.Add, 100, 20), new TerrainLayer(4, Function.InvNCTurbulent, Method.Multiply, 40, 0.5)), new CompositeTerrain(new TerrainLayer(0, Function.NCTurbulent, Method.Add, 300, 10), new TerrainLayer(1, Function.NCTurbulent, Method.Multiply, 300, 5), new TerrainLayer(2, Function.Simplex, Method.Add, 400, 25), new TerrainLayer(3, Function.Simplex, Method.Add, 50, 25), new TerrainLayer(4, Function.InvNCTurbulent, Method.Multiply, 70, 0.8)), new CompositeTerrain(new TerrainLayer(0, Function.NCTurbulent, Method.Add, 300, 50), new TerrainLayer(1, Function.NCTurbulent, Method.Multiply, 300, 4), new TerrainLayer(2, Function.Simplex, Method.Add, 400, 25), new TerrainLayer(3, Function.Simplex, Method.Add, 50, 25), new TerrainLayer(4, Function.InvNCTurbulent, Method.Multiply, 100, 0.8)));
 	private final World worldObj;
 
-	public ChunkProviderTatooine(World worldObj, long seed)
+	public ChunkProviderHyperspace(World worldObj, long seed)
 	{
 		this.worldObj = worldObj;
 	}
@@ -47,40 +40,6 @@ public class ChunkProviderTatooine implements IChunkProvider
 	public Chunk provideChunk(int cx, int cz)
 	{
 		Chunk chunk = new Chunk(worldObj, cx, cz);
-		for (short x = 0; x < 16; x++)
-		{
-			for (short z = 0; z < 16; z++)
-			{
-				double height = terrain.getHeightAt((cx * 16 + x), (cz * 16 + z)) + 60;
-				int finalHeight = (int)height;
-
-				if (chunk.getBlockStorageArray()[0] == null)
-					chunk.getBlockStorageArray()[0] = new ExtendedBlockStorage(0, !worldObj.provider.hasNoSky);
-				chunk.getBlockStorageArray()[0].setExtBlockID(x, 0, z, Blocks.bedrock);
-
-				for (short y = 1; y <= finalHeight; y++)
-				{
-					int l = y >> 4;
-					ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
-
-					if (extendedblockstorage == null)
-					{
-						extendedblockstorage = new ExtendedBlockStorage(l << 4, !worldObj.provider.hasNoSky);
-						chunk.getBlockStorageArray()[l] = extendedblockstorage;
-					}
-
-					double sandThreshold = height * 0.95;
-					double sandstoneThreshold = height * 0.85;
-
-					if (y >= sandThreshold)
-						extendedblockstorage.setExtBlockID(x, y & 15, z, BlockRegister.tatooineSand);
-					else if (y >= sandstoneThreshold && y < sandThreshold)
-						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.sandstone);
-					else
-						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
-				}
-			}
-		}
 
 		StructureRegister.structureEngine.genStructure(chunk);
 
@@ -159,7 +118,7 @@ public class ChunkProviderTatooine implements IChunkProvider
 	 */
 	public String makeString()
 	{
-		return "TatooineLevelSource";
+		return "EndorLevelSource";
 	}
 
 	/**
@@ -171,7 +130,6 @@ public class ChunkProviderTatooine implements IChunkProvider
 		return biomegenbase.getSpawnableList(p_73155_1_);
 	}
 
-	@Override
 	public ChunkPosition findClosestStructure(World p_147416_1_, String p_147416_2_, int p_147416_3_, int p_147416_4_, int p_147416_5_)
 	{
 		return null;

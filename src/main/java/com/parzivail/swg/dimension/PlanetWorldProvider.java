@@ -27,6 +27,9 @@ public abstract class PlanetWorldProvider extends WorldProvider
 
 	public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)
 	{
+		if (planetDescriptor.rotationPeriod == 0)
+			return 0;
+
 		int j = (int)(p_76563_1_ % (long)(planetDescriptor.rotationPeriod * 1000));
 		float f1 = ((float)j + p_76563_3_) / (planetDescriptor.rotationPeriod * 1000) - 0.25F;
 
@@ -48,6 +51,8 @@ public abstract class PlanetWorldProvider extends WorldProvider
 
 	public int getMoonPhase(long p_76559_1_)
 	{
+		if (planetDescriptor.rotationPeriod == 0)
+			return 0;
 		return (int)(p_76559_1_ / (long)(planetDescriptor.rotationPeriod * 1000) % 8L + 8L) % 8;
 	}
 

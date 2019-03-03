@@ -137,7 +137,8 @@ public class EventHandler
 		if (WorldRegister.planetDescriptorHashMap.containsKey(event.entity.worldObj.provider.dimensionId))
 		{
 			PlanetDescriptor planetDescriptor = WorldRegister.planetDescriptorHashMap.get(event.entity.worldObj.provider.dimensionId);
-			event.entity.motionY /= Math.sqrt(planetDescriptor.gravity);
+			// TODO: make gravity just re-add some delta-Y to players on each tick
+			//event.entity.motionY /= Math.sqrt(planetDescriptor.gravity);
 		}
 	}
 
@@ -403,8 +404,9 @@ public class EventHandler
 		if (WorldRegister.planetDescriptorHashMap.containsKey(event.player.worldObj.provider.dimensionId) && !event.player.onGround && event.player.motionY < 0)
 		{
 			PlanetDescriptor planetDescriptor = WorldRegister.planetDescriptorHashMap.get(event.player.worldObj.provider.dimensionId);
-			if (planetDescriptor.gravity != 1)
-				event.player.motionY += 0.08D * 0.9800000190734863D * (1 - planetDescriptor.gravity);
+			// TODO: make gravity just re-add some delta-Y to players on each tick
+			//			if (planetDescriptor.gravity != 1)
+			//				event.player.motionY += 0.08D * 0.98D * (1 - planetDescriptor.gravity);
 		}
 
 		if (event.player.worldObj.isRemote)
