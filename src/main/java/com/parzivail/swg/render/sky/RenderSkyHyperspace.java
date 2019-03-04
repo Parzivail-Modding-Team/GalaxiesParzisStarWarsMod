@@ -1,6 +1,7 @@
 package com.parzivail.swg.render.sky;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +14,7 @@ public class RenderSkyHyperspace extends IRenderHandler
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc)
 	{
-
+		GL.PushMatrix();
+		GL.PopMatrix();
 	}
 }
