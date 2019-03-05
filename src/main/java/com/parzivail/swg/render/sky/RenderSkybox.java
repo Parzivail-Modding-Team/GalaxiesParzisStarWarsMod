@@ -1,20 +1,23 @@
 package com.parzivail.swg.render.sky;
 
-import com.parzivail.swg.Resources;
-import com.parzivail.util.ui.gltk.GL;
+import com.parzivail.util.render.Skybox;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IRenderHandler;
 
-public class RenderSkyHyperspace extends IRenderHandler
+public class RenderSkybox extends IRenderHandler
 {
-	private static final ResourceLocation skybox = Resources.location("textures/environment/cube_hyperspace.png");
+	private final ResourceLocation skybox;
+
+	public RenderSkybox(ResourceLocation skybox)
+	{
+		this.skybox = skybox;
+	}
 
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc)
 	{
-		GL.PushMatrix();
-		GL.PopMatrix();
+		Skybox.render(mc, skybox);
 	}
 }

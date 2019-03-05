@@ -1,9 +1,10 @@
 package com.parzivail.swg.dimension.hyperspace;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetWorldProvider;
 import com.parzivail.swg.registry.WorldRegister;
-import com.parzivail.swg.render.sky.RenderSkyHyperspace;
+import com.parzivail.swg.render.sky.RenderSkybox;
 import com.parzivail.util.dimension.SingleBiomeChunkGenerator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -31,7 +32,7 @@ public class WorldProviderHyperspace extends PlanetWorldProvider
 	public IRenderHandler getSkyRenderer()
 	{
 		if (skyRenderer == null)
-			skyRenderer = new RenderSkyHyperspace();
+			skyRenderer = new RenderSkybox(Resources.location("textures/environment/cubemaps/hyperspace_tunnel.png"));
 		return skyRenderer;
 	}
 }
