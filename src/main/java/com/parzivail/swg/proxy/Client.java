@@ -7,6 +7,7 @@ import com.parzivail.swg.entity.EntityChair;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
+import com.parzivail.swg.entity.ship.EntityScootEmAround;
 import com.parzivail.swg.entity.ship.EntitySeat;
 import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.swg.entity.ship.EntityT65;
@@ -31,6 +32,8 @@ import com.parzivail.swg.render.mob.RenderGizka;
 import com.parzivail.swg.render.npc.RenderJawa;
 import com.parzivail.swg.render.npc.RenderMerchant;
 import com.parzivail.swg.render.ship.RenderShip;
+import com.parzivail.swg.render.ship.model.ModelScootEmAround;
+import com.parzivail.swg.render.ship.model.ModelXWing;
 import com.parzivail.swg.render.weapon.*;
 import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;
 import com.parzivail.swg.render.weapon.grenades.RenderThermalDetonator;
@@ -213,7 +216,8 @@ public class Client extends Common
 		frMassassi = createFont("massassi");
 
 		// TODO: abstract out ship render types for models etc.
-		RenderingRegistry.registerEntityRenderingHandler(EntityT65.class, new RenderShip());
+		RenderingRegistry.registerEntityRenderingHandler(EntityT65.class, new RenderShip(new ModelXWing()));
+		RenderingRegistry.registerEntityRenderingHandler(EntityScootEmAround.class, new RenderShip(new ModelScootEmAround()));
 		//RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
 

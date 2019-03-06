@@ -24,6 +24,8 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 {
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
+	public RotatedAxes cameraOrientation;
+	public RotatedAxes previousCameraOrientation;
 	public Vector3f angularMomentum;
 	public float throttle;
 	public EntitySeat[] seats;
@@ -43,6 +45,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		super(worldIn);
 		setSize(1, 1);
 		orientation = previousOrientation = new RotatedAxes(0, 0, 0);
+		cameraOrientation = previousCameraOrientation = new RotatedAxes(0, 0, 0);
 		angularMomentum = new Vector3f(0, 0, 0);
 		throttle = 0;
 	}
@@ -105,6 +108,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		prevRotationPitch = rotationPitch;
 		prevRotationYaw = rotationYaw;
 		previousOrientation = orientation.clone();
+		previousCameraOrientation = cameraOrientation.clone();
 
 		Entity driver = seats == null ? null : (seats[0] == null ? null : seats[0].riddenByEntity);
 		if (driver instanceof EntityPlayer)
@@ -114,14 +118,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			throttle += player.moveForward * data.acceleration;
 			throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
 
-			float p = 0;
-
-			// Ok, player.rotationPitch * 0.999999f is a fun one. So, when pitch = -90 or 90, the math makes a lot of
-			// assumptions the matrices should be in (since any yaw with pitch = [-90, 90] is the same location so to
-			// combat that we don't let it hit 90, just 89.99991 which is close enough and won't bother anyone.
-			if (data.isAirVehicle)
-				p = -player.rotationPitch * 0.999999f;
-			orientation.setAngles(-player.rotationYaw, p, 0);
+			consumePlayerOrientation(data, player);
 
 			//			if (player.moveForward != 0)
 			//				orientation.rotateLocalPitch(player.moveForward);
@@ -152,35 +149,62 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			motionZ = 0;
 		}
 
-		// max distance
-		if (data.hasMaxDistance)
+		if (data.isAirVehicle)
 		{
-			List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMax, 0).addCoord(0, data.distanceMax * 2, 0));
-			List<AxisAlignedBB> aabbBig = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMax + 1, 0).addCoord(0, (data.distanceMax + 1) * 2, 0));
-			if (aabb.isEmpty())
+			// max distance
+			if (data.hasMaxDistance)
 			{
-				if (aabbBig.isEmpty())
-					motionY = motionY > 0 ? -data.repulsorliftForce : motionY;
-				else
-					motionY = motionY > 0 ? 0 : motionY;
+				List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMax, 0).addCoord(0, data.distanceMax * 2, 0));
+				List<AxisAlignedBB> aabbBig = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMax + 1, 0).addCoord(0, (data.distanceMax + 1) * 2, 0));
+				if (aabb.isEmpty())
+				{
+					if (aabbBig.isEmpty())
+						motionY = motionY >= 0 ? -data.repulsorliftForce : motionY;
+					else
+						motionY = motionY >= 0 ? 0 : motionY;
+				}
+			}
+
+			// min distance
+			if (data.hasMinDistance)
+			{
+				List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMin, 0).addCoord(0, data.distanceMin * 2, 0));
+				List<AxisAlignedBB> aabbSmall = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMin - 1, 0).addCoord(0, (data.distanceMin - 1) * 2, 0));
+				if (!aabb.isEmpty())
+				{
+					if (aabbSmall.isEmpty())
+						motionY = motionY <= 0 ? 0 : motionY;
+					else
+						motionY = motionY <= 0 ? data.repulsorliftForce : motionY;
+				}
 			}
 		}
-
-		// min distance
-		if (data.hasMinDistance)
+		else
 		{
-			List<AxisAlignedBB> aabb = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMin, 0).addCoord(0, data.distanceMin * 2, 0));
-			List<AxisAlignedBB> aabbSmall = EntityUtils.getBlockAABBs(worldObj, boundingBox.expand(0, data.distanceMin - 1, 0).addCoord(0, (data.distanceMin - 1) * 2, 0));
-			if (!aabb.isEmpty())
-			{
-				if (aabbSmall.isEmpty())
-					motionY = motionY < 0 ? 0 : motionY;
-				else
-					motionY = motionY < 0 ? data.repulsorliftForce : motionY;
-			}
+			// gravity
+			motionY -= 0.75 * data.repulsorliftForce;
+
+			if (onGround)
+				motionY *= -0.5D;
 		}
 
 		moveEntity(motionX, motionY, motionZ);
+	}
+
+	protected void consumePlayerOrientation(ShipData data, EntityPlayer player)
+	{
+		// Ok, player.rotationPitch * 0.999999f is a fun one. So, when pitch = -90 or 90, the math makes a lot of
+		// assumptions the matrices should be in (since any yaw with pitch = [-90, 90] is the same location so to
+		// combat that we don't let it hit 90, just 89.99991 which is close enough and won't bother anyone.
+		float playerPitch = -player.rotationPitch * 0.999999f;
+
+		float vehiclePitch = 0;
+
+		if (data.isAirVehicle)
+			vehiclePitch = playerPitch;
+
+		orientation.setAngles(-player.rotationYaw, vehiclePitch, 0);
+		cameraOrientation.setAngles(-player.rotationYaw, playerPitch, 0);
 	}
 
 	private void spawnChildren()

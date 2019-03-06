@@ -1,11 +1,8 @@
 package com.parzivail.swg.render.ship;
 
-import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.swg.entity.ship.ShipData;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.util.binary.Swg3.SwgModel;
-import com.parzivail.util.binary.Swg3.SwgPart;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.FxMC;
@@ -23,16 +20,11 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderShip extends Render
 {
-	private static final SwgModel model;
+	private final IEntityRenderer model;
 
-	static
+	public RenderShip(IEntityRenderer model)
 	{
-		ResourceLocation r = new ResourceLocation(Resources.MODID, "models/test.swg3");
-		model = SwgModel.Load(r);
-	}
-
-	public RenderShip()
-	{
+		this.model = model;
 	}
 
 	@Override
@@ -41,8 +33,6 @@ public class RenderShip extends Render
 		if (!(entity instanceof EntityShip))
 			return;
 
-		int frame = 0;
-
 		GL11.glPushMatrix();
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -50,23 +40,34 @@ public class RenderShip extends Render
 		EntityShip ship = (EntityShip)entity;
 		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
 		float dPitch = wrapAngleTo90_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
+		float dCamPitch = wrapAngleTo90_float(ship.cameraOrientation.getPitch() - ship.previousCameraOrientation.getPitch());
 		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
 		float yaw = MathHelper.wrapAngleTo180_float(ship.previousOrientation.getYaw() + dYaw * partialTicks);
 		float pitch = wrapAngleTo90_float(ship.previousOrientation.getPitch() + dPitch * partialTicks);
+		float camPitch = wrapAngleTo90_float(ship.previousCameraOrientation.getPitch() + dCamPitch * partialTicks);
 		float roll = MathHelper.wrapAngleTo180_float(ship.previousOrientation.getRoll() + dRoll * partialTicks);
 
 		// keep camera from doing a 360 in one tick (0-1 partialTicks) when (yaw - prevYaw) ~ 360deg
 		float slidDYaw = ship.slidingYaw.getOldAverage() + (ship.slidingYaw.getAverage() - ship.slidingYaw.getOldAverage()) * partialTicks;
 		float slidDPitch = ship.slidingPitch.getOldAverage() + (ship.slidingPitch.getAverage() - ship.slidingPitch.getOldAverage()) * partialTicks;
 
-		roll += slidDYaw;
+		ShipData data = ship.getData();
+
+		if (data.isAirVehicle)
+			roll += slidDYaw;
+		else
+		{
+			slidDPitch = 0;
+			slidDYaw = 0;
+		}
 
 		if (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer())
 		{
 			Vector3f seatOffset = new Vector3f(0, 0, 0);
 
 			float camDist = ship.camera.getCamDist(partialTicks);
-			RotatedAxes ra = new RotatedAxes(yaw - slidDYaw, pitch - slidDPitch, roll);
+			float shipPitch = pitch - slidDPitch;
+			RotatedAxes ra = new RotatedAxes(yaw - slidDYaw, shipPitch + (camPitch - shipPitch), roll);
 			Vector3f forward = ra.findLocalVectorGlobally(new Vector3f(0, 0, camDist));
 
 			GL.Translate(seatOffset.x + forward.x, seatOffset.y + forward.y, seatOffset.z + forward.z);
@@ -76,8 +77,6 @@ public class RenderShip extends Render
 		GL.Enable(EnableCap.Texture2D);
 
 		FxMC.enableSunBasedLighting(ship, partialTicks);
-
-		ShipData data = ship.getData();
 
 		GL.Translate(0, data.verticalCenteringOffset, 0);
 		GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
@@ -90,26 +89,7 @@ public class RenderShip extends Render
 		GL.Rotate(-90, 1, 0, 0);
 		GL.Rotate(-90, 0, 0, 1);
 
-		for (SwgPart p : model.parts)
-		{
-			GL.PushMatrix();
-			//			if (p.name.equals("x_wing01") || p.name.equals("x_wing04"))
-			//			{
-			//				GL.Translate(0, 0, data.verticalCenteringOffset - data.verticalGroundingOffset);
-			//				GL.Rotate(-13, 1, 0, 0);
-			//				GL.Translate(0, 0, -data.verticalCenteringOffset + data.verticalGroundingOffset);
-			//			}
-			//			if (p.name.equals("x_wing02") || p.name.equals("x_wing03"))
-			//			{
-			//				GL.Translate(0, 0, data.verticalCenteringOffset - data.verticalGroundingOffset);
-			//				GL.Rotate(13, 1, 0, 0);
-			//				GL.Translate(0, 0, -data.verticalCenteringOffset + data.verticalGroundingOffset);
-			//			}
-			bindTexture(p.textures[frame].texture);
-			GL.Scale(0.0004f);
-			GL.CallList(model.partRenderLists.get(p.name)[frame]);
-			GL.PopMatrix();
-		}
+		model.doRender(renderManager, entity, x, y, z, partialTicks);
 
 		//		Fx.D3.DrawSolidBox();
 		//

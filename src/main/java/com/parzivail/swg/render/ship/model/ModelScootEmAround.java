@@ -1,17 +1,22 @@
-package com.parzivail.swg.render.ship;
+package com.parzivail.swg.render.ship.model;
 
-import com.parzivail.util.ui.ShaderHelper;
+import com.parzivail.swg.Resources;
+import com.parzivail.swg.render.ship.IEntityRenderer;
+import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * ScootEmAround - Weaston
  * Created using Tabula 4.1.1
  */
-public class ModelScootEmAround extends ModelBase
+public class ModelScootEmAround extends ModelBase implements IEntityRenderer
 {
+	private static final ResourceLocation texture = new ResourceLocation(Resources.MODID, "textures/vehicle/yavinScoot.png");
+
 	public ModelRenderer shape1;
 	public ModelRenderer shape1_1;
 	public ModelRenderer shape1_2;
@@ -145,17 +150,17 @@ public class ModelScootEmAround extends ModelBase
 
 		shape1.render(f5);
 
-		if (entity != null)
-		{
-			GL11.glPushMatrix();
-			ShaderHelper.setColor(1, 0.2f, 0.2f, 1);
-			ShaderHelper.useShader(ShaderHelper.glowSolid);
-			GL11.glTranslatef(0, 1.187f, 0);
-			Light2.render(f5);
-			Light1.render(f5);
-			ShaderHelper.releaseShader();
-			GL11.glPopMatrix();
-		}
+		//		if (entity != null)
+		//		{
+		//			GL11.glPushMatrix();
+		//			ShaderHelper.setColor(1, 0.2f, 0.2f, 1);
+		//			ShaderHelper.useShader(ShaderHelper.glowSolid);
+		//			GL11.glTranslatef(0, 1.187f, 0);
+		//			Light2.render(f5);
+		//			Light1.render(f5);
+		//			ShaderHelper.releaseShader();
+		//			GL11.glPopMatrix();
+		//		}
 	}
 
 	/**
@@ -166,5 +171,14 @@ public class ModelScootEmAround extends ModelBase
 		modelRenderer.rotateAngleX = x;
 		modelRenderer.rotateAngleY = y;
 		modelRenderer.rotateAngleZ = z;
+	}
+
+	@Override
+	public void doRender(RenderManager renderManager, Entity entity, double viewX, double viewY, double viewZ, float partialTicks)
+	{
+		renderManager.renderEngine.bindTexture(texture);
+		GL.Rotate(-90, 1, 0, 0);
+		GL.Rotate(-90, 0, 1, 0);
+		render(entity, 0, 0, 0, 0, 0, 0.0625f);
 	}
 }

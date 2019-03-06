@@ -1,6 +1,7 @@
 package com.parzivail.swg.command;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.entity.ship.EntityScootEmAround;
 import com.parzivail.swg.entity.ship.EntityT65;
 import com.parzivail.util.command.CommandParser;
 import com.parzivail.util.command.Parameter;
@@ -44,6 +45,9 @@ public class CommandSpawnShip extends CommandBase
 			{
 				case "xwing":
 					spawn(new EntityT65(player.worldObj), player);
+					break;
+				case "scoot":
+					spawn(new EntityScootEmAround(player.worldObj), player);
 					break;
 			}
 		}

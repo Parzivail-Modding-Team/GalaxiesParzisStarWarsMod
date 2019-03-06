@@ -4,6 +4,7 @@ import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntityChair;
 import com.parzivail.swg.entity.EntitySmokeGrenade;
 import com.parzivail.swg.entity.EntityThermalDetonator;
+import com.parzivail.swg.entity.ship.EntityScootEmAround;
 import com.parzivail.swg.entity.ship.EntitySeat;
 import com.parzivail.swg.entity.ship.EntityT65;
 import com.parzivail.swg.mob.MobGizka;
@@ -19,6 +20,7 @@ public class EntityRegister
 	public static void register()
 	{
 		SwgEntityUtil.registerEntity(EntityT65.class, "t65");
+		SwgEntityUtil.registerEntity(EntityScootEmAround.class, "t65");
 		SwgEntityUtil.registerEntity(EntitySeat.class, "seat");
 
 		//		SwgEntityUtil.registerEntity(EntityShip.class, "espt");
