@@ -24,8 +24,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 {
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
-	public RotatedAxes cameraOrientation;
-	public RotatedAxes previousCameraOrientation;
 	public Vector3f angularMomentum;
 	public float throttle;
 	public EntitySeat[] seats;
@@ -45,7 +43,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		super(worldIn);
 		setSize(1, 1);
 		orientation = previousOrientation = new RotatedAxes(0, 0, 0);
-		cameraOrientation = previousCameraOrientation = new RotatedAxes(0, 0, 0);
 		angularMomentum = new Vector3f(0, 0, 0);
 		throttle = 0;
 	}
@@ -65,6 +62,8 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	}
 
 	public abstract ShipData getData();
+
+	public abstract Vector3f getSeatPosition(int seatIdx);
 
 	@Override
 	public void setDead()
@@ -108,7 +107,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		prevRotationPitch = rotationPitch;
 		prevRotationYaw = rotationYaw;
 		previousOrientation = orientation.clone();
-		previousCameraOrientation = cameraOrientation.clone();
 
 		Entity driver = seats == null ? null : (seats[0] == null ? null : seats[0].riddenByEntity);
 		if (driver instanceof EntityPlayer)
@@ -185,7 +183,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			motionY -= 0.75 * data.repulsorliftForce;
 
 			if (onGround)
-				motionY *= -0.5D;
+				motionY = 0;
 		}
 
 		moveEntity(motionX, motionY, motionZ);
@@ -204,7 +202,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			vehiclePitch = playerPitch;
 
 		orientation.setAngles(-player.rotationYaw, vehiclePitch, 0);
-		cameraOrientation.setAngles(-player.rotationYaw, playerPitch, 0);
 	}
 
 	private void spawnChildren()
@@ -263,7 +260,8 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 
 	private void createChildren()
 	{
-		seats = new EntitySeat[1];
+		ShipData data = getData();
+		seats = new EntitySeat[data.numSeats];
 	}
 
 	private void spawnCamera()

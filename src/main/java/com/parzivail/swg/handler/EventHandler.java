@@ -5,6 +5,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.entity.ship.EntityShip;
+import com.parzivail.swg.entity.ship.ShipData;
 import com.parzivail.swg.force.Cron;
 import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.gui.GuiNowEntering;
@@ -149,30 +150,25 @@ public class EventHandler
 		if (event.entity instanceof EntityPlayer)
 		{
 			EntityShip ship = SwgEntityUtil.getShipRiding(event.entity);
-			if (ship != null && event.isCancelable())
-				event.setCanceled(true);
+			if (ship != null)
+			{
+				ShipData data = ship.getData();
+				if (data.isAirVehicle && event.isCancelable())
+					event.setCanceled(true);
+			}
 
-			RenderLightning.render((EntityPlayer)event.entity);
+			if (!event.isCanceled())
+			{
+				RenderExtLightsaberTrail.render((EntityPlayer)event.entity);
+				RenderLightning.render((EntityPlayer)event.entity);
+			}
 		}
-		//		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
-		//			ShaderHelper.useShader(ShaderHelper.entityGlow);
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void on(RenderLivingEvent.Post event)
 	{
-		if (event.entity instanceof EntityPlayer)
-		{
-			EntityShip ship = SwgEntityUtil.getShipRiding(event.entity);
-			if (ship != null && event.isCancelable())
-				event.setCanceled(true);
-
-			RenderExtLightsaberTrail.render((EntityPlayer)event.entity);
-		}
-		//		else if (event.entity instanceof EntityLiving && ClientRenderState.renderState.contains(ClientRenderState.SniperThermal))
-		//			ShaderHelper.releaseShader();
-
 		if (ItemBlasterRifle.isHoldingBlaster(Client.mc.thePlayer))
 		{
 			RaytraceHit target = EntityUtils.rayTrace(Client.mc.thePlayer, 30);
@@ -217,7 +213,7 @@ public class EventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(RenderHandEvent event)
 	{
-		if (Client.mc.thePlayer != null)
+		if (Client.getPlayer() != null)
 		{
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
 
@@ -227,6 +223,9 @@ public class EventHandler
 				if (overlay.shouldHideHand(Client.mc.thePlayer, heldItem) && event.isCancelable())
 					event.setCanceled(true);
 			}
+
+			if (SwgEntityUtil.getShipRiding(Client.getPlayer()) != null && event.isCancelable())
+				event.setCanceled(true);
 		}
 	}
 
@@ -274,6 +273,8 @@ public class EventHandler
 			}
 			else if (ship != null)
 			{
+				ShipData data = ship.getData();
+
 				float r = ship.orientation.getRoll();
 				float pR = ship.previousOrientation.getRoll();
 				while (r - pR < -180.0F)
@@ -282,7 +283,9 @@ public class EventHandler
 					pR += 360.0F;
 				FxMC.changeCameraRoll(r);
 				FxMC.changePrevCameraRoll(pR);
-				Client.mc.renderViewEntity = ship.camera;
+
+				if (data.isAirVehicle)
+					Client.mc.renderViewEntity = ship.camera;
 			}
 
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();

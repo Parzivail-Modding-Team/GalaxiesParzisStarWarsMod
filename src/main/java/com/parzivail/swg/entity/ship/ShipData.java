@@ -10,6 +10,7 @@ public class ShipData
 	public float distanceMin = 1.5f;
 	public float distanceMax = 2.5f;
 	public float repulsorliftForce = 1;
+	public int numSeats = 1;
 	public boolean hasMinDistance;
 	public boolean hasMaxDistance;
 	public float verticalCenteringOffset = 1.684f;

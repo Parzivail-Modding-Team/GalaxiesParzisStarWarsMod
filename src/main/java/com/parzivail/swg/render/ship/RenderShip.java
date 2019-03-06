@@ -1,16 +1,17 @@
 package com.parzivail.swg.render.ship;
 
+import com.parzivail.swg.entity.ship.EntitySeat;
 import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.swg.entity.ship.ShipData;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
-import com.parzivail.util.ui.FxMC;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -40,11 +41,9 @@ public class RenderShip extends Render
 		EntityShip ship = (EntityShip)entity;
 		float dYaw = MathHelper.wrapAngleTo180_float(ship.orientation.getYaw() - ship.previousOrientation.getYaw());
 		float dPitch = wrapAngleTo90_float(ship.orientation.getPitch() - ship.previousOrientation.getPitch());
-		float dCamPitch = wrapAngleTo90_float(ship.cameraOrientation.getPitch() - ship.previousCameraOrientation.getPitch());
 		float dRoll = MathHelper.wrapAngleTo180_float(ship.orientation.getRoll() - ship.previousOrientation.getRoll());
 		float yaw = MathHelper.wrapAngleTo180_float(ship.previousOrientation.getYaw() + dYaw * partialTicks);
 		float pitch = wrapAngleTo90_float(ship.previousOrientation.getPitch() + dPitch * partialTicks);
-		float camPitch = wrapAngleTo90_float(ship.previousCameraOrientation.getPitch() + dCamPitch * partialTicks);
 		float roll = MathHelper.wrapAngleTo180_float(ship.previousOrientation.getRoll() + dRoll * partialTicks);
 
 		// keep camera from doing a 360 in one tick (0-1 partialTicks) when (yaw - prevYaw) ~ 360deg
@@ -61,26 +60,26 @@ public class RenderShip extends Render
 			slidDYaw = 0;
 		}
 
-		if (ship.seats[0] != null && ship.seats[0].riddenByEntity == Client.getPlayer())
+		EntityPlayer client = Client.getPlayer();
+		if (Client.mc.renderViewEntity == ship.camera && client != null && client.ridingEntity instanceof EntitySeat && ((EntitySeat)client.ridingEntity).getParent() == ship)
 		{
-			Vector3f seatOffset = new Vector3f(0, 0, 0);
-
 			float camDist = ship.camera.getCamDist(partialTicks);
 			float shipPitch = pitch - slidDPitch;
-			RotatedAxes ra = new RotatedAxes(yaw - slidDYaw, shipPitch + (camPitch - shipPitch), roll);
+			RotatedAxes ra = new RotatedAxes(yaw - slidDYaw, shipPitch, roll);
 			Vector3f forward = ra.findLocalVectorGlobally(new Vector3f(0, 0, camDist));
 
-			GL.Translate(seatOffset.x + forward.x, seatOffset.y + forward.y, seatOffset.z + forward.z);
+			GL.Translate(forward.x, forward.y, forward.z);
 		}
 		else
 			GL.Translate(x, y, z);
 		GL.Enable(EnableCap.Texture2D);
 
-		FxMC.enableSunBasedLighting(ship, partialTicks);
+		// TODO: fix
+		//FxMC.enableSunBasedLighting(ship, partialTicks);
 
 		GL.Translate(0, data.verticalCenteringOffset, 0);
-		GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-pitch, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(yaw + slidDYaw / 10, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(-pitch - slidDPitch, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(-roll, 0.0F, 0.0F, 1.0F);
 		GL.Translate(0, -data.verticalCenteringOffset, 0);
 

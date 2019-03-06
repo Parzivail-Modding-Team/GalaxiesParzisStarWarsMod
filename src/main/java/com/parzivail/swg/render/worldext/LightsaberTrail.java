@@ -2,6 +2,7 @@ package com.parzivail.swg.render.worldext;
 
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.lwjgl.Vector3f;
+import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
 
@@ -81,5 +82,6 @@ public class LightsaberTrail
 			GL.Vertex3(coreEndHere);
 		}
 		GL.End();
+		GL.Color(GLPalette.WHITE);
 	}
 }

@@ -1,5 +1,6 @@
 package com.parzivail.swg.entity.ship;
 
+import com.parzivail.util.math.lwjgl.Vector3f;
 import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -68,7 +69,11 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData
 			setDead();
 
 		if (parent != null)
-			setPosition(parent.posX, parent.posY, parent.posZ);
+		{
+			Vector3f seatOffset = parent.getSeatPosition(seatIdx);
+			seatOffset = parent.orientation.findLocalVectorGlobally(seatOffset);
+			setPosition(parent.posX + seatOffset.x, parent.posY + seatOffset.y, parent.posZ + seatOffset.z);
+		}
 	}
 
 	public EntityShip getParent()

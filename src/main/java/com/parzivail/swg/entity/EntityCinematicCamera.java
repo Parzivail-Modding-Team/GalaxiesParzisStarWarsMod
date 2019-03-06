@@ -2,6 +2,7 @@ package com.parzivail.swg.entity;
 
 import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.swg.entity.ship.ShipData;
+import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -31,9 +32,11 @@ public class EntityCinematicCamera extends EntityLivingBase
 		prevPosY = posY;
 		prevPosZ = posZ;
 
+		RotatedAxes axes = parent.orientation;
+
 		float camDist = getCamDist(0.5f);
 		Vector3f cameraPosition = new Vector3f(0, 0, -camDist);
-		cameraPosition = parent.cameraOrientation.findLocalVectorGlobally(cameraPosition);
+		cameraPosition = axes.findLocalVectorGlobally(cameraPosition);
 
 		double dX = parent.posX + cameraPosition.x - posX;
 		double dY = parent.posY + cameraPosition.y - posY;
@@ -45,8 +48,8 @@ public class EntityCinematicCamera extends EntityLivingBase
 
 		setPosition(posX + dX * lerpAmount, posY + dY * lerpAmount, posZ + dZ * lerpAmount);
 
-		rotationYaw = -parent.cameraOrientation.getYaw();
-		rotationPitch = -parent.cameraOrientation.getPitch();
+		rotationYaw = -axes.getYaw();
+		rotationPitch = -axes.getPitch();
 
 		while (rotationYaw - prevRotationYaw < -180.0F)
 			prevRotationYaw -= 360.0F;
