@@ -1,4 +1,4 @@
-package com.parzivail.swg.render.entity;
+package com.parzivail.swg.render.ship;
 
 import com.parzivail.swg.entity.ship.EntitySeat;
 import com.parzivail.util.ui.Fx;

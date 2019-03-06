@@ -1,4 +1,4 @@
-package com.parzivail.swg.render.entity;
+package com.parzivail.swg.render.ship;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.ship.EntityShip;
