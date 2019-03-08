@@ -49,6 +49,15 @@
       }
     ]
   },
+  "swg.atmo.hyperspaceAlarm": {
+    "category": "block",
+    "sounds": [
+      {
+        "name": "atmo/hyperspaceAlarm",
+        "stream": true
+      }
+    ]
+  },
   "swg.mech.vaporator": {
     "category": "block",
     "sounds": [

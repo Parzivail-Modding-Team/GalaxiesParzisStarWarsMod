@@ -93,6 +93,12 @@ public class ItemBinoculars extends PItem implements IGuiOverlay, ILeftClickInte
 	}
 
 	@Override
+	public boolean doesDrawOverlay(EntityPlayer player, ItemStack item)
+	{
+		return true;
+	}
+
+	@Override
 	public void drawOverlay(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
 		BinocularData bd = new BinocularData(stack);

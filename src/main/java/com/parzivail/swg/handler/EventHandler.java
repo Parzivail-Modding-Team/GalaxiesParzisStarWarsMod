@@ -213,7 +213,8 @@ public class EventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(RenderHandEvent event)
 	{
-		if (Client.getPlayer() != null)
+		EntityPlayer player = Client.getPlayer();
+		if (player != null)
 		{
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
 
@@ -224,7 +225,8 @@ public class EventHandler
 					event.setCanceled(true);
 			}
 
-			if (SwgEntityUtil.getShipRiding(Client.getPlayer()) != null && event.isCancelable())
+			EntityShip ship = SwgEntityUtil.getShipRiding(player);
+			if (ship != null && ship.shouldHideHand(player, null))
 				event.setCanceled(true);
 		}
 	}
@@ -360,32 +362,41 @@ public class EventHandler
 
 			if (heldItem != null && heldItem.getItem() instanceof IGuiOverlay)
 			{
-				if (event.type == ElementType.CROSSHAIRS && event.isCancelable())
-					event.setCanceled(true);
-
-				if (event.type == ElementType.TEXT)
-				{
-					GL.PushAttrib(EnumSet.of(AttribMask.EnableBit, AttribMask.LineBit, AttribMask.PointBit));
-
-					GL.PushMatrix();
-					GL.Translate(Client.resolution.getScaledWidth_double() / 2, Client.resolution.getScaledHeight_double() / 2, 0);
-					Client.mc.entityRenderer.disableLightmap(0);
-					GL.Disable(EnableCap.Lighting);
-					GL.Disable(EnableCap.Texture2D);
-					GL.Enable(EnableCap.Blend);
-					GL.Enable(EnableCap.PointSmooth);
-					GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
-
-					((IGuiOverlay)heldItem.getItem()).drawOverlay(Client.resolution, Client.mc.thePlayer, heldItem);
-
-					GL.PopMatrix();
-					GL11.glColor4f(1, 1, 1, 1);
-
-					GL.PopAttrib();
-				}
+				IGuiOverlay overlayProvider = (IGuiOverlay)heldItem.getItem();
+				drawOverlay(event, heldItem, overlayProvider);
 			}
 
 			KeybindRegistry.keyAttack.setIntercepting(heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor);
+
+			if (ship != null)
+				drawOverlay(event, heldItem, ship);
+		}
+	}
+
+	private static void drawOverlay(RenderGameOverlayEvent.Pre event, ItemStack heldItem, IGuiOverlay overlayProvider)
+	{
+		if (event.type == ElementType.CROSSHAIRS && event.isCancelable())
+			event.setCanceled(true);
+
+		if (event.type == ElementType.TEXT)
+		{
+			GL.PushAttrib(EnumSet.of(AttribMask.EnableBit, AttribMask.LineBit, AttribMask.PointBit));
+
+			GL.PushMatrix();
+			GL.Translate(Client.resolution.getScaledWidth_double() / 2, Client.resolution.getScaledHeight_double() / 2, 0);
+			Client.mc.entityRenderer.disableLightmap(0);
+			GL.Disable(EnableCap.Lighting);
+			GL.Disable(EnableCap.Texture2D);
+			GL.Enable(EnableCap.Blend);
+			GL.Enable(EnableCap.PointSmooth);
+			GL11.glHint(GL11.GL_POINT_SMOOTH_HINT, GL11.GL_NICEST);
+
+			overlayProvider.drawOverlay(Client.resolution, Client.mc.thePlayer, heldItem);
+
+			GL.PopMatrix();
+			GL11.glColor4f(1, 1, 1, 1);
+
+			GL.PopAttrib();
 		}
 	}
 
@@ -415,7 +426,7 @@ public class EventHandler
 		if (event.player.worldObj.isRemote)
 		{
 			ItemStack heldItem = event.player.getHeldItem();
-			StarWarsGalaxy.proxy.tickLightsaberSounds(event.player, heldItem);
+			StarWarsGalaxy.proxy.tickSounds(event.player, heldItem);
 		}
 	}
 

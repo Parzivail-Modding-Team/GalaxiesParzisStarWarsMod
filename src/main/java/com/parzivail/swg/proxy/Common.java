@@ -97,7 +97,7 @@ public class Common
 	{
 	}
 
-	public void tickLightsaberSounds(EntityPlayer player, ItemStack heldItem)
+	public void tickSounds(EntityPlayer player, ItemStack heldItem)
 	{
 	}
 }

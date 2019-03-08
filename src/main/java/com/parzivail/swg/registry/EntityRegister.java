@@ -20,7 +20,7 @@ public class EntityRegister
 	public static void register()
 	{
 		SwgEntityUtil.registerEntity(EntityT65.class, "t65");
-		SwgEntityUtil.registerEntity(EntityScootEmAround.class, "t65");
+		SwgEntityUtil.registerEntity(EntityScootEmAround.class, "scoot");
 		SwgEntityUtil.registerEntity(EntitySeat.class, "seat");
 
 		//		SwgEntityUtil.registerEntity(EntityShip.class, "espt");

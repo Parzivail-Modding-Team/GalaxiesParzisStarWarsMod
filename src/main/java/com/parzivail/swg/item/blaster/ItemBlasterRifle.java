@@ -123,6 +123,12 @@ public class ItemBlasterRifle extends PItem implements IGuiOverlay, ILeftClickIn
 	}
 
 	@Override
+	public boolean doesDrawOverlay(EntityPlayer player, ItemStack item)
+	{
+		return true;
+	}
+
+	@Override
 	public void drawOverlay(ScaledResolution sr, EntityPlayer player, ItemStack stack)
 	{
 		float spread = getSpreadAmount(stack, player);

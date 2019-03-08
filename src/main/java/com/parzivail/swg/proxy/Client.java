@@ -42,6 +42,7 @@ import com.parzivail.swg.tile.antenna.TileSatelliteDish;
 import com.parzivail.swg.util.SwgEntityUtil;
 import com.parzivail.swg.world.PswgWorldDataHandler;
 import com.parzivail.util.audio.ClientSoundHandler;
+import com.parzivail.util.audio.SwgSound;
 import com.parzivail.util.block.INameProvider;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.item.ILeftClickInterceptor;
@@ -143,6 +144,7 @@ public class Client extends Common
 
 	/**
 	 * Tests if the player exists
+	 *
 	 * @return True if the client player has been initialized
 	 */
 	@SideOnly(Side.CLIENT)
@@ -153,6 +155,7 @@ public class Client extends Common
 
 	/**
 	 * Gets the client player or null if Minecraft or the player does not exist
+	 *
 	 * @return A client player
 	 */
 	@SideOnly(Side.CLIENT)
@@ -264,18 +267,29 @@ public class Client extends Common
 	}
 
 	@Override
-	public void tickLightsaberSounds(EntityPlayer player, ItemStack heldItem)
+	public void tickSounds(EntityPlayer player, ItemStack heldItem)
 	{
 		if (heldItem != null && heldItem.getItem() instanceof ItemLightsaber)
 		{
 			LightsaberData ld = new LightsaberData(heldItem);
 			if (ld.isOpen)
-				ClientSoundHandler.playLightsaberSound(player);
+				ClientSoundHandler.playSound(player, SwgSound.LightsaberIdle);
 			else
-				ClientSoundHandler.stopLightsaberSound(player);
+				ClientSoundHandler.stopSound(player, SwgSound.LightsaberIdle);
 		}
 		else
-			ClientSoundHandler.stopLightsaberSound(player);
+			ClientSoundHandler.stopSound(player, SwgSound.LightsaberIdle);
+
+		EntityShip ship = SwgEntityUtil.getShipRiding(player);
+		if (ship != null)
+		{
+			if (ship.isBootingHyperdrive())
+				ClientSoundHandler.playSound(player, SwgSound.HyperspaceAlarm);
+			else
+				ClientSoundHandler.stopSound(player, SwgSound.HyperspaceAlarm);
+		}
+		else
+			ClientSoundHandler.stopSound(player, SwgSound.HyperspaceAlarm);
 	}
 
 	@Override

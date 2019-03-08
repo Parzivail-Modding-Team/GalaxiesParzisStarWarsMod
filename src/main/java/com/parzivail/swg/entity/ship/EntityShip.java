@@ -3,7 +3,9 @@ package com.parzivail.swg.entity.ship;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.network.MessageShipOrientation;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
+import com.parzivail.util.item.IGuiOverlay;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.SlidingWindow;
 import com.parzivail.util.math.lwjgl.Vector3f;
@@ -20,7 +22,7 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public abstract class EntityShip extends Entity implements IEntityAdditionalSpawnData
+public abstract class EntityShip extends Entity implements IEntityAdditionalSpawnData, IGuiOverlay
 {
 	public RotatedAxes orientation;
 	public RotatedAxes previousOrientation;
@@ -28,6 +30,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	public float throttle;
 	public EntitySeat[] seats;
 	public boolean isInitialized;
+	public int ticksStartHyperdrive = -1;
 
 	@SideOnly(Side.CLIENT)
 	public EntityCinematicCamera camera;
@@ -100,6 +103,19 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			spawnChildren();
 			isInitialized = true;
 		}
+
+		if (posY > 255)
+		{
+			if (ticksStartHyperdrive == -1)
+				ticksStartHyperdrive = ticksExisted;
+			else if (ticksExisted - ticksStartHyperdrive > 100)
+			{
+				Lumberjack.log("Hyperdrive");
+				ticksStartHyperdrive = -1;
+			}
+		}
+		else
+			ticksStartHyperdrive = -1;
 
 		prevPosX = posX;
 		prevPosY = posY;
@@ -298,5 +314,10 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	{
 		// TODO:
 		return true;
+	}
+
+	public boolean isBootingHyperdrive()
+	{
+		return posY > 255;
 	}
 }
