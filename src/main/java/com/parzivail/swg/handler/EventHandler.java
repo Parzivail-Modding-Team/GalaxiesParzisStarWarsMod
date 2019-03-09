@@ -430,11 +430,8 @@ public class EventHandler
 			//				event.player.motionY += 0.08D * 0.98D * (1 - planetDescriptor.gravity);
 		}
 
-		if (event.player.worldObj.isRemote)
-		{
-			ItemStack heldItem = event.player.getHeldItem();
-			StarWarsGalaxy.proxy.tickSounds(event.player, heldItem);
-		}
+		ItemStack heldItem = event.player.getHeldItem();
+		StarWarsGalaxy.proxy.tickSounds(event.player, heldItem);
 	}
 
 	@SubscribeEvent

@@ -15,7 +15,7 @@ public class MovingSoundHyperspaceAlarm extends MovingSound
 	{
 		super(Resources.location("swg.atmo.hyperspaceAlarm"));
 		this.player = player;
-		attenuationType = AttenuationType.LINEAR;
+		attenuationType = AttenuationType.NONE;
 		repeat = true;
 		repeatDelay = 0;
 	}
