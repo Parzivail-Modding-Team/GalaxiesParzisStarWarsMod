@@ -1,11 +1,8 @@
 package com.parzivail.swg.render.ship;
 
-import com.parzivail.swg.entity.ship.EntitySeat;
 import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.swg.entity.ship.ShipData;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.util.math.RotatedAxes;
-import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -61,17 +58,18 @@ public class RenderShip extends Render
 		}
 
 		EntityPlayer client = Client.getPlayer();
-		if (Client.mc.renderViewEntity == ship.camera && client != null && client.ridingEntity instanceof EntitySeat && ((EntitySeat)client.ridingEntity).getParent() == ship)
-		{
-			float camDist = ship.camera.getCamDist(partialTicks);
-			float shipPitch = pitch - slidDPitch;
-			RotatedAxes ra = new RotatedAxes(yaw - slidDYaw, shipPitch, roll);
-			Vector3f forward = ra.findLocalVectorGlobally(new Vector3f(0, 0, camDist));
+		//		if (Client.mc.renderViewEntity == ship.camera && client != null && client.ridingEntity instanceof EntitySeat && ((EntitySeat)client.ridingEntity).getParent() == ship)
+		//		{
+		//			float camDist = ship.camera.getCamDist(partialTicks);
+		//			float shipPitch = pitch - slidDPitch;
+		//			RotatedAxes ra = new RotatedAxes(yaw - slidDYaw, shipPitch, roll);
+		//			Vector3f forward = ra.findLocalVectorGlobally(new Vector3f(0, 0, camDist));
+		//
+		//			GL.Translate(forward.x, forward.y, forward.z);
+		//		}
+		//		else
+		GL.Translate(x, y, z);
 
-			GL.Translate(forward.x, forward.y, forward.z);
-		}
-		else
-			GL.Translate(x, y, z);
 		GL.Enable(EnableCap.Texture2D);
 
 		// TODO: fix
@@ -90,6 +88,7 @@ public class RenderShip extends Render
 
 		model.doRender(renderManager, entity, x, y, z, partialTicks);
 
+		//		GL.Disable(EnableCap.Texture2D);
 		//		Fx.D3.DrawSolidBox();
 		//
 		//		GL.Disable(EnableCap.Lighting);

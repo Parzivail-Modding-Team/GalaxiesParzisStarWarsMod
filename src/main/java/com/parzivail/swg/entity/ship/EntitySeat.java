@@ -34,6 +34,7 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData
 		this.parent = parent;
 		parentId = parent.getEntityId();
 		this.seatIdx = seatIdx;
+		noClip = true;
 		setPosition(parent.posX, parent.posY, parent.posZ);
 	}
 
@@ -67,6 +68,12 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData
 
 		if (parentId == 0 && ticksExisted > 20)
 			setDead();
+
+		lastTickPosX = prevPosX = posX;
+		lastTickPosY = prevPosY = posY;
+		lastTickPosZ = prevPosZ = posZ;
+		prevRotationPitch = rotationPitch;
+		prevRotationYaw = rotationYaw;
 
 		if (parent != null)
 		{

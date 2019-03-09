@@ -60,8 +60,15 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	@SideOnly(Side.CLIENT)
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int rotationIncrements)
 	{
-		setPosition(x, y, z);
-		setRotation(yaw, pitch);
+		Vector3f here = new Vector3f((float)posX, (float)posY, (float)posZ);
+		Vector3f there = new Vector3f((float)x, (float)y, (float)z);
+		if (Vector3f.sub(here, there, null).lengthSquared() > 1)
+		{
+			// Dear server. I respect you telling me where to go, but I decline and will proceed to tell you where I am instead.
+			StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
+			//			setPosition(x, y, z);
+			//			setRotation(yaw, pitch);
+		}
 	}
 
 	public abstract ShipData getData();
@@ -117,9 +124,9 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		else
 			ticksStartHyperdrive = -1;
 
-		prevPosX = posX;
-		prevPosY = posY;
-		prevPosZ = posZ;
+		lastTickPosX = prevPosX = posX;
+		lastTickPosY = prevPosY = posY;
+		lastTickPosZ = prevPosZ = posZ;
 		prevRotationPitch = rotationPitch;
 		prevRotationYaw = rotationYaw;
 		previousOrientation = orientation.clone();
@@ -139,7 +146,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 
 			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, 1));
 
-			if (ticksExisted % 5 == 0 && worldObj.isRemote)
+			if (ticksExisted % 10 == 0 && worldObj.isRemote)
 				StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
 
 			rotationPitch = orientation.getPitch();
@@ -196,10 +203,10 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		else
 		{
 			// gravity
-			motionY -= 0.75 * data.repulsorliftForce;
-
 			if (onGround)
 				motionY = 0;
+			else
+				motionY -= 0.75 * data.repulsorliftForce;
 		}
 
 		moveEntity(motionX, motionY, motionZ);
@@ -217,6 +224,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		if (data.isAirVehicle)
 			vehiclePitch = playerPitch;
 
+		// TODO: the client/server mismatch for player orientation is what causes the vibration. Setting to constant values eliminates it.
 		orientation.setAngles(-player.rotationYaw, vehiclePitch, 0);
 	}
 

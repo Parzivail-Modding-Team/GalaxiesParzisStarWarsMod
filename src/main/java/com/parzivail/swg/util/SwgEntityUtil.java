@@ -32,7 +32,7 @@ public class SwgEntityUtil
 	{
 		while (EntityList.getClassFromID(mobId) != null)
 			mobId++;
-		EntityRegistry.registerModEntity(entityClass, entityName, mobId, StarWarsGalaxy.instance, 80, 1, true);
+		EntityRegistry.registerModEntity(entityClass, entityName, mobId, StarWarsGalaxy.instance, 80, 10, false);
 		EntityList.idToClassMap.put(Integer.valueOf(mobId), entityClass);
 		Lumberjack.debug("Registered entity \"" + entityName + "\" as ID " + mobId);
 	}

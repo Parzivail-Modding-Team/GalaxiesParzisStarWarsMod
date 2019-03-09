@@ -242,7 +242,7 @@ public class EventHandler
 	public void on(TickEvent.WorldTickEvent event)
 	{
 		if (event.world.provider.dimensionId == StarWarsGalaxy.config.getDimIdHoth())
-			event.world.setRainStrength(1);
+			event.world.rainingStrength = 1;
 	}
 
 	@SubscribeEvent
@@ -380,6 +380,7 @@ public class EventHandler
 		}
 	}
 
+	@SideOnly(Side.CLIENT)
 	private static void drawOverlay(RenderGameOverlayEvent.Pre event, ItemStack heldItem, IGuiOverlay overlayProvider)
 	{
 		if (event.type == ElementType.CROSSHAIRS && event.isCancelable())
@@ -430,8 +431,11 @@ public class EventHandler
 			//				event.player.motionY += 0.08D * 0.98D * (1 - planetDescriptor.gravity);
 		}
 
-		ItemStack heldItem = event.player.getHeldItem();
-		StarWarsGalaxy.proxy.tickSounds(event.player, heldItem);
+		if (event.player.worldObj.isRemote)
+		{
+			ItemStack heldItem = event.player.getHeldItem();
+			StarWarsGalaxy.proxy.tickSounds(event.player, heldItem);
+		}
 	}
 
 	@SubscribeEvent

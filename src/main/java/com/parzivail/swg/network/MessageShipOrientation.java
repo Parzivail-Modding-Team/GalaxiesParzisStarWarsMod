@@ -2,10 +2,10 @@ package com.parzivail.swg.network;
 
 import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 
@@ -17,6 +17,7 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 	public int shipId;
 	public int shipDim;
 	public RotatedAxes orientation;
+	public Vector3f position;
 
 	public MessageShipOrientation()
 	{
@@ -27,6 +28,7 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 		shipId = ship.getEntityId();
 		shipDim = ship.dimension;
 		orientation = ship.orientation;
+		position = new Vector3f((float)ship.posX, (float)ship.posY, (float)ship.posZ);
 	}
 
 	@Override
@@ -36,8 +38,9 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 		if (dim == null)
 			return null;
 
-		Entity ship = dim.getEntityByID(shipId);
-		((EntityShip)ship).orientation = orientation.clone();
+		EntityShip ship = (EntityShip)dim.getEntityByID(shipId);
+		ship.orientation = orientation.clone();
+		ship.setPosition(position.x, position.y, position.z);
 
 		return null;
 	}
