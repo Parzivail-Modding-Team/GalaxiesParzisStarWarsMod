@@ -4,6 +4,8 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.dimension.endor.BiomeEndor;
 import com.parzivail.swg.dimension.endor.WorldProviderEndor;
+import com.parzivail.swg.dimension.hoth.BiomeHothCrags;
+import com.parzivail.swg.dimension.hoth.WorldProviderHoth;
 import com.parzivail.swg.dimension.hyperspace.BiomeHyperspace;
 import com.parzivail.swg.dimension.hyperspace.WorldProviderHyperspace;
 import com.parzivail.swg.dimension.tatooine.BiomeTatooineDunes;
@@ -21,6 +23,7 @@ public class WorldRegister
 	public static BiomeTatooineDunes biomeTatooineDunes;
 	public static BiomeEndor biomeEndor;
 	public static BiomeHyperspace biomeHyperspace;
+	public static BiomeHothCrags biomeHothCrags;
 
 	public static HashMap<Integer, PlanetDescriptor> planetDescriptorHashMap = new HashMap<>();
 
@@ -35,12 +38,17 @@ public class WorldRegister
 		biomeHyperspace = new BiomeHyperspace(StarWarsGalaxy.config.getBiomeIdHyperspace());
 		BiomeManager.removeSpawnBiome(biomeHyperspace);
 
+		biomeHothCrags = new BiomeHothCrags(StarWarsGalaxy.config.getBiomeIdHothCrags());
+		BiomeManager.removeSpawnBiome(biomeHothCrags);
+
 		WorldUtils.registerDimension(StarWarsGalaxy.config.getDimIdTatooine(), WorldProviderTatooine.class);
 		WorldUtils.registerDimension(StarWarsGalaxy.config.getDimIdEndor(), WorldProviderEndor.class);
 		WorldUtils.registerDimension(StarWarsGalaxy.config.getDimIdHyperspace(), WorldProviderHyperspace.class);
+		WorldUtils.registerDimension(StarWarsGalaxy.config.getDimIdHoth(), WorldProviderHoth.class);
 
 		planetDescriptorHashMap.put(StarWarsGalaxy.config.getDimIdTatooine(), new PlanetDescriptor("Tatooine", 23, 10465, 1));
 		planetDescriptorHashMap.put(StarWarsGalaxy.config.getDimIdEndor(), new PlanetDescriptor("The Forest Moon of Endor", 18, 4900, 0.85f));
 		planetDescriptorHashMap.put(StarWarsGalaxy.config.getDimIdHyperspace(), new PlanetDescriptor("Hyperspace", 0, 0, 0f));
+		planetDescriptorHashMap.put(StarWarsGalaxy.config.getDimIdHoth(), new PlanetDescriptor("Hoth", 0, 0, 0f));
 	}
 }

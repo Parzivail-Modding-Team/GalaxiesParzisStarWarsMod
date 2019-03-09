@@ -15,10 +15,12 @@ public class Config extends Configuration
 	private Property dimIdTatooine;
 	private Property dimIdEndor;
 	private Property dimIdHyperspace;
+	private Property dimIdHoth;
 
 	private Property biomeIdTatooineDunes;
 	private Property biomeIdEndor;
 	private Property biomeIdHyperspace;
+	private Property biomeIdHothCrags;
 
 	public Config(File file)
 	{
@@ -36,10 +38,12 @@ public class Config extends Configuration
 		dimIdTatooine = get(CATEGORY_DIMENSIONS, "dimIdTatooine", 2, "Tatooine's dimension identifier");
 		dimIdEndor = get(CATEGORY_DIMENSIONS, "dimIdEndor", 3, "Endor's dimension identifier");
 		dimIdHyperspace = get(CATEGORY_DIMENSIONS, "dimIdHyperspace", 4, "Hyperspace's dimension identifier");
+		dimIdHoth = get(CATEGORY_DIMENSIONS, "dimIdHoth", 5, "Hoth's dimension identifier");
 
 		biomeIdTatooineDunes = get(CATEGORY_BIOMES, "biomeIdTatooineDunes", 100, "Tatooine Dunes' biome identifier");
 		biomeIdEndor = get(CATEGORY_BIOMES, "biomeIdEndor", 101, "Endor's biome identifier");
 		biomeIdHyperspace = get(CATEGORY_BIOMES, "biomeIdHyperspace", 102, "Hyperspace's biome identifier");
+		biomeIdHothCrags = get(CATEGORY_BIOMES, "biomeIdHothCrags", 103, "Hoth's biome identifier");
 
 		if (hasChanged())
 			save();
@@ -85,5 +89,15 @@ public class Config extends Configuration
 	public int getBiomeIdHyperspace()
 	{
 		return biomeIdHyperspace.getInt();
+	}
+
+	public int getDimIdHoth()
+	{
+		return dimIdHoth.getInt();
+	}
+
+	public int getBiomeIdHothCrags()
+	{
+		return biomeIdHothCrags.getInt();
 	}
 }

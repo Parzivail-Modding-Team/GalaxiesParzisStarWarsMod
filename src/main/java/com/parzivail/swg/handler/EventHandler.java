@@ -239,6 +239,13 @@ public class EventHandler
 	}
 
 	@SubscribeEvent
+	public void on(TickEvent.WorldTickEvent event)
+	{
+		if (event.world.provider.dimensionId == StarWarsGalaxy.config.getDimIdHoth())
+			event.world.setRainStrength(1);
+	}
+
+	@SubscribeEvent
 	public void on(PlayerFlyableFallEvent event)
 	{
 		// No need to cancel, you're in Creative, so you're not taking fall damage
