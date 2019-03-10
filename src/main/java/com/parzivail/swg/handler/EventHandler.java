@@ -278,6 +278,7 @@ public class EventHandler
 			if (ship == null && Client.mc.renderViewEntity instanceof EntityCinematicCamera)
 			{
 				FxMC.changeCameraRoll(0);
+				FxMC.changeCameraDist(4);
 				Client.mc.renderViewEntity = Client.mc.thePlayer;
 			}
 			else if (ship != null)
@@ -294,7 +295,10 @@ public class EventHandler
 				FxMC.changePrevCameraRoll(pR);
 
 				if (data.isAirVehicle)
+				{
 					Client.mc.renderViewEntity = ship.camera;
+					FxMC.changeCameraDist(0);
+				}
 			}
 
 			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();

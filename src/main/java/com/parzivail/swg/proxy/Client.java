@@ -2,10 +2,7 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.entity.EntityBlasterBolt;
-import com.parzivail.swg.entity.EntityChair;
-import com.parzivail.swg.entity.EntitySmokeGrenade;
-import com.parzivail.swg.entity.EntityThermalDetonator;
+import com.parzivail.swg.entity.*;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.entity.ship.EntityScootEmAround;
 import com.parzivail.swg.entity.ship.EntitySeat;
@@ -226,6 +223,7 @@ public class Client extends Common
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityChair.class, new RenderNothing());
 		RenderingRegistry.registerEntityRenderingHandler(EntitySeat.class, new RenderNothing());
+		RenderingRegistry.registerEntityRenderingHandler(EntityCinematicCamera.class, new RenderNothing());
 
 		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());
 		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());

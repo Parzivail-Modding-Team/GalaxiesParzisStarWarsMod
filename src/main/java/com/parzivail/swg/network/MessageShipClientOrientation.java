@@ -1,18 +1,17 @@
 package com.parzivail.swg.network;
 
 import com.parzivail.swg.entity.ship.EntityShip;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
 
 /**
  * Created by colby on 12/29/2017.
  */
-public class MessageShipOrientation extends PMessage<MessageShipOrientation>
+public class MessageShipClientOrientation extends PMessage<MessageShipClientOrientation>
 {
 	public int shipId;
 	public int shipDim;
@@ -20,11 +19,11 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 	public Vector3f position;
 	public Vector3f velocity;
 
-	public MessageShipOrientation()
+	public MessageShipClientOrientation()
 	{
 	}
 
-	public MessageShipOrientation(EntityShip ship)
+	public MessageShipClientOrientation(EntityShip ship)
 	{
 		shipId = ship.getEntityId();
 		shipDim = ship.dimension;
@@ -36,11 +35,7 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 	@Override
 	public IMessage handleMessage(MessageContext context)
 	{
-		WorldServer dim = MinecraftServer.getServer().worldServerForDimension(shipDim);
-		if (dim == null)
-			return null;
-
-		EntityShip ship = (EntityShip)dim.getEntityByID(shipId);
+		EntityShip ship = (EntityShip)Client.mc.theWorld.getEntityByID(shipId);
 		ship.orientation = orientation.clone();
 
 		ship.setPosition(position.x, position.y, position.z);

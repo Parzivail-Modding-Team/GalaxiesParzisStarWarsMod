@@ -146,6 +146,7 @@ public class RenderSkyTatooine extends IRenderHandler
 	@Override
 	public void render(float partialTicks, WorldClient world, Minecraft mc)
 	{
+		GL.PushMatrix();
 		GL.Disable(EnableCap.Texture2D);
 		Vec3 vec3 = world.getSkyColor(mc.renderViewEntity, partialTicks);
 		float skyR = (float)vec3.xCoord;
@@ -387,5 +388,6 @@ public class RenderSkyTatooine extends IRenderHandler
 		GL11.glPopMatrix();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glDepthMask(true);
+		GL.PopMatrix();
 	}
 }

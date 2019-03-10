@@ -3,6 +3,7 @@ package com.parzivail.swg.entity.ship;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.network.MessageShipOrientation;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.item.IGuiOverlay;
@@ -60,14 +61,20 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	@SideOnly(Side.CLIENT)
 	public void setPositionAndRotation2(double x, double y, double z, float yaw, float pitch, int rotationIncrements)
 	{
-		Vector3f here = new Vector3f((float)posX, (float)posY, (float)posZ);
-		Vector3f there = new Vector3f((float)x, (float)y, (float)z);
-		if (Vector3f.sub(here, there, null).lengthSquared() > 1)
+		if (seats[0] != null && seats[0].riddenByEntity == Client.getPlayer())
 		{
-			// Dear server. I respect you telling me where to go, but I decline and will proceed to tell you where I am instead.
-			StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
-			//			setPosition(x, y, z);
-			//			setRotation(yaw, pitch);
+			Vector3f here = new Vector3f((float)posX, (float)posY, (float)posZ);
+			Vector3f there = new Vector3f((float)x, (float)y, (float)z);
+			if (Vector3f.sub(here, there, null).lengthSquared() > 1)
+			{
+				// Dear server. I respect you telling me where to go, but I decline and will proceed to tell you where I am instead.
+				StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
+			}
+		}
+		else
+		{
+			setPosition(x, y, z);
+			setRotation(yaw, pitch);
 		}
 	}
 
@@ -141,13 +148,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 
 			consumePlayerOrientation(data, player);
 
-			//			if (player.moveForward != 0)
-			//				orientation.rotateLocalPitch(player.moveForward);
-
 			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, 1));
-
-			if (ticksExisted % 10 == 0 && worldObj.isRemote)
-				StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
 
 			rotationPitch = orientation.getPitch();
 			rotationYaw = orientation.getYaw();
@@ -162,6 +163,15 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			motionX = forward.x * throttle;
 			motionY = forward.y * throttle;
 			motionZ = forward.z * throttle;
+
+			//			if (!worldObj.isRemote && ticksExisted % 5 == 0)
+			//			{
+			//				EntityTracker entitytracker = ((WorldServer)worldObj).getEntityTracker();
+			//
+			//				Set<EntityPlayer> players = entitytracker.getTrackingPlayers(this);
+			//				for (EntityPlayer p : players)
+			//					StarWarsGalaxy.network.sendTo(new MessageShipClientOrientation(this), (EntityPlayerMP)p);
+			//			}
 		}
 		else
 		{

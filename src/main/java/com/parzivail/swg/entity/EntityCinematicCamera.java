@@ -1,7 +1,7 @@
 package com.parzivail.swg.entity;
 
 import com.parzivail.swg.entity.ship.EntityShip;
-import com.parzivail.swg.entity.ship.ShipData;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.EntityLivingBase;
@@ -42,9 +42,7 @@ public class EntityCinematicCamera extends EntityLivingBase
 		double dY = parent.posY + cameraPosition.y - posY;
 		double dZ = parent.posZ + cameraPosition.z - posZ;
 
-		ShipData data = parent.getData();
-
-		float lerpAmount = data.isAirVehicle ? 0.8F : 1;
+		float lerpAmount = 0.5f;
 
 		setPosition(posX + dX * lerpAmount, posY + dY * lerpAmount, posZ + dZ * lerpAmount);
 
@@ -77,15 +75,32 @@ public class EntityCinematicCamera extends EntityLivingBase
 		//		Vector3f cameraPosition = new Vector3f(0, 0, -tempDistance);
 		//		cameraPosition = parent.orientation.findLocalVectorGlobally(cameraPosition);
 		//
-		//		Vec3 shipPos = Vec3.createVectorHelper(parent.posX, parent.posY, parent.posZ);
-		//		Vec3 camPos = Vec3.createVectorHelper(parent.posX + cameraPosition.x, parent.posY + cameraPosition.y, parent.posZ + cameraPosition.z);
-		//		MovingObjectPosition mop = worldObj.rayTraceBlocks(camPos, shipPos);
+		//		ShipData data = parent.getData();
+		//		double d0 = parent.prevPosX + (parent.posX - parent.prevPosX) * partialTicks;
+		//		double d1 = parent.prevPosY + (parent.posY - parent.prevPosY) * partialTicks - data.verticalCenteringOffset;
+		//		double d2 = parent.prevPosZ + (parent.posZ - parent.prevPosZ) * partialTicks;
 		//
-		//		if (mop != null)
+		//		double d3 = cameraPosition.x;
+		//		double d4 = cameraPosition.y;
+		//		double d5 = cameraPosition.z;
+		//
+		//		for (int k = 0; k < 8; ++k)
 		//		{
-		//			double mopDistance = mop.hitVec.distanceTo(shipPos);
-		//			if (mopDistance < tempDistance)
-		//				return (float)mopDistance;
+		//			float f3 = (float)((k & 1) * 2 - 1);
+		//			float f4 = (float)((k >> 1 & 1) * 2 - 1);
+		//			float f5 = (float)((k >> 2 & 1) * 2 - 1);
+		//			f3 *= 0.1F;
+		//			f4 *= 0.1F;
+		//			f5 *= 0.1F;
+		//			MovingObjectPosition movingobjectposition = Client.mc.theWorld.rayTraceBlocks(Vec3.createVectorHelper(d0 + (double)f3, d1 + (double)f4, d2 + (double)f5), Vec3.createVectorHelper(d0 - d3 + (double)f3 + (double)f5, d1 - d5 + (double)f4, d2 - d4 + (double)f5));
+		//
+		//			if (movingobjectposition != null)
+		//			{
+		//				double d6 = movingobjectposition.hitVec.distanceTo(Vec3.createVectorHelper(d0, d1, d2));
+		//
+		//				if (d6 < tempDistance)
+		//					tempDistance = (float)d6;
+		//			}
 		//		}
 
 		return tempDistance;
@@ -93,8 +108,14 @@ public class EntityCinematicCamera extends EntityLivingBase
 
 	private float getCamDistTarget(float partialTicks)
 	{
+		int thirdPerson = Client.mc.gameSettings.thirdPersonView;
+		int scalar = 1;
+		if (thirdPerson == 0)
+			return 0;
+		else if (thirdPerson == 2)
+			scalar = -1;
 		float throttle = parent.slidingThrottle.getOldAverage() + (parent.slidingThrottle.getAverage() - parent.slidingThrottle.getOldAverage()) * partialTicks;
-		return 10 + 3 * throttle;
+		return scalar * (10 + 3 * throttle);
 	}
 
 	@Override
