@@ -28,6 +28,7 @@ import com.parzivail.swg.render.lightsaber.RenderLightsaber;
 import com.parzivail.swg.render.mob.RenderGizka;
 import com.parzivail.swg.render.npc.RenderJawa;
 import com.parzivail.swg.render.npc.RenderMerchant;
+import com.parzivail.swg.render.overlay.HudLumberjack;
 import com.parzivail.swg.render.ship.RenderShip;
 import com.parzivail.swg.render.ship.model.ModelScootEmAround;
 import com.parzivail.swg.render.ship.model.ModelXWing;
@@ -101,6 +102,8 @@ public class Client extends Common
 	private static final FloatBuffer l2WTempInputBuffer2 = GLAllocation.createDirectFloatBuffer(16);
 	private static final float[] l2WTempMatrixArray = new float[16];
 	private static final FloatBuffer l2WTempOutputBuffer = FloatBuffer.allocate(16);
+
+	public static HudLumberjack hudLog;
 
 	/**
 	 * Creates a Minecraft FontRenderer for the given font asset name
@@ -196,6 +199,12 @@ public class Client extends Common
 	}
 
 	@Override
+	public void hudDebug(String category, Object data)
+	{
+		hudLog.debug(category, String.valueOf(data));
+	}
+
+	@Override
 	public void init()
 	{
 		mc = Minecraft.getMinecraft();
@@ -207,6 +216,8 @@ public class Client extends Common
 		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, new PFramebuffer(mc.displayWidth, mc.displayHeight, true), "framebufferMc", "field_147124_at", "au");
 
 		guiQuestNotification = new GuiQuestNotification();
+
+		hudLog = new HudLumberjack();
 
 		frNaboo = createFont("naboo");
 		frAurebesh = createFont("aurebesh");

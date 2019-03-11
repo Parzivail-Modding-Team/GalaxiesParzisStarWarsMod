@@ -39,7 +39,6 @@ public class MessageShipClientOrientation extends PMessage<MessageShipClientOrie
 		ship.orientation = orientation.clone();
 
 		ship.setPosition(position.x, position.y, position.z);
-
 		ship.throttle = throttle;
 
 		return null;

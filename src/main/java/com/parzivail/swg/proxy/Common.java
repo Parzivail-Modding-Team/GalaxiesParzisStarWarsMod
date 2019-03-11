@@ -100,4 +100,8 @@ public class Common
 	public void tickSounds(EntityPlayer player, ItemStack heldItem)
 	{
 	}
+
+	public void hudDebug(String category, Object data)
+	{
+	}
 }

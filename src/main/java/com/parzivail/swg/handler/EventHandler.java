@@ -309,6 +309,8 @@ public class EventHandler
 			{
 				GuiNowEntering.draw(Client.mc.thePlayer);
 
+				Client.hudLog.render();
+
 				PswgExtProp props = PswgExtProp.get(Client.mc.thePlayer);
 				ForcePowerDescriptor[] descs = props.getPowers();
 				if (descs != null)
@@ -457,11 +459,20 @@ public class EventHandler
 		else
 			Client.leftClickDelayTimer = 0;
 
-		if (Client.doesPlayerExist())
+		EntityPlayer player = Client.getPlayer();
+		if (player != null)
 		{
-			ItemStack heldItem = Client.mc.thePlayer.getHeldItem();
+			ItemStack heldItem = player.getHeldItem();
 			if (heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor)
 				StarWarsGalaxy.proxy.checkLeftClickPressed(true);
+
+			//			EntityShip ship = SwgEntityUtil.getShipRiding(player);
+			//			if (ship != null)
+			//			{
+			//				StarWarsGalaxy.proxy.hudDebug("motionX", ship.motionX);
+			//				StarWarsGalaxy.proxy.hudDebug("motionY", ship.motionY);
+			//				StarWarsGalaxy.proxy.hudDebug("motionZ", ship.motionZ);
+			//			}
 		}
 	}
 

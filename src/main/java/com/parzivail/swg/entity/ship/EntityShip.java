@@ -2,7 +2,6 @@ package com.parzivail.swg.entity.ship;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityCinematicCamera;
-import com.parzivail.swg.network.MessageShipClientOrientation;
 import com.parzivail.swg.network.MessageShipOrientation;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.Lumberjack;
@@ -16,17 +15,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 
 import java.util.List;
-import java.util.Set;
 
 public abstract class EntityShip extends Entity implements IEntityAdditionalSpawnData, IGuiOverlay
 {
@@ -107,6 +102,16 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	}
 
 	@Override
+	public void setPosition(double x, double y, double z)
+	{
+		super.setPosition(x, y, z);
+		if (seats != null)
+			for (EntitySeat seat : seats)
+				if (seat != null)
+					seat.trackParent();
+	}
+
+	@Override
 	public void onUpdate()
 	{
 		if (ridingEntity != null && ridingEntity.isDead)
@@ -150,22 +155,12 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 
 			if (player == Client.getPlayer())
 			{
+				float oldThrottle = throttle;
 				throttle += player.moveForward * data.acceleration;
 				throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
 
-				if (ticksExisted % 5 == 0)
-				{
+				if (oldThrottle != throttle)
 					StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
-
-					if (!worldObj.isRemote && ticksExisted % 5 == 0)
-					{
-						EntityTracker entitytracker = ((WorldServer)worldObj).getEntityTracker();
-
-						Set<EntityPlayer> players = entitytracker.getTrackingPlayers(this);
-						for (EntityPlayer p : players)
-							StarWarsGalaxy.network.sendTo(new MessageShipClientOrientation(this), (EntityPlayerMP)p);
-					}
-				}
 			}
 
 			consumePlayerOrientation(data, player);
@@ -332,12 +327,14 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		buffer.writeFloat(orientation.getYaw());
 		buffer.writeFloat(orientation.getPitch());
 		buffer.writeFloat(orientation.getRoll());
+		buffer.writeFloat(throttle);
 	}
 
 	@Override
 	public void readSpawnData(ByteBuf buffer)
 	{
 		orientation = new RotatedAxes(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
+		throttle = buffer.readFloat();
 		createChildren();
 	}
 

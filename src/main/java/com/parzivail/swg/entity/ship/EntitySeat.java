@@ -69,6 +69,11 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData
 		if (parentId == 0 && ticksExisted > 20)
 			setDead();
 
+		trackParent();
+	}
+
+	public void trackParent()
+	{
 		lastTickPosX = prevPosX = posX;
 		lastTickPosY = prevPosY = posY;
 		lastTickPosZ = prevPosZ = posZ;
