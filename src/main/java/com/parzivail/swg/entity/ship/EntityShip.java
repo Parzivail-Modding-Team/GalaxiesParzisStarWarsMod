@@ -2,6 +2,7 @@ package com.parzivail.swg.entity.ship;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityCinematicCamera;
+import com.parzivail.swg.network.MessageShipClientOrientation;
 import com.parzivail.swg.network.MessageShipOrientation;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.Lumberjack;
@@ -15,13 +16,17 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 import java.util.List;
+import java.util.Set;
 
 public abstract class EntityShip extends Entity implements IEntityAdditionalSpawnData, IGuiOverlay
 {
@@ -143,12 +148,33 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		{
 			EntityPlayer player = (EntityPlayer)driver;
 
-			throttle += player.moveForward * data.acceleration;
-			throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
+			if (player == Client.getPlayer())
+			{
+				throttle += player.moveForward * data.acceleration;
+				throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
+
+				if (ticksExisted % 5 == 0)
+				{
+					StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
+
+					if (!worldObj.isRemote && ticksExisted % 5 == 0)
+					{
+						EntityTracker entitytracker = ((WorldServer)worldObj).getEntityTracker();
+
+						Set<EntityPlayer> players = entitytracker.getTrackingPlayers(this);
+						for (EntityPlayer p : players)
+							StarWarsGalaxy.network.sendTo(new MessageShipClientOrientation(this), (EntityPlayerMP)p);
+					}
+				}
+			}
 
 			consumePlayerOrientation(data, player);
 
 			Vector3f forward = orientation.findLocalVectorGlobally(new Vector3f(0, 0, 1));
+
+			motionX = forward.x * throttle;
+			motionY = forward.y * throttle;
+			motionZ = forward.z * throttle;
 
 			rotationPitch = orientation.getPitch();
 			rotationYaw = orientation.getYaw();
@@ -159,19 +185,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			slidingPitch.slide(dPitch);
 
 			slidingThrottle.slide(throttle);
-
-			motionX = forward.x * throttle;
-			motionY = forward.y * throttle;
-			motionZ = forward.z * throttle;
-
-			//			if (!worldObj.isRemote && ticksExisted % 5 == 0)
-			//			{
-			//				EntityTracker entitytracker = ((WorldServer)worldObj).getEntityTracker();
-			//
-			//				Set<EntityPlayer> players = entitytracker.getTrackingPlayers(this);
-			//				for (EntityPlayer p : players)
-			//					StarWarsGalaxy.network.sendTo(new MessageShipClientOrientation(this), (EntityPlayerMP)p);
-			//			}
 		}
 		else
 		{

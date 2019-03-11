@@ -5,10 +5,7 @@ import com.parzivail.swg.command.CommandSpawnShip;
 import com.parzivail.swg.config.Config;
 import com.parzivail.swg.handler.EventHandler;
 import com.parzivail.swg.handler.GuiHandler;
-import com.parzivail.swg.network.MessagePswgExtPropSync;
-import com.parzivail.swg.network.MessagePswgWorldDataSync;
-import com.parzivail.swg.network.MessageShipOrientation;
-import com.parzivail.swg.network.MessageTransaction;
+import com.parzivail.swg.network.*;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.registry.*;
@@ -86,6 +83,7 @@ public class StarWarsGalaxy
 		registerMessageClient(MessageCreateDecal.class);
 		registerMessageClient(MessagePswgExtPropSync.class);
 		registerMessageClient(MessagePswgWorldDataSync.class);
+		registerMessageClient(MessageShipClientOrientation.class);
 
 		transactionBroker.register(TransactionDeductCredits.class);
 		transactionBroker.register(TransactionUnlockAttachment.class);

@@ -17,7 +17,7 @@ public class MessageShipClientOrientation extends PMessage<MessageShipClientOrie
 	public int shipDim;
 	public RotatedAxes orientation;
 	public Vector3f position;
-	public Vector3f velocity;
+	public float throttle;
 
 	public MessageShipClientOrientation()
 	{
@@ -29,7 +29,7 @@ public class MessageShipClientOrientation extends PMessage<MessageShipClientOrie
 		shipDim = ship.dimension;
 		orientation = ship.orientation;
 		position = new Vector3f((float)ship.posX, (float)ship.posY, (float)ship.posZ);
-		velocity = new Vector3f((float)ship.motionX, (float)ship.motionY, (float)ship.motionZ);
+		throttle = ship.throttle;
 	}
 
 	@Override
@@ -40,9 +40,7 @@ public class MessageShipClientOrientation extends PMessage<MessageShipClientOrie
 
 		ship.setPosition(position.x, position.y, position.z);
 
-		ship.motionX = velocity.x;
-		ship.motionY = velocity.y;
-		ship.motionZ = velocity.z;
+		ship.throttle = throttle;
 
 		return null;
 	}
