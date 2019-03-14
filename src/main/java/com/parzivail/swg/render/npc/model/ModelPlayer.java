@@ -1,4 +1,4 @@
-package com.parzivail.swg.render.npc;
+package com.parzivail.swg.render.npc.model;
 
 import com.parzivail.util.ui.gltk.GL;
 import cpw.mods.fml.relauncher.Side;

@@ -1,5 +1,6 @@
 package com.parzivail.swg.render.npc;
 
+import com.parzivail.swg.render.npc.model.ModelPlayer;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;

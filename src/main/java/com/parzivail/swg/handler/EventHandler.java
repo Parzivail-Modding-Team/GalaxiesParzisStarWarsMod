@@ -478,6 +478,32 @@ public class EventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
+	public void on(RenderPlayerEvent.Pre event)
+	{
+		// TODO: get updated models
+		//		ModelTogrutaM.instance.inheritAngles(event.renderer.modelBipedMain);
+		//
+		//		if (event.isCancelable())
+		//			event.setCanceled(false);
+		//
+		//		event.renderer.modelBipedMain.bipedHead.isHidden = true;
+		//		event.renderer.modelBipedMain.bipedHeadwear.isHidden = true;
+		//		event.renderer.modelBipedMain.bipedBody.isHidden = true;
+		//		event.renderer.modelBipedMain.bipedRightArm.isHidden = true;
+		//		event.renderer.modelBipedMain.bipedLeftArm.isHidden = true;
+		//		event.renderer.modelBipedMain.bipedRightLeg.isHidden = true;
+		//		event.renderer.modelBipedMain.bipedLeftLeg.isHidden = true;
+		//
+		//		GL.PushMatrix();
+		//		GL.Rotate(180, 1, 0, 0);
+		//		GL.Rotate(MathUtil.interpolateRotation(event.entityPlayer.prevRenderYawOffset, event.entityPlayer.renderYawOffset, event.partialRenderTick), 0, 1, 0);
+		//		GL.Translate(0,0.2f, 0);
+		//		ModelTogrutaM.instance.render(event.entityPlayer, 0, 0, 0, 0, 0, 1/16f);
+		//		GL.PopMatrix();
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void on(KeyInputEvent event)
 	{
 		KeyHandler.onInput(event);

@@ -93,4 +93,17 @@ public class MathUtil
 	{
 		return Math.round(x / nearest) * nearest;
 	}
+
+	public static float interpolateRotation(float from, float to, float p)
+	{
+		float f3;
+
+		for (f3 = to - from; f3 < -180.0F; f3 += 360.0F)
+			;
+
+		while (f3 >= 180.0F)
+			f3 -= 360.0F;
+
+		return from + p * f3;
+	}
 }
