@@ -231,6 +231,12 @@ public class EventHandler
 			if (ship != null && ship.shouldHideHand(player, null))
 				event.setCanceled(true);
 		}
+
+		if (!event.isCanceled())
+		{
+			PRenderPlayer.instance.renderHand(event.partialTicks, event.renderPass);
+			event.setCanceled(true);
+		}
 	}
 
 	@SubscribeEvent

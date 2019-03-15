@@ -1,13 +1,19 @@
 package com.parzivail.swg.render.player;
 
 import com.mojang.authlib.GameProfile;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.render.npc.model.ModelRefBiped;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -23,11 +29,13 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.Project;
 
 @SideOnly(Side.CLIENT)
 public class PRenderPlayer extends RendererLivingEntity
@@ -426,6 +434,159 @@ public class PRenderPlayer extends RendererLivingEntity
 		modelBipedMain.swingProgress = 0.0F;
 		modelBipedMain.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, p_82441_1_);
 		modelBipedMain.getArmRight().render(0.0625F);
+	}
+
+	public void renderHand(float p_78476_1_, int p_78476_2_)
+	{
+		Minecraft mc = Client.mc;
+		EntityRenderer er = Client.mc.entityRenderer;
+
+		if (er.debugViewDirection <= 0)
+		{
+			GL11.glMatrixMode(GL11.GL_PROJECTION);
+			GL11.glLoadIdentity();
+			float f1 = 0.07F;
+
+			if (mc.gameSettings.anaglyph)
+			{
+				GL11.glTranslatef((float)(-(p_78476_2_ * 2 - 1)) * f1, 0.0F, 0.0F);
+			}
+
+			// TODO: fix if this causes issues
+			//			if (er.cameraZoom != 1.0D)
+			//			{
+			//				GL11.glTranslatef((float)er.cameraYaw, (float)(-er.cameraPitch), 0.0F);
+			//				GL11.glScaled(er.cameraZoom, er.cameraZoom, 1.0D);
+			//			}
+
+			float farPlaneDistance = ReflectionHelper.getPrivateValue(EntityRenderer.class, er, "farPlaneDistance", "field_78530_s", "u");
+
+			Project.gluPerspective(getFOVModifier(p_78476_1_, false), (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, farPlaneDistance * 2.0F);
+
+			if (mc.playerController.enableEverythingIsScrewedUpMode())
+			{
+				float f2 = 0.6666667F;
+				GL11.glScalef(1.0F, f2, 1.0F);
+			}
+
+			GL11.glMatrixMode(GL11.GL_MODELVIEW);
+			GL11.glLoadIdentity();
+
+			if (mc.gameSettings.anaglyph)
+			{
+				GL11.glTranslatef((float)(p_78476_2_ * 2 - 1) * 0.1F, 0.0F, 0.0F);
+			}
+
+			GL11.glPushMatrix();
+			hurtCameraEffect(p_78476_1_);
+
+			if (mc.gameSettings.viewBobbing)
+			{
+				setupViewBobbing(p_78476_1_);
+			}
+
+			if (mc.gameSettings.thirdPersonView == 0 && !mc.renderViewEntity.isPlayerSleeping() && !mc.gameSettings.hideGUI && !mc.playerController.enableEverythingIsScrewedUpMode())
+			{
+				er.enableLightmap((double)p_78476_1_);
+				er.itemRenderer.renderItemInFirstPerson(p_78476_1_);
+				er.disableLightmap((double)p_78476_1_);
+			}
+
+			GL11.glPopMatrix();
+
+			if (mc.gameSettings.thirdPersonView == 0 && !mc.renderViewEntity.isPlayerSleeping())
+			{
+				er.itemRenderer.renderOverlays(p_78476_1_);
+				hurtCameraEffect(p_78476_1_);
+			}
+
+			if (mc.gameSettings.viewBobbing)
+			{
+				setupViewBobbing(p_78476_1_);
+			}
+		}
+	}
+
+	private float getFOVModifier(float p_78481_1_, boolean p_78481_2_)
+	{
+		Minecraft mc = Client.mc;
+		EntityRenderer er = Client.mc.entityRenderer;
+		float fovModifierHand = ReflectionHelper.getPrivateValue(EntityRenderer.class, er, "fovModifierHand", "field_78507_R", "W");
+		float fovModifierHandPrev = ReflectionHelper.getPrivateValue(EntityRenderer.class, er, "fovModifierHandPrev", "field_78506_S", "X");
+
+		if (er.debugViewDirection > 0)
+		{
+			return 90.0F;
+		}
+		else
+		{
+			EntityLivingBase entityplayer = mc.renderViewEntity;
+			float f1 = 70.0F;
+
+			if (p_78481_2_)
+			{
+				f1 = mc.gameSettings.fovSetting;
+				f1 *= fovModifierHandPrev + (fovModifierHand - fovModifierHandPrev) * p_78481_1_;
+			}
+
+			if (entityplayer.getHealth() <= 0.0F)
+			{
+				float f2 = (float)entityplayer.deathTime + p_78481_1_;
+				f1 /= (1.0F - 500.0F / (f2 + 500.0F)) * 2.0F + 1.0F;
+			}
+
+			Block block = ActiveRenderInfo.getBlockAtEntityViewpoint(mc.theWorld, entityplayer, p_78481_1_);
+
+			if (block.getMaterial() == Material.water)
+			{
+				f1 = f1 * 60.0F / 70.0F;
+			}
+
+			//			return f1 + er.prevDebugCamFOV + (er.debugCamFOV - er.prevDebugCamFOV) * p_78481_1_;
+			return f1;
+		}
+	}
+
+	private void setupViewBobbing(float p_78475_1_)
+	{
+		Minecraft mc = Client.mc;
+		if (mc.renderViewEntity instanceof EntityPlayer)
+		{
+			EntityPlayer entityplayer = (EntityPlayer)mc.renderViewEntity;
+			float f1 = entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified;
+			float f2 = -(entityplayer.distanceWalkedModified + f1 * p_78475_1_);
+			float f3 = entityplayer.prevCameraYaw + (entityplayer.cameraYaw - entityplayer.prevCameraYaw) * p_78475_1_;
+			float f4 = entityplayer.prevCameraPitch + (entityplayer.cameraPitch - entityplayer.prevCameraPitch) * p_78475_1_;
+			GL11.glTranslatef(MathHelper.sin(f2 * (float)Math.PI) * f3 * 0.5F, -Math.abs(MathHelper.cos(f2 * (float)Math.PI) * f3), 0.0F);
+			GL11.glRotatef(MathHelper.sin(f2 * (float)Math.PI) * f3 * 3.0F, 0.0F, 0.0F, 1.0F);
+			GL11.glRotatef(Math.abs(MathHelper.cos(f2 * (float)Math.PI - 0.2F) * f3) * 5.0F, 1.0F, 0.0F, 0.0F);
+			GL11.glRotatef(f4, 1.0F, 0.0F, 0.0F);
+		}
+	}
+
+	private void hurtCameraEffect(float p_78482_1_)
+	{
+		Minecraft mc = Client.mc;
+
+		EntityLivingBase entitylivingbase = mc.renderViewEntity;
+		float f1 = (float)entitylivingbase.hurtTime - p_78482_1_;
+		float f2;
+
+		if (entitylivingbase.getHealth() <= 0.0F)
+		{
+			f2 = (float)entitylivingbase.deathTime + p_78482_1_;
+			GL11.glRotatef(40.0F - 8000.0F / (f2 + 200.0F), 0.0F, 0.0F, 1.0F);
+		}
+
+		if (f1 >= 0.0F)
+		{
+			f1 /= (float)entitylivingbase.maxHurtTime;
+			f1 = MathHelper.sin(f1 * f1 * f1 * f1 * (float)Math.PI);
+			f2 = entitylivingbase.attackedAtYaw;
+			GL11.glRotatef(-f2, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(-f1 * 14.0F, 0.0F, 0.0F, 1.0F);
+			GL11.glRotatef(f2, 0.0F, 1.0F, 0.0F);
+		}
 	}
 
 	/**
