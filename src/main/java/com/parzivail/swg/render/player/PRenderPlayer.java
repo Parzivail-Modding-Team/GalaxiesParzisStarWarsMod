@@ -1,6 +1,7 @@
 package com.parzivail.swg.render.player;
 
 import com.mojang.authlib.GameProfile;
+import com.parzivail.swg.render.npc.model.ModelRefBiped;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -22,27 +23,28 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class PRenderPlayer extends RendererLivingEntity
 {
 	private static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
-	public ModelBiped modelBipedMain;
-	public ModelBiped modelArmorChestplate;
-	public ModelBiped modelArmor;
+	public PModelBipedBase modelBipedMain;
+	public PModelBipedBase modelArmorChestplate;
+	public PModelBipedBase modelArmor;
 
 	public static final PRenderPlayer instance = new PRenderPlayer();
 
 	public PRenderPlayer()
 	{
-		super(new ModelBiped(0.0F), 0.5F);
-		modelBipedMain = (ModelBiped)mainModel;
-		modelArmorChestplate = new ModelBiped(1.0F);
-		modelArmor = new ModelBiped(0.5F);
+		super(new ModelRefBiped(), 0.5F);
+		modelBipedMain = (PModelBipedBase)mainModel;
+		modelArmorChestplate = new ModelBipedWrapper(new ModelBiped(1.0F));
+		modelArmor = new ModelBipedWrapper(new ModelBiped(0.5F));
 
 		renderManager = RenderManager.instance;
 	}
@@ -62,15 +64,14 @@ public class PRenderPlayer extends RendererLivingEntity
 			{
 				ItemArmor itemarmor = (ItemArmor)item;
 				bindTexture(RenderBiped.getArmorResource(p_77032_1_, itemstack, p_77032_2_, null));
-				ModelBiped modelbiped = p_77032_2_ == 2 ? modelArmor : modelArmorChestplate;
-				modelbiped.bipedHead.showModel = p_77032_2_ == 0;
-				modelbiped.bipedHeadwear.showModel = p_77032_2_ == 0;
-				modelbiped.bipedBody.showModel = p_77032_2_ == 1 || p_77032_2_ == 2;
-				modelbiped.bipedRightArm.showModel = p_77032_2_ == 1;
-				modelbiped.bipedLeftArm.showModel = p_77032_2_ == 1;
-				modelbiped.bipedRightLeg.showModel = p_77032_2_ == 2 || p_77032_2_ == 3;
-				modelbiped.bipedLeftLeg.showModel = p_77032_2_ == 2 || p_77032_2_ == 3;
-				modelbiped = net.minecraftforge.client.ForgeHooksClient.getArmorModel(p_77032_1_, itemstack, p_77032_2_, modelbiped);
+				PModelBipedBase modelbiped = p_77032_2_ == 2 ? modelArmor : modelArmorChestplate;
+				modelbiped.getHead().showModel = p_77032_2_ == 0;
+				modelbiped.getHeadgear().showModel = p_77032_2_ == 0;
+				modelbiped.getBody().showModel = p_77032_2_ == 1 || p_77032_2_ == 2;
+				modelbiped.getArmRight().showModel = p_77032_2_ == 1;
+				modelbiped.getArmLeft().showModel = p_77032_2_ == 1;
+				modelbiped.getLegRight().showModel = p_77032_2_ == 2 || p_77032_2_ == 3;
+				modelbiped.getLegLeft().showModel = p_77032_2_ == 2 || p_77032_2_ == 3;
 				setRenderPassModel(modelbiped);
 				modelbiped.swingProgress = mainModel.swingProgress;
 				modelbiped.isRiding = mainModel.isRiding;
@@ -181,13 +182,13 @@ public class PRenderPlayer extends RendererLivingEntity
 		if (itemstack != null)
 		{
 			GL11.glPushMatrix();
-			modelBipedMain.bipedHead.postRender(0.0625F);
+			modelBipedMain.getHead().postRender(0.0625F);
 			float f1;
 
 			if (itemstack.getItem() instanceof ItemBlock)
 			{
-				net.minecraftforge.client.IItemRenderer customRenderer = net.minecraftforge.client.MinecraftForgeClient.getItemRenderer(itemstack, net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED);
-				boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED, itemstack, net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3D));
+				IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(itemstack, IItemRenderer.ItemRenderType.EQUIPPED);
+				boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, itemstack, IItemRenderer.ItemRendererHelper.BLOCK_3D));
 
 				if (is3D || RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemstack.getItem()).getRenderType()))
 				{
@@ -226,86 +227,63 @@ public class PRenderPlayer extends RendererLivingEntity
 		}
 
 		float f2;
-
-		if (p_77029_1_.getCommandSenderName().equals("deadmau5") && p_77029_1_.hasSkin())
-		{
-			bindTexture(p_77029_1_.getLocationSkin());
-
-			for (int j = 0; j < 2; ++j)
-			{
-				float f9 = p_77029_1_.prevRotationYaw + (p_77029_1_.rotationYaw - p_77029_1_.prevRotationYaw) * p_77029_2_ - (p_77029_1_.prevRenderYawOffset + (p_77029_1_.renderYawOffset - p_77029_1_.prevRenderYawOffset) * p_77029_2_);
-				float f10 = p_77029_1_.prevRotationPitch + (p_77029_1_.rotationPitch - p_77029_1_.prevRotationPitch) * p_77029_2_;
-				GL11.glPushMatrix();
-				GL11.glRotatef(f9, 0.0F, 1.0F, 0.0F);
-				GL11.glRotatef(f10, 1.0F, 0.0F, 0.0F);
-				GL11.glTranslatef(0.375F * (float)(j * 2 - 1), 0.0F, 0.0F);
-				GL11.glTranslatef(0.0F, -0.375F, 0.0F);
-				GL11.glRotatef(-f10, 1.0F, 0.0F, 0.0F);
-				GL11.glRotatef(-f9, 0.0F, 1.0F, 0.0F);
-				f2 = 1.3333334F;
-				GL11.glScalef(f2, f2, f2);
-				modelBipedMain.renderEars(0.0625F);
-				GL11.glPopMatrix();
-			}
-		}
-
 		boolean flag = p_77029_1_.hasCape();
 		//flag = event.renderCape && flag;
 		float f4;
 
-		if (flag && !p_77029_1_.isInvisible() && !p_77029_1_.getHideCape())
-		{
-			bindTexture(p_77029_1_.getLocationCape());
-			GL11.glPushMatrix();
-			GL11.glTranslatef(0.0F, 0.0F, 0.125F);
-			double d3 = p_77029_1_.field_71091_bM + (p_77029_1_.field_71094_bP - p_77029_1_.field_71091_bM) * (double)p_77029_2_ - (p_77029_1_.prevPosX + (p_77029_1_.posX - p_77029_1_.prevPosX) * (double)p_77029_2_);
-			double d4 = p_77029_1_.field_71096_bN + (p_77029_1_.field_71095_bQ - p_77029_1_.field_71096_bN) * (double)p_77029_2_ - (p_77029_1_.prevPosY + (p_77029_1_.posY - p_77029_1_.prevPosY) * (double)p_77029_2_);
-			double d0 = p_77029_1_.field_71097_bO + (p_77029_1_.field_71085_bR - p_77029_1_.field_71097_bO) * (double)p_77029_2_ - (p_77029_1_.prevPosZ + (p_77029_1_.posZ - p_77029_1_.prevPosZ) * (double)p_77029_2_);
-			f4 = p_77029_1_.prevRenderYawOffset + (p_77029_1_.renderYawOffset - p_77029_1_.prevRenderYawOffset) * p_77029_2_;
-			double d1 = (double)MathHelper.sin(f4 * (float)Math.PI / 180.0F);
-			double d2 = (double)(-MathHelper.cos(f4 * (float)Math.PI / 180.0F));
-			float f5 = (float)d4 * 10.0F;
-
-			if (f5 < -6.0F)
-			{
-				f5 = -6.0F;
-			}
-
-			if (f5 > 32.0F)
-			{
-				f5 = 32.0F;
-			}
-
-			float f6 = (float)(d3 * d1 + d0 * d2) * 100.0F;
-			float f7 = (float)(d3 * d2 - d0 * d1) * 100.0F;
-
-			if (f6 < 0.0F)
-			{
-				f6 = 0.0F;
-			}
-
-			float f8 = p_77029_1_.prevCameraYaw + (p_77029_1_.cameraYaw - p_77029_1_.prevCameraYaw) * p_77029_2_;
-			f5 += MathHelper.sin((p_77029_1_.prevDistanceWalkedModified + (p_77029_1_.distanceWalkedModified - p_77029_1_.prevDistanceWalkedModified) * p_77029_2_) * 6.0F) * 32.0F * f8;
-
-			if (p_77029_1_.isSneaking())
-			{
-				f5 += 25.0F;
-			}
-
-			GL11.glRotatef(6.0F + f6 / 2.0F + f5, 1.0F, 0.0F, 0.0F);
-			GL11.glRotatef(f7 / 2.0F, 0.0F, 0.0F, 1.0F);
-			GL11.glRotatef(-f7 / 2.0F, 0.0F, 1.0F, 0.0F);
-			GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-			modelBipedMain.renderCloak(0.0625F);
-			GL11.glPopMatrix();
-		}
+		//		if (flag && !p_77029_1_.isInvisible() && !p_77029_1_.getHideCape())
+		//		{
+		//			bindTexture(p_77029_1_.getLocationCape());
+		//			GL11.glPushMatrix();
+		//			GL11.glTranslatef(0.0F, 0.0F, 0.125F);
+		//			double d3 = p_77029_1_.field_71091_bM + (p_77029_1_.field_71094_bP - p_77029_1_.field_71091_bM) * (double)p_77029_2_ - (p_77029_1_.prevPosX + (p_77029_1_.posX - p_77029_1_.prevPosX) * (double)p_77029_2_);
+		//			double d4 = p_77029_1_.field_71096_bN + (p_77029_1_.field_71095_bQ - p_77029_1_.field_71096_bN) * (double)p_77029_2_ - (p_77029_1_.prevPosY + (p_77029_1_.posY - p_77029_1_.prevPosY) * (double)p_77029_2_);
+		//			double d0 = p_77029_1_.field_71097_bO + (p_77029_1_.field_71085_bR - p_77029_1_.field_71097_bO) * (double)p_77029_2_ - (p_77029_1_.prevPosZ + (p_77029_1_.posZ - p_77029_1_.prevPosZ) * (double)p_77029_2_);
+		//			f4 = p_77029_1_.prevRenderYawOffset + (p_77029_1_.renderYawOffset - p_77029_1_.prevRenderYawOffset) * p_77029_2_;
+		//			double d1 = (double)MathHelper.sin(f4 * (float)Math.PI / 180.0F);
+		//			double d2 = (double)(-MathHelper.cos(f4 * (float)Math.PI / 180.0F));
+		//			float f5 = (float)d4 * 10.0F;
+		//
+		//			if (f5 < -6.0F)
+		//			{
+		//				f5 = -6.0F;
+		//			}
+		//
+		//			if (f5 > 32.0F)
+		//			{
+		//				f5 = 32.0F;
+		//			}
+		//
+		//			float f6 = (float)(d3 * d1 + d0 * d2) * 100.0F;
+		//			float f7 = (float)(d3 * d2 - d0 * d1) * 100.0F;
+		//
+		//			if (f6 < 0.0F)
+		//			{
+		//				f6 = 0.0F;
+		//			}
+		//
+		//			float f8 = p_77029_1_.prevCameraYaw + (p_77029_1_.cameraYaw - p_77029_1_.prevCameraYaw) * p_77029_2_;
+		//			f5 += MathHelper.sin((p_77029_1_.prevDistanceWalkedModified + (p_77029_1_.distanceWalkedModified - p_77029_1_.prevDistanceWalkedModified) * p_77029_2_) * 6.0F) * 32.0F * f8;
+		//
+		//			if (p_77029_1_.isSneaking())
+		//			{
+		//				f5 += 25.0F;
+		//			}
+		//
+		//			GL11.glRotatef(6.0F + f6 / 2.0F + f5, 1.0F, 0.0F, 0.0F);
+		//			GL11.glRotatef(f7 / 2.0F, 0.0F, 0.0F, 1.0F);
+		//			GL11.glRotatef(-f7 / 2.0F, 0.0F, 1.0F, 0.0F);
+		//			GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
+		//			modelBipedMain.renderCloak(0.0625F);
+		//			GL11.glPopMatrix();
+		//		}
 
 		ItemStack itemstack1 = p_77029_1_.inventory.getCurrentItem();
 
 		if (itemstack1 != null)
 		{
 			GL11.glPushMatrix();
-			modelBipedMain.bipedRightArm.postRender(0.0625F);
+			modelBipedMain.getArmRight().postRender(0.0625F);
 			GL11.glTranslatef(-0.0625F, 0.4375F, 0.0625F);
 
 			if (p_77029_1_.fishEntity != null)
@@ -320,8 +298,8 @@ public class PRenderPlayer extends RendererLivingEntity
 				enumaction = itemstack1.getItemUseAction();
 			}
 
-			net.minecraftforge.client.IItemRenderer customRenderer = net.minecraftforge.client.MinecraftForgeClient.getItemRenderer(itemstack1, net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED);
-			boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(net.minecraftforge.client.IItemRenderer.ItemRenderType.EQUIPPED, itemstack1, net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3D));
+			IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(itemstack1, IItemRenderer.ItemRenderType.EQUIPPED);
+			boolean is3D = (customRenderer != null && customRenderer.shouldUseRenderHelper(IItemRenderer.ItemRenderType.EQUIPPED, itemstack1, IItemRenderer.ItemRendererHelper.BLOCK_3D));
 
 			if (is3D || itemstack1.getItem() instanceof ItemBlock && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemstack1.getItem()).getRenderType()))
 			{
@@ -447,7 +425,7 @@ public class PRenderPlayer extends RendererLivingEntity
 		GL11.glColor3f(f, f, f);
 		modelBipedMain.swingProgress = 0.0F;
 		modelBipedMain.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, p_82441_1_);
-		modelBipedMain.bipedRightArm.render(0.0625F);
+		modelBipedMain.getArmRight().render(0.0625F);
 	}
 
 	/**

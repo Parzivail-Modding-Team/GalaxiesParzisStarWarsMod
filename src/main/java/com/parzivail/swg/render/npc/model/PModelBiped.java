@@ -8,7 +8,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 @SideOnly(Side.CLIENT)
-public class ModelPlayer extends ModelBiped
+public class PModelBiped extends ModelBiped
 {
 	private final ModelRenderer field_178729_w;
 	private final ModelRenderer field_178736_x;
@@ -19,7 +19,7 @@ public class ModelPlayer extends ModelBiped
 	public ModelRenderer bipedRightLegwear;
 	public ModelRenderer bipedBodyWear;
 
-	public ModelPlayer(float scaleFactor, boolean smallArms)
+	public PModelBiped(float scaleFactor, boolean smallArms)
 	{
 		super(scaleFactor, 0.0F, 64, 64);
 		field_178735_y = smallArms;

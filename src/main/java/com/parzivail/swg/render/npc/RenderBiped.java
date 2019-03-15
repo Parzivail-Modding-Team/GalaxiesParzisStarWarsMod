@@ -1,6 +1,6 @@
 package com.parzivail.swg.render.npc;
 
-import com.parzivail.swg.render.npc.model.ModelPlayer;
+import com.parzivail.swg.render.npc.model.PModelBiped;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -20,16 +20,16 @@ import org.lwjgl.opengl.GL11;
 
 public abstract class RenderBiped<T extends EntityLiving> extends RendererLivingEntity
 {
-	public ModelPlayer modelBipedMain;
-	public ModelPlayer modelArmorChestplate;
-	public ModelPlayer modelArmor;
+	public PModelBiped modelBipedMain;
+	public PModelBiped modelArmorChestplate;
+	public PModelBiped modelArmor;
 
 	public RenderBiped()
 	{
-		super(new ModelPlayer(0.0F, false), 0.5F);
-		modelBipedMain = (ModelPlayer)mainModel;
-		modelArmorChestplate = new ModelPlayer(1.0F, false);
-		modelArmor = new ModelPlayer(0.5F, false);
+		super(new PModelBiped(0.0F, false), 0.5F);
+		modelBipedMain = (PModelBiped)mainModel;
+		modelArmorChestplate = new PModelBiped(1.0F, false);
+		modelArmor = new PModelBiped(0.5F, false);
 	}
 
 	/**
