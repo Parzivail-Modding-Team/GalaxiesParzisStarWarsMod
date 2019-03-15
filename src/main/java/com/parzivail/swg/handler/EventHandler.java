@@ -19,6 +19,7 @@ import com.parzivail.swg.registry.ForceRegistry;
 import com.parzivail.swg.registry.KeybindRegistry;
 import com.parzivail.swg.registry.WorldRegister;
 import com.parzivail.swg.render.force.RenderLightning;
+import com.parzivail.swg.render.player.PRenderPlayer;
 import com.parzivail.swg.render.worldext.RenderExtHealthBar;
 import com.parzivail.swg.render.worldext.RenderExtLightsaberTrail;
 import com.parzivail.swg.util.SwgEntityUtil;
@@ -50,6 +51,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
@@ -480,11 +482,11 @@ public class EventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(RenderPlayerEvent.Pre event)
 	{
-		// TODO: get updated models
+		if (event.isCancelable())
+			event.setCanceled(true);
+
+		//		// TODO: get updated models
 		//		ModelTogrutaM.instance.inheritAngles(event.renderer.modelBipedMain);
-		//
-		//		if (event.isCancelable())
-		//			event.setCanceled(false);
 		//
 		//		event.renderer.modelBipedMain.bipedHead.isHidden = true;
 		//		event.renderer.modelBipedMain.bipedHeadwear.isHidden = true;
@@ -497,9 +499,11 @@ public class EventHandler
 		//		GL.PushMatrix();
 		//		GL.Rotate(180, 1, 0, 0);
 		//		GL.Rotate(MathUtil.interpolateRotation(event.entityPlayer.prevRenderYawOffset, event.entityPlayer.renderYawOffset, event.partialRenderTick), 0, 1, 0);
-		//		GL.Translate(0,0.2f, 0);
-		//		ModelTogrutaM.instance.render(event.entityPlayer, 0, 0, 0, 0, 0, 1/16f);
+		//		GL.Translate(0, 0.2f, 0);
+		//		ModelTogrutaM.instance.render(event.entityPlayer, 0, 0, 0, 0, 0, 1 / 16f);
 		//		GL.PopMatrix();
+
+		PRenderPlayer.instance.renderPlayer((AbstractClientPlayer)event.entityPlayer, 0, 0, 0, 0, event.partialRenderTick);
 	}
 
 	@SubscribeEvent
