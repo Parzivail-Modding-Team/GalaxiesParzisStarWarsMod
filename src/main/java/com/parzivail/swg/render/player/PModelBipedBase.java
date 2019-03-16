@@ -141,10 +141,10 @@ public abstract class PModelBipedBase extends ModelBase
 			getBody().rotateAngleX = 0.5F;
 			getArmRight().rotateAngleX += 0.4F;
 			getArmLeft().rotateAngleX += 0.4F;
-			getLegRight().rotationPointZ = 4.0F;
-			getLegLeft().rotationPointZ = 4.0F;
-			getLegRight().rotationPointY = 9.0F;
-			getLegLeft().rotationPointY = 9.0F;
+			getLegRight().rotationPointZ = 5.0F; // original: 4
+			getLegLeft().rotationPointZ = 5.0F;
+			getLegRight().rotationPointY = 10.0F; // original: 9
+			getLegLeft().rotationPointY = 10.0F;
 			getHead().rotationPointY = 1.0F;
 			getHeadgear().rotationPointY = 1.0F;
 		}

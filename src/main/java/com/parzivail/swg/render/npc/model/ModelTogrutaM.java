@@ -122,7 +122,7 @@ public class ModelTogrutaM extends PModelBipedBase
         TailBaseR.addChild(HeadTailR);
         HeadTailL.addChild(TailLowerL);
         Head.addChild(TailBaseB);
-        Torso.addChild(LegL_1);
+        //        Torso.addChild(LegL_1);
         HeadTailR.addChild(TailLowerR);
         TailBaseB.addChild(HeadTailB);
         HeadTailB.addChild(TailLowerB);
