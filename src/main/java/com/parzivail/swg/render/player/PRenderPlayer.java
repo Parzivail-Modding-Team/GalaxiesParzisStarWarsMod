@@ -1,8 +1,9 @@
 package com.parzivail.swg.render.player;
 
 import com.mojang.authlib.GameProfile;
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.render.npc.model.ModelRefBiped;
+import com.parzivail.swg.render.npc.model.ModelTogrutaM;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -49,7 +50,7 @@ public class PRenderPlayer extends RendererLivingEntity
 
 	public PRenderPlayer()
 	{
-		super(new ModelRefBiped(), 0.5F);
+		super(new ModelTogrutaM(), 0.5F);
 		modelBipedMain = (PModelBipedBase)mainModel;
 		modelArmorChestplate = new ModelBipedWrapper(new ModelBiped(1.0F));
 		modelArmor = new ModelBipedWrapper(new ModelBiped(0.5F));
@@ -177,7 +178,8 @@ public class PRenderPlayer extends RendererLivingEntity
 	 */
 	protected ResourceLocation getEntityTexture(AbstractClientPlayer p_110775_1_)
 	{
-		return p_110775_1_.getLocationSkin();
+		//		return p_110775_1_.getLocationSkin();
+		return Resources.location("textures/mob/togruta_m.png");
 	}
 
 	protected void renderEquippedItems(AbstractClientPlayer p_77029_1_, float p_77029_2_)
