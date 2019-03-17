@@ -60,6 +60,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -509,7 +510,9 @@ public class EventHandler
 		//		ModelTogrutaM.instance.render(event.entityPlayer, 0, 0, 0, 0, 0, 1 / 16f);
 		//		GL.PopMatrix();
 
-		PRenderPlayer.instance.renderPlayer((AbstractClientPlayer)event.entityPlayer, 0, 0, 0, 0, event.partialRenderTick);
+		Vec3 viewPos = Client.mc.renderViewEntity.getPosition(event.partialRenderTick);
+		Vec3 entityPos = event.entityPlayer.getPosition(event.partialRenderTick);
+		PRenderPlayer.instance.renderPlayer((AbstractClientPlayer)event.entityPlayer, entityPos.xCoord - viewPos.xCoord, entityPos.yCoord - viewPos.yCoord, entityPos.zCoord - viewPos.zCoord, 0, event.partialRenderTick);
 	}
 
 	@SubscribeEvent

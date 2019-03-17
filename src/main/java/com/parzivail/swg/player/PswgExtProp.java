@@ -6,6 +6,7 @@ import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.force.IForcePower;
 import com.parzivail.swg.network.MessagePswgExtPropSync;
 import com.parzivail.swg.player.species.SpeciesType;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.item.NbtSave;
 import com.parzivail.util.item.NbtSerializable;
 import net.minecraft.entity.Entity;
@@ -207,7 +208,10 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 
 		StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entity);
 		for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(entity))
+		{
+			Lumberjack.debug("Tracked by %s", entityPlayer.getCommandSenderName());
 			StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entityPlayer);
+		}
 	}
 
 	void playerStartedTracking(EntityPlayer entityPlayer)
