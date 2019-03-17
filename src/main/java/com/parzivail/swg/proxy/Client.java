@@ -359,6 +359,8 @@ public class Client extends Common
 			return;
 		}
 		Entity e = w.getEntityByID(entityId);
+		if (e == null)
+			return;
 		PswgExtProp props = PswgExtProp.get(e);
 		props.loadNBTData(ieep);
 	}

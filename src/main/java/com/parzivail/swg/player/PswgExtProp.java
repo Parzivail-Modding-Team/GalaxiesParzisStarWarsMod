@@ -6,16 +6,13 @@ import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.force.IForcePower;
 import com.parzivail.swg.network.MessagePswgExtPropSync;
 import com.parzivail.swg.player.species.SpeciesType;
-import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.item.NbtSave;
 import com.parzivail.util.item.NbtSerializable;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
@@ -202,16 +199,8 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 		if (world.isRemote)
 			return;
 
-		// TODO: not syncing anything to LAN players
-		EntityTracker tracker = ((WorldServer)world).getEntityTracker();
 		MessagePswgExtPropSync message = new MessagePswgExtPropSync((EntityPlayer)entity, this);
-
-		StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entity);
-		for (EntityPlayer entityPlayer : tracker.getTrackingPlayers(entity))
-		{
-			Lumberjack.debug("Tracked by %s", entityPlayer.getCommandSenderName());
-			StarWarsGalaxy.network.sendTo(message, (EntityPlayerMP)entityPlayer);
-		}
+		StarWarsGalaxy.network.sendToDimension(message, entity.dimension);
 	}
 
 	void playerStartedTracking(EntityPlayer entityPlayer)
