@@ -50,7 +50,7 @@ public class Resources
 
 	public static String forceDot(String name)
 	{
-		return dot(MODID, dot("repulsorliftForce", name));
+		return dot(MODID, dot("force", name));
 	}
 
 	public static String itemDot(String name, String variant)

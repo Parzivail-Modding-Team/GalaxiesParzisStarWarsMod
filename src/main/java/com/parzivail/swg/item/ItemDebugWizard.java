@@ -5,6 +5,7 @@ import com.parzivail.swg.force.Cron;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.ForceRegistry;
+import com.parzivail.util.ui.TextUtil;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -23,7 +24,7 @@ public class ItemDebugWizard extends PItem
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean advancedTooltips)
 	{
 		info.add("Currently debugging: Force Powers (jump)");
-		info.add(String.format("%s: §r[§e%s§r]", I18n.format(Resources.guiDot("use")), Resources.getKeyName(Client.mc.gameSettings.keyBindUseItem)));
+		info.add(TextUtil.graveToSection(String.format("%s: `r[`e%s`r]", I18n.format(Resources.guiDot("use")), Resources.getKeyName(Client.mc.gameSettings.keyBindUseItem))));
 	}
 
 	@Override

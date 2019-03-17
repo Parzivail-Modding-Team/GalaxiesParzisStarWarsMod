@@ -367,8 +367,11 @@ public class EventHandler
 				GL.PushMatrix();
 				GL.Translate((l / 2f), (i1 / 2f), 0);
 				Entity entity = Client.mc.renderViewEntity;
+				int scalar = Client.mc.gameSettings.thirdPersonView == 2 ? -1 : 1;
 				GL.Rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * event.partialTicks, -1.0F, 0.0F, 0.0F);
-				GL.Rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * event.partialTicks, 0.0F, 1.0F, 0.0F);
+				GL.Rotate(scalar * (entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * event.partialTicks), 0.0F, 1.0F, 0.0F);
+				if (scalar == -1)
+					GL.Rotate(180, 0, 1, 0);
 				GL.Scale(-1.0F, -1.0F, -1.0F);
 				FxMC.renderDirections();
 				GL.PopMatrix();
@@ -377,16 +380,21 @@ public class EventHandler
 					event.setCanceled(true);
 			}
 
-			if (heldItem != null && heldItem.getItem() instanceof IScreenShader)
-				ShaderHelper.framebufferShader = ((IScreenShader)heldItem.getItem()).requestShader(Client.mc.thePlayer, heldItem);
+			if (Client.mc.gameSettings.thirdPersonView == 0)
+			{
+				if (heldItem != null && heldItem.getItem() instanceof IScreenShader)
+					ShaderHelper.framebufferShader = ((IScreenShader)heldItem.getItem()).requestShader(Client.mc.thePlayer, heldItem);
+				else
+					ShaderHelper.framebufferShader = 0;
+
+				if (heldItem != null && heldItem.getItem() instanceof IGuiOverlay)
+				{
+					IGuiOverlay overlayProvider = (IGuiOverlay)heldItem.getItem();
+					drawOverlay(event, heldItem, overlayProvider);
+				}
+			}
 			else
 				ShaderHelper.framebufferShader = 0;
-
-			if (heldItem != null && heldItem.getItem() instanceof IGuiOverlay)
-			{
-				IGuiOverlay overlayProvider = (IGuiOverlay)heldItem.getItem();
-				drawOverlay(event, heldItem, overlayProvider);
-			}
 
 			KeybindRegistry.keyAttack.setIntercepting(heldItem != null && heldItem.getItem() instanceof ILeftClickInterceptor);
 

@@ -25,6 +25,16 @@ public class TextUtil
 		}
 	}
 
+	public static String getFormattingCode(char c)
+	{
+		return "\u00A7" + c;
+	}
+
+	public static String graveToSection(String s)
+	{
+		return s.replaceAll("`", "\u00A7");
+	}
+
 	public static int getWidth(FontRenderer font, String whatchars)
 	{
 		String[] lines = whatchars.split("\n");

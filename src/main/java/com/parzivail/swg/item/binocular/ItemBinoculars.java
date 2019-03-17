@@ -13,6 +13,7 @@ import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.ui.Fx.D2;
 import com.parzivail.util.ui.GLPalette;
 import com.parzivail.util.ui.ShaderHelper;
+import com.parzivail.util.ui.TextUtil;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -66,8 +67,8 @@ public class ItemBinoculars extends PItem implements IGuiOverlay, ILeftClickInte
 		BinocularData bd = new BinocularData(stack);
 
 		//text.add(String.format("%s: %sx", I18n.format(Resources.guiDot("zoomLevel")), bd.zoomLevel));
-		text.add(String.format("%s: §r[§e%s§r]", I18n.format(Resources.guiDot("zoom")), Resources.getKeyName(Client.mc.gameSettings.keyBindAttack)));
-		text.add(String.format("%s: §r[§e%s§r]", I18n.format(Resources.guiDot("use")), Resources.getKeyName(Client.mc.gameSettings.keyBindUseItem)));
+		text.add(TextUtil.graveToSection(String.format("%s: `r[`e%s`r]", I18n.format(Resources.guiDot("zoom")), Resources.getKeyName(Client.mc.gameSettings.keyBindAttack))));
+		text.add(TextUtil.graveToSection(String.format("%s: `r[`e%s`r]", I18n.format(Resources.guiDot("use")), Resources.getKeyName(Client.mc.gameSettings.keyBindUseItem))));
 	}
 
 	@Override
