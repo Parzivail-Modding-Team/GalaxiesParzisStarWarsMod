@@ -1,7 +1,9 @@
 package com.parzivail.swg.render.npc.model;
 
 import com.parzivail.swg.render.player.PModelBipedBase;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * ModelBiped - Either Mojang or a mod author
@@ -100,5 +102,11 @@ public class ModelRefBiped extends PModelBipedBase
 	public ModelRenderer getHeadgear()
 	{
 		return headgear;
+	}
+
+	@Override
+	public ResourceLocation getBaseTexture(AbstractClientPlayer player)
+	{
+		return player.getLocationSkin();
 	}
 }

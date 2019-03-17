@@ -1,9 +1,10 @@
 package com.parzivail.swg.render.player;
 
 import com.mojang.authlib.GameProfile;
-import com.parzivail.swg.Resources;
+import com.parzivail.swg.player.PswgExtProp;
+import com.parzivail.swg.player.species.SpeciesType;
 import com.parzivail.swg.proxy.Client;
-import com.parzivail.swg.render.npc.model.ModelTogrutaM;
+import com.parzivail.swg.render.npc.model.*;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -38,20 +39,35 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.Project;
 
+import java.util.HashMap;
+
 @SideOnly(Side.CLIENT)
 public class PRenderPlayer extends RendererLivingEntity
 {
 	private static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
-	public PModelBipedBase modelBipedMain;
+	private static final HashMap<SpeciesType, PModelBipedBase> speciesModelMap = new HashMap<>();
 	public PModelBipedBase modelArmorChestplate;
 	public PModelBipedBase modelArmor;
+
+	static
+	{
+		speciesModelMap.put(SpeciesType.Human, new ModelRefBiped());
+		speciesModelMap.put(SpeciesType.Bith_M, new ModelBithM());
+		speciesModelMap.put(SpeciesType.Bothan_F, new ModelBothanF());
+		speciesModelMap.put(SpeciesType.Bothan_M, new ModelBothanM());
+		speciesModelMap.put(SpeciesType.Chagrian_F, new ModelChagrianF());
+		speciesModelMap.put(SpeciesType.Chagrian_M, new ModelChagrianM());
+		speciesModelMap.put(SpeciesType.Togruta_F, new ModelTogrutaF());
+		speciesModelMap.put(SpeciesType.Togruta_M, new ModelTogrutaM());
+		speciesModelMap.put(SpeciesType.Twilek_F, new ModelTwilekF());
+		speciesModelMap.put(SpeciesType.Twilek_M, new ModelTwilekM());
+	}
 
 	public static final PRenderPlayer instance = new PRenderPlayer();
 
 	public PRenderPlayer()
 	{
-		super(new ModelTogrutaM(), 0.5F);
-		modelBipedMain = (PModelBipedBase)mainModel;
+		super(new ModelRefBiped(), 0.5F);
 		modelArmorChestplate = new ModelBipedWrapper(new ModelBiped(1.0F));
 		modelArmor = new ModelBipedWrapper(new ModelBiped(0.5F));
 
@@ -75,7 +91,8 @@ public class PRenderPlayer extends RendererLivingEntity
 				bindTexture(RenderBiped.getArmorResource(p_77032_1_, itemstack, p_77032_2_, null));
 				PModelBipedBase modelbiped = p_77032_2_ == 2 ? modelArmor : modelArmorChestplate;
 				modelbiped.getHead().showModel = p_77032_2_ == 0;
-				modelbiped.getHeadgear().showModel = p_77032_2_ == 0;
+				if (modelbiped.getHeadgear() != null)
+					modelbiped.getHeadgear().showModel = p_77032_2_ == 0;
 				modelbiped.getBody().showModel = p_77032_2_ == 1 || p_77032_2_ == 2;
 				modelbiped.getArmRight().showModel = p_77032_2_ == 1;
 				modelbiped.getArmLeft().showModel = p_77032_2_ == 1;
@@ -141,9 +158,10 @@ public class PRenderPlayer extends RendererLivingEntity
 	 */
 	public void renderPlayer(AbstractClientPlayer player, double x, double y, double z, float unused, float partialTicks)
 	{
+		PModelBipedBase playerModel = getPlayerModel(player);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 		ItemStack itemstack = player.inventory.getCurrentItem();
-		modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = modelBipedMain.heldItemRight = itemstack != null ? 1 : 0;
+		modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = playerModel.heldItemRight = itemstack != null ? 1 : 0;
 
 		if (itemstack != null && player.getItemInUseCount() > 0)
 		{
@@ -151,15 +169,15 @@ public class PRenderPlayer extends RendererLivingEntity
 
 			if (enumaction == EnumAction.block)
 			{
-				modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = modelBipedMain.heldItemRight = 3;
+				modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = playerModel.heldItemRight = 3;
 			}
 			else if (enumaction == EnumAction.bow)
 			{
-				modelArmorChestplate.aimedBow = modelArmor.aimedBow = modelBipedMain.aimedBow = true;
+				modelArmorChestplate.aimedBow = modelArmor.aimedBow = playerModel.aimedBow = true;
 			}
 		}
 
-		modelArmorChestplate.isSneak = modelArmor.isSneak = modelBipedMain.isSneak = player.isSneaking();
+		modelArmorChestplate.isSneak = modelArmor.isSneak = playerModel.isSneak = player.isSneaking();
 		double d3 = y - (double)player.yOffset;
 
 		if (player.isSneaking() && !(player instanceof EntityPlayerSP))
@@ -168,31 +186,51 @@ public class PRenderPlayer extends RendererLivingEntity
 		}
 
 		super.doRender(player, x, d3, z, unused, partialTicks);
-		modelArmorChestplate.aimedBow = modelArmor.aimedBow = modelBipedMain.aimedBow = false;
-		modelArmorChestplate.isSneak = modelArmor.isSneak = modelBipedMain.isSneak = false;
-		modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = modelBipedMain.heldItemRight = 0;
+		modelArmorChestplate.aimedBow = modelArmor.aimedBow = playerModel.aimedBow = false;
+		modelArmorChestplate.isSneak = modelArmor.isSneak = playerModel.isSneak = false;
+		modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = playerModel.heldItemRight = 0;
+	}
+
+	private PModelBipedBase getPlayerModel(EntityPlayer player)
+	{
+		PswgExtProp prop = PswgExtProp.get(player);
+		if (prop == null)
+			return null;
+		SpeciesType species = prop.getSpecies();
+		PModelBipedBase model = getSpeciesModel(species);
+		if (mainModel != model)
+			mainModel = model;
+		return model;
+	}
+
+	private PModelBipedBase getSpeciesModel(SpeciesType species)
+	{
+		return speciesModelMap.get(species);
 	}
 
 	/**
 	 * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
 	 */
-	protected ResourceLocation getEntityTexture(AbstractClientPlayer p_110775_1_)
+	protected ResourceLocation getEntityTexture(AbstractClientPlayer player)
 	{
-		//		return p_110775_1_.getLocationSkin();
-		return Resources.location("textures/mob/togruta_m.png");
+		PModelBipedBase playerModel = getPlayerModel(player);
+		if (playerModel == null)
+			return steveTextures;
+		return playerModel.getBaseTexture(player);
 	}
 
-	protected void renderEquippedItems(AbstractClientPlayer p_77029_1_, float p_77029_2_)
+	protected void renderEquippedItems(AbstractClientPlayer player, float p_77029_2_)
 	{
+		PModelBipedBase playerModel = getPlayerModel(player);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-		super.renderEquippedItems(p_77029_1_, p_77029_2_);
-		renderArrowsStuckInEntity(p_77029_1_, p_77029_2_);
-		ItemStack itemstack = p_77029_1_.inventory.armorItemInSlot(3);
+		super.renderEquippedItems(player, p_77029_2_);
+		renderArrowsStuckInEntity(player, p_77029_2_);
+		ItemStack itemstack = player.inventory.armorItemInSlot(3);
 
 		if (itemstack != null)
 		{
 			GL11.glPushMatrix();
-			modelBipedMain.getHead().postRender(0.0625F);
+			playerModel.getHead().postRender(0.0625F);
 			float f1;
 
 			if (itemstack.getItem() instanceof ItemBlock)
@@ -208,7 +246,7 @@ public class PRenderPlayer extends RendererLivingEntity
 					GL11.glScalef(f1, -f1, -f1);
 				}
 
-				renderManager.itemRenderer.renderItem(p_77029_1_, itemstack, 0);
+				renderManager.itemRenderer.renderItem(player, itemstack, 0);
 			}
 			else if (itemstack.getItem() == Items.skull)
 			{
@@ -237,19 +275,19 @@ public class PRenderPlayer extends RendererLivingEntity
 		}
 
 		float f2;
-		boolean flag = p_77029_1_.hasCape();
+		boolean flag = player.hasCape();
 		//flag = event.renderCape && flag;
 		float f4;
 
-		//		if (flag && !p_77029_1_.isInvisible() && !p_77029_1_.getHideCape())
+		//		if (flag && !player.isInvisible() && !player.getHideCape())
 		//		{
-		//			bindTexture(p_77029_1_.getLocationCape());
+		//			bindTexture(player.getLocationCape());
 		//			GL11.glPushMatrix();
 		//			GL11.glTranslatef(0.0F, 0.0F, 0.125F);
-		//			double d3 = p_77029_1_.field_71091_bM + (p_77029_1_.field_71094_bP - p_77029_1_.field_71091_bM) * (double)p_77029_2_ - (p_77029_1_.prevPosX + (p_77029_1_.posX - p_77029_1_.prevPosX) * (double)p_77029_2_);
-		//			double d4 = p_77029_1_.field_71096_bN + (p_77029_1_.field_71095_bQ - p_77029_1_.field_71096_bN) * (double)p_77029_2_ - (p_77029_1_.prevPosY + (p_77029_1_.posY - p_77029_1_.prevPosY) * (double)p_77029_2_);
-		//			double d0 = p_77029_1_.field_71097_bO + (p_77029_1_.field_71085_bR - p_77029_1_.field_71097_bO) * (double)p_77029_2_ - (p_77029_1_.prevPosZ + (p_77029_1_.posZ - p_77029_1_.prevPosZ) * (double)p_77029_2_);
-		//			f4 = p_77029_1_.prevRenderYawOffset + (p_77029_1_.renderYawOffset - p_77029_1_.prevRenderYawOffset) * p_77029_2_;
+		//			double d3 = player.field_71091_bM + (player.field_71094_bP - player.field_71091_bM) * (double)p_77029_2_ - (player.prevPosX + (player.posX - player.prevPosX) * (double)p_77029_2_);
+		//			double d4 = player.field_71096_bN + (player.field_71095_bQ - player.field_71096_bN) * (double)p_77029_2_ - (player.prevPosY + (player.posY - player.prevPosY) * (double)p_77029_2_);
+		//			double d0 = player.field_71097_bO + (player.field_71085_bR - player.field_71097_bO) * (double)p_77029_2_ - (player.prevPosZ + (player.posZ - player.prevPosZ) * (double)p_77029_2_);
+		//			f4 = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * p_77029_2_;
 		//			double d1 = (double)MathHelper.sin(f4 * (float)Math.PI / 180.0F);
 		//			double d2 = (double)(-MathHelper.cos(f4 * (float)Math.PI / 180.0F));
 		//			float f5 = (float)d4 * 10.0F;
@@ -272,10 +310,10 @@ public class PRenderPlayer extends RendererLivingEntity
 		//				f6 = 0.0F;
 		//			}
 		//
-		//			float f8 = p_77029_1_.prevCameraYaw + (p_77029_1_.cameraYaw - p_77029_1_.prevCameraYaw) * p_77029_2_;
-		//			f5 += MathHelper.sin((p_77029_1_.prevDistanceWalkedModified + (p_77029_1_.distanceWalkedModified - p_77029_1_.prevDistanceWalkedModified) * p_77029_2_) * 6.0F) * 32.0F * f8;
+		//			float f8 = player.prevCameraYaw + (player.cameraYaw - player.prevCameraYaw) * p_77029_2_;
+		//			f5 += MathHelper.sin((player.prevDistanceWalkedModified + (player.distanceWalkedModified - player.prevDistanceWalkedModified) * p_77029_2_) * 6.0F) * 32.0F * f8;
 		//
-		//			if (p_77029_1_.isSneaking())
+		//			if (player.isSneaking())
 		//			{
 		//				f5 += 25.0F;
 		//			}
@@ -288,22 +326,22 @@ public class PRenderPlayer extends RendererLivingEntity
 		//			GL11.glPopMatrix();
 		//		}
 
-		ItemStack itemstack1 = p_77029_1_.inventory.getCurrentItem();
+		ItemStack itemstack1 = player.inventory.getCurrentItem();
 
 		if (itemstack1 != null)
 		{
 			GL11.glPushMatrix();
-			modelBipedMain.getArmRight().postRender(0.0625F);
+			playerModel.getArmRight().postRender(0.0625F);
 			GL11.glTranslatef(-0.0625F, 0.4375F, 0.0625F);
 
-			if (p_77029_1_.fishEntity != null)
+			if (player.fishEntity != null)
 			{
 				itemstack1 = new ItemStack(Items.stick);
 			}
 
 			EnumAction enumaction = null;
 
-			if (p_77029_1_.getItemInUseCount() > 0)
+			if (player.getItemInUseCount() > 0)
 			{
 				enumaction = itemstack1.getItemUseAction();
 			}
@@ -339,7 +377,7 @@ public class PRenderPlayer extends RendererLivingEntity
 					GL11.glTranslatef(0.0F, -0.125F, 0.0F);
 				}
 
-				if (p_77029_1_.getItemInUseCount() > 0 && enumaction == EnumAction.block)
+				if (player.getItemInUseCount() > 0 && enumaction == EnumAction.block)
 				{
 					GL11.glTranslatef(0.05F, 0.0F, -0.1F);
 					GL11.glRotatef(-50.0F, 0.0F, 1.0F, 0.0F);
@@ -375,7 +413,7 @@ public class PRenderPlayer extends RendererLivingEntity
 					f3 = (float)(i >> 8 & 255) / 255.0F;
 					f4 = (float)(i & 255) / 255.0F;
 					GL11.glColor4f(f12, f3, f4, 1.0F);
-					renderManager.itemRenderer.renderItem(p_77029_1_, itemstack1, k);
+					renderManager.itemRenderer.renderItem(player, itemstack1, k);
 				}
 			}
 			else
@@ -385,7 +423,7 @@ public class PRenderPlayer extends RendererLivingEntity
 				f12 = (float)(k >> 8 & 255) / 255.0F;
 				f3 = (float)(k & 255) / 255.0F;
 				GL11.glColor4f(f11, f12, f3, 1.0F);
-				renderManager.itemRenderer.renderItem(p_77029_1_, itemstack1, 0);
+				renderManager.itemRenderer.renderItem(player, itemstack1, 0);
 			}
 
 			GL11.glPopMatrix();
@@ -429,13 +467,14 @@ public class PRenderPlayer extends RendererLivingEntity
 		super.renderOffsetLivingLabel(p_96449_1_, p_96449_2_, p_96449_4_, p_96449_6_, p_96449_8_, p_96449_9_, p_96449_10_);
 	}
 
-	public void renderFirstPersonArm(EntityPlayer p_82441_1_)
+	public void renderFirstPersonArm(EntityPlayer player)
 	{
+		PModelBipedBase playerModel = getPlayerModel(player);
 		float f = 1.0F;
 		GL11.glColor3f(f, f, f);
-		modelBipedMain.swingProgress = 0.0F;
-		modelBipedMain.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, p_82441_1_);
-		modelBipedMain.getArmRight().render(0.0625F);
+		playerModel.swingProgress = 0.0F;
+		playerModel.setRotationAngles(0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F, player);
+		playerModel.getArmRight().render(0.0625F);
 	}
 
 	public void renderHand(float p_78476_1_, int p_78476_2_)

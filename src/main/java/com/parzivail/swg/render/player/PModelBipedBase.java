@@ -1,9 +1,11 @@
 package com.parzivail.swg.render.player;
 
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public abstract class PModelBipedBase extends ModelBase
@@ -36,6 +38,8 @@ public abstract class PModelBipedBase extends ModelBase
 
 	public abstract ModelRenderer getHeadgear();
 
+	public abstract ResourceLocation getBaseTexture(AbstractClientPlayer player);
+
 	/**
 	 * Sets the models various rotation angles then renders the model.
 	 */
@@ -59,7 +63,8 @@ public abstract class PModelBipedBase extends ModelBase
 			getArmLeft().render(p_78088_7_);
 			getLegRight().render(p_78088_7_);
 			getLegLeft().render(p_78088_7_);
-			getHeadgear().render(p_78088_7_);
+			if (getHeadgear() != null)
+				getHeadgear().render(p_78088_7_);
 			GL11.glPopMatrix();
 		}
 		else
@@ -70,7 +75,8 @@ public abstract class PModelBipedBase extends ModelBase
 			getArmLeft().render(p_78088_7_);
 			getLegRight().render(p_78088_7_);
 			getLegLeft().render(p_78088_7_);
-			getHeadgear().render(p_78088_7_);
+			if (getHeadgear() != null)
+				getHeadgear().render(p_78088_7_);
 		}
 	}
 
@@ -78,8 +84,11 @@ public abstract class PModelBipedBase extends ModelBase
 	{
 		getHead().rotateAngleY = p_78087_4_ / (180F / (float)Math.PI);
 		getHead().rotateAngleX = p_78087_5_ / (180F / (float)Math.PI);
-		getHeadgear().rotateAngleY = getHead().rotateAngleY;
-		getHeadgear().rotateAngleX = getHead().rotateAngleX;
+		if (getHeadgear() != null)
+		{
+			getHeadgear().rotateAngleY = getHead().rotateAngleY;
+			getHeadgear().rotateAngleX = getHead().rotateAngleX;
+		}
 		getArmRight().rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F + (float)Math.PI) * 2.0F * p_78087_2_ * 0.5F;
 		getArmLeft().rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 2.0F * p_78087_2_ * 0.5F;
 		getArmRight().rotateAngleZ = 0.0F;
@@ -146,7 +155,8 @@ public abstract class PModelBipedBase extends ModelBase
 			getLegRight().rotationPointY = 10.0F; // original: 9
 			getLegLeft().rotationPointY = 10.0F;
 			getHead().rotationPointY = 1.0F;
-			getHeadgear().rotationPointY = 1.0F;
+			if (getHeadgear() != null)
+				getHeadgear().rotationPointY = 1.0F;
 		}
 		else
 		{
@@ -156,7 +166,8 @@ public abstract class PModelBipedBase extends ModelBase
 			getLegRight().rotationPointY = 12.0F;
 			getLegLeft().rotationPointY = 12.0F;
 			getHead().rotationPointY = 0.0F;
-			getHeadgear().rotationPointY = 0.0F;
+			if (getHeadgear() != null)
+				getHeadgear().rotationPointY = 0.0F;
 		}
 
 		getArmRight().rotateAngleZ += MathHelper.cos(p_78087_3_ * 0.09F) * 0.05F + 0.05F;

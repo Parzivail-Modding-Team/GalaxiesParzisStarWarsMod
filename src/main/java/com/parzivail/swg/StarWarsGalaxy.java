@@ -1,6 +1,7 @@
 package com.parzivail.swg;
 
 import com.parzivail.swg.command.CommandChangeDimensions;
+import com.parzivail.swg.command.CommandSetSpecies;
 import com.parzivail.swg.command.CommandSpawnShip;
 import com.parzivail.swg.config.Config;
 import com.parzivail.swg.handler.EventHandler;
@@ -144,5 +145,6 @@ public class StarWarsGalaxy
 	{
 		event.registerServerCommand(new CommandChangeDimensions());
 		event.registerServerCommand(new CommandSpawnShip());
+		event.registerServerCommand(new CommandSetSpecies());
 	}
 }

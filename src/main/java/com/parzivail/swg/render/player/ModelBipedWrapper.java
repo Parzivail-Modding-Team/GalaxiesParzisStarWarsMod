@@ -1,7 +1,9 @@
 package com.parzivail.swg.render.player;
 
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.util.ResourceLocation;
 
 public class ModelBipedWrapper extends PModelBipedBase
 {
@@ -52,5 +54,11 @@ public class ModelBipedWrapper extends PModelBipedBase
 	public ModelRenderer getHeadgear()
 	{
 		return modelBiped.bipedHeadwear;
+	}
+
+	@Override
+	public ResourceLocation getBaseTexture(AbstractClientPlayer player)
+	{
+		return player.getLocationSkin();
 	}
 }

@@ -5,6 +5,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.force.IForcePower;
 import com.parzivail.swg.network.MessagePswgExtPropSync;
+import com.parzivail.swg.player.species.SpeciesType;
 import com.parzivail.util.item.NbtSave;
 import com.parzivail.util.item.NbtSerializable;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,8 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	protected String[] activeQuests;
 	@NbtSave
 	protected String[] completedQuests;
+	@NbtSave
+	protected int species;
 	@NbtSave
 	protected String[] flags;
 	@NbtSave
@@ -64,6 +67,17 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	public boolean hasFlag(String flag)
 	{
 		return ArrayUtils.contains(flags, flag);
+	}
+
+	public SpeciesType getSpecies()
+	{
+		return SpeciesType.values()[species];
+	}
+
+	public void setSpecies(SpeciesType species)
+	{
+		this.species = species.ordinal();
+		sync();
 	}
 
 	public int getCreditBalance()
