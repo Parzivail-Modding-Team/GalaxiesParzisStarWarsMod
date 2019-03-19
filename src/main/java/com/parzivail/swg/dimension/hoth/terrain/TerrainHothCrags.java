@@ -6,17 +6,17 @@ import com.parzivail.util.world.ProcNoise;
 public class TerrainHothCrags implements ITerrainHeightmap
 {
 	private final ProcNoise _noise = new ProcNoise(0);
-	private final int octaves;
 
-	public TerrainHothCrags(int octaves)
+	public TerrainHothCrags()
 	{
-		this.octaves = octaves;
 	}
 
 	@Override
 	public double getHeightAt(int x, int z)
 	{
-		return _noise.octNoise(x / 150f, z / 150f, octaves) * 80;
+		double h = 1 - _noise.octWorley(x / 100f, z / 100f, 2);
+
+		return h * 100;
 	}
 
 	@Override

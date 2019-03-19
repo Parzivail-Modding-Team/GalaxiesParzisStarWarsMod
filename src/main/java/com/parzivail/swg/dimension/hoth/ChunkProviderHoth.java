@@ -22,8 +22,7 @@ import java.util.Random;
  */
 public class ChunkProviderHoth implements IChunkProvider
 {
-	public static final ITerrainHeightmap terrain = new TerrainHothCrags(6);
-	public static final ITerrainHeightmap terrainSnow = new TerrainHothCrags(3);
+	public static final ITerrainHeightmap terrain = new TerrainHothCrags();
 	private final World worldObj;
 
 	public ChunkProviderHoth(World worldObj, long seed)
@@ -50,10 +49,7 @@ public class ChunkProviderHoth implements IChunkProvider
 		{
 			for (short z = 0; z < 16; z++)
 			{
-				double height = terrain.getHeightAt((cx * 16 + x), (cz * 16 + z)) + 60;
-				int d = 15;
-				double heightSnow = (terrain.getHeightAt((cx * 16 + x + d), (cz * 16 + z)) + terrain.getHeightAt((cx * 16 + x), (cz * 16 + z + d)) + terrain.getHeightAt((cx * 16 + x - d), (cz * 16 + z)) + terrain.getHeightAt((cx * 16 + x), (cz * 16 + z - d))) / 4 + 62;
-				int finalHeight = (int)Math.max(height, heightSnow);
+				int finalHeight = (int)terrain.getHeightAt((cx * 16 + x), (cz * 16 + z));
 
 				if (chunk.getBlockStorageArray()[0] == null)
 					chunk.getBlockStorageArray()[0] = new ExtendedBlockStorage(0, !worldObj.provider.hasNoSky);
@@ -70,10 +66,7 @@ public class ChunkProviderHoth implements IChunkProvider
 						chunk.getBlockStorageArray()[l] = extendedblockstorage;
 					}
 
-					if (y > height && height <= heightSnow)
-						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.snow);
-					else if (y <= height)
-						extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
+					extendedblockstorage.setExtBlockID(x, y & 15, z, Blocks.stone);
 				}
 			}
 		}

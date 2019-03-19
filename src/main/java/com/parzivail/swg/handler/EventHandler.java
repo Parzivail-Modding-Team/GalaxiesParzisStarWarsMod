@@ -250,8 +250,8 @@ public class EventHandler
 	@SubscribeEvent
 	public void on(TickEvent.WorldTickEvent event)
 	{
-		if (event.world.provider.dimensionId == StarWarsGalaxy.config.getDimIdHoth())
-			event.world.rainingStrength = 1;
+		//		if (event.world.provider.dimensionId == StarWarsGalaxy.config.getDimIdHoth())
+		//			event.world.rainingStrength = 0;
 	}
 
 	@SubscribeEvent
