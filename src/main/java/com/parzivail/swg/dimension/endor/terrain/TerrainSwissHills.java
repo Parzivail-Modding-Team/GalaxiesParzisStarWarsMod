@@ -13,7 +13,7 @@ public class TerrainSwissHills implements ITerrainHeightmap
 	}
 
 	@Override
-	public double getHeightAt(int x, int z)
+	public double getHeightAt(double x, double z)
 	{
 		return pNoise.swissTurbulence(x / 200f, z / 200f, 4, 3, 0.5, 0.25) * 70;
 	}

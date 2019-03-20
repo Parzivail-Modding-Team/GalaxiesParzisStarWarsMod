@@ -12,9 +12,28 @@ public class TerrainHothCrags implements ITerrainHeightmap
 	}
 
 	@Override
-	public double getHeightAt(int x, int z)
+	public double getHeightAt(double x, double z)
 	{
-		return (1 - _noise.octWorley(x / 100f, z / 100f, 3)) * 100;
+		double j = _noise.octaveNoise(x / 420, z / 420, 4);
+
+		// the first 2 values essentially translate to the radius of the creaters, smaller the number the bigger the creater
+		// var h = ProcNoise.Worley(x / 400 + 200, z / 400 + 200, j) * 1.45;
+		double h1 = _noise.octaveNoise(x / 110, z / 110, 4);
+		double h2 = _noise.octaveNoise(x / 110 + 999, z / 110 - 999, 4);
+
+		// the first 2 values essentially translate to the radius of the creaters, smaller the number the bigger the creater
+		double h = _noise.worley(x / 400 + h1, z / 400 - h1, j) * 1.3;
+		if (h < 1)
+			h = circularize(h);
+		else
+			h = 1;
+
+		return h * 80 + _noise.octaveNoise(x / 70, z / 70, 5) * 20 + 60;
+	}
+
+	private double circularize(double x)
+	{
+		return 1 - Math.sqrt(1 - Math.pow(x, 1.8));
 	}
 
 	@Override

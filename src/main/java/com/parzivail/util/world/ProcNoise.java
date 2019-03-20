@@ -81,28 +81,28 @@ public class ProcNoise
 		return noise(x + d, z) - n;
 	}
 
-	public double octNoise(double x, double z, int octaves)
+	public double octaveNoise(double x, double z, int octaves)
 	{
 		double n = noise(x, z) / 2;
 		if (octaves <= 1)
 			return n;
-		return n + octNoise((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
+		return n + octaveNoise((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
 	}
 
-	public double octWorley(double x, double z, int octaves)
+	public double octaveWorley(double x, double z, int octaves)
 	{
 		double n = worley(x, z) / 2;
 		if (octaves <= 1)
 			return n;
-		return n + octWorley((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
+		return n + octaveWorley((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
 	}
 
-	public double octInvWorley(double x, double z, int octaves)
+	public double octaveInvWorley(double x, double z, int octaves)
 	{
 		double n = (1 - worley(x, z)) / 2;
 		if (octaves <= 1)
 			return n;
-		return n + octInvWorley((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
+		return n + octaveInvWorley((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
 	}
 
 	public double hashA(double x, double z)

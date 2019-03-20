@@ -233,11 +233,11 @@ public class EventHandler
 				event.setCanceled(true);
 		}
 
-		if (!event.isCanceled())
-		{
-			PRenderPlayer.instance.renderHand(event.partialTicks, event.renderPass);
-			event.setCanceled(true);
-		}
+		//		if (!event.isCanceled())
+		//		{
+		//			PRenderPlayer.instance.renderHand(event.partialTicks, event.renderPass);
+		//			event.setCanceled(true);
+		//		}
 	}
 
 	@SubscribeEvent

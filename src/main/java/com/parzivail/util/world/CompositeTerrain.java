@@ -26,7 +26,7 @@ public class CompositeTerrain implements ITerrainHeightmap
 		layers.add(layer);
 	}
 
-	public double getHeightAt(int x, int z)
+	public double getHeightAt(double x, double z)
 	{
 		double value = 0;
 		for (TerrainLayer terrainLayer : layers)

@@ -9,7 +9,7 @@ public class TerrainTatooineCanyons implements ITerrainHeightmap
 	private final ProcNoise _noise = new ProcNoise(0);
 
 	@Override
-	public double getHeightAt(int x, int z)
+	public double getHeightAt(double x, double z)
 	{
 		double s = 2;
 		double h = get(x / s, z / s);
@@ -28,9 +28,9 @@ public class TerrainTatooineCanyons implements ITerrainHeightmap
 		h = h * 35;
 
 		h = MathHelper.clamp_double(h, 0, 1);
-		double j = _noise.octNoise(x / 200f, z / 200f, 6) * 90;
+		double j = _noise.octaveNoise(x / 200f, z / 200f, 6) * 90;
 
-		return (h * 0.8 + _noise.octNoise(x / 200f, z / 200f, 3) * 0.8) * (j + 10);
+		return (h * 0.8 + _noise.octaveNoise(x / 200f, z / 200f, 3) * 0.8) * (j + 10);
 	}
 
 	private double get(double x, double z)

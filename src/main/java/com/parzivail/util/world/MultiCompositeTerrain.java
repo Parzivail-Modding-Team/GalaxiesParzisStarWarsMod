@@ -19,9 +19,9 @@ public class MultiCompositeTerrain implements ITerrainHeightmap
 		n = terrains.length - 1;
 	}
 
-	public double getHeightAt(int x, int z)
+	public double getHeightAt(double x, double z)
 	{
-		double l = getBiomeLerpAmount(x, z);
+		double l = getBiomeLerpAmount((int)x, (int)z);
 		double y = 0;
 		for (int i = 0; i < terrains.length; i++)
 		{

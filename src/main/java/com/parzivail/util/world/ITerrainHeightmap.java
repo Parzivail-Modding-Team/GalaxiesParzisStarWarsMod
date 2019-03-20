@@ -13,7 +13,7 @@ public interface ITerrainHeightmap
 	 *
 	 * @return The height of the basic at (x, z)
 	 */
-	double getHeightAt(int x, int z);
+	double getHeightAt(double x, double z);
 
 	/**
 	 * Gets the biome noise interpolation value (0<=x<=1) for the specified position
