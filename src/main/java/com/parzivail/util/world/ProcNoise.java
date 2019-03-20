@@ -94,7 +94,7 @@ public class ProcNoise
 		double n = worley(x, z) / 2;
 		if (octaves <= 1)
 			return n;
-		return n + octNoise((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
+		return n + octWorley((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
 	}
 
 	public double octInvWorley(double x, double z, int octaves)

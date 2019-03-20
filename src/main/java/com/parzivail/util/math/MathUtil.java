@@ -1,5 +1,6 @@
 package com.parzivail.util.math;
 
+import com.parzivail.util.math.lwjgl.Vector2f;
 import com.parzivail.util.math.lwjgl.Vector3f;
 
 import java.util.Random;
@@ -9,16 +10,19 @@ public class MathUtil
 	public static final double oneOverGoldenRatio = 0.61803398875;
 	private static final Random _rand = new Random();
 
-	public static double fract(double d)
+	public static float fract(double d)
 	{
-		return d - Math.floor(d);
+		return (float)(d - Math.floor(d));
 	}
 
-	public static double[] fract(double[] v)
+	public static Vector2f fract(Vector2f v)
 	{
-		for (int i = 0; i < v.length; i++)
-			v[i] = fract(v[i]);
-		return v;
+		return new Vector2f(fract(v.x), fract(v.y));
+	}
+
+	public static Vector3f fract(Vector3f v)
+	{
+		return new Vector3f(fract(v.x), fract(v.y), fract(v.z));
 	}
 
 	public static Vector3f lerp(float t, Vector3f a, Vector3f b)
@@ -36,11 +40,14 @@ public class MathUtil
 		return Double.longBitsToDouble(Double.doubleToLongBits(d) ^ seed);
 	}
 
-	public static double[] floor(double[] v)
+	public static Vector2f floor(Vector2f v)
 	{
-		for (int i = 0; i < v.length; i++)
-			v[i] = Math.floor(v[i]);
-		return v;
+		return new Vector2f((float)Math.floor(v.x), (float)Math.floor(v.y));
+	}
+
+	public static Vector3f floor(Vector3f v)
+	{
+		return new Vector3f((float)Math.floor(v.x), (float)Math.floor(v.y), (float)Math.floor(v.z));
 	}
 
 	public static double clamp(double x)

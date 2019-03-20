@@ -14,9 +14,7 @@ public class TerrainHothCrags implements ITerrainHeightmap
 	@Override
 	public double getHeightAt(int x, int z)
 	{
-		double h = 1 - _noise.octWorley(x / 100f, z / 100f, 2);
-
-		return h * 100;
+		return (1 - _noise.octWorley(x / 100f, z / 100f, 3)) * 100;
 	}
 
 	@Override
