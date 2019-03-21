@@ -3,8 +3,10 @@ package com.parzivail.swg.entity.ship;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityCinematicCamera;
 import com.parzivail.swg.network.MessageShipOrientation;
+import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.dimension.Rift;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.item.IGuiOverlay;
 import com.parzivail.util.math.RotatedAxes;
@@ -21,7 +23,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public abstract class EntityShip extends Entity implements IEntityAdditionalSpawnData, IGuiOverlay
 {
@@ -32,6 +36,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	public EntitySeat[] seats;
 	public boolean isInitialized;
 	public int ticksStartHyperdrive = -1;
+	public UUID shipId;
 
 	@SideOnly(Side.CLIENT)
 	public EntityCinematicCamera camera;
@@ -49,6 +54,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		orientation = previousOrientation = new RotatedAxes(0, 0, 0);
 		angularMomentum = new Vector3f(0, 0, 0);
 		throttle = 0;
+		shipId = UUID.randomUUID();
 	}
 
 	@Override
@@ -128,13 +134,14 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			isInitialized = true;
 		}
 
-		if (posY > 255)
+		if (posY > 255 && dimension != StarWarsGalaxy.config.getDimIdHyperspace())
 		{
 			if (ticksStartHyperdrive == -1)
 				ticksStartHyperdrive = ticksExisted;
 			else if (ticksExisted - ticksStartHyperdrive > 100)
 			{
 				Lumberjack.log("Hyperdrive");
+				Rift.travelEntity(this, StarWarsGalaxy.config.getDimIdHyperspace());
 				ticksStartHyperdrive = -1;
 			}
 		}
@@ -174,11 +181,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			rotationPitch = orientation.getPitch();
 			rotationYaw = orientation.getYaw();
 
-			float dYaw = MathHelper.wrapAngleTo180_float(orientation.getYaw() - previousOrientation.getYaw());
-			slidingYaw.slide(dYaw);
-			float dPitch = MathHelper.wrapAngleTo180_float(orientation.getPitch() - previousOrientation.getPitch());
-			slidingPitch.slide(dPitch);
-
 			slidingThrottle.slide(throttle);
 		}
 		else
@@ -187,6 +189,11 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			motionY = 0;
 			motionZ = 0;
 		}
+
+		float dYaw = MathHelper.wrapAngleTo180_float(orientation.getYaw() - previousOrientation.getYaw());
+		slidingYaw.slide(dYaw);
+		float dPitch = MathHelper.wrapAngleTo180_float(orientation.getPitch() - previousOrientation.getPitch());
+		slidingPitch.slide(dPitch);
 
 		if (data.isAirVehicle)
 		{
@@ -254,12 +261,36 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			return;
 		}
 
+		HashMap<Integer, EntityPlayer> players = getPlayersToRemount();
+
+		Lumberjack.debug("Creating seats");
 		for (int i = 0; i < seats.length; i++)
 		{
+			Lumberjack.debug("Creating seat %s", i);
 			// TODO: seat roles
 			seats[i] = new EntitySeat(worldObj, this, i);
 			worldObj.spawnEntityInWorld(seats[i]);
+			if (players.containsKey(i) && players.get(i) != null)
+			{
+				Lumberjack.debug("Player found for seat %s", i);
+				players.get(i).mountEntity(seats[i]);
+			}
+			else
+				Lumberjack.debug("No player found for seat %s", i);
 		}
+	}
+
+	private HashMap<Integer, EntityPlayer> getPlayersToRemount()
+	{
+		HashMap<Integer, EntityPlayer> players = new HashMap<>();
+		for (Object o : worldObj.playerEntities)
+		{
+			EntityPlayer player = (EntityPlayer)o;
+			PswgExtProp ieep = PswgExtProp.get(player);
+			if (ieep.isChangingDimensions() && shipId.equals(ieep.getShipRiding()))
+				players.put(ieep.getShipRidingSeatIdx(), player);
+		}
+		return players;
 	}
 
 	public void updateRiderPosition()
@@ -298,6 +329,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		throttle = tagCompound.getFloat("throttle");
 		orientation = new RotatedAxes(tagCompound.getFloat("yaw"), tagCompound.getFloat("pitch"), tagCompound.getFloat("roll"));
 		createChildren();
+		shipId = UUID.fromString(tagCompound.getString("shipId"));
 	}
 
 	private void createChildren()
@@ -319,6 +351,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		tagCompound.setFloat("yaw", orientation.getYaw());
 		tagCompound.setFloat("pitch", orientation.getPitch());
 		tagCompound.setFloat("roll", orientation.getRoll());
+		tagCompound.setString("shipId", shipId.toString());
 	}
 
 	@Override
@@ -328,6 +361,10 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		buffer.writeFloat(orientation.getPitch());
 		buffer.writeFloat(orientation.getRoll());
 		buffer.writeFloat(throttle);
+		long lower = shipId.getLeastSignificantBits();
+		long upper = shipId.getMostSignificantBits();
+		buffer.writeLong(lower);
+		buffer.writeLong(upper);
 	}
 
 	@Override
@@ -336,6 +373,9 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		orientation = new RotatedAxes(buffer.readFloat(), buffer.readFloat(), buffer.readFloat());
 		throttle = buffer.readFloat();
 		createChildren();
+		long lower = buffer.readLong();
+		long upper = buffer.readLong();
+		shipId = new UUID(upper, lower);
 	}
 
 	public boolean canBeControlledBy(EntityPlayer thePlayer)
@@ -347,5 +387,13 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	public boolean isBootingHyperdrive()
 	{
 		return posY > 255;
+	}
+
+	public void breakdown()
+	{
+		isInitialized = false;
+		for (EntitySeat seat : seats)
+			if (seat != null)
+				seat.setDead();
 	}
 }

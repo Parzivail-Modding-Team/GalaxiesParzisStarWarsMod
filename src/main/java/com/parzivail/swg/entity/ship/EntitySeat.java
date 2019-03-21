@@ -93,6 +93,11 @@ public class EntitySeat extends Entity implements IEntityAdditionalSpawnData
 		return parent;
 	}
 
+	public int getSeatIdx()
+	{
+		return seatIdx;
+	}
+
 	public boolean canBeCollidedWith()
 	{
 		return !isDead;

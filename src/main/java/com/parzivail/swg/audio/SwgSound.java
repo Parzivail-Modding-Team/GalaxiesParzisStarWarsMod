@@ -1,4 +1,4 @@
-package com.parzivail.util.audio;
+package com.parzivail.swg.audio;
 
 public enum SwgSound
 {

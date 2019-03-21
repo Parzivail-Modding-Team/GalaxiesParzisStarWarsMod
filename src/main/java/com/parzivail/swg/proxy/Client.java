@@ -2,6 +2,8 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.audio.ClientSoundHandler;
+import com.parzivail.swg.audio.SwgSound;
 import com.parzivail.swg.entity.*;
 import com.parzivail.swg.entity.fx.ParticleSmoke;
 import com.parzivail.swg.entity.ship.EntityScootEmAround;
@@ -39,8 +41,6 @@ import com.parzivail.swg.tile.TileGunRack;
 import com.parzivail.swg.tile.antenna.TileSatelliteDish;
 import com.parzivail.swg.util.SwgEntityUtil;
 import com.parzivail.swg.world.PswgWorldDataHandler;
-import com.parzivail.util.audio.ClientSoundHandler;
-import com.parzivail.util.audio.SwgSound;
 import com.parzivail.util.block.INameProvider;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.item.ILeftClickInterceptor;

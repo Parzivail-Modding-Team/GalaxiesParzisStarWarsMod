@@ -4,6 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetDescriptor;
 import com.parzivail.swg.entity.EntityCinematicCamera;
+import com.parzivail.swg.entity.ship.EntitySeat;
 import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.swg.entity.ship.ShipData;
 import com.parzivail.swg.force.Cron;
@@ -71,6 +72,7 @@ import net.minecraftforge.event.world.WorldEvent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.EnumSet;
+import java.util.UUID;
 
 /**
  * Created by colby on 9/13/2017.
@@ -284,13 +286,20 @@ public class EventHandler
 		if (Client.getPlayer() != null)
 		{
 			EntityShip ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
-			if (ship == null && Client.mc.renderViewEntity instanceof EntityCinematicCamera)
+			if (ship == null)
 			{
-				FxMC.changeCameraRoll(0);
-				FxMC.changeCameraDist(4);
-				Client.mc.renderViewEntity = Client.mc.thePlayer;
+				if (Client.mc.renderViewEntity instanceof EntityCinematicCamera)
+				{
+					FxMC.changeCameraRoll(0);
+					FxMC.changeCameraDist(4);
+					Client.mc.renderViewEntity = Client.mc.thePlayer;
+				}
+				else if (FxMC.getCameraDist() == 0)
+				{
+					FxMC.changeCameraDist(4);
+				}
 			}
-			else if (ship != null)
+			else
 			{
 				ShipData data = ship.getData();
 
@@ -458,6 +467,32 @@ public class EventHandler
 		{
 			ItemStack heldItem = event.player.getHeldItem();
 			StarWarsGalaxy.proxy.tickSounds(event.player, heldItem);
+		}
+		else
+		{
+			PswgExtProp ieep = PswgExtProp.get(event.player);
+			UUID ridingShip = ieep.getShipRiding();
+			if (event.player.ridingEntity instanceof EntitySeat)
+			{
+				EntitySeat seat = (EntitySeat)event.player.ridingEntity;
+				EntityShip ship = seat.getParent();
+				if (ship != null && !ship.shipId.equals(ridingShip))
+				{
+					ieep.setShipRiding(ship.shipId);
+					ieep.setShipRidingSeatIdx(seat.getSeatIdx());
+				}
+				else
+					ieep.setShipRiding(null);
+			}
+			else if (!ieep.isChangingDimensions())
+			{
+				ieep.setShipRiding(null);
+			}
+
+			if (event.player.ticksExisted > 40 && ieep.isChangingDimensions())
+			{
+				ieep.setChangingDimensions(false);
+			}
 		}
 	}
 

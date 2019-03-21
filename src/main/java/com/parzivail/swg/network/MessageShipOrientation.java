@@ -48,6 +48,9 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 			return null;
 
 		EntityShip ship = (EntityShip)dim.getEntityByID(shipId);
+		if (ship == null)
+			return null;
+
 		ship.orientation = orientation.clone();
 
 		ship.setPosition(position.x, position.y, position.z);

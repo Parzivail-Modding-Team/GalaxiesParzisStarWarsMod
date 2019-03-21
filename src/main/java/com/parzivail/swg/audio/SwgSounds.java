@@ -1,7 +1,5 @@
-package com.parzivail.util.audio;
+package com.parzivail.swg.audio;
 
-import com.parzivail.swg.audio.MovingSoundHyperspaceAlarm;
-import com.parzivail.swg.audio.MovingSoundLightsaberIdle;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.entity.player.EntityPlayer;
 

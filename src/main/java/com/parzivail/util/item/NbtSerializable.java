@@ -11,6 +11,7 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class NbtSerializable<T extends NbtSerializable>
 {
@@ -28,6 +29,7 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(boolean.class, NbtSerializable::readBoolean, NbtSerializable::writeBoolean);
 		map(int[].class, NbtSerializable::readListInteger, NbtSerializable::writeListInteger);
 		map(String[].class, NbtSerializable::readListString, NbtSerializable::writeListString);
+		map(UUID.class, NbtSerializable::readUuid, NbtSerializable::writeUuid);
 
 		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
 		map(LightsaberDescriptor.class, NbtSerializable::readLightsaberDescriptor, NbtSerializable::writeLightsaberDescriptor);
@@ -149,6 +151,19 @@ public class NbtSerializable<T extends NbtSerializable>
 	private static void writeFloat(String s, Float aFloat, NBTTagCompound compound)
 	{
 		compound.setFloat(s, aFloat);
+	}
+
+	private static UUID readUuid(String s, NBTTagCompound compound)
+	{
+		String id = compound.getString(s);
+		if ("".equals(id))
+			return null;
+		return UUID.fromString(id);
+	}
+
+	private static void writeUuid(String s, UUID id, NBTTagCompound compound)
+	{
+		compound.setString(s, id == null ? "" : id.toString());
 	}
 
 	private static Long readLong(String s, NBTTagCompound compound)

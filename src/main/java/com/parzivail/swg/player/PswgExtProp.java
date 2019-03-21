@@ -18,6 +18,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.Constants.NBT;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.UUID;
+
 public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtendedEntityProperties
 {
 	public static final String PROP_NAME = Resources.MODID + "_eep";
@@ -32,6 +34,12 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	protected String[] completedQuests;
 	@NbtSave
 	protected int species;
+	@NbtSave
+	protected boolean changingDimensions;
+	@NbtSave
+	protected UUID shipRiding;
+	@NbtSave
+	protected int shipRidingSeatIdx;
 	@NbtSave
 	protected String[] flags;
 	@NbtSave
@@ -206,5 +214,38 @@ public class PswgExtProp extends NbtSerializable<PswgExtProp> implements IExtend
 	void playerStartedTracking(EntityPlayer entityPlayer)
 	{
 		StarWarsGalaxy.network.sendTo(new MessagePswgExtPropSync((EntityPlayer)entity, this), (EntityPlayerMP)entityPlayer);
+	}
+
+	public UUID getShipRiding()
+	{
+		return shipRiding;
+	}
+
+	public void setShipRiding(UUID shipId)
+	{
+		shipRiding = shipId;
+		sync();
+	}
+
+	public int getShipRidingSeatIdx()
+	{
+		return shipRidingSeatIdx;
+	}
+
+	public void setShipRidingSeatIdx(int idx)
+	{
+		shipRidingSeatIdx = idx;
+		sync();
+	}
+
+	public void setChangingDimensions(boolean changingDimensions)
+	{
+		this.changingDimensions = changingDimensions;
+		sync();
+	}
+
+	public boolean isChangingDimensions()
+	{
+		return changingDimensions;
 	}
 }

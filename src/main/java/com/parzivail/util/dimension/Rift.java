@@ -1,6 +1,9 @@
 package com.parzivail.util.dimension;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.entity.ship.EntitySeat;
+import com.parzivail.swg.entity.ship.EntityShip;
+import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.util.common.Lumberjack;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -28,19 +31,17 @@ import java.util.List;
  */
 public class Rift
 {
-	public static boolean travelEntity(World world, Entity entity, int dimension)
+	public static boolean travelEntity(Entity entity, int dimension)
 	{
 		ChunkCoordinates spawnPos;// = null;
 		float spawnYaw = 0;
 
-		if (world.isRemote)
+		if (entity.worldObj.isRemote)
 		{
 			return false;
 		}
 		else
 		{
-			float yaw = spawnYaw;
-
 			MinecraftServer mcServer = StarWarsGalaxy.proxy.getMCServer();
 			if (mcServer == null)
 			{
@@ -50,16 +51,8 @@ public class Rift
 			{
 				WorldServer newworld = mcServer.worldServerForDimension(dimension);
 				spawnPos = newworld.getSpawnPoint();
-				if (newworld == null)
-				{
-					System.err.println("Cannot Link Entity to Dimension: Could not get World for Dimension " + dimension);
-					return false;
-				}
-				else
-				{
-					teleportEntity(newworld, entity, dimension, spawnPos, yaw);
-					return true;
-				}
+				teleportEntity(newworld, entity, dimension, spawnPos, spawnYaw);
+				return true;
 			}
 		}
 	}
@@ -72,6 +65,19 @@ public class Rift
 		{
 			entity.mountEntity(null);
 			mount = teleportEntity(newworld, mount, dimension, spawn, yaw);
+		}
+
+		if (entity instanceof EntityShip)
+		{
+			EntityShip ship = (EntityShip)entity;
+			for (EntitySeat seat : ship.seats)
+				if (seat != null && seat.riddenByEntity instanceof EntityPlayer)
+				{
+					PswgExtProp ieep = PswgExtProp.get(seat.riddenByEntity);
+					ieep.setChangingDimensions(true);
+					teleportEntity(newworld, seat.riddenByEntity, dimension, spawn, yaw);
+				}
+			ship.breakdown();
 		}
 
 		boolean changingworlds = origin != newworld;

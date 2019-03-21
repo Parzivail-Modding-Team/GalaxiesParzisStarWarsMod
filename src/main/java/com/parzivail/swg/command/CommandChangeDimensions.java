@@ -1,6 +1,7 @@
 package com.parzivail.swg.command;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.entity.ship.EntitySeat;
 import com.parzivail.util.command.CommandParser;
 import com.parzivail.util.command.Parameter;
 import com.parzivail.util.dimension.Rift;
@@ -40,7 +41,10 @@ public class CommandChangeDimensions extends CommandBase
 		else
 		{
 			Entity player = CommandBase.getCommandSenderAsPlayer(sender);
-			Rift.travelEntity(player.worldObj, player, args.dimension);
+			if (player.ridingEntity instanceof EntitySeat && ((EntitySeat)player.ridingEntity).getParent() != null)
+				Rift.travelEntity(((EntitySeat)player.ridingEntity).getParent(), args.dimension);
+			else
+				Rift.travelEntity(player, args.dimension);
 		}
 	}
 

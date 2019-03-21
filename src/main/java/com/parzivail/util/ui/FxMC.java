@@ -19,16 +19,13 @@ public class FxMC
 {
 	public static void changeCameraDist(int dist)
 	{
-		try
-		{
-			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistance", "field_78490_B", "E");
-			ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistanceTemp", "field_78491_C", "F");
-		}
-		catch (Exception e)
-		{
-			Lumberjack.warn("Unable to change camera distance!");
-			e.printStackTrace();
-		}
+		ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistance", "field_78490_B", "E");
+		ObfuscationReflectionHelper.setPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, dist, "thirdPersonDistanceTemp", "field_78491_C", "F");
+	}
+
+	public static float getCameraDist()
+	{
+		return ObfuscationReflectionHelper.getPrivateValue(EntityRenderer.class, Client.mc.entityRenderer, "thirdPersonDistance", "field_78490_B", "E");
 	}
 
 	public static void changeCameraRoll(float roll)

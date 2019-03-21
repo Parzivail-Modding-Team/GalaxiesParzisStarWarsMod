@@ -1,4 +1,4 @@
-package com.parzivail.util.audio;
+package com.parzivail.swg.audio;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.audio.ISound;
@@ -18,7 +18,16 @@ public class ClientSoundHandler
 		ISound sound = sounds.get(type);
 		SoundHandler sh = FMLClientHandler.instance().getClient().getSoundHandler();
 		if (!sh.isSoundPlaying(sound))
-			sh.playSound(sound);
+		{
+			try
+			{
+				sh.playSound(sound);
+			}
+			catch (IllegalArgumentException e)
+			{
+				sh.stopSound(sound);
+			}
+		}
 
 		putSounds(player, sounds);
 	}
@@ -29,8 +38,7 @@ public class ClientSoundHandler
 
 		ISound sound = sounds.get(type);
 		SoundHandler sh = FMLClientHandler.instance().getClient().getSoundHandler();
-		if (sh.isSoundPlaying(sound))
-			sh.stopSound(sound);
+		sh.stopSound(sound);
 
 		putSounds(player, sounds);
 	}
