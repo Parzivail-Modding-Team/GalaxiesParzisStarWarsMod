@@ -97,7 +97,7 @@ public class RenderLightsaber extends JsonItemRenderer
 		{
 			float length = d.bladeLength * MathHelper.clamp_float((bd.openAnimation + Client.renderPartialTicks * bd.openingState - bd.openingState) / 4f, 0, 1);
 
-			if (player != null && (type == ItemRenderType.EQUIPPED || type == ItemRenderType.EQUIPPED_FIRST_PERSON))
+			if (player != null && type == ItemRenderType.EQUIPPED)
 			{
 				GL.PushMatrix();
 				Vector3f pBase = Client.getLocalToWorldPos();

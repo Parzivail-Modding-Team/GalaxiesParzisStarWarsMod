@@ -39,11 +39,8 @@ public class LightsaberTrail
 		GL.Begin(PrimitiveType.Quads);
 		for (int i = 1; i < points.size(); i++)
 		{
-			if (i != 1)
-				continue;
-
 			LightsaberTrailComponent pointsHere = points.get(i);
-			LightsaberTrailComponent pointsPrev = points.get(points.size() - 1);
+			LightsaberTrailComponent pointsPrev = points.get(i - 1);
 			float p = (float)i / points.size();
 
 			Vector3f hereBase = pointsHere.getBasePos();
@@ -62,63 +59,63 @@ public class LightsaberTrail
 			Vector3f coreEndHere = MathUtil.lerp(botLenLerp, hereBase, hereEnd);
 			Vector3f coreEndPrev = MathUtil.lerp(botLenLerp, prevBase, prevEnd);
 
-			Vector3f normal = Vector3f.cross(Vector3f.sub(coreEndPrev, coreStartPrev, null), Vector3f.sub(coreEndHere, coreStartPrev, null), null).normalise(null);
-
-			if (normal.y < 0)
-				normal.scale(-1);
-
-			normal.scale(0.0175f);
-
-			//			GL.Vertex3(coreStartPrev);
-			//			GL.Vertex3(coreEndPrev);
-			//			GL.Vertex3(coreEndHere);
-			//			GL.Vertex3(coreStartHere);
-
-			// Top
-			GL.Vertex3(Vector3f.add(coreStartPrev, normal, null));
-			GL.Vertex3(Vector3f.add(coreEndPrev, normal, null));
-			GL.Vertex3(Vector3f.add(coreEndHere, normal, null));
-			GL.Vertex3(Vector3f.add(coreStartHere, normal, null));
-
-			// Bottom
-			GL.Vertex3(Vector3f.sub(coreStartPrev, normal, null));
-			GL.Vertex3(Vector3f.sub(coreEndPrev, normal, null));
-			GL.Vertex3(Vector3f.sub(coreEndHere, normal, null));
-			GL.Vertex3(Vector3f.sub(coreStartHere, normal, null));
-
-			// Prev wall
-			GL.Vertex3(Vector3f.add(coreStartPrev, normal, null));
-			GL.Vertex3(Vector3f.add(coreEndPrev, normal, null));
-			GL.Vertex3(Vector3f.sub(coreEndPrev, normal, null));
-			GL.Vertex3(Vector3f.sub(coreStartPrev, normal, null));
-
-			// Here wall
-			GL.Vertex3(Vector3f.add(coreStartHere, normal, null));
-			GL.Vertex3(Vector3f.add(coreEndHere, normal, null));
-			GL.Vertex3(Vector3f.sub(coreEndHere, normal, null));
-			GL.Vertex3(Vector3f.sub(coreStartHere, normal, null));
-
-			//			GL.Color(pointsHere.getColor(), (int)(p * 128));
+			//			Vector3f normal = Vector3f.cross(Vector3f.sub(coreEndPrev, coreStartPrev, null), Vector3f.sub(coreEndHere, coreStartPrev, null), null).normalise(null);
 			//
-			//			GL.Vertex3(prevEnd);
-			//			GL.Vertex3(coreStartPrev);
-			//			GL.Vertex3(coreStartHere);
-			//			GL.Vertex3(hereEnd);
+			//			if (normal.y < 0)
+			//				normal.scale(-1);
 			//
-			//			if (i > points.size() * 0.3)
-			//				GL.Color(pointsHere.getCoreColor(), 255);
+			//			normal.scale(0.0175f);
 			//
-			//			GL.Vertex3(coreStartPrev);
-			//			GL.Vertex3(coreEndPrev);
-			//			GL.Vertex3(coreEndHere);
-			//			GL.Vertex3(coreStartHere);
+			//			//			GL.Vertex3(coreStartPrev);
+			//			//			GL.Vertex3(coreEndPrev);
+			//			//			GL.Vertex3(coreEndHere);
+			//			//			GL.Vertex3(coreStartHere);
 			//
-			//			GL.Color(pointsHere.getColor(), (int)(p * 128));
+			//			// Top
+			//			GL.Vertex3(Vector3f.add(coreStartPrev, normal, null));
+			//			GL.Vertex3(Vector3f.add(coreEndPrev, normal, null));
+			//			GL.Vertex3(Vector3f.add(coreEndHere, normal, null));
+			//			GL.Vertex3(Vector3f.add(coreStartHere, normal, null));
 			//
-			//			GL.Vertex3(coreEndPrev);
-			//			GL.Vertex3(prevBase);
-			//			GL.Vertex3(hereBase);
-			//			GL.Vertex3(coreEndHere);
+			//			// Bottom
+			//			GL.Vertex3(Vector3f.sub(coreStartPrev, normal, null));
+			//			GL.Vertex3(Vector3f.sub(coreEndPrev, normal, null));
+			//			GL.Vertex3(Vector3f.sub(coreEndHere, normal, null));
+			//			GL.Vertex3(Vector3f.sub(coreStartHere, normal, null));
+			//
+			//			// Prev wall
+			//			GL.Vertex3(Vector3f.add(coreStartPrev, normal, null));
+			//			GL.Vertex3(Vector3f.add(coreEndPrev, normal, null));
+			//			GL.Vertex3(Vector3f.sub(coreEndPrev, normal, null));
+			//			GL.Vertex3(Vector3f.sub(coreStartPrev, normal, null));
+			//
+			//			// Here wall
+			//			GL.Vertex3(Vector3f.add(coreStartHere, normal, null));
+			//			GL.Vertex3(Vector3f.add(coreEndHere, normal, null));
+			//			GL.Vertex3(Vector3f.sub(coreEndHere, normal, null));
+			//			GL.Vertex3(Vector3f.sub(coreStartHere, normal, null));
+
+			GL.Color(pointsHere.getColor(), (int)(p * 128));
+
+			GL.Vertex3(prevEnd);
+			GL.Vertex3(coreStartPrev);
+			GL.Vertex3(coreStartHere);
+			GL.Vertex3(hereEnd);
+
+			if (i > points.size() * 0.3)
+				GL.Color(pointsHere.getCoreColor(), 255);
+
+			GL.Vertex3(coreStartPrev);
+			GL.Vertex3(coreEndPrev);
+			GL.Vertex3(coreEndHere);
+			GL.Vertex3(coreStartHere);
+
+			GL.Color(pointsHere.getColor(), (int)(p * 128));
+
+			GL.Vertex3(coreEndPrev);
+			GL.Vertex3(prevBase);
+			GL.Vertex3(hereBase);
+			GL.Vertex3(coreEndHere);
 		}
 		GL.End();
 		GL.Color(GLPalette.WHITE);
