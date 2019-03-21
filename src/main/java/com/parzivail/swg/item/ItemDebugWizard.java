@@ -23,7 +23,7 @@ public class ItemDebugWizard extends PItem
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List info, boolean advancedTooltips)
 	{
-		info.add("Currently debugging: Force Powers (jump)");
+		info.add("Currently debugging: Force Powers (lightning)");
 		info.add(TextUtil.graveToSection(String.format("%s: `r[`e%s`r]", I18n.format(Resources.guiDot("use")), Resources.getKeyName(Client.mc.gameSettings.keyBindUseItem))));
 	}
 
@@ -41,7 +41,10 @@ public class ItemDebugWizard extends PItem
 			}
 		}
 
-		Cron.usePower(player, ForceRegistry.fpJump);
+		if (Cron.isActive(player, ForceRegistry.fpLightning))
+			Cron.deactivate(player, ForceRegistry.fpLightning);
+		else
+			Cron.usePower(player, ForceRegistry.fpLightning);
 
 		return stack;
 	}
