@@ -17,6 +17,9 @@ public class BiomeHyperspace extends PBiomeGenBase
 		super(biomeId);
 		setBiomeName("Hyperspace");
 		spawnableCreatureList.clear();
+		spawnableCaveCreatureList.clear();
+		spawnableMonsterList.clear();
+		spawnableWaterCreatureList.clear();
 	}
 
 	@Override

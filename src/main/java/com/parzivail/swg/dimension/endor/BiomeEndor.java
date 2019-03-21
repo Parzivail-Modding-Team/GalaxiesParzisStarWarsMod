@@ -29,6 +29,9 @@ public class BiomeEndor extends PBiomeGenBase
 		super(biomeId);
 		setBiomeName("The Forest Moon of Endor");
 		spawnableCreatureList.clear();
+		spawnableCaveCreatureList.clear();
+		spawnableMonsterList.clear();
+		spawnableWaterCreatureList.clear();
 	}
 
 	@Override

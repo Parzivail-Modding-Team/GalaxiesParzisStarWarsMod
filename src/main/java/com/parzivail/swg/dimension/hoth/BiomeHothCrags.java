@@ -33,6 +33,9 @@ public class BiomeHothCrags extends PBiomeGenBase
 		super(biomeId);
 		setBiomeName("Hoth");
 		spawnableCreatureList.clear();
+		spawnableCaveCreatureList.clear();
+		spawnableMonsterList.clear();
+		spawnableWaterCreatureList.clear();
 
 		temperature = 0;
 
