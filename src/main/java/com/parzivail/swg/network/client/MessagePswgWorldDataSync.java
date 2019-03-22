@@ -1,4 +1,4 @@
-package com.parzivail.swg.network;
+package com.parzivail.swg.network.client;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.world.PswgWorldDataHandler;

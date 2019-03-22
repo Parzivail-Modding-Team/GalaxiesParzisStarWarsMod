@@ -4,7 +4,7 @@ import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.force.ForcePowerDescriptor;
 import com.parzivail.swg.force.IForcePower;
-import com.parzivail.swg.network.MessagePswgExtPropSync;
+import com.parzivail.swg.network.client.MessagePswgExtPropSync;
 import com.parzivail.swg.player.species.SpeciesType;
 import com.parzivail.util.item.NbtSave;
 import com.parzivail.util.item.NbtSerializable;

@@ -1,4 +1,4 @@
-package com.parzivail.swg.network;
+package com.parzivail.swg.network.client;
 
 import com.parzivail.swg.entity.ship.EntityShip;
 import com.parzivail.swg.proxy.Client;

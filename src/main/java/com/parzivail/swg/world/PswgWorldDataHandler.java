@@ -2,7 +2,7 @@ package com.parzivail.swg.world;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.network.MessagePswgWorldDataSync;
+import com.parzivail.swg.network.client.MessagePswgWorldDataSync;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;

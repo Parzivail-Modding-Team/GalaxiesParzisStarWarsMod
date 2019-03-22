@@ -195,7 +195,7 @@ public class PRenderPlayer extends RendererLivingEntity
 	{
 		PswgExtProp prop = PswgExtProp.get(player);
 		if (prop == null)
-			return null;
+			return speciesModelMap.get(SpeciesType.Human);
 		SpeciesType species = prop.getSpecies();
 		PModelBipedBase model = getSpeciesModel(species);
 		if (mainModel != model)

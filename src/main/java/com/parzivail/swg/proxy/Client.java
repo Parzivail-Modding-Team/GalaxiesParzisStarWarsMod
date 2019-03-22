@@ -320,18 +320,6 @@ public class Client extends Common
 	}
 
 	@Override
-	public boolean isServer()
-	{
-		return false;
-	}
-
-	@Override
-	public Entity getEntityById(int dim, int id)
-	{
-		return Minecraft.getMinecraft().theWorld.getEntityByID(id);
-	}
-
-	@Override
 	public void spawnSmokeParticle(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
 	{
 		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSmoke(world, x, y, z, velocityX, velocityY, velocityZ));
@@ -344,9 +332,9 @@ public class Client extends Common
 	}
 
 	@Override
-	public void handleVehicleMovement()
+	public void handleVehicleKeybinds()
 	{
-		KeyHandler.handleVehicleMovement();
+		KeyHandler.handleVehicleKeybinds();
 	}
 
 	@Override
@@ -363,12 +351,5 @@ public class Client extends Common
 			return;
 		PswgExtProp props = PswgExtProp.get(e);
 		props.loadNBTData(ieep);
-	}
-
-	@Override
-	public boolean isClientControlled(EntityShip query)
-	{
-		EntityShip ship = SwgEntityUtil.getShipRiding(mc.thePlayer);
-		return ship != null && ship.equals(query) && ship.canBeControlledBy(mc.thePlayer);
 	}
 }

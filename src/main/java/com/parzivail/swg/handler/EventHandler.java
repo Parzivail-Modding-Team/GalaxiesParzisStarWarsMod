@@ -13,7 +13,7 @@ import com.parzivail.swg.gui.GuiNowEntering;
 import com.parzivail.swg.gui.GuiScreenTrailer;
 import com.parzivail.swg.item.PItem;
 import com.parzivail.swg.item.blaster.ItemBlasterRifle;
-import com.parzivail.swg.network.MessagePswgWorldDataSync;
+import com.parzivail.swg.network.client.MessagePswgWorldDataSync;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.registry.ForceRegistry;
@@ -534,24 +534,6 @@ public class EventHandler
 	{
 		if (event.isCancelable())
 			event.setCanceled(true);
-
-		//		// TODO: get updated models
-		//		ModelTogrutaM.instance.inheritAngles(event.renderer.modelBipedMain);
-		//
-		//		event.renderer.modelBipedMain.bipedHead.isHidden = true;
-		//		event.renderer.modelBipedMain.bipedHeadwear.isHidden = true;
-		//		event.renderer.modelBipedMain.bipedBody.isHidden = true;
-		//		event.renderer.modelBipedMain.bipedRightArm.isHidden = true;
-		//		event.renderer.modelBipedMain.bipedLeftArm.isHidden = true;
-		//		event.renderer.modelBipedMain.bipedRightLeg.isHidden = true;
-		//		event.renderer.modelBipedMain.bipedLeftLeg.isHidden = true;
-		//
-		//		GL.PushMatrix();
-		//		GL.Rotate(180, 1, 0, 0);
-		//		GL.Rotate(MathUtil.interpolateRotation(event.entityPlayer.prevRenderYawOffset, event.entityPlayer.renderYawOffset, event.partialRenderTick), 0, 1, 0);
-		//		GL.Translate(0, 0.2f, 0);
-		//		ModelTogrutaM.instance.render(event.entityPlayer, 0, 0, 0, 0, 0, 1 / 16f);
-		//		GL.PopMatrix();
 
 		Vec3 viewPos = Client.mc.renderViewEntity.getPosition(event.partialRenderTick);
 		Vec3 entityPos = event.entityPlayer.getPosition(event.partialRenderTick);

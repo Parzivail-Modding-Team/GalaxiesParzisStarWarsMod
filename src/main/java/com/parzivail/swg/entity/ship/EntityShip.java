@@ -9,6 +9,7 @@ import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.dimension.Rift;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.item.IGuiOverlay;
+import com.parzivail.util.math.RenderedValue;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.SlidingWindow;
 import com.parzivail.util.math.lwjgl.Vector3f;
@@ -37,6 +38,8 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	public boolean isInitialized;
 	public int ticksStartHyperdrive = -1;
 	public UUID shipId;
+	public boolean wingsOpen;
+	public RenderedValue wingsTimer = new RenderedValue();
 
 	@SideOnly(Side.CLIENT)
 	public EntityCinematicCamera camera;
@@ -123,6 +126,14 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		if (ridingEntity != null && ridingEntity.isDead)
 			ridingEntity = null;
 
+		lastTickPosX = prevPosX = posX;
+		lastTickPosY = prevPosY = posY;
+		lastTickPosZ = prevPosZ = posZ;
+		prevRotationPitch = rotationPitch;
+		prevRotationYaw = rotationYaw;
+		previousOrientation = orientation.clone();
+		wingsTimer.tick();
+
 		ShipData data = getData();
 
 		if (posY < -64.0D)
@@ -133,6 +144,8 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			spawnChildren();
 			isInitialized = true;
 		}
+
+		StarWarsGalaxy.proxy.handleVehicleKeybinds();
 
 		if (posY > 255 && dimension != StarWarsGalaxy.config.getDimIdHyperspace())
 		{
@@ -147,13 +160,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		}
 		else
 			ticksStartHyperdrive = -1;
-
-		lastTickPosX = prevPosX = posX;
-		lastTickPosY = prevPosY = posY;
-		lastTickPosZ = prevPosZ = posZ;
-		prevRotationPitch = rotationPitch;
-		prevRotationYaw = rotationYaw;
-		previousOrientation = orientation.clone();
 
 		Entity driver = seats == null ? null : (seats[0] == null ? null : seats[0].riddenByEntity);
 		if (driver instanceof EntityPlayer)
@@ -194,6 +200,12 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		slidingYaw.slide(dYaw);
 		float dPitch = MathHelper.wrapAngleTo180_float(orientation.getPitch() - previousOrientation.getPitch());
 		slidingPitch.slide(dPitch);
+
+		float timer = wingsTimer.get(0);
+		if (wingsOpen && timer < 20)
+			wingsTimer.add(1);
+		else if (!wingsOpen && timer > 0)
+			wingsTimer.add(-1);
 
 		if (data.isAirVehicle)
 		{
@@ -249,7 +261,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		if (data.isAirVehicle)
 			vehiclePitch = playerPitch;
 
-		// TODO: the client/server mismatch for player orientation is what causes the vibration. Setting to constant values eliminates it.
 		orientation.setAngles(-player.rotationYaw, vehiclePitch, 0);
 	}
 
@@ -263,20 +274,15 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 
 		HashMap<Integer, EntityPlayer> players = getPlayersToRemount();
 
-		Lumberjack.debug("Creating seats");
 		for (int i = 0; i < seats.length; i++)
 		{
-			Lumberjack.debug("Creating seat %s", i);
 			// TODO: seat roles
 			seats[i] = new EntitySeat(worldObj, this, i);
 			worldObj.spawnEntityInWorld(seats[i]);
 			if (players.containsKey(i) && players.get(i) != null)
 			{
-				Lumberjack.debug("Player found for seat %s", i);
 				players.get(i).mountEntity(seats[i]);
 			}
-			else
-				Lumberjack.debug("No player found for seat %s", i);
 		}
 	}
 
@@ -378,12 +384,6 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		shipId = new UUID(upper, lower);
 	}
 
-	public boolean canBeControlledBy(EntityPlayer thePlayer)
-	{
-		// TODO:
-		return true;
-	}
-
 	public boolean isBootingHyperdrive()
 	{
 		return posY > 255;
@@ -395,5 +395,27 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		for (EntitySeat seat : seats)
 			if (seat != null)
 				seat.setDead();
+	}
+
+	public void consumeInput(ShipInput input)
+	{
+		switch (input)
+		{
+			case WingActuate:
+				wingsOpen = !wingsOpen;
+				break;
+		}
+	}
+
+	public void writeState(NBTTagCompound state)
+	{
+		state.setBoolean("wingsOpen", wingsOpen);
+		state.setFloat("wingsTimer", wingsTimer.get(0));
+	}
+
+	public void readState(NBTTagCompound state)
+	{
+		wingsOpen = state.getBoolean("wingsOpen");
+		wingsTimer.set(state.getFloat("wingsTimer"));
 	}
 }

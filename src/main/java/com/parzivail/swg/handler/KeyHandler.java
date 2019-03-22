@@ -1,7 +1,12 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.entity.ship.EntityShip;
+import com.parzivail.swg.entity.ship.ShipInput;
+import com.parzivail.swg.network.MessageShipInput;
 import com.parzivail.swg.proxy.Client;
+import com.parzivail.swg.registry.KeybindRegistry;
+import com.parzivail.swg.util.SwgEntityUtil;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.MouseInputEvent;
 import net.minecraft.client.settings.KeyBinding;
@@ -31,35 +36,22 @@ public class KeyHandler
 			Client.guiQuestNotification.show();
 		}
 
-		//		if (KeybindRegistry.keyDebug.getIsKeyPressed())
-		//		{
-		//		}
+		EntityShip ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
+		if (Client.mc.thePlayer != null && ship != null)
+		{
+			if (KeybindRegistry.keyShipWingActuate.getIsKeyPressed())
+				StarWarsGalaxy.network.sendToServer(new MessageShipInput(ship, ShipInput.WingActuate));
+		}
 	}
 
-	public static void handleVehicleMovement()
+	public static void handleVehicleKeybinds()
 	{
-		// TODO
-		//		EntityShip ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
-		//		if (Client.mc.thePlayer != null && ship != null)
-		//		{
-		//			if ($(Client.mc.gameSettings.keyBindLeft))
-		//				ship.acceptInput(ShipInput.RollLeft);
-		//
-		//			if ($(Client.mc.gameSettings.keyBindRight))
-		//				ship.acceptInput(ShipInput.RollRight);
-		//
-		//			if ($(Client.mc.gameSettings.keyBindForward))
-		//				ship.acceptInput(ShipInput.PitchDown);
-		//
-		//			if ($(Client.mc.gameSettings.keyBindBack))
-		//				ship.acceptInput(ShipInput.PitchUp);
-		//
-		//			if ($(Client.mc.gameSettings.keyBindJump))
-		//				ship.acceptInput(ShipInput.ThrottleUp);
-		//
-		//			if ($(Client.mc.gameSettings.keyBindSprint))
-		//				ship.acceptInput(ShipInput.ThrottleDown);
-		//		}
+		EntityShip ship = SwgEntityUtil.getShipRiding(Client.mc.thePlayer);
+		if (Client.mc.thePlayer != null && ship != null)
+		{
+			//			if ($(KeybindRegistry.keyShipWingActuate))
+			//				ship.acceptInput(ShipInput.RollLeft);
+		}
 	}
 
 	private static boolean $(KeyBinding key)

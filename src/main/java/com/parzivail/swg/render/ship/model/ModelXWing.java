@@ -1,6 +1,8 @@
 package com.parzivail.swg.render.ship.model;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.entity.ship.EntityShip;
+import com.parzivail.swg.entity.ship.ShipData;
 import com.parzivail.swg.render.ship.IEntityRenderer;
 import com.parzivail.util.binary.Swg3.SwgModel;
 import com.parzivail.util.binary.Swg3.SwgPart;
@@ -24,21 +26,26 @@ public class ModelXWing implements IEntityRenderer
 	{
 		int frame = 0;
 
+		EntityShip ship = (EntityShip)entity;
+		ShipData data = ship.getData();
+
+		float wingOpenAmount = ship.wingsTimer.get(partialTicks) / 20f;
+
 		for (SwgPart p : model.parts)
 		{
 			GL.PushMatrix();
-			//			if (p.name.equals("x_wing01") || p.name.equals("x_wing04"))
-			//			{
-			//				GL.Translate(0, 0, data.verticalCenteringOffset - data.verticalGroundingOffset);
-			//				GL.Rotate(-13, 1, 0, 0);
-			//				GL.Translate(0, 0, -data.verticalCenteringOffset + data.verticalGroundingOffset);
-			//			}
-			//			if (p.name.equals("x_wing02") || p.name.equals("x_wing03"))
-			//			{
-			//				GL.Translate(0, 0, data.verticalCenteringOffset - data.verticalGroundingOffset);
-			//				GL.Rotate(13, 1, 0, 0);
-			//				GL.Translate(0, 0, -data.verticalCenteringOffset + data.verticalGroundingOffset);
-			//			}
+			if (p.name.equals("x_wing01") || p.name.equals("x_wing04"))
+			{
+				GL.Translate(0, 0, data.verticalCenteringOffset - data.verticalGroundingOffset);
+				GL.Rotate(-13 * wingOpenAmount, 1, 0, 0);
+				GL.Translate(0, 0, -data.verticalCenteringOffset + data.verticalGroundingOffset);
+			}
+			if (p.name.equals("x_wing02") || p.name.equals("x_wing03"))
+			{
+				GL.Translate(0, 0, data.verticalCenteringOffset - data.verticalGroundingOffset);
+				GL.Rotate(13 * wingOpenAmount, 1, 0, 0);
+				GL.Translate(0, 0, -data.verticalCenteringOffset + data.verticalGroundingOffset);
+			}
 			renderManager.renderEngine.bindTexture(p.textures[frame].texture);
 			GL.Scale(0.0004f);
 			GL.CallList(model.partRenderLists.get(p.name)[frame]);
