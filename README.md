@@ -18,9 +18,10 @@ If you'd like to help support and sustain the mod, please consider becoming a do
 [![Become a donor!](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=8079542)
 
 Perks include:
-* Shoutouts
-* Getting to name NPCs, locations and structures
-* White-list on the mod development server
+* Your name in the credits
+* Early mod releases
+
+
 
 Goals include:
 * Community MMO server
