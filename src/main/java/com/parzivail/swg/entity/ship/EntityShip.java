@@ -2,7 +2,7 @@ package com.parzivail.swg.entity.ship;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityCinematicCamera;
-import com.parzivail.swg.network.MessageShipOrientation;
+import com.parzivail.swg.network.MessageShipState;
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.common.Lumberjack;
@@ -77,7 +77,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 			if (Vector3f.sub(here, there, null).lengthSquared() > 1)
 			{
 				// Dear server. I respect you telling me where to go, but I decline and will proceed to tell you where I am instead.
-				StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
+				StarWarsGalaxy.network.sendToServer(new MessageShipState(this));
 			}
 		}
 		else
@@ -173,7 +173,7 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 				throttle = MathHelper.clamp_float(throttle, 0, data.maxThrottle);
 
 				if (oldThrottle != throttle)
-					StarWarsGalaxy.network.sendToServer(new MessageShipOrientation(this));
+					StarWarsGalaxy.network.sendToServer(new MessageShipState(this));
 			}
 
 			consumePlayerOrientation(data, player);
@@ -332,10 +332,10 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound tagCompound)
 	{
-		throttle = tagCompound.getFloat("throttle");
-		orientation = new RotatedAxes(tagCompound.getFloat("yaw"), tagCompound.getFloat("pitch"), tagCompound.getFloat("roll"));
-		createChildren();
+		readTransientState(tagCompound);
 		shipId = UUID.fromString(tagCompound.getString("shipId"));
+
+		createChildren();
 	}
 
 	private void createChildren()
@@ -353,11 +353,8 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound tagCompound)
 	{
-		tagCompound.setFloat("throttle", throttle);
-		tagCompound.setFloat("yaw", orientation.getYaw());
-		tagCompound.setFloat("pitch", orientation.getPitch());
-		tagCompound.setFloat("roll", orientation.getRoll());
 		tagCompound.setString("shipId", shipId.toString());
+		writeTransientState(tagCompound);
 	}
 
 	@Override
@@ -407,14 +404,20 @@ public abstract class EntityShip extends Entity implements IEntityAdditionalSpaw
 		}
 	}
 
-	public void writeState(NBTTagCompound state)
+	public void writeTransientState(NBTTagCompound state)
 	{
+		state.setFloat("throttle", throttle);
+		state.setFloat("yaw", orientation.getYaw());
+		state.setFloat("pitch", orientation.getPitch());
+		state.setFloat("roll", orientation.getRoll());
 		state.setBoolean("wingsOpen", wingsOpen);
 		state.setFloat("wingsTimer", wingsTimer.get(0));
 	}
 
-	public void readState(NBTTagCompound state)
+	public void readTransientState(NBTTagCompound state)
 	{
+		throttle = state.getFloat("throttle");
+		orientation = new RotatedAxes(state.getFloat("yaw"), state.getFloat("pitch"), state.getFloat("roll"));
 		wingsOpen = state.getBoolean("wingsOpen");
 		wingsTimer.set(state.getFloat("wingsTimer"));
 	}

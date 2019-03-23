@@ -2,8 +2,7 @@ package com.parzivail.swg.network;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.ship.EntityShip;
-import com.parzivail.swg.network.client.MessageShipClientOrientation;
-import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.swg.network.client.MessageShipClientState;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.network.PMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -21,29 +20,25 @@ import java.util.Set;
 /**
  * Created by colby on 12/29/2017.
  */
-public class MessageShipOrientation extends PMessage<MessageShipOrientation>
+public class MessageShipState extends PMessage<MessageShipState>
 {
 	public int shipId;
 	public int shipDim;
-	public RotatedAxes orientation;
 	public Vector3f position;
-	public float throttle;
 	public NBTTagCompound state;
 
-	public MessageShipOrientation()
+	public MessageShipState()
 	{
 	}
 
-	public MessageShipOrientation(EntityShip ship)
+	public MessageShipState(EntityShip ship)
 	{
 		shipId = ship.getEntityId();
 		shipDim = ship.dimension;
-		orientation = ship.orientation;
 		position = new Vector3f((float)ship.posX, (float)ship.posY, (float)ship.posZ);
-		throttle = ship.throttle;
 
 		state = new NBTTagCompound();
-		ship.writeState(state);
+		ship.writeTransientState(state);
 	}
 
 	@Override
@@ -57,12 +52,8 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 		if (ship == null)
 			return null;
 
-		ship.orientation = orientation.clone();
-
 		ship.setPosition(position.x, position.y, position.z);
-		ship.throttle = throttle;
-
-		ship.readState(state);
+		ship.readTransientState(state);
 
 		Entity driver = ship.seats[0].riddenByEntity;
 
@@ -72,7 +63,7 @@ public class MessageShipOrientation extends PMessage<MessageShipOrientation>
 		{
 			if (p == driver)
 				continue;
-			StarWarsGalaxy.network.sendTo(new MessageShipClientOrientation(ship), (EntityPlayerMP)p);
+			StarWarsGalaxy.network.sendTo(new MessageShipClientState(ship), (EntityPlayerMP)p);
 		}
 
 		return null;

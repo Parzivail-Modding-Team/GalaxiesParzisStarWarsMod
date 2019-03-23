@@ -11,7 +11,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 /**
  * Created by colby on 12/29/2017.
  */
-public class MessageShipClientOrientation extends PMessage<MessageShipClientOrientation>
+public class MessageShipClientState extends PMessage<MessageShipClientState>
 {
 	public int shipId;
 	public int shipDim;
@@ -19,11 +19,11 @@ public class MessageShipClientOrientation extends PMessage<MessageShipClientOrie
 	public Vector3f position;
 	public float throttle;
 
-	public MessageShipClientOrientation()
+	public MessageShipClientState()
 	{
 	}
 
-	public MessageShipClientOrientation(EntityShip ship)
+	public MessageShipClientState(EntityShip ship)
 	{
 		shipId = ship.getEntityId();
 		shipDim = ship.dimension;
