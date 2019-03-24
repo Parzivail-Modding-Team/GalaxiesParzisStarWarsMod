@@ -17,10 +17,7 @@ import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.registry.*;
 import com.parzivail.swg.tab.PTab;
-import com.parzivail.swg.transaction.TransactionDeductCredits;
-import com.parzivail.swg.transaction.TransactionEquipAttachment;
-import com.parzivail.swg.transaction.TransactionSetLightsaberDescriptor;
-import com.parzivail.swg.transaction.TransactionUnlockAttachment;
+import com.parzivail.swg.transaction.*;
 import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.OpenSimplexNoise;
 import com.parzivail.util.network.MessageCreateDecal;
@@ -98,6 +95,7 @@ public class StarWarsGalaxy
 		transactionBroker.register(TransactionUnlockAttachment.class);
 		transactionBroker.register(TransactionEquipAttachment.class);
 		transactionBroker.register(TransactionSetLightsaberDescriptor.class);
+		transactionBroker.register(TransactionUpdateNpcSpawner.class);
 	}
 
 	@SuppressWarnings("unchecked")

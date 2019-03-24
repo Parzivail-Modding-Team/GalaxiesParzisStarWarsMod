@@ -61,6 +61,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.ActiveRenderInfo;
 import net.minecraft.client.renderer.GLAllocation;
@@ -299,6 +300,12 @@ public class Client extends Common
 		}
 		else
 			ClientSoundHandler.stopSound(player, SwgSound.HyperspaceAlarm);
+	}
+
+	@Override
+	public void displayGuiScreen(GuiScreen gui)
+	{
+		mc.displayGuiScreen(gui);
 	}
 
 	@Override

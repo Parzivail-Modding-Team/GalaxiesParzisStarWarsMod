@@ -27,6 +27,7 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(float.class, NbtSerializable::readFloat, NbtSerializable::writeFloat);
 		map(double.class, NbtSerializable::readDouble, NbtSerializable::writeDouble);
 		map(boolean.class, NbtSerializable::readBoolean, NbtSerializable::writeBoolean);
+		map(String.class, NbtSerializable::readString, NbtSerializable::writeString);
 		map(int[].class, NbtSerializable::readListInteger, NbtSerializable::writeListInteger);
 		map(String[].class, NbtSerializable::readListString, NbtSerializable::writeListString);
 		map(UUID.class, NbtSerializable::readUuid, NbtSerializable::writeUuid);
@@ -214,6 +215,16 @@ public class NbtSerializable<T extends NbtSerializable>
 	private static void writeBoolean(String s, boolean aBoolean, NBTTagCompound compound)
 	{
 		compound.setBoolean(s, aBoolean);
+	}
+
+	private static String readString(String s, NBTTagCompound compound)
+	{
+		return compound.getString(s);
+	}
+
+	private static void writeString(String s, String aString, NBTTagCompound compound)
+	{
+		compound.setString(s, aString);
 	}
 
 	private static Pair<Reader, Writer> getHandler(Class<?> clazz)

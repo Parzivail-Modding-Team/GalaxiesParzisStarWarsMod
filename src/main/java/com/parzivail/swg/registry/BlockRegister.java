@@ -126,6 +126,7 @@ public class BlockRegister
 		registerWithTile(lightsaberForge = new BlockLightsaberForge().withPlaceholderTexture());
 		registerWithTile(new BlockSabaccTable().withPlaceholderTexture());
 		registerWithTile(new BlockSoundHothTelemetry().withPlaceholderTexture());
+		registerWithTile(new BlockNpcSpawner());
 
 		// Tile entities that need to keep a TESR
 		registerWithTile(gunRack = new BlockGunRack());

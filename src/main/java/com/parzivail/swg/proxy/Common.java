@@ -8,6 +8,7 @@ import com.parzivail.util.network.MessageSpawnParticle;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -76,6 +77,10 @@ public class Common
 	}
 
 	public void handleVehicleKeybinds()
+	{
+	}
+
+	public void displayGuiScreen(GuiScreen gui)
 	{
 	}
 }

@@ -1,3 +1,6 @@
+pswg.gui.save=Save
+pswg.gui.spawn=Spawn
+pswg.gui.cancel=Cancel
 pswg.gui.scope=Scope
 pswg.gui.barrel=Barrel
 pswg.gui.grip=Grip
@@ -22,6 +25,9 @@ pswg.gui.lightsaber.bladeColor=Glow Color
 pswg.gui.lightsaber.bladeLength=Blade Length
 pswg.gui.lightsaber.coreColor=Core Color
 pswg.gui.lightsaber.unstable=Unstable
+
+pswg.gui.npcSpawner=NPC Spawner
+pswg.gui.npcId=NPC ID
 
 pswg.zone.common.entering=Now Entering
 pswg.zone.moseisley=The Mos Eisley Spaceport
