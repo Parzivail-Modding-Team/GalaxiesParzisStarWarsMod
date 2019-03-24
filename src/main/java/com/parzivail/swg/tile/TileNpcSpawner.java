@@ -1,6 +1,5 @@
 package com.parzivail.swg.tile;
 
-import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.util.common.Lumberjack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityPig;
@@ -35,7 +34,7 @@ public class TileNpcSpawner extends TileEntity
 		if (spawnImmediately)
 		{
 			if (worldObj.isRemote)
-				StarWarsGalaxy.proxy.displayGuiScreen(null);
+				return;
 
 			setSpawnImmediately(false);
 

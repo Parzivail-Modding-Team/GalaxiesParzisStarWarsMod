@@ -64,17 +64,17 @@ public class GuiNpcSpawner extends GuiScreen
 		{
 			if (button.id == btnCancel.id)
 			{
-				mc.displayGuiScreen(null);
+				player.closeScreen();
 			}
 			else if (button.id == btnSave.id)
 			{
 				StarWarsGalaxy.transactionBroker.dispatch(new TransactionUpdateNpcSpawner(tile, npcId.getText(), false));
-				mc.displayGuiScreen(null);
+				player.closeScreen();
 			}
 			else if (button.id == btnSpawn.id)
 			{
 				StarWarsGalaxy.transactionBroker.dispatch(new TransactionUpdateNpcSpawner(tile, npcId.getText(), true));
-				mc.displayGuiScreen(null);
+				player.closeScreen();
 			}
 		}
 	}
