@@ -1,178 +1,55 @@
 [
   {
-    "id": "c65f28dc-c040-4ce6-8479-defb4d113c40",
+    "id": "e02d5273-80f1-4d18-8bd3-c6e59c78ab59",
     "type": 0,
     "outputs": [
       {
-        "connectId": "3557761b-68f7-49e0-bd85-3020bf337e4e",
+        "connectId": "6fb03b22-c457-4b33-bd9b-c98aef0cb089",
         "text": ""
       }
     ]
   },
   {
-    "id": "553d640b-aa64-48bf-afc6-e7ba32a10f43",
+    "id": "dab67275-a69a-46ce-be78-205fcc0d1d78",
     "type": 1,
     "outputs": []
   },
   {
-    "id": "3557761b-68f7-49e0-bd85-3020bf337e4e",
-    "type": 2,
+    "id": "6fb03b22-c457-4b33-bd9b-c98aef0cb089",
+    "type": 4,
     "outputs": [
       {
-        "connectId": "961dc7ff-c390-40c2-919f-5fddb2612615",
-        "text": "Did you ever hear the tragedy of Darth Plagueis \"the wise\"?"
-      }
-    ]
-  },
-  {
-    "id": "961dc7ff-c390-40c2-919f-5fddb2612615",
-    "type": 3,
-    "outputs": [
-      {
-        "connectId": "e4067921-8f6a-4011-a91d-8d391017c9ff",
-        "text": "Yes."
+        "connectId": "cdbeb96a-72c7-4e32-adfd-c74722cbcb8f",
+        "text": "!item",
+        "payload": [
+          "any",
+          "minecraft:apple 5",
+          "minecraft:wool 1 3"
+        ]
       },
       {
-        "connectId": "bf356047-6e73-4f41-86ac-f481300d268c",
-        "text": "No."
+        "connectId": "2c9b227f-db48-4aa2-8eac-2b95a0fa2bde",
+        "text": "[Else]"
       }
     ]
   },
   {
-    "id": "e4067921-8f6a-4011-a91d-8d391017c9ff",
+    "id": "cdbeb96a-72c7-4e32-adfd-c74722cbcb8f",
     "type": 2,
     "outputs": [
       {
-        "connectId": "06187ad3-f454-4cfe-bbfa-242dc36b437a",
-        "text": "No you haven't. It's not a story the Jedi would tell you. It's a Sith legend."
+        "connectId": "dab67275-a69a-46ce-be78-205fcc0d1d78",
+        "text": "You have the item."
       }
     ]
   },
   {
-    "id": "bf356047-6e73-4f41-86ac-f481300d268c",
+    "id": "2c9b227f-db48-4aa2-8eac-2b95a0fa2bde",
     "type": 2,
     "outputs": [
       {
-        "connectId": "06187ad3-f454-4cfe-bbfa-242dc36b437a",
-        "text": "I thought not. It's not a story the Jedi would tell you. It's a Sith legend."
-      }
-    ]
-  },
-  {
-    "id": "06187ad3-f454-4cfe-bbfa-242dc36b437a",
-    "type": 2,
-    "outputs": [
-      {
-        "connectId": "d68c7b75-1072-4a1e-bfd8-4723866bb904",
-        "text": "Darth Plagueis was a Dark Lord of the Sith who lived many years ago. "
-      }
-    ]
-  },
-  {
-    "id": "d68c7b75-1072-4a1e-bfd8-4723866bb904",
-    "type": 2,
-    "outputs": [
-      {
-        "connectId": "fead21ca-ef29-4b9c-affe-1cbd035eeb69",
-        "text": "He was so powerful and so wise that he could use the Force to influence the midichlorians to create life..."
-      }
-    ]
-  },
-  {
-    "id": "fead21ca-ef29-4b9c-affe-1cbd035eeb69",
-    "type": 2,
-    "outputs": [
-      {
-        "connectId": "5c764c66-14bf-4d01-8e81-9af2c8a92389",
-        "text": "He had such a knowledge of the dark side that he could even keep the ones he cared about from dying."
-      }
-    ]
-  },
-  {
-    "id": "5c764c66-14bf-4d01-8e81-9af2c8a92389",
-    "type": 3,
-    "outputs": [
-      {
-        "connectId": "e09585f6-9111-4f71-9a3a-c5243559c885",
-        "text": "He could do that? He could actually save people from death?"
-      },
-      {
-        "connectId": "e09585f6-9111-4f71-9a3a-c5243559c885",
-        "text": "That's outrageous. That's unfair."
-      }
-    ]
-  },
-  {
-    "id": "e09585f6-9111-4f71-9a3a-c5243559c885",
-    "type": 2,
-    "outputs": [
-      {
-        "connectId": "3bb0ce21-5ffa-4694-8da8-822000971d34",
-        "text": "The dark side of the Force is a pathway to many abilities some consider to be unnatural."
-      }
-    ]
-  },
-  {
-    "id": "3bb0ce21-5ffa-4694-8da8-822000971d34",
-    "type": 2,
-    "outputs": [
-      {
-        "connectId": "c0137cc1-494f-4f27-987f-5fd0d62972d9",
-        "text": "He became so powerful... the only thing he was afraid of was losing his power, which eventually, of course, he did."
-      }
-    ]
-  },
-  {
-    "id": "c0137cc1-494f-4f27-987f-5fd0d62972d9",
-    "type": 2,
-    "outputs": [
-      {
-        "connectId": "b9508967-8f32-477d-8fa5-5f48b51e23a3",
-        "text": "Unfortunately, he taught his apprentice everything he knew, and then one night, his apprentice killed him in his sleep."
-      }
-    ]
-  },
-  {
-    "id": "b9508967-8f32-477d-8fa5-5f48b51e23a3",
-    "type": 2,
-    "outputs": [
-      {
-        "connectId": "546a3822-0dc8-4c7f-8d70-8333ab2264f4",
-        "text": "Ironic, he could save others from death, but not himself."
-      }
-    ]
-  },
-  {
-    "id": "546a3822-0dc8-4c7f-8d70-8333ab2264f4",
-    "type": 3,
-    "outputs": [
-      {
-        "connectId": "553d640b-aa64-48bf-afc6-e7ba32a10f43",
-        "text": "I have no interest in these things."
-      },
-      {
-        "connectId": "3f0355d2-2f46-4eff-8522-3bcdd4f48e51",
-        "text": "Is it possible to learn this power?"
-      }
-    ]
-  },
-  {
-    "id": "3f0355d2-2f46-4eff-8522-3bcdd4f48e51",
-    "type": 2,
-    "outputs": [
-      {
-        "connectId": "7639298c-8f0b-4d1c-8544-bd5f8692bae5",
-        "text": "Not from a Jedi."
-      }
-    ]
-  },
-  {
-    "id": "7639298c-8f0b-4d1c-8544-bd5f8692bae5",
-    "type": 8,
-    "outputs": [
-      {
-        "connectId": "553d640b-aa64-48bf-afc6-e7ba32a10f43",
-        "text": "LearnTheDarkSide"
+        "connectId": "dab67275-a69a-46ce-be78-205fcc0d1d78",
+        "text": "You don't have the item."
       }
     ]
   }

@@ -156,9 +156,36 @@ public class NedInteraction
 
 	private boolean hasFlag(NedNode node)
 	{
+		String flag = node.outputs.get(0).text;
+		if (flag.startsWith("!"))
+			return hasSpecialFlag(node.outputs.get(0));
 		PswgExtProp props = PswgExtProp.get(player);
 		if (props != null)
-			return props.hasFlag(node.outputs.get(0).text);
+			return props.hasFlag(flag);
+		return false;
+	}
+
+	private boolean hasSpecialFlag(NedConnection connection)
+	{
+		String flag = connection.text;
+		if (connection.payload == null)
+		{
+			Lumberjack.debug("Attempted to check special flag with no payload");
+			return false;
+		}
+
+		String[] extras = connection.payload;
+		switch (flag)
+		{
+			case "!item":
+			{
+				boolean any = false;
+				if (extras.length < 1)
+					return false;
+				if ("any".equals(extras[0]))
+					any = true;
+			}
+		}
 		return false;
 	}
 }

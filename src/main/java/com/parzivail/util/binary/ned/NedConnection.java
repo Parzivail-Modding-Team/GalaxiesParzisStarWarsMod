@@ -6,6 +6,7 @@ public class NedConnection
 {
 	public String text;
 	public UUID connectId;
+	public String[] payload;
 
 	public NedConnection(String text, UUID connectId)
 	{
