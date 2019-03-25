@@ -4,12 +4,12 @@ import java.util.UUID;
 
 public class NedConnection
 {
-	public final String text;
-	public final UUID connectedId;
+	public String text;
+	public UUID connectId;
 
-	public NedConnection(String text, UUID connectedId)
+	public NedConnection(String text, UUID connectId)
 	{
 		this.text = text;
-		this.connectedId = connectedId;
+		this.connectId = connectId;
 	}
 }

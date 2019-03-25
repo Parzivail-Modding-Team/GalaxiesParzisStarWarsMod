@@ -1,16 +1,14 @@
 package com.parzivail.swg.registry;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.util.binary.ned.NedX;
+import com.parzivail.util.binary.ned.NedGraph;
 
 public class QuestRegister
 {
-	public static NedX testQuest;
-	public static NedX complexQuest;
+	public static NedGraph complexQuest;
 
 	public static void register()
 	{
-		testQuest = NedX.Load(Resources.location("quests/basic.nedx"));
-		complexQuest = NedX.Load(Resources.location("quests/complexdialogue.nedx"));
+		complexQuest = NedGraph.LoadJson(Resources.location("quests/testquest.nedj"));
 	}
 }

@@ -9,11 +9,11 @@ import java.util.UUID;
 public class NedInteraction
 {
 	private final EntityPlayer player;
-	private final NedX tree;
+	private final NedGraph tree;
 	public boolean done;
 	public NedNode node;
 
-	public NedInteraction(EntityPlayer player, NedX tree, NedNode root)
+	public NedInteraction(EntityPlayer player, NedGraph tree, NedNode root)
 	{
 		this.player = player;
 		this.tree = tree;
@@ -25,11 +25,11 @@ public class NedInteraction
 	{
 		if (node.outputs.get(pathIndex) == null)
 		{
-			Lumberjack.log("Attempted to advance quest down null path");
+			Lumberjack.debug("Attempted to advance quest down null path");
 			return null;
 		}
 
-		UUID nextCxn = node.outputs.get(pathIndex).connectedId;
+		UUID nextCxn = node.outputs.get(pathIndex).connectId;
 		return tree.getNodeById(nextCxn);
 	}
 
@@ -37,14 +37,14 @@ public class NedInteraction
 	{
 		if (node.outputs.get(pathIndex) == null)
 		{
-			Lumberjack.log("Attempted to advance quest down null path");
+			Lumberjack.debug("Attempted to advance quest down null path");
 			return;
 		}
 
-		UUID nextCxn = node.outputs.get(pathIndex).connectedId;
+		UUID nextCxn = node.outputs.get(pathIndex).connectId;
 		node = tree.getNodeById(nextCxn);
 
-		switch (node.type)
+		switch (node.getType())
 		{
 			case None:
 			case Start:
@@ -91,12 +91,12 @@ public class NedInteraction
 
 	private void triggerEvent(NedNode node)
 	{
-		Lumberjack.log("triggerEvent %s", node.outputs.get(0).text);
+		Lumberjack.debug("triggerEvent %s", node.outputs.get(0).text);
 	}
 
 	private void completeQuest(NedNode node)
 	{
-		Lumberjack.log("completeQuest %s", node.outputs.get(0).text);
+		Lumberjack.debug("completeQuest %s", node.outputs.get(0).text);
 
 		if (!player.worldObj.isRemote)
 		{
@@ -112,7 +112,7 @@ public class NedInteraction
 
 	private void startQuest(NedNode node)
 	{
-		Lumberjack.log("startQuest %s", node.outputs.get(0).text);
+		Lumberjack.debug("startQuest %s", node.outputs.get(0).text);
 
 		if (!player.worldObj.isRemote)
 		{

@@ -1,28 +1,34 @@
 package com.parzivail.util.binary.ned;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.google.gson.Gson;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.util.binary.PIO;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.InvalidObjectException;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
-public class NedX
+public class NedGraph
 {
 	public final int version;
-	public final ArrayList<NedNode> nodes;
+	public final List<NedNode> nodes;
 
-	public NedX(int version, ArrayList<NedNode> nodes)
+	public NedGraph(int version, List<NedNode> nodes)
 	{
 		this.version = version;
 		this.nodes = nodes;
 	}
 
-	public static NedX Load(ResourceLocation filename)
+	public static NedGraph LoadNedx(ResourceLocation filename)
 	{
 		try
 		{
@@ -32,7 +38,7 @@ public class NedX
 			byte[] identr = new byte[4];
 			int read = s.read(identr);
 			String ident = new String(identr);
-			if (!ident.equals("NEDX") || read != identr.length)
+			if (!"NEDX".equals(ident) || read != identr.length)
 				throw new InvalidObjectException("Input file not NEDX quest");
 
 			int version = s.readInt();
@@ -64,7 +70,25 @@ public class NedX
 
 			s.close();
 			fs.close();
-			return new NedX(version, nodes);
+			return new NedGraph(version, nodes);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static NedGraph LoadJson(ResourceLocation filename)
+	{
+		try
+		{
+			InputStream fs = PIO.getResource(StarWarsGalaxy.class, filename);
+			Reader r = new InputStreamReader(fs, StandardCharsets.UTF_8);
+			Gson gson = new Gson();
+			NedNode[] nodes = gson.fromJson(r, NedNode[].class);
+
+			return new NedGraph(1, Arrays.asList(nodes));
 		}
 		catch (Exception e)
 		{
@@ -81,7 +105,7 @@ public class NedX
 	public NedNode getStartNode()
 	{
 		for (NedNode node : nodes)
-			if (node.type.equals(NodeType.Start))
+			if (node.getType() == NodeType.Start)
 				return node;
 		return null;
 	}

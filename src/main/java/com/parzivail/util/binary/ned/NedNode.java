@@ -24,14 +24,19 @@ public class NedNode
 		types.put(10, NodeType.TriggerEvent);
 	}
 
-	public final UUID id;
-	public final NodeType type;
-	public final ArrayList<NedConnection> outputs;
+	public UUID id;
+	public int type;
+	public ArrayList<NedConnection> outputs;
 
 	public NedNode(UUID id, int type, ArrayList<NedConnection> outputs)
 	{
 		this.id = id;
-		this.type = types.get(type);
+		this.type = type;
 		this.outputs = outputs;
+	}
+
+	public NodeType getType()
+	{
+		return types.get(type);
 	}
 }

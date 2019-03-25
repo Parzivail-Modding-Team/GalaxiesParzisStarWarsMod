@@ -71,7 +71,7 @@ public class GuiDialogue extends GuiContainer
 	{
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
-		if (interaction.node.type == NodeType.NpcDialogue)
+		if (interaction.node.getType() == NodeType.NpcDialogue)
 		{
 			GL.PushAttrib(AttribMask.EnableBit);
 			GL.Enable(EnableCap.Blend);
@@ -98,7 +98,7 @@ public class GuiDialogue extends GuiContainer
 			super.keyTyped(typedChar, keyCode);
 		if (keyCode == Keyboard.KEY_RETURN || keyCode == Keyboard.KEY_SPACE)
 		{
-			if (interaction.node.type == NodeType.NpcDialogue)
+			if (interaction.node.getType() == NodeType.NpcDialogue)
 				movePastNpcDialogue();
 		}
 	}
@@ -132,7 +132,7 @@ public class GuiDialogue extends GuiContainer
 		if (interaction.node == null)
 			return;
 
-		if (interaction.node.type == NodeType.NpcDialogue)
+		if (interaction.node.getType() == NodeType.NpcDialogue)
 		{
 			npcDialogue = interaction.node.outputs.get(0).text;
 
@@ -142,7 +142,7 @@ public class GuiDialogue extends GuiContainer
 			textFadeOutValue = new AnimatedValue(0, Math.min(npcDialogue.length() * 10, 500));
 			textFadeOutValue.queueAnimatingTo(1);
 		}
-		else if (interaction.node.type == NodeType.PlayerDialogue)
+		else if (interaction.node.getType() == NodeType.PlayerDialogue)
 		{
 			bOpt1.visible = bOpt2.visible = bOpt3.visible = bOpt4.visible = false;
 			bNext.visible = false;
@@ -153,7 +153,7 @@ public class GuiDialogue extends GuiContainer
 				options[i].visible = true;
 			}
 		}
-		else if (interaction.node.type == NodeType.End)
+		else if (interaction.node.getType() == NodeType.End)
 			mc.thePlayer.closeScreen();
 	}
 
