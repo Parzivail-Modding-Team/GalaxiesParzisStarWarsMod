@@ -2,7 +2,10 @@ package com.parzivail.util.binary.ned;
 
 import com.parzivail.swg.player.PswgExtProp;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.item.ItemUtils;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 import java.util.UUID;
 
@@ -25,7 +28,7 @@ public class NedInteraction
 	{
 		if (node.outputs.get(pathIndex) == null)
 		{
-			Lumberjack.debug("Attempted to advance quest down null path");
+			Lumberjack.warn("[QUEST] Attempted to advance down null path");
 			return null;
 		}
 
@@ -37,7 +40,7 @@ public class NedInteraction
 	{
 		if (node.outputs.get(pathIndex) == null)
 		{
-			Lumberjack.debug("Attempted to advance quest down null path");
+			Lumberjack.warn("[QUEST] Attempted to advance down null path");
 			return;
 		}
 
@@ -170,7 +173,7 @@ public class NedInteraction
 		String flag = connection.text;
 		if (connection.payload == null)
 		{
-			Lumberjack.debug("Attempted to check special flag with no payload");
+			Lumberjack.warn("[QUEST] Attempted to check special flag with no payload");
 			return false;
 		}
 
@@ -179,13 +182,80 @@ public class NedInteraction
 		{
 			case "!item":
 			{
-				boolean any = false;
-				if (extras.length < 1)
-					return false;
-				if ("any".equals(extras[0]))
-					any = true;
+				return processCommandHasItem(extras);
 			}
 		}
 		return false;
+	}
+
+	private Boolean processCommandHasItem(String[] extras)
+	{
+		boolean any = false;
+		if (extras.length < 1)
+			return false;
+		if ("any".equals(extras[0]))
+			any = true;
+
+		for (int i = 1; i < extras.length; i++)
+		{
+			String[] args = extras[i].split(" ");
+			if (args.length < 2)
+			{
+				Lumberjack.warn(String.format("[QUEST] Item missing required params: '%s'", extras[i]));
+				continue;
+			}
+
+			try
+			{
+				String itemId = args[0];
+				int count = Integer.parseInt(args[1]);
+				int data = 0;
+
+				Item item = getItemByText(itemId);
+
+				if (item == null)
+				{
+					Lumberjack.warn(String.format("[QUEST] Unknown item ID: '%s'", itemId));
+					continue;
+				}
+
+				if (args.length == 3)
+					data = Integer.parseInt(args[2]);
+
+				boolean hasItem = ItemUtils.hasItems(player, new ItemStack(item, count, data));
+				if (hasItem && any)
+					return true;
+				if (!hasItem && !any)
+					return false;
+			}
+			catch (NumberFormatException e)
+			{
+				Lumberjack.warn(String.format("[QUEST] Parameter must be integer, required format '<itemid> <number> [metadata]': '%s'", extras[i]));
+			}
+		}
+		return !any;
+	}
+
+	/**
+	 * Gets the Item specified by the given text string.  First checks the item registry, then tries by parsing the
+	 * string as an integer ID (deprecated).  Warns the sender if we matched by parsing the ID.  Throws if the item
+	 * wasn't found.  Returns the item if it was found.
+	 */
+	public static Item getItemByText(String id)
+	{
+		Item item = (Item)Item.itemRegistry.getObject(id);
+
+		if (item == null)
+		{
+			try
+			{
+				item = Item.getItemById(Integer.parseInt(id));
+			}
+			catch (NumberFormatException ignored)
+			{
+			}
+		}
+
+		return item;
 	}
 }
