@@ -2,14 +2,11 @@ package com.parzivail.swg.handler;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.container.ContainerBlasterWorkbench;
-import com.parzivail.swg.container.ContainerDialogue;
-import com.parzivail.swg.container.ContainerEmpty;
 import com.parzivail.swg.container.ContainerLightsaberForge;
 import com.parzivail.swg.gui.*;
 import com.parzivail.swg.tile.TileBlasterWorkbench;
 import com.parzivail.swg.tile.TileLightsaberForge;
 import com.parzivail.swg.tile.TileNpcSpawner;
-import com.parzivail.util.container.ContainerNothing;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -37,14 +34,8 @@ public class GuiHandler implements IGuiHandler
 	{
 		if (id == Resources.GUI_BLASTER_WORKBENCH)
 			return new ContainerBlasterWorkbench(player.inventory, (TileBlasterWorkbench)world.getTileEntity(x, y, z));
-		if (id == Resources.GUI_NPC_SPAWNER)
-			return new ContainerEmpty();
 		if (id == Resources.GUI_LIGHTSABER_FORGE)
 			return new ContainerLightsaberForge(player.inventory, (TileLightsaberForge)world.getTileEntity(x, y, z));
-		if (id == Resources.GUI_DIALOGUE)
-			return new ContainerDialogue(world.getEntityByID(x));
-		if (id == Resources.GUI_PERSONAL_DATAPAD)
-			return new ContainerNothing();
 		return null;
 	}
 }
