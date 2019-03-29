@@ -17,7 +17,7 @@ public class Resources
 
 	public static final boolean IS_DEBUG = System.getenv("PSWG_DEBUG") != null && Boolean.parseBoolean(System.getenv("PSWG_DEBUG"));
 
-	private static int guiIdx = 1;
+	private static int guiIdx;
 	public static final int GUI_BLASTER_WORKBENCH = guiIdx++;
 	public static final int GUI_NPC_SPAWNER = guiIdx++;
 	public static final int GUI_DIALOGUE = guiIdx++;

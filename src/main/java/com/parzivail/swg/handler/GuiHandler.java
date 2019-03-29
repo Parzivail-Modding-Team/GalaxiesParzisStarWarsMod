@@ -7,6 +7,7 @@ import com.parzivail.swg.gui.*;
 import com.parzivail.swg.tile.TileBlasterWorkbench;
 import com.parzivail.swg.tile.TileLightsaberForge;
 import com.parzivail.swg.tile.TileNpcSpawner;
+import com.parzivail.util.container.ContainerNone;
 import cpw.mods.fml.common.network.IGuiHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
@@ -36,6 +37,12 @@ public class GuiHandler implements IGuiHandler
 			return new ContainerBlasterWorkbench(player.inventory, (TileBlasterWorkbench)world.getTileEntity(x, y, z));
 		if (id == Resources.GUI_LIGHTSABER_FORGE)
 			return new ContainerLightsaberForge(player.inventory, (TileLightsaberForge)world.getTileEntity(x, y, z));
+		if (id == Resources.GUI_NPC_SPAWNER)
+			return new ContainerNone();
+		if (id == Resources.GUI_DIALOGUE)
+			return new ContainerNone();
+		if (id == Resources.GUI_PERSONAL_DATAPAD)
+			return new ContainerNone();
 		return null;
 	}
 }
