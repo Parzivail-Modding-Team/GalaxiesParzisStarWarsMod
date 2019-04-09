@@ -1,6 +1,6 @@
 ![Galaxies: Parzi's Star Wars Mod](https://raw.githubusercontent.com/Parzivail-Modding-Team/StarWarsGalaxy/master/resources/images/logo_big.png "Galaxies: Parzi's Star Wars Mod")
 
-# Galaxies: Parzi's Star Wars Mod (PSWG) for Minecraft 1.7.10
+# Galaxies: Parzi's Star Wars Mod (PSWG) for Minecraft 1.12.2
 
 ![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/StarWarsGalaxy/total.svg) 
 ![Discord](https://img.shields.io/discord/412945916476129280.svg)
