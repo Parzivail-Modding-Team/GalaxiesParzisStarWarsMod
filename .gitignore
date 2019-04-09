@@ -76,16 +76,9 @@ fabric.properties
 
 crash-reports/
 eclipse/
-mods/
-resourcepacks/
-saves/
-/logs/
-/screenshots/
-/journeymap/
-/usernamecache.json
-/asm/
-/config/
-!/simpledeobf-0.6.jar
+run/
+*.ipr
+*.iml
 
 
 # Vim swap files
