@@ -1,10 +1,15 @@
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder
+
 buildscript {
     repositories {
         jcenter()
         maven { url = "http://files.minecraftforge.net/maven" }
+        maven { url = "https://oss.sonatype.org/content/repositories/snapshots/" }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath 'org.eclipse.jgit:org.eclipse.jgit:5.2.0.201812061821-r'
     }
 }
 apply plugin: 'net.minecraftforge.gradle.forge'
