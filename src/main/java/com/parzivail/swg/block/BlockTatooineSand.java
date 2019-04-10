@@ -1,14 +1,12 @@
 package com.parzivail.swg.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
+import com.parzivail.util.component.PBlock;
 import net.minecraft.block.material.Material;
 
-public class BlockTatooineSand extends Block
+public class BlockTatooineSand extends PBlock
 {
 	public BlockTatooineSand()
 	{
-		super(Material.SAND, MapColor.SAND);
-		setRegistryName("sand_tatooine");
+		super("sand_tatooine", Material.SAND);
 	}
 }
