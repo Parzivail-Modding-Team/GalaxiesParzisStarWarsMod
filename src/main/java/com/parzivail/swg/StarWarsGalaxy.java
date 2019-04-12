@@ -30,6 +30,8 @@ public class StarWarsGalaxy
 		tab = new SwgCreativeTab();
 		MinecraftForge.EVENT_BUS.register(eventHandler);
 		MinecraftForge.EVENT_BUS.register(BlockRegister.class);
+
+		proxy.preInit(event);
 	}
 
 	@EventHandler
