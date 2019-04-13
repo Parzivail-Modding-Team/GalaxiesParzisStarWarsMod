@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 
 public class PBlockFacing extends PBlock
 {
-	public static final PropertyEnum<EnumFacing> FACING = PropertyDirection.create("facing");
+	public static final PropertyEnum<EnumFacing> FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
 
 	public PBlockFacing(String name, Material material)
 	{

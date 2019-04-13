@@ -25,7 +25,7 @@ public class BlockRegister
 		IForgeRegistry<Block> r = event.getRegistry();
 
 		r.register(sandTatooine = new BlockTatooineSand());
-		r.register(lightFloorAngledSmall = new PBlockFacing("light_floor_angled_small", Material.CIRCUITS));
+		r.register(lightFloorAngledSmall = new PBlockFacing("light_floor_angled_small", Material.CIRCUITS).setNotFullBlock());
 	}
 
 	@SubscribeEvent

@@ -1,9 +1,11 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.model.PModelLoader;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class SwgClientProxy extends SwgProxy
@@ -11,7 +13,7 @@ public class SwgClientProxy extends SwgProxy
 	@Override
 	public void preInit(FMLPreInitializationEvent e)
 	{
-		//		ModelLoaderRegistry.registerLoader(PModelLoader.INSTANCE);
+		ModelLoaderRegistry.registerLoader(PModelLoader.INSTANCE);
 	}
 
 	@Override
