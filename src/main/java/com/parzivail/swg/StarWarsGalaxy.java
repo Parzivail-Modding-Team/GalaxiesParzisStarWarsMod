@@ -37,5 +37,6 @@ public class StarWarsGalaxy
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
+		proxy.init(event);
 	}
 }

@@ -85,18 +85,26 @@ public class VanillaModelWrapper implements IModel
 		{
 			if (model.getParentLocation().getResourcePath().equals("builtin/generated"))
 			{
-				model.parent = BuiltinLoader.MODEL_GENERATED;
+				model.parent = new GenericModelReference(BuiltinLoader.MODEL_GENERATED);
 			}
 			else
 			{
 				IModel parent = ModelLoaderRegistry.getModelOrLogError(model.getParentLocation(), "Could not load vanilla model parent '" + model.getParentLocation() + "' for '" + model);
-				if (parent instanceof VanillaModelWrapper)
+				if (parent instanceof PModelBlock)
 				{
-					model.parent = ((VanillaModelWrapper)parent).model;
+					model.parent = new GenericModelReference((PModelBlock)parent);
 				}
-				else
+				else if ("net.minecraftforge.client.model".equals(parent.getClass().getPackage().getName()))
 				{
-					//throw new IllegalStateException("Vanilla model '" + model + "' can't have non-vanilla parent");
+					try
+					{
+						model.parent = new GenericModelReference((PModelBlock)PModelLoader.INSTANCE.loadModel(model.getParentLocation()));
+						int i = 0;
+					}
+					catch (Exception e)
+					{
+						e.printStackTrace();
+					}
 				}
 			}
 		}

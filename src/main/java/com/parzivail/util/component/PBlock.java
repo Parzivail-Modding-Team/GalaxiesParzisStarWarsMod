@@ -10,6 +10,7 @@ import net.minecraft.item.ItemBlock;
 public class PBlock extends Block
 {
 	protected String name;
+	private boolean opaque = true;
 
 	public PBlock(String name, Material material)
 	{
@@ -31,12 +32,12 @@ public class PBlock extends Block
 
 	public PBlock setNotFullBlock()
 	{
-		this.fullBlock = false;
+		this.opaque = false;
 		return this;
 	}
 
 	public boolean isOpaqueCube(IBlockState state)
 	{
-		return this.fullBlock;
+		return opaque;
 	}
 }

@@ -2,6 +2,7 @@ package com.parzivail.swg.model;
 
 import com.parzivail.swg.Resources;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -20,7 +21,7 @@ public class PModelLoader implements ICustomModelLoader
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
-		return Resources.MODID.equals(modelLocation.getResourceDomain());
+		return Resources.MODID.equals(modelLocation.getResourceDomain()) && !(modelLocation instanceof ModelResourceLocation);
 	}
 
 	@Override
@@ -28,7 +29,7 @@ public class PModelLoader implements ICustomModelLoader
 	{
 		// Load vanilla model
 		PModelBlock vanillaModel;
-		ResourceLocation vanillaModelLocation = new ResourceLocation(modelLocation.getResourceDomain(), "models/block/" + modelLocation.getResourcePath() + ".json");
+		ResourceLocation vanillaModelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath() + ".json");
 		try (IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(vanillaModelLocation); Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))
 		{
 			vanillaModel = PModelBlock.deserialize(reader);

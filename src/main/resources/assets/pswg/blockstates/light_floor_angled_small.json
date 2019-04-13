@@ -1,24 +1,24 @@
 {
   "variants": {
     "normal": {
-      "model": "pswg:testrot"
+      "model": "pswg:light_floor_angled_small"
     },
     "inventory": {
-      "model": "pswg:testrot"
+      "model": "pswg:light_floor_angled_small"
     },
     "facing=north": {
-      "model": "pswg:testrot"
+      "model": "pswg:light_floor_angled_small"
     },
     "facing=south": {
-      "model": "pswg:testrot",
+      "model": "pswg:light_floor_angled_small",
       "y": 180
     },
     "facing=west": {
-      "model": "pswg:testrot",
+      "model": "pswg:light_floor_angled_small",
       "y": 270
     },
     "facing=east": {
-      "model": "pswg:testrot",
+      "model": "pswg:light_floor_angled_small",
       "y": 90
     }
   }

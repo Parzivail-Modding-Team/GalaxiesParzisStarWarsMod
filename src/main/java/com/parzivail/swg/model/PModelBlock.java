@@ -38,7 +38,7 @@ public class PModelBlock
 	@VisibleForTesting
 	public final Map<String, String> textures;
 	@VisibleForTesting
-	public PModelBlock parent;
+	public GenericModelReference parent;
 	@VisibleForTesting
 	protected ResourceLocation parentLocation;
 
@@ -92,7 +92,7 @@ public class PModelBlock
 	{
 		if (this.parentLocation != null)
 		{
-			this.parent = p_178299_1_.get(this.parentLocation);
+			this.parent = new GenericModelReference(p_178299_1_.get(this.parentLocation));
 		}
 	}
 
@@ -133,7 +133,7 @@ public class PModelBlock
 		return this.resolveTextureName(textureName, new Bookkeep(this));
 	}
 
-	private String resolveTextureName(String textureName, Bookkeep p_178302_2_)
+	String resolveTextureName(String textureName, Bookkeep p_178302_2_)
 	{
 		if (this.startsWithHash(textureName))
 		{
@@ -178,7 +178,7 @@ public class PModelBlock
 		return this.parentLocation;
 	}
 
-	public PModelBlock getRootModel()
+	public Object getRootModel()
 	{
 		return this.hasParent() ? this.parent.getRootModel() : this;
 	}
@@ -196,7 +196,7 @@ public class PModelBlock
 		return new ItemCameraTransforms(itemtransformvec3f, itemtransformvec3f1, itemtransformvec3f2, itemtransformvec3f3, itemtransformvec3f4, itemtransformvec3f5, itemtransformvec3f6, itemtransformvec3f7);
 	}
 
-	private ItemTransformVec3f getTransform(ItemCameraTransforms.TransformType type)
+	ItemTransformVec3f getTransform(ItemCameraTransforms.TransformType type)
 	{
 		return this.parent != null && !this.cameraTransforms.hasCustomTransform(type) ? this.parent.getTransform(type) : this.cameraTransforms.getTransform(type);
 	}
@@ -231,7 +231,7 @@ public class PModelBlock
 	static final class Bookkeep
 	{
 		public final PModelBlock model;
-		public PModelBlock modelExt;
+		public Object modelExt;
 
 		private Bookkeep(PModelBlock modelIn)
 		{
