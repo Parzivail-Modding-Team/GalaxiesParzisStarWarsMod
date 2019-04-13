@@ -17,6 +17,7 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.model.animation.IClip;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
+import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -24,7 +25,7 @@ import java.util.function.Function;
 public class VanillaModelWrapper implements IModel
 {
 	public static final ModelBlockAnimation DEFAULT_MODEL_BLOCK_ANIMATION = new ModelBlockAnimation(ImmutableMap.of(), ImmutableMap.of());
-	private static final FaceBakery FACE_BAKERY = new FaceBakery();
+	private static final PFaceBakery FACE_BAKERY = new PFaceBakery();
 
 	private final ResourceLocation location;
 	private final PModelBlock model;
@@ -54,9 +55,9 @@ public class VanillaModelWrapper implements IModel
 		return model.getRootModel() == BuiltinLoader.MODEL_ENTITY;
 	}
 
-	public static BakedQuad makeBakedQuad(BlockPart blockPart, BlockPartFace blockPartFace, TextureAtlasSprite sprite, EnumFacing face, ITransformation transform, boolean uvLocked)
+	public static BakedQuad makeBakedQuad(PBlockPart blockPart, BlockPartFace blockPartFace, TextureAtlasSprite sprite, EnumFacing face, ITransformation transform, boolean uvLocked)
 	{
-		return FACE_BAKERY.makeBakedQuad(blockPart.positionFrom, blockPart.positionTo, blockPartFace, sprite, face, transform, blockPart.partRotation, uvLocked, blockPart.shade);
+		return FACE_BAKERY.makeBakedQuad(blockPart.positionFrom, blockPart.positionTo, blockPartFace, sprite, face, transform, blockPart.partRotation, blockPart.rotated, uvLocked, blockPart.shade);
 	}
 
 	@Override
@@ -85,27 +86,17 @@ public class VanillaModelWrapper implements IModel
 		{
 			if (model.getParentLocation().getResourcePath().equals("builtin/generated"))
 			{
-				model.parent = new GenericModelReference(BuiltinLoader.MODEL_GENERATED);
+				model.parent = BuiltinLoader.MODEL_GENERATED;
 			}
 			else
 			{
 				IModel parent = ModelLoaderRegistry.getModelOrLogError(model.getParentLocation(), "Could not load vanilla model parent '" + model.getParentLocation() + "' for '" + model);
-				if (parent instanceof PModelBlock)
+				if (parent instanceof VanillaModelWrapper)
 				{
-					model.parent = new GenericModelReference((PModelBlock)parent);
+					model.parent = ((VanillaModelWrapper)parent).model;
 				}
-				else if ("net.minecraftforge.client.model".equals(parent.getClass().getPackage().getName()))
-				{
-					try
-					{
-						model.parent = new GenericModelReference((PModelBlock)PModelLoader.INSTANCE.loadModel(model.getParentLocation()));
-						int i = 0;
-					}
-					catch (Exception e)
-					{
-						e.printStackTrace();
-					}
-				}
+				else
+					throw new InvalidStateException("Invalid parent for " + model + ", parent was " + parent);
 			}
 		}
 
@@ -189,7 +180,7 @@ public class VanillaModelWrapper implements IModel
 			{
 				continue;
 			}
-			BlockPart part = model.getElements().get(i);
+			PBlockPart part = model.getElements().get(i);
 			TRSRTransformation transformation = baseState;
 			if (newTransforms.get(i) != null)
 			{
@@ -197,7 +188,7 @@ public class VanillaModelWrapper implements IModel
 				BlockPartRotation rot = part.partRotation;
 				if (rot == null)
 					rot = new BlockPartRotation(new org.lwjgl.util.vector.Vector3f(), EnumFacing.Axis.Y, 0, false);
-				part = new BlockPart(part.positionFrom, part.positionTo, part.mapFaces, rot, part.shade);
+				part = new PBlockPart(part.positionFrom, part.positionTo, part.mapFaces, rot, part.rotated, part.shade);
 			}
 			for (Map.Entry<EnumFacing, BlockPartFace> e : part.mapFaces.entrySet())
 			{
@@ -259,10 +250,10 @@ public class VanillaModelWrapper implements IModel
 		if (textures.isEmpty())
 			return this;
 
-		List<BlockPart> elements = Lists.newArrayList(); //We have to duplicate this so we can edit it below.
-		for (BlockPart part : model.getElements())
+		List<PBlockPart> elements = Lists.newArrayList(); //We have to duplicate this so we can edit it below.
+		for (PBlockPart part : model.getElements())
 		{
-			elements.add(new BlockPart(part.positionFrom, part.positionTo, Maps.newHashMap(part.mapFaces), part.partRotation, part.shade));
+			elements.add(new PBlockPart(part.positionFrom, part.positionTo, Maps.newHashMap(part.mapFaces), part.partRotation, part.rotated, part.shade));
 		}
 
 		PModelBlock newModel = new PModelBlock(model.getParentLocation(), elements, Maps.newHashMap(model.textures), model.isAmbientOcclusion(), model.isGui3d(), model.getAllTransforms(), Lists.newArrayList(model.getOverrides()));

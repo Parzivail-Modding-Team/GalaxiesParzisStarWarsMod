@@ -2,7 +2,6 @@ package com.parzivail.swg.model;
 
 import com.google.common.collect.Maps;
 import com.google.gson.*;
-import net.minecraft.client.renderer.block.model.BlockPart;
 import net.minecraft.client.renderer.block.model.BlockPartFace;
 import net.minecraft.client.renderer.block.model.BlockPartRotation;
 import net.minecraft.util.EnumFacing;
@@ -14,14 +13,15 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 import java.util.Map;
 
-public class BlockPartDeserializer implements JsonDeserializer<BlockPart>
+public class BlockPartDeserializer implements JsonDeserializer<PBlockPart>
 {
-	public BlockPart deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
+	public PBlockPart deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
 	{
 		JsonObject jsonobject = p_deserialize_1_.getAsJsonObject();
 		Vector3f vector3f = this.parsePositionFrom(jsonobject);
 		Vector3f vector3f1 = this.parsePositionTo(jsonobject);
 		BlockPartRotation blockpartrotation = this.parseRotation(jsonobject);
+		Vector3f blockpartrotated = this.parseRotated(jsonobject);
 		Map<EnumFacing, BlockPartFace> map = this.parseFacesCheck(p_deserialize_3_, jsonobject);
 
 		if (jsonobject.has("shade") && !JsonUtils.isBoolean(jsonobject, "shade"))
@@ -31,7 +31,7 @@ public class BlockPartDeserializer implements JsonDeserializer<BlockPart>
 		else
 		{
 			boolean flag = JsonUtils.getBoolean(jsonobject, "shade", true);
-			return new BlockPart(vector3f, vector3f1, map, blockpartrotation, flag);
+			return new PBlockPart(vector3f, vector3f1, map, blockpartrotation, blockpartrotated, flag);
 		}
 	}
 
@@ -50,6 +50,17 @@ public class BlockPartDeserializer implements JsonDeserializer<BlockPart>
 			boolean flag = JsonUtils.getBoolean(jsonobject, "rescale", false);
 			blockpartrotation = new BlockPartRotation(vector3f, enumfacing$axis, f, flag);
 		}
+
+		return blockpartrotation;
+	}
+
+	@Nullable
+	private Vector3f parseRotated(JsonObject object)
+	{
+		Vector3f blockpartrotation = null;
+
+		if (object.has("rotated"))
+			blockpartrotation = this.parsePosition(object, "rotated");
 
 		return blockpartrotation;
 	}
@@ -146,6 +157,9 @@ public class BlockPartDeserializer implements JsonDeserializer<BlockPart>
 
 	private Vector3f parsePosition(JsonObject object, String memberName)
 	{
+		if (!object.has(memberName))
+			return null;
+
 		JsonArray jsonarray = JsonUtils.getJsonArray(object, memberName);
 
 		if (jsonarray.size() != 3)
