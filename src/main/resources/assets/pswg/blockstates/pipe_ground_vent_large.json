@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:pipe_ground_vent_large"
+    },
+    "inventory": {
+      "model": "pswg:pipe_ground_vent_large"
+    },
+    "facing=north": {
+      "model": "pswg:pipe_ground_vent_large"
+    },
+    "facing=south": {
+      "model": "pswg:pipe_ground_vent_large",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:pipe_ground_vent_large",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:pipe_ground_vent_large",
+      "y": 90
+    }
+  }
+}

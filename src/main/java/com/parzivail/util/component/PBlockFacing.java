@@ -29,17 +29,17 @@ public class PBlockFacing extends PBlock
 
 	public IBlockState getStateFromMeta(int meta)
 	{
-		return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta & 0x4));
+		return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
 	}
 
 	public int getMetaFromState(IBlockState state)
 	{
-		return state.getValue(FACING).getHorizontalIndex() & 0x4;
+		return state.getValue(FACING).getHorizontalIndex();
 	}
 
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 3);
 	}
 }

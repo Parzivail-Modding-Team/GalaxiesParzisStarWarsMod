@@ -1,4 +1,4 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import com.google.common.collect.Maps;
 import com.google.gson.*;

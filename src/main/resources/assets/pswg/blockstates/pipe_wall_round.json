@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:pipe_wall_round"
+    },
+    "inventory": {
+      "model": "pswg:pipe_wall_round"
+    },
+    "facing=north": {
+      "model": "pswg:pipe_wall_round"
+    },
+    "facing=south": {
+      "model": "pswg:pipe_wall_round",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:pipe_wall_round",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:pipe_wall_round",
+      "y": 90
+    }
+  }
+}

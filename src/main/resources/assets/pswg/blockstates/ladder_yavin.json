@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:ladder_yavin"
+    },
+    "inventory": {
+      "model": "pswg:ladder_yavin"
+    },
+    "facing=north": {
+      "model": "pswg:ladder_yavin"
+    },
+    "facing=south": {
+      "model": "pswg:ladder_yavin",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:ladder_yavin",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:ladder_yavin",
+      "y": 90
+    }
+  }
+}

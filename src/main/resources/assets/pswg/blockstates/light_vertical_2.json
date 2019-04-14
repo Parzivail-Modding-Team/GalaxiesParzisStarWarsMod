@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:light_vertical_2"
+    },
+    "inventory": {
+      "model": "pswg:light_vertical_2"
+    },
+    "facing=north": {
+      "model": "pswg:light_vertical_2"
+    },
+    "facing=south": {
+      "model": "pswg:light_vertical_2",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:light_vertical_2",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:light_vertical_2",
+      "y": 90
+    }
+  }
+}

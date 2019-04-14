@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:console_hoth_1"
+    },
+    "inventory": {
+      "model": "pswg:console_hoth_1"
+    },
+    "facing=north": {
+      "model": "pswg:console_hoth_1"
+    },
+    "facing=south": {
+      "model": "pswg:console_hoth_1",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:console_hoth_1",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:console_hoth_1",
+      "y": 90
+    }
+  }
+}

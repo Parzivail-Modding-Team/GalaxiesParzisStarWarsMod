@@ -1,4 +1,4 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
@@ -29,7 +29,7 @@ public class ModelLocationInformation
 			Field customVariantNamesField = ModelBakery.class.getDeclaredField("customVariantNames");
 			customVariantNamesField.setAccessible(true);
 			// noinspection unchecked
-			customVariantNames = (Map<net.minecraftforge.registries.IRegistryDelegate<Item>, Set<String>>)customVariantNamesField.get(null);
+			customVariantNames = (Map<IRegistryDelegate<Item>, Set<String>>)customVariantNamesField.get(null);
 		}
 		catch (ReflectiveOperationException e)
 		{

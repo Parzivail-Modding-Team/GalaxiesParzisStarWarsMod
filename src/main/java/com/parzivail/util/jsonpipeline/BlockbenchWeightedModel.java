@@ -1,4 +1,4 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import com.google.common.base.Preconditions;
 import com.google.common.collect.*;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 
-public class PWeightedModel implements IModel
+public class BlockbenchWeightedModel implements IModel
 {
 	private final List<Variant> variants;
 	private final List<ResourceLocation> locations;
@@ -28,7 +28,7 @@ public class PWeightedModel implements IModel
 	private final List<IModel> models;
 	private final IModelState defaultState;
 
-	public PWeightedModel(VariantList variants) throws Exception
+	public BlockbenchWeightedModel(VariantList variants) throws Exception
 	{
 		this.variants = variants.getVariantList();
 		locations = new ArrayList<>();
@@ -61,7 +61,7 @@ public class PWeightedModel implements IModel
 		defaultState = new MultiModelState(builder.build());
 	}
 
-	private PWeightedModel(List<Variant> variants, List<ResourceLocation> locations, Set<ResourceLocation> textures, List<IModel> models, IModelState defaultState)
+	private BlockbenchWeightedModel(List<Variant> variants, List<ResourceLocation> locations, Set<ResourceLocation> textures, List<IModel> models, IModelState defaultState)
 	{
 		this.variants = variants;
 		this.locations = locations;
@@ -110,7 +110,7 @@ public class PWeightedModel implements IModel
 	}
 
 	@Override
-	public PWeightedModel retexture(ImmutableMap<String, String> textures)
+	public BlockbenchWeightedModel retexture(ImmutableMap<String, String> textures)
 	{
 		if (textures.isEmpty())
 			return this;
@@ -129,6 +129,6 @@ public class PWeightedModel implements IModel
 			builder.add(Pair.of(retextured, variants.get(i).getState()));
 		}
 
-		return new PWeightedModel(variants, locations, modelTextures, retexturedModels, new MultiModelState(builder.build()));
+		return new BlockbenchWeightedModel(variants, locations, modelTextures, retexturedModels, new MultiModelState(builder.build()));
 	}
 }

@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:tank_air"
+    },
+    "inventory": {
+      "model": "pswg:tank_air"
+    },
+    "facing=north": {
+      "model": "pswg:tank_air"
+    },
+    "facing=south": {
+      "model": "pswg:tank_air",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:tank_air",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:tank_air",
+      "y": 90
+    }
+  }
+}

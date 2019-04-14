@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:panel_wall_lock"
+    },
+    "inventory": {
+      "model": "pswg:panel_wall_lock"
+    },
+    "facing=north": {
+      "model": "pswg:panel_wall_lock"
+    },
+    "facing=south": {
+      "model": "pswg:panel_wall_lock",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:panel_wall_lock",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:panel_wall_lock",
+      "y": 90
+    }
+  }
+}

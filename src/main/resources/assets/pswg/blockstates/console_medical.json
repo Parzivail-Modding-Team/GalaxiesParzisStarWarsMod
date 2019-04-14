@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:console_medical"
+    },
+    "inventory": {
+      "model": "pswg:console_medical"
+    },
+    "facing=north": {
+      "model": "pswg:console_medical"
+    },
+    "facing=south": {
+      "model": "pswg:console_medical",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:console_medical",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:console_medical",
+      "y": 90
+    }
+  }
+}

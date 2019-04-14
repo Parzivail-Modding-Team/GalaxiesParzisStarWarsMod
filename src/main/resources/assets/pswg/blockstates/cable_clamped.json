@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:cable_clamped"
+    },
+    "inventory": {
+      "model": "pswg:cable_clamped"
+    },
+    "facing=north": {
+      "model": "pswg:cable_clamped"
+    },
+    "facing=south": {
+      "model": "pswg:cable_clamped",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:cable_clamped",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:cable_clamped",
+      "y": 90
+    }
+  }
+}

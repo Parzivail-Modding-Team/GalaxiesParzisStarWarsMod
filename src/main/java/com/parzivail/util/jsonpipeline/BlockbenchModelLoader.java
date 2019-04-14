@@ -1,8 +1,6 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
-import com.parzivail.swg.Resources;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -13,26 +11,32 @@ import net.minecraftforge.client.model.animation.ModelBlockAnimation;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Predicate;
 
-public class PModelLoader implements ICustomModelLoader
+public class BlockbenchModelLoader implements ICustomModelLoader
 {
-	public static final PModelLoader INSTANCE = new PModelLoader();
+	private final Predicate<ResourceLocation> handleCondition;
+
+	public BlockbenchModelLoader(Predicate<ResourceLocation> handleCondition)
+	{
+		this.handleCondition = handleCondition;
+	}
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
-		return Resources.MODID.equals(modelLocation.getResourceDomain()) && !(modelLocation instanceof ModelResourceLocation);
+		return handleCondition.test(modelLocation);
 	}
 
 	@Override
 	public IModel loadModel(ResourceLocation modelLocation) throws Exception
 	{
 		// Load vanilla model
-		PModelBlock vanillaModel;
+		BlockbenchGeometry vanillaModel;
 		ResourceLocation vanillaModelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath() + ".json");
 		try (IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(vanillaModelLocation); Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))
 		{
-			vanillaModel = PModelBlock.deserialize(reader);
+			vanillaModel = BlockbenchGeometry.deserialize(reader);
 			vanillaModel.name = modelLocation.toString();
 		}
 
@@ -45,8 +49,8 @@ public class PModelLoader implements ICustomModelLoader
 		ResourceLocation armatureLocation = new ResourceLocation(modelLocation.getResourceDomain(), "armatures/" + modelPath + ".json");
 		ModelBlockAnimation animation = ModelBlockAnimation.loadVanillaAnimation(Minecraft.getMinecraft().getResourceManager(), armatureLocation);
 
-		// Return the vanilla model weapped in a VanillaModelWrapper
-		return new VanillaModelWrapper(modelLocation, vanillaModel, false, animation);
+		// Return the vanilla model weapped in a BlockbenchModel
+		return new BlockbenchModel(modelLocation, vanillaModel, false, animation);
 	}
 
 	@Override
@@ -57,6 +61,6 @@ public class PModelLoader implements ICustomModelLoader
 	@Override
 	public String toString()
 	{
-		return "PModelLoader";
+		return "BlockbenchModelLoader";
 	}
 }

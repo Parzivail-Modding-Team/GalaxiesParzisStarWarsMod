@@ -1,9 +1,9 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.model.ModelLocationInformation;
-import com.parzivail.swg.model.PModelLoader;
-import com.parzivail.swg.model.PModelVariantLoader;
+import com.parzivail.util.jsonpipeline.BlockbenchModelLoader;
+import com.parzivail.util.jsonpipeline.BlockbenchWeightedModelLoader;
+import com.parzivail.util.jsonpipeline.ModelLocationInformation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
@@ -20,8 +20,8 @@ public class SwgClientProxy extends SwgProxy
 	public void preInit(FMLPreInitializationEvent e)
 	{
 		mc = Minecraft.getMinecraft();
-		ModelLoaderRegistry.registerLoader(PModelLoader.INSTANCE);
-		ModelLoaderRegistry.registerLoader(PModelVariantLoader.INSTANCE);
+		ModelLoaderRegistry.registerLoader(new BlockbenchModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && !(modelLocation instanceof ModelResourceLocation))));
+		ModelLoaderRegistry.registerLoader(new BlockbenchWeightedModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && modelLocation instanceof ModelResourceLocation)));
 	}
 
 	@Override

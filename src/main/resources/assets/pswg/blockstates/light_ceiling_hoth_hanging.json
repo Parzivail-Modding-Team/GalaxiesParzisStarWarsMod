@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:light_ceiling_hoth_hanging"
+    },
+    "inventory": {
+      "model": "pswg:light_ceiling_hoth_hanging"
+    },
+    "facing=north": {
+      "model": "pswg:light_ceiling_hoth_hanging"
+    },
+    "facing=south": {
+      "model": "pswg:light_ceiling_hoth_hanging",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:light_ceiling_hoth_hanging",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:light_ceiling_hoth_hanging",
+      "y": 90
+    }
+  }
+}

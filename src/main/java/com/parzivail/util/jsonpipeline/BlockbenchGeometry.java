@@ -1,4 +1,4 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
@@ -21,12 +21,12 @@ import java.util.*;
 import java.util.Map.Entry;
 
 @SideOnly(Side.CLIENT)
-public class PModelBlock
+public class BlockbenchGeometry
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	@VisibleForTesting
-	static final Gson SERIALIZER = (new GsonBuilder()).registerTypeAdapter(PModelBlock.class, new Deserializer()).registerTypeAdapter(PBlockPart.class, new BlockPartDeserializer()).registerTypeAdapter(BlockPartFace.class, new BlockPartFaceDeserializer()).registerTypeAdapter(BlockFaceUV.class, new BlockFaceUVDeserializer()).registerTypeAdapter(ItemTransformVec3f.class, new ItemTransformVec3fDeserializer()).registerTypeAdapter(ItemCameraTransforms.class, new ItemCameraTransformsDeserializer()).registerTypeAdapter(ItemOverride.class, new ItemOverrideDeserializer()).create();
-	private final List<PBlockPart> elements;
+	static final Gson SERIALIZER = (new GsonBuilder()).registerTypeAdapter(BlockbenchGeometry.class, new Deserializer()).registerTypeAdapter(BlockbenchPart.class, new BlockbenchPartDeserializer()).registerTypeAdapter(BlockPartFace.class, new BlockPartFaceDeserializer()).registerTypeAdapter(BlockFaceUV.class, new BlockFaceUVDeserializer()).registerTypeAdapter(ItemTransformVec3f.class, new ItemTransformVec3fDeserializer()).registerTypeAdapter(ItemCameraTransforms.class, new ItemCameraTransformsDeserializer()).registerTypeAdapter(ItemOverride.class, new ItemOverrideDeserializer()).create();
+	private final List<BlockbenchPart> elements;
 	private final boolean gui3d;
 	public final boolean ambientOcclusion;
 	private final ItemCameraTransforms cameraTransforms;
@@ -35,21 +35,21 @@ public class PModelBlock
 	@VisibleForTesting
 	public final Map<String, String> textures;
 	@VisibleForTesting
-	public PModelBlock parent;
+	public BlockbenchGeometry parent;
 	@VisibleForTesting
 	protected ResourceLocation parentLocation;
 
-	public static PModelBlock deserialize(Reader readerIn)
+	public static BlockbenchGeometry deserialize(Reader readerIn)
 	{
-		return JsonUtils.gsonDeserialize(SERIALIZER, readerIn, PModelBlock.class, false);
+		return JsonUtils.gsonDeserialize(SERIALIZER, readerIn, BlockbenchGeometry.class, false);
 	}
 
-	public static PModelBlock deserialize(String jsonString)
+	public static BlockbenchGeometry deserialize(String jsonString)
 	{
 		return deserialize(new StringReader(jsonString));
 	}
 
-	public PModelBlock(@Nullable ResourceLocation parentLocationIn, List<PBlockPart> elementsIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn, List<ItemOverride> overridesIn)
+	public BlockbenchGeometry(@Nullable ResourceLocation parentLocationIn, List<BlockbenchPart> elementsIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn, List<ItemOverride> overridesIn)
 	{
 		this.elements = elementsIn;
 		this.ambientOcclusion = ambientOcclusionIn;
@@ -60,7 +60,7 @@ public class PModelBlock
 		this.overrides = overridesIn;
 	}
 
-	public List<PBlockPart> getElements()
+	public List<BlockbenchPart> getElements()
 	{
 		return this.elements.isEmpty() && this.hasParent() ? this.parent.getElements() : this.elements;
 	}
@@ -85,7 +85,7 @@ public class PModelBlock
 		return this.parentLocation == null || this.parent != null && this.parent.isResolved();
 	}
 
-	public void getParentFromMap(Map<ResourceLocation, PModelBlock> p_178299_1_)
+	public void getParentFromMap(Map<ResourceLocation, BlockbenchGeometry> p_178299_1_)
 	{
 		if (this.parentLocation != null)
 		{
@@ -232,22 +232,22 @@ public class PModelBlock
 	@SideOnly(Side.CLIENT)
 	static final class Bookkeep
 	{
-		public final PModelBlock model;
+		public final BlockbenchGeometry model;
 		public Object modelExt;
 
-		private Bookkeep(PModelBlock modelIn)
+		private Bookkeep(BlockbenchGeometry modelIn)
 		{
 			this.model = modelIn;
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static class Deserializer implements JsonDeserializer<PModelBlock>
+	public static class Deserializer implements JsonDeserializer<BlockbenchGeometry>
 	{
-		public PModelBlock deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
+		public BlockbenchGeometry deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
 		{
 			JsonObject jsonobject = p_deserialize_1_.getAsJsonObject();
-			List<PBlockPart> list = this.getModelElements(p_deserialize_3_, jsonobject);
+			List<BlockbenchPart> list = this.getModelElements(p_deserialize_3_, jsonobject);
 			String s = this.getParent(jsonobject);
 			Map<String, String> map = this.getTextures(jsonobject);
 			boolean flag = this.getAmbientOcclusionEnabled(jsonobject);
@@ -261,7 +261,7 @@ public class PModelBlock
 
 			List<ItemOverride> list1 = this.getItemOverrides(p_deserialize_3_, jsonobject);
 			ResourceLocation resourcelocation = s.isEmpty() ? null : new ResourceLocation(s);
-			return new PModelBlock(resourcelocation, list, map, flag, true, itemcameratransforms, list1);
+			return new BlockbenchGeometry(resourcelocation, list, map, flag, true, itemcameratransforms, list1);
 		}
 
 		protected List<ItemOverride> getItemOverrides(JsonDeserializationContext deserializationContext, JsonObject object)
@@ -306,15 +306,15 @@ public class PModelBlock
 			return JsonUtils.getBoolean(object, "ambientocclusion", true);
 		}
 
-		protected List<PBlockPart> getModelElements(JsonDeserializationContext deserializationContext, JsonObject object)
+		protected List<BlockbenchPart> getModelElements(JsonDeserializationContext deserializationContext, JsonObject object)
 		{
-			List<PBlockPart> list = Lists.newArrayList();
+			List<BlockbenchPart> list = Lists.newArrayList();
 
 			if (object.has("elements"))
 			{
 				for (JsonElement jsonelement : JsonUtils.getJsonArray(object, "elements"))
 				{
-					list.add(deserializationContext.deserialize(jsonelement, PBlockPart.class));
+					list.add(deserializationContext.deserialize(jsonelement, BlockbenchPart.class));
 				}
 			}
 

@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:machine_spoked"
+    },
+    "inventory": {
+      "model": "pswg:machine_spoked"
+    },
+    "facing=north": {
+      "model": "pswg:machine_spoked"
+    },
+    "facing=south": {
+      "model": "pswg:machine_spoked",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:machine_spoked",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:machine_spoked",
+      "y": 90
+    }
+  }
+}

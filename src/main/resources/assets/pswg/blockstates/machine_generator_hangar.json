@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:machine_generator_hangar"
+    },
+    "inventory": {
+      "model": "pswg:machine_generator_hangar"
+    },
+    "facing=north": {
+      "model": "pswg:machine_generator_hangar"
+    },
+    "facing=south": {
+      "model": "pswg:machine_generator_hangar",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:machine_generator_hangar",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:machine_generator_hangar",
+      "y": 90
+    }
+  }
+}

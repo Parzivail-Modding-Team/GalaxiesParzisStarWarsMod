@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:machine_moseisley"
+    },
+    "inventory": {
+      "model": "pswg:machine_moseisley"
+    },
+    "facing=north": {
+      "model": "pswg:machine_moseisley"
+    },
+    "facing=south": {
+      "model": "pswg:machine_moseisley",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:machine_moseisley",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:machine_moseisley",
+      "y": 90
+    }
+  }
+}

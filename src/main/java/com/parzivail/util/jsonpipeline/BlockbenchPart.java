@@ -1,4 +1,4 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import net.minecraft.client.renderer.block.model.BlockPart;
 import net.minecraft.client.renderer.block.model.BlockPartFace;
@@ -9,13 +9,15 @@ import org.lwjgl.util.vector.Vector3f;
 import javax.annotation.Nullable;
 import java.util.Map;
 
-public class PBlockPart extends BlockPart
+public class BlockbenchPart extends BlockPart
 {
 	public final Vector3f rotated;
+	public final QuadData quadData;
 
-	public PBlockPart(Vector3f positionFromIn, Vector3f positionToIn, Map<EnumFacing, BlockPartFace> mapFacesIn, @Nullable BlockPartRotation partRotationIn, Vector3f partRotatedIn, boolean shadeIn)
+	public BlockbenchPart(Vector3f positionFromIn, Vector3f positionToIn, Map<EnumFacing, BlockPartFace> mapFacesIn, @Nullable BlockPartRotation partRotationIn, Vector3f partRotatedIn, boolean shadeIn, QuadData quadData)
 	{
 		super(positionFromIn, positionToIn, mapFacesIn, partRotationIn, shadeIn);
 		rotated = partRotatedIn;
+		this.quadData = quadData;
 	}
 }

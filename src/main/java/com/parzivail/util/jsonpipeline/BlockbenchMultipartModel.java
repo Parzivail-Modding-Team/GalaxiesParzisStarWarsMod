@@ -1,4 +1,4 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.renderer.block.model.IBakedModel;
@@ -14,25 +14,25 @@ import net.minecraftforge.common.model.IModelState;
 import java.util.Map;
 import java.util.function.Function;
 
-public class PMultipartModel implements IModel
+public class BlockbenchMultipartModel implements IModel
 {
 	private final ResourceLocation location;
 	private final Multipart multipart;
 	private final ImmutableMap<Selector, IModel> partModels;
 
-	public PMultipartModel(ResourceLocation location, Multipart multipart) throws Exception
+	public BlockbenchMultipartModel(ResourceLocation location, Multipart multipart) throws Exception
 	{
 		this.location = location;
 		this.multipart = multipart;
 		ImmutableMap.Builder<Selector, IModel> builder = ImmutableMap.builder();
 		for (Selector selector : multipart.getSelectors())
 		{
-			builder.put(selector, new PWeightedModel(selector.getVariantList()));
+			builder.put(selector, new BlockbenchWeightedModel(selector.getVariantList()));
 		}
 		partModels = builder.build();
 	}
 
-	private PMultipartModel(ResourceLocation location, Multipart multipart, ImmutableMap<Selector, IModel> partModels)
+	private BlockbenchMultipartModel(ResourceLocation location, Multipart multipart, ImmutableMap<Selector, IModel> partModels)
 	{
 		this.location = location;
 		this.multipart = multipart;
@@ -64,6 +64,6 @@ public class PMultipartModel implements IModel
 			builder.put(partModel.getKey(), partModel.getValue().retexture(textures));
 		}
 
-		return new PMultipartModel(location, multipart, builder.build());
+		return new BlockbenchMultipartModel(location, multipart, builder.build());
 	}
 }

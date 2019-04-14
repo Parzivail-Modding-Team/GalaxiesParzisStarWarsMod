@@ -1,7 +1,6 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import com.google.common.collect.Lists;
-import com.parzivail.swg.Resources;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelBlockDefinition;
@@ -17,15 +16,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.function.Predicate;
 
-public class PModelVariantLoader implements ICustomModelLoader
+public class BlockbenchWeightedModelLoader implements ICustomModelLoader
 {
-	public static final PModelVariantLoader INSTANCE = new PModelVariantLoader();
+	private final Predicate<ResourceLocation> handleCondition;
+
+	public BlockbenchWeightedModelLoader(Predicate<ResourceLocation> handleCondition)
+	{
+		this.handleCondition = handleCondition;
+	}
 
 	@Override
 	public boolean accepts(ResourceLocation modelLocation)
 	{
-		return Resources.MODID.equals(modelLocation.getResourceDomain()) && modelLocation instanceof ModelResourceLocation;
+		return handleCondition.test(modelLocation);
 	}
 
 	@Override
@@ -36,7 +41,7 @@ public class PModelVariantLoader implements ICustomModelLoader
 
 		if (definition.hasVariant(variant.getVariant()))
 		{
-			return new PWeightedModel(definition.getVariant(variant.getVariant()));
+			return new BlockbenchWeightedModel(definition.getVariant(variant.getVariant()));
 		}
 		else
 		{
@@ -49,7 +54,7 @@ public class PModelVariantLoader implements ICustomModelLoader
 				}
 			}
 
-			return new PMultipartModel(new ResourceLocation(variant.getResourceDomain(), variant.getResourcePath()), definition.getMultipartData());
+			return new BlockbenchMultipartModel(new ResourceLocation(variant.getResourceDomain(), variant.getResourcePath()), definition.getMultipartData());
 		}
 	}
 

@@ -1,4 +1,4 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import com.google.common.collect.*;
 import net.minecraft.block.state.IBlockState;
@@ -22,22 +22,22 @@ import sun.plugin.dom.exception.InvalidStateException;
 import java.util.*;
 import java.util.function.Function;
 
-public class VanillaModelWrapper implements IModel
+public class BlockbenchModel implements IModel
 {
 	public static final ModelBlockAnimation DEFAULT_MODEL_BLOCK_ANIMATION = new ModelBlockAnimation(ImmutableMap.of(), ImmutableMap.of());
-	private static final PFaceBakery FACE_BAKERY = new PFaceBakery();
+	private static final BlockbenchFaceBakery FACE_BAKERY = new BlockbenchFaceBakery();
 
 	private final ResourceLocation location;
-	private final PModelBlock model;
+	private final BlockbenchGeometry model;
 	private final boolean uvlock;
 	private final ModelBlockAnimation animation;
 
-	public VanillaModelWrapper(ResourceLocation location, PModelBlock model)
+	public BlockbenchModel(ResourceLocation location, BlockbenchGeometry model)
 	{
 		this(location, model, false, DEFAULT_MODEL_BLOCK_ANIMATION);
 	}
 
-	public VanillaModelWrapper(ResourceLocation location, PModelBlock model, boolean uvlock, ModelBlockAnimation animation)
+	public BlockbenchModel(ResourceLocation location, BlockbenchGeometry model, boolean uvlock, ModelBlockAnimation animation)
 	{
 		this.location = location;
 		this.model = model;
@@ -45,19 +45,19 @@ public class VanillaModelWrapper implements IModel
 		this.animation = animation;
 	}
 
-	private static boolean hasItemModel(PModelBlock model)
+	private static boolean hasItemModel(BlockbenchGeometry model)
 	{
 		return model.getRootModel() == BuiltinLoader.MODEL_GENERATED;
 	}
 
-	private static boolean isCustomRenderer(PModelBlock model)
+	private static boolean isCustomRenderer(BlockbenchGeometry model)
 	{
 		return model.getRootModel() == BuiltinLoader.MODEL_ENTITY;
 	}
 
-	public static BakedQuad makeBakedQuad(PBlockPart blockPart, BlockPartFace blockPartFace, TextureAtlasSprite sprite, EnumFacing face, ITransformation transform, boolean uvLocked)
+	public static BakedQuad makeBakedQuad(BlockbenchPart blockPart, BlockPartFace blockPartFace, TextureAtlasSprite sprite, EnumFacing face, ITransformation transform, boolean uvLocked)
 	{
-		return FACE_BAKERY.makeBakedQuad(blockPart.positionFrom, blockPart.positionTo, blockPartFace, sprite, face, transform, blockPart.partRotation, blockPart.rotated, uvLocked, blockPart.shade);
+		return FACE_BAKERY.makeBakedQuad(blockPart.positionFrom, blockPart.positionTo, blockPartFace, sprite, face, transform, blockPart.partRotation, blockPart.rotated, uvLocked, blockPart.shade, blockPart.quadData);
 	}
 
 	@Override
@@ -91,9 +91,9 @@ public class VanillaModelWrapper implements IModel
 			else
 			{
 				IModel parent = ModelLoaderRegistry.getModelOrLogError(model.getParentLocation(), "Could not load vanilla model parent '" + model.getParentLocation() + "' for '" + model);
-				if (parent instanceof VanillaModelWrapper)
+				if (parent instanceof BlockbenchModel)
 				{
-					model.parent = ((VanillaModelWrapper)parent).model;
+					model.parent = ((BlockbenchModel)parent).model;
 				}
 				else
 					throw new InvalidStateException("Invalid parent for " + model + ", parent was " + parent);
@@ -131,7 +131,7 @@ public class VanillaModelWrapper implements IModel
 		{
 			throw new IllegalArgumentException("can't bake vanilla models to the format that doesn't fit into the default one: " + format);
 		}
-		PModelBlock model = this.model;
+		BlockbenchGeometry model = this.model;
 
 		if (model == null)
 		{
@@ -169,7 +169,7 @@ public class VanillaModelWrapper implements IModel
 		return model.getOverrideLocations();
 	}
 
-	private IBakedModel bakeNormal(PModelBlock model, IModelState perState, final IModelState modelState, List<TRSRTransformation> newTransforms, final VertexFormat format, final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, boolean uvLocked)
+	private IBakedModel bakeNormal(BlockbenchGeometry model, IModelState perState, final IModelState modelState, List<TRSRTransformation> newTransforms, final VertexFormat format, final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, boolean uvLocked)
 	{
 		final TRSRTransformation baseState = modelState.apply(Optional.empty()).orElse(TRSRTransformation.identity());
 		TextureAtlasSprite particle = bakedTextureGetter.apply(new ResourceLocation(model.resolveTextureName("particle")));
@@ -180,7 +180,7 @@ public class VanillaModelWrapper implements IModel
 			{
 				continue;
 			}
-			PBlockPart part = model.getElements().get(i);
+			BlockbenchPart part = model.getElements().get(i);
 			TRSRTransformation transformation = baseState;
 			if (newTransforms.get(i) != null)
 			{
@@ -188,7 +188,7 @@ public class VanillaModelWrapper implements IModel
 				BlockPartRotation rot = part.partRotation;
 				if (rot == null)
 					rot = new BlockPartRotation(new org.lwjgl.util.vector.Vector3f(), EnumFacing.Axis.Y, 0, false);
-				part = new PBlockPart(part.positionFrom, part.positionTo, part.mapFaces, rot, part.rotated, part.shade);
+				part = new BlockbenchPart(part.positionFrom, part.positionTo, part.mapFaces, rot, part.rotated, part.shade, part.quadData);
 			}
 			for (Map.Entry<EnumFacing, BlockPartFace> e : part.mapFaces.entrySet())
 			{
@@ -207,7 +207,7 @@ public class VanillaModelWrapper implements IModel
 
 		return new PerspectiveMapWrapper(builder.makeBakedModel(), perState)
 		{
-			private final ItemOverrideList overrides = new AnimationItemOverrideList(VanillaModelWrapper.this, modelState, format, bakedTextureGetter, super.getOverrides());
+			private final ItemOverrideList overrides = new AnimationItemOverrideList(BlockbenchModel.this, modelState, format, bakedTextureGetter, super.getOverrides());
 
 			@Override
 			public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand)
@@ -245,18 +245,18 @@ public class VanillaModelWrapper implements IModel
 	}
 
 	@Override
-	public VanillaModelWrapper retexture(ImmutableMap<String, String> textures)
+	public BlockbenchModel retexture(ImmutableMap<String, String> textures)
 	{
 		if (textures.isEmpty())
 			return this;
 
-		List<PBlockPart> elements = Lists.newArrayList(); //We have to duplicate this so we can edit it below.
-		for (PBlockPart part : model.getElements())
+		List<BlockbenchPart> elements = Lists.newArrayList(); //We have to duplicate this so we can edit it below.
+		for (BlockbenchPart part : model.getElements())
 		{
-			elements.add(new PBlockPart(part.positionFrom, part.positionTo, Maps.newHashMap(part.mapFaces), part.partRotation, part.rotated, part.shade));
+			elements.add(new BlockbenchPart(part.positionFrom, part.positionTo, Maps.newHashMap(part.mapFaces), part.partRotation, part.rotated, part.shade, part.quadData));
 		}
 
-		PModelBlock newModel = new PModelBlock(model.getParentLocation(), elements, Maps.newHashMap(model.textures), model.isAmbientOcclusion(), model.isGui3d(), model.getAllTransforms(), Lists.newArrayList(model.getOverrides()));
+		BlockbenchGeometry newModel = new BlockbenchGeometry(model.getParentLocation(), elements, Maps.newHashMap(model.textures), model.isAmbientOcclusion(), model.isGui3d(), model.getAllTransforms(), Lists.newArrayList(model.getOverrides()));
 		newModel.name = model.name;
 		newModel.parent = model.parent;
 
@@ -294,7 +294,7 @@ public class VanillaModelWrapper implements IModel
 			part.mapFaces.entrySet().removeIf(entry -> removed.contains(entry.getValue().texture));
 		}
 
-		return new VanillaModelWrapper(location, newModel, uvlock, animation);
+		return new BlockbenchModel(location, newModel, uvlock, animation);
 	}
 
 	@Override
@@ -309,31 +309,31 @@ public class VanillaModelWrapper implements IModel
 	}
 
 	@Override
-	public VanillaModelWrapper smoothLighting(boolean value)
+	public BlockbenchModel smoothLighting(boolean value)
 	{
 		if (model.ambientOcclusion == value)
 		{
 			return this;
 		}
 
-		PModelBlock newModel = new PModelBlock(model.getParentLocation(), model.getElements(), model.textures, value, model.isGui3d(), model.getAllTransforms(), Lists.newArrayList(model.getOverrides()));
+		BlockbenchGeometry newModel = new BlockbenchGeometry(model.getParentLocation(), model.getElements(), model.textures, value, model.isGui3d(), model.getAllTransforms(), Lists.newArrayList(model.getOverrides()));
 		newModel.parent = model.parent;
 		newModel.name = model.name;
-		return new VanillaModelWrapper(location, newModel, uvlock, animation);
+		return new BlockbenchModel(location, newModel, uvlock, animation);
 	}
 
 	@Override
-	public VanillaModelWrapper gui3d(boolean value)
+	public BlockbenchModel gui3d(boolean value)
 	{
 		if (model.isGui3d() == value)
 		{
 			return this;
 		}
 
-		PModelBlock newModel = new PModelBlock(model.getParentLocation(), model.getElements(), model.textures, model.ambientOcclusion, value, model.getAllTransforms(), Lists.newArrayList(model.getOverrides()));
+		BlockbenchGeometry newModel = new BlockbenchGeometry(model.getParentLocation(), model.getElements(), model.textures, model.ambientOcclusion, value, model.getAllTransforms(), Lists.newArrayList(model.getOverrides()));
 		newModel.parent = model.parent;
 		newModel.name = model.name;
-		return new VanillaModelWrapper(location, newModel, uvlock, animation);
+		return new BlockbenchModel(location, newModel, uvlock, animation);
 	}
 
 	@Override
@@ -344,6 +344,6 @@ public class VanillaModelWrapper implements IModel
 			return this;
 		}
 
-		return new VanillaModelWrapper(location, model, value, animation);
+		return new BlockbenchModel(location, model, value, animation);
 	}
 }

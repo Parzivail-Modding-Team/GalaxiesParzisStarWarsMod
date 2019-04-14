@@ -1,8 +1,9 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import net.minecraft.client.renderer.EnumFaceDirection;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
@@ -15,7 +16,7 @@ import org.lwjgl.util.vector.Vector4f;
 import javax.annotation.Nullable;
 
 @SideOnly(Side.CLIENT)
-public class PFaceBakery
+public class BlockbenchFaceBakery
 {
 	private static final float SCALE_ROTATION_22_5 = 1.0F / (float)Math.cos(0.39269909262657166D) - 1.0F;
 	private static final float SCALE_ROTATION_GENERAL = 1.0F / (float)Math.cos((Math.PI / 4D)) - 1.0F;
@@ -81,7 +82,7 @@ public class PFaceBakery
 		return new BakedQuad(aint, face.tintIndex, enumfacing, sprite, shade, net.minecraft.client.renderer.vertex.DefaultVertexFormats.ITEM);
 	}
 
-	public BakedQuad makeBakedQuad(Vector3f posFrom, Vector3f posTo, BlockPartFace face, TextureAtlasSprite sprite, EnumFacing facing, net.minecraftforge.common.model.ITransformation modelRotationIn, BlockPartRotation partRotation, Vector3f partRotated, boolean uvLocked, boolean shade)
+	public BakedQuad makeBakedQuad(Vector3f posFrom, Vector3f posTo, BlockPartFace face, TextureAtlasSprite sprite, EnumFacing facing, net.minecraftforge.common.model.ITransformation modelRotationIn, BlockPartRotation partRotation, Vector3f partRotated, boolean uvLocked, boolean shade, QuadData extras)
 	{
 		BlockFaceUV blockfaceuv = face.blockFaceUV;
 
@@ -90,7 +91,7 @@ public class PFaceBakery
 			blockfaceuv = net.minecraftforge.client.ForgeHooksClient.applyUVLock(face.blockFaceUV, facing, modelRotationIn);
 		}
 
-		int[] aint = this.makeQuadVertexData(blockfaceuv, sprite, facing, this.getPositionsDiv16(posFrom, posTo), modelRotationIn, partRotation, partRotated, false);
+		int[] aint = this.makeQuadVertexData(blockfaceuv, sprite, facing, this.getPositionsDiv16(posFrom, posTo), modelRotationIn, partRotation, partRotated, false, extras);
 		EnumFacing enumfacing = getFacingFromVertexData(aint);
 
 		if (partRotation == null)
@@ -99,7 +100,12 @@ public class PFaceBakery
 		}
 
 		net.minecraftforge.client.ForgeHooksClient.fillNormal(aint, enumfacing);
-		return new BakedQuad(aint, face.tintIndex, enumfacing, sprite, shade, net.minecraft.client.renderer.vertex.DefaultVertexFormats.ITEM);
+		Quad quad = Quad.from(new BakedQuad(aint, face.tintIndex, enumfacing, sprite, shade, DefaultVertexFormats.ITEM));
+		if (extras.lit)
+		{
+			quad = quad.setLight(15, 15);
+		}
+		return quad.rebake();
 	}
 
 	private BlockFaceUV applyUVLock(BlockFaceUV p_188010_1_, EnumFacing p_188010_2_, ModelRotation p_188010_3_)
@@ -124,13 +130,13 @@ public class PFaceBakery
 		return aint;
 	}
 
-	private int[] makeQuadVertexData(BlockFaceUV uvs, TextureAtlasSprite sprite, EnumFacing orientation, float[] p_188012_4_, net.minecraftforge.common.model.ITransformation rotationIn, BlockPartRotation partRotation, Vector3f partRotated, boolean shade)
+	private int[] makeQuadVertexData(BlockFaceUV uvs, TextureAtlasSprite sprite, EnumFacing orientation, float[] p_188012_4_, net.minecraftforge.common.model.ITransformation rotationIn, BlockPartRotation partRotation, Vector3f partRotated, boolean shade, QuadData extras)
 	{
 		int[] aint = new int[28];
 
 		for (int i = 0; i < 4; ++i)
 		{
-			this.fillVertexData(aint, i, orientation, uvs, p_188012_4_, sprite, rotationIn, partRotation, partRotated, shade);
+			this.fillVertexData(aint, i, orientation, uvs, p_188012_4_, sprite, rotationIn, partRotation, partRotated, shade, extras);
 		}
 
 		return aint;
@@ -187,21 +193,21 @@ public class PFaceBakery
 		Vector3f vector3f = new Vector3f(p_188015_5_[enumfacedirection$vertexinformation.xIndex], p_188015_5_[enumfacedirection$vertexinformation.yIndex], p_188015_5_[enumfacedirection$vertexinformation.zIndex]);
 		this.rotatePart(vector3f, p_188015_8_);
 		int j = this.rotateVertex(vector3f, p_188015_3_, p_188015_2_, p_188015_7_);
-		this.storeVertexData(p_188015_1_, j, p_188015_2_, vector3f, i, p_188015_6_, p_188015_4_);
+		this.storeVertexData(p_188015_1_, j, p_188015_2_, vector3f, i, p_188015_6_, p_188015_4_, QuadData.DEFAULT);
 	}
 
-	private void fillVertexData(int[] p_188015_1_, int p_188015_2_, EnumFacing p_188015_3_, BlockFaceUV p_188015_4_, float[] p_188015_5_, TextureAtlasSprite p_188015_6_, net.minecraftforge.common.model.ITransformation p_188015_7_, BlockPartRotation p_188015_8_, Vector3f partRotated, boolean p_188015_9_)
+	private void fillVertexData(int[] faceData, int vertexIndex, EnumFacing facing, BlockFaceUV faceUv, float[] p_188015_5_, TextureAtlasSprite sprite, net.minecraftforge.common.model.ITransformation transformation, BlockPartRotation p_188015_8_, Vector3f partRotated, boolean shaded, QuadData extras)
 	{
-		EnumFacing enumfacing = p_188015_7_.rotate(p_188015_3_);
-		int i = p_188015_9_ ? this.getFaceShadeColor(enumfacing) : -1;
-		EnumFaceDirection.VertexInformation enumfacedirection$vertexinformation = EnumFaceDirection.getFacing(p_188015_3_).getVertexInformation(p_188015_2_);
-		Vector3f vector3f = new Vector3f(p_188015_5_[enumfacedirection$vertexinformation.xIndex], p_188015_5_[enumfacedirection$vertexinformation.yIndex], p_188015_5_[enumfacedirection$vertexinformation.zIndex]);
-		this.rotatePart(vector3f, p_188015_8_, partRotated);
-		int j = this.rotateVertex(vector3f, p_188015_3_, p_188015_2_, p_188015_7_);
-		this.storeVertexData(p_188015_1_, j, p_188015_2_, vector3f, i, p_188015_6_, p_188015_4_);
+		EnumFacing enumfacing = transformation.rotate(facing);
+		int shadeColor = shaded ? this.getFaceShadeColor(enumfacing) : extras.lightColor;
+		EnumFaceDirection.VertexInformation enumfacedirection$vertexinformation = EnumFaceDirection.getFacing(facing).getVertexInformation(vertexIndex);
+		Vector3f position = new Vector3f(p_188015_5_[enumfacedirection$vertexinformation.xIndex], p_188015_5_[enumfacedirection$vertexinformation.yIndex], p_188015_5_[enumfacedirection$vertexinformation.zIndex]);
+		this.rotatePart(position, p_188015_8_, partRotated);
+		int storeIndex = this.rotateVertex(position, facing, vertexIndex, transformation);
+		this.storeVertexData(faceData, storeIndex, vertexIndex, position, shadeColor, sprite, faceUv, extras);
 	}
 
-	private void storeVertexData(int[] faceData, int storeIndex, int vertexIndex, Vector3f position, int shadeColor, TextureAtlasSprite sprite, BlockFaceUV faceUV)
+	private void storeVertexData(int[] faceData, int storeIndex, int vertexIndex, Vector3f position, int shadeColor, TextureAtlasSprite sprite, BlockFaceUV faceUV, QuadData extras)
 	{
 		int i = storeIndex * 7;
 		faceData[i] = Float.floatToRawIntBits(position.x);
@@ -331,9 +337,10 @@ public class PFaceBakery
 
 	public static EnumFacing getFacingFromVertexData(int[] faceData)
 	{
+		int offset = 7;
 		Vector3f vector3f = new Vector3f(Float.intBitsToFloat(faceData[0]), Float.intBitsToFloat(faceData[1]), Float.intBitsToFloat(faceData[2]));
-		Vector3f vector3f1 = new Vector3f(Float.intBitsToFloat(faceData[7]), Float.intBitsToFloat(faceData[8]), Float.intBitsToFloat(faceData[9]));
-		Vector3f vector3f2 = new Vector3f(Float.intBitsToFloat(faceData[14]), Float.intBitsToFloat(faceData[15]), Float.intBitsToFloat(faceData[16]));
+		Vector3f vector3f1 = new Vector3f(Float.intBitsToFloat(faceData[offset]), Float.intBitsToFloat(faceData[offset + 1]), Float.intBitsToFloat(faceData[offset + 2]));
+		Vector3f vector3f2 = new Vector3f(Float.intBitsToFloat(faceData[2 * offset]), Float.intBitsToFloat(faceData[2 * offset + 1]), Float.intBitsToFloat(faceData[2 * offset + 2]));
 		Vector3f vector3f3 = new Vector3f();
 		Vector3f vector3f4 = new Vector3f();
 		Vector3f vector3f5 = new Vector3f();

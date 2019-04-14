@@ -1,0 +1,25 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:cable_ground"
+    },
+    "inventory": {
+      "model": "pswg:cable_ground"
+    },
+    "facing=north": {
+      "model": "pswg:cable_ground"
+    },
+    "facing=south": {
+      "model": "pswg:cable_ground",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "pswg:cable_ground",
+      "y": 270
+    },
+    "facing=east": {
+      "model": "pswg:cable_ground",
+      "y": 90
+    }
+  }
+}

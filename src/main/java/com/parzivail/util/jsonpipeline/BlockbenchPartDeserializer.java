@@ -1,4 +1,4 @@
-package com.parzivail.swg.model;
+package com.parzivail.util.jsonpipeline;
 
 import com.google.common.collect.Maps;
 import com.google.gson.*;
@@ -13,26 +13,35 @@ import java.lang.reflect.Type;
 import java.util.Locale;
 import java.util.Map;
 
-public class BlockPartDeserializer implements JsonDeserializer<PBlockPart>
+public class BlockbenchPartDeserializer implements JsonDeserializer<BlockbenchPart>
 {
-	public PBlockPart deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
+	public BlockbenchPart deserialize(JsonElement p_deserialize_1_, Type p_deserialize_2_, JsonDeserializationContext p_deserialize_3_) throws JsonParseException
 	{
 		JsonObject jsonobject = p_deserialize_1_.getAsJsonObject();
 		Vector3f vector3f = this.parsePositionFrom(jsonobject);
 		Vector3f vector3f1 = this.parsePositionTo(jsonobject);
 		BlockPartRotation blockpartrotation = this.parseRotation(jsonobject);
 		Vector3f blockpartrotated = this.parseRotated(jsonobject);
+		QuadData extra = this.parseExtra(jsonobject);
 		Map<EnumFacing, BlockPartFace> map = this.parseFacesCheck(p_deserialize_3_, jsonobject);
 
-		if (jsonobject.has("shade") && !JsonUtils.isBoolean(jsonobject, "shade"))
+		boolean flag = JsonUtils.getBoolean(jsonobject, "shade", true);
+		return new BlockbenchPart(vector3f, vector3f1, map, blockpartrotation, blockpartrotated, flag, extra);
+	}
+
+	private QuadData parseExtra(JsonObject object)
+	{
+		QuadData extra = QuadData.DEFAULT;
+
+		if (object.has("quadData"))
 		{
-			throw new JsonParseException("Expected shade to be a Boolean");
+			JsonObject jsonobject = JsonUtils.getJsonObject(object, "quadData");
+			boolean lit = JsonUtils.getBoolean(jsonobject, "lit", false);
+			int lightColor = JsonUtils.getInt(jsonobject, "lightColor", -1);
+			extra = new QuadData(lit, lightColor);
 		}
-		else
-		{
-			boolean flag = JsonUtils.getBoolean(jsonobject, "shade", true);
-			return new PBlockPart(vector3f, vector3f1, map, blockpartrotation, blockpartrotated, flag);
-		}
+
+		return extra;
 	}
 
 	@Nullable
@@ -129,30 +138,12 @@ public class BlockPartDeserializer implements JsonDeserializer<PBlockPart>
 
 	private Vector3f parsePositionTo(JsonObject object)
 	{
-		Vector3f vector3f = this.parsePosition(object, "to");
-
-		if (vector3f.x >= -16.0F && vector3f.y >= -16.0F && vector3f.z >= -16.0F && vector3f.x <= 32.0F && vector3f.y <= 32.0F && vector3f.z <= 32.0F)
-		{
-			return vector3f;
-		}
-		else
-		{
-			throw new JsonParseException("'to' specifier exceeds the allowed boundaries: " + vector3f);
-		}
+		return this.parsePosition(object, "to");
 	}
 
 	private Vector3f parsePositionFrom(JsonObject object)
 	{
-		Vector3f vector3f = this.parsePosition(object, "from");
-
-		if (vector3f.x >= -16.0F && vector3f.y >= -16.0F && vector3f.z >= -16.0F && vector3f.x <= 32.0F && vector3f.y <= 32.0F && vector3f.z <= 32.0F)
-		{
-			return vector3f;
-		}
-		else
-		{
-			throw new JsonParseException("'from' specifier exceeds the allowed boundaries: " + vector3f);
-		}
+		return this.parsePosition(object, "from");
 	}
 
 	private Vector3f parsePosition(JsonObject object, String memberName)

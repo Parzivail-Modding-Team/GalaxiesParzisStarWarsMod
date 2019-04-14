@@ -1,10 +1,12 @@
 {
+	"parent": "pswg:block/base/block",
 	"credit": "Made with Blockbench",
 	"textures": {
 		"0": "pswg:blocks/model/darkgray",
-		"1": "pswg:blocks/model/white",
+		"1": "pswg:blocks/model/special_lit_white",
 		"particle": "pswg:blocks/model/darkgray"
 	},
+	"ambientocclusion": false,
 	"elements": [
 		{
 			"name": "base",
@@ -163,6 +165,11 @@
 				-0.5,
 				13
 			],
+			"shade": false,
+			"quadData": {
+				"lit": true,
+				"lightColor": -1
+			},
 			"rotation": {
 				"angle": 75,
 				"axis": "x",
