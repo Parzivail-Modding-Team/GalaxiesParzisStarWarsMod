@@ -1,6 +1,5 @@
 package com.parzivail.swg.register;
 
-import com.parzivail.swg.Resources;
 import com.parzivail.swg.block.BlockTatooineSand;
 import com.parzivail.util.component.IBlockWithItem;
 import com.parzivail.util.component.PBlockFacing;
@@ -10,13 +9,11 @@ import net.minecraft.item.Item;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@GameRegistry.ObjectHolder(Resources.MODID)
 public class BlockRegister
 {
 	public static List<IBlockWithItem> _blocksToRegister;

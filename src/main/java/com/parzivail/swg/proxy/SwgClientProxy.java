@@ -19,6 +19,7 @@ public class SwgClientProxy extends SwgProxy
 	@Override
 	public void preInit(FMLPreInitializationEvent e)
 	{
+		super.preInit(e);
 		mc = Minecraft.getMinecraft();
 		ModelLoaderRegistry.registerLoader(new BlockbenchModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && !(modelLocation instanceof ModelResourceLocation))));
 		ModelLoaderRegistry.registerLoader(new BlockbenchWeightedModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && modelLocation instanceof ModelResourceLocation)));
@@ -27,6 +28,7 @@ public class SwgClientProxy extends SwgProxy
 	@Override
 	public void init(FMLInitializationEvent e)
 	{
+		super.init(e);
 		ModelLocationInformation.init(mc.getBlockRendererDispatcher().getBlockModelShapes().getBlockStateMapper());
 	}
 
