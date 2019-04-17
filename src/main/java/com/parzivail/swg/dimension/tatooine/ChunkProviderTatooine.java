@@ -2,6 +2,7 @@ package com.parzivail.swg.dimension.tatooine;
 
 import com.google.common.collect.ImmutableList;
 import com.parzivail.swg.dimension.tatooine.terrain.TerrainTatooineCanyons;
+import com.parzivail.swg.register.StructureRegister;
 import com.parzivail.util.world.*;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
@@ -53,7 +54,7 @@ public class ChunkProviderTatooine implements IChunkGenerator
 			}
 		}
 
-		//StructureRegister.structureEngine.genStructure(chunk);
+		StructureRegister.structureEngine.genStructure(worldObj.provider.getDimension(), cx, cz, chunk);
 
 		Chunk realChunk = new Chunk(this.worldObj, chunk, cx, cz);
 		Biome[] abiome = this.worldObj.getBiomeProvider().getBiomes(null, cx * 16, cz * 16, 16, 16);

@@ -4,6 +4,7 @@ import com.parzivail.swg.register.WorldRegister;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.DimensionType;
 import net.minecraft.world.WorldProvider;
+import net.minecraft.world.biome.BiomeProviderSingle;
 import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.IRenderHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -15,24 +16,35 @@ public abstract class PlanetWorldProvider extends WorldProvider
 {
 	private final DimensionType type;
 	private final PlanetDescriptor planetDescriptor;
+	private final BiomeProviderSingle biomeProviderSingle;
 
 	@SideOnly(Side.CLIENT)
 	protected IRenderHandler skyRenderer;
 
-	public PlanetWorldProvider(DimensionType type, SingleBiomeProvider biomeProvider)
+	public PlanetWorldProvider(DimensionType type, BiomeProviderSingle biomeProvider)
 	{
 		this.type = type;
 		planetDescriptor = WorldRegister.planetDescriptorHashMap.get(type.getId());
-		this.biomeProvider = biomeProvider;
+		this.biomeProviderSingle = biomeProvider;
 	}
 
-	public float calculateCelestialAngle(long p_76563_1_, float p_76563_3_)
+	public void init()
+	{
+		this.hasSkyLight = true;
+		this.biomeProvider = biomeProviderSingle;
+	}
+
+	public float calculateCelestialAngle(long worldTime, float partialTicks)
 	{
 		if (planetDescriptor.rotationPeriod == 0)
 			return 0;
 
-		int j = (int)(p_76563_1_ % (long)(planetDescriptor.rotationPeriod * 1000));
-		float f1 = ((float)j + p_76563_3_) / (planetDescriptor.rotationPeriod * 1000) - 0.25F;
+		boolean doDaylightCycle = world.getGameRules().getBoolean("doDaylightCycle");
+		if (!doDaylightCycle)
+			partialTicks = 0;
+
+		int j = (int)(worldTime % (long)(planetDescriptor.rotationPeriod * 1000));
+		float f1 = ((float)j + partialTicks) / (planetDescriptor.rotationPeriod * 1000) - 0.25F;
 
 		if (f1 < 0.0F)
 		{
@@ -50,11 +62,20 @@ public abstract class PlanetWorldProvider extends WorldProvider
 		return f1;
 	}
 
-	public int getMoonPhase(long p_76559_1_)
+	@Override
+	public float getStarBrightness(float partialTicks)
+	{
+		boolean doDaylightCycle = world.getGameRules().getBoolean("doDaylightCycle");
+		if (!doDaylightCycle)
+			partialTicks = 0;
+		return super.getStarBrightness(partialTicks);
+	}
+
+	public int getMoonPhase(long worldTime)
 	{
 		if (planetDescriptor.rotationPeriod == 0)
 			return 0;
-		return (int)(p_76559_1_ / (long)(planetDescriptor.rotationPeriod * 1000) % 8L + 8L) % 8;
+		return (int)(worldTime / (long)(planetDescriptor.rotationPeriod * 1000) % 8L + 8L) % 8;
 	}
 
 	@Override

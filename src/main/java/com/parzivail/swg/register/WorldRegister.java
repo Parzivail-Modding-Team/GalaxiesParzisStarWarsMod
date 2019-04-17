@@ -24,6 +24,6 @@ public class WorldRegister
 		DimensionManager.registerDimension(tatooineId, tatooineDimension);
 		BiomeManager.addBiome(BiomeManager.BiomeType.DESERT, new BiomeManager.BiomeEntry(biomeTatooineDunes, 0));
 		BiomeManager.removeSpawnBiome(biomeTatooineDunes);
-		planetDescriptorHashMap.put(tatooineId, new PlanetDescriptor("Tatooine", 1, 1, 1));
+		planetDescriptorHashMap.put(tatooineId, new PlanetDescriptor("Tatooine", 23, 10465, 1));
 	}
 }
