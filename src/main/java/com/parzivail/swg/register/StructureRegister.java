@@ -13,6 +13,6 @@ public class StructureRegister
 		structureEngine.registerBlockTransformer(new LegacyBlockTransformer());
 
 		//structureEngine.load(StarWarsGalaxy.config.getDimIdTatooine(), Resources.location("structures/interdictor.scrf"));
-		structureEngine.load(2, Resources.location("structures/isd_test.scrf"));
+		structureEngine.load(2, Resources.location("structures/isd_test_converted.scrf"));
 	}
 }
