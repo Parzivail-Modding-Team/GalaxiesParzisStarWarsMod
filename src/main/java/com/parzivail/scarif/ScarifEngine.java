@@ -1,6 +1,5 @@
 package com.parzivail.scarif;
 
-import com.parzivail.swg.register.IBlockTransformer;
 import com.parzivail.util.common.Lumberjack;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
@@ -28,7 +27,6 @@ public class ScarifEngine
 
 	private final HashMap<Integer, ArrayList<ScarifStructure>> structures = new HashMap<>();
 	private final Logger logger;
-	private List<IBlockTransformer> blockTransformers = new ArrayList<>();
 	private List<Short> erroredBlocks = new ArrayList<>();
 
 	public ScarifEngine(String modid)
@@ -85,7 +83,7 @@ public class ScarifEngine
 				int blockZ = (pos >> 4) & 0x0F;
 				int blockY = (pos >> 8) & 0xFF;
 
-				Block b = Block.getBlockFromName(transformBlockId(structure.getBlockById(block.id)));
+				Block b = Block.getBlockFromName(structure.getBlockById(block.id));
 				if (b == null)
 					informBlockNotFound(structure, block);
 				else
@@ -98,17 +96,6 @@ public class ScarifEngine
 			}
 		}
 		return hadStructure;
-	}
-
-	private String transformBlockId(String blockId)
-	{
-		for (IBlockTransformer transformer : blockTransformers)
-		{
-			String outputName = transformer.transform(blockId);
-			if (outputName != null)
-				return outputName;
-		}
-		return blockId;
 	}
 
 	private void informBlockNotFound(ScarifStructure structure, ScarifBlock block)
@@ -138,10 +125,5 @@ public class ScarifEngine
 				tileCache.clear();
 			}
 		}
-	}
-
-	public void registerBlockTransformer(IBlockTransformer blockTransformer)
-	{
-		blockTransformers.add(blockTransformer);
 	}
 }
