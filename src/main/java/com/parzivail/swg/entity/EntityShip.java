@@ -3,8 +3,8 @@ package com.parzivail.swg.entity;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.util.math.SlidingWindow;
 import com.parzivail.util.math.lwjgl.Vector3f;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,6 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Rotations;
@@ -36,6 +35,14 @@ public class EntityShip extends Entity
 	private boolean rightInputDown;
 	private boolean forwardInputDown;
 	private boolean backInputDown;
+
+	public RotatedAxes rotation = new RotatedAxes();
+	public RotatedAxes prevRotation = new RotatedAxes();
+
+	@SideOnly(Side.CLIENT)
+	public SlidingWindow slidingPitch = new SlidingWindow(6);
+	@SideOnly(Side.CLIENT)
+	public SlidingWindow slidingYaw = new SlidingWindow(5);
 
 	public EntityShip(World worldIn)
 	{
@@ -124,18 +131,23 @@ public class EntityShip extends Entity
 	@Override
 	public void onUpdate()
 	{
+		this.prevRotation = rotation;
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
+
+		this.rotation = getRotation();
+		this.setRotation(-this.rotation.getYaw(), -this.rotation.getPitch());
+
 		super.onUpdate();
 
 		if (this.canPassengerSteer())
 		{
 			Entity controllingPassenger = getControllingPassenger();
-			if (controllingPassenger instanceof EntityPlayerSP && this.world.isRemote)
+			if (controllingPassenger instanceof EntityPlayer && this.world.isRemote)
 			{
-				MovementInput input = ((EntityPlayerSP)controllingPassenger).movementInput;
-				StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(this, input.forwardKeyDown, input.backKeyDown, input.leftKeyDown, input.rightKeyDown));
+				EntityPlayer pilot = (EntityPlayer)controllingPassenger;
+				StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(this, pilot));
 			}
 
 			this.updateMotion();
@@ -149,18 +161,26 @@ public class EntityShip extends Entity
 
 		if (!world.isRemote)
 			this.control();
+		else
+		{
+			float dYaw = MathHelper.wrapDegrees(rotation.getYaw() - prevRotation.getYaw());
+			slidingYaw.slide(dYaw);
+			float dPitch = MathHelper.wrapDegrees(rotation.getPitch() - prevRotation.getPitch());
+			slidingPitch.slide(dPitch);
+		}
 
 		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
 		//this.doBlockCollisions();
 	}
 
-	public void setInputs(boolean forwardInputDown, boolean backInputDown, boolean leftInputDown, boolean rightInputDown)
+	public void setInputs(MessageSetShipInput packet)
 	{
-		this.forwardInputDown = forwardInputDown;
-		this.backInputDown = backInputDown;
-		this.leftInputDown = leftInputDown;
-		this.rightInputDown = rightInputDown;
+		dataManager.set(ROTATION, new Rotations(-packet.pitch, -packet.yaw, 0));
+		this.forwardInputDown = packet.forwardInputDown;
+		this.backInputDown = packet.backInputDown;
+		this.leftInputDown = packet.leftInputDown;
+		this.rightInputDown = packet.rightInputDown;
 	}
 
 	private void control()
@@ -194,13 +214,6 @@ public class EntityShip extends Entity
 				throttle = MathHelper.clamp(throttle - 0.1f, 0, 1);
 				setThrottle(throttle);
 			}
-
-			//			Entity controllingPassenger = getControllingPassenger();
-			//			if (controllingPassenger instanceof EntityPlayer)
-			//			{
-			//				EntityPlayer player = (EntityPlayer)controllingPassenger;
-			//				dataManager.set(ROTATION, new Rotations(player.rotationYaw, 0, 0));
-			//			}
 		}
 	}
 
@@ -248,7 +261,7 @@ public class EntityShip extends Entity
 		if (throttle > 0)
 		{
 			RotatedAxes rotatedAxes = getRotation();
-			Vector3f forward = rotatedAxes.findLocalVectorGlobally(new Vector3f(1, 0, 0));
+			Vector3f forward = rotatedAxes.findLocalVectorGlobally(new Vector3f(0, 0, 1));
 
 			this.motionX = forward.x * throttle * 4;
 			this.motionY = forward.y * throttle * 4;

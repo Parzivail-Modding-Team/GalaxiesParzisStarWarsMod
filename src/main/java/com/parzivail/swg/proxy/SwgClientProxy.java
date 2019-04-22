@@ -7,8 +7,11 @@ import com.parzivail.util.jsonpipeline.BlockbenchModelLoader;
 import com.parzivail.util.jsonpipeline.BlockbenchWeightedModelLoader;
 import com.parzivail.util.jsonpipeline.ModelLocationInformation;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.MovementInput;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
@@ -41,5 +44,12 @@ public class SwgClientProxy extends SwgProxy
 	public void registerItemRenderer(Item item, String id)
 	{
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Resources.modColon(id), "inventory"));
+	}
+
+	public MovementInput getMovementInput(EntityPlayer player)
+	{
+		if (player instanceof EntityPlayerSP)
+			return ((EntityPlayerSP)player).movementInput;
+		return null;
 	}
 }

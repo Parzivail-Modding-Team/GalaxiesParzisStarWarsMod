@@ -33,20 +33,30 @@ public class RenderShip extends Render<EntityShip>
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
-		RotatedAxes rotation = ship.getRotation();
-		float yaw = MathHelper.wrapDegrees(rotation.getYaw());
-		float pitch = wrapAngleTo90_float(rotation.getPitch());
-		float roll = MathHelper.wrapDegrees(rotation.getRoll());
+		RotatedAxes prevRotation = ship.prevRotation;
+		RotatedAxes rotation = ship.rotation;
 
-		GL.Translate(x, y, z);
+		float dYaw = MathHelper.wrapDegrees(rotation.getYaw() - prevRotation.getYaw());
+		float dPitch = wrapAngleTo90(rotation.getPitch() - prevRotation.getPitch());
+		float dRoll = MathHelper.wrapDegrees(rotation.getRoll() - prevRotation.getRoll());
+		float yaw = MathHelper.wrapDegrees(prevRotation.getYaw() + dYaw * partialTicks);
+		float pitch = wrapAngleTo90(prevRotation.getPitch() + dPitch * partialTicks);
+		float roll = MathHelper.wrapDegrees(prevRotation.getRoll() + dRoll * partialTicks);
+
+		float slidDYaw = ship.slidingYaw.getOldAverage() + (ship.slidingYaw.getAverage() - ship.slidingYaw.getOldAverage()) * partialTicks;
+		float slidDPitch = ship.slidingPitch.getOldAverage() + (ship.slidingPitch.getAverage() - ship.slidingPitch.getOldAverage()) * partialTicks;
+
+		roll += slidDYaw;
+
+		GL.Translate(x, y + 0.5f, z);
 
 		GL.Enable(EnableCap.Texture2D);
 
 		// TODO: fix
 		//FxMC.enableSunBasedLighting(ship, partialTicks);
 
-		GL11.glRotatef(yaw, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-pitch, 1.0F, 0.0F, 0.0F);
+		GL11.glRotatef(yaw + slidDYaw / 10, 0.0F, 1.0F, 0.0F);
+		GL11.glRotatef(-pitch - slidDPitch, 1.0F, 0.0F, 0.0F);
 		GL11.glRotatef(-roll, 0.0F, 0.0F, 1.0F);
 
 		GL.Rotate(-90, 1, 0, 0);
@@ -91,7 +101,7 @@ public class RenderShip extends Render<EntityShip>
 		return null;
 	}
 
-	public static float wrapAngleTo90_float(float a)
+	public static float wrapAngleTo90(float a)
 	{
 		a %= 180.0F;
 
