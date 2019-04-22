@@ -3,10 +3,10 @@ package com.parzivail.swg.entity;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
-import net.minecraft.entity.item.EntityBoat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
@@ -29,7 +29,8 @@ import java.util.function.Consumer;
 
 public class EntityShip extends Entity
 {
-	private static final DataParameter<Rotations> ROTATION = EntityDataManager.createKey(EntityBoat.class, DataSerializers.ROTATIONS);
+	private static final DataParameter<Rotations> ROTATION = EntityDataManager.createKey(EntityShip.class, DataSerializers.ROTATIONS);
+	private static final DataParameter<Float> THROTTLE = EntityDataManager.createKey(EntityShip.class, DataSerializers.FLOAT);
 
 	private boolean leftInputDown;
 	private boolean rightInputDown;
@@ -57,12 +58,14 @@ public class EntityShip extends Entity
 	@Override
 	protected void entityInit()
 	{
+		this.dataManager.register(THROTTLE, 0f);
 		this.dataManager.register(ROTATION, new Rotations(0, 0, 0));
 	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
+		setThrottle(compound.getFloat("throttle"));
 		dataManager.set(ROTATION, new Rotations(compound.getTagList("rotation", 5)));
 	}
 
@@ -70,6 +73,7 @@ public class EntityShip extends Entity
 	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
 		compound.setTag("rotation", dataManager.get(ROTATION).writeToNBT());
+		compound.setFloat("throttle", getThrottle());
 	}
 
 	@Nullable
@@ -133,6 +137,8 @@ public class EntityShip extends Entity
 				MovementInput input = ((EntityPlayerSP)controllingPassenger).movementInput;
 				StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(this, input.forwardKeyDown, input.backKeyDown, input.leftKeyDown, input.rightKeyDown));
 			}
+
+			this.updateMotion();
 		}
 		else
 		{
@@ -141,9 +147,9 @@ public class EntityShip extends Entity
 			this.motionZ = 0.0D;
 		}
 
-		this.control();
+		if (!world.isRemote)
+			this.control();
 
-		this.updateMotion();
 		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
 		//this.doBlockCollisions();
@@ -165,32 +171,42 @@ public class EntityShip extends Entity
 
 			if (this.leftInputDown)
 			{
-				rotateYaw(0.04f);
+				rotateYaw(3);
 			}
 
 			if (this.rightInputDown)
 			{
-				rotateYaw(-0.04f);
+				rotateYaw(-3);
 			}
 
 			if (this.forwardInputDown)
 			{
-				rotatePitch(-0.04f);
+				//				rotatePitch(3);
+				float throttle = getThrottle();
+				throttle = MathHelper.clamp(throttle + 0.1f, 0, 1);
+				setThrottle(throttle);
 			}
 
 			if (this.backInputDown)
 			{
-				rotatePitch(0.04f);
+				//				rotatePitch(-3);
+				float throttle = getThrottle();
+				throttle = MathHelper.clamp(throttle - 0.1f, 0, 1);
+				setThrottle(throttle);
 			}
 
-			this.motionX += (double)(MathHelper.sin(-this.rotationYaw * 0.017453292F) * f);
-			this.motionZ += (double)(MathHelper.cos(this.rotationYaw * 0.017453292F) * f);
+			//			Entity controllingPassenger = getControllingPassenger();
+			//			if (controllingPassenger instanceof EntityPlayer)
+			//			{
+			//				EntityPlayer player = (EntityPlayer)controllingPassenger;
+			//				dataManager.set(ROTATION, new Rotations(player.rotationYaw, 0, 0));
+			//			}
 		}
 	}
 
 	private void rotateYaw(float amount)
 	{
-		changeOrientation(axes -> axes.rotateLocalYaw(amount));
+		changeOrientation(axes -> axes.rotateGlobalYaw(amount));
 	}
 
 	private void rotatePitch(float amount)
@@ -206,11 +222,44 @@ public class EntityShip extends Entity
 		dataManager.set(ROTATION, new Rotations(axes.getPitch(), axes.getYaw(), axes.getRoll()));
 	}
 
+	public RotatedAxes getRotation()
+	{
+		Rotations angles = dataManager.get(ROTATION);
+		return new RotatedAxes(angles.getY(), angles.getX(), angles.getZ());
+	}
+
+	private void setThrottle(float throttle)
+	{
+		dataManager.set(THROTTLE, throttle);
+	}
+
+	private float getThrottle()
+	{
+		return dataManager.get(THROTTLE);
+	}
+
 	private void updateMotion()
 	{
 		double d1 = this.hasNoGravity() ? 0.0D : -0.03999999910593033D;
 
 		//this.motionY += d1;
+
+		float throttle = getThrottle();
+		if (throttle > 0)
+		{
+			RotatedAxes rotatedAxes = getRotation();
+			Vector3f forward = rotatedAxes.findLocalVectorGlobally(new Vector3f(1, 0, 0));
+
+			this.motionX = forward.x * throttle * 4;
+			this.motionY = forward.y * throttle * 4;
+			this.motionZ = forward.z * throttle * 4;
+		}
+		else
+		{
+			this.motionX = 0;
+			this.motionY = 0;
+			this.motionZ = 0;
+		}
 	}
 
 	@Override
@@ -219,7 +268,7 @@ public class EntityShip extends Entity
 		if (this.isPassenger(passenger))
 		{
 			passenger.setPosition(this.posX, this.posY, this.posZ);
-			this.applyYawToEntity(passenger);
+			//this.applyYawToEntity(passenger);
 		}
 	}
 
@@ -240,7 +289,7 @@ public class EntityShip extends Entity
 	@Override
 	public void applyOrientationToEntity(Entity entityToUpdate)
 	{
-		this.applyYawToEntity(entityToUpdate);
+		//this.applyYawToEntity(entityToUpdate);
 	}
 
 	@Override
