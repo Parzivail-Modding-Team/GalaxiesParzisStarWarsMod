@@ -3,6 +3,7 @@ package com.parzivail.swg.entity;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.util.math.RotatedAxes;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.item.EntityBoat;
@@ -14,6 +15,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.MovementInput;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Rotations;
@@ -22,6 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class EntityShip extends Entity
@@ -84,6 +87,12 @@ public class EntityShip extends Entity
 	}
 
 	@Override
+	public boolean canBeCollidedWith()
+	{
+		return !this.isDead;
+	}
+
+	@Override
 	public boolean attackEntityFrom(DamageSource source, float amount)
 	{
 		if (!this.world.isRemote && !this.isDead)
@@ -100,6 +109,14 @@ public class EntityShip extends Entity
 			return true;
 	}
 
+	@Nullable
+	@Override
+	public Entity getControllingPassenger()
+	{
+		List<Entity> list = this.getPassengers();
+		return list.isEmpty() ? null : list.get(0);
+	}
+
 	@Override
 	public void onUpdate()
 	{
@@ -110,15 +127,12 @@ public class EntityShip extends Entity
 
 		if (this.canPassengerSteer())
 		{
-			this.updateMotion();
-
-			if (this.world.isRemote)
+			Entity controllingPassenger = getControllingPassenger();
+			if (controllingPassenger instanceof EntityPlayerSP && this.world.isRemote)
 			{
-				this.control();
-				StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(this, this.forwardInputDown, this.backInputDown, this.leftInputDown, this.rightInputDown));
+				MovementInput input = ((EntityPlayerSP)controllingPassenger).movementInput;
+				StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(this, input.forwardKeyDown, input.backKeyDown, input.leftKeyDown, input.rightKeyDown));
 			}
-
-			this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 		}
 		else
 		{
@@ -126,6 +140,11 @@ public class EntityShip extends Entity
 			this.motionY = 0.0D;
 			this.motionZ = 0.0D;
 		}
+
+		this.control();
+
+		this.updateMotion();
+		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
 		//this.doBlockCollisions();
 	}

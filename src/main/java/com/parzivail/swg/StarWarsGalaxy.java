@@ -28,6 +28,9 @@ public class StarWarsGalaxy
 	public static SwgProxy proxy;
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(Resources.MODID);
 
+	@Mod.Instance(value = Resources.MODID)
+	public static StarWarsGalaxy instance;
+
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{

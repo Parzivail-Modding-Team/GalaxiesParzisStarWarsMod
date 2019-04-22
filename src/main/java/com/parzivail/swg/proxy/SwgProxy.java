@@ -1,5 +1,6 @@
 package com.parzivail.swg.proxy;
 
+import com.parzivail.swg.register.EntityRegister;
 import com.parzivail.swg.register.StructureRegister;
 import com.parzivail.swg.register.WorldRegister;
 import net.minecraft.item.Item;
@@ -12,6 +13,7 @@ public class SwgProxy
 	{
 		WorldRegister.register();
 		StructureRegister.register();
+		EntityRegister.register();
 	}
 
 	public void init(FMLInitializationEvent e)
