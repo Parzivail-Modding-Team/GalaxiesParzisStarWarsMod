@@ -1,4 +1,5 @@
 {
+  "parent": "pswg:block/base/block",
   "credit": "Made with Blockbench",
   "textures": {
     "0": "pswg:blocks/model/cyan",

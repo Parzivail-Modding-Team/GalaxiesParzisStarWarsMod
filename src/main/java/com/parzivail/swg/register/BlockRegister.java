@@ -1,7 +1,9 @@
 package com.parzivail.swg.register;
 
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.block.BlockTatooineSand;
 import com.parzivail.util.component.IBlockWithItem;
+import com.parzivail.util.component.PBlock;
 import com.parzivail.util.component.PBlockFacing;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -25,6 +27,7 @@ public class BlockRegister
 		_blocksToRegister = new ArrayList<>();
 
 		register(r, new BlockTatooineSand());
+		register(r, new PBlock("wall_lab", Material.GROUND));
 		register(r, new PBlockFacing("antenna_thin", Material.GROUND).withBoundingBox(7, 0, 7, 2, 48, 2));
 		register(r, new PBlockFacing("cable_clamped", Material.GROUND).withBoundingBox(4, 0, 4, 8, 5, 8));
 		register(r, new PBlockFacing("cable_ground", Material.GROUND).withBoundingBox(4, 0, 4, 8, 5, 8));
@@ -60,6 +63,7 @@ public class BlockRegister
 
 	private static void register(IForgeRegistry<Block> r, Block block)
 	{
+		block.setCreativeTab(StarWarsGalaxy.tab);
 		r.register(block);
 		if (block instanceof IBlockWithItem)
 			_blocksToRegister.add((IBlockWithItem)block);
