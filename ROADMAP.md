@@ -1,5 +1,5 @@
 # *Galaxies: Parzi's Star Wars Mod* Roadmap
-Each new update will contain the associated items, blocks, ships, NPCs, and quests for the major features. This list is subject to change, as new planets may be added between updates, or some planets may not be added at all.
+Unless otherwise noted, each new update will contain the associated items, blocks, ships, NPCs, and quests for the major features. This list is subject to change, as new planets may be added between updates, or some planets may not be added at all.
 ## 1.0: *Desert Storm* Update
 * New planet: Tatooine
 * New landmarks
@@ -8,6 +8,7 @@ Each new update will contain the associated items, blocks, ships, NPCs, and ques
   * Lars Homestead
   * Kenobi Homestead
   * Jabba's Palace and Sail Barge
+* This update will not yet contain quests.
 ## 1.1: *Wayward Jungle* Update
 * New planet: Yavin 4
 * New landmarks
