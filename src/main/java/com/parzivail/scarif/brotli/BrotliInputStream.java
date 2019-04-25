@@ -23,21 +23,18 @@ public class BrotliInputStream extends InputStream
 	 * Internal buffer used for efficient byte-by-byte reading.
 	 */
 	private final byte[] buffer;
-
-	/**
-	 * Number of decoded but still unused bytes in internal buffer.
-	 */
-	private int remainingBufferBytes;
-
-	/**
-	 * Next unused byte offset.
-	 */
-	private int bufferOffset;
-
 	/**
 	 * Decoder state.
 	 */
 	private final State state = new State();
+	/**
+	 * Number of decoded but still unused bytes in internal buffer.
+	 */
+	private int remainingBufferBytes;
+	/**
+	 * Next unused byte offset.
+	 */
+	private int bufferOffset;
 
 	/**
 	 * Creates a {@link InputStream} wrapper that decompresses brotli data.

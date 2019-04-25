@@ -35,29 +35,9 @@ import java.nio.ByteBuffer;
 final class Transform
 {
 
-	static final class Transforms
-	{
-		final int numTransforms;
-		final int[] triplets;
-		final byte[] prefixSuffixStorage;
-		final int[] prefixSuffixHeads;
-		final short[] params;
-
-		Transforms(int numTransforms, int prefixSuffixLen, int prefixSuffixCount)
-		{
-			this.numTransforms = numTransforms;
-			triplets = new int[numTransforms * 3];
-			params = new short[numTransforms];
-			prefixSuffixStorage = new byte[prefixSuffixLen];
-			prefixSuffixHeads = new int[prefixSuffixCount + 1];
-		}
-	}
-
 	static final int NUM_RFC_TRANSFORMS = 121;
 	static final Transforms RFC_TRANSFORMS = new Transforms(NUM_RFC_TRANSFORMS, 167, 50);
-
 	private static final int OMIT_FIRST_LAST_LIMIT = 9;
-
 	private static final int IDENTITY = 0;
 	private static final int OMIT_LAST_BASE = IDENTITY + 1 - 1;  // there is no OMIT_LAST_0.
 	private static final int UPPERCASE_FIRST = OMIT_LAST_BASE + OMIT_FIRST_LAST_LIMIT + 1;
@@ -65,10 +45,14 @@ final class Transform
 	private static final int OMIT_FIRST_BASE = UPPERCASE_ALL + 1 - 1;  // there is no OMIT_FIRST_0.
 	private static final int SHIFT_FIRST = OMIT_FIRST_BASE + OMIT_FIRST_LAST_LIMIT + 1;
 	private static final int SHIFT_ALL = SHIFT_FIRST + 1;
-
 	// Bundle of 0-terminated strings.
 	private static final String PREFIX_SUFFIX_SRC = "# #s #, #e #.# the #.com/#\u00C2\u00A0# of # and" + " # in # to #\"#\">#\n#]# for # a # that #. # with #'# from # by #. The # on # as # is #ing" + " #\n\t#:#ed #(# at #ly #=\"# of the #. This #,# not #er #al #='#ful #ive #less #est #ize #" + "ous #";
 	private static final String TRANSFORMS_SRC = "     !! ! ,  *!  &!  \" !  ) *   * -  ! # !  #!*!  " + "+  ,$ !  -  %  .  / #   0  1 .  \"   2  3!*   4%  ! # /   5  6  7  8 0  1 &   $   9 +   : " + " ;  < '  !=  >  ?! 4  @ 4  2  &   A *# (   B  C& ) %  ) !*# *-% A +! *.  D! %'  & E *6  F " + " G% ! *A *%  H! D  I!+!  J!+   K +- *4! A  L!*4  M  N +6  O!*% +.! K *G  P +%(  ! G *D +D " + " Q +# *K!*G!+D!+# +G +A +4!+% +K!+4!*D!+K!*K";
+
+	static
+	{
+		unpackTransforms(RFC_TRANSFORMS.prefixSuffixStorage, RFC_TRANSFORMS.prefixSuffixHeads, RFC_TRANSFORMS.triplets, PREFIX_SUFFIX_SRC, TRANSFORMS_SRC);
+	}
 
 	private static void unpackTransforms(byte[] prefixSuffix, int[] prefixSuffixHeads, int[] transforms, String prefixSuffixSrc, String transformsSrc)
 	{
@@ -92,11 +76,6 @@ final class Transform
 		{
 			transforms[i] = transformsSrc.charAt(i) - 32;
 		}
-	}
-
-	static
-	{
-		unpackTransforms(RFC_TRANSFORMS.prefixSuffixStorage, RFC_TRANSFORMS.prefixSuffixHeads, RFC_TRANSFORMS.triplets, PREFIX_SUFFIX_SRC, TRANSFORMS_SRC);
 	}
 
 	static int transformDictionaryWord(byte[] dst, int dstOffset, ByteBuffer src, int srcOffset, int len, Transforms transforms, int transformIndex)
@@ -270,5 +249,23 @@ final class Transform
 		}
 
 		return offset - dstOffset;
+	}
+
+	static final class Transforms
+	{
+		final int numTransforms;
+		final int[] triplets;
+		final byte[] prefixSuffixStorage;
+		final int[] prefixSuffixHeads;
+		final short[] params;
+
+		Transforms(int numTransforms, int prefixSuffixLen, int prefixSuffixCount)
+		{
+			this.numTransforms = numTransforms;
+			triplets = new int[numTransforms * 3];
+			params = new short[numTransforms];
+			prefixSuffixStorage = new byte[prefixSuffixLen];
+			prefixSuffixHeads = new int[prefixSuffixCount + 1];
+		}
 	}
 }
