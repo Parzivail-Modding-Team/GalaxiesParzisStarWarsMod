@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:sand_irridiated"
+    },
+    "inventory": {
+      "model": "pswg:sand_irridiated"
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:slab_stone_temple"
+    },
+    "inventory": {
+      "model": "pswg:slab_stone_temple"
+    }
+  }
+}

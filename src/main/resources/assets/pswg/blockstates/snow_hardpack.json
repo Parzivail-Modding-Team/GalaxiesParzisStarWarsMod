@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "normal": {
+      "model": "pswg:snow_hardpack"
+    },
+    "inventory": {
+      "model": "pswg:snow_hardpack"
+    }
+  }
+}

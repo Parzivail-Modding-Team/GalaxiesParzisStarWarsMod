@@ -28,6 +28,38 @@ public class BlockRegister
 
 		register(r, new BlockTatooineSand());
 		register(r, new PBlock("wall_lab", Material.GROUND));
+		register(r, new PBlock("brick_old", Material.GROUND));
+		register(r, new PBlock("brick_temple", Material.GROUND));
+		register(r, new PBlock("brick_temple_fancy", Material.GROUND));
+		register(r, new PBlock("concrete", Material.GROUND));
+		register(r, new PBlock("crate", Material.GROUND));
+		register(r, new PBlock("door_hoth", Material.GROUND));
+		register(r, new PBlock("metal_black", Material.GROUND));
+		register(r, new PBlock("metal_caution", Material.GROUND));
+		register(r, new PBlock("metal_gray", Material.GROUND));
+		register(r, new PBlock("metal_gray_bevel", Material.GROUND));
+		register(r, new PBlock("metal_gray_dark", Material.GROUND));
+		register(r, new PBlock("metal_white", Material.GROUND));
+		register(r, new PBlock("mud", Material.GROUND));
+		register(r, new PBlock("ore_chromium", Material.GROUND));
+		register(r, new PBlock("ore_cortosis", Material.GROUND));
+		register(r, new PBlock("ore_rubindum", Material.GROUND));
+		register(r, new PBlock("ore_titanium", Material.GROUND));
+		register(r, new PBlock("pourstone", Material.GROUND));
+		register(r, new PBlock("pumice", Material.GROUND));
+		register(r, new PBlock("salt", Material.GROUND));
+		register(r, new PBlock("sandstone_oxidized", Material.GROUND));
+		register(r, new PBlock("sand_irridiated", Material.GROUND));
+		register(r, new PBlock("sand_oxidized", Material.GROUND));
+		register(r, new PBlock("sand_rhodocrosite", Material.GROUND));
+		register(r, new PBlock("slab_stone_temple", Material.GROUND));
+		register(r, new PBlock("snow_cut", Material.GROUND));
+		register(r, new PBlock("snow_hardpack", Material.GROUND));
+		register(r, new PBlock("stab_stone_temple_dark_top", Material.GROUND));
+		register(r, new PBlock("stab_stone_temple_top", Material.GROUND));
+		register(r, new PBlock("stone_hoth", Material.GROUND));
+		register(r, new PBlock("stone_temple", Material.GROUND));
+
 		register(r, new PBlockFacing("antenna_thin", Material.GROUND).withBoundingBox(7, 0, 7, 2, 48, 2));
 		register(r, new PBlockFacing("cable_clamped", Material.GROUND).withBoundingBox(4, 0, 4, 8, 5, 8));
 		register(r, new PBlockFacing("cable_ground", Material.GROUND).withBoundingBox(4, 0, 4, 8, 5, 8));
