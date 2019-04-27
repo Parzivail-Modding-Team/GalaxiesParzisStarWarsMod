@@ -28,6 +28,11 @@ public class PBlock extends Block implements IBlockWithItem
 		setRegistryName(name);
 	}
 
+	public PBlock(String name)
+	{
+		this(name, Material.GROUND);
+	}
+
 	@Override
 	public void registerItemModel(Item itemBlock)
 	{
