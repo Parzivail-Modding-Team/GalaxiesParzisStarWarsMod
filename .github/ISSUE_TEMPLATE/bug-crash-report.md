@@ -15,7 +15,13 @@ Steps to reproduce the behavior (example):
 4. Crash
 
 **Expected behavior**
-A clear and concise description of what you expected to happen.
+A clear and concise description of what should have happened if nothing was wrong.
+
+**Crash Report**
+Please insert the crash report here if applicable.
+```
+Insert Here!
+```
 
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
@@ -27,4 +33,4 @@ If applicable, add screenshots to help explain your problem.
  - Java Version [e.g. 8]
 
 **Additional context**
-Add any other context about the problem here. If you have other mods installed, please list them here.
+Add any other information about the problem that you think may help us solve it. If you have other mods installed, please list them here.
