@@ -60,6 +60,8 @@ public class BlockRegister
 		register(r, new PBlock("stone_hoth"));
 		register(r, new PBlock("stone_temple"));
 
+		// chair_basic
+
 		register(r, new PBlockFacing("antenna_thin", Material.GROUND).withBoundingBox(7, 0, 7, 2, 48, 2));
 		register(r, new PBlockFacing("cable_clamped", Material.GROUND).withBoundingBox(4, 0, 4, 8, 5, 8));
 		register(r, new PBlockFacing("cable_ground", Material.GROUND).withBoundingBox(4, 0, 4, 8, 5, 8));
@@ -68,6 +70,11 @@ public class BlockRegister
 		register(r, new PBlockFacing("console_hoth_3", Material.GROUND).withBoundingBox(0, 0, 0, 16, 32, 16).setLightLevel(0.5f));
 		register(r, new PBlockFacing("console_medical", Material.GROUND).withBoundingBox(2, 0, 2, 12, 16, 12));
 		register(r, new PBlockFacing("console_medical_large", Material.GROUND).withBoundingBox(0, 0, 0, 16, 32, 16));
+		register(r, new PBlockFacing("crate_hoth", Material.GROUND).withBoundingBox(2, 0, 2, 12, 16, 12));
+		register(r, new PBlockFacing("crate_hoth_large", Material.GROUND).withBoundingBox(2, 0, 2, 12, 16, 12));
+		register(r, new PBlockFacing("crate_mosespa", Material.GROUND).withBoundingBox(2, 0, 2, 12, 16, 12));
+		register(r, new PBlockFacing("crate_villa", Material.GROUND).withBoundingBox(2, 0, 2, 12, 16, 12));
+		register(r, new PBlockFacing("crate_yavin", Material.GROUND).withBoundingBox(2, 0, 2, 12, 16, 12));
 		register(r, new PBlockFacing("ladder_yavin", Material.GROUND).withBoundingBox(0, 0, 0, 16, 16, 16));
 		register(r, new PBlockFacing("light_ceiling_hoth", Material.GROUND).withBoundingBox(4, 11, 4, 8, 5, 8).setLightLevel(1));
 		register(r, new PBlockFacing("light_ceiling_hoth_hanging", Material.GROUND).withBoundingBox(2, 0, 2, 12, 8, 12).setLightLevel(1));
@@ -76,6 +83,7 @@ public class BlockRegister
 		register(r, new PBlockFacing("light_floor_runway", Material.GROUND).withBoundingBox(4, 0, 4, 8, 8, 8).withTranslucent().setLightLevel(1));
 		register(r, new PBlockFacing("light_vertical", Material.GROUND).setLightLevel(1));
 		register(r, new PBlockFacing("light_vertical_2", Material.GROUND).setLightLevel(1));
+		register(r, new PBlockFacing("light_wall_angled", Material.GROUND).withBoundingBox(4, 4, 4, 8, 8, 8).setLightLevel(1));
 		register(r, new PBlockFacing("light_wall_indicator", Material.GROUND).withBoundingBox(4, 4, 4, 8, 8, 8).setLightLevel(1));
 		register(r, new PBlockFacing("light_wall_indicator_cluster", Material.GROUND).withBoundingBox(4, 4, 4, 8, 8, 8).setLightLevel(1));
 		register(r, new PBlockFacing("machine_generator_hangar", Material.GROUND));

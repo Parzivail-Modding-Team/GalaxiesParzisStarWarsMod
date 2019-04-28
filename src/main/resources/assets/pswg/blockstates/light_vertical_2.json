@@ -1,13 +1,16 @@
 {
   "variants": {
     "normal": {
-      "model": "pswg:light_vertical_2"
+      "model": "pswg:light_vertical_2",
+      "y": 180
     },
     "inventory": {
-      "model": "pswg:light_vertical_2"
+      "model": "pswg:light_vertical_2",
+      "y": 180
     },
     "facing=north": {
-      "model": "pswg:light_vertical_2"
+      "model": "pswg:light_vertical_2",
+      "y": 0
     },
     "facing=south": {
       "model": "pswg:light_vertical_2",

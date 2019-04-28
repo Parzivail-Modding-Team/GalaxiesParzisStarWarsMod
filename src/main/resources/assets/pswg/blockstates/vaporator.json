@@ -1,13 +1,16 @@
 {
   "variants": {
     "normal": {
-      "model": "pswg:vaporator"
+      "model": "pswg:vaporator",
+      "y": 180
     },
     "inventory": {
-      "model": "pswg:vaporator"
+      "model": "pswg:vaporator",
+      "y": 180
     },
     "facing=north": {
-      "model": "pswg:vaporator"
+      "model": "pswg:vaporator",
+      "y": 0
     },
     "facing=south": {
       "model": "pswg:vaporator",

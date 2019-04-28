@@ -1,13 +1,16 @@
 {
   "variants": {
     "normal": {
-      "model": "pswg:machine_spoked"
+      "model": "pswg:machine_spoked",
+      "y": 180
     },
     "inventory": {
-      "model": "pswg:machine_spoked"
+      "model": "pswg:machine_spoked",
+      "y": 180
     },
     "facing=north": {
-      "model": "pswg:machine_spoked"
+      "model": "pswg:machine_spoked",
+      "y": 0
     },
     "facing=south": {
       "model": "pswg:machine_spoked",

@@ -18,7 +18,7 @@ public class PBlockFacing extends PBlock
 	public PBlockFacing(String name, Material material)
 	{
 		super(name, material);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.SOUTH));
 	}
 
 	@Override
@@ -40,6 +40,6 @@ public class PBlockFacing extends PBlock
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing().getOpposite()), 3);
+		worldIn.setBlockState(pos, state.withProperty(FACING, placer.getHorizontalFacing()), 3);
 	}
 }

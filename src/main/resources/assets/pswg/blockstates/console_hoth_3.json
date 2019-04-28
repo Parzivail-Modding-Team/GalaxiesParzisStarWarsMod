@@ -1,13 +1,16 @@
 {
   "variants": {
     "normal": {
-      "model": "pswg:console_hoth_3"
+      "model": "pswg:console_hoth_3",
+      "y": 180
     },
     "inventory": {
-      "model": "pswg:console_hoth_3"
+      "model": "pswg:console_hoth_3",
+      "y": 180
     },
     "facing=north": {
-      "model": "pswg:console_hoth_3"
+      "model": "pswg:console_hoth_3",
+      "y": 0
     },
     "facing=south": {
       "model": "pswg:console_hoth_3",

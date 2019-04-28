@@ -1,13 +1,16 @@
 {
   "variants": {
     "normal": {
-      "model": "pswg:light_ceiling_hoth"
+      "model": "pswg:light_ceiling_hoth",
+      "y": 180
     },
     "inventory": {
-      "model": "pswg:light_ceiling_hoth"
+      "model": "pswg:light_ceiling_hoth",
+      "y": 180
     },
     "facing=north": {
-      "model": "pswg:light_ceiling_hoth"
+      "model": "pswg:light_ceiling_hoth",
+      "y": 0
     },
     "facing=south": {
       "model": "pswg:light_ceiling_hoth",
