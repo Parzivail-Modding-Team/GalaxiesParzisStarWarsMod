@@ -203,7 +203,6 @@ public class EntityShip extends Entity
 
 			if (this.forwardInputDown)
 			{
-				//				rotatePitch(3);
 				float throttle = getThrottle();
 				throttle = MathHelper.clamp(throttle + 0.1f, 0, 1);
 				setThrottle(throttle);
@@ -211,12 +210,13 @@ public class EntityShip extends Entity
 
 			if (this.backInputDown)
 			{
-				//				rotatePitch(-3);
 				float throttle = getThrottle();
 				throttle = MathHelper.clamp(throttle - 0.1f, 0, 1);
 				setThrottle(throttle);
 			}
 		}
+		else
+			setThrottle(0);
 	}
 
 	private void rotateYaw(float amount)
@@ -322,7 +322,10 @@ public class EntityShip extends Entity
 		else
 		{
 			if (!this.world.isRemote)
+			{
 				player.startRiding(this);
+				StarWarsGalaxy.proxy.startCapturingShipInput(player, this);
+			}
 
 			return true;
 		}

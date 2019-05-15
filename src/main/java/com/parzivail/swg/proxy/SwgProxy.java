@@ -1,5 +1,6 @@
 package com.parzivail.swg.proxy;
 
+import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.register.EntityRegister;
 import com.parzivail.swg.register.StructureRegister;
 import com.parzivail.swg.register.WorldRegister;
@@ -29,5 +30,9 @@ public class SwgProxy
 	public MovementInput getMovementInput(EntityPlayer player)
 	{
 		return null;
+	}
+
+	public void startCapturingShipInput(EntityPlayer player, EntityShip entityShip)
+	{
 	}
 }

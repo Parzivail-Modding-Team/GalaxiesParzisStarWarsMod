@@ -2,6 +2,7 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.gui.GuiShipInput;
 import com.parzivail.swg.render.RenderShip;
 import com.parzivail.util.jsonpipeline.BlockbenchModelLoader;
 import com.parzivail.util.jsonpipeline.BlockbenchWeightedModelLoader;
@@ -44,6 +45,11 @@ public class SwgClientProxy extends SwgProxy
 	public void registerItemRenderer(Item item, String id)
 	{
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Resources.modColon(id), "inventory"));
+	}
+
+	public void startCapturingShipInput(EntityPlayer player, EntityShip entityShip)
+	{
+		mc.displayGuiScreen(new GuiShipInput());
 	}
 
 	public MovementInput getMovementInput(EntityPlayer player)
