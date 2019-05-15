@@ -4,7 +4,9 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.SlidingWindow;
+import com.parzivail.util.math.lwjgl.Matrix4f;
 import com.parzivail.util.math.lwjgl.Vector3f;
+import com.parzivail.util.math.lwjgl.Vector4f;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.MoverType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -36,8 +38,8 @@ public class EntityShip extends Entity
 	private boolean forwardInputDown;
 	private boolean backInputDown;
 
-	public RotatedAxes rotation = new RotatedAxes();
-	public RotatedAxes prevRotation = new RotatedAxes();
+	public Rotations rotation = new Rotations(0, 0, 0);
+	public Rotations prevRotation = new Rotations(0, 0, 0);
 
 	@SideOnly(Side.CLIENT)
 	public SlidingWindow slidingPitch = new SlidingWindow(6);
@@ -136,8 +138,8 @@ public class EntityShip extends Entity
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
 
-		this.rotation = getRotation();
-		this.setRotation(-this.rotation.getYaw(), -this.rotation.getPitch());
+		this.rotation = dataManager.get(ROTATION);
+		//		this.setRotation(-this.rotation.getYaw(), -this.rotation.getPitch());
 
 		super.onUpdate();
 
@@ -163,10 +165,10 @@ public class EntityShip extends Entity
 			this.control();
 		else
 		{
-			float dYaw = MathHelper.wrapDegrees(rotation.getYaw() - prevRotation.getYaw());
-			slidingYaw.slide(dYaw);
-			float dPitch = MathHelper.wrapDegrees(rotation.getPitch() - prevRotation.getPitch());
-			slidingPitch.slide(dPitch);
+			//			float dYaw = MathHelper.wrapDegrees(rotation.getYaw() - prevRotation.getYaw());
+			//			slidingYaw.slide(dYaw);
+			//			float dPitch = MathHelper.wrapDegrees(rotation.getPitch() - prevRotation.getPitch());
+			//			slidingPitch.slide(dPitch);
 		}
 
 		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
@@ -235,10 +237,17 @@ public class EntityShip extends Entity
 		dataManager.set(ROTATION, new Rotations(axes.getPitch(), axes.getYaw(), axes.getRoll()));
 	}
 
-	public RotatedAxes getRotation()
+	public Matrix4f getRotation(float partialTicks)
 	{
-		Rotations angles = dataManager.get(ROTATION);
-		return new RotatedAxes(angles.getY(), angles.getX(), angles.getZ());
+		float dPitch = MathHelper.wrapDegrees(rotation.getX() - prevRotation.getX());
+		float dYaw = MathHelper.wrapDegrees(rotation.getY() - prevRotation.getY());
+
+		float x = prevRotation.getX() + dPitch * partialTicks;
+		float y = prevRotation.getY() + dYaw * partialTicks;
+
+		Matrix4f rotX = Matrix4f.rotate((float)(-x / 180 * Math.PI), new Vector3f(1, 0, 0), new Matrix4f(), null);
+		Matrix4f rotY = Matrix4f.rotate((float)(y / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
+		return Matrix4f.mul(rotY, rotX, null);
 	}
 
 	private void setThrottle(float throttle)
@@ -260,8 +269,8 @@ public class EntityShip extends Entity
 		float throttle = getThrottle();
 		if (throttle > 0)
 		{
-			RotatedAxes rotatedAxes = getRotation();
-			Vector3f forward = rotatedAxes.findLocalVectorGlobally(new Vector3f(0, 0, 1));
+			Matrix4f rotatedAxes = getRotation(0);
+			Vector4f forward = Matrix4f.transform(rotatedAxes, new Vector4f(0, 0, 1, 0), null);
 
 			this.motionX = forward.x * throttle * 4;
 			this.motionY = forward.y * throttle * 4;

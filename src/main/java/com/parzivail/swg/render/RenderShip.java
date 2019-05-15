@@ -1,7 +1,8 @@
 package com.parzivail.swg.render;
 
 import com.parzivail.swg.entity.EntityShip;
-import com.parzivail.util.math.RotatedAxes;
+import com.parzivail.util.math.lwjgl.Matrix4f;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -11,15 +12,18 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
+import java.nio.FloatBuffer;
 
 /**
  * Created by colby on 12/26/2017.
  */
 public class RenderShip extends Render<EntityShip>
 {
+	private FloatBuffer buff = BufferUtils.createFloatBuffer(16);
 	public RenderShip(RenderManager renderManagerIn)
 	{
 		super(renderManagerIn);
@@ -33,31 +37,36 @@ public class RenderShip extends Render<EntityShip>
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
-		RotatedAxes prevRotation = ship.prevRotation;
-		RotatedAxes rotation = ship.rotation;
+		Matrix4f rotation = ship.getRotation(partialTicks);
 
-		float dYaw = MathHelper.wrapDegrees(rotation.getYaw() - prevRotation.getYaw());
-		float dPitch = wrapAngleTo90(rotation.getPitch() - prevRotation.getPitch());
-		float dRoll = MathHelper.wrapDegrees(rotation.getRoll() - prevRotation.getRoll());
-		float yaw = MathHelper.wrapDegrees(prevRotation.getYaw() + dYaw * partialTicks);
-		float pitch = wrapAngleTo90(prevRotation.getPitch() + dPitch * partialTicks);
-		float roll = MathHelper.wrapDegrees(prevRotation.getRoll() + dRoll * partialTicks);
+		//		float dYaw = MathHelper.wrapDegrees(rotation.getYaw() - prevRotation.getYaw());
+		//		float dPitch = wrapAngleTo90(rotation.getPitch() - prevRotation.getPitch());
+		//		float dRoll = MathHelper.wrapDegrees(rotation.getRoll() - prevRotation.getRoll());
+		//		float yaw = MathHelper.wrapDegrees(prevRotation.getYaw() + dYaw * partialTicks);
+		//		float pitch = wrapAngleTo90(prevRotation.getPitch() + dPitch * partialTicks);
+		//		float roll = MathHelper.wrapDegrees(prevRotation.getRoll() + dRoll * partialTicks);
+		//
+		//		float slidDYaw = ship.slidingYaw.getOldAverage() + (ship.slidingYaw.getAverage() - ship.slidingYaw.getOldAverage()) * partialTicks;
+		//		float slidDPitch = ship.slidingPitch.getOldAverage() + (ship.slidingPitch.getAverage() - ship.slidingPitch.getOldAverage()) * partialTicks;
+		//
+		//		roll += slidDYaw;
 
-		float slidDYaw = ship.slidingYaw.getOldAverage() + (ship.slidingYaw.getAverage() - ship.slidingYaw.getOldAverage()) * partialTicks;
-		float slidDPitch = ship.slidingPitch.getOldAverage() + (ship.slidingPitch.getAverage() - ship.slidingPitch.getOldAverage()) * partialTicks;
-
-		roll += slidDYaw;
-
-		GL.Translate(x, y + 0.5f, z);
+		float dYaw = MathHelper.wrapDegrees(ship.prevRotation.getY() - ship.rotation.getY());
+		rotation = Matrix4f.rotate(dYaw / 180 * (float)Math.PI, new Vector3f(0, 0, 1), rotation, null);
 
 		GL.Enable(EnableCap.Texture2D);
 
 		// TODO: fix
 		//FxMC.enableSunBasedLighting(ship, partialTicks);
 
-		GL11.glRotatef(yaw + slidDYaw / 10, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-pitch - slidDPitch, 1.0F, 0.0F, 0.0F);
-		GL11.glRotatef(-roll, 0.0F, 0.0F, 1.0F);
+		Matrix4f translation = Matrix4f.translate(new Vector3f((float)x, (float)y + 0.5f, (float)z), new Matrix4f(), null);
+		Matrix4f mat = Matrix4f.mul(translation, rotation, null);
+
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		mat.toBuffer(buff);
+		GL11.glMultMatrix(buff);
+
+		//		GL.Translate(x, y + 0.5f, z);
 
 		GL.Rotate(-90, 1, 0, 0);
 		GL.Rotate(-90, 0, 0, 1);
