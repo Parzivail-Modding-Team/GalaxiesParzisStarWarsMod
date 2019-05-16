@@ -237,7 +237,7 @@ public class EntityShip extends Entity
 		this.prevRoll = roll;
 
 		this.pitch += mouseDy * 0.15f;
-		this.roll -= mouseDx * 0.15f;
+		this.yaw -= mouseDx * 0.15f;
 
 		this.setRotation(-yaw, -pitch);
 	}
@@ -275,7 +275,7 @@ public class EntityShip extends Entity
 		Matrix4f rotX = Matrix4f.rotate((float)(-x / 180 * Math.PI), new Vector3f(1, 0, 0), new Matrix4f(), null);
 		Matrix4f rotY = Matrix4f.rotate((float)(y / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
 		Matrix4f rotZ = Matrix4f.rotate((float)(z / 180 * Math.PI), new Vector3f(0, 0, 1), new Matrix4f(), null);
-		return Matrix4f.mul(Matrix4f.mul(rotZ, rotX, null), rotY, null);
+		return Matrix4f.mul(Matrix4f.mul(rotZ, rotY, null), rotX, null);
 	}
 
 	public Matrix4f getRotation()
@@ -283,7 +283,7 @@ public class EntityShip extends Entity
 		Matrix4f rotX = Matrix4f.rotate((float)(-pitch / 180 * Math.PI), new Vector3f(1, 0, 0), new Matrix4f(), null);
 		Matrix4f rotY = Matrix4f.rotate((float)(yaw / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
 		Matrix4f rotZ = Matrix4f.rotate((float)(roll / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
-		return Matrix4f.mul(Matrix4f.mul(rotZ, rotX, null), rotY, null);
+		return Matrix4f.mul(Matrix4f.mul(rotZ, rotY, null), rotX, null);
 	}
 
 	private void setThrottle(float throttle)
