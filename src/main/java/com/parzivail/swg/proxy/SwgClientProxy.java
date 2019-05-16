@@ -1,9 +1,7 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityShip;
-import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.swg.render.RenderShip;
 import com.parzivail.util.jsonpipeline.BlockbenchModelLoader;
 import com.parzivail.util.jsonpipeline.BlockbenchWeightedModelLoader;
@@ -52,7 +50,9 @@ public class SwgClientProxy extends SwgProxy
 	public void captureShipInput(EntityPlayer pilot, EntityShip entityShip)
 	{
 		MouseHelper mouseHelper = mc.mouseHelper;
-		StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(entityShip, pilot, mouseHelper.deltaX, mouseHelper.deltaY));
+		float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+		float f1 = f * f * f * 8.0F;
+		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1);
 	}
 
 	public MovementInput getMovementInput(EntityPlayer player)

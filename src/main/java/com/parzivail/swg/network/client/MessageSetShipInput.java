@@ -15,10 +15,11 @@ public class MessageSetShipInput extends PMessage<MessageSetShipInput>
 {
 	public int dimension;
 	public int id;
-	public int mouseDx;
-	public int mouseDy;
+	public float mouseDx;
+	public float mouseDy;
 	public float pitch;
 	public float yaw;
+	public float roll;
 	public boolean forwardInputDown;
 	public boolean backInputDown;
 	public boolean leftInputDown;
@@ -28,19 +29,18 @@ public class MessageSetShipInput extends PMessage<MessageSetShipInput>
 	{
 	}
 
-	public MessageSetShipInput(EntityShip ship, EntityPlayer pilot, int mouseDx, int mouseDy)
+	public MessageSetShipInput(EntityShip ship, EntityPlayer pilot, float pitch, float yaw, float roll)
 	{
 		this.dimension = ship.dimension;
 		this.id = ship.getEntityId();
-		this.pitch = pilot.rotationPitch;
-		this.yaw = pilot.rotationYawHead;
+		this.pitch = pitch;
+		this.yaw = yaw;
+		this.roll = roll;
 		MovementInput movementInput = StarWarsGalaxy.proxy.getMovementInput(pilot);
 		this.forwardInputDown = movementInput.forwardKeyDown;
 		this.backInputDown = movementInput.backKeyDown;
 		this.leftInputDown = movementInput.leftKeyDown;
 		this.rightInputDown = movementInput.rightKeyDown;
-		this.mouseDx = mouseDx;
-		this.mouseDy = mouseDy;
 	}
 
 	@Override

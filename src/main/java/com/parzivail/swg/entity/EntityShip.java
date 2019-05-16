@@ -2,7 +2,6 @@ package com.parzivail.swg.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.client.MessageSetShipInput;
-import com.parzivail.util.math.RotatedAxes;
 import com.parzivail.util.math.SlidingWindow;
 import com.parzivail.util.math.lwjgl.Matrix4f;
 import com.parzivail.util.math.lwjgl.Vector3f;
@@ -26,11 +25,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class EntityShip extends Entity
 {
-	private static final DataParameter<Rotations> ROTATION = EntityDataManager.createKey(EntityShip.class, DataSerializers.ROTATIONS);
 	private static final DataParameter<Float> THROTTLE = EntityDataManager.createKey(EntityShip.class, DataSerializers.FLOAT);
 
 	private boolean leftInputDown;
@@ -38,8 +35,12 @@ public class EntityShip extends Entity
 	private boolean forwardInputDown;
 	private boolean backInputDown;
 
-	public Rotations rotation = new Rotations(0, 0, 0);
-	public Rotations prevRotation = new Rotations(0, 0, 0);
+	public float yaw;
+	public float pitch;
+	public float roll;
+	public float prevYaw;
+	public float prevPitch;
+	public float prevRoll;
 
 	@SideOnly(Side.CLIENT)
 	public SlidingWindow slidingPitch = new SlidingWindow(6);
@@ -68,20 +69,22 @@ public class EntityShip extends Entity
 	protected void entityInit()
 	{
 		this.dataManager.register(THROTTLE, 0f);
-		this.dataManager.register(ROTATION, new Rotations(0, 0, 0));
 	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
 		setThrottle(compound.getFloat("throttle"));
-		dataManager.set(ROTATION, new Rotations(compound.getTagList("rotation", 5)));
+		Rotations r = new Rotations(compound.getTagList("rotation", 5));
+		pitch = r.getX();
+		yaw = r.getY();
+		roll = r.getZ();
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
-		compound.setTag("rotation", dataManager.get(ROTATION).writeToNBT());
+		compound.setTag("rotation", new Rotations(pitch, yaw, roll).writeToNBT());
 		compound.setFloat("throttle", getThrottle());
 	}
 
@@ -133,13 +136,15 @@ public class EntityShip extends Entity
 	@Override
 	public void onUpdate()
 	{
-		this.prevRotation = rotation;
+		//		this.prevPitch = pitch;
+		//		this.prevYaw = yaw;
+		//		this.prevRoll = roll;
+
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
 
-		this.rotation = dataManager.get(ROTATION);
-		this.setRotation(-this.rotation.getY(), -this.rotation.getX());
+		//		this.rotation = dataManager.get(ROTATION);
 
 		super.onUpdate();
 
@@ -149,7 +154,7 @@ public class EntityShip extends Entity
 			if (controllingPassenger instanceof EntityPlayer && this.world.isRemote)
 			{
 				EntityPlayer pilot = (EntityPlayer)controllingPassenger;
-				StarWarsGalaxy.proxy.captureShipInput(pilot, this);
+				StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(this, pilot, pitch, yaw, roll));
 			}
 
 			this.updateMotion();
@@ -171,20 +176,70 @@ public class EntityShip extends Entity
 			//			slidingPitch.slide(dPitch);
 		}
 
+		slidingPitch.slide(pitch);
+		slidingYaw.slide(yaw);
+
 		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
 		//this.doBlockCollisions();
 	}
 
+	private float getPitch(float partialTicks)
+	{
+		float dPitch = MathHelper.wrapDegrees(slidingPitch.getAverage() - slidingPitch.getOldAverage());
+		float x = slidingPitch.getAverage() + dPitch * partialTicks;
+
+		return prevPitch + (pitch - prevPitch) * partialTicks;
+	}
+
+	private float getYaw(float partialTicks)
+	{
+		float dYaw = MathHelper.wrapDegrees(slidingYaw.getAverage() - slidingYaw.getOldAverage());
+		float y = slidingYaw.getAverage() + dYaw * partialTicks;
+
+		return prevYaw + (yaw - prevYaw) * partialTicks;
+	}
+
+	private float getRoll(float partialTicks)
+	{
+		//		float dYaw = MathHelper.wrapDegrees(slidingYaw.getAverage() - slidingYaw.getOldAverage());
+		//		float y = slidingYaw.getAverage() + dYaw * partialTicks;
+
+		return prevRoll + (roll - prevRoll) * partialTicks;
+	}
+
 	public void setInputs(MessageSetShipInput packet)
 	{
-		Rotations prev = dataManager.get(ROTATION);
-		dataManager.set(ROTATION, new Rotations(prev.getX() + packet.mouseDy, prev.getY() - packet.mouseDx, prev.getZ()));
+		this.prevRotationYaw = this.rotationYaw;
+		this.prevRotationPitch = this.rotationPitch;
+		this.prevPitch = pitch;
+		this.prevYaw = yaw;
+		this.prevRoll = roll;
+
+		this.pitch = packet.pitch;
+		this.yaw = packet.yaw;
+		this.roll = packet.roll;
+
+		this.setRotation(-yaw, -pitch);
 
 		this.forwardInputDown = packet.forwardInputDown;
 		this.backInputDown = packet.backInputDown;
 		this.leftInputDown = packet.leftInputDown;
 		this.rightInputDown = packet.rightInputDown;
+	}
+
+	public void setInputsClient(float mouseDx, float mouseDy)
+	{
+		this.prevRotationYaw = this.rotationYaw;
+		this.prevRotationPitch = this.rotationPitch;
+		this.prevPitch = pitch;
+		this.prevYaw = yaw;
+		this.prevRoll = roll;
+
+		this.pitch += mouseDy * 0.15f;
+		this.roll -= mouseDx * 0.15f;
+
+		this.setRotation(-yaw, -pitch);
 	}
 
 	private void control()
@@ -211,35 +266,24 @@ public class EntityShip extends Entity
 			setThrottle(0);
 	}
 
-	private void rotateYaw(float amount)
-	{
-		changeOrientation(axes -> axes.rotateGlobalYaw(amount));
-	}
-
-	private void rotatePitch(float amount)
-	{
-		changeOrientation(axes -> axes.rotateLocalPitch(amount));
-	}
-
-	private void changeOrientation(Consumer<RotatedAxes> func)
-	{
-		Rotations angles = dataManager.get(ROTATION);
-		RotatedAxes axes = new RotatedAxes(angles.getY(), angles.getX(), angles.getZ());
-		func.accept(axes);
-		dataManager.set(ROTATION, new Rotations(axes.getPitch(), axes.getYaw(), axes.getRoll()));
-	}
-
 	public Matrix4f getRotation(float partialTicks)
 	{
-		float dPitch = MathHelper.wrapDegrees(rotation.getX() - prevRotation.getX());
-		float dYaw = MathHelper.wrapDegrees(rotation.getY() - prevRotation.getY());
-
-		float x = prevRotation.getX() + dPitch * partialTicks;
-		float y = prevRotation.getY() + dYaw * partialTicks;
+		float x = getPitch(partialTicks);
+		float y = getYaw(partialTicks);
+		float z = getRoll(partialTicks);
 
 		Matrix4f rotX = Matrix4f.rotate((float)(-x / 180 * Math.PI), new Vector3f(1, 0, 0), new Matrix4f(), null);
 		Matrix4f rotY = Matrix4f.rotate((float)(y / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
-		return Matrix4f.mul(rotY, rotX, null);
+		Matrix4f rotZ = Matrix4f.rotate((float)(z / 180 * Math.PI), new Vector3f(0, 0, 1), new Matrix4f(), null);
+		return Matrix4f.mul(Matrix4f.mul(rotZ, rotX, null), rotY, null);
+	}
+
+	public Matrix4f getRotation()
+	{
+		Matrix4f rotX = Matrix4f.rotate((float)(-pitch / 180 * Math.PI), new Vector3f(1, 0, 0), new Matrix4f(), null);
+		Matrix4f rotY = Matrix4f.rotate((float)(yaw / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
+		Matrix4f rotZ = Matrix4f.rotate((float)(roll / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
+		return Matrix4f.mul(Matrix4f.mul(rotZ, rotX, null), rotY, null);
 	}
 
 	private void setThrottle(float throttle)
@@ -261,7 +305,7 @@ public class EntityShip extends Entity
 		float throttle = getThrottle();
 		if (throttle > 0)
 		{
-			Matrix4f rotatedAxes = getRotation(0);
+			Matrix4f rotatedAxes = getRotation();
 			Vector4f forward = Matrix4f.transform(rotatedAxes, new Vector4f(0, 0, 1, 0), null);
 
 			this.motionX = forward.x * throttle * 4;

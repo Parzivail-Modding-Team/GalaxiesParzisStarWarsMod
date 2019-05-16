@@ -51,7 +51,7 @@ public class RenderShip extends Render<EntityShip>
 		//
 		//		roll += slidDYaw;
 
-		float dYaw = MathHelper.wrapDegrees(ship.prevRotation.getY() - ship.rotation.getY());
+		float dYaw = MathHelper.wrapDegrees(ship.slidingYaw.getOldAverage() - ship.slidingYaw.getAverage());
 		rotation = Matrix4f.rotate(dYaw / 180 * (float)Math.PI, new Vector3f(0, 0, 1), rotation, null);
 
 		GL.Enable(EnableCap.Texture2D);
