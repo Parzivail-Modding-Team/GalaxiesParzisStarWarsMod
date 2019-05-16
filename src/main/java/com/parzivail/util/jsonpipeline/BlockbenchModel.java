@@ -17,7 +17,6 @@ import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.model.animation.IClip;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.Properties;
-import sun.plugin.dom.exception.InvalidStateException;
 
 import java.util.*;
 import java.util.function.Function;
@@ -95,8 +94,8 @@ public class BlockbenchModel implements IModel
 				{
 					model.parent = ((BlockbenchModel)parent).model;
 				}
-				else
-					throw new InvalidStateException("Invalid parent for " + model + ", parent was " + parent);
+				//				else
+				//					throw new Exception("Invalid parent for " + model + ", parent was " + parent);
 			}
 		}
 
