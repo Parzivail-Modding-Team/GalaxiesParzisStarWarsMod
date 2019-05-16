@@ -32,7 +32,7 @@ public class SwgProxy
 		return null;
 	}
 
-	public void startCapturingShipInput(EntityPlayer player, EntityShip entityShip)
+	public void captureShipInput(EntityPlayer pilot, EntityShip entityShip)
 	{
 	}
 }

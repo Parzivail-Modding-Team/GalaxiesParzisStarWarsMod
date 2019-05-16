@@ -1,8 +1,9 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityShip;
-import com.parzivail.swg.gui.GuiShipInput;
+import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.swg.render.RenderShip;
 import com.parzivail.util.jsonpipeline.BlockbenchModelLoader;
 import com.parzivail.util.jsonpipeline.BlockbenchWeightedModelLoader;
@@ -12,6 +13,7 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.MouseHelper;
 import net.minecraft.util.MovementInput;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
@@ -47,9 +49,10 @@ public class SwgClientProxy extends SwgProxy
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Resources.modColon(id), "inventory"));
 	}
 
-	public void startCapturingShipInput(EntityPlayer player, EntityShip entityShip)
+	public void captureShipInput(EntityPlayer pilot, EntityShip entityShip)
 	{
-		mc.displayGuiScreen(new GuiShipInput());
+		MouseHelper mouseHelper = mc.mouseHelper;
+		StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(entityShip, pilot, mouseHelper.deltaX, mouseHelper.deltaY));
 	}
 
 	public MovementInput getMovementInput(EntityPlayer player)

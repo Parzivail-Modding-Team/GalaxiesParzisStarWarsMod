@@ -15,6 +15,8 @@ public class MessageSetShipInput extends PMessage<MessageSetShipInput>
 {
 	public int dimension;
 	public int id;
+	public int mouseDx;
+	public int mouseDy;
 	public float pitch;
 	public float yaw;
 	public boolean forwardInputDown;
@@ -26,7 +28,7 @@ public class MessageSetShipInput extends PMessage<MessageSetShipInput>
 	{
 	}
 
-	public MessageSetShipInput(EntityShip ship, EntityPlayer pilot)
+	public MessageSetShipInput(EntityShip ship, EntityPlayer pilot, int mouseDx, int mouseDy)
 	{
 		this.dimension = ship.dimension;
 		this.id = ship.getEntityId();
@@ -37,6 +39,8 @@ public class MessageSetShipInput extends PMessage<MessageSetShipInput>
 		this.backInputDown = movementInput.backKeyDown;
 		this.leftInputDown = movementInput.leftKeyDown;
 		this.rightInputDown = movementInput.rightKeyDown;
+		this.mouseDx = mouseDx;
+		this.mouseDy = mouseDy;
 	}
 
 	@Override

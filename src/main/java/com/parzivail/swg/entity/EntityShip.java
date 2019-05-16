@@ -139,7 +139,7 @@ public class EntityShip extends Entity
 		this.prevPosZ = this.posZ;
 
 		this.rotation = dataManager.get(ROTATION);
-		//		this.setRotation(-this.rotation.getYaw(), -this.rotation.getPitch());
+		this.setRotation(-this.rotation.getY(), -this.rotation.getX());
 
 		super.onUpdate();
 
@@ -149,7 +149,7 @@ public class EntityShip extends Entity
 			if (controllingPassenger instanceof EntityPlayer && this.world.isRemote)
 			{
 				EntityPlayer pilot = (EntityPlayer)controllingPassenger;
-				StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(this, pilot));
+				StarWarsGalaxy.proxy.captureShipInput(pilot, this);
 			}
 
 			this.updateMotion();
@@ -178,7 +178,9 @@ public class EntityShip extends Entity
 
 	public void setInputs(MessageSetShipInput packet)
 	{
-		dataManager.set(ROTATION, new Rotations(-packet.pitch, -packet.yaw, 0));
+		Rotations prev = dataManager.get(ROTATION);
+		dataManager.set(ROTATION, new Rotations(prev.getX() + packet.mouseDy, prev.getY() - packet.mouseDx, prev.getZ()));
+
 		this.forwardInputDown = packet.forwardInputDown;
 		this.backInputDown = packet.backInputDown;
 		this.leftInputDown = packet.leftInputDown;
@@ -190,16 +192,6 @@ public class EntityShip extends Entity
 		if (this.isBeingRidden())
 		{
 			float f = 0.0F;
-
-			if (this.leftInputDown)
-			{
-				rotateYaw(3);
-			}
-
-			if (this.rightInputDown)
-			{
-				rotateYaw(-3);
-			}
 
 			if (this.forwardInputDown)
 			{
@@ -322,10 +314,7 @@ public class EntityShip extends Entity
 		else
 		{
 			if (!this.world.isRemote)
-			{
 				player.startRiding(this);
-				StarWarsGalaxy.proxy.startCapturingShipInput(player, this);
-			}
 
 			return true;
 		}
