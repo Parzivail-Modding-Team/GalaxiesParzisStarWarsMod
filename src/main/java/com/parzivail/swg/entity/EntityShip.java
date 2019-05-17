@@ -272,18 +272,23 @@ public class EntityShip extends Entity
 		float y = getYaw(partialTicks);
 		float z = getRoll(partialTicks);
 
-		Matrix4f rotX = Matrix4f.rotate((float)(-x / 180 * Math.PI), new Vector3f(1, 0, 0), new Matrix4f(), null);
-		Matrix4f rotY = Matrix4f.rotate((float)(y / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
-		Matrix4f rotZ = Matrix4f.rotate((float)(z / 180 * Math.PI), new Vector3f(0, 0, 1), new Matrix4f(), null);
-		return Matrix4f.mul(Matrix4f.mul(rotZ, rotY, null), rotX, null);
+		return buildRotationMatrix(x, y, z);
 	}
 
 	public Matrix4f getRotation()
 	{
+		return buildRotationMatrix(pitch, yaw, roll);
+	}
+
+	private Matrix4f buildRotationMatrix(float pitch, float yaw, float roll)
+	{
 		Matrix4f rotX = Matrix4f.rotate((float)(-pitch / 180 * Math.PI), new Vector3f(1, 0, 0), new Matrix4f(), null);
 		Matrix4f rotY = Matrix4f.rotate((float)(yaw / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
-		Matrix4f rotZ = Matrix4f.rotate((float)(roll / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
-		return Matrix4f.mul(Matrix4f.mul(rotZ, rotY, null), rotX, null);
+
+		//Vector4f forward = Matrix4f.transform(Matrix4f.mul(rotY, rotX, null), new Vector4f(0, 0, 1, 0), null);
+
+		//Matrix4f rotZ = Matrix4f.rotate((float)(roll / 180 * Math.PI), new Vector3f(forward.x, forward.y, forward.z), new Matrix4f(), null);
+		return Matrix4f.mul(rotY, rotX, null);
 	}
 
 	private void setThrottle(float throttle)
@@ -305,8 +310,7 @@ public class EntityShip extends Entity
 		float throttle = getThrottle();
 		if (throttle > 0)
 		{
-			Matrix4f rotatedAxes = getRotation();
-			Vector4f forward = Matrix4f.transform(rotatedAxes, new Vector4f(0, 0, 1, 0), null);
+			Vector4f forward = getForwardVector();
 
 			this.motionX = forward.x * throttle * 4;
 			this.motionY = forward.y * throttle * 4;
@@ -318,6 +322,12 @@ public class EntityShip extends Entity
 			this.motionY = 0;
 			this.motionZ = 0;
 		}
+	}
+
+	private Vector4f getForwardVector()
+	{
+		Matrix4f rotatedAxes = getRotation();
+		return Matrix4f.transform(rotatedAxes, new Vector4f(0, 0, 1, 0), null);
 	}
 
 	@Override
