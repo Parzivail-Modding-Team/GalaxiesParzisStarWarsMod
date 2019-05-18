@@ -1,5 +1,6 @@
 package com.parzivail.swg.network;
 
+import com.parzivail.util.math.lwjgl.Matrix4f;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
@@ -42,6 +43,7 @@ public abstract class PMessage<REQ extends PMessage> implements Serializable, IM
 		mapHandler(NBTTagCompound.class, PMessage::readNBT, PMessage::writeNBT);
 		mapHandler(ItemStack.class, PMessage::readItemStack, PMessage::writeItemStack);
 		mapHandler(BlockPos.class, PMessage::readBlockPos, PMessage::writeBlockPos);
+		mapHandler(Matrix4f.class, PMessage::readMat4f, PMessage::writeMat4f);
 
 		mapHandler(EntityPlayer.class, PMessage::readPlayer, PMessage::writePlayer);
 		mapHandler(Entity.class, PMessage::readEntity, PMessage::writeEntity);
@@ -160,6 +162,48 @@ public abstract class PMessage<REQ extends PMessage> implements Serializable, IM
 	private static void writeByte(byte b, ByteBuf buf)
 	{
 		buf.writeByte(b);
+	}
+
+	private static Matrix4f readMat4f(ByteBuf buf)
+	{
+		Matrix4f mat = new Matrix4f();
+		mat.m00 = buf.readFloat();
+		mat.m01 = buf.readFloat();
+		mat.m02 = buf.readFloat();
+		mat.m03 = buf.readFloat();
+		mat.m10 = buf.readFloat();
+		mat.m11 = buf.readFloat();
+		mat.m12 = buf.readFloat();
+		mat.m13 = buf.readFloat();
+		mat.m20 = buf.readFloat();
+		mat.m21 = buf.readFloat();
+		mat.m22 = buf.readFloat();
+		mat.m23 = buf.readFloat();
+		mat.m30 = buf.readFloat();
+		mat.m31 = buf.readFloat();
+		mat.m32 = buf.readFloat();
+		mat.m33 = buf.readFloat();
+		return mat;
+	}
+
+	private static void writeMat4f(Matrix4f mat, ByteBuf buf)
+	{
+		buf.writeFloat(mat.m00);
+		buf.writeFloat(mat.m01);
+		buf.writeFloat(mat.m02);
+		buf.writeFloat(mat.m03);
+		buf.writeFloat(mat.m10);
+		buf.writeFloat(mat.m11);
+		buf.writeFloat(mat.m12);
+		buf.writeFloat(mat.m13);
+		buf.writeFloat(mat.m20);
+		buf.writeFloat(mat.m21);
+		buf.writeFloat(mat.m22);
+		buf.writeFloat(mat.m23);
+		buf.writeFloat(mat.m30);
+		buf.writeFloat(mat.m31);
+		buf.writeFloat(mat.m32);
+		buf.writeFloat(mat.m33);
 	}
 
 	private static EntityPlayer readPlayer(ByteBuf buf)

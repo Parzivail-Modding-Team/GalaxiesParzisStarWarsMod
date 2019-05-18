@@ -2,6 +2,7 @@ package com.parzivail.swg.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.client.MessageSetShipInput;
+import com.parzivail.util.common.PNbtUtil;
 import com.parzivail.util.math.SlidingWindow;
 import com.parzivail.util.math.lwjgl.Matrix4f;
 import com.parzivail.util.math.lwjgl.Vector3f;
@@ -18,7 +19,6 @@ import net.minecraft.util.EntityDamageSourceIndirect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Rotations;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -35,12 +35,8 @@ public class EntityShip extends Entity
 	private boolean forwardInputDown;
 	private boolean backInputDown;
 
-	public float yaw;
-	public float pitch;
-	public float roll;
-	public float prevYaw;
-	public float prevPitch;
-	public float prevRoll;
+	private Matrix4f prevRotation = new Matrix4f();
+	private Matrix4f rotation = new Matrix4f();
 
 	@SideOnly(Side.CLIENT)
 	public SlidingWindow slidingPitch = new SlidingWindow(6);
@@ -75,16 +71,13 @@ public class EntityShip extends Entity
 	protected void readEntityFromNBT(NBTTagCompound compound)
 	{
 		setThrottle(compound.getFloat("throttle"));
-		Rotations r = new Rotations(compound.getTagList("rotation", 5));
-		pitch = r.getX();
-		yaw = r.getY();
-		roll = r.getZ();
+		rotation = PNbtUtil.getMatrix4(compound, "rotmat");
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound compound)
 	{
-		compound.setTag("rotation", new Rotations(pitch, yaw, roll).writeToNBT());
+		PNbtUtil.setMatrix4(compound, "rotmat", rotation);
 		compound.setFloat("throttle", getThrottle());
 	}
 
@@ -154,7 +147,7 @@ public class EntityShip extends Entity
 			if (controllingPassenger instanceof EntityPlayer && this.world.isRemote)
 			{
 				EntityPlayer pilot = (EntityPlayer)controllingPassenger;
-				StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(this, pilot, pitch, yaw, roll));
+				StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInput(this, pilot, rotation));
 			}
 
 			this.updateMotion();
@@ -176,51 +169,23 @@ public class EntityShip extends Entity
 			//			slidingPitch.slide(dPitch);
 		}
 
-		slidingPitch.slide(pitch);
-		slidingYaw.slide(yaw);
+		//		slidingPitch.slide(pitch);
+		//		slidingYaw.slide(yaw);
 
 		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
 		//this.doBlockCollisions();
 	}
 
-	private float getPitch(float partialTicks)
-	{
-		float dPitch = MathHelper.wrapDegrees(slidingPitch.getAverage() - slidingPitch.getOldAverage());
-		float x = slidingPitch.getAverage() + dPitch * partialTicks;
-
-		return prevPitch + (pitch - prevPitch) * partialTicks;
-	}
-
-	private float getYaw(float partialTicks)
-	{
-		float dYaw = MathHelper.wrapDegrees(slidingYaw.getAverage() - slidingYaw.getOldAverage());
-		float y = slidingYaw.getAverage() + dYaw * partialTicks;
-
-		return prevYaw + (yaw - prevYaw) * partialTicks;
-	}
-
-	private float getRoll(float partialTicks)
-	{
-		//		float dYaw = MathHelper.wrapDegrees(slidingYaw.getAverage() - slidingYaw.getOldAverage());
-		//		float y = slidingYaw.getAverage() + dYaw * partialTicks;
-
-		return prevRoll + (roll - prevRoll) * partialTicks;
-	}
-
 	public void setInputs(MessageSetShipInput packet)
 	{
 		this.prevRotationYaw = this.rotationYaw;
 		this.prevRotationPitch = this.rotationPitch;
-		this.prevPitch = pitch;
-		this.prevYaw = yaw;
-		this.prevRoll = roll;
+		this.prevRotation = rotation;
+		this.rotation = packet.rotation;
 
-		this.pitch = packet.pitch;
-		this.yaw = packet.yaw;
-		this.roll = packet.roll;
-
-		this.setRotation(-yaw, -pitch);
+		Vector3f euler = getEulerAngles();
+		this.setRotation(-euler.y, -euler.x);
 
 		this.forwardInputDown = packet.forwardInputDown;
 		this.backInputDown = packet.backInputDown;
@@ -228,18 +193,30 @@ public class EntityShip extends Entity
 		this.rightInputDown = packet.rightInputDown;
 	}
 
-	public void setInputsClient(float mouseDx, float mouseDy)
+	public Vector3f getEulerAngles()
+	{
+		Vector4f forward = Matrix4f.transform(rotation, new Vector4f(0, 0, 1, 0), null);
+		forward = forward.normalise(null);
+		float pitch = (float)(Math.asin(-forward.y) / Math.PI * 180);
+		float yaw = (float)(Math.atan2(forward.x, forward.z) / Math.PI * 180);
+		float roll = (float)(Math.atan2(rotation.m01, rotation.m11) / Math.PI * 180);
+		return new Vector3f(pitch, yaw, roll);
+	}
+
+	public void setInputsClient(float mouseDx, float mouseDy, boolean rollMode)
 	{
 		this.prevRotationYaw = this.rotationYaw;
 		this.prevRotationPitch = this.rotationPitch;
-		this.prevPitch = pitch;
-		this.prevYaw = yaw;
-		this.prevRoll = roll;
+		this.prevRotation = rotation;
 
-		this.pitch += mouseDy * 0.15f;
-		this.yaw -= mouseDx * 0.15f;
+		Matrix4f.rotate((float)(-(mouseDy * 0.15f) / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
+		//		if (rollMode)
+		Matrix4f.rotate((float)((mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
+		//		else
+		//			Matrix4f.rotate((float)(-(mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
 
-		this.setRotation(-yaw, -pitch);
+		Vector3f euler = getEulerAngles();
+		this.setRotation(-euler.y, -euler.x);
 	}
 
 	private void control()
@@ -268,28 +245,23 @@ public class EntityShip extends Entity
 
 	public Matrix4f getRotation(float partialTicks)
 	{
-		float x = getPitch(partialTicks);
-		float y = getYaw(partialTicks);
-		float z = getRoll(partialTicks);
-
-		return buildRotationMatrix(x, y, z);
+		// TODO: slerp
+		return rotation;
 	}
 
 	public Matrix4f getRotation()
 	{
-		return buildRotationMatrix(pitch, yaw, roll);
+		return rotation;
 	}
 
-	private Matrix4f buildRotationMatrix(float pitch, float yaw, float roll)
-	{
-		Matrix4f rotX = Matrix4f.rotate((float)(-pitch / 180 * Math.PI), new Vector3f(1, 0, 0), new Matrix4f(), null);
-		Matrix4f rotY = Matrix4f.rotate((float)(yaw / 180 * Math.PI), new Vector3f(0, 1, 0), new Matrix4f(), null);
-
-		//Vector4f forward = Matrix4f.transform(Matrix4f.mul(rotY, rotX, null), new Vector4f(0, 0, 1, 0), null);
-
-		//Matrix4f rotZ = Matrix4f.rotate((float)(roll / 180 * Math.PI), new Vector3f(forward.x, forward.y, forward.z), new Matrix4f(), null);
-		return Matrix4f.mul(rotY, rotX, null);
-	}
+	//	private Matrix4f buildRotationMatrix(float pitch, float yaw, float roll)
+	//	{
+	//		rotation.setIdentity();
+	//		Matrix4f.rotate((float)(yaw / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
+	//		Matrix4f.rotate((float)(-pitch / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
+	//		Matrix4f.rotate((float)(roll / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
+	//		return rotation;
+	//	}
 
 	private void setThrottle(float throttle)
 	{

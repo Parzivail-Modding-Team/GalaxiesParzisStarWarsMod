@@ -62,14 +62,13 @@ public class RenderShip extends Render<EntityShip>
 		Matrix4f translation = Matrix4f.translate(new Vector3f((float)x, (float)y + 0.5f, (float)z), new Matrix4f(), null);
 		Matrix4f mat = Matrix4f.mul(translation, rotation, null);
 
+		GL.Translate(0, 0.25f, 0);
+
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		mat.toBuffer(buff);
+		buff.clear();
+		mat.store(buff);
+		buff.flip();
 		GL11.glMultMatrix(buff);
-
-		//		GL.Translate(x, y + 0.5f, z);
-
-		GL.Rotate(-90, 1, 0, 0);
-		GL.Rotate(-90, 0, 0, 1);
 
 		GL.Disable(EnableCap.Texture2D);
 		Fx.D3.DrawSolidBox();

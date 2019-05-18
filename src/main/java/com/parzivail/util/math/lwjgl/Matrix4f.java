@@ -922,26 +922,4 @@ public class Matrix4f extends Matrix
 
 		return dest;
 	}
-
-	public void toBuffer(FloatBuffer buff)
-	{
-		buff.clear();
-		buff.put(m00);
-		buff.put(m01);
-		buff.put(m02);
-		buff.put(m03);
-		buff.put(m10);
-		buff.put(m11);
-		buff.put(m12);
-		buff.put(m13);
-		buff.put(m20);
-		buff.put(m21);
-		buff.put(m22);
-		buff.put(m23);
-		buff.put(m30);
-		buff.put(m31);
-		buff.put(m32);
-		buff.put(m33);
-		buff.flip();
-	}
 }
