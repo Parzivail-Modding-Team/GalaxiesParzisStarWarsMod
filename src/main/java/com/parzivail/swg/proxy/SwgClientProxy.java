@@ -52,7 +52,7 @@ public class SwgClientProxy extends SwgProxy
 		MouseHelper mouseHelper = mc.mouseHelper;
 		float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
 		float f1 = f * f * f * 8.0F;
-		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, mc.gameSettings.keyBindSprint.isKeyDown());
+		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, mc.gameSettings.keyBindSprint.isKeyDown(), mc.gameSettings.keyBindJump.isKeyDown());
 	}
 
 	public MovementInput getMovementInput(EntityPlayer player)

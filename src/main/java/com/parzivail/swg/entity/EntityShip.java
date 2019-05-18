@@ -39,9 +39,13 @@ public class EntityShip extends Entity
 	private Matrix4f rotation = new Matrix4f();
 
 	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingPitch = new SlidingWindow(6);
+	public SlidingWindow slidingPitch = new SlidingWindow(24);
 	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingYaw = new SlidingWindow(5);
+	public SlidingWindow slidingYaw = new SlidingWindow(20);
+	@SideOnly(Side.CLIENT)
+	public int timeRolled = 0;
+	@SideOnly(Side.CLIENT)
+	public boolean rollReleveling = false;
 
 	public EntityShip(World worldIn)
 	{
@@ -126,6 +130,11 @@ public class EntityShip extends Entity
 		return list.isEmpty() ? null : list.get(0);
 	}
 
+	public float getEyeHeight()
+	{
+		return this.height * 0.5f;
+	}
+
 	@Override
 	public void onUpdate()
 	{
@@ -163,10 +172,20 @@ public class EntityShip extends Entity
 			this.control();
 		else
 		{
-			//			float dYaw = MathHelper.wrapDegrees(rotation.getYaw() - prevRotation.getYaw());
-			//			slidingYaw.slide(dYaw);
-			//			float dPitch = MathHelper.wrapDegrees(rotation.getPitch() - prevRotation.getPitch());
-			//			slidingPitch.slide(dPitch);
+			Vector3f angles = getEulerAngles();
+			float currentRoll = angles.z;
+
+			if (Math.abs(currentRoll) > 0.5f)
+			{
+				timeRolled++;
+				if (timeRolled > 20)
+					rollReleveling = true;
+			}
+			else
+			{
+				timeRolled = 0;
+				rollReleveling = false;
+			}
 		}
 
 		//		slidingPitch.slide(pitch);
@@ -185,7 +204,7 @@ public class EntityShip extends Entity
 		this.rotation = packet.rotation;
 
 		Vector3f euler = getEulerAngles();
-		this.setRotation(-euler.y, -euler.x);
+		this.setRotation(-euler.y, euler.x);
 
 		this.forwardInputDown = packet.forwardInputDown;
 		this.backInputDown = packet.backInputDown;
@@ -203,20 +222,33 @@ public class EntityShip extends Entity
 		return new Vector3f(pitch, yaw, roll);
 	}
 
-	public void setInputsClient(float mouseDx, float mouseDy, boolean rollMode)
+	public void setInputsClient(float mouseDx, float mouseDy, boolean rollMode, boolean forceRelevel)
 	{
 		this.prevRotationYaw = this.rotationYaw;
 		this.prevRotationPitch = this.rotationPitch;
 		this.prevRotation = rotation;
 
 		Matrix4f.rotate((float)(-(mouseDy * 0.15f) / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
-		//		if (rollMode)
-		Matrix4f.rotate((float)((mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
-		//		else
-		//			Matrix4f.rotate((float)(-(mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
+		if (rollMode)
+			Matrix4f.rotate((float)((mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
+		else
+			Matrix4f.rotate((float)(-(mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
+
+		Vector3f angles = getEulerAngles();
+		float currentRoll = angles.z;
+
+		boolean shouldAttemptLevel = (forceRelevel || (!rollMode && rollReleveling));
+		if (shouldAttemptLevel)
+			Matrix4f.rotate((float)((-currentRoll * 0.01f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
+
+		if (rollMode)
+		{
+			timeRolled = 0;
+			rollReleveling = false;
+		}
 
 		Vector3f euler = getEulerAngles();
-		this.setRotation(-euler.y, -euler.x);
+		this.setRotation(-euler.y, euler.x);
 	}
 
 	private void control()
