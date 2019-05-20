@@ -37,7 +37,7 @@ public class RenderShip extends Render<EntityShip>
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
 
-		Matrix4f rotation = ship.getRotation(partialTicks);
+		Matrix4f rotation = ship.getRotation();
 
 		//		float dYaw = MathHelper.wrapDegrees(rotation.getYaw() - prevRotation.getYaw());
 		//		float dPitch = wrapAngleTo90(rotation.getPitch() - prevRotation.getPitch());

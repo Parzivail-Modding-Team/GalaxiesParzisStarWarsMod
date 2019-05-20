@@ -7,7 +7,9 @@ import com.parzivail.swg.register.WorldRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class SwgProxy
@@ -23,6 +25,10 @@ public class SwgProxy
 	{
 	}
 
+	public void postInit(FMLPostInitializationEvent e)
+	{
+	}
+
 	public void registerItemRenderer(Item itemBlock, String name)
 	{
 	}
@@ -33,6 +39,10 @@ public class SwgProxy
 	}
 
 	public void captureShipInput(EntityPlayer pilot, EntityShip entityShip)
+	{
+	}
+
+	public void notifyPlayer(ITextComponent message, boolean actionBar)
 	{
 	}
 }

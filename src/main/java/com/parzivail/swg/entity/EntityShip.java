@@ -275,25 +275,10 @@ public class EntityShip extends Entity
 			setThrottle(0);
 	}
 
-	public Matrix4f getRotation(float partialTicks)
-	{
-		// TODO: slerp
-		return rotation;
-	}
-
 	public Matrix4f getRotation()
 	{
 		return rotation;
 	}
-
-	//	private Matrix4f buildRotationMatrix(float pitch, float yaw, float roll)
-	//	{
-	//		rotation.setIdentity();
-	//		Matrix4f.rotate((float)(yaw / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
-	//		Matrix4f.rotate((float)(-pitch / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
-	//		Matrix4f.rotate((float)(roll / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
-	//		return rotation;
-	//	}
 
 	private void setThrottle(float throttle)
 	{

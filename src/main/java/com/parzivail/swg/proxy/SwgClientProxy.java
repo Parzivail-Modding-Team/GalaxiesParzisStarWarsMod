@@ -2,6 +2,7 @@ package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.register.KeybindRegister;
 import com.parzivail.swg.render.RenderShip;
 import com.parzivail.util.jsonpipeline.BlockbenchModelLoader;
 import com.parzivail.util.jsonpipeline.BlockbenchWeightedModelLoader;
@@ -13,15 +14,18 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
 import net.minecraft.util.MovementInput;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public class SwgClientProxy extends SwgProxy
 {
 	public static Minecraft mc;
+	public static boolean shipInputRollMode = false;
 
 	@Override
 	public void preInit(FMLPreInitializationEvent e)
@@ -42,6 +46,13 @@ public class SwgClientProxy extends SwgProxy
 	}
 
 	@Override
+	public void postInit(FMLPostInitializationEvent e)
+	{
+		super.postInit(e);
+		KeybindRegister.register();
+	}
+
+	@Override
 	public void registerItemRenderer(Item item, String id)
 	{
 		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Resources.modColon(id), "inventory"));
@@ -52,7 +63,7 @@ public class SwgClientProxy extends SwgProxy
 		MouseHelper mouseHelper = mc.mouseHelper;
 		float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
 		float f1 = f * f * f * 8.0F;
-		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, mc.gameSettings.keyBindSprint.isKeyDown(), mc.gameSettings.keyBindJump.isKeyDown());
+		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, shipInputRollMode, mc.gameSettings.keyBindJump.isKeyDown());
 	}
 
 	public MovementInput getMovementInput(EntityPlayer player)
@@ -60,5 +71,11 @@ public class SwgClientProxy extends SwgProxy
 		if (player instanceof EntityPlayerSP)
 			return ((EntityPlayerSP)player).movementInput;
 		return null;
+	}
+
+	@Override
+	public void notifyPlayer(ITextComponent message, boolean actionBar)
+	{
+		mc.player.sendStatusMessage(message, actionBar);
 	}
 }

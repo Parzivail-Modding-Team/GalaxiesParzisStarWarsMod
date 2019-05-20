@@ -3,10 +3,14 @@ package com.parzivail.swg.handler;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.proxy.SwgClientProxy;
+import com.parzivail.swg.register.KeybindRegister;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -36,6 +40,20 @@ public class SwgEventHandler
 			}
 			else if (SwgClientProxy.mc.getRenderViewEntity() instanceof EntityShip)
 				SwgClientProxy.mc.setRenderViewEntity(SwgClientProxy.mc.player);
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void on(InputEvent.KeyInputEvent e)
+	{
+		if (KeybindRegister.keyShipChangeInputMode.isPressed())
+		{
+			SwgClientProxy.shipInputRollMode = !SwgClientProxy.shipInputRollMode;
+			if (SwgClientProxy.shipInputRollMode)
+				StarWarsGalaxy.proxy.notifyPlayer(new TextComponentString("Ship input mode: " + TextFormatting.GREEN + "roll"), true);
+			else
+				StarWarsGalaxy.proxy.notifyPlayer(new TextComponentString("Ship input mode: " + TextFormatting.GREEN + "yaw"), true);
 		}
 	}
 
