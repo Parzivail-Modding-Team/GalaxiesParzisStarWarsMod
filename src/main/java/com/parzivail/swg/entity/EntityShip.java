@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EntityShip extends Entity
+public class EntityShip extends Entity implements IFreeRotator
 {
 	private static final DataParameter<Float> THROTTLE = EntityDataManager.createKey(EntityShip.class, DataSerializers.FLOAT);
 
@@ -69,6 +69,7 @@ public class EntityShip extends Entity
 	protected void entityInit()
 	{
 		this.dataManager.register(THROTTLE, 0f);
+		StarWarsGalaxy.proxy.createShipCamera(this);
 	}
 
 	@Override
@@ -122,6 +123,13 @@ public class EntityShip extends Entity
 			return true;
 	}
 
+	@Override
+	public void setDead()
+	{
+		StarWarsGalaxy.proxy.destroyShipCamera();
+		super.setDead();
+	}
+
 	@Nullable
 	@Override
 	public Entity getControllingPassenger()
@@ -173,6 +181,7 @@ public class EntityShip extends Entity
 		else
 		{
 			Vector3f angles = getEulerAngles();
+
 			float currentRoll = angles.z;
 
 			if (Math.abs(currentRoll) > 0.5f)
@@ -361,5 +370,11 @@ public class EntityShip extends Entity
 
 			return true;
 		}
+	}
+
+	@Override
+	public Matrix4f getRotationMatrix()
+	{
+		return rotation;
 	}
 }

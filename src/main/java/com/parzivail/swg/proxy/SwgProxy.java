@@ -4,6 +4,7 @@ import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.register.EntityRegister;
 import com.parzivail.swg.register.StructureRegister;
 import com.parzivail.swg.register.WorldRegister;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MovementInput;
@@ -39,6 +40,14 @@ public class SwgProxy
 	}
 
 	public void captureShipInput(EntityPlayer pilot, EntityShip entityShip)
+	{
+	}
+
+	public void createShipCamera(Entity target)
+	{
+	}
+
+	public void destroyShipCamera()
 	{
 	}
 

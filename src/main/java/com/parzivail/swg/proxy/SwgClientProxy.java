@@ -1,6 +1,7 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.entity.EntityCamera;
 import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.register.KeybindRegister;
 import com.parzivail.swg.render.RenderShip;
@@ -10,6 +11,7 @@ import com.parzivail.util.jsonpipeline.ModelLocationInformation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
@@ -26,6 +28,7 @@ public class SwgClientProxy extends SwgProxy
 {
 	public static Minecraft mc;
 	public static boolean shipInputRollMode = false;
+	public static EntityCamera entityCamera;
 
 	@Override
 	public void preInit(FMLPreInitializationEvent e)
@@ -77,5 +80,26 @@ public class SwgClientProxy extends SwgProxy
 	public void notifyPlayer(ITextComponent message, boolean actionBar)
 	{
 		mc.player.sendStatusMessage(message, actionBar);
+	}
+
+	@Override
+	public void createShipCamera(Entity target)
+	{
+		destroyShipCamera();
+
+		entityCamera = new EntityCamera(target.world);
+		entityCamera.setTarget(target);
+		entityCamera.copyLocationAndAnglesFrom(target);
+		entityCamera.world.spawnEntity(entityCamera);
+	}
+
+	@Override
+	public void destroyShipCamera()
+	{
+		if (entityCamera == null)
+			return;
+
+		entityCamera.world.removeEntity(entityCamera);
+		entityCamera = null;
 	}
 }

@@ -1,6 +1,7 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.entity.EntityCamera;
 import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.proxy.SwgClientProxy;
 import com.parzivail.swg.register.KeybindRegister;
@@ -29,7 +30,7 @@ public class SwgEventHandler
 			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
 			{
 				EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
-				SwgClientProxy.mc.setRenderViewEntity(ship);
+				SwgClientProxy.mc.setRenderViewEntity(SwgClientProxy.entityCamera);
 
 				// this is also the fastest time to poll input
 				if (ship.getControllingPassenger() instanceof EntityPlayer && ship.world.isRemote)
@@ -38,7 +39,7 @@ public class SwgEventHandler
 					StarWarsGalaxy.proxy.captureShipInput(pilot, ship);
 				}
 			}
-			else if (SwgClientProxy.mc.getRenderViewEntity() instanceof EntityShip)
+			else if (SwgClientProxy.mc.getRenderViewEntity() instanceof EntityCamera)
 				SwgClientProxy.mc.setRenderViewEntity(SwgClientProxy.mc.player);
 		}
 	}
