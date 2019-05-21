@@ -1,0 +1,4 @@
+pswg.gui.shipInputModeAlert=Ship Input Mode: %s
+pswg.gui.shipInputMode.yaw=Yaw-centric
+pswg.gui.shipInputMode.roll=Roll-centric
+pswg.gui.shipInputMode.landing=Landing

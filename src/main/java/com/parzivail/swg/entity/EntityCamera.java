@@ -65,7 +65,7 @@ public class EntityCamera extends Entity
 
 			Vector4f offset = new Vector4f();
 
-			trailingDistance = 10;
+			trailingDistance = 8;
 
 			if (target instanceof IFreeRotator)
 			{

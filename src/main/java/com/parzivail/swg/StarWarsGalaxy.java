@@ -2,6 +2,7 @@ package com.parzivail.swg;
 
 import com.parzivail.swg.handler.SwgEventHandler;
 import com.parzivail.swg.network.client.MessageSetShipInput;
+import com.parzivail.swg.network.client.MessageSetShipInputMode;
 import com.parzivail.swg.proxy.SwgProxy;
 import com.parzivail.swg.register.BlockRegister;
 import com.parzivail.swg.tab.SwgCreativeTab;
@@ -41,6 +42,7 @@ public class StarWarsGalaxy
 		MinecraftForge.EVENT_BUS.register(BlockRegister.class);
 
 		registerServerHandler(MessageSetShipInput.class);
+		registerServerHandler(MessageSetShipInputMode.class);
 
 		proxy.preInit(event);
 	}

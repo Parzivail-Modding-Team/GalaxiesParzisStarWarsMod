@@ -2,6 +2,8 @@ package com.parzivail.swg.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.network.client.MessageSetShipInput;
+import com.parzivail.swg.proxy.ShipInputMode;
+import com.parzivail.swg.proxy.SwgClientProxy;
 import com.parzivail.util.common.PNbtUtil;
 import com.parzivail.util.math.SlidingWindow;
 import com.parzivail.util.math.lwjgl.Matrix4f;
@@ -29,7 +31,11 @@ import java.util.List;
 public class EntityShip extends Entity implements IFreeRotator
 {
 	private static final DataParameter<Float> THROTTLE = EntityDataManager.createKey(EntityShip.class, DataSerializers.FLOAT);
+	private static final DataParameter<Integer> THROTTLE_REPULSOR = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> MODE = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
 
+	private boolean upInputDown;
+	private boolean downInputDown;
 	private boolean leftInputDown;
 	private boolean rightInputDown;
 	private boolean forwardInputDown;
@@ -45,7 +51,7 @@ public class EntityShip extends Entity implements IFreeRotator
 	@SideOnly(Side.CLIENT)
 	public int timeRolled = 0;
 	@SideOnly(Side.CLIENT)
-	public boolean rollReleveling = false;
+	public boolean autoRelevel = false;
 
 	public EntityShip(World worldIn)
 	{
@@ -69,6 +75,8 @@ public class EntityShip extends Entity implements IFreeRotator
 	protected void entityInit()
 	{
 		this.dataManager.register(THROTTLE, 0f);
+		this.dataManager.register(THROTTLE_REPULSOR, 0);
+		this.dataManager.register(MODE, 0);
 		StarWarsGalaxy.proxy.createShipCamera(this);
 	}
 
@@ -188,12 +196,12 @@ public class EntityShip extends Entity implements IFreeRotator
 			{
 				timeRolled++;
 				if (timeRolled > 20)
-					rollReleveling = true;
+					autoRelevel = true;
 			}
 			else
 			{
 				timeRolled = 0;
-				rollReleveling = false;
+				autoRelevel = false;
 			}
 		}
 
@@ -215,6 +223,8 @@ public class EntityShip extends Entity implements IFreeRotator
 		Vector3f euler = getEulerAngles();
 		this.setRotation(-euler.y, euler.x);
 
+		this.upInputDown = packet.upInputDown;
+		this.downInputDown = packet.downInputDown;
 		this.forwardInputDown = packet.forwardInputDown;
 		this.backInputDown = packet.backInputDown;
 		this.leftInputDown = packet.leftInputDown;
@@ -231,29 +241,44 @@ public class EntityShip extends Entity implements IFreeRotator
 		return new Vector3f(pitch, yaw, roll);
 	}
 
-	public void setInputsClient(float mouseDx, float mouseDy, boolean rollMode, boolean forceRelevel)
+	public void setInputsClient(float mouseDx, float mouseDy, ShipInputMode shipInputMode, boolean forceRelevel)
 	{
 		this.prevRotationYaw = this.rotationYaw;
 		this.prevRotationPitch = this.rotationPitch;
 		this.prevRotation = rotation;
 
-		Matrix4f.rotate((float)(-(mouseDy * 0.15f) / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
-		if (rollMode)
-			Matrix4f.rotate((float)((mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
-		else
-			Matrix4f.rotate((float)(-(mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
+		boolean modeAllowsAutoRelevel = false;
 
 		Vector3f angles = getEulerAngles();
 		float currentRoll = angles.z;
+		float currentPitch = angles.x;
 
-		boolean shouldAttemptLevel = (forceRelevel || (!rollMode && rollReleveling));
-		if (shouldAttemptLevel)
+		switch (shipInputMode)
+		{
+			case Yaw:
+				Matrix4f.rotate((float)(-(mouseDy * 0.15f) / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
+				Matrix4f.rotate((float)(-(mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
+				modeAllowsAutoRelevel = true;
+				break;
+			case Roll:
+				Matrix4f.rotate((float)(-(mouseDy * 0.15f) / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
+				Matrix4f.rotate((float)((mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
+				break;
+			case Landing:
+				Matrix4f.rotate((float)((-currentPitch * 0.01f) / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
+				Matrix4f.rotate((float)(-(mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
+				Matrix4f.rotate((float)((-currentRoll * 0.01f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
+				break;
+		}
+
+		boolean shouldAttemptAutoRelevel = (autoRelevel && SwgClientProxy.autoRelevelEnabled && modeAllowsAutoRelevel);
+		if (forceRelevel || shouldAttemptAutoRelevel)
 			Matrix4f.rotate((float)((-currentRoll * 0.01f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
 
-		if (rollMode)
+		if (shouldAttemptAutoRelevel && Math.abs(currentRoll) < 0.5)
 		{
 			timeRolled = 0;
-			rollReleveling = false;
+			autoRelevel = false;
 		}
 
 		Vector3f euler = getEulerAngles();
@@ -279,6 +304,17 @@ public class EntityShip extends Entity implements IFreeRotator
 				throttle = MathHelper.clamp(throttle - 0.1f, 0, 1);
 				setThrottle(throttle);
 			}
+
+			if (this.upInputDown)
+			{
+				setThrottleRepulsor(1);
+			}
+			else if (this.downInputDown)
+			{
+				setThrottleRepulsor(-1);
+			}
+			else
+				setThrottleRepulsor(0);
 		}
 		else
 			setThrottle(0);
@@ -299,26 +335,57 @@ public class EntityShip extends Entity implements IFreeRotator
 		return dataManager.get(THROTTLE);
 	}
 
+	private void setThrottleRepulsor(int throttle)
+	{
+		dataManager.set(THROTTLE_REPULSOR, throttle);
+	}
+
+	private int getThrottleRepulsor()
+	{
+		return dataManager.get(THROTTLE_REPULSOR);
+	}
+
+	public void setInputMode(int mode)
+	{
+		dataManager.set(MODE, mode);
+	}
+
+	public int getInputMode()
+	{
+		return dataManager.get(MODE);
+	}
+
 	private void updateMotion()
 	{
 		double d1 = this.hasNoGravity() ? 0.0D : -0.03999999910593033D;
 
 		//this.motionY += d1;
 
-		float throttle = getThrottle();
-		if (throttle > 0)
+		int mode = getInputMode();
+		if (mode == ShipInputMode.Landing.ordinal())
 		{
-			Vector4f forward = getForwardVector();
-
-			this.motionX = forward.x * throttle * 4;
-			this.motionY = forward.y * throttle * 4;
-			this.motionZ = forward.z * throttle * 4;
+			float throttleRepulsor = getThrottleRepulsor();
+			this.motionX = 0;
+			this.motionY = throttleRepulsor * 0.25f;
+			this.motionZ = 0;
 		}
 		else
 		{
-			this.motionX = 0;
-			this.motionY = 0;
-			this.motionZ = 0;
+			float throttle = getThrottle();
+			if (throttle > 0)
+			{
+				Vector4f forward = getForwardVector();
+
+				this.motionX = forward.x * throttle * 4;
+				this.motionY = forward.y * throttle * 4;
+				this.motionZ = forward.z * throttle * 4;
+			}
+			else
+			{
+				this.motionX = 0;
+				this.motionY = 0;
+				this.motionZ = 0;
+			}
 		}
 	}
 

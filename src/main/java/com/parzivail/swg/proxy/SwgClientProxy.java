@@ -27,7 +27,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class SwgClientProxy extends SwgProxy
 {
 	public static Minecraft mc;
-	public static boolean shipInputRollMode = false;
+	public static ShipInputMode[] shipInputModes = ShipInputMode.values();
+	public static boolean autoRelevelEnabled = true;
 	public static EntityCamera entityCamera;
 
 	@Override
@@ -66,7 +67,8 @@ public class SwgClientProxy extends SwgProxy
 		MouseHelper mouseHelper = mc.mouseHelper;
 		float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
 		float f1 = f * f * f * 8.0F;
-		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, shipInputRollMode, mc.gameSettings.keyBindJump.isKeyDown());
+		int shipInputMode = entityShip.getInputMode();
+		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, shipInputModes[shipInputMode], mc.gameSettings.keyBindJump.isKeyDown());
 	}
 
 	public MovementInput getMovementInput(EntityPlayer player)
