@@ -32,7 +32,11 @@ public class SwgEventHandler
 			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
 			{
 				EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
-				SwgClientProxy.mc.setRenderViewEntity(ship.chaseCam);
+
+				if (SwgClientProxy.mc.gameSettings.thirdPersonView == 0 || SwgClientProxy.mc.gameSettings.thirdPersonView == 2)
+					SwgClientProxy.mc.setRenderViewEntity(ship);
+				else
+					SwgClientProxy.mc.setRenderViewEntity(ship.chaseCam);
 
 				// this is also the fastest time to poll input
 				if (ship.getControllingPassenger() instanceof EntityPlayer && ship.world.isRemote)
