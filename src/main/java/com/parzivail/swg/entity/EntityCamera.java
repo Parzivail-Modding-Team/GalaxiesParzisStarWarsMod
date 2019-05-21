@@ -1,5 +1,6 @@
 package com.parzivail.swg.entity;
 
+import com.parzivail.swg.config.SwgConfig;
 import com.parzivail.swg.proxy.SwgClientProxy;
 import com.parzivail.util.math.lwjgl.Matrix4f;
 import com.parzivail.util.math.lwjgl.Vector4f;
@@ -53,6 +54,12 @@ public class EntityCamera extends Entity
 	@Override
 	public void onUpdate()
 	{
+		if (!world.isRemote)
+		{
+			new Exception("The camera should never exist on the server!").printStackTrace();
+			setDead();
+		}
+
 		this.prevPosX = this.posX;
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
@@ -61,7 +68,7 @@ public class EntityCamera extends Entity
 
 		if (target != null)
 		{
-			float stiffness = 0.4f;
+			float stiffness = SwgConfig.SwgConfigClient.cameraStiffness;
 
 			Vector4f offset = new Vector4f();
 

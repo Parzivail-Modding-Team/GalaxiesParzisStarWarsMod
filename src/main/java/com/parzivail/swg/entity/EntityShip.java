@@ -34,8 +34,10 @@ public class EntityShip extends Entity implements IFreeRotator
 	private static final DataParameter<Integer> THROTTLE_REPULSOR = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
 	private static final DataParameter<Integer> MODE = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
 
-	private boolean upInputDown;
-	private boolean downInputDown;
+	public static final ShipInputMode[] shipInputModes = {
+			ShipInputMode.Yaw, ShipInputMode.Roll, ShipInputMode.Landing
+	};
+
 	private boolean leftInputDown;
 	private boolean rightInputDown;
 	private boolean forwardInputDown;
@@ -52,6 +54,8 @@ public class EntityShip extends Entity implements IFreeRotator
 	public int timeRolled = 0;
 	@SideOnly(Side.CLIENT)
 	public boolean autoRelevel = false;
+	@SideOnly(Side.CLIENT)
+	public EntityCamera chaseCam;
 
 	public EntityShip(World worldIn)
 	{
@@ -77,7 +81,15 @@ public class EntityShip extends Entity implements IFreeRotator
 		this.dataManager.register(THROTTLE, 0f);
 		this.dataManager.register(THROTTLE_REPULSOR, 0);
 		this.dataManager.register(MODE, 0);
-		StarWarsGalaxy.proxy.createShipCamera(this);
+
+		if (world.isRemote)
+		{
+			destroyCamera();
+			chaseCam = new EntityCamera(world);
+			chaseCam.setTarget(this);
+			chaseCam.copyLocationAndAnglesFrom(this);
+			world.spawnEntity(chaseCam);
+		}
 	}
 
 	@Override
@@ -134,8 +146,17 @@ public class EntityShip extends Entity implements IFreeRotator
 	@Override
 	public void setDead()
 	{
-		StarWarsGalaxy.proxy.destroyShipCamera();
+		destroyCamera();
 		super.setDead();
+	}
+
+	private void destroyCamera()
+	{
+		if (chaseCam == null)
+			return;
+
+		world.removeEntity(chaseCam);
+		chaseCam = null;
 	}
 
 	@Nullable
@@ -223,8 +244,6 @@ public class EntityShip extends Entity implements IFreeRotator
 		Vector3f euler = getEulerAngles();
 		this.setRotation(-euler.y, euler.x);
 
-		this.upInputDown = packet.upInputDown;
-		this.downInputDown = packet.downInputDown;
 		this.forwardInputDown = packet.forwardInputDown;
 		this.backInputDown = packet.backInputDown;
 		this.leftInputDown = packet.leftInputDown;
@@ -289,35 +308,39 @@ public class EntityShip extends Entity implements IFreeRotator
 	{
 		if (this.isBeingRidden())
 		{
-			float f = 0.0F;
+			ShipInputMode inputMode = shipInputModes[getInputMode()];
+			if (inputMode == ShipInputMode.Landing)
+			{
+				if (getThrottle() != 0)
+					setThrottle(0);
 
-			if (this.forwardInputDown)
-			{
-				float throttle = getThrottle();
-				throttle = MathHelper.clamp(throttle + 0.1f, 0, 1);
-				setThrottle(throttle);
-			}
-
-			if (this.backInputDown)
-			{
-				float throttle = getThrottle();
-				throttle = MathHelper.clamp(throttle - 0.1f, 0, 1);
-				setThrottle(throttle);
-			}
-
-			if (this.upInputDown)
-			{
-				setThrottleRepulsor(1);
-			}
-			else if (this.downInputDown)
-			{
-				setThrottleRepulsor(-1);
+				if (this.forwardInputDown)
+				{
+					setThrottleRepulsor(1);
+				}
+				else if (this.backInputDown)
+				{
+					setThrottleRepulsor(-1);
+				}
+				else
+					setThrottleRepulsor(0);
 			}
 			else
-				setThrottleRepulsor(0);
+			{
+				if (this.forwardInputDown)
+				{
+					float throttle = getThrottle();
+					throttle = MathHelper.clamp(throttle + 0.1f, 0, 1);
+					setThrottle(throttle);
+				}
+				else if (this.backInputDown)
+				{
+					float throttle = getThrottle();
+					throttle = MathHelper.clamp(throttle - 0.1f, 0, 1);
+					setThrottle(throttle);
+				}
+			}
 		}
-		else
-			setThrottle(0);
 	}
 
 	public Matrix4f getRotation()
@@ -361,8 +384,8 @@ public class EntityShip extends Entity implements IFreeRotator
 
 		//this.motionY += d1;
 
-		int mode = getInputMode();
-		if (mode == ShipInputMode.Landing.ordinal())
+		ShipInputMode mode = shipInputModes[getInputMode()];
+		if (mode == ShipInputMode.Landing)
 		{
 			float throttleRepulsor = getThrottleRepulsor();
 			this.motionX = 0;
@@ -401,7 +424,7 @@ public class EntityShip extends Entity implements IFreeRotator
 		if (this.isPassenger(passenger))
 		{
 			passenger.setPosition(this.posX, this.posY, this.posZ);
-			//this.applyYawToEntity(passenger);
+			this.applyYawToEntity(passenger);
 		}
 	}
 
@@ -422,7 +445,7 @@ public class EntityShip extends Entity implements IFreeRotator
 	@Override
 	public void applyOrientationToEntity(Entity entityToUpdate)
 	{
-		//this.applyYawToEntity(entityToUpdate);
+		this.applyYawToEntity(entityToUpdate);
 	}
 
 	@Override

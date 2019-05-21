@@ -1,7 +1,6 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.entity.EntityCamera;
 import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.register.KeybindRegister;
 import com.parzivail.swg.render.RenderShip;
@@ -11,7 +10,6 @@ import com.parzivail.util.jsonpipeline.ModelLocationInformation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.MouseHelper;
@@ -27,9 +25,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class SwgClientProxy extends SwgProxy
 {
 	public static Minecraft mc;
-	public static ShipInputMode[] shipInputModes = ShipInputMode.values();
 	public static boolean autoRelevelEnabled = true;
-	public static EntityCamera entityCamera;
 
 	@Override
 	public void preInit(FMLPreInitializationEvent e)
@@ -68,7 +64,7 @@ public class SwgClientProxy extends SwgProxy
 		float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
 		float f1 = f * f * f * 8.0F;
 		int shipInputMode = entityShip.getInputMode();
-		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, shipInputModes[shipInputMode], mc.gameSettings.keyBindJump.isKeyDown());
+		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, EntityShip.shipInputModes[shipInputMode], mc.gameSettings.keyBindJump.isKeyDown());
 	}
 
 	public MovementInput getMovementInput(EntityPlayer player)
@@ -82,26 +78,5 @@ public class SwgClientProxy extends SwgProxy
 	public void notifyPlayer(ITextComponent message, boolean actionBar)
 	{
 		mc.player.sendStatusMessage(message, actionBar);
-	}
-
-	@Override
-	public void createShipCamera(Entity target)
-	{
-		destroyShipCamera();
-
-		entityCamera = new EntityCamera(target.world);
-		entityCamera.setTarget(target);
-		entityCamera.copyLocationAndAnglesFrom(target);
-		entityCamera.world.spawnEntity(entityCamera);
-	}
-
-	@Override
-	public void destroyShipCamera()
-	{
-		if (entityCamera == null)
-			return;
-
-		entityCamera.world.removeEntity(entityCamera);
-		entityCamera = null;
 	}
 }

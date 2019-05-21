@@ -32,7 +32,7 @@ public class SwgEventHandler
 			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
 			{
 				EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
-				SwgClientProxy.mc.setRenderViewEntity(SwgClientProxy.entityCamera);
+				SwgClientProxy.mc.setRenderViewEntity(ship.chaseCam);
 
 				// this is also the fastest time to poll input
 				if (ship.getControllingPassenger() instanceof EntityPlayer && ship.world.isRemote)
@@ -50,24 +50,36 @@ public class SwgEventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(InputEvent.KeyInputEvent e)
 	{
-		if (KeybindRegister.keyShipChangeInputMode.isPressed())
+		if (SwgClientProxy.mc.player != null)
 		{
-			if (SwgClientProxy.mc.player != null)
+			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
 			{
-				if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
+				if (KeybindRegister.keyShipChangeInputMode.isPressed())
 				{
 					EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
 					int shipInputMode = ship.getInputMode();
 					shipInputMode++;
-					shipInputMode %= SwgClientProxy.shipInputModes.length;
-					ShipInputMode mode = SwgClientProxy.shipInputModes[shipInputMode];
-					TextComponentTranslation textMode = new TextComponentTranslation(mode.langEntry);
-					textMode.getStyle().setColor(TextFormatting.GREEN);
-					StarWarsGalaxy.proxy.notifyPlayer(new TextComponentTranslation("pswg.gui.shipInputModeAlert", textMode), true);
-					StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInputMode(ship, shipInputMode));
+					shipInputMode %= 2; // only want Yaw and Roll for mode switch button
+					setInputMode(ship, shipInputMode);
+				}
+
+				if (KeybindRegister.keyShipLandingMode.isPressed())
+				{
+					EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
+					int shipInputMode = 2;
+					setInputMode(ship, shipInputMode);
 				}
 			}
 		}
+	}
+
+	private void setInputMode(EntityShip ship, int shipInputMode)
+	{
+		ShipInputMode mode = EntityShip.shipInputModes[shipInputMode];
+		TextComponentTranslation textMode = new TextComponentTranslation(mode.langEntry);
+		textMode.getStyle().setColor(TextFormatting.GREEN);
+		StarWarsGalaxy.proxy.notifyPlayer(new TextComponentTranslation("pswg.gui.shipInputModeAlert", textMode), true);
+		StarWarsGalaxy.NETWORK.sendToServer(new MessageSetShipInputMode(ship, shipInputMode));
 	}
 
 	@SubscribeEvent

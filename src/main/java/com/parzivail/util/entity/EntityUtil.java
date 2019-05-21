@@ -22,7 +22,7 @@ public class EntityUtil
 	public static void registerEntity(Object mod, String modId, Class<? extends Entity> clazz, String name, int entityId, int trackingDistance, int updateFrequency, boolean sendsVelocityUpdates)
 	{
 		ResourceLocation registryName = new ResourceLocation(modId, name);
-		EntityRegistry.registerModEntity(registryName, clazz, name, entityId, mod, trackingDistance, updateFrequency, sendsVelocityUpdates);
+		EntityRegistry.registerModEntity(registryName, clazz, modId + "." + name, entityId, mod, trackingDistance, updateFrequency, sendsVelocityUpdates);
 	}
 
 	public static int getEggId()

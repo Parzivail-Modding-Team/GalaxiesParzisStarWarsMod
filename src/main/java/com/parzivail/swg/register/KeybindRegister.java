@@ -19,12 +19,15 @@ public class KeybindRegister
 	public static KeyBinding keyDebug;
 	@SideOnly(Side.CLIENT)
 	public static KeyBinding keyShipChangeInputMode;
+	@SideOnly(Side.CLIENT)
+	public static KeyBinding keyShipLandingMode;
 
 	public static void register()
 	{
 		//KeybindRegistry.keyShootVehicle = registerKeybind("shootVehicle", Keyboard.KEY_F);
 		keyDebug = registerKeybind("debug", Keyboard.KEY_NONE);
 		keyShipChangeInputMode = registerKeybind("shipInputMode", Keyboard.KEY_X);
+		keyShipLandingMode = registerKeybind("shipLandingMode", Keyboard.KEY_M);
 
 		//		Client.mc.gameSettings.keyBindAttack = keyAttack = new InterceptingKeyBinding(Client.mc.gameSettings.keyBindAttack);
 	}
