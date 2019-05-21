@@ -84,7 +84,8 @@ public class EntityShip extends Entity implements IFreeRotator
 
 		if (world.isRemote)
 		{
-			destroyCamera();
+			if (chaseCam != null)
+				destroyCamera();
 			chaseCam = new EntityCamera(world);
 			chaseCam.setTarget(this);
 			chaseCam.copyLocationAndAnglesFrom(this);
@@ -186,6 +187,14 @@ public class EntityShip extends Entity implements IFreeRotator
 		//		this.rotation = dataManager.get(ROTATION);
 
 		super.onUpdate();
+
+		if (world.isRemote && chaseCam == null)
+		{
+			chaseCam = new EntityCamera(world);
+			chaseCam.setTarget(this);
+			chaseCam.copyLocationAndAnglesFrom(this);
+			world.spawnEntity(chaseCam);
+		}
 
 		if (this.canPassengerSteer())
 		{
