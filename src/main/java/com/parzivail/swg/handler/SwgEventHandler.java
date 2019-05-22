@@ -8,6 +8,7 @@ import com.parzivail.swg.proxy.ShipInputMode;
 import com.parzivail.swg.proxy.SwgClientProxy;
 import com.parzivail.swg.register.KeybindRegister;
 import com.parzivail.util.math.lwjgl.Vector3f;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -29,6 +30,7 @@ public class SwgEventHandler
 
 		if (SwgClientProxy.mc.player != null)
 		{
+			Entity rve = SwgClientProxy.mc.getRenderViewEntity();
 			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
 			{
 				EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
@@ -45,7 +47,7 @@ public class SwgEventHandler
 					StarWarsGalaxy.proxy.captureShipInput(pilot, ship);
 				}
 			}
-			else if (SwgClientProxy.mc.getRenderViewEntity() instanceof EntityCamera)
+			else if (rve instanceof EntityCamera || rve instanceof EntityShip)
 				SwgClientProxy.mc.setRenderViewEntity(SwgClientProxy.mc.player);
 		}
 	}
