@@ -18,6 +18,10 @@ public class SwgConfig
 		@Config.RangeDouble(min = 0.1, max = 1)
 		@Config.LangKey("pswg.config.entry.cameraStiffness")
 		public static float cameraStiffness = 0.4f;
+
+		@Config.RangeDouble(min = 0.1, max = 2)
+		@Config.LangKey("pswg.config.entry.cameraSensitivity")
+		public static float cameraSensitivity = 1;
 	}
 
 	@Mod.EventBusSubscriber

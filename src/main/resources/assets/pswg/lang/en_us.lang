@@ -2,6 +2,7 @@ pswg.config.category.general=General
 pswg.config.category.client=Client
 
 pswg.config.entry.cameraStiffness=Camera stiffness
+pswg.config.entry.cameraSensitivity=Camera sensitivity
 
 pswg.gui.shipInputModeAlert=Ship Input Mode: %s
 pswg.gui.shipInputMode.yaw=Yaw-centric

@@ -1,6 +1,7 @@
 package com.parzivail.swg.entity;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.config.SwgConfig;
 import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.swg.proxy.ShipInputMode;
 import com.parzivail.swg.proxy.SwgClientProxy;
@@ -280,6 +281,10 @@ public class EntityShip extends Entity implements IFreeRotator
 		Vector3f angles = getEulerAngles();
 		float currentRoll = angles.z;
 		float currentPitch = angles.x;
+
+		float coef = SwgConfig.SwgConfigClient.cameraSensitivity;
+		mouseDx *= coef;
+		mouseDy *= coef;
 
 		switch (shipInputMode)
 		{
