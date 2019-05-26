@@ -81,6 +81,11 @@ public class SwgEventHandler
 					setInputMode(ship, shipInputMode);
 				}
 			}
+
+			if (KeybindRegister.keyDebug != null && KeybindRegister.keyDebug.isPressed())
+			{
+
+			}
 		}
 	}
 
