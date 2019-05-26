@@ -112,7 +112,7 @@ public class SwgEventHandler
 	}
 
 	@SubscribeEvent
-	public void onPlayerTick(TickEvent.PlayerTickEvent event)
+	public void on(TickEvent.PlayerTickEvent event)
 	{
 		if (event.phase == TickEvent.Phase.END && event.player == SwgClientProxy.mc.player)
 		{
@@ -121,17 +121,14 @@ public class SwgEventHandler
 	}
 
 	@SubscribeEvent
-	public void onOpenGui(GuiOpenEvent event)
+	@SideOnly(Side.CLIENT)
+	public void on(GuiOpenEvent event)
 	{
 		if (event.getGui() instanceof GuiDownloadTerrain && SwgClientProxy.mc.player != null)
 		{
 			int dim = 2; // TODO: check against any SW dim
-			if (SwgClientProxy.mc.player.dimension == dim || playerDimPrev == dim)
-			{
-				GuiHyperspaceLoading guiLoading = new GuiHyperspaceLoading();
-				guiLoading.setEntering(SwgClientProxy.mc.player.dimension == dim);
-				event.setGui(guiLoading);
-			}
+			if (SwgClientProxy.mc.player.dimension == dim)
+				event.setGui(new GuiHyperspaceLoading());
 		}
 	}
 }
