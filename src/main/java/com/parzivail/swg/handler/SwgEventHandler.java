@@ -30,6 +30,8 @@ public class SwgEventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(TickEvent.RenderTickEvent e)
 	{
+		SwgClientProxy.animHyperspaceTest.tick();
+
 		if (e.phase != TickEvent.Phase.START)
 			return;
 
@@ -84,7 +86,13 @@ public class SwgEventHandler
 
 			if (KeybindRegister.keyDebug != null && KeybindRegister.keyDebug.isPressed())
 			{
-
+				if (SwgClientProxy.animHyperspaceTest.playing)
+				{
+					SwgClientProxy.animHyperspaceTest.stop();
+					SwgClientProxy.animHyperspaceTest.reset();
+				}
+				else
+					SwgClientProxy.animHyperspaceTest.play();
 			}
 		}
 	}

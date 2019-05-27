@@ -17,13 +17,19 @@ public class Sequencer
 		track = sequence;
 		direction = SequenceDirection.Forward;
 		endBehavior = SequenceEndBehavior.StopAndReset;
+
+		position = 0;
 		playing = false;
 
+		reset();
 		computeLength();
 	}
 
 	public void tick()
 	{
+		if (!playing)
+			return;
+
 		long t = System.currentTimeMillis();
 		long dt = (t - prevTime);
 
@@ -42,7 +48,7 @@ public class Sequencer
 		int l = 0;
 		for (Animatable a : track)
 		{
-			if (l + a.length > position)
+			if (position > l && position < l + a.length)
 			{
 				a.tick((position - l) / (float)a.length);
 				break;
@@ -56,11 +62,11 @@ public class Sequencer
 
 	public void play()
 	{
-		startTime = prevTime = System.currentTimeMillis();
+		prevTime = System.currentTimeMillis();
 		playing = true;
 	}
 
-	private void stop()
+	public void stop()
 	{
 		playing = false;
 	}
@@ -76,6 +82,8 @@ public class Sequencer
 				position = length;
 				break;
 		}
+		for (Animatable a : track)
+			a.reset();
 	}
 
 	public Animatable getCurrentAnimatable()
@@ -124,7 +132,19 @@ public class Sequencer
 
 	private void checkEnds()
 	{
-		if (position <= length)
+		boolean isFinished = false;
+
+		switch (direction)
+		{
+			case Forward:
+				isFinished = position > length;
+				break;
+			case Reverse:
+				isFinished = position < 0;
+				break;
+		}
+
+		if (!isFinished)
 			return;
 
 		switch (endBehavior)

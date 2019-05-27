@@ -1,9 +1,11 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.swg.Resources;
+import com.parzivail.swg.animation.HyperspaceEnter;
 import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.register.KeybindRegister;
 import com.parzivail.swg.render.RenderShip;
+import com.parzivail.util.animation.Sequencer;
 import com.parzivail.util.jsonpipeline.BlockbenchModelLoader;
 import com.parzivail.util.jsonpipeline.BlockbenchWeightedModelLoader;
 import com.parzivail.util.jsonpipeline.ModelLocationInformation;
@@ -26,6 +28,8 @@ public class SwgClientProxy extends SwgProxy
 {
 	public static Minecraft mc;
 	public static boolean autoRelevelEnabled = true;
+
+	public static Sequencer animHyperspaceTest = new Sequencer(new HyperspaceEnter());
 
 	@Override
 	public void preInit(FMLPreInitializationEvent e)

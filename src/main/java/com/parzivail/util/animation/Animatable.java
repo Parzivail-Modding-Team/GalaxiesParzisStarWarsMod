@@ -14,4 +14,8 @@ public class Animatable
 	public void tick(float t)
 	{
 	}
+
+	public void reset()
+	{
+	}
 }
