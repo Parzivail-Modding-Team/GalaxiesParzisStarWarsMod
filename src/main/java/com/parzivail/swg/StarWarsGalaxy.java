@@ -1,10 +1,12 @@
 package com.parzivail.swg;
 
 import com.parzivail.swg.handler.SwgEventHandler;
+import com.parzivail.swg.network.client.MessageItemLeftClick;
 import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.swg.network.client.MessageSetShipInputMode;
 import com.parzivail.swg.proxy.SwgProxy;
 import com.parzivail.swg.register.BlockRegister;
+import com.parzivail.swg.register.ItemRegister;
 import com.parzivail.swg.tab.SwgCreativeTab;
 import com.parzivail.swg_gen.Version;
 import com.parzivail.util.common.Lumberjack;
@@ -40,9 +42,11 @@ public class StarWarsGalaxy
 		tab = new SwgCreativeTab();
 		MinecraftForge.EVENT_BUS.register(eventHandler);
 		MinecraftForge.EVENT_BUS.register(BlockRegister.class);
+		MinecraftForge.EVENT_BUS.register(ItemRegister.class);
 
 		registerServerHandler(MessageSetShipInput.class);
 		registerServerHandler(MessageSetShipInputMode.class);
+		registerServerHandler(MessageItemLeftClick.class);
 
 		proxy.preInit(event);
 	}

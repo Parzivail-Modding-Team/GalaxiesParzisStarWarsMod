@@ -8,10 +8,12 @@ import com.parzivail.swg.network.client.MessageSetShipInputMode;
 import com.parzivail.swg.proxy.ShipInputMode;
 import com.parzivail.swg.proxy.SwgClientProxy;
 import com.parzivail.swg.register.KeybindRegister;
+import com.parzivail.util.item.ILeftClickInterceptor;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
@@ -35,6 +37,12 @@ public class SwgEventHandler
 
 		if (SwgClientProxy.mc.player != null)
 		{
+			ItemStack heldItem = SwgClientProxy.mc.player.getHeldItemMainhand();
+			KeybindRegister.keyAttack.setIntercepting(heldItem.getItem() instanceof ILeftClickInterceptor);
+
+			if (heldItem.getItem() instanceof ILeftClickInterceptor)
+				SwgClientProxy.checkLeftClickPressed(true);
+
 			Entity rve = SwgClientProxy.mc.getRenderViewEntity();
 			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
 			{
@@ -59,8 +67,36 @@ public class SwgEventHandler
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
+	public void on(TickEvent.ClientTickEvent event)
+	{
+		if (event.phase != TickEvent.Phase.START)
+			return;
+
+		if (SwgClientProxy.mc.player != null)
+		{
+			//			SoundHandler.tick(event);
+			//			WorldDecals.tick(SwgClientProxy.mc.player.dimension);
+
+			if (SwgClientProxy.leftClickDelayTimer > 0)
+				SwgClientProxy.leftClickDelayTimer--;
+			else
+				SwgClientProxy.leftClickDelayTimer = 0;
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void on(InputEvent.MouseInputEvent event)
+	{
+		SwgClientProxy.checkLeftClickPressed(false);
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
 	public void on(InputEvent.KeyInputEvent e)
 	{
+		SwgClientProxy.checkLeftClickPressed(false);
+
 		if (SwgClientProxy.mc.player != null)
 		{
 			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)

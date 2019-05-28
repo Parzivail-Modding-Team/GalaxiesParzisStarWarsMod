@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 import net.minecraftforge.registries.GameData;
 
-public class EntityUtil
+public class EntityRegUtil
 {
 	public static void registerEntityWithEgg(Object mod, String modId, Class<? extends Entity> clazz, String name, int entityId, int bgColor, int fgColor)
 	{
