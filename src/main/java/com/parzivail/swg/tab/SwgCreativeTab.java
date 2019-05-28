@@ -1,7 +1,8 @@
 package com.parzivail.swg.tab;
 
+import com.parzivail.swg.Resources;
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class SwgCreativeTab extends CreativeTabs
@@ -14,6 +15,6 @@ public class SwgCreativeTab extends CreativeTabs
 	@Override
 	public ItemStack getTabIconItem()
 	{
-		return Items.APPLE.getDefaultInstance();
+		return new ItemStack(Block.getBlockFromName(Resources.modColon("light_vertical")));
 	}
 }

@@ -24,8 +24,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class SwgEventHandler
 {
-	private int playerDimPrev = 0;
-
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void on(TickEvent.RenderTickEvent e)
@@ -121,15 +119,6 @@ public class SwgEventHandler
 				e.setYaw(180 - angles.y);
 				e.setRoll(angles.z);
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public void on(TickEvent.PlayerTickEvent event)
-	{
-		if (event.phase == TickEvent.Phase.END && event.player == SwgClientProxy.mc.player)
-		{
-			playerDimPrev = event.player.dimension;
 		}
 	}
 
