@@ -58,7 +58,7 @@ public class EntityBlasterBolt extends Entity
 
 		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
-		if (this.collided)
+		if (this.collided || this.ticksExisted > 60)
 			this.setDead();
 	}
 

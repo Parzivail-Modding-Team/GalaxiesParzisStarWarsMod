@@ -3,9 +3,11 @@ package com.parzivail.swg.proxy;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.animation.HyperspaceEnter;
+import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.network.client.MessageItemLeftClick;
 import com.parzivail.swg.register.KeybindRegister;
+import com.parzivail.swg.render.RenderBlasterBolt;
 import com.parzivail.swg.render.RenderShip;
 import com.parzivail.util.animation.Sequencer;
 import com.parzivail.util.item.ILeftClickInterceptor;
@@ -45,6 +47,7 @@ public class SwgClientProxy extends SwgProxy
 		ModelLoaderRegistry.registerLoader(new BlockbenchWeightedModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && modelLocation instanceof ModelResourceLocation)));
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, RenderShip::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, RenderBlasterBolt::new);
 	}
 
 	@Override
