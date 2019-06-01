@@ -56,6 +56,158 @@ public class BlockbenchFaceBakery
 		}
 	};
 
+	static
+	{
+		addUvRotation(ModelRotation.X0_Y0, EnumFacing.DOWN, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y0, EnumFacing.EAST, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y0, EnumFacing.NORTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y0, EnumFacing.SOUTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y0, EnumFacing.UP, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y0, EnumFacing.WEST, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y90, EnumFacing.EAST, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y90, EnumFacing.NORTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y90, EnumFacing.SOUTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y90, EnumFacing.WEST, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y180, EnumFacing.EAST, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y180, EnumFacing.NORTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y180, EnumFacing.SOUTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y180, EnumFacing.WEST, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y270, EnumFacing.EAST, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y270, EnumFacing.NORTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y270, EnumFacing.SOUTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y270, EnumFacing.WEST, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X90_Y0, EnumFacing.DOWN, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X90_Y0, EnumFacing.SOUTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X90_Y90, EnumFacing.DOWN, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X90_Y180, EnumFacing.DOWN, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X90_Y180, EnumFacing.NORTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X90_Y270, EnumFacing.DOWN, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X180_Y0, EnumFacing.DOWN, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X180_Y0, EnumFacing.UP, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X270_Y0, EnumFacing.SOUTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X270_Y0, EnumFacing.UP, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X270_Y90, EnumFacing.UP, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X270_Y180, EnumFacing.NORTH, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X270_Y180, EnumFacing.UP, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X270_Y270, EnumFacing.UP, UV_ROTATION_0);
+		addUvRotation(ModelRotation.X0_Y270, EnumFacing.UP, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X0_Y90, EnumFacing.DOWN, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X90_Y0, EnumFacing.WEST, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X90_Y90, EnumFacing.WEST, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X90_Y180, EnumFacing.WEST, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X90_Y270, EnumFacing.NORTH, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X90_Y270, EnumFacing.SOUTH, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X90_Y270, EnumFacing.WEST, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X180_Y90, EnumFacing.UP, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X180_Y270, EnumFacing.DOWN, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X270_Y0, EnumFacing.EAST, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X270_Y90, EnumFacing.EAST, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X270_Y90, EnumFacing.NORTH, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X270_Y90, EnumFacing.SOUTH, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X270_Y180, EnumFacing.EAST, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X270_Y270, EnumFacing.EAST, UV_ROTATION_270);
+		addUvRotation(ModelRotation.X0_Y180, EnumFacing.DOWN, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X0_Y180, EnumFacing.UP, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X90_Y0, EnumFacing.NORTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X90_Y0, EnumFacing.UP, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X90_Y90, EnumFacing.UP, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X90_Y180, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X90_Y180, EnumFacing.UP, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X90_Y270, EnumFacing.UP, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y0, EnumFacing.EAST, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y0, EnumFacing.NORTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y0, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y0, EnumFacing.WEST, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y90, EnumFacing.EAST, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y90, EnumFacing.NORTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y90, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y90, EnumFacing.WEST, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y180, EnumFacing.DOWN, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y180, EnumFacing.EAST, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y180, EnumFacing.NORTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y180, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y180, EnumFacing.UP, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y180, EnumFacing.WEST, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y270, EnumFacing.EAST, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y270, EnumFacing.NORTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y270, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X180_Y270, EnumFacing.WEST, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X270_Y0, EnumFacing.DOWN, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X270_Y0, EnumFacing.NORTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X270_Y90, EnumFacing.DOWN, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X270_Y180, EnumFacing.DOWN, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X270_Y180, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X270_Y270, EnumFacing.DOWN, UV_ROTATION_INVERSE);
+		addUvRotation(ModelRotation.X0_Y90, EnumFacing.UP, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X0_Y270, EnumFacing.DOWN, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X90_Y0, EnumFacing.EAST, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X90_Y90, EnumFacing.EAST, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X90_Y90, EnumFacing.NORTH, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X90_Y90, EnumFacing.SOUTH, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X90_Y180, EnumFacing.EAST, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X90_Y270, EnumFacing.EAST, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X270_Y0, EnumFacing.WEST, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X180_Y90, EnumFacing.DOWN, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X180_Y270, EnumFacing.UP, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X270_Y90, EnumFacing.WEST, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X270_Y180, EnumFacing.WEST, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X270_Y270, EnumFacing.NORTH, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X270_Y270, EnumFacing.SOUTH, UV_ROTATION_90);
+		addUvRotation(ModelRotation.X270_Y270, EnumFacing.WEST, UV_ROTATION_90);
+	}
+
+	public static EnumFacing getFacingFromVertexData(int[] faceData)
+	{
+		int offset = 7;
+		Vector3f vector3f = new Vector3f(Float.intBitsToFloat(faceData[0]), Float.intBitsToFloat(faceData[1]), Float.intBitsToFloat(faceData[2]));
+		Vector3f vector3f1 = new Vector3f(Float.intBitsToFloat(faceData[offset]), Float.intBitsToFloat(faceData[offset + 1]), Float.intBitsToFloat(faceData[offset + 2]));
+		Vector3f vector3f2 = new Vector3f(Float.intBitsToFloat(faceData[2 * offset]), Float.intBitsToFloat(faceData[2 * offset + 1]), Float.intBitsToFloat(faceData[2 * offset + 2]));
+		Vector3f vector3f3 = new Vector3f();
+		Vector3f vector3f4 = new Vector3f();
+		Vector3f vector3f5 = new Vector3f();
+		Vector3f.sub(vector3f, vector3f1, vector3f3);
+		Vector3f.sub(vector3f2, vector3f1, vector3f4);
+		Vector3f.cross(vector3f4, vector3f3, vector3f5);
+		float f = (float)Math.sqrt((double)(vector3f5.x * vector3f5.x + vector3f5.y * vector3f5.y + vector3f5.z * vector3f5.z));
+		vector3f5.x /= f;
+		vector3f5.y /= f;
+		vector3f5.z /= f;
+		EnumFacing enumfacing = null;
+		float f1 = 0.0F;
+
+		for (EnumFacing enumfacing1 : EnumFacing.values())
+		{
+			Vec3i vec3i = enumfacing1.getDirectionVec();
+			Vector3f vector3f6 = new Vector3f((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
+			float f2 = Vector3f.dot(vector3f5, vector3f6);
+
+			if (f2 >= 0.0F && f2 > f1)
+			{
+				f1 = f2;
+				enumfacing = enumfacing1;
+			}
+		}
+
+		if (enumfacing == null)
+		{
+			return EnumFacing.UP;
+		}
+		else
+		{
+			return enumfacing;
+		}
+	}
+
+	private static void addUvRotation(ModelRotation p_188013_0_, EnumFacing p_188013_1_, Rotation p_188013_2_)
+	{
+		UV_ROTATIONS[getIndex(p_188013_0_, p_188013_1_)] = p_188013_2_;
+	}
+
+	private static int getIndex(ModelRotation p_188014_0_, EnumFacing p_188014_1_)
+	{
+		return ModelRotation.values().length * p_188014_1_.ordinal() + p_188014_0_.ordinal();
+	}
+
 	public BakedQuad makeBakedQuad(Vector3f posFrom, Vector3f posTo, BlockPartFace face, TextureAtlasSprite sprite, EnumFacing facing, ModelRotation modelRotationIn, @Nullable BlockPartRotation partRotation, boolean uvLocked, boolean shade)
 	{
 		return makeBakedQuad(posFrom, posTo, face, sprite, facing, (net.minecraftforge.common.model.ITransformation)modelRotationIn, partRotation, uvLocked, shade);
@@ -335,48 +487,6 @@ public class BlockbenchFaceBakery
 		return matrix4f;
 	}
 
-	public static EnumFacing getFacingFromVertexData(int[] faceData)
-	{
-		int offset = 7;
-		Vector3f vector3f = new Vector3f(Float.intBitsToFloat(faceData[0]), Float.intBitsToFloat(faceData[1]), Float.intBitsToFloat(faceData[2]));
-		Vector3f vector3f1 = new Vector3f(Float.intBitsToFloat(faceData[offset]), Float.intBitsToFloat(faceData[offset + 1]), Float.intBitsToFloat(faceData[offset + 2]));
-		Vector3f vector3f2 = new Vector3f(Float.intBitsToFloat(faceData[2 * offset]), Float.intBitsToFloat(faceData[2 * offset + 1]), Float.intBitsToFloat(faceData[2 * offset + 2]));
-		Vector3f vector3f3 = new Vector3f();
-		Vector3f vector3f4 = new Vector3f();
-		Vector3f vector3f5 = new Vector3f();
-		Vector3f.sub(vector3f, vector3f1, vector3f3);
-		Vector3f.sub(vector3f2, vector3f1, vector3f4);
-		Vector3f.cross(vector3f4, vector3f3, vector3f5);
-		float f = (float)Math.sqrt((double)(vector3f5.x * vector3f5.x + vector3f5.y * vector3f5.y + vector3f5.z * vector3f5.z));
-		vector3f5.x /= f;
-		vector3f5.y /= f;
-		vector3f5.z /= f;
-		EnumFacing enumfacing = null;
-		float f1 = 0.0F;
-
-		for (EnumFacing enumfacing1 : EnumFacing.values())
-		{
-			Vec3i vec3i = enumfacing1.getDirectionVec();
-			Vector3f vector3f6 = new Vector3f((float)vec3i.getX(), (float)vec3i.getY(), (float)vec3i.getZ());
-			float f2 = Vector3f.dot(vector3f5, vector3f6);
-
-			if (f2 >= 0.0F && f2 > f1)
-			{
-				f1 = f2;
-				enumfacing = enumfacing1;
-			}
-		}
-
-		if (enumfacing == null)
-		{
-			return EnumFacing.UP;
-		}
-		else
-		{
-			return enumfacing;
-		}
-	}
-
 	private void applyFacing(int[] p_178408_1_, EnumFacing p_178408_2_)
 	{
 		int[] aint = new int[p_178408_1_.length];
@@ -454,116 +564,6 @@ public class BlockbenchFaceBakery
 				}
 			}
 		}
-	}
-
-	private static void addUvRotation(ModelRotation p_188013_0_, EnumFacing p_188013_1_, Rotation p_188013_2_)
-	{
-		UV_ROTATIONS[getIndex(p_188013_0_, p_188013_1_)] = p_188013_2_;
-	}
-
-	private static int getIndex(ModelRotation p_188014_0_, EnumFacing p_188014_1_)
-	{
-		return ModelRotation.values().length * p_188014_1_.ordinal() + p_188014_0_.ordinal();
-	}
-
-	static
-	{
-		addUvRotation(ModelRotation.X0_Y0, EnumFacing.DOWN, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y0, EnumFacing.EAST, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y0, EnumFacing.NORTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y0, EnumFacing.SOUTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y0, EnumFacing.UP, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y0, EnumFacing.WEST, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y90, EnumFacing.EAST, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y90, EnumFacing.NORTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y90, EnumFacing.SOUTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y90, EnumFacing.WEST, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y180, EnumFacing.EAST, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y180, EnumFacing.NORTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y180, EnumFacing.SOUTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y180, EnumFacing.WEST, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y270, EnumFacing.EAST, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y270, EnumFacing.NORTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y270, EnumFacing.SOUTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y270, EnumFacing.WEST, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X90_Y0, EnumFacing.DOWN, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X90_Y0, EnumFacing.SOUTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X90_Y90, EnumFacing.DOWN, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X90_Y180, EnumFacing.DOWN, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X90_Y180, EnumFacing.NORTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X90_Y270, EnumFacing.DOWN, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X180_Y0, EnumFacing.DOWN, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X180_Y0, EnumFacing.UP, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X270_Y0, EnumFacing.SOUTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X270_Y0, EnumFacing.UP, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X270_Y90, EnumFacing.UP, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X270_Y180, EnumFacing.NORTH, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X270_Y180, EnumFacing.UP, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X270_Y270, EnumFacing.UP, UV_ROTATION_0);
-		addUvRotation(ModelRotation.X0_Y270, EnumFacing.UP, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X0_Y90, EnumFacing.DOWN, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X90_Y0, EnumFacing.WEST, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X90_Y90, EnumFacing.WEST, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X90_Y180, EnumFacing.WEST, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X90_Y270, EnumFacing.NORTH, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X90_Y270, EnumFacing.SOUTH, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X90_Y270, EnumFacing.WEST, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X180_Y90, EnumFacing.UP, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X180_Y270, EnumFacing.DOWN, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X270_Y0, EnumFacing.EAST, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X270_Y90, EnumFacing.EAST, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X270_Y90, EnumFacing.NORTH, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X270_Y90, EnumFacing.SOUTH, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X270_Y180, EnumFacing.EAST, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X270_Y270, EnumFacing.EAST, UV_ROTATION_270);
-		addUvRotation(ModelRotation.X0_Y180, EnumFacing.DOWN, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X0_Y180, EnumFacing.UP, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X90_Y0, EnumFacing.NORTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X90_Y0, EnumFacing.UP, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X90_Y90, EnumFacing.UP, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X90_Y180, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X90_Y180, EnumFacing.UP, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X90_Y270, EnumFacing.UP, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y0, EnumFacing.EAST, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y0, EnumFacing.NORTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y0, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y0, EnumFacing.WEST, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y90, EnumFacing.EAST, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y90, EnumFacing.NORTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y90, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y90, EnumFacing.WEST, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y180, EnumFacing.DOWN, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y180, EnumFacing.EAST, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y180, EnumFacing.NORTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y180, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y180, EnumFacing.UP, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y180, EnumFacing.WEST, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y270, EnumFacing.EAST, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y270, EnumFacing.NORTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y270, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X180_Y270, EnumFacing.WEST, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X270_Y0, EnumFacing.DOWN, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X270_Y0, EnumFacing.NORTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X270_Y90, EnumFacing.DOWN, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X270_Y180, EnumFacing.DOWN, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X270_Y180, EnumFacing.SOUTH, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X270_Y270, EnumFacing.DOWN, UV_ROTATION_INVERSE);
-		addUvRotation(ModelRotation.X0_Y90, EnumFacing.UP, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X0_Y270, EnumFacing.DOWN, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X90_Y0, EnumFacing.EAST, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X90_Y90, EnumFacing.EAST, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X90_Y90, EnumFacing.NORTH, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X90_Y90, EnumFacing.SOUTH, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X90_Y180, EnumFacing.EAST, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X90_Y270, EnumFacing.EAST, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X270_Y0, EnumFacing.WEST, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X180_Y90, EnumFacing.DOWN, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X180_Y270, EnumFacing.UP, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X270_Y90, EnumFacing.WEST, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X270_Y180, EnumFacing.WEST, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X270_Y270, EnumFacing.NORTH, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X270_Y270, EnumFacing.SOUTH, UV_ROTATION_90);
-		addUvRotation(ModelRotation.X270_Y270, EnumFacing.WEST, UV_ROTATION_90);
 	}
 
 	@SideOnly(Side.CLIENT)

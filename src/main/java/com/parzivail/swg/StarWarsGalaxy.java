@@ -24,16 +24,14 @@ import net.minecraftforge.fml.relauncher.Side;
 @Mod(modid = Resources.MODID, name = Resources.NAME, version = Version.VERSION)
 public class StarWarsGalaxy
 {
-	private static int packetId;
-
+	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(Resources.MODID);
 	public static SwgEventHandler eventHandler = new SwgEventHandler();
 	public static SwgCreativeTab tab;
 	@SidedProxy(clientSide = "com.parzivail.swg.proxy.SwgClientProxy", serverSide = "com.parzivail.swg.proxy.SwgProxy", modId = Resources.MODID)
 	public static SwgProxy proxy;
-	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(Resources.MODID);
-
 	@Mod.Instance(value = Resources.MODID)
 	public static StarWarsGalaxy instance;
+	private static int packetId;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event)

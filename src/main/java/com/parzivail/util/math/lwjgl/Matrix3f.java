@@ -57,18 +57,6 @@ public class Matrix3f extends Matrix
 	}
 
 	/**
-	 * Load from another matrix
-	 *
-	 * @param src The source matrix
-	 *
-	 * @return this
-	 */
-	public Matrix3f load(Matrix3f src)
-	{
-		return load(src, this);
-	}
-
-	/**
 	 * Copy source matrix to destination matrix
 	 *
 	 * @param src  The source matrix
@@ -92,94 +80,6 @@ public class Matrix3f extends Matrix
 		dest.m22 = src.m22;
 
 		return dest;
-	}
-
-	/**
-	 * Load from a float buffer. The buffer stores the matrix in column major
-	 * (OpenGL) order.
-	 *
-	 * @param buf A float buffer to read from
-	 *
-	 * @return this
-	 */
-	public Matrix load(FloatBuffer buf)
-	{
-
-		m00 = buf.get();
-		m01 = buf.get();
-		m02 = buf.get();
-		m10 = buf.get();
-		m11 = buf.get();
-		m12 = buf.get();
-		m20 = buf.get();
-		m21 = buf.get();
-		m22 = buf.get();
-
-		return this;
-	}
-
-	/**
-	 * Load from a float buffer. The buffer stores the matrix in row major
-	 * (maths) order.
-	 *
-	 * @param buf A float buffer to read from
-	 *
-	 * @return this
-	 */
-	public Matrix loadTranspose(FloatBuffer buf)
-	{
-
-		m00 = buf.get();
-		m10 = buf.get();
-		m20 = buf.get();
-		m01 = buf.get();
-		m11 = buf.get();
-		m21 = buf.get();
-		m02 = buf.get();
-		m12 = buf.get();
-		m22 = buf.get();
-
-		return this;
-	}
-
-	/**
-	 * Store this matrix in a float buffer. The matrix is stored in column
-	 * major (openGL) order.
-	 *
-	 * @param buf The buffer to store this matrix in
-	 */
-	public Matrix store(FloatBuffer buf)
-	{
-		buf.put(m00);
-		buf.put(m01);
-		buf.put(m02);
-		buf.put(m10);
-		buf.put(m11);
-		buf.put(m12);
-		buf.put(m20);
-		buf.put(m21);
-		buf.put(m22);
-		return this;
-	}
-
-	/**
-	 * Store this matrix in a float buffer. The matrix is stored in row
-	 * major (maths) order.
-	 *
-	 * @param buf The buffer to store this matrix in
-	 */
-	public Matrix storeTranspose(FloatBuffer buf)
-	{
-		buf.put(m00);
-		buf.put(m10);
-		buf.put(m20);
-		buf.put(m01);
-		buf.put(m11);
-		buf.put(m21);
-		buf.put(m02);
-		buf.put(m12);
-		buf.put(m22);
-		return this;
 	}
 
 	/**
@@ -300,28 +200,6 @@ public class Matrix3f extends Matrix
 	}
 
 	/**
-	 * Transpose this matrix
-	 *
-	 * @return this
-	 */
-	public Matrix transpose()
-	{
-		return transpose(this, this);
-	}
-
-	/**
-	 * Transpose this matrix and place the result in another matrix
-	 *
-	 * @param dest The destination matrix or null if a new matrix is to be created
-	 *
-	 * @return the transposed matrix
-	 */
-	public Matrix3f transpose(Matrix3f dest)
-	{
-		return transpose(this, dest);
-	}
-
-	/**
 	 * Transpose the source matrix and place the result into the destination matrix
 	 *
 	 * @param src  The source matrix to be transposed
@@ -353,37 +231,6 @@ public class Matrix3f extends Matrix
 		dest.m21 = m21;
 		dest.m22 = m22;
 		return dest;
-	}
-
-	/**
-	 * @return the determinant of the matrix
-	 */
-	public float determinant()
-	{
-		float f = m00 * (m11 * m22 - m12 * m21) + m01 * (m12 * m20 - m10 * m22) + m02 * (m10 * m21 - m11 * m20);
-		return f;
-	}
-
-	/**
-	 * Returns a string representation of this matrix
-	 */
-	public String toString()
-	{
-		StringBuilder buf = new StringBuilder();
-		buf.append(m00).append(' ').append(m10).append(' ').append(m20).append(' ').append('\n');
-		buf.append(m01).append(' ').append(m11).append(' ').append(m21).append(' ').append('\n');
-		buf.append(m02).append(' ').append(m12).append(' ').append(m22).append(' ').append('\n');
-		return buf.toString();
-	}
-
-	/**
-	 * Invert this matrix
-	 *
-	 * @return this if successful, null otherwise
-	 */
-	public Matrix invert()
-	{
-		return invert(this, this);
 	}
 
 	/**
@@ -439,28 +286,6 @@ public class Matrix3f extends Matrix
 	}
 
 	/**
-	 * Negate this matrix
-	 *
-	 * @return this
-	 */
-	public Matrix negate()
-	{
-		return negate(this);
-	}
-
-	/**
-	 * Negate this matrix and place the result in a destination matrix.
-	 *
-	 * @param dest The destination matrix, or null if a new matrix is to be created
-	 *
-	 * @return the negated matrix
-	 */
-	public Matrix3f negate(Matrix3f dest)
-	{
-		return negate(this, dest);
-	}
-
-	/**
 	 * Negate the source matrix and place the result in the destination matrix.
 	 *
 	 * @param src  The source matrix
@@ -486,16 +311,6 @@ public class Matrix3f extends Matrix
 	}
 
 	/**
-	 * Set this matrix to be the identity matrix.
-	 *
-	 * @return this
-	 */
-	public Matrix setIdentity()
-	{
-		return setIdentity(this);
-	}
-
-	/**
 	 * Set the matrix to be the identity matrix.
 	 *
 	 * @param m The matrix to be set to the identity
@@ -517,16 +332,6 @@ public class Matrix3f extends Matrix
 	}
 
 	/**
-	 * Set this matrix to 0.
-	 *
-	 * @return this
-	 */
-	public Matrix setZero()
-	{
-		return setZero(this);
-	}
-
-	/**
 	 * Set the matrix matrix to 0.
 	 *
 	 * @param m The matrix to be set to 0
@@ -545,5 +350,200 @@ public class Matrix3f extends Matrix
 		m.m21 = 0.0f;
 		m.m22 = 0.0f;
 		return m;
+	}
+
+	/**
+	 * Load from another matrix
+	 *
+	 * @param src The source matrix
+	 *
+	 * @return this
+	 */
+	public Matrix3f load(Matrix3f src)
+	{
+		return load(src, this);
+	}
+
+	/**
+	 * Load from a float buffer. The buffer stores the matrix in column major
+	 * (OpenGL) order.
+	 *
+	 * @param buf A float buffer to read from
+	 *
+	 * @return this
+	 */
+	public Matrix load(FloatBuffer buf)
+	{
+
+		m00 = buf.get();
+		m01 = buf.get();
+		m02 = buf.get();
+		m10 = buf.get();
+		m11 = buf.get();
+		m12 = buf.get();
+		m20 = buf.get();
+		m21 = buf.get();
+		m22 = buf.get();
+
+		return this;
+	}
+
+	/**
+	 * Load from a float buffer. The buffer stores the matrix in row major
+	 * (maths) order.
+	 *
+	 * @param buf A float buffer to read from
+	 *
+	 * @return this
+	 */
+	public Matrix loadTranspose(FloatBuffer buf)
+	{
+
+		m00 = buf.get();
+		m10 = buf.get();
+		m20 = buf.get();
+		m01 = buf.get();
+		m11 = buf.get();
+		m21 = buf.get();
+		m02 = buf.get();
+		m12 = buf.get();
+		m22 = buf.get();
+
+		return this;
+	}
+
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in column
+	 * major (openGL) order.
+	 *
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix store(FloatBuffer buf)
+	{
+		buf.put(m00);
+		buf.put(m01);
+		buf.put(m02);
+		buf.put(m10);
+		buf.put(m11);
+		buf.put(m12);
+		buf.put(m20);
+		buf.put(m21);
+		buf.put(m22);
+		return this;
+	}
+
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in row
+	 * major (maths) order.
+	 *
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix storeTranspose(FloatBuffer buf)
+	{
+		buf.put(m00);
+		buf.put(m10);
+		buf.put(m20);
+		buf.put(m01);
+		buf.put(m11);
+		buf.put(m21);
+		buf.put(m02);
+		buf.put(m12);
+		buf.put(m22);
+		return this;
+	}
+
+	/**
+	 * Transpose this matrix
+	 *
+	 * @return this
+	 */
+	public Matrix transpose()
+	{
+		return transpose(this, this);
+	}
+
+	/**
+	 * Transpose this matrix and place the result in another matrix
+	 *
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 *
+	 * @return the transposed matrix
+	 */
+	public Matrix3f transpose(Matrix3f dest)
+	{
+		return transpose(this, dest);
+	}
+
+	/**
+	 * @return the determinant of the matrix
+	 */
+	public float determinant()
+	{
+		float f = m00 * (m11 * m22 - m12 * m21) + m01 * (m12 * m20 - m10 * m22) + m02 * (m10 * m21 - m11 * m20);
+		return f;
+	}
+
+	/**
+	 * Returns a string representation of this matrix
+	 */
+	public String toString()
+	{
+		StringBuilder buf = new StringBuilder();
+		buf.append(m00).append(' ').append(m10).append(' ').append(m20).append(' ').append('\n');
+		buf.append(m01).append(' ').append(m11).append(' ').append(m21).append(' ').append('\n');
+		buf.append(m02).append(' ').append(m12).append(' ').append(m22).append(' ').append('\n');
+		return buf.toString();
+	}
+
+	/**
+	 * Invert this matrix
+	 *
+	 * @return this if successful, null otherwise
+	 */
+	public Matrix invert()
+	{
+		return invert(this, this);
+	}
+
+	/**
+	 * Negate this matrix
+	 *
+	 * @return this
+	 */
+	public Matrix negate()
+	{
+		return negate(this);
+	}
+
+	/**
+	 * Negate this matrix and place the result in a destination matrix.
+	 *
+	 * @param dest The destination matrix, or null if a new matrix is to be created
+	 *
+	 * @return the negated matrix
+	 */
+	public Matrix3f negate(Matrix3f dest)
+	{
+		return negate(this, dest);
+	}
+
+	/**
+	 * Set this matrix to be the identity matrix.
+	 *
+	 * @return this
+	 */
+	public Matrix setIdentity()
+	{
+		return setIdentity(this);
+	}
+
+	/**
+	 * Set this matrix to 0.
+	 *
+	 * @return this
+	 */
+	public Matrix setZero()
+	{
+		return setZero(this);
 	}
 }

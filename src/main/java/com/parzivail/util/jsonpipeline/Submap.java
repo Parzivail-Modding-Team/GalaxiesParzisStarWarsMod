@@ -9,7 +9,12 @@ public class Submap implements ISubmap
 	public static final ISubmap[][] X2 = new ISubmap[][] {
 			{ new Submap(8, 8, 0, 0), new Submap(8, 8, 8, 0) }, { new Submap(8, 8, 0, 8), new Submap(8, 8, 8, 8) }
 	};
-
+	public static final ISubmap[][] X4 = new ISubmap[][] {
+			{ new Submap(4, 4, 0, 0), new Submap(4, 4, 4, 0), new Submap(4, 4, 8, 0), new Submap(4, 4, 12, 0) },
+			{ new Submap(4, 4, 0, 4), new Submap(4, 4, 4, 4), new Submap(4, 4, 8, 4), new Submap(4, 4, 12, 4) },
+			{ new Submap(4, 4, 0, 8), new Submap(4, 4, 4, 8), new Submap(4, 4, 8, 8), new Submap(4, 4, 12, 8) },
+			{ new Submap(4, 4, 0, 12), new Submap(4, 4, 4, 12), new Submap(4, 4, 8, 12), new Submap(4, 4, 12, 12) },
+			};
 	private static final float DIV3 = 16 / 3f;
 	public static final ISubmap[][] X3 = new ISubmap[][] {
 			{ new Submap(DIV3, DIV3, 0, 0), new Submap(DIV3, DIV3, DIV3, 0), new Submap(DIV3, DIV3, DIV3 * 2, 0) }, {
@@ -20,17 +25,9 @@ public class Submap implements ISubmap
 					new Submap(DIV3, DIV3, DIV3 * 2, DIV3 * 2)
 			},
 			};
-
-	public static final ISubmap[][] X4 = new ISubmap[][] {
-			{ new Submap(4, 4, 0, 0), new Submap(4, 4, 4, 0), new Submap(4, 4, 8, 0), new Submap(4, 4, 12, 0) },
-			{ new Submap(4, 4, 0, 4), new Submap(4, 4, 4, 4), new Submap(4, 4, 8, 4), new Submap(4, 4, 12, 4) },
-			{ new Submap(4, 4, 0, 8), new Submap(4, 4, 4, 8), new Submap(4, 4, 8, 8), new Submap(4, 4, 12, 8) },
-			{ new Submap(4, 4, 0, 12), new Submap(4, 4, 4, 12), new Submap(4, 4, 8, 12), new Submap(4, 4, 12, 12) },
-			};
-
+	private static final float FACTOR = 16f;
 	private final float width, height;
 	private final float xOffset, yOffset;
-
 	private final SubmapNormalized normalized = new SubmapNormalized(this);
 
 	public Submap(float width, float height, float xOffset, float yOffset)
@@ -94,8 +91,6 @@ public class Submap implements ISubmap
 	{
 		return yOffset;
 	}
-
-	private static final float FACTOR = 16f;
 
 	private static class SubmapNormalized implements ISubmap
 	{

@@ -6,7 +6,8 @@ import org.lwjgl.opengl.GL11;
  * Created by colby on 9/13/2017.
  */
 public enum MaterialFace
-{Front(GL11.GL_FRONT), Back(GL11.GL_BACK), FrontAndBack(GL11.GL_FRONT_AND_BACK);
+{
+	Front(GL11.GL_FRONT), Back(GL11.GL_BACK), FrontAndBack(GL11.GL_FRONT_AND_BACK);
 
 	private final int glValue;
 
@@ -18,4 +19,5 @@ public enum MaterialFace
 	public int getGlValue()
 	{
 		return glValue;
-	}}
+	}
+}

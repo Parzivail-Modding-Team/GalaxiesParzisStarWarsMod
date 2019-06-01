@@ -49,62 +49,6 @@ public abstract class PMessage<REQ extends PMessage> implements Serializable, IM
 		mapHandler(Entity.class, PMessage::readEntity, PMessage::writeEntity);
 	}
 
-	// The thing you override!
-	public IMessage handleMessage(MessageContext context)
-	{
-		return null;
-	}
-
-	@Override
-	public final IMessage onMessage(REQ message, MessageContext context)
-	{
-		if (context.side == Side.CLIENT)
-			Minecraft.getMinecraft().addScheduledTask(() -> message.handleMessage(context));
-		else
-			FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> message.handleMessage(context));
-		return null;
-	}
-
-	@Override
-	public final void fromBytes(ByteBuf buf)
-	{
-		try
-		{
-			Class<?> clazz = getClass();
-			Field[] clFields = getClassFields(clazz);
-			for (Field f : clFields)
-			{
-				Class<?> type = f.getType();
-				if (acceptField(f, type))
-					readField(f, type, buf);
-			}
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException("Error at reading packet " + this, e);
-		}
-	}
-
-	@Override
-	public final void toBytes(ByteBuf buf)
-	{
-		try
-		{
-			Class<?> clazz = getClass();
-			Field[] clFields = getClassFields(clazz);
-			for (Field f : clFields)
-			{
-				Class<?> type = f.getType();
-				if (acceptField(f, type))
-					writeField(f, type, buf);
-			}
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException("Error at writing packet " + this, e);
-		}
-	}
-
 	private static Field[] getClassFields(Class<?> clazz)
 	{
 		if (fieldCache.containsValue(clazz))
@@ -118,18 +62,6 @@ public abstract class PMessage<REQ extends PMessage> implements Serializable, IM
 			fieldCache.put(clazz, fields);
 			return fields;
 		}
-	}
-
-	private final void writeField(Field f, Class clazz, ByteBuf buf) throws IllegalArgumentException, IllegalAccessException
-	{
-		Pair<Reader, Writer> handler = getHandler(clazz);
-		handler.getRight().write(f.get(this), buf);
-	}
-
-	private final void readField(Field f, Class clazz, ByteBuf buf) throws IllegalArgumentException, IllegalAccessException
-	{
-		Pair<Reader, Writer> handler = getHandler(clazz);
-		f.set(this, handler.getLeft().read(buf));
 	}
 
 	private static Pair<Reader, Writer> getHandler(Class<?> clazz)
@@ -347,6 +279,74 @@ public abstract class PMessage<REQ extends PMessage> implements Serializable, IM
 	private static void writeBlockPos(BlockPos pos, ByteBuf buf)
 	{
 		buf.writeLong(pos.toLong());
+	}
+
+	// The thing you override!
+	public IMessage handleMessage(MessageContext context)
+	{
+		return null;
+	}
+
+	@Override
+	public final IMessage onMessage(REQ message, MessageContext context)
+	{
+		if (context.side == Side.CLIENT)
+			Minecraft.getMinecraft().addScheduledTask(() -> message.handleMessage(context));
+		else
+			FMLCommonHandler.instance().getMinecraftServerInstance().addScheduledTask(() -> message.handleMessage(context));
+		return null;
+	}
+
+	@Override
+	public final void fromBytes(ByteBuf buf)
+	{
+		try
+		{
+			Class<?> clazz = getClass();
+			Field[] clFields = getClassFields(clazz);
+			for (Field f : clFields)
+			{
+				Class<?> type = f.getType();
+				if (acceptField(f, type))
+					readField(f, type, buf);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Error at reading packet " + this, e);
+		}
+	}
+
+	@Override
+	public final void toBytes(ByteBuf buf)
+	{
+		try
+		{
+			Class<?> clazz = getClass();
+			Field[] clFields = getClassFields(clazz);
+			for (Field f : clFields)
+			{
+				Class<?> type = f.getType();
+				if (acceptField(f, type))
+					writeField(f, type, buf);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Error at writing packet " + this, e);
+		}
+	}
+
+	private final void writeField(Field f, Class clazz, ByteBuf buf) throws IllegalArgumentException, IllegalAccessException
+	{
+		Pair<Reader, Writer> handler = getHandler(clazz);
+		handler.getRight().write(f.get(this), buf);
+	}
+
+	private final void readField(Field f, Class clazz, ByteBuf buf) throws IllegalArgumentException, IllegalAccessException
+	{
+		Pair<Reader, Writer> handler = getHandler(clazz);
+		f.set(this, handler.getLeft().read(buf));
 	}
 
 	// Functional interfaces

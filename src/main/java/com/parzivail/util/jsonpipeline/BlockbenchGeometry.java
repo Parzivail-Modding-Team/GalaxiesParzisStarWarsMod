@@ -23,21 +23,32 @@ import java.util.Map.Entry;
 @SideOnly(Side.CLIENT)
 public class BlockbenchGeometry
 {
-	private static final Logger LOGGER = LogManager.getLogger();
 	@VisibleForTesting
 	static final Gson SERIALIZER = (new GsonBuilder()).registerTypeAdapter(BlockbenchGeometry.class, new Deserializer()).registerTypeAdapter(BlockbenchPart.class, new BlockbenchPartDeserializer()).registerTypeAdapter(BlockPartFace.class, new BlockPartFaceDeserializer()).registerTypeAdapter(BlockFaceUV.class, new BlockFaceUVDeserializer()).registerTypeAdapter(ItemTransformVec3f.class, new ItemTransformVec3fDeserializer()).registerTypeAdapter(ItemCameraTransforms.class, new ItemCameraTransformsDeserializer()).registerTypeAdapter(ItemOverride.class, new ItemOverrideDeserializer()).create();
+	private static final Logger LOGGER = LogManager.getLogger();
+	public final boolean ambientOcclusion;
+	@VisibleForTesting
+	public final Map<String, String> textures;
 	private final List<BlockbenchPart> elements;
 	private final boolean gui3d;
-	public final boolean ambientOcclusion;
 	private final ItemCameraTransforms cameraTransforms;
 	private final List<ItemOverride> overrides;
 	public String name = "";
 	@VisibleForTesting
-	public final Map<String, String> textures;
-	@VisibleForTesting
 	public BlockbenchGeometry parent;
 	@VisibleForTesting
 	protected ResourceLocation parentLocation;
+
+	public BlockbenchGeometry(@Nullable ResourceLocation parentLocationIn, List<BlockbenchPart> elementsIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn, List<ItemOverride> overridesIn)
+	{
+		this.elements = elementsIn;
+		this.ambientOcclusion = ambientOcclusionIn;
+		this.gui3d = gui3dIn;
+		this.textures = texturesIn;
+		this.parentLocation = parentLocationIn;
+		this.cameraTransforms = cameraTransformsIn;
+		this.overrides = overridesIn;
+	}
 
 	public static BlockbenchGeometry deserialize(Reader readerIn)
 	{
@@ -49,15 +60,25 @@ public class BlockbenchGeometry
 		return deserialize(new StringReader(jsonString));
 	}
 
-	public BlockbenchGeometry(@Nullable ResourceLocation parentLocationIn, List<BlockbenchPart> elementsIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn, List<ItemOverride> overridesIn)
+	public static void checkModelHierarchy(Map<ResourceLocation, net.minecraft.client.renderer.block.model.ModelBlock> p_178312_0_)
 	{
-		this.elements = elementsIn;
-		this.ambientOcclusion = ambientOcclusionIn;
-		this.gui3d = gui3dIn;
-		this.textures = texturesIn;
-		this.parentLocation = parentLocationIn;
-		this.cameraTransforms = cameraTransformsIn;
-		this.overrides = overridesIn;
+		for (net.minecraft.client.renderer.block.model.ModelBlock modelblock : p_178312_0_.values())
+		{
+			try
+			{
+				net.minecraft.client.renderer.block.model.ModelBlock modelblock1 = modelblock.parent;
+
+				for (net.minecraft.client.renderer.block.model.ModelBlock modelblock2 = modelblock1.parent; modelblock1 != modelblock2; modelblock2 = modelblock2.parent.parent)
+				{
+					modelblock1 = modelblock1.parent;
+				}
+
+				throw new net.minecraft.client.renderer.block.model.ModelBlock.LoopException();
+			}
+			catch (NullPointerException var5)
+			{
+			}
+		}
 	}
 
 	public List<BlockbenchPart> getElements()
@@ -196,27 +217,6 @@ public class BlockbenchGeometry
 	ItemTransformVec3f getTransform(ItemCameraTransforms.TransformType type)
 	{
 		return this.parent != null && !this.cameraTransforms.hasCustomTransform(type) ? this.parent.getTransform(type) : this.cameraTransforms.getTransform(type);
-	}
-
-	public static void checkModelHierarchy(Map<ResourceLocation, net.minecraft.client.renderer.block.model.ModelBlock> p_178312_0_)
-	{
-		for (net.minecraft.client.renderer.block.model.ModelBlock modelblock : p_178312_0_.values())
-		{
-			try
-			{
-				net.minecraft.client.renderer.block.model.ModelBlock modelblock1 = modelblock.parent;
-
-				for (net.minecraft.client.renderer.block.model.ModelBlock modelblock2 = modelblock1.parent; modelblock1 != modelblock2; modelblock2 = modelblock2.parent.parent)
-				{
-					modelblock1 = modelblock1.parent;
-				}
-
-				throw new net.minecraft.client.renderer.block.model.ModelBlock.LoopException();
-			}
-			catch (NullPointerException var5)
-			{
-			}
-		}
 	}
 
 	public ModelBlock makeModelBlock()

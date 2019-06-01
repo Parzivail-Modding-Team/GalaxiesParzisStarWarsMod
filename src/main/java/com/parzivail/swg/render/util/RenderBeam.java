@@ -18,7 +18,7 @@ public class RenderBeam
 		if (length == 0)
 			return;
 
-		GL11.glPushMatrix();
+		GL.PushMatrix();
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL.Disable(EnableCap.Lighting);
 		GL.Disable(EnableCap.Texture2D);
@@ -40,7 +40,7 @@ public class RenderBeam
 		{
 			// draw glow
 			GL11.glDepthMask(false);
-			float fLayers = layers;
+			float fLayers = (float)layers;
 			int layersPlusOne = layers + 1;
 			for (int layer = layers; layer >= 0; layer--)
 			{
@@ -81,6 +81,6 @@ public class RenderBeam
 
 		SwgClientProxy.mc.entityRenderer.enableLightmap();
 		GL.PopAttrib();
-		GL11.glPopMatrix();
+		GL.PopMatrix();
 	}
 }

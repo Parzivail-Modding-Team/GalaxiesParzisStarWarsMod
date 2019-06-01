@@ -31,22 +31,12 @@ import java.util.List;
 
 public class EntityShip extends Entity implements IFreeRotator
 {
-	private static final DataParameter<Float> THROTTLE = EntityDataManager.createKey(EntityShip.class, DataSerializers.FLOAT);
-	private static final DataParameter<Integer> THROTTLE_REPULSOR = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
-	private static final DataParameter<Integer> MODE = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
-
 	public static final ShipInputMode[] shipInputModes = {
 			ShipInputMode.Yaw, ShipInputMode.Roll, ShipInputMode.Landing
 	};
-
-	private boolean leftInputDown;
-	private boolean rightInputDown;
-	private boolean forwardInputDown;
-	private boolean backInputDown;
-
-	private Matrix4f prevRotation = new Matrix4f();
-	private Matrix4f rotation = new Matrix4f();
-
+	private static final DataParameter<Float> THROTTLE = EntityDataManager.createKey(EntityShip.class, DataSerializers.FLOAT);
+	private static final DataParameter<Integer> THROTTLE_REPULSOR = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
+	private static final DataParameter<Integer> MODE = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
 	@SideOnly(Side.CLIENT)
 	public SlidingWindow slidingPitch = new SlidingWindow(24);
 	@SideOnly(Side.CLIENT)
@@ -57,6 +47,12 @@ public class EntityShip extends Entity implements IFreeRotator
 	public boolean autoRelevel = false;
 	@SideOnly(Side.CLIENT)
 	public EntityCamera chaseCam;
+	private boolean leftInputDown;
+	private boolean rightInputDown;
+	private boolean forwardInputDown;
+	private boolean backInputDown;
+	private Matrix4f prevRotation = new Matrix4f();
+	private Matrix4f rotation = new Matrix4f();
 
 	public EntityShip(World worldIn)
 	{
@@ -362,19 +358,14 @@ public class EntityShip extends Entity implements IFreeRotator
 		return rotation;
 	}
 
-	private void setThrottle(float throttle)
-	{
-		dataManager.set(THROTTLE, throttle);
-	}
-
 	private float getThrottle()
 	{
 		return dataManager.get(THROTTLE);
 	}
 
-	private void setThrottleRepulsor(int throttle)
+	private void setThrottle(float throttle)
 	{
-		dataManager.set(THROTTLE_REPULSOR, throttle);
+		dataManager.set(THROTTLE, throttle);
 	}
 
 	private int getThrottleRepulsor()
@@ -382,14 +373,19 @@ public class EntityShip extends Entity implements IFreeRotator
 		return dataManager.get(THROTTLE_REPULSOR);
 	}
 
-	public void setInputMode(int mode)
+	private void setThrottleRepulsor(int throttle)
 	{
-		dataManager.set(MODE, mode);
+		dataManager.set(THROTTLE_REPULSOR, throttle);
 	}
 
 	public int getInputMode()
 	{
 		return dataManager.get(MODE);
+	}
+
+	public void setInputMode(int mode)
+	{
+		dataManager.set(MODE, mode);
 	}
 
 	private void updateMotion()

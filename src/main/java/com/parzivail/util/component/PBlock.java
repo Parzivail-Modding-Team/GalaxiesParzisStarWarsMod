@@ -15,8 +15,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class PBlock extends Block implements IBlockWithItem
 {
-	private AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
 	protected String name;
+	private AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0, 0, 0, 1, 1, 1);
 	private boolean hasCustomBounds;
 	private BlockRenderLayer renderLayer = BlockRenderLayer.CUTOUT;
 

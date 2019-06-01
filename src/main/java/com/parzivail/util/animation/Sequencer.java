@@ -2,15 +2,14 @@ package com.parzivail.util.animation;
 
 public class Sequencer
 {
+	public SequenceDirection direction;
+	public SequenceEndBehavior endBehavior;
+	public boolean playing;
 	private Animatable[] track;
 	private int length;
 	private long startTime;
 	private long prevTime;
 	private int position;
-
-	public SequenceDirection direction;
-	public SequenceEndBehavior endBehavior;
-	public boolean playing;
 
 	public Sequencer(Animatable... sequence)
 	{
@@ -108,14 +107,14 @@ public class Sequencer
 		return direction;
 	}
 
-	public SequenceEndBehavior getEndBehavior()
-	{
-		return endBehavior;
-	}
-
 	public void setDirection(SequenceDirection direction)
 	{
 		this.direction = direction;
+	}
+
+	public SequenceEndBehavior getEndBehavior()
+	{
+		return endBehavior;
 	}
 
 	public void setEndBehavior(SequenceEndBehavior endBehavior)

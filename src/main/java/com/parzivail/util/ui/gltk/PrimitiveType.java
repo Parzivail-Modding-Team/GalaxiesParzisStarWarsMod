@@ -28,4 +28,5 @@ public enum PrimitiveType
 	public int getGlValue()
 	{
 		return glValue;
-	}}
+	}
+}

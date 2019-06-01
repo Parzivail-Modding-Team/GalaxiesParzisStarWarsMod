@@ -84,4 +84,5 @@ public enum EnableCap
 	public int getGlValue()
 	{
 		return glValue;
-	}}
+	}
+}

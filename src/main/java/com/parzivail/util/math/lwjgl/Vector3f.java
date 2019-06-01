@@ -71,64 +71,6 @@ public class Vector3f extends Vector implements ReadableVector3f, WritableVector
 		set(x, y, z);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.parzivail.util.math.lwjgl.WritableVector2f#set(float, float)
-	 */
-	public void set(float x, float y)
-	{
-		this.x = x;
-		this.y = y;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.parzivail.util.math.lwjgl.WritableVector3f#set(float, float, float)
-	 */
-	public void set(float x, float y, float z)
-	{
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
-
-	/**
-	 * Load from another Vector3f
-	 *
-	 * @param src The source vector
-	 *
-	 * @return this
-	 */
-	public Vector3f set(ReadableVector3f src)
-	{
-		x = src.getX();
-		y = src.getY();
-		z = src.getZ();
-		return this;
-	}
-
-	/**
-	 * @return the length squared of the vector
-	 */
-	public float lengthSquared()
-	{
-		return x * x + y * y + z * z;
-	}
-
-	/**
-	 * Translate a vector
-	 *
-	 * @param x The translation in x
-	 * @param y the translation in y
-	 *
-	 * @return this
-	 */
-	public Vector3f translate(float x, float y, float z)
-	{
-		this.x += x;
-		this.y += y;
-		this.z += z;
-		return this;
-	}
-
 	/**
 	 * Add a vector to another vector and place the result in a destination
 	 * vector.
@@ -192,6 +134,96 @@ public class Vector3f extends Vector implements ReadableVector3f, WritableVector
 	}
 
 	/**
+	 * The dot product of two vectors is calculated as
+	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
+	 *
+	 * @param left  The LHS vector
+	 * @param right The RHS vector
+	 *
+	 * @return left dot right
+	 */
+	public static float dot(Vector3f left, Vector3f right)
+	{
+		return left.x * right.x + left.y * right.y + left.z * right.z;
+	}
+
+	/**
+	 * Calculate the angle between two vectors, in radians
+	 *
+	 * @param a A vector
+	 * @param b The other vector
+	 *
+	 * @return the angle between the two vectors, in radians
+	 */
+	public static float angle(Vector3f a, Vector3f b)
+	{
+		float dls = dot(a, b) / (a.length() * b.length());
+		if (dls < -1f)
+			dls = -1f;
+		else if (dls > 1.0f)
+			dls = 1.0f;
+		return (float)Math.acos(dls);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.parzivail.util.math.lwjgl.WritableVector2f#set(float, float)
+	 */
+	public void set(float x, float y)
+	{
+		this.x = x;
+		this.y = y;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.parzivail.util.math.lwjgl.WritableVector3f#set(float, float, float)
+	 */
+	public void set(float x, float y, float z)
+	{
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	/**
+	 * Load from another Vector3f
+	 *
+	 * @param src The source vector
+	 *
+	 * @return this
+	 */
+	public Vector3f set(ReadableVector3f src)
+	{
+		x = src.getX();
+		y = src.getY();
+		z = src.getZ();
+		return this;
+	}
+
+	/**
+	 * @return the length squared of the vector
+	 */
+	public float lengthSquared()
+	{
+		return x * x + y * y + z * z;
+	}
+
+	/**
+	 * Translate a vector
+	 *
+	 * @param x The translation in x
+	 * @param y the translation in y
+	 *
+	 * @return this
+	 */
+	public Vector3f translate(float x, float y, float z)
+	{
+		this.x += x;
+		this.y += y;
+		this.z += z;
+		return this;
+	}
+
+	/**
 	 * Negate a vector
 	 *
 	 * @return this
@@ -238,38 +270,6 @@ public class Vector3f extends Vector implements ReadableVector3f, WritableVector
 			dest.set(x / l, y / l, z / l);
 
 		return dest;
-	}
-
-	/**
-	 * The dot product of two vectors is calculated as
-	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
-	 *
-	 * @param left  The LHS vector
-	 * @param right The RHS vector
-	 *
-	 * @return left dot right
-	 */
-	public static float dot(Vector3f left, Vector3f right)
-	{
-		return left.x * right.x + left.y * right.y + left.z * right.z;
-	}
-
-	/**
-	 * Calculate the angle between two vectors, in radians
-	 *
-	 * @param a A vector
-	 * @param b The other vector
-	 *
-	 * @return the angle between the two vectors, in radians
-	 */
-	public static float angle(Vector3f a, Vector3f b)
-	{
-		float dls = dot(a, b) / (a.length() * b.length());
-		if (dls < -1f)
-			dls = -1f;
-		else if (dls > 1.0f)
-			dls = 1.0f;
-		return (float)Math.acos(dls);
 	}
 
 	/* (non-Javadoc)
@@ -335,14 +335,6 @@ public class Vector3f extends Vector implements ReadableVector3f, WritableVector
 	}
 
 	/**
-	 * @return y
-	 */
-	public final float getY()
-	{
-		return y;
-	}
-
-	/**
 	 * Set X
 	 *
 	 * @param x
@@ -350,6 +342,14 @@ public class Vector3f extends Vector implements ReadableVector3f, WritableVector
 	public final void setX(float x)
 	{
 		this.x = x;
+	}
+
+	/**
+	 * @return y
+	 */
+	public final float getY()
+	{
+		return y;
 	}
 
 	/**
@@ -362,6 +362,14 @@ public class Vector3f extends Vector implements ReadableVector3f, WritableVector
 		this.y = y;
 	}
 
+	/* (Overrides)
+	 * @see org.lwjgl.vector.ReadableVector3f#getZ()
+	 */
+	public float getZ()
+	{
+		return z;
+	}
+
 	/**
 	 * Set Z
 	 *
@@ -370,14 +378,6 @@ public class Vector3f extends Vector implements ReadableVector3f, WritableVector
 	public void setZ(float z)
 	{
 		this.z = z;
-	}
-
-	/* (Overrides)
-	 * @see org.lwjgl.vector.ReadableVector3f#getZ()
-	 */
-	public float getZ()
-	{
-		return z;
 	}
 
 	public boolean equals(Object obj)

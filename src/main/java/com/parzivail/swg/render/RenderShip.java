@@ -24,10 +24,24 @@ import java.nio.FloatBuffer;
 public class RenderShip extends Render<EntityShip>
 {
 	private FloatBuffer buff = BufferUtils.createFloatBuffer(16);
+
 	public RenderShip(RenderManager renderManagerIn)
 	{
 		super(renderManagerIn);
 		this.shadowSize = 0.5F;
+	}
+
+	public static float wrapAngleTo90(float a)
+	{
+		a %= 180.0F;
+
+		if (a >= 90)
+			a -= 180;
+
+		if (a < -90)
+			a += 180;
+
+		return a;
 	}
 
 	@Override
@@ -105,18 +119,5 @@ public class RenderShip extends Render<EntityShip>
 	protected ResourceLocation getEntityTexture(EntityShip entity)
 	{
 		return null;
-	}
-
-	public static float wrapAngleTo90(float a)
-	{
-		a %= 180.0F;
-
-		if (a >= 90)
-			a -= 180;
-
-		if (a < -90)
-			a += 180;
-
-		return a;
 	}
 }

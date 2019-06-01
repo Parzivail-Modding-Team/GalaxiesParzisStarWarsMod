@@ -38,6 +38,38 @@ public class SwgClientProxy extends SwgProxy
 
 	public static Sequencer animHyperspaceTest = new Sequencer(new HyperspaceEnter());
 
+	/**
+	 * Queries the "attack" keybind and processes items who consume the associated action
+	 *
+	 * @param passive False if the event was triggered by a keybind or mouse click, true if it was triggered by the tick handler
+	 */
+	public static void checkLeftClickPressed(boolean passive)
+	{
+		if (leftClickDelayTimer > 0)
+			return;
+
+		ItemStack heldItem = mc.player.getHeldItemMainhand();
+		if (!(heldItem.getItem() instanceof ILeftClickInterceptor))
+			return;
+		ILeftClickInterceptor item = ((ILeftClickInterceptor)heldItem.getItem());
+
+		boolean risingEdge = KeybindRegister.keyAttack.interceptedIsPressed();
+		boolean holding = KeybindRegister.keyAttack.getInterceptedIsKeyDown();
+
+		boolean pressed = item.isLeftClickRepeatable() ? (passive && (risingEdge || holding)) : risingEdge;
+
+		if (item.isLeftClickRepeatable())
+			while (KeybindRegister.keyAttack.interceptedIsPressed())
+				;
+
+		if (pressed)
+		{
+			leftClickDelayTimer = 2;
+			item.onItemLeftClick(heldItem, mc.player.world, mc.player);
+			StarWarsGalaxy.NETWORK.sendToServer(new MessageItemLeftClick(mc.player));
+		}
+	}
+
 	@Override
 	public void preInit(FMLPreInitializationEvent e)
 	{
@@ -90,37 +122,5 @@ public class SwgClientProxy extends SwgProxy
 	public void notifyPlayer(ITextComponent message, boolean actionBar)
 	{
 		mc.player.sendStatusMessage(message, actionBar);
-	}
-
-	/**
-	 * Queries the "attack" keybind and processes items who consume the associated action
-	 *
-	 * @param passive False if the event was triggered by a keybind or mouse click, true if it was triggered by the tick handler
-	 */
-	public static void checkLeftClickPressed(boolean passive)
-	{
-		if (leftClickDelayTimer > 0)
-			return;
-
-		ItemStack heldItem = mc.player.getHeldItemMainhand();
-		if (!(heldItem.getItem() instanceof ILeftClickInterceptor))
-			return;
-		ILeftClickInterceptor item = ((ILeftClickInterceptor)heldItem.getItem());
-
-		boolean risingEdge = KeybindRegister.keyAttack.interceptedIsPressed();
-		boolean holding = KeybindRegister.keyAttack.getInterceptedIsKeyDown();
-
-		boolean pressed = item.isLeftClickRepeatable() ? (passive && (risingEdge || holding)) : risingEdge;
-
-		if (item.isLeftClickRepeatable())
-			while (KeybindRegister.keyAttack.interceptedIsPressed())
-				;
-
-		if (pressed)
-		{
-			leftClickDelayTimer = 2;
-			item.onItemLeftClick(heldItem, mc.player.world, mc.player);
-			StarWarsGalaxy.NETWORK.sendToServer(new MessageItemLeftClick(mc.player));
-		}
 	}
 }

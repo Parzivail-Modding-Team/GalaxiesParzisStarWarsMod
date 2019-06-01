@@ -49,4 +49,5 @@ public enum AttribMask
 	public int getGlValue()
 	{
 		return glValue;
-	}}
+	}
+}
