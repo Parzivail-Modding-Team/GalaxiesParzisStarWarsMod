@@ -1,6 +1,7 @@
 package com.parzivail.swg.register;
 
 import com.parzivail.swg.StarWarsGalaxy;
+import com.parzivail.swg.block.BlockHothConsole;
 import com.parzivail.swg.block.BlockTatooineSand;
 import com.parzivail.util.component.IBlockWithItem;
 import com.parzivail.util.component.PBlock;
@@ -65,9 +66,9 @@ public class BlockRegister
 		register(r, new PBlockFacing("antenna_thin", Material.GROUND).withBoundingBox(7, 0, 7, 2, 48, 2));
 		register(r, new PBlockFacing("cable_clamped", Material.GROUND).withBoundingBox(4, 0, 4, 8, 5, 8));
 		register(r, new PBlockFacing("cable_ground", Material.GROUND).withBoundingBox(4, 0, 4, 8, 5, 8));
-		register(r, new PBlockFacing("console_hoth_1", Material.GROUND).withBoundingBox(0, 0, 0, 16, 32, 16).setLightLevel(0.5f));
-		register(r, new PBlockFacing("console_hoth_2", Material.GROUND).withBoundingBox(0, 0, 0, 16, 32, 16).setLightLevel(0.5f));
-		register(r, new PBlockFacing("console_hoth_3", Material.GROUND).withBoundingBox(0, 0, 0, 16, 32, 16).setLightLevel(0.5f));
+		register(r, new BlockHothConsole("console_hoth_1", Material.GROUND).setLightLevel(0.5f));
+		register(r, new BlockHothConsole("console_hoth_2", Material.GROUND).setLightLevel(0.5f));
+		register(r, new BlockHothConsole("console_hoth_3", Material.GROUND).setLightLevel(0.5f));
 		register(r, new PBlockFacing("console_medical", Material.GROUND).withBoundingBox(2, 0, 2, 12, 16, 12));
 		register(r, new PBlockFacing("console_medical_large", Material.GROUND).withBoundingBox(0, 0, 0, 16, 32, 16));
 		register(r, new PBlockFacing("crate_hoth", Material.GROUND).withBoundingBox(2, 0, 2, 12, 16, 12));
