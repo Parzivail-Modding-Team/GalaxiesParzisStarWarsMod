@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:sand_rhodocrosite"
-    },
-    "inventory": {
-      "model": "pswg:sand_rhodocrosite"
-    }
+	"normal": {
+	  "model": "pswg:sand_rhodocrosite"
+	},
+	"inventory": {
+	  "model": "pswg:sand_rhodocrosite"
+	}
   }
 }

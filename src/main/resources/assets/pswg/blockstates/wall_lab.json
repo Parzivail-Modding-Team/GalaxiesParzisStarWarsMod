@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:wall_lab"
-    },
-    "inventory": {
-      "model": "pswg:wall_lab"
-    }
+	"normal": {
+	  "model": "pswg:wall_lab"
+	},
+	"inventory": {
+	  "model": "pswg:wall_lab"
+	}
   }
 }

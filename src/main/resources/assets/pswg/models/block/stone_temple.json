@@ -1,6 +1,6 @@
 {
   "parent": "pswg:block/base/cube_all",
   "textures": {
-    "all": "pswg:blocks/stone_temple"
+	"all": "pswg:blocks/stone_temple"
   }
 }

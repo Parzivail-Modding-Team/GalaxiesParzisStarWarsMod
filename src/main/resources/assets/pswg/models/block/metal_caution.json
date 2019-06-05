@@ -1,6 +1,6 @@
 {
   "parent": "pswg:block/base/cube_all",
   "textures": {
-    "all": "pswg:blocks/metal_caution"
+	"all": "pswg:blocks/metal_caution"
   }
 }

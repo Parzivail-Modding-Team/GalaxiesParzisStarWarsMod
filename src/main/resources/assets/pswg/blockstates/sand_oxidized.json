@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:sand_oxidized"
-    },
-    "inventory": {
-      "model": "pswg:sand_oxidized"
-    }
+	"normal": {
+	  "model": "pswg:sand_oxidized"
+	},
+	"inventory": {
+	  "model": "pswg:sand_oxidized"
+	}
   }
 }

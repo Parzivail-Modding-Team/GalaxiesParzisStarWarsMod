@@ -1,7 +1,7 @@
 package com.parzivail.swg.register;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.proxy.SwgClientProxy;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.client.InterceptingKeyBinding;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -31,7 +31,7 @@ public class KeybindRegister
 		keyShipChangeInputMode = registerKeybind("shipInputMode", Keyboard.KEY_X);
 		keyShipLandingMode = registerKeybind("shipLandingMode", Keyboard.KEY_M);
 
-		SwgClientProxy.mc.gameSettings.keyBindAttack = keyAttack = new InterceptingKeyBinding(SwgClientProxy.mc.gameSettings.keyBindAttack);
+		Client.mc.gameSettings.keyBindAttack = keyAttack = new InterceptingKeyBinding(Client.mc.gameSettings.keyBindAttack);
 	}
 
 	private static KeyBinding registerKeybind(String keyName, int keyCode)

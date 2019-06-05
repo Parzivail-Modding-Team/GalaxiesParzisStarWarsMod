@@ -22,8 +22,8 @@ public class SwgItem extends Item
 	public SwgItem(String name)
 	{
 		this.name = name;
-		setUnlocalizedName(name);
 		setRegistryName(Resources.modColon(this.name));
+		setUnlocalizedName(Resources.modDot(this.name));
 		setCreativeTab(StarWarsGalaxy.tab);
 	}
 

@@ -1,28 +1,28 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:vaporator_2",
-      "y": 180
-    },
-    "inventory": {
-      "model": "pswg:vaporator_2",
-      "y": 180
-    },
-    "facing=north": {
-      "model": "pswg:vaporator_2",
-      "y": 0
-    },
-    "facing=south": {
-      "model": "pswg:vaporator_2",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "pswg:vaporator_2",
-      "y": 270
-    },
-    "facing=east": {
-      "model": "pswg:vaporator_2",
-      "y": 90
-    }
+	"normal": {
+	  "model": "pswg:vaporator_2",
+	  "y": 180
+	},
+	"inventory": {
+	  "model": "pswg:vaporator_2",
+	  "y": 180
+	},
+	"facing=north": {
+	  "model": "pswg:vaporator_2",
+	  "y": 0
+	},
+	"facing=south": {
+	  "model": "pswg:vaporator_2",
+	  "y": 180
+	},
+	"facing=west": {
+	  "model": "pswg:vaporator_2",
+	  "y": 270
+	},
+	"facing=east": {
+	  "model": "pswg:vaporator_2",
+	  "y": 90
+	}
   }
 }

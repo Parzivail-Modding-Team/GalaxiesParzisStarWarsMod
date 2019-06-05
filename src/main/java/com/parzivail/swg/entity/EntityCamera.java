@@ -1,7 +1,7 @@
 package com.parzivail.swg.entity;
 
 import com.parzivail.swg.config.SwgConfig;
-import com.parzivail.swg.proxy.SwgClientProxy;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.math.lwjgl.Matrix4f;
 import com.parzivail.util.math.lwjgl.Vector4f;
 import net.minecraft.entity.Entity;
@@ -77,7 +77,7 @@ public class EntityCamera extends Entity
 			if (target instanceof IFreeRotator)
 			{
 				float currentOffset = 0;
-				if (SwgClientProxy.mc.gameSettings.thirdPersonView != 0)
+				if (Client.mc.gameSettings.thirdPersonView != 0)
 					currentOffset = 4;
 
 				Matrix4f rotation = ((IFreeRotator)target).getRotationMatrix();

@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:metal_caution"
-    },
-    "inventory": {
-      "model": "pswg:metal_caution"
-    }
+	"normal": {
+	  "model": "pswg:metal_caution"
+	},
+	"inventory": {
+	  "model": "pswg:metal_caution"
+	}
   }
 }

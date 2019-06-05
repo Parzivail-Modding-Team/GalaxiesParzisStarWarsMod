@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:salt"
-    },
-    "inventory": {
-      "model": "pswg:salt"
-    }
+	"normal": {
+	  "model": "pswg:salt"
+	},
+	"inventory": {
+	  "model": "pswg:salt"
+	}
   }
 }

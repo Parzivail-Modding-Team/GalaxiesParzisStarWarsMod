@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:sand_tatooine"
-    },
-    "inventory": {
-      "model": "pswg:sand_tatooine"
-    }
+	"normal": {
+	  "model": "pswg:sand_tatooine"
+	},
+	"inventory": {
+	  "model": "pswg:sand_tatooine"
+	}
   }
 }

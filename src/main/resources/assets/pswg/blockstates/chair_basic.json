@@ -1,28 +1,28 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:chair_basic",
-      "y": 180
-    },
-    "inventory": {
-      "model": "pswg:chair_basic",
-      "y": 180
-    },
-    "facing=north": {
-      "model": "pswg:chair_basic",
-      "y": 0
-    },
-    "facing=south": {
-      "model": "pswg:chair_basic",
-      "y": 180
-    },
-    "facing=west": {
-      "model": "pswg:chair_basic",
-      "y": 270
-    },
-    "facing=east": {
-      "model": "pswg:chair_basic",
-      "y": 90
-    }
+	"normal": {
+	  "model": "pswg:chair_basic",
+	  "y": 180
+	},
+	"inventory": {
+	  "model": "pswg:chair_basic",
+	  "y": 180
+	},
+	"facing=north": {
+	  "model": "pswg:chair_basic",
+	  "y": 0
+	},
+	"facing=south": {
+	  "model": "pswg:chair_basic",
+	  "y": 180
+	},
+	"facing=west": {
+	  "model": "pswg:chair_basic",
+	  "y": 270
+	},
+	"facing=east": {
+	  "model": "pswg:chair_basic",
+	  "y": 90
+	}
   }
 }

@@ -1,7 +1,7 @@
 package com.parzivail.swg.render.util;
 
 import com.parzivail.swg.Resources;
-import com.parzivail.swg.proxy.SwgClientProxy;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
@@ -27,7 +27,7 @@ public class RenderBeam
 		GL.Enable(EnableCap.CullFace);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-		SwgClientProxy.mc.entityRenderer.disableLightmap();
+		Client.mc.entityRenderer.disableLightmap();
 
 		if (globalInstability != 0)
 		{
@@ -79,7 +79,7 @@ public class RenderBeam
 			}
 		}
 
-		SwgClientProxy.mc.entityRenderer.enableLightmap();
+		Client.mc.entityRenderer.enableLightmap();
 		GL.PopAttrib();
 		GL.PopMatrix();
 	}

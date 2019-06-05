@@ -4,7 +4,7 @@ import com.parzivail.swg.handler.SwgEventHandler;
 import com.parzivail.swg.network.client.MessageItemLeftClick;
 import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.swg.network.client.MessageSetShipInputMode;
-import com.parzivail.swg.proxy.SwgProxy;
+import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.register.BlockRegister;
 import com.parzivail.swg.register.ItemRegister;
 import com.parzivail.swg.tab.SwgCreativeTab;
@@ -27,8 +27,8 @@ public class StarWarsGalaxy
 	public static final SimpleNetworkWrapper NETWORK = NetworkRegistry.INSTANCE.newSimpleChannel(Resources.MODID);
 	public static SwgEventHandler eventHandler = new SwgEventHandler();
 	public static SwgCreativeTab tab;
-	@SidedProxy(clientSide = "com.parzivail.swg.proxy.SwgClientProxy", serverSide = "com.parzivail.swg.proxy.SwgProxy", modId = Resources.MODID)
-	public static SwgProxy proxy;
+	@SidedProxy(clientSide = "com.parzivail.swg.proxy.Client", serverSide = "com.parzivail.swg.proxy.Common", modId = Resources.MODID)
+	public static Common proxy;
 	@Mod.Instance(value = Resources.MODID)
 	public static StarWarsGalaxy instance;
 	private static int packetId;

@@ -5,8 +5,8 @@ import com.parzivail.swg.entity.EntityCamera;
 import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.gui.GuiHyperspaceLoading;
 import com.parzivail.swg.network.client.MessageSetShipInputMode;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.proxy.ShipInputMode;
-import com.parzivail.swg.proxy.SwgClientProxy;
 import com.parzivail.swg.register.KeybindRegister;
 import com.parzivail.util.item.ILeftClickInterceptor;
 import com.parzivail.util.math.lwjgl.Vector3f;
@@ -30,28 +30,30 @@ public class SwgEventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(TickEvent.RenderTickEvent e)
 	{
-		SwgClientProxy.animHyperspaceTest.tick();
+		Client.partialTicks = e.renderTickTime;
+
+		Client.animHyperspaceTest.tick();
 
 		if (e.phase != TickEvent.Phase.START)
 			return;
 
-		if (SwgClientProxy.mc.player != null)
+		if (Client.mc.player != null)
 		{
-			ItemStack heldItem = SwgClientProxy.mc.player.getHeldItemMainhand();
+			ItemStack heldItem = Client.mc.player.getHeldItemMainhand();
 			KeybindRegister.keyAttack.setIntercepting(heldItem.getItem() instanceof ILeftClickInterceptor);
 
 			if (heldItem.getItem() instanceof ILeftClickInterceptor)
-				SwgClientProxy.checkLeftClickPressed(true);
+				Client.checkLeftClickPressed(true);
 
-			Entity rve = SwgClientProxy.mc.getRenderViewEntity();
-			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
+			Entity rve = Client.mc.getRenderViewEntity();
+			if (Client.mc.player.getRidingEntity() instanceof EntityShip)
 			{
-				EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
+				EntityShip ship = (EntityShip)Client.mc.player.getRidingEntity();
 
-				if (SwgClientProxy.mc.gameSettings.thirdPersonView == 0 || SwgClientProxy.mc.gameSettings.thirdPersonView == 2)
-					SwgClientProxy.mc.setRenderViewEntity(ship);
+				if (Client.mc.gameSettings.thirdPersonView == 0 || Client.mc.gameSettings.thirdPersonView == 2)
+					Client.mc.setRenderViewEntity(ship);
 				else
-					SwgClientProxy.mc.setRenderViewEntity(ship.chaseCam);
+					Client.mc.setRenderViewEntity(ship.chaseCam);
 
 				// this is also the fastest time to poll input
 				if (ship.getControllingPassenger() instanceof EntityPlayer && ship.world.isRemote)
@@ -61,7 +63,7 @@ public class SwgEventHandler
 				}
 			}
 			else if (rve instanceof EntityCamera || rve instanceof EntityShip)
-				SwgClientProxy.mc.setRenderViewEntity(SwgClientProxy.mc.player);
+				Client.mc.setRenderViewEntity(Client.mc.player);
 		}
 	}
 
@@ -72,15 +74,15 @@ public class SwgEventHandler
 		if (event.phase != TickEvent.Phase.START)
 			return;
 
-		if (SwgClientProxy.mc.player != null)
+		if (Client.mc.player != null)
 		{
 			//			SoundHandler.tick(event);
-			//			WorldDecals.tick(SwgClientProxy.mc.player.dimension);
+			//			WorldDecals.tick(Client.mc.player.dimension);
 
-			if (SwgClientProxy.leftClickDelayTimer > 0)
-				SwgClientProxy.leftClickDelayTimer--;
+			if (Client.leftClickDelayTimer > 0)
+				Client.leftClickDelayTimer--;
 			else
-				SwgClientProxy.leftClickDelayTimer = 0;
+				Client.leftClickDelayTimer = 0;
 		}
 	}
 
@@ -88,22 +90,22 @@ public class SwgEventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(InputEvent.MouseInputEvent event)
 	{
-		SwgClientProxy.checkLeftClickPressed(false);
+		Client.checkLeftClickPressed(false);
 	}
 
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void on(InputEvent.KeyInputEvent e)
 	{
-		SwgClientProxy.checkLeftClickPressed(false);
+		Client.checkLeftClickPressed(false);
 
-		if (SwgClientProxy.mc.player != null)
+		if (Client.mc.player != null)
 		{
-			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
+			if (Client.mc.player.getRidingEntity() instanceof EntityShip)
 			{
 				if (KeybindRegister.keyShipChangeInputMode.isPressed())
 				{
-					EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
+					EntityShip ship = (EntityShip)Client.mc.player.getRidingEntity();
 					int shipInputMode = ship.getInputMode();
 					shipInputMode++;
 					shipInputMode %= 2; // only want Yaw and Roll for mode switch button
@@ -112,7 +114,7 @@ public class SwgEventHandler
 
 				if (KeybindRegister.keyShipLandingMode.isPressed())
 				{
-					EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
+					EntityShip ship = (EntityShip)Client.mc.player.getRidingEntity();
 					int shipInputMode = 2;
 					setInputMode(ship, shipInputMode);
 				}
@@ -120,13 +122,13 @@ public class SwgEventHandler
 
 			if (KeybindRegister.keyDebug != null && KeybindRegister.keyDebug.isPressed())
 			{
-				if (SwgClientProxy.animHyperspaceTest.playing)
+				if (Client.animHyperspaceTest.playing)
 				{
-					SwgClientProxy.animHyperspaceTest.stop();
-					SwgClientProxy.animHyperspaceTest.reset();
+					Client.animHyperspaceTest.stop();
+					Client.animHyperspaceTest.reset();
 				}
 				else
-					SwgClientProxy.animHyperspaceTest.play();
+					Client.animHyperspaceTest.play();
 			}
 		}
 	}
@@ -144,11 +146,11 @@ public class SwgEventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(EntityViewRenderEvent.CameraSetup e)
 	{
-		if (SwgClientProxy.mc.player != null)
+		if (Client.mc.player != null)
 		{
-			if (SwgClientProxy.mc.player.getRidingEntity() instanceof EntityShip)
+			if (Client.mc.player.getRidingEntity() instanceof EntityShip)
 			{
-				EntityShip ship = (EntityShip)SwgClientProxy.mc.player.getRidingEntity();
+				EntityShip ship = (EntityShip)Client.mc.player.getRidingEntity();
 				Vector3f angles = ship.getEulerAngles();
 
 				e.setPitch(angles.x);
@@ -162,10 +164,10 @@ public class SwgEventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(GuiOpenEvent event)
 	{
-		if (event.getGui() instanceof GuiDownloadTerrain && SwgClientProxy.mc.player != null)
+		if (event.getGui() instanceof GuiDownloadTerrain && Client.mc.player != null)
 		{
 			int dim = 2; // TODO: check against any SW dim
-			if (SwgClientProxy.mc.player.dimension == dim)
+			if (Client.mc.player.dimension == dim)
 				event.setGui(new GuiHyperspaceLoading());
 		}
 	}

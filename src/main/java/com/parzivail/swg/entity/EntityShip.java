@@ -3,8 +3,8 @@ package com.parzivail.swg.entity;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.config.SwgConfig;
 import com.parzivail.swg.network.client.MessageSetShipInput;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.proxy.ShipInputMode;
-import com.parzivail.swg.proxy.SwgClientProxy;
 import com.parzivail.util.common.PNbtUtil;
 import com.parzivail.util.math.SlidingWindow;
 import com.parzivail.util.math.lwjgl.Matrix4f;
@@ -300,7 +300,7 @@ public class EntityShip extends Entity implements IFreeRotator
 				break;
 		}
 
-		boolean shouldAttemptAutoRelevel = (autoRelevel && SwgClientProxy.autoRelevelEnabled && modeAllowsAutoRelevel);
+		boolean shouldAttemptAutoRelevel = (autoRelevel && Client.autoRelevelEnabled && modeAllowsAutoRelevel);
 		if (forceRelevel || shouldAttemptAutoRelevel)
 			Matrix4f.rotate((float)((-currentRoll * 0.01f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
 

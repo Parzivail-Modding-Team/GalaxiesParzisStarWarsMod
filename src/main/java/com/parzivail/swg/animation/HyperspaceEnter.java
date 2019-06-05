@@ -1,6 +1,6 @@
 package com.parzivail.swg.animation;
 
-import com.parzivail.swg.proxy.SwgClientProxy;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.animation.Animatable;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.gltk.GL;
@@ -54,7 +54,7 @@ public class HyperspaceEnter extends Animatable
 
 		GlStateManager.pushMatrix();
 
-		ScaledResolution scaledRes = new ScaledResolution(SwgClientProxy.mc);
+		ScaledResolution scaledRes = new ScaledResolution(Client.mc);
 		double w = scaledRes.getScaledWidth();
 		double h = scaledRes.getScaledHeight();
 

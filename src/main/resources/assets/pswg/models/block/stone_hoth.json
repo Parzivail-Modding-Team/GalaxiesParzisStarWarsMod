@@ -1,6 +1,6 @@
 {
   "parent": "pswg:block/base/cube_all",
   "textures": {
-    "all": "pswg:blocks/stone_hoth"
+	"all": "pswg:blocks/stone_hoth"
   }
 }

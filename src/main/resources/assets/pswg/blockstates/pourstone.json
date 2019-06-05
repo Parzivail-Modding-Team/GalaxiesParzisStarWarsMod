@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:pourstone"
-    },
-    "inventory": {
-      "model": "pswg:pourstone"
-    }
+	"normal": {
+	  "model": "pswg:pourstone"
+	},
+	"inventory": {
+	  "model": "pswg:pourstone"
+	}
   }
 }

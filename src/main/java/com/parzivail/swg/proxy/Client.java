@@ -6,9 +6,11 @@ import com.parzivail.swg.animation.HyperspaceEnter;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.network.client.MessageItemLeftClick;
+import com.parzivail.swg.register.ItemRegister;
 import com.parzivail.swg.register.KeybindRegister;
 import com.parzivail.swg.render.RenderBlasterBolt;
 import com.parzivail.swg.render.RenderShip;
+import com.parzivail.swg.render.item.RenderItemLightsaber;
 import com.parzivail.util.animation.Sequencer;
 import com.parzivail.util.item.ILeftClickInterceptor;
 import com.parzivail.util.jsonpipeline.BlockbenchModelLoader;
@@ -25,16 +27,18 @@ import net.minecraft.util.MovementInput;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-public class SwgClientProxy extends SwgProxy
+public class Client extends Common
 {
 	public static int leftClickDelayTimer;
 	public static Minecraft mc;
 	public static boolean autoRelevelEnabled = true;
+	public static float partialTicks;
 
 	public static Sequencer animHyperspaceTest = new Sequencer(new HyperspaceEnter());
 
@@ -75,8 +79,8 @@ public class SwgClientProxy extends SwgProxy
 	{
 		super.preInit(e);
 		mc = Minecraft.getMinecraft();
-		ModelLoaderRegistry.registerLoader(new BlockbenchModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && !(modelLocation instanceof ModelResourceLocation))));
-		ModelLoaderRegistry.registerLoader(new BlockbenchWeightedModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && modelLocation instanceof ModelResourceLocation)));
+		ModelLoaderRegistry.registerLoader(new BlockbenchModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().startsWith("models/block") && !(modelLocation instanceof ModelResourceLocation))));
+		ModelLoaderRegistry.registerLoader(new BlockbenchWeightedModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().startsWith("models/block") && modelLocation instanceof ModelResourceLocation)));
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, RenderShip::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, RenderBlasterBolt::new);
@@ -122,5 +126,11 @@ public class SwgClientProxy extends SwgProxy
 	public void notifyPlayer(ITextComponent message, boolean actionBar)
 	{
 		mc.player.sendStatusMessage(message, actionBar);
+	}
+
+	@Override
+	public void onRegisterItem(RegistryEvent.Register<Item> event)
+	{
+		ItemRegister.lightsaber.setTileEntityItemStackRenderer(new RenderItemLightsaber());
 	}
 }

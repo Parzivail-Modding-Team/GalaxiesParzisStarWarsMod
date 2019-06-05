@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:ore_rubindum"
-    },
-    "inventory": {
-      "model": "pswg:ore_rubindum"
-    }
+	"normal": {
+	  "model": "pswg:ore_rubindum"
+	},
+	"inventory": {
+	  "model": "pswg:ore_rubindum"
+	}
   }
 }

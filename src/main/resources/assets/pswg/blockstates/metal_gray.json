@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:metal_gray"
-    },
-    "inventory": {
-      "model": "pswg:metal_gray"
-    }
+	"normal": {
+	  "model": "pswg:metal_gray"
+	},
+	"inventory": {
+	  "model": "pswg:metal_gray"
+	}
   }
 }

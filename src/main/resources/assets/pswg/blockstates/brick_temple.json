@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:brick_temple"
-    },
-    "inventory": {
-      "model": "pswg:brick_temple"
-    }
+	"normal": {
+	  "model": "pswg:brick_temple"
+	},
+	"inventory": {
+	  "model": "pswg:brick_temple"
+	}
   }
 }

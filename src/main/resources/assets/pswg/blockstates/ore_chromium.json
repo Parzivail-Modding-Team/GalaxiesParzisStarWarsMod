@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:ore_chromium"
-    },
-    "inventory": {
-      "model": "pswg:ore_chromium"
-    }
+	"normal": {
+	  "model": "pswg:ore_chromium"
+	},
+	"inventory": {
+	  "model": "pswg:ore_chromium"
+	}
   }
 }

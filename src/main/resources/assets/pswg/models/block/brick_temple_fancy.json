@@ -1,6 +1,6 @@
 {
   "parent": "pswg:block/base/cube_all",
   "textures": {
-    "all": "pswg:blocks/brick_temple_fancy"
+	"all": "pswg:blocks/brick_temple_fancy"
   }
 }

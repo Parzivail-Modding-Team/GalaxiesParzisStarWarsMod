@@ -1,6 +1,6 @@
 {
   "parent": "pswg:block/base/cube_all",
   "textures": {
-    "all": "pswg:blocks/sand_tatooine"
+	"all": "pswg:blocks/sand_tatooine"
   }
 }

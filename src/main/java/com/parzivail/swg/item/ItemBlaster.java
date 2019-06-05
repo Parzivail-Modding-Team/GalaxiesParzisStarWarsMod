@@ -23,7 +23,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class ItemBlasterBase extends SwgItem implements ILeftClickInterceptor
+public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 {
 	private final BlasterDescriptor descriptor;
 
@@ -32,11 +32,13 @@ public class ItemBlasterBase extends SwgItem implements ILeftClickInterceptor
 	private final AnimatedValue avHeatup;
 	private final AnimatedValue avCooldown;
 
-	public ItemBlasterBase(BlasterDescriptor descriptor)
+	public ItemBlaster(BlasterDescriptor descriptor)
 	{
-		super("rifle." + descriptor.name);
+		super("blaster");
+		setMaxStackSize(1);
+		setMaxDamage(0);
+
 		this.descriptor = descriptor;
-		maxStackSize = 1;
 
 		avExpansion = new AnimatedValue(-2, 100);
 		avAds = new AnimatedValue(0, 100);
@@ -47,7 +49,7 @@ public class ItemBlasterBase extends SwgItem implements ILeftClickInterceptor
 
 	public static boolean isHoldingBlaster(EntityPlayer player)
 	{
-		return player.getHeldItemMainhand().getItem() instanceof ItemBlasterBase;
+		return player.getHeldItemMainhand().getItem() instanceof ItemBlaster;
 	}
 
 	public float getAdsLerp(ItemStack stack, World world, EntityPlayer player)

@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:concrete"
-    },
-    "inventory": {
-      "model": "pswg:concrete"
-    }
+	"normal": {
+	  "model": "pswg:concrete"
+	},
+	"inventory": {
+	  "model": "pswg:concrete"
+	}
   }
 }

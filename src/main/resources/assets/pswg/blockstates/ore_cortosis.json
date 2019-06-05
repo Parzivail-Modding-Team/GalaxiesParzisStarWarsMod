@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:ore_cortosis"
-    },
-    "inventory": {
-      "model": "pswg:ore_cortosis"
-    }
+	"normal": {
+	  "model": "pswg:ore_cortosis"
+	},
+	"inventory": {
+	  "model": "pswg:ore_cortosis"
+	}
   }
 }

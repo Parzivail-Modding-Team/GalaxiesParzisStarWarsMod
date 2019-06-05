@@ -1,5 +1,6 @@
 package com.parzivail.util.jsonpipeline;
 
+import com.parzivail.util.common.Lumberjack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
@@ -49,6 +50,7 @@ public class BlockbenchModelLoader implements ICustomModelLoader
 		ResourceLocation armatureLocation = new ResourceLocation(modelLocation.getResourceDomain(), "armatures/" + modelPath + ".json");
 		ModelBlockAnimation animation = ModelBlockAnimation.loadVanillaAnimation(Minecraft.getMinecraft().getResourceManager(), armatureLocation);
 
+		Lumberjack.log(modelLocation);
 		// Return the vanilla model weapped in a BlockbenchModel
 		return new BlockbenchModel(modelLocation, vanillaModel, false, animation);
 	}

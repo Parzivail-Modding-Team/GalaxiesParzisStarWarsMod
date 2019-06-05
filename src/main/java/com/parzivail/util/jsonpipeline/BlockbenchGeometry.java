@@ -38,6 +38,7 @@ public class BlockbenchGeometry
 	public BlockbenchGeometry parent;
 	@VisibleForTesting
 	protected ResourceLocation parentLocation;
+	private boolean builtin;
 
 	public BlockbenchGeometry(@Nullable ResourceLocation parentLocationIn, List<BlockbenchPart> elementsIn, Map<String, String> texturesIn, boolean ambientOcclusionIn, boolean gui3dIn, ItemCameraTransforms cameraTransformsIn, List<ItemOverride> overridesIn)
 	{
@@ -227,6 +228,17 @@ public class BlockbenchGeometry
 	private List<BlockPart> makeNormalElements()
 	{
 		return new ArrayList<>(elements);
+	}
+
+	public boolean isBuiltin()
+	{
+		return builtin;
+	}
+
+	public BlockbenchGeometry asBuiltin()
+	{
+		this.builtin = true;
+		return this;
 	}
 
 	@SideOnly(Side.CLIENT)

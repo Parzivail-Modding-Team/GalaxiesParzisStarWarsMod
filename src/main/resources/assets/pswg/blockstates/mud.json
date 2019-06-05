@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:mud"
-    },
-    "inventory": {
-      "model": "pswg:mud"
-    }
+	"normal": {
+	  "model": "pswg:mud"
+	},
+	"inventory": {
+	  "model": "pswg:mud"
+	}
   }
 }

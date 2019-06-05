@@ -1,10 +1,10 @@
 {
   "variants": {
-    "normal": {
-      "model": "pswg:crate"
-    },
-    "inventory": {
-      "model": "pswg:crate"
-    }
+	"normal": {
+	  "model": "pswg:crate"
+	},
+	"inventory": {
+	  "model": "pswg:crate"
+	}
   }
 }
