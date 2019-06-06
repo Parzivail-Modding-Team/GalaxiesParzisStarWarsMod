@@ -34,7 +34,7 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 
 	public ItemBlaster(BlasterDescriptor descriptor)
 	{
-		super("blaster");
+		super("blaster." + descriptor.name);
 		setMaxStackSize(1);
 		setMaxDamage(0);
 
