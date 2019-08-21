@@ -34,7 +34,7 @@ public class BlockbenchModelLoader implements ICustomModelLoader
 	{
 		// Load vanilla model
 		BlockbenchGeometry vanillaModel;
-		ResourceLocation vanillaModelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath() + ".json");
+		ResourceLocation vanillaModelLocation = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
 		try (IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(vanillaModelLocation); Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))
 		{
 			vanillaModel = BlockbenchGeometry.deserialize(reader);
@@ -47,7 +47,7 @@ public class BlockbenchModelLoader implements ICustomModelLoader
 		{
 			modelPath = modelPath.substring("models/".length());
 		}
-		ResourceLocation armatureLocation = new ResourceLocation(modelLocation.getResourceDomain(), "armatures/" + modelPath + ".json");
+		ResourceLocation armatureLocation = new ResourceLocation(modelLocation.getResourceDomain(), "armatures/" + modelPath);
 		ModelBlockAnimation animation = ModelBlockAnimation.loadVanillaAnimation(Minecraft.getMinecraft().getResourceManager(), armatureLocation);
 
 		Lumberjack.log(modelLocation);

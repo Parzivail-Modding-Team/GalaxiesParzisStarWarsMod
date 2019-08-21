@@ -4,7 +4,7 @@
    See file LICENSE for detail or copy at https://opensource.org/licenses/MIT
 */
 
-package com.parzivail.scarif.brotli;
+package com.parzivail.brotli;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -60,7 +60,7 @@ public class BlockbenchWeightedModelLoader implements ICustomModelLoader
 
 	private ModelBlockDefinition loadMultiPartModelBlockDefinition(ResourceLocation location)
 	{
-		ResourceLocation blockstateLocation = new ResourceLocation(location.getResourceDomain(), "blockstates/" + location.getResourcePath() + ".json");
+		ResourceLocation blockstateLocation = new ResourceLocation(location.getResourceDomain(), "blockstates/" + location.getResourcePath());
 
 		List<ModelBlockDefinition> list = Lists.newArrayList();
 		try

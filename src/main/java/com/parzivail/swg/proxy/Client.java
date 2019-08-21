@@ -79,8 +79,8 @@ public class Client extends Common
 	{
 		super.preInit(e);
 		mc = Minecraft.getMinecraft();
-		ModelLoaderRegistry.registerLoader(new BlockbenchModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().startsWith("models/block") && !(modelLocation instanceof ModelResourceLocation))));
-		ModelLoaderRegistry.registerLoader(new BlockbenchWeightedModelLoader(modelLocation -> (Resources.MODID.equals(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().startsWith("models/block") && modelLocation instanceof ModelResourceLocation)));
+		ModelLoaderRegistry.registerLoader(new BlockbenchModelLoader(modelLocation -> (modelLocation.getResourcePath().endsWith(".pjson") && !(modelLocation instanceof ModelResourceLocation))));
+		ModelLoaderRegistry.registerLoader(new BlockbenchWeightedModelLoader(modelLocation -> (modelLocation.getResourcePath().endsWith(".pjson") && modelLocation instanceof ModelResourceLocation)));
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, RenderShip::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, RenderBlasterBolt::new);

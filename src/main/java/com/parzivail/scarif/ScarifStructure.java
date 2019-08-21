@@ -1,7 +1,7 @@
 package com.parzivail.scarif;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.parzivail.scarif.brotli.BrotliInputStream;
+import com.parzivail.brotli.BrotliInputStream;
 import com.parzivail.swg.StarWarsGalaxy;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
