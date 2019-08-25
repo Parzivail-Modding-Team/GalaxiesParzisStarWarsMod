@@ -1,4 +1,4 @@
-package com.parzivail.scarif;
+package com.parzivail.util.binary;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
@@ -7,7 +7,7 @@ import net.minecraft.util.ResourceLocation;
 
 import java.io.*;
 
-class ScarifUtil
+public class BinaryUtil
 {
 	public static String readNullTerminatedString(DataInput s)
 	{

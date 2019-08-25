@@ -1,91 +1,145 @@
 package com.parzivail.pm3d;
 
+import com.google.common.io.LittleEndianDataInputStream;
+import com.parzivail.brotli.BrotliInputStream;
+import com.parzivail.util.binary.BinaryUtil;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.model.ICustomModelLoader;
-import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.ModelLoaderRegistry;
-import net.minecraftforge.client.model.obj.OBJModel;
-import org.apache.commons.io.IOUtils;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 
-public class Pm3dLoader implements ICustomModelLoader
+public class Pm3dLoader
 {
-	private IResourceManager manager;
-	private final Set<String> enabledDomains = new HashSet<>();
-	private final Map<ResourceLocation, OBJModel> cache = new HashMap<>();
-	private final Map<ResourceLocation, Exception> errors = new HashMap<>();
+	private static final String MAGIC = "Pm3D";
+	private static int ACCEPTED_VERSION = 0x01;
 
-	public Pm3dLoader(String domain)
+	private final LittleEndianDataInputStream objStream;
+	private final IResourceManager manager;
+
+	public Pm3dLoader(IResource from, IResourceManager manager) throws IOException
 	{
-		enabledDomains.add(domain.toLowerCase());
+		this.manager = manager;
+		BrotliInputStream bis = new BrotliInputStream(from.getInputStream());
+		this.objStream = new LittleEndianDataInputStream(bis);
 	}
 
-	@Override
-	public void onResourceManagerReload(IResourceManager resourceManager)
+	public Pm3dModel load() throws IOException
 	{
-		this.manager = resourceManager;
-		cache.clear();
-		errors.clear();
+		byte[] identBytes = new byte[MAGIC.length()];
+		int read = objStream.read(identBytes);
+		String ident = new String(identBytes);
+		if (!ident.equals(MAGIC) || read != identBytes.length)
+			throw new IOException("Input file not Pm3D model");
+
+		int version = objStream.readInt();
+
+		if (version != ACCEPTED_VERSION)
+			throw new IOException(String.format("Input file version is 0x%s, expected 0x%s", Integer.toHexString(version), Integer.toHexString(ACCEPTED_VERSION)));
+
+		String credit = BinaryUtil.readNullTerminatedString(objStream);
+
+		EnumSet<Pm3dFlags> flags = EnumSet.of(Pm3dFlags.None);
+
+		byte byteFlags = objStream.readByte();
+
+		if ((byteFlags & Pm3dFlags.AmbientOcclusion.getFlag()) != 0)
+			flags.add(Pm3dFlags.AmbientOcclusion);
+
+		int numVerts = objStream.readInt();
+		int numNormals = objStream.readInt();
+		int numUvs = objStream.readInt();
+		int numObjects = objStream.readInt();
+
+		ArrayList<Pm3dVert> verts = loadVerts(numVerts, objStream);
+		ArrayList<Pm3dNormal> normals = loadNormals(numNormals, objStream);
+		ArrayList<Pm3dUv> uvs = loadUvs(numUvs, objStream);
+		HashMap<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> objects = loadObjects(numObjects, objStream);
+
+		return new Pm3dModel(verts, normals, uvs, objects);
 	}
 
-	@Override
-	public boolean accepts(ResourceLocation modelLocation)
+	private ArrayList<Pm3dVert> loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		return enabledDomains.contains(modelLocation.getResourceDomain()) && modelLocation.getResourcePath().endsWith(".pm3d");
-	}
+		ArrayList<Pm3dVert> verts = new ArrayList<>();
 
-	@Override
-	public IModel loadModel(ResourceLocation modelLocation) throws Exception
-	{
-		ResourceLocation file = new ResourceLocation(modelLocation.getResourceDomain(), modelLocation.getResourcePath());
-		if (!cache.containsKey(file))
+		for (int i = 0; i < num; i++)
 		{
-			IResource resource = null;
-			try
-			{
-				try
-				{
-					resource = manager.getResource(file);
-				}
-				catch (FileNotFoundException e)
-				{
-					if (modelLocation.getResourcePath().startsWith("models/block/"))
-						resource = manager.getResource(new ResourceLocation(file.getResourceDomain(), "models/item/" + file.getResourcePath().substring("models/block/".length())));
-					else if (modelLocation.getResourcePath().startsWith("models/item/"))
-						resource = manager.getResource(new ResourceLocation(file.getResourceDomain(), "models/block/" + file.getResourcePath().substring("models/item/".length())));
-					else
-						throw e;
-				}
-				OBJModel.Parser parser = new OBJModel.Parser(resource, manager);
-				OBJModel model = null;
-				try
-				{
-					model = parser.parse();
-				}
-				catch (Exception e)
-				{
-					errors.put(modelLocation, e);
-				}
-				finally
-				{
-					cache.put(modelLocation, model);
-				}
-			}
-			finally
-			{
-				IOUtils.closeQuietly(resource);
-			}
+			float x = objStream.readFloat();
+			float y = objStream.readFloat();
+			float z = objStream.readFloat();
+
+			verts.add(new Pm3dVert(x, y, z));
 		}
-		OBJModel model = cache.get(file);
-		if (model == null)
-			throw new ModelLoaderRegistry.LoaderException("Error loading model previously: " + file, errors.get(modelLocation));
-		return model;
+
+		return verts;
+	}
+
+	private ArrayList<Pm3dNormal> loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
+	{
+		ArrayList<Pm3dNormal> normals = new ArrayList<>();
+
+		for (int i = 0; i < num; i++)
+		{
+			float x = objStream.readFloat();
+			float y = objStream.readFloat();
+			float z = objStream.readFloat();
+
+			normals.add(new Pm3dNormal(x, y, z));
+		}
+
+		return normals;
+	}
+
+	private ArrayList<Pm3dUv> loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
+	{
+		ArrayList<Pm3dUv> uvs = new ArrayList<>();
+
+		for (int i = 0; i < num; i++)
+		{
+			float u = objStream.readFloat();
+			float v = objStream.readFloat();
+
+			uvs.add(new Pm3dUv(u, v));
+		}
+
+		return uvs;
+	}
+
+	private HashMap<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> loadObjects(int num, LittleEndianDataInputStream objStream) throws IOException
+	{
+		HashMap<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> objects = new HashMap<>();
+
+		int numObjects = objStream.readInt();
+
+		for (int i = 0; i < num; i++)
+		{
+			String objName = BinaryUtil.readNullTerminatedString(objStream);
+			String matName = BinaryUtil.readNullTerminatedString(objStream);
+			int numFaces = objStream.readInt();
+
+			ArrayList<Pm3dFace> faces = new ArrayList<>();
+
+			for (int j = 0; j < numFaces; j++)
+			{
+				Pm3dFace face = new Pm3dFace();
+				int numVerts = objStream.readInt();
+				for (int k = 0; k < numVerts; k++)
+				{
+					int vertex = objStream.readInt();
+					int normal = objStream.readInt();
+					int texture = objStream.readInt();
+					face.verts.add(new Pm3dVertPointer(vertex, normal, texture));
+				}
+
+				faces.add(face);
+			}
+
+			objects.put(new Pm3dModelObjectInfo(objName, matName), faces);
+		}
+
+		return objects;
 	}
 }

@@ -1,5 +1,6 @@
 package com.parzivail.swg.proxy;
 
+import com.parzivail.pm3d.Pm3dModelLoader;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.animation.HyperspaceEnter;
@@ -81,6 +82,7 @@ public class Client extends Common
 		mc = Minecraft.getMinecraft();
 		ModelLoaderRegistry.registerLoader(new BlockbenchModelLoader(modelLocation -> (modelLocation.getResourcePath().endsWith(".pjson") && !(modelLocation instanceof ModelResourceLocation))));
 		ModelLoaderRegistry.registerLoader(new BlockbenchWeightedModelLoader(modelLocation -> (modelLocation.getResourcePath().endsWith(".pjson") && modelLocation instanceof ModelResourceLocation)));
+		ModelLoaderRegistry.registerLoader(new Pm3dModelLoader());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, RenderShip::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, RenderBlasterBolt::new);

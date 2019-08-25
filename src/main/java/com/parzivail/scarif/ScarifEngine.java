@@ -1,5 +1,6 @@
 package com.parzivail.scarif;
 
+import com.parzivail.util.binary.BinaryUtil;
 import com.parzivail.util.common.Lumberjack;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
@@ -65,7 +66,7 @@ public class ScarifEngine
 
 	public boolean genStructure(int dimId, int x, int z, ChunkPrimer chunk)
 	{
-		long chunkPos = ScarifUtil.encodeChunkPos(x, z);
+		long chunkPos = BinaryUtil.encodeChunkPos(x, z);
 		boolean hadStructure = false;
 
 		for (ScarifStructure structure : getStructuresForDimension(dimId))
@@ -108,7 +109,7 @@ public class ScarifEngine
 
 	public void genTiles(World world, int worldX, int worldZ)
 	{
-		long cPos = ScarifUtil.encodeChunkPos(worldX >> 4, worldZ >> 4);
+		long cPos = BinaryUtil.encodeChunkPos(worldX >> 4, worldZ >> 4);
 		for (ScarifStructure structure : getStructuresForDimension(world.provider.getDimension()))
 		{
 			ArrayList<NBTTagCompound> tileCache = structure.getCachedTiles(cPos);
