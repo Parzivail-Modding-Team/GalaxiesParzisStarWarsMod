@@ -1,27 +1,27 @@
 {
   "variants": {
 	"normal": {
-	  "model": "pswg:console_hoth_3",
+	  "model": "pswg:console_hoth_3.pm3d",
 	  "y": 180
 	},
 	"inventory": {
-	  "model": "pswg:console_hoth_3",
+	  "model": "pswg:console_hoth_3.pm3d",
 	  "y": 180
 	},
 	"facing=north": {
-	  "model": "pswg:console_hoth_3",
+	  "model": "pswg:console_hoth_3.pm3d",
 	  "y": 0
 	},
 	"facing=south": {
-	  "model": "pswg:console_hoth_3",
+	  "model": "pswg:console_hoth_3.pm3d",
 	  "y": 180
 	},
 	"facing=west": {
-	  "model": "pswg:console_hoth_3",
+	  "model": "pswg:console_hoth_3.pm3d",
 	  "y": 270
 	},
 	"facing=east": {
-	  "model": "pswg:console_hoth_3",
+	  "model": "pswg:console_hoth_3.pm3d",
 	  "y": 90
 	}
   }

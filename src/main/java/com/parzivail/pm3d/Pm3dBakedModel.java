@@ -7,16 +7,20 @@ import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.common.model.TRSRTransformation;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import javax.vecmath.Matrix4f;
+import java.io.IOException;
+import java.util.*;
 import java.util.function.Function;
 
 public class Pm3dBakedModel implements IBakedModel
@@ -25,6 +29,7 @@ public class Pm3dBakedModel implements IBakedModel
 	private final IModelState state;
 	private final VertexFormat format;
 	private final Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter;
+	private HashMap<IBlockState, List<BakedQuad>> quadCache;
 
 	public Pm3dBakedModel(Pm3dModel pm3dModel, IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
 	{
@@ -32,50 +37,80 @@ public class Pm3dBakedModel implements IBakedModel
 		this.state = state;
 		this.format = format;
 		this.bakedTextureGetter = bakedTextureGetter;
+
+		quadCache = new HashMap<>();
 	}
 
 	@Override
 	public List<BakedQuad> getQuads(@Nullable IBlockState state, @Nullable EnumFacing side, long rand)
 	{
+		if (quadCache.containsKey(state))
+			return quadCache.get(state);
+
 		List<BakedQuad> quads = new ArrayList<>();
+
+		TRSRTransformation global = this.state.apply(Optional.empty()).orElse(TRSRTransformation.identity());
+		Matrix4f m = global.getMatrix();
 
 		for (Map.Entry<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> pair : pm3dModel.objects.entrySet())
 		{
-			TextureAtlasSprite sprite = bakedTextureGetter.apply(new ResourceLocation(pair.getKey().materialName));
+			TextureAtlasSprite sprite = bakedTextureGetter.apply(new ResourceLocation(pm3dModel.getTexture(pair.getKey().materialName)));
 
 			for (Pm3dFace face : pair.getValue())
 			{
-				Pm3dVertPointer ptr0 = face.verts.get(0);
-				Pm3dVert vert0 = this.pm3dModel.verts.get(ptr0.getVertex() - 1);
-				Pm3dNormal norm0 = this.pm3dModel.normals.get(ptr0.getNormal() - 1);
-				Pm3dUv uv0 = this.pm3dModel.uvs.get(ptr0.getTexture() - 1);
-
-				Pm3dVertPointer ptr1 = face.verts.get(1);
-				Pm3dVert vert1 = this.pm3dModel.verts.get(ptr1.getVertex() - 1);
-				Pm3dNormal norm1 = this.pm3dModel.normals.get(ptr1.getNormal() - 1);
-				Pm3dUv uv1 = this.pm3dModel.uvs.get(ptr1.getTexture() - 1);
-
-				Pm3dVertPointer ptr2 = face.verts.get(2);
-				Pm3dVert vert2 = this.pm3dModel.verts.get(ptr2.getVertex() - 1);
-				Pm3dNormal norm2 = this.pm3dModel.normals.get(ptr2.getNormal() - 1);
-				Pm3dUv uv2 = this.pm3dModel.uvs.get(ptr2.getTexture() - 1);
-
 				UnpackedBakedQuad.Builder b = new UnpackedBakedQuad.Builder(format);
 				b.setTexture(sprite);
 
-				putVertexData(b, sprite, vert0, norm0, uv0);
-				putVertexData(b, sprite, vert1, norm1, uv1);
-				putVertexData(b, sprite, vert2, norm2, uv2);
-				putVertexData(b, sprite, vert2, norm2, uv2);
+				switch (face.verts.size())
+				{
+					case 3:
+						putTriangle(b, face, sprite, m);
+						break;
+					case 4:
+						putQuad(b, face, sprite, m);
+						break;
+					default:
+						CrashReport crashreport = CrashReport.makeCrashReport(new IOException(String.format("Pm3D face bakery expects triangles or quads, found n-gon (%s sides)", face.verts.size())), "Baking Pm3D structure");
+						CrashReportCategory crashreportcategory = crashreport.makeCategory("Model being baked");
+						crashreportcategory.addCrashSection("Filename", pm3dModel.filename);
+						throw new ReportedException(crashreport);
+				}
 
 				quads.add(b.build());
 			}
 		}
 
+		quadCache.put(state, quads);
+
 		return quads;
 	}
 
-	private final void putVertexData(UnpackedBakedQuad.Builder builder, TextureAtlasSprite sprite, Pm3dVert vert, Pm3dNormal norm, Pm3dUv uv)
+	private void putVertPointer(UnpackedBakedQuad.Builder b, Pm3dVertPointer pointer, TextureAtlasSprite sprite, Matrix4f transformation)
+	{
+		Pm3dVert vert = this.pm3dModel.verts.get(pointer.getVertex() - 1);
+		Pm3dVert norm = this.pm3dModel.normals.get(pointer.getNormal() - 1);
+		Pm3dUv uv = this.pm3dModel.uvs.get(pointer.getTexture() - 1);
+
+		putVertexData(b, sprite, vert.scale(1 / 16f).apply(transformation).translate(0.5f, 0.5f, 0.5f), norm, uv);
+	}
+
+	private void putQuad(UnpackedBakedQuad.Builder b, Pm3dFace face, TextureAtlasSprite sprite, Matrix4f transformation)
+	{
+		putVertPointer(b, face.verts.get(0), sprite, transformation);
+		putVertPointer(b, face.verts.get(1), sprite, transformation);
+		putVertPointer(b, face.verts.get(2), sprite, transformation);
+		putVertPointer(b, face.verts.get(3), sprite, transformation);
+	}
+
+	private void putTriangle(UnpackedBakedQuad.Builder b, Pm3dFace face, TextureAtlasSprite sprite, Matrix4f transformation)
+	{
+		putVertPointer(b, face.verts.get(0), sprite, transformation);
+		putVertPointer(b, face.verts.get(1), sprite, transformation);
+		putVertPointer(b, face.verts.get(2), sprite, transformation);
+		putVertPointer(b, face.verts.get(2), sprite, transformation); // last vert twice
+	}
+
+	private final void putVertexData(UnpackedBakedQuad.Builder builder, TextureAtlasSprite sprite, Pm3dVert vert, Pm3dVert norm, Pm3dUv uv)
 	{
 		// TODO handle everything not handled (texture transformations, bones, transformations, normals, e.t.c)
 		for (int e = 0; e < format.getElementCount(); e++)
@@ -90,7 +125,7 @@ public class Pm3dBakedModel implements IBakedModel
 					break;
 				case UV:
 					// TODO handle more brushes
-					builder.put(e, sprite.getInterpolatedU(uv.u * 16), sprite.getInterpolatedV(uv.v * 16), 0, 1);
+					builder.put(e, sprite.getInterpolatedU(uv.u * 16), sprite.getInterpolatedV((1 - uv.v) * 16), 0, 1);
 					break;
 				case NORMAL:
 					builder.put(e, norm.x, norm.y, norm.z, 0);
@@ -101,7 +136,7 @@ public class Pm3dBakedModel implements IBakedModel
 		}
 	}
 
-	private void putVert(Pm3dVert vert0, Pm3dNormal norm0, Pm3dUv uv0, Quad.Builder b)
+	private void putVert(Pm3dVert vert0, Pm3dVert norm0, Pm3dUv uv0, Quad.Builder b)
 	{
 		b.put(0, vert0.x, vert0.y, vert0.z);
 		b.put(1, uv0.u, uv0.v);
@@ -112,13 +147,13 @@ public class Pm3dBakedModel implements IBakedModel
 	@Override
 	public boolean isAmbientOcclusion()
 	{
-		return false;
+		return pm3dModel.flags.contains(Pm3dFlags.AmbientOcclusion);
 	}
 
 	@Override
 	public boolean isGui3d()
 	{
-		return false;
+		return true;
 	}
 
 	@Override
@@ -130,7 +165,9 @@ public class Pm3dBakedModel implements IBakedModel
 	@Override
 	public TextureAtlasSprite getParticleTexture()
 	{
-		return ModelLoader.White.INSTANCE;
+		if (!pm3dModel.textures.containsKey("particle"))
+			return ModelLoader.White.INSTANCE;
+		return bakedTextureGetter.apply(new ResourceLocation(pm3dModel.textures.get("particle")));
 	}
 
 	@Override

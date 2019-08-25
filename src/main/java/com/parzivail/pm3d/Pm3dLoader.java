@@ -17,10 +17,12 @@ public class Pm3dLoader
 	private static int ACCEPTED_VERSION = 0x01;
 
 	private final LittleEndianDataInputStream objStream;
+	private final IResource from;
 	private final IResourceManager manager;
 
 	public Pm3dLoader(IResource from, IResourceManager manager) throws IOException
 	{
+		this.from = from;
 		this.manager = manager;
 		BrotliInputStream bis = new BrotliInputStream(from.getInputStream());
 		this.objStream = new LittleEndianDataInputStream(bis);
@@ -48,17 +50,34 @@ public class Pm3dLoader
 		if ((byteFlags & Pm3dFlags.AmbientOcclusion.getFlag()) != 0)
 			flags.add(Pm3dFlags.AmbientOcclusion);
 
+		int numTextures = objStream.readInt();
 		int numVerts = objStream.readInt();
 		int numNormals = objStream.readInt();
 		int numUvs = objStream.readInt();
 		int numObjects = objStream.readInt();
 
+		HashMap<String, String> textures = loadTextures(numTextures, objStream);
+
 		ArrayList<Pm3dVert> verts = loadVerts(numVerts, objStream);
-		ArrayList<Pm3dNormal> normals = loadNormals(numNormals, objStream);
+		ArrayList<Pm3dVert> normals = loadVerts(numNormals, objStream);
 		ArrayList<Pm3dUv> uvs = loadUvs(numUvs, objStream);
 		HashMap<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> objects = loadObjects(numObjects, objStream);
 
-		return new Pm3dModel(verts, normals, uvs, objects);
+		return new Pm3dModel(from.getResourceLocation(), credit, flags, textures, verts, normals, uvs, objects);
+	}
+
+	private HashMap<String, String> loadTextures(int num, LittleEndianDataInputStream objStream) throws IOException
+	{
+		HashMap<String, String> textures = new HashMap<>();
+
+		for (int i = 0; i < num; i++)
+		{
+			String key = BinaryUtil.readNullTerminatedString(objStream);
+			String value = BinaryUtil.readNullTerminatedString(objStream);
+			textures.put(key, value);
+		}
+
+		return textures;
 	}
 
 	private ArrayList<Pm3dVert> loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
@@ -75,22 +94,6 @@ public class Pm3dLoader
 		}
 
 		return verts;
-	}
-
-	private ArrayList<Pm3dNormal> loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
-	{
-		ArrayList<Pm3dNormal> normals = new ArrayList<>();
-
-		for (int i = 0; i < num; i++)
-		{
-			float x = objStream.readFloat();
-			float y = objStream.readFloat();
-			float z = objStream.readFloat();
-
-			normals.add(new Pm3dNormal(x, y, z));
-		}
-
-		return normals;
 	}
 
 	private ArrayList<Pm3dUv> loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
@@ -111,8 +114,6 @@ public class Pm3dLoader
 	private HashMap<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> loadObjects(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
 		HashMap<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> objects = new HashMap<>();
-
-		int numObjects = objStream.readInt();
 
 		for (int i = 0; i < num; i++)
 		{

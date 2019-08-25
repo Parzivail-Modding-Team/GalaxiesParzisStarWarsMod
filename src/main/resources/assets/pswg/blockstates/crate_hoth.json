@@ -1,27 +1,27 @@
 {
   "variants": {
 	"normal": {
-	  "model": "pswg:crate_hoth",
+	  "model": "pswg:crate_hoth.pm3d",
 	  "y": 180
 	},
 	"inventory": {
-	  "model": "pswg:crate_hoth",
+	  "model": "pswg:crate_hoth.pm3d",
 	  "y": 180
 	},
 	"facing=north": {
-	  "model": "pswg:crate_hoth",
+	  "model": "pswg:crate_hoth.pm3d",
 	  "y": 0
 	},
 	"facing=south": {
-	  "model": "pswg:crate_hoth",
+	  "model": "pswg:crate_hoth.pm3d",
 	  "y": 180
 	},
 	"facing=west": {
-	  "model": "pswg:crate_hoth",
+	  "model": "pswg:crate_hoth.pm3d",
 	  "y": 270
 	},
 	"facing=east": {
-	  "model": "pswg:crate_hoth",
+	  "model": "pswg:crate_hoth.pm3d",
 	  "y": 90
 	}
   }

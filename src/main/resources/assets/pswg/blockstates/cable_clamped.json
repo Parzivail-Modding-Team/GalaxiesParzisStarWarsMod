@@ -1,27 +1,27 @@
 {
   "variants": {
 	"normal": {
-	  "model": "pswg:cable_clamped",
+	  "model": "pswg:cable_clamped.pm3d",
 	  "y": 180
 	},
 	"inventory": {
-	  "model": "pswg:cable_clamped",
+	  "model": "pswg:cable_clamped.pm3d",
 	  "y": 180
 	},
 	"facing=north": {
-	  "model": "pswg:cable_clamped",
+	  "model": "pswg:cable_clamped.pm3d",
 	  "y": 0
 	},
 	"facing=south": {
-	  "model": "pswg:cable_clamped",
+	  "model": "pswg:cable_clamped.pm3d",
 	  "y": 180
 	},
 	"facing=west": {
-	  "model": "pswg:cable_clamped",
+	  "model": "pswg:cable_clamped.pm3d",
 	  "y": 270
 	},
 	"facing=east": {
-	  "model": "pswg:cable_clamped",
+	  "model": "pswg:cable_clamped.pm3d",
 	  "y": 90
 	}
   }
