@@ -14,9 +14,14 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.*;
+import java.util.Collections;
 
 public class ItemRegister
 {
@@ -40,28 +45,47 @@ public class ItemRegister
 	{
 		Gson gson = new GsonBuilder().registerTypeAdapter(BlasterDescriptor.class, new ModuleBlasterDeserializer()).create();
 
-		File[] resourceFiles = getResourceFolderFiles("assets/" + Resources.MODID + "/modules/blasters");
-
-		for (File f : resourceFiles)
+		try (FileSystem fs = FileSystems.newFileSystem(ItemRegister.class.getProtectionDomain().getCodeSource().getLocation().toURI(), Collections.emptyMap()))
 		{
-			try
+			Path[] resourceFiles = getResourceFolderFiles("assets/" + Resources.MODID + "/modules/blasters");
+
+			for (Path f : resourceFiles)
 			{
-				BlasterDescriptor d = gson.fromJson(new FileReader(f), BlasterDescriptor.class);
-				r.register(blaster = new ItemBlaster(d));
+				try (InputStream inputStream = Files.newInputStream(f))
+				{
+					try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream))
+					{
+						BlasterDescriptor d = gson.fromJson(inputStreamReader, BlasterDescriptor.class);
+						r.register(blaster = new ItemBlaster(d));
+					}
+				}
+				catch (Exception e)
+				{
+					Lumberjack.err("Failed to load blaster module: " + f.getFileName());
+					e.printStackTrace();
+				}
 			}
-			catch (Exception e)
-			{
-				Lumberjack.err("Failed to load blaster module: " + f.getName());
-				e.printStackTrace();
-			}
+		}
+		catch (URISyntaxException | IOException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
-	private static File[] getResourceFolderFiles(String folder)
+	private static Path[] getResourceFolderFiles(String folder)
 	{
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		ClassLoader loader = ItemRegister.class.getClassLoader();
 		URL url = loader.getResource(folder);
-		String path = url.getPath();
-		return new File(path).listFiles();
+		try
+		{
+			Path path = Paths.get(url.toURI());
+			return Files.list(path).toArray(Path[]::new);
+		}
+		catch (URISyntaxException | IOException e)
+		{
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 }
