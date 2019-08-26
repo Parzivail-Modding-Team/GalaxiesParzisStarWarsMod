@@ -14,14 +14,14 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.*;
-import java.util.Collections;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class ItemRegister
 {
@@ -45,31 +45,23 @@ public class ItemRegister
 	{
 		Gson gson = new GsonBuilder().registerTypeAdapter(BlasterDescriptor.class, new ModuleBlasterDeserializer()).create();
 
-		try (FileSystem fs = FileSystems.newFileSystem(ItemRegister.class.getProtectionDomain().getCodeSource().getLocation().toURI(), Collections.emptyMap()))
-		{
-			Path[] resourceFiles = getResourceFolderFiles("assets/" + Resources.MODID + "/modules/blasters");
+		Path[] resourceFiles = getResourceFolderFiles("assets/" + Resources.MODID + "/modules/blasters");
 
-			for (Path f : resourceFiles)
+		for (Path f : resourceFiles)
+		{
+			try (InputStream inputStream = Files.newInputStream(f))
 			{
-				try (InputStream inputStream = Files.newInputStream(f))
+				try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream))
 				{
-					try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream))
-					{
-						BlasterDescriptor d = gson.fromJson(inputStreamReader, BlasterDescriptor.class);
-						r.register(blaster = new ItemBlaster(d));
-					}
-				}
-				catch (Exception e)
-				{
-					Lumberjack.err("Failed to load blaster module: " + f.getFileName());
-					e.printStackTrace();
+					BlasterDescriptor d = gson.fromJson(inputStreamReader, BlasterDescriptor.class);
+					r.register(blaster = new ItemBlaster(d));
 				}
 			}
-		}
-		catch (URISyntaxException | IOException e)
-		{
-			e.printStackTrace();
-			throw new RuntimeException(e);
+			catch (Exception e)
+			{
+				Lumberjack.err("Failed to load blaster module: " + f.getFileName());
+				e.printStackTrace();
+			}
 		}
 	}
 
