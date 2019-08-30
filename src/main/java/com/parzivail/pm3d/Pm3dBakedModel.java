@@ -1,10 +1,10 @@
 package com.parzivail.pm3d;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.parzivail.util.jsonpipeline.Quad;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.crash.CrashReport;
@@ -13,9 +13,12 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.PerspectiveMapWrapper;
+import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
+import org.lwjgl.util.vector.Vector3f;
 
 import javax.annotation.Nullable;
 import javax.vecmath.Matrix4f;
@@ -49,7 +52,13 @@ public class Pm3dBakedModel implements IBakedModel
 
 		List<BakedQuad> quads = new ArrayList<>();
 
-		TRSRTransformation global = this.state.apply(Optional.empty()).orElse(TRSRTransformation.identity());
+		ItemCameraTransforms transforms = getAllTransforms();
+		Map<ItemCameraTransforms.TransformType, TRSRTransformation> tMap = Maps.newEnumMap(ItemCameraTransforms.TransformType.class);
+		tMap.putAll(PerspectiveMapWrapper.getTransforms(transforms));
+		tMap.putAll(PerspectiveMapWrapper.getTransforms(this.state));
+		IModelState perState = new SimpleModelState(ImmutableMap.copyOf(tMap));
+
+		TRSRTransformation global = perState.apply(Optional.empty()).orElse(TRSRTransformation.identity());
 		Matrix4f m = global.getMatrix();
 
 		for (Map.Entry<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> pair : pm3dModel.objects.entrySet())
@@ -83,6 +92,19 @@ public class Pm3dBakedModel implements IBakedModel
 		quadCache.put(state, quads);
 
 		return quads;
+	}
+
+	private ItemCameraTransforms getAllTransforms()
+	{
+		ItemTransformVec3f itemtransformvec3f = new ItemTransformVec3f(new Vector3f(75, 225, 0), new Vector3f(0, 2.5f, 0), new Vector3f(0.375f, 0.375f, 0.375f)); //this.getTransform(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND);
+		ItemTransformVec3f itemtransformvec3f1 = new ItemTransformVec3f(new Vector3f(75, 45, 0), new Vector3f(0, 2.5f, 0), new Vector3f(0.375f, 0.375f, 0.375f)); //this.getTransform(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+		ItemTransformVec3f itemtransformvec3f2 = new ItemTransformVec3f(new Vector3f(0, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)); //this.getTransform(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
+		ItemTransformVec3f itemtransformvec3f3 = new ItemTransformVec3f(new Vector3f(0, 45, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)); //this.getTransform(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
+		ItemTransformVec3f itemtransformvec3f4 = new ItemTransformVec3f(new Vector3f(), new Vector3f(), new Vector3f()); //this.getTransform(ItemCameraTransforms.TransformType.HEAD);
+		ItemTransformVec3f itemtransformvec3f5 = new ItemTransformVec3f(new Vector3f(30, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.625f, 0.625f, 0.625f)); //this.getTransform(ItemCameraTransforms.TransformType.GUI);
+		ItemTransformVec3f itemtransformvec3f6 = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(0, 3, 0), new Vector3f(0.25f, 0.25f, 0.25f)); //this.getTransform(ItemCameraTransforms.TransformType.GROUND);
+		ItemTransformVec3f itemtransformvec3f7 = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(0.5f, 0.5f, 0.5f)); //this.getTransform(ItemCameraTransforms.TransformType.FIXED);
+		return new ItemCameraTransforms(itemtransformvec3f, itemtransformvec3f1, itemtransformvec3f2, itemtransformvec3f3, itemtransformvec3f4, itemtransformvec3f5, itemtransformvec3f6, itemtransformvec3f7);
 	}
 
 	private void putVertPointer(UnpackedBakedQuad.Builder b, Pm3dVertPointer pointer, TextureAtlasSprite sprite, Matrix4f transformation)
