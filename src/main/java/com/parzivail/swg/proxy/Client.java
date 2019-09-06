@@ -1,6 +1,7 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.pm3d.Pm3dModelLoader;
+import com.parzivail.pr3.Pr3Model;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.animation.HyperspaceEnter;
@@ -33,6 +34,8 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
+import java.io.IOException;
 
 public class Client extends Common
 {
@@ -86,6 +89,15 @@ public class Client extends Common
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, RenderShip::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, RenderBlasterBolt::new);
+
+		try
+		{
+			Pr3Model model = Pr3Model.load(Resources.location("models/rigged/xwing_t65b.pr3"));
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 	@Override

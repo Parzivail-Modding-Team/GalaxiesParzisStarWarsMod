@@ -2,85 +2,73 @@ package com.parzivail.pr3;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.brotli.BrotliInputStream;
-import com.parzivail.pm3d.*;
+import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.binary.BinaryUtil;
+import com.parzivail.util.math.lwjgl.Matrix4f;
+import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
 
 public class Pr3Model
 {
-	private static final String MAGIC = "Pm3D";
+	private static final String MAGIC = "PR3";
 	private static int ACCEPTED_VERSION = 0x01;
 
-	private final LittleEndianDataInputStream objStream;
-	private final IResource from;
+	private final ArrayList<Pr3Object> objects;
 
-	public Pr3Model(IResource from) throws IOException
+	public Pr3Model(ArrayList<Pr3Object> objects)
 	{
-		this.from = from;
-		BrotliInputStream bis = new BrotliInputStream(from.getInputStream());
-		this.objStream = new LittleEndianDataInputStream(bis);
+		this.objects = objects;
 	}
 
-	public Pm3dModel load() throws IOException
+	public static Pr3Model load(ResourceLocation location) throws IOException
 	{
+		IResource from = Client.mc.getResourceManager().getResource(location);
+		BrotliInputStream bis = new BrotliInputStream(from.getInputStream());
+		LittleEndianDataInputStream objStream = new LittleEndianDataInputStream(bis);
+
 		byte[] identBytes = new byte[MAGIC.length()];
 		int read = objStream.read(identBytes);
 		String ident = new String(identBytes);
 		if (!ident.equals(MAGIC) || read != identBytes.length)
-			throw new IOException("Input file not Pm3D model");
+			throw new IOException("Input file not PR3 model");
 
 		int version = objStream.readInt();
 
 		if (version != ACCEPTED_VERSION)
 			throw new IOException(String.format("Input file version is 0x%s, expected 0x%s", Integer.toHexString(version), Integer.toHexString(ACCEPTED_VERSION)));
 
-		String credit = BinaryUtil.readNullTerminatedString(objStream);
-
-		EnumSet<Pm3dFlags> flags = EnumSet.of(Pm3dFlags.None);
-
-		byte byteFlags = objStream.readByte();
-
-		if ((byteFlags & Pm3dFlags.AmbientOcclusion.getFlag()) != 0)
-			flags.add(Pm3dFlags.AmbientOcclusion);
-
-		int numTextures = objStream.readInt();
-		int numVerts = objStream.readInt();
-		int numNormals = objStream.readInt();
-		int numUvs = objStream.readInt();
 		int numObjects = objStream.readInt();
 
-		HashMap<String, String> textures = loadTextures(numTextures, objStream);
+		ArrayList<Pr3Object> objects = new ArrayList<Pr3Object>();
 
-		ArrayList<Pm3dVert> verts = loadVerts(numVerts, objStream);
-		ArrayList<Pm3dVert> normals = loadVerts(numNormals, objStream);
-		ArrayList<Pm3dUv> uvs = loadUvs(numUvs, objStream);
-		HashMap<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> objects = loadObjects(numObjects, objStream);
-
-		return new Pm3dModel(from.getResourceLocation(), credit, flags, textures, verts, normals, uvs, objects);
-	}
-
-	private HashMap<String, String> loadTextures(int num, LittleEndianDataInputStream objStream) throws IOException
-	{
-		HashMap<String, String> textures = new HashMap<>();
-
-		for (int i = 0; i < num; i++)
+		for (int i = 0; i < numObjects; i++)
 		{
-			String key = BinaryUtil.readNullTerminatedString(objStream);
-			String value = BinaryUtil.readNullTerminatedString(objStream);
-			textures.put(key, value);
+			String name = BinaryUtil.readNullTerminatedString(objStream);
+			String materialName = BinaryUtil.readNullTerminatedString(objStream);
+
+			Matrix4f transformationMatrix = BinaryUtil.readMatrix4(objStream);
+
+			ArrayList<Vector3f> vertices = readLengthCodedVectors(objStream);
+			ArrayList<Vector3f> normals = readLengthCodedVectors(objStream);
+			ArrayList<Vector3f> uvs = readLengthCodedVectors(objStream);
+
+			ArrayList<Pr3FacePointer> faces = readLengthCodedFaces(objStream);
+
+			objects.add(new Pr3Object(name, vertices, faces, normals, uvs, transformationMatrix, materialName));
 		}
 
-		return textures;
+		return new Pr3Model(objects);
 	}
 
-	private ArrayList<Pm3dVert> loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static ArrayList<Vector3f> readLengthCodedVectors(LittleEndianDataInputStream objStream) throws IOException
 	{
-		ArrayList<Pm3dVert> verts = new ArrayList<>();
+		int num = objStream.readInt();
+
+		ArrayList<Vector3f> vectors = new ArrayList<>();
 
 		for (int i = 0; i < num; i++)
 		{
@@ -88,57 +76,27 @@ public class Pr3Model
 			float y = objStream.readFloat();
 			float z = objStream.readFloat();
 
-			verts.add(new Pm3dVert(x, y, z));
+			vectors.add(new Vector3f(x, y, z));
 		}
 
-		return verts;
+		return vectors;
 	}
 
-	private ArrayList<Pm3dUv> loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static ArrayList<Pr3FacePointer> readLengthCodedFaces(LittleEndianDataInputStream objStream) throws IOException
 	{
-		ArrayList<Pm3dUv> uvs = new ArrayList<>();
+		int num = objStream.readInt();
+
+		ArrayList<Pr3FacePointer> faces = new ArrayList<>();
 
 		for (int i = 0; i < num; i++)
 		{
-			float u = objStream.readFloat();
-			float v = objStream.readFloat();
+			int a = objStream.readInt();
+			int b = objStream.readInt();
+			int c = objStream.readInt();
 
-			uvs.add(new Pm3dUv(u, v));
+			faces.add(new Pr3FacePointer(a, b, c));
 		}
 
-		return uvs;
-	}
-
-	private HashMap<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> loadObjects(int num, LittleEndianDataInputStream objStream) throws IOException
-	{
-		HashMap<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> objects = new HashMap<>();
-
-		for (int i = 0; i < num; i++)
-		{
-			String objName = BinaryUtil.readNullTerminatedString(objStream);
-			String matName = BinaryUtil.readNullTerminatedString(objStream);
-			int numFaces = objStream.readInt();
-
-			ArrayList<Pm3dFace> faces = new ArrayList<>();
-
-			for (int j = 0; j < numFaces; j++)
-			{
-				Pm3dFace face = new Pm3dFace();
-				int numVerts = objStream.readInt();
-				for (int k = 0; k < numVerts; k++)
-				{
-					int vertex = objStream.readInt();
-					int normal = objStream.readInt();
-					int texture = objStream.readInt();
-					face.verts.add(new Pm3dVertPointer(vertex, normal, texture));
-				}
-
-				faces.add(face);
-			}
-
-			objects.put(new Pm3dModelObjectInfo(objName, matName), faces);
-		}
-
-		return objects;
+		return faces;
 	}
 }
