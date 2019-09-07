@@ -5,8 +5,8 @@
       <author>Blender User</author>
       <authoring_tool>Blender 2.80.75 commit date:2019-07-29, commit time:14:47, hash:f6cb5f54494e</authoring_tool>
     </contributor>
-    <created>2019-09-04T18:59:30</created>
-    <modified>2019-09-04T18:59:30</modified>
+    <created>2019-09-06T17:53:39</created>
+    <modified>2019-09-06T17:53:39</modified>
     <unit name="meter" meter="1"/>
     <up_axis>Z_UP</up_axis>
   </asset>
@@ -338,7 +338,7 @@
   <library_visual_scenes>
     <visual_scene id="Scene" name="Scene">
       <node id="WingBottomLeft" name="WingBottomLeft" type="NODE">
-        <matrix sid="transform">1 0 0 0 0 1 0 -3.044706 0 0 1 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.9999999 0 0 0 0 1 0 -3.044706 0 0 0.9999999 0 0 0 0 1</matrix>
         <instance_geometry url="#WingBottomLeft-mesh" name="WingBottomLeft">
           <bind_material>
             <technique_common>
@@ -350,7 +350,7 @@
         </instance_geometry>
       </node>
       <node id="WingBottomRight" name="WingBottomRight" type="NODE">
-        <matrix sid="transform">1 0 0 0 0 1 0 -3.04471 0 0 1 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.9999999 0 0 0 0 1 0 -3.04471 0 0 0.9999999 0 0 0 0 1</matrix>
         <instance_geometry url="#WingBottomRight-mesh" name="WingBottomRight">
           <bind_material>
             <technique_common>
@@ -362,7 +362,7 @@
         </instance_geometry>
       </node>
       <node id="WingTopLeft" name="WingTopLeft" type="NODE">
-        <matrix sid="transform">1 0 0 0 0 1 0 -3.044706 0 0 1 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.9999999 0 0 0 0 1 0 -3.044706 0 0 0.9999999 0 0 0 0 1</matrix>
         <instance_geometry url="#WingTopLeft-mesh" name="WingTopLeft">
           <bind_material>
             <technique_common>
@@ -374,7 +374,7 @@
         </instance_geometry>
       </node>
       <node id="WingTopRight" name="WingTopRight" type="NODE">
-        <matrix sid="transform">1 0 0 0 0 1 0 -3.04471 0 0 1 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.9999999 0 0 0 0 1 0 -3.04471 0 0 0.9999999 0 0 0 0 1</matrix>
         <instance_geometry url="#WingTopRight-mesh" name="WingTopRight">
           <bind_material>
             <technique_common>
@@ -386,7 +386,7 @@
         </instance_geometry>
       </node>
       <node id="Nose" name="Nose" type="NODE">
-        <matrix sid="transform">1 0 0 0 0 1 0 4.26795 0 0 1 0.054934 0 0 0 1</matrix>
+        <matrix sid="transform">0.9999999 0 0 0 0 1 0 4.26795 0 0 0.9999999 0.054934 0 0 0 1</matrix>
         <instance_geometry url="#Nose-mesh" name="Nose">
           <bind_material>
             <technique_common>
@@ -398,7 +398,7 @@
         </instance_geometry>
       </node>
       <node id="Cockpit" name="Cockpit" type="NODE">
-        <matrix sid="transform">1 0 0 0 0 1 0 -1.03 0 0 1 0.687788 0 0 0 1</matrix>
+        <matrix sid="transform">0.9999999 0 0 0 0 1 0 -1.03 0 0 0.9999999 0.687788 0 0 0 1</matrix>
         <instance_geometry url="#Cockpit-mesh" name="Cockpit">
           <bind_material>
             <technique_common>
@@ -410,7 +410,7 @@
         </instance_geometry>
       </node>
       <node id="Fuselage" name="Fuselage" type="NODE">
-        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <matrix sid="transform">0.9999999 0 0 0 0 1 0 0 0 0 0.9999999 0 0 0 0 1</matrix>
         <instance_geometry url="#Fuselage-mesh" name="Fuselage">
           <bind_material>
             <technique_common>

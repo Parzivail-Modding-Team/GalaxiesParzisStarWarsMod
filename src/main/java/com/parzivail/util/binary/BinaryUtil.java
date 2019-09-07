@@ -36,20 +36,20 @@ public class BinaryUtil
 		Matrix4f m = new Matrix4f();
 
 		m.m00 = s.readFloat();
-		m.m01 = s.readFloat();
-		m.m02 = s.readFloat();
-		m.m03 = s.readFloat();
 		m.m10 = s.readFloat();
-		m.m11 = s.readFloat();
-		m.m12 = s.readFloat();
-		m.m13 = s.readFloat();
 		m.m20 = s.readFloat();
-		m.m21 = s.readFloat();
-		m.m22 = s.readFloat();
-		m.m23 = s.readFloat();
 		m.m30 = s.readFloat();
+		m.m01 = s.readFloat();
+		m.m11 = s.readFloat();
+		m.m21 = s.readFloat();
 		m.m31 = s.readFloat();
+		m.m02 = s.readFloat();
+		m.m12 = s.readFloat();
+		m.m22 = s.readFloat();
 		m.m32 = s.readFloat();
+		m.m03 = s.readFloat();
+		m.m13 = s.readFloat();
+		m.m23 = s.readFloat();
 		m.m33 = s.readFloat();
 
 		return m;

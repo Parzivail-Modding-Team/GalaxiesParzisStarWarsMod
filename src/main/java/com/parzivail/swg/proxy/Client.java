@@ -1,7 +1,6 @@
 package com.parzivail.swg.proxy;
 
 import com.parzivail.pm3d.Pm3dModelLoader;
-import com.parzivail.pr3.Pr3Model;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.animation.HyperspaceEnter;
@@ -10,6 +9,7 @@ import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.network.client.MessageItemLeftClick;
 import com.parzivail.swg.register.ItemRegister;
 import com.parzivail.swg.register.KeybindRegister;
+import com.parzivail.swg.register.Pr3ModelRegister;
 import com.parzivail.swg.render.RenderBlasterBolt;
 import com.parzivail.swg.render.RenderShip;
 import com.parzivail.swg.render.item.RenderItemLightsaber;
@@ -92,7 +92,7 @@ public class Client extends Common
 
 		try
 		{
-			Pr3Model model = Pr3Model.load(Resources.location("models/rigged/xwing_t65b.pr3"));
+			Pr3ModelRegister.load();
 		}
 		catch (IOException ex)
 		{

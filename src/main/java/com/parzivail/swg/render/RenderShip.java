@@ -1,9 +1,9 @@
 package com.parzivail.swg.render;
 
 import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.register.Pr3ModelRegister;
 import com.parzivail.util.math.lwjgl.Matrix4f;
 import com.parzivail.util.math.lwjgl.Vector3f;
-import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -82,8 +82,9 @@ public class RenderShip extends Render<EntityShip>
 		buff.flip();
 		GL11.glMultMatrix(buff);
 
+		GL.Enable(EnableCap.Texture2D);
+		Pr3ModelRegister.XwingT65b.draw();
 		GL.Disable(EnableCap.Texture2D);
-		Fx.D3.DrawSolidBox();
 
 		GL.Disable(EnableCap.Lighting);
 		GL.PushMatrix();
