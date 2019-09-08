@@ -1,7 +1,6 @@
 package com.parzivail.swg.handler;
 
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.entity.EntityCamera;
 import com.parzivail.swg.entity.EntityShip;
 import com.parzivail.swg.gui.GuiHyperspaceLoading;
 import com.parzivail.swg.network.client.MessageSetShipInputMode;
@@ -11,7 +10,6 @@ import com.parzivail.swg.register.KeybindRegister;
 import com.parzivail.util.item.ILeftClickInterceptor;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.client.gui.GuiDownloadTerrain;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -34,36 +32,41 @@ public class SwgEventHandler
 
 		Client.animHyperspaceTest.tick();
 
-		if (e.phase != TickEvent.Phase.START)
-			return;
-
-		if (Client.mc.player != null)
+		if (e.phase == TickEvent.Phase.START)
 		{
-			ItemStack heldItem = Client.mc.player.getHeldItemMainhand();
-			KeybindRegister.keyAttack.setIntercepting(heldItem.getItem() instanceof ILeftClickInterceptor);
-
-			if (heldItem.getItem() instanceof ILeftClickInterceptor)
-				Client.checkLeftClickPressed(true);
-
-			Entity rve = Client.mc.getRenderViewEntity();
-			if (Client.mc.player.getRidingEntity() instanceof EntityShip)
+			Client.prevCamEntity = null;
+			if (Client.mc.player != null)
 			{
-				EntityShip ship = (EntityShip)Client.mc.player.getRidingEntity();
+				ItemStack heldItem = Client.mc.player.getHeldItemMainhand();
+				KeybindRegister.keyAttack.setIntercepting(heldItem.getItem() instanceof ILeftClickInterceptor);
 
-				if (Client.mc.gameSettings.thirdPersonView == 0 || Client.mc.gameSettings.thirdPersonView == 2)
-					Client.mc.setRenderViewEntity(ship);
-				else
-					Client.mc.setRenderViewEntity(ship.chaseCam);
+				if (heldItem.getItem() instanceof ILeftClickInterceptor)
+					Client.checkLeftClickPressed(true);
 
-				// this is also the fastest time to poll input
-				if (ship.getControllingPassenger() instanceof EntityPlayer && ship.world.isRemote)
+				if (Client.mc.player.getRidingEntity() instanceof EntityShip)
 				{
-					EntityPlayer pilot = (EntityPlayer)ship.getControllingPassenger();
-					StarWarsGalaxy.proxy.captureShipInput(pilot, ship);
+					Client.prevCamEntity = Client.mc.getRenderViewEntity();
+
+					EntityShip ship = (EntityShip)Client.mc.player.getRidingEntity();
+
+					if (Client.mc.gameSettings.thirdPersonView == 0 || Client.mc.gameSettings.thirdPersonView == 2)
+						Client.mc.setRenderViewEntity(ship);
+					else
+						Client.mc.setRenderViewEntity(ship.chaseCam);
+
+					// this is also the fastest time to poll input
+					if (ship.getControllingPassenger() instanceof EntityPlayer && ship.world.isRemote)
+					{
+						EntityPlayer pilot = (EntityPlayer)ship.getControllingPassenger();
+						StarWarsGalaxy.proxy.captureShipInput(pilot, ship);
+					}
 				}
 			}
-			else if (rve instanceof EntityCamera || rve instanceof EntityShip)
-				Client.mc.setRenderViewEntity(Client.mc.player);
+		}
+		else if (e.phase == TickEvent.Phase.END)
+		{
+			if (Client.prevCamEntity != null)
+				Client.mc.setRenderViewEntity(Client.prevCamEntity);
 		}
 	}
 

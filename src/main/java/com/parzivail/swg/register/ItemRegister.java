@@ -72,18 +72,29 @@ public class ItemRegister
 		URL url = loader.getResource(folder);
 		try
 		{
-			URI uri = url.toURI();
-			Map<String, String> env = new HashMap<>();
-			env.put("create", "true");
-			FileSystem zipfs = FileSystems.newFileSystem(uri, env);
-
-			Path path = Paths.get(uri);
+			Path path = getPath(url.toURI());
 			return Files.list(path).toArray(Path[]::new);
 		}
 		catch (URISyntaxException | IOException e)
 		{
 			e.printStackTrace();
 			throw new RuntimeException(e);
+		}
+	}
+
+	private static Path getPath(URI uri) throws IOException
+	{
+		try
+		{
+			return Paths.get(uri);
+		}
+		catch (FileSystemNotFoundException e)
+		{
+			Map<String, String> env = new HashMap<>();
+			env.put("create", "true");
+			FileSystem zipfs = FileSystems.newFileSystem(uri, env);
+
+			return Paths.get(uri);
 		}
 	}
 }

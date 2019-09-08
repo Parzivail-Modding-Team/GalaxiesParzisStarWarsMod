@@ -21,6 +21,7 @@ import com.parzivail.util.jsonpipeline.ModelLocationInformation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -46,6 +47,8 @@ public class Client extends Common
 
 	public static Sequencer animHyperspaceTest = new Sequencer(new HyperspaceEnter());
 	public static boolean xwingDebug = false;
+
+	public static Entity prevCamEntity = null;
 
 	/**
 	 * Queries the "attack" keybind and processes items who consume the associated action
