@@ -122,13 +122,15 @@ public class SwgEventHandler
 
 			if (KeybindRegister.keyDebug != null && KeybindRegister.keyDebug.isPressed())
 			{
-				if (Client.animHyperspaceTest.playing)
-				{
-					Client.animHyperspaceTest.stop();
-					Client.animHyperspaceTest.reset();
-				}
-				else
-					Client.animHyperspaceTest.play();
+				//				if (Client.animHyperspaceTest.playing)
+				//				{
+				//					Client.animHyperspaceTest.stop();
+				//					Client.animHyperspaceTest.reset();
+				//				}
+				//				else
+				//					Client.animHyperspaceTest.play();
+
+				Client.xwingDebug = !Client.xwingDebug;
 			}
 		}
 	}

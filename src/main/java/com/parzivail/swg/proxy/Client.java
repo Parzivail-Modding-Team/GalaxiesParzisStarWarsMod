@@ -45,6 +45,7 @@ public class Client extends Common
 	public static float partialTicks;
 
 	public static Sequencer animHyperspaceTest = new Sequencer(new HyperspaceEnter());
+	public static boolean xwingDebug = false;
 
 	/**
 	 * Queries the "attack" keybind and processes items who consume the associated action

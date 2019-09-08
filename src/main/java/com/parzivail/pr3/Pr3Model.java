@@ -128,17 +128,17 @@ public class Pr3Model
 			buff.flip();
 			GL11.glMultMatrix(buff);
 
-			//			switch (object.name)
-			//			{
-			//				case "WingTopLeft":
-			//				case "WingBottomRight":
-			//					GL.Rotate(0, 0, 1, 0);
-			//					break;
-			//				case "WingTopRight":
-			//				case "WingBottomLeft":
-			//					GL.Rotate(-0, 0, 1, 0);
-			//					break;
-			//			}
+			switch (object.name)
+			{
+				case "WingTopLeft":
+				case "WingBottomRight":
+					GL.Rotate(Client.xwingDebug ? 13 : 0, 0, 1, 0);
+					break;
+				case "WingTopRight":
+				case "WingBottomLeft":
+					GL.Rotate(Client.xwingDebug ? -13 : 0, 0, 1, 0);
+					break;
+			}
 
 			GL.Begin(PrimitiveType.Triangles);
 			for (Pr3FacePointer face : object.faces)

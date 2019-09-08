@@ -17,11 +17,12 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ItemRegister
 {
@@ -71,7 +72,12 @@ public class ItemRegister
 		URL url = loader.getResource(folder);
 		try
 		{
-			Path path = Paths.get(url.toURI());
+			URI uri = url.toURI();
+			Map<String, String> env = new HashMap<>();
+			env.put("create", "true");
+			FileSystem zipfs = FileSystems.newFileSystem(uri, env);
+
+			Path path = Paths.get(uri);
 			return Files.list(path).toArray(Path[]::new);
 		}
 		catch (URISyntaxException | IOException e)
