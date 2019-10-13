@@ -34,7 +34,6 @@ public class ItemRegister
 	{
 		IForgeRegistry<Item> r = event.getRegistry();
 
-		//		r.register(blaster = new ItemBlaster(new BlasterDescriptor("a280", 8, 0, 30, 0, 0, 10, 0xFF0000, 10, 0, 3)));
 		r.register(lightsaber = new ItemLightsaber());
 
 		loadModularBlasters(r);

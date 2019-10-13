@@ -13,6 +13,7 @@ import com.parzivail.swg.register.Pr3ModelRegister;
 import com.parzivail.swg.render.RenderBlasterBolt;
 import com.parzivail.swg.render.RenderShip;
 import com.parzivail.swg.render.item.RenderItemLightsaber;
+import com.parzivail.swg.render.util.DummyBuiltinLoader;
 import com.parzivail.util.animation.Sequencer;
 import com.parzivail.util.item.ILeftClickInterceptor;
 import com.parzivail.util.jsonpipeline.BlockbenchModelLoader;
@@ -90,6 +91,7 @@ public class Client extends Common
 		ModelLoaderRegistry.registerLoader(new BlockbenchModelLoader(modelLocation -> (modelLocation.getResourcePath().endsWith(".pjson") && !(modelLocation instanceof ModelResourceLocation))));
 		ModelLoaderRegistry.registerLoader(new BlockbenchWeightedModelLoader(modelLocation -> (modelLocation.getResourcePath().endsWith(".pjson") && modelLocation instanceof ModelResourceLocation)));
 		ModelLoaderRegistry.registerLoader(new Pm3dModelLoader());
+		ModelLoaderRegistry.registerLoader(new DummyBuiltinLoader());
 
 		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, RenderShip::new);
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, RenderBlasterBolt::new);
@@ -150,5 +152,6 @@ public class Client extends Common
 	public void onRegisterItem(RegistryEvent.Register<Item> event)
 	{
 		ItemRegister.lightsaber.setTileEntityItemStackRenderer(new RenderItemLightsaber());
+		registerItemRenderer(ItemRegister.lightsaber, "builtin");
 	}
 }

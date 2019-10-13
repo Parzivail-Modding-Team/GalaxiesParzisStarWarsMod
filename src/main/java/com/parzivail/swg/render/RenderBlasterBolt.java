@@ -52,7 +52,7 @@ public class RenderBlasterBolt extends Render
 		GL.Rotate(90 - yaw, 0, 1, 0);
 		GL.Rotate(pitch + 90, 0, 0, 1);
 		GL.Scale(0.5);
-		RenderBeam.render(len / 2, 0, 19, 1.275f, true, 0xFFFFFFFF, true, e.getColor(), 0.005f, 0.005f);
+		RenderBeam.render(1, len / 2, 0, 19, 1.275f, true, 0xFFFFFFFF, true, e.getColor(), 0.005f, 0.005f, false);
 
 		GL.PopAttrib();
 		GL.PopAttrib();

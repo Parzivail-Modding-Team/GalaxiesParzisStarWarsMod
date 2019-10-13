@@ -13,12 +13,15 @@ public class RenderBeam
 	/**
 	 * Draws a beam. Lightsabers use 0.005 localInstability, (1.025 - openPercent) * 0.016f globalInstability, 19 layers, 0.037 taper, 1.275 layerDeltaOpacity
 	 */
-	public static void render(float length, float taper, int layers, float layerDeltaOpacity, boolean hasCore, int coreColor, boolean hasGlow, int glowColor, float globalInstability, float localInstability)
+	public static void render(float thickness, float length, float taper, int layers, float layerDeltaOpacity, boolean hasCore, int coreColor, boolean hasGlow, int glowColor, float globalInstability, float localInstability, boolean roundedEnd)
 	{
-		if (length == 0)
+		if (thickness == 0 || length == 0)
 			return;
 
 		GL.PushMatrix();
+
+		GL.Scale(thickness, 1, thickness);
+
 		GL.PushAttrib(AttribMask.EnableBit);
 		GL.Disable(EnableCap.Lighting);
 		GL.Disable(EnableCap.Texture2D);
@@ -42,10 +45,15 @@ public class RenderBeam
 			GL11.glDepthMask(false);
 			float fLayers = (float)layers;
 			int layersPlusOne = layers + 1;
+			float taperCoef = 1.5f;
+			float expanse = 0.15f * (1 - taper * 0.3f);
 			for (int layer = layers; layer >= 0; layer--)
 			{
 				GL.Color(glowColor, (int)(layerDeltaOpacity * layer));
-				Fx.D3.DrawSolidBoxSkewTaper(0.12 - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, length - 0.13f + 0.2f * Math.sqrt(1 - Math.pow(1 - layer / fLayers, 2)), 0, 0, -(layersPlusOne - layer) * 0.005f, 0);
+
+				float glowTaper = roundedEnd ? (0.1f * (1 - Math.max(taperCoef * Math.abs(1 - layer / fLayers) - (taperCoef - 1), 0)) - 0.05f) : (expanse - 0.0058f * layer);
+
+				Fx.D3.DrawSolidBoxSkewTaper(0.16 * (1 - taper * 0.5f) - 0.0058f * layer, 0.16 - 0.0058f * layer, 0, length + glowTaper, 0, 0, -(layersPlusOne - layer) * 0.005f, 0);
 			}
 			GL11.glDepthMask(true);
 		}
@@ -65,7 +73,7 @@ public class RenderBeam
 			double offset = Resources.RANDOM.nextGaussian();
 
 			double dTRoundBottom = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * (segments + 1)) * localInstability : 0;
-			Fx.D3.DrawSolidBoxSkewTaper(0.01f, topThickness + dTRoundBottom, 0, length + 0.02f, 0, 0, length, 0);
+			Fx.D3.DrawSolidBoxSkewTaper(roundedEnd ? 0.01f : (topThickness + dTRoundBottom), topThickness + dTRoundBottom, 0, length + 0.02f, 0, 0, length, 0);
 
 			for (int i = 0; i < segments; i++)
 			{
