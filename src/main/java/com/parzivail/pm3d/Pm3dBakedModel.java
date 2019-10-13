@@ -1,8 +1,5 @@
 package com.parzivail.pm3d;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.parzivail.util.jsonpipeline.Quad;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -13,8 +10,6 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.PerspectiveMapWrapper;
-import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.common.model.IModelState;
 import net.minecraftforge.common.model.TRSRTransformation;
@@ -28,6 +23,8 @@ import java.util.function.Function;
 
 public class Pm3dBakedModel implements IBakedModel
 {
+	private static final ItemCameraTransforms TRANSFORMS = getAllTransforms();
+
 	private final Pm3dModel pm3dModel;
 	private final IModelState state;
 	private final VertexFormat format;
@@ -52,14 +49,7 @@ public class Pm3dBakedModel implements IBakedModel
 
 		List<BakedQuad> quads = new ArrayList<>();
 
-		ItemCameraTransforms transforms = getAllTransforms();
-		Map<ItemCameraTransforms.TransformType, TRSRTransformation> tMap = Maps.newEnumMap(ItemCameraTransforms.TransformType.class);
-		tMap.putAll(PerspectiveMapWrapper.getTransforms(transforms));
-		tMap.putAll(PerspectiveMapWrapper.getTransforms(this.state));
-		IModelState perState = new SimpleModelState(ImmutableMap.copyOf(tMap));
-
-		TRSRTransformation global = perState.apply(Optional.empty()).orElse(TRSRTransformation.identity());
-		Matrix4f m = global.getMatrix();
+		Matrix4f m = this.state.apply(Optional.empty()).orElse(TRSRTransformation.identity()).getMatrix();
 
 		for (Map.Entry<Pm3dModelObjectInfo, ArrayList<Pm3dFace>> pair : pm3dModel.objects.entrySet())
 		{
@@ -94,17 +84,17 @@ public class Pm3dBakedModel implements IBakedModel
 		return quads;
 	}
 
-	private ItemCameraTransforms getAllTransforms()
+	private static ItemCameraTransforms getAllTransforms()
 	{
-		ItemTransformVec3f itemtransformvec3f = new ItemTransformVec3f(new Vector3f(75, 225, 0), new Vector3f(0, 2.5f, 0), new Vector3f(0.375f, 0.375f, 0.375f)); //this.getTransform(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND);
-		ItemTransformVec3f itemtransformvec3f1 = new ItemTransformVec3f(new Vector3f(75, 45, 0), new Vector3f(0, 2.5f, 0), new Vector3f(0.375f, 0.375f, 0.375f)); //this.getTransform(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
-		ItemTransformVec3f itemtransformvec3f2 = new ItemTransformVec3f(new Vector3f(0, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)); //this.getTransform(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
-		ItemTransformVec3f itemtransformvec3f3 = new ItemTransformVec3f(new Vector3f(0, 45, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)); //this.getTransform(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
-		ItemTransformVec3f itemtransformvec3f4 = new ItemTransformVec3f(new Vector3f(), new Vector3f(), new Vector3f()); //this.getTransform(ItemCameraTransforms.TransformType.HEAD);
-		ItemTransformVec3f itemtransformvec3f5 = new ItemTransformVec3f(new Vector3f(30, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.625f, 0.625f, 0.625f)); //this.getTransform(ItemCameraTransforms.TransformType.GUI);
-		ItemTransformVec3f itemtransformvec3f6 = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(0, 3, 0), new Vector3f(0.25f, 0.25f, 0.25f)); //this.getTransform(ItemCameraTransforms.TransformType.GROUND);
-		ItemTransformVec3f itemtransformvec3f7 = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(0.5f, 0.5f, 0.5f)); //this.getTransform(ItemCameraTransforms.TransformType.FIXED);
-		return new ItemCameraTransforms(itemtransformvec3f, itemtransformvec3f1, itemtransformvec3f2, itemtransformvec3f3, itemtransformvec3f4, itemtransformvec3f5, itemtransformvec3f6, itemtransformvec3f7);
+		ItemTransformVec3f thirdperson_left = new ItemTransformVec3f(new Vector3f(75, 135, 0), new Vector3f(0, 0, 0), new Vector3f(0.375f, 0.375f, 0.375f)); //this.getTransform(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND);
+		ItemTransformVec3f thirdperson_right = new ItemTransformVec3f(new Vector3f(75, 135, 0), new Vector3f(0, 0, 0), new Vector3f(0.375f, 0.375f, 0.375f)); //this.getTransform(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND);
+		ItemTransformVec3f firstperson_left = new ItemTransformVec3f(new Vector3f(0, 135, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)); //this.getTransform(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND);
+		ItemTransformVec3f firstperson_right = new ItemTransformVec3f(new Vector3f(0, 135, 0), new Vector3f(0, 0, 0), new Vector3f(0.40f, 0.40f, 0.40f)); //this.getTransform(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND);
+		ItemTransformVec3f head = new ItemTransformVec3f(new Vector3f(), new Vector3f(), new Vector3f()); //this.getTransform(ItemCameraTransforms.TransformType.HEAD);
+		ItemTransformVec3f gui = new ItemTransformVec3f(new Vector3f(30, 225, 0), new Vector3f(0, 0, 0), new Vector3f(0.625f, 0.625f, 0.625f)); //this.getTransform(ItemCameraTransforms.TransformType.GUI);
+		ItemTransformVec3f ground = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(0, 0.1f, 0), new Vector3f(0.25f, 0.25f, 0.25f)); //this.getTransform(ItemCameraTransforms.TransformType.GROUND);
+		ItemTransformVec3f fixed = new ItemTransformVec3f(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0), new Vector3f(0.5f, 0.5f, 0.5f)); //this.getTransform(ItemCameraTransforms.TransformType.FIXED);
+		return new ItemCameraTransforms(thirdperson_left, thirdperson_right, firstperson_left, firstperson_right, head, gui, ground, fixed);
 	}
 
 	private void putVertPointer(UnpackedBakedQuad.Builder b, Pm3dVertPointer pointer, TextureAtlasSprite sprite, Matrix4f transformation)
@@ -158,14 +148,6 @@ public class Pm3dBakedModel implements IBakedModel
 		}
 	}
 
-	private void putVert(Pm3dVert vert0, Pm3dVert norm0, Pm3dUv uv0, Quad.Builder b)
-	{
-		b.put(0, vert0.x, vert0.y, vert0.z);
-		b.put(1, uv0.u, uv0.v);
-		b.put(2, norm0.x, norm0.y, norm0.z);
-		b.put(3, 0);
-	}
-
 	@Override
 	public boolean isAmbientOcclusion()
 	{
@@ -196,5 +178,11 @@ public class Pm3dBakedModel implements IBakedModel
 	public ItemOverrideList getOverrides()
 	{
 		return ItemOverrideList.NONE;
+	}
+
+	@Override
+	public ItemCameraTransforms getItemCameraTransforms()
+	{
+		return TRANSFORMS;
 	}
 }

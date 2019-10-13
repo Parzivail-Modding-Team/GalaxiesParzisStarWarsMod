@@ -70,9 +70,9 @@ public class RenderBeam
 			float dLength = length / segments;
 			float bottomThickness = 0.035f;
 			float topThickness = bottomThickness * (1 - taper); //0.022f;
-			double offset = Resources.RANDOM.nextGaussian();
+			double offset = Resources.RANDOM.nextGaussian() * 10;
 
-			double dTRoundBottom = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * (segments + 1)) * localInstability : 0;
+			double dTRoundBottom = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * (segments + 1) * 3) * localInstability : 0;
 			Fx.D3.DrawSolidBoxSkewTaper(roundedEnd ? 0.01f : (topThickness + dTRoundBottom), topThickness + dTRoundBottom, 0, length + 0.02f, 0, 0, length, 0);
 
 			for (int i = 0; i < segments; i++)
@@ -80,14 +80,13 @@ public class RenderBeam
 				float topThicknessLerp = (float)Fx.Util.Lerp(bottomThickness, topThickness, dSegments * (i + 1));
 				float bottomThicknessLerp = (float)Fx.Util.Lerp(bottomThickness, topThickness, dSegments * i);
 
-				double dTTop = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * (i + 1)) * localInstability : 0;
-				double dTBottom = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * i) * localInstability : 0;
+				double dTTop = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * (i + 1) * 3) * localInstability : 0;
+				double dTBottom = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * i * 3) * localInstability : 0;
 
 				Fx.D3.DrawSolidBoxSkewTaper(topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
 			}
 		}
 
-		Client.mc.entityRenderer.enableLightmap();
 		GL.PopAttrib();
 		GL.PopMatrix();
 	}

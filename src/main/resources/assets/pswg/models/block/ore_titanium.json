@@ -1,5 +1,5 @@
 {
-  "parent": "pswg:block/base/cube_all",
+  "parent": "block/cube_all",
   "textures": {
 	"all": "pswg:blocks/ore_titanium"
   }

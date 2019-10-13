@@ -57,6 +57,8 @@ public class ChunkProviderTatooine implements IChunkGenerator
 		StructureRegister.structureEngine.genStructure(worldObj.provider.getDimension(), cx, cz, chunk);
 
 		Chunk realChunk = new Chunk(this.worldObj, chunk, cx, cz);
+		realChunk.generateSkylightMap();
+
 		Biome[] abiome = this.worldObj.getBiomeProvider().getBiomes(null, cx * 16, cz * 16, 16, 16);
 		byte[] abyte = realChunk.getBiomeArray();
 
