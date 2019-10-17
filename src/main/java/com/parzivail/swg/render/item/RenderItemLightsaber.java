@@ -18,7 +18,7 @@ public class RenderItemLightsaber extends TileEntityItemStackRenderer
 	@Override
 	public void renderByItem(ItemStack item)
 	{
-		float partialTicks = Client.partialTicks;
+		float partialTicks = Client.mc.getRenderPartialTicks();
 
 		LightsaberData bd = new LightsaberData(item);
 		LightsaberDescriptor d = bd.descriptor;

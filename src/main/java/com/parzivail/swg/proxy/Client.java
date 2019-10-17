@@ -41,7 +41,6 @@ public class Client extends Common
 	public static int leftClickDelayTimer;
 	public static Minecraft mc;
 	public static boolean autoRelevelEnabled = true;
-	public static float partialTicks;
 
 	public static Sequencer animHyperspaceTest = new Sequencer(new HyperspaceEnter());
 	public static boolean xwingDebug = false;
@@ -66,9 +65,9 @@ public class Client extends Common
 		boolean risingEdge = KeybindRegister.keyAttack.interceptedIsPressed();
 		boolean holding = KeybindRegister.keyAttack.getInterceptedIsKeyDown();
 
-		boolean pressed = item.isLeftClickRepeatable() ? (passive && (risingEdge || holding)) : risingEdge;
+		boolean pressed = item.isLeftClickRepeatable(heldItem, mc.player.world, mc.player) ? (passive && (risingEdge || holding)) : risingEdge;
 
-		if (item.isLeftClickRepeatable())
+		if (item.isLeftClickRepeatable(heldItem, mc.player.world, mc.player))
 			while (KeybindRegister.keyAttack.interceptedIsPressed())
 				;
 

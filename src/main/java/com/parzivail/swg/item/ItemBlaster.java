@@ -251,9 +251,13 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 	}
 
 	@Override
-	public boolean isLeftClickRepeatable()
+	public boolean isLeftClickRepeatable(ItemStack stack, World world, EntityPlayer player)
 	{
-		return true;
+		if (descriptor.autofireTimeTicks == -1)
+			return false;
+
+		BlasterData d = new BlasterData(stack);
+		return d.shotTimer <= 0;
 	}
 
 	//	@Override
@@ -375,6 +379,11 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 			EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
 			entity.attackEntityFrom(DamageSource.causePlayerDamage(player), descriptor.damage);
 		}
+
+		BlasterData d = new BlasterData(stack);
+		d.shotTimer = descriptor.autofireTimeTicks;
+		d.serialize(stack.getTagCompound());
+
 		return true;
 	}
 }

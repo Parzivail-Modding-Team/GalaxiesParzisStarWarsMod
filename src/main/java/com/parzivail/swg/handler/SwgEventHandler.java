@@ -28,8 +28,6 @@ public class SwgEventHandler
 	@SideOnly(Side.CLIENT)
 	public void on(TickEvent.RenderTickEvent e)
 	{
-		Client.partialTicks = e.renderTickTime;
-
 		Client.animHyperspaceTest.tick();
 
 		if (e.phase == TickEvent.Phase.START)

@@ -8,5 +8,5 @@ public interface ILeftClickInterceptor
 {
 	boolean onItemLeftClick(ItemStack stack, World world, EntityPlayer player);
 
-	boolean isLeftClickRepeatable();
+	boolean isLeftClickRepeatable(ItemStack stack, World world, EntityPlayer player);
 }
