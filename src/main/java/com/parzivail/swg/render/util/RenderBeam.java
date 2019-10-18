@@ -43,13 +43,14 @@ public class RenderBeam
 		{
 			// draw glow
 			GL11.glDepthMask(false);
+			GL.Disable(EnableCap.CullFace);
 			float fLayers = (float)layers;
 			int layersPlusOne = layers + 1;
 			float taperCoef = 1.5f;
 			float expanse = 0.15f * (1 - taper * 0.3f);
 			for (int layer = layers; layer >= 0; layer--)
 			{
-				GL.Color(glowColor, (int)(layerDeltaOpacity * layer));
+				GL.Color(glowColor, (int)(layerDeltaOpacity * (layer / fLayers) * 255));
 
 				float glowTaper = roundedEnd ? (0.1f * (1 - Math.max(taperCoef * Math.abs(1 - layer / fLayers) - (taperCoef - 1), 0)) - 0.05f) : (expanse - 0.0058f * layer);
 
@@ -60,6 +61,8 @@ public class RenderBeam
 
 		if (hasCore)
 		{
+			GL.Enable(EnableCap.CullFace);
+
 			// draw core
 			GL.Color(coreColor);
 

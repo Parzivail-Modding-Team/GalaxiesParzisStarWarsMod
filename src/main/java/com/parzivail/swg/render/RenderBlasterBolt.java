@@ -45,14 +45,14 @@ public class RenderBlasterBolt extends Render
 		double dz = e.getDz();
 		float len = e.getLength();
 
-		double d3 = (double)MathHelper.sqrt(dx * dx + dz * dz);
+		double dxz = (double)MathHelper.sqrt(dx * dx + dz * dz);
 		float yaw = (float)(Math.atan2(dz, dx) * 180.0D / Math.PI) - 90.0F;
-		float pitch = (float)(-(Math.atan2(dy, d3) * 180.0D / Math.PI));
+		float pitch = (float)(-(Math.atan2(dy, dxz) * 180.0D / Math.PI));
 
 		GL.Rotate(90 - yaw, 0, 1, 0);
 		GL.Rotate(pitch + 90, 0, 0, 1);
 		GL.Scale(0.5);
-		RenderBeam.render(1, len / 2, 0, 19, 1.275f, true, 0xFFFFFFFF, true, e.getColor(), 0.005f, 0.005f, false);
+		RenderBeam.render(1, len / 2, 0, 19, 0.1f, true, 0xFFFFFFFF, true, e.getColor(), 0.005f, 0.005f, false);
 
 		GL.PopAttrib();
 		GL.PopAttrib();

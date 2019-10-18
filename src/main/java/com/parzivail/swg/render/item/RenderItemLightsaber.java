@@ -31,7 +31,7 @@ public class RenderItemLightsaber extends TileEntityItemStackRenderer
 		GL.Translate(0.5f, 0.5f, 0.5f);
 
 		float length = d.bladeLength * MathHelper.clamp((bd.openAnimation + partialTicks * bd.openingState - bd.openingState) / 4f, 0, 1);
-		RenderBeam.render(0.6f, length, 0.037f, 19, 1.275f, true, d.coreColor, true, d.bladeColor, d.unstable ? 0.002f : 0, d.unstable ? 0.006f : 0, true);
+		RenderBeam.render(0.6f, length, 0.037f, 19, 0.1f, true, d.coreColor, true, d.bladeColor, d.unstable ? 0.002f : 0, d.unstable ? 0.006f : 0, true);
 
 		GL.PopMatrix();
 	}

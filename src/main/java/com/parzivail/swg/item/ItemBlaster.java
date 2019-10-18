@@ -386,4 +386,10 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 
 		return true;
 	}
+
+	@Override
+	public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged)
+	{
+		return false;
+	}
 }
