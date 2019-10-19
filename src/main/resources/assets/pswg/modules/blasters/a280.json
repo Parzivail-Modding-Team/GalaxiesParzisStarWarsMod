@@ -9,5 +9,5 @@
   "clipSize": 20,
   "roundsBeforeOverheat": 15,
   "cooldownTimeTicks": 20,
-  "autofireTimeTicks": 12
+  "autofireTimeTicks": 8
 }

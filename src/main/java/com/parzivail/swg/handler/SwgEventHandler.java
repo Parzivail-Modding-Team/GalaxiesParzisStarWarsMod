@@ -7,6 +7,7 @@ import com.parzivail.swg.network.client.MessageSetShipInputMode;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.proxy.ShipInputMode;
 import com.parzivail.swg.register.KeybindRegister;
+import com.parzivail.swg.render.RenderBlasterOverlay;
 import com.parzivail.util.item.ILeftClickInterceptor;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.client.gui.GuiDownloadTerrain;
@@ -16,6 +17,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -85,6 +87,16 @@ public class SwgEventHandler
 			else
 				Client.leftClickDelayTimer = 0;
 		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void on(RenderGameOverlayEvent event)
+	{
+		if (event.getType() != RenderGameOverlayEvent.ElementType.TEXT)
+			return;
+
+		RenderBlasterOverlay.render(event);
 	}
 
 	@SubscribeEvent

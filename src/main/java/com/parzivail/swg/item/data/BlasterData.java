@@ -33,4 +33,9 @@ public class BlasterData extends NbtSerializable<BlasterData>
 	{
 		return shotTimer <= 0;
 	}
+
+	public int getHeatPerShot()
+	{
+		return 10;
+	}
 }

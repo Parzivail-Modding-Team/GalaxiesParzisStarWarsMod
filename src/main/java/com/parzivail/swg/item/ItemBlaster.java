@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 {
-	private final BlasterDescriptor descriptor;
+	public final BlasterDescriptor descriptor;
 
 	private final AnimatedValue avExpansion;
 	private final AnimatedValue avAds;
@@ -256,7 +256,7 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 			return false;
 
 		BlasterData d = new BlasterData(stack);
-		return d.shotTimer <= 0;
+		return d.shotTimer <= 0 && !d.isCoolingDown();
 	}
 
 	//	@Override
@@ -363,6 +363,9 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 	@Override
 	public boolean onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
 	{
+		if (!isLeftClickRepeatable(stack, world, player))
+			return false;
+
 		BlasterData d = new BlasterData(stack);
 		if (d.shotTimer > 0)
 			return false;
@@ -400,6 +403,13 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 
 				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, rhb.hitVec.x, rhb.hitVec.y, rhb.hitVec.z, -dX + dMX, -dY + dMY, -dZ + dMZ);
 			}
+		}
+
+		d.heat += d.getHeatPerShot() * descriptor.autofireTimeTicks / 4;
+		if (d.heat >= descriptor.roundsBeforeOverheat * d.getHeatPerShot())
+		{
+			d.heat = 0;
+			d.cooldownTimer = descriptor.cooldownTimeTicks;
 		}
 
 		d.shotTimer = descriptor.autofireTimeTicks;
