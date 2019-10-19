@@ -50,9 +50,9 @@ public class EntityBlasterBolt extends Entity
 		this.prevPosY = this.posY;
 		this.prevPosZ = this.posZ;
 
-		this.motionX = this.getDx() * 3;
-		this.motionY = this.getDy() * 3;
-		this.motionZ = this.getDz() * 3;
+		this.motionX = this.getDx() * 5;
+		this.motionY = this.getDy() * 5;
+		this.motionZ = this.getDz() * 5;
 
 		super.onUpdate();
 

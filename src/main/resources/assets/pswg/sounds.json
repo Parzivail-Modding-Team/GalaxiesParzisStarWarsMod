@@ -1,0 +1,20 @@
+{
+  "blaster.fire.a280": {
+	"category": "player",
+	"sounds": [
+	  "pswg:blasters/a280/fire"
+	]
+  },
+  "blaster.dryfire": {
+	"category": "player",
+	"sounds": [
+	  "pswg:blasters/dryfire"
+	]
+  },
+  "blaster.reload": {
+	"category": "player",
+	"sounds": [
+	  "pswg:blasters/reload"
+	]
+  }
+}

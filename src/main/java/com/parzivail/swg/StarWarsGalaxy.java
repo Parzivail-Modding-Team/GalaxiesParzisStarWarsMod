@@ -7,6 +7,7 @@ import com.parzivail.swg.network.client.MessageSetShipInputMode;
 import com.parzivail.swg.proxy.Common;
 import com.parzivail.swg.register.BlockRegister;
 import com.parzivail.swg.register.ItemRegister;
+import com.parzivail.swg.register.SoundRegister;
 import com.parzivail.swg.tab.SwgCreativeTab;
 import com.parzivail.swg_gen.Version;
 import com.parzivail.util.common.Lumberjack;
@@ -41,6 +42,7 @@ public class StarWarsGalaxy
 		MinecraftForge.EVENT_BUS.register(eventHandler);
 		MinecraftForge.EVENT_BUS.register(BlockRegister.class);
 		MinecraftForge.EVENT_BUS.register(ItemRegister.class);
+		MinecraftForge.EVENT_BUS.register(SoundRegister.class);
 
 		registerServerHandler(MessageSetShipInput.class);
 		registerServerHandler(MessageSetShipInputMode.class);

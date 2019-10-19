@@ -3,20 +3,19 @@ package com.parzivail.swg.item;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.data.BlasterData;
 import com.parzivail.swg.item.data.BlasterDescriptor;
+import com.parzivail.swg.register.SoundRegister;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.item.ILeftClickInterceptor;
 import com.parzivail.util.math.RaytraceHit;
+import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -364,11 +363,17 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 	@Override
 	public boolean onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
 	{
+		BlasterData d = new BlasterData(stack);
+		if (d.shotTimer > 0)
+			return false;
+
 		Vec3d look = player.getLookVec();
 		float rangeIncrease = 0; //bd.getBarrel().getRangeIncrease();
 		RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * rangeIncrease, player, new Entity[0], true);
 
 		//		Sfx.play(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
+
+		world.playSound(player, player.getPosition(), SoundRegister.getBlasterFire(descriptor.name), SoundCategory.PLAYERS, 1.0F, 1 + (float)world.rand.nextGaussian() / 10);
 
 		Entity e = new EntityBlasterBolt(world, look, descriptor.damage, descriptor.boltColor);
 		e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
@@ -379,8 +384,24 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 			EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
 			entity.attackEntityFrom(DamageSource.causePlayerDamage(player), descriptor.damage);
 		}
+		else if (hit instanceof RaytraceHitBlock)
+		{
+			RaytraceHitBlock rhb = (RaytraceHitBlock)hit;
 
-		BlasterData d = new BlasterData(stack);
+			for (int i = 0; i < 10; i++)
+			{
+				double dX = look.x / 10;
+				double dY = look.y / 10;
+				double dZ = look.z / 10;
+
+				double dMX = world.rand.nextGaussian() / 50;
+				double dMY = world.rand.nextGaussian() / 50;
+				double dMZ = world.rand.nextGaussian() / 50;
+
+				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, rhb.hitVec.x, rhb.hitVec.y, rhb.hitVec.z, -dX + dMX, -dY + dMY, -dZ + dMZ);
+			}
+		}
+
 		d.shotTimer = descriptor.autofireTimeTicks;
 		d.serialize(stack.getTagCompound());
 
