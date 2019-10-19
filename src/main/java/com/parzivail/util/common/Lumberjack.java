@@ -72,9 +72,9 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void warn(Object message)
+	public static void warn(Object message, Object... params)
 	{
-		log(Level.WARN, String.valueOf(message));
+		log(Level.WARN, String.format(String.valueOf(message), params));
 	}
 
 	/**
@@ -82,9 +82,9 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void err(Object message)
+	public static void err(Object message, Object... params)
 	{
-		log(Level.ERROR, String.valueOf(message));
+		log(Level.ERROR, String.format(String.valueOf(message), params));
 	}
 
 	/**
@@ -92,9 +92,9 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void trace(Object message)
+	public static void trace(Object message, Object... params)
 	{
-		log(Level.TRACE, String.valueOf(message));
+		log(Level.TRACE, String.format(String.valueOf(message), params));
 	}
 
 	public static void init(Logger modLog)

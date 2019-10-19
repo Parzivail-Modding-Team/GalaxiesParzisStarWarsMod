@@ -5,11 +5,13 @@ import com.parzivail.swg.item.data.BlasterData;
 import com.parzivail.swg.item.data.BlasterDescriptor;
 import com.parzivail.swg.register.SoundRegister;
 import com.parzivail.util.common.AnimatedValue;
+import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.item.ILeftClickInterceptor;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
+import net.minecraft.block.Block;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -371,12 +373,14 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 			return false;
 
 		Vec3d look = player.getLookVec();
-		float rangeIncrease = 0; //bd.getBarrel().getRangeIncrease();
+		float rangeIncrease = 0; // TODO: bd.getBarrel().getRangeIncrease();
 		RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * rangeIncrease, player, new Entity[0], true);
 
-		//		Sfx.play(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
-
-		world.playSound(player, player.getPosition(), SoundRegister.getBlasterFire(descriptor.name), SoundCategory.PLAYERS, 1.0F, 1 + (float)world.rand.nextGaussian() / 10);
+		SoundEvent sound = SoundRegister.getBlasterFire(descriptor.name);
+		if (sound == null)
+			Lumberjack.warn("Fire sound event does not exist for blaster '%s'", descriptor.name);
+		else
+			world.playSound(player, player.getPosition(), sound, SoundCategory.PLAYERS, 1.0F /* TODO: 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.rand.nextGaussian() / 10);
 
 		Entity e = new EntityBlasterBolt(world, look, descriptor.damage, descriptor.boltColor);
 		e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
@@ -401,7 +405,9 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 				double dMY = world.rand.nextGaussian() / 50;
 				double dMZ = world.rand.nextGaussian() / 50;
 
+				// TODO: sync to all clients
 				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, rhb.hitVec.x, rhb.hitVec.y, rhb.hitVec.z, -dX + dMX, -dY + dMY, -dZ + dMZ);
+				world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, rhb.hitVec.x, rhb.hitVec.y, rhb.hitVec.z, -dX + dMX, -dY + dMY, -dZ + dMZ, Block.getStateId(world.getBlockState(rhb.pos)));
 			}
 		}
 

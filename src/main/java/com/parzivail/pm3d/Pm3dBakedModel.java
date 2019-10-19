@@ -124,7 +124,6 @@ public class Pm3dBakedModel implements IBakedModel
 
 	private final void putVertexData(UnpackedBakedQuad.Builder builder, TextureAtlasSprite sprite, Pm3dVert vert, Pm3dVert norm, Pm3dUv uv)
 	{
-		// TODO handle everything not handled (texture transformations, bones, transformations, normals, e.t.c)
 		for (int e = 0; e < format.getElementCount(); e++)
 		{
 			switch (format.getElement(e).getUsage())
@@ -136,7 +135,6 @@ public class Pm3dBakedModel implements IBakedModel
 					builder.put(e, 1, 1, 1, 1);
 					break;
 				case UV:
-					// TODO handle more brushes
 					builder.put(e, sprite.getInterpolatedU(uv.u * 16), sprite.getInterpolatedV((1 - uv.v) * 16), 0, 1);
 					break;
 				case NORMAL:
