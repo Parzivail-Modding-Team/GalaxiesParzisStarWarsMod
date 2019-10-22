@@ -6,6 +6,7 @@ import com.parzivail.swg.item.ItemLightsaber;
 import com.parzivail.swg.item.SwgItem;
 import com.parzivail.swg.item.SwgItemFood;
 import com.parzivail.swg.item.data.BlasterDescriptor;
+import com.parzivail.swg.item.data.LightsaberDescriptor;
 import com.parzivail.util.item.ModularItems;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
@@ -14,9 +15,11 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.ArrayList;
+
 public class ItemRegister
 {
-	public static ItemLightsaber lightsaber;
+	public static ArrayList<ItemLightsaber> lightsabers = new ArrayList<>();
 
 	public static SwgItemFood joganFruit;
 	public static SwgItemFood chasuka;
@@ -49,7 +52,12 @@ public class ItemRegister
 	{
 		IForgeRegistry<Item> r = event.getRegistry();
 
-		r.register(lightsaber = new ItemLightsaber());
+		for (LightsaberDescriptor d : ModularItems.getLightsaberDescriptors())
+		{
+			ItemLightsaber saber = new ItemLightsaber(d);
+			r.register(saber);
+			lightsabers.add(saber);
+		}
 
 		for (BlasterDescriptor d : ModularItems.getBlasterDescriptors())
 			r.register(new ItemBlaster(d));

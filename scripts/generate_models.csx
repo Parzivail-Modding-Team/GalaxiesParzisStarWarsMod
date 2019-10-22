@@ -1,4 +1,4 @@
-var d = @"E:\Forge\Mods\PSWG\PSWG12\src\main\resources\assets\pswg\textures\items";
+var d = @"..\src\main\resources\assets\pswg\textures\items";
 
 var modNamespace = "pswg";
 var t = @"{{

@@ -34,6 +34,9 @@ public class PBlock extends Block implements IBlockWithItem
 		setUnlocalizedName(name);
 		setRegistryName(name);
 
+		setHardness(5);
+		setResistance(10);
+
 		List<AxisAlignedBB> boundingBox = createBoundingBox();
 		if (boundingBox != null)
 		{

@@ -5,7 +5,7 @@
   "range": 40,
   "cost": 0,
   "weight": 0,
-  "boltColor": "FF0000",
+  "boltColor": 16711680,
   "clipSize": 20,
   "roundsBeforeOverheat": 15,
   "cooldownTimeTicks": 20,

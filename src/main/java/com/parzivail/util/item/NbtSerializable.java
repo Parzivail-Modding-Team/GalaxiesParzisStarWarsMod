@@ -1,6 +1,8 @@
 package com.parzivail.util.item;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.parzivail.swg.item.data.LightsaberDescriptor;
 import com.parzivail.util.common.Enumerable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -12,6 +14,8 @@ import java.util.UUID;
 
 public class NbtSerializable<T extends NbtSerializable>
 {
+	private static final Gson GSON = new GsonBuilder().create();
+
 	private static final HashMap<Class, Pair<Reader, Writer>> handlers = new HashMap<>();
 	private static final HashMap<Class, Field[]> fieldCache = new HashMap<>();
 
@@ -30,9 +34,10 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(UUID.class, NbtSerializable::readUuid, NbtSerializable::writeUuid);
 
 		//		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
-		//		map(LightsaberDescriptor.class, NbtSerializable::readLightsaberDescriptor, NbtSerializable::writeLightsaberDescriptor);
 		//		map(ForcePowerDescriptor[].class, NbtSerializable::readForcePowerDescriptors, NbtSerializable::writeForcePowerDescriptors);
 		//		map(BlasterAttachment[].class, NbtSerializable::readBlasterAttachments, NbtSerializable::writeBlasterAttachments);
+
+		map(LightsaberDescriptor.class, NbtSerializable::readLightsaberDescriptor, NbtSerializable::writeLightsaberDescriptor);
 	}
 
 	private static int[] readListInteger(String s, NBTTagCompound compound)
@@ -76,32 +81,23 @@ public class NbtSerializable<T extends NbtSerializable>
 	//		else
 	//			compound.setInteger(s, blasterAttachment.getId());
 	//	}
-	//
-	//	private static LightsaberDescriptor readLightsaberDescriptor(String s, NBTTagCompound compound)
-	//	{
-	//		LightsaberDescriptor ld = new LightsaberDescriptor();
-	//		if (!compound.hasKey(s))
-	//			return ld;
-	//		NBTTagCompound ldCompound = compound.getCompoundTag(s);
-	//		ld.bladeColor = ldCompound.getInteger("bladeColor");
-	//		ld.bladeLength = ldCompound.getFloat("bladeLength");
-	//		ld.coreColor = ldCompound.getInteger("coreColor");
-	//		ld.unstable = ldCompound.getBoolean("unstable");
-	//		return ld;
-	//	}
-	//
-	//	private static void writeLightsaberDescriptor(String s, LightsaberDescriptor ld, NBTTagCompound compound)
-	//	{
-	//		if (ld == null)
-	//			ld = new LightsaberDescriptor();
-	//		NBTTagCompound ldCompound = new NBTTagCompound();
-	//		ldCompound.setInteger("bladeColor", ld.bladeColor);
-	//		ldCompound.setFloat("bladeLength", ld.bladeLength);
-	//		ldCompound.setInteger("coreColor", ld.coreColor);
-	//		ldCompound.setBoolean("unstable", ld.unstable);
-	//		compound.setTag(s, ldCompound);
-	//	}
-	//
+
+	private static LightsaberDescriptor readLightsaberDescriptor(String s, NBTTagCompound compound)
+	{
+		if (!compound.hasKey(s))
+			return LightsaberDescriptor.DEFAULT;
+
+		return GSON.fromJson(compound.getString(s), LightsaberDescriptor.class);
+	}
+
+	private static void writeLightsaberDescriptor(String s, LightsaberDescriptor ld, NBTTagCompound compound)
+	{
+		if (ld == null)
+			throw new IllegalArgumentException("Lightsaber descriptor was not copied from the item");
+
+		compound.setString(s, GSON.toJson(ld));
+	}
+
 	//	private static ForcePowerDescriptor[] readForcePowerDescriptors(String s, NBTTagCompound compound)
 	//	{
 	//		return new Gson().fromJson(compound.getString(s), ForcePowerDescriptor[].class);

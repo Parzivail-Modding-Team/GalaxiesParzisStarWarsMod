@@ -6,6 +6,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.animation.HyperspaceEnter;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.item.ItemLightsaber;
 import com.parzivail.swg.network.client.MessageItemLeftClick;
 import com.parzivail.swg.register.ItemRegister;
 import com.parzivail.swg.register.KeybindRegister;
@@ -117,7 +118,8 @@ public class Client extends Common
 	@Override
 	public void onRegisterItem(RegistryEvent.Register<Item> event)
 	{
-		setItemRenderer(ItemRegister.lightsaber, new RenderItemLightsaber());
+		for (ItemLightsaber lightsaber : ItemRegister.lightsabers)
+			setItemRenderer(lightsaber, new RenderItemLightsaber());
 	}
 
 	public void setItemRenderer(Item item, TileEntityItemStackRenderer renderer)

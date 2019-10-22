@@ -17,6 +17,9 @@ public class PBlockFalling extends BlockFalling implements IBlockWithItem
 		this.name = name;
 		setUnlocalizedName(name);
 		setRegistryName(name);
+
+		setHardness(5);
+		setResistance(10);
 	}
 
 	@Override

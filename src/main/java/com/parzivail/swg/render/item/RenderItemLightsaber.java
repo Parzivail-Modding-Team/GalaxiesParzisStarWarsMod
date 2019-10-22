@@ -24,14 +24,14 @@ public class RenderItemLightsaber extends TileEntityItemStackRenderer
 		LightsaberDescriptor d = bd.descriptor;
 
 		if (d == null)
-			d = LightsaberDescriptor.BLANK;
+			d = LightsaberDescriptor.DEFAULT;
 
 		GL.PushMatrix();
 
 		GL.Translate(0.5f, 0.5f, 0.5f);
 
-		float length = d.bladeLength * MathHelper.clamp((bd.openAnimation + partialTicks * bd.openingState - bd.openingState) / 4f, 0, 1);
-		RenderBeam.render(0.6f, length, 0.037f, 19, 0.1f, true, d.coreColor, true, d.bladeColor, d.unstable ? 0.002f : 0, d.unstable ? 0.006f : 0, true);
+		float length = d.blade.length * MathHelper.clamp((bd.openAnimation + partialTicks * bd.openingState - bd.openingState) / 4f, 0, 1);
+		RenderBeam.render(0.6f, length * 1.5f, 0.037f, 19, 0.1f, true, d.blade.coreColor, true, d.blade.glowColor, d.unstable ? 0.002f : 0, d.unstable ? 0.006f : 0, true);
 
 		GL.PopMatrix();
 	}

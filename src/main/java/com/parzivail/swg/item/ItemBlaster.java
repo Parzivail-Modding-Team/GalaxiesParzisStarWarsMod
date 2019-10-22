@@ -6,7 +6,6 @@ import com.parzivail.swg.item.data.BlasterData;
 import com.parzivail.swg.item.data.BlasterDescriptor;
 import com.parzivail.swg.register.SoundRegister;
 import com.parzivail.util.common.AnimatedValue;
-import com.parzivail.util.common.Lumberjack;
 import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.item.ILeftClickInterceptor;
@@ -437,10 +436,8 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 			float rangeIncrease = 0; // TODO: bd.getBarrel().getRangeIncrease();
 			RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * rangeIncrease, player, new Entity[0], true);
 
-			SoundEvent sound = SoundRegister.getBlasterFire(descriptor.name);
-			if (sound == null)
-				Lumberjack.warn("Fire sound event does not exist for blaster '%s'", descriptor.name);
-			else
+			SoundEvent sound = SoundRegister.getSound("blaster.fire." + descriptor.name);
+			if (sound != null)
 				world.playSound(player, player.getPosition(), sound, SoundCategory.PLAYERS, 1.0F /* TODO: 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.rand.nextGaussian() / 10);
 
 			Entity e = new EntityBlasterBolt(world, look, descriptor.damage, descriptor.boltColor);

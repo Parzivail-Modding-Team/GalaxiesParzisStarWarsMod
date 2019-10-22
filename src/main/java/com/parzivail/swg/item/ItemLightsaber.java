@@ -4,9 +4,11 @@ import com.google.common.collect.Multimap;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.data.LightsaberData;
 import com.parzivail.swg.item.data.LightsaberDescriptor;
+import com.parzivail.swg.register.SoundRegister;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +16,8 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -21,9 +25,16 @@ import java.util.List;
 
 public class ItemLightsaber extends SwgItem
 {
-	public ItemLightsaber()
+	/**
+	 * For item creation only. Use the descriptor of the LightsaberData for the stack instead.
+	 */
+	@Deprecated
+	private final LightsaberDescriptor descriptor;
+
+	public ItemLightsaber(LightsaberDescriptor d)
 	{
-		super("lightsaber");
+		super("lightsaber_" + d.name);
+		descriptor = d;
 		setMaxStackSize(1);
 		setMaxDamage(0);
 	}
@@ -35,25 +46,48 @@ public class ItemLightsaber extends SwgItem
 
 		if (player.isSneaking())
 		{
-			if (!world.isRemote)
+			LightsaberData ld = new LightsaberData(stack);
+
+			if (ld.openingState == 0)
 			{
-				LightsaberData bd = new LightsaberData(stack);
+				ld.isOpen = !ld.isOpen;
 
-				if (bd.openingState == 0)
+				if (ld.isOpen)
 				{
-					bd.isOpen = !bd.isOpen;
-
-					//					if (bd.isOpen)
-					//						Sfx.play(player, Resources.modColon("swg.fx.saber.start"), 1, 1);
-					//					else
-					//						Sfx.play(player, Resources.modColon("swg.fx.saber.stop"), 1, 1);
+					SoundEvent sound = SoundRegister.getSound("lightsaber.start." + ld.descriptor.sounds.start);
+					if (sound != null)
+						world.playSound(player, player.getPosition(), sound, SoundCategory.PLAYERS, 1, 1);
 				}
-
-				bd.serialize(stack.getTagCompound());
+				else
+				{
+					SoundEvent sound = SoundRegister.getSound("lightsaber.stop." + ld.descriptor.sounds.stop);
+					if (sound != null)
+						world.playSound(player, player.getPosition(), sound, SoundCategory.PLAYERS, 1, 1);
+				}
 			}
+
+			if (!world.isRemote)
+				ld.serialize(stack.getTagCompound());
 		}
 
 		return super.onItemRightClick(world, player, hand);
+	}
+
+	@Override
+	public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
+	{
+		if (!(entityLiving instanceof EntityPlayer))
+			return super.onEntitySwing(entityLiving, stack);
+
+		EntityPlayer player = (EntityPlayer)entityLiving;
+		World world = player.world;
+
+		LightsaberData ld = new LightsaberData(stack);
+		SoundEvent sound = SoundRegister.getSound("lightsaber.swing." + ld.descriptor.sounds.swing);
+		if (sound != null)
+			world.playSound(player, player.getPosition(), sound, SoundCategory.PLAYERS, 1, 1 + (float)world.rand.nextGaussian() / 10);
+
+		return super.onEntitySwing(entityLiving, stack);
 	}
 
 	@Override
@@ -68,9 +102,9 @@ public class ItemLightsaber extends SwgItem
 		}
 		else
 		{
-			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.coreColor")), String.format("#%06X", d.coreColor & 0xFFFFFF)));
-			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.bladeColor")), String.format("#%06X", d.bladeColor & 0xFFFFFF)));
-			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.bladeLength")), d.bladeLength));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.coreColor")), String.format("#%06X", d.blade.coreColor & 0xFFFFFF)));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.bladeColor")), String.format("#%06X", d.blade.glowColor & 0xFFFFFF)));
+			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.bladeLength")), d.blade.length));
 			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("lightsaber.unstable")), d.unstable));
 		}
 	}
@@ -82,9 +116,9 @@ public class ItemLightsaber extends SwgItem
 
 		if (slot == EntityEquipmentSlot.MAINHAND)
 		{
-			LightsaberData bd = new LightsaberData(stack);
+			LightsaberData ld = new LightsaberData(stack);
 
-			if (bd.isOpen)
+			if (ld.isOpen)
 				multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 15, 0));
 			else
 				multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", 1, 0));
@@ -96,35 +130,38 @@ public class ItemLightsaber extends SwgItem
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected)
 	{
-		LightsaberData bd = new LightsaberData(stack);
+		LightsaberData ld = new LightsaberData(stack);
 
-		if (bd.isOpen)
+		if (ld.descriptor == null)
+			ld.descriptor = descriptor;
+
+		if (ld.isOpen)
 		{
-			if (bd.openAnimation < 4)
+			if (ld.openAnimation < 4)
 			{
-				bd.openAnimation++;
-				bd.openingState = 1;
+				ld.openAnimation++;
+				ld.openingState = 1;
 			}
 			else
 			{
-				bd.openAnimation = 4;
-				bd.openingState = 0;
+				ld.openAnimation = 4;
+				ld.openingState = 0;
 			}
 		}
 		else
 		{
-			if (bd.openAnimation > 0)
+			if (ld.openAnimation > 0)
 			{
-				bd.openAnimation--;
-				bd.openingState = -1;
+				ld.openAnimation--;
+				ld.openingState = -1;
 			}
 			else
 			{
-				bd.openAnimation = 0;
-				bd.openingState = 0;
+				ld.openAnimation = 0;
+				ld.openingState = 0;
 			}
 		}
 
-		bd.serialize(stack.getTagCompound());
+		ld.serialize(stack.getTagCompound());
 	}
 }

@@ -8,6 +8,12 @@ import java.lang.reflect.Type;
 
 public class ModuleBlasterDeserializer implements JsonDeserializer<BlasterDescriptor>
 {
+	public static final ModuleBlasterDeserializer INSTANCE = new ModuleBlasterDeserializer();
+
+	private ModuleBlasterDeserializer()
+	{
+	}
+
 	@Override
 	public BlasterDescriptor deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
 	{

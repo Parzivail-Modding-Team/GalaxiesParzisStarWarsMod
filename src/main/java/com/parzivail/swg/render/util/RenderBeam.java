@@ -64,18 +64,18 @@ public class RenderBeam
 			GL.Enable(EnableCap.CullFace);
 
 			// draw core
-			GL.Color(coreColor);
+			GL.Color(coreColor, 255);
 
-			boolean isBladeUnstable = localInstability != 0;
+			boolean shouldPulsate = localInstability != 0;
 
-			int segments = isBladeUnstable ? 15 : 1;
+			int segments = shouldPulsate ? 15 : 1;
 			float dSegments = 1f / segments;
 			float dLength = length / segments;
 			float bottomThickness = 0.035f;
 			float topThickness = bottomThickness * (1 - taper); //0.022f;
 			double offset = Resources.RANDOM.nextGaussian() * 10;
 
-			double dTRoundBottom = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * (segments + 1) * 3) * localInstability : 0;
+			double dTRoundBottom = shouldPulsate ? Resources.NOISE.eval(offset, dLength * (segments + 1) * 3) * localInstability : 0;
 			Fx.D3.DrawSolidBoxSkewTaper(roundedEnd ? 0.01f : (topThickness + dTRoundBottom), topThickness + dTRoundBottom, 0, length + 0.02f, 0, 0, length, 0);
 
 			for (int i = 0; i < segments; i++)
@@ -83,8 +83,8 @@ public class RenderBeam
 				float topThicknessLerp = (float)Fx.Util.Lerp(bottomThickness, topThickness, dSegments * (i + 1));
 				float bottomThicknessLerp = (float)Fx.Util.Lerp(bottomThickness, topThickness, dSegments * i);
 
-				double dTTop = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * (i + 1) * 3) * localInstability : 0;
-				double dTBottom = isBladeUnstable ? Resources.NOISE.eval(offset, dLength * i * 3) * localInstability : 0;
+				double dTTop = shouldPulsate ? Resources.NOISE.eval(offset, dLength * (i + 1) * 3) * localInstability : 0;
+				double dTBottom = shouldPulsate ? Resources.NOISE.eval(offset, dLength * i * 3) * localInstability : 0;
 
 				Fx.D3.DrawSolidBoxSkewTaper(topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
 			}

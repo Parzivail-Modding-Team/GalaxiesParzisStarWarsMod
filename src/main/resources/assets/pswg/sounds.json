@@ -1,10 +1,4 @@
 {
-  "blaster.fire.a280": {
-	"category": "player",
-	"sounds": [
-	  "pswg:blasters/a280/fire"
-	]
-  },
   "blaster.dryfire": {
 	"category": "player",
 	"sounds": [
@@ -15,6 +9,54 @@
 	"category": "player",
 	"sounds": [
 	  "pswg:blasters/reload"
+	]
+  },
+  "blaster.fire.a280": {
+	"category": "player",
+	"sounds": [
+	  "pswg:blasters/a280/fire"
+	]
+  },
+  "lightsaber.block": {
+	"category": "player",
+	"sounds": [
+	  "pswg:lightsabers/block"
+	]
+  },
+  "lightsaber.spark": {
+	"category": "player",
+	"sounds": [
+	  "pswg:lightsabers/spark"
+	]
+  },
+  "lightsaber.deflect": {
+	"category": "player",
+	"sounds": [
+	  "pswg:lightsabers/deflect"
+	]
+  },
+  "lightsaber.idle.default": {
+	"category": "player",
+	"sounds": [
+	  "pswg:lightsabers/default/idle"
+	]
+  },
+  "lightsaber.start.default": {
+	"category": "player",
+	"sounds": [
+	  "pswg:lightsabers/default/start"
+	]
+  },
+  "lightsaber.stop.default": {
+	"category": "player",
+	"sounds": [
+	  "pswg:lightsabers/default/stop"
+	]
+  },
+  "lightsaber.swing.default": {
+	"category": "player",
+	"sounds": [
+	  "pswg:lightsabers/default/swing1", "pswg:lightsabers/default/swing2", "pswg:lightsabers/default/swing3"
 	]
   }
 }

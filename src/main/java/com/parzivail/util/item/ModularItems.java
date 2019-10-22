@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.item.data.BlasterDescriptor;
+import com.parzivail.swg.item.data.LightsaberDescriptor;
 import com.parzivail.swg.register.ItemRegister;
-import com.parzivail.swg.register.deserializer.ModuleBlasterDeserializer;
 import com.parzivail.util.common.Lumberjack;
 
 import java.io.IOException;
@@ -21,9 +21,11 @@ import java.util.Map;
 
 public class ModularItems
 {
+	private static final Gson GSON = new GsonBuilder().create();
+
 	public static ArrayList<BlasterDescriptor> getBlasterDescriptors()
 	{
-		Gson gson = new GsonBuilder().registerTypeAdapter(BlasterDescriptor.class, new ModuleBlasterDeserializer()).create();
+		//		Gson gson = new GsonBuilder().registerTypeAdapter(BlasterDescriptor.class, ModuleBlasterDeserializer.INSTANCE).create();
 		ArrayList<BlasterDescriptor> descriptors = new ArrayList<>();
 
 		Path[] resourceFiles = getResourceFolderFiles("assets/" + Resources.MODID + "/modules/blasters");
@@ -34,12 +36,38 @@ public class ModularItems
 			{
 				try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream))
 				{
-					descriptors.add(gson.fromJson(inputStreamReader, BlasterDescriptor.class));
+					descriptors.add(GSON.fromJson(inputStreamReader, BlasterDescriptor.class));
 				}
 			}
 			catch (Exception e)
 			{
 				Lumberjack.err("Failed to load blaster module: " + f.getFileName());
+				e.printStackTrace();
+			}
+		}
+
+		return descriptors;
+	}
+
+	public static ArrayList<LightsaberDescriptor> getLightsaberDescriptors()
+	{
+		//		Gson gson = new GsonBuilder().registerTypeAdapter(LightsaberDescriptor.class, ModuleLightsaberDeserializer.INSTANCE).create();
+		ArrayList<LightsaberDescriptor> descriptors = new ArrayList<>();
+
+		Path[] resourceFiles = getResourceFolderFiles("assets/" + Resources.MODID + "/modules/lightsabers");
+
+		for (Path f : resourceFiles)
+		{
+			try (InputStream inputStream = Files.newInputStream(f))
+			{
+				try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream))
+				{
+					descriptors.add(GSON.fromJson(inputStreamReader, LightsaberDescriptor.class));
+				}
+			}
+			catch (Exception e)
+			{
+				Lumberjack.err("Failed to load lightsaber module: " + f.getFileName());
 				e.printStackTrace();
 			}
 		}
@@ -73,8 +101,7 @@ public class ModularItems
 		{
 			Map<String, String> env = new HashMap<>();
 			env.put("create", "true");
-			FileSystem zipfs = FileSystems.newFileSystem(uri, env);
-
+			FileSystem dummy = FileSystems.newFileSystem(uri, env);
 			return Paths.get(uri);
 		}
 	}
