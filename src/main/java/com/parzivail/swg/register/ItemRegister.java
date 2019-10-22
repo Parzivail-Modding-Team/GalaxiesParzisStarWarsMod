@@ -18,29 +18,31 @@ public class ItemRegister
 {
 	public static ItemLightsaber lightsaber;
 
-	private static SwgItemFood joganFruit;
-	private static SwgItemFood chasuka;
-	private static SwgItemFood meiloorun;
-	private static SwgItemFood mynockWing;
-	private static SwgItemFood friedMynockWing;
-	private static SwgItemFood banthaChop;
-	private static SwgItemFood banthaSteak;
-	private static SwgItemFood nerfChop;
-	private static SwgItemFood nerfSteak;
-	private static SwgItemFood gizkaChop;
-	private static SwgItemFood gizkaSteak;
-	private static SwgItemFood flangthTakeout;
-	private static SwgItemFood flangthPlate;
+	public static SwgItemFood joganFruit;
+	public static SwgItemFood chasuka;
+	public static SwgItemFood meiloorun;
+	public static SwgItemFood mynockWing;
+	public static SwgItemFood friedMynockWing;
+	public static SwgItemFood banthaChop;
+	public static SwgItemFood banthaSteak;
+	public static SwgItemFood nerfChop;
+	public static SwgItemFood nerfSteak;
+	public static SwgItemFood gizkaChop;
+	public static SwgItemFood gizkaSteak;
+	public static SwgItemFood flangthTakeout;
+	public static SwgItemFood flangthPlate;
 
-	private static SwgItemFood redDeathStick;
-	private static SwgItemFood yellowDeathStick;
+	public static SwgItemFood redDeathStick;
+	public static SwgItemFood yellowDeathStick;
 
-	private static SwgItemFood blueMilk;
-	private static SwgItemFood bluePuffCube;
-	private static SwgItemFood blueYogurt;
+	public static SwgItemFood blueMilk;
+	public static SwgItemFood bluePuffCube;
+	public static SwgItemFood blueYogurt;
 
-	private static SwgItemFood qrikkiBread;
-	private static SwgItemFood qrikkiWaffle;
+	public static SwgItemFood qrikkiBread;
+	public static SwgItemFood qrikkiWaffle;
+
+	public static SwgItem gasCanisterSmall;
 
 	@SubscribeEvent
 	public static void registerItems(RegistryEvent.Register<Item> event)
@@ -75,6 +77,8 @@ public class ItemRegister
 
 		registerQuick(r, qrikkiBread = new SwgItemFood("qrikki_bread", 5, 0.6F));
 		registerQuick(r, qrikkiWaffle = new SwgItemFood("qrikki_waffle", 8, 0.7F));
+
+		registerQuick(r, gasCanisterSmall = new SwgItem("gas_canister_small"));
 
 		StarWarsGalaxy.proxy.onRegisterItem(event);
 	}

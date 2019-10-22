@@ -12,6 +12,8 @@ public class BlasterData extends NbtSerializable<BlasterData>
 	@NbtSave
 	public int shotsRemaining;
 	@NbtSave
+	public int shotsWhenFull;
+	@NbtSave
 	public int heat;
 	@NbtSave
 	public int cooldownTimer;

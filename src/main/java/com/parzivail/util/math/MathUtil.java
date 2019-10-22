@@ -1,5 +1,7 @@
 package com.parzivail.util.math;
 
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
@@ -112,5 +114,14 @@ public class MathUtil
 			f3 -= 360.0F;
 
 		return from + p * f3;
+	}
+
+	public static Vec3d getVectorForRotation(float pitch, float yaw)
+	{
+		float f = MathHelper.cos(-yaw * 0.017453292F - (float)Math.PI);
+		float f1 = MathHelper.sin(-yaw * 0.017453292F - (float)Math.PI);
+		float f2 = -MathHelper.cos(-pitch * 0.017453292F);
+		float f3 = MathHelper.sin(-pitch * 0.017453292F);
+		return new Vec3d(f1 * f2, f3, f * f2);
 	}
 }

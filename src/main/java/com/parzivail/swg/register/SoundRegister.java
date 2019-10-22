@@ -15,6 +15,9 @@ public class SoundRegister
 {
 	private static HashMap<String, SoundEvent> BLASTER_FIRE = new HashMap<>();
 
+	public static SoundEvent BLASTER_DRYFIRE;
+	public static SoundEvent BLASTER_RELOAD;
+
 	@SubscribeEvent
 	public static void registerSoundEvents(RegistryEvent.Register<SoundEvent> event)
 	{
@@ -28,6 +31,9 @@ public class SoundRegister
 
 			BLASTER_FIRE.put(d.name, soundEvent);
 		}
+
+		r.register(BLASTER_DRYFIRE = getSound("blaster.dryfire"));
+		r.register(BLASTER_RELOAD = getSound("blaster.reload"));
 	}
 
 	private static SoundEvent getSound(String soundId)

@@ -1,17 +1,21 @@
 package com.parzivail.swg.item;
 
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.item.data.BlasterData;
 import com.parzivail.swg.item.data.BlasterDescriptor;
 import com.parzivail.swg.register.SoundRegister;
 import com.parzivail.util.common.AnimatedValue;
 import com.parzivail.util.common.Lumberjack;
+import com.parzivail.util.common.Pair;
 import com.parzivail.util.entity.EntityUtils;
 import com.parzivail.util.item.ILeftClickInterceptor;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.RaytraceHit;
 import com.parzivail.util.math.RaytraceHitBlock;
 import com.parzivail.util.math.RaytraceHitEntity;
 import net.minecraft.block.Block;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -37,7 +41,7 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 	{
 		super("blaster." + descriptor.name);
 		setMaxStackSize(1);
-		setMaxDamage(0);
+		setMaxDamage(100);
 
 		this.descriptor = descriptor;
 
@@ -75,8 +79,11 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flag)
 	{
-		//		BlasterData bd = new BlasterData(stack);
-		//
+		BlasterData d = new BlasterData(stack);
+
+		tooltip.add(I18n.format(Resources.guiDot("damage"), descriptor.damage));
+		tooltip.add(I18n.format(Resources.guiDot("range"), descriptor.range));
+
 		//		if (bd.getScope() != null)
 		//			text.add(String.format("%s: %s", I18n.format(Resources.guiDot("scope")), I18n.format(bd.getScope().name)));
 		//		if (bd.getBarrel() != null)
@@ -215,7 +222,7 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 	private float getSpreadAmount(ItemStack stack, EntityPlayer player)
 	{
 		if (descriptor.spread == 0)
-			return 0;
+			return 0.3f;
 
 		BlasterData bd = new BlasterData(stack);
 		if (bd.isAimingDownSights)
@@ -348,19 +355,26 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 	//		return true;
 	//	}
 
-	//	private Pair<Integer, BlasterPowerPack> getAnotherPack(EntityPlayer player)
-	//	{
-	//		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
-	//		{
-	//			ItemStack s = player.inventory.getStackInSlot(i);
-	//			BlasterPowerPack a = ItemBlasterPowerPack.getPackType(s);
-	//			if (a == null)
-	//				continue;
-	//
-	//			return new Pair<>(i, a);
-	//		}
-	//		return null;
-	//	}
+	private Pair<Integer, BlasterPowerPack> getAnotherPack(EntityPlayer player)
+	{
+		for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+		{
+			ItemStack s = player.inventory.getStackInSlot(i);
+			BlasterPowerPack a = BlasterPowerPack.getPackType(s);
+			if (a == null)
+				continue;
+
+			return new Pair<>(i, a);
+		}
+		return null;
+	}
+
+	@Override
+	public boolean hasEffect(ItemStack stack)
+	{
+		BlasterData bd = new BlasterData(stack);
+		return bd.isCoolingDown();
+	}
 
 	@Override
 	public boolean onItemLeftClick(ItemStack stack, World world, EntityPlayer player)
@@ -372,51 +386,101 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 		if (d.shotTimer > 0)
 			return false;
 
-		Vec3d look = player.getLookVec();
-		float rangeIncrease = 0; // TODO: bd.getBarrel().getRangeIncrease();
-		RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * rangeIncrease, player, new Entity[0], true);
+		boolean canFire = true;
 
-		SoundEvent sound = SoundRegister.getBlasterFire(descriptor.name);
-		if (sound == null)
-			Lumberjack.warn("Fire sound event does not exist for blaster '%s'", descriptor.name);
-		else
-			world.playSound(player, player.getPosition(), sound, SoundCategory.PLAYERS, 1.0F /* TODO: 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.rand.nextGaussian() / 10);
-
-		Entity e = new EntityBlasterBolt(world, look, descriptor.damage, descriptor.boltColor);
-		e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-		world.spawnEntity(e);
-
-		if (hit instanceof RaytraceHitEntity && ((RaytraceHitEntity)hit).entity instanceof EntityLiving)
+		if (!player.capabilities.isCreativeMode && d.shotsRemaining <= 0)
 		{
-			EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
-			entity.attackEntityFrom(DamageSource.causePlayerDamage(player), descriptor.damage);
-		}
-		else if (hit instanceof RaytraceHitBlock)
-		{
-			RaytraceHitBlock rhb = (RaytraceHitBlock)hit;
+			Pair<Integer, BlasterPowerPack> nextPack = getAnotherPack(player);
 
-			for (int i = 0; i < 10; i++)
+			if (nextPack == null)
 			{
-				double dX = look.x / 10;
-				double dY = look.y / 10;
-				double dZ = look.z / 10;
+				world.playSound(player, player.getPosition(), SoundRegister.BLASTER_DRYFIRE, SoundCategory.PLAYERS, 1, 1);
 
-				double dMX = world.rand.nextGaussian() / 50;
-				double dMY = world.rand.nextGaussian() / 50;
-				double dMZ = world.rand.nextGaussian() / 50;
+				stack.setItemDamage(0);
 
-				// TODO: sync to all clients
-				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, rhb.hitVec.x, rhb.hitVec.y, rhb.hitVec.z, -dX + dMX, -dY + dMY, -dZ + dMZ);
-				world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, rhb.hitVec.x, rhb.hitVec.y, rhb.hitVec.z, -dX + dMX, -dY + dMY, -dZ + dMZ, Block.getStateId(world.getBlockState(rhb.pos)));
+				canFire = false;
+			}
+			else
+			{
+				d.shotsRemaining = nextPack.right.getNumShots();
+				d.shotsWhenFull = nextPack.right.getNumShots();
+
+				stack.setItemDamage(100);
+
+				player.inventory.decrStackSize(nextPack.left, 1);
+				world.playSound(player, player.getPosition(), SoundRegister.BLASTER_RELOAD, SoundCategory.PLAYERS, 1, 1);
 			}
 		}
 
-		d.heat += d.getHeatPerShot() * descriptor.autofireTimeTicks / 4;
-		if (d.heat >= descriptor.roundsBeforeOverheat * d.getHeatPerShot())
+		if (canFire)
 		{
-			d.heat = 0;
-			d.cooldownTimer = descriptor.cooldownTimeTicks;
+			d.shotsRemaining--;
+
+			if (d.shotsRemaining < 0)
+				d.shotsRemaining = 0;
+
+			if (d.shotsWhenFull == 0)
+				stack.setItemDamage(100);
+			else
+				stack.setItemDamage((int)((d.shotsWhenFull - d.shotsRemaining) / (float)d.shotsWhenFull * 100));
+
+			float spread = getSpreadAmount(stack, player);
+
+			float hS = (float)((world.rand.nextGaussian() * 2 - 1) * spread);
+			float vS = (float)((world.rand.nextGaussian() * 2 - 1) * spread);
+
+			float hSR = 1/* - d.getBarrel().getHorizontalSpreadReduction()*/;
+			float vSR = 1/* - d.getBarrel().getVerticalSpreadReduction()*/;
+
+			Vec3d look = MathUtil.getVectorForRotation(player.rotationPitch + vS * vSR, player.rotationYaw + hS * hSR);
+
+			float rangeIncrease = 0; // TODO: bd.getBarrel().getRangeIncrease();
+			RaytraceHit hit = EntityUtils.rayTrace(look, descriptor.range + descriptor.range * rangeIncrease, player, new Entity[0], true);
+
+			SoundEvent sound = SoundRegister.getBlasterFire(descriptor.name);
+			if (sound == null)
+				Lumberjack.warn("Fire sound event does not exist for blaster '%s'", descriptor.name);
+			else
+				world.playSound(player, player.getPosition(), sound, SoundCategory.PLAYERS, 1.0F /* TODO: 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.rand.nextGaussian() / 10);
+
+			Entity e = new EntityBlasterBolt(world, look, descriptor.damage, descriptor.boltColor);
+			e.setPosition(player.posX, player.posY + player.getEyeHeight(), player.posZ);
+			world.spawnEntity(e);
+
+			if (hit instanceof RaytraceHitEntity && ((RaytraceHitEntity)hit).entity instanceof EntityLiving)
+			{
+				EntityLiving entity = (EntityLiving)((RaytraceHitEntity)hit).entity;
+				entity.attackEntityFrom(DamageSource.causePlayerDamage(player), descriptor.damage);
+			}
+			else if (hit instanceof RaytraceHitBlock)
+			{
+				RaytraceHitBlock rhb = (RaytraceHitBlock)hit;
+
+				for (int i = 0; i < 10; i++)
+				{
+					double dX = look.x / 10;
+					double dY = look.y / 10;
+					double dZ = look.z / 10;
+
+					double dMX = world.rand.nextGaussian() / 50;
+					double dMY = world.rand.nextGaussian() / 50;
+					double dMZ = world.rand.nextGaussian() / 50;
+
+					// TODO: sync to all clients
+					world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, rhb.hitVec.x, rhb.hitVec.y, rhb.hitVec.z, -dX + dMX, -dY + dMY, -dZ + dMZ);
+					world.spawnParticle(EnumParticleTypes.BLOCK_CRACK, rhb.hitVec.x, rhb.hitVec.y, rhb.hitVec.z, -dX + dMX, -dY + dMY, -dZ + dMZ, Block.getStateId(world.getBlockState(rhb.pos)));
+				}
+			}
+
+			d.heat += d.getHeatPerShot() * descriptor.autofireTimeTicks / 4;
+			if (d.heat >= descriptor.roundsBeforeOverheat * d.getHeatPerShot())
+			{
+				d.heat = 0;
+				d.cooldownTimer = descriptor.cooldownTimeTicks;
+			}
 		}
+
+		// TODO: implement recoil in a smooth and cross-sided manner
 
 		d.shotTimer = descriptor.autofireTimeTicks;
 		d.serialize(stack.getTagCompound());

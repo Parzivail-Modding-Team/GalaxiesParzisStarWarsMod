@@ -1,7 +1,7 @@
 {
   "name": "a280",
   "damage": 8,
-  "spread": 0,
+  "spread": 0.3,
   "range": 40,
   "cost": 0,
   "weight": 0,
