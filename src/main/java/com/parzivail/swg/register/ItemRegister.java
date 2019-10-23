@@ -59,6 +59,10 @@ public class ItemRegister
 			lightsabers.add(saber);
 		}
 
+		ItemLightsaber customSaber = new ItemLightsaber(LightsaberDescriptor.DEFAULT, "custom");
+		r.register(customSaber);
+		lightsabers.add(customSaber);
+
 		for (BlasterDescriptor d : ModularItems.getBlasterDescriptors())
 			r.register(new ItemBlaster(d));
 

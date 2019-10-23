@@ -33,7 +33,12 @@ public class ItemLightsaber extends SwgItem
 
 	public ItemLightsaber(LightsaberDescriptor d)
 	{
-		super("lightsaber_" + d.name);
+		this(d, d.name);
+	}
+
+	public ItemLightsaber(LightsaberDescriptor d, String name)
+	{
+		super("lightsaber_" + name);
 		descriptor = d;
 		setMaxStackSize(1);
 		setMaxDamage(0);

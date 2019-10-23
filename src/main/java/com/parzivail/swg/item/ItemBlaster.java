@@ -385,8 +385,6 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 		if (d.shotTimer > 0)
 			return false;
 
-		boolean canFire = true;
-
 		if (!player.capabilities.isCreativeMode && d.shotsRemaining <= 0)
 		{
 			Pair<Integer, BlasterPowerPack> nextPack = getAnotherPack(player);
@@ -394,24 +392,20 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 			if (nextPack == null)
 			{
 				world.playSound(player, player.getPosition(), SoundRegister.BLASTER_DRYFIRE, SoundCategory.PLAYERS, 1, 1);
-
-				stack.setItemDamage(0);
-
-				canFire = false;
+				stack.setItemDamage(getMaxDamage(stack));
 			}
 			else
 			{
 				d.shotsRemaining = nextPack.right.getNumShots();
 				d.shotsWhenFull = nextPack.right.getNumShots();
 
-				stack.setItemDamage(100);
+				stack.setItemDamage(0);
 
 				player.inventory.decrStackSize(nextPack.left, 1);
 				world.playSound(player, player.getPosition(), SoundRegister.BLASTER_RELOAD, SoundCategory.PLAYERS, 1, 1);
 			}
 		}
-
-		if (canFire)
+		else
 		{
 			d.shotsRemaining--;
 
@@ -421,7 +415,7 @@ public class ItemBlaster extends SwgItem implements ILeftClickInterceptor
 			if (d.shotsWhenFull == 0)
 				stack.setItemDamage(100);
 			else
-				stack.setItemDamage((int)((d.shotsWhenFull - d.shotsRemaining) / (float)d.shotsWhenFull * 100));
+				stack.setItemDamage((int)((d.shotsWhenFull - d.shotsRemaining) / (float)d.shotsWhenFull * getMaxDamage(stack)));
 
 			float spread = getSpreadAmount(stack, player);
 
