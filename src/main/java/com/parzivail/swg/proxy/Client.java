@@ -6,6 +6,7 @@ import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.animation.HyperspaceEnter;
 import com.parzivail.swg.entity.EntityBlasterBolt;
 import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.entity.ship.EntityT65B;
 import com.parzivail.swg.item.ItemLightsaber;
 import com.parzivail.swg.network.client.MessageItemLeftClick;
 import com.parzivail.swg.register.ItemRegister;
@@ -89,7 +90,7 @@ public class Client extends Common
 		ModelLoaderRegistry.registerLoader(new Pm3dModelLoader());
 		ModelLoaderRegistry.registerLoader(new DummyBuiltinLoader());
 
-		RenderingRegistry.registerEntityRenderingHandler(EntityShip.class, RenderShip::new);
+		RenderingRegistry.registerEntityRenderingHandler(EntityT65B.class, renderManagerIn -> new RenderShip(renderManagerIn, Pr3ModelRegister.XwingT65b));
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, RenderBlasterBolt::new);
 
 		try
@@ -133,8 +134,8 @@ public class Client extends Common
 		MouseHelper mouseHelper = mc.mouseHelper;
 		float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
 		float f1 = f * f * f * 8.0F;
-		int shipInputMode = entityShip.getInputMode();
-		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, EntityShip.shipInputModes[shipInputMode], mc.gameSettings.keyBindJump.isKeyDown());
+		ShipInputMode shipInputMode = entityShip.getShipInputMode();
+		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, shipInputMode, mc.gameSettings.keyBindJump.isKeyDown());
 	}
 
 	public MovementInput getMovementInput(EntityPlayer player)

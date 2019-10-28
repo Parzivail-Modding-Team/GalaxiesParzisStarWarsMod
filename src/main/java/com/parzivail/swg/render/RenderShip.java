@@ -1,9 +1,10 @@
 package com.parzivail.swg.render;
 
+import com.parzivail.pr3.Pr3Model;
 import com.parzivail.swg.entity.EntityShip;
-import com.parzivail.swg.register.Pr3ModelRegister;
 import com.parzivail.util.math.lwjgl.Matrix4f;
 import com.parzivail.util.math.lwjgl.Vector3f;
+import com.parzivail.util.ui.Fx;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.EnableCap;
 import com.parzivail.util.ui.gltk.GL;
@@ -11,7 +12,6 @@ import com.parzivail.util.ui.gltk.PrimitiveType;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -23,11 +23,13 @@ import java.nio.FloatBuffer;
  */
 public class RenderShip extends Render<EntityShip>
 {
+	private final Pr3Model model;
 	private FloatBuffer buff = BufferUtils.createFloatBuffer(16);
 
-	public RenderShip(RenderManager renderManagerIn)
+	public RenderShip(RenderManager renderManagerIn, Pr3Model model)
 	{
 		super(renderManagerIn);
+		this.model = model;
 		this.shadowSize = 0.5F;
 	}
 
@@ -53,21 +55,6 @@ public class RenderShip extends Render<EntityShip>
 
 		Matrix4f rotation = ship.getRotation();
 
-		//		float dYaw = MathHelper.wrapDegrees(rotation.getYaw() - prevRotation.getYaw());
-		//		float dPitch = wrapAngleTo90(rotation.getPitch() - prevRotation.getPitch());
-		//		float dRoll = MathHelper.wrapDegrees(rotation.getRoll() - prevRotation.getRoll());
-		//		float yaw = MathHelper.wrapDegrees(prevRotation.getYaw() + dYaw * partialTicks);
-		//		float pitch = wrapAngleTo90(prevRotation.getPitch() + dPitch * partialTicks);
-		//		float roll = MathHelper.wrapDegrees(prevRotation.getRoll() + dRoll * partialTicks);
-		//
-		//		float slidDYaw = ship.slidingYaw.getOldAverage() + (ship.slidingYaw.getAverage() - ship.slidingYaw.getOldAverage()) * partialTicks;
-		//		float slidDPitch = ship.slidingPitch.getOldAverage() + (ship.slidingPitch.getAverage() - ship.slidingPitch.getOldAverage()) * partialTicks;
-		//
-		//		roll += slidDYaw;
-
-		float dYaw = MathHelper.wrapDegrees(ship.slidingYaw.getOldAverage() - ship.slidingYaw.getAverage());
-		rotation = Matrix4f.rotate(dYaw / 180 * (float)Math.PI, new Vector3f(0, 0, 1), rotation, null);
-
 		GL.Enable(EnableCap.Texture2D);
 
 		// TODO: fix
@@ -82,32 +69,47 @@ public class RenderShip extends Render<EntityShip>
 		buff.flip();
 		GL11.glMultMatrix(buff);
 
-		GL.Enable(EnableCap.Texture2D);
-		Pr3ModelRegister.XwingT65b.draw();
-		GL.Disable(EnableCap.Texture2D);
+		if (model != null)
+		{
+			GL.Enable(EnableCap.Texture2D);
+			model.draw();
+		}
+		else
+		{
+			GL.Disable(EnableCap.Texture2D);
+			GL.Disable(EnableCap.Lighting);
 
-		GL.Disable(EnableCap.Lighting);
-		GL.PushMatrix();
-		GL.Scale(0.25f);
-		GL11.glLineWidth(2);
-		GL.Color(1f, 0, 0);
-		GL.Begin(PrimitiveType.LineStrip);
-		GL.Vertex3(0.0D, 0.0D, 0.0D);
-		GL.Vertex3((double)10, 0.0D, 0.0D);
-		GL.End();
+			GL.PushMatrix();
+			GL.Scale(0.25f);
+			GL11.glLineWidth(2);
+			GL.Color(1f, 0, 0);
+			GL.Begin(PrimitiveType.LineStrip);
+			GL.Vertex3(0.0D, 0.0D, 0.0D);
+			GL.Vertex3(10, 0.0D, 0.0D);
+			GL.End();
 
-		GL.Color(0, 1f, 0);
-		GL.Begin(PrimitiveType.LineStrip);
-		GL.Vertex3(0.0D, 0.0D, 0.0D);
-		GL.Vertex3(0.0D, (double)10, 0.0D);
-		GL.End();
+			GL.Color(0, 1f, 0);
+			GL.Begin(PrimitiveType.LineStrip);
+			GL.Vertex3(0.0D, 0.0D, 0.0D);
+			GL.Vertex3(0.0D, 10, 0.0D);
+			GL.End();
 
-		GL.Color(0, 0, 1f);
-		GL.Begin(PrimitiveType.LineStrip);
-		GL.Vertex3(0.0D, 0.0D, 0.0D);
-		GL.Vertex3(0.0D, 0.0D, (double)10);
-		GL.End();
-		GL.PopMatrix();
+			GL.Color(0, 0, 1f);
+			GL.Begin(PrimitiveType.LineStrip);
+			GL.Vertex3(0.0D, 0.0D, 0.0D);
+			GL.Vertex3(0.0D, 0.0D, 10);
+			GL.End();
+			GL.PopMatrix();
+
+			GL.Color(0xFF000000);
+			Fx.D3.DrawWireBox();
+
+			GL.Enable(EnableCap.PolygonOffsetFill);
+			GL11.glPolygonOffset(1, 1);
+
+			GL.Color(0xFFFFFFFF);
+			Fx.D3.DrawSolidBox();
+		}
 
 		GL.Color(0xFFFFFFFF);
 

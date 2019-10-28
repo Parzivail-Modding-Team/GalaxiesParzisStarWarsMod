@@ -1,4 +1,4 @@
-package com.parzivail.util.math;
+package com.parzivail.util.common;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

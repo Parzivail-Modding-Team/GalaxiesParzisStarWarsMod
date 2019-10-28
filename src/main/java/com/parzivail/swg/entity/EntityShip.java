@@ -6,7 +6,6 @@ import com.parzivail.swg.network.client.MessageSetShipInput;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.swg.proxy.ShipInputMode;
 import com.parzivail.util.common.PNbtUtil;
-import com.parzivail.util.math.SlidingWindow;
 import com.parzivail.util.math.lwjgl.Matrix4f;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.math.lwjgl.Vector4f;
@@ -29,18 +28,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class EntityShip extends Entity implements IFreeRotator
+public abstract class EntityShip extends Entity implements IFreeRotator
 {
-	public static final ShipInputMode[] shipInputModes = {
-			ShipInputMode.Yaw, ShipInputMode.Roll, ShipInputMode.Landing
-	};
-	private static final DataParameter<Float> THROTTLE = EntityDataManager.createKey(EntityShip.class, DataSerializers.FLOAT);
-	private static final DataParameter<Integer> THROTTLE_REPULSOR = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
-	private static final DataParameter<Integer> MODE = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
-	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingPitch = new SlidingWindow(24);
-	@SideOnly(Side.CLIENT)
-	public SlidingWindow slidingYaw = new SlidingWindow(20);
+	private static final DataParameter<Float> INPUT_THROTTLE = EntityDataManager.createKey(EntityShip.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> INPUT_THROTTLE_ALT = EntityDataManager.createKey(EntityShip.class, DataSerializers.FLOAT);
+	private static final DataParameter<Integer> INPUT_MODE = EntityDataManager.createKey(EntityShip.class, DataSerializers.VARINT);
 	@SideOnly(Side.CLIENT)
 	public int timeRolled = 0;
 	@SideOnly(Side.CLIENT)
@@ -51,7 +43,6 @@ public class EntityShip extends Entity implements IFreeRotator
 	private boolean rightInputDown;
 	private boolean forwardInputDown;
 	private boolean backInputDown;
-	private Matrix4f prevRotation = new Matrix4f();
 	private Matrix4f rotation = new Matrix4f();
 
 	public EntityShip(World worldIn)
@@ -75,9 +66,9 @@ public class EntityShip extends Entity implements IFreeRotator
 	@Override
 	protected void entityInit()
 	{
-		this.dataManager.register(THROTTLE, 0f);
-		this.dataManager.register(THROTTLE_REPULSOR, 0);
-		this.dataManager.register(MODE, 0);
+		this.dataManager.register(INPUT_THROTTLE, 0f);
+		this.dataManager.register(INPUT_THROTTLE_ALT, 0f);
+		this.dataManager.register(INPUT_MODE, 0);
 
 		if (world.isRemote)
 		{
@@ -232,9 +223,6 @@ public class EntityShip extends Entity implements IFreeRotator
 			}
 		}
 
-		//		slidingPitch.slide(pitch);
-		//		slidingYaw.slide(yaw);
-
 		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
 		//this.doBlockCollisions();
@@ -244,7 +232,6 @@ public class EntityShip extends Entity implements IFreeRotator
 	{
 		this.prevRotationYaw = this.rotationYaw;
 		this.prevRotationPitch = this.rotationPitch;
-		this.prevRotation = rotation;
 		this.rotation = packet.rotation;
 
 		Vector3f euler = getEulerAngles();
@@ -270,7 +257,6 @@ public class EntityShip extends Entity implements IFreeRotator
 	{
 		this.prevRotationYaw = this.rotationYaw;
 		this.prevRotationPitch = this.rotationPitch;
-		this.prevRotation = rotation;
 
 		boolean modeAllowsAutoRelevel = false;
 
@@ -284,16 +270,16 @@ public class EntityShip extends Entity implements IFreeRotator
 
 		switch (shipInputMode)
 		{
-			case Yaw:
+			case YawCentric:
 				Matrix4f.rotate((float)(-(mouseDy * 0.15f) / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
 				Matrix4f.rotate((float)(-(mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
 				modeAllowsAutoRelevel = true;
 				break;
-			case Roll:
+			case RollCentric:
 				Matrix4f.rotate((float)(-(mouseDy * 0.15f) / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
 				Matrix4f.rotate((float)((mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
 				break;
-			case Landing:
+			case Repulsor:
 				Matrix4f.rotate((float)((-currentPitch * 0.01f) / 180 * Math.PI), new Vector3f(1, 0, 0), rotation, rotation);
 				Matrix4f.rotate((float)(-(mouseDx * 0.15f) / 180 * Math.PI), new Vector3f(0, 1, 0), rotation, rotation);
 				Matrix4f.rotate((float)((-currentRoll * 0.01f) / 180 * Math.PI), new Vector3f(0, 0, 1), rotation, rotation);
@@ -318,8 +304,8 @@ public class EntityShip extends Entity implements IFreeRotator
 	{
 		if (this.isBeingRidden())
 		{
-			ShipInputMode inputMode = shipInputModes[getInputMode()];
-			if (inputMode == ShipInputMode.Landing)
+			ShipInputMode inputMode = getShipInputMode();
+			if (inputMode == ShipInputMode.Repulsor)
 			{
 				if (getThrottle() != 0)
 					setThrottle(0);
@@ -353,6 +339,13 @@ public class EntityShip extends Entity implements IFreeRotator
 		}
 	}
 
+	public ShipInputMode getShipInputMode()
+	{
+		return getShipInputMode(getInputMode());
+	}
+
+	protected abstract ShipInputMode[] getAvailableInputModes();
+
 	public Matrix4f getRotation()
 	{
 		return rotation;
@@ -360,32 +353,32 @@ public class EntityShip extends Entity implements IFreeRotator
 
 	private float getThrottle()
 	{
-		return dataManager.get(THROTTLE);
+		return dataManager.get(INPUT_THROTTLE);
 	}
 
 	private void setThrottle(float throttle)
 	{
-		dataManager.set(THROTTLE, throttle);
+		dataManager.set(INPUT_THROTTLE, throttle);
 	}
 
-	private int getThrottleRepulsor()
+	private float getThrottleRepulsor()
 	{
-		return dataManager.get(THROTTLE_REPULSOR);
+		return dataManager.get(INPUT_THROTTLE_ALT);
 	}
 
-	private void setThrottleRepulsor(int throttle)
+	private void setThrottleRepulsor(float throttle)
 	{
-		dataManager.set(THROTTLE_REPULSOR, throttle);
+		dataManager.set(INPUT_THROTTLE_ALT, throttle);
 	}
 
 	public int getInputMode()
 	{
-		return dataManager.get(MODE);
+		return dataManager.get(INPUT_MODE);
 	}
 
 	public void setInputMode(int mode)
 	{
-		dataManager.set(MODE, mode);
+		dataManager.set(INPUT_MODE, mode);
 	}
 
 	private void updateMotion()
@@ -394,8 +387,8 @@ public class EntityShip extends Entity implements IFreeRotator
 
 		//this.motionY += d1;
 
-		ShipInputMode mode = shipInputModes[getInputMode()];
-		if (mode == ShipInputMode.Landing)
+		ShipInputMode mode = getShipInputMode();
+		if (mode == ShipInputMode.Repulsor)
 		{
 			float throttleRepulsor = getThrottleRepulsor();
 			this.motionX = 0;
@@ -476,5 +469,13 @@ public class EntityShip extends Entity implements IFreeRotator
 	public Matrix4f getRotationMatrix()
 	{
 		return rotation;
+	}
+
+	public ShipInputMode getShipInputMode(int mode)
+	{
+		ShipInputMode[] modes = getAvailableInputModes();
+		if (mode >= modes.length)
+			throw new IndexOutOfBoundsException("Invalid input mode ID requested from ship");
+		return modes[mode];
 	}
 }

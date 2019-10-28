@@ -150,7 +150,7 @@ public class SwgEventHandler
 
 	private void setInputMode(EntityShip ship, int shipInputMode)
 	{
-		ShipInputMode mode = EntityShip.shipInputModes[shipInputMode];
+		ShipInputMode mode = ship.getShipInputMode(shipInputMode);
 		TextComponentTranslation textMode = new TextComponentTranslation(mode.langEntry);
 		textMode.getStyle().setColor(TextFormatting.GREEN);
 		StarWarsGalaxy.proxy.notifyPlayer(new TextComponentTranslation("pswg.gui.shipInputModeAlert", textMode), true);

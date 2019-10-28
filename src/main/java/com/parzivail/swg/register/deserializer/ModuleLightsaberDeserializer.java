@@ -2,7 +2,7 @@ package com.parzivail.swg.register.deserializer;
 
 import com.google.gson.*;
 import com.parzivail.swg.item.data.LightsaberDescriptor;
-import com.parzivail.util.math.JsonObjUtils;
+import com.parzivail.util.common.JsonObjUtils;
 import net.minecraft.util.JsonUtils;
 
 import java.lang.reflect.Type;

@@ -4,9 +4,9 @@ import com.parzivail.swg.Resources;
 
 public enum ShipInputMode
 {
-	Yaw(Resources.guiDot("shipInputMode.yaw")),
-	Roll(Resources.guiDot("shipInputMode.roll")),
-	Landing(Resources.guiDot("shipInputMode.landing"));
+	YawCentric(Resources.guiDot("shipInputMode.yaw")),
+	RollCentric(Resources.guiDot("shipInputMode.roll")),
+	Repulsor(Resources.guiDot("shipInputMode.landing"));
 
 	public final String langEntry;
 
