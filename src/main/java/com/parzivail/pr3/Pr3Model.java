@@ -2,13 +2,17 @@ package com.parzivail.pr3;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.brotli.BrotliInputStream;
+import com.parzivail.swg.Resources;
 import com.parzivail.swg.proxy.Client;
 import com.parzivail.util.binary.BinaryUtil;
 import com.parzivail.util.math.lwjgl.Matrix4f;
 import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.gltk.GL;
-import com.parzivail.util.ui.gltk.PrimitiveType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.crash.CrashReport;
+import net.minecraft.crash.CrashReportCategory;
+import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -19,10 +23,11 @@ import java.util.ArrayList;
 
 public class Pr3Model
 {
-	private FloatBuffer buff = BufferUtils.createFloatBuffer(16);
-
 	private static final String MAGIC = "PR3";
 	private static int ACCEPTED_VERSION = 0x01;
+
+	private static Pr3Shader shader;
+	private static FloatBuffer buff = BufferUtils.createFloatBuffer(16);
 
 	private final ArrayList<Pr3Object> objects;
 	private final ResourceLocation texture;
@@ -111,6 +116,28 @@ public class Pr3Model
 
 	public void draw()
 	{
+		if (shader == null)
+		{
+			ResourceLocation rFrag = Resources.location("shaders/model.frag");
+			ResourceLocation rVert = Resources.location("shaders/model.vert");
+
+			try
+			{
+				IResource frag = Minecraft.getMinecraft().getResourceManager().getResource(rFrag);
+				IResource vert = Minecraft.getMinecraft().getResourceManager().getResource(rVert);
+
+				shader = new Pr3Shader(frag, vert);
+			}
+			catch (IOException e)
+			{
+				CrashReport crashreport = CrashReport.makeCrashReport(e, "Loading PR3 shaders");
+				CrashReportCategory crashreportcategory = crashreport.makeCategory("Shaders being loaded");
+				crashreportcategory.addCrashSection("Vertex", rFrag.toString());
+				crashreportcategory.addCrashSection("Fragment", rVert.toString());
+				throw new ReportedException(crashreport);
+			}
+		}
+
 		GL.PushMatrix();
 
 		GL.Rotate(180, 0, 1, 0);
@@ -140,34 +167,9 @@ public class Pr3Model
 					break;
 			}
 
-			GL.Begin(PrimitiveType.Triangles);
-			for (Pr3FacePointer face : object.faces)
-			{
-				Vector3f vA = object.vertices.get(face.a);
-				Vector3f vB = object.vertices.get(face.b);
-				Vector3f vC = object.vertices.get(face.c);
-
-				Vector3f nA = object.normals.get(face.a);
-				Vector3f nB = object.normals.get(face.b);
-				Vector3f nC = object.normals.get(face.c);
-
-				Vector3f uA = object.uvs.get(face.a);
-				Vector3f uB = object.uvs.get(face.b);
-				Vector3f uC = object.uvs.get(face.c);
-
-				GL.TexCoord2(uA.x, 1 - uA.y);
-				GL.Normal3(nA.x, nA.y, nA.z);
-				GL.Vertex3(vA.x, vA.y, vA.z);
-
-				GL.TexCoord2(uB.x, 1 - uB.y);
-				GL.Normal3(nB.x, nB.y, nB.z);
-				GL.Vertex3(vB.x, vB.y, vB.z);
-
-				GL.TexCoord2(uC.x, 1 - uC.y);
-				GL.Normal3(nC.x, nC.y, nC.z);
-				GL.Vertex3(vC.x, vC.y, vC.z);
-			}
-			GL.End();
+			//			shader.use();
+			object.vertexBuffer.render(GL11.GL_TRIANGLES);
+			//			shader.release();
 			GL.PopMatrix();
 		}
 
