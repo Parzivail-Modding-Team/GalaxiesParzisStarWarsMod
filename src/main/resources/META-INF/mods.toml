@@ -1,0 +1,29 @@
+modLoader="javafml"
+loaderVersion="[28,)"
+issueTrackerURL="https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/issues"
+displayURL="http://pswg.dev/"
+authors="parzivail"
+
+[[mods]]
+    modId="pswg"
+    version="${version}"
+    displayName="Galaxies: Parzi's Star Wars Mod"
+    updateJSONURL="http://pswg.dev/version.json"
+    logoFile="logo.png"
+    credits=""
+    description='''
+    Explore the Galaxy with Galaxies: Parzi's Star Wars Mod!
+    '''
+
+[[dependencies.pswg]]
+    modId="forge"
+    mandatory=true
+    versionRange="[28,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.pswg]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.14.4]"
+    ordering="NONE"
+    side="BOTH"
