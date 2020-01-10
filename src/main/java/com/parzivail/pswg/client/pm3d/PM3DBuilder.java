@@ -1,11 +1,18 @@
 package com.parzivail.pswg.client.pm3d;
 
+import com.parzivail.pswg.util.Lumberjack;
 import com.parzivail.util.primative.Vector2f;
 import com.parzivail.util.primative.Vector3f;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.util.Identifier;
+
+import java.util.ArrayList;
 
 public class PM3DBuilder
 {
@@ -13,17 +20,22 @@ public class PM3DBuilder
 
 	public static Mesh build(PM3DContainer container)
 	{
+		ArrayList<Identifier> textureErrors = new ArrayList<>();
+
 		MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
 		QuadEmitter quadEmitter = meshBuilder.getEmitter();
 
 		for (PM3DObject o : container.objects)
 			for (PM3DFace face : o.faces)
-				emitFace(quadEmitter, container, o, face);
+				emitFace(quadEmitter, container, o, face, textureErrors);
+
+		for (Identifier error : textureErrors)
+			Lumberjack.error("Error while loading PM3D model: texture %s not found", error);
 
 		return meshBuilder.build();
 	}
 
-	private static void emitFace(QuadEmitter quadEmitter, PM3DContainer container, PM3DObject object, PM3DFace face)
+	private static void emitFace(QuadEmitter quadEmitter, PM3DContainer container, PM3DObject object, PM3DFace face, ArrayList<Identifier> textureErrors)
 	{
 		quadEmitter.spriteColor(0, -1, -1, -1, -1).material(RendererAccess.INSTANCE.getRenderer().materialFinder().find()).colorIndex(1);
 
@@ -53,13 +65,17 @@ public class PM3DBuilder
 
 		String spriteName = container.textures.get(object.matName);
 
-		//		SpriteIdentifier spriteIdentifier;
-		//		if (container.textures.containsKey(object.matName))
-		//			spriteIdentifier = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, new Identifier(spriteName.toLowerCase()));
-		//		else
-		//			spriteIdentifier = new SpriteIdentifier(SpriteAtlasTexture.PARTICLE_ATLAS_TEX, MissingSprite.getMissingSpriteId());
-		//
-		//		quadEmitter.spriteBake(0, spriteIdentifier.getSprite(), MutableQuadView.BAKE_NORMALIZED);
+		SpriteIdentifier spriteIdentifier = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, new Identifier(container.textures.containsKey(object.matName) ? spriteName.toLowerCase() : "missingno"));
+
+		try
+		{
+			quadEmitter.spriteBake(0, spriteIdentifier.getSprite(), MutableQuadView.BAKE_NORMALIZED);
+		}
+		catch (NullPointerException ex)
+		{
+			if (!textureErrors.contains(spriteIdentifier.getTextureId()))
+				textureErrors.add(spriteIdentifier.getTextureId());
+		}
 
 		quadEmitter.emit();
 	}
