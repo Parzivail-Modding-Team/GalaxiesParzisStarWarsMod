@@ -1,6 +1,6 @@
 ![Galaxies: Parzi's Star Wars Mod](https://raw.githubusercontent.com/Parzivail-Modding-Team/StarWarsGalaxy/master/resources/images/logo_big.png "Galaxies: Parzi's Star Wars Mod")
 
-# Galaxies: Parzi's Star Wars Mod (PSWG) for Minecraft 1.14.4
+# Galaxies: Parzi's Star Wars Mod (PSWG) for Minecraft+Fabric 1.15
 
 ![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/StarWarsGalaxy/total.svg) 
 ![Discord](https://img.shields.io/discord/412945916476129280.svg)
@@ -52,22 +52,7 @@ Things to consider:
     * Been implemented.
     * Been rejected.
 
-## License
+## Auxillary Licensing Information
 Some ideas and concepts Copyright or Trademark Lucasfilm LTD., LucasArts, or Disney.
 
 If you are a modpack owner or distributor, you are fully responsible for supporting this mod's integration with the pack in form and function. If an issue is *caused* by this mod, you or the player is responsible for posting a support ticket/issue here.
-
-#### You CAN:
-
-* Download PSWG and play it.
-* Make a public Minecraft server with PSWG.
-* Include PSWG in a modpack if you have express permission from us, and only if you link back here.
-* Make content showing PSWG gameplay (a link back here is not required, but is appreciated).
-* Modify, compile, or otherwise use PSWG's source code privately.
-* Maintain a fork of PSWG and contribute content or bugfixes.
-
-#### You CANNOT:
-
-* Redistribute original or modified compiled PSWG binaries, without express permission from us.
-* Host the mod on a mod-hosting website, for example, Curse.
-* Claim that you made PSWG.
