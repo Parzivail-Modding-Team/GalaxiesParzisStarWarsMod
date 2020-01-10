@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "pswg",
+  "version": "${version}",
+  "name": "Galaxies: Parzi's Star Wars Mod",
+  "description": "Explore the galaxy with Galaxies: Parzi's Star Wars Mod!",
+  "authors": [
+	"parzivail"
+  ],
+  "contact": {
+	"homepage": "https://pswg.dev/",
+	"sources": "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod"
+  },
+  "license": "",
+  "icon": "assets/pswg/icon.png",
+  "environment": "*",
+  "entrypoints": {
+	"main": [
+	  "com.parzivail.pswg.GalaxiesMain"
+	],
+	"client": [
+	  "com.parzivail.pswg.GalaxiesClient"
+	]
+  },
+  "mixins": [
+	"pswg.mixins.json"
+  ],
+  "depends": {
+	"fabricloader": ">=0.7.2",
+	"fabric": "*",
+	"minecraft": "1.15.x"
+  },
+  "suggests": {
+	"flamingo": "*"
+  }
+}
