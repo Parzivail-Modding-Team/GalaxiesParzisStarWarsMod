@@ -1,0 +1,28 @@
+{
+  "variants": {
+	"normal": {
+	  "model": "pswg:chair_basic.pm3d",
+	  "y": 180
+	},
+	"inventory": {
+	  "model": "pswg:chair_basic.pm3d",
+	  "y": 180
+	},
+	"facing=north": {
+	  "model": "pswg:chair_basic.pm3d",
+	  "y": 0
+	},
+	"facing=south": {
+	  "model": "pswg:chair_basic.pm3d",
+	  "y": 180
+	},
+	"facing=west": {
+	  "model": "pswg:chair_basic.pm3d",
+	  "y": 270
+	},
+	"facing=east": {
+	  "model": "pswg:chair_basic.pm3d",
+	  "y": 90
+	}
+  }
+}

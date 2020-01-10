@@ -58,29 +58,6 @@ public class Matrix4f extends Matrix
 	}
 
 	/**
-	 * Returns a string representation of this matrix
-	 */
-	public String toString()
-	{
-		StringBuilder buf = new StringBuilder();
-		buf.append(m00).append(' ').append(m10).append(' ').append(m20).append(' ').append(m30).append('\n');
-		buf.append(m01).append(' ').append(m11).append(' ').append(m21).append(' ').append(m31).append('\n');
-		buf.append(m02).append(' ').append(m12).append(' ').append(m22).append(' ').append(m32).append('\n');
-		buf.append(m03).append(' ').append(m13).append(' ').append(m23).append(' ').append(m33).append('\n');
-		return buf.toString();
-	}
-
-	/**
-	 * Set this matrix to be the identity matrix.
-	 *
-	 * @return this
-	 */
-	public Matrix setIdentity()
-	{
-		return setIdentity(this);
-	}
-
-	/**
 	 * Set the given matrix to be the identity matrix.
 	 *
 	 * @param m The matrix to set to the identity
@@ -107,16 +84,6 @@ public class Matrix4f extends Matrix
 		m.m33 = 1.0f;
 
 		return m;
-	}
-
-	/**
-	 * Set this matrix to 0.
-	 *
-	 * @return this
-	 */
-	public Matrix setZero()
-	{
-		return setZero(this);
 	}
 
 	/**
@@ -149,18 +116,6 @@ public class Matrix4f extends Matrix
 	}
 
 	/**
-	 * Load from another matrix4f
-	 *
-	 * @param src The source matrix
-	 *
-	 * @return this
-	 */
-	public Matrix4f load(Matrix4f src)
-	{
-		return load(src, this);
-	}
-
-	/**
 	 * Copy the source matrix to the destination matrix
 	 *
 	 * @param src  The source matrix
@@ -190,142 +145,6 @@ public class Matrix4f extends Matrix
 		dest.m33 = src.m33;
 
 		return dest;
-	}
-
-	/**
-	 * Load from a float buffer. The buffer stores the matrix in column major
-	 * (OpenGL) order.
-	 *
-	 * @param buf A float buffer to read from
-	 *
-	 * @return this
-	 */
-	public Matrix load(FloatBuffer buf)
-	{
-
-		m00 = buf.get();
-		m01 = buf.get();
-		m02 = buf.get();
-		m03 = buf.get();
-		m10 = buf.get();
-		m11 = buf.get();
-		m12 = buf.get();
-		m13 = buf.get();
-		m20 = buf.get();
-		m21 = buf.get();
-		m22 = buf.get();
-		m23 = buf.get();
-		m30 = buf.get();
-		m31 = buf.get();
-		m32 = buf.get();
-		m33 = buf.get();
-
-		return this;
-	}
-
-	/**
-	 * Load from a float buffer. The buffer stores the matrix in row major
-	 * (maths) order.
-	 *
-	 * @param buf A float buffer to read from
-	 *
-	 * @return this
-	 */
-	public Matrix loadTranspose(FloatBuffer buf)
-	{
-
-		m00 = buf.get();
-		m10 = buf.get();
-		m20 = buf.get();
-		m30 = buf.get();
-		m01 = buf.get();
-		m11 = buf.get();
-		m21 = buf.get();
-		m31 = buf.get();
-		m02 = buf.get();
-		m12 = buf.get();
-		m22 = buf.get();
-		m32 = buf.get();
-		m03 = buf.get();
-		m13 = buf.get();
-		m23 = buf.get();
-		m33 = buf.get();
-
-		return this;
-	}
-
-	/**
-	 * Store this matrix in a float buffer. The matrix is stored in column
-	 * major (openGL) order.
-	 *
-	 * @param buf The buffer to store this matrix in
-	 */
-	public Matrix store(FloatBuffer buf)
-	{
-		buf.put(m00);
-		buf.put(m01);
-		buf.put(m02);
-		buf.put(m03);
-		buf.put(m10);
-		buf.put(m11);
-		buf.put(m12);
-		buf.put(m13);
-		buf.put(m20);
-		buf.put(m21);
-		buf.put(m22);
-		buf.put(m23);
-		buf.put(m30);
-		buf.put(m31);
-		buf.put(m32);
-		buf.put(m33);
-		return this;
-	}
-
-	/**
-	 * Store this matrix in a float buffer. The matrix is stored in row
-	 * major (maths) order.
-	 *
-	 * @param buf The buffer to store this matrix in
-	 */
-	public Matrix storeTranspose(FloatBuffer buf)
-	{
-		buf.put(m00);
-		buf.put(m10);
-		buf.put(m20);
-		buf.put(m30);
-		buf.put(m01);
-		buf.put(m11);
-		buf.put(m21);
-		buf.put(m31);
-		buf.put(m02);
-		buf.put(m12);
-		buf.put(m22);
-		buf.put(m32);
-		buf.put(m03);
-		buf.put(m13);
-		buf.put(m23);
-		buf.put(m33);
-		return this;
-	}
-
-	/**
-	 * Store the rotation portion of this matrix in a float buffer. The matrix is stored in column
-	 * major (openGL) order.
-	 *
-	 * @param buf The buffer to store this matrix in
-	 */
-	public Matrix store3f(FloatBuffer buf)
-	{
-		buf.put(m00);
-		buf.put(m01);
-		buf.put(m02);
-		buf.put(m10);
-		buf.put(m11);
-		buf.put(m12);
-		buf.put(m20);
-		buf.put(m21);
-		buf.put(m22);
-		return this;
 	}
 
 	/**
@@ -476,52 +295,6 @@ public class Matrix4f extends Matrix
 	}
 
 	/**
-	 * Transpose this matrix
-	 *
-	 * @return this
-	 */
-	public Matrix transpose()
-	{
-		return transpose(this);
-	}
-
-	/**
-	 * Translate this matrix
-	 *
-	 * @param vec The vector to translate by
-	 *
-	 * @return this
-	 */
-	public Matrix4f translate(Vector2f vec)
-	{
-		return translate(vec, this);
-	}
-
-	/**
-	 * Translate this matrix
-	 *
-	 * @param vec The vector to translate by
-	 *
-	 * @return this
-	 */
-	public Matrix4f translate(Vector3f vec)
-	{
-		return translate(vec, this);
-	}
-
-	/**
-	 * Scales this matrix
-	 *
-	 * @param vec The vector to scale by
-	 *
-	 * @return this
-	 */
-	public Matrix4f scale(Vector3f vec)
-	{
-		return scale(vec, this, this);
-	}
-
-	/**
 	 * Scales the source matrix and put the result in the destination matrix
 	 *
 	 * @param vec  The vector to scale by
@@ -547,33 +320,6 @@ public class Matrix4f extends Matrix
 		dest.m22 = src.m22 * vec.z;
 		dest.m23 = src.m23 * vec.z;
 		return dest;
-	}
-
-	/**
-	 * Rotates the matrix around the given axis the specified angle
-	 *
-	 * @param angle the angle, in radians.
-	 * @param axis  The vector representing the rotation axis. Must be normalized.
-	 *
-	 * @return this
-	 */
-	public Matrix4f rotate(float angle, Vector3f axis)
-	{
-		return rotate(angle, axis, this);
-	}
-
-	/**
-	 * Rotates the matrix around the given axis the specified angle
-	 *
-	 * @param angle the angle, in radians.
-	 * @param axis  The vector representing the rotation axis. Must be normalized.
-	 * @param dest  The matrix to put the result, or null if a new matrix is to be created
-	 *
-	 * @return The rotated matrix
-	 */
-	public Matrix4f rotate(float angle, Vector3f axis, Matrix4f dest)
-	{
-		return rotate(angle, axis, this, dest);
 	}
 
 	/**
@@ -637,19 +383,6 @@ public class Matrix4f extends Matrix
 	}
 
 	/**
-	 * Translate this matrix and stash the result in another matrix
-	 *
-	 * @param vec  The vector to translate by
-	 * @param dest The destination matrix or null if a new matrix is to be created
-	 *
-	 * @return the translated matrix
-	 */
-	public Matrix4f translate(Vector3f vec, Matrix4f dest)
-	{
-		return translate(vec, this, dest);
-	}
-
-	/**
 	 * Translate the source matrix and stash the result in the destination matrix
 	 *
 	 * @param vec  The vector to translate by
@@ -672,19 +405,6 @@ public class Matrix4f extends Matrix
 	}
 
 	/**
-	 * Translate this matrix and stash the result in another matrix
-	 *
-	 * @param vec  The vector to translate by
-	 * @param dest The destination matrix or null if a new matrix is to be created
-	 *
-	 * @return the translated matrix
-	 */
-	public Matrix4f translate(Vector2f vec, Matrix4f dest)
-	{
-		return translate(vec, this, dest);
-	}
-
-	/**
 	 * Translate the source matrix and stash the result in the destination matrix
 	 *
 	 * @param vec  The vector to translate by
@@ -704,18 +424,6 @@ public class Matrix4f extends Matrix
 		dest.m33 += src.m03 * vec.x + src.m13 * vec.y;
 
 		return dest;
-	}
-
-	/**
-	 * Transpose this matrix and place the result in another matrix
-	 *
-	 * @param dest The destination matrix or null if a new matrix is to be created
-	 *
-	 * @return the transposed matrix
-	 */
-	public Matrix4f transpose(Matrix4f dest)
-	{
-		return transpose(this, dest);
 	}
 
 	/**
@@ -768,18 +476,6 @@ public class Matrix4f extends Matrix
 	}
 
 	/**
-	 * @return the determinant of the matrix
-	 */
-	public float determinant()
-	{
-		float f = m00 * ((m11 * m22 * m33 + m12 * m23 * m31 + m13 * m21 * m32) - m13 * m22 * m31 - m11 * m23 * m32 - m12 * m21 * m33);
-		f -= m01 * ((m10 * m22 * m33 + m12 * m23 * m30 + m13 * m20 * m32) - m13 * m22 * m30 - m10 * m23 * m32 - m12 * m20 * m33);
-		f += m02 * ((m10 * m21 * m33 + m11 * m23 * m30 + m13 * m20 * m31) - m13 * m21 * m30 - m10 * m23 * m31 - m11 * m20 * m33);
-		f -= m03 * ((m10 * m21 * m32 + m11 * m22 * m30 + m12 * m20 * m31) - m12 * m21 * m30 - m10 * m22 * m31 - m11 * m20 * m32);
-		return f;
-	}
-
-	/**
 	 * Calculate the determinant of a 3x3 matrix
 	 *
 	 * @return result
@@ -788,16 +484,6 @@ public class Matrix4f extends Matrix
 	private static float determinant3x3(float t00, float t01, float t02, float t10, float t11, float t12, float t20, float t21, float t22)
 	{
 		return t00 * (t11 * t22 - t12 * t21) + t01 * (t12 * t20 - t10 * t22) + t02 * (t10 * t21 - t11 * t20);
-	}
-
-	/**
-	 * Invert this matrix
-	 *
-	 * @return this if successful, null otherwise
-	 */
-	public Matrix invert()
-	{
-		return invert(this, this);
 	}
 
 	/**
@@ -869,28 +555,6 @@ public class Matrix4f extends Matrix
 	}
 
 	/**
-	 * Negate this matrix
-	 *
-	 * @return this
-	 */
-	public Matrix negate()
-	{
-		return negate(this);
-	}
-
-	/**
-	 * Negate this matrix and place the result in a destination matrix.
-	 *
-	 * @param dest The destination matrix, or null if a new matrix is to be created
-	 *
-	 * @return the negated matrix
-	 */
-	public Matrix4f negate(Matrix4f dest)
-	{
-		return negate(this, dest);
-	}
-
-	/**
 	 * Negate this matrix and place the result in a destination matrix.
 	 *
 	 * @param src  The source matrix
@@ -921,5 +585,341 @@ public class Matrix4f extends Matrix
 		dest.m33 = -src.m33;
 
 		return dest;
+	}
+
+	/**
+	 * Returns a string representation of this matrix
+	 */
+	public String toString()
+	{
+		StringBuilder buf = new StringBuilder();
+		buf.append(m00).append(' ').append(m10).append(' ').append(m20).append(' ').append(m30).append('\n');
+		buf.append(m01).append(' ').append(m11).append(' ').append(m21).append(' ').append(m31).append('\n');
+		buf.append(m02).append(' ').append(m12).append(' ').append(m22).append(' ').append(m32).append('\n');
+		buf.append(m03).append(' ').append(m13).append(' ').append(m23).append(' ').append(m33).append('\n');
+		return buf.toString();
+	}
+
+	/**
+	 * Set this matrix to be the identity matrix.
+	 *
+	 * @return this
+	 */
+	public Matrix setIdentity()
+	{
+		return setIdentity(this);
+	}
+
+	/**
+	 * Set this matrix to 0.
+	 *
+	 * @return this
+	 */
+	public Matrix setZero()
+	{
+		return setZero(this);
+	}
+
+	/**
+	 * Load from another matrix4f
+	 *
+	 * @param src The source matrix
+	 *
+	 * @return this
+	 */
+	public Matrix4f load(Matrix4f src)
+	{
+		return load(src, this);
+	}
+
+	/**
+	 * Load from a float buffer. The buffer stores the matrix in column major
+	 * (OpenGL) order.
+	 *
+	 * @param buf A float buffer to read from
+	 *
+	 * @return this
+	 */
+	public Matrix load(FloatBuffer buf)
+	{
+
+		m00 = buf.get();
+		m01 = buf.get();
+		m02 = buf.get();
+		m03 = buf.get();
+		m10 = buf.get();
+		m11 = buf.get();
+		m12 = buf.get();
+		m13 = buf.get();
+		m20 = buf.get();
+		m21 = buf.get();
+		m22 = buf.get();
+		m23 = buf.get();
+		m30 = buf.get();
+		m31 = buf.get();
+		m32 = buf.get();
+		m33 = buf.get();
+
+		return this;
+	}
+
+	/**
+	 * Load from a float buffer. The buffer stores the matrix in row major
+	 * (maths) order.
+	 *
+	 * @param buf A float buffer to read from
+	 *
+	 * @return this
+	 */
+	public Matrix loadTranspose(FloatBuffer buf)
+	{
+
+		m00 = buf.get();
+		m10 = buf.get();
+		m20 = buf.get();
+		m30 = buf.get();
+		m01 = buf.get();
+		m11 = buf.get();
+		m21 = buf.get();
+		m31 = buf.get();
+		m02 = buf.get();
+		m12 = buf.get();
+		m22 = buf.get();
+		m32 = buf.get();
+		m03 = buf.get();
+		m13 = buf.get();
+		m23 = buf.get();
+		m33 = buf.get();
+
+		return this;
+	}
+
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in column
+	 * major (openGL) order.
+	 *
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix store(FloatBuffer buf)
+	{
+		buf.put(m00);
+		buf.put(m01);
+		buf.put(m02);
+		buf.put(m03);
+		buf.put(m10);
+		buf.put(m11);
+		buf.put(m12);
+		buf.put(m13);
+		buf.put(m20);
+		buf.put(m21);
+		buf.put(m22);
+		buf.put(m23);
+		buf.put(m30);
+		buf.put(m31);
+		buf.put(m32);
+		buf.put(m33);
+		return this;
+	}
+
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in row
+	 * major (maths) order.
+	 *
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix storeTranspose(FloatBuffer buf)
+	{
+		buf.put(m00);
+		buf.put(m10);
+		buf.put(m20);
+		buf.put(m30);
+		buf.put(m01);
+		buf.put(m11);
+		buf.put(m21);
+		buf.put(m31);
+		buf.put(m02);
+		buf.put(m12);
+		buf.put(m22);
+		buf.put(m32);
+		buf.put(m03);
+		buf.put(m13);
+		buf.put(m23);
+		buf.put(m33);
+		return this;
+	}
+
+	/**
+	 * Store the rotation portion of this matrix in a float buffer. The matrix is stored in column
+	 * major (openGL) order.
+	 *
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix store3f(FloatBuffer buf)
+	{
+		buf.put(m00);
+		buf.put(m01);
+		buf.put(m02);
+		buf.put(m10);
+		buf.put(m11);
+		buf.put(m12);
+		buf.put(m20);
+		buf.put(m21);
+		buf.put(m22);
+		return this;
+	}
+
+	/**
+	 * Transpose this matrix
+	 *
+	 * @return this
+	 */
+	public Matrix transpose()
+	{
+		return transpose(this);
+	}
+
+	/**
+	 * Translate this matrix
+	 *
+	 * @param vec The vector to translate by
+	 *
+	 * @return this
+	 */
+	public Matrix4f translate(Vector2f vec)
+	{
+		return translate(vec, this);
+	}
+
+	/**
+	 * Translate this matrix
+	 *
+	 * @param vec The vector to translate by
+	 *
+	 * @return this
+	 */
+	public Matrix4f translate(Vector3f vec)
+	{
+		return translate(vec, this);
+	}
+
+	/**
+	 * Scales this matrix
+	 *
+	 * @param vec The vector to scale by
+	 *
+	 * @return this
+	 */
+	public Matrix4f scale(Vector3f vec)
+	{
+		return scale(vec, this, this);
+	}
+
+	/**
+	 * Rotates the matrix around the given axis the specified angle
+	 *
+	 * @param angle the angle, in radians.
+	 * @param axis  The vector representing the rotation axis. Must be normalized.
+	 *
+	 * @return this
+	 */
+	public Matrix4f rotate(float angle, Vector3f axis)
+	{
+		return rotate(angle, axis, this);
+	}
+
+	/**
+	 * Rotates the matrix around the given axis the specified angle
+	 *
+	 * @param angle the angle, in radians.
+	 * @param axis  The vector representing the rotation axis. Must be normalized.
+	 * @param dest  The matrix to put the result, or null if a new matrix is to be created
+	 *
+	 * @return The rotated matrix
+	 */
+	public Matrix4f rotate(float angle, Vector3f axis, Matrix4f dest)
+	{
+		return rotate(angle, axis, this, dest);
+	}
+
+	/**
+	 * Translate this matrix and stash the result in another matrix
+	 *
+	 * @param vec  The vector to translate by
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 *
+	 * @return the translated matrix
+	 */
+	public Matrix4f translate(Vector3f vec, Matrix4f dest)
+	{
+		return translate(vec, this, dest);
+	}
+
+	/**
+	 * Translate this matrix and stash the result in another matrix
+	 *
+	 * @param vec  The vector to translate by
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 *
+	 * @return the translated matrix
+	 */
+	public Matrix4f translate(Vector2f vec, Matrix4f dest)
+	{
+		return translate(vec, this, dest);
+	}
+
+	/**
+	 * Transpose this matrix and place the result in another matrix
+	 *
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 *
+	 * @return the transposed matrix
+	 */
+	public Matrix4f transpose(Matrix4f dest)
+	{
+		return transpose(this, dest);
+	}
+
+	/**
+	 * @return the determinant of the matrix
+	 */
+	public float determinant()
+	{
+		float f = m00 * ((m11 * m22 * m33 + m12 * m23 * m31 + m13 * m21 * m32) - m13 * m22 * m31 - m11 * m23 * m32 - m12 * m21 * m33);
+		f -= m01 * ((m10 * m22 * m33 + m12 * m23 * m30 + m13 * m20 * m32) - m13 * m22 * m30 - m10 * m23 * m32 - m12 * m20 * m33);
+		f += m02 * ((m10 * m21 * m33 + m11 * m23 * m30 + m13 * m20 * m31) - m13 * m21 * m30 - m10 * m23 * m31 - m11 * m20 * m33);
+		f -= m03 * ((m10 * m21 * m32 + m11 * m22 * m30 + m12 * m20 * m31) - m12 * m21 * m30 - m10 * m22 * m31 - m11 * m20 * m32);
+		return f;
+	}
+
+	/**
+	 * Invert this matrix
+	 *
+	 * @return this if successful, null otherwise
+	 */
+	public Matrix invert()
+	{
+		return invert(this, this);
+	}
+
+	/**
+	 * Negate this matrix
+	 *
+	 * @return this
+	 */
+	public Matrix negate()
+	{
+		return negate(this);
+	}
+
+	/**
+	 * Negate this matrix and place the result in a destination matrix.
+	 *
+	 * @param dest The destination matrix, or null if a new matrix is to be created
+	 *
+	 * @return the negated matrix
+	 */
+	public Matrix4f negate(Matrix4f dest)
+	{
+		return negate(this, dest);
 	}
 }

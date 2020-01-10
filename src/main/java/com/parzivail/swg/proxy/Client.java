@@ -1,362 +1,153 @@
 package com.parzivail.swg.proxy;
 
+import com.parzivail.pm3d.Pm3dModelLoader;
 import com.parzivail.swg.Resources;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.swg.audio.ClientSoundHandler;
-import com.parzivail.swg.audio.SwgSound;
-import com.parzivail.swg.entity.*;
-import com.parzivail.swg.entity.fx.ParticleSmoke;
-import com.parzivail.swg.entity.ship.EntityScootEmAround;
-import com.parzivail.swg.entity.ship.EntitySeat;
-import com.parzivail.swg.entity.ship.EntityShip;
-import com.parzivail.swg.entity.ship.EntityT65;
-import com.parzivail.swg.gui.GuiQuestNotification;
-import com.parzivail.swg.handler.KeyHandler;
-import com.parzivail.swg.item.lightsaber.ItemLightsaber;
-import com.parzivail.swg.item.lightsaber.LightsaberData;
-import com.parzivail.swg.mob.MobGizka;
-import com.parzivail.swg.npc.NpcJawa;
-import com.parzivail.swg.npc.NpcMerchant;
-import com.parzivail.swg.player.PswgExtProp;
-import com.parzivail.swg.registry.BlockRegister;
-import com.parzivail.swg.registry.ItemRegister;
-import com.parzivail.swg.registry.KeybindRegistry;
-import com.parzivail.swg.render.antenna.RenderSatelliteDish;
-import com.parzivail.swg.render.binoculars.RenderMacrobinoculars;
-import com.parzivail.swg.render.entity.RenderBlasterBolt;
-import com.parzivail.swg.render.entity.RenderNothing;
-import com.parzivail.swg.render.gunrack.RenderGunRack;
-import com.parzivail.swg.render.lightsaber.RenderLightsaber;
-import com.parzivail.swg.render.mob.RenderGizka;
-import com.parzivail.swg.render.npc.RenderJawa;
-import com.parzivail.swg.render.npc.RenderMerchant;
-import com.parzivail.swg.render.overlay.HudLumberjack;
-import com.parzivail.swg.render.ship.RenderShip;
-import com.parzivail.swg.render.ship.model.ModelScootEmAround;
-import com.parzivail.swg.render.ship.model.ModelXWing;
-import com.parzivail.swg.render.weapon.*;
-import com.parzivail.swg.render.weapon.grenades.RenderSmokeGrenade;
-import com.parzivail.swg.render.weapon.grenades.RenderThermalDetonator;
-import com.parzivail.swg.tile.TileGunRack;
-import com.parzivail.swg.tile.antenna.TileSatelliteDish;
-import com.parzivail.swg.util.SwgEntityUtil;
-import com.parzivail.swg.world.PswgWorldDataHandler;
-import com.parzivail.util.block.INameProvider;
-import com.parzivail.util.common.Lumberjack;
+import com.parzivail.swg.animation.HyperspaceEnter;
+import com.parzivail.swg.entity.EntityBlasterBolt;
+import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.entity.ship.EntityT65B;
+import com.parzivail.swg.item.ItemLightsaber;
+import com.parzivail.swg.network.client.MessageItemLeftClick;
+import com.parzivail.swg.register.ItemRegister;
+import com.parzivail.swg.register.KeybindRegister;
+import com.parzivail.swg.register.Pr3ModelRegister;
+import com.parzivail.swg.render.RenderBlasterBolt;
+import com.parzivail.swg.render.RenderShip;
+import com.parzivail.swg.render.item.RenderItemLightsaber;
+import com.parzivail.swg.render.util.DummyBuiltinLoader;
+import com.parzivail.util.animation.Sequencer;
 import com.parzivail.util.item.ILeftClickInterceptor;
-import com.parzivail.util.math.BufferMatrix;
-import com.parzivail.util.math.lwjgl.Vector3f;
-import com.parzivail.util.network.MessageItemLeftClick;
-import com.parzivail.util.render.EntityRenderDroppedItem;
-import com.parzivail.util.render.PEntityRenderer;
-import com.parzivail.util.render.RenderBasicTileItem;
-import com.parzivail.util.render.pipeline.JsonBlockRenderer;
-import com.parzivail.util.ui.PFramebuffer;
-import com.parzivail.util.ui.ShaderHelper;
-import cpw.mods.fml.client.registry.ClientRegistry;
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.client.renderer.tileentity.TileEntityItemStackRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
-import net.minecraftforge.client.MinecraftForgeClient;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.MouseHelper;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.client.registry.RenderingRegistry;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import java.nio.FloatBuffer;
+import java.io.IOException;
 
-/**
- * Created by colby on 9/10/2017.
- */
 public class Client extends Common
 {
-	public static Minecraft mc;
-	public static FontRenderer frNaboo;
-	public static FontRenderer frAurebesh;
-	public static FontRenderer frDroid;
-	public static FontRenderer frEwok;
-	public static FontRenderer frHuttese;
-	public static FontRenderer frMassassi;
-
 	public static int leftClickDelayTimer;
+	public static Minecraft mc;
+	public static boolean autoRelevelEnabled = true;
 
-	public static float renderPartialTicks;
+	public static Sequencer animHyperspaceTest = new Sequencer(new HyperspaceEnter());
+	public static boolean xwingDebug = false;
 
-	public static ScaledResolution resolution;
-
-	public static GuiQuestNotification guiQuestNotification;
-
-	private static final FloatBuffer l2WTempInputBuffer1 = GLAllocation.createDirectFloatBuffer(16);
-	private static final FloatBuffer l2WTempInputBuffer2 = GLAllocation.createDirectFloatBuffer(16);
-	private static final float[] l2WTempMatrixArray = new float[16];
-	private static final FloatBuffer l2WTempOutputBuffer = FloatBuffer.allocate(16);
-
-	public static HudLumberjack hudLog;
-
-	/**
-	 * Creates a Minecraft FontRenderer for the given font asset name
-	 *
-	 * @param file Font asset name
-	 *
-	 * @return A new FontRenderer
-	 */
-	@SideOnly(Side.CLIENT)
-	private static FontRenderer createFont(String file)
-	{
-		FontRenderer renderer = new FontRenderer(mc.gameSettings, Resources.location(String.format("textures/font/%s.png", file)), mc.getTextureManager(), false);
-		((IReloadableResourceManager)Minecraft.getMinecraft().getResourceManager()).registerReloadListener(renderer);
-		return renderer;
-	}
-
-	/**
-	 * Gets the current absolute world position represented by the local GL model matrix
-	 *
-	 * @return Absolute world position
-	 */
-	@SideOnly(Side.CLIENT)
-	public static Vector3f getLocalToWorldPos()
-	{
-		l2WTempInputBuffer1.clear();
-		l2WTempInputBuffer2.clear();
-		l2WTempOutputBuffer.clear();
-
-		FloatBuffer camMat = ObfuscationReflectionHelper.getPrivateValue(ActiveRenderInfo.class, null, "modelview", "field_74594_j", "j");
-		BufferMatrix.invertMatrix(camMat, l2WTempInputBuffer2);
-
-		GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, l2WTempInputBuffer1);
-		BufferMatrix.multiply(l2WTempInputBuffer1, l2WTempInputBuffer2, l2WTempOutputBuffer);
-		l2WTempOutputBuffer.get(l2WTempMatrixArray);
-		Vec3 playerPos = mc.renderViewEntity.getPosition(renderPartialTicks);
-		return new Vector3f(l2WTempMatrixArray[12] + (float)playerPos.xCoord, l2WTempMatrixArray[13] + (float)playerPos.yCoord, l2WTempMatrixArray[14] + (float)playerPos.zCoord);
-	}
-
-	/**
-	 * Tests if the player exists
-	 *
-	 * @return True if the client player has been initialized
-	 */
-	@SideOnly(Side.CLIENT)
-	public static boolean doesPlayerExist()
-	{
-		return mc != null && mc.thePlayer != null;
-	}
-
-	/**
-	 * Gets the client player or null if Minecraft or the player does not exist
-	 *
-	 * @return A client player
-	 */
-	@SideOnly(Side.CLIENT)
-	public static EntityPlayer getPlayer()
-	{
-		if (!doesPlayerExist())
-			return null;
-		return mc.thePlayer;
-	}
+	public static Entity prevCamEntity = null;
 
 	/**
 	 * Queries the "attack" keybind and processes items who consume the associated action
 	 *
 	 * @param passive False if the event was triggered by a keybind or mouse click, true if it was triggered by the tick handler
 	 */
-	public void checkLeftClickPressed(boolean passive)
+	public static void checkLeftClickPressed(boolean passive)
 	{
 		if (leftClickDelayTimer > 0)
 			return;
 
-		ItemStack heldItem = mc.thePlayer.getHeldItem();
-		if (heldItem == null || !(heldItem.getItem() instanceof ILeftClickInterceptor))
+		ItemStack heldItem = mc.player.getHeldItemMainhand();
+		if (!(heldItem.getItem() instanceof ILeftClickInterceptor))
 			return;
 		ILeftClickInterceptor item = ((ILeftClickInterceptor)heldItem.getItem());
 
-		boolean risingEdge = KeybindRegistry.keyAttack.interceptedIsPressed();
-		boolean holding = KeybindRegistry.keyAttack.getInterceptedIsKeyPressed();
+		boolean risingEdge = KeybindRegister.keyAttack.interceptedIsPressed();
+		boolean holding = KeybindRegister.keyAttack.getInterceptedIsKeyDown();
 
-		boolean pressed = item.isLeftClickRepeatable() ? (passive && (risingEdge || holding)) : risingEdge;
+		boolean pressed = item.isLeftClickRepeatable(heldItem, mc.player.world, mc.player) ? (passive && (risingEdge || holding)) : risingEdge;
 
-		if (item.isLeftClickRepeatable())
-			while (KeybindRegistry.keyAttack.interceptedIsPressed())
+		if (item.isLeftClickRepeatable(heldItem, mc.player.world, mc.player))
+			while (KeybindRegister.keyAttack.interceptedIsPressed())
 				;
 
 		if (pressed)
 		{
 			leftClickDelayTimer = 2;
-			item.onItemLeftClick(heldItem, mc.thePlayer.worldObj, mc.thePlayer);
-			StarWarsGalaxy.network.sendToServer(new MessageItemLeftClick(mc.thePlayer));
+			item.onItemLeftClick(heldItem, mc.player.world, mc.player);
+			StarWarsGalaxy.NETWORK.sendToServer(new MessageItemLeftClick(mc.player));
 		}
 	}
 
 	@Override
-	public void hudDebug(String category, Object data)
+	public void preInit(FMLPreInitializationEvent e)
 	{
-		hudLog.debug(category, String.valueOf(data));
-	}
-
-	@Override
-	public void init()
-	{
+		super.preInit(e);
 		mc = Minecraft.getMinecraft();
 
-		ShaderHelper.initShaders();
+		ModelLoaderRegistry.registerLoader(new Pm3dModelLoader());
+		ModelLoaderRegistry.registerLoader(new DummyBuiltinLoader());
 
-		mc.entityRenderer = new PEntityRenderer(mc, mc.getResourceManager());
+		RenderingRegistry.registerEntityRenderingHandler(EntityT65B.class, renderManagerIn -> new RenderShip(renderManagerIn, Pr3ModelRegister.XwingT65b));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, RenderBlasterBolt::new);
 
-		ObfuscationReflectionHelper.setPrivateValue(Minecraft.class, mc, new PFramebuffer(mc.displayWidth, mc.displayHeight, true), "framebufferMc", "field_147124_at", "au");
-
-		guiQuestNotification = new GuiQuestNotification();
-
-		hudLog = new HudLumberjack();
-
-		frNaboo = createFont("naboo");
-		frAurebesh = createFont("aurebesh");
-		frDroid = createFont("droid");
-		frEwok = createFont("ewok");
-		frHuttese = createFont("huttese");
-		frMassassi = createFont("massassi");
-
-		// TODO: abstract out ship render types for models etc.
-		RenderingRegistry.registerEntityRenderingHandler(EntityT65.class, new RenderShip(new ModelXWing()));
-		RenderingRegistry.registerEntityRenderingHandler(EntityScootEmAround.class, new RenderShip(new ModelScootEmAround()));
-		//RenderingRegistry.registerEntityRenderingHandler(Seat.class, new RenderNothing());
-		RenderingRegistry.registerEntityRenderingHandler(EntityBlasterBolt.class, new RenderBlasterBolt());
-
-		RenderingRegistry.registerEntityRenderingHandler(EntityChair.class, new RenderNothing());
-		RenderingRegistry.registerEntityRenderingHandler(EntitySeat.class, new RenderNothing());
-		RenderingRegistry.registerEntityRenderingHandler(EntityCinematicCamera.class, new RenderNothing());
-
-		RenderingRegistry.registerEntityRenderingHandler(NpcMerchant.class, new RenderMerchant());
-		RenderingRegistry.registerEntityRenderingHandler(NpcJawa.class, new RenderJawa());
-
-		RenderingRegistry.registerEntityRenderingHandler(MobGizka.class, new RenderGizka());
-
-		RenderingRegistry.registerEntityRenderingHandler(EntitySmokeGrenade.class, new EntityRenderDroppedItem(new RenderSmokeGrenade(), new ItemStack(ItemRegister.grenadeSmoke)));
-		RenderingRegistry.registerEntityRenderingHandler(EntityThermalDetonator.class, new EntityRenderDroppedItem(new RenderThermalDetonator(), new ItemStack(ItemRegister.grenadeThermalDetonator)));
-
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleA280, new RenderA280());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleBowcaster, new RenderBowcaster());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleCycler, new RenderCycler());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDefender, new RenderDefender());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDh17, new RenderDH17());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDl18, new RenderDL18());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDl21, new RenderDL21());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleDlt19, new RenderDlt19());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleE11, new RenderE11());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleIonization, new RenderIonization());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleRt97c, new RenderRT97C());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleScout, new RenderScout());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleSe14c, new RenderSE14C());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.rifleT21, new RenderT21());
-
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.grenadeSmoke, new RenderSmokeGrenade());
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.grenadeThermalDetonator, new RenderThermalDetonator());
-
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.lightsaber, new RenderLightsaber(Resources.location("models/item/lightsaber/luke.json")));
-
-		MinecraftForgeClient.registerItemRenderer(ItemRegister.binocularsMb450, new RenderMacrobinoculars());
-
-		ClientRegistry.bindTileEntitySpecialRenderer(TileGunRack.class, new RenderGunRack());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileSatelliteDish.class, new RenderSatelliteDish());
-
-		registerBasicTileItemRenderer(BlockRegister.gunRack, 0.8f);
-		registerBasicTileItemRenderer(BlockRegister.satelliteDish, 0.4f);
-
-		Lumberjack.log("Client proxy loaded!");
-	}
-
-	@Override
-	public void tickSounds(EntityPlayer player, ItemStack heldItem)
-	{
-		if (heldItem != null && heldItem.getItem() instanceof ItemLightsaber)
+		try
 		{
-			LightsaberData ld = new LightsaberData(heldItem);
-			if (ld.isOpen)
-				ClientSoundHandler.playSound(player, SwgSound.LightsaberIdle);
-			else
-				ClientSoundHandler.stopSound(player, SwgSound.LightsaberIdle);
+			Pr3ModelRegister.load();
 		}
-		else
-			ClientSoundHandler.stopSound(player, SwgSound.LightsaberIdle);
-
-		EntityShip ship = SwgEntityUtil.getShipRiding(player);
-		if (ship != null)
+		catch (IOException ex)
 		{
-			if (ship.isBootingHyperdrive())
-				ClientSoundHandler.playSound(player, SwgSound.HyperspaceAlarm);
-			else
-				ClientSoundHandler.stopSound(player, SwgSound.HyperspaceAlarm);
+			ex.printStackTrace();
 		}
-		else
-			ClientSoundHandler.stopSound(player, SwgSound.HyperspaceAlarm);
 	}
 
 	@Override
-	public void displayGuiScreen(GuiScreen gui)
+	public void postInit(FMLPostInitializationEvent e)
 	{
-		mc.displayGuiScreen(gui);
+		super.postInit(e);
+		KeybindRegister.register();
 	}
 
 	@Override
-	public <T extends Block & INameProvider> void registerBlockModel(T block)
+	public void registerItemRenderer(Item item, String id)
 	{
-		RenderingRegistry.registerBlockHandler(new JsonBlockRenderer(block, Resources.location(String.format("models/block/%s.json", block.getName()))));
-	}
-
-	@SideOnly(Side.CLIENT)
-	private void registerBasicTileItemRenderer(Block block, float scale)
-	{
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(block), new RenderBasicTileItem(block, scale));
+		ModelLoader.setCustomModelResourceLocation(item, 0, new ModelResourceLocation(Resources.modColon(id), "inventory"));
 	}
 
 	@Override
-	public void postInit()
+	public void onRegisterItem(RegistryEvent.Register<Item> event)
 	{
-		KeybindRegistry.registerAll();
+		for (ItemLightsaber lightsaber : ItemRegister.lightsabers)
+			setItemRenderer(lightsaber, new RenderItemLightsaber());
+	}
+
+	public void setItemRenderer(Item item, TileEntityItemStackRenderer renderer)
+	{
+		item.setTileEntityItemStackRenderer(renderer);
+		registerItemRenderer(item, "builtin");
+	}
+
+	public void captureShipInput(EntityPlayer pilot, EntityShip entityShip)
+	{
+		MouseHelper mouseHelper = mc.mouseHelper;
+		float f = mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
+		float f1 = f * f * f * 8.0F;
+		ShipInputMode shipInputMode = entityShip.getShipInputMode();
+		entityShip.setInputsClient(mouseHelper.deltaX * f1, mouseHelper.deltaY * f1, shipInputMode, mc.gameSettings.keyBindJump.isKeyDown());
+	}
+
+	public MovementInput getMovementInput(EntityPlayer player)
+	{
+		if (player instanceof EntityPlayerSP)
+			return ((EntityPlayerSP)player).movementInput;
+		return null;
 	}
 
 	@Override
-	public void spawnSmokeParticle(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
+	public void notifyPlayer(ITextComponent message, boolean actionBar)
 	{
-		Minecraft.getMinecraft().effectRenderer.addEffect(new ParticleSmoke(world, x, y, z, velocityX, velocityY, velocityZ));
-	}
-
-	@Override
-	public void handleWorldDataSync(NBTTagCompound worldData)
-	{
-		PswgWorldDataHandler.get(mc.theWorld).readFromNBT(worldData);
-	}
-
-	@Override
-	public void handleVehicleKeybinds()
-	{
-		KeyHandler.handleVehicleKeybinds();
-	}
-
-	@Override
-	public void handlePlayerDataSync(int entityId, NBTTagCompound ieep)
-	{
-		World w = mc.theWorld;
-		if (w == null)
-		{
-			Lumberjack.warn("Recieved null world for MessagePswgExtPropSync::handleMessage");
-			return;
-		}
-		Entity e = w.getEntityByID(entityId);
-		if (e == null)
-			return;
-		PswgExtProp props = PswgExtProp.get(e);
-		props.loadNBTData(ieep);
+		mc.player.sendStatusMessage(message, actionBar);
 	}
 }

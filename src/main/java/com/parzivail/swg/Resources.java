@@ -1,28 +1,20 @@
 package com.parzivail.swg;
 
+import com.parzivail.util.common.OpenSimplexNoise;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 
-/**
- * Created by colby on 9/10/2017.
- */
+import java.util.Random;
+
 public class Resources
 {
 	public static final String MODID = "pswg";
-
-	public static final int[] PANEL_LIGHT_COLORS = {
-			0xF8E443, 0x0050A1, 0x4ACBFF, 0xD1A250, 0x42A904, 0xFB4B33, 0x000000
-	};
-
+	public static final String NAME = "Galaxies: Parzi's Star Wars Mod";
 	public static final boolean IS_DEBUG = System.getenv("PSWG_DEBUG") != null && Boolean.parseBoolean(System.getenv("PSWG_DEBUG"));
 
-	private static int guiIdx;
-	public static final int GUI_BLASTER_WORKBENCH = guiIdx++;
-	public static final int GUI_NPC_SPAWNER = guiIdx++;
-	public static final int GUI_DIALOGUE = guiIdx++;
-	public static final int GUI_PERSONAL_DATAPAD = guiIdx++;
-	public static final int GUI_LIGHTSABER_FORGE = guiIdx++;
+	public static final Random RANDOM = new Random();
+	public static final OpenSimplexNoise NOISE = new OpenSimplexNoise();
 
 	public static String itemDot(String name)
 	{

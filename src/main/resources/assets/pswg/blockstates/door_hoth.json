@@ -1,0 +1,10 @@
+{
+  "variants": {
+	"normal": {
+	  "model": "pswg:door_hoth"
+	},
+	"inventory": {
+	  "model": "pswg:door_hoth"
+	}
+  }
+}

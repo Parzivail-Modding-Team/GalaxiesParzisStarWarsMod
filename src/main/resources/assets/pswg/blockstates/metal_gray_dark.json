@@ -1,0 +1,10 @@
+{
+  "variants": {
+	"normal": {
+	  "model": "pswg:metal_gray_dark"
+	},
+	"inventory": {
+	  "model": "pswg:metal_gray_dark"
+	}
+  }
+}

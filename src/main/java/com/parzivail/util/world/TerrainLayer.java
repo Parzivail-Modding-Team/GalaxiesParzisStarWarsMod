@@ -8,12 +8,12 @@ import com.parzivail.util.common.OpenSimplexNoise;
 public class TerrainLayer
 {
 	private final OpenSimplexNoise noise;
-	public Function function = Function.Simplex;
-	public Method method = Method.Add;
+	public TerrainFunction function = TerrainFunction.Simplex;
+	public TerrainCompositeMethod method = TerrainCompositeMethod.Add;
 	public double scale = 200;
 	public double range = 20;
 
-	public TerrainLayer(long seed, Function function, Method method, double scale, double range)
+	public TerrainLayer(long seed, TerrainFunction function, TerrainCompositeMethod method, double scale, double range)
 	{
 		this.function = function;
 		this.method = method;
@@ -22,9 +22,9 @@ public class TerrainLayer
 		noise = new OpenSimplexNoise(seed);
 	}
 
-	public TerrainLayer(long seed, Method method, double scale, double range)
+	public TerrainLayer(long seed, TerrainCompositeMethod method, double scale, double range)
 	{
-		this(seed, Function.Simplex, method, scale, range);
+		this(seed, TerrainFunction.Simplex, method, scale, range);
 	}
 
 	public double GetValue(double x, double y)
@@ -213,30 +213,5 @@ public class TerrainLayer
 			default:
 				return 0;
 		}
-	}
-
-	public enum Method
-	{
-		Add, Multiply, Subtract
-	}
-
-	public enum Function
-	{
-		Simplex,
-		Turbulent,
-		InvTurbulent,
-		NCTurbulent,
-		InvNCTurbulent,
-		Midpoint,
-		InvMidpoint,
-		FilmMelt,
-		Warble,
-		InvWarble,
-		Klump,
-		InvKlump,
-		HiLoPass,
-		InvHiLoPass,
-		MidWave,
-		Constant
 	}
 }

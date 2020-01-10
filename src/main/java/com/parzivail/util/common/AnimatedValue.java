@@ -1,7 +1,7 @@
 package com.parzivail.util.common;
 
 import com.parzivail.util.math.Ease;
-import com.parzivail.util.ui.Fx.Util;
+import com.parzivail.util.ui.Fx;
 
 import java.util.function.Function;
 
@@ -32,7 +32,7 @@ public class AnimatedValue
 
 	public void queueAnimatingTo(float value)
 	{
-		long timeHere = Util.GetMillis();
+		long timeHere = Fx.Util.GetMillis();
 
 		if (value != next)
 		{
@@ -50,7 +50,7 @@ public class AnimatedValue
 
 	public float getValue(Function<Float, Float> interpolation)
 	{
-		long timeHere = Util.GetMillis();
+		long timeHere = Fx.Util.GetMillis();
 
 		if (timeHere > nextTime)
 			return next;

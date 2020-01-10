@@ -1,9 +1,9 @@
 package com.parzivail.scarif;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.parzivail.brotli.BrotliInputStream;
 import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.util.binary.PIO;
-import com.parzivail.util.binary.brotli.BrotliInputStream;
+import com.parzivail.util.binary.BinaryUtil;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
@@ -32,7 +32,7 @@ public class ScarifStructure
 
 	public static ScarifStructure read(ResourceLocation filename) throws IOException
 	{
-		InputStream fs = PIO.getResource(StarWarsGalaxy.class, filename);
+		InputStream fs = BinaryUtil.getResource(StarWarsGalaxy.class, filename);
 		BrotliInputStream bis = new BrotliInputStream(fs);
 		LittleEndianDataInputStream s = new LittleEndianDataInputStream(bis);
 
@@ -52,7 +52,7 @@ public class ScarifStructure
 		for (int entryIdx = 0; entryIdx < numIdMapEntries; entryIdx++)
 		{
 			short id = s.readShort();
-			String name = ScarifUtil.readNullTerminatedString(s);
+			String name = BinaryUtil.readNullTerminatedString(s);
 			idMap.put(id, name);
 		}
 
@@ -88,16 +88,16 @@ public class ScarifStructure
 					int len = s.readInt();
 					if (len <= 0)
 						throw new IOException("Zero-length NBT present");
-					tileTag = ScarifUtil.readUncompressedNbt(s, len);
+					tileTag = BinaryUtil.readUncompressedNbt(s, len);
 				}
 
 				if (idMap.containsKey(id))
-					blocks[blockIdx] = new ScarifBlock(ScarifUtil.encodeBlockPos(x, y, z), id, metadata, tileTag);
+					blocks[blockIdx] = new ScarifBlock(BinaryUtil.encodeBlockPos(x, y, z), id, metadata, tileTag);
 				else
 					throw new IOException(String.format("Unknown block ID found: %s", id));
 			}
 
-			diffMap.put(ScarifUtil.encodeChunkPos(chunkX, chunkZ), blocks);
+			diffMap.put(BinaryUtil.encodeChunkPos(chunkX, chunkZ), blocks);
 		}
 		s.close();
 

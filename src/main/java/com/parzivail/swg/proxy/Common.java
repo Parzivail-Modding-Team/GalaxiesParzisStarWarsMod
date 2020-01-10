@@ -1,86 +1,53 @@
 package com.parzivail.swg.proxy;
 
-import com.parzivail.swg.StarWarsGalaxy;
-import com.parzivail.util.block.INameProvider;
-import com.parzivail.util.common.Lumberjack;
-import com.parzivail.util.network.MessageCreateDecal;
-import com.parzivail.util.network.MessageSpawnParticle;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import net.minecraft.block.Block;
-import net.minecraft.client.gui.GuiScreen;
+import com.parzivail.swg.entity.EntityShip;
+import com.parzivail.swg.register.EntityRegister;
+import com.parzivail.swg.register.StructureRegister;
+import com.parzivail.swg.register.WorldRegister;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.item.Item;
+import net.minecraft.util.MovementInput;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-/**
- * Created by colby on 9/10/2017.
- */
 public class Common
 {
-	private MinecraftServer MCServer;
-
-	public void init()
+	public void preInit(FMLPreInitializationEvent e)
 	{
-		Lumberjack.log("Server proxy loaded!");
+		WorldRegister.register();
+		StructureRegister.register();
+		EntityRegister.register();
 	}
 
-	public void spawnParticle(World world, String name, double x, double y, double z, double vx, double vy, double vz)
-	{
-		StarWarsGalaxy.network.sendToDimension(new MessageSpawnParticle(world.provider.dimensionId, name, x, y, z, vx, vy, vz), world.provider.dimensionId);
-	}
-
-	public void createDecal(World world, int type, int blockX, int blockY, int blockZ, float x, float y, float z, float size, EnumFacing direction)
-	{
-		StarWarsGalaxy.network.sendToAllAround(new MessageCreateDecal(world.provider.dimensionId, type, blockX, blockY, blockZ, x, y, z, size, direction), new TargetPoint(world.provider.dimensionId, x, y, z, 100));
-	}
-
-	public void checkLeftClickPressed(boolean selfReported)
-	{
-
-	}
-
-	public MinecraftServer getMCServer()
-	{
-		return FMLCommonHandler.instance().getMinecraftServerInstance();
-	}
-
-	public void postInit()
+	public void init(FMLInitializationEvent e)
 	{
 	}
 
-	public void spawnSmokeParticle(World world, double x, double y, double z, double velocityX, double velocityY, double velocityZ)
+	public void postInit(FMLPostInitializationEvent e)
 	{
 	}
 
-	public void handleWorldDataSync(NBTTagCompound worldData)
+	public void registerItemRenderer(Item itemBlock, String name)
 	{
 	}
 
-	public void handlePlayerDataSync(int entityId, NBTTagCompound ieep)
+	public void onRegisterItem(RegistryEvent.Register<Item> event)
 	{
 	}
 
-	public <T extends Block & INameProvider> void registerBlockModel(T block)
+	public MovementInput getMovementInput(EntityPlayer player)
+	{
+		return null;
+	}
+
+	public void captureShipInput(EntityPlayer pilot, EntityShip entityShip)
 	{
 	}
 
-	public void tickSounds(EntityPlayer player, ItemStack heldItem)
-	{
-	}
-
-	public void hudDebug(String category, Object data)
-	{
-	}
-
-	public void handleVehicleKeybinds()
-	{
-	}
-
-	public void displayGuiScreen(GuiScreen gui)
+	public void notifyPlayer(ITextComponent message, boolean actionBar)
 	{
 	}
 }

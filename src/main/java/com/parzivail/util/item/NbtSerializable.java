@@ -1,11 +1,10 @@
 package com.parzivail.util.item;
 
 import com.google.gson.Gson;
-import com.parzivail.swg.force.ForcePowerDescriptor;
-import com.parzivail.swg.item.blaster.data.BlasterAttachment;
-import com.parzivail.swg.item.blaster.data.BlasterAttachments;
-import com.parzivail.swg.item.lightsaber.LightsaberDescriptor;
+import com.google.gson.GsonBuilder;
+import com.parzivail.swg.item.data.LightsaberDescriptor;
 import com.parzivail.util.common.Enumerable;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -15,6 +14,8 @@ import java.util.UUID;
 
 public class NbtSerializable<T extends NbtSerializable>
 {
+	private static final Gson GSON = new GsonBuilder().create();
+
 	private static final HashMap<Class, Pair<Reader, Writer>> handlers = new HashMap<>();
 	private static final HashMap<Class, Field[]> fieldCache = new HashMap<>();
 
@@ -32,10 +33,11 @@ public class NbtSerializable<T extends NbtSerializable>
 		map(String[].class, NbtSerializable::readListString, NbtSerializable::writeListString);
 		map(UUID.class, NbtSerializable::readUuid, NbtSerializable::writeUuid);
 
-		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
-		map(LightsaberDescriptor.class, NbtSerializable::readLightsaberDescriptor, NbtSerializable::writeLightsaberDescriptor);
-		map(ForcePowerDescriptor[].class, NbtSerializable::readForcePowerDescriptors, NbtSerializable::writeForcePowerDescriptors);
+		//		map(BlasterAttachment.class, NbtSerializable::readBlasterAttachment, NbtSerializable::writeBlasterAttachment);
+		//		map(ForcePowerDescriptor[].class, NbtSerializable::readForcePowerDescriptors, NbtSerializable::writeForcePowerDescriptors);
 		//		map(BlasterAttachment[].class, NbtSerializable::readBlasterAttachments, NbtSerializable::writeBlasterAttachments);
+
+		map(LightsaberDescriptor.class, NbtSerializable::readLightsaberDescriptor, NbtSerializable::writeLightsaberDescriptor);
 	}
 
 	private static int[] readListInteger(String s, NBTTagCompound compound)
@@ -64,75 +66,66 @@ public class NbtSerializable<T extends NbtSerializable>
 		compound.setString(s, new Gson().toJson(strings));
 	}
 
-	private static BlasterAttachment readBlasterAttachment(String s, NBTTagCompound compound)
-	{
-		int i = compound.getInteger(s);
-		if (i == 0)
-			return null;
-		return BlasterAttachments.ATTACHMENTS.get(i);
-	}
-
-	private static void writeBlasterAttachment(String s, BlasterAttachment blasterAttachment, NBTTagCompound compound)
-	{
-		if (blasterAttachment == null)
-			compound.setInteger(s, 0);
-		else
-			compound.setInteger(s, blasterAttachment.getId());
-	}
+	//	private static BlasterAttachment readBlasterAttachment(String s, NBTTagCompound compound)
+	//	{
+	//		int i = compound.getInteger(s);
+	//		if (i == 0)
+	//			return null;
+	//		return BlasterAttachments.ATTACHMENTS.get(i);
+	//	}
+	//
+	//	private static void writeBlasterAttachment(String s, BlasterAttachment blasterAttachment, NBTTagCompound compound)
+	//	{
+	//		if (blasterAttachment == null)
+	//			compound.setInteger(s, 0);
+	//		else
+	//			compound.setInteger(s, blasterAttachment.getId());
+	//	}
 
 	private static LightsaberDescriptor readLightsaberDescriptor(String s, NBTTagCompound compound)
 	{
-		LightsaberDescriptor ld = new LightsaberDescriptor();
 		if (!compound.hasKey(s))
-			return ld;
-		NBTTagCompound ldCompound = compound.getCompoundTag(s);
-		ld.bladeColor = ldCompound.getInteger("bladeColor");
-		ld.bladeLength = ldCompound.getFloat("bladeLength");
-		ld.coreColor = ldCompound.getInteger("coreColor");
-		ld.unstable = ldCompound.getBoolean("unstable");
-		return ld;
+			return LightsaberDescriptor.DEFAULT;
+
+		return GSON.fromJson(compound.getString(s), LightsaberDescriptor.class);
 	}
 
 	private static void writeLightsaberDescriptor(String s, LightsaberDescriptor ld, NBTTagCompound compound)
 	{
 		if (ld == null)
-			ld = new LightsaberDescriptor();
-		NBTTagCompound ldCompound = new NBTTagCompound();
-		ldCompound.setInteger("bladeColor", ld.bladeColor);
-		ldCompound.setFloat("bladeLength", ld.bladeLength);
-		ldCompound.setInteger("coreColor", ld.coreColor);
-		ldCompound.setBoolean("unstable", ld.unstable);
-		compound.setTag(s, ldCompound);
+			throw new IllegalArgumentException("Lightsaber descriptor was not copied from the item");
+
+		compound.setString(s, GSON.toJson(ld));
 	}
 
-	private static ForcePowerDescriptor[] readForcePowerDescriptors(String s, NBTTagCompound compound)
-	{
-		return new Gson().fromJson(compound.getString(s), ForcePowerDescriptor[].class);
-	}
-
-	private static void writeForcePowerDescriptors(String s, ForcePowerDescriptor[] forcePowerDescriptor, NBTTagCompound compound)
-	{
-		if (forcePowerDescriptor == null)
-			forcePowerDescriptor = new ForcePowerDescriptor[0];
-
-		compound.setString(s, new Gson().toJson(forcePowerDescriptor));
-	}
-
-	private static BlasterAttachment[] readBlasterAttachments(String s, NBTTagCompound compound)
-	{
-		int len = compound.getInteger(s + "-len");
-		BlasterAttachment[] a = new BlasterAttachment[len];
-		for (int i = 0; i < len; i++)
-			a[i] = readBlasterAttachment(s + "-" + i, compound);
-		return a;
-	}
-
-	private static void writeBlasterAttachments(String s, BlasterAttachment[] blasterAttachments, NBTTagCompound compound)
-	{
-		compound.setInteger(s + "-len", blasterAttachments.length);
-		for (int i = 0; i < blasterAttachments.length; i++)
-			writeBlasterAttachment(s + "-" + i, blasterAttachments[i], compound);
-	}
+	//	private static ForcePowerDescriptor[] readForcePowerDescriptors(String s, NBTTagCompound compound)
+	//	{
+	//		return new Gson().fromJson(compound.getString(s), ForcePowerDescriptor[].class);
+	//	}
+	//
+	//	private static void writeForcePowerDescriptors(String s, ForcePowerDescriptor[] forcePowerDescriptor, NBTTagCompound compound)
+	//	{
+	//		if (forcePowerDescriptor == null)
+	//			forcePowerDescriptor = new ForcePowerDescriptor[0];
+	//
+	//		compound.setString(s, new Gson().toJson(forcePowerDescriptor));
+	//	}
+	//
+	//	private static BlasterAttachment[] readBlasterAttachments(String s, NBTTagCompound compound)
+	//	{
+	//		int len = compound.getInteger(s + "-len");
+	//		BlasterAttachment[] a = new BlasterAttachment[len];
+	//		for (int i = 0; i < len; i++)
+	//			a[i] = readBlasterAttachment(s + "-" + i, compound);
+	//		return a;
+	//	}
+	//
+	//	private static void writeBlasterAttachments(String s, BlasterAttachment[] blasterAttachments, NBTTagCompound compound)
+	//	{
+	//		compound.setInteger(s + "-len", blasterAttachments.length);
+	//		for (int i = 0; i < blasterAttachments.length; i++)
+	//			writeBlasterAttachment(s + "-" + i, blasterAttachments[i], compound);
+	//	}
 
 	private static Double readDouble(String s, NBTTagCompound compound)
 	{
@@ -260,6 +253,11 @@ public class NbtSerializable<T extends NbtSerializable>
 		return f.isAnnotationPresent(NbtSave.class) && handlers.containsKey(f.getType());
 	}
 
+	public void deserialize(ItemStack stack)
+	{
+		deserialize(stack.getTagCompound());
+	}
+
 	public void deserialize(NBTTagCompound compound)
 	{
 		if (compound == null)
@@ -291,6 +289,12 @@ public class NbtSerializable<T extends NbtSerializable>
 		{
 			e.printStackTrace();
 		}
+	}
+
+	public void serialize(ItemStack stack)
+	{
+		ItemUtils.ensureNbt(stack);
+		serialize(stack.getTagCompound());
 	}
 
 	private void readField(Field f, Class clazz, NBTTagCompound buf) throws IllegalArgumentException, IllegalAccessException

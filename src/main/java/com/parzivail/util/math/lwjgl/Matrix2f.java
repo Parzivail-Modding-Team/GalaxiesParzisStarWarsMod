@@ -65,18 +65,6 @@ public class Matrix2f extends Matrix
 	}
 
 	/**
-	 * Load from another matrix
-	 *
-	 * @param src The source matrix
-	 *
-	 * @return this
-	 */
-	public Matrix2f load(Matrix2f src)
-	{
-		return load(src, this);
-	}
-
-	/**
 	 * Copy the source matrix to the destination matrix.
 	 *
 	 * @param src  The source matrix
@@ -95,74 +83,6 @@ public class Matrix2f extends Matrix
 		dest.m11 = src.m11;
 
 		return dest;
-	}
-
-	/**
-	 * Load from a float buffer. The buffer stores the matrix in column major
-	 * (OpenGL) order.
-	 *
-	 * @param buf A float buffer to read from
-	 *
-	 * @return this
-	 */
-	public Matrix load(FloatBuffer buf)
-	{
-
-		m00 = buf.get();
-		m01 = buf.get();
-		m10 = buf.get();
-		m11 = buf.get();
-
-		return this;
-	}
-
-	/**
-	 * Load from a float buffer. The buffer stores the matrix in row major
-	 * (mathematical) order.
-	 *
-	 * @param buf A float buffer to read from
-	 *
-	 * @return this
-	 */
-	public Matrix loadTranspose(FloatBuffer buf)
-	{
-
-		m00 = buf.get();
-		m10 = buf.get();
-		m01 = buf.get();
-		m11 = buf.get();
-
-		return this;
-	}
-
-	/**
-	 * Store this matrix in a float buffer. The matrix is stored in column
-	 * major (openGL) order.
-	 *
-	 * @param buf The buffer to store this matrix in
-	 */
-	public Matrix store(FloatBuffer buf)
-	{
-		buf.put(m00);
-		buf.put(m01);
-		buf.put(m10);
-		buf.put(m11);
-		return this;
-	}
-
-	/**
-	 * Store this matrix in a float buffer. The matrix is stored in row
-	 * major (maths) order.
-	 *
-	 * @param buf The buffer to store this matrix in
-	 */
-	public Matrix storeTranspose(FloatBuffer buf)
-	{
-		buf.put(m00);
-		buf.put(m10);
-		buf.put(m01);
-		buf.put(m11);
-		return this;
 	}
 
 	/**
@@ -261,28 +181,6 @@ public class Matrix2f extends Matrix
 	}
 
 	/**
-	 * Transpose this matrix
-	 *
-	 * @return this
-	 */
-	public Matrix transpose()
-	{
-		return transpose(this);
-	}
-
-	/**
-	 * Transpose this matrix and place the result in another matrix.
-	 *
-	 * @param dest The destination matrix or null if a new matrix is to be created
-	 *
-	 * @return the transposed matrix
-	 */
-	public Matrix2f transpose(Matrix2f dest)
-	{
-		return transpose(this, dest);
-	}
-
-	/**
 	 * Transpose the source matrix and place the result in the destination matrix.
 	 *
 	 * @param src  The source matrix or null if a new matrix is to be created
@@ -302,16 +200,6 @@ public class Matrix2f extends Matrix
 		dest.m10 = m10;
 
 		return dest;
-	}
-
-	/**
-	 * Invert this matrix
-	 *
-	 * @return this if successful, null otherwise
-	 */
-	public Matrix invert()
-	{
-		return invert(this, this);
 	}
 
 	/**
@@ -350,6 +238,164 @@ public class Matrix2f extends Matrix
 	}
 
 	/**
+	 * Negate the source matrix and stash the result in the destination matrix.
+	 *
+	 * @param src  The source matrix to be negated
+	 * @param dest The destination matrix, or null if a new matrix is to be created
+	 *
+	 * @return the negated matrix
+	 */
+	public static Matrix2f negate(Matrix2f src, Matrix2f dest)
+	{
+		if (dest == null)
+			dest = new Matrix2f();
+
+		dest.m00 = -src.m00;
+		dest.m01 = -src.m01;
+		dest.m10 = -src.m10;
+		dest.m11 = -src.m11;
+
+		return dest;
+	}
+
+	/**
+	 * Set the source matrix to be the identity matrix.
+	 *
+	 * @param src The matrix to set to the identity.
+	 *
+	 * @return The source matrix
+	 */
+	public static Matrix2f setIdentity(Matrix2f src)
+	{
+		src.m00 = 1.0f;
+		src.m01 = 0.0f;
+		src.m10 = 0.0f;
+		src.m11 = 1.0f;
+		return src;
+	}
+
+	public static Matrix2f setZero(Matrix2f src)
+	{
+		src.m00 = 0.0f;
+		src.m01 = 0.0f;
+		src.m10 = 0.0f;
+		src.m11 = 0.0f;
+		return src;
+	}
+
+	/**
+	 * Load from another matrix
+	 *
+	 * @param src The source matrix
+	 *
+	 * @return this
+	 */
+	public Matrix2f load(Matrix2f src)
+	{
+		return load(src, this);
+	}
+
+	/**
+	 * Load from a float buffer. The buffer stores the matrix in column major
+	 * (OpenGL) order.
+	 *
+	 * @param buf A float buffer to read from
+	 *
+	 * @return this
+	 */
+	public Matrix load(FloatBuffer buf)
+	{
+
+		m00 = buf.get();
+		m01 = buf.get();
+		m10 = buf.get();
+		m11 = buf.get();
+
+		return this;
+	}
+
+	/**
+	 * Load from a float buffer. The buffer stores the matrix in row major
+	 * (mathematical) order.
+	 *
+	 * @param buf A float buffer to read from
+	 *
+	 * @return this
+	 */
+	public Matrix loadTranspose(FloatBuffer buf)
+	{
+
+		m00 = buf.get();
+		m10 = buf.get();
+		m01 = buf.get();
+		m11 = buf.get();
+
+		return this;
+	}
+
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in column
+	 * major (openGL) order.
+	 *
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix store(FloatBuffer buf)
+	{
+		buf.put(m00);
+		buf.put(m01);
+		buf.put(m10);
+		buf.put(m11);
+		return this;
+	}
+
+	/**
+	 * Store this matrix in a float buffer. The matrix is stored in row
+	 * major (maths) order.
+	 *
+	 * @param buf The buffer to store this matrix in
+	 */
+	public Matrix storeTranspose(FloatBuffer buf)
+	{
+		buf.put(m00);
+		buf.put(m10);
+		buf.put(m01);
+		buf.put(m11);
+		return this;
+	}
+
+	/**
+	 * Transpose this matrix
+	 *
+	 * @return this
+	 */
+	public Matrix transpose()
+	{
+		return transpose(this);
+	}
+
+	/**
+	 * Transpose this matrix and place the result in another matrix.
+	 *
+	 * @param dest The destination matrix or null if a new matrix is to be created
+	 *
+	 * @return the transposed matrix
+	 */
+	public Matrix2f transpose(Matrix2f dest)
+	{
+		return transpose(this, dest);
+	}
+
+	/**
+	 * Invert this matrix
+	 *
+	 * @return this if successful, null otherwise
+	 */
+	public Matrix invert()
+	{
+		return invert(this, this);
+	}
+
+	/**
 	 * Returns a string representation of this matrix
 	 */
 	public String toString()
@@ -383,27 +429,6 @@ public class Matrix2f extends Matrix
 	}
 
 	/**
-	 * Negate the source matrix and stash the result in the destination matrix.
-	 *
-	 * @param src  The source matrix to be negated
-	 * @param dest The destination matrix, or null if a new matrix is to be created
-	 *
-	 * @return the negated matrix
-	 */
-	public static Matrix2f negate(Matrix2f src, Matrix2f dest)
-	{
-		if (dest == null)
-			dest = new Matrix2f();
-
-		dest.m00 = -src.m00;
-		dest.m01 = -src.m01;
-		dest.m10 = -src.m10;
-		dest.m11 = -src.m11;
-
-		return dest;
-	}
-
-	/**
 	 * Set this matrix to be the identity matrix.
 	 *
 	 * @return this
@@ -414,22 +439,6 @@ public class Matrix2f extends Matrix
 	}
 
 	/**
-	 * Set the source matrix to be the identity matrix.
-	 *
-	 * @param src The matrix to set to the identity.
-	 *
-	 * @return The source matrix
-	 */
-	public static Matrix2f setIdentity(Matrix2f src)
-	{
-		src.m00 = 1.0f;
-		src.m01 = 0.0f;
-		src.m10 = 0.0f;
-		src.m11 = 1.0f;
-		return src;
-	}
-
-	/**
 	 * Set this matrix to 0.
 	 *
 	 * @return this
@@ -437,15 +446,6 @@ public class Matrix2f extends Matrix
 	public Matrix setZero()
 	{
 		return setZero(this);
-	}
-
-	public static Matrix2f setZero(Matrix2f src)
-	{
-		src.m00 = 0.0f;
-		src.m01 = 0.0f;
-		src.m10 = 0.0f;
-		src.m11 = 0.0f;
-		return src;
 	}
 
 	/* (non-Javadoc)

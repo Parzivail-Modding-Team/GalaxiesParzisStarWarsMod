@@ -2,7 +2,7 @@ package com.parzivail.util.math;
 
 import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +41,8 @@ public class Cone
 	{
 		Vector3f relativePosition = new Vector3f((float)entity.posX, (float)entity.posY, (float)entity.posZ);
 		relativePosition = Vector3f.sub(relativePosition, new Vector3f((float)view.posX, (float)view.posY + view.getEyeHeight(), (float)view.posZ), null);
-		Vec3 look = view.getLookVec();
-		return getAngleBetweenVectors(new Vector3f((float)look.xCoord, (float)look.yCoord, (float)look.zCoord), relativePosition);
+		Vec3d look = view.getLookVec();
+		return getAngleBetweenVectors(new Vector3f((float)look.x, (float)look.y, (float)look.z), relativePosition);
 	}
 
 	private static float getAngleBetweenVectors(Vector3f v1, Vector3f v2)

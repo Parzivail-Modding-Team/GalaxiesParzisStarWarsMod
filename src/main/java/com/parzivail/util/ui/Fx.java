@@ -1,14 +1,14 @@
 package com.parzivail.util.ui;
 
-import com.parzivail.util.math.lwjgl.Vector2f;
-import com.parzivail.util.math.lwjgl.Vector3f;
 import com.parzivail.util.ui.gltk.AttribMask;
 import com.parzivail.util.ui.gltk.GL;
 import com.parzivail.util.ui.gltk.PrimitiveType;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Created by colby on 9/13/2017.
@@ -103,9 +103,9 @@ public class Fx
 			return (System.currentTimeMillis() % (long)(1000 / hz)) / (1000 / hz);
 		}
 
-		public static Vector3f Vector3f(Vec3 startPos)
+		public static Vector3f Vector3f(Vec3d startPos)
 		{
-			return new Vector3f((float)startPos.xCoord, (float)startPos.yCoord, (float)startPos.zCoord);
+			return new Vector3f((float)startPos.x, (float)startPos.y, (float)startPos.z);
 		}
 
 		public static long GetMillis()

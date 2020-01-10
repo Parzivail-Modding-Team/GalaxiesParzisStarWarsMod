@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+	"all": "pswg:blocks/stab_stone_temple_top"
+  }
+}

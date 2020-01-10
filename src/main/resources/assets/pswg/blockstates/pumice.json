@@ -1,0 +1,10 @@
+{
+  "variants": {
+	"normal": {
+	  "model": "pswg:pumice"
+	},
+	"inventory": {
+	  "model": "pswg:pumice"
+	}
+  }
+}

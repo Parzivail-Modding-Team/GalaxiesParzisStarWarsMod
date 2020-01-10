@@ -1,7 +1,7 @@
 package com.parzivail.util.world;
 
-import com.parzivail.util.math.lwjgl.Vector3f;
 import net.minecraft.entity.Entity;
+import org.lwjgl.util.vector.Vector3f;
 
 public class Zone
 {

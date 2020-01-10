@@ -44,10 +44,20 @@ public class RotatedAxes
 		convertAnglesToMatrix();
 	}
 
+	public float getYaw()
+	{
+		return rotationYaw;
+	}
+
 	public void setYaw(float yaw)
 	{
 		rotationYaw = yaw;
 		convertAnglesToMatrix();
+	}
+
+	public float getPitch()
+	{
+		return rotationPitch;
 	}
 
 	public void setPitch(float pitch)
@@ -56,25 +66,15 @@ public class RotatedAxes
 		convertAnglesToMatrix();
 	}
 
+	public float getRoll()
+	{
+		return rotationRoll;
+	}
+
 	public void setRoll(float roll)
 	{
 		rotationRoll = roll;
 		convertAnglesToMatrix();
-	}
-
-	public float getYaw()
-	{
-		return rotationYaw;
-	}
-
-	public float getPitch()
-	{
-		return rotationPitch;
-	}
-
-	public float getRoll()
-	{
-		return rotationRoll;
 	}
 
 	public Vector3f getXAxis()

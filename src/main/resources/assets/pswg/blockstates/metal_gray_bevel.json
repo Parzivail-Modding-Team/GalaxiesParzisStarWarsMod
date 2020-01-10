@@ -1,0 +1,10 @@
+{
+  "variants": {
+	"normal": {
+	  "model": "pswg:metal_gray_bevel"
+	},
+	"inventory": {
+	  "model": "pswg:metal_gray_bevel"
+	}
+  }
+}

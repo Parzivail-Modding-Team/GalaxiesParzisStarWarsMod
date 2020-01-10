@@ -1,14 +1,11 @@
 package com.parzivail.util.ui.gltk;
 
-import com.parzivail.swg.proxy.Client;
-import com.parzivail.util.math.lwjgl.Vector2f;
-import com.parzivail.util.math.lwjgl.Vector3f;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.GLUtessellator;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -260,28 +257,28 @@ public class GL
 		GL11.glColor4f(red / 255f, green / 255f, blue / 255f, a / 255f);
 	}
 
-	public static void Scissor(int x, int y, int width, int height)
-	{
-		Minecraft mc = Minecraft.getMinecraft();
-		ScaledResolution reso = Client.resolution;
-		double scaleW = (double)mc.displayWidth / reso.getScaledWidth_double();
-		double scaleH = (double)mc.displayHeight / reso.getScaledHeight_double();
-		if (width > 0 && height > 0)
-		{
-			if (x < 0)
-			{
-				x = 0;
-			}
-
-			if (y < 0)
-			{
-				y = 0;
-			}
-
-			Enable(EnableCap.ScissorTest);
-			GL11.glScissor((int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.displayHeight - (double)(y + height) * scaleH), (int)Math.floor((double)(x + width) * scaleW) - (int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.displayHeight - (double)y * scaleH) - (int)Math.floor((double)mc.displayHeight - (double)(y + height) * scaleH));
-		}
-	}
+	//	public static void Scissor(int x, int y, int width, int height)
+	//	{
+	//		Minecraft mc = Minecraft.getMinecraft();
+	//		ScaledResolution reso = Client.resolution;
+	//		double scaleW = (double)mc.displayWidth / reso.getScaledWidth_double();
+	//		double scaleH = (double)mc.displayHeight / reso.getScaledHeight_double();
+	//		if (width > 0 && height > 0)
+	//		{
+	//			if (x < 0)
+	//			{
+	//				x = 0;
+	//			}
+	//
+	//			if (y < 0)
+	//			{
+	//				y = 0;
+	//			}
+	//
+	//			Enable(EnableCap.ScissorTest);
+	//			GL11.glScissor((int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.displayHeight - (double)(y + height) * scaleH), (int)Math.floor((double)(x + width) * scaleW) - (int)Math.floor((double)x * scaleW), (int)Math.floor((double)mc.displayHeight - (double)y * scaleH) - (int)Math.floor((double)mc.displayHeight - (double)(y + height) * scaleH));
+	//		}
+	//	}
 
 	public static void EndScissor()
 	{

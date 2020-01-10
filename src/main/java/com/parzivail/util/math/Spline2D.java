@@ -1,5 +1,7 @@
 package com.parzivail.util.math;
 
+import com.parzivail.util.math.lwjgl.Vector2f;
+
 public class Spline2D
 {
 	private Spline splineX;
@@ -14,7 +16,7 @@ public class Spline2D
 	 *
 	 * @param points
 	 */
-	public Spline2D(FPoint[] points)
+	public Spline2D(Vector2f[] points)
 	{
 		double[] x = new double[points.length];
 		double[] y = new double[points.length];
@@ -97,9 +99,9 @@ public class Spline2D
 	/**
 	 * @param t 0 <= t <= 1
 	 */
-	public FPoint getPoint(double t)
+	public Vector2f getPoint(double t)
 	{
-		return new FPoint((float)splineX.getValue(t), (float)splineY.getValue(t));
+		return new Vector2f((float)splineX.getValue(t), (float)splineY.getValue(t));
 	}
 
 	/**

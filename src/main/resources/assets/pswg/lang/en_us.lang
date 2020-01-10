@@ -1,0 +1,17 @@
+pswg.config.category.general=General
+pswg.config.category.client=Client
+
+pswg.config.entry.cameraStiffness=Camera stiffness
+pswg.config.entry.cameraSensitivity=Camera sensitivity
+
+pswg.gui.shipInputModeAlert=Ship Input Mode: %s
+pswg.gui.shipInputMode.yaw=Yaw-centric
+pswg.gui.shipInputMode.roll=Roll-centric
+pswg.gui.shipInputMode.landing=Landing
+
+entity.pswg.ship.name=Generic Ship
+
+key.pswg=Galaxies: Parzi's Star Wars Mod
+key.pswg.debug=Debug Key
+key.pswg.shipInputMode=Ship: Change Input Mode
+key.pswg.shipLandingMode=Ship: Enter Landing Mode

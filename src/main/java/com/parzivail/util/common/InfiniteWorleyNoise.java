@@ -1,8 +1,8 @@
 package com.parzivail.util.common;
 
 import com.parzivail.util.math.MathUtil;
-import com.parzivail.util.math.lwjgl.Vector2f;
-import com.parzivail.util.math.lwjgl.Vector3f;
+import org.lwjgl.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class InfiniteWorleyNoise
 {

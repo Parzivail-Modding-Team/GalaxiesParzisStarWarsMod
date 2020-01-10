@@ -1,0 +1,10 @@
+{
+  "variants": {
+	"normal": {
+	  "model": "pswg:snow_cut"
+	},
+	"inventory": {
+	  "model": "pswg:snow_cut"
+	}
+  }
+}

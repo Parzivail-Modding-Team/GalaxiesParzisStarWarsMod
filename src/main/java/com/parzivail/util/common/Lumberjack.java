@@ -2,7 +2,6 @@ package com.parzivail.util.common;
 
 import com.parzivail.swg.Resources;
 import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
@@ -10,7 +9,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class Lumberjack
 {
-	public static final Logger logger = LogManager.getLogger(Resources.MODID.toUpperCase());
+	private static Logger logger;
 
 	/**
 	 * Prints a message to log only in Debug mode
@@ -73,9 +72,9 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void warn(Object message)
+	public static void warn(Object message, Object... params)
 	{
-		log(Level.WARN, String.valueOf(message));
+		log(Level.WARN, String.format(String.valueOf(message), params));
 	}
 
 	/**
@@ -83,9 +82,9 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void err(Object message)
+	public static void err(Object message, Object... params)
 	{
-		log(Level.ERROR, String.valueOf(message));
+		log(Level.ERROR, String.format(String.valueOf(message), params));
 	}
 
 	/**
@@ -93,8 +92,13 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void trace(Object message)
+	public static void trace(Object message, Object... params)
 	{
-		log(Level.TRACE, String.valueOf(message));
+		log(Level.TRACE, String.format(String.valueOf(message), params));
+	}
+
+	public static void init(Logger modLog)
+	{
+		Lumberjack.logger = modLog;
 	}
 }

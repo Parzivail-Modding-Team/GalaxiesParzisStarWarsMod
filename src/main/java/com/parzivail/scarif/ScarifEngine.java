@@ -1,5 +1,6 @@
 package com.parzivail.scarif;
 
+import com.parzivail.util.binary.BinaryUtil;
 import com.parzivail.util.common.Lumberjack;
 import net.minecraft.block.Block;
 import net.minecraft.crash.CrashReport;
@@ -8,14 +9,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ReportedException;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.storage.ExtendedBlockStorage;
+import net.minecraft.world.chunk.ChunkPrimer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * SCARIF: Structure Consolidation and Rapid Insertion Format
@@ -26,6 +28,7 @@ public class ScarifEngine
 
 	private final HashMap<Integer, ArrayList<ScarifStructure>> structures = new HashMap<>();
 	private final Logger logger;
+	private List<Short> erroredBlocks = new ArrayList<>();
 
 	public ScarifEngine(String modid)
 	{
@@ -61,12 +64,12 @@ public class ScarifEngine
 		return structures.get(dim);
 	}
 
-	public boolean genStructure(Chunk chunk)
+	public boolean genStructure(int dimId, int x, int z, ChunkPrimer chunk)
 	{
-		long chunkPos = ScarifUtil.encodeChunkPos(chunk.xPosition, chunk.zPosition);
+		long chunkPos = BinaryUtil.encodeChunkPos(x, z);
 		boolean hadStructure = false;
 
-		for (ScarifStructure structure : getStructuresForDimension(chunk.worldObj.provider.dimensionId))
+		for (ScarifStructure structure : getStructuresForDimension(dimId))
 		{
 			if (!structure.hasChunk(chunkPos))
 				continue;
@@ -81,33 +84,33 @@ public class ScarifEngine
 				int blockZ = (pos >> 4) & 0x0F;
 				int blockY = (pos >> 8) & 0xFF;
 
-				int l = blockY >> 4;
-				ExtendedBlockStorage extendedblockstorage = chunk.getBlockStorageArray()[l];
-
-				if (extendedblockstorage == null)
-				{
-					extendedblockstorage = new ExtendedBlockStorage(l << 4, !chunk.worldObj.provider.hasNoSky);
-					chunk.getBlockStorageArray()[l] = extendedblockstorage;
-				}
-
 				Block b = Block.getBlockFromName(structure.getBlockById(block.id));
 				if (b == null)
-					Lumberjack.debug(structure.getBlockById(block.id));
+					informBlockNotFound(structure, block);
+				else
+				{
+					chunk.setBlockState(blockX, blockY, blockZ, b.getStateFromMeta(block.metadata));
 
-				extendedblockstorage.setExtBlockID(blockX, blockY & 15, blockZ, b);
-				extendedblockstorage.setExtBlockMetadata(blockX, blockY & 15, blockZ, block.metadata);
-
-				if (block.tileData != null)
-					structure.cacheTile(chunkPos, block.tileData);
+					if (block.tileData != null)
+						structure.cacheTile(chunkPos, block.tileData);
+				}
 			}
 		}
 		return hadStructure;
 	}
 
+	private void informBlockNotFound(ScarifStructure structure, ScarifBlock block)
+	{
+		if (erroredBlocks.contains(block.id))
+			return;
+		erroredBlocks.add(block.id);
+		Lumberjack.err("Structure block not found: " + structure.getBlockById(block.id));
+	}
+
 	public void genTiles(World world, int worldX, int worldZ)
 	{
-		long cPos = ScarifUtil.encodeChunkPos(worldX >> 4, worldZ >> 4);
-		for (ScarifStructure structure : getStructuresForDimension(world.provider.dimensionId))
+		long cPos = BinaryUtil.encodeChunkPos(worldX >> 4, worldZ >> 4);
+		for (ScarifStructure structure : getStructuresForDimension(world.provider.getDimension()))
 		{
 			ArrayList<NBTTagCompound> tileCache = structure.getCachedTiles(cPos);
 
@@ -115,7 +118,7 @@ public class ScarifEngine
 			{
 				for (NBTTagCompound pair : tileCache)
 				{
-					TileEntity te = world.getTileEntity(pair.getInteger("x"), pair.getInteger("y"), pair.getInteger("z"));
+					TileEntity te = world.getTileEntity(new BlockPos(pair.getInteger("x"), pair.getInteger("y"), pair.getInteger("z")));
 					if (te != null)
 						te.readFromNBT(pair);
 				}

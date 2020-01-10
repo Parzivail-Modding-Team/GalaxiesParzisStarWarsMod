@@ -1,7 +1,6 @@
 package com.parzivail.util.world;
 
-import com.parzivail.util.world.TerrainLayer.Method;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 /**
  * Created by colby on 12/28/2016.
@@ -14,7 +13,7 @@ public class MultiCompositeTerrain implements ITerrainHeightmap
 
 	public MultiCompositeTerrain(long seed, int noiseScale, ITerrainHeightmap... terrains)
 	{
-		lerpNoise = new TerrainLayer(seed, Method.Add, noiseScale, 1);
+		lerpNoise = new TerrainLayer(seed, TerrainCompositeMethod.Add, noiseScale, 1);
 		this.terrains = terrains;
 		n = terrains.length - 1;
 	}
@@ -34,7 +33,7 @@ public class MultiCompositeTerrain implements ITerrainHeightmap
 	@Override
 	public double getBiomeLerpAmount(int x, int z)
 	{
-		return MathHelper.clamp_double(lerpNoise.GetValue(x, z), 0, 1);
+		return MathHelper.clamp(lerpNoise.GetValue(x, z), 0, 1);
 	}
 
 	@Override

@@ -1,0 +1,28 @@
+{
+  "variants": {
+	"normal": {
+	  "model": "pswg:antenna_thin.pm3d",
+	  "y": 180
+	},
+	"inventory": {
+	  "model": "pswg:antenna_thin.pm3d",
+	  "y": 180
+	},
+	"facing=north": {
+	  "model": "pswg:antenna_thin.pm3d",
+	  "y": 0
+	},
+	"facing=south": {
+	  "model": "pswg:antenna_thin.pm3d",
+	  "y": 180
+	},
+	"facing=west": {
+	  "model": "pswg:antenna_thin.pm3d",
+	  "y": 270
+	},
+	"facing=east": {
+	  "model": "pswg:antenna_thin.pm3d",
+	  "y": 90
+	}
+  }
+}

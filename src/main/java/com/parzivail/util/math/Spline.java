@@ -9,7 +9,6 @@ import java.util.Arrays;
  */
 class Spline
 {
-
 	private double[] xx;
 	private double[] yy;
 
@@ -83,7 +82,6 @@ class Spline
 		}
 
 		index = -(index + 1) - 1;
-		//TODO linear interpolation or extrapolation
 		if (index < 0)
 		{
 			return yy[0];
@@ -119,7 +117,6 @@ class Spline
 			storageIndex = index;
 		}
 
-		//TODO linear interpolation or extrapolation
 		if (storageIndex < 0)
 		{
 			return yy[0];

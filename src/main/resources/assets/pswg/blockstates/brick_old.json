@@ -1,0 +1,10 @@
+{
+  "variants": {
+	"normal": {
+	  "model": "pswg:brick_old"
+	},
+	"inventory": {
+	  "model": "pswg:brick_old"
+	}
+  }
+}

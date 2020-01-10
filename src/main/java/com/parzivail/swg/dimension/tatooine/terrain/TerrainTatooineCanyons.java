@@ -2,7 +2,7 @@ package com.parzivail.swg.dimension.tatooine.terrain;
 
 import com.parzivail.util.world.ITerrainHeightmap;
 import com.parzivail.util.world.ProcNoise;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 
 public class TerrainTatooineCanyons implements ITerrainHeightmap
 {
@@ -27,7 +27,7 @@ public class TerrainTatooineCanyons implements ITerrainHeightmap
 		h = 1 - 1 / (2 * h) - 0.48;
 		h = h * 35;
 
-		h = MathHelper.clamp_double(h, 0, 1);
+		h = MathHelper.clamp(h, 0, 1);
 		double j = _noise.octaveNoise(x / 200f, z / 200f, 6) * 90;
 
 		return (h * 0.8 + _noise.octaveNoise(x / 200f, z / 200f, 3) * 0.8) * (j + 10);

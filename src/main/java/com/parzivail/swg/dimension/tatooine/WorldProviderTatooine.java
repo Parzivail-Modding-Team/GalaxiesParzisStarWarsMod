@@ -1,29 +1,24 @@
 package com.parzivail.swg.dimension.tatooine;
 
-import com.parzivail.swg.StarWarsGalaxy;
 import com.parzivail.swg.dimension.PlanetWorldProvider;
-import com.parzivail.swg.registry.WorldRegister;
-import com.parzivail.swg.render.sky.RenderSkyTatooine;
-import com.parzivail.util.dimension.SingleBiomeChunkGenerator;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.world.chunk.IChunkProvider;
+import com.parzivail.swg.register.WorldRegister;
+import net.minecraft.world.biome.BiomeProviderSingle;
+import net.minecraft.world.gen.IChunkGenerator;
 import net.minecraftforge.client.IRenderHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-/**
- * Created by colby on 9/10/2017.
- */
 public class WorldProviderTatooine extends PlanetWorldProvider
 {
 	public WorldProviderTatooine()
 	{
-		super(StarWarsGalaxy.config.getDimIdTatooine(), new SingleBiomeChunkGenerator(WorldRegister.biomeTatooineDunes, 0));
+		super(WorldRegister.tatooineDimension, new BiomeProviderSingle(WorldRegister.biomeTatooineDunes));
 	}
 
 	@Override
-	public IChunkProvider createChunkProvider()
+	public IChunkGenerator createChunkProvider()
 	{
-		return new ChunkProviderTatooine(worldObj, 0);
+		return new ChunkProviderTatooine(world);
 	}
 
 	@Override

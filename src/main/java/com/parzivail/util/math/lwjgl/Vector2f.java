@@ -71,6 +71,80 @@ public class Vector2f extends Vector implements ReadableVector2f, WritableVector
 		set(x, y);
 	}
 
+	/**
+	 * The dot product of two vectors is calculated as
+	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
+	 *
+	 * @param left  The LHS vector
+	 * @param right The RHS vector
+	 *
+	 * @return left dot right
+	 */
+	public static float dot(Vector2f left, Vector2f right)
+	{
+		return left.x * right.x + left.y * right.y;
+	}
+
+	/**
+	 * Calculate the angle between two vectors, in radians
+	 *
+	 * @param a A vector
+	 * @param b The other vector
+	 *
+	 * @return the angle between the two vectors, in radians
+	 */
+	public static float angle(Vector2f a, Vector2f b)
+	{
+		float dls = dot(a, b) / (a.length() * b.length());
+		if (dls < -1f)
+			dls = -1f;
+		else if (dls > 1.0f)
+			dls = 1.0f;
+		return (float)Math.acos(dls);
+	}
+
+	/**
+	 * Add a vector to another vector and place the result in a destination
+	 * vector.
+	 *
+	 * @param left  The LHS vector
+	 * @param right The RHS vector
+	 * @param dest  The destination vector, or null if a new vector is to be created
+	 *
+	 * @return the sum of left and right in dest
+	 */
+	public static Vector2f add(Vector2f left, Vector2f right, Vector2f dest)
+	{
+		if (dest == null)
+			return new Vector2f(left.x + right.x, left.y + right.y);
+		else
+		{
+			dest.set(left.x + right.x, left.y + right.y);
+			return dest;
+		}
+	}
+
+	/**
+	 * Subtract a vector from another vector and place the result in a destination
+	 * vector.
+	 *
+	 * @param left  The LHS vector
+	 * @param right The RHS vector
+	 * @param dest  The destination vector, or null if a new vector is to be created
+	 *
+	 * @return left minus right in dest
+	 */
+	public static Vector2f sub(Vector2f left, Vector2f right, Vector2f dest)
+	{
+		if (dest == null)
+			return new Vector2f(left.x - right.x, left.y - right.y);
+		else
+		{
+			dest.set(left.x - right.x, left.y - right.y);
+			return dest;
+		}
+	}
+
 	/* (non-Javadoc)
 	 * @see com.parzivail.util.math.lwjgl.WritableVector2f#set(float, float)
 	 */
@@ -165,80 +239,6 @@ public class Vector2f extends Vector implements ReadableVector2f, WritableVector
 	}
 
 	/**
-	 * The dot product of two vectors is calculated as
-	 * v1.x * v2.x + v1.y * v2.y + v1.z * v2.z
-	 *
-	 * @param left  The LHS vector
-	 * @param right The RHS vector
-	 *
-	 * @return left dot right
-	 */
-	public static float dot(Vector2f left, Vector2f right)
-	{
-		return left.x * right.x + left.y * right.y;
-	}
-
-	/**
-	 * Calculate the angle between two vectors, in radians
-	 *
-	 * @param a A vector
-	 * @param b The other vector
-	 *
-	 * @return the angle between the two vectors, in radians
-	 */
-	public static float angle(Vector2f a, Vector2f b)
-	{
-		float dls = dot(a, b) / (a.length() * b.length());
-		if (dls < -1f)
-			dls = -1f;
-		else if (dls > 1.0f)
-			dls = 1.0f;
-		return (float)Math.acos(dls);
-	}
-
-	/**
-	 * Add a vector to another vector and place the result in a destination
-	 * vector.
-	 *
-	 * @param left  The LHS vector
-	 * @param right The RHS vector
-	 * @param dest  The destination vector, or null if a new vector is to be created
-	 *
-	 * @return the sum of left and right in dest
-	 */
-	public static Vector2f add(Vector2f left, Vector2f right, Vector2f dest)
-	{
-		if (dest == null)
-			return new Vector2f(left.x + right.x, left.y + right.y);
-		else
-		{
-			dest.set(left.x + right.x, left.y + right.y);
-			return dest;
-		}
-	}
-
-	/**
-	 * Subtract a vector from another vector and place the result in a destination
-	 * vector.
-	 *
-	 * @param left  The LHS vector
-	 * @param right The RHS vector
-	 * @param dest  The destination vector, or null if a new vector is to be created
-	 *
-	 * @return left minus right in dest
-	 */
-	public static Vector2f sub(Vector2f left, Vector2f right, Vector2f dest)
-	{
-		if (dest == null)
-			return new Vector2f(left.x - right.x, left.y - right.y);
-		else
-		{
-			dest.set(left.x - right.x, left.y - right.y);
-			return dest;
-		}
-	}
-
-	/**
 	 * Store this vector in a FloatBuffer
 	 *
 	 * @param buf The buffer to store it in, at the current position
@@ -302,14 +302,6 @@ public class Vector2f extends Vector implements ReadableVector2f, WritableVector
 	}
 
 	/**
-	 * @return y
-	 */
-	public final float getY()
-	{
-		return y;
-	}
-
-	/**
 	 * Set X
 	 *
 	 * @param x
@@ -317,6 +309,14 @@ public class Vector2f extends Vector implements ReadableVector2f, WritableVector
 	public final void setX(float x)
 	{
 		this.x = x;
+	}
+
+	/**
+	 * @return y
+	 */
+	public final float getY()
+	{
+		return y;
 	}
 
 	/**

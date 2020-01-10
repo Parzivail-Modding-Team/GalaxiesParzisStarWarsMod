@@ -1,29 +1,34 @@
 package com.parzivail.swg.entity;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.MoverType;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class EntityBlasterBolt extends Entity
 {
-	private static final int DATA_DX = 11;
-	private static final int DATA_DY = 12;
-	private static final int DATA_DZ = 13;
-	private static final int DATA_LENGTH = 14;
-	private static final int DATA_COLOR = 15;
+	private static final DataParameter<Float> DATA_DX = EntityDataManager.createKey(EntityBlasterBolt.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> DATA_DY = EntityDataManager.createKey(EntityBlasterBolt.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> DATA_DZ = EntityDataManager.createKey(EntityBlasterBolt.class, DataSerializers.FLOAT);
+	private static final DataParameter<Float> DATA_LENGTH = EntityDataManager.createKey(EntityBlasterBolt.class, DataSerializers.FLOAT);
+	private static final DataParameter<Integer> DATA_COLOR = EntityDataManager.createKey(EntityBlasterBolt.class, DataSerializers.VARINT);
 
 	public EntityBlasterBolt(World world)
 	{
-		this(world, 0, 0, 0, 0, 0xFF0000);
+		this(world, new Vec3d(0, 0, 0), 0, 0xFF0000);
 	}
 
-	public EntityBlasterBolt(World world, float dx, float dy, float dz, float length, int rgb)
+	public EntityBlasterBolt(World world, Vec3d direction, float length, int rgb)
 	{
 		super(world);
 		setSize(0.1f, 0.1f);
-		setDx(dx);
-		setDy(dy);
-		setDz(dz);
+		setDx((float)direction.x);
+		setDy((float)direction.y);
+		setDz((float)direction.z);
 		setLength(length);
 		setColor(rgb);
 	}
@@ -31,28 +36,30 @@ public class EntityBlasterBolt extends Entity
 	@Override
 	protected void entityInit()
 	{
-		dataWatcher.addObject(DATA_DX, 0f); // dx
-		dataWatcher.addObject(DATA_DY, 0f); // dy
-		dataWatcher.addObject(DATA_DZ, 0f); // dz
-		dataWatcher.addObject(DATA_LENGTH, 1f); // length
-		dataWatcher.addObject(DATA_COLOR, 0xFF0000); // length
+		dataManager.register(DATA_DX, 0f); // dx
+		dataManager.register(DATA_DY, 0f); // dy
+		dataManager.register(DATA_DZ, 0f); // dz
+		dataManager.register(DATA_LENGTH, 1f); // length
+		dataManager.register(DATA_COLOR, 0xFF0000); // length
 	}
 
 	@Override
 	public void onUpdate()
 	{
+		this.prevPosX = this.posX;
+		this.prevPosY = this.posY;
+		this.prevPosZ = this.posZ;
+
+		this.motionX = this.getDx() * 5;
+		this.motionY = this.getDy() * 5;
+		this.motionZ = this.getDz() * 5;
+
 		super.onUpdate();
 
-		motionX = getDx() * 3;
-		motionY = getDy() * 3;
-		motionZ = getDz() * 3;
+		this.move(MoverType.SELF, this.motionX, this.motionY, this.motionZ);
 
-		posX += motionX;
-		posY += motionY;
-		posZ += motionZ;
-
-		if (ticksExisted > 60)
-			setDead();
+		if (this.collided || this.ticksExisted > 60)
+			this.setDead();
 	}
 
 	@Override
@@ -77,51 +84,51 @@ public class EntityBlasterBolt extends Entity
 
 	public float getDx()
 	{
-		return dataWatcher.getWatchableObjectFloat(DATA_DX);
+		return dataManager.get(DATA_DX);
 	}
 
 	public void setDx(float f)
 	{
-		dataWatcher.updateObject(DATA_DX, f);
+		dataManager.set(DATA_DX, f);
 	}
 
 	public float getDy()
 	{
-		return dataWatcher.getWatchableObjectFloat(DATA_DY);
+		return dataManager.get(DATA_DY);
 	}
 
 	public void setDy(float f)
 	{
-		dataWatcher.updateObject(DATA_DY, f);
+		dataManager.set(DATA_DY, f);
 	}
 
 	public float getDz()
 	{
-		return dataWatcher.getWatchableObjectFloat(DATA_DZ);
+		return dataManager.get(DATA_DZ);
 	}
 
 	public void setDz(float f)
 	{
-		dataWatcher.updateObject(DATA_DZ, f);
+		dataManager.set(DATA_DZ, f);
 	}
 
 	public float getLength()
 	{
-		return dataWatcher.getWatchableObjectFloat(DATA_LENGTH);
+		return dataManager.get(DATA_LENGTH);
 	}
 
 	public void setLength(float f)
 	{
-		dataWatcher.updateObject(DATA_LENGTH, f);
+		dataManager.set(DATA_LENGTH, f);
 	}
 
 	public int getColor()
 	{
-		return dataWatcher.getWatchableObjectInt(DATA_COLOR);
+		return dataManager.get(DATA_COLOR);
 	}
 
 	public void setColor(int f)
 	{
-		dataWatcher.updateObject(DATA_COLOR, f);
+		dataManager.set(DATA_COLOR, f);
 	}
 }
