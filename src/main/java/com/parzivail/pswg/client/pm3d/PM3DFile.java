@@ -1,19 +1,25 @@
 package com.parzivail.pswg.client.pm3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.mojang.datafixers.util.Pair;
 import com.parzivail.brotli.BrotliInputStream;
 import com.parzivail.util.binary.BinaryUtil;
 import com.parzivail.util.primative.Vector2f;
 import com.parzivail.util.primative.Vector3f;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.UnbakedModel;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashMap;
+import java.util.*;
+import java.util.function.Function;
 
-public class PM3DContainer
+public class PM3DFile
 {
 	private static final String MAGIC = "Pm3D";
 	private static final int ACCEPTED_VERSION = 0x01;
@@ -27,7 +33,7 @@ public class PM3DContainer
 	public final ArrayList<Vector2f> uvs;
 	public final ArrayList<PM3DObject> objects;
 
-	public PM3DContainer(Identifier identifier, String credit, EnumSet<PM3DFlags> flags, HashMap<String, String> textures, ArrayList<Vector3f> verts, ArrayList<Vector3f> normals, ArrayList<Vector2f> uvs, ArrayList<PM3DObject> objects)
+	public PM3DFile(Identifier identifier, String credit, EnumSet<PM3DFlags> flags, HashMap<String, String> textures, ArrayList<Vector3f> verts, ArrayList<Vector3f> normals, ArrayList<Vector2f> uvs, ArrayList<PM3DObject> objects)
 	{
 		this.identifier = identifier;
 		this.credit = credit;
@@ -39,8 +45,23 @@ public class PM3DContainer
 		this.objects = objects;
 	}
 
-	public static PM3DContainer load(InputStream reader, Identifier identifier) throws IOException
+	public static PM3DFile tryLoad(Identifier identifier)
 	{
+		try
+		{
+			return load(identifier);
+		}
+		catch (IOException ex)
+		{
+			ex.printStackTrace();
+			CrashReport crashReport = CrashReport.create(ex, String.format("Loading PM3D file: %s", identifier));
+			throw new CrashException(crashReport);
+		}
+	}
+
+	private static PM3DFile load(Identifier identifier) throws IOException
+	{
+		InputStream reader = MinecraftClient.getInstance().getResourceManager().getResource(identifier).getInputStream();
 		BrotliInputStream bis = new BrotliInputStream(reader);
 		LittleEndianDataInputStream objStream = new LittleEndianDataInputStream(bis);
 
@@ -77,7 +98,7 @@ public class PM3DContainer
 		ArrayList<Vector2f> uvs = loadUvs(numUvs, objStream);
 		ArrayList<PM3DObject> objects = loadObjects(numObjects, objStream);
 
-		return new PM3DContainer(identifier, credit, flags, textures, verts, normals, uvs, objects);
+		return new PM3DFile(identifier, credit, flags, textures, verts, normals, uvs, objects);
 	}
 
 	private static HashMap<String, String> loadTextures(int num, LittleEndianDataInputStream objStream) throws IOException
@@ -88,7 +109,7 @@ public class PM3DContainer
 		{
 			String key = BinaryUtil.readNullTerminatedString(objStream);
 			String value = BinaryUtil.readNullTerminatedString(objStream);
-			textures.put(key, value);
+			textures.put(key, value.toLowerCase());
 		}
 
 		return textures;
@@ -146,7 +167,7 @@ public class PM3DContainer
 					int vertex = objStream.readInt();
 					int normal = objStream.readInt();
 					int texture = objStream.readInt();
-					face.verts.add(new Pm3dVertPointer(vertex, normal, texture));
+					face.verts.add(new PM3DVertPointer(vertex, normal, texture));
 				}
 
 				faces.add(face);
@@ -156,5 +177,15 @@ public class PM3DContainer
 		}
 
 		return objects;
+	}
+
+	public List<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> function, Set<Pair<String, String>> errors)
+	{
+		ArrayList<SpriteIdentifier> ids = new ArrayList<>();
+
+		for (HashMap.Entry<String, String> entry : textures.entrySet())
+			ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, new Identifier(entry.getValue())));
+
+		return ids;
 	}
 }

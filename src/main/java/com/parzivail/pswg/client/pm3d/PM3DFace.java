@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class PM3DFace
 {
-	public final ArrayList<Pm3dVertPointer> verts;
+	public final ArrayList<PM3DVertPointer> verts;
 
 	public PM3DFace()
 	{

@@ -8,23 +8,15 @@ import java.io.IOException;
 
 public class BinaryUtil
 {
-	public static String readNullTerminatedString(DataInput s)
+	public static String readNullTerminatedString(DataInput s) throws IOException
 	{
 		StringBuilder str = new StringBuilder();
-		try
+		while (true)
 		{
-			while (true)
-			{
-				byte b = s.readByte();
-				if (b == 0)
-					return str.toString();
-				str.append((char)b);
-			}
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-			return null;
+			byte b = s.readByte();
+			if (b == 0)
+				return str.toString();
+			str.append((char)b);
 		}
 	}
 

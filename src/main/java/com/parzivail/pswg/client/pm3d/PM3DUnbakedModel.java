@@ -1,56 +1,74 @@
+/*******************************************************************************
+ * Copyright 2019 grondag
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License.  You may obtain a copy
+ * of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.  See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ ******************************************************************************/
+
 package com.parzivail.pswg.client.pm3d;
 
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 import java.util.function.Function;
 
+/**
+ * Can be used for multiple blocks - will return same baked model for each
+ */
 public class PM3DUnbakedModel implements UnbakedModel
 {
-	protected PM3DContainer container;
-	protected Mesh mesh;
-	protected ModelTransformation transform;
+	private final Identifier identifier;
+	private final Function<Function<SpriteIdentifier, Sprite>, PM3DModel> baker;
+	private PM3DModel baked = null;
 
-	public PM3DUnbakedModel(PM3DContainer container, Mesh mesh, ModelTransformation transform)
+	public PM3DUnbakedModel(Identifier identifier, Function<Function<SpriteIdentifier, Sprite>, PM3DModel> baker)
 	{
-		if (transform == null)
-			transform = ModelTransformation.NONE;
-
-		this.container = container;
-		this.mesh = mesh;
-		this.transform = transform;
+		this.identifier = identifier;
+		this.baker = baker;
 	}
 
 	@Override
 	public Collection<Identifier> getModelDependencies()
 	{
-		return Collections.emptySet();
+		return Collections.emptyList();
 	}
 
 	@Override
-	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences)
+	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> function, Set<Pair<String, String>> errors)
 	{
-		//		List<Identifier> sprites = new ArrayList<>();
-		//		builder.getMtlList().forEach(mtl -> sprites.add(new Identifier(mtl.getMapKd())));
-		//
-		//		return sprites;
-		return Collections.emptySet();
+		PM3DFile container = PM3DFile.tryLoad(identifier);
+		return container.getTextureDependencies(function, errors);
 	}
 
 	@Override
-	public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId)
+	@Nullable
+	public BakedModel bake(ModelLoader modelLoader, Function<SpriteIdentifier, Sprite> spriteLoader, ModelBakeSettings modelBakeSettings, Identifier identifier)
 	{
-		return new PM3DBakedModel(mesh, transform);
+		PM3DModel result = baked;
+		if (result == null)
+		{
+			result = baker.apply(spriteLoader);
+			baked = result;
+		}
+		return result;
 	}
 }

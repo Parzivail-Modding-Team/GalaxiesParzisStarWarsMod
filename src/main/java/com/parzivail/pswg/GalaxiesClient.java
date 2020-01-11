@@ -1,6 +1,7 @@
 package com.parzivail.pswg;
 
-import com.parzivail.pswg.client.pm3d.PM3DLoader;
+import com.parzivail.pswg.client.ModelLoader;
+import com.parzivail.pswg.client.model.SimpleModels;
 import com.parzivail.pswg.util.Lumberjack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
@@ -12,9 +13,8 @@ public class GalaxiesClient implements ClientModInitializer
 	{
 		Lumberjack.debug("onInitializeClient");
 
-		PM3DLoader.INSTANCE.registerDomain(Resources.MODID);
+		SimpleModels.register(Resources.identifier("sand_tatooine"), ModelLoader.loadPM3D(Resources.identifier("models/block/vaporator.pm3d")));
 
-		ModelLoadingRegistry.INSTANCE.registerResourceProvider(PM3DLoader.INSTANCE);
-		//		ModelLoadingRegistry.INSTANCE.registerVariantProvider(ItemPM3DLoader.INSTANCE);
+		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> SimpleModels.INSTANCE);
 	}
 }
