@@ -18,6 +18,8 @@ package com.parzivail.pswg.client.model;
 
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -26,6 +28,11 @@ import net.minecraft.client.texture.Sprite;
 public abstract class AbstractModel implements BakedModel, FabricBakedModel
 {
 	protected static final Renderer RENDERER = RendererAccess.INSTANCE.getRenderer();
+
+	protected final RenderMaterial MAT_DIFFUSE_OPAQUE = RENDERER.materialFinder().find();
+	protected final RenderMaterial MAT_DIFFUSE_CUTOUT = RENDERER.materialFinder().blendMode(0, BlendMode.CUTOUT_MIPPED).find();
+	protected final RenderMaterial MAT_DIFFUSE_TRANSLUCENT = RENDERER.materialFinder().blendMode(0, BlendMode.TRANSLUCENT).find();
+	protected final RenderMaterial MAT_EMISSIVE = RENDERER.materialFinder().emissive(0, true).disableAo(0, true).disableDiffuse(0, true).find();
 
 	protected final Sprite modelSprite;
 	protected final ModelTransformation transformation;

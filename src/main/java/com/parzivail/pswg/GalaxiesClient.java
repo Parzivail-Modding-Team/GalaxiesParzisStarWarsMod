@@ -13,7 +13,7 @@ public class GalaxiesClient implements ClientModInitializer
 	{
 		Lumberjack.debug("onInitializeClient");
 
-		SimpleModels.register(Resources.identifier("sand_tatooine"), ModelLoader.loadPM3D(Resources.identifier("models/block/vaporator.pm3d")));
+		SimpleModels.register(Resources.identifier("sand_tatooine"), ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d")));
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> SimpleModels.INSTANCE);
 	}
