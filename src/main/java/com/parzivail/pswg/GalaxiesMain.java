@@ -11,7 +11,7 @@ import net.minecraft.util.registry.Registry;
 
 public class GalaxiesMain implements ModInitializer
 {
-	public static final Block SAND_TATOOINE = new Block(FabricBlockSettings.of(Material.SAND).build());
+	public static final Block SAND_TATOOINE = new Block(FabricBlockSettings.of(Material.SAND).nonOpaque().build());
 
 	public static final ItemGroup TAB = FabricItemGroupBuilder.build(Resources.identifier("blocks"), () -> new ItemStack(Items.APPLE));
 

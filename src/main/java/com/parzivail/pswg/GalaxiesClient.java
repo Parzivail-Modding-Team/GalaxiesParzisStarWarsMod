@@ -5,6 +5,7 @@ import com.parzivail.pswg.client.model.SimpleModels;
 import com.parzivail.pswg.util.Lumberjack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.minecraft.util.registry.Registry;
 
 public class GalaxiesClient implements ClientModInitializer
 {
@@ -13,7 +14,7 @@ public class GalaxiesClient implements ClientModInitializer
 	{
 		Lumberjack.debug("onInitializeClient");
 
-		SimpleModels.register(Resources.identifier("sand_tatooine"), ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d")));
+		SimpleModels.register(Registry.BLOCK.getId(GalaxiesMain.SAND_TATOOINE), ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d")));
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> SimpleModels.INSTANCE);
 	}

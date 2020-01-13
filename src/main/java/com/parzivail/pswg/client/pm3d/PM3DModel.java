@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.pm3d;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.model.SimpleModel;
 import com.parzivail.util.primative.Vector2f;
 import com.parzivail.util.primative.Vector3f;
@@ -12,7 +13,6 @@ import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 
@@ -29,12 +29,12 @@ public class PM3DModel extends SimpleModel
 		super(sprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
 		this.container = container;
 
-		sprites.put("0", spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, new Identifier("minecraft:block/stone"))));
+		sprites.put("0", spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/crate_octagon"))));
 	}
 
 	private void emitFace(QuadEmitter quadEmitter, PM3DObject object, PM3DFace face)
 	{
-		quadEmitter.spriteColor(0, 0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff).material(getMaterial(face)).colorIndex(1);
+		quadEmitter.material(getMaterial(face));
 
 		PM3DVertPointer a = face.verts.get(0);
 		PM3DVertPointer b = face.verts.get(1);
@@ -56,10 +56,10 @@ public class PM3DModel extends SimpleModel
 		Vector2f tC = container.uvs.get(c.getTexture());
 		Vector2f tD = container.uvs.get(d.getTexture());
 
-		quadEmitter.pos(0, vA.toMinecraft()).normal(0, nA.toMinecraft()).sprite(0, 0, tA.x, tA.y);
-		quadEmitter.pos(1, vB.toMinecraft()).normal(1, nB.toMinecraft()).sprite(1, 0, tB.x, tB.y);
-		quadEmitter.pos(2, vC.toMinecraft()).normal(2, nC.toMinecraft()).sprite(2, 0, tC.x, tC.y);
-		quadEmitter.pos(3, vD.toMinecraft()).normal(3, nD.toMinecraft()).sprite(3, 0, tD.x, tD.y);
+		quadEmitter.pos(0, vA.toMinecraft()).normal(0, nA.toMinecraft()).sprite(0, 0, tA.x, 1 - tA.y);
+		quadEmitter.pos(1, vB.toMinecraft()).normal(1, nB.toMinecraft()).sprite(1, 0, tB.x, 1 - tB.y);
+		quadEmitter.pos(2, vC.toMinecraft()).normal(2, nC.toMinecraft()).sprite(2, 0, tC.x, 1 - tC.y);
+		quadEmitter.pos(3, vD.toMinecraft()).normal(3, nD.toMinecraft()).sprite(3, 0, tD.x, 1 - tD.y);
 
 		quadEmitter.spriteBake(0, sprites.get("0"), MutableQuadView.BAKE_NORMALIZED);
 
@@ -101,6 +101,6 @@ public class PM3DModel extends SimpleModel
 
 	public static PM3DModel create(Function<SpriteIdentifier, Sprite> spriteMap, PM3DFile container)
 	{
-		return new PM3DModel(spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, new Identifier("minecraft:block/stone"))), spriteMap, container);
+		return new PM3DModel(spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/crate_octagon"))), spriteMap, container);
 	}
 }

@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.pm3d;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.mojang.datafixers.util.Pair;
 import com.parzivail.brotli.BrotliInputStream;
+import com.parzivail.pswg.Resources;
 import com.parzivail.util.binary.BinaryUtil;
 import com.parzivail.util.primative.Vector2f;
 import com.parzivail.util.primative.Vector3f;
@@ -153,7 +154,7 @@ public class PM3DFile
 	{
 		ArrayList<SpriteIdentifier> ids = new ArrayList<>();
 
-		ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, new Identifier("minecraft:block/stone")));
+		ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/crate_octagon")));
 
 		return ids;
 	}
