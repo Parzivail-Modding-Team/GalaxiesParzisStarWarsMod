@@ -34,7 +34,7 @@ public class PM3DModel extends SimpleModel
 
 	private void emitFace(QuadEmitter quadEmitter, PM3DObject object, PM3DFace face)
 	{
-		quadEmitter.material(getMaterial(face));
+		quadEmitter.colorIndex(1).spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF).material(getMaterial(face));
 
 		PM3DVertPointer a = face.verts.get(0);
 		PM3DVertPointer b = face.verts.get(1);
