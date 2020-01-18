@@ -154,7 +154,7 @@ public class PM3DFile
 	{
 		ArrayList<SpriteIdentifier> ids = new ArrayList<>();
 
-		ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/crate_octagon")));
+		ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/xwing_t65b")));
 
 		return ids;
 	}

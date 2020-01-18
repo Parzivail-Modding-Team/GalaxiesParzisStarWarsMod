@@ -393,7 +393,12 @@ public class Vector3f extends Vector implements ReadableVector3f, WritableVector
 		return x == other.x && y == other.y && z == other.z;
 	}
 
-	public net.minecraft.client.util.math.Vector3f toMinecraft()
+	public net.minecraft.client.util.math.Vector3f toMinecraftNormal()
+	{
+		return new net.minecraft.client.util.math.Vector3f(x, y, z);
+	}
+
+	public net.minecraft.client.util.math.Vector3f toMinecraftVertex()
 	{
 		return new net.minecraft.client.util.math.Vector3f(x + 0.5f, y, z + 0.5f);
 	}

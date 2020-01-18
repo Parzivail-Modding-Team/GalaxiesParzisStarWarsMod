@@ -29,7 +29,7 @@ public class PM3DModel extends SimpleModel
 		super(sprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
 		this.container = container;
 
-		sprites.put("0", spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/crate_octagon"))));
+		sprites.put("0", spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/xwing_t65b"))));
 	}
 
 	private void emitFace(QuadEmitter quadEmitter, PM3DObject object, PM3DFace face)
@@ -56,10 +56,10 @@ public class PM3DModel extends SimpleModel
 		Vector2f tC = container.uvs.get(c.getTexture());
 		Vector2f tD = container.uvs.get(d.getTexture());
 
-		quadEmitter.pos(0, vA.toMinecraft()).normal(0, nA.toMinecraft()).sprite(0, 0, tA.x, 1 - tA.y);
-		quadEmitter.pos(1, vB.toMinecraft()).normal(1, nB.toMinecraft()).sprite(1, 0, tB.x, 1 - tB.y);
-		quadEmitter.pos(2, vC.toMinecraft()).normal(2, nC.toMinecraft()).sprite(2, 0, tC.x, 1 - tC.y);
-		quadEmitter.pos(3, vD.toMinecraft()).normal(3, nD.toMinecraft()).sprite(3, 0, tD.x, 1 - tD.y);
+		quadEmitter.pos(0, vA.toMinecraftVertex()).normal(0, nA.toMinecraftNormal()).sprite(0, 0, tA.x, 1 - tA.y);
+		quadEmitter.pos(1, vB.toMinecraftVertex()).normal(1, nB.toMinecraftNormal()).sprite(1, 0, tB.x, 1 - tB.y);
+		quadEmitter.pos(2, vC.toMinecraftVertex()).normal(2, nC.toMinecraftNormal()).sprite(2, 0, tC.x, 1 - tC.y);
+		quadEmitter.pos(3, vD.toMinecraftVertex()).normal(3, nD.toMinecraftNormal()).sprite(3, 0, tD.x, 1 - tD.y);
 
 		quadEmitter.spriteBake(0, sprites.get("0"), MutableQuadView.BAKE_NORMALIZED);
 
@@ -101,6 +101,6 @@ public class PM3DModel extends SimpleModel
 
 	public static PM3DModel create(Function<SpriteIdentifier, Sprite> spriteMap, PM3DFile container)
 	{
-		return new PM3DModel(spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/crate_octagon"))), spriteMap, container);
+		return new PM3DModel(spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/xwing_t65b"))), spriteMap, container);
 	}
 }
