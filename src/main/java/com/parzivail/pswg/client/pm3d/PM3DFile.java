@@ -1,16 +1,11 @@
 package com.parzivail.pswg.client.pm3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.mojang.datafixers.util.Pair;
 import com.parzivail.brotli.BrotliInputStream;
-import com.parzivail.pswg.Resources;
 import com.parzivail.util.binary.BinaryUtil;
 import com.parzivail.util.primative.Vector2f;
 import com.parzivail.util.primative.Vector3f;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
@@ -18,9 +13,6 @@ import net.minecraft.util.crash.CrashReport;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
 
 public class PM3DFile
 {
@@ -42,23 +34,23 @@ public class PM3DFile
 		this.objects = objects;
 	}
 
-	public static PM3DFile tryLoad(Identifier identifier)
+	public static PM3DFile tryLoad(Identifier modelFile)
 	{
 		try
 		{
-			return load(identifier);
+			return load(modelFile);
 		}
 		catch (IOException ex)
 		{
 			ex.printStackTrace();
-			CrashReport crashReport = CrashReport.create(ex, String.format("Loading PM3D file: %s", identifier));
+			CrashReport crashReport = CrashReport.create(ex, String.format("Loading PM3D file: %s", modelFile));
 			throw new CrashException(crashReport);
 		}
 	}
 
-	private static PM3DFile load(Identifier identifier) throws IOException
+	private static PM3DFile load(Identifier modelFile) throws IOException
 	{
-		InputStream reader = MinecraftClient.getInstance().getResourceManager().getResource(identifier).getInputStream();
+		InputStream reader = MinecraftClient.getInstance().getResourceManager().getResource(modelFile).getInputStream();
 		BrotliInputStream bis = new BrotliInputStream(reader);
 		LittleEndianDataInputStream objStream = new LittleEndianDataInputStream(bis);
 
@@ -83,7 +75,7 @@ public class PM3DFile
 		ArrayList<Vector2f> uvs = loadUvs(numUvs, objStream);
 		ArrayList<PM3DObject> objects = loadObjects(numObjects, objStream);
 
-		return new PM3DFile(identifier, verts, normals, uvs, objects);
+		return new PM3DFile(modelFile, verts, normals, uvs, objects);
 	}
 
 	private static ArrayList<Vector3f> loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
@@ -148,14 +140,5 @@ public class PM3DFile
 		}
 
 		return objects;
-	}
-
-	public List<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> function, Set<Pair<String, String>> errors)
-	{
-		ArrayList<SpriteIdentifier> ids = new ArrayList<>();
-
-		ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, Resources.identifier("model/xwing_t65b")));
-
-		return ids;
 	}
 }

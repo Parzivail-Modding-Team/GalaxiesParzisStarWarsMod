@@ -50,12 +50,6 @@ public abstract class AbstractModel implements BakedModel, FabricBakedModel
 	}
 
 	@Override
-	public boolean hasDepthInGui()
-	{
-		return true;
-	}
-
-	@Override
 	public boolean isBuiltin()
 	{
 		return false;

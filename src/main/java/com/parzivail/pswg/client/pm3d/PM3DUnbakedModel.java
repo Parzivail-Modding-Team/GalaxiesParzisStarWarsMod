@@ -22,10 +22,12 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
@@ -36,13 +38,15 @@ import java.util.function.Function;
  */
 public class PM3DUnbakedModel implements UnbakedModel
 {
-	private final Identifier identifier;
+	private final Identifier baseTexture;
+	private final Identifier particleTexture;
 	private final Function<Function<SpriteIdentifier, Sprite>, PM3DModel> baker;
 	private PM3DModel baked = null;
 
-	public PM3DUnbakedModel(Identifier identifier, Function<Function<SpriteIdentifier, Sprite>, PM3DModel> baker)
+	public PM3DUnbakedModel(Identifier baseTexture, Identifier particleTexture, Function<Function<SpriteIdentifier, Sprite>, PM3DModel> baker)
 	{
-		this.identifier = identifier;
+		this.baseTexture = baseTexture;
+		this.particleTexture = particleTexture;
 		this.baker = baker;
 	}
 
@@ -55,8 +59,13 @@ public class PM3DUnbakedModel implements UnbakedModel
 	@Override
 	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> function, Set<Pair<String, String>> errors)
 	{
-		PM3DFile container = PM3DFile.tryLoad(identifier);
-		return container.getTextureDependencies(function, errors);
+		ArrayList<SpriteIdentifier> ids = new ArrayList<>();
+
+		ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, baseTexture));
+		if (!baseTexture.equals(particleTexture))
+			ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, particleTexture));
+
+		return ids;
 	}
 
 	@Override

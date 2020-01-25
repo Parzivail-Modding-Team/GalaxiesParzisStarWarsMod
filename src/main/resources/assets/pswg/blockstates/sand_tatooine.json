@@ -1,1 +1,7 @@
-{}
+{
+  "variants": {
+	"": {
+	  "model": "pswg:block/sand_tatooine"
+	}
+  }
+}

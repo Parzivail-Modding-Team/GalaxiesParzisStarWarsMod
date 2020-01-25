@@ -7,8 +7,8 @@ import net.minecraft.util.Identifier;
 
 public class ModelLoader
 {
-	public static PM3DUnbakedModel loadPM3D(Identifier identifier)
+	public static PM3DUnbakedModel loadPM3D(Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
 	{
-		return new PM3DUnbakedModel(identifier, spriteMap -> PM3DModel.create(spriteMap, PM3DFile.tryLoad(identifier)));
+		return new PM3DUnbakedModel(baseTexture, particleTexture, spriteMap -> PM3DModel.create(PM3DFile.tryLoad(modelFile), baseTexture, particleTexture, spriteMap));
 	}
 }
