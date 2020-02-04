@@ -55,4 +55,6 @@ Things to consider:
 ## Auxillary Licensing Information
 Some ideas and concepts Copyright or Trademark Lucasfilm LTD., LucasArts, or Disney.
 
+Non-code assets CC-BY-SA 4.0.
+
 If you are a modpack owner or distributor, you are fully responsible for supporting this mod's integration with the pack in form and function. If an issue is *caused* by this mod, you or the player is responsible for posting a support ticket/issue here.
