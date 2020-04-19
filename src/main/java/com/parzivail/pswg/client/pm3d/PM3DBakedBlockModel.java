@@ -1,8 +1,7 @@
 package com.parzivail.pswg.client.pm3d;
 
 import com.parzivail.pswg.client.model.SimpleModel;
-import com.parzivail.util.primative.Vector2f;
-import com.parzivail.util.primative.Vector3f;
+import com.parzivail.pswg.util.VertUtil;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
@@ -15,15 +14,17 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.function.Function;
 
-public class PM3DModel extends SimpleModel
+public class PM3DBakedBlockModel extends SimpleModel
 {
 	private final Sprite baseSprite;
 	private final PM3DFile container;
 
-	private PM3DModel(Sprite baseSprite, Sprite particleSprite, PM3DFile container)
+	private PM3DBakedBlockModel(Sprite baseSprite, Sprite particleSprite, PM3DFile container)
 	{
 		super(particleSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
 		this.baseSprite = baseSprite;
@@ -39,25 +40,25 @@ public class PM3DModel extends SimpleModel
 		PM3DVertPointer c = face.verts.get(2);
 		PM3DVertPointer d = face.verts.size() == 4 ? face.verts.get(3) : c;
 
-		Vector3f vA = container.verts.get(a.getVertex());
-		Vector3f vB = container.verts.get(b.getVertex());
-		Vector3f vC = container.verts.get(c.getVertex());
-		Vector3f vD = container.verts.get(d.getVertex());
+		Vec3d vA = container.verts.get(a.getVertex());
+		Vec3d vB = container.verts.get(b.getVertex());
+		Vec3d vC = container.verts.get(c.getVertex());
+		Vec3d vD = container.verts.get(d.getVertex());
 
-		Vector3f nA = container.normals.get(a.getNormal());
-		Vector3f nB = container.normals.get(b.getNormal());
-		Vector3f nC = container.normals.get(c.getNormal());
-		Vector3f nD = container.normals.get(d.getNormal());
+		Vec3d nA = container.normals.get(a.getNormal());
+		Vec3d nB = container.normals.get(b.getNormal());
+		Vec3d nC = container.normals.get(c.getNormal());
+		Vec3d nD = container.normals.get(d.getNormal());
 
-		Vector2f tA = container.uvs.get(a.getTexture());
-		Vector2f tB = container.uvs.get(b.getTexture());
-		Vector2f tC = container.uvs.get(c.getTexture());
-		Vector2f tD = container.uvs.get(d.getTexture());
+		Vec2f tA = container.uvs.get(a.getTexture());
+		Vec2f tB = container.uvs.get(b.getTexture());
+		Vec2f tC = container.uvs.get(c.getTexture());
+		Vec2f tD = container.uvs.get(d.getTexture());
 
-		quadEmitter.pos(0, vA.toMinecraftVertex()).normal(0, nA.toMinecraftNormal()).sprite(0, 0, tA.x, 1 - tA.y);
-		quadEmitter.pos(1, vB.toMinecraftVertex()).normal(1, nB.toMinecraftNormal()).sprite(1, 0, tB.x, 1 - tB.y);
-		quadEmitter.pos(2, vC.toMinecraftVertex()).normal(2, nC.toMinecraftNormal()).sprite(2, 0, tC.x, 1 - tC.y);
-		quadEmitter.pos(3, vD.toMinecraftVertex()).normal(3, nD.toMinecraftNormal()).sprite(3, 0, tD.x, 1 - tD.y);
+		quadEmitter.pos(0, VertUtil.toMinecraftVertex(vA)).normal(0, VertUtil.toMinecraftNormal(nA)).sprite(0, 0, tA.x, 1 - tA.y);
+		quadEmitter.pos(1, VertUtil.toMinecraftVertex(vB)).normal(1, VertUtil.toMinecraftNormal(nB)).sprite(1, 0, tB.x, 1 - tB.y);
+		quadEmitter.pos(2, VertUtil.toMinecraftVertex(vC)).normal(2, VertUtil.toMinecraftNormal(nC)).sprite(2, 0, tC.x, 1 - tC.y);
+		quadEmitter.pos(3, VertUtil.toMinecraftVertex(vD)).normal(3, VertUtil.toMinecraftNormal(nD)).sprite(3, 0, tD.x, 1 - tD.y);
 
 		quadEmitter.spriteBake(0, baseSprite, MutableQuadView.BAKE_NORMALIZED);
 
@@ -97,9 +98,9 @@ public class PM3DModel extends SimpleModel
 		return meshBuilder.build();
 	}
 
-	public static PM3DModel create(PM3DFile container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
+	public static PM3DBakedBlockModel create(PM3DFile container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
 	{
-		return new PM3DModel(spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, baseTexture)), spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, particleTexture)), container);
+		return new PM3DBakedBlockModel(spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, baseTexture)), spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, particleTexture)), container);
 	}
 
 	@Override

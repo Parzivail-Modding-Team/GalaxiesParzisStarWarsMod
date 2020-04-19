@@ -36,14 +36,14 @@ import java.util.function.Function;
 /**
  * Can be used for multiple blocks - will return same baked model for each
  */
-public class PM3DUnbakedModel implements UnbakedModel
+public class PM3DUnbakedBlockModel implements UnbakedModel
 {
 	private final Identifier baseTexture;
 	private final Identifier particleTexture;
-	private final Function<Function<SpriteIdentifier, Sprite>, PM3DModel> baker;
-	private PM3DModel baked = null;
+	private final Function<Function<SpriteIdentifier, Sprite>, PM3DBakedBlockModel> baker;
+	private PM3DBakedBlockModel baked = null;
 
-	public PM3DUnbakedModel(Identifier baseTexture, Identifier particleTexture, Function<Function<SpriteIdentifier, Sprite>, PM3DModel> baker)
+	public PM3DUnbakedBlockModel(Identifier baseTexture, Identifier particleTexture, Function<Function<SpriteIdentifier, Sprite>, PM3DBakedBlockModel> baker)
 	{
 		this.baseTexture = baseTexture;
 		this.particleTexture = particleTexture;
@@ -72,7 +72,7 @@ public class PM3DUnbakedModel implements UnbakedModel
 	@Nullable
 	public BakedModel bake(ModelLoader modelLoader, Function<SpriteIdentifier, Sprite> spriteLoader, ModelBakeSettings modelBakeSettings, Identifier identifier)
 	{
-		PM3DModel result = baked;
+		PM3DBakedBlockModel result = baked;
 		if (result == null)
 		{
 			result = baker.apply(spriteLoader);

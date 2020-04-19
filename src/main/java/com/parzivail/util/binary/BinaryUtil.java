@@ -1,7 +1,8 @@
 package com.parzivail.util.binary;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.parzivail.util.primative.Matrix4f;
+import com.parzivail.pswg.util.MatUtil;
+import net.minecraft.client.util.math.Matrix4f;
 
 import java.io.DataInput;
 import java.io.IOException;
@@ -22,25 +23,25 @@ public class BinaryUtil
 
 	public static Matrix4f readMatrix4(LittleEndianDataInputStream s) throws IOException
 	{
+		float a00 = s.readFloat();
+		float a10 = s.readFloat();
+		float a20 = s.readFloat();
+		float a30 = s.readFloat();
+		float a01 = s.readFloat();
+		float a11 = s.readFloat();
+		float a21 = s.readFloat();
+		float a31 = s.readFloat();
+		float a02 = s.readFloat();
+		float a12 = s.readFloat();
+		float a22 = s.readFloat();
+		float a32 = s.readFloat();
+		float a03 = s.readFloat();
+		float a13 = s.readFloat();
+		float a23 = s.readFloat();
+		float a33 = s.readFloat();
+
 		Matrix4f m = new Matrix4f();
-
-		m.m00 = s.readFloat();
-		m.m10 = s.readFloat();
-		m.m20 = s.readFloat();
-		m.m30 = s.readFloat();
-		m.m01 = s.readFloat();
-		m.m11 = s.readFloat();
-		m.m21 = s.readFloat();
-		m.m31 = s.readFloat();
-		m.m02 = s.readFloat();
-		m.m12 = s.readFloat();
-		m.m22 = s.readFloat();
-		m.m32 = s.readFloat();
-		m.m03 = s.readFloat();
-		m.m13 = s.readFloat();
-		m.m23 = s.readFloat();
-		m.m33 = s.readFloat();
-
+		MatUtil.set(m, a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33);
 		return m;
 	}
 }
