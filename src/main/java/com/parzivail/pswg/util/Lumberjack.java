@@ -1,6 +1,7 @@
 package com.parzivail.pswg.util;
 
 import com.parzivail.pswg.Resources;
+import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,19 +17,17 @@ public class Lumberjack
 	 */
 	public static void debug(Object message, Object... params)
 	{
-		if (!Resources.IS_DEBUG)
+		if (!FabricLoader.getInstance().isDevelopmentEnvironment())
 			return;
 		StackTraceElement[] trace = Thread.currentThread().getStackTrace();
 		String format = String.format(String.valueOf(message), params);
 		if (trace.length >= 3)
 		{
 			StackTraceElement stack = trace[2];
-			log("<%s::%s> %s", stack.getClassName(), stack.getMethodName(), format);
+			log("<%s#%s> %s", stack.getClassName(), stack.getMethodName(), format);
 		}
 		else
-		{
 			log("<Unknown Stack> %s", format);
-		}
 	}
 
 	/**

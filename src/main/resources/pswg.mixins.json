@@ -6,7 +6,7 @@
     "ClientPlayNetworkHandlerMixin"
   ],
   "client": [
-	"Matrix4fMixin"
+	"Matrix4fMixin", "EntityClientMixin"
   ],
   "injectors": {
 	"defaultRequire": 1

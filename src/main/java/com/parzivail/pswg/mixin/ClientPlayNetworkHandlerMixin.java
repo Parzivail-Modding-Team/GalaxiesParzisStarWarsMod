@@ -25,7 +25,7 @@ public class ClientPlayNetworkHandlerMixin
 	private void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo ci, double x, double y, double z, EntityType<?> type)
 	{
 		Entity entity = null;
-		if (type == GalaxiesMain.SHIP)
+		if (type == GalaxiesMain.EntityTypeShip)
 		{
 			entity = ShipEntity.create(this.world);
 		}

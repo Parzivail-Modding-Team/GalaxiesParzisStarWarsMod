@@ -24,6 +24,6 @@ public class SwgBlocks
 	public static void register(Block block, Identifier identifier)
 	{
 		Registry.register(Registry.BLOCK, identifier, block);
-		Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(GalaxiesMain.TAB)));
+		Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(GalaxiesMain.Tab)));
 	}
 }

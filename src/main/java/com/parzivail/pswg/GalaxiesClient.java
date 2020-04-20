@@ -22,6 +22,6 @@ public class GalaxiesClient implements ClientModInitializer
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> SimpleModels.INSTANCE);
 
-		EntityRendererRegistry.INSTANCE.register(GalaxiesMain.SHIP, (entityRenderDispatcher, context) -> new ShipRenderer(entityRenderDispatcher));
+		EntityRendererRegistry.INSTANCE.register(GalaxiesMain.EntityTypeShip, (entityRenderDispatcher, context) -> new ShipRenderer(entityRenderDispatcher));
 	}
 }
