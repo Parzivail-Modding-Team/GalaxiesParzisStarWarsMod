@@ -3,11 +3,9 @@
   "package": "com.parzivail.pswg.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "ClientPlayNetworkHandlerMixin"
+	"ClientPlayNetworkHandlerMixin"
   ],
-  "client": [
-	"Matrix4fMixin", "EntityClientMixin"
-  ],
+  "client": ["EntityClientMixin", "GameRendererMixin", "Matrix4fMixin"],
   "injectors": {
 	"defaultRequire": 1
   }

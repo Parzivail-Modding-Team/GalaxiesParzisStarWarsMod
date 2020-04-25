@@ -22,24 +22,19 @@ public class QuatUtil
 
 	public static EulerAngle toEulerAngles(Quaternion q)
 	{
-		Vec3d forward = rotate(new Vec3d(0, 0, 1), q);
-		Vec3d up = rotate(new Vec3d(0, 1, 0), q);
+		Vec3d forward = rotate(POSZ, q);
 
-		// Yaw is the bearing of the forward vector's shadow in the xy plane.
 		double yaw = Math.atan2(forward.z, forward.x) - Math.PI / 2;
+		double pitch = -Math.atan2(forward.y, Math.sqrt(forward.z * forward.z + forward.x * forward.x));
 
-		// Pitch is the altitude of the forward vector off the xy plane, toward the down direction.
-		double pitch = -Math.asin(forward.y);
+		float w = q.getA();
+		float x = q.getB();
+		float z = q.getC();
+		float y = q.getD();
 
-		// Find the vector in the xy plane 90 degrees to the right of our bearing.
-		double planeRightX = Math.sin(yaw);
-		double planeRightY = -Math.cos(yaw);
-
-		// Roll is the rightward lean of our up vector, computed here using a dot product.
-		double roll = Math.asin(up.x * planeRightX + up.z * planeRightY);
-		// If we're twisted upside-down, return a roll in the range +-(pi/2, pi)
-		if (up.y < 0)
-			roll = Math.signum(roll) * Math.PI - roll;
+		double siny_cosp = 2 * (w * z + x * y);
+		double cosy_cosp = 1 - 2 * (y * y + z * z);
+		double roll = Math.atan2(siny_cosp, cosy_cosp);
 
 		return new EulerAngle((float)pitch, (float)yaw, (float)roll);
 	}

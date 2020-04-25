@@ -1,11 +1,14 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.util.math.Matrix4fExt;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Matrix4f.class)
+@Environment(EnvType.CLIENT)
 public class Matrix4fMixin implements Matrix4fExt
 {
 	@Shadow
@@ -75,5 +78,85 @@ public class Matrix4fMixin implements Matrix4fExt
 		this.a31 = a31;
 		this.a32 = a32;
 		this.a33 = a33;
+	}
+
+	public float getM00()
+	{
+		return this.a00;
+	}
+
+	public float getM01()
+	{
+		return this.a01;
+	}
+
+	public float getM02()
+	{
+		return this.a02;
+	}
+
+	public float getM03()
+	{
+		return this.a03;
+	}
+
+	public float getM10()
+	{
+		return this.a10;
+	}
+
+	public float getM11()
+	{
+		return this.a11;
+	}
+
+	public float getM12()
+	{
+		return this.a12;
+	}
+
+	public float getM13()
+	{
+		return this.a13;
+	}
+
+	public float getM20()
+	{
+		return this.a20;
+	}
+
+	public float getM21()
+	{
+		return this.a21;
+	}
+
+	public float getM22()
+	{
+		return this.a22;
+	}
+
+	public float getM23()
+	{
+		return this.a23;
+	}
+
+	public float getM30()
+	{
+		return this.a30;
+	}
+
+	public float getM31()
+	{
+		return this.a31;
+	}
+
+	public float getM32()
+	{
+		return this.a32;
+	}
+
+	public float getM33()
+	{
+		return this.a33;
 	}
 }

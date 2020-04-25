@@ -6,7 +6,6 @@ import com.parzivail.pswg.util.QuatUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.PacketContext;
-import net.minecraft.client.network.packet.EntitySpawnS2CPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -14,6 +13,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Box;
@@ -124,9 +124,9 @@ public class ShipEntity extends Entity
 		prevRotation = QuatUtil.copy(getRotation());
 		Quaternion rotation = QuatUtil.copy(getRotation());
 
-		//		rotation = new Quaternion(20, 20, 0, true);
+		//		rotation = new Quaternion(0, 0, 0, true);
 
-		//		QuatUtil.rotateTowards(rotation, QuatUtil.POSY, QuatUtil.rotate(QuatUtil.POSY, rotation), null, null);
+		//				QuatUtil.rotateTowards(rotation, QuatUtil.POSY, QuatUtil.rotate(QuatUtil.POSY, rotation), null, null);
 
 		//		rotation.hamiltonProduct(new Quaternion(5, 0, 0, true));
 		//		rotation.hamiltonProduct(new Quaternion(0, 0, 5, true));
@@ -214,12 +214,14 @@ public class ShipEntity extends Entity
 	public Vec3d getRotationVecClient()
 	{
 		return super.getRotationVecClient();
+		//		return QuatUtil.rotate(new Vec3d(0, 0, 1), getRotation());
 	}
 
 	@Override
 	public Vec3d getRotationVec(float tickDelta)
 	{
-		return QuatUtil.rotate(new Vec3d(0, 0, 1), getRotation(tickDelta));
+		return super.getRotationVec(tickDelta);
+		//		return QuatUtil.rotate(new Vec3d(0, 0, 1), getRotation(tickDelta));
 	}
 
 	public static ShipEntity create(World world)
