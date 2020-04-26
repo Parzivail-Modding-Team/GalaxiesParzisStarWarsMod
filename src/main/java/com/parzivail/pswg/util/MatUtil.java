@@ -16,4 +16,10 @@ public class MatUtil
 	{
 		return (Matrix4fExt)((Object)matrix);
 	}
+
+	@SuppressWarnings("ConstantConditions")
+	public static Matrix4f to(Matrix4fExt matrix)
+	{
+		return (Matrix4f)((Object)matrix);
+	}
 }

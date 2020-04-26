@@ -2,7 +2,8 @@ package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.GalaxiesMain;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
-import com.parzivail.pswg.util.QuatUtil;
+import com.parzivail.pswg.util.MathUtil;
+import com.parzivail.pswg.util.Rotation;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.PacketContext;
@@ -17,8 +18,6 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.EulerAngle;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -27,9 +26,10 @@ import java.util.List;
 
 public class ShipEntity extends Entity
 {
-	private static final TrackedData<Quaternion> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
+	private static final TrackedData<Rotation> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.ROTATION);
 
-	private Quaternion prevRotation = Quaternion.IDENTITY;
+	private Rotation rotation = new Rotation();
+	private Rotation prevRotation = new Rotation();
 
 	public ShipEntity(EntityType<?> type, World world)
 	{
@@ -101,7 +101,7 @@ public class ShipEntity extends Entity
 	@Override
 	protected void initDataTracker()
 	{
-		getDataTracker().startTracking(ROTATION, QuatUtil.copy(Quaternion.IDENTITY));
+		getDataTracker().startTracking(ROTATION, new Rotation());
 	}
 
 	@Override
@@ -121,17 +121,10 @@ public class ShipEntity extends Entity
 	{
 		super.tick();
 
-		prevRotation = QuatUtil.copy(getRotation());
-		Quaternion rotation = QuatUtil.copy(getRotation());
+		prevRotation = rotation.clone();
+		Rotation rotation = getRotation();
 
-		//		rotation = new Quaternion(0, 0, 0, true);
-
-		//				QuatUtil.rotateTowards(rotation, QuatUtil.POSY, QuatUtil.rotate(QuatUtil.POSY, rotation), null, null);
-
-		//		rotation.hamiltonProduct(new Quaternion(5, 0, 0, true));
-		//		rotation.hamiltonProduct(new Quaternion(0, 0, 5, true));
-
-		setRotation(rotation);
+		//		setRotation(rotation);
 		updateEulerRotation(rotation);
 	}
 
@@ -152,8 +145,8 @@ public class ShipEntity extends Entity
 	{
 		if (this.hasPassenger(passenger))
 		{
-			Vec3d vec3d = new Vec3d(0, 0, 5);
-			vec3d = QuatUtil.rotate(vec3d, getRotation());
+			Vec3d vec3d = new Vec3d(0, 0, 0);
+			vec3d = getRotation().unproject(vec3d);
 
 			passenger.updatePosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
 			this.copyEntityData(passenger);
@@ -185,43 +178,53 @@ public class ShipEntity extends Entity
 		return new EntitySpawnS2CPacket(this);
 	}
 
-	public Quaternion getRotation()
+	public Rotation getRotation()
 	{
 		return getDataTracker().get(ROTATION);
 	}
 
-	public Quaternion getRotation(float t)
+	public Rotation getRotation(float t)
 	{
-		Quaternion start = prevRotation;
-		Quaternion end = getDataTracker().get(ROTATION);
+		Rotation start = prevRotation;
+		Rotation end = getRotation();
 
-		return QuatUtil.slerp(start, end, t);
+		return MathUtil.lerp(start, end, t);
 	}
 
-	public void setRotation(Quaternion q)
+	public void setRotation(Rotation q)
 	{
-		getDataTracker().set(ROTATION, q);
+		rotation = q;
+
+		if (!world.isClient)
+			getDataTracker().set(ROTATION, q);
 	}
 
-	private void updateEulerRotation(Quaternion rotation)
+	private void updateEulerRotation(Rotation rotation)
 	{
-		EulerAngle eulerAngle = QuatUtil.toEulerAngles(rotation);
-		yaw = eulerAngle.getYaw() * QuatUtil.toDegreesf;
-		pitch = eulerAngle.getPitch() * QuatUtil.toDegreesf;
+		//		EulerAngle eulerAngle = rotation.toEulerAngles();
+		//		yaw = eulerAngle.getYaw();
+		//		pitch = eulerAngle.getPitch();
+		//
+		//		while (this.pitch - this.prevPitch >= 180.0F)
+		//			this.prevPitch += 360.0F;
+		//
+		//		while (this.yaw - this.prevYaw < -180.0F)
+		//			this.prevYaw -= 360.0F;
+		//
+		//		while (this.yaw - this.prevYaw >= 180.0F)
+		//			this.prevYaw += 360.0F;
 	}
 
 	@Override
 	public Vec3d getRotationVecClient()
 	{
 		return super.getRotationVecClient();
-		//		return QuatUtil.rotate(new Vec3d(0, 0, 1), getRotation());
 	}
 
 	@Override
 	public Vec3d getRotationVec(float tickDelta)
 	{
 		return super.getRotationVec(tickDelta);
-		//		return QuatUtil.rotate(new Vec3d(0, 0, 1), getRotation(tickDelta));
 	}
 
 	public static ShipEntity create(World world)
@@ -233,8 +236,9 @@ public class ShipEntity extends Entity
 
 	public void acceptInput(double mouseDx, double mouseDy)
 	{
-		Quaternion rotation = QuatUtil.copy(getRotation());
-		rotation.hamiltonProduct(new Quaternion((float)mouseDy, 0, (float)mouseDx, true));
+		Rotation rotation = getRotation();
+		rotation.rotateGlobal(MathUtil.POSZ, (float)mouseDx);
+		//		rotation.rotatePitch((float)mouseDy);
 		setRotation(rotation);
 
 		if (this.world.isClient)

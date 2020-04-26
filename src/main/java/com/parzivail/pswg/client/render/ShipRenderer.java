@@ -4,17 +4,20 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DEntityModel;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.entity.ShipEntity;
+import com.parzivail.pswg.util.Rotation;
+import com.parzivail.pswg.util.VertUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
-import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.EulerAngle;
 
 public class ShipRenderer extends EntityRenderer<ShipEntity>
 {
-	private Lazy<PM3DEntityModel> model;
+	private final Lazy<PM3DEntityModel> model;
 
 	public ShipRenderer(EntityRenderDispatcher entityRenderDispatcher)
 	{
@@ -30,8 +33,37 @@ public class ShipRenderer extends EntityRenderer<ShipEntity>
 		//		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(this.model.getLayer(this.getTexture(entity)));
 		matrices.push();
 		matrices.translate(0, entity.getEyeHeight(null), 0);
-		matrices.multiply(entity.getRotation(tickDelta));
-		matrices.multiply(new Quaternion(0, 180, 0, true));
+
+		Rotation r = entity.getRotation(tickDelta);
+		EulerAngle angle = r.toEulerAngles();
+
+		float shipYaw = angle.getYaw();
+		float shipPitch = angle.getPitch();
+		float offset = 180;
+
+		MinecraftClient mc = MinecraftClient.getInstance();
+
+		//		if (mc.cameraEntity == entity)
+		//		{
+		//			Camera c = MinecraftClient.getInstance().gameRenderer.getCamera();
+		//
+		//			shipYaw = c.getYaw();
+		//			shipPitch = c.getPitch();
+		//
+		//			if (mc.options.perspective == 2)
+		//				offset = 0;
+		//		}
+
+		//		matrices.multiply(new Quaternion(0, -shipYaw, 0, true));
+		//		matrices.multiply(new Quaternion(shipPitch, 0, 0, true));
+		//		matrices.multiply(new Quaternion(0, offset, 0, true));
+		//		matrices.multiply(new Quaternion(0, 0, angle.getRoll(), true));
+
+		MatrixStack.Entry e = matrices.peek();
+		e.getModel().multiply(VertUtil.toClientMat(r.getMatrix()));
+
+		//		matrices.multiply(new Quaternion(0, 180, 0, true));
+
 		model.get().render(getTexture(entity), tickDelta, matrices, vertexConsumers, light);
 		matrices.pop();
 	}

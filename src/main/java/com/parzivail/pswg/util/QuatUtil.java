@@ -1,5 +1,6 @@
 package com.parzivail.pswg.util;
 
+import com.parzivail.util.math.Matrix4fExt;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.Vector3f;
@@ -13,16 +14,9 @@ public class QuatUtil
 	public static final double toDegrees = 180.0 / Math.PI;
 	public static final float toDegreesf = (float)toDegrees;
 
-	public static final Vec3d POSX = new Vec3d(1, 0, 0);
-	public static final Vec3d NEGX = new Vec3d(-1, 0, 0);
-	public static final Vec3d POSY = new Vec3d(0, 1, 0);
-	public static final Vec3d NEGY = new Vec3d(0, -1, 0);
-	public static final Vec3d POSZ = new Vec3d(0, 0, 1);
-	public static final Vec3d NEGZ = new Vec3d(0, 0, -1);
-
 	public static EulerAngle toEulerAngles(Quaternion q)
 	{
-		Vec3d forward = rotate(POSZ, q);
+		Vec3d forward = rotate(MathUtil.POSZ, q);
 
 		double yaw = Math.atan2(forward.z, forward.x) - Math.PI / 2;
 		double pitch = -Math.atan2(forward.y, Math.sqrt(forward.z * forward.z + forward.x * forward.x));
@@ -161,6 +155,31 @@ public class QuatUtil
 		Quaternion q1 = copy(q);
 		invert(q1);
 		return q1;
+	}
+
+	public static Quaternion from(Matrix4f m1)
+	{
+		Matrix4fExt m = MatUtil.from(m1);
+		double w = Math.sqrt(1.0 + m.getM00() + m.getM11() + m.getM22()) / 2.0;
+		double w4 = (4.0 * w);
+		double x = (m.getM21() - m.getM12()) / w4;
+		double y = (m.getM02() - m.getM20()) / w4;
+		double z = (m.getM10() - m.getM01()) / w4;
+
+		return new Quaternion((float)x, (float)y, (float)z, (float)w);
+	}
+
+	public static Matrix4f to(Quaternion q)
+	{
+		q.normalize();
+		float qw = q.getA();
+		float qx = q.getB();
+		float qy = q.getC();
+		float qz = q.getD();
+
+		Matrix4fExt m = MatUtil.from(new Matrix4f());
+		m.set(1.0f - 2.0f * qy * qy - 2.0f * qz * qz, 2.0f * qx * qy - 2.0f * qz * qw, 2.0f * qx * qz + 2.0f * qy * qw, 0.0f, 2.0f * qx * qy + 2.0f * qz * qw, 1.0f - 2.0f * qx * qx - 2.0f * qz * qz, 2.0f * qy * qz - 2.0f * qx * qw, 0.0f, 2.0f * qx * qz - 2.0f * qy * qw, 2.0f * qy * qz + 2.0f * qx * qw, 1.0f - 2.0f * qx * qx - 2.0f * qy * qy, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+		return MatUtil.to(m);
 	}
 
 	public static Vec3d project(Vec3d self, Vec3d ref)
