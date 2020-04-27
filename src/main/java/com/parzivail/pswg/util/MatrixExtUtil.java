@@ -3,7 +3,7 @@ package com.parzivail.pswg.util;
 import com.parzivail.util.math.Matrix4fExt;
 import net.minecraft.client.util.math.Matrix4f;
 
-public class MatUtil
+public class MatrixExtUtil
 {
 	public static void set(Matrix4f mat, float a00, float a01, float a02, float a03, float a10, float a11, float a12, float a13, float a20, float a21, float a22, float a23, float a30, float a31, float a32, float a33)
 	{

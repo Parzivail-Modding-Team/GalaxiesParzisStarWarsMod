@@ -130,4 +130,65 @@ public class MathUtil
 			scale(self, 0f);
 		}
 	}
+
+	public static float dot_product(Quaternion q1, Quaternion q2)
+	{
+		return q1.getA() * q2.getA() + q1.getB() * q2.getB() + q1.getC() * q2.getC() + q1.getD() * q2.getD();
+	}
+
+	public static Quaternion slerp(Quaternion start, Quaternion end, float t)
+	{
+		// Only unit quaternions are valid rotations.
+		// Normalize to avoid undefined behavior.
+		start.normalize();
+		end.normalize();
+
+		// Compute the cosine of the angle between the two vectors.
+		double dot = dot_product(start, end);
+
+		// If the dot product is negative, slerp won't take
+		// the shorter path. Note that end and -end are equivalent when
+		// the negation is applied to all four components. Fix by
+		// reversing one quaternion.
+		if (dot < 0.0f)
+		{
+			end.scale(-1);
+			dot = -dot;
+		}
+
+		if (dot > 0.9995)
+		{
+			// If the inputs are too close for comfort, linearly interpolate
+			// and normalize the result.
+
+			float f = 1 - t;
+
+			float a = f * start.getA() + t * end.getA();
+			float b = f * start.getB() + t * end.getB();
+			float c = f * start.getC() + t * end.getC();
+			float d = f * start.getD() + t * end.getD();
+
+			Quaternion result = new Quaternion(b, c, d, a);
+			result.normalize();
+			return result;
+		}
+
+		// Since dot is in range [0, DOT_THRESHOLD], acos is safe
+		double theta_0 = Math.acos(dot);        // theta_0 = angle between input vectors
+		double theta = theta_0 * t;          // theta = angle between start and result
+		double sin_theta = Math.sin(theta);     // compute this value only once
+		double sin_theta_0 = Math.sin(theta_0); // compute this value only once
+
+		double f1 = Math.cos(theta) - dot * sin_theta / sin_theta_0;  // == sin(theta_0 - theta) / sin(theta_0)
+		double f2 = sin_theta / sin_theta_0;
+
+		float a = (float)(f1 * start.getA() + f2 * end.getA());
+		float b = (float)(f1 * start.getB() + f2 * end.getB());
+		float c = (float)(f1 * start.getC() + f2 * end.getC());
+		float d = (float)(f1 * start.getD() + f2 * end.getD());
+
+		Quaternion result = new Quaternion(b, c, d, a);
+		result.normalize();
+		return result;
+	}
 }

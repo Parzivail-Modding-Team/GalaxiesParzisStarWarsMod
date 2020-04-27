@@ -19,7 +19,7 @@ public class ShipInputHandler
 		ShipEntity ship = ShipEntity.getShip(player);
 		if (ship != null)
 		{
-			mc.cameraEntity = ship;
+			mc.cameraEntity = ship.camera;
 			ship.acceptInput(cursorDeltaX, cursorDeltaY);
 			return true;
 		}

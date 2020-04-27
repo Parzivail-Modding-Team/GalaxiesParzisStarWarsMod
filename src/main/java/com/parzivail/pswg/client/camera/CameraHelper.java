@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.camera;
 
+import com.parzivail.pswg.entity.ChaseCamEntity;
 import com.parzivail.pswg.entity.ShipEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
@@ -17,12 +18,12 @@ public class CameraHelper
 
 		assert cameraEntity != null;
 
-		if (cameraEntity instanceof ShipEntity)
+		if (cameraEntity instanceof ChaseCamEntity)
 		{
-			ShipEntity ship = (ShipEntity)cameraEntity;
+			ChaseCamEntity cam = ((ChaseCamEntity)cameraEntity);
+			ShipEntity ship = cam.parent;
 
-			Quaternion r = ship.getRotation().copy();
-			r.normalize();
+			Quaternion r = ship.getViewRotation(tickDelta).copy();
 			r.conjugate();
 			matrix.multiply(r);
 		}

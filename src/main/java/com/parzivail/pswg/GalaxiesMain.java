@@ -1,6 +1,7 @@
 package com.parzivail.pswg;
 
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.entity.ChaseCamEntity;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.util.Lumberjack;
@@ -22,6 +23,7 @@ public class GalaxiesMain implements ModInitializer
 	public static final ItemGroup Tab = FabricItemGroupBuilder.build(Resources.identifier("blocks"), () -> new ItemStack(Items.APPLE));
 
 	public static final EntityType<ShipEntity> EntityTypeShip = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("ship"), FabricEntityTypeBuilder.create(EntityCategory.MISC, ShipEntity::new).size(EntityDimensions.fixed(1, 1)).build());
+	public static final EntityType<ChaseCamEntity> EntityTypeChaseCam = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("chase_cam"), FabricEntityTypeBuilder.create(EntityCategory.MISC, ChaseCamEntity::new).size(EntityDimensions.fixed(0.1f, 0.1f)).build());
 
 	public static final Identifier PacketShipRotation = Resources.identifier("ship_rotation");
 

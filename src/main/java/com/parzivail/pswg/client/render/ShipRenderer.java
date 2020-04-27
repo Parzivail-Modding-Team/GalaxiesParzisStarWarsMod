@@ -30,7 +30,7 @@ public class ShipRenderer extends EntityRenderer<ShipEntity>
 
 		matrix.translate(0, entity.getEyeHeight(null), 0);
 
-		Quaternion r = entity.getRotation();
+		Quaternion r = entity.getViewRotation(tickDelta);
 		matrix.multiply(r);
 
 		model.get().render(getTexture(entity), tickDelta, matrix, vertexConsumers, light);

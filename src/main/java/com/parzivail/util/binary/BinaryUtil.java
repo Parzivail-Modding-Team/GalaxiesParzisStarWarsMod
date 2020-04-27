@@ -1,7 +1,7 @@
 package com.parzivail.util.binary;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.parzivail.pswg.util.MatUtil;
+import com.parzivail.pswg.util.MatrixExtUtil;
 import net.minecraft.client.util.math.Matrix4f;
 
 import java.io.DataInput;
@@ -41,7 +41,7 @@ public class BinaryUtil
 		float a33 = s.readFloat();
 
 		Matrix4f m = new Matrix4f();
-		MatUtil.set(m, a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33);
+		MatrixExtUtil.set(m, a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33);
 		return m;
 	}
 }

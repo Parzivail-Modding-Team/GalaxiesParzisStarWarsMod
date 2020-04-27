@@ -2,6 +2,7 @@ package com.parzivail.pswg;
 
 import com.parzivail.pswg.client.ModelLoader;
 import com.parzivail.pswg.client.model.SimpleModels;
+import com.parzivail.pswg.client.render.EmptyRenderer;
 import com.parzivail.pswg.client.render.ShipRenderer;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.util.Lumberjack;
@@ -23,5 +24,6 @@ public class GalaxiesClient implements ClientModInitializer
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> SimpleModels.INSTANCE);
 
 		EntityRendererRegistry.INSTANCE.register(GalaxiesMain.EntityTypeShip, (entityRenderDispatcher, context) -> new ShipRenderer(entityRenderDispatcher));
+		EntityRendererRegistry.INSTANCE.register(GalaxiesMain.EntityTypeChaseCam, (entityRenderDispatcher, context) -> new EmptyRenderer(entityRenderDispatcher));
 	}
 }

@@ -2,15 +2,22 @@ package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.GalaxiesMain;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
+import com.parzivail.pswg.util.ClientUtil;
+import com.parzivail.pswg.util.EntityUtil;
 import com.parzivail.pswg.util.MathUtil;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
@@ -18,7 +25,6 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -29,11 +35,33 @@ import java.util.List;
 public class ShipEntity extends Entity
 {
 	private static final TrackedData<Quaternion> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
+	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);
+
+	@Environment(EnvType.CLIENT)
+	public ChaseCamEntity camera;
+
+	private Quaternion viewRotation = Quaternion.IDENTITY;
+	private Quaternion viewPrevRotation = Quaternion.IDENTITY;
 
 	public ShipEntity(EntityType<?> type, World world)
 	{
 		super(type, world);
 		this.inanimate = true;
+	}
+
+	@Override
+	public void kill()
+	{
+		super.kill();
+
+		if (world.isClient)
+			killCamera();
+	}
+
+	private void killCamera()
+	{
+		if (camera != null)
+			camera.kill();
 	}
 
 	public static void handleRotationPacket(PacketContext packetContext, PacketByteBuf attachedData)
@@ -71,6 +99,11 @@ public class ShipEntity extends Entity
 		return false;
 	}
 
+	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
+	{
+		return 0.0F;
+	}
+
 	@Nullable
 	@Override
 	public Box getHardCollisionBox(Entity collidingEntity)
@@ -101,6 +134,7 @@ public class ShipEntity extends Entity
 	protected void initDataTracker()
 	{
 		getDataTracker().startTracking(ROTATION, Quaternion.IDENTITY);
+		getDataTracker().startTracking(THROTTLE, 0f);
 	}
 
 	@Override
@@ -120,9 +154,33 @@ public class ShipEntity extends Entity
 	{
 		super.tick();
 
+		viewPrevRotation = viewRotation.copy();
+		viewRotation = getRotation().copy();
+
+		if (world.isClient && camera == null)
+		{
+			camera = GalaxiesMain.EntityTypeChaseCam.create(world);
+			assert camera != null;
+
+			camera.setParent(this);
+			ClientUtil.spawnEntity(world, camera);
+		}
+
+		//		Entity pilot = getPrimaryPassenger();
+		//		if (!world.isClient && pilot != null)
+		//		{
+		//			if (pilot instanceof PlayerEntity)
+		//				setThrottle(((PlayerEntity)pilot).getMainHandStack().getCount() > 0 ? 5 : 0);
+		//		}
+		//
+		//		float throttle = getThrottle();
+		//		Vec3d forward = MathUtil.rotate(MathUtil.NEGZ, getRotation());
+		//
+		//		move(MovementType.SELF, forward.multiply(throttle));
+
 		Quaternion rotation = MathUtil.copy(getRotation());
 		setRotation(rotation);
-		updateEulerRotation(rotation);
+		EntityUtil.updateEulerRotation(this, rotation);
 	}
 
 	public boolean interact(PlayerEntity player, Hand hand)
@@ -152,14 +210,8 @@ public class ShipEntity extends Entity
 
 	protected void copyEntityData(Entity entity)
 	{
-		//		entity.setYaw(this.pitch);
-		//		entity.setHeadYaw(this.pitch);
-		//		entity.setYaw(this.pitch);
-		//		float f = MathHelper.wrapDegrees(entity.yaw - this.pitch);
-		//		float g = MathHelper.clamp(f, -105.0F, 105.0F);
-		//		entity.prevYaw += g - f;
-		//		entity.yaw += g - f;
-		//		entity.setHeadYaw(this.pitch);
+		entity.yaw = this.yaw;
+		entity.pitch = this.pitch;
 	}
 
 	@Nullable
@@ -183,37 +235,33 @@ public class ShipEntity extends Entity
 	//		return MathUtil.lerp(start, end, t);
 	//	}
 
+	public float getThrottle()
+	{
+		return getDataTracker().get(THROTTLE);
+	}
+
+	public void setThrottle(float t)
+	{
+		getDataTracker().set(THROTTLE, t);
+	}
+
 	public Quaternion getRotation()
 	{
 		return getDataTracker().get(ROTATION);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public Quaternion getViewRotation(float t)
+	{
+		Quaternion start = viewPrevRotation;
+		Quaternion end = viewRotation;
+		return MathUtil.slerp(start, end, t);
 	}
 
 	public void setRotation(Quaternion q)
 	{
 		q.normalize();
 		getDataTracker().set(ROTATION, q);
-	}
-
-	private void updateEulerRotation(Quaternion rotation)
-	{
-		EulerAngle eulerAngle = MathUtil.toEulerAngles(rotation);
-		yaw = eulerAngle.getYaw();
-		pitch = eulerAngle.getPitch();
-
-		while (this.pitch - this.prevPitch >= 180.0F)
-		{
-			this.prevPitch += 360.0F;
-		}
-
-		while (this.yaw - this.prevYaw < -180.0F)
-		{
-			this.prevYaw -= 360.0F;
-		}
-
-		while (this.yaw - this.prevYaw >= 180.0F)
-		{
-			this.prevYaw += 360.0F;
-		}
 	}
 
 	public static ShipEntity create(World world)
