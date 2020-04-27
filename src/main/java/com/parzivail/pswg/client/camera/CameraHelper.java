@@ -1,14 +1,12 @@
 package com.parzivail.pswg.client.camera;
 
 import com.parzivail.pswg.entity.ShipEntity;
-import com.parzivail.pswg.util.Rotation;
-import com.parzivail.pswg.util.VertUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.math.EulerAngle;
+import net.minecraft.util.math.Quaternion;
 
 public class CameraHelper
 {
@@ -23,13 +21,10 @@ public class CameraHelper
 		{
 			ShipEntity ship = (ShipEntity)cameraEntity;
 
-			Rotation r = ship.getRotation(tickDelta);
-			EulerAngle angle = r.toEulerAngles();
-
-			//			matrix.multiply(Vector3f.POSITIVE_Z.getDegreesQuaternion(-angle.getRoll()));
-
-			MatrixStack.Entry e = matrix.peek();
-			e.getModel().multiply(VertUtil.toClientMat(r.getMatrix()));
+			Quaternion r = ship.getRotation().copy();
+			r.normalize();
+			r.conjugate();
+			matrix.multiply(r);
 		}
 		else
 		{

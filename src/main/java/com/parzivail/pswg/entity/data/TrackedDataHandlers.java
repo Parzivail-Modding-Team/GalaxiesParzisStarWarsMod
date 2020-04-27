@@ -1,37 +1,43 @@
 package com.parzivail.pswg.entity.data;
 
-import com.parzivail.pswg.util.Rotation;
+import com.parzivail.pswg.util.MathUtil;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.util.PacketByteBuf;
+import net.minecraft.util.math.Quaternion;
 
 public class TrackedDataHandlers
 {
-	public static final TrackedDataHandler<Rotation> ROTATION = new TrackedDataHandler<Rotation>()
+	public static final TrackedDataHandler<Quaternion> QUATERNION = new TrackedDataHandler<Quaternion>()
 	{
 		@Override
-		public void write(PacketByteBuf data, Rotation rotation)
+		public void write(PacketByteBuf data, Quaternion q)
 		{
-			rotation.getMatrix().store(data);
+			data.writeFloat(q.getA());
+			data.writeFloat(q.getB());
+			data.writeFloat(q.getC());
+			data.writeFloat(q.getD());
 		}
 
 		@Override
-		public Rotation read(PacketByteBuf buffer)
+		public Quaternion read(PacketByteBuf buffer)
 		{
-			Rotation rotation = new Rotation();
-			rotation.getMatrix().load(buffer);
-			return rotation;
+			float a = buffer.readFloat();
+			float b = buffer.readFloat();
+			float c = buffer.readFloat();
+			float d = buffer.readFloat();
+			return new Quaternion(b, c, d, a);
 		}
 
 		@Override
-		public Rotation copy(Rotation rotation)
+		public Quaternion copy(Quaternion q)
 		{
-			return rotation.clone();
+			return MathUtil.copy(q);
 		}
 	};
 
 	public static void register()
 	{
-		TrackedDataHandlerRegistry.register(ROTATION);
+		TrackedDataHandlerRegistry.register(QUATERNION);
 	}
 }

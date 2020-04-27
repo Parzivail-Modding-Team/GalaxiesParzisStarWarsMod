@@ -4,16 +4,13 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DEntityModel;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.entity.ShipEntity;
-import com.parzivail.pswg.util.Rotation;
-import com.parzivail.pswg.util.VertUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
-import net.minecraft.util.math.EulerAngle;
+import net.minecraft.util.math.Quaternion;
 
 public class ShipRenderer extends EntityRenderer<ShipEntity>
 {
@@ -26,46 +23,19 @@ public class ShipRenderer extends EntityRenderer<ShipEntity>
 	}
 
 	@Override
-	public void render(ShipEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light)
+	public void render(ShipEntity entity, float yaw, float tickDelta, MatrixStack matrix, VertexConsumerProvider vertexConsumers, int light)
 	{
-		super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
-		//		this.model.setAngles(entity, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F);
-		//		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(this.model.getLayer(this.getTexture(entity)));
-		matrices.push();
-		matrices.translate(0, entity.getEyeHeight(null), 0);
+		super.render(entity, yaw, tickDelta, matrix, vertexConsumers, light);
+		matrix.push();
 
-		Rotation r = entity.getRotation(tickDelta);
-		EulerAngle angle = r.toEulerAngles();
+		matrix.translate(0, entity.getEyeHeight(null), 0);
 
-		float shipYaw = angle.getYaw();
-		float shipPitch = angle.getPitch();
-		float offset = 180;
+		Quaternion r = entity.getRotation();
+		matrix.multiply(r);
 
-		MinecraftClient mc = MinecraftClient.getInstance();
+		model.get().render(getTexture(entity), tickDelta, matrix, vertexConsumers, light);
 
-		//		if (mc.cameraEntity == entity)
-		//		{
-		//			Camera c = MinecraftClient.getInstance().gameRenderer.getCamera();
-		//
-		//			shipYaw = c.getYaw();
-		//			shipPitch = c.getPitch();
-		//
-		//			if (mc.options.perspective == 2)
-		//				offset = 0;
-		//		}
-
-		//		matrices.multiply(new Quaternion(0, -shipYaw, 0, true));
-		//		matrices.multiply(new Quaternion(shipPitch, 0, 0, true));
-		//		matrices.multiply(new Quaternion(0, offset, 0, true));
-		//		matrices.multiply(new Quaternion(0, 0, angle.getRoll(), true));
-
-		MatrixStack.Entry e = matrices.peek();
-		e.getModel().multiply(VertUtil.toClientMat(r.getMatrix()));
-
-		//		matrices.multiply(new Quaternion(0, 180, 0, true));
-
-		model.get().render(getTexture(entity), tickDelta, matrices, vertexConsumers, light);
-		matrices.pop();
+		matrix.pop();
 	}
 
 	@Override

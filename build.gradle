@@ -19,7 +19,6 @@ version = project.mod_version
 group = project.maven_group
 
 minecraft {
-	accessWidener = file("src/main/resources/pswg.accesswidener")
 }
 
 dependencies {
