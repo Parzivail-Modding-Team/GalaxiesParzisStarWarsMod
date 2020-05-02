@@ -1,7 +1,6 @@
 package com.parzivail.pswg.client.pm3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.parzivail.brotli.BrotliInputStream;
 import com.parzivail.util.binary.BinaryUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
@@ -9,6 +8,7 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import org.brotli.dec.BrotliInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -178,7 +178,7 @@ public class ShipEntity extends Entity
 		//
 		//		move(MovementType.SELF, forward.multiply(throttle));
 
-		Quaternion rotation = MathUtil.copy(getRotation());
+		Quaternion rotation = new Quaternion(getRotation());
 		setRotation(rotation);
 		EntityUtil.updateEulerRotation(this, rotation);
 	}
@@ -275,8 +275,19 @@ public class ShipEntity extends Entity
 	{
 		Quaternion rotation = getRotation();
 
-		rotation.hamiltonProduct(new Quaternion(new Vector3f(0, 0, 1), -(float)mouseDx, true));
-		rotation.hamiltonProduct(new Quaternion(new Vector3f(1, 0, 0), -(float)mouseDy, true));
+		boolean pitchRoll = false;
+
+		if (pitchRoll)
+			rotation.hamiltonProduct(new Quaternion(new Vector3f(0, 0, 1), -(float)mouseDx * 0.15f, true));
+		else
+		{
+			Vec3d v = MathUtil.project(MathUtil.POSY, rotation);
+			rotation.hamiltonProduct(new Quaternion(new Vector3f(v), (float)(Math.asin(v.y) * -mouseDx * 0.15f), true));
+
+			// TODO: roll back toward zero when this mode is switched to and the ship has a nonzero roll
+		}
+
+		rotation.hamiltonProduct(new Quaternion(new Vector3f(1, 0, 0), -(float)mouseDy * 0.15f, true));
 
 		setRotation(rotation);
 

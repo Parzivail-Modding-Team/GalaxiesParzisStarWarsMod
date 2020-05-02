@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.2.7-SNAPSHOT'
+	id 'fabric-loom' version '0.4.3'
 	id 'maven-publish'
 }
 
@@ -29,6 +29,9 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	modCompile "org.brotli:dec:0.1.2"
+	include "org.brotli:dec:0.1.2"
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.

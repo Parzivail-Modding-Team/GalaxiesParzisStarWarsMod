@@ -46,7 +46,7 @@ public class MathUtil
 
 	public static Quaternion getRotationTowards(Vec3d from, Vec3d to)
 	{
-		Quaternion q = copy(Quaternion.IDENTITY);
+		Quaternion q = new Quaternion(Quaternion.IDENTITY);
 		Vec3d cross = from.crossProduct(to);
 		float w = (float)(Math.sqrt(from.lengthSquared() * to.lengthSquared()) + from.dotProduct(to));
 		q.set(w, (float)cross.x, (float)cross.y, (float)cross.z);
@@ -90,26 +90,24 @@ public class MathUtil
 
 	public static Quaternion invertCopy(Quaternion q)
 	{
-		Quaternion q1 = copy(q);
+		Quaternion q1 = new Quaternion(q);
 		invert(q1);
 		return q1;
 	}
 
-	public static Vec3d project(Vec3d self, Vec3d ref)
+	/**
+	 * Finds a global vector in local terms
+	 *
+	 * @param v
+	 * @param q
+	 *
+	 * @return
+	 */
+	public static Vec3d project(Vec3d v, Quaternion q)
 	{
-		Vec3d v = ref.normalize();
-		double len = self.dotProduct(v);
-		return v.multiply(len);
-	}
-
-	public static Vec3d reject(Vec3d self, Vec3d ref)
-	{
-		return self.subtract(project(self, ref));
-	}
-
-	public static Quaternion copy(Quaternion self)
-	{
-		return new Quaternion(self);
+		Quaternion c = new Quaternion(q);
+		c.conjugate();
+		return MathUtil.rotate(v, c);
 	}
 
 	public static void scale(Quaternion self, float factor)
@@ -190,5 +188,10 @@ public class MathUtil
 		Quaternion result = new Quaternion(b, c, d, a);
 		result.normalize();
 		return result;
+	}
+
+	public static Vec3d lerp(float tickDelta, Vec3d a, Vec3d b)
+	{
+		return new Vec3d(MathHelper.lerp(tickDelta, a.x, b.x), MathHelper.lerp(tickDelta, a.y, b.y), MathHelper.lerp(tickDelta, a.z, b.z));
 	}
 }

@@ -1,6 +1,5 @@
-package com.parzivail.pswg.util;
+package com.parzivail.util.math;
 
-import com.parzivail.util.math.Matrix4fExt;
 import net.minecraft.client.util.math.Matrix4f;
 
 public class MatrixExtUtil
@@ -14,12 +13,12 @@ public class MatrixExtUtil
 	@SuppressWarnings("ConstantConditions")
 	public static Matrix4fExt from(Matrix4f matrix)
 	{
-		return (Matrix4fExt)((Object)matrix);
+		return (Matrix4fExt)(Object)matrix;
 	}
 
 	@SuppressWarnings("ConstantConditions")
 	public static Matrix4f to(Matrix4fExt matrix)
 	{
-		return (Matrix4f)((Object)matrix);
+		return (Matrix4f)(Object)matrix;
 	}
 }

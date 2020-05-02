@@ -1,6 +1,9 @@
 package com.parzivail.pswg.client.input;
 
+import com.parzivail.pswg.entity.ChaseCamEntity;
 import com.parzivail.pswg.entity.ShipEntity;
+import com.parzivail.util.client.GameRendererExt;
+import com.parzivail.util.client.GameRendererExtUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -16,15 +19,27 @@ public class ShipInputHandler
 
 		assert player != null;
 
+		GameRendererExt gr = GameRendererExtUtil.from(mc.gameRenderer);
 		ShipEntity ship = ShipEntity.getShip(player);
+
 		if (ship != null)
 		{
-			mc.cameraEntity = ship.camera;
+			if (mc.options.perspective != 0)
+				mc.cameraEntity = ship.camera;
+			else
+				mc.cameraEntity = ship;
+
+			gr.setHandVisible(false);
+
 			ship.acceptInput(cursorDeltaX, cursorDeltaY);
 			return true;
 		}
 
-		mc.cameraEntity = player;
+		if (mc.cameraEntity instanceof ChaseCamEntity || mc.cameraEntity instanceof ShipEntity)
+		{
+			mc.cameraEntity = player;
+			gr.setHandVisible(true);
+		}
 
 		return false;
 	}

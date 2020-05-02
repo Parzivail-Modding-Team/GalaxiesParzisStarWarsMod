@@ -1,6 +1,5 @@
 package com.parzivail.pswg.entity.data;
 
-import com.parzivail.pswg.util.MathUtil;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.util.PacketByteBuf;
@@ -32,7 +31,7 @@ public class TrackedDataHandlers
 		@Override
 		public Quaternion copy(Quaternion q)
 		{
-			return MathUtil.copy(q);
+			return new Quaternion(q);
 		}
 	};
 
