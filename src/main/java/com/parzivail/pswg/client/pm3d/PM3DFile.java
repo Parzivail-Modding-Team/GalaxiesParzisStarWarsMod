@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.pm3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
+import com.parzivail.pswg.Client;
 import com.parzivail.util.binary.BinaryUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
@@ -50,7 +50,7 @@ public class PM3DFile
 
 	private static PM3DFile load(Identifier modelFile) throws IOException
 	{
-		InputStream reader = MinecraftClient.getInstance().getResourceManager().getResource(modelFile).getInputStream();
+		InputStream reader = Client.minecraft.getResourceManager().getResource(modelFile).getInputStream();
 		BrotliInputStream bis = new BrotliInputStream(reader);
 		LittleEndianDataInputStream objStream = new LittleEndianDataInputStream(bis);
 

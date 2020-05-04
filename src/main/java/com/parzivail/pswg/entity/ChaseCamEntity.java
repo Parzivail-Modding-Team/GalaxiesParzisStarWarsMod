@@ -1,8 +1,8 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.util.EntityUtil;
 import com.parzivail.pswg.util.MathUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -96,8 +96,7 @@ public class ChaseCamEntity extends Entity
 
 	private float getCamDistTarget()
 	{
-		MinecraftClient mc = MinecraftClient.getInstance();
-		int thirdPerson = mc.options.perspective;
+		int thirdPerson = Client.minecraft.options.perspective;
 		int scalar = 1;
 		if (thirdPerson == 0)
 			return 0;

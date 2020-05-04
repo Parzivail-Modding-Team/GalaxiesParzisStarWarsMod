@@ -1,6 +1,6 @@
 package com.parzivail.pswg.client.render;
 
-import net.minecraft.client.MinecraftClient;
+import com.parzivail.pswg.Client;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -29,8 +29,7 @@ public class EmptyRenderer extends EntityRenderer<Entity>
 	{
 		super.render(entity, yaw, tickDelta, matrix, vertexConsumers, light);
 
-		MinecraftClient mc = MinecraftClient.getInstance();
-		if (!mc.options.debugEnabled)
+		if (!Client.minecraft.options.debugEnabled)
 			return;
 
 		Box box = entity.getBoundingBox();
@@ -47,7 +46,7 @@ public class EmptyRenderer extends EntityRenderer<Entity>
 
 		Matrix4f textMatrix = matrix.peek().getModel();
 
-		float g = MinecraftClient.getInstance().options.getTextBackgroundOpacity(0.25F);
+		float g = Client.minecraft.options.getTextBackgroundOpacity(0.25F);
 		int k = (int)(g * 255.0F) << 24;
 		TextRenderer textRenderer = this.getFontRenderer();
 		float h = (float)(-textRenderer.getStringWidth(n.asString()) / 2);

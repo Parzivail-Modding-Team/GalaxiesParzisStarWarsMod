@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.GalaxiesMain;
+import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.entity.ShipEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,7 +28,7 @@ public class ClientPlayNetworkHandlerMixin
 	private void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo ci, double x, double y, double z, EntityType<?> type)
 	{
 		Entity entity = null;
-		if (type == GalaxiesMain.EntityTypeShip)
+		if (type == SwgEntities.Ship.T65bXwing)
 		{
 			entity = ShipEntity.create(this.world);
 		}

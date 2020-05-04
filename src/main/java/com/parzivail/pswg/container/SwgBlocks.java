@@ -1,6 +1,6 @@
 package com.parzivail.pswg.container;
 
-import com.parzivail.pswg.GalaxiesMain;
+import com.parzivail.pswg.Galaxies;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -24,6 +24,6 @@ public class SwgBlocks
 	public static void register(Block block, Identifier identifier)
 	{
 		Registry.register(Registry.BLOCK, identifier, block);
-		Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(GalaxiesMain.Tab)));
+		Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(Galaxies.Tab)));
 	}
 }

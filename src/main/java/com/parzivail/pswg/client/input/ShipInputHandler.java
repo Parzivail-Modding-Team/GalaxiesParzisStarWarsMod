@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.input;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ChaseCamEntity;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.util.client.GameRendererExt;
@@ -14,7 +15,7 @@ public class ShipInputHandler
 	@Environment(EnvType.CLIENT)
 	public static boolean handle(double cursorDeltaX, double cursorDeltaY)
 	{
-		MinecraftClient mc = MinecraftClient.getInstance();
+		MinecraftClient mc = Client.minecraft;
 		ClientPlayerEntity player = mc.player;
 
 		assert player != null;
@@ -31,7 +32,7 @@ public class ShipInputHandler
 
 			gr.setHandVisible(false);
 
-			ship.acceptInput(cursorDeltaX, cursorDeltaY);
+			ship.acceptMouseInput(cursorDeltaX, cursorDeltaY);
 			return true;
 		}
 

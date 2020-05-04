@@ -1,6 +1,8 @@
 package com.parzivail.pswg.entity;
 
-import com.parzivail.pswg.GalaxiesMain;
+import com.parzivail.pswg.client.input.ShipControls;
+import com.parzivail.pswg.container.SwgEntities;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.util.ClientUtil;
 import com.parzivail.pswg.util.EntityUtil;
@@ -30,6 +32,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.EnumSet;
 import java.util.List;
 
 public class ShipEntity extends Entity
@@ -74,7 +77,7 @@ public class ShipEntity extends Entity
 			ShipEntity ship = getShip(player);
 
 			if (ship != null)
-				ship.acceptInput(dx, dy);
+				ship.acceptMouseInput(dx, dy);
 		});
 	}
 
@@ -159,7 +162,7 @@ public class ShipEntity extends Entity
 
 		if (world.isClient && camera == null)
 		{
-			camera = GalaxiesMain.EntityTypeChaseCam.create(world);
+			camera = SwgEntities.Ship.ChaseCam.create(world);
 			assert camera != null;
 
 			camera.setParent(this);
@@ -266,12 +269,17 @@ public class ShipEntity extends Entity
 
 	public static ShipEntity create(World world)
 	{
-		ShipEntity ship = new ShipEntity(GalaxiesMain.EntityTypeShip, world);
+		ShipEntity ship = new ShipEntity(SwgEntities.Ship.T65bXwing, world);
 		//		ship.setSettings(settings);
 		return ship;
 	}
 
-	public void acceptInput(double mouseDx, double mouseDy)
+	public void acceptControlInput(EnumSet<ShipControls> controls)
+	{
+
+	}
+
+	public void acceptMouseInput(double mouseDx, double mouseDy)
 	{
 		Quaternion rotation = getRotation();
 
@@ -296,7 +304,7 @@ public class ShipEntity extends Entity
 			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeFloat((float)mouseDx);
 			passedData.writeFloat((float)mouseDy);
-			ClientSidePacketRegistry.INSTANCE.sendToServer(GalaxiesMain.PacketShipRotation, passedData);
+			ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketShipRotation, passedData);
 		}
 	}
 }
