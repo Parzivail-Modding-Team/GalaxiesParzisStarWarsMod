@@ -9,7 +9,8 @@ public class KeyHandler
 {
 	public static void handle(MinecraftClient mc)
 	{
-		assert mc.player != null;
+		if (mc.player == null)
+			return;
 
 		ShipEntity ship = ShipEntity.getShip(mc.player);
 

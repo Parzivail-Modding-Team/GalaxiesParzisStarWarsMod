@@ -13,10 +13,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
-import net.minecraft.entity.EntityType;
+import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -39,6 +36,7 @@ public class ShipEntity extends Entity
 {
 	private static final TrackedData<Quaternion> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
 	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);
+	private static final TrackedData<Short> CONTROLS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
 
 	@Environment(EnvType.CLIENT)
 	public ChaseCamEntity camera;
@@ -78,6 +76,19 @@ public class ShipEntity extends Entity
 
 			if (ship != null)
 				ship.acceptMouseInput(dx, dy);
+		});
+	}
+
+	public static void handleControlPacket(PacketContext packetContext, PacketByteBuf attachedData)
+	{
+		short controls = attachedData.readShort();
+
+		packetContext.getTaskQueue().execute(() -> {
+			PlayerEntity player = packetContext.getPlayer();
+			ShipEntity ship = getShip(player);
+
+			if (ship != null)
+				ship.acceptControlInput(ShipControls.unpack(controls));
 		});
 	}
 
@@ -138,6 +149,7 @@ public class ShipEntity extends Entity
 	{
 		getDataTracker().startTracking(ROTATION, Quaternion.IDENTITY);
 		getDataTracker().startTracking(THROTTLE, 0f);
+		getDataTracker().startTracking(CONTROLS, (short)0);
 	}
 
 	@Override
@@ -169,17 +181,17 @@ public class ShipEntity extends Entity
 			ClientUtil.spawnEntity(world, camera);
 		}
 
-		//		Entity pilot = getPrimaryPassenger();
-		//		if (!world.isClient && pilot != null)
-		//		{
-		//			if (pilot instanceof PlayerEntity)
-		//				setThrottle(((PlayerEntity)pilot).getMainHandStack().getCount() > 0 ? 5 : 0);
-		//		}
-		//
-		//		float throttle = getThrottle();
-		//		Vec3d forward = MathUtil.rotate(MathUtil.NEGZ, getRotation());
-		//
-		//		move(MovementType.SELF, forward.multiply(throttle));
+		Entity pilot = getPrimaryPassenger();
+		if (!world.isClient && pilot != null)
+		{
+			if (pilot instanceof PlayerEntity)
+				setThrottle(getControls().contains(ShipControls.THROTTLE_UP) ? 3 : 0);
+		}
+
+		float throttle = getThrottle();
+		Vec3d forward = MathUtil.rotate(MathUtil.NEGZ, getRotation());
+
+		move(MovementType.SELF, forward.multiply(throttle));
 
 		Quaternion rotation = new Quaternion(getRotation());
 		setRotation(rotation);
@@ -238,6 +250,16 @@ public class ShipEntity extends Entity
 	//		return MathUtil.lerp(start, end, t);
 	//	}
 
+	public EnumSet<ShipControls> getControls()
+	{
+		return ShipControls.unpack(getDataTracker().get(CONTROLS));
+	}
+
+	public void setControls(EnumSet<ShipControls> controls)
+	{
+		getDataTracker().set(CONTROLS, ShipControls.pack(controls));
+	}
+
 	public float getThrottle()
 	{
 		return getDataTracker().get(THROTTLE);
@@ -276,7 +298,17 @@ public class ShipEntity extends Entity
 
 	public void acceptControlInput(EnumSet<ShipControls> controls)
 	{
+		if (ShipControls.pack(controls) == getDataTracker().get(CONTROLS))
+			return;
 
+		setControls(controls);
+
+		if (this.world.isClient)
+		{
+			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+			passedData.writeShort(ShipControls.pack(controls));
+			ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketShipControls, passedData);
+		}
 	}
 
 	public void acceptMouseInput(double mouseDx, double mouseDy)

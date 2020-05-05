@@ -35,8 +35,30 @@ public class TrackedDataHandlers
 		}
 	};
 
+	public static final TrackedDataHandler<Short> SHORT = new TrackedDataHandler<Short>()
+	{
+		@Override
+		public void write(PacketByteBuf data, Short x)
+		{
+			data.writeShort(x);
+		}
+
+		@Override
+		public Short read(PacketByteBuf buffer)
+		{
+			return buffer.readShort();
+		}
+
+		@Override
+		public Short copy(Short x)
+		{
+			return x;
+		}
+	};
+
 	public static void register()
 	{
 		TrackedDataHandlerRegistry.register(QUATERNION);
+		TrackedDataHandlerRegistry.register(SHORT);
 	}
 }

@@ -16,10 +16,10 @@
   "environment": "*",
   "entrypoints": {
 	"main": [
-	  "com.parzivail.pswg.GalaxiesMain"
+	  "com.parzivail.pswg.Galaxies"
 	],
 	"client": [
-	  "com.parzivail.pswg.GalaxiesClient"
+	  "com.parzivail.pswg.Client"
 	]
   },
   "mixins": [
