@@ -27,7 +27,7 @@ def getVersionName = { ->
 }
 
 archivesBaseName = project.archives_base_name
-version = project.mod_version + '-' + getVersionName()
+version = getVersionName()
 group = project.maven_group
 
 minecraft {
