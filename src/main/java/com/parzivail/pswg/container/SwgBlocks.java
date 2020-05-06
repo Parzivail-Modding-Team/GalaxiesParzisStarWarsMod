@@ -3,6 +3,7 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Galaxies;
 import net.fabricmc.fabric.api.block.FabricBlockSettings;
 import net.minecraft.block.Block;
+import net.minecraft.block.FallingBlock;
 import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -13,7 +14,7 @@ public class SwgBlocks
 {
 	public static class Sand
 	{
-		public static final Block Tatooine = new Block(FabricBlockSettings.of(Material.SAND).nonOpaque().build());
+		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.SAND).nonOpaque().build());
 	}
 
 	public static class Crate
