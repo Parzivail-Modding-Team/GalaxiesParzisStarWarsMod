@@ -30,7 +30,9 @@ public class TatooineDimension extends Dimension
 	@Override
 	public ChunkGenerator<?> createChunkGenerator()
 	{
-		FixedBiomeSourceConfig biomeConfig = BiomeSourceType.FIXED.getConfig(world.getLevelProperties()).setBiome(SwgDimensions.Tatooine.BIOME);
+		FixedBiomeSourceConfig biomeConfig = BiomeSourceType.FIXED
+				.getConfig(world.getLevelProperties())
+				.setBiome(SwgDimensions.Tatooine.BIOME);
 		return new ChunkGeneratorTatooine(world, BiomeSourceType.FIXED.applyConfig(biomeConfig), new MultiCompositeTerrain(0, 800, new TerrainTatooineCanyons()));
 	}
 

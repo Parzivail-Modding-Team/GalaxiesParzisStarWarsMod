@@ -13,8 +13,15 @@ public class SwgEntities
 {
 	public static class Ship
 	{
-		public static final EntityType<ChaseCamEntity> ChaseCam = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("chase_cam"), FabricEntityTypeBuilder.create(EntityCategory.MISC, ChaseCamEntity::new).dimensions(EntityDimensions.fixed(0.1f, 0.1f)).build());
+		public static final EntityType<ChaseCamEntity> ChaseCam = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("chase_cam"), FabricEntityTypeBuilder
+				.create(EntityCategory.MISC, ChaseCamEntity::new)
+				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
+				.build());
 
-		public static final EntityType<ShipEntity> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("ship"), FabricEntityTypeBuilder.create(EntityCategory.MISC, ShipEntity::new).dimensions(EntityDimensions.fixed(1, 1)).trackable(128, 10, true).build());
+		public static final EntityType<ShipEntity> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("ship"), FabricEntityTypeBuilder
+				.create(EntityCategory.MISC, ShipEntity::new)
+				.dimensions(EntityDimensions.fixed(1, 1))
+				.trackable(128, 10, true)
+				.build());
 	}
 }

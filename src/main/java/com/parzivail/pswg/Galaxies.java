@@ -16,12 +16,9 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.command.CommandManager;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Objects;
-
-import static net.minecraft.command.arguments.DimensionArgumentType.dimension;
 
 public class Galaxies implements ModInitializer
 {
@@ -41,13 +38,13 @@ public class Galaxies implements ModInitializer
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) ->
 				dispatcher.register(CommandManager.literal("cdim")
-						.requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
-						.then(CommandManager.argument("dimension", dimension())
-								.executes((context -> {
-									DimensionType dimensionType = DimensionArgumentType.getDimensionArgument(context, "dimension");
-									FabricDimensions.teleport(Objects.requireNonNull(context.getSource().getEntity()), dimensionType);
-									return 1;
-								}))))));
+				                                  .requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
+				                                  .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+				                                                      .executes((context -> {
+					                                                      DimensionType dimensionType = DimensionArgumentType.getDimensionArgument(context, "dimension");
+					                                                      FabricDimensions.teleport(Objects.requireNonNull(context.getSource().getEntity()), dimensionType);
+					                                                      return 1;
+				                                                      }))))));
 
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipControls, ShipEntity::handleControlPacket);

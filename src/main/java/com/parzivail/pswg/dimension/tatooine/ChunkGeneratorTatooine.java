@@ -36,7 +36,7 @@ public class ChunkGeneratorTatooine extends ChunkGenerator<MultiCompositeTerrain
 				int o = k + m;
 				int p = l + n;
 				int q = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, m, n);
-				int e = Math.max(1, (int) (q * 0.15));
+				int e = Math.max(1, (int)(q * 0.15));
 				for (int y = 0; y < e; y++)
 				{
 					BlockState blockState = chunk.getBlockState(blockPos.set(o, q - y, p));
