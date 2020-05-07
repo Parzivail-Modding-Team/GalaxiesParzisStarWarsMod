@@ -24,6 +24,7 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.Hand;
 import net.minecraft.util.PacketByteBuf;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -41,8 +42,8 @@ public class ShipEntity extends Entity
 	@Environment(EnvType.CLIENT)
 	public ChaseCamEntity camera;
 
-	private Quaternion viewRotation = Quaternion.IDENTITY;
-	private Quaternion viewPrevRotation = Quaternion.IDENTITY;
+	private Quaternion viewRotation = Quaternion.IDENTITY.copy();
+	private Quaternion viewPrevRotation = Quaternion.IDENTITY.copy();
 
 	public ShipEntity(EntityType<?> type, World world)
 	{
@@ -67,15 +68,17 @@ public class ShipEntity extends Entity
 
 	public static void handleRotationPacket(PacketContext packetContext, PacketByteBuf attachedData)
 	{
-		float dx = attachedData.readFloat();
-		float dy = attachedData.readFloat();
+		float qa = attachedData.readFloat();
+		float qb = attachedData.readFloat();
+		float qc = attachedData.readFloat();
+		float qd = attachedData.readFloat();
 
 		packetContext.getTaskQueue().execute(() -> {
 			PlayerEntity player = packetContext.getPlayer();
 			ShipEntity ship = getShip(player);
 
 			if (ship != null)
-				ship.acceptMouseInput(dx, dy);
+				ship.setRotation(new Quaternion(qb, qc, qd, qa));
 		});
 	}
 
@@ -115,7 +118,7 @@ public class ShipEntity extends Entity
 
 	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
 	{
-		return 0.0F;
+		return getHeight() / 2f;
 	}
 
 	@Nullable
@@ -147,7 +150,7 @@ public class ShipEntity extends Entity
 	@Override
 	protected void initDataTracker()
 	{
-		getDataTracker().startTracking(ROTATION, Quaternion.IDENTITY);
+		getDataTracker().startTracking(ROTATION, Quaternion.IDENTITY.copy());
 		getDataTracker().startTracking(THROTTLE, 0f);
 		getDataTracker().startTracking(CONTROLS, (short)0);
 	}
@@ -155,13 +158,19 @@ public class ShipEntity extends Entity
 	@Override
 	protected void readCustomDataFromTag(CompoundTag tag)
 	{
-
+		if (tag.contains("rotation"))
+			setRotation(MathUtil.getQuaternion(tag.getCompound("rotation")));
+		setThrottle(tag.getFloat("throttle"));
 	}
 
 	@Override
 	protected void writeCustomDataToTag(CompoundTag tag)
 	{
+		CompoundTag qTag = new CompoundTag();
+		MathUtil.putQuaternion(qTag, getRotation());
+		tag.put("rotation", qTag);
 
+		tag.putFloat("throttle", getThrottle());
 	}
 
 	@Override
@@ -169,33 +178,40 @@ public class ShipEntity extends Entity
 	{
 		super.tick();
 
+		if (world.isClient)
+		{
+			if (camera == null)
+			{
+				camera = SwgEntities.Ship.ChaseCam.create(world);
+				assert camera != null;
+
+				camera.setParent(this);
+				ClientUtil.spawnEntity(world, camera);
+			}
+		}
+
 		viewPrevRotation = viewRotation.copy();
 		viewRotation = getRotation().copy();
 
-		if (world.isClient && camera == null)
-		{
-			camera = SwgEntities.Ship.ChaseCam.create(world);
-			assert camera != null;
-
-			camera.setParent(this);
-			ClientUtil.spawnEntity(world, camera);
-		}
-
 		Entity pilot = getPrimaryPassenger();
-		if (!world.isClient && pilot != null)
+		float throttle = getThrottle();
+
+		if (pilot instanceof PlayerEntity)
 		{
-			if (pilot instanceof PlayerEntity)
-				setThrottle(getControls().contains(ShipControls.THROTTLE_UP) ? 3 : 0);
+			if (getControls().contains(ShipControls.THROTTLE_UP))
+				throttle += 0.3f;
+			if (getControls().contains(ShipControls.THROTTLE_DOWN))
+				throttle -= 0.3f;
+
+			throttle = MathHelper.clamp(throttle, 0, 3);
+
+			setThrottle(throttle);
 		}
 
-		float throttle = getThrottle();
 		Vec3d forward = MathUtil.rotate(MathUtil.NEGZ, getRotation());
-
 		move(MovementType.SELF, forward.multiply(throttle));
 
-		Quaternion rotation = new Quaternion(getRotation());
-		setRotation(rotation);
-		EntityUtil.updateEulerRotation(this, rotation);
+		EntityUtil.updateEulerRotation(this, getRotation());
 	}
 
 	public boolean interact(PlayerEntity player, Hand hand)
@@ -215,7 +231,7 @@ public class ShipEntity extends Entity
 	{
 		if (this.hasPassenger(passenger))
 		{
-			Vec3d vec3d = new Vec3d(0, 0, 0);
+			Vec3d vec3d = new Vec3d(0, 0, 3 * this.getPassengerList().indexOf(passenger));
 			vec3d = MathUtil.rotate(vec3d, getRotation());
 
 			passenger.updatePosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
@@ -313,7 +329,7 @@ public class ShipEntity extends Entity
 
 	public void acceptMouseInput(double mouseDx, double mouseDy)
 	{
-		Quaternion rotation = getRotation();
+		Quaternion rotation = getRotation().copy();
 
 		boolean pitchRoll = false;
 
@@ -331,12 +347,11 @@ public class ShipEntity extends Entity
 
 		setRotation(rotation);
 
-		if (this.world.isClient)
-		{
-			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-			passedData.writeFloat((float)mouseDx);
-			passedData.writeFloat((float)mouseDy);
-			ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketShipRotation, passedData);
-		}
+		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+		passedData.writeFloat(rotation.getA());
+		passedData.writeFloat(rotation.getB());
+		passedData.writeFloat(rotation.getC());
+		passedData.writeFloat(rotation.getD());
+		ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketShipRotation, passedData);
 	}
 }

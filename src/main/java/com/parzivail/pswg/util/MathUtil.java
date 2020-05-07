@@ -3,6 +3,7 @@ package com.parzivail.pswg.util;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
@@ -46,7 +47,7 @@ public class MathUtil
 
 	public static Quaternion getRotationTowards(Vec3d from, Vec3d to)
 	{
-		Quaternion q = new Quaternion(Quaternion.IDENTITY);
+		Quaternion q = Quaternion.IDENTITY.copy();
 		Vec3d cross = from.crossProduct(to);
 		float w = (float)(Math.sqrt(from.lengthSquared() * to.lengthSquared()) + from.dotProduct(to));
 		q.set(w, (float)cross.x, (float)cross.y, (float)cross.z);
@@ -57,6 +58,19 @@ public class MathUtil
 	public static void set(Quaternion self, Quaternion other)
 	{
 		self.set(other.getA(), other.getB(), other.getC(), other.getD());
+	}
+
+	public static void putQuaternion(CompoundTag tag, Quaternion q)
+	{
+		tag.putFloat("a", q.getA());
+		tag.putFloat("b", q.getB());
+		tag.putFloat("c", q.getC());
+		tag.putFloat("d", q.getD());
+	}
+
+	public static Quaternion getQuaternion(CompoundTag tag)
+	{
+		return new Quaternion(tag.getFloat("b"), tag.getFloat("c"), tag.getFloat("d"), tag.getFloat("a"));
 	}
 
 	public static void rotateTowards(Quaternion self, Vec3d orientation, float speed, Matrix4f mat, VertexConsumer debugConsumer)
