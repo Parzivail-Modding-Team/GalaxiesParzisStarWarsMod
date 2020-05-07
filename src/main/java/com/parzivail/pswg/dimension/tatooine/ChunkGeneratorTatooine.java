@@ -1,7 +1,9 @@
 package com.parzivail.pswg.dimension.tatooine;
 
+import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.world.MultiCompositeTerrain;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ChunkRegion;
@@ -21,7 +23,45 @@ public class ChunkGeneratorTatooine extends ChunkGenerator<MultiCompositeTerrain
 	@Override
 	public void buildSurface(ChunkRegion chunkRegion, Chunk chunk)
 	{
+		ChunkPos chunkPos = chunk.getPos();
+		int k = chunkPos.getStartX();
+		int l = chunkPos.getStartZ();
+		BlockPos.Mutable blockPos = new BlockPos.Mutable();
+		BlockState tatooineSand = SwgBlocks.Sand.Tatooine.getDefaultState();
 
+		for (int m = 0; m < 16; m++)
+		{
+			for (int n = 0; n < 16; n++)
+			{
+				int o = k + m;
+				int p = l + n;
+				int q = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, m, n);
+				int e = Math.max(1, (int) (q * 0.15));
+				for (int y = 0; y < e; y++)
+				{
+					BlockState blockState = chunk.getBlockState(blockPos.set(o, q - y, p));
+					if (blockState.getBlock() == Blocks.STONE || (q < 2 && (q - y) != 0))
+					{
+						chunk.setBlockState(blockPos, tatooineSand, false);
+					}
+				}
+			}
+		}
+
+		this.buildBedrock(chunk);
+	}
+
+	private void buildBedrock(Chunk chunk)
+	{
+		final BlockPos.Mutable blockPos = new BlockPos.Mutable();
+		final BlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
+		for (int i = 0; i < 16; i++)
+		{
+			for (int j = 0; j < 16; j++)
+			{
+				chunk.setBlockState(blockPos.set(i, 0, j), BEDROCK, false);
+			}
+		}
 	}
 
 	@Override

@@ -11,7 +11,6 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.biome.Biomes;
 import net.minecraft.world.biome.source.BiomeSourceType;
 import net.minecraft.world.biome.source.FixedBiomeSourceConfig;
 import net.minecraft.world.dimension.Dimension;
@@ -31,7 +30,7 @@ public class TatooineDimension extends Dimension
 	@Override
 	public ChunkGenerator<?> createChunkGenerator()
 	{
-		FixedBiomeSourceConfig biomeConfig = BiomeSourceType.FIXED.getConfig(world.getLevelProperties()).setBiome(Biomes.DESERT);
+		FixedBiomeSourceConfig biomeConfig = BiomeSourceType.FIXED.getConfig(world.getLevelProperties()).setBiome(SwgDimensions.Tatooine.BIOME);
 		return new ChunkGeneratorTatooine(world, BiomeSourceType.FIXED.applyConfig(biomeConfig), new MultiCompositeTerrain(0, 800, new TerrainTatooineCanyons()));
 	}
 
