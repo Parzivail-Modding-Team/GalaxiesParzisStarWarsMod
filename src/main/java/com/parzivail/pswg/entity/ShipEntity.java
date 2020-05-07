@@ -7,6 +7,7 @@ import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.util.ClientUtil;
 import com.parzivail.pswg.util.EntityUtil;
 import com.parzivail.pswg.util.MathUtil;
+import com.parzivail.util.math.QuatUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -159,7 +160,7 @@ public class ShipEntity extends Entity
 	protected void readCustomDataFromTag(CompoundTag tag)
 	{
 		if (tag.contains("rotation"))
-			setRotation(MathUtil.getQuaternion(tag.getCompound("rotation")));
+			setRotation(QuatUtil.getQuaternion(tag.getCompound("rotation")));
 		setThrottle(tag.getFloat("throttle"));
 	}
 
@@ -167,7 +168,7 @@ public class ShipEntity extends Entity
 	protected void writeCustomDataToTag(CompoundTag tag)
 	{
 		CompoundTag qTag = new CompoundTag();
-		MathUtil.putQuaternion(qTag, getRotation());
+		QuatUtil.putQuaternion(qTag, getRotation());
 		tag.put("rotation", qTag);
 
 		tag.putFloat("throttle", getThrottle());
@@ -208,7 +209,7 @@ public class ShipEntity extends Entity
 			setThrottle(throttle);
 		}
 
-		Vec3d forward = MathUtil.rotate(MathUtil.NEGZ, getRotation());
+		Vec3d forward = QuatUtil.rotate(MathUtil.NEGZ, getRotation());
 		move(MovementType.SELF, forward.multiply(throttle));
 
 		EntityUtil.updateEulerRotation(this, getRotation());
@@ -232,7 +233,7 @@ public class ShipEntity extends Entity
 		if (this.hasPassenger(passenger))
 		{
 			Vec3d vec3d = new Vec3d(0, 0, 3 * this.getPassengerList().indexOf(passenger));
-			vec3d = MathUtil.rotate(vec3d, getRotation());
+			vec3d = QuatUtil.rotate(vec3d, getRotation());
 
 			passenger.updatePosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
 			this.copyEntityData(passenger);
@@ -296,7 +297,7 @@ public class ShipEntity extends Entity
 	{
 		Quaternion start = viewPrevRotation;
 		Quaternion end = viewRotation;
-		return MathUtil.slerp(start, end, t);
+		return QuatUtil.slerp(start, end, t);
 	}
 
 	public void setRotation(Quaternion q)
@@ -337,7 +338,7 @@ public class ShipEntity extends Entity
 			rotation.hamiltonProduct(new Quaternion(new Vector3f(0, 0, 1), -(float)mouseDx * 0.15f, true));
 		else
 		{
-			Vec3d v = MathUtil.project(MathUtil.POSY, rotation);
+			Vec3d v = QuatUtil.project(MathUtil.POSY, rotation);
 			rotation.hamiltonProduct(new Quaternion(new Vector3f(v), (float)(Math.asin(v.y) * -mouseDx * 0.15f), true));
 
 			// TODO: roll back toward zero when this mode is switched to and the ship has a nonzero roll

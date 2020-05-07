@@ -3,6 +3,7 @@ package com.parzivail.pswg.entity;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.util.EntityUtil;
 import com.parzivail.pswg.util.MathUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -51,7 +52,7 @@ public class ChaseCamEntity extends Entity
 		Quaternion q = parent.getRotation();
 
 		float camDistTarget = getCamDistTarget();
-		Vec3d camTargetPosition = parent.getPos().add(MathUtil.rotate(new Vec3d(0, 0, camDistTarget), q));
+		Vec3d camTargetPosition = parent.getPos().add(QuatUtil.rotate(new Vec3d(0, 0, camDistTarget), q));
 		Vec3d camDpos = camTargetPosition.subtract(getPos());
 
 		float lerpAmount = 0.4f;

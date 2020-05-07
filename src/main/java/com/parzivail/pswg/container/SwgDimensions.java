@@ -10,16 +10,11 @@ import net.minecraft.world.Heightmap;
 
 public class SwgDimensions
 {
-	public static class Planets
+	public static class Tatooine
 	{
-		public static FabricDimensionType TATOOINE = FabricDimensionType
-				.builder()
-				.defaultPlacer((oldEntity, destinationWorld, portalDir, horizontalOffset, verticalOffset) -> new BlockPattern.TeleportTarget(new Vec3d(destinationWorld.getTopPosition(Heightmap.Type.WORLD_SURFACE, BlockPos.ORIGIN)), oldEntity.getVelocity(), (int) oldEntity.yaw))
-				.factory(TatooineDimension::new)
-				.skyLight(true)
-				.buildAndRegister(Resources.identifier("tatooine"));
+		public static final FabricDimensionType DIMENSION_TYPE = FabricDimensionType.builder().defaultPlacer((oldEntity, destinationWorld, portalDir, horizontalOffset, verticalOffset) -> new BlockPattern.TeleportTarget(new Vec3d(destinationWorld.getTopPosition(Heightmap.Type.WORLD_SURFACE, BlockPos.ORIGIN)), oldEntity.getVelocity(), (int)oldEntity.yaw)).factory(TatooineDimension::new).skyLight(true).buildAndRegister(Resources.identifier("tatooine"));
 
-		public static void registerDimensions()
+		public static void register()
 		{
 		}
 	}

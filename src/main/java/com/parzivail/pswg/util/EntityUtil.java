@@ -1,5 +1,6 @@
 package com.parzivail.pswg.util;
 
+import com.parzivail.util.math.QuatUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Quaternion;
@@ -9,7 +10,7 @@ public class EntityUtil
 {
 	public static void updateEulerRotation(Entity entity, Quaternion rotation)
 	{
-		EulerAngle eulerAngle = MathUtil.toEulerAngles(rotation);
+		EulerAngle eulerAngle = QuatUtil.toEulerAngles(rotation);
 		entity.yaw = eulerAngle.getYaw();
 		entity.pitch = eulerAngle.getPitch();
 
