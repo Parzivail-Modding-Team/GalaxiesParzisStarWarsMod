@@ -15,6 +15,6 @@ public class SwgEntities
 	{
 		public static final EntityType<ChaseCamEntity> ChaseCam = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("chase_cam"), FabricEntityTypeBuilder.create(EntityCategory.MISC, ChaseCamEntity::new).size(EntityDimensions.fixed(0.1f, 0.1f)).build());
 
-		public static final EntityType<ShipEntity> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("ship"), FabricEntityTypeBuilder.create(EntityCategory.MISC, ShipEntity::new).size(EntityDimensions.fixed(1, 1)).build());
+		public static final EntityType<ShipEntity> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("ship"), FabricEntityTypeBuilder.create(EntityCategory.MISC, ShipEntity::new).size(EntityDimensions.fixed(1, 1)).trackable(128, 10, true).build());
 	}
 }

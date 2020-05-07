@@ -10,7 +10,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RayTraceContext;
@@ -43,7 +42,7 @@ public class ChaseCamEntity extends Entity
 	{
 		super.tick();
 
-		if (parent == null)
+		if (parent == null || parent.removed)
 		{
 			kill();
 			return;
@@ -61,12 +60,7 @@ public class ChaseCamEntity extends Entity
 		BlockHitResult result = this.world.rayTrace(new RayTraceContext(parent.getPos(), lerpPos, RayTraceContext.ShapeType.COLLIDER, RayTraceContext.FluidHandling.NONE, parent));
 
 		Vec3d resultPos = MathUtil.lerp(0.98f, parent.getPos(), result.getPos());
-		setPos(resultPos.x, resultPos.y, resultPos.z);
-
-		Box box = getBoundingBox();
-		Vec3d boxCenter = box.getCenter();
-		Vec3d pos = getPos();
-		this.setBoundingBox(box.offset(pos.subtract(boxCenter)).offset(0, box.getYLength() / 2, 0));
+		updatePosition(resultPos.x, resultPos.y, resultPos.z);
 
 		EntityUtil.updateEulerRotation(this, q);
 	}
@@ -85,7 +79,7 @@ public class ChaseCamEntity extends Entity
 
 	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
 	{
-		return 0.0F;
+		return getHeight() / 2f;
 	}
 
 	@Override
