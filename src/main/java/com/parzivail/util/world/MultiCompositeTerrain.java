@@ -12,9 +12,11 @@ public class MultiCompositeTerrain extends ChunkGeneratorConfig implements ITerr
 	private final ITerrainHeightmap[] terrains;
 	private final float n;
 	private final TerrainLayer lerpNoise;
+	private final int offset;
 
-	public MultiCompositeTerrain(long seed, int noiseScale, ITerrainHeightmap... terrains)
+	public MultiCompositeTerrain(long seed, int offset, int noiseScale, ITerrainHeightmap... terrains)
 	{
+		this.offset = offset;
 		lerpNoise = new TerrainLayer(seed, Method.Add, noiseScale, 1);
 		this.terrains = terrains;
 		n = terrains.length - 1;
@@ -29,7 +31,7 @@ public class MultiCompositeTerrain extends ChunkGeneratorConfig implements ITerr
 			if ((i - 1f) / n <= l && l <= (i + 1f) / n)
 				y += (-Math.abs(n * l - i) + 1) * terrains[i].getHeightAt(x, z);
 		}
-		return y;
+		return y + offset;
 	}
 
 	@Override

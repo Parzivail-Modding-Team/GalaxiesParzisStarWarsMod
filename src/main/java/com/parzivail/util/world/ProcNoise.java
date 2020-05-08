@@ -23,7 +23,7 @@ public class ProcNoise
 		return (_noise.eval(x, z) + 1) / 2;
 	}
 
-	public double rawnoise(double x, double z)
+	public double rawNoise(double x, double z)
 	{
 		return _noise.eval(x, z);
 	}
@@ -33,7 +33,7 @@ public class ProcNoise
 		return (_noise.eval(x, y, z) + 1) / 2;
 	}
 
-	public double rawnoise(double x, double y, double z)
+	public double rawNoise(double x, double y, double z)
 	{
 		return _noise.eval(x, y, z);
 	}
@@ -43,7 +43,7 @@ public class ProcNoise
 		return (_noise.eval(x, y, z, w) + 1) / 2;
 	}
 
-	public double rawnoise(double x, double y, double z, double w)
+	public double rawNoise(double x, double y, double z, double w)
 	{
 		return _noise.eval(x, y, z, w);
 	}
@@ -53,7 +53,7 @@ public class ProcNoise
 		return (_worley.eval(x, z) + 1) / 2;
 	}
 
-	public double rawworley(double x, double z)
+	public double rawWorley(double x, double z)
 	{
 		return _worley.eval(x, z);
 	}
@@ -63,7 +63,7 @@ public class ProcNoise
 		return (_worley.eval((float)x, (float)y, (float)z) + 1) / 2;
 	}
 
-	public double rawworley(double x, double y, double z)
+	public double rawWorley(double x, double y, double z)
 	{
 		return _worley.eval((float)x, (float)y, (float)z);
 	}

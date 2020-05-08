@@ -2,7 +2,7 @@ package com.parzivail.pswg.dimension;
 
 import com.parzivail.pswg.container.SwgDimensions;
 import com.parzivail.pswg.dimension.tatooine.ChunkGeneratorTatooine;
-import com.parzivail.pswg.dimension.tatooine.TerrainTatooineCanyons;
+import com.parzivail.pswg.dimension.tatooine.terrain.*;
 import com.parzivail.util.world.MultiCompositeTerrain;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -33,7 +33,12 @@ public class TatooineDimension extends Dimension
 		FixedBiomeSourceConfig biomeConfig = BiomeSourceType.FIXED
 				.getConfig(world.getLevelProperties())
 				.setBiome(SwgDimensions.Tatooine.BIOME);
-		return new ChunkGeneratorTatooine(world, BiomeSourceType.FIXED.applyConfig(biomeConfig), new MultiCompositeTerrain(0, 800, new TerrainTatooineCanyons()));
+		return new ChunkGeneratorTatooine(world, BiomeSourceType.FIXED.applyConfig(biomeConfig), new MultiCompositeTerrain(0, 100, 3600, new TerrainTatooinePlains(0),
+		                                                                                                                   new TerrainTatooineHills(0),
+		                                                                                                                   new TerrainTatooineDunesSmall(0),
+		                                                                                                                   new TerrainTatooineDunesLarge(0),
+		                                                                                                                   new TerrainTatooineWastes(0),
+		                                                                                                                   new TerrainTatooineCanyons(0)));
 	}
 
 	@Nullable
