@@ -1,4 +1,4 @@
-package com.parzivail.pswg.dimension.tatooine;
+package com.parzivail.pswg.dimension.tatooine.terrain;
 
 import com.parzivail.util.world.ITerrainHeightmap;
 import com.parzivail.util.world.ProcNoise;
@@ -6,7 +6,12 @@ import net.minecraft.util.math.MathHelper;
 
 public class TerrainTatooineCanyons implements ITerrainHeightmap
 {
-	private final ProcNoise _noise = new ProcNoise(0);
+	private final ProcNoise _noise;
+
+	public TerrainTatooineCanyons(long seed)
+	{
+		_noise = new ProcNoise(seed);
+	}
 
 	@Override
 	public double getHeightAt(double x, double z)
