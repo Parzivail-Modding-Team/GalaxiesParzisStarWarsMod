@@ -4,8 +4,14 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
   ],
-  "client": ["ClientPlayNetworkHandlerMixin", "EntityClientMixin", "GameRendererMixin", "Matrix4fMixin"],
+  "client": [
+    "ClientPlayNetworkHandlerMixin",
+    "EntityClientMixin",
+    "GameRendererMixin",
+    "Matrix4fMixin",
+    "SpriteAtlasTextureMixin"
+  ],
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   }
 }
