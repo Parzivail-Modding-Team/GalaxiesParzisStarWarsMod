@@ -36,17 +36,22 @@ public class QuatUtil
 
 	public static Quaternion getRotationTowards(Vec3d from, Vec3d to)
 	{
-		Quaternion q = Quaternion.IDENTITY.copy();
+		Quaternion q = new Quaternion(Quaternion.IDENTITY);
 		Vec3d cross = from.crossProduct(to);
 		float w = (float)(Math.sqrt(from.lengthSquared() * to.lengthSquared()) + from.dotProduct(to));
-		q.set(w, (float)cross.x, (float)cross.y, (float)cross.z);
-		q.normalize();
+		set(q, w, (float)cross.x, (float)cross.y, (float)cross.z);
+		normalize(q);
 		return q;
+	}
+
+	public static void set(Quaternion self, float x, float y, float z, float w)
+	{
+		QuaternionExt.from(self).set0(x, y, z, w);
 	}
 
 	public static void set(Quaternion self, Quaternion other)
 	{
-		self.set(other.getA(), other.getB(), other.getC(), other.getD());
+		set(self, other.getA(), other.getB(), other.getC(), other.getD());
 	}
 
 	public static void putQuaternion(CompoundTag tag, Quaternion q)
@@ -88,7 +93,7 @@ public class QuatUtil
 	public static void invert(Quaternion self)
 	{
 		float l = self.getA() * self.getA() + self.getB() * self.getB() + self.getC() * self.getC() + self.getD() * self.getD();
-		self.set(self.getA() / l, -self.getB() / l, -self.getC() / l, -self.getD() / l);
+		set(self, self.getA() / l, -self.getB() / l, -self.getC() / l, -self.getD() / l);
 	}
 
 	public static Quaternion invertCopy(Quaternion q)
@@ -115,7 +120,7 @@ public class QuatUtil
 
 	public static void scale(Quaternion self, float factor)
 	{
-		self.set(self.getA() * factor, self.getB() * factor, self.getC() * factor, self.getD() * factor);
+		set(self, self.getB() * factor, self.getC() * factor, self.getD() * factor, self.getA() * factor);
 	}
 
 	public static void normalize(Quaternion self)
@@ -141,8 +146,8 @@ public class QuatUtil
 	{
 		// Only unit quaternions are valid rotations.
 		// Normalize to avoid undefined behavior.
-		start.normalize();
-		end.normalize();
+		normalize(start);
+		normalize(end);
 
 		// Compute the cosine of the angle between the two vectors.
 		double dot = dot_product(start, end);
@@ -153,7 +158,7 @@ public class QuatUtil
 		// reversing one quaternion.
 		if (dot < 0.0f)
 		{
-			end.scale(-1);
+			scale(end, -1);
 			dot = -dot;
 		}
 
@@ -170,7 +175,7 @@ public class QuatUtil
 			float d = f * start.getD() + t * end.getD();
 
 			Quaternion result = new Quaternion(b, c, d, a);
-			result.normalize();
+			normalize(result);
 			return result;
 		}
 
@@ -189,7 +194,7 @@ public class QuatUtil
 		float d = (float)(f1 * start.getD() + f2 * end.getD());
 
 		Quaternion result = new Quaternion(b, c, d, a);
-		result.normalize();
+		normalize(result);
 		return result;
 	}
 }

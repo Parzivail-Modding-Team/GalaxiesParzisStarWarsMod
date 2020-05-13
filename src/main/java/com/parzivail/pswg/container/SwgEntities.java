@@ -23,5 +23,10 @@ public class SwgEntities
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackable(128, 10, true)
 				.build());
+
+		public static void register()
+		{
+			// no-op to make sure the class is loaded
+		}
 	}
 }

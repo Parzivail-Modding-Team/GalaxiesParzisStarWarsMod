@@ -43,8 +43,8 @@ public class ShipEntity extends Entity
 	@Environment(EnvType.CLIENT)
 	public ChaseCamEntity camera;
 
-	private Quaternion viewRotation = Quaternion.IDENTITY.copy();
-	private Quaternion viewPrevRotation = Quaternion.IDENTITY.copy();
+	private Quaternion viewRotation = new Quaternion(Quaternion.IDENTITY);
+	private Quaternion viewPrevRotation = new Quaternion(Quaternion.IDENTITY);
 
 	public ShipEntity(EntityType<?> type, World world)
 	{
@@ -151,7 +151,7 @@ public class ShipEntity extends Entity
 	@Override
 	protected void initDataTracker()
 	{
-		getDataTracker().startTracking(ROTATION, Quaternion.IDENTITY.copy());
+		getDataTracker().startTracking(ROTATION, new Quaternion(Quaternion.IDENTITY));
 		getDataTracker().startTracking(THROTTLE, 0f);
 		getDataTracker().startTracking(CONTROLS, (short)0);
 	}
@@ -191,8 +191,8 @@ public class ShipEntity extends Entity
 			}
 		}
 
-		viewPrevRotation = viewRotation.copy();
-		viewRotation = getRotation().copy();
+		viewPrevRotation = new Quaternion(viewRotation);
+		viewRotation = new Quaternion(getRotation());
 
 		Entity pilot = getPrimaryPassenger();
 		float throttle = getThrottle();
@@ -302,7 +302,7 @@ public class ShipEntity extends Entity
 
 	public void setRotation(Quaternion q)
 	{
-		q.normalize();
+		QuatUtil.normalize(q);
 		getDataTracker().set(ROTATION, q);
 	}
 
@@ -330,7 +330,7 @@ public class ShipEntity extends Entity
 
 	public void acceptMouseInput(double mouseDx, double mouseDy)
 	{
-		Quaternion rotation = getRotation().copy();
+		Quaternion rotation = new Quaternion(getRotation());
 
 		boolean pitchRoll = false;
 
