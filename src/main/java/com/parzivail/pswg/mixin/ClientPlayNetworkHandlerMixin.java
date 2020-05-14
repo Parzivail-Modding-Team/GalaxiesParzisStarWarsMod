@@ -27,7 +27,7 @@ public class ClientPlayNetworkHandlerMixin
 	private void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo ci, double x, double y, double z, EntityType<?> type)
 	{
 		Entity entity = null;
-		if (type == SwgEntities.Ship.T65bXwing || type == SwgEntities.Ship.ChaseCam)
+		if (type == SwgEntities.Ship.T65bXwing || type == SwgEntities.Ship.ChaseCam || type == SwgEntities.BlasterBolt)
 			entity = type.create(this.world);
 		if (entity != null)
 		{
@@ -35,8 +35,8 @@ public class ClientPlayNetworkHandlerMixin
 			entity.setVelocity(Vec3d.ZERO);
 			entity.updatePosition(x, y, z);
 			entity.updateTrackedPosition(x, y, z);
-			entity.pitch = (float)(packet.getPitch() * 360) / 256.0F;
-			entity.yaw = (float)(packet.getYaw() * 360) / 256.0F;
+			entity.pitch = (float) (packet.getPitch() * 360) / 256.0F;
+			entity.yaw = (float) (packet.getYaw() * 360) / 256.0F;
 			entity.setEntityId(i);
 			entity.setUuid(packet.getUuid());
 			this.world.addEntity(i, entity);

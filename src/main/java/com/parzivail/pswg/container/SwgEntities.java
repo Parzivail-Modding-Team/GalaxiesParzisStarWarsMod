@@ -1,6 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ChaseCamEntity;
 import com.parzivail.pswg.entity.ShipEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -29,4 +30,10 @@ public class SwgEntities
 			// no-op to make sure the class is loaded
 		}
 	}
+
+	public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("blaster_bolt"), FabricEntityTypeBuilder
+			.<BlasterBoltEntity>create(EntityCategory.MISC, BlasterBoltEntity::new)
+			.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+			.trackable(40, 5, true)
+			.build());
 }

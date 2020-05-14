@@ -1,9 +1,6 @@
 package com.parzivail.pswg;
 
-import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.container.SwgDimensions;
-import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.container.SwgPackets;
+import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.util.Lumberjack;
@@ -17,6 +14,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Objects;
@@ -40,15 +38,17 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register(SwgBlocks.Ore.Chromium, Resources.identifier("ore_chromium"));
 
+		Registry.register(Registry.ITEM, Resources.identifier("a280"), SwgItems.Blaster.A280);
+
 		SwgDimensions.Tatooine.registerDimension();
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) ->
 				dispatcher.register(CommandManager.literal("cdim")
-				                                  .requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
-				                                  .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-				                                                      .executes((context -> {
-					                                                      DimensionType dimensionType = DimensionArgumentType.getDimensionArgument(context, "dimension");
-					                                                      FabricDimensions.teleport(Objects.requireNonNull(context.getSource().getEntity()), dimensionType);
+						.requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
+						.then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+								.executes((context -> {
+									DimensionType dimensionType = DimensionArgumentType.getDimensionArgument(context, "dimension");
+									FabricDimensions.teleport(Objects.requireNonNull(context.getSource().getEntity()), dimensionType);
 					                                                      return 1;
 				                                                      }))))));
 
