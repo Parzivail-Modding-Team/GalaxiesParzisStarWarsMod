@@ -35,7 +35,10 @@ public class Galaxies implements ModInitializer
 		SwgEntities.Ship.register();
 
 		SwgBlocks.register(SwgBlocks.Sand.Tatooine, Resources.identifier("sand_tatooine"));
+
 		SwgBlocks.register(SwgBlocks.Crate.Octagon, Resources.identifier("crate_octagon"));
+
+		SwgBlocks.register(SwgBlocks.Ore.Chromium, Resources.identifier("ore_chromium"));
 
 		SwgDimensions.Tatooine.registerDimension();
 

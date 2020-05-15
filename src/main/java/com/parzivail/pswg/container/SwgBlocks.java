@@ -22,6 +22,11 @@ public class SwgBlocks
 		public static final Block Octagon = new Block(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
+	public static class Ore
+	{
+		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+	}
+
 	public static void register(Block block, Identifier identifier)
 	{
 		Registry.register(Registry.BLOCK, identifier, block);

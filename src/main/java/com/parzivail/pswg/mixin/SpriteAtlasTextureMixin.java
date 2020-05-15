@@ -2,6 +2,7 @@ package com.parzivail.pswg.mixin;
 
 import com.google.gson.Gson;
 import com.parzivail.pswg.json.PSWGTextureMeta;
+import com.parzivail.util.ColorUtil;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -18,7 +19,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 @Mixin(SpriteAtlasTexture.class)
 public abstract class SpriteAtlasTextureMixin
@@ -34,50 +34,50 @@ public abstract class SpriteAtlasTextureMixin
 	{
 		Identifier identifier = getTexturePath(info.getId());
 		Resource textureMetaResource;
+
 		if (!container.containsResource(new Identifier(identifier.getNamespace(), identifier.getPath() + ".pswgmeta")))
-		{
 			return nativeImage;
-		}
+
 		try
 		{
 			textureMetaResource = container.getResource(new Identifier(identifier.getNamespace(), identifier.getPath() + ".pswgmeta"));
-		} catch (IOException ignored)
+		}
+		catch (IOException ignored)
 		{
 			return nativeImage;
 		}
+
 		PSWGTextureMeta textureMeta;
 		try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(textureMetaResource.getInputStream(), StandardCharsets.UTF_8)))
 		{
 			textureMeta = GSON.fromJson(bufferedReader, PSWGTextureMeta.class);
 		}
-		if (textureMeta.layers == null)
-		{
-			return nativeImage;
-		}
 
-		NativeImage[] layerImages = new NativeImage[textureMeta.layers.size()];
-		int[] layerTints = new int[textureMeta.layers.size()];
-		List<PSWGTextureMeta.Layer> layers = textureMeta.layers;
+		if (textureMeta.layers == null)
+			return nativeImage;
+
+		NativeImage[] layerImages = new NativeImage[textureMeta.layers.length];
+		int[] layerTints = new int[textureMeta.layers.length];
+
+		for (int n = 0; n < textureMeta.layers.length; n++)
 		{
-			int n = 0;
-			for (PSWGTextureMeta.Layer layer : layers)
+			PSWGTextureMeta.Layer layer = textureMeta.layers[n];
+
+			if (layer.texture.equals("#this"))
+				layerImages[n] = nativeImage;
+			else
 			{
-				if (layer.layer.equals("#this"))
-				{
-					layerImages[n] = nativeImage;
-				} else
-				{
-					// what should happen if a base layer has a .pswgmeta file too?
-					Identifier baseLayerIdentifier = getTexturePath(new Identifier(layer.layer));
-					NativeImage baseLayerImage = NativeImage.read(container.getResource(baseLayerIdentifier).getInputStream());
-					if (baseLayerImage.getHeight() != nativeImage.getHeight() || baseLayerImage.getWidth() != nativeImage.getWidth())
-					{
-						throw new RuntimeException("Error: Size of " + identifier + " (" + nativeImage.getWidth() + '|' + nativeImage.getHeight() + ") doesn't match its base layer's size (" + baseLayerIdentifier + ", " + baseLayerImage.getWidth() + '|' + baseLayerImage.getHeight() + ')');
-					}
-					layerImages[n] = baseLayerImage;
-				}
-				layerTints[n++] = layer.tint;
+				// what should happen if a base layer has a .pswgmeta file too?
+				Identifier baseLayerIdentifier = getTexturePath(new Identifier(layer.texture));
+				NativeImage baseLayerImage = NativeImage.read(container.getResource(baseLayerIdentifier).getInputStream());
+
+				if (baseLayerImage.getHeight() != nativeImage.getHeight() || baseLayerImage.getWidth() != nativeImage.getWidth())
+					throw new RuntimeException("Error: Size of " + identifier + " (" + nativeImage.getWidth() + '|' + nativeImage.getHeight() + ") doesn't match its base layer's size (" + baseLayerIdentifier + ", " + baseLayerImage.getWidth() + '|' + baseLayerImage.getHeight() + ')');
+
+				layerImages[n] = baseLayerImage;
 			}
+
+			layerTints[n] = layer.tint;
 		}
 
 		NativeImage outImage = new NativeImage(nativeImage.getWidth(), nativeImage.getHeight(), false);
@@ -88,10 +88,10 @@ public abstract class SpriteAtlasTextureMixin
 		{
 			for (int y = 0; y < height; y++)
 			{
-				for (int n = 0, layerImagesLength = layerImages.length; n < layerImagesLength; n++)
+				for (int layer = 0, layerImagesLength = layerImages.length; layer < layerImagesLength; layer++)
 				{
-					NativeImage layerImage = layerImages[n];
-					outImage.blendPixel(x, y, applyTint(layerImage.getPixelRgba(x, y), layerTints[n]));
+					NativeImage layerImage = layerImages[layer];
+					outImage.blendPixel(x, y, applyTint(layerImage.getPixelRgba(x, y), layerTints[layer]));
 				}
 			}
 		}
@@ -99,8 +99,23 @@ public abstract class SpriteAtlasTextureMixin
 	}
 
 	@Unique
-	private int applyTint(int pixel, int tint)
+	private int applyTint(int color, int tint)
 	{
-		return ((int) ((pixel & 255) * ((tint & 255) / 255f))) | (int) ((pixel >> 8 & 255) * ((tint >> 8 & 255) / 255f)) << 8 | (int) ((pixel >> 16 & 255) * ((tint >> 16 & 255) / 255f)) << 16 | (pixel & 0xff000000);
+		int pixelA = ColorUtil.Argb.getA(color);
+		int pixelR = ColorUtil.Argb.getR(color);
+		int pixelG = ColorUtil.Argb.getG(color);
+		int pixelB = ColorUtil.Argb.getB(color);
+
+		int tintA = ColorUtil.Argb.getA(tint);
+		int tintR = ColorUtil.Argb.getR(tint);
+		int tintG = ColorUtil.Argb.getG(tint);
+		int tintB = ColorUtil.Argb.getB(tint);
+
+		int a = pixelA * tintA / 0xFF;
+		int r = pixelR * tintR / 0xFF;
+		int g = pixelG * tintG / 0xFF;
+		int b = pixelB * tintB / 0xFF;
+
+		return ColorUtil.Argb.pack(a, r, g, b);
 	}
 }
