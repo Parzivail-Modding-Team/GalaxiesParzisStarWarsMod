@@ -17,18 +17,18 @@ public class CameraHelper
 
 		if (ship != null)
 		{
-			Quaternion r = ship.getViewRotation(tickDelta).copy();
+			Quaternion r = new Quaternion(ship.getViewRotation(tickDelta));
 
 			if (Client.minecraft.options.perspective == 2)
-				r.hamiltonProduct(new Quaternion(0, 180, 0, true));
+				r.hamiltonProduct(new Quaternion(Vector3f.POSITIVE_Y, 180, true));
 
 			r.conjugate();
 			matrix.multiply(r);
 		}
 		else
 		{
-			matrix.multiply(Vector3f.POSITIVE_X.getDegreesQuaternion(camera.getPitch()));
-			matrix.multiply(Vector3f.POSITIVE_Y.getDegreesQuaternion(camera.getYaw() + 180.0F));
+			matrix.multiply(new Quaternion(Vector3f.POSITIVE_X, camera.getPitch(), true));
+			matrix.multiply(new Quaternion(Vector3f.POSITIVE_Y, camera.getYaw() + 180.0F, true));
 		}
 	}
 }

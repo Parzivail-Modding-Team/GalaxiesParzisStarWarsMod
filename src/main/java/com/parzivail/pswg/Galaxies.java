@@ -2,6 +2,7 @@ package com.parzivail.pswg;
 
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgDimensions;
+import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
@@ -30,6 +31,8 @@ public class Galaxies implements ModInitializer
 		Lumberjack.debug("onInitialize");
 
 		TrackedDataHandlers.register();
+
+		SwgEntities.Ship.register();
 
 		SwgBlocks.register(SwgBlocks.Sand.Tatooine, Resources.identifier("sand_tatooine"));
 		SwgBlocks.register(SwgBlocks.Crate.Octagon, Resources.identifier("crate_octagon"));

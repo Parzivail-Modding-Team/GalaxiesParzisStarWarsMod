@@ -3,6 +3,7 @@
   "package": "com.parzivail.pswg.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "QuaternionMixin"
   ],
   "client": [
     "ClientPlayNetworkHandlerMixin",
