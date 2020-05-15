@@ -101,21 +101,21 @@ public abstract class SpriteAtlasTextureMixin
 	@Unique
 	private int applyTint(int color, int tint)
 	{
-		int pixelA = ColorUtil.Argb.getA(color);
-		int pixelR = ColorUtil.Argb.getR(color);
-		int pixelG = ColorUtil.Argb.getG(color);
-		int pixelB = ColorUtil.Argb.getB(color);
+		int pixelA = ColorUtil.Abgr.getA(color);
+		int pixelB = ColorUtil.Abgr.getB(color);
+		int pixelG = ColorUtil.Abgr.getG(color);
+		int pixelR = ColorUtil.Abgr.getR(color);
 
-		int tintA = ColorUtil.Argb.getA(tint);
-		int tintR = ColorUtil.Argb.getR(tint);
-		int tintG = ColorUtil.Argb.getG(tint);
-		int tintB = ColorUtil.Argb.getB(tint);
+		int tintA = ColorUtil.Abgr.getA(tint);
+		int tintB = ColorUtil.Abgr.getB(tint);
+		int tintG = ColorUtil.Abgr.getG(tint);
+		int tintR = ColorUtil.Abgr.getR(tint);
 
 		int a = pixelA * tintA / 0xFF;
-		int r = pixelR * tintR / 0xFF;
-		int g = pixelG * tintG / 0xFF;
 		int b = pixelB * tintB / 0xFF;
+		int g = pixelG * tintG / 0xFF;
+		int r = pixelR * tintR / 0xFF;
 
-		return ColorUtil.Argb.pack(a, r, g, b);
+		return ColorUtil.Abgr.pack(a, b, g, r);
 	}
 }
