@@ -7,6 +7,7 @@ import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.util.ClientUtil;
 import com.parzivail.pswg.util.EntityUtil;
 import com.parzivail.pswg.util.MathUtil;
+import com.parzivail.util.entity.FlyingVehicle;
 import com.parzivail.util.math.QuatUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -34,7 +35,7 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
-public class ShipEntity extends Entity
+public class ShipEntity extends Entity implements FlyingVehicle
 {
 	private static final TrackedData<Quaternion> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
 	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);
