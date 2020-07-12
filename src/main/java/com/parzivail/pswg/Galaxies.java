@@ -21,7 +21,10 @@ import java.util.Objects;
 
 public class Galaxies implements ModInitializer
 {
-	public static final ItemGroup Tab = FabricItemGroupBuilder.build(Resources.identifier("blocks"), () -> new ItemStack(Items.APPLE));
+	public static final ItemGroup Tab = FabricItemGroupBuilder
+			.create(Resources.identifier("blocks"))
+			.icon(() -> new ItemStack(Items.APPLE))
+			.build();
 
 	@Override
 	public void onInitialize()
@@ -37,6 +40,8 @@ public class Galaxies implements ModInitializer
 		SwgBlocks.register(SwgBlocks.Crate.Octagon, Resources.identifier("crate_octagon"));
 
 		SwgBlocks.register(SwgBlocks.Ore.Chromium, Resources.identifier("ore_chromium"));
+
+		Registry.register(Registry.ITEM, Resources.identifier("lightsaber"), SwgItems.Lightsaber);
 
 		Registry.register(Registry.ITEM, Resources.identifier("a280"), SwgItems.Blaster.A280);
 
