@@ -47,15 +47,15 @@ public class Galaxies implements ModInitializer
 
 		SwgDimensions.Tatooine.registerDimension();
 
-		CommandRegistrationCallback.EVENT.register(((dispatcher, dedicated) ->
+		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
 				dispatcher.register(CommandManager.literal("cdim")
 						.requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
 						.then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-								.executes((context -> {
+								.executes(context -> {
 									DimensionType dimensionType = DimensionArgumentType.getDimensionArgument(context, "dimension");
 									FabricDimensions.teleport(Objects.requireNonNull(context.getSource().getEntity()), dimensionType);
 					                                                      return 1;
-				                                                      }))))));
+				                                                      }))));
 
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipControls, ShipEntity::handleControlPacket);
