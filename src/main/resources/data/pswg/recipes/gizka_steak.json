@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "pswg:gizka_chop"
+  },
+  "result": "pswg:gizka_steak",
+  "experience": 0.35,
+  "cookingtime": 200
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "ingredient": {
+    "item": "pswg:qrikki_bread"
+  },
+  "result": "pswg:qrikki_waffle",
+  "experience": 0.35,
+  "cookingtime": 600
+}

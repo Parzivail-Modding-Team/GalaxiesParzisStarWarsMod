@@ -45,6 +45,33 @@ public class Galaxies implements ModInitializer
 
 		Registry.register(Registry.ITEM, Resources.identifier("a280"), SwgItems.Blaster.A280);
 
+		Registry.register(Registry.ITEM, Resources.identifier("salt_pile"), SwgItems.Food.SaltPile);
+
+		// TODO: should the cooked variants be called cooked_<meat type> like vanilla does?
+		Registry.register(Registry.ITEM, Resources.identifier("jogan_fruit"), SwgItems.Food.JoganFruit);
+		Registry.register(Registry.ITEM, Resources.identifier("chasuka"), SwgItems.Food.Chasuka);
+		Registry.register(Registry.ITEM, Resources.identifier("meiloorun"), SwgItems.Food.Meiloorun);
+		Registry.register(Registry.ITEM, Resources.identifier("mynock_wing"), SwgItems.Food.MynockWing);
+		Registry.register(Registry.ITEM, Resources.identifier("fried_mynock_wing"), SwgItems.Food.FriedMynockWing);
+		Registry.register(Registry.ITEM, Resources.identifier("bantha_chop"), SwgItems.Food.BanthaChop);
+		Registry.register(Registry.ITEM, Resources.identifier("bantha_steak"), SwgItems.Food.BanthaSteak);
+		Registry.register(Registry.ITEM, Resources.identifier("nerf_chop"), SwgItems.Food.NerfChop);
+		Registry.register(Registry.ITEM, Resources.identifier("nerf_steak"), SwgItems.Food.NerfSteak);
+		Registry.register(Registry.ITEM, Resources.identifier("gizka_chop"), SwgItems.Food.GizkaChop);
+		Registry.register(Registry.ITEM, Resources.identifier("gizka_steak"), SwgItems.Food.GizkaSteak);
+		Registry.register(Registry.ITEM, Resources.identifier("flangth_takeout"), SwgItems.Food.FlangthTakeout);
+		Registry.register(Registry.ITEM, Resources.identifier("flangth_plate"), SwgItems.Food.FlangthPlate);
+
+		Registry.register(Registry.ITEM, Resources.identifier("red_death_stick"), SwgItems.Food.RedDeathStick);
+		Registry.register(Registry.ITEM, Resources.identifier("yellow_death_stick"), SwgItems.Food.YellowDeathStick);
+
+		Registry.register(Registry.ITEM, Resources.identifier("blue_milk"), SwgItems.Food.BlueMilk);
+		Registry.register(Registry.ITEM, Resources.identifier("blue_puff_cube"), SwgItems.Food.BluePuffCube);
+		Registry.register(Registry.ITEM, Resources.identifier("blue_yogurt"), SwgItems.Food.BlueYogurt);
+
+		Registry.register(Registry.ITEM, Resources.identifier("qrikki_bread"), SwgItems.Food.QrikkiBread);
+		Registry.register(Registry.ITEM, Resources.identifier("qrikki_waffle"), SwgItems.Food.QrikkiWaffle);
+
 		SwgDimensions.Tatooine.registerDimension();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->

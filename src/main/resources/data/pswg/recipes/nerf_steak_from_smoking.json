@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smoking",
+  "ingredient": {
+    "item": "pswg:nerf_chop"
+  },
+  "result": "pswg:nerf_steak",
+  "experience": 0.35,
+  "cookingtime": 100
+}

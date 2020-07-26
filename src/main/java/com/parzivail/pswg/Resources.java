@@ -2,6 +2,7 @@ package com.parzivail.pswg;
 
 import net.minecraft.util.Identifier;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class Resources
@@ -12,7 +13,7 @@ public class Resources
 
 	public static final Random RANDOM = new Random();
 
-	public static Identifier identifier(String path)
+	public static Identifier identifier(@Nonnull String path)
 	{
 		return new Identifier(MODID, path);
 	}
