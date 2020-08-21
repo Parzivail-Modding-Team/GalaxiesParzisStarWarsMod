@@ -25,6 +25,9 @@ public class SwgBlocks
 	public static class Ore
 	{
 		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Rubindum = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
 	}
 
 	public static void register(Block block, Identifier identifier)

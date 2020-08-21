@@ -2,6 +2,7 @@ package com.parzivail.pswg.mixin;
 
 import com.google.gson.Gson;
 import com.parzivail.pswg.json.PSWGTextureMeta;
+import com.parzivail.pswg.util.Lumberjack;
 import com.parzivail.util.ColorUtil;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
@@ -42,8 +43,10 @@ public abstract class SpriteAtlasTextureMixin
 		{
 			textureMetaResource = container.getResource(new Identifier(identifier.getNamespace(), identifier.getPath() + ".pswgmeta"));
 		}
-		catch (IOException ignored)
+		catch (IOException ex)
 		{
+			Lumberjack.error("Error loading pswgmeta resource:");
+			ex.printStackTrace();
 			return nativeImage;
 		}
 
@@ -51,6 +54,12 @@ public abstract class SpriteAtlasTextureMixin
 		try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(textureMetaResource.getInputStream(), StandardCharsets.UTF_8)))
 		{
 			textureMeta = GSON.fromJson(bufferedReader, PSWGTextureMeta.class);
+		}
+		catch (Exception ex)
+		{
+			Lumberjack.error("Error loading pswgmeta JSON:");
+			ex.printStackTrace();
+			return nativeImage;
 		}
 
 		if (textureMeta.layers == null)
@@ -72,7 +81,7 @@ public abstract class SpriteAtlasTextureMixin
 				NativeImage baseLayerImage = NativeImage.read(container.getResource(baseLayerIdentifier).getInputStream());
 
 				if (baseLayerImage.getHeight() != nativeImage.getHeight() || baseLayerImage.getWidth() != nativeImage.getWidth())
-					throw new RuntimeException("Error: Size of " + identifier + " (" + nativeImage.getWidth() + '|' + nativeImage.getHeight() + ") doesn't match its base layer's size (" + baseLayerIdentifier + ", " + baseLayerImage.getWidth() + '|' + baseLayerImage.getHeight() + ')');
+					throw new RuntimeException("Layer size mismatch: overlay layer " + identifier + " (" + nativeImage.getWidth() + "x" + nativeImage.getHeight() + "), base layer " + baseLayerIdentifier + " (" + baseLayerImage.getWidth() + "x" + baseLayerImage.getHeight() + ")");
 
 				layerImages[n] = baseLayerImage;
 			}
@@ -95,27 +104,28 @@ public abstract class SpriteAtlasTextureMixin
 				}
 			}
 		}
+
 		return outImage;
 	}
 
 	@Unique
 	private int applyTint(int color, int tint)
 	{
-		int pixelA = ColorUtil.Abgr.getA(color);
-		int pixelB = ColorUtil.Abgr.getB(color);
-		int pixelG = ColorUtil.Abgr.getG(color);
-		int pixelR = ColorUtil.Abgr.getR(color);
+		int pixelA = ColorUtil.Argb.getA(color);
+		int pixelR = ColorUtil.Argb.getR(color);
+		int pixelG = ColorUtil.Argb.getG(color);
+		int pixelB = ColorUtil.Argb.getB(color);
 
-		int tintA = ColorUtil.Abgr.getA(tint);
-		int tintB = ColorUtil.Abgr.getB(tint);
-		int tintG = ColorUtil.Abgr.getG(tint);
-		int tintR = ColorUtil.Abgr.getR(tint);
+		int tintA = ColorUtil.Argb.getA(tint);
+		int tintR = ColorUtil.Argb.getR(tint);
+		int tintG = ColorUtil.Argb.getG(tint);
+		int tintB = ColorUtil.Argb.getB(tint);
 
 		int a = pixelA * tintA / 0xFF;
+		int r = pixelR * tintR / 0xFF;
 		int b = pixelB * tintB / 0xFF;
 		int g = pixelG * tintG / 0xFF;
-		int r = pixelR * tintR / 0xFF;
 
-		return ColorUtil.Abgr.pack(a, b, g, r);
+		return ColorUtil.Argb.pack(a, r, g, b);
 	}
 }
