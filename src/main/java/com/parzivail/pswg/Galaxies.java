@@ -1,6 +1,7 @@
 package com.parzivail.pswg;
 
 import com.parzivail.pswg.container.*;
+import com.parzivail.pswg.dimension.DefaultEntityPlacer;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.util.Lumberjack;
@@ -80,14 +81,14 @@ public class Galaxies implements ModInitializer
 		SwgDimensions.Tatooine.registerDimension();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
-				dispatcher.register(CommandManager.literal("cdim")
-						.requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
-						.then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-								.executes(context -> {
-									DimensionType dimensionType = DimensionArgumentType.getDimensionArgument(context, "dimension");
-									FabricDimensions.teleport(Objects.requireNonNull(context.getSource().getEntity()), dimensionType);
-					                                                      return 1;
-				                                                      }))));
+				                                           dispatcher.register(CommandManager.literal("cdim")
+				                                                                             .requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
+				                                                                             .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+				                                                                                                 .executes(context -> {
+					                                                                                                 DimensionType dimensionType = DimensionArgumentType.getDimensionArgument(context, "dimension");
+					                                                                                                 FabricDimensions.teleport(Objects.requireNonNull(context.getSource().getEntity()), dimensionType, DefaultEntityPlacer.INSTANCE);
+					                                                                                                 return 1;
+				                                                                                                 }))));
 
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipControls, ShipEntity::handleControlPacket);

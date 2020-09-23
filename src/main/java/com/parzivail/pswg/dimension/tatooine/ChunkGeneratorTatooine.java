@@ -7,6 +7,7 @@ import com.parzivail.pswg.structure.ScarifSection;
 import com.parzivail.util.world.MultiCompositeTerrain;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.ChunkRegion;
@@ -15,6 +16,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
+
+import java.util.Map;
 
 public class ChunkGeneratorTatooine extends ChunkGenerator<MultiCompositeTerrain>
 {
@@ -55,6 +58,9 @@ public class ChunkGeneratorTatooine extends ChunkGenerator<MultiCompositeTerrain
 		if (strChunk != null)
 		{
 			strChunk.init();
+
+			for (Map.Entry<BlockPos, CompoundTag> tile : strChunk.tiles.entrySet())
+				chunk.addPendingBlockEntityTag(tile.getValue());
 
 			for (int i = 0; i < strChunk.numSections; i++)
 			{
