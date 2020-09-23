@@ -16,7 +16,6 @@ import net.minecraft.util.registry.Registry;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.zip.GZIPInputStream;
 
 public class ScarifChunk
 {
@@ -25,9 +24,9 @@ public class ScarifChunk
 	public int numSections;
 	private boolean initialized = false;
 
-	public ScarifChunk(GZIPInputStream stream)
+	public ScarifChunk(LittleEndianDataInputStream stream)
 	{
-		this.stream = new LittleEndianDataInputStream(stream);
+		this.stream = stream;
 	}
 
 	public void init()
@@ -69,7 +68,21 @@ public class ScarifChunk
 	{
 		try
 		{
-			return readSectionUnsafe();
+			int y = stream.readByte();
+
+			int paletteSize = PIO.read7BitEncodedInt(stream);
+			BlockState[] palette = new BlockState[paletteSize];
+
+			for (int i = 0; i < paletteSize; i++)
+				palette[i] = readBlockState();
+
+			int[] blockStates = new int[4096];
+			for (int i = 0; i < blockStates.length; i++)
+			{
+				blockStates[i] = PIO.read7BitEncodedInt(stream);
+			}
+
+			return new ScarifSection(y, palette, blockStates);
 		}
 		catch (IOException e)
 		{
@@ -78,25 +91,6 @@ public class ScarifChunk
 		}
 
 		return null;
-	}
-
-	private ScarifSection readSectionUnsafe() throws IOException
-	{
-		int y = stream.readByte();
-
-		int paletteSize = PIO.read7BitEncodedInt(stream);
-		BlockState[] palette = new BlockState[paletteSize];
-
-		for (int i = 0; i < paletteSize; i++)
-			palette[i] = readBlockState();
-
-		int[] blockStates = new int[4096];
-		for (int i = 0; i < blockStates.length; i++)
-		{
-			blockStates[i] = PIO.read7BitEncodedInt(stream);
-		}
-
-		return new ScarifSection(palette, blockStates);
 	}
 
 	public BlockState readBlockState() throws IOException

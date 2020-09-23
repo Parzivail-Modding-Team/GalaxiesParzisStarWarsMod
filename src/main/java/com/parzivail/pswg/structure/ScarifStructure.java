@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.io.RandomAccessFile;
 import java.nio.channels.Channels;
 import java.util.HashMap;
-import java.util.zip.GZIPInputStream;
 
 public class ScarifStructure
 {
@@ -31,7 +30,37 @@ public class ScarifStructure
 	{
 		try
 		{
-			return readUnsafe(filename);
+			RandomAccessFile raf = PIO.getFile("data", filename);
+			if (raf == null)
+				throw new IOException("Could not load file");
+
+			InputStream fs = Channels.newInputStream(raf.getChannel());
+			LittleEndianDataInputStream s = new LittleEndianDataInputStream(fs);
+
+			byte[] identBytes = new byte[MAGIC.length()];
+			int read = s.read(identBytes);
+			String ident = new String(identBytes);
+			if (!ident.equals(MAGIC) || read != identBytes.length)
+				throw new IOException("Input file not SCARIF structure");
+
+			int version = s.readInt();
+			if (version != 2)
+				throw new IOException("Input file not SCARIF v2 structure");
+
+			int numChunks = s.readInt();
+
+			HashMap<ChunkPos, Long> chunkHeaderEntries = new HashMap<>();
+
+			for (int i = 0; i < numChunks; i++)
+			{
+				int x = s.readInt();
+				int z = s.readInt();
+				long offset = s.readLong();
+
+				chunkHeaderEntries.put(new ChunkPos(x, z), offset);
+			}
+
+			return new ScarifStructure(raf, s, chunkHeaderEntries);
 		}
 		catch (IOException e)
 		{
@@ -42,47 +71,15 @@ public class ScarifStructure
 		return null;
 	}
 
-	public static ScarifStructure readUnsafe(Identifier filename) throws IOException
-	{
-		RandomAccessFile raf = PIO.getFile("data", filename);
-		if (raf == null)
-			throw new IOException("Could not load file");
-
-		InputStream fs = Channels.newInputStream(raf.getChannel());
-		LittleEndianDataInputStream s = new LittleEndianDataInputStream(fs);
-
-		byte[] identBytes = new byte[MAGIC.length()];
-		int read = s.read(identBytes);
-		String ident = new String(identBytes);
-		if (!ident.equals(MAGIC) || read != identBytes.length)
-			throw new IOException("Input file not SCARIF structure");
-
-		int version = s.readInt();
-		if (version != 2)
-			throw new IOException("Input file not SCARIF v2 structure");
-
-		int numChunks = s.readInt();
-
-		HashMap<ChunkPos, Long> chunkHeaderEntries = new HashMap<>();
-
-		for (int i = 0; i < numChunks; i++)
-		{
-			int x = s.readInt();
-			int z = s.readInt();
-			long offset = s.readLong();
-
-			chunkHeaderEntries.put(new ChunkPos(x, z), offset);
-		}
-
-		return new ScarifStructure(raf, s, chunkHeaderEntries);
-	}
-
 	public ScarifChunk openChunk(ChunkPos pos)
 	{
+		if (!entries.containsKey(pos))
+			return null;
+
 		try
 		{
 			file.seek(entries.get(pos));
-			return new ScarifChunk(new GZIPInputStream(stream));
+			return new ScarifChunk(stream);
 		}
 		catch (IOException e)
 		{

@@ -18,7 +18,6 @@ import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
 import javax.annotation.Nullable;
-import java.util.Random;
 
 public class TatooineDimension extends Dimension
 {
@@ -44,9 +43,7 @@ public class TatooineDimension extends Dimension
 	@Nullable
 	public BlockPos getSpawningBlockInChunk(ChunkPos chunkPos, boolean checkMobSpawnValidity)
 	{
-		Random random = new Random(this.world.getSeed());
-		BlockPos blockPos = new BlockPos(chunkPos.getStartX() + random.nextInt(15), 0, chunkPos.getEndZ() + random.nextInt(15));
-		return this.world.getTopNonAirState(blockPos).getMaterial().blocksMovement() ? blockPos : null;
+		return new BlockPos(-17, 140, -27);
 	}
 
 	@Nullable

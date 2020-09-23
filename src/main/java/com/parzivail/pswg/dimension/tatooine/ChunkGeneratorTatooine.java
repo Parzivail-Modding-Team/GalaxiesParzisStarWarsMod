@@ -1,6 +1,9 @@
 package com.parzivail.pswg.dimension.tatooine;
 
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgStructures;
+import com.parzivail.pswg.structure.ScarifChunk;
+import com.parzivail.pswg.structure.ScarifSection;
 import com.parzivail.util.world.MultiCompositeTerrain;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -43,6 +46,29 @@ public class ChunkGeneratorTatooine extends ChunkGenerator<MultiCompositeTerrain
 					if (blockState.getBlock() == Blocks.STONE || (q < 2 && (q - y) != 0))
 					{
 						chunk.setBlockState(blockPos, tatooineSand, false);
+					}
+				}
+			}
+		}
+
+		ScarifChunk strChunk = SwgStructures.General.Region.openChunk(chunkPos);
+		if (strChunk != null)
+		{
+			strChunk.init();
+
+			for (int i = 0; i < strChunk.numSections; i++)
+			{
+				ScarifSection section = strChunk.readSection();
+
+				for (int y = 0; y < 16; y++)
+				{
+					for (int z = 0; z < 16; z++)
+					{
+						for (int x = 0; x < 16; x++)
+						{
+							BlockState blockState = section.palette[section.blockStates[y * 256 + z * 16 + x]];
+							chunk.setBlockState(blockPos.set(k + x, section.y * 16 + y, l + z), blockState, false);
+						}
 					}
 				}
 			}
