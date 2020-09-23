@@ -8,18 +8,18 @@ import net.minecraft.util.math.ChunkPos;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.RandomAccessFile;
 import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.util.HashMap;
 
 public class ScarifStructure
 {
 	private static final String MAGIC = "SCRF";
 	private final LittleEndianDataInputStream stream;
-	private final RandomAccessFile file;
+	private final FileChannel file;
 	private final HashMap<ChunkPos, Long> entries;
 
-	public ScarifStructure(RandomAccessFile file, LittleEndianDataInputStream stream, HashMap<ChunkPos, Long> entries)
+	public ScarifStructure(FileChannel file, LittleEndianDataInputStream stream, HashMap<ChunkPos, Long> entries)
 	{
 		this.file = file;
 		this.stream = stream;
@@ -30,11 +30,11 @@ public class ScarifStructure
 	{
 		try
 		{
-			RandomAccessFile raf = PIO.getFile("data", filename);
+			FileChannel raf = PIO.getFile("data", filename);
 			if (raf == null)
 				throw new IOException("Could not load file");
 
-			InputStream fs = Channels.newInputStream(raf.getChannel());
+			InputStream fs = Channels.newInputStream(raf);
 			LittleEndianDataInputStream s = new LittleEndianDataInputStream(fs);
 
 			byte[] identBytes = new byte[MAGIC.length()];
@@ -78,7 +78,7 @@ public class ScarifStructure
 
 		try
 		{
-			file.seek(entries.get(pos));
+			file.position(entries.get(pos));
 			return new ScarifChunk(stream);
 		}
 		catch (IOException e)

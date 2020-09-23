@@ -1,13 +1,17 @@
 package com.parzivail.pswg.util;
 
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.Resources;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.Identifier;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.UUID;
 
 public class PIO
@@ -77,16 +81,16 @@ public class PIO
 		return Galaxies.class.getClassLoader().getResourceAsStream(domain + "/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath());
 	}
 
-	public static RandomAccessFile getFile(String domain, Identifier resourceLocation)
+	public static FileChannel getFile(String domain, Identifier resourceLocation)
 	{
 		try
 		{
-			URL url = Galaxies.class.getClassLoader().getResource(domain + "/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath());
-			if (url == null)
-				return null;
-			return new RandomAccessFile(new File(url.toURI()), "r");
+			ModContainer container = FabricLoader.getInstance().getModContainer(Resources.MODID).orElseThrow(IllegalStateException::new);
+			Path path = container.getPath(domain + "/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath());
+
+			return FileChannel.open(path, StandardOpenOption.READ);
 		}
-		catch (FileNotFoundException | URISyntaxException e)
+		catch (IOException e)
 		{
 			e.printStackTrace();
 		}
