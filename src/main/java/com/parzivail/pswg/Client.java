@@ -37,6 +37,7 @@ public class Client implements ClientModInitializer
 		//		KeyBindingRegistry.INSTANCE.register(KEY_THROTTLE_UP);
 		//		KeyBindingRegistry.INSTANCE.register(KEY_THROTTLE_DOWN);
 
+		// TODO: "I'd think you use ModelProvider or ModelAppender and register it to ModelLoaderregistry"
 		SimpleModels.register(Registry.BLOCK.getId(SwgBlocks.Crate.Octagon), ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon"), new Identifier("block/stone")));
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> SimpleModels.INSTANCE);
