@@ -24,6 +24,9 @@ public class KeyHandler
 			if (mc.options.keyBack.isPressed())
 				controls.add(ShipControls.THROTTLE_DOWN);
 
+			if (mc.options.keyRight.isPressed())
+				controls.add(ShipControls.SPECIAL);
+
 			ship.acceptControlInput(controls);
 		}
 	}

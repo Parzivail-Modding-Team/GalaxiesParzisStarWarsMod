@@ -40,6 +40,10 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	private static final TrackedData<Quaternion> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
 	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Short> CONTROLS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
+	private static final TrackedData<Short> WINGS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
+
+	private static final int WING_DIRECTION_MASK = 0b10000000;
+	private static final int WING_TIMER_MASK = 0b01111111;
 
 	@Environment(EnvType.CLIENT)
 	public ChaseCamEntity camera;
@@ -51,21 +55,6 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	{
 		super(type, world);
 		this.inanimate = true;
-	}
-
-	@Override
-	public void kill()
-	{
-		super.kill();
-
-		if (world.isClient)
-			killCamera();
-	}
-
-	private void killCamera()
-	{
-		if (camera != null)
-			camera.kill();
 	}
 
 	public static void handleRotationPacket(PacketContext packetContext, PacketByteBuf attachedData)
@@ -112,6 +101,28 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		return null;
 	}
 
+	public static ShipEntity create(World world)
+	{
+		ShipEntity ship = new ShipEntity(SwgEntities.Ship.T65bXwing, world);
+		//		ship.setSettings(settings);
+		return ship;
+	}
+
+	@Override
+	public void kill()
+	{
+		super.kill();
+
+		if (world.isClient)
+			killCamera();
+	}
+
+	private void killCamera()
+	{
+		if (camera != null)
+			camera.kill();
+	}
+
 	@Override
 	protected boolean canClimb()
 	{
@@ -155,6 +166,7 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		getDataTracker().startTracking(ROTATION, new Quaternion(Quaternion.IDENTITY));
 		getDataTracker().startTracking(THROTTLE, 0f);
 		getDataTracker().startTracking(CONTROLS, (short)0);
+		getDataTracker().startTracking(WINGS, (short)0);
 	}
 
 	@Override
@@ -198,22 +210,57 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		Entity pilot = getPrimaryPassenger();
 		float throttle = getThrottle();
 
+		short wingTimer = getWingTimer();
+
+		if (wingTimer != 0)
+		{
+			boolean movingUp = getWingDirection();
+
+			wingTimer--;
+
+			setWings(movingUp, wingTimer);
+		}
+
 		if (pilot instanceof PlayerEntity)
 		{
-			if (getControls().contains(ShipControls.THROTTLE_UP))
+			EnumSet<ShipControls> controls = getControls();
+
+			if (controls.contains(ShipControls.THROTTLE_UP))
 				throttle += 0.3f;
-			if (getControls().contains(ShipControls.THROTTLE_DOWN))
+			if (controls.contains(ShipControls.THROTTLE_DOWN))
 				throttle -= 0.3f;
 
 			throttle = MathHelper.clamp(throttle, 0, 3);
 
 			setThrottle(throttle);
+
+			if (controls.contains(ShipControls.SPECIAL) && wingTimer == 0)
+			{
+				boolean movingUp = getWingDirection();
+
+				setWings(!movingUp, (short)20);
+			}
 		}
 
+		//		Lumberjack.log("%s %s %s", this.getX(), this.getY(), this.getZ());
+
 		Vec3d forward = QuatUtil.rotate(MathUtil.NEGZ, getRotation());
-		move(MovementType.SELF, forward.multiply(throttle));
+		setVelocity(forward.multiply(throttle));
+
+		move(MovementType.SELF, getVelocity());
 
 		EntityUtil.updateEulerRotation(this, getRotation());
+	}
+
+	@Override
+	public void updateTrackedPositionAndAngles(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate)
+	{
+		// Stray movement packets seem to make their way to the
+		// client way after the ship has stopped so we just ignore
+		// them
+		if (getThrottle() > 0)
+			this.updatePosition(x, y, z);
+		this.setRotation(yaw, pitch);
 	}
 
 	public boolean interact(PlayerEntity player, Hand hand)
@@ -254,12 +301,6 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		return list.isEmpty() ? null : list.get(0);
 	}
 
-	@Override
-	public Packet<?> createSpawnPacket()
-	{
-		return new EntitySpawnS2CPacket(this);
-	}
-
 	//	public Rotation getRotation(float t)
 	//	{
 	//		Rotation start = prevRotation;
@@ -267,6 +308,12 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	//
 	//		return MathUtil.lerp(start, end, t);
 	//	}
+
+	@Override
+	public Packet<?> createSpawnPacket()
+	{
+		return new EntitySpawnS2CPacket(this);
+	}
 
 	public EnumSet<ShipControls> getControls()
 	{
@@ -293,6 +340,12 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		return getDataTracker().get(ROTATION);
 	}
 
+	public void setRotation(Quaternion q)
+	{
+		QuatUtil.normalize(q);
+		getDataTracker().set(ROTATION, q);
+	}
+
 	@Environment(EnvType.CLIENT)
 	public Quaternion getViewRotation(float t)
 	{
@@ -301,17 +354,21 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		return QuatUtil.slerp(start, end, t);
 	}
 
-	public void setRotation(Quaternion q)
+	public short getWingTimer()
 	{
-		QuatUtil.normalize(q);
-		getDataTracker().set(ROTATION, q);
+		return (short)(getDataTracker().get(WINGS) & WING_TIMER_MASK);
 	}
 
-	public static ShipEntity create(World world)
+	public boolean getWingDirection()
 	{
-		ShipEntity ship = new ShipEntity(SwgEntities.Ship.T65bXwing, world);
-		//		ship.setSettings(settings);
-		return ship;
+		return (getDataTracker().get(WINGS) & WING_DIRECTION_MASK) != 0;
+	}
+
+	public void setWings(boolean direction, short timer)
+	{
+		if (direction)
+			timer |= WING_DIRECTION_MASK;
+		getDataTracker().set(WINGS, timer);
 	}
 
 	public void acceptControlInput(EnumSet<ShipControls> controls)

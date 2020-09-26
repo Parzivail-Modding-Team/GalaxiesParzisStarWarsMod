@@ -8,7 +8,6 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
-import org.brotli.dec.BrotliInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,8 +50,7 @@ public class PM3DFile
 	private static PM3DFile load(Identifier modelFile) throws IOException
 	{
 		InputStream reader = PIO.getStream("assets", modelFile);
-		BrotliInputStream bis = new BrotliInputStream(reader);
-		LittleEndianDataInputStream objStream = new LittleEndianDataInputStream(bis);
+		LittleEndianDataInputStream objStream = new LittleEndianDataInputStream(reader);
 
 		byte[] identBytes = new byte[MAGIC.length()];
 		int read = objStream.read(identBytes);
