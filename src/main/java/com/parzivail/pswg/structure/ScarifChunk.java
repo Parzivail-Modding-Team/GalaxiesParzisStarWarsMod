@@ -6,7 +6,6 @@ import com.parzivail.pswg.util.PIO;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.state.State;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
@@ -112,8 +111,9 @@ public class ScarifChunk
 			for (String key : props.getKeys())
 			{
 				Property<?> property = stateManager.getProperty(key);
-				if (property != null)
-					blockState = State.tryRead(blockState, property, key, props.toString(), props.getString(key));
+				// TODO
+				//				if (property != null)
+				//					blockState = State.tryRead(blockState, property, key, props.toString(), props.getString(key));
 			}
 		}
 

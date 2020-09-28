@@ -2,7 +2,7 @@ package com.parzivail.pswg.entity.data;
 
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.util.PacketByteBuf;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Quaternion;
 
 public class TrackedDataHandlers
@@ -12,10 +12,10 @@ public class TrackedDataHandlers
 		@Override
 		public void write(PacketByteBuf data, Quaternion q)
 		{
-			data.writeFloat(q.getA());
-			data.writeFloat(q.getB());
-			data.writeFloat(q.getC());
-			data.writeFloat(q.getD());
+			data.writeFloat(q.getW());
+			data.writeFloat(q.getX());
+			data.writeFloat(q.getY());
+			data.writeFloat(q.getZ());
 		}
 
 		@Override

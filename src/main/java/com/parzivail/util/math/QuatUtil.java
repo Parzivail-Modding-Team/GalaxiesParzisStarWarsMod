@@ -2,13 +2,9 @@ package com.parzivail.util.math;
 
 import com.parzivail.pswg.util.MathUtil;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.EulerAngle;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 
 public class QuatUtil
 {
@@ -25,10 +21,10 @@ public class QuatUtil
 	public static Vec3d rotate(Vec3d self, Quaternion q)
 	{
 		// Extract the vector part of the quaternion
-		Vec3d u = new Vec3d(q.getB(), q.getC(), q.getD());
+		Vec3d u = new Vec3d(q.getX(), q.getY(), q.getZ());
 
 		// Extract the scalar part of the quaternion
-		float s = q.getA();
+		float s = q.getW();
 
 		// Do the math
 		return u.multiply(2.0f * u.dotProduct(self)).add(self.multiply(s * s - u.dotProduct(u))).add(u.crossProduct(self).multiply(2.0f * s));
@@ -51,15 +47,15 @@ public class QuatUtil
 
 	public static void set(Quaternion self, Quaternion other)
 	{
-		set(self, other.getA(), other.getB(), other.getC(), other.getD());
+		set(self, other.getW(), other.getX(), other.getY(), other.getZ());
 	}
 
 	public static void putQuaternion(CompoundTag tag, Quaternion q)
 	{
-		tag.putFloat("a", q.getA());
-		tag.putFloat("b", q.getB());
-		tag.putFloat("c", q.getC());
-		tag.putFloat("d", q.getD());
+		tag.putFloat("a", q.getW());
+		tag.putFloat("b", q.getX());
+		tag.putFloat("c", q.getY());
+		tag.putFloat("d", q.getZ());
 	}
 
 	public static Quaternion getQuaternion(CompoundTag tag)
@@ -92,8 +88,8 @@ public class QuatUtil
 
 	public static void invert(Quaternion self)
 	{
-		float l = self.getA() * self.getA() + self.getB() * self.getB() + self.getC() * self.getC() + self.getD() * self.getD();
-		set(self, self.getA() / l, -self.getB() / l, -self.getC() / l, -self.getD() / l);
+		float l = self.getW() * self.getW() + self.getX() * self.getX() + self.getY() * self.getY() + self.getZ() * self.getZ();
+		set(self, self.getW() / l, -self.getX() / l, -self.getY() / l, -self.getZ() / l);
 	}
 
 	public static Quaternion invertCopy(Quaternion q)
@@ -120,12 +116,12 @@ public class QuatUtil
 
 	public static void scale(Quaternion self, float factor)
 	{
-		set(self, self.getB() * factor, self.getC() * factor, self.getD() * factor, self.getA() * factor);
+		set(self, self.getX() * factor, self.getY() * factor, self.getZ() * factor, self.getW() * factor);
 	}
 
 	public static void normalize(Quaternion self)
 	{
-		float f = self.getB() * self.getB() + self.getC() * self.getC() + self.getD() * self.getD() + self.getA() * self.getA();
+		float f = self.getX() * self.getX() + self.getY() * self.getY() + self.getZ() * self.getZ() + self.getW() * self.getW();
 		if (f > 1.0E-6F)
 		{
 			float g = (float)MathHelper.fastInverseSqrt((double)f);
@@ -139,7 +135,7 @@ public class QuatUtil
 
 	public static float dot_product(Quaternion q1, Quaternion q2)
 	{
-		return q1.getA() * q2.getA() + q1.getB() * q2.getB() + q1.getC() * q2.getC() + q1.getD() * q2.getD();
+		return q1.getW() * q2.getW() + q1.getX() * q2.getX() + q1.getY() * q2.getY() + q1.getZ() * q2.getZ();
 	}
 
 	public static Quaternion slerp(Quaternion start, Quaternion end, float t)
@@ -169,10 +165,10 @@ public class QuatUtil
 
 			float f = 1 - t;
 
-			float a = f * start.getA() + t * end.getA();
-			float b = f * start.getB() + t * end.getB();
-			float c = f * start.getC() + t * end.getC();
-			float d = f * start.getD() + t * end.getD();
+			float a = f * start.getW() + t * end.getW();
+			float b = f * start.getX() + t * end.getX();
+			float c = f * start.getY() + t * end.getY();
+			float d = f * start.getZ() + t * end.getZ();
 
 			Quaternion result = new Quaternion(b, c, d, a);
 			normalize(result);
@@ -188,10 +184,10 @@ public class QuatUtil
 		double f1 = Math.cos(theta) - dot * sin_theta / sin_theta_0;  // == sin(theta_0 - theta) / sin(theta_0)
 		double f2 = sin_theta / sin_theta_0;
 
-		float a = (float)(f1 * start.getA() + f2 * end.getA());
-		float b = (float)(f1 * start.getB() + f2 * end.getB());
-		float c = (float)(f1 * start.getC() + f2 * end.getC());
-		float d = (float)(f1 * start.getD() + f2 * end.getD());
+		float a = (float)(f1 * start.getW() + f2 * end.getW());
+		float b = (float)(f1 * start.getX() + f2 * end.getX());
+		float c = (float)(f1 * start.getY() + f2 * end.getY());
+		float d = (float)(f1 * start.getZ() + f2 * end.getZ());
 
 		Quaternion result = new Quaternion(b, c, d, a);
 		normalize(result);

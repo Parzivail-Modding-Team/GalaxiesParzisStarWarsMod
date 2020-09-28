@@ -2,7 +2,7 @@ package com.parzivail.util.binary;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.util.math.MatrixExtUtil;
-import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.util.math.Matrix4f;
 
 import java.io.DataInput;
 import java.io.IOException;

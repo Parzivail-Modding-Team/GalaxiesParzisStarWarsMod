@@ -4,12 +4,12 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ProjectileUtil;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
+import net.minecraft.entity.projectile.PersistentProjectileEntity;
+import net.minecraft.entity.projectile.ProjectileUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.hit.EntityHitResult;
@@ -18,12 +18,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.RayTraceContext;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class BlasterBoltEntity extends ProjectileEntity
+public class BlasterBoltEntity extends PersistentProjectileEntity
 {
 	@Override
 	public void writeCustomDataToTag(CompoundTag tag)
@@ -99,7 +99,7 @@ public class BlasterBoltEntity extends ProjectileEntity
 			this.prevPitch = this.pitch;
 		}
 
-		BlockPos blockPos = new BlockPos(this);
+		BlockPos blockPos = this.getBlockPos();
 		BlockState blockState = this.world.getBlockState(blockPos);
 		Vec3d vec3d3;
 		if (!blockState.isAir())
@@ -128,7 +128,7 @@ public class BlasterBoltEntity extends ProjectileEntity
 		{
 			vec3d3 = this.getPos();
 			Vec3d vec3d4 = vec3d3.add(velocity);
-			HitResult hitResult = this.world.rayTrace(new RayTraceContext(vec3d3, vec3d4, RayTraceContext.ShapeType.COLLIDER, RayTraceContext.FluidHandling.NONE, this));
+			HitResult hitResult = this.world.raycast(new RaycastContext(vec3d3, vec3d4, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
 			if (hitResult.getType() != HitResult.Type.MISS)
 			{
 				vec3d4 = hitResult.getPos();
@@ -154,7 +154,7 @@ public class BlasterBoltEntity extends ProjectileEntity
 
 				if (hitResult != null)
 				{
-					this.onHit(hitResult);
+					this.onCollision(hitResult);
 					this.velocityDirty = true;
 				}
 			}

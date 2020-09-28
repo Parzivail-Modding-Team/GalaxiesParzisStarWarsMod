@@ -9,6 +9,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.options.Perspective;
 
 public class ShipInputHandler
 {
@@ -25,7 +26,7 @@ public class ShipInputHandler
 
 		if (ship != null)
 		{
-			if (mc.options.perspective != 0)
+			if (mc.options.getPerspective() != Perspective.FIRST_PERSON)
 				mc.cameraEntity = ship.camera;
 			else
 				mc.cameraEntity = ship;

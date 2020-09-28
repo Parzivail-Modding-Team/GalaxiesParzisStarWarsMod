@@ -5,10 +5,10 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.util.math.MatrixExtUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Matrix4f;
 
 import java.io.*;
 import java.nio.channels.FileChannel;

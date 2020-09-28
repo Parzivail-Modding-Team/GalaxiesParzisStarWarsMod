@@ -66,9 +66,9 @@ public class PM3DUnbakedBlockModel implements UnbakedModel
 	{
 		ArrayList<SpriteIdentifier> ids = new ArrayList<>();
 
-		ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, baseTexture));
+		ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, baseTexture));
 		if (!baseTexture.equals(particleTexture))
-			ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEX, particleTexture));
+			ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, particleTexture));
 
 		return ids;
 	}

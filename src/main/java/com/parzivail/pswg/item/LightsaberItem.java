@@ -1,24 +1,45 @@
 package com.parzivail.pswg.item;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.ToolMaterials;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DefaultedList;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers
 {
+	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
+	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
+	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnOffhand;
+
 	public LightsaberItem(Settings settings)
 	{
 		super(ToolMaterials.DIAMOND, 1, -2.4f, settings);
+
+		ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(EntityAttributes.GENERIC_ATTACK_SPEED, new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_ID, "Weapon modifier", -2.4f, EntityAttributeModifier.Operation.ADDITION));
+		this.attribModsOff = builder.build();
+
+		builder = ImmutableMultimap.builder();
+		builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", 15, EntityAttributeModifier.Operation.ADDITION));
+		this.attribModsOnMainhand = builder.build();
+
+		builder = ImmutableMultimap.builder();
+		builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", 15, EntityAttributeModifier.Operation.ADDITION));
+		this.attribModsOnOffhand = builder.build();
 	}
 
 	@Override
@@ -40,26 +61,26 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	}
 
 	@Override
-	public void getAttributeModifiers(EquipmentSlot slot, ItemStack stack, Multimap<String, EntityAttributeModifier> attributes)
+	public ImmutableMultimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack)
 	{
-		if (slot == EquipmentSlot.MAINHAND && isActive(stack)) {
-			attributes.removeAll(EntityAttributes.ATTACK_DAMAGE.getId());
-			//attributes.removeAll(EntityAttributes.ATTACK_SPEED.getId());
-
-			attributes.put(EntityAttributes.ATTACK_DAMAGE.getId(), new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_UUID, "Weapon modifier", 15, EntityAttributeModifier.Operation.ADDITION));
-			//attributes.put(EntityAttributes.ATTACK_SPEED.getId(), new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_UUID, "Weapon modifier", 3, EntityAttributeModifier.Operation.ADDITION));
+		if (isActive(stack))
+		{
+			if (slot == EquipmentSlot.MAINHAND)
+				return attribModsOnMainhand;
+			else
+				return attribModsOnOffhand;
 		}
+		else
+			return attribModsOff;
 	}
 
 	@Override
-	public Multimap<String, EntityAttributeModifier> getModifiers(EquipmentSlot slot)
+	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot)
 	{
-		Multimap<String, EntityAttributeModifier> multimap = super.getModifiers(slot);
-		if (slot == EquipmentSlot.MAINHAND) {
-		   multimap.put(EntityAttributes.ATTACK_SPEED.getId(), new EntityAttributeModifier(ATTACK_SPEED_MODIFIER_UUID, "Weapon modifier", -2.4f, EntityAttributeModifier.Operation.ADDITION));
-		}
-
-		return multimap;
+		if (slot == EquipmentSlot.MAINHAND)
+			return attribModsOnMainhand;
+		else
+			return attribModsOnOffhand;
 	}
 
 	private static boolean isActive(ItemStack stack)

@@ -100,7 +100,7 @@ public abstract class SpriteAtlasTextureMixin
 				for (int layer = 0, layerImagesLength = layerImages.length; layer < layerImagesLength; layer++)
 				{
 					NativeImage layerImage = layerImages[layer];
-					outImage.blendPixel(x, y, applyTint(layerImage.getPixelRgba(x, y), layerTints[layer]));
+					outImage.setPixelColor(x, y, applyTint(layerImage.getPixelColor(x, y), layerTints[layer]));
 				}
 			}
 		}

@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.camera;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ShipEntity;
+import net.minecraft.client.options.Perspective;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
@@ -19,7 +20,7 @@ public class CameraHelper
 		{
 			Quaternion r = new Quaternion(ship.getViewRotation(tickDelta));
 
-			if (Client.minecraft.options.perspective == 2)
+			if (Client.minecraft.options.getPerspective() == Perspective.THIRD_PERSON_FRONT)
 				r.hamiltonProduct(new Quaternion(Vector3f.POSITIVE_Y, 180, true));
 
 			r.conjugate();

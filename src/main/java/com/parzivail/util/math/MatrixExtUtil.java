@@ -1,6 +1,6 @@
 package com.parzivail.util.math;
 
-import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.util.math.Matrix4f;
 
 public class MatrixExtUtil
 {

@@ -3,6 +3,7 @@ package com.parzivail.pswg.mixin;
 import com.google.common.collect.Multimap;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,11 +19,13 @@ public abstract class ItemStackMixin
 	@Shadow
 	public abstract Item getItem();
 
-	@Inject(method = "getAttributeModifiers", at = @At("RETURN"))
-	private void getAttributeModifiers(EquipmentSlot equipmentSlot, CallbackInfoReturnable<Multimap<String, EntityAttributeModifier>> info){
-		if(getItem() instanceof ItemStackEntityAttributeModifiers){
-			ItemStackEntityAttributeModifiers item = (ItemStackEntityAttributeModifiers) getItem();
-			item.getAttributeModifiers(equipmentSlot, (ItemStack)(Object)this, info.getReturnValue());
+	@Inject(method = "getAttributeModifiers", at = @At("RETURN"), cancellable = true)
+	private void getAttributeModifiers(EquipmentSlot equipmentSlot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> info)
+	{
+		if (getItem() instanceof ItemStackEntityAttributeModifiers)
+		{
+			ItemStackEntityAttributeModifiers item = (ItemStackEntityAttributeModifiers)getItem();
+			info.setReturnValue(item.getAttributeModifiers(equipmentSlot, (ItemStack)(Object)this));
 		}
 	}
 }

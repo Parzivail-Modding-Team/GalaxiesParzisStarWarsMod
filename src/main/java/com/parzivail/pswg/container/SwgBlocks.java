@@ -15,7 +15,7 @@ public class SwgBlocks
 {
 	public static class Sand
 	{
-		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.SAND).nonOpaque());
+		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).nonOpaque());
 	}
 
 	public static class Crate

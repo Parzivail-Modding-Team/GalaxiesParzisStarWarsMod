@@ -4,6 +4,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.util.EntityUtil;
 import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.math.QuatUtil;
+import net.minecraft.client.options.Perspective;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -13,7 +14,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RayTraceContext;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 public class ChaseCamEntity extends Entity
@@ -58,7 +59,7 @@ public class ChaseCamEntity extends Entity
 		float lerpAmount = 0.4f;
 
 		Vec3d lerpPos = getPos().add(camDpos.multiply(lerpAmount));
-		BlockHitResult result = this.world.rayTrace(new RayTraceContext(parent.getPos(), lerpPos, RayTraceContext.ShapeType.COLLIDER, RayTraceContext.FluidHandling.NONE, parent));
+		BlockHitResult result = this.world.raycast(new RaycastContext(parent.getPos(), lerpPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, parent));
 
 		Vec3d resultPos = MathUtil.lerp(0.98f, parent.getPos(), result.getPos());
 		updatePosition(resultPos.x, resultPos.y, resultPos.z);
@@ -91,11 +92,11 @@ public class ChaseCamEntity extends Entity
 
 	private float getCamDistTarget()
 	{
-		int thirdPerson = Client.minecraft.options.perspective;
+		Perspective perspective = Client.minecraft.options.getPerspective();
 		int scalar = 1;
-		if (thirdPerson == 0)
+		if (perspective == Perspective.FIRST_PERSON)
 			return 0;
-		else if (thirdPerson == 2)
+		else if (perspective == Perspective.THIRD_PERSON_FRONT)
 			scalar = -1;
 		float throttle = 1;
 		return scalar * (10 + 3 * throttle);

@@ -23,17 +23,18 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
+import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.List;
@@ -97,12 +98,12 @@ public abstract class SimpleModel extends AbstractModel
 	}
 
 	@Override
-	public ModelItemPropertyOverrideList getItemPropertyOverrides()
+	public ModelOverrideList getOverrides()
 	{
 		return itemProxy;
 	}
 
-	protected class ItemProxy extends ModelItemPropertyOverrideList
+	protected class ItemProxy extends ModelOverrideList
 	{
 		public ItemProxy()
 		{
@@ -110,7 +111,7 @@ public abstract class SimpleModel extends AbstractModel
 		}
 
 		@Override
-		public BakedModel apply(BakedModel bakedModel_1, ItemStack itemStack_1, World world_1, LivingEntity livingEntity_1)
+		public BakedModel apply(BakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity)
 		{
 			return SimpleModel.this;
 		}

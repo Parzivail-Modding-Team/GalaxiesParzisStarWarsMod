@@ -22,10 +22,10 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.PacketByteBuf;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
@@ -133,20 +133,6 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
 	{
 		return getHeight() / 2f;
-	}
-
-	@Nullable
-	@Override
-	public Box getHardCollisionBox(Entity collidingEntity)
-	{
-		return collidingEntity.isPushable() ? collidingEntity.getBoundingBox() : null;
-	}
-
-	@Nullable
-	@Override
-	public Box getCollisionBox()
-	{
-		return this.getBoundingBox();
 	}
 
 	@Override
@@ -264,12 +250,12 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		this.setRotation(yaw, pitch);
 	}
 
-	public boolean interact(PlayerEntity player, Hand hand)
+	public ActionResult interact(PlayerEntity player, Hand hand)
 	{
 		if (player.shouldCancelInteraction())
-			return false;
+			return ActionResult.FAIL;
 		else
-			return !this.world.isClient && player.startRiding(this);
+			return !this.world.isClient && player.startRiding(this) ? ActionResult.CONSUME : ActionResult.FAIL;
 	}
 
 	protected boolean canAddPassenger(Entity passenger)
@@ -408,10 +394,10 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		setRotation(rotation);
 
 		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-		passedData.writeFloat(rotation.getA());
-		passedData.writeFloat(rotation.getB());
-		passedData.writeFloat(rotation.getC());
-		passedData.writeFloat(rotation.getD());
+		passedData.writeFloat(rotation.getW());
+		passedData.writeFloat(rotation.getX());
+		passedData.writeFloat(rotation.getY());
+		passedData.writeFloat(rotation.getZ());
 		ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketShipRotation, passedData);
 	}
 }

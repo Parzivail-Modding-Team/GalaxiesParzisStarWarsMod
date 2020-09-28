@@ -7,12 +7,11 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -39,9 +38,9 @@ public class EmptyRenderer extends EntityRenderer<Entity>
 		matrix.translate(0, box.getYLength() / 2, 0);
 
 		float f = 0.025f;
-		Text n = entity.getName();
+		String n = entity.getClass().getSimpleName();
 
-		matrix.multiply(this.renderManager.getRotation());
+		matrix.multiply(this.dispatcher.getRotation());
 		matrix.scale(-f, -f, f);
 
 		Matrix4f textMatrix = matrix.peek().getModel();
@@ -49,10 +48,10 @@ public class EmptyRenderer extends EntityRenderer<Entity>
 		float g = Client.minecraft.options.getTextBackgroundOpacity(0.25F);
 		int k = (int)(g * 255.0F) << 24;
 		TextRenderer textRenderer = this.getFontRenderer();
-		float h = (float)(-textRenderer.getStringWidth(n.asString()) / 2);
+		float h = (float)(-textRenderer.getWidth(n) / 2);
 
-		textRenderer.draw(n.asString(), h, 0, 0x20ffffff, false, textMatrix, vertexConsumers, true, k, light);
-		textRenderer.draw(n.asString(), h, 0, -1, false, textMatrix, vertexConsumers, false, 0, light);
+		textRenderer.draw(n, h, 0, 0x20ffffff, false, textMatrix, vertexConsumers, true, k, light);
+		textRenderer.draw(n, h, 0, -1, false, textMatrix, vertexConsumers, false, 0, light);
 
 		matrix.pop();
 

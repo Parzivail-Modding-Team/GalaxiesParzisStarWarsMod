@@ -9,20 +9,20 @@ import org.spongepowered.asm.mixin.Shadow;
 public class QuaternionMixin implements QuaternionExt
 {
 	@Shadow
-	private float a;
+	private float x;
 	@Shadow
-	private float b;
+	private float y;
 	@Shadow
-	private float c;
+	private float z;
 	@Shadow
-	private float d;
+	private float w;
 
 	@Override
-	public void set0(float b, float c, float d, float a)
+	public void set0(float x, float y, float z, float w)
 	{
-		this.b = b;
-		this.c = c;
-		this.d = d;
-		this.a = a;
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		this.w = w;
 	}
 }
