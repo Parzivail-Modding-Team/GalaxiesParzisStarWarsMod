@@ -28,7 +28,13 @@ public class SwgBlocks
 	{
 		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
 		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Exonium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Kelerium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
 		public static final Block Rubindum = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Thorolide = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
 	}
 

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "pswg:item/nerf_steak"
+    "layer0": "pswg:item/cooked_bantha_chop"
   }
 }

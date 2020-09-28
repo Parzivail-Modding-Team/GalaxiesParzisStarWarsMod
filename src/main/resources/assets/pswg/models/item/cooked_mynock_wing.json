@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "pswg:item/fried_mynock_wing"
+    "layer0": "pswg:item/cooked_mynock_wing"
   }
 }
