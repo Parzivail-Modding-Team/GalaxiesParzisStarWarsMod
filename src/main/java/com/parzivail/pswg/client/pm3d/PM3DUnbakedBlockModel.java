@@ -50,11 +50,9 @@ public class PM3DUnbakedBlockModel implements UnbakedModel
 		this.baker = baker;
 	}
 
-	public PM3DUnbakedBlockModel(PM3DUnbakedBlockModel source)
+	public PM3DUnbakedBlockModel copy()
 	{
-		this.baseTexture = source.baseTexture;
-		this.particleTexture = source.particleTexture;
-		this.baker = source.baker;
+		return new PM3DUnbakedBlockModel(baseTexture, particleTexture, baker);
 	}
 
 	@Override

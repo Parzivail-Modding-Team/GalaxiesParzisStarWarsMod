@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.pm3d;
 
+import com.parzivail.pswg.block.RotatingBlock;
 import com.parzivail.pswg.client.model.SimpleModel;
 import com.parzivail.pswg.util.ClientMathUtil;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
@@ -8,6 +9,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -16,6 +18,7 @@ import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.math.Quaternion;
 
 import java.util.function.Function;
 
@@ -101,6 +104,38 @@ public class PM3DBakedBlockModel extends SimpleModel
 				emitFace(transformation, quadEmitter, face);
 
 		return meshBuilder.build();
+	}
+
+	@Override
+	protected Matrix4f createTransformation(BlockState state)
+	{
+		Matrix4f mat = new Matrix4f();
+		mat.loadIdentity();
+
+		if (state == null)
+		{
+			// Item transformation, scale largest dimension to 1
+
+			float largestDimension = (float)Math.max(container.bounds.getXLength(), Math.max(container.bounds.getYLength(), container.bounds.getZLength()));
+
+			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
+			mat.multiply(Matrix4f.scale(1 / largestDimension, 1 / largestDimension, 1 / largestDimension));
+			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+
+			return mat;
+		}
+
+		if (state.contains(RotatingBlock.ROTATION))
+		{
+			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
+
+			int rotation = state.get(RotatingBlock.ROTATION);
+			mat.multiply(new Quaternion(0, -rotation * 45, 0, true));
+
+			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+		}
+
+		return mat;
 	}
 
 	public static PM3DBakedBlockModel create(PM3DFile container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)

@@ -17,8 +17,6 @@
 package com.parzivail.pswg.client.model;
 
 import com.google.common.collect.ImmutableList;
-import com.parzivail.pswg.block.RotatingBlock;
-import com.parzivail.pswg.util.ClientMathUtil;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -33,7 +31,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
 
@@ -78,23 +75,7 @@ public abstract class SimpleModel extends AbstractModel
 		return result;
 	}
 
-	private Matrix4f createTransformation(BlockState state)
-	{
-		Matrix4f mat = new Matrix4f();
-		mat.loadIdentity();
-
-		if (state.contains(RotatingBlock.ROTATION))
-		{
-			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
-
-			int rotation = state.get(RotatingBlock.ROTATION);
-			mat.multiply(new Quaternion(0, -rotation * 45, 0, true));
-
-			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
-		}
-
-		return mat;
-	}
+	protected abstract Matrix4f createTransformation(BlockState state);
 
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand)
@@ -138,6 +119,6 @@ public abstract class SimpleModel extends AbstractModel
 	@Override
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context)
 	{
-		context.meshConsumer().accept(mesh(ClientMathUtil.MATRIX_IDENTITY));
+		context.meshConsumer().accept(mesh(createTransformation(null)));
 	}
 }

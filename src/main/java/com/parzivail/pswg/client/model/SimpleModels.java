@@ -54,11 +54,11 @@ public enum SimpleModels implements ModelVariantProvider
 	public static void register(Block block, PM3DUnbakedBlockModel unbakedModel)
 	{
 		Identifier blockId = Registry.BLOCK.getId(block);
-		models.put(new ModelIdentifier(blockId, "inventory"), new PM3DUnbakedBlockModel(unbakedModel));
+		models.put(new ModelIdentifier(blockId, "inventory"), unbakedModel.copy());
 		for (BlockState state : block.getStateManager().getStates())
 		{
 			ModelIdentifier id = new ModelIdentifier(blockId, BlockModels.propertyMapToString(state.getEntries()));
-			models.put(id, new PM3DUnbakedBlockModel(unbakedModel));
+			models.put(id, unbakedModel.copy());
 		}
 	}
 

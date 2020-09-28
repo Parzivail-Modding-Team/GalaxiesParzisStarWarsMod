@@ -7,6 +7,8 @@ import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,14 +24,16 @@ public class PM3DFile
 	public final ArrayList<Vector3f> normals;
 	public final ArrayList<Vector3f> uvs;
 	public final ArrayList<PM3DObject> objects;
+	public final Box bounds;
 
-	public PM3DFile(Identifier identifier, ArrayList<Vector3f> verts, ArrayList<Vector3f> normals, ArrayList<Vector3f> uvs, ArrayList<PM3DObject> objects)
+	public PM3DFile(Identifier identifier, ArrayList<Vector3f> verts, ArrayList<Vector3f> normals, ArrayList<Vector3f> uvs, ArrayList<PM3DObject> objects, Box bounds)
 	{
 		this.identifier = identifier;
 		this.verts = verts;
 		this.normals = normals;
 		this.uvs = uvs;
 		this.objects = objects;
+		this.bounds = bounds;
 	}
 
 	public static PM3DFile tryLoad(Identifier modelFile)
@@ -72,7 +76,34 @@ public class PM3DFile
 		ArrayList<Vector3f> uvs = loadUvs(numUvs, objStream);
 		ArrayList<PM3DObject> objects = loadObjects(numObjects, objStream);
 
-		return new PM3DFile(modelFile, verts, normals, uvs, objects);
+		Box bounds = getBounds(verts);
+
+		return new PM3DFile(modelFile, verts, normals, uvs, objects, bounds);
+	}
+
+	private static Box getBounds(ArrayList<Vector3f> verts)
+	{
+		Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+		Vector3f max = new Vector3f(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+
+		for (Vector3f v : verts)
+		{
+			if (v.getX() < min.getX())
+				min.set(v.getX(), min.getY(), min.getZ());
+			if (v.getY() < min.getY())
+				min.set(min.getX(), v.getY(), min.getZ());
+			if (v.getZ() < min.getZ())
+				min.set(min.getX(), min.getY(), v.getZ());
+
+			if (v.getX() > max.getX())
+				max.set(v.getX(), max.getY(), max.getZ());
+			if (v.getY() > max.getY())
+				max.set(max.getX(), v.getY(), max.getZ());
+			if (v.getZ() > max.getZ())
+				max.set(max.getX(), max.getY(), v.getZ());
+		}
+
+		return new Box(new Vec3d(min), new Vec3d(max));
 	}
 
 	private static ArrayList<Vector3f> loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
