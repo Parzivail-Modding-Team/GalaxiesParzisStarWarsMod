@@ -1,6 +1,6 @@
 ![Galaxies: Parzi's Star Wars Mod](https://raw.githubusercontent.com/Parzivail-Modding-Team/StarWarsGalaxy/master/resources/images/logo_big.png "Galaxies: Parzi's Star Wars Mod")
 
-# Galaxies: Parzi's Star Wars Mod (PSWG) for Minecraft+Fabric 1.15
+# Galaxies: Parzi's Star Wars Mod (PSWG) for Minecraft+Fabric
 
 ![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/StarWarsGalaxy/total.svg) 
 ![Discord](https://img.shields.io/discord/412945916476129280.svg)
@@ -11,7 +11,7 @@ In 2015, Parzi's Star Wars Mod was launched as a cooperative effort to bring tog
 Today, I'm working again to create the **next generation** of mods which push the limit of the immersion possible within Minecraft, essentially using it as a game engine. This starts with Galaxies: Parzi's Star Wars Mod, which is slated to have **dozens of planets, locations, and landmarks** to explore, **hundreds of NPCs** to interact with, and **story-driven quests**.
 
 ## Community and Support
-You can join the community in [the Discord server!](https://discord.gg/54MVQZZ) I also encourage everyone to add your suggestions (not issues) to our [suggestion tracker](https://pswg.nolt.io/).
+You can join the community in [the Discord server!](https://discord.gg/54MVQZZ) I also encourage everyone to voice your suggestions, comments, and questions in the Discord.
 
 If you'd like to help support and sustain the mod, please consider becoming a donor!
 
