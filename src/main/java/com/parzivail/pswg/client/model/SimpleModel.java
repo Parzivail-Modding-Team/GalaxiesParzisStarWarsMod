@@ -17,6 +17,8 @@
 package com.parzivail.pswg.client.model;
 
 import com.google.common.collect.ImmutableList;
+import com.parzivail.pswg.block.RotatingBlock;
+import com.parzivail.pswg.util.ClientMathUtil;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -26,10 +28,12 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.json.ModelItemPropertyOverrideList;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.math.Matrix4f;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
 
@@ -59,19 +63,37 @@ public abstract class SimpleModel extends AbstractModel
 		return false;
 	}
 
-	protected abstract Mesh createMesh();
+	protected abstract Mesh createMesh(Matrix4f transformation);
 
-	protected Mesh mesh()
+	protected Mesh mesh(Matrix4f transformation)
 	{
 		Mesh result = mesh;
 
 		if (result == null)
 		{
-			result = createMesh();
+			result = createMesh(transformation);
 			mesh = result;
 		}
 
 		return result;
+	}
+
+	private Matrix4f createTransformation(BlockState state)
+	{
+		Matrix4f mat = new Matrix4f();
+		mat.loadIdentity();
+
+		if (state.contains(RotatingBlock.ROTATION))
+		{
+			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
+
+			int rotation = state.get(RotatingBlock.ROTATION);
+			mat.multiply(new Quaternion(0, -rotation * 45, 0, true));
+
+			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+		}
+
+		return mat;
 	}
 
 	@Override
@@ -80,7 +102,7 @@ public abstract class SimpleModel extends AbstractModel
 		List<BakedQuad>[] lists = quadLists == null ? null : quadLists.get();
 		if (lists == null)
 		{
-			lists = ModelHelper.toQuadLists(mesh());
+			lists = ModelHelper.toQuadLists(mesh(createTransformation(state)));
 			quadLists = new WeakReference<>(lists);
 		}
 		final List<BakedQuad> result = lists[face == null ? 6 : face.getId()];
@@ -90,7 +112,7 @@ public abstract class SimpleModel extends AbstractModel
 	@Override
 	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context)
 	{
-		context.meshConsumer().accept(mesh());
+		context.meshConsumer().accept(mesh(createTransformation(state)));
 	}
 
 	@Override
@@ -116,6 +138,6 @@ public abstract class SimpleModel extends AbstractModel
 	@Override
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context)
 	{
-		context.meshConsumer().accept(mesh());
+		context.meshConsumer().accept(mesh(ClientMathUtil.MATRIX_IDENTITY));
 	}
 }

@@ -3,11 +3,10 @@ package com.parzivail.pswg.client.pm3d;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
 import com.parzivail.util.binary.BinaryUtil;
+import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.Vec2f;
-import net.minecraft.util.math.Vec3d;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,12 +18,12 @@ public class PM3DFile
 	private static final int ACCEPTED_VERSION = 0x02;
 
 	public final Identifier identifier;
-	public final ArrayList<Vec3d> verts;
-	public final ArrayList<Vec3d> normals;
-	public final ArrayList<Vec2f> uvs;
+	public final ArrayList<Vector3f> verts;
+	public final ArrayList<Vector3f> normals;
+	public final ArrayList<Vector3f> uvs;
 	public final ArrayList<PM3DObject> objects;
 
-	public PM3DFile(Identifier identifier, ArrayList<Vec3d> verts, ArrayList<Vec3d> normals, ArrayList<Vec2f> uvs, ArrayList<PM3DObject> objects)
+	public PM3DFile(Identifier identifier, ArrayList<Vector3f> verts, ArrayList<Vector3f> normals, ArrayList<Vector3f> uvs, ArrayList<PM3DObject> objects)
 	{
 		this.identifier = identifier;
 		this.verts = verts;
@@ -68,17 +67,33 @@ public class PM3DFile
 		int numUvs = objStream.readInt();
 		int numObjects = objStream.readInt();
 
-		ArrayList<Vec3d> verts = loadVerts(numVerts, objStream);
-		ArrayList<Vec3d> normals = loadVerts(numNormals, objStream);
-		ArrayList<Vec2f> uvs = loadUvs(numUvs, objStream);
+		ArrayList<Vector3f> verts = loadVerts(numVerts, objStream);
+		ArrayList<Vector3f> normals = loadNormals(numNormals, objStream);
+		ArrayList<Vector3f> uvs = loadUvs(numUvs, objStream);
 		ArrayList<PM3DObject> objects = loadObjects(numObjects, objStream);
 
 		return new PM3DFile(modelFile, verts, normals, uvs, objects);
 	}
 
-	private static ArrayList<Vec3d> loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static ArrayList<Vector3f> loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		ArrayList<Vec3d> verts = new ArrayList<>();
+		ArrayList<Vector3f> verts = new ArrayList<>();
+
+		for (int i = 0; i < num; i++)
+		{
+			float x = objStream.readFloat() + 0.5f;
+			float y = objStream.readFloat();
+			float z = objStream.readFloat() + 0.5f;
+
+			verts.add(new Vector3f(x, y, z));
+		}
+
+		return verts;
+	}
+
+	private static ArrayList<Vector3f> loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
+	{
+		ArrayList<Vector3f> verts = new ArrayList<>();
 
 		for (int i = 0; i < num; i++)
 		{
@@ -86,22 +101,22 @@ public class PM3DFile
 			float y = objStream.readFloat();
 			float z = objStream.readFloat();
 
-			verts.add(new Vec3d(x, y, z));
+			verts.add(new Vector3f(x, y, z));
 		}
 
 		return verts;
 	}
 
-	private static ArrayList<Vec2f> loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static ArrayList<Vector3f> loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		ArrayList<Vec2f> uvs = new ArrayList<>();
+		ArrayList<Vector3f> uvs = new ArrayList<>();
 
 		for (int i = 0; i < num; i++)
 		{
 			float u = objStream.readFloat();
 			float v = objStream.readFloat();
 
-			uvs.add(new Vec2f(u, v));
+			uvs.add(new Vector3f(u, v, 0));
 		}
 
 		return uvs;

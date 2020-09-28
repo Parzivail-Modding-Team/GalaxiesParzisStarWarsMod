@@ -41,13 +41,20 @@ public class PM3DUnbakedBlockModel implements UnbakedModel
 	private final Identifier baseTexture;
 	private final Identifier particleTexture;
 	private final Function<Function<SpriteIdentifier, Sprite>, PM3DBakedBlockModel> baker;
-	private PM3DBakedBlockModel baked = null;
+	private PM3DBakedBlockModel cachedBakedModel = null;
 
 	public PM3DUnbakedBlockModel(Identifier baseTexture, Identifier particleTexture, Function<Function<SpriteIdentifier, Sprite>, PM3DBakedBlockModel> baker)
 	{
 		this.baseTexture = baseTexture;
 		this.particleTexture = particleTexture;
 		this.baker = baker;
+	}
+
+	public PM3DUnbakedBlockModel(PM3DUnbakedBlockModel source)
+	{
+		this.baseTexture = source.baseTexture;
+		this.particleTexture = source.particleTexture;
+		this.baker = source.baker;
 	}
 
 	@Override
@@ -72,11 +79,11 @@ public class PM3DUnbakedBlockModel implements UnbakedModel
 	@Nullable
 	public BakedModel bake(ModelLoader modelLoader, Function<SpriteIdentifier, Sprite> spriteLoader, ModelBakeSettings modelBakeSettings, Identifier identifier)
 	{
-		PM3DBakedBlockModel result = baked;
+		PM3DBakedBlockModel result = cachedBakedModel;
 		if (result == null)
 		{
 			result = baker.apply(spriteLoader);
-			baked = result;
+			cachedBakedModel = result;
 		}
 		return result;
 	}

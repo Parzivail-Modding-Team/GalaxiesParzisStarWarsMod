@@ -16,12 +16,15 @@
 
 package com.parzivail.pswg.client.model;
 
+import com.parzivail.pswg.client.pm3d.PM3DUnbakedBlockModel;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.UnbakedModel;
@@ -30,6 +33,7 @@ import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.registry.Registry;
 
 import java.util.HashMap;
 import java.util.List;
@@ -39,17 +43,23 @@ public enum SimpleModels implements ModelVariantProvider
 {
 	INSTANCE;
 
-	private static final HashMap<Identifier, UnbakedModel> models = new HashMap<>();
+	private static final HashMap<ModelIdentifier, UnbakedModel> models = new HashMap<>();
 
 	@Override
 	public UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context)
 	{
-		return models.get(new Identifier(modelId.getNamespace(), modelId.getPath()));
+		return models.get(modelId);
 	}
 
-	public static void register(Identifier id, UnbakedModel unbakedModel)
+	public static void register(Block block, PM3DUnbakedBlockModel unbakedModel)
 	{
-		models.put(id, unbakedModel);
+		Identifier blockId = Registry.BLOCK.getId(block);
+		models.put(new ModelIdentifier(blockId, "inventory"), new PM3DUnbakedBlockModel(unbakedModel));
+		for (BlockState state : block.getStateManager().getStates())
+		{
+			ModelIdentifier id = new ModelIdentifier(blockId, BlockModels.propertyMapToString(state.getEntries()));
+			models.put(id, new PM3DUnbakedBlockModel(unbakedModel));
+		}
 	}
 
 	/**

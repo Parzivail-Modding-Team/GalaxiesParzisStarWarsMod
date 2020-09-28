@@ -1,6 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.block.RotatingBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
 import net.minecraft.block.FallingBlock;
@@ -19,7 +20,7 @@ public class SwgBlocks
 
 	public static class Crate
 	{
-		public static final Block Octagon = new Block(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final RotatingBlock Octagon = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
 	public static class Ore

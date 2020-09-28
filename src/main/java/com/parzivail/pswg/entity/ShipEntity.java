@@ -48,6 +48,7 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	@Environment(EnvType.CLIENT)
 	public ChaseCamEntity camera;
 
+	private final Quaternion instRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewPrevRotation = new Quaternion(Quaternion.IDENTITY);
 
