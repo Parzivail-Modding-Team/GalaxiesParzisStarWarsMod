@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smoking",
   "ingredient": {
-    "item": "pswg:bantha_chop"
+	"item": "pswg:nerf_chop"
   },
-  "result": "pswg:bantha_steak",
+  "result": "pswg:cooked_nerf_chop",
   "experience": 0.35,
   "cookingtime": 100
 }

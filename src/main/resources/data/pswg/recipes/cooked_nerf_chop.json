@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "pswg:mynock_wing"
+	"item": "pswg:nerf_chop"
   },
-  "result": "pswg:fried_mynock_wing",
+  "result": "pswg:cooked_nerf_chop",
   "experience": 0.35,
   "cookingtime": 200
 }

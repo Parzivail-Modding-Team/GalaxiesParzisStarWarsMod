@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smoking",
   "ingredient": {
-    "item": "pswg:nerf_chop"
+	"item": "pswg:gizka_chop"
   },
-  "result": "pswg:nerf_steak",
+  "result": "pswg:cooked_gizka_chop",
   "experience": 0.35,
   "cookingtime": 100
 }

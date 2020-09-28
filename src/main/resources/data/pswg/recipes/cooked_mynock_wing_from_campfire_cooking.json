@@ -1,9 +1,9 @@
 {
   "type": "minecraft:campfire_cooking",
   "ingredient": {
-    "item": "pswg:gizka_chop"
+	"item": "pswg:mynock_wing"
   },
-  "result": "pswg:gizka_steak",
+  "result": "pswg:cooked_mynock_wing",
   "experience": 0.35,
   "cookingtime": 600
 }

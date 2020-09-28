@@ -4,16 +4,16 @@ directory = pathlib.Path(__file__).parent.parent / "src" / "main" / "resources" 
 
 items = {
     "mynock_wing": {
-        "output": "fried_mynock_wing",
+        "output": "cooked_mynock_wing",
     },
     "bantha_chop": {
-        "output": "bantha_steak",
+        "output": "cooked_bantha_chop",
     },
     "nerf_chop": {
-        "output": "nerf_steak",
+        "output": "cooked_nerf_chop",
     },
     "gizka_chop": {
-        "output": "gizka_steak",
+        "output": "cooked_gizka_chop",
     },
     "qrikki_bread": {
         "output": "qrikki_waffle",

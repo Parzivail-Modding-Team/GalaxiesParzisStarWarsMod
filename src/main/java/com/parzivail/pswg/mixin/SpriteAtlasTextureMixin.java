@@ -3,7 +3,6 @@ package com.parzivail.pswg.mixin;
 import com.google.gson.Gson;
 import com.parzivail.pswg.json.PSWGTextureMeta;
 import com.parzivail.pswg.util.Lumberjack;
-import com.parzivail.util.ColorUtil;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -100,7 +99,7 @@ public abstract class SpriteAtlasTextureMixin
 				for (int layer = 0, layerImagesLength = layerImages.length; layer < layerImagesLength; layer++)
 				{
 					NativeImage layerImage = layerImages[layer];
-					outImage.setPixelColor(x, y, applyTint(layerImage.getPixelColor(x, y), layerTints[layer]));
+					outImage.setPixelColor(x, y, blendColorsOnSrcAlpha(outImage.getPixelColor(x, y), layerImage.getPixelColor(x, y), layerTints[layer]));
 				}
 			}
 		}
@@ -109,23 +108,33 @@ public abstract class SpriteAtlasTextureMixin
 	}
 
 	@Unique
-	private int applyTint(int color, int tint)
+	private int blendColorsOnSrcAlpha(int dest, int src, int tint)
 	{
-		int pixelA = ColorUtil.Argb.getA(color);
-		int pixelR = ColorUtil.Argb.getR(color);
-		int pixelG = ColorUtil.Argb.getG(color);
-		int pixelB = ColorUtil.Argb.getB(color);
+		float destA = NativeImage.getAlpha(dest) / 255f;
+		int destR = NativeImage.getRed(dest);
+		int destG = NativeImage.getGreen(dest);
+		int destB = NativeImage.getBlue(dest);
 
-		int tintA = ColorUtil.Argb.getA(tint);
-		int tintR = ColorUtil.Argb.getR(tint);
-		int tintG = ColorUtil.Argb.getG(tint);
-		int tintB = ColorUtil.Argb.getB(tint);
+		float srcA = NativeImage.getAlpha(src) / 255f;
+		int srcR = NativeImage.getRed(src);
+		int srcG = NativeImage.getGreen(src);
+		int srcB = NativeImage.getBlue(src);
 
-		int a = pixelA * tintA / 0xFF;
-		int r = pixelR * tintR / 0xFF;
-		int b = pixelB * tintB / 0xFF;
-		int g = pixelG * tintG / 0xFF;
+		float tintA = NativeImage.getAlpha(tint) / 255f;
+		int tintR = NativeImage.getRed(tint);
+		int tintG = NativeImage.getGreen(tint);
+		int tintB = NativeImage.getBlue(tint);
 
-		return ColorUtil.Argb.pack(a, r, g, b);
+		srcR = (srcR * tintR) / 255;
+		srcG = (srcG * tintG) / 255;
+		srcB = (srcB * tintB) / 255;
+
+		int a = (int)((destA + srcA) * 255f);
+		int r = (int)((1 - srcA) * destR + srcA * srcR);
+		int b = (int)((1 - srcA) * destG + srcA * srcG);
+		int g = (int)((1 - srcA) * destB + srcA * srcB);
+
+		// This is supposedly an ABGR color but the colors are very wrong unless you pack it as an AGBR color
+		return NativeImage.getAbgrColor(a, g, b, r);
 	}
 }

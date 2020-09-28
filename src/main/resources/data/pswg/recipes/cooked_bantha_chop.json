@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-    "item": "pswg:nerf_chop"
+	"item": "pswg:bantha_chop"
   },
-  "result": "pswg:nerf_steak",
+  "result": "pswg:cooked_bantha_chop",
   "experience": 0.35,
   "cookingtime": 200
 }
