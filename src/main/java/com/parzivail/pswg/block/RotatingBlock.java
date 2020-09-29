@@ -26,7 +26,7 @@ public class RotatingBlock extends Block
 
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
-		return this.getDefaultState().with(ROTATION, MathHelper.floor((double)((90 + ctx.getPlayerYaw()) * 8.0F / 360.0F) + 0.5D) & 7);
+		return this.getDefaultState().with(ROTATION, MathHelper.floor((double)((ctx.getPlayerYaw() - 90) * 8.0F / 360.0F) + 0.5D) & 7);
 	}
 
 	public BlockState rotate(BlockState state, BlockRotation rotation)

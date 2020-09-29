@@ -20,8 +20,14 @@ public class SwgBlocks
 
 	public static class Crate
 	{
-		public static final RotatingBlock Octagon = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		public static final RotatingBlock MoistureVaporator = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final RotatingBlock OctagonOrange = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final RotatingBlock OctagonGray = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final RotatingBlock OctagonBlack = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+	}
+
+	public static class Vaporator
+	{
+		public static final RotatingBlock Gx8 = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
 	public static class Ore
