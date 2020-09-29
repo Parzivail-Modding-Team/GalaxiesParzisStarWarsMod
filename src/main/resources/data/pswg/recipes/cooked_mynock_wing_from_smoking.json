@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smoking",
   "ingredient": {
-	"item": "pswg:mynock_wing"
+    "item": "pswg:mynock_wing"
   },
   "result": "pswg:cooked_mynock_wing",
   "experience": 0.35,

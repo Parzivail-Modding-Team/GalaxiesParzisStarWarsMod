@@ -1,7 +1,7 @@
 {
   "type": "minecraft:campfire_cooking",
   "ingredient": {
-	"item": "pswg:gizka_chop"
+    "item": "pswg:gizka_chop"
   },
   "result": "pswg:cooked_gizka_chop",
   "experience": 0.35,

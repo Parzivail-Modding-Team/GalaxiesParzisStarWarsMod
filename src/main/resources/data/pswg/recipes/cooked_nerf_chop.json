@@ -1,7 +1,7 @@
 {
   "type": "minecraft:smelting",
   "ingredient": {
-	"item": "pswg:nerf_chop"
+    "item": "pswg:nerf_chop"
   },
   "result": "pswg:cooked_nerf_chop",
   "experience": 0.35,
