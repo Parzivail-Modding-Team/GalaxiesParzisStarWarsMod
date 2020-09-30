@@ -1,6 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.block.BlockMoistureVaporator;
 import com.parzivail.pswg.block.RotatingBlock;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -27,7 +28,7 @@ public class SwgBlocks
 
 	public static class Vaporator
 	{
-		public static final RotatingBlock Gx8 = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
 	public static class Ore

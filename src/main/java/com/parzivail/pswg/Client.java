@@ -40,7 +40,7 @@ public class Client implements ClientModInitializer
 		SimpleModels.register(SwgBlocks.Crate.OctagonGray, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon_gray"), new Identifier("block/stone")));
 		SimpleModels.register(SwgBlocks.Crate.OctagonBlack, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon_black"), new Identifier("block/stone")));
 
-		SimpleModels.register(SwgBlocks.Vaporator.Gx8, ModelLoader.loadPM3D(Resources.identifier("models/block/moisture_vaporator.pm3d"), Resources.identifier("model/moisture_vaporator"), new Identifier("block/stone")));
+		SimpleModels.register(SwgBlocks.Vaporator.Gx8, ModelLoader.loadPM3D(Resources.identifier("models/block/moisture_vaporator_gx8.pm3d"), Resources.identifier("model/moisture_vaporator_gx8"), new Identifier("block/stone")));
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> SimpleModels.INSTANCE);
 
