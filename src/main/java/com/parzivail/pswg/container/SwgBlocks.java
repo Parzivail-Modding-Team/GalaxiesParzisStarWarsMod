@@ -32,6 +32,11 @@ public class SwgBlocks
 		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
+	public static class Machine
+	{
+		public static final RotatingBlock Spoked = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+	}
+
 	public static class Ore
 	{
 		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());

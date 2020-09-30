@@ -125,13 +125,10 @@ public class PM3DBakedBlockModel extends SimpleModel
 			return mat;
 		}
 
-		if (state.contains(RotatingBlock.ROTATION))
+		if (state.getBlock() instanceof RotatingBlock)
 		{
 			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
-
-			int rotation = state.get(RotatingBlock.ROTATION);
-			mat.multiply(new Quaternion(0, -rotation * 45, 0, true));
-
+			mat.multiply(new Quaternion(0, ((RotatingBlock)state.getBlock()).getRotationDegrees(state), 0, true));
 			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
 		}
 

@@ -24,6 +24,16 @@ public class RotatingBlock extends Block
 		super(settings);
 	}
 
+	public float getRotationDegrees(BlockState state)
+	{
+		if (!state.contains(ROTATION))
+			return 0;
+
+		int rotationIdx = state.get(ROTATION);
+
+		return -rotationIdx * 45;
+	}
+
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		return this.getDefaultState().with(ROTATION, MathHelper.floor((double)((ctx.getPlayerYaw() - 90) * 8.0F / 360.0F) + 0.5D) & 7);
@@ -31,12 +41,12 @@ public class RotatingBlock extends Block
 
 	public BlockState rotate(BlockState state, BlockRotation rotation)
 	{
-		return state.with(ROTATION, rotation.rotate(state.get(ROTATION), 16));
+		return state.with(ROTATION, rotation.rotate(state.get(ROTATION), 8));
 	}
 
 	public BlockState mirror(BlockState state, BlockMirror mirror)
 	{
-		return state.with(ROTATION, mirror.mirror(state.get(ROTATION), 16));
+		return state.with(ROTATION, mirror.mirror(state.get(ROTATION), 8));
 	}
 
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
