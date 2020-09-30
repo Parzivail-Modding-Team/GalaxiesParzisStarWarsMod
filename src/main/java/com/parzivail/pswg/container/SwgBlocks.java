@@ -24,6 +24,7 @@ public class SwgBlocks
 		public static final RotatingBlock OctagonOrange = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 		public static final RotatingBlock OctagonGray = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 		public static final RotatingBlock OctagonBlack = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final RotatingBlock MosEisley = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
 	public static class Vaporator
