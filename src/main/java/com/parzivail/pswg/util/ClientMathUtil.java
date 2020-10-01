@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.client.util.math.Vector4f;
+import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 
 public class ClientMathUtil
@@ -21,5 +22,13 @@ public class ClientMathUtil
 		Vector4f v4 = new Vector4f(v);
 		v4.transform(m);
 		return new Vector3f(v4.getX(), v4.getY(), v4.getZ());
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static Vector3f transform(Vector3f v, Matrix3f m)
+	{
+		Vector3f v3 = v.copy();
+		v3.transform(m);
+		return v3;
 	}
 }

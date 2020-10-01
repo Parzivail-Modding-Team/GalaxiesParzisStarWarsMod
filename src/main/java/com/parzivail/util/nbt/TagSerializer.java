@@ -38,6 +38,25 @@ public class TagSerializer
 		//map(ItemStack[].class, PNBTSerial::readItemStacks, PNBTSerial::writeItemStacks);
 	}
 
+	public TagSerializer(CompoundTag source)
+	{
+		try
+		{
+			Class<?> clazz = this.getClass();
+			Field[] clFields = getClassFields(clazz);
+			for (Field f : clFields)
+			{
+				Class<?> type = f.getType();
+				if (acceptField(f, type))
+					this.readField(f, type, source);
+			}
+		}
+		catch (Exception e)
+		{
+			throw new RuntimeException("Error at reading NBT " + this, e);
+		}
+	}
+
 	private static boolean acceptField(Field f, Class<?> type)
 	{
 		int mods = f.getModifiers();
@@ -68,25 +87,6 @@ public class TagSerializer
 	private static <T> void map(Class<T> type, Reader<T> reader, Writer<T> writer)
 	{
 		TYPE_SERIALIZERS.put(type, Pair.of(reader, writer));
-	}
-
-	public final void deserialize(CompoundTag nbt)
-	{
-		try
-		{
-			Class<?> clazz = this.getClass();
-			Field[] clFields = getClassFields(clazz);
-			for (Field f : clFields)
-			{
-				Class<?> type = f.getType();
-				if (acceptField(f, type))
-					this.readField(f, type, nbt);
-			}
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException("Error at reading NBT " + this, e);
-		}
 	}
 
 	private void readField(Field f, Class<?> clazz, CompoundTag nbt) throws IllegalArgumentException, IllegalAccessException

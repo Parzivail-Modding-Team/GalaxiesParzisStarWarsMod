@@ -31,10 +31,13 @@ public class Client implements ClientModInitializer
 
 		minecraft = MinecraftClient.getInstance();
 
+		// TODO: migrate to the new keybind system
 		KeyBindingRegistry.INSTANCE.addCategory("category.pswg");
 
 		//		KeyBindingRegistry.INSTANCE.register(KEY_THROTTLE_UP);
 		//		KeyBindingRegistry.INSTANCE.register(KEY_THROTTLE_DOWN);
+
+		ClientTickCallback.EVENT.register(KeyHandler::handle);
 
 		SimpleModels.register(SwgBlocks.Crate.OctagonOrange, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon_orange"), new Identifier("block/stone")));
 		SimpleModels.register(SwgBlocks.Crate.OctagonGray, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon_gray"), new Identifier("block/stone")));
@@ -50,7 +53,5 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.T65bXwing, (entityRenderDispatcher, context) -> new ShipRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.ChaseCam, (entityRenderDispatcher, context) -> new EmptyRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.BlasterBolt, (entityRenderDispatcher, context) -> new BlasterBoltRenderer(entityRenderDispatcher));
-
-		ClientTickCallback.EVENT.register(KeyHandler::handle);
 	}
 }

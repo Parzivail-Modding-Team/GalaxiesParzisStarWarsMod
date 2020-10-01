@@ -4,7 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": ["FarmlandBlockMixin", "ItemStackMixin", "QuaternionMixin", "ServerPlayNetworkHandlerMixin"],
   "client": [
-	"ClientPlayNetworkHandlerMixin", "EntityClientMixin", "GameRendererMixin", "Matrix4fMixin", "SpriteAtlasTextureMixin"
+	"ClientPlayNetworkHandlerMixin", "EntityClientMixin", "GameRendererMixin", "ItemRendererMixin", "Matrix4fMixin", "SpriteAtlasTextureMixin"
   ],
   "injectors": {
 	"defaultRequire": 1

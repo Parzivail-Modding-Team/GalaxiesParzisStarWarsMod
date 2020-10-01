@@ -2,6 +2,7 @@ package com.parzivail.pswg.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.parzivail.pswg.item.data.LightsaberTag;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
@@ -42,6 +43,11 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		this.attribModsOnOffhand = builder.build();
 	}
 
+	private static boolean isActive(ItemStack stack)
+	{
+		return !stack.isEmpty() && new LightsaberTag(stack.getOrCreateTag()).active;
+	}
+
 	@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
 	{
@@ -63,51 +69,51 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	@Override
 	public ImmutableMultimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack)
 	{
-		if (isActive(stack))
+		switch (slot)
 		{
-			if (slot == EquipmentSlot.MAINHAND)
-				return attribModsOnMainhand;
-			else
-				return attribModsOnOffhand;
+			case MAINHAND:
+				return isActive(stack) ? attribModsOnMainhand : attribModsOff;
+			case OFFHAND:
+				return isActive(stack) ? attribModsOnOffhand : attribModsOff;
+			default:
+				return ImmutableMultimap.of();
 		}
-		else
-			return attribModsOff;
 	}
 
 	@Override
 	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot)
 	{
-		if (slot == EquipmentSlot.MAINHAND)
-			return attribModsOnMainhand;
-		else
-			return attribModsOnOffhand;
-	}
-
-	private static boolean isActive(ItemStack stack)
-	{
-		return !stack.isEmpty() && stack.getTag() != null && stack.getTag().getBoolean("active");
+		switch (slot)
+		{
+			case MAINHAND:
+			case OFFHAND:
+				return attribModsOff;
+			default:
+				return ImmutableMultimap.of();
+		}
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand) {
+	public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand)
+	{
 		final ItemStack stack = player.getStackInHand(hand);
-		if (player.isSneaking()) {
-			switchActive(stack);
+		if (player.isSneaking())
+		{
+			LightsaberTag.mutate(stack, (tag) -> tag.active = !tag.active);
 			return new TypedActionResult<>(ActionResult.SUCCESS, stack);
 		}
 		return new TypedActionResult<>(ActionResult.PASS, stack);
 	}
 
-	private static void switchActive(ItemStack stack)
-	{
-		stack.getOrCreateTag().putBoolean("active", !isActive(stack));
-	}
-
 	@Override
-	public boolean isDamageable() {
+	public boolean isDamageable()
+	{
 		return false;
 	}
 
 	@Override
-	public boolean isEnchantable(ItemStack stack) { return true; }
+	public boolean isEnchantable(ItemStack stack)
+	{
+		return true;
+	}
 }
