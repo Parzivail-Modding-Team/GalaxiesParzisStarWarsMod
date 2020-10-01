@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.parzivail.pswg.item.data.LightsaberTag;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
@@ -59,6 +60,12 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	}
 
 	@Override
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
+	{
+		LightsaberTag.mutate(stack, LightsaberTag::tickTransition);
+	}
+
+	@Override
 	public boolean postHit(ItemStack stack, LivingEntity target, LivingEntity attacker)
 	{
 		// maybe energy cost? otherwise leave empty, this is important to
@@ -99,7 +106,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		final ItemStack stack = player.getStackInHand(hand);
 		if (player.isSneaking())
 		{
-			LightsaberTag.mutate(stack, (tag) -> tag.active = !tag.active);
+			LightsaberTag.mutate(stack, LightsaberTag::toggle);
 			return new TypedActionResult<>(ActionResult.SUCCESS, stack);
 		}
 		return new TypedActionResult<>(ActionResult.PASS, stack);

@@ -8,7 +8,11 @@ import java.util.function.Consumer;
 
 public class LightsaberTag extends TagSerializer
 {
+	public static final byte TRANSITION_TICKS = 8;
+
 	public boolean active;
+
+	public byte transition;
 
 	public LightsaberTag(CompoundTag source)
 	{
@@ -21,5 +25,34 @@ public class LightsaberTag extends TagSerializer
 		LightsaberTag t = new LightsaberTag(nbt);
 		action.accept(t);
 		stack.setTag(t.serialize());
+	}
+
+	public void toggle()
+	{
+		if (transition == 0)
+		{
+			transition = active ? -TRANSITION_TICKS : TRANSITION_TICKS;
+			active = !active;
+		}
+	}
+
+	public void tickTransition()
+	{
+		if (transition > 0)
+			transition--;
+
+		if (transition < 0)
+			transition++;
+	}
+
+	public float getSize(float partialTicks)
+	{
+		if (transition == 0)
+			return active ? 1 : 0;
+
+		if (transition > 0)
+			return 1 - (transition - partialTicks) / TRANSITION_TICKS;
+
+		return -(transition + partialTicks) / TRANSITION_TICKS;
 	}
 }

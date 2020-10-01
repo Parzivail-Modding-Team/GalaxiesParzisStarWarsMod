@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.container.SwgItems;
+import com.parzivail.pswg.item.data.LightsaberTag;
 import com.parzivail.util.client.RenderShapes;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import net.minecraft.client.MinecraftClient;
@@ -42,6 +43,11 @@ public class SimpleItemRender
 			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(new Identifier("minecraft", "textures/block/stone.png")));
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 
+			MinecraftClient mc = MinecraftClient.getInstance();
+			LightsaberTag lt = new LightsaberTag(stack.getOrCreateTag());
+
+			float lengthCoefficient = lt.getSize(mc.getTickDelta());
+
 			lightsaber_luke_rotj.get().render(VertexConsumerBuffer.Instance);
 			matrices.pop();
 
@@ -50,7 +56,7 @@ public class SimpleItemRender
 			vc = vertexConsumers.getBuffer(RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, 7, 256, false, false, RenderLayer.MultiPhaseParameters.builder().build(true)));
 
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			renderBlade(VertexConsumerBuffer.Instance, 2, 0, 0xFF00FF00, 0xFFFFFFFF, false, true, false);
+			renderBlade(VertexConsumerBuffer.Instance, 2 * lengthCoefficient, 0, 0xFF00FF00, 0xFFFFFFFF, false, true, false);
 
 			RenderLayer.MultiPhaseParameters.Builder builder = RenderLayer.MultiPhaseParameters.builder();
 
@@ -74,7 +80,7 @@ public class SimpleItemRender
 			vc = vertexConsumers.getBuffer(RenderLayer.of("lightsaber_glow", VertexFormats.POSITION_COLOR, 7, 256, false, true, builder.build(true)));
 
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			renderBlade(VertexConsumerBuffer.Instance, 2, 0, 0x0040FF, 0xFFFFFFFF, false, false, true);
+			renderBlade(VertexConsumerBuffer.Instance, 2 * lengthCoefficient, 0, 0x0040FF, 0xFFFFFFFF, false, false, true);
 
 			matrices.pop();
 
