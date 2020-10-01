@@ -30,9 +30,6 @@ archivesBaseName = project.archives_base_name
 version = getVersionName()
 group = project.maven_group
 
-minecraft {
-}
-
 dependencies {
 	//to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"

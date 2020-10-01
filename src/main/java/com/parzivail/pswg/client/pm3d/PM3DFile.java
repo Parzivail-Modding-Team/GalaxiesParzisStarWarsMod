@@ -1,18 +1,14 @@
 package com.parzivail.pswg.client.pm3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.parzivail.pswg.util.ClientMathUtil;
 import com.parzivail.pswg.util.PIO;
 import com.parzivail.util.binary.BinaryUtil;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.MatrixStack;
+import com.parzivail.util.client.VertexConsumerBuffer;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 
 import java.io.IOException;
@@ -41,19 +37,14 @@ public class PM3DFile
 		this.bounds = bounds;
 	}
 
-	public void render(MatrixStack matrices, VertexConsumer vertexBuffer, int light)
+	public void render(VertexConsumerBuffer vcb)
 	{
-		MatrixStack.Entry entry = matrices.peek();
-
-		Matrix4f model = entry.getModel();
-		Matrix3f normal = entry.getNormal();
-
 		for (PM3DObject o : objects)
 			for (PM3DFace face : o.faces)
-				emitFace(model, normal, vertexBuffer, light, face);
+				emitFace(vcb, face);
 	}
 
-	private void emitFace(Matrix4f model, Matrix3f normal, VertexConsumer vertexBuffer, int light, PM3DFace face)
+	private void emitFace(VertexConsumerBuffer vcb, PM3DFace face)
 	{
 		PM3DVertPointer a = face.verts.get(0);
 		PM3DVertPointer b = face.verts.get(1);
@@ -75,20 +66,10 @@ public class PM3DFile
 		Vector3f tC = uvs.get(c.getTexture());
 		Vector3f tD = uvs.get(d.getTexture());
 
-		vA = ClientMathUtil.transform(vA, model);
-		vB = ClientMathUtil.transform(vB, model);
-		vC = ClientMathUtil.transform(vC, model);
-		vD = ClientMathUtil.transform(vD, model);
-
-		nA = ClientMathUtil.transform(nA, normal);
-		nB = ClientMathUtil.transform(nB, normal);
-		nC = ClientMathUtil.transform(nC, normal);
-		nD = ClientMathUtil.transform(nD, normal);
-
-		vertexBuffer.vertex(vA.getX(), vA.getY(), vA.getZ(), 1, 1, 1, 1, tA.getX(), 1 - tA.getY(), 0xFFFFFF, light, nA.getX(), nA.getY(), nA.getZ());
-		vertexBuffer.vertex(vB.getX(), vB.getY(), vB.getZ(), 1, 1, 1, 1, tB.getX(), 1 - tB.getY(), 0xFFFFFF, light, nB.getX(), nB.getY(), nB.getZ());
-		vertexBuffer.vertex(vC.getX(), vC.getY(), vC.getZ(), 1, 1, 1, 1, tC.getX(), 1 - tC.getY(), 0xFFFFFF, light, nC.getX(), nC.getY(), nC.getZ());
-		vertexBuffer.vertex(vD.getX(), vD.getY(), vD.getZ(), 1, 1, 1, 1, tD.getX(), 1 - tD.getY(), 0xFFFFFF, light, nD.getX(), nD.getY(), nD.getZ());
+		vcb.vertex(vA, nA, tA.getX(), 1 - tA.getY());
+		vcb.vertex(vB, nB, tB.getX(), 1 - tB.getY());
+		vcb.vertex(vC, nC, tC.getX(), 1 - tC.getY());
+		vcb.vertex(vD, nD, tD.getX(), 1 - tD.getY());
 	}
 
 	public static PM3DFile tryLoad(Identifier modelFile)
