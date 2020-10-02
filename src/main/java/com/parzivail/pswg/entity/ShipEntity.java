@@ -163,7 +163,7 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	protected void readCustomDataFromTag(CompoundTag tag)
 	{
 		if (tag.contains("rotation"))
-			setRotation(QuatUtil.getQuaternion(tag.getCompound("rotation")));
+			setRotation(viewRotation = QuatUtil.getQuaternion(tag.getCompound("rotation")));
 		setThrottle(tag.getFloat("throttle"));
 	}
 

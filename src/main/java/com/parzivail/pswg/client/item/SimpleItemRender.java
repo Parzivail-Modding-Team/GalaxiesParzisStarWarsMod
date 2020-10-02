@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class SimpleItemRender
@@ -53,7 +54,7 @@ public class SimpleItemRender
 
 			matrices.translate(0.02f, 0, 0.02f);
 
-			vc = vertexConsumers.getBuffer(RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, 7, 256, false, false, RenderLayer.MultiPhaseParameters.builder().build(true)));
+			vc = vertexConsumers.getBuffer(RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().build(true)));
 
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 			renderBlade(VertexConsumerBuffer.Instance, 2 * lengthCoefficient, 0, 0xFF00FF00, 0xFFFFFFFF, false, true, false);
@@ -77,7 +78,7 @@ public class SimpleItemRender
 				RenderSystem.defaultBlendFunc();
 			}));
 
-			vc = vertexConsumers.getBuffer(RenderLayer.of("lightsaber_glow", VertexFormats.POSITION_COLOR, 7, 256, false, true, builder.build(true)));
+			vc = vertexConsumers.getBuffer(RenderLayer.of("lightsaber_glow", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, builder.build(true)));
 
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 			renderBlade(VertexConsumerBuffer.Instance, 2 * lengthCoefficient, 0, 0x0040FF, 0xFFFFFFFF, false, false, true);
