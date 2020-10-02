@@ -107,7 +107,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		if (player.isSneaking())
 		{
 			LightsaberTag.mutate(stack, LightsaberTag::toggle);
-			return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+			return new TypedActionResult<>(ActionResult.CONSUME, stack);
 		}
 		return new TypedActionResult<>(ActionResult.PASS, stack);
 	}

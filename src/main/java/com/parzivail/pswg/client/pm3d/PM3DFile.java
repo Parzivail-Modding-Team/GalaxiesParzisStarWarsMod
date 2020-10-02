@@ -37,41 +37,6 @@ public class PM3DFile
 		this.bounds = bounds;
 	}
 
-	public void render(VertexConsumerBuffer vcb)
-	{
-		for (PM3DObject o : objects)
-			for (PM3DFace face : o.faces)
-				emitFace(vcb, face);
-	}
-
-	private void emitFace(VertexConsumerBuffer vcb, PM3DFace face)
-	{
-		PM3DVertPointer a = face.verts.get(0);
-		PM3DVertPointer b = face.verts.get(1);
-		PM3DVertPointer c = face.verts.get(2);
-		PM3DVertPointer d = face.verts.size() == 4 ? face.verts.get(3) : c;
-
-		Vector3f vA = verts.get(a.getVertex());
-		Vector3f vB = verts.get(b.getVertex());
-		Vector3f vC = verts.get(c.getVertex());
-		Vector3f vD = verts.get(d.getVertex());
-
-		Vector3f nA = normals.get(a.getNormal());
-		Vector3f nB = normals.get(b.getNormal());
-		Vector3f nC = normals.get(c.getNormal());
-		Vector3f nD = normals.get(d.getNormal());
-
-		Vector3f tA = uvs.get(a.getTexture());
-		Vector3f tB = uvs.get(b.getTexture());
-		Vector3f tC = uvs.get(c.getTexture());
-		Vector3f tD = uvs.get(d.getTexture());
-
-		vcb.vertex(vA, nA, tA.getX(), 1 - tA.getY());
-		vcb.vertex(vB, nB, tB.getX(), 1 - tB.getY());
-		vcb.vertex(vC, nC, tC.getX(), 1 - tC.getY());
-		vcb.vertex(vD, nD, tD.getX(), 1 - tD.getY());
-	}
-
 	public static PM3DFile tryLoad(Identifier modelFile)
 	{
 		try
@@ -220,5 +185,40 @@ public class PM3DFile
 		}
 
 		return objects;
+	}
+
+	public void render(VertexConsumerBuffer vcb)
+	{
+		for (PM3DObject o : objects)
+			for (PM3DFace face : o.faces)
+				emitFace(vcb, face);
+	}
+
+	private void emitFace(VertexConsumerBuffer vcb, PM3DFace face)
+	{
+		PM3DVertPointer a = face.verts.get(0);
+		PM3DVertPointer b = face.verts.get(1);
+		PM3DVertPointer c = face.verts.get(2);
+		PM3DVertPointer d = face.verts.size() == 4 ? face.verts.get(3) : c;
+
+		Vector3f vA = verts.get(a.getVertex());
+		Vector3f vB = verts.get(b.getVertex());
+		Vector3f vC = verts.get(c.getVertex());
+		Vector3f vD = verts.get(d.getVertex());
+
+		Vector3f nA = normals.get(a.getNormal());
+		Vector3f nB = normals.get(b.getNormal());
+		Vector3f nC = normals.get(c.getNormal());
+		Vector3f nD = normals.get(d.getNormal());
+
+		Vector3f tA = uvs.get(a.getTexture());
+		Vector3f tB = uvs.get(b.getTexture());
+		Vector3f tC = uvs.get(c.getTexture());
+		Vector3f tD = uvs.get(d.getTexture());
+
+		vcb.vertex(vA, nA, tA.getX(), 1 - tA.getY());
+		vcb.vertex(vB, nB, tB.getX(), 1 - tB.getY());
+		vcb.vertex(vC, nC, tC.getX(), 1 - tC.getY());
+		vcb.vertex(vD, nD, tD.getX(), 1 - tD.getY());
 	}
 }

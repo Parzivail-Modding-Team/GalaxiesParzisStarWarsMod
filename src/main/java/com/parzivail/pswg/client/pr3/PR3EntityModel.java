@@ -29,37 +29,32 @@ public class PR3EntityModel<T extends Entity>
 		this.orientationGetter = orientationGetter;
 	}
 
-	private void emitFace(T entity, Identifier texture, float tickDelta, MatrixStack.Entry matrices, VertexConsumerProvider vertexConsumers, int light, PR3Object o, PR3FacePointer face)
+	private void emitFace(VertexConsumer vertexConsumer, MatrixStack.Entry matrices, int light, PR3Object o, Quaternion objectRotation, PR3FacePointer face)
 	{
-		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texture));
 		Matrix4f modelMat = matrices.getModel();
 		Matrix3f normalMat = matrices.getNormal();
 
 		modelMat.multiply(o.transformationMatrix);
 
-		Quaternion q = orientationGetter.apply(entity, o.name, tickDelta);
-		if (q != null)
+		if (objectRotation != null)
 		{
-			modelMat.multiply(q);
-			normalMat.multiply(q);
+			modelMat.multiply(objectRotation);
+			normalMat.multiply(objectRotation);
 		}
 
 		Vector3f vA = o.vertices[face.a];
 		Vector3f vB = o.vertices[face.b];
 		Vector3f vC = o.vertices[face.c];
-		Vector3f vD = o.vertices[face.c];
 
 		Vector3f nA = o.normals[face.a];
 		Vector3f nB = o.normals[face.b];
 		Vector3f nC = o.normals[face.c];
-		Vector3f nD = o.normals[face.c];
 
 		Vector3f tA = o.uvs[face.a];
 		Vector3f tB = o.uvs[face.b];
 		Vector3f tC = o.uvs[face.c];
-		Vector3f tD = o.uvs[face.c];
 
-		emitVertex(light, vertexConsumer, modelMat, normalMat, vD, nD, tD);
+		emitVertex(light, vertexConsumer, modelMat, normalMat, vC, nC, tC);
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vC, nC, tC);
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vB, nB, tB);
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vA, nA, tA);
@@ -76,12 +71,18 @@ public class PR3EntityModel<T extends Entity>
 
 	public void render(T entity, Identifier texture, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light)
 	{
+		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texture));
+
 		for (PR3Object o : container.objects)
+		{
+			Quaternion objectRotation = orientationGetter.apply(entity, o.name, tickDelta);
+
 			for (PR3FacePointer face : o.faces)
 			{
 				matrices.push();
-				emitFace(entity, texture, tickDelta, matrices.peek(), vertexConsumers, light, o, face);
+				emitFace(vertexConsumer, matrices.peek(), light, o, objectRotation, face);
 				matrices.pop();
 			}
+		}
 	}
 }

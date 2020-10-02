@@ -50,13 +50,13 @@ public class ChaseCamEntity extends Entity
 			return;
 		}
 
-		Quaternion q = parent.getRotation();
+		float lerpAmount = 0.4f;
+
+		Quaternion q = parent.getViewRotation(lerpAmount);
 
 		float camDistTarget = getCamDistTarget();
 		Vec3d camTargetPosition = parent.getPos().add(QuatUtil.rotate(new Vec3d(0, 0, camDistTarget), q));
 		Vec3d camDpos = camTargetPosition.subtract(getPos());
-
-		float lerpAmount = 0.4f;
 
 		Vec3d lerpPos = getPos().add(camDpos.multiply(lerpAmount));
 		BlockHitResult result = this.world.raycast(new RaycastContext(parent.getPos(), lerpPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, parent));

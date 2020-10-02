@@ -48,9 +48,12 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	@Environment(EnvType.CLIENT)
 	public ChaseCamEntity camera;
 
-	private final Quaternion instRotation = new Quaternion(Quaternion.IDENTITY);
+	private Quaternion instRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewPrevRotation = new Quaternion(Quaternion.IDENTITY);
+
+	@Environment(EnvType.CLIENT)
+	public short clientWingState;
 
 	public ShipEntity(EntityType<?> type, World world)
 	{
@@ -192,7 +195,7 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		}
 
 		viewPrevRotation = new Quaternion(viewRotation);
-		viewRotation = new Quaternion(getRotation());
+		viewRotation = new Quaternion(instRotation);
 
 		Entity pilot = getPrimaryPassenger();
 		float throttle = getThrottle();
@@ -233,6 +236,9 @@ public class ShipEntity extends Entity implements FlyingVehicle
 
 		Vec3d forward = QuatUtil.rotate(MathUtil.NEGZ, getRotation());
 		setVelocity(forward.multiply(throttle));
+
+		setRotation(viewRotation);
+		clientWingState = dataTracker.get(WINGS);
 
 		move(MovementType.SELF, getVelocity());
 
@@ -330,6 +336,7 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	public void setRotation(Quaternion q)
 	{
 		QuatUtil.normalize(q);
+		instRotation = q.copy();
 		getDataTracker().set(ROTATION, q);
 	}
 
@@ -349,6 +356,18 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	public boolean getWingDirection()
 	{
 		return (getDataTracker().get(WINGS) & WING_DIRECTION_MASK) != 0;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public short getWingTimerClient()
+	{
+		return (short)(clientWingState & WING_TIMER_MASK);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean getWingDirectionClient()
+	{
+		return (clientWingState & WING_DIRECTION_MASK) != 0;
 	}
 
 	public void setWings(boolean direction, short timer)
@@ -375,7 +394,7 @@ public class ShipEntity extends Entity implements FlyingVehicle
 
 	public void acceptMouseInput(double mouseDx, double mouseDy)
 	{
-		Quaternion rotation = new Quaternion(getRotation());
+		Quaternion rotation = new Quaternion(instRotation);
 
 		boolean pitchRoll = false;
 
@@ -384,14 +403,14 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		else
 		{
 			Vec3d v = QuatUtil.project(MathUtil.POSY, rotation);
-			rotation.hamiltonProduct(new Quaternion(new Vector3f(v), (float)(Math.asin(v.y) * -mouseDx * 0.15f), true));
+			rotation.hamiltonProduct(new Quaternion(new Vector3f(v), (float)(Math.asin(v.y) * -mouseDx * 0.1f), true));
 
 			// TODO: roll back toward zero when this mode is switched to and the ship has a nonzero roll
 		}
 
-		rotation.hamiltonProduct(new Quaternion(new Vector3f(1, 0, 0), -(float)mouseDy * 0.15f, true));
+		rotation.hamiltonProduct(new Quaternion(new Vector3f(1, 0, 0), -(float)mouseDy * 0.1f, true));
 
-		setRotation(rotation);
+		instRotation = rotation;
 
 		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
 		passedData.writeFloat(rotation.getW());

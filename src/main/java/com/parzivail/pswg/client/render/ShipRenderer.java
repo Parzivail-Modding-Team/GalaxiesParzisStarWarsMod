@@ -24,9 +24,9 @@ public class ShipRenderer extends EntityRenderer<ShipEntity>
 
 	private static Quaternion getRotation(ShipEntity ship, String part, float tickDelta)
 	{
-		short wingTimer = ship.getWingTimer();
+		short wingTimer = ship.getWingTimerClient();
 
-		boolean wingsOpening = ship.getWingDirection();
+		boolean wingsOpening = ship.getWingDirectionClient();
 		float timer = Math.abs(wingTimer);
 
 		if (timer > 0)
