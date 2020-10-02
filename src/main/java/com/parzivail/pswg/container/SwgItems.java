@@ -2,18 +2,23 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.item.BlasterItem;
+import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.LightsaberItem;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.FoodComponent;
 import net.minecraft.item.Item;
-import org.lwjgl.system.CallbackI;
 
 public class SwgItems
 {
 	public static class Blaster
 	{
 		public static final BlasterItem A280 = new BlasterItem(new BlasterItem.Settings().maxCount(1).damage(8).group(Galaxies.Tab));
+	}
+
+	public static class Debug
+	{
+		public static final DebugItem Debug = new DebugItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));
 	}
 
 	public static final LightsaberItem Lightsaber = new LightsaberItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));

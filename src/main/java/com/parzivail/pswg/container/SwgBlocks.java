@@ -3,6 +3,7 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.block.BlockMoistureVaporator;
 import com.parzivail.pswg.block.RotatingBlock;
+import com.parzivail.util.block.BlockUtils;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
@@ -20,6 +21,16 @@ public class SwgBlocks
 		public static final RotatingBlock OctagonGray = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 		public static final RotatingBlock OctagonBlack = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 		public static final RotatingBlock MosEisley = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+	}
+
+	public static class Leaves
+	{
+		public static final LeavesBlock Sequoia = createLeavesBlock();
+
+		private static LeavesBlock createLeavesBlock()
+		{
+			return new LeavesBlock(AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtils::never).blockVision(BlockUtils::never));
+		}
 	}
 
 	public static class Log

@@ -13,6 +13,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
@@ -36,6 +37,8 @@ public class Client implements ClientModInitializer
 
 		//		KeyBindingRegistry.INSTANCE.register(KEY_THROTTLE_UP);
 		//		KeyBindingRegistry.INSTANCE.register(KEY_THROTTLE_DOWN);
+
+		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 
 		ClientTickCallback.EVENT.register(KeyHandler::handle);
 
