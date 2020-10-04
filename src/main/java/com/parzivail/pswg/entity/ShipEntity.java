@@ -48,6 +48,9 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	@Environment(EnvType.CLIENT)
 	public ChaseCamEntity camera;
 
+	@Environment(EnvType.CLIENT)
+	private boolean firstTick = true;
+
 	private Quaternion instRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewPrevRotation = new Quaternion(Quaternion.IDENTITY);
@@ -163,7 +166,7 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	protected void readCustomDataFromTag(CompoundTag tag)
 	{
 		if (tag.contains("rotation"))
-			setRotation(viewRotation = QuatUtil.getQuaternion(tag.getCompound("rotation")));
+			setRotation(QuatUtil.getQuaternion(tag.getCompound("rotation")));
 		setThrottle(tag.getFloat("throttle"));
 	}
 
@@ -191,6 +194,12 @@ public class ShipEntity extends Entity implements FlyingVehicle
 
 				camera.setParent(this);
 				ClientUtil.spawnEntity(world, camera);
+			}
+
+			if (firstTick)
+			{
+				instRotation = getRotation();
+				firstTick = false;
 			}
 		}
 
