@@ -49,7 +49,7 @@ public class RemoteTextureProvider
 		});
 	}
 
-	public Identifier loadSkin(String id)
+	public Identifier loadTexture(String id)
 	{
 		final Identifier identifier = new Identifier(identifierRoot + "/" + id);
 
@@ -62,7 +62,8 @@ public class RemoteTextureProvider
 					RenderSystem.recordRenderCall(() -> {
 						String string = Hashing.sha1().hashUnencodedChars(remoteTextureUrl.getHash()).toString();
 						AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
-						if (abstractTexture == null)
+						// TODO: fallback texture
+						if (!(abstractTexture instanceof RemoteTexture))
 						{
 							File file = new File(this.skinCacheDir, string.length() > 2 ? string.substring(0, 2) : "xx");
 							File file2 = new File(file, string);

@@ -21,7 +21,10 @@ public class SwgItems
 		public static final DebugItem Debug = new DebugItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));
 	}
 
-	public static final LightsaberItem Lightsaber = new LightsaberItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));
+	public static class Lightsaber
+	{
+		public static final LightsaberItem Lightsaber = new LightsaberItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));
+	}
 
 	public static class Food
 	{

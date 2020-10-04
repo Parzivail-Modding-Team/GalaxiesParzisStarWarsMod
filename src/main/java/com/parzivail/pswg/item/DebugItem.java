@@ -23,6 +23,9 @@ public class DebugItem extends Item
 	@Override
 	public ActionResult useOnBlock(ItemUsageContext context)
 	{
+		if (context.getPlayer() == null || !context.getPlayer().isSneaking())
+			return ActionResult.PASS;
+
 		World world = context.getWorld();
 		BlockPos start = context.getBlockPos().up();
 

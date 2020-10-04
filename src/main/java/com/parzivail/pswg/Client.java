@@ -3,6 +3,7 @@ package com.parzivail.pswg;
 import com.parzivail.pswg.client.ModelLoader;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.model.SimpleModels;
+import com.parzivail.pswg.client.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.EmptyRenderer;
 import com.parzivail.pswg.client.render.ShipRenderer;
@@ -24,6 +25,7 @@ public class Client implements ClientModInitializer
 	//	private static final FabricKeyBinding KEY_THROTTLE_DOWN = FabricKeyBinding.Builder.create(Resources.identifier("throttle_down"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_S | GLFW.GLFW_MOD_SHIFT, "category.pswg").build();
 
 	public static MinecraftClient minecraft;
+	public static RemoteTextureProvider remoteTextureProvider;
 
 	@Override
 	public void onInitializeClient()

@@ -56,7 +56,7 @@ public class Galaxies implements ModInitializer
 		SwgBlocks.register(SwgBlocks.Ore.Thorolide, Resources.identifier("ore_thorolide"));
 		SwgBlocks.register(SwgBlocks.Ore.Titanium, Resources.identifier("ore_titanium"));
 
-		Registry.register(Registry.ITEM, Resources.identifier("lightsaber"), SwgItems.Lightsaber);
+		Registry.register(Registry.ITEM, Resources.identifier("lightsaber"), SwgItems.Lightsaber.Lightsaber);
 
 		Registry.register(Registry.ITEM, Resources.identifier("a280"), SwgItems.Blaster.A280);
 
