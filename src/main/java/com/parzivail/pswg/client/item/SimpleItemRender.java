@@ -24,6 +24,26 @@ public class SimpleItemRender
 {
 	private static final Lazy<PM3DFile> lightsaber_luke_rotj = new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/lightsaber_luke_rotj.pm3d")));
 
+	private static final RenderLayer LAYER_LIGHTSABER_CORE = RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().build(true));
+	private static final RenderLayer LAYER_LIGHTSABER_GLOW_THIRDPERSON = RenderLayer.of("lightsaber_glow_fp", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency", () -> {
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
+	}, () -> {
+		RenderSystem.disableBlend();
+		RenderSystem.defaultBlendFunc();
+	})).target(new RenderPhase.Target("translucent_target", () -> {
+		MinecraftClient.getInstance().worldRenderer.getEntityFramebuffer().beginWrite(false);
+	}, () -> {
+		MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+	})).build(true));
+	private static final RenderLayer LAYER_LIGHTSABER_GLOW_FIRSTPERSON = RenderLayer.of("lightsaber_glow_fp", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency", () -> {
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
+	}, () -> {
+		RenderSystem.disableBlend();
+		RenderSystem.defaultBlendFunc();
+	})).build(true));
+
 	public static void renderItem(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci)
 	{
 		if (!stack.isEmpty() && stack.getItem() == SwgItems.Lightsaber)
@@ -36,10 +56,6 @@ public class SimpleItemRender
 
 			matrices.push();
 			matrices.scale(0.04f, 0.04f, 0.04f);
-			//			matrices.translate(-0.5, -0.5, -0.5);
-
-			//			final RenderLayer layer = renderMode == ModelTransformation.Mode.GUI ? TexturedRenderLayers.getEntityTranslucentCull() : RenderLayers.getItemLayer(stack, renderMode != ModelTransformation.Mode.GROUND);
-			//			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayers.getItemLayer(stack, renderMode != ModelTransformation.Mode.GROUND));
 
 			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(new Identifier("minecraft", "textures/block/stone.png")));
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
@@ -48,40 +64,25 @@ public class SimpleItemRender
 			LightsaberTag lt = new LightsaberTag(stack.getOrCreateTag());
 
 			float lengthCoefficient = lt.getSize(mc.getTickDelta());
+			float baseLength = 1.6f;
 
 			lightsaber_luke_rotj.get().render(VertexConsumerBuffer.Instance);
 			matrices.pop();
 
 			matrices.translate(0.02f, 0, 0.02f);
 
-			vc = vertexConsumers.getBuffer(RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().build(true)));
+			vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_CORE);
 
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			renderBlade(VertexConsumerBuffer.Instance, 2 * lengthCoefficient, 0, 0xFF00FF00, 0xFFFFFFFF, false, true, false);
-
-			RenderLayer.MultiPhaseParameters.Builder builder = RenderLayer.MultiPhaseParameters.builder();
+			renderBlade(VertexConsumerBuffer.Instance, baseLength * lengthCoefficient, 0, 0xFF00FF00, 0xFFFFFFFF, false, true, false);
 
 			if (renderMode != ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND && renderMode != ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND && renderMode != ModelTransformation.Mode.GUI)
-			{
-				builder.target(new RenderPhase.Target("translucent_target", () -> {
-					MinecraftClient.getInstance().worldRenderer.getEntityFramebuffer().beginWrite(false);
-				}, () -> {
-					MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
-				}));
-			}
-
-			builder.transparency(new RenderPhase.Transparency("lightsaber_glow_transparency", () -> {
-				RenderSystem.enableBlend();
-				RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
-			}, () -> {
-				RenderSystem.disableBlend();
-				RenderSystem.defaultBlendFunc();
-			}));
-
-			vc = vertexConsumers.getBuffer(RenderLayer.of("lightsaber_glow", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, builder.build(true)));
+				vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_GLOW_THIRDPERSON);
+			else
+				vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_GLOW_FIRSTPERSON);
 
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			renderBlade(VertexConsumerBuffer.Instance, 2 * lengthCoefficient, 0, 0x0040FF, 0xFFFFFFFF, false, false, true);
+			renderBlade(VertexConsumerBuffer.Instance, baseLength * lengthCoefficient, 0, 0xFF0040FF, 0xFFFFFFFF, false, false, true);
 
 			matrices.pop();
 
@@ -109,11 +110,20 @@ public class SimpleItemRender
 		{
 			// draw glow
 			//			for (int layer = 10; layer <= 16; layer++)
-			int layer = 16;
-			{
-				vcb.setColor(bladeColor, 0x60/*(int)(1.275f * layer)*/);
-				RenderShapes.drawSolidBoxSkewTaper(vcb, 0.14f - 0.0058f * layer, 0.16f - 0.0058f * layer, 0, bladeLength - 0.14f + 0.2f * (float)Math.sqrt(1 - Math.pow(1 - layer / 19f, 2)), 0, 0, -(20 - layer) * 0.005f, 0);
-			}
+			//			{
+			//				vcb.setColor(bladeColor, (int)(1.275f * layer));
+			//				RenderShapes.drawSolidBoxSkewTaper(vcb, 0.14f - 0.0058f * layer, 0.16f - 0.0058f * layer, 0, bladeLength - 0.14f + 0.2f * (float)Math.sqrt(1 - Math.pow(1 - layer / 19f, 2)), 0, 0, -(20 - layer) * 0.005f, 0);
+			//			}
+
+			int layer = 0;
+
+			vcb.setColor(bladeColor, 0x40);
+			layer = 16;
+			RenderShapes.drawSolidBoxSkewTaper(vcb, 0.14f - 0.0058f * layer, 0.16f - 0.0058f * layer, 0, bladeLength + 0.18f, 0, 0, -(20 - layer) * 0.005f, 0);
+
+			vcb.setColor(0xFF0000, 0x40);
+			layer = 10;
+			RenderShapes.drawSolidBoxSkewTaper(vcb, 0.14f - 0.0058f * layer, 0.16f - 0.0058f * layer, 0, bladeLength + 0.2f, 0, 0, -(20 - layer) * 0.005f, 0);
 		}
 
 		if (blade)

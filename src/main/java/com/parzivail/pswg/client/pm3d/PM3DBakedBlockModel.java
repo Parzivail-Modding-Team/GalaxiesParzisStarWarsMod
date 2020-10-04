@@ -43,20 +43,20 @@ public class PM3DBakedBlockModel extends SimpleModel
 		PM3DVertPointer c = face.verts.get(2);
 		PM3DVertPointer d = face.verts.size() == 4 ? face.verts.get(3) : c;
 
-		Vector3f vA = container.verts.get(a.getVertex());
-		Vector3f vB = container.verts.get(b.getVertex());
-		Vector3f vC = container.verts.get(c.getVertex());
-		Vector3f vD = container.verts.get(d.getVertex());
+		Vector3f vA = container.verts[a.vertex];
+		Vector3f vB = container.verts[b.vertex];
+		Vector3f vC = container.verts[c.vertex];
+		Vector3f vD = container.verts[d.vertex];
 
-		Vector3f nA = container.normals.get(a.getNormal());
-		Vector3f nB = container.normals.get(b.getNormal());
-		Vector3f nC = container.normals.get(c.getNormal());
-		Vector3f nD = container.normals.get(d.getNormal());
+		Vector3f nA = container.normals[a.normal];
+		Vector3f nB = container.normals[b.normal];
+		Vector3f nC = container.normals[c.normal];
+		Vector3f nD = container.normals[d.normal];
 
-		Vector3f tA = container.uvs.get(a.getTexture());
-		Vector3f tB = container.uvs.get(b.getTexture());
-		Vector3f tC = container.uvs.get(c.getTexture());
-		Vector3f tD = container.uvs.get(d.getTexture());
+		Vector3f tA = container.uvs[a.texture];
+		Vector3f tB = container.uvs[b.texture];
+		Vector3f tC = container.uvs[c.texture];
+		Vector3f tD = container.uvs[d.texture];
 
 		vA = ClientMathUtil.transform(vA, transformation);
 		vB = ClientMathUtil.transform(vB, transformation);

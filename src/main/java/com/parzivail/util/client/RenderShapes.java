@@ -3,7 +3,6 @@ package com.parzivail.util.client;
 public class RenderShapes
 {
 	private static final float[][] _vertsBox = new float[8][3];
-	private static final float[][] _texCoordBox = new float[8][2];
 	private static final float[][] _vertsBoxSkew;
 
 	private static final float[][] _normalsBox = {
@@ -29,11 +28,6 @@ public class RenderShapes
 		_vertsBox[0][2] = _vertsBox[3][2] = _vertsBox[4][2] = _vertsBox[7][2] = -0.5f;
 		_vertsBox[1][2] = _vertsBox[2][2] = _vertsBox[5][2] = _vertsBox[6][2] = 0.5f;
 		_vertsBoxSkew = deepCopyIntMatrix(_vertsBox);
-
-		_texCoordBox[0][0] = _texCoordBox[1][0] = _texCoordBox[2][0] = _texCoordBox[3][0] = 0;
-		_texCoordBox[4][0] = _texCoordBox[5][0] = _texCoordBox[6][0] = _texCoordBox[7][0] = 1;
-		_texCoordBox[0][1] = _texCoordBox[1][1] = _texCoordBox[4][1] = _texCoordBox[5][1] = 0;
-		_texCoordBox[2][1] = _texCoordBox[3][1] = _texCoordBox[6][1] = _texCoordBox[7][1] = 1;
 	}
 
 	private static float[][] deepCopyIntMatrix(float[][] input)
@@ -89,12 +83,12 @@ public class RenderShapes
 
 	private static void box(VertexConsumerBuffer vcb, float[][] verts)
 	{
-		for (int i = 5; i >= 0; i--)
+		for (int i = 0; i < 6; i++)
 		{
-			vcb.vertex(verts[_facesBox[i][0]][0], verts[_facesBox[i][0]][1], verts[_facesBox[i][0]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], _texCoordBox[i][0], _texCoordBox[i][1]);
-			vcb.vertex(verts[_facesBox[i][1]][0], verts[_facesBox[i][1]][1], verts[_facesBox[i][1]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], _texCoordBox[i][0], _texCoordBox[i][1]);
-			vcb.vertex(verts[_facesBox[i][2]][0], verts[_facesBox[i][2]][1], verts[_facesBox[i][2]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], _texCoordBox[i][0], _texCoordBox[i][1]);
-			vcb.vertex(verts[_facesBox[i][3]][0], verts[_facesBox[i][3]][1], verts[_facesBox[i][3]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], _texCoordBox[i][0], _texCoordBox[i][1]);
+			vcb.vertex(verts[_facesBox[i][0]][0], verts[_facesBox[i][0]][1], verts[_facesBox[i][0]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 0);
+			vcb.vertex(verts[_facesBox[i][1]][0], verts[_facesBox[i][1]][1], verts[_facesBox[i][1]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 0);
+			vcb.vertex(verts[_facesBox[i][2]][0], verts[_facesBox[i][2]][1], verts[_facesBox[i][2]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 1);
+			vcb.vertex(verts[_facesBox[i][3]][0], verts[_facesBox[i][3]][1], verts[_facesBox[i][3]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 1);
 		}
 	}
 }

@@ -21,13 +21,13 @@ public class PM3DFile
 	private static final int ACCEPTED_VERSION = 0x02;
 
 	public final Identifier identifier;
-	public final ArrayList<Vector3f> verts;
-	public final ArrayList<Vector3f> normals;
-	public final ArrayList<Vector3f> uvs;
-	public final ArrayList<PM3DObject> objects;
+	public final Vector3f[] verts;
+	public final Vector3f[] normals;
+	public final Vector3f[] uvs;
+	public final PM3DObject[] objects;
 	public final Box bounds;
 
-	public PM3DFile(Identifier identifier, ArrayList<Vector3f> verts, ArrayList<Vector3f> normals, ArrayList<Vector3f> uvs, ArrayList<PM3DObject> objects, Box bounds)
+	public PM3DFile(Identifier identifier, Vector3f[] verts, Vector3f[] normals, Vector3f[] uvs, PM3DObject[] objects, Box bounds)
 	{
 		this.identifier = identifier;
 		this.verts = verts;
@@ -72,17 +72,17 @@ public class PM3DFile
 		int numUvs = objStream.readInt();
 		int numObjects = objStream.readInt();
 
-		ArrayList<Vector3f> verts = loadVerts(numVerts, objStream);
-		ArrayList<Vector3f> normals = loadNormals(numNormals, objStream);
-		ArrayList<Vector3f> uvs = loadUvs(numUvs, objStream);
-		ArrayList<PM3DObject> objects = loadObjects(numObjects, objStream);
+		Vector3f[] verts = loadVerts(numVerts, objStream);
+		Vector3f[] normals = loadNormals(numNormals, objStream);
+		Vector3f[] uvs = loadUvs(numUvs, objStream);
+		PM3DObject[] objects = loadObjects(numObjects, objStream);
 
 		Box bounds = getBounds(verts);
 
 		return new PM3DFile(modelFile, verts, normals, uvs, objects, bounds);
 	}
 
-	private static Box getBounds(ArrayList<Vector3f> verts)
+	private static Box getBounds(Vector3f[] verts)
 	{
 		Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
 		Vector3f max = new Vector3f(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
@@ -107,9 +107,9 @@ public class PM3DFile
 		return new Box(new Vec3d(min), new Vec3d(max));
 	}
 
-	private static ArrayList<Vector3f> loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static Vector3f[] loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		ArrayList<Vector3f> verts = new ArrayList<>();
+		Vector3f[] verts = new Vector3f[num];
 
 		for (int i = 0; i < num; i++)
 		{
@@ -117,15 +117,15 @@ public class PM3DFile
 			float y = objStream.readFloat();
 			float z = objStream.readFloat() + 0.5f;
 
-			verts.add(new Vector3f(x, y, z));
+			verts[i] = new Vector3f(x, y, z);
 		}
 
 		return verts;
 	}
 
-	private static ArrayList<Vector3f> loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static Vector3f[] loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		ArrayList<Vector3f> verts = new ArrayList<>();
+		Vector3f[] verts = new Vector3f[num];
 
 		for (int i = 0; i < num; i++)
 		{
@@ -133,30 +133,30 @@ public class PM3DFile
 			float y = objStream.readFloat();
 			float z = objStream.readFloat();
 
-			verts.add(new Vector3f(x, y, z));
+			verts[i] = new Vector3f(x, y, z);
 		}
 
 		return verts;
 	}
 
-	private static ArrayList<Vector3f> loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static Vector3f[] loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		ArrayList<Vector3f> uvs = new ArrayList<>();
+		Vector3f[] uvs = new Vector3f[num];
 
 		for (int i = 0; i < num; i++)
 		{
 			float u = objStream.readFloat();
 			float v = objStream.readFloat();
 
-			uvs.add(new Vector3f(u, v, 0));
+			uvs[i] = new Vector3f(u, v, 0);
 		}
 
 		return uvs;
 	}
 
-	private static ArrayList<PM3DObject> loadObjects(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static PM3DObject[] loadObjects(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		ArrayList<PM3DObject> objects = new ArrayList<>();
+		PM3DObject[] objects = new PM3DObject[num];
 
 		for (int i = 0; i < num; i++)
 		{
@@ -181,7 +181,7 @@ public class PM3DFile
 				faces.add(face);
 			}
 
-			objects.add(new PM3DObject(objName, faces));
+			objects[i] = new PM3DObject(objName, faces);
 		}
 
 		return objects;
@@ -201,24 +201,14 @@ public class PM3DFile
 		PM3DVertPointer c = face.verts.get(2);
 		PM3DVertPointer d = face.verts.size() == 4 ? face.verts.get(3) : c;
 
-		Vector3f vA = verts.get(a.getVertex());
-		Vector3f vB = verts.get(b.getVertex());
-		Vector3f vC = verts.get(c.getVertex());
-		Vector3f vD = verts.get(d.getVertex());
+		Vector3f tA = uvs[a.texture];
+		Vector3f tB = uvs[b.texture];
+		Vector3f tC = uvs[c.texture];
+		Vector3f tD = uvs[d.texture];
 
-		Vector3f nA = normals.get(a.getNormal());
-		Vector3f nB = normals.get(b.getNormal());
-		Vector3f nC = normals.get(c.getNormal());
-		Vector3f nD = normals.get(d.getNormal());
-
-		Vector3f tA = uvs.get(a.getTexture());
-		Vector3f tB = uvs.get(b.getTexture());
-		Vector3f tC = uvs.get(c.getTexture());
-		Vector3f tD = uvs.get(d.getTexture());
-
-		vcb.vertex(vA, nA, tA.getX(), 1 - tA.getY());
-		vcb.vertex(vB, nB, tB.getX(), 1 - tB.getY());
-		vcb.vertex(vC, nC, tC.getX(), 1 - tC.getY());
-		vcb.vertex(vD, nD, tD.getX(), 1 - tD.getY());
+		vcb.vertex(verts[a.vertex], normals[a.normal], tA.getX(), 1 - tA.getY());
+		vcb.vertex(verts[b.vertex], normals[b.normal], tB.getX(), 1 - tB.getY());
+		vcb.vertex(verts[c.vertex], normals[c.normal], tC.getX(), 1 - tC.getY());
+		vcb.vertex(verts[d.vertex], normals[d.normal], tD.getX(), 1 - tD.getY());
 	}
 }
