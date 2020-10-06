@@ -26,7 +26,7 @@ public class Galaxies implements ModInitializer
 
 		TrackedDataHandlers.register();
 
-		SwgEntities.Ship.register();
+		SwgEntities.register();
 
 		SwgStructures.General.register();
 
@@ -88,7 +88,7 @@ public class Galaxies implements ModInitializer
 		Registry.register(Registry.ITEM, Resources.identifier("qrikki_bread"), SwgItems.Food.QrikkiBread);
 		Registry.register(Registry.ITEM, Resources.identifier("qrikki_waffle"), SwgItems.Food.QrikkiWaffle);
 
-		//		SwgDimensions.Tatooine.registerDimension();
+		SwgDimensions.Tatooine.registerDimension();
 
 		//		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
 		//				                                           dispatcher.register(CommandManager.literal("cdim")

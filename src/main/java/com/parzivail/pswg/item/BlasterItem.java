@@ -37,7 +37,7 @@ public class BlasterItem extends Item
 		final ItemStack stack = user.getStackInHand(hand);
 		if (!world.isClient)
 		{
-			final BlasterBoltEntity entity = new BlasterBoltEntity(SwgEntities.BlasterBolt, user, world);
+			final BlasterBoltEntity entity = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, user, world);
 			entity.setDamage(this.damage);
 			entity.setProperties(user, user.pitch, user.yaw, 0.0F, 3.0F, 1.0F);
 			entity.setNoGravity(true);

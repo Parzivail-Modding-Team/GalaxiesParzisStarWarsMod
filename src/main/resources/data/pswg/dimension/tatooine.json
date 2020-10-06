@@ -1,6 +1,10 @@
 {
   "type": "pswg:tatooine",
   "generator": {
-	"type": "pswg:tatooine_chunk_generator"
+	"type": "pswg:tatooine_chunk_generator",
+	"biome_source": {
+	  "type": "minecraft:fixed",
+	  "biome": "pswg:tatooine_plains"
+	}
   }
 }

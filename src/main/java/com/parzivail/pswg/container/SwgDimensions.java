@@ -1,21 +1,32 @@
 package com.parzivail.pswg.container;
 
-//public class SwgDimensions
-//{
-//	public static class Tatooine
-//	{
-//		public static final TatooineBiome BIOME = new TatooineBiome();
-//		public static FabricDimensionType DIMENSION_TYPE;
-//
-//		public static void registerDimension()
-//		{
-//			final Identifier identifier = Resources.identifier("tatooine");
-//			Registry.register(Registry.BIOME, identifier, BIOME);
-//			DIMENSION_TYPE = FabricDimensionType.builder()
-//			                                    .defaultPlacer((oldEntity, destinationWorld, portalDir, horizontalOffset, verticalOffset) -> new BlockPattern.TeleportTarget(new Vec3d(destinationWorld.getTopPosition(Heightmap.Type.WORLD_SURFACE, BlockPos.ORIGIN)), oldEntity.getVelocity(), (int)oldEntity.yaw))
-//			                                    .factory(TatooineDimension::new)
-//			                                    .skyLight(true)
-//			                                    .buildAndRegister(identifier);
-//		}
-//	}
-//}
+import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.dimension.tatooine.TatooineChunkGenerator;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.World;
+import net.minecraft.world.dimension.DimensionType;
+
+public class SwgDimensions
+{
+	public static class Tatooine
+	{
+		public static final RegistryKey<World> DIMENSION = RegistryKey.of(Registry.DIMENSION, Resources.identifier("tatooine"));
+		public static final RegistryKey<DimensionType> DIMENSION_TYPE_KEY = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, Resources.identifier("tatooine"));
+
+		public static DimensionType TYPE;
+		public static ServerWorld WORLD;
+
+		public static void registerDimension()
+		{
+			Registry.register(Registry.CHUNK_GENERATOR, Resources.identifier("tatooine_chunk_generator"), TatooineChunkGenerator.CODEC);
+
+			ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+				TYPE = server.getRegistryManager().getDimensionTypes().get(DIMENSION_TYPE_KEY);
+				WORLD = server.getWorld(DIMENSION);
+			});
+		}
+	}
+}

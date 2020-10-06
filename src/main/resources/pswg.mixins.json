@@ -2,9 +2,7 @@
   "required": true,
   "package": "com.parzivail.pswg.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-	"FarmlandBlockMixin", "ItemStackMixin", "QuaternionMixin", "ServerPlayNetworkHandlerMixin"
-  ],
+  "mixins": ["FarmlandBlockMixin", "ItemStackMixin", "QuaternionMixin", "ServerPlayNetworkHandlerMixin"],
   "client": [
 	"ClientPlayNetworkHandlerMixin", "EntityClientMixin", "GameRendererMixin", "HeldItemRendererMixin", "ItemRendererMixin", "Matrix4fMixin", "MinecraftClientMixin", "SpriteAtlasTextureMixin"
   ],

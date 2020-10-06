@@ -25,15 +25,29 @@ public class SwgEntities
 				.trackable(128, 10, true)
 				.build());
 
-		public static void register()
+		static void register()
 		{
 			// no-op to make sure the class is loaded
 		}
 	}
 
-	public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("blaster_bolt"), FabricEntityTypeBuilder
-			.<BlasterBoltEntity>create(SpawnGroup.MISC, BlasterBoltEntity::new)
-			.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
-			.trackable(40, 5, true)
-			.build());
+	public static class Misc
+	{
+		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("blaster_bolt"), FabricEntityTypeBuilder
+				.<BlasterBoltEntity>create(SpawnGroup.MISC, BlasterBoltEntity::new)
+				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+				.trackable(40, 5, true)
+				.build());
+
+		static void register()
+		{
+			// no-op to make sure the class is loaded
+		}
+	}
+
+	public static void register()
+	{
+		Ship.register();
+		Misc.register();
+	}
 }
