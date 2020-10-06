@@ -1,6 +1,9 @@
 package com.parzivail.pswg.util;
 
+import com.parzivail.util.math.Matrix4fExt;
+import com.parzivail.util.math.MatrixExtUtil;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 
@@ -19,6 +22,12 @@ public class MathUtil
 
 	public static final double toDegrees = 180.0 / Math.PI;
 	public static final float toDegreesf = (float)toDegrees;
+
+	public static Vec3d transform(Vec3d v, Matrix4f matrix)
+	{
+		Matrix4fExt m = MatrixExtUtil.from(matrix);
+		return new Vec3d(m.getM00() * v.x + m.getM01() * v.y + m.getM02() * v.z + m.getM03(), m.getM10() * v.x + m.getM11() * v.y + m.getM12() * v.z + m.getM13(), m.getM20() * v.x + m.getM21() * v.y + m.getM22() * v.z + m.getM23());
+	}
 
 	public static float fract(double d)
 	{

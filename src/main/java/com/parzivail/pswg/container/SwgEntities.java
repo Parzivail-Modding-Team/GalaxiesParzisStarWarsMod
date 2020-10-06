@@ -3,7 +3,7 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ChaseCamEntity;
-import com.parzivail.pswg.entity.ShipEntity;
+import com.parzivail.pswg.entity.ship.T65BXwing;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -19,8 +19,8 @@ public class SwgEntities
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.build());
 
-		public static final EntityType<ShipEntity> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("ship"), FabricEntityTypeBuilder
-				.create(SpawnGroup.MISC, ShipEntity::new)
+		public static final EntityType<T65BXwing> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("xwing_t65b"), FabricEntityTypeBuilder
+				.create(SpawnGroup.MISC, T65BXwing::new)
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackable(128, 10, true)
 				.build());

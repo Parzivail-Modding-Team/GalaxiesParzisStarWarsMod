@@ -1,13 +1,13 @@
 package com.parzivail.util.world;
 
-import com.parzivail.util.noise.OpenSimplexNoise;
+import com.parzivail.util.noise.OpenSimplex2F;
 
 /**
  * Created by colby on 12/27/2016.
  */
 public class TerrainLayer
 {
-	private final OpenSimplexNoise noise;
+	private final OpenSimplex2F noise;
 	public Function function = Function.Simplex;
 	public Method method = Method.Add;
 	public double scale = 200;
@@ -19,7 +19,7 @@ public class TerrainLayer
 		this.method = method;
 		this.scale = scale;
 		this.range = range;
-		noise = new OpenSimplexNoise(seed);
+		noise = new OpenSimplex2F(seed);
 	}
 
 	public TerrainLayer(long seed, Method method, double scale, double range)
@@ -29,7 +29,7 @@ public class TerrainLayer
 
 	public double GetValue(double x, double y)
 	{
-		double raw = noise.eval(x / scale, y / scale);
+		double raw = noise.noise2(x / scale, y / scale);
 
 		switch (function)
 		{

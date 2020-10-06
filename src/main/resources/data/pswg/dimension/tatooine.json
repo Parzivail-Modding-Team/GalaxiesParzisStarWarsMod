@@ -1,0 +1,6 @@
+{
+  "type": "pswg:tatooine",
+  "generator": {
+	"type": "pswg:tatooine_chunk_generator"
+  }
+}

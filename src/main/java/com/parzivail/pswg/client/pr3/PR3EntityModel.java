@@ -12,20 +12,22 @@ import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 
-public class PR3EntityModel<T extends Entity>
+public class PR3EntityModel<T extends Entity, PT extends Enum<PT>>
 {
 	@FunctionalInterface
-	public interface OrientationGetterFunction<T1>
+	public interface OrientationGetterFunction<T1, P extends Enum<P>>
 	{
-		Quaternion apply(T1 entity, String part, float tickDelta);
+		Quaternion apply(T1 entity, P part, float tickDelta);
 	}
 
 	private final PR3File container;
-	private final OrientationGetterFunction<T> orientationGetter;
+	private final Class<PT> partClass;
+	private final OrientationGetterFunction<T, PT> orientationGetter;
 
-	public PR3EntityModel(PR3File container, OrientationGetterFunction<T> orientationGetter)
+	public PR3EntityModel(PR3File container, Class<PT> partClass, OrientationGetterFunction<T, PT> orientationGetter)
 	{
 		this.container = container;
+		this.partClass = partClass;
 		this.orientationGetter = orientationGetter;
 	}
 
@@ -35,12 +37,8 @@ public class PR3EntityModel<T extends Entity>
 		Matrix3f normalMat = matrices.getNormal();
 
 		modelMat.multiply(o.transformationMatrix);
-
-		if (objectRotation != null)
-		{
-			modelMat.multiply(objectRotation);
-			normalMat.multiply(objectRotation);
-		}
+		modelMat.multiply(objectRotation);
+		normalMat.multiply(objectRotation);
 
 		Vector3f vA = o.vertices[face.a];
 		Vector3f vB = o.vertices[face.b];
@@ -75,7 +73,7 @@ public class PR3EntityModel<T extends Entity>
 
 		for (PR3Object o : container.objects)
 		{
-			Quaternion objectRotation = orientationGetter.apply(entity, o.name, tickDelta);
+			Quaternion objectRotation = orientationGetter.apply(entity, PT.valueOf(partClass, o.name), tickDelta);
 
 			for (PR3FacePointer face : o.faces)
 			{

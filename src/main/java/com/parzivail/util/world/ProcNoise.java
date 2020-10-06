@@ -2,50 +2,50 @@ package com.parzivail.util.world;
 
 import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.noise.InfiniteWorleyNoise;
-import com.parzivail.util.noise.OpenSimplexNoise;
+import com.parzivail.util.noise.OpenSimplex2F;
 import net.minecraft.util.math.MathHelper;
 
 public class ProcNoise
 {
-	private final OpenSimplexNoise _noise;
+	private final OpenSimplex2F _noise;
 	private final InfiniteWorleyNoise _worley;
 	private final long _seed;
 
 	public ProcNoise(long seed)
 	{
 		_seed = seed;
-		_noise = new OpenSimplexNoise(seed);
+		_noise = new OpenSimplex2F(seed);
 		_worley = new InfiniteWorleyNoise(seed);
 	}
 
 	public double noise(double x, double z)
 	{
-		return (_noise.eval(x, z) + 1) / 2;
+		return (_noise.noise2(x, z) + 1) / 2;
 	}
 
 	public double rawNoise(double x, double z)
 	{
-		return _noise.eval(x, z);
+		return _noise.noise2(x, z);
 	}
 
 	public double noise(double x, double y, double z)
 	{
-		return (_noise.eval(x, y, z) + 1) / 2;
+		return (_noise.noise3_XZBeforeY(x, y, z) + 1) / 2;
 	}
 
 	public double rawNoise(double x, double y, double z)
 	{
-		return _noise.eval(x, y, z);
+		return _noise.noise3_XZBeforeY(x, y, z);
 	}
 
 	public double noise(double x, double y, double z, double w)
 	{
-		return (_noise.eval(x, y, z, w) + 1) / 2;
+		return (_noise.noise4_XZBeforeYW(x, y, z, w) + 1) / 2;
 	}
 
 	public double rawNoise(double x, double y, double z, double w)
 	{
-		return _noise.eval(x, y, z, w);
+		return _noise.noise4_XZBeforeYW(x, y, z, w);
 	}
 
 	public double worley(double x, double z)

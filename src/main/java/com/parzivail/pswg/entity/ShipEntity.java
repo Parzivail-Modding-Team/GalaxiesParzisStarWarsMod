@@ -23,7 +23,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.MathHelper;
@@ -35,15 +34,11 @@ import javax.annotation.Nullable;
 import java.util.EnumSet;
 import java.util.List;
 
-public class ShipEntity extends Entity implements FlyingVehicle
+public abstract class ShipEntity extends Entity implements FlyingVehicle
 {
 	private static final TrackedData<Quaternion> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
 	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Short> CONTROLS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
-	private static final TrackedData<Short> WINGS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
-
-	private static final int WING_DIRECTION_MASK = 0b10000000;
-	private static final int WING_TIMER_MASK = 0b01111111;
 
 	@Environment(EnvType.CLIENT)
 	public ChaseCamEntity camera;
@@ -54,9 +49,6 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	private Quaternion instRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewPrevRotation = new Quaternion(Quaternion.IDENTITY);
-
-	@Environment(EnvType.CLIENT)
-	public short clientWingState;
 
 	public ShipEntity(EntityType<?> type, World world)
 	{
@@ -108,13 +100,6 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		return null;
 	}
 
-	public static ShipEntity create(World world)
-	{
-		ShipEntity ship = new ShipEntity(SwgEntities.Ship.T65bXwing, world);
-		//		ship.setSettings(settings);
-		return ship;
-	}
-
 	@Override
 	public void kill()
 	{
@@ -159,7 +144,6 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		getDataTracker().startTracking(ROTATION, new Quaternion(Quaternion.IDENTITY));
 		getDataTracker().startTracking(THROTTLE, 0f);
 		getDataTracker().startTracking(CONTROLS, (short)0);
-		getDataTracker().startTracking(WINGS, (short)0);
 	}
 
 	@Override
@@ -206,20 +190,9 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		viewPrevRotation = new Quaternion(viewRotation);
 		viewRotation = new Quaternion(instRotation);
 
-		Entity pilot = getPrimaryPassenger();
 		float throttle = getThrottle();
 
-		short wingTimer = getWingTimer();
-
-		if (wingTimer != 0)
-		{
-			boolean movingUp = getWingDirection();
-
-			wingTimer--;
-
-			setWings(movingUp, wingTimer);
-		}
-
+		Entity pilot = getPrimaryPassenger();
 		if (pilot instanceof PlayerEntity)
 		{
 			EnumSet<ShipControls> controls = getControls();
@@ -232,22 +205,12 @@ public class ShipEntity extends Entity implements FlyingVehicle
 			throttle = MathHelper.clamp(throttle, 0, 3);
 
 			setThrottle(throttle);
-
-			if (controls.contains(ShipControls.SPECIAL) && wingTimer == 0)
-			{
-				boolean movingUp = getWingDirection();
-
-				setWings(!movingUp, (short)20);
-			}
 		}
-
-		//		Lumberjack.log("%s %s %s", this.getX(), this.getY(), this.getZ());
 
 		Vec3d forward = QuatUtil.rotate(MathUtil.NEGZ, getRotation());
 		setVelocity(forward.multiply(throttle));
 
 		setRotation(viewRotation);
-		clientWingState = dataTracker.get(WINGS);
 
 		move(MovementType.SELF, getVelocity());
 
@@ -312,10 +275,7 @@ public class ShipEntity extends Entity implements FlyingVehicle
 	//	}
 
 	@Override
-	public Packet<?> createSpawnPacket()
-	{
-		return new EntitySpawnS2CPacket(this);
-	}
+	public abstract Packet<?> createSpawnPacket();
 
 	public EnumSet<ShipControls> getControls()
 	{
@@ -355,35 +315,6 @@ public class ShipEntity extends Entity implements FlyingVehicle
 		Quaternion start = viewPrevRotation;
 		Quaternion end = viewRotation;
 		return QuatUtil.slerp(start, end, t);
-	}
-
-	public short getWingTimer()
-	{
-		return (short)(getDataTracker().get(WINGS) & WING_TIMER_MASK);
-	}
-
-	public boolean getWingDirection()
-	{
-		return (getDataTracker().get(WINGS) & WING_DIRECTION_MASK) != 0;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public short getWingTimerClient()
-	{
-		return (short)(clientWingState & WING_TIMER_MASK);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public boolean getWingDirectionClient()
-	{
-		return (clientWingState & WING_DIRECTION_MASK) != 0;
-	}
-
-	public void setWings(boolean direction, short timer)
-	{
-		if (direction)
-			timer |= WING_DIRECTION_MASK;
-		getDataTracker().set(WINGS, timer);
 	}
 
 	public void acceptControlInput(EnumSet<ShipControls> controls)

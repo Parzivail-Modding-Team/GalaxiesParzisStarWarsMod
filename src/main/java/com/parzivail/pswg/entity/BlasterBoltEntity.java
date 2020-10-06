@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -85,13 +86,15 @@ public class BlasterBoltEntity extends PersistentProjectileEntity
 	public void tick()
 	{
 		this.baseTick();
-		final byte life;
-		setLife(life = (byte) (getLife() + 1));
+		final byte life = (byte)(getLife() + 1);
+		setLife(life);
+
 		if (life >= 60)
 		{
 			this.remove();
 			return;
 		}
+
 		Vec3d velocity = this.getVelocity();
 		if (this.prevPitch == 0.0F && this.prevYaw == 0.0F)
 		{
@@ -166,7 +169,8 @@ public class BlasterBoltEntity extends PersistentProjectileEntity
 				remove(); // spawn some smoke particles here
 			}
 
-			this.updatePosition(this.getX() + velocity.x, this.getY() + velocity.y, this.getZ() + velocity.z);
+			this.move(MovementType.SELF, velocity);
+
 			this.checkBlockCollision();
 		}
 	}
