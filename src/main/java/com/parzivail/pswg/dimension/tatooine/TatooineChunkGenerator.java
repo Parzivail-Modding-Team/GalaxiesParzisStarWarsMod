@@ -91,7 +91,8 @@ public class TatooineChunkGenerator extends ChunkGenerator
 		int chunkWorldX = chunkPos.getStartX();
 		int chunkWorldZ = chunkPos.getStartZ();
 		BlockState tatooineSand = SwgBlocks.Sand.Tatooine.getDefaultState();
-		BlockState stone = Blocks.SANDSTONE.getDefaultState();
+		BlockState sandstone = Blocks.SANDSTONE.getDefaultState();
+		BlockState stone = Blocks.STONE.getDefaultState();
 
 		ProtoChunk pc = (ProtoChunk)chunk;
 
@@ -120,6 +121,8 @@ public class TatooineChunkGenerator extends ChunkGenerator
 
 					if (y > height * 0.98f)
 						chunkSection.setBlockState(cX, y & 15, cZ, tatooineSand, false);
+					else if (y > height * 0.8f)
+						chunkSection.setBlockState(cX, y & 15, cZ, sandstone, false);
 					else
 						chunkSection.setBlockState(cX, y & 15, cZ, stone, false);
 				}
