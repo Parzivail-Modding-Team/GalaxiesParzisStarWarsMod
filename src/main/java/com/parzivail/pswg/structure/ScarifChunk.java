@@ -15,6 +15,7 @@ import net.minecraft.util.registry.Registry;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class ScarifChunk
 {
@@ -110,13 +111,24 @@ public class ScarifChunk
 
 			for (String key : props.getKeys())
 			{
-				Property<?> property = stateManager.getProperty(key);
-				// TODO
-				//				if (property != null)
-				//					blockState = State.tryRead(blockState, property, key, props.toString(), props.getString(key));
+				Property<? extends Comparable<?>> property = stateManager.getProperty(key);
+				if (property != null)
+					blockState = withProperty(blockState, property, key, props, blockState.toString());
 			}
 		}
 
 		return blockState;
+	}
+
+	private static <T extends Comparable<T>> BlockState withProperty(BlockState state, net.minecraft.state.property.Property<T> property, String key, CompoundTag propertiesTag, String context)
+	{
+		Optional<T> optional = property.parse(propertiesTag.getString(key));
+		if (optional.isPresent())
+			return state.with(property, optional.get());
+		else
+		{
+			Lumberjack.warn("Unable to read property: %s with value: %s for blockstate: %s", key, propertiesTag.getString(key), context);
+			return state;
+		}
 	}
 }

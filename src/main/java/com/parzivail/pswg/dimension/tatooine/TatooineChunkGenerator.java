@@ -6,6 +6,7 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.dimension.tatooine.terrain.TerrainTatooineCanyons;
 import com.parzivail.pswg.structure.ScarifChunk;
 import com.parzivail.pswg.structure.ScarifSection;
+import com.parzivail.pswg.util.Lumberjack;
 import com.parzivail.util.world.CompositeTerrain;
 import com.parzivail.util.world.ITerrainHeightmap;
 import com.parzivail.util.world.MultiCompositeTerrain;
@@ -129,7 +130,7 @@ public class TatooineChunkGenerator extends ChunkGenerator
 			}
 		}
 
-		ScarifChunk strChunk = null; //SwgStructures.General.Region.openChunk(chunkPos);
+		ScarifChunk strChunk = null; //SwgStructures.General.Region.get().openChunk(chunkPos);
 		if (strChunk != null)
 		{
 			strChunk.init();
@@ -151,8 +152,15 @@ public class TatooineChunkGenerator extends ChunkGenerator
 					{
 						for (int x = 0; x < 16; x++)
 						{
-							BlockState blockState = section.palette[section.blockStates[y * 256 + z * 16 + x]];
-							chunkSection.setBlockState(chunkWorldX + x, y, chunkWorldZ + z, blockState, false);
+							int stateIdx = section.blockStates[y * 256 + z * 16 + x];
+							if (stateIdx >= section.palette.length)
+							{
+								Lumberjack.warn("Invalid SCARIF palette index for chunk %s,%s, block %s,%s,%s", chunkPos.x, chunkPos.z, x, y, z);
+								continue;
+							}
+
+							BlockState blockState = section.palette[stateIdx];
+							chunkSection.setBlockState(x, y, z, blockState, false);
 						}
 					}
 				}

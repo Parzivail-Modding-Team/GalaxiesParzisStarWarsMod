@@ -4,6 +4,8 @@ import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.Lumberjack;
 import com.parzivail.pswg.util.PIO;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.ChunkPos;
 
 import java.io.IOException;
@@ -64,11 +66,9 @@ public class ScarifStructure
 		}
 		catch (IOException e)
 		{
-			Lumberjack.error("Could not load structure: %s", filename.toString());
-			e.printStackTrace();
+			CrashReport crashReport = CrashReport.create(e, String.format("Could not load structure: %s", filename.toString()));
+			throw new CrashException(crashReport);
 		}
-
-		return null;
 	}
 
 	public ScarifChunk openChunk(ChunkPos pos)
