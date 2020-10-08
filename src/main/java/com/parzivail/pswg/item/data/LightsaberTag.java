@@ -36,7 +36,7 @@ public class LightsaberTag extends TagSerializer
 		}
 	}
 
-	public void tickTransition()
+	public void tick()
 	{
 		if (transition > 0)
 			transition--;

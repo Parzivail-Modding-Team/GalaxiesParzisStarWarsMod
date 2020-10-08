@@ -62,7 +62,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		LightsaberTag.mutate(stack, LightsaberTag::tickTransition);
+		LightsaberTag.mutate(stack, LightsaberTag::tick);
 	}
 
 	@Override

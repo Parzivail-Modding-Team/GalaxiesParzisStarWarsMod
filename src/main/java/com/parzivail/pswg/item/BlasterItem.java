@@ -2,6 +2,7 @@ package com.parzivail.pswg.item;
 
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
+import com.parzivail.pswg.item.data.BlasterTag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.ProjectileDamageSource;
@@ -18,6 +19,34 @@ import javax.annotation.Nullable;
 
 public class BlasterItem extends Item
 {
+	public static class Settings extends Item.Settings
+	{
+		private Double damage;
+
+		/**
+		 * Required.
+		 */
+		public Settings damage(double damage)
+		{
+			this.damage = damage;
+			return this;
+		}
+
+		@Override
+		public Settings maxCount(int maxCount)
+		{
+			super.maxCount(maxCount);
+			return this;
+		}
+
+		@Override
+		public Settings group(ItemGroup group)
+		{
+			super.group(group);
+			return this;
+		}
+	}
+
 	private final double damage;
 
 	public static DamageSource blaster(PersistentProjectileEntity projectile, @Nullable Entity attacker)
@@ -34,6 +63,7 @@ public class BlasterItem extends Item
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand)
 	{
+		// TODO: raycast aiming and damage, entity is for effect only
 		final ItemStack stack = user.getStackInHand(hand);
 		if (!world.isClient)
 		{
@@ -47,31 +77,9 @@ public class BlasterItem extends Item
 		return TypedActionResult.consume(stack);
 	}
 
-	public static class Settings extends Item.Settings
+	@Override
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		private Double damage;
-
-		/**
-		 * Required.
-		 */
-		public com.parzivail.pswg.item.BlasterItem.Settings damage(double damage)
-		{
-			this.damage = damage;
-			return this;
-		}
-
-		@Override
-		public com.parzivail.pswg.item.BlasterItem.Settings maxCount(int maxCount)
-		{
-			super.maxCount(maxCount);
-			return this;
-		}
-
-		@Override
-		public com.parzivail.pswg.item.BlasterItem.Settings group(ItemGroup group)
-		{
-			super.group(group);
-			return this;
-		}
+		BlasterTag.mutate(stack, BlasterTag::tick);
 	}
 }
