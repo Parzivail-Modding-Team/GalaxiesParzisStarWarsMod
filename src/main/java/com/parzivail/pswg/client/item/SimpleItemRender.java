@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SimpleItemRender
 {
 	private static final Lazy<PM3DFile> lightsaber_luke_rotj = new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/lightsaber_luke_rotj.pm3d")));
+	private static final Lazy<PM3DFile> lightsaber_luke_rotj_inventory = new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/lightsaber_luke_rotj_inventory.pm3d")));
 
 	public static void renderItem(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci)
 	{
@@ -68,7 +69,10 @@ public class SimpleItemRender
 			int coreColor = 0xFFFFFF;
 			int glowColor = 0x0020FF;
 
-			lightsaber_luke_rotj.get().render(VertexConsumerBuffer.Instance);
+			if (renderMode == ModelTransformation.Mode.GUI)
+				lightsaber_luke_rotj_inventory.get().render(VertexConsumerBuffer.Instance);
+			else
+				lightsaber_luke_rotj.get().render(VertexConsumerBuffer.Instance);
 			matrices.pop();
 
 			if (renderMode != ModelTransformation.Mode.GUI)
