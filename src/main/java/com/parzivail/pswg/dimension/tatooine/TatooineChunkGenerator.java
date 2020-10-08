@@ -88,12 +88,13 @@ public class TatooineChunkGenerator extends ChunkGenerator
 	@Override
 	public void populateNoise(WorldAccess world, StructureAccessor accessor, Chunk chunk)
 	{
-		ChunkPos chunkPos = chunk.getPos();
-		int chunkWorldX = chunkPos.getStartX();
-		int chunkWorldZ = chunkPos.getStartZ();
-		BlockState tatooineSand = SwgBlocks.Sand.Tatooine.getDefaultState();
-		BlockState sandstone = Blocks.SANDSTONE.getDefaultState();
-		BlockState stone = Blocks.STONE.getDefaultState();
+		final ChunkPos chunkPos = chunk.getPos();
+		final int chunkWorldX = chunkPos.getStartX();
+		final int chunkWorldZ = chunkPos.getStartZ();
+		final BlockState tatooineSand = SwgBlocks.Sand.Tatooine.getDefaultState();
+		final BlockState sandstone = Blocks.SANDSTONE.getDefaultState();
+		final BlockState stone = Blocks.STONE.getDefaultState();
+		final BlockState bedrock = Blocks.BEDROCK.getDefaultState();
 
 		ProtoChunk pc = (ProtoChunk)chunk;
 
@@ -109,7 +110,7 @@ public class TatooineChunkGenerator extends ChunkGenerator
 				int worldX = chunkWorldX + cX;
 				int worldZ = chunkWorldZ + cZ;
 				int height = (int)terrain.getHeightAt(worldX, worldZ);
-				for (int y = 1; y < height; y++)
+				for (int y = 0; y < height; y++)
 				{
 					if (y >> 4 != sectionY)
 					{
@@ -120,7 +121,9 @@ public class TatooineChunkGenerator extends ChunkGenerator
 						chunkSection.lock();
 					}
 
-					if (y > height * 0.98f)
+					if (y == 0)
+						chunkSection.setBlockState(cX, 0, cZ, bedrock);
+					else if (y > height * 0.98f)
 						chunkSection.setBlockState(cX, y & 15, cZ, tatooineSand, false);
 					else if (y > height * 0.8f)
 						chunkSection.setBlockState(cX, y & 15, cZ, sandstone, false);
@@ -136,7 +139,7 @@ public class TatooineChunkGenerator extends ChunkGenerator
 			strChunk.init();
 
 			for (Map.Entry<BlockPos, CompoundTag> tile : strChunk.tiles.entrySet())
-				chunk.addPendingBlockEntityTag(tile.getValue());
+				pc.addPendingBlockEntityTag(tile.getValue());
 
 			for (int i = 0; i < strChunk.numSections; i++)
 			{
@@ -168,21 +171,6 @@ public class TatooineChunkGenerator extends ChunkGenerator
 		}
 
 		chunkSection.unlock();
-
-		this.buildBedrock(chunk);
-	}
-
-	private void buildBedrock(Chunk chunk)
-	{
-		final BlockPos.Mutable blockPos = new BlockPos.Mutable();
-		final BlockState BEDROCK = Blocks.BEDROCK.getDefaultState();
-		for (int i = 0; i < 16; i++)
-		{
-			for (int j = 0; j < 16; j++)
-			{
-				chunk.setBlockState(blockPos.set(i, 0, j), BEDROCK, false);
-			}
-		}
 	}
 
 	@Override

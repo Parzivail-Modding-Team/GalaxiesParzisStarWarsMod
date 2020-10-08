@@ -3,6 +3,8 @@ package com.parzivail.pswg.mixin;
 import com.google.gson.Gson;
 import com.parzivail.pswg.json.PSWGTextureMeta;
 import com.parzivail.pswg.util.Lumberjack;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -21,6 +23,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 @Mixin(SpriteAtlasTexture.class)
+@Environment(EnvType.CLIENT)
 public abstract class SpriteAtlasTextureMixin
 {
 	@Shadow
@@ -120,7 +123,7 @@ public abstract class SpriteAtlasTextureMixin
 		int srcG = NativeImage.getGreen(src);
 		int srcB = NativeImage.getBlue(src);
 
-		float tintA = NativeImage.getAlpha(tint) / 255f;
+		//		float tintA = NativeImage.getAlpha(tint) / 255f;
 		int tintR = NativeImage.getRed(tint);
 		int tintG = NativeImage.getGreen(tint);
 		int tintB = NativeImage.getBlue(tint);
