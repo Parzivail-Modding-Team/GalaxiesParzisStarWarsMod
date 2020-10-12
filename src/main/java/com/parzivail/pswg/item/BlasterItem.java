@@ -3,6 +3,7 @@ package com.parzivail.pswg.item;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.item.data.BlasterTag;
+import com.parzivail.util.item.ILeftClickConsumer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.ProjectileDamageSource;
@@ -17,15 +18,12 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public class BlasterItem extends Item
+public class BlasterItem extends Item implements ILeftClickConsumer
 {
 	public static class Settings extends Item.Settings
 	{
 		private Double damage;
 
-		/**
-		 * Required.
-		 */
 		public Settings damage(double damage)
 		{
 			this.damage = damage;
@@ -61,11 +59,12 @@ public class BlasterItem extends Item
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand)
+	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity user, Hand hand)
 	{
 		// TODO: raycast aiming and damage, entity is for effect only
 		final ItemStack stack = user.getStackInHand(hand);
-		if (!world.isClient)
+		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
+		if (!world.isClient && bt.shotTimer == 0)
 		{
 			final BlasterBoltEntity entity = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, user, world);
 			entity.setDamage(this.damage);
@@ -73,6 +72,8 @@ public class BlasterItem extends Item
 			entity.setNoGravity(true);
 			entity.pickupType = PersistentProjectileEntity.PickupPermission.DISALLOWED;
 			world.spawnEntity(entity);
+
+			BlasterTag.mutate(stack, blasterTag -> blasterTag.shotTimer = 10);
 		}
 		return TypedActionResult.consume(stack);
 	}

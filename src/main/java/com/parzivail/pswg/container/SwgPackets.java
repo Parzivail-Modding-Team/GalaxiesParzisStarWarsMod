@@ -7,6 +7,7 @@ public class SwgPackets
 {
 	public static class C2S
 	{
+		public static final Identifier PacketPlayerLeftClickItem = Resources.identifier("player_useleft");
 		public static final Identifier PacketShipRotation = Resources.identifier("ship_rotation");
 		public static final Identifier PacketShipControls = Resources.identifier("ship_controls");
 	}

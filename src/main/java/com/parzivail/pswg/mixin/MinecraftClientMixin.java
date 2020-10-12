@@ -2,6 +2,7 @@ package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.remote.RemoteTextureProvider;
+import com.parzivail.util.item.LeftClickHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -28,5 +29,11 @@ public class MinecraftClientMixin
 	private void init(RunArgs args, CallbackInfo ci)
 	{
 		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", new File(args.directories.assetDir, "pswgRemoteAssets"));
+	}
+
+	@Inject(method = "Lnet/minecraft/client/MinecraftClient;handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"), cancellable = true)
+	private void doAttack(CallbackInfo ci)
+	{
+		LeftClickHandler.handleInputEvents(ci);
 	}
 }
