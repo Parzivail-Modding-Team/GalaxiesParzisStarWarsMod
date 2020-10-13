@@ -1,8 +1,8 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.util.EntityUtil;
 import com.parzivail.pswg.util.MathUtil;
+import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.options.Perspective;
 import net.minecraft.entity.Entity;

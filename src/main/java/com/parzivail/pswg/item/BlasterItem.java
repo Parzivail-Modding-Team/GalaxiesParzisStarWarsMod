@@ -2,29 +2,159 @@ package com.parzivail.pswg.item;
 
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
+import com.parzivail.pswg.item.data.BlasterPowerPack;
 import com.parzivail.pswg.item.data.BlasterTag;
+import com.parzivail.pswg.util.MathUtil;
+import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.item.ILeftClickConsumer;
+import com.parzivail.util.math.EntityHitResult;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.ProjectileDamageSource;
+import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 public class BlasterItem extends Item implements ILeftClickConsumer
 {
+	private final float damage;
+
+	public BlasterItem(BlasterItem.Settings settings)
+	{
+		super(settings);
+		this.damage = settings.damage;
+	}
+
+	public static DamageSource getDamageSource(Entity attacker)
+	{
+		return (new EntityDamageSource("pswg.blaster", attacker)).setProjectile();
+	}
+
+	@Override
+	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity player, Hand hand)
+	{
+		// TODO: raycast aiming and damage, entity is for effect only
+		final ItemStack stack = player.getStackInHand(hand);
+		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
+
+		if (!bt.isReady() || bt.isCoolingDown())
+			return TypedActionResult.pass(stack);
+
+		if (!player.isCreative())
+		{
+			if (bt.shotsRemaining <= 0)
+			{
+				Pair<Integer, BlasterPowerPack> nextPack = getAnotherPack(player);
+
+				if (nextPack == null)
+				{
+					if (!world.isClient)
+					{
+						//						Sfx.play(player, Resources.modColon("swg.fx.rifleDryfire"), 1, 1);
+					}
+					return TypedActionResult.fail(stack);
+				}
+				else if (!world.isClient)
+				{
+					bt.shotsRemaining = nextPack.getRight().numShots;
+					player.inventory.removeStack(nextPack.getLeft(), 1);
+					//					Sfx.play(player, Resources.modColon("swg.fx.rifleReload"), 1, 1);
+				}
+			}
+
+			bt.heat += 20;
+			bt.shotsRemaining--;
+		}
+
+		if (!world.isClient)
+		{
+			float spread = getSpreadAmount(stack, player);
+			Matrix4f m = new Matrix4f();
+			m.loadIdentity();
+
+			m.multiply(new Quaternion(0, -player.yaw, 0, true));
+			m.multiply(new Quaternion(player.pitch, 0, 0, true));
+
+			float hS = (world.random.nextFloat() * 2 - 1) * spread;
+			float vS = (world.random.nextFloat() * 2 - 1) * spread;
+
+			float hSR = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
+			float vSR = 1; // - bd.getBarrel().getVerticalSpreadReduction();
+
+			m.multiply(new Quaternion(0, hS * hSR, 0, true));
+			m.multiply(new Quaternion(vS * vSR, 0, 0, true));
+
+			Vec3d look = MathUtil.transform(MathUtil.POSZ, m);
+
+			final BlasterBoltEntity entity = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world);
+			entity.setProperties(player, player.pitch, player.yaw, 0.0F, 3.0F, 1.0F);
+			world.spawnEntity(entity);
+
+			// Sfx.play(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
+
+			int range = 20;
+
+			Vec3d start = new Vec3d(player.getX(), player.getEyeY(), player.getZ());
+
+			EntityHitResult hit = EntityUtil.raycastEntities(start, look, range, player, new Entity[] { player });
+
+			if (hit == null)
+			{
+				BlockHitResult blockHit = EntityUtil.raycastBlocks(start, look, range, player);
+				// smoke poof
+			}
+			else
+			{
+				hit.entity.damage(getDamageSource(player), damage);
+			}
+
+			bt.shotTimer = 10;
+
+			stack.setTag(bt.serialize());
+		}
+
+		return TypedActionResult.consume(stack);
+	}
+
+	private float getSpreadAmount(ItemStack stack, PlayerEntity player)
+	{
+		return 0;
+	}
+
+	private Pair<Integer, BlasterPowerPack> getAnotherPack(PlayerEntity player)
+	{
+		for (int i = 0; i < player.inventory.size(); i++)
+		{
+			ItemStack s = player.inventory.getStack(i);
+			BlasterPowerPack a = BlasterPowerPackItem.getPackType(s);
+			if (a == null)
+				continue;
+
+			return new Pair<>(i, a);
+		}
+		return null;
+	}
+
+	@Override
+	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
+	{
+		BlasterTag.mutate(stack, BlasterTag::tick);
+	}
+
 	public static class Settings extends Item.Settings
 	{
-		private Double damage;
+		private float damage;
 
-		public Settings damage(double damage)
+		public Settings damage(float damage)
 		{
 			this.damage = damage;
 			return this;
@@ -43,44 +173,5 @@ public class BlasterItem extends Item implements ILeftClickConsumer
 			super.group(group);
 			return this;
 		}
-	}
-
-	private final double damage;
-
-	public static DamageSource blaster(PersistentProjectileEntity projectile, @Nullable Entity attacker)
-	{
-		return (new ProjectileDamageSource("pswg.blaster", projectile, attacker)).setProjectile();
-	}
-
-	public BlasterItem(com.parzivail.pswg.item.BlasterItem.Settings settings)
-	{
-		super(settings);
-		this.damage = settings.damage;
-	}
-
-	@Override
-	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity user, Hand hand)
-	{
-		// TODO: raycast aiming and damage, entity is for effect only
-		final ItemStack stack = user.getStackInHand(hand);
-		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
-		if (!world.isClient && bt.shotTimer == 0)
-		{
-			final BlasterBoltEntity entity = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, user, world);
-			entity.setDamage(this.damage);
-			entity.setProperties(user, user.pitch, user.yaw, 0.0F, 3.0F, 1.0F);
-			entity.setNoGravity(true);
-			entity.pickupType = PersistentProjectileEntity.PickupPermission.DISALLOWED;
-			world.spawnEntity(entity);
-
-			BlasterTag.mutate(stack, blasterTag -> blasterTag.shotTimer = 10);
-		}
-		return TypedActionResult.consume(stack);
-	}
-
-	@Override
-	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
-	{
-		BlasterTag.mutate(stack, BlasterTag::tick);
 	}
 }

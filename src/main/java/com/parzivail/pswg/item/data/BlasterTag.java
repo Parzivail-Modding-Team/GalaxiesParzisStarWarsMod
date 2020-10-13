@@ -34,5 +34,18 @@ public class BlasterTag extends TagSerializer
 
 		if (shotTimer > 0)
 			shotTimer--;
+
+		if (heat > 0)
+			heat--;
+	}
+
+	public boolean isReady()
+	{
+		return shotTimer == 0;
+	}
+
+	public boolean isCoolingDown()
+	{
+		return cooldownTimer > 0;
 	}
 }
