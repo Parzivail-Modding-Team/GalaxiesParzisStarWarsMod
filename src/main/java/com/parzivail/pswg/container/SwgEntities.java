@@ -10,8 +10,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.util.registry.Registry;
 
+import java.util.ArrayList;
+
 public class SwgEntities
 {
+	public static final ArrayList<EntityType<?>> entityTypes = new ArrayList<>();
+
 	public static class Ship
 	{
 		public static final EntityType<ChaseCamEntity> ChaseCam = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("chase_cam"), FabricEntityTypeBuilder
@@ -27,7 +31,8 @@ public class SwgEntities
 
 		static void register()
 		{
-			// no-op to make sure the class is loaded
+			entityTypes.add(ChaseCam);
+			entityTypes.add(T65bXwing);
 		}
 	}
 
@@ -41,7 +46,7 @@ public class SwgEntities
 
 		static void register()
 		{
-			// no-op to make sure the class is loaded
+			entityTypes.add(BlasterBolt);
 		}
 	}
 

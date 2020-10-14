@@ -6,6 +6,7 @@ import com.parzivail.pswg.item.data.BlasterPowerPack;
 import com.parzivail.pswg.item.data.BlasterTag;
 import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.entity.EntityUtil;
+import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.math.EntityHitResult;
 import net.minecraft.entity.Entity;
@@ -24,7 +25,7 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class BlasterItem extends Item implements ILeftClickConsumer
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality
 {
 	private final float damage;
 
@@ -42,7 +43,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer
 	@Override
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity player, Hand hand)
 	{
-		// TODO: raycast aiming and damage, entity is for effect only
 		final ItemStack stack = player.getStackInHand(hand);
 		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
 
@@ -122,7 +122,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer
 			stack.setTag(bt.serialize());
 		}
 
-		return TypedActionResult.consume(stack);
+		return TypedActionResult.success(stack);
 	}
 
 	private float getSpreadAmount(ItemStack stack, PlayerEntity player)
@@ -148,6 +148,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
 		BlasterTag.mutate(stack, BlasterTag::tick);
+	}
+
+	@Override
+	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
+	{
+		return true;
 	}
 
 	public static class Settings extends Item.Settings

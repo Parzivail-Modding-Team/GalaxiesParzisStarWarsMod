@@ -26,11 +26,12 @@ public class ClientPlayNetworkHandlerMixin
 	@Inject(method = "onEntitySpawn(Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;)V", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/network/packet/s2c/play/EntitySpawnS2CPacket;getEntityTypeId()Lnet/minecraft/entity/EntityType;"), cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
 	private void onEntitySpawn(EntitySpawnS2CPacket packet, CallbackInfo ci, double x, double y, double z, EntityType<?> type)
 	{
-		Entity entity = null;
-		if (type == SwgEntities.Ship.T65bXwing || type == SwgEntities.Ship.ChaseCam || type == SwgEntities.Misc.BlasterBolt)
-			entity = type.create(this.world);
-		if (entity != null)
+		if (SwgEntities.entityTypes.contains(type))
 		{
+			Entity entity = type.create(this.world);
+
+			assert entity != null;
+
 			int i = packet.getId();
 			entity.setVelocity(Vec3d.ZERO);
 			entity.updatePosition(x, y, z);

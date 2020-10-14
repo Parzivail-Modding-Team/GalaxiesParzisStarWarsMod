@@ -3,6 +3,7 @@ package com.parzivail.pswg.item;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.parzivail.pswg.item.data.LightsaberTag;
+import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -21,7 +22,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers
+public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality
 {
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
@@ -120,6 +121,12 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 
 	@Override
 	public boolean isEnchantable(ItemStack stack)
+	{
+		return true;
+	}
+
+	@Override
+	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
 		return true;
 	}

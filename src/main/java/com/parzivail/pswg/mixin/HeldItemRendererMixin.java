@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.item.LightsaberItem;
+import com.parzivail.util.item.ICustomVisualItemEquality;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.item.HeldItemRenderer;
@@ -16,8 +16,8 @@ public class HeldItemRendererMixin
 	@Redirect(method = "updateHeldItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;areEqual(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z"))
 	private boolean areStacksEqual(ItemStack original, ItemStack updated)
 	{
-		if (updated.getItem().equals(original.getItem()) && updated.getItem() instanceof LightsaberItem)
-			return true;
+		if (updated.getItem().equals(original.getItem()) && updated.getItem() instanceof ICustomVisualItemEquality)
+			return ((ICustomVisualItemEquality)updated.getItem()).areStacksVisuallyEqual(original, updated);
 
 		return ItemStack.areEqual(original, updated);
 	}
