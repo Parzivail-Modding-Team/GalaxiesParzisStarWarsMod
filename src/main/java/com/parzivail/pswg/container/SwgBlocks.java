@@ -1,11 +1,14 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.block.BlasterWorkbenchBlock;
 import com.parzivail.pswg.block.BlockMoistureVaporator;
 import com.parzivail.pswg.block.RotatingBlock;
+import com.parzivail.pswg.blockentity.BlasterWorkbenchBlockEntity;
 import com.parzivail.util.block.BlockUtils;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
@@ -74,9 +77,21 @@ public class SwgBlocks
 		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
+	public static class Workbench
+	{
+		public static final BlasterWorkbenchBlock Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = BlockEntityType.Builder.create(BlasterWorkbenchBlockEntity::new, Blaster).build(null);
+	}
+
 	public static void register(Block block, Identifier identifier)
 	{
 		Registry.register(Registry.BLOCK, identifier, block);
 		Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(Galaxies.Tab)));
+	}
+
+	public static void register(BlockWithEntity block, BlockEntityType<?> blockEntityType, Identifier identifier)
+	{
+		register(block, identifier);
+		Registry.register(Registry.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
 	}
 }

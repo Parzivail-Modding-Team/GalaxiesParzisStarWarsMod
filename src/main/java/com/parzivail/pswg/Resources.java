@@ -19,4 +19,9 @@ public class Resources
 	{
 		return new Identifier(MODID, path);
 	}
+
+	public static String modcolon(String str)
+	{
+		return MODID + ":" + str;
+	}
 }
