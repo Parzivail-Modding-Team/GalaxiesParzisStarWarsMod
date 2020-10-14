@@ -11,7 +11,6 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.util.Lumberjack;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.keybinding.KeyBindingRegistry;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -34,11 +33,8 @@ public class Client implements ClientModInitializer
 
 		minecraft = MinecraftClient.getInstance();
 
-		// TODO: migrate to the new keybind system
-		KeyBindingRegistry.INSTANCE.addCategory("category.pswg");
-
-		//		KeyBindingRegistry.INSTANCE.register(KEY_THROTTLE_UP);
-		//		KeyBindingRegistry.INSTANCE.register(KEY_THROTTLE_DOWN);
+		//		KeyBindingHelper.registerKeyBinding(KEY_THROTTLE_UP);
+		//		KeyBindingHelper.registerKeyBinding(KEY_THROTTLE_DOWN);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 
