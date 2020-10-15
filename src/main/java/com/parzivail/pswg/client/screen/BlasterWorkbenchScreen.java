@@ -19,19 +19,17 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	public BlasterWorkbenchScreen(BlasterWorkbenchScreenHandler handler, PlayerInventory inventory, Text title)
 	{
 		super(handler, inventory, title);
+		backgroundWidth = 256;
+		backgroundHeight = 241;
 	}
 
 	protected void init()
 	{
 		super.init();
 
-		backgroundWidth = 256;
-		backgroundHeight = 241;
-
-		this.playerInventoryTitleY = this.backgroundHeight - 130;
-
-		this.titleX = (176 - this.textRenderer.getWidth(this.title)) / 2;
-		this.titleY = -31;
+		this.playerInventoryTitleX = 47;
+		this.playerInventoryTitleY = this.backgroundHeight - 94;
+		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 	}
 
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)

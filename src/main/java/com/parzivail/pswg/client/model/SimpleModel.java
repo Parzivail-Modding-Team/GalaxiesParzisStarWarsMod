@@ -37,6 +37,7 @@ import net.minecraft.world.BlockRenderView;
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
@@ -46,9 +47,9 @@ import java.util.function.Supplier;
  */
 public abstract class SimpleModel extends AbstractModel
 {
-	protected Mesh mesh = null;
-	protected WeakReference<List<BakedQuad>[]> quadLists = null;
 	protected final ItemProxy itemProxy = new ItemProxy();
+	protected HashMap<Matrix4f, Mesh> meshes = new HashMap<>();
+	protected WeakReference<List<BakedQuad>[]> quadLists = null;
 
 	public SimpleModel(Sprite sprite, ModelTransformation transformation)
 	{
@@ -65,15 +66,13 @@ public abstract class SimpleModel extends AbstractModel
 
 	protected Mesh mesh(Matrix4f transformation)
 	{
-		Mesh result = mesh;
+		if (meshes.containsKey(transformation))
+			return meshes.get(transformation);
 
-		if (result == null)
-		{
-			result = createMesh(transformation);
-			mesh = result;
-		}
+		Mesh m = createMesh(transformation);
+		meshes.put(transformation, m);
 
-		return result;
+		return m;
 	}
 
 	protected abstract Matrix4f createTransformation(BlockState state);
@@ -103,6 +102,12 @@ public abstract class SimpleModel extends AbstractModel
 		return itemProxy;
 	}
 
+	@Override
+	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context)
+	{
+		context.meshConsumer().accept(mesh(createTransformation(null)));
+	}
+
 	protected class ItemProxy extends ModelOverrideList
 	{
 		public ItemProxy()
@@ -115,11 +120,5 @@ public abstract class SimpleModel extends AbstractModel
 		{
 			return SimpleModel.this;
 		}
-	}
-
-	@Override
-	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context)
-	{
-		context.meshConsumer().accept(mesh(createTransformation(null)));
 	}
 }

@@ -26,19 +26,13 @@ public class BlasterWorkbenchScreenHandler extends ScreenHandler
 		inventory.onOpen(playerInventory.player);
 
 		for (int row = 0; row < 3; ++row)
-		{
 			for (int column = 0; column < 9; ++column)
-			{
-				this.addSlot(new Slot(playerInventory, column + row * 9 + 9, 8 + column * 18, 122 + row * 18));
-			}
-		}
+				this.addSlot(new Slot(playerInventory, column + row * 9 + 9, column * 18 + 48, row * 18 + 159));
 
 		for (int column = 0; column < 9; ++column)
-		{
-			this.addSlot(new Slot(playerInventory, column, 8 + column * 18, 180));
-		}
+			this.addSlot(new Slot(playerInventory, column, column * 18 + 48, 217));
 
-		this.addSlot(new Slot(inventory, 0, -26, 26));
+		this.addSlot(new Slot(inventory, 0, 14, 63));
 	}
 
 	public ItemStack transferSlot(PlayerEntity player, int index)
@@ -49,14 +43,14 @@ public class BlasterWorkbenchScreenHandler extends ScreenHandler
 		{
 			ItemStack itemStack2 = slot.getStack();
 			itemStack = itemStack2.copy();
-			if (index < 9)
+			if (index < this.inventory.size())
 			{
-				if (!this.insertItem(itemStack2, 9, 45, true))
+				if (!this.insertItem(itemStack2, this.inventory.size(), this.slots.size(), true))
 				{
 					return ItemStack.EMPTY;
 				}
 			}
-			else if (!this.insertItem(itemStack2, 0, 9, false))
+			else if (!this.insertItem(itemStack2, 0, this.inventory.size(), false))
 			{
 				return ItemStack.EMPTY;
 			}
@@ -69,13 +63,6 @@ public class BlasterWorkbenchScreenHandler extends ScreenHandler
 			{
 				slot.markDirty();
 			}
-
-			if (itemStack2.getCount() == itemStack.getCount())
-			{
-				return ItemStack.EMPTY;
-			}
-
-			slot.onTakeItem(player, itemStack2);
 		}
 
 		return itemStack;

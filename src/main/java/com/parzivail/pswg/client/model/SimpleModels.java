@@ -45,16 +45,11 @@ public enum SimpleModels implements ModelVariantProvider
 
 	private static final HashMap<ModelIdentifier, UnbakedModel> models = new HashMap<>();
 
-	@Override
-	public UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context)
-	{
-		return models.get(modelId);
-	}
-
-	public static void register(Block block, PM3DUnbakedBlockModel unbakedModel)
+	public static void register(Block block, boolean registerInventoryModel, PM3DUnbakedBlockModel unbakedModel)
 	{
 		Identifier blockId = Registry.BLOCK.getId(block);
-		models.put(new ModelIdentifier(blockId, "inventory"), unbakedModel.copy());
+		if (registerInventoryModel)
+			models.put(new ModelIdentifier(blockId, "inventory"), unbakedModel.copy());
 		for (BlockState state : block.getStateManager().getStates())
 		{
 			ModelIdentifier id = new ModelIdentifier(blockId, BlockModels.propertyMapToString(state.getEntries()));
@@ -116,5 +111,11 @@ public enum SimpleModels implements ModelVariantProvider
 				qe.emit();
 			}
 		}
+	}
+
+	@Override
+	public UnbakedModel loadModelVariant(ModelIdentifier modelId, ModelProviderContext context)
+	{
+		return models.get(modelId);
 	}
 }
