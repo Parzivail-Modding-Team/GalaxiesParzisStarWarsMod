@@ -8,6 +8,8 @@ import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.EmptyRenderer;
 import com.parzivail.pswg.client.render.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
+import com.parzivail.pswg.client.screen.MosEisleyCrateScreen;
+import com.parzivail.pswg.client.screen.OctagonCrateScreen;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgScreenTypes;
@@ -44,6 +46,8 @@ public class Client implements ClientModInitializer
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::handle);
 
 		ScreenRegistry.register(SwgScreenTypes.Workbench.Blaster, BlasterWorkbenchScreen::new);
+		ScreenRegistry.register(SwgScreenTypes.Crate.Octagon, OctagonCrateScreen::new);
+		ScreenRegistry.register(SwgScreenTypes.Crate.MosEisley, MosEisleyCrateScreen::new);
 
 		SimpleModels.register(SwgBlocks.Crate.OctagonOrange, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon_orange"), new Identifier("block/stone")));
 		SimpleModels.register(SwgBlocks.Crate.OctagonGray, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon_gray"), new Identifier("block/stone")));

@@ -13,7 +13,6 @@ import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.registry.Registry;
@@ -23,8 +22,8 @@ import java.util.Objects;
 public class Galaxies implements ModInitializer
 {
 	public static final ItemGroup Tab = FabricItemGroupBuilder
-			.create(Resources.identifier("blocks"))
-			.icon(() -> new ItemStack(Items.APPLE))
+			.create(Resources.identifier("main"))
+			.icon(() -> new ItemStack(SwgItems.Lightsaber.Lightsaber))
 			.build();
 
 	@Override
@@ -40,10 +39,12 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register(SwgBlocks.Sand.Tatooine, Resources.identifier("sand_tatooine"));
 
+		SwgBlocks.register(SwgBlocks.Crate.OctagonBlockEntityType, Resources.identifier("crate_octagon"));
 		SwgBlocks.register(SwgBlocks.Crate.OctagonOrange, Resources.identifier("crate_octagon_orange"));
 		SwgBlocks.register(SwgBlocks.Crate.OctagonGray, Resources.identifier("crate_octagon_gray"));
 		SwgBlocks.register(SwgBlocks.Crate.OctagonBlack, Resources.identifier("crate_octagon_black"));
-		SwgBlocks.register(SwgBlocks.Crate.MosEisley, Resources.identifier("crate_mos_eisley"));
+
+		SwgBlocks.register(SwgBlocks.Crate.MosEisley, SwgBlocks.Crate.MosEisleyBlockEntityType, Resources.identifier("crate_mos_eisley"));
 
 		SwgBlocks.register(SwgBlocks.Leaves.Sequoia, Resources.identifier("leaves_sequoia"));
 
@@ -88,8 +89,8 @@ public class Galaxies implements ModInitializer
 		Registry.register(Registry.ITEM, Resources.identifier("flangth_takeout"), SwgItems.Food.FlangthTakeout);
 		Registry.register(Registry.ITEM, Resources.identifier("flangth_plate"), SwgItems.Food.FlangthPlate);
 
-		Registry.register(Registry.ITEM, Resources.identifier("red_death_stick"), SwgItems.Food.RedDeathStick);
-		Registry.register(Registry.ITEM, Resources.identifier("yellow_death_stick"), SwgItems.Food.YellowDeathStick);
+		Registry.register(Registry.ITEM, Resources.identifier("death_stick_red"), SwgItems.Food.DeathStickRed);
+		Registry.register(Registry.ITEM, Resources.identifier("death_stick_yellow"), SwgItems.Food.DeathStickYellow);
 
 		Registry.register(Registry.ITEM, Resources.identifier("blue_milk"), SwgItems.Food.BlueMilk);
 		Registry.register(Registry.ITEM, Resources.identifier("blue_puff_cube"), SwgItems.Food.BluePuffCube);

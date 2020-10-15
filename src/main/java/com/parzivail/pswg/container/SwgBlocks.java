@@ -1,10 +1,10 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
-import com.parzivail.pswg.block.BlasterWorkbenchBlock;
-import com.parzivail.pswg.block.BlockMoistureVaporator;
-import com.parzivail.pswg.block.RotatingBlock;
+import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.blockentity.BlasterWorkbenchBlockEntity;
+import com.parzivail.pswg.blockentity.MosEisleyCrateBlockEntity;
+import com.parzivail.pswg.blockentity.OctagonCrateBlockEntity;
 import com.parzivail.util.block.BlockUtils;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -20,10 +20,13 @@ public class SwgBlocks
 {
 	public static class Crate
 	{
-		public static final RotatingBlock OctagonOrange = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		public static final RotatingBlock OctagonGray = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		public static final RotatingBlock OctagonBlack = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		public static final RotatingBlock MosEisley = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final OctagonCrateBlock OctagonOrange = new OctagonCrateBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final OctagonCrateBlock OctagonGray = new OctagonCrateBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final OctagonCrateBlock OctagonBlack = new OctagonCrateBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final BlockEntityType<OctagonCrateBlockEntity> OctagonBlockEntityType = BlockEntityType.Builder.create(OctagonCrateBlockEntity::new, OctagonOrange, OctagonGray, OctagonBlack).build(null);
+
+		public static final MosEisleyCrateBlock MosEisley = new MosEisleyCrateBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final BlockEntityType<MosEisleyCrateBlockEntity> MosEisleyBlockEntityType = BlockEntityType.Builder.create(MosEisleyCrateBlockEntity::new, MosEisley).build(null);
 	}
 
 	public static class Leaves
@@ -89,9 +92,14 @@ public class SwgBlocks
 		Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(Galaxies.Tab)));
 	}
 
-	public static void register(BlockWithEntity block, BlockEntityType<?> blockEntityType, Identifier identifier)
+	public static void register(Block block, BlockEntityType<?> blockEntityType, Identifier identifier)
 	{
 		register(block, identifier);
+		Registry.register(Registry.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
+	}
+
+	public static void register(BlockEntityType<?> blockEntityType, Identifier identifier)
+	{
 		Registry.register(Registry.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
 	}
 }

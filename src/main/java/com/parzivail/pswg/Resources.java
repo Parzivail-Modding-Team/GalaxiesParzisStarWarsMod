@@ -20,8 +20,8 @@ public class Resources
 		return new Identifier(MODID, path);
 	}
 
-	public static String modcolon(String str)
+	public static String container(String str)
 	{
-		return MODID + ":" + str;
+		return "container." + MODID + "." + str;
 	}
 }

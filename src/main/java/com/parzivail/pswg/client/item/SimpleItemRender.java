@@ -16,6 +16,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
+import net.minecraft.util.math.Quaternion;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class SimpleItemRender
@@ -57,9 +58,6 @@ public class SimpleItemRender
 			matrices.push();
 			matrices.scale(0.04f, 0.04f, 0.04f);
 
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(new Identifier("minecraft", "textures/block/stone.png")));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-
 			MinecraftClient mc = MinecraftClient.getInstance();
 			LightsaberTag lt = new LightsaberTag(stack.getOrCreateTag());
 
@@ -69,10 +67,20 @@ public class SimpleItemRender
 			int coreColor = 0xFFFFFF;
 			int glowColor = 0x0020FF;
 
+			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(new Identifier("minecraft", "textures/block/stone.png")));
+			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+
 			if (renderMode == ModelTransformation.Mode.GUI)
+			{
+				matrices.translate(8, 4, 0);
+				matrices.multiply(new Quaternion(0, 0, -45, true));
+				matrices.scale(1.5f, 1.5f, 1.5f);
+
 				lightsaber_luke_rotj_inventory.get().render(VertexConsumerBuffer.Instance);
+			}
 			else
 				lightsaber_luke_rotj.get().render(VertexConsumerBuffer.Instance);
+
 			matrices.pop();
 
 			if (renderMode != ModelTransformation.Mode.GUI)

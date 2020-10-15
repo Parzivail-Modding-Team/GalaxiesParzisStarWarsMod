@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
+import com.parzivail.pswg.screen.MosEisleyCrateScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -12,22 +12,21 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreenHandler>
+public class MosEisleyCrateScreen extends HandledScreen<MosEisleyCrateScreenHandler>
 {
-	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/workbench_blaster.png");
+	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/crate_mos_eisley.png");
 
-	public BlasterWorkbenchScreen(BlasterWorkbenchScreenHandler handler, PlayerInventory inventory, Text title)
+	public MosEisleyCrateScreen(MosEisleyCrateScreenHandler handler, PlayerInventory inventory, Text title)
 	{
 		super(handler, inventory, title);
-		backgroundWidth = 256;
-		backgroundHeight = 241;
+		backgroundWidth = 176;
+		backgroundHeight = 168;
 	}
 
 	protected void init()
 	{
 		super.init();
 
-		this.playerInventoryTitleX = 48;
 		this.playerInventoryTitleY = this.backgroundHeight - 94;
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 	}
