@@ -82,19 +82,29 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 		super.fromTag(state, tag);
 	}
 
+	private boolean isBucket(ItemStack stack)
+	{
+		return stack.getCount() == 1 && stack.getItem() == Items.BUCKET;
+	}
+
+	private ItemStack fillBucket(ItemStack unfilledStack)
+	{
+		return new ItemStack(Items.WATER_BUCKET);
+	}
+
 	@Override
 	public void tick()
 	{
 		if (this.world != null && !this.world.isClient)
 		{
 			ItemStack stack = getStack(0);
-			if (stack.getCount() == 1 && stack.getItem() == Items.BUCKET)
+			if (isBucket(stack))
 			{
 				if (collectionTimer <= 0)
 				{
 					collectionTimer = TIMER_LENGTH;
 
-					setStack(0, new ItemStack(Items.WATER_BUCKET));
+					setStack(0, fillBucket(stack));
 				}
 
 				this.collectionTimer--;
