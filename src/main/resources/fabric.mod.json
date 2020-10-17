@@ -20,7 +20,10 @@
 	],
 	"client": [
 	  "com.parzivail.pswg.Client"
-	]
+	],
+    "cardinal-components-entity": [
+      "com.parzivail.pswg.container.SwgComponents"
+    ]
   },
   "mixins": [
 	"pswg.mixins.json"
@@ -30,7 +33,9 @@
 	"fabric": "*",
 	"minecraft": "1.16.x"
   },
-  "suggests": {
-	"flamingo": "*"
+  "custom": {
+	"cardinal-components": [
+      "pswg:credits"
+    ]
   }
 }
