@@ -26,15 +26,15 @@ public class OctagonCrateScreenHandler extends ScreenHandler
 		inventory.onOpen(playerInventory.player);
 
 		for (int row = 0; row < 3; ++row)
+			for (int column = 0; column < 13; ++column)
+				this.addSlot(new Slot(inventory, column + row * 13, column * 18 + 8, row * 18 + 18));
+
+		for (int row = 0; row < 3; ++row)
 			for (int column = 0; column < 9; ++column)
 				this.addSlot(new Slot(playerInventory, column + row * 9 + 9, column * 18 + 44, row * 18 + 86));
 
 		for (int column = 0; column < 9; ++column)
 			this.addSlot(new Slot(playerInventory, column, column * 18 + 44, 144));
-
-		for (int row = 0; row < 3; ++row)
-			for (int column = 0; column < 13; ++column)
-				this.addSlot(new Slot(inventory, column + row * 13, column * 18 + 8, row * 18 + 18));
 	}
 
 	public ItemStack transferSlot(PlayerEntity player, int index)

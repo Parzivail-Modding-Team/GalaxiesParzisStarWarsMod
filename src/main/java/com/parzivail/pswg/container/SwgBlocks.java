@@ -3,6 +3,7 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.blockentity.BlasterWorkbenchBlockEntity;
+import com.parzivail.pswg.blockentity.MoistureVaporatorBlockEntity;
 import com.parzivail.pswg.blockentity.MosEisleyCrateBlockEntity;
 import com.parzivail.pswg.blockentity.OctagonCrateBlockEntity;
 import com.parzivail.util.block.BlockUtils;
@@ -75,9 +76,10 @@ public class SwgBlocks
 		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).nonOpaque());
 	}
 
-	public static class Vaporator
+	public static class MoistureVaporator
 	{
 		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = BlockEntityType.Builder.create(MoistureVaporatorBlockEntity::new, Gx8).build(null);
 	}
 
 	public static class Workbench

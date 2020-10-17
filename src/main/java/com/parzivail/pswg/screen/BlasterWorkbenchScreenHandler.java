@@ -25,14 +25,14 @@ public class BlasterWorkbenchScreenHandler extends ScreenHandler
 		this.inventory = inventory;
 		inventory.onOpen(playerInventory.player);
 
+		this.addSlot(new Slot(inventory, 0, 14, 63));
+
 		for (int row = 0; row < 3; ++row)
 			for (int column = 0; column < 9; ++column)
 				this.addSlot(new Slot(playerInventory, column + row * 9 + 9, column * 18 + 48, row * 18 + 159));
 
 		for (int column = 0; column < 9; ++column)
 			this.addSlot(new Slot(playerInventory, column, column * 18 + 48, 217));
-
-		this.addSlot(new Slot(inventory, 0, 14, 63));
 	}
 
 	public ItemStack transferSlot(PlayerEntity player, int index)

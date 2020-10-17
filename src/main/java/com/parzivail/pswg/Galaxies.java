@@ -52,7 +52,7 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register(SwgBlocks.Machine.Spoked, Resources.identifier("machine_spoked"));
 
-		SwgBlocks.register(SwgBlocks.Vaporator.Gx8, Resources.identifier("moisture_vaporator_gx8"));
+		SwgBlocks.register(SwgBlocks.MoistureVaporator.Gx8, SwgBlocks.MoistureVaporator.Gx8BlockEntityType, Resources.identifier("moisture_vaporator_gx8"));
 
 		SwgBlocks.register(SwgBlocks.Ore.Chromium, Resources.identifier("ore_chromium"));
 		SwgBlocks.register(SwgBlocks.Ore.Cortosis, Resources.identifier("ore_cortosis"));
