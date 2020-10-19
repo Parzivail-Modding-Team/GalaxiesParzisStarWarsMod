@@ -1,5 +1,6 @@
 package com.parzivail.pswg.screen;
 
+import com.parzivail.pswg.container.SwgRecipeType;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -8,36 +9,47 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.World;
 
 public class MoistureVaporatorScreenHandler extends ScreenHandler
 {
 	private final PropertyDelegate propertyDelegate;
 	private final Inventory inventory;
+	private final World world;
 
 	public MoistureVaporatorScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		this(syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(1));
+		this(syncId, playerInventory, new SimpleInventory(2), new ArrayPropertyDelegate(2));
 	}
 
 	public MoistureVaporatorScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate)
 	{
 		super(SwgScreenTypes.MoistureVaporator.GX8, syncId);
 		this.propertyDelegate = propertyDelegate;
-		checkSize(inventory, 1);
+		checkSize(inventory, 2);
 		this.inventory = inventory;
+		this.world = playerInventory.player.world;
 		inventory.onOpen(playerInventory.player);
 
-		this.addSlot(new Slot(inventory, 0, 80, 35)
+		this.addSlot(new Slot(inventory, 0, 31, 35)
 		{
 			@Override
 			public boolean canInsert(ItemStack stack)
 			{
-				return stack.getItem() == Items.BUCKET;
+				return isHydratable(stack);
+			}
+		});
+
+		this.addSlot(new Slot(inventory, 1, 129, 35)
+		{
+			@Override
+			public boolean canInsert(ItemStack stack)
+			{
+				return false;
 			}
 		});
 
@@ -49,6 +61,11 @@ public class MoistureVaporatorScreenHandler extends ScreenHandler
 			this.addSlot(new Slot(playerInventory, column, column * 18 + 8, 142));
 
 		this.addProperties(propertyDelegate);
+	}
+
+	protected boolean isHydratable(ItemStack itemStack)
+	{
+		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(itemStack), this.world).isPresent();
 	}
 
 	public ItemStack transferSlot(PlayerEntity player, int index)
@@ -88,6 +105,12 @@ public class MoistureVaporatorScreenHandler extends ScreenHandler
 	public int getCollectionTimer()
 	{
 		return this.propertyDelegate.get(0);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public int getCollectionTimerLength()
+	{
+		return this.propertyDelegate.get(1);
 	}
 
 	@Override

@@ -33,6 +33,9 @@ public class Galaxies implements ModInitializer
 
 		TrackedDataHandlers.register();
 
+		SwgRecipeType.register();
+		SwgRecipeSerializers.register();
+
 		SwgEntities.register();
 
 		SwgStructures.General.register();

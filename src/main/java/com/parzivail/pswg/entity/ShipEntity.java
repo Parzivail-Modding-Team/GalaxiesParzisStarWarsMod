@@ -41,7 +41,7 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	private static final TrackedData<Short> CONTROLS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
 
 	@Environment(EnvType.CLIENT)
-	public ChaseCamEntity camera;
+	private ChaseCamEntity camera;
 
 	@Environment(EnvType.CLIENT)
 	private boolean firstTick = true;
@@ -164,6 +164,21 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		tag.putFloat("throttle", getThrottle());
 	}
 
+	@Environment(EnvType.CLIENT)
+	public ChaseCamEntity getCamera()
+	{
+		if (camera == null)
+		{
+			camera = SwgEntities.Ship.ChaseCam.create(world);
+			assert camera != null;
+
+			camera.setParent(this);
+			ClientUtil.spawnEntity(world, camera);
+		}
+
+		return camera;
+	}
+
 	@Override
 	public void tick()
 	{
@@ -171,15 +186,6 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 
 		if (world.isClient)
 		{
-			if (camera == null)
-			{
-				camera = SwgEntities.Ship.ChaseCam.create(world);
-				assert camera != null;
-
-				camera.setParent(this);
-				ClientUtil.spawnEntity(world, camera);
-			}
-
 			if (firstTick)
 			{
 				instRotation = getRotation();

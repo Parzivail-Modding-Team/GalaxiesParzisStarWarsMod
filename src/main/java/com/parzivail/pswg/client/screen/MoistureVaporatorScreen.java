@@ -2,13 +2,13 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.blockentity.MoistureVaporatorBlockEntity;
 import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -38,6 +38,18 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 		this.renderBackground(matrices);
 		super.render(matrices, mouseX, mouseY, delta);
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+
+		int i = (this.width - this.backgroundWidth) / 2;
+		int j = (this.height - this.backgroundHeight) / 2;
+
+		if (mouseX > i + 103 && mouseX < i + 112 && mouseY > j + 28 && mouseY < j + 58)
+		{
+			int timer = this.handler.getCollectionTimer();
+			int timerLength = this.handler.getCollectionTimerLength();
+			if (timerLength <= 0)
+				timerLength = 1;
+			this.renderTooltip(matrices, new LiteralText(String.format("%s%%", (int)((1 - timer / (float)timerLength) * 100))), mouseX, mouseY);
+		}
 	}
 
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
@@ -49,9 +61,10 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 		int j = (this.height - this.backgroundHeight) / 2;
 		this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-		int l = this.handler.getCollectionTimer();
-		int height = (int)((1 - l / (float)MoistureVaporatorBlockEntity.TIMER_LENGTH) * 30);
-		this.drawTexture(matrices, i + 62, j + 28 + 30 - height, 176, 30 - height, 9, height);
+		int timer = this.handler.getCollectionTimer();
+		int timerLength = this.handler.getCollectionTimerLength();
+		int height = timerLength <= 0 ? 30 : (int)((1 - timer / (float)timerLength) * 30);
+		this.drawTexture(matrices, i + 103, j + 28 + 30 - height, 176, 30 - height, 9, height);
 	}
 
 	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY)

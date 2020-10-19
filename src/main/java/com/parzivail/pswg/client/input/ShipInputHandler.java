@@ -27,7 +27,7 @@ public class ShipInputHandler
 		if (ship != null)
 		{
 			if (mc.options.getPerspective() != Perspective.FIRST_PERSON)
-				mc.cameraEntity = ship.camera;
+				mc.cameraEntity = ship.getCamera();
 			else
 				mc.cameraEntity = ship;
 

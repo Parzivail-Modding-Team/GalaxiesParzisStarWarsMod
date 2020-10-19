@@ -13,4 +13,14 @@ public class ItemUtil
 
 		return true;
 	}
+
+	public static boolean areStacksEqualIgnoreCount(ItemStack left, ItemStack right)
+	{
+		if (left.getItem() != right.getItem())
+			return false;
+		else if (left.getTag() == null && right.getTag() != null)
+			return false;
+		else
+			return left.getTag() == null || left.getTag().equals(right.getTag());
+	}
 }
