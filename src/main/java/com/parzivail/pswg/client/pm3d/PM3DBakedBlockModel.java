@@ -9,6 +9,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -17,10 +18,14 @@ import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.world.BlockRenderView;
 
+import java.util.Random;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class PM3DBakedBlockModel extends SimpleModel
 {
@@ -94,7 +99,18 @@ public class PM3DBakedBlockModel extends SimpleModel
 	}
 
 	@Override
-	protected Mesh createMesh(Matrix4f transformation)
+	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	{
+		return createMesh(transformation);
+	}
+
+	@Override
+	protected Mesh createItemMesh(Matrix4f transformation)
+	{
+		return createMesh(transformation);
+	}
+
+	private Mesh createMesh(Matrix4f transformation)
 	{
 		MeshBuilder meshBuilder = RENDERER.meshBuilder();
 		QuadEmitter quadEmitter = meshBuilder.getEmitter();

@@ -93,16 +93,15 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 
 	protected int getHydrateTime()
 	{
+		assert this.world != null;
 		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, this, this.world).map(VaporatorRecipe::getDuration).orElse(200);
 	}
 
 	private boolean isHydratable(ItemStack stack)
 	{
+		assert this.world != null;
 		Optional<VaporatorRecipe> recipeOptional = this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world);
-		if (!recipeOptional.isPresent())
-			return false;
-
-		return canAcceptOutput(recipeOptional.get());
+		return recipeOptional.filter(this::canAcceptOutput).isPresent();
 	}
 
 	private boolean canAcceptOutput(VaporatorRecipe recipe)
@@ -121,6 +120,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 
 	private VaporatorRecipe hydrate(ItemStack stack)
 	{
+		assert this.world != null;
 		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world).orElseThrow(RuntimeException::new);
 	}
 

@@ -17,6 +17,7 @@
 package com.parzivail.pswg.client.model;
 
 import com.google.common.collect.ImmutableList;
+import com.parzivail.pswg.Resources;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -48,7 +49,7 @@ import java.util.function.Supplier;
 public abstract class SimpleModel extends AbstractModel
 {
 	protected final ItemProxy itemProxy = new ItemProxy();
-	protected HashMap<Matrix4f, Mesh> meshes = new HashMap<>();
+	protected HashMap<ModelCacheId, Mesh> meshes = new HashMap<>();
 	protected WeakReference<List<BakedQuad>[]> quadLists = null;
 
 	public SimpleModel(Sprite sprite, ModelTransformation transformation)
@@ -62,15 +63,32 @@ public abstract class SimpleModel extends AbstractModel
 		return false;
 	}
 
-	protected abstract Mesh createMesh(Matrix4f transformation);
+	protected abstract Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation);
 
-	protected Mesh mesh(Matrix4f transformation)
+	protected abstract Mesh createItemMesh(Matrix4f transformation);
+
+	protected Mesh createOrCacheBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		if (meshes.containsKey(transformation))
-			return meshes.get(transformation);
+		ModelCacheId cacheId = new ModelCacheId(pos, transformation);
 
-		Mesh m = createMesh(transformation);
-		meshes.put(transformation, m);
+		if (meshes.containsKey(cacheId))
+			return meshes.get(cacheId);
+
+		Mesh m = createBlockMesh(blockView, state, pos, randomSupplier, context, transformation);
+		meshes.put(cacheId, m);
+
+		return m;
+	}
+
+	protected Mesh createOrCacheItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	{
+		ModelCacheId cacheId = new ModelCacheId(null, transformation);
+
+		if (meshes.containsKey(cacheId))
+			return meshes.get(cacheId);
+
+		Mesh m = createItemMesh(transformation);
+		meshes.put(cacheId, m);
 
 		return m;
 	}
@@ -83,7 +101,7 @@ public abstract class SimpleModel extends AbstractModel
 		List<BakedQuad>[] lists = quadLists == null ? null : quadLists.get();
 		if (lists == null)
 		{
-			lists = ModelHelper.toQuadLists(mesh(createTransformation(state)));
+			lists = ModelHelper.toQuadLists(createOrCacheBlockMesh(null, state, BlockPos.ORIGIN, () -> Resources.RANDOM, null, createTransformation(state)));
 			quadLists = new WeakReference<>(lists);
 		}
 		final List<BakedQuad> result = lists[face == null ? 6 : face.getId()];
@@ -93,7 +111,7 @@ public abstract class SimpleModel extends AbstractModel
 	@Override
 	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context)
 	{
-		context.meshConsumer().accept(mesh(createTransformation(state)));
+		context.meshConsumer().accept(createOrCacheBlockMesh(blockView, state, pos, randomSupplier, context, createTransformation(state)));
 	}
 
 	@Override
@@ -105,7 +123,7 @@ public abstract class SimpleModel extends AbstractModel
 	@Override
 	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context)
 	{
-		context.meshConsumer().accept(mesh(createTransformation(null)));
+		context.meshConsumer().accept(createOrCacheItemMesh(stack, randomSupplier, context, createTransformation(null)));
 	}
 
 	protected class ItemProxy extends ModelOverrideList
@@ -119,6 +137,27 @@ public abstract class SimpleModel extends AbstractModel
 		public BakedModel apply(BakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity)
 		{
 			return SimpleModel.this;
+		}
+	}
+
+	private static class ModelCacheId
+	{
+		private final BlockPos pos;
+		private final Matrix4f transformation;
+
+		public ModelCacheId(BlockPos pos, Matrix4f transformation)
+		{
+			this.pos = pos;
+			this.transformation = transformation;
+		}
+
+		@Override
+		public int hashCode()
+		{
+			if (pos == null)
+				return transformation.hashCode();
+
+			return (transformation.hashCode() * 31) ^ pos.hashCode();
 		}
 	}
 }
