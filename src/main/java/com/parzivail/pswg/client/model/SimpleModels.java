@@ -16,7 +16,6 @@
 
 package com.parzivail.pswg.client.model;
 
-import com.parzivail.pswg.client.pm3d.PM3DUnbakedBlockModel;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -45,7 +44,7 @@ public enum SimpleModels implements ModelVariantProvider
 
 	private static final HashMap<ModelIdentifier, UnbakedModel> models = new HashMap<>();
 
-	public static void register(Block block, boolean registerInventoryModel, PM3DUnbakedBlockModel unbakedModel)
+	public static void register(Block block, boolean registerInventoryModel, ClonableUnbakedModel unbakedModel)
 	{
 		Identifier blockId = Registry.BLOCK.getId(block);
 		if (registerInventoryModel)

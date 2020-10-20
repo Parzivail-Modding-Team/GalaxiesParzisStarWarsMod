@@ -37,10 +37,7 @@ import net.minecraft.world.BlockRenderView;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 
 /**
@@ -63,13 +60,18 @@ public abstract class SimpleModel extends AbstractModel
 		return false;
 	}
 
+	protected boolean variesByBlockPos()
+	{
+		return false;
+	}
+
 	protected abstract Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation);
 
 	protected abstract Mesh createItemMesh(Matrix4f transformation);
 
 	protected Mesh createOrCacheBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		ModelCacheId cacheId = new ModelCacheId(pos, transformation);
+		ModelCacheId cacheId = new ModelCacheId(variesByBlockPos() ? new BlockPos(pos) : BlockPos.ORIGIN, transformation);
 
 		if (meshes.containsKey(cacheId))
 			return meshes.get(cacheId);
@@ -155,9 +157,22 @@ public abstract class SimpleModel extends AbstractModel
 		public int hashCode()
 		{
 			if (pos == null)
-				return transformation.hashCode();
+				return transformation.hashCode() * 31;
 
-			return (transformation.hashCode() * 31) ^ pos.hashCode();
+			return (transformation.hashCode() * 31) + pos.hashCode();
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+				return true;
+			if (!(o instanceof ModelCacheId))
+				return false;
+
+			ModelCacheId cacheId = (ModelCacheId)o;
+
+			return Objects.equals(pos, cacheId.pos) && Objects.equals(transformation, cacheId.transformation);
 		}
 	}
 }

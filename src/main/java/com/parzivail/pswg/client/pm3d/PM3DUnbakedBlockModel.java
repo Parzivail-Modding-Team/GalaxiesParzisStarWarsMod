@@ -17,6 +17,7 @@
 package com.parzivail.pswg.client.pm3d;
 
 import com.mojang.datafixers.util.Pair;
+import com.parzivail.pswg.client.model.ClonableUnbakedModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
@@ -36,7 +37,7 @@ import java.util.function.Function;
 /**
  * Can be used for multiple blocks - will return same baked model for each
  */
-public class PM3DUnbakedBlockModel implements UnbakedModel
+public class PM3DUnbakedBlockModel extends ClonableUnbakedModel
 {
 	private final Identifier baseTexture;
 	private final Identifier particleTexture;
@@ -50,7 +51,7 @@ public class PM3DUnbakedBlockModel implements UnbakedModel
 		this.baker = baker;
 	}
 
-	public PM3DUnbakedBlockModel copy()
+	public ClonableUnbakedModel copy()
 	{
 		return new PM3DUnbakedBlockModel(baseTexture, particleTexture, baker);
 	}
@@ -77,12 +78,11 @@ public class PM3DUnbakedBlockModel implements UnbakedModel
 	@Nullable
 	public BakedModel bake(ModelLoader modelLoader, Function<SpriteIdentifier, Sprite> spriteLoader, ModelBakeSettings modelBakeSettings, Identifier identifier)
 	{
-		PM3DBakedBlockModel result = cachedBakedModel;
-		if (result == null)
-		{
-			result = baker.apply(spriteLoader);
-			cachedBakedModel = result;
-		}
+		if (cachedBakedModel != null)
+			return cachedBakedModel;
+
+		PM3DBakedBlockModel result = baker.apply(spriteLoader);
+		cachedBakedModel = result;
 		return result;
 	}
 }
