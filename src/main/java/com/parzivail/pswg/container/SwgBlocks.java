@@ -59,21 +59,21 @@ public class SwgBlocks
 
 	public static class Ore
 	{
-		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
-		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
-		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
-		public static final Block Exonium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
-		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
-		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
-		public static final Block Kelerium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
-		public static final Block Rubindum = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
-		public static final Block Thorolide = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
-		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE).nonOpaque());
+		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Exonium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Kelerium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Rubindum = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Thorolide = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE));
 	}
 
 	public static class Sand
 	{
-		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).nonOpaque());
+		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND));
 	}
 
 	public static class MoistureVaporator
@@ -84,7 +84,7 @@ public class SwgBlocks
 
 	public static class Workbench
 	{
-		public static final BlasterWorkbenchBlock Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final BlasterWorkbenchBlock Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL));
 		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = BlockEntityType.Builder.create(BlasterWorkbenchBlockEntity::new, Blaster).build(null);
 	}
 
