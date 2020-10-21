@@ -22,7 +22,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class SimpleItemRender
 {
 	private static final Lazy<PM3DFile> lightsaber_luke_rotj = new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/lightsaber_luke_rotj.pm3d")));
+	private static final Identifier lightsaber_luke_rotj_texture = Resources.identifier("textures/model/lightsaber_luke_rotj.png");
 	private static final Lazy<PM3DFile> lightsaber_luke_rotj_inventory = new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/lightsaber_luke_rotj_inventory.pm3d")));
+	private static final Identifier lightsaber_luke_rotj_inventory_texture = Resources.identifier("textures/model/lightsaber_luke_rotj_inventory.png");
 
 	public static void renderItem(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci)
 	{
@@ -67,19 +69,23 @@ public class SimpleItemRender
 			int coreColor = 0xFFFFFF;
 			int glowColor = 0x0020FF;
 
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(new Identifier("minecraft", "textures/block/stone.png")));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-
 			if (renderMode == ModelTransformation.Mode.GUI)
 			{
 				matrices.translate(8, 4, 0);
 				matrices.multiply(new Quaternion(0, 0, -45, true));
 				matrices.scale(1.5f, 1.5f, 1.5f);
 
+				VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(lightsaber_luke_rotj_inventory_texture));
+				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 				lightsaber_luke_rotj_inventory.get().render(VertexConsumerBuffer.Instance);
 			}
 			else
+			{
+				VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(lightsaber_luke_rotj_texture));
+				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+
 				lightsaber_luke_rotj.get().render(VertexConsumerBuffer.Instance);
+			}
 
 			matrices.pop();
 
