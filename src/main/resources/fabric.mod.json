@@ -22,7 +22,7 @@
 	  "com.parzivail.pswg.Client"
 	],
     "cardinal-components-entity": [
-      "com.parzivail.pswg.container.SwgComponents"
+      "com.parzivail.pswg.component.SwgEntityComponents"
     ]
   },
   "mixins": [
@@ -35,7 +35,7 @@
   },
   "custom": {
 	"cardinal-components": [
-      "pswg:credits"
-    ]
+	  "pswg:persistent", "pswg:volatile"
+	]
   }
 }
