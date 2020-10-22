@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4.3'
+	id 'fabric-loom' version '0.5.33'
 	id 'maven-publish'
 }
 
@@ -84,6 +84,10 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
 	from "LICENSE"
+}
+
+wrapper {
+	distributionType = Wrapper.DistributionType.ALL
 }
 
 // configure the maven publication
