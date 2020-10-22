@@ -1,32 +1,46 @@
 package com.parzivail.pswg.client.render;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.entity.BlasterBoltEntity;
+import com.parzivail.pswg.container.SwgItems;
+import com.parzivail.pswg.entity.ThrownLightsaberEntity;
+import com.parzivail.pswg.item.data.LightsaberTag;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
-public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
+public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEntity>
 {
-	public BlasterBoltRenderer(EntityRenderDispatcher entityRenderDispatcher)
+	private final ItemRenderer itemRenderer;
+
+	private final ItemStack stack = new ItemStack(SwgItems.Lightsaber.Lightsaber);
+
+	public ThrownLightsaberRenderer(EntityRenderDispatcher entityRenderDispatcher, ItemRenderer itemRenderer)
 	{
 		super(entityRenderDispatcher);
+		this.itemRenderer = itemRenderer;
+
+		LightsaberTag.mutate(stack, lightsaberTag -> {
+			lightsaberTag.active = true;
+		});
 	}
 
 	@Override
-	public Identifier getTexture(BlasterBoltEntity entity)
+	public Identifier getTexture(ThrownLightsaberEntity entity)
 	{
 		return Resources.identifier("missing");
 	}
 
 	@Override
-	public void render(BlasterBoltEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumerProvider, int light)
+	public void render(ThrownLightsaberEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumerProvider, int light)
 	{
 		//		super.render(entity, yaw, tickDelta, matrices, consumerProvider, light);
 
@@ -43,7 +57,9 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		matrices.multiply(new Quaternion(0, -rYaw, 0, true));
 		matrices.multiply(new Quaternion(rPitch + 90, 0, 0, true));
 
-		LightsaberRenderer.renderBlade(ModelTransformation.Mode.FIXED, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, 1, false, 0xFFFFFF, 0xFF0020);
+		matrices.multiply(new Quaternion(0, 0, -(entity.age + tickDelta) * 30, true));
+
+		this.itemRenderer.renderItem(stack, ModelTransformation.Mode.FIXED, light, OverlayTexture.DEFAULT_UV, matrices, consumerProvider);
 
 		matrices.pop();
 	}

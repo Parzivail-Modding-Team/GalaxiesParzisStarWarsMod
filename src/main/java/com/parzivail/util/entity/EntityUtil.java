@@ -7,10 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.EulerAngle;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 
 import java.util.Arrays;
@@ -93,5 +90,13 @@ public class EntityUtil
 		Vec3d prevParentPos = new Vec3d(e.prevX, e.prevY, e.prevZ);
 
 		return MathUtil.lerp(tickDelta, prevParentPos, parentPos);
+	}
+
+	public static void setVelocityFromAngles(Entity entity, float pitch, float yaw, float roll, float scalar)
+	{
+		float f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+		float g = -MathHelper.sin((pitch + roll) * 0.017453292F);
+		float h = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+		entity.setVelocity(scalar * f, scalar * g, scalar * h);
 	}
 }

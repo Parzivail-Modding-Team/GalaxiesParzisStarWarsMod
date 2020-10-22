@@ -6,6 +6,7 @@ import com.parzivail.pswg.client.model.SimpleModels;
 import com.parzivail.pswg.client.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.EmptyRenderer;
+import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
@@ -57,7 +58,7 @@ public class Client implements ClientModInitializer
 		SimpleModels.register(SwgBlocks.Crate.MosEisley, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_mos_eisley.pm3d"), Resources.identifier("model/crate_mos_eisley"), new Identifier("block/stone")));
 
 		SimpleModels.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadPM3D(Resources.identifier("models/block/machine_spoked.pm3d"), Resources.identifier("model/machine_spoked"), new Identifier("block/stone")));
-//		SimpleModels.register(SwgBlocks.Machine.Spoked, true, new DebugModel.Unbaked(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("block/stone"))));
+		//		SimpleModels.register(SwgBlocks.Machine.Spoked, true, new DebugModel.Unbaked(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("block/stone"))));
 
 		SimpleModels.register(SwgBlocks.MoistureVaporator.Gx8, false, ModelLoader.loadPM3D(Resources.identifier("models/block/moisture_vaporator_gx8.pm3d"), Resources.identifier("model/moisture_vaporator_gx8"), new Identifier("block/stone")));
 
@@ -66,5 +67,6 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.T65bXwing, (entityRenderDispatcher, context) -> new T65BXwingRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.ChaseCam, (entityRenderDispatcher, context) -> new EmptyRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, (entityRenderDispatcher, context) -> new BlasterBoltRenderer(entityRenderDispatcher));
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, (entityRenderDispatcher, context) -> new ThrownLightsaberRenderer(entityRenderDispatcher, context.getItemRenderer()));
 	}
 }

@@ -96,7 +96,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			Vec3d look = MathUtil.transform(MathUtil.POSZ, m);
 
 			final BlasterBoltEntity entity = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world);
-			entity.setProperties(player, player.pitch, player.yaw, 0.0F, 3.0F, 1.0F);
+			entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 3.0F, 0);
 			world.spawnEntity(entity);
 
 			// Sfx.play(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());

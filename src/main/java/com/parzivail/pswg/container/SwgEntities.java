@@ -3,6 +3,7 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ChaseCamEntity;
+import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
@@ -44,9 +45,16 @@ public class SwgEntities
 				.trackable(40, 5, true)
 				.build());
 
+		public static final EntityType<ThrownLightsaberEntity> ThrownLightsaber = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("thrown_lightsaber"), FabricEntityTypeBuilder
+				.<ThrownLightsaberEntity>create(SpawnGroup.MISC, ThrownLightsaberEntity::new)
+				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+				.trackable(40, 5, true)
+				.build());
+
 		static void register()
 		{
 			entityTypes.add(BlasterBolt);
+			entityTypes.add(ThrownLightsaber);
 		}
 	}
 

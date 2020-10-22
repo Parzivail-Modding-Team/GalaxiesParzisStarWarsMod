@@ -57,6 +57,9 @@ public class SimpleItemRender
 
 			matrices.translate(-0.02f, 0.16f, 0.04f);
 
+			if (renderMode != ModelTransformation.Mode.GUI)
+				matrices.translate(0, 0.18f, 0);
+
 			matrices.push();
 			matrices.scale(0.04f, 0.04f, 0.04f);
 
