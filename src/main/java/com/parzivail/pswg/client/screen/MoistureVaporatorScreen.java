@@ -10,12 +10,14 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScreenHandler>
 {
 	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/moisture_vaporator_gx8.png");
+	private static final Text TEXT_IDLE = new TranslatableText(Resources.container("moisture_vaporator_gx8.idle"));
 
 	public MoistureVaporatorScreen(MoistureVaporatorScreenHandler handler, PlayerInventory inventory, Text title)
 	{
@@ -45,10 +47,17 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 		if (mouseX > i + 103 && mouseX < i + 112 && mouseY > j + 28 && mouseY < j + 58)
 		{
 			int timer = this.handler.getCollectionTimer();
-			int timerLength = this.handler.getCollectionTimerLength();
-			if (timerLength <= 0)
-				timerLength = 1;
-			this.renderTooltip(matrices, new LiteralText(String.format("%s%%", (int)((1 - timer / (float)timerLength) * 100))), mouseX, mouseY);
+			if (timer == -1)
+			{
+				this.renderTooltip(matrices, TEXT_IDLE, mouseX, mouseY);
+			}
+			else
+			{
+				int timerLength = this.handler.getCollectionTimerLength();
+				if (timerLength <= 0)
+					timerLength = 1;
+				this.renderTooltip(matrices, new LiteralText(String.format("%s%%", (int)((1 - timer / (float)timerLength) * 100))), mouseX, mouseY);
+			}
 		}
 	}
 
