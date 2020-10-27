@@ -29,4 +29,8 @@ public class Resources
 	{
 		return "command." + MODID + "." + str;
 	}
+
+	//	public static String keyBinding(String str) {
+	//		return "key." + MODID + "." + str;
+	//	}
 }

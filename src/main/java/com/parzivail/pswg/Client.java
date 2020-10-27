@@ -27,8 +27,8 @@ import net.minecraft.util.Identifier;
 
 public class Client implements ClientModInitializer
 {
-	//	private static final FabricKeyBinding KEY_THROTTLE_UP = FabricKeyBinding.Builder.create(Resources.identifier("throttle_up"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_W | GLFW.GLFW_MOD_SHIFT, "category.pswg").build();
-	//	private static final FabricKeyBinding KEY_THROTTLE_DOWN = FabricKeyBinding.Builder.create(Resources.identifier("throttle_down"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_S | GLFW.GLFW_MOD_SHIFT, "category.pswg").build();
+	//	private static final KeyBinding KEY_THROTTLE_UP = new KeyBinding(Resources.keyBinding("throttle_up"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_W | GLFW.GLFW_MOD_SHIFT, "category.pswg");
+	//	private static final KeyBinding KEY_THROTTLE_DOWN = new KeyBinding(Resources.keyBinding("throttle_down"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_S | GLFW.GLFW_MOD_SHIFT, "category.pswg");
 
 	public static MinecraftClient minecraft;
 	public static RemoteTextureProvider remoteTextureProvider;
