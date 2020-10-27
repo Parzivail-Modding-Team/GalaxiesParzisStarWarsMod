@@ -14,6 +14,8 @@ public class SwgSpecies
 	public static final Identifier SPECIES_TOGRUTA_F = register(Resources.identifier("togruta_f"));
 	public static final Identifier SPECIES_CHAGRIAN_M = register(Resources.identifier("chagrian_m"));
 	public static final Identifier SPECIES_CHAGRIAN_F = register(Resources.identifier("chagrian_f"));
+	public static final Identifier SPECIES_TWILEK_M = register(Resources.identifier("twilek_m"));
+	public static final Identifier SPECIES_TWILEK_F = register(Resources.identifier("twilek_f"));
 
 	private static Identifier register(Identifier species)
 	{

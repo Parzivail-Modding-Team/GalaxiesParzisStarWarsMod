@@ -1,10 +1,7 @@
 package com.parzivail.pswg.client.species;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.model.npc.ModelChagrianF;
-import com.parzivail.pswg.client.model.npc.ModelChagrianM;
-import com.parzivail.pswg.client.model.npc.ModelTogrutaF;
-import com.parzivail.pswg.client.model.npc.ModelTogrutaM;
+import com.parzivail.pswg.client.model.npc.*;
 import com.parzivail.pswg.container.SwgSpecies;
 import net.minecraft.util.Identifier;
 
@@ -20,6 +17,8 @@ public class SwgSpeciesModels
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TOGRUTA_F, Resources.identifier("textures/species/togruta_f.png"), new ModelTogrutaF<>(0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_CHAGRIAN_M, Resources.identifier("textures/species/chagrian_m.png"), new ModelChagrianM<>(0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_CHAGRIAN_F, Resources.identifier("textures/species/chagrian_f.png"), new ModelChagrianF<>(0)));
+		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TWILEK_M, Resources.identifier("textures/species/twilek_m.png"), new ModelTwilekM<>(0)));
+		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TWILEK_F, Resources.identifier("textures/species/twilek_f.png"), new ModelTwilekF<>(0)));
 	}
 
 	private static void register(SwgSpeciesModel model)
