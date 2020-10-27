@@ -93,5 +93,6 @@ public class ModelTwilekF<T extends LivingEntity> extends PlayerEntityModel<T>
 		HeadTailL.addChild(TailLowerL_1);
 		HeadTailR.addChild(TailLowerL);
 		head.addChild(SpikeL);
+		torso.addChild(Chest);
 	}
 }

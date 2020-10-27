@@ -106,5 +106,6 @@ public class ModelChagrianF<T extends LivingEntity> extends PlayerEntityModel<T>
 		TailLowerR.addChild(TailLowerLowerR);
 		TailLowerL.addChild(TailLowerLowerL);
 		TailBaseL.addChild(HeadTailL);
+		torso.addChild(Chest);
 	}
 }

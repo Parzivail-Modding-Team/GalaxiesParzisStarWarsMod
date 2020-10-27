@@ -124,5 +124,6 @@ public class ModelTogrutaF<T extends LivingEntity> extends PlayerEntityModel<T>
 		TailBaseR.addChild(TailUpperR);
 		TailBaseL.addChild(HeadTailL);
 		TailBaseB.addChild(HeadTailB);
+		torso.addChild(Chest);
 	}
 }

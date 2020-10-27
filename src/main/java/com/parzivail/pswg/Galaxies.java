@@ -125,7 +125,6 @@ public class Galaxies implements ModInitializer
 				                                                                             .then(CommandManager.argument("species", new SpeciesArgumentType())
 				                                                                                                 .executes(context -> {
 					                                                                                                 Identifier species = context.getArgument("species", Identifier.class);
-					                                                                                                 SwgPersistentComponents pc = SwgEntityComponents.getPersistent(context.getSource().getPlayer());
 
 					                                                                                                 if (!SwgSpecies.SPECIES.contains(species))
 					                                                                                                 {
@@ -133,6 +132,7 @@ public class Galaxies implements ModInitializer
 						                                                                                                 return 0;
 					                                                                                                 }
 
+					                                                                                                 SwgPersistentComponents pc = SwgEntityComponents.getPersistent(context.getSource().getPlayer());
 					                                                                                                 if (species.equals(SwgSpecies.SPECIES_HUMAN))
 						                                                                                                 pc.setSpecies(null);
 					                                                                                                 else
