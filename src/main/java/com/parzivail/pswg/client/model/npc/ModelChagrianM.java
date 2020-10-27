@@ -1,0 +1,118 @@
+package com.parzivail.pswg.client.model.npc;
+
+import com.parzivail.util.client.ModelPartUtil;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.entity.LivingEntity;
+
+public class ModelChagrianM<T extends LivingEntity> extends PlayerEntityModel<T>
+{
+	public ModelPart TailBaseR;
+	public ModelPart TailBaseL;
+	public ModelPart HeadTailR;
+	public ModelPart TailUpperR;
+	public ModelPart TailLowerR;
+	public ModelPart TailLowerLowerR;
+	public ModelPart TailUpperUpperR;
+	public ModelPart HeadTailL;
+	public ModelPart TaiUpperL;
+	public ModelPart TailLowerL;
+	public ModelPart TailLowerLowerL;
+	public ModelPart TailUpperUpperL;
+
+	public ModelChagrianM(float scale)
+	{
+		super(scale, false);
+
+		textureWidth = 64;
+		textureHeight = 60;
+		TailUpperUpperL = new ModelPart(this, 47, 50);
+		TailUpperUpperL.mirror = true;
+		TailUpperUpperL.setPivot(1.1F, -3.0F, 0.8F);
+		TailUpperUpperL.addCuboid(-0.5F, 0.0F, -0.5F, 1, 11, 1, 0.0F);
+		TailBaseR = new ModelPart(this, 0, 36);
+		TailBaseR.mirror = true;
+		TailBaseR.setPivot(-2.5F, -7.9F, -1.0F);
+		TailBaseR.addCuboid(-2.5F, 0.3F, -0.2F, 4, 5, 6, 0.0F);
+		ModelPartUtil.setRotateAngle(TailBaseR, -0.45378560551852565F, 0.13962634015954636F, 0.0F);
+		leftArm = new ModelPart(this, 40, 16);
+		leftArm.mirror = true;
+		leftArm.setPivot(5.0F, 2.0F, -0.0F);
+		leftArm.addCuboid(-1.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F);
+		ModelPartUtil.setRotateAngle(leftArm, 0.0F, 0.0F, -0.10000736613927509F);
+		TaiUpperL = new ModelPart(this, 50, 39);
+		TaiUpperL.mirror = true;
+		TaiUpperL.setPivot(0.8F, -2.6F, -5.0F);
+		TaiUpperL.addCuboid(0.0F, 0.0F, 0.0F, 0, 0, 0, 0.0F);
+		ModelPartUtil.setRotateAngle(TaiUpperL, 0.8651597102135892F, -0.024085543677521744F, 0.0645771823237902F);
+		HeadTailR = new ModelPart(this, 20, 35);
+		HeadTailR.mirror = true;
+		HeadTailR.setPivot(0.2F, 0.8F, 0.9F);
+		HeadTailR.addCuboid(-3.0F, 1.9F, 1.1F, 3, 8, 3, 0.0F);
+		ModelPartUtil.setRotateAngle(HeadTailR, -0.08726646259971647F, 0.0F, 0.0F);
+		rightArm = new ModelPart(this, 40, 16);
+		rightArm.setPivot(-5.0F, 2.0F, 0.0F);
+		rightArm.addCuboid(-3.0F, -2.0F, -2.0F, 4, 12, 4, 0.0F);
+		ModelPartUtil.setRotateAngle(rightArm, 0.0F, 0.0F, 0.10000736613927509F);
+		TailLowerR = new ModelPart(this, 32, 40);
+		TailLowerR.mirror = true;
+		TailLowerR.setPivot(-1.5F, 9.2F, 2.4F);
+		TailLowerR.addCuboid(-1.0F, 0.0F, -1.0F, 2, 4, 2, 0.0F);
+		ModelPartUtil.setRotateAngle(TailLowerR, 0.45378560551852565F, 0.0F, 0.0F);
+		TailUpperUpperR = new ModelPart(this, 47, 50);
+		TailUpperUpperR.mirror = true;
+		TailUpperUpperR.setPivot(-3.1F, -3.0F, 0.8F);
+		TailUpperUpperR.addCuboid(-0.5F, 0.0F, -0.5F, 1, 11, 1, 0.0F);
+		TailBaseL = new ModelPart(this, 0, 36);
+		TailBaseL.setPivot(2.5F, -7.9F, -1.0F);
+		TailBaseL.addCuboid(-1.5F, 0.3F, -0.2F, 4, 5, 6, 0.0F);
+		ModelPartUtil.setRotateAngle(TailBaseL, -0.45378560551852565F, -0.13962634015954636F, 0.0F);
+		rightLeg = new ModelPart(this, 0, 16);
+		rightLeg.setPivot(-1.9F, 12.0F, 0.1F);
+		rightLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
+		TailLowerLowerL = new ModelPart(this, 47, 50);
+		TailLowerLowerL.mirror = true;
+		TailLowerLowerL.setPivot(0.0F, 1.0F, 0.0F);
+		TailLowerLowerL.addCuboid(-0.5F, 0.0F, -0.5F, 1, 9, 1, 0.0F);
+		torso = new ModelPart(this, 16, 16);
+		torso.setPivot(0.0F, 0.0F, 0.0F);
+		torso.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
+		leftLeg = new ModelPart(this, 0, 16);
+		leftLeg.mirror = true;
+		leftLeg.setPivot(1.9F, 12.0F, 0.1F);
+		leftLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
+		TailLowerLowerR = new ModelPart(this, 47, 50);
+		TailLowerLowerR.mirror = true;
+		TailLowerLowerR.setPivot(0.0F, 1.0F, 0.0F);
+		TailLowerLowerR.addCuboid(-0.5F, 0.0F, -0.5F, 1, 9, 1, 0.0F);
+		head = new ModelPart(this, 0, 0);
+		head.setPivot(0.0F, 0.0F, 0.0F);
+		head.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F);
+		TailUpperR = new ModelPart(this, 50, 39);
+		TailUpperR.setPivot(1.2F, -2.7F, -4.4F);
+		TailUpperR.addCuboid(0.0F, 0.0F, 0.0F, 0, 0, 0, 0.0F);
+		ModelPartUtil.setRotateAngle(TailUpperR, 0.8651597102135892F, 0.024085543677521744F, -0.0645771823237902F);
+		TailLowerL = new ModelPart(this, 32, 40);
+		TailLowerL.mirror = true;
+		TailLowerL.setPivot(1.5F, 9.2F, 2.4F);
+		TailLowerL.addCuboid(-1.0F, 0.0F, -1.0F, 2, 4, 2, 0.0F);
+		ModelPartUtil.setRotateAngle(TailLowerL, 0.45378560551852565F, 0.0F, 0.0F);
+		HeadTailL = new ModelPart(this, 20, 35);
+		HeadTailL.mirror = true;
+		HeadTailL.setPivot(-0.2F, 0.8F, 0.9F);
+		HeadTailL.addCuboid(0.0F, 1.9F, 1.1F, 3, 8, 3, 0.0F);
+		ModelPartUtil.setRotateAngle(HeadTailL, -0.08726646259971647F, 0.0F, 0.0F);
+		TaiUpperL.addChild(TailUpperUpperL);
+		head.addChild(TailBaseR);
+		TailBaseL.addChild(TaiUpperL);
+		TailBaseR.addChild(HeadTailR);
+		HeadTailR.addChild(TailLowerR);
+		TailUpperR.addChild(TailUpperUpperR);
+		head.addChild(TailBaseL);
+		TailLowerL.addChild(TailLowerLowerL);
+		TailLowerR.addChild(TailLowerLowerR);
+		TailBaseR.addChild(TailUpperR);
+		HeadTailL.addChild(TailLowerL);
+		TailBaseL.addChild(HeadTailL);
+	}
+}
