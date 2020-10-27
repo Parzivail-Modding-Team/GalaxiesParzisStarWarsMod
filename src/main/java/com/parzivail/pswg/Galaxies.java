@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -125,6 +126,12 @@ public class Galaxies implements ModInitializer
 				                                                                                                 .executes(context -> {
 					                                                                                                 Identifier species = context.getArgument("species", Identifier.class);
 					                                                                                                 SwgPersistentComponents pc = SwgEntityComponents.getPersistent(context.getSource().getPlayer());
+
+					                                                                                                 if (!SwgSpecies.SPECIES.contains(species))
+					                                                                                                 {
+						                                                                                                 context.getSource().sendFeedback(new TranslatableText(Resources.command("species.invalid"), species.toString()), false);
+						                                                                                                 return 0;
+					                                                                                                 }
 
 					                                                                                                 if (species.equals(SwgSpecies.SPECIES_HUMAN))
 						                                                                                                 pc.setSpecies(null);

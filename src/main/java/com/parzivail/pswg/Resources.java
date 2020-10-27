@@ -24,4 +24,9 @@ public class Resources
 	{
 		return "container." + MODID + "." + str;
 	}
+
+	public static String command(String str)
+	{
+		return "command." + MODID + "." + str;
+	}
 }
