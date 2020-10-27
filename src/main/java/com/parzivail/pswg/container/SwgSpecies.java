@@ -11,6 +11,7 @@ public class SwgSpecies
 
 	public static final Identifier SPECIES_HUMAN = register(Resources.identifier("human"));
 	public static final Identifier SPECIES_TOGRUTA_M = register(Resources.identifier("togruta_m"));
+	public static final Identifier SPECIES_TOGRUTA_F = register(Resources.identifier("togruta_f"));
 
 	private static Identifier register(Identifier species)
 	{
