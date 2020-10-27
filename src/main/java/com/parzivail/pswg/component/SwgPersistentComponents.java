@@ -6,40 +6,48 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 
 public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 {
 	private final PlayerEntity provider;
 
-	private static final int TEST_SYNCOP = 1;
-	private int test;
+	private static final int SPECIES_SYNCOP = 1;
+	private String species = "";
 
 	public SwgPersistentComponents(PlayerEntity provider)
 	{
 		this.provider = provider;
 	}
 
-	public int getTest()
+	public Identifier getSpecies()
 	{
-		return test;
+		if ("".equals(species))
+			return null;
+
+		return new Identifier(species);
 	}
 
-	public void setTest(int test)
+	public void setSpecies(Identifier species)
 	{
-		this.test = test;
-		SwgEntityComponents.PERSISTENT.sync(provider, TEST_SYNCOP);
+		String speciesStr = "";
+		if (species != null)
+			speciesStr = species.toString();
+
+		this.species = speciesStr;
+		SwgEntityComponents.PERSISTENT.sync(provider, SPECIES_SYNCOP);
 	}
 
 	@Override
 	public void readFromNbt(CompoundTag tag)
 	{
-		test = tag.getInt("test");
+		species = tag.getString("species");
 	}
 
 	@Override
 	public void writeToNbt(CompoundTag tag)
 	{
-		tag.putInt("test", test);
+		tag.putString("species", species);
 	}
 
 	/**
@@ -64,8 +72,8 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 			case FULL_SYNC:
 				writeToPacket(buf, recipient);
 				break;
-			case TEST_SYNCOP:
-				buf.writeInt(test);
+			case SPECIES_SYNCOP:
+				buf.writeString(species);
 				break;
 		}
 	}
@@ -89,8 +97,8 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 				if (tag != null)
 					this.readFromNbt(tag);
 				break;
-			case TEST_SYNCOP:
-				test = buf.readInt();
+			case SPECIES_SYNCOP:
+				species = buf.readString();
 				break;
 		}
 	}

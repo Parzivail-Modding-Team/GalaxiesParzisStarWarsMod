@@ -1,5 +1,8 @@
 package com.parzivail.pswg;
 
+import com.parzivail.pswg.command.SpeciesArgumentType;
+import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.SwgPersistentComponents;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.dimension.DimensionTeleporter;
 import com.parzivail.pswg.entity.ShipEntity;
@@ -14,7 +17,9 @@ import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.Objects;
@@ -111,6 +116,20 @@ public class Galaxies implements ModInitializer
 				                                                                                                 .executes(context -> {
 					                                                                                                 ServerWorld world = DimensionArgumentType.getDimensionArgument(context, "dimension");
 					                                                                                                 DimensionTeleporter.teleport(Objects.requireNonNull(context.getSource().getEntity()), world);
+					                                                                                                 return 1;
+				                                                                                                 }))));
+		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
+				                                           dispatcher.register(CommandManager.literal("pswg_species")
+				                                                                             .requires(source -> source.hasPermissionLevel(2) && source.getEntity() instanceof ServerPlayerEntity) // same permission level as tp
+				                                                                             .then(CommandManager.argument("species", new SpeciesArgumentType())
+				                                                                                                 .executes(context -> {
+					                                                                                                 Identifier species = context.getArgument("species", Identifier.class);
+					                                                                                                 SwgPersistentComponents pc = SwgEntityComponents.getPersistent(context.getSource().getPlayer());
+
+					                                                                                                 if (species.equals(SwgSpecies.SPECIES_HUMAN))
+						                                                                                                 pc.setSpecies(null);
+					                                                                                                 else
+						                                                                                                 pc.setSpecies(species);
 					                                                                                                 return 1;
 				                                                                                                 }))));
 

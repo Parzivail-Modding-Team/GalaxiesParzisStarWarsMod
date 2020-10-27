@@ -4,7 +4,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": ["CarverMixin", "FarmlandBlockMixin", "ItemStackMixin", "Matrix4fMixin", "QuaternionMixin", "ServerPlayNetworkHandlerMixin"],
   "client": [
-	"ClientPlayNetworkHandlerMixin", "EntityClientMixin", "GameRendererMixin", "HeldItemRendererMixin", "ItemRendererMixin", "LevelPropertiesMixin", "MinecraftClientMixin", "SpriteAtlasTextureMixin"
+	"AbstractClientPlayerEntityMixin", "ClientPlayNetworkHandlerMixin", "EntityClientMixin", "EntityRenderDispatcherMixin", "GameRendererMixin", "HeldItemRendererMixin", "ItemRendererMixin", "LevelPropertiesMixin", "MinecraftClientMixin", "PlayerEntityClientMixin", "SpriteAtlasTextureMixin"
   ],
   "injectors": {
 	"defaultRequire": 1
