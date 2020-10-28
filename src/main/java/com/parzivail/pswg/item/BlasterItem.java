@@ -6,9 +6,11 @@ import com.parzivail.pswg.item.data.BlasterPowerPack;
 import com.parzivail.pswg.item.data.BlasterTag;
 import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.entity.EntityUtil;
+import com.parzivail.util.item.ICustomHUD;
 import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.math.EntityHitResult;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.EntityDamageSource;
@@ -25,7 +27,7 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, ICustomHUD
 {
 	private final float damage;
 
@@ -154,6 +156,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
 		return true;
+	}
+
+	@Override
+	public void renderCustomHUD(ItemStack stack, MatrixStack matrices)
+	{
+		// TODO
 	}
 
 	public static class Settings extends Item.Settings
