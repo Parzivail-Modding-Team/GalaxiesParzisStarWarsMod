@@ -14,8 +14,10 @@ import com.parzivail.pswg.client.screen.MosEisleyCrateScreen;
 import com.parzivail.pswg.client.screen.OctagonCrateScreen;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
+import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.util.Lumberjack;
+import com.parzivail.util.item.CustomHUDRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -70,5 +72,6 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.ChaseCam, (entityRenderDispatcher, context) -> new EmptyRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, (entityRenderDispatcher, context) -> new BlasterBoltRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, (entityRenderDispatcher, context) -> new ThrownLightsaberRenderer(entityRenderDispatcher, context.getItemRenderer()));
+		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.A280, (itemStack, matrixStack) -> {});
 	}
 }
