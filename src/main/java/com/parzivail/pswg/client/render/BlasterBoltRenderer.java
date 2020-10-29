@@ -43,7 +43,7 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		matrices.multiply(new Quaternion(0, -rYaw, 0, true));
 		matrices.multiply(new Quaternion(rPitch + 90, 0, 0, true));
 
-		LightsaberRenderer.renderBlade(ModelTransformation.Mode.FIXED, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, 1, false, 0xFFFFFF, 0xFF0020);
+		LightsaberRenderer.renderBlade(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, 1, false, 0xFFFFFF, 0xFF0020);
 
 		matrices.pop();
 	}

@@ -57,7 +57,14 @@ public class SimpleItemRender
 
 			matrices.translate(-0.02f, 0.16f, 0.04f);
 
-			if (renderMode != ModelTransformation.Mode.GUI)
+			if (renderMode == ModelTransformation.Mode.FIXED)
+			{
+				matrices.translate(-0.18f, 0, 0);
+				matrices.scale(1.8f, 1.8f, 1.8f);
+				matrices.multiply(new Quaternion(0, 0, 45, true));
+				matrices.translate(0, 0.18f, 0);
+			}
+			else if (renderMode != ModelTransformation.Mode.GUI)
 				matrices.translate(0, 0.18f, 0);
 
 			matrices.push();
