@@ -2,6 +2,7 @@ package com.parzivail.pswg.item;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.data.LightsaberTag;
 import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
@@ -16,6 +17,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.SwordItem;
 import net.minecraft.item.ToolMaterials;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -48,6 +50,21 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	private static boolean isActive(ItemStack stack)
 	{
 		return !stack.isEmpty() && new LightsaberTag(stack.getOrCreateTag()).active;
+	}
+
+	public static void toggle(World world, PlayerEntity player, ItemStack stack)
+	{
+		LightsaberTag.mutate(stack, lightsaberTag -> {
+			boolean success = lightsaberTag.toggle();
+
+			if (success && !world.isClient)
+			{
+				if (lightsaberTag.active)
+					world.playSound(null, player.getBlockPos(), SwgSounds.Lightsaber.START_CLASSIC, SoundCategory.PLAYERS, 1f, 1f);
+				else
+					world.playSound(null, player.getBlockPos(), SwgSounds.Lightsaber.STOP_CLASSIC, SoundCategory.PLAYERS, 1f, 1f);
+			}
+		});
 	}
 
 	@Override
@@ -107,7 +124,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		final ItemStack stack = player.getStackInHand(hand);
 		if (player.isSneaking())
 		{
-			LightsaberTag.mutate(stack, LightsaberTag::toggle);
+			toggle(world, player, stack);
 			return new TypedActionResult<>(ActionResult.CONSUME, stack);
 		}
 		return new TypedActionResult<>(ActionResult.PASS, stack);

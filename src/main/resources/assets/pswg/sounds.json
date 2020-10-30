@@ -1,0 +1,17 @@
+{
+  "lightsaber.start.classic": {
+	"sounds": [
+	  "pswg:lightsaber/start/classic"
+	]
+  },
+  "lightsaber.stop.classic": {
+	"sounds": [
+	  "pswg:lightsaber/stop/classic"
+	]
+  },
+  "lightsaber.idle.classic": {
+	"sounds": [
+	  "pswg:lightsaber/idle/classic"
+	]
+  }
+}

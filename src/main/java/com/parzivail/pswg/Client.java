@@ -18,17 +18,20 @@ import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.util.Lumberjack;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
+import org.lwjgl.glfw.GLFW;
 
 public class Client implements ClientModInitializer
 {
-	//	private static final KeyBinding KEY_THROTTLE_UP = new KeyBinding(Resources.keyBinding("throttle_up"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_W | GLFW.GLFW_MOD_SHIFT, "category.pswg");
-	//	private static final KeyBinding KEY_THROTTLE_DOWN = new KeyBinding(Resources.keyBinding("throttle_down"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_S | GLFW.GLFW_MOD_SHIFT, "category.pswg");
+	public static final KeyBinding KEY_LIGHTSABER_TOGGLE = new KeyBinding(Resources.keyBinding("lightsaber_toggle"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_X, "key.category.pswg");
 
 	public static MinecraftClient minecraft;
 	public static RemoteTextureProvider remoteTextureProvider;
@@ -40,8 +43,7 @@ public class Client implements ClientModInitializer
 
 		minecraft = MinecraftClient.getInstance();
 
-		//		KeyBindingHelper.registerKeyBinding(KEY_THROTTLE_UP);
-		//		KeyBindingHelper.registerKeyBinding(KEY_THROTTLE_DOWN);
+		KeyBindingHelper.registerKeyBinding(KEY_LIGHTSABER_TOGGLE);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 

@@ -27,13 +27,14 @@ public class LightsaberTag extends TagSerializer
 		stack.setTag(t.serialize());
 	}
 
-	public void toggle()
+	public boolean toggle()
 	{
-		if (transition == 0)
-		{
-			transition = active ? -TRANSITION_TICKS : TRANSITION_TICKS;
-			active = !active;
-		}
+		if (transition != 0)
+			return false;
+
+		transition = active ? -TRANSITION_TICKS : TRANSITION_TICKS;
+		active = !active;
+		return true;
 	}
 
 	public void tick()

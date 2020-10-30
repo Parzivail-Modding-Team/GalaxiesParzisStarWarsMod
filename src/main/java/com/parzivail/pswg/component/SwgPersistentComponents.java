@@ -106,12 +106,17 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 	@Override
 	public boolean shouldSyncWith(ServerPlayerEntity player, int syncOp)
 	{
-		// We should only sync data with tehe client associated with
-		// the player containing the data. This won't be the case,
-		// obviously, when we need to show visual effects on all
-		// clients, as with force powers, etc. That data will be
-		// sent on the correct syncOp
+		// If we have any properties that shouldn't be
+		// synced to other players, we should just
+		// define another component that is local
+		// to the player in question. If we leave
+		// this as player == this.provider, and
+		// use syncOp to send only specific props
+		// to clients, they won't get synced on the
+		// initial, full sync, so having two different
+		// components is the best compromise in
+		// my opinion.
 
-		return player == provider;
+		return true;
 	}
 }

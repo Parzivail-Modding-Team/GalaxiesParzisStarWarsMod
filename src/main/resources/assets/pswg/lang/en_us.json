@@ -48,5 +48,7 @@
   "item.pswg.blue_yogurt": "Blue Yogurt",
   "item.pswg.qrikki_bread": "Qrikki Bread",
   "item.pswg.qrikki_waffle": "Qrikki Waffle",
-  "itemGroup.pswg.main": "Galaxies: Parzi's Star Wars Mod"
+  "itemGroup.pswg.main": "Galaxies: Parzi's Star Wars Mod",
+  "key.category.pswg": "Galaxies: Parzi's Star Wars Mod",
+  "key.pswg.lightsaber_toggle": "Toggle Lightsaber"
 }

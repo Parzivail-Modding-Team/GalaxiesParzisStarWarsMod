@@ -7,13 +7,15 @@ import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.dimension.DimensionTeleporter;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
+import com.parzivail.pswg.handler.PlayerPacketHandler;
 import com.parzivail.pswg.util.Lumberjack;
-import com.parzivail.util.item.LeftClickHandler;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.DimensionArgumentType;
+import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.CommandManager;
@@ -45,6 +47,8 @@ public class Galaxies implements ModInitializer
 		SwgEntities.register();
 
 		SwgStructures.General.register();
+
+		SwgSounds.register();
 
 		SwgBlocks.register(SwgBlocks.Sand.Tatooine, Resources.identifier("sand_tatooine"));
 
@@ -119,6 +123,8 @@ public class Galaxies implements ModInitializer
 					                                                                                                 DimensionTeleporter.teleport(Objects.requireNonNull(context.getSource().getEntity()), world);
 					                                                                                                 return 1;
 				                                                                                                 }))));
+
+		ArgumentTypes.register("pswg:species", SpeciesArgumentType.class, new ConstantArgumentSerializer<>(SpeciesArgumentType::new));
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
 				                                           dispatcher.register(CommandManager.literal("pswg_species")
 				                                                                             .requires(source -> source.hasPermissionLevel(2) && source.getEntity() instanceof ServerPlayerEntity) // same permission level as tp
@@ -140,7 +146,8 @@ public class Galaxies implements ModInitializer
 					                                                                                                 return 1;
 				                                                                                                 }))));
 
-		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketPlayerLeftClickItem, LeftClickHandler::handleLeftClickPacket);
+		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketPlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
+		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketPlayerLightsaberToggle, PlayerPacketHandler::handleLightsaberTogglePacket);
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipControls, ShipEntity::handleControlPacket);
 	}

@@ -31,8 +31,8 @@ public class MinecraftClientMixin
 		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", new File(args.directories.assetDir, "pswgRemoteAssets"));
 	}
 
-	@Inject(method = "Lnet/minecraft/client/MinecraftClient;handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V"), cancellable = true)
-	private void doAttack(CallbackInfo ci)
+	@Inject(method = "Lnet/minecraft/client/MinecraftClient;handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V", shift = At.Shift.BEFORE), cancellable = true)
+	private void handleInputEvents(CallbackInfo ci)
 	{
 		LeftClickHandler.handleInputEvents(ci);
 	}

@@ -3,9 +3,7 @@ package com.parzivail.util.item;
 import com.parzivail.pswg.container.SwgPackets;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.ActionResult;
@@ -35,19 +33,8 @@ public class LeftClickHandler
 				return;
 
 			ci.cancel();
-		}
 
-		ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketPlayerLeftClickItem, new PacketByteBuf(Unpooled.buffer()));
-	}
-
-	public static void handleLeftClickPacket(PacketContext packetContext, PacketByteBuf packetByteBuf)
-	{
-		PlayerEntity player = packetContext.getPlayer();
-		ItemStack stack = player.getMainHandStack();
-
-		if (stack.getItem() instanceof ILeftClickConsumer)
-		{
-			((ILeftClickConsumer)stack.getItem()).useLeft(player.world, player, Hand.MAIN_HAND);
+			ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketPlayerLeftClickItem, new PacketByteBuf(Unpooled.buffer()));
 		}
 	}
 }
