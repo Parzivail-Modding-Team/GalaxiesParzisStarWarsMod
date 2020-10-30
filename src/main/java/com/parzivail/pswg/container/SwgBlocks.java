@@ -73,7 +73,7 @@ public class SwgBlocks
 
 	public static class Sand
 	{
-		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND));
+		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
 	}
 
 	public static class MoistureVaporator
