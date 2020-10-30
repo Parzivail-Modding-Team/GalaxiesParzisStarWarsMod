@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:block/leaves",
-  "textures": {
-	"all": "pswg:block/leaves_sequoia"
-  }
+	"parent": "minecraft:block/leaves",
+	"textures": {
+		"all": "pswg:block/leaves_sequoia"
+	}
 }

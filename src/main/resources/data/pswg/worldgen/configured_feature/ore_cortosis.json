@@ -1,46 +1,46 @@
 {
-  "config": {
-	"feature": {
-	  "config": {
+	"config": {
 		"feature": {
-		  "config": {
-			"feature": {
-			  "config": {
-				"target": {
-				  "tag": "minecraft:base_stone_overworld",
-				  "predicate_type": "minecraft:tag_match"
+			"config": {
+				"feature": {
+					"config": {
+						"feature": {
+							"config": {
+								"target": {
+									"tag": "minecraft:base_stone_overworld",
+									"predicate_type": "minecraft:tag_match"
+								},
+								"state": {
+									"Name": "pswg:ore_cortosis"
+								},
+								"size": 1
+							},
+							"type": "minecraft:ore"
+						},
+						"decorator": {
+							"config": {
+								"bottom_offset": 0,
+								"top_offset": 0,
+								"maximum": 4
+							},
+							"type": "minecraft:range"
+						}
+					},
+					"type": "minecraft:decorated"
 				},
-				"state": {
-				  "Name": "pswg:ore_cortosis"
-				},
-				"size": 1
-			  },
-			  "type": "minecraft:ore"
+				"decorator": {
+					"config": {},
+					"type": "minecraft:square"
+				}
 			},
-			"decorator": {
-			  "config": {
-				"bottom_offset": 0,
-				"top_offset": 0,
-				"maximum": 4
-			  },
-			  "type": "minecraft:range"
-			}
-		  },
-		  "type": "minecraft:decorated"
+			"type": "minecraft:decorated"
 		},
 		"decorator": {
-		  "config": {},
-		  "type": "minecraft:square"
+			"config": {
+				"count": 20
+			},
+			"type": "minecraft:count"
 		}
-	  },
-	  "type": "minecraft:decorated"
 	},
-	"decorator": {
-	  "config": {
-		"count": 20
-	  },
-	  "type": "minecraft:count"
-	}
-  },
-  "type": "minecraft:decorated"
+	"type": "minecraft:decorated"
 }

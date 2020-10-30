@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:smoking",
-  "ingredient": {
-    "item": "pswg:gizka_chop"
-  },
-  "result": "pswg:cooked_gizka_chop",
-  "experience": 0.35,
-  "cookingtime": 100
+	"type": "minecraft:smoking",
+	"ingredient": {
+		"item": "pswg:gizka_chop"
+	},
+	"result": "pswg:cooked_gizka_chop",
+	"experience": 0.35,
+	"cookingtime": 100
 }

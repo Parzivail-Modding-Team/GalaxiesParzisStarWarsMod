@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:campfire_cooking",
-  "ingredient": {
-    "item": "pswg:nerf_chop"
-  },
-  "result": "pswg:cooked_nerf_chop",
-  "experience": 0.35,
-  "cookingtime": 600
+	"type": "minecraft:campfire_cooking",
+	"ingredient": {
+		"item": "pswg:nerf_chop"
+	},
+	"result": "pswg:cooked_nerf_chop",
+	"experience": 0.35,
+	"cookingtime": 600
 }

@@ -1,12 +1,32 @@
 {
-  "required": true,
-  "package": "com.parzivail.pswg.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "mixins": ["CarverMixin", "FarmlandBlockMixin", "ItemStackMixin", "Matrix4fMixin", "QuaternionMixin", "ServerPlayNetworkHandlerMixin"],
-  "client": [
-	"AbstractClientPlayerEntityMixin", "ClientPlayNetworkHandlerMixin", "ClientRecipeBookMixin", "EntityClientMixin", "EntityRenderDispatcherMixin", "GameRendererMixin", "HeldItemRendererMixin", "InGameHudMixin", "ItemRendererMixin", "LevelPropertiesMixin", "MinecraftClientMixin", "PlayerEntityMixin", "PlayerEntityModelMixin", "SpriteAtlasTextureMixin"
-  ],
-  "injectors": {
-	"defaultRequire": 1
-  }
+	"required": true,
+	"package": "com.parzivail.pswg.mixin",
+	"compatibilityLevel": "JAVA_8",
+	"mixins": [
+		"CarverMixin",
+		"FarmlandBlockMixin",
+		"ItemStackMixin",
+		"Matrix4fMixin",
+		"QuaternionMixin",
+		"ServerPlayNetworkHandlerMixin"
+	],
+	"client": [
+		"AbstractClientPlayerEntityMixin",
+		"ClientPlayNetworkHandlerMixin",
+		"ClientRecipeBookMixin",
+		"EntityClientMixin",
+		"EntityRenderDispatcherMixin",
+		"GameRendererMixin",
+		"HeldItemRendererMixin",
+		"InGameHudMixin",
+		"ItemRendererMixin",
+		"LevelPropertiesMixin",
+		"MinecraftClientMixin",
+		"PlayerEntityMixin",
+		"PlayerEntityModelMixin",
+		"SpriteAtlasTextureMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
 }

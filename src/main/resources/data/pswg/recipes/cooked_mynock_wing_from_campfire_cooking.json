@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:campfire_cooking",
-  "ingredient": {
-    "item": "pswg:mynock_wing"
-  },
-  "result": "pswg:cooked_mynock_wing",
-  "experience": 0.35,
-  "cookingtime": 600
+	"type": "minecraft:campfire_cooking",
+	"ingredient": {
+		"item": "pswg:mynock_wing"
+	},
+	"result": "pswg:cooked_mynock_wing",
+	"experience": 0.35,
+	"cookingtime": 600
 }

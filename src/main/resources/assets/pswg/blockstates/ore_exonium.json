@@ -1,7 +1,7 @@
 {
-  "variants": {
-	"": {
-	  "model": "pswg:block/ore_exonium"
+	"variants": {
+		"": {
+			"model": "pswg:block/ore_exonium"
+		}
 	}
-  }
 }

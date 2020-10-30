@@ -1,7 +1,7 @@
 {
-  "variants": {
-	"": {
-	  "model": "pswg:block/workbench_blaster"
+	"variants": {
+		"": {
+			"model": "pswg:block/workbench_blaster"
+		}
 	}
-  }
 }

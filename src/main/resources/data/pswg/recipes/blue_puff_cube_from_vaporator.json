@@ -1,10 +1,10 @@
 {
-  "type": "pswg:vaporator",
-  "ingredient": {
-	"item": "pswg:blue_milk"
-  },
-  "result": {
-	"item": "pswg:blue_puff_cube"
-  },
-  "duration": 400
+	"type": "pswg:vaporator",
+	"ingredient": {
+		"item": "pswg:blue_milk"
+	},
+	"result": {
+		"item": "pswg:blue_puff_cube"
+	},
+	"duration": 400
 }

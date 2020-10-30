@@ -1,9 +1,9 @@
 {
-  "type": "minecraft:smoking",
-  "ingredient": {
-    "item": "pswg:bantha_chop"
-  },
-  "result": "pswg:cooked_bantha_chop",
-  "experience": 0.35,
-  "cookingtime": 100
+	"type": "minecraft:smoking",
+	"ingredient": {
+		"item": "pswg:bantha_chop"
+	},
+	"result": "pswg:cooked_bantha_chop",
+	"experience": 0.35,
+	"cookingtime": 100
 }

@@ -1,9 +1,10 @@
 {
-  "layers": [
-	{
-	  "texture": "minecraft:block/stone"
-	}, {
-	  "texture": "#this"
-	}
-  ]
+	"layers": [
+		{
+			"texture": "minecraft:block/stone"
+		},
+		{
+			"texture": "#this"
+		}
+	]
 }

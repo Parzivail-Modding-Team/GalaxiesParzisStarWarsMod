@@ -1,6 +1,6 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "pswg:item/jogan_fruit"
-  }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "pswg:item/jogan_fruit"
+	}
 }

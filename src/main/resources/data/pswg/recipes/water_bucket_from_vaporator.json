@@ -1,10 +1,10 @@
 {
-  "type": "pswg:vaporator",
-  "ingredient": {
-	"item": "minecraft:bucket"
-  },
-  "result": {
-	"item": "minecraft:water_bucket"
-  },
-  "duration": 1200
+	"type": "pswg:vaporator",
+	"ingredient": {
+		"item": "minecraft:bucket"
+	},
+	"result": {
+		"item": "minecraft:water_bucket"
+	},
+	"duration": 1200
 }

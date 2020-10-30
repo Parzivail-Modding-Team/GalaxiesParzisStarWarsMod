@@ -1,6 +1,6 @@
 {
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "pswg:item/debug"
-  }
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "pswg:item/debug"
+	}
 }
