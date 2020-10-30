@@ -1,5 +1,6 @@
 package com.parzivail.pswg.item.data;
 
+import com.parzivail.util.math.Ease;
 import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -52,8 +53,8 @@ public class LightsaberTag extends TagSerializer
 			return active ? 1 : 0;
 
 		if (transition > 0)
-			return 1 - (transition - partialTicks) / TRANSITION_TICKS;
+			return Ease.outCubic(1 - (transition - partialTicks) / TRANSITION_TICKS);
 
-		return -(transition + partialTicks) / TRANSITION_TICKS;
+		return Ease.inCubic(-(transition + partialTicks) / TRANSITION_TICKS);
 	}
 }
