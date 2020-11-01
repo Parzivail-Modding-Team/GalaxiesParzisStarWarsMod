@@ -1,13 +1,15 @@
 package com.parzivail.pswg.client.model.npc;
 
 import com.parzivail.util.client.ModelPartUtil;
-import com.parzivail.util.client.PlayerEntityModelUtil;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.LivingEntity;
 
 public class ModelTwilekCombined<T extends LivingEntity> extends PlayerEntityModel<T>
 {
+	private static final int TEXTURE_WIDTH = 96;
+	private static final int TEXTURE_HEIGHT = 96;
+
 	public ModelPart FrontalL;
 	public ModelPart FrontalR;
 	public ModelPart SpikeL;
@@ -24,8 +26,9 @@ public class ModelTwilekCombined<T extends LivingEntity> extends PlayerEntityMod
 	{
 		super(scale, true);
 
-		textureWidth = 96;
-		textureHeight = 96;
+		textureWidth = TEXTURE_WIDTH;
+		textureHeight = TEXTURE_HEIGHT;
+
 		TailLowerL_1 = new ModelPart(this, 47, 66);
 		TailLowerL_1.setPivot(0.5F, 11.5F, 1.7F);
 		TailLowerL_1.addCuboid(0.0F, 0.0F, 0.0F, 2, 6, 2, 0.0F);
@@ -35,14 +38,6 @@ public class ModelTwilekCombined<T extends LivingEntity> extends PlayerEntityMod
 		TailBaseR.setPivot(-4.5F, -7.2F, -0.2F);
 		TailBaseR.addCuboid(0.0F, 0.0F, 0.0F, 4, 5, 5, 0.0F);
 		ModelPartUtil.setRotateAngle(TailBaseR, 0.18203784098300857F, 0.0F, 0.0F);
-		head = new ModelPart(this, 0, 0);
-		head.setPivot(0.0F, 0.0F, 0.0F);
-		head.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F);
-		ModelPart LegLOverlay = new ModelPart(this, 0, 32);
-		LegLOverlay.mirror = true;
-		LegLOverlay.setPivot(2.0F, 12.0F, 0.0F);
-		LegLOverlay.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.5F);
-		PlayerEntityModelUtil.setLeftPantLeg(this, LegLOverlay);
 		Chest = new ModelPart(this, 0, 65);
 		Chest.setPivot(0.0F, -0.1F, 1.0F);
 		Chest.addCuboid(-3.0F, 2.0F, -4.0F, 6, 3, 2, 0.0F);
@@ -58,65 +53,24 @@ public class ModelTwilekCombined<T extends LivingEntity> extends PlayerEntityMod
 		FrontalR.mirror = true;
 		FrontalR.setPivot(-4.3F, -8.6F, -4.4F);
 		FrontalR.addCuboid(0.0F, 0.0F, 0.0F, 4, 4, 4, 0.0F);
-		ModelPart LegROverlay = new ModelPart(this, 0, 48);
-		LegROverlay.mirror = true;
-		LegROverlay.setPivot(-2.0F, 12.0F, 0.0F);
-		LegROverlay.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.5F);
-		PlayerEntityModelUtil.setRightPantLeg(this, LegROverlay);
 		FrontalL = new ModelPart(this, 2, 79);
 		FrontalL.setPivot(0.3F, -8.6F, -4.4F);
 		FrontalL.addCuboid(0.0F, 0.0F, 0.0F, 4, 4, 4, 0.0F);
-		leftArm = new ModelPart(this, 40, 16);
-		leftArm.mirror = true;
-		leftArm.setPivot(5.0F, 2.0F, 0.0F);
-		leftArm.addCuboid(-1.0F, -2.0F, -2.0F, 3, 12, 4, 0.0F);
-		ModelPart ArmLOverlay = new ModelPart(this, 40, 32);
-		ArmLOverlay.mirror = true;
-		ArmLOverlay.setPivot(5.0F, 2.0F, 0.0F);
-		ArmLOverlay.addCuboid(-1.0F, -2.0F, -2.0F, 3, 12, 4, 0.5F);
-		PlayerEntityModelUtil.setLeftSleeve(this, ArmLOverlay);
-		ModelPart ArmROverlay = new ModelPart(this, 46, 48);
-		ArmROverlay.mirror = true;
-		ArmROverlay.setPivot(-5.0F, 2.0F, 0.0F);
-		ArmROverlay.addCuboid(-2.0F, -2.0F, -2.0F, 3, 12, 4, 0.5F);
-		PlayerEntityModelUtil.setRightSleeve(this, ArmROverlay);
-		rightLeg = new ModelPart(this, 16, 48);
-		rightLeg.mirror = true;
-		rightLeg.setPivot(-1.9F, 12.0F, 0.0F);
-		rightLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
 		TailMidR = new ModelPart(this, 33, 66);
 		TailMidR.mirror = true;
 		TailMidR.setPivot(0.4F, -0.2F, 0.9F);
 		TailMidR.addCuboid(0.0F, 1.9F, 1.1F, 3, 10, 3, 0.0F);
 		ModelPartUtil.setRotateAngle(TailMidR, -0.08325220532012952F, 0.0F, 0.0F);
-		ModelPart TorsoOverlay = new ModelPart(this, 16, 32);
-		TorsoOverlay.setPivot(0.0F, 0.0F, 0.0F);
-		TorsoOverlay.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.5F);
-		PlayerEntityModelUtil.setJacket(this, TorsoOverlay);
 		TailLowerL = new ModelPart(this, 47, 66);
 		TailLowerL.mirror = true;
 		TailLowerL.setPivot(0.5F, 11.5F, 1.7F);
 		TailLowerL.addCuboid(0.0F, 0.0F, 0.0F, 2, 6, 2, 0.0F);
 		ModelPartUtil.setRotateAngle(TailLowerL, -0.08866272600131193F, 0.0F, 0.0F);
-		helmet = new ModelPart(this, 32, 0);
-		helmet.setPivot(0.0F, 0.0F, 0.0F);
-		helmet.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.5F);
-		torso = new ModelPart(this, 16, 16);
-		torso.setPivot(0.0F, 0.0F, 0.0F);
-		torso.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
 		SpikeR = new ModelPart(this, 4, 71);
 		SpikeR.mirror = true;
 		SpikeR.setPivot(-4.8F, -3.5F, -1.8F);
 		SpikeR.addCuboid(0.0F, 0.0F, 0.0F, 2, 3, 2, 0.0F);
 		ModelPartUtil.setRotateAngle(SpikeR, 0.0F, 0.0F, -0.4461061568097506F);
-		rightArm = new ModelPart(this, 32, 48);
-		rightArm.mirror = true;
-		rightArm.setPivot(-5.0F, 2.0F, 0.0F);
-		rightArm.addCuboid(-2.0F, -2.0F, -2.0F, 3, 12, 4, 0.0F);
-		leftLeg = new ModelPart(this, 0, 16);
-		leftLeg.mirror = true;
-		leftLeg.setPivot(1.9F, 12.0F, 0.0F);
-		leftLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.0F);
 		TailBaseL = new ModelPart(this, 14, 66);
 		TailBaseL.setPivot(0.5F, -7.2F, -0.1F);
 		TailBaseL.addCuboid(0.0F, 0.0F, 0.0F, 4, 5, 5, 0.0F);
@@ -133,5 +87,12 @@ public class ModelTwilekCombined<T extends LivingEntity> extends PlayerEntityMod
 		TailMidR.addChild(TailLowerL);
 		head.addChild(SpikeR);
 		head.addChild(TailBaseL);
+	}
+
+	@Override
+	public void accept(ModelPart modelPart)
+	{
+		modelPart.setTextureSize(TEXTURE_WIDTH, TEXTURE_HEIGHT);
+		super.accept(modelPart);
 	}
 }

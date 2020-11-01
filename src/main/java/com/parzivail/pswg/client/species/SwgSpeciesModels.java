@@ -14,11 +14,11 @@ public class SwgSpeciesModels
 	static
 	{
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TOGRUTA_M, Resources.identifier("textures/species/togruta_m.png"), new ModelTogrutaM<>(0)));
-		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TOGRUTA_F, Resources.identifier("textures/species/togruta_f.png"), new ModelTogrutaF<>(0)));
+		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TOGRUTA_F, Resources.identifier("textures/species/togruta/female/yellow.png"), new ModelTogrutaF<>(0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_CHAGRIAN_M, Resources.identifier("textures/species/chagrian_m.png"), new ModelChagrianM<>(0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_CHAGRIAN_F, Resources.identifier("textures/species/chagrian_f.png"), new ModelChagrianF<>(0)));
-		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TWILEK_M, Resources.identifier("textures/species/twilek_m.png"), new ModelTwilekCombined<>(true, 0)));
-		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TWILEK_F, Resources.identifier("textures/species/twilek_f.png"), new ModelTwilekCombined<>(false, 0)));
+		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TWILEK_M, Resources.identifier("textures/species/twilek/male/green.png"), new ModelTwilekCombined<>(true, 0)));
+		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TWILEK_F, Resources.identifier("textures/species/twilek/female/green.png"), new ModelTwilekCombined<>(false, 0)));
 	}
 
 	private static void register(SwgSpeciesModel model)
