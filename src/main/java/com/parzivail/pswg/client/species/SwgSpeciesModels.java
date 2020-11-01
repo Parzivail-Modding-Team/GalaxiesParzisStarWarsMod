@@ -13,7 +13,7 @@ public class SwgSpeciesModels
 
 	static
 	{
-		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TOGRUTA_M, Resources.identifier("textures/species/togruta_m.png"), new ModelTogrutaM<>(0)));
+		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TOGRUTA_M, Resources.identifier("textures/species/togruta/male/yellow.png"), new ModelTogrutaM<>(0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TOGRUTA_F, Resources.identifier("textures/species/togruta/female/yellow.png"), new ModelTogrutaF<>(0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_CHAGRIAN_M, Resources.identifier("textures/species/chagrian_m.png"), new ModelChagrianM<>(0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_CHAGRIAN_F, Resources.identifier("textures/species/chagrian_f.png"), new ModelChagrianF<>(0)));
