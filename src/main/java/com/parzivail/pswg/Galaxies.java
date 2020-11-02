@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.DimensionArgumentType;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -25,6 +26,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.Collection;
 import java.util.Objects;
 
 public class Galaxies implements ModInitializer
@@ -127,24 +129,30 @@ public class Galaxies implements ModInitializer
 		ArgumentTypes.register("pswg:species", SpeciesArgumentType.class, new ConstantArgumentSerializer<>(SpeciesArgumentType::new));
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
 				                                           dispatcher.register(CommandManager.literal("pswg_species")
-				                                                                             .requires(source -> source.hasPermissionLevel(2) && source.getEntity() instanceof ServerPlayerEntity) // same permission level as tp
-				                                                                             .then(CommandManager.argument("species", new SpeciesArgumentType())
-				                                                                                                 .executes(context -> {
-					                                                                                                 Identifier species = context.getArgument("species", Identifier.class);
+				                                                                             .requires(source -> source.hasPermissionLevel(2)) // same permission level as tp
+				                                                                             .then(CommandManager.argument("players", EntityArgumentType.players())
+				                                                                                                 .then(CommandManager.argument("species", new SpeciesArgumentType())
+				                                                                                                                     .executes(context -> {
+					                                                                                                                     Collection<ServerPlayerEntity> players = EntityArgumentType.getPlayers(context, "players");
+					                                                                                                                     Identifier species = context.getArgument("species", Identifier.class);
 
-					                                                                                                 if (!SwgSpecies.SPECIES.contains(species))
-					                                                                                                 {
-						                                                                                                 context.getSource().sendFeedback(new TranslatableText(Resources.command("species.invalid"), species.toString()), false);
-						                                                                                                 return 0;
-					                                                                                                 }
+					                                                                                                                     if (!SwgSpecies.SPECIES.contains(species))
+					                                                                                                                     {
+						                                                                                                                     context.getSource().sendFeedback(new TranslatableText(Resources.command("species.invalid"), species.toString()), false);
+						                                                                                                                     return 0;
+					                                                                                                                     }
 
-					                                                                                                 SwgPersistentComponents pc = SwgEntityComponents.getPersistent(context.getSource().getPlayer());
-					                                                                                                 if (species.equals(SwgSpecies.SPECIES_HUMAN))
-						                                                                                                 pc.setSpecies(null);
-					                                                                                                 else
-						                                                                                                 pc.setSpecies(species);
-					                                                                                                 return 1;
-				                                                                                                 }))));
+					                                                                                                                     for (ServerPlayerEntity player : players)
+					                                                                                                                     {
+						                                                                                                                     SwgPersistentComponents pc = SwgEntityComponents.getPersistent(player);
+						                                                                                                                     if (species.equals(SwgSpecies.SPECIES_HUMAN))
+							                                                                                                                     pc.setSpecies(null);
+						                                                                                                                     else
+							                                                                                                                     pc.setSpecies(species);
+					                                                                                                                     }
+
+					                                                                                                                     return 1;
+				                                                                                                                     })))));
 
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketPlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketPlayerLightsaberToggle, PlayerPacketHandler::handleLightsaberTogglePacket);
