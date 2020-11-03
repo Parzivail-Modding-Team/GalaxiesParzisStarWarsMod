@@ -7,8 +7,8 @@ repositories {
 	mavenCentral()
 
 	maven {
-		name = "OnyxStudios"
-		url = "https://maven.abusedmaster.xyz"
+		name = "Ladysnake Libs"
+		url = "https://dl.bintray.com/ladysnake/libs"
 	}
 }
 

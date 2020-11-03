@@ -58,7 +58,9 @@ public class SwgVolatileComponents implements ComponentV3, AutoSyncedComponent
 		switch (syncOp)
 		{
 			case FULL_SYNC:
-				writeToPacket(buf, recipient);
+				CompoundTag tag = new CompoundTag();
+				writeToNbt(tag);
+				buf.writeCompoundTag(tag);
 				break;
 			case CREDITS_SYNCOP:
 				buf.writeInt(credits);

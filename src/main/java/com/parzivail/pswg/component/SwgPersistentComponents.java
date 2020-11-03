@@ -70,7 +70,9 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 		switch (syncOp)
 		{
 			case FULL_SYNC:
-				writeToPacket(buf, recipient);
+				CompoundTag tag = new CompoundTag();
+				writeToNbt(tag);
+				buf.writeCompoundTag(tag);
 				break;
 			case SPECIES_SYNCOP:
 				buf.writeString(species);
