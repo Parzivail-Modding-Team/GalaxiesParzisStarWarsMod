@@ -34,7 +34,7 @@ import java.util.Optional;
 
 public class TatooineChunkGenerator extends ChunkGenerator
 {
-	public static final Codec<TatooineChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> generator.biomeSource)).apply(instance, instance.stable(TatooineChunkGenerator::new)));
+	public static final Codec<TatooineChunkGenerator> CODEC = RecordCodecBuilder.create((instance) -> instance.group(BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> generator.populationSource)).apply(instance, instance.stable(TatooineChunkGenerator::new)));
 
 	public static final ITerrainHeightmap terrain = new MultiCompositeTerrain(0, 60, 3000,
 	                                                                          new TerrainTatooineCanyons(0),
