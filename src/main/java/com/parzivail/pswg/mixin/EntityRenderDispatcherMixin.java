@@ -40,6 +40,7 @@ public class EntityRenderDispatcherMixin
 			modelRenderers.put(pair.getKey().toString(), new PlayerEntityRendererWithModel((EntityRenderDispatcher)(Object)this, pair.getValue().model));
 	}
 
+	@SuppressWarnings("unchecked")
 	@Inject(method = "getRenderer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;getModel()Ljava/lang/String;"), cancellable = true)
 	private <T extends Entity> void getRenderer(T entity, CallbackInfoReturnable<EntityRenderer<? super T>> cir)
 	{
@@ -52,7 +53,7 @@ public class EntityRenderDispatcherMixin
 		if (species == null || !SwgSpeciesModels.MODELS.containsKey(species))
 			return;
 
-		cir.setReturnValue((EntityRenderer)modelRenderers.get(species.toString()));
+		cir.setReturnValue((EntityRenderer<T>)modelRenderers.get(species.toString()));
 		cir.cancel();
 	}
 }
