@@ -11,7 +11,10 @@
 	},
 	"lightsaber.idle.classic": {
 		"sounds": [
-			"pswg:lightsaber/idle/classic"
+			{
+				"name": "pswg:lightsaber/idle/classic",
+				"attenuation_distance": 6
+			}
 		]
 	}
 }

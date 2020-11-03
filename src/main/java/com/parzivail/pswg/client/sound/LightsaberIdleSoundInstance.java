@@ -15,7 +15,6 @@ public class LightsaberIdleSoundInstance extends MovingSoundInstance
 {
 	private final PlayerEntity player;
 
-	// TODO: This sounds instance WILL NOT attenuate volume for some reason
 	public LightsaberIdleSoundInstance(PlayerEntity player)
 	{
 		super(SwgSounds.Lightsaber.IDLE_CLASSIC, SoundCategory.PLAYERS);
