@@ -57,7 +57,7 @@ public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEnt
 		matrices.multiply(new Quaternion(0, -rYaw, 0, true));
 		matrices.multiply(new Quaternion(rPitch + 90, 0, 0, true));
 
-		matrices.multiply(new Quaternion(0, 0, -(entity.age + tickDelta) * 30, true));
+		matrices.multiply(new Quaternion(0, 0, -(entity.age + tickDelta) * 31, true));
 
 		this.itemRenderer.renderItem(stack, ModelTransformation.Mode.NONE, light, OverlayTexture.DEFAULT_UV, matrices, consumerProvider);
 
