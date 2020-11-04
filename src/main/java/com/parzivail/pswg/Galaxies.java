@@ -54,6 +54,12 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register(SwgBlocks.Sand.Tatooine, Resources.identifier("sand_tatooine"));
 
+		SwgBlocks.register(SwgBlocks.Stone.Temple, Resources.identifier("stone_temple"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleBricks, Resources.identifier("stone_temple_bricks"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChisled, Resources.identifier("stone_temple_bricks_chisled"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleSlabSideSmooth, Resources.identifier("stone_temple_slab_side_smooth"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleSmooth, Resources.identifier("stone_temple_smooth"));
+
 		SwgBlocks.register(SwgBlocks.Crate.OctagonBlockEntityType, Resources.identifier("crate_octagon"));
 		SwgBlocks.register(SwgBlocks.Crate.OctagonOrange, Resources.identifier("crate_octagon_orange"));
 		SwgBlocks.register(SwgBlocks.Crate.OctagonGray, Resources.identifier("crate_octagon_gray"));

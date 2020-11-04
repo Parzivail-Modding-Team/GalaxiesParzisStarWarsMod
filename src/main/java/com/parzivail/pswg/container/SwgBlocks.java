@@ -76,6 +76,15 @@ public class SwgBlocks
 		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
 	}
 
+	public static class Stone
+	{
+		public static final Block Temple = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block TempleBricks = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block TempleBricksChisled = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block TempleSlabSideSmooth = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block TempleSmooth = new Block(FabricBlockSettings.of(Material.STONE));
+	}
+
 	public static class MoistureVaporator
 	{
 		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).nonOpaque());
