@@ -1,8 +1,8 @@
-![Galaxies: Parzi's Star Wars Mod](https://raw.githubusercontent.com/Parzivail-Modding-Team/StarWarsGalaxy/master/resources/images/logo_big.png "Galaxies: Parzi's Star Wars Mod")
+![Galaxies: Parzi's Star Wars Mod](https://raw.githubusercontent.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/master/resources/images/logo_big.png "Galaxies: Parzi's Star Wars Mod")
 
 # Galaxies: Parzi's Star Wars Mod (PSWG) for Minecraft+Fabric
 
-![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/StarWarsGalaxy/total.svg) 
+![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/total.svg) 
 ![Discord](https://img.shields.io/discord/412945916476129280.svg)
 
 
@@ -18,36 +18,33 @@ If you'd like to help support and sustain the mod, please consider becoming a do
 [![Become a donor!](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/bePatron?u=8079542)
 
 Perks include:
+* Early mod releases and developer builds
 * Your name in the credits
-* Early mod releases
-
-
 
 Goals include:
+* Bringing on more developers and artists
 * Community MMO server
 * Ad-free website and downloads
 
 ## Building
-PSWG runs on the (Forge) Gradle build system. I recommend you use IntelliJ as an IDE. Simply import the gradle project, setup your development workspace, and build.
+PSWG builds using the Gradle build system. I recommend you use IntelliJ as an IDE. Simply import the gradle project, setup your development workspace, and build.
 
-* Set up your development workspace by running:
-    * `gradlew setupDecompWorkspace`
-    * `gradlew idea`
+* Set up your development workspace by importing the Gradle project
+* Decompile Minecraft sources: `gradlew genSources`
 * All dependencies are met with Maven and are subsequently compiled into the resulting jarfile.
 * Build a jarfile with `gradlew build` to produce `pswg-<version>.jar` in `./build/libs`. 
 
-Extra Info:
+Recommended:
 
-* If IntelliJ fails to run the mod because of a texture error, make sure under Project Structure > Modules > StarWarsGalaxy_Main that the **inherits project compile output path** option is selected.
+* [MinecraftDev IntelliJ IDEA Plugin](https://plugins.jetbrains.com/plugin/8327)
 
 ## Contributing
-Please only create pull requests for content additions or bugfixes.
+Please only create pull requests for content additions or bugfixes (i.e. not as a way to report issues or post suggestions).
 
 Things to consider:
 
 * Before spending a lot of time on adding a feature, please discuss feature additions with the team on Discord. 
-* Pull requests changing formatting, syntax choices, and other non-functional changes are likely to be rejected.
-* Conform to the coding style of the class you are editing or similar classes.
+* Conform to the code style of the class you are editing or similar classes.
 * Search previous pull requests to make sure the feature you're adding or the bug you are fixing hasn't already:
     * Been implemented.
     * Been rejected.
