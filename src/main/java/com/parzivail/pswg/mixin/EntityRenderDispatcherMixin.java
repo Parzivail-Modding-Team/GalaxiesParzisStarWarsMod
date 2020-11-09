@@ -1,6 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.model.npc.PlayerEntityRendererWithModel;
+import com.parzivail.pswg.client.species.SwgSpeciesInstance;
 import com.parzivail.pswg.client.species.SwgSpeciesModel;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import com.parzivail.pswg.component.SwgEntityComponents;
@@ -49,11 +50,11 @@ public class EntityRenderDispatcherMixin
 
 		SwgPersistentComponents pc = SwgEntityComponents.getPersistent((PlayerEntity)entity);
 
-		Identifier species = pc.getSpecies();
-		if (species == null || !SwgSpeciesModels.MODELS.containsKey(species))
+		SwgSpeciesInstance species = pc.getSpecies();
+		if (species == null)
 			return;
 
-		cir.setReturnValue((EntityRenderer<T>)modelRenderers.get(species.toString()));
+		cir.setReturnValue((EntityRenderer<T>)modelRenderers.get(species.getModel().identifier.toString()));
 		cir.cancel();
 	}
 }

@@ -25,6 +25,7 @@
 	"block.pswg.stone_temple_smooth": "Smooth Light Absorbing Stone",
 	"block.pswg.workbench_blaster": "Blaster Workbench",
 	"command.pswg.species.invalid": "Unknown species %s",
+	"command.pswg.species.variant.invalid": "Unknown variant %s for species %s",
 	"container.pswg.crate_octagon": "Kyber Crate",
 	"container.pswg.crate_mos_eisley": "Mos Eisley Crate",
 	"container.pswg.moisture_vaporator_gx8": "GX8 Moisture Vaporator",

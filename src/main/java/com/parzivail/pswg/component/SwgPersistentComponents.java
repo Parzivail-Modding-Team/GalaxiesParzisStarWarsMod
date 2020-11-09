@@ -1,12 +1,12 @@
 package com.parzivail.pswg.component;
 
+import com.parzivail.pswg.client.species.SwgSpeciesInstance;
 import dev.onyxstudios.cca.api.v3.component.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
 
 public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 {
@@ -20,15 +20,12 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 		this.provider = provider;
 	}
 
-	public Identifier getSpecies()
+	public SwgSpeciesInstance getSpecies()
 	{
-		if ("".equals(species))
-			return null;
-
-		return new Identifier(species);
+		return SwgSpeciesInstance.fromString(species);
 	}
 
-	public void setSpecies(Identifier species)
+	public void setSpecies(SwgSpeciesInstance species)
 	{
 		String speciesStr = "";
 		if (species != null)

@@ -26,3 +26,4 @@ public class SpeciesArgumentType implements ArgumentType<Identifier>
 		return context.getSource() instanceof CommandSource ? CommandSource.suggestIdentifiers(SwgSpecies.SPECIES.stream(), builder) : Suggestions.empty();
 	}
 }
+

@@ -1,7 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.client.species.SwgSpeciesModel;
-import com.parzivail.pswg.client.species.SwgSpeciesModels;
+import com.parzivail.pswg.client.species.SwgSpeciesInstance;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.component.SwgPersistentComponents;
 import net.fabricmc.api.EnvType;
@@ -23,13 +22,11 @@ public class AbstractClientPlayerEntityMixin
 	{
 		SwgPersistentComponents pc = SwgEntityComponents.getPersistent((PlayerEntity)(Object)this);
 
-		Identifier species = pc.getSpecies();
-		if (species == null || !SwgSpeciesModels.MODELS.containsKey(species))
+		SwgSpeciesInstance species = pc.getSpecies();
+		if (species == null)
 			return;
 
-		SwgSpeciesModel model = SwgSpeciesModels.MODELS.get(species);
-
-		cir.setReturnValue(model.texture);
+		cir.setReturnValue(species.getTexture());
 		cir.cancel();
 	}
 }
