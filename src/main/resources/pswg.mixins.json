@@ -24,7 +24,6 @@
 		"LivingEntityRendererAccessor",
 		"MinecraftClientMixin",
 		"PlayerEntityMixin",
-		"PlayerEntityModelMixin",
 		"PlayerEntityRendererMixin",
 		"SpriteAtlasTextureMixin"
 	],

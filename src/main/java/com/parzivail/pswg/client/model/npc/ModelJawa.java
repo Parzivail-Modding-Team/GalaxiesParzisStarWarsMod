@@ -6,6 +6,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.Arm;
 
 /**
  * PSWGJawa - Sindavar
@@ -56,10 +57,24 @@ public class ModelJawa<T extends LivingEntity> extends PlayerEntityModel<T>
 		super.accept(modelPart);
 	}
 
+	public void setArmAngle(Arm arm, MatrixStack matrices)
+	{
+		ModelPart modelPart = this.getArm(arm);
+
+		float f = 0.5f * 0.7f * (float)(arm == Arm.RIGHT ? 1 : -1);
+		modelPart.pivotX += f;
+
+		matrices.translate(0, 0.44f, 0);
+		matrices.scale(0.7f, 0.7f, 0.7f);
+
+		modelPart.rotate(matrices);
+
+		modelPart.pivotX -= f;
+	}
+
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, float red, float green, float blue, float alpha)
 	{
-		// TODO: fix item hand position
 		matrices.push();
 
 		matrices.translate(0, 0.44f, 0);
