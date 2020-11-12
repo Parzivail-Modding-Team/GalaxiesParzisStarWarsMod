@@ -4,16 +4,18 @@ import com.parzivail.pswg.container.SwgPackets;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class LeftClickHandler
 {
-	public static void handleInputEvents(CallbackInfo ci)
+	public static void handleInputEvents(CallbackInfo ci, @NotNull ClientPlayerInteractionManager interactionManager)
 	{
 		MinecraftClient mc = MinecraftClient.getInstance();
 
@@ -33,6 +35,8 @@ public class LeftClickHandler
 				return;
 
 			ci.cancel();
+
+			interactionManager.cancelBlockBreaking();
 
 			ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketPlayerLeftClickItem, new PacketByteBuf(Unpooled.buffer()));
 		}

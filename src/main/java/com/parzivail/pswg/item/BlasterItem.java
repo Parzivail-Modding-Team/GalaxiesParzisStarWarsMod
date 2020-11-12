@@ -9,6 +9,7 @@ import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.math.EntityHitResult;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.damage.EntityDamageSource;
@@ -20,6 +21,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
@@ -38,6 +40,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public static DamageSource getDamageSource(Entity attacker)
 	{
 		return (new EntityDamageSource("pswg.blaster", attacker)).setProjectile();
+	}
+
+	@Override
+	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
+	{
+		return false;
 	}
 
 	@Override
