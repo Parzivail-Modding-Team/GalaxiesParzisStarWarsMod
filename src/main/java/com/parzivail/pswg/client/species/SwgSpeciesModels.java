@@ -20,6 +20,7 @@ public class SwgSpeciesModels
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_TWILEK_F, new ModelTwilekCombined<>(false, 0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_BITH_M, new ModelBithCombined<>(true, 0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_BITH_F, new ModelBithCombined<>(false, 0)));
+		register(new SwgSpeciesModel(SwgSpecies.SPECIES_JAWA, new ModelJawa<>(0)));
 	}
 
 	private static void register(SwgSpeciesModel model)

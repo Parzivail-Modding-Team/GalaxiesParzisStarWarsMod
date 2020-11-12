@@ -22,6 +22,7 @@ public class SwgSpecies
 	public static final Identifier SPECIES_TWILEK_F = register(Resources.identifier("twilek_f"), "blue", "green", "pink", "purple", "tan", "yellow");
 	public static final Identifier SPECIES_BITH_M = register(Resources.identifier("bith_m"), "green", "pink", "white");
 	public static final Identifier SPECIES_BITH_F = register(Resources.identifier("bith_f"), "green", "pink", "white");
+	public static final Identifier SPECIES_JAWA = register(Resources.identifier("jawa"), "normal");
 
 	private static Identifier register(Identifier species, String... variants)
 	{
