@@ -11,16 +11,29 @@ public class LightsaberTag extends TagSerializer
 {
 	public static final byte TRANSITION_TICKS = 8;
 
+	public boolean init;
+
 	public boolean active;
 
 	public byte transition;
 
-	public int coreColor = 0xFFFFFF;
-	public int bladeColor = 0x0020FF;
+	public int coreColor;
+	public int bladeColor;
 
 	public LightsaberTag(CompoundTag source)
 	{
 		super(source);
+	}
+
+	protected void setDefaults()
+	{
+		init = true;
+
+		active = false;
+		transition = 0;
+
+		coreColor = 0xFFFFFF;
+		bladeColor = 0x0020FF;
 	}
 
 	public static void mutate(ItemStack stack, Consumer<LightsaberTag> action)
@@ -59,5 +72,13 @@ public class LightsaberTag extends TagSerializer
 			return Ease.outCubic(1 - (transition - partialTicks) / TRANSITION_TICKS);
 
 		return Ease.inCubic(-(transition + partialTicks) / TRANSITION_TICKS);
+	}
+
+	@Override
+	public CompoundTag serialize()
+	{
+		if (!init)
+			setDefaults();
+		return super.serialize();
 	}
 }

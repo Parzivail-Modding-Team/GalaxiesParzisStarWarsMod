@@ -95,7 +95,7 @@ public class TagSerializer
 		f.set(this, handler.getLeft().read(f.getName(), nbt));
 	}
 
-	public final CompoundTag serialize()
+	public CompoundTag serialize()
 	{
 		CompoundTag compound = new CompoundTag();
 		this.serialize(compound);
