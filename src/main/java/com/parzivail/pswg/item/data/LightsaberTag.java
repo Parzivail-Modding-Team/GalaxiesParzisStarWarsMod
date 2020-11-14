@@ -15,6 +15,9 @@ public class LightsaberTag extends TagSerializer
 
 	public byte transition;
 
+	public int coreColor = 0xFFFFFF;
+	public int bladeColor = 0x0020FF;
+
 	public LightsaberTag(CompoundTag source)
 	{
 		super(source);

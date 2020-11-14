@@ -76,8 +76,8 @@ public class SimpleItemRender
 			boolean unstable = false;
 			float baseLength = 1.6f;
 			float lengthCoefficient = lt.getSize(mc.getTickDelta());
-			int coreColor = 0xFFFFFF;
-			int glowColor = 0x0020FF;
+			int coreColor = lt.coreColor;
+			int glowColor = lt.bladeColor;
 
 			if (renderMode == ModelTransformation.Mode.GUI)
 			{
