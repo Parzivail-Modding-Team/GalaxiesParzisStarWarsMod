@@ -17,17 +17,17 @@ public class TagSerializer
 
 	static
 	{
-		map(byte.class, (field, nbt) -> nbt.getByte(field), (field, a, nbt) -> nbt.putByte(field, a));
-		map(short.class, (field, nbt) -> nbt.getShort(field), (field, a, nbt) -> nbt.putShort(field, a));
-		map(int.class, (field, nbt) -> nbt.getInt(field), (field, a, nbt) -> nbt.putInt(field, a));
-		map(long.class, (field, nbt) -> nbt.getLong(field), (field, a, nbt) -> nbt.putLong(field, a));
-		map(float.class, (field, nbt) -> nbt.getFloat(field), (field, a, nbt) -> nbt.putFloat(field, a));
-		map(double.class, (field, nbt) -> nbt.getDouble(field), (field, a, nbt) -> nbt.putDouble(field, a));
-		map(boolean.class, (field, nbt) -> nbt.getBoolean(field), (field, a, nbt) -> nbt.putBoolean(field, a));
-		map(char.class, (field, nbt) -> nbt.getString(field).charAt(0), (field, a, nbt) -> nbt.putString(field, String.valueOf(a)));
-		map(String.class, (field, nbt) -> nbt.getString(field), (field, a, nbt) -> nbt.putString(field, a));
-		map(CompoundTag.class, (field, nbt) -> nbt.getCompound(field), (field, a, nbt) -> nbt.put(field, a));
-		map(ItemStack.class, (field, nbt) -> ItemStack.fromTag(nbt.getCompound(field)), (field, a, nbt) -> nbt.put(field, a.toTag(new CompoundTag())));
+		map(byte.class, CompoundTag::getByte, CompoundTag::putByte);
+		map(short.class, CompoundTag::getShort, CompoundTag::putShort);
+		map(int.class, CompoundTag::getInt, CompoundTag::putInt);
+		map(long.class, CompoundTag::getLong, CompoundTag::putLong);
+		map(float.class, CompoundTag::getFloat, CompoundTag::putFloat);
+		map(double.class, CompoundTag::getDouble, CompoundTag::putDouble);
+		map(boolean.class, CompoundTag::getBoolean, CompoundTag::putBoolean);
+		map(char.class, (nbt, field) -> nbt.getString(field).charAt(0), (nbt, field, a) -> nbt.putString(field, String.valueOf(a)));
+		map(String.class, CompoundTag::getString, CompoundTag::putString);
+		map(CompoundTag.class, CompoundTag::getCompound, CompoundTag::put);
+		map(ItemStack.class, (nbt, field) -> ItemStack.fromTag(nbt.getCompound(field)), (nbt, field, a) -> nbt.put(field, a.toTag(new CompoundTag())));
 
 		//map(EntityPlayer.class, PNBTSerial::readPlayer, PNBTSerial::writePlayer);
 		//map(Entity.class, PNBTSerial::readEntity, PNBTSerial::writeEntity);
@@ -84,7 +84,7 @@ public class TagSerializer
 		return pair;
 	}
 
-	private static <T> void map(Class<T> type, Reader<T> reader, Writer<T> writer)
+	private static <T> void map(Class<T> type, Reader<? extends T> reader, Writer<? super T> writer)
 	{
 		TYPE_SERIALIZERS.put(type, Pair.of(reader, writer));
 	}
@@ -92,7 +92,7 @@ public class TagSerializer
 	private void readField(Field f, Class<?> clazz, CompoundTag nbt) throws IllegalArgumentException, IllegalAccessException
 	{
 		Pair<Reader<?>, Writer<?>> handler = getHandler(clazz);
-		f.set(this, handler.getLeft().read(f.getName(), nbt));
+		f.set(this, handler.getLeft().read(nbt, f.getName()));
 	}
 
 	public CompoundTag serialize()
@@ -126,16 +126,16 @@ public class TagSerializer
 	{
 		Pair<Reader<T>, Writer<T>> handler = (Pair<Reader<T>, Writer<T>>)((Object)getHandler(clazz));
 		Object obj = f.get(this);
-		handler.getRight().write(f.getName(), (T)obj, nbt);
+		handler.getRight().write(nbt, f.getName(), (T)obj);
 	}
 
 	interface Reader<T>
 	{
-		T read(String name, CompoundTag nbt);
+		T read(CompoundTag nbt, String name);
 	}
 
 	interface Writer<T>
 	{
-		void write(String name, T t, CompoundTag nbt);
+		void write(CompoundTag nbt, String name, T t);
 	}
 }
