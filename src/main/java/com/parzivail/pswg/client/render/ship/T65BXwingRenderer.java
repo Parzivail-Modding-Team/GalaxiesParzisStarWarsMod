@@ -31,6 +31,6 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 	@Override
 	public Identifier getTexture(T65BXwing entity)
 	{
-		return Resources.identifier("textures/model/xwing_t65b.png");
+		return Resources.identifier("textures/ship/xwing_t65b.png");
 	}
 }

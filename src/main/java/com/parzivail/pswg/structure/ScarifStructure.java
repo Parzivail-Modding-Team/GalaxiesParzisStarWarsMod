@@ -30,6 +30,7 @@ public class ScarifStructure
 
 	public static ScarifStructure read(Identifier filename)
 	{
+		// TODO: clean up temporary files created by file streaming
 		try
 		{
 			FileChannel raf = PIO.getFile("data", filename);
