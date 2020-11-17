@@ -41,4 +41,19 @@ public class LeftClickHandler
 			ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketPlayerLeftClickItem, new PacketByteBuf(Unpooled.buffer()));
 		}
 	}
+
+	public static void doAttack(CallbackInfo ci)
+	{
+		MinecraftClient mc = MinecraftClient.getInstance();
+
+		if (!mc.options.keyAttack.isPressed())
+			return;
+
+		assert mc.player != null;
+
+		ItemStack stack = mc.player.getMainHandStack();
+
+		if (stack.getItem() instanceof ILeftClickConsumer)
+			ci.cancel();
+	}
 }

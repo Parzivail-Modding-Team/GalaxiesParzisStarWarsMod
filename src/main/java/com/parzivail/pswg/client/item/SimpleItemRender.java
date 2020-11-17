@@ -31,27 +31,6 @@ public class SimpleItemRender
 
 	public static void renderItem(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci)
 	{
-		//		if (!stack.isEmpty() && stack.getItem() == SwgItems.Debug.Debug)
-		//		{
-		//			matrices.push();
-		//
-		//			model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
-		//
-		//			matrices.translate(-0.5, -0.5, 0);
-		//
-		//			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(Client.remoteTextureProvider.loadTexture("aksjdlkjds")));
-		//
-		//			VertexConsumerBuffer vcb = VertexConsumerBuffer.Instance;
-		//			vcb.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		//
-		//			vcb.vertex(0, 0, 0, 0, 0, 1, 0, 1);
-		//			vcb.vertex(1, 0, 0, 0, 0, 1, 1, 1);
-		//			vcb.vertex(1, 1, 0, 0, 0, 1, 1, 0);
-		//			vcb.vertex(0, 1, 0, 0, 0, 1, 0, 0);
-		//
-		//			matrices.pop();
-		//		}
-
 		if (!stack.isEmpty())
 		{
 			if (stack.getItem() == SwgItems.Lightsaber.Lightsaber)
@@ -121,8 +100,6 @@ public class SimpleItemRender
 
 				model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
 
-				//				matrices.translate(-0.02f, 0.16f, 0.04f);
-
 				if (renderMode == ModelTransformation.Mode.FIXED)
 				{
 					matrices.translate(-0.18f, 0, 0);
@@ -153,6 +130,7 @@ public class SimpleItemRender
 				{
 					matrices.multiply(new Quaternion(0, 180, 0, true));
 					matrices.translate(-0.5f, -1, -0.5f);
+					matrices.scale(0.9f, 0.9f, 0.9f);
 
 					VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(a280c_texture));
 					VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);

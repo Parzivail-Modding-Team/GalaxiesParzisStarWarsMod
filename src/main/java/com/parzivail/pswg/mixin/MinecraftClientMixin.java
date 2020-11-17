@@ -2,6 +2,7 @@ package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.remote.RemoteTextureProvider;
+import com.parzivail.pswg.util.Lumberjack;
 import com.parzivail.util.item.LeftClickHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,13 +33,22 @@ public class MinecraftClientMixin
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void init(RunArgs args, CallbackInfo ci)
 	{
-		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", new File(args.directories.assetDir, "pswgRemoteAssets"));
+		File remoteAssetDir = new File(args.directories.assetDir, "pswgRemoteAssets");
+		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.getPath());
+		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", remoteAssetDir);
 	}
 
 	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V", shift = At.Shift.BEFORE), cancellable = true)
-	private void handleInputEvents(CallbackInfo ci)
+	private void handleInputEventsHandleBlockBreaking(CallbackInfo ci)
 	{
 		// interactionManager cannot be null here
+		assert interactionManager != null;
 		LeftClickHandler.handleInputEvents(ci, interactionManager);
+	}
+
+	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;doAttack()V", shift = At.Shift.BEFORE), cancellable = true)
+	private void handleInputEventsDoAttack(CallbackInfo ci)
+	{
+		LeftClickHandler.doAttack(ci);
 	}
 }
