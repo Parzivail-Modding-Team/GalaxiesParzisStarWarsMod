@@ -69,7 +69,7 @@ public class T65BXwing extends ShipEntity
 				return new Quaternion(0, 0, angle, true);
 		}
 
-		return Quaternion.IDENTITY.copy();
+		return new Quaternion(Quaternion.IDENTITY);
 	}
 
 	@Override

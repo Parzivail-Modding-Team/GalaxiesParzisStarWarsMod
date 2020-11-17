@@ -139,6 +139,6 @@ public class RigT65B implements IEntityRig<T65BXwing, RigT65B.Part>
 				return new Quaternion(0, 0, angle, true);
 		}
 
-		return Quaternion.IDENTITY.copy();
+		return new Quaternion(Quaternion.IDENTITY);
 	}
 }

@@ -311,7 +311,7 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	public void setRotation(Quaternion q)
 	{
 		QuatUtil.normalize(q);
-		instRotation = q.copy();
+		instRotation = new Quaternion(q);
 		getDataTracker().set(ROTATION, q);
 	}
 
