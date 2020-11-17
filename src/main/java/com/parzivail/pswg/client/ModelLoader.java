@@ -9,6 +9,6 @@ public class ModelLoader
 {
 	public static PM3DUnbakedBlockModel loadPM3D(Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
 	{
-		return new PM3DUnbakedBlockModel(baseTexture, particleTexture, spriteMap -> PM3DBakedBlockModel.create(PM3DFile.tryLoad(modelFile), baseTexture, particleTexture, spriteMap));
+		return new PM3DUnbakedBlockModel(baseTexture, particleTexture, spriteMap -> PM3DBakedBlockModel.create(PM3DFile.tryLoad(modelFile).getLevelOfDetail(0), baseTexture, particleTexture, spriteMap));
 	}
 }

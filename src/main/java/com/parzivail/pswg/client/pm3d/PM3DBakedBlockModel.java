@@ -30,9 +30,9 @@ import java.util.function.Supplier;
 public class PM3DBakedBlockModel extends SimpleModel
 {
 	private final Sprite baseSprite;
-	private final PM3DFile container;
+	private final PM3DLod container;
 
-	private PM3DBakedBlockModel(Sprite baseSprite, Sprite particleSprite, PM3DFile container)
+	private PM3DBakedBlockModel(Sprite baseSprite, Sprite particleSprite, PM3DLod container)
 	{
 		super(particleSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
 		this.baseSprite = baseSprite;
@@ -151,7 +151,7 @@ public class PM3DBakedBlockModel extends SimpleModel
 		return mat;
 	}
 
-	public static PM3DBakedBlockModel create(PM3DFile container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
+	public static PM3DBakedBlockModel create(PM3DLod container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
 	{
 		return new PM3DBakedBlockModel(spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, particleTexture)), container);
 	}

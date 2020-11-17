@@ -2,39 +2,36 @@ package com.parzivail.pswg.client.pm3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
-import com.parzivail.util.binary.BinaryUtil;
-import com.parzivail.util.client.VertexConsumerBuffer;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class PM3DFile
 {
 	private static final String MAGIC = "Pm3D";
-	private static final int ACCEPTED_VERSION = 0x02;
+	private static final int[] ACCEPTED_VERSIONS = { 0x02, 0x03 };
 
-	public final Identifier identifier;
-	public final Vector3f[] verts;
-	public final Vector3f[] normals;
-	public final Vector3f[] uvs;
-	public final PM3DObject[] objects;
-	public final Box bounds;
+	private final PM3DLod[] lods;
 
-	public PM3DFile(Identifier identifier, Vector3f[] verts, Vector3f[] normals, Vector3f[] uvs, PM3DObject[] objects, Box bounds)
+	public PM3DFile(PM3DLod[] lods)
 	{
-		this.identifier = identifier;
-		this.verts = verts;
-		this.normals = normals;
-		this.uvs = uvs;
-		this.objects = objects;
-		this.bounds = bounds;
+		this.lods = lods;
+	}
+
+	public PM3DLod getLevelOfDetail(int lod)
+	{
+		return lods[MathHelper.clamp(lod, 0, lods.length - 1)];
 	}
 
 	public static PM3DFile tryLoad(Identifier modelFile)
@@ -64,22 +61,41 @@ public class PM3DFile
 
 		int version = objStream.readInt();
 
-		if (version != ACCEPTED_VERSION)
-			throw new IOException(String.format("Input file version is 0x%s, expected 0x%s", Integer.toHexString(version), Integer.toHexString(ACCEPTED_VERSION)));
+		if (!ArrayUtils.contains(ACCEPTED_VERSIONS, version))
+			throw new IOException(String.format("Input file version is 0x%s, expected one of: %s", Integer.toHexString(version), getAcceptedVersionString()));
 
-		int numVerts = objStream.readInt();
-		int numNormals = objStream.readInt();
-		int numUvs = objStream.readInt();
-		int numObjects = objStream.readInt();
+		int numLods = 1;
 
-		Vector3f[] verts = loadVerts(numVerts, objStream);
-		Vector3f[] normals = loadNormals(numNormals, objStream);
-		Vector3f[] uvs = loadUvs(numUvs, objStream);
-		PM3DObject[] objects = loadObjects(numObjects, objStream);
+		if (version > 2)
+		{
+			numLods = objStream.readInt();
+		}
 
-		Box bounds = getBounds(verts);
+		PM3DLod[] lods = new PM3DLod[numLods];
 
-		return new PM3DFile(modelFile, verts, normals, uvs, objects, bounds);
+		for (int i = 0; i < numLods; i++)
+		{
+			int numVerts = objStream.readInt();
+			int numNormals = objStream.readInt();
+			int numUvs = objStream.readInt();
+			int numObjects = objStream.readInt();
+
+			Vector3f[] verts = loadVerts(numVerts, objStream);
+			Vector3f[] normals = loadNormals(numNormals, objStream);
+			Vector3f[] uvs = loadUvs(numUvs, objStream);
+			PM3DObject[] objects = loadObjects(version, numObjects, objStream);
+
+			Box bounds = getBounds(verts);
+
+			lods[i] = new PM3DLod(modelFile, verts, normals, uvs, objects, bounds);
+		}
+
+		return new PM3DFile(lods);
+	}
+
+	private static String getAcceptedVersionString()
+	{
+		return Arrays.stream(ACCEPTED_VERSIONS).mapToObj(i -> "0x" + Integer.toHexString(i)).collect(Collectors.joining(", "));
 	}
 
 	private static Box getBounds(Vector3f[] verts)
@@ -154,13 +170,13 @@ public class PM3DFile
 		return uvs;
 	}
 
-	private static PM3DObject[] loadObjects(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static PM3DObject[] loadObjects(int version, int num, LittleEndianDataInputStream objStream) throws IOException
 	{
 		PM3DObject[] objects = new PM3DObject[num];
 
 		for (int i = 0; i < num; i++)
 		{
-			String objName = BinaryUtil.readNullTerminatedString(objStream);
+			String objName = PIO.readNullTerminatedString(objStream);
 			int numFaces = objStream.readInt();
 
 			ArrayList<PM3DFace> faces = new ArrayList<>();
@@ -172,10 +188,20 @@ public class PM3DFile
 				int numVerts = objStream.readInt();
 				for (int k = 0; k < numVerts; k++)
 				{
-					int vertex = objStream.readInt();
-					int normal = objStream.readInt();
-					int texture = objStream.readInt();
-					face.verts.add(new PM3DVertPointer(vertex, normal, texture));
+					if (version > 2)
+					{
+						int vertex = PIO.read7BitEncodedInt(objStream);
+						int normal = PIO.read7BitEncodedInt(objStream);
+						int texture = PIO.read7BitEncodedInt(objStream);
+						face.verts.add(new PM3DVertPointer(vertex, normal, texture));
+					}
+					else
+					{
+						int vertex = objStream.readInt();
+						int normal = objStream.readInt();
+						int texture = objStream.readInt();
+						face.verts.add(new PM3DVertPointer(vertex, normal, texture));
+					}
 				}
 
 				faces.add(face);
@@ -185,30 +211,5 @@ public class PM3DFile
 		}
 
 		return objects;
-	}
-
-	public void render(VertexConsumerBuffer vcb)
-	{
-		for (PM3DObject o : objects)
-			for (PM3DFace face : o.faces)
-				emitFace(vcb, face);
-	}
-
-	private void emitFace(VertexConsumerBuffer vcb, PM3DFace face)
-	{
-		PM3DVertPointer a = face.verts.get(0);
-		PM3DVertPointer b = face.verts.get(1);
-		PM3DVertPointer c = face.verts.get(2);
-		PM3DVertPointer d = face.verts.size() == 4 ? face.verts.get(3) : c;
-
-		Vector3f tA = uvs[a.texture];
-		Vector3f tB = uvs[b.texture];
-		Vector3f tC = uvs[c.texture];
-		Vector3f tD = uvs[d.texture];
-
-		vcb.vertex(verts[a.vertex], normals[a.normal], tA.getX(), 1 - tA.getY());
-		vcb.vertex(verts[b.vertex], normals[b.normal], tB.getX(), 1 - tB.getY());
-		vcb.vertex(verts[c.vertex], normals[c.normal], tC.getX(), 1 - tC.getY());
-		vcb.vertex(verts[d.vertex], normals[d.normal], tD.getX(), 1 - tD.getY());
 	}
 }
