@@ -4,6 +4,7 @@ import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
+import com.parzivail.util.math.QuatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
@@ -63,10 +64,10 @@ public class T65BXwing extends ShipEntity
 		{
 			case "WingTopLeft":
 			case "WingBottomRight":
-				return new Quaternion(0, 0, -angle, true);
+				return QuatUtil.of(0, 0, -angle, true);
 			case "WingBottomLeft":
 			case "WingTopRight":
-				return new Quaternion(0, 0, angle, true);
+				return QuatUtil.of(0, 0, angle, true);
 		}
 
 		return new Quaternion(Quaternion.IDENTITY);

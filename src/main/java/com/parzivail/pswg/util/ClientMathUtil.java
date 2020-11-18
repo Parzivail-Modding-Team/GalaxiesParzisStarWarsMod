@@ -7,6 +7,7 @@ import net.minecraft.client.util.math.Vector4f;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 
+@Environment(EnvType.CLIENT)
 public class ClientMathUtil
 {
 	public static final Matrix4f MATRIX_IDENTITY = new Matrix4f();

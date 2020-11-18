@@ -9,6 +9,8 @@ import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.math.EntityHitResult;
+import com.parzivail.util.math.MatrixExtUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -23,7 +25,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -51,8 +52,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity player, Hand hand)
 	{
-		// TODO: can't fire on servers?
-
 		final ItemStack stack = player.getStackInHand(hand);
 		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
 
@@ -89,10 +88,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		{
 			float spread = getSpreadAmount(stack, player);
 			Matrix4f m = new Matrix4f();
-			m.loadIdentity();
+			MatrixExtUtil.loadIdentity(m);
 
-			m.multiply(new Quaternion(0, -player.yaw, 0, true));
-			m.multiply(new Quaternion(player.pitch, 0, 0, true));
+			MatrixExtUtil.multiply(m, QuatUtil.of(0, -player.yaw, 0, true));
+			MatrixExtUtil.multiply(m, QuatUtil.of(player.pitch, 0, 0, true));
 
 			float hS = (world.random.nextFloat() * 2 - 1) * spread;
 			float vS = (world.random.nextFloat() * 2 - 1) * spread;
@@ -100,8 +99,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			float hSR = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
 			float vSR = 1; // - bd.getBarrel().getVerticalSpreadReduction();
 
-			m.multiply(new Quaternion(0, hS * hSR, 0, true));
-			m.multiply(new Quaternion(vS * vSR, 0, 0, true));
+			MatrixExtUtil.multiply(m, QuatUtil.of(0, hS * hSR, 0, true));
+			MatrixExtUtil.multiply(m, QuatUtil.of(vS * vSR, 0, 0, true));
 
 			Vec3d look = MathUtil.transform(MathUtil.POSZ, m);
 

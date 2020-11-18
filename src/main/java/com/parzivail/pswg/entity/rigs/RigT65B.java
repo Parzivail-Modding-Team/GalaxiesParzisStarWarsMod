@@ -133,10 +133,10 @@ public class RigT65B implements IEntityRig<T65BXwing, RigT65B.Part>
 		{
 			case WingTopLeft:
 			case WingBottomRight:
-				return new Quaternion(0, 0, -angle, true);
+				return QuatUtil.of(0, 0, -angle, true);
 			case WingBottomLeft:
 			case WingTopRight:
-				return new Quaternion(0, 0, angle, true);
+				return QuatUtil.of(0, 0, angle, true);
 		}
 
 		return new Quaternion(Quaternion.IDENTITY);
