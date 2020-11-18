@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.client.RenderShapes;
 import com.parzivail.util.client.VertexConsumerBuffer;
@@ -24,10 +25,10 @@ public class LightsaberRenderer
 		RenderSystem.defaultBlendFunc();
 	})).target(new RenderPhase.Target("item_entity_target", () -> {
 		if (MinecraftClient.isFabulousGraphicsOrBetter())
-			MinecraftClient.getInstance().worldRenderer.getEntityFramebuffer().beginWrite(false);
+			Client.minecraft.worldRenderer.getEntityFramebuffer().beginWrite(false);
 	}, () -> {
 		if (MinecraftClient.isFabulousGraphicsOrBetter())
-			MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+			Client.minecraft.getFramebuffer().beginWrite(false);
 	})).build(true));
 
 	private static final RenderLayer LAYER_LIGHTSABER_GLOW_DARK_THIRDPERSON = RenderLayer.of("lightsaber_glow_dark_3p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency", () -> {
@@ -38,10 +39,10 @@ public class LightsaberRenderer
 		RenderSystem.defaultBlendFunc();
 	})).target(new RenderPhase.Target("item_entity_target", () -> {
 		if (MinecraftClient.isFabulousGraphicsOrBetter())
-			MinecraftClient.getInstance().worldRenderer.getEntityFramebuffer().beginWrite(false);
+			Client.minecraft.worldRenderer.getEntityFramebuffer().beginWrite(false);
 	}, () -> {
 		if (MinecraftClient.isFabulousGraphicsOrBetter())
-			MinecraftClient.getInstance().getFramebuffer().beginWrite(false);
+			Client.minecraft.getFramebuffer().beginWrite(false);
 	})).build(true));
 
 	private static final RenderLayer LAYER_LIGHTSABER_GLOW_FIRSTPERSON = RenderLayer.of("lightsaber_glow_1p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency", () -> {

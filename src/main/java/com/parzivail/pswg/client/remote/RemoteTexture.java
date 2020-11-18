@@ -1,9 +1,9 @@
 package com.parzivail.pswg.client.remote;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.Client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.texture.TextureUtil;
@@ -43,7 +43,7 @@ public class RemoteTexture extends ResourceTexture
 
 	private void onTextureLoaded(NativeImage image)
 	{
-		MinecraftClient.getInstance().execute(() -> {
+		Client.minecraft.execute(() -> {
 			this.loaded = true;
 			if (!RenderSystem.isOnRenderThread())
 			{
@@ -66,7 +66,7 @@ public class RemoteTexture extends ResourceTexture
 
 	public void load(ResourceManager manager) throws IOException
 	{
-		MinecraftClient.getInstance().execute(() -> {
+		Client.minecraft.execute(() -> {
 			if (!this.loaded)
 			{
 				try
@@ -107,7 +107,7 @@ public class RemoteTexture extends ResourceTexture
 
 					try
 					{
-						httpURLConnection = (HttpURLConnection)(new URL(this.url)).openConnection(MinecraftClient.getInstance().getNetworkProxy());
+						httpURLConnection = (HttpURLConnection)(new URL(this.url)).openConnection(Client.minecraft.getNetworkProxy());
 						httpURLConnection.setDoInput(true);
 						httpURLConnection.setDoOutput(false);
 						httpURLConnection.connect();
@@ -124,7 +124,7 @@ public class RemoteTexture extends ResourceTexture
 								inputStream2 = httpURLConnection.getInputStream();
 							}
 
-							MinecraftClient.getInstance().execute(() -> {
+							Client.minecraft.execute(() -> {
 								NativeImage nativeImage = this.loadTexture(inputStream2);
 								if (nativeImage != null)
 								{

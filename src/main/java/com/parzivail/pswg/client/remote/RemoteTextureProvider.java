@@ -6,9 +6,9 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.hash.Hashing;
 import com.mojang.authlib.minecraft.InsecureTextureException;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.Client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.DefaultSkinHelper;
@@ -58,7 +58,7 @@ public class RemoteTextureProvider
 			{
 				final RemoteTextureUrl remoteTextureUrl = this.skinCache.getUnchecked(id);
 
-				MinecraftClient.getInstance().execute(() -> {
+				Client.minecraft.execute(() -> {
 					RenderSystem.recordRenderCall(() -> {
 						String string = Hashing.sha1().hashUnencodedChars(remoteTextureUrl.getHash()).toString();
 						AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);

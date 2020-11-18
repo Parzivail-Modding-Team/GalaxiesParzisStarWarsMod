@@ -1,5 +1,6 @@
 package com.parzivail.util.item;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgPackets;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
@@ -17,7 +18,7 @@ public class LeftClickHandler
 {
 	public static void handleInputEvents(CallbackInfo ci, @NotNull ClientPlayerInteractionManager interactionManager)
 	{
-		MinecraftClient mc = MinecraftClient.getInstance();
+		MinecraftClient mc = Client.minecraft;
 
 		if (!mc.options.keyAttack.isPressed())
 			return;
@@ -44,7 +45,7 @@ public class LeftClickHandler
 
 	public static void doAttack(CallbackInfo ci)
 	{
-		MinecraftClient mc = MinecraftClient.getInstance();
+		MinecraftClient mc = Client.minecraft;
 
 		if (!mc.options.keyAttack.isPressed())
 			return;

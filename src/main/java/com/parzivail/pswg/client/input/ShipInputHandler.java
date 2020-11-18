@@ -3,8 +3,6 @@ package com.parzivail.pswg.client.input;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ChaseCamEntity;
 import com.parzivail.pswg.entity.ShipEntity;
-import com.parzivail.util.client.GameRendererExt;
-import com.parzivail.util.client.GameRendererExtUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -21,7 +19,6 @@ public class ShipInputHandler
 
 		assert player != null;
 
-		GameRendererExt gr = GameRendererExtUtil.from(mc.gameRenderer);
 		ShipEntity ship = ShipEntity.getShip(player);
 
 		if (ship != null)
@@ -31,17 +28,12 @@ public class ShipInputHandler
 			else
 				mc.cameraEntity = ship;
 
-			gr.setHandVisible(false);
-
 			ship.acceptMouseInput(cursorDeltaX, cursorDeltaY);
 			return true;
 		}
 
 		if (mc.cameraEntity instanceof ChaseCamEntity || mc.cameraEntity instanceof ShipEntity)
-		{
 			mc.cameraEntity = player;
-			gr.setHandVisible(true);
-		}
 
 		return false;
 	}

@@ -1,9 +1,9 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.sound.LightsaberIdleSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -28,7 +28,7 @@ public class PlayerEntityMixin
 		boolean meetsConditionsForLightsaberSound = LightsaberIdleSoundInstance.areConditionsMet(player);
 		if (meetsConditionsForLightsaberSound && !metConditionsForLightsaberSound)
 		{
-			MinecraftClient.getInstance().getSoundManager().play(new LightsaberIdleSoundInstance(player));
+			Client.minecraft.getSoundManager().play(new LightsaberIdleSoundInstance(player));
 		}
 		metConditionsForLightsaberSound = meetsConditionsForLightsaberSound;
 	}

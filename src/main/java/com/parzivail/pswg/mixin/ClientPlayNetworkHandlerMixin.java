@@ -1,11 +1,11 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.sound.LightsaberThrownSoundInstance;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -36,7 +36,7 @@ public class ClientPlayNetworkHandlerMixin
 			assert entity != null;
 
 			if (entity instanceof ThrownLightsaberEntity)
-				MinecraftClient.getInstance().getSoundManager().play(new LightsaberThrownSoundInstance((ThrownLightsaberEntity)entity));
+				Client.minecraft.getSoundManager().play(new LightsaberThrownSoundInstance((ThrownLightsaberEntity)entity));
 
 			int i = packet.getId();
 			entity.setVelocity(Vec3d.ZERO);

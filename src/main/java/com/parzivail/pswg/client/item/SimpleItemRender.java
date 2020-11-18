@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.item;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.render.LightsaberRenderer;
@@ -54,7 +55,7 @@ public class SimpleItemRender
 				matrices.push();
 				matrices.scale(0.04f, 0.04f, 0.04f);
 
-				MinecraftClient mc = MinecraftClient.getInstance();
+				MinecraftClient mc = Client.minecraft;
 				LightsaberTag lt = new LightsaberTag(stack.getOrCreateTag());
 
 				boolean unstable = false;
@@ -111,8 +112,6 @@ public class SimpleItemRender
 					matrices.translate(0, 0.18f, 0);
 
 				matrices.scale(0.2f, 0.2f, 0.2f);
-
-				MinecraftClient mc = MinecraftClient.getInstance();
 
 				if (renderMode == ModelTransformation.Mode.GUI)
 				{
