@@ -136,6 +136,7 @@ public class Galaxies implements ModInitializer
 				                                                                                                 }))));
 
 		ArgumentTypes.register("pswg:species", SpeciesArgumentType.class, new ConstantArgumentSerializer<>(SpeciesArgumentType::new));
+		ArgumentTypes.register("pswg:variant", SpeciesVariantArgumentType.class, new ConstantArgumentSerializer<>(SpeciesVariantArgumentType::new));
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
 				                                           dispatcher.register(CommandManager.literal("pswg_species")
 				                                                                             .requires(source -> source.hasPermissionLevel(2)) // same permission level as tp

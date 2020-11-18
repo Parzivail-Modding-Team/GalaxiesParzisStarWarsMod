@@ -51,6 +51,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity player, Hand hand)
 	{
+		// TODO: can't fire on servers?
+
 		final ItemStack stack = player.getStackInHand(hand);
 		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
 
