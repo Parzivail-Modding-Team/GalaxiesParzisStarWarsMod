@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.remote;
+package com.parzivail.pswg.client.texture.remote;
 
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;

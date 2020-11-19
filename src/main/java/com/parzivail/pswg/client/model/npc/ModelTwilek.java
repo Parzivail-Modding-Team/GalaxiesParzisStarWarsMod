@@ -5,7 +5,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.LivingEntity;
 
-public class ModelTwilekCombined<T extends LivingEntity> extends PlayerEntityModel<T>
+public class ModelTwilek<T extends LivingEntity> extends PlayerEntityModel<T>
 {
 	private static final int TEXTURE_WIDTH = 96;
 	private static final int TEXTURE_HEIGHT = 96;
@@ -22,7 +22,7 @@ public class ModelTwilekCombined<T extends LivingEntity> extends PlayerEntityMod
 	public ModelPart TailLowerL_1;
 	public ModelPart Chest;
 
-	public ModelTwilekCombined(boolean male, float scale)
+	public ModelTwilek(boolean male, float scale)
 	{
 		super(scale, true);
 

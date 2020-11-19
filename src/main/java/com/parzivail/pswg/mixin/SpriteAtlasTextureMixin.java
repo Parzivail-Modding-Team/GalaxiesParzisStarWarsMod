@@ -3,6 +3,7 @@ package com.parzivail.pswg.mixin;
 import com.google.gson.Gson;
 import com.parzivail.pswg.json.PSWGTextureMeta;
 import com.parzivail.pswg.util.Lumberjack;
+import com.parzivail.util.client.ColorUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.NativeImage;
@@ -102,42 +103,11 @@ public abstract class SpriteAtlasTextureMixin
 				for (int layer = 0, layerImagesLength = layerImages.length; layer < layerImagesLength; layer++)
 				{
 					NativeImage layerImage = layerImages[layer];
-					outImage.setPixelColor(x, y, blendColorsOnSrcAlpha(outImage.getPixelColor(x, y), layerImage.getPixelColor(x, y), layerTints[layer]));
+					outImage.setPixelColor(x, y, ColorUtil.blendColorsOnSrcAlpha(outImage.getPixelColor(x, y), layerImage.getPixelColor(x, y), layerTints[layer]));
 				}
 			}
 		}
 
 		return outImage;
-	}
-
-	@Unique
-	private int blendColorsOnSrcAlpha(int dest, int src, int tint)
-	{
-		float destA = NativeImage.getAlpha(dest) / 255f;
-		int destR = NativeImage.getRed(dest);
-		int destG = NativeImage.getGreen(dest);
-		int destB = NativeImage.getBlue(dest);
-
-		float srcA = NativeImage.getAlpha(src) / 255f;
-		int srcR = NativeImage.getRed(src);
-		int srcG = NativeImage.getGreen(src);
-		int srcB = NativeImage.getBlue(src);
-
-		//		float tintA = NativeImage.getAlpha(tint) / 255f;
-		int tintR = NativeImage.getRed(tint);
-		int tintG = NativeImage.getGreen(tint);
-		int tintB = NativeImage.getBlue(tint);
-
-		srcR = (srcR * tintR) / 255;
-		srcG = (srcG * tintG) / 255;
-		srcB = (srcB * tintB) / 255;
-
-		int a = (int)((destA + srcA) * 255f);
-		int r = (int)((1 - srcA) * destR + srcA * srcR);
-		int b = (int)((1 - srcA) * destG + srcA * srcG);
-		int g = (int)((1 - srcA) * destB + srcA * srcB);
-
-		// This is supposedly an ABGR color but the colors are very wrong unless you pack it as an AGBR color
-		return NativeImage.getAbgrColor(a, g, b, r);
 	}
 }

@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.LivingEntity;
 
-public class ModelBithCombined<T extends LivingEntity> extends PlayerEntityModel<T>
+public class ModelBith<T extends LivingEntity> extends PlayerEntityModel<T>
 {
 	private static final int TEXTURE_WIDTH = 96;
 	private static final int TEXTURE_HEIGHT = 96;
@@ -14,7 +14,7 @@ public class ModelBithCombined<T extends LivingEntity> extends PlayerEntityModel
 	public ModelPart FrontalL;
 	public ModelPart Chest;
 
-	public ModelBithCombined(boolean male, float scale)
+	public ModelBith(boolean male, float scale)
 	{
 		super(scale, true);
 

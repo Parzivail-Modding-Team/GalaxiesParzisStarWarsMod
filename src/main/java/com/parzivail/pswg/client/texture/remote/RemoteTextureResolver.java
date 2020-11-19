@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.remote;
+package com.parzivail.pswg.client.texture.remote;
 
 public class RemoteTextureResolver
 {

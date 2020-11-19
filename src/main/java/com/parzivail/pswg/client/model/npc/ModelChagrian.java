@@ -9,7 +9,7 @@ import net.minecraft.entity.LivingEntity;
  * PSWG_Chagrian - Sindavar
  * Created using Tabula 7.1.0
  */
-public class ModelChagrianCombined<T extends LivingEntity> extends PlayerEntityModel<T>
+public class ModelChagrian<T extends LivingEntity> extends PlayerEntityModel<T>
 {
 	private static final int TEXTURE_WIDTH = 96;
 	private static final int TEXTURE_HEIGHT = 96;
@@ -26,7 +26,7 @@ public class ModelChagrianCombined<T extends LivingEntity> extends PlayerEntityM
 	public ModelPart TailUpperUpperL;
 	public ModelPart Chest;
 
-	public ModelChagrianCombined(boolean male, float scale)
+	public ModelChagrian(boolean male, float scale)
 	{
 		super(scale, true);
 

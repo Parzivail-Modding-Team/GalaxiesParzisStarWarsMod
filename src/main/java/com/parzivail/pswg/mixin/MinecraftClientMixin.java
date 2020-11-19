@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.client.remote.RemoteTextureProvider;
+import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.util.Lumberjack;
 import com.parzivail.util.item.LeftClickHandler;
 import net.fabricmc.api.EnvType;

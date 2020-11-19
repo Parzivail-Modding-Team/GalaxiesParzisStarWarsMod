@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.remote;
+package com.parzivail.pswg.client.texture.remote;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;

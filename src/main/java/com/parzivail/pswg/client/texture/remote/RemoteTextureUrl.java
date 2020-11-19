@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.remote;
+package com.parzivail.pswg.client.texture.remote;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
