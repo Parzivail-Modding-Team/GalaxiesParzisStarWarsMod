@@ -2,6 +2,7 @@ package com.parzivail.util.item;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgPackets;
+import com.parzivail.pswg.entity.ShipEntity;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
@@ -51,6 +52,15 @@ public class LeftClickHandler
 			return;
 
 		assert mc.player != null;
+
+		ShipEntity ship = ShipEntity.getShip(mc.player);
+		if (ship != null)
+		{
+			ship.acceptLeftClick();
+
+			ci.cancel();
+			return;
+		}
 
 		ItemStack stack = mc.player.getMainHandStack();
 

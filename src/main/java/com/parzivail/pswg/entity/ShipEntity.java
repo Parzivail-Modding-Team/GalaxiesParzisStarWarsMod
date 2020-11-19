@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.*;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -98,6 +99,13 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		}
 
 		return null;
+	}
+
+	@Override
+	public boolean damage(DamageSource source, float amount)
+	{
+		// TODO: prevent riders from damaging
+		return super.damage(source, amount);
 	}
 
 	@Override
@@ -364,5 +372,10 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		passedData.writeFloat(rotation.getY());
 		passedData.writeFloat(rotation.getZ());
 		ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketShipRotation, passedData);
+	}
+
+	public void acceptLeftClick()
+	{
+		// TODO: blasters etc.
 	}
 }
