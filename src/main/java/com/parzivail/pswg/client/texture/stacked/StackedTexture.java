@@ -2,7 +2,6 @@ package com.parzivail.pswg.client.texture.stacked;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.mixin.ResourceTextureMixin;
 import com.parzivail.util.client.ColorUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -75,8 +74,7 @@ public class StackedTexture extends ResourceTexture
 
 		for (int i = 0; i < textures.length; i++)
 		{
-			ResourceTexture resource = new ResourceTexture(textures[i]);
-			TextureData texData = ((ResourceTextureMixin)resource).loadTextureData(manager);
+			TextureData texData = TextureData.load(manager, textures[i]);
 
 			nativeImages[i] = texData.getImage();
 

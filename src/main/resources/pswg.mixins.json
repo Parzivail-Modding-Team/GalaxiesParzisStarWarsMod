@@ -26,7 +26,6 @@
 		"PlayerEntityMixin",
 		"PlayerEntityModelMixin",
 		"PlayerEntityRendererMixin",
-		"ResourceTextureMixin",
 		"SpriteAtlasTextureMixin"
 	],
 	"injectors": {
