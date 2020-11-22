@@ -2,6 +2,8 @@ package com.parzivail.pswg;
 
 import com.parzivail.pswg.client.ModelLoader;
 import com.parzivail.pswg.client.input.KeyHandler;
+import com.parzivail.pswg.client.item.render.BlasterItemRenderer;
+import com.parzivail.pswg.client.item.render.LightsaberItemRenderer;
 import com.parzivail.pswg.client.model.SimpleModels;
 import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.EmptyRenderer;
@@ -18,6 +20,7 @@ import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.util.Lumberjack;
 import com.parzivail.util.item.CustomHUDRenderer;
+import com.parzivail.util.item.CustomItemRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -73,5 +76,7 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, (entityRenderDispatcher, context) -> new BlasterBoltRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, (entityRenderDispatcher, context) -> new ThrownLightsaberRenderer(entityRenderDispatcher, context.getItemRenderer()));
 		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.A280, (itemStack, matrixStack) -> {});
+		CustomItemRenderer.register(SwgItems.Blaster.A280, new BlasterItemRenderer());
+		CustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, new LightsaberItemRenderer());
 	}
 }
