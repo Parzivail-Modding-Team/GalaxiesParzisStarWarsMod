@@ -14,8 +14,8 @@ public class SwgSpecies
 	public static final Identifier SPECIES_NONE = register(new Identifier("none"), "none");
 	//	public static final Identifier SPECIES_HUMAN_M = register(Resources.identifier("human"), "steve", "blonde");
 	//	public static final Identifier SPECIES_HUMAN_F = register(Resources.identifier("human"), "alex", "blonde");
-	public static final Identifier SPECIES_AQUALISH_M = register(Resources.identifier("aqualish_m"), "beige", "green");
-	public static final Identifier SPECIES_AQUALISH_F = register(Resources.identifier("aqualish_f"), "beige", "green");
+	//	TODO: public static final Identifier SPECIES_AQUALISH_M = register(Resources.identifier("aqualish_m"), "beige", "green");
+	//	TODO: public static final Identifier SPECIES_AQUALISH_F = register(Resources.identifier("aqualish_f"), "beige", "green");
 	public static final Identifier SPECIES_BITH_M = register(Resources.identifier("bith_m"), "green", "pink", "white");
 	public static final Identifier SPECIES_BITH_F = register(Resources.identifier("bith_f"), "green", "pink", "white");
 	//	public static final Identifier SPECIES_BOTHAN_M = register(Resources.identifier("bothan_m"), "brown");
