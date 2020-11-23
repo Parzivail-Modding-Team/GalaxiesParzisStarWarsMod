@@ -12,8 +12,8 @@ public class SwgSpeciesModels
 
 	static
 	{
-		register(new SwgSpeciesModel(SwgSpecies.SPECIES_AQUALISH_M, new ModelAqualish<>(true, 0)));
-		register(new SwgSpeciesModel(SwgSpecies.SPECIES_AQUALISH_F, new ModelAqualish<>(false, 0)));
+		//		register(new SwgSpeciesModel(SwgSpecies.SPECIES_AQUALISH_M, new ModelAqualish<>(true, 0)));
+		//		register(new SwgSpeciesModel(SwgSpecies.SPECIES_AQUALISH_F, new ModelAqualish<>(false, 0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_BITH_M, new ModelBith<>(true, 0)));
 		register(new SwgSpeciesModel(SwgSpecies.SPECIES_BITH_F, new ModelBith<>(false, 0)));
 		//		register(new SwgSpeciesModel(SwgSpecies.SPECIES_BOTHAN_M, new ModelBothan<>(true, 0)));
