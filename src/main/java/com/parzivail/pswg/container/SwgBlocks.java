@@ -71,6 +71,34 @@ public class SwgBlocks
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE));
 	}
 
+	public static class Panel
+	{
+		public static final Block ImperialBase = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.GRAY).sounds(BlockSoundGroup.METAL));
+		public static final Block ImperialBlackBase = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.BLACK).sounds(BlockSoundGroup.METAL));
+		public static final PillarBlock Imperial1 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock Imperial2 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock Imperial3 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLight1 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLight2 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLight3 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLight4 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLight5 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLight6 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLightTall1 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLightTall2 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLightTall3 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLightTall4 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock ImperialLightDecoy = createPanel(MaterialColor.GRAY, MaterialColor.GRAY);
+		public static final PillarBlock ImperialLightOff = createPanel(MaterialColor.GRAY, MaterialColor.BLACK);
+
+		private static PillarBlock createPanel(MaterialColor topMaterialColor, MaterialColor sideMaterialColor)
+		{
+			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> {
+				return blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor;
+			}).strength(2.0F).sounds(BlockSoundGroup.METAL));
+		}
+	}
+
 	public static class Sand
 	{
 		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));

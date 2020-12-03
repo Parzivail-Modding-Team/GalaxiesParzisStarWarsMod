@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/cube_column_horizontal",
+	"textures": {
+		"end": "pswg:block/panel_imperial_base",
+		"side": "pswg:block/panel_imperial_light_off"
+	}
+}

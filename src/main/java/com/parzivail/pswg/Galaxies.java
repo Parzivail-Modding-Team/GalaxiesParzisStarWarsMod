@@ -84,6 +84,24 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register(SwgBlocks.Log.Sequoia, Resources.identifier("log_sequoia"));
 
+		SwgBlocks.register(SwgBlocks.Panel.ImperialBase, Resources.identifier("panel_imperial_base"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialBlackBase, Resources.identifier("panel_imperial_black_base"));
+		SwgBlocks.register(SwgBlocks.Panel.Imperial1, Resources.identifier("panel_imperial_1"));
+		SwgBlocks.register(SwgBlocks.Panel.Imperial2, Resources.identifier("panel_imperial_2"));
+		SwgBlocks.register(SwgBlocks.Panel.Imperial3, Resources.identifier("panel_imperial_3"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLight1, Resources.identifier("panel_imperial_light_1"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLight2, Resources.identifier("panel_imperial_light_2"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLight3, Resources.identifier("panel_imperial_light_3"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLight4, Resources.identifier("panel_imperial_light_4"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLight5, Resources.identifier("panel_imperial_light_5"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLight6, Resources.identifier("panel_imperial_light_6"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLightTall1, Resources.identifier("panel_imperial_light_tall_1"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLightTall2, Resources.identifier("panel_imperial_light_tall_2"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLightTall3, Resources.identifier("panel_imperial_light_tall_3"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLightTall4, Resources.identifier("panel_imperial_light_tall_4"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLightDecoy, Resources.identifier("panel_imperial_light_decoy"));
+		SwgBlocks.register(SwgBlocks.Panel.ImperialLightOff, Resources.identifier("panel_imperial_light_off"));
+
 		SwgBlocks.register(SwgBlocks.Machine.Spoked, Resources.identifier("machine_spoked"));
 
 		SwgBlocks.register(SwgBlocks.MoistureVaporator.Gx8, SwgBlocks.MoistureVaporator.Gx8BlockEntityType, Resources.identifier("moisture_vaporator_gx8"));
