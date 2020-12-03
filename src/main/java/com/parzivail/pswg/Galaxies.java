@@ -45,12 +45,9 @@ public class Galaxies implements ModInitializer
 		Lumberjack.debug("onInitialize");
 
 		// TODO: inventory clears when opening crates
-		// TODO: species variant renames caused missing textures
-		// TODO: make tatooine ambient light level the same as overworld, not nether
 		// TODO: hide other players in ships
 		// TODO: ships don't turn sometimes for other players on servers
 		// TODO: dual weilding one on and one off lightsaber might play the sound twice
-		// TODO: thrown lightsaber gimbal lock
 		// TODO: blaster sounds
 		// TODO: new blaster models
 
