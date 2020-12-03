@@ -1,15 +1,15 @@
 {
 	"variants": {
 		"axis=x": {
-			"model": "pswg:block/panel_imperial_light_off",
+			"model": "pswg:block/panel_imperial_light_off_horizontal",
 			"x": 90,
 			"y": 90
 		},
 		"axis=y": {
-			"model": "pswg:block/panel_imperial_light_off_horizontal"
+			"model": "pswg:block/panel_imperial_light_off"
 		},
 		"axis=z": {
-			"model": "pswg:block/panel_imperial_light_off",
+			"model": "pswg:block/panel_imperial_light_off_horizontal",
 			"x": 90
 		}
 	}
