@@ -118,6 +118,7 @@ public class Galaxies implements ModInitializer
 		Registry.register(Registry.ITEM, Resources.identifier("lightsaber"), SwgItems.Lightsaber.Lightsaber);
 
 		Registry.register(Registry.ITEM, Resources.identifier("a280"), SwgItems.Blaster.A280);
+		Registry.register(Registry.ITEM, Resources.identifier("e11"), SwgItems.Blaster.E11);
 
 		Registry.register(Registry.ITEM, Resources.identifier("debug"), SwgItems.Debug.Debug);
 

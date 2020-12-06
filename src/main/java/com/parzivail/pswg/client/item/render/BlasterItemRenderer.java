@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.item.render;
 
-import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
+import com.parzivail.pswg.client.pm3d.PM3DLod;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.item.CustomItemRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -17,9 +17,16 @@ import net.minecraft.util.math.Quaternion;
 
 public class BlasterItemRenderer implements CustomItemRenderer
 {
-	private static final Lazy<PM3DFile> a280c = new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/a280c.pm3d")));
-	private static final Identifier a280c_texture = Resources.identifier("textures/blaster/a280c.png");
-	private static final Identifier a280c_inventory_texture = Resources.identifier("textures/blaster/a280c_inventory.png");
+	private final Lazy<PM3DFile> pm3dModel;
+	private final Identifier texture;
+	private final Identifier inventoryTexture;
+
+	public BlasterItemRenderer(Lazy<PM3DFile> model, Identifier texture, Identifier inventoryTexture)
+	{
+		this.pm3dModel = model;
+		this.texture = texture;
+		this.inventoryTexture = inventoryTexture;
+	}
 
 	@Override
 	public void render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
@@ -42,25 +49,39 @@ public class BlasterItemRenderer implements CustomItemRenderer
 
 		if (renderMode == ModelTransformation.Mode.GUI)
 		{
-			matrices.translate(-0.5f, -2.2f, 0);
+			matrices.translate(-0.5f, -1.5f, 0);
 			matrices.multiply(new Quaternion(90, 0, 0, true));
 			matrices.multiply(new Quaternion(0, 0, -90, true));
 			matrices.multiply(new Quaternion(-135, 0, 0, true));
-			matrices.scale(0.7f, 0.7f, 0.7f);
 
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(a280c_inventory_texture));
+			PM3DLod m = pm3dModel.get().getLevelOfDetail(0);
+
+			float f = 1.7f / (float)m.bounds.getYLength();
+			matrices.scale(f, f, f);
+
+			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(inventoryTexture));
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			a280c.get().getLevelOfDetail(0).render(VertexConsumerBuffer.Instance);
+			m.render(VertexConsumerBuffer.Instance);
+		}
+		else if (renderMode.isFirstPerson())
+		{
+			matrices.multiply(new Quaternion(0, 180, 0, true));
+			matrices.translate(-0.4f, -0.5f, -0.25f);
+			matrices.scale(0.9f, 0.9f, 0.9f);
+
+			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texture));
+			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+			pm3dModel.get().getLevelOfDetail(1).render(VertexConsumerBuffer.Instance);
 		}
 		else
 		{
 			matrices.multiply(new Quaternion(0, 180, 0, true));
-			matrices.translate(-0.5f, -1, -0.5f);
+			matrices.translate(-0.4f, -1, -0.5f);
 			matrices.scale(0.9f, 0.9f, 0.9f);
 
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(a280c_texture));
+			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texture));
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			a280c.get().getLevelOfDetail(1).render(VertexConsumerBuffer.Instance);
+			pm3dModel.get().getLevelOfDetail(1).render(VertexConsumerBuffer.Instance);
 		}
 
 		matrices.pop();

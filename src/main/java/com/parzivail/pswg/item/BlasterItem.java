@@ -1,6 +1,7 @@
 package com.parzivail.pswg.item;
 
 import com.parzivail.pswg.container.SwgEntities;
+import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.item.data.BlasterPowerPack;
 import com.parzivail.pswg.item.data.BlasterTag;
@@ -19,6 +20,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
@@ -31,11 +34,13 @@ import net.minecraft.world.World;
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality
 {
 	private final float damage;
+	private final SoundEvent sound;
 
 	public BlasterItem(BlasterItem.Settings settings)
 	{
 		super(settings);
 		this.damage = settings.damage;
+		this.sound = settings.sound;
 	}
 
 	public static DamageSource getDamageSource(Entity attacker)
@@ -68,7 +73,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				{
 					if (!world.isClient)
 					{
-						//						Sfx.play(player, Resources.modColon("swg.fx.rifleDryfire"), 1, 1);
+						world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.DRYFIRE, SoundCategory.PLAYERS, 1f, 1f);
 					}
 					return TypedActionResult.fail(stack);
 				}
@@ -76,7 +81,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				{
 					bt.shotsRemaining = nextPack.getRight().numShots;
 					player.inventory.removeStack(nextPack.getLeft(), 1);
-					//					Sfx.play(player, Resources.modColon("swg.fx.rifleReload"), 1, 1);
+					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.RELOAD, SoundCategory.PLAYERS, 1f, 1f);
 				}
 			}
 
@@ -109,7 +114,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			entity.setPos(player.getX(), player.getY() + 1.2f, player.getZ());
 			world.spawnEntity(entity);
 
-			// Sfx.play(player, Resources.modColon("swg.fx." + name), 1 + (float)world.rand.nextGaussian() / 10, 1 - bd.getBarrel().getNoiseReduction());
+			world.playSound(null, player.getBlockPos(), sound, SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
 
 			int range = 20;
 
@@ -168,11 +173,18 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static class Settings extends Item.Settings
 	{
-		private float damage;
+		private float damage = 1;
+		private SoundEvent sound = SwgSounds.Blaster.FIRE_DL44;
 
 		public Settings damage(float damage)
 		{
 			this.damage = damage;
+			return this;
+		}
+
+		public Settings sound(SoundEvent sound)
+		{
+			this.sound = sound;
 			return this;
 		}
 

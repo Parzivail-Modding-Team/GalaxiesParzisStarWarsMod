@@ -16,5 +16,100 @@
 				"attenuation_distance": 6
 			}
 		]
+	},
+	"blaster.reload": {
+		"sounds": [
+			"pswg:blaster/reload"
+		]
+	},
+	"blaster.dryfire": {
+		"sounds": [
+			"pswg:blaster/dryfire"
+		]
+	},
+	"blaster.fire.a280": {
+		"sounds": [
+			"pswg:blaster/a280"
+		]
+	},
+	"blaster.fire.bike": {
+		"sounds": [
+			"pswg:blaster/bike"
+		]
+	},
+	"blaster.fire.bowcaster": {
+		"sounds": [
+			"pswg:blaster/bowcaster"
+		]
+	},
+	"blaster.fire.cycler": {
+		"sounds": [
+			"pswg:blaster/cycler"
+		]
+	},
+	"blaster.fire.dh17": {
+		"sounds": [
+			"pswg:blaster/dh17"
+		]
+	},
+	"blaster.fire.dl44": {
+		"sounds": [
+			"pswg:blaster/dl44"
+		]
+	},
+	"blaster.fire.dlt19": {
+		"sounds": [
+			"pswg:blaster/dlt19"
+		]
+	},
+	"blaster.fire.e11": {
+		"sounds": [
+			"pswg:blaster/e11"
+		]
+	},
+	"blaster.fire.eweb": {
+		"sounds": [
+			"pswg:blaster/eweb"
+		]
+	},
+	"blaster.fire.ionization": {
+		"sounds": [
+			"pswg:blaster/ion"
+		]
+	},
+	"blaster.fire.rt97c": {
+		"sounds": [
+			"pswg:blaster/rt97c"
+		]
+	},
+	"blaster.fire.t21": {
+		"sounds": [
+			"pswg:blaster/t21"
+		]
+	},
+	"blaster.fire.se14c": {
+		"sounds": [
+			"pswg:blaster/se14c"
+		]
+	},
+	"blaster.fire.dl18": {
+		"sounds": [
+			"pswg:blaster/dl18"
+		]
+	},
+	"blaster.fire.scout": {
+		"sounds": [
+			"pswg:blaster/dl44"
+		]
+	},
+	"blaster.fire.defender": {
+		"sounds": [
+			"pswg:blaster/dl44"
+		]
+	},
+	"blaster.fire.dl21": {
+		"sounds": [
+			"pswg:blaster/dl44"
+		]
 	}
 }

@@ -5,6 +5,7 @@ import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.item.render.BlasterItemRenderer;
 import com.parzivail.pswg.client.item.render.LightsaberItemRenderer;
 import com.parzivail.pswg.client.model.SimpleModels;
+import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.EmptyRenderer;
 import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
@@ -32,6 +33,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Lazy;
 import org.lwjgl.glfw.GLFW;
 
 public class Client implements ClientModInitializer
@@ -75,8 +77,15 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.ChaseCam, (entityRenderDispatcher, context) -> new EmptyRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, (entityRenderDispatcher, context) -> new BlasterBoltRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, (entityRenderDispatcher, context) -> new ThrownLightsaberRenderer(entityRenderDispatcher, context.getItemRenderer()));
-		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.A280, (itemStack, matrixStack) -> {});
-		CustomItemRenderer.register(SwgItems.Blaster.A280, new BlasterItemRenderer());
+
 		CustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, new LightsaberItemRenderer());
+
+		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.A280, (itemStack, matrixStack) -> {
+		});
+		CustomItemRenderer.register(SwgItems.Blaster.A280, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/a280c.pm3d"))), Resources.identifier("textures/blaster/a280c.png"), Resources.identifier("textures/blaster/a280c_inventory.png")));
+
+		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.E11, (itemStack, matrixStack) -> {
+		});
+		CustomItemRenderer.register(SwgItems.Blaster.E11, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/e11.pm3d"))), Resources.identifier("textures/blaster/e11.png"), Resources.identifier("textures/blaster/e11_inventory.png")));
 	}
 }

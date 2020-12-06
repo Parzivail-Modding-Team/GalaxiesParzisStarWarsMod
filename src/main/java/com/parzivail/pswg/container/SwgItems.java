@@ -13,7 +13,8 @@ public class SwgItems
 {
 	public static class Blaster
 	{
-		public static final BlasterItem A280 = new BlasterItem(new BlasterItem.Settings().maxCount(1).damage(8).group(Galaxies.Tab));
+		public static final BlasterItem A280 = new BlasterItem(new BlasterItem.Settings().maxCount(1).damage(8).sound(SwgSounds.Blaster.FIRE_A280).group(Galaxies.Tab));
+		public static final BlasterItem E11 = new BlasterItem(new BlasterItem.Settings().maxCount(1).damage(8).sound(SwgSounds.Blaster.FIRE_E11).group(Galaxies.Tab));
 	}
 
 	public static class Debug
