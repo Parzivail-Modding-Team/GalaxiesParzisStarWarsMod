@@ -44,7 +44,6 @@ public class Galaxies implements ModInitializer
 	{
 		Lumberjack.debug("onInitialize");
 
-		// TODO: inventory clears when opening crates
 		// TODO: hide other players in ships
 		// TODO: ships don't turn sometimes for other players on servers
 		// TODO: dual weilding one on and one off lightsaber might play the sound twice
@@ -149,6 +148,8 @@ public class Galaxies implements ModInitializer
 		Registry.register(Registry.ITEM, Resources.identifier("qrikki_waffle"), SwgItems.Food.QrikkiWaffle);
 
 		SwgDimensions.Tatooine.registerDimension();
+
+		SwgScreenTypes.register();
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
 				                                           dispatcher.register(CommandManager.literal("cdim")
