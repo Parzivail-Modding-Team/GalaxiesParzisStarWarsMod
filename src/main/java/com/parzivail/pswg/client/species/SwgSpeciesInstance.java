@@ -16,6 +16,10 @@ public class SwgSpeciesInstance
 		this.variant = variant;
 	}
 
+	public SwgSpeciesInstance(Identifier species) { // uses default variant
+		this(species, SwgSpecies.DEFAULT_VARIANT.get(species));
+	}
+
 	@Override
 	public String toString()
 	{

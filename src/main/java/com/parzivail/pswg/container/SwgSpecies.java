@@ -2,6 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
 import net.minecraft.util.Identifier;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ public class SwgSpecies
 {
 	public static final ArrayList<Identifier> SPECIES = new ArrayList<>();
 	public static final HashMap<Identifier, String[]> VARIANTS = new HashMap<>();
+	public static final HashMap<Identifier, String> DEFAULT_VARIANT = new HashMap<>();
 
 	public static final Identifier SPECIES_NONE = register(new Identifier("none"), "none");
 	//	public static final Identifier SPECIES_HUMAN_M = register(Resources.identifier("human"), "steve", "blonde");
@@ -36,6 +38,13 @@ public class SwgSpecies
 	{
 		SPECIES.add(species);
 		VARIANTS.put(species, variants);
+		DEFAULT_VARIANT.put(species, variants[0]); // uses first variant as default
 		return species;
+	}
+
+	private static void registerDefault(Identifier species, String variant) { // sets a different variant as default
+		if (SPECIES.contains(species) && ArrayUtils.contains(VARIANTS.get(species), variant)) {
+			DEFAULT_VARIANT.put(species, variant);
+		}
 	}
 }
