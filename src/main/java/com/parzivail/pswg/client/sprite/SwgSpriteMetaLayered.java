@@ -1,8 +1,8 @@
-package com.parzivail.pswg.json;
+package com.parzivail.pswg.client.sprite;
 
 import javax.annotation.Nullable;
 
-public class PSWGTextureMeta
+public class SwgSpriteMetaLayered
 {
 	@Nullable
 	public Layer[] layers = null;
