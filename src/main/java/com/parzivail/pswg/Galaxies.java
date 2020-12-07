@@ -162,39 +162,56 @@ public class Galaxies implements ModInitializer
 		ArgumentTypes.register("pswg:species", SpeciesArgumentType.class, new ConstantArgumentSerializer<>(SpeciesArgumentType::new));
 		ArgumentTypes.register("pswg:variant", SpeciesVariantArgumentType.class, new ConstantArgumentSerializer<>(SpeciesVariantArgumentType::new));
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
-				                                           dispatcher.register(CommandManager.literal("pswg_species")
-				                                                                             .requires(source -> source.hasPermissionLevel(2)) // same permission level as tp
-				                                                                             .then(CommandManager.argument("players", EntityArgumentType.players())
-				                                                                                                 .then(CommandManager.argument("species", new SpeciesArgumentType())
-				                                                                                                                     .then(CommandManager.argument("variant", new SpeciesVariantArgumentType())
-				                                                                                                                                         .executes(context -> {
-					                                                                                                                                         Collection<ServerPlayerEntity> players = EntityArgumentType.getPlayers(context, "players");
-					                                                                                                                                         Identifier species = context.getArgument("species", Identifier.class);
-					                                                                                                                                         String variant = context.getArgument("variant", String.class);
+			dispatcher.register(CommandManager.literal("pswg_species")
+				.requires(source -> source.hasPermissionLevel(2)) // same permission level as tp
+				.then(CommandManager.argument("players", EntityArgumentType.players())
+				.then(CommandManager.argument("species", new SpeciesArgumentType()) // uses default variant
+				.executes(context -> {
+					Collection<ServerPlayerEntity> players = EntityArgumentType.getPlayers(context, "players");
+					Identifier species = context.getArgument("species", Identifier.class);
 
-					                                                                                                                                         if (!SwgSpecies.SPECIES.contains(species))
-					                                                                                                                                         {
-						                                                                                                                                         context.getSource().sendFeedback(new TranslatableText(Resources.command("species.invalid"), species.toString()), false);
-						                                                                                                                                         return 0;
-					                                                                                                                                         }
+					if (!SwgSpecies.SPECIES.contains(species)) {
+						context.getSource().sendFeedback(new TranslatableText(Resources.command("species.invalid"), species.toString()), false);
+						return 0;
+					}
 
-					                                                                                                                                         if (!ArrayUtils.contains(SwgSpecies.VARIANTS.get(species), variant))
-					                                                                                                                                         {
-						                                                                                                                                         context.getSource().sendFeedback(new TranslatableText(Resources.command("species.variant.invalid"), variant, species.toString()), false);
-						                                                                                                                                         return 0;
-					                                                                                                                                         }
+					for (ServerPlayerEntity player : players) {
+						SwgPersistentComponents pc = SwgEntityComponents.getPersistent(player);
+						if (species.equals(SwgSpecies.SPECIES_NONE))
+							pc.setSpecies(null);
+						else
+							pc.setSpecies(new SwgSpeciesInstance(species));
+					}
 
-					                                                                                                                                         for (ServerPlayerEntity player : players)
-					                                                                                                                                         {
-						                                                                                                                                         SwgPersistentComponents pc = SwgEntityComponents.getPersistent(player);
-						                                                                                                                                         if (species.equals(SwgSpecies.SPECIES_NONE))
-							                                                                                                                                         pc.setSpecies(null);
-						                                                                                                                                         else
-							                                                                                                                                         pc.setSpecies(new SwgSpeciesInstance(species, variant));
-					                                                                                                                                         }
+					return 1;
+				})
+				.then(CommandManager.argument("variant", new SpeciesVariantArgumentType()) // uses specified variant
+					.executes(context -> {
+						Collection<ServerPlayerEntity> players = EntityArgumentType.getPlayers(context, "players");
+						Identifier species = context.getArgument("species", Identifier.class);
+						String variant = context.getArgument("variant", String.class);
 
-					                                                                                                                                         return 1;
-				                                                                                                                                         }))))));
+						if (!SwgSpecies.SPECIES.contains(species)) {
+							context.getSource().sendFeedback(new TranslatableText(Resources.command("species.invalid"), species.toString()), false);
+							return 0;
+						}
+
+						if (!ArrayUtils.contains(SwgSpecies.VARIANTS.get(species), variant)) {
+							context.getSource().sendFeedback(new TranslatableText(Resources.command("species.variant.invalid"), variant, species.toString()), false);
+							return 0;
+						}
+
+						for (ServerPlayerEntity player : players) {
+							SwgPersistentComponents pc = SwgEntityComponents.getPersistent(player);
+							if (species.equals(SwgSpecies.SPECIES_NONE))
+								pc.setSpecies(null);
+							else
+								pc.setSpecies(new SwgSpeciesInstance(species, variant));
+						}
+
+						return 1;
+					})
+				)))));
 
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketPlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
 		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketPlayerLightsaberToggle, PlayerPacketHandler::handleLightsaberTogglePacket);
