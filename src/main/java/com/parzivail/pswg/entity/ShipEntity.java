@@ -43,10 +43,6 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	@Environment(EnvType.CLIENT)
 	private ChaseCamEntity camera;
 
-	@Environment(EnvType.CLIENT)
-	private boolean firstTick = true;
-
-	private Quaternion instRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewPrevRotation = new Quaternion(Quaternion.IDENTITY);
 
@@ -184,17 +180,8 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	{
 		super.tick();
 
-		if (world.isClient)
-		{
-			if (firstTick)
-			{
-				instRotation = getRotation();
-				firstTick = false;
-			}
-		}
-
 		viewPrevRotation = new Quaternion(viewRotation);
-		viewRotation = new Quaternion(instRotation);
+		viewRotation = new Quaternion(getRotation());
 
 		float throttle = getThrottle();
 
@@ -311,7 +298,6 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	public void setRotation(Quaternion q)
 	{
 		QuatUtil.normalize(q);
-		instRotation = new Quaternion(q);
 		getDataTracker().set(ROTATION, q);
 	}
 
@@ -340,7 +326,7 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 
 	public void acceptMouseInput(double mouseDx, double mouseDy)
 	{
-		Quaternion rotation = new Quaternion(instRotation);
+		Quaternion rotation = new Quaternion(getRotation());
 
 		boolean pitchRoll = false;
 
@@ -356,7 +342,7 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 
 		rotation.hamiltonProduct(new Quaternion(new Vector3f(1, 0, 0), -(float)mouseDy * 0.1f, true));
 
-		instRotation = rotation;
+		setRotation(rotation);
 
 		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
 		passedData.writeFloat(rotation.getW());

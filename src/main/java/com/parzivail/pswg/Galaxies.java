@@ -44,10 +44,7 @@ public class Galaxies implements ModInitializer
 	{
 		Lumberjack.debug("onInitialize");
 
-		// TODO: hide other players in ships
-		// TODO: ships don't turn sometimes for other players on servers
 		// TODO: dual weilding one on and one off lightsaber might play the sound twice
-		// TODO: blaster sounds
 		// TODO: new blaster models
 
 		TrackedDataHandlers.register();
