@@ -43,6 +43,13 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	@Environment(EnvType.CLIENT)
 	private ChaseCamEntity camera;
 
+	@Environment(EnvType.CLIENT)
+	private Quaternion clientInstRotation = new Quaternion(Quaternion.IDENTITY);
+	@Environment(EnvType.CLIENT)
+	private Quaternion clientRotation = new Quaternion(Quaternion.IDENTITY);
+	@Environment(EnvType.CLIENT)
+	private Quaternion clientPrevRotation = new Quaternion(Quaternion.IDENTITY);
+
 	private Quaternion viewRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewPrevRotation = new Quaternion(Quaternion.IDENTITY);
 
@@ -183,6 +190,12 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		viewPrevRotation = new Quaternion(viewRotation);
 		viewRotation = new Quaternion(getRotation());
 
+		if (world.isClient)
+		{
+			clientPrevRotation = new Quaternion(clientRotation);
+			clientRotation = new Quaternion(clientInstRotation);
+		}
+
 		float throttle = getThrottle();
 
 		Entity pilot = getPrimaryPassenger();
@@ -304,8 +317,8 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	@Environment(EnvType.CLIENT)
 	public Quaternion getViewRotation(float t)
 	{
-		Quaternion start = viewPrevRotation;
-		Quaternion end = viewRotation;
+		Quaternion start = clientPrevRotation;
+		Quaternion end = clientRotation;
 		return QuatUtil.slerp(start, end, t);
 	}
 
@@ -343,6 +356,8 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		rotation.hamiltonProduct(new Quaternion(new Vector3f(1, 0, 0), -(float)mouseDy * 0.1f, true));
 
 		setRotation(rotation);
+
+		clientInstRotation = new Quaternion(rotation);
 
 		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
 		passedData.writeFloat(rotation.getW());

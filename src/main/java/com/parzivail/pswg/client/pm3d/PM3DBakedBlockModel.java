@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.PillarBlock;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -19,6 +20,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.BlockRenderView;
@@ -146,6 +148,26 @@ public class PM3DBakedBlockModel extends SimpleModel
 			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
 			mat.multiply(new Quaternion(0, ((RotatingBlock)state.getBlock()).getRotationDegrees(state), 0, true));
 			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+		}
+
+		if (state.getBlock() instanceof PillarBlock)
+		{
+			Direction.Axis axis = state.get(PillarBlock.AXIS);
+
+			switch (axis)
+			{
+				case X:
+					mat.multiply(new Quaternion(0, 0, -90, true));
+					mat.multiply(Matrix4f.translate(-1, 0, 0));
+					break;
+				case Z:
+					mat.multiply(new Quaternion(0, -90, 0, true));
+					mat.multiply(new Quaternion(0, 0, -90, true));
+					mat.multiply(Matrix4f.translate(-1, 0, -1));
+					break;
+				case Y:
+					break;
+			}
 		}
 
 		return mat;

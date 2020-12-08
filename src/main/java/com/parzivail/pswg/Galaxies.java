@@ -46,6 +46,8 @@ public class Galaxies implements ModInitializer
 
 		// TODO: dual weilding one on and one off lightsaber might play the sound twice
 		// TODO: new blaster models
+		// TODO: Pm3D block particle textures
+		// TODO: convert pipe corners/junctions from pillar blocks to 4-way rotating blocks in horizontal/vertical variants
 
 		TrackedDataHandlers.register();
 
@@ -94,6 +96,10 @@ public class Galaxies implements ModInitializer
 		SwgBlocks.register(SwgBlocks.Panel.ImperialLightTall4, Resources.identifier("panel_imperial_light_tall_4"));
 		SwgBlocks.register(SwgBlocks.Panel.ImperialLightDecoy, Resources.identifier("panel_imperial_light_decoy"));
 		SwgBlocks.register(SwgBlocks.Panel.ImperialLightOff, Resources.identifier("panel_imperial_light_off"));
+
+		SwgBlocks.register(SwgBlocks.Pipe.Sectional, Resources.identifier("pipe_sectional"));
+		SwgBlocks.register(SwgBlocks.Pipe.SectionalCorner, Resources.identifier("pipe_sectional_corner"));
+		SwgBlocks.register(SwgBlocks.Pipe.SectionalJunction, Resources.identifier("pipe_sectional_junction"));
 
 		SwgBlocks.register(SwgBlocks.Machine.Spoked, Resources.identifier("machine_spoked"));
 

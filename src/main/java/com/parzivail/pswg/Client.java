@@ -71,6 +71,10 @@ public class Client implements ClientModInitializer
 
 		SimpleModels.register(SwgBlocks.MoistureVaporator.Gx8, false, ModelLoader.loadPM3D(Resources.identifier("models/block/moisture_vaporator_gx8.pm3d"), Resources.identifier("model/moisture_vaporator_gx8"), new Identifier("block/stone")));
 
+		SimpleModels.register(SwgBlocks.Pipe.Sectional, true, ModelLoader.loadPM3D(Resources.identifier("models/block/pipe_sectional.pm3d"), Resources.identifier("model/pipe_sectional"), new Identifier("block/stone")));
+		SimpleModels.register(SwgBlocks.Pipe.SectionalCorner, true, ModelLoader.loadPM3D(Resources.identifier("models/block/pipe_sectional_corner.pm3d"), Resources.identifier("model/pipe_sectional_corner"), new Identifier("block/stone")));
+		SimpleModels.register(SwgBlocks.Pipe.SectionalJunction, true, ModelLoader.loadPM3D(Resources.identifier("models/block/pipe_sectional_junction.pm3d"), Resources.identifier("model/pipe_sectional_junction"), new Identifier("block/stone")));
+
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> SimpleModels.INSTANCE);
 
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.T65bXwing, (entityRenderDispatcher, context) -> new T65BXwingRenderer(entityRenderDispatcher));
