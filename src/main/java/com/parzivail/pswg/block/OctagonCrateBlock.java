@@ -15,7 +15,7 @@ public class OctagonCrateBlock extends RotatingBlockWithEntity
 {
 	public OctagonCrateBlock(Settings settings)
 	{
-		super(settings);
+		super(settings, 8);
 	}
 
 	@Override

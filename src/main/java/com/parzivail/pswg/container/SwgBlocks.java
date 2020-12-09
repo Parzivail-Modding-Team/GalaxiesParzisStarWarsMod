@@ -54,7 +54,7 @@ public class SwgBlocks
 
 	public static class Machine
 	{
-		public static final RotatingBlock Spoked = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final RotatingBlock Spoked = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque(), 8);
 	}
 
 	public static class Ore
@@ -101,16 +101,7 @@ public class SwgBlocks
 
 	public static class Pipe
 	{
-		public static final PillarBlock Sectional = createPipe(MaterialColor.RED, MaterialColor.RED);
-		public static final PillarBlock SectionalJunction = createPipe(MaterialColor.RED, MaterialColor.RED);
-		public static final PillarBlock SectionalCorner = createPipe(MaterialColor.RED, MaterialColor.RED);
-
-		private static PillarBlock createPipe(MaterialColor topMaterialColor, MaterialColor sideMaterialColor)
-		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> {
-				return blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor;
-			}).strength(2.0F).nonOpaque().sounds(BlockSoundGroup.METAL));
-		}
+		public static final Block Thick = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.GRAY).nonOpaque().sounds(BlockSoundGroup.METAL));
 	}
 
 	public static class Sand

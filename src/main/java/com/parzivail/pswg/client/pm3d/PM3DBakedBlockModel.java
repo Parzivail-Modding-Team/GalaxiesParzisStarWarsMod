@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.pm3d;
 
+import com.parzivail.pswg.block.ConnectingNodeBlock;
 import com.parzivail.pswg.block.RotatingBlock;
 import com.parzivail.pswg.client.model.SimpleModel;
 import com.parzivail.pswg.util.ClientMathUtil;
@@ -25,20 +26,30 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.BlockRenderView;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class PM3DBakedBlockModel extends SimpleModel
 {
+	private final boolean variesByBlockState;
 	private final Sprite baseSprite;
 	private final PM3DLod container;
 
-	private PM3DBakedBlockModel(Sprite baseSprite, Sprite particleSprite, PM3DLod container)
+	private PM3DBakedBlockModel(boolean variesByBlockState, Sprite baseSprite, Sprite particleSprite, PM3DLod container)
 	{
 		super(particleSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
+		this.variesByBlockState = variesByBlockState;
 		this.baseSprite = baseSprite;
 		this.container = container;
+	}
+
+	@Override
+	protected boolean variesByBlockState()
+	{
+		return variesByBlockState;
 	}
 
 	private void emitFace(Matrix4f transformation, QuadEmitter quadEmitter, PM3DFace face)
@@ -70,6 +81,11 @@ public class PM3DBakedBlockModel extends SimpleModel
 		vC = ClientMathUtil.transform(vC, transformation);
 		vD = ClientMathUtil.transform(vD, transformation);
 
+		nA = ClientMathUtil.transformNormal(nA, transformation);
+		nB = ClientMathUtil.transformNormal(nB, transformation);
+		nC = ClientMathUtil.transformNormal(nC, transformation);
+		nD = ClientMathUtil.transformNormal(nD, transformation);
+
 		quadEmitter.pos(0, vA).normal(0, nA).sprite(0, 0, tA.getX(), 1 - tA.getY());
 		quadEmitter.pos(1, vB).normal(1, nB).sprite(1, 0, tB.getX(), 1 - tB.getY());
 		quadEmitter.pos(2, vC).normal(2, nC).sprite(2, 0, tC.getX(), 1 - tC.getY());
@@ -100,9 +116,39 @@ public class PM3DBakedBlockModel extends SimpleModel
 		}
 	}
 
+	public static final Map<String, Direction> FACING_SUBMODELS;
+
+	static
+	{
+		FACING_SUBMODELS = new HashMap<>();
+		FACING_SUBMODELS.put("NODE_PY", Direction.NORTH);
+		FACING_SUBMODELS.put("NODE_NY", Direction.SOUTH);
+		FACING_SUBMODELS.put("NODE_PX", Direction.EAST);
+		FACING_SUBMODELS.put("NODE_NX", Direction.WEST);
+		FACING_SUBMODELS.put("NODE_PZ", Direction.UP);
+		FACING_SUBMODELS.put("NODE_NZ", Direction.DOWN);
+	}
+
 	@Override
 	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
+		if (state.getBlock() instanceof ConnectingNodeBlock)
+		{
+			MeshBuilder meshBuilder = RENDERER.meshBuilder();
+			QuadEmitter quadEmitter = meshBuilder.getEmitter();
+
+			for (PM3DObject o : container.objects)
+			{
+				if (!"NODE_CENTER".equals(o.objName) && !state.get(ConnectingNodeBlock.FACING_PROPERTIES.get(FACING_SUBMODELS.get(o.objName))))
+					continue;
+
+				for (PM3DFace face : o.faces)
+					emitFace(transformation, quadEmitter, face);
+			}
+
+			return meshBuilder.build();
+		}
+
 		return createMesh(transformation);
 	}
 
@@ -173,9 +219,9 @@ public class PM3DBakedBlockModel extends SimpleModel
 		return mat;
 	}
 
-	public static PM3DBakedBlockModel create(PM3DLod container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
+	public static PM3DBakedBlockModel create(boolean variesByBlockState, PM3DLod container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
 	{
-		return new PM3DBakedBlockModel(spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, particleTexture)), container);
+		return new PM3DBakedBlockModel(variesByBlockState, spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, particleTexture)), container);
 	}
 
 	@Override

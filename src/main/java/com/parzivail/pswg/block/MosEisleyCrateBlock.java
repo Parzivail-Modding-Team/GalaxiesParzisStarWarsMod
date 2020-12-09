@@ -15,7 +15,7 @@ public class MosEisleyCrateBlock extends RotatingBlockWithEntity
 {
 	public MosEisleyCrateBlock(Settings settings)
 	{
-		super(settings);
+		super(settings, 8);
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class BlockMoistureVaporator extends RotatingBlockWithEntity implements I
 {
 	public BlockMoistureVaporator(Settings settings)
 	{
-		super(settings);
+		super(settings, 8);
 	}
 
 	@Override

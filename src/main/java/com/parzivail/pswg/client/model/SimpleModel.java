@@ -65,13 +65,18 @@ public abstract class SimpleModel extends AbstractModel
 		return false;
 	}
 
+	protected boolean variesByBlockState()
+	{
+		return false;
+	}
+
 	protected abstract Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation);
 
 	protected abstract Mesh createItemMesh(Matrix4f transformation);
 
 	protected Mesh createOrCacheBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		ModelCacheId cacheId = new ModelCacheId(variesByBlockPos() ? new BlockPos(pos) : BlockPos.ORIGIN, transformation);
+		ModelCacheId cacheId = new ModelCacheId(variesByBlockPos() ? new BlockPos(pos) : (variesByBlockState() ? state : BlockPos.ORIGIN), transformation);
 
 		if (meshes.containsKey(cacheId))
 			return meshes.get(cacheId);
@@ -144,22 +149,22 @@ public abstract class SimpleModel extends AbstractModel
 
 	private static class ModelCacheId
 	{
-		private final BlockPos pos;
+		private final Object discriminator;
 		private final Matrix4f transformation;
 
-		public ModelCacheId(BlockPos pos, Matrix4f transformation)
+		public ModelCacheId(Object discriminator, Matrix4f transformation)
 		{
-			this.pos = pos;
+			this.discriminator = discriminator;
 			this.transformation = transformation;
 		}
 
 		@Override
 		public int hashCode()
 		{
-			if (pos == null)
+			if (discriminator == null)
 				return transformation.hashCode() * 31;
 
-			return (transformation.hashCode() * 31) + pos.hashCode();
+			return (transformation.hashCode() * 31) + discriminator.hashCode();
 		}
 
 		@Override
@@ -172,7 +177,7 @@ public abstract class SimpleModel extends AbstractModel
 
 			ModelCacheId cacheId = (ModelCacheId)o;
 
-			return Objects.equals(pos, cacheId.pos) && Objects.equals(transformation, cacheId.transformation);
+			return Objects.equals(discriminator, cacheId.discriminator) && Objects.equals(transformation, cacheId.transformation);
 		}
 	}
 }

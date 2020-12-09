@@ -26,6 +26,19 @@ public class ClientMathUtil
 	}
 
 	@Environment(EnvType.CLIENT)
+	public static Vector3f transformNormal(Vector3f v, Matrix4f m)
+	{
+		Vector4f v4 = new Vector4f(v);
+		v4.transform(m);
+		Vector4f zero = new Vector4f(0, 0, 0, 0);
+		zero.transform(m);
+
+		Vector3f out = new Vector3f(v4.getX() - zero.getX(), v4.getY() - zero.getY(), v4.getZ() - zero.getZ());
+		out.normalize();
+		return out;
+	}
+
+	@Environment(EnvType.CLIENT)
 	public static Vector3f transform(Vector3f v, Matrix3f m)
 	{
 		Vector3f v3 = v.copy();
