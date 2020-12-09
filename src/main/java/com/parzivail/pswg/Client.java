@@ -82,12 +82,16 @@ public class Client implements ClientModInitializer
 
 		CustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, new LightsaberItemRenderer());
 
+		CustomItemRenderer.register(SwgItems.Blaster.A280, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/a280c.pm3d"))), Resources.identifier("textures/blaster/a280c.png"), Resources.identifier("textures/blaster/a280c_inventory.png")));
 		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.A280, (itemStack, matrixStack) -> {
 		});
-		CustomItemRenderer.register(SwgItems.Blaster.A280, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/a280c.pm3d"))), Resources.identifier("textures/blaster/a280c.png"), Resources.identifier("textures/blaster/a280c_inventory.png")));
 
+		CustomItemRenderer.register(SwgItems.Blaster.E11, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/e11.pm3d"))), Resources.identifier("textures/blaster/e11.png"), Resources.identifier("textures/blaster/e11_inventory.png")));
 		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.E11, (itemStack, matrixStack) -> {
 		});
-		CustomItemRenderer.register(SwgItems.Blaster.E11, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/e11.pm3d"))), Resources.identifier("textures/blaster/e11.png"), Resources.identifier("textures/blaster/e11_inventory.png")));
+
+		CustomItemRenderer.register(SwgItems.Blaster.EE3, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/ee3.pm3d"))), Resources.identifier("textures/blaster/ee3.png"), Resources.identifier("textures/blaster/ee3_inventory.png")));
+		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.EE3, (itemStack, matrixStack) -> {
+		});
 	}
 }
