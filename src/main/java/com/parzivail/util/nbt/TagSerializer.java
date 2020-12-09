@@ -2,6 +2,7 @@ package com.parzivail.util.nbt;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.lang.reflect.Field;
@@ -26,6 +27,7 @@ public class TagSerializer
 		map(boolean.class, CompoundTag::getBoolean, CompoundTag::putBoolean);
 		map(char.class, (nbt, field) -> nbt.getString(field).charAt(0), (nbt, field, a) -> nbt.putString(field, String.valueOf(a)));
 		map(String.class, CompoundTag::getString, CompoundTag::putString);
+		map(Identifier.class, (nbt, field) -> new Identifier(nbt.getString(field)), (nbt, field, a) -> nbt.putString(field, a.toString()));
 		map(CompoundTag.class, CompoundTag::getCompound, CompoundTag::put);
 		map(ItemStack.class, (nbt, field) -> ItemStack.fromTag(nbt.getCompound(field)), (nbt, field, a) -> nbt.put(field, a.toTag(new CompoundTag())));
 

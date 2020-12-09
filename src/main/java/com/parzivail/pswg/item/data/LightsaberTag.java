@@ -1,9 +1,11 @@
 package com.parzivail.pswg.item.data;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 
@@ -19,6 +21,9 @@ public class LightsaberTag extends TagSerializer
 
 	public int coreColor;
 	public int bladeColor;
+	public boolean unstable;
+
+	public Identifier hilt;
 
 	public LightsaberTag(CompoundTag source)
 	{
@@ -34,6 +39,9 @@ public class LightsaberTag extends TagSerializer
 
 		coreColor = 0xFFFFFF;
 		bladeColor = 0x0020FF;
+		unstable = false;
+
+		hilt = Resources.identifier("luke/rotj");
 	}
 
 	public static void mutate(ItemStack stack, Consumer<LightsaberTag> action)

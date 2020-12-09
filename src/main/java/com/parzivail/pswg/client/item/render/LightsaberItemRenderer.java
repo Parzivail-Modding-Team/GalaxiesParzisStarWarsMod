@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.item.render;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
+import com.parzivail.pswg.client.pm3d.PM3DTexturedModel;
 import com.parzivail.pswg.client.render.LightsaberRenderer;
 import com.parzivail.pswg.item.data.LightsaberTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
@@ -16,14 +17,27 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Lazy;
 import net.minecraft.util.math.Quaternion;
+
+import java.util.HashMap;
 
 public class LightsaberItemRenderer implements CustomItemRenderer
 {
-	private static final Lazy<PM3DFile> lightsaber_luke_rotj = new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/lightsaber/lightsaber_luke_rotj.pm3d")));
-	private static final Identifier lightsaber_luke_rotj_texture = Resources.identifier("textures/lightsaber/lightsaber_luke_rotj.png");
-	private static final Identifier lightsaber_luke_rotj_inventory_texture = Resources.identifier("textures/lightsaber/lightsaber_luke_rotj_inventory.png");
+	//	private static final Lazy<PM3DFile> lightsaber_luke_rotj = new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/lightsaber/lightsaber_luke_rotj.pm3d")));
+	//	private static final Identifier lightsaber_luke_rotj_texture = Resources.identifier("textures/lightsaber/lightsaber_luke_rotj.png");
+	//	private static final Identifier lightsaber_luke_rotj_inventory_texture = Resources.identifier("textures/lightsaber/lightsaber_luke_rotj_inventory.png");
+
+	public static final Identifier DEFAULT_MODEL;
+	public static final HashMap<Identifier, PM3DTexturedModel> MODELS = new HashMap<>();
+
+	static
+	{
+		MODELS.put((DEFAULT_MODEL = Resources.identifier("luke/rotj")), new PM3DTexturedModel(
+				() -> PM3DFile.tryLoad(Resources.identifier("models/lightsaber/luke/rotj.pm3d")),
+				Resources.identifier("textures/lightsaber/luke/rotj_inventory.png"),
+				Resources.identifier("textures/lightsaber/luke/rotj.png")
+		));
+	}
 
 	@Override
 	public void render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
@@ -50,29 +64,30 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 		MinecraftClient mc = Client.minecraft;
 		LightsaberTag lt = new LightsaberTag(stack.getOrCreateTag());
 
-		boolean unstable = false;
+		boolean unstable = lt.unstable;
 		float baseLength = 1.6f;
 		float lengthCoefficient = lt.getSize(mc.getTickDelta());
 		int coreColor = lt.coreColor;
 		int glowColor = lt.bladeColor;
 
+		PM3DTexturedModel texturedModel = MODELS.get(lt.hilt);
+		if (texturedModel == null)
+			texturedModel = MODELS.get(DEFAULT_MODEL);
+
+		int lod = 1;
+
 		if (renderMode == ModelTransformation.Mode.GUI)
 		{
+			lod = 0;
+
 			matrices.translate(8, 4, 0);
 			matrices.multiply(new Quaternion(0, 0, -45, true));
 			matrices.scale(1.5f, 1.5f, 1.5f);
-
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(lightsaber_luke_rotj_inventory_texture));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			lightsaber_luke_rotj.get().getLevelOfDetail(0).render(VertexConsumerBuffer.Instance);
 		}
-		else
-		{
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(lightsaber_luke_rotj_texture));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 
-			lightsaber_luke_rotj.get().getLevelOfDetail(1).render(VertexConsumerBuffer.Instance);
-		}
+		VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texturedModel.getTexture(lod)));
+		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+		texturedModel.getModel(lod).render(VertexConsumerBuffer.Instance);
 
 		matrices.pop();
 
