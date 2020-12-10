@@ -2,7 +2,7 @@ package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.screen.OctagonCrateScreenHandler;
+import com.parzivail.pswg.screen.CrateImperialCubeScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -10,22 +10,22 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
-public class OctagonCrateBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
+public class CrateImperialCubeBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
 {
-	public OctagonCrateBlockEntity()
+	public CrateImperialCubeBlockEntity()
 	{
-		super(SwgBlocks.Crate.OctagonBlockEntityType, 39);
+		super(SwgBlocks.Crate.ImperialCubeBlockEntityType, 15);
 	}
 
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("crate_octagon"));
+		return new TranslatableText(Resources.container("crate_imperial_cube"));
 	}
 
 	@Override
 	public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player)
 	{
-		return new OctagonCrateScreenHandler(syncId, inv, this);
+		return new CrateImperialCubeScreenHandler(syncId, inv, this);
 	}
 }

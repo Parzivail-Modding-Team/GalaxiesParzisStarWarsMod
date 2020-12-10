@@ -2,10 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.block.*;
-import com.parzivail.pswg.blockentity.BlasterWorkbenchBlockEntity;
-import com.parzivail.pswg.blockentity.MoistureVaporatorBlockEntity;
-import com.parzivail.pswg.blockentity.MosEisleyCrateBlockEntity;
-import com.parzivail.pswg.blockentity.OctagonCrateBlockEntity;
+import com.parzivail.pswg.blockentity.*;
 import com.parzivail.util.block.BlockUtils;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -21,13 +18,16 @@ public class SwgBlocks
 {
 	public static class Crate
 	{
-		public static final OctagonCrateBlock OctagonOrange = new OctagonCrateBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		public static final OctagonCrateBlock OctagonGray = new OctagonCrateBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		public static final OctagonCrateBlock OctagonBlack = new OctagonCrateBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		public static final BlockEntityType<OctagonCrateBlockEntity> OctagonBlockEntityType = BlockEntityType.Builder.create(OctagonCrateBlockEntity::new, OctagonOrange, OctagonGray, OctagonBlack).build(null);
+		public static final RotatingBlockWithGuiEntity OctagonOrange = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateOctagonBlockEntity::new);
+		public static final RotatingBlockWithGuiEntity OctagonGray = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateOctagonBlockEntity::new);
+		public static final RotatingBlockWithGuiEntity OctagonBlack = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateOctagonBlockEntity::new);
+		public static final BlockEntityType<CrateOctagonBlockEntity> OctagonBlockEntityType = BlockEntityType.Builder.create(CrateOctagonBlockEntity::new, OctagonOrange, OctagonGray, OctagonBlack).build(null);
 
-		public static final MosEisleyCrateBlock MosEisley = new MosEisleyCrateBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		public static final BlockEntityType<MosEisleyCrateBlockEntity> MosEisleyBlockEntityType = BlockEntityType.Builder.create(MosEisleyCrateBlockEntity::new, MosEisley).build(null);
+		public static final RotatingBlockWithGuiEntity MosEisley = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateMosEisleyBlockEntity::new);
+		public static final BlockEntityType<CrateMosEisleyBlockEntity> MosEisleyBlockEntityType = BlockEntityType.Builder.create(CrateMosEisleyBlockEntity::new, MosEisley).build(null);
+
+		public static final RotatingBlockWithGuiEntity ImperialCube = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateImperialCubeBlockEntity::new);
+		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCubeBlockEntityType = BlockEntityType.Builder.create(CrateImperialCubeBlockEntity::new, ImperialCube).build(null);
 	}
 
 	public static class Leaves
@@ -54,7 +54,7 @@ public class SwgBlocks
 
 	public static class Machine
 	{
-		public static final RotatingBlock Spoked = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque(), 8);
+		public static final RotatingBlock Spoked = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
 	public static class Ore

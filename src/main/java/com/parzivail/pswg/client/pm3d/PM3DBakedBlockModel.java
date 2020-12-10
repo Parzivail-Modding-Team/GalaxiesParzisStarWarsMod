@@ -81,11 +81,6 @@ public class PM3DBakedBlockModel extends SimpleModel
 		vC = ClientMathUtil.transform(vC, transformation);
 		vD = ClientMathUtil.transform(vD, transformation);
 
-		nA = ClientMathUtil.transformNormal(nA, transformation);
-		nB = ClientMathUtil.transformNormal(nB, transformation);
-		nC = ClientMathUtil.transformNormal(nC, transformation);
-		nD = ClientMathUtil.transformNormal(nD, transformation);
-
 		quadEmitter.pos(0, vA).normal(0, nA).sprite(0, 0, tA.getX(), 1 - tA.getY());
 		quadEmitter.pos(1, vB).normal(1, nB).sprite(1, 0, tB.getX(), 1 - tB.getY());
 		quadEmitter.pos(2, vC).normal(2, nC).sprite(2, 0, tC.getX(), 1 - tC.getY());

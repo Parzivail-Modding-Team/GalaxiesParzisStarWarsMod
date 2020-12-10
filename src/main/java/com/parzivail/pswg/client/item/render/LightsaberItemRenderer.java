@@ -23,10 +23,6 @@ import java.util.HashMap;
 
 public class LightsaberItemRenderer implements CustomItemRenderer
 {
-	//	private static final Lazy<PM3DFile> lightsaber_luke_rotj = new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/lightsaber/lightsaber_luke_rotj.pm3d")));
-	//	private static final Identifier lightsaber_luke_rotj_texture = Resources.identifier("textures/lightsaber/lightsaber_luke_rotj.png");
-	//	private static final Identifier lightsaber_luke_rotj_inventory_texture = Resources.identifier("textures/lightsaber/lightsaber_luke_rotj_inventory.png");
-
 	public static final Identifier DEFAULT_MODEL;
 	public static final HashMap<Identifier, PM3DTexturedModel> MODELS = new HashMap<>();
 

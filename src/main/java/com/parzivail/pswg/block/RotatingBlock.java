@@ -20,10 +20,10 @@ public class RotatingBlock extends Block
 	public static final IntProperty ROTATION;
 	private final int divisions;
 
-	public RotatingBlock(Settings settings, int divisions)
+	public RotatingBlock(Settings settings)
 	{
 		super(settings);
-		this.divisions = divisions;
+		this.divisions = 4;
 	}
 
 	public float getRotationDegrees(BlockState state)

@@ -1,6 +1,5 @@
 package com.parzivail.pswg.block;
 
-import com.parzivail.pswg.blockentity.MosEisleyCrateBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,17 +10,22 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class MosEisleyCrateBlock extends RotatingBlockWithEntity
+import java.util.function.Supplier;
+
+public class RotatingBlockWithGuiEntity extends RotatingBlockWithEntity
 {
-	public MosEisleyCrateBlock(Settings settings)
+	private final Supplier<BlockEntity> blockEntitySupplier;
+
+	public RotatingBlockWithGuiEntity(Settings settings, Supplier<BlockEntity> blockEntitySupplier)
 	{
-		super(settings, 8);
+		super(settings);
+		this.blockEntitySupplier = blockEntitySupplier;
 	}
 
 	@Override
 	public BlockEntity createBlockEntity(BlockView world)
 	{
-		return new MosEisleyCrateBlockEntity();
+		return blockEntitySupplier.get();
 	}
 
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)

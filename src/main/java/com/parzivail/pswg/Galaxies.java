@@ -74,6 +74,8 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register(SwgBlocks.Crate.MosEisley, SwgBlocks.Crate.MosEisleyBlockEntityType, Resources.identifier("crate_mos_eisley"));
 
+		SwgBlocks.register(SwgBlocks.Crate.ImperialCube, SwgBlocks.Crate.ImperialCubeBlockEntityType, Resources.identifier("crate_imperial_cube"));
+
 		SwgBlocks.register(SwgBlocks.Leaves.Sequoia, Resources.identifier("leaves_sequoia"));
 
 		SwgBlocks.register(SwgBlocks.Log.Sequoia, Resources.identifier("log_sequoia"));
@@ -117,9 +119,9 @@ public class Galaxies implements ModInitializer
 
 		Registry.register(Registry.ITEM, Resources.identifier("lightsaber"), SwgItems.Lightsaber.Lightsaber);
 
-		Registry.register(Registry.ITEM, Resources.identifier("a280"), SwgItems.Blaster.A280);
-		Registry.register(Registry.ITEM, Resources.identifier("e11"), SwgItems.Blaster.E11);
-		Registry.register(Registry.ITEM, Resources.identifier("ee3"), SwgItems.Blaster.EE3);
+		Registry.register(Registry.ITEM, Resources.identifier("blaster_a280"), SwgItems.Blaster.A280);
+		Registry.register(Registry.ITEM, Resources.identifier("blaster_e11"), SwgItems.Blaster.E11);
+		Registry.register(Registry.ITEM, Resources.identifier("blaster_ee3"), SwgItems.Blaster.EE3);
 
 		Registry.register(Registry.ITEM, Resources.identifier("debug"), SwgItems.Debug.Debug);
 

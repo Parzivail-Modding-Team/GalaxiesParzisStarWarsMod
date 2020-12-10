@@ -12,9 +12,9 @@ import javax.annotation.Nullable;
 
 public abstract class RotatingBlockWithEntity extends RotatingBlock implements BlockEntityProvider
 {
-	protected RotatingBlockWithEntity(AbstractBlock.Settings settings, int divisions)
+	protected RotatingBlockWithEntity(AbstractBlock.Settings settings)
 	{
-		super(settings, divisions);
+		super(settings);
 	}
 
 	public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data)
