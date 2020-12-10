@@ -85,6 +85,10 @@ public class Client implements ClientModInitializer
 		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.A280, (itemStack, matrixStack) -> {
 		});
 
+		CustomItemRenderer.register(SwgItems.Blaster.DH17, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/dh17.pm3d"))), Resources.identifier("textures/blaster/dh17.png"), Resources.identifier("textures/blaster/dh17_inventory.png")));
+		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.DH17, (itemStack, matrixStack) -> {
+		});
+
 		CustomItemRenderer.register(SwgItems.Blaster.E11, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/e11.pm3d"))), Resources.identifier("textures/blaster/e11.png"), Resources.identifier("textures/blaster/e11_inventory.png")));
 		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.E11, (itemStack, matrixStack) -> {
 		});
