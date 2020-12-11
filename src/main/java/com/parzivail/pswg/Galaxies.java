@@ -15,6 +15,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -29,6 +30,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Objects;
 
@@ -55,6 +59,24 @@ public class Galaxies implements ModInitializer
 		SwgRecipeSerializers.register();
 
 		SwgEntities.register();
+
+		{
+			Path modDir = FabricLoader.getInstance().getGameDir().resolve("mods");
+			try {
+				for (Path file: (Iterable<Path>) Files.list(modDir)::iterator) {
+					String name = file.getFileName().toString();
+					if (name.startsWith("zipfstmp") && name.endsWith(".tmp")) {
+						try {
+							Files.delete(file);
+						} catch (IOException ignored) {
+							// Ignore this. If we get an exception here, we're on Windows,
+							// and the file is being used.
+						}
+					}
+				}
+			} catch (IOException ignored) {
+			}
+		}
 
 		SwgStructures.General.register();
 
