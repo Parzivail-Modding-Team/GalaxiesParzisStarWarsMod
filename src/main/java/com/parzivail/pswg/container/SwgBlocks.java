@@ -4,6 +4,7 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.blockentity.*;
 import com.parzivail.util.block.BlockUtils;
+import com.parzivail.util.block.VoxelShapeUtil;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
@@ -73,7 +74,7 @@ public class SwgBlocks
 
 	public static class Light
 	{
-		public static final Block FloorWedge = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15).dynamicBounds());
+		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15));
 	}
 
 	public static class Panel
