@@ -17,6 +17,11 @@ import net.minecraft.util.registry.Registry;
 
 public class SwgBlocks
 {
+	public static class Barrel
+	{
+		public static final Block MosEisley = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 15), FabricBlockSettings.of(Material.METAL).nonOpaque());
+	}
+
 	public static class Crate
 	{
 		public static final RotatingBlockWithGuiEntity OctagonOrange = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateOctagonBlockEntity::new);

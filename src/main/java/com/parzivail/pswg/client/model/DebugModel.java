@@ -33,9 +33,9 @@ public class DebugModel extends SimpleModel
 	}
 
 	@Override
-	protected boolean variesByBlockPos()
+	protected Discriminator getDiscriminator()
 	{
-		return true;
+		return Discriminator.UNIQUE;
 	}
 
 	@Override

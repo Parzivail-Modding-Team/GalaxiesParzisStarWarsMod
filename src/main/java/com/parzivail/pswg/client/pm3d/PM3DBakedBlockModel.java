@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.pm3d;
 import com.parzivail.pswg.block.ConnectingNodeBlock;
 import com.parzivail.pswg.block.RotatingBlock;
 import com.parzivail.pswg.client.model.SimpleModel;
+import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.util.ClientMathUtil;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -34,22 +35,22 @@ import java.util.function.Supplier;
 
 public class PM3DBakedBlockModel extends SimpleModel
 {
-	private final boolean variesByBlockState;
+	private final Discriminator discriminator;
 	private final Sprite baseSprite;
 	private final PM3DLod container;
 
-	private PM3DBakedBlockModel(boolean variesByBlockState, Sprite baseSprite, Sprite particleSprite, PM3DLod container)
+	private PM3DBakedBlockModel(Discriminator discriminator, Sprite baseSprite, Sprite particleSprite, PM3DLod container)
 	{
 		super(particleSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
-		this.variesByBlockState = variesByBlockState;
+		this.discriminator = discriminator;
 		this.baseSprite = baseSprite;
 		this.container = container;
 	}
 
 	@Override
-	protected boolean variesByBlockState()
+	protected Discriminator getDiscriminator()
 	{
-		return variesByBlockState;
+		return discriminator;
 	}
 
 	private void emitFace(Matrix4f transformation, QuadEmitter quadEmitter, PM3DFace face)
@@ -144,6 +145,18 @@ public class PM3DBakedBlockModel extends SimpleModel
 			return meshBuilder.build();
 		}
 
+		// TODO: make this a block flag
+		if (state.getBlock() == SwgBlocks.Barrel.MosEisley)
+		{
+			Random r = randomSupplier.get();
+			r.setSeed(pos.asLong());
+
+			float s = 0.5f;
+			float dx = r.nextFloat() * s;
+			float dz = r.nextFloat() * s;
+			transformation.multiply(Matrix4f.translate(dx, 0, dz));
+		}
+
 		return createMesh(transformation);
 	}
 
@@ -214,9 +227,9 @@ public class PM3DBakedBlockModel extends SimpleModel
 		return mat;
 	}
 
-	public static PM3DBakedBlockModel create(boolean variesByBlockState, PM3DLod container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
+	public static PM3DBakedBlockModel create(Discriminator discriminator, PM3DLod container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
 	{
-		return new PM3DBakedBlockModel(variesByBlockState, spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, particleTexture)), container);
+		return new PM3DBakedBlockModel(discriminator, spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, particleTexture)), container);
 	}
 
 	@Override

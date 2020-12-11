@@ -4,6 +4,7 @@ import com.parzivail.pswg.client.ModelLoader;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.item.render.BlasterItemRenderer;
 import com.parzivail.pswg.client.item.render.LightsaberItemRenderer;
+import com.parzivail.pswg.client.model.SimpleModel;
 import com.parzivail.pswg.client.model.SimpleModels;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.render.BlasterBoltRenderer;
@@ -56,6 +57,8 @@ public class Client implements ClientModInitializer
 
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::handle);
 
+		SimpleModels.register(SwgBlocks.Barrel.MosEisley, true, ModelLoader.loadPM3D(SimpleModel.Discriminator.UNIQUE, Resources.identifier("models/block/barrel/mos_eisley.pm3d"), Resources.identifier("model/barrel/mos_eisley"), new Identifier("block/stone")));
+
 		ScreenRegistry.register(SwgScreenTypes.Crate.Octagon, CrateOctagonScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.Crate.MosEisley, CrateGenericSmallScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.Crate.ImperialCube, CrateGenericSmallScreen::new);
@@ -71,7 +74,6 @@ public class Client implements ClientModInitializer
 		SimpleModels.register(SwgBlocks.Light.FloorWedge, true, ModelLoader.loadPM3D(Resources.identifier("models/block/light/floor_wedge.pm3d"), Resources.identifier("model/light/floor_wedge"), new Identifier("block/stone")));
 
 		SimpleModels.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadPM3D(Resources.identifier("models/block/machine_spoked.pm3d"), Resources.identifier("model/machine_spoked"), new Identifier("block/stone")));
-		//		SimpleModels.register(SwgBlocks.Machine.Spoked, true, new DebugModel.Unbaked(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("block/stone"))));
 
 		SimpleModels.register(SwgBlocks.MoistureVaporator.Gx8, false, ModelLoader.loadPM3D(Resources.identifier("models/block/moisture_vaporator_gx8.pm3d"), Resources.identifier("model/moisture_vaporator_gx8"), new Identifier("block/stone")));
 

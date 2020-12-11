@@ -45,6 +45,13 @@ import java.util.function.Supplier;
  */
 public abstract class SimpleModel extends AbstractModel
 {
+	public enum Discriminator
+	{
+		GLOBAL,
+		BLOCKSTATE,
+		UNIQUE
+	}
+
 	protected final ItemProxy itemProxy = new ItemProxy();
 	protected HashMap<ModelCacheId, Mesh> meshes = new HashMap<>();
 	protected WeakReference<List<BakedQuad>[]> quadLists = null;
@@ -60,14 +67,9 @@ public abstract class SimpleModel extends AbstractModel
 		return false;
 	}
 
-	protected boolean variesByBlockPos()
+	protected Discriminator getDiscriminator()
 	{
-		return false;
-	}
-
-	protected boolean variesByBlockState()
-	{
-		return false;
+		return Discriminator.GLOBAL;
 	}
 
 	protected abstract Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation);
@@ -76,7 +78,25 @@ public abstract class SimpleModel extends AbstractModel
 
 	protected Mesh createOrCacheBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		ModelCacheId cacheId = new ModelCacheId(variesByBlockPos() ? new BlockPos(pos) : (variesByBlockState() ? state : BlockPos.ORIGIN), transformation);
+		Object cacheDiscriminator;
+
+		switch (getDiscriminator())
+		{
+			case GLOBAL:
+				cacheDiscriminator = BlockPos.ORIGIN;
+				break;
+			case BLOCKSTATE:
+				cacheDiscriminator = state;
+				break;
+			case UNIQUE:
+				cacheDiscriminator = pos;
+				break;
+			default:
+				cacheDiscriminator = null;
+				break;
+		}
+
+		ModelCacheId cacheId = new ModelCacheId(cacheDiscriminator, transformation);
 
 		if (meshes.containsKey(cacheId))
 			return meshes.get(cacheId);
