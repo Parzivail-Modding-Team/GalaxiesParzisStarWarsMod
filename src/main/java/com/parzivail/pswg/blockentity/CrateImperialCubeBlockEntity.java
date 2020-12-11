@@ -2,7 +2,8 @@ package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.screen.CrateImperialCubeScreenHandler;
+import com.parzivail.pswg.container.SwgScreenTypes;
+import com.parzivail.pswg.screen.CrateGenericSmallScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -26,6 +27,6 @@ public class CrateImperialCubeBlockEntity extends InventoryBlockEntity implement
 	@Override
 	public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player)
 	{
-		return new CrateImperialCubeScreenHandler(syncId, inv, this);
+		return new CrateGenericSmallScreenHandler(SwgScreenTypes.Crate.ImperialCube, syncId, inv, this);
 	}
 }

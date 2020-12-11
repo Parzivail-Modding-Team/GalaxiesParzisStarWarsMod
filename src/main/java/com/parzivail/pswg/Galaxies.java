@@ -47,6 +47,7 @@ public class Galaxies implements ModInitializer
 		// TODO: dual weilding one on and one off lightsaber might play the sound twice
 		// TODO: new blaster models
 		// TODO: Pm3D block particle textures
+		// TODO: Modeled block aabb bounds
 
 		TrackedDataHandlers.register();
 
@@ -114,6 +115,8 @@ public class Galaxies implements ModInitializer
 		SwgBlocks.register(SwgBlocks.Ore.Rubindum, Resources.identifier("ore_rubindum"));
 		SwgBlocks.register(SwgBlocks.Ore.Thorolide, Resources.identifier("ore_thorolide"));
 		SwgBlocks.register(SwgBlocks.Ore.Titanium, Resources.identifier("ore_titanium"));
+
+		SwgBlocks.register(SwgBlocks.Light.FloorWedge, Resources.identifier("light_floor_wedge"));
 
 		SwgBlocks.register(SwgBlocks.Workbench.Blaster, SwgBlocks.Workbench.BlasterBlockEntityType, Resources.identifier("workbench_blaster"));
 

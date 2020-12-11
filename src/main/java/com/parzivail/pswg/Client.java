@@ -10,7 +10,10 @@ import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.EmptyRenderer;
 import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.ship.T65BXwingRenderer;
-import com.parzivail.pswg.client.screen.*;
+import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
+import com.parzivail.pswg.client.screen.CrateGenericSmallScreen;
+import com.parzivail.pswg.client.screen.CrateOctagonScreen;
+import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
@@ -54,16 +57,18 @@ public class Client implements ClientModInitializer
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::handle);
 
 		ScreenRegistry.register(SwgScreenTypes.Crate.Octagon, CrateOctagonScreen::new);
-		ScreenRegistry.register(SwgScreenTypes.Crate.MosEisley, CrateMosEisleyScreen::new);
-		ScreenRegistry.register(SwgScreenTypes.Crate.ImperialCube, CrateImperialCubeScreen::new);
+		ScreenRegistry.register(SwgScreenTypes.Crate.MosEisley, CrateGenericSmallScreen::new);
+		ScreenRegistry.register(SwgScreenTypes.Crate.ImperialCube, CrateGenericSmallScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.MoistureVaporator.GX8, MoistureVaporatorScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.Workbench.Blaster, BlasterWorkbenchScreen::new);
 
-		SimpleModels.register(SwgBlocks.Crate.OctagonOrange, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon_orange"), new Identifier("block/stone")));
-		SimpleModels.register(SwgBlocks.Crate.OctagonGray, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon_gray"), new Identifier("block/stone")));
-		SimpleModels.register(SwgBlocks.Crate.OctagonBlack, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_octagon.pm3d"), Resources.identifier("model/crate_octagon_black"), new Identifier("block/stone")));
-		SimpleModels.register(SwgBlocks.Crate.MosEisley, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_mos_eisley.pm3d"), Resources.identifier("model/crate_mos_eisley"), new Identifier("block/stone")));
-		SimpleModels.register(SwgBlocks.Crate.ImperialCube, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate_imperial_cube.pm3d"), Resources.identifier("model/crate_imperial_cube"), new Identifier("block/stone")));
+		SimpleModels.register(SwgBlocks.Crate.OctagonOrange, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/octagon.pm3d"), Resources.identifier("model/crate/octagon_orange"), new Identifier("block/stone")));
+		SimpleModels.register(SwgBlocks.Crate.OctagonGray, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/octagon.pm3d"), Resources.identifier("model/crate/octagon_gray"), new Identifier("block/stone")));
+		SimpleModels.register(SwgBlocks.Crate.OctagonBlack, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/octagon.pm3d"), Resources.identifier("model/crate/octagon_black"), new Identifier("block/stone")));
+		SimpleModels.register(SwgBlocks.Crate.MosEisley, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/mos_eisley.pm3d"), Resources.identifier("model/crate/mos_eisley"), new Identifier("block/stone")));
+		SimpleModels.register(SwgBlocks.Crate.ImperialCube, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/imperial_cube.pm3d"), Resources.identifier("model/crate/imperial_cube"), new Identifier("block/stone")));
+
+		SimpleModels.register(SwgBlocks.Light.FloorWedge, true, ModelLoader.loadPM3D(Resources.identifier("models/block/light/floor_wedge.pm3d"), Resources.identifier("model/light/floor_wedge"), new Identifier("block/stone")));
 
 		SimpleModels.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadPM3D(Resources.identifier("models/block/machine_spoked.pm3d"), Resources.identifier("model/machine_spoked"), new Identifier("block/stone")));
 		//		SimpleModels.register(SwgBlocks.Machine.Spoked, true, new DebugModel.Unbaked(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier("block/stone"))));
@@ -81,19 +86,19 @@ public class Client implements ClientModInitializer
 
 		CustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, new LightsaberItemRenderer());
 
-		CustomItemRenderer.register(SwgItems.Blaster.A280, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/a280c.pm3d"))), Resources.identifier("textures/blaster/a280c.png"), Resources.identifier("textures/blaster/a280c_inventory.png")));
+		CustomItemRenderer.register(SwgItems.Blaster.A280, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/a280.pm3d"))), Resources.identifier("textures/model/blaster/a280.png"), Resources.identifier("textures/model/blaster/a280_inventory.png")));
 		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.A280, (itemStack, matrixStack) -> {
 		});
 
-		CustomItemRenderer.register(SwgItems.Blaster.DH17, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/dh17.pm3d"))), Resources.identifier("textures/blaster/dh17.png"), Resources.identifier("textures/blaster/dh17_inventory.png")));
+		CustomItemRenderer.register(SwgItems.Blaster.DH17, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/dh17.pm3d"))), Resources.identifier("textures/model/blaster/dh17.png"), Resources.identifier("textures/model/blaster/dh17_inventory.png")));
 		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.DH17, (itemStack, matrixStack) -> {
 		});
 
-		CustomItemRenderer.register(SwgItems.Blaster.E11, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/e11.pm3d"))), Resources.identifier("textures/blaster/e11.png"), Resources.identifier("textures/blaster/e11_inventory.png")));
+		CustomItemRenderer.register(SwgItems.Blaster.E11, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/e11.pm3d"))), Resources.identifier("textures/model/blaster/e11.png"), Resources.identifier("textures/model/blaster/e11_inventory.png")));
 		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.E11, (itemStack, matrixStack) -> {
 		});
 
-		CustomItemRenderer.register(SwgItems.Blaster.EE3, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/blaster/ee3.pm3d"))), Resources.identifier("textures/blaster/ee3.png"), Resources.identifier("textures/blaster/ee3_inventory.png")));
+		CustomItemRenderer.register(SwgItems.Blaster.EE3, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/ee3.pm3d"))), Resources.identifier("textures/model/blaster/ee3.png"), Resources.identifier("textures/blaster/model/ee3_inventory.png")));
 		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.EE3, (itemStack, matrixStack) -> {
 		});
 	}

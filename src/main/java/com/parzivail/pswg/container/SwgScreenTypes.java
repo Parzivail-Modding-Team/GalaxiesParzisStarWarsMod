@@ -1,17 +1,27 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.screen.*;
+import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
+import com.parzivail.pswg.screen.CrateGenericSmallScreenHandler;
+import com.parzivail.pswg.screen.CrateOctagonScreenHandler;
+import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.screen.ScreenHandlerType;
+import org.jetbrains.annotations.NotNull;
 
 public class SwgScreenTypes
 {
 	public static class Crate
 	{
 		public static final ScreenHandlerType<CrateOctagonScreenHandler> Octagon = ScreenHandlerRegistry.registerSimple(Resources.identifier("crate_octagon"), CrateOctagonScreenHandler::new);
-		public static final ScreenHandlerType<CrateMosEisleyScreenHandler> MosEisley = ScreenHandlerRegistry.registerSimple(Resources.identifier("crate_mos_eisley"), CrateMosEisleyScreenHandler::new);
-		public static final ScreenHandlerType<CrateImperialCubeScreenHandler> ImperialCube = ScreenHandlerRegistry.registerSimple(Resources.identifier("crate_imperial_cube"), CrateImperialCubeScreenHandler::new);
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> MosEisley = ScreenHandlerRegistry.registerSimple(Resources.identifier("crate_mos_eisley"), makeScreenHandler(Crate.MosEisley));
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> ImperialCube = ScreenHandlerRegistry.registerSimple(Resources.identifier("crate_imperial_cube"), makeScreenHandler(Crate.ImperialCube));
+
+		@NotNull
+		private static ScreenHandlerRegistry.SimpleClientHandlerFactory<CrateGenericSmallScreenHandler> makeScreenHandler(ScreenHandlerType<?> handlerType)
+		{
+			return (sId, inv) -> new CrateGenericSmallScreenHandler(handlerType, sId, inv);
+		}
 
 		static void register()
 		{

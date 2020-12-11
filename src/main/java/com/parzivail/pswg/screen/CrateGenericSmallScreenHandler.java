@@ -1,21 +1,21 @@
 package com.parzivail.pswg.screen;
 
-import com.parzivail.pswg.container.SwgScreenTypes;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 
-public class CrateImperialCubeScreenHandler extends InventoryScreenHandler
+public class CrateGenericSmallScreenHandler extends InventoryScreenHandler
 {
-	public CrateImperialCubeScreenHandler(int syncId, PlayerInventory playerInventory)
+	public CrateGenericSmallScreenHandler(ScreenHandlerType<?> screenType, int syncId, PlayerInventory playerInventory)
 	{
-		this(syncId, playerInventory, new SimpleInventory(15));
+		this(screenType, syncId, playerInventory, new SimpleInventory(15));
 	}
 
-	public CrateImperialCubeScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory)
+	public CrateGenericSmallScreenHandler(ScreenHandlerType<?> screenType, int syncId, PlayerInventory playerInventory, Inventory inventory)
 	{
-		super(SwgScreenTypes.Crate.ImperialCube, syncId, inventory);
+		super(screenType, syncId, inventory);
 		checkSize(inventory, 15);
 		inventory.onOpen(playerInventory.player);
 

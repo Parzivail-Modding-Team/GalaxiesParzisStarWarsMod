@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.screen.CrateImperialCubeScreenHandler;
+import com.parzivail.pswg.screen.CrateGenericSmallScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -12,11 +12,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class CrateImperialCubeScreen extends HandledScreen<CrateImperialCubeScreenHandler>
+public class CrateGenericSmallScreen extends HandledScreen<CrateGenericSmallScreenHandler>
 {
 	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/crate_5x3.png");
 
-	public CrateImperialCubeScreen(CrateImperialCubeScreenHandler handler, PlayerInventory inventory, Text title)
+	public CrateGenericSmallScreen(CrateGenericSmallScreenHandler handler, PlayerInventory inventory, Text title)
 	{
 		super(handler, inventory, title);
 		backgroundWidth = 176;

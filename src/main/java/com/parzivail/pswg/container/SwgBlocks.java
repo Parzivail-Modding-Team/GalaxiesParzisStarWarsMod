@@ -71,6 +71,11 @@ public class SwgBlocks
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE));
 	}
 
+	public static class Light
+	{
+		public static final Block FloorWedge = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15).dynamicBounds());
+	}
+
 	public static class Panel
 	{
 		public static final Block ImperialBase = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.GRAY).sounds(BlockSoundGroup.METAL));
