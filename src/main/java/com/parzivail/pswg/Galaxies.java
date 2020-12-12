@@ -119,6 +119,7 @@ public class Galaxies implements ModInitializer
 		SwgBlocks.register(SwgBlocks.Ore.Titanium, Resources.identifier("ore_titanium"));
 
 		SwgBlocks.register(SwgBlocks.Light.FloorWedge, Resources.identifier("light_floor_wedge"));
+		SwgBlocks.register(SwgBlocks.Light.WallCluster, Resources.identifier("light_wall_cluster"));
 
 		SwgBlocks.register(SwgBlocks.Workbench.Blaster, SwgBlocks.Workbench.BlasterBlockEntityType, Resources.identifier("workbench_blaster"));
 

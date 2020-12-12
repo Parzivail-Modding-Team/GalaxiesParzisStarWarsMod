@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.parzivail.util.block.VoxelShapeUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.util.math.BlockPos;
@@ -12,13 +13,13 @@ public class RotatingBlockWithBounds extends RotatingBlock
 
 	public RotatingBlockWithBounds(VoxelShape shape, Settings settings)
 	{
-		super(settings);
+		super(settings.dynamicBounds());
 		this.shape = shape;
 	}
 
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
-		return shape;
+		return VoxelShapeUtil.rotate(shape, state.get(ROTATION) % 4);
 	}
 }
