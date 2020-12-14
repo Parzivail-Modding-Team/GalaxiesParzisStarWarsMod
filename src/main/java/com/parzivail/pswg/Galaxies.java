@@ -89,6 +89,8 @@ public class Galaxies implements ModInitializer
 		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChisled, Resources.identifier("stone_temple_bricks_chisled"));
 		SwgBlocks.register(SwgBlocks.Stone.TempleSlabSideSmooth, Resources.identifier("stone_temple_slab_side_smooth"));
 		SwgBlocks.register(SwgBlocks.Stone.TempleSmooth, Resources.identifier("stone_temple_smooth"));
+		SwgBlocks.register(SwgBlocks.Stone.MassassiBricks, Resources.identifier("stone_massassi_bricks"));
+		SwgBlocks.register(SwgBlocks.Stone.MassassiSmooth, Resources.identifier("stone_massassi_smooth"));
 
 		SwgBlocks.register(SwgBlocks.Barrel.MosEisley, Resources.identifier("barrel_mos_eisley"));
 

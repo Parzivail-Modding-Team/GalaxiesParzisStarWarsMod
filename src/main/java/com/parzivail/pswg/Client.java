@@ -4,6 +4,7 @@ import com.parzivail.pswg.client.ModelLoader;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.item.render.BlasterItemRenderer;
 import com.parzivail.pswg.client.item.render.LightsaberItemRenderer;
+import com.parzivail.pswg.client.item.render.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.model.SimpleModel;
 import com.parzivail.pswg.client.model.SimpleModels;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
@@ -21,8 +22,8 @@ import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.util.Lumberjack;
-import com.parzivail.util.item.CustomHUDRenderer;
 import com.parzivail.util.item.CustomItemRenderer;
+import com.parzivail.util.item.ICustomHudRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -40,6 +41,7 @@ import org.lwjgl.glfw.GLFW;
 public class Client implements ClientModInitializer
 {
 	public static final KeyBinding KEY_LIGHTSABER_TOGGLE = new KeyBinding(Resources.keyBinding("lightsaber_toggle"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_X, "key.category.pswg");
+	public static final KeyBinding KEY_SHIP_INPUT_MODE_TOGGLE = new KeyBinding(Resources.keyBinding("ship_input_mode_toggle"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_Y, "key.category.pswg");
 
 	public static MinecraftClient minecraft;
 	public static RemoteTextureProvider remoteTextureProvider;
@@ -52,6 +54,7 @@ public class Client implements ClientModInitializer
 		minecraft = MinecraftClient.getInstance();
 
 		KeyBindingHelper.registerKeyBinding(KEY_LIGHTSABER_TOGGLE);
+		//		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_TOGGLE);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 
@@ -90,19 +93,15 @@ public class Client implements ClientModInitializer
 		CustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, new LightsaberItemRenderer());
 
 		CustomItemRenderer.register(SwgItems.Blaster.A280, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/a280.pm3d"))), Resources.identifier("textures/model/blaster/a280.png"), Resources.identifier("textures/model/blaster/a280_inventory.png")));
-		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.A280, (itemStack, matrixStack) -> {
-		});
+		ICustomHudRenderer.registerCustomHUD(SwgItems.Blaster.A280, BlasterHudRenderer.INSTANCE);
 
 		CustomItemRenderer.register(SwgItems.Blaster.DH17, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/dh17.pm3d"))), Resources.identifier("textures/model/blaster/dh17.png"), Resources.identifier("textures/model/blaster/dh17_inventory.png")));
-		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.DH17, (itemStack, matrixStack) -> {
-		});
+		ICustomHudRenderer.registerCustomHUD(SwgItems.Blaster.DH17, BlasterHudRenderer.INSTANCE);
 
 		CustomItemRenderer.register(SwgItems.Blaster.E11, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/e11.pm3d"))), Resources.identifier("textures/model/blaster/e11.png"), Resources.identifier("textures/model/blaster/e11_inventory.png")));
-		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.E11, (itemStack, matrixStack) -> {
-		});
+		ICustomHudRenderer.registerCustomHUD(SwgItems.Blaster.E11, BlasterHudRenderer.INSTANCE);
 
-		CustomItemRenderer.register(SwgItems.Blaster.EE3, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/ee3.pm3d"))), Resources.identifier("textures/model/blaster/ee3.png"), Resources.identifier("textures/blaster/model/ee3_inventory.png")));
-		CustomHUDRenderer.registerCustomHUD(SwgItems.Blaster.EE3, (itemStack, matrixStack) -> {
-		});
+		CustomItemRenderer.register(SwgItems.Blaster.EE3, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/ee3.pm3d"))), Resources.identifier("textures/model/blaster/ee3.png"), Resources.identifier("textures/model/blaster/ee3_inventory.png")));
+		ICustomHudRenderer.registerCustomHUD(SwgItems.Blaster.EE3, BlasterHudRenderer.INSTANCE);
 	}
 }

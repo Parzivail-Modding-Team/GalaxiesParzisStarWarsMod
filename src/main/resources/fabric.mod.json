@@ -23,6 +23,9 @@
 		],
 		"cardinal-components-entity": [
 			"com.parzivail.pswg.component.SwgEntityComponents"
+		],
+		"tweed:config": [
+			"com.parzivail.pswg.Config"
 		]
 	},
 	"mixins": [

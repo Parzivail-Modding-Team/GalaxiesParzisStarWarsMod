@@ -129,6 +129,8 @@ public class SwgBlocks
 		public static final Block TempleBricksChisled = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block TempleSlabSideSmooth = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block TempleSmooth = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block MassassiBricks = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE));
 	}
 
 	public static class MoistureVaporator

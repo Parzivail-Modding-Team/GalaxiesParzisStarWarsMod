@@ -5,10 +5,15 @@ plugins {
 
 repositories {
 	mavenCentral()
+	jcenter()
 
 	maven {
 		name = "Ladysnake Libs"
 		url = "https://dl.bintray.com/ladysnake/libs"
+	}
+
+	maven {
+		url "https://maven.siphalor.de"
 	}
 }
 
@@ -52,6 +57,13 @@ dependencies {
 	//CCA Entity
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
+
+	// Tweed
+	include "de.siphalor:tweed-1.16:${project.tweed_version}"
+	modImplementation("de.siphalor:tweed-1.16:${project.tweed_version}") {
+		exclude group: ("net.fabricmc.fabric-api")
+		exclude module: "modmenu"
+	}
 }
 
 processResources {
