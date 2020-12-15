@@ -41,7 +41,7 @@ import org.lwjgl.glfw.GLFW;
 public class Client implements ClientModInitializer
 {
 	public static final KeyBinding KEY_LIGHTSABER_TOGGLE = new KeyBinding(Resources.keyBinding("lightsaber_toggle"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_X, "key.category.pswg");
-	public static final KeyBinding KEY_SHIP_INPUT_MODE_TOGGLE = new KeyBinding(Resources.keyBinding("ship_input_mode_toggle"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_Y, "key.category.pswg");
+	public static final KeyBinding KEY_SHIP_INPUT_MODE_OVERRIDE = new KeyBinding(Resources.keyBinding("ship_input_mode_override"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.category.pswg");
 
 	public static MinecraftClient minecraft;
 	public static RemoteTextureProvider remoteTextureProvider;
@@ -54,7 +54,7 @@ public class Client implements ClientModInitializer
 		minecraft = MinecraftClient.getInstance();
 
 		KeyBindingHelper.registerKeyBinding(KEY_LIGHTSABER_TOGGLE);
-		//		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_TOGGLE);
+		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_OVERRIDE);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 

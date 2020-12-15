@@ -87,5 +87,6 @@
 	"item.pswg.salt_pile": "Salt Pile",
 	"itemGroup.pswg.main": "Galaxies: Parzi's Star Wars Mod",
 	"key.category.pswg": "Galaxies: Parzi's Star Wars Mod",
-	"key.pswg.lightsaber_toggle": "Toggle Lightsaber"
+	"key.pswg.lightsaber_toggle": "Toggle Lightsaber",
+	"key.pswg.ship_input_mode_override": "Override Ship Input Mode"
 }

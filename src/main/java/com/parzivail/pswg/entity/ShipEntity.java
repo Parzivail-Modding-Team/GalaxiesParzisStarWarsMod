@@ -1,5 +1,6 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Config;
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgEntities;
@@ -338,11 +339,17 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	public void acceptMouseInput(double mouseDx, double mouseDy)
 	{
 		Quaternion rotation = new Quaternion(clientInstRotation);
 
-		if (Config.input.shipRollPriority)
+		boolean shipRollPriority = Config.input.shipRollPriority;
+
+		if (Client.KEY_SHIP_INPUT_MODE_OVERRIDE.isPressed())
+			shipRollPriority = !shipRollPriority;
+
+		if (shipRollPriority)
 			rotation.hamiltonProduct(new Quaternion(new Vector3f(0, 0, 1), -(float)mouseDx * 0.15f, true));
 		else
 		{
