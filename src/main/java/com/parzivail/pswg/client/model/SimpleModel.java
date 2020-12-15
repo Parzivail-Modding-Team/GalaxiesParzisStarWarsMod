@@ -49,7 +49,7 @@ public abstract class SimpleModel extends AbstractModel
 	{
 		GLOBAL,
 		BLOCKSTATE,
-		UNIQUE
+		RENDER_SEED
 	}
 
 	protected final ItemProxy itemProxy = new ItemProxy();
@@ -88,8 +88,8 @@ public abstract class SimpleModel extends AbstractModel
 			case BLOCKSTATE:
 				cacheDiscriminator = state;
 				break;
-			case UNIQUE:
-				cacheDiscriminator = pos;
+			case RENDER_SEED:
+				cacheDiscriminator = state.getRenderingSeed(pos);
 				break;
 			default:
 				cacheDiscriminator = null;

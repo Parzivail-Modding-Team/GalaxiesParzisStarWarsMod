@@ -92,6 +92,8 @@ public class Galaxies implements ModInitializer
 		SwgBlocks.register(SwgBlocks.Stone.MassassiBricks, Resources.identifier("stone_massassi_bricks"));
 		SwgBlocks.register(SwgBlocks.Stone.MassassiSmooth, Resources.identifier("stone_massassi_smooth"));
 
+		SwgBlocks.register(SwgBlocks.Tank.Fusion, Resources.identifier("tank_fusion"));
+
 		SwgBlocks.register(SwgBlocks.Barrel.MosEisley, Resources.identifier("barrel_mos_eisley"));
 
 		SwgBlocks.register(SwgBlocks.Crate.OctagonBlockEntityType, Resources.identifier("crate_octagon"));

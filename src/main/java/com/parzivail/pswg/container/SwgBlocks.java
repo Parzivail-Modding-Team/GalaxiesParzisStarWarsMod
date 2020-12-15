@@ -133,6 +133,11 @@ public class SwgBlocks
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE));
 	}
 
+	public static class Tank
+	{
+		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+	}
+
 	public static class MoistureVaporator
 	{
 		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).nonOpaque());

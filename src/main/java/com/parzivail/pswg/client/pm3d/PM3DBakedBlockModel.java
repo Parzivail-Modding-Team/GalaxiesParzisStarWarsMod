@@ -149,7 +149,7 @@ public class PM3DBakedBlockModel extends SimpleModel
 		if (state.getBlock() == SwgBlocks.Barrel.MosEisley)
 		{
 			Random r = randomSupplier.get();
-			r.setSeed(pos.asLong());
+			r.setSeed(state.getRenderingSeed(pos));
 
 			float s = 0.5f;
 			float dx = r.nextFloat() * s;

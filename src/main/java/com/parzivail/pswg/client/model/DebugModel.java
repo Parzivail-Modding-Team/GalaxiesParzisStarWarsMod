@@ -35,7 +35,7 @@ public class DebugModel extends SimpleModel
 	@Override
 	protected Discriminator getDiscriminator()
 	{
-		return Discriminator.UNIQUE;
+		return Discriminator.RENDER_SEED;
 	}
 
 	@Override
