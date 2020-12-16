@@ -1,0 +1,44 @@
+{
+	"name": "PSWG Item",
+	"author": "parzivail",
+	"version": "1.0",
+	"fields": [
+		{
+			"key": "$$FRIENDLYNAME$$",
+			"name": "Friendly name"
+		},
+		{
+			"key": "$$FIELD$$",
+			"name": "Field name",
+			"source": "$$FRIENDLYNAME$$",
+			"case": "Pascal"
+		},
+		{
+			"key": "$$REGNAME$$",
+			"name": "Registry name",
+			"source": "$$FRIENDLYNAME$$",
+			"case": "Snake"
+		}
+	],
+	"files": [
+		{
+			"source": "oneliners.txt"
+		},
+		{
+			"source": "blockmodel.json",
+			"destination": "./src/main/resources/assets/pswg/models/block/$$REGNAME$$.json"
+		},
+		{
+			"source": "itemmodel.json",
+			"destination": "./src/main/resources/assets/pswg/models/item/$$REGNAME$$.json"
+		},
+		{
+			"source": "blockstate.json",
+			"destination": "./src/main/resources/assets/pswg/blockstates/$$REGNAME$$.json"
+		},
+		{
+			"source": "ore.png.pswglayers",
+			"destination": "./src/main/resources/assets/pswg/textures/block/$$REGNAME$$.png.pswglayers"
+		}
+	]
+}

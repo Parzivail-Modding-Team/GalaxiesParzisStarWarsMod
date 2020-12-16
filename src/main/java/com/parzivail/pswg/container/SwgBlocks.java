@@ -68,6 +68,7 @@ public class SwgBlocks
 	{
 		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Desh = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block Exonium = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.STONE));
