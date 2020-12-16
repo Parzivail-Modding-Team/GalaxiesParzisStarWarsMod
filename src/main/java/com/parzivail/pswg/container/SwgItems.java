@@ -26,10 +26,12 @@ public class SwgItems
 
 	public static class Ingot
 	{
-		public static final Item BeskarIngot = new Item(new Item.Settings().group(Galaxies.Tab));
-		public static final Item ChromiumIngot = new Item(new Item.Settings().group(Galaxies.Tab));
-		public static final Item DurasteelIngot = new Item(new Item.Settings().group(Galaxies.Tab));
-		public static final Item PlasteelIngot = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item Beskar = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item Chromium = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Lightsaber
