@@ -24,6 +24,14 @@ public class SwgItems
 		public static final DebugItem Debug = new DebugItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));
 	}
 
+	public static class Ingot
+	{
+		public static final Item BeskarIngot = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item ChromiumIngot = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item DurasteelIngot = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item PlasteelIngot = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
 	public static class Lightsaber
 	{
 		public static final LightsaberItem Lightsaber = new LightsaberItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));

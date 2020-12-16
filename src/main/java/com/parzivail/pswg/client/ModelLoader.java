@@ -10,7 +10,7 @@ public class ModelLoader
 {
 	public static PM3DUnbakedBlockModel loadPM3D(Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
 	{
-		return new PM3DUnbakedBlockModel(baseTexture, particleTexture, spriteMap -> PM3DBakedBlockModel.create(SimpleModel.Discriminator.GLOBAL, PM3DFile.tryLoad(modelFile).getLevelOfDetail(0), baseTexture, particleTexture, spriteMap));
+		return loadPM3D(SimpleModel.Discriminator.GLOBAL, modelFile, baseTexture, particleTexture);
 	}
 
 	public static PM3DUnbakedBlockModel loadPM3D(SimpleModel.Discriminator discriminator, Identifier modelFile, Identifier baseTexture, Identifier particleTexture)

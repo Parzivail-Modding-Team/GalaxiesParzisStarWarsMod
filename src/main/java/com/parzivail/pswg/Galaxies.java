@@ -158,6 +158,11 @@ public class Galaxies implements ModInitializer
 
 		Registry.register(Registry.ITEM, Resources.identifier("debug"), SwgItems.Debug.Debug);
 
+		Registry.register(Registry.ITEM, Resources.identifier("beskar_ingot"), SwgItems.Ingot.BeskarIngot);
+		Registry.register(Registry.ITEM, Resources.identifier("chromium_ingot"), SwgItems.Ingot.ChromiumIngot);
+		Registry.register(Registry.ITEM, Resources.identifier("durasteel_ingot"), SwgItems.Ingot.DurasteelIngot);
+		Registry.register(Registry.ITEM, Resources.identifier("plasteel_ingot"), SwgItems.Ingot.PlasteelIngot);
+
 		Registry.register(Registry.ITEM, Resources.identifier("salt_pile"), SwgItems.Food.SaltPile);
 
 		Registry.register(Registry.ITEM, Resources.identifier("jogan_fruit"), SwgItems.Food.JoganFruit);
