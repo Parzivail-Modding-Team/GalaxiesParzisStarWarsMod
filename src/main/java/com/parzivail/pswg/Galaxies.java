@@ -145,6 +145,9 @@ public class Galaxies implements ModInitializer
 		SwgBlocks.register(SwgBlocks.Ore.Thorolide, Resources.identifier("ore_thorolide"));
 		SwgBlocks.register(SwgBlocks.Ore.Titanium, Resources.identifier("ore_titanium"));
 
+		SwgBlocks.register(SwgBlocks.MaterialBlock.Desh, Resources.identifier("desh_block"));
+		SwgBlocks.register(SwgBlocks.MaterialBlock.Durasteel, Resources.identifier("durasteel_block"));
+
 		SwgBlocks.register(SwgBlocks.Light.FloorWedge, Resources.identifier("light_floor_wedge"));
 		SwgBlocks.register(SwgBlocks.Light.WallCluster, Resources.identifier("light_wall_cluster"));
 

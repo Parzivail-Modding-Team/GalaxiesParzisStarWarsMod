@@ -1,5 +1,5 @@
 {
-	"name": "PSWG Ore",
+	"name": "PSWG Block",
 	"author": "parzivail",
 	"version": "1.0",
 	"fields": [
@@ -35,10 +35,6 @@
 		{
 			"source": "blockstate.json",
 			"destination": "./src/main/resources/assets/pswg/blockstates/$$REGNAME$$.json"
-		},
-		{
-			"source": "ore.png.pswglayers",
-			"destination": "./src/main/resources/assets/pswg/textures/block/$$REGNAME$$.png.pswglayers"
 		}
 	]
 }

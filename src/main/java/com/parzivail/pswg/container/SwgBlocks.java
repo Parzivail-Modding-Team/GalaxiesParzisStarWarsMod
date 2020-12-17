@@ -79,6 +79,12 @@ public class SwgBlocks
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE));
 	}
 
+	public static class MaterialBlock
+	{
+		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL));
+	}
+
 	public static class Light
 	{
 		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15));
