@@ -1,6 +1,6 @@
 package com.parzivail.pswg.handler;
 
-import com.parzivail.pswg.item.LightsaberItem;
+import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.util.item.ILeftClickConsumer;
 import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.sound;
 
 import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.item.LightsaberItem;
-import com.parzivail.pswg.item.data.LightsaberTag;
+import com.parzivail.pswg.item.lightsaber.LightsaberItem;
+import com.parzivail.pswg.item.lightsaber.LightsaberTag;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.sound.MovingSoundInstance;

@@ -1,9 +1,9 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
-import com.parzivail.pswg.item.BlasterItem;
 import com.parzivail.pswg.item.DebugItem;
-import com.parzivail.pswg.item.LightsaberItem;
+import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.FoodComponent;

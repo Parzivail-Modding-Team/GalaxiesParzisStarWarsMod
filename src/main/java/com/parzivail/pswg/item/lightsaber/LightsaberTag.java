@@ -1,4 +1,4 @@
-package com.parzivail.pswg.item.data;
+package com.parzivail.pswg.item.lightsaber;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.math.Ease;

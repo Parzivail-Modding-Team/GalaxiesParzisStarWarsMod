@@ -2,7 +2,7 @@ package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.features.ForceFeatureRenderer;
 import com.parzivail.pswg.entity.ShipEntity;
-import com.parzivail.pswg.item.BlasterItem;
+import com.parzivail.pswg.item.blaster.BlasterItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;

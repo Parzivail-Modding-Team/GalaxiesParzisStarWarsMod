@@ -5,7 +5,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.pm3d.PM3DTexturedModel;
 import com.parzivail.pswg.client.render.LightsaberRenderer;
-import com.parzivail.pswg.item.data.LightsaberTag;
+import com.parzivail.pswg.item.lightsaber.LightsaberTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.item.CustomItemRenderer;
 import net.minecraft.client.MinecraftClient;

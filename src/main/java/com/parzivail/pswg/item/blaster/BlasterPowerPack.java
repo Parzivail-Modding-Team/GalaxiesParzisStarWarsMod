@@ -1,4 +1,4 @@
-package com.parzivail.pswg.item.data;
+package com.parzivail.pswg.item.blaster;
 
 public class BlasterPowerPack
 {

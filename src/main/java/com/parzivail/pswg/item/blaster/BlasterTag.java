@@ -1,4 +1,4 @@
-package com.parzivail.pswg.item.data;
+package com.parzivail.pswg.item.blaster;
 
 import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.item.ItemStack;
@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 public class BlasterTag extends TagSerializer
 {
 	public boolean isAimingDownSights;
+	public boolean canBypassCooling;
 	public int shotsRemaining;
 	public int heat;
 	public int cooldownTimer;
