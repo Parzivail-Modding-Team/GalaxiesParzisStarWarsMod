@@ -11,10 +11,6 @@ repositories {
 		name = "Ladysnake Libs"
 		url = "https://dl.bintray.com/ladysnake/libs"
 	}
-
-	maven {
-		url "https://maven.siphalor.de"
-	}
 }
 
 dependencies {
@@ -59,27 +55,42 @@ dependencies {
 
 	// PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
 	// You may need to force-disable transitiveness on them.
-	//CCA Base
+
+	// CCA Base
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
-	//CCA Entity
+	// CCA Entity
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 
-	// Tweed
-	include "de.siphalor:tweed-1.16:${project.tweed_version}"
-	modImplementation("de.siphalor:tweed-1.16:${project.tweed_version}") {
-		exclude group: ("net.fabricmc.fabric-api")
-		exclude module: "modmenu"
+	// Autoconfig
+	modImplementation("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
 	}
+	include "me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}"
+
+	// Cloth Config
+	modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
+
+	// Mod Menu
+	modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
 }
 
 processResources {
 	inputs.property "version", project.version
+	inputs.property "cca_version", project.cca_version
+	inputs.property "autoconfig_version", project.autoconfig_version
+	inputs.property "cloth_config_version", project.cloth_config_version
 
 	from(sourceSets.main.resources.srcDirs) {
 		include "fabric.mod.json"
-		expand "version": project.version
+		expand  "version": project.version,
+				"cca_version": project.cca_version,
+				"autoconfig_version": project.autoconfig_version,
+				"cloth_config_version": project.cloth_config_version
 	}
 
 	from(sourceSets.main.resources.srcDirs) {

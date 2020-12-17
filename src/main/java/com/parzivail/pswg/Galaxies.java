@@ -11,6 +11,8 @@ import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.handler.PlayerPacketHandler;
 import com.parzivail.pswg.util.Lumberjack;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
@@ -53,6 +55,8 @@ public class Galaxies implements ModInitializer
 		// TODO: Pm3D block particle textures
 		// TODO: Modeled block aabb bounds
 
+		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
+		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
 		TrackedDataHandlers.register();
 
 		SwgRecipeType.register();

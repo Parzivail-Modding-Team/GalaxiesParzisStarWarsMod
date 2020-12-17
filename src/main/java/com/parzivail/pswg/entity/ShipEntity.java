@@ -1,7 +1,7 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.Config;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgPackets;
@@ -344,7 +344,7 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	{
 		Quaternion rotation = new Quaternion(clientInstRotation);
 
-		boolean shipRollPriority = Config.input.shipRollPriority;
+		boolean shipRollPriority = Resources.CONFIG.get().input.shipRollPriority;
 
 		if (Client.KEY_SHIP_INPUT_MODE_OVERRIDE.isPressed())
 			shipRollPriority = !shipRollPriority;
