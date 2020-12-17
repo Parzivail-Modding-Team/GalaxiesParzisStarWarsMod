@@ -33,13 +33,17 @@ import net.minecraft.world.World;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality
 {
-	private final float damage;
+	private final float baseDamage;
+	private final float baseRange;
+	private final float baseMaxHeat;
 	private final SoundEvent sound;
 
 	public BlasterItem(BlasterItem.Settings settings)
 	{
 		super(settings);
-		this.damage = settings.damage;
+		this.baseDamage = settings.baseDamage;
+		this.baseRange = settings.baseRange;
+		this.baseMaxHeat = settings.baseMaxHeat;
 		this.sound = settings.sound;
 	}
 
@@ -84,9 +88,15 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.RELOAD, SoundCategory.PLAYERS, 1f, 1f);
 				}
 			}
+		}
 
-			bt.heat += 20;
-			bt.shotsRemaining--;
+		bt.heat += 20;
+		bt.shotsRemaining--;
+
+		if (bt.heat > getMaxHeat(stack, player))
+		{
+			bt.cooldownTimer = 80;
+			bt.heat = 0;
 		}
 
 		if (!world.isClient)
@@ -116,7 +126,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			world.playSound(null, player.getBlockPos(), sound, SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
 
-			int range = 20;
+			float range = baseRange;
 
 			Vec3d start = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
 
@@ -125,11 +135,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			if (hit == null)
 			{
 				BlockHitResult blockHit = EntityUtil.raycastBlocks(start, look, range, player);
-				// smoke poof
+				// TODO: smoke poof
 			}
 			else
 			{
-				hit.entity.damage(getDamageSource(player), damage);
+				hit.entity.damage(getDamageSource(player), baseDamage);
 			}
 
 			bt.shotTimer = 10;
@@ -143,6 +153,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	private float getSpreadAmount(ItemStack stack, PlayerEntity player)
 	{
 		return 0;
+	}
+
+	public float getMaxHeat(ItemStack stack, PlayerEntity player)
+	{
+		return baseMaxHeat;
 	}
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(PlayerEntity player)
@@ -173,12 +188,26 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static class Settings extends Item.Settings
 	{
-		private float damage = 1;
+		private float baseDamage = 1;
+		private float baseRange = 1;
+		private float baseMaxHeat = 100;
 		private SoundEvent sound = SwgSounds.Blaster.FIRE_DL44;
 
-		public Settings damage(float damage)
+		public Settings baseDamage(float damage)
 		{
-			this.damage = damage;
+			this.baseDamage = damage;
+			return this;
+		}
+
+		public Settings baseRange(float range)
+		{
+			this.baseRange = range;
+			return this;
+		}
+
+		public Settings baseMaxHeat(float heat)
+		{
+			this.baseMaxHeat = heat;
 			return this;
 		}
 

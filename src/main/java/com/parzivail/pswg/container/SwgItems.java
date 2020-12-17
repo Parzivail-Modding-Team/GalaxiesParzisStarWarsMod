@@ -13,10 +13,10 @@ public class SwgItems
 {
 	public static class Blaster
 	{
-		public static final BlasterItem A280 = new BlasterItem(new BlasterItem.Settings().maxCount(1).damage(8).sound(SwgSounds.Blaster.FIRE_A280).group(Galaxies.Tab));
-		public static final BlasterItem DH17 = new BlasterItem(new BlasterItem.Settings().maxCount(1).damage(8).sound(SwgSounds.Blaster.FIRE_DH17).group(Galaxies.Tab));
-		public static final BlasterItem E11 = new BlasterItem(new BlasterItem.Settings().maxCount(1).damage(8).sound(SwgSounds.Blaster.FIRE_E11).group(Galaxies.Tab));
-		public static final BlasterItem EE3 = new BlasterItem(new BlasterItem.Settings().maxCount(1).damage(8).sound(SwgSounds.Blaster.FIRE_DH17).group(Galaxies.Tab));
+		public static final BlasterItem A280 = new BlasterItem(new BlasterItem.Settings().maxCount(1).baseRange(30).baseDamage(8).baseMaxHeat(100).sound(SwgSounds.Blaster.FIRE_A280).group(Galaxies.Tab));
+		public static final BlasterItem DH17 = new BlasterItem(new BlasterItem.Settings().maxCount(1).baseRange(15).baseDamage(4).baseMaxHeat(70).sound(SwgSounds.Blaster.FIRE_DH17).group(Galaxies.Tab));
+		public static final BlasterItem E11 = new BlasterItem(new BlasterItem.Settings().maxCount(1).baseRange(30).baseDamage(8).baseMaxHeat(100).sound(SwgSounds.Blaster.FIRE_E11).group(Galaxies.Tab));
+		public static final BlasterItem EE3 = new BlasterItem(new BlasterItem.Settings().maxCount(1).baseRange(25).baseDamage(7).baseMaxHeat(130).sound(SwgSounds.Blaster.FIRE_DH17).group(Galaxies.Tab));
 	}
 
 	public static class Debug
