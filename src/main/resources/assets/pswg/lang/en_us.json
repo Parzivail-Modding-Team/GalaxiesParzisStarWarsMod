@@ -50,6 +50,7 @@
 	"block.pswg.stone_temple_slab_side_smooth": "Slab-Side Light Absorbing Stone",
 	"block.pswg.stone_temple_smooth": "Smooth Light Absorbing Stone",
 	"block.pswg.stone_temple": "Light Absorbing Stone",
+	"block.pswg.titanium_block": "Titanium Block",
 	"block.pswg.workbench_blaster": "Blaster Workbench",
 	"command.pswg.species.invalid": "Unknown species %s",
 	"command.pswg.species.variant.invalid": "Unknown variant %s for species %s",

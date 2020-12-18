@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public class BlasterBoltEntity extends ThrownEntity
 {
-	private static final TrackedData<Byte> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	public BlasterBoltEntity(EntityType<? extends BlasterBoltEntity> type, World world)
 	{
@@ -24,18 +24,24 @@ public class BlasterBoltEntity extends ThrownEntity
 		super(type, owner, world);
 	}
 
+	public void setRange(float range)
+	{
+		int ticksToLive = (int)(range / getVelocity().length());
+		setLife(ticksToLive);
+	}
+
 	@Override
 	public void writeCustomDataToTag(CompoundTag tag)
 	{
 		super.writeCustomDataToTag(tag);
-		tag.putByte("life", getLife());
+		tag.putInt("life", getLife());
 	}
 
 	@Override
 	public void readCustomDataFromTag(CompoundTag tag)
 	{
 		super.readCustomDataFromTag(tag);
-		setLife(tag.getByte("life"));
+		setLife(tag.getInt("life"));
 	}
 
 	@Override
@@ -47,15 +53,15 @@ public class BlasterBoltEntity extends ThrownEntity
 	@Override
 	protected void initDataTracker()
 	{
-		dataTracker.startTracking(LIFE, (byte)0);
+		dataTracker.startTracking(LIFE, 0);
 	}
 
-	private byte getLife()
+	private int getLife()
 	{
 		return dataTracker.get(LIFE);
 	}
 
-	private void setLife(byte life)
+	private void setLife(int life)
 	{
 		dataTracker.set(LIFE, life);
 	}
@@ -63,10 +69,10 @@ public class BlasterBoltEntity extends ThrownEntity
 	@Override
 	public void tick()
 	{
-		final byte life = (byte)(getLife() + 1);
+		final int life = getLife() - 1;
 		setLife(life);
 
-		if (life >= 60)
+		if (life <= 0)
 		{
 			this.remove();
 			return;

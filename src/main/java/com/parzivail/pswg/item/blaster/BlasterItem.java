@@ -164,14 +164,15 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			Vec3d look = MathUtil.transform(MathUtil.POSZ, m);
 
+			float range = getRange(stack, player);
+
 			final BlasterBoltEntity entity = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world);
 			entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 3.0F, 0);
 			entity.setPos(player.getX(), player.getY() + 1.2f, player.getZ());
+			entity.setRange(range);
 			world.spawnEntity(entity);
 
 			world.playSound(null, player.getBlockPos(), sound, SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
-
-			float range = getRange(stack, player);
 
 			Vec3d start = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
 

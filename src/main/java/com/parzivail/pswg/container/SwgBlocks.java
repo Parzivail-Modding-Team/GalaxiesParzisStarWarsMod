@@ -83,6 +83,7 @@ public class SwgBlocks
 	{
 		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL));
 		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL));
 	}
 
 	public static class Light

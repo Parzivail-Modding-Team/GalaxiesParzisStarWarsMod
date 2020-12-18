@@ -1,0 +1,48 @@
+{
+	"name": "PSWG Ore Block",
+	"author": "parzivail",
+	"version": "1.0",
+	"fields": [
+		{
+			"key": "$$FRIENDLYNAME$$",
+			"name": "Friendly name"
+		},
+		{
+			"key": "$$FIELD$$",
+			"name": "Field name",
+			"source": "$$FRIENDLYNAME$$",
+			"case": "Pascal"
+		},
+		{
+			"key": "$$REGNAME$$",
+			"name": "Registry name",
+			"source": "$$FRIENDLYNAME$$",
+			"case": "Snake"
+		},
+		{
+			"key": "$$INGOTREGNAME$$",
+			"name": "Ingot registry name"
+		}
+	],
+	"files": [
+		{
+			"source": "oneliners.txt"
+		},
+		{
+			"source": "blockmodel.json",
+			"destination": "./src/main/resources/assets/pswg/models/block/$$REGNAME$$.json"
+		},
+		{
+			"source": "itemmodel.json",
+			"destination": "./src/main/resources/assets/pswg/models/item/$$REGNAME$$.json"
+		},
+		{
+			"source": "blockstate.json",
+			"destination": "./src/main/resources/assets/pswg/blockstates/$$REGNAME$$.json"
+		},
+		{
+			"source": "recipe_ingot_from_block.json",
+			"destination": "./src/main/resources/data/pswg/recipes/$$INGOTREGNAME$$_from_$$REGNAME$$.json"
+		}
+	]
+}

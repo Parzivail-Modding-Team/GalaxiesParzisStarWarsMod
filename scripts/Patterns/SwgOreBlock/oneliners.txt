@@ -1,0 +1,8 @@
+// com/parzivail/pswg/Galaxies.java
+SwgBlocks.register(SwgBlocks.Block.$$FIELD$$, Resources.identifier("$$REGNAME$$"));
+
+// com/parzivail/pswg/container/SwgBlocks.java
+public static final Block $$FIELD$$ = new Block(FabricBlockSettings.of(Material.METAL));
+
+// assets/pswg/lang/en_us.json
+"block.pswg.$$REGNAME$$": "$$FRIENDLYNAME$$",

@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "$$INGOTREGNAME$$",
+	"ingredients": [
+		{
+			"item": "pswg:$$REGNAME$$"
+		}
+	],
+	"result": {
+		"item": "pswg:$$INGOTREGNAME$$",
+		"count": 9
+	}
+}
