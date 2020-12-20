@@ -3,6 +3,7 @@ package com.parzivail.pswg.item.blaster;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
+import com.parzivail.pswg.item.IZoomingItem;
 import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.item.ICustomVisualItemEquality;
@@ -29,7 +30,7 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem
 {
 	private final float baseDamage;
 	private final float baseRange;
@@ -56,6 +57,17 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
 	{
 		return false;
+	}
+
+	@Override
+	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
+	{
+		final ItemStack stack = player.getStackInHand(hand);
+
+		if (!world.isClient)
+			BlasterTag.mutate(stack, t -> t.isAimingDownSights = !t.isAimingDownSights);
+
+		return TypedActionResult.success(stack);
 	}
 
 	@Override
@@ -245,6 +257,17 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
 		return true;
+	}
+
+	@Override
+	public double getFovMultiplier(ItemStack stack, World world, PlayerEntity entity)
+	{
+		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
+
+		if (bt.isAimingDownSights)
+			return 0.2f;
+
+		return 1;
 	}
 
 	public static class Settings extends Item.Settings
