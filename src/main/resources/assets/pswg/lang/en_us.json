@@ -98,5 +98,10 @@
 	"itemGroup.pswg.main": "Galaxies: Parzi's Star Wars Mod",
 	"key.category.pswg": "Galaxies: Parzi's Star Wars Mod",
 	"key.pswg.lightsaber_toggle": "Toggle Lightsaber",
-	"key.pswg.ship_input_mode_override": "Override Ship Input Mode"
+	"key.pswg.ship_input_mode_override": "Override Ship Input Mode",
+	"text.autoconfig.pswg.title": "Galaxies: Parzi's Star Wars Mod",
+	"text.autoconfig.pswg.option.input": "Input",
+	"text.autoconfig.pswg.option.input.@Tooltip": "Here you can change your preferred input methods.",
+	"text.autoconfig.pswg.option.input.shipRollPriority": "Override Ship Input Mode",
+	"text.autoconfig.pswg.option.input.shipRollPriority.@Tooltip": "Sets whether mouse inputs should be pitch and yaw, or pitch and roll"
 }
