@@ -139,6 +139,14 @@ public class SwgBlocks
 		public static final Block TempleSmooth = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block MassassiBricks = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE));
+
+		public static final Block TempleStairs = new SwgStairsBlock(Temple.getDefaultState(), AbstractBlock.Settings.copy(Temple));
+		public static final Block TempleBricksStairs = new SwgStairsBlock(TempleBricks.getDefaultState(), AbstractBlock.Settings.copy(TempleBricks));
+		public static final Block TempleBricksChisledStairs = new SwgStairsBlock(TempleBricksChisled.getDefaultState(), AbstractBlock.Settings.copy(TempleBricksChisled));
+		public static final Block TempleSlabSideSmoothStairs = new SwgStairsBlock(TempleSlabSideSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSlabSideSmooth));
+		public static final Block TempleSmoothStairs = new SwgStairsBlock(TempleSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSmooth));
+		public static final Block MassassiBrickStairs = new SwgStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
+		public static final Block MassassiSmoothStairs = new SwgStairsBlock(MassassiSmooth.getDefaultState(), AbstractBlock.Settings.copy(MassassiSmooth));
 	}
 
 	public static class Tank

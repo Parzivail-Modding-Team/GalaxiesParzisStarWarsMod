@@ -54,6 +54,7 @@ public class Galaxies implements ModInitializer
 		// TODO: new blaster models
 		// TODO: Pm3D block particle textures
 		// TODO: Modeled block aabb bounds
+		// TODO: Modeled block waterlogging
 
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
@@ -95,6 +96,14 @@ public class Galaxies implements ModInitializer
 		SwgBlocks.register(SwgBlocks.Stone.TempleSmooth, Resources.identifier("stone_temple_smooth"));
 		SwgBlocks.register(SwgBlocks.Stone.MassassiBricks, Resources.identifier("stone_massassi_bricks"));
 		SwgBlocks.register(SwgBlocks.Stone.MassassiSmooth, Resources.identifier("stone_massassi_smooth"));
+
+		SwgBlocks.register(SwgBlocks.Stone.TempleStairs, Resources.identifier("stone_temple_stairs"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleBricksStairs, Resources.identifier("stone_temple_brick_stairs"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChisledStairs, Resources.identifier("stone_temple_brick_chisled_stairs"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleSlabSideSmoothStairs, Resources.identifier("stone_temple_slab_side_smooth_stairs"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleSmoothStairs, Resources.identifier("stone_temple_smooth_stairs"));
+		SwgBlocks.register(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("stone_massassi_brick_stairs"));
+		SwgBlocks.register(SwgBlocks.Stone.MassassiSmoothStairs, Resources.identifier("stone_massassi_smooth_stairs"));
 
 		SwgBlocks.register(SwgBlocks.Tank.Fusion, Resources.identifier("tank_fusion"));
 

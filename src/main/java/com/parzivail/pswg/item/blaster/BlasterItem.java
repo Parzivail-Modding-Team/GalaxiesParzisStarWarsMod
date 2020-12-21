@@ -67,7 +67,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (!world.isClient)
 			BlasterTag.mutate(stack, t -> t.isAimingDownSights = !t.isAimingDownSights);
 
-		return TypedActionResult.success(stack);
+		return TypedActionResult.fail(stack);
 	}
 
 	@Override
@@ -189,15 +189,18 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			Vec3d start = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
 
 			EntityHitResult hit = EntityUtil.raycastEntities(start, look, range, player, new Entity[] { player });
+			BlockHitResult blockHit = EntityUtil.raycastBlocks(start, look, range, player);
 
-			if (hit == null)
-			{
-				BlockHitResult blockHit = EntityUtil.raycastBlocks(start, look, range, player);
-				// TODO: smoke poof
-			}
-			else
+			double entityDistance = hit == null ? Double.MAX_VALUE : hit.hit.squaredDistanceTo(entity.getPos());
+			double blockDistance = blockHit == null ? Double.MAX_VALUE : blockHit.squaredDistanceTo(entity);
+
+			if (hit != null && entityDistance < blockDistance)
 			{
 				hit.entity.damage(getDamageSource(player), getDamage(stack, player));
+			}
+			else if (blockHit != null)
+			{
+				// TODO: smoke puff
 			}
 
 			bt.shotTimer = 10;
