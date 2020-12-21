@@ -81,7 +81,9 @@ public class Galaxies implements ModInitializer
 						}
 					}
 				}
-			} catch (IOException ignored) {
+			}
+			catch (IOException ignored)
+			{
 			}
 		}
 
@@ -89,93 +91,7 @@ public class Galaxies implements ModInitializer
 
 		SwgSounds.register();
 
-		SwgBlocks.register(SwgBlocks.Sand.Tatooine, Resources.identifier("sand_tatooine"));
-
-		SwgBlocks.register(SwgBlocks.Stone.Temple, Resources.identifier("stone_temple"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleBricks, Resources.identifier("stone_temple_bricks"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChiseled, Resources.identifier("stone_temple_bricks_chiseled"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleSlabSideSmooth, Resources.identifier("stone_temple_slab_side_smooth"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleSmooth, Resources.identifier("stone_temple_smooth"));
-		SwgBlocks.register(SwgBlocks.Stone.MassassiBricks, Resources.identifier("stone_massassi_bricks"));
-		SwgBlocks.register(SwgBlocks.Stone.MassassiSmooth, Resources.identifier("stone_massassi_smooth"));
-
-		SwgBlocks.register(SwgBlocks.Stone.TempleStairs, Resources.identifier("stone_temple_stairs"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleBricksStairs, Resources.identifier("stone_temple_brick_stairs"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChiseledStairs, Resources.identifier("stone_temple_brick_chiseled_stairs"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleSlabSideSmoothStairs, Resources.identifier("stone_temple_slab_side_smooth_stairs"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleSmoothStairs, Resources.identifier("stone_temple_smooth_stairs"));
-		SwgBlocks.register(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("stone_massassi_brick_stairs"));
-		SwgBlocks.register(SwgBlocks.Stone.MassassiSmoothStairs, Resources.identifier("stone_massassi_smooth_stairs"));
-
-		SwgBlocks.register(SwgBlocks.Stone.TempleSlab, Resources.identifier("stone_temple_slab"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleBricksSlab, Resources.identifier("stone_temple_brick_slab"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChiseledSlab, Resources.identifier("stone_temple_brick_chiseled_slab"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleBricksBeveledSlab, Resources.identifier("stone_temple_brick_beveled_slab"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleSmoothSlab, Resources.identifier("stone_temple_smooth_slab"));
-		SwgBlocks.register(SwgBlocks.Stone.MassassiBrickSlab, Resources.identifier("stone_massassi_brick_slab"));
-		SwgBlocks.register(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("stone_massassi_smooth_slab"));
-
-		SwgBlocks.register(SwgBlocks.Tank.Fusion, Resources.identifier("tank_fusion"));
-
-		SwgBlocks.register(SwgBlocks.Barrel.MosEisley, Resources.identifier("barrel_mos_eisley"));
-
-		SwgBlocks.register(SwgBlocks.Crate.OctagonBlockEntityType, Resources.identifier("crate_octagon"));
-		SwgBlocks.register(SwgBlocks.Crate.OctagonOrange, Resources.identifier("crate_octagon_orange"));
-		SwgBlocks.register(SwgBlocks.Crate.OctagonGray, Resources.identifier("crate_octagon_gray"));
-		SwgBlocks.register(SwgBlocks.Crate.OctagonBlack, Resources.identifier("crate_octagon_black"));
-
-		SwgBlocks.register(SwgBlocks.Crate.MosEisley, SwgBlocks.Crate.MosEisleyBlockEntityType, Resources.identifier("crate_mos_eisley"));
-
-		SwgBlocks.register(SwgBlocks.Crate.ImperialCube, SwgBlocks.Crate.ImperialCubeBlockEntityType, Resources.identifier("crate_imperial_cube"));
-
-		SwgBlocks.register(SwgBlocks.Leaves.Sequoia, Resources.identifier("leaves_sequoia"));
-
-		SwgBlocks.register(SwgBlocks.Log.Sequoia, Resources.identifier("log_sequoia"));
-
-		SwgBlocks.register(SwgBlocks.Panel.ImperialBase, Resources.identifier("panel_imperial_base"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialBlackBase, Resources.identifier("panel_imperial_black_base"));
-		SwgBlocks.register(SwgBlocks.Panel.Imperial1, Resources.identifier("panel_imperial_1"));
-		SwgBlocks.register(SwgBlocks.Panel.Imperial2, Resources.identifier("panel_imperial_2"));
-		SwgBlocks.register(SwgBlocks.Panel.Imperial3, Resources.identifier("panel_imperial_3"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLight1, Resources.identifier("panel_imperial_light_1"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLight2, Resources.identifier("panel_imperial_light_2"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLight3, Resources.identifier("panel_imperial_light_3"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLight4, Resources.identifier("panel_imperial_light_4"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLight5, Resources.identifier("panel_imperial_light_5"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLight6, Resources.identifier("panel_imperial_light_6"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLightTall1, Resources.identifier("panel_imperial_light_tall_1"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLightTall2, Resources.identifier("panel_imperial_light_tall_2"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLightTall3, Resources.identifier("panel_imperial_light_tall_3"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLightTall4, Resources.identifier("panel_imperial_light_tall_4"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLightDecoy, Resources.identifier("panel_imperial_light_decoy"));
-		SwgBlocks.register(SwgBlocks.Panel.ImperialLightOff, Resources.identifier("panel_imperial_light_off"));
-
-		SwgBlocks.register(SwgBlocks.Pipe.Thick, Resources.identifier("pipe_thick"));
-
-		SwgBlocks.register(SwgBlocks.Machine.Spoked, Resources.identifier("machine_spoked"));
-
-		SwgBlocks.register(SwgBlocks.MoistureVaporator.Gx8, SwgBlocks.MoistureVaporator.Gx8BlockEntityType, Resources.identifier("moisture_vaporator_gx8"));
-
-		SwgBlocks.register(SwgBlocks.Ore.Chromium, Resources.identifier("chromium_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Cortosis, Resources.identifier("cortosis_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Desh, Resources.identifier("desh_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Diatium, Resources.identifier("diatium_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Exonium, Resources.identifier("exonium_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Helicite, Resources.identifier("helicite_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Ionite, Resources.identifier("ionite_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Kelerium, Resources.identifier("kelerium_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Rubindum, Resources.identifier("rubindum_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Thorolide, Resources.identifier("thorolide_ore"));
-		SwgBlocks.register(SwgBlocks.Ore.Titanium, Resources.identifier("titanium_ore"));
-
-		SwgBlocks.register(SwgBlocks.MaterialBlock.Desh, Resources.identifier("desh_block"));
-		SwgBlocks.register(SwgBlocks.MaterialBlock.Durasteel, Resources.identifier("durasteel_block"));
-		SwgBlocks.register(SwgBlocks.MaterialBlock.Titanium, Resources.identifier("titanium_block"));
-
-		SwgBlocks.register(SwgBlocks.Light.FloorWedge, Resources.identifier("light_floor_wedge"));
-		SwgBlocks.register(SwgBlocks.Light.WallCluster, Resources.identifier("light_wall_cluster"));
-
-		SwgBlocks.register(SwgBlocks.Workbench.Blaster, SwgBlocks.Workbench.BlasterBlockEntityType, Resources.identifier("workbench_blaster"));
+		SwgBlocks.register();
 
 		Registry.register(Registry.ITEM, Resources.identifier("lightsaber"), SwgItems.Lightsaber.Lightsaber);
 
