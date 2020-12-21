@@ -55,6 +55,7 @@ public class Galaxies implements ModInitializer
 		// TODO: Pm3D block particle textures
 		// TODO: Modeled block aabb bounds
 		// TODO: Modeled block waterlogging
+		// TODO: Fusion tank texture to power of two to fix mipmapping
 
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
