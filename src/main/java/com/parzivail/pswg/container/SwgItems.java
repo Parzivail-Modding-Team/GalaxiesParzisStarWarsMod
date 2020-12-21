@@ -28,6 +28,7 @@ public class SwgItems
 	{
 		public static final Item Beskar = new Item(new Item.Settings().group(Galaxies.Tab));
 		public static final Item Chromium = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item Cortosis = new Item(new Item.Settings().group(Galaxies.Tab));
 		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.Tab));
 		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.Tab));
