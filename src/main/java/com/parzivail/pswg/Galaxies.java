@@ -156,17 +156,17 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register(SwgBlocks.MoistureVaporator.Gx8, SwgBlocks.MoistureVaporator.Gx8BlockEntityType, Resources.identifier("moisture_vaporator_gx8"));
 
-		SwgBlocks.register(SwgBlocks.Ore.Chromium, Resources.identifier("ore_chromium"));
-		SwgBlocks.register(SwgBlocks.Ore.Cortosis, Resources.identifier("ore_cortosis"));
-		SwgBlocks.register(SwgBlocks.Ore.Desh, Resources.identifier("ore_desh"));
-		SwgBlocks.register(SwgBlocks.Ore.Diatium, Resources.identifier("ore_diatium"));
-		SwgBlocks.register(SwgBlocks.Ore.Exonium, Resources.identifier("ore_exonium"));
-		SwgBlocks.register(SwgBlocks.Ore.Helicite, Resources.identifier("ore_helicite"));
-		SwgBlocks.register(SwgBlocks.Ore.Ionite, Resources.identifier("ore_ionite"));
-		SwgBlocks.register(SwgBlocks.Ore.Kelerium, Resources.identifier("ore_kelerium"));
-		SwgBlocks.register(SwgBlocks.Ore.Rubindum, Resources.identifier("ore_rubindum"));
-		SwgBlocks.register(SwgBlocks.Ore.Thorolide, Resources.identifier("ore_thorolide"));
-		SwgBlocks.register(SwgBlocks.Ore.Titanium, Resources.identifier("ore_titanium"));
+		SwgBlocks.register(SwgBlocks.Ore.Chromium, Resources.identifier("chromium_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Cortosis, Resources.identifier("cortosis_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Desh, Resources.identifier("desh_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Diatium, Resources.identifier("diatium_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Exonium, Resources.identifier("exonium_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Helicite, Resources.identifier("helicite_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Ionite, Resources.identifier("ionite_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Kelerium, Resources.identifier("kelerium_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Rubindum, Resources.identifier("rubindum_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Thorolide, Resources.identifier("thorolide_ore"));
+		SwgBlocks.register(SwgBlocks.Ore.Titanium, Resources.identifier("titanium_ore"));
 
 		SwgBlocks.register(SwgBlocks.MaterialBlock.Desh, Resources.identifier("desh_block"));
 		SwgBlocks.register(SwgBlocks.MaterialBlock.Durasteel, Resources.identifier("durasteel_block"));

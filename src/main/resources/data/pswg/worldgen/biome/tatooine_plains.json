@@ -21,11 +21,11 @@
 	},
 	"features": [
 		[
-			"pswg:ore_rubindum",
-			"minecraft:ore_coal",
-			"minecraft:ore_iron",
-			"minecraft:ore_gold",
-			"minecraft:ore_diamond"
+			"pswg:rubindum_ore",
+			"minecraft:coal_ore",
+			"minecraft:iron_ore",
+			"minecraft:gold_ore",
+			"minecraft:diamond_ore"
 		]
 	],
 	"starts": [

@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "pswg:ore_cortosis"
+					"name": "pswg:cortosis_ore"
 				}
 			],
 			"conditions": [

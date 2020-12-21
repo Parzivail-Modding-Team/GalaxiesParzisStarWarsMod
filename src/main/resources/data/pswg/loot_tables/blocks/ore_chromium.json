@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "pswg:ore_chromium"
+					"name": "pswg:chromium_ore"
 				}
 			],
 			"conditions": [

@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "pswg:ore_kelerium"
+					"name": "pswg:kelerium_ore"
 				}
 			],
 			"conditions": [

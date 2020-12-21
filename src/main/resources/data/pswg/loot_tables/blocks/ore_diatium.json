@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "pswg:ore_diatium"
+					"name": "pswg:diatium_ore"
 				}
 			],
 			"conditions": [

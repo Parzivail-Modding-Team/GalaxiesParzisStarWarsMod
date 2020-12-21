@@ -11,7 +11,7 @@
 									"predicate_type": "minecraft:tag_match"
 								},
 								"state": {
-									"Name": "pswg:ore_chromium"
+									"Name": "pswg:chromium_ore"
 								},
 								"size": 4
 							},

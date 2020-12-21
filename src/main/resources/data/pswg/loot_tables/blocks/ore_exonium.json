@@ -6,7 +6,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "pswg:ore_exonium"
+					"name": "pswg:exonium_ore"
 				}
 			],
 			"conditions": [
