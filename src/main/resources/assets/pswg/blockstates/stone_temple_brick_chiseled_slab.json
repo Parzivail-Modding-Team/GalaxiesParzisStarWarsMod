@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"type=bottom": {
+			"model": "pswg:block/stone_temple_brick_chiseled_slab"
+		},
+		"type=double": {
+			"model": "pswg:block/stone_temple_bricks_chiseled"
+		},
+		"type=top": {
+			"model": "pswg:block/stone_temple_brick_chiseled_slab_top"
+		}
+	}
+}

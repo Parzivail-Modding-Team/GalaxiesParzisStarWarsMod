@@ -91,7 +91,7 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register(SwgBlocks.Stone.Temple, Resources.identifier("stone_temple"));
 		SwgBlocks.register(SwgBlocks.Stone.TempleBricks, Resources.identifier("stone_temple_bricks"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChisled, Resources.identifier("stone_temple_bricks_chisled"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChiseled, Resources.identifier("stone_temple_bricks_chiseled"));
 		SwgBlocks.register(SwgBlocks.Stone.TempleSlabSideSmooth, Resources.identifier("stone_temple_slab_side_smooth"));
 		SwgBlocks.register(SwgBlocks.Stone.TempleSmooth, Resources.identifier("stone_temple_smooth"));
 		SwgBlocks.register(SwgBlocks.Stone.MassassiBricks, Resources.identifier("stone_massassi_bricks"));
@@ -99,11 +99,19 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register(SwgBlocks.Stone.TempleStairs, Resources.identifier("stone_temple_stairs"));
 		SwgBlocks.register(SwgBlocks.Stone.TempleBricksStairs, Resources.identifier("stone_temple_brick_stairs"));
-		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChisledStairs, Resources.identifier("stone_temple_brick_chisled_stairs"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChiseledStairs, Resources.identifier("stone_temple_brick_chiseled_stairs"));
 		SwgBlocks.register(SwgBlocks.Stone.TempleSlabSideSmoothStairs, Resources.identifier("stone_temple_slab_side_smooth_stairs"));
 		SwgBlocks.register(SwgBlocks.Stone.TempleSmoothStairs, Resources.identifier("stone_temple_smooth_stairs"));
 		SwgBlocks.register(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("stone_massassi_brick_stairs"));
 		SwgBlocks.register(SwgBlocks.Stone.MassassiSmoothStairs, Resources.identifier("stone_massassi_smooth_stairs"));
+
+		SwgBlocks.register(SwgBlocks.Stone.TempleSlab, Resources.identifier("stone_temple_slab"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleBricksSlab, Resources.identifier("stone_temple_brick_slab"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleBricksChiseledSlab, Resources.identifier("stone_temple_brick_chiseled_slab"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleBricksBeveledSlab, Resources.identifier("stone_temple_brick_beveled_slab"));
+		SwgBlocks.register(SwgBlocks.Stone.TempleSmoothSlab, Resources.identifier("stone_temple_smooth_slab"));
+		SwgBlocks.register(SwgBlocks.Stone.MassassiBrickSlab, Resources.identifier("stone_massassi_brick_slab"));
+		SwgBlocks.register(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("stone_massassi_smooth_slab"));
 
 		SwgBlocks.register(SwgBlocks.Tank.Fusion, Resources.identifier("tank_fusion"));
 

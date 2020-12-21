@@ -134,7 +134,7 @@ public class SwgBlocks
 	{
 		public static final Block Temple = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block TempleBricks = new Block(FabricBlockSettings.of(Material.STONE));
-		public static final Block TempleBricksChisled = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block TempleBricksChiseled = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block TempleSlabSideSmooth = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block TempleSmooth = new Block(FabricBlockSettings.of(Material.STONE));
 		public static final Block MassassiBricks = new Block(FabricBlockSettings.of(Material.STONE));
@@ -142,11 +142,19 @@ public class SwgBlocks
 
 		public static final Block TempleStairs = new SwgStairsBlock(Temple.getDefaultState(), AbstractBlock.Settings.copy(Temple));
 		public static final Block TempleBricksStairs = new SwgStairsBlock(TempleBricks.getDefaultState(), AbstractBlock.Settings.copy(TempleBricks));
-		public static final Block TempleBricksChisledStairs = new SwgStairsBlock(TempleBricksChisled.getDefaultState(), AbstractBlock.Settings.copy(TempleBricksChisled));
+		public static final Block TempleBricksChiseledStairs = new SwgStairsBlock(TempleBricksChiseled.getDefaultState(), AbstractBlock.Settings.copy(TempleBricksChiseled));
 		public static final Block TempleSlabSideSmoothStairs = new SwgStairsBlock(TempleSlabSideSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSlabSideSmooth));
 		public static final Block TempleSmoothStairs = new SwgStairsBlock(TempleSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSmooth));
 		public static final Block MassassiBrickStairs = new SwgStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
 		public static final Block MassassiSmoothStairs = new SwgStairsBlock(MassassiSmooth.getDefaultState(), AbstractBlock.Settings.copy(MassassiSmooth));
+
+		public static final Block TempleSlab = new SlabBlock(AbstractBlock.Settings.copy(Temple));
+		public static final Block TempleBricksSlab = new SlabBlock(AbstractBlock.Settings.copy(TempleBricks));
+		public static final Block TempleBricksChiseledSlab = new SlabBlock(AbstractBlock.Settings.copy(TempleBricksChiseled));
+		public static final Block TempleBricksBeveledSlab = new SlabBlock(AbstractBlock.Settings.copy(TempleSlabSideSmooth));
+		public static final Block TempleSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(TempleSmooth));
+		public static final Block MassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiBricks));
+		public static final Block MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
 	}
 
 	public static class Tank

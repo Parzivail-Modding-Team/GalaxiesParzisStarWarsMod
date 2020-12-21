@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"type=bottom": {
+			"model": "pswg:block/stone_temple_brick_beveled_slab"
+		},
+		"type=double": {
+			"model": "pswg:block/stone_temple_slab_side_smooth"
+		},
+		"type=top": {
+			"model": "pswg:block/stone_temple_brick_beveled_slab_top"
+		}
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"type=bottom": {
+			"model": "pswg:block/stone_temple_slab"
+		},
+		"type=double": {
+			"model": "pswg:block/stone_temple"
+		},
+		"type=top": {
+			"model": "pswg:block/stone_temple_slab_top"
+		}
+	}
+}

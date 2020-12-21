@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/outer_stairs",
+	"textures": {
+		"bottom": "pswg:block/stone_temple_bricks_chiseled",
+		"top": "pswg:block/stone_temple_bricks_chiseled",
+		"side": "pswg:block/stone_temple_bricks_chiseled"
+	}
+}

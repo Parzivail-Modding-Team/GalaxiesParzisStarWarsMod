@@ -13,7 +13,7 @@ Directory.CreateDirectory(blockModelDir);
 Directory.CreateDirectory(itemModelDir);
 Directory.CreateDirectory(blockstateDir);
 
-var names = new[] { "stone_temple", "stone_temple_bricks", "stone_temple_bricks_chisled", "stone_temple_slab_side_smooth", "stone_temple_smooth" };
+var names = new[] { "stone_temple", "stone_temple_bricks", "stone_temple_bricks_chiseled", "stone_temple_slab_side_smooth", "stone_temple_smooth" };
 
 foreach (var regId in names)
 {

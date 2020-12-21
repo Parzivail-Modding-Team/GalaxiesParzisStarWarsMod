@@ -1,5 +1,5 @@
 {
-	"name": "PSWG Stairs",
+	"name": "PSWG Slab",
 	"author": "parzivail",
 	"version": "1.0",
 	"fields": [
@@ -31,12 +31,8 @@
 			"destination": "./src/main/resources/assets/pswg/models/block/$$REGNAME$$.json"
 		},
 		{
-			"source": "model_inner.json",
-			"destination": "./src/main/resources/assets/pswg/models/block/$$REGNAME$$_inner.json"
-		},
-		{
-			"source": "model_outer.json",
-			"destination": "./src/main/resources/assets/pswg/models/block/$$REGNAME$$_outer.json"
+			"source": "model_top.json",
+			"destination": "./src/main/resources/assets/pswg/models/block/$$REGNAME$$_top.json"
 		},
 		{
 			"source": "itemmodel.json",
