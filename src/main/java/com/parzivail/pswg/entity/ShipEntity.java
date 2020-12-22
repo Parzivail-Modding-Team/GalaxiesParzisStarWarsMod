@@ -3,10 +3,8 @@ package com.parzivail.pswg.entity;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.input.ShipControls;
-import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
-import com.parzivail.pswg.util.ClientUtil;
 import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.FlyingVehicle;
@@ -43,7 +41,7 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	private static final TrackedData<Short> CONTROLS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
 
 	@Environment(EnvType.CLIENT)
-	private ChaseCamEntity camera;
+	private ChaseCam camera;
 
 	@Environment(EnvType.CLIENT)
 	private Quaternion clientInstRotation = new Quaternion(Quaternion.IDENTITY);
@@ -106,21 +104,6 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	}
 
 	@Override
-	public void kill()
-	{
-		super.kill();
-
-		if (world.isClient)
-			killCamera();
-	}
-
-	private void killCamera()
-	{
-		if (camera != null)
-			camera.kill();
-	}
-
-	@Override
 	protected boolean canClimb()
 	{
 		return false;
@@ -170,15 +153,11 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 	}
 
 	@Environment(EnvType.CLIENT)
-	public ChaseCamEntity getCamera()
+	public ChaseCam getCamera()
 	{
 		if (camera == null)
 		{
-			camera = SwgEntities.Ship.ChaseCam.create(world);
-			assert camera != null;
-
-			camera.setParent(this);
-			ClientUtil.spawnEntity(world, camera);
+			camera = new ChaseCam();
 		}
 
 		return camera;
@@ -196,6 +175,9 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		{
 			clientPrevRotation = new Quaternion(clientRotation);
 			clientRotation = new Quaternion(clientInstRotation);
+
+			ChaseCam camera = getCamera();
+			camera.tick(this);
 		}
 
 		float throttle = getThrottle();

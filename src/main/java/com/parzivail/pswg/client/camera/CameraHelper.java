@@ -1,7 +1,6 @@
 package com.parzivail.pswg.client.camera;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.entity.ChaseCamEntity;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.item.IZoomingItem;
 import net.minecraft.client.MinecraftClient;
@@ -17,6 +16,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class CameraHelper
 {
+	public static final MutableCameraEntity MUTABLE_CAMERA_ENTITY = new MutableCameraEntity();
+
 	public static void applyCameraTransformations(float tickDelta, long limitTime, MatrixStack matrix, Camera camera)
 	{
 		assert Client.minecraft.player != null;
@@ -43,7 +44,7 @@ public class CameraHelper
 	public static void renderHand(MatrixStack matrices, Camera camera, float tickDelta, CallbackInfo ci)
 	{
 		MinecraftClient mc = Client.minecraft;
-		if (mc.cameraEntity instanceof ChaseCamEntity || mc.cameraEntity instanceof ShipEntity)
+		if (mc.cameraEntity instanceof MutableCameraEntity || mc.cameraEntity instanceof ShipEntity)
 			ci.cancel();
 	}
 
