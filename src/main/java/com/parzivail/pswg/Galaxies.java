@@ -29,7 +29,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
@@ -93,48 +92,7 @@ public class Galaxies implements ModInitializer
 
 		SwgBlocks.register();
 
-		Registry.register(Registry.ITEM, Resources.identifier("lightsaber"), SwgItems.Lightsaber.Lightsaber);
-
-		Registry.register(Registry.ITEM, Resources.identifier("blaster_a280"), SwgItems.Blaster.A280);
-		Registry.register(Registry.ITEM, Resources.identifier("blaster_dh17"), SwgItems.Blaster.DH17);
-		Registry.register(Registry.ITEM, Resources.identifier("blaster_e11"), SwgItems.Blaster.E11);
-		Registry.register(Registry.ITEM, Resources.identifier("blaster_ee3"), SwgItems.Blaster.EE3);
-
-		Registry.register(Registry.ITEM, Resources.identifier("debug"), SwgItems.Debug.Debug);
-
-		Registry.register(Registry.ITEM, Resources.identifier("beskar_ingot"), SwgItems.Ingot.Beskar);
-		Registry.register(Registry.ITEM, Resources.identifier("chromium_ingot"), SwgItems.Ingot.Chromium);
-		Registry.register(Registry.ITEM, Resources.identifier("cortosis_ingot"), SwgItems.Ingot.Cortosis);
-		Registry.register(Registry.ITEM, Resources.identifier("desh_ingot"), SwgItems.Ingot.Desh);
-		Registry.register(Registry.ITEM, Resources.identifier("durasteel_ingot"), SwgItems.Ingot.Durasteel);
-		Registry.register(Registry.ITEM, Resources.identifier("plasteel_ingot"), SwgItems.Ingot.Plasteel);
-		Registry.register(Registry.ITEM, Resources.identifier("titanium_ingot"), SwgItems.Ingot.Titanium);
-
-		Registry.register(Registry.ITEM, Resources.identifier("salt_pile"), SwgItems.Food.SaltPile);
-
-		Registry.register(Registry.ITEM, Resources.identifier("jogan_fruit"), SwgItems.Food.JoganFruit);
-		Registry.register(Registry.ITEM, Resources.identifier("chasuka"), SwgItems.Food.Chasuka);
-		Registry.register(Registry.ITEM, Resources.identifier("meiloorun"), SwgItems.Food.Meiloorun);
-		Registry.register(Registry.ITEM, Resources.identifier("mynock_wing"), SwgItems.Food.MynockWing);
-		Registry.register(Registry.ITEM, Resources.identifier("cooked_mynock_wing"), SwgItems.Food.FriedMynockWing);
-		Registry.register(Registry.ITEM, Resources.identifier("bantha_chop"), SwgItems.Food.BanthaChop);
-		Registry.register(Registry.ITEM, Resources.identifier("cooked_bantha_chop"), SwgItems.Food.BanthaSteak);
-		Registry.register(Registry.ITEM, Resources.identifier("nerf_chop"), SwgItems.Food.NerfChop);
-		Registry.register(Registry.ITEM, Resources.identifier("cooked_nerf_chop"), SwgItems.Food.NerfSteak);
-		Registry.register(Registry.ITEM, Resources.identifier("gizka_chop"), SwgItems.Food.GizkaChop);
-		Registry.register(Registry.ITEM, Resources.identifier("cooked_gizka_chop"), SwgItems.Food.GizkaSteak);
-		Registry.register(Registry.ITEM, Resources.identifier("flangth_takeout"), SwgItems.Food.FlangthTakeout);
-		Registry.register(Registry.ITEM, Resources.identifier("flangth_plate"), SwgItems.Food.FlangthPlate);
-
-		Registry.register(Registry.ITEM, Resources.identifier("death_stick_red"), SwgItems.Food.DeathStickRed);
-		Registry.register(Registry.ITEM, Resources.identifier("death_stick_yellow"), SwgItems.Food.DeathStickYellow);
-
-		Registry.register(Registry.ITEM, Resources.identifier("blue_milk"), SwgItems.Food.BlueMilk);
-		Registry.register(Registry.ITEM, Resources.identifier("blue_puff_cube"), SwgItems.Food.BluePuffCube);
-		Registry.register(Registry.ITEM, Resources.identifier("blue_yogurt"), SwgItems.Food.BlueYogurt);
-
-		Registry.register(Registry.ITEM, Resources.identifier("qrikki_bread"), SwgItems.Food.QrikkiBread);
-		Registry.register(Registry.ITEM, Resources.identifier("qrikki_waffle"), SwgItems.Food.QrikkiWaffle);
+		SwgItems.register();
 
 		SwgDimensions.Tatooine.registerDimension();
 

@@ -7,7 +7,6 @@ import java.lang.reflect.Modifier;
 
 public class RegistryHelper
 {
-
 	public static <T> void registerAnnotatedFields(Class<?> rootClazz, Class<T> registryType, RegistryMethod<T> registryFunction)
 	{
 		for (Class<?> clazz : rootClazz.getClasses())
