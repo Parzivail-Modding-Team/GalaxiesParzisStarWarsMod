@@ -1,10 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
-import com.parzivail.pswg.screen.CrateGenericSmallScreenHandler;
-import com.parzivail.pswg.screen.CrateOctagonScreenHandler;
-import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
+import com.parzivail.pswg.screen.*;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.screen.ScreenHandlerType;
 import org.jetbrains.annotations.NotNull;
@@ -41,7 +38,8 @@ public class SwgScreenTypes
 
 	public static class Workbench
 	{
-		public static final ScreenHandlerType<BlasterWorkbenchScreenHandler> Blaster = ScreenHandlerRegistry.registerSimple(Resources.identifier("workbench_blaster"), BlasterWorkbenchScreenHandler::new);
+		public static final ScreenHandlerType<BlasterWorkbenchScreenHandler> Blaster = ScreenHandlerRegistry.registerSimple(Resources.identifier("blaster_workbench"), BlasterWorkbenchScreenHandler::new);
+		public static final ScreenHandlerType<LightsaberForgeScreenHandler> Lightsaber = ScreenHandlerRegistry.registerSimple(Resources.identifier("lightsaber_forge"), LightsaberForgeScreenHandler::new);
 
 		static void register()
 		{

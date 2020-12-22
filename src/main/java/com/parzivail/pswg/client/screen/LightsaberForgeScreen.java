@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
+import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -12,11 +12,11 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
-public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreenHandler>
+public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHandler>
 {
-	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/blaster_workbench.png");
+	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/lightsaber_forge.png");
 
-	public BlasterWorkbenchScreen(BlasterWorkbenchScreenHandler handler, PlayerInventory inventory, Text title)
+	public LightsaberForgeScreen(LightsaberForgeScreenHandler handler, PlayerInventory inventory, Text title)
 	{
 		super(handler, inventory, title);
 		backgroundWidth = 256;

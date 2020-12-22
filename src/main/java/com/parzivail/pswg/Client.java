@@ -12,10 +12,7 @@ import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.EmptyRenderer;
 import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.ship.T65BXwingRenderer;
-import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
-import com.parzivail.pswg.client.screen.CrateGenericSmallScreen;
-import com.parzivail.pswg.client.screen.CrateOctagonScreen;
-import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
+import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
@@ -67,6 +64,7 @@ public class Client implements ClientModInitializer
 		ScreenRegistry.register(SwgScreenTypes.Crate.ImperialCube, CrateGenericSmallScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.MoistureVaporator.GX8, MoistureVaporatorScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.Workbench.Blaster, BlasterWorkbenchScreen::new);
+		ScreenRegistry.register(SwgScreenTypes.Workbench.Lightsaber, LightsaberForgeScreen::new);
 
 		SimpleModels.register(SwgBlocks.Tank.Fusion, true, ModelLoader.loadPM3D(Resources.identifier("models/block/tank/fusion.pm3d"), Resources.identifier("model/tank/fusion"), new Identifier("block/stone")));
 

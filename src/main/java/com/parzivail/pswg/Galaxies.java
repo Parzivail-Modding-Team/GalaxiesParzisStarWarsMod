@@ -55,7 +55,6 @@ public class Galaxies implements ModInitializer
 		// TODO: Modeled block aabb bounds
 		// TODO: Modeled block waterlogging
 		// TODO: Fusion tank texture to power of two to fix mipmapping
-		// TODO: Imperial lights to use borderless imperial panel texture
 
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
@@ -91,7 +90,6 @@ public class Galaxies implements ModInitializer
 		SwgSounds.register();
 
 		SwgBlocks.register();
-
 		SwgItems.register();
 
 		SwgDimensions.Tatooine.registerDimension();

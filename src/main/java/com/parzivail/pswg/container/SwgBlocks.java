@@ -243,10 +243,14 @@ public class SwgBlocks
 
 	public static class Workbench
 	{
-		@RegistryName("workbench_blaster")
-		public static final BlasterWorkbenchBlock Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("workbench_blaster")
+		@RegistryName("blaster_workbench")
+		public static final Block Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("blaster_workbench")
 		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = BlockEntityType.Builder.create(BlasterWorkbenchBlockEntity::new, Blaster).build(null);
+		@RegistryName("lightsaber_forge")
+		public static final Block Lightsaber = new LightsaberForgeBlock(FabricBlockSettings.of(Material.WOOD));
+		@RegistryName("lightsaber_forge")
+		public static final BlockEntityType<LightsaberForgeBlockEntity> LightsaberBlockEntityType = BlockEntityType.Builder.create(LightsaberForgeBlockEntity::new, Lightsaber).build(null);
 	}
 
 	public static void register()
