@@ -1,6 +1,7 @@
 {
-	"parent": "block/cube_all",
+	"parent": "block/cube_column",
 	"textures": {
-		"all": "pswg:block/stone_temple_slab_side_smooth"
+		"end": "pswg:block/stone_temple_smooth",
+		"side": "pswg:block/stone_temple_slab_side_smooth"
 	}
 }
