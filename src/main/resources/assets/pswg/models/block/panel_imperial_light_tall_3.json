@@ -1,7 +1,7 @@
 {
 	"parent": "minecraft:block/cube_column",
 	"textures": {
-		"end": "pswg:block/panel_imperial_1",
+		"end": "pswg:block/panel_imperial_base",
 		"side": "pswg:block/panel_imperial_light_tall_3"
 	}
 }
