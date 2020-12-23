@@ -12,6 +12,7 @@
 	],
 	"client": [
 		"AbstractClientPlayerEntityMixin",
+		"CameraMixin",
 		"ClientPlayNetworkHandlerMixin",
 		"ClientRecipeBookMixin",
 		"EntityClientMixin",

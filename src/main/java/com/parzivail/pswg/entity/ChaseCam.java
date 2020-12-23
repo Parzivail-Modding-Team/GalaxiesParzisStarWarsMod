@@ -29,19 +29,20 @@ public class ChaseCam
 
 		float lerpAmount = 0.4f;
 
-		Quaternion q = parent.getViewRotation(0);
+		Quaternion q = parent.getViewRotation(1);
 
-		float camDistTarget = getCamDistTarget();
+		float camDistTarget = getCamDistTarget(parent, q);
 		Vec3d camTargetPosition = parent.getPos().add(QuatUtil.rotate(new Vec3d(0, 0, camDistTarget), q));
 		Vec3d camDpos = camTargetPosition.subtract(pos);
 
 		Vec3d lerpPos = pos.add(camDpos.multiply(lerpAmount));
-		BlockHitResult result = world.raycast(new RaycastContext(parent.getPos(), lerpPos, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, parent));
+		BlockHitResult result = world.raycast(new RaycastContext(parent.getPos(), lerpPos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, parent));
 
-		pos = MathUtil.lerp(1, parent.getPos(), result.getPos());
+		double totalDistance = parent.getPos().distanceTo(result.getPos());
+		pos = MathUtil.lerp((float)((totalDistance - 0.05) / totalDistance), parent.getPos(), result.getPos());
 	}
 
-	private float getCamDistTarget()
+	private float getCamDistTarget(ShipEntity parent, Quaternion q)
 	{
 		Perspective perspective = Client.minecraft.options.getPerspective();
 		int scalar = 1;
@@ -50,6 +51,6 @@ public class ChaseCam
 		else if (perspective == Perspective.THIRD_PERSON_FRONT)
 			scalar = -1;
 		float throttle = 1;
-		return scalar * (10 + 3 * throttle);
+		return scalar * (13 + 3 * throttle);
 	}
 }
