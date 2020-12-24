@@ -91,12 +91,15 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		 * Crosshair
 		 */
 
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-		this.drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
-		RenderSystem.defaultBlendFunc();
+		if (bt.isAimingDownSights)
+		{
+			RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
+			this.drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
+			RenderSystem.defaultBlendFunc();
+		}
 
 		client.getTextureManager().bindTexture(InGameHud.GUI_ICONS_TEXTURE);
 
-		return true;
+		return bt.isAimingDownSights;
 	}
 }
