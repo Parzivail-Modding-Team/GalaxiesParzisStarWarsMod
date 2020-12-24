@@ -4,6 +4,7 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.item.DebugItem;
+import com.parzivail.pswg.item.LiquidFoodItem;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -90,17 +91,16 @@ public class SwgItems
 		@RegistryName("flangth_plate")
 		public static final Item FlangthPlate = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()).group(Galaxies.Tab));
 
-		// TODO: negative effects?
 		@RegistryName("death_stick_red")
-		public static final Item DeathStickRed = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200), 0.8F).build()).group(Galaxies.Tab));
+		public static final Item DeathStickRed = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200), 0.8F).statusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200), 1).build()).group(Galaxies.Tab));
 		@RegistryName("death_stick_yellow")
-		public static final Item DeathStickYellow = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 0.8F).build()).group(Galaxies.Tab));
+		public static final Item DeathStickYellow = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 0.8F).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()).group(Galaxies.Tab));
 
 		// TODO: consider turning this into a Fluid
 		@RegistryName("blue_milk")
-		public static final Item BlueMilk = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item BlueMilk = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("blue_puff_cube")
-		public static final Item BluePuffCube = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(1).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item BluePuffCube = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(1).saturationModifier(0.3F).snack().build()).group(Galaxies.Tab));
 		@RegistryName("blue_yogurt")
 		public static final Item BlueYogurt = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 
