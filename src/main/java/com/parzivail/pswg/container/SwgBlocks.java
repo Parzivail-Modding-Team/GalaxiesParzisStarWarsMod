@@ -1,6 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.blockentity.*;
 import com.parzivail.pswg.container.registry.RegistryHelper;
@@ -18,12 +19,23 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShapes;
 
+import java.util.Random;
+
 public class SwgBlocks
 {
 	public static class Barrel
 	{
 		@RegistryName("barrel_mos_eisley")
-		public static final Block MosEisley = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 15), FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final Block MosEisley = new TranslatingBlock((state, world, pos, context) -> {
+			Random r = Resources.RANDOM;
+			r.setSeed(state.getRenderingSeed(pos));
+
+			float s = 4;
+			float dx = r.nextFloat() * s;
+			float dz = r.nextFloat() * s;
+
+			return VoxelShapeUtil.getCenteredCube(9.2f, 15.6f, dx, dz);
+		}, FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
 	public static class Crate
@@ -75,7 +87,7 @@ public class SwgBlocks
 	public static class Machine
 	{
 		@RegistryName("machine_spoked")
-		public static final RotatingBlock Spoked = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		public static final RotatingBlock Spoked = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
 	public static class Ore

@@ -25,6 +25,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
@@ -101,6 +102,12 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		}
 
 		return null;
+	}
+
+	@Override
+	public Box getVisibilityBoundingBox()
+	{
+		return getBoundingBox().expand(5);
 	}
 
 	@Override

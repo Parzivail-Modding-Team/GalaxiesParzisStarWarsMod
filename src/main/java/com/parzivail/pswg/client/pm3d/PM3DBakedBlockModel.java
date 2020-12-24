@@ -2,9 +2,10 @@ package com.parzivail.pswg.client.pm3d;
 
 import com.parzivail.pswg.block.ConnectingNodeBlock;
 import com.parzivail.pswg.block.RotatingBlock;
+import com.parzivail.pswg.block.TranslatingBlock;
 import com.parzivail.pswg.client.model.SimpleModel;
-import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.util.ClientMathUtil;
+import com.parzivail.util.block.VoxelShapeUtil;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
@@ -14,6 +15,7 @@ import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -21,10 +23,8 @@ import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.*;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.HashMap;
@@ -145,16 +145,11 @@ public class PM3DBakedBlockModel extends SimpleModel
 			return meshBuilder.build();
 		}
 
-		// TODO: make this a block flag
-		if (state.getBlock() == SwgBlocks.Barrel.MosEisley)
+		if (state.getBlock() instanceof TranslatingBlock)
 		{
-			Random r = randomSupplier.get();
-			r.setSeed(state.getRenderingSeed(pos));
-
-			float s = 0.5f;
-			float dx = r.nextFloat() * s;
-			float dz = r.nextFloat() * s;
-			transformation.multiply(Matrix4f.translate(dx, 0, dz));
+			VoxelShape shape = state.getBlock().getOutlineShape(state, blockView, pos, ShapeContext.absent());
+			Vec3d center = VoxelShapeUtil.getCenter(shape);
+			transformation.multiply(Matrix4f.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f));
 		}
 
 		return createMesh(transformation);

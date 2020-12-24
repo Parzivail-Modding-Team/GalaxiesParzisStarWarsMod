@@ -2,6 +2,7 @@ package com.parzivail.util.block;
 
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -12,6 +13,15 @@ public class VoxelShapeUtil
 		width /= 32;
 		height /= 16;
 		return VoxelShapes.cuboid(0.5 - width, 0, 0.5 - width, 0.5 + width, height, 0.5 + width);
+	}
+
+	public static VoxelShape getCenteredCube(float width, float height, float dX, float dZ)
+	{
+		width /= 32;
+		height /= 16;
+		dX /= 16;
+		dZ /= 16;
+		return VoxelShapes.cuboid(0.5 - width + dX, 0, 0.5 - width + dZ, 0.5 + width + dX, height, 0.5 + width + dZ);
 	}
 
 	public static VoxelShape getCentered(float length, float width, float height)
@@ -88,5 +98,12 @@ public class VoxelShapeUtil
 		}
 
 		return VoxelShapes.cuboid(minX, minY, minZ, maxX, maxY, maxZ);
+	}
+
+	public static Vec3d getCenter(VoxelShape shape)
+	{
+		return new Vec3d((shape.getMin(Direction.Axis.X) + shape.getMax(Direction.Axis.X)) / 2,
+		                 (shape.getMin(Direction.Axis.Y) + shape.getMax(Direction.Axis.Y)) / 2,
+		                 (shape.getMin(Direction.Axis.Z) + shape.getMax(Direction.Axis.Z)) / 2);
 	}
 }
