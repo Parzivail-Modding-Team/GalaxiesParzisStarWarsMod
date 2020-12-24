@@ -53,6 +53,7 @@ public class Client implements ClientModInitializer
 		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_OVERRIDE);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::handle);
 
