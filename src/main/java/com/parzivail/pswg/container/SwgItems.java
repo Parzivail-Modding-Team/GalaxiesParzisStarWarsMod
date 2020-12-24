@@ -102,7 +102,7 @@ public class SwgItems
 		@RegistryName("blue_puff_cube")
 		public static final Item BluePuffCube = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(1).saturationModifier(0.3F).snack().build()).group(Galaxies.Tab));
 		@RegistryName("blue_yogurt")
-		public static final Item BlueYogurt = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item BlueYogurt = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 
 		@RegistryName("qrikki_bread")
 		public static final Item QrikkiBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.6F).build()).group(Galaxies.Tab));
