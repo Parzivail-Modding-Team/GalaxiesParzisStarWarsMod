@@ -21,6 +21,9 @@ public class SwgSounds
 
 	public static void register()
 	{
+		Lightsaber.register();
+		Blaster.register();
+
 		for (Map.Entry<Identifier, SoundEvent> pair : SOUND_EVENTS.entrySet())
 			Registry.register(Registry.SOUND_EVENT, pair.getKey(), pair.getValue());
 	}
@@ -30,6 +33,10 @@ public class SwgSounds
 		public static final SoundEvent START_CLASSIC = of(Resources.identifier("lightsaber.start.classic"));
 		public static final SoundEvent STOP_CLASSIC = of(Resources.identifier("lightsaber.stop.classic"));
 		public static final SoundEvent IDLE_CLASSIC = of(Resources.identifier("lightsaber.idle.classic"));
+
+		private static void register()
+		{
+		}
 	}
 
 	public static class Blaster
@@ -53,5 +60,9 @@ public class SwgSounds
 		public static final SoundEvent FIRE_SCOUT = of(Resources.identifier("blaster.fire.dl44"));
 		public static final SoundEvent FIRE_DEFENDER = of(Resources.identifier("blaster.fire.dl44"));
 		public static final SoundEvent FIRE_DL21 = of(Resources.identifier("blaster.fire.dl44"));
+
+		private static void register()
+		{
+		}
 	}
 }
