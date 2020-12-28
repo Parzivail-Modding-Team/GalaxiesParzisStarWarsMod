@@ -1,5 +1,6 @@
 package com.parzivail.util.client;
 
+import com.parzivail.pswg.util.MathUtil;
 import net.minecraft.client.texture.NativeImage;
 
 public class ColorUtil
@@ -25,12 +26,11 @@ public class ColorUtil
 		srcG = (srcG * tintG) / 255;
 		srcB = (srcB * tintB) / 255;
 
-		int a = (int)((destA + srcA) * 255f);
-		int r = (int)((1 - srcA) * destR + srcA * srcR);
-		int b = (int)((1 - srcA) * destG + srcA * srcG);
-		int g = (int)((1 - srcA) * destB + srcA * srcB);
+		int a = MathUtil.clamp((int)((destA + srcA) * 255f), 0, 255);
+		int r = MathUtil.clamp((int)((1 - srcA) * destR + srcA * srcR), 0, 255);
+		int g = MathUtil.clamp((int)((1 - srcA) * destG + srcA * srcG), 0, 255);
+		int b = MathUtil.clamp((int)((1 - srcA) * destB + srcA * srcB), 0, 255);
 
-		// This is supposedly an ABGR color but the colors are very wrong unless you pack it as an AGBR color
-		return NativeImage.getAbgrColor(a, g, b, r);
+		return NativeImage.getAbgrColor(a, b, g, r);
 	}
 }

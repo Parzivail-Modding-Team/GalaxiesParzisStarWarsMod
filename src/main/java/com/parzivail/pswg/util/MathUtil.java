@@ -78,4 +78,8 @@ public class MathUtil
 	{
 		return Math.sqrt(v.x * v.x + v.y * v.y);
 	}
+
+	public static int clamp(int i, int min, int max) {
+		return Math.max(min, Math.min(i, max));
+	}
 }
