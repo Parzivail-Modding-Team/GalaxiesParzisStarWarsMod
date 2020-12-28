@@ -170,6 +170,8 @@ public class SwgBlocks
 		public static final PillarBlock ImperialLightDecoy = createPanel(MaterialColor.GRAY, MaterialColor.GRAY);
 		@RegistryName("panel_imperial_light_off")
 		public static final PillarBlock ImperialLightOff = createPanel(MaterialColor.GRAY, MaterialColor.BLACK);
+		@RegistryName("lab_wall")
+		public static final Block LabWall = new Block(FabricBlockSettings.of(Material.STONE));
 
 		private static PillarBlock createLitPanel(MaterialColor topMaterialColor, MaterialColor sideMaterialColor)
 		{
