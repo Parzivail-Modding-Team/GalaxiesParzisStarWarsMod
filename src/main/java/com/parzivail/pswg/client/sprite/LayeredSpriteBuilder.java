@@ -12,9 +12,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.function.Function;
 
 public class LayeredSpriteBuilder
@@ -23,7 +20,6 @@ public class LayeredSpriteBuilder
 
 	public static NativeImage build(NativeImage nativeImage, Identifier identifier, ResourceManager resourceManager, Function<Identifier, Identifier> texturePathResolver) throws IOException
 	{
-		System.out.println(identifier);
 		Resource textureMetaResource;
 		try
 		{
@@ -90,10 +86,6 @@ public class LayeredSpriteBuilder
 				}
 			}
 		}
-
-		final Path path = Paths.get("/home/kb1000/texturedump/assets").resolve(identifier.getNamespace()).resolve(identifier.getPath());
-		Files.createDirectories(path.getParent());
-		outImage.writeFile(path);
 
 		return outImage;
 	}
