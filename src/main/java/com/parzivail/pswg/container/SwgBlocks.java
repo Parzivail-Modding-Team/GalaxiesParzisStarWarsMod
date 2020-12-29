@@ -118,10 +118,18 @@ public class SwgBlocks
 
 	public static class MaterialBlock
 	{
+		@RegistryName("beskar_block")
+		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("chromium_block")
+		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("cortosis_block")
+		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("desh_block")
 		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("durasteel_block")
 		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("plasteel_block")
+		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("titanium_block")
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL));
 	}

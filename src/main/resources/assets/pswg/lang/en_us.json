@@ -1,7 +1,10 @@
 {
 	"block.pswg.barrel_mos_eisley": "Mos Eisley Barrel",
+	"block.pswg.beskar_block": "Beskar Block",
 	"block.pswg.blaster_workbench": "Blaster Workbench",
+	"block.pswg.chromium_block": "Chromium Block",
 	"block.pswg.chromium_ore": "Chromium Ore",
+	"block.pswg.cortosis_block": "Cortosis Block",
 	"block.pswg.cortosis_ore": "Cortosis Ore",
 	"block.pswg.crate_imperial_cube": "Imperial Crate",
 	"block.pswg.crate_mos_eisley": "Mos Eisley Crate",
@@ -42,6 +45,7 @@
 	"block.pswg.panel_imperial_light_tall_3": "Imperial Lighting Panel",
 	"block.pswg.panel_imperial_light_tall_4": "Imperial Lighting Panel",
 	"block.pswg.pipe_thick": "Large Pipe",
+	"block.pswg.plasteel_block": "Plasteel Block",
 	"block.pswg.rubindum_ore": "Rubindum Ore",
 	"block.pswg.sand_tatooine": "Tatooine Sand",
 	"block.pswg.stone_massassi_brick_slab": "Massassi Stone Brick Slab",
