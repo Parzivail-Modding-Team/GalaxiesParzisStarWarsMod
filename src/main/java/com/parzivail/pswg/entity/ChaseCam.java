@@ -39,7 +39,10 @@ public class ChaseCam
 		BlockHitResult result = world.raycast(new RaycastContext(parent.getPos(), lerpPos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, parent));
 
 		double totalDistance = parent.getPos().distanceTo(result.getPos());
-		pos = MathUtil.lerp((float)((totalDistance - 0.05) / totalDistance), parent.getPos(), result.getPos());
+		if (totalDistance == 0)
+			pos = result.getPos();
+		else
+			pos = MathUtil.lerp((float)((totalDistance - 0.05) / totalDistance), parent.getPos(), result.getPos());
 	}
 
 	private float getCamDistTarget(ShipEntity parent, Quaternion q)
