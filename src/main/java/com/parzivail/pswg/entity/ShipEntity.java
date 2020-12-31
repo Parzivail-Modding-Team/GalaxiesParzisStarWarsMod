@@ -180,8 +180,16 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 
 		if (world.isClient)
 		{
-			clientPrevRotation = new Quaternion(clientRotation);
-			clientRotation = new Quaternion(clientInstRotation);
+			if (Client.isShipClientControlled(this))
+			{
+				clientPrevRotation = new Quaternion(clientRotation);
+				clientRotation = new Quaternion(clientInstRotation);
+			}
+			else
+			{
+				clientPrevRotation = new Quaternion(viewPrevRotation);
+				clientRotation = new Quaternion(viewRotation);
+			}
 
 			ChaseCam camera = getCamera();
 			camera.tick(this);

@@ -17,6 +17,7 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgScreenTypes;
+import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.util.Lumberjack;
 import com.parzivail.util.item.CustomItemRenderer;
 import com.parzivail.util.item.ICustomHudRenderer;
@@ -41,6 +42,14 @@ public class Client implements ClientModInitializer
 
 	public static MinecraftClient minecraft;
 	public static RemoteTextureProvider remoteTextureProvider;
+
+	public static boolean isShipClientControlled(ShipEntity shipEntity)
+	{
+		if (minecraft == null || minecraft.player == null)
+			return false;
+
+		return ShipEntity.getShip(minecraft.player) == shipEntity;
+	}
 
 	@Override
 	public void onInitializeClient()
