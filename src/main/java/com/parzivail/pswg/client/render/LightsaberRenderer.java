@@ -82,7 +82,7 @@ public class LightsaberRenderer
 			vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_GLOW_FIRSTPERSON);
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderGlow(totalLength, glowColor, cap);
+		renderGlow(totalLength, glowColor, unstable, cap);
 	}
 
 	private static void renderCore(float bladeLength, int coreColor, boolean unstable, boolean cap)
@@ -115,7 +115,7 @@ public class LightsaberRenderer
 		}
 	}
 
-	public static void renderGlow(float bladeLength, int bladeColor, boolean cap)
+	public static void renderGlow(float bladeLength, int bladeColor, boolean unstable, boolean cap)
 	{
 		if (bladeLength == 0)
 			return;
@@ -125,7 +125,12 @@ public class LightsaberRenderer
 		for (int layer = 19; layer > 10; layer--)
 		{
 			VertexConsumerBuffer.Instance.setColor(bladeColor, (int)(1.675f * layer));
-			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, thicknessTop - 0.0058f * layer, 0.16f - 0.0058f * layer, 0, cap ? bladeLength - 0.33f + 0.4f * (float)Math.sqrt(1 - Math.pow(1 - layer / 19f, 2)) : bladeLength + (20 - layer) * 0.005f, 0, 0, -(20 - layer) * 0.005f, 0);
+
+			float layerThicknessModifier = 0;
+			if (unstable)
+				layerThicknessModifier = (float)Resources.RANDOM.nextGaussian() * 0.01f;
+
+			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, thicknessTop - layerThicknessModifier - 0.0058f * layer, 0.16f - layerThicknessModifier - 0.0058f * layer, 0, cap ? layerThicknessModifier + bladeLength - 0.33f + 0.4f * (float)Math.sqrt(1 - Math.pow(1 - layer / 19f, 2)) : bladeLength + (20 - layer) * 0.005f, 0, 0, -(20 - layer) * 0.005f, 0);
 		}
 	}
 }
