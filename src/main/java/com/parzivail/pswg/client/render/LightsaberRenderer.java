@@ -13,13 +13,18 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
+import java.util.function.Function;
+
 public class LightsaberRenderer
 {
 	private static final RenderLayer LAYER_LIGHTSABER_CORE = RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().build(true));
 
-	private static final RenderLayer LAYER_LIGHTSABER_GLOW_THIRDPERSON = RenderLayer.of("lightsaber_glow_3p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency", () -> {
+	private static final Function<Integer, Integer> BLEND_LIGHTSABER = (layer) -> (int)(1.675f * layer);
+
+	private static final RenderLayer LAYER_LIGHTSABER_GLOW_THIRDPERSON = RenderLayer.of("lightsaber_glow_3p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency_3p", () -> {
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
+		RenderSystem.enableCull();
 	}, () -> {
 		RenderSystem.disableBlend();
 		RenderSystem.defaultBlendFunc();
@@ -29,12 +34,27 @@ public class LightsaberRenderer
 	}, () -> {
 		if (MinecraftClient.isFabulousGraphicsOrBetter())
 			Client.minecraft.getFramebuffer().beginWrite(false);
+	})).cull(new RenderPhase.Cull(true)).build(true));
+
+	private static final RenderLayer LAYER_LIGHTSABER_GLOW_FIRSTPERSON = RenderLayer.of("lightsaber_glow_1p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency_1p", () -> {
+		RenderSystem.enableBlend();
+		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
+		RenderSystem.enableCull();
+	}, () -> {
+		RenderSystem.disableBlend();
+		RenderSystem.defaultBlendFunc();
 	})).build(true));
 
-	private static final RenderLayer LAYER_LIGHTSABER_GLOW_DARK_THIRDPERSON = RenderLayer.of("lightsaber_glow_dark_3p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency", () -> {
+	private static final Function<Integer, Integer> BLEND_LIGHTSABER_DARK = (layer) -> (int)MathHelper.lerp((layer - 11) / 8f, 0, 192);
+
+	private static final RenderLayer LAYER_LIGHTSABER_GLOW_DARK_THIRDPERSON = RenderLayer.of("lightsaber_glow_dark_3p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_dark_transparency_3p", () -> {
 		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_DST_COLOR, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
+		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
+		RenderSystem.enableCull();
+		GL11.glPushAttrib(GL11.GL_POLYGON_BIT);
+		GL11.glCullFace(GL11.GL_FRONT);
 	}, () -> {
+		GL11.glPopAttrib();
 		RenderSystem.disableBlend();
 		RenderSystem.defaultBlendFunc();
 	})).target(new RenderPhase.Target("item_entity_target", () -> {
@@ -43,25 +63,21 @@ public class LightsaberRenderer
 	}, () -> {
 		if (MinecraftClient.isFabulousGraphicsOrBetter())
 			Client.minecraft.getFramebuffer().beginWrite(false);
-	})).build(true));
+	})).cull(new RenderPhase.Cull(true)).build(true));
 
-	private static final RenderLayer LAYER_LIGHTSABER_GLOW_FIRSTPERSON = RenderLayer.of("lightsaber_glow_1p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency", () -> {
+	private static final RenderLayer LAYER_LIGHTSABER_GLOW_DARK_FIRSTPERSON = RenderLayer.of("lightsaber_glow_dark_1p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_dark_transparency_1p", () -> {
 		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
+		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
+		RenderSystem.enableCull();
+		GL11.glPushAttrib(GL11.GL_POLYGON_BIT);
+		GL11.glCullFace(GL11.GL_FRONT);
 	}, () -> {
+		GL11.glPopAttrib();
 		RenderSystem.disableBlend();
 		RenderSystem.defaultBlendFunc();
-	})).build(true));
+	})).cull(new RenderPhase.Cull(true)).build(true));
 
-	private static final RenderLayer LAYER_LIGHTSABER_GLOW_DARK_FIRSTPERSON = RenderLayer.of("lightsaber_glow_dark_1p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency", () -> {
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_DST_COLOR, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
-	}, () -> {
-		RenderSystem.disableBlend();
-		RenderSystem.defaultBlendFunc();
-	})).build(true));
-
-	public static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, int coreColor, int glowColor)
+	public static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, int coreColor, int glowColor, boolean darkBlend)
 	{
 		VertexConsumer vc;
 
@@ -77,12 +93,12 @@ public class LightsaberRenderer
 		renderCore(totalLength, coreColor, unstable, cap);
 
 		if (renderMode != ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND && renderMode != ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND)
-			vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_GLOW_THIRDPERSON); // TODO: swap in different blending mode for darksabers
+			vc = vertexConsumers.getBuffer(darkBlend ? LAYER_LIGHTSABER_GLOW_DARK_THIRDPERSON : LAYER_LIGHTSABER_GLOW_THIRDPERSON);
 		else
-			vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_GLOW_FIRSTPERSON);
+			vc = vertexConsumers.getBuffer(darkBlend ? LAYER_LIGHTSABER_GLOW_DARK_FIRSTPERSON : LAYER_LIGHTSABER_GLOW_FIRSTPERSON);
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderGlow(totalLength, glowColor, unstable, cap);
+		renderGlow(totalLength, glowColor, unstable, cap, darkBlend);
 	}
 
 	private static void renderCore(float bladeLength, int coreColor, boolean unstable, boolean cap)
@@ -115,7 +131,7 @@ public class LightsaberRenderer
 		}
 	}
 
-	public static void renderGlow(float bladeLength, int bladeColor, boolean unstable, boolean cap)
+	public static void renderGlow(float bladeLength, int bladeColor, boolean unstable, boolean cap, boolean darkBlend)
 	{
 		if (bladeLength == 0)
 			return;
@@ -124,7 +140,7 @@ public class LightsaberRenderer
 
 		for (int layer = 19; layer > 10; layer--)
 		{
-			VertexConsumerBuffer.Instance.setColor(bladeColor, (int)(1.675f * layer));
+			VertexConsumerBuffer.Instance.setColor(bladeColor, (darkBlend ? BLEND_LIGHTSABER_DARK : BLEND_LIGHTSABER).apply(layer));
 
 			float layerThicknessModifier = 0;
 			if (unstable)

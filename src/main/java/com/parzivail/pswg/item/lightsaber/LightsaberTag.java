@@ -22,6 +22,7 @@ public class LightsaberTag extends TagSerializer
 	public int coreColor;
 	public int bladeColor;
 	public boolean unstable;
+	public boolean darkBlend;
 
 	public Identifier hilt;
 
@@ -40,6 +41,7 @@ public class LightsaberTag extends TagSerializer
 		coreColor = 0xFFFFFF;
 		bladeColor = 0x0020FF;
 		unstable = false;
+		darkBlend = false;
 
 		hilt = Resources.identifier("luke/rotj");
 	}
@@ -85,6 +87,7 @@ public class LightsaberTag extends TagSerializer
 	@Override
 	public CompoundTag serialize()
 	{
+		// TODO: figure out how to properly create default tags for stacks
 		if (!init)
 			setDefaults();
 		return super.serialize();
