@@ -1,13 +1,13 @@
 {
 	"type": "minecraft:crafting_shapeless",
-	"group": "desh_ingot",
+	"group": "beskar_ingot",
 	"ingredients": [
 		{
-			"item": "pswg:desh_block"
+			"item": "pswg:beskar_block"
 		}
 	],
 	"result": {
-		"item": "pswg:desh_ingot",
+		"item": "pswg:beskar_ingot",
 		"count": 9
 	}
 }

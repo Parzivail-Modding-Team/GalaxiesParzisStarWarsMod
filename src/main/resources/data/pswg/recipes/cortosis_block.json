@@ -7,10 +7,10 @@
 	],
 	"key": {
 		"#": {
-			"item": "pswg:desh_ingot"
+			"item": "pswg:cortosis_ingot"
 		}
 	},
 	"result": {
-		"item": "pswg:desh_block"
+		"item": "pswg:cortosis_block"
 	}
 }

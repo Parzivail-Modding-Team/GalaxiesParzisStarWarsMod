@@ -129,7 +129,7 @@ public class SwgBlocks
 		@RegistryName("durasteel_block")
 		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("plasteel_block")
-		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("titanium_block")
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL));
 	}

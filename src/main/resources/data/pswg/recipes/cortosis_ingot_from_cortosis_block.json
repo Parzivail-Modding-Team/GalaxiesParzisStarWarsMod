@@ -1,13 +1,13 @@
 {
 	"type": "minecraft:crafting_shapeless",
-	"group": "desh_ingot",
+	"group": "cortosis_ingot",
 	"ingredients": [
 		{
-			"item": "pswg:desh_block"
+			"item": "pswg:cortosis_block"
 		}
 	],
 	"result": {
-		"item": "pswg:desh_ingot",
+		"item": "pswg:cortosis_ingot",
 		"count": 9
 	}
 }

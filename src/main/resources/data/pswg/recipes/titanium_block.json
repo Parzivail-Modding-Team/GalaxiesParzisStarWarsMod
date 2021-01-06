@@ -7,10 +7,10 @@
 	],
 	"key": {
 		"#": {
-			"item": "pswg:desh_ingot"
+			"item": "pswg:titanium_ingot"
 		}
 	},
 	"result": {
-		"item": "pswg:desh_block"
+		"item": "pswg:titanium_block"
 	}
 }

@@ -7,10 +7,10 @@
 	],
 	"key": {
 		"#": {
-			"item": "pswg:desh_ingot"
+			"item": "pswg:chromium_ingot"
 		}
 	},
 	"result": {
-		"item": "pswg:desh_block"
+		"item": "pswg:chromium_block"
 	}
 }

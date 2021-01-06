@@ -7,10 +7,10 @@
 	],
 	"key": {
 		"#": {
-			"item": "pswg:desh_ingot"
+			"item": "pswg:beskar_ingot"
 		}
 	},
 	"result": {
-		"item": "pswg:desh_block"
+		"item": "pswg:beskar_block"
 	}
 }

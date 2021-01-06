@@ -7,10 +7,10 @@
 	],
 	"key": {
 		"#": {
-			"item": "pswg:desh_ingot"
+			"item": "pswg:plasteel_ingot"
 		}
 	},
 	"result": {
-		"item": "pswg:desh_block"
+		"item": "pswg:plasteel_block"
 	}
 }

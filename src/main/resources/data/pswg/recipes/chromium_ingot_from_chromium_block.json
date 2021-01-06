@@ -1,13 +1,13 @@
 {
 	"type": "minecraft:crafting_shapeless",
-	"group": "desh_ingot",
+	"group": "chromium_ingot",
 	"ingredients": [
 		{
-			"item": "pswg:desh_block"
+			"item": "pswg:chromium_block"
 		}
 	],
 	"result": {
-		"item": "pswg:desh_ingot",
+		"item": "pswg:chromium_ingot",
 		"count": 9
 	}
 }

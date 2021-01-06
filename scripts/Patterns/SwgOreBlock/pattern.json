@@ -43,6 +43,10 @@
 		{
 			"source": "recipe_ingot_from_block.json",
 			"destination": "./src/main/resources/data/pswg/recipes/$$INGOTREGNAME$$_from_$$REGNAME$$.json"
+		},
+		{
+			"source": "recipe_block.json",
+			"destination": "./src/main/resources/data/pswg/recipes/$$REGNAME$$.json"
 		}
 	]
 }

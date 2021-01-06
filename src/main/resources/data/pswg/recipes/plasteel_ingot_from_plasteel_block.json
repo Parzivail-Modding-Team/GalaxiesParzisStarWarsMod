@@ -1,13 +1,13 @@
 {
 	"type": "minecraft:crafting_shapeless",
-	"group": "desh_ingot",
+	"group": "plasteel_ingot",
 	"ingredients": [
 		{
-			"item": "pswg:desh_block"
+			"item": "pswg:plasteel_block"
 		}
 	],
 	"result": {
-		"item": "pswg:desh_ingot",
+		"item": "pswg:plasteel_ingot",
 		"count": 9
 	}
 }
