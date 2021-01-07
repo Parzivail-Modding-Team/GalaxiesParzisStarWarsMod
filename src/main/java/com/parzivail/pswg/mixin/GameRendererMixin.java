@@ -64,9 +64,15 @@ public class GameRendererMixin
 	}
 
 	@Inject(method = "renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;render(Lnet/minecraft/client/util/math/MatrixStack;FJZLnet/minecraft/client/render/Camera;Lnet/minecraft/client/render/GameRenderer;Lnet/minecraft/client/render/LightmapTextureManager;Lnet/minecraft/util/math/Matrix4f;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-	void applyCameraTransformations(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo info, boolean shouldRenderBlockOutline, Camera camera)
+	void applyCameraTransformations(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo ci, boolean shouldRenderBlockOutline, Camera camera)
 	{
 		CameraHelper.applyCameraTransformations(tickDelta, limitTime, matrix, camera);
+	}
+
+	@Inject(method = "renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", at = @At(value = "HEAD"))
+	void renderWorldHead(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo ci)
+	{
+		CameraHelper.renderWorldHead(tickDelta, limitTime, matrix);
 	}
 
 	@Inject(method = "Lnet/minecraft/client/render/GameRenderer;renderHand(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/Camera;F)V", at = @At("HEAD"), cancellable = true)

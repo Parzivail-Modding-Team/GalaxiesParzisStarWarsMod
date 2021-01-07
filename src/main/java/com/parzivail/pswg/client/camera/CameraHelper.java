@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.camera;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ShipEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.options.Perspective;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
@@ -42,5 +43,28 @@ public class CameraHelper
 		MinecraftClient mc = Client.minecraft;
 		if (mc.cameraEntity instanceof MutableCameraEntity || mc.cameraEntity instanceof ShipEntity)
 			ci.cancel();
+	}
+
+	public static void renderWorldHead(float tickDelta, long limitTime, MatrixStack matrix)
+	{
+		MinecraftClient mc = Client.minecraft;
+		ClientPlayerEntity player = mc.player;
+
+		assert player != null;
+
+		ShipEntity ship = ShipEntity.getShip(player);
+
+		if (ship != null)
+		{
+			if (mc.options.getPerspective() != Perspective.FIRST_PERSON)
+				mc.cameraEntity = CameraHelper.MUTABLE_CAMERA_ENTITY.with(ship, ship.getCamera());
+			else
+				mc.cameraEntity = ship;
+
+			return;
+		}
+
+		if (mc.cameraEntity instanceof MutableCameraEntity || mc.cameraEntity instanceof ShipEntity)
+			mc.cameraEntity = player;
 	}
 }
