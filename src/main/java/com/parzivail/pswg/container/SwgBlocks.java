@@ -142,6 +142,14 @@ public class SwgBlocks
 		public static final Block WallCluster = new RotatingBlockWithBounds(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15));
 	}
 
+	public static class Plant
+	{
+		@RegistryName("funnel_flower")
+		public static final Block FunnelFlower = new SwgFernBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("blossoming_funnel_flower")
+		public static final Block BlossomingFunnelFlower = new SwgFernBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+	}
+
 	public static class Panel
 	{
 		@RegistryName("panel_imperial_base")
