@@ -92,6 +92,8 @@ public class SwgBlocks
 
 	public static class Ore
 	{
+		@RegistryName("beskar_ore")
+		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("chromium_ore")
 		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("cortosis_ore")
