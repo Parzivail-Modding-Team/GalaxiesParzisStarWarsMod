@@ -60,6 +60,14 @@ public class SwgBlocks
 		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCubeBlockEntityType = BlockEntityType.Builder.create(CrateImperialCubeBlockEntity::new, ImperialCube).build(null);
 	}
 
+	public static class Door
+	{
+		@RegistryName("door_tatooine_home")
+		public static final RotatingBlockWithEntity TatooineHome = new BlockTatooineHomeDoor(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		@RegistryName("door_tatooine_home")
+		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = BlockEntityType.Builder.create(TatooineHomeDoorBlockEntity::new, TatooineHome).build(null);
+	}
+
 	public static class Leaves
 	{
 		@RegistryName("leaves_sequoia")

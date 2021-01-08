@@ -81,16 +81,10 @@ dependencies {
 
 processResources {
 	inputs.property "version", project.version
-	inputs.property "cca_version", project.cca_version
-	inputs.property "autoconfig_version", project.autoconfig_version
-	inputs.property "cloth_config_version", project.cloth_config_version
 
 	from(sourceSets.main.resources.srcDirs) {
 		include "fabric.mod.json"
-		expand  "version": project.version,
-				"cca_version": project.cca_version,
-				"autoconfig_version": project.autoconfig_version,
-				"cloth_config_version": project.cloth_config_version
+		expand  "version": project.version
 	}
 
 	from(sourceSets.main.resources.srcDirs) {

@@ -17,6 +17,7 @@
 		"ClientRecipeBookMixin",
 		"EntityClientMixin",
 		"EntityRenderDispatcherMixin",
+		"FramebufferMixin",
 		"GameRendererMixin",
 		"HeldItemRendererMixin",
 		"InGameHudMixin",

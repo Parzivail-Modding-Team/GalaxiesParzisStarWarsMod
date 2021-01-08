@@ -34,11 +34,7 @@
 	"depends": {
 		"fabricloader": ">=0.7.2",
 		"fabric": "*",
-		"minecraft": "1.16.x",
-		"cardinal-components-base": ">=${cca_version}",
-		"cardinal-components-entity": ">=${cca_version}",
-		"autoconfig1u": ">=${autoconfig_version}",
-		"cloth-config2": ">=${cloth_config_version}"
+		"minecraft": "1.16.x"
 	},
 	"recommends": {
 		"modmenu": "*"

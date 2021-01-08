@@ -11,6 +11,7 @@ import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.RenderLayerHelper;
 import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
+import com.parzivail.pswg.client.render.block.TatooineHomeDoorRenderer;
 import com.parzivail.pswg.client.render.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
@@ -26,6 +27,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
@@ -67,6 +69,8 @@ public class Client implements ClientModInitializer
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::handle);
+
+		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
 
 		SimpleModels.register(SwgBlocks.Barrel.MosEisley, true, ModelLoader.loadPM3D(SimpleModel.Discriminator.RENDER_SEED, Resources.identifier("models/block/barrel/mos_eisley.pm3d"), Resources.identifier("model/barrel/mos_eisley"), new Identifier("block/stone")));
 
