@@ -49,6 +49,8 @@ public class SwgItems
 		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_ingot")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("transparisteel_ingot")
+		public static final Item Transparisteel = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Lightsaber
