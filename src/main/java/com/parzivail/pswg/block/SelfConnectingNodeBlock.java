@@ -25,11 +25,20 @@ public class SelfConnectingNodeBlock extends ConnectingNodeBlock
 	}
 
 	@Override
+	public boolean canConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction)
+	{
+		return otherState.getBlock() == this;
+	}
+
+	@Override
 	public boolean shouldConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction)
 	{
-		if (state.get(FACING_PROPERTIES.get(direction)))
-			return true;
+		if (!canConnectTo(world, state, otherState, otherPos, direction))
+			return false;
 
-		return otherState.getBlock() == this && otherState.get(FACING_PROPERTIES.get(direction.getOpposite()));
+		//		if (state.get(FACING_PROPERTIES.get(direction)))
+		//			return true;
+
+		return otherState.get(FACING_PROPERTIES.get(direction.getOpposite()));
 	}
 }

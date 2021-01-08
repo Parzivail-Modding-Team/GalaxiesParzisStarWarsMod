@@ -53,11 +53,24 @@ public abstract class ConnectingNodeBlock extends Block
 		setDefaultState(this.stateManager.getDefaultState().with(NORTH, false).with(EAST, false).with(SOUTH, false).with(WEST, false).with(UP, false).with(DOWN, false));
 	}
 
+	abstract boolean canConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction);
+
 	abstract boolean shouldConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction);
 
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
-		return createConnectedState(ctx.getWorld(), ctx.getBlockPos());
+		BlockState state = this.getDefaultState();
+		BlockPos pos = ctx.getBlockPos();
+		World world = ctx.getWorld();
+
+		for (Map.Entry<Direction, BooleanProperty> pair : FACING_PROPERTIES.entrySet())
+		{
+			BlockPos neighborPos = pos.offset(pair.getKey());
+			BlockState neighborState = world.getBlockState(neighborPos);
+			state = state.with(pair.getValue(), canConnectTo(world, state, neighborState, neighborPos, pair.getKey()));
+		}
+
+		return state;
 	}
 
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState otherState, WorldAccess world, BlockPos pos, BlockPos otherPos)
@@ -75,7 +88,7 @@ public abstract class ConnectingNodeBlock extends Block
 
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
-		if (!player.abilities.allowModifyWorld || !player.isSneaking())
+		if (!player.abilities.allowModifyWorld || !player.getStackInHand(hand).isEmpty())
 		{
 			return ActionResult.PASS;
 		}
@@ -84,20 +97,6 @@ public abstract class ConnectingNodeBlock extends Block
 			world.setBlockState(pos, state.cycle(FACING_PROPERTIES.get(hit.getSide())), 3);
 			return ActionResult.success(world.isClient);
 		}
-	}
-
-	private BlockState createConnectedState(WorldAccess world, BlockPos pos)
-	{
-		BlockState state = this.getDefaultState();
-
-		for (Map.Entry<Direction, BooleanProperty> pair : FACING_PROPERTIES.entrySet())
-		{
-			BlockPos neighborPos = pos.offset(pair.getKey());
-			BlockState neighborState = world.getBlockState(neighborPos);
-			state = state.with(pair.getValue(), shouldConnectTo(world, state, neighborState, neighborPos, pair.getKey()));
-		}
-
-		return state;
 	}
 
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
