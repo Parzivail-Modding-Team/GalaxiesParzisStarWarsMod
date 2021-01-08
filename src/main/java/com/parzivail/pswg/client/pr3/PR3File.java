@@ -14,7 +14,7 @@ import java.io.InputStream;
 public class PR3File
 {
 	private static final String MAGIC = "PR3";
-	private static final int ACCEPTED_VERSION = 0x01;
+	private static final int ACCEPTED_VERSION = 0x02;
 
 	public final PR3Object[] objects;
 
@@ -77,22 +77,22 @@ public class PR3File
 
 	private static PR3FacePointer[] readLengthCodedFaces(LittleEndianDataInputStream objStream) throws IOException
 	{
-		int length = objStream.readInt();
+		int length = PIO.read7BitEncodedInt(objStream);
 
 		PR3FacePointer[] faces = new PR3FacePointer[length];
 		for (int i = 0; i < length; i++)
-			faces[i] = new PR3FacePointer(objStream.readInt(), objStream.readInt(), objStream.readInt());
+			faces[i] = new PR3FacePointer(PIO.read7BitEncodedInt(objStream), PIO.read7BitEncodedInt(objStream), PIO.read7BitEncodedInt(objStream));
 
 		return faces;
 	}
 
 	private static Vector3f[] readLengthCodedVectors(LittleEndianDataInputStream objStream) throws IOException
 	{
-		int length = objStream.readInt();
+		int length = PIO.read7BitEncodedInt(objStream);
 
 		Vector3f[] vectors = new Vector3f[length];
 		for (int i = 0; i < length; i++)
-			vectors[i] = new Vector3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
+			vectors[i] = new Vector3f(PIO.readHalf(objStream), PIO.readHalf(objStream), PIO.readHalf(objStream));
 
 		return vectors;
 	}

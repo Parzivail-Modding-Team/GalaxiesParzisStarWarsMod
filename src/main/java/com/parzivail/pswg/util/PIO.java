@@ -2,6 +2,7 @@ package com.parzivail.pswg.util;
 
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
+import com.parzivail.util.binary.HalfFloat;
 import com.parzivail.util.math.MatrixExtUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -28,6 +29,12 @@ public class PIO
 				return str.toString();
 			str.append((char)b);
 		}
+	}
+
+	public static float readHalf(DataInput s) throws IOException
+	{
+		HalfFloat hf = new HalfFloat(s.readShort());
+		return hf.getFullFloat();
 	}
 
 	public static int read7BitEncodedInt(InputStream is) throws IOException

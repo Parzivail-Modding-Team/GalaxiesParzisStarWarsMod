@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class PM3DFile
 {
 	private static final String MAGIC = "Pm3D";
-	private static final int[] ACCEPTED_VERSIONS = { 0x02, 0x03 };
+	private static final int[] ACCEPTED_VERSIONS = { 0x04 };
 
 	private final PM3DLod[] lods;
 
@@ -83,7 +83,7 @@ public class PM3DFile
 			Vector3f[] verts = loadVerts(numVerts, objStream);
 			Vector3f[] normals = loadNormals(numNormals, objStream);
 			Vector3f[] uvs = loadUvs(numUvs, objStream);
-			PM3DObject[] objects = loadObjects(version, numObjects, objStream);
+			PM3DObject[] objects = loadObjects(numObjects, objStream);
 
 			Box bounds = getBounds(verts);
 
@@ -129,9 +129,9 @@ public class PM3DFile
 
 		for (int i = 0; i < num; i++)
 		{
-			float x = objStream.readFloat() + 0.5f;
-			float y = objStream.readFloat();
-			float z = objStream.readFloat() + 0.5f;
+			float x = PIO.readHalf(objStream) + 0.5f;
+			float y = PIO.readHalf(objStream);
+			float z = PIO.readHalf(objStream) + 0.5f;
 
 			verts[i] = new Vector3f(x, y, z);
 		}
@@ -145,9 +145,9 @@ public class PM3DFile
 
 		for (int i = 0; i < num; i++)
 		{
-			float x = objStream.readFloat();
-			float y = objStream.readFloat();
-			float z = objStream.readFloat();
+			float x = PIO.readHalf(objStream);
+			float y = PIO.readHalf(objStream);
+			float z = PIO.readHalf(objStream);
 
 			verts[i] = new Vector3f(x, y, z);
 		}
@@ -161,8 +161,8 @@ public class PM3DFile
 
 		for (int i = 0; i < num; i++)
 		{
-			float u = objStream.readFloat();
-			float v = objStream.readFloat();
+			float u = PIO.readHalf(objStream);
+			float v = PIO.readHalf(objStream);
 
 			uvs[i] = new Vector3f(u, v, 0);
 		}
@@ -170,7 +170,7 @@ public class PM3DFile
 		return uvs;
 	}
 
-	private static PM3DObject[] loadObjects(int version, int num, LittleEndianDataInputStream objStream) throws IOException
+	private static PM3DObject[] loadObjects(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
 		PM3DObject[] objects = new PM3DObject[num];
 
@@ -188,20 +188,10 @@ public class PM3DFile
 				int numVerts = objStream.readInt();
 				for (int k = 0; k < numVerts; k++)
 				{
-					if (version > 2)
-					{
-						int vertex = PIO.read7BitEncodedInt(objStream);
-						int normal = PIO.read7BitEncodedInt(objStream);
-						int texture = PIO.read7BitEncodedInt(objStream);
-						face.verts.add(new PM3DVertPointer(vertex, normal, texture));
-					}
-					else
-					{
-						int vertex = objStream.readInt();
-						int normal = objStream.readInt();
-						int texture = objStream.readInt();
-						face.verts.add(new PM3DVertPointer(vertex, normal, texture));
-					}
+					int vertex = PIO.read7BitEncodedInt(objStream);
+					int normal = PIO.read7BitEncodedInt(objStream);
+					int texture = PIO.read7BitEncodedInt(objStream);
+					face.verts.add(new PM3DVertPointer(vertex, normal, texture));
 				}
 
 				faces.add(face);
