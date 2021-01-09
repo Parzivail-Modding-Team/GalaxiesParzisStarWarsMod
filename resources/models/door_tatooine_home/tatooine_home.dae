@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<COLLADA xmlns="http://www.collada.org/2005/11/COLLADASchema" version="1.4.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <asset>
+    <contributor>
+      <author>Blender User</author>
+      <authoring_tool>Blender 2.80.75 commit date:2019-07-29, commit time:14:47, hash:f6cb5f54494e</authoring_tool>
+    </contributor>
+    <created>2021-01-09T14:41:28</created>
+    <modified>2021-01-09T14:41:28</modified>
+    <unit name="meter" meter="1"/>
+    <up_axis>Z_UP</up_axis>
+  </asset>
+  <library_effects>
+    <effect id="door-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <color sid="diffuse">0.8 0.8 0.8 1</color>
+            </diffuse>
+            <reflectivity>
+              <float sid="specular">0.5</float>
+            </reflectivity>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+    <effect id="frame-effect">
+      <profile_COMMON>
+        <technique sid="common">
+          <lambert>
+            <emission>
+              <color sid="emission">0 0 0 1</color>
+            </emission>
+            <diffuse>
+              <color sid="diffuse">0.8 0.8 0.8 1</color>
+            </diffuse>
+            <reflectivity>
+              <float sid="specular">0.5</float>
+            </reflectivity>
+          </lambert>
+        </technique>
+      </profile_COMMON>
+    </effect>
+  </library_effects>
+  <library_images/>
+  <library_materials>
+    <material id="door-material" name="door">
+      <instance_effect url="#door-effect"/>
+    </material>
+    <material id="frame-material" name="frame">
+      <instance_effect url="#frame-effect"/>
+    </material>
+  </library_materials>
+  <library_geometries>
+    <geometry id="StencilMask-mesh" name="StencilMask">
+      <mesh>
+        <source id="StencilMask-mesh-positions">
+          <float_array id="StencilMask-mesh-positions-array" count="24">-0.4375 -0.25 0.0625 -0.4375 -0.25 1.9375 -0.4375 0.25 0.0625 -0.4375 0.25 1.9375 0.4375 -0.25 0.0625 0.4375 -0.25 1.9375 0.4375 0.25 0.0625 0.4375 0.25 1.9375</float_array>
+          <technique_common>
+            <accessor source="#StencilMask-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="StencilMask-mesh-normals">
+          <float_array id="StencilMask-mesh-normals-array" count="18">-1 0 0 0 1 0 1 0 0 0 -1 0 0 0 -1 0 0 1</float_array>
+          <technique_common>
+            <accessor source="#StencilMask-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="StencilMask-mesh-map-0">
+          <float_array id="StencilMask-mesh-map-0-array" count="72">0.625 0 0.375 0.25 0.375 0 0.625 0.25 0.375 0.5 0.375 0.25 0.625 0.5 0.375 0.75 0.375 0.5 0.625 0.75 0.375 1 0.375 0.75 0.375 0.5 0.125 0.75 0.125 0.5 0.875 0.5 0.625 0.75 0.625 0.5 0.625 0 0.625 0.25 0.375 0.25 0.625 0.25 0.625 0.5 0.375 0.5 0.625 0.5 0.625 0.75 0.375 0.75 0.625 0.75 0.625 1 0.375 1 0.375 0.5 0.375 0.75 0.125 0.75 0.875 0.5 0.875 0.75 0.625 0.75</float_array>
+          <technique_common>
+            <accessor source="#StencilMask-mesh-map-0-array" count="36" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="StencilMask-mesh-vertices">
+          <input semantic="POSITION" source="#StencilMask-mesh-positions"/>
+        </vertices>
+        <triangles material="door-material" count="12">
+          <input semantic="VERTEX" source="#StencilMask-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#StencilMask-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#StencilMask-mesh-map-0" offset="2" set="0"/>
+          <p>1 0 0 2 0 1 0 0 2 3 1 3 6 1 4 2 1 5 7 2 6 4 2 7 6 2 8 5 3 9 0 3 10 4 3 11 6 4 12 0 4 13 2 4 14 3 5 15 5 5 16 7 5 17 1 0 18 3 0 19 2 0 20 3 1 21 7 1 22 6 1 23 7 2 24 5 2 25 4 2 26 5 3 27 1 3 28 0 3 29 6 4 30 4 4 31 0 4 32 3 5 33 1 5 34 5 5 35</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="Frame-mesh" name="Frame">
+      <mesh>
+        <source id="Frame-mesh-positions">
+          <float_array id="Frame-mesh-positions-array" count="96">-0.5 -0.25 0 -0.5 -0.25 2 -0.5 0.25 0 -0.5 0.25 2 -0.4375001 -0.25 0 -0.4375001 -0.25 2 -0.4375001 0.25 0 -0.4375001 0.25 2 -0.5 -0.25 1.9375 -0.5 0.25 1.9375 -0.4375001 0.25 1.9375 -0.4375001 -0.25 1.9375 0.4374999 0.25 0.06250005 0.4374999 0.25 0 0.4374999 -0.25 0 0.4374999 -0.25 0.06250005 0.4374999 0.25 2 0.4374999 -0.25 2 0.4374999 0.25 1.9375 0.4374999 -0.25 1.9375 0.5 0.25 2 0.5 -0.25 2 0.5 0.25 1.9375 0.5 -0.25 1.9375 0.5 0.25 0.06250005 0.5 0.25 0 0.5 -0.25 0 0.5 -0.25 0.06250005 -0.4375 0.25 0.06249994 -0.4999688 0.25 0.06250005 -0.4375 -0.25 0.06249994 -0.4999688 -0.25 0.06249994</float_array>
+          <technique_common>
+            <accessor source="#Frame-mesh-positions-array" count="32" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Frame-mesh-normals">
+          <float_array id="Frame-mesh-normals-array" count="54">1 0 0 0 -1 0 0 1 0 0 0 1 0 0 -1 0 -1 0 1.70299e-7 0 -1 1 0 1.66416e-5 0.9999999 0 -4.99249e-4 -1 0 0 0 1 0 -1 0 0 0 -1 -2.72479e-7 0 -1 0 1 0 1.66416e-5 0.9999999 0 -4.99248e-4 -1 0 0 0 1 0</float_array>
+          <technique_common>
+            <accessor source="#Frame-mesh-normals-array" count="18" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Frame-mesh-map-0">
+          <float_array id="Frame-mesh-map-0-array" count="384">0 0.775 0.1607143 0.8 0.1607143 0.775 0.8392857 0.775 0.8571429 0.8 0.8571429 0.775 0.4107143 0.8 0.1607143 0.775 0.1607143 0.8 0.1607143 0.775 0.1428571 0.8 0.1607143 0.8 0.4285714 1 0.4464285 0.8 0.4285714 0.8 0.1607143 0.8 0.1428571 1 0.1607143 1 0.8392857 0 0.8571429 0.02499997 0.8571429 0 0.8571429 0.02499997 0.8392857 0.775 0.8571429 0.775 1 1 0.75 0.8 0.75 1 0 0.02499997 0.1607143 0.775 0.1607143 0.02499997 0 0 0.1607143 0.02499997 0.1607143 0 0.8571429 0.02499997 1 0.775 1 0.02499997 0.1607143 0.02499997 0.4107143 0 0.1607143 0 0.8571429 0.02499997 1 0.775 1 0.02499997 0.1428571 0.02499997 0.1607143 0.775 0.1607143 0.02499997 0.6964286 1 0.4464285 0.8 0.4464285 1 0.1428571 0.02499997 0.1607143 0 0.1428571 0 0.5714286 0.775 0.5892857 0.8 0.5892857 0.775 0.5892857 0.775 0.8392857 0.8 0.8392857 0.775 0.4107143 1 0.1607143 0.8 0.1607143 1 1 1 0.75 0.8 0.75 1 0.4107143 0.775 0.5892857 0.8 0.5892857 0.775 0.4285714 0.8 0.4107143 0.775 0.4107143 0.8 0.4285714 1 0.4107143 0.8 0.4107143 1 0.4285714 0.02499997 0.4107143 0.775 0.4285714 0.775 0.5892857 0.775 0.4107143 0.02499997 0.4107143 0.775 0.4107143 0 0.5892857 0.02499997 0.5892857 0 0.7142857 1 0.6964286 0.8 0.6964286 1 0.4285714 0.02499997 0.4107143 0 0.4107143 0.02499997 0.5714286 0 0.5892857 0.02499997 0.5892857 0 0.5892857 0.02499997 0.5714286 0.775 0.5892857 0.775 0.5892857 0 0.8392857 0.02499997 0.8392857 0 0 0.775 0 0.8 0.1607143 0.8 0.8392857 0.775 0.8392857 0.8 0.8571429 0.8 0.4107143 0.8 0.4107143 0.775 0.1607143 0.775 0.1607143 0.775 0.1428571 0.775 0.1428571 0.8 0.4285714 1 0.4464285 1 0.4464285 0.8 0.1607143 0.8 0.1428571 0.8 0.1428571 1 0.8392857 0 0.8392857 0.02499997 0.8571429 0.02499997 0.8571429 0.02499997 0.8392857 0.02499997 0.8392857 0.775 1 1 1 0.8 0.75 0.8 0 0.02499997 0 0.775 0.1607143 0.775 0 0 0 0.02499997 0.1607143 0.02499997 0.8571429 0.02499997 0.8571429 0.775 1 0.775 0.1607143 0.02499997 0.4107143 0.02499997 0.4107143 0 0.8571429 0.02499997 0.8571429 0.775 1 0.775 0.1428571 0.02499997 0.1428571 0.775 0.1607143 0.775 0.6964286 1 0.6964286 0.8 0.4464285 0.8 0.1428571 0.02499997 0.1607143 0.02499997 0.1607143 0 0.5714286 0.775 0.5714286 0.8 0.5892857 0.8 0.5892857 0.775 0.5892857 0.8 0.8392857 0.8 0.4107143 1 0.4107143 0.8 0.1607143 0.8 1 1 1 0.8 0.75 0.8 0.4107143 0.775 0.4107143 0.8 0.5892857 0.8 0.4285714 0.8 0.4285714 0.775 0.4107143 0.775 0.4285714 1 0.4285714 0.8 0.4107143 0.8 0.4285714 0.02499997 0.4107143 0.02499997 0.4107143 0.775 0.5892857 0.775 0.5892857 0.02499997 0.4107143 0.02499997 0.4107143 0 0.4107143 0.02499997 0.5892857 0.02499997 0.7142857 1 0.7142857 0.8 0.6964286 0.8 0.4285714 0.02499997 0.4285714 0 0.4107143 0 0.5714286 0 0.5714286 0.02499997 0.5892857 0.02499997 0.5892857 0.02499997 0.5714286 0.02499997 0.5714286 0.775 0.5892857 0 0.5892857 0.02499997 0.8392857 0.02499997</float_array>
+          <technique_common>
+            <accessor source="#Frame-mesh-map-0-array" count="192" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Frame-mesh-vertices">
+          <input semantic="POSITION" source="#Frame-mesh-positions"/>
+        </vertices>
+        <triangles material="frame-material" count="64">
+          <input semantic="VERTEX" source="#Frame-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Frame-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Frame-mesh-map-0" offset="2" set="0"/>
+          <p>9 0 0 1 0 1 8 0 2 10 1 3 3 1 4 9 1 5 17 2 6 11 2 7 5 2 8 11 2 9 1 2 10 5 2 11 0 3 12 6 3 13 2 3 14 5 4 15 3 4 16 7 4 17 6 5 18 29 5 19 2 5 20 29 1 21 10 1 22 9 1 23 12 6 24 30 6 25 28 6 26 29 7 27 8 7 28 31 7 29 2 8 30 31 8 31 0 8 32 30 9 33 10 9 34 28 9 35 30 2 36 14 2 37 4 2 38 12 0 39 19 0 40 15 0 41 31 10 42 11 10 43 30 10 44 14 3 45 6 3 46 4 3 47 31 2 48 4 2 49 0 2 50 22 1 51 16 1 52 18 1 53 18 1 54 7 1 55 10 1 56 16 4 57 5 4 58 7 4 59 19 3 60 10 3 61 11 3 62 23 11 63 20 11 64 22 11 65 21 2 66 19 2 67 17 2 68 20 4 69 17 4 70 16 4 71 27 2 72 19 2 73 23 2 74 22 11 75 27 11 76 23 11 77 26 11 78 24 11 79 25 11 80 26 3 81 13 3 82 14 3 83 27 2 84 14 2 85 15 2 86 25 1 87 12 1 88 13 1 89 12 1 90 22 1 91 18 1 92 13 12 93 28 12 94 6 12 95 9 0 96 3 0 97 1 0 98 10 1 99 7 1 100 3 1 101 17 2 102 19 2 103 11 2 104 11 2 105 8 2 106 1 2 107 0 3 108 4 3 109 6 3 110 5 4 111 1 4 112 3 4 113 6 1 114 28 1 115 29 1 116 29 13 117 28 13 118 10 13 119 12 6 120 15 6 121 30 6 122 29 14 123 9 14 124 8 14 125 2 15 126 29 15 127 31 15 128 30 16 129 11 16 130 10 16 131 30 2 132 15 2 133 14 2 134 12 0 135 18 0 136 19 0 137 31 2 138 8 2 139 11 2 140 14 3 141 13 3 142 6 3 143 31 17 144 30 17 145 4 17 146 22 1 147 20 1 148 16 1 149 18 1 150 16 1 151 7 1 152 16 4 153 17 4 154 5 4 155 19 3 156 18 3 157 10 3 158 23 11 159 21 11 160 20 11 161 21 2 162 23 2 163 19 2 164 20 4 165 21 4 166 17 4 167 27 2 168 15 2 169 19 2 170 22 11 171 24 11 172 27 11 173 26 11 174 27 11 175 24 11 176 26 3 177 25 3 178 13 3 179 27 2 180 26 2 181 14 2 182 25 1 183 24 1 184 12 1 185 12 1 186 24 1 187 22 1 188 13 1 189 12 1 190 28 1 191</p>
+        </triangles>
+      </mesh>
+    </geometry>
+    <geometry id="Door-mesh" name="Door">
+      <mesh>
+        <source id="Door-mesh-positions">
+          <float_array id="Door-mesh-positions-array" count="24">-0.4375 -0.125 0.06250005 -0.4375 -0.125 1.9375 -0.4375 0.1249999 0.06250005 -0.4375 0.1249999 1.9375 0.4375 -0.125 0.06250005 0.4375 -0.125 1.9375 0.4375 0.1249999 0.06250005 0.4375 0.1249999 1.9375</float_array>
+          <technique_common>
+            <accessor source="#Door-mesh-positions-array" count="8" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Door-mesh-normals">
+          <float_array id="Door-mesh-normals-array" count="18">1 0 0 0 -1 0 -1 -2.54313e-7 0 0 1 0 0 0 1 0 0 -1</float_array>
+          <technique_common>
+            <accessor source="#Door-mesh-normals-array" count="6" stride="3">
+              <param name="X" type="float"/>
+              <param name="Y" type="float"/>
+              <param name="Z" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <source id="Door-mesh-map-0">
+          <float_array id="Door-mesh-map-0-array" count="72">0 0 0.1111111 0.882353 0.1111111 0 0.6111111 0 1 0.882353 1 0 0.5 0 0.6111111 0.882353 0.6111111 0 0.1111111 0 0.5 0.882353 0.5 0 0.5 1 0.8888889 0.882353 0.5 0.882353 0.5 0.882353 0.1111111 1 0.5 1 0 0 0 0.882353 0.1111111 0.882353 0.6111111 0 0.6111111 0.882353 1 0.882353 0.5 0 0.5 0.882353 0.6111111 0.882353 0.1111111 0 0.1111111 0.882353 0.5 0.882353 0.5 1 0.8888889 1 0.8888889 0.882353 0.5 0.882353 0.1111111 0.882353 0.1111111 1</float_array>
+          <technique_common>
+            <accessor source="#Door-mesh-map-0-array" count="36" stride="2">
+              <param name="S" type="float"/>
+              <param name="T" type="float"/>
+            </accessor>
+          </technique_common>
+        </source>
+        <vertices id="Door-mesh-vertices">
+          <input semantic="POSITION" source="#Door-mesh-positions"/>
+        </vertices>
+        <triangles material="door-material" count="12">
+          <input semantic="VERTEX" source="#Door-mesh-vertices" offset="0"/>
+          <input semantic="NORMAL" source="#Door-mesh-normals" offset="1"/>
+          <input semantic="TEXCOORD" source="#Door-mesh-map-0" offset="2" set="0"/>
+          <p>2 0 0 1 0 1 0 0 2 6 1 3 3 1 4 2 1 5 4 2 6 7 2 7 6 2 8 0 3 9 5 3 10 4 3 11 0 4 12 6 4 13 2 4 14 5 5 15 3 5 16 7 5 17 2 0 18 3 0 19 1 0 20 6 1 21 7 1 22 3 1 23 4 2 24 5 2 25 7 2 26 0 3 27 1 3 28 5 3 29 0 4 30 4 4 31 6 4 32 5 5 33 1 5 34 3 5 35</p>
+        </triangles>
+      </mesh>
+    </geometry>
+  </library_geometries>
+  <library_visual_scenes>
+    <visual_scene id="Scene" name="Scene">
+      <node id="StencilMask" name="StencilMask" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#StencilMask-mesh" name="StencilMask">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="door-material" target="#door-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Frame" name="Frame" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#Frame-mesh" name="Frame">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="frame-material" target="#frame-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+      <node id="Door" name="Door" type="NODE">
+        <matrix sid="transform">1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1</matrix>
+        <instance_geometry url="#Door-mesh" name="Door">
+          <bind_material>
+            <technique_common>
+              <instance_material symbol="door-material" target="#door-material">
+                <bind_vertex_input semantic="UVMap" input_semantic="TEXCOORD" input_set="0"/>
+              </instance_material>
+            </technique_common>
+          </bind_material>
+        </instance_geometry>
+      </node>
+    </visual_scene>
+  </library_visual_scenes>
+  <scene>
+    <instance_visual_scene url="#Scene"/>
+  </scene>
+</COLLADA>

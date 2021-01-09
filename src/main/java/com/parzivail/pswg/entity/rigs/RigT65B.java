@@ -2,17 +2,19 @@ package com.parzivail.pswg.entity.rigs;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pr3r.PR3RFile;
-import com.parzivail.pswg.entity.IEntityRig;
 import com.parzivail.pswg.entity.ship.T65BXwing;
+import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
-public class RigT65B implements IEntityRig<T65BXwing, RigT65B.Part>
+public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 {
 	public enum Part
 	{
@@ -57,9 +59,9 @@ public class RigT65B implements IEntityRig<T65BXwing, RigT65B.Part>
 			this.localPosition = localPosition;
 		}
 
-		public Vec3d getWorldPosition(T65BXwing entity)
+		public Vec3d getWorldPosition(MatrixStack stack, T65BXwing entity)
 		{
-			return INSTANCE.getWorldPosition(entity, parent, localPosition);
+			return INSTANCE.getWorldPosition(stack, entity, parent, localPosition);
 		}
 	}
 
@@ -72,7 +74,19 @@ public class RigT65B implements IEntityRig<T65BXwing, RigT65B.Part>
 	}
 
 	@Override
-	public Quaternion getRotation(T65BXwing entity, RigT65B.Part part)
+	public void transform(MatrixStack stack, T65BXwing target, RigT65B.Part part)
+	{
+		MatrixStack.Entry entry = stack.peek();
+		Matrix4f modelMat = entry.getModel();
+		Matrix3f normalMat = entry.getNormal();
+
+		Quaternion objectRotation = getRotation(target, part);
+
+		modelMat.multiply(objectRotation);
+		normalMat.multiply(objectRotation);
+	}
+
+	private Quaternion getRotation(T65BXwing entity, RigT65B.Part part)
 	{
 		short wingTimer = entity.getWingTimer();
 
@@ -83,41 +97,57 @@ public class RigT65B implements IEntityRig<T65BXwing, RigT65B.Part>
 	}
 
 	@Override
-	public Vec3d getWorldPosition(T65BXwing entity, RigT65B.Part part, Vec3d localPosition)
+	public Vec3d getWorldPosition(MatrixStack stack, T65BXwing target, RigT65B.Part part, Vec3d localPosition)
 	{
+		stack.push();
+		MatrixStack.Entry entry = stack.peek();
+		Matrix4f parent = entry.getModel();
 		Matrix4f rig = RIG.objects.get(part.getPartName());
+		parent.multiply(rig);
 
-		localPosition = MathUtil.transform(localPosition, rig);
-		localPosition = QuatUtil.rotate(localPosition, getRotation(entity, part));
+		transform(stack, target, part);
 
-		return QuatUtil.rotate(localPosition, entity.getRotation());
+		parent.multiply(target.getRotation());
+
+		Vec3d vec = MathUtil.transform(localPosition, parent);
+		stack.pop();
+
+		return vec;
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public Quaternion getRotation(T65BXwing entity, RigT65B.Part part, float tickDelta)
+	public void transform(MatrixStack stack, T65BXwing target, RigT65B.Part part, float tickDelta)
 	{
-		short wingTimer = entity.getWingTimerClient();
+		short wingTimer = target.getWingTimerClient();
 
-		boolean wingsOpening = entity.getWingDirectionClient();
+		boolean wingsOpening = target.getWingDirectionClient();
 		float timer = Math.abs(wingTimer);
 
 		if (timer > 0)
 			timer -= tickDelta;
 
-		return getRotation(part, wingsOpening, timer);
+		stack.multiply(getRotation(part, wingsOpening, timer));
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public Vec3d getWorldPosition(T65BXwing entity, RigT65B.Part part, Vec3d localPosition, float tickDelta)
+	public Vec3d getWorldPosition(MatrixStack stack, T65BXwing target, RigT65B.Part part, Vec3d localPosition, float tickDelta)
 	{
+		stack.push();
+		MatrixStack.Entry entry = stack.peek();
+		Matrix4f parent = entry.getModel();
 		Matrix4f rig = RIG.objects.get(part.getPartName());
+		parent.multiply(rig);
 
-		localPosition = MathUtil.transform(localPosition, rig);
-		localPosition = QuatUtil.rotate(localPosition, getRotation(entity, part, tickDelta));
+		transform(stack, target, part, tickDelta);
 
-		return QuatUtil.rotate(localPosition, entity.getViewRotation(tickDelta));
+		parent.multiply(target.getRotation());
+
+		Vec3d vec = MathUtil.transform(localPosition, parent);
+		stack.pop();
+
+		return vec;
 	}
 
 	private Quaternion getRotation(RigT65B.Part part, boolean wingsOpening, float timer)
