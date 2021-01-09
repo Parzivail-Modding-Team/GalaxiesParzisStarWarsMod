@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 
 public class TatooineHomeDoorRenderer extends BlockEntityRenderer<TatooineHomeDoorBlockEntity>
 {
-	private static final ItemStack stack = new ItemStack(SwgBlocks.Door.TatooineHome, 1);
+	private static final ItemStack stack = new ItemStack(SwgBlocks.Door.TatooineHomeController, 1);
 
 	public TatooineHomeDoorRenderer(BlockEntityRenderDispatcher dispatcher)
 	{

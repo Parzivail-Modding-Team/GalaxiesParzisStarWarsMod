@@ -62,10 +62,10 @@ public class SwgBlocks
 
 	public static class Door
 	{
+		public static final BlockTatooineHomeDoor TatooineHomeFiller = new BlockTatooineHomeDoor(FabricBlockSettings.of(Material.METAL).noCollision().nonOpaque());
+		public static final BlockTatooineHomeDoor TatooineHomeController = new BlockTatooineHomeDoorController(FabricBlockSettings.of(Material.METAL).noCollision().nonOpaque());
 		@RegistryName("door_tatooine_home")
-		public static final RotatingBlockWithEntity TatooineHome = new BlockTatooineHomeDoor(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		@RegistryName("door_tatooine_home")
-		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = BlockEntityType.Builder.create(TatooineHomeDoorBlockEntity::new, TatooineHome).build(null);
+		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = BlockEntityType.Builder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeController).build(null);
 	}
 
 	public static class Leaves
@@ -304,6 +304,10 @@ public class SwgBlocks
 	{
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Block.class, SwgBlocks::registerBlock);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
+
+		Registry.register(Registry.BLOCK, Resources.identifier("door_tatooine_home_controller"), Door.TatooineHomeController);
+		Registry.register(Registry.BLOCK, Resources.identifier("door_tatooine_home"), Door.TatooineHomeFiller);
+		Registry.register(Registry.ITEM, Resources.identifier("door_tatooine_home"), new BlockTatooineHomeDoor.Item(Door.TatooineHomeController, new Item.Settings().group(Galaxies.Tab)));
 	}
 
 	public static void registerBlock(Block block, Identifier identifier)
