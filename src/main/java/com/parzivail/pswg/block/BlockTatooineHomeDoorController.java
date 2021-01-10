@@ -34,7 +34,7 @@ public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor imple
 		BlockPos controllerPos = getController(world, pos);
 		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
-		if (e == null || !e.isOpening())
+		if (e == null || !e.isOpening() || e.isMoving())
 			return SHAPE_OPEN;
 
 		return SHAPE_CLOSED;
