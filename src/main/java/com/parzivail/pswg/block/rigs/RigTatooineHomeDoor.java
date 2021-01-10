@@ -5,6 +5,7 @@ import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.client.pr3r.PR3RFile;
 import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.util.MathUtil;
+import com.parzivail.util.math.Ease;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
@@ -77,7 +78,12 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 		if (part != Part.Door)
 			return;
 
-		stack.translate(MathHelper.sin((float)(((System.currentTimeMillis() % 5000) / 5000f) * Math.PI * 2)), 0, 0);
+		float timer = target.getAnimationTime(tickDelta);
+
+		if (target.isOpening())
+			stack.translate(0.845 * Ease.outCubic(1 - timer), 0, 0);
+		else
+			stack.translate(0.845 * Ease.inCubic(timer), 0, 0);
 	}
 
 	@Override
