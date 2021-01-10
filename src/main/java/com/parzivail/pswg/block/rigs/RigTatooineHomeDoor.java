@@ -1,16 +1,19 @@
 package com.parzivail.pswg.block.rigs;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.block.BlockTatooineHomeDoor;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.client.pr3r.PR3RFile;
 import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.math.Ease;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntity, RigTatooineHomeDoor.Part>
 {
@@ -44,35 +47,25 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 	@Override
 	public void transform(MatrixStack stack, TatooineHomeDoorBlockEntity target, Part part)
 	{
-		if (part != Part.Door)
-			return;
-
-		stack.translate(0.5 + MathHelper.sin((float)(((System.currentTimeMillis() % 5000) / 5000f) * Math.PI * 2)), 1, 0.5);
+		transform(stack, target, part, 0);
 	}
 
 	@Override
 	public Vec3d getWorldPosition(MatrixStack stack, TatooineHomeDoorBlockEntity target, Part part, Vec3d localPosition)
 	{
-		stack.push();
-		MatrixStack.Entry entry = stack.peek();
-		Matrix4f parent = entry.getModel();
-		Matrix4f rig = RIG.objects.get(part.getPartName());
-		parent.multiply(rig);
-
-		transform(stack, target, part);
-
-		// TODO: rotate based on block
-
-		Vec3d vec = MathUtil.transform(localPosition, parent);
-		stack.pop();
-
-		return vec;
+		return getWorldPosition(stack, target, part, localPosition, 0);
 	}
 
 	@Override
 	public void transform(MatrixStack stack, TatooineHomeDoorBlockEntity target, Part part, float tickDelta)
 	{
 		stack.translate(0.5, 0, 0.5);
+
+		World world = target.getWorld();
+		BlockPos pos = target.getPos();
+		BlockState block = world.getBlockState(pos);
+		stack.multiply(new Quaternion(0, (block.get(BlockTatooineHomeDoor.ROTATION) - 1) * -90, 0, true));
+
 		stack.multiply(new Quaternion(-90, 0, 0, true));
 
 		if (part != Part.Door)

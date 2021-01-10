@@ -1,6 +1,7 @@
 package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
+import com.parzivail.util.block.VoxelShapeUtil;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -23,6 +24,18 @@ public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor imple
 			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
 			VoxelShapes.cuboid(1 - 1.5 * 0.0625, 0.0625, 0.375, 1 - 0.0625, 1, 0.625));
 
+	private static final VoxelShape[] SHAPES_CLOSED = new VoxelShape[4];
+	private static final VoxelShape[] SHAPES_OPEN = new VoxelShape[4];
+
+	static
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			SHAPES_CLOSED[i] = VoxelShapeUtil.rotate(SHAPE_CLOSED, i);
+			SHAPES_OPEN[i] = VoxelShapeUtil.rotate(SHAPE_OPEN, i);
+		}
+	}
+
 	public BlockTatooineHomeDoorController(Settings settings)
 	{
 		super(settings);
@@ -34,10 +47,12 @@ public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor imple
 		BlockPos controllerPos = getController(world, pos);
 		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
-		if (e == null || !e.isOpening() || e.isMoving())
-			return SHAPE_OPEN;
+		int rotation = (state.get(ROTATION) + 3) % 4;
 
-		return SHAPE_CLOSED;
+		if (e == null || !e.isOpening() || e.isMoving())
+			return SHAPES_OPEN[rotation];
+
+		return SHAPES_CLOSED[rotation];
 	}
 
 	@Override
