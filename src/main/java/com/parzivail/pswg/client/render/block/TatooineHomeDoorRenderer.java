@@ -40,6 +40,9 @@ public class TatooineHomeDoorRenderer extends BlockEntityRenderer<TatooineHomeDo
 		RenderLayer layerStencilMask = RenderLayer.of("stencil_mask", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("stencil_mask_gl", () ->
 		{
 			GL11.glEnable(GL11.GL_STENCIL_TEST);
+			GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
+
+			GL11.glPolygonOffset(0, -3);
 
 			GL11.glStencilMask(0xFF); // Write to stencil buffer
 			GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
@@ -53,6 +56,7 @@ public class TatooineHomeDoorRenderer extends BlockEntityRenderer<TatooineHomeDo
 			GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
 			GL11.glColorMask(true, true, true, true);
 			GL11.glStencilMask(0x00); // Don't write anything to stencil buffer
+			GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
 		})).cull(new RenderPhase.Cull(false)).build(true));
 
 		RenderLayer layerStencilTarget = RenderLayer.of("stencil_target", VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL, GL11.GL_QUADS, 2097152, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("stencil_target_gl", () ->

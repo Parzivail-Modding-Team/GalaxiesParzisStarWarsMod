@@ -18,7 +18,7 @@ public class RotatingBlock extends Block
 	}
 
 	public static final IntProperty ROTATION;
-	private final int divisions;
+	protected final int divisions;
 
 	public RotatingBlock(Settings settings)
 	{

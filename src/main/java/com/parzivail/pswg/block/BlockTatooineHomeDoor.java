@@ -18,6 +18,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -99,6 +100,17 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 			return SHAPES_OPEN[rotation];
 
 		return SHAPES_CLOSED[rotation];
+	}
+
+	@Override
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
+	{
+		return new ItemStack(SwgBlocks.Door.TatooineHomeController);
+	}
+
+	public BlockState getPlacementState(ItemPlacementContext ctx)
+	{
+		return this.getDefaultState().with(ROTATION, (MathHelper.floor((double)((ctx.getPlayerYaw() - 90) * divisions / 360.0F) + 0.5D) + 2) & (divisions - 1));
 	}
 
 	protected BlockPos getController(BlockView world, BlockPos self)

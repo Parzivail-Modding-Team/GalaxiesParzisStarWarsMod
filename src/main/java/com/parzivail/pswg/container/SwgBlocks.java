@@ -307,7 +307,7 @@ public class SwgBlocks
 
 		Registry.register(Registry.BLOCK, Resources.identifier("door_tatooine_home_controller"), Door.TatooineHomeController);
 		Registry.register(Registry.BLOCK, Resources.identifier("door_tatooine_home"), Door.TatooineHomeFiller);
-		Registry.register(Registry.ITEM, Resources.identifier("door_tatooine_home"), new BlockTatooineHomeDoor.Item(Door.TatooineHomeController, new Item.Settings().group(Galaxies.Tab)));
+		Registry.register(Registry.ITEM, Resources.identifier("door_tatooine_home_controller"), new BlockTatooineHomeDoor.Item(Door.TatooineHomeController, new Item.Settings().group(Galaxies.Tab)));
 	}
 
 	public static void registerBlock(Block block, Identifier identifier)
