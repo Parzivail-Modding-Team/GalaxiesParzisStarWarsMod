@@ -1,6 +1,7 @@
 {
 	"block.pswg.barrel_mos_eisley": "Barril de Mos Eisley",
 	"block.pswg.beskar_block": "Bloco de Beskar",
+	"block.pswg.beskar_ore": "Minério de Beskar",
 	"block.pswg.blaster_workbench": "Bancada de trabalho de Blaster",
 	"block.pswg.blossoming_funnel_flower": "Flor Funil Florescendo",
 	"block.pswg.chromium_block": "Bloco de Chromium",
@@ -106,9 +107,10 @@
 	"item.pswg.death_stick_yellow": "Palito da Morte",
 	"item.pswg.debug": "§cDebug Item§r",
 	"item.pswg.desh_ingot": "Lingote de Desh",
+	"item.pswg.door_tatooine_home_controller": "Porta de Casa de Tatooine",
 	"item.pswg.durasteel_ingot": "Lingote de Durasteel",
-	"item.pswg.flangth_plate": "Flangth Plate",
-	"item.pswg.flangth_takeout": "Flangth Takeout",
+	"item.pswg.flangth_plate": "Prato de Flangth",
+	"item.pswg.flangth_takeout": "Flangth Para Viagem",
 	"item.pswg.gizka_chop": "Peito de Gizka",
 	"item.pswg.jogan_fruit": "Fruta Jogan",
 	"item.pswg.lightsaber": "Sabre de Luz",
@@ -120,6 +122,7 @@
 	"item.pswg.qrikki_waffle": "Waffle Qrikki",
 	"item.pswg.salt_pile": "Pilha de Sal",
 	"item.pswg.titanium_ingot": "Lingote de Titanium",
+	"item.pswg.transparisteel_ingot": "Lingote de Transparisteel",
 	"itemGroup.pswg.main": "Galaxies: Parzi's Star Wars Mod",
 	"key.category.pswg": "Galaxies: Parzi's Star Wars Mod",
 	"key.pswg.lightsaber_toggle": "Alternar Sabre de Luz",
@@ -127,6 +130,6 @@
 	"text.autoconfig.pswg.option.input": "Comando",
 	"text.autoconfig.pswg.option.input.@Tooltip": "Aqui você pode alterar os seus métodos de comando favoritos.",
 	"text.autoconfig.pswg.option.input.shipRollPriority": "Nave dará prioridade ao comando de rolar",
-	"text.autoconfig.pswg.option.input.shipRollPriority.@Tooltip": "Define se os comandos do mouse devem ser 'inclinar e guinar', ou 'inclinar e rolar'",
+	"text.autoconfig.pswg.option.input.shipRollPriority.@Tooltip": "Define se os comandos do mouse devem ser "inclinar e guinar", ou "inclinar e rolar",
 	"text.autoconfig.pswg.title": "Galaxies: Parzi's Star Wars Mod"
 }
