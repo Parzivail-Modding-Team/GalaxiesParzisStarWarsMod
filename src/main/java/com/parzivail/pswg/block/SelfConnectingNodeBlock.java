@@ -31,7 +31,7 @@ public class SelfConnectingNodeBlock extends ConnectingNodeBlock
 	}
 
 	@Override
-	public boolean shouldConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction)
+	public boolean isConnectedTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction)
 	{
 		if (!canConnectTo(world, state, otherState, otherPos, direction))
 			return false;

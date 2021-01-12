@@ -5,6 +5,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.server.network.DebugInfoSender;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -17,6 +19,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Map;
 
 public abstract class ConnectingNodeBlock extends Block
@@ -55,7 +59,7 @@ public abstract class ConnectingNodeBlock extends Block
 
 	abstract boolean canConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction);
 
-	abstract boolean shouldConnectTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction);
+	abstract boolean isConnectedTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction);
 
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
@@ -73,6 +77,62 @@ public abstract class ConnectingNodeBlock extends Block
 		return state;
 	}
 
+	public ArrayList<BlockPos> getGlobalOutlets(WorldAccess world, BlockState state, BlockPos entryPoint)
+	{
+		ArrayList<BlockPos> outlets = new ArrayList<>();
+
+		ArrayList<BlockPos> checked = new ArrayList<>();
+		ArrayDeque<BlockPos> q = new ArrayDeque<>();
+		q.add(entryPoint);
+
+		while (!q.isEmpty())
+		{
+			BlockPos node = q.poll();
+
+			checked.add(node);
+
+			state = world.getBlockState(node);
+
+			outlets.addAll(getLocalOutlets(world, state, node));
+
+			for (BlockPos pos : getLocalConnections(world, state, node))
+				if (!checked.contains(pos))
+					q.add(pos);
+		}
+
+		return outlets;
+	}
+
+	public ArrayList<BlockPos> getLocalOutlets(WorldAccess world, BlockState state, BlockPos pos)
+	{
+		ArrayList<BlockPos> outlets = new ArrayList<>();
+
+		for (Map.Entry<Direction, BooleanProperty> directions : FACING_PROPERTIES.entrySet())
+		{
+			BlockPos other = pos.offset(directions.getKey());
+			BlockState otherState = world.getBlockState(other);
+			if (!canConnectTo(world, state, otherState, other, directions.getKey()) && state.get(directions.getValue()))
+				outlets.add(other);
+		}
+
+		return outlets;
+	}
+
+	public ArrayList<BlockPos> getLocalConnections(WorldAccess world, BlockState state, BlockPos pos)
+	{
+		ArrayList<BlockPos> connections = new ArrayList<>();
+
+		for (Map.Entry<Direction, BooleanProperty> directions : FACING_PROPERTIES.entrySet())
+		{
+			BlockPos other = pos.offset(directions.getKey());
+			BlockState otherState = world.getBlockState(other);
+			if (isConnectedTo(world, state, otherState, other, directions.getKey()))
+				connections.add(other);
+		}
+
+		return connections;
+	}
+
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState otherState, WorldAccess world, BlockPos pos, BlockPos otherPos)
 	{
 		if (!state.canPlaceAt(world, pos))
@@ -82,7 +142,7 @@ public abstract class ConnectingNodeBlock extends Block
 		}
 		else
 		{
-			return state.with(FACING_PROPERTIES.get(direction), shouldConnectTo(world, state, otherState, otherPos, direction));
+			return state.with(FACING_PROPERTIES.get(direction), isConnectedTo(world, state, otherState, otherPos, direction));
 		}
 	}
 
@@ -94,7 +154,18 @@ public abstract class ConnectingNodeBlock extends Block
 		}
 		else
 		{
-			world.setBlockState(pos, state.cycle(FACING_PROPERTIES.get(hit.getSide())), 3);
+			if (player.isSneaking())
+			{
+				if (!world.isClient)
+				{
+					ArrayList<BlockPos> outlets = getGlobalOutlets(world, state, pos);
+
+					for (BlockPos outlet : outlets)
+						DebugInfoSender.addGameTestMarker((ServerWorld)world, outlet, "Outlet", 0, 1000);
+				}
+			}
+			else
+				world.setBlockState(pos, state.cycle(FACING_PROPERTIES.get(hit.getSide())), 3);
 			return ActionResult.success(world.isClient);
 		}
 	}
