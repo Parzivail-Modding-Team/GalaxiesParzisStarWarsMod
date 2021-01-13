@@ -12,8 +12,8 @@ import com.parzivail.util.math.QuatUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.fabricmc.fabric.api.network.PacketContext;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
@@ -23,6 +23,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.Box;
@@ -60,15 +63,14 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		this.inanimate = true;
 	}
 
-	public static void handleRotationPacket(PacketContext packetContext, PacketByteBuf attachedData)
+	public static void handleRotationPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		float qa = attachedData.readFloat();
-		float qb = attachedData.readFloat();
-		float qc = attachedData.readFloat();
-		float qd = attachedData.readFloat();
+		float qa = buf.readFloat();
+		float qb = buf.readFloat();
+		float qc = buf.readFloat();
+		float qd = buf.readFloat();
 
-		packetContext.getTaskQueue().execute(() -> {
-			PlayerEntity player = packetContext.getPlayer();
+		server.execute(() -> {
 			ShipEntity ship = getShip(player);
 
 			if (ship != null)
@@ -76,12 +78,11 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		});
 	}
 
-	public static void handleControlPacket(PacketContext packetContext, PacketByteBuf attachedData)
+	public static void handleControlPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		short controls = attachedData.readShort();
+		short controls = buf.readShort();
 
-		packetContext.getTaskQueue().execute(() -> {
-			PlayerEntity player = packetContext.getPlayer();
+		server.execute(() -> {
 			ShipEntity ship = getShip(player);
 
 			if (ship != null)
@@ -332,7 +333,7 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		{
 			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeShort(ShipControls.pack(controls));
-			ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketShipControls, passedData);
+			ClientPlayNetworking.send(SwgPackets.C2S.PacketShipControls, passedData);
 		}
 	}
 
@@ -367,7 +368,7 @@ public abstract class ShipEntity extends Entity implements FlyingVehicle
 		passedData.writeFloat(rotation.getX());
 		passedData.writeFloat(rotation.getY());
 		passedData.writeFloat(rotation.getZ());
-		ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketShipRotation, passedData);
+		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipRotation, passedData);
 	}
 
 	public void acceptLeftClick()

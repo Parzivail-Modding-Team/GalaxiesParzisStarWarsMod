@@ -10,13 +10,14 @@ import com.parzivail.pswg.dimension.DimensionTeleporter;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.handler.PlayerPacketHandler;
+import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.util.Lumberjack;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.ArgumentTypes;
@@ -25,6 +26,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -162,9 +164,21 @@ public class Galaxies implements ModInitializer
 					})
 				)))));
 
-		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketPlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
-		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketPlayerLightsaberToggle, PlayerPacketHandler::handleLightsaberTogglePacket);
-		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);
-		ServerSidePacketRegistry.INSTANCE.register(SwgPackets.C2S.PacketShipControls, ShipEntity::handleControlPacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketLightsaberForgeApply, (server, player, handler, buf, responseSender) -> {
+			CompoundTag tag = buf.readCompoundTag();
+
+			server.execute(() -> {
+				if (player.currentScreenHandler instanceof LightsaberForgeScreenHandler)
+				{
+					LightsaberForgeScreenHandler screenHandler = (LightsaberForgeScreenHandler)player.currentScreenHandler;
+					screenHandler.setLightsaberTag(tag);
+				}
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerLightsaberToggle, PlayerPacketHandler::handleLightsaberTogglePacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipControls, ShipEntity::handleControlPacket);
 	}
 }

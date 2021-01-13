@@ -56,12 +56,12 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 		else if (renderMode != ModelTransformation.Mode.GUI)
 			matrices.translate(0, 0.18f, 0);
 
-		renderDirect(stack, renderMode, matrices, vertexConsumers, light, overlay);
+		renderDirect(stack, renderMode, matrices, vertexConsumers, light, overlay, false);
 
 		matrices.pop();
 	}
 
-	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
+	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade)
 	{
 		matrices.push();
 		matrices.scale(0.04f, 0.04f, 0.04f);
@@ -71,7 +71,7 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 
 		boolean unstable = lt.unstable;
 		float baseLength = 1.6f;
-		float lengthCoefficient = lt.getSize(mc.getTickDelta());
+		float lengthCoefficient = forceBlade ? 1 : lt.getSize(mc.getTickDelta());
 		int coreColor = lt.coreColor;
 		int glowColor = lt.bladeColor;
 		boolean darkBlend = lt.darkBlend;

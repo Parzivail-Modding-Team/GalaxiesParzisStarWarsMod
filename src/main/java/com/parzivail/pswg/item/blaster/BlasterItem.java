@@ -116,7 +116,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				bt.canBypassCooling = false;
 			}
 
-			stack.setTag(bt.serialize());
+			bt.serializeAsSubtag(stack);
 
 			return result;
 		}
@@ -205,7 +205,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			bt.shotTimer = 10;
 
-			stack.setTag(bt.serialize());
+			bt.serializeAsSubtag(stack);
 		}
 
 		return TypedActionResult.success(stack);

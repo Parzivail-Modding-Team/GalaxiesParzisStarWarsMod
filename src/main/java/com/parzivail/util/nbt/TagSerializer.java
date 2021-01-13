@@ -40,17 +40,23 @@ public class TagSerializer
 		//map(ItemStack[].class, PNBTSerial::readItemStacks, PNBTSerial::writeItemStacks);
 	}
 
-	public TagSerializer(CompoundTag source)
+	private final String slug;
+
+	public TagSerializer(Identifier slug, CompoundTag source)
 	{
+		this.slug = slug.toString();
+		Class<?> clazz = this.getClass();
+		Field[] clFields = getClassFields(clazz);
+
+		CompoundTag domain = source.getCompound(this.slug);
+
 		try
 		{
-			Class<?> clazz = this.getClass();
-			Field[] clFields = getClassFields(clazz);
 			for (Field f : clFields)
 			{
 				Class<?> type = f.getType();
 				if (acceptField(f, type))
-					this.readField(f, type, source);
+					this.readField(f, type, domain);
 			}
 		}
 		catch (Exception e)
@@ -97,14 +103,35 @@ public class TagSerializer
 		f.set(this, handler.getLeft().read(nbt, f.getName()));
 	}
 
-	public CompoundTag serialize()
+	public void serializeAsSubtag(ItemStack stack)
+	{
+		CompoundTag nbt = stack.getOrCreateTag();
+		this.serializeAsSubtag(nbt);
+		stack.setTag(nbt);
+	}
+
+	public void serializeAsSubtag(CompoundTag nbt)
 	{
 		CompoundTag compound = new CompoundTag();
-		this.serialize(compound);
+		this.serializeInto(compound);
+		nbt.put(slug, compound);
+	}
+
+	public CompoundTag toTag()
+	{
+		CompoundTag compound = new CompoundTag();
+		this.serializeInto(compound);
 		return compound;
 	}
 
-	public final void serialize(CompoundTag nbt)
+	public CompoundTag toSubtag()
+	{
+		CompoundTag compound = new CompoundTag();
+		this.serializeAsSubtag(compound);
+		return compound;
+	}
+
+	public final void serializeInto(CompoundTag nbt)
 	{
 		try
 		{

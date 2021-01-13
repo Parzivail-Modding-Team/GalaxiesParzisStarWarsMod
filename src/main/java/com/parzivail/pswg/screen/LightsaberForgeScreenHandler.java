@@ -3,11 +3,13 @@ package com.parzivail.pswg.screen;
 import com.parzivail.pswg.client.screen.slot.StrictSlot;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
+import com.parzivail.pswg.item.lightsaber.LightsaberTag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
@@ -44,6 +46,18 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 
 		for (int column = 0; column < 9; ++column)
 			this.addSlot(new Slot(playerInventory, column, column * 18 + 48, 217));
+	}
+
+	public void setLightsaberTag(CompoundTag lightsaberTag)
+	{
+		Slot slot = this.slots.get(0);
+		ItemStack stack = slot.getStack();
+
+		LightsaberTag tag = LightsaberTag.fromRootTag(lightsaberTag);
+		tag.serializeAsSubtag(stack.getOrCreateTag());
+
+		slot.setStack(stack);
+		slot.markDirty();
 	}
 
 	public void close(PlayerEntity player)

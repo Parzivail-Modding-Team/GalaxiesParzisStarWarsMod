@@ -4,7 +4,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ShipEntity;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 
@@ -19,7 +19,7 @@ public class KeyHandler
 
 		if (Client.KEY_LIGHTSABER_TOGGLE.isPressed())
 		{
-			ClientSidePacketRegistry.INSTANCE.sendToServer(SwgPackets.C2S.PacketPlayerLightsaberToggle, new PacketByteBuf(Unpooled.buffer()));
+			ClientPlayNetworking.send(SwgPackets.C2S.PacketPlayerLightsaberToggle, new PacketByteBuf(Unpooled.buffer()));
 		}
 
 		ShipEntity ship = ShipEntity.getShip(mc.player);

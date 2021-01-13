@@ -3,6 +3,7 @@ package com.parzivail.pswg.item.lightsaber;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
 import net.minecraft.entity.Entity;
@@ -12,10 +13,8 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.SwordItem;
-import net.minecraft.item.ToolMaterials;
+import net.minecraft.item.*;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -23,7 +22,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality
+public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality, IDefaultNbtProvider
 {
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
@@ -44,6 +43,12 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		builder = ImmutableMultimap.builder();
 		builder.put(EntityAttributes.GENERIC_ATTACK_DAMAGE, new EntityAttributeModifier(ATTACK_DAMAGE_MODIFIER_ID, "Weapon modifier", 15, EntityAttributeModifier.Operation.ADDITION));
 		this.attribModsOnOffhand = builder.build();
+	}
+
+	@Override
+	public CompoundTag getDefaultTag(ItemConvertible item, int count)
+	{
+		return new LightsaberTag().toSubtag();
 	}
 
 	private static boolean isActive(ItemStack stack)

@@ -1,13 +1,17 @@
 package com.parzivail.pswg.item.blaster;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 
 public class BlasterTag extends TagSerializer
 {
+	public static final Identifier SLUG = Resources.identifier("blaster");
+
 	public boolean isAimingDownSights;
 	public boolean canBypassCooling;
 	public int shotsRemaining;
@@ -17,7 +21,7 @@ public class BlasterTag extends TagSerializer
 
 	public BlasterTag(CompoundTag source)
 	{
-		super(source);
+		super(SLUG, source);
 	}
 
 	public static void mutate(ItemStack stack, Consumer<BlasterTag> action)
@@ -25,7 +29,7 @@ public class BlasterTag extends TagSerializer
 		CompoundTag nbt = stack.getOrCreateTag();
 		BlasterTag t = new BlasterTag(nbt);
 		action.accept(t);
-		stack.setTag(t.serialize());
+		t.serializeAsSubtag(stack);
 	}
 
 	public void tick()

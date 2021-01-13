@@ -11,9 +11,8 @@ import java.util.function.Consumer;
 
 public class LightsaberTag extends TagSerializer
 {
+	public static final Identifier SLUG = Resources.identifier("lightsaber");
 	public static final byte TRANSITION_TICKS = 8;
-
-	public boolean init;
 
 	public boolean active;
 
@@ -28,12 +27,12 @@ public class LightsaberTag extends TagSerializer
 
 	public LightsaberTag(CompoundTag source)
 	{
-		super(source);
+		super(SLUG, source);
 	}
 
-	protected void setDefaults()
+	public LightsaberTag()
 	{
-		init = true;
+		super(SLUG, new CompoundTag());
 
 		active = false;
 		transition = 0;
@@ -46,12 +45,20 @@ public class LightsaberTag extends TagSerializer
 		hilt = Resources.identifier("luke/rotj");
 	}
 
+	public static LightsaberTag fromRootTag(CompoundTag tag)
+	{
+		CompoundTag parent = new CompoundTag();
+		parent.put(SLUG.toString(), tag);
+		return new LightsaberTag(parent);
+	}
+
 	public static void mutate(ItemStack stack, Consumer<LightsaberTag> action)
 	{
 		CompoundTag nbt = stack.getOrCreateTag();
 		LightsaberTag t = new LightsaberTag(nbt);
 		action.accept(t);
-		stack.setTag(t.serialize());
+
+		t.serializeAsSubtag(stack);
 	}
 
 	public boolean toggle()
@@ -82,14 +89,5 @@ public class LightsaberTag extends TagSerializer
 			return Ease.outCubic(1 - (transition - partialTicks) / TRANSITION_TICKS);
 
 		return Ease.inCubic(-(transition + partialTicks) / TRANSITION_TICKS);
-	}
-
-	@Override
-	public CompoundTag serialize()
-	{
-		// TODO: figure out how to properly create default tags for stacks
-		if (!init)
-			setDefaults();
-		return super.serialize();
 	}
 }

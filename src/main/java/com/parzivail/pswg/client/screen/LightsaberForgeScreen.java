@@ -4,12 +4,15 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.item.render.LightsaberItemRenderer;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.lightsaber.LightsaberTag;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
 import com.parzivail.util.client.ColorUtil;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
@@ -19,6 +22,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.text.LiteralText;
@@ -151,6 +155,9 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		}));
 
 		this.addButton(new ButtonWidget(x + this.backgroundWidth / 2 - 20, y + 124, 40, 20, new TranslatableText("Apply"), button -> {
+			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+			passedData.writeCompoundTag(getLightsaberTag().toTag());
+			ClientPlayNetworking.send(SwgPackets.C2S.PacketLightsaberForgeApply, passedData);
 		}));
 
 		this.addButton(bBladeColor = new ButtonWidget(x + 8, y + 119, 30, 20, new TranslatableText("Blade"), button -> {
@@ -214,7 +221,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	{
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{
-			LightsaberTag lt = new LightsaberTag(lightsaber.getOrCreateTag());
+			LightsaberTag lt = getLightsaberTag();
 
 			int color = 0;
 
@@ -234,6 +241,11 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			cbUnstable.setChecked(lt.unstable);
 			cbDarkBlendMode.setChecked(lt.darkBlend);
 		}
+	}
+
+	private LightsaberTag getLightsaberTag()
+	{
+		return new LightsaberTag(lightsaber.getOrCreateTag());
 	}
 
 	@Override
@@ -295,7 +307,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{
-			LightsaberItemRenderer.INSTANCE.renderDirect(lightsaber, ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND, matrices, immediate, 0xf000f0, 0xFFFFFF);
+			LightsaberItemRenderer.INSTANCE.renderDirect(lightsaber, ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND, matrices, immediate, 0xf000f0, 0xFFFFFF, true);
 			immediate.draw();
 		}
 		matrices.pop();
