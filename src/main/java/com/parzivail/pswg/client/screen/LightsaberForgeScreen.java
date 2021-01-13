@@ -11,6 +11,8 @@ import com.parzivail.util.client.ColorUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -21,19 +23,94 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Quaternion;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHandler> implements ScreenHandlerListener
 {
+	private class MutableSlider extends SliderWidget
+	{
+		private final String translationKey;
+		private final Function<Double, String> valueFormatter;
+		private final Consumer<MutableSlider> callback;
+
+		public MutableSlider(int x, int y, int width, int height, String translationKey, double value, Function<Double, String> valueFormatter, Consumer<MutableSlider> callback)
+		{
+			super(x, y, width, height, LiteralText.EMPTY, value);
+			this.translationKey = translationKey;
+			this.valueFormatter = valueFormatter;
+			this.callback = callback;
+			updateMessage();
+		}
+
+		@Override
+		protected void updateMessage()
+		{
+			setMessage(new TranslatableText(translationKey, valueFormatter.apply(value)));
+		}
+
+		@Override
+		protected void applyValue()
+		{
+			callback.accept(this);
+		}
+
+		public double getValue()
+		{
+			return value;
+		}
+
+		public void setValue(double value)
+		{
+			this.value = value;
+			applyValue();
+			updateMessage();
+		}
+	}
+
+	private static class MutableCheckbox extends CheckboxWidget
+	{
+		private final Consumer<MutableCheckbox> callback;
+
+		public MutableCheckbox(int x, int y, int width, int height, Text text, boolean checked, boolean showLabel, Consumer<MutableCheckbox> callback)
+		{
+			super(x, y, width, height, text, checked, showLabel);
+			this.callback = callback;
+		}
+
+		public void setChecked(boolean checked)
+		{
+			if (isChecked() != checked)
+				onPress();
+		}
+
+		@Override
+		public void onPress()
+		{
+			super.onPress();
+			callback.accept(this);
+		}
+	}
+
 	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/lightsaber_forge.png");
 
 	private final List<SliderWidget> sliders = new ArrayList<>();
+
+	private MutableSlider sR;
+	private MutableSlider sG;
+	private MutableSlider sB;
+	private MutableCheckbox cbUnstable;
+	private MutableCheckbox cbDarkBlendMode;
+	private ButtonWidget bBladeColor;
+	private ButtonWidget bCoreColor;
 
 	private int r;
 	private int g;
@@ -57,69 +134,50 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 		this.handler.addListener(this);
 
-		if (lightsaber.getItem() instanceof LightsaberItem)
-		{
-			LightsaberTag lt = new LightsaberTag(lightsaber.getOrCreateTag());
-
-			int color = lt.bladeColor;
-			r = (color & 0xFF0000) >> 16;
-			g = (color & 0xFF00) >> 8;
-			b = (color & 0xFF);
-		}
+		Function<Double, String> valueFormatter = value -> String.format("%s", (int)Math.round(value * 255));
 
 		sliders.clear();
-		sliders.add(new SliderWidget(x + 41, y + 61, 100, 20, new LiteralText("R: 0"), r / 255f)
-		{
-			@Override
-			protected void updateMessage()
-			{
-				this.setMessage(new LiteralText("R: " + (int)Math.round(value * 255)));
-			}
+		sliders.add(sR = new MutableSlider(x + 41, y + 59, 100, 20, "R: %s", r / 255f, valueFormatter, slider -> {
+			r = (int)Math.round(slider.getValue() * 255);
+			commitChanges();
+		}));
+		sliders.add(sG = new MutableSlider(x + 41, y + 79, 100, 20, "G: %s", g / 255f, valueFormatter, slider -> {
+			g = (int)Math.round(slider.getValue() * 255);
+			commitChanges();
+		}));
+		sliders.add(sB = new MutableSlider(x + 41, y + 99, 100, 20, "B: %s", b / 255f, valueFormatter, slider -> {
+			b = (int)Math.round(slider.getValue() * 255);
+			commitChanges();
+		}));
 
-			@Override
-			protected void applyValue()
-			{
-				r = (int)Math.round(value * 255);
-				commitChanges();
-			}
-		});
+		this.addButton(new ButtonWidget(x + this.backgroundWidth / 2 - 20, y + 124, 40, 20, new TranslatableText("Apply"), button -> {
+		}));
 
-		sliders.add(new SliderWidget(x + 41, y + 83, 100, 20, new LiteralText("G: 0"), g / 255f)
-		{
-			@Override
-			protected void updateMessage()
-			{
-				this.setMessage(new LiteralText("G: " + (int)Math.round(value * 255)));
-			}
+		this.addButton(bBladeColor = new ButtonWidget(x + 8, y + 119, 30, 20, new TranslatableText("Blade"), button -> {
+			button.active = false;
+			bCoreColor.active = true;
+			onLightsaberChanged();
+		}));
 
-			@Override
-			protected void applyValue()
-			{
-				g = (int)Math.round(value * 255);
-				commitChanges();
-			}
-		});
+		this.addButton(bCoreColor = new ButtonWidget(x + 38, y + 119, 30, 20, new TranslatableText("Core"), button -> {
+			button.active = false;
+			bBladeColor.active = true;
+			onLightsaberChanged();
+		}));
 
-		sliders.add(new SliderWidget(x + 41, y + 105, 100, 20, new LiteralText("B: 0"), 0)
-		{
-			@Override
-			protected void updateMessage()
-			{
-				this.setMessage(new LiteralText("B: " + (int)Math.round(value * 255)));
-			}
+		bBladeColor.active = false;
 
-			@Override
-			protected void applyValue()
-			{
-				b = (int)Math.round(value * 255);
-				commitChanges();
-			}
-		});
+		this.addButton(cbUnstable = new MutableCheckbox(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> {
+			commitChanges();
+		}));
+		this.addButton(cbDarkBlendMode = new MutableCheckbox(x + 173, y + 87, 20, 20, new TranslatableText("Dark"), false, true, mutableCheckbox -> {
+			commitChanges();
+		}));
 
 		for (SliderWidget s : sliders)
-		{
 			this.addButton(s);
-		}
+
+		onLightsaberChanged();
 	}
 
 	public void removed()
@@ -142,8 +200,40 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	{
 		LightsaberTag.mutate(lightsaber, (lt) ->
 		{
-			lt.bladeColor = ColorUtil.packRgb(r, g, b);
+			if (!bBladeColor.active)
+				lt.bladeColor = ColorUtil.packRgb(r, g, b);
+			else if (!bCoreColor.active)
+				lt.coreColor = ColorUtil.packRgb(r, g, b);
+
+			lt.unstable = cbUnstable.isChecked();
+			lt.darkBlend = cbDarkBlendMode.isChecked();
 		});
+	}
+
+	private void onLightsaberChanged()
+	{
+		if (lightsaber.getItem() instanceof LightsaberItem)
+		{
+			LightsaberTag lt = new LightsaberTag(lightsaber.getOrCreateTag());
+
+			int color = 0;
+
+			if (!bBladeColor.active)
+				color = lt.bladeColor;
+			else if (!bCoreColor.active)
+				color = lt.coreColor;
+
+			r = (color & 0xFF0000) >> 16;
+			g = (color & 0xFF00) >> 8;
+			b = (color & 0xFF);
+
+			sR.setValue(r / 255f);
+			sG.setValue(g / 255f);
+			sB.setValue(b / 255f);
+
+			cbUnstable.setChecked(lt.unstable);
+			cbDarkBlendMode.setChecked(lt.darkBlend);
+		}
 	}
 
 	@Override
@@ -160,6 +250,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			case 0:
 			{
 				lightsaber = stack.copy();
+				onLightsaberChanged();
 				break;
 			}
 		}
@@ -213,8 +304,8 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		int x0 = x + 7;
 		int x1 = x + 7 + 30;
-		int y0 = y + 88;
-		int y1 = y + 88 + 30;
+		int y0 = y + 84;
+		int y1 = y + 84 + 30;
 
 		int u0 = 0;
 		int u1 = 10;

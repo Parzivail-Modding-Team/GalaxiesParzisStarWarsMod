@@ -144,7 +144,7 @@ public class LightsaberRenderer
 
 			float layerThicknessModifier = 0;
 			if (unstable)
-				layerThicknessModifier = (float)Resources.RANDOM.nextGaussian() * 0.01f;
+				layerThicknessModifier = (float)Resources.RANDOM.nextGaussian() * 0.003f;
 
 			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, thicknessTop - layerThicknessModifier - 0.0058f * layer, 0.16f - layerThicknessModifier - 0.0058f * layer, 0, cap ? layerThicknessModifier + bladeLength - 0.33f + 0.4f * (float)Math.sqrt(1 - Math.pow(1 - layer / 19f, 2)) : bladeLength + (20 - layer) * 0.005f, 0, 0, -(20 - layer) * 0.005f, 0);
 		}
