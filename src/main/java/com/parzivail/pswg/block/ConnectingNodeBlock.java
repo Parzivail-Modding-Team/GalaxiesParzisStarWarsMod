@@ -156,6 +156,7 @@ public abstract class ConnectingNodeBlock extends Block
 		{
 			if (player.isSneaking())
 			{
+				// TODO: remove
 				if (!world.isClient)
 				{
 					ArrayList<BlockPos> outlets = getGlobalOutlets(world, state, pos);

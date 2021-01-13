@@ -33,4 +33,12 @@ public class ColorUtil
 
 		return NativeImage.getAbgrColor(a, b, g, r);
 	}
+
+	public static int packRgb(int r, int g, int b)
+	{
+		int rgb = (r & 0xFF);
+		rgb = (rgb << 8) + (g & 0xFF);
+		rgb = (rgb << 8) + (b & 0xFF);
+		return rgb | 0xFF000000;
+	}
 }

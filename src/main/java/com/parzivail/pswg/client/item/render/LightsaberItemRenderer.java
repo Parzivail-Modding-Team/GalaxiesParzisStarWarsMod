@@ -26,6 +26,8 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 	public static final Identifier DEFAULT_MODEL;
 	public static final HashMap<Identifier, PM3DTexturedModel> MODELS = new HashMap<>();
 
+	public static final LightsaberItemRenderer INSTANCE = new LightsaberItemRenderer();
+
 	static
 	{
 		MODELS.put((DEFAULT_MODEL = Resources.identifier("luke/rotj")), new PM3DTexturedModel(
@@ -54,6 +56,13 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 		else if (renderMode != ModelTransformation.Mode.GUI)
 			matrices.translate(0, 0.18f, 0);
 
+		renderDirect(stack, renderMode, matrices, vertexConsumers, light, overlay);
+
+		matrices.pop();
+	}
+
+	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
+	{
 		matrices.push();
 		matrices.scale(0.04f, 0.04f, 0.04f);
 
@@ -94,7 +103,5 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 
 			LightsaberRenderer.renderBlade(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, coreColor, glowColor, darkBlend);
 		}
-
-		matrices.pop();
 	}
 }

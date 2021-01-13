@@ -107,7 +107,7 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, (entityRenderDispatcher, context) -> new BlasterBoltRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, (entityRenderDispatcher, context) -> new ThrownLightsaberRenderer(entityRenderDispatcher, context.getItemRenderer()));
 
-		CustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, new LightsaberItemRenderer());
+		CustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 
 		CustomItemRenderer.register(SwgItems.Blaster.A280, new BlasterItemRenderer(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/a280.pm3d"))), Resources.identifier("textures/model/blaster/a280.png"), Resources.identifier("textures/model/blaster/a280_inventory.png")));
 		ICustomHudRenderer.registerCustomHUD(SwgItems.Blaster.A280, BlasterHudRenderer.INSTANCE);
