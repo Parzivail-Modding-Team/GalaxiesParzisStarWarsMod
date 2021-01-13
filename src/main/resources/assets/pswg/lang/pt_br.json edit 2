@@ -130,6 +130,6 @@
 	"text.autoconfig.pswg.option.input": "Comando",
 	"text.autoconfig.pswg.option.input.@Tooltip": "Aqui você pode alterar os seus métodos de comando favoritos.",
 	"text.autoconfig.pswg.option.input.shipRollPriority": "Nave dará prioridade ao comando de rolar",
-	"text.autoconfig.pswg.option.input.shipRollPriority.@Tooltip": "Define se os comandos do mouse devem ser 'inclinar e guinar', ou 'inclinar e rolar',
+	"text.autoconfig.pswg.option.input.shipRollPriority.@Tooltip": "Define se os comandos do mouse devem ser 'inclinar e guinar', ou 'inclinar e rolar'",
 	"text.autoconfig.pswg.title": "Galaxies: Parzi's Star Wars Mod"
 }
