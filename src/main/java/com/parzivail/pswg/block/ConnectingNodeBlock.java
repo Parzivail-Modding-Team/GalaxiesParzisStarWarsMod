@@ -142,7 +142,7 @@ public abstract class ConnectingNodeBlock extends Block
 		}
 		else
 		{
-			return state.with(FACING_PROPERTIES.get(direction), isConnectedTo(world, state, otherState, otherPos, direction));
+			return state.with(FACING_PROPERTIES.get(direction), state.get(FACING_PROPERTIES.get(direction)) || isConnectedTo(world, state, otherState, otherPos, direction));
 		}
 	}
 
