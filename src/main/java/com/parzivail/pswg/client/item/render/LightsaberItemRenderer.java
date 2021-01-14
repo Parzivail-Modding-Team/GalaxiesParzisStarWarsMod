@@ -44,17 +44,28 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 
 		model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
 
-		matrices.translate(-0.02f, 0.16f, 0.04f);
+		matrices.translate(-0.02f, 0.25f, 0.04f);
 
-		if (renderMode == ModelTransformation.Mode.FIXED)
+		switch (renderMode)
 		{
-			matrices.translate(-0.18f, 0, 0);
-			matrices.scale(1.8f, 1.8f, 1.8f);
-			matrices.multiply(new Quaternion(0, 0, 45, true));
-			matrices.translate(0, 0.18f, 0);
+			case FIXED:
+				matrices.translate(-0.25f, 0, 0);
+				matrices.scale(1.8f, 1.8f, 1.8f);
+				matrices.multiply(new Quaternion(0, 0, 45, true));
+				matrices.translate(0, 0.04f, 0);
+				break;
+			case GUI:
+				matrices.translate(0, -0.08f, 0);
+				matrices.scale(1.2f, 1.2f, 1.2f);
+				break;
+			case FIRST_PERSON_LEFT_HAND:
+			case FIRST_PERSON_RIGHT_HAND:
+				matrices.translate(0, 0.05f, 0);
+				break;
+			default:
+				matrices.translate(0, -0.05f, 0);
+				break;
 		}
-		else if (renderMode != ModelTransformation.Mode.GUI)
-			matrices.translate(0, 0.18f, 0);
 
 		renderDirect(stack, renderMode, matrices, vertexConsumers, light, overlay, false);
 
@@ -64,7 +75,7 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade)
 	{
 		matrices.push();
-		matrices.scale(0.04f, 0.04f, 0.04f);
+		matrices.scale(0.03f, 0.03f, 0.03f);
 
 		MinecraftClient mc = Client.minecraft;
 		LightsaberTag lt = new LightsaberTag(stack.getOrCreateTag());
@@ -99,7 +110,7 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 
 		if (renderMode != ModelTransformation.Mode.GUI)
 		{
-			matrices.translate(0.02f, 0, 0.02f);
+			matrices.translate(0.015f, 0, 0.015f);
 
 			LightsaberRenderer.renderBlade(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, coreColor, glowColor, darkBlend);
 		}
