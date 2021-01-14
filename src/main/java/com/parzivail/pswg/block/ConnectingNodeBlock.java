@@ -162,7 +162,7 @@ public abstract class ConnectingNodeBlock extends Block
 					ArrayList<BlockPos> outlets = getGlobalOutlets(world, state, pos);
 
 					for (BlockPos outlet : outlets)
-						DebugInfoSender.addGameTestMarker((ServerWorld)world, outlet, "Outlet", 0, 1000);
+						DebugInfoSender.addGameTestMarker((ServerWorld)world, outlet, world.getBlockState(outlet).toString(), 0, 1000);
 				}
 			}
 			else

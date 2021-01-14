@@ -343,6 +343,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY)
 	{
 		this.textRenderer.draw(matrices, this.title, (float)this.titleX, (float)this.titleY, 4210752);
-		this.textRenderer.draw(matrices, this.playerInventory.getDisplayName(), (float)this.playerInventoryTitleX, (float)this.playerInventoryTitleY, 4210752);
+		this.textRenderer.draw(matrices, this.playerInventory.getDisplayName(), (float)this.playerInventoryTitleX, (float)this.playerInventoryTitleY, 0x404040);
 	}
 }

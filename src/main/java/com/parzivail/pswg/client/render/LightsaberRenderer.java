@@ -106,23 +106,27 @@ public class LightsaberRenderer
 		if (bladeLength == 0)
 			return;
 
-		int segments = unstable ? 15 : 1;
-		float dSegments = 1f / segments;
-		float dLength = bladeLength / segments;
-		float offset = (float)Resources.RANDOM.nextGaussian();
+		final int segments = unstable ? 15 : 1;
+		final float dSegments = 1f / segments;
+		final float dLength = bladeLength / segments;
+		final float offset = (float)Resources.RANDOM.nextGaussian();
+
+		final float solidThickness = 0.035f;
+		final float cappedThickness = 0.03f;
+		final float topThickness = cap ? cappedThickness : solidThickness;
 
 		VertexConsumerBuffer.Instance.setColor(coreColor);
 
 		if (cap)
 		{
 			float dTRoundBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(offset, dLength * (segments + 1)) * 0.005f : 0;
-			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, 0.01f, 0.022f + dTRoundBottom, 0, bladeLength + 0.02f, 0, 0, bladeLength, 0);
+			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, 0.01f, cappedThickness + dTRoundBottom, 0, bladeLength + 0.025f, 0, 0, bladeLength, 0);
 		}
 
 		for (int i = 0; i < segments; i++)
 		{
-			float topThicknessLerp = MathHelper.lerp(dSegments * (i + 1), 0.035f, cap ? 0.022f : 0.035f);
-			float bottomThicknessLerp = MathHelper.lerp(dSegments * i, 0.035f, cap ? 0.022f : 0.035f);
+			float topThicknessLerp = MathHelper.lerp(dSegments * (i + 1), solidThickness, topThickness);
+			float bottomThicknessLerp = MathHelper.lerp(dSegments * i, solidThickness, topThickness);
 
 			float dTTop = unstable ? (float)Resources.SIMPLEX_0.noise2(offset, dLength * (i + 1)) * 0.005f : 0;
 			float dTBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(offset, dLength * i) * 0.005f : 0;
@@ -138,7 +142,7 @@ public class LightsaberRenderer
 
 		float thicknessTop = cap ? 0.14f : 0.16f;
 
-		for (int layer = 19; layer > 10; layer--)
+		for (int layer = 20; layer > 11; layer--)
 		{
 			VertexConsumerBuffer.Instance.setColor(bladeColor, (darkBlend ? BLEND_LIGHTSABER_DARK : BLEND_LIGHTSABER).apply(layer));
 
@@ -146,7 +150,7 @@ public class LightsaberRenderer
 			if (unstable)
 				layerThicknessModifier = (float)Resources.RANDOM.nextGaussian() * 0.003f;
 
-			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, thicknessTop - layerThicknessModifier - 0.0058f * layer, 0.16f - layerThicknessModifier - 0.0058f * layer, 0, layerThicknessModifier + bladeLength + (cap ? layer : 20 - layer) * 0.005f, 0, 0, -(20 - layer) * 0.005f, 0);
+			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, thicknessTop - layerThicknessModifier - 0.0058f * layer, 0.16f - layerThicknessModifier - 0.0058f * layer, 0, layerThicknessModifier + bladeLength + (cap ? layer - 11 : 9 - (layer - 11)) * 0.008f, 0, 0, -(20 - layer) * 0.005f, 0);
 		}
 	}
 }
