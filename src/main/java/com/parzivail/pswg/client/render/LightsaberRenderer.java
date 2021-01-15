@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.client.RenderShapes;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import net.minecraft.client.MinecraftClient;
@@ -13,13 +14,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 
-import java.util.function.Function;
-
 public class LightsaberRenderer
 {
 	private static final RenderLayer LAYER_LIGHTSABER_CORE = RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().build(true));
-
-	private static final Function<Integer, Integer> BLEND_LIGHTSABER = (layer) -> (int)(1.675f * layer);
 
 	private static final RenderLayer LAYER_LIGHTSABER_GLOW_THIRDPERSON = RenderLayer.of("lightsaber_glow_3p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency_3p", () -> {
 		RenderSystem.enableBlend();
@@ -44,8 +41,6 @@ public class LightsaberRenderer
 		RenderSystem.disableBlend();
 		RenderSystem.defaultBlendFunc();
 	})).build(true));
-
-	private static final Function<Integer, Integer> BLEND_LIGHTSABER_DARK = (layer) -> (int)MathHelper.lerp((layer - 11) / 8f, 0, 192);
 
 	private static final RenderLayer LAYER_LIGHTSABER_GLOW_DARK_THIRDPERSON = RenderLayer.of("lightsaber_glow_dark_3p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_dark_transparency_3p", () -> {
 		RenderSystem.enableBlend();
@@ -144,7 +139,7 @@ public class LightsaberRenderer
 
 		for (int layer = 22; layer > 12; layer--)
 		{
-			VertexConsumerBuffer.Instance.setColor(bladeColor, (darkBlend ? BLEND_LIGHTSABER_DARK : BLEND_LIGHTSABER).apply(layer));
+			VertexConsumerBuffer.Instance.setColor(bladeColor, (int)MathUtil.remap(layer, 12, 22, 0, darkBlend ? 196 : 128));
 
 			float layerThicknessModifier = 0;
 			if (unstable)

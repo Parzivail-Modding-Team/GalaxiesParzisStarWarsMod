@@ -79,7 +79,13 @@ public class MathUtil
 		return Math.sqrt(v.x * v.x + v.y * v.y);
 	}
 
-	public static int clamp(int i, int min, int max) {
+	public static int clamp(int i, int min, int max)
+	{
 		return Math.max(min, Math.min(i, max));
+	}
+
+	public static float remap(float x, float iMin, float iMax, float oMin, float oMax)
+	{
+		return (x - iMin) / (iMax - iMin) * (oMax - oMin) + oMin;
 	}
 }
