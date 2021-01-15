@@ -112,7 +112,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	private MutableSlider sG;
 	private MutableSlider sB;
 	private MutableCheckbox cbUnstable;
-	private MutableCheckbox cbDarkBlendMode;
 	private ButtonWidget bBladeColor;
 	private ButtonWidget bCoreColor;
 
@@ -177,9 +176,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		this.addButton(cbUnstable = new MutableCheckbox(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> {
 			commitChanges();
 		}));
-		this.addButton(cbDarkBlendMode = new MutableCheckbox(x + 173, y + 87, 20, 20, new TranslatableText("Dark"), false, true, mutableCheckbox -> {
-			commitChanges();
-		}));
 
 		for (SliderWidget s : sliders)
 			this.addButton(s);
@@ -213,7 +209,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 				lt.coreColor = ColorUtil.packRgb(r, g, b);
 
 			lt.unstable = cbUnstable.isChecked();
-			lt.darkBlend = cbDarkBlendMode.isChecked();
 		});
 	}
 
@@ -239,7 +234,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			sB.setValue(b / 255f);
 
 			cbUnstable.setChecked(lt.unstable);
-			cbDarkBlendMode.setChecked(lt.darkBlend);
 		}
 	}
 

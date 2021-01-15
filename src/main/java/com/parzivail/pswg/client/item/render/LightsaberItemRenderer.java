@@ -85,7 +85,6 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 		float lengthCoefficient = forceBlade ? 1 : lt.getSize(mc.getTickDelta());
 		int coreColor = lt.coreColor;
 		int glowColor = lt.bladeColor;
-		boolean darkBlend = lt.darkBlend;
 
 		PM3DTexturedModel texturedModel = MODELS.get(lt.hilt);
 		if (texturedModel == null)
@@ -112,7 +111,7 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 		{
 			matrices.translate(0.015f, 0, 0.015f);
 
-			LightsaberRenderer.renderBlade(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, coreColor, glowColor, darkBlend);
+			LightsaberRenderer.renderBlade(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, coreColor, glowColor);
 		}
 	}
 }

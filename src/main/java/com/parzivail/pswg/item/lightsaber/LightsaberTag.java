@@ -21,7 +21,6 @@ public class LightsaberTag extends TagSerializer
 	public int coreColor;
 	public int bladeColor;
 	public boolean unstable;
-	public boolean darkBlend;
 
 	public Identifier hilt;
 
@@ -40,7 +39,6 @@ public class LightsaberTag extends TagSerializer
 		coreColor = 0xFFFFFF;
 		bladeColor = 0x0020FF;
 		unstable = false;
-		darkBlend = false;
 
 		hilt = Resources.identifier("luke/rotj");
 	}

@@ -2,12 +2,10 @@ package com.parzivail.pswg.client.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.client.RenderShapes;
 import com.parzivail.util.client.VertexConsumerBuffer;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
@@ -18,61 +16,36 @@ public class LightsaberRenderer
 {
 	private static final RenderLayer LAYER_LIGHTSABER_CORE = RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().build(true));
 
-	private static final RenderLayer LAYER_LIGHTSABER_GLOW_THIRDPERSON = RenderLayer.of("lightsaber_glow_3p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency_3p", () -> {
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
-		RenderSystem.enableCull();
-	}, () -> {
-		RenderSystem.disableBlend();
-		RenderSystem.defaultBlendFunc();
-	})).target(new RenderPhase.Target("item_entity_target", () -> {
-		if (MinecraftClient.isFabulousGraphicsOrBetter())
-			Client.minecraft.worldRenderer.getEntityFramebuffer().beginWrite(false);
-	}, () -> {
-		if (MinecraftClient.isFabulousGraphicsOrBetter())
-			Client.minecraft.getFramebuffer().beginWrite(false);
-	})).cull(new RenderPhase.Cull(true)).build(true));
+	private static final RenderLayer LAYER_LIGHTSABER_STENCIL_MASK = RenderLayer.of("core_stencil_mask2", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("core_stencil_mask_gl", () ->
+	{
+		GL11.glEnable(GL11.GL_STENCIL_TEST);
 
-	private static final RenderLayer LAYER_LIGHTSABER_GLOW_FIRSTPERSON = RenderLayer.of("lightsaber_glow_1p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_transparency_1p", () -> {
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
-		RenderSystem.enableCull();
+		GL11.glStencilMask(0xFF); // Write to stencil buffer
+		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
+
+		GL11.glColorMask(false, false, false, false);
+		GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF); // Set any stencil to 1
+		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
+		GL11.glDepthMask(false);
 	}, () -> {
-		RenderSystem.disableBlend();
-		RenderSystem.defaultBlendFunc();
+		GL11.glDepthMask(true);
+		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
+		GL11.glColorMask(true, true, true, true);
+		GL11.glStencilMask(0x00); // Don't write anything to stencil buffer
 	})).build(true));
 
-	private static final RenderLayer LAYER_LIGHTSABER_GLOW_DARK_THIRDPERSON = RenderLayer.of("lightsaber_glow_dark_3p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_dark_transparency_3p", () -> {
+	private static final RenderLayer LAYER_LIGHTSABER_STENCIL_TARGET = RenderLayer.of("glow_stencil_target", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 2097152, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("glow_stencil_target_gl", () ->
+	{
+		GL11.glStencilFunc(GL11.GL_NOTEQUAL, 1, 0xFF); // Fail test if stencil value is 1
 		RenderSystem.enableBlend();
 		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
-		RenderSystem.enableCull();
-		GL11.glPushAttrib(GL11.GL_POLYGON_BIT);
-		GL11.glCullFace(GL11.GL_FRONT);
 	}, () -> {
-		GL11.glPopAttrib();
 		RenderSystem.disableBlend();
 		RenderSystem.defaultBlendFunc();
-	})).target(new RenderPhase.Target("item_entity_target", () -> {
-		if (MinecraftClient.isFabulousGraphicsOrBetter())
-			Client.minecraft.worldRenderer.getEntityFramebuffer().beginWrite(false);
-	}, () -> {
-		if (MinecraftClient.isFabulousGraphicsOrBetter())
-			Client.minecraft.getFramebuffer().beginWrite(false);
-	})).cull(new RenderPhase.Cull(true)).build(true));
+		GL11.glDisable(GL11.GL_STENCIL_TEST);
+	})).build(true));
 
-	private static final RenderLayer LAYER_LIGHTSABER_GLOW_DARK_FIRSTPERSON = RenderLayer.of("lightsaber_glow_dark_1p", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("lightsaber_glow_dark_transparency_1p", () -> {
-		RenderSystem.enableBlend();
-		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
-		RenderSystem.enableCull();
-		GL11.glPushAttrib(GL11.GL_POLYGON_BIT);
-		GL11.glCullFace(GL11.GL_FRONT);
-	}, () -> {
-		GL11.glPopAttrib();
-		RenderSystem.disableBlend();
-		RenderSystem.defaultBlendFunc();
-	})).cull(new RenderPhase.Cull(true)).build(true));
-
-	public static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, int coreColor, int glowColor, boolean darkBlend)
+	public static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, int coreColor, int glowColor)
 	{
 		VertexConsumer vc;
 
@@ -84,16 +57,19 @@ public class LightsaberRenderer
 		matrices.translate(dX, 0, dY);
 
 		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_CORE);
+
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		renderCore(totalLength, coreColor, unstable, cap);
 
-		if (renderMode != ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND && renderMode != ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND)
-			vc = vertexConsumers.getBuffer(darkBlend ? LAYER_LIGHTSABER_GLOW_DARK_THIRDPERSON : LAYER_LIGHTSABER_GLOW_THIRDPERSON);
-		else
-			vc = vertexConsumers.getBuffer(darkBlend ? LAYER_LIGHTSABER_GLOW_DARK_FIRSTPERSON : LAYER_LIGHTSABER_GLOW_FIRSTPERSON);
+		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_STENCIL_MASK);
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderGlow(totalLength, glowColor, unstable, cap, darkBlend);
+		renderCore(totalLength, coreColor, unstable, cap);
+
+		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_STENCIL_TARGET);
+
+		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+		renderGlow(totalLength, glowColor, unstable, cap);
 	}
 
 	private static void renderCore(float bladeLength, int coreColor, boolean unstable, boolean cap)
@@ -130,7 +106,7 @@ public class LightsaberRenderer
 		}
 	}
 
-	public static void renderGlow(float bladeLength, int bladeColor, boolean unstable, boolean cap, boolean darkBlend)
+	public static void renderGlow(float bladeLength, int bladeColor, boolean unstable, boolean cap)
 	{
 		if (bladeLength == 0)
 			return;
@@ -139,7 +115,7 @@ public class LightsaberRenderer
 
 		for (int layer = 22; layer > 12; layer--)
 		{
-			VertexConsumerBuffer.Instance.setColor(bladeColor, (int)MathUtil.remap(layer, 12, 22, 0, darkBlend ? 196 : 128));
+			VertexConsumerBuffer.Instance.setColor(bladeColor, (int)MathUtil.remap(layer, 12, 22, 0, 128));
 
 			float layerThicknessModifier = 0;
 			if (unstable)
