@@ -1,5 +1,6 @@
 package com.parzivail.util.math;
 
+import com.parzivail.pswg.access.IQuaternionAccess;
 import com.parzivail.pswg.util.MathUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.Vector3f;
@@ -60,7 +61,7 @@ public class QuatUtil
 
 	public static void set(Quaternion self, float x, float y, float z, float w)
 	{
-		QuaternionExt.from(self).set0(x, y, z, w);
+		IQuaternionAccess.from(self).set0(x, y, z, w);
 	}
 
 	public static void set(Quaternion self, Quaternion other)

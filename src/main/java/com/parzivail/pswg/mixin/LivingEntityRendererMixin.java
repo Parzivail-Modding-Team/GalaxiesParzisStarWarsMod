@@ -14,7 +14,7 @@ import java.util.List;
 
 @Mixin(LivingEntityRenderer.class)
 @Environment(EnvType.CLIENT)
-public interface LivingEntityRendererAccessor<T extends LivingEntity, M extends EntityModel<T>>
+public interface LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>>
 {
 	@Accessor
 	@Final

@@ -7,12 +7,16 @@
 		"FarmlandBlockMixin",
 		"ItemStackMixin",
 		"Matrix4fMixin",
+		"MinecraftServerMixin",
+		"PlayerManagerMixin",
 		"QuaternionMixin",
-		"ServerPlayNetworkHandlerMixin"
+		"ServerPlayNetworkHandlerMixin",
+		"ServerResourceManagerMixin"
 	],
 	"client": [
 		"AbstractClientPlayerEntityMixin",
 		"CameraMixin",
+		"ClientLoginNetworkHandlerMixin",
 		"ClientPlayNetworkHandlerMixin",
 		"ClientRecipeBookMixin",
 		"EntityClientMixin",
@@ -23,7 +27,7 @@
 		"InGameHudMixin",
 		"ItemRendererMixin",
 		"LevelPropertiesMixin",
-		"LivingEntityRendererAccessor",
+		"LivingEntityRendererMixin",
 		"MinecraftClientMixin",
 		"PlayerEntityMixin",
 		"PlayerEntityModelMixin",

@@ -1,9 +1,11 @@
 package com.parzivail.pswg.item.blaster;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.container.data.SwgBlasterLoader;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.item.IDefaultNbtProvider;
 import com.parzivail.pswg.item.IZoomingItem;
@@ -35,6 +37,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.Map;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider
 {
@@ -242,20 +246,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (group != Galaxies.Tab)
 			return;
 
-		// TODO: load these from a datapack
-		BlasterDescriptor d = new BlasterDescriptor(
-				Resources.identifier("a280"),
-				10,
-				50,
-				1,
-				0xFF0000,
-				10,
-				10,
-				new BlasterSpreadInfo(0, 0),
-				new BlasterHeatInfo(100, 15),
-				BlasterCoolingBypassProfile.DEFAULT
-		);
-		stacks.add(forType(d));
+		SwgBlasterLoader blasterLoader = Client.getBlasterLoader();
+
+		for (Map.Entry<Identifier, BlasterDescriptor> entry : blasterLoader.getBlasters().entrySet())
+			stacks.add(forType(entry.getValue()));
 	}
 
 	private ItemStack forType(BlasterDescriptor blasterDescriptor)

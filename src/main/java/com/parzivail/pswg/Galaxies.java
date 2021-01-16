@@ -26,7 +26,6 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.serialize.ConstantArgumentSerializer;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -164,18 +163,7 @@ public class Galaxies implements ModInitializer
 					})
 				)))));
 
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketLightsaberForgeApply, (server, player, handler, buf, responseSender) -> {
-			CompoundTag tag = buf.readCompoundTag();
-
-			server.execute(() -> {
-				if (player.currentScreenHandler instanceof LightsaberForgeScreenHandler)
-				{
-					LightsaberForgeScreenHandler screenHandler = (LightsaberForgeScreenHandler)player.currentScreenHandler;
-					screenHandler.setLightsaberTag(tag);
-				}
-			});
-		});
-
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketLightsaberForgeApply, LightsaberForgeScreenHandler::handleSetLighsaberTag);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerLightsaberToggle, PlayerPacketHandler::handleLightsaberTogglePacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);

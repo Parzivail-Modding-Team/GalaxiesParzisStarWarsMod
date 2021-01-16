@@ -40,4 +40,23 @@ public class BlasterDescriptor extends TagSerializer
 		this.heat = heat;
 		this.cooling = cooling;
 	}
+
+	/**
+	 * Do not call: only used in deserialization
+	 */
+	@Deprecated
+	public BlasterDescriptor(Identifier id, BlasterDescriptor other)
+	{
+		super(SLUG);
+		this.id = id;
+		this.damage = other.damage;
+		this.range = other.range;
+		this.weight = other.weight;
+		this.boltColor = other.boltColor;
+		this.magazineSize = other.magazineSize;
+		this.automaticRepeatTime = other.automaticRepeatTime;
+		this.spread = other.spread;
+		this.heat = other.heat;
+		this.cooling = other.cooling;
+	}
 }

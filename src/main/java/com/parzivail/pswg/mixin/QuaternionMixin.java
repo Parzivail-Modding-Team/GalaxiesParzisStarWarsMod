@@ -1,12 +1,12 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.util.math.QuaternionExt;
+import com.parzivail.pswg.access.IQuaternionAccess;
 import net.minecraft.util.math.Quaternion;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Quaternion.class)
-public class QuaternionMixin implements QuaternionExt
+public class QuaternionMixin implements IQuaternionAccess
 {
 	@Shadow
 	private float x;

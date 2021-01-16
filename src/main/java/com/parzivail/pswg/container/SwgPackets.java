@@ -13,4 +13,9 @@ public class SwgPackets
 		public static final Identifier PacketShipRotation = Resources.identifier("ship_rotation");
 		public static final Identifier PacketShipControls = Resources.identifier("ship_controls");
 	}
+
+	public static class S2C
+	{
+		public static final Identifier PacketSyncBlasters = Resources.identifier("sync_blasters");
+	}
 }

@@ -3,17 +3,9 @@
 	"damage": 1.0,
 	"range": 30.0,
 	"weight": 1.0,
-	"boltColor": "FF0000",
+	"boltColor": 16711680,
 	"magazineSize": 10,
-	"soundFire": "pswg:blaster.fire.a280",
 	"automaticRepeatTime": -1,
-	"model": {
-		"model": "pswg:models/item/blaster/a280.pm3d",
-		"textures": [
-			"pswg:textures/model/blaster/a280_inventory.png",
-			"pswg:textures/model/blaster/a280.png"
-		]
-	},
 	"spread": {
 		"horizontal": 0.0,
 		"vertical": 0.0

@@ -1,7 +1,6 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
-import com.parzivail.pswg.container.data.SwgBlasterLoader;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.item.DebugItem;
@@ -110,7 +109,5 @@ public class SwgItems
 	public static void register()
 	{
 		RegistryHelper.registerAnnotatedFields(SwgItems.class, Item.class, (instance, registryName) -> Registry.register(Registry.ITEM, registryName, instance));
-
-		SwgBlasterLoader.load();
 	}
 }

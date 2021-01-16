@@ -4,15 +4,20 @@ import com.parzivail.pswg.client.screen.slot.StrictSlot;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.lightsaber.LightsaberTag;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class LightsaberForgeScreenHandler extends ScreenHandler
 {
@@ -46,6 +51,19 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 
 		for (int column = 0; column < 9; ++column)
 			this.addSlot(new Slot(playerInventory, column, column * 18 + 48, 217));
+	}
+
+	public static void handleSetLighsaberTag(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	{
+		CompoundTag tag = buf.readCompoundTag();
+
+		server.execute(() -> {
+			if (player.currentScreenHandler instanceof LightsaberForgeScreenHandler)
+			{
+				LightsaberForgeScreenHandler screenHandler = (LightsaberForgeScreenHandler)player.currentScreenHandler;
+				screenHandler.setLightsaberTag(tag);
+			}
+		});
 	}
 
 	public void setLightsaberTag(CompoundTag lightsaberTag)

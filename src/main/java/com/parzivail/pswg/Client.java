@@ -14,10 +14,8 @@ import com.parzivail.pswg.client.render.block.TatooineHomeDoorRenderer;
 import com.parzivail.pswg.client.render.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
-import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.container.SwgScreenTypes;
+import com.parzivail.pswg.container.*;
+import com.parzivail.pswg.container.data.SwgBlasterLoader;
 import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.util.Lumberjack;
 import com.parzivail.util.item.CustomItemRenderer;
@@ -26,6 +24,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -45,12 +44,24 @@ public class Client implements ClientModInitializer
 	public static MinecraftClient minecraft;
 	public static RemoteTextureProvider remoteTextureProvider;
 
+	private static SwgBlasterLoader blasterLoader;
+
 	public static boolean isShipClientControlled(ShipEntity shipEntity)
 	{
 		if (minecraft == null || minecraft.player == null)
 			return false;
 
 		return ShipEntity.getShip(minecraft.player) == shipEntity;
+	}
+
+	public static void resetLoaders()
+	{
+		blasterLoader = new SwgBlasterLoader();
+	}
+
+	public static SwgBlasterLoader getBlasterLoader()
+	{
+		return blasterLoader;
 	}
 
 	@Override
@@ -109,5 +120,12 @@ public class Client implements ClientModInitializer
 
 		CustomItemRenderer.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
 		ICustomHudRenderer.registerCustomHUD(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+			if (blasterLoader != null)
+				blasterLoader.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
+			else
+				Lumberjack.error("Attempted to sync blaster descriptors without initializing the client loader!");
+		});
 	}
 }
