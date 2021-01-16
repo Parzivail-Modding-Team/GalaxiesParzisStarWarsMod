@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterCoolingBypassProfile;
+import com.parzivail.pswg.item.blaster.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.BlasterTag;
 import com.parzivail.util.item.ICustomHudRenderer;
@@ -36,9 +37,10 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		final int cooldownWidth = 61;
 
 		BlasterItem b = (BlasterItem)stack.getItem();
+		BlasterDescriptor bd = new BlasterDescriptor(stack.getOrCreateTag());
 		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
 
-		BlasterCoolingBypassProfile profile = b.getCoolingProfile(stack, player);
+		BlasterCoolingBypassProfile profile = bd.cooling;
 		final int crosshairIdx = 0;
 
 		/*
@@ -52,7 +54,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			// translucent background
 			this.drawTexture(matrices, cooldownBarX, j + 30, 0, 0, cooldownWidth, 3);
 
-			final float maxHeat = b.getMaxHeat(stack, player);
+			final float maxHeat = bd.heat.capacity;
 
 			if (bt.isCoolingDown())
 			{

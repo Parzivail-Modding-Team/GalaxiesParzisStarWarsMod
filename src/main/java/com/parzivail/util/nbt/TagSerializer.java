@@ -1,5 +1,8 @@
 package com.parzivail.util.nbt;
 
+import com.parzivail.pswg.item.blaster.BlasterCoolingBypassProfile;
+import com.parzivail.pswg.item.blaster.BlasterHeatInfo;
+import com.parzivail.pswg.item.blaster.BlasterSpreadInfo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
@@ -30,6 +33,9 @@ public class TagSerializer
 		map(Identifier.class, (nbt, field) -> new Identifier(nbt.getString(field)), (nbt, field, a) -> nbt.putString(field, a.toString()));
 		map(CompoundTag.class, CompoundTag::getCompound, CompoundTag::put);
 		map(ItemStack.class, (nbt, field) -> ItemStack.fromTag(nbt.getCompound(field)), (nbt, field, a) -> nbt.put(field, a.toTag(new CompoundTag())));
+		map(BlasterSpreadInfo.class, BlasterSpreadInfo::fromTag, BlasterSpreadInfo::toTag);
+		map(BlasterHeatInfo.class, BlasterHeatInfo::fromTag, BlasterHeatInfo::toTag);
+		map(BlasterCoolingBypassProfile.class, BlasterCoolingBypassProfile::fromTag, BlasterCoolingBypassProfile::toTag);
 
 		//map(EntityPlayer.class, PNBTSerial::readPlayer, PNBTSerial::writePlayer);
 		//map(Entity.class, PNBTSerial::readEntity, PNBTSerial::writeEntity);
@@ -42,9 +48,14 @@ public class TagSerializer
 
 	private final String slug;
 
-	public TagSerializer(Identifier slug, CompoundTag source)
+	public TagSerializer(Identifier slug)
 	{
 		this.slug = slug.toString();
+	}
+
+	public TagSerializer(Identifier slug, CompoundTag source)
+	{
+		this(slug);
 		Class<?> clazz = this.getClass();
 		Field[] clFields = getClassFields(clazz);
 

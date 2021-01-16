@@ -40,7 +40,7 @@ public class PM3DFile
 		{
 			return load(modelFile);
 		}
-		catch (IOException ex)
+		catch (NullPointerException | IOException ex)
 		{
 			ex.printStackTrace();
 			CrashReport crashReport = CrashReport.create(ex, String.format("Loading PM3D file: %s", modelFile));
@@ -48,8 +48,21 @@ public class PM3DFile
 		}
 	}
 
+	public static PM3DFile loadOrNull(Identifier modelFile)
+	{
+		try
+		{
+			return load(modelFile);
+		}
+		catch (NullPointerException | IOException ex)
+		{
+			return null;
+		}
+	}
+
 	private static PM3DFile load(Identifier modelFile) throws IOException
 	{
+		// TODO: allow different modid domains
 		InputStream reader = PIO.getStream("assets", modelFile);
 		LittleEndianDataInputStream objStream = new LittleEndianDataInputStream(reader);
 

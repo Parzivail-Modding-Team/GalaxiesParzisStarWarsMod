@@ -28,6 +28,11 @@ public class SwgSounds
 			Registry.register(Registry.SOUND_EVENT, pair.getKey(), pair.getValue());
 	}
 
+	public static SoundEvent getOrDefault(Identifier sound, SoundEvent fallback)
+	{
+		return SOUND_EVENTS.getOrDefault(sound, fallback);
+	}
+
 	public static class Lightsaber
 	{
 		public static final SoundEvent START_CLASSIC = of(Resources.identifier("lightsaber.start.classic"));

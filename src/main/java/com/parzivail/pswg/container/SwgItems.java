@@ -1,6 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.container.data.SwgBlasterLoader;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.item.DebugItem;
@@ -17,14 +18,8 @@ public class SwgItems
 {
 	public static class Blaster
 	{
-		@RegistryName("blaster_a280")
-		public static final BlasterItem A280 = new BlasterItem(new BlasterItem.Settings().maxCount(1).baseRange(30).baseDamage(8).baseMaxHeat(100).sound(SwgSounds.Blaster.FIRE_A280).group(Galaxies.Tab));
-		@RegistryName("blaster_dh17")
-		public static final BlasterItem DH17 = new BlasterItem(new BlasterItem.Settings().maxCount(1).baseRange(15).baseDamage(4).baseMaxHeat(70).sound(SwgSounds.Blaster.FIRE_DH17).group(Galaxies.Tab));
-		@RegistryName("blaster_e11")
-		public static final BlasterItem E11 = new BlasterItem(new BlasterItem.Settings().maxCount(1).baseRange(30).baseDamage(8).baseMaxHeat(100).sound(SwgSounds.Blaster.FIRE_E11).group(Galaxies.Tab));
-		@RegistryName("blaster_ee3")
-		public static final BlasterItem EE3 = new BlasterItem(new BlasterItem.Settings().maxCount(1).baseRange(25).baseDamage(7).baseMaxHeat(130).sound(SwgSounds.Blaster.FIRE_DH17).group(Galaxies.Tab));
+		@RegistryName("blaster")
+		public static final BlasterItem Blaster = new BlasterItem(new Item.Settings().maxCount(1));
 	}
 
 	public static class Debug
@@ -115,5 +110,7 @@ public class SwgItems
 	public static void register()
 	{
 		RegistryHelper.registerAnnotatedFields(SwgItems.class, Item.class, (instance, registryName) -> Registry.register(Registry.ITEM, registryName, instance));
+
+		SwgBlasterLoader.load();
 	}
 }

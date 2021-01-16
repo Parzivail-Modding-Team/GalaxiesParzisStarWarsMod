@@ -1,0 +1,17 @@
+{
+	"version": 1,
+	"damage": 1.0,
+	"range": 30.0,
+	"weight": 1.0,
+	"boltColor": "FF0000",
+	"magazineSize": 10,
+	"model": "pswg:models/item/blaster/a280.pm3d",
+	"heat": {
+		"capacity": 100,
+		"perRound": 15
+	},
+	"sounds": {
+		"fire": "pswg:blaster.fire.a280"
+	},
+	"cooling": "pswg:default"
+}
