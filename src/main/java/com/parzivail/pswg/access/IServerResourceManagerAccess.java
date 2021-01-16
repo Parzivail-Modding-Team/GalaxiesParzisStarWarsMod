@@ -1,8 +1,8 @@
 package com.parzivail.pswg.access;
 
-import com.parzivail.pswg.container.data.SwgBlasterLoader;
+import com.parzivail.pswg.data.SwgBlasterManager;
 
 public interface IServerResourceManagerAccess
 {
-	SwgBlasterLoader getBlasterLoader();
+	SwgBlasterManager getBlasterLoader();
 }

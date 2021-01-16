@@ -1,12 +1,12 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.util.math.Matrix4fExt;
+import com.parzivail.pswg.access.IMatrix4fAccess;
 import net.minecraft.util.math.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(Matrix4f.class)
-public class Matrix4fMixin implements Matrix4fExt
+public class Matrix4fMixin implements IMatrix4fAccess
 {
 	@Shadow
 	protected float a00;

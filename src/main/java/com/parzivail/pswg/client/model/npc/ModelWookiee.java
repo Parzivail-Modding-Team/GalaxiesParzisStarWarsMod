@@ -1,6 +1,6 @@
 package com.parzivail.pswg.client.model.npc;
 
-import com.parzivail.util.client.PlayerEntityModelUtil;
+import com.parzivail.pswg.access.util.PlayerEntityModelAccessUtil;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.LivingEntity;
@@ -42,7 +42,7 @@ public class ModelWookiee<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.FootL = new ModelPart(this, 47, 70);
 		this.FootL.setPivot(0.0F, 8.0F, -1.5F);
 		this.FootL.addCuboid(-2.0F, 0.0F, -1.5F, 4, 4, 5, 0.0F);
-		PlayerEntityModelUtil.setRightPantLeg(this, new ModelPart(this, 0, 33));
+		PlayerEntityModelAccessUtil.setRightPantLeg(this, new ModelPart(this, 0, 33));
 		this.rightPantLeg.setPivot(-2.0F, 12.0F, 0.0F);
 		this.rightPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.2F);
 		this.leftLeg = new ModelPart(this, 16, 49);
@@ -54,16 +54,16 @@ public class ModelWookiee<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.head = new ModelPart(this, 0, 0);
 		this.head.setPivot(0.0F, -1.0F, 0.0F);
 		this.head.addCuboid(-4.0F, -8.0F, -4.0F, 8, 9, 8, 0.0F);
-		PlayerEntityModelUtil.setLeftPantLeg(this, new ModelPart(this, 0, 49));
+		PlayerEntityModelAccessUtil.setLeftPantLeg(this, new ModelPart(this, 0, 49));
 		this.leftPantLeg.setPivot(2.0F, 12.0F, 0.0F);
 		this.leftPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 4, 12, 4, 0.2F);
-		PlayerEntityModelUtil.setRightSleeve(this, new ModelPart(this, 40, 33));
+		PlayerEntityModelAccessUtil.setRightSleeve(this, new ModelPart(this, 40, 33));
 		this.rightSleeve.setPivot(-5.0F, 2.0F, 0.0F);
 		this.rightSleeve.addCuboid(-2.0F, -2.0F, -2.0F, 3, 12, 4, 0.2F);
-		PlayerEntityModelUtil.setJacket(this, new ModelPart(this, 16, 33));
+		PlayerEntityModelAccessUtil.setJacket(this, new ModelPart(this, 16, 33));
 		this.jacket.setPivot(0.0F, 0.0F, 0.0F);
 		this.jacket.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.2F);
-		PlayerEntityModelUtil.setLeftSleeve(this, new ModelPart(this, 48, 49));
+		PlayerEntityModelAccessUtil.setLeftSleeve(this, new ModelPart(this, 48, 49));
 		this.leftSleeve.setPivot(5.0F, 2.0F, 0.0F);
 		this.leftSleeve.addCuboid(-1.0F, -2.0F, -2.0F, 3, 12, 4, 0.2F);
 		this.rightLeg.addChild(this.FootR);

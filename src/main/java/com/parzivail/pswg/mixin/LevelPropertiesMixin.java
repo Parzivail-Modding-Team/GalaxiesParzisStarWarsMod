@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.mojang.serialization.Lifecycle;
-import com.parzivail.pswg.util.Lumberjack;
+import com.parzivail.util.Lumberjack;
 import net.minecraft.world.level.LevelProperties;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

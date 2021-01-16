@@ -1,13 +1,14 @@
 package com.parzivail.util.entity;
 
-import com.parzivail.pswg.util.MathUtil;
 import com.parzivail.util.math.EntityHitResult;
-import com.parzivail.util.math.QuatUtil;
+import com.parzivail.util.math.MathUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 
 import java.util.Arrays;
@@ -60,28 +61,6 @@ public class EntityUtil
 	{
 		Vec3d end = startPos.add(fromDir.multiply(distance));
 		return fromEntity.world.raycast(new RaycastContext(startPos, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, fromEntity));
-	}
-
-	public static void updateEulerRotation(Entity entity, Quaternion rotation)
-	{
-		EulerAngle eulerAngle = QuatUtil.toEulerAngles(rotation);
-		entity.yaw = eulerAngle.getYaw();
-		entity.pitch = eulerAngle.getPitch();
-
-		while (entity.pitch - entity.prevPitch >= 180.0F)
-		{
-			entity.prevPitch += 360.0F;
-		}
-
-		while (entity.yaw - entity.prevYaw < -180.0F)
-		{
-			entity.prevYaw -= 360.0F;
-		}
-
-		while (entity.yaw - entity.prevYaw >= 180.0F)
-		{
-			entity.prevYaw += 360.0F;
-		}
 	}
 
 	public static Vec3d getPosition(Entity e, float tickDelta)

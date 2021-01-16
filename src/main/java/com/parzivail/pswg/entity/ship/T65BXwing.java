@@ -2,9 +2,8 @@ package com.parzivail.pswg.entity.ship;
 
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.entity.ShipEntity;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
-import com.parzivail.util.math.QuatUtil;
+import com.parzivail.pswg.util.QuatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;

@@ -1,8 +1,5 @@
 package com.parzivail.util.nbt;
 
-import com.parzivail.pswg.item.blaster.BlasterCoolingBypassProfile;
-import com.parzivail.pswg.item.blaster.BlasterHeatInfo;
-import com.parzivail.pswg.item.blaster.BlasterSpreadInfo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
@@ -21,29 +18,18 @@ public class TagSerializer
 
 	static
 	{
-		map(byte.class, CompoundTag::getByte, CompoundTag::putByte);
-		map(short.class, CompoundTag::getShort, CompoundTag::putShort);
-		map(int.class, CompoundTag::getInt, CompoundTag::putInt);
-		map(long.class, CompoundTag::getLong, CompoundTag::putLong);
-		map(float.class, CompoundTag::getFloat, CompoundTag::putFloat);
-		map(double.class, CompoundTag::getDouble, CompoundTag::putDouble);
-		map(boolean.class, CompoundTag::getBoolean, CompoundTag::putBoolean);
-		map(char.class, (nbt, field) -> nbt.getString(field).charAt(0), (nbt, field, a) -> nbt.putString(field, String.valueOf(a)));
-		map(String.class, CompoundTag::getString, CompoundTag::putString);
-		map(Identifier.class, (nbt, field) -> new Identifier(nbt.getString(field)), (nbt, field, a) -> nbt.putString(field, a.toString()));
-		map(CompoundTag.class, CompoundTag::getCompound, CompoundTag::put);
-		map(ItemStack.class, (nbt, field) -> ItemStack.fromTag(nbt.getCompound(field)), (nbt, field, a) -> nbt.put(field, a.toTag(new CompoundTag())));
-		map(BlasterSpreadInfo.class, BlasterSpreadInfo::fromTag, BlasterSpreadInfo::toTag);
-		map(BlasterHeatInfo.class, BlasterHeatInfo::fromTag, BlasterHeatInfo::toTag);
-		map(BlasterCoolingBypassProfile.class, BlasterCoolingBypassProfile::fromTag, BlasterCoolingBypassProfile::toTag);
-
-		//map(EntityPlayer.class, PNBTSerial::readPlayer, PNBTSerial::writePlayer);
-		//map(Entity.class, PNBTSerial::readEntity, PNBTSerial::writeEntity);
-		//map(Vec3.class, PNBTSerial::readVec3, PNBTSerial::writeVec3);
-		//map(EntityCooldownEntry.class, PNBTSerial::readEntityCooldownEntry, PNBTSerial::writeEntityCooldownEntry);
-		//map(Color.class, PNBTSerial::readColor, PNBTSerial::writeColor);
-		//map(World.class, PNBTSerial::readWorld, PNBTSerial::writeWorld);
-		//map(ItemStack[].class, PNBTSerial::readItemStacks, PNBTSerial::writeItemStacks);
+		register(byte.class, CompoundTag::getByte, CompoundTag::putByte);
+		register(short.class, CompoundTag::getShort, CompoundTag::putShort);
+		register(int.class, CompoundTag::getInt, CompoundTag::putInt);
+		register(long.class, CompoundTag::getLong, CompoundTag::putLong);
+		register(float.class, CompoundTag::getFloat, CompoundTag::putFloat);
+		register(double.class, CompoundTag::getDouble, CompoundTag::putDouble);
+		register(boolean.class, CompoundTag::getBoolean, CompoundTag::putBoolean);
+		register(char.class, (nbt, field) -> nbt.getString(field).charAt(0), (nbt, field, a) -> nbt.putString(field, String.valueOf(a)));
+		register(String.class, CompoundTag::getString, CompoundTag::putString);
+		register(Identifier.class, (nbt, field) -> new Identifier(nbt.getString(field)), (nbt, field, a) -> nbt.putString(field, a.toString()));
+		register(CompoundTag.class, CompoundTag::getCompound, CompoundTag::put);
+		register(ItemStack.class, (nbt, field) -> ItemStack.fromTag(nbt.getCompound(field)), (nbt, field, a) -> nbt.put(field, a.toTag(new CompoundTag())));
 	}
 
 	private final String slug;
@@ -103,7 +89,7 @@ public class TagSerializer
 		return pair;
 	}
 
-	private static <T> void map(Class<T> type, Reader<? extends T> reader, Writer<? super T> writer)
+	public static <T> void register(Class<T> type, Reader<? extends T> reader, Writer<? super T> writer)
 	{
 		TYPE_SERIALIZERS.put(type, Pair.of(reader, writer));
 	}
@@ -169,12 +155,12 @@ public class TagSerializer
 		handler.getRight().write(nbt, f.getName(), (T)obj);
 	}
 
-	interface Reader<T>
+	public interface Reader<T>
 	{
 		T read(CompoundTag nbt, String name);
 	}
 
-	interface Writer<T>
+	public interface Writer<T>
 	{
 		void write(CompoundTag nbt, String name, T t);
 	}

@@ -3,7 +3,7 @@ package com.parzivail.pswg.client.render;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
-import com.parzivail.pswg.item.lightsaber.LightsaberTag;
+import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;

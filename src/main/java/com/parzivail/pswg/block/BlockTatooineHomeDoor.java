@@ -2,6 +2,7 @@ package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.util.block.RotatingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

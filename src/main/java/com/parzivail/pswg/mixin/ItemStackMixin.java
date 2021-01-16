@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.google.common.collect.Multimap;
-import com.parzivail.pswg.item.IDefaultNbtProvider;
+import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;

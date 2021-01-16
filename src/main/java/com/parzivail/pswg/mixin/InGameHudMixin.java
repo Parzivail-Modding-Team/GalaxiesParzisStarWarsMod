@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.camera.MutableCameraEntity;
-import com.parzivail.pswg.entity.ShipEntity;
+import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.util.item.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;

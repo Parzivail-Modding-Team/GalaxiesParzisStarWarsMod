@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.pm3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
+import com.parzivail.util.binary.DataReader;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
@@ -142,9 +143,9 @@ public class PM3DFile
 
 		for (int i = 0; i < num; i++)
 		{
-			float x = PIO.readHalf(objStream) + 0.5f;
-			float y = PIO.readHalf(objStream);
-			float z = PIO.readHalf(objStream) + 0.5f;
+			float x = DataReader.readHalf(objStream) + 0.5f;
+			float y = DataReader.readHalf(objStream);
+			float z = DataReader.readHalf(objStream) + 0.5f;
 
 			verts[i] = new Vector3f(x, y, z);
 		}
@@ -158,9 +159,9 @@ public class PM3DFile
 
 		for (int i = 0; i < num; i++)
 		{
-			float x = PIO.readHalf(objStream);
-			float y = PIO.readHalf(objStream);
-			float z = PIO.readHalf(objStream);
+			float x = DataReader.readHalf(objStream);
+			float y = DataReader.readHalf(objStream);
+			float z = DataReader.readHalf(objStream);
 
 			verts[i] = new Vector3f(x, y, z);
 		}
@@ -174,8 +175,8 @@ public class PM3DFile
 
 		for (int i = 0; i < num; i++)
 		{
-			float u = PIO.readHalf(objStream);
-			float v = PIO.readHalf(objStream);
+			float u = DataReader.readHalf(objStream);
+			float v = DataReader.readHalf(objStream);
 
 			uvs[i] = new Vector3f(u, v, 0);
 		}
@@ -189,7 +190,7 @@ public class PM3DFile
 
 		for (int i = 0; i < num; i++)
 		{
-			String objName = PIO.readNullTerminatedString(objStream);
+			String objName = DataReader.readNullTerminatedString(objStream);
 			int numFaces = objStream.readInt();
 
 			ArrayList<PM3DFace> faces = new ArrayList<>();
@@ -201,9 +202,9 @@ public class PM3DFile
 				int numVerts = objStream.readInt();
 				for (int k = 0; k < numVerts; k++)
 				{
-					int vertex = PIO.read7BitEncodedInt(objStream);
-					int normal = PIO.read7BitEncodedInt(objStream);
-					int texture = PIO.read7BitEncodedInt(objStream);
+					int vertex = DataReader.read7BitEncodedInt(objStream);
+					int normal = DataReader.read7BitEncodedInt(objStream);
+					int texture = DataReader.read7BitEncodedInt(objStream);
 					face.verts.add(new PM3DVertPointer(vertex, normal, texture));
 				}
 

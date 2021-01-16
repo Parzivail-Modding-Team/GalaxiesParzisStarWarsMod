@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.pr3;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
+import com.parzivail.util.binary.DataReader;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
@@ -59,8 +60,8 @@ public class PR3File
 		PR3Object[] objects = new PR3Object[numObjects];
 		for (int i = 0; i < numObjects; i++)
 		{
-			String name = PIO.readNullTerminatedString(objStream);
-			String material = PIO.readNullTerminatedString(objStream);
+			String name = DataReader.readNullTerminatedString(objStream);
+			String material = DataReader.readNullTerminatedString(objStream);
 			Matrix4f transformation = PIO.readMatrix4f(objStream);
 
 			Vector3f[] vertices = readLengthCodedVectors(objStream);
@@ -77,22 +78,22 @@ public class PR3File
 
 	private static PR3FacePointer[] readLengthCodedFaces(LittleEndianDataInputStream objStream) throws IOException
 	{
-		int length = PIO.read7BitEncodedInt(objStream);
+		int length = DataReader.read7BitEncodedInt(objStream);
 
 		PR3FacePointer[] faces = new PR3FacePointer[length];
 		for (int i = 0; i < length; i++)
-			faces[i] = new PR3FacePointer(PIO.read7BitEncodedInt(objStream), PIO.read7BitEncodedInt(objStream), PIO.read7BitEncodedInt(objStream));
+			faces[i] = new PR3FacePointer(DataReader.read7BitEncodedInt(objStream), DataReader.read7BitEncodedInt(objStream), DataReader.read7BitEncodedInt(objStream));
 
 		return faces;
 	}
 
 	private static Vector3f[] readLengthCodedVectors(LittleEndianDataInputStream objStream) throws IOException
 	{
-		int length = PIO.read7BitEncodedInt(objStream);
+		int length = DataReader.read7BitEncodedInt(objStream);
 
 		Vector3f[] vectors = new Vector3f[length];
 		for (int i = 0; i < length; i++)
-			vectors[i] = new Vector3f(PIO.readHalf(objStream), PIO.readHalf(objStream), PIO.readHalf(objStream));
+			vectors[i] = new Vector3f(DataReader.readHalf(objStream), DataReader.readHalf(objStream), DataReader.readHalf(objStream));
 
 		return vectors;
 	}

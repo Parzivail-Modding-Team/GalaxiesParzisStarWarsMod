@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.input;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.pswg.entity.ShipEntity;
+import com.parzivail.pswg.entity.ship.ShipEntity;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;

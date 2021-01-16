@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.pswg.container.data.SwgBlasterLoader;
+import com.parzivail.pswg.data.SwgBlasterManager;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.server.MinecraftServer;
@@ -30,14 +30,14 @@ public class PlayerManagerMixin
 	@Inject(method = "Lnet/minecraft/server/PlayerManager;onPlayerConnect(Lnet/minecraft/network/ClientConnection;Lnet/minecraft/server/network/ServerPlayerEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendCommandTree(Lnet/minecraft/server/network/ServerPlayerEntity;)V", shift = At.Shift.BEFORE))
 	public void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci)
 	{
-		SwgBlasterLoader loader = SwgBlasterLoader.get(server);
+		SwgBlasterManager loader = SwgBlasterManager.get(server);
 		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncBlasters, loader.createPacket());
 	}
 
 	@Inject(method = "Lnet/minecraft/server/PlayerManager;onDataPacksReloaded()V", at = @At("TAIL"))
 	public void onDataPacksReloaded(CallbackInfo ci)
 	{
-		SwgBlasterLoader loader = SwgBlasterLoader.get(server);
+		SwgBlasterManager loader = SwgBlasterManager.get(server);
 		for (ServerPlayerEntity serverPlayerEntity : this.players)
 			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.PacketSyncBlasters, loader.createPacket());
 	}

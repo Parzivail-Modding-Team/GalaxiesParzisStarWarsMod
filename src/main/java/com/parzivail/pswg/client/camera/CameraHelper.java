@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.camera;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.entity.ShipEntity;
+import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.options.Perspective;

@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.sprite;
 
 import com.google.gson.Gson;
-import com.parzivail.pswg.util.Lumberjack;
+import com.parzivail.util.Lumberjack;
 import com.parzivail.util.client.ColorUtil;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.resource.Resource;

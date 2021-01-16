@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.input;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.entity.ShipEntity;
+import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

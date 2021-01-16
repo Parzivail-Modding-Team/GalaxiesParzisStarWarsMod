@@ -1,0 +1,23 @@
+{
+	"version": 1,
+	"damage": 1.0,
+	"range": 30.0,
+	"weight": 1.0,
+	"boltColor": 16711680,
+	"magazineSize": 10,
+	"automaticRepeatTime": -1,
+	"spread": {
+		"horizontal": 0.0,
+		"vertical": 0.0
+	},
+	"heat": {
+		"capacity": 100,
+		"perRound": 15
+	},
+	"cooling": {
+		"primaryBypassTime": 0.7,
+		"primaryBypassTolerance": 0.05,
+		"secondaryBypassTime": 0.3,
+		"secondaryBypassTolerance": 0.1
+	}
+}

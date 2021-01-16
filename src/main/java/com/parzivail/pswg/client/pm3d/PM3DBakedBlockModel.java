@@ -1,11 +1,11 @@
 package com.parzivail.pswg.client.pm3d;
 
-import com.parzivail.pswg.block.ConnectingNodeBlock;
-import com.parzivail.pswg.block.RotatingBlock;
-import com.parzivail.pswg.block.TranslatingBlock;
-import com.parzivail.pswg.client.model.SimpleModel;
 import com.parzivail.pswg.util.ClientMathUtil;
+import com.parzivail.util.block.ConnectingNodeBlock;
+import com.parzivail.util.block.DisplacingBlock;
+import com.parzivail.util.block.RotatingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
+import com.parzivail.util.client.model.DynamicBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
@@ -33,7 +33,7 @@ import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class PM3DBakedBlockModel extends SimpleModel
+public class PM3DBakedBlockModel extends DynamicBakedModel
 {
 	private final Discriminator discriminator;
 	private final Sprite baseSprite;
@@ -145,7 +145,7 @@ public class PM3DBakedBlockModel extends SimpleModel
 			return meshBuilder.build();
 		}
 
-		if (state.getBlock() instanceof TranslatingBlock)
+		if (state.getBlock() instanceof DisplacingBlock)
 		{
 			VoxelShape shape = state.getBlock().getOutlineShape(state, blockView, pos, ShapeContext.absent());
 			Vec3d center = VoxelShapeUtil.getCenter(shape);

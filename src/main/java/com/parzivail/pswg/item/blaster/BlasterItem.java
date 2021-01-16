@@ -3,19 +3,19 @@ package com.parzivail.pswg.item.blaster;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.container.data.SwgBlasterLoader;
+import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
-import com.parzivail.pswg.item.IDefaultNbtProvider;
-import com.parzivail.pswg.item.IZoomingItem;
-import com.parzivail.pswg.util.MathUtil;
+import com.parzivail.pswg.item.blaster.data.*;
+import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.item.ICustomVisualItemEquality;
+import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
+import com.parzivail.util.item.IZoomingItem;
 import com.parzivail.util.math.EntityHitResult;
-import com.parzivail.util.math.MatrixExtUtil;
-import com.parzivail.util.math.QuatUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
@@ -157,10 +157,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (!world.isClient)
 		{
 			Matrix4f m = new Matrix4f();
-			MatrixExtUtil.loadIdentity(m);
+			Matrix4fAccessUtil.loadIdentity(m);
 
-			MatrixExtUtil.multiply(m, QuatUtil.of(0, -player.yaw, 0, true));
-			MatrixExtUtil.multiply(m, QuatUtil.of(player.pitch, 0, 0, true));
+			Matrix4fAccessUtil.multiply(m, QuatUtil.of(0, -player.yaw, 0, true));
+			Matrix4fAccessUtil.multiply(m, QuatUtil.of(player.pitch, 0, 0, true));
 
 			// TODO
 			float hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
@@ -169,10 +169,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			float hSR = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
 			float vSR = 1; // - bd.getBarrel().getVerticalSpreadReduction();
 
-			MatrixExtUtil.multiply(m, QuatUtil.of(0, hS * hSR, 0, true));
-			MatrixExtUtil.multiply(m, QuatUtil.of(vS * vSR, 0, 0, true));
+			Matrix4fAccessUtil.multiply(m, QuatUtil.of(0, hS * hSR, 0, true));
+			Matrix4fAccessUtil.multiply(m, QuatUtil.of(vS * vSR, 0, 0, true));
 
-			Vec3d look = MathUtil.transform(MathUtil.POSZ, m);
+			Vec3d look = Matrix4fAccessUtil.transform(com.parzivail.util.math.MathUtil.POSZ, m);
 
 			float range = bd.range;
 
@@ -246,7 +246,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (group != Galaxies.Tab)
 			return;
 
-		SwgBlasterLoader blasterLoader = Client.getBlasterLoader();
+		SwgBlasterManager blasterLoader = Client.getBlasterLoader();
 
 		for (Map.Entry<Identifier, BlasterDescriptor> entry : blasterLoader.getBlasters().entrySet())
 			stacks.add(forType(entry.getValue()));

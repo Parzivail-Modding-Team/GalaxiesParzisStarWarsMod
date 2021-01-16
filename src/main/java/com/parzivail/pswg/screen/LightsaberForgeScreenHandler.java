@@ -3,7 +3,7 @@ package com.parzivail.pswg.screen;
 import com.parzivail.pswg.client.screen.slot.StrictSlot;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
-import com.parzivail.pswg.item.lightsaber.LightsaberTag;
+import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

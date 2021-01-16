@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.camera.CameraHelper;
-import com.parzivail.pswg.item.IZoomingItem;
+import com.parzivail.util.item.IZoomingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;

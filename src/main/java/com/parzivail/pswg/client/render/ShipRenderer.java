@@ -1,6 +1,6 @@
 package com.parzivail.pswg.client.render;
 
-import com.parzivail.pswg.entity.ShipEntity;
+import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;

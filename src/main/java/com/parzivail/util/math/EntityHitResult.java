@@ -10,7 +10,6 @@ public class EntityHitResult
 
 	public EntityHitResult(Entity entity, Vec3d hit)
 	{
-
 		this.entity = entity;
 		this.hit = hit;
 	}

@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.util.entity.FlyingVehicle;
+import com.parzivail.util.entity.IFlyingVehicle;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,8 +17,10 @@ public class ServerPlayNetworkHandlerMixin
 	@Shadow private int vehicleFloatingTicks;
 
 	@Inject(method = "tick()V", at = @At(value = "FIELD", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;vehicleFloatingTicks:I"))
-	private void preventFlyingVehicleKick(CallbackInfo ci) {
-		if (topmostRiddenEntity instanceof FlyingVehicle) {
+	private void preventFlyingVehicleKick(CallbackInfo ci)
+	{
+		if (topmostRiddenEntity instanceof IFlyingVehicle)
+		{
 			vehicleFloatingTicks = 0;
 		}
 	}

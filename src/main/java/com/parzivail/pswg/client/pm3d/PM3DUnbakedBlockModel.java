@@ -17,7 +17,7 @@
 package com.parzivail.pswg.client.pm3d;
 
 import com.mojang.datafixers.util.Pair;
-import com.parzivail.pswg.client.model.ClonableUnbakedModel;
+import com.parzivail.util.client.model.ClonableUnbakedModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;

@@ -1,11 +1,11 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.model.npc.PlayerEntityRendererWithModel;
-import com.parzivail.pswg.client.species.SwgSpeciesInstance;
 import com.parzivail.pswg.client.species.SwgSpeciesModel;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.component.SwgPersistentComponents;
+import com.parzivail.pswg.species.SwgSpeciesInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;

@@ -1,5 +1,6 @@
 package com.parzivail.pswg.item.blaster;
 
+import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 

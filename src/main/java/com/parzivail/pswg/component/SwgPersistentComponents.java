@@ -1,6 +1,6 @@
 package com.parzivail.pswg.component;
 
-import com.parzivail.pswg.client.species.SwgSpeciesInstance;
+import com.parzivail.pswg.species.SwgSpeciesInstance;
 import dev.onyxstudios.cca.api.v3.component.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.entity.player.PlayerEntity;

@@ -6,9 +6,9 @@ import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.blockentity.*;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
-import com.parzivail.util.block.BlockUtils;
-import com.parzivail.util.block.VoxelShapeUtil;
+import com.parzivail.util.block.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
@@ -26,7 +26,7 @@ public class SwgBlocks
 	public static class Barrel
 	{
 		@RegistryName("barrel_mos_eisley")
-		public static final Block MosEisley = new TranslatingBlock((state, world, pos, context) -> {
+		public static final Block MosEisley = new DisplacingBlock((state, world, pos, context) -> {
 			Random r = Resources.RANDOM;
 			r.setSeed(state.getRenderingSeed(pos));
 
@@ -75,7 +75,7 @@ public class SwgBlocks
 
 		private static LeavesBlock createLeavesBlock()
 		{
-			return new LeavesBlock(AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtils::never).blockVision(BlockUtils::never));
+			return new LeavesBlock(AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).ticksRandomly().sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates((state, world, pos) -> false).blockVision((state, world, pos) -> false));
 		}
 	}
 
@@ -155,9 +155,9 @@ public class SwgBlocks
 	public static class Plant
 	{
 		@RegistryName("funnel_flower")
-		public static final Block FunnelFlower = new SwgFernBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block FunnelFlower = new PFernBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
-		public static final Block BlossomingFunnelFlower = new SwgFernBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block BlossomingFunnelFlower = new PFernBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
 	public static class Panel
@@ -244,19 +244,19 @@ public class SwgBlocks
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE));
 
 		@RegistryName("stone_temple_stairs")
-		public static final Block TempleStairs = new SwgStairsBlock(Temple.getDefaultState(), AbstractBlock.Settings.copy(Temple));
+		public static final Block TempleStairs = new PStairsBlock(Temple.getDefaultState(), AbstractBlock.Settings.copy(Temple));
 		@RegistryName("stone_temple_brick_stairs")
-		public static final Block TempleBricksStairs = new SwgStairsBlock(TempleBricks.getDefaultState(), AbstractBlock.Settings.copy(TempleBricks));
+		public static final Block TempleBricksStairs = new PStairsBlock(TempleBricks.getDefaultState(), AbstractBlock.Settings.copy(TempleBricks));
 		@RegistryName("stone_temple_brick_chiseled_stairs")
-		public static final Block TempleBricksChiseledStairs = new SwgStairsBlock(TempleBricksChiseled.getDefaultState(), AbstractBlock.Settings.copy(TempleBricksChiseled));
+		public static final Block TempleBricksChiseledStairs = new PStairsBlock(TempleBricksChiseled.getDefaultState(), AbstractBlock.Settings.copy(TempleBricksChiseled));
 		@RegistryName("stone_temple_slab_side_smooth_stairs")
-		public static final Block TempleSlabSideSmoothStairs = new SwgStairsBlock(TempleSlabSideSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSlabSideSmooth));
+		public static final Block TempleSlabSideSmoothStairs = new PStairsBlock(TempleSlabSideSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSlabSideSmooth));
 		@RegistryName("stone_temple_smooth_stairs")
-		public static final Block TempleSmoothStairs = new SwgStairsBlock(TempleSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSmooth));
+		public static final Block TempleSmoothStairs = new PStairsBlock(TempleSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSmooth));
 		@RegistryName("stone_massassi_brick_stairs")
-		public static final Block MassassiBrickStairs = new SwgStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
+		public static final Block MassassiBrickStairs = new PStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
 		@RegistryName("stone_massassi_smooth_stairs")
-		public static final Block MassassiSmoothStairs = new SwgStairsBlock(MassassiSmooth.getDefaultState(), AbstractBlock.Settings.copy(MassassiSmooth));
+		public static final Block MassassiSmoothStairs = new PStairsBlock(MassassiSmooth.getDefaultState(), AbstractBlock.Settings.copy(MassassiSmooth));
 
 		@RegistryName("stone_temple_slab")
 		public static final Block TempleSlab = new SlabBlock(AbstractBlock.Settings.copy(Temple));
@@ -304,6 +304,8 @@ public class SwgBlocks
 	{
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Block.class, SwgBlocks::registerBlock);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
+
+		FlammableBlockRegistry.getDefaultInstance().add(SwgBlocks.Leaves.Sequoia, 30, 60);
 
 		Registry.register(Registry.BLOCK, Resources.identifier("door_tatooine_home_controller"), Door.TatooineHomeController);
 		Registry.register(Registry.BLOCK, Resources.identifier("door_tatooine_home"), Door.TatooineHomeFiller);

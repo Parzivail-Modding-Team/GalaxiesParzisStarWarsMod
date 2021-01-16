@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.access.IServerResourceManagerAccess;
-import com.parzivail.pswg.container.data.SwgBlasterLoader;
+import com.parzivail.pswg.data.SwgBlasterManager;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.resource.ServerResourceManager;
 import net.minecraft.server.command.CommandManager;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerResourceManagerMixin implements IServerResourceManagerAccess
 {
 	@Unique
-	SwgBlasterLoader blasterLoader;
+	SwgBlasterManager blasterLoader;
 
 	@Shadow
 	@Final
@@ -26,11 +26,11 @@ public class ServerResourceManagerMixin implements IServerResourceManagerAccess
 	@Inject(method = "Lnet/minecraft/resource/ServerResourceManager;<init>(Lnet/minecraft/server/command/CommandManager$RegistrationEnvironment;I)V", at = @At("TAIL"))
 	private void init(CommandManager.RegistrationEnvironment registrationEnvironment, int i, CallbackInfo ci)
 	{
-		resourceManager.registerListener(blasterLoader = new SwgBlasterLoader());
+		resourceManager.registerListener(blasterLoader = new SwgBlasterManager());
 	}
 
 	@Override
-	public SwgBlasterLoader getBlasterLoader()
+	public SwgBlasterManager getBlasterLoader()
 	{
 		return blasterLoader;
 	}

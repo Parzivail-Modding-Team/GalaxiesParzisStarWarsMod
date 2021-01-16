@@ -2,6 +2,8 @@ package com.parzivail.pswg.client.model;
 
 import com.mojang.datafixers.util.Pair;
 import com.parzivail.pswg.util.ClientMathUtil;
+import com.parzivail.util.client.model.ClonableUnbakedModel;
+import com.parzivail.util.client.model.DynamicBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -25,7 +27,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class DebugModel extends SimpleModel
+public class DebugModel extends DynamicBakedModel
 {
 	public DebugModel(Sprite sprite)
 	{
