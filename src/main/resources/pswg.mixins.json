@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
 		"CarverMixin",
+		"DeadBushBlockMixin",
 		"FarmlandBlockMixin",
 		"ItemStackMixin",
 		"Matrix4fMixin",
