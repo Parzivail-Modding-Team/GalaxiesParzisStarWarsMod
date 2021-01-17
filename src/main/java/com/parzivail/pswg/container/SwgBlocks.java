@@ -155,9 +155,9 @@ public class SwgBlocks
 	public static class Plant
 	{
 		@RegistryName("funnel_flower")
-		public static final Block FunnelFlower = new PFernBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block FunnelFlower = new FunnelFlowerBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
-		public static final Block BlossomingFunnelFlower = new PFernBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block BlossomingFunnelFlower = new FunnelFlowerBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
 	public static class Panel
