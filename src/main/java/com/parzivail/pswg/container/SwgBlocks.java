@@ -224,6 +224,8 @@ public class SwgBlocks
 	{
 		@RegistryName("sand_tatooine")
 		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
+		@RegistryName("dense_tatooine_sand")
+		public static final Block DenseTatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
 	}
 
 	public static class Stone
@@ -242,6 +244,11 @@ public class SwgBlocks
 		public static final Block MassassiBricks = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("stone_massassi_smooth")
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE));
+
+		@RegistryName("pourstone")
+		public static final Block Pourstone = new Block(FabricBlockSettings.of(Material.STONE));
+		@RegistryName("light_pourstone")
+		public static final Block LightPourstone = new Block(FabricBlockSettings.of(Material.STONE));
 
 		@RegistryName("stone_temple_stairs")
 		public static final Block TempleStairs = new PStairsBlock(Temple.getDefaultState(), AbstractBlock.Settings.copy(Temple));
