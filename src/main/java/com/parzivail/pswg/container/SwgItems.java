@@ -21,6 +21,14 @@ public class SwgItems
 		public static final BlasterItem Blaster = new BlasterItem(new Item.Settings().maxCount(1));
 	}
 
+	public static class CraftingComponents
+	{
+		@RegistryName("led")
+		public static final Item Led = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("turbine")
+		public static final Item Turbine = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
 	public static class Debug
 	{
 		@RegistryName("debug")
