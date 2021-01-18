@@ -1,0 +1,7 @@
+{
+	"parent": "minecraft:block/cube_column",
+	"textures": {
+		"end": "pswg:block/tatooine_vent_top",
+		"side": "pswg:block/tatooine_vent_side"
+	}
+}

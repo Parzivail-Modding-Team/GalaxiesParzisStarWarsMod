@@ -280,6 +280,12 @@ public class SwgBlocks
 		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
+	public static class Vent
+	{
+		@RegistryName("tatooine_vent")
+		public static final Block Tatooine = new Block(FabricBlockSettings.of(Material.METAL).nonOpaque());
+	}
+
 	public static class MoistureVaporator
 	{
 		@RegistryName("moisture_vaporator_gx8")
