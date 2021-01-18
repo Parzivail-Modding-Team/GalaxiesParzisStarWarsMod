@@ -18,5 +18,8 @@ public class DeadBushBlockMixin
 		if (floor.getBlock() == SwgBlocks.Sand.Tatooine) {
 			cir.setReturnValue(true);
 		}
+		if (floor.getBlock() == SwgBlocks.Sand.DenseTatooine) {
+			cir.setReturnValue(true);
+		}
 	}
 }
