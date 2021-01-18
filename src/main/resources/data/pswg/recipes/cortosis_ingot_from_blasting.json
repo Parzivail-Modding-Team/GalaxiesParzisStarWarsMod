@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:blasting",
+	"ingredient": {
+		"item": "pswg:cortosis_ore"
+	},
+	"result": "pswg:cortosis_ingot",
+	"experience": 1,
+	"cookingtime": 100
+}

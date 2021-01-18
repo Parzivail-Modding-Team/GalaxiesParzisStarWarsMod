@@ -1,0 +1,9 @@
+{
+	"type": "minecraft:blasting",
+	"ingredient": {
+		"item": "pswg:chromium_ore"
+	},
+	"result": "pswg:chromium_ingot",
+	"experience": 1,
+	"cookingtime": 100
+}
