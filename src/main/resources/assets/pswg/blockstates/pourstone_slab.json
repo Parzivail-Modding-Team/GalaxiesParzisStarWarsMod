@@ -1,0 +1,13 @@
+{
+	"variants": {
+		"type=bottom": {
+			"model": "pswg:block/pourstone_slab"
+		},
+		"type=double": {
+			"model": "pswg:block/pourstone"
+		},
+		"type=top": {
+			"model": "pswg:block/pourstone_slab_top"
+		}
+	}
+}

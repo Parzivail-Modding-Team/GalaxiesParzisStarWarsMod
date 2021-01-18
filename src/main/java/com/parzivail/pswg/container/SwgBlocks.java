@@ -265,6 +265,11 @@ public class SwgBlocks
 		@RegistryName("stone_massassi_smooth_stairs")
 		public static final Block MassassiSmoothStairs = new PStairsBlock(MassassiSmooth.getDefaultState(), AbstractBlock.Settings.copy(MassassiSmooth));
 
+		@RegistryName("pourstone_stairs")
+		public static final Block PourstoneStairs = new PStairsBlock(Pourstone.getDefaultState(), AbstractBlock.Settings.copy(Pourstone));
+		@RegistryName("light_pourstone_stairs")
+		public static final Block LightPourstoneStairs = new PStairsBlock(LightPourstone.getDefaultState(), AbstractBlock.Settings.copy(LightPourstone));
+
 		@RegistryName("stone_temple_slab")
 		public static final Block TempleSlab = new SlabBlock(AbstractBlock.Settings.copy(Temple));
 		@RegistryName("stone_temple_brick_slab")
@@ -279,6 +284,11 @@ public class SwgBlocks
 		public static final Block MassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiBricks));
 		@RegistryName("stone_massassi_smooth_slab")
 		public static final Block MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
+
+		@RegistryName("pourstone_slab")
+		public static final Block PourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
+		@RegistryName("light_pourstone_slab")
+		public static final Block LightPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
 	}
 
 	public static class Tank
