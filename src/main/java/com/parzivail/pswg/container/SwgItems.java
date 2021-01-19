@@ -45,6 +45,8 @@ public class SwgItems
 		public static final Item Cortosis = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("desh_ingot")
 		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("diatium_ingot")
+		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("durasteel_ingot")
 		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("plasteel_ingot")

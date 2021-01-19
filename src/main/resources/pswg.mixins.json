@@ -5,6 +5,7 @@
 	"mixins": [
 		"CarverMixin",
 		"DeadBushBlockMixin",
+		"CactusMixin",
 		"FarmlandBlockMixin",
 		"ItemStackMixin",
 		"Matrix4fMixin",
