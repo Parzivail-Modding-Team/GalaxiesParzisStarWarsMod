@@ -26,6 +26,11 @@ bin/
 run/
 remappedSrc/
 
+# python
+
+__pycache__/
+*.py[co]
+
 # pswg
 
 releases/
