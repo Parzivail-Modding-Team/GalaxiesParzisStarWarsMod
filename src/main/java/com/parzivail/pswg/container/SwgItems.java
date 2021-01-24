@@ -23,6 +23,8 @@ public class SwgItems
 
 	public static class CraftingComponents
 	{
+		@RegistryName("electric_motor")
+		public static final Item ElectricMotor = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("led")
 		public static final Item Led = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("turbine")
