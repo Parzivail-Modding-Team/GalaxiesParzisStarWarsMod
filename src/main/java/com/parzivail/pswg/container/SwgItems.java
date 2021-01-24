@@ -51,12 +51,21 @@ public class SwgItems
 		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("durasteel_ingot")
 		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("lommite_ingot")
+		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("plasteel_ingot")
 		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_ingot")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("transparisteel_ingot")
 		public static final Item Transparisteel = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
+	public static class Nugget {
+		@RegistryName("diatium_nugget")
+		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("lommite_nugget")
+		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Lightsaber
@@ -116,11 +125,6 @@ public class SwgItems
 		public static final Item QrikkiBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.6F).build()).group(Galaxies.Tab));
 		@RegistryName("qrikki_waffle")
 		public static final Item QrikkiWaffle = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.7F).build()).group(Galaxies.Tab));
-	}
-
-	public static class Nugget {
-		@RegistryName("diatium_nugget")
-		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static void register()

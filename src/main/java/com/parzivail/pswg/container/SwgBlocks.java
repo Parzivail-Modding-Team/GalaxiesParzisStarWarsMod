@@ -118,6 +118,8 @@ public class SwgBlocks
 		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("kelerium_ore")
 		public static final Block Kelerium = new Block(FabricBlockSettings.of(Material.STONE));
+		@RegistryName("lommite_ore")
+		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("rubindum_ore")
 		public static final Block Rubindum = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("thorolide_ore")
@@ -141,7 +143,7 @@ public class SwgBlocks
 		@RegistryName("durasteel_block")
 		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("lommite_block")
-		public static final Block LommiteBlock = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("plasteel_block")
 		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("titanium_block")

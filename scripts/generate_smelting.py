@@ -27,6 +27,7 @@ for ore in (
         "cortosis",
         "desh",
         "diatium",
+        "lommite",
         "titanium",
 ):
     items[f"{ore}_ore"] = {
@@ -56,7 +57,8 @@ for input, meta in items.items():
 """)
     campfire_cooking_time = meta.get("campfire_cooking_time", 600)
     if campfire_cooking_time:
-        with open(directory / f"{meta['output']}_from_campfire_cooking.json", "w", encoding="utf-8", newline="\n") as fp:
+        with open(directory / f"{meta['output']}_from_campfire_cooking.json", "w", encoding="utf-8",
+                  newline="\n") as fp:
             fp.write(f"""\
 {{
 \t"type": "minecraft:campfire_cooking",

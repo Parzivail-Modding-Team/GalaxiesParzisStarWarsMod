@@ -1,7 +1,5 @@
-// com/parzivail/pswg/Galaxies.java
-SwgBlocks.register(SwgBlocks.Ore.$$FIELD$$, Resources.identifier("$$REGNAME$$"));
-
 // com/parzivail/pswg/container/SwgBlocks.java
+@RegistryName("$$REGNAME$$")
 public static final Block $$FIELD$$ = new Block(FabricBlockSettings.of(Material.STONE));
 
 // assets/pswg/lang/en_us.json
