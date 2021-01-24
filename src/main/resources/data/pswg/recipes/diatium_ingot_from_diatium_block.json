@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "diatium_ingot",
+	"ingredients": [
+		{
+			"item": "pswg:diatium_block"
+		}
+	],
+	"result": {
+		"item": "pswg:diatium_ingot",
+		"count": 9
+	}
+}

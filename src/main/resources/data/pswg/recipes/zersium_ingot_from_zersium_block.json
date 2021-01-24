@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "zersium_ingot",
+	"ingredients": [
+		{
+			"item": "pswg:zersium_block"
+		}
+	],
+	"result": {
+		"item": "pswg:zersium_ingot",
+		"count": 9
+	}
+}

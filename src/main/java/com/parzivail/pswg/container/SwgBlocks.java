@@ -136,12 +136,18 @@ public class SwgBlocks
 		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("desh_block")
 		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("diatium_block")
+		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("durasteel_block")
 		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("lommite_block")
+		public static final Block LommiteBlock = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("plasteel_block")
 		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("titanium_block")
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("zersium_block")
+		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL));
 	}
 
 	public static class Light

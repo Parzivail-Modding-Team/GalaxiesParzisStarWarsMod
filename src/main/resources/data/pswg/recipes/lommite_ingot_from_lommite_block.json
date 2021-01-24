@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "lommite_ingot",
+	"ingredients": [
+		{
+			"item": "pswg:lommite_block"
+		}
+	],
+	"result": {
+		"item": "pswg:lommite_ingot",
+		"count": 9
+	}
+}
