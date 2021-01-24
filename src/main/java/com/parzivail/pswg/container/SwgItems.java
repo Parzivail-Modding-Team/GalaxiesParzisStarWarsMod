@@ -64,10 +64,18 @@ public class SwgItems
 	}
 
 	public static class Nugget {
+		@RegistryName("chromium_nugget")
+		public static final Item Chromium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("desh_nugget")
+		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("diatium_nugget")
 		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("durasteel_nugget")
+		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("lommite_nugget")
 		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("titanium_nugget")
+		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("zersium_nugget")
 		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
