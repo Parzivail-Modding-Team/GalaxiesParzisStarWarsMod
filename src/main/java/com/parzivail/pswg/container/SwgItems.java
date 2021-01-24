@@ -118,6 +118,11 @@ public class SwgItems
 		public static final Item QrikkiWaffle = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.7F).build()).group(Galaxies.Tab));
 	}
 
+	public static class Nugget {
+		@RegistryName("diatium_nugget")
+		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
 	public static void register()
 	{
 		RegistryHelper.registerAnnotatedFields(SwgItems.class, Item.class, (instance, registryName) -> Registry.register(Registry.ITEM, registryName, instance));
