@@ -29,6 +29,7 @@ for ore in (
         "diatium",
         "lommite",
         "titanium",
+        "zersium",
 ):
     items[f"{ore}_ore"] = {
         "output": f"{ore}_ingot",

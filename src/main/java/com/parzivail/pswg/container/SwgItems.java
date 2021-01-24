@@ -59,6 +59,8 @@ public class SwgItems
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("transparisteel_ingot")
 		public static final Item Transparisteel = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("zersium_ingot")
+		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Nugget {
@@ -66,6 +68,8 @@ public class SwgItems
 		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("lommite_nugget")
 		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("zersium_nugget")
+		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Lightsaber

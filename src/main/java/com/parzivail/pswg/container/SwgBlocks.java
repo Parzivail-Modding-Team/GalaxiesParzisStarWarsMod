@@ -126,6 +126,8 @@ public class SwgBlocks
 		public static final Block Thorolide = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("titanium_ore")
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE));
+		@RegistryName("zersium_ore")
+		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.STONE));
 	}
 
 	public static class MaterialBlock
