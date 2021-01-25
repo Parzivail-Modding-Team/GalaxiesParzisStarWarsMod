@@ -177,11 +177,11 @@ public class SwgBlocks
 		@RegistryName("panel_imperial_black_base")
 		public static final Block ImperialBlackBase = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.BLACK).sounds(BlockSoundGroup.METAL));
 		@RegistryName("panel_imperial_1")
-		public static final PillarBlock Imperial1 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock Imperial1 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
 		@RegistryName("panel_imperial_2")
-		public static final PillarBlock Imperial2 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock Imperial2 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
 		@RegistryName("panel_imperial_3")
-		public static final PillarBlock Imperial3 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock Imperial3 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
 		@RegistryName("panel_imperial_light_1")
 		public static final PillarBlock ImperialLight1 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
 		@RegistryName("panel_imperial_light_2")
