@@ -130,9 +130,13 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 			TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
 			if (!e.isMoving())
+			{
 				e.startMoving();
+				return ActionResult.SUCCESS;
+			}
+
+			return ActionResult.CONSUME;
 		}
-		return super.onUse(state, world, pos, player, hand, hit);
 	}
 
 	public boolean canPlace(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer)
