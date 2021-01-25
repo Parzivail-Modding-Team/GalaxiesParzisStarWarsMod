@@ -236,6 +236,8 @@ public class SwgBlocks
 		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
 		@RegistryName("dense_tatooine_sand")
 		public static final Block DenseTatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
+		@RegistryName("tatooine_canyon_sand")
+		public static final Block TatooineCanyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
 	}
 
 	public static class Stone
