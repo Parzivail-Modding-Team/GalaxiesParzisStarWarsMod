@@ -28,7 +28,9 @@ public class MinecraftClientMixin
 	@Final
 	private TextureManager textureManager;
 
-	@Shadow @Nullable public ClientPlayerInteractionManager interactionManager;
+	@Shadow
+	@Nullable
+	public ClientPlayerInteractionManager interactionManager;
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void init(RunArgs args, CallbackInfo ci)

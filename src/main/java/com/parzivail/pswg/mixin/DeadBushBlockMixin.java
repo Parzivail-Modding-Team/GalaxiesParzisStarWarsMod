@@ -1,6 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.container.SwgBlocks;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DeadBushBlock;
 import net.minecraft.util.math.BlockPos;
@@ -14,12 +15,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class DeadBushBlockMixin
 {
 	@Inject(method = "canPlantOnTop", at = @At("RETURN"), cancellable = true)
-	private void canPlantOnTatooineSand(BlockState floor, BlockView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-		if (floor.getBlock() == SwgBlocks.Sand.Tatooine) {
+	private void canPlantOnTop(BlockState state, BlockView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
+	{
+		Block block = state.getBlock();
+		if (block == SwgBlocks.Sand.Tatooine || block == SwgBlocks.Sand.DenseTatooine)
 			cir.setReturnValue(true);
-		}
-		if (floor.getBlock() == SwgBlocks.Sand.DenseTatooine) {
-			cir.setReturnValue(true);
-		}
 	}
 }

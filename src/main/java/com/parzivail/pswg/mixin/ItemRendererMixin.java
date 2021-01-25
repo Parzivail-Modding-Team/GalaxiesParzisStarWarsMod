@@ -24,7 +24,8 @@ public class ItemRendererMixin
 	{
 		if (!stack.isEmpty())
 		{
-			@Nullable final CustomItemRenderer itemRenderer = CustomItemRenderer.ITEM_RENDERER_MAP.get(stack.getItem());
+			@Nullable
+			final CustomItemRenderer itemRenderer = CustomItemRenderer.ITEM_RENDERER_MAP.get(stack.getItem());
 			if (itemRenderer != null)
 			{
 				itemRenderer.render(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model);

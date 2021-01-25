@@ -12,16 +12,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayNetworkHandler.class)
 public class ServerPlayNetworkHandlerMixin
 {
-	@Shadow private Entity topmostRiddenEntity;
+	@Shadow
+	private Entity topmostRiddenEntity;
 
-	@Shadow private int vehicleFloatingTicks;
+	@Shadow
+	private int vehicleFloatingTicks;
 
 	@Inject(method = "tick()V", at = @At(value = "FIELD", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;vehicleFloatingTicks:I"))
-	private void preventFlyingVehicleKick(CallbackInfo ci)
+	private void tick(CallbackInfo ci)
 	{
+		// Prevent flying vehicle kick
 		if (topmostRiddenEntity instanceof IFlyingVehicle)
-		{
 			vehicleFloatingTicks = 0;
-		}
 	}
 }
