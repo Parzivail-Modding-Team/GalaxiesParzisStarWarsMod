@@ -58,13 +58,15 @@ public class LightsaberRenderer
 
 		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_CORE);
 
+		final float offset = (float)Resources.RANDOM.nextGaussian();
+
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderCore(totalLength, coreColor, unstable, cap);
+		renderCore(totalLength, coreColor, unstable, offset, cap);
 
 		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_STENCIL_MASK);
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderCore(totalLength, coreColor, unstable, cap);
+		renderCore(totalLength, coreColor, unstable, offset, cap);
 
 		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_STENCIL_TARGET);
 
@@ -72,7 +74,7 @@ public class LightsaberRenderer
 		renderGlow(totalLength, glowColor, unstable, cap);
 	}
 
-	private static void renderCore(float bladeLength, int coreColor, boolean unstable, boolean cap)
+	private static void renderCore(float bladeLength, int coreColor, boolean unstable, float simplexOffset, boolean cap)
 	{
 		if (bladeLength == 0)
 			return;
@@ -80,7 +82,6 @@ public class LightsaberRenderer
 		final int segments = unstable ? 15 : 1;
 		final float dSegments = 1f / segments;
 		final float dLength = bladeLength / segments;
-		final float offset = (float)Resources.RANDOM.nextGaussian();
 
 		final float solidThickness = 0.027f;
 		final float cappedThickness = 0.02f;
@@ -90,7 +91,7 @@ public class LightsaberRenderer
 
 		if (cap)
 		{
-			float dTRoundBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(offset, dLength * (segments + 1)) * 0.005f : 0;
+			float dTRoundBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * (segments + 1)) * 0.005f : 0;
 			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, 0.01f, cappedThickness + dTRoundBottom, 0, bladeLength + 0.025f, 0, 0, bladeLength, 0);
 		}
 
@@ -99,8 +100,8 @@ public class LightsaberRenderer
 			float topThicknessLerp = MathHelper.lerp(dSegments * (i + 1), solidThickness, topThickness);
 			float bottomThicknessLerp = MathHelper.lerp(dSegments * i, solidThickness, topThickness);
 
-			float dTTop = unstable ? (float)Resources.SIMPLEX_0.noise2(offset, dLength * (i + 1)) * 0.005f : 0;
-			float dTBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(offset, dLength * i) * 0.005f : 0;
+			float dTTop = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * (i + 1)) * 0.005f : 0;
+			float dTBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * i) * 0.005f : 0;
 
 			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
 		}
