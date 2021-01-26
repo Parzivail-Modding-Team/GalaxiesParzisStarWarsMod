@@ -1,6 +1,7 @@
 {
-	"parent": "minecraft:block/cube_all",
+	"parent": "minecraft:block/cube_column",
 	"textures": {
-		"all": "pswg:block/panel_imperial_3"
+		"side": "pswg:block/panel_imperial_3",
+		"end": "pswg:block/panel_imperial_base"
 	}
 }

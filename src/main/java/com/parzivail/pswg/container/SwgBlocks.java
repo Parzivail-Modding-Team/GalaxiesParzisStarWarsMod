@@ -151,7 +151,7 @@ public class SwgBlocks
 		@RegistryName("titanium_block")
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL));
 		@RegistryName("zersium_block")
-		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).luminance(15));
 	}
 
 	public static class Light

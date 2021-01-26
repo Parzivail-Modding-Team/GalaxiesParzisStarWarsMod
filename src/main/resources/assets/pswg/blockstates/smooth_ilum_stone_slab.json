@@ -4,7 +4,7 @@
 			"model": "pswg:block/smooth_ilum_stone_slab"
 		},
 		"type=double": {
-			"model": "pswg:block/smooth_ilum_stone_slab_double"
+			"model": "pswg:block/smooth_ilum_stone"
 		},
 		"type=top": {
 			"model": "pswg:block/smooth_ilum_stone_slab_top"

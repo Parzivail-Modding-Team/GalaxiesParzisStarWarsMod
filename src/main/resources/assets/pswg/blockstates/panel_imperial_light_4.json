@@ -1,7 +1,7 @@
 {
 	"variants": {
 		"axis=x": {
-			"model": "pswg:block/panel_imperial_light_4_horizontal",
+			"model": "pswg:block/panel_imperial_light_4",
 			"x": 90,
 			"y": 90
 		},
@@ -9,7 +9,7 @@
 			"model": "pswg:block/panel_imperial_light_4"
 		},
 		"axis=z": {
-			"model": "pswg:block/panel_imperial_light_4_horizontal",
+			"model": "pswg:block/panel_imperial_light_4",
 			"x": 90
 		}
 	}

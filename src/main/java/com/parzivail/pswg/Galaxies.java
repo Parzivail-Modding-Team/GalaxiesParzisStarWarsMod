@@ -1,5 +1,6 @@
 package com.parzivail.pswg;
 
+import com.parzivail.datagen.DataGenHelper;
 import com.parzivail.pswg.command.SpeciesArgumentType;
 import com.parzivail.pswg.command.SpeciesVariantArgumentType;
 import com.parzivail.pswg.component.SwgEntityComponents;
@@ -22,6 +23,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.ArgumentTypes;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -155,5 +157,8 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerLightsaberToggle, PlayerPacketHandler::handleLightsaberTogglePacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipControls, ShipEntity::handleControlPacket);
+
+		if (FabricLoader.getInstance().isDevelopmentEnvironment())
+			DataGenHelper.run();
 	}
 }

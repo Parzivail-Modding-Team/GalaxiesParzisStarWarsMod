@@ -1,7 +1,7 @@
 {
 	"variants": {
 		"axis=x": {
-			"model": "pswg:block/log_sequoia_horizontal",
+			"model": "pswg:block/log_sequoia",
 			"x": 90,
 			"y": 90
 		},
@@ -9,7 +9,7 @@
 			"model": "pswg:block/log_sequoia"
 		},
 		"axis=z": {
-			"model": "pswg:block/log_sequoia_horizontal",
+			"model": "pswg:block/log_sequoia",
 			"x": 90
 		}
 	}

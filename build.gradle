@@ -101,6 +101,8 @@ tasks.withType(JavaCompile) {
 
 jar {
 	from "LICENSE"
+
+	exclude("com/parzivail/datagen")
 }
 
 wrapper {

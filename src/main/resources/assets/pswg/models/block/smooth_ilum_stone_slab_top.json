@@ -1,8 +1,8 @@
 {
 	"parent": "minecraft:block/slab_top",
 	"textures": {
-		"bottom": "pswg:block/smooth_ilum_stone",
+		"side": "pswg:block/smooth_ilum_stone_slab_side",
 		"top": "pswg:block/smooth_ilum_stone",
-		"side": "pswg:block/smooth_ilum_stone_slab_side"
+		"bottom": "pswg:block/smooth_ilum_stone"
 	}
 }
