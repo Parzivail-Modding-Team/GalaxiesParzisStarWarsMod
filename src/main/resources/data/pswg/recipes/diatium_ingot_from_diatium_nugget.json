@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"###",
+		"###",
+		"###"
+	],
+	"key": {
+		"#": {
+			"item": "pswg:diatium_nugget"
+		}
+	},
+	"result": {
+		"item": "pswg:diatium_ingot"
+	}
+}

@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"group": "durasteel_nugget",
+	"ingredients": [
+		{
+			"item": "pswg:durasteel_ingot"
+		}
+	],
+	"result": {
+		"item": "pswg:durasteel_nugget",
+		"count": 9
+	}
+}
