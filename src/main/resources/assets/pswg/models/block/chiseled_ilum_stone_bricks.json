@@ -1,6 +1,6 @@
 {
 	"parent": "block/cube_all",
 	"textures": {
-		"all": "pswg:block/chisled_ilum_stone_bricks"
+		"all": "pswg:block/chiseled_ilum_stone_bricks"
 	}
 }

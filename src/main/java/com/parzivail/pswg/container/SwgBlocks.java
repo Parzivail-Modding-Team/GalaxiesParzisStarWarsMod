@@ -284,8 +284,8 @@ public class SwgBlocks
 		public static final Block IlumBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumBricks));
 		@RegistryName("ilum_stone_brick_stairs")
 		public static final Block IlumBrickStairs = new PStairsBlock(IlumBricks.getDefaultState(), AbstractBlock.Settings.copy(IlumBricks));
-		@RegistryName("chisled_ilum_stone_bricks")
-		public static final Block IlumChisledBricks = new Block(FabricBlockSettings.of(Material.STONE));
+		@RegistryName("chiseled_ilum_stone_bricks")
+		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE));
 	}
 
 	public static class Tank
