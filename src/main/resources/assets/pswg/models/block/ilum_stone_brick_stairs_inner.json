@@ -1,0 +1,8 @@
+{
+	"parent": "minecraft:block/inner_stairs",
+	"textures": {
+		"bottom": "pswg:block/ilum_stone_bricks",
+		"top": "pswg:block/ilum_stone_bricks",
+		"side": "pswg:block/ilum_stone_bricks"
+	}
+}

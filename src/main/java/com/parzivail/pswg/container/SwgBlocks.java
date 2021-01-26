@@ -242,65 +242,50 @@ public class SwgBlocks
 
 	public static class Stone
 	{
-		@RegistryName("stone_temple")
-		public static final Block Temple = new Block(FabricBlockSettings.of(Material.STONE));
-		@RegistryName("stone_temple_bricks")
-		public static final Block TempleBricks = new Block(FabricBlockSettings.of(Material.STONE));
-		@RegistryName("stone_temple_bricks_chiseled")
-		public static final Block TempleBricksChiseled = new Block(FabricBlockSettings.of(Material.STONE));
-		@RegistryName("stone_temple_slab_side_smooth")
-		public static final Block TempleSlabSideSmooth = new Block(FabricBlockSettings.of(Material.STONE));
-		@RegistryName("stone_temple_smooth")
-		public static final Block TempleSmooth = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("stone_massassi_bricks")
 		public static final Block MassassiBricks = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("stone_massassi_smooth")
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE));
-
-		@RegistryName("pourstone")
-		public static final Block Pourstone = new Block(FabricBlockSettings.of(Material.STONE));
-		@RegistryName("light_pourstone")
-		public static final Block LightPourstone = new Block(FabricBlockSettings.of(Material.STONE));
-
-		@RegistryName("stone_temple_stairs")
-		public static final Block TempleStairs = new PStairsBlock(Temple.getDefaultState(), AbstractBlock.Settings.copy(Temple));
-		@RegistryName("stone_temple_brick_stairs")
-		public static final Block TempleBricksStairs = new PStairsBlock(TempleBricks.getDefaultState(), AbstractBlock.Settings.copy(TempleBricks));
-		@RegistryName("stone_temple_brick_chiseled_stairs")
-		public static final Block TempleBricksChiseledStairs = new PStairsBlock(TempleBricksChiseled.getDefaultState(), AbstractBlock.Settings.copy(TempleBricksChiseled));
-		@RegistryName("stone_temple_slab_side_smooth_stairs")
-		public static final Block TempleSlabSideSmoothStairs = new PStairsBlock(TempleSlabSideSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSlabSideSmooth));
-		@RegistryName("stone_temple_smooth_stairs")
-		public static final Block TempleSmoothStairs = new PStairsBlock(TempleSmooth.getDefaultState(), AbstractBlock.Settings.copy(TempleSmooth));
 		@RegistryName("stone_massassi_brick_stairs")
 		public static final Block MassassiBrickStairs = new PStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
 		@RegistryName("stone_massassi_smooth_stairs")
 		public static final Block MassassiSmoothStairs = new PStairsBlock(MassassiSmooth.getDefaultState(), AbstractBlock.Settings.copy(MassassiSmooth));
-
-		@RegistryName("pourstone_stairs")
-		public static final Block PourstoneStairs = new PStairsBlock(Pourstone.getDefaultState(), AbstractBlock.Settings.copy(Pourstone));
-		@RegistryName("light_pourstone_stairs")
-		public static final Block LightPourstoneStairs = new PStairsBlock(LightPourstone.getDefaultState(), AbstractBlock.Settings.copy(LightPourstone));
-
-		@RegistryName("stone_temple_slab")
-		public static final Block TempleSlab = new SlabBlock(AbstractBlock.Settings.copy(Temple));
-		@RegistryName("stone_temple_brick_slab")
-		public static final Block TempleBricksSlab = new SlabBlock(AbstractBlock.Settings.copy(TempleBricks));
-		@RegistryName("stone_temple_brick_chiseled_slab")
-		public static final Block TempleBricksChiseledSlab = new SlabBlock(AbstractBlock.Settings.copy(TempleBricksChiseled));
-		@RegistryName("stone_temple_brick_beveled_slab")
-		public static final Block TempleBricksBeveledSlab = new SlabBlock(AbstractBlock.Settings.copy(TempleSlabSideSmooth));
-		@RegistryName("stone_temple_smooth_slab")
-		public static final Block TempleSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(TempleSmooth));
 		@RegistryName("stone_massassi_brick_slab")
 		public static final Block MassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiBricks));
 		@RegistryName("stone_massassi_smooth_slab")
 		public static final Block MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
 
+		@RegistryName("pourstone")
+		public static final Block Pourstone = new Block(FabricBlockSettings.of(Material.STONE));
+		@RegistryName("light_pourstone")
+		public static final Block LightPourstone = new Block(FabricBlockSettings.of(Material.STONE));
+		@RegistryName("pourstone_stairs")
+		public static final Block PourstoneStairs = new PStairsBlock(Pourstone.getDefaultState(), AbstractBlock.Settings.copy(Pourstone));
+		@RegistryName("light_pourstone_stairs")
+		public static final Block LightPourstoneStairs = new PStairsBlock(LightPourstone.getDefaultState(), AbstractBlock.Settings.copy(LightPourstone));
 		@RegistryName("pourstone_slab")
 		public static final Block PourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
 		@RegistryName("light_pourstone_slab")
 		public static final Block LightPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
+
+		@RegistryName("ilum_stone")
+		public static final Block Ilum = new Block(FabricBlockSettings.of(Material.STONE));
+		@RegistryName("ilum_stone_slab")
+		public static final Block IlumSlab = new SlabBlock(AbstractBlock.Settings.copy(Ilum));
+		@RegistryName("ilum_stone_stairs")
+		public static final Block IlumStairs = new PStairsBlock(Ilum.getDefaultState(), AbstractBlock.Settings.copy(Ilum));
+		@RegistryName("smooth_ilum_stone")
+		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE));
+		@RegistryName("smooth_ilum_stone_slab")
+		public static final Block IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
+		@RegistryName("ilum_stone_bricks")
+		public static final Block IlumBricks = new Block(FabricBlockSettings.of(Material.STONE));
+		@RegistryName("ilum_stone_brick_slab")
+		public static final Block IlumBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumBricks));
+		@RegistryName("ilum_stone_brick_stairs")
+		public static final Block IlumBrickStairs = new PStairsBlock(IlumBricks.getDefaultState(), AbstractBlock.Settings.copy(IlumBricks));
+		@RegistryName("chisled_ilum_stone_bricks")
+		public static final Block IlumChisledBricks = new Block(FabricBlockSettings.of(Material.STONE));
 	}
 
 	public static class Tank
