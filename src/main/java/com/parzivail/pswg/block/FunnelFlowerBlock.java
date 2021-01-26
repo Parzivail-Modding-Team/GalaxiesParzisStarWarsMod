@@ -25,6 +25,7 @@ public class FunnelFlowerBlock extends PlantBlock
 		Block block = floor.getBlock();
 		return block == SwgBlocks.Sand.Tatooine ||
 		       block == SwgBlocks.Sand.DenseTatooine ||
+		       block == SwgBlocks.Sand.TatooineCanyon ||
 		       block == Blocks.GRASS_BLOCK ||
 		       block == Blocks.SAND ||
 		       block == Blocks.RED_SAND ||

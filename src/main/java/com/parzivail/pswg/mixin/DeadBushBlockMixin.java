@@ -18,7 +18,7 @@ public class DeadBushBlockMixin
 	private void canPlantOnTop(BlockState state, BlockView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
 	{
 		Block block = state.getBlock();
-		if (block == SwgBlocks.Sand.Tatooine || block == SwgBlocks.Sand.DenseTatooine)
+		if (block == SwgBlocks.Sand.Tatooine || block == SwgBlocks.Sand.DenseTatooine || block == SwgBlocks.Sand.TatooineCanyon)
 			cir.setReturnValue(true);
 	}
 }

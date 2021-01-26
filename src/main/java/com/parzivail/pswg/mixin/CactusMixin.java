@@ -18,7 +18,7 @@ public abstract class CactusMixin
 	private void canPlaceAt(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
 	{
 		Block below = world.getBlockState(pos.down()).getBlock();
-		if (below == SwgBlocks.Sand.Tatooine || below == SwgBlocks.Sand.DenseTatooine)
+		if (below == SwgBlocks.Sand.Tatooine || below == SwgBlocks.Sand.DenseTatooine || below == SwgBlocks.Sand.TatooineCanyon)
 			cir.setReturnValue(true);
 	}
 }
