@@ -1,8 +1,1 @@
-{
-	"parent": "minecraft:block/slab_top",
-	"textures": {
-		"side": "pswg:block/pourstone",
-		"top": "pswg:block/pourstone",
-		"bottom": "pswg:block/pourstone"
-	}
-}
+{"parent":"minecraft:block/slab_top","textures":{"side":"pswg:block/pourstone","top":"pswg:block/pourstone","bottom":"pswg:block/pourstone"}}

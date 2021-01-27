@@ -1,7 +1,1 @@
-{
-	"variants": {
-		"": {
-			"model": "pswg:block/stone_massassi_smooth"
-		}
-	}
-}
+{"variants":{"":{"model":"pswg:block/stone_massassi_smooth"}}}

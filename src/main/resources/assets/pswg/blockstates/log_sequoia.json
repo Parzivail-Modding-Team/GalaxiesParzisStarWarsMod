@@ -1,16 +1,1 @@
-{
-	"variants": {
-		"axis=x": {
-			"model": "pswg:block/log_sequoia",
-			"x": 90,
-			"y": 90
-		},
-		"axis=y": {
-			"model": "pswg:block/log_sequoia"
-		},
-		"axis=z": {
-			"model": "pswg:block/log_sequoia",
-			"x": 90
-		}
-	}
-}
+{"variants":{"axis=x":{"model":"pswg:block/log_sequoia","x":90,"y":90},"axis=y":{"model":"pswg:block/log_sequoia"},"axis=z":{"model":"pswg:block/log_sequoia","x":90}}}

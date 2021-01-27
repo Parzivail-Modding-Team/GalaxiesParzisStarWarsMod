@@ -1,7 +1,1 @@
-{
-	"variants": {
-		"": {
-			"model": "pswg:block/helicite_ore"
-		}
-	}
-}
+{"variants":{"":{"model":"pswg:block/helicite_ore"}}}

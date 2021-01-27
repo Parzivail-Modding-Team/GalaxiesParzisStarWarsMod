@@ -1,8 +1,1 @@
-{
-	"parent": "minecraft:block/inner_stairs",
-	"textures": {
-		"side": "pswg:block/stone_massassi_bricks",
-		"top": "pswg:block/stone_massassi_bricks",
-		"bottom": "pswg:block/stone_massassi_bricks"
-	}
-}
+{"parent":"minecraft:block/inner_stairs","textures":{"side":"pswg:block/stone_massassi_bricks","top":"pswg:block/stone_massassi_bricks","bottom":"pswg:block/stone_massassi_bricks"}}

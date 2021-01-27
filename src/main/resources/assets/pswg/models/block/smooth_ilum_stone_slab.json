@@ -1,8 +1,1 @@
-{
-	"parent": "minecraft:block/slab",
-	"textures": {
-		"side": "pswg:block/smooth_ilum_stone_slab_side",
-		"top": "pswg:block/smooth_ilum_stone",
-		"bottom": "pswg:block/smooth_ilum_stone"
-	}
-}
+{"parent":"minecraft:block/slab","textures":{"side":"pswg:block/smooth_ilum_stone_slab_side","top":"pswg:block/smooth_ilum_stone","bottom":"pswg:block/smooth_ilum_stone"}}

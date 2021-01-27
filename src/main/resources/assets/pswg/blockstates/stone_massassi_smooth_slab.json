@@ -1,13 +1,1 @@
-{
-	"variants": {
-		"type=bottom": {
-			"model": "pswg:block/stone_massassi_smooth_slab"
-		},
-		"type=double": {
-			"model": "pswg:block/stone_massassi_smooth"
-		},
-		"type=top": {
-			"model": "pswg:block/stone_massassi_smooth_slab_top"
-		}
-	}
-}
+{"variants":{"type=bottom":{"model":"pswg:block/stone_massassi_smooth_slab"},"type=double":{"model":"pswg:block/stone_massassi_smooth"},"type=top":{"model":"pswg:block/stone_massassi_smooth_slab_top"}}}

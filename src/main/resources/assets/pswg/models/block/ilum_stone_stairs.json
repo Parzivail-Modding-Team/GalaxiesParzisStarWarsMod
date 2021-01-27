@@ -1,8 +1,1 @@
-{
-	"parent": "minecraft:block/stairs",
-	"textures": {
-		"side": "pswg:block/ilum_stone",
-		"top": "pswg:block/ilum_stone",
-		"bottom": "pswg:block/ilum_stone"
-	}
-}
+{"parent":"minecraft:block/stairs","textures":{"side":"pswg:block/ilum_stone","top":"pswg:block/ilum_stone","bottom":"pswg:block/ilum_stone"}}

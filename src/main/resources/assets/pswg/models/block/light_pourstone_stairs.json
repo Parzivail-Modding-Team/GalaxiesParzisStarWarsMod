@@ -1,8 +1,1 @@
-{
-	"parent": "minecraft:block/stairs",
-	"textures": {
-		"side": "pswg:block/light_pourstone",
-		"top": "pswg:block/light_pourstone",
-		"bottom": "pswg:block/light_pourstone"
-	}
-}
+{"parent":"minecraft:block/stairs","textures":{"side":"pswg:block/light_pourstone","top":"pswg:block/light_pourstone","bottom":"pswg:block/light_pourstone"}}

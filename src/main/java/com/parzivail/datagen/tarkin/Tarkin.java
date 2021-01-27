@@ -18,6 +18,17 @@ public class Tarkin
 
 		List<BuiltAsset> assets = new ArrayList<>();
 
+		generateBlocks(assets);
+
+		for (BuiltAsset asset : assets)
+		{
+			Lumberjack.log("Wrote %s", asset.getFilename());
+			asset.write();
+		}
+	}
+
+	private static void generateBlocks(List<BuiltAsset> assets)
+	{
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
 
 		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.identifier("block/log_sequoia_top"), Resources.identifier("block/log_sequoia_side")).build(assets);
@@ -104,11 +115,5 @@ public class Tarkin
 
 		BlockGenerator.basic(SwgBlocks.Workbench.Blaster).build(assets);
 		BlockGenerator.basic(SwgBlocks.Workbench.Lightsaber).build(assets);
-
-		for (BuiltAsset asset : assets)
-		{
-			Lumberjack.log("Wrote %s", asset.getFilename());
-			asset.write();
-		}
 	}
 }

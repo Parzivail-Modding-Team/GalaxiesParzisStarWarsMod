@@ -1,6 +1,1 @@
-{
-	"parent": "minecraft:block/cube_all",
-	"textures": {
-		"all": "pswg:block/lightsaber_forge"
-	}
-}
+{"parent":"minecraft:block/cube_all","textures":{"all":"pswg:block/lightsaber_forge"}}

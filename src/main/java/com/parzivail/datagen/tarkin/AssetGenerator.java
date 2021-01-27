@@ -22,12 +22,18 @@ public class AssetGenerator
 		return new Identifier(id.getNamespace(), "block/" + id.getPath());
 	}
 
+	public static BlockGenerator blockDefaultDrops(Block block)
+	{
+		return block(block)
+				.lootTable(LootTableFile::basic);
+	}
+
 	public static BlockGenerator block(Block block)
 	{
 		return new BlockGenerator(block)
 				.state(BlockStateGenerator::basic)
-				.model(ModelGenerator::cube)
-				.itemModel(ModelGenerator::ofBlock);
+				.model(ModelFile::cube)
+				.itemModel(ModelFile::ofBlock);
 	}
 
 	public static void setOutputRoot(Path rootDir)

@@ -1,16 +1,1 @@
-{
-	"variants": {
-		"axis=x": {
-			"model": "pswg:block/panel_imperial_1",
-			"x": 90,
-			"y": 90
-		},
-		"axis=y": {
-			"model": "pswg:block/panel_imperial_1"
-		},
-		"axis=z": {
-			"model": "pswg:block/panel_imperial_1",
-			"x": 90
-		}
-	}
-}
+{"variants":{"axis=x":{"model":"pswg:block/panel_imperial_1","x":90,"y":90},"axis=y":{"model":"pswg:block/panel_imperial_1"},"axis=z":{"model":"pswg:block/panel_imperial_1","x":90}}}

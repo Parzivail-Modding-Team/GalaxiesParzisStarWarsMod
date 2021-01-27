@@ -55,6 +55,11 @@ public class BuiltAsset
 		return getAssetPath(IdentifierUtil.concat("models/item/", identifier, ".json"));
 	}
 
+	private static Path getLootTablePath(Identifier identifier)
+	{
+		return getDataPath(IdentifierUtil.concat("loot_tables/", identifier, ".json"));
+	}
+
 	public static BuiltAsset blockstate(Identifier identifier, JsonElement contents)
 	{
 		Lumberjack.log("Created blockstate %s", identifier);
@@ -71,6 +76,12 @@ public class BuiltAsset
 	{
 		Lumberjack.log("Created item model %s", identifier);
 		return new BuiltAsset(getItemModelPath(identifier), contents);
+	}
+
+	public static BuiltAsset lootTable(Identifier identifier, JsonElement contents)
+	{
+		Lumberjack.log("Created loot table %s", identifier);
+		return new BuiltAsset(getLootTablePath(identifier), contents);
 	}
 
 	public void write()

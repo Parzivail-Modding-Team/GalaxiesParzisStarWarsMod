@@ -10,13 +10,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ModelGenerator
+public class ModelFile
 {
 	private final Identifier filename;
 	private final Identifier parent;
 	private final HashMap<String, Identifier> textures;
 
-	private ModelGenerator(Identifier filename, Identifier parent)
+	private ModelFile(Identifier filename, Identifier parent)
 	{
 		this.filename = filename;
 		this.parent = parent;
@@ -28,48 +28,48 @@ public class ModelGenerator
 		return filename;
 	}
 
-	public static ModelGenerator ofBlock(Block block)
+	public static ModelFile ofBlock(Block block)
 	{
-		return new ModelGenerator(AssetGenerator.getRegistryName(block), AssetGenerator.getTextureName(block));
+		return new ModelFile(AssetGenerator.getRegistryName(block), AssetGenerator.getTextureName(block));
 	}
 
-	public static ModelGenerator ofModel(Identifier filename, Identifier source)
+	public static ModelFile ofModel(Identifier filename, Identifier source)
 	{
-		return new ModelGenerator(filename, source);
+		return new ModelFile(filename, source);
 	}
 
-	public static ModelGenerator cube(Block block)
+	public static ModelFile cube(Block block)
 	{
-		return ModelGenerator
+		return ModelFile
 				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_all"))
 				.texture("all", AssetGenerator.getTextureName(block));
 	}
 
-	public static ModelGenerator leaves(Block block)
+	public static ModelFile leaves(Block block)
 	{
-		return ModelGenerator
+		return ModelFile
 				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/leaves"))
 				.texture("all", AssetGenerator.getTextureName(block));
 	}
 
-	public static ModelGenerator column(Block block, Identifier topTexture, Identifier sideTexture)
+	public static ModelFile column(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		return ModelGenerator
+		return ModelFile
 				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_column"))
 				.texture("end", topTexture)
 				.texture("side", sideTexture);
 	}
 
-	public static Collection<ModelGenerator> slab(Block block, Identifier topTexture, Identifier sideTexture)
+	public static Collection<ModelFile> slab(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		Identifier id = AssetGenerator.getRegistryName(block);
 		return Arrays.asList(
-				ModelGenerator
+				ModelFile
 						.ofModel(id, new Identifier("block/slab"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
-				ModelGenerator
+				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/slab_top"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
@@ -77,42 +77,42 @@ public class ModelGenerator
 		);
 	}
 
-	public static Collection<ModelGenerator> slabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)
+	public static Collection<ModelFile> slabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		Identifier id = AssetGenerator.getRegistryName(block);
 		return Arrays.asList(
-				ModelGenerator
+				ModelFile
 						.ofModel(id, new Identifier("block/slab"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
-				ModelGenerator
+				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/slab_top"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
-				ModelGenerator
+				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_double"), new Identifier("block/cube_column"))
 						.texture("end", topTexture)
 						.texture("side", sideTexture)
 		);
 	}
 
-	public static Collection<ModelGenerator> stairs(Block block, Identifier topTexture, Identifier sideTexture)
+	public static Collection<ModelFile> stairs(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		Identifier id = AssetGenerator.getRegistryName(block);
 		return Arrays.asList(
-				ModelGenerator
+				ModelFile
 						.ofModel(id, new Identifier("block/stairs"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
-				ModelGenerator
+				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_inner"), new Identifier("block/inner_stairs"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
 						.texture("side", sideTexture),
-				ModelGenerator
+				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_outer"), new Identifier("block/outer_stairs"))
 						.texture("bottom", topTexture)
 						.texture("top", topTexture)
@@ -120,14 +120,14 @@ public class ModelGenerator
 		);
 	}
 
-	public static ModelGenerator tintedCross(Block block)
+	public static ModelFile tintedCross(Block block)
 	{
-		return ModelGenerator
+		return ModelFile
 				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/tinted_cross"))
 				.texture("cross", AssetGenerator.getTextureName(block));
 	}
 
-	public ModelGenerator texture(String key, Identifier value)
+	public ModelFile texture(String key, Identifier value)
 	{
 		textures.put(key, value);
 		return this;

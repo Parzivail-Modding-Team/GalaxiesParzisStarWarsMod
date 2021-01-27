@@ -1,13 +1,1 @@
-{
-	"variants": {
-		"type=bottom": {
-			"model": "pswg:block/ilum_stone_slab"
-		},
-		"type=double": {
-			"model": "pswg:block/ilum_stone"
-		},
-		"type=top": {
-			"model": "pswg:block/ilum_stone_slab_top"
-		}
-	}
-}
+{"variants":{"type=bottom":{"model":"pswg:block/ilum_stone_slab"},"type=double":{"model":"pswg:block/ilum_stone"},"type=top":{"model":"pswg:block/ilum_stone_slab_top"}}}

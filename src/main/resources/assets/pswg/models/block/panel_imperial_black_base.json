@@ -1,6 +1,1 @@
-{
-	"parent": "minecraft:block/cube_all",
-	"textures": {
-		"all": "pswg:block/panel_imperial_black_base"
-	}
-}
+{"parent":"minecraft:block/cube_all","textures":{"all":"pswg:block/panel_imperial_black_base"}}

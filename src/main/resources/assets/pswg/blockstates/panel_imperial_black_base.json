@@ -1,7 +1,1 @@
-{
-	"variants": {
-		"": {
-			"model": "pswg:block/panel_imperial_black_base"
-		}
-	}
-}
+{"variants":{"":{"model":"pswg:block/panel_imperial_black_base"}}}
