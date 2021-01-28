@@ -1,6 +1,7 @@
 package com.parzivail.datagen.tarkin;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -11,10 +12,15 @@ public class AssetGenerator
 {
 	private static Path rootDir = Paths.get("..", "src", "main", "resources");
 
-	static Identifier getRegistryName(Block block)
+	static Identifier getRegistryName(ItemConvertible item)
 	{
-		return Registry.BLOCK.getId(block);
+		return Registry.ITEM.getId(item.asItem());
 	}
+
+//	static Identifier getRegistryName(Block block)
+//	{
+//		return Registry.BLOCK.getId(block);
+//	}
 
 	static Identifier getTextureName(Block block)
 	{

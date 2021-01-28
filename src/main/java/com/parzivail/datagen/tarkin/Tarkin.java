@@ -2,7 +2,10 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.Lumberjack;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +23,69 @@ public class Tarkin
 
 		generateBlocks(assets);
 
+		mineralRecipeSet(
+				assets,
+				SwgBlocks.Ore.Chromium,
+				SwgItems.Ingot.Chromium,
+				SwgItems.Nugget.Chromium,
+				SwgBlocks.MaterialBlock.Chromium
+		);
+
+		mineralRecipeSet(
+				assets,
+				SwgBlocks.Ore.Desh,
+				SwgItems.Ingot.Desh,
+				SwgItems.Nugget.Desh,
+				SwgBlocks.MaterialBlock.Desh
+		);
+
+		mineralRecipeSet(
+				assets,
+				SwgBlocks.Ore.Diatium,
+				SwgItems.Ingot.Diatium,
+				SwgItems.Nugget.Diatium,
+				SwgBlocks.MaterialBlock.Diatium
+		);
+
+		mineralRecipeSet(
+				assets,
+				SwgBlocks.Ore.Zersium,
+				SwgItems.Ingot.Zersium,
+				SwgItems.Nugget.Zersium,
+				SwgBlocks.MaterialBlock.Zersium
+		);
+
 		for (BuiltAsset asset : assets)
 		{
 			Lumberjack.log("Wrote %s", asset.getFilename());
 			asset.write();
 		}
+	}
+
+	private static void mineralRecipeSet(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot, ItemConvertible nugget, ItemConvertible block)
+	{
+		// ore -> ingot
+		RecipeGenerator.Smelting.of(ingot, ore).build(assets);
+
+		// TODO: blasting
+
+		// block <-> 9 ingot
+		RecipeGenerator.Shapeless.of(new ItemStack(ingot, 9))
+		                         .ingredient(block)
+		                         .build(assets);
+		RecipeGenerator.Shaped.of(new ItemStack(block, 1))
+		                      .full(ingot, ingot, ingot,
+		                            ingot, ingot, ingot,
+		                            ingot, ingot, ingot);
+
+		// ingot <-> 9 nugget
+		RecipeGenerator.Shapeless.of(new ItemStack(nugget, 9))
+		                         .ingredient(ingot)
+		                         .build(assets);
+		RecipeGenerator.Shaped.of(new ItemStack(ingot, 1))
+		                      .full(nugget, nugget, nugget,
+		                            nugget, nugget, nugget,
+		                            nugget, nugget, nugget);
 	}
 
 	private static void generateBlocks(List<BuiltAsset> assets)
