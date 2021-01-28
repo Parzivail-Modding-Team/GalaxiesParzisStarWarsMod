@@ -1,9 +1,0 @@
-{
-	"type": "minecraft:blasting",
-	"ingredient": {
-		"item": "pswg:zersium_ore"
-	},
-	"result": "pswg:zersium_ingot",
-	"experience": 1,
-	"cookingtime": 100
-}

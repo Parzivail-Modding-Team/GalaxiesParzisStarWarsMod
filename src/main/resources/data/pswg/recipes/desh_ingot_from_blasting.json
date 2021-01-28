@@ -1,9 +1,0 @@
-{
-	"type": "minecraft:blasting",
-	"ingredient": {
-		"item": "pswg:desh_ore"
-	},
-	"result": "pswg:desh_ingot",
-	"experience": 1,
-	"cookingtime": 100
-}

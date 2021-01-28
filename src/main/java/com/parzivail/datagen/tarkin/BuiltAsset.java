@@ -60,6 +60,11 @@ public class BuiltAsset
 		return getDataPath(IdentifierUtil.concat("loot_tables/", identifier, ".json"));
 	}
 
+	private static Path getRecipePath(Identifier identifier)
+	{
+		return getDataPath(IdentifierUtil.concat("recipes/", identifier, ".json"));
+	}
+
 	public static BuiltAsset blockstate(Identifier identifier, JsonElement contents)
 	{
 		Lumberjack.log("Created blockstate %s", identifier);
@@ -82,6 +87,12 @@ public class BuiltAsset
 	{
 		Lumberjack.log("Created loot table %s", identifier);
 		return new BuiltAsset(getLootTablePath(identifier), contents);
+	}
+
+	public static BuiltAsset recipe(Identifier identifier, JsonElement contents)
+	{
+		Lumberjack.log("Created recipe %s", identifier);
+		return new BuiltAsset(getRecipePath(identifier), contents);
 	}
 
 	public void write()
