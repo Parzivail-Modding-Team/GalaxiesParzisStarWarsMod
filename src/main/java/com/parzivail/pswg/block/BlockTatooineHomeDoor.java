@@ -169,7 +169,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player)
 	{
-		if (!world.isClient && player.isCreative())
+		if (!world.isClient)
 		{
 			int part = state.get(PART);
 

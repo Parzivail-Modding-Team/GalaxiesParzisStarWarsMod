@@ -79,8 +79,6 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 		timer &= ~MASK_DIRECTION;
 		if (opening)
 			timer |= MASK_DIRECTION;
-
-		this.markDirty();
 	}
 
 	public int getTimer()
@@ -92,8 +90,6 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 	{
 		timer &= ~MASK_TIMER;
 		timer |= (newTimer & MASK_TIMER);
-
-		this.markDirty();
 	}
 
 	public void startMoving()

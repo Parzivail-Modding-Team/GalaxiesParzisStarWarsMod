@@ -53,7 +53,7 @@ public class TatooineHomeDoorRenderer extends BlockEntityRenderer<TatooineHomeDo
 		GL11.glStencilFunc(GL11.GL_EQUAL, 1, 0xFF); // Pass test if stencil value is 1
 	}, () -> {
 		GL11.glDisable(GL11.GL_STENCIL_TEST);
-	})).diffuseLighting(new RenderPhase.DiffuseLighting(true)).texture(new RenderPhase.Texture(TEXTURE_DOOR, false, true)).build(true));
+	})).diffuseLighting(new RenderPhase.DiffuseLighting(true)).lightmap(new RenderPhase.Lightmap(true)).texture(new RenderPhase.Texture(TEXTURE_DOOR, false, true)).build(true));
 
 	public TatooineHomeDoorRenderer(BlockEntityRenderDispatcher dispatcher)
 	{
