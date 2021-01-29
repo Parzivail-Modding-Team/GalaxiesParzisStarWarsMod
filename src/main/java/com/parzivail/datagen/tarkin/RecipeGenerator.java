@@ -308,6 +308,7 @@ public abstract class RecipeGenerator
 				JsonObject result = new JsonObject();
 				result.addProperty("item", output.toString());
 				result.addProperty("count", outputCount);
+				root.add("result", result);
 
 				// built asset
 				String source = type.getPath();

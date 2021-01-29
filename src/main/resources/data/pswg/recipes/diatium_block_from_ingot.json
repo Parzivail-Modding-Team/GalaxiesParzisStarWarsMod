@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:diatium_block","pattern":["ddd","ddd","ddd"],"key":{"d":{"item":"pswg:diatium_ingot"}}}
+{"type":"minecraft:crafting_shaped","group":"pswg:diatium_block","pattern":["ddd","ddd","ddd"],"key":{"d":{"item":"pswg:diatium_ingot"}},"result":{"item":"pswg:diatium_block","count":1}}

@@ -45,6 +45,13 @@ public class ModelFile
 				.texture("all", AssetGenerator.getTextureName(block));
 	}
 
+	public static ModelFile item(Block block)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("item/generated"))
+				.texture("layer0", AssetGenerator.getTextureName(block));
+	}
+
 	public static ModelFile leaves(Block block)
 	{
 		return ModelFile
@@ -118,6 +125,13 @@ public class ModelFile
 						.texture("top", topTexture)
 						.texture("side", sideTexture)
 		);
+	}
+
+	public static ModelFile cross(Block block)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cross"))
+				.texture("cross", AssetGenerator.getTextureName(block));
 	}
 
 	public static ModelFile tintedCross(Block block)

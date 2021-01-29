@@ -83,7 +83,16 @@ public class BlockGenerator
 
 	static BlockGenerator cross(Block block)
 	{
-		return basic(block).model(ModelFile::tintedCross);
+		return basic(block)
+				.model(ModelFile::cross)
+				.itemModel(ModelFile::item);
+	}
+
+	static BlockGenerator tintedCross(Block block)
+	{
+		return basic(block)
+				.model(ModelFile::tintedCross)
+				.itemModel(ModelFile::item);
 	}
 
 	@FunctionalInterface
