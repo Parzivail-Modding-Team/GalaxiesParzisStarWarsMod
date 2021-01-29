@@ -95,11 +95,9 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 		BlockPos controllerPos = getController(world, pos);
 		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
-		assert e != null;
-
 		int rotation = (state.get(ROTATION) + 3) % 4;
 
-		if (!e.isOpening() || e.isMoving())
+		if (e == null || !e.isOpening() || e.isMoving())
 			return SHAPES_OPEN[rotation];
 
 		return SHAPES_CLOSED[rotation];
