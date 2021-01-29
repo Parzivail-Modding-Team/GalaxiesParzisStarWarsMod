@@ -25,7 +25,17 @@ public class Tarkin
 		List<BuiltAsset> assets = new ArrayList<>();
 
 		generateBlocks(assets);
+		generateRecipes(assets);
 
+		for (BuiltAsset asset : assets)
+		{
+			Lumberjack.log("Wrote %s", asset.getFilename());
+			asset.write();
+		}
+	}
+
+	private static void generateRecipes(List<BuiltAsset> assets)
+	{
 		// TODO: support tags instead of items in recipes
 		// TODO: support substitutes instead of items in recipes
 
@@ -100,53 +110,6 @@ public class Tarkin
 				SwgItems.Nugget.Zersium,
 				SwgBlocks.MaterialBlock.Zersium
 		);
-
-		for (BuiltAsset asset : assets)
-		{
-			Lumberjack.log("Wrote %s", asset.getFilename());
-			asset.write();
-		}
-	}
-
-	private static void recipeFood(List<BuiltAsset> assets, Item input, Item output)
-	{
-		RecipeGenerator.Cooking.smelting(output, input, "raw")
-		                       .build(assets);
-		RecipeGenerator.Cooking.smoking(output, input, "smoking_raw")
-		                       .build(assets);
-		RecipeGenerator.Cooking.campfire(output, input, "campfire_raw")
-		                       .build(assets);
-	}
-
-	private static void mineralRecipeSet(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot, ItemConvertible block)
-	{
-		recipeOreToIngot(assets, ore, ingot);
-		recipeInterchange(assets, ingot, "ingot", block, "block");
-	}
-
-	private static void mineralRecipeSet(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot, ItemConvertible nugget, ItemConvertible block)
-	{
-		recipeOreToIngot(assets, ore, ingot);
-		recipeInterchange(assets, ingot, "ingot", block, "block");
-		recipeInterchange(assets, nugget, "nugget", ingot, "ingot");
-	}
-
-	private static void recipeInterchange(List<BuiltAsset> assets, ItemConvertible smallUnit, String smallUnitName, ItemConvertible largeUnit, String largeUnitName)
-	{
-		RecipeGenerator.Shapeless.of(new ItemStack(smallUnit, 9), largeUnitName)
-		                         .ingredient(largeUnit)
-		                         .build(assets);
-		RecipeGenerator.Shaped.of(new ItemStack(largeUnit, 1))
-		                      .grid3x3Fill(smallUnit, smallUnitName)
-		                      .build(assets);
-	}
-
-	private static void recipeOreToIngot(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot)
-	{
-		RecipeGenerator.Cooking.smelting(ingot, ore, "ore")
-		                       .build(assets);
-		RecipeGenerator.Cooking.blasting(ingot, ore, "blasting_ore")
-		                       .build(assets);
 	}
 
 	private static void generateBlocks(List<BuiltAsset> assets)
@@ -258,5 +221,46 @@ public class Tarkin
 
 		BlockGenerator.basic(SwgBlocks.Workbench.Blaster).build(assets);
 		BlockGenerator.basic(SwgBlocks.Workbench.Lightsaber).build(assets);
+	}
+
+	private static void recipeFood(List<BuiltAsset> assets, Item input, Item output)
+	{
+		RecipeGenerator.Cooking.smelting(output, input, "raw")
+		                       .build(assets);
+		RecipeGenerator.Cooking.smoking(output, input, "smoking_raw")
+		                       .build(assets);
+		RecipeGenerator.Cooking.campfire(output, input, "campfire_raw")
+		                       .build(assets);
+	}
+
+	private static void mineralRecipeSet(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot, ItemConvertible block)
+	{
+		recipeOreToIngot(assets, ore, ingot);
+		recipeInterchange(assets, ingot, "ingot", block, "block");
+	}
+
+	private static void mineralRecipeSet(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot, ItemConvertible nugget, ItemConvertible block)
+	{
+		recipeOreToIngot(assets, ore, ingot);
+		recipeInterchange(assets, ingot, "ingot", block, "block");
+		recipeInterchange(assets, nugget, "nugget", ingot, "ingot");
+	}
+
+	private static void recipeInterchange(List<BuiltAsset> assets, ItemConvertible smallUnit, String smallUnitName, ItemConvertible largeUnit, String largeUnitName)
+	{
+		RecipeGenerator.Shapeless.of(new ItemStack(smallUnit, 9), largeUnitName)
+		                         .ingredient(largeUnit)
+		                         .build(assets);
+		RecipeGenerator.Shaped.of(new ItemStack(largeUnit, 1))
+		                      .grid3x3Fill(smallUnit, smallUnitName)
+		                      .build(assets);
+	}
+
+	private static void recipeOreToIngot(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot)
+	{
+		RecipeGenerator.Cooking.smelting(ingot, ore, "ore")
+		                       .build(assets);
+		RecipeGenerator.Cooking.blasting(ingot, ore, "blasting_ore")
+		                       .build(assets);
 	}
 }

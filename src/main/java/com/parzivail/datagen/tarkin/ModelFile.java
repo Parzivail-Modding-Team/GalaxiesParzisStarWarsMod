@@ -3,6 +3,7 @@ package com.parzivail.datagen.tarkin;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
@@ -50,6 +51,13 @@ public class ModelFile
 		return ModelFile
 				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("item/generated"))
 				.texture("layer0", AssetGenerator.getTextureName(block));
+	}
+
+	public static ModelFile item(Item item)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(item), new Identifier("item/generated"))
+				.texture("layer0", AssetGenerator.getTextureName(item));
 	}
 
 	public static ModelFile leaves(Block block)
