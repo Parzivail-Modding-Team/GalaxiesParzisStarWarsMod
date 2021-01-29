@@ -13,9 +13,34 @@ import java.util.function.Function;
 
 public class BlockGenerator
 {
+	public static BlockGenerator blockDefaultDrops(Block block)
+	{
+		return block(block)
+				.lootTable(LootTableFile::basic);
+	}
+
+	public static BlockGenerator blockNoModel(Block block)
+	{
+		return new BlockGenerator(block);
+	}
+
+	public static BlockGenerator blockNoModelDefaultDrops(Block block)
+	{
+		return blockNoModel(block)
+				.lootTable(LootTableFile::basic);
+	}
+
+	public static BlockGenerator block(Block block)
+	{
+		return blockNoModel(block)
+				.state(BlockStateGenerator::basic)
+				.model(ModelFile::cube)
+				.itemModel(ModelFile::ofBlock);
+	}
+
 	static BlockGenerator basic(Block block)
 	{
-		return AssetGenerator.blockDefaultDrops(block);
+		return blockDefaultDrops(block);
 	}
 
 	static BlockGenerator basicRandomRotation(Block block)
@@ -128,11 +153,14 @@ public class BlockGenerator
 	public void build(List<BuiltAsset> assets)
 	{
 		// blockstate
-		assets.add(BuiltAsset.blockstate(getRegistryName(), stateSupplier.get()));
+		if (stateSupplier != null)
+			assets.add(BuiltAsset.blockstate(getRegistryName(), stateSupplier.get()));
 
 		// models
-		blockModel.forEach(modelFile -> assets.add(BuiltAsset.blockModel(modelFile.getId(), modelFile.build())));
-		assets.add(BuiltAsset.itemModel(itemModel.getId(), itemModel.build()));
+		if (blockModel != null)
+			blockModel.forEach(modelFile -> assets.add(BuiltAsset.blockModel(modelFile.getId(), modelFile.build())));
+		if (itemModel != null)
+			assets.add(BuiltAsset.itemModel(itemModel.getId(), itemModel.build()));
 
 		// loot tables
 		if (!lootTables.isEmpty())

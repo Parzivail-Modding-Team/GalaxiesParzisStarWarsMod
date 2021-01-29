@@ -151,9 +151,37 @@ public class Tarkin
 
 	private static void generateBlocks(List<BuiltAsset> assets)
 	{
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Barrel.MosEisley).build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OctagonOrange).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OctagonGray).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OctagonBlack).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.MosEisley).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.ImperialCube).build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Door.TatooineHomeController).build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.FloorWedge).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.WallCluster).build(assets);
+
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
 
 		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.identifier("block/log_sequoia_top"), Resources.identifier("block/log_sequoia_side")).build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
+
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Beskar).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Chromium).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Cortosis).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Desh).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Diatium).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Durasteel).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Lommite).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Plasteel).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Titanium).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Zersium).build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Ore.Beskar).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Chromium).build(assets);
@@ -169,20 +197,6 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Ore.Thorolide).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Titanium).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Zersium).build(assets);
-
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Beskar).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Chromium).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Cortosis).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Desh).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Diatium).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Durasteel).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Lommite).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Plasteel).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Titanium).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Zersium).build(assets);
-
-		BlockGenerator.cross(SwgBlocks.Plant.FunnelFlower).build(assets);
-		BlockGenerator.cross(SwgBlocks.Plant.BlossomingFunnelFlower).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Panel.ImperialBase).build(assets);
 		BlockGenerator.basic(SwgBlocks.Panel.ImperialBlackBase).build(assets);
@@ -204,6 +218,11 @@ public class Tarkin
 		BlockGenerator.column(SwgBlocks.Panel.ImperialLightOff, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_light_off")).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Panel.LabWall).build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Pipe.Thick).build(assets);
+
+		BlockGenerator.cross(SwgBlocks.Plant.FunnelFlower).build(assets);
+		BlockGenerator.cross(SwgBlocks.Plant.BlossomingFunnelFlower).build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Tatooine).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DenseTatooine).build(assets);
@@ -232,6 +251,8 @@ public class Tarkin
 		BlockGenerator.slab(SwgBlocks.Stone.IlumBrickSlab, Resources.identifier("block/ilum_stone_bricks")).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.IlumBrickStairs, Resources.identifier("block/ilum_stone_bricks")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumChiseledBricks).build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.Fusion).build(assets);
 
 		BlockGenerator.staticColumn(SwgBlocks.Vent.Tatooine, Resources.identifier("block/tatooine_vent_top"), Resources.identifier("block/tatooine_vent_side")).build(assets);
 

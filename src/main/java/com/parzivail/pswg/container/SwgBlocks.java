@@ -68,6 +68,14 @@ public class SwgBlocks
 		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = BlockEntityType.Builder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeController).build(null);
 	}
 
+	public static class Light
+	{
+		@RegistryName("light_floor_wedge")
+		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15));
+		@RegistryName("light_wall_cluster")
+		public static final Block WallCluster = new RotatingBlockWithBounds(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15));
+	}
+
 	public static class Leaves
 	{
 		@RegistryName("leaves_sequoia")
@@ -96,6 +104,38 @@ public class SwgBlocks
 	{
 		@RegistryName("machine_spoked")
 		public static final RotatingBlock Spoked = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), FabricBlockSettings.of(Material.METAL).nonOpaque());
+	}
+
+	public static class MaterialBlock
+	{
+		@RegistryName("beskar_block")
+		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("chromium_block")
+		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("cortosis_block")
+		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("desh_block")
+		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("diatium_block")
+		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("durasteel_block")
+		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("lommite_block")
+		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("plasteel_block")
+		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("titanium_block")
+		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL));
+		@RegistryName("zersium_block")
+		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).luminance(15));
+	}
+
+	public static class MoistureVaporator
+	{
+		@RegistryName("moisture_vaporator_gx8")
+		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).nonOpaque());
+		@RegistryName("moisture_vaporator_gx8")
+		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = BlockEntityType.Builder.create(MoistureVaporatorBlockEntity::new, Gx8).build(null);
 	}
 
 	public static class Ore
@@ -128,46 +168,6 @@ public class SwgBlocks
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE));
 		@RegistryName("zersium_ore")
 		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.STONE));
-	}
-
-	public static class MaterialBlock
-	{
-		@RegistryName("beskar_block")
-		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("chromium_block")
-		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("cortosis_block")
-		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("desh_block")
-		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("diatium_block")
-		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("durasteel_block")
-		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("lommite_block")
-		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("plasteel_block")
-		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("titanium_block")
-		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL));
-		@RegistryName("zersium_block")
-		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).luminance(15));
-	}
-
-	public static class Light
-	{
-		@RegistryName("light_floor_wedge")
-		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15));
-		@RegistryName("light_wall_cluster")
-		public static final Block WallCluster = new RotatingBlockWithBounds(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15));
-	}
-
-	public static class Plant
-	{
-		@RegistryName("funnel_flower")
-		public static final Block FunnelFlower = new FunnelFlowerBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
-		@RegistryName("blossoming_funnel_flower")
-		public static final Block BlossomingFunnelFlower = new FunnelFlowerBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
 	public static class Panel
@@ -228,6 +228,14 @@ public class SwgBlocks
 	{
 		@RegistryName("pipe_thick")
 		public static final Block Thick = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.GRAY).nonOpaque().sounds(BlockSoundGroup.METAL));
+	}
+
+	public static class Plant
+	{
+		@RegistryName("funnel_flower")
+		public static final Block FunnelFlower = new FunnelFlowerBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("blossoming_funnel_flower")
+		public static final Block BlossomingFunnelFlower = new FunnelFlowerBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
 	public static class Sand
@@ -298,14 +306,6 @@ public class SwgBlocks
 	{
 		@RegistryName("tatooine_vent")
 		public static final Block Tatooine = new Block(FabricBlockSettings.of(Material.METAL).nonOpaque());
-	}
-
-	public static class MoistureVaporator
-	{
-		@RegistryName("moisture_vaporator_gx8")
-		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		@RegistryName("moisture_vaporator_gx8")
-		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = BlockEntityType.Builder.create(MoistureVaporatorBlockEntity::new, Gx8).build(null);
 	}
 
 	public static class Workbench
