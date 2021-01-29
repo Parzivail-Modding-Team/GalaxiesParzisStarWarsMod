@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"plp",
+		"p p",
+		"ppp"
+	],
+	"key": {
+		"p": {
+			"item": "pswg:plasteel_ingot"
+		},
+		"l": {
+			"item": "pswg:led"
+		}
+	},
+	"result": {
+		"item": "pswg:crate_imperial_cube"
+	}
+}

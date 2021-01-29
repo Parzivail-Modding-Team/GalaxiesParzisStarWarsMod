@@ -29,6 +29,10 @@ public class SwgItems
 		public static final Item Led = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("turbine")
 		public static final Item Turbine = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("ball_bearing")
+		public static final Item BallBearing = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("desh_wire")
+		public static final Item DeshWire = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Debug

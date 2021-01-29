@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ggg",
+		"gcg",
+		"d d"
+	],
+	"key": {
+		"g": {
+			"item": "minecraft:glass_pane"
+		},
+		"c": {
+			"item": "pswg:chromium_nugget"
+		},
+		"d": {
+			"item": "pswg:desh_wire"
+		}
+	},
+	"result": {
+		"item": "pswg:led",
+		"count": 6
+	}
+}
