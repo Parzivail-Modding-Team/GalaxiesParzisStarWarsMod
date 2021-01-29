@@ -95,9 +95,11 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 		BlockPos controllerPos = getController(world, pos);
 		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
+		assert e != null;
+
 		int rotation = (state.get(ROTATION) + 3) % 4;
 
-		if (e == null || !e.isOpening() || e.isMoving())
+		if (!e.isOpening() || e.isMoving())
 			return SHAPES_OPEN[rotation];
 
 		return SHAPES_CLOSED[rotation];
@@ -129,13 +131,42 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 			BlockPos controllerPos = getController(world, pos);
 			TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
+			assert e != null;
+
 			if (!e.isMoving())
 			{
+				e.setPowered(false);
 				e.startMoving();
 				return ActionResult.SUCCESS;
 			}
 
 			return ActionResult.CONSUME;
+		}
+	}
+
+	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify)
+	{
+		BlockPos controllerPos = getController(world, pos);
+		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
+
+		assert e != null;
+
+		boolean wasPowered = e.isPowered();
+		boolean isPowered = world.isReceivingRedstonePower(pos);
+
+		if (!world.isClient && block != this)
+		{
+			e.setPowered(isPowered);
+			if (wasPowered && !isPowered && !e.isOpening())
+			{
+				e.setDirection(false);
+				e.startMoving();
+			}
+			else if (isPowered && !wasPowered && e.isOpening())
+			{
+				e.setDirection(true);
+				e.startMoving();
+			}
 		}
 	}
 
