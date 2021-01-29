@@ -131,7 +131,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		this.playerInventoryTitleX = 48;
 		this.playerInventoryTitleY = this.backgroundHeight - 94;
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
-		this.handler.addListener(this);
 
 		Function<Double, String> valueFormatter = value -> String.format("%s", (int)Math.round(value * 255));
 
@@ -172,7 +171,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			commitChanges();
 		}));
 
-		onLightsaberChanged();
+		this.handler.addListener(this);
 	}
 
 	public void removed()
@@ -220,12 +219,20 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			g = (color & 0xFF00) >> 8;
 			b = (color & 0xFF);
 
-			sR.setValue(r / 255f);
-			sG.setValue(g / 255f);
-			sB.setValue(b / 255f);
-
 			cbUnstable.setChecked(lt.unstable);
 		}
+		else
+		{
+			r = 0;
+			g = 0;
+			b = 0;
+
+			cbUnstable.setChecked(false);
+		}
+
+		sR.setValue(r / 255f);
+		sG.setValue(g / 255f);
+		sB.setValue(b / 255f);
 	}
 
 	private LightsaberTag getLightsaberTag()
