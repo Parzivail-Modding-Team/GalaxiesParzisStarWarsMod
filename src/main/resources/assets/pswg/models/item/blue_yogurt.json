@@ -1,6 +1,1 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "pswg:item/blue_yogurt"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/blue_yogurt"}}

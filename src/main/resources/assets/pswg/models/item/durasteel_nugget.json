@@ -1,6 +1,1 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "pswg:item/durasteel_nugget"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/durasteel_nugget"}}

@@ -7,7 +7,6 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 
@@ -129,14 +128,15 @@ public class BlockGenerator
 	private final Block block;
 
 	private BlockStateSupplier stateSupplier;
-	private Collection<ModelFile> blockModel;
 	private ModelFile itemModel;
+	private final Collection<ModelFile> blockModels;
 	private final Collection<LootTableFile> lootTables;
 
 	BlockGenerator(Block block)
 	{
 		this.block = block;
 
+		this.blockModels = new ArrayList<>();
 		this.lootTables = new ArrayList<>();
 	}
 
@@ -157,8 +157,8 @@ public class BlockGenerator
 			assets.add(BuiltAsset.blockstate(getRegistryName(), stateSupplier.get()));
 
 		// models
-		if (blockModel != null)
-			blockModel.forEach(modelFile -> assets.add(BuiltAsset.blockModel(modelFile.getId(), modelFile.build())));
+		if (blockModels != null)
+			blockModels.forEach(modelFile -> assets.add(BuiltAsset.blockModel(modelFile.getId(), modelFile.build())));
 		if (itemModel != null)
 			assets.add(BuiltAsset.itemModel(itemModel.getId(), itemModel.build()));
 
@@ -180,13 +180,13 @@ public class BlockGenerator
 
 	public BlockGenerator models(Function<Block, Collection<ModelFile>> modelFunc)
 	{
-		this.blockModel = modelFunc.apply(block);
+		this.blockModels.addAll(modelFunc.apply(block));
 		return this;
 	}
 
 	public BlockGenerator model(Function<Block, ModelFile> modelFunc)
 	{
-		this.blockModel = Collections.singletonList(modelFunc.apply(block));
+		this.blockModels.add(modelFunc.apply(block));
 		return this;
 	}
 

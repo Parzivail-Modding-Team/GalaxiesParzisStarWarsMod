@@ -1,6 +1,1 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "pswg:item/cooked_nerf_chop"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/cooked_nerf_chop"}}

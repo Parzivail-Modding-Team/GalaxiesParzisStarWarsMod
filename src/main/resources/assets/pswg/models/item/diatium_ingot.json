@@ -1,6 +1,1 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "pswg:item/diatium_ingot"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/diatium_ingot"}}

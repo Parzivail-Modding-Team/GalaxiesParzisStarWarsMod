@@ -1,6 +1,1 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "pswg:item/death_stick_red"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/death_stick_red"}}

@@ -20,11 +20,12 @@ public class Tarkin
 	{
 		Lumberjack.setLogHeader("TARKIN");
 
-//		AssetGenerator.setOutputRoot(Paths.get("..", "TEMP", "src", "main", "resources"));
+		//		AssetGenerator.setOutputRoot(Paths.get("..", "TEMP", "src", "main", "resources"));
 
 		List<BuiltAsset> assets = new ArrayList<>();
 
 		generateBlocks(assets);
+		generateItems(assets);
 		generateRecipes(assets);
 
 		for (BuiltAsset asset : assets)
@@ -39,11 +40,11 @@ public class Tarkin
 		// TODO: support tags instead of items in recipes
 		// TODO: support substitutes instead of items in recipes
 
-		recipeFood(assets, SwgItems.Food.BanthaChop, SwgItems.Food.BanthaSteak);
-		recipeFood(assets, SwgItems.Food.GizkaChop, SwgItems.Food.GizkaSteak);
-		recipeFood(assets, SwgItems.Food.MynockWing, SwgItems.Food.FriedMynockWing);
-		recipeFood(assets, SwgItems.Food.NerfChop, SwgItems.Food.NerfSteak);
-		recipeFood(assets, SwgItems.Food.QrikkiBread, SwgItems.Food.QrikkiWaffle);
+		recipeCookedFood(assets, SwgItems.Food.BanthaChop, SwgItems.Food.BanthaSteak);
+		recipeCookedFood(assets, SwgItems.Food.GizkaChop, SwgItems.Food.GizkaSteak);
+		recipeCookedFood(assets, SwgItems.Food.MynockWing, SwgItems.Food.FriedMynockWing);
+		recipeCookedFood(assets, SwgItems.Food.NerfChop, SwgItems.Food.NerfSteak);
+		recipeCookedFood(assets, SwgItems.Food.QrikkiBread, SwgItems.Food.QrikkiWaffle);
 
 		mineralRecipeSet(
 				assets,
@@ -110,6 +111,71 @@ public class Tarkin
 				SwgItems.Nugget.Zersium,
 				SwgBlocks.MaterialBlock.Zersium
 		);
+	}
+
+	private static void generateItems(List<BuiltAsset> assets)
+	{
+		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
+
+		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.Led).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.Turbine).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.BallBearing).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.DeshWire).build(assets);
+
+		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
+
+		ItemGenerator.basic(SwgItems.Ingot.Beskar).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Chromium).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Cortosis).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Desh).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Diatium).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Durasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Lommite).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Plasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Titanium).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Transparisteel).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Zersium).build(assets);
+
+		// TODO: ItemGenerator.basic(SwgItems.Nugget.Beskar).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Chromium).build(assets);
+		// TODO: ItemGenerator.basic(SwgItems.Nugget.Cortosis).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Desh).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Diatium).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Durasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Lommite).build(assets);
+		// TODO: ItemGenerator.basic(SwgItems.Nugget.Plasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Titanium).build(assets);
+		// TODO: ItemGenerator.basic(SwgItems.Nugget.Transparisteel).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Zersium).build(assets);
+
+		ItemGenerator.empty(SwgItems.Lightsaber.Lightsaber).build(assets);
+
+		ItemGenerator.basic(SwgItems.Food.SaltPile).build(assets);
+		ItemGenerator.basic(SwgItems.Food.JoganFruit).build(assets);
+		ItemGenerator.basic(SwgItems.Food.Chasuka).build(assets);
+		ItemGenerator.basic(SwgItems.Food.Meiloorun).build(assets);
+		ItemGenerator.basic(SwgItems.Food.MynockWing).build(assets);
+		ItemGenerator.basic(SwgItems.Food.FriedMynockWing).build(assets);
+		ItemGenerator.basic(SwgItems.Food.BanthaChop).build(assets);
+		ItemGenerator.basic(SwgItems.Food.BanthaSteak).build(assets);
+		ItemGenerator.basic(SwgItems.Food.NerfChop).build(assets);
+		ItemGenerator.basic(SwgItems.Food.NerfSteak).build(assets);
+		ItemGenerator.basic(SwgItems.Food.GizkaChop).build(assets);
+		ItemGenerator.basic(SwgItems.Food.GizkaSteak).build(assets);
+
+		ItemGenerator.basic(SwgItems.Food.FlangthTakeout).build(assets);
+		ItemGenerator.basic(SwgItems.Food.FlangthPlate).build(assets);
+
+		ItemGenerator.basic(SwgItems.Food.DeathStickRed).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DeathStickYellow).build(assets);
+
+		ItemGenerator.basic(SwgItems.Food.BlueMilk).build(assets);
+		ItemGenerator.basic(SwgItems.Food.BluePuffCube).build(assets);
+		ItemGenerator.basic(SwgItems.Food.BlueYogurt).build(assets);
+
+		ItemGenerator.basic(SwgItems.Food.QrikkiBread).build(assets);
+		ItemGenerator.basic(SwgItems.Food.QrikkiWaffle).build(assets);
 	}
 
 	private static void generateBlocks(List<BuiltAsset> assets)
@@ -223,7 +289,7 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Workbench.Lightsaber).build(assets);
 	}
 
-	private static void recipeFood(List<BuiltAsset> assets, Item input, Item output)
+	private static void recipeCookedFood(List<BuiltAsset> assets, Item input, Item output)
 	{
 		RecipeGenerator.Cooking.smelting(output, input, "raw")
 		                       .build(assets);

@@ -60,6 +60,12 @@ public class ModelFile
 				.texture("layer0", AssetGenerator.getTextureName(item));
 	}
 
+	public static ModelFile empty(Item item)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(item), new Identifier("builtin/generated"));
+	}
+
 	public static ModelFile leaves(Block block)
 	{
 		return ModelFile

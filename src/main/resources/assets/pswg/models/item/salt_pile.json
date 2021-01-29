@@ -1,6 +1,1 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "pswg:item/salt_pile"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/salt_pile"}}

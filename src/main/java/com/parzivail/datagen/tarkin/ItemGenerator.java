@@ -2,6 +2,8 @@ package com.parzivail.datagen.tarkin;
 
 import net.minecraft.item.Item;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
@@ -18,25 +20,37 @@ public class ItemGenerator
 				.model(ModelFile::item);
 	}
 
-	private final Item item;
+	static ItemGenerator empty(Item block)
+	{
+		return itemNoModel(block)
+				.model(ModelFile::empty);
+	}
 
-	private ModelFile itemModel;
+	private final Item item;
+	private final Collection<ModelFile> itemModels;
 
 	ItemGenerator(Item item)
 	{
 		this.item = item;
+
+		itemModels = new ArrayList<>();
 	}
 
 	public ItemGenerator model(Function<Item, ModelFile> modelFunc)
 	{
-		this.itemModel = modelFunc.apply(item);
+		this.itemModels.add(modelFunc.apply(item));
+		return this;
+	}
+
+	public ItemGenerator models(Function<Item, ModelFile> modelFunc)
+	{
+		this.itemModels.add(modelFunc.apply(item));
 		return this;
 	}
 
 	public void build(List<BuiltAsset> assets)
 	{
 		// models
-		if (itemModel != null)
-			assets.add(BuiltAsset.itemModel(itemModel.getId(), itemModel.build()));
+		itemModels.forEach(modelFile -> assets.add(BuiltAsset.itemModel(modelFile.getId(), modelFile.build())));
 	}
 }
