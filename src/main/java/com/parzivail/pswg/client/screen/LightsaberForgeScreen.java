@@ -32,8 +32,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Quaternion;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -106,8 +104,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/lightsaber_forge.png");
 
-	private final List<SliderWidget> sliders = new ArrayList<>();
-
 	private MutableSlider sR;
 	private MutableSlider sG;
 	private MutableSlider sB;
@@ -139,16 +135,15 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		Function<Double, String> valueFormatter = value -> String.format("%s", (int)Math.round(value * 255));
 
-		sliders.clear();
-		sliders.add(sR = new MutableSlider(x + 41, y + 59, 100, 20, "R: %s", r / 255f, valueFormatter, slider -> {
+		this.addButton(sR = new MutableSlider(x + 41, y + 59, 100, 20, "R: %s", r / 255f, valueFormatter, slider -> {
 			r = (int)Math.round(slider.getValue() * 255);
 			commitChanges();
 		}));
-		sliders.add(sG = new MutableSlider(x + 41, y + 79, 100, 20, "G: %s", g / 255f, valueFormatter, slider -> {
+		this.addButton(sG = new MutableSlider(x + 41, y + 79, 100, 20, "G: %s", g / 255f, valueFormatter, slider -> {
 			g = (int)Math.round(slider.getValue() * 255);
 			commitChanges();
 		}));
-		sliders.add(sB = new MutableSlider(x + 41, y + 99, 100, 20, "B: %s", b / 255f, valueFormatter, slider -> {
+		this.addButton(sB = new MutableSlider(x + 41, y + 99, 100, 20, "B: %s", b / 255f, valueFormatter, slider -> {
 			b = (int)Math.round(slider.getValue() * 255);
 			commitChanges();
 		}));
@@ -177,9 +172,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			commitChanges();
 		}));
 
-		for (SliderWidget s : sliders)
-			this.addButton(s);
-
 		onLightsaberChanged();
 	}
 
@@ -192,11 +184,10 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY)
 	{
-		// functional programming hell yeah
-		return sliders.stream().anyMatch(
-				widget -> widget.isMouseOver(mouseX, mouseY) &&
-				          widget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
-		) || super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		if (this.getFocused() != null && this.isDragging() && button == 0 && this.getFocused().mouseDragged(mouseX, mouseY, button, deltaX, deltaY))
+			return true;
+
+		return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
 	}
 
 	private void commitChanges()
