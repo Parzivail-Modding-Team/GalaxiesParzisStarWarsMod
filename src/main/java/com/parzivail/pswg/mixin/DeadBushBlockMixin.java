@@ -1,6 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.DeadBushBlock;
@@ -18,7 +19,7 @@ public class DeadBushBlockMixin
 	private void canPlantOnTop(BlockState state, BlockView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
 	{
 		Block block = state.getBlock();
-		if (block == SwgBlocks.Sand.Tatooine || block == SwgBlocks.Dirt.DenseTatooine || block == SwgBlocks.Sand.TatooineCanyon)
+		if (SwgTags.Block.TATOOINE_SAND.contains(block) || block == SwgBlocks.Dirt.DenseTatooine )
 			cir.setReturnValue(true);
 	}
 }

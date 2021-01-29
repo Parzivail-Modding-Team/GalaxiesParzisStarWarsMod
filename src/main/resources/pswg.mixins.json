@@ -3,9 +3,9 @@
 	"package": "com.parzivail.pswg.mixin",
 	"compatibilityLevel": "JAVA_8",
 	"mixins": [
+		"CactusBlockMixin",
 		"CarverMixin",
 		"DeadBushBlockMixin",
-		"CactusMixin",
 		"FarmlandBlockMixin",
 		"ItemStackMixin",
 		"Matrix4fMixin",

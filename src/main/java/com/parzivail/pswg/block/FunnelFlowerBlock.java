@@ -2,6 +2,7 @@ package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.container.SwgBlocks;
 import net.minecraft.block.*;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -23,12 +24,9 @@ public class FunnelFlowerBlock extends PlantBlock
 	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos)
 	{
 		Block block = floor.getBlock();
-		return block == SwgBlocks.Sand.Tatooine ||
+		return BlockTags.SAND.contains(block) ||
 		       block == SwgBlocks.Dirt.DenseTatooine ||
-		       block == SwgBlocks.Sand.TatooineCanyon ||
 		       block == Blocks.GRASS_BLOCK ||
-		       block == Blocks.SAND ||
-		       block == Blocks.RED_SAND ||
 		       block == Blocks.TERRACOTTA ||
 		       block == Blocks.WHITE_TERRACOTTA ||
 		       block == Blocks.ORANGE_TERRACOTTA ||
