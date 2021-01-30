@@ -2,6 +2,7 @@ package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
+import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.pswg.handler.LeftClickHandler;
 import com.parzivail.util.Lumberjack;
 import net.fabricmc.api.EnvType;
@@ -38,6 +39,7 @@ public class MinecraftClientMixin
 		File remoteAssetDir = new File(args.directories.assetDir, "pswgRemoteAssets");
 		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.getPath());
 		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", remoteAssetDir);
+		Client.stackedTextureProvider = new StackedTextureProvider(textureManager, "pswg:stacked");
 	}
 
 	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V", shift = At.Shift.BEFORE), cancellable = true)

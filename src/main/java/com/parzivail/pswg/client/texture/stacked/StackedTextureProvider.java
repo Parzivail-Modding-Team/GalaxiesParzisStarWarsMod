@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
@@ -35,7 +36,7 @@ public class StackedTextureProvider
 						// TODO: fallback texture
 						if (!(abstractTexture instanceof StackedTexture))
 						{
-							StackedTexture remoteTexture = new StackedTexture(null, textures);
+							StackedTexture remoteTexture = new StackedTexture(DefaultSkinHelper.getTexture(), textures);
 							this.textureManager.registerTexture(identifier, remoteTexture);
 						}
 					});

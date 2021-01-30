@@ -18,7 +18,9 @@ public class SwgSpeciesInstance
 		this.variant = variant;
 	}
 
-	public SwgSpeciesInstance(Identifier species) { // uses default variant
+	public SwgSpeciesInstance(Identifier species)
+	{
+		// uses default variant
 		this(species, SwgSpecies.DEFAULT_VARIANT.get(species));
 	}
 
@@ -35,6 +37,11 @@ public class SwgSpeciesInstance
 
 	public Identifier getTexture()
 	{
+		//		Identifier base = Resources.identifier("textures/species/togruta_f/base_red.png");
+		//		Identifier clothes = Resources.identifier("textures/species/global_f/clothes.png");
+		//		Identifier montrals = Resources.identifier("textures/species/togruta_f/montrals_darkblue.png");
+		//		Identifier eyes = Resources.identifier("textures/species/global_f/eyes.png");
+		//		return Client.stackedTextureProvider.loadTexture(species.toString().replace(":", "_") + "/" + variant, base, clothes, montrals, eyes);
 		return Resources.identifier("textures/species/" + species.getPath() + "/" + variant + ".png");
 	}
 

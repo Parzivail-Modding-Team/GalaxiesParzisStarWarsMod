@@ -12,6 +12,7 @@ import com.parzivail.pswg.client.render.item.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.render.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
+import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
@@ -43,6 +44,7 @@ public class Client implements ClientModInitializer
 
 	public static MinecraftClient minecraft;
 	public static RemoteTextureProvider remoteTextureProvider;
+	public static StackedTextureProvider stackedTextureProvider;
 
 	private static SwgBlasterManager blasterLoader;
 
