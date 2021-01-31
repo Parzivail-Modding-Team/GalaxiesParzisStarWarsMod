@@ -13,26 +13,38 @@ import net.minecraft.world.BlockView;
 
 public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor implements BlockEntityProvider
 {
-	private static final VoxelShape SHAPE_CLOSED = VoxelShapes.union(
+	private static final VoxelShape INTERACTION_SHAPE_CLOSED = VoxelShapes.union(
 			VoxelShapes.cuboid(0, 0, 0.25, 1, 0.0625, 0.75),
 			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
 			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
 			VoxelShapes.cuboid(0.0625, 0.0625, 0.375, 1 - 0.0625, 1, 0.625));
-	private static final VoxelShape SHAPE_OPEN = VoxelShapes.union(
+	private static final VoxelShape INTERACTION_SHAPE_OPEN = VoxelShapes.union(
 			VoxelShapes.cuboid(0, 0, 0.25, 1, 0.0625, 0.75),
 			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
 			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
 			VoxelShapes.cuboid(1 - 1.5 * 0.0625, 0.0625, 0.375, 1 - 0.0625, 1, 0.625));
+	private static final VoxelShape COLLISION_SHAPE_CLOSED = VoxelShapes.union(
+			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
+			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
+			VoxelShapes.cuboid(0.0625, 0.0625, 0.375, 1 - 0.0625, 1, 0.625));
+	private static final VoxelShape COLLISION_SHAPE_OPEN = VoxelShapes.union(
+			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
+			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
+			VoxelShapes.cuboid(1 - 1.5 * 0.0625, 0.0625, 0.375, 1 - 0.0625, 1, 0.625));
 
-	private static final VoxelShape[] SHAPES_CLOSED = new VoxelShape[4];
-	private static final VoxelShape[] SHAPES_OPEN = new VoxelShape[4];
+	private static final VoxelShape[] INTERACTION_SHAPES_CLOSED = new VoxelShape[4];
+	private static final VoxelShape[] INTERACTION_SHAPES_OPEN = new VoxelShape[4];
+	private static final VoxelShape[] COLLISION_SHAPES_CLOSED = new VoxelShape[4];
+	private static final VoxelShape[] COLLISION_SHAPES_OPEN = new VoxelShape[4];
 
 	static
 	{
 		for (int i = 0; i < 4; i++)
 		{
-			SHAPES_CLOSED[i] = VoxelShapeUtil.rotate(SHAPE_CLOSED, i);
-			SHAPES_OPEN[i] = VoxelShapeUtil.rotate(SHAPE_OPEN, i);
+			INTERACTION_SHAPES_CLOSED[i] = VoxelShapeUtil.rotate(INTERACTION_SHAPE_CLOSED, i);
+			INTERACTION_SHAPES_OPEN[i] = VoxelShapeUtil.rotate(INTERACTION_SHAPE_OPEN, i);
+			COLLISION_SHAPES_CLOSED[i] = VoxelShapeUtil.rotate(COLLISION_SHAPE_CLOSED, i);
+			COLLISION_SHAPES_OPEN[i] = VoxelShapeUtil.rotate(COLLISION_SHAPE_OPEN, i);
 		}
 	}
 
@@ -44,15 +56,13 @@ public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor imple
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
-		BlockPos controllerPos = getController(world, pos);
-		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
+		return getShape(state, world, pos, INTERACTION_SHAPES_OPEN, INTERACTION_SHAPES_CLOSED);
+	}
 
-		int rotation = (state.get(ROTATION) + 3) % 4;
-
-		if (e == null || !e.isOpening() || e.isMoving())
-			return SHAPES_OPEN[rotation];
-
-		return SHAPES_CLOSED[rotation];
+	@Override
+	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	{
+		return getShape(state, world, pos, COLLISION_SHAPES_OPEN, COLLISION_SHAPES_CLOSED);
 	}
 
 	@Override
