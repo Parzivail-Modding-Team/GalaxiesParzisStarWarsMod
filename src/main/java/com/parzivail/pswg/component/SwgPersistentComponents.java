@@ -1,6 +1,6 @@
 package com.parzivail.pswg.component;
 
-import com.parzivail.pswg.species.SwgSpeciesInstance;
+import com.parzivail.pswg.species.SwgSpecies;
 import dev.onyxstudios.cca.api.v3.component.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,18 +20,17 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 		this.provider = provider;
 	}
 
-	public SwgSpeciesInstance getSpecies()
+	public SwgSpecies getSpecies()
 	{
-		return SwgSpeciesInstance.fromString(species);
+		// TODO
+		return null;
 	}
 
-	public void setSpecies(SwgSpeciesInstance species)
+	public void setSpecies(SwgSpecies species)
 	{
-		String speciesStr = "";
-		if (species != null)
-			speciesStr = species.toString();
+		// TODO
 
-		this.species = speciesStr;
+		this.species = "";
 		SwgEntityComponents.PERSISTENT.sync(provider, SPECIES_SYNCOP);
 	}
 

@@ -7,7 +7,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SwgSpecies
+public class SwgSpeciesRegistry
 {
 	public static final ArrayList<Identifier> SPECIES = new ArrayList<>();
 	public static final HashMap<Identifier, String[]> VARIANTS = new HashMap<>();

@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Collection;
 
 @Environment(EnvType.CLIENT)
 public class StackedTexture extends ResourceTexture
@@ -22,10 +23,10 @@ public class StackedTexture extends ResourceTexture
 	private final Identifier[] textures;
 	private boolean loaded;
 
-	public StackedTexture(Identifier fallbackSkin, Identifier... textures)
+	public StackedTexture(Identifier fallbackSkin, Collection<Identifier> textures)
 	{
 		super(fallbackSkin);
-		this.textures = textures;
+		this.textures = textures.toArray(new Identifier[0]);
 	}
 
 	private void onTextureLoaded(NativeImage image)

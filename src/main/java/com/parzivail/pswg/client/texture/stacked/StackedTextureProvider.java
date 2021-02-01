@@ -11,6 +11,8 @@ import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 
+import java.util.Collection;
+
 @Environment(EnvType.CLIENT)
 public class StackedTextureProvider
 {
@@ -23,7 +25,7 @@ public class StackedTextureProvider
 		this.identifierRoot = identifierRoot;
 	}
 
-	public Identifier loadTexture(String id, Identifier... textures)
+	public Identifier loadTexture(String id, Collection<Identifier> textures)
 	{
 		final Identifier identifier = new Identifier(identifierRoot + "/" + id);
 
