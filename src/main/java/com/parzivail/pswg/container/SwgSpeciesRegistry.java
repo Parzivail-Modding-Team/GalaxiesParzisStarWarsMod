@@ -18,8 +18,6 @@ public class SwgSpeciesRegistry
 
 	// Normal species and variants
 	public static final Identifier SPECIES_TOGRUTA = Resources.identifier("togruta");
-	public static final Identifier SPECIES_TOGRUTA_M = Resources.identifier("togruta/m"); // TODO: automate m/f registration for models
-	public static final Identifier SPECIES_TOGRUTA_F = Resources.identifier("togruta/f");
 
 	static
 	{

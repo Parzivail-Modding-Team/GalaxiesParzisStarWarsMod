@@ -58,7 +58,6 @@ public class StackedTextureProvider
 				Client.minecraft.execute(() -> {
 					RenderSystem.recordRenderCall(() -> {
 						AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
-						// TODO: fallback texture
 						if (!(abstractTexture instanceof StackedTexture))
 						{
 							StackedTexture remoteTexture = new StackedTexture(DefaultSkinHelper.getTexture(), textures);
