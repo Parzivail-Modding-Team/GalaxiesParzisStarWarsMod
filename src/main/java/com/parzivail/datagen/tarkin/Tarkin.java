@@ -254,8 +254,9 @@ public class Tarkin
 		BlockGenerator.cross(SwgBlocks.Plant.BlossomingFunnelFlower).build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Tatooine).build(assets);
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DenseTatooine).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.TatooineCanyon).build(assets);
+
+		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DenseTatooine).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);
