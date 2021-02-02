@@ -1,7 +1,9 @@
-package com.parzivail.pswg.species;
+package com.parzivail.pswg.species.species;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
+import com.parzivail.pswg.species.SpeciesVariable;
+import com.parzivail.pswg.species.SwgSpecies;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
@@ -9,37 +11,25 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class SpeciesTogruta extends SwgSpecies
+public class SpeciesTwilek extends SwgSpecies
 {
 	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(
 			Resources.identifier("body"),
 			"green",
+			"blue",
+			"cyan",
 			"green",
+			"lime",
+			"magenta",
 			"orange",
+			"pink",
 			"purple",
-			"red"
+			"red",
+			"white",
+			"yellow"
 	);
 
-	private static final SpeciesVariable VAR_MONTRALS = new SpeciesVariable(
-			Resources.identifier("montral"),
-			"1",
-			"1",
-			"2",
-			"3",
-			"4",
-			"5"
-	);
-
-	public SpeciesTogruta()
-	{
-		this.gender = SpeciesGender.FEMALE;
-		this.model = SpeciesGender.toModel(this);
-
-		setVariable(VAR_BODY, "red");
-		setVariable(VAR_MONTRALS, "3");
-	}
-
-	public SpeciesTogruta(String serialized)
+	public SpeciesTwilek(String serialized)
 	{
 		super(serialized);
 	}
@@ -47,13 +37,13 @@ public class SpeciesTogruta extends SwgSpecies
 	@Override
 	public Identifier getSlug()
 	{
-		return SwgSpeciesRegistry.SPECIES_TOGRUTA;
+		return SwgSpeciesRegistry.SPECIES_TWILEK;
 	}
 
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_BODY, VAR_MONTRALS };
+		return new SpeciesVariable[] { VAR_BODY };
 	}
 
 	@Override
@@ -63,8 +53,6 @@ public class SpeciesTogruta extends SwgSpecies
 		ArrayList<Identifier> stack = new ArrayList<>();
 		stack.add(getGenderedTexture(this, getVariable(VAR_BODY)));
 		stack.add(getGenderedGlobalTexture(gender, "clothes"));
-		stack.add(getTexture(this, "montrals/" + getVariable(VAR_MONTRALS)));
-		stack.add(getTexture(this, "eyes"));
 		return stack;
 	}
 }

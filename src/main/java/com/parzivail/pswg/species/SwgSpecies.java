@@ -1,6 +1,7 @@
 package com.parzivail.pswg.species;
 
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
+import com.parzivail.pswg.species.species.SpeciesTogruta;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
@@ -59,6 +60,9 @@ public abstract class SwgSpecies
 	public SwgSpecies(String serialized)
 	{
 		this();
+		if (serialized == null)
+			return;
+
 		String[] parts = serialized.split(MODEL_SEPARATOR);
 		String[] variables = parts[1].split(VARIABLE_SEPARATOR);
 
