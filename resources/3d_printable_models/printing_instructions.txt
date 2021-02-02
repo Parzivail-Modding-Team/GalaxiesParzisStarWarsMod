@@ -1,0 +1,11 @@
+1. Open the Stl file in the slicer of your choosing (I use Cura)
+2. Slice the model and adjust settings for 3d printing. You shouldn't have to do much but make sure the preview looks like the model itself
+3. Export as a .gcode file or send it directly to your 3d printer
+
+20th scale models (1:20) mean that one minecraft block is equal to 5 cm (.96 in)
+40th scale models (1:40) mean that one minecraft block is equal to 2.5 cm (.98 in)
+
+You can scale the prints to other sizes, of course, these are just the size they were designed to be printed at
+You may notice that if you scale a model down, thin walls in the model will disappear
+
+If you have any problems with the models themselves, just @Mikey in the PSWG discord. (Please don't DM me with issues)
