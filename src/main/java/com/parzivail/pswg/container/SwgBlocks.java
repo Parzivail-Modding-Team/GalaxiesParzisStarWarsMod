@@ -249,7 +249,7 @@ public class SwgBlocks
 	public static class Dirt
 	{
 		@RegistryName("dense_tatooine_sand")
-		public static final Block DenseTatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
+		public static final Block DenseTatooine = new Block(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
 	}
 
 	public static class Stone
