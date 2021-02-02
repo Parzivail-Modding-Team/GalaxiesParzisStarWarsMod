@@ -10,12 +10,17 @@ import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class StackedTextureProvider
 {
+	private static final HashMap<String, Identifier> TEXTURE_CACHE = new HashMap<>();
+
 	private final TextureManager textureManager;
 	private final String identifierRoot;
 
@@ -25,10 +30,28 @@ public class StackedTextureProvider
 		this.identifierRoot = identifierRoot;
 	}
 
-	public Identifier loadTexture(String id, Collection<Identifier> textures)
+	public Identifier loadTexture(String id, Supplier<Identifier> fallback, Collection<Identifier> textures)
 	{
-		final Identifier identifier = new Identifier(identifierRoot + "/" + id);
+		Identifier identifier = getIdentifier(id);
+		AbstractTexture texture = textureManager.getTexture(identifier);
 
+		// The texture is fully loaded
+		if (texture != null)
+			return identifier;
+
+		if (!TEXTURE_CACHE.containsKey(id))
+		{
+			// The texture hasn't been stacked yet
+			loadTexture(identifier, textures);
+			TEXTURE_CACHE.put(id, identifier);
+		}
+
+		// The texture has been stacked but hasn't been loaded yet
+		return fallback.get();
+	}
+
+	public void loadTexture(Identifier identifier, Collection<Identifier> textures)
+	{
 		Util.getMainWorkerExecutor().execute(() -> {
 			try
 			{
@@ -48,7 +71,11 @@ public class StackedTextureProvider
 			{
 			}
 		});
+	}
 
-		return identifier;
+	@NotNull
+	private Identifier getIdentifier(String id)
+	{
+		return new Identifier(identifierRoot + "/" + id);
 	}
 }

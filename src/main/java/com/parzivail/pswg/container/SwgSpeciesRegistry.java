@@ -1,50 +1,37 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.species.SpeciesTogruta;
+import com.parzivail.pswg.species.SwgSpecies;
 import net.minecraft.util.Identifier;
-import org.apache.commons.lang3.ArrayUtils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.function.Function;
 
 public class SwgSpeciesRegistry
 {
-	public static final ArrayList<Identifier> SPECIES = new ArrayList<>();
-	public static final HashMap<Identifier, String[]> VARIANTS = new HashMap<>();
-	public static final HashMap<Identifier, String> DEFAULT_VARIANT = new HashMap<>();
+	protected static final HashMap<Identifier, Function<String, SwgSpecies>> SPECIES = new HashMap<>();
 
-	public static final Identifier SPECIES_NONE = register(new Identifier("none"), "none");
-	//	public static final Identifier SPECIES_HUMAN_M = register(Resources.identifier("human"), "steve", "blonde");
-	//	public static final Identifier SPECIES_HUMAN_F = register(Resources.identifier("human"), "alex", "blonde");
-	//	TODO: public static final Identifier SPECIES_AQUALISH_M = register(Resources.identifier("aqualish_m"), "beige", "green");
-	//	TODO: public static final Identifier SPECIES_AQUALISH_F = register(Resources.identifier("aqualish_f"), "beige", "green");
-	public static final Identifier SPECIES_BITH_M = register(Resources.identifier("bith_m"), "green", "pink", "white");
-	public static final Identifier SPECIES_BITH_F = register(Resources.identifier("bith_f"), "green", "pink", "white");
-	//	public static final Identifier SPECIES_BOTHAN_M = register(Resources.identifier("bothan_m"), "brown");
-	//	public static final Identifier SPECIES_BOTHAN_F = register(Resources.identifier("bothan_f"), "brown");
-	public static final Identifier SPECIES_CHAGRIAN_M = register(Resources.identifier("chagrian_m"), "blue");
-	public static final Identifier SPECIES_CHAGRIAN_F = register(Resources.identifier("chagrian_f"), "blue");
-	public static final Identifier SPECIES_JAWA = register(Resources.identifier("jawa"), "brown");
-	//	public static final Identifier SPECIES_KAMINOAN_M = register(Resources.identifier("kaminoan_m"), "blue", "purple", "white");
-	//	public static final Identifier SPECIES_KAMINOAN_F = register(Resources.identifier("kaminoan_f"), "blue", "purple", "white");
-	public static final Identifier SPECIES_TOGRUTA_M = register(Resources.identifier("togruta_m"), "orange", "purple", "red", "yellow");
-	public static final Identifier SPECIES_TOGRUTA_F = register(Resources.identifier("togruta_f"), "orange", "purple", "red", "yellow");
-	public static final Identifier SPECIES_TWILEK_M = register(Resources.identifier("twilek_m"), "blue", "green", "pink", "purple", "beige", "yellow");
-	public static final Identifier SPECIES_TWILEK_F = register(Resources.identifier("twilek_f"), "blue", "green", "pink", "purple", "beige", "yellow");
-	//	public static final Identifier SPECIES_WOOKIEE_M = register(Resources.identifier("wookiee_m"), "brown");
-	//	public static final Identifier SPECIES_WOOKIEE_F = register(Resources.identifier("wookiee_f"), "brown");
+	// Species with special meaning internally
+	public static final Identifier SPECIES_GLOBAL = Resources.identifier("global"); // "global" species contains shared textures
+	public static final Identifier SPECIES_NONE = new Identifier("none"); // "none" species delegates player models back to Minecraft
 
-	private static Identifier register(Identifier species, String... variants)
+	// Normal species and variants
+	public static final Identifier SPECIES_TOGRUTA = Resources.identifier("togruta");
+	public static final Identifier SPECIES_TOGRUTA_M = Resources.identifier("togruta/m"); // TODO: automate m/f registration for models
+	public static final Identifier SPECIES_TOGRUTA_F = Resources.identifier("togruta/f");
+
+	static
 	{
-		SPECIES.add(species);
-		VARIANTS.put(species, variants);
-		DEFAULT_VARIANT.put(species, variants[0]); // uses first variant as default
-		return species;
+		SPECIES.put(SwgSpeciesRegistry.SPECIES_TOGRUTA, SpeciesTogruta::new);
 	}
 
-	private static void registerDefault(Identifier species, String variant) { // sets a different variant as default
-		if (SPECIES.contains(species) && ArrayUtils.contains(VARIANTS.get(species), variant)) {
-			DEFAULT_VARIANT.put(species, variant);
-		}
+	public static SwgSpecies deserialize(String serialized)
+	{
+		Identifier id = SwgSpecies.getSpeciesSlug(serialized);
+		if (!SPECIES.containsKey(id))
+			return null;
+
+		return SPECIES.get(id).apply(serialized);
 	}
 }

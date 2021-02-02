@@ -1,5 +1,6 @@
 package com.parzivail.pswg.component;
 
+import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.SwgSpecies;
 import dev.onyxstudios.cca.api.v3.component.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
@@ -22,15 +23,19 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 
 	public SwgSpecies getSpecies()
 	{
-		// TODO
-		return null;
+		if (species.isEmpty())
+			return null;
+
+		return SwgSpeciesRegistry.deserialize(species);
 	}
 
 	public void setSpecies(SwgSpecies species)
 	{
-		// TODO
-
 		this.species = "";
+
+		if (species != null)
+			this.species = species.serialize();
+
 		SwgEntityComponents.PERSISTENT.sync(provider, SPECIES_SYNCOP);
 	}
 

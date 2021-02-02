@@ -7,6 +7,8 @@ public enum SpeciesGender
 	MALE("m"),
 	FEMALE("f");
 
+	private static final String GENDER_SEPARATOR = "/";
+
 	private final String slug;
 
 	SpeciesGender(String slug)
@@ -19,9 +21,15 @@ public enum SpeciesGender
 		return slug;
 	}
 
-	public static SpeciesGender fromSlug(String genderedSlug)
+	public static Identifier stripGender(String genderedSlug)
 	{
-		String[] parts = genderedSlug.split("_", 2);
+		String[] parts = genderedSlug.split(GENDER_SEPARATOR, 2);
+		return new Identifier(parts[0]);
+	}
+
+	public static SpeciesGender fromModel(String genderedSlug)
+	{
+		String[] parts = genderedSlug.split(GENDER_SEPARATOR, 2);
 
 		if (parts.length == 2 && parts[1].equals(FEMALE.slug))
 			return FEMALE;
@@ -29,10 +37,15 @@ public enum SpeciesGender
 		return MALE;
 	}
 
-	public static Identifier toSlug(SwgSpecies species)
+	public static Identifier toModel(SwgSpecies species)
 	{
 		Identifier slug = species.getSlug();
 		SpeciesGender gender = species.getGender();
-		return new Identifier(slug.getNamespace(), slug.getPath() + '_' + gender.slug);
+		return toModel(slug, gender);
+	}
+
+	public static Identifier toModel(Identifier species, SpeciesGender gender)
+	{
+		return new Identifier(species.getNamespace(), species.getPath() + GENDER_SEPARATOR + gender.slug);
 	}
 }

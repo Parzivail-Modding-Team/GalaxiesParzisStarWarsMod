@@ -6,9 +6,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import net.minecraft.command.CommandSource;
-import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -35,13 +32,14 @@ public class SpeciesVariantArgumentType implements ArgumentType<String>
 	@Override
 	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder)
 	{
-		Identifier species = context.getArgument("species", Identifier.class);
-
-		if (!SwgSpeciesRegistry.SPECIES.contains(species))
-		{
-			return Suggestions.empty();
-		}
-
-		return context.getSource() instanceof CommandSource ? CommandSource.suggestMatching(SwgSpeciesRegistry.VARIANTS.get(species), builder) : Suggestions.empty();
+		return null;
+//		Identifier species = context.getArgument("species", Identifier.class);
+//
+//		if (!SwgSpeciesRegistry.SPECIES.contains(species))
+//		{
+//			return Suggestions.empty();
+//		}
+//
+//		return context.getSource() instanceof CommandSource ? CommandSource.suggestMatching(SwgSpeciesRegistry.VARIANTS.get(species), builder) : Suggestions.empty();
 	}
 }
