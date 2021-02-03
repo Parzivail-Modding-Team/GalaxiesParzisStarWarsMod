@@ -33,6 +33,12 @@ public class SwgItems
 		public static final Item BallBearing = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("desh_wire")
 		public static final Item DeshWire = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("desh_coil")
+		public static final Item DeshCoil = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("plasteel_rod")
+		public static final Item PlasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("durasteel_rod")
+		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Debug

@@ -1,0 +1,16 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ddd",
+		"d d",
+		"ddd"
+	],
+	"key": {
+		"d": {
+			"item": "pswg:desh_wire"
+		}
+	},
+	"result": {
+		"item": "pswg:desh_coil"
+	}
+}

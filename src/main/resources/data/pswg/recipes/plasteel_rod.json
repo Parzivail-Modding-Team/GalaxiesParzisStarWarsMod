@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"p",
+		"p",
+		"p"
+	],
+	"key": {
+		"p": {
+			"item": "pswg:plasteel_ingot"
+		}
+	},
+	"result": {
+		"item": "pswg:plasteel_rod",
+		"count": 3
+	}
+}

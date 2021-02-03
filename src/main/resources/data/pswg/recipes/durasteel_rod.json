@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"d",
+		"d",
+		"d"
+	],
+	"key": {
+		"d": {
+			"item": "pswg:durasteel_ingot"
+		}
+	},
+	"result": {
+		"item": "pswg:durasteel_rod",
+		"count": 3
+	}
+}
