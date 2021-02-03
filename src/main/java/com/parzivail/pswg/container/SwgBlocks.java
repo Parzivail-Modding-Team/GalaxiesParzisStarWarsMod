@@ -71,9 +71,9 @@ public class SwgBlocks
 	public static class Light
 	{
 		@RegistryName("light_floor_wedge")
-		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15));
+		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15).strength(1.0F));
 		@RegistryName("light_wall_cluster")
-		public static final Block WallCluster = new RotatingBlockWithBounds(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15));
+		public static final Block WallCluster = new RotatingBlockWithBounds(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15).strength(1.0F));
 	}
 
 	public static class Leaves
@@ -109,25 +109,25 @@ public class SwgBlocks
 	public static class MaterialBlock
 	{
 		@RegistryName("beskar_block")
-		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("chromium_block")
-		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("cortosis_block")
-		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("desh_block")
-		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("diatium_block")
-		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("durasteel_block")
-		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("lommite_block")
-		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("plasteel_block")
-		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("titanium_block")
-		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL));
+		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("zersium_block")
-		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).luminance(15));
+		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 	}
 
 	public static class MoistureVaporator
@@ -141,33 +141,33 @@ public class SwgBlocks
 	public static class Ore
 	{
 		@RegistryName("beskar_ore")
-		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("chromium_ore")
-		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("cortosis_ore")
-		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("desh_ore")
-		public static final Block Desh = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Desh = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("diatium_ore")
-		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("exonium_ore")
-		public static final Block Exonium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Exonium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("helicite_ore")
-		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("ionite_ore")
-		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("kelerium_ore")
-		public static final Block Kelerium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Kelerium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("lommite_ore")
-		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("rubindum_ore")
-		public static final Block Rubindum = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Rubindum = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("thorolide_ore")
-		public static final Block Thorolide = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Thorolide = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("titanium_ore")
-		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 		@RegistryName("zersium_ore")
-		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F));
 	}
 
 	public static class Panel
@@ -281,23 +281,23 @@ public class SwgBlocks
 		public static final Block LightPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
 
 		@RegistryName("ilum_stone")
-		public static final Block Ilum = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block Ilum = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F));
 		@RegistryName("ilum_stone_slab")
 		public static final Block IlumSlab = new SlabBlock(AbstractBlock.Settings.copy(Ilum));
 		@RegistryName("ilum_stone_stairs")
 		public static final Block IlumStairs = new PStairsBlock(Ilum.getDefaultState(), AbstractBlock.Settings.copy(Ilum));
 		@RegistryName("smooth_ilum_stone")
-		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F));
 		@RegistryName("smooth_ilum_stone_slab")
 		public static final Block IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
 		@RegistryName("ilum_stone_bricks")
-		public static final Block IlumBricks = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block IlumBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F));
 		@RegistryName("ilum_stone_brick_slab")
 		public static final Block IlumBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumBricks));
 		@RegistryName("ilum_stone_brick_stairs")
 		public static final Block IlumBrickStairs = new PStairsBlock(IlumBricks.getDefaultState(), AbstractBlock.Settings.copy(IlumBricks));
 		@RegistryName("chiseled_ilum_stone_bricks")
-		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE));
+		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F));
 	}
 
 	public static class Tank
