@@ -4,9 +4,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.Lumberjack;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,20 +37,20 @@ public class Tarkin
 		// TODO: support tags instead of items in recipes
 		// TODO: support substitutes instead of items in recipes
 
-		recipeCookedFood(assets, SwgItems.Food.BanthaChop, SwgItems.Food.BanthaSteak);
-		recipeCookedFood(assets, SwgItems.Food.GizkaChop, SwgItems.Food.GizkaSteak);
-		recipeCookedFood(assets, SwgItems.Food.MynockWing, SwgItems.Food.FriedMynockWing);
-		recipeCookedFood(assets, SwgItems.Food.NerfChop, SwgItems.Food.NerfSteak);
-		recipeCookedFood(assets, SwgItems.Food.QrikkiBread, SwgItems.Food.QrikkiWaffle);
+		RecipeGenerator.buildFood(assets, SwgItems.Food.BanthaChop, SwgItems.Food.BanthaSteak);
+		RecipeGenerator.buildFood(assets, SwgItems.Food.GizkaChop, SwgItems.Food.GizkaSteak);
+		RecipeGenerator.buildFood(assets, SwgItems.Food.MynockWing, SwgItems.Food.FriedMynockWing);
+		RecipeGenerator.buildFood(assets, SwgItems.Food.NerfChop, SwgItems.Food.NerfSteak);
+		RecipeGenerator.buildFood(assets, SwgItems.Food.QrikkiBread, SwgItems.Food.QrikkiWaffle);
 
-		mineralRecipeSet(
+		RecipeGenerator.buildMetal(
 				assets,
 				SwgBlocks.Ore.Beskar,
 				SwgItems.Ingot.Beskar,
 				SwgBlocks.MaterialBlock.Beskar
 		);
 
-		mineralRecipeSet(
+		RecipeGenerator.buildMetal(
 				assets,
 				SwgBlocks.Ore.Chromium,
 				SwgItems.Ingot.Chromium,
@@ -61,14 +58,14 @@ public class Tarkin
 				SwgBlocks.MaterialBlock.Chromium
 		);
 
-		mineralRecipeSet(
+		RecipeGenerator.buildMetal(
 				assets,
 				SwgBlocks.Ore.Cortosis,
 				SwgItems.Ingot.Cortosis,
 				SwgBlocks.MaterialBlock.Cortosis
 		);
 
-		mineralRecipeSet(
+		RecipeGenerator.buildMetal(
 				assets,
 				SwgBlocks.Ore.Desh,
 				SwgItems.Ingot.Desh,
@@ -76,7 +73,7 @@ public class Tarkin
 				SwgBlocks.MaterialBlock.Desh
 		);
 
-		mineralRecipeSet(
+		RecipeGenerator.buildMetal(
 				assets,
 				SwgBlocks.Ore.Diatium,
 				SwgItems.Ingot.Diatium,
@@ -86,7 +83,7 @@ public class Tarkin
 
 		// TODO: durasteel
 
-		mineralRecipeSet(
+		RecipeGenerator.buildMetal(
 				assets,
 				SwgBlocks.Ore.Lommite,
 				SwgItems.Ingot.Lommite,
@@ -96,7 +93,7 @@ public class Tarkin
 
 		// TODO: plasteel
 
-		mineralRecipeSet(
+		RecipeGenerator.buildMetal(
 				assets,
 				SwgBlocks.Ore.Titanium,
 				SwgItems.Ingot.Titanium,
@@ -104,7 +101,7 @@ public class Tarkin
 				SwgBlocks.MaterialBlock.Titanium
 		);
 
-		mineralRecipeSet(
+		RecipeGenerator.buildMetal(
 				assets,
 				SwgBlocks.Ore.Zersium,
 				SwgItems.Ingot.Zersium,
@@ -288,46 +285,5 @@ public class Tarkin
 
 		BlockGenerator.basic(SwgBlocks.Workbench.Blaster).build(assets);
 		BlockGenerator.basic(SwgBlocks.Workbench.Lightsaber).build(assets);
-	}
-
-	private static void recipeCookedFood(List<BuiltAsset> assets, Item input, Item output)
-	{
-		RecipeGenerator.Cooking.smelting(output, input, "raw")
-		                       .build(assets);
-		RecipeGenerator.Cooking.smoking(output, input, "smoking_raw")
-		                       .build(assets);
-		RecipeGenerator.Cooking.campfire(output, input, "campfire_raw")
-		                       .build(assets);
-	}
-
-	private static void mineralRecipeSet(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot, ItemConvertible block)
-	{
-		recipeOreToIngot(assets, ore, ingot);
-		recipeInterchange(assets, ingot, "ingot", block, "block");
-	}
-
-	private static void mineralRecipeSet(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot, ItemConvertible nugget, ItemConvertible block)
-	{
-		recipeOreToIngot(assets, ore, ingot);
-		recipeInterchange(assets, ingot, "ingot", block, "block");
-		recipeInterchange(assets, nugget, "nugget", ingot, "ingot");
-	}
-
-	private static void recipeInterchange(List<BuiltAsset> assets, ItemConvertible smallUnit, String smallUnitName, ItemConvertible largeUnit, String largeUnitName)
-	{
-		RecipeGenerator.Shapeless.of(new ItemStack(smallUnit, 9), largeUnitName)
-		                         .ingredient(largeUnit)
-		                         .build(assets);
-		RecipeGenerator.Shaped.of(new ItemStack(largeUnit, 1))
-		                      .grid3x3Fill(smallUnit, smallUnitName)
-		                      .build(assets);
-	}
-
-	private static void recipeOreToIngot(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot)
-	{
-		RecipeGenerator.Cooking.smelting(ingot, ore, "ore")
-		                       .build(assets);
-		RecipeGenerator.Cooking.blasting(ingot, ore, "blasting_ore")
-		                       .build(assets);
 	}
 }

@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class BlockGenerator
 {
-	public static BlockGenerator blockDefaultDrops(Block block)
+	public static BlockGenerator basic(Block block)
 	{
 		return block(block)
 				.lootTable(LootTableFile::basic);
@@ -35,11 +35,6 @@ public class BlockGenerator
 				.state(BlockStateGenerator::basic)
 				.model(ModelFile::cube)
 				.itemModel(ModelFile::ofBlock);
-	}
-
-	static BlockGenerator basic(Block block)
-	{
-		return blockDefaultDrops(block);
 	}
 
 	static BlockGenerator basicRandomRotation(Block block)
@@ -93,16 +88,6 @@ public class BlockGenerator
 	static BlockGenerator slab(Block block, Identifier model)
 	{
 		return slab(block, model, model, model);
-	}
-
-	private static BlockGenerator slabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)
-	{
-		Identifier id = AssetGenerator.getRegistryName(block);
-		Identifier top = IdentifierUtil.concat("block/", id, "_top");
-		Identifier full = IdentifierUtil.concat("block/", id, "_double");
-		return basic(block)
-				.state((b, modelId) -> BlockStateGenerator.slab(block, AssetGenerator.getTextureName(block), top, full))
-				.models(b -> ModelFile.slabUniqueDouble(b, topTexture, sideTexture));
 	}
 
 	static BlockGenerator cross(Block block)

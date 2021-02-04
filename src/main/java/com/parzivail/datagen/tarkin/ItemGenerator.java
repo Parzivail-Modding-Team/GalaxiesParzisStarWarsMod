@@ -14,9 +14,9 @@ public class ItemGenerator
 		return new ItemGenerator(block);
 	}
 
-	static ItemGenerator basic(Item block)
+	static ItemGenerator basic(Item item)
 	{
-		return itemNoModel(block)
+		return itemNoModel(item)
 				.model(ModelFile::item);
 	}
 
@@ -37,12 +37,6 @@ public class ItemGenerator
 	}
 
 	public ItemGenerator model(Function<Item, ModelFile> modelFunc)
-	{
-		this.itemModels.add(modelFunc.apply(item));
-		return this;
-	}
-
-	public ItemGenerator models(Function<Item, ModelFile> modelFunc)
 	{
 		this.itemModels.add(modelFunc.apply(item));
 		return this;

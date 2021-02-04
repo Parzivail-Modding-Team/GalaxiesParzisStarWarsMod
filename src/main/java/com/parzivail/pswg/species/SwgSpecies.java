@@ -64,15 +64,19 @@ public abstract class SwgSpecies
 			return;
 
 		String[] parts = serialized.split(MODEL_SEPARATOR);
-		String[] variables = parts[1].split(VARIABLE_SEPARATOR);
 
 		this.model = new Identifier(parts[0]);
 		this.gender = SpeciesGender.fromModel(parts[0]);
 
-		for (int i = 1; i < variables.length; i++)
+		if (parts.length > 1)
 		{
-			String[] pairParts = variables[i].split(VARIABLE_EQUALS, 2);
-			this.variables.put(new Identifier(pairParts[0]), pairParts[1]);
+			String[] variables = parts[1].split(VARIABLE_SEPARATOR);
+
+			for (String variable : variables)
+			{
+				String[] pairParts = variable.split(VARIABLE_EQUALS, 2);
+				this.variables.put(new Identifier(pairParts[0]), pairParts[1]);
+			}
 		}
 	}
 

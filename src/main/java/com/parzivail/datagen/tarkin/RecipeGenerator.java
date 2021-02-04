@@ -2,6 +2,7 @@ package com.parzivail.datagen.tarkin;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -13,6 +14,47 @@ import java.util.Map;
 
 public abstract class RecipeGenerator
 {
+	public static void buildFood(List<BuiltAsset> assets, Item input, Item output)
+	{
+		Cooking.smelting("raw", input, output)
+		       .build(assets);
+		Cooking.smoking("smoking_raw", input, output)
+		       .build(assets);
+		Cooking.campfire("campfire_raw", input, output)
+		       .build(assets);
+	}
+
+	public static void buildMetal(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot, ItemConvertible block)
+	{
+		buildOreToIngot(assets, ore, ingot);
+		buildBidirectional(assets, ingot, "ingot", block, "block");
+	}
+
+	public static void buildMetal(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot, ItemConvertible nugget, ItemConvertible block)
+	{
+		buildOreToIngot(assets, ore, ingot);
+		buildBidirectional(assets, ingot, "ingot", block, "block");
+		buildBidirectional(assets, nugget, "nugget", ingot, "ingot");
+	}
+
+	public static void buildBidirectional(List<BuiltAsset> assets, ItemConvertible smallUnit, String smallUnitName, ItemConvertible largeUnit, String largeUnitName)
+	{
+		Shapeless.of(new ItemStack(smallUnit, 9), largeUnitName)
+		         .ingredient(largeUnit)
+		         .build(assets);
+		Shaped.of(new ItemStack(largeUnit, 1))
+		      .fill3x3(smallUnitName, smallUnit)
+		      .build(assets);
+	}
+
+	public static void buildOreToIngot(List<BuiltAsset> assets, ItemConvertible ore, ItemConvertible ingot)
+	{
+		Cooking.smelting("ore", ore, ingot)
+		       .build(assets);
+		Cooking.blasting("blasting_ore", ore, ingot)
+		       .build(assets);
+	}
+
 	public final Identifier type;
 	public final Identifier output;
 	public final String sourceName;
@@ -53,26 +95,26 @@ public abstract class RecipeGenerator
 
 	public static class Cooking extends RecipeGenerator
 	{
-		public static Cooking smelting(ItemConvertible output, ItemConvertible input, String sourceName)
+		public static Cooking smelting(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
 			return new Cooking(new Identifier("smelting"), AssetGenerator.getRegistryName(output), input, sourceName);
 		}
 
-		public static Cooking blasting(ItemConvertible output, ItemConvertible input, String sourceName)
+		public static Cooking blasting(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
 			return new Cooking(new Identifier("blasting"), AssetGenerator.getRegistryName(output), input, sourceName)
 					.cookTime(100);
 		}
 
-		public static Cooking campfire(ItemConvertible output, ItemConvertible input, String sourceName)
+		public static Cooking campfire(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
 			return new Cooking(new Identifier("campfire_cooking"), AssetGenerator.getRegistryName(output), input, sourceName)
 					.cookTime(600);
 		}
 
-		public static Cooking smoking(ItemConvertible output, ItemConvertible input, String sourceName)
+		public static Cooking smoking(String sourceName, ItemConvertible input, ItemConvertible output)
 		{
-			return new Cooking(new Identifier("campfire_cooking"), AssetGenerator.getRegistryName(output), input, sourceName)
+			return new Cooking(new Identifier("smoking"), AssetGenerator.getRegistryName(output), input, sourceName)
 					.cookTime(100);
 		}
 
@@ -133,7 +175,7 @@ public abstract class RecipeGenerator
 		}
 
 		@Override
-		public void buildInto(JsonObject jsonElement)
+		protected void buildInto(JsonObject jsonElement)
 		{
 			JsonArray ingredients = new JsonArray();
 			for (ItemConvertible input : inputs)
@@ -187,19 +229,19 @@ public abstract class RecipeGenerator
 			return grid3x3(sourceName, a, null, null, b, null, null, c, null, null);
 		}
 
-		public Shaped grid2x2(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c, ItemConvertible d)
+		public Shaped grid2x2(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible d, ItemConvertible e)
 		{
-			return grid3x3(sourceName, a, b, null, c, d, null, null, null, null);
+			return grid3x3(sourceName, a, b, null, d, e, null, null, null, null);
 		}
 
-		public Shaped grid2x2Fill(String sourceName, ItemConvertible a)
+		public Shaped fill2x2(String sourceName, ItemConvertible item)
 		{
-			return grid2x2(sourceName, a, a, a, a);
+			return grid2x2(sourceName, item, item, item, item);
 		}
 
-		public Shaped grid2x3(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c, ItemConvertible d, ItemConvertible e, ItemConvertible f)
+		public Shaped grid2x3(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible d, ItemConvertible e, ItemConvertible g, ItemConvertible h)
 		{
-			return grid3x3(sourceName, a, b, null, c, d, null, e, f, null);
+			return grid3x3(sourceName, a, b, null, d, e, null, g, h, null);
 		}
 
 		public Shaped grid3x2(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c, ItemConvertible d, ItemConvertible e, ItemConvertible f)
@@ -213,13 +255,13 @@ public abstract class RecipeGenerator
 			return this;
 		}
 
-		public Shaped grid3x3Fill(ItemConvertible a, String sourceName)
+		public Shaped fill3x3(String sourceName, ItemConvertible item)
 		{
-			return grid3x3(sourceName, a, a, a, a, a, a, a, a, a);
+			return grid3x3(sourceName, item, item, item, item, item, item, item, item, item);
 		}
 
 		@Override
-		public void buildInto(JsonObject jsonElement)
+		protected void buildInto(JsonObject jsonElement)
 		{
 		}
 

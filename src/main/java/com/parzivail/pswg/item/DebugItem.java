@@ -23,7 +23,7 @@ public class DebugItem extends Item
 //		entity.setProperties(player, MathHelper.clamp(player.pitch, -89.9f, 89.9f), player.yaw, 0.0F, 0.6f, 0);
 //		world.spawnEntity(entity);
 
-		SwgEntityComponents.getPersistent(player).setSpecies(SwgSpeciesRegistry.deserialize("pswg:aqualish/m;body=green"));
+		SwgEntityComponents.getPersistent(player).setSpecies(SwgSpeciesRegistry.deserialize("pswg:aqualish/m;pswg:body=beige"));
 
 		return TypedActionResult.consume(player.getStackInHand(hand));
 	}
