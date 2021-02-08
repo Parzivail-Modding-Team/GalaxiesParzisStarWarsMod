@@ -35,7 +35,7 @@ public class SwgSpeciesRegistry
 //		SPECIES.put(SwgSpeciesRegistry.SPECIES_BOTHAN, SpeciesBothan::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_CHAGRIAN, SpeciesChagrian::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_JAWA, SpeciesJawa::new);
-		SPECIES.put(SwgSpeciesRegistry.SPECIES_KAMINOAN, SpeciesKaminoan::new);
+//		SPECIES.put(SwgSpeciesRegistry.SPECIES_KAMINOAN, SpeciesKaminoan::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_TOGRUTA, SpeciesTogruta::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_TWILEK, SpeciesTwilek::new);
 	}

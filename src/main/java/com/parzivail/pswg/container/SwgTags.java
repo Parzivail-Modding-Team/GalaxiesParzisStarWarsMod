@@ -6,7 +6,8 @@ import net.minecraft.tag.Tag;
 
 public class SwgTags
 {
-	public static class Block {
+	public static class Block
+	{
 		public static final Tag<net.minecraft.block.Block> TATOOINE_SAND = TagRegistry.block(Resources.identifier("tatooine_sand"));
 	}
 }
