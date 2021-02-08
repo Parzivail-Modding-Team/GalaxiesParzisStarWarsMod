@@ -11,6 +11,11 @@ repositories {
 		name = "Ladysnake Libs"
 		url = "https://dl.bintray.com/ladysnake/libs"
 	}
+
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/releases"
+    }
 }
 
 dependencies {
@@ -76,7 +81,7 @@ dependencies {
 	include "me.shedaniel.cloth:config-2:${project.cloth_config_version}"
 
 	// Mod Menu
-	modImplementation("io.github.prospector:modmenu:${project.modmenu_version}")
+	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 }
 
 processResources {
