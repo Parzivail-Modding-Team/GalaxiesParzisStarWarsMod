@@ -22,6 +22,7 @@
 		"ClientPlayNetworkHandlerMixin",
 		"ClientRecipeBookMixin",
 		"EntityClientMixin",
+		"EntityRenderDispatcherAccessor",
 		"EntityRenderDispatcherMixin",
 		"FramebufferMixin",
 		"GameRendererMixin",

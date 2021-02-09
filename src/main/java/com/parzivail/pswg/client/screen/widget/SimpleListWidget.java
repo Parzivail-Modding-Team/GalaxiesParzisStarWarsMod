@@ -3,10 +3,12 @@ package com.parzivail.pswg.client.screen.widget;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.gui.widget.EntryListWidget;
+import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -122,5 +124,19 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 	public List<Entry<T>> getEntries()
 	{
 		return children();
+	}
+
+	@Override
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
+	{
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+
+		Window window = client.getWindow();
+		double scaleFactor = window.getScaleFactor();
+		GL11.glScissor((int)(left * scaleFactor), window.getHeight() - (int)(bottom * scaleFactor), (int)((right - left) * scaleFactor), (int)((bottom - top) * scaleFactor));
+
+		super.render(matrices, mouseX, mouseY, delta);
+
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
 }

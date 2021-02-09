@@ -2,7 +2,9 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
+import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
+import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
 import net.fabricmc.api.EnvType;
@@ -12,11 +14,17 @@ import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.util.math.Vector3f;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Quaternion;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
@@ -103,9 +111,7 @@ public class SpeciesSelectScreen extends Screen
 
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
 	{
-		return this.speciesListWidget.mouseScrolled(mouseX, mouseY, amount) ||
-		       this.speciesVariableListWidget.mouseScrolled(mouseX, mouseY, amount) ||
-		       this.speciesVariableValueListWidget.mouseScrolled(mouseX, mouseY, amount);
+		return super.mouseScrolled(mouseX, mouseY, amount);
 	}
 
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
@@ -116,6 +122,60 @@ public class SpeciesSelectScreen extends Screen
 		this.speciesVariableValueListWidget.render(matrices, mouseX, mouseY, delta);
 		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
 		super.render(matrices, mouseX, mouseY, delta);
+
+		int x = 500;
+		int y = 200;
+		drawEntity(x, y, 30, x - mouseX, y - mouseY);
+	}
+
+	private String getSpeciesString()
+	{
+		return "pswg:togruta/f;pswg:body=orange";
+	}
+
+	public void drawEntity(int x, int y, int size, float mouseX, float mouseY)
+	{
+		PlayerEntity entity = client.player;
+		float f = (float)Math.atan(mouseX / 40.0F);
+		float g = (float)Math.atan(mouseY / 40.0F);
+		RenderSystem.pushMatrix();
+		RenderSystem.translatef((float)x, (float)y, 1050.0F);
+		RenderSystem.scalef(1.0F, 1.0F, -1.0F);
+		MatrixStack matrixStack = new MatrixStack();
+		matrixStack.translate(0.0D, 0.0D, 1000.0D);
+		matrixStack.scale((float)size, (float)size, (float)size);
+		Quaternion quaternion = Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
+		Quaternion quaternion2 = Vector3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
+		quaternion.hamiltonProduct(quaternion2);
+		matrixStack.multiply(quaternion);
+		float h = entity.bodyYaw;
+		float i = entity.yaw;
+		float j = entity.pitch;
+		float k = entity.prevHeadYaw;
+		float l = entity.headYaw;
+		entity.bodyYaw = 180.0F;
+		entity.yaw = 180.0F + f * 40.0F;
+		entity.pitch = -g * 20.0F;
+		entity.headYaw = entity.yaw;
+		entity.prevHeadYaw = entity.yaw;
+		quaternion2.conjugate();
+		VertexConsumerProvider.Immediate immediate = client.getBufferBuilders().getEntityVertexConsumers();
+
+		SwgSpecies species = SwgSpeciesRegistry.deserialize(getSpeciesString());
+		EntityRenderDispatcherAccessor erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
+		Map<String, PlayerEntityRenderer> renderers =  erda.getModelRenderers();
+
+		PlayerEntityRenderer renderer = renderers.get(species.getModel().toString());
+		client.getEntityRenderDispatcher().textureManager.bindTexture(SwgSpeciesModels.getTexture(species));
+		renderer.render(client.player, 0, 0, matrixStack, immediate, 0xf000f0);
+
+		immediate.draw();
+		entity.bodyYaw = h;
+		entity.yaw = i;
+		entity.pitch = j;
+		entity.prevHeadYaw = k;
+		entity.headYaw = l;
+		RenderSystem.popMatrix();
 	}
 
 	public void renderBackgroundTexture(int vOffset)
