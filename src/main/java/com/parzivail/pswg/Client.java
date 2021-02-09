@@ -42,6 +42,8 @@ public class Client implements ClientModInitializer
 	public static final KeyBinding KEY_LIGHTSABER_TOGGLE = new KeyBinding(Resources.keyBinding("lightsaber_toggle"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_X, "key.category.pswg");
 	public static final KeyBinding KEY_SHIP_INPUT_MODE_OVERRIDE = new KeyBinding(Resources.keyBinding("ship_input_mode_override"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.category.pswg");
 
+	public static final KeyBinding KEY_SPECIES_SELECT = new KeyBinding(Resources.keyBinding("species_select"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category.pswg");
+
 	public static MinecraftClient minecraft;
 	public static RemoteTextureProvider remoteTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
@@ -75,11 +77,13 @@ public class Client implements ClientModInitializer
 
 		KeyBindingHelper.registerKeyBinding(KEY_LIGHTSABER_TOGGLE);
 		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_OVERRIDE);
+		KeyBindingHelper.registerKeyBinding(KEY_SPECIES_SELECT);
+
+		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::handle);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 
-		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::handle);
 
 		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
 

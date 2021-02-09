@@ -155,6 +155,7 @@
 	"key.category.pswg": "Galaxies: Parzi's Star Wars Mod",
 	"key.pswg.lightsaber_toggle": "Toggle Lightsaber",
 	"key.pswg.ship_input_mode_override": "Override Ship Input Mode",
+	"screen.pswg.species_select": "Species Customization",
 	"text.autoconfig.pswg.option.input": "Input",
 	"text.autoconfig.pswg.option.input.@Tooltip": "Here you can change your preferred input methods.",
 	"text.autoconfig.pswg.option.input.shipRollPriority": "Roll priority ship input",

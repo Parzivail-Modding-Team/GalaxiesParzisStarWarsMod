@@ -89,6 +89,7 @@ public abstract class SwgSpecies
 
 	public void setDefaultVariables()
 	{
+		gender = SpeciesGender.MALE;
 		for (SpeciesVariable variable : getVariables())
 			setVariable(variable, variable.getDefaultValue());
 	}
