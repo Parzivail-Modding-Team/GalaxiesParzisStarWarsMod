@@ -4,6 +4,8 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.Lumberjack;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -192,7 +194,7 @@ public class Tarkin
 
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
 
-		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.identifier("block/log_sequoia_top"), Resources.identifier("block/log_sequoia_side")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.identifier("block/sequoia_log_top"), Resources.identifier("block/sequoia_log_side")).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
 
