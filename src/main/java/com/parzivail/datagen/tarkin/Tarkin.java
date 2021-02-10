@@ -257,10 +257,10 @@ public class Tarkin
 
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("block/stone_massassi_bricks")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiSmoothStairs, Resources.identifier("block/stone_massassi_smooth")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.identifier("block/stone_massassi_bricks")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("block/stone_massassi_smooth")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("block/massassi_stone_bricks")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.MassassiSmoothStairs, Resources.identifier("block/smooth_massassi_stone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.identifier("block/massassi_stone_bricks")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("block/smooth_massassi_stone")).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.Pourstone).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.LightPourstone).build(assets);

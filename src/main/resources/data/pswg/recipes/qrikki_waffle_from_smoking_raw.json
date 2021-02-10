@@ -1,1 +1,1 @@
-{"type":"minecraft:campfire_cooking","group":"pswg:qrikki_waffle","result":"pswg:qrikki_waffle","experience":0.35,"cookingtime":100,"ingredient":{"item":"pswg:qrikki_bread"}}
+{"type":"minecraft:smoking","group":"pswg:qrikki_waffle","result":"pswg:qrikki_waffle","experience":0.35,"cookingtime":100,"ingredient":{"item":"pswg:qrikki_bread"}}

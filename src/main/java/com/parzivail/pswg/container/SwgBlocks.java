@@ -240,7 +240,7 @@ public class SwgBlocks
 
 	public static class Sand
 	{
-		@RegistryName("sand_tatooine")
+		@RegistryName("tatooine_sand")
 		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
 		@RegistryName("tatooine_canyon_sand")
 		public static final Block TatooineCanyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
@@ -254,17 +254,17 @@ public class SwgBlocks
 
 	public static class Stone
 	{
-		@RegistryName("stone_massassi_bricks")
+		@RegistryName("massassi_stone_bricks")
 		public static final Block MassassiBricks = new Block(FabricBlockSettings.of(Material.STONE));
-		@RegistryName("stone_massassi_smooth")
+		@RegistryName("smooth_massassi_stone")
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE));
-		@RegistryName("stone_massassi_brick_stairs")
+		@RegistryName("massassi_stone_brick_stairs")
 		public static final Block MassassiBrickStairs = new PStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
-		@RegistryName("stone_massassi_smooth_stairs")
+		@RegistryName("smooth_massassi_stone_stairs")
 		public static final Block MassassiSmoothStairs = new PStairsBlock(MassassiSmooth.getDefaultState(), AbstractBlock.Settings.copy(MassassiSmooth));
-		@RegistryName("stone_massassi_brick_slab")
+		@RegistryName("massassi_stone_brick_slab")
 		public static final Block MassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiBricks));
-		@RegistryName("stone_massassi_smooth_slab")
+		@RegistryName("smooth_massassi_stone_slab")
 		public static final Block MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
 
 		@RegistryName("pourstone")
@@ -302,7 +302,7 @@ public class SwgBlocks
 
 	public static class Tank
 	{
-		@RegistryName("tank_fusion")
+		@RegistryName("fusion_fuel_tank")
 		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
