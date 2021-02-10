@@ -143,7 +143,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			}
 		}
 
-		bt.heat += 20;
+		bt.heat += bd.heat.perRound;
 		bt.shotsRemaining--;
 
 		if (bt.heat > bd.heat.capacity)
