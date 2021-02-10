@@ -216,13 +216,8 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Ore.Cortosis).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Desh).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Diatium).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Exonium).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Helicite).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Ionite).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Kelerium).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Lommite).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Rubindum).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Thorolide).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Titanium).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Zersium).build(assets);
 
