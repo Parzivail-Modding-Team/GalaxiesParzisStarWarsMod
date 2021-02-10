@@ -1,0 +1,1 @@
+{"type":"minecraft:block","pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"pswg:spoked_machine"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]}
