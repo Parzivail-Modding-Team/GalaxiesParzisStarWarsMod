@@ -1,6 +1,6 @@
 {
 	"replace": false,
 	"values": [
-		"pswg:log_sequoia"
+		"pswg:sequoia_log"
 	]
 }

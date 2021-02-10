@@ -10,9 +10,9 @@ public class SwgScreenTypes
 {
 	public static class Crate
 	{
-		public static final ScreenHandlerType<CrateOctagonScreenHandler> Octagon = ScreenHandlerRegistry.registerSimple(Resources.identifier("crate_octagon"), CrateOctagonScreenHandler::new);
-		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> MosEisley = ScreenHandlerRegistry.registerSimple(Resources.identifier("crate_mos_eisley"), makeScreenHandler(Crate.MosEisley));
-		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> ImperialCube = ScreenHandlerRegistry.registerSimple(Resources.identifier("crate_imperial_cube"), makeScreenHandler(Crate.ImperialCube));
+		public static final ScreenHandlerType<CrateOctagonScreenHandler> Octagon = ScreenHandlerRegistry.registerSimple(Resources.identifier("kyber_crate"), CrateOctagonScreenHandler::new);
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> MosEisley = ScreenHandlerRegistry.registerSimple(Resources.identifier("mos_eisley_crate"), makeScreenHandler(Crate.MosEisley));
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> ImperialCube = ScreenHandlerRegistry.registerSimple(Resources.identifier("imperial_crate"), makeScreenHandler(Crate.ImperialCube));
 
 		@NotNull
 		private static ScreenHandlerRegistry.SimpleClientHandlerFactory<CrateGenericSmallScreenHandler> makeScreenHandler(ScreenHandlerType<?> handlerType)
@@ -28,7 +28,7 @@ public class SwgScreenTypes
 
 	public static class MoistureVaporator
 	{
-		public static final ScreenHandlerType<MoistureVaporatorScreenHandler> GX8 = ScreenHandlerRegistry.registerSimple(Resources.identifier("moisture_vaporator_gx8"), MoistureVaporatorScreenHandler::new);
+		public static final ScreenHandlerType<MoistureVaporatorScreenHandler> GX8 = ScreenHandlerRegistry.registerSimple(Resources.identifier("gx8_moisture_vaporator"), MoistureVaporatorScreenHandler::new);
 
 		static void register()
 		{

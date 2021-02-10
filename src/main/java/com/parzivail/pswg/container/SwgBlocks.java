@@ -25,7 +25,7 @@ public class SwgBlocks
 {
 	public static class Barrel
 	{
-		@RegistryName("barrel_mos_eisley")
+		@RegistryName("mos_eisley_barrel")
 		public static final Block MosEisley = new DisplacingBlock((state, world, pos, context) -> {
 			Random r = Resources.RANDOM;
 			r.setSeed(state.getRenderingSeed(pos));
@@ -40,23 +40,23 @@ public class SwgBlocks
 
 	public static class Crate
 	{
-		@RegistryName("crate_octagon_orange")
+		@RegistryName("orange_kyber_crate")
 		public static final RotatingBlockWithGuiEntity OctagonOrange = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateOctagonBlockEntity::new);
-		@RegistryName("crate_octagon_gray")
+		@RegistryName("gray_kyber_crate")
 		public static final RotatingBlockWithGuiEntity OctagonGray = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateOctagonBlockEntity::new);
-		@RegistryName("crate_octagon_black")
+		@RegistryName("black_kyber_crate")
 		public static final RotatingBlockWithGuiEntity OctagonBlack = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateOctagonBlockEntity::new);
-		@RegistryName("crate_octagon")
+		@RegistryName("kyber_crate")
 		public static final BlockEntityType<CrateOctagonBlockEntity> OctagonBlockEntityType = BlockEntityType.Builder.create(CrateOctagonBlockEntity::new, OctagonOrange, OctagonGray, OctagonBlack).build(null);
 
-		@RegistryName("crate_mos_eisley")
+		@RegistryName("mos_eisley_crate")
 		public static final RotatingBlockWithGuiEntity MosEisley = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateMosEisleyBlockEntity::new);
-		@RegistryName("crate_mos_eisley")
+		@RegistryName("mos_eisley_crate")
 		public static final BlockEntityType<CrateMosEisleyBlockEntity> MosEisleyBlockEntityType = BlockEntityType.Builder.create(CrateMosEisleyBlockEntity::new, MosEisley).build(null);
 
-		@RegistryName("crate_imperial_cube")
+		@RegistryName("imperial_crate")
 		public static final RotatingBlockWithGuiEntity ImperialCube = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).nonOpaque(), CrateImperialCubeBlockEntity::new);
-		@RegistryName("crate_imperial_cube")
+		@RegistryName("imperial_crate")
 		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCubeBlockEntityType = BlockEntityType.Builder.create(CrateImperialCubeBlockEntity::new, ImperialCube).build(null);
 	}
 
@@ -70,15 +70,15 @@ public class SwgBlocks
 
 	public static class Light
 	{
-		@RegistryName("light_floor_wedge")
+		@RegistryName("floor_wedge_light")
 		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15).strength(1.0F));
-		@RegistryName("light_wall_cluster")
+		@RegistryName("wall_cluster_light")
 		public static final Block WallCluster = new RotatingBlockWithBounds(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15).strength(1.0F));
 	}
 
 	public static class Leaves
 	{
-		@RegistryName("leaves_sequoia")
+		@RegistryName("sequoia_leaves")
 		public static final LeavesBlock Sequoia = createLeavesBlock();
 
 		private static LeavesBlock createLeavesBlock()
@@ -89,7 +89,7 @@ public class SwgBlocks
 
 	public static class Log
 	{
-		@RegistryName("log_sequoia")
+		@RegistryName("sequoia_log")
 		public static final PillarBlock Sequoia = createLogBlock(MaterialColor.WOOD, MaterialColor.BROWN);
 
 		private static PillarBlock createLogBlock(MaterialColor topMaterialColor, MaterialColor sideMaterialColor)
@@ -102,7 +102,7 @@ public class SwgBlocks
 
 	public static class Machine
 	{
-		@RegistryName("machine_spoked")
+		@RegistryName("spoked_machine")
 		public static final RotatingBlock Spoked = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), FabricBlockSettings.of(Material.METAL).nonOpaque());
 	}
 
@@ -132,9 +132,9 @@ public class SwgBlocks
 
 	public static class MoistureVaporator
 	{
-		@RegistryName("moisture_vaporator_gx8")
+		@RegistryName("gx8_moisture_vaporator")
 		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).nonOpaque());
-		@RegistryName("moisture_vaporator_gx8")
+		@RegistryName("gx8_moisture_vaporator")
 		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = BlockEntityType.Builder.create(MoistureVaporatorBlockEntity::new, Gx8).build(null);
 	}
 
@@ -226,7 +226,7 @@ public class SwgBlocks
 
 	public static class Pipe
 	{
-		@RegistryName("pipe_thick")
+		@RegistryName("large_pipe")
 		public static final Block Thick = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.GRAY).nonOpaque().sounds(BlockSoundGroup.METAL));
 	}
 
@@ -331,9 +331,9 @@ public class SwgBlocks
 
 		FlammableBlockRegistry.getDefaultInstance().add(SwgBlocks.Leaves.Sequoia, 30, 60);
 
-		Registry.register(Registry.BLOCK, Resources.identifier("door_tatooine_home_controller"), Door.TatooineHomeController);
-		Registry.register(Registry.BLOCK, Resources.identifier("door_tatooine_home"), Door.TatooineHomeFiller);
-		Registry.register(Registry.ITEM, Resources.identifier("door_tatooine_home_controller"), new BlockTatooineHomeDoor.Item(Door.TatooineHomeController, new Item.Settings().group(Galaxies.Tab)));
+		Registry.register(Registry.BLOCK, Resources.identifier("tatooine_home_door_controller"), Door.TatooineHomeController);
+		Registry.register(Registry.BLOCK, Resources.identifier("tatooine_home_door"), Door.TatooineHomeFiller);
+		Registry.register(Registry.ITEM, Resources.identifier("tatooine_home_door"), new BlockTatooineHomeDoor.Item(Door.TatooineHomeController, new Item.Settings().group(Galaxies.Tab)));
 	}
 
 	public static void registerBlock(Block block, Identifier identifier)
