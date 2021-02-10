@@ -1,1 +1,1 @@
-{"parent":"minecraft:block/cube_column","textures":{"side":"pswg:block/log_sequoia_side","end":"pswg:block/log_sequoia_top"}}
+{"parent":"minecraft:block/cube_column","textures":{"side":"pswg:block/sequoia_log_side","end":"pswg:block/sequoia_log_top"}}
