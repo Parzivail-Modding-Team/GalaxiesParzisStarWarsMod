@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.client.model.npc.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -58,15 +59,25 @@ public class SpeciesSelectScreen extends Screen
 
 		speciesVariableValueListWidget = new SimpleListWidget<>(client, 310, 50, 120, 200, 15, entry -> {
 			updateAbility();
+
+			if (entry != null)
+			{
+				SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
+				SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
+				SwgSpecies species = speciesEntry.getValue();
+
+				species.setVariable(selectedVariable.getValue(), entry);
+			}
 		});
 		speciesVariableValueListWidget.setEntrySelector(entries -> {
+			SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
 			SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
-			if (selectedVariable == null)
+			if (speciesEntry == null || selectedVariable == null)
 				return entries.get(0);
 
 			SpeciesVariable variable = selectedVariable.getValue();
-			String defaultValue = variable.getDefaultValue();
-			Optional<SimpleListWidget.Entry<String>> entry = entries.stream().filter(stringEntry -> defaultValue.equals(stringEntry.getValue())).findFirst();
+			String varValue = speciesEntry.getValue().getVariable(variable);
+			Optional<SimpleListWidget.Entry<String>> entry = entries.stream().filter(stringEntry -> varValue.equals(stringEntry.getValue())).findFirst();
 			return entry.orElseGet(() -> entries.get(0));
 		});
 
@@ -125,12 +136,16 @@ public class SpeciesSelectScreen extends Screen
 
 		int x = 500;
 		int y = 200;
-		drawEntity(x, y, 30, x - mouseX, y - mouseY);
+		drawEntity(x, y, 50, x - mouseX, y - 75 - mouseY);
 	}
 
 	private String getSpeciesString()
 	{
-		return "pswg:togruta/f;pswg:body=orange";
+		SimpleListWidget.Entry<SwgSpecies> entry = speciesListWidget.getSelected();
+		if (entry == null)
+			return null;
+
+		return entry.getValue().serialize();
 	}
 
 	public void drawEntity(int x, int y, int size, float mouseX, float mouseY)
@@ -153,21 +168,24 @@ public class SpeciesSelectScreen extends Screen
 		float j = entity.pitch;
 		float k = entity.prevHeadYaw;
 		float l = entity.headYaw;
-		entity.bodyYaw = 180.0F;
+		entity.bodyYaw = 180.0F + f * 20.0F;
 		entity.yaw = 180.0F + f * 40.0F;
 		entity.pitch = -g * 20.0F;
 		entity.headYaw = entity.yaw;
 		entity.prevHeadYaw = entity.yaw;
-		quaternion2.conjugate();
 		VertexConsumerProvider.Immediate immediate = client.getBufferBuilders().getEntityVertexConsumers();
 
-		SwgSpecies species = SwgSpeciesRegistry.deserialize(getSpeciesString());
-		EntityRenderDispatcherAccessor erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
-		Map<String, PlayerEntityRenderer> renderers =  erda.getModelRenderers();
+		String speciesString = getSpeciesString();
+		if (speciesString != null)
+		{
+			SwgSpecies species = SwgSpeciesRegistry.deserialize(speciesString);
+			EntityRenderDispatcherAccessor erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
+			Map<String, PlayerEntityRenderer> renderers = erda.getModelRenderers();
 
-		PlayerEntityRenderer renderer = renderers.get(species.getModel().toString());
-		client.getEntityRenderDispatcher().textureManager.bindTexture(SwgSpeciesModels.getTexture(species));
-		renderer.render(client.player, 0, 0, matrixStack, immediate, 0xf000f0);
+			PlayerEntityRendererWithModel renderer = (PlayerEntityRendererWithModel)renderers.get(species.getModel().toString());
+
+			renderer.renderWithTexture(SwgSpeciesModels.getTexture(species), client.player, 1, 1, matrixStack, immediate, 0xf000f0);
+		}
 
 		immediate.draw();
 		entity.bodyYaw = h;

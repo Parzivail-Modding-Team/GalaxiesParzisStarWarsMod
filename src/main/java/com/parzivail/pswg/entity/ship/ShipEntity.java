@@ -239,9 +239,11 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		// Stray movement packets seem to make their way to the
 		// client way after the ship has stopped so we just ignore
 		// them
-		if (getThrottle() > 0)
+		if (getPrimaryPassenger() == null || getThrottle() > 0)
+		{
 			this.updatePosition(x, y, z);
-		this.setRotation(yaw, pitch);
+			this.setRotation(yaw, pitch);
+		}
 	}
 
 	public ActionResult interact(PlayerEntity player, Hand hand)

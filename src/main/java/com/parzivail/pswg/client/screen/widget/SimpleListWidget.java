@@ -96,6 +96,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 
 	public void clear()
 	{
+		setScrollAmount(0);
 		this.setSelected(null);
 		this.clearEntries();
 	}
@@ -103,6 +104,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 	public void setEntries(List<T> values)
 	{
 		clear();
+
 		for (T value : values)
 			addEntry(new Entry<>(this, value));
 
@@ -133,6 +135,8 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 
 		Window window = client.getWindow();
 		double scaleFactor = window.getScaleFactor();
+
+		// TODO: where'd the scrollbar go?
 		GL11.glScissor((int)(left * scaleFactor), window.getHeight() - (int)(bottom * scaleFactor), (int)((right - left) * scaleFactor), (int)((bottom - top) * scaleFactor));
 
 		super.render(matrices, mouseX, mouseY, delta);
