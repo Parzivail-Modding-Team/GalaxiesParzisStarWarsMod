@@ -104,6 +104,11 @@ public abstract class SwgSpecies
 		return gender;
 	}
 
+	public void setGender(SpeciesGender gender)
+	{
+		this.gender = gender;
+	}
+
 	public String getVariable(SpeciesVariable variable)
 	{
 		return variables.get(variable.getName());

@@ -6,13 +6,16 @@ import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
+import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
+import com.parzivail.util.math.Ease;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -24,6 +27,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
+import org.apache.commons.lang3.ArrayUtils;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Map;
 import java.util.Optional;
@@ -36,9 +42,13 @@ public class SpeciesSelectScreen extends Screen
 
 	private final Screen parent;
 
+	private CheckboxWidget cbGender;
 	private SimpleListWidget<SwgSpecies> speciesListWidget;
 	private SimpleListWidget<SpeciesVariable> speciesVariableListWidget;
 	private SimpleListWidget<String> speciesVariableValueListWidget;
+
+	private static final int CAROUSEL_TIMER_MAX = 10;
+	private int carouselTimer = 0;
 
 	public SpeciesSelectScreen(Screen parent)
 	{
@@ -99,15 +109,20 @@ public class SpeciesSelectScreen extends Screen
 		});
 		speciesListWidget.setEntryFormatter(species -> new TranslatableText(species.getSlug().toString()));
 
-		this.children.add(speciesVariableValueListWidget);
+//		this.children.add(speciesVariableValueListWidget);
 		this.children.add(speciesVariableListWidget);
 		this.children.add(speciesListWidget);
+
+		this.addButton(cbGender = new CheckboxWidget(50, 230, 20, 20, new TranslatableText("female"), false, true));
 
 		speciesListWidget.setEntries(SwgSpeciesRegistry.getSpecies());
 	}
 
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers)
 	{
+		if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_RIGHT)
+			return moveToNextVariableOption(keyCode == GLFW.GLFW_KEY_LEFT);
+
 		if (super.keyPressed(keyCode, scanCode, modifiers))
 			return true;
 		else if (this.speciesListWidget.getSelected() != null)
@@ -118,6 +133,46 @@ public class SpeciesSelectScreen extends Screen
 			return this.speciesVariableValueListWidget.keyPressed(keyCode, scanCode, modifiers);
 		else
 			return false;
+	}
+
+	private boolean moveToNextVariableOption(boolean left)
+	{
+		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
+		SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
+		if (speciesEntry == null || selectedVariable == null)
+			return false;
+
+		SwgSpecies species = speciesEntry.getValue();
+		SpeciesVariable variable = selectedVariable.getValue();
+		String[] values = variable.getPossibleValues();
+		String selectedValue = species.getVariable(variable);
+
+		int nextIndex = ArrayUtils.indexOf(values, selectedValue);
+
+		if (left)
+		{
+			nextIndex--;
+			carouselTimer = -CAROUSEL_TIMER_MAX;
+		}
+		else
+		{
+			nextIndex++;
+			carouselTimer = CAROUSEL_TIMER_MAX;
+		}
+
+		species.setVariable(variable, values[(values.length + nextIndex) % values.length]);
+		return true;
+	}
+
+	@Override
+	public void tick()
+	{
+		super.tick();
+
+		if (carouselTimer > 0)
+			carouselTimer--;
+		else if (carouselTimer < 0)
+			carouselTimer++;
 	}
 
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
@@ -134,29 +189,61 @@ public class SpeciesSelectScreen extends Screen
 		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
 		super.render(matrices, mouseX, mouseY, delta);
 
-		int x = 500;
-		int y = 200;
-		drawEntity(x, y, 50, x - mouseX, y - 75 - mouseY);
+		int x = width / 2;
+		int y = 350;
+
+		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
+		SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
+		if (speciesEntry == null || selectedVariable == null)
+			return;
+
+		SwgSpecies species = speciesEntry.getValue();
+		species.setGender(cbGender.isChecked() ? SpeciesGender.FEMALE : SpeciesGender.MALE);
+		SpeciesVariable variable = selectedVariable.getValue();
+
+		String[] values = variable.getPossibleValues();
+		String selectedValue = species.getVariable(variable);
+
+		int selectedIndex = ArrayUtils.indexOf(values, selectedValue);
+
+		for (int j = 0; j < values.length; j++)
+		{
+			String value = values[j];
+			species.setVariable(variable, value);
+
+			matrices.push();
+
+			float modelOffset = j - selectedIndex + Ease.inCubic((carouselTimer - (delta * Math.signum(carouselTimer))) / (float)CAROUSEL_TIMER_MAX);
+
+			if (modelOffset != 0)
+			{
+				float scale = -Math.abs(modelOffset / 10f) + 1;
+				matrices.scale(scale, scale, scale);
+				matrices.translate(0, -height * (1 - scale) * 0.15f, 0);
+			}
+
+			drawEntity(matrices, species.serialize(), (int)(x + modelOffset * 50), y, 50, x - mouseX, y - 75 - mouseY);
+
+			GL11.glColor4f(1, 1, 1, 1);
+			matrices.pop();
+		}
+
+		species.setVariable(variable, selectedValue);
 	}
 
-	private String getSpeciesString()
+	public void drawEntity(MatrixStack matrixStack, String speciesString, int x, int y, int size, float mouseX, float mouseY)
 	{
-		SimpleListWidget.Entry<SwgSpecies> entry = speciesListWidget.getSelected();
-		if (entry == null)
-			return null;
+		if (speciesString == null)
+			return;
 
-		return entry.getValue().serialize();
-	}
+		matrixStack.push();
+		RenderSystem.pushMatrix();
 
-	public void drawEntity(int x, int y, int size, float mouseX, float mouseY)
-	{
 		PlayerEntity entity = client.player;
 		float f = (float)Math.atan(mouseX / 40.0F);
 		float g = (float)Math.atan(mouseY / 40.0F);
-		RenderSystem.pushMatrix();
 		RenderSystem.translatef((float)x, (float)y, 1050.0F);
 		RenderSystem.scalef(1.0F, 1.0F, -1.0F);
-		MatrixStack matrixStack = new MatrixStack();
 		matrixStack.translate(0.0D, 0.0D, 1000.0D);
 		matrixStack.scale((float)size, (float)size, (float)size);
 		Quaternion quaternion = Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
@@ -173,19 +260,16 @@ public class SpeciesSelectScreen extends Screen
 		entity.pitch = -g * 20.0F;
 		entity.headYaw = entity.yaw;
 		entity.prevHeadYaw = entity.yaw;
+
 		VertexConsumerProvider.Immediate immediate = client.getBufferBuilders().getEntityVertexConsumers();
 
-		String speciesString = getSpeciesString();
-		if (speciesString != null)
-		{
-			SwgSpecies species = SwgSpeciesRegistry.deserialize(speciesString);
-			EntityRenderDispatcherAccessor erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
-			Map<String, PlayerEntityRenderer> renderers = erda.getModelRenderers();
+		EntityRenderDispatcherAccessor erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
+		Map<String, PlayerEntityRenderer> renderers = erda.getModelRenderers();
 
-			PlayerEntityRendererWithModel renderer = (PlayerEntityRendererWithModel)renderers.get(species.getModel().toString());
+		SwgSpecies species = SwgSpeciesRegistry.deserialize(speciesString);
+		PlayerEntityRendererWithModel renderer = (PlayerEntityRendererWithModel)renderers.get(species.getModel().toString());
 
-			renderer.renderWithTexture(SwgSpeciesModels.getTexture(species), client.player, 1, 1, matrixStack, immediate, 0xf000f0);
-		}
+		renderer.renderWithTexture(SwgSpeciesModels.getTexture(species), client.player, 1, 1, matrixStack, immediate, 0xf000f0);
 
 		immediate.draw();
 		entity.bodyYaw = h;
@@ -193,6 +277,8 @@ public class SpeciesSelectScreen extends Screen
 		entity.pitch = j;
 		entity.prevHeadYaw = k;
 		entity.headYaw = l;
+
+		matrixStack.pop();
 		RenderSystem.popMatrix();
 	}
 
