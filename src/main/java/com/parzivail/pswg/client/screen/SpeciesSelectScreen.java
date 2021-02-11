@@ -26,13 +26,12 @@ import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class SpeciesSelectScreen extends Screen
@@ -45,10 +44,10 @@ public class SpeciesSelectScreen extends Screen
 	private CheckboxWidget cbGender;
 	private SimpleListWidget<SwgSpecies> speciesListWidget;
 	private SimpleListWidget<SpeciesVariable> speciesVariableListWidget;
-	private SimpleListWidget<String> speciesVariableValueListWidget;
 
 	private static final int CAROUSEL_TIMER_MAX = 10;
 	private int carouselTimer = 0;
+	private boolean looping = false;
 
 	public SpeciesSelectScreen(Screen parent)
 	{
@@ -67,35 +66,7 @@ public class SpeciesSelectScreen extends Screen
 			this.client.openScreen(this.parent);
 		}));
 
-		speciesVariableValueListWidget = new SimpleListWidget<>(client, 310, 50, 120, 200, 15, entry -> {
-			updateAbility();
-
-			if (entry != null)
-			{
-				SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
-				SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
-				SwgSpecies species = speciesEntry.getValue();
-
-				species.setVariable(selectedVariable.getValue(), entry);
-			}
-		});
-		speciesVariableValueListWidget.setEntrySelector(entries -> {
-			SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
-			SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
-			if (speciesEntry == null || selectedVariable == null)
-				return entries.get(0);
-
-			SpeciesVariable variable = selectedVariable.getValue();
-			String varValue = speciesEntry.getValue().getVariable(variable);
-			Optional<SimpleListWidget.Entry<String>> entry = entries.stream().filter(stringEntry -> varValue.equals(stringEntry.getValue())).findFirst();
-			return entry.orElseGet(() -> entries.get(0));
-		});
-
 		speciesVariableListWidget = new SimpleListWidget<>(client, 180, 50, 120, 200, 15, entry -> {
-			if (entry != null)
-				speciesVariableValueListWidget.setEntries(entry.getPossibleValues());
-			else
-				speciesVariableValueListWidget.clear();
 			updateAbility();
 		});
 		speciesVariableListWidget.setEntryFormatter(var -> new TranslatableText(var.getName().toString()));
@@ -109,7 +80,6 @@ public class SpeciesSelectScreen extends Screen
 		});
 		speciesListWidget.setEntryFormatter(species -> new TranslatableText(species.getSlug().toString()));
 
-//		this.children.add(speciesVariableValueListWidget);
 		this.children.add(speciesVariableListWidget);
 		this.children.add(speciesListWidget);
 
@@ -129,8 +99,6 @@ public class SpeciesSelectScreen extends Screen
 			return this.speciesListWidget.keyPressed(keyCode, scanCode, modifiers);
 		else if (this.speciesVariableListWidget.getSelected() != null)
 			return this.speciesVariableListWidget.keyPressed(keyCode, scanCode, modifiers);
-		else if (this.speciesVariableValueListWidget.getSelected() != null)
-			return this.speciesVariableValueListWidget.keyPressed(keyCode, scanCode, modifiers);
 		else
 			return false;
 	}
@@ -160,6 +128,8 @@ public class SpeciesSelectScreen extends Screen
 			carouselTimer = CAROUSEL_TIMER_MAX;
 		}
 
+		looping = nextIndex == values.length || nextIndex == -1;
+
 		species.setVariable(variable, values[(values.length + nextIndex) % values.length]);
 		return true;
 	}
@@ -185,12 +155,12 @@ public class SpeciesSelectScreen extends Screen
 		this.renderBackground(matrices);
 		this.speciesListWidget.render(matrices, mouseX, mouseY, delta);
 		this.speciesVariableListWidget.render(matrices, mouseX, mouseY, delta);
-		this.speciesVariableValueListWidget.render(matrices, mouseX, mouseY, delta);
 		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
 		super.render(matrices, mouseX, mouseY, delta);
 
 		int x = width / 2;
-		int y = 350;
+		int y = height / 2;
+		int modelSize = 100;
 
 		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
 		SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
@@ -213,18 +183,20 @@ public class SpeciesSelectScreen extends Screen
 
 			matrices.push();
 
-			float modelOffset = j - selectedIndex + Ease.inCubic((carouselTimer - (delta * Math.signum(carouselTimer))) / (float)CAROUSEL_TIMER_MAX);
+			float modelOffset = j - selectedIndex;
+			float timer = (carouselTimer - (delta * Math.signum(carouselTimer))) / (float)CAROUSEL_TIMER_MAX;
 
-			if (modelOffset != 0)
-			{
-				float scale = -Math.abs(modelOffset / 10f) + 1;
-				matrices.scale(scale, scale, scale);
-				matrices.translate(0, -height * (1 - scale) * 0.15f, 0);
-			}
+			if (looping)
+				timer = MathHelper.lerp(timer, 0, -1 - (values.length - 1) / 20f);
 
-			drawEntity(matrices, species.serialize(), (int)(x + modelOffset * 50), y, 50, x - mouseX, y - 75 - mouseY);
+			modelOffset += Ease.inCubic(timer);
 
-			GL11.glColor4f(1, 1, 1, 1);
+			float scale = -Math.abs(modelOffset / 2.5f) + 1;
+			matrices.scale(scale, scale, scale);
+			matrices.translate(0, modelSize, 0);
+
+			drawEntity(matrices, species.serialize(), (int)(x + modelOffset * modelSize), y, modelSize, x - mouseX, y - 75 - mouseY);
+
 			matrices.pop();
 		}
 
@@ -242,9 +214,9 @@ public class SpeciesSelectScreen extends Screen
 		PlayerEntity entity = client.player;
 		float f = (float)Math.atan(mouseX / 40.0F);
 		float g = (float)Math.atan(mouseY / 40.0F);
-		RenderSystem.translatef((float)x, (float)y, 1050.0F);
+		RenderSystem.translatef((float)x, (float)y, 1000.0F);
 		RenderSystem.scalef(1.0F, 1.0F, -1.0F);
-		matrixStack.translate(0.0D, 0.0D, 1000.0D);
+		matrixStack.translate(0.0D, 0.0D, 500.0D);
 		matrixStack.scale((float)size, (float)size, (float)size);
 		Quaternion quaternion = Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
 		Quaternion quaternion2 = Vector3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
