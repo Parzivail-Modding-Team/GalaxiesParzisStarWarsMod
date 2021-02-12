@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.model.npc.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
@@ -21,6 +22,7 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,6 +40,8 @@ public class SpeciesSelectScreen extends Screen
 {
 	//	public static final Identifier BACKGROUND = Resources.identifier("textures/block/");
 	public static final Identifier BACKGROUND = new Identifier("textures/gui/options_background.png");
+
+	public static final Identifier CAROUSEL = Resources.identifier("textures/gui/species_select/carousel.png");
 
 	private final Screen parent;
 
@@ -62,7 +66,7 @@ public class SpeciesSelectScreen extends Screen
 	@Override
 	protected void init()
 	{
-		this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 32, 200, 20, ScreenTexts.DONE, (button) -> {
+		this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 26, 200, 20, ScreenTexts.DONE, (button) -> {
 			this.client.openScreen(this.parent);
 		}));
 
@@ -160,7 +164,7 @@ public class SpeciesSelectScreen extends Screen
 
 		int x = width / 2;
 		int y = height / 2;
-		int modelSize = 100;
+		int modelSize = 60;
 
 		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
 		SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
@@ -175,6 +179,13 @@ public class SpeciesSelectScreen extends Screen
 		String selectedValue = species.getVariable(variable);
 
 		int selectedIndex = ArrayUtils.indexOf(values, selectedValue);
+
+		Window window = client.getWindow();
+
+		this.client.getTextureManager().bindTexture(CAROUSEL);
+		drawTexture(matrices, width / 2 - 128, height / 2 - 91, 0, 0, 256, 182);
+
+		matrices.push();
 
 		for (int j = 0; j < values.length; j++)
 		{
@@ -191,14 +202,18 @@ public class SpeciesSelectScreen extends Screen
 
 			modelOffset += Ease.inCubic(timer);
 
-			float scale = -Math.abs(modelOffset / 2.5f) + 1;
+			matrices.translate((int)(x + Math.signum(modelOffset) * Math.pow(Math.abs((modelOffset * 0.8f)), 0.7f) * modelSize), y, 0);
+
+			float scale = -Math.abs(modelOffset / 3f) + 1;
 			matrices.scale(scale, scale, scale);
 			matrices.translate(0, modelSize, 0);
 
-			drawEntity(matrices, species.serialize(), (int)(x + modelOffset * modelSize), y, modelSize, x - mouseX, y - 75 - mouseY);
+			drawEntity(matrices, species.serialize(), 0, 0, modelSize, x - mouseX, y - 75 - mouseY);
 
 			matrices.pop();
 		}
+
+		matrices.pop();
 
 		species.setVariable(variable, selectedValue);
 	}
