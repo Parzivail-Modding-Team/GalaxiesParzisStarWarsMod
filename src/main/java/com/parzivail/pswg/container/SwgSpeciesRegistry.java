@@ -57,4 +57,14 @@ public class SwgSpeciesRegistry
 
 		return SPECIES.get(id).apply(serialized);
 	}
+
+	public static String getTranslationKey(SwgSpecies species)
+	{
+		return getTranslationKey(species.getSlug());
+	}
+
+	public static String getTranslationKey(Identifier species)
+	{
+		return "species." + species.getNamespace() + "." + species.getPath();
+	}
 }

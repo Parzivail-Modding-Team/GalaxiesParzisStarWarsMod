@@ -22,10 +22,10 @@ import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -73,7 +73,7 @@ public class SpeciesSelectScreen extends Screen
 		speciesVariableListWidget = new SimpleListWidget<>(client, 180, 50, 120, 200, 15, entry -> {
 			updateAbility();
 		});
-		speciesVariableListWidget.setEntryFormatter(var -> new TranslatableText(var.getName().toString()));
+		speciesVariableListWidget.setEntryFormatter(speciesVariable -> new TranslatableText(speciesVariable.getTranslationKey()));
 
 		speciesListWidget = new SimpleListWidget<>(client, 50, 50, 120, 200, 15, entry -> {
 			if (entry != null)
@@ -82,12 +82,20 @@ public class SpeciesSelectScreen extends Screen
 				speciesVariableListWidget.clear();
 			updateAbility();
 		});
-		speciesListWidget.setEntryFormatter(species -> new TranslatableText(species.getSlug().toString()));
+		speciesListWidget.setEntryFormatter(species -> new TranslatableText(SwgSpeciesRegistry.getTranslationKey(species)));
 
 		this.children.add(speciesVariableListWidget);
 		this.children.add(speciesListWidget);
 
 		this.addButton(cbGender = new CheckboxWidget(50, 230, 20, 20, new TranslatableText("female"), false, true));
+
+		this.addButton(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, new LiteralText("<"), (button) -> {
+			moveToNextVariableOption(true);
+		}));
+
+		this.addButton(new ButtonWidget(this.width / 2 + 100, this.height / 2 - 10, 20, 20, new LiteralText(">"), (button) -> {
+			moveToNextVariableOption(false);
+		}));
 
 		speciesListWidget.setEntries(SwgSpeciesRegistry.getSpecies());
 	}
@@ -151,6 +159,12 @@ public class SpeciesSelectScreen extends Screen
 
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
 	{
+		if (Math.abs(mouseX - width / 2) < 128 && Math.abs(mouseY - height / 2) < 91)
+		{
+			moveToNextVariableOption(amount < 0);
+			return true;
+		}
+
 		return super.mouseScrolled(mouseX, mouseY, amount);
 	}
 
@@ -160,7 +174,6 @@ public class SpeciesSelectScreen extends Screen
 		this.speciesListWidget.render(matrices, mouseX, mouseY, delta);
 		this.speciesVariableListWidget.render(matrices, mouseX, mouseY, delta);
 		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
-		super.render(matrices, mouseX, mouseY, delta);
 
 		int x = width / 2;
 		int y = height / 2;
@@ -168,54 +181,58 @@ public class SpeciesSelectScreen extends Screen
 
 		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
 		SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
-		if (speciesEntry == null || selectedVariable == null)
-			return;
-
-		SwgSpecies species = speciesEntry.getValue();
-		species.setGender(cbGender.isChecked() ? SpeciesGender.FEMALE : SpeciesGender.MALE);
-		SpeciesVariable variable = selectedVariable.getValue();
-
-		String[] values = variable.getPossibleValues();
-		String selectedValue = species.getVariable(variable);
-
-		int selectedIndex = ArrayUtils.indexOf(values, selectedValue);
-
-		Window window = client.getWindow();
-
-		this.client.getTextureManager().bindTexture(CAROUSEL);
-		drawTexture(matrices, width / 2 - 128, height / 2 - 91, 0, 0, 256, 182);
-
-		matrices.push();
-
-		for (int j = 0; j < values.length; j++)
+		if (speciesEntry != null && selectedVariable != null)
 		{
-			String value = values[j];
-			species.setVariable(variable, value);
+			SwgSpecies species = speciesEntry.getValue();
+			species.setGender(cbGender.isChecked() ? SpeciesGender.FEMALE : SpeciesGender.MALE);
+			SpeciesVariable variable = selectedVariable.getValue();
+
+			String[] values = variable.getPossibleValues();
+			String selectedValue = species.getVariable(variable);
+
+			int selectedIndex = ArrayUtils.indexOf(values, selectedValue);
+
+			this.client.getTextureManager().bindTexture(CAROUSEL);
+			drawTexture(matrices, width / 2 - 128, height / 2 - 91, 0, 0, 256, 182);
+
+			drawCenteredText(matrices, this.textRenderer, new TranslatableText(variable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
 
 			matrices.push();
 
-			float modelOffset = j - selectedIndex;
-			float timer = (carouselTimer - (delta * Math.signum(carouselTimer))) / (float)CAROUSEL_TIMER_MAX;
+			for (int j = 0; j < values.length; j++)
+			{
+				String value = values[j];
+				species.setVariable(variable, value);
 
-			if (looping)
-				timer = MathHelper.lerp(timer, 0, -1 - (values.length - 1) / 20f);
+				matrices.push();
 
-			modelOffset += Ease.inCubic(timer);
+				float offsetTimer = j - selectedIndex;
+				float timer = (carouselTimer - (delta * Math.signum(carouselTimer))) / (float)CAROUSEL_TIMER_MAX;
 
-			matrices.translate((int)(x + Math.signum(modelOffset) * Math.pow(Math.abs((modelOffset * 0.8f)), 0.7f) * modelSize), y, 0);
+				if (looping)
+					timer = MathHelper.lerp(timer, 0, -1 - (values.length - 1) / 20f);
 
-			float scale = -Math.abs(modelOffset / 3f) + 1;
-			matrices.scale(scale, scale, scale);
-			matrices.translate(0, modelSize, 0);
+				offsetTimer += Ease.inCubic(timer);
+				double offset = Math.signum(offsetTimer) * Math.pow(Math.abs((offsetTimer * 0.8f)), 0.7f) * modelSize;
 
-			drawEntity(matrices, species.serialize(), 0, 0, modelSize, x - mouseX, y - 75 - mouseY);
+				matrices.translate((int)(x + offset), y, 0);
+
+				float scale = -Math.abs(offsetTimer / 3f) + 1;
+				matrices.translate(0, offset / 2f * (scale + 0.3f), 0);
+				matrices.scale(scale, scale, scale);
+				matrices.translate(0, modelSize, 0);
+
+				drawEntity(matrices, species.serialize(), 0, 0, modelSize, x - mouseX, y - modelSize / 2f - mouseY);
+
+				matrices.pop();
+			}
 
 			matrices.pop();
+
+			species.setVariable(variable, selectedValue);
 		}
 
-		matrices.pop();
-
-		species.setVariable(variable, selectedValue);
+		super.render(matrices, mouseX, mouseY, delta);
 	}
 
 	public void drawEntity(MatrixStack matrixStack, String speciesString, int x, int y, int size, float mouseX, float mouseY)

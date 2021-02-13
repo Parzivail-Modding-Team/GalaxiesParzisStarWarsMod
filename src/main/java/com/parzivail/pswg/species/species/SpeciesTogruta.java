@@ -1,6 +1,5 @@
 package com.parzivail.pswg.species.species;
 
-import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
@@ -13,8 +12,8 @@ import java.util.Collection;
 
 public class SpeciesTogruta extends SwgSpecies
 {
-	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(
-			Resources.identifier("body"),
+	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA,
+			"body",
 			"green",
 			"green",
 			"orange",
@@ -22,8 +21,8 @@ public class SpeciesTogruta extends SwgSpecies
 			"red"
 	);
 
-	private static final SpeciesVariable VAR_MONTRALS = new SpeciesVariable(
-			Resources.identifier("montral"),
+	private static final SpeciesVariable VAR_MONTRALS = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA,
+			"montral",
 			"1",
 			"1",
 			"2",

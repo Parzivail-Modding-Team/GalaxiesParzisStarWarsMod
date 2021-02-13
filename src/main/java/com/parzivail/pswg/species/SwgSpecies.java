@@ -48,7 +48,7 @@ public abstract class SwgSpecies
 		return new Identifier(slug.getNamespace(), "textures/species/" + slug.getPath() + "/" + texture + ".png");
 	}
 
-	protected final Map<Identifier, String> variables = new HashMap<>();
+	protected final Map<String, String> variables = new HashMap<>();
 	protected Identifier model;
 	protected SpeciesGender gender;
 
@@ -75,7 +75,7 @@ public abstract class SwgSpecies
 			for (String variable : variables)
 			{
 				String[] pairParts = variable.split(VARIABLE_EQUALS, 2);
-				this.variables.put(new Identifier(pairParts[0]), pairParts[1]);
+				this.variables.put(pairParts[0], pairParts[1]);
 			}
 		}
 	}
@@ -124,7 +124,7 @@ public abstract class SwgSpecies
 		String variablePairs = variables
 				.entrySet()
 				.stream()
-				.map(variable -> variable.getKey().toString() + VARIABLE_EQUALS + variable.getValue())
+				.map(variable -> variable.getKey() + VARIABLE_EQUALS + variable.getValue())
 				.collect(Collectors.joining(VARIABLE_SEPARATOR));
 
 		return SpeciesGender.toModel(this).toString() + MODEL_SEPARATOR + variablePairs;

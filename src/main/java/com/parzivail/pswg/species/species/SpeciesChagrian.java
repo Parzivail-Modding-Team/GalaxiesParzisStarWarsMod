@@ -1,6 +1,5 @@
 package com.parzivail.pswg.species.species;
 
-import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
@@ -13,11 +12,11 @@ import java.util.Collection;
 
 public class SpeciesChagrian extends SwgSpecies
 {
-	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(
-			Resources.identifier("body"),
-			"blue",
-			"black",
-			"blue"
+	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_CHAGRIAN,
+	                                                             "body",
+	                                                             "blue",
+	                                                             "black",
+	                                                             "blue"
 	);
 
 	public SpeciesChagrian(String serialized)

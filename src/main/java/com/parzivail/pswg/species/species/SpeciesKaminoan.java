@@ -1,6 +1,5 @@
 package com.parzivail.pswg.species.species;
 
-import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
@@ -13,12 +12,12 @@ import java.util.Collection;
 
 public class SpeciesKaminoan extends SwgSpecies
 {
-	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(
-			Resources.identifier("body"),
-			"white",
-			"blue",
-			"purple",
-			"white"
+	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_KAMINOAN,
+	                                                             "body",
+	                                                             "white",
+	                                                             "blue",
+	                                                             "purple",
+	                                                             "white"
 	);
 
 	public SpeciesKaminoan(String serialized)
