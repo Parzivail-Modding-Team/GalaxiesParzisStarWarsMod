@@ -52,7 +52,6 @@ public class StackedTexture extends ResourceTexture
 		image.upload(0, 0, 0, true);
 	}
 
-	@SuppressWarnings("ConstantConditions")
 	public void load(ResourceManager manager) throws IOException
 	{
 		Client.minecraft.execute(() -> {

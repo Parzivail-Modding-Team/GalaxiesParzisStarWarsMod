@@ -30,7 +30,7 @@ public class StackedTextureProvider
 		this.identifierRoot = identifierRoot;
 	}
 
-	public Identifier loadTexture(String id, Supplier<Identifier> fallback, Collection<Identifier> textures)
+	public Identifier loadTexture(String id, Supplier<Identifier> fallback, Supplier<Collection<Identifier>> textures)
 	{
 		Identifier identifier = getIdentifier(id);
 		AbstractTexture texture = textureManager.getTexture(identifier);
@@ -42,7 +42,7 @@ public class StackedTextureProvider
 		if (!TEXTURE_CACHE.containsKey(id))
 		{
 			// The texture hasn't been stacked yet
-			loadTexture(identifier, textures);
+			loadTexture(identifier, textures.get());
 			TEXTURE_CACHE.put(id, identifier);
 		}
 
@@ -60,8 +60,8 @@ public class StackedTextureProvider
 						AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
 						if (!(abstractTexture instanceof StackedTexture))
 						{
-							StackedTexture remoteTexture = new StackedTexture(DefaultSkinHelper.getTexture(), textures);
-							this.textureManager.registerTexture(identifier, remoteTexture);
+							StackedTexture texture = new StackedTexture(DefaultSkinHelper.getTexture(), textures);
+							this.textureManager.registerTexture(identifier, texture);
 						}
 					});
 				});

@@ -161,7 +161,7 @@ public class SpeciesSelectScreen extends Screen
 	{
 		if (Math.abs(mouseX - width / 2) < 128 && Math.abs(mouseY - height / 2) < 91)
 		{
-			moveToNextVariableOption(amount < 0);
+			moveToNextVariableOption(amount > 0);
 			return true;
 		}
 

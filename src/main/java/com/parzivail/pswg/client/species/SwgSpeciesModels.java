@@ -48,7 +48,8 @@ public class SwgSpeciesModels
 	public static Identifier getTexture(SwgSpecies species)
 	{
 		int hashCode = species.hashCode();
+
 		// TODO: sensible fallback texture instead of just black for a frame?
-		return Client.stackedTextureProvider.loadTexture("species/" + hashCode, () -> new Identifier(""), species.getTextureStack());
+		return Client.stackedTextureProvider.loadTexture("species/" + hashCode, () -> new Identifier(""), species::getTextureStack);
 	}
 }

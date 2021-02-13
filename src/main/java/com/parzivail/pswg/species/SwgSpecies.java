@@ -148,7 +148,8 @@ public abstract class SwgSpecies
 	@Override
 	public int hashCode()
 	{
-		int result = gender.hashCode();
+		int result = getSlug().hashCode();
+		result = 31 * result + gender.hashCode();
 		result = 31 * result + variables.hashCode();
 		return result;
 	}
