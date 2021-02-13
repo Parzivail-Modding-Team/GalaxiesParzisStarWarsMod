@@ -49,7 +49,7 @@ public class SpeciesSelectScreen extends Screen
 	private SimpleListWidget<SwgSpecies> speciesListWidget;
 	private SimpleListWidget<SpeciesVariable> speciesVariableListWidget;
 
-	private static final int CAROUSEL_TIMER_MAX = 10;
+	private static final int CAROUSEL_TIMER_MAX = 6;
 	private int carouselTimer = 0;
 	private boolean looping = false;
 
@@ -222,7 +222,7 @@ public class SpeciesSelectScreen extends Screen
 				matrices.scale(scale, scale, scale);
 				matrices.translate(0, modelSize, 0);
 
-				drawEntity(matrices, species.serialize(), 0, 0, modelSize, x - mouseX, y - modelSize / 2f - mouseY);
+				drawEntity(matrices, species.serialize(), 0, 0, modelSize, (float)(x - mouseX + offset), y - modelSize / 2f - mouseY);
 
 				matrices.pop();
 			}

@@ -77,16 +77,19 @@ public class ModelTwilek<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.Chest.addCuboid(-3.0F, 2.0F, -4.0F, 6, 3, 2, 0.0F);
 		this.TailMidL.addChild(this.TailLowerL_1);
 		this.TailBaseR.addChild(this.TailMidR);
-		this.head.addChild(this.FrontalR);
 		this.head.addChild(this.TailBaseR);
 		this.head.addChild(this.SpikeR);
-		this.head.addChild(this.FrontalL);
 		this.TailMidR.addChild(this.TailLowerL);
 		this.head.addChild(this.TailBaseL);
 		this.head.addChild(this.SpikeL);
 		this.TailBaseL.addChild(this.TailMidL);
 
-		if (!male)
+		if (male)
+		{
+			this.head.addChild(this.FrontalR);
+			this.head.addChild(this.FrontalL);
+		}
+		else
 			this.torso.addChild(this.Chest);
 	}
 
