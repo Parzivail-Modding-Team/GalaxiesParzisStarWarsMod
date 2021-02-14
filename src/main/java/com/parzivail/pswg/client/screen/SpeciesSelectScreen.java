@@ -5,14 +5,19 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.model.npc.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
+import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.component.SwgPersistentComponents;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
 import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
 import com.parzivail.util.math.Ease;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -25,6 +30,7 @@ import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
@@ -33,6 +39,7 @@ import net.minecraft.util.math.Quaternion;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.List;
 import java.util.Map;
 
 @Environment(EnvType.CLIENT)
@@ -53,10 +60,17 @@ public class SpeciesSelectScreen extends Screen
 	private int carouselTimer = 0;
 	private boolean looping = false;
 
+	private final List<SwgSpecies> availableSpecies;
+	private SwgSpecies playerSpecies;
+
 	public SpeciesSelectScreen(Screen parent)
 	{
 		super(new TranslatableText("screen.pswg.species_select"));
 		this.parent = parent;
+
+		availableSpecies = SwgSpeciesRegistry.getSpecies();
+
+		availableSpecies.add(0, null);
 	}
 
 	private void updateAbility()
@@ -66,7 +80,10 @@ public class SpeciesSelectScreen extends Screen
 	@Override
 	protected void init()
 	{
-		this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 26, 200, 20, ScreenTexts.DONE, (button) -> {
+		SwgPersistentComponents c = SwgEntityComponents.getPersistent(client.player);
+		playerSpecies = c.getSpecies();
+
+		this.addButton(new ButtonWidget(this.width / 2 + 5, this.height - 26, 95, 20, ScreenTexts.DONE, (button) -> {
 			this.client.openScreen(this.parent);
 		}));
 
@@ -77,12 +94,19 @@ public class SpeciesSelectScreen extends Screen
 
 		speciesListWidget = new SimpleListWidget<>(client, width / 2 - 128 - 80, height / 2 - 91, 80, 182, 15, entry -> {
 			if (entry != null)
+			{
 				speciesVariableListWidget.setEntries(entry.getVariables());
+			}
 			else
 				speciesVariableListWidget.clear();
 			updateAbility();
 		});
 		speciesListWidget.setEntryFormatter(species -> new TranslatableText(SwgSpeciesRegistry.getTranslationKey(species)));
+		speciesListWidget.setEntrySelector(entries -> {
+			if (playerSpecies == null)
+				return entries.get(1);
+			return entries.stream().filter(swgSpeciesEntry -> playerSpecies.isSameSpecies(swgSpeciesEntry.getValue())).findFirst().orElse(null);
+		});
 
 		this.children.add(speciesVariableListWidget);
 		this.children.add(speciesListWidget);
@@ -97,7 +121,36 @@ public class SpeciesSelectScreen extends Screen
 			moveToNextVariableOption(false);
 		}));
 
-		speciesListWidget.setEntries(SwgSpeciesRegistry.getSpecies());
+		this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 26, 95, 20, new TranslatableText("gui.pswg.apply"), (button) -> {
+			if (speciesListWidget.getSelected() == null)
+				return;
+
+			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+
+			SwgSpecies selected = speciesListWidget.getSelected().getValue();
+
+			if (selected == null)
+				passedData.writeString("minecraft:none");
+			else
+			{
+				if (!selected.isSameSpecies(playerSpecies))
+					this.playerSpecies = SwgSpeciesRegistry.deserialize(selected.serialize());
+
+				if (speciesVariableListWidget.getSelected() == null)
+					return;
+
+				SpeciesVariable selectedVariable = speciesVariableListWidget.getSelected().getValue();
+
+				this.playerSpecies.setVariable(selectedVariable, selected.getVariable(selectedVariable));
+
+				passedData.writeString(this.playerSpecies.serialize());
+			}
+
+			ClientPlayNetworking.send(SwgPackets.C2S.PacketSetOwnSpecies, passedData);
+		}));
+
+		speciesListWidget.setEntries(availableSpecies);
+		speciesListWidget.setSelected(speciesListWidget.getEntries().get(1));
 	}
 
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers)
@@ -118,14 +171,14 @@ public class SpeciesSelectScreen extends Screen
 	private boolean moveToNextVariableOption(boolean left)
 	{
 		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
-		SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
-		if (speciesEntry == null || selectedVariable == null)
+		SimpleListWidget.Entry<SpeciesVariable> selectedVariableEntry = speciesVariableListWidget.getSelected();
+		if (speciesEntry == null || selectedVariableEntry == null)
 			return false;
 
-		SwgSpecies species = speciesEntry.getValue();
-		SpeciesVariable variable = selectedVariable.getValue();
-		String[] values = variable.getPossibleValues();
-		String selectedValue = species.getVariable(variable);
+		SwgSpecies selectedSpecies = speciesEntry.getValue();
+		SpeciesVariable selectedVariable = selectedVariableEntry.getValue();
+		String[] values = selectedVariable.getPossibleValues();
+		String selectedValue = selectedSpecies.getVariable(selectedVariable);
 
 		int nextIndex = ArrayUtils.indexOf(values, selectedValue);
 
@@ -142,7 +195,7 @@ public class SpeciesSelectScreen extends Screen
 
 		looping = nextIndex == values.length || nextIndex == -1;
 
-		species.setVariable(variable, values[(values.length + nextIndex) % values.length]);
+		selectedSpecies.setVariable(selectedVariable, values[(values.length + nextIndex) % values.length]);
 		return true;
 	}
 
@@ -179,30 +232,33 @@ public class SpeciesSelectScreen extends Screen
 		int y = height / 2;
 		int modelSize = 60;
 
-		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
-		SimpleListWidget.Entry<SpeciesVariable> selectedVariable = speciesVariableListWidget.getSelected();
-		if (speciesEntry != null && selectedVariable != null)
-		{
-			SwgSpecies species = speciesEntry.getValue();
-			species.setGender(cbGender.isChecked() ? SpeciesGender.FEMALE : SpeciesGender.MALE);
-			SpeciesVariable variable = selectedVariable.getValue();
+		this.client.getTextureManager().bindTexture(CAROUSEL);
+		drawTexture(matrices, width / 2 - 128, height / 2 - 91, 0, 0, 256, 182);
 
-			String[] values = variable.getPossibleValues();
-			String selectedValue = species.getVariable(variable);
+		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
+		SimpleListWidget.Entry<SpeciesVariable> selectedVariableEntry = speciesVariableListWidget.getSelected();
+		if (speciesEntry != null && selectedVariableEntry != null)
+		{
+			SwgSpecies selectedSpecies = speciesEntry.getValue();
+			selectedSpecies.setGender(cbGender.isChecked() ? SpeciesGender.FEMALE : SpeciesGender.MALE);
+			SpeciesVariable selectedVariable = selectedVariableEntry.getValue();
+
+			String[] values = selectedVariable.getPossibleValues();
+			String selectedValue = selectedSpecies.getVariable(selectedVariable);
+
+			if (selectedSpecies.isSameSpecies(this.playerSpecies))
+				selectedSpecies.copyVariables(this.playerSpecies);
 
 			int selectedIndex = ArrayUtils.indexOf(values, selectedValue);
 
-			this.client.getTextureManager().bindTexture(CAROUSEL);
-			drawTexture(matrices, width / 2 - 128, height / 2 - 91, 0, 0, 256, 182);
-
-			drawCenteredText(matrices, this.textRenderer, new TranslatableText(variable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
+			drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
 
 			matrices.push();
 
 			for (int j = 0; j < values.length; j++)
 			{
 				String value = values[j];
-				species.setVariable(variable, value);
+				selectedSpecies.setVariable(selectedVariable, value);
 
 				matrices.push();
 
@@ -222,14 +278,14 @@ public class SpeciesSelectScreen extends Screen
 				matrices.scale(scale, scale, scale);
 				matrices.translate(0, modelSize, 0);
 
-				drawEntity(matrices, species.serialize(), 0, 0, modelSize, (float)(x - mouseX + offset), y - modelSize / 2f - mouseY);
+				drawEntity(matrices, selectedSpecies.serialize(), 0, 0, modelSize, (float)(x - mouseX + offset), y - modelSize / 2f - mouseY);
 
 				matrices.pop();
 			}
 
 			matrices.pop();
 
-			species.setVariable(variable, selectedValue);
+			selectedSpecies.setVariable(selectedVariable, selectedValue);
 		}
 
 		super.render(matrices, mouseX, mouseY, delta);

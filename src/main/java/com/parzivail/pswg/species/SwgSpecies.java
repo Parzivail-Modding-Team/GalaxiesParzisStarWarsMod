@@ -153,4 +153,19 @@ public abstract class SwgSpecies
 		result = 31 * result + variables.hashCode();
 		return result;
 	}
+
+	public boolean isSameSpecies(SwgSpecies other)
+	{
+		if (other == null)
+			return false;
+
+		return getSlug().equals(other.getSlug());
+	}
+
+	public void copyVariables(SwgSpecies species)
+	{
+		this.setDefaultVariables();
+		for (Map.Entry<String, String> pair : species.variables.entrySet())
+			this.variables.put(pair.getKey(), pair.getValue());
+	}
 }
