@@ -52,7 +52,7 @@ public class SpeciesTwilek extends SwgSpecies
 		ArrayList<Identifier> stack = new ArrayList<>();
 		stack.add(getGenderedTexture(this, getVariable(VAR_BODY)));
 		stack.add(getGenderedGlobalTexture(gender, "clothes"));
-		stack.add(getTexture(this, "eyes"));
+		stack.add(getGlobalTexture("eyes"));
 		return stack;
 	}
 }

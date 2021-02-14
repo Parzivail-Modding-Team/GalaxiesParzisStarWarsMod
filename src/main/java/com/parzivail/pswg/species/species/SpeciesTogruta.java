@@ -56,7 +56,7 @@ public class SpeciesTogruta extends SwgSpecies
 		stack.add(getGenderedTexture(this, getVariable(VAR_BODY)));
 		stack.add(getGenderedGlobalTexture(gender, "clothes"));
 		stack.add(getTexture(this, "montrals/" + getVariable(VAR_MONTRALS)));
-		stack.add(getTexture(this, "eyes"));
+		stack.add(getGlobalTexture("eyes"));
 		return stack;
 	}
 }
