@@ -42,7 +42,7 @@ public class SpeciesBith extends SwgSpecies
 	public Collection<Identifier> getTextureStack()
 	{
 		ArrayList<Identifier> stack = new ArrayList<>();
-		stack.add(getGenderedTexture(this, getVariable(VAR_BODY)));
+		stack.add(getGenderedTexture(this, VAR_BODY));
 		stack.add(getGenderedGlobalTexture(gender, "clothes"));
 		return stack;
 	}

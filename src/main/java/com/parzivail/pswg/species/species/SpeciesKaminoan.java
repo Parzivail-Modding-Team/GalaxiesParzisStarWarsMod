@@ -42,9 +42,9 @@ public class SpeciesKaminoan extends SwgSpecies
 	public Collection<Identifier> getTextureStack()
 	{
 		ArrayList<Identifier> stack = new ArrayList<>();
-		stack.add(getGenderedTexture(this, getVariable(VAR_BODY)));
-		stack.add(getGenderedTexture(this, "clothes"));
-		stack.add(getTexture(this, "eyes"));
+//		stack.add(getGenderedTexture(this, getVariable(VAR_BODY)));
+//		stack.add(getGenderedTexture(this, "clothes"));
+//		stack.add(getTexture(this, "eyes"));
 		return stack;
 	}
 }

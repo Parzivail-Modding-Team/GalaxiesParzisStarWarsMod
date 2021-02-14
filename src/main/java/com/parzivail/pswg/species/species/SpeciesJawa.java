@@ -12,13 +12,11 @@ import java.util.Collection;
 
 public class SpeciesJawa extends SwgSpecies
 {
-//	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(
-//			Resources.identifier("body"),
-//			"white",
-//			"green",
-//			"pink",
-//			"white"
-//	);
+	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_JAWA,
+			"body",
+			"brown",
+			"brown"
+	);
 
 	public SpeciesJawa(String serialized)
 	{
@@ -34,7 +32,7 @@ public class SpeciesJawa extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { /*VAR_BODY*/ };
+		return new SpeciesVariable[] { VAR_BODY };
 	}
 
 	@Override
@@ -42,7 +40,7 @@ public class SpeciesJawa extends SwgSpecies
 	public Collection<Identifier> getTextureStack()
 	{
 		ArrayList<Identifier> stack = new ArrayList<>();
-		stack.add(getGenderedTexture(this, "brown"));
+		stack.add(getGenderedTexture(this, VAR_BODY));
 //		stack.add(getGenderedGlobalTexture(gender, "clothes"));
 		return stack;
 	}

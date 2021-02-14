@@ -61,6 +61,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 		super(minecraftClient, width, height, y, y + height, itemHeight);
 		this.onSelectionChanged = onSelectionChanged;
 		this.setLeftPos(x);
+		this.method_31322(false);
 		this.method_31323(false);
 	}
 

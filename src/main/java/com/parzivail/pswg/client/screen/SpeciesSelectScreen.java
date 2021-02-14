@@ -70,12 +70,12 @@ public class SpeciesSelectScreen extends Screen
 			this.client.openScreen(this.parent);
 		}));
 
-		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, height / 2 - 91, 70, 200, 15, entry -> {
+		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, height / 2 - 91, 80, 182, 15, entry -> {
 			updateAbility();
 		});
 		speciesVariableListWidget.setEntryFormatter(speciesVariable -> new TranslatableText(speciesVariable.getTranslationKey()));
 
-		speciesListWidget = new SimpleListWidget<>(client, width / 2 - 128 - 70, height / 2 - 91, 70, 200, 15, entry -> {
+		speciesListWidget = new SimpleListWidget<>(client, width / 2 - 128 - 80, height / 2 - 91, 80, 182, 15, entry -> {
 			if (entry != null)
 				speciesVariableListWidget.setEntries(entry.getVariables());
 			else

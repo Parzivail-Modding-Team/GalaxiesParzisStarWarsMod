@@ -5,6 +5,13 @@ import net.minecraft.util.Identifier;
 
 public class SpeciesVariable
 {
+	public static final String NONE = "none";
+
+	public static boolean isNone(SwgSpecies species, SpeciesVariable variable)
+	{
+		return species.getVariable(variable).equals(NONE);
+	}
+
 	private final Identifier species;
 	private final String name;
 	private final String defaultValue;
