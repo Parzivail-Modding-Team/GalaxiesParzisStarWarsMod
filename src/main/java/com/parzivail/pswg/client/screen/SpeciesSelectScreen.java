@@ -152,7 +152,8 @@ public class SpeciesSelectScreen extends Screen
 
 		this.addButton(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("gui.pswg.use_female_model"), this.gender == SpeciesGender.FEMALE, (checked) -> {
 			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
-			this.playerSpecies.setGender(gender);
+			if (this.playerSpecies != null)
+				this.playerSpecies.setGender(gender);
 		}));
 
 		speciesListWidget.setEntries(availableSpecies);
