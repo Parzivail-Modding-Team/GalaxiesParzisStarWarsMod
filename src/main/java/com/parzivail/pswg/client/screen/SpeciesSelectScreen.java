@@ -86,10 +86,6 @@ public class SpeciesSelectScreen extends Screen
 		if (playerSpecies != null)
 			this.gender = playerSpecies.getGender();
 
-		this.addButton(new ButtonWidget(this.width / 2 + 5, this.height - 26, 95, 20, ScreenTexts.DONE, (button) -> {
-			this.client.openScreen(this.parent);
-		}));
-
 		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, height / 2 - 91, 80, 182, 15, entry -> {
 			updateAbility();
 		});
@@ -114,11 +110,6 @@ public class SpeciesSelectScreen extends Screen
 		this.children.add(speciesVariableListWidget);
 		this.children.add(speciesListWidget);
 
-		this.addButton(new EventCheckboxWidget(50, 230, 20, 20, new TranslatableText("gui.pswg.use_female_model"), false, (checked) -> {
-			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
-			this.playerSpecies.setGender(gender);
-		}));
-
 		this.addButton(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, new LiteralText("<"), (button) -> {
 			moveToNextVariableOption(true);
 		}));
@@ -127,7 +118,11 @@ public class SpeciesSelectScreen extends Screen
 			moveToNextVariableOption(false);
 		}));
 
-		this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 26, 95, 20, new TranslatableText("gui.pswg.apply"), (button) -> {
+		this.addButton(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> {
+			this.client.openScreen(this.parent);
+		}));
+
+		this.addButton(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText("gui.pswg.apply"), (button) -> {
 			if (speciesListWidget.getSelected() == null)
 				return;
 
@@ -153,6 +148,11 @@ public class SpeciesSelectScreen extends Screen
 			}
 
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketSetOwnSpecies, passedData);
+		}));
+
+		this.addButton(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("gui.pswg.use_female_model"), this.gender == SpeciesGender.FEMALE, (checked) -> {
+			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
+			this.playerSpecies.setGender(gender);
 		}));
 
 		speciesListWidget.setEntries(availableSpecies);
