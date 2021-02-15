@@ -29,7 +29,7 @@ public class BlasterItemRenderer implements CustomItemRenderer
 
 	static
 	{
-		FALLBACK_MODEL = new BlasterModelEntry(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/a280.pm3d"))), Resources.identifier("textures/model/blaster/a280.png"), Resources.identifier("textures/model/blaster/a280_inventory.png"));
+		FALLBACK_MODEL = new BlasterModelEntry(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/a280.pm3d"))), Resources.identifier("textures/model/blaster/a280.png"));
 	}
 
 	private BlasterItemRenderer()
@@ -48,8 +48,7 @@ public class BlasterItemRenderer implements CustomItemRenderer
 
 		BlasterModelEntry entry = new BlasterModelEntry(
 				new Lazy<>(() -> file),
-				new Identifier(id.getNamespace(), "textures/model/blaster/" + id.getPath() + ".png"),
-				new Identifier(id.getNamespace(), "textures/model/blaster/" + id.getPath() + "_inventory.png")
+				new Identifier(id.getNamespace(), "textures/model/blaster/" + id.getPath() + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
 
@@ -69,21 +68,19 @@ public class BlasterItemRenderer implements CustomItemRenderer
 
 		matrices.scale(0.2f, 0.2f, 0.2f);
 
+		PM3DLod m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
+
 		if (renderMode == ModelTransformation.Mode.GUI)
 		{
 			matrices.multiply(new Quaternion(90, 0, 0, true));
 			matrices.multiply(new Quaternion(0, 0, -90, true));
 			matrices.multiply(new Quaternion(-135, 0, 0, true));
 
-			PM3DLod m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
+//			PM3DLod m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
 			float f = 4 / (float)m.bounds.getZLength() * MathHelper.SQUARE_ROOT_OF_TWO;
 			matrices.scale(f, f, f);
 
 			matrices.translate(0, (float)-m.bounds.minY - m.bounds.getYLength() / 2, (float)-m.bounds.minZ - m.bounds.getZLength() / 2);
-
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(modelEntry.inventoryTexture));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			m.render(VertexConsumerBuffer.Instance);
 		}
 		else if (renderMode == ModelTransformation.Mode.FIXED)
 		{
@@ -91,36 +88,27 @@ public class BlasterItemRenderer implements CustomItemRenderer
 			matrices.multiply(new Quaternion(0, 0, 90, true));
 			matrices.multiply(new Quaternion(-135, 0, 0, true));
 
-			PM3DLod m = modelEntry.pm3dModel.get().getLevelOfDetail(1);
 			float f = 4 / (float)m.bounds.getZLength() * MathHelper.SQUARE_ROOT_OF_TWO;
 			matrices.scale(f, f, f);
 
 			matrices.translate((float)-m.bounds.minX, (float)-m.bounds.minY - m.bounds.getYLength() / 2, (float)-m.bounds.minZ - m.bounds.getZLength() / 2);
-
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(modelEntry.inventoryTexture));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			m.render(VertexConsumerBuffer.Instance);
 		}
 		else if (renderMode.isFirstPerson())
 		{
 			matrices.translate(0, 0.9f, 0);
 			matrices.multiply(new Quaternion(0, 180, 0, true));
 			matrices.translate(-0.4f, -0.5f, -0.25f);
-
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(modelEntry.texture));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			modelEntry.pm3dModel.get().getLevelOfDetail(1).render(VertexConsumerBuffer.Instance);
 		}
 		else
 		{
 			matrices.translate(0, 0.9f, 0);
 			matrices.multiply(new Quaternion(0, 180, 0, true));
 			matrices.translate(-0.4f, -1, -0.5f);
-
-			VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(modelEntry.texture));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-			modelEntry.pm3dModel.get().getLevelOfDetail(1).render(VertexConsumerBuffer.Instance);
 		}
+
+		VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(modelEntry.texture));
+		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+		m.render(VertexConsumerBuffer.Instance);
 
 		matrices.pop();
 	}
@@ -129,13 +117,11 @@ public class BlasterItemRenderer implements CustomItemRenderer
 	{
 		public final Lazy<PM3DFile> pm3dModel;
 		public final Identifier texture;
-		public final Identifier inventoryTexture;
 
-		private BlasterModelEntry(Lazy<PM3DFile> pm3dModel, Identifier texture, Identifier inventoryTexture)
+		private BlasterModelEntry(Lazy<PM3DFile> pm3dModel, Identifier texture)
 		{
 			this.pm3dModel = pm3dModel;
 			this.texture = texture;
-			this.inventoryTexture = inventoryTexture;
 		}
 	}
 }

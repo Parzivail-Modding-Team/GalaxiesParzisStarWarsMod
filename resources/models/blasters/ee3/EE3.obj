@@ -1,6 +1,6 @@
-# Blender v2.91.0 OBJ File: 'EE3_Feb9.blend'
+# Blender v2.80 (sub 75) OBJ File: 'EE3.blend'
 # www.blender.org
-mtllib EE3_Feb9.mtl
+mtllib EE3.mtl
 o EE3_Cube
 v -0.150000 0.150000 -0.200000
 v -0.150000 0.450000 -0.200000
