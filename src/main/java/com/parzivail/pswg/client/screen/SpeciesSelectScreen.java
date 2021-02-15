@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.model.npc.PlayerEntityRendererWithModel;
+import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import com.parzivail.pswg.component.SwgEntityComponents;
@@ -21,7 +22,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -52,7 +52,6 @@ public class SpeciesSelectScreen extends Screen
 
 	private final Screen parent;
 
-	private CheckboxWidget cbGender;
 	private SimpleListWidget<SwgSpecies> speciesListWidget;
 	private SimpleListWidget<SpeciesVariable> speciesVariableListWidget;
 
@@ -62,6 +61,7 @@ public class SpeciesSelectScreen extends Screen
 
 	private final List<SwgSpecies> availableSpecies;
 	private SwgSpecies playerSpecies;
+	private SpeciesGender gender = SpeciesGender.MALE;
 
 	public SpeciesSelectScreen(Screen parent)
 	{
@@ -82,6 +82,9 @@ public class SpeciesSelectScreen extends Screen
 	{
 		SwgPersistentComponents c = SwgEntityComponents.getPersistent(client.player);
 		playerSpecies = c.getSpecies();
+
+		if (playerSpecies != null)
+			this.gender = playerSpecies.getGender();
 
 		this.addButton(new ButtonWidget(this.width / 2 + 5, this.height - 26, 95, 20, ScreenTexts.DONE, (button) -> {
 			this.client.openScreen(this.parent);
@@ -111,7 +114,10 @@ public class SpeciesSelectScreen extends Screen
 		this.children.add(speciesVariableListWidget);
 		this.children.add(speciesListWidget);
 
-		this.addButton(cbGender = new CheckboxWidget(50, 230, 20, 20, new TranslatableText("female"), false, true));
+		this.addButton(new EventCheckboxWidget(50, 230, 20, 20, new TranslatableText("female"), false, (checked) -> {
+			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
+			this.playerSpecies.setGender(gender);
+		}));
 
 		this.addButton(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, new LiteralText("<"), (button) -> {
 			moveToNextVariableOption(true);
@@ -240,14 +246,15 @@ public class SpeciesSelectScreen extends Screen
 		if (speciesEntry != null && selectedVariableEntry != null)
 		{
 			SwgSpecies selectedSpecies = speciesEntry.getValue();
-			selectedSpecies.setGender(cbGender.isChecked() ? SpeciesGender.FEMALE : SpeciesGender.MALE);
 			SpeciesVariable selectedVariable = selectedVariableEntry.getValue();
 
 			String[] values = selectedVariable.getPossibleValues();
 			String selectedValue = selectedSpecies.getVariable(selectedVariable);
 
 			if (selectedSpecies.isSameSpecies(this.playerSpecies))
-				selectedSpecies.copyVariables(this.playerSpecies);
+				selectedSpecies.copy(this.playerSpecies);
+
+			selectedSpecies.setGender(gender);
 
 			int selectedIndex = ArrayUtils.indexOf(values, selectedValue);
 

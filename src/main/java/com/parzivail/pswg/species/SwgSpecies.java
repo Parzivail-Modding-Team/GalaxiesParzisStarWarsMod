@@ -162,10 +162,12 @@ public abstract class SwgSpecies
 		return getSlug().equals(other.getSlug());
 	}
 
-	public void copyVariables(SwgSpecies species)
+	public void copy(SwgSpecies species)
 	{
 		this.setDefaultVariables();
 		for (Map.Entry<String, String> pair : species.variables.entrySet())
 			this.variables.put(pair.getKey(), pair.getValue());
+
+		this.gender = species.gender;
 	}
 }
