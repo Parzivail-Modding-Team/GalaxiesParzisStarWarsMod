@@ -174,9 +174,12 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	@Override
 	public void tick()
 	{
-		super.tick();
-
 		viewPrevRotation = new Quaternion(viewRotation);
+
+		super.tick();
+		if (this.isLogicalSideForUpdatingMovement())
+			this.updateTrackedPosition(this.getX(), this.getY(), this.getZ());
+
 		viewRotation = new Quaternion(getRotation());
 
 		if (world.isClient)
@@ -231,19 +234,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		move(MovementType.SELF, getVelocity());
 
 		QuatUtil.updateEulerRotation(this, getRotation());
-	}
-
-	@Override
-	public void updateTrackedPositionAndAngles(double x, double y, double z, float yaw, float pitch, int interpolationSteps, boolean interpolate)
-	{
-		// Stray movement packets seem to make their way to the
-		// client way after the ship has stopped so we just ignore
-		// them
-		if (getPrimaryPassenger() == null || getThrottle() > 0)
-		{
-			this.updatePosition(x, y, z);
-			this.setRotation(yaw, pitch);
-		}
 	}
 
 	public ActionResult interact(PlayerEntity player, Hand hand)
@@ -312,7 +302,8 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 	public void setThrottle(float t)
 	{
-		getDataTracker().set(THROTTLE, t);
+		if (t != getThrottle())
+			getDataTracker().set(THROTTLE, t);
 	}
 
 	public Quaternion getRotation()

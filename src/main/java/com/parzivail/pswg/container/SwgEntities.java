@@ -21,7 +21,8 @@ public class SwgEntities
 		public static final EntityType<T65BXwing> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("xwing_t65b"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, T65BXwing::new)
 				.dimensions(EntityDimensions.fixed(1, 1))
-				.trackable(128, 10, true)
+				.trackRangeBlocks(128)
+//				.forceTrackedVelocityUpdates(true)
 				.build());
 
 		static void register()
@@ -35,13 +36,15 @@ public class SwgEntities
 		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("blaster_bolt"), FabricEntityTypeBuilder
 				.<BlasterBoltEntity>create(SpawnGroup.MISC, BlasterBoltEntity::new)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
-				.trackable(40, 5, true)
+				.trackRangeBlocks(40)
+				//				.forceTrackedVelocityUpdates(true)
 				.build());
 
 		public static final EntityType<ThrownLightsaberEntity> ThrownLightsaber = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("thrown_lightsaber"), FabricEntityTypeBuilder
 				.<ThrownLightsaberEntity>create(SpawnGroup.MISC, ThrownLightsaberEntity::new)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
-				.trackable(40, 5, true)
+				.trackRangeBlocks(40)
+				//				.forceTrackedVelocityUpdates(true)
 				.build());
 
 		static void register()
