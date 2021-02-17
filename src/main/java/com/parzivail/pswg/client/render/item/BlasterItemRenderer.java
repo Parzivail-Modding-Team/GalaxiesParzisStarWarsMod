@@ -5,7 +5,7 @@ import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.pm3d.PM3DLod;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.util.client.VertexConsumerBuffer;
-import com.parzivail.util.item.CustomItemRenderer;
+import com.parzivail.util.item.ICustomItemRenderer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -20,7 +20,7 @@ import net.minecraft.util.math.Quaternion;
 
 import java.util.HashMap;
 
-public class BlasterItemRenderer implements CustomItemRenderer
+public class BlasterItemRenderer implements ICustomItemRenderer
 {
 	public static final BlasterItemRenderer INSTANCE = new BlasterItemRenderer();
 

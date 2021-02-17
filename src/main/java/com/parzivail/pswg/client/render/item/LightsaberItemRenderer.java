@@ -7,21 +7,24 @@ import com.parzivail.pswg.client.pm3d.PM3DTexturedModel;
 import com.parzivail.pswg.client.render.LightsaberRenderer;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
-import com.parzivail.util.item.CustomItemRenderer;
+import com.parzivail.util.item.ICustomItemRenderer;
+import com.parzivail.util.item.ICustomPoseItem;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 
 import java.util.HashMap;
 
-public class LightsaberItemRenderer implements CustomItemRenderer
+public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
 	public static final Identifier DEFAULT_MODEL;
 	public static final HashMap<Identifier, PM3DTexturedModel> MODELS = new HashMap<>();
@@ -113,5 +116,11 @@ public class LightsaberItemRenderer implements CustomItemRenderer
 
 			LightsaberRenderer.renderBlade(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, coreColor, glowColor);
 		}
+	}
+
+	@Override
+	public void modifyPose(ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	{
+//		float handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
 	}
 }

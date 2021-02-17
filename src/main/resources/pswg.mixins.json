@@ -17,6 +17,7 @@
 	],
 	"client": [
 		"AbstractClientPlayerEntityMixin",
+		"BipedEntityModelMixin",
 		"CameraMixin",
 		"ClientLoginNetworkHandlerMixin",
 		"ClientPlayNetworkHandlerMixin",

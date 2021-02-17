@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.util.item.CustomItemRenderer;
+import com.parzivail.util.item.ICustomItemRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -25,7 +25,7 @@ public class ItemRendererMixin
 		if (!stack.isEmpty())
 		{
 			@Nullable
-			final CustomItemRenderer itemRenderer = CustomItemRenderer.ITEM_RENDERER_MAP.get(stack.getItem());
+			final ICustomItemRenderer itemRenderer = ICustomItemRenderer.ITEM_RENDERER_MAP.get(stack.getItem());
 			if (itemRenderer != null)
 			{
 				itemRenderer.render(stack, renderMode, leftHanded, matrices, vertexConsumers, light, overlay, model);

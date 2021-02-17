@@ -9,11 +9,11 @@ import net.minecraft.item.ItemStack;
 
 import java.util.HashMap;
 
-public interface CustomItemRenderer
+public interface ICustomItemRenderer
 {
-	HashMap<Item, CustomItemRenderer> ITEM_RENDERER_MAP = new HashMap<>();
+	HashMap<Item, ICustomItemRenderer> ITEM_RENDERER_MAP = new HashMap<>();
 
-	static void register(Item item, CustomItemRenderer renderer)
+	static void register(Item item, ICustomItemRenderer renderer)
 	{
 		ITEM_RENDERER_MAP.put(item, renderer);
 	}
