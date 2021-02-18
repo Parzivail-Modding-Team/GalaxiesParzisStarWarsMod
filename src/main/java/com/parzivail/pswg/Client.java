@@ -126,6 +126,16 @@ public class Client implements ClientModInitializer
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 
+//		try
+//		{
+//			AnimationInfo animationInfo = AnimationLoader.loadAnimation(PIO.getStream("assets", Resources.identifier("animations/player/lightsaber/idle.dca")));
+//			int i = 0;
+//		}
+//		catch (IOException e)
+//		{
+//			e.printStackTrace();
+//		}
+
 		ICustomItemRenderer.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
 		ICustomHudRenderer.registerCustomHUD(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
 

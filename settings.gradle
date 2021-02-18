@@ -8,3 +8,6 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+include 'Studio-Jar'
+project(':Studio-Jar').projectDir = file('Studio-Jar')
