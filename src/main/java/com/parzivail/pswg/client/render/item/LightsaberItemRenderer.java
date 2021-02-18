@@ -6,9 +6,13 @@ import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.pm3d.PM3DTexturedModel;
 import com.parzivail.pswg.client.render.LightsaberRenderer;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
+import com.parzivail.pswg.util.PIO;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.item.ICustomItemRenderer;
 import com.parzivail.util.item.ICustomPoseItem;
+import net.dumbcode.studio.animation.info.AnimationInfo;
+import net.dumbcode.studio.animation.info.AnimationLoader;
+import net.dumbcode.studio.animation.info.KeyframeInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -20,13 +24,16 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
+	private static final AnimationInfo idlePose;
+
 	public static final Identifier DEFAULT_MODEL;
 	public static final HashMap<Identifier, PM3DTexturedModel> MODELS = new HashMap<>();
 
@@ -39,6 +46,18 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 				Resources.identifier("textures/model/lightsaber/luke/rotj_inventory.png"),
 				Resources.identifier("textures/model/lightsaber/luke/rotj.png")
 		));
+
+		AnimationInfo tempIdleAnim = null;
+		try
+		{
+			tempIdleAnim = AnimationLoader.loadAnimation(PIO.getStream("assets", Resources.identifier("animations/player/lightsaber/idle.dca")));
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+
+		idlePose = tempIdleAnim;
 	}
 
 	@Override
@@ -124,24 +143,18 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	{
 		float handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
 
-		rightArm.pitch = -0.8727F + (MathHelper.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F / 15);
-		rightArm.yaw = -0.5672F;
-		rightArm.roll = 0.0F;
-		leftArm.pitch = -1.0472F + (MathHelper.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F / 15);
-		leftArm.yaw = 0.829F;
-		leftArm.roll = -0.0436F;
-		if (handSwingProgress > 0)
-		{
-			float gx = 1.0F - handSwingProgress;
-			float hx = MathHelper.sin(gx * 3.1415927F);
-			float kx = head.pitch;
-			if (kx < 0)
-			{
-				kx = 0.25F;
-			}
-			float ix = MathHelper.sin(handSwingProgress * 3.1415927F) * -((kx) - 0.7F) * 0.75F;
-			rightArm.pitch = (float)((double)rightArm.pitch - ((double)hx * 1.2D + (double)ix));
-			leftArm.pitch = (float)((double)leftArm.pitch - ((double)hx * 1.2D + (double)ix) * 1.2D) * 0.75F;
-		}
+		KeyframeInfo keyframe = idlePose.getKeyframes().get(0);
+		Map<String, float[]> rotationMap = keyframe.getRotationMap();
+
+		float[] rLeftArm = rotationMap.get("leftArm");
+		float[] rRightArm = rotationMap.get("rightArm");
+
+		leftArm.pitch = rLeftArm[0];
+		leftArm.yaw = rLeftArm[1];
+		leftArm.roll = rLeftArm[2];
+
+		rightArm.pitch = rRightArm[0];
+		rightArm.yaw = rRightArm[1];
+		rightArm.roll = rRightArm[2];
 	}
 }

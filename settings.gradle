@@ -9,5 +9,5 @@ pluginManagement {
     }
 }
 
-//include 'Studio-Jar'
-//project(':Studio-Jar').projectDir = file('Studio-Jar')
+include 'Studio-Jar'
+project(':Studio-Jar').projectDir = file('Studio-Jar')
