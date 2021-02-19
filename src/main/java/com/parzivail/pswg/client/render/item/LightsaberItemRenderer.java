@@ -12,7 +12,6 @@ import com.parzivail.util.item.ICustomItemRenderer;
 import com.parzivail.util.item.ICustomPoseItem;
 import net.dumbcode.studio.animation.info.AnimationInfo;
 import net.dumbcode.studio.animation.info.AnimationLoader;
-import net.dumbcode.studio.animation.info.KeyframeInfo;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -28,7 +27,6 @@ import net.minecraft.util.math.Quaternion;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
@@ -141,20 +139,20 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	@Override
 	public void modifyPose(ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		float handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
-
-		KeyframeInfo keyframe = idlePose.getKeyframes().get(0);
-		Map<String, float[]> rotationMap = keyframe.getRotationMap();
-
-		float[] rLeftArm = rotationMap.get("leftArm");
-		float[] rRightArm = rotationMap.get("rightArm");
-
-		leftArm.pitch = rLeftArm[0];
-		leftArm.yaw = rLeftArm[1];
-		leftArm.roll = rLeftArm[2];
-
-		rightArm.pitch = rRightArm[0];
-		rightArm.yaw = rRightArm[1];
-		rightArm.roll = rRightArm[2];
+//		float handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
+//
+//		KeyframeInfo keyframe = idlePose.getKeyframes().get(0);
+//		Map<String, float[]> rotationMap = keyframe.getRotationMap();
+//
+//		float[] rLeftArm = rotationMap.get("leftArm");
+//		float[] rRightArm = rotationMap.get("rightArm");
+//
+//		leftArm.pitch = -rLeftArm[0];
+//		leftArm.yaw = -rLeftArm[1];
+//		leftArm.roll = rLeftArm[2];
+//
+//		rightArm.pitch = -rRightArm[0];
+//		rightArm.yaw = -rRightArm[1];
+//		rightArm.roll = rRightArm[2];
 	}
 }
