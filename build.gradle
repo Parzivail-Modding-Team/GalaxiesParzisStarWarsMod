@@ -84,7 +84,8 @@ dependencies {
 	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
 	// DC Studio API
-	compile project(':Studio-Jar')
+	implementation(project(":Studio-Jar"))
+    include(project(":Studio-Jar"))
 }
 
 processResources {
