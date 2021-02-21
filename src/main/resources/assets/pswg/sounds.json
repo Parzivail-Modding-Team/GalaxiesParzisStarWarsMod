@@ -72,7 +72,7 @@
 			"pswg:blaster/eweb"
 		]
 	},
-	"blaster.fire.ionization": {
+	"blaster.fire.ion": {
 		"sounds": [
 			"pswg:blaster/ion"
 		]
