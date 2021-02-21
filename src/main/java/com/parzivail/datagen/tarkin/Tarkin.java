@@ -3,7 +3,9 @@ package com.parzivail.datagen.tarkin;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgItems;
+import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.util.Lumberjack;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
@@ -110,6 +112,21 @@ public class Tarkin
 				SwgItems.Nugget.Zersium,
 				SwgBlocks.MaterialBlock.Zersium
 		);
+
+		RecipeGenerator.Shapeless.of(new ItemStack(SwgItems.Dust.Ionite), "crystal")
+		                         .ingredient(SwgItems.Crystal.Ionite)
+		                         .build(assets);
+
+		RecipeGenerator.Shapeless.of(new ItemStack(Items.BLUE_DYE), "ionite")
+		                         .ingredient(SwgItems.Dust.Ionite)
+		                         .build(assets);
+
+		RecipeGenerator.Shaped.of(new ItemStack(Items.TNT))
+				.grid3x3("ionite", SwgItems.Dust.Ionite, SwgBlocks.Sand.Tatooine, SwgItems.Dust.Ionite,
+				                             SwgBlocks.Sand.Tatooine,SwgItems.Dust.Ionite,SwgBlocks.Sand.Tatooine,
+				                            SwgItems.Dust.Ionite,SwgBlocks.Sand.Tatooine,SwgItems.Dust.Ionite)
+				.build(assets);
+
 	}
 
 	private static void generateItems(List<BuiltAsset> assets)
@@ -147,6 +164,10 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Nugget.Titanium).build(assets);
 		// TODO: ItemGenerator.basic(SwgItems.Nugget.Transparisteel).build(assets);
 		ItemGenerator.basic(SwgItems.Nugget.Zersium).build(assets);
+
+		ItemGenerator.basic(SwgItems.Crystal.Ionite).build(assets);
+
+		ItemGenerator.basic(SwgItems.Dust.Ionite).build(assets);
 
 		ItemGenerator.empty(SwgItems.Lightsaber.Lightsaber).build(assets);
 

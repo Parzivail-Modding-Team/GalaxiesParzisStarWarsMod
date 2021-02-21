@@ -73,7 +73,8 @@ public class SwgItems
 		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
-	public static class Nugget {
+	public static class Nugget
+	{
 		@RegistryName("chromium_nugget")
 		public static final Item Chromium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("desh_nugget")
@@ -88,6 +89,18 @@ public class SwgItems
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("zersium_nugget")
 		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
+	public static class Crystal
+	{
+		@RegistryName("ionite_crystal")
+		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
+	public static class Dust
+	{
+		@RegistryName("ionite_dust")
+		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Lightsaber
