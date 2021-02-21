@@ -21,6 +21,7 @@ public class SwgSounds
 
 	public static void register()
 	{
+		Door.register();
 		Lightsaber.register();
 		Blaster.register();
 
@@ -38,6 +39,15 @@ public class SwgSounds
 		public static final SoundEvent START_CLASSIC = of(Resources.identifier("lightsaber.start.classic"));
 		public static final SoundEvent STOP_CLASSIC = of(Resources.identifier("lightsaber.stop.classic"));
 		public static final SoundEvent IDLE_CLASSIC = of(Resources.identifier("lightsaber.idle.classic"));
+
+		private static void register()
+		{
+		}
+	}
+
+	public static class Door
+	{
+		public static final SoundEvent PNEUMATIC = of(Resources.identifier("door.pneumatic"));
 
 		private static void register()
 		{

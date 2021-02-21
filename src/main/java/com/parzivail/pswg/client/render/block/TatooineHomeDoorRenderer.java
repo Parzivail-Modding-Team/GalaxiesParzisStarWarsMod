@@ -31,7 +31,7 @@ public class TatooineHomeDoorRenderer extends BlockEntityRenderer<TatooineHomeDo
 		GL11.glEnable(GL11.GL_STENCIL_TEST);
 		GL11.glEnable(GL11.GL_POLYGON_OFFSET_FILL);
 
-		GL11.glPolygonOffset(0, -3);
+		GL11.glPolygonOffset(-1, 0);
 
 		GL11.glStencilMask(0xFF); // Write to stencil buffer
 		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);

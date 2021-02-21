@@ -1,17 +1,19 @@
 package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgSounds;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Tickable;
 
 public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable
 {
-	private static final int ANIMATION_TIME = 15;
+	private static final int ANIMATION_TIME = 10;
 
 	private static final byte MASK_MOVING = (byte)0b10000000;
 	private static final byte MASK_DIRECTION = (byte)0b01000000;
@@ -123,12 +125,17 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 	@Override
 	public void tick()
 	{
+		if (world == null)
+			return;
+
 		if (isMoving())
 		{
 			int timer = getTimer();
 
 			if (timer == 0)
 				return;
+			else if (timer == ANIMATION_TIME - 1 && world.isClient)
+				world.playSound(pos.getX(), pos.getY(), pos.getZ(), SwgSounds.Door.PNEUMATIC, SoundCategory.BLOCKS, 1, 1, true);
 
 			timer--;
 

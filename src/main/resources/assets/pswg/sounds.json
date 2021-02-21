@@ -111,5 +111,10 @@
 		"sounds": [
 			"pswg:blaster/dl44"
 		]
+	},
+	"door.pneumatic": {
+		"sounds": [
+			"pswg:door/pneumatic"
+		]
 	}
 }
