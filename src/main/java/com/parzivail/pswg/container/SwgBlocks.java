@@ -111,11 +111,11 @@ public class SwgBlocks
 		@RegistryName("beskar_block")
 		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("chromium_block")
-		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
+		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL).strength(3.0F));
 		@RegistryName("cortosis_block")
 		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("desh_block")
-		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
+		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL).strength(3.0F));
 		@RegistryName("diatium_block")
 		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("durasteel_block")
@@ -128,6 +128,8 @@ public class SwgBlocks
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
 		@RegistryName("zersium_block")
 		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).strength(5.0F));
+		@RegistryName("ionite_block")
+		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE).strength(5.0F).luminance(3));
 	}
 
 	public static class MoistureVaporator

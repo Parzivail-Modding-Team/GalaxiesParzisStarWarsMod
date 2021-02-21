@@ -127,6 +127,14 @@ public class Tarkin
 				                            SwgItems.Dust.Ionite,SwgBlocks.Sand.Tatooine,SwgItems.Dust.Ionite)
 				.build(assets);
 
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.MaterialBlock.Ionite))
+				.fill3x3("dust",SwgItems.Dust.Ionite)
+				.build(assets);
+
+		RecipeGenerator.Shapeless.of(new ItemStack(SwgItems.Dust.Ionite, 9), "block")
+		                         .ingredient(SwgBlocks.MaterialBlock.Ionite)
+		                         .build(assets);
+
 	}
 
 	private static void generateItems(List<BuiltAsset> assets)
@@ -229,6 +237,7 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Plasteel).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Titanium).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Zersium).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Ionite).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8).build(assets);
 
