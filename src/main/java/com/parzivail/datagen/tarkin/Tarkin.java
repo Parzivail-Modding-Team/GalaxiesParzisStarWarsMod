@@ -135,10 +135,21 @@ public class Tarkin
 		                         .ingredient(SwgBlocks.MaterialBlock.Ionite)
 		                         .build(assets);
 
+		// broken for some reason TODO: Fix this
+		//RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.ZersiumRod, 3))
+		//		.grid3x3("zersium", null, SwgItems.Ingot.Zersium, null,
+		//		                            null, SwgItems.Ingot.Zersium, null,
+		//		                            null, SwgItems.Ingot.Zersium, null)
+		//		.build(assets);
+
 	}
 
 	private static void generateItems(List<BuiltAsset> assets)
 	{
+		ItemGenerator.basic(SwgItems.Axe.Durasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Axe.Titanium).build(assets);
+		ItemGenerator.basic(SwgItems.Axe.Beskar).build(assets);
+
 		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
 
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
@@ -146,38 +157,13 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.CraftingComponents.Turbine).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.BallBearing).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.DeshWire).build(assets);
-
-		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
-
-		ItemGenerator.basic(SwgItems.Ingot.Beskar).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Chromium).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Cortosis).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Desh).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Diatium).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Durasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Lommite).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Plasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Titanium).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Transparisteel).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Zersium).build(assets);
-
-		// TODO: ItemGenerator.basic(SwgItems.Nugget.Beskar).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Chromium).build(assets);
-		// TODO: ItemGenerator.basic(SwgItems.Nugget.Cortosis).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Desh).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Diatium).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Durasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Lommite).build(assets);
-		// TODO: ItemGenerator.basic(SwgItems.Nugget.Plasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Titanium).build(assets);
-		// TODO: ItemGenerator.basic(SwgItems.Nugget.Transparisteel).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Zersium).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.ZersiumRod).build(assets);
 
 		ItemGenerator.basic(SwgItems.Crystal.Ionite).build(assets);
 
-		ItemGenerator.basic(SwgItems.Dust.Ionite).build(assets);
+		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
-		ItemGenerator.empty(SwgItems.Lightsaber.Lightsaber).build(assets);
+		ItemGenerator.basic(SwgItems.Dust.Ionite).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.SaltPile).build(assets);
 		ItemGenerator.basic(SwgItems.Food.JoganFruit).build(assets);
@@ -204,6 +190,44 @@ public class Tarkin
 
 		ItemGenerator.basic(SwgItems.Food.QrikkiBread).build(assets);
 		ItemGenerator.basic(SwgItems.Food.QrikkiWaffle).build(assets);
+
+		ItemGenerator.basic(SwgItems.Hoe.Durasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Hoe.Titanium).build(assets);
+		ItemGenerator.basic(SwgItems.Hoe.Beskar).build(assets);
+
+		ItemGenerator.basic(SwgItems.Ingot.Beskar).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Chromium).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Cortosis).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Desh).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Diatium).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Durasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Lommite).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Plasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Titanium).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Transparisteel).build(assets);
+		ItemGenerator.basic(SwgItems.Ingot.Zersium).build(assets);
+
+		ItemGenerator.empty(SwgItems.Lightsaber.Lightsaber).build(assets);
+
+		// TODO: ItemGenerator.basic(SwgItems.Nugget.Beskar).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Chromium).build(assets);
+		// TODO: ItemGenerator.basic(SwgItems.Nugget.Cortosis).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Desh).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Diatium).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Durasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Lommite).build(assets);
+		// TODO: ItemGenerator.basic(SwgItems.Nugget.Plasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Titanium).build(assets);
+		// TODO: ItemGenerator.basic(SwgItems.Nugget.Transparisteel).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Zersium).build(assets);
+
+		ItemGenerator.basic(SwgItems.Pickaxe.Durasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Pickaxe.Titanium).build(assets);
+		ItemGenerator.basic(SwgItems.Pickaxe.Beskar).build(assets);
+
+		ItemGenerator.basic(SwgItems.Shovel.Durasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Shovel.Titanium).build(assets);
+		ItemGenerator.basic(SwgItems.Shovel.Beskar).build(assets);
 	}
 
 	private static void generateBlocks(List<BuiltAsset> assets)

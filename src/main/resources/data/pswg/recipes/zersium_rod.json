@@ -1,0 +1,17 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"z",
+		"z",
+		"z"
+	],
+	"key": {
+		"z": {
+			"item": "pswg:zersium_ingot"
+		}
+	},
+	"result": {
+		"item": "pswg:zersium_rod",
+		"count": 3
+	}
+}
