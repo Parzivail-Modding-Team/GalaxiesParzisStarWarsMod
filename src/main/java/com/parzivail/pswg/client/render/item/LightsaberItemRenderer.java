@@ -23,6 +23,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 
 import java.io.IOException;
@@ -139,20 +140,28 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	@Override
 	public void modifyPose(ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-//		float handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
-//
+		float handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
+
 //		KeyframeInfo keyframe = idlePose.getKeyframes().get(0);
-//		Map<String, float[]> rotationMap = keyframe.getRotationMap();
-//
-//		float[] rLeftArm = rotationMap.get("leftArm");
-//		float[] rRightArm = rotationMap.get("rightArm");
-//
-//		leftArm.pitch = -rLeftArm[0];
-//		leftArm.yaw = -rLeftArm[1];
-//		leftArm.roll = rLeftArm[2];
-//
-//		rightArm.pitch = -rRightArm[0];
-//		rightArm.yaw = -rRightArm[1];
-//		rightArm.roll = rRightArm[2];
+
+		rightArm.pitch = -0.8727F + (MathHelper.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F / 15);
+		rightArm.yaw = -0.5672F;
+		rightArm.roll = 0.0F;
+		leftArm.pitch = -1.0472F + (MathHelper.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F / 15);
+		leftArm.yaw = 0.829F;
+		leftArm.roll = -0.0436F;
+		if (handSwingProgress > 0)
+		{
+			float gx = 1.0F - handSwingProgress;
+			float hx = MathHelper.sin(gx * 3.1415927F);
+			float kx = head.pitch;
+			if (kx < 0)
+			{
+				kx = 0.25F;
+			}
+			float ix = MathHelper.sin(handSwingProgress * 3.1415927F) * -((kx) - 0.7F) * 0.75F;
+			rightArm.pitch = (float)((double)rightArm.pitch - ((double)hx * 1.2D + (double)ix));
+			leftArm.pitch = (float)((double)leftArm.pitch - ((double)hx * 1.2D + (double)ix) * 1.2D) * 0.75F;
+		}
 	}
 }
