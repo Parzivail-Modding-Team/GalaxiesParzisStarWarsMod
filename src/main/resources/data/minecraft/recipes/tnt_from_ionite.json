@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","group":"minecraft:tnt","pattern":["iti","tit","iti"],"key":{"t":{"item":"pswg:tatooine_sand"},"i":{"item":"pswg:ionite_dust"}},"result":{"item":"minecraft:tnt","count":1}}
+{"type":"minecraft:crafting_shaped","group":"minecraft:tnt","pattern":["iti","tit","iti"],"key":{"i":{"item":"pswg:ionite_dust"},"t":{"item":"pswg:tatooine_sand"}},"result":{"item":"minecraft:tnt","count":1}}
