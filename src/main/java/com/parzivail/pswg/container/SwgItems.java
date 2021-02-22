@@ -3,15 +3,22 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
-import com.parzivail.pswg.item.*;
+import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
 import com.parzivail.pswg.item.material.TitaniumToolMaterial;
+import com.parzivail.util.item.LiquidFoodItem;
+import com.parzivail.util.item.PAxeItem;
+import com.parzivail.util.item.PHoeItem;
+import com.parzivail.util.item.PPickaxeItem;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.*;
+import net.minecraft.item.FoodComponent;
+import net.minecraft.item.Item;
+import net.minecraft.item.ShovelItem;
+import net.minecraft.item.ToolItem;
 import net.minecraft.util.registry.Registry;
 
 public class SwgItems
@@ -19,11 +26,11 @@ public class SwgItems
 	public static class Axe
 	{
 		@RegistryName("durasteel_axe")
-		public static final ToolItem Durasteel = new CustomAxeItem(DurasteelToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Durasteel = new PAxeItem(DurasteelToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_axe")
-		public static final ToolItem Titanium = new CustomAxeItem(TitaniumToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Titanium = new PAxeItem(TitaniumToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("beskar_axe")
-		public static final ToolItem Beskar = new CustomAxeItem(BeskarToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Beskar = new PAxeItem(BeskarToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Blaster
@@ -129,11 +136,11 @@ public class SwgItems
 	public static class Hoe
 	{
 		@RegistryName("durasteel_hoe")
-		public static final ToolItem Durasteel = new CustomHoeItem(DurasteelToolMaterial.INSTANCE, -2, 0.0F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Durasteel = new PHoeItem(DurasteelToolMaterial.INSTANCE, -2, 0.0F, new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_hoe")
-		public static final ToolItem Titanium = new CustomHoeItem(TitaniumToolMaterial.INSTANCE, -3, 0.0F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Titanium = new PHoeItem(TitaniumToolMaterial.INSTANCE, -3, 0.0F, new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("beskar_hoe")
-		public static final ToolItem Beskar = new CustomHoeItem(BeskarToolMaterial.INSTANCE, -5, 0.0F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Beskar = new PHoeItem(BeskarToolMaterial.INSTANCE, -5, 0.0F, new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Ingot
@@ -189,11 +196,11 @@ public class SwgItems
 	public static class Pickaxe
 	{
 		@RegistryName("durasteel_pickaxe")
-		public static final ToolItem Durasteel = new CustomPickaxeItem(DurasteelToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Durasteel = new PPickaxeItem(DurasteelToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_pickaxe")
-		public static final ToolItem Titanium = new CustomPickaxeItem(TitaniumToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Titanium = new PPickaxeItem(TitaniumToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("beskar_pickaxe")
-		public static final ToolItem Beskar = new CustomPickaxeItem(BeskarToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Beskar = new PPickaxeItem(BeskarToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Shovel

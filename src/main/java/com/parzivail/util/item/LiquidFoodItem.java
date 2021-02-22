@@ -1,4 +1,4 @@
-package com.parzivail.pswg.item;
+package com.parzivail.util.item;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

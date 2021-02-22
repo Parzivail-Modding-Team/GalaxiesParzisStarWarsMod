@@ -6,31 +6,41 @@ import net.minecraft.recipe.Ingredient;
 
 public class BeskarToolMaterial implements ToolMaterial
 {
-
 	public static final BeskarToolMaterial INSTANCE = new BeskarToolMaterial();
 
 	@Override
-	public int getDurability() {
+	public int getDurability()
+	{
 		return 2000;
 	}
+
 	@Override
-	public float getMiningSpeedMultiplier() {
+	public float getMiningSpeedMultiplier()
+	{
 		return 10.0F;
 	}
+
 	@Override
-	public float getAttackDamage() {
+	public float getAttackDamage()
+	{
 		return 5.0F;
 	}
+
 	@Override
-	public int getMiningLevel() {
+	public int getMiningLevel()
+	{
 		return 5;
 	}
+
 	@Override
-	public int getEnchantability() {
+	public int getEnchantability()
+	{
 		return 16;
 	}
+
 	@Override
-	public Ingredient getRepairIngredient() {
+	public Ingredient getRepairIngredient()
+	{
 		return Ingredient.ofItems(SwgItems.Ingot.Beskar);
 	}
 }
