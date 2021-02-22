@@ -224,14 +224,29 @@ public abstract class RecipeGenerator
 			return grid3x3(sourceName, a, null, null, b, null, null, null, null, null);
 		}
 
+		public Shaped fill1x2(String sourceName, ItemConvertible a)
+		{
+			return grid1x2(sourceName, a, a);
+		}
+
 		public Shaped grid1x3(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c)
 		{
 			return grid3x3(sourceName, a, null, null, b, null, null, c, null, null);
 		}
 
+		public Shaped fill1x3(String sourceName, ItemConvertible a)
+		{
+			return grid1x3(sourceName, a, a, a);
+		}
+
 		public Shaped grid2x1(String sourceName, ItemConvertible a, ItemConvertible b)
 		{
 			return grid3x3(sourceName, a, b, null, null, null, null, null, null, null);
+		}
+
+		public Shaped fill2x1(String sourceName, ItemConvertible a)
+		{
+			return grid2x1(sourceName, a, a);
 		}
 
 		public Shaped grid2x2(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible d, ItemConvertible e)
@@ -249,14 +264,29 @@ public abstract class RecipeGenerator
 			return grid3x3(sourceName, a, b, null, d, e, null, g, h, null);
 		}
 
+		public Shaped fill2x3(String sourceName, ItemConvertible a)
+		{
+			return grid2x3(sourceName, a, a, a, a, a, a);
+		}
+
 		public Shaped grid3x1(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c)
 		{
 			return grid3x3(sourceName, a, b, c, null, null, null, null, null, null);
 		}
 
+		public Shaped fill3x1(String sourceName, ItemConvertible a)
+		{
+			return grid3x1(sourceName, a, a, a);
+		}
+
 		public Shaped grid3x2(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c, ItemConvertible d, ItemConvertible e, ItemConvertible f)
 		{
 			return grid3x3(sourceName, a, b, c, d, e, f, null, null, null);
+		}
+
+		public Shaped fill3x2(String sourceName, ItemConvertible a)
+		{
+			return grid3x2(sourceName, a, a, a, a, a, a);
 		}
 
 		public Shaped grid3x3(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c, ItemConvertible d, ItemConvertible e, ItemConvertible f, ItemConvertible g, ItemConvertible h, ItemConvertible i)
