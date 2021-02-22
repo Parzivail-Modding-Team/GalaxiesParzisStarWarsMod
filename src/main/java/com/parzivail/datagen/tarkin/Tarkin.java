@@ -3,9 +3,7 @@ package com.parzivail.datagen.tarkin;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.util.Lumberjack;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
@@ -122,26 +120,30 @@ public class Tarkin
 		                         .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.TNT))
-				.grid3x3("ionite", SwgItems.Dust.Ionite, SwgBlocks.Sand.Tatooine, SwgItems.Dust.Ionite,
-				                             SwgBlocks.Sand.Tatooine,SwgItems.Dust.Ionite,SwgBlocks.Sand.Tatooine,
-				                            SwgItems.Dust.Ionite,SwgBlocks.Sand.Tatooine,SwgItems.Dust.Ionite)
-				.build(assets);
+		                      .grid3x3("ionite", SwgItems.Dust.Ionite, SwgBlocks.Sand.Tatooine, SwgItems.Dust.Ionite,
+		                               SwgBlocks.Sand.Tatooine, SwgItems.Dust.Ionite, SwgBlocks.Sand.Tatooine,
+		                               SwgItems.Dust.Ionite, SwgBlocks.Sand.Tatooine, SwgItems.Dust.Ionite)
+		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.MaterialBlock.Ionite))
-				.fill3x3("dust",SwgItems.Dust.Ionite)
-				.build(assets);
+		                      .fill3x3("dust", SwgItems.Dust.Ionite)
+		                      .build(assets);
 
 		RecipeGenerator.Shapeless.of(new ItemStack(SwgItems.Dust.Ionite, 9), "block")
 		                         .ingredient(SwgBlocks.MaterialBlock.Ionite)
 		                         .build(assets);
 
-		// broken for some reason TODO: Fix this
-		//RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.ZersiumRod, 3))
-		//		.grid3x3("zersium", null, SwgItems.Ingot.Zersium, null,
-		//		                            null, SwgItems.Ingot.Zersium, null,
-		//		                            null, SwgItems.Ingot.Zersium, null)
-		//		.build(assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.ZersiumRod, 3))
+		                      .grid3x3("zersium", null, SwgItems.Ingot.Zersium, null,
+		                               null, SwgItems.Ingot.Zersium, null,
+		                               null, SwgItems.Ingot.Zersium, null)
+		                      .build(assets);
 
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Pickaxe.Beskar))
+		                      .grid3x3("crafting", SwgItems.Ingot.Beskar, SwgItems.Ingot.Beskar, SwgItems.Ingot.Beskar,
+		                               null, SwgItems.CraftingComponents.ZersiumRod, null,
+		                               null, SwgItems.CraftingComponents.ZersiumRod, null)
+		                      .build(assets);
 	}
 
 	private static void generateItems(List<BuiltAsset> assets)

@@ -229,6 +229,11 @@ public abstract class RecipeGenerator
 			return grid3x3(sourceName, a, null, null, b, null, null, c, null, null);
 		}
 
+		public Shaped grid2x1(String sourceName, ItemConvertible a, ItemConvertible b)
+		{
+			return grid3x3(sourceName, a, b, null, null, null, null, null, null, null);
+		}
+
 		public Shaped grid2x2(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible d, ItemConvertible e)
 		{
 			return grid3x3(sourceName, a, b, null, d, e, null, null, null, null);
@@ -242,6 +247,11 @@ public abstract class RecipeGenerator
 		public Shaped grid2x3(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible d, ItemConvertible e, ItemConvertible g, ItemConvertible h)
 		{
 			return grid3x3(sourceName, a, b, null, d, e, null, g, h, null);
+		}
+
+		public Shaped grid3x1(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c)
+		{
+			return grid3x3(sourceName, a, b, c, null, null, null, null, null, null);
 		}
 
 		public Shaped grid3x2(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c, ItemConvertible d, ItemConvertible e, ItemConvertible f)
@@ -282,7 +292,7 @@ public abstract class RecipeGenerator
 				for (int i = 0; i < 3; i++)
 					for (int j = 0; j < 3; j++)
 					{
-						if (shapeGrid[i][j] == null)
+						if (shapeGrid[j][i] == null)
 							continue;
 
 						if (i < minX)
@@ -305,11 +315,11 @@ public abstract class RecipeGenerator
 					StringBuilder b = new StringBuilder();
 					for (int i = minX; i <= maxX; i++)
 					{
-						if (shapeGrid[i][j] == null)
+						if (shapeGrid[j][i] == null)
 							b.append(" ");
 						else
 						{
-							ItemConvertible item = shapeGrid[i][j];
+							ItemConvertible item = shapeGrid[j][i];
 							if (!key.containsKey(item))
 							{
 								Identifier reg = AssetGenerator.getRegistryName(item);
