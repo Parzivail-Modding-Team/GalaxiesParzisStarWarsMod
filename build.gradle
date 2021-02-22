@@ -16,6 +16,12 @@ repositories {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/releases"
     }
+
+    // FIXME: remove
+    maven {
+        name = "JitPack"
+        url = "https://jitpack.io"
+    }
 }
 
 dependencies {
@@ -84,8 +90,8 @@ dependencies {
 	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
 
 	// DC Studio API
-	modImplementation(project(":Studio-Jar"))
-	include(project(":Studio-Jar"))
+	modImplementation("com.github.Dumb-Code:Studio-Jar:4bf0959007bdb931a3f1e5a00d7087463343115b")
+	include("com.github.Dumb-Code:Studio-Jar:4bf0959007bdb931a3f1e5a00d7087463343115b")
 }
 
 processResources {
