@@ -5,6 +5,7 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.util.Lumberjack;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -227,6 +228,68 @@ public class Tarkin
 		                      .grid3x3("crafting", null, SwgItems.Ingot.Beskar, null,
 		                                                       null,SwgItems.CraftingComponents.ZersiumRod,null,
 		                                                         null,SwgItems.CraftingComponents.ZersiumRod,null)
+		                      .build (assets);
+
+		//Plasteel alternative recipes
+		RecipeGenerator.Shaped.of(new ItemStack(Items.ANVIL))
+				.grid3x3("plasteel",
+				         SwgBlocks.MaterialBlock.Plasteel, SwgBlocks.MaterialBlock.Plasteel, SwgBlocks.MaterialBlock.Plasteel,
+				         null, SwgItems.Ingot.Plasteel, null,
+				         SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+				.build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.BLAST_FURNACE))
+		                      .grid3x3("plasteel",
+		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, Items.FURNACE, SwgItems.Ingot.Plasteel,
+		                               Items.SMOOTH_STONE, Items.SMOOTH_STONE, Items.SMOOTH_STONE)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.BUCKET))
+		                      .grid3x2("plasteel",
+		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
+		                               null, SwgItems.Ingot.Plasteel, null)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.CAULDRON))
+		                      .grid3x3("plasteel",
+		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,SwgItems.Ingot.Plasteel)
+		                      .build (assets);
+		RecipeGenerator.Shapeless.of(new ItemStack(Items.FLINT_AND_STEEL), "plasteel")
+		                         .ingredient(SwgItems.Ingot.Plasteel)
+		                         .ingredient(Items.FLINT)
+		                         .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.HEAVY_WEIGHTED_PRESSURE_PLATE))
+		                      .grid2x1("plasteel", SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.HOPPER))
+		                      .grid3x3("plasteel",
+		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, Items.CHEST, SwgItems.Ingot.Plasteel,
+		                               null, SwgItems.Ingot.Plasteel, null)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.MINECART))
+		                      .grid3x2("plasteel",
+		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.RAIL,16))
+		                      .grid3x3("plasteel",
+		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, Items.STICK, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, null,SwgItems.Ingot.Plasteel)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.SHEARS))
+		                      .grid2x2("plasteel_left",
+		                               SwgItems.Ingot.Plasteel, null,
+		                               null, SwgItems.Ingot.Plasteel)
+		                      .grid2x2("plasteel_right",
+		                               null,SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel,null)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.STONECUTTER))
+		                      .grid3x2("plasteel",
+		                               null, SwgItems.Ingot.Plasteel, null,
+		                               Items.STONE,Items.STONE,Items.STONE)
 		                      .build (assets);
 	}
 
