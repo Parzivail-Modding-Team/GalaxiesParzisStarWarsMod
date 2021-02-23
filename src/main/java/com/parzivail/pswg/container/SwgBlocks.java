@@ -64,6 +64,12 @@ public class SwgBlocks
 	{
 		@RegistryName("desert_loam")
 		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.GRAVEL));
+		@RegistryName("wet_pourstone")
+		public static final Block WetPourstone = new Block(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.GRAVEL));
+		@RegistryName("wet_pourstone_stairs")
+		public static final Block WetPourstoneStairs = new PStairsBlock(WetPourstone.getDefaultState(), AbstractBlock.Settings.copy(WetPourstone));
+		@RegistryName("wet_pourstone_slab")
+		public static final Block WetPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(WetPourstone));
 	}
 
 	public static class Door

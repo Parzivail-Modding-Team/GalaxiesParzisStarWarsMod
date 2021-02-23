@@ -292,7 +292,7 @@ public class Tarkin
 		                               Items.STONE,Items.STONE,Items.STONE)
 		                      .build (assets);
 		//Pourstone
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.PourstoneStairs, 4))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.PourstoneStairs, 6))
 		                      .grid3x3("pourstone_left",
 		                               SwgBlocks.Stone.Pourstone, null, null,
 		                               SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone,null,
@@ -307,7 +307,7 @@ public class Tarkin
 		                               SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone)
 		                      .build (assets);
 		//Light Pourstone
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.LightPourstoneStairs, 4))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.LightPourstoneStairs, 6))
 		                      .grid3x3("light_pourstone_left",
 		                               SwgBlocks.Stone.LightPourstone, null, null,
 		                               SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone,null,
@@ -322,7 +322,7 @@ public class Tarkin
 		                               SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone)
 		                      .build (assets);
 		//Ilum Stone
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumStairs, 4))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumStairs, 6))
 		                      .grid3x3("ilum_stone_left",
 		                               SwgBlocks.Stone.Ilum, null, null,
 		                               SwgBlocks.Stone.Ilum,SwgBlocks.Stone.Ilum,null,
@@ -345,7 +345,7 @@ public class Tarkin
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumBricks, 4))
 		                      .fill2x2("ilum_stone",SwgBlocks.Stone.Ilum)
 		                      .build (assets);
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumBrickStairs, 4))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumBrickStairs, 6))
 		                      .grid3x3("ilum_stone_left",
 		                               SwgBlocks.Stone.IlumBricks, null, null,
 		                               SwgBlocks.Stone.IlumBricks,SwgBlocks.Stone.IlumBricks,null,
@@ -362,6 +362,29 @@ public class Tarkin
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumChiseledBricks))
 		                      .fill1x2("ilum_stone", SwgBlocks.Stone.IlumBrickSlab)
 		                      .build (assets);
+		//Wet Pourstone
+		RecipeGenerator.Shapeless.of(new ItemStack(SwgBlocks.Dirt.WetPourstone, 8),"crafting")
+		                         .ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam)
+		                         .ingredient(SwgBlocks.Sand.Desert).ingredient(SwgBlocks.Sand.Desert).ingredient(SwgBlocks.Sand.Desert)
+		                         .ingredient(Items.WHEAT).ingredient(Items.WHEAT)
+		                         .ingredient(Items.WATER_BUCKET)
+		                         .build (assets);
+
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Dirt.WetPourstoneStairs, 6))
+		                      .grid3x3("wet_pourstone_left",
+		                               SwgBlocks.Dirt.WetPourstone, null, null,
+		                               SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone,null,
+		                               SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone)
+		                      .grid3x3("wet_pourstone_right",
+		                               null, null, SwgBlocks.Dirt.WetPourstone,
+		                               null,SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone,
+		                               SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Dirt.WetPourstoneSlab, 6))
+		                      .grid3x1("wet_pourstone",
+		                               SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone)
+		                      .build (assets);
+
 	}
 
 	private static void generateItems(List<BuiltAsset> assets)
@@ -371,6 +394,11 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Axe.Beskar).build(assets);
 
 		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
+
+		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
+		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.identifier("block/wet_pourstone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.identifier("block/wet_pourstone")).build(assets);
 
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.Led).build(assets);
@@ -524,8 +552,6 @@ public class Tarkin
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon).build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
-
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("block/massassi_stone_bricks")).build(assets);
@@ -534,10 +560,10 @@ public class Tarkin
 		BlockGenerator.slab(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("block/smooth_massassi_stone")).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.Pourstone).build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.LightPourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.identifier("block/pourstone")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.LightPourstoneStairs, Resources.identifier("block/light_pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.PourstoneSlab, Resources.identifier("block/pourstone")).build(assets);
+		BlockGenerator.basic(SwgBlocks.Stone.LightPourstone).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.LightPourstoneStairs, Resources.identifier("block/light_pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.LightPourstoneSlab, Resources.identifier("block/light_pourstone")).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.Ilum).build(assets);
