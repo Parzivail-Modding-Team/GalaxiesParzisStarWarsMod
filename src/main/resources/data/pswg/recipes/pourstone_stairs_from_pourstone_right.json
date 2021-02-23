@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"pswg:pourstone_stairs","pattern":["  p"," pp","ppp"],"key":{"p":{"item":"pswg:pourstone"}},"result":{"item":"pswg:pourstone_stairs","count":4}}

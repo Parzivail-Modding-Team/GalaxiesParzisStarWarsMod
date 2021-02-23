@@ -291,6 +291,77 @@ public class Tarkin
 		                               null, SwgItems.Ingot.Plasteel, null,
 		                               Items.STONE,Items.STONE,Items.STONE)
 		                      .build (assets);
+		//Pourstone
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.PourstoneStairs, 4))
+		                      .grid3x3("pourstone_left",
+		                               SwgBlocks.Stone.Pourstone, null, null,
+		                               SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone,null,
+		                               SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone)
+		                      .grid3x3("pourstone_right",
+		                               null, null, SwgBlocks.Stone.Pourstone,
+		                               null,SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone,
+		                               SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.PourstoneSlab, 6))
+		                      .grid3x1("pourstone",
+		                               SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone)
+		                      .build (assets);
+		//Light Pourstone
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.LightPourstoneStairs, 4))
+		                      .grid3x3("light_pourstone_left",
+		                               SwgBlocks.Stone.LightPourstone, null, null,
+		                               SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone,null,
+		                               SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone)
+		                      .grid3x3("light_pourstone_right",
+		                               null, null, SwgBlocks.Stone.LightPourstone,
+		                               null,SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone,
+		                               SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.LightPourstoneSlab, 6))
+		                      .grid3x1("light_pourstone",
+		                               SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone,SwgBlocks.Stone.LightPourstone)
+		                      .build (assets);
+		//Ilum Stone
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumStairs, 4))
+		                      .grid3x3("ilum_stone_left",
+		                               SwgBlocks.Stone.Ilum, null, null,
+		                               SwgBlocks.Stone.Ilum,SwgBlocks.Stone.Ilum,null,
+		                               SwgBlocks.Stone.Ilum,SwgBlocks.Stone.Ilum,SwgBlocks.Stone.Ilum)
+		                      .grid3x3("ilum_stone_right",
+		                               null, null, SwgBlocks.Stone.Ilum,
+		                               null,SwgBlocks.Stone.Ilum,SwgBlocks.Stone.Ilum,
+		                               SwgBlocks.Stone.Ilum,SwgBlocks.Stone.Ilum,SwgBlocks.Stone.Ilum)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumSlab, 6))
+		                      .grid3x1("ilum_stone",
+		                               SwgBlocks.Stone.Ilum,SwgBlocks.Stone.Ilum,SwgBlocks.Stone.Ilum)
+		                      .build (assets);
+		RecipeGenerator.Cooking.smelting("smooth_ilum_stone",SwgBlocks.Stone.Ilum,SwgBlocks.Stone.IlumSmooth).experience(0.1F)
+		                       .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumSmoothSlab, 6))
+		                      .grid3x1("smooth_ilum_stone",
+		                               SwgBlocks.Stone.IlumSmooth,SwgBlocks.Stone.IlumSmooth,SwgBlocks.Stone.IlumSmooth)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumBricks, 4))
+		                      .fill2x2("ilum_stone",SwgBlocks.Stone.Ilum)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumBrickStairs, 4))
+		                      .grid3x3("ilum_stone_left",
+		                               SwgBlocks.Stone.IlumBricks, null, null,
+		                               SwgBlocks.Stone.IlumBricks,SwgBlocks.Stone.IlumBricks,null,
+		                               SwgBlocks.Stone.IlumBricks,SwgBlocks.Stone.IlumBricks,SwgBlocks.Stone.IlumBricks)
+		                      .grid3x3("ilum_stone_right",
+		                               null, null, SwgBlocks.Stone.IlumBricks,
+		                               null,SwgBlocks.Stone.IlumBricks,SwgBlocks.Stone.IlumBricks,
+		                               SwgBlocks.Stone.IlumBricks,SwgBlocks.Stone.IlumBricks,SwgBlocks.Stone.IlumBricks)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumBrickSlab, 6))
+		                      .grid3x1("ilum_stone",
+		                               SwgBlocks.Stone.IlumBricks,SwgBlocks.Stone.IlumBricks,SwgBlocks.Stone.IlumBricks)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumChiseledBricks))
+		                      .fill1x2("ilum_stone", SwgBlocks.Stone.IlumBrickSlab)
+		                      .build (assets);
 	}
 
 	private static void generateItems(List<BuiltAsset> assets)
