@@ -14,7 +14,7 @@ public class CarverMixin
 	@Inject(method = "canAlwaysCarveBlock(Lnet/minecraft/block/BlockState;)Z", at = @At("HEAD"), cancellable = true)
 	private void canAlwaysCarveBlock(BlockState state, CallbackInfoReturnable<Boolean> cir)
 	{
-		if (state.getBlock() == SwgBlocks.Sand.Tatooine)
+		if (state.getBlock() == SwgBlocks.Sand.Desert)
 		{
 			cir.setReturnValue(true);
 			cir.cancel();

@@ -60,6 +60,12 @@ public class SwgBlocks
 		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCubeBlockEntityType = BlockEntityType.Builder.create(CrateImperialCubeBlockEntity::new, ImperialCube).build(null);
 	}
 
+	public static class Dirt
+	{
+		@RegistryName("desert_loam")
+		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.GRAVEL));
+	}
+
 	public static class Door
 	{
 		public static final BlockTatooineHomeDoor TatooineHomeFiller = new BlockTatooineHomeDoor(FabricBlockSettings.of(Material.METAL).nonOpaque());
@@ -232,16 +238,10 @@ public class SwgBlocks
 
 	public static class Sand
 	{
-		@RegistryName("tatooine_sand")
-		public static final Block Tatooine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
-		@RegistryName("tatooine_canyon_sand")
-		public static final Block TatooineCanyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
-	}
-
-	public static class Dirt
-	{
-		@RegistryName("dense_tatooine_sand")
-		public static final Block DenseTatooine = new Block(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
+		@RegistryName("desert_sand")
+		public static final Block Desert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
+		@RegistryName("desert_canyon_sand")
+		public static final Block DesertCanyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).strength(0.5F).sounds(BlockSoundGroup.SAND));
 	}
 
 	public static class Stone

@@ -123,9 +123,9 @@ public class Tarkin
 		                         .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.TNT))
-				.grid3x3("ionite", SwgItems.Dust.Ionite, SwgBlocks.Sand.Tatooine, SwgItems.Dust.Ionite,
-				                             SwgBlocks.Sand.Tatooine,SwgItems.Dust.Ionite,SwgBlocks.Sand.Tatooine,
-				                            SwgItems.Dust.Ionite,SwgBlocks.Sand.Tatooine,SwgItems.Dust.Ionite)
+				.grid3x3("ionite", SwgItems.Dust.Ionite, SwgBlocks.Sand.Desert, SwgItems.Dust.Ionite,
+				                             SwgBlocks.Sand.Desert,SwgItems.Dust.Ionite,SwgBlocks.Sand.Desert,
+				                            SwgItems.Dust.Ionite,SwgBlocks.Sand.Desert,SwgItems.Dust.Ionite)
 				.build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.MaterialBlock.Ionite))
@@ -450,10 +450,10 @@ public class Tarkin
 		BlockGenerator.cross(SwgBlocks.Plant.FunnelFlower).build(assets);
 		BlockGenerator.cross(SwgBlocks.Plant.BlossomingFunnelFlower).build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Tatooine).build(assets);
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.TatooineCanyon).build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon).build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DenseTatooine).build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);

@@ -19,7 +19,7 @@ public class DeadBushBlockMixin
 	private void canPlantOnTop(BlockState state, BlockView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
 	{
 		Block block = state.getBlock();
-		if (SwgTags.Block.TATOOINE_SAND.contains(block) || block == SwgBlocks.Dirt.DenseTatooine )
+		if (SwgTags.Block.DESERT_SAND.contains(block) || block == SwgBlocks.Dirt.DesertLoam )
 			cir.setReturnValue(true);
 	}
 }

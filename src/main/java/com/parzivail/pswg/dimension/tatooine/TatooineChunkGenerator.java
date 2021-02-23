@@ -91,7 +91,7 @@ public class TatooineChunkGenerator extends ChunkGenerator
 		final ChunkPos chunkPos = chunk.getPos();
 		final int chunkWorldX = chunkPos.getStartX();
 		final int chunkWorldZ = chunkPos.getStartZ();
-		final BlockState tatooineSand = SwgBlocks.Sand.Tatooine.getDefaultState();
+		final BlockState tatooineSand = SwgBlocks.Sand.Desert.getDefaultState();
 		final BlockState sandstone = Blocks.SANDSTONE.getDefaultState();
 		final BlockState stone = Blocks.STONE.getDefaultState();
 		final BlockState bedrock = Blocks.BEDROCK.getDefaultState();
