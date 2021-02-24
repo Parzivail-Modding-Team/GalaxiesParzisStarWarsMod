@@ -86,6 +86,8 @@ public class SwgBlocks
 		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15).strength(1.0F));
 		@RegistryName("wall_cluster_light")
 		public static final Block WallCluster = new RotatingBlockWithBounds(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), FabricBlockSettings.of(Material.METAL).nonOpaque().luminance(15).strength(1.0F));
+		@RegistryName("light_block")
+		public static final Block LightBlock = new Block(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(15).strength(0.3F));
 	}
 
 	public static class Leaves

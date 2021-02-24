@@ -384,7 +384,24 @@ public class Tarkin
 		                      .grid3x1("wet_pourstone",
 		                               SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone,SwgBlocks.Dirt.WetPourstone)
 		                      .build (assets);
-
+		//Light Blocks
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.LightBlock, 3))
+		                      .grid3x3("crafting",
+		                               Items.GLASS_PANE, Items.GLASS_PANE, Items.GLASS_PANE,
+		                               Items.GLASS_PANE, SwgItems.CraftingComponents.LightPanel,Items.GLASS_PANE,
+		                               Items.GLASS_PANE,Items.GLASS_PANE,Items.GLASS_PANE)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.FloorWedge, 4))
+		                      .grid3x2("crafting",
+		                               null, SwgItems.Ingot.Plasteel, null,
+		                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel,SwgItems.Ingot.Plasteel)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.WallCluster, 4))
+		                      .grid3x3("crafting",
+		                               null, SwgItems.Ingot.Plasteel, null,
+		                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel,SwgItems.Ingot.Plasteel,
+		                               null, SwgItems.Ingot.Plasteel, null)
+		                      .build (assets);
 	}
 
 	private static void generateItems(List<BuiltAsset> assets)
@@ -401,7 +418,8 @@ public class Tarkin
 		BlockGenerator.slab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.identifier("block/wet_pourstone")).build(assets);
 
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.Led).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.LightPanel).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.DisplayPanel).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.Turbine).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.BallBearing).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.DeshWire).build(assets);
@@ -492,6 +510,7 @@ public class Tarkin
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.FloorWedge).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.WallCluster).build(assets);
+		BlockGenerator.basic(SwgBlocks.Light.LightBlock).build(assets);
 
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
 

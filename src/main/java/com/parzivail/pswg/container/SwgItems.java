@@ -43,8 +43,6 @@ public class SwgItems
 	{
 		@RegistryName("electric_motor")
 		public static final Item ElectricMotor = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("led")
-		public static final Item Led = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("turbine")
 		public static final Item Turbine = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("ball_bearing")
@@ -59,6 +57,10 @@ public class SwgItems
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("zersium_rod")
 		public static final Item ZersiumRod = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("light_panel")
+		public static final Item LightPanel = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("display_panel")
+		public static final Item DisplayPanel = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Crystal
