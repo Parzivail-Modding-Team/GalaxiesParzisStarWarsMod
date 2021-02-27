@@ -90,8 +90,6 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 
 		transform(stack, target, part, tickDelta);
 
-		// TODO: rotate based on block
-
 		Vec3d vec = Matrix4fAccessUtil.transform(localPosition, parent);
 		stack.pop();
 

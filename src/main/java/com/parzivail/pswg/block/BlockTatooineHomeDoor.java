@@ -170,7 +170,8 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 		BlockPos controllerPos = getController(world, pos);
 		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
-		assert e != null;
+		if (e == null)
+			return;
 
 		boolean wasPowered = e.isPowered();
 		boolean isPowered = world.isReceivingRedstonePower(pos);
