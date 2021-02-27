@@ -134,15 +134,14 @@ public class SwgItems
 		public static final Item QrikkiWaffle = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.7F).build()).group(Galaxies.Tab));
 	}
 
-	//TODO: Make Durasteel and Titanium deal .5 less damage
 	public static class Hoe
 	{
 		@RegistryName("durasteel_hoe")
-		public static final ToolItem Durasteel = new PHoeItem(DurasteelToolMaterial.INSTANCE, -2, 0.0F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Durasteel = new PHoeItem(DurasteelToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_hoe")
-		public static final ToolItem Titanium = new PHoeItem(TitaniumToolMaterial.INSTANCE, -3, 0.0F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Titanium = new PHoeItem(TitaniumToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("beskar_hoe")
-		public static final ToolItem Beskar = new PHoeItem(BeskarToolMaterial.INSTANCE, -5, 0.0F, new Item.Settings().group(Galaxies.Tab));
+		public static final ToolItem Beskar = new PHoeItem(BeskarToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Ingot
