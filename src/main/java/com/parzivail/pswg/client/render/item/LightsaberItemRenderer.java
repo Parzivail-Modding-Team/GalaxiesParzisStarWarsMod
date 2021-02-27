@@ -6,12 +6,9 @@ import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.pm3d.PM3DTexturedModel;
 import com.parzivail.pswg.client.render.LightsaberRenderer;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
-import com.parzivail.pswg.util.PIO;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.item.ICustomItemRenderer;
 import com.parzivail.util.item.ICustomPoseItem;
-import net.dumbcode.studio.animation.info.AnimationInfo;
-import net.dumbcode.studio.animation.info.AnimationLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -26,13 +23,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
-	private static final AnimationInfo idlePose;
-
 	public static final Identifier DEFAULT_MODEL;
 	public static final HashMap<Identifier, PM3DTexturedModel> MODELS = new HashMap<>();
 
@@ -45,18 +39,6 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 				Resources.identifier("textures/model/lightsaber/luke/rotj_inventory.png"),
 				Resources.identifier("textures/model/lightsaber/luke/rotj.png")
 		));
-
-		AnimationInfo tempIdleAnim = null;
-		try
-		{
-			tempIdleAnim = AnimationLoader.loadAnimation(PIO.getStream("assets", Resources.identifier("animations/player/lightsaber/idle.dca")));
-		}
-		catch (IOException e)
-		{
-			e.printStackTrace();
-		}
-
-		idlePose = tempIdleAnim;
 	}
 
 	@Override

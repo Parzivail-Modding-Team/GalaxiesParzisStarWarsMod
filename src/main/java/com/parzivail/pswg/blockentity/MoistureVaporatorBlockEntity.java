@@ -165,7 +165,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 			}
 			else if (collectionTimerLength != -1)
 			{
-				collectionTimer = 0;
+				collectionTimer = -1;
 				collectionTimerLength = -1;
 
 				markDirty();
