@@ -175,18 +175,21 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 		boolean wasPowered = e.isPowered();
 		boolean isPowered = world.isReceivingRedstonePower(pos);
 
-		if (!world.isClient && block != this && !e.isMoving())
+		if (!world.isClient && block != this)
 		{
 			e.setPowered(isPowered);
-			if (wasPowered && !isPowered && !e.isOpening())
+			if (!e.isMoving())
 			{
-				e.setDirection(false);
-				e.startMoving();
-			}
-			else if (isPowered && !wasPowered && e.isOpening())
-			{
-				e.setDirection(true);
-				e.startMoving();
+				if (wasPowered && !isPowered && !e.isOpening())
+				{
+					e.setDirection(false);
+					e.startMoving();
+				}
+				else if (isPowered && !wasPowered && e.isOpening())
+				{
+					e.setDirection(true);
+					e.startMoving();
+				}
 			}
 		}
 	}
