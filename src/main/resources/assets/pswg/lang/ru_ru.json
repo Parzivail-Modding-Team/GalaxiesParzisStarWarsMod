@@ -1,6 +1,6 @@
 {
 	"block.pswg.beskar_block": "Блок бескара",
-	"block.pswg.beskar_ore": "Руда бескара",
+	"block.pswg.beskar_ore": "Бескаровая руда\n",
 	"block.pswg.black_kyber_crate": "Чёрный кибер-ящик",
 	"block.pswg.blaster_workbench": "Мастерская Бластеров",
 	"block.pswg.blossoming_funnel_flower": "Цветущий цветок Воронки",
@@ -94,7 +94,7 @@
 	"container.pswg.crate_octagon": "Кибер-ящик",
 	"container.pswg.lightsaber_forge": "Кузница световых мечей",
 	"container.pswg.moisture_vaporator_gx8": "Испаритель влаги GX8",
-	"container.pswg.moisture_vaporator_gx8.idle": "Пустой",
+	"container.pswg.moisture_vaporator_gx8.idle": "Не работает",
 	"entity.pswg.blaster_bolt": "Бластерный выстрел",
 	"entity.pswg.xwing_t65b": "T65B X-Wing",
 	"gui.pswg.apply": "Принять",
