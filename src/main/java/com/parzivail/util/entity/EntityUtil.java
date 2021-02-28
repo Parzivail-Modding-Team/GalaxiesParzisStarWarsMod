@@ -24,6 +24,8 @@ public class EntityUtil
 
 		List<Entity> blacklist = Arrays.asList(exclude);
 
+		fromDir = fromDir.normalize();
+
 		Vec3d endPos = startPos.add(fromDir.multiply(distance));
 		List<Entity> list = fromEntity.world.getEntitiesByClass(LivingEntity.class, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
 

@@ -63,6 +63,16 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		this.inanimate = true;
 	}
 
+	public static void handleFirePacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	{
+		server.execute(() -> {
+			ShipEntity ship = getShip(player);
+
+			if (ship != null)
+				ship.acceptFireInput();
+		});
+	}
+
 	public static void handleRotationPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
 		float qa = buf.readFloat();
@@ -340,6 +350,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		}
 	}
 
+	public void acceptFireInput()
+	{
+	}
+
 	@Environment(EnvType.CLIENT)
 	public void acceptMouseInput(double mouseDx, double mouseDy)
 	{
@@ -376,6 +390,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 	public void acceptLeftClick()
 	{
-		// TODO: blasters etc.
+		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipFire, new PacketByteBuf(Unpooled.buffer()));
 	}
 }

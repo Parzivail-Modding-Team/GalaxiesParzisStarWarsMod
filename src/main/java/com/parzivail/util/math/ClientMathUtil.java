@@ -1,4 +1,4 @@
-package com.parzivail.pswg.util;
+package com.parzivail.util.math;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

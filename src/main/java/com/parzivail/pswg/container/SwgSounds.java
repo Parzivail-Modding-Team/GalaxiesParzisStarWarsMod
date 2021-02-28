@@ -24,6 +24,7 @@ public class SwgSounds
 		Door.register();
 		Lightsaber.register();
 		Blaster.register();
+		Ship.register();
 
 		for (Map.Entry<Identifier, SoundEvent> pair : SOUND_EVENTS.entrySet())
 			Registry.register(Registry.SOUND_EVENT, pair.getKey(), pair.getValue());
@@ -75,6 +76,15 @@ public class SwgSounds
 		public static final SoundEvent FIRE_SCOUT = of(Resources.identifier("blaster.fire.dl44"));
 		public static final SoundEvent FIRE_DEFENDER = of(Resources.identifier("blaster.fire.dl44"));
 		public static final SoundEvent FIRE_DL21 = of(Resources.identifier("blaster.fire.dl44"));
+
+		private static void register()
+		{
+		}
+	}
+
+	public static class Ship
+	{
+		public static final SoundEvent XWINGT65B_FIRE = of(Resources.identifier("ship.blaster.fire.xwingt65b"));
 
 		private static void register()
 		{

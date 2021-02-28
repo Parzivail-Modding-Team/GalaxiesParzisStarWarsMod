@@ -4,22 +4,18 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
-import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.item.blaster.data.*;
+import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.pswg.util.QuatUtil;
-import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.item.IZoomingItem;
-import com.parzivail.util.math.EntityHitResult;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -32,24 +28,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider
 {
 	public BlasterItem(Settings settings)
 	{
 		super(settings);
-	}
-
-	public static DamageSource getDamageSource(Entity attacker)
-	{
-		return (new EntityDamageSource("pswg.blaster", attacker)).setProjectile();
 	}
 
 	@Override
@@ -172,34 +163,18 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			Matrix4fAccessUtil.multiply(m, QuatUtil.of(0, hS * hSR, 0, true));
 			Matrix4fAccessUtil.multiply(m, QuatUtil.of(vS * vSR, 0, 0, true));
 
-			Vec3d look = Matrix4fAccessUtil.transform(com.parzivail.util.math.MathUtil.POSZ, m);
-
-			float range = bd.range;
-
-			final BlasterBoltEntity entity = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world);
-			entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 3.0F, 0);
-			entity.setPos(player.getX(), player.getY() + 1.2f, player.getZ());
-			entity.setRange(range);
-			world.spawnEntity(entity);
-
+			Vec3d fromDir = Matrix4fAccessUtil.transform(com.parzivail.util.math.MathUtil.POSZ, m);
 			world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
 
-			Vec3d start = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
+			float range = bd.range;
+			float damage = bd.damage;
 
-			EntityHitResult hit = EntityUtil.raycastEntities(start, look, range, player, new Entity[] { player });
-			BlockHitResult blockHit = EntityUtil.raycastBlocks(start, look, range, player);
+			Consumer<BlasterBoltEntity> entityInitializer = entity -> {
+				entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 3.0F, 0);
+				entity.setPos(player.getX(), player.getY() + 1.2f, player.getZ());
+			};
 
-			double entityDistance = hit == null ? Double.MAX_VALUE : hit.hit.squaredDistanceTo(entity.getPos());
-			double blockDistance = blockHit == null ? Double.MAX_VALUE : blockHit.squaredDistanceTo(entity);
-
-			if (hit != null && entityDistance < blockDistance)
-			{
-				hit.entity.damage(getDamageSource(player), bd.damage);
-			}
-			else if (blockHit != null)
-			{
-				// TODO: smoke puff
-			}
+			BlasterUtil.fireBolt(world, player, fromDir, range, damage, entityInitializer);
 
 			bt.shotTimer = 10;
 

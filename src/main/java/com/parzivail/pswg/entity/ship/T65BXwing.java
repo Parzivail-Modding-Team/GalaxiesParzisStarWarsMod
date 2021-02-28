@@ -2,27 +2,40 @@ package com.parzivail.pswg.entity.ship;
 
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.entity.data.TrackedDataHandlers;
+import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.entity.rigs.RigT65B;
+import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.pswg.util.QuatUtil;
+import com.parzivail.util.math.MathUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
 
 public class T65BXwing extends ShipEntity
 {
-	private static final TrackedData<Short> WINGS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
+	private static final TrackedData<Byte> WINGS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final int WING_DIRECTION_MASK = 0b10000000;
 	private static final int WING_TIMER_MASK = 0b01111111;
+
+	private static final TrackedData<Byte> CANNONS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final int CANNON_STATE_MASK = 0b00000011;
+
+	private static final RigT65B.Socket[] CANNON_ORDER = { RigT65B.Socket.CannonTopLeft, RigT65B.Socket.CannonBottomLeft, RigT65B.Socket.CannonTopRight, RigT65B.Socket.CannonBottomRight };
+
 	@Environment(EnvType.CLIENT)
 	public short clientWingState;
 
@@ -42,7 +55,8 @@ public class T65BXwing extends ShipEntity
 	protected void initDataTracker()
 	{
 		super.initDataTracker();
-		getDataTracker().startTracking(WINGS, (short)0);
+		getDataTracker().startTracking(WINGS, (byte)0);
+		getDataTracker().startTracking(CANNONS, (byte)0);
 	}
 
 	private Quaternion getPartRotation(String part)
@@ -73,25 +87,38 @@ public class T65BXwing extends ShipEntity
 	}
 
 	@Override
+	public void acceptFireInput()
+	{
+		Entity passenger = getPrimaryPassenger();
+		if (!(passenger instanceof PlayerEntity))
+			return;
+
+		PlayerEntity player = (PlayerEntity)passenger;
+
+		Vec3d pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(5f), getRotation());
+		MatrixStack stack = new MatrixStack();
+
+		byte cannonState = getCannonState();
+
+		Vec3d p = CANNON_ORDER[cannonState].getWorldPosition(stack, this);
+
+		BlasterUtil.fireBolt(world, player, pDir, 100, 50, blasterBoltEntity -> {
+			blasterBoltEntity.setVelocity(pDir);
+			blasterBoltEntity.setPos(this.getX() + p.x, this.getY() + p.y + 0.25f, this.getZ() + p.z);
+		});
+
+		world.playSound(null, player.getBlockPos(), SwgSounds.Ship.XWINGT65B_FIRE, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 10);
+
+		cannonState++;
+		setCannonState(cannonState);
+	}
+
+	@Override
 	public void tick()
 	{
 		super.tick();
 
-		//		Vec3d pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(3f), getRotation());
-		//
-		//		Vec3d p = RigT65B.Socket.CannonTopLeft.getWorldPosition(this);
-		//		world.addParticle(ParticleTypes.SMOKE, this.getX() + p.x, this.getY() + p.y + 0.5f, this.getZ() + p.z, pDir.x, pDir.y, pDir.z);
-		//
-		//		p = RigT65B.Socket.CannonBottomLeft.getWorldPosition(this);
-		//		world.addParticle(ParticleTypes.SMOKE, this.getX() + p.x, this.getY() + p.y + 0.5f, this.getZ() + p.z, pDir.x, pDir.y, pDir.z);
-		//
-		//		p = RigT65B.Socket.CannonTopRight.getWorldPosition(this);
-		//		world.addParticle(ParticleTypes.SMOKE, this.getX() + p.x, this.getY() + p.y + 0.5f, this.getZ() + p.z, pDir.x, pDir.y, pDir.z);
-		//
-		//		p = RigT65B.Socket.CannonBottomRight.getWorldPosition(this);
-		//		world.addParticle(ParticleTypes.SMOKE, this.getX() + p.x, this.getY() + p.y + 0.5f, this.getZ() + p.z, pDir.x, pDir.y, pDir.z);
-
-		short wingTimer = getWingTimer();
+		byte wingTimer = getWingTimer();
 
 		if (wingTimer != 0)
 		{
@@ -111,7 +138,7 @@ public class T65BXwing extends ShipEntity
 			{
 				boolean movingUp = getWingDirection();
 
-				setWings(!movingUp, (short)20);
+				setWings(!movingUp, (byte)20);
 			}
 		}
 
@@ -124,9 +151,24 @@ public class T65BXwing extends ShipEntity
 		return new EntitySpawnS2CPacket(this);
 	}
 
-	public short getWingTimer()
+	public byte getCannonState()
 	{
-		return (short)(getDataTracker().get(WINGS) & WING_TIMER_MASK);
+		return (byte)(getDataTracker().get(CANNONS) & CANNON_STATE_MASK);
+	}
+
+	public void setCannonState(byte cannonState)
+	{
+		byte cannons = getDataTracker().get(CANNONS);
+
+		cannons &= ~CANNON_STATE_MASK;
+		cannons |= cannonState & CANNON_STATE_MASK;
+
+		getDataTracker().set(CANNONS, cannons);
+	}
+
+	public byte getWingTimer()
+	{
+		return (byte)(getDataTracker().get(WINGS) & WING_TIMER_MASK);
 	}
 
 	public boolean getWingDirection()
@@ -135,9 +177,9 @@ public class T65BXwing extends ShipEntity
 	}
 
 	@Environment(EnvType.CLIENT)
-	public short getWingTimerClient()
+	public byte getWingTimerClient()
 	{
-		return (short)(clientWingState & WING_TIMER_MASK);
+		return (byte)(clientWingState & WING_TIMER_MASK);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -146,7 +188,7 @@ public class T65BXwing extends ShipEntity
 		return (clientWingState & WING_DIRECTION_MASK) != 0;
 	}
 
-	public void setWings(boolean direction, short timer)
+	public void setWings(boolean direction, byte timer)
 	{
 		if (direction)
 			timer |= WING_DIRECTION_MASK;

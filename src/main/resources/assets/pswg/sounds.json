@@ -112,6 +112,14 @@
 			"pswg:blaster/dl44"
 		]
 	},
+	"ship.blaster.fire.xwingt65b": {
+		"sounds": [
+			{
+				"name": "pswg:ship/xwing/fire",
+				"attenuation_distance": 32
+			}
+		]
+	},
 	"door.pneumatic": {
 		"sounds": [
 			"pswg:door/pneumatic"

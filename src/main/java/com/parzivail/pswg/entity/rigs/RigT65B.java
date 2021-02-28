@@ -100,14 +100,15 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 	public Vec3d getWorldPosition(MatrixStack stack, T65BXwing target, RigT65B.Part part, Vec3d localPosition)
 	{
 		stack.push();
+
+		stack.multiply(target.getRotation());
+
 		MatrixStack.Entry entry = stack.peek();
 		Matrix4f parent = entry.getModel();
 		Matrix4f rig = RIG.objects.get(part.getPartName());
 		parent.multiply(rig);
 
 		transform(stack, target, part);
-
-		parent.multiply(target.getRotation());
 
 		Vec3d vec = Matrix4fAccessUtil.transform(localPosition, parent);
 		stack.pop();

@@ -1,11 +1,11 @@
 package com.parzivail.pswg.client.pm3d;
 
-import com.parzivail.pswg.util.ClientMathUtil;
 import com.parzivail.util.block.ConnectingNodeBlock;
 import com.parzivail.util.block.DisplacingBlock;
 import com.parzivail.util.block.RotatingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
+import com.parzivail.util.math.ClientMathUtil;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
