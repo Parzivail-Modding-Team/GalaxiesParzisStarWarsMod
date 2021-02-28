@@ -170,7 +170,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			float damage = bd.damage;
 
 			Consumer<BlasterBoltEntity> entityInitializer = entity -> {
-				entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 3.0F, 0);
+				entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 5.0F, 0);
 				entity.setPos(player.getX(), player.getY() + 1.2f, player.getZ());
 			};
 
