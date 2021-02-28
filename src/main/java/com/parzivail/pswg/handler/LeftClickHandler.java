@@ -53,9 +53,6 @@ public class LeftClickHandler
 	{
 		MinecraftClient mc = Client.minecraft;
 
-		if (!mc.options.keyAttack.isPressed())
-			return;
-
 		assert mc.player != null;
 
 		ShipEntity ship = ShipEntity.getShip(mc.player);
