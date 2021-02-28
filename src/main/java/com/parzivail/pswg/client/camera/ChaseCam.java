@@ -16,13 +16,25 @@ public class ChaseCam
 	public Vec3d prevPos;
 	public Vec3d pos;
 
+	private boolean firstTick = true;
+
+	public ChaseCam()
+	{
+		prevPos = new Vec3d(0, 0, 0);
+		pos = new Vec3d(0, 0, 0);
+	}
+
 	public void tick(ShipEntity parent)
 	{
 		if (parent == null || parent.removed)
 			return;
 
-		if (pos == null)
+		if (firstTick)
+		{
 			pos = parent.getPos();
+
+			firstTick = false;
+		}
 
 		prevPos = new Vec3d(pos.x, pos.y, pos.z);
 
