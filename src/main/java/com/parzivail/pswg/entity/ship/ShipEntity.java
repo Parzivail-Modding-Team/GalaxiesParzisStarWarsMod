@@ -53,6 +53,8 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	private Quaternion clientRotation = new Quaternion(Quaternion.IDENTITY);
 	@Environment(EnvType.CLIENT)
 	private Quaternion clientPrevRotation = new Quaternion(Quaternion.IDENTITY);
+	@Environment(EnvType.CLIENT)
+	private boolean firstRotationUpdate = true;
 
 	private Quaternion viewRotation = new Quaternion(Quaternion.IDENTITY);
 	private Quaternion viewPrevRotation = new Quaternion(Quaternion.IDENTITY);
@@ -239,8 +241,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		Vec3d forward = QuatUtil.rotate(MathUtil.NEGZ, getRotation());
 		setVelocity(forward.multiply(throttle));
 
-		setRotation(viewRotation);
-
 		move(MovementType.SELF, getVelocity());
 
 		QuatUtil.updateEulerRotation(this, getRotation());
@@ -357,7 +357,15 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	@Environment(EnvType.CLIENT)
 	public void acceptMouseInput(double mouseDx, double mouseDy)
 	{
+		if (this.firstUpdate)
+			return;
+
 		Quaternion rotation = new Quaternion(clientInstRotation);
+		if (firstRotationUpdate)
+		{
+			rotation = new Quaternion(getRotation());
+			firstRotationUpdate = false;
+		}
 
 		boolean shipRollPriority = Resources.CONFIG.get().input.shipRollPriority;
 

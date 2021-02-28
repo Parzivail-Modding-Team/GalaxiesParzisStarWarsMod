@@ -6,7 +6,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.data.SwgBlasterManager;
-import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.pswg.util.QuatUtil;
@@ -34,7 +33,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider
 {
@@ -169,12 +167,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			float range = bd.range;
 			float damage = bd.damage;
 
-			Consumer<BlasterBoltEntity> entityInitializer = entity -> {
-				entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 5.0F, 0);
+			BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
+				entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 4.0F, 0);
 				entity.setPos(player.getX(), player.getY() + 1.2f, player.getZ());
-			};
-
-			BlasterUtil.fireBolt(world, player, fromDir, range, damage, entityInitializer);
+			});
 
 			bt.shotTimer = 10;
 

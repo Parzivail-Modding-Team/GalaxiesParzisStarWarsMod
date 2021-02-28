@@ -16,6 +16,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.sound.SoundCategory;
@@ -95,7 +96,7 @@ public class T65BXwing extends ShipEntity
 
 		PlayerEntity player = (PlayerEntity)passenger;
 
-		Vec3d pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(5f), getRotation());
+		Vec3d pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(4f), getRotation());
 		MatrixStack stack = new MatrixStack();
 
 		byte cannonState = getCannonState();
@@ -149,6 +150,26 @@ public class T65BXwing extends ShipEntity
 	public Packet<?> createSpawnPacket()
 	{
 		return new EntitySpawnS2CPacket(this);
+	}
+
+	@Override
+	protected void readCustomDataFromTag(CompoundTag tag)
+	{
+		super.readCustomDataFromTag(tag);
+
+		setWings(tag.getBoolean("wingDirection"), tag.getByte("wingTimer"));
+		setCannonState(tag.getByte("cannonState"));
+	}
+
+	@Override
+	protected void writeCustomDataToTag(CompoundTag tag)
+	{
+		super.writeCustomDataToTag(tag);
+
+		tag.putBoolean("wingDirection", getWingDirection());
+		tag.putByte("wingTimer", getWingTimer());
+
+		tag.putByte("cannonState", getCannonState());
 	}
 
 	public byte getCannonState()

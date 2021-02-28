@@ -23,18 +23,19 @@ public class BlasterUtil
 
 	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, float damage, Consumer<BlasterBoltEntity> entityInitializer)
 	{
-		final BlasterBoltEntity entity = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world);
-		entityInitializer.accept(entity);
-		entity.setRange(range);
-		world.spawnEntity(entity);
+		final BlasterBoltEntity bolt = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world);
+		entityInitializer.accept(bolt);
+		bolt.setRange(range);
 
-		Vec3d start = new Vec3d(entity.getX(), entity.getY(), entity.getZ());
+		world.spawnEntity(bolt);
+
+		Vec3d start = new Vec3d(player.getX(), player.getY(), player.getZ());
 
 		EntityHitResult hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
 		BlockHitResult blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player);
 
-		double entityDistance = hit == null ? Double.MAX_VALUE : hit.hit.squaredDistanceTo(entity.getPos());
-		double blockDistance = blockHit == null ? Double.MAX_VALUE : blockHit.squaredDistanceTo(entity);
+		double entityDistance = hit == null ? Double.MAX_VALUE : hit.hit.squaredDistanceTo(player.getPos());
+		double blockDistance = blockHit == null ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
 
 		if (hit != null && entityDistance < blockDistance)
 		{

@@ -78,6 +78,9 @@ public class BlasterBoltEntity extends ThrownEntity
 			return;
 		}
 
+		pitch = 0;//(float)Math.asin(-fromDir.y) * MathUtil.toDegreesf;
+		yaw = 0;//(float)Math.atan2(fromDir.x, fromDir.z) * MathUtil.toDegreesf;
+
 		super.tick();
 	}
 
