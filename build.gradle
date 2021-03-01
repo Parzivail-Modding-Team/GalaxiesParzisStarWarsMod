@@ -16,6 +16,11 @@ repositories {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/releases"
 	}
+
+	maven {
+		name = "Shedaniel Maven"
+		url = "https://maven.shedaniel.me"
+	}
 }
 
 java {
@@ -65,17 +70,11 @@ dependencies {
 	modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}")
 	include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}")
 
-	// Autoconfig
-	modImplementation("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
-	include("me.sargunvohra.mcmods:autoconfig1u:${project.autoconfig_version}")
-
 	// Cloth Config
-	modImplementation("me.shedaniel.cloth:config-2:${project.cloth_config_version}") {
+	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	include("me.shedaniel.cloth:config-2:${project.cloth_config_version}")
+	include("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")
 
 	// Mod Menu
 	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")

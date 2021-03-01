@@ -1,10 +1,10 @@
 package com.parzivail.pswg;
 
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.ConfigEntry;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
-@me.sargunvohra.mcmods.autoconfig1u.annotation.Config(name = "pswg")
+@me.shedaniel.autoconfig.annotation.Config(name = "pswg")
 public class Config implements ConfigData
 {
 	// @Comments are replicated in en_us.json (for i18n)

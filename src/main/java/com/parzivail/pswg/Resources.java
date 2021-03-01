@@ -1,7 +1,7 @@
 package com.parzivail.pswg;
 
 import com.parzivail.util.noise.OpenSimplex2F;
-import me.sargunvohra.mcmods.autoconfig1u.ConfigHolder;
+import me.shedaniel.autoconfig.ConfigHolder;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nonnull;
