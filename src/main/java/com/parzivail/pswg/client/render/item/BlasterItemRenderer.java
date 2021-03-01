@@ -15,7 +15,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 
 import java.util.HashMap;
@@ -70,28 +69,21 @@ public class BlasterItemRenderer implements ICustomItemRenderer
 
 		PM3DLod m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
 
-		if (renderMode == ModelTransformation.Mode.GUI)
+		if (renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.FIXED)
 		{
 			matrices.multiply(new Quaternion(90, 0, 0, true));
 			matrices.multiply(new Quaternion(0, 0, -90, true));
-			matrices.multiply(new Quaternion(-135, 0, 0, true));
 
-//			PM3DLod m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
-			float f = 4 / (float)m.bounds.getZLength() * MathHelper.SQUARE_ROOT_OF_TWO;
+			float angle = (float)(Math.PI / 4) * 5;
+			matrices.multiply(new Quaternion(angle, 0, 0, false));
+
+			double yi = m.bounds.getYLength() * Math.abs(Math.sin(angle)) + m.bounds.getZLength() * Math.abs(Math.cos(angle));
+			double zi = m.bounds.getYLength() * Math.abs(Math.cos(angle)) + m.bounds.getZLength() * Math.abs(Math.sin(angle));
+
+			float f = (float)(5 / Math.max(yi, zi));
 			matrices.scale(f, f, f);
 
-			matrices.translate(0, (float)-m.bounds.minY - m.bounds.getYLength() / 2, (float)-m.bounds.minZ - m.bounds.getZLength() / 2);
-		}
-		else if (renderMode == ModelTransformation.Mode.FIXED)
-		{
-			matrices.multiply(new Quaternion(90, 0, 0, true));
-			matrices.multiply(new Quaternion(0, 0, 90, true));
-			matrices.multiply(new Quaternion(-135, 0, 0, true));
-
-			float f = 4 / (float)m.bounds.getZLength() * MathHelper.SQUARE_ROOT_OF_TWO;
-			matrices.scale(f, f, f);
-
-			matrices.translate((float)-m.bounds.minX, (float)-m.bounds.minY - m.bounds.getYLength() / 2, (float)-m.bounds.minZ - m.bounds.getZLength() / 2);
+			matrices.translate(0, (float)-m.bounds.minY - m.bounds.getYLength() / 2f, (float)-m.bounds.minZ - m.bounds.getZLength() / 2f);
 		}
 		else if (renderMode.isFirstPerson())
 		{
