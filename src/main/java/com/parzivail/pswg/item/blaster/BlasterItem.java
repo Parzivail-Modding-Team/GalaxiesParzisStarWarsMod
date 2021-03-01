@@ -253,7 +253,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
-		return true;
+		BlasterDescriptor bdOriginal = new BlasterDescriptor(original.getOrCreateTag());
+		BlasterDescriptor bdUpdated = new BlasterDescriptor(updated.getOrCreateTag());
+		return bdOriginal.id.equals(bdUpdated.id);
 	}
 
 	@Override
