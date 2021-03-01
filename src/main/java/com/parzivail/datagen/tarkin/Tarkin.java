@@ -562,7 +562,7 @@ public class Tarkin
 
 		BlockGenerator.basic(SwgBlocks.Panel.LabWall).build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Pipe.Thick).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Pipe.Large).build(assets);
 
 		BlockGenerator.cross(SwgBlocks.Plant.FunnelFlower).build(assets);
 		BlockGenerator.cross(SwgBlocks.Plant.BlossomingFunnelFlower).build(assets);
@@ -596,7 +596,7 @@ public class Tarkin
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.Fusion).build(assets);
 
-		BlockGenerator.staticColumn(SwgBlocks.Vent.Tatooine, Resources.identifier("block/tatooine_vent_top"), Resources.identifier("block/tatooine_vent_side")).build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Vent.Air, Resources.identifier("block/air_vent_top"), Resources.identifier("block/air_vent_side")).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Workbench.Blaster).build(assets);
 		BlockGenerator.basic(SwgBlocks.Workbench.Lightsaber).build(assets);
