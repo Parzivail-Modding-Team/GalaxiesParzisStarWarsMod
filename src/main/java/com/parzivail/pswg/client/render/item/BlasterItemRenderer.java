@@ -74,6 +74,12 @@ public class BlasterItemRenderer implements ICustomItemRenderer
 			matrices.multiply(new Quaternion(90, 0, 0, true));
 			matrices.multiply(new Quaternion(0, 0, -90, true));
 
+			if (renderMode == ModelTransformation.Mode.FIXED)
+			{
+				matrices.multiply(new Quaternion(0, 0, 180, true));
+				matrices.translate(-m.bounds.getXLength() * 0.75f, 0, 0);
+			}
+
 			float angle = (float)(Math.PI / 4) * 5;
 			matrices.multiply(new Quaternion(angle, 0, 0, false));
 
