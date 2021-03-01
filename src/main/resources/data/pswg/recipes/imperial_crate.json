@@ -10,10 +10,10 @@
 			"item": "pswg:plasteel_ingot"
 		},
 		"l": {
-			"item": "pswg:led"
+			"item": "pswg:light_panel"
 		}
 	},
 	"result": {
-		"item": "pswg:crate_imperial_cube"
+		"item": "pswg:imperial_crate"
 	}
 }
