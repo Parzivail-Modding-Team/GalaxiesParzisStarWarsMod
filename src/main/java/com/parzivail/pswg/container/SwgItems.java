@@ -4,6 +4,7 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.item.DebugItem;
+import com.parzivail.pswg.item.SpawnEntityItem;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.material.BeskarToolMaterial;
@@ -212,6 +213,12 @@ public class SwgItems
 		public static final ToolItem Titanium = new ShovelItem(TitaniumToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("beskar_shovel")
 		public static final ToolItem Beskar = new ShovelItem(BeskarToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings().group(Galaxies.Tab));
+	}
+
+	public static class Spawners
+	{
+		@RegistryName("spawn_xwing_t65b")
+		public static final Item XwingT65b = new SpawnEntityItem(SwgEntities.Ship.T65bXwing, new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static void register()

@@ -3,10 +3,7 @@ package com.parzivail.datagen.tarkin;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.util.Lumberjack;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 
@@ -494,6 +491,8 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Shovel.Durasteel).build(assets);
 		ItemGenerator.basic(SwgItems.Shovel.Titanium).build(assets);
 		ItemGenerator.basic(SwgItems.Shovel.Beskar).build(assets);
+
+		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);
 	}
 
 	private static void generateBlocks(List<BuiltAsset> assets)

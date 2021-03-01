@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.*;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
@@ -144,6 +145,17 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	public boolean collides()
 	{
 		return !this.removed;
+	}
+
+	@Override
+	public boolean damage(DamageSource source, float amount)
+	{
+		if (this.isInvulnerableTo(source))
+			return false;
+
+		this.kill();
+
+		return true;
 	}
 
 	@Override
