@@ -38,20 +38,25 @@ public class SwgItems
 		public static final Item Turbine = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("ball_bearing")
 		public static final Item BallBearing = new Item(new Item.Settings().group(Galaxies.Tab));
+
 		@RegistryName("desh_wire")
 		public static final Item DeshWire = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("desh_coil")
 		public static final Item DeshCoil = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("plasteel_rod")
-		public static final Item PlasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("durasteel_rod")
-		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("zersium_rod")
-		public static final Item ZersiumRod = new Item(new Item.Settings().group(Galaxies.Tab));
+
 		@RegistryName("light_panel")
 		public static final Item LightPanel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("display_panel")
 		public static final Item DisplayPanel = new Item(new Item.Settings().group(Galaxies.Tab));
+
+		@RegistryName("plasteel_rod")
+		public static final Item PlasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("zersium_rod")
+		public static final Item ZersiumRod = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("durasteel_rod")
+		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
+
+
 	}
 
 	public static class Hoe
@@ -161,6 +166,7 @@ public class SwgItems
 		public static final Item Chasuka = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("meiloorun")
 		public static final Item Meiloorun = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+
 		@RegistryName("mynock_wing")
 		public static final Item MynockWing = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).meat().build()).group(Galaxies.Tab));
 		@RegistryName("cooked_mynock_wing")
