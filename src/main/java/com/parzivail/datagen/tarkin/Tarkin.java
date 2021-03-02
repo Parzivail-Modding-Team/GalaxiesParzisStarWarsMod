@@ -47,7 +47,7 @@ public class Tarkin
 
 		RecipeGenerator.buildMetal(
 				assets,
-				0.35f,
+				5.0F,
 				SwgBlocks.Ore.Beskar,
 				SwgItems.Ingot.Beskar,
 				SwgBlocks.MaterialBlock.Beskar
@@ -55,7 +55,7 @@ public class Tarkin
 
 		RecipeGenerator.buildMetal(
 				assets,
-				0.35f,
+				1.0F,
 				SwgBlocks.Ore.Chromium,
 				SwgItems.Ingot.Chromium,
 				SwgItems.Nugget.Chromium,
@@ -64,7 +64,7 @@ public class Tarkin
 
 		RecipeGenerator.buildMetal(
 				assets,
-				0.35f,
+				4.0F,
 				SwgBlocks.Ore.Cortosis,
 				SwgItems.Ingot.Cortosis,
 				SwgBlocks.MaterialBlock.Cortosis
@@ -72,7 +72,7 @@ public class Tarkin
 
 		RecipeGenerator.buildMetal(
 				assets,
-				0.35f,
+				0.4F,
 				SwgBlocks.Ore.Desh,
 				SwgItems.Ingot.Desh,
 				SwgItems.Nugget.Desh,
@@ -81,7 +81,7 @@ public class Tarkin
 
 		RecipeGenerator.buildMetal(
 				assets,
-				0.35f,
+				0.7F,
 				SwgBlocks.Ore.Diatium,
 				SwgItems.Ingot.Diatium,
 				SwgItems.Nugget.Diatium,
@@ -92,7 +92,7 @@ public class Tarkin
 
 		RecipeGenerator.buildMetal(
 				assets,
-				0.35f,
+				0.7F,
 				SwgBlocks.Ore.Lommite,
 				SwgItems.Ingot.Lommite,
 				// TODO: nugget
@@ -103,7 +103,7 @@ public class Tarkin
 
 		RecipeGenerator.buildMetal(
 				assets,
-				0.35f,
+				2.0F,
 				SwgBlocks.Ore.Titanium,
 				SwgItems.Ingot.Titanium,
 				SwgItems.Nugget.Titanium,
@@ -112,7 +112,7 @@ public class Tarkin
 
 		RecipeGenerator.buildMetal(
 				assets,
-				0.35f,
+				0.7F,
 				SwgBlocks.Ore.Zersium,
 				SwgItems.Ingot.Zersium,
 				SwgItems.Nugget.Zersium,
