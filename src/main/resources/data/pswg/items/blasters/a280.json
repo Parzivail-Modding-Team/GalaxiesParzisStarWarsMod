@@ -1,20 +1,20 @@
 {
-	"version": 1,
-	"damage": 1.0,
-	"range": 30.0,
-	"weight": 1.0,
+	"version": 1.1,
+	"damage": 3.06,
+	"range": 188.0,
+	"weight": 6.7,
 	"boltColor": 16711680,
-	"magazineSize": 10,
-	"automaticRepeatTime": 10,
+	"magazineSize": 24,
+	"automaticRepeatTime": 10.8,
 	"spread": {
 		"horizontal": 0.0,
 		"vertical": 0.0
 	},
 	"heat": {
-		"capacity": 100,
-		"perRound": 15,
-		"overheatPenalty": 10,
-		"passiveCooldownDelay": 30
+		"capacity": 1008,
+		"perRound": 42,
+		"overheatPenalty": 20,
+		"passiveCooldownDelay": 100
 	},
 	"cooling": {
 		"primaryBypassTime": 0.7,

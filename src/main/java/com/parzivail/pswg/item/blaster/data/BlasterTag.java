@@ -36,7 +36,7 @@ public class BlasterTag extends TagSerializer
 	public void tick()
 	{
 		if (overheatTimer > 0)
-			overheatTimer--;
+			overheatTimer-=14;
 
 		if (passiveCooldownTimer > 0)
 			passiveCooldownTimer--;
@@ -45,7 +45,7 @@ public class BlasterTag extends TagSerializer
 			shotTimer--;
 
 		if (heat > 0 && passiveCooldownTimer == 0)
-			heat--;
+			heat-=8;
 	}
 
 	public boolean isReady()
