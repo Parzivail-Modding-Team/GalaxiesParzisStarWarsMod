@@ -1,5 +1,5 @@
 {
-	"version": 1.1,
+	"version": 1,
 	"damage": 1.75,
 	"range": 188.0,
 	"weight": 2.7,
@@ -13,7 +13,9 @@
 	"heat": {
 		"capacity": 1045,
 		"perRound": 55,
+		"drainSpeed": 8,
 		"overheatPenalty": 54,
+		"overheatDrainSpeed": 14,
 		"passiveCooldownDelay": 10
 	},
 	"cooling": {

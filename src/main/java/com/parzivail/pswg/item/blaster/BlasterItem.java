@@ -59,6 +59,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
+	public boolean hasGlint(ItemStack stack)
+	{
+		return true;
+	}
+
+	@Override
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity player, Hand hand)
 	{
 		final ItemStack stack = player.getStackInHand(hand);
@@ -210,7 +216,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				10,
 				10,
 				new BlasterSpreadInfo(0, 0),
-				new BlasterHeatInfo(100, 15, 30, 15),
+				new BlasterHeatInfo(100, 15, 8, 30, 14, 15),
 				BlasterCoolingBypassProfile.DEFAULT
 		);
 
@@ -253,7 +259,17 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		BlasterTag.mutate(stack, BlasterTag::tick);
+		BlasterDescriptor bd = new BlasterDescriptor(stack.getOrCreateTag());
+
+		BlasterTag.mutate(stack, blasterTag -> {
+			if (blasterTag.overheatTimer > 0)
+				blasterTag.overheatTimer -= bd.heat.overheatDrainSpeed;
+
+			if (blasterTag.heat > 0 && blasterTag.passiveCooldownTimer == 0)
+				blasterTag.heat -= bd.heat.drainSpeed;
+
+			blasterTag.tick();
+		});
 	}
 
 	@Override
