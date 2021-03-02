@@ -8,6 +8,7 @@
 		"DeadBushBlockMixin",
 		"FarmlandBlockMixin",
 		"ItemStackMixin",
+		"LivingEntityMixin",
 		"Matrix4fMixin",
 		"MinecraftServerMixin",
 		"PlayerManagerMixin",

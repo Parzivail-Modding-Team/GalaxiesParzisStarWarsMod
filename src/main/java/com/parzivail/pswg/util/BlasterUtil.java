@@ -3,10 +3,10 @@ package com.parzivail.pswg.util;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.util.entity.EntityUtil;
+import com.parzivail.util.entity.PEntityDamageSource;
 import com.parzivail.util.math.EntityHitResult;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.EntityDamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
@@ -18,7 +18,7 @@ public class BlasterUtil
 {
 	public static DamageSource getDamageSource(Entity attacker)
 	{
-		return new EntityDamageSource("pswg.blaster", attacker).setProjectile();
+		return new PEntityDamageSource("pswg.blaster", attacker).setIgnoresInvulnerableFrames().setProjectile();
 	}
 
 	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, float damage, Consumer<BlasterBoltEntity> entityInitializer)
