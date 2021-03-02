@@ -13,10 +13,11 @@ public class BlasterTag extends TagSerializer
 	public static final Identifier SLUG = Resources.identifier("blaster_data");
 
 	public boolean isAimingDownSights;
-	public boolean canBypassCooling;
+	public boolean canBypassOverheat;
 	public int shotsRemaining;
 	public int heat;
-	public int cooldownTimer;
+	public int overheatTimer;
+	public int passiveCooldownTimer;
 	public int shotTimer;
 
 	public BlasterTag(CompoundTag source)
@@ -34,13 +35,16 @@ public class BlasterTag extends TagSerializer
 
 	public void tick()
 	{
-		if (cooldownTimer > 0)
-			cooldownTimer--;
+		if (overheatTimer > 0)
+			overheatTimer--;
+
+		if (passiveCooldownTimer > 0)
+			passiveCooldownTimer--;
 
 		if (shotTimer > 0)
 			shotTimer--;
 
-		if (heat > 0)
+		if (heat > 0 && passiveCooldownTimer == 0)
 			heat--;
 	}
 
@@ -49,8 +53,8 @@ public class BlasterTag extends TagSerializer
 		return shotTimer == 0;
 	}
 
-	public boolean isCoolingDown()
+	public boolean isOverheatCooling()
 	{
-		return cooldownTimer > 0;
+		return overheatTimer > 0;
 	}
 }

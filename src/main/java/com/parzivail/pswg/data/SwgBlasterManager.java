@@ -75,6 +75,8 @@ public class SwgBlasterManager extends JsonDataLoader
 
 		buf.writeInt(value.heat.capacity);
 		buf.writeInt(value.heat.perRound);
+		buf.writeInt(value.heat.overheatPenalty);
+		buf.writeInt(value.heat.passiveCooldownDelay);
 
 		buf.writeFloat(value.cooling.primaryBypassTime);
 		buf.writeFloat(value.cooling.primaryBypassTolerance);
@@ -112,6 +114,8 @@ public class SwgBlasterManager extends JsonDataLoader
 
 		int heat_capacity = buf.readInt();
 		int heat_perRound = buf.readInt();
+		int heat_cooldownDelay = buf.readInt();
+		int heat_passiveCooldownDelay = buf.readInt();
 
 		float cooling_primaryBypassTime = buf.readFloat();
 		float cooling_primaryBypassTolerance = buf.readFloat();
@@ -127,7 +131,7 @@ public class SwgBlasterManager extends JsonDataLoader
 				magazineSize,
 				automaticRepeatTime,
 				new BlasterSpreadInfo(spread_horizontal, spread_vertical),
-				new BlasterHeatInfo(heat_capacity, heat_perRound),
+				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_cooldownDelay, heat_passiveCooldownDelay),
 				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance)
 		);
 	}

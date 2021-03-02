@@ -29,7 +29,7 @@ public class BlasterUtil
 
 		world.spawnEntity(bolt);
 
-		Vec3d start = new Vec3d(player.getX(), player.getY(), player.getZ());
+		Vec3d start = new Vec3d(bolt.getX(), bolt.getY() + bolt.getHeight() / 2f, bolt.getZ());
 
 		EntityHitResult hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
 		BlockHitResult blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player);

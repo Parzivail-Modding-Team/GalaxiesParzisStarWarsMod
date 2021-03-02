@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRenderer
 {
@@ -47,7 +48,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		 * Cooldown
 		 */
 
-		if (bt.isCoolingDown() || bt.heat > 0)
+		if (bt.isOverheatCooling() || bt.heat > 0)
 		{
 			int cooldownBarX = (scaledWidth - cooldownWidth) / 2;
 
@@ -56,14 +57,16 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 			final float maxHeat = bd.heat.capacity;
 
-			if (bt.isCoolingDown())
+			if (bt.isOverheatCooling())
 			{
-				float cooldownTimer = (bt.cooldownTimer - client.getTickDelta()) / maxHeat;
+				float cooldownTimer = (bt.overheatTimer - client.getTickDelta()) / maxHeat;
+
+				cooldownTimer = MathHelper.clamp(cooldownTimer, 0, 0.98f);
 
 				// red cooldown background
 				this.drawTexture(matrices, cooldownBarX, j + 30, 0, 16, cooldownWidth, 3);
 
-				if (bt.canBypassCooling)
+				if (bt.canBypassOverheat)
 				{
 					int primaryBypassStartX = (int)((profile.primaryBypassTime - profile.primaryBypassTolerance) * cooldownWidth);
 					int primaryBypassWidth = (int)(2 * profile.primaryBypassTolerance * cooldownWidth);
@@ -81,7 +84,11 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			}
 			else
 			{
-				float heatPercentage = (bt.heat - client.getTickDelta()) / maxHeat;
+				float deltaHeat = 0;
+				if (bt.passiveCooldownTimer == 0)
+					deltaHeat = client.getTickDelta();
+
+				float heatPercentage = (bt.heat - deltaHeat) / maxHeat;
 				this.drawTexture(matrices, cooldownBarX, j + 30, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
 			}
 

@@ -68,14 +68,19 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (!bt.isReady())
 			return TypedActionResult.fail(stack);
 
-		if (bt.isCoolingDown())
+		bt.shotTimer = bd.automaticRepeatTime;
+
+		if (bt.isOverheatCooling())
 		{
-			if (world.isClient || !bt.canBypassCooling)
+			if (world.isClient || !bt.canBypassOverheat)
+			{
+				bt.serializeAsSubtag(stack);
 				return TypedActionResult.fail(stack);
+			}
 
 			BlasterCoolingBypassProfile profile = bd.cooling;
 
-			final float cooldownTime = bt.cooldownTimer / (float)bd.heat.capacity;
+			final float cooldownTime = bt.overheatTimer / (float)bd.heat.capacity;
 
 			final float primaryBypassStart = profile.primaryBypassTime - profile.primaryBypassTolerance;
 			final float primaryBypassEnd = profile.primaryBypassTime + profile.primaryBypassTolerance;
@@ -87,21 +92,21 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			if (profile.primaryBypassTolerance > 0 && cooldownTime >= primaryBypassStart && cooldownTime <= primaryBypassEnd)
 			{
 				// TODO: primary bypass sound
-				bt.cooldownTimer = 0;
+				bt.overheatTimer = 0;
 
 				result = TypedActionResult.success(stack);
 			}
 			else if (profile.secondaryBypassTolerance > 0 && cooldownTime >= secondaryBypassStart && cooldownTime <= secondaryBypassEnd)
 			{
 				// TODO: secondary bypass sound
-				bt.cooldownTimer = 0;
+				bt.overheatTimer = 0;
 
 				result = TypedActionResult.success(stack);
 			}
 			else
 			{
 				// TODO: failed bypass sound
-				bt.canBypassCooling = false;
+				bt.canBypassOverheat = false;
 			}
 
 			bt.serializeAsSubtag(stack);
@@ -121,6 +126,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					{
 						world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.DRYFIRE, SoundCategory.PLAYERS, 1f, 1f);
 					}
+
+					bt.serializeAsSubtag(stack);
 					return TypedActionResult.fail(stack);
 				}
 				else if (!world.isClient)
@@ -132,14 +139,15 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			}
 		}
 
+		bt.passiveCooldownTimer = bd.heat.passiveCooldownDelay;
 		bt.heat += bd.heat.perRound;
 		bt.shotsRemaining--;
 
 		if (bt.heat > bd.heat.capacity)
 		{
 			// TODO: overheat sound
-			bt.cooldownTimer = bd.heat.capacity;
-			bt.canBypassCooling = true;
+			bt.overheatTimer = bd.heat.capacity + bd.heat.overheatPenalty;
+			bt.canBypassOverheat = true;
 			bt.heat = 0;
 		}
 
@@ -169,10 +177,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
 				entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 4.0F, 0);
-				entity.setPos(player.getX(), player.getY() + 1.2f, player.getZ());
+				entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 			});
-
-			bt.shotTimer = 10;
 
 			bt.serializeAsSubtag(stack);
 		}
@@ -204,7 +210,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				10,
 				10,
 				new BlasterSpreadInfo(0, 0),
-				new BlasterHeatInfo(100, 15),
+				new BlasterHeatInfo(100, 15, 30, 15),
 				BlasterCoolingBypassProfile.DEFAULT
 		);
 
