@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"pswg:black_kyber_crate","pattern":["ttt","tbt","ttt"],"key":{"b":{"item":"minecraft:black_dye"},"t":{"item":"pswg:titanium_ingot"}},"result":{"item":"pswg:black_kyber_crate","count":1}}

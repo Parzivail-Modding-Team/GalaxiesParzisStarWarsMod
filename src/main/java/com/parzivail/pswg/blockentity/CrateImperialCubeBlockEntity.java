@@ -15,7 +15,7 @@ public class CrateImperialCubeBlockEntity extends InventoryBlockEntity implement
 {
 	public CrateImperialCubeBlockEntity()
 	{
-		super(SwgBlocks.Crate.ImperialCubeBlockEntityType, 15);
+		super(SwgBlocks.Crate.ImperialCrateBlockEntityType, 15);
 	}
 
 	@Override

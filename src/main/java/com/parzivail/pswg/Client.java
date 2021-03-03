@@ -88,7 +88,7 @@ public class Client implements ClientModInitializer
 
 		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
 
-		ModelRegistry.register(SwgBlocks.Barrel.MosEisley, true, ModelLoader.loadPM3D(DynamicBakedModel.Discriminator.RENDER_SEED, Resources.identifier("models/block/barrel/mos_eisley.pm3d"), Resources.identifier("model/barrel/mos_eisley"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadPM3D(DynamicBakedModel.Discriminator.RENDER_SEED, Resources.identifier("models/block/barrel/mos_eisley.pm3d"), Resources.identifier("model/barrel/mos_eisley"), new Identifier("block/stone")));
 
 		ScreenRegistry.register(SwgScreenTypes.Crate.Octagon, CrateOctagonScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.Crate.MosEisley, CrateGenericSmallScreen::new);
@@ -99,11 +99,11 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.register(SwgBlocks.Tank.Fusion, true, ModelLoader.loadPM3D(Resources.identifier("models/block/tank/fusion.pm3d"), Resources.identifier("model/tank/fusion"), new Identifier("block/stone")));
 
-		ModelRegistry.register(SwgBlocks.Crate.OctagonOrange, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/octagon.pm3d"), Resources.identifier("model/crate/octagon_orange"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Crate.OctagonGray, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/octagon.pm3d"), Resources.identifier("model/crate/octagon_gray"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Crate.OctagonBlack, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/octagon.pm3d"), Resources.identifier("model/crate/octagon_black"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Crate.MosEisley, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/mos_eisley.pm3d"), Resources.identifier("model/crate/mos_eisley"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Crate.ImperialCube, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/imperial_cube.pm3d"), Resources.identifier("model/crate/imperial_cube"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.OrangeKyber, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/octagon.pm3d"), Resources.identifier("model/crate/octagon_orange"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.GrayKyber, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/octagon.pm3d"), Resources.identifier("model/crate/octagon_gray"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/octagon.pm3d"), Resources.identifier("model/crate/octagon_black"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/mos_eisley.pm3d"), Resources.identifier("model/crate/mos_eisley"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.Imperial, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/imperial_cube.pm3d"), Resources.identifier("model/crate/imperial_cube"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Light.FloorWedge, true, ModelLoader.loadPM3D(Resources.identifier("models/block/light/floor_wedge.pm3d"), Resources.identifier("model/light/floor_wedge"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Light.WallCluster, true, ModelLoader.loadPM3D(Resources.identifier("models/block/light/wall_cluster.pm3d"), Resources.identifier("model/light/wall_cluster"), new Identifier("block/stone")));

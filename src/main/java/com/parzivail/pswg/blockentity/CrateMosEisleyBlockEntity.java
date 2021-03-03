@@ -15,7 +15,7 @@ public class CrateMosEisleyBlockEntity extends InventoryBlockEntity implements N
 {
 	public CrateMosEisleyBlockEntity()
 	{
-		super(SwgBlocks.Crate.MosEisleyBlockEntityType, 15);
+		super(SwgBlocks.Crate.ToolboxBlockEntityType, 15);
 	}
 
 	@Override

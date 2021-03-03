@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"pswg:toolbox","pattern":["ddd","d d","iii"],"key":{"i":{"item":"minecraft:iron_ingot"},"d":{"item":"pswg:desh_ingot"}},"result":{"item":"pswg:toolbox","count":1}}

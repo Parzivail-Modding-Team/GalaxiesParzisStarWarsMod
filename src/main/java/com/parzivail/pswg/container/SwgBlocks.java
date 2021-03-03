@@ -14,7 +14,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.PickaxeItem;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -28,7 +27,7 @@ public class SwgBlocks
 	public static class Barrel
 	{
 		@RegistryName("desh_barrel")
-		public static final Block MosEisley = new DisplacingBlock((state, world, pos, context) -> {
+		public static final Block Desh = new DisplacingBlock((state, world, pos, context) -> {
 			Random r = Resources.RANDOM;
 			r.setSeed(state.getRenderingSeed(pos));
 
@@ -43,23 +42,23 @@ public class SwgBlocks
 	public static class Crate
 	{
 		@RegistryName("orange_kyber_crate")
-		public static final RotatingBlockWithGuiEntity OctagonOrange = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateOctagonBlockEntity::new);
+		public static final RotatingBlockWithGuiEntity OrangeKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateOctagonBlockEntity::new);
 		@RegistryName("gray_kyber_crate")
-		public static final RotatingBlockWithGuiEntity OctagonGray = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateOctagonBlockEntity::new);
+		public static final RotatingBlockWithGuiEntity GrayKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateOctagonBlockEntity::new);
 		@RegistryName("black_kyber_crate")
-		public static final RotatingBlockWithGuiEntity OctagonBlack = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateOctagonBlockEntity::new);
+		public static final RotatingBlockWithGuiEntity BlackKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateOctagonBlockEntity::new);
 		@RegistryName("kyber_crate")
-		public static final BlockEntityType<CrateOctagonBlockEntity> OctagonBlockEntityType = BlockEntityType.Builder.create(CrateOctagonBlockEntity::new, OctagonOrange, OctagonGray, OctagonBlack).build(null);
+		public static final BlockEntityType<CrateOctagonBlockEntity> KyberCrateBlockEntityType = BlockEntityType.Builder.create(CrateOctagonBlockEntity::new, OrangeKyber, GrayKyber, BlackKyber).build(null);
 
 		@RegistryName("toolbox")
-		public static final RotatingBlockWithGuiEntity MosEisley = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateMosEisleyBlockEntity::new);
+		public static final RotatingBlockWithGuiEntity Toolbox = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateMosEisleyBlockEntity::new);
 		@RegistryName("toolbox")
-		public static final BlockEntityType<CrateMosEisleyBlockEntity> MosEisleyBlockEntityType = BlockEntityType.Builder.create(CrateMosEisleyBlockEntity::new, MosEisley).build(null);
+		public static final BlockEntityType<CrateMosEisleyBlockEntity> ToolboxBlockEntityType = BlockEntityType.Builder.create(CrateMosEisleyBlockEntity::new, Toolbox).build(null);
 
 		@RegistryName("imperial_crate")
-		public static final RotatingBlockWithGuiEntity ImperialCube = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateImperialCubeBlockEntity::new);
+		public static final RotatingBlockWithGuiEntity Imperial = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateImperialCubeBlockEntity::new);
 		@RegistryName("imperial_crate")
-		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCubeBlockEntityType = BlockEntityType.Builder.create(CrateImperialCubeBlockEntity::new, ImperialCube).build(null);
+		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCrateBlockEntityType = BlockEntityType.Builder.create(CrateImperialCubeBlockEntity::new, Imperial).build(null);
 	}
 
 	public static class Door

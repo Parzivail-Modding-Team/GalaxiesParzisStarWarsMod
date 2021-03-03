@@ -362,6 +362,7 @@ public class Tarkin
 		                               SwgItems.Nugget.Plasteel, Items.SOUL_TORCH, SwgItems.Nugget.Plasteel,
 		                               SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel,SwgItems.Nugget.Plasteel)
 		                      .build (assets);
+
 		//Pourstone
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.PourstoneStairs, 6))
 		                      .grid3x3("pourstone_left",
@@ -377,6 +378,13 @@ public class Tarkin
 		                      .grid3x1("pourstone",
 		                               SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone,SwgBlocks.Stone.Pourstone)
 		                      .build (assets);
+		RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Dirt.WetPourstone, SwgBlocks.Stone.Pourstone).experience(0.1F)
+		                       .build (assets);
+		RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Dirt.WetPourstoneStairs, SwgBlocks.Stone.PourstoneStairs).experience(0.1F)
+		                       .build (assets);
+		RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Dirt.WetPourstoneSlab, SwgBlocks.Stone.PourstoneSlab).experience(0.1F)
+		                       .build (assets);
+
 		//Light Pourstone
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.LightPourstoneStairs, 6))
 		                      .grid3x3("light_pourstone_left",
@@ -472,6 +480,38 @@ public class Tarkin
 		                               null, SwgItems.Ingot.Plasteel, null,
 		                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel,SwgItems.Ingot.Plasteel,
 		                               null, SwgItems.Ingot.Plasteel, null)
+		                      .build (assets);
+
+		//Decoration Blocks and Machines
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Vent.Air, 3))
+		                      .grid3x3("crafting",
+		                               SwgItems.Ingot.Plasteel,SwgItems.Nugget.Plasteel,SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel,SwgItems.Nugget.Plasteel,SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel,SwgItems.Nugget.Plasteel,SwgItems.Ingot.Plasteel)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.OrangeKyber))
+		                      .grid3x3("crafting",
+		                               SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium,
+		                               SwgItems.Ingot.Titanium,Items.ORANGE_DYE,SwgItems.Ingot.Titanium,
+		                               SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.GrayKyber))
+		                      .grid3x3("crafting",
+		                               SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium,
+		                               SwgItems.Ingot.Titanium,Items.GRAY_DYE,SwgItems.Ingot.Titanium,
+		                               SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.BlackKyber))
+		                      .grid3x3("crafting",
+		                               SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium,
+		                               SwgItems.Ingot.Titanium,Items.BLACK_DYE,SwgItems.Ingot.Titanium,
+		                               SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium,SwgItems.Ingot.Titanium)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.Toolbox))
+		                      .grid3x3("crafting",
+		                               SwgItems.Ingot.Desh,SwgItems.Ingot.Desh,SwgItems.Ingot.Desh,
+		                               SwgItems.Ingot.Desh,null,SwgItems.Ingot.Desh,
+		                               Items.IRON_INGOT,Items.IRON_INGOT,Items.IRON_INGOT)
 		                      .build (assets);
 	}
 
@@ -571,13 +611,13 @@ public class Tarkin
 
 	private static void generateBlocks(List<BuiltAsset> assets)
 	{
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Barrel.MosEisley).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Barrel.Desh).build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OctagonOrange).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OctagonGray).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OctagonBlack).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.MosEisley).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.ImperialCube).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OrangeKyber).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.GrayKyber).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.BlackKyber).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Toolbox).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Imperial).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Door.TatooineHomeController).build(assets);
 

@@ -14,7 +14,7 @@ public class CrateOctagonBlockEntity extends InventoryBlockEntity implements Nam
 {
 	public CrateOctagonBlockEntity()
 	{
-		super(SwgBlocks.Crate.OctagonBlockEntityType, 39);
+		super(SwgBlocks.Crate.KyberCrateBlockEntityType, 39);
 	}
 
 	@Override
