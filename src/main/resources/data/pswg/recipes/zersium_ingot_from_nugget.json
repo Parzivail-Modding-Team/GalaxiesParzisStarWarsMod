@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:zersium_ingot","pattern":["zzz","zzz","zzz"],"key":{"z":{"item":"pswg:zersium_nugget"}},"result":{"item":"pswg:zersium_ingot","count":1}}
+{"type":"minecraft:crafting_shaped","group":"pswg:zersium_ingot","pattern":["aaa","aaa","aaa"],"key":{"a":{"item":"pswg:zersium_nugget"}},"result":{"item":"pswg:zersium_ingot","count":1}}

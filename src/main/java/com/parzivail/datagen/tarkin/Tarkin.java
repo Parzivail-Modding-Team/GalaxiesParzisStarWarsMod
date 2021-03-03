@@ -6,6 +6,7 @@ import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.Lumberjack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.tag.BlockTags;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,6 @@ public class Tarkin
 
 	private static void generateRecipes(List<BuiltAsset> assets)
 	{
-		// TODO: support tags instead of items in recipes
-		// TODO: support substitutes instead of items in recipes
-
 		RecipeGenerator.buildFood(assets, SwgItems.Food.BanthaChop, SwgItems.Food.BanthaSteak);
 		RecipeGenerator.buildFood(assets, SwgItems.Food.GizkaChop, SwgItems.Food.GizkaSteak);
 		RecipeGenerator.buildFood(assets, SwgItems.Food.MynockWing, SwgItems.Food.FriedMynockWing);
@@ -309,9 +307,9 @@ public class Tarkin
 		                      .build (assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.PISTON))
 		                      .grid3x3("plasteel",
-		                               Items.OAK_PLANKS, Items.OAK_PLANKS, Items.OAK_PLANKS,
+		                               BlockTags.PLANKS, BlockTags.PLANKS, BlockTags.PLANKS,
 		                               Items.COBBLESTONE, SwgItems.Ingot.Plasteel, Items.COBBLESTONE,
-		                               Items.COBBLESTONE, Items.REDSTONE,Items.COBBLESTONE)
+		                               Items.COBBLESTONE, Items.REDSTONE, Items.COBBLESTONE)
 		                      .build (assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.RAIL,16))
 		                      .grid3x3("plasteel",
@@ -329,15 +327,15 @@ public class Tarkin
 		                      .build (assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.SHIELD))
 		                      .grid3x3("plasteel",
-		                               Items.OAK_PLANKS, SwgItems.Ingot.Plasteel, Items.OAK_PLANKS,
-		                               Items.OAK_PLANKS, Items.OAK_PLANKS, Items.OAK_PLANKS,
-		                              null, Items.OAK_PLANKS, null)
+		                               BlockTags.PLANKS, SwgItems.Ingot.Plasteel, BlockTags.PLANKS,
+		                               BlockTags.PLANKS, BlockTags.PLANKS, BlockTags.PLANKS,
+		                              null, BlockTags.PLANKS, null)
 		                      .build (assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.SMITHING_TABLE))
 		                      .grid2x3("plasteel",
 		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
-		                               Items.OAK_PLANKS,Items.OAK_PLANKS,
-		                               Items.OAK_PLANKS,Items.OAK_PLANKS)
+		                               BlockTags.PLANKS,BlockTags.PLANKS,
+		                               BlockTags.PLANKS,BlockTags.PLANKS)
 		                      .build (assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.STONECUTTER))
 		                      .grid3x2("plasteel",
@@ -348,7 +346,7 @@ public class Tarkin
 		                      .grid1x3("plasteel",
 		                               SwgItems.Ingot.Plasteel,
 		                               Items.STICK,
-		                               Items.OAK_PLANKS)
+		                               BlockTags.PLANKS)
 		                      .build (assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.LANTERN))
 		                      .grid3x3("plasteel",

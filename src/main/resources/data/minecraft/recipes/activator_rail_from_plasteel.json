@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","group":"minecraft:activator_rail","pattern":["psp","prp","psp"],"key":{"s":{"item":"minecraft:stick"},"r":{"item":"minecraft:redstone_torch"},"p":{"item":"pswg:plasteel_ingot"}},"result":{"item":"minecraft:activator_rail","count":6}}
+{"type":"minecraft:crafting_shaped","group":"minecraft:activator_rail","pattern":["aba","aca","aba"],"key":{"c":{"item":"minecraft:redstone_torch"},"a":{"item":"pswg:plasteel_ingot"},"b":{"item":"minecraft:stick"}},"result":{"item":"minecraft:activator_rail","count":6}}

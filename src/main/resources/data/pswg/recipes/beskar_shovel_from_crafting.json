@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:beskar_shovel","pattern":["b","z","z"],"key":{"b":{"item":"pswg:beskar_ingot"},"z":{"item":"pswg:zersium_rod"}},"result":{"item":"pswg:beskar_shovel","count":1}}
+{"type":"minecraft:crafting_shaped","group":"pswg:beskar_shovel","pattern":["a","b","b"],"key":{"b":{"item":"pswg:zersium_rod"},"a":{"item":"pswg:beskar_ingot"}},"result":{"item":"pswg:beskar_shovel","count":1}}

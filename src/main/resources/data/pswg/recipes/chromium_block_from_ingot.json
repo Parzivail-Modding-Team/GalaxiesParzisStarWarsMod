@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:chromium_block","pattern":["ccc","ccc","ccc"],"key":{"c":{"item":"pswg:chromium_ingot"}},"result":{"item":"pswg:chromium_block","count":1}}
+{"type":"minecraft:crafting_shaped","group":"pswg:chromium_block","pattern":["aaa","aaa","aaa"],"key":{"a":{"item":"pswg:chromium_ingot"}},"result":{"item":"pswg:chromium_block","count":1}}

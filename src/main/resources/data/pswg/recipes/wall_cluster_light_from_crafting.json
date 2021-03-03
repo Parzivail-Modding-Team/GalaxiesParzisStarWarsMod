@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:wall_cluster_light","pattern":[" p ","plp"," p "],"key":{"l":{"item":"pswg:light_panel"},"p":{"item":"pswg:plasteel_ingot"}},"result":{"item":"pswg:wall_cluster_light","count":4}}
+{"type":"minecraft:crafting_shaped","group":"pswg:wall_cluster_light","pattern":[" a ","aba"," a "],"key":{"a":{"item":"pswg:plasteel_ingot"},"b":{"item":"pswg:light_panel"}},"result":{"item":"pswg:wall_cluster_light","count":4}}

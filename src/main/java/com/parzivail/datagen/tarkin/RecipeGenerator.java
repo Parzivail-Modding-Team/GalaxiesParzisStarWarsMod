@@ -2,9 +2,13 @@ package com.parzivail.datagen.tarkin;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.parzivail.datagen.tarkin.crafting.IJsonCraftingComponent;
+import com.parzivail.datagen.tarkin.crafting.IngredientTag;
+import com.parzivail.datagen.tarkin.crafting.ItemConvertibleJsonCraftingComponent;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -55,6 +59,23 @@ public abstract class RecipeGenerator
 		       .build(assets);
 	}
 
+	private static IJsonCraftingComponent getJsonComponent(Object o)
+	{
+		if (o == null)
+			return null;
+
+		if (o instanceof IJsonCraftingComponent)
+			return (IJsonCraftingComponent)o;
+
+		if (o instanceof ItemConvertible)
+			return new ItemConvertibleJsonCraftingComponent((ItemConvertible)o);
+
+		if (o instanceof Tag.Identified<?>)
+			return new IngredientTag(((Tag.Identified<?>)o).getId());
+
+		throw new IllegalArgumentException();
+	}
+
 	public final Identifier type;
 	public final Identifier output;
 	public final String sourceName;
@@ -68,14 +89,6 @@ public abstract class RecipeGenerator
 
 		this.group = output;
 		this.sourceName = sourceName;
-	}
-
-	private static JsonObject toJson(ItemConvertible item)
-	{
-		JsonObject o = new JsonObject();
-		o.addProperty("item", AssetGenerator.getRegistryName(item).toString());
-
-		return o;
 	}
 
 	protected abstract void buildInto(JsonObject jsonElement);
@@ -118,14 +131,14 @@ public abstract class RecipeGenerator
 					.cookTime(100);
 		}
 
-		public final ItemConvertible input;
+		public final IJsonCraftingComponent input;
 		public float experience = 0.35f;
 		public int cookTime = 200;
 
-		private Cooking(Identifier type, Identifier output, ItemConvertible input, String sourceName)
+		private Cooking(Identifier type, Identifier output, Object input, String sourceName)
 		{
 			super(type, output, sourceName);
-			this.input = input;
+			this.input = RecipeGenerator.getJsonComponent(input);
 		}
 
 		public Cooking experience(float experience)
@@ -147,7 +160,7 @@ public abstract class RecipeGenerator
 			jsonElement.addProperty("experience", experience);
 			jsonElement.addProperty("cookingtime", cookTime);
 
-			jsonElement.add("ingredient", RecipeGenerator.toJson(input));
+			jsonElement.add("ingredient", input.getIngredientObject());
 		}
 	}
 
@@ -159,7 +172,7 @@ public abstract class RecipeGenerator
 		}
 
 		public final int outputCount;
-		public final List<ItemConvertible> inputs;
+		public final List<IJsonCraftingComponent> inputs;
 
 		private Shapeless(ItemStack output, String sourceName)
 		{
@@ -168,9 +181,9 @@ public abstract class RecipeGenerator
 			this.inputs = new ArrayList<>();
 		}
 
-		public Shapeless ingredient(ItemConvertible ingredient)
+		public Shapeless ingredient(Object ingredient)
 		{
-			inputs.add(ingredient.asItem());
+			inputs.add(RecipeGenerator.getJsonComponent(ingredient));
 			return this;
 		}
 
@@ -178,8 +191,8 @@ public abstract class RecipeGenerator
 		protected void buildInto(JsonObject jsonElement)
 		{
 			JsonArray ingredients = new JsonArray();
-			for (ItemConvertible input : inputs)
-				ingredients.add(toJson(input));
+			for (IJsonCraftingComponent input : inputs)
+				ingredients.add(input.getIngredientObject());
 			jsonElement.add("ingredients", ingredients);
 
 			JsonObject result = new JsonObject();
@@ -195,9 +208,9 @@ public abstract class RecipeGenerator
 		private static class Shape
 		{
 			public final String sourceName;
-			public final ItemConvertible[][] grid;
+			public final IJsonCraftingComponent[][] grid;
 
-			public Shape(String sourceName, ItemConvertible[][] grid)
+			public Shape(String sourceName, IJsonCraftingComponent[][] grid)
 			{
 				this.sourceName = sourceName;
 				this.grid = grid;
@@ -219,83 +232,88 @@ public abstract class RecipeGenerator
 			this.shapes = new ArrayList<>();
 		}
 
-		public Shaped grid1x2(String sourceName, ItemConvertible a, ItemConvertible b)
+		public Shaped grid1x2(String sourceName, Object a, Object b)
 		{
 			return grid3x3(sourceName, a, null, null, b, null, null, null, null, null);
 		}
 
-		public Shaped fill1x2(String sourceName, ItemConvertible a)
+		public Shaped fill1x2(String sourceName, Object a)
 		{
 			return grid1x2(sourceName, a, a);
 		}
 
-		public Shaped grid1x3(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c)
+		public Shaped grid1x3(String sourceName, Object a, Object b, Object c)
 		{
 			return grid3x3(sourceName, a, null, null, b, null, null, c, null, null);
 		}
 
-		public Shaped fill1x3(String sourceName, ItemConvertible a)
+		public Shaped fill1x3(String sourceName, Object a)
 		{
 			return grid1x3(sourceName, a, a, a);
 		}
 
-		public Shaped grid2x1(String sourceName, ItemConvertible a, ItemConvertible b)
+		public Shaped grid2x1(String sourceName, Object a, Object b)
 		{
 			return grid3x3(sourceName, a, b, null, null, null, null, null, null, null);
 		}
 
-		public Shaped fill2x1(String sourceName, ItemConvertible a)
+		public Shaped fill2x1(String sourceName, Object a)
 		{
 			return grid2x1(sourceName, a, a);
 		}
 
-		public Shaped grid2x2(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible d, ItemConvertible e)
+		public Shaped grid2x2(String sourceName, Object a, Object b, Object d, Object e)
 		{
 			return grid3x3(sourceName, a, b, null, d, e, null, null, null, null);
 		}
 
-		public Shaped fill2x2(String sourceName, ItemConvertible item)
+		public Shaped fill2x2(String sourceName, Object item)
 		{
 			return grid2x2(sourceName, item, item, item, item);
 		}
 
-		public Shaped grid2x3(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible d, ItemConvertible e, ItemConvertible g, ItemConvertible h)
+		public Shaped grid2x3(String sourceName, Object a, Object b, Object d, Object e, Object g, Object h)
 		{
 			return grid3x3(sourceName, a, b, null, d, e, null, g, h, null);
 		}
 
-		public Shaped fill2x3(String sourceName, ItemConvertible a)
+		public Shaped fill2x3(String sourceName, Object a)
 		{
 			return grid2x3(sourceName, a, a, a, a, a, a);
 		}
 
-		public Shaped grid3x1(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c)
+		public Shaped grid3x1(String sourceName, Object a, Object b, Object c)
 		{
 			return grid3x3(sourceName, a, b, c, null, null, null, null, null, null);
 		}
 
-		public Shaped fill3x1(String sourceName, ItemConvertible a)
+		public Shaped fill3x1(String sourceName, Object a)
 		{
 			return grid3x1(sourceName, a, a, a);
 		}
 
-		public Shaped grid3x2(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c, ItemConvertible d, ItemConvertible e, ItemConvertible f)
+		public Shaped grid3x2(String sourceName, Object a, Object b, Object c, Object d, Object e, Object f)
 		{
 			return grid3x3(sourceName, a, b, c, d, e, f, null, null, null);
 		}
 
-		public Shaped fill3x2(String sourceName, ItemConvertible a)
+		public Shaped fill3x2(String sourceName, Object a)
 		{
 			return grid3x2(sourceName, a, a, a, a, a, a);
 		}
 
-		public Shaped grid3x3(String sourceName, ItemConvertible a, ItemConvertible b, ItemConvertible c, ItemConvertible d, ItemConvertible e, ItemConvertible f, ItemConvertible g, ItemConvertible h, ItemConvertible i)
+		public Shaped grid3x3(String sourceName, Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h, Object i)
 		{
-			shapes.add(new Shape(sourceName, new ItemConvertible[][] { { a, b, c }, { d, e, f }, { g, h, i } }));
+
+			shapes.add(new Shape(sourceName, new IJsonCraftingComponent[][] {
+					{ getJsonComponent(a), getJsonComponent(b), getJsonComponent(c) },
+					{ getJsonComponent(d), getJsonComponent(e), getJsonComponent(f) },
+					{ getJsonComponent(g), getJsonComponent(h), getJsonComponent(i) }
+			}));
 			return this;
 		}
 
-		public Shaped fill3x3(String sourceName, ItemConvertible item)
+		public Shaped fill3x3(String sourceName, Object item)
 		{
 			return grid3x3(sourceName, item, item, item, item, item, item, item, item, item);
 		}
@@ -310,7 +328,7 @@ public abstract class RecipeGenerator
 		{
 			for (Shape shape : shapes)
 			{
-				ItemConvertible[][] shapeGrid = shape.grid;
+				IJsonCraftingComponent[][] shapeGrid = shape.grid;
 
 				int minX = 3;
 				int maxX = -1;
@@ -336,8 +354,12 @@ public abstract class RecipeGenerator
 							maxY = j;
 					}
 
-				HashMap<ItemConvertible, Character> key = new HashMap<>();
+				HashMap<IJsonCraftingComponent, Character> key = new HashMap<>();
 				ArrayList<String> recipe = new ArrayList<>();
+
+				// there can never be more than 9 ingredients in a "crafting_shaped" recipe
+				char[] ingredientKeys = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' };
+				int ingredientKeyIdx = 0;
 
 				// build pattern
 				for (int j = minY; j <= maxY; j++)
@@ -349,21 +371,9 @@ public abstract class RecipeGenerator
 							b.append(" ");
 						else
 						{
-							ItemConvertible item = shapeGrid[j][i];
+							IJsonCraftingComponent item = shapeGrid[j][i];
 							if (!key.containsKey(item))
-							{
-								Identifier reg = AssetGenerator.getRegistryName(item);
-								String itemName = reg.getPath();
-								char c = itemName.charAt(0);
-
-								while (anyValue(key, c))
-								{
-									itemName = itemName.substring(1);
-									c = itemName.charAt(0);
-								}
-
-								key.put(item, c);
-							}
+								key.put(item, ingredientKeys[ingredientKeyIdx++]);
 
 							b.append(key.get(item));
 						}
@@ -383,8 +393,8 @@ public abstract class RecipeGenerator
 				root.add("pattern", pattern);
 
 				JsonObject keyObject = new JsonObject();
-				for (Map.Entry<ItemConvertible, Character> entry : key.entrySet())
-					keyObject.add(entry.getValue().toString(), RecipeGenerator.toJson(entry.getKey()));
+				for (Map.Entry<IJsonCraftingComponent, Character> entry : key.entrySet())
+					keyObject.add(entry.getValue().toString(), entry.getKey().getIngredientObject());
 				root.add("key", keyObject);
 
 				JsonObject result = new JsonObject();
@@ -401,9 +411,9 @@ public abstract class RecipeGenerator
 			}
 		}
 
-		private boolean anyValue(HashMap<ItemConvertible, Character> key, char c)
+		private boolean anyValue(HashMap<IJsonCraftingComponent, Character> key, char c)
 		{
-			for (Map.Entry<ItemConvertible, Character> entry : key.entrySet())
+			for (Map.Entry<IJsonCraftingComponent, Character> entry : key.entrySet())
 				if (entry.getValue() == c)
 					return true;
 

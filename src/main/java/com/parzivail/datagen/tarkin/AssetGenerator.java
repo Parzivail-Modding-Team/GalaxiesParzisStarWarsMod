@@ -13,7 +13,7 @@ public class AssetGenerator
 {
 	private static Path rootDir = Paths.get("..", "src", "main", "resources");
 
-	static Identifier getRegistryName(ItemConvertible item)
+	public static Identifier getRegistryName(ItemConvertible item)
 	{
 		return Registry.ITEM.getId(item.asItem());
 	}

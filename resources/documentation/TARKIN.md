@@ -144,10 +144,11 @@ RecipeGenerator.Shapeless.of(ItemStack, String);
 
 which specifies the recipe output and the source name. The source name is the string appended to the recipe file for organization. For example, "ingot" would be preferred for creating nuggets from an ingot, and the output filename would be `xxxxx_nugget_from_ingot.json`.
 
-Ingredients are added with the builder method
+Ingredients are added with the builder method. The `Ingredient` parameter type generically refers to an `ItemConvertible`, like `Block`s and `Item`s, but also refers to tags via tag instances like `
+BlockTags.PLANKS` or anonymous tags through TARKIN's `IngredientTag` class.
 
 ```java
-RecipeGenerator.Shapeless::ingredient(ItemConvertible);
+RecipeGenerator.Shapeless::ingredient(Ingredient);
 ```
 
 which accepts blocks or items.
@@ -176,7 +177,7 @@ x     |  1  |  2  |  3  |
 
 ##### Grid methods
 
-Directly specify each grid slot. All `a-i` parameters are `ItemConvertible`s and are shown as their grid slots for convenience.
+Directly specify each grid slot. All `a-i` parameters are an ingredient type and are shown as their grid slots for convenience.
 
 ```java
 RecipeGenerator.Shaped.grid1x2(String, a, b);
@@ -192,8 +193,8 @@ RecipeGenerator.Shaped.grid3x3(String, a, b, c, d, e, f, g, h, i);
 Fill methods fill the entire square of each size with the specified item.
 
 ```java
-RecipeGenerator.Shaped.fill2x2(String, ItemConvertible);
-RecipeGenerator.Shaped.fill3x3(String, ItemConvertible);
+RecipeGenerator.Shaped.fill2x2(String, Ingredient);
+RecipeGenerator.Shaped.fill3x3(String, Ingredient);
 ```
 
 ### Cooking recipes
@@ -201,10 +202,10 @@ RecipeGenerator.Shaped.fill3x3(String, ItemConvertible);
 Cooking recipes are generated through `RecipeGenerator.Cooking`. Obtain an instance through one of the static builder methods:
 
 ```java
-RecipeGenerator.Cooking.smelting(ItemConvertible, ItemConvertible, String);
-RecipeGenerator.Cooking.blasting(ItemConvertible, ItemConvertible, String);
-RecipeGenerator.Cooking.campfire(ItemConvertible, ItemConvertible, String);
-RecipeGenerator.Cooking.smoking(ItemConvertible, ItemConvertible, String);
+RecipeGenerator.Cooking.smelting(String, Ingredient, Ingredient);
+RecipeGenerator.Cooking.blasting(String, Ingredient, Ingredient);
+RecipeGenerator.Cooking.campfire(String, Ingredient, Ingredient);
+RecipeGenerator.Cooking.smoking(String, Ingredient, Ingredient);
 ```
 
 The default experience is 0.35, and the default cook times are as follows:

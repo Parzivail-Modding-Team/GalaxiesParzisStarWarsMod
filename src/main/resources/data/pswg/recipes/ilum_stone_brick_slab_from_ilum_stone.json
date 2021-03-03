@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:ilum_stone_brick_slab","pattern":["iii"],"key":{"i":{"item":"pswg:ilum_stone_bricks"}},"result":{"item":"pswg:ilum_stone_brick_slab","count":6}}
+{"type":"minecraft:crafting_shaped","group":"pswg:ilum_stone_brick_slab","pattern":["aaa"],"key":{"a":{"item":"pswg:ilum_stone_bricks"}},"result":{"item":"pswg:ilum_stone_brick_slab","count":6}}
