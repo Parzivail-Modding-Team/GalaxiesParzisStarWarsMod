@@ -31,7 +31,7 @@ public abstract class RecipeGenerator
 	public static void buildMetal(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible ingot, ItemConvertible block)
 	{
 		buildOreToIngot(assets, experience, ore, ingot);
-		buildBidirectional(assets, ingot, "ingot", block, "block");
+		buildReversible9to1(assets, ingot, "ingot", block, "block");
 	}
 
 	public static void buildMetal(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible ingot, ItemConvertible nugget, ItemConvertible block)
@@ -42,11 +42,11 @@ public abstract class RecipeGenerator
 
 	public static void buildBlockIngotNugget(List<BuiltAsset> assets, ItemConvertible block, ItemConvertible ingot, ItemConvertible nugget)
 	{
-		buildBidirectional(assets, ingot, "ingot", block, "block");
-		buildBidirectional(assets, nugget, "nugget", ingot, "ingot");
+		buildReversible9to1(assets, ingot, "ingot", block, "block");
+		buildReversible9to1(assets, nugget, "nugget", ingot, "ingot");
 	}
 
-	public static void buildBidirectional(List<BuiltAsset> assets, ItemConvertible smallUnit, String smallUnitName, ItemConvertible largeUnit, String largeUnitName)
+	public static void buildReversible9to1(List<BuiltAsset> assets, ItemConvertible smallUnit, String smallUnitName, ItemConvertible largeUnit, String largeUnitName)
 	{
 		Shapeless.of(new ItemStack(smallUnit, 9), largeUnitName)
 		         .ingredient(largeUnit)
