@@ -15,7 +15,7 @@ public class BlockGenerator
 	public static BlockGenerator basic(Block block)
 	{
 		return block(block)
-				.lootTable(LootTableFile::basic);
+				.lootTable(LootTableFile::singleSelf);
 	}
 
 	public static BlockGenerator blockNoModel(Block block)
@@ -26,7 +26,7 @@ public class BlockGenerator
 	public static BlockGenerator blockNoModelDefaultDrops(Block block)
 	{
 		return blockNoModel(block)
-				.lootTable(LootTableFile::basic);
+				.lootTable(LootTableFile::singleSelf);
 	}
 
 	public static BlockGenerator block(Block block)
