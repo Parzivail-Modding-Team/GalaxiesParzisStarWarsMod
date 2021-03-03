@@ -37,6 +37,11 @@ public abstract class RecipeGenerator
 	public static void buildMetal(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible ingot, ItemConvertible nugget, ItemConvertible block)
 	{
 		buildOreToIngot(assets, experience, ore, ingot);
+		buildBlockIngotNugget(assets, block, ingot, nugget);
+	}
+
+	public static void buildBlockIngotNugget(List<BuiltAsset> assets, ItemConvertible block, ItemConvertible ingot, ItemConvertible nugget)
+	{
 		buildBidirectional(assets, ingot, "ingot", block, "block");
 		buildBidirectional(assets, nugget, "nugget", ingot, "ingot");
 	}
