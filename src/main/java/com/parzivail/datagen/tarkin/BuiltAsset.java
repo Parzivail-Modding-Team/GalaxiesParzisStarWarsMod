@@ -3,9 +3,12 @@ package com.parzivail.datagen.tarkin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.parzivail.pswg.Resources;
 import com.parzivail.util.Lumberjack;
 import net.minecraft.util.Identifier;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -62,7 +65,7 @@ public class BuiltAsset
 
 	private static Path getRecipePath(Identifier identifier)
 	{
-		return getDataPath(IdentifierUtil.concat("recipes/", identifier, ".json"));
+		return getDataPath(IdentifierUtil.concat("recipes/tarkin/", identifier, ".json"));
 	}
 
 	public static BuiltAsset blockstate(Identifier identifier, JsonElement contents)
@@ -93,6 +96,18 @@ public class BuiltAsset
 	{
 		Lumberjack.log("Created recipe %s", identifier);
 		return new BuiltAsset(getRecipePath(identifier), contents);
+	}
+
+	public static void nukeRecipeDir() throws IOException
+	{
+		Path dummyAsset = getRecipePath(Resources.identifier("dummy"));
+
+		File parentDir = dummyAsset.getParent().toFile();
+
+		if (!parentDir.exists())
+			return;
+
+		FileUtils.cleanDirectory(parentDir);
 	}
 
 	public void write()

@@ -9,7 +9,14 @@ public class DataGenHelper
 		String tarkinArg = System.getProperty("tarkin", "");
 		if (!tarkinArg.isEmpty())
 		{
-			Tarkin.main(tarkinArg);
+			try
+			{
+				Tarkin.main(tarkinArg);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
 			System.exit(0);
 		}
 	}

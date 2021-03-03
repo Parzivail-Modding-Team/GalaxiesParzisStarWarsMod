@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"pswg:light_block","pattern":["aaa","aba","aaa"],"key":{"a":{"item":"minecraft:glass_pane"},"b":{"item":"pswg:light_panel"}},"result":{"item":"pswg:light_block","count":3}}

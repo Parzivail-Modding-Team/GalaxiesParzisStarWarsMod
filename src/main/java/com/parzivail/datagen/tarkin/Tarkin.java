@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class Tarkin
 {
-	public static void main(String arg)
+	public static void main(String arg) throws Exception
 	{
 		Lumberjack.setLogHeader("TARKIN");
 
@@ -27,6 +27,8 @@ public class Tarkin
 		generateBlocks(assets);
 		generateItems(assets);
 		generateRecipes(assets);
+
+		BuiltAsset.nukeRecipeDir();
 
 		for (BuiltAsset asset : assets)
 		{
