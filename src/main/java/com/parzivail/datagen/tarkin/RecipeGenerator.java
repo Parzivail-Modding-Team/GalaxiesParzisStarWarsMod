@@ -103,7 +103,11 @@ public abstract class RecipeGenerator
 
 		buildInto(root);
 
-		assets.add(BuiltAsset.recipe(IdentifierUtil.concat(output, "_from_" + sourceName), root));
+		String source = "";
+		if (sourceName != null)
+			source = "_from_" + sourceName;
+
+		assets.add(BuiltAsset.recipe(IdentifierUtil.concat(output, source), root));
 	}
 
 	public static class Cooking extends RecipeGenerator
@@ -227,7 +231,7 @@ public abstract class RecipeGenerator
 
 		private Shaped(ItemStack output)
 		{
-			super(new Identifier("crafting_shaped"), AssetGenerator.getRegistryName(output.getItem()), "");
+			super(new Identifier("crafting_shaped"), AssetGenerator.getRegistryName(output.getItem()), null);
 			this.outputCount = output.getCount();
 			this.shapes = new ArrayList<>();
 		}
@@ -304,7 +308,6 @@ public abstract class RecipeGenerator
 
 		public Shaped grid3x3(String sourceName, Object a, Object b, Object c, Object d, Object e, Object f, Object g, Object h, Object i)
 		{
-
 			shapes.add(new Shape(sourceName, new IJsonCraftingComponent[][] {
 					{ getJsonComponent(a), getJsonComponent(b), getJsonComponent(c) },
 					{ getJsonComponent(d), getJsonComponent(e), getJsonComponent(f) },
@@ -403,11 +406,11 @@ public abstract class RecipeGenerator
 				root.add("result", result);
 
 				// built asset
-				String source = type.getPath();
+				String source = "";
 				if (shape.sourceName != null)
-					source = shape.sourceName;
+					source = "_from_" + shape.sourceName;
 
-				assets.add(BuiltAsset.recipe(IdentifierUtil.concat(output, "_from_" + source), root));
+				assets.add(BuiltAsset.recipe(IdentifierUtil.concat(output, source), root));
 			}
 		}
 
