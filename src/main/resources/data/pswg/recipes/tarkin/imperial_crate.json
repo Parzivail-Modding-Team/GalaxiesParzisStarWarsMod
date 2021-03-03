@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"pswg:imperial_crate","pattern":["aba","a a","aaa"],"key":{"a":{"item":"pswg:plasteel_ingot"},"b":{"item":"pswg:light_panel"}},"result":{"item":"pswg:imperial_crate","count":1}}

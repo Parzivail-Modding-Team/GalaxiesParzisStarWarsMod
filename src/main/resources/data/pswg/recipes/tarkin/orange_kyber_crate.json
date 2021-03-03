@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"pswg:orange_kyber_crate","pattern":["aaa","aba","aaa"],"key":{"b":{"item":"minecraft:orange_dye"},"a":{"item":"pswg:titanium_ingot"}},"result":{"item":"pswg:orange_kyber_crate","count":1}}

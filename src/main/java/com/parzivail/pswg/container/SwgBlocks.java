@@ -280,7 +280,6 @@ public class SwgBlocks
 		public static final Block WetPourstoneStairs = new PStairsBlock(WetPourstone.getDefaultState(), AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("wet_pourstone_slab")
 		public static final Block WetPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(WetPourstone));
-
 		@RegistryName("desert_loam")
 		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
 	}

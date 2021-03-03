@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"pswg:air_vent","pattern":["aba","aba","aba"],"key":{"a":{"item":"pswg:plasteel_ingot"},"b":{"item":"pswg:plasteel_nugget"}},"result":{"item":"pswg:air_vent","count":3}}
