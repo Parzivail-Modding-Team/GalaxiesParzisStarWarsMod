@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"minecraft:tripwire_hook","pattern":["p","s","o"],"key":{"p":{"item":"pswg:plasteel_ingot"},"s":{"item":"minecraft:stick"},"o":{"item":"minecraft:oak_planks"}},"result":{"item":"minecraft:tripwire_hook","count":2}}

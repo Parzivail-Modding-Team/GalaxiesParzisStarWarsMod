@@ -123,6 +123,8 @@ public class SwgItems
 		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("lommite_nugget")
 		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("plasteel_nugget")
+		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_nugget")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("zersium_nugget")

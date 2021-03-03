@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"minecraft:smithing_table","pattern":["pp","oo","oo"],"key":{"p":{"item":"pswg:plasteel_ingot"},"o":{"item":"minecraft:oak_planks"}},"result":{"item":"minecraft:smithing_table","count":1}}

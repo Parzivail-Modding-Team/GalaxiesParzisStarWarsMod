@@ -236,6 +236,12 @@ public class Tarkin
 		                      .build (assets);
 
 		//Plasteel alternative recipes
+		RecipeGenerator.Shaped.of(new ItemStack(Items.ACTIVATOR_RAIL, 6))
+		                      .grid3x3("plasteel",
+		                               SwgItems.Ingot.Plasteel, Items.STICK, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, Items.REDSTONE_TORCH, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, Items.STICK, SwgItems.Ingot.Plasteel)
+		                      .build (assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.ANVIL))
 				.grid3x3("plasteel",
 				         SwgBlocks.MaterialBlock.Plasteel, SwgBlocks.MaterialBlock.Plasteel, SwgBlocks.MaterialBlock.Plasteel,
@@ -259,6 +265,30 @@ public class Tarkin
 		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
 		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,SwgItems.Ingot.Plasteel)
 		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.CHAIN))
+		                      .grid1x3("plasteel",
+		                               SwgItems.Nugget.Plasteel,
+		                               SwgItems.Ingot.Plasteel,
+		                               SwgItems.Nugget.Plasteel)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.COMPASS))
+		                      .grid3x3("plasteel",
+		                               null, SwgItems.Ingot.Plasteel, null,
+		                               SwgItems.Ingot.Plasteel, Items.REDSTONE, SwgItems.Ingot.Plasteel,
+		                               null, SwgItems.Ingot.Plasteel, null)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.CROSSBOW))
+		                      .grid3x3("plasteel",
+		                               Items.STICK, SwgItems.Ingot.Plasteel, Items.STICK,
+		                               Items.STRING, Items.TRIPWIRE_HOOK, Items.STRING,
+		                               null, Items.STICK, null)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.DETECTOR_RAIL, 6))
+		                      .grid3x3("plasteel",
+		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, Items.STONE_PRESSURE_PLATE, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Ingot.Plasteel, Items.REDSTONE, SwgItems.Ingot.Plasteel)
+		                      .build (assets);
 		RecipeGenerator.Shapeless.of(new ItemStack(Items.FLINT_AND_STEEL), "plasteel")
 		                         .ingredient(SwgItems.Ingot.Plasteel)
 		                         .ingredient(Items.FLINT)
@@ -277,6 +307,12 @@ public class Tarkin
 		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
 		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
 		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.PISTON))
+		                      .grid3x3("plasteel",
+		                               Items.OAK_PLANKS, Items.OAK_PLANKS, Items.OAK_PLANKS,
+		                               Items.COBBLESTONE, SwgItems.Ingot.Plasteel, Items.COBBLESTONE,
+		                               Items.COBBLESTONE, Items.REDSTONE,Items.COBBLESTONE)
+		                      .build (assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.RAIL,16))
 		                      .grid3x3("plasteel",
 		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
@@ -291,10 +327,40 @@ public class Tarkin
 		                               null,SwgItems.Ingot.Plasteel,
 		                               SwgItems.Ingot.Plasteel,null)
 		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.SHIELD))
+		                      .grid3x3("plasteel",
+		                               Items.OAK_PLANKS, SwgItems.Ingot.Plasteel, Items.OAK_PLANKS,
+		                               Items.OAK_PLANKS, Items.OAK_PLANKS, Items.OAK_PLANKS,
+		                              null, Items.OAK_PLANKS, null)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.SMITHING_TABLE))
+		                      .grid2x3("plasteel",
+		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
+		                               Items.OAK_PLANKS,Items.OAK_PLANKS,
+		                               Items.OAK_PLANKS,Items.OAK_PLANKS)
+		                      .build (assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.STONECUTTER))
 		                      .grid3x2("plasteel",
 		                               null, SwgItems.Ingot.Plasteel, null,
 		                               Items.STONE,Items.STONE,Items.STONE)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.TRIPWIRE_HOOK, 2))
+		                      .grid1x3("plasteel",
+		                               SwgItems.Ingot.Plasteel,
+		                               Items.STICK,
+		                               Items.OAK_PLANKS)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.LANTERN))
+		                      .grid3x3("plasteel",
+		                               SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel,
+		                               SwgItems.Nugget.Plasteel, Items.TORCH, SwgItems.Nugget.Plasteel,
+		                               SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel,SwgItems.Nugget.Plasteel)
+		                      .build (assets);
+		RecipeGenerator.Shaped.of(new ItemStack(Items.SOUL_LANTERN))
+		                      .grid3x3("plasteel",
+		                               SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel,
+		                               SwgItems.Nugget.Plasteel, Items.SOUL_TORCH, SwgItems.Nugget.Plasteel,
+		                               SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel,SwgItems.Nugget.Plasteel)
 		                      .build (assets);
 		//Pourstone
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.PourstoneStairs, 6))
@@ -487,7 +553,7 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Nugget.Diatium).build(assets);
 		ItemGenerator.basic(SwgItems.Nugget.Durasteel).build(assets);
 		ItemGenerator.basic(SwgItems.Nugget.Lommite).build(assets);
-		// TODO: ItemGenerator.basic(SwgItems.Nugget.Plasteel).build(assets);
+		ItemGenerator.basic(SwgItems.Nugget.Plasteel).build(assets);
 		ItemGenerator.basic(SwgItems.Nugget.Titanium).build(assets);
 		// TODO: ItemGenerator.basic(SwgItems.Nugget.Transparisteel).build(assets);
 		ItemGenerator.basic(SwgItems.Nugget.Zersium).build(assets);

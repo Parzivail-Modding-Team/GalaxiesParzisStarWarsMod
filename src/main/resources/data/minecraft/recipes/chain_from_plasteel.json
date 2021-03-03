@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"minecraft:chain","pattern":["p","l","p"],"key":{"l":{"item":"pswg:plasteel_ingot"},"p":{"item":"pswg:plasteel_nugget"}},"result":{"item":"minecraft:chain","count":1}}
