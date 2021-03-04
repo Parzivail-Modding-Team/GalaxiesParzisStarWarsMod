@@ -100,6 +100,27 @@ public class ModelFile
 		);
 	}
 
+	public static Collection<ModelFile> slabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)
+	{
+		Identifier id = AssetGenerator.getRegistryName(block);
+		return Arrays.asList(
+				ModelFile
+						.ofModel(id, new Identifier("block/slab"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/slab_top"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_double"), new Identifier("block/cube_column"))
+						.texture("end", topTexture)
+						.texture("side", sideTexture)
+		);
+	}
+
 	public static Collection<ModelFile> cubes(Block block, String... suffixes)
 	{
 		Identifier id = AssetGenerator.getRegistryName(block);

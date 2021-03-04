@@ -863,7 +863,7 @@ public class Tarkin
 		BlockGenerator.slab(SwgBlocks.Stone.MassassiSlab, Resources.identifier("block/massassi_stone")).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.MassassiStairs, Resources.identifier("block/massassi_stone")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("block/smooth_massassi_stone"), Resources.identifier("block/smooth_massassi_stone"), Resources.identifier("block/smooth_massassi_stone_slab_side")).build(assets);
+		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("block/smooth_massassi_stone_slab_double"), Resources.identifier("block/smooth_massassi_stone"), Resources.identifier("block/smooth_massassi_stone_slab_side")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.identifier("block/massassi_stone_bricks")).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("block/massassi_stone_bricks")).build(assets);
@@ -880,7 +880,7 @@ public class Tarkin
 		BlockGenerator.slab(SwgBlocks.Stone.IlumSlab, Resources.identifier("block/ilum_stone")).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.IlumStairs, Resources.identifier("block/ilum_stone")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumSmooth).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.IlumSmoothSlab, Resources.identifier("block/smooth_ilum_stone"), Resources.identifier("block/smooth_ilum_stone"), Resources.identifier("block/smooth_ilum_stone_slab_side")).build(assets);
+		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.IlumSmoothSlab, Resources.identifier("block/smooth_ilum_stone_slab_double"), Resources.identifier("block/smooth_ilum_stone"), Resources.identifier("block/smooth_ilum_stone_slab_side")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumBricks).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.IlumBrickSlab, Resources.identifier("block/ilum_stone_bricks")).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.IlumBrickStairs, Resources.identifier("block/ilum_stone_bricks")).build(assets);
