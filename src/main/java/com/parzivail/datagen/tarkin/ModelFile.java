@@ -6,10 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class ModelFile
 {
@@ -32,6 +29,11 @@ public class ModelFile
 	public static ModelFile ofBlock(Block block)
 	{
 		return new ModelFile(AssetGenerator.getRegistryName(block), AssetGenerator.getTextureName(block));
+	}
+
+	public static ModelFile ofBlockDifferentParent(Block block, Identifier parent)
+	{
+		return new ModelFile(AssetGenerator.getRegistryName(block), parent);
 	}
 
 	public static ModelFile ofModel(Identifier filename, Identifier source)
@@ -96,6 +98,21 @@ public class ModelFile
 						.texture("top", topTexture)
 						.texture("side", sideTexture)
 		);
+	}
+
+	public static Collection<ModelFile> cubes(Block block, String... suffixes)
+	{
+		Identifier id = AssetGenerator.getRegistryName(block);
+		ArrayList<ModelFile> models = new ArrayList<>();
+
+		for (String suffix : suffixes)
+		{
+			models.add(ModelFile
+					           .ofModel(IdentifierUtil.concat(AssetGenerator.getRegistryName(block), suffix), new Identifier("block/cube_all"))
+					           .texture("all", IdentifierUtil.concat(AssetGenerator.getTextureName(block), suffix)));
+		}
+
+		return models;
 	}
 
 	public static Collection<ModelFile> stairs(Block block, Identifier topTexture, Identifier sideTexture)

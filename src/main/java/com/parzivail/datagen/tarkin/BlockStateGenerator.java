@@ -5,6 +5,7 @@ import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.block.enums.StairShape;
 import net.minecraft.data.client.model.*;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -17,6 +18,11 @@ public class BlockStateGenerator
 	public static VariantsBlockStateSupplier basic(Block block, Identifier modelId)
 	{
 		return VariantsBlockStateSupplier.create(block, BlockStateVariant.create().put(VariantSettings.MODEL, modelId));
+	}
+
+	public static VariantsBlockStateSupplier forBooleanProperty(Block block, BooleanProperty property, Identifier trueModel, Identifier falseModel)
+	{
+		return VariantsBlockStateSupplier.create(block).coordinate(createBooleanModelMap(property, trueModel, falseModel));
 	}
 
 	public static VariantsBlockStateSupplier randomRotation(Block block, Identifier modelId)
@@ -32,6 +38,11 @@ public class BlockStateGenerator
 	public static BlockStateSupplier column(Block block, Identifier modelId)
 	{
 		return VariantsBlockStateSupplier.create(block, BlockStateVariant.create().put(VariantSettings.MODEL, modelId)).coordinate(createAxisRotatedVariantMap());
+	}
+
+	private static BlockStateVariantMap createBooleanModelMap(BooleanProperty property, Identifier trueModel, Identifier falseModel)
+	{
+		return BlockStateVariantMap.create(property).register(true, BlockStateVariant.create().put(VariantSettings.MODEL, trueModel)).register(false, BlockStateVariant.create().put(VariantSettings.MODEL, falseModel));
 	}
 
 	private static BlockStateVariantMap createAxisRotatedVariantMap()

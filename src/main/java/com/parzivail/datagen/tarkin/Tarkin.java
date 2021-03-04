@@ -4,6 +4,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.Lumberjack;
+import com.parzivail.util.block.InvertedLampBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.tag.ItemTags;
@@ -790,7 +791,12 @@ public class Tarkin
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.FloorWedge).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.WallCluster).build(assets);
-		BlockGenerator.basic(SwgBlocks.Light.LightBlock).build(assets);
+
+		BlockGenerator.basic(SwgBlocks.Light.LightBlock)
+		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
+		              .models(block -> ModelFile.cubes(block, "", "_on"))
+		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
+		              .build(assets);
 
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
 
@@ -853,12 +859,15 @@ public class Tarkin
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon).build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
+		BlockGenerator.basic(SwgBlocks.Stone.Massassi).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MassassiSlab, Resources.identifier("block/massassi_stone")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.MassassiStairs, Resources.identifier("block/massassi_stone")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("block/massassi_stone_bricks")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiSmoothStairs, Resources.identifier("block/smooth_massassi_stone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("block/smooth_massassi_stone"), Resources.identifier("block/smooth_massassi_stone"), Resources.identifier("block/smooth_massassi_stone_slab_side")).build(assets);
+		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.identifier("block/massassi_stone_bricks")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("block/smooth_massassi_stone")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("block/massassi_stone_bricks")).build(assets);
+		BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.Pourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.identifier("block/pourstone")).build(assets);

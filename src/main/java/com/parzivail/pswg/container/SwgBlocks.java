@@ -149,7 +149,7 @@ public class SwgBlocks
 	public static class Light
 	{
 		@RegistryName("light_block")
-		public static final Block LightBlock = new Block(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(15).strength(0.3F));
+		public static final Block LightBlock = new InvertedLampBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(BlockUtil.createLightLevelFromBlockState(15)).strength(0.3F));
 
 		@RegistryName("floor_wedge_light")
 		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
@@ -299,18 +299,25 @@ public class SwgBlocks
 		@RegistryName("light_pourstone_slab")
 		public static final Block LightPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
 
+		@RegistryName("massassi_stone")
+		public static final Block Massassi = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
+		@RegistryName("massassi_stone_stairs")
+		public static final Block MassassiStairs = new PStairsBlock(Massassi.getDefaultState(), AbstractBlock.Settings.copy(Massassi));
+		@RegistryName("massassi_stone_slab")
+		public static final Block MassassiSlab = new SlabBlock(AbstractBlock.Settings.copy(Massassi));
+		@RegistryName("smooth_massassi_stone")
+		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
+		@RegistryName("smooth_massassi_stone_slab")
+		public static final Block MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
 		@RegistryName("massassi_stone_bricks")
 		public static final Block MassassiBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("massassi_stone_brick_stairs")
 		public static final Block MassassiBrickStairs = new PStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
 		@RegistryName("massassi_stone_brick_slab")
 		public static final Block MassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiBricks));
-		@RegistryName("smooth_massassi_stone")
-		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
-		@RegistryName("smooth_massassi_stone_stairs")
-		public static final Block MassassiSmoothStairs = new PStairsBlock(MassassiSmooth.getDefaultState(), AbstractBlock.Settings.copy(MassassiSmooth));
-		@RegistryName("smooth_massassi_stone_slab")
-		public static final Block MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
+		@RegistryName("chiseled_massassi_stone_bricks")
+		public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
+
 
 		@RegistryName("ilum_stone")
 		public static final Block Ilum = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
