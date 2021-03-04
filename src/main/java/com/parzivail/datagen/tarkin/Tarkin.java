@@ -554,7 +554,7 @@ public class Tarkin
 
 		//Light Blocks
 		{
-			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.LightBlock, 3))
+			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.Fixture, 3))
 			                      .grid3x3(null,
 			                               Items.GLASS_PANE, Items.GLASS_PANE, Items.GLASS_PANE,
 			                               Items.GLASS_PANE, SwgItems.CraftingComponents.LightPanel, Items.GLASS_PANE,
@@ -792,7 +792,7 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.FloorWedge).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.WallCluster).build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Light.LightBlock)
+		BlockGenerator.basic(SwgBlocks.Light.Fixture)
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
 		              .models(block -> ModelFile.cubes(block, "", "_on"))
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
@@ -867,7 +867,7 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.identifier("block/massassi_stone_bricks")).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("block/massassi_stone_bricks")).build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
+		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.Pourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.identifier("block/pourstone")).build(assets);

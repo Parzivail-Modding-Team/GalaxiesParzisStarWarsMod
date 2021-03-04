@@ -148,8 +148,8 @@ public class SwgBlocks
 
 	public static class Light
 	{
-		@RegistryName("light_block")
-		public static final Block LightBlock = new InvertedLampBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(BlockUtil.createLightLevelFromBlockState(15)).strength(0.3F));
+		@RegistryName("light_fixture")
+		public static final Block Fixture = new InvertedLampBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(BlockUtil.createLightLevelFromBlockState(15)).strength(0.3F));
 
 		@RegistryName("floor_wedge_light")
 		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
@@ -315,8 +315,8 @@ public class SwgBlocks
 		public static final Block MassassiBrickStairs = new PStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
 		@RegistryName("massassi_stone_brick_slab")
 		public static final Block MassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiBricks));
-		@RegistryName("chiseled_massassi_stone_bricks")
-		public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
+		//@RegistryName("chiseled_massassi_stone_bricks")
+		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 
 
 		@RegistryName("ilum_stone")

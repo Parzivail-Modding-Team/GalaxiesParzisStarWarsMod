@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","group":"minecraft:hopper","pattern":["a a","aba"," a "],"key":{"b":{"item":"minecraft:chest"},"a":{"item":"pswg:plasteel_ingot"}},"result":{"item":"minecraft:hopper","count":1}}

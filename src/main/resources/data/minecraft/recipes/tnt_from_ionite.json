@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","group":"minecraft:tnt","pattern":["aba","bab","aba"],"key":{"a":{"item":"pswg:ionite_dust"},"b":{"item":"pswg:desert_sand"}},"result":{"item":"minecraft:tnt","count":1}}
