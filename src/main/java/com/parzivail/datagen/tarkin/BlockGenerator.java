@@ -89,7 +89,7 @@ public class BlockGenerator
 		Identifier top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.slab(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
-				.models(b -> ModelFile.slab(b, topTexture, sideTexture));
+				.models(b -> ModelFile.slabUniqueDouble(b, topTexture, sideTexture));
 	}
 
 	static BlockGenerator slab(Block block, Identifier model)

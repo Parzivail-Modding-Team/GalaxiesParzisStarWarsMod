@@ -1,7 +1,1 @@
-{
-	"parent": "minecraft:block/cube_column",
-	"textures": {
-		"end": "pswg:block/smooth_ilum_stone",
-		"side": "pswg:block/smooth_ilum_stone_slab_side"
-	}
-}
+{"parent":"minecraft:block/cube_column","textures":{"side":"pswg:block/smooth_ilum_stone_slab_side","end":"pswg:block/smooth_ilum_stone"}}
