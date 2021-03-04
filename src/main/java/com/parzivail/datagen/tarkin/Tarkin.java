@@ -814,9 +814,8 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Plasteel).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Titanium).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Zersium).build(assets);
-		BlockGenerator.block(SwgBlocks.MaterialBlock.Ionite)
-		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Ionite, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
-		              .build(assets);
+		BlockGenerator.block(SwgBlocks.MaterialBlock.Ionite).build(assets);
+
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8).build(assets);
 
@@ -825,10 +824,12 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Ore.Cortosis).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Desh).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Diatium).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Ionite).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Lommite).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Titanium).build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Zersium).build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Ionite)
+		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Ionite, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
+		              .build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Panel.ImperialBase).build(assets);
 		BlockGenerator.basic(SwgBlocks.Panel.ImperialBlackBase).build(assets);
