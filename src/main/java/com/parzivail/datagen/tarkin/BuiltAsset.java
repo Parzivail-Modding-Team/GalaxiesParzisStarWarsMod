@@ -19,10 +19,10 @@ public class BuiltAsset
 {
 	static final Gson GSON = new GsonBuilder().disableHtmlEscaping().create();
 
-	private final Path file;
-	private final JsonElement contents;
+	protected final Path file;
+	protected final JsonElement contents;
 
-	private BuiltAsset(Path file, JsonElement contents)
+	protected BuiltAsset(Path file, JsonElement contents)
 	{
 		this.file = file;
 		this.contents = contents;
@@ -58,6 +58,12 @@ public class BuiltAsset
 		return getAssetPath(IdentifierUtil.concat("models/item/", identifier, ".json"));
 	}
 
+	private static Path getLangPath(Identifier identifier)
+	{
+		// /assets/minecraft/lang/en_us.json
+		return getAssetPath(IdentifierUtil.concat("lang/", identifier, ".json"));
+	}
+
 	private static Path getLootTablePath(Identifier identifier)
 	{
 		return getDataPath(IdentifierUtil.concat("loot_tables/", identifier, ".json"));
@@ -84,6 +90,12 @@ public class BuiltAsset
 	{
 		Lumberjack.log("Created item model %s", identifier);
 		return new BuiltAsset(getItemModelPath(identifier), contents);
+	}
+
+	public static BuiltAsset lang(Identifier identifier, JsonElement contents)
+	{
+		Lumberjack.log("Created lang entry %s", identifier);
+		return new JsonObjKeyInsBuiltAsset(getLangPath(identifier), contents);
 	}
 
 	public static BuiltAsset lootTable(Identifier identifier, JsonElement contents)

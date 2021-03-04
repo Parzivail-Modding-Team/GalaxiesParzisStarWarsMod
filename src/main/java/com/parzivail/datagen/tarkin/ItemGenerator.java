@@ -14,17 +14,25 @@ public class ItemGenerator
 		return new ItemGenerator(block);
 	}
 
+	public static ItemGenerator itemNoModelLangEntry(Item block)
+	{
+		return itemNoModel(block)
+				.lang(LanguageProvider::ofItem);
+	}
+
 	static ItemGenerator basic(Item item)
 	{
-		return itemNoModel(item)
+		return itemNoModelLangEntry(item)
 				.model(ModelFile::item);
 	}
 
 	static ItemGenerator empty(Item block)
 	{
-		return itemNoModel(block)
+		return itemNoModelLangEntry(block)
 				.model(ModelFile::empty);
 	}
+
+	private LanguageProvider languageProvider;
 
 	private final Item item;
 	private final Collection<ModelFile> itemModels;
@@ -42,9 +50,18 @@ public class ItemGenerator
 		return this;
 	}
 
+	public ItemGenerator lang(Function<Item, LanguageProvider> languageFunc)
+	{
+		languageProvider = languageFunc.apply(item);
+		return this;
+	}
+
 	public void build(List<BuiltAsset> assets)
 	{
 		// models
 		itemModels.forEach(modelFile -> assets.add(BuiltAsset.itemModel(modelFile.getId(), modelFile.build())));
+
+		if (languageProvider != null)
+			assets.add(languageProvider.build());
 	}
 }

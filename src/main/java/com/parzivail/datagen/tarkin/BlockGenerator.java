@@ -18,6 +18,12 @@ public class BlockGenerator
 				.lootTable(LootTableFile::singleSelf);
 	}
 
+	public static BlockGenerator blockNoModelLangEntry(Block block)
+	{
+		return new BlockGenerator(block)
+				.lang(LanguageProvider::ofBlock);
+	}
+
 	public static BlockGenerator blockNoModel(Block block)
 	{
 		return new BlockGenerator(block);
@@ -25,13 +31,13 @@ public class BlockGenerator
 
 	public static BlockGenerator blockNoModelDefaultDrops(Block block)
 	{
-		return blockNoModel(block)
+		return blockNoModelLangEntry(block)
 				.lootTable(LootTableFile::singleSelf);
 	}
 
 	public static BlockGenerator block(Block block)
 	{
-		return blockNoModel(block)
+		return blockNoModelLangEntry(block)
 				.state(BlockStateGenerator::basic)
 				.model(ModelFile::cube)
 				.itemModel(ModelFile::ofBlock);
@@ -121,6 +127,8 @@ public class BlockGenerator
 
 	private BlockStateSupplier stateSupplier;
 	private ModelFile itemModel;
+	private LanguageProvider languageProvider;
+
 	private final Collection<ModelFile> blockModels;
 	private final Collection<LootTableFile> lootTables;
 
@@ -148,15 +156,23 @@ public class BlockGenerator
 		if (stateSupplier != null)
 			assets.add(BuiltAsset.blockstate(getRegistryName(), stateSupplier.get()));
 
+		if (languageProvider != null)
+			assets.add(languageProvider.build());
+
 		// models
-		if (blockModels != null)
-			blockModels.forEach(modelFile -> assets.add(BuiltAsset.blockModel(modelFile.getId(), modelFile.build())));
+		blockModels.forEach(modelFile -> assets.add(BuiltAsset.blockModel(modelFile.getId(), modelFile.build())));
+
 		if (itemModel != null)
 			assets.add(BuiltAsset.itemModel(itemModel.getId(), itemModel.build()));
 
 		// loot tables
-		if (!lootTables.isEmpty())
-			lootTables.forEach(lootTableFile -> assets.add(BuiltAsset.lootTable(lootTableFile.filename, lootTableFile.build())));
+		lootTables.forEach(lootTableFile -> assets.add(BuiltAsset.lootTable(lootTableFile.filename, lootTableFile.build())));
+	}
+
+	public BlockGenerator lang(Function<Block, LanguageProvider> languageFunc)
+	{
+		languageProvider = languageFunc.apply(block);
+		return this;
 	}
 
 	public BlockGenerator state(BlockStateSupplierFunc stateSupplierFunc, Identifier modelId)
