@@ -2,6 +2,7 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgDimensions;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.InvertedLampBlock;
@@ -53,6 +54,8 @@ public class Tarkin
 			RecipeGenerator.Shapeless.of(new ItemStack(SwgItems.Dust.Ionite, 9), null)
 			                         .ingredient(SwgBlocks.MaterialBlock.Ionite)
 			                         .build(assets);
+			RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Ore.Ionite, SwgItems.Dust.Ionite).experience(0.7F)
+			                       .build(assets);
 			//Metals
 			{
 				RecipeGenerator.buildMetal(
@@ -424,7 +427,7 @@ public class Tarkin
 			{
 				RecipeGenerator.Shapeless.of(new ItemStack(SwgBlocks.Dirt.WetPourstone, 8), null)
 				                         .ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam)
-				                         .ingredient(SwgBlocks.Sand.Desert).ingredient(SwgBlocks.Sand.Desert).ingredient(SwgBlocks.Sand.Desert)
+				                         .ingredient(ItemTags.SAND).ingredient(ItemTags.SAND).ingredient(ItemTags.SAND)
 				                         .ingredient(Items.WHEAT).ingredient(Items.WHEAT)
 				                         .ingredient(Items.WATER_BUCKET)
 				                         .build(assets);
@@ -552,6 +555,64 @@ public class Tarkin
 			}
 		}
 
+		//Massassi Blocks
+		{
+			//Massassi Stone
+			{
+				RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiStairs, 6))
+				                      .grid3x3("crafting_left",
+				                               SwgBlocks.Stone.Massassi, null, null,
+				                               SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi, null,
+				                               SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi)
+				                      .grid3x3("crafting_right",
+				                               null, null, SwgBlocks.Stone.Massassi,
+				                               null, SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi,
+				                               SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi)
+				                      .build(assets);
+
+				RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiSlab, 6))
+				                      .grid3x1(null,
+				                               SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi)
+				                      .build(assets);
+			}
+			//Smooth Massassi Stone
+			{
+				RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Stone.Massassi, SwgBlocks.Stone.MassassiSmooth).experience(0.1F)
+				                       .build(assets);
+
+				RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiSmoothSlab, 6))
+				                      .grid3x1(null,
+				                               SwgBlocks.Stone.MassassiSmooth, SwgBlocks.Stone.MassassiSmooth, SwgBlocks.Stone.MassassiSmooth)
+				                      .build(assets);
+			}
+			//Massassi Stone Bricks
+			{
+				RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiBricks, 4))
+				                      .fill2x2(null, SwgBlocks.Stone.Massassi)
+				                      .build(assets);
+
+				RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiBrickStairs, 6))
+				                      .grid3x3("crafting_left",
+				                               SwgBlocks.Stone.MassassiBricks, null, null,
+				                               SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks, null,
+				                               SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks)
+				                      .grid3x3("crafting_right",
+				                               null, null, SwgBlocks.Stone.MassassiBricks,
+				                               null, SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks,
+				                               SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks)
+				                      .build(assets);
+
+				RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiBrickSlab, 6))
+				                      .grid3x1(null,
+				                               SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks)
+				                      .build(assets);
+
+				//RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiChiseledBricks))
+				//                     .fill1x2(null, SwgBlocks.Stone.MassassiBrickSlab)
+				//                     .build(assets);
+			}
+		}
+
 		//Light Blocks
 		{
 			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.Fixture, 3))
@@ -577,6 +638,13 @@ public class Tarkin
 
 		//Decoration Blocks and Machines
 		{
+			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Door.TatooineHomeController))
+			                      .grid2x3(null,
+			                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
+			                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
+			                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+			                      .build(assets);
+
 			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Vent.Air, 3))
 			                      .grid3x3(null,
 			                               SwgItems.Ingot.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Ingot.Plasteel,
