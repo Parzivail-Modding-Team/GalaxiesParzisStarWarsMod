@@ -6,7 +6,10 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.data.SwgBlasterManager;
-import com.parzivail.pswg.item.blaster.data.*;
+import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
+import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
+import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
+import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.item.ICustomVisualItemEquality;
@@ -64,11 +67,29 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		return true;
 	}
 
+	public static Identifier getBlasterModel(ItemStack stack)
+	{
+		CompoundTag tag = stack.getOrCreateTag();
+
+		String blasterModel = tag.getString("model");
+		if (blasterModel.isEmpty())
+			blasterModel = "pswg:a280";
+
+		return new Identifier(blasterModel);
+	}
+
+	public static BlasterDescriptor getBlasterDescriptor(World world, ItemStack stack)
+	{
+		SwgBlasterManager blasterManager = SwgBlasterManager.get(world);
+		return blasterManager.getBlaster(getBlasterModel(stack));
+	}
+
 	@Override
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity player, Hand hand)
 	{
 		final ItemStack stack = player.getStackInHand(hand);
-		BlasterDescriptor bd = new BlasterDescriptor(stack.getOrCreateTag());
+
+		BlasterDescriptor bd = getBlasterDescriptor(world, stack);
 		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
 
 		if (!bt.isReady())
@@ -200,27 +221,25 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public String getTranslationKey(ItemStack stack)
 	{
-		BlasterDescriptor bd = new BlasterDescriptor(stack.getOrCreateTag());
-		return "item." + bd.id.getNamespace() + ".blaster_" + bd.id.getPath();
+		CompoundTag tag = stack.getOrCreateTag();
+
+		String blasterModel = tag.getString("model");
+		if (blasterModel.isEmpty())
+			blasterModel = "pswg:a280";
+
+		Identifier bdId = new Identifier(blasterModel);
+
+		return "item." + bdId.getNamespace() + ".blaster_" + bdId.getPath();
 	}
 
 	@Override
 	public CompoundTag getDefaultTag(ItemConvertible item, int count)
 	{
-		BlasterDescriptor d = new BlasterDescriptor(
-				Resources.identifier("a280"),
-				10,
-				50,
-				1,
-				0xFF0000,
-				10,
-				10,
-				new BlasterSpreadInfo(0, 0),
-				new BlasterHeatInfo(100, 15, 8, 30, 14, 15),
-				BlasterCoolingBypassProfile.DEFAULT
-		);
+		CompoundTag tag = new CompoundTag();
 
-		return d.toSubtag();
+		tag.putString("model", Resources.identifier("a280").toString());
+
+		return tag;
 	}
 
 	@Override
@@ -238,7 +257,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	private ItemStack forType(BlasterDescriptor blasterDescriptor)
 	{
 		ItemStack stack = new ItemStack(this);
-		blasterDescriptor.serializeAsSubtag(stack);
+
+		stack.getOrCreateTag().putString("model", blasterDescriptor.id.toString());
+
 		return stack;
 	}
 
@@ -259,7 +280,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		BlasterDescriptor bd = new BlasterDescriptor(stack.getOrCreateTag());
+		BlasterDescriptor bd = getBlasterDescriptor(world, stack);
 
 		BlasterTag.mutate(stack, blasterTag -> {
 			if (blasterTag.overheatTimer > 0)
@@ -275,9 +296,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
-		BlasterDescriptor bdOriginal = new BlasterDescriptor(original.getOrCreateTag());
-		BlasterDescriptor bdUpdated = new BlasterDescriptor(updated.getOrCreateTag());
-		return bdOriginal.id.equals(bdUpdated.id);
+		Identifier idOriginal = getBlasterModel(original);
+		Identifier idUpdated = getBlasterModel(updated);
+		return idOriginal.equals(idUpdated);
 	}
 
 	@Override

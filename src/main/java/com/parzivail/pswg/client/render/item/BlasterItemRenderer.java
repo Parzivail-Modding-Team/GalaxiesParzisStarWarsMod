@@ -3,7 +3,6 @@ package com.parzivail.pswg.client.render.item;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.pm3d.PM3DLod;
-import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.item.ICustomItemRenderer;
 import net.minecraft.client.render.RenderLayer;
@@ -13,6 +12,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
 import net.minecraft.util.math.Quaternion;
@@ -57,9 +57,15 @@ public class BlasterItemRenderer implements ICustomItemRenderer
 	@Override
 	public void render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
 	{
-		BlasterDescriptor bd = new BlasterDescriptor(stack.getOrCreateTag());
+		CompoundTag tag = stack.getOrCreateTag();
 
-		BlasterModelEntry modelEntry = getModel(bd.id);
+		String blasterModel = tag.getString("model");
+		if (blasterModel.isEmpty())
+			blasterModel = "pswg:a280";
+
+		Identifier bdId = new Identifier(blasterModel);
+
+		BlasterModelEntry modelEntry = getModel(bdId);
 
 		matrices.push();
 

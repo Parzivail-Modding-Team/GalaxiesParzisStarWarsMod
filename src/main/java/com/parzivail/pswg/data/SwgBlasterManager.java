@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.access.IServerResourceManagerAccess;
 import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
@@ -22,6 +23,7 @@ import net.minecraft.resource.ServerResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,6 +46,14 @@ public class SwgBlasterManager extends JsonDataLoader
 	{
 		ServerResourceManager srm = ((MinecraftServerMixin)server).getServerResourceManager();
 		return ((IServerResourceManagerAccess)srm).getBlasterLoader();
+	}
+
+	public static SwgBlasterManager get(World world)
+	{
+		if (world.isClient)
+			return Client.getBlasterLoader();
+
+		return SwgBlasterManager.get(world.getServer());
 	}
 
 	public PacketByteBuf createPacket()
@@ -182,5 +192,10 @@ public class SwgBlasterManager extends JsonDataLoader
 			throw new IllegalArgumentException("Can only parse version 1 blaster descriptors!");
 
 		return new BlasterDescriptor(identifier, GSON.fromJson(jsonObject, BlasterDescriptor.class));
+	}
+
+	public BlasterDescriptor getBlaster(Identifier bdId)
+	{
+		return blasters.get(bdId);
 	}
 }

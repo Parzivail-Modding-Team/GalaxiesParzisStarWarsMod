@@ -38,8 +38,8 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		final int cooldownWidth = 61;
 
 		BlasterItem b = (BlasterItem)stack.getItem();
-		BlasterDescriptor bd = new BlasterDescriptor(stack.getOrCreateTag());
 		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
+		BlasterDescriptor bd = BlasterItem.getBlasterDescriptor(player.world, stack);
 
 		BlasterCoolingBypassProfile profile = bd.cooling;
 		final int crosshairIdx = 0;
