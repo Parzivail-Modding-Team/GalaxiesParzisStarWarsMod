@@ -10,6 +10,7 @@ public class BlasterDescriptor extends TagSerializer
 	public static final Identifier SLUG = Resources.identifier("blaster_model");
 
 	public Identifier id;
+	public boolean oneHanded;
 	public float damage;
 	public float range;
 	public float weight;
@@ -26,10 +27,11 @@ public class BlasterDescriptor extends TagSerializer
 		super(SLUG, tag);
 	}
 
-	public BlasterDescriptor(Identifier id, float damage, float range, float weight, int boltColor, int magazineSize, int automaticRepeatTime, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
+	public BlasterDescriptor(Identifier id, boolean oneHanded, float damage, float range, float weight, int boltColor, int magazineSize, int automaticRepeatTime, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
 	{
 		super(SLUG);
 		this.id = id;
+		this.oneHanded = oneHanded;
 		this.damage = damage;
 		this.range = range;
 		this.weight = weight;
@@ -49,6 +51,7 @@ public class BlasterDescriptor extends TagSerializer
 	{
 		super(SLUG);
 		this.id = id;
+		this.oneHanded = other.oneHanded;
 		this.damage = other.damage;
 		this.range = other.range;
 		this.weight = other.weight;

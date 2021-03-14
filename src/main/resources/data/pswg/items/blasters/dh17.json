@@ -1,5 +1,6 @@
 {
 	"version": 1,
+	"oneHanded": true,
 	"damage": 2.9,
 	"range": 75.0,
 	"weight": 1.0,

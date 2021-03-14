@@ -3,23 +3,30 @@ package com.parzivail.pswg.client.render.item;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.pm3d.PM3DLod;
+import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
+import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.item.ICustomItemRenderer;
+import com.parzivail.util.item.ICustomPoseItem;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
 import net.minecraft.util.math.Quaternion;
 
 import java.util.HashMap;
 
-public class BlasterItemRenderer implements ICustomItemRenderer
+public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
 	public static final BlasterItemRenderer INSTANCE = new BlasterItemRenderer();
 
@@ -115,6 +122,48 @@ public class BlasterItemRenderer implements ICustomItemRenderer
 		m.render(VertexConsumerBuffer.Instance);
 
 		matrices.pop();
+	}
+
+	@Override
+	public void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	{
+		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
+		BlasterDescriptor bd = BlasterItem.getBlasterDescriptor(entity.world, stack);
+
+		float armPitchOffset = 0;
+		float armPitchScale = 1;
+
+		if (!bt.isAimingDownSights)
+		{
+			armPitchOffset = 0.7f;
+			armPitchScale = 0.6f;
+		}
+
+		Arm preferredHand = entity.getMainArm();
+
+		switch (preferredHand)
+		{
+			case LEFT:
+				leftArm.yaw = 0.1F + head.yaw;
+				leftArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
+
+				if (bt.isAimingDownSights && !bd.oneHanded)
+				{
+					rightArm.yaw = -0.1F + head.yaw - 0.4F;
+					rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
+				}
+				break;
+			case RIGHT:
+				rightArm.yaw = -0.1F + head.yaw;
+				rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
+
+				if (bt.isAimingDownSights && !bd.oneHanded)
+				{
+					leftArm.yaw = 0.1F + head.yaw + 0.4F;
+					leftArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
+				}
+				break;
+		}
 	}
 
 	private static class BlasterModelEntry

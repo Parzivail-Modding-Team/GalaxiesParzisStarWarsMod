@@ -73,6 +73,7 @@ public class SwgBlasterManager extends JsonDataLoader
 
 	private void writeBlasterDescriptor(PacketByteBuf buf, BlasterDescriptor value)
 	{
+		buf.writeBoolean(value.oneHanded);
 		buf.writeFloat(value.damage);
 		buf.writeFloat(value.range);
 		buf.writeFloat(value.weight);
@@ -114,6 +115,7 @@ public class SwgBlasterManager extends JsonDataLoader
 
 	private BlasterDescriptor readBlasterDescriptor(Identifier key, PacketByteBuf buf)
 	{
+		boolean oneHanded = buf.readBoolean();
 		float damage = buf.readFloat();
 		float range = buf.readFloat();
 		float weight = buf.readFloat();
@@ -138,6 +140,7 @@ public class SwgBlasterManager extends JsonDataLoader
 
 		return new BlasterDescriptor(
 				key,
+				oneHanded,
 				damage,
 				range,
 				weight,

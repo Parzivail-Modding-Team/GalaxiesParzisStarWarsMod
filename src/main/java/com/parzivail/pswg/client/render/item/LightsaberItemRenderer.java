@@ -120,7 +120,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	}
 
 	@Override
-	public void modifyPose(ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
+	public void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
 		float handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
 
