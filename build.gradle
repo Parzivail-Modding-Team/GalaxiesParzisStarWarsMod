@@ -8,8 +8,8 @@ repositories {
 	jcenter()
 
 	maven {
-		name = "Ladysnake Libs"
-		url = "https://dl.bintray.com/ladysnake/libs"
+		name = "Ladysnake Mods"
+		url = "https://ladysnake.jfrog.io/artifactory/mods"
 	}
 
 	maven {
