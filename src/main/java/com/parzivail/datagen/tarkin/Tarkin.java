@@ -2,7 +2,6 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.container.SwgDimensions;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.InvertedLampBlock;
@@ -622,11 +621,18 @@ public class Tarkin
 			                               Items.GLASS_PANE, Items.GLASS_PANE, Items.GLASS_PANE)
 			                      .build(assets);
 
-			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.FloorWedge, 4))
+			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.RedHangar, 4))
 			                      .grid3x2(null,
 			                               null, SwgItems.Ingot.Plasteel, null,
 			                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel)
 			                      .build(assets);
+
+			// TODO: BlueHangar light recipe, tweak other recipe for colors
+//			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.BlueHangar, 4))
+//			                      .grid3x2(null,
+//			                               null, SwgItems.Ingot.Plasteel, null,
+//			                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel)
+//			                      .build(assets);
 
 			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.WallCluster, 4))
 			                      .grid3x3(null,
@@ -857,7 +863,8 @@ public class Tarkin
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Door.TatooineHomeController).build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.FloorWedge).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.RedHangar).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.BlueHangar).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.WallCluster).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Light.Fixture)

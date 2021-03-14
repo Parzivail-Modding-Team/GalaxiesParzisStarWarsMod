@@ -151,8 +151,10 @@ public class SwgBlocks
 		@RegistryName("light_fixture")
 		public static final Block Fixture = new InvertedLampBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(BlockUtil.createLightLevelFromBlockState(15)).strength(0.3F));
 
-		@RegistryName("floor_wedge_light")
-		public static final Block FloorWedge = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
+		@RegistryName("red_hangar_light")
+		public static final Block RedHangar = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
+		@RegistryName("blue_hangar_light")
+		public static final Block BlueHangar = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(8, 5), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("wall_cluster_light")
 		public static final Block WallCluster = new RotatingBlockWithBounds(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 	}

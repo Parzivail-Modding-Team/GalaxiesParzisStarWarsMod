@@ -105,7 +105,8 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/mos_eisley.pm3d"), Resources.identifier("model/crate/mos_eisley"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Crate.Imperial, true, ModelLoader.loadPM3D(Resources.identifier("models/block/crate/imperial_cube.pm3d"), Resources.identifier("model/crate/imperial_cube"), new Identifier("block/stone")));
 
-		ModelRegistry.register(SwgBlocks.Light.FloorWedge, true, ModelLoader.loadPM3D(Resources.identifier("models/block/light/floor_wedge.pm3d"), Resources.identifier("model/light/floor_wedge"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Light.RedHangar, true, ModelLoader.loadPM3D(Resources.identifier("models/block/light/hangar_light.pm3d"), Resources.identifier("model/light/red_hangar_light"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Light.BlueHangar, true, ModelLoader.loadPM3D(Resources.identifier("models/block/light/hangar_light.pm3d"), Resources.identifier("model/light/blue_hangar_light"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Light.WallCluster, true, ModelLoader.loadPM3D(Resources.identifier("models/block/light/wall_cluster.pm3d"), Resources.identifier("model/light/wall_cluster"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadPM3D(Resources.identifier("models/block/machine_spoked.pm3d"), Resources.identifier("model/machine_spoked"), new Identifier("block/stone")));
