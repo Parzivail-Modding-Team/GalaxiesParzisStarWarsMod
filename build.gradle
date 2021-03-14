@@ -1,11 +1,10 @@
 plugins {
-	id("fabric-loom") version "0.5.43"
+	id("fabric-loom") version "0.6-SNAPSHOT"
 	id("maven-publish")
 }
 
 repositories {
 	mavenCentral()
-	jcenter()
 
 	maven {
 		name = "Ladysnake Mods"
