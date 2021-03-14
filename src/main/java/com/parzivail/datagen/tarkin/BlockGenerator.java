@@ -69,12 +69,21 @@ public class BlockGenerator
 
 	static BlockGenerator stairs(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		Identifier id = AssetGenerator.getRegistryName(block);
-		Identifier inner = IdentifierUtil.concat("block/", id, "_inner");
-		Identifier outer = IdentifierUtil.concat("block/", id, "_outer");
+		Identifier id = AssetGenerator.getTextureName(block);
+		Identifier inner = IdentifierUtil.concat(id, "_inner");
+		Identifier outer = IdentifierUtil.concat(id, "_outer");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.stairs(b, inner, AssetGenerator.getTextureName(block), outer))
 				.models(b -> ModelFile.stairs(b, topTexture, sideTexture));
+	}
+
+	static BlockGenerator basicRandomMirror(Block block)
+	{
+		Identifier id = AssetGenerator.getTextureName(block);
+		Identifier mirrored = IdentifierUtil.concat(id, "_mirrored");
+		return basic(block)
+				.state((b, modelId) -> BlockStateGenerator.randomMirror(b, id, mirrored))
+				.models(ModelFile::randomMirror);
 	}
 
 	static BlockGenerator stairs(Block block, Identifier texture)

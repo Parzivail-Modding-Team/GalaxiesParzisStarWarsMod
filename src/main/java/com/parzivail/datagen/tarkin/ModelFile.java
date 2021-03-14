@@ -158,6 +158,17 @@ public class ModelFile
 		);
 	}
 
+	public static Collection<ModelFile> randomMirror(Block block)
+	{
+		Identifier mirroredId = IdentifierUtil.concat(AssetGenerator.getRegistryName(block), "_mirrored");
+		return Arrays.asList(
+				ModelFile.cube(block),
+				ModelFile
+						.ofModel(mirroredId, new Identifier("block/cube_mirrored_all"))
+						.texture("all", AssetGenerator.getTextureName(block))
+		);
+	}
+
 	public static ModelFile cross(Block block)
 	{
 		return ModelFile

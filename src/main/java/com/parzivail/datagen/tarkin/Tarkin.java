@@ -891,7 +891,6 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Zersium).build(assets);
 		BlockGenerator.block(SwgBlocks.MaterialBlock.Ionite).build(assets);
 
-
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Ore.Beskar).build(assets);
@@ -935,7 +934,7 @@ public class Tarkin
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon).build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Stone.Massassi).build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Massassi).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.MassassiSlab, Resources.identifier("block/massassi_stone")).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.MassassiStairs, Resources.identifier("block/massassi_stone")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);
@@ -945,14 +944,14 @@ public class Tarkin
 		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("block/massassi_stone_bricks")).build(assets);
 		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Stone.Pourstone).build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.identifier("block/pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.PourstoneSlab, Resources.identifier("block/pourstone")).build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.LightPourstone).build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.LightPourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.LightPourstoneStairs, Resources.identifier("block/light_pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.LightPourstoneSlab, Resources.identifier("block/light_pourstone")).build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Stone.Ilum).build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.IlumSlab, Resources.identifier("block/ilum_stone")).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.IlumStairs, Resources.identifier("block/ilum_stone")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumSmooth).build(assets);

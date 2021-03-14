@@ -30,9 +30,29 @@ public class BlockStateGenerator
 		return VariantsBlockStateSupplier.create(block, modelRandomRotation(modelId));
 	}
 
+	public static VariantsBlockStateSupplier randomMirror(Block block, Identifier modelId, Identifier mirroredModelId)
+	{
+		return VariantsBlockStateSupplier.create(block, modelRandomMirror(modelId, mirroredModelId));
+	}
+
 	private static BlockStateVariant[] modelRandomRotation(Identifier modelId)
 	{
-		return new BlockStateVariant[] { BlockStateVariant.create().put(VariantSettings.MODEL, modelId), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.Y, VariantSettings.Rotation.R90), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.Y, VariantSettings.Rotation.R180), BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.Y, VariantSettings.Rotation.R270) };
+		return new BlockStateVariant[] {
+				BlockStateVariant.create().put(VariantSettings.MODEL, modelId),
+				BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.Y, VariantSettings.Rotation.R90),
+				BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.Y, VariantSettings.Rotation.R180),
+				BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.Y, VariantSettings.Rotation.R270)
+		};
+	}
+
+	private static BlockStateVariant[] modelRandomMirror(Identifier modelId, Identifier mirroredModelId)
+	{
+		return new BlockStateVariant[] {
+				BlockStateVariant.create().put(VariantSettings.MODEL, modelId),
+				BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId),
+				BlockStateVariant.create().put(VariantSettings.MODEL, modelId).put(VariantSettings.Y, VariantSettings.Rotation.R180),
+				BlockStateVariant.create().put(VariantSettings.MODEL, mirroredModelId).put(VariantSettings.Y, VariantSettings.Rotation.R180)
+		};
 	}
 
 	public static BlockStateSupplier column(Block block, Identifier modelId)
