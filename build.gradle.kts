@@ -29,8 +29,6 @@ java {
 	toolchain {
 		languageVersion.set(JavaLanguageVersion.of(8))
 	}
-	sourceCompatibility = JavaVersion.VERSION_1_8
-	targetCompatibility = JavaVersion.VERSION_1_8
 
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 	// if it is present.
