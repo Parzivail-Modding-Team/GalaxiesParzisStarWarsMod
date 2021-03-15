@@ -622,17 +622,17 @@ public class Tarkin
 			                      .build(assets);
 
 			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.RedHangar, 4))
-			                      .grid3x2(null,
+			                      .grid3x3(null,
 			                               null, SwgItems.Ingot.Plasteel, null,
-			                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel)
+			                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel,
+			                               null, Items.RED_DYE, null)
 			                      .build(assets);
-
-			// TODO: BlueHangar light recipe, tweak other recipe for colors
-//			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.BlueHangar, 4))
-//			                      .grid3x2(null,
-//			                               null, SwgItems.Ingot.Plasteel, null,
-//			                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel)
-//			                      .build(assets);
+			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.BlueHangar, 4))
+			                      .grid3x3(null,
+			                               null, SwgItems.Ingot.Plasteel, null,
+			                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel,
+			                               null, Items.BLUE_DYE, null)
+				.build(assets);
 
 			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.WallCluster, 4))
 			                      .grid3x3(null,
