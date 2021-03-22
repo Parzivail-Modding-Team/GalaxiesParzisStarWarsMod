@@ -860,6 +860,7 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.BlackKyber).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Toolbox).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Imperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Segmented).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Door.TatooineHomeController).build(assets);
 

@@ -13,6 +13,7 @@ public class SwgScreenTypes
 		public static final ScreenHandlerType<CrateOctagonScreenHandler> Octagon = ScreenHandlerRegistry.registerSimple(Resources.identifier("kyber_crate"), CrateOctagonScreenHandler::new);
 		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> MosEisley = ScreenHandlerRegistry.registerSimple(Resources.identifier("mos_eisley_crate"), makeScreenHandler(Crate.MosEisley));
 		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> ImperialCube = ScreenHandlerRegistry.registerSimple(Resources.identifier("imperial_crate"), makeScreenHandler(Crate.ImperialCube));
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Segmented = ScreenHandlerRegistry.registerSimple(Resources.identifier("segmented"), makeScreenHandler(Crate.Segmented));
 
 		@NotNull
 		private static ScreenHandlerRegistry.SimpleClientHandlerFactory<CrateGenericSmallScreenHandler> makeScreenHandler(ScreenHandlerType<?> handlerType)
