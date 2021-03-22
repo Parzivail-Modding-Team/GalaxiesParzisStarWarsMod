@@ -21,7 +21,7 @@ public class CrateSegmentedBlockEntity extends InventoryBlockEntity implements N
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("crate_segmented"));
+		return new TranslatableText(Resources.container("segmented_crate"));
 	}
 
 	@Override
