@@ -21,7 +21,7 @@ public class CrateImperialCubeBlockEntity extends InventoryBlockEntity implement
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("crate_imperial_cube"));
+		return new TranslatableText(Resources.container("imperial_cube_crate"));
 	}
 
 	@Override

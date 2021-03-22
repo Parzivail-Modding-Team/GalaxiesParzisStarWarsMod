@@ -21,7 +21,7 @@ public class CrateMosEisleyBlockEntity extends InventoryBlockEntity implements N
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("crate_mos_eisley"));
+		return new TranslatableText(Resources.container("mos_eisley_crate"));
 	}
 
 	@Override

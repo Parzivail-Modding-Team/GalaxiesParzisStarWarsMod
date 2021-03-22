@@ -20,7 +20,7 @@ public class CrateOctagonBlockEntity extends InventoryBlockEntity implements Nam
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("crate_octagon"));
+		return new TranslatableText(Resources.container("kyber_crate"));
 	}
 
 	@Override
