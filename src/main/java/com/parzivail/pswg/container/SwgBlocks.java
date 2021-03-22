@@ -61,7 +61,7 @@ public class SwgBlocks
 		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCrateBlockEntityType = BlockEntityType.Builder.create(CrateImperialCubeBlockEntity::new, Imperial).build(null);
 
 		@RegistryName("segmented_crate")
-		public static final RotatingBlockWithBoundsGuiEntity Segmented = new RotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(26, 14, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateSegmentedBlockEntity::new);
+		public static final RotatingBlockWithBoundsGuiEntity Segmented = new RotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(28, 14, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateSegmentedBlockEntity::new);
 		@RegistryName("segmented_crate")
 		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = BlockEntityType.Builder.create(CrateSegmentedBlockEntity::new, Segmented).build(null);
 	}

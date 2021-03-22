@@ -6,13 +6,21 @@ import net.minecraft.item.ItemStack;
 
 public class BlasterPowerPackItem extends Item
 {
-	public BlasterPowerPackItem(Settings settings)
+	private final int numShotsProvided;
+
+	public BlasterPowerPackItem(int numShotsProvided, Settings settings)
 	{
 		super(settings);
+		this.numShotsProvided = numShotsProvided;
 	}
 
 	public static BlasterPowerPack getPackType(ItemStack stack)
 	{
-		return null;
+		if (!(stack.getItem() instanceof BlasterPowerPackItem))
+			return null;
+
+		BlasterPowerPackItem ppi = (BlasterPowerPackItem)stack.getItem();
+
+		return new BlasterPowerPack(ppi.numShotsProvided);
 	}
 }

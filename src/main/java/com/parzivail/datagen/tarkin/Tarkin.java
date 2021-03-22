@@ -764,6 +764,7 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Axe.Beskar).build(assets);
 
 		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
+		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
 		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone).build(assets);

@@ -6,6 +6,7 @@ import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.SpawnEntityItem;
 import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.item.blaster.BlasterPowerPackItem;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
@@ -215,6 +216,8 @@ public class SwgItems
 	{
 		@RegistryName("blaster")
 		public static final BlasterItem Blaster = new BlasterItem(new Item.Settings().maxCount(1));
+		@RegistryName("small_power_pack")
+		public static final BlasterPowerPackItem SmallPowerPack = new BlasterPowerPackItem(75, new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Spawners
