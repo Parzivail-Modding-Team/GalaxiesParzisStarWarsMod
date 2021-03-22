@@ -1,5 +1,6 @@
 # Blender v2.91.0 OBJ File: 'segmented_crate.blend'
 # www.blender.org
+mtllib segmented_crate.mtl
 o Cube.002
 v 0.312500 0.125000 0.875000
 v 0.312500 0.750000 0.875000
@@ -335,6 +336,7 @@ vn -1.0000 0.0000 0.0000
 vn 0.0000 -1.0000 0.0000
 vn 1.0000 0.0000 0.0000
 vn 0.0000 1.0000 0.0000
+usemtl MAT_DIFFUSE_CUTOUT
 s off
 f 15/1/1 14/2/1 7/3/1 5/4/1
 f 12/5/2 4/6/2 2/7/2 11/8/2
