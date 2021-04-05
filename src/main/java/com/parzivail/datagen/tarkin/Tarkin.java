@@ -878,6 +878,8 @@ public class Tarkin
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
 
 		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.identifier("block/sequoia_log_top"), Resources.identifier("block/sequoia_log_side")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.identifier("block/japor_log_top"), Resources.identifier("block/japor_log_side")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.identifier("block/tatooine_log_top"), Resources.identifier("block/tatooine_log_side")).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
 
@@ -932,6 +934,9 @@ public class Tarkin
 
 		BlockGenerator.cross(SwgBlocks.Plant.FunnelFlower).build(assets);
 		BlockGenerator.cross(SwgBlocks.Plant.BlossomingFunnelFlower).build(assets);
+		BlockGenerator.cross(SwgBlocks.Plant.PoontenGrass).build(assets);
+		BlockGenerator.cross(SwgBlocks.Plant.DriedPoontenGrass).build(assets);
+		BlockGenerator.cross(SwgBlocks.Plant.Tuber).build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon).build(assets);

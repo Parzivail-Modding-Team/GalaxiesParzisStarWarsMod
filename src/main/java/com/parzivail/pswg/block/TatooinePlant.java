@@ -7,11 +7,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
-public class FunnelFlowerBlock extends PlantBlock
+public class TatooinePlant extends PlantBlock
 {
 	protected static final VoxelShape SHAPE = Block.createCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 13.0D, 14.0D);
 
-	public FunnelFlowerBlock(Settings settings)
+	public TatooinePlant(Settings settings)
 	{
 		super(settings);
 	}

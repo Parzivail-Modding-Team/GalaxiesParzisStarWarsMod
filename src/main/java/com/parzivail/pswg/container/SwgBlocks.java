@@ -122,9 +122,15 @@ public class SwgBlocks
 	public static class Plant
 	{
 		@RegistryName("funnel_flower")
-		public static final Block FunnelFlower = new FunnelFlowerBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block FunnelFlower = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
-		public static final Block BlossomingFunnelFlower = new FunnelFlowerBlock(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block BlossomingFunnelFlower = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("poonten_grass")
+		public static final Block PoontenGrass = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("dried_poonten_grass")
+		public static final Block DriedPoontenGrass = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("tuber")
+		public static final Block Tuber = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
 	public static class Leaves
@@ -142,6 +148,10 @@ public class SwgBlocks
 	{
 		@RegistryName("sequoia_log")
 		public static final PillarBlock Sequoia = createLogBlock(MaterialColor.WOOD, MaterialColor.BROWN);
+		@RegistryName("japor_log")
+		public static final PillarBlock Japor = createLogBlock(MaterialColor.WOOD, MaterialColor.BROWN);
+		@RegistryName("tatooine_log")
+		public static final PillarBlock Tatooine = createLogBlock(MaterialColor.WOOD, MaterialColor.BROWN);
 
 		private static PillarBlock createLogBlock(MaterialColor topMaterialColor, MaterialColor sideMaterialColor)
 		{
