@@ -841,6 +841,20 @@ public class Tarkin
 		// TODO: ItemGenerator.basic(SwgItems.Nugget.Transparisteel).build(assets);
 		ItemGenerator.basic(SwgItems.Nugget.Zersium).build(assets);
 
+		ItemGenerator.basic(SwgItems.RawOre.Beskar).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Chromium).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Cortosis).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Desh).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Diatium).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Exonium).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Helicite).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Iommite).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Kelerium).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Rubindum).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Thorolide).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Titanium).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.Zersium).build(assets);
+
 		ItemGenerator.basic(SwgItems.Pickaxe.Durasteel).build(assets);
 		ItemGenerator.basic(SwgItems.Pickaxe.Titanium).build(assets);
 		ItemGenerator.basic(SwgItems.Pickaxe.Beskar).build(assets);

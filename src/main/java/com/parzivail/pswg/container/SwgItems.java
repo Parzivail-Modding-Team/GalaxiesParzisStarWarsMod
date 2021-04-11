@@ -158,6 +158,38 @@ public class SwgItems
 		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
+	// TODO: some of these might belong into Crystal, or somewhere else.
+	//  Also, check if the names are consistent with vanilla 1.17.
+	public static class RawOre
+	{
+		@RegistryName("raw_beskar")
+		public static final Item Beskar = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_chromium")
+		public static final Item Chromium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_cortosis")
+		public static final Item Cortosis = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_desh")
+		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_diatium")
+		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_exonium")
+		public static final Item Exonium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_helicite")
+		public static final Item Helicite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_iommite")
+		public static final Item Iommite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_kelerium")
+		public static final Item Kelerium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_rubindum")
+		public static final Item Rubindum = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_thorolide")
+		public static final Item Thorolide = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_titanium")
+		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_zersium")
+		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
 	public static class Food
 	{
 		@RegistryName("salt_pile")
