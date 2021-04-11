@@ -779,7 +779,11 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.CraftingComponents.DeshWire).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.ZersiumRod).build(assets);
 
+		ItemGenerator.basic(SwgItems.Crystal.Exonium).build(assets);
+		ItemGenerator.basic(SwgItems.Crystal.Helicite).build(assets);
 		ItemGenerator.basic(SwgItems.Crystal.Ionite).build(assets);
+		ItemGenerator.basic(SwgItems.Crystal.Lommite).build(assets);
+		ItemGenerator.basic(SwgItems.Crystal.Thorolide).build(assets);
 
 		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
@@ -846,12 +850,8 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.RawOre.Cortosis).build(assets);
 		ItemGenerator.basic(SwgItems.RawOre.Desh).build(assets);
 		ItemGenerator.basic(SwgItems.RawOre.Diatium).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Exonium).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Helicite).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Iommite).build(assets);
 		ItemGenerator.basic(SwgItems.RawOre.Kelerium).build(assets);
 		ItemGenerator.basic(SwgItems.RawOre.Rubindum).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Thorolide).build(assets);
 		ItemGenerator.basic(SwgItems.RawOre.Titanium).build(assets);
 		ItemGenerator.basic(SwgItems.RawOre.Zersium).build(assets);
 

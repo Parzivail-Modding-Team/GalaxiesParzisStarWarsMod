@@ -108,8 +108,16 @@ public class SwgItems
 
 	public static class Crystal
 	{
+		@RegistryName("exonium")
+		public static final Item Exonium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("helicite_crystal")
+		public static final Item Helicite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("ionite_crystal")
 		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("lommite_crystal")
+		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("thorolide_crystal")
+		public static final Item Thorolide = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Nugget
@@ -172,18 +180,10 @@ public class SwgItems
 		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("raw_diatium")
 		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("raw_exonium")
-		public static final Item Exonium = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("raw_helicite")
-		public static final Item Helicite = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("raw_iommite")
-		public static final Item Iommite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("raw_kelerium")
 		public static final Item Kelerium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("raw_rubindum")
 		public static final Item Rubindum = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("raw_thorolide")
-		public static final Item Thorolide = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("raw_titanium")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("raw_zersium")
