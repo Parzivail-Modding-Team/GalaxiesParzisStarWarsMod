@@ -155,10 +155,19 @@ public class SwgBlocks
 
 		private static PillarBlock createLogBlock(MaterialColor topMaterialColor, MaterialColor sideMaterialColor)
 		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, (blockState) -> {
-				return blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor;
-			}).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+			return new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, blockState ->
+					blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		}
+	}
+
+	public static class Wood
+	{
+		@RegistryName("sequoia_wood")
+		public static final PillarBlock Sequoia = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		@RegistryName("japor_wood")
+		public static final PillarBlock Japor = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		@RegistryName("tatooine_wood")
+		public static final PillarBlock Tatooine = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MaterialColor.WOOD).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 	}
 
 	public static class Light

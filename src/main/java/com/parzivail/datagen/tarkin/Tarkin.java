@@ -891,9 +891,13 @@ public class Tarkin
 
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
 
-		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.identifier("block/sequoia_log_top"), Resources.identifier("block/sequoia_log_side")).build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.identifier("block/japor_log_top"), Resources.identifier("block/japor_log_side")).build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.identifier("block/tatooine_log_top"), Resources.identifier("block/tatooine_log_side")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.identifier("block/sequoia_log_top"), Resources.identifier("block/sequoia_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.identifier("block/japor_log_top"), Resources.identifier("block/japor_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.identifier("block/tatooine_log_top"), Resources.identifier("block/tatooine_log")).build(assets);
+
+		BlockGenerator.column(SwgBlocks.Wood.Sequoia, Resources.identifier("block/sequoia_log"), Resources.identifier("block/sequoia_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Wood.Japor, Resources.identifier("block/japor_log"), Resources.identifier("block/japor_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Wood.Tatooine, Resources.identifier("block/tatooine_log"), Resources.identifier("block/tatooine_log")).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
 
