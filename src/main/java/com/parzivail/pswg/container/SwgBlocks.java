@@ -17,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShapes;
 
@@ -29,7 +30,7 @@ public class SwgBlocks
 		@RegistryName("desh_barrel")
 		public static final Block Desh = new DisplacingBlock((state, world, pos, context) -> {
 			Random r = Resources.RANDOM;
-			r.setSeed(state.getRenderingSeed(pos));
+			r.setSeed(MathHelper.hashCode(pos));
 
 			float s = 4;
 			float dx = r.nextFloat() * s;
