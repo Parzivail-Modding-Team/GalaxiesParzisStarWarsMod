@@ -8,6 +8,7 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
@@ -35,6 +36,9 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		matrices.push();
 
 		matrices.translate(0, 0.5f * entity.getHeight(), 0);
+
+		float s = MathHelper.clamp(entity.age / 2f,0.1f, 1);
+		matrices.scale(s, s, s);
 
 		float rPitch = (float)Math.asin(-velocity.y);
 		float rYaw = (float)Math.atan2(velocity.x, velocity.z);
