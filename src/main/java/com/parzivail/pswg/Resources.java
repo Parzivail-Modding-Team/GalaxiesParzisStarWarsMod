@@ -80,7 +80,7 @@ public class Resources
 
 			GithubReleaseEntry mostRecentRelease = entries[0];
 
-			if (!mostRecentRelease.tag_name.equals(ownVersion))
+			if (isRemoteVersionNewer(ownVersion, mostRecentRelease.tag_name))
 			{
 				REMOTE_VERSION = mostRecentRelease;
 
@@ -91,5 +91,11 @@ public class Resources
 		{
 			Lumberjack.error("Failed to check for updates: %s", e.getMessage());
 		}
+	}
+
+	private static boolean isRemoteVersionNewer(String local, String remote)
+	{
+		// TODO: actual version comparison
+		return !local.equals(remote);
 	}
 }
