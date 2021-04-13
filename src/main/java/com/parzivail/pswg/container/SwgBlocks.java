@@ -105,6 +105,12 @@ public class SwgBlocks
 		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 	}
 
+	public static class Debug
+	{
+		@RegistryName("connecting_glass")
+		public static final ConnectingGlassDebugBlock ConnectingGlass = new ConnectingGlassDebugBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
+	}
+
 	public static class Vent
 	{
 		@RegistryName("air_vent")

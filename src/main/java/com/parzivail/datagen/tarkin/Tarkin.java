@@ -900,6 +900,8 @@ public class Tarkin
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
 
+		BlockGenerator.basic(SwgBlocks.Debug.ConnectingGlass).build(assets);
+
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Beskar).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Chromium).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Cortosis).build(assets);

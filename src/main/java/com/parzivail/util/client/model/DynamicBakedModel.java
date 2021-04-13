@@ -46,6 +46,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 {
 	public enum Discriminator
 	{
+		NONE,
 		GLOBAL,
 		BLOCKSTATE,
 		RENDER_SEED
@@ -94,6 +95,9 @@ public abstract class DynamicBakedModel extends AbstractModel
 				cacheDiscriminator = null;
 				break;
 		}
+
+		if (cacheDiscriminator == null)
+			return createBlockMesh(blockView, state, pos, randomSupplier, context, transformation);
 
 		ModelCacheId cacheId = new ModelCacheId(cacheDiscriminator, transformation);
 
