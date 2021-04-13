@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.Identifier;
 
 import java.util.*;
@@ -55,6 +56,13 @@ public class ModelFile
 				.texture("layer0", AssetGenerator.getTextureName(block));
 	}
 
+	public static ModelFile item(Block block, Identifier textureName)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("item/generated"))
+				.texture("layer0", textureName);
+	}
+
 	public static ModelFile item(Item item)
 	{
 		return ModelFile
@@ -98,6 +106,24 @@ public class ModelFile
 						.texture("top", topTexture)
 						.texture("side", sideTexture)
 		);
+	}
+
+	public static Collection<ModelFile> crop(Block block, IntProperty property)
+	{
+		Identifier id = AssetGenerator.getRegistryName(block);
+		ArrayList<ModelFile> modelFiles = new ArrayList<>();
+
+		for (int i : property.getValues())
+		{
+			Identifier localId = IdentifierUtil.concat(id, "_stage" + i);
+			modelFiles.add(
+					ModelFile
+							.ofModel(localId, new Identifier("block/crop"))
+							.texture("crop", IdentifierUtil.concat("block/", localId))
+			);
+		}
+
+		return modelFiles;
 	}
 
 	public static Collection<ModelFile> slabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)

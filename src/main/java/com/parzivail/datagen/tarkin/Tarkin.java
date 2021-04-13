@@ -41,7 +41,6 @@ public class Tarkin
 
 	private static void generateRecipes(List<BuiltAsset> assets)
 	{
-
 		//Materials
 		{
 			RecipeGenerator.Shapeless.of(new ItemStack(SwgItems.Dust.Ionite), null)
@@ -791,7 +790,7 @@ public class Tarkin
 
 		ItemGenerator.basic(SwgItems.Food.SaltPile).build(assets);
 		ItemGenerator.basic(SwgItems.Food.JoganFruit).build(assets);
-		ItemGenerator.basic(SwgItems.Food.Chasuka).build(assets);
+		ItemGenerator.basic(SwgItems.Food.ChasukaLeaf).build(assets);
 		ItemGenerator.basic(SwgItems.Food.Meiloorun).build(assets);
 		ItemGenerator.basic(SwgItems.Food.MynockWing).build(assets);
 		ItemGenerator.basic(SwgItems.Food.FriedMynockWing).build(assets);
@@ -955,6 +954,8 @@ public class Tarkin
 		BlockGenerator.cross(SwgBlocks.Plant.PoontenGrass).build(assets);
 		BlockGenerator.cross(SwgBlocks.Plant.DriedPoontenGrass).build(assets);
 		BlockGenerator.cross(SwgBlocks.Plant.Tuber).build(assets);
+
+		BlockGenerator.crop(SwgBlocks.Plant.Chasuka, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2")).build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon).build(assets);

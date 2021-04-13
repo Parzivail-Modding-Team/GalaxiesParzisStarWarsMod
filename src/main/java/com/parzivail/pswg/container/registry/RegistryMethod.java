@@ -5,5 +5,5 @@ import net.minecraft.util.Identifier;
 @FunctionalInterface
 public interface RegistryMethod<T>
 {
-	void accept(T instance, Identifier registryName);
+	void accept(T instance, Identifier registryName, boolean ignoreTab);
 }

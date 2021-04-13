@@ -22,7 +22,7 @@ public class RegistryHelper
 
 				try
 				{
-					registryFunction.accept((T)field.get(null), Resources.identifier(annotation.value()));
+					registryFunction.accept((T)field.get(null), Resources.identifier(annotation.value()), field.getAnnotation(TabIgnore.class) != null);
 				}
 				catch (IllegalAccessException e)
 				{

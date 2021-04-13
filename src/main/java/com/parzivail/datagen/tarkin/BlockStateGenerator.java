@@ -6,6 +6,7 @@ import net.minecraft.block.enums.SlabType;
 import net.minecraft.block.enums.StairShape;
 import net.minecraft.data.client.model.*;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
@@ -33,6 +34,12 @@ public class BlockStateGenerator
 	public static VariantsBlockStateSupplier randomMirror(Block block, Identifier modelId, Identifier mirroredModelId)
 	{
 		return VariantsBlockStateSupplier.create(block, modelRandomMirror(modelId, mirroredModelId));
+	}
+
+	public static VariantsBlockStateSupplier crop(Block block, Identifier modelId, IntProperty ageProperty)
+	{
+		BlockStateVariantMap blockStateVariantMap = BlockStateVariantMap.create(ageProperty).register((integer) -> BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(modelId, "_stage" + integer)));
+		return VariantsBlockStateSupplier.create(block).coordinate(blockStateVariantMap);
 	}
 
 	private static BlockStateVariant[] modelRandomRotation(Identifier modelId)

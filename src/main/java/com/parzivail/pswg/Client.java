@@ -122,6 +122,7 @@ public class Client implements ClientModInitializer
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.PoontenGrass, RenderLayer.getCutout());
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.DriedPoontenGrass, RenderLayer.getCutout());
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.Tuber, RenderLayer.getCutout());
+		RenderLayerHelper.addBlock(SwgBlocks.Plant.Chasuka, RenderLayer.getCutout());
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> ModelRegistry.INSTANCE);
 

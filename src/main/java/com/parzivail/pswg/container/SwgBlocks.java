@@ -3,9 +3,11 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.*;
+import com.parzivail.pswg.block.crop.ChasukaCrop;
 import com.parzivail.pswg.blockentity.*;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
+import com.parzivail.pswg.container.registry.TabIgnore;
 import com.parzivail.util.block.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -70,6 +72,8 @@ public class SwgBlocks
 	public static class Door
 	{
 		public static final BlockTatooineHomeDoor TatooineHomeFiller = new BlockTatooineHomeDoor(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 0));
+		@RegistryName("tatooine_home_door_controller")
+		@TabIgnore
 		public static final BlockTatooineHomeDoor TatooineHomeController = new BlockTatooineHomeDoorController(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 0));
 		@RegistryName("door_tatooine_home")
 		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = BlockEntityType.Builder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeController).build(null);
@@ -132,6 +136,9 @@ public class SwgBlocks
 		public static final Block DriedPoontenGrass = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("tuber")
 		public static final Block Tuber = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("chasuka")
+		@TabIgnore
+		public static final CropBlock Chasuka = new ChasukaCrop(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 	}
 
 	public static class Leaves
@@ -373,18 +380,22 @@ public class SwgBlocks
 
 		FlammableBlockRegistry.getDefaultInstance().add(SwgBlocks.Leaves.Sequoia, 30, 60);
 
-		Registry.register(Registry.BLOCK, Resources.identifier("tatooine_home_door_controller"), Door.TatooineHomeController);
 		Registry.register(Registry.BLOCK, Resources.identifier("tatooine_home_door"), Door.TatooineHomeFiller);
 		Registry.register(Registry.ITEM, Resources.identifier("tatooine_home_door"), new BlockTatooineHomeDoor.Item(Door.TatooineHomeController, new Item.Settings().group(Galaxies.Tab)));
 	}
 
-	public static void registerBlock(Block block, Identifier identifier)
+	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab)
 	{
+		Item.Settings itemSettings = new Item.Settings();
+
+		if (!ignoreTab)
+			itemSettings = itemSettings.group(Galaxies.Tab);
+
 		Registry.register(Registry.BLOCK, identifier, block);
-		Registry.register(Registry.ITEM, identifier, new BlockItem(block, new Item.Settings().group(Galaxies.Tab)));
+		Registry.register(Registry.ITEM, identifier, new BlockItem(block, itemSettings));
 	}
 
-	public static void registerBlockEntityType(BlockEntityType<?> blockEntityType, Identifier identifier)
+	public static void registerBlockEntityType(BlockEntityType<?> blockEntityType, Identifier identifier, boolean ignoreTab)
 	{
 		Registry.register(Registry.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
 	}

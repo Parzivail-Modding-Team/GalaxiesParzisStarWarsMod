@@ -17,10 +17,7 @@ import com.parzivail.util.item.PHoeItem;
 import com.parzivail.util.item.PPickaxeItem;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.item.FoodComponent;
-import net.minecraft.item.Item;
-import net.minecraft.item.ShovelItem;
-import net.minecraft.item.ToolItem;
+import net.minecraft.item.*;
 import net.minecraft.util.registry.Registry;
 
 public class SwgItems
@@ -197,8 +194,8 @@ public class SwgItems
 
 		@RegistryName("jogan_fruit")
 		public static final Item JoganFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
-		@RegistryName("chasuka")
-		public static final Item Chasuka = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("chasuka_leaf")
+		public static final Item ChasukaLeaf = new AliasedBlockItem(SwgBlocks.Plant.Chasuka, new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("meiloorun")
 		public static final Item Meiloorun = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 
@@ -266,6 +263,6 @@ public class SwgItems
 
 	public static void register()
 	{
-		RegistryHelper.registerAnnotatedFields(SwgItems.class, Item.class, (instance, registryName) -> Registry.register(Registry.ITEM, registryName, instance));
+		RegistryHelper.registerAnnotatedFields(SwgItems.class, Item.class, (instance, registryName, ignoreTab) -> Registry.register(Registry.ITEM, registryName, instance));
 	}
 }

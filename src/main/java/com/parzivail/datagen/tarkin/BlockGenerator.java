@@ -1,6 +1,7 @@
 package com.parzivail.datagen.tarkin;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.CropBlock;
 import net.minecraft.data.client.model.BlockStateSupplier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -41,6 +42,14 @@ public class BlockGenerator
 				.state(BlockStateGenerator::basic)
 				.model(ModelFile::cube)
 				.itemModel(ModelFile::ofBlock);
+	}
+
+	static BlockGenerator crop(CropBlock block, Identifier itemTexture)
+	{
+		return blockNoModelLangEntry(block)
+				.state((block1, modelId) -> BlockStateGenerator.crop(block1, modelId, block.getAgeProperty()))
+				.models(block1 -> ModelFile.crop(block1, block.getAgeProperty()))
+				.itemModel(block2 -> ModelFile.item(block2, itemTexture));
 	}
 
 	static BlockGenerator basicRandomRotation(Block block)
