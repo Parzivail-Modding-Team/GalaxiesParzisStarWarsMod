@@ -35,16 +35,16 @@ public class ConnectedTextureHelper
 		int masked = (connections & directionMask);
 
 		if (masked == connectionFlagNear)
-			return 4;
-		else if (masked == connectionFlagFar)
-			return 2;
-		else if (masked == (connectionFlagNear | connectionFlagFar))
 			return 3;
+		else if (masked == connectionFlagFar)
+			return 1;
+		else if (masked == (connectionFlagNear | connectionFlagFar))
+			return 2;
 
 		return 0;
 	}
 
-	public static Point getConnectedBlockTexture(BlockRenderView blockView, BlockState block, BlockPos pos, Direction facing, BlockConnectionFunc blockConnectionFunc)
+	public static Point getConnectedBlockTexture(BlockRenderView blockView, BlockState block, BlockPos pos, Direction facing, boolean horizontalConnect, boolean verticalConnect, boolean lateralConnect, BlockConnectionFunc blockConnectionFunc)
 	{
 		if (pos == null)
 			return getPointFromConnections(0);
@@ -55,50 +55,50 @@ public class ConnectedTextureHelper
 		{
 			case DOWN:
 			{
-				up = pos.south();
-				down = pos.north();
-				left = pos.west();
-				right = pos.east();
+				up = lateralConnect ? pos.south() : null;
+				down = lateralConnect ? pos.north() : null;
+				left = lateralConnect ? pos.west() : null;
+				right = lateralConnect ? pos.east() : null;
 				break;
 			}
 			case UP:
 			{
-				up = pos.north();
-				down = pos.south();
-				left = pos.west();
-				right = pos.east();
+				up = lateralConnect ? pos.north() : null;
+				down = lateralConnect ? pos.south() : null;
+				left = lateralConnect ? pos.west() : null;
+				right = lateralConnect ? pos.east() : null;
 				break;
 			}
 			case NORTH:
 			{
-				up = pos.up();
-				down = pos.down();
-				left = pos.east();
-				right = pos.west();
+				up = verticalConnect ? pos.up() : null;
+				down = verticalConnect ? pos.down() : null;
+				left = horizontalConnect ? pos.east() : null;
+				right = horizontalConnect ? pos.west() : null;
 				break;
 			}
 			case SOUTH:
 			{
-				up = pos.up();
-				down = pos.down();
-				left = pos.west();
-				right = pos.east();
+				up = verticalConnect ? pos.up() : null;
+				down = verticalConnect ? pos.down() : null;
+				left = horizontalConnect ? pos.west() : null;
+				right = horizontalConnect ? pos.east() : null;
 				break;
 			}
 			case WEST:
 			{
-				up = pos.up();
-				down = pos.down();
-				left = pos.north();
-				right = pos.south();
+				up = verticalConnect ? pos.up() : null;
+				down = verticalConnect ? pos.down() : null;
+				left = horizontalConnect ? pos.north() : null;
+				right = horizontalConnect ? pos.south() : null;
 				break;
 			}
 			case EAST:
 			{
-				up = pos.up();
-				down = pos.down();
-				left = pos.south();
-				right = pos.north();
+				up = verticalConnect ? pos.up() : null;
+				down = verticalConnect ? pos.down() : null;
+				left = horizontalConnect ? pos.south() : null;
+				right = horizontalConnect ? pos.north() : null;
 				break;
 			}
 			default:
@@ -107,16 +107,16 @@ public class ConnectedTextureHelper
 
 		int connections = 0;
 
-		if (blockConnectionFunc.apply(block, blockView.getBlockState(up)))
+		if (up != null && blockConnectionFunc.apply(block, blockView.getBlockState(up)))
 			connections |= CONNECTED_UP;
 
-		if (blockConnectionFunc.apply(block, blockView.getBlockState(down)))
+		if (down != null && blockConnectionFunc.apply(block, blockView.getBlockState(down)))
 			connections |= CONNECTED_DOWN;
 
-		if (blockConnectionFunc.apply(block, blockView.getBlockState(left)))
+		if (left != null && blockConnectionFunc.apply(block, blockView.getBlockState(left)))
 			connections |= CONNECTED_LEFT;
 
-		if (blockConnectionFunc.apply(block, blockView.getBlockState(right)))
+		if (right != null && blockConnectionFunc.apply(block, blockView.getBlockState(right)))
 			connections |= CONNECTED_RIGHT;
 
 		return getPointFromConnections(connections);

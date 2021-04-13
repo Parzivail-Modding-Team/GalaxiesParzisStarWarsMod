@@ -105,10 +105,10 @@ public class SwgBlocks
 		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 	}
 
-	public static class Debug
+	public static class Glass
 	{
-		@RegistryName("connecting_glass")
-		public static final ConnectingGlassDebugBlock ConnectingGlass = new ConnectingGlassDebugBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
+		@RegistryName("imperial_glass")
+		public static final SelfConnectingGlassBlock Imperial = new SelfConnectingGlassBlock(AbstractBlock.Settings.of(Material.GLASS).strength(0.3F).sounds(BlockSoundGroup.GLASS).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never));
 	}
 
 	public static class Vent
@@ -224,14 +224,10 @@ public class SwgBlocks
 		@RegistryName("panel_imperial_light_6")
 		public static final PillarBlock ImperialLight6 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
 
-		@RegistryName("panel_imperial_light_tall_1")
-		public static final PillarBlock ImperialLightTall1 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_light_tall_2")
-		public static final PillarBlock ImperialLightTall2 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_light_tall_3")
-		public static final PillarBlock ImperialLightTall3 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_light_tall_4")
-		public static final PillarBlock ImperialLightTall4 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_tall_light_1")
+		public static final SelfConnectingBlock ImperialLightTall1 = createLitConnectingPanel(MaterialColor.GRAY);
+		@RegistryName("gray_imperial_tall_light_2")
+		public static final SelfConnectingBlock ImperialLightTall2 = createLitConnectingPanel(MaterialColor.GRAY);
 
 		@RegistryName("panel_imperial_light_decoy")
 		public static final PillarBlock ImperialLightDecoy = createPanel(MaterialColor.GRAY, MaterialColor.GRAY);
@@ -246,6 +242,11 @@ public class SwgBlocks
 			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> {
 				return blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor;
 			}).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> 15));
+		}
+
+		private static SelfConnectingBlock createLitConnectingPanel(MaterialColor materialColor)
+		{
+			return new SelfConnectingBlock(AbstractBlock.Settings.of(Material.METAL, materialColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> 15));
 		}
 
 		private static PillarBlock createPanel(MaterialColor topMaterialColor, MaterialColor sideMaterialColor)

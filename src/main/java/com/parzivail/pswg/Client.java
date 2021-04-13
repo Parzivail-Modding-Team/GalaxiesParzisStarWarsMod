@@ -2,7 +2,6 @@ package com.parzivail.pswg;
 
 import com.parzivail.pswg.client.ModelLoader;
 import com.parzivail.pswg.client.input.KeyHandler;
-import com.parzivail.pswg.client.model.ConnectedTextureModel;
 import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.RenderLayerHelper;
 import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
@@ -35,9 +34,7 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
@@ -120,8 +117,11 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.register(SwgBlocks.Pipe.Large, false, ModelLoader.loadPM3D(Resources.identifier("models/block/pipe_thick.pm3d"), Resources.identifier("model/pipe_thick"), new Identifier("block/stone")));
 
-		ModelRegistry.register(SwgBlocks.Debug.ConnectingGlass, true, new ConnectedTextureModel.Unbaked(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Resources.identifier("block/connecting_glass"))));
-		RenderLayerHelper.addBlock(SwgBlocks.Debug.ConnectingGlass, RenderLayer.getTranslucent());
+		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialLightTall1, false, true, false, Resources.identifier("block/panel_imperial_base_connected"));
+		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialLightTall2, false, true, false, Resources.identifier("block/panel_imperial_base_connected"));
+
+		ModelRegistry.registerConnected(SwgBlocks.Glass.Imperial);
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.Imperial, RenderLayer.getTranslucent());
 
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.FunnelFlower, RenderLayer.getCutout());
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.BlossomingFunnelFlower, RenderLayer.getCutout());

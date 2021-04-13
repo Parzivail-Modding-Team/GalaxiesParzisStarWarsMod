@@ -16,6 +16,7 @@
 
 package com.parzivail.util.client.model;
 
+import com.parzivail.pswg.client.model.ConnectedTextureModel;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -28,7 +29,9 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -43,6 +46,21 @@ public enum ModelRegistry implements ModelVariantProvider
 	INSTANCE;
 
 	private static final HashMap<ModelIdentifier, UnbakedModel> models = new HashMap<>();
+
+	public static void registerConnected(Block block)
+	{
+		registerConnected(block, true, true, true, null);
+	}
+
+	public static void registerConnected(Block block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture)
+	{
+		Identifier id = Registry.BLOCK.getId(block);
+		register(block, true, new ConnectedTextureModel.Unbaked(
+				hConnect, vConnect, lConnect,
+				new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier(id.getNamespace(), "block/" + id.getPath())),
+				capTexture == null ? null : new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, capTexture)
+		));
+	}
 
 	public static void register(Block block, boolean registerInventoryModel, ClonableUnbakedModel unbakedModel)
 	{

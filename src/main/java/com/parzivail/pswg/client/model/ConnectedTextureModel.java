@@ -32,16 +32,25 @@ import java.util.function.Supplier;
 
 public class ConnectedTextureModel extends DynamicBakedModel
 {
-	public ConnectedTextureModel(Sprite sprite)
+	private final boolean hConnect;
+	private final boolean vConnect;
+	private final boolean lConnect;
+	private final Sprite capSprite;
+
+	public ConnectedTextureModel(boolean hConnect, boolean vConnect, boolean lConnect, Sprite sprite, Sprite capSprite)
 	{
 		super(sprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
+		this.hConnect = hConnect;
+		this.vConnect = vConnect;
+		this.lConnect = lConnect;
+		this.capSprite = capSprite;
 	}
 
 	@Override
 	protected Discriminator getDiscriminator()
 	{
 		// TODO: change from debug value
-		return Discriminator.BLOCKSTATE;
+		return Discriminator.NONE;
 	}
 
 	@Override
@@ -77,9 +86,14 @@ public class ConnectedTextureModel extends DynamicBakedModel
 				quadEmitter.nominalFace(q.getFace());
 				quadEmitter.colorIndex(q.getColorIndex());
 
-				Point subSpritePoint = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, cullFace, (self, other) -> other.isOf(self.getBlock()));
+				Point subSpritePoint = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, cullFace, hConnect, vConnect, lConnect, (self, other) -> other.isOf(self.getBlock()));
 
-				SubSprite subSprite = getSubSprite(modelSprite, 5, 5, subSpritePoint.x, subSpritePoint.y);
+				Sprite sprite = modelSprite;
+
+				if (capSprite != null && (cullFace == Direction.UP || cullFace == Direction.DOWN))
+					sprite = capSprite;
+
+				SubSprite subSprite = getSubSprite(sprite, 4, 4, subSpritePoint.x, subSpritePoint.y);
 
 				quadEmitter.sprite(0, 0, subSprite.minU, subSprite.minV);
 				quadEmitter.sprite(1, 0, subSprite.minU, subSprite.maxV);
@@ -133,12 +147,20 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	{
 		private final Function<Function<SpriteIdentifier, Sprite>, ConnectedTextureModel> baker;
 		private ConnectedTextureModel cachedBakedModel;
+		private final boolean hConnect;
+		private final boolean vConnect;
+		private final boolean lConnect;
 		private final SpriteIdentifier sprite;
+		private final SpriteIdentifier capSprite;
 
-		public Unbaked(SpriteIdentifier sprite)
+		public Unbaked(boolean hConnect, boolean vConnect, boolean lConnect, SpriteIdentifier sprite, SpriteIdentifier capSprite)
 		{
+			this.hConnect = hConnect;
+			this.vConnect = vConnect;
+			this.lConnect = lConnect;
 			this.sprite = sprite;
-			this.baker = spriteIdentifierSpriteFunction -> new ConnectedTextureModel(spriteIdentifierSpriteFunction.apply(sprite));
+			this.capSprite = capSprite;
+			this.baker = spriteLoader -> new ConnectedTextureModel(hConnect, vConnect, lConnect, spriteLoader.apply(sprite), capSprite == null ? null : spriteLoader.apply(capSprite));
 		}
 
 		@Override
@@ -153,6 +175,9 @@ public class ConnectedTextureModel extends DynamicBakedModel
 			ArrayList<SpriteIdentifier> ids = new ArrayList<>();
 
 			ids.add(sprite);
+
+			if (capSprite != null)
+				ids.add(capSprite);
 
 			return ids;
 		}
@@ -171,7 +196,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		@Override
 		public ClonableUnbakedModel copy()
 		{
-			return new Unbaked(sprite);
+			return new Unbaked(hConnect, vConnect, lConnect, sprite, capSprite);
 		}
 	}
 }
