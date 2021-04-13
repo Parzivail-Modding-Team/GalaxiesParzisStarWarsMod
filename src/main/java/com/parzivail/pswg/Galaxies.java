@@ -52,6 +52,8 @@ public class Galaxies implements ModInitializer
 	{
 		Lumberjack.debug("onInitialize");
 
+		Resources.checkVersion();
+
 		TagSerializer.register(BlasterSpreadInfo.class, BlasterSpreadInfo::fromTag, BlasterSpreadInfo::toTag);
 		TagSerializer.register(BlasterHeatInfo.class, BlasterHeatInfo::fromTag, BlasterHeatInfo::toTag);
 		TagSerializer.register(BlasterCoolingBypassProfile.class, BlasterCoolingBypassProfile::fromTag, BlasterCoolingBypassProfile::toTag);
