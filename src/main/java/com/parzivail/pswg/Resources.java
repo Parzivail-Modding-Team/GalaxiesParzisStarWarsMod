@@ -81,9 +81,11 @@ public class Resources
 			GithubReleaseEntry mostRecentRelease = entries[0];
 
 			if (!mostRecentRelease.tag_name.equals(ownVersion))
+			{
 				REMOTE_VERSION = mostRecentRelease;
 
-			Lumberjack.warn("A new version is available at https://pswg.dev/download.html: %s (vs: %s)", REMOTE_VERSION.name, ownVersion);
+				Lumberjack.warn("A new version is available at https://pswg.dev/download.html: %s (vs: %s)", REMOTE_VERSION.name, ownVersion);
+			}
 		}
 		catch (Exception e)
 		{
