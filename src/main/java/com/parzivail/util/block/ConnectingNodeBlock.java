@@ -5,8 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.network.DebugInfoSender;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -156,14 +154,13 @@ public abstract class ConnectingNodeBlock extends Block
 		{
 			if (player.isSneaking())
 			{
-				// TODO: remove
-				if (!world.isClient)
-				{
-					ArrayList<BlockPos> outlets = getGlobalOutlets(world, state, pos);
-
-					for (BlockPos outlet : outlets)
-						DebugInfoSender.addGameTestMarker((ServerWorld)world, outlet, world.getBlockState(outlet).toString(), 0, 1000);
-				}
+//				if (!world.isClient)
+//				{
+//					ArrayList<BlockPos> outlets = getGlobalOutlets(world, state, pos);
+//
+//					for (BlockPos outlet : outlets)
+//						DebugInfoSender.addGameTestMarker((ServerWorld)world, outlet, world.getBlockState(outlet).toString(), 0, 1000);
+//				}
 			}
 			else
 				world.setBlockState(pos, state.cycle(FACING_PROPERTIES.get(hit.getSide())), 3);
