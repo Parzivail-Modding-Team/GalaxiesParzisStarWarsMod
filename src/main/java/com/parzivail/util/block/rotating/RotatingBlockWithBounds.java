@@ -1,21 +1,19 @@
-package com.parzivail.util.block;
+package com.parzivail.util.block.rotating;
 
+import com.parzivail.util.block.VoxelShapeUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
-import java.util.function.Supplier;
-
-public class RotatingBlockWithBoundsGuiEntity extends RotatingBlockWithGuiEntity
+public class RotatingBlockWithBounds extends RotatingBlock
 {
 	private final VoxelShape shape;
 
-	public RotatingBlockWithBoundsGuiEntity(VoxelShape shape, Settings settings, Supplier<BlockEntity> blockEntitySupplier)
+	public RotatingBlockWithBounds(VoxelShape shape, Settings settings)
 	{
-		super(settings.dynamicBounds(), blockEntitySupplier);
+		super(settings.dynamicBounds());
 		this.shape = shape;
 	}
 

@@ -1,4 +1,4 @@
-package com.parzivail.util.block;
+package com.parzivail.util.block.connecting;
 
 import com.google.common.collect.Maps;
 import net.minecraft.block.Block;

@@ -1,4 +1,4 @@
-package com.parzivail.util.block;
+package com.parzivail.util.block.connecting;
 
 import net.minecraft.block.BlockState;
 

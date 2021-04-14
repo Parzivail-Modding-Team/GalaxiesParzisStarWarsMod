@@ -9,6 +9,15 @@ import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.container.registry.TabIgnore;
 import com.parzivail.util.block.*;
+import com.parzivail.util.block.connecting.SelfConnectingBlock;
+import com.parzivail.util.block.connecting.SelfConnectingNodeBlock;
+import com.parzivail.util.block.mutating.DryingBlock;
+import com.parzivail.util.block.mutating.DryingSlabBlock;
+import com.parzivail.util.block.mutating.DryingStairsBlock;
+import com.parzivail.util.block.rotating.RotatingBlock;
+import com.parzivail.util.block.rotating.RotatingBlockWithBounds;
+import com.parzivail.util.block.rotating.RotatingBlockWithBoundsGuiEntity;
+import com.parzivail.util.block.rotating.RotatingBlockWithGuiEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
@@ -316,11 +325,11 @@ public class SwgBlocks
 	public static class Dirt
 	{
 		@RegistryName("wet_pourstone")
-		public static final Block WetPourstone = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
+		public static final Block WetPourstone = new DryingBlock(Stone.Pourstone, 25, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
 		@RegistryName("wet_pourstone_stairs")
-		public static final Block WetPourstoneStairs = new PStairsBlock(WetPourstone.getDefaultState(), AbstractBlock.Settings.copy(WetPourstone));
+		public static final Block WetPourstoneStairs = new DryingStairsBlock(WetPourstone.getDefaultState(), Stone.PourstoneStairs, 25, AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("wet_pourstone_slab")
-		public static final Block WetPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(WetPourstone));
+		public static final Block WetPourstoneSlab = new DryingSlabBlock(Stone.PourstoneSlab, 25, AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("desert_loam")
 		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
 	}
@@ -330,32 +339,32 @@ public class SwgBlocks
 		@RegistryName("pourstone")
 		public static final Block Pourstone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("pourstone_stairs")
-		public static final Block PourstoneStairs = new PStairsBlock(Pourstone.getDefaultState(), AbstractBlock.Settings.copy(Pourstone));
+		public static final StairsBlock PourstoneStairs = new PStairsBlock(Pourstone.getDefaultState(), AbstractBlock.Settings.copy(Pourstone));
 		@RegistryName("pourstone_slab")
-		public static final Block PourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
+		public static final SlabBlock PourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
 		@RegistryName("light_pourstone")
 		public static final Block LightPourstone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("light_pourstone_stairs")
-		public static final Block LightPourstoneStairs = new PStairsBlock(LightPourstone.getDefaultState(), AbstractBlock.Settings.copy(LightPourstone));
+		public static final StairsBlock LightPourstoneStairs = new PStairsBlock(LightPourstone.getDefaultState(), AbstractBlock.Settings.copy(LightPourstone));
 		@RegistryName("light_pourstone_slab")
-		public static final Block LightPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
+		public static final SlabBlock LightPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
 
 		@RegistryName("massassi_stone")
 		public static final Block Massassi = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("massassi_stone_stairs")
-		public static final Block MassassiStairs = new PStairsBlock(Massassi.getDefaultState(), AbstractBlock.Settings.copy(Massassi));
+		public static final StairsBlock MassassiStairs = new PStairsBlock(Massassi.getDefaultState(), AbstractBlock.Settings.copy(Massassi));
 		@RegistryName("massassi_stone_slab")
-		public static final Block MassassiSlab = new SlabBlock(AbstractBlock.Settings.copy(Massassi));
+		public static final SlabBlock MassassiSlab = new SlabBlock(AbstractBlock.Settings.copy(Massassi));
 		@RegistryName("smooth_massassi_stone")
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("smooth_massassi_stone_slab")
-		public static final Block MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
+		public static final SlabBlock MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
 		@RegistryName("massassi_stone_bricks")
 		public static final Block MassassiBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("massassi_stone_brick_stairs")
-		public static final Block MassassiBrickStairs = new PStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
+		public static final StairsBlock MassassiBrickStairs = new PStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
 		@RegistryName("massassi_stone_brick_slab")
-		public static final Block MassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiBricks));
+		public static final SlabBlock MassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiBricks));
 		//@RegistryName("chiseled_massassi_stone_bricks")
 		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 
@@ -363,19 +372,19 @@ public class SwgBlocks
 		@RegistryName("ilum_stone")
 		public static final Block Ilum = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("ilum_stone_stairs")
-		public static final Block IlumStairs = new PStairsBlock(Ilum.getDefaultState(), AbstractBlock.Settings.copy(Ilum));
+		public static final StairsBlock IlumStairs = new PStairsBlock(Ilum.getDefaultState(), AbstractBlock.Settings.copy(Ilum));
 		@RegistryName("ilum_stone_slab")
-		public static final Block IlumSlab = new SlabBlock(AbstractBlock.Settings.copy(Ilum));
+		public static final SlabBlock IlumSlab = new SlabBlock(AbstractBlock.Settings.copy(Ilum));
 		@RegistryName("smooth_ilum_stone")
 		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("smooth_ilum_stone_slab")
-		public static final Block IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
+		public static final SlabBlock IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
 		@RegistryName("ilum_stone_bricks")
 		public static final Block IlumBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("ilum_stone_brick_stairs")
-		public static final Block IlumBrickStairs = new PStairsBlock(IlumBricks.getDefaultState(), AbstractBlock.Settings.copy(IlumBricks));
+		public static final StairsBlock IlumBrickStairs = new PStairsBlock(IlumBricks.getDefaultState(), AbstractBlock.Settings.copy(IlumBricks));
 		@RegistryName("ilum_stone_brick_slab")
-		public static final Block IlumBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumBricks));
+		public static final SlabBlock IlumBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumBricks));
 		@RegistryName("chiseled_ilum_stone_bricks")
 		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 	}

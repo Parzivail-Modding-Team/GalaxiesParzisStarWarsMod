@@ -1,8 +1,8 @@
 package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.blockentity.MoistureVaporatorBlockEntity;
-import com.parzivail.util.block.RotatingBlockWithEntity;
 import com.parzivail.util.block.VoxelShapeUtil;
+import com.parzivail.util.block.rotating.RotatingBlockWithEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;

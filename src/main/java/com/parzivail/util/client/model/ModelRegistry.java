@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -47,12 +48,12 @@ public enum ModelRegistry implements ModelVariantProvider
 
 	private static final HashMap<ModelIdentifier, UnbakedModel> models = new HashMap<>();
 
-	public static void registerConnected(Block block)
+	public static void registerConnected(ConnectingBlock block)
 	{
 		registerConnected(block, true, true, true, null);
 	}
 
-	public static void registerConnected(Block block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture)
+	public static void registerConnected(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture)
 	{
 		Identifier id = Registry.BLOCK.getId(block);
 		register(block, true, new ConnectedTextureModel.Unbaked(

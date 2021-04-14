@@ -85,7 +85,6 @@ public class Client implements ClientModInitializer
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 
-
 		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
 
 		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadPM3D(DynamicBakedModel.Discriminator.RENDER_SEED, Resources.identifier("models/block/barrel/mos_eisley.pm3d"), Resources.identifier("model/barrel/mos_eisley"), new Identifier("block/stone")));

@@ -1,4 +1,4 @@
-package com.parzivail.util.block;
+package com.parzivail.util.block.rotating;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

@@ -1,6 +1,6 @@
 package com.parzivail.pswg.block;
 
-import com.parzivail.util.block.SelfConnectingBlock;
+import com.parzivail.util.block.connecting.SelfConnectingBlock;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
