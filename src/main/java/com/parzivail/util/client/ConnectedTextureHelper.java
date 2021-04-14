@@ -2,18 +2,14 @@ package com.parzivail.util.client;
 
 import com.parzivail.util.math.Point;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ConnectingBlock;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
 public class ConnectedTextureHelper
 {
-	@FunctionalInterface
-	public interface BlockConnectionFunc
-	{
-		boolean apply(BlockState self, BlockState other);
-	}
-
 	private static final int CONNECTED_UP = 0b0001;
 	private static final int CONNECTED_DOWN = 0b0010;
 	private static final int CONNECTED_LEFT = 0b0100;
@@ -44,61 +40,61 @@ public class ConnectedTextureHelper
 		return 0;
 	}
 
-	public static Point getConnectedBlockTexture(BlockRenderView blockView, BlockState block, BlockPos pos, Direction facing, boolean horizontalConnect, boolean verticalConnect, boolean lateralConnect, BlockConnectionFunc blockConnectionFunc)
+	public static Point getConnectedBlockTexture(BlockRenderView blockView, BlockState block, BlockPos pos, Direction facing, boolean horizontalConnect, boolean verticalConnect, boolean lateralConnect)
 	{
 		if (pos == null)
 			return getPointFromConnections(0);
 
-		BlockPos up, down, left, right;
+		BooleanProperty up, down, left, right;
 
 		switch (facing)
 		{
 			case DOWN:
 			{
-				up = lateralConnect ? pos.south() : null;
-				down = lateralConnect ? pos.north() : null;
-				left = lateralConnect ? pos.west() : null;
-				right = lateralConnect ? pos.east() : null;
+				up = lateralConnect ? ConnectingBlock.SOUTH : null;
+				down = lateralConnect ? ConnectingBlock.NORTH : null;
+				left = lateralConnect ? ConnectingBlock.WEST : null;
+				right = lateralConnect ? ConnectingBlock.EAST : null;
 				break;
 			}
 			case UP:
 			{
-				up = lateralConnect ? pos.north() : null;
-				down = lateralConnect ? pos.south() : null;
-				left = lateralConnect ? pos.west() : null;
-				right = lateralConnect ? pos.east() : null;
+				up = lateralConnect ? ConnectingBlock.NORTH : null;
+				down = lateralConnect ? ConnectingBlock.SOUTH : null;
+				left = lateralConnect ? ConnectingBlock.WEST : null;
+				right = lateralConnect ? ConnectingBlock.EAST : null;
 				break;
 			}
 			case NORTH:
 			{
-				up = verticalConnect ? pos.up() : null;
-				down = verticalConnect ? pos.down() : null;
-				left = horizontalConnect ? pos.east() : null;
-				right = horizontalConnect ? pos.west() : null;
+				up = verticalConnect ? ConnectingBlock.UP : null;
+				down = verticalConnect ? ConnectingBlock.DOWN : null;
+				left = horizontalConnect ? ConnectingBlock.EAST : null;
+				right = horizontalConnect ? ConnectingBlock.WEST : null;
 				break;
 			}
 			case SOUTH:
 			{
-				up = verticalConnect ? pos.up() : null;
-				down = verticalConnect ? pos.down() : null;
-				left = horizontalConnect ? pos.west() : null;
-				right = horizontalConnect ? pos.east() : null;
+				up = verticalConnect ? ConnectingBlock.UP : null;
+				down = verticalConnect ? ConnectingBlock.DOWN : null;
+				left = horizontalConnect ? ConnectingBlock.WEST : null;
+				right = horizontalConnect ? ConnectingBlock.EAST : null;
 				break;
 			}
 			case WEST:
 			{
-				up = verticalConnect ? pos.up() : null;
-				down = verticalConnect ? pos.down() : null;
-				left = horizontalConnect ? pos.north() : null;
-				right = horizontalConnect ? pos.south() : null;
+				up = verticalConnect ? ConnectingBlock.UP : null;
+				down = verticalConnect ? ConnectingBlock.DOWN : null;
+				left = horizontalConnect ? ConnectingBlock.NORTH : null;
+				right = horizontalConnect ? ConnectingBlock.SOUTH : null;
 				break;
 			}
 			case EAST:
 			{
-				up = verticalConnect ? pos.up() : null;
-				down = verticalConnect ? pos.down() : null;
-				left = horizontalConnect ? pos.south() : null;
-				right = horizontalConnect ? pos.north() : null;
+				up = verticalConnect ? ConnectingBlock.UP : null;
+				down = verticalConnect ? ConnectingBlock.DOWN : null;
+				left = horizontalConnect ? ConnectingBlock.SOUTH : null;
+				right = horizontalConnect ? ConnectingBlock.NORTH : null;
 				break;
 			}
 			default:
@@ -107,16 +103,16 @@ public class ConnectedTextureHelper
 
 		int connections = 0;
 
-		if (up != null && blockConnectionFunc.apply(block, blockView.getBlockState(up)))
+		if (up != null && block.get(up))
 			connections |= CONNECTED_UP;
 
-		if (down != null && blockConnectionFunc.apply(block, blockView.getBlockState(down)))
+		if (down != null && block.get(down))
 			connections |= CONNECTED_DOWN;
 
-		if (left != null && blockConnectionFunc.apply(block, blockView.getBlockState(left)))
+		if (left != null && block.get(left))
 			connections |= CONNECTED_LEFT;
 
-		if (right != null && blockConnectionFunc.apply(block, blockView.getBlockState(right)))
+		if (right != null && block.get(right))
 			connections |= CONNECTED_RIGHT;
 
 		return getPointFromConnections(connections);

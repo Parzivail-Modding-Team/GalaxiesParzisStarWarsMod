@@ -68,10 +68,13 @@ public class ConnectedTextureModel extends DynamicBakedModel
 
 		for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
 		{
+			if (state != null && !(state.getBlock() instanceof ConnectingBlock))
+				continue;
+
 			final Direction cullFace = ModelHelper.faceFromIndex(i);
 			final BooleanProperty facingProp = ConnectingBlock.FACING_PROPERTIES.get(cullFace);
 
-			if (state != null && state.getBlock() instanceof ConnectingBlock && state.contains(facingProp) && state.get(facingProp))
+			if (state != null && state.contains(facingProp) && state.get(facingProp))
 				continue;
 
 			final List<BakedQuad> quads = model.getQuads(state, cullFace, random);
@@ -86,7 +89,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 				quadEmitter.nominalFace(q.getFace());
 				quadEmitter.colorIndex(q.getColorIndex());
 
-				Point subSpritePoint = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, cullFace, hConnect, vConnect, lConnect, (self, other) -> other.isOf(self.getBlock()));
+				Point subSpritePoint = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, cullFace, hConnect, vConnect, lConnect);
 
 				Sprite sprite = modelSprite;
 
