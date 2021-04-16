@@ -1,3 +1,5 @@
+import java.util.regex.Pattern
+
 plugins {
 	id("fabric-loom") version "0.6-SNAPSHOT"
 	id("maven-publish")
@@ -39,12 +41,25 @@ java {
 
 def getVersionName()
 {
-	def stdout = new ByteArrayOutputStream()
+	final stdout = new ByteArrayOutputStream()
 	exec {
 		commandLine = ["git", "describe", "--tags", "--dirty"]
 		standardOutput = stdout
 	}
-	return stdout.toString().trim()
+	final version = stdout.toString().trim()
+
+	final pattern = Pattern.compile(/^([0-9.]+)\+([0-9.]+)((?:-[0-9]+-[0-9a-f]+)?(?:-dirty)?)?$/)
+	if (!version.startsWith("1.16"))
+	{
+		final m = pattern.matcher(version)
+		if (m.matches())
+		{
+			final pre = m.group(3)
+			if (pre != null && !pre.isEmpty())
+				return "${m.group(1)}$pre+${m.group(2)}"
+		}
+	}
+	return version
 }
 
 archivesBaseName = project.archives_base_name
