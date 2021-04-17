@@ -34,3 +34,6 @@ __pycache__/
 # pswg
 
 releases/
+
+
+.DS_Store
