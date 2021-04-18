@@ -10,7 +10,9 @@ import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.container.registry.TabIgnore;
 import com.parzivail.util.block.*;
 import com.parzivail.util.block.connecting.SelfConnectingBlock;
+import com.parzivail.util.block.connecting.SelfConnectingGlassBlock;
 import com.parzivail.util.block.connecting.SelfConnectingNodeBlock;
+import com.parzivail.util.block.connecting.SelfConnectingStainedGlassBlock;
 import com.parzivail.util.block.mutating.DryingBlock;
 import com.parzivail.util.block.mutating.DryingSlabBlock;
 import com.parzivail.util.block.mutating.DryingStairsBlock;
@@ -26,6 +28,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -117,7 +120,49 @@ public class SwgBlocks
 	public static class Glass
 	{
 		@RegistryName("imperial_glass")
-		public static final SelfConnectingGlassBlock Imperial = new SelfConnectingGlassBlock(AbstractBlock.Settings.of(Material.GLASS).strength(0.3F).sounds(BlockSoundGroup.GLASS).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+		public static final SelfConnectingGlassBlock Imperial = createSelfConnectingGlass();
+		@RegistryName("white_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock WhiteStainedImperial = createSelfConnectingStainedGlass(DyeColor.WHITE);
+		@RegistryName("orange_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock OrangeStainedImperial = createSelfConnectingStainedGlass(DyeColor.ORANGE);
+		@RegistryName("magenta_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock MagentaStainedImperial = createSelfConnectingStainedGlass(DyeColor.MAGENTA);
+		@RegistryName("light_blue_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock LightBlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_BLUE);
+		@RegistryName("yellow_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock YellowStainedImperial = createSelfConnectingStainedGlass(DyeColor.YELLOW);
+		@RegistryName("lime_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock LimeStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIME);
+		@RegistryName("pink_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock PinkStainedImperial = createSelfConnectingStainedGlass(DyeColor.PINK);
+		@RegistryName("gray_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock GrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.GRAY);
+		@RegistryName("light_gray_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock LightGrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_GRAY);
+		@RegistryName("cyan_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock CyanStainedImperial = createSelfConnectingStainedGlass(DyeColor.CYAN);
+		@RegistryName("purple_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock PurpleStainedImperial = createSelfConnectingStainedGlass(DyeColor.PURPLE);
+		@RegistryName("blue_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock BlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLUE);
+		@RegistryName("brown_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock BrownStainedImperial = createSelfConnectingStainedGlass(DyeColor.BROWN);
+		@RegistryName("green_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock GreenStainedImperial = createSelfConnectingStainedGlass(DyeColor.GREEN);
+		@RegistryName("red_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock RedStainedImperial = createSelfConnectingStainedGlass(DyeColor.RED);
+		@RegistryName("black_stained_imperial_glass")
+		public static final SelfConnectingStainedGlassBlock BlackStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLACK);
+
+		private static SelfConnectingGlassBlock createSelfConnectingGlass()
+		{
+			return new SelfConnectingGlassBlock(AbstractBlock.Settings.of(Material.GLASS).strength(0.3F).sounds(BlockSoundGroup.GLASS).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+		}
+
+		private static SelfConnectingStainedGlassBlock createSelfConnectingStainedGlass(DyeColor color)
+		{
+			return new SelfConnectingStainedGlassBlock(color, AbstractBlock.Settings.of(Material.GLASS, color).strength(0.3F).sounds(BlockSoundGroup.GLASS).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+		}
 	}
 
 	public static class Vent
@@ -285,7 +330,7 @@ public class SwgBlocks
 		@RegistryName("lommite_block")
 		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
 		@RegistryName("plasteel_block")
-		public static final Block Plasteel = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
+		public static final SelfConnectingBlock Plasteel = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
 		@RegistryName("titanium_block")
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).breakByTool(FabricToolTags.PICKAXES, 3).requiresTool());
 		@RegistryName("zersium_block")

@@ -119,8 +119,45 @@ public class Client implements ClientModInitializer
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialLightTall1, false, true, false, Resources.identifier("block/panel_imperial_base_connected"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialLightTall2, false, true, false, Resources.identifier("block/panel_imperial_base_connected"));
 
+		ModelRegistry.registerConnected(SwgBlocks.MaterialBlock.Plasteel);
+
 		ModelRegistry.registerConnected(SwgBlocks.Glass.Imperial);
-		RenderLayerHelper.addBlock(SwgBlocks.Glass.Imperial, RenderLayer.getTranslucent());
+		ModelRegistry.registerConnected(SwgBlocks.Glass.WhiteStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.OrangeStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.MagentaStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.LightBlueStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.YellowStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.LimeStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.PinkStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.GrayStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.LightGrayStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.CyanStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.PurpleStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.BlueStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.BrownStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.GreenStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.RedStainedImperial);
+		ModelRegistry.registerConnected(SwgBlocks.Glass.BlackStainedImperial);
+
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.Imperial, RenderLayer.getCutout());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.WhiteStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.OrangeStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.MagentaStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.LightBlueStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.YellowStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.LimeStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.PinkStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.GrayStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.LightGrayStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.CyanStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.PurpleStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.BlueStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.BrownStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.GreenStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.RedStainedImperial, RenderLayer.getTranslucent());
+		RenderLayerHelper.addBlock(SwgBlocks.Glass.BlackStainedImperial, RenderLayer.getTranslucent());
+
+		RenderLayerHelper.addBlock(SwgBlocks.Leaves.Sequoia, RenderLayer.getCutoutMipped());
 
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.FunnelFlower, RenderLayer.getCutout());
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.BlossomingFunnelFlower, RenderLayer.getCutout());

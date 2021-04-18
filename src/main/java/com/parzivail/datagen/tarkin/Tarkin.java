@@ -808,7 +808,6 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.DeathStickYellow).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.BlueMilk).build(assets);
-		ItemGenerator.basic(SwgItems.Food.BluePuffCube).build(assets);
 		ItemGenerator.basic(SwgItems.Food.BlueYogurt).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.QrikkiBread).build(assets);
@@ -901,6 +900,22 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.Imperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.WhiteStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.OrangeStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.MagentaStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LightBlueStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.YellowStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LimeStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.PinkStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.GrayStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LightGrayStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.CyanStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.PurpleStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlueStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BrownStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.GreenStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.RedStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlackStainedImperial).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Beskar).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Chromium).build(assets);
