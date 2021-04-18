@@ -28,15 +28,15 @@ public abstract class RecipeGenerator
 		       .build(assets);
 	}
 
-	public static void buildMetal(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible ingot, ItemConvertible block)
+	public static void buildMetal(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible rawOre, ItemConvertible ingot, ItemConvertible block)
 	{
-		buildOreToIngot(assets, experience, ore, ingot);
+		buildOreToIngot(assets, experience, ore, rawOre, ingot);
 		buildReversible9to1(assets, ingot, "ingot", block, "block");
 	}
 
-	public static void buildMetal(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible ingot, ItemConvertible nugget, ItemConvertible block)
+	public static void buildMetal(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible rawOre, ItemConvertible ingot, ItemConvertible nugget, ItemConvertible block)
 	{
-		buildOreToIngot(assets, experience, ore, ingot);
+		buildOreToIngot(assets, experience, ore, rawOre, ingot);
 		buildBlockIngotNugget(assets, block, ingot, nugget);
 	}
 
@@ -56,11 +56,15 @@ public abstract class RecipeGenerator
 		      .build(assets);
 	}
 
-	public static void buildOreToIngot(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible ingot)
+	public static void buildOreToIngot(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible rawOre, ItemConvertible ingot)
 	{
 		Cooking.smelting("ore", ore, ingot).experience(experience)
 		       .build(assets);
 		Cooking.blasting("blasting_ore", ore, ingot).experience(experience)
+		       .build(assets);
+		Cooking.smelting("raw_ore", rawOre, ingot).experience(experience)
+		       .build(assets);
+		Cooking.blasting("blasting_raw_ore", rawOre, ingot).experience(experience)
 		       .build(assets);
 	}
 
