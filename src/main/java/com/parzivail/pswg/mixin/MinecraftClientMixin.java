@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.File;
+import java.nio.file.Path;
 
 @Mixin(MinecraftClient.class)
 @Environment(EnvType.CLIENT)
@@ -36,8 +36,8 @@ public class MinecraftClientMixin
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void init(RunArgs args, CallbackInfo ci)
 	{
-		File remoteAssetDir = new File(args.directories.assetDir, "pswgRemoteAssets");
-		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.getPath());
+		Path remoteAssetDir = args.directories.assetDir.toPath().resolve("pswgRemoteAssets");
+		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.toString());
 		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", remoteAssetDir);
 		Client.stackedTextureProvider = new StackedTextureProvider(textureManager, "pswg:stacked");
 	}
@@ -50,7 +50,7 @@ public class MinecraftClientMixin
 		LeftClickHandler.handleInputEvents(ci, interactionManager);
 	}
 
-	@Inject(method = "Lnet/minecraft/client/MinecraftClient;doAttack()V", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "doAttack()V", at = @At("HEAD"), cancellable = true)
 	private void doAttack(CallbackInfo ci)
 	{
 		LeftClickHandler.doAttack(ci);

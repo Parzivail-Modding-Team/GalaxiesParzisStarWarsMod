@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -28,11 +28,11 @@ public class RemoteTextureProvider
 
 	private final TextureManager textureManager;
 	private final String identifierRoot;
-	private final File skinCacheDir;
+	private final Path skinCacheDir;
 	private final RemoteTextureResolver remoteTextureResolver;
 	private final LoadingCache<Identifier, RemoteTextureUrl> skinCache;
 
-	public RemoteTextureProvider(TextureManager textureManager, String identifierRoot, File skinCacheDir)
+	public RemoteTextureProvider(TextureManager textureManager, String identifierRoot, Path skinCacheDir)
 	{
 		this.textureManager = textureManager;
 		this.identifierRoot = identifierRoot;
@@ -89,9 +89,9 @@ public class RemoteTextureProvider
 						AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
 						if (!(abstractTexture instanceof RemoteTexture))
 						{
-							File file = new File(this.skinCacheDir, string.length() > 2 ? string.substring(0, 2) : "xx");
-							File file2 = new File(file, string);
-							RemoteTexture remoteTexture = new RemoteTexture(file2, remoteTextureUrl.getUrl(), DefaultSkinHelper.getTexture());
+							Path path = this.skinCacheDir.resolve(string.length() > 2 ? string.substring(0, 2) : "xx");
+							Path path2 = path.resolve(string);
+							RemoteTexture remoteTexture = new RemoteTexture(path2, remoteTextureUrl.getUrl(), DefaultSkinHelper.getTexture());
 							this.textureManager.registerTexture(identifier, remoteTexture);
 						}
 					});
