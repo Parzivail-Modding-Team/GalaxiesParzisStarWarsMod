@@ -53,8 +53,6 @@ public class SwgItems
 		public static final Item ZersiumRod = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("durasteel_rod")
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
-
-
 	}
 
 	public static class Hoe
@@ -237,6 +235,30 @@ public class SwgItems
 		public static final Item QrikkiBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.6F).build()).group(Galaxies.Tab));
 		@RegistryName("qrikki_waffle")
 		public static final Item QrikkiWaffle = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.7F).build()).group(Galaxies.Tab));
+
+		// TODO: set up food values for these
+		@RegistryName("ahrisa_bowl")
+		public static final Item AhrisaBowl = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("black_melon")
+		public static final Item BlackMelon = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("chasuka_seeds")
+		public static final Item ChasukaSeeds = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("desert_plums")
+		public static final Item DesertPlums = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("dried_poonten_grass_bushel")
+		public static final Item DriedPoontenGrass = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("haroun_bread")
+		public static final Item HarounBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("hkak_bean")
+		public static final Item HkakBean = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("pallie_fruit")
+		public static final Item PallieFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("pika_fruit")
+		public static final Item PikaFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("stripped_japor_branch")
+		public static final Item StrippedJaporBranch = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("tuber")
+		public static final Item Tuber = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 	}
 
 	public static class Blaster

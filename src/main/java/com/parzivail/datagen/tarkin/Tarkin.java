@@ -813,6 +813,18 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.QrikkiBread).build(assets);
 		ItemGenerator.basic(SwgItems.Food.QrikkiWaffle).build(assets);
 
+		ItemGenerator.basic(SwgItems.Food.AhrisaBowl).build(assets);
+		ItemGenerator.basic(SwgItems.Food.BlackMelon).build(assets);
+		ItemGenerator.basic(SwgItems.Food.ChasukaSeeds).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DesertPlums).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DriedPoontenGrass).build(assets);
+		ItemGenerator.basic(SwgItems.Food.HarounBread).build(assets);
+		ItemGenerator.basic(SwgItems.Food.HkakBean).build(assets);
+		ItemGenerator.basic(SwgItems.Food.PallieFruit).build(assets);
+		ItemGenerator.basic(SwgItems.Food.PikaFruit).build(assets);
+		ItemGenerator.basic(SwgItems.Food.StrippedJaporBranch).build(assets);
+		ItemGenerator.basic(SwgItems.Food.Tuber).build(assets);
+
 		ItemGenerator.basic(SwgItems.Hoe.Durasteel).build(assets);
 		ItemGenerator.basic(SwgItems.Hoe.Titanium).build(assets);
 		ItemGenerator.basic(SwgItems.Hoe.Beskar).build(assets);

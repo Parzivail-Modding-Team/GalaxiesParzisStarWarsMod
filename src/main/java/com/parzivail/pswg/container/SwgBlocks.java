@@ -194,7 +194,7 @@ public class SwgBlocks
 		public static final Block PoontenGrass = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("dried_poonten_grass")
 		public static final Block DriedPoontenGrass = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
-		@RegistryName("tuber")
+		@RegistryName("tuber_stalk")
 		public static final Block Tuber = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("chasuka")
 		@TabIgnore
