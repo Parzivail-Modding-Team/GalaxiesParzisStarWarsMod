@@ -49,8 +49,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	@Override
 	protected Discriminator getDiscriminator()
 	{
-		// TODO: change from debug value
-		return Discriminator.NONE;
+		return Discriminator.BLOCKSTATE;
 	}
 
 	@Override
