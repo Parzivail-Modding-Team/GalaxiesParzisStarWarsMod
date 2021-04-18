@@ -10,17 +10,16 @@ import net.minecraft.client.texture.TextureUtil;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.concurrent.CompletableFuture;
 
 @Environment(EnvType.CLIENT)
@@ -28,13 +27,13 @@ public class RemoteTexture extends ResourceTexture
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	@Nullable
-	private final File cacheFile;
+	private final Path cacheFile;
 	private final String url;
 	@Nullable
 	private CompletableFuture<?> loader;
 	private boolean loaded;
 
-	public RemoteTexture(@Nullable File cacheFile, String url, Identifier fallbackSkin)
+	public RemoteTexture(@Nullable Path cacheFile, String url, Identifier fallbackSkin)
 	{
 		super(fallbackSkin);
 		this.cacheFile = cacheFile;
@@ -84,11 +83,11 @@ public class RemoteTexture extends ResourceTexture
 		if (this.loader == null)
 		{
 			NativeImage nativeImage2;
-			if (this.cacheFile != null && this.cacheFile.isFile())
+			if (this.cacheFile != null && Files.isRegularFile(cacheFile))
 			{
 				LOGGER.debug("Loading http texture from local cache ({})", this.cacheFile);
-				FileInputStream fileInputStream = new FileInputStream(this.cacheFile);
-				nativeImage2 = this.loadTexture(fileInputStream);
+				InputStream inputStream = Files.newInputStream(this.cacheFile);
+				nativeImage2 = this.loadTexture(inputStream);
 			}
 			else
 			{
@@ -107,7 +106,7 @@ public class RemoteTexture extends ResourceTexture
 
 					try
 					{
-						httpURLConnection = (HttpURLConnection)(new URL(this.url)).openConnection(Client.minecraft.getNetworkProxy());
+						httpURLConnection = (HttpURLConnection)new URL(this.url).openConnection(Client.minecraft.getNetworkProxy());
 						httpURLConnection.setDoInput(true);
 						httpURLConnection.setDoOutput(false);
 						httpURLConnection.connect();
@@ -116,8 +115,8 @@ public class RemoteTexture extends ResourceTexture
 							InputStream inputStream2;
 							if (this.cacheFile != null)
 							{
-								FileUtils.copyInputStreamToFile(httpURLConnection.getInputStream(), this.cacheFile);
-								inputStream2 = new FileInputStream(this.cacheFile);
+								Files.copy(httpURLConnection.getInputStream(), this.cacheFile);
+								inputStream2 = Files.newInputStream(this.cacheFile);
 							}
 							else
 							{

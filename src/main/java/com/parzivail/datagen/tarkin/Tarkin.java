@@ -60,6 +60,7 @@ public class Tarkin
 						assets,
 						5.0F,
 						SwgBlocks.Ore.Beskar,
+						SwgItems.RawOre.Beskar,
 						SwgItems.Ingot.Beskar,
 						SwgBlocks.MaterialBlock.Beskar
 				);
@@ -68,6 +69,7 @@ public class Tarkin
 						assets,
 						1.0F,
 						SwgBlocks.Ore.Chromium,
+						SwgItems.RawOre.Chromium,
 						SwgItems.Ingot.Chromium,
 						SwgItems.Nugget.Chromium,
 						SwgBlocks.MaterialBlock.Chromium
@@ -77,6 +79,7 @@ public class Tarkin
 						assets,
 						4.0F,
 						SwgBlocks.Ore.Cortosis,
+						SwgItems.RawOre.Cortosis,
 						SwgItems.Ingot.Cortosis,
 						SwgBlocks.MaterialBlock.Cortosis
 				);
@@ -85,6 +88,7 @@ public class Tarkin
 						assets,
 						0.4F,
 						SwgBlocks.Ore.Desh,
+						SwgItems.RawOre.Desh,
 						SwgItems.Ingot.Desh,
 						SwgItems.Nugget.Desh,
 						SwgBlocks.MaterialBlock.Desh
@@ -94,6 +98,7 @@ public class Tarkin
 						assets,
 						0.7F,
 						SwgBlocks.Ore.Diatium,
+						SwgItems.RawOre.Diatium,
 						SwgItems.Ingot.Diatium,
 						SwgItems.Nugget.Diatium,
 						SwgBlocks.MaterialBlock.Diatium
@@ -105,6 +110,8 @@ public class Tarkin
 						assets,
 						0.7F,
 						SwgBlocks.Ore.Lommite,
+						// TODO: why is this in Crystal if it is a metal?
+						SwgItems.Crystal.Lommite,
 						SwgItems.Ingot.Lommite,
 						// TODO: nugget
 						SwgBlocks.MaterialBlock.Lommite
@@ -116,6 +123,7 @@ public class Tarkin
 						assets,
 						2.0F,
 						SwgBlocks.Ore.Titanium,
+						SwgItems.RawOre.Titanium,
 						SwgItems.Ingot.Titanium,
 						SwgItems.Nugget.Titanium,
 						SwgBlocks.MaterialBlock.Titanium
@@ -125,6 +133,7 @@ public class Tarkin
 						assets,
 						0.7F,
 						SwgBlocks.Ore.Zersium,
+						SwgItems.RawOre.Zersium,
 						SwgItems.Ingot.Zersium,
 						SwgItems.Nugget.Zersium,
 						SwgBlocks.MaterialBlock.Zersium
@@ -808,11 +817,22 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.DeathStickYellow).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.BlueMilk).build(assets);
-		ItemGenerator.basic(SwgItems.Food.BluePuffCube).build(assets);
 		ItemGenerator.basic(SwgItems.Food.BlueYogurt).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.QrikkiBread).build(assets);
 		ItemGenerator.basic(SwgItems.Food.QrikkiWaffle).build(assets);
+
+		ItemGenerator.basic(SwgItems.Food.AhrisaBowl).build(assets);
+		ItemGenerator.basic(SwgItems.Food.BlackMelon).build(assets);
+		ItemGenerator.basic(SwgItems.Food.ChasukaSeeds).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DesertPlums).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DriedPoontenGrass).build(assets);
+		ItemGenerator.basic(SwgItems.Food.HarounBread).build(assets);
+		ItemGenerator.basic(SwgItems.Food.HkakBean).build(assets);
+		ItemGenerator.basic(SwgItems.Food.PallieFruit).build(assets);
+		ItemGenerator.basic(SwgItems.Food.PikaFruit).build(assets);
+		ItemGenerator.basic(SwgItems.Food.StrippedJaporBranch).build(assets);
+		ItemGenerator.basic(SwgItems.Food.Tuber).build(assets);
 
 		ItemGenerator.basic(SwgItems.Hoe.Durasteel).build(assets);
 		ItemGenerator.basic(SwgItems.Hoe.Titanium).build(assets);
@@ -901,6 +921,22 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.Imperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.WhiteStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.OrangeStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.MagentaStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LightBlueStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.YellowStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LimeStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.PinkStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.GrayStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LightGrayStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.CyanStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.PurpleStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlueStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BrownStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.GreenStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.RedStainedImperial).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlackStainedImperial).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Beskar).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Chromium).build(assets);
@@ -916,14 +952,31 @@ public class Tarkin
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8).build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Ore.Beskar).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Chromium).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Cortosis).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Desh).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Diatium).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Lommite).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Titanium).build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Zersium).build(assets);
+		// TODO: adjust loot table to match vanilla raw ores
+		BlockGenerator.basic(SwgBlocks.Ore.Beskar)
+		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Beskar))
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Chromium)
+		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Chromium))
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Cortosis)
+		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Cortosis))
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Desh)
+		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Desh))
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Diatium)
+		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Diatium))
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Lommite)
+		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.Crystal.Lommite))
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Titanium)
+		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Titanium))
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Zersium)
+		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Zersium))
+		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Ore.Ionite)
 		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Ionite, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
 		              .build(assets);

@@ -49,8 +49,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	@Override
 	protected Discriminator getDiscriminator()
 	{
-		// TODO: change from debug value
-		return Discriminator.NONE;
+		return Discriminator.BLOCKSTATE;
 	}
 
 	@Override
@@ -66,6 +65,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		BlockModels blockModels = Client.minecraft.getBlockRenderManager().getModels();
 		BakedModel model = blockModels.getModel(SwgBlocks.Panel.LabWall.getDefaultState());
 
+		// TODO: blending is broken: translucent blocks become opaque when another translucent block is connected below them
 		for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
 		{
 			if (state != null && !(state.getBlock() instanceof ConnectingBlock))

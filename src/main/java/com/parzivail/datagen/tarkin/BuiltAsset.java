@@ -8,9 +8,9 @@ import com.parzivail.util.Lumberjack;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -114,12 +114,12 @@ public class BuiltAsset
 	{
 		Path dummyAsset = getRecipePath(Resources.identifier("dummy"));
 
-		File parentDir = dummyAsset.getParent().toFile();
+		Path parentDir = dummyAsset.getParent();
 
-		if (!parentDir.exists())
+		if (!Files.exists(parentDir))
 			return;
 
-		FileUtils.cleanDirectory(parentDir);
+		FileUtils.cleanDirectory(parentDir.toFile());
 	}
 
 	public void write()
@@ -128,11 +128,9 @@ public class BuiltAsset
 		{
 			Files.createDirectories(file.getParent());
 
-			String path = getFilename();
-
-			FileWriter writer = new FileWriter(path);
-			writer.write(GSON.toJson(contents));
-			writer.close();
+			try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
+				GSON.toJson(contents, writer);
+			}
 		}
 		catch (IOException e)
 		{

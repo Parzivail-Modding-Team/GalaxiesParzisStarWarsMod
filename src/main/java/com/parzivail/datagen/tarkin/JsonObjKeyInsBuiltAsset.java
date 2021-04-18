@@ -1,13 +1,14 @@
 package com.parzivail.datagen.tarkin;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -24,15 +25,15 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 	@Override
 	public void write()
 	{
-		File fFile = file.toFile();
-		String path = getFilename();
-
-		if (fFile.exists())
+		if (Files.exists(file))
 		{
 			try
 			{
-				FileReader reader = new FileReader(path);
-				JsonObject json = GSON.fromJson(reader, JsonObject.class);
+				JsonObject json;
+				try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8))
+				{
+					json = GSON.fromJson(reader, JsonObject.class);
+				}
 
 				JsonObject objContents = (JsonObject)contents;
 
@@ -42,10 +43,14 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 						json.add(pair.getKey(), pair.getValue());
 				}
 
-				JsonWriter jsonWriter = new JsonWriter(new FileWriter(path));
-				jsonWriter.setIndent("\t");
-				GSON.toJson(getSorted(json), jsonWriter);
-				jsonWriter.close();
+				try (
+						Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8);
+						JsonWriter jsonWriter = new JsonWriter(writer)
+				)
+				{
+					jsonWriter.setIndent("\t");
+					GSON.toJson(sortKeysRecursively(json), jsonWriter);
+				}
 			}
 			catch (IOException e)
 			{
@@ -58,9 +63,10 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 			{
 				Files.createDirectories(file.getParent());
 
-				FileWriter writer = new FileWriter(path);
-				writer.write(GSON.toJson(contents));
-				writer.close();
+				try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.US_ASCII))
+				{
+					GSON.toJson(contents, writer);
+				}
 			}
 			catch (IOException e)
 			{
@@ -69,7 +75,7 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 		}
 	}
 
-	private static JsonObject getSorted(JsonObject jsonObject)
+	private static JsonObject sortKeysRecursively(JsonObject jsonObject)
 	{
 		List<String> keySet = jsonObject.entrySet().stream().map(Map.Entry::getKey).sorted().collect(Collectors.toList());
 		JsonObject temp = new JsonObject();
@@ -79,13 +85,33 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 			JsonElement ele = jsonObject.get(key);
 			if (ele.isJsonObject())
 			{
-				ele = getSorted(ele.getAsJsonObject());
-				temp.add(key, ele);
+				ele = sortKeysRecursively(ele.getAsJsonObject());
 			}
 			else if (ele.isJsonArray())
-				temp.add(key, ele.getAsJsonArray());
-			else
-				temp.add(key, ele.getAsJsonPrimitive());
+			{
+				ele = sortKeysRecursively(ele.getAsJsonArray());
+			}
+			temp.add(key, ele);
+		}
+
+		return temp;
+	}
+
+	private static JsonArray sortKeysRecursively(JsonArray jsonArray)
+	{
+		final JsonArray temp = new JsonArray();
+
+		for (JsonElement ele : jsonArray)
+		{
+			if (ele.isJsonObject())
+			{
+				ele = sortKeysRecursively(ele.getAsJsonObject());
+			}
+			else if (ele.isJsonArray())
+			{
+				ele = sortKeysRecursively(ele.getAsJsonArray());
+			}
+			temp.add(ele);
 		}
 
 		return temp;
