@@ -134,7 +134,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
-		return this.getDefaultState().with(ROTATION, (MathHelper.floor((double)((ctx.getPlayerYaw() - 90) * divisions / 360.0F) + 0.5D) + 2) & (divisions - 1));
+		return this.getDefaultState().with(ROTATION, (MathHelper.floor((double)((ctx.getPlayerYaw() - 90) * 4 / 360.0F) + 0.5D) + 2) & 0b111);
 	}
 
 	protected BlockPos getController(BlockView world, BlockPos self)

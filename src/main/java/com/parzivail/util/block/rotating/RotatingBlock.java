@@ -18,12 +18,10 @@ public class RotatingBlock extends Block
 	}
 
 	public static final IntProperty ROTATION;
-	protected final int divisions;
 
 	public RotatingBlock(Settings settings)
 	{
 		super(settings);
-		this.divisions = 4;
 	}
 
 	public float getRotationDegrees(BlockState state)
@@ -33,22 +31,22 @@ public class RotatingBlock extends Block
 
 		int rotationIdx = state.get(ROTATION);
 
-		return -rotationIdx * (360f / divisions);
+		return -rotationIdx * 90;
 	}
 
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
-		return this.getDefaultState().with(ROTATION, MathHelper.floor((double)((ctx.getPlayerYaw() - 90) * divisions / 360.0F) + 0.5D) & (divisions - 1));
+		return this.getDefaultState().with(ROTATION, MathHelper.floor((double)((ctx.getPlayerYaw() - 90) * 4 / 360.0F) + 0.5D) & 0b11);
 	}
 
 	public BlockState rotate(BlockState state, BlockRotation rotation)
 	{
-		return state.with(ROTATION, rotation.rotate(state.get(ROTATION), 8));
+		return state.with(ROTATION, rotation.rotate(state.get(ROTATION), 4));
 	}
 
 	public BlockState mirror(BlockState state, BlockMirror mirror)
 	{
-		return state.with(ROTATION, mirror.mirror(state.get(ROTATION), 8));
+		return state.with(ROTATION, mirror.mirror(state.get(ROTATION), 4));
 	}
 
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
