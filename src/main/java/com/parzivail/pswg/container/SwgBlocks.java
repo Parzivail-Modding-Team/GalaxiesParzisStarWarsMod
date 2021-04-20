@@ -253,40 +253,44 @@ public class SwgBlocks
 
 	public static class Panel
 	{
-		@RegistryName("panel_imperial_base")
-		public static final Block ImperialBase = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.GRAY).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
-		@RegistryName("panel_imperial_black_base")
-		public static final Block ImperialBlackBase = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		@RegistryName("black_imperial_panel_blank")
+		public static final Block BlackImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		@RegistryName("gray_imperial_panel_blank")
+		public static final Block GrayImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MaterialColor.GRAY).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		@RegistryName("gray_imperial_panel_pattern_1")
+		public static final PillarBlock GrayImperialPanelPattern1 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_2")
+		public static final PillarBlock GrayImperialPanelPattern2 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_3")
+		public static final PillarBlock GrayImperialPanelPattern3 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_4")
+		public static final PillarBlock GrayImperialPanelPattern4 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_5")
+		public static final PillarBlock GrayImperialPanelPattern5 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
 
-		@RegistryName("panel_imperial_1")
-		public static final PillarBlock Imperial1 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_2")
-		public static final PillarBlock Imperial2 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_3")
-		public static final PillarBlock Imperial3 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-
-		@RegistryName("panel_imperial_light_1")
-		public static final PillarBlock ImperialLight1 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_light_2")
-		public static final PillarBlock ImperialLight2 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_light_3")
-		public static final PillarBlock ImperialLight3 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_light_4")
-		public static final PillarBlock ImperialLight4 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_light_5")
-		public static final PillarBlock ImperialLight5 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
-		@RegistryName("panel_imperial_light_6")
-		public static final PillarBlock ImperialLight6 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_half_1")
+		public static final PillarBlock GrayImperialLightHalf1 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_half_2")
+		public static final PillarBlock GrayImperialLightHalf2 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_half_3")
+		public static final PillarBlock GrayImperialLightHalf3 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_half_4")
+		public static final PillarBlock GrayImperialLightHalf4 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_half_5")
+		public static final PillarBlock GrayImperialLightHalf5 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_off_1")
+		public static final PillarBlock GrayImperialLightOff1 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_off_2")
+		public static final PillarBlock GrayImperialLightOff2 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_on_1")
+		public static final PillarBlock GrayImperialLightOn1 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_on_2")
+		public static final PillarBlock GrayImperialLightOn2 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
 
 		@RegistryName("gray_imperial_tall_light_1")
 		public static final SelfConnectingBlock ImperialLightTall1 = createLitConnectingPanel(MaterialColor.GRAY);
 		@RegistryName("gray_imperial_tall_light_2")
 		public static final SelfConnectingBlock ImperialLightTall2 = createLitConnectingPanel(MaterialColor.GRAY);
-
-		@RegistryName("panel_imperial_light_decoy")
-		public static final PillarBlock ImperialLightDecoy = createPanel(MaterialColor.GRAY, MaterialColor.GRAY);
-		@RegistryName("panel_imperial_light_off")
-		public static final PillarBlock ImperialLightOff = createPanel(MaterialColor.GRAY, MaterialColor.BLACK);
 
 		@RegistryName("lab_wall")
 		public static final Block LabWall = new Block(FabricBlockSettings.of(Material.STONE));

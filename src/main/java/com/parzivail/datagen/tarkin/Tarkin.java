@@ -981,20 +981,24 @@ public class Tarkin
 		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Ionite, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
 		              .build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Panel.ImperialBase).build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.ImperialBlackBase).build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank).build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelBlank).build(assets);
 
-		BlockGenerator.column(SwgBlocks.Panel.Imperial1, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_1")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.Imperial2, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_2")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.Imperial3, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_3")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.ImperialLight1, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_light_1")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.ImperialLight2, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_light_2")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.ImperialLight3, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_light_3")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.ImperialLight4, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_light_4")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.ImperialLight5, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_light_5")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.ImperialLight6, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_light_6")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.ImperialLightDecoy, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_light_decoy")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.ImperialLightOff, Resources.identifier("block/panel_imperial_base"), Resources.identifier("block/panel_imperial_light_off")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff1, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff2, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn1, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn2, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern1, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern2, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern3, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern4, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern5, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall1).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall2).build(assets);

@@ -1,0 +1,1 @@
+{"type":"minecraft:block","pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"pswg:black_imperial_panel_blank"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]}
