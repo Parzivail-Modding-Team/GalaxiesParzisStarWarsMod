@@ -269,15 +269,15 @@ public class SwgBlocks
 		public static final PillarBlock GrayImperialPanelPattern5 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
 
 		@RegistryName("gray_imperial_light_half_1")
-		public static final PillarBlock GrayImperialLightHalf1 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock GrayImperialLightHalf1 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY, 8);
 		@RegistryName("gray_imperial_light_half_2")
-		public static final PillarBlock GrayImperialLightHalf2 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock GrayImperialLightHalf2 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY, 8);
 		@RegistryName("gray_imperial_light_half_3")
-		public static final PillarBlock GrayImperialLightHalf3 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock GrayImperialLightHalf3 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY, 8);
 		@RegistryName("gray_imperial_light_half_4")
-		public static final PillarBlock GrayImperialLightHalf4 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock GrayImperialLightHalf4 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY, 8);
 		@RegistryName("gray_imperial_light_half_5")
-		public static final PillarBlock GrayImperialLightHalf5 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
+		public static final PillarBlock GrayImperialLightHalf5 = createLitPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY, 8);
 		@RegistryName("gray_imperial_light_off_1")
 		public static final PillarBlock GrayImperialLightOff1 = createPanel(MaterialColor.GRAY, MaterialColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_light_off_2")
@@ -295,11 +295,16 @@ public class SwgBlocks
 		@RegistryName("lab_wall")
 		public static final Block LabWall = new Block(FabricBlockSettings.of(Material.STONE));
 
-		private static PillarBlock createLitPanel(MaterialColor topMaterialColor, MaterialColor sideMaterialColor)
+		private static PillarBlock createLitPanel(MaterialColor topMaterialColor, MaterialColor sideMaterialColor, int luminance)
 		{
 			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> {
 				return blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor;
-			}).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> 15));
+			}).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> luminance));
+		}
+
+		private static PillarBlock createLitPanel(MaterialColor topMaterialColor, MaterialColor sideMaterialColor)
+		{
+			return createLitPanel(topMaterialColor, sideMaterialColor, 15);
 		}
 
 		private static SelfConnectingBlock createLitConnectingPanel(MaterialColor materialColor)
