@@ -58,24 +58,33 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		MeshBuilder meshBuilder = RENDERER.meshBuilder();
 		QuadEmitter quadEmitter = meshBuilder.getEmitter();
 
-		quadEmitter.colorIndex(1).spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF).material(MAT_DIFFUSE_CUTOUT);
-
 		final Random random = randomSupplier == null ? new Random(42) : randomSupplier.get();
 
 		BlockModels blockModels = Client.minecraft.getBlockRenderManager().getModels();
 		BakedModel model = blockModels.getModel(SwgBlocks.Panel.LabWall.getDefaultState());
 
-		// TODO: blending is broken: translucent blocks become opaque when another translucent block is connected below them
+		// TODO: fix item lighting
+//		if (state == null) // Assume it's an item
+//		{
+//			model = Client.minecraft.getItemRenderer().getHeldItemModel(new ItemStack(SwgBlocks.Panel.LabWall), null, null);
+//		}
+
 		for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
 		{
 			if (state != null && !(state.getBlock() instanceof ConnectingBlock))
 				continue;
 
 			final Direction cullFace = ModelHelper.faceFromIndex(i);
-			final BooleanProperty facingProp = ConnectingBlock.FACING_PROPERTIES.get(cullFace);
+			if (cullFace != null)
+			{
+				final BooleanProperty facingProp = ConnectingBlock.FACING_PROPERTIES.get(cullFace);
 
-			if (state != null && state.contains(facingProp) && state.get(facingProp))
-				continue;
+				if (state != null && state.get(facingProp))
+				{
+					quadEmitter.emit();
+					continue;
+				}
+			}
 
 			final List<BakedQuad> quads = model.getQuads(state, cullFace, random);
 
@@ -84,10 +93,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 
 			for (final BakedQuad q : quads)
 			{
-				quadEmitter.fromVanilla(q.getVertexData(), 0, false);
-				quadEmitter.cullFace(cullFace);
-				quadEmitter.nominalFace(q.getFace());
-				quadEmitter.colorIndex(q.getColorIndex());
+				quadEmitter.fromVanilla(q, null, cullFace);
 
 				Point subSpritePoint = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, cullFace, hConnect, vConnect, lConnect);
 
