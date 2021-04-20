@@ -7,7 +7,11 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class BlasterBoltEntity extends ThrownEntity
@@ -87,7 +91,28 @@ public class BlasterBoltEntity extends ThrownEntity
 	protected void onCollision(HitResult hitResult)
 	{
 		super.onCollision(hitResult);
-		if (!this.world.isClient)
+		if (this.world.isClient)
+		{
+			for (int i = 0; i < 8; i++)
+			{
+				Vec3d pos = hitResult.getPos().add(0, getHeight() / 2f, 0);
+
+				double vx = this.random.nextGaussian() * 0.02;
+				double vy = (this.random.nextGaussian() * 0.5 + 1) * 0.03f;
+				double vz = this.random.nextGaussian() * 0.02;
+
+				if (hitResult.getType() == HitResult.Type.BLOCK)
+				{
+					BlockHitResult blockHit = (BlockHitResult)hitResult;
+
+					if (blockHit.getSide() == Direction.DOWN)
+						vy *= -2;
+				}
+
+				this.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, vx, vy, vz);
+			}
+		}
+		else
 		{
 			this.world.sendEntityStatus(this, (byte)3);
 			this.remove();

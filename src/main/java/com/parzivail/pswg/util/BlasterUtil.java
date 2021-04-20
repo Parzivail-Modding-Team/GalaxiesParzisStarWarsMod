@@ -43,7 +43,7 @@ public class BlasterUtil
 		}
 		else if (blockHit != null)
 		{
-			// TODO: smoke puff
+			// TODO: smoke puff, blaster burn mark, etc server-side stuff
 		}
 	}
 }
