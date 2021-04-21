@@ -14,23 +14,27 @@ import net.minecraft.world.BlockView;
 public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor implements BlockEntityProvider
 {
 	private static final VoxelShape INTERACTION_SHAPE_CLOSED = VoxelShapes.union(
-			VoxelShapes.cuboid(0, 0, 0.25, 1, 0.0625, 0.75),
-			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
-			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(0.0625, 0.0625, 0.375, 1 - 0.0625, 1, 0.625));
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 1, 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 1 - 0.0625, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.375, 0, 0.0625, 0.625, 1 - 0.0625, 1 - 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 0.0625, 1)
+	);
 	private static final VoxelShape INTERACTION_SHAPE_OPEN = VoxelShapes.union(
-			VoxelShapes.cuboid(0, 0, 0.25, 1, 0.0625, 0.75),
-			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
-			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(1 - 1.5 * 0.0625, 0.0625, 0.375, 1 - 0.0625, 1, 0.625));
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 1, 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 1 - 0.0625, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.375, 0, 1 - 1.5 * 0.0625, 0.625, 1 - 0.0625, 1 - 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 0.0625, 1)
+	);
 	private static final VoxelShape COLLISION_SHAPE_CLOSED = VoxelShapes.union(
-			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
-			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(0.0625, 0.0625, 0.375, 1 - 0.0625, 1, 0.625));
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 1, 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 1 - 0.0625, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.375, 0, 0.0625, 0.625, 1 - 0.0625, 1 - 0.0625)
+	);
 	private static final VoxelShape COLLISION_SHAPE_OPEN = VoxelShapes.union(
-			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
-			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(1 - 1.5 * 0.0625, 0.0625, 0.375, 1 - 0.0625, 1, 0.625));
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 1, 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 1 - 0.0625, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.375, 0, 1 - 1.5 * 0.0625, 0.625, 1 - 0.0625, 1 - 0.0625)
+	);
 
 	private static final VoxelShape[] INTERACTION_SHAPES_CLOSED = new VoxelShape[4];
 	private static final VoxelShape[] INTERACTION_SHAPES_OPEN = new VoxelShape[4];

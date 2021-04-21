@@ -19,7 +19,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -52,23 +51,27 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	private static final int SIZE = 2;
 	private static final VoxelShape INTERACTION_SHAPE_CLOSED = VoxelShapes.union(
-			VoxelShapes.cuboid(0, 1 - 0.0625, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
-			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(0.0625, 0, 0.375, 1 - 0.0625, 1 - 0.0625, 0.625));
+			VoxelShapes.cuboid(0.25, 1 - 0.0625, 0, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 1, 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 1 - 0.0625, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.375, 0, 0.0625, 0.625, 1 - 0.0625, 1 - 0.0625)
+	);
 	private static final VoxelShape INTERACTION_SHAPE_OPEN = VoxelShapes.union(
-			VoxelShapes.cuboid(0, 1 - 0.0625, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
-			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(1 - 1.5 * 0.0625, 0, 0.375, 1 - 0.0625, 1 - 0.0625, 0.625));
+			VoxelShapes.cuboid(0.25, 1 - 0.0625, 0, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 1, 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 1 - 0.0625, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.375, 0, 1 - 1.5 * 0.0625, 0.625, 1 - 0.0625, 1 - 0.0625)
+	);
 	private static final VoxelShape COLLISION_SHAPE_CLOSED = VoxelShapes.union(
-			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
-			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(0.0625, 0, 0.375, 1 - 0.0625, 1 - 0.0625, 0.625));
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 1, 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 1 - 0.0625, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.375, 0, 0.0625, 0.625, 1 - 0.0625, 1 - 0.0625)
+	);
 	private static final VoxelShape COLLISION_SHAPE_OPEN = VoxelShapes.union(
-			VoxelShapes.cuboid(0, 0, 0.25, 0.0625, 1, 0.75),
-			VoxelShapes.cuboid(1 - 0.0625, 0, 0.25, 1, 1, 0.75),
-			VoxelShapes.cuboid(1 - 1.5 * 0.0625, 0, 0.375, 1 - 0.0625, 1 - 0.0625, 0.625));
+			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 1, 0.0625),
+			VoxelShapes.cuboid(0.25, 0, 1 - 0.0625, 0.75, 1, 1),
+			VoxelShapes.cuboid(0.375, 0, 1 - 1.5 * 0.0625, 0.625, 1 - 0.0625, 1 - 0.0625)
+	);
 
 	private static final VoxelShape[] INTERACTION_SHAPES_CLOSED = new VoxelShape[4];
 	private static final VoxelShape[] INTERACTION_SHAPES_OPEN = new VoxelShape[4];
@@ -118,7 +121,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 		BlockPos controllerPos = getController(world, pos);
 		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
-		int rotation = (state.get(ROTATION) + 3) % 4;
+		int rotation = (state.get(FACING).getHorizontal() + 1) % 4;
 
 		if (e == null || !e.isOpening() || e.isMoving())
 			return openShapes[rotation];
@@ -130,11 +133,6 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
 	{
 		return new ItemStack(SwgBlocks.Door.TatooineHomeController);
-	}
-
-	public BlockState getPlacementState(ItemPlacementContext ctx)
-	{
-		return this.getDefaultState().with(ROTATION, (MathHelper.floor((double)((ctx.getPlayerYaw() - 90) * 4 / 360.0F) + 0.5D) + 2) & 0b111);
 	}
 
 	protected BlockPos getController(BlockView world, BlockPos self)
@@ -215,7 +213,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 			for (int i = 1; i < SIZE; i++)
 			{
 				pos = pos.up();
-				world.setBlockState(pos, SwgBlocks.Door.TatooineHomeFiller.getDefaultState().with(ROTATION, state.get(ROTATION)).with(PART, i), 3);
+				world.setBlockState(pos, SwgBlocks.Door.TatooineHomeFiller.getDefaultState().with(FACING, state.get(FACING)).with(PART, i), 3);
 			}
 
 			world.updateNeighbors(pos, Blocks.AIR);

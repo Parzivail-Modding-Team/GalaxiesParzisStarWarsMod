@@ -2,10 +2,11 @@ package com.parzivail.pswg.block.rigs;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
-import com.parzivail.pswg.block.BlockTatooineHomeDoor;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.rig.pr3r.PR3RFile;
+import com.parzivail.util.block.rotating.RotatingBlock;
+import com.parzivail.util.math.ClientMathUtil;
 import com.parzivail.util.math.Ease;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.math.MatrixStack;
@@ -64,7 +65,10 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 		World world = target.getWorld();
 		BlockPos pos = target.getPos();
 		BlockState block = world.getBlockState(pos);
-		stack.multiply(new Quaternion(0, (block.get(BlockTatooineHomeDoor.ROTATION) - 1) * -90, 0, true));
+		stack.multiply(ClientMathUtil.getRotation(block.get(RotatingBlock.FACING)));
+
+		// TODO: model isn't oriented to face +X
+		stack.multiply(new Quaternion(0, -90, 0, true));
 
 		stack.multiply(new Quaternion(-90, 0, 0, true));
 

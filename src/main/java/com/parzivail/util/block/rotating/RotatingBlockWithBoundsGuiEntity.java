@@ -23,6 +23,7 @@ public class RotatingBlockWithBoundsGuiEntity extends RotatingBlockWithGuiEntity
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
-		return VoxelShapeUtil.rotate(shape, state.get(ROTATION) % 4);
+		// East isn't zero, but everything defaults to facing east
+		return VoxelShapeUtil.rotate(shape, (state.get(FACING).getHorizontal() + 1) % 4);
 	}
 }

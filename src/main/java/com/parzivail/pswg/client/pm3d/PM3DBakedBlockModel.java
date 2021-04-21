@@ -195,7 +195,9 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 		if (state.getBlock() instanceof RotatingBlock)
 		{
 			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
-			mat.multiply(new Quaternion(0, ((RotatingBlock)state.getBlock()).getRotationDegrees(state), 0, true));
+
+			mat.multiply(ClientMathUtil.getRotation(state.get(RotatingBlock.FACING)));
+
 			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
 		}
 
