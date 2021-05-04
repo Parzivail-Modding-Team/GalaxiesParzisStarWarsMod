@@ -48,7 +48,7 @@ def getVersionName()
 	}
 	final version = stdout.toString().trim()
 
-	final pattern = Pattern.compile(/^([0-9.]+)\+([0-9.]+)((?:-[0-9]+-[0-9a-f]+)?(?:-dirty)?)?$/)
+	final pattern = Pattern.compile(/^([0-9.]+)\+([0-9.]+)((?:-g[0-9]+-[0-9a-f]+)?(?:-dirty)?)?$/)
 	if (!version.startsWith("1.16"))
 	{
 		final m = pattern.matcher(version)
