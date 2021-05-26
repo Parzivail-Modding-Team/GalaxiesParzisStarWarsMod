@@ -3,7 +3,9 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
+import com.parzivail.pswg.entity.fish.FaaEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
@@ -22,12 +24,27 @@ public class SwgEntities
 				.create(SpawnGroup.MISC, T65BXwing::new)
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackRangeBlocks(128)
-//				.forceTrackedVelocityUpdates(true)
 				.build());
 
 		static void register()
 		{
 			entityTypes.add(T65bXwing);
+		}
+	}
+
+	public static class Fish
+	{
+
+		public static final EntityType<FaaEntity> Faa = Registry.register(
+				Registry.ENTITY_TYPE,
+				Resources.identifier("faa"),
+				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, FaaEntity::new).dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build()
+		);
+
+		static void register()
+		{
+			entityTypes.add(Faa);
+			FabricDefaultAttributeRegistry.register(Faa, FaaEntity.createMobAttributes());
 		}
 	}
 
@@ -37,14 +54,12 @@ public class SwgEntities
 				.<BlasterBoltEntity>create(SpawnGroup.MISC, BlasterBoltEntity::new)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
 				.trackRangeBlocks(40)
-				//				.forceTrackedVelocityUpdates(true)
 				.build());
 
 		public static final EntityType<ThrownLightsaberEntity> ThrownLightsaber = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("thrown_lightsaber"), FabricEntityTypeBuilder
 				.<ThrownLightsaberEntity>create(SpawnGroup.MISC, ThrownLightsaberEntity::new)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
 				.trackRangeBlocks(40)
-				//				.forceTrackedVelocityUpdates(true)
 				.build());
 
 		static void register()
@@ -57,6 +72,7 @@ public class SwgEntities
 	public static void register()
 	{
 		Ship.register();
+		Fish.register();
 		Misc.register();
 	}
 }

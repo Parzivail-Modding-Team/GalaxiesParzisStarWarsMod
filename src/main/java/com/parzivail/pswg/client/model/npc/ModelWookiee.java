@@ -1,10 +1,13 @@
 package com.parzivail.pswg.client.model.npc;
 
 import com.parzivail.pswg.access.util.PlayerEntityModelAccessUtil;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.LivingEntity;
 
+@Environment(EnvType.CLIENT)
 public class ModelWookiee<T extends LivingEntity> extends PlayerEntityModel<T>
 {
 	private static final int TEXTURE_WIDTH = 96;

@@ -1,9 +1,12 @@
 package com.parzivail.pswg.client.model.npc;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.LivingEntity;
 
+@Environment(EnvType.CLIENT)
 public class ModelBith<T extends LivingEntity> extends PlayerEntityModel<T>
 {
 	private static final int TEXTURE_WIDTH = 96;

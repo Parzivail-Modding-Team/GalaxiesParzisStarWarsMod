@@ -8,6 +8,8 @@ import com.parzivail.util.client.SubSprite;
 import com.parzivail.util.client.model.ClonableUnbakedModel;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.math.Point;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
@@ -30,6 +32,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Environment(EnvType.CLIENT)
 public class ConnectedTextureModel extends DynamicBakedModel
 {
 	private final boolean hConnect;
