@@ -1,6 +1,5 @@
 package com.parzivail.pswg.client.model.fish;
 
-import com.parzivail.pswg.entity.fish.FaaEntity;
 import com.parzivail.util.client.ModelPartUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -8,6 +7,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.passive.FishEntity;
 import net.minecraft.util.math.MathHelper;
 
 /**
@@ -15,7 +15,7 @@ import net.minecraft.util.math.MathHelper;
  * Created using Tabula 8.0.0
  */
 @Environment(EnvType.CLIENT)
-public class FaaModel extends EntityModel<FaaEntity>
+public class FaaModel<T extends FishEntity> extends EntityModel<T>
 {
 	public ModelPart body;
 	public ModelPart hornRight;
@@ -93,7 +93,7 @@ public class FaaModel extends EntityModel<FaaEntity>
 	}
 
 	@Override
-	public void setAngles(FaaEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)
+	public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)
 	{
 		float f = 1.0F;
 		if (!entity.isTouchingWater())
