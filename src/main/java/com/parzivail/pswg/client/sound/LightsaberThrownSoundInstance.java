@@ -36,7 +36,7 @@ public class LightsaberThrownSoundInstance extends MovingSoundInstance
 
 	public void tick()
 	{
-		if (this.entity.removed)
+		if (this.entity.isRemoved())
 		{
 			this.setDone();
 			return;

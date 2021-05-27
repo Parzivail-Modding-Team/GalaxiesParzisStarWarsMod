@@ -71,7 +71,7 @@ public class DimensionTeleporter
 				entity.refreshPositionAndAngles(x, y, z, f, g);
 				entity.setHeadYaw(f);
 				world.onDimensionChanged(entity);
-				other.removed = true;
+				other.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
 			}
 		}
 

@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
@@ -15,9 +15,9 @@ public class PlayerEntityRendererWithModel extends PlayerEntityRenderer
 {
 	private Identifier overrideTexture;
 
-	public PlayerEntityRendererWithModel(EntityRenderDispatcher entityRenderDispatcher, PlayerEntityModel<AbstractClientPlayerEntity> model)
+	public PlayerEntityRendererWithModel(EntityRendererFactory.Context ctx, boolean slim, PlayerEntityModel<AbstractClientPlayerEntity> model)
 	{
-		super(entityRenderDispatcher);
+		super(ctx, slim);
 		this.model = model;
 	}
 

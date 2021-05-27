@@ -49,8 +49,8 @@ public class LightsaberRenderer
 	{
 		VertexConsumer vc;
 
-		float totalLength = baseLength * lengthCoefficient;
-		float shake = (1.1f - lengthCoefficient) * 0.004f;
+		var totalLength = baseLength * lengthCoefficient;
+		var shake = (1.1f - lengthCoefficient) * 0.004f;
 
 		double dX = (float)Resources.RANDOM.nextGaussian() * shake;
 		double dY = (float)Resources.RANDOM.nextGaussian() * shake;
@@ -58,7 +58,7 @@ public class LightsaberRenderer
 
 		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_CORE);
 
-		final float offset = (float)Resources.RANDOM.nextGaussian();
+		final var offset = (float)Resources.RANDOM.nextGaussian();
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		renderCore(totalLength, coreColor, unstable, offset, cap);
@@ -79,29 +79,29 @@ public class LightsaberRenderer
 		if (bladeLength == 0)
 			return;
 
-		final int segments = unstable ? 15 : 1;
-		final float dSegments = 1f / segments;
-		final float dLength = bladeLength / segments;
+		final var segments = unstable ? 15 : 1;
+		final var dSegments = 1f / segments;
+		final var dLength = bladeLength / segments;
 
-		final float solidThickness = 0.027f;
-		final float cappedThickness = 0.02f;
-		final float topThickness = cap ? cappedThickness : solidThickness;
+		final var solidThickness = 0.027f;
+		final var cappedThickness = 0.02f;
+		final var topThickness = cap ? cappedThickness : solidThickness;
 
 		VertexConsumerBuffer.Instance.setColor(coreColor);
 
 		if (cap)
 		{
-			float dTRoundBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * (segments + 1)) * 0.005f : 0;
+			var dTRoundBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * (segments + 1)) * 0.005f : 0;
 			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, 0.01f, cappedThickness + dTRoundBottom, 0, bladeLength + 0.025f, 0, 0, bladeLength, 0);
 		}
 
-		for (int i = 0; i < segments; i++)
+		for (var i = 0; i < segments; i++)
 		{
-			float topThicknessLerp = MathHelper.lerp(dSegments * (i + 1), solidThickness, topThickness);
-			float bottomThicknessLerp = MathHelper.lerp(dSegments * i, solidThickness, topThickness);
+			var topThicknessLerp = MathHelper.lerp(dSegments * (i + 1), solidThickness, topThickness);
+			var bottomThicknessLerp = MathHelper.lerp(dSegments * i, solidThickness, topThickness);
 
-			float dTTop = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * (i + 1)) * 0.005f : 0;
-			float dTBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * i) * 0.005f : 0;
+			var dTTop = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * (i + 1)) * 0.005f : 0;
+			var dTBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * i) * 0.005f : 0;
 
 			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
 		}
@@ -112,9 +112,9 @@ public class LightsaberRenderer
 		if (bladeLength == 0)
 			return;
 
-		float thicknessTop = cap ? 0.14f : 0.16f;
+		var thicknessTop = cap ? 0.14f : 0.16f;
 
-		for (int layer = 22; layer > 12; layer--)
+		for (var layer = 22; layer > 12; layer--)
 		{
 			VertexConsumerBuffer.Instance.setColor(bladeColor, (int)MathUtil.remap(layer, 12, 22, 0, 128));
 

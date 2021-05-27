@@ -6,7 +6,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.data.SwgBlasterManager;
-import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
@@ -32,10 +31,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.util.Map;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider
 {
@@ -53,7 +49,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
 	{
-		final ItemStack stack = player.getStackInHand(hand);
+		final var stack = player.getStackInHand(hand);
 
 		if (!world.isClient)
 			BlasterTag.mutate(stack, t -> t.isAimingDownSights = !t.isAimingDownSights);
@@ -69,9 +65,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static Identifier getBlasterModel(ItemStack stack)
 	{
-		NbtCompound tag = stack.getOrCreateTag();
+		var tag = stack.getOrCreateTag();
 
-		String blasterModel = tag.getString("model");
+		var blasterModel = tag.getString("model");
 		if (blasterModel.isEmpty())
 			blasterModel = "pswg:a280";
 
@@ -80,17 +76,17 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static BlasterDescriptor getBlasterDescriptor(World world, ItemStack stack)
 	{
-		SwgBlasterManager blasterManager = SwgBlasterManager.get(world);
+		var blasterManager = SwgBlasterManager.get(world);
 		return blasterManager.getBlaster(getBlasterModel(stack));
 	}
 
 	@Override
 	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity player, Hand hand)
 	{
-		final ItemStack stack = player.getStackInHand(hand);
+		final var stack = player.getStackInHand(hand);
 
-		BlasterDescriptor bd = getBlasterDescriptor(world, stack);
-		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
+		var bd = getBlasterDescriptor(world, stack);
+		var bt = new BlasterTag(stack.getOrCreateTag());
 
 		if (!bt.isReady())
 			return TypedActionResult.fail(stack);
@@ -105,16 +101,16 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				return TypedActionResult.fail(stack);
 			}
 
-			BlasterCoolingBypassProfile profile = bd.cooling;
+			var profile = bd.cooling;
 
-			final float cooldownTime = bt.overheatTimer / (float)bd.heat.capacity;
+			final var cooldownTime = bt.overheatTimer / (float)bd.heat.capacity;
 
-			final float primaryBypassStart = profile.primaryBypassTime - profile.primaryBypassTolerance;
-			final float primaryBypassEnd = profile.primaryBypassTime + profile.primaryBypassTolerance;
-			final float secondaryBypassStart = profile.secondaryBypassTime - profile.secondaryBypassTolerance;
-			final float secondaryBypassEnd = profile.secondaryBypassTime + profile.secondaryBypassTolerance;
+			final var primaryBypassStart = profile.primaryBypassTime - profile.primaryBypassTolerance;
+			final var primaryBypassEnd = profile.primaryBypassTime + profile.primaryBypassTolerance;
+			final var secondaryBypassStart = profile.secondaryBypassTime - profile.secondaryBypassTolerance;
+			final var secondaryBypassEnd = profile.secondaryBypassTime + profile.secondaryBypassTolerance;
 
-			TypedActionResult<ItemStack> result = TypedActionResult.fail(stack);
+			var result = TypedActionResult.fail(stack);
 
 			if (profile.primaryBypassTolerance > 0 && cooldownTime >= primaryBypassStart && cooldownTime <= primaryBypassEnd)
 			{
@@ -145,7 +141,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		{
 			if (bt.shotsRemaining <= 0)
 			{
-				Pair<Integer, BlasterPowerPack> nextPack = getAnotherPack(player);
+				var nextPack = getAnotherPack(player);
 
 				if (nextPack == null)
 				{
@@ -160,7 +156,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				else if (!world.isClient)
 				{
 					bt.shotsRemaining = nextPack.getRight().numShots;
-					player.inventory.removeStack(nextPack.getLeft(), 1);
+					player.getInventory().removeStack(nextPack.getLeft(), 1);
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.RELOAD, SoundCategory.PLAYERS, 1f, 1f);
 				}
 			}
@@ -180,15 +176,15 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 		if (!world.isClient)
 		{
-			Matrix4f m = new Matrix4f();
+			var m = new Matrix4f();
 			Matrix4fAccessUtil.loadIdentity(m);
 
-			Matrix4fAccessUtil.multiply(m, QuatUtil.of(0, -player.yaw, 0, true));
-			Matrix4fAccessUtil.multiply(m, QuatUtil.of(player.pitch, 0, 0, true));
+			Matrix4fAccessUtil.multiply(m, QuatUtil.of(0, -player.getPitch(), 0, true));
+			Matrix4fAccessUtil.multiply(m, QuatUtil.of(player.getYaw(), 0, 0, true));
 
 			// TODO
-			float hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
-			float vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
+			var hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
+			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
 
 			float hSR = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
 			float vSR = 1; // - bd.getBarrel().getVerticalSpreadReduction();
@@ -196,14 +192,14 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			Matrix4fAccessUtil.multiply(m, QuatUtil.of(0, hS * hSR, 0, true));
 			Matrix4fAccessUtil.multiply(m, QuatUtil.of(vS * vSR, 0, 0, true));
 
-			Vec3d fromDir = Matrix4fAccessUtil.transform(com.parzivail.util.math.MathUtil.POSZ, m);
+			var fromDir = Matrix4fAccessUtil.transform(com.parzivail.util.math.MathUtil.POSZ, m);
 			world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
 
-			float range = bd.range;
-			float damage = bd.damage;
+			var range = bd.range;
+			var damage = bd.damage;
 
 			BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
-				entity.setProperties(player, player.pitch + vS * vSR, player.yaw + hS * hSR, 0.0F, 4.0F, 0);
+				entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 4.0F, 0);
 				entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 			});
 
@@ -221,13 +217,13 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public String getTranslationKey(ItemStack stack)
 	{
-		NbtCompound tag = stack.getOrCreateTag();
+		var tag = stack.getOrCreateTag();
 
-		String blasterModel = tag.getString("model");
+		var blasterModel = tag.getString("model");
 		if (blasterModel.isEmpty())
 			blasterModel = "pswg:a280";
 
-		Identifier bdId = new Identifier(blasterModel);
+		var bdId = new Identifier(blasterModel);
 
 		return "item." + bdId.getNamespace() + ".blaster_" + bdId.getPath();
 	}
@@ -235,7 +231,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public NbtCompound getDefaultTag(ItemConvertible item, int count)
 	{
-		NbtCompound tag = new NbtCompound();
+		var tag = new NbtCompound();
 
 		tag.putString("model", Resources.identifier("a280").toString());
 
@@ -248,15 +244,15 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (group != Galaxies.Tab)
 			return;
 
-		SwgBlasterManager blasterLoader = Client.getBlasterLoader();
+		var blasterLoader = Client.getBlasterLoader();
 
-		for (Map.Entry<Identifier, BlasterDescriptor> entry : blasterLoader.getBlasters().entrySet())
+		for (var entry : blasterLoader.getBlasters().entrySet())
 			stacks.add(forType(entry.getValue()));
 	}
 
 	private ItemStack forType(BlasterDescriptor blasterDescriptor)
 	{
-		ItemStack stack = new ItemStack(this);
+		var stack = new ItemStack(this);
 
 		stack.getOrCreateTag().putString("model", blasterDescriptor.id.toString());
 
@@ -265,10 +261,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(PlayerEntity player)
 	{
-		for (int i = 0; i < player.inventory.size(); i++)
+		for (var i = 0; i < player.getInventory().size(); i++)
 		{
-			ItemStack s = player.inventory.getStack(i);
-			BlasterPowerPack a = BlasterPowerPackItem.getPackType(s);
+			var s = player.getInventory().getStack(i);
+			var a = BlasterPowerPackItem.getPackType(s);
 			if (a == null)
 				continue;
 
@@ -280,7 +276,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		BlasterDescriptor bd = getBlasterDescriptor(world, stack);
+		var bd = getBlasterDescriptor(world, stack);
 
 		BlasterTag.mutate(stack, blasterTag -> {
 			if (blasterTag.overheatTimer > 0)
@@ -296,15 +292,15 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
-		Identifier idOriginal = getBlasterModel(original);
-		Identifier idUpdated = getBlasterModel(updated);
+		var idOriginal = getBlasterModel(original);
+		var idUpdated = getBlasterModel(updated);
 		return idOriginal.equals(idUpdated);
 	}
 
 	@Override
 	public double getFovMultiplier(ItemStack stack, World world, PlayerEntity entity)
 	{
-		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
+		var bt = new BlasterTag(stack.getOrCreateTag());
 
 		if (bt.isAimingDownSights)
 			return 0.2f;

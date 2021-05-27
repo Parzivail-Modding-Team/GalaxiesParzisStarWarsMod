@@ -167,9 +167,9 @@ public class Client implements ClientModInitializer
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> ModelRegistry.INSTANCE);
 
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.T65bXwing, (ctx) -> new T65BXwingRenderer(ctx.getRenderDispatcher()));
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, (ctx) -> new BlasterBoltRenderer(ctx.getRenderDispatcher()));
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, (ctx) -> new ThrownLightsaberRenderer(ctx.getRenderDispatcher(), ctx.getItemRenderer()));
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.T65bXwing, T65BXwingRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, BlasterBoltRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, ThrownLightsaberRenderer::new);
 //		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Faa, (ctx) -> new FaaEntityRenderer(dispatcher));
 //		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Laa, (ctx) -> new LaaEntityRenderer(dispatcher));
 //		EntityRendererRegistry.INSTANCE.register(SwgEntities.Amphibian.Worrt, (ctx) -> new WorrtEntityRenderer(dispatcher));

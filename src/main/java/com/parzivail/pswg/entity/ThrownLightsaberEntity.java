@@ -63,12 +63,12 @@ public class ThrownLightsaberEntity extends ThrownEntity
 	@Override
 	public void tick()
 	{
-		final byte life = (byte)(getLife() + 1);
+		final var life = (byte)(getLife() + 1);
 		setLife(life);
 
 		if (life >= 60)
 		{
-			this.remove();
+			this.discard();
 			return;
 		}
 
@@ -81,7 +81,7 @@ public class ThrownLightsaberEntity extends ThrownEntity
 		if (!this.world.isClient)
 		{
 			this.world.sendEntityStatus(this, (byte)3);
-			this.remove();
+			this.discard();
 		}
 	}
 }

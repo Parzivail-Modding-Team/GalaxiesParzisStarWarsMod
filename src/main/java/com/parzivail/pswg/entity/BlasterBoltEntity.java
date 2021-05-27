@@ -11,7 +11,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class BlasterBoltEntity extends ThrownEntity
@@ -30,7 +29,7 @@ public class BlasterBoltEntity extends ThrownEntity
 
 	public void setRange(float range)
 	{
-		int ticksToLive = (int)(range / getVelocity().length());
+		var ticksToLive = (int)(range / getVelocity().length());
 		setLife(ticksToLive);
 	}
 
@@ -73,17 +72,17 @@ public class BlasterBoltEntity extends ThrownEntity
 	@Override
 	public void tick()
 	{
-		final int life = getLife() - 1;
+		final var life = getLife() - 1;
 		setLife(life);
 
 		if (life <= 0)
 		{
-			this.remove();
+			this.discard();
 			return;
 		}
 
-		pitch = 0;//(float)Math.asin(-fromDir.y) * MathUtil.toDegreesf;
-		yaw = 0;//(float)Math.atan2(fromDir.x, fromDir.z) * MathUtil.toDegreesf;
+		setPitch(0);
+		setYaw(0);
 
 		super.tick();
 	}
@@ -93,17 +92,17 @@ public class BlasterBoltEntity extends ThrownEntity
 		super.onCollision(hitResult);
 		if (this.world.isClient)
 		{
-			for (int i = 0; i < 8; i++)
+			for (var i = 0; i < 8; i++)
 			{
-				Vec3d pos = hitResult.getPos().add(0, getHeight() / 2f, 0);
+				var pos = hitResult.getPos().add(0, getHeight() / 2f, 0);
 
-				double vx = this.random.nextGaussian() * 0.02;
-				double vy = (this.random.nextGaussian() * 0.5 + 1) * 0.03f;
-				double vz = this.random.nextGaussian() * 0.02;
+				var vx = this.random.nextGaussian() * 0.02;
+				var vy = (this.random.nextGaussian() * 0.5 + 1) * 0.03f;
+				var vz = this.random.nextGaussian() * 0.02;
 
 				if (hitResult.getType() == HitResult.Type.BLOCK)
 				{
-					BlockHitResult blockHit = (BlockHitResult)hitResult;
+					var blockHit = (BlockHitResult)hitResult;
 
 					if (blockHit.getSide() == Direction.DOWN)
 						vy *= -2;
@@ -115,7 +114,7 @@ public class BlasterBoltEntity extends ThrownEntity
 		else
 		{
 			this.world.sendEntityStatus(this, (byte)3);
-			this.remove();
+			this.discard();
 		}
 	}
 }

@@ -4,7 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.model.npc.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
-import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.component.SwgPersistentComponents;

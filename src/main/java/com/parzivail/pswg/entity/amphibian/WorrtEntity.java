@@ -9,7 +9,6 @@ import net.minecraft.entity.ai.goal.FleeEntityGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
-import net.minecraft.entity.ai.pathing.Path;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
@@ -66,10 +65,10 @@ public class WorrtEntity extends AnimalEntity
 	{
 		if (!this.horizontalCollision && (!this.moveControl.isMoving() || !(this.moveControl.getTargetY() > this.getY() + 0.5D)))
 		{
-			Path path = this.navigation.getCurrentPath();
+			var path = this.navigation.getCurrentPath();
 			if (path != null && !path.isFinished())
 			{
-				Vec3d vec3d = path.getNodePosition(this);
+				var vec3d = path.getNodePosition(this);
 				if (vec3d.y > this.getY() + 0.5D)
 				{
 					return 0.5F;
@@ -87,7 +86,7 @@ public class WorrtEntity extends AnimalEntity
 	protected void jump()
 	{
 		super.jump();
-		double d = this.moveControl.getSpeed();
+		var d = this.moveControl.getSpeed();
 		if (d > 0.0D)
 		{
 			double e = squaredHorizontalLength(this.getVelocity());
@@ -133,7 +132,7 @@ public class WorrtEntity extends AnimalEntity
 
 	public void mobTick()
 	{
-		byte airborneTimer = getAirborneTimer();
+		var airborneTimer = getAirborneTimer();
 		if (!onGround)
 		{
 			if (airborneTimer < 0)
@@ -170,13 +169,13 @@ public class WorrtEntity extends AnimalEntity
 				this.scheduleJump();
 			}
 
-			WorrtEntity.WorrtJumpControl worrtJumpControl = (WorrtEntity.WorrtJumpControl)this.jumpControl;
+			var worrtJumpControl = (WorrtEntity.WorrtJumpControl)this.jumpControl;
 			if (!worrtJumpControl.isActive())
 			{
 				if (this.moveControl.isMoving() && this.ticksUntilJump == 0)
 				{
-					Path path = this.navigation.getCurrentPath();
-					Vec3d vec3d = new Vec3d(this.moveControl.getTargetX(), this.moveControl.getTargetY(), this.moveControl.getTargetZ());
+					var path = this.navigation.getCurrentPath();
+					var vec3d = new Vec3d(this.moveControl.getTargetX(), this.moveControl.getTargetY(), this.moveControl.getTargetZ());
 					if (path != null && !path.isFinished())
 					{
 						vec3d = path.getNodePosition(this);

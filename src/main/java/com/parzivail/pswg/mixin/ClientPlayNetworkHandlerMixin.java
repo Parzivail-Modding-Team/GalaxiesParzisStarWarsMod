@@ -10,7 +10,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
@@ -38,19 +37,19 @@ public class ClientPlayNetworkHandlerMixin
 	{
 		if (SwgEntities.entityTypes.contains(type))
 		{
-			Entity entity = type.create(this.world);
+			var entity = type.create(this.world);
 
 			assert entity != null;
 
 			if (entity instanceof ThrownLightsaberEntity)
 				Client.minecraft.getSoundManager().play(new LightsaberThrownSoundInstance((ThrownLightsaberEntity)entity));
 
-			int i = packet.getId();
+			var i = packet.getId();
 			entity.setVelocity(Vec3d.ZERO);
 			entity.setPosition(x, y, z);
 			entity.updateTrackedPosition(x, y, z);
-			entity.pitch = (float)(packet.getPitch() * 360) / 256.0F;
-			entity.yaw = (float)(packet.getYaw() * 360) / 256.0F;
+			entity.setPitch((float)(packet.getPitch() * 360) / 256.0F);
+			entity.setYaw((float)(packet.getYaw() * 360) / 256.0F);
 			entity.setEntityId(i);
 			entity.setUuid(packet.getUuid());
 			this.world.addEntity(i, entity);

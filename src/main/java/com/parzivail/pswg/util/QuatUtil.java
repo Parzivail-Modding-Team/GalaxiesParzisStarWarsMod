@@ -216,20 +216,20 @@ public class QuatUtil
 	public static void updateEulerRotation(Entity entity, Quaternion rotation)
 	{
 		EulerAngle eulerAngle = toEulerAngles(rotation);
-		entity.yaw = eulerAngle.getYaw();
-		entity.pitch = eulerAngle.getPitch();
+		entity.setYaw(eulerAngle.getYaw());
+		entity.setPitch(eulerAngle.getPitch());
 
-		while (entity.pitch - entity.prevPitch >= 180.0F)
+		while (entity.getPitch() - entity.prevPitch >= 180.0F)
 		{
 			entity.prevPitch += 360.0F;
 		}
 
-		while (entity.yaw - entity.prevYaw < -180.0F)
+		while (entity.getYaw() - entity.prevYaw < -180.0F)
 		{
 			entity.prevYaw -= 360.0F;
 		}
 
-		while (entity.yaw - entity.prevYaw >= 180.0F)
+		while (entity.getYaw() - entity.prevYaw >= 180.0F)
 		{
 			entity.prevYaw += 360.0F;
 		}

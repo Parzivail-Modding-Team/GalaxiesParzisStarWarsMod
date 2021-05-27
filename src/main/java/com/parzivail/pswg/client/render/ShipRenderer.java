@@ -2,16 +2,15 @@ package com.parzivail.pswg.client.render;
 
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Quaternion;
 
 public abstract class ShipRenderer<T extends ShipEntity> extends EntityRenderer<T>
 {
-	public ShipRenderer(EntityRenderDispatcher entityRenderDispatcher)
+	public ShipRenderer(EntityRendererFactory.Context ctx)
 	{
-		super(entityRenderDispatcher);
+		super(ctx);
 	}
 
 	@Override
@@ -22,7 +21,7 @@ public abstract class ShipRenderer<T extends ShipEntity> extends EntityRenderer<
 
 		matrix.translate(0, entity.getEyeHeight(null), 0);
 
-		Quaternion r = entity.getViewRotation(tickDelta);
+		var r = entity.getViewRotation(tickDelta);
 		matrix.multiply(r);
 
 		renderModel(entity, yaw, tickDelta, matrix, vertexConsumers, light);
