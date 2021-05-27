@@ -70,6 +70,12 @@ public class ModelFile
 				.texture("layer0", AssetGenerator.getTextureName(item));
 	}
 
+	public static ModelFile spawn_egg(Item item)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(item), new Identifier("item/template_spawn_egg"));
+	}
+
 	public static ModelFile empty(Item item)
 	{
 		return ModelFile

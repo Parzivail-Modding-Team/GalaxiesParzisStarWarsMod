@@ -41,7 +41,7 @@ public class SwgEntities
 		public static final EntityType<WorrtEntity> Worrt = Registry.register(
 				Registry.ENTITY_TYPE,
 				Resources.identifier("worrt"),
-				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorrtEntity::new).dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build()
+				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorrtEntity::new).dimensions(EntityDimensions.fixed(0.6f, 0.6f)).build()
 		);
 
 		static void register()
@@ -56,16 +56,16 @@ public class SwgEntities
 		public static final EntityType<BucketableFishEntity> Faa = Registry.register(
 				Registry.ENTITY_TYPE,
 				Resources.identifier("faa"),
-				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
-				                       .dimensions(EntityDimensions.fixed(0.25f, 0.25f))
+				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
+				                       .dimensions(EntityDimensions.fixed(0.5F, 0.3F))
 				                       .build()
 		);
 
 		public static final EntityType<BucketableFishEntity> Laa = Registry.register(
 				Registry.ENTITY_TYPE,
 				Resources.identifier("laa"),
-				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
-				                       .dimensions(EntityDimensions.fixed(0.25f, 0.25f))
+				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
+				                       .dimensions(EntityDimensions.fixed(0.5F, 0.3F))
 				                       .build()
 		);
 

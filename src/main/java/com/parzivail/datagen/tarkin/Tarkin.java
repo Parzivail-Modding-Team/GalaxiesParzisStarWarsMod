@@ -883,6 +883,10 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Shovel.Beskar).build(assets);
 
 		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);
+
+		ItemGenerator.spawn_egg(SwgItems.Spawners.Faa).build(assets);
+		ItemGenerator.spawn_egg(SwgItems.Spawners.Laa).build(assets);
+		ItemGenerator.spawn_egg(SwgItems.Spawners.Worrt).build(assets);
 	}
 
 	private static void generateBlocks(List<BuiltAsset> assets)
