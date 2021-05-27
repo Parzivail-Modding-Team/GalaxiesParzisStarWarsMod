@@ -18,7 +18,7 @@ public class LightsaberForgeBlockEntity extends BlockEntity implements NamedScre
 {
 	public LightsaberForgeBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(SwgBlocks.Workbench.LightsaberBlockEntityType);
+		super(SwgBlocks.Workbench.LightsaberBlockEntityType, pos, state);
 	}
 
 	@Override
