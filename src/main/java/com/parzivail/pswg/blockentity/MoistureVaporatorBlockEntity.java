@@ -7,6 +7,7 @@ import com.parzivail.pswg.recipe.VaporatorRecipe;
 import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
 import com.parzivail.util.item.ItemUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -17,12 +18,12 @@ import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.Optional;
 
-public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory, Tickable
+public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
 {
 	protected final PropertyDelegate propertyDelegate;
 	private int collectionTimer;
@@ -122,52 +123,51 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world).orElseThrow(RuntimeException::new);
 	}
 
-	@Override
-	public void tick()
+	public static <T extends BlockEntity> void serverTick(World world, BlockPos blockPos, BlockState blockState, T be)
 	{
-		if (this.world != null && !this.world.isClient)
+		if (!(be instanceof MoistureVaporatorBlockEntity t))
+			return;
+
+		ItemStack stack = t.getStack(0);
+		if (t.isHydratable(stack))
 		{
-			ItemStack stack = getStack(0);
-			if (isHydratable(stack))
+			VaporatorRecipe recipe = t.hydrate(stack);
+
+			if (t.collectionTimerLength == -1)
 			{
-				VaporatorRecipe recipe = hydrate(stack);
-
-				if (collectionTimerLength == -1)
-				{
-					collectionTimer = collectionTimerLength = recipe.getDuration();
-				}
-				else if (collectionTimer <= 0)
-				{
-					ItemStack outputStack = getStack(1).copy();
-					ItemStack resultStack = recipe.getOutput();
-
-					stack.decrement(1);
-					setStack(0, stack.copy());
-
-					if (outputStack.isEmpty())
-						setStack(1, resultStack.copy());
-					else
-					{
-						if (!ItemUtil.areStacksEqualIgnoreCount(outputStack, resultStack) || resultStack.getCount() + outputStack.getCount() > outputStack.getMaxCount())
-							throw new RuntimeException("Result and output itemstacks cannot combine!");
-
-						outputStack.setCount(resultStack.getCount() + outputStack.getCount());
-						setStack(1, outputStack);
-					}
-					collectionTimerLength = -1;
-				}
-
-				collectionTimer--;
-
-				markDirty();
+				t.collectionTimer = t.collectionTimerLength = recipe.getDuration();
 			}
-			else if (collectionTimerLength != -1)
+			else if (t.collectionTimer <= 0)
 			{
-				collectionTimer = -1;
-				collectionTimerLength = -1;
+				ItemStack outputStack = t.getStack(1).copy();
+				ItemStack resultStack = recipe.getOutput();
 
-				markDirty();
+				stack.decrement(1);
+				t.setStack(0, stack.copy());
+
+				if (outputStack.isEmpty())
+					t.setStack(1, resultStack.copy());
+				else
+				{
+					if (!ItemUtil.areStacksEqualIgnoreCount(outputStack, resultStack) || resultStack.getCount() + outputStack.getCount() > outputStack.getMaxCount())
+						throw new RuntimeException("Result and output itemstacks cannot combine!");
+
+					outputStack.setCount(resultStack.getCount() + outputStack.getCount());
+					t.setStack(1, outputStack);
+				}
+				t.collectionTimerLength = -1;
 			}
+
+			t.collectionTimer--;
+
+			t.markDirty();
+		}
+		else if (t.collectionTimerLength != -1)
+		{
+			t.collectionTimer = -1;
+			t.collectionTimerLength = -1;
+
+			t.markDirty();
 		}
 	}
 }

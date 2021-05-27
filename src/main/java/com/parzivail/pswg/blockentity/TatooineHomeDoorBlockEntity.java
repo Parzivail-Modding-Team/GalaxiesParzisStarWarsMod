@@ -9,10 +9,10 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable
+public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEntityClientSerializable
 {
 	private static final int ANIMATION_TIME = 10;
 
@@ -123,36 +123,38 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 		return 1;
 	}
 
-	@Override
-	public void tick()
+	public static <T extends BlockEntity> void tick(World world, BlockPos blockPos, BlockState blockState, T be)
 	{
+		if (!(be instanceof TatooineHomeDoorBlockEntity t))
+			return;
+
 		if (world == null)
 			return;
 
-		if (isMoving())
+		if (t.isMoving())
 		{
-			int timer = getTimer();
+			int timer = t.getTimer();
 
 			if (timer == 0)
 				return;
 			else if (timer == ANIMATION_TIME - 1 && world.isClient)
-				world.playSound(pos.getX(), pos.getY(), pos.getZ(), SwgSounds.Door.PNEUMATIC, SoundCategory.BLOCKS, 1, 1, true);
+				world.playSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(), SwgSounds.Door.PNEUMATIC, SoundCategory.BLOCKS, 1, 1, true);
 
 			timer--;
 
 			if (timer <= 0)
 			{
-				boolean opening = isOpening();
-				setDirection(!opening);
+				boolean opening = t.isOpening();
+				t.setDirection(!opening);
 
-				setTimer(0);
-				setMoving(false);
+				t.setTimer(0);
+				t.setMoving(false);
 			}
 			else
-				setTimer(timer);
+				t.setTimer(timer);
 
 			if (!world.isClient)
-				sync();
+				t.sync();
 		}
 	}
 }
