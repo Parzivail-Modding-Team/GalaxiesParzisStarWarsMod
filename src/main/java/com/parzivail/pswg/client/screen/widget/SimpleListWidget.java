@@ -16,7 +16,7 @@ import java.util.function.Function;
 
 public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleListWidget.Entry<T>>
 {
-	public static class Entry<T> extends EntryListWidget.Entry<Entry<T>>
+	public static class Entry<T> extends EntryListWidget.Entry<com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<T>>
 	{
 		private final SimpleListWidget<T> parent;
 		private final T value;
@@ -54,15 +54,15 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 	private final Consumer<T> onSelectionChanged;
 
 	private Function<T, Text> entryFormatter = entry -> new TranslatableText(entry.toString());
-	private Function<List<Entry<T>>, Entry<T>> entrySelector = entries -> entries.get(0);
+	private Function<List<com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<T>>, com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<T>> entrySelector = entries -> entries.get(0);
 
 	public SimpleListWidget(MinecraftClient minecraftClient, int x, int y, int width, int height, int itemHeight, Consumer<T> onSelectionChanged)
 	{
 		super(minecraftClient, width, height, y, y + height, itemHeight);
 		this.onSelectionChanged = onSelectionChanged;
 		this.setLeftPos(x);
-		this.method_31322(false);
-		this.method_31323(false);
+		this.setRenderBackground(false);
+		this.setRenderHorizontalShadows(false);
 	}
 
 	public void setEntryFormatter(Function<T, Text> entryFormatter)
@@ -70,7 +70,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 		this.entryFormatter = entryFormatter;
 	}
 
-	public void setEntrySelector(Function<List<Entry<T>>, Entry<T>> entrySelector)
+	public void setEntrySelector(Function<List<com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<T>>, com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<T>> entrySelector)
 	{
 		this.entrySelector = entrySelector;
 	}
@@ -107,7 +107,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 		clear();
 
 		for (T value : values)
-			addEntry(new Entry<>(this, value));
+			addEntry(new com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<>(this, value));
 
 		if (!children().isEmpty())
 			setSelected(entrySelector.apply(children()));
@@ -118,13 +118,13 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 		clear();
 
 		for (T value : values)
-			addEntry(new Entry<>(this, value));
+			addEntry(new com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<>(this, value));
 
 		if (!children().isEmpty())
 			setSelected(entrySelector.apply(children()));
 	}
 
-	public List<Entry<T>> getEntries()
+	public List<com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<T>> getEntries()
 	{
 		return children();
 	}

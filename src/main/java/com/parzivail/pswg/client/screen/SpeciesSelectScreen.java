@@ -28,7 +28,6 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.LiteralText;
@@ -36,6 +35,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
 
@@ -314,8 +314,8 @@ public class SpeciesSelectScreen extends Screen
 		RenderSystem.scalef(1.0F, 1.0F, -1.0F);
 		matrixStack.translate(0.0D, 0.0D, 500.0D);
 		matrixStack.scale((float)size, (float)size, (float)size);
-		Quaternion quaternion = Vector3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
-		Quaternion quaternion2 = Vector3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
+		Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
+		Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
 		quaternion.hamiltonProduct(quaternion2);
 		matrixStack.multiply(quaternion);
 		float h = entity.bodyYaw;

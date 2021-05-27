@@ -1,20 +1,20 @@
 package com.parzivail.pswg.client.pm3d;
 
 import com.parzivail.util.client.VertexConsumerBuffer;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3f;
 
 public class PM3DLod
 {
 	public final Identifier identifier;
-	public final Vector3f[] verts;
-	public final Vector3f[] normals;
-	public final Vector3f[] uvs;
+	public final Vec3f[] verts;
+	public final Vec3f[] normals;
+	public final Vec3f[] uvs;
 	public final PM3DObject[] objects;
 	public final Box bounds;
 
-	public PM3DLod(Identifier identifier, Vector3f[] verts, Vector3f[] normals, Vector3f[] uvs, PM3DObject[] objects, Box bounds)
+	public PM3DLod(Identifier identifier, Vec3f[] verts, Vec3f[] normals, Vec3f[] uvs, PM3DObject[] objects, Box bounds)
 	{
 		this.identifier = identifier;
 		this.verts = verts;
@@ -38,10 +38,10 @@ public class PM3DLod
 		PM3DVertPointer c = face.verts.get(2);
 		PM3DVertPointer d = face.verts.size() == 4 ? face.verts.get(3) : c;
 
-		Vector3f tA = uvs[a.texture];
-		Vector3f tB = uvs[b.texture];
-		Vector3f tC = uvs[c.texture];
-		Vector3f tD = uvs[d.texture];
+		Vec3f tA = uvs[a.texture];
+		Vec3f tB = uvs[b.texture];
+		Vec3f tC = uvs[c.texture];
+		Vec3f tD = uvs[d.texture];
 
 		vcb.vertex(verts[a.vertex], normals[a.normal], tA.getX(), 1 - tA.getY());
 		vcb.vertex(verts[b.vertex], normals[b.normal], tB.getX(), 1 - tB.getY());

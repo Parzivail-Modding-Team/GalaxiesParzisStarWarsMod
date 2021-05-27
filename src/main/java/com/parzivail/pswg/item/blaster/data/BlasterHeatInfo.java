@@ -1,6 +1,6 @@
 package com.parzivail.pswg.item.blaster.data;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 public class BlasterHeatInfo
 {
@@ -21,9 +21,9 @@ public class BlasterHeatInfo
 		this.passiveCooldownDelay = passiveCooldownDelay;
 	}
 
-	public static BlasterHeatInfo fromTag(CompoundTag compoundTag, String s)
+	public static BlasterHeatInfo fromTag(NbtCompound compoundTag, String s)
 	{
-		CompoundTag tag = compoundTag.getCompound(s);
+		NbtCompound tag = compoundTag.getCompound(s);
 
 		return new BlasterHeatInfo(
 				tag.getInt("capacity"),
@@ -35,9 +35,9 @@ public class BlasterHeatInfo
 		);
 	}
 
-	public static void toTag(CompoundTag compoundTag, String s, BlasterHeatInfo data)
+	public static void toTag(NbtCompound compoundTag, String s, BlasterHeatInfo data)
 	{
-		CompoundTag tag = new CompoundTag();
+		NbtCompound tag = new NbtCompound();
 
 		tag.putInt("capacity", data.capacity);
 		tag.putInt("perRound", data.perRound);

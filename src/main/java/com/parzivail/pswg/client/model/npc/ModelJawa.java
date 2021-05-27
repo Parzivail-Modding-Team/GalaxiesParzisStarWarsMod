@@ -31,12 +31,12 @@ public class ModelJawa<T extends LivingEntity> extends PlayerEntityModel<T>
 		textureWidth = TEXTURE_WIDTH;
 		textureHeight = TEXTURE_HEIGHT;
 
-		this.torso = new ModelPart(this, 16, 16);
-		this.torso.setPivot(0.0F, 0.0F, 0.0F);
-		this.torso.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
-		this.helmet = new ModelPart(this, 32, 0);
-		this.helmet.setPivot(0.0F, 0.0F, 0.0F);
-		this.helmet.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.2F);
+		this.body = new ModelPart(this, 16, 16);
+		this.body.setPivot(0.0F, 0.0F, 0.0F);
+		this.body.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
+		this.hat = new ModelPart(this, 32, 0);
+		this.hat.setPivot(0.0F, 0.0F, 0.0F);
+		this.hat.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.2F);
 		this.Hood2 = new ModelPart(this, 50, 74);
 		this.Hood2.setPivot(0.0F, 0.0F, 7.0F);
 		this.Hood2.addCuboid(-1.0F, 0.0F, 0.0F, 2, 2, 1, 0.0F);
@@ -49,7 +49,7 @@ public class ModelJawa<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.Hair.setPivot(0.0F, 0.0F, 0.0F);
 		this.Hair.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.1F);
 		this.Hood.addChild(this.Hood2);
-		this.helmet.addChild(this.Hood);
+		this.hat.addChild(this.Hood);
 		this.head.addChild(this.Hair);
 	}
 

@@ -10,7 +10,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -55,7 +55,7 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 
 	public static void handleSetLighsaberTag(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		CompoundTag tag = buf.readCompoundTag();
+		NbtCompound tag = buf.readNbt();
 
 		server.execute(() -> {
 			if (player.currentScreenHandler instanceof LightsaberForgeScreenHandler)
@@ -66,7 +66,7 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 		});
 	}
 
-	public void setLightsaberTag(CompoundTag lightsaberTag)
+	public void setLightsaberTag(NbtCompound lightsaberTag)
 	{
 		Slot slot = this.slots.get(0);
 		ItemStack stack = slot.getStack();

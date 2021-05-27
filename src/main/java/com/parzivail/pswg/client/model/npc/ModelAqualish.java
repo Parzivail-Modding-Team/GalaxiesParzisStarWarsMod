@@ -41,7 +41,7 @@ public class ModelAqualish<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.Chest.setPivot(0.0F, -0.1F, 1.0F);
 		this.Chest.addCuboid(-3.0F, 2.0F, -4.0F, 6, 3, 2, 0.0F);
 		if (!male)
-			this.torso.addChild(this.Chest);
+			this.body.addChild(this.Chest);
 		this.Nose.addChild(this.ToothL);
 		this.head.addChild(this.Nose);
 		this.Nose.addChild(this.ToothR);

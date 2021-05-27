@@ -26,7 +26,7 @@ public class ServerResourceManagerMixin implements IServerResourceManagerAccess
 	@Inject(method = "Lnet/minecraft/resource/ServerResourceManager;<init>(Lnet/minecraft/server/command/CommandManager$RegistrationEnvironment;I)V", at = @At("TAIL"))
 	private void init(CommandManager.RegistrationEnvironment registrationEnvironment, int i, CallbackInfo ci)
 	{
-		resourceManager.registerListener(blasterLoader = new SwgBlasterManager());
+		resourceManager.registerReloader(blasterLoader = new SwgBlasterManager());
 	}
 
 	@Override

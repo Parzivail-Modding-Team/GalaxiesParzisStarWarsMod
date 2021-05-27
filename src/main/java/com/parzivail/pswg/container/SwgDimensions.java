@@ -13,7 +13,7 @@ public class SwgDimensions
 {
 	public static class Tatooine
 	{
-		public static final RegistryKey<World> DIMENSION = RegistryKey.of(Registry.DIMENSION, Resources.identifier("tatooine"));
+		public static final RegistryKey<World> DIMENSION = RegistryKey.of(Registry.WORLD_KEY, Resources.identifier("tatooine"));
 		public static final RegistryKey<DimensionType> DIMENSION_TYPE_KEY = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, Resources.identifier("tatooine"));
 
 		public static DimensionType TYPE;

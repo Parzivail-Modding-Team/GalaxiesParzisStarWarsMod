@@ -4,7 +4,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.math.MathUtil;
-import net.minecraft.client.options.Perspective;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;

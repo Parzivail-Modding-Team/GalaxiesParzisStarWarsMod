@@ -58,9 +58,9 @@ public class ModelChagrian<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.TailUpperL.setPivot(-1.5F, -9.9F, -3.5F);
 		this.TailUpperL.addCuboid(-2.0F, 0.0F, 0.0F, 2, 4, 2, 0.0F);
 		ModelPartUtil.setRotateAngle(TailUpperL, 0.091106186954104F, 0.0F, -0.22759093446006054F);
-		this.torso = new ModelPart(this, 16, 16);
-		this.torso.setPivot(0.0F, 0.0F, 0.0F);
-		this.torso.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
+		this.body = new ModelPart(this, 16, 16);
+		this.body.setPivot(0.0F, 0.0F, 0.0F);
+		this.body.addCuboid(-4.0F, 0.0F, -2.0F, 8, 12, 4, 0.0F);
 		this.TailLowerL = new ModelPart(this, 35, 67);
 		this.TailLowerL.mirror = true;
 		this.TailLowerL.setPivot(0.4F, 6.7F, 2.9F);
@@ -76,9 +76,9 @@ public class ModelChagrian<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.TailHornR.setPivot(-1.1F, 3.0F, 1.5F);
 		this.TailHornR.addCuboid(-1.0F, 0.0F, 0.0F, 1, 7, 1, 0.0F);
 		ModelPartUtil.setRotateAngle(TailHornR, -1.2292353921796064F, -0.18203784098300857F, -0.045553093477052F);
-		this.helmet = new ModelPart(this, 32, 0);
-		this.helmet.setPivot(0.0F, 0.0F, 0.0F);
-		this.helmet.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.2F);
+		this.hat = new ModelPart(this, 32, 0);
+		this.hat.setPivot(0.0F, 0.0F, 0.0F);
+		this.hat.addCuboid(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.2F);
 		this.TailHornL = new ModelPart(this, 48, 67);
 		this.TailHornL.mirror = true;
 		this.TailHornL.setPivot(1.1F, 3.0F, 1.5F);
@@ -95,7 +95,7 @@ public class ModelChagrian<T extends LivingEntity> extends PlayerEntityModel<T>
 		ModelPartUtil.setRotateAngle(TailUpperUpperL, -0.18203784098300857F, 0.0F, 0.0F);
 		this.head.addChild(this.HeadTailL);
 		if (!male)
-			this.torso.addChild(this.Chest);
+			this.body.addChild(this.Chest);
 		this.head.addChild(this.HeadTailR);
 		this.TailUpperR.addChild(this.TailUpperUpperR);
 		this.head.addChild(this.TailUpperL);

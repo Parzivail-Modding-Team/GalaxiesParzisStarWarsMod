@@ -14,14 +14,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -33,6 +32,7 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -167,7 +167,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	}
 
 	@Override
-	protected void readCustomDataFromTag(CompoundTag tag)
+	protected void readCustomDataFromNbt(NbtCompound tag)
 	{
 		if (tag.contains("rotation"))
 			setRotation(QuatUtil.getQuaternion(tag.getCompound("rotation")));
@@ -175,9 +175,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	}
 
 	@Override
-	protected void writeCustomDataToTag(CompoundTag tag)
+	protected void writeCustomDataToNbt(NbtCompound tag)
 	{
-		CompoundTag qTag = new CompoundTag();
+		NbtCompound qTag = new NbtCompound();
 		QuatUtil.putQuaternion(qTag, getRotation());
 		tag.put("rotation", qTag);
 
@@ -278,7 +278,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			Vec3d vec3d = new Vec3d(0, 0, 3 * this.getPassengerList().indexOf(passenger));
 			vec3d = QuatUtil.rotate(vec3d, getRotation());
 
-			passenger.updatePosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
+			passenger.setPosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
 			this.copyEntityData(passenger);
 		}
 	}
@@ -385,16 +385,16 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			shipRollPriority = !shipRollPriority;
 
 		if (shipRollPriority)
-			rotation.hamiltonProduct(new Quaternion(new Vector3f(0, 0, 1), -(float)mouseDx * 0.15f, true));
+			rotation.hamiltonProduct(new Quaternion(new Vec3f(0, 0, 1), -(float)mouseDx * 0.15f, true));
 		else
 		{
 			Vec3d v = QuatUtil.project(com.parzivail.util.math.MathUtil.POSY, rotation);
-			rotation.hamiltonProduct(new Quaternion(new Vector3f(v), (float)(Math.asin(v.y) * -mouseDx * 0.1f), true));
+			rotation.hamiltonProduct(new Quaternion(new Vec3f(v), (float)(Math.asin(v.y) * -mouseDx * 0.1f), true));
 
 			// TODO: roll back toward zero when this mode is switched to and the ship has a nonzero roll
 		}
 
-		rotation.hamiltonProduct(new Quaternion(new Vector3f(1, 0, 0), -(float)mouseDy * 0.1f, true));
+		rotation.hamiltonProduct(new Quaternion(new Vec3f(1, 0, 0), -(float)mouseDy * 0.1f, true));
 
 		setRotation(rotation);
 

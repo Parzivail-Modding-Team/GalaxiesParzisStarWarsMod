@@ -23,7 +23,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -69,7 +69,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static Identifier getBlasterModel(ItemStack stack)
 	{
-		CompoundTag tag = stack.getOrCreateTag();
+		NbtCompound tag = stack.getOrCreateTag();
 
 		String blasterModel = tag.getString("model");
 		if (blasterModel.isEmpty())
@@ -221,7 +221,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public String getTranslationKey(ItemStack stack)
 	{
-		CompoundTag tag = stack.getOrCreateTag();
+		NbtCompound tag = stack.getOrCreateTag();
 
 		String blasterModel = tag.getString("model");
 		if (blasterModel.isEmpty())
@@ -233,9 +233,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
-	public CompoundTag getDefaultTag(ItemConvertible item, int count)
+	public NbtCompound getDefaultTag(ItemConvertible item, int count)
 	{
-		CompoundTag tag = new CompoundTag();
+		NbtCompound tag = new NbtCompound();
 
 		tag.putString("model", Resources.identifier("a280").toString());
 

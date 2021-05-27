@@ -5,7 +5,7 @@ import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.util.QuatUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 
 public class MutableCameraEntity extends Entity
@@ -25,13 +25,13 @@ public class MutableCameraEntity extends Entity
 	}
 
 	@Override
-	protected void readCustomDataFromTag(CompoundTag tag)
+	protected void readCustomDataFromNbt(NbtCompound tag)
 	{
 
 	}
 
 	@Override
-	protected void writeCustomDataToTag(CompoundTag tag)
+	protected void writeCustomDataToNbt(NbtCompound tag)
 	{
 
 	}
@@ -51,7 +51,7 @@ public class MutableCameraEntity extends Entity
 		this.prevX = camera.prevPos.x;
 		this.prevY = camera.prevPos.y;
 		this.prevZ = camera.prevPos.z;
-		updatePosition(camera.pos.x, camera.pos.y, camera.pos.z);
+		setPosition(camera.pos.x, camera.pos.y, camera.pos.z);
 
 		this.prevPitch = this.pitch;
 		this.prevYaw = this.yaw;

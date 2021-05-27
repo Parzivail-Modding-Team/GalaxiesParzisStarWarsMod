@@ -3,7 +3,7 @@ package com.parzivail.pswg.component;
 import dev.onyxstudios.cca.api.v3.component.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -31,13 +31,13 @@ public class SwgVolatileComponents implements ComponentV3, AutoSyncedComponent
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag)
+	public void readFromNbt(NbtCompound tag)
 	{
 		credits = tag.getInt("credits");
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag)
+	public void writeToNbt(NbtCompound tag)
 	{
 		tag.putInt("credits", credits);
 	}
@@ -58,9 +58,9 @@ public class SwgVolatileComponents implements ComponentV3, AutoSyncedComponent
 		switch (syncOp)
 		{
 			case FULL_SYNC:
-				CompoundTag tag = new CompoundTag();
+				NbtCompound tag = new NbtCompound();
 				writeToNbt(tag);
-				buf.writeCompoundTag(tag);
+				buf.writeNbt(tag);
 				break;
 			case CREDITS_SYNCOP:
 				buf.writeInt(credits);
@@ -83,7 +83,7 @@ public class SwgVolatileComponents implements ComponentV3, AutoSyncedComponent
 		switch (syncOp)
 		{
 			case FULL_SYNC:
-				CompoundTag tag = buf.readCompoundTag();
+				NbtCompound tag = buf.readNbt();
 				if (tag != null)
 					this.readFromNbt(tag);
 				break;

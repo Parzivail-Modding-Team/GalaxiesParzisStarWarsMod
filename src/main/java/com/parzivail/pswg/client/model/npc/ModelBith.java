@@ -38,7 +38,7 @@ public class ModelBith<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.FrontalR.addCuboid(-4.0F, 0.0F, 0.0F, 4, 5, 4, 0.0F);
 		this.head.addChild(this.HeadExtension);
 		if (!male)
-			this.torso.addChild(this.Chest);
+			this.body.addChild(this.Chest);
 		this.HeadExtension.addChild(this.FrontalL);
 		this.HeadExtension.addChild(this.FrontalR);
 	}

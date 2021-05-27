@@ -279,7 +279,7 @@ public class WorrtEntity extends AnimalEntity
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Vec3d method_29919()
+	public Vec3d getLeashOffset()
 	{
 		return new Vec3d(0.0D, 0.6F * this.getStandingEyeHeight(), this.getWidth() * 0.4F);
 	}

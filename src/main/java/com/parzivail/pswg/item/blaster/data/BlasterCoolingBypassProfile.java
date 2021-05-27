@@ -1,7 +1,7 @@
 package com.parzivail.pswg.item.blaster.data;
 
 import com.parzivail.pswg.Resources;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -32,9 +32,9 @@ public class BlasterCoolingBypassProfile
 		this.secondaryBypassTolerance = secondaryBypassTolerance;
 	}
 
-	public static BlasterCoolingBypassProfile fromTag(CompoundTag compoundTag, String s)
+	public static BlasterCoolingBypassProfile fromTag(NbtCompound compoundTag, String s)
 	{
-		CompoundTag tag = compoundTag.getCompound(s);
+		NbtCompound tag = compoundTag.getCompound(s);
 
 		return new BlasterCoolingBypassProfile(
 				tag.getFloat("primaryBypassTime"),
@@ -44,9 +44,9 @@ public class BlasterCoolingBypassProfile
 		);
 	}
 
-	public static void toTag(CompoundTag compoundTag, String s, BlasterCoolingBypassProfile data)
+	public static void toTag(NbtCompound compoundTag, String s, BlasterCoolingBypassProfile data)
 	{
-		CompoundTag tag = new CompoundTag();
+		NbtCompound tag = new NbtCompound();
 
 		tag.putFloat("primaryBypassTime", data.primaryBypassTime);
 		tag.putFloat("primaryBypassTolerance", data.primaryBypassTolerance);

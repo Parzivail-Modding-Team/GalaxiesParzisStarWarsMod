@@ -58,15 +58,15 @@ public class ModelKaminoan<T extends LivingEntity> extends PlayerEntityModel<T>
 		PlayerEntityModelAccessUtil.setLeftSleeve(this, new ModelPart(this, 40, 48));
 		this.leftSleeve.setPivot(4.0F, -2.9F, 0.0F);
 		this.leftSleeve.addCuboid(-1.0F, -1.5F, -1.0F, 2, 15, 2, 0.2F);
-		this.torso = new ModelPart(this, 21, 15);
-		this.torso.setPivot(0.0F, -4.5F, 1.0F);
-		this.torso.addCuboid(-3.0F, 0.0F, -2.0F, 6, 6, 2, 0.0F);
+		this.body = new ModelPart(this, 21, 15);
+		this.body.setPivot(0.0F, -4.5F, 1.0F);
+		this.body.addCuboid(-3.0F, 0.0F, -2.0F, 6, 6, 2, 0.0F);
 		PlayerEntityModelAccessUtil.setRightPantLeg(this, new ModelPart(this, 9, 30));
-		this.rightPantLeg.setPivot(-0.5F, 7.9F, 1.0F);
-		this.rightPantLeg.addCuboid(-2.0F, 0.0F, -2.0F, 2, 16, 2, 0.2F);
+		this.rightPants.setPivot(-0.5F, 7.9F, 1.0F);
+		this.rightPants.addCuboid(-2.0F, 0.0F, -2.0F, 2, 16, 2, 0.2F);
 		PlayerEntityModelAccessUtil.setLeftPantLeg(this, new ModelPart(this, 9, 48));
-		this.leftPantLeg.setPivot(0.5F, 7.9F, 1.0F);
-		this.leftPantLeg.addCuboid(0.0F, 0.0F, -2.0F, 2, 16, 2, 0.2F);
+		this.leftPants.setPivot(0.5F, 7.9F, 1.0F);
+		this.leftPants.addCuboid(0.0F, 0.0F, -2.0F, 2, 16, 2, 0.2F);
 		this.head = new ModelPart(this, 0, 0);
 		this.head.setPivot(0.2F, -12.4F, -0.5F);
 		this.head.addCuboid(-2.5F, -5.0F, -2.5F, 5, 5, 5, 0.0F);
@@ -76,13 +76,13 @@ public class ModelKaminoan<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.Chest = new ModelPart(this, 0, 69);
 		this.Chest.setPivot(0.5F, -1.4F, 1.0F);
 		this.Chest.addCuboid(-3.0F, 2.0F, -4.0F, 5, 3, 2, 0.0F);
-		this.helmet = new ModelPart(this, 32, 0);
-		this.helmet.setPivot(0.0F, -12.4F, -0.5F);
-		this.helmet.addCuboid(-2.5F, -5.0F, -2.5F, 5, 5, 5, 0.2F);
-		this.torso.addChild(this.torsolower);
+		this.hat = new ModelPart(this, 32, 0);
+		this.hat.setPivot(0.0F, -12.4F, -0.5F);
+		this.hat.addCuboid(-2.5F, -5.0F, -2.5F, 5, 5, 5, 0.2F);
+		this.body.addChild(this.torsolower);
 		this.head.addChild(this.Head_1);
 		if (!male)
-			this.torso.addChild(this.Chest);
+			this.body.addChild(this.Chest);
 	}
 
 	protected Iterable<ModelPart> getBodyParts()

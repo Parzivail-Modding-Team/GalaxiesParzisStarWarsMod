@@ -6,7 +6,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
@@ -25,16 +25,16 @@ public class ThrownLightsaberEntity extends ThrownEntity
 	}
 
 	@Override
-	public void writeCustomDataToTag(CompoundTag tag)
+	public void writeCustomDataToNbt(NbtCompound tag)
 	{
-		super.writeCustomDataToTag(tag);
+		super.writeCustomDataToNbt(tag);
 		tag.putByte("life", getLife());
 	}
 
 	@Override
-	public void readCustomDataFromTag(CompoundTag tag)
+	public void readCustomDataFromNbt(NbtCompound tag)
 	{
-		super.readCustomDataFromTag(tag);
+		super.readCustomDataFromNbt(tag);
 		setLife(tag.getByte("life"));
 	}
 

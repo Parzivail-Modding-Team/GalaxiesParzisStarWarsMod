@@ -7,7 +7,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Tickable;
 
@@ -27,9 +27,9 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag)
+	public NbtCompound writeNbt(NbtCompound tag)
 	{
-		super.toTag(tag);
+		super.writeNbt(tag);
 
 		tag.putByte("timer", timer);
 
@@ -37,21 +37,21 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 	}
 
 	@Override
-	public void fromTag(BlockState state, CompoundTag tag)
+	public void readNbt(BlockState state, NbtCompound tag)
 	{
-		super.fromTag(state, tag);
+		super.readNbt(state, tag);
 
 		timer = tag.getByte("timer");
 	}
 
 	@Override
-	public void fromClientTag(CompoundTag compoundTag)
+	public void fromClientTag(NbtCompound compoundTag)
 	{
 		timer = compoundTag.getByte("timer");
 	}
 
 	@Override
-	public CompoundTag toClientTag(CompoundTag compoundTag)
+	public NbtCompound toClientTag(NbtCompound compoundTag)
 	{
 		compoundTag.putByte("timer", timer);
 

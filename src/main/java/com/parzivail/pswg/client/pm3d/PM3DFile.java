@@ -3,13 +3,13 @@ package com.parzivail.pswg.client.pm3d;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
 import com.parzivail.util.binary.DataReader;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
@@ -94,9 +94,9 @@ public class PM3DFile
 			int numUvs = objStream.readInt();
 			int numObjects = objStream.readInt();
 
-			Vector3f[] verts = loadVerts(numVerts, objStream);
-			Vector3f[] normals = loadNormals(numNormals, objStream);
-			Vector3f[] uvs = loadUvs(numUvs, objStream);
+			Vec3f[] verts = loadVerts(numVerts, objStream);
+			Vec3f[] normals = loadNormals(numNormals, objStream);
+			Vec3f[] uvs = loadUvs(numUvs, objStream);
 			PM3DObject[] objects = loadObjects(numObjects, objStream);
 
 			Box bounds = getBounds(verts);
@@ -112,12 +112,12 @@ public class PM3DFile
 		return Arrays.stream(ACCEPTED_VERSIONS).mapToObj(i -> "0x" + Integer.toHexString(i)).collect(Collectors.joining(", "));
 	}
 
-	private static Box getBounds(Vector3f[] verts)
+	private static Box getBounds(Vec3f[] verts)
 	{
-		Vector3f min = new Vector3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
-		Vector3f max = new Vector3f(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+		Vec3f min = new Vec3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+		Vec3f max = new Vec3f(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
 
-		for (Vector3f v : verts)
+		for (Vec3f v : verts)
 		{
 			if (v.getX() < min.getX())
 				min.set(v.getX(), min.getY(), min.getZ());
@@ -137,9 +137,9 @@ public class PM3DFile
 		return new Box(new Vec3d(min), new Vec3d(max));
 	}
 
-	private static Vector3f[] loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static Vec3f[] loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		Vector3f[] verts = new Vector3f[num];
+		Vec3f[] verts = new Vec3f[num];
 
 		for (int i = 0; i < num; i++)
 		{
@@ -147,15 +147,15 @@ public class PM3DFile
 			float y = DataReader.readHalf(objStream);
 			float z = DataReader.readHalf(objStream) + 0.5f;
 
-			verts[i] = new Vector3f(x, y, z);
+			verts[i] = new Vec3f(x, y, z);
 		}
 
 		return verts;
 	}
 
-	private static Vector3f[] loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static Vec3f[] loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		Vector3f[] verts = new Vector3f[num];
+		Vec3f[] verts = new Vec3f[num];
 
 		for (int i = 0; i < num; i++)
 		{
@@ -163,22 +163,22 @@ public class PM3DFile
 			float y = DataReader.readHalf(objStream);
 			float z = DataReader.readHalf(objStream);
 
-			verts[i] = new Vector3f(x, y, z);
+			verts[i] = new Vec3f(x, y, z);
 		}
 
 		return verts;
 	}
 
-	private static Vector3f[] loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static Vec3f[] loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		Vector3f[] uvs = new Vector3f[num];
+		Vec3f[] uvs = new Vec3f[num];
 
 		for (int i = 0; i < num; i++)
 		{
 			float u = DataReader.readHalf(objStream);
 			float v = DataReader.readHalf(objStream);
 
-			uvs[i] = new Vector3f(u, v, 0);
+			uvs[i] = new Vec3f(u, v, 0);
 		}
 
 		return uvs;

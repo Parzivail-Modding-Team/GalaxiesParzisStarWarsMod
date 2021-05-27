@@ -1,7 +1,7 @@
 package com.parzivail.util.nbt;
 
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -18,18 +18,18 @@ public class TagSerializer
 
 	static
 	{
-		register(byte.class, CompoundTag::getByte, CompoundTag::putByte);
-		register(short.class, CompoundTag::getShort, CompoundTag::putShort);
-		register(int.class, CompoundTag::getInt, CompoundTag::putInt);
-		register(long.class, CompoundTag::getLong, CompoundTag::putLong);
-		register(float.class, CompoundTag::getFloat, CompoundTag::putFloat);
-		register(double.class, CompoundTag::getDouble, CompoundTag::putDouble);
-		register(boolean.class, CompoundTag::getBoolean, CompoundTag::putBoolean);
+		register(byte.class, NbtCompound::getByte, NbtCompound::putByte);
+		register(short.class, NbtCompound::getShort, NbtCompound::putShort);
+		register(int.class, NbtCompound::getInt, NbtCompound::putInt);
+		register(long.class, NbtCompound::getLong, NbtCompound::putLong);
+		register(float.class, NbtCompound::getFloat, NbtCompound::putFloat);
+		register(double.class, NbtCompound::getDouble, NbtCompound::putDouble);
+		register(boolean.class, NbtCompound::getBoolean, NbtCompound::putBoolean);
 		register(char.class, (nbt, field) -> nbt.getString(field).charAt(0), (nbt, field, a) -> nbt.putString(field, String.valueOf(a)));
-		register(String.class, CompoundTag::getString, CompoundTag::putString);
+		register(String.class, NbtCompound::getString, NbtCompound::putString);
 		register(Identifier.class, (nbt, field) -> new Identifier(nbt.getString(field)), (nbt, field, a) -> nbt.putString(field, a.toString()));
-		register(CompoundTag.class, CompoundTag::getCompound, CompoundTag::put);
-		register(ItemStack.class, (nbt, field) -> ItemStack.fromTag(nbt.getCompound(field)), (nbt, field, a) -> nbt.put(field, a.toTag(new CompoundTag())));
+		register(NbtCompound.class, NbtCompound::getCompound, NbtCompound::put);
+		register(ItemStack.class, (nbt, field) -> ItemStack.fromNbt(nbt.getCompound(field)), (nbt, field, a) -> nbt.put(field, a.writeNbt(new NbtCompound())));
 	}
 
 	private final String slug;
@@ -39,13 +39,13 @@ public class TagSerializer
 		this.slug = slug.toString();
 	}
 
-	public TagSerializer(Identifier slug, CompoundTag source)
+	public TagSerializer(Identifier slug, NbtCompound source)
 	{
 		this(slug);
 		Class<?> clazz = this.getClass();
 		Field[] clFields = getClassFields(clazz);
 
-		CompoundTag domain = source.getCompound(this.slug);
+		NbtCompound domain = source.getCompound(this.slug);
 
 		try
 		{
@@ -94,7 +94,7 @@ public class TagSerializer
 		TYPE_SERIALIZERS.put(type, Pair.of(reader, writer));
 	}
 
-	private void readField(Field f, Class<?> clazz, CompoundTag nbt) throws IllegalArgumentException, IllegalAccessException
+	private void readField(Field f, Class<?> clazz, NbtCompound nbt) throws IllegalArgumentException, IllegalAccessException
 	{
 		Pair<Reader<?>, Writer<?>> handler = getHandler(clazz);
 		f.set(this, handler.getLeft().read(nbt, f.getName()));
@@ -102,33 +102,33 @@ public class TagSerializer
 
 	public void serializeAsSubtag(ItemStack stack)
 	{
-		CompoundTag nbt = stack.getOrCreateTag();
+		NbtCompound nbt = stack.getOrCreateTag();
 		this.serializeAsSubtag(nbt);
 		stack.setTag(nbt);
 	}
 
-	public void serializeAsSubtag(CompoundTag nbt)
+	public void serializeAsSubtag(NbtCompound nbt)
 	{
-		CompoundTag compound = new CompoundTag();
+		NbtCompound compound = new NbtCompound();
 		this.serializeInto(compound);
 		nbt.put(slug, compound);
 	}
 
-	public CompoundTag toTag()
+	public NbtCompound toTag()
 	{
-		CompoundTag compound = new CompoundTag();
+		NbtCompound compound = new NbtCompound();
 		this.serializeInto(compound);
 		return compound;
 	}
 
-	public CompoundTag toSubtag()
+	public NbtCompound toSubtag()
 	{
-		CompoundTag compound = new CompoundTag();
+		NbtCompound compound = new NbtCompound();
 		this.serializeAsSubtag(compound);
 		return compound;
 	}
 
-	public final void serializeInto(CompoundTag nbt)
+	public final void serializeInto(NbtCompound nbt)
 	{
 		try
 		{
@@ -148,7 +148,7 @@ public class TagSerializer
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> void writeField(Field f, Class<T> clazz, CompoundTag nbt) throws IllegalArgumentException, IllegalAccessException
+	private <T> void writeField(Field f, Class<T> clazz, NbtCompound nbt) throws IllegalArgumentException, IllegalAccessException
 	{
 		Pair<Reader<T>, Writer<T>> handler = (Pair<Reader<T>, Writer<T>>)((Object)getHandler(clazz));
 		Object obj = f.get(this);
@@ -157,11 +157,11 @@ public class TagSerializer
 
 	public interface Reader<T>
 	{
-		T read(CompoundTag nbt, String name);
+		T read(NbtCompound nbt, String name);
 	}
 
 	public interface Writer<T>
 	{
-		void write(CompoundTag nbt, String name, T t);
+		void write(NbtCompound nbt, String name, T t);
 	}
 }

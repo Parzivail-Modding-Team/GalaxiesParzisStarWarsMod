@@ -59,7 +59,7 @@ public class ModelBothan<T extends LivingEntity> extends PlayerEntityModel<T>
 		this.EarTipL.addCuboid(0.0F, 0.0F, 0.0F, 1, 1, 2, 0.0F);
 		this.SnoutLower.addChild(this.SnoutLower_1);
 		if (!male)
-			this.torso.addChild(this.Chest);
+			this.body.addChild(this.Chest);
 		this.EarR.addChild(this.EarTipR);
 		this.EarL.addChild(this.EarTipL);
 		this.SnoutLower.addChild(this.SnoutUpper);

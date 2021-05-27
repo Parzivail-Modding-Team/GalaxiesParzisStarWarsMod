@@ -93,7 +93,7 @@ public class ModelTwilek<T extends LivingEntity> extends PlayerEntityModel<T>
 			this.head.addChild(this.FrontalL);
 		}
 		else
-			this.torso.addChild(this.Chest);
+			this.body.addChild(this.Chest);
 	}
 
 	@Override

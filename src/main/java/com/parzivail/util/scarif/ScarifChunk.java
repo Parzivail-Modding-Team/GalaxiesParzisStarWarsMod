@@ -5,7 +5,7 @@ import com.parzivail.util.Lumberjack;
 import com.parzivail.util.binary.DataReader;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class ScarifChunk
 {
-	public final HashMap<BlockPos, CompoundTag> tiles = new HashMap<>();
+	public final HashMap<BlockPos, NbtCompound> tiles = new HashMap<>();
 	private final LittleEndianDataInputStream stream;
 	public int numSections;
 	private boolean initialized = false;
@@ -48,7 +48,7 @@ public class ScarifChunk
 				int z = DataReader.read7BitEncodedInt(stream);
 
 				int nbtLen = stream.readInt();
-				CompoundTag nbt = DataReader.readUncompressedNbt(stream, nbtLen);
+				NbtCompound nbt = DataReader.readUncompressedNbt(stream, nbtLen);
 
 				tiles.put(new BlockPos(x, y, z), nbt);
 			}
@@ -107,7 +107,7 @@ public class ScarifChunk
 			StateManager<Block, BlockState> stateManager = block.getStateManager();
 
 			int tagLen = stream.readInt();
-			CompoundTag props = DataReader.readUncompressedNbt(stream, tagLen);
+			NbtCompound props = DataReader.readUncompressedNbt(stream, tagLen);
 
 			for (String key : props.getKeys())
 			{
@@ -120,7 +120,7 @@ public class ScarifChunk
 		return blockState;
 	}
 
-	private static <T extends Comparable<T>> BlockState withProperty(BlockState state, net.minecraft.state.property.Property<T> property, String key, CompoundTag propertiesTag, String context)
+	private static <T extends Comparable<T>> BlockState withProperty(BlockState state, net.minecraft.state.property.Property<T> property, String key, NbtCompound propertiesTag, String context)
 	{
 		Optional<T> optional = property.parse(propertiesTag.getString(key));
 		if (optional.isPresent())

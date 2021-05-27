@@ -4,11 +4,11 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.client.util.math.Vector4f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Vector4f;
 
 public class PR3Model<T, PT extends Enum<PT>>
 {
@@ -34,17 +34,17 @@ public class PR3Model<T, PT extends Enum<PT>>
 		Matrix4f modelMat = matrices.getModel();
 		Matrix3f normalMat = matrices.getNormal();
 
-		Vector3f vA = o.vertices[face.a];
-		Vector3f vB = o.vertices[face.b];
-		Vector3f vC = o.vertices[face.c];
+		Vec3f vA = o.vertices[face.a];
+		Vec3f vB = o.vertices[face.b];
+		Vec3f vC = o.vertices[face.c];
 
-		Vector3f nA = o.normals[face.a];
-		Vector3f nB = o.normals[face.b];
-		Vector3f nC = o.normals[face.c];
+		Vec3f nA = o.normals[face.a];
+		Vec3f nB = o.normals[face.b];
+		Vec3f nC = o.normals[face.c];
 
-		Vector3f tA = o.uvs[face.a];
-		Vector3f tB = o.uvs[face.b];
-		Vector3f tC = o.uvs[face.c];
+		Vec3f tA = o.uvs[face.a];
+		Vec3f tB = o.uvs[face.b];
+		Vec3f tC = o.uvs[face.c];
 
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vC, nC, tC);
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vC, nC, tC);
@@ -52,11 +52,11 @@ public class PR3Model<T, PT extends Enum<PT>>
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vA, nA, tA);
 	}
 
-	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vector3f vertex, Vector3f normal, Vector3f texCoord)
+	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vec3f vertex, Vec3f normal, Vec3f texCoord)
 	{
 		Vector4f v = new Vector4f(vertex.getX(), vertex.getY(), vertex.getZ(), 1.0F);
 		v.transform(modelMatrix);
-		Vector3f n = new Vector3f(-normal.getX(), -normal.getY(), -normal.getZ());
+		Vec3f n = new Vec3f(-normal.getX(), -normal.getY(), -normal.getZ());
 		n.transform(normalMatrix);
 		vertexConsumer.vertex(v.getX(), v.getY(), v.getZ(), 1, 1, 1, 1, texCoord.getX(), 1 - texCoord.getY(), 0xFFFFFF, light, n.getX(), n.getY(), n.getZ());
 	}

@@ -11,7 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -76,19 +76,19 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag)
+	public NbtCompound writeNbt(NbtCompound tag)
 	{
 		tag.putInt("collectionTimer", collectionTimer);
 		tag.putInt("collectionTimerLength", collectionTimerLength);
-		return super.toTag(tag);
+		return super.writeNbt(tag);
 	}
 
 	@Override
-	public void fromTag(BlockState state, CompoundTag tag)
+	public void readNbt(BlockState state, NbtCompound tag)
 	{
 		collectionTimer = tag.getInt("collectionTimer");
 		collectionTimerLength = tag.getInt("collectionTimerLength");
-		super.fromTag(state, tag);
+		super.readNbt(state, tag);
 	}
 
 	protected int getHydrateTime()

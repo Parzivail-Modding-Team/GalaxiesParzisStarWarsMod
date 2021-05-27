@@ -27,7 +27,7 @@ public class BucketableFishEntity extends SchoolingFishEntity
 		return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 3.0D);
 	}
 
-	protected ItemStack getFishBucketItem()
+	protected ItemStack getBucketItem()
 	{
 		return new ItemStack(bucket);
 	}

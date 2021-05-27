@@ -56,7 +56,7 @@ public class VaporatorRecipe implements Recipe<Inventory>
 	}
 
 	@Environment(EnvType.CLIENT)
-	public ItemStack getRecipeKindIcon()
+	public ItemStack createIcon()
 	{
 		return new ItemStack(SwgBlocks.MoistureVaporator.Gx8);
 	}

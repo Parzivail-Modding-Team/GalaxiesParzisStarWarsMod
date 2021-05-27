@@ -18,7 +18,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
@@ -64,7 +64,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	@Override
 	public void render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
 	{
-		CompoundTag tag = stack.getOrCreateTag();
+		NbtCompound tag = stack.getOrCreateTag();
 
 		String blasterModel = tag.getString("model");
 		if (blasterModel.isEmpty())

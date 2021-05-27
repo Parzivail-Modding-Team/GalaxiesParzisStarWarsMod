@@ -13,7 +13,7 @@ import com.parzivail.util.world.MultiCompositeTerrain;
 import com.parzivail.util.world.TerrainLayer;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.BlockView;
@@ -138,8 +138,8 @@ public class TatooineChunkGenerator extends ChunkGenerator
 		{
 			strChunk.init();
 
-			for (Map.Entry<BlockPos, CompoundTag> tile : strChunk.tiles.entrySet())
-				pc.addPendingBlockEntityTag(tile.getValue());
+			for (Map.Entry<BlockPos, NbtCompound> tile : strChunk.tiles.entrySet())
+				pc.addPendingBlockEntityNbt(tile.getValue());
 
 			for (int i = 0; i < strChunk.numSections; i++)
 			{
