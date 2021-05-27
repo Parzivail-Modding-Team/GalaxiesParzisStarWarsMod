@@ -1,6 +1,7 @@
 package com.parzivail.pswg.blockentity;
 
 import com.parzivail.util.item.ItemUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,14 +10,15 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 
 public abstract class InventoryBlockEntity extends BlockEntity implements Inventory
 {
 	protected final DefaultedList<ItemStack> inventory;
 
-	public InventoryBlockEntity(BlockEntityType<?> type, int inventorySize)
+	public InventoryBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, int inventorySize)
 	{
-		super(type);
+		super(type, pos, state);
 		inventory = DefaultedList.ofSize(inventorySize, ItemStack.EMPTY);
 	}
 

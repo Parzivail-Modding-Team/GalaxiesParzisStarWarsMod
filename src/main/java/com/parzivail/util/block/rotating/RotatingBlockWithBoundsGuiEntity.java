@@ -8,13 +8,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
 public class RotatingBlockWithBoundsGuiEntity extends RotatingBlockWithGuiEntity
 {
 	private final VoxelShape shape;
 
-	public RotatingBlockWithBoundsGuiEntity(VoxelShape shape, Settings settings, Supplier<BlockEntity> blockEntitySupplier)
+	public RotatingBlockWithBoundsGuiEntity(VoxelShape shape, Settings settings, BiFunction<BlockPos, BlockState, BlockEntity> blockEntitySupplier)
 	{
 		super(settings.dynamicBounds(), blockEntitySupplier);
 		this.shape = shape;

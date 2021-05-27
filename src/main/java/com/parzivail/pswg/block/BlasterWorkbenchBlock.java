@@ -24,7 +24,7 @@ public class BlasterWorkbenchBlock extends BlockWithEntity
 	@Override
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new BlasterWorkbenchBlockEntity();
+		return new BlasterWorkbenchBlockEntity(pos, state);
 	}
 
 	public BlockRenderType getRenderType(BlockState state)

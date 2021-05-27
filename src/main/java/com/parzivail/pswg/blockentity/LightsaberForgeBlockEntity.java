@@ -3,6 +3,7 @@ package com.parzivail.pswg.blockentity;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,10 +12,11 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.BlockPos;
 
 public class LightsaberForgeBlockEntity extends BlockEntity implements NamedScreenHandlerFactory
 {
-	public LightsaberForgeBlockEntity()
+	public LightsaberForgeBlockEntity(BlockPos pos, BlockState state)
 	{
 		super(SwgBlocks.Workbench.LightsaberBlockEntityType);
 	}

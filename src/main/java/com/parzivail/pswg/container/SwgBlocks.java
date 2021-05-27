@@ -21,6 +21,7 @@ import com.parzivail.util.block.rotating.RotatingBlockWithBounds;
 import com.parzivail.util.block.rotating.RotatingBlockWithBoundsGuiEntity;
 import com.parzivail.util.block.rotating.RotatingBlockWithGuiEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
@@ -30,6 +31,7 @@ import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
@@ -63,22 +65,22 @@ public class SwgBlocks
 		@RegistryName("black_kyber_crate")
 		public static final RotatingBlockWithGuiEntity BlackKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateOctagonBlockEntity::new);
 		@RegistryName("kyber_crate")
-		public static final BlockEntityType<CrateOctagonBlockEntity> KyberCrateBlockEntityType = BlockEntityType.Builder.create(CrateOctagonBlockEntity::new, OrangeKyber, GrayKyber, BlackKyber).build(null);
+		public static final BlockEntityType<CrateOctagonBlockEntity> KyberCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateOctagonBlockEntity::new, OrangeKyber, GrayKyber, BlackKyber).build();
 
 		@RegistryName("toolbox")
 		public static final RotatingBlockWithGuiEntity Toolbox = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateMosEisleyBlockEntity::new);
 		@RegistryName("toolbox")
-		public static final BlockEntityType<CrateMosEisleyBlockEntity> ToolboxBlockEntityType = BlockEntityType.Builder.create(CrateMosEisleyBlockEntity::new, Toolbox).build(null);
+		public static final BlockEntityType<CrateMosEisleyBlockEntity> ToolboxBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateMosEisleyBlockEntity::new, Toolbox).build();
 
 		@RegistryName("imperial_crate")
 		public static final RotatingBlockWithGuiEntity Imperial = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateImperialCubeBlockEntity::new);
 		@RegistryName("imperial_crate")
-		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCrateBlockEntityType = BlockEntityType.Builder.create(CrateImperialCubeBlockEntity::new, Imperial).build(null);
+		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateImperialCubeBlockEntity::new, Imperial).build();
 
 		@RegistryName("segmented_crate")
 		public static final RotatingBlockWithBoundsGuiEntity Segmented = new RotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(28, 14, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0), CrateSegmentedBlockEntity::new);
 		@RegistryName("segmented_crate")
-		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = BlockEntityType.Builder.create(CrateSegmentedBlockEntity::new, Segmented).build(null);
+		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, Segmented).build();
 	}
 
 	public static class Door
@@ -88,7 +90,7 @@ public class SwgBlocks
 		@TabIgnore
 		public static final BlockTatooineHomeDoor TatooineHomeController = new BlockTatooineHomeDoorController(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 0));
 		@RegistryName("door_tatooine_home")
-		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = BlockEntityType.Builder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeController).build(null);
+		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeController).build();
 	}
 
 	public static class Machine
@@ -102,7 +104,7 @@ public class SwgBlocks
 		@RegistryName("gx8_moisture_vaporator")
 		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(10.0F).breakByTool(FabricToolTags.PICKAXES, 2).requiresTool());
 		@RegistryName("gx8_moisture_vaporator")
-		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = BlockEntityType.Builder.create(MoistureVaporatorBlockEntity::new, Gx8).build(null);
+		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = FabricBlockEntityTypeBuilder.create(MoistureVaporatorBlockEntity::new, Gx8).build();
 	}
 
 	public static class Pipe
@@ -176,12 +178,12 @@ public class SwgBlocks
 		@RegistryName("blaster_workbench")
 		public static final Block Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("blaster_workbench")
-		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = BlockEntityType.Builder.create(BlasterWorkbenchBlockEntity::new, Blaster).build(null);
+		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = FabricBlockEntityTypeBuilder.create(BlasterWorkbenchBlockEntity::new, Blaster).build();
 
 		@RegistryName("lightsaber_forge")
 		public static final Block Lightsaber = new LightsaberForgeBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(2.5F).breakByTool(FabricToolTags.AXES, 0));
 		@RegistryName("lightsaber_forge")
-		public static final BlockEntityType<LightsaberForgeBlockEntity> LightsaberBlockEntityType = BlockEntityType.Builder.create(LightsaberForgeBlockEntity::new, Lightsaber).build(null);
+		public static final BlockEntityType<LightsaberForgeBlockEntity> LightsaberBlockEntityType = FabricBlockEntityTypeBuilder.create(LightsaberForgeBlockEntity::new, Lightsaber).build();
 	}
 
 	public static class Plant

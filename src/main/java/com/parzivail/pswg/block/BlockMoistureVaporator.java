@@ -42,7 +42,7 @@ public class BlockMoistureVaporator extends RotatingBlockWithEntity implements I
 	@Override
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new MoistureVaporatorBlockEntity();
+		return new MoistureVaporatorBlockEntity(pos, state);
 	}
 
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)

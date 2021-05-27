@@ -6,6 +6,7 @@ import com.parzivail.pswg.container.SwgRecipeType;
 import com.parzivail.pswg.recipe.VaporatorRecipe;
 import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
 import com.parzivail.util.item.ItemUtil;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -17,6 +18,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.Optional;
 
@@ -26,9 +28,9 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	private int collectionTimer;
 	private int collectionTimerLength;
 
-	public MoistureVaporatorBlockEntity()
+	public MoistureVaporatorBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(SwgBlocks.MoistureVaporator.Gx8BlockEntityType, 2);
+		super(SwgBlocks.MoistureVaporator.Gx8BlockEntityType, pos, state, 2);
 		this.propertyDelegate = new PropertyDelegate()
 		{
 			public int get(int index)

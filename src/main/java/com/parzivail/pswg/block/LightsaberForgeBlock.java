@@ -22,7 +22,7 @@ public class LightsaberForgeBlock extends BlockWithEntity
 	@Override
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new LightsaberForgeBlockEntity();
+		return new LightsaberForgeBlockEntity(pos, state);
 	}
 
 	public BlockRenderType getRenderType(BlockState state)
