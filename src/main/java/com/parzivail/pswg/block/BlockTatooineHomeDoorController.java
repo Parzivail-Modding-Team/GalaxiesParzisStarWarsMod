@@ -76,7 +76,7 @@ public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor imple
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockView world)
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
 		return new TatooineHomeDoorBlockEntity();
 	}

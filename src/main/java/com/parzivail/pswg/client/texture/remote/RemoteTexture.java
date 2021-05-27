@@ -1,12 +1,12 @@
 package com.parzivail.pswg.client.texture.remote;
 
+import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
-import net.minecraft.client.texture.TextureUtil;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -59,7 +59,7 @@ public class RemoteTexture extends ResourceTexture
 
 	private void uploadTexture(NativeImage image)
 	{
-		TextureUtil.allocate(this.getGlId(), image.getWidth(), image.getHeight());
+		TextureUtil.prepareImage(this.getGlId(), image.getWidth(), image.getHeight());
 		image.upload(0, 0, 0, true);
 	}
 

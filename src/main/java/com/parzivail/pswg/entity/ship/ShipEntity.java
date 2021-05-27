@@ -28,11 +28,7 @@ import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -144,7 +140,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	@Override
 	public boolean collides()
 	{
-		return !this.removed;
+		return !this.isRemoved();
 	}
 
 	@Override
@@ -285,8 +281,8 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 	protected void copyEntityData(Entity entity)
 	{
-		entity.yaw = this.yaw;
-		entity.pitch = this.pitch;
+		this.setPitch(entity.getPitch());
+		this.setYaw(entity.getYaw());
 	}
 
 	@Nullable

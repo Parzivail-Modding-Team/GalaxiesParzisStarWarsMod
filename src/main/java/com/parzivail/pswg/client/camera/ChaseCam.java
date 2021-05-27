@@ -26,7 +26,7 @@ public class ChaseCam
 
 	public void tick(ShipEntity parent)
 	{
-		if (parent == null || parent.removed)
+		if (parent == null || parent.isRemoved())
 			return;
 
 		if (firstTick)

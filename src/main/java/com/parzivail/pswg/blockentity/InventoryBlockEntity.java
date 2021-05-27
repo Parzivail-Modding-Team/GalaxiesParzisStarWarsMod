@@ -1,7 +1,6 @@
 package com.parzivail.pswg.blockentity;
 
 import com.parzivail.util.item.ItemUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -29,10 +28,10 @@ public abstract class InventoryBlockEntity extends BlockEntity implements Invent
 	}
 
 	@Override
-	public void readNbt(BlockState state, NbtCompound tag)
+	public void readNbt(NbtCompound tag)
 	{
 		Inventories.readNbt(tag, inventory);
-		super.readNbt(state, tag);
+		super.readNbt(tag);
 	}
 
 	@Override

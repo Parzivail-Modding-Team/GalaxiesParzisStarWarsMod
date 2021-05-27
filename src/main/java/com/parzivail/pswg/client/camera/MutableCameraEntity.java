@@ -47,14 +47,14 @@ public class MutableCameraEntity extends Entity
 		this.parent = parent;
 		this.camera = camera;
 
-		setWorld(parent.world);
+		this.world = parent.world;
 		this.prevX = camera.prevPos.x;
 		this.prevY = camera.prevPos.y;
 		this.prevZ = camera.prevPos.z;
 		setPosition(camera.pos.x, camera.pos.y, camera.pos.z);
 
-		this.prevPitch = this.pitch;
-		this.prevYaw = this.yaw;
+		this.prevPitch = this.getPitch();
+		this.prevYaw = this.getYaw();
 		QuatUtil.updateEulerRotation(this, parent.getViewRotation(Client.minecraft.getTickDelta()));
 
 		return this;
