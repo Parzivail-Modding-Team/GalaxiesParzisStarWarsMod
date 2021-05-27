@@ -16,7 +16,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.util.Identifier;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,7 +30,6 @@ import java.util.Map;
 public class EntityRenderDispatcherMixin
 {
 	@Shadow
-	@Final
 	private Map<String, PlayerEntityRenderer> modelRenderers;
 
 	@Inject(method = "registerRenderers", at = @At("TAIL"))

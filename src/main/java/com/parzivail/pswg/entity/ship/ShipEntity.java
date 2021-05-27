@@ -120,12 +120,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		return getBoundingBox().expand(5);
 	}
 
-	@Override
-	protected boolean canClimb()
-	{
-		return false;
-	}
-
 	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
 	{
 		return getHeight() / 2f;
