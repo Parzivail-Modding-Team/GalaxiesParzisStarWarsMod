@@ -50,16 +50,16 @@ public class WorrtEntity extends AnimalEntity
 	protected void initGoals()
 	{
 		this.goalSelector.add(1, new SwimGoal(this));
-		this.goalSelector.add(1, new WorrtEntity.EscapeDangerGoal(this, 2.2D));
-		this.goalSelector.add(4, new FleeEntityGoal<>(this, PlayerEntity.class, 8.0F, 2.2D, 2.2D));
-		this.goalSelector.add(4, new FleeEntityGoal<>(this, HostileEntity.class, 4.0F, 2.2D, 2.2D));
-		this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.6D));
+		this.goalSelector.add(1, new WorrtEntity.EscapeDangerGoal(this, 0.8D));
+		this.goalSelector.add(4, new FleeEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D));
+		this.goalSelector.add(4, new FleeEntityGoal<>(this, HostileEntity.class, 4.0F, 0.6D, 1.0D));
+		this.goalSelector.add(6, new WanderAroundFarGoal(this, 1.0D, 0.1F));
 		this.goalSelector.add(11, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
 	}
 
 	public static DefaultAttributeContainer.Builder createAttributes()
 	{
-		return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 4.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.3D);
+		return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 4.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 1.0D);
 	}
 
 	protected float getJumpVelocity()
@@ -76,7 +76,7 @@ public class WorrtEntity extends AnimalEntity
 				}
 			}
 
-			return (float)this.moveControl.getSpeed() * 0.3f;
+			return (float)this.moveControl.getSpeed() * 0.5f;
 		}
 		else
 		{

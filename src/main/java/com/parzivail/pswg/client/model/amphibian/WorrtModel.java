@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.model.amphibian;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.util.client.ModelPartUtil;
 import com.parzivail.util.math.Ease;
@@ -185,10 +186,27 @@ public class WorrtModel<T extends Entity> extends EntityModel<T>
 	@Override
 	public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)
 	{
-		//        float cycle = Math.abs(MathHelper.sin(0.02F * animationProgress));
-		//		float t2 = (0.001F * ((float)(System.currentTimeMillis() % 10000))) % 2;
+		float headYawRad = headYaw * 0.017453292F;
+		float headPitchRad = headPitch * 0.017453292F;
 
-		float dT = MathHelper.fractionalPart(animationProgress);
+		float leftAntenna = MathHelper.sin(0.02F * animationProgress);
+		antennaLeft1.pitch = 0.4363323129985824F + leftAntenna * 0.1f;
+		antennaLeft2.pitch = 0.8991936386169619F + leftAntenna * 0.05f + headPitchRad;
+
+		float rightAntenna = MathHelper.cos(0.02F * animationProgress);
+		antennaRight1.pitch = 0.4363323129985824F + rightAntenna * 0.1f;
+		antennaRight2.pitch = 0.8991936386169619F + rightAntenna * 0.05f + headPitchRad;
+
+		antennaRight1.yaw = 0.6981317007977318F + headYawRad / 6f;
+		antennaLeft1.yaw = -0.6981317007977318F + headYawRad / 6f;
+
+		eyeRight.yaw = 0.3490658503988659F + headYawRad / 4f;
+		eyeLeft.yaw = -0.3490658503988659F + headYawRad / 4f;
+
+		eyeRight.pitch = headPitchRad;
+		eyeLeft.pitch = headPitchRad;
+
+		float dT = Client.minecraft.getTickDelta();
 
 		if (entity instanceof WorrtEntity)
 		{
@@ -197,7 +215,7 @@ public class WorrtModel<T extends Entity> extends EntityModel<T>
 
 			if (timer > 0)
 			{
-				float t = MathHelper.clamp((timer + dT) / 5f, 0, 1);
+				float t = MathHelper.clamp((timer - dT) / 5f, 0, 1);
 
 				body.pitch = (-MathHelper.cos(t * MathUtil.fPI) + 1) / 4f;
 				head.pitch = -(-MathHelper.cos(t * MathUtil.fPI) + 1) / 7f;
@@ -221,7 +239,7 @@ public class WorrtModel<T extends Entity> extends EntityModel<T>
 			}
 			else
 			{
-				float t = MathHelper.clamp((-timer + dT) / 5f, 0, 1);
+				float t = MathHelper.clamp((-timer - dT) / 5f, 0, 1);
 
 				// landing [0, 1)
 				body.pitch = 0.5f - (-MathHelper.cos(Ease.inCubic(t) * MathUtil.fPI) + 1) / 4f;
