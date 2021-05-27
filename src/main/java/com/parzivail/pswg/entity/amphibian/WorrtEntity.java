@@ -89,7 +89,7 @@ public class WorrtEntity extends AnimalEntity
 		var d = this.moveControl.getSpeed();
 		if (d > 0.0D)
 		{
-			double e = squaredHorizontalLength(this.getVelocity());
+			var e = this.getVelocity().method_37268();
 			if (e < 0.01D)
 			{
 				this.updateVelocity((float)d, new Vec3d(0.0D, 0.0D, 1.0D));
@@ -211,7 +211,7 @@ public class WorrtEntity extends AnimalEntity
 
 	private void lookTowards(double x, double z)
 	{
-		this.yaw = (float)(MathHelper.atan2(z - this.getZ(), x - this.getX()) * 57.2957763671875D) - 90.0F;
+		this.setYaw((float)(MathHelper.atan2(z - this.getZ(), x - this.getX()) * 57.2957763671875D) - 90.0F);
 	}
 
 	private void method_6611()

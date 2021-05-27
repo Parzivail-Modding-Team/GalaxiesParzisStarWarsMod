@@ -25,7 +25,7 @@ public class FramebufferMixin
 		FramebufferInfo.DEPTH_ATTACHMENT = GL30.GL_DEPTH_STENCIL_ATTACHMENT;
 	}
 
-	@ModifyArg(method = "initFbo", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;texImage2D(IIIIIIIILjava/nio/IntBuffer;)V", ordinal = 0), index = 2)
+	@ModifyArg(method = "initFbo", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V", ordinal = 0), index = 2)
 	private int initFboTexImage2D(int internalFormat)
 	{
 		return GL30.GL_DEPTH24_STENCIL8;
