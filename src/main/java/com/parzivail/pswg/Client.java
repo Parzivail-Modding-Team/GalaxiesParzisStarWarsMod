@@ -8,6 +8,7 @@ import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.amphibian.WorrtEntityRenderer;
 import com.parzivail.pswg.client.render.block.TatooineHomeDoorRenderer;
 import com.parzivail.pswg.client.render.fish.FaaEntityRenderer;
+import com.parzivail.pswg.client.render.fish.LaaEntityRenderer;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
 import com.parzivail.pswg.client.render.item.hud.BlasterHudRenderer;
@@ -174,6 +175,7 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, (entityRenderDispatcher, context) -> new BlasterBoltRenderer(entityRenderDispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, (entityRenderDispatcher, context) -> new ThrownLightsaberRenderer(entityRenderDispatcher, context.getItemRenderer()));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Faa, (dispatcher, context) -> new FaaEntityRenderer(dispatcher));
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Laa, (dispatcher, context) -> new LaaEntityRenderer(dispatcher));
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Amphibian.Worrt, (dispatcher, context) -> new WorrtEntityRenderer(dispatcher));
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);

@@ -1,4 +1,4 @@
-package com.parzivail.pswg.entity.fish;
+package com.parzivail.util.entity;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
@@ -6,17 +6,20 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.SchoolingFishEntity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 
-public class FaaEntity extends SchoolingFishEntity
+public class BucketableFishEntity extends SchoolingFishEntity
 {
-	public FaaEntity(EntityType<? extends FaaEntity> entityType, World world)
+	private final Item bucket;
+
+	public BucketableFishEntity(EntityType<? extends BucketableFishEntity> entityType, World world, Item bucket)
 	{
 		super(entityType, world);
+		this.bucket = bucket;
 	}
 
 	public static DefaultAttributeContainer.Builder createAttributes()
@@ -26,8 +29,7 @@ public class FaaEntity extends SchoolingFishEntity
 
 	protected ItemStack getFishBucketItem()
 	{
-		// TODO
-		return new ItemStack(Items.COD_BUCKET);
+		return new ItemStack(bucket);
 	}
 
 	protected SoundEvent getAmbientSound()

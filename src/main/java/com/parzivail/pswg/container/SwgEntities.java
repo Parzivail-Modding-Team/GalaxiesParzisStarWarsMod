@@ -4,14 +4,16 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
-import com.parzivail.pswg.entity.fish.FaaEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
+import com.parzivail.util.entity.BucketableFishEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
+import net.minecraft.item.Items;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
@@ -51,17 +53,29 @@ public class SwgEntities
 
 	public static class Fish
 	{
-
-		public static final EntityType<FaaEntity> Faa = Registry.register(
+		public static final EntityType<BucketableFishEntity> Faa = Registry.register(
 				Registry.ENTITY_TYPE,
 				Resources.identifier("faa"),
-				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, FaaEntity::new).dimensions(EntityDimensions.fixed(0.25f, 0.25f)).build()
+				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
+				                       .dimensions(EntityDimensions.fixed(0.25f, 0.25f))
+				                       .build()
+		);
+
+		public static final EntityType<BucketableFishEntity> Laa = Registry.register(
+				Registry.ENTITY_TYPE,
+				Resources.identifier("laa"),
+				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
+				                       .dimensions(EntityDimensions.fixed(0.25f, 0.25f))
+				                       .build()
 		);
 
 		static void register()
 		{
 			entityTypes.add(Faa);
-			FabricDefaultAttributeRegistry.register(Faa, FaaEntity.createAttributes());
+			FabricDefaultAttributeRegistry.register(Faa, BucketableFishEntity.createAttributes());
+
+			entityTypes.add(Laa);
+			FabricDefaultAttributeRegistry.register(Laa, BucketableFishEntity.createAttributes());
 		}
 	}
 

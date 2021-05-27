@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.render.fish;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.model.fish.FaaModel;
+import com.parzivail.pswg.client.model.fish.LaaModel;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -10,17 +10,17 @@ import net.minecraft.entity.passive.FishEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 
-public class FaaEntityRenderer extends MobEntityRenderer<FishEntity, FaaModel<FishEntity>>
+public class LaaEntityRenderer extends MobEntityRenderer<FishEntity, LaaModel<FishEntity>>
 {
-	public FaaEntityRenderer(EntityRenderDispatcher entityRenderDispatcher)
+	public LaaEntityRenderer(EntityRenderDispatcher entityRenderDispatcher)
 	{
-		super(entityRenderDispatcher, new FaaModel<>(), 0.5f);
+		super(entityRenderDispatcher, new LaaModel<>(), 0.5f);
 	}
 
 	@Override
 	public Identifier getTexture(FishEntity entity)
 	{
-		return Resources.identifier("textures/entity/fish/faa.png");
+		return Resources.identifier("textures/entity/fish/laa.png");
 	}
 
 	@Override
