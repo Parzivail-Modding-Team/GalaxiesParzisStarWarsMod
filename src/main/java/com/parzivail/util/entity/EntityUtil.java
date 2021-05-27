@@ -27,9 +27,9 @@ public class EntityUtil
 		fromDir = fromDir.normalize();
 
 		Vec3d endPos = startPos.add(fromDir.multiply(distance));
-		List<Entity> list = fromEntity.world.getEntitiesByClass(LivingEntity.class, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
+		var list = fromEntity.world.getEntitiesByClass(LivingEntity.class, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
 
-		for (Entity entity : list)
+		for (var entity : list)
 		{
 			if (blacklist.contains(entity))
 				continue;

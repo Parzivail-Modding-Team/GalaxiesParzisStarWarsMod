@@ -10,6 +10,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 
 public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable
 {
@@ -21,9 +22,9 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 	private static final byte MASK_TIMER = (byte)0b00011111;
 	private byte timer = 0;
 
-	public TatooineHomeDoorBlockEntity()
+	public TatooineHomeDoorBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(SwgBlocks.Door.TatooineHomeBlockEntityType);
+		super(SwgBlocks.Door.TatooineHomeBlockEntityType, pos, state);
 	}
 
 	@Override
@@ -37,9 +38,9 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 	}
 
 	@Override
-	public void readNbt(BlockState state, NbtCompound tag)
+	public void readNbt(NbtCompound tag)
 	{
-		super.readNbt(state, tag);
+		super.readNbt(tag);
 
 		timer = tag.getByte("timer");
 	}

@@ -78,6 +78,6 @@ public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor imple
 	@Override
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new TatooineHomeDoorBlockEntity();
+		return new TatooineHomeDoorBlockEntity(pos, state);
 	}
 }

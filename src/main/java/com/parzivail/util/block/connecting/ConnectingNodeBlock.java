@@ -146,7 +146,7 @@ public abstract class ConnectingNodeBlock extends Block
 
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
-		if (!player.abilities.allowModifyWorld || !player.getStackInHand(hand).isEmpty())
+		if (!player.getAbilities().allowModifyWorld || !player.getStackInHand(hand).isEmpty())
 		{
 			return ActionResult.PASS;
 		}

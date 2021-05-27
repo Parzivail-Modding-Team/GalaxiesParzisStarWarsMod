@@ -6,7 +6,6 @@ import com.parzivail.pswg.container.SwgRecipeType;
 import com.parzivail.pswg.recipe.VaporatorRecipe;
 import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
 import com.parzivail.util.item.ItemUtil;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -34,15 +33,12 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 		{
 			public int get(int index)
 			{
-				switch (index)
-				{
-					case 0:
-						return MoistureVaporatorBlockEntity.this.collectionTimer;
-					case 1:
-						return MoistureVaporatorBlockEntity.this.collectionTimerLength;
-					default:
-						return 0;
-				}
+				return switch (index)
+						{
+							case 0 -> MoistureVaporatorBlockEntity.this.collectionTimer;
+							case 1 -> MoistureVaporatorBlockEntity.this.collectionTimerLength;
+							default -> 0;
+						};
 			}
 
 			public void set(int index, int value)
@@ -84,11 +80,11 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	}
 
 	@Override
-	public void readNbt(BlockState state, NbtCompound tag)
+	public void readNbt(NbtCompound tag)
 	{
 		collectionTimer = tag.getInt("collectionTimer");
 		collectionTimerLength = tag.getInt("collectionTimerLength");
-		super.readNbt(state, tag);
+		super.readNbt(tag);
 	}
 
 	protected int getHydrateTime()
