@@ -8,7 +8,6 @@ import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.item.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -108,7 +107,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			RenderSystem.defaultBlendFunc();
 		}
 
-		client.getTextureManager().bindTexture(InGameHud.GUI_ICONS_TEXTURE);
+		RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
 
 		return bt.isAimingDownSights;
 	}
