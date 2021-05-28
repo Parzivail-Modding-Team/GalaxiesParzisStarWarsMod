@@ -122,6 +122,10 @@ tasks.jar {
 	exclude("com/parzivail/datagen")
 }
 
+tasks.remapJar {
+	archiveVersion.set(project.version.toString().replace("+", "_"))
+}
+
 // configure the maven publication
 publishing {
 	publications {
@@ -141,4 +145,10 @@ publishing {
 		// uncomment to publish to the local maven
 		// mavenLocal()
 	}
+}
+
+open class CITask : DefaultTask()
+
+tasks.register<CITask>("ci") {
+	dependsOn(tasks.build)
 }
