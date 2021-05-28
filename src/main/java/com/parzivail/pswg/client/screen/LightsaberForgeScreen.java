@@ -320,9 +320,9 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		bufferBuilder.vertex(matrices.peek().getModel(), (float)x1, (float)y0, (float)z).color(r, g, b, 255).texture(u1, v0).next();
 		bufferBuilder.vertex(matrices.peek().getModel(), (float)x0, (float)y0, (float)z).color(r, g, b, 255).texture(u0, v0).next();
 		bufferBuilder.end();
-		RenderSystem.disableTexture();
+
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 		BufferRenderer.draw(bufferBuilder);
-		RenderSystem.enableTexture();
 
 		matrices.pop();
 	}
