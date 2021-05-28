@@ -7,6 +7,10 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
+/**
+ * Model: Faa
+ * Author: Coda
+ */
 @Environment(EnvType.CLIENT)
 public class FaaEntityModel<T extends Entity> extends SinglePartEntityModel<T>
 {

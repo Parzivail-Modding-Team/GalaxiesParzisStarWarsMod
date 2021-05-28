@@ -11,6 +11,10 @@ import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 
+/**
+ * Model: Worrt
+ * Author: Coda
+ */
 @Environment(EnvType.CLIENT)
 public class WorrtEntityModel<T extends Entity> extends SinglePartEntityModel<T>
 {
