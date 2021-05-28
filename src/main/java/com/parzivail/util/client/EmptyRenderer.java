@@ -3,12 +3,12 @@ package com.parzivail.util.client;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.shape.VoxelShapes;
 
 public class EmptyRenderer extends EntityRenderer<Entity>
 {
@@ -33,7 +33,7 @@ public class EmptyRenderer extends EntityRenderer<Entity>
 		matrix.translate(0, box.getYLength() / 2, 0);
 
 		var f = 0.025f;
-		var n = entity.getClass().getSimpleName();
+		var n = entity.getType().getTranslationKey();
 
 		matrix.multiply(this.dispatcher.getRotation());
 		matrix.scale(-f, -f, f);
@@ -52,14 +52,8 @@ public class EmptyRenderer extends EntityRenderer<Entity>
 
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getLines());
 
-		var center = box.getCenter();
-
-		var boxMatrix = matrix.peek().getModel();
-		var shape = VoxelShapes.cuboid(box);
-		shape.forEachEdge((x1, y1, z1, x2, y2, z2) -> {
-			vertexConsumer.vertex(boxMatrix, (float)(x1 - center.x), (float)(y1 - center.y), (float)(z1 - center.z)).color(1f, 1f, 1f, 1f).next();
-			vertexConsumer.vertex(boxMatrix, (float)(x2 - center.x), (float)(y2 - center.y), (float)(z2 - center.z)).color(1f, 1f, 1f, 1f).next();
-		});
+		box = box.offset(-entity.getX(), -entity.getY(), -entity.getZ());
+		WorldRenderer.drawBox(matrix, vertexConsumer, box, 1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	@Override

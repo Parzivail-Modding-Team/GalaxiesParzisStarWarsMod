@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.pr3;
 
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -31,20 +32,20 @@ public class PR3Model<T, PT extends Enum<PT>>
 
 	private void emitFace(VertexConsumer vertexConsumer, MatrixStack.Entry matrices, PR3Object o, PR3FacePointer face, int light)
 	{
-		Matrix4f modelMat = matrices.getModel();
-		Matrix3f normalMat = matrices.getNormal();
+		var modelMat = matrices.getModel();
+		var normalMat = matrices.getNormal();
 
-		Vec3f vA = o.vertices[face.a];
-		Vec3f vB = o.vertices[face.b];
-		Vec3f vC = o.vertices[face.c];
+		var vA = o.vertices[face.a];
+		var vB = o.vertices[face.b];
+		var vC = o.vertices[face.c];
 
-		Vec3f nA = o.normals[face.a];
-		Vec3f nB = o.normals[face.b];
-		Vec3f nC = o.normals[face.c];
+		var nA = o.normals[face.a];
+		var nB = o.normals[face.b];
+		var nC = o.normals[face.c];
 
-		Vec3f tA = o.uvs[face.a];
-		Vec3f tB = o.uvs[face.b];
-		Vec3f tC = o.uvs[face.c];
+		var tA = o.uvs[face.a];
+		var tB = o.uvs[face.b];
+		var tC = o.uvs[face.c];
 
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vC, nC, tC);
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vC, nC, tC);
@@ -54,24 +55,24 @@ public class PR3Model<T, PT extends Enum<PT>>
 
 	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vec3f vertex, Vec3f normal, Vec3f texCoord)
 	{
-		Vector4f v = new Vector4f(vertex.getX(), vertex.getY(), vertex.getZ(), 1.0F);
+		var v = new Vector4f(vertex.getX(), vertex.getY(), vertex.getZ(), 1.0F);
 		v.transform(modelMatrix);
-		Vec3f n = new Vec3f(-normal.getX(), -normal.getY(), -normal.getZ());
+		var n = new Vec3f(-normal.getX(), -normal.getY(), -normal.getZ());
 		n.transform(normalMatrix);
-		vertexConsumer.vertex(v.getX(), v.getY(), v.getZ(), 1, 1, 1, 1, texCoord.getX(), 1 - texCoord.getY(), 0xFFFFFF, light, n.getX(), n.getY(), n.getZ());
+		vertexConsumer.vertex(v.getX(), v.getY(), v.getZ(), 1, 1, 1, 1, texCoord.getX(), 1 - texCoord.getY(), OverlayTexture.DEFAULT_UV, light, n.getX(), n.getY(), n.getZ());
 	}
 
 	public void render(T target, VertexConsumerProvider vertexConsumers, Identifier texture, MatrixStack matrices, int light, float tickDelta)
 	{
-		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texture));
+		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texture));
 
-		for (PR3Object o : getObjects())
+		for (var o : getObjects())
 			renderObject(target, o, vertexConsumer, matrices, tickDelta, light);
 	}
 
 	public void renderObject(VertexConsumer consumer, String objectName, T target, float tickDelta, MatrixStack matrices, int light)
 	{
-		PR3Object o = getObject(objectName);
+		var o = getObject(objectName);
 		renderObject(target, o, consumer, matrices, tickDelta, light);
 	}
 
@@ -79,13 +80,13 @@ public class PR3Model<T, PT extends Enum<PT>>
 	{
 		matrices.push();
 
-		MatrixStack.Entry entry = matrices.peek();
-		Matrix4f modelMat = entry.getModel();
+		var entry = matrices.peek();
+		var modelMat = entry.getModel();
 		modelMat.multiply(o.transformationMatrix);
 
 		transform(matrices, target, o.name, tickDelta);
 
-		for (PR3FacePointer face : o.faces)
+		for (var face : o.faces)
 			emitFace(consumer, matrices.peek(), o, face, light);
 
 		matrices.pop();
@@ -98,7 +99,7 @@ public class PR3Model<T, PT extends Enum<PT>>
 
 	public PR3Object getObject(String name)
 	{
-		for (PR3Object object : getObjects())
+		for (var object : getObjects())
 			if (object.name.equals(name))
 				return object;
 
