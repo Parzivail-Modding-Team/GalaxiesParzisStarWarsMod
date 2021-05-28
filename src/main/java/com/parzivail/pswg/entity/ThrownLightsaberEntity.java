@@ -1,5 +1,7 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.Client;
+import com.parzivail.pswg.client.sound.LightsaberThrownSoundInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -7,6 +9,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
@@ -36,6 +39,14 @@ public class ThrownLightsaberEntity extends ThrownEntity
 	{
 		super.readCustomDataFromNbt(tag);
 		setLife(tag.getByte("life"));
+	}
+
+	@Override
+	public void onSpawnPacket(EntitySpawnS2CPacket packet)
+	{
+		super.onSpawnPacket(packet);
+
+		Client.minecraft.getSoundManager().play(new LightsaberThrownSoundInstance(this));
 	}
 
 	@Override

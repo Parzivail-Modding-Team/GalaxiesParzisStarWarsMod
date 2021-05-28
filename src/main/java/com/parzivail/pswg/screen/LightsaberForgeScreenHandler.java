@@ -82,7 +82,7 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 	{
 		super.close(player);
 		this.context.run((world, blockPos) -> {
-			this.dropInventory(player, world, this.inventory);
+			this.dropInventory(player, this.inventory);
 		});
 	}
 

@@ -97,6 +97,27 @@ public class VoxelShapeUtil
 				break;
 		}
 
+		if (minX > maxX)
+		{
+			var temp = minX;
+			minX = maxX;
+			maxX = temp;
+		}
+
+		if (minY > maxY)
+		{
+			var temp = minY;
+			minY = maxY;
+			maxY = temp;
+		}
+
+		if (minZ > maxZ)
+		{
+			var temp = minZ;
+			minZ = maxZ;
+			maxZ = temp;
+		}
+
 		return VoxelShapes.cuboid(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 

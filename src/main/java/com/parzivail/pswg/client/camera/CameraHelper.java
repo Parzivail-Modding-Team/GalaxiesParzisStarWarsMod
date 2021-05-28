@@ -7,8 +7,6 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class CameraHelper
@@ -17,25 +15,26 @@ public class CameraHelper
 
 	public static void applyCameraTransformations(float tickDelta, long limitTime, MatrixStack matrix, Camera camera)
 	{
-		assert Client.minecraft.player != null;
-
-		ShipEntity ship = ShipEntity.getShip(Client.minecraft.player);
-
-		if (ship != null)
-		{
-			Quaternion r = new Quaternion(ship.getViewRotation(tickDelta));
-
-			if (Client.minecraft.options.getPerspective() == Perspective.THIRD_PERSON_FRONT)
-				r.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, 180, true));
-
-			r.conjugate();
-			matrix.multiply(r);
-		}
-		else
-		{
-			matrix.multiply(new Quaternion(Vec3f.POSITIVE_X, camera.getPitch(), true));
-			matrix.multiply(new Quaternion(Vec3f.POSITIVE_Y, camera.getYaw() + 180.0F, true));
-		}
+		return;
+//		assert Client.minecraft.player != null;
+//
+//		ShipEntity ship = ShipEntity.getShip(Client.minecraft.player);
+//
+//		if (ship != null)
+//		{
+//			Quaternion r = new Quaternion(ship.getViewRotation(tickDelta));
+//
+//			if (Client.minecraft.options.getPerspective() == Perspective.THIRD_PERSON_FRONT)
+//				r.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, 180, true));
+//
+//			r.conjugate();
+//			matrix.multiply(r);
+//		}
+//		else
+//		{
+//			matrix.multiply(new Quaternion(Vec3f.POSITIVE_X, camera.getPitch(), true));
+//			matrix.multiply(new Quaternion(Vec3f.POSITIVE_Y, camera.getYaw() + 180.0F, true));
+//		}
 	}
 
 	public static void renderHand(MatrixStack matrices, Camera camera, float tickDelta, CallbackInfo ci)

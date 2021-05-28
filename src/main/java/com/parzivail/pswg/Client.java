@@ -16,6 +16,8 @@ import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.util.Lumberjack;
+import com.parzivail.util.client.EmptyBlockEntityRenderer;
+import com.parzivail.util.client.EmptyRenderer;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.item.ICustomHudRenderer;
@@ -26,6 +28,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
@@ -85,6 +88,7 @@ public class Client implements ClientModInitializer
 
 		// TODO
 //		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
+		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, EmptyBlockEntityRenderer::new);
 
 		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadPM3D(DynamicBakedModel.Discriminator.RENDER_SEED, Resources.identifier("models/block/barrel/mos_eisley.pm3d"), Resources.identifier("model/barrel/mos_eisley"), new Identifier("block/stone")));
 
@@ -170,6 +174,9 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.T65bXwing, T65BXwingRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, BlasterBoltRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, ThrownLightsaberRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Faa, EmptyRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Laa, EmptyRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Amphibian.Worrt, EmptyRenderer::new);
 //		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Faa, (ctx) -> new FaaEntityRenderer(dispatcher));
 //		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Laa, (ctx) -> new LaaEntityRenderer(dispatcher));
 //		EntityRendererRegistry.INSTANCE.register(SwgEntities.Amphibian.Worrt, (ctx) -> new WorrtEntityRenderer(dispatcher));

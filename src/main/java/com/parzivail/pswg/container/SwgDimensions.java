@@ -24,7 +24,7 @@ public class SwgDimensions
 			Registry.register(Registry.CHUNK_GENERATOR, Resources.identifier("tatooine_chunk_generator"), TatooineChunkGenerator.CODEC);
 
 			ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-				TYPE = server.getRegistryManager().getDimensionTypes().get(DIMENSION_TYPE_KEY);
+				TYPE = server.getRegistryManager().get(Registry.DIMENSION_TYPE_KEY).get(DIMENSION_TYPE_KEY);
 				WORLD = server.getWorld(DIMENSION);
 			});
 		}

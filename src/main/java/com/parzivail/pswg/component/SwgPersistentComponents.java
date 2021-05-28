@@ -36,7 +36,7 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 		if (species != null)
 			this.species = species.serialize();
 
-		SwgEntityComponents.PERSISTENT.sync(provider, SPECIES_SYNCOP);
+		SwgEntityComponents.PERSISTENT.sync(provider, (buf, recipient) -> writeSyncPacket(buf, recipient, SPECIES_SYNCOP));
 	}
 
 	@Override
@@ -64,27 +64,30 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 	}
 
 	@Override
-	public void writeToPacket(PacketByteBuf buf, ServerPlayerEntity recipient, int syncOp)
+	public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient)
+	{
+		writeSyncPacket(buf, recipient, 0);
+	}
+
+	private void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient, int syncOp)
 	{
 		buf.writeInt(syncOp);
 
 		switch (syncOp)
 		{
-			case FULL_SYNC:
-				NbtCompound tag = new NbtCompound();
+			case 0 -> { // Full sync
+				var tag = new NbtCompound();
 				writeToNbt(tag);
 				buf.writeNbt(tag);
-				break;
-			case SPECIES_SYNCOP:
-				buf.writeString(species);
-				break;
+			}
+			case SPECIES_SYNCOP -> buf.writeString(species);
 		}
 	}
 
 	@Override
-	public void readFromPacket(PacketByteBuf buf)
+	public void applySyncPacket(PacketByteBuf buf)
 	{
-		int syncOp = buf.readInt();
+		var syncOp = buf.readInt();
 
 		// It seems like a bad idea to read arbitrary fields
 		// on command from a packet, but this packet will only
@@ -95,19 +98,17 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 
 		switch (syncOp)
 		{
-			case FULL_SYNC:
+			case 0 -> { // Full sync
 				NbtCompound tag = buf.readNbt();
 				if (tag != null)
 					this.readFromNbt(tag);
-				break;
-			case SPECIES_SYNCOP:
-				species = buf.readString();
-				break;
+			}
+			case SPECIES_SYNCOP -> species = buf.readString();
 		}
 	}
 
 	@Override
-	public boolean shouldSyncWith(ServerPlayerEntity player, int syncOp)
+	public boolean shouldSyncWith(ServerPlayerEntity player)
 	{
 		// If we have any properties that shouldn't be
 		// synced to other players, we should just

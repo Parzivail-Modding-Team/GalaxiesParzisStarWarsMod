@@ -29,7 +29,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Quaternion;
 
 import java.util.function.Consumer;
@@ -134,32 +133,32 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		Function<Double, String> valueFormatter = value -> String.format("%s", (int)Math.round(value * 255));
 
-		this.addButton(sR = new MutableSlider(x + 41, y + 59, 100, 20, "R: %s", r / 255f, valueFormatter, slider -> {
+		this.addDrawableChild(sR = new MutableSlider(x + 41, y + 59, 100, 20, "R: %s", r / 255f, valueFormatter, slider -> {
 			r = (int)Math.round(slider.getValue() * 255);
 			commitChanges();
 		}));
-		this.addButton(sG = new MutableSlider(x + 41, y + 79, 100, 20, "G: %s", g / 255f, valueFormatter, slider -> {
+		this.addDrawableChild(sG = new MutableSlider(x + 41, y + 79, 100, 20, "G: %s", g / 255f, valueFormatter, slider -> {
 			g = (int)Math.round(slider.getValue() * 255);
 			commitChanges();
 		}));
-		this.addButton(sB = new MutableSlider(x + 41, y + 99, 100, 20, "B: %s", b / 255f, valueFormatter, slider -> {
+		this.addDrawableChild(sB = new MutableSlider(x + 41, y + 99, 100, 20, "B: %s", b / 255f, valueFormatter, slider -> {
 			b = (int)Math.round(slider.getValue() * 255);
 			commitChanges();
 		}));
 
-		this.addButton(new ButtonWidget(x + this.backgroundWidth / 2 - 20, y + 124, 40, 20, new TranslatableText("Apply"), button -> {
-			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+		this.addDrawableChild(new ButtonWidget(x + this.backgroundWidth / 2 - 20, y + 124, 40, 20, new TranslatableText("Apply"), button -> {
+			var passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeNbt(getLightsaberTag().toTag());
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketLightsaberForgeApply, passedData);
 		}));
 
-		this.addButton(bBladeColor = new ButtonWidget(x + 8, y + 119, 30, 20, new TranslatableText("Blade"), button -> {
+		this.addDrawableChild(bBladeColor = new ButtonWidget(x + 8, y + 119, 30, 20, new TranslatableText("Blade"), button -> {
 			button.active = false;
 			bCoreColor.active = true;
 			onLightsaberChanged();
 		}));
 
-		this.addButton(bCoreColor = new ButtonWidget(x + 38, y + 119, 30, 20, new TranslatableText("Core"), button -> {
+		this.addDrawableChild(bCoreColor = new ButtonWidget(x + 38, y + 119, 30, 20, new TranslatableText("Core"), button -> {
 			button.active = false;
 			bBladeColor.active = true;
 			onLightsaberChanged();
@@ -167,7 +166,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		bBladeColor.active = false;
 
-		this.addButton(cbUnstable = new MutableCheckbox(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> {
+		this.addDrawableChild(cbUnstable = new MutableCheckbox(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> {
 			commitChanges();
 		}));
 
@@ -206,9 +205,9 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	{
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{
-			LightsaberTag lt = getLightsaberTag();
+			var lt = getLightsaberTag();
 
-			int color = 0;
+			var color = 0;
 
 			if (!bBladeColor.active)
 				color = lt.bladeColor;
@@ -241,12 +240,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	}
 
 	@Override
-	public void onHandlerRegistered(ScreenHandler handler, DefaultedList<ItemStack> stacks)
-	{
-		this.onSlotUpdate(handler, 0, handler.getSlot(0).getStack());
-	}
-
-	@Override
 	public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack)
 	{
 		switch (slotId)
@@ -275,18 +268,20 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
 	{
 		this.renderBackground(matrices);
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.client.getTextureManager().bindTexture(TEXTURE);
-		int i = (this.width - this.backgroundWidth) / 2;
-		int j = (this.height - this.backgroundHeight) / 2;
+
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, TEXTURE);
+		var i = (this.width - this.backgroundWidth) / 2;
+		var j = (this.height - this.backgroundHeight) / 2;
 		this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-		final int stencilX = 9;
-		final int stencilY = 17;
-		final int stencilWidth = 238;
-		final int stencilHeight = 39;
+		final var stencilX = 9;
+		final var stencilY = 17;
+		final var stencilWidth = 238;
+		final var stencilHeight = 39;
 
-		final int hiltLength = 70;
+		final var hiltLength = 70;
 
 		matrices.push();
 		matrices.translate(x + stencilX + hiltLength, y + stencilY + stencilHeight / 2f, 100);
@@ -295,7 +290,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		matrices.multiply(new Quaternion(0, 135, 0, true));
 		matrices.scale(100, -100, 100);
 
-		VertexConsumerProvider.Immediate immediate = Client.minecraft.getBufferBuilders().getEntityVertexConsumers();
+		var immediate = Client.minecraft.getBufferBuilders().getEntityVertexConsumers();
 
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{
@@ -306,20 +301,20 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		matrices.push();
 
-		int x0 = x + 7;
-		int x1 = x + 7 + 30;
-		int y0 = y + 84;
-		int y1 = y + 84 + 30;
+		var x0 = x + 7;
+		var x1 = x + 7 + 30;
+		var y0 = y + 84;
+		var y1 = y + 84 + 30;
 
-		int u0 = 0;
-		int u1 = 10;
-		int v0 = 0;
-		int v1 = 10;
+		var u0 = 0;
+		var u1 = 10;
+		var v0 = 0;
+		var v1 = 10;
 
-		int z = 0;
+		var z = 0;
 
-		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-		bufferBuilder.begin(7, VertexFormats.POSITION_COLOR);
+		var bufferBuilder = Tessellator.getInstance().getBuffer();
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 		bufferBuilder.vertex(matrices.peek().getModel(), (float)x0, (float)y1, (float)z).color(r, g, b, 255).texture(u0, v1).next();
 		bufferBuilder.vertex(matrices.peek().getModel(), (float)x1, (float)y1, (float)z).color(r, g, b, 255).texture(u1, v1).next();
 		bufferBuilder.vertex(matrices.peek().getModel(), (float)x1, (float)y0, (float)z).color(r, g, b, 255).texture(u1, v0).next();
@@ -330,11 +325,5 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		RenderSystem.enableTexture();
 
 		matrices.pop();
-	}
-
-	protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY)
-	{
-		this.textRenderer.draw(matrices, this.title, (float)this.titleX, (float)this.titleY, 4210752);
-		this.textRenderer.draw(matrices, this.playerInventory.getDisplayName(), (float)this.playerInventoryTitleX, (float)this.playerInventoryTitleY, 0x404040);
 	}
 }

@@ -7,9 +7,7 @@ import net.minecraft.client.gl.Framebuffer;
 import org.lwjgl.opengl.GL30;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * author: c64cosmin
@@ -19,10 +17,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 public class FramebufferMixin
 {
-	@Inject(method = "initFbo", at = @At("HEAD"))
-	private void initFboStencil(int width, int height, boolean getError, CallbackInfo info)
+	@ModifyArg(method = "initFbo", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_glFramebufferTexture2D(IIIII)V", ordinal = 1), index = 1)
+	private int initFboStencil(int attachment)
 	{
-		FramebufferInfo.DEPTH_ATTACHMENT = GL30.GL_DEPTH_STENCIL_ATTACHMENT;
+		return GL30.GL_DEPTH_STENCIL_ATTACHMENT;
 	}
 
 	@ModifyArg(method = "initFbo", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/platform/GlStateManager;_texImage2D(IIIIIIIILjava/nio/IntBuffer;)V", ordinal = 0), index = 2)
