@@ -164,7 +164,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 		}
 
 		@Override
-		public BakedModel apply(BakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity)
+		public BakedModel apply(BakedModel model, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity entity, int seed)
 		{
 			return DynamicBakedModel.this;
 		}

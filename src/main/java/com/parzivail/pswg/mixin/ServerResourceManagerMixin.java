@@ -5,6 +5,7 @@ import com.parzivail.pswg.data.SwgBlasterManager;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.resource.ServerResourceManager;
 import net.minecraft.server.command.CommandManager;
+import net.minecraft.util.registry.DynamicRegistryManager;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -23,10 +24,10 @@ public class ServerResourceManagerMixin implements IServerResourceManagerAccess
 	@Final
 	private ReloadableResourceManager resourceManager;
 
-	@Inject(method = "Lnet/minecraft/resource/ServerResourceManager;<init>(Lnet/minecraft/server/command/CommandManager$RegistrationEnvironment;I)V", at = @At("TAIL"))
-	private void init(CommandManager.RegistrationEnvironment registrationEnvironment, int i, CallbackInfo ci)
+	@Inject(method = "Lnet/minecraft/resource/ServerResourceManager;<init>(Lnet/minecraft/util/registry/DynamicRegistryManager;Lnet/minecraft/server/command/CommandManager$RegistrationEnvironment;I)V", at = @At("TAIL"))
+	private void init(DynamicRegistryManager registryManager, CommandManager.RegistrationEnvironment commandEnvironment, int functionPermissionLevel, CallbackInfo ci)
 	{
-		resourceManager.registerListener(blasterLoader = new SwgBlasterManager());
+		resourceManager.registerReloader(blasterLoader = new SwgBlasterManager());
 	}
 
 	@Override

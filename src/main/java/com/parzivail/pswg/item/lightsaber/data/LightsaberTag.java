@@ -4,7 +4,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
@@ -24,14 +24,14 @@ public class LightsaberTag extends TagSerializer
 
 	public Identifier hilt;
 
-	public LightsaberTag(CompoundTag source)
+	public LightsaberTag(NbtCompound source)
 	{
 		super(SLUG, source);
 	}
 
 	public LightsaberTag()
 	{
-		super(SLUG, new CompoundTag());
+		super(SLUG, new NbtCompound());
 
 		active = false;
 		transition = 0;
@@ -43,16 +43,16 @@ public class LightsaberTag extends TagSerializer
 		hilt = Resources.identifier("luke/rotj");
 	}
 
-	public static LightsaberTag fromRootTag(CompoundTag tag)
+	public static LightsaberTag fromRootTag(NbtCompound tag)
 	{
-		CompoundTag parent = new CompoundTag();
+		NbtCompound parent = new NbtCompound();
 		parent.put(SLUG.toString(), tag);
 		return new LightsaberTag(parent);
 	}
 
 	public static void mutate(ItemStack stack, Consumer<LightsaberTag> action)
 	{
-		CompoundTag nbt = stack.getOrCreateTag();
+		NbtCompound nbt = stack.getOrCreateTag();
 		LightsaberTag t = new LightsaberTag(nbt);
 		action.accept(t);
 

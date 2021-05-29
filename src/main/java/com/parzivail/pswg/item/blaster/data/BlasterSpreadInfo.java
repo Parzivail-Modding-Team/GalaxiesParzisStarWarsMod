@@ -1,6 +1,6 @@
 package com.parzivail.pswg.item.blaster.data;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 public class BlasterSpreadInfo
 {
@@ -13,9 +13,9 @@ public class BlasterSpreadInfo
 		this.vertical = vertical;
 	}
 
-	public static BlasterSpreadInfo fromTag(CompoundTag compoundTag, String s)
+	public static BlasterSpreadInfo fromTag(NbtCompound compoundTag, String s)
 	{
-		CompoundTag tag = compoundTag.getCompound(s);
+		NbtCompound tag = compoundTag.getCompound(s);
 
 		return new BlasterSpreadInfo(
 				tag.getFloat("horizontal"),
@@ -23,9 +23,9 @@ public class BlasterSpreadInfo
 		);
 	}
 
-	public static void toTag(CompoundTag compoundTag, String s, BlasterSpreadInfo data)
+	public static void toTag(NbtCompound compoundTag, String s, BlasterSpreadInfo data)
 	{
-		CompoundTag tag = new CompoundTag();
+		NbtCompound tag = new NbtCompound();
 
 		tag.putFloat("horizontal", data.horizontal);
 		tag.putFloat("vertical", data.vertical);

@@ -4,13 +4,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterItem;
-import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
-import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.item.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -27,22 +25,24 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	@Override
 	public boolean renderCustomHUD(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
 	{
-		MinecraftClient client = MinecraftClient.getInstance();
-		int scaledWidth = client.getWindow().getScaledWidth();
-		int scaledHeight = client.getWindow().getScaledHeight();
+		var client = MinecraftClient.getInstance();
+		var scaledWidth = client.getWindow().getScaledWidth();
+		var scaledHeight = client.getWindow().getScaledHeight();
 
-		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		client.getTextureManager().bindTexture(HUD_ELEMENTS_TEXTURE);
-		int i = scaledWidth / 2;
-		int j = scaledHeight / 2;
-		final int cooldownWidth = 61;
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		RenderSystem.setShaderTexture(0, HUD_ELEMENTS_TEXTURE);
 
-		BlasterItem b = (BlasterItem)stack.getItem();
-		BlasterTag bt = new BlasterTag(stack.getOrCreateTag());
-		BlasterDescriptor bd = BlasterItem.getBlasterDescriptor(player.world, stack);
+		var i = scaledWidth / 2;
+		var j = scaledHeight / 2;
+		final var cooldownWidth = 61;
 
-		BlasterCoolingBypassProfile profile = bd.cooling;
-		final int crosshairIdx = 0;
+		var b = (BlasterItem)stack.getItem();
+		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bd = BlasterItem.getBlasterDescriptor(player.world, stack);
+
+		var profile = bd.cooling;
+		final var crosshairIdx = 0;
 
 		/*
 		 * Cooldown
@@ -50,7 +50,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 		if (bt.isOverheatCooling() || bt.heat > 0)
 		{
-			int cooldownBarX = (scaledWidth - cooldownWidth) / 2;
+			var cooldownBarX = (scaledWidth - cooldownWidth) / 2;
 
 			// translucent background
 			this.drawTexture(matrices, cooldownBarX, j + 30, 0, 0, cooldownWidth, 3);
@@ -59,7 +59,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 			if (bt.isOverheatCooling())
 			{
-				float cooldownTimer = (bt.overheatTimer - client.getTickDelta()) / maxHeat;
+				var cooldownTimer = (bt.overheatTimer - client.getTickDelta()) / maxHeat;
 
 				cooldownTimer = MathHelper.clamp(cooldownTimer, 0, 0.98f);
 
@@ -68,10 +68,10 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 				if (bt.canBypassOverheat)
 				{
-					int primaryBypassStartX = (int)((profile.primaryBypassTime - profile.primaryBypassTolerance) * cooldownWidth);
-					int primaryBypassWidth = (int)(2 * profile.primaryBypassTolerance * cooldownWidth);
-					int secondaryBypassStartX = (int)((profile.secondaryBypassTime - profile.secondaryBypassTolerance) * cooldownWidth);
-					int secondaryBypassWidth = (int)(2 * profile.secondaryBypassTolerance * cooldownWidth);
+					var primaryBypassStartX = (int)((profile.primaryBypassTime - profile.primaryBypassTolerance) * cooldownWidth);
+					var primaryBypassWidth = (int)(2 * profile.primaryBypassTolerance * cooldownWidth);
+					var secondaryBypassStartX = (int)((profile.secondaryBypassTime - profile.secondaryBypassTolerance) * cooldownWidth);
+					var secondaryBypassWidth = (int)(2 * profile.secondaryBypassTolerance * cooldownWidth);
 
 					// blue primary bypass
 					this.drawTexture(matrices, cooldownBarX + primaryBypassStartX, j + 30, primaryBypassStartX, 8, primaryBypassWidth, 3);
@@ -88,7 +88,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				if (bt.passiveCooldownTimer == 0)
 					deltaHeat = client.getTickDelta();
 
-				float heatPercentage = (bt.heat - deltaHeat) / maxHeat;
+				var heatPercentage = (bt.heat - deltaHeat) / maxHeat;
 				this.drawTexture(matrices, cooldownBarX, j + 30, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
 			}
 
@@ -107,7 +107,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			RenderSystem.defaultBlendFunc();
 		}
 
-		client.getTextureManager().bindTexture(InGameHud.GUI_ICONS_TEXTURE);
+		RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
 
 		return bt.isAimingDownSights;
 	}

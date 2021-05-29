@@ -273,6 +273,15 @@ public class SwgItems
 	{
 		@RegistryName("spawn_xwing_t65b")
 		public static final Item XwingT65b = new SpawnEntityItem(SwgEntities.Ship.T65bXwing, new Item.Settings().group(Galaxies.Tab));
+
+		@RegistryName("spawn_faa")
+		public static final Item Faa = new SpawnEggItem(SwgEntities.Fish.Faa, 0xE9933E, 0x9471EB, new Item.Settings().group(Galaxies.Tab));
+
+		@RegistryName("spawn_laa")
+		public static final Item Laa = new SpawnEggItem(SwgEntities.Fish.Laa, 0x2F5747, 0xD5BC92, new Item.Settings().group(Galaxies.Tab));
+
+		@RegistryName("spawn_worrt")
+		public static final Item Worrt = new SpawnEggItem(SwgEntities.Amphibian.Worrt, 0x5B482C, 0x635735, new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Lightsaber

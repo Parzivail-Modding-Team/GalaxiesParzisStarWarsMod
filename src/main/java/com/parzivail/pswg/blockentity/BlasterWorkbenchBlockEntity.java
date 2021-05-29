@@ -3,18 +3,20 @@ package com.parzivail.pswg.blockentity;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.BlockPos;
 
 public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
 {
-	public BlasterWorkbenchBlockEntity()
+	public BlasterWorkbenchBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(SwgBlocks.Workbench.BlasterBlockEntityType, 1);
+		super(SwgBlocks.Workbench.BlasterBlockEntityType, pos, state, 1);
 	}
 
 	@Override

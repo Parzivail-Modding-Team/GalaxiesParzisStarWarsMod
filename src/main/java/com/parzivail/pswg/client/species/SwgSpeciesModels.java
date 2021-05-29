@@ -1,8 +1,6 @@
 package com.parzivail.pswg.client.species;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.client.model.npc.*;
-import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SwgSpecies;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -17,14 +15,14 @@ public class SwgSpeciesModels
 
 	static
 	{
-		register(SwgSpeciesRegistry.SPECIES_AQUALISH, new ModelAqualish<>(true, 0), new ModelAqualish<>(false, 0));
-		register(SwgSpeciesRegistry.SPECIES_BITH, new ModelBith<>(true, 0), new ModelBith<>(false, 0));
-		register(SwgSpeciesRegistry.SPECIES_BOTHAN, new ModelBothan<>(true, 0), new ModelBothan<>(false, 0));
-		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, new ModelChagrian<>(true, 0), new ModelChagrian<>(false, 0));
-		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, new ModelKaminoan<>(true, 0), new ModelKaminoan<>(false, 0));
-		register(SwgSpeciesRegistry.SPECIES_JAWA, new ModelJawa<>(0), new ModelJawa<>(0));
-		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, new ModelTogrutaM<>(0), new ModelTogrutaF<>(0));
-		register(SwgSpeciesRegistry.SPECIES_TWILEK, new ModelTwilek<>(true, 0), new ModelTwilek<>(false, 0));
+		//		register(SwgSpeciesRegistry.SPECIES_AQUALISH, new ModelAqualish<>(true, 0), new ModelAqualish<>(false, 0));
+		//		register(SwgSpeciesRegistry.SPECIES_BITH, new ModelBith<>(true, 0), new ModelBith<>(false, 0));
+		//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, new ModelBothan<>(true, 0), new ModelBothan<>(false, 0));
+		//		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, new ModelChagrian<>(true, 0), new ModelChagrian<>(false, 0));
+		//		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, new ModelKaminoan<>(true, 0), new ModelKaminoan<>(false, 0));
+		//		register(SwgSpeciesRegistry.SPECIES_JAWA, new ModelJawa<>(0), new ModelJawa<>(0));
+		//		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, new ModelTogrutaM<>(0), new ModelTogrutaF<>(0));
+		//		register(SwgSpeciesRegistry.SPECIES_TWILEK, new ModelTwilek<>(true, 0), new ModelTwilek<>(false, 0));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
 	}
@@ -47,7 +45,7 @@ public class SwgSpeciesModels
 
 	public static Identifier getTexture(SwgSpecies species)
 	{
-		int hashCode = species.hashCode();
+		var hashCode = species.hashCode();
 
 		// TODO: sensible fallback texture instead of just black for a frame?
 		return Client.stackedTextureProvider.loadTexture("species/" + hashCode, () -> new Identifier(""), species::getTextureStack);

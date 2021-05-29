@@ -3,9 +3,8 @@ package com.parzivail.pswg.util;
 import com.parzivail.pswg.access.IQuaternionAccess;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.*;
 
 public class QuatUtil
@@ -50,7 +49,7 @@ public class QuatUtil
 		return new Quaternion(f * i * k + g * h * j, g * h * k - f * i * j, f * h * k + g * i * j, g * i * k - f * h * j);
 	}
 
-	public static void putQuaternion(CompoundTag tag, Quaternion q)
+	public static void putQuaternion(NbtCompound tag, Quaternion q)
 	{
 		tag.putFloat("a", q.getW());
 		tag.putFloat("b", q.getX());
@@ -58,7 +57,7 @@ public class QuatUtil
 		tag.putFloat("d", q.getZ());
 	}
 
-	public static Quaternion getQuaternion(CompoundTag tag)
+	public static Quaternion getQuaternion(NbtCompound tag)
 	{
 		return new Quaternion(tag.getFloat("b"), tag.getFloat("c"), tag.getFloat("d"), tag.getFloat("a"));
 	}
@@ -81,7 +80,7 @@ public class QuatUtil
 			debugConsumer.vertex(mat, 0.0f, 0.0f, 0.0f).color(0f, 1f, 0f, 1f).next();
 			debugConsumer.vertex(mat, (float)cross.x, (float)cross.y, (float)cross.z).color(0f, 1f, 0f, 1f).next();
 		}
-		Quaternion other = new Quaternion(new Vector3f(axis), speed * f1, false);
+		Quaternion other = new Quaternion(new Vec3f(axis), speed * f1, false);
 		other.hamiltonProduct(self);
 		set(self, other);
 	}
@@ -217,20 +216,20 @@ public class QuatUtil
 	public static void updateEulerRotation(Entity entity, Quaternion rotation)
 	{
 		EulerAngle eulerAngle = toEulerAngles(rotation);
-		entity.yaw = eulerAngle.getYaw();
-		entity.pitch = eulerAngle.getPitch();
+		entity.setYaw(eulerAngle.getYaw());
+		entity.setPitch(eulerAngle.getPitch());
 
-		while (entity.pitch - entity.prevPitch >= 180.0F)
+		while (entity.getPitch() - entity.prevPitch >= 180.0F)
 		{
 			entity.prevPitch += 360.0F;
 		}
 
-		while (entity.yaw - entity.prevYaw < -180.0F)
+		while (entity.getYaw() - entity.prevYaw < -180.0F)
 		{
 			entity.prevYaw -= 360.0F;
 		}
 
-		while (entity.yaw - entity.prevYaw >= 180.0F)
+		while (entity.getYaw() - entity.prevYaw >= 180.0F)
 		{
 			entity.prevYaw += 360.0F;
 		}

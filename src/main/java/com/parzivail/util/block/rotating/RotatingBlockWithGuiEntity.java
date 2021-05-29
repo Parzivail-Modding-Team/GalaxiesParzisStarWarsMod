@@ -7,25 +7,24 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-import java.util.function.Supplier;
+import java.util.function.BiFunction;
 
 public class RotatingBlockWithGuiEntity extends RotatingBlockWithEntity
 {
-	private final Supplier<BlockEntity> blockEntitySupplier;
+	private final BiFunction<BlockPos, BlockState, BlockEntity> blockEntityBiFunction;
 
-	public RotatingBlockWithGuiEntity(Settings settings, Supplier<BlockEntity> blockEntitySupplier)
+	public RotatingBlockWithGuiEntity(Settings settings, BiFunction<BlockPos, BlockState, BlockEntity> blockEntityBiFunction)
 	{
 		super(settings);
-		this.blockEntitySupplier = blockEntitySupplier;
+		this.blockEntityBiFunction = blockEntityBiFunction;
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockView world)
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
-		return blockEntitySupplier.get();
+		return blockEntityBiFunction.apply(pos, state);
 	}
 
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)

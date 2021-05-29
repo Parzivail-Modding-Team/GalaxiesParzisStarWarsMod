@@ -21,11 +21,11 @@ public interface PlayerEntityModelMixin
 	void setRightSleeve(ModelPart value);
 
 	@Mutable
-	@Accessor("leftPantLeg")
+	@Accessor("leftPants")
 	void setLeftPantLeg(ModelPart value);
 
 	@Mutable
-	@Accessor("rightPantLeg")
+	@Accessor("rightPants")
 	void setRightPantLeg(ModelPart value);
 
 	@Mutable

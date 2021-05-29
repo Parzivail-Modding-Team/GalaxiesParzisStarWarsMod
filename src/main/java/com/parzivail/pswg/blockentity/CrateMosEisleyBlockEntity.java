@@ -4,18 +4,20 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.screen.CrateGenericSmallScreenHandler;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import net.minecraft.util.math.BlockPos;
 
 public class CrateMosEisleyBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
 {
-	public CrateMosEisleyBlockEntity()
+	public CrateMosEisleyBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(SwgBlocks.Crate.ToolboxBlockEntityType, 15);
+		super(SwgBlocks.Crate.ToolboxBlockEntityType, pos, state, 15);
 	}
 
 	@Override

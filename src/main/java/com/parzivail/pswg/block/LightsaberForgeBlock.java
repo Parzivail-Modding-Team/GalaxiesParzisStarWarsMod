@@ -10,7 +10,6 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class LightsaberForgeBlock extends BlockWithEntity
@@ -21,9 +20,9 @@ public class LightsaberForgeBlock extends BlockWithEntity
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockView world)
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new LightsaberForgeBlockEntity();
+		return new LightsaberForgeBlockEntity(pos, state);
 	}
 
 	public BlockRenderType getRenderType(BlockState state)

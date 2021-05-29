@@ -2,8 +2,8 @@ package com.parzivail.util.client;
 
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.client.util.math.Vector4f;
+import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Vector4f;
 
 public enum VertexConsumerBuffer
 {
@@ -74,7 +74,7 @@ public enum VertexConsumerBuffer
 		this.light = light;
 	}
 
-	public void vertex(Vector3f pos, Vector3f normal, float u, float v)
+	public void vertex(Vec3f pos, Vec3f normal, float u, float v)
 	{
 		Vector4f pos4 = new Vector4f(pos);
 		normal = normal.copy();
@@ -87,6 +87,6 @@ public enum VertexConsumerBuffer
 
 	public void vertex(float x, float y, float z, float nx, float ny, float nz, float u, float v)
 	{
-		vertex(new Vector3f(x, y, z), new Vector3f(nx, ny, nz), u, v);
+		vertex(new Vec3f(x, y, z), new Vec3f(nx, ny, nz), u, v);
 	}
 }

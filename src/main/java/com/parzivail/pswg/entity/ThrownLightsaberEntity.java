@@ -1,12 +1,15 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.Client;
+import com.parzivail.pswg.client.sound.LightsaberThrownSoundInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
@@ -25,17 +28,25 @@ public class ThrownLightsaberEntity extends ThrownEntity
 	}
 
 	@Override
-	public void writeCustomDataToTag(CompoundTag tag)
+	public void writeCustomDataToNbt(NbtCompound tag)
 	{
-		super.writeCustomDataToTag(tag);
+		super.writeCustomDataToNbt(tag);
 		tag.putByte("life", getLife());
 	}
 
 	@Override
-	public void readCustomDataFromTag(CompoundTag tag)
+	public void readCustomDataFromNbt(NbtCompound tag)
 	{
-		super.readCustomDataFromTag(tag);
+		super.readCustomDataFromNbt(tag);
 		setLife(tag.getByte("life"));
+	}
+
+	@Override
+	public void onSpawnPacket(EntitySpawnS2CPacket packet)
+	{
+		super.onSpawnPacket(packet);
+
+		Client.minecraft.getSoundManager().play(new LightsaberThrownSoundInstance(this));
 	}
 
 	@Override
@@ -63,12 +74,12 @@ public class ThrownLightsaberEntity extends ThrownEntity
 	@Override
 	public void tick()
 	{
-		final byte life = (byte)(getLife() + 1);
+		final var life = (byte)(getLife() + 1);
 		setLife(life);
 
 		if (life >= 60)
 		{
-			this.remove();
+			this.discard();
 			return;
 		}
 
@@ -81,7 +92,7 @@ public class ThrownLightsaberEntity extends ThrownEntity
 		if (!this.world.isClient)
 		{
 			this.world.sendEntityStatus(this, (byte)3);
-			this.remove();
+			this.discard();
 		}
 	}
 }

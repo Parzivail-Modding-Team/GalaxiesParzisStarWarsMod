@@ -3,12 +3,11 @@ package com.parzivail.pswg.client.pr3;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
 import com.parzivail.util.binary.DataReader;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Matrix4f;
-
+import net.minecraft.util.math.Vec3f;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -64,9 +63,9 @@ public class PR3File
 			String material = DataReader.readNullTerminatedString(objStream);
 			Matrix4f transformation = PIO.readMatrix4f(objStream);
 
-			Vector3f[] vertices = readLengthCodedVectors(objStream);
-			Vector3f[] normals = readLengthCodedVectors(objStream);
-			Vector3f[] uvs = readLengthCodedVectors(objStream);
+			Vec3f[] vertices = readLengthCodedVectors(objStream);
+			Vec3f[] normals = readLengthCodedVectors(objStream);
+			Vec3f[] uvs = readLengthCodedVectors(objStream);
 
 			PR3FacePointer[] faces = readLengthCodedFaces(objStream);
 
@@ -87,13 +86,13 @@ public class PR3File
 		return faces;
 	}
 
-	private static Vector3f[] readLengthCodedVectors(LittleEndianDataInputStream objStream) throws IOException
+	private static Vec3f[] readLengthCodedVectors(LittleEndianDataInputStream objStream) throws IOException
 	{
 		int length = DataReader.read7BitEncodedInt(objStream);
 
-		Vector3f[] vectors = new Vector3f[length];
+		Vec3f[] vectors = new Vec3f[length];
 		for (int i = 0; i < length; i++)
-			vectors[i] = new Vector3f(DataReader.readHalf(objStream), DataReader.readHalf(objStream), DataReader.readHalf(objStream));
+			vectors[i] = new Vec3f(DataReader.readHalf(objStream), DataReader.readHalf(objStream), DataReader.readHalf(objStream));
 
 		return vectors;
 	}

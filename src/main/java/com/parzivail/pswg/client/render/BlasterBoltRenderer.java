@@ -3,8 +3,8 @@ package com.parzivail.pswg.client.render;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.EntityRenderer;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -14,9 +14,9 @@ import net.minecraft.util.math.Vec3d;
 
 public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 {
-	public BlasterBoltRenderer(EntityRenderDispatcher entityRenderDispatcher)
+	public BlasterBoltRenderer(EntityRendererFactory.Context ctx)
 	{
-		super(entityRenderDispatcher);
+		super(ctx);
 	}
 
 	@Override

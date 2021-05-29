@@ -21,7 +21,7 @@ public class DebugItem extends Item
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
 	{
 		final ThrownLightsaberEntity entity = new ThrownLightsaberEntity(SwgEntities.Misc.ThrownLightsaber, player, world);
-		entity.setProperties(player, MathHelper.clamp(player.pitch, -89.9f, 89.9f), player.yaw, 0.0F, 0.6f, 0);
+		entity.setProperties(player, MathHelper.clamp(player.getPitch(), -89.9f, 89.9f), player.getYaw(), 0.0F, 0.6f, 0);
 		world.spawnEntity(entity);
 
 		return TypedActionResult.consume(player.getStackInHand(hand));

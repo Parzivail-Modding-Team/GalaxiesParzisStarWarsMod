@@ -2,10 +2,10 @@ package com.parzivail.pswg.component;
 
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.SwgSpecies;
-import dev.onyxstudios.cca.api.v3.component.AutoSyncedComponent;
 import dev.onyxstudios.cca.api.v3.component.ComponentV3;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 
@@ -36,17 +36,17 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 		if (species != null)
 			this.species = species.serialize();
 
-		SwgEntityComponents.PERSISTENT.sync(provider, SPECIES_SYNCOP);
+		SwgEntityComponents.PERSISTENT.sync(provider, (buf, recipient) -> writeSyncPacket(buf, recipient, SPECIES_SYNCOP));
 	}
 
 	@Override
-	public void readFromNbt(CompoundTag tag)
+	public void readFromNbt(NbtCompound tag)
 	{
 		species = tag.getString("species");
 	}
 
 	@Override
-	public void writeToNbt(CompoundTag tag)
+	public void writeToNbt(NbtCompound tag)
 	{
 		tag.putString("species", species);
 	}
@@ -64,27 +64,30 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 	}
 
 	@Override
-	public void writeToPacket(PacketByteBuf buf, ServerPlayerEntity recipient, int syncOp)
+	public void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient)
+	{
+		writeSyncPacket(buf, recipient, 0);
+	}
+
+	private void writeSyncPacket(PacketByteBuf buf, ServerPlayerEntity recipient, int syncOp)
 	{
 		buf.writeInt(syncOp);
 
 		switch (syncOp)
 		{
-			case FULL_SYNC:
-				CompoundTag tag = new CompoundTag();
+			case 0 -> { // Full sync
+				var tag = new NbtCompound();
 				writeToNbt(tag);
-				buf.writeCompoundTag(tag);
-				break;
-			case SPECIES_SYNCOP:
-				buf.writeString(species);
-				break;
+				buf.writeNbt(tag);
+			}
+			case SPECIES_SYNCOP -> buf.writeString(species);
 		}
 	}
 
 	@Override
-	public void readFromPacket(PacketByteBuf buf)
+	public void applySyncPacket(PacketByteBuf buf)
 	{
-		int syncOp = buf.readInt();
+		var syncOp = buf.readInt();
 
 		// It seems like a bad idea to read arbitrary fields
 		// on command from a packet, but this packet will only
@@ -95,19 +98,17 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 
 		switch (syncOp)
 		{
-			case FULL_SYNC:
-				CompoundTag tag = buf.readCompoundTag();
+			case 0 -> { // Full sync
+				NbtCompound tag = buf.readNbt();
 				if (tag != null)
 					this.readFromNbt(tag);
-				break;
-			case SPECIES_SYNCOP:
-				species = buf.readString();
-				break;
+			}
+			case SPECIES_SYNCOP -> species = buf.readString();
 		}
 	}
 
 	@Override
-	public boolean shouldSyncWith(ServerPlayerEntity player, int syncOp)
+	public boolean shouldSyncWith(ServerPlayerEntity player)
 	{
 		// If we have any properties that shouldn't be
 		// synced to other players, we should just

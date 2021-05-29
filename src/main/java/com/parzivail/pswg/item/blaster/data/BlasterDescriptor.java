@@ -2,7 +2,7 @@ package com.parzivail.pswg.item.blaster.data;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.nbt.TagSerializer;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 public class BlasterDescriptor extends TagSerializer
@@ -22,7 +22,7 @@ public class BlasterDescriptor extends TagSerializer
 	public BlasterHeatInfo heat;
 	public BlasterCoolingBypassProfile cooling;
 
-	public BlasterDescriptor(CompoundTag tag)
+	public BlasterDescriptor(NbtCompound tag)
 	{
 		super(SLUG, tag);
 	}

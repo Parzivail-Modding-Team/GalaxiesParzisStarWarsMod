@@ -6,31 +6,26 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.dimension.tatooine.terrain.TerrainTatooineCanyons;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.scarif.ScarifChunk;
-import com.parzivail.util.scarif.ScarifSection;
 import com.parzivail.util.world.CompositeTerrain;
 import com.parzivail.util.world.ITerrainHeightmap;
 import com.parzivail.util.world.MultiCompositeTerrain;
 import com.parzivail.util.world.TerrainLayer;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.ChunkPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.ChunkRegion;
+import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.WorldAccess;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.chunk.ProtoChunk;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.StructuresConfig;
+import net.minecraft.world.gen.chunk.VerticalBlockSample;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 public class TatooineChunkGenerator extends ChunkGenerator
 {
@@ -86,31 +81,31 @@ public class TatooineChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public void populateNoise(WorldAccess world, StructureAccessor accessor, Chunk chunk)
+	public CompletableFuture<Chunk> populateNoise(Executor executor, StructureAccessor accessor, Chunk chunk)
 	{
-		final ChunkPos chunkPos = chunk.getPos();
-		final int chunkWorldX = chunkPos.getStartX();
-		final int chunkWorldZ = chunkPos.getStartZ();
-		final BlockState tatooineSand = SwgBlocks.Sand.Desert.getDefaultState();
-		final BlockState sandstone = Blocks.SANDSTONE.getDefaultState();
-		final BlockState stone = Blocks.STONE.getDefaultState();
-		final BlockState bedrock = Blocks.BEDROCK.getDefaultState();
+		final var chunkPos = chunk.getPos();
+		final var chunkWorldX = chunkPos.getStartX();
+		final var chunkWorldZ = chunkPos.getStartZ();
+		final var tatooineSand = SwgBlocks.Sand.Desert.getDefaultState();
+		final var sandstone = Blocks.SANDSTONE.getDefaultState();
+		final var stone = Blocks.STONE.getDefaultState();
+		final var bedrock = Blocks.BEDROCK.getDefaultState();
 
-		ProtoChunk pc = (ProtoChunk)chunk;
+		var pc = (ProtoChunk)chunk;
 
-		int sectionY = 0;
-		ChunkSection chunkSection = pc.getSection(0);
+		var sectionY = 0;
+		var chunkSection = pc.getSection(0);
 
 		chunkSection.lock();
 
-		for (int cX = 0; cX < 16; cX++)
+		for (var cX = 0; cX < 16; cX++)
 		{
-			for (int cZ = 0; cZ < 16; cZ++)
+			for (var cZ = 0; cZ < 16; cZ++)
 			{
-				int worldX = chunkWorldX + cX;
-				int worldZ = chunkWorldZ + cZ;
-				int height = (int)terrain.getHeightAt(worldX, worldZ);
-				for (int y = 0; y < height; y++)
+				var worldX = chunkWorldX + cX;
+				var worldZ = chunkWorldZ + cZ;
+				var height = (int)terrain.getHeightAt(worldX, worldZ);
+				for (var y = 0; y < height; y++)
 				{
 					if (y >> 4 != sectionY)
 					{
@@ -138,31 +133,31 @@ public class TatooineChunkGenerator extends ChunkGenerator
 		{
 			strChunk.init();
 
-			for (Map.Entry<BlockPos, CompoundTag> tile : strChunk.tiles.entrySet())
-				pc.addPendingBlockEntityTag(tile.getValue());
+			for (var tile : strChunk.tiles.entrySet())
+				pc.addPendingBlockEntityNbt(tile.getValue());
 
-			for (int i = 0; i < strChunk.numSections; i++)
+			for (var i = 0; i < strChunk.numSections; i++)
 			{
-				ScarifSection section = strChunk.readSection();
+				var section = strChunk.readSection();
 
 				chunkSection.unlock();
 				chunkSection = pc.getSection(section.y);
 				chunkSection.lock();
 
-				for (int y = 0; y < 16; y++)
+				for (var y = 0; y < 16; y++)
 				{
-					for (int z = 0; z < 16; z++)
+					for (var z = 0; z < 16; z++)
 					{
-						for (int x = 0; x < 16; x++)
+						for (var x = 0; x < 16; x++)
 						{
-							int stateIdx = section.blockStates[y * 256 + z * 16 + x];
+							var stateIdx = section.blockStates[y * 256 + z * 16 + x];
 							if (stateIdx >= section.palette.length)
 							{
 								Lumberjack.warn("Invalid SCARIF palette index for chunk %s,%s, block %s,%s,%s", chunkPos.x, chunkPos.z, x, y, z);
 								continue;
 							}
 
-							BlockState blockState = section.palette[stateIdx];
+							var blockState = section.palette[stateIdx];
 							chunkSection.setBlockState(x, y, z, blockState, false);
 						}
 					}
@@ -171,16 +166,18 @@ public class TatooineChunkGenerator extends ChunkGenerator
 		}
 
 		chunkSection.unlock();
+
+		return CompletableFuture.completedFuture(chunk);
 	}
 
 	@Override
-	public int getHeight(int x, int z, Heightmap.Type heightmapType)
+	public int getHeight(int x, int z, Heightmap.Type heightmapType, HeightLimitView world)
 	{
 		return (int)terrain.getHeightAt(x, z) + 1;
 	}
 
 	@Override
-	public BlockView getColumnSample(int x, int z)
+	public VerticalBlockSample getColumnSample(int x, int z, HeightLimitView world)
 	{
 		return null;
 	}

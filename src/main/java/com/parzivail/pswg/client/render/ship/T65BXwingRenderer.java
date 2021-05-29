@@ -7,7 +7,7 @@ import com.parzivail.pswg.client.render.ShipRenderer;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Lazy;
@@ -16,9 +16,9 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 {
 	private final Lazy<PR3Model<T65BXwing, RigT65B.Part>> model;
 
-	public T65BXwingRenderer(EntityRenderDispatcher entityRenderDispatcher)
+	public T65BXwingRenderer(EntityRendererFactory.Context ctx)
 	{
-		super(entityRenderDispatcher);
+		super(ctx);
 		model = new Lazy<>(() -> new PR3Model<>(PR3File.tryLoad(Resources.identifier("models/ship/xwing_t65b.pr3")), RigT65B.Part.class, RigT65B.INSTANCE::transform));
 	}
 

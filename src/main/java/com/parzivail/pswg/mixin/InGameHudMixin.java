@@ -30,7 +30,7 @@ public class InGameHudMixin
 	{
 		assert this.client.player != null;
 
-		ItemStack mainHandStack = this.client.player.inventory.getMainHandStack();
+		ItemStack mainHandStack = this.client.player.getInventory().getMainHandStack();
 		ICustomHudRenderer customHUDRenderer = ICustomHudRenderer.CUSTOM_HUD_RENDERERS.get(mainHandStack.getItem());
 		if (customHUDRenderer != null)
 		{

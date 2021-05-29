@@ -2,13 +2,11 @@ package com.parzivail.pswg.client.camera;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ship.ShipEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.options.Perspective;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class CameraHelper
@@ -19,40 +17,39 @@ public class CameraHelper
 	{
 		assert Client.minecraft.player != null;
 
-		ShipEntity ship = ShipEntity.getShip(Client.minecraft.player);
+		var ship = ShipEntity.getShip(Client.minecraft.player);
 
-		if (ship != null)
-		{
-			Quaternion r = new Quaternion(ship.getViewRotation(tickDelta));
+		if (ship == null)
+			return;
 
-			if (Client.minecraft.options.getPerspective() == Perspective.THIRD_PERSON_FRONT)
-				r.hamiltonProduct(new Quaternion(Vector3f.POSITIVE_Y, 180, true));
+		// Undo what is expected to be the player's current rotation transformation
+		matrix.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-(camera.getYaw() + 180.0F)));
+		matrix.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-camera.getPitch()));
 
-			r.conjugate();
-			matrix.multiply(r);
-		}
-		else
-		{
-			matrix.multiply(new Quaternion(Vector3f.POSITIVE_X, camera.getPitch(), true));
-			matrix.multiply(new Quaternion(Vector3f.POSITIVE_Y, camera.getYaw() + 180.0F, true));
-		}
+		var r = new Quaternion(ship.getViewRotation(tickDelta));
+
+		if (Client.minecraft.options.getPerspective() == Perspective.THIRD_PERSON_FRONT)
+			r.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, 180, true));
+
+		r.conjugate();
+		matrix.multiply(r);
 	}
 
 	public static void renderHand(MatrixStack matrices, Camera camera, float tickDelta, CallbackInfo ci)
 	{
-		MinecraftClient mc = Client.minecraft;
+		var mc = Client.minecraft;
 		if (mc.cameraEntity instanceof MutableCameraEntity || mc.cameraEntity instanceof ShipEntity)
 			ci.cancel();
 	}
 
 	public static void renderWorldHead(float tickDelta, long limitTime, MatrixStack matrix)
 	{
-		MinecraftClient mc = Client.minecraft;
-		ClientPlayerEntity player = mc.player;
+		var mc = Client.minecraft;
+		var player = mc.player;
 
 		assert player != null;
 
-		ShipEntity ship = ShipEntity.getShip(player);
+		var ship = ShipEntity.getShip(player);
 
 		if (ship != null)
 		{

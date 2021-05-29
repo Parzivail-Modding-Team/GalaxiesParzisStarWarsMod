@@ -2,7 +2,7 @@ package com.parzivail.util.binary;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.Identifier;
 
@@ -49,7 +49,7 @@ public class DataReader
 		return count;
 	}
 
-	public static CompoundTag readUncompressedNbt(InputStream s, int len) throws IOException
+	public static NbtCompound readUncompressedNbt(InputStream s, int len) throws IOException
 	{
 		byte[] bytesNbt = new byte[len];
 		int readNbt = s.read(bytesNbt);
@@ -57,7 +57,7 @@ public class DataReader
 			throw new IOException("Invalid NBT length");
 
 		DataInputStream stream = new DataInputStream(new ByteArrayInputStream(bytesNbt));
-		CompoundTag tag = NbtIo.read(stream);
+		NbtCompound tag = NbtIo.read(stream);
 		stream.close();
 		return tag;
 	}

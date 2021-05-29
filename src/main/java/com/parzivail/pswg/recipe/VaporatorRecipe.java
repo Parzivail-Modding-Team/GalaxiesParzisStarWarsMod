@@ -56,7 +56,7 @@ public class VaporatorRecipe implements Recipe<Inventory>
 	}
 
 	@Environment(EnvType.CLIENT)
-	public ItemStack getRecipeKindIcon()
+	public ItemStack createIcon()
 	{
 		return new ItemStack(SwgBlocks.MoistureVaporator.Gx8);
 	}
@@ -82,7 +82,7 @@ public class VaporatorRecipe implements Recipe<Inventory>
 		{
 			Ingredient ingredient = Ingredient.fromJson(JsonHelper.getObject(jsonObject, "ingredient"));
 			int duration = JsonHelper.getInt(jsonObject, "duration");
-			ItemStack itemStack = ShapedRecipe.getItemStack(JsonHelper.getObject(jsonObject, "result"));
+			ItemStack itemStack = ShapedRecipe.outputFromJson(JsonHelper.getObject(jsonObject, "result"));
 			return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
 		}
 

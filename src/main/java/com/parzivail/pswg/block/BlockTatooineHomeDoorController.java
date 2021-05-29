@@ -1,15 +1,20 @@
 package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
+import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.VoxelShapeUtil;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor implements BlockEntityProvider
 {
@@ -76,8 +81,17 @@ public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor imple
 	}
 
 	@Override
-	public BlockEntity createBlockEntity(BlockView world)
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new TatooineHomeDoorBlockEntity();
+		return new TatooineHomeDoorBlockEntity(pos, state);
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type)
+	{
+		if (type != SwgBlocks.Door.TatooineHomeBlockEntityType)
+			return null;
+		return TatooineHomeDoorBlockEntity::tick;
 	}
 }

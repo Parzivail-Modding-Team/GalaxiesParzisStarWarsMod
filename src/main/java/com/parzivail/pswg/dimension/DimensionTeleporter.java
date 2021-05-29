@@ -30,7 +30,7 @@ public class DimensionTeleporter
 		if (entity instanceof ServerPlayerEntity)
 		{
 			ChunkPos chunkPos = new ChunkPos(new BlockPos(x, y, z));
-			world.getChunkManager().addTicket(ChunkTicketType.POST_TELEPORT, chunkPos, 1, entity.getEntityId());
+			world.getChunkManager().addTicket(ChunkTicketType.POST_TELEPORT, chunkPos, 1, entity.getId());
 			entity.stopRiding();
 			if (((ServerPlayerEntity)entity).isSleeping())
 			{
@@ -39,7 +39,7 @@ public class DimensionTeleporter
 
 			if (world == entity.world)
 			{
-				((ServerPlayerEntity)entity).networkHandler.teleportRequest(x, y, z, yaw, pitch, movementFlags);
+				((ServerPlayerEntity)entity).networkHandler.requestTeleport(x, y, z, yaw, pitch, movementFlags);
 			}
 			else
 			{
@@ -71,7 +71,7 @@ public class DimensionTeleporter
 				entity.refreshPositionAndAngles(x, y, z, f, g);
 				entity.setHeadYaw(f);
 				world.onDimensionChanged(entity);
-				other.removed = true;
+				other.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
 			}
 		}
 

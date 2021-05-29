@@ -2,12 +2,12 @@ package com.parzivail.util.math;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.Vector3f;
-import net.minecraft.client.util.math.Vector4f;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.Vector4f;
 
 @Environment(EnvType.CLIENT)
 public class ClientMathUtil
@@ -19,16 +19,16 @@ public class ClientMathUtil
 		MATRIX_IDENTITY.loadIdentity();
 	}
 
-	public static Vector3f transform(Vector3f v, Matrix4f m)
+	public static Vec3f transform(Vec3f v, Matrix4f m)
 	{
 		Vector4f v4 = new Vector4f(v);
 		v4.transform(m);
-		return new Vector3f(v4.getX(), v4.getY(), v4.getZ());
+		return new Vec3f(v4.getX(), v4.getY(), v4.getZ());
 	}
 
-	public static Vector3f transform(Vector3f v, Matrix3f m)
+	public static Vec3f transform(Vec3f v, Matrix3f m)
 	{
-		Vector3f v3 = v.copy();
+		Vec3f v3 = v.copy();
 		v3.transform(m);
 		return v3;
 	}

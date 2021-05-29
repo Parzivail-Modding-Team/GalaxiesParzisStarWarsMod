@@ -26,6 +26,12 @@ public class ItemGenerator
 				.model(ModelFile::item);
 	}
 
+	static ItemGenerator spawn_egg(Item item)
+	{
+		return itemNoModelLangEntry(item)
+				.model(ModelFile::spawn_egg);
+	}
+
 	static ItemGenerator empty(Item block)
 	{
 		return itemNoModelLangEntry(block)

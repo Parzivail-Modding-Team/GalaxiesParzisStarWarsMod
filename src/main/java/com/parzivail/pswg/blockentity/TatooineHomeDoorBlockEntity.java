@@ -7,11 +7,12 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
-public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable, BlockEntityClientSerializable
+public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEntityClientSerializable
 {
 	private static final int ANIMATION_TIME = 10;
 
@@ -21,15 +22,15 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 	private static final byte MASK_TIMER = (byte)0b00011111;
 	private byte timer = 0;
 
-	public TatooineHomeDoorBlockEntity()
+	public TatooineHomeDoorBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(SwgBlocks.Door.TatooineHomeBlockEntityType);
+		super(SwgBlocks.Door.TatooineHomeBlockEntityType, pos, state);
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag)
+	public NbtCompound writeNbt(NbtCompound tag)
 	{
-		super.toTag(tag);
+		super.writeNbt(tag);
 
 		tag.putByte("timer", timer);
 
@@ -37,21 +38,21 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 	}
 
 	@Override
-	public void fromTag(BlockState state, CompoundTag tag)
+	public void readNbt(NbtCompound tag)
 	{
-		super.fromTag(state, tag);
+		super.readNbt(tag);
 
 		timer = tag.getByte("timer");
 	}
 
 	@Override
-	public void fromClientTag(CompoundTag compoundTag)
+	public void fromClientTag(NbtCompound compoundTag)
 	{
 		timer = compoundTag.getByte("timer");
 	}
 
 	@Override
-	public CompoundTag toClientTag(CompoundTag compoundTag)
+	public NbtCompound toClientTag(NbtCompound compoundTag)
 	{
 		compoundTag.putByte("timer", timer);
 
@@ -122,36 +123,38 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements Tickable
 		return 1;
 	}
 
-	@Override
-	public void tick()
+	public static <T extends BlockEntity> void tick(World world, BlockPos blockPos, BlockState blockState, T be)
 	{
+		if (!(be instanceof TatooineHomeDoorBlockEntity t))
+			return;
+
 		if (world == null)
 			return;
 
-		if (isMoving())
+		if (t.isMoving())
 		{
-			int timer = getTimer();
+			int timer = t.getTimer();
 
 			if (timer == 0)
 				return;
 			else if (timer == ANIMATION_TIME - 1 && world.isClient)
-				world.playSound(pos.getX(), pos.getY(), pos.getZ(), SwgSounds.Door.PNEUMATIC, SoundCategory.BLOCKS, 1, 1, true);
+				world.playSound(blockPos.getX(), blockPos.getY(), blockPos.getZ(), SwgSounds.Door.PNEUMATIC, SoundCategory.BLOCKS, 1, 1, true);
 
 			timer--;
 
 			if (timer <= 0)
 			{
-				boolean opening = isOpening();
-				setDirection(!opening);
+				boolean opening = t.isOpening();
+				t.setDirection(!opening);
 
-				setTimer(0);
-				setMoving(false);
+				t.setTimer(0);
+				t.setMoving(false);
 			}
 			else
-				setTimer(timer);
+				t.setTimer(timer);
 
 			if (!world.isClient)
-				sync();
+				t.sync();
 		}
 	}
 }

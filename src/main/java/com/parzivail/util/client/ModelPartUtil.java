@@ -4,10 +4,10 @@ import net.minecraft.client.model.ModelPart;
 
 public class ModelPartUtil
 {
-	public static void setRotateAngle(ModelPart part, float pitch, float roll, float yaw)
+	public static void setRotateAngle(ModelPart part, float pitch, float yaw, float roll)
 	{
 		part.pitch = pitch;
-		part.yaw = roll;
-		part.roll = yaw;
+		part.yaw = yaw;
+		part.roll = roll;
 	}
 }

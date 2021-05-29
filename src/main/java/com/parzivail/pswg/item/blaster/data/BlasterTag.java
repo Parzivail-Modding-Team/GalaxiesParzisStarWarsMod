@@ -3,7 +3,7 @@ package com.parzivail.pswg.item.blaster.data;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
@@ -20,14 +20,14 @@ public class BlasterTag extends TagSerializer
 	public int passiveCooldownTimer;
 	public int shotTimer;
 
-	public BlasterTag(CompoundTag source)
+	public BlasterTag(NbtCompound source)
 	{
 		super(SLUG, source);
 	}
 
 	public static void mutate(ItemStack stack, Consumer<BlasterTag> action)
 	{
-		CompoundTag nbt = stack.getOrCreateTag();
+		NbtCompound nbt = stack.getOrCreateTag();
 		BlasterTag t = new BlasterTag(nbt);
 		action.accept(t);
 		t.serializeAsSubtag(stack);

@@ -19,7 +19,6 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.client.util.math.Vector3f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
@@ -62,20 +61,20 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 		PM3DVertPointer c = face.verts.get(2);
 		PM3DVertPointer d = face.verts.size() == 4 ? face.verts.get(3) : c;
 
-		Vector3f vA = container.verts[a.vertex];
-		Vector3f vB = container.verts[b.vertex];
-		Vector3f vC = container.verts[c.vertex];
-		Vector3f vD = container.verts[d.vertex];
+		Vec3f vA = container.verts[a.vertex];
+		Vec3f vB = container.verts[b.vertex];
+		Vec3f vC = container.verts[c.vertex];
+		Vec3f vD = container.verts[d.vertex];
 
-		Vector3f nA = container.normals[a.normal];
-		Vector3f nB = container.normals[b.normal];
-		Vector3f nC = container.normals[c.normal];
-		Vector3f nD = container.normals[d.normal];
+		Vec3f nA = container.normals[a.normal];
+		Vec3f nB = container.normals[b.normal];
+		Vec3f nC = container.normals[c.normal];
+		Vec3f nD = container.normals[d.normal];
 
-		Vector3f tA = container.uvs[a.texture];
-		Vector3f tB = container.uvs[b.texture];
-		Vector3f tC = container.uvs[c.texture];
-		Vector3f tD = container.uvs[d.texture];
+		Vec3f tA = container.uvs[a.texture];
+		Vec3f tB = container.uvs[b.texture];
+		Vec3f tC = container.uvs[c.texture];
+		Vec3f tD = container.uvs[d.texture];
 
 		vA = ClientMathUtil.transform(vA, transformation);
 		vB = ClientMathUtil.transform(vB, transformation);

@@ -8,31 +8,32 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
 
 public abstract class InventoryBlockEntity extends BlockEntity implements Inventory
 {
 	protected final DefaultedList<ItemStack> inventory;
 
-	public InventoryBlockEntity(BlockEntityType<?> type, int inventorySize)
+	public InventoryBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, int inventorySize)
 	{
-		super(type);
+		super(type, pos, state);
 		inventory = DefaultedList.ofSize(inventorySize, ItemStack.EMPTY);
 	}
 
 	@Override
-	public CompoundTag toTag(CompoundTag tag)
+	public NbtCompound writeNbt(NbtCompound tag)
 	{
-		Inventories.toTag(tag, this.inventory);
-		return super.toTag(tag);
+		Inventories.writeNbt(tag, this.inventory);
+		return super.writeNbt(tag);
 	}
 
 	@Override
-	public void fromTag(BlockState state, CompoundTag tag)
+	public void readNbt(NbtCompound tag)
 	{
-		Inventories.fromTag(tag, inventory);
-		super.fromTag(state, tag);
+		Inventories.readNbt(tag, inventory);
+		super.readNbt(tag);
 	}
 
 	@Override

@@ -10,8 +10,8 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class BlasterWorkbenchBlock extends BlockWithEntity
 {
@@ -20,10 +20,11 @@ public class BlasterWorkbenchBlock extends BlockWithEntity
 		super(settings);
 	}
 
+	@Nullable
 	@Override
-	public BlockEntity createBlockEntity(BlockView world)
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new BlasterWorkbenchBlockEntity();
+		return new BlasterWorkbenchBlockEntity(pos, state);
 	}
 
 	public BlockRenderType getRenderType(BlockState state)

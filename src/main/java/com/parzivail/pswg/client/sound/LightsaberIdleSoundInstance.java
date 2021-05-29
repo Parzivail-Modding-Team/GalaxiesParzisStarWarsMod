@@ -39,13 +39,13 @@ public class LightsaberIdleSoundInstance extends MovingSoundInstance
 
 	public void tick()
 	{
-		if (this.player.removed)
+		if (this.player.isRemoved())
 		{
 			this.setDone();
 			return;
 		}
 
-		boolean foundSaber = false;
+		var foundSaber = false;
 
 		if (player.getMainHandStack().getItem() instanceof LightsaberItem)
 			foundSaber = tryUseStack(player.getMainHandStack());
@@ -66,9 +66,9 @@ public class LightsaberIdleSoundInstance extends MovingSoundInstance
 
 	private boolean tryUseStack(ItemStack stack)
 	{
-		LightsaberTag lt = new LightsaberTag(stack.getOrCreateTag());
+		var lt = new LightsaberTag(stack.getOrCreateTag());
 
-		float size = lt.getSize(0);
+		var size = lt.getSize(0);
 		if (size > 0)
 		{
 			volume = size;
@@ -88,7 +88,7 @@ public class LightsaberIdleSoundInstance extends MovingSoundInstance
 		if (!(stack.getItem() instanceof LightsaberItem))
 			return false;
 
-		LightsaberTag lt = new LightsaberTag(stack.getOrCreateTag());
+		var lt = new LightsaberTag(stack.getOrCreateTag());
 		return lt.getSize(0) > 0;
 	}
 }

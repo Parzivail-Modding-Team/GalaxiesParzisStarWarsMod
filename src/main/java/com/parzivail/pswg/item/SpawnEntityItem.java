@@ -1,6 +1,5 @@
 package com.parzivail.pswg.item;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -13,7 +12,6 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -34,17 +32,17 @@ public class SpawnEntityItem extends Item
 
 	public ActionResult useOnBlock(ItemUsageContext context)
 	{
-		World world = context.getWorld();
+		var world = context.getWorld();
 		if (!(world instanceof ServerWorld))
 		{
 			return ActionResult.SUCCESS;
 		}
 		else
 		{
-			ItemStack itemStack = context.getStack();
-			BlockPos blockPos = context.getBlockPos();
-			Direction direction = context.getSide();
-			BlockState blockState = world.getBlockState(blockPos);
+			var itemStack = context.getStack();
+			var blockPos = context.getBlockPos();
+			var direction = context.getSide();
+			var blockState = world.getBlockState(blockPos);
 
 			BlockPos blockPos3;
 			if (blockState.getCollisionShape(world, blockPos).isEmpty())
@@ -63,8 +61,8 @@ public class SpawnEntityItem extends Item
 
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand)
 	{
-		ItemStack itemStack = user.getStackInHand(hand);
-		BlockHitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
+		var itemStack = user.getStackInHand(hand);
+		var hitResult = raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
 		if (hitResult.getType() != HitResult.Type.BLOCK)
 		{
 			return TypedActionResult.pass(itemStack);
@@ -75,8 +73,8 @@ public class SpawnEntityItem extends Item
 		}
 		else
 		{
-			BlockHitResult blockHitResult = hitResult;
-			BlockPos blockPos = blockHitResult.getBlockPos();
+			var blockHitResult = hitResult;
+			var blockPos = blockHitResult.getBlockPos();
 			if (!(world.getBlockState(blockPos).getBlock() instanceof FluidBlock))
 			{
 				return TypedActionResult.pass(itemStack);
@@ -89,7 +87,7 @@ public class SpawnEntityItem extends Item
 				}
 				else
 				{
-					if (!user.abilities.creativeMode)
+					if (!user.getAbilities().creativeMode)
 						itemStack.decrement(1);
 
 					user.incrementStat(Stats.USED.getOrCreateStat(this));

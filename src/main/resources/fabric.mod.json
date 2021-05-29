@@ -23,9 +23,6 @@
 		],
 		"cardinal-components-entity": [
 			"com.parzivail.pswg.component.SwgEntityComponents"
-		],
-		"modmenu": [
-			"com.parzivail.pswg.compat.modmenu.GalaxiesModMenuIntegration"
 		]
 	},
 	"mixins": [
@@ -34,7 +31,7 @@
 	"depends": {
 		"fabricloader": ">=0.7.2",
 		"fabric": "*",
-		"minecraft": "1.16.x"
+		"minecraft": "~1.17-beta.1"
 	},
 	"recommends": {
 		"modmenu": "*"

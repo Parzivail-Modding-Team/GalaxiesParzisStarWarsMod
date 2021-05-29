@@ -1,7 +1,6 @@
 package com.parzivail.pswg.client.input;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import io.netty.buffer.Unpooled;
@@ -20,7 +19,8 @@ public class KeyHandler
 
 		if (Client.KEY_SPECIES_SELECT.wasPressed())
 		{
-			Client.minecraft.openScreen(new SpeciesSelectScreen(Client.minecraft.currentScreen));
+			// TODO
+			//			Client.minecraft.openScreen(new SpeciesSelectScreen(Client.minecraft.currentScreen));
 		}
 
 		if (Client.KEY_LIGHTSABER_TOGGLE.wasPressed())
