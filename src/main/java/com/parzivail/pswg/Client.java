@@ -1,7 +1,8 @@
 package com.parzivail.pswg;
 
-import com.parzivail.pswg.client.ModelLoader;
 import com.parzivail.pswg.client.input.KeyHandler;
+import com.parzivail.pswg.client.loader.ModelLoader;
+import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.RenderLayerHelper;
 import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
@@ -48,14 +49,15 @@ public class Client implements ClientModInitializer
 
 	public static final KeyBinding KEY_SPECIES_SELECT = new KeyBinding(Resources.keyBinding("species_select"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category.pswg");
 
-	public static MinecraftClient minecraft;
 	public static RemoteTextureProvider remoteTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
+	public static NemManager nemManager;
 
 	private static SwgBlasterManager blasterLoader;
 
 	public static boolean isShipClientControlled(ShipEntity shipEntity)
 	{
+		MinecraftClient minecraft = MinecraftClient.getInstance();
 		if (minecraft == null || minecraft.player == null)
 			return false;
 
@@ -76,8 +78,6 @@ public class Client implements ClientModInitializer
 	public void onInitializeClient()
 	{
 		Lumberjack.debug("onInitializeClient");
-
-		minecraft = MinecraftClient.getInstance();
 
 		KeyBindingHelper.registerKeyBinding(KEY_LIGHTSABER_TOGGLE);
 		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_OVERRIDE);

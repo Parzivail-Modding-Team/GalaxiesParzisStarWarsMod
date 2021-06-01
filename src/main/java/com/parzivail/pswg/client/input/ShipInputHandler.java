@@ -1,6 +1,5 @@
 package com.parzivail.pswg.client.input;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -12,8 +11,9 @@ public class ShipInputHandler
 	@Environment(EnvType.CLIENT)
 	public static boolean handle(double cursorDeltaX, double cursorDeltaY)
 	{
-		MinecraftClient mc = Client.minecraft;
-		ClientPlayerEntity player = mc.player;
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+
+		ClientPlayerEntity player = minecraft.player;
 
 		assert player != null;
 

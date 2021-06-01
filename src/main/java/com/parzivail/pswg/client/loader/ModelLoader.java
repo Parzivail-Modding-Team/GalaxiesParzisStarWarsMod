@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client;
+package com.parzivail.pswg.client.loader;
 
 import com.parzivail.pswg.client.pm3d.PM3DBakedBlockModel;
 import com.parzivail.pswg.client.pm3d.PM3DFile;

@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.camera;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.util.QuatUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
@@ -44,6 +44,8 @@ public class MutableCameraEntity extends Entity
 
 	public MutableCameraEntity with(ShipEntity parent, ChaseCam camera)
 	{
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+
 		this.parent = parent;
 		this.camera = camera;
 
@@ -55,7 +57,7 @@ public class MutableCameraEntity extends Entity
 
 		this.prevPitch = this.getPitch();
 		this.prevYaw = this.getYaw();
-		QuatUtil.updateEulerRotation(this, parent.getViewRotation(Client.minecraft.getTickDelta()));
+		QuatUtil.updateEulerRotation(this, parent.getViewRotation(minecraft.getTickDelta()));
 
 		return this;
 	}

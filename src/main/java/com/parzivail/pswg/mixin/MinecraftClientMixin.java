@@ -1,6 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.pswg.handler.LeftClickHandler;
@@ -11,6 +12,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.texture.TextureManager;
+import net.minecraft.resource.ReloadableResourceManager;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -30,6 +32,10 @@ public class MinecraftClientMixin
 	private TextureManager textureManager;
 
 	@Shadow
+	@Final
+	private ReloadableResourceManager resourceManager;
+
+	@Shadow
 	@Nullable
 	public ClientPlayerInteractionManager interactionManager;
 
@@ -40,6 +46,17 @@ public class MinecraftClientMixin
 		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.toString());
 		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", remoteAssetDir);
 		Client.stackedTextureProvider = new StackedTextureProvider(textureManager, "pswg:stacked");
+	}
+
+	@Inject(method = "Lnet/minecraft/client/MinecraftClient;initializeSearchableContainers()V", at = @At("TAIL"))
+	private void initializeSearchableContainers(CallbackInfo ci)
+	{
+		// Registering the reloadable resource managers here because this method is
+		// only called once and it's before the tail of MinecraftClient's <init>,
+		// where the resource manager is reloaded
+
+		Client.nemManager = new NemManager();
+		resourceManager.registerReloader(Client.nemManager);
 	}
 
 	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V", shift = At.Shift.BEFORE), cancellable = true)

@@ -1,9 +1,9 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.util.item.ICustomPoseItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.AnimalModel;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
@@ -41,13 +41,15 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
 		if (!livingEntity.getOffHandStack().isEmpty() || livingEntity.isSwimming() || livingEntity.hasVehicle())
 			return;
 
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+
 		ItemStack stack = livingEntity.getMainHandStack();
 		if (!stack.isEmpty())
 		{
 			@Nullable
 			final ICustomPoseItem pose = ICustomPoseItem.ITEM_POSE_MAP.get(stack.getItem());
 			if (pose != null)
-				pose.modifyPose(livingEntity, stack, head, rightArm, leftArm, livingEntity, limbAngle, limbDistance, animationProgress, headYaw, headPitch, Client.minecraft.getTickDelta());
+				pose.modifyPose(livingEntity, stack, head, rightArm, leftArm, livingEntity, limbAngle, limbDistance, animationProgress, headYaw, headPitch, minecraft.getTickDelta());
 		}
 	}
 }

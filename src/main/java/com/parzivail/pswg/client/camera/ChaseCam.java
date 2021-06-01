@@ -1,9 +1,9 @@
 package com.parzivail.pswg.client.camera;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.math.MathUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Quaternion;
@@ -60,7 +60,9 @@ public class ChaseCam
 
 	private float getCamDistTarget(ShipEntity parent, Quaternion q)
 	{
-		Perspective perspective = Client.minecraft.options.getPerspective();
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+
+		Perspective perspective = minecraft.options.getPerspective();
 		int scalar = 1;
 		if (perspective == Perspective.FIRST_PERSON)
 			return 0;

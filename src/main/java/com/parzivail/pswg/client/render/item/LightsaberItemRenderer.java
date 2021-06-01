@@ -1,6 +1,5 @@
 package com.parzivail.pswg.client.render.item;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.client.pm3d.PM3DTexturedModel;
@@ -9,6 +8,7 @@ import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.item.ICustomItemRenderer;
 import com.parzivail.util.item.ICustomPoseItem;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -76,15 +76,16 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade)
 	{
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+
 		matrices.push();
 		matrices.scale(0.03f, 0.03f, 0.03f);
 
-		var mc = Client.minecraft;
 		var lt = new LightsaberTag(stack.getOrCreateTag());
 
 		var unstable = lt.unstable;
 		var baseLength = 1.6f;
-		var lengthCoefficient = forceBlade ? 1 : lt.getSize(mc.getTickDelta());
+		var lengthCoefficient = forceBlade ? 1 : lt.getSize(minecraft.getTickDelta());
 		var coreColor = lt.coreColor;
 		var glowColor = lt.bladeColor;
 

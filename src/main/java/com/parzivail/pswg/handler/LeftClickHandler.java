@@ -1,6 +1,5 @@
 package com.parzivail.pswg.handler;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.util.item.ILeftClickConsumer;
@@ -20,22 +19,22 @@ public class LeftClickHandler
 {
 	public static void handleInputEvents(CallbackInfo ci, @NotNull ClientPlayerInteractionManager interactionManager)
 	{
-		MinecraftClient mc = Client.minecraft;
+		MinecraftClient minecraft = MinecraftClient.getInstance();
 
-		if (!mc.options.keyAttack.isPressed())
+		if (!minecraft.options.keyAttack.isPressed())
 			return;
 
-		assert mc.player != null;
+		assert minecraft.player != null;
 
-		ShipEntity ship = ShipEntity.getShip(mc.player);
+		ShipEntity ship = ShipEntity.getShip(minecraft.player);
 		if (ship != null)
 			return;
 
-		ItemStack stack = mc.player.getMainHandStack();
+		ItemStack stack = minecraft.player.getMainHandStack();
 
 		if (stack.getItem() instanceof ILeftClickConsumer)
 		{
-			TypedActionResult<ItemStack> tar = ((ILeftClickConsumer)stack.getItem()).useLeft(mc.player.world, mc.player, Hand.MAIN_HAND);
+			TypedActionResult<ItemStack> tar = ((ILeftClickConsumer)stack.getItem()).useLeft(minecraft.player.world, minecraft.player, Hand.MAIN_HAND);
 			ActionResult ar = tar.getResult();
 
 			if (ar == ActionResult.PASS)
@@ -51,11 +50,11 @@ public class LeftClickHandler
 
 	public static void doAttack(CallbackInfo ci)
 	{
-		MinecraftClient mc = Client.minecraft;
+		MinecraftClient minecraft = MinecraftClient.getInstance();
 
-		assert mc.player != null;
+		assert minecraft.player != null;
 
-		ShipEntity ship = ShipEntity.getShip(mc.player);
+		ShipEntity ship = ShipEntity.getShip(minecraft.player);
 		if (ship != null)
 		{
 			ship.acceptLeftClick();
@@ -64,7 +63,7 @@ public class LeftClickHandler
 			return;
 		}
 
-		ItemStack stack = mc.player.getMainHandStack();
+		ItemStack stack = minecraft.player.getMainHandStack();
 
 		if (stack.getItem() instanceof ILeftClickConsumer)
 			ci.cancel();

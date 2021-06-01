@@ -1,7 +1,7 @@
 package com.parzivail.pswg.entity;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.sound.LightsaberThrownSoundInstance;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -46,7 +46,8 @@ public class ThrownLightsaberEntity extends ThrownEntity
 	{
 		super.onSpawnPacket(packet);
 
-		Client.minecraft.getSoundManager().play(new LightsaberThrownSoundInstance(this));
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+		minecraft.getSoundManager().play(new LightsaberThrownSoundInstance(this));
 	}
 
 	@Override

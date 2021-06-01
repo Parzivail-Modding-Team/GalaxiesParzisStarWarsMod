@@ -1,7 +1,6 @@
 package com.parzivail.pswg.client.model;
 
 import com.mojang.datafixers.util.Pair;
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.client.ConnectedTextureHelper;
 import com.parzivail.util.client.SubSprite;
@@ -17,6 +16,7 @@ import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConnectingBlock;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.model.*;
 import net.minecraft.client.texture.Sprite;
@@ -58,12 +58,14 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	@Override
 	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+
 		MeshBuilder meshBuilder = RENDERER.meshBuilder();
 		QuadEmitter quadEmitter = meshBuilder.getEmitter();
 
 		final Random random = randomSupplier == null ? new Random(42) : randomSupplier.get();
 
-		BlockModels blockModels = Client.minecraft.getBlockRenderManager().getModels();
+		BlockModels blockModels = minecraft.getBlockRenderManager().getModels();
 		BakedModel model = blockModels.getModel(SwgBlocks.Panel.LabWall.getDefaultState());
 
 		// TODO: fix item lighting

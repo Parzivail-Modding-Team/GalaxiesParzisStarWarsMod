@@ -2,10 +2,10 @@ package com.parzivail.pswg.client.texture.stacked;
 
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.pswg.Client;
 import com.parzivail.util.client.ColorUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.resource.ResourceManager;
@@ -31,7 +31,8 @@ public class StackedTexture extends ResourceTexture
 
 	private void onTextureLoaded(NativeImage image)
 	{
-		Client.minecraft.execute(() -> {
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+		minecraft.execute(() -> {
 			this.loaded = true;
 			if (!RenderSystem.isOnRenderThread())
 			{
@@ -54,7 +55,8 @@ public class StackedTexture extends ResourceTexture
 
 	public void load(ResourceManager manager) throws IOException
 	{
-		Client.minecraft.execute(() -> {
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+		minecraft.execute(() -> {
 			if (!this.loaded)
 			{
 				try

@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.camera;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ship.ShipEntity;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
@@ -15,9 +15,10 @@ public class CameraHelper
 
 	public static void applyCameraTransformations(float tickDelta, long limitTime, MatrixStack matrix, Camera camera)
 	{
-		assert Client.minecraft.player != null;
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+		assert minecraft.player != null;
 
-		var ship = ShipEntity.getShip(Client.minecraft.player);
+		var ship = ShipEntity.getShip(minecraft.player);
 
 		if (ship == null)
 			return;
@@ -28,7 +29,7 @@ public class CameraHelper
 
 		var r = new Quaternion(ship.getViewRotation(tickDelta));
 
-		if (Client.minecraft.options.getPerspective() == Perspective.THIRD_PERSON_FRONT)
+		if (minecraft.options.getPerspective() == Perspective.THIRD_PERSON_FRONT)
 			r.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, 180, true));
 
 		r.conjugate();
@@ -37,15 +38,16 @@ public class CameraHelper
 
 	public static void renderHand(MatrixStack matrices, Camera camera, float tickDelta, CallbackInfo ci)
 	{
-		var mc = Client.minecraft;
-		if (mc.cameraEntity instanceof MutableCameraEntity || mc.cameraEntity instanceof ShipEntity)
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+
+		if (minecraft.cameraEntity instanceof MutableCameraEntity || minecraft.cameraEntity instanceof ShipEntity)
 			ci.cancel();
 	}
 
 	public static void renderWorldHead(float tickDelta, long limitTime, MatrixStack matrix)
 	{
-		var mc = Client.minecraft;
-		var player = mc.player;
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var player = minecraft.player;
 
 		assert player != null;
 
@@ -53,15 +55,15 @@ public class CameraHelper
 
 		if (ship != null)
 		{
-			if (mc.options.getPerspective() != Perspective.FIRST_PERSON)
-				mc.cameraEntity = CameraHelper.MUTABLE_CAMERA_ENTITY.with(ship, ship.getCamera());
+			if (minecraft.options.getPerspective() != Perspective.FIRST_PERSON)
+				minecraft.cameraEntity = CameraHelper.MUTABLE_CAMERA_ENTITY.with(ship, ship.getCamera());
 			else
-				mc.cameraEntity = ship;
+				minecraft.cameraEntity = ship;
 
 			return;
 		}
 
-		if (mc.cameraEntity instanceof MutableCameraEntity || mc.cameraEntity instanceof ShipEntity)
-			mc.cameraEntity = player;
+		if (minecraft.cameraEntity instanceof MutableCameraEntity || minecraft.cameraEntity instanceof ShipEntity)
+			minecraft.cameraEntity = player;
 	}
 }

@@ -1,7 +1,6 @@
 package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
 import com.parzivail.pswg.container.SwgPackets;
@@ -13,6 +12,7 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
@@ -267,6 +267,8 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
 	{
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
@@ -288,7 +290,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		matrices.multiply(new Quaternion(0, 135, 0, true));
 		matrices.scale(100, -100, 100);
 
-		var immediate = Client.minecraft.getBufferBuilders().getEntityVertexConsumers();
+		var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
 
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{

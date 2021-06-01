@@ -2,9 +2,9 @@ package com.parzivail.pswg.client.texture.stacked;
 
 import com.mojang.authlib.minecraft.InsecureTextureException;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.pswg.Client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.DefaultSkinHelper;
@@ -55,7 +55,8 @@ public class StackedTextureProvider
 		Util.getMainWorkerExecutor().execute(() -> {
 			try
 			{
-				Client.minecraft.execute(() -> {
+				MinecraftClient minecraft = MinecraftClient.getInstance();
+				minecraft.execute(() -> {
 					RenderSystem.recordRenderCall(() -> {
 						AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
 						if (!(abstractTexture instanceof StackedTexture))

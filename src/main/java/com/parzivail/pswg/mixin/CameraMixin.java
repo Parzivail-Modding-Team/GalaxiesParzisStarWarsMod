@@ -1,9 +1,9 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,9 +20,10 @@ public class CameraMixin
 	)
 	private double clipToSpace(double desiredCameraDistance)
 	{
-		assert Client.minecraft.player != null;
+		MinecraftClient minecraft = MinecraftClient.getInstance();
+		assert minecraft.player != null;
 
-		ShipEntity ship = ShipEntity.getShip(Client.minecraft.player);
+		ShipEntity ship = ShipEntity.getShip(minecraft.player);
 		if (ship != null)
 			return 0;
 
