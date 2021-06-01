@@ -78,23 +78,13 @@ public abstract class DynamicBakedModel extends AbstractModel
 
 	protected Mesh createOrCacheBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		Object cacheDiscriminator;
-
-		switch (getDiscriminator())
-		{
-			case GLOBAL:
-				cacheDiscriminator = BlockPos.ORIGIN;
-				break;
-			case BLOCKSTATE:
-				cacheDiscriminator = state;
-				break;
-			case RENDER_SEED:
-				cacheDiscriminator = state.getRenderingSeed(pos);
-				break;
-			default:
-				cacheDiscriminator = null;
-				break;
-		}
+		Object cacheDiscriminator = switch (getDiscriminator())
+				{
+					case GLOBAL -> BlockPos.ORIGIN;
+					case BLOCKSTATE -> state;
+					case RENDER_SEED -> state.getRenderingSeed(pos);
+					default -> null;
+				};
 
 		if (cacheDiscriminator == null)
 			return createBlockMesh(blockView, state, pos, randomSupplier, context, transformation);

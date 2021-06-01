@@ -29,6 +29,17 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 	{
 		MinecraftClient minecraft = MinecraftClient.getInstance();
 
+		var dT = minecraft.getTickDelta();
+
+		var timer = entity.getAirborneTimer();
+
+		if (entity.isAiDisabled())
+		{
+			timer = 0;
+			dT = 0;
+			animationProgress = 0;
+		}
+
 		var body = model.getPart().getChild("body");
 		var jaw = body.getChild("jaw");
 		var armRight1 = body.getChild("armRight1");
@@ -71,11 +82,7 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 		eyeRight.pitch = headPitchRad;
 		eyeLeft.pitch = headPitchRad;
 
-		var dT = minecraft.getTickDelta();
-
-		var timer = entity.getAirborneTimer();
-
-		if (timer > 0)
+		if (timer >= 0)
 		{
 			var t = MathHelper.clamp((timer + dT) / 5f, 0, 1);
 

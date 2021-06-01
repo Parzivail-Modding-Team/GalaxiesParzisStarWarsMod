@@ -27,7 +27,7 @@ public class LaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 	public static void setAngles(SinglePartEntityModel<FishEntity> model, FishEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)
 	{
 		if (entity.isAiDisabled())
-			return;
+			animationProgress = 0;
 
 		var body = model.getPart().getChild("body");
 		var pectoralFinLeft = body.getChild("pectoralFinLeft");
@@ -59,6 +59,10 @@ public class LaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 	protected void setupTransforms(FishEntity entity, MatrixStack matrixStack, float f, float g, float h)
 	{
 		super.setupTransforms(entity, matrixStack, f, g, h);
+
+		if (entity.isAiDisabled())
+			return;
+
 		float i = 4.3F * MathHelper.sin(0.6F * f);
 		matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(i));
 		if (!entity.isTouchingWater())

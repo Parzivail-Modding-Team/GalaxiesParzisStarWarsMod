@@ -52,7 +52,7 @@ public class WorrtEntity extends AnimalEntity
 		this.goalSelector.add(1, new WorrtEntity.EscapeDangerGoal(this, 0.8D));
 		this.goalSelector.add(4, new FleeEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D));
 		this.goalSelector.add(4, new FleeEntityGoal<>(this, HostileEntity.class, 4.0F, 0.6D, 1.0D));
-		this.goalSelector.add(6, new WanderAroundFarGoal(this, 1.0D, 0.1F));
+		this.goalSelector.add(6, new WanderAroundFarGoal(this, 1.0D, 0.2F));
 		this.goalSelector.add(11, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
 	}
 
@@ -71,15 +71,15 @@ public class WorrtEntity extends AnimalEntity
 				var vec3d = path.getNodePosition(this);
 				if (vec3d.y > this.getY() + 0.5D)
 				{
-					return 0.5F;
+					return 0.4F;
 				}
 			}
 
-			return (float)this.moveControl.getSpeed() * 0.5f;
+			return (float)this.moveControl.getSpeed() * 0.4f;
 		}
 		else
 		{
-			return 0.5F;
+			return 0.4F;
 		}
 	}
 
@@ -130,7 +130,8 @@ public class WorrtEntity extends AnimalEntity
 		this.dataTracker.startTracking(AIRBORNE_TIMER, (byte)0);
 	}
 
-	public void mobTick()
+	@Override
+	public void tick()
 	{
 		var airborneTimer = getAirborneTimer();
 		if (!onGround)
@@ -156,6 +157,11 @@ public class WorrtEntity extends AnimalEntity
 			}
 		}
 
+		super.tick();
+	}
+
+	public void mobTick()
+	{
 		if (this.ticksUntilJump > 0)
 		{
 			--this.ticksUntilJump;
@@ -329,7 +335,7 @@ public class WorrtEntity extends AnimalEntity
 		{
 			if (this.worrt.isTouchingWater())
 			{
-				speed = 1.5D;
+				speed = 0.5D;
 			}
 
 			super.moveTo(x, y, z, speed);
