@@ -9,10 +9,8 @@ import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.item.ICustomItemRenderer;
 import com.parzivail.util.item.ICustomPoseItem;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -81,20 +79,20 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		matrices.push();
 		matrices.scale(0.03f, 0.03f, 0.03f);
 
-		MinecraftClient mc = Client.minecraft;
-		LightsaberTag lt = new LightsaberTag(stack.getOrCreateTag());
+		var mc = Client.minecraft;
+		var lt = new LightsaberTag(stack.getOrCreateTag());
 
-		boolean unstable = lt.unstable;
-		float baseLength = 1.6f;
-		float lengthCoefficient = forceBlade ? 1 : lt.getSize(mc.getTickDelta());
-		int coreColor = lt.coreColor;
-		int glowColor = lt.bladeColor;
+		var unstable = lt.unstable;
+		var baseLength = 1.6f;
+		var lengthCoefficient = forceBlade ? 1 : lt.getSize(mc.getTickDelta());
+		var coreColor = lt.coreColor;
+		var glowColor = lt.bladeColor;
 
-		PM3DTexturedModel texturedModel = MODELS.get(lt.hilt);
+		var texturedModel = MODELS.get(lt.hilt);
 		if (texturedModel == null)
 			texturedModel = MODELS.get(DEFAULT_MODEL);
 
-		int lod = 1;
+		var lod = 1;
 
 		if (renderMode == ModelTransformation.Mode.GUI)
 		{
@@ -105,7 +103,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			matrices.scale(1.5f, 1.5f, 1.5f);
 		}
 
-		VertexConsumer vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texturedModel.getTexture(lod)));
+		var vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texturedModel.getTexture(lod)));
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		texturedModel.getModel(lod).render(VertexConsumerBuffer.Instance);
 
@@ -122,7 +120,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	@Override
 	public void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		float handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
+		var handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
 
 //		KeyframeInfo keyframe = idlePose.getKeyframes().get(0);
 
@@ -134,14 +132,14 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		leftArm.roll = -0.0436F;
 		if (handSwingProgress > 0)
 		{
-			float gx = 1.0F - handSwingProgress;
-			float hx = MathHelper.sin(gx * 3.1415927F);
-			float kx = head.pitch;
+			var gx = 1.0F - handSwingProgress;
+			var hx = MathHelper.sin(gx * 3.1415927F);
+			var kx = head.pitch;
 			if (kx < 0)
 			{
 				kx = 0.25F;
 			}
-			float ix = MathHelper.sin(handSwingProgress * 3.1415927F) * -((kx) - 0.7F) * 0.75F;
+			var ix = MathHelper.sin(handSwingProgress * 3.1415927F) * -((kx) - 0.7F) * 0.75F;
 			rightArm.pitch = (float)((double)rightArm.pitch - ((double)hx * 1.2D + (double)ix));
 			leftArm.pitch = (float)((double)leftArm.pitch - ((double)hx * 1.2D + (double)ix) * 1.2D) * 0.75F;
 		}

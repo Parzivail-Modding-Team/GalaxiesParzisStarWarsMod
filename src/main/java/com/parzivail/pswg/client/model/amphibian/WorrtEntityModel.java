@@ -80,7 +80,7 @@ public class WorrtEntityModel<T extends Entity> extends SinglePartEntityModel<T>
 
 	public WorrtEntityModel()
 	{
-		this(WorrtEntityModel.getTexturedModelData().createModel());
+		this(getTexturedModelData().createModel());
 	}
 
 	public static TexturedModelData getTexturedModelData()

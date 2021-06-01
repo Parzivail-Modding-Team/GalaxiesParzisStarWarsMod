@@ -48,7 +48,7 @@ public class LaaEntityModel<T extends Entity> extends SinglePartEntityModel<T>
 
 	public LaaEntityModel()
 	{
-		this(LaaEntityModel.getTexturedModelData().createModel());
+		this(getTexturedModelData().createModel());
 	}
 
 	public static TexturedModelData getTexturedModelData()

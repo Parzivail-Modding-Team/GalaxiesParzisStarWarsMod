@@ -48,7 +48,7 @@ public class FaaEntityModel<T extends Entity> extends SinglePartEntityModel<T>
 
 	public FaaEntityModel()
 	{
-		this(FaaEntityModel.getTexturedModelData().createModel());
+		this(getTexturedModelData().createModel());
 	}
 
 	public static TexturedModelData getTexturedModelData()
