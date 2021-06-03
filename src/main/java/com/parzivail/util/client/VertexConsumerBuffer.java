@@ -2,6 +2,7 @@ package com.parzivail.util.client;
 
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Vector4f;
 
@@ -88,5 +89,25 @@ public enum VertexConsumerBuffer
 	public void vertex(float x, float y, float z, float nx, float ny, float nz, float u, float v)
 	{
 		vertex(new Vec3f(x, y, z), new Vec3f(nx, ny, nz), u, v);
+	}
+
+	public void line(float x1, float y1, float z1, float x2, float y2, float z2)
+	{
+		Vec3f start = new Vec3f(x1, y1, z1);
+		Vec3f end = new Vec3f(x2, y2, z2);
+		Vec3f normal = new Vec3f(x2, y2, z2);
+		normal.subtract(start);
+		normal.normalize();
+
+		vertex(start, normal,0, 0);
+		vertex(end, normal,0, 0);
+	}
+
+	public void line(Vec3d start, Vec3d end)
+	{
+		Vec3d normal = new Vec3d(end.x, end.y, end.z).subtract(start).normalize();
+
+		vertex((float)start.x, (float)start.y, (float)start.z, (float)normal.x, (float)normal.y, (float)normal.z,0, 0);
+		vertex((float)end.x, (float)end.y, (float)end.z, (float)normal.x, (float)normal.y, (float)normal.z,0, 0);
 	}
 }

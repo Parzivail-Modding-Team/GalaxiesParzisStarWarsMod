@@ -7,6 +7,7 @@ import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.RenderLayerHelper;
 import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.amphibian.WorrtEntityRenderer;
+import com.parzivail.pswg.client.render.debug.KinematicTestEntityRenderer;
 import com.parzivail.pswg.client.render.fish.FaaEntityRenderer;
 import com.parzivail.pswg.client.render.fish.LaaEntityRenderer;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
@@ -179,6 +180,8 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Faa, FaaEntityRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Laa, LaaEntityRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Amphibian.Worrt, WorrtEntityRenderer::new);
+
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.KinematicTest, KinematicTestEntityRenderer::new);
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);

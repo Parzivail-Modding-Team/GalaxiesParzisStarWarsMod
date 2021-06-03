@@ -4,6 +4,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
+import com.parzivail.pswg.entity.debug.KinematicTestEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.util.entity.BucketableFishEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -93,8 +94,14 @@ public class SwgEntities
 				.trackRangeBlocks(40)
 				.build());
 
+		public static final EntityType<KinematicTestEntity> KinematicTest = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("kinematic_test"), FabricEntityTypeBuilder
+				.create(SpawnGroup.MISC, KinematicTestEntity::new)
+				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+				.build());
+
 		static void register()
 		{
+			entityTypes.add(KinematicTest);
 			entityTypes.add(BlasterBolt);
 			entityTypes.add(ThrownLightsaber);
 		}

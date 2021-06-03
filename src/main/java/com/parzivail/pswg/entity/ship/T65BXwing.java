@@ -2,10 +2,14 @@ package com.parzivail.pswg.entity.ship;
 
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgEntities;
+import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.rigs.RigT65B;
+import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.pswg.util.QuatUtil;
+import com.parzivail.util.math.MathUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
@@ -15,7 +19,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.EnumSet;
@@ -84,28 +90,28 @@ public class T65BXwing extends ShipEntity
 	@Override
 	public void acceptFireInput()
 	{
-//		Entity passenger = getPrimaryPassenger();
-//		if (!(passenger instanceof PlayerEntity))
-//			return;
-//
-//		PlayerEntity player = (PlayerEntity)passenger;
-//
-//		Vec3d pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(4f), getRotation());
-//		MatrixStack stack = new MatrixStack();
-//
-//		byte cannonState = getCannonState();
-//
-//		Vec3d p = CANNON_ORDER[cannonState].getWorldPosition(stack, this);
-//
-//		BlasterUtil.fireBolt(world, player, pDir, 100, 50, blasterBoltEntity -> {
-//			blasterBoltEntity.setVelocity(pDir);
-//			blasterBoltEntity.setPos(this.getX() + p.x, this.getY() + p.y + 0.25f, this.getZ() + p.z);
-//		});
-//
-//		world.playSound(null, player.getBlockPos(), SwgSounds.Ship.XWINGT65B_FIRE, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 10);
-//
-//		cannonState++;
-//		setCannonState(cannonState);
+		Entity passenger = getPrimaryPassenger();
+		if (!(passenger instanceof PlayerEntity))
+			return;
+
+		PlayerEntity player = (PlayerEntity)passenger;
+
+		Vec3d pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(4f), getRotation());
+		MatrixStack stack = new MatrixStack();
+
+		byte cannonState = getCannonState();
+
+		Vec3d p = CANNON_ORDER[cannonState].getWorldPosition(stack, this);
+
+		BlasterUtil.fireBolt(world, player, pDir, 100, 50, blasterBoltEntity -> {
+			blasterBoltEntity.setVelocity(pDir);
+			blasterBoltEntity.setPos(this.getX() + p.x, this.getY() + p.y + 0.25f, this.getZ() + p.z);
+		});
+
+		world.playSound(null, player.getBlockPos(), SwgSounds.Ship.XWINGT65B_FIRE, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 10);
+
+		cannonState++;
+		setCannonState(cannonState);
 	}
 
 	@Override
