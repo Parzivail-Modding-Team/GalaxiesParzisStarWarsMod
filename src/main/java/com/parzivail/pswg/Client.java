@@ -40,6 +40,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
@@ -52,9 +53,6 @@ public class Client implements ClientModInitializer
 
 	public static RemoteTextureProvider remoteTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
-	public static NemManager nemManager;
-
-	private static SwgBlasterManager blasterLoader;
 
 	public static boolean isShipClientControlled(ShipEntity shipEntity)
 	{
@@ -63,16 +61,6 @@ public class Client implements ClientModInitializer
 			return false;
 
 		return ShipEntity.getShip(minecraft.player) == shipEntity;
-	}
-
-	public static void resetLoaders()
-	{
-		blasterLoader = new SwgBlasterManager();
-	}
-
-	public static SwgBlasterManager getBlasterLoader()
-	{
-		return blasterLoader;
 	}
 
 	@Override
@@ -190,11 +178,51 @@ public class Client implements ClientModInitializer
 		ICustomPoseItem.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
 		ICustomHudRenderer.registerCustomHUD(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
 
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-			if (blasterLoader != null)
-				blasterLoader.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
-			else
-				Lumberjack.error("Attempted to sync blaster descriptors without initializing the client loader!");
-		});
+		ResourceManagers.registerPackets();
+	}
+
+	public static class ResourceManagers
+	{
+		private static NemManager nemManager;
+		private static SwgBlasterManager blasterLoader;
+
+		public static SwgBlasterManager getBlasterLoader()
+		{
+			return blasterLoader;
+		}
+
+		public static NemManager getNemManager()
+		{
+			return nemManager;
+		}
+
+		/**
+		 * Register managers which are used by the client to provide visuals that can be reloaded
+		 */
+		public static void registerReloadableManagers(ReloadableResourceManager resourceManager)
+		{
+			resourceManager.registerReloader(nemManager = new NemManager());
+		}
+
+		/**
+		 * Register managers which are used by the server to provide content
+		 */
+		public static void registerNonreloadableManagers()
+		{
+			blasterLoader = new SwgBlasterManager();
+		}
+
+		/**
+		 * Register packets used by server resource managers to synchronize content from the client to the server
+		 */
+		public static void registerPackets()
+		{
+			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+				if (blasterLoader != null)
+					blasterLoader.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
+				else
+					Lumberjack.error("Attempted to sync blaster descriptors without initializing the client loader!");
+			});
+		}
 	}
 }

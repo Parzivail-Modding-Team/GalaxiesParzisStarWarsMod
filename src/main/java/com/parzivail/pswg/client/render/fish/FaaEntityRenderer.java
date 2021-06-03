@@ -15,7 +15,7 @@ public class FaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 {
 	public FaaEntityRenderer(EntityRendererFactory.Context context)
 	{
-		super(context, Client.nemManager.getModel(Resources.identifier("mob/fish/faa"), FaaEntityRenderer::setAngles), 0.5f);
+		super(context, Client.ResourceManagers.getNemManager().getModel(Resources.identifier("mob/fish/faa"), FaaEntityRenderer::setAngles), 0.5f);
 	}
 
 	@Override

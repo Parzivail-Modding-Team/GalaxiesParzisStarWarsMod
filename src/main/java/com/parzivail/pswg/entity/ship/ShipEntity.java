@@ -113,13 +113,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		return null;
 	}
 
-	// TODO: is this needed anymore?
-//	@Override
-//	public void onSpawnPacket(EntitySpawnS2CPacket packet)
-//	{
-//		setPosition(packet.getX(), packet.getY(), packet.getZ());
-//	}
-
 	@Override
 	public Box getVisibilityBoundingBox()
 	{

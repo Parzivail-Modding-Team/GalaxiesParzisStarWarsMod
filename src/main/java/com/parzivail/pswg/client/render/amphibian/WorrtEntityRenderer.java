@@ -16,7 +16,7 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 {
 	public WorrtEntityRenderer(EntityRendererFactory.Context context)
 	{
-		super(context, Client.nemManager.getModel(Resources.identifier("mob/amphibian/worrt"), WorrtEntityRenderer::setAngles), 0.5f);
+		super(context, Client.ResourceManagers.getNemManager().getModel(Resources.identifier("mob/amphibian/worrt"), WorrtEntityRenderer::setAngles), 0.5f);
 	}
 
 	@Override

@@ -6,12 +6,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.access.IServerResourceManagerAccess;
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterHeatInfo;
 import com.parzivail.pswg.item.blaster.data.BlasterSpreadInfo;
-import com.parzivail.pswg.mixin.MinecraftServerMixin;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
@@ -19,7 +18,6 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.JsonDataLoader;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ServerResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
@@ -44,25 +42,24 @@ public class SwgBlasterManager extends JsonDataLoader
 
 	public static SwgBlasterManager get(MinecraftServer server)
 	{
-		ServerResourceManager srm = ((MinecraftServerMixin)server).getServerResourceManager();
-		return ((IServerResourceManagerAccess)srm).getBlasterLoader();
+		return Galaxies.ResourceManagers.get(server).getBlasterLoader();
 	}
 
 	public static SwgBlasterManager get(World world)
 	{
 		if (world.isClient)
-			return Client.getBlasterLoader();
+			return Client.ResourceManagers.getBlasterLoader();
 
 		return SwgBlasterManager.get(world.getServer());
 	}
 
 	public PacketByteBuf createPacket()
 	{
-		PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+		var passedData = new PacketByteBuf(Unpooled.buffer());
 
 		passedData.writeInt(blasters.size());
 
-		for (Map.Entry<Identifier, BlasterDescriptor> entry : blasters.entrySet())
+		for (var entry : blasters.entrySet())
 		{
 			passedData.writeIdentifier(entry.getKey());
 			writeBlasterDescriptor(passedData, entry.getValue());
@@ -99,14 +96,14 @@ public class SwgBlasterManager extends JsonDataLoader
 
 	public void handlePacket(MinecraftClient minecraftClient, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)
 	{
-		int size = packetByteBuf.readInt();
+		var size = packetByteBuf.readInt();
 
-		HashMap<Identifier, BlasterDescriptor> map = new HashMap<>();
+		var map = new HashMap<Identifier, BlasterDescriptor>();
 
-		for (int i = 0; i < size; i++)
+		for (var i = 0; i < size; i++)
 		{
-			Identifier key = packetByteBuf.readIdentifier();
-			BlasterDescriptor value = readBlasterDescriptor(key, packetByteBuf);
+			var key = packetByteBuf.readIdentifier();
+			var value = readBlasterDescriptor(key, packetByteBuf);
 			map.put(key, value);
 		}
 
@@ -115,28 +112,28 @@ public class SwgBlasterManager extends JsonDataLoader
 
 	private BlasterDescriptor readBlasterDescriptor(Identifier key, PacketByteBuf buf)
 	{
-		boolean oneHanded = buf.readBoolean();
-		float damage = buf.readFloat();
-		float range = buf.readFloat();
-		float weight = buf.readFloat();
-		int boltColor = buf.readInt();
-		int magazineSize = buf.readInt();
-		int automaticRepeatTime = buf.readInt();
+		var oneHanded = buf.readBoolean();
+		var damage = buf.readFloat();
+		var range = buf.readFloat();
+		var weight = buf.readFloat();
+		var boltColor = buf.readInt();
+		var magazineSize = buf.readInt();
+		var automaticRepeatTime = buf.readInt();
 
-		float spread_horizontal = buf.readFloat();
-		float spread_vertical = buf.readFloat();
+		var spread_horizontal = buf.readFloat();
+		var spread_vertical = buf.readFloat();
 
-		int heat_capacity = buf.readInt();
-		int heat_perRound = buf.readInt();
-		int heat_drainSpeed = buf.readInt();
-		int heat_cooldownDelay = buf.readInt();
-		int heat_overheatDrainSpeed = buf.readInt();
-		int heat_passiveCooldownDelay = buf.readInt();
+		var heat_capacity = buf.readInt();
+		var heat_perRound = buf.readInt();
+		var heat_drainSpeed = buf.readInt();
+		var heat_cooldownDelay = buf.readInt();
+		var heat_overheatDrainSpeed = buf.readInt();
+		var heat_passiveCooldownDelay = buf.readInt();
 
-		float cooling_primaryBypassTime = buf.readFloat();
-		float cooling_primaryBypassTolerance = buf.readFloat();
-		float cooling_secondaryBypassTime = buf.readFloat();
-		float cooling_secondaryBypassTolerance = buf.readFloat();
+		var cooling_primaryBypassTime = buf.readFloat();
+		var cooling_primaryBypassTolerance = buf.readFloat();
+		var cooling_secondaryBypassTime = buf.readFloat();
+		var cooling_secondaryBypassTolerance = buf.readFloat();
 
 		return new BlasterDescriptor(
 				key,
@@ -160,7 +157,7 @@ public class SwgBlasterManager extends JsonDataLoader
 		map.forEach((identifier, jsonElement) -> {
 			try
 			{
-				BlasterDescriptor obj = deserializeBlasterDescriptor(identifier, jsonElement);
+				var obj = deserializeBlasterDescriptor(identifier, jsonElement);
 				blasterDescriptorMap.put(identifier, obj);
 			}
 			catch (IllegalArgumentException | JsonParseException ex)
@@ -172,24 +169,14 @@ public class SwgBlasterManager extends JsonDataLoader
 		blasters = ImmutableMap.copyOf(blasterDescriptorMap);
 	}
 
-	public void reset()
-	{
-		blasters.clear();
-	}
-
 	public Map<Identifier, BlasterDescriptor> getBlasters()
 	{
 		return blasters;
 	}
 
-	public void setBlasters(Map<Identifier, BlasterDescriptor> blasters)
-	{
-		this.blasters = ImmutableMap.copyOf(blasters);
-	}
-
 	private BlasterDescriptor deserializeBlasterDescriptor(Identifier identifier, JsonElement jsonObject)
 	{
-		int version = jsonObject.getAsJsonObject().get("version").getAsInt();
+		var version = jsonObject.getAsJsonObject().get("version").getAsInt();
 
 		if (version != 1)
 			throw new IllegalArgumentException("Can only parse version 1 blaster descriptors!");

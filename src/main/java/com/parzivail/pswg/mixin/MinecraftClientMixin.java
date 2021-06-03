@@ -1,7 +1,6 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.pswg.handler.LeftClickHandler;
@@ -55,8 +54,7 @@ public class MinecraftClientMixin
 		// only called once and it's before the tail of MinecraftClient's <init>,
 		// where the resource manager is reloaded
 
-		Client.nemManager = new NemManager();
-		resourceManager.registerReloader(Client.nemManager);
+		Client.ResourceManagers.registerReloadableManagers(resourceManager);
 	}
 
 	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V", shift = At.Shift.BEFORE), cancellable = true)

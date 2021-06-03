@@ -14,6 +14,6 @@ public class ClientLoginNetworkHandlerMixin
 	@Inject(method = "Lnet/minecraft/client/network/ClientLoginNetworkHandler;onLoginSuccess(Lnet/minecraft/network/packet/s2c/login/LoginSuccessS2CPacket;)V", at = @At("TAIL"))
 	private void onLoginSuccess(LoginSuccessS2CPacket packet, CallbackInfo ci)
 	{
-		Client.resetLoaders();
+		Client.ResourceManagers.registerNonreloadableManagers();
 	}
 }

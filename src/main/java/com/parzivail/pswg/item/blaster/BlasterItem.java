@@ -244,7 +244,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (group != Galaxies.Tab)
 			return;
 
-		var blasterLoader = Client.getBlasterLoader();
+		var blasterLoader = Client.ResourceManagers.getBlasterLoader();
 
 		for (var entry : blasterLoader.getBlasters().entrySet())
 			stacks.add(forType(entry.getValue()));

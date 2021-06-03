@@ -2,9 +2,11 @@ package com.parzivail.pswg;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.parzivail.datagen.DataGenHelper;
+import com.parzivail.pswg.access.IServerResourceManagerAccess;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.component.SwgPersistentComponents;
 import com.parzivail.pswg.container.*;
+import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.dimension.DimensionTeleporter;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
@@ -12,6 +14,7 @@ import com.parzivail.pswg.handler.PlayerPacketHandler;
 import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
 import com.parzivail.pswg.item.blaster.data.BlasterHeatInfo;
 import com.parzivail.pswg.item.blaster.data.BlasterSpreadInfo;
+import com.parzivail.pswg.mixin.MinecraftServerMixin;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.species.SwgSpecies;
 import com.parzivail.util.Lumberjack;
@@ -27,6 +30,8 @@ import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.resource.ReloadableResourceManager;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -138,5 +143,26 @@ public class Galaxies implements ModInitializer
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment())
 			DataGenHelper.run();
+	}
+
+	public static class ResourceManagers
+	{
+		public static ResourceManagers get(MinecraftServer server)
+		{
+			var srm = ((MinecraftServerMixin)server).getServerResourceManager();
+			return ((IServerResourceManagerAccess)srm).getResourceManagers();
+		}
+
+		private final SwgBlasterManager blasterLoader;
+
+		public ResourceManagers(ReloadableResourceManager resourceManager)
+		{
+			resourceManager.registerReloader(blasterLoader = new SwgBlasterManager());
+		}
+
+		public SwgBlasterManager getBlasterLoader()
+		{
+			return blasterLoader;
+		}
 	}
 }

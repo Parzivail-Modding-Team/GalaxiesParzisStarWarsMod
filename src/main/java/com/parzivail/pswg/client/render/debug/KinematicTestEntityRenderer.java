@@ -26,7 +26,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 	{
 		super(ctx);
 
-		model = Client.nemManager.getModel(Resources.identifier("mob/debug/bantha"), KinematicTestEntityRenderer::setAngles);
+		model = Client.ResourceManagers.getNemManager().getModel(Resources.identifier("mob/debug/bantha"), KinematicTestEntityRenderer::setAngles);
 	}
 
 	private static void setAngles(MutableAnimatedModel<KinematicTestEntity> model, KinematicTestEntity entity, float v, float v1, float v2, float v3, float v4)
