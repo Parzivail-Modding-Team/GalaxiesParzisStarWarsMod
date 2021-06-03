@@ -26,7 +26,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 	{
 		super(ctx);
 
-		model = Client.nemManager.getModel(Resources.identifier("mob/debug/body_and_legs"), KinematicTestEntityRenderer::setAngles);
+		model = Client.nemManager.getModel(Resources.identifier("mob/debug/bantha"), KinematicTestEntityRenderer::setAngles);
 	}
 
 	private static void setAngles(MutableAnimatedModel<KinematicTestEntity> model, KinematicTestEntity entity, float v, float v1, float v2, float v3, float v4)
@@ -36,12 +36,11 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 		var leftFrontLeg2 = leftFrontLeg.getChild("leftFrontLeg2");
 
 		var start = new Vec3d(0.45f, 1.125f, 1.08f);
-		var end = new Vec3d(0.45f, 1.125f, 1.08f);
 
 		var l1 = 0.5625f;
 		var l2 = 0.5625f;
 
-		var result = TwoJointIk.evaluate(entity, start, end, false, l1, l2);
+		var result = TwoJointIk.forwardEvaluate(entity, start, false, entity.getYaw(), l1, l2);
 
 		leftFrontLeg.pitch = -(float)(result.hipPitch() / 180 * Math.PI);
 		leftFrontLeg2.pitch = (float)(result.kneePitch() / 180 * Math.PI);
@@ -70,7 +69,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 		var l1 = 0.5625f;
 		var l2 = 0.5625f;
 
-		var result = TwoJointIk.evaluate(entity, start, end, false, l1, l2);
+		var result = TwoJointIk.forwardEvaluate(entity, start, false, entity.getYaw(), l1, l2);
 
 		//		v.setColor(0x8000FF00);
 		//
@@ -81,7 +80,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 
 		matrices.push();
 		matrices.translate(start.x, start.y, start.z);
-		matrices.multiply(new Quaternion(Vec3f.POSITIVE_Y, (float)result.hipYaw() - 90, true));
+		matrices.multiply(new Quaternion(Vec3f.POSITIVE_Y, (float)result.hipYaw(), true));
 		matrices.multiply(new Quaternion(Vec3f.POSITIVE_X, -(float)result.hipPitch(), true));
 		v.setMatrices(matrices.peek());
 

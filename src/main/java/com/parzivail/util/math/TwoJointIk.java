@@ -13,7 +13,27 @@ public class TwoJointIk
 	{
 	}
 
-	public static Result evaluate(Entity entity, Vec3d hip, Vec3d footRequest, boolean backwardsKnee, double upperLegLength, double lowerLegLength)
+	public static Result forwardEvaluate(Entity entity, Vec3d hip, boolean backwardsKnee, double hipYaw, double upperLegLength, double lowerLegLength)
+	{
+		var entityPos = entity.getPos();
+
+		var lTotal = upperLegLength + lowerLegLength;
+
+		var world = entity.world;
+		var result = world.raycast(new RaycastContext(hip.add(entityPos), hip.add(entityPos).subtract(0, lTotal, 0), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, entity));
+		if (result.getType() == HitResult.Type.MISS)
+			return new Result(Vec3d.ZERO, Vec3d.ZERO, hipYaw, 0, 0);
+
+		var footPos = result.getPos().subtract(entityPos);
+		var dGround = hip.y - footPos.y - lowerLegLength;
+		var hipPitch = 90 - (Math.asin(dGround / upperLegLength)) / Math.PI * 180;
+
+		var kneePos = footPos.add(0, lowerLegLength, 0);
+
+		return new Result(kneePos, footPos, hipYaw, hipPitch, hipPitch);
+	}
+
+	public static Result backEvaluate(Entity entity, Vec3d hip, Vec3d footRequest, boolean backwardsKnee, double upperLegLength, double lowerLegLength)
 	{
 		var entityPos = entity.getPos();
 
@@ -21,7 +41,7 @@ public class TwoJointIk
 		var l2 = lowerLegLength;
 		var lTotal = l1 + l2;
 
-		var hipYaw = hip.x == footRequest.x && hip.z == footRequest.z ? entity.getYaw() + 90 : MathHelper.atan2(footRequest.z - hip.z, footRequest.x - hip.x) / Math.PI * 180;
+		var hipYaw = hip.x == footRequest.x && hip.z == footRequest.z ? entity.getYaw() : MathHelper.atan2(footRequest.z - hip.z, footRequest.x - hip.x) / Math.PI * 180 - 90;
 
 		if (hip.distanceTo(footRequest) >= lTotal)
 			return getFullyExtendedResult(hip, footRequest, hipYaw);
