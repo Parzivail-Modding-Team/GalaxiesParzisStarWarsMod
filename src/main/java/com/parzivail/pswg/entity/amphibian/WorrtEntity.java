@@ -89,7 +89,7 @@ public class WorrtEntity extends AnimalEntity
 		var d = this.moveControl.getSpeed();
 		if (d > 0.0D)
 		{
-			var e = this.getVelocity().method_37268();
+			var e = this.getVelocity().horizontalLengthSquared();
 			if (e < 0.01D)
 			{
 				this.updateVelocity((float)d, new Vec3d(0.0D, 0.0D, 1.0D));

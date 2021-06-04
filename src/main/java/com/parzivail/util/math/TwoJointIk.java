@@ -55,7 +55,7 @@ public class TwoJointIk
 
 		footRequest = footRequest.subtract(hip);
 
-		var endX = footRequest.method_37267(); // method_37267 = horizontalLength
+		var endX = footRequest.horizontalLength();
 		var endY = footRequest.y;
 
 		var lSquareDiff = l1 * l1 - l2 * l2;
@@ -81,7 +81,7 @@ public class TwoJointIk
 	private static TwoJointIk.Result getFullyExtendedResult(Vec3d hip, Vec3d footRequest, double hipYaw)
 	{
 		var deltaPos = footRequest.subtract(hip);
-		var fullyExtendedHipPitch = MathHelper.atan2(deltaPos.y, deltaPos.method_37267());
+		var fullyExtendedHipPitch = MathHelper.atan2(deltaPos.y, deltaPos.horizontalLength());
 		return new Result(Vec3d.ZERO, Vec3d.ZERO, hipYaw, fullyExtendedHipPitch, 0);
 	}
 }
