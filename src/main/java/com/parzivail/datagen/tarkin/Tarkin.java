@@ -834,6 +834,33 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.StrippedJaporBranch).build(assets);
 		ItemGenerator.basic(SwgItems.Food.Tuber).build(assets);
 
+		ItemGenerator.basic(SwgItems.Food.CookedEopieLoin).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.CorpseOfGorg).build(assets);
+		ItemGenerator.basic(SwgItems.Food.CrispyGorg).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DebDeb).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.DewbackBone).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DewbackEgg).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DewbackOmlette).build(assets);
+		ItemGenerator.basic(SwgItems.Food.EopieLoin).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.EyeOfSketto).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.Hide).build(assets);
+		ItemGenerator.basic(SwgItems.Food.HubbaGourd).build(assets);
+		ItemGenerator.basic(SwgItems.Food.JerbaRack).build(assets);
+		ItemGenerator.basic(SwgItems.Food.JerbaRib).build(assets);
+		ItemGenerator.basic(SwgItems.Food.KraytMeat).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.KraytTooth).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.KreetleHusk).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.LizardGizzard).build(assets);
+		ItemGenerator.basic(SwgItems.Food.RawSkettoNugget).build(assets);
+		ItemGenerator.basic(SwgItems.Food.RoastKrayt).build(assets);
+		ItemGenerator.basic(SwgItems.Food.RontoChuck).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.SquillLiver).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.TongueOfWorrt).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.ToughHide).build(assets);
+		ItemGenerator.basic(SwgItems.Food.TuberMash).build(assets);
+		ItemGenerator.basic(SwgItems.Food.VaporatorMushroom).build(assets);
+		ItemGenerator.basic(SwgItems.Food.WorrtEgg).build(assets);
+
 		ItemGenerator.basic(SwgItems.Hoe.Durasteel).build(assets);
 		ItemGenerator.basic(SwgItems.Hoe.Titanium).build(assets);
 		ItemGenerator.basic(SwgItems.Hoe.Beskar).build(assets);

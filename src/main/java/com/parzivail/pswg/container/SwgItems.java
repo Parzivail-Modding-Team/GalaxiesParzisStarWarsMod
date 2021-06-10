@@ -259,6 +259,62 @@ public class SwgItems
 		public static final Item StrippedJaporBranch = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("tuber")
 		public static final Item Tuber = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		@RegistryName("cooked_eopie_loin")
+		public static final Item CookedEopieLoin = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("crispy_gorg")
+		public static final Item CrispyGorg = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("dewback_egg")
+		public static final Item DewbackEgg = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("dewback_omlette")
+		public static final Item DewbackOmlette = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("jerba_rack")
+		public static final Item JerbaRack = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("jerba_rib")
+		public static final Item JerbaRib = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("krayt_meat")
+		public static final Item KraytMeat = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_sketto_nugget")
+		public static final Item RawSkettoNugget = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("roast_krayt")
+		public static final Item RoastKrayt = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("ronto_chuck")
+		public static final Item RontoChuck = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("tuber_mash")
+		public static final Item TuberMash = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("vaporator_mushroom")
+		public static final Item VaporatorMushroom = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("worrt_egg")
+		public static final Item WorrtEgg = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("deb_deb")
+		public static final Item DebDeb = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("eopie_loin")
+		public static final Item EopieLoin = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("hubba_gourd")
+		public static final Item HubbaGourd = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
+	public static class MobDrops
+	{
+		@RegistryName("corpse_of_gorg")
+		public static final Item CorpseOfGorg = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("dewback_bone")
+		public static final Item DewbackBone = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("eye_of_sketto")
+		public static final Item EyeOfSketto = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("hide")
+		public static final Item Hide = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("krayt_tooth")
+		public static final Item KraytTooth = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("kreetle_husk")
+		public static final Item KreetleHusk = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("lizard_gizzard")
+		public static final Item LizardGizzard = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("squill_liver")
+		public static final Item SquillLiver = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("tongue_of_worrt")
+		public static final Item TongueOfWorrt = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("tough_hide")
+		public static final Item ToughHide = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Blaster
