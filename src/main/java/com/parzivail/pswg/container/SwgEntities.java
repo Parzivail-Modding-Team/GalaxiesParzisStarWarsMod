@@ -24,7 +24,7 @@ public class SwgEntities
 
 	public static class Ship
 	{
-		public static final EntityType<T65BXwing> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("xwing_t65b"), FabricEntityTypeBuilder
+		public static final EntityType<T65BXwing> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.id("xwing_t65b"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, T65BXwing::new)
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackRangeBlocks(128)
@@ -41,7 +41,7 @@ public class SwgEntities
 
 		public static final EntityType<WorrtEntity> Worrt = Registry.register(
 				Registry.ENTITY_TYPE,
-				Resources.identifier("worrt"),
+				Resources.id("worrt"),
 				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorrtEntity::new).dimensions(EntityDimensions.fixed(0.6f, 0.6f)).build()
 		);
 
@@ -56,7 +56,7 @@ public class SwgEntities
 	{
 		public static final EntityType<BucketableFishEntity> Faa = Registry.register(
 				Registry.ENTITY_TYPE,
-				Resources.identifier("faa"),
+				Resources.id("faa"),
 				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
 				                       .dimensions(EntityDimensions.fixed(0.5F, 0.3F))
 				                       .build()
@@ -64,7 +64,7 @@ public class SwgEntities
 
 		public static final EntityType<BucketableFishEntity> Laa = Registry.register(
 				Registry.ENTITY_TYPE,
-				Resources.identifier("laa"),
+				Resources.id("laa"),
 				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
 				                       .dimensions(EntityDimensions.fixed(0.5F, 0.3F))
 				                       .build()
@@ -82,19 +82,19 @@ public class SwgEntities
 
 	public static class Misc
 	{
-		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("blaster_bolt"), FabricEntityTypeBuilder
+		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_bolt"), FabricEntityTypeBuilder
 				.<BlasterBoltEntity>create(SpawnGroup.MISC, BlasterBoltEntity::new)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
 				.trackRangeBlocks(40)
 				.build());
 
-		public static final EntityType<ThrownLightsaberEntity> ThrownLightsaber = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("thrown_lightsaber"), FabricEntityTypeBuilder
+		public static final EntityType<ThrownLightsaberEntity> ThrownLightsaber = Registry.register(Registry.ENTITY_TYPE, Resources.id("thrown_lightsaber"), FabricEntityTypeBuilder
 				.<ThrownLightsaberEntity>create(SpawnGroup.MISC, ThrownLightsaberEntity::new)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
 				.trackRangeBlocks(40)
 				.build());
 
-		public static final EntityType<KinematicTestEntity> KinematicTest = Registry.register(Registry.ENTITY_TYPE, Resources.identifier("kinematic_test"), FabricEntityTypeBuilder
+		public static final EntityType<KinematicTestEntity> KinematicTest = Registry.register(Registry.ENTITY_TYPE, Resources.id("kinematic_test"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, KinematicTestEntity::new)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
 				.build());

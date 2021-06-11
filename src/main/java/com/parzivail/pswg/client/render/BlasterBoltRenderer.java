@@ -22,7 +22,7 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 	@Override
 	public Identifier getTexture(BlasterBoltEntity entity)
 	{
-		return Resources.identifier("missing");
+		return Resources.id("missing");
 	}
 
 	@Override

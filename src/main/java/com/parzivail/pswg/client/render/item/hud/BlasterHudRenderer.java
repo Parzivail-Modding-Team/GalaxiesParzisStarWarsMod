@@ -20,7 +20,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 {
 	public static final BlasterHudRenderer INSTANCE = new BlasterHudRenderer();
 
-	private static final Identifier HUD_ELEMENTS_TEXTURE = Resources.identifier("textures/gui/blasters.png");
+	private static final Identifier HUD_ELEMENTS_TEXTURE = Resources.id("textures/gui/blasters.png");
 
 	@Override
 	public boolean renderCustomHUD(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)

@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CrateGenericSmallScreen extends HandledScreen<CrateGenericSmallScreenHandler>
 {
-	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/crate_5x3.png");
+	private static final Identifier TEXTURE = Resources.id("textures/gui/container/crate_5x3.png");
 
 	public CrateGenericSmallScreen(CrateGenericSmallScreenHandler handler, PlayerInventory inventory, Text title)
 	{

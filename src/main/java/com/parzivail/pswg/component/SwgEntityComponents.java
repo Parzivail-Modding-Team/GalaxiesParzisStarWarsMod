@@ -10,8 +10,8 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public class SwgEntityComponents implements EntityComponentInitializer
 {
-	static final ComponentKey<SwgPersistentComponents> PERSISTENT = ComponentRegistryV3.INSTANCE.getOrCreate(Resources.identifier("persistent"), SwgPersistentComponents.class);
-	static final ComponentKey<SwgVolatileComponents> VOLATILE = ComponentRegistryV3.INSTANCE.getOrCreate(Resources.identifier("volatile"), SwgVolatileComponents.class);
+	static final ComponentKey<SwgPersistentComponents> PERSISTENT = ComponentRegistryV3.INSTANCE.getOrCreate(Resources.id("persistent"), SwgPersistentComponents.class);
+	static final ComponentKey<SwgVolatileComponents> VOLATILE = ComponentRegistryV3.INSTANCE.getOrCreate(Resources.id("volatile"), SwgVolatileComponents.class);
 
 	@Override
 	public void registerEntityComponentFactories(EntityComponentFactoryRegistry registry)

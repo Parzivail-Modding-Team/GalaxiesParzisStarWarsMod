@@ -7,7 +7,7 @@ import net.minecraft.util.Identifier;
 
 public class BlasterDescriptor extends TagSerializer
 {
-	public static final Identifier SLUG = Resources.identifier("blaster_model");
+	public static final Identifier SLUG = Resources.id("blaster_model");
 
 	public Identifier id;
 	public boolean oneHanded;

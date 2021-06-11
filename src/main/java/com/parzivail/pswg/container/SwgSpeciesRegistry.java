@@ -22,18 +22,18 @@ public class SwgSpeciesRegistry
 	protected static final HashMap<Identifier, Function<String, SwgSpecies>> SPECIES = new HashMap<>();
 
 	// Species with special meaning internally
-	public static final Identifier SPECIES_GLOBAL = Resources.identifier("global"); // "global" species contains shared textures
+	public static final Identifier SPECIES_GLOBAL = Resources.id("global"); // "global" species contains shared textures
 	public static final Identifier SPECIES_NONE = new Identifier("none"); // "none" species delegates player models back to Minecraft
 
 	// Normal species and variants
-	public static final Identifier SPECIES_AQUALISH = Resources.identifier("aqualish");
-	public static final Identifier SPECIES_BITH = Resources.identifier("bith");
-	public static final Identifier SPECIES_BOTHAN = Resources.identifier("bothan");
-	public static final Identifier SPECIES_CHAGRIAN = Resources.identifier("chagrian");
-	public static final Identifier SPECIES_JAWA = Resources.identifier("jawa");
-	public static final Identifier SPECIES_KAMINOAN = Resources.identifier("kaminoan");
-	public static final Identifier SPECIES_TOGRUTA = Resources.identifier("togruta");
-	public static final Identifier SPECIES_TWILEK = Resources.identifier("twilek");
+	public static final Identifier SPECIES_AQUALISH = Resources.id("aqualish");
+	public static final Identifier SPECIES_BITH = Resources.id("bith");
+	public static final Identifier SPECIES_BOTHAN = Resources.id("bothan");
+	public static final Identifier SPECIES_CHAGRIAN = Resources.id("chagrian");
+	public static final Identifier SPECIES_JAWA = Resources.id("jawa");
+	public static final Identifier SPECIES_KAMINOAN = Resources.id("kaminoan");
+	public static final Identifier SPECIES_TOGRUTA = Resources.id("togruta");
+	public static final Identifier SPECIES_TWILEK = Resources.id("twilek");
 
 	static
 	{

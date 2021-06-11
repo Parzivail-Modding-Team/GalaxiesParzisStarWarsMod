@@ -101,7 +101,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		}
 	}
 
-	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/lightsaber_forge.png");
+	private static final Identifier TEXTURE = Resources.id("textures/gui/container/lightsaber_forge.png");
 
 	private MutableSlider sR;
 	private MutableSlider sG;

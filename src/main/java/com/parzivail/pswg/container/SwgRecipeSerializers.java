@@ -7,7 +7,7 @@ import net.minecraft.util.registry.Registry;
 
 public class SwgRecipeSerializers
 {
-	public static final RecipeSerializer<VaporatorRecipe> Vaporator = Registry.register(Registry.RECIPE_SERIALIZER, Resources.identifier("vaporator"), new VaporatorRecipe.Serializer());
+	public static final RecipeSerializer<VaporatorRecipe> Vaporator = Registry.register(Registry.RECIPE_SERIALIZER, Resources.id("vaporator"), new VaporatorRecipe.Serializer());
 
 	public static void register()
 	{

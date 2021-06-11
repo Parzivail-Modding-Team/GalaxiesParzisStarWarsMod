@@ -67,7 +67,7 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 
 	public static final RigT65B INSTANCE = new RigT65B();
 
-	private static final PR3RFile RIG = PR3RFile.tryLoad(Resources.identifier("rigs/ship/xwing_t65b.pr3r"));
+	private static final PR3RFile RIG = PR3RFile.tryLoad(Resources.id("rigs/ship/xwing_t65b.pr3r"));
 
 	private RigT65B()
 	{

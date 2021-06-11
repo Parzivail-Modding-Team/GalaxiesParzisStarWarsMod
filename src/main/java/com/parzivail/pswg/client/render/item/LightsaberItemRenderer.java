@@ -32,10 +32,10 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 	static
 	{
-		MODELS.put((DEFAULT_MODEL = Resources.identifier("luke/rotj")), new PM3DTexturedModel(
-				() -> PM3DFile.tryLoad(Resources.identifier("models/item/lightsaber/luke/rotj.pm3d")),
-				Resources.identifier("textures/model/lightsaber/luke/rotj_inventory.png"),
-				Resources.identifier("textures/model/lightsaber/luke/rotj.png")
+		MODELS.put((DEFAULT_MODEL = Resources.id("luke/rotj")), new PM3DTexturedModel(
+				() -> PM3DFile.tryLoad(Resources.id("models/item/lightsaber/luke/rotj.pm3d")),
+				Resources.id("textures/model/lightsaber/luke/rotj_inventory.png"),
+				Resources.id("textures/model/lightsaber/luke/rotj.png")
 		));
 	}
 

@@ -8,6 +8,6 @@ public class SwgTags
 {
 	public static class Block
 	{
-		public static final Tag<net.minecraft.block.Block> DESERT_SAND = TagRegistry.block(Resources.identifier("desert_sand"));
+		public static final Tag<net.minecraft.block.Block> DESERT_SAND = TagRegistry.block(Resources.id("desert_sand"));
 	}
 }

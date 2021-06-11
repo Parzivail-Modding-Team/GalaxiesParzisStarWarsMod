@@ -233,7 +233,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	{
 		var tag = new NbtCompound();
 
-		tag.putString("model", Resources.identifier("a280").toString());
+		tag.putString("model", Resources.id("a280").toString());
 
 		return tag;
 	}

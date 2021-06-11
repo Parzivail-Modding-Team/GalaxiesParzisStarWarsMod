@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 public class BlasterTag extends TagSerializer
 {
-	public static final Identifier SLUG = Resources.identifier("blaster_data");
+	public static final Identifier SLUG = Resources.id("blaster_data");
 
 	public boolean isAimingDownSights;
 	public boolean canBypassOverheat;

@@ -40,7 +40,7 @@ public class SwgStructures
 
 	public static class General
 	{
-		public static final Lazy<ScarifStructure> Region = new Lazy<>(() -> ScarifStructure.read(Resources.identifier("structures/entire_region.scrf2")));
+		public static final Lazy<ScarifStructure> Region = new Lazy<>(() -> ScarifStructure.read(Resources.id("structures/entire_region.scrf2")));
 
 		public static void register()
 		{

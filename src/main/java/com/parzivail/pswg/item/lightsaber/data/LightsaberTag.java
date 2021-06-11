@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class LightsaberTag extends TagSerializer
 {
-	public static final Identifier SLUG = Resources.identifier("lightsaber");
+	public static final Identifier SLUG = Resources.id("lightsaber");
 	public static final byte TRANSITION_TICKS = 8;
 
 	public boolean active;
@@ -40,7 +40,7 @@ public class LightsaberTag extends TagSerializer
 		bladeColor = 0x0020FF;
 		unstable = false;
 
-		hilt = Resources.identifier("luke/rotj");
+		hilt = Resources.id("luke/rotj");
 	}
 
 	public static LightsaberTag fromRootTag(NbtCompound tag)

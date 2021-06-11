@@ -26,7 +26,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 	{
 		super(ctx);
 
-		model = Client.ResourceManagers.getNemManager().getModel(Resources.identifier("mob/debug/bantha"), KinematicTestEntityRenderer::setAngles);
+		model = Client.ResourceManagers.getNemManager().getModel(Resources.id("mob/debug/bantha"), KinematicTestEntityRenderer::setAngles);
 	}
 
 	private static void setAngles(MutableAnimatedModel<KinematicTestEntity> model, KinematicTestEntity entity, float v, float v1, float v2, float v3, float v4)
@@ -101,7 +101,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 		matrices.multiply(new Quaternion(Vec3f.POSITIVE_Y, 180, true));
 
 		this.model.setAngles(entity, 0, 0, 0, 0, 0);
-		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(Resources.identifier("textures/block/debug16.png")));
+		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(Resources.id("textures/block/debug16.png")));
 		this.model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
 
 		matrices.pop();

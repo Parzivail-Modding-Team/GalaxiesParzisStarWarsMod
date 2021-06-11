@@ -30,7 +30,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	static
 	{
-		FALLBACK_MODEL = new BlasterModelEntry(new Lazy<>(() -> PM3DFile.tryLoad(Resources.identifier("models/item/blaster/a280.pm3d"))), Resources.identifier("textures/model/blaster/a280.png"));
+		FALLBACK_MODEL = new BlasterModelEntry(new Lazy<>(() -> PM3DFile.tryLoad(Resources.id("models/item/blaster/a280.pm3d"))), Resources.id("textures/model/blaster/a280.png"));
 	}
 
 	private BlasterItemRenderer()

@@ -48,7 +48,7 @@ public class Galaxies implements ModInitializer
 	}
 
 	public static final ItemGroup Tab = FabricItemGroupBuilder
-			.create(Resources.identifier("main"))
+			.create(Resources.id("main"))
 			.icon(() -> new ItemStack(SwgItems.Lightsaber.Lightsaber))
 			.build();
 
@@ -81,7 +81,7 @@ public class Galaxies implements ModInitializer
 
 		SwgItems.register();
 
-//		SwgDimensions.Tatooine.registerDimension();
+		SwgDimensions.Tatooine.register();
 
 		SwgScreenTypes.register();
 

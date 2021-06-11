@@ -15,13 +15,13 @@ public class FaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 {
 	public FaaEntityRenderer(EntityRendererFactory.Context context)
 	{
-		super(context, Client.ResourceManagers.getNemManager().getModel(Resources.identifier("mob/fish/faa"), FaaEntityRenderer::setAngles), 0.5f);
+		super(context, Client.ResourceManagers.getNemManager().getModel(Resources.id("mob/fish/faa"), FaaEntityRenderer::setAngles), 0.5f);
 	}
 
 	@Override
 	public Identifier getTexture(FishEntity entity)
 	{
-		return Resources.identifier("textures/entity/fish/faa.png");
+		return Resources.id("textures/entity/fish/faa.png");
 	}
 
 	public static void setAngles(SinglePartEntityModel<FishEntity> model, FishEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)

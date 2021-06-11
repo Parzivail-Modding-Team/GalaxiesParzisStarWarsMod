@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class CrateOctagonScreen extends HandledScreen<CrateOctagonScreenHandler>
 {
-	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/crate_13x3.png");
+	private static final Identifier TEXTURE = Resources.id("textures/gui/container/crate_13x3.png");
 
 	public CrateOctagonScreen(CrateOctagonScreenHandler handler, PlayerInventory inventory, Text title)
 	{

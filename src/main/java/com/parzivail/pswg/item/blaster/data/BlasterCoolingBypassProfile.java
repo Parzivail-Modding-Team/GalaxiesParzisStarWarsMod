@@ -16,8 +16,8 @@ public class BlasterCoolingBypassProfile
 		return profile;
 	}
 
-	public static final BlasterCoolingBypassProfile NONE = of(Resources.identifier("none"), new BlasterCoolingBypassProfile(0, 0, 0, 0));
-	public static final BlasterCoolingBypassProfile DEFAULT = of(Resources.identifier("default"), new BlasterCoolingBypassProfile(0.7f, 0.05f, 0.3f, 0.1f));
+	public static final BlasterCoolingBypassProfile NONE = of(Resources.id("none"), new BlasterCoolingBypassProfile(0, 0, 0, 0));
+	public static final BlasterCoolingBypassProfile DEFAULT = of(Resources.id("default"), new BlasterCoolingBypassProfile(0.7f, 0.05f, 0.3f, 0.1f));
 
 	public float primaryBypassTime;
 	public float primaryBypassTolerance;

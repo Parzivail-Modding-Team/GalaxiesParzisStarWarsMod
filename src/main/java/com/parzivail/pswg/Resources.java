@@ -33,7 +33,7 @@ public class Resources
 
 	public static GithubReleaseEntry REMOTE_VERSION = null;
 
-	public static Identifier identifier(@Nonnull String path)
+	public static Identifier id(@Nonnull String path)
 	{
 		return new Identifier(MODID, path);
 	}

@@ -15,13 +15,13 @@ public class LaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 {
 	public LaaEntityRenderer(EntityRendererFactory.Context context)
 	{
-		super(context, Client.ResourceManagers.getNemManager().getModel(Resources.identifier("mob/fish/laa"), LaaEntityRenderer::setAngles), 0.5f);
+		super(context, Client.ResourceManagers.getNemManager().getModel(Resources.id("mob/fish/laa"), LaaEntityRenderer::setAngles), 0.5f);
 	}
 
 	@Override
 	public Identifier getTexture(FishEntity entity)
 	{
-		return Resources.identifier("textures/entity/fish/laa.png");
+		return Resources.id("textures/entity/fish/laa.png");
 	}
 
 	public static void setAngles(SinglePartEntityModel<FishEntity> model, FishEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)

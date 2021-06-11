@@ -34,7 +34,7 @@ public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEnt
 	@Override
 	public Identifier getTexture(ThrownLightsaberEntity entity)
 	{
-		return Resources.identifier("missing");
+		return Resources.id("missing");
 	}
 
 	@Override

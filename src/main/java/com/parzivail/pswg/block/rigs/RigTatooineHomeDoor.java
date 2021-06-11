@@ -39,7 +39,7 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 
 	public static final RigTatooineHomeDoor INSTANCE = new RigTatooineHomeDoor();
 
-	private static final PR3RFile RIG = PR3RFile.tryLoad(Resources.identifier("rigs/block/door/tatooine_home.pr3r"));
+	private static final PR3RFile RIG = PR3RFile.tryLoad(Resources.id("rigs/block/door/tatooine_home.pr3r"));
 
 	private RigTatooineHomeDoor()
 	{

@@ -19,7 +19,7 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 	public T65BXwingRenderer(EntityRendererFactory.Context ctx)
 	{
 		super(ctx);
-		model = new Lazy<>(() -> new PR3Model<>(PR3File.tryLoad(Resources.identifier("models/ship/xwing_t65b.pr3")), RigT65B.Part.class, RigT65B.INSTANCE::transform));
+		model = new Lazy<>(() -> new PR3Model<>(PR3File.tryLoad(Resources.id("models/ship/xwing_t65b.pr3")), RigT65B.Part.class, RigT65B.INSTANCE::transform));
 	}
 
 	@Override
@@ -31,6 +31,6 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 	@Override
 	public Identifier getTexture(T65BXwing entity)
 	{
-		return Resources.identifier("textures/ship/xwing_t65b.png");
+		return Resources.id("textures/ship/xwing_t65b.png");
 	}
 }

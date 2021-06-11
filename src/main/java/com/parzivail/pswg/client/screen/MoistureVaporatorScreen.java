@@ -17,7 +17,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScreenHandler>
 {
-	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/moisture_vaporator.png");
+	private static final Identifier TEXTURE = Resources.id("textures/gui/container/moisture_vaporator.png");
 	private static final Text TEXT_IDLE = new TranslatableText(Resources.container("moisture_vaporator_gx8.idle"));
 
 	public MoistureVaporatorScreen(MoistureVaporatorScreenHandler handler, PlayerInventory inventory, Text title)

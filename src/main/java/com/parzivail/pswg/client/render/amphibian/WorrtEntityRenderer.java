@@ -16,13 +16,13 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 {
 	public WorrtEntityRenderer(EntityRendererFactory.Context context)
 	{
-		super(context, Client.ResourceManagers.getNemManager().getModel(Resources.identifier("mob/amphibian/worrt"), WorrtEntityRenderer::setAngles), 0.5f);
+		super(context, Client.ResourceManagers.getNemManager().getModel(Resources.id("mob/amphibian/worrt"), WorrtEntityRenderer::setAngles), 0.5f);
 	}
 
 	@Override
 	public Identifier getTexture(WorrtEntity entity)
 	{
-		return Resources.identifier("textures/entity/amphibian/worrt.png");
+		return Resources.id("textures/entity/amphibian/worrt.png");
 	}
 
 	public static void setAngles(SinglePartEntityModel<WorrtEntity> model, WorrtEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)

@@ -13,7 +13,7 @@ public class SwgRecipeType
 {
 	public static final ArrayList<RecipeType<?>> RECIPE_TYPES = new ArrayList<>();
 
-	public static final RecipeType<VaporatorRecipe> Vaporator = register(Resources.identifier("vaporator"));
+	public static final RecipeType<VaporatorRecipe> Vaporator = register(Resources.id("vaporator"));
 
 	public static void register()
 	{

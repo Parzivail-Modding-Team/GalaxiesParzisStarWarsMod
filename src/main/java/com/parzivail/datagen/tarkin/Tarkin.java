@@ -776,8 +776,8 @@ public class Tarkin
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
 		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.identifier("block/wet_pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.identifier("block/wet_pourstone")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.id("block/wet_pourstone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.id("block/wet_pourstone")).build(assets);
 
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.LightPanel).build(assets);
@@ -941,13 +941,13 @@ public class Tarkin
 
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
 
-		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.identifier("block/sequoia_log_top"), Resources.identifier("block/sequoia_log")).build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.identifier("block/japor_log_top"), Resources.identifier("block/japor_log")).build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.identifier("block/tatooine_log_top"), Resources.identifier("block/tatooine_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"), Resources.id("block/sequoia_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.id("block/japor_log_top"), Resources.id("block/japor_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.id("block/tatooine_log_top"), Resources.id("block/tatooine_log")).build(assets);
 
-		BlockGenerator.column(SwgBlocks.Wood.Sequoia, Resources.identifier("block/sequoia_log"), Resources.identifier("block/sequoia_log")).build(assets);
-		BlockGenerator.column(SwgBlocks.Wood.Japor, Resources.identifier("block/japor_log"), Resources.identifier("block/japor_log")).build(assets);
-		BlockGenerator.column(SwgBlocks.Wood.Tatooine, Resources.identifier("block/tatooine_log"), Resources.identifier("block/tatooine_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Wood.Sequoia, Resources.id("block/sequoia_log"), Resources.id("block/sequoia_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Wood.Japor, Resources.id("block/japor_log"), Resources.id("block/japor_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Wood.Tatooine, Resources.id("block/tatooine_log"), Resources.id("block/tatooine_log")).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
 
@@ -1015,21 +1015,21 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank).build(assets);
 		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelBlank).build(assets);
 
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff1, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff2, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn1, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn2, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff1, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff2, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn1, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn2, Resources.id("block/gray_imperial_panel_blank")).build(assets);
 
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern1, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern2, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern3, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern4, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern5, Resources.identifier("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern1, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern2, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern3, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern4, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern5, Resources.id("block/gray_imperial_panel_blank")).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall1).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall2).build(assets);
@@ -1050,35 +1050,35 @@ public class Tarkin
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon).build(assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Massassi).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiSlab, Resources.identifier("block/massassi_stone")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiStairs, Resources.identifier("block/massassi_stone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MassassiSlab, Resources.id("block/massassi_stone")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.MassassiStairs, Resources.id("block/massassi_stone")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);
-		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MassassiSmoothSlab, Resources.identifier("block/smooth_massassi_stone_slab_double"), Resources.identifier("block/smooth_massassi_stone"), Resources.identifier("block/smooth_massassi_stone_slab_side")).build(assets);
+		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MassassiSmoothSlab, Resources.id("block/smooth_massassi_stone_slab_double"), Resources.id("block/smooth_massassi_stone"), Resources.id("block/smooth_massassi_stone_slab_side")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.identifier("block/massassi_stone_bricks")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.identifier("block/massassi_stone_bricks")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.id("block/massassi_stone_bricks")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.id("block/massassi_stone_bricks")).build(assets);
 		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.identifier("block/pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.PourstoneSlab, Resources.identifier("block/pourstone")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.id("block/pourstone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.PourstoneSlab, Resources.id("block/pourstone")).build(assets);
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.LightPourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.LightPourstoneStairs, Resources.identifier("block/light_pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.LightPourstoneSlab, Resources.identifier("block/light_pourstone")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.LightPourstoneStairs, Resources.id("block/light_pourstone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.LightPourstoneSlab, Resources.id("block/light_pourstone")).build(assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.IlumSlab, Resources.identifier("block/ilum_stone")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.IlumStairs, Resources.identifier("block/ilum_stone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.IlumSlab, Resources.id("block/ilum_stone")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.IlumStairs, Resources.id("block/ilum_stone")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumSmooth).build(assets);
-		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.IlumSmoothSlab, Resources.identifier("block/smooth_ilum_stone_slab_double"), Resources.identifier("block/smooth_ilum_stone"), Resources.identifier("block/smooth_ilum_stone_slab_side")).build(assets);
+		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.IlumSmoothSlab, Resources.id("block/smooth_ilum_stone_slab_double"), Resources.id("block/smooth_ilum_stone"), Resources.id("block/smooth_ilum_stone_slab_side")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumBricks).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.IlumBrickSlab, Resources.identifier("block/ilum_stone_bricks")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.IlumBrickStairs, Resources.identifier("block/ilum_stone_bricks")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.IlumBrickSlab, Resources.id("block/ilum_stone_bricks")).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.IlumBrickStairs, Resources.id("block/ilum_stone_bricks")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumChiseledBricks).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.Fusion).build(assets);
 
-		BlockGenerator.staticColumn(SwgBlocks.Vent.Air, Resources.identifier("block/air_vent_top"), Resources.identifier("block/air_vent_side")).build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Vent.Air, Resources.id("block/air_vent_top"), Resources.id("block/air_vent_side")).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Workbench.Blaster).build(assets);
 		BlockGenerator.basic(SwgBlocks.Workbench.Lightsaber).build(assets);

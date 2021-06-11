@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 @Environment(EnvType.CLIENT)
 public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreenHandler>
 {
-	private static final Identifier TEXTURE = Resources.identifier("textures/gui/container/blaster_workbench.png");
+	private static final Identifier TEXTURE = Resources.id("textures/gui/container/blaster_workbench.png");
 
 	public BlasterWorkbenchScreen(BlasterWorkbenchScreenHandler handler, PlayerInventory inventory, Text title)
 	{
