@@ -295,14 +295,22 @@ public class SwgItems
 
 	public static class MobDrops
 	{
+		@RegistryName("faa_bucket")
+		public static final Item FaaBucket = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("laa_bucket")
+		public static final Item LaaBucket = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("corpse_of_gorg")
 		public static final Item CorpseOfGorg = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("dewback_bone")
 		public static final Item DewbackBone = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("dewback_bone_shard")
+		public static final Item DewbackBoneShard = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("eye_of_sketto")
 		public static final Item EyeOfSketto = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("hide")
 		public static final Item Hide = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("krayt_pearl")
+		public static final Item KraytPearl = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("krayt_tooth")
 		public static final Item KraytTooth = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("kreetle_husk")

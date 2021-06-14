@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.item.Items;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
@@ -57,7 +56,7 @@ public class SwgEntities
 		public static final EntityType<BucketableFishEntity> Faa = Registry.register(
 				Registry.ENTITY_TYPE,
 				Resources.id("faa"),
-				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
+				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, SwgItems.MobDrops.FaaBucket))
 				                       .dimensions(EntityDimensions.fixed(0.5F, 0.3F))
 				                       .build()
 		);
@@ -65,7 +64,7 @@ public class SwgEntities
 		public static final EntityType<BucketableFishEntity> Laa = Registry.register(
 				Registry.ENTITY_TYPE,
 				Resources.id("laa"),
-				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, Items.COD_BUCKET))
+				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, SwgItems.MobDrops.LaaBucket))
 				                       .dimensions(EntityDimensions.fixed(0.5F, 0.3F))
 				                       .build()
 		);

@@ -849,11 +849,16 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.TuberMash).build(assets);
 		ItemGenerator.basic(SwgItems.Food.VaporatorMushroom).build(assets);
 		ItemGenerator.basic(SwgItems.Food.WorrtEgg).build(assets);
+		ItemGenerator.basic(SwgItems.Food.StrippedJaporBranch).build(assets);
 
+		ItemGenerator.basic(SwgItems.MobDrops.FaaBucket).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.LaaBucket).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.CorpseOfGorg).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.DewbackBone).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.DewbackBoneShard).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.EyeOfSketto).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.Hide).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.KraytPearl).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.KraytTooth).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.KreetleHusk).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.LizardGizzard).build(assets);
