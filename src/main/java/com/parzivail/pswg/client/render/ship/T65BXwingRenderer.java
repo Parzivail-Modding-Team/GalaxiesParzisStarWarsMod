@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.render.ship;
 
+import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pr3.PR3File;
 import com.parzivail.pswg.client.pr3.PR3Model;
@@ -13,16 +14,17 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Lazy;
+
+import java.util.function.Supplier;
 
 public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 {
-	private final Lazy<PR3Model<T65BXwing, RigT65B.Part>> model;
+	private final Supplier<PR3Model<T65BXwing, RigT65B.Part>> model;
 
 	public T65BXwingRenderer(EntityRendererFactory.Context ctx)
 	{
 		super(ctx);
-		model = new Lazy<>(() -> new PR3Model<>(PR3File.tryLoad(Resources.id("models/ship/xwing_t65b.pr3")), RigT65B.Part.class, RigT65B.INSTANCE::transform));
+		model = Suppliers.memoize(() -> new PR3Model<>(PR3File.tryLoad(Resources.id("models/ship/xwing_t65b.pr3")), RigT65B.Part.class, RigT65B.INSTANCE::transform));
 	}
 
 	@Override

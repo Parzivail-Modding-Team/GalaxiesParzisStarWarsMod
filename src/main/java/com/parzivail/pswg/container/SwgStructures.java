@@ -1,13 +1,14 @@
 package com.parzivail.pswg.container;
 
+import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.scarif.ScarifStructure;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Lazy;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
 public class SwgStructures
 {
@@ -40,7 +41,7 @@ public class SwgStructures
 
 	public static class General
 	{
-		public static final Lazy<ScarifStructure> Region = new Lazy<>(() -> ScarifStructure.read(Resources.id("structures/entire_region.scrf2")));
+		public static final Supplier<ScarifStructure> Region = Suppliers.memoize(() -> ScarifStructure.read(Resources.id("structures/entire_region.scrf2")));
 
 		public static void register()
 		{

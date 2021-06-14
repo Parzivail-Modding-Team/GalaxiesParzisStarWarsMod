@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.render.item;
 
+import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
 import com.parzivail.pswg.item.blaster.BlasterItem;
@@ -16,10 +17,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Lazy;
 import net.minecraft.util.math.Quaternion;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
@@ -30,7 +31,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	static
 	{
-		FALLBACK_MODEL = new BlasterModelEntry(new Lazy<>(() -> PM3DFile.tryLoad(Resources.id("models/item/blaster/a280.pm3d"))), Resources.id("textures/model/blaster/a280.png"));
+		FALLBACK_MODEL = new BlasterModelEntry(Suppliers.memoize(() -> PM3DFile.tryLoad(Resources.id("models/item/blaster/a280.pm3d"))), Resources.id("textures/model/blaster/a280.png"));
 	}
 
 	private BlasterItemRenderer()
@@ -48,7 +49,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			return FALLBACK_MODEL;
 
 		var entry = new BlasterModelEntry(
-				new Lazy<>(() -> file),
+				Suppliers.memoize(() -> file),
 				new Identifier(id.getNamespace(), "textures/model/blaster/" + id.getPath() + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
@@ -163,10 +164,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	private static class BlasterModelEntry
 	{
-		public final Lazy<PM3DFile> pm3dModel;
+		public final Supplier<PM3DFile> pm3dModel;
 		public final Identifier texture;
 
-		private BlasterModelEntry(Lazy<PM3DFile> pm3dModel, Identifier texture)
+		private BlasterModelEntry(Supplier<PM3DFile> pm3dModel, Identifier texture)
 		{
 			this.pm3dModel = pm3dModel;
 			this.texture = texture;
