@@ -46,12 +46,6 @@ public class ChaseCam
 
 		float camDistTarget = getCamDistTarget(parent, q);
 
-		if (camDistTarget == 0)
-		{
-			pos = parent.getEyePos();
-			return;
-		}
-
 		Vec3d camTargetPosition = parent.getPos().add(QuatUtil.rotate(new Vec3d(0, 0, camDistTarget), q));
 		Vec3d camDpos = camTargetPosition.subtract(pos);
 
@@ -75,7 +69,7 @@ public class ChaseCam
 			return 0;
 		else if (perspective == Perspective.THIRD_PERSON_FRONT)
 			scalar = -1;
-		float throttle = 1;
+		float throttle = parent.getThrottle();
 		return scalar * (13 + 3 * throttle);
 	}
 }

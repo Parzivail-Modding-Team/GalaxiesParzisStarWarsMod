@@ -49,13 +49,11 @@ public class MutableCameraEntity extends Entity
 		this.parent = parent;
 		this.camera = camera;
 
-		var eyeHeight = getStandingEyeHeight();
-
 		this.world = parent.world;
 		this.prevX = camera.prevPos.x;
-		this.prevY = camera.prevPos.y - eyeHeight;
+		this.prevY = camera.prevPos.y;
 		this.prevZ = camera.prevPos.z;
-		setPosition(camera.pos.x, camera.pos.y - eyeHeight, camera.pos.z);
+		setPosition(camera.pos.x, camera.pos.y, camera.pos.z);
 
 		this.prevPitch = this.getPitch();
 		this.prevYaw = this.getYaw();
