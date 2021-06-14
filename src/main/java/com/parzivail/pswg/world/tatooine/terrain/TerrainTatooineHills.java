@@ -1,13 +1,13 @@
-package com.parzivail.pswg.dimension.tatooine.terrain;
+package com.parzivail.pswg.world.tatooine.terrain;
 
 import com.parzivail.util.world.ITerrainHeightmap;
 import com.parzivail.util.world.ProcNoise;
 
-public class TerrainTatooinePlains implements ITerrainHeightmap
+public class TerrainTatooineHills implements ITerrainHeightmap
 {
 	private final ProcNoise _noise;
 
-	public TerrainTatooinePlains(long seed)
+	public TerrainTatooineHills(long seed)
 	{
 		_noise = new ProcNoise(seed);
 	}
@@ -15,7 +15,11 @@ public class TerrainTatooinePlains implements ITerrainHeightmap
 	@Override
 	public double getHeightAt(double x, double z)
 	{
-		return _noise.noise(x / 100, z / 100) * 10 + Math.abs(_noise.rawNoise(x / 50, z / 50)) * 5;
+		double noise = _noise.noise(x / 100, z / 100 + 3000) * 20;
+
+		noise *= (1 - Math.abs(_noise.rawNoise(x / 30 + 2000, z / 30)));
+
+		return noise;
 	}
 
 	@Override

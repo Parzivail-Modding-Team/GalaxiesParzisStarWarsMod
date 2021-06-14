@@ -8,6 +8,7 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -16,11 +17,10 @@ public class PR3File
 	private static final String MAGIC = "PR3";
 	private static final int ACCEPTED_VERSION = 0x02;
 
-	public final PR3Object[] objects;
+	public final PR3RenderedObject[] objects;
 
-	public PR3File(PR3Object[] objects)
+	public PR3File(PR3RenderedObject[] objects)
 	{
-
 		this.objects = objects;
 	}
 
@@ -56,7 +56,7 @@ public class PR3File
 
 		int numObjects = objStream.readInt();
 
-		PR3Object[] objects = new PR3Object[numObjects];
+		PR3RenderedObject[] objects = new PR3RenderedObject[numObjects];
 		for (int i = 0; i < numObjects; i++)
 		{
 			String name = DataReader.readNullTerminatedString(objStream);
@@ -69,7 +69,7 @@ public class PR3File
 
 			PR3FacePointer[] faces = readLengthCodedFaces(objStream);
 
-			objects[i] = new PR3Object(name, new Identifier(material), vertices, normals, uvs, faces, transformation);
+			objects[i] = new PR3RenderedObject(name, new Identifier(material), vertices, normals, uvs, faces, transformation);
 		}
 
 		return new PR3File(objects);

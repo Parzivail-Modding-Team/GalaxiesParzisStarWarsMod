@@ -1,4 +1,4 @@
-package com.parzivail.pswg.dimension;
+package com.parzivail.util.world;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

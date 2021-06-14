@@ -1,4 +1,4 @@
-package com.parzivail.pswg.dimension.tatooine.terrain;
+package com.parzivail.pswg.world.tatooine.terrain;
 
 import com.parzivail.util.world.ITerrainHeightmap;
 import com.parzivail.util.world.ProcNoise;

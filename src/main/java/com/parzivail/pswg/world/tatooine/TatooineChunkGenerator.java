@@ -1,9 +1,9 @@
-package com.parzivail.pswg.dimension.tatooine;
+package com.parzivail.pswg.world.tatooine;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.dimension.tatooine.terrain.TerrainTatooineCanyons;
+import com.parzivail.pswg.world.tatooine.terrain.TerrainTatooineCanyons;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.scarif.ScarifChunk;
 import com.parzivail.util.world.CompositeTerrain;

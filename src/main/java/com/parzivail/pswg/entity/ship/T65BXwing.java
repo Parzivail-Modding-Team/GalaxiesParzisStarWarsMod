@@ -11,6 +11,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -112,6 +114,13 @@ public class T65BXwing extends ShipEntity
 
 		cannonState++;
 		setCannonState(cannonState);
+	}
+
+	@Override
+	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
+	{
+		return 0f;
+//		return super.getEyeHeight(pose, dimensions);
 	}
 
 	@Override

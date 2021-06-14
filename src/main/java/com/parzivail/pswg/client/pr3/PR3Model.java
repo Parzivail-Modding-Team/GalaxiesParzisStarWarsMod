@@ -30,7 +30,7 @@ public class PR3Model<T, PT extends Enum<PT>>
 		this.transformer = transformer;
 	}
 
-	private void emitFace(VertexConsumer vertexConsumer, MatrixStack.Entry matrices, PR3Object o, PR3FacePointer face, int light)
+	private void emitFace(VertexConsumer vertexConsumer, MatrixStack.Entry matrices, PR3RenderedObject o, PR3FacePointer face, int light)
 	{
 		var modelMat = matrices.getModel();
 		var normalMat = matrices.getNormal();
@@ -76,7 +76,7 @@ public class PR3Model<T, PT extends Enum<PT>>
 		renderObject(target, o, consumer, matrices, tickDelta, light);
 	}
 
-	private void renderObject(T target, PR3Object o, VertexConsumer consumer, MatrixStack matrices, float tickDelta, int light)
+	public void renderObject(T target, PR3RenderedObject o, VertexConsumer consumer, MatrixStack matrices, float tickDelta, int light)
 	{
 		matrices.push();
 
@@ -97,7 +97,7 @@ public class PR3Model<T, PT extends Enum<PT>>
 		transformer.apply(stack, target, PT.valueOf(partClass, objectName), tickDelta);
 	}
 
-	public PR3Object getObject(String name)
+	public PR3RenderedObject getObject(String name)
 	{
 		for (var object : getObjects())
 			if (object.name.equals(name))
@@ -106,7 +106,7 @@ public class PR3Model<T, PT extends Enum<PT>>
 		return null;
 	}
 
-	public PR3Object[] getObjects()
+	public PR3RenderedObject[] getObjects()
 	{
 		return container.objects;
 	}

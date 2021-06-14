@@ -1,4 +1,4 @@
-package com.parzivail.pswg.dimension;
+package com.parzivail.util.world;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;

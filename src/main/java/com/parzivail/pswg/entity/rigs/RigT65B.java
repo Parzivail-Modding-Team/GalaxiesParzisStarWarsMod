@@ -4,6 +4,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.pswg.rig.IModelRig;
+import com.parzivail.pswg.rig.pr3r.PR3Object;
 import com.parzivail.pswg.rig.pr3r.PR3RFile;
 import com.parzivail.pswg.util.QuatUtil;
 import net.fabricmc.api.EnvType;
@@ -36,6 +37,11 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 		public String getPartName()
 		{
 			return partName;
+		}
+
+		public boolean is(PR3Object object)
+		{
+			return object.name.equals(partName);
 		}
 	}
 

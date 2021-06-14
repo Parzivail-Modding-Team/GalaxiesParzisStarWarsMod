@@ -1,7 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.dimension.EmptyChunkGenerator;
+import com.parzivail.util.world.EmptyChunkGenerator;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;

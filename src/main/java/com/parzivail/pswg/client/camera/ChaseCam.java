@@ -45,6 +45,13 @@ public class ChaseCam
 		Quaternion q = parent.getViewRotation(1);
 
 		float camDistTarget = getCamDistTarget(parent, q);
+
+		if (camDistTarget == 0)
+		{
+			pos = parent.getEyePos();
+			return;
+		}
+
 		Vec3d camTargetPosition = parent.getPos().add(QuatUtil.rotate(new Vec3d(0, 0, camDistTarget), q));
 		Vec3d camDpos = camTargetPosition.subtract(pos);
 

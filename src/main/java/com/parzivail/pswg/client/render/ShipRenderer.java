@@ -19,8 +19,6 @@ public abstract class ShipRenderer<T extends ShipEntity> extends EntityRenderer<
 		super.render(entity, yaw, tickDelta, matrix, vertexConsumers, light);
 		matrix.push();
 
-		matrix.translate(0, entity.getEyeHeight(null), 0);
-
 		var r = entity.getViewRotation(tickDelta);
 		matrix.multiply(r);
 

@@ -55,10 +55,10 @@ public class CameraHelper
 
 		if (ship != null)
 		{
-			if (minecraft.options.getPerspective() != Perspective.FIRST_PERSON)
+//			if (minecraft.options.getPerspective() != Perspective.FIRST_PERSON)
 				minecraft.cameraEntity = CameraHelper.MUTABLE_CAMERA_ENTITY.with(ship, ship.getCamera());
-			else
-				minecraft.cameraEntity = ship;
+//			else
+//				minecraft.cameraEntity = ship;
 
 			return;
 		}

@@ -5,7 +5,10 @@ import com.parzivail.pswg.client.pr3.PR3File;
 import com.parzivail.pswg.client.pr3.PR3Model;
 import com.parzivail.pswg.client.render.ShipRenderer;
 import com.parzivail.pswg.entity.rigs.RigT65B;
+import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
@@ -25,7 +28,23 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 	@Override
 	protected void renderModel(T65BXwing entity, float yaw, float tickDelta, MatrixStack matrix, VertexConsumerProvider vertexConsumers, int light)
 	{
-		model.get().render(entity, vertexConsumers, getTexture(entity), matrix, light, tickDelta);
+		var mc = MinecraftClient.getInstance();
+		var isClientShip = ShipEntity.getShip(mc.player) == entity;
+
+		var modelRef = model.get();
+		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
+
+		var eyeOffset = -0.6f;
+		matrix.translate(0, eyeOffset, 0);
+
+		for (var o : modelRef.getObjects())
+		{
+			// TODO
+			if (isClientShip && (RigT65B.Part.Cockpit.is(o)))
+				continue;
+
+			modelRef.renderObject(entity, o, vertexConsumer, matrix, tickDelta, light);
+		}
 	}
 
 	@Override
