@@ -38,6 +38,7 @@
 		"PlayerEntityModelMixin",
 		"PlayerEntityRendererMixin",
 		"RenderLayersMixin",
+		"RenderPhaseAccessor",
 		"SpriteAtlasTextureMixin"
 	],
 	"injectors": {

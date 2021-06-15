@@ -1,5 +1,5 @@
-import java.util.regex.Pattern
 import java.io.ByteArrayOutputStream
+import java.util.regex.Pattern
 
 plugins {
 	id("fabric-loom") version "0.8-SNAPSHOT"
@@ -59,6 +59,10 @@ fun getVersionName(): String
 	return version
 }
 
+loom {
+	accessWidener = file("src/main/resources/pswg.accesswidener")
+}
+
 val archives_base_name: String by project.ext
 val maven_group: String by project.ext
 val minecraft_version: String by project.ext
@@ -67,7 +71,6 @@ val loader_version: String by project.ext
 val fabric_version: String by project.ext
 val cca_version: String by project.ext
 val cloth_config_version: String by project.ext
-
 
 base.archivesBaseName = archives_base_name
 version = getVersionName()

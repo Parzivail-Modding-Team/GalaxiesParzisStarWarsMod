@@ -25,6 +25,7 @@
 			"com.parzivail.pswg.component.SwgEntityComponents"
 		]
 	},
+	"accessWidener": "pswg.accesswidener",
 	"mixins": [
 		"pswg.mixins.json"
 	],
