@@ -301,6 +301,8 @@ public class SwgItems
 		public static final Item LaaBucket = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("corpse_of_gorg")
 		public static final Item CorpseOfGorg = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("bantha_horn")
+		public static final Item BanthaHorn = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("dewback_bone")
 		public static final Item DewbackBone = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("dewback_bone_shard")

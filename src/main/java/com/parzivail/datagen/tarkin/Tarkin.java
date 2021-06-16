@@ -854,6 +854,7 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.MobDrops.FaaBucket).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.LaaBucket).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.CorpseOfGorg).build(assets);
+		ItemGenerator.basic(SwgItems.MobDrops.BanthaHorn).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.DewbackBone).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.DewbackBoneShard).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.EyeOfSketto).build(assets);
