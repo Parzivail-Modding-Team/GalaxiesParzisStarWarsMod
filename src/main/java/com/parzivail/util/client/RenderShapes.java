@@ -18,6 +18,11 @@ public class RenderShapes
 			{ 0, 1, 2, 3 }, { 3, 2, 6, 7 }, { 7, 6, 5, 4 }, { 4, 5, 1, 0 }, { 5, 6, 2, 1 }, { 7, 4, 0, 3 }
 	};
 
+	private static final int[] _counterClockwiseVertIndices = new int[] {0, 1, 2, 3};
+	private static final int[] _clockwiseVertIndices = new int[] {3, 2, 1, 0};
+
+	private static boolean _renderClockwise = false;
+
 	static
 	{
 		// cube
@@ -83,12 +88,21 @@ public class RenderShapes
 
 	private static void box(VertexConsumerBuffer vcb, float[][] verts)
 	{
+		int[] indices = _renderClockwise ? _clockwiseVertIndices : _counterClockwiseVertIndices;
+
 		for (int i = 0; i < 6; i++)
 		{
-			vcb.vertex(verts[_facesBox[i][0]][0], verts[_facesBox[i][0]][1], verts[_facesBox[i][0]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 0);
-			vcb.vertex(verts[_facesBox[i][1]][0], verts[_facesBox[i][1]][1], verts[_facesBox[i][1]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 0);
-			vcb.vertex(verts[_facesBox[i][2]][0], verts[_facesBox[i][2]][1], verts[_facesBox[i][2]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 1);
-			vcb.vertex(verts[_facesBox[i][3]][0], verts[_facesBox[i][3]][1], verts[_facesBox[i][3]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 1);
+			vcb.vertex(verts[_facesBox[i][indices[0]]][0], verts[_facesBox[i][indices[0]]][1], verts[_facesBox[i][indices[0]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 0);
+			vcb.vertex(verts[_facesBox[i][indices[1]]][0], verts[_facesBox[i][indices[1]]][1], verts[_facesBox[i][indices[1]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 0);
+			vcb.vertex(verts[_facesBox[i][indices[2]]][0], verts[_facesBox[i][indices[2]]][1], verts[_facesBox[i][indices[2]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 1);
+			vcb.vertex(verts[_facesBox[i][indices[3]]][0], verts[_facesBox[i][indices[3]]][1], verts[_facesBox[i][indices[3]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 1);
 		}
+	}
+
+	public static void invertCull(Runnable action)
+	{
+		_renderClockwise = true;
+		action.run();
+		_renderClockwise = false;
 	}
 }

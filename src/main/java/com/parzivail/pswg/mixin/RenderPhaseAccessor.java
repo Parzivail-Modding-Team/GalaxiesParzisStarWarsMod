@@ -40,6 +40,12 @@ public interface RenderPhaseAccessor
 		throw new AssertionError();
 	}
 
+	@Accessor("TRANSLUCENT_TRANSPARENCY")
+	static RenderPhase.Transparency get_TRANSLUCENT_TRANSPARENCY()
+	{
+		throw new AssertionError();
+	}
+
 	@Accessor("DISABLE_CULLING")
 	static RenderPhase.Cull get_DISABLE_CULLING()
 	{
@@ -48,6 +54,12 @@ public interface RenderPhaseAccessor
 
 	@Accessor("POSITION_COLOR_TEXTURE_SHADER")
 	static RenderPhase.Shader get_POSITION_COLOR_TEXTURE_SHADER()
+	{
+		throw new AssertionError();
+	}
+
+	@Accessor("LIGHTNING_SHADER")
+	static RenderPhase.Shader get_LIGHTNING_SHADER()
 	{
 		throw new AssertionError();
 	}
