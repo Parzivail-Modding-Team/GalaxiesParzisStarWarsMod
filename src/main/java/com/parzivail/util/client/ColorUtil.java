@@ -41,4 +41,32 @@ public class ColorUtil
 		rgb = (rgb << 8) + (b & 0xFF);
 		return rgb | 0xFF000000;
 	}
+
+	public static int packFloatRgb(final float r, final float g, final float b)
+	{
+		return packRgb((int)(r * 255 + 0.5),
+		               (int)(g * 255 + 0.5),
+		               (int)(b * 255 + 0.5));
+	}
+
+	public static int fromHSV(final float hue, final float saturation, final float value)
+	{
+		final float normaliedHue = (hue - (float)Math.floor(hue));
+		final int h = (int)(normaliedHue * 6);
+		final float f = normaliedHue * 6 - h;
+		final float p = value * (1 - saturation);
+		final float q = value * (1 - f * saturation);
+		final float t = value * (1 - (1 - f) * saturation);
+
+		return switch (h)
+				{
+					case 0 -> packFloatRgb(value, t, p);
+					case 1 -> packFloatRgb(q, value, p);
+					case 2 -> packFloatRgb(p, value, t);
+					case 3 -> packFloatRgb(p, q, value);
+					case 4 -> packFloatRgb(t, p, value);
+					case 5 -> packFloatRgb(value, p, q);
+					default -> 0;
+				};
+	}
 }

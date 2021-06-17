@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.mixin.RenderPhaseAccessor;
+import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.client.RenderShapes;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.math.MathUtil;
@@ -12,38 +13,7 @@ import net.minecraft.util.math.MathHelper;
 
 public class LightsaberRenderer
 {
-//	private static final RenderLayer LAYER_LIGHTSABER_CORE = RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().build(true));
-//
-//	private static final RenderLayer LAYER_LIGHTSABER_STENCIL_MASK = RenderLayer.of("core_stencil_mask2", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 256, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("core_stencil_mask_gl", () ->
-//	{
-//		GL11.glEnable(GL11.GL_STENCIL_TEST);
-//
-//		GL11.glStencilMask(0xFF); // Write to stencil buffer
-//		GL11.glClear(GL11.GL_STENCIL_BUFFER_BIT);
-//
-//		GL11.glColorMask(false, false, false, false);
-//		GL11.glStencilFunc(GL11.GL_ALWAYS, 1, 0xFF); // Set any stencil to 1
-//		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_REPLACE);
-//		GL11.glDepthMask(false);
-//	}, () -> {
-//		GL11.glDepthMask(true);
-//		GL11.glStencilOp(GL11.GL_KEEP, GL11.GL_KEEP, GL11.GL_KEEP);
-//		GL11.glColorMask(true, true, true, true);
-//		GL11.glStencilMask(0x00); // Don't write anything to stencil buffer
-//	})).build(true));
-//
-//	private static final RenderLayer LAYER_LIGHTSABER_STENCIL_TARGET = RenderLayer.of("glow_stencil_target", VertexFormats.POSITION_COLOR, GL11.GL_QUADS, 2097152, false, false, RenderLayer.MultiPhaseParameters.builder().transparency(new RenderPhase.Transparency("glow_stencil_target_gl", () ->
-//	{
-//		GL11.glStencilFunc(GL11.GL_NOTEQUAL, 1, 0xFF); // Fail test if stencil value is 1
-//		RenderSystem.enableBlend();
-//		RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE, GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ZERO);
-//	}, () -> {
-//		RenderSystem.disableBlend();
-//		RenderSystem.defaultBlendFunc();
-//		GL11.glDisable(GL11.GL_STENCIL_TEST);
-//	})).build(true));
-
-	private static final RenderLayer LAYER_LIGHTSABER = RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_NO_LAYERING()).build(true));
+	private static final RenderLayer LAYER_LIGHTSABER = RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 
 	public static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, int coreColor, int glowColor)
 	{
@@ -56,27 +26,28 @@ public class LightsaberRenderer
 		double dY = (float)Resources.RANDOM.nextGaussian() * shake;
 		matrices.translate(dX, 0, dY);
 
-//		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_CORE);
 		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER);
-//		vc = vertexConsumers.getBuffer(RenderLayer.getLines());
 
 		final var offset = (float)Resources.RANDOM.nextGaussian();
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderCore(totalLength, coreColor | 0xFF000000, unstable, offset, cap);
+		//		renderCore(totalLength, coreColor | 0xFF000000, unstable, offset, cap);
 		RenderShapes.invertCull(() -> renderGlow(totalLength, glowColor, unstable, cap));
+	}
 
-//		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_STENCIL_MASK);
-//		vc = vertexConsumers.getBuffer(RenderLayer.getLines());
-//
-//		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-//		renderCore(totalLength, coreColor, unstable, offset, cap);
+	private static float getAlpha(double x)
+	{
+		return (float)MathHelper.clamp(1 - (x / 100 + 0.4) / (1 + Math.exp(-0.3 * (x - 22))), 0, 1);
+	}
 
-//		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER_STENCIL_TARGET);
-//		vc = vertexConsumers.getBuffer(RenderLayer.getLines());
-//
-//		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-//		renderGlow(totalLength, glowColor, unstable, cap);
+	private static float getSaturation(double x)
+	{
+		return (float)MathHelper.clamp((x / 400 + 0.76) / (1 + Math.exp(-0.27 * (x - 10))), 0, 1);
+	}
+
+	private static float getHue(double h, double x)
+	{
+		return (float)MathHelper.clamp(-0.06 * Math.exp(-0.011 * Math.pow(x - 6, 2)) + h, 0, 1);
 	}
 
 	private static void renderCore(float bladeLength, int coreColor, boolean unstable, float simplexOffset, boolean cap)
@@ -117,17 +88,32 @@ public class LightsaberRenderer
 		if (bladeLength == 0)
 			return;
 
-		var thicknessTop = cap ? 0.15f : 0.16f;
+		var thicknessTop = cap ? 0.01f : 0.01f;
 
-		for (var layer = 21; layer > 12; layer--)
+		for (var layer = 0; layer <= 12; layer++)
 		{
-			VertexConsumerBuffer.Instance.setColor(bladeColor, (int)MathUtil.remap(layer, 12, 22, 0, 128));
+			// TODO: hue
+			var x = MathUtil.remap(layer, 0, 12, 5, 60);
+			int color = ColorUtil.fromHSV(
+					getHue(0.61f, x),
+					getSaturation(x),
+					1
+			);
+			VertexConsumerBuffer.Instance.setColor(color, (int)(255 * getAlpha(x)));
 
 			float layerThicknessModifier = 0;
 			if (unstable)
 				layerThicknessModifier = (float)Resources.RANDOM.nextGaussian() * 0.003f;
 
-			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, thicknessTop - layerThicknessModifier - 0.0058f * layer, 0.16f - layerThicknessModifier - 0.0058f * layer, 0, layerThicknessModifier + bladeLength + (cap ? layer - 8 : 10 - (layer - 9)) * 0.006f, 0, 0, -(22 - layer) * 0.005f, 0);
+			float dT = 0.0035f * layer;
+
+			RenderShapes.drawSolidBoxSkewTaper(
+					VertexConsumerBuffer.Instance,
+					thicknessTop - layerThicknessModifier + dT,
+					0.015f - layerThicknessModifier + dT,
+					0, layerThicknessModifier + bladeLength + dT, 0,
+					0, -dT, 0
+			);
 		}
 	}
 }

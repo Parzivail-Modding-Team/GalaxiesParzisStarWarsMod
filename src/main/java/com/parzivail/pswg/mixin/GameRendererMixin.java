@@ -1,6 +1,5 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.camera.CameraHelper;
 import com.parzivail.util.item.IZoomingItem;
 import net.fabricmc.api.EnvType;
@@ -8,11 +7,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Shader;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Hand;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -24,8 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-import java.io.IOException;
-
 @Mixin(GameRenderer.class)
 @Environment(EnvType.CLIENT)
 public class GameRendererMixin
@@ -36,12 +30,6 @@ public class GameRendererMixin
 
 	@Unique
 	private double formerFov;
-
-	@Inject(at = @At("TAIL"), method = "Lnet/minecraft/client/render/GameRenderer;loadShaders(Lnet/minecraft/resource/ResourceManager;)V")
-	private void reloadShaders(ResourceManager manager, CallbackInfo ci) throws IOException
-	{
-		Client.lightsaberShader = new Shader(manager, "rendertype_lightsaber", VertexFormats.POSITION_COLOR);
-	}
 
 	@Inject(at = @At("RETURN"), method = "getFov(Lnet/minecraft/client/render/Camera;FZ)D", cancellable = true)
 	private void getZoomedFov(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Double> cir)

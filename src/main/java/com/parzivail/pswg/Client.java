@@ -39,8 +39,6 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.Shader;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.util.Identifier;
@@ -55,9 +53,6 @@ public class Client implements ClientModInitializer
 
 	public static RemoteTextureProvider remoteTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
-
-	public static Shader lightsaberShader;
-	public static final RenderPhase.Shader LIGHTSABER_SHADER = new RenderPhase.Shader(() -> lightsaberShader);
 
 	public static boolean isShipClientControlled(ShipEntity shipEntity)
 	{
