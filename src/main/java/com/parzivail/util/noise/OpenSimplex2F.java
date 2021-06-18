@@ -83,6 +83,9 @@ public class OpenSimplex2F
 	 */
 	private double noise2_Base(double xs, double ys)
 	{
+		xs %= Integer.MAX_VALUE;
+		ys %= Integer.MAX_VALUE;
+
 		double value = 0;
 
 		// Get base points and offsets
@@ -189,6 +192,9 @@ public class OpenSimplex2F
 	 */
 	private double noise3_BCC(double xr, double yr, double zr)
 	{
+		xr %= Integer.MAX_VALUE;
+		yr %= Integer.MAX_VALUE;
+		zr %= Integer.MAX_VALUE;
 
 		// Get base and offsets inside cube of first lattice.
 		int xrb = fastFloor(xr), yrb = fastFloor(yr), zrb = fastFloor(zr);
@@ -289,6 +295,11 @@ public class OpenSimplex2F
 	 */
 	private double noise4_Base(double xs, double ys, double zs, double ws)
 	{
+		xs %= Integer.MAX_VALUE;
+		ys %= Integer.MAX_VALUE;
+		zs %= Integer.MAX_VALUE;
+		ws %= Integer.MAX_VALUE;
+
 		double value = 0;
 
 		// Get base points and offsets

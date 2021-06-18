@@ -86,8 +86,6 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		var unstable = lt.unstable;
 		var baseLength = 1.6f;
 		var lengthCoefficient = forceBlade ? 1 : lt.getSize(minecraft.getTickDelta());
-		var coreColor = lt.coreColor;
-		var glowColor = lt.bladeColor;
 
 		var texturedModel = MODELS.get(lt.hilt);
 		if (texturedModel == null)
@@ -114,7 +112,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		{
 			matrices.translate(0.015f, 0, 0.015f);
 
-			LightsaberRenderer.renderBlade(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, coreColor, glowColor);
+			LightsaberRenderer.renderBlade(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, lt.bladeHue);
 		}
 	}
 

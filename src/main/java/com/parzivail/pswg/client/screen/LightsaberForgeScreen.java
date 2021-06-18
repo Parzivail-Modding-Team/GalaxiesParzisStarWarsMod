@@ -103,16 +103,10 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 	private static final Identifier TEXTURE = Resources.id("textures/gui/container/lightsaber_forge.png");
 
-	private MutableSlider sR;
-	private MutableSlider sG;
-	private MutableSlider sB;
+	private MutableSlider sliderHue;
 	private MutableCheckbox cbUnstable;
-	private ButtonWidget bBladeColor;
-	private ButtonWidget bCoreColor;
 
-	private int r;
-	private int g;
-	private int b;
+	private float hue;
 
 	private ItemStack lightsaber = ItemStack.EMPTY;
 
@@ -131,18 +125,10 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		this.playerInventoryTitleY = this.backgroundHeight - 94;
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 
-		Function<Double, String> valueFormatter = value -> String.format("%s", (int)Math.round(value * 255));
+		Function<Double, String> valueFormatter = value -> String.format("%s", (int)Math.round(value * 1000) / 1000f);
 
-		this.addDrawableChild(sR = new MutableSlider(x + 41, y + 59, 100, 20, "R: %s", r / 255f, valueFormatter, slider -> {
-			r = (int)Math.round(slider.getValue() * 255);
-			commitChanges();
-		}));
-		this.addDrawableChild(sG = new MutableSlider(x + 41, y + 79, 100, 20, "G: %s", g / 255f, valueFormatter, slider -> {
-			g = (int)Math.round(slider.getValue() * 255);
-			commitChanges();
-		}));
-		this.addDrawableChild(sB = new MutableSlider(x + 41, y + 99, 100, 20, "B: %s", b / 255f, valueFormatter, slider -> {
-			b = (int)Math.round(slider.getValue() * 255);
+		this.addDrawableChild(sliderHue = new MutableSlider(x + 41, y + 59, 100, 20, "Hue: %s", hue, valueFormatter, slider -> {
+			hue = (float)slider.getValue();
 			commitChanges();
 		}));
 
@@ -151,20 +137,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			passedData.writeNbt(getLightsaberTag().toTag());
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketLightsaberForgeApply, passedData);
 		}));
-
-		this.addDrawableChild(bBladeColor = new ButtonWidget(x + 8, y + 119, 30, 20, new TranslatableText("Blade"), button -> {
-			button.active = false;
-			bCoreColor.active = true;
-			onLightsaberChanged();
-		}));
-
-		this.addDrawableChild(bCoreColor = new ButtonWidget(x + 38, y + 119, 30, 20, new TranslatableText("Core"), button -> {
-			button.active = false;
-			bBladeColor.active = true;
-			onLightsaberChanged();
-		}));
-
-		bBladeColor.active = false;
 
 		this.addDrawableChild(cbUnstable = new MutableCheckbox(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> {
 			commitChanges();
@@ -192,11 +164,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	{
 		LightsaberTag.mutate(lightsaber, (lt) ->
 		{
-			if (!bBladeColor.active)
-				lt.bladeColor = ColorUtil.packRgb(r, g, b);
-			else if (!bCoreColor.active)
-				lt.coreColor = ColorUtil.packRgb(r, g, b);
-
+			lt.bladeHue = hue;
 			lt.unstable = cbUnstable.isChecked();
 		});
 	}
@@ -207,31 +175,17 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		{
 			var lt = getLightsaberTag();
 
-			var color = 0;
-
-			if (!bBladeColor.active)
-				color = lt.bladeColor;
-			else if (!bCoreColor.active)
-				color = lt.coreColor;
-
-			r = (color & 0xFF0000) >> 16;
-			g = (color & 0xFF00) >> 8;
-			b = (color & 0xFF);
+			hue = lt.bladeHue;
 
 			cbUnstable.setChecked(lt.unstable);
 		}
 		else
 		{
-			r = 0;
-			g = 0;
-			b = 0;
-
+			hue = 0;
 			cbUnstable.setChecked(false);
 		}
 
-		sR.setValue(r / 255f);
-		sG.setValue(g / 255f);
-		sB.setValue(b / 255f);
+		sliderHue.setValue(hue);
 	}
 
 	private LightsaberTag getLightsaberTag()
@@ -291,6 +245,11 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		matrices.scale(100, -100, 100);
 
 		var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
+
+		int rgb = ColorUtil.fromHSV(hue, 1, 1);
+		int b = rgb & 0xFF;
+		int g = (rgb >> 8) & 0xFF;
+		int r = (rgb >> 16) & 0xFF;
 
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{

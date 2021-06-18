@@ -15,12 +15,15 @@ public class LightsaberRenderer
 {
 	private static final RenderLayer LAYER_LIGHTSABER = RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 
-	public static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, int coreColor, int glowColor)
+	public static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue)
 	{
 		VertexConsumer vc;
 
 		var totalLength = baseLength * lengthCoefficient;
 		var shake = (1.1f - lengthCoefficient) * 0.004f;
+
+		if (unstable)
+			shake *= 2;
 
 		double dX = (float)Resources.RANDOM.nextGaussian() * shake;
 		double dY = (float)Resources.RANDOM.nextGaussian() * shake;
@@ -32,7 +35,7 @@ public class LightsaberRenderer
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		//		renderCore(totalLength, coreColor | 0xFF000000, unstable, offset, cap);
-		RenderShapes.invertCull(() -> renderGlow(totalLength, glowColor, unstable, cap));
+		renderGlow(totalLength, glowHue, unstable, cap);
 	}
 
 	private static float getAlpha(double x)
@@ -83,37 +86,77 @@ public class LightsaberRenderer
 		}
 	}
 
-	public static void renderGlow(float bladeLength, int bladeColor, boolean unstable, boolean cap)
+	public static void renderGlow(float bladeLength, float glowHue, boolean unstable, boolean cap)
 	{
 		if (bladeLength == 0)
 			return;
 
-		var thicknessTop = cap ? 0.01f : 0.01f;
+		var thicknessBottom = 0.018f;
+		var thicknessTop = cap ? 0.012f : thicknessBottom;
 
-		for (var layer = 0; layer <= 12; layer++)
+		int mL = 0;
+		int xL = 14;
+
+		float deltaThickness = 0.0028f;
+
+		var minOutputLayer = mL * thicknessBottom / deltaThickness;
+
+		var globalTime = ((System.currentTimeMillis()) % Integer.MAX_VALUE) / 4f;
+
+		for (var layer = mL; layer <= xL; layer++)
 		{
+			var time = ((System.currentTimeMillis() - layer * 10) % Integer.MAX_VALUE) / 200f;
+			var noise = (float)Resources.SIMPLEX_0.noise2(0, time);
+
+			var hueOffset = unstable ? (noise * 0.02f) : 0;
+
 			// TODO: hue
-			var x = MathUtil.remap(layer, 0, 12, 5, 60);
+			var x = MathUtil.remap(layer, mL, xL, minOutputLayer, 60);
 			int color = ColorUtil.fromHSV(
-					getHue(0.61f, x),
+					getHue(glowHue + hueOffset, x),
 					getSaturation(x),
 					1
 			);
 			VertexConsumerBuffer.Instance.setColor(color, (int)(255 * getAlpha(x)));
+			float layerThickness = deltaThickness * layer;
 
-			float layerThicknessModifier = 0;
-			if (unstable)
-				layerThicknessModifier = (float)Resources.RANDOM.nextGaussian() * 0.003f;
-
-			float dT = 0.0035f * layer;
-
-			RenderShapes.drawSolidBoxSkewTaper(
+			Runnable action = () -> RenderShapes.drawSolidBoxSkewTaper(
 					VertexConsumerBuffer.Instance,
-					thicknessTop - layerThicknessModifier + dT,
-					0.015f - layerThicknessModifier + dT,
-					0, layerThicknessModifier + bladeLength + dT, 0,
-					0, -dT, 0
+					thicknessTop + layerThickness,
+					thicknessBottom + layerThickness,
+					0, bladeLength + layerThickness, 0,
+					0, -layerThickness, 0
 			);
+
+			if (layer > 0)
+				RenderShapes.invertCull(action);
+			else
+			{
+				final var segments = unstable ? 35 : 1;
+				final var dSegments = 1f / segments;
+				final var dLength = bladeLength / segments;
+
+				final var dLengthTime = 5;
+
+				for (var i = 0; i < segments; i++)
+				{
+					var topThicknessLerp = MathHelper.lerp(dSegments * (i + 1), thicknessBottom, thicknessTop);
+					var bottomThicknessLerp = MathHelper.lerp(dSegments * i, thicknessBottom, thicknessTop);
+
+					var dTTop = unstable ? (float)Resources.SIMPLEX_0.noise2(globalTime, dLengthTime * dLength * (i + 1)) * 0.005f : 0;
+					var dTBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(globalTime, dLengthTime * dLength * i) * 0.005f : 0;
+
+					noise = (float)Resources.SIMPLEX_0.noise2(globalTime, 3 * dLength * i);
+					color = ColorUtil.fromHSV(
+							0,
+							unstable ? (0.07f - noise * 0.07f) : 0,
+							1
+					);
+					VertexConsumerBuffer.Instance.setColor(color, (int)(255 * getAlpha(x)));
+
+					RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
+				}
+			}
 		}
 	}
 }
