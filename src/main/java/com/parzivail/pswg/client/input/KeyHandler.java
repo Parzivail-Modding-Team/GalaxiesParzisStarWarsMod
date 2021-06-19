@@ -19,8 +19,8 @@ public class KeyHandler
 
 		if (Client.KEY_SPECIES_SELECT.wasPressed())
 		{
-			// TODO
-			//			Client.minecraft.openScreen(new SpeciesSelectScreen(Client.minecraft.currentScreen));
+			// TODO: reimplement species select screen
+			// Client.minecraft.openScreen(new SpeciesSelectScreen(Client.minecraft.currentScreen));
 		}
 
 		if (Client.KEY_LIGHTSABER_TOGGLE.wasPressed())

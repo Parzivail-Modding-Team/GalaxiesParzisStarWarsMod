@@ -2,12 +2,7 @@ package com.parzivail.util.math;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.math.Vector4f;
+import net.minecraft.util.math.*;
 
 @Environment(EnvType.CLIENT)
 public class ClientMathUtil
@@ -35,24 +30,14 @@ public class ClientMathUtil
 
 	public static Quaternion getRotation(Direction direction)
 	{
-		// TODO
-
-		switch (direction)
-		{
-			case DOWN:
-				return new Quaternion(90, 0, 0, true);
-			case UP:
-				return new Quaternion(-90, 0, 0, true);
-			case NORTH:
-				return new Quaternion(0, 90, 0, true);
-			case SOUTH:
-				return new Quaternion(0, -90, 0, true);
-			case WEST:
-				return new Quaternion(0, 180, 0, true);
-			case EAST:
-				return new Quaternion(0, 0, 0, true);
-			default:
-				throw new IllegalStateException("Unexpected value: " + direction);
-		}
+		return switch (direction)
+				{
+					case DOWN -> new Quaternion(90, 0, 0, true);
+					case UP -> new Quaternion(-90, 0, 0, true);
+					case NORTH -> new Quaternion(0, 90, 0, true);
+					case SOUTH -> new Quaternion(0, -90, 0, true);
+					case WEST -> new Quaternion(0, 180, 0, true);
+					case EAST -> new Quaternion(0, 0, 0, true);
+				};
 	}
 }

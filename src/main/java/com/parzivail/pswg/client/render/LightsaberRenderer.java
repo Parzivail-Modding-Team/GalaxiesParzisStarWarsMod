@@ -110,7 +110,6 @@ public class LightsaberRenderer
 
 			var hueOffset = unstable ? (noise * 0.02f) : 0;
 
-			// TODO: hue
 			var x = MathUtil.remap(layer, mL, xL, minOutputLayer, 60);
 			int color = ColorUtil.fromHSV(
 					getHue(glowHue + hueOffset, x),

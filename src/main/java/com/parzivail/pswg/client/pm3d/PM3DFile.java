@@ -63,7 +63,7 @@ public class PM3DFile
 
 	private static PM3DFile load(Identifier modelFile) throws IOException
 	{
-		// TODO: allow different modid domains
+		// TODO: convert this to a KeyedReloadableLoader
 		InputStream reader = PIO.getStream("assets", modelFile);
 		LittleEndianDataInputStream objStream = new LittleEndianDataInputStream(reader);
 

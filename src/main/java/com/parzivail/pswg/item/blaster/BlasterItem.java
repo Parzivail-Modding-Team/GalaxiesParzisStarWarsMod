@@ -182,10 +182,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			Matrix4fAccessUtil.multiply(m, QuatUtil.of(0, -player.getPitch(), 0, true));
 			Matrix4fAccessUtil.multiply(m, QuatUtil.of(player.getYaw(), 0, 0, true));
 
-			// TODO
 			var hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
 
+			// TODO: stats customization
 			float hSR = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
 			float vSR = 1; // - bd.getBarrel().getVerticalSpreadReduction();
 

@@ -67,7 +67,6 @@ public class RotatingBlockWithBounds extends RotatingBlock
 		if (requiresSubstrate == Substrate.NONE)
 			return state;
 
-		// TODO: the +3 is because the only block that relies on this right now, the wall cluster light, is rotated -90 deg away from "facing forward"
 		Direction substrateDirection = getSubstrateDirection(state);
 
 		return direction.getOpposite() == substrateDirection && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
