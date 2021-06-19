@@ -49,7 +49,7 @@ public class RotatingBlockWithBounds extends RotatingBlock
 		{
 			case BEHIND:
 			{
-				BlockPos blockPos = pos.offset(substrateDirection.getOpposite());
+				BlockPos blockPos = pos.offset(substrateDirection);
 				return sideCoversSmallSquare(world, blockPos, substrateDirection.getOpposite());
 			}
 			case BELOW:
