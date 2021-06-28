@@ -39,7 +39,8 @@
 		"PlayerEntityRendererMixin",
 		"RenderLayersMixin",
 		"RenderPhaseAccessor",
-		"SpriteAtlasTextureMixin"
+		"SpriteAtlasTextureMixin",
+		"WorldRendererMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

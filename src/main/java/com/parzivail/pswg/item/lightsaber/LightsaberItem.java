@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
-import com.parzivail.util.item.ICustomVisualItemEquality;
+import com.parzivail.util.client.render.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
 import net.minecraft.entity.Entity;

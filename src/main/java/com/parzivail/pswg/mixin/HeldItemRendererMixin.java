@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.util.item.ICustomVisualItemEquality;
+import com.parzivail.util.client.render.ICustomVisualItemEquality;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.item.HeldItemRenderer;

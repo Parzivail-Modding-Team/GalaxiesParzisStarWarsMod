@@ -11,7 +11,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.pswg.util.QuatUtil;
-import com.parzivail.util.item.ICustomVisualItemEquality;
+import com.parzivail.util.client.render.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.item.IZoomingItem;

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
-import com.parzivail.util.item.ICustomHudRenderer;
+import com.parzivail.util.client.render.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.GameRenderer;
@@ -23,7 +23,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	private static final Identifier HUD_ELEMENTS_TEXTURE = Resources.id("textures/gui/blasters.png");
 
 	@Override
-	public boolean renderCustomHUD(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
+	public boolean render(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
 	{
 		var client = MinecraftClient.getInstance();
 		var scaledWidth = client.getWindow().getScaledWidth();
