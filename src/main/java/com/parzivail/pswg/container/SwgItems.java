@@ -236,7 +236,6 @@ public class SwgItems
 		@RegistryName("qrikki_waffle")
 		public static final Item QrikkiWaffle = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.7F).build()).group(Galaxies.Tab));
 
-		// TODO: set up food values for these
 		@RegistryName("ahrisa_bowl")
 		public static final Item AhrisaBowl = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("black_melon")

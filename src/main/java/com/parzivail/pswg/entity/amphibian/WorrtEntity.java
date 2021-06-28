@@ -49,10 +49,10 @@ public class WorrtEntity extends AnimalEntity
 	protected void initGoals()
 	{
 		this.goalSelector.add(1, new SwimGoal(this));
-		this.goalSelector.add(1, new WorrtEntity.EscapeDangerGoal(this, 0.8D));
-		this.goalSelector.add(4, new FleeEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.6D, 1.0D));
-		this.goalSelector.add(4, new FleeEntityGoal<>(this, HostileEntity.class, 4.0F, 0.6D, 1.0D));
-		this.goalSelector.add(6, new WanderAroundFarGoal(this, 1.0D, 0.2F));
+		this.goalSelector.add(1, new WorrtEntity.EscapeDangerGoal(this, 0.5D));
+		this.goalSelector.add(4, new FleeEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.3D, 0.7D));
+		this.goalSelector.add(4, new FleeEntityGoal<>(this, HostileEntity.class, 4.0F, 0.3D, 0.7D));
+		this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.7D, 0.2F));
 		this.goalSelector.add(11, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
 	}
 
@@ -71,15 +71,15 @@ public class WorrtEntity extends AnimalEntity
 				var vec3d = path.getNodePosition(this);
 				if (vec3d.y > this.getY() + 0.5D)
 				{
-					return 0.4F;
+					return 0.3F;
 				}
 			}
 
-			return (float)this.moveControl.getSpeed() * 0.4f;
+			return (float)this.moveControl.getSpeed() * 0.3f;
 		}
 		else
 		{
-			return 0.4F;
+			return 0.3F;
 		}
 	}
 
