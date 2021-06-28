@@ -38,7 +38,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 {
 	private static final TrackedData<Quaternion> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
 	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);
-	private static final TrackedData<Short> CONTROLS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
+	private static final TrackedData<Short> CONTROL_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
+	private static final TrackedData<Short> SHIELD_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
+	private static final TrackedData<Integer> FUEL_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
 	@Environment(EnvType.CLIENT)
 	private ChaseCam camera;
@@ -152,7 +154,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	{
 		getDataTracker().startTracking(ROTATION, new Quaternion(Quaternion.IDENTITY));
 		getDataTracker().startTracking(THROTTLE, 0f);
-		getDataTracker().startTracking(CONTROLS, (short)0);
+		getDataTracker().startTracking(CONTROL_BITS, (short)0);
+		getDataTracker().startTracking(SHIELD_BITS, (short)0);
+		getDataTracker().startTracking(FUEL_BITS, 0);
 	}
 
 	@Override
@@ -298,12 +302,12 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 	public EnumSet<ShipControls> getControls()
 	{
-		return ShipControls.unpack(getDataTracker().get(CONTROLS));
+		return ShipControls.unpack(getDataTracker().get(CONTROL_BITS));
 	}
 
 	public void setControls(EnumSet<ShipControls> controls)
 	{
-		getDataTracker().set(CONTROLS, ShipControls.pack(controls));
+		getDataTracker().set(CONTROL_BITS, ShipControls.pack(controls));
 	}
 
 	public float getThrottle()
@@ -338,7 +342,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 	public void acceptControlInput(EnumSet<ShipControls> controls)
 	{
-		if (ShipControls.pack(controls) == getDataTracker().get(CONTROLS))
+		if (ShipControls.pack(controls) == getDataTracker().get(CONTROL_BITS))
 			return;
 
 		setControls(controls);
