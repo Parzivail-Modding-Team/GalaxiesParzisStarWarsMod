@@ -1,4 +1,4 @@
-package com.parzivail.util.item;
+package com.parzivail.util.client.render;
 
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,10 +15,10 @@ public interface ICustomHudRenderer
 	 */
 	HashMap<Item, ICustomHudRenderer> CUSTOM_HUD_RENDERERS = new HashMap<>();
 
-	static void registerCustomHUD(Item item, ICustomHudRenderer customHUDRenderer)
+	static void register(Item item, ICustomHudRenderer renderer)
 	{
-		CUSTOM_HUD_RENDERERS.put(item, customHUDRenderer);
+		CUSTOM_HUD_RENDERERS.put(item, renderer);
 	}
 
-	boolean renderCustomHUD(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices);
+	boolean render(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices);
 }

@@ -236,61 +236,60 @@ public class SwgItems
 		@RegistryName("qrikki_waffle")
 		public static final Item QrikkiWaffle = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.7F).build()).group(Galaxies.Tab));
 
-		// TODO: set up food values for these
 		@RegistryName("ahrisa_bowl")
 		public static final Item AhrisaBowl = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("black_melon")
-		public static final Item BlackMelon = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item BlackMelon = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("chasuka_seeds")
-		public static final Item ChasukaSeeds = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item ChasukaSeeds = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("desert_plums")
-		public static final Item DesertPlums = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item DesertPlums = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("dried_poonten_grass_bushel")
-		public static final Item DriedPoontenGrass = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item DriedPoontenGrass = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("haroun_bread")
-		public static final Item HarounBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item HarounBread = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(5).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("hkak_bean")
-		public static final Item HkakBean = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item HkakBean = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("pallie_fruit")
-		public static final Item PallieFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item PallieFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("pika_fruit")
-		public static final Item PikaFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item PikaFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("stripped_japor_branch")
-		public static final Item StrippedJaporBranch = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item StrippedJaporBranch = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("tuber")
-		public static final Item Tuber = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
+		public static final Item Tuber = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("cooked_eopie_loin")
-		public static final Item CookedEopieLoin = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item CookedEopieLoin = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("crispy_gorg")
-		public static final Item CrispyGorg = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item CrispyGorg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("dewback_egg")
-		public static final Item DewbackEgg = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item DewbackEgg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("dewback_omlette")
-		public static final Item DewbackOmlette = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item DewbackOmlette = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("jerba_rack")
-		public static final Item JerbaRack = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item JerbaRack = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("jerba_rib")
-		public static final Item JerbaRib = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item JerbaRib = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("krayt_meat")
-		public static final Item KraytMeat = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item KraytMeat = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("raw_sketto_nugget")
-		public static final Item RawSkettoNugget = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item RawSkettoNugget = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("roast_krayt")
-		public static final Item RoastKrayt = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item RoastKrayt = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("ronto_chuck")
-		public static final Item RontoChuck = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item RontoChuck = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("tuber_mash")
-		public static final Item TuberMash = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item TuberMash = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("vaporator_mushroom")
-		public static final Item VaporatorMushroom = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item VaporatorMushroom = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("worrt_egg")
-		public static final Item WorrtEgg = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item WorrtEgg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("deb_deb")
-		public static final Item DebDeb = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item DebDeb = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("eopie_loin")
-		public static final Item EopieLoin = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item EopieLoin = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("hubba_gourd")
-		public static final Item HubbaGourd = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item HubbaGourd = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 	}
 
 	public static class MobDrops

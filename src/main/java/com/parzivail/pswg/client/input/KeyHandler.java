@@ -41,7 +41,10 @@ public class KeyHandler
 				controls.add(ShipControls.THROTTLE_DOWN);
 
 			if (mc.options.keyRight.isPressed())
-				controls.add(ShipControls.SPECIAL);
+				controls.add(ShipControls.SPECIAL1);
+
+			if (mc.options.keyLeft.isPressed())
+				controls.add(ShipControls.SPECIAL2);
 
 			ship.acceptControlInput(controls);
 		}

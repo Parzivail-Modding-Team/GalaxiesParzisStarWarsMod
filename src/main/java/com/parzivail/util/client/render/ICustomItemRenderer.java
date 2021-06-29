@@ -1,4 +1,4 @@
-package com.parzivail.util.item;
+package com.parzivail.util.client.render;
 
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.model.BakedModel;

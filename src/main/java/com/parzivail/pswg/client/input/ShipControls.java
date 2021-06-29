@@ -4,7 +4,7 @@ import java.util.EnumSet;
 
 public enum ShipControls
 {
-	NONE(0), THROTTLE_UP(0b1), THROTTLE_DOWN(0b10), BLASTER(0b100), SPECIAL(0b1000);
+	NONE(0), THROTTLE_UP(0b1), THROTTLE_DOWN(0b10), BLASTER(0b100), SPECIAL1(0b1000), SPECIAL2(0b1000);
 
 	private final short flag;
 

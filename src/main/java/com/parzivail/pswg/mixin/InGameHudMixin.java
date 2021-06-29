@@ -2,7 +2,7 @@ package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.camera.MutableCameraEntity;
 import com.parzivail.pswg.entity.ship.ShipEntity;
-import com.parzivail.util.item.ICustomHudRenderer;
+import com.parzivail.util.client.render.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
@@ -34,7 +34,7 @@ public class InGameHudMixin
 		ICustomHudRenderer customHUDRenderer = ICustomHudRenderer.CUSTOM_HUD_RENDERERS.get(mainHandStack.getItem());
 		if (customHUDRenderer != null)
 		{
-			if (customHUDRenderer.renderCustomHUD(this.client.player, Hand.MAIN_HAND, mainHandStack, matrices))
+			if (customHUDRenderer.render(this.client.player, Hand.MAIN_HAND, mainHandStack, matrices))
 				ci.cancel();
 		}
 	}

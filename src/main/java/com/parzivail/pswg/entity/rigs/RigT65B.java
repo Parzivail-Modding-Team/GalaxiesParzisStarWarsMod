@@ -94,12 +94,17 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 
 	private Quaternion getRotation(T65BXwing entity, RigT65B.Part part)
 	{
-		short wingTimer = entity.getWingTimer();
+		short rawWingTimer = entity.getWingTimer();
 
-		boolean wingsOpening = entity.getWingDirection();
-		float timer = Math.abs(wingTimer);
+		boolean wingsOpening = entity.areWingsOpening();
+		float wingTimer = Math.abs(rawWingTimer);
 
-		return getRotation(part, wingsOpening, timer);
+		short rawCockpitTimer = entity.getCockpitTimer();
+
+		boolean cockpitOpening = entity.isCockpitOpening();
+		float cockpitTimer = Math.abs(rawCockpitTimer);
+
+		return getRotation(part, wingsOpening, wingTimer, cockpitOpening, cockpitTimer);
 	}
 
 	@Override
@@ -126,15 +131,23 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 	@Environment(EnvType.CLIENT)
 	public void transform(MatrixStack stack, T65BXwing target, RigT65B.Part part, float tickDelta)
 	{
-		short wingTimer = target.getWingTimerClient();
+		short rawWingTimer = target.getWingTimerClient();
 
-		boolean wingsOpening = target.getWingDirectionClient();
-		float timer = Math.abs(wingTimer);
+		boolean wingsOpening = target.areWingsOpeningClient();
+		float wingTimer = Math.abs(rawWingTimer);
 
-		if (timer > 0)
-			timer -= tickDelta;
+		if (wingTimer > 0)
+			wingTimer -= tickDelta;
 
-		stack.multiply(getRotation(part, wingsOpening, timer));
+		short rawCockpitTimer = target.getCockpitTimerClient();
+
+		boolean cockpitOpening = target.isCockpitOpeningClient();
+		float cockpitTimer = Math.abs(rawCockpitTimer);
+
+		if (cockpitTimer > 0)
+			cockpitTimer -= tickDelta;
+
+		stack.multiply(getRotation(part, wingsOpening, wingTimer, cockpitOpening, cockpitTimer));
 	}
 
 	@Override
@@ -157,23 +170,38 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 		return vec;
 	}
 
-	private Quaternion getRotation(RigT65B.Part part, boolean wingsOpening, float timer)
+	private Quaternion getRotation(Part part, boolean wingsOpening, float wingTimer, boolean cockpitOpening, float cockpitTimer)
 	{
-		float angle;
-
-		if (wingsOpening)
-			angle = 13 * (20 - timer) / 20;
-		else
-			angle = 13 * timer / 20;
-
-		switch (part)
+		if (part.getPartName().startsWith("Wing"))
 		{
-			case WingTopLeft:
-			case WingBottomRight:
-				return QuatUtil.of(0, 0, -angle, true);
-			case WingBottomLeft:
-			case WingTopRight:
-				return QuatUtil.of(0, 0, angle, true);
+			float timer = Math.abs(wingTimer);
+
+			float wingAngle;
+
+			if (wingsOpening)
+				wingAngle = 13 * (20 - timer) / 20;
+			else
+				wingAngle = 13 * timer / 20;
+
+			return switch (part)
+					{
+						case WingTopLeft, WingBottomRight -> QuatUtil.of(0, 0, -wingAngle, true);
+						case WingBottomLeft, WingTopRight -> QuatUtil.of(0, 0, wingAngle, true);
+						default -> throw new IndexOutOfBoundsException();
+					};
+		}
+		else if (part == RigT65B.Part.Cockpit)
+		{
+			float timer = Math.abs(cockpitTimer);
+
+			float cockpitAngle;
+
+			if (cockpitOpening)
+				cockpitAngle = 50 * (20 - timer) / 20;
+			else
+				cockpitAngle = 50 * timer / 20;
+
+			return QuatUtil.of(cockpitAngle, 0, 0, true);
 		}
 
 		return new Quaternion(Quaternion.IDENTITY);

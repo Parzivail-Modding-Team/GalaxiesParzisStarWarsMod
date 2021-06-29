@@ -14,6 +14,7 @@ import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
 import com.parzivail.pswg.client.render.item.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.render.ship.T65BXwingRenderer;
+import com.parzivail.pswg.client.render.sky.TatooineSkyRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
@@ -24,9 +25,10 @@ import com.parzivail.util.Lumberjack;
 import com.parzivail.util.client.EmptyBlockEntityRenderer;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.client.model.ModelRegistry;
-import com.parzivail.util.item.ICustomHudRenderer;
-import com.parzivail.util.item.ICustomItemRenderer;
-import com.parzivail.util.item.ICustomPoseItem;
+import com.parzivail.util.client.render.ICustomHudRenderer;
+import com.parzivail.util.client.render.ICustomItemRenderer;
+import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.client.render.ICustomSkyRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -176,7 +178,9 @@ public class Client implements ClientModInitializer
 
 		ICustomItemRenderer.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
 		ICustomPoseItem.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
-		ICustomHudRenderer.registerCustomHUD(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
+		ICustomHudRenderer.register(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
+
+		ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 
 		ResourceManagers.registerPackets();
 	}

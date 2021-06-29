@@ -22,7 +22,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -30,17 +29,24 @@ import java.util.EnumSet;
 
 public class T65BXwing extends ShipEntity
 {
-	private static final TrackedData<Byte> WINGS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final TrackedData<Byte> WING_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final int WING_DIRECTION_MASK = 0b10000000;
 	private static final int WING_TIMER_MASK = 0b01111111;
 
-	private static final TrackedData<Byte> CANNONS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final TrackedData<Byte> COCKPIT_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final int COCKPIT_DIRECTION_MASK = 0b10000000;
+	private static final int COCKPIT_TIMER_MASK = 0b01111111;
+
+	private static final TrackedData<Byte> CANNON_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final int CANNON_STATE_MASK = 0b00000011;
 
 	private static final RigT65B.Socket[] CANNON_ORDER = { RigT65B.Socket.CannonTopLeft, RigT65B.Socket.CannonBottomLeft, RigT65B.Socket.CannonTopRight, RigT65B.Socket.CannonBottomRight };
 
 	@Environment(EnvType.CLIENT)
-	public short clientWingState;
+	public short clientWingBits;
+
+	@Environment(EnvType.CLIENT)
+	public short clientCockpitBits;
 
 	public T65BXwing(EntityType<?> type, World world)
 	{
@@ -58,35 +64,9 @@ public class T65BXwing extends ShipEntity
 	protected void initDataTracker()
 	{
 		super.initDataTracker();
-		getDataTracker().startTracking(WINGS, (byte)0);
-		getDataTracker().startTracking(CANNONS, (byte)0);
-	}
-
-	private Quaternion getPartRotation(String part)
-	{
-		short wingTimer = getWingTimer();
-
-		boolean wingsOpening = getWingDirection();
-		float timer = Math.abs(wingTimer);
-
-		float angle;
-
-		if (wingsOpening)
-			angle = 13 * (20 - timer) / 20;
-		else
-			angle = 13 * timer / 20;
-
-		switch (part)
-		{
-			case "WingTopLeft":
-			case "WingBottomRight":
-				return QuatUtil.of(0, 0, -angle, true);
-			case "WingBottomLeft":
-			case "WingTopRight":
-				return QuatUtil.of(0, 0, angle, true);
-		}
-
-		return new Quaternion(Quaternion.IDENTITY);
+		getDataTracker().startTracking(WING_BITS, (byte)0);
+		getDataTracker().startTracking(COCKPIT_BITS, (byte)0);
+		getDataTracker().startTracking(CANNON_BITS, (byte)0);
 	}
 
 	@Override
@@ -128,31 +108,55 @@ public class T65BXwing extends ShipEntity
 	{
 		super.tick();
 
+		EnumSet<ShipControls> controls = getControls();
+		Entity pilot = getPrimaryPassenger();
+
+		// tick wings
 		byte wingTimer = getWingTimer();
 
 		if (wingTimer != 0)
 		{
-			boolean movingUp = getWingDirection();
+			boolean movingUp = areWingsOpening();
 
 			wingTimer--;
 
 			setWings(movingUp, wingTimer);
 		}
 
-		Entity pilot = getPrimaryPassenger();
 		if (pilot instanceof PlayerEntity)
 		{
-			EnumSet<ShipControls> controls = getControls();
-
-			if (controls.contains(ShipControls.SPECIAL) && wingTimer == 0)
+			if (controls.contains(ShipControls.SPECIAL1) && wingTimer == 0)
 			{
-				boolean movingUp = getWingDirection();
+				boolean opening = areWingsOpening();
 
-				setWings(!movingUp, (byte)20);
+				setWings(!opening, (byte)20);
 			}
 		}
 
-		clientWingState = dataTracker.get(WINGS);
+		// tick cockpit
+		byte cockpitTimer = getCockpitTimer();
+
+		if (cockpitTimer != 0)
+		{
+			boolean movingUp = isCockpitOpening();
+
+			cockpitTimer--;
+
+			setCockpit(movingUp, cockpitTimer);
+		}
+
+		if (pilot instanceof PlayerEntity)
+		{
+			if (controls.contains(ShipControls.SPECIAL2) && cockpitTimer == 0)
+			{
+				boolean opening = isCockpitOpening();
+
+				setCockpit(!opening, (byte)20);
+			}
+		}
+
+		clientWingBits = dataTracker.get(WING_BITS);
+		clientCockpitBits = dataTracker.get(COCKPIT_BITS);
 	}
 
 	@Override
@@ -167,6 +171,7 @@ public class T65BXwing extends ShipEntity
 		super.readCustomDataFromNbt(tag);
 
 		setWings(tag.getBoolean("wingDirection"), tag.getByte("wingTimer"));
+		setCockpit(tag.getBoolean("cockpitDirection"), tag.getByte("cockpitTimer"));
 		setCannonState(tag.getByte("cannonState"));
 	}
 
@@ -175,53 +180,85 @@ public class T65BXwing extends ShipEntity
 	{
 		super.writeCustomDataToNbt(tag);
 
-		tag.putBoolean("wingDirection", getWingDirection());
+		tag.putBoolean("wingDirection", areWingsOpening());
 		tag.putByte("wingTimer", getWingTimer());
+
+		tag.putBoolean("cockpitDirection", isCockpitOpening());
+		tag.putByte("cockpitTimer", getCockpitTimer());
 
 		tag.putByte("cannonState", getCannonState());
 	}
 
 	public byte getCannonState()
 	{
-		return (byte)(getDataTracker().get(CANNONS) & CANNON_STATE_MASK);
+		return (byte)(getDataTracker().get(CANNON_BITS) & CANNON_STATE_MASK);
 	}
 
 	public void setCannonState(byte cannonState)
 	{
-		byte cannons = getDataTracker().get(CANNONS);
+		byte cannons = getDataTracker().get(CANNON_BITS);
 
 		cannons &= ~CANNON_STATE_MASK;
 		cannons |= cannonState & CANNON_STATE_MASK;
 
-		getDataTracker().set(CANNONS, cannons);
+		getDataTracker().set(CANNON_BITS, cannons);
 	}
 
 	public byte getWingTimer()
 	{
-		return (byte)(getDataTracker().get(WINGS) & WING_TIMER_MASK);
+		return (byte)(getDataTracker().get(WING_BITS) & WING_TIMER_MASK);
 	}
 
-	public boolean getWingDirection()
+	public boolean areWingsOpening()
 	{
-		return (getDataTracker().get(WINGS) & WING_DIRECTION_MASK) != 0;
+		return (getDataTracker().get(WING_BITS) & WING_DIRECTION_MASK) != 0;
 	}
 
 	@Environment(EnvType.CLIENT)
 	public byte getWingTimerClient()
 	{
-		return (byte)(clientWingState & WING_TIMER_MASK);
+		return (byte)(clientWingBits & WING_TIMER_MASK);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public boolean getWingDirectionClient()
+	public boolean areWingsOpeningClient()
 	{
-		return (clientWingState & WING_DIRECTION_MASK) != 0;
+		return (clientWingBits & WING_DIRECTION_MASK) != 0;
 	}
 
 	public void setWings(boolean direction, byte timer)
 	{
 		if (direction)
 			timer |= WING_DIRECTION_MASK;
-		getDataTracker().set(WINGS, timer);
+		getDataTracker().set(WING_BITS, timer);
+	}
+
+	public byte getCockpitTimer()
+	{
+		return (byte)(getDataTracker().get(COCKPIT_BITS) & COCKPIT_TIMER_MASK);
+	}
+
+	public boolean isCockpitOpening()
+	{
+		return (getDataTracker().get(COCKPIT_BITS) & COCKPIT_DIRECTION_MASK) != 0;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public byte getCockpitTimerClient()
+	{
+		return (byte)(clientCockpitBits & COCKPIT_TIMER_MASK);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public boolean isCockpitOpeningClient()
+	{
+		return (clientCockpitBits & COCKPIT_DIRECTION_MASK) != 0;
+	}
+
+	public void setCockpit(boolean direction, byte timer)
+	{
+		if (direction)
+			timer |= COCKPIT_DIRECTION_MASK;
+		getDataTracker().set(COCKPIT_BITS, timer);
 	}
 }
