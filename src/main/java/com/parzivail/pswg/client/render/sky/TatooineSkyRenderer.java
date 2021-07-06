@@ -79,11 +79,15 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-90.0F));
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(client.world.getSkyAngle(tickDelta) * 360.0F));
 
+		var fractionalDay = client.world.getLevelProperties().getTimeOfDay() / 24000f;
+		var fractionalWeek = fractionalDay / 7;
+
 		matrices.push();
-		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(5));
-		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(5));
+		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(5 * MathHelper.sin(fractionalWeek)));
+		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(8 * MathHelper.cos(fractionalWeek)));
 		Matrix4f matrix4f3 = matrices.peek().getModel();
-		t = 23;
+
+		t = 23 + 10 * MathHelper.sin(fractionalWeek);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, SUN);
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
@@ -95,10 +99,10 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		BufferRenderer.draw(bufferBuilder);
 		matrices.pop();
 
-		t = 30;
+		t = 30 + 10 * MathHelper.sin((float)(fractionalWeek + Math.PI));
 		matrices.push();
-		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-5));
-		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-5));
+		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(5 * MathHelper.sin((float)(fractionalWeek + Math.PI))));
+		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(8 * MathHelper.cos((float)(fractionalWeek + Math.PI))));
 		Matrix4f offsetMat = matrices.peek().getModel();
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, SUN);
@@ -136,6 +140,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-7));
 		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(8));
+		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(fractionalDay * 0.1f * 360.0F));
 		matrix4f3 = matrices.peek().getModel();
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 		bufferBuilder.vertex(matrix4f3, -t, -100.0F, t).texture(q, r).next();
@@ -146,12 +151,11 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		BufferRenderer.draw(bufferBuilder);
 		matrices.pop();
 
-		// TODO: have these moons rotate independently
-
 		t = 8;
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-9));
 		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(13));
+		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(fractionalDay * 0.2f * 360.0F));
 		matrix4f3 = matrices.peek().getModel();
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 		bufferBuilder.vertex(matrix4f3, -t, -100.0F, t).texture(q, r).next();
