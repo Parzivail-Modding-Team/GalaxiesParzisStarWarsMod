@@ -94,17 +94,10 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 
 	private Quaternion getRotation(T65BXwing entity, RigT65B.Part part)
 	{
-		short rawWingTimer = entity.getWingTimer();
+		var wingAnim = entity.getWingAnim();
+		var cockpitAnim = entity.getCockpitAnim();
 
-		boolean wingsOpening = entity.areWingsOpening();
-		float wingTimer = Math.abs(rawWingTimer);
-
-		short rawCockpitTimer = entity.getCockpitTimer();
-
-		boolean cockpitOpening = entity.isCockpitOpening();
-		float cockpitTimer = Math.abs(rawCockpitTimer);
-
-		return getRotation(part, wingsOpening, wingTimer, cockpitOpening, cockpitTimer);
+		return getRotation(part, wingAnim.isPositiveDirection(), wingAnim.getTimer(), cockpitAnim.isPositiveDirection(), cockpitAnim.getTimer());
 	}
 
 	@Override
@@ -131,23 +124,19 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 	@Environment(EnvType.CLIENT)
 	public void transform(MatrixStack stack, T65BXwing target, RigT65B.Part part, float tickDelta)
 	{
-		short rawWingTimer = target.getWingTimerClient();
-
-		boolean wingsOpening = target.areWingsOpeningClient();
-		float wingTimer = Math.abs(rawWingTimer);
+		var wingAnim = target.getWingAnim();
+		var wingTimer = wingAnim.getTimer();
 
 		if (wingTimer > 0)
 			wingTimer -= tickDelta;
 
-		short rawCockpitTimer = target.getCockpitTimerClient();
-
-		boolean cockpitOpening = target.isCockpitOpeningClient();
-		float cockpitTimer = Math.abs(rawCockpitTimer);
+		var cockpitAnim = target.getCockpitAnim();
+		var cockpitTimer = cockpitAnim.getTimer();
 
 		if (cockpitTimer > 0)
 			cockpitTimer -= tickDelta;
 
-		stack.multiply(getRotation(part, wingsOpening, wingTimer, cockpitOpening, cockpitTimer));
+		stack.multiply(getRotation(part, wingAnim.isPositiveDirection(), wingTimer, cockpitAnim.isPositiveDirection(), cockpitTimer));
 	}
 
 	@Override

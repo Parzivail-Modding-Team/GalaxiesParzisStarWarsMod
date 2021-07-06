@@ -3,9 +3,11 @@ package com.parzivail.pswg.entity.ship;
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.pswg.util.QuatUtil;
+import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.math.MathUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,13 +31,8 @@ import java.util.EnumSet;
 
 public class T65BXwing extends ShipEntity
 {
-	private static final TrackedData<Byte> WING_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
-	private static final int WING_DIRECTION_MASK = 0b10000000;
-	private static final int WING_TIMER_MASK = 0b01111111;
-
-	private static final TrackedData<Byte> COCKPIT_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
-	private static final int COCKPIT_DIRECTION_MASK = 0b10000000;
-	private static final int COCKPIT_TIMER_MASK = 0b01111111;
+	private static final TrackedData<TrackedAnimationValue> WING_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.ANIM);
+	private static final TrackedData<TrackedAnimationValue> COCKPIT_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.ANIM);
 
 	private static final TrackedData<Byte> CANNON_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final int CANNON_STATE_MASK = 0b00000011;
@@ -43,10 +40,10 @@ public class T65BXwing extends ShipEntity
 	private static final RigT65B.Socket[] CANNON_ORDER = { RigT65B.Socket.CannonTopLeft, RigT65B.Socket.CannonBottomLeft, RigT65B.Socket.CannonTopRight, RigT65B.Socket.CannonBottomRight };
 
 	@Environment(EnvType.CLIENT)
-	public short clientWingBits;
+	public TrackedAnimationValue clientWingAnim;
 
 	@Environment(EnvType.CLIENT)
-	public short clientCockpitBits;
+	public TrackedAnimationValue clientCockpitAnim;
 
 	public T65BXwing(EntityType<?> type, World world)
 	{
@@ -64,9 +61,29 @@ public class T65BXwing extends ShipEntity
 	protected void initDataTracker()
 	{
 		super.initDataTracker();
-		getDataTracker().startTracking(WING_BITS, (byte)0);
-		getDataTracker().startTracking(COCKPIT_BITS, (byte)0);
+		getDataTracker().startTracking(WING_ANIM, new TrackedAnimationValue());
+		getDataTracker().startTracking(COCKPIT_ANIM, new TrackedAnimationValue());
 		getDataTracker().startTracking(CANNON_BITS, (byte)0);
+	}
+
+	public TrackedAnimationValue getWingAnim()
+	{
+		return dataTracker.get(WING_ANIM);
+	}
+
+	public void setWingAnim(TrackedAnimationValue value)
+	{
+		dataTracker.set(WING_ANIM, value);
+	}
+
+	public TrackedAnimationValue getCockpitAnim()
+	{
+		return dataTracker.get(COCKPIT_ANIM);
+	}
+
+	public void setCockpitAnim(TrackedAnimationValue value)
+	{
+		dataTracker.set(COCKPIT_ANIM, value);
 	}
 
 	@Override
@@ -109,54 +126,12 @@ public class T65BXwing extends ShipEntity
 		super.tick();
 
 		EnumSet<ShipControls> controls = getControls();
-		Entity pilot = getPrimaryPassenger();
 
-		// tick wings
-		byte wingTimer = getWingTimer();
+		tickControlledAnim(WING_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL1));
+		tickControlledAnim(COCKPIT_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL2));
 
-		if (wingTimer != 0)
-		{
-			boolean movingUp = areWingsOpening();
-
-			wingTimer--;
-
-			setWings(movingUp, wingTimer);
-		}
-
-		if (pilot instanceof PlayerEntity)
-		{
-			if (controls.contains(ShipControls.SPECIAL1) && wingTimer == 0)
-			{
-				boolean opening = areWingsOpening();
-
-				setWings(!opening, (byte)20);
-			}
-		}
-
-		// tick cockpit
-		byte cockpitTimer = getCockpitTimer();
-
-		if (cockpitTimer != 0)
-		{
-			boolean movingUp = isCockpitOpening();
-
-			cockpitTimer--;
-
-			setCockpit(movingUp, cockpitTimer);
-		}
-
-		if (pilot instanceof PlayerEntity)
-		{
-			if (controls.contains(ShipControls.SPECIAL2) && cockpitTimer == 0)
-			{
-				boolean opening = isCockpitOpening();
-
-				setCockpit(!opening, (byte)20);
-			}
-		}
-
-		clientWingBits = dataTracker.get(WING_BITS);
-		clientCockpitBits = dataTracker.get(COCKPIT_BITS);
+		clientCockpitAnim = getCockpitAnim();
+		clientWingAnim = getWingAnim();
 	}
 
 	@Override
@@ -170,8 +145,9 @@ public class T65BXwing extends ShipEntity
 	{
 		super.readCustomDataFromNbt(tag);
 
-		setWings(tag.getBoolean("wingDirection"), tag.getByte("wingTimer"));
-		setCockpit(tag.getBoolean("cockpitDirection"), tag.getByte("cockpitTimer"));
+		getWingAnim().write(tag, "wingAnim");
+		getCockpitAnim().write(tag, "cockpitAnim");
+
 		setCannonState(tag.getByte("cannonState"));
 	}
 
@@ -180,11 +156,8 @@ public class T65BXwing extends ShipEntity
 	{
 		super.writeCustomDataToNbt(tag);
 
-		tag.putBoolean("wingDirection", areWingsOpening());
-		tag.putByte("wingTimer", getWingTimer());
-
-		tag.putBoolean("cockpitDirection", isCockpitOpening());
-		tag.putByte("cockpitTimer", getCockpitTimer());
+		setWingAnim(TrackedAnimationValue.read(tag, "wingAnim"));
+		setCockpitAnim(TrackedAnimationValue.read(tag, "cockpitAnim"));
 
 		tag.putByte("cannonState", getCannonState());
 	}
@@ -202,63 +175,5 @@ public class T65BXwing extends ShipEntity
 		cannons |= cannonState & CANNON_STATE_MASK;
 
 		getDataTracker().set(CANNON_BITS, cannons);
-	}
-
-	public byte getWingTimer()
-	{
-		return (byte)(getDataTracker().get(WING_BITS) & WING_TIMER_MASK);
-	}
-
-	public boolean areWingsOpening()
-	{
-		return (getDataTracker().get(WING_BITS) & WING_DIRECTION_MASK) != 0;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public byte getWingTimerClient()
-	{
-		return (byte)(clientWingBits & WING_TIMER_MASK);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public boolean areWingsOpeningClient()
-	{
-		return (clientWingBits & WING_DIRECTION_MASK) != 0;
-	}
-
-	public void setWings(boolean direction, byte timer)
-	{
-		if (direction)
-			timer |= WING_DIRECTION_MASK;
-		getDataTracker().set(WING_BITS, timer);
-	}
-
-	public byte getCockpitTimer()
-	{
-		return (byte)(getDataTracker().get(COCKPIT_BITS) & COCKPIT_TIMER_MASK);
-	}
-
-	public boolean isCockpitOpening()
-	{
-		return (getDataTracker().get(COCKPIT_BITS) & COCKPIT_DIRECTION_MASK) != 0;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public byte getCockpitTimerClient()
-	{
-		return (byte)(clientCockpitBits & COCKPIT_TIMER_MASK);
-	}
-
-	@Environment(EnvType.CLIENT)
-	public boolean isCockpitOpeningClient()
-	{
-		return (clientCockpitBits & COCKPIT_DIRECTION_MASK) != 0;
-	}
-
-	public void setCockpit(boolean direction, byte timer)
-	{
-		if (direction)
-			timer |= COCKPIT_DIRECTION_MASK;
-		getDataTracker().set(COCKPIT_BITS, timer);
 	}
 }

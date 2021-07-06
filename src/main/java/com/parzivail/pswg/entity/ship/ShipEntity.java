@@ -8,6 +8,7 @@ import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.entity.IFlyingVehicle;
+import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.math.MathUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -296,6 +297,20 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	//
 	//		return MathUtil.lerp(start, end, t);
 	//	}
+
+	protected void tickControlledAnim(TrackedData<TrackedAnimationValue> data, byte animLength, boolean keyInput)
+	{
+		var anim = dataTracker.get(data);
+		anim.tick();
+
+		if (getPrimaryPassenger() instanceof PlayerEntity)
+		{
+			if (keyInput && anim.isStopped())
+				anim.startToggled(animLength);
+		}
+
+		dataTracker.set(data, anim);
+	}
 
 	@Override
 	public abstract Packet<?> createSpawnPacket();
