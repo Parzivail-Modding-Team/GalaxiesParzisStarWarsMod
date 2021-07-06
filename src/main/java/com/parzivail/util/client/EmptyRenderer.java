@@ -42,7 +42,7 @@ public class EmptyRenderer extends EntityRenderer<Entity>
 
 		var g = minecraft.options.getTextBackgroundOpacity(0.25F);
 		var k = (int)(g * 255.0F) << 24;
-		var textRenderer = this.getFontRenderer();
+		var textRenderer = this.getTextRenderer();
 		var h = (float)(-textRenderer.getWidth(n) / 2);
 
 		textRenderer.draw(n, h, 0, 0x20ffffff, false, textMatrix, vertexConsumers, true, k, light);

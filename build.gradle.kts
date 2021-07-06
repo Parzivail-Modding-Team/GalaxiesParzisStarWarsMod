@@ -13,9 +13,9 @@ repositories {
 		name = "Ladysnake Mods"
 	}
 
-	maven(url = "https://maven.terraformersmc.com/releases") {
-		name = "TerraformersMC"
-	}
+//	maven(url = "https://maven.terraformersmc.com/releases") {
+//		name = "TerraformersMC"
+//	}
 
 	maven(url = "https://maven.shedaniel.me") {
 		name = "Shedaniel Maven"
@@ -78,6 +78,8 @@ group = maven_group
 
 dependencies {
 	implementation("com.google.code.findbugs:jsr305:3.0.2")
+	// Used by dependencies
+	implementation("com.demonwav.mcdev:annotations:1.0")
 
 	//to change the versions see the gradle.properties file
 	minecraft("com.mojang:minecraft:${minecraft_version}")
