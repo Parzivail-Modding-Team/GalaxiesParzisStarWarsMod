@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.pr3;
 
+import com.parzivail.util.math.Transform;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
@@ -16,7 +17,7 @@ public class PR3Model<T, PT extends Enum<PT>>
 	@FunctionalInterface
 	public interface TransformerFunction<T1, P extends Enum<P>>
 	{
-		void apply(MatrixStack stack, T1 target, P part, float tickDelta);
+		void apply(Transform stack, T1 target, P part, float tickDelta);
 	}
 
 	protected final PR3File container;
@@ -84,7 +85,10 @@ public class PR3Model<T, PT extends Enum<PT>>
 		var modelMat = entry.getModel();
 		modelMat.multiply(o.transformationMatrix);
 
-		transform(matrices, target, o.name, tickDelta);
+		Transform t = new Transform();
+		transform(t, target, o.name, tickDelta);
+
+		matrices.method_34425(t.value().getModel());
 
 		for (var face : o.faces)
 			emitFace(consumer, matrices.peek(), o, face, light);
@@ -92,7 +96,7 @@ public class PR3Model<T, PT extends Enum<PT>>
 		matrices.pop();
 	}
 
-	public void transform(MatrixStack stack, T target, String objectName, float tickDelta)
+	public void transform(Transform stack, T target, String objectName, float tickDelta)
 	{
 		transformer.apply(stack, target, PT.valueOf(partClass, objectName), tickDelta);
 	}

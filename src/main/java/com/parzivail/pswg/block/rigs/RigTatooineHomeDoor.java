@@ -8,8 +8,8 @@ import com.parzivail.pswg.rig.pr3r.PR3RFile;
 import com.parzivail.util.block.rotating.RotatingBlock;
 import com.parzivail.util.math.ClientMathUtil;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.Transform;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
@@ -46,19 +46,19 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 	}
 
 	@Override
-	public void transform(MatrixStack stack, TatooineHomeDoorBlockEntity target, Part part)
+	public void transform(Transform stack, TatooineHomeDoorBlockEntity target, Part part)
 	{
 		transform(stack, target, part, 0);
 	}
 
 	@Override
-	public Vec3d getWorldPosition(MatrixStack stack, TatooineHomeDoorBlockEntity target, Part part, Vec3d localPosition)
+	public Vec3d getWorldPosition(Transform stack, TatooineHomeDoorBlockEntity target, Part part, Vec3d localPosition)
 	{
 		return getWorldPosition(stack, target, part, localPosition, 0);
 	}
 
 	@Override
-	public void transform(MatrixStack stack, TatooineHomeDoorBlockEntity target, Part part, float tickDelta)
+	public void transform(Transform stack, TatooineHomeDoorBlockEntity target, Part part, float tickDelta)
 	{
 		stack.translate(0.5, 0, 0.5);
 
@@ -84,10 +84,10 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 	}
 
 	@Override
-	public Vec3d getWorldPosition(MatrixStack stack, TatooineHomeDoorBlockEntity target, Part part, Vec3d localPosition, float tickDelta)
+	public Vec3d getWorldPosition(Transform stack, TatooineHomeDoorBlockEntity target, Part part, Vec3d localPosition, float tickDelta)
 	{
-		stack.push();
-		MatrixStack.Entry entry = stack.peek();
+		stack.save();
+		Transform.State entry = stack.value();
 		Matrix4f parent = entry.getModel();
 		Matrix4f rig = RIG.objects.get(part.getPartName());
 		parent.multiply(rig);
@@ -95,7 +95,7 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 		transform(stack, target, part, tickDelta);
 
 		Vec3d vec = Matrix4fAccessUtil.transform(localPosition, parent);
-		stack.pop();
+		stack.restore();
 
 		return vec;
 	}

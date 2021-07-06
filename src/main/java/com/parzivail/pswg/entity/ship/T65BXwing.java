@@ -9,9 +9,9 @@ import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.math.MathUtil;
+import com.parzivail.util.math.Transform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
@@ -96,7 +96,7 @@ public class T65BXwing extends ShipEntity
 		PlayerEntity player = (PlayerEntity)passenger;
 
 		Vec3d pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(4f), getRotation());
-		MatrixStack stack = new MatrixStack();
+		Transform stack = new Transform();
 
 		byte cannonState = getCannonState();
 

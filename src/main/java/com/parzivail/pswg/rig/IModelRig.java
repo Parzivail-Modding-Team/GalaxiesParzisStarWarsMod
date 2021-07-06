@@ -1,15 +1,15 @@
 package com.parzivail.pswg.rig;
 
-import net.minecraft.client.util.math.MatrixStack;
+import com.parzivail.util.math.Transform;
 import net.minecraft.util.math.Vec3d;
 
 public interface IModelRig<T, P extends Enum<P>>
 {
-	void transform(MatrixStack stack, T target, P part);
+	void transform(Transform stack, T target, P part);
 
-	Vec3d getWorldPosition(MatrixStack stack, T target, P part, Vec3d localPosition);
+	Vec3d getWorldPosition(Transform stack, T target, P part, Vec3d localPosition);
 
-	void transform(MatrixStack stack, T target, P part, float tickDelta);
+	void transform(Transform stack, T target, P part, float tickDelta);
 
-	Vec3d getWorldPosition(MatrixStack stack, T target, P part, Vec3d localPosition, float tickDelta);
+	Vec3d getWorldPosition(Transform stack, T target, P part, Vec3d localPosition, float tickDelta);
 }

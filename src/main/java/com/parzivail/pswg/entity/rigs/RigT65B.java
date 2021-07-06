@@ -7,10 +7,9 @@ import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.rig.pr3r.PR3Object;
 import com.parzivail.pswg.rig.pr3r.PR3RFile;
 import com.parzivail.pswg.util.QuatUtil;
+import com.parzivail.util.math.Transform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
@@ -65,7 +64,7 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 			this.localPosition = localPosition;
 		}
 
-		public Vec3d getWorldPosition(MatrixStack stack, T65BXwing entity)
+		public Vec3d getWorldPosition(Transform stack, T65BXwing entity)
 		{
 			return INSTANCE.getWorldPosition(stack, entity, parent, localPosition);
 		}
@@ -80,16 +79,14 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 	}
 
 	@Override
-	public void transform(MatrixStack stack, T65BXwing target, RigT65B.Part part)
+	public void transform(Transform stack, T65BXwing target, RigT65B.Part part)
 	{
-		MatrixStack.Entry entry = stack.peek();
+		Transform.State entry = stack.value();
 		Matrix4f modelMat = entry.getModel();
-		Matrix3f normalMat = entry.getNormal();
 
 		Quaternion objectRotation = getRotation(target, part);
 
 		modelMat.multiply(objectRotation);
-		normalMat.multiply(objectRotation);
 	}
 
 	private Quaternion getRotation(T65BXwing entity, RigT65B.Part part)
@@ -101,13 +98,13 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 	}
 
 	@Override
-	public Vec3d getWorldPosition(MatrixStack stack, T65BXwing target, RigT65B.Part part, Vec3d localPosition)
+	public Vec3d getWorldPosition(Transform stack, T65BXwing target, RigT65B.Part part, Vec3d localPosition)
 	{
-		stack.push();
+		stack.save();
 
 		stack.multiply(target.getRotation());
 
-		MatrixStack.Entry entry = stack.peek();
+		Transform.State entry = stack.value();
 		Matrix4f parent = entry.getModel();
 		Matrix4f rig = RIG.objects.get(part.getPartName());
 		parent.multiply(rig);
@@ -115,14 +112,14 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 		transform(stack, target, part);
 
 		Vec3d vec = Matrix4fAccessUtil.transform(localPosition, parent);
-		stack.pop();
+		stack.restore();
 
 		return vec;
 	}
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public void transform(MatrixStack stack, T65BXwing target, RigT65B.Part part, float tickDelta)
+	public void transform(Transform stack, T65BXwing target, RigT65B.Part part, float tickDelta)
 	{
 		var wingAnim = target.getWingAnim();
 		var wingTimer = wingAnim.getTimer();
@@ -141,10 +138,10 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public Vec3d getWorldPosition(MatrixStack stack, T65BXwing target, RigT65B.Part part, Vec3d localPosition, float tickDelta)
+	public Vec3d getWorldPosition(Transform stack, T65BXwing target, RigT65B.Part part, Vec3d localPosition, float tickDelta)
 	{
-		stack.push();
-		MatrixStack.Entry entry = stack.peek();
+		stack.save();
+		Transform.State entry = stack.value();
 		Matrix4f parent = entry.getModel();
 		Matrix4f rig = RIG.objects.get(part.getPartName());
 		parent.multiply(rig);
@@ -154,7 +151,7 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 		parent.multiply(target.getRotation());
 
 		Vec3d vec = Matrix4fAccessUtil.transform(localPosition, parent);
-		stack.pop();
+		stack.restore();
 
 		return vec;
 	}
