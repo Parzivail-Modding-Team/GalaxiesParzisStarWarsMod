@@ -7,6 +7,7 @@ import com.parzivail.pswg.client.render.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.RenderLayerHelper;
 import com.parzivail.pswg.client.render.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.amphibian.WorrtEntityRenderer;
+import com.parzivail.pswg.client.render.block.TatooineHomeDoorRenderer;
 import com.parzivail.pswg.client.render.debug.KinematicTestEntityRenderer;
 import com.parzivail.pswg.client.render.fish.FaaEntityRenderer;
 import com.parzivail.pswg.client.render.fish.LaaEntityRenderer;
@@ -22,7 +23,6 @@ import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.util.Lumberjack;
-import com.parzivail.util.client.EmptyBlockEntityRenderer;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.client.render.ICustomHudRenderer;
@@ -80,8 +80,8 @@ public class Client implements ClientModInitializer
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 
 		// TODO: reimplement tatooine home door rendering
-//		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
-		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, EmptyBlockEntityRenderer::new);
+		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
+//		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, EmptyBlockEntityRenderer::new);
 
 		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadPM3D(DynamicBakedModel.Discriminator.RENDER_SEED, Resources.id("models/block/barrel/mos_eisley.pm3d"), Resources.id("model/barrel/mos_eisley"), new Identifier("block/stone")));
 

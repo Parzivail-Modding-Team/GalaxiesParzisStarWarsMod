@@ -69,7 +69,7 @@ public class PR3File
 
 			PR3FacePointer[] faces = readLengthCodedFaces(objStream);
 
-			objects[i] = new PR3RenderedObject(name, new Identifier(material), vertices, normals, uvs, faces, transformation);
+			objects[i] = new PR3RenderedObject(name, vertices, normals, uvs, faces, transformation);
 		}
 
 		return new PR3File(objects);
