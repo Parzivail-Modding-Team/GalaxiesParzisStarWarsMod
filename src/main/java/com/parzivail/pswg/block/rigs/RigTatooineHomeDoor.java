@@ -67,9 +67,6 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 		BlockState block = world.getBlockState(pos);
 		stack.multiply(ClientMathUtil.getRotation(block.get(RotatingBlock.FACING)));
 
-		// TODO: model isn't oriented to face +X
-//		stack.multiply(new Quaternion(0, -90, 0, true));
-
 		if (part == Part.Door)
 		{
 			float timer = target.getAnimationTime(tickDelta);

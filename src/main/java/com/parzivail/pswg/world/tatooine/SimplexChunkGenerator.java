@@ -1,11 +1,11 @@
-package com.parzivail.util.world;
+package com.parzivail.pswg.world.tatooine;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.parzivail.util.world.EmptyStructuresConfig;
+import com.parzivail.util.world.biome.CachingBlender;
+import com.parzivail.util.world.biome.LinkedBiomeWeightMap;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.source.BiomeSource;
@@ -14,32 +14,25 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
-public class EmptyChunkGenerator extends ChunkGenerator
+public abstract class SimplexChunkGenerator extends ChunkGenerator
 {
-	public static final Codec<EmptyChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance
-			.group(
-					BiomeSource.CODEC.fieldOf("biome_source").forGetter((generator) -> generator.biomeSource),
-					Codec.BOOL.fieldOf("has_bedrock").forGetter((generator) -> generator.hasBedrock)
-			)
-			.apply(instance, instance.stable(EmptyChunkGenerator::new))
-	);
-
 	protected final boolean hasBedrock;
+	private final CachingBlender blender;
 
-	public EmptyChunkGenerator(BiomeSource biomeSource, boolean hasBedrock)
+	public SimplexChunkGenerator(BiomeSource biomeSource, boolean hasBedrock)
 	{
 		super(biomeSource, new EmptyStructuresConfig());
 		this.hasBedrock = hasBedrock;
+
+		this.blender = new CachingBlender(0.04, 24, 16);
 	}
 
-	@Override
-	protected Codec<? extends ChunkGenerator> getCodec()
-	{
-		return CODEC;
-	}
+	protected abstract BiomeEntry getBiome(double x, double z);
 
 	@Override
 	public ChunkGenerator withSeed(long seed)
@@ -48,26 +41,42 @@ public class EmptyChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public void buildSurface(ChunkRegion region, Chunk chunk)
-	{
-		// "decorate"
-	}
-
-	@Override
 	public CompletableFuture<Chunk> populateNoise(Executor executor, StructureAccessor accessor, Chunk chunk)
 	{
 		if (hasBedrock)
 			return CompletableFuture.supplyAsync(() -> {
-				var lowestSectionIdx = chunk.getSectionIndex(0);
-				var lowestSection = chunk.getSection(lowestSectionIdx);
 
+				var chunkPos = chunk.getPos();
 				var pos = new BlockPos.Mutable();
+
+				Map<Integer, double[]> typeWeights = new HashMap<>();
+
+				LinkedBiomeWeightMap weights = this.blender.getBlendForChunk(0, chunkPos.x * 16, chunkPos.z * 16, (x0, z0) -> {
+					return getBiome((int)x0, (int)z0).height();
+				});
+
+				do
+				{
+					typeWeights.put(weights.getBiome(), weights.getWeights());
+					weights = weights.getNext();
+				}
+				while (weights != null);
 
 				for (var z = 0; z < 16; z++)
 					for (var x = 0; x < 16; x++)
 					{
 						pos.set(x, 0, z);
 						chunk.setBlockState(pos, Blocks.BEDROCK.getDefaultState(), false);
+
+						var height = 0.0;
+
+						for (var pair : typeWeights.entrySet())
+						{
+							height += pair.getKey() * 10 * pair.getValue()[z * 16 + x];
+						}
+
+						pos.set(x, Math.round(height), z);
+						chunk.setBlockState(pos, Blocks.STONE.getDefaultState(), false);
 					}
 
 				return chunk;
