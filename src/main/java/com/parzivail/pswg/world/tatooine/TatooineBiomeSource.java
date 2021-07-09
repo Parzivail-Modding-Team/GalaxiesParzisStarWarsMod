@@ -3,6 +3,7 @@ package com.parzivail.pswg.world.tatooine;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.parzivail.pswg.container.SwgDimensions;
 import com.parzivail.util.world.biome.BackingBiomeSource;
 import com.parzivail.util.world.biome.BiomeEntry;
 import com.parzivail.util.world.biome.SimplexBiomeSampler;
@@ -10,7 +11,6 @@ import net.minecraft.util.dynamic.RegistryLookupCodec;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
 import net.minecraft.world.biome.source.BiomeSource;
 
 import java.util.List;
@@ -18,14 +18,14 @@ import java.util.List;
 public class TatooineBiomeSource extends BiomeSource implements BackingBiomeSource
 {
 	private static final List<BiomeEntry> BIOME_VERTICES = ImmutableList.of(
-			new BiomeEntry(BiomeKeys.DESERT_HILLS, 0.6f, 0.20f), // dunes
-			new BiomeEntry(BiomeKeys.BADLANDS, 0.45f, 0.75f), // canyons
-			new BiomeEntry(BiomeKeys.BADLANDS_PLATEAU, 0.202f, 0.867f), // plateaus
-			new BiomeEntry(BiomeKeys.MUSHROOM_FIELDS, 0.9f, 0.949f), // mushroom mesas
-			new BiomeEntry(BiomeKeys.BASALT_DELTAS, 0.819f, 0.72f), // wastes
-			new BiomeEntry(BiomeKeys.MOUNTAINS, 0.743f, 0.515f), // mountains
-			new BiomeEntry(BiomeKeys.DESERT, 0.15f, 0.325f), // salt flats
-			new BiomeEntry(BiomeKeys.BEACH, 0.067f, 0.057f) // oasis
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_DUNES_KEY, 0.6f, 0.20f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_CANYONS_KEY, 0.45f, 0.75f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_PLATEAU_KEY, 0.202f, 0.867f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_MUSHMESA_KEY, 0.9f, 0.949f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_WASTES_KEY, 0.819f, 0.72f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_MOUNTAINS_KEY, 0.743f, 0.515f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_SALTFLATS_KEY, 0.15f, 0.325f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_OASIS_KEY, 0.067f, 0.057f)
 	);
 
 	public static final Codec<TatooineBiomeSource> CODEC = RecordCodecBuilder.create(instance -> instance
