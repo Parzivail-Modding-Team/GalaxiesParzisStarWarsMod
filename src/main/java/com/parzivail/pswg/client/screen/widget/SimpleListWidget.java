@@ -42,9 +42,9 @@ package com.parzivail.pswg.client.screen.widget;
 //	private Function<T, Text> entryFormatter = entry -> new TranslatableText(entry.toString());
 //	private Function<List<com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<T>>, com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<T>> entrySelector = entries -> entries.get(0);
 //
-//	public SimpleListWidget(MinecraftClient minecraftClient, int x, int y, int width, int height, int itemHeight, Consumer<T> onSelectionChanged)
+//	public SimpleListWidget(MinecraftClient minecraftClient, int x, int y, int width, int key, int itemHeight, Consumer<T> onSelectionChanged)
 //	{
-//		super(minecraftClient, width, height, y, y + height, itemHeight);
+//		super(minecraftClient, width, key, y, y + key, itemHeight);
 //		this.onSelectionChanged = onSelectionChanged;
 //		this.setLeftPos(x);
 //		this.setRenderBackground(false);

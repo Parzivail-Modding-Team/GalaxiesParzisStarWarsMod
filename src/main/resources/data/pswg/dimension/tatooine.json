@@ -3,8 +3,7 @@
 		"type": "pswg:tatooine_generator",
 		"has_bedrock": true,
 		"biome_source": {
-			"type": "minecraft:fixed",
-			"biome": "minecraft:plains"
+			"type": "pswg:tatooine_source"
 		}
 	},
 	"type": "pswg:tatooine_type"

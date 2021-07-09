@@ -1,6 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.world.tatooine.TatooineBiomeSource;
 import com.parzivail.pswg.world.tatooine.TatooineChunkGenerator;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -16,6 +17,7 @@ public class SwgDimensions
 
 		public static void register()
 		{
+			Registry.register(Registry.BIOME_SOURCE, Resources.id("tatooine_source"), TatooineBiomeSource.CODEC);
 			Registry.register(Registry.CHUNK_GENERATOR, Resources.id("tatooine_generator"), TatooineChunkGenerator.CODEC);
 		}
 	}

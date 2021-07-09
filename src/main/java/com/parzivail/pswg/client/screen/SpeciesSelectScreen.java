@@ -44,12 +44,12 @@ package com.parzivail.pswg.client.screen;
 //		if (playerSpecies != null)
 //			this.gender = playerSpecies.getGender();
 //
-//		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, height / 2 - 91, 80, 182, 15, entry -> {
+//		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, key / 2 - 91, 80, 182, 15, entry -> {
 //			updateAbility();
 //		});
 //		speciesVariableListWidget.setEntryFormatter(speciesVariable -> new TranslatableText(speciesVariable.getTranslationKey()));
 //
-//		speciesListWidget = new SimpleListWidget<>(client, width / 2 - 128 - 80, height / 2 - 91, 80, 182, 15, entry -> {
+//		speciesListWidget = new SimpleListWidget<>(client, width / 2 - 128 - 80, key / 2 - 91, 80, 182, 15, entry -> {
 //			if (entry != null)
 //			{
 //				speciesVariableListWidget.setEntries(entry.getVariables());
@@ -68,19 +68,19 @@ package com.parzivail.pswg.client.screen;
 //		this.children.add(speciesVariableListWidget);
 //		this.children.add(speciesListWidget);
 //
-//		this.addButton(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, new LiteralText("<"), (button) -> {
+//		this.addButton(new ButtonWidget(this.width / 2 - 120, this.key / 2 - 10, 20, 20, new LiteralText("<"), (button) -> {
 //			moveToNextVariableOption(true);
 //		}));
 //
-//		this.addButton(new ButtonWidget(this.width / 2 + 100, this.height / 2 - 10, 20, 20, new LiteralText(">"), (button) -> {
+//		this.addButton(new ButtonWidget(this.width / 2 + 100, this.key / 2 - 10, 20, 20, new LiteralText(">"), (button) -> {
 //			moveToNextVariableOption(false);
 //		}));
 //
-//		this.addButton(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> {
+//		this.addButton(new ButtonWidget(this.width / 2 - 100 - 75, this.key - 26, 95, 20, ScreenTexts.BACK, (button) -> {
 //			this.client.openScreen(this.parent);
 //		}));
 //
-//		this.addButton(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText("gui.pswg.apply"), (button) -> {
+//		this.addButton(new ButtonWidget(this.width / 2 - 60, this.key - 26, 120, 20, new TranslatableText("gui.pswg.apply"), (button) -> {
 //			if (speciesListWidget.getSelected() == null)
 //				return;
 //
@@ -108,7 +108,7 @@ package com.parzivail.pswg.client.screen;
 //			ClientPlayNetworking.send(SwgPackets.C2S.PacketSetOwnSpecies, passedData);
 //		}));
 //
-//		this.addButton(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("gui.pswg.use_female_model"), this.gender == SpeciesGender.FEMALE, (checked) -> {
+//		this.addButton(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.key - 26, 20, 20, new TranslatableText("gui.pswg.use_female_model"), this.gender == SpeciesGender.FEMALE, (checked) -> {
 //			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
 //			if (this.playerSpecies != null)
 //				this.playerSpecies.setGender(gender);
@@ -177,7 +177,7 @@ package com.parzivail.pswg.client.screen;
 //
 //	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
 //	{
-//		if (Math.abs(mouseX - width / 2) < 128 && Math.abs(mouseY - height / 2) < 91)
+//		if (Math.abs(mouseX - width / 2) < 128 && Math.abs(mouseY - key / 2) < 91)
 //		{
 //			moveToNextVariableOption(amount > 0);
 //			return true;
@@ -194,11 +194,11 @@ package com.parzivail.pswg.client.screen;
 //		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
 //
 //		int x = width / 2;
-//		int y = height / 2;
+//		int y = key / 2;
 //		int modelSize = 60;
 //
 //		this.client.getTextureManager().bindTexture(CAROUSEL);
-//		drawTexture(matrices, width / 2 - 128, height / 2 - 91, 0, 0, 256, 182);
+//		drawTexture(matrices, width / 2 - 128, key / 2 - 91, 0, 0, 256, 182);
 //
 //		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelected();
 //		SimpleListWidget.Entry<SpeciesVariable> selectedVariableEntry = speciesVariableListWidget.getSelected();
@@ -217,7 +217,7 @@ package com.parzivail.pswg.client.screen;
 //
 //			int selectedIndex = ArrayUtils.indexOf(values, selectedValue);
 //
-//			drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
+//			drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, key / 2 + 70, 16777215);
 //
 //			matrices.push();
 //
@@ -316,8 +316,8 @@ package com.parzivail.pswg.client.screen;
 //		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
 //		float f = 32.0F;
 //		bufferBuilder.begin(7, VertexFormats.POSITION_TEXTURE_COLOR);
-//		bufferBuilder.vertex(0.0D, this.height, 0.0D).texture(0.0F, (float)this.height / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();
-//		bufferBuilder.vertex(this.width, this.height, 0.0D).texture((float)this.width / 32.0F, (float)this.height / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();
+//		bufferBuilder.vertex(0.0D, this.key, 0.0D).texture(0.0F, (float)this.key / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();
+//		bufferBuilder.vertex(this.width, this.key, 0.0D).texture((float)this.width / 32.0F, (float)this.key / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();
 //		bufferBuilder.vertex(this.width, 0.0D, 0.0D).texture((float)this.width / 32.0F, (float)vOffset).color(64, 64, 64, 255).next();
 //		bufferBuilder.vertex(0.0D, 0.0D, 0.0D).texture(0.0F, (float)vOffset).color(64, 64, 64, 255).next();
 //		tessellator.draw();

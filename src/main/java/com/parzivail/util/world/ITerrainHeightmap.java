@@ -6,12 +6,12 @@ package com.parzivail.util.world;
 public interface ITerrainHeightmap
 {
 	/**
-	 * Gets the height of the top basic (natural worldgen, not player creation) at (x, z)
+	 * Gets the key of the top basic (natural worldgen, not player creation) at (x, z)
 	 *
 	 * @param x The x position
 	 * @param z The y position
 	 *
-	 * @return The height of the basic at (x, z)
+	 * @return The key of the basic at (x, z)
 	 */
 	double getHeightAt(double x, double z);
 

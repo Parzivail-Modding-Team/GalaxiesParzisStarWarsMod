@@ -1,7 +1,10 @@
 package com.parzivail.util.world.biome;
 
+import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.biome.Biome;
+
 @FunctionalInterface
 public interface BiomeEvaluationCallback
 {
-	int getBiomeAt(double x, double z);
+	RegistryKey<Biome> getBiomeAt(double x, double z);
 }
