@@ -74,7 +74,7 @@ public class TatooineBiomeSource extends BiomeSource implements BackingBiomeSour
 	}
 
 	@Override
-	public RegistryKey<Biome> getBacking(int x, int z)
+	public RegistryKey<Biome> getBiome(int x, int z)
 	{
 		return this.biomeRegistry.getKey(this.backingSampler.sample(this.biomeRegistry, x, z)).get();
 	}

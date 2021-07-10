@@ -1,7 +1,9 @@
 package com.parzivail.util.world;
 
+import com.parzivail.util.world.biome.BiomeSurfaceHint;
+
 @FunctionalInterface
 public interface NoiseGenerator
 {
-	double generate(double x, double z);
+	BiomeSurfaceHint generate(double x, double z);
 }

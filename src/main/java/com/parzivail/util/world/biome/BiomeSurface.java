@@ -1,9 +1,9 @@
 package com.parzivail.util.world.biome;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 
-public interface BackingBiomeSource
+public record BiomeSurface(RegistryKey<Biome> biome, int height, BlockState surface)
 {
-	RegistryKey<Biome> getBiome(int x, int z);
 }

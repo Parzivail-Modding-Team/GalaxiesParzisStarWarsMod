@@ -20,7 +20,7 @@ public class InfiniteWorleyNoise
 
 	private float R(double n)
 	{
-		return com.parzivail.util.math.MathUtil.fract(Math.cos(com.parzivail.util.math.MathUtil.seed(n * 89.42, _seed)) * 343.42);
+		return MathUtil.fract(Math.cos(MathUtil.seed(n * 89.42, _seed)) * 343.42);
 	}
 
 	private Vec2f R(Vec2f n)
@@ -42,8 +42,8 @@ public class InfiniteWorleyNoise
 			for (float y = -1; y <= 1; y++)
 			{
 				Vec2f q = new Vec2f(x, y);
-				Vec2f p = com.parzivail.util.math.MathUtil.add(com.parzivail.util.math.MathUtil.floor(n), q);
-				double d = MathUtil.length(com.parzivail.util.math.MathUtil.sub(com.parzivail.util.math.MathUtil.add(R(p), q), com.parzivail.util.math.MathUtil.fract(n)));
+				Vec2f p = MathUtil.add(MathUtil.floor(n), q);
+				double d = MathUtil.length(MathUtil.sub(MathUtil.add(R(p), q), MathUtil.fract(n)));
 
 				if (dis <= d)
 					continue;
@@ -65,8 +65,8 @@ public class InfiniteWorleyNoise
 				for (float z = -1; z <= 1; z++)
 				{
 					Vec3d q = new Vec3d(x, y, z);
-					Vec3d p = com.parzivail.util.math.MathUtil.floor(n).add(q);
-					double d = R(p).add(q).subtract(com.parzivail.util.math.MathUtil.fract(n)).length();
+					Vec3d p = MathUtil.floor(n).add(q);
+					double d = R(p).add(q).subtract(MathUtil.fract(n)).length();
 
 					if (dis <= d)
 						continue;

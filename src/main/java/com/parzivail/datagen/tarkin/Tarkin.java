@@ -1052,8 +1052,13 @@ public class Tarkin
 
 		BlockGenerator.crop(SwgBlocks.Plant.Chasuka, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2")).build(assets);
 
+		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.SaltyDesert).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon).build(assets);
+
+		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked).build(assets);
+
+		BlockGenerator.staticColumn(SwgBlocks.Stone.DesertSediment, Resources.id("block/desert_sediment_top"), Resources.id("block/desert_sediment")).build(assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Massassi).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.MassassiSlab, Resources.id("block/massassi_stone")).build(assets);

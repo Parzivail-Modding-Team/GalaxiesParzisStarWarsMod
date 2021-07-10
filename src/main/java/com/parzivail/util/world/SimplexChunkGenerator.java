@@ -1,6 +1,9 @@
 package com.parzivail.util.world;
 
+import com.parzivail.util.math.RandomCollection;
 import com.parzivail.util.world.biome.BackingBiomeSource;
+import com.parzivail.util.world.biome.BiomeSurface;
+import com.parzivail.util.world.biome.BiomeSurfaceHint;
 import com.parzivail.util.world.biome.CachingBlender;
 import it.unimi.dsi.fastutil.longs.Long2ObjectLinkedOpenHashMap;
 import net.minecraft.block.BlockState;
@@ -13,12 +16,14 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
@@ -27,8 +32,9 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 	protected final boolean hasBedrock;
 	private final CachingBlender blender;
 	private final BackingBiomeSource backing;
+	private final ChunkRandom chunkRandom;
 
-	private final ThreadLocal<Long2ObjectLinkedOpenHashMap<int[]>> noiseCache = new ThreadLocal<>();
+	private final ThreadLocal<Long2ObjectLinkedOpenHashMap<BiomeSurface[]>> noiseCache = new ThreadLocal<>();
 
 	public SimplexChunkGenerator(BiomeSource biomeSource, boolean hasBedrock)
 	{
@@ -41,8 +47,8 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 		}
 
 		this.backing = (BackingBiomeSource)this.biomeSource;
-
 		this.blender = new CachingBlender(0.04, 24, 16);
+		this.chunkRandom = new ChunkRandom();
 	}
 
 	@Override
@@ -51,17 +57,17 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 		return this;
 	}
 
-	private int[] getHeightsInChunk(ChunkPos pos)
+	private BiomeSurface[] getHeightsInChunk(ChunkPos pos)
 	{
 		if (noiseCache.get() == null)
 			noiseCache.set(new Long2ObjectLinkedOpenHashMap<>());
 
 		//return cached values
-		int[] res = noiseCache.get().get(pos.toLong());
+		BiomeSurface[] res = noiseCache.get().get(pos.toLong());
 		if (res != null)
 			return res;
 
-		int[] vals = new int[256];
+		BiomeSurface[] vals = new BiomeSurface[256];
 
 		generateNoise(vals, pos, 0, 16);
 
@@ -76,15 +82,33 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 		return vals;
 	}
 
-	public void generateNoise(int[] noise, ChunkPos pos, int start, int size)
+	public void generateNoise(BiomeSurface[] noise, ChunkPos pos, int start, int size)
 	{
 		for (int x = start; x < start + size; x++)
 		{
 			for (int z = 0; z < 16; z++)
 			{
-				noise[(x * 16) + z] = getHeight((pos.x * 16) + x, (pos.z * 16) + z, Heightmap.Type.WORLD_SURFACE_WG, null);
+				noise[(x * 16) + z] = getSurface((pos.x * 16) + x, (pos.z * 16) + z, Heightmap.Type.WORLD_SURFACE_WG, null);
 			}
 		}
+	}
+
+	/**
+	 * Gets the "strata" block in the current column
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @return Returns the strata block, or an empty Optional if it should defer to the surface hinted block
+	 */
+	protected Optional<BlockState> getStrataBlock(int x, int y, int z, BiomeSurface surface)
+	{
+		if (y == 0)
+			return Optional.of(Blocks.BEDROCK.getDefaultState());
+
+		if (y > 0.8 * surface.height())
+			return Optional.empty();
+
+		return Optional.of(Blocks.STONE.getDefaultState());
 	}
 
 	@Override
@@ -94,21 +118,21 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 			return CompletableFuture.supplyAsync(() -> {
 				var pos = new BlockPos.Mutable();
 
-				int[] requestedVals = getHeightsInChunk(chunk.getPos());
+				var chunkPos = chunk.getPos();
+
+				BiomeSurface[] requestedVals = getHeightsInChunk(chunk.getPos());
 
 				for (var z = 0; z < 16; z++)
 					for (var x = 0; x < 16; x++)
 					{
-						pos.set(x, 0, z);
-						chunk.setBlockState(pos, Blocks.BEDROCK.getDefaultState(), false);
+						var surface = requestedVals[(x * 16) + z];
 
-						var height = requestedVals[(x * 16) + z];
-
-						for (var y = 1; y <= height; y++)
+						for (var y = 1; y <= surface.height(); y++)
 						{
-							// TODO: better
-							pos.set(x, y, z);
-							chunk.setBlockState(pos, Blocks.STONE.getDefaultState(), false);
+							var strata = getStrataBlock(chunkPos.x * 16, y, chunkPos.z * 16, surface);
+							var block = strata.orElse(surface.surface());
+
+							chunk.setBlockState(pos.set(x, y, z), block, false);
 						}
 					}
 
@@ -122,14 +146,13 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 
 	protected abstract void populateExtra(Executor executor, StructureAccessor accessor, Chunk chunk);
 
-	protected abstract double getNoise(RegistryKey<Biome> biomeKey, int x, int z);
+	protected abstract BiomeSurfaceHint getNoise(RegistryKey<Biome> biomeKey, int x, int z);
 
-	@Override
-	public int getHeight(int x, int z, Heightmap.Type heightmapType, HeightLimitView heightLimitView)
+	public BiomeSurface getSurface(int x, int z, Heightmap.Type heightmapType, HeightLimitView heightLimitView)
 	{
 		Map<RegistryKey<Biome>, double[]> typeWeights = new HashMap<>();
 
-		var weights = this.blender.getBlendForChunk(0, (x >> 4) << 4, (z >> 4) << 4, (x0, z0) -> this.backing.getBacking((int)x0, (int)z0));
+		var weights = this.blender.getBlendForChunk(0, (x >> 4) << 4, (z >> 4) << 4, (x0, z0) -> this.backing.getBiome((int)x0, (int)z0));
 
 		do
 		{
@@ -140,17 +163,31 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 
 		var height = 0.0;
 
+		var chunkX = x & 15;
+		var chunkZ = z & 15;
+		var weightIdx = chunkZ * 16 + chunkX;
+
+		chunkRandom.setTerrainSeed(chunkX, chunkZ);
+		var surfaceSampler = new RandomCollection<BlockState>(chunkRandom);
+
 		for (var pair : typeWeights.entrySet())
 		{
 			var biomeKey = pair.getKey();
-			var biomeHeight = getNoise(biomeKey, x, z);
+			var weight = pair.getValue()[weightIdx];
+			var surfaceHint = getNoise(biomeKey, x, z);
 
-			var chunkX = x & 15;
-			var chunkZ = z & 15;
-			height += biomeHeight * pair.getValue()[chunkZ * 16 + chunkX];
+			height += surfaceHint.height() * weight;
+
+			surfaceSampler.add(Math.pow(weight, 3), surfaceHint.surface());
 		}
 
-		return (int)Math.round(height);
+		return new BiomeSurface(this.backing.getBiome(x, z), (int)Math.round(height), surfaceSampler.sample());
+	}
+
+	@Override
+	public int getHeight(int x, int z, Heightmap.Type heightmapType, HeightLimitView heightLimitView)
+	{
+		return getSurface(x, z, heightmapType, heightLimitView).height();
 	}
 
 	@Override

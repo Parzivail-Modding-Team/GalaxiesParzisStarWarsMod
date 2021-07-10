@@ -371,10 +371,18 @@ public class SwgBlocks
 
 	public static class Sand
 	{
+		@RegistryName("salty_desert_sand")
+		public static final Block SaltyDesert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
 		@RegistryName("desert_sand")
 		public static final Block Desert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
 		@RegistryName("desert_canyon_sand")
 		public static final Block DesertCanyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
+	}
+
+	public static class Salt
+	{
+		@RegistryName("caked_salt")
+		public static final Block Caked = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
 	}
 
 	public static class Dirt
@@ -391,6 +399,9 @@ public class SwgBlocks
 
 	public static class Stone
 	{
+		@RegistryName("desert_sediment")
+		public static final Block DesertSediment = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
+
 		@RegistryName("pourstone")
 		public static final Block Pourstone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("pourstone_stairs")

@@ -4,6 +4,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.world.tatooine.TatooineBiomeSource;
 import com.parzivail.pswg.world.tatooine.TatooineChunkGenerator;
 import net.minecraft.block.Blocks;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -18,6 +19,13 @@ import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
 public class SwgDimensions
 {
+	private static int getSkyColor(float temperature)
+	{
+		float f = temperature / 3.0F;
+		f = MathHelper.clamp(f, -1.0F, 1.0F);
+		return MathHelper.hsvToRgb(0.62222224F - f * 0.05F, 0.5F + f * 0.1F, 1.0F);
+	}
+
 	public static class Tatooine
 	{
 		public static final RegistryKey<DimensionOptions> DIMENSION_KEY = RegistryKey.of(Registry.DIMENSION_KEY, Resources.id("tatooine"));
@@ -60,13 +68,13 @@ public class SwgDimensions
 					.category(Biome.Category.NONE)
 					.depth(0)
 					.scale(0)
-					.temperature(1)
+					.temperature(2)
 					.downfall(0)
 					.effects((new BiomeEffects.Builder())
 							         .waterColor(0x3f76e4)
 							         .waterFogColor(0x050533)
 							         .fogColor(0xc0d8ff)
-							         .skyColor(0x77adff)
+							         .skyColor(getSkyColor(2.0F))
 							         .build())
 					.spawnSettings(new SpawnSettings.Builder().build())
 					.generationSettings(
