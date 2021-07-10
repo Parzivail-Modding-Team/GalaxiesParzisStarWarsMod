@@ -79,6 +79,13 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 		if (y > 0.9 * height)
 			return Optional.empty();
 
+		/*
+		 *TODO:
+		 * move these into a registry like the biome noise generators, each biome will have different surface
+		 * thicknesses and thickness should even vary based on the surface hint. For example, salt flats should
+		 * have a surface thickness of 1 and the crag part of wastes and the tops of plateaus should have a high
+		 * surface thickness
+		 */
 		return Optional.of(Blocks.SANDSTONE.getDefaultState());
 	}
 
