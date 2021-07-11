@@ -1017,6 +1017,12 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Ore.Ionite)
 		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Ionite, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
 		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Helicite)
+		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Helicite, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Ore.Thorolide)
+		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Thorolide, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
+		              .build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank).build(assets);
 		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelBlank).build(assets);

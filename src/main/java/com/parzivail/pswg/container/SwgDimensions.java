@@ -58,6 +58,9 @@ public class SwgDimensions
 		// TODO: private static final ConfiguredFeature<?, ?> ORE_ZERSIUM = DecoratorUtil.ore(0, 63, 9, 20, SwgBlocks.Ore.Titanium.getDefaultState(),  null);
 		private static final ConfiguredFeature<?, ?> ORE_TITANIUM = DecoratorUtil.ore(0, 20, 2, 2, SwgBlocks.Ore.Titanium.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_DIATIUM = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Diatium.getDefaultState(), /* TODO */ null);
+		private static final ConfiguredFeature<?, ?> ORE_ZERSIUM = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Zersium.getDefaultState(), /* TODO */ null);
+		private static final ConfiguredFeature<?, ?> ORE_HELICITE = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Helicite.getDefaultState(), /* TODO */ null);
+		private static final ConfiguredFeature<?, ?> ORE_THOROLIDE = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Thorolide.getDefaultState(), /* TODO */ null);
 
 		public static void register()
 		{
@@ -71,6 +74,9 @@ public class SwgDimensions
 
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_titanium"), ORE_TITANIUM);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_diatium"), ORE_DIATIUM);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_zersium"), ORE_ZERSIUM);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_helicite"), ORE_HELICITE);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_thorolide"), ORE_THOROLIDE);
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_CANYONS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
@@ -137,6 +143,9 @@ public class SwgDimensions
 
 			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_TITANIUM);
 			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_DIATIUM);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_ZERSIUM);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_HELICITE);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_THOROLIDE);
 
 			generationOptions.accept(genSettings);
 

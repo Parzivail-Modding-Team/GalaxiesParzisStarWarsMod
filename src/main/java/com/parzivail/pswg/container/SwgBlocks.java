@@ -367,6 +367,10 @@ public class SwgBlocks
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE).strength(4.0F).breakByTool(FabricToolTags.PICKAXES, 3).requiresTool());
 		@RegistryName("zersium_ore")
 		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
+		@RegistryName("thorolide_ore")
+		public static final Block Thorolide = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
+		@RegistryName("helicite_ore")
+		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
 	}
 
 	public static class Sand
