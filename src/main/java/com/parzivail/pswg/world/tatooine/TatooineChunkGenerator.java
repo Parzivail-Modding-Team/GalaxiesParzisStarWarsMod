@@ -192,7 +192,7 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 
 		if (h > 0.15)
 		{
-			return new BiomeSurfaceHint((0.5 + 0.15 * surfaceNoise) * 60, SwgBlocks.Stone.DesertSediment.getDefaultState());
+			return new BiomeSurfaceHint(MIN_HEIGHT + (0.5 + 0.15 * surfaceNoise) * 60, SwgBlocks.Stone.DesertSediment.getDefaultState());
 		}
 
 		return new BiomeSurfaceHint(MIN_HEIGHT + h * 180, SwgBlocks.Sand.DesertCanyon.getDefaultState());

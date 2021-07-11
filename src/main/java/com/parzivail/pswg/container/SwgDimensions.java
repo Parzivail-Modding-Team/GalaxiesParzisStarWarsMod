@@ -1,6 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.world.tatooine.TatooineBiomeSource;
 import com.parzivail.pswg.world.tatooine.TatooineChunkGenerator;
 import com.parzivail.util.Consumers;
@@ -53,6 +54,7 @@ public class SwgDimensions
 
 		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_FUNNEL_FLOWER = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.BlossomingFunnelFlower.getDefaultState(), 4).add(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 7));
 		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_POONTEN_GRASS = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.PoontenGrass.getDefaultState(), 4).add(SwgBlocks.Plant.DriedPoontenGrass.getDefaultState(), 7));
+		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_HKAK_BUSHES = DecoratorUtil.random(8, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.HkakBush.getDefaultState(), 10).add(SwgBlocks.Plant.HkakBush.getDefaultState().with(HkakBushBlock.AGE,3), 1));
 
 		private static final ConfiguredFeature<?, ?> ORE_TITANIUM = DecoratorUtil.ore(0, 12, 1, 1, SwgBlocks.Ore.Titanium.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_DIATIUM = DecoratorUtil.ore(0, 32, 2, 3, SwgBlocks.Ore.Diatium.getDefaultState(), /* TODO */ null);
@@ -69,6 +71,7 @@ public class SwgDimensions
 
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_patch_funnel_flower"), PATCH_FUNNEL_FLOWER);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_patch_poonten_grass"), PATCH_POONTEN_GRASS);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_patch_hkak_bushes"), PATCH_HKAK_BUSHES);
 
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_titanium"), ORE_TITANIUM);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_diatium"), ORE_DIATIUM);
@@ -79,11 +82,13 @@ public class SwgDimensions
 			Registry.register(BuiltinRegistries.BIOME, BIOME_CANYONS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
 				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
+				addVegetalPatch(builder, PATCH_HKAK_BUSHES);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_PLATEAU_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
 				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
+				addVegetalPatch(builder, PATCH_HKAK_BUSHES);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_MUSHMESA_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
@@ -93,6 +98,7 @@ public class SwgDimensions
 			Registry.register(BuiltinRegistries.BIOME, BIOME_WASTES_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
 				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
+				addVegetalPatch(builder, PATCH_HKAK_BUSHES);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_MOUNTAINS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
@@ -107,6 +113,7 @@ public class SwgDimensions
 			Registry.register(BuiltinRegistries.BIOME, BIOME_OASIS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
 				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
+				addVegetalPatch(builder, PATCH_HKAK_BUSHES);
 			}));
 		}
 
