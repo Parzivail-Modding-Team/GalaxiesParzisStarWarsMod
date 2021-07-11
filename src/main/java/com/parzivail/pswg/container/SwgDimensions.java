@@ -54,8 +54,6 @@ public class SwgDimensions
 		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_FUNNEL_FLOWER = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.BlossomingFunnelFlower.getDefaultState(), 4).add(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 7));
 		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_POONTEN_GRASS = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.PoontenGrass.getDefaultState(), 4).add(SwgBlocks.Plant.DriedPoontenGrass.getDefaultState(), 7));
 
-		// TODO: private static final ConfiguredFeature<?, ?> ORE_THOROLIDE = DecoratorUtil.ore(0, 63, 9, 20, SwgBlocks.Ore.Titanium.getDefaultState(), null);
-		// TODO: private static final ConfiguredFeature<?, ?> ORE_ZERSIUM = DecoratorUtil.ore(0, 63, 9, 20, SwgBlocks.Ore.Titanium.getDefaultState(),  null);
 		private static final ConfiguredFeature<?, ?> ORE_TITANIUM = DecoratorUtil.ore(0, 20, 2, 2, SwgBlocks.Ore.Titanium.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_DIATIUM = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Diatium.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_ZERSIUM = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Zersium.getDefaultState(), /* TODO */ null);
