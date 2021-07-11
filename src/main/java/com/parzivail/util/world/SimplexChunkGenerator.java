@@ -127,7 +127,7 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 					{
 						var surface = requestedVals[(x * 16) + z];
 
-						for (var y = 1; y <= surface.height(); y++)
+						for (var y = 0; y <= surface.height(); y++)
 						{
 							var strata = getStrataBlock(chunkPos.x * 16, y, chunkPos.z * 16, surface);
 							var block = strata.orElse(surface.surface());

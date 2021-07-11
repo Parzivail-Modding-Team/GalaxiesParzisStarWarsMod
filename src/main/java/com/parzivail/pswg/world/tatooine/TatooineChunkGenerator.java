@@ -9,6 +9,7 @@ import com.parzivail.util.scarif.ScarifChunk;
 import com.parzivail.util.world.NoiseGenerator;
 import com.parzivail.util.world.ProcNoise;
 import com.parzivail.util.world.SimplexChunkGenerator;
+import com.parzivail.util.world.biome.BiomeSurface;
 import com.parzivail.util.world.biome.BiomeSurfaceHint;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -68,15 +69,15 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 	@Override
 	public void buildSurface(ChunkRegion region, Chunk chunk)
 	{
-		// "decorate"
 	}
 
-	protected Optional<BlockState> getStrataBlock(int x, int y, int z, int height)
+	@Override
+	protected Optional<BlockState> getStrataBlock(int x, int y, int z, BiomeSurface surface)
 	{
 		if (y == 0)
 			return Optional.of(Blocks.BEDROCK.getDefaultState());
 
-		if (y > 0.9 * height)
+		if (y > 0.9 * surface.height())
 			return Optional.empty();
 
 		/*
@@ -86,7 +87,7 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 		 * have a surface thickness of 1 and the crag part of wastes and the tops of plateaus should have a high
 		 * surface thickness
 		 */
-		return Optional.of(Blocks.SANDSTONE.getDefaultState());
+		return Optional.of(Blocks.STONE.getDefaultState());
 	}
 
 	@Override

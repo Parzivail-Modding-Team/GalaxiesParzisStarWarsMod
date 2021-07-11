@@ -18,6 +18,7 @@ import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
+import net.minecraft.world.gen.feature.ConfiguredFeatures;
 import net.minecraft.world.gen.feature.RandomPatchFeatureConfig;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
@@ -53,6 +54,11 @@ public class SwgDimensions
 		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_FUNNEL_FLOWER = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.BlossomingFunnelFlower.getDefaultState(), 4).add(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 7));
 		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_POONTEN_GRASS = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.PoontenGrass.getDefaultState(), 4).add(SwgBlocks.Plant.DriedPoontenGrass.getDefaultState(), 7));
 
+		// TODO: private static final ConfiguredFeature<?, ?> ORE_THOROLIDE = DecoratorUtil.ore(0, 63, 9, 20, SwgBlocks.Ore.Titanium.getDefaultState(), null);
+		// TODO: private static final ConfiguredFeature<?, ?> ORE_ZERSIUM = DecoratorUtil.ore(0, 63, 9, 20, SwgBlocks.Ore.Titanium.getDefaultState(),  null);
+		private static final ConfiguredFeature<?, ?> ORE_TITANIUM = DecoratorUtil.ore(0, 20, 2, 2, SwgBlocks.Ore.Titanium.getDefaultState(), /* TODO */ null);
+		private static final ConfiguredFeature<?, ?> ORE_DIATIUM = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Diatium.getDefaultState(), /* TODO */ null);
+
 		public static void register()
 		{
 			Registry.register(Registry.BIOME_SOURCE, Resources.id("tatooine_source"), TatooineBiomeSource.CODEC);
@@ -60,38 +66,49 @@ public class SwgDimensions
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_DUNES_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, GEN_NONE));
 
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_patch_funnel_flower"), PATCH_FUNNEL_FLOWER);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_patch_poonten_grass"), PATCH_POONTEN_GRASS);
+
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_titanium"), ORE_TITANIUM);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_diatium"), ORE_DIATIUM);
+
 			Registry.register(BuiltinRegistries.BIOME, BIOME_CANYONS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_FUNNEL_FLOWER.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_POONTEN_GRASS.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
+				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
+				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_PLATEAU_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_FUNNEL_FLOWER.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_POONTEN_GRASS.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
+				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
+				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_MUSHMESA_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_FUNNEL_FLOWER.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
+				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_WASTES_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_FUNNEL_FLOWER.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_POONTEN_GRASS.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
+				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
+				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_MOUNTAINS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_FUNNEL_FLOWER.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_POONTEN_GRASS.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
+				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
+				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_SALTFLATS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_FUNNEL_FLOWER.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
+				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_OASIS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_FUNNEL_FLOWER.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
-				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, PATCH_POONTEN_GRASS.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
+				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
+				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
 			}));
+		}
+
+		private static void addVegetalPatch(GenerationSettings.Builder builder, ConfiguredFeature<RandomPatchFeatureConfig, ?> patch)
+		{
+			builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, patch.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
 		}
 
 		private static Biome getGenericDesertBiome(Consumer<SpawnSettings.Builder> spawnOptions, Consumer<GenerationSettings.Builder> generationOptions)
@@ -99,7 +116,7 @@ public class SwgDimensions
 			var surfaceBuilder = SurfaceBuilder.DEFAULT
 					.withConfig(new TernarySurfaceConfig(
 							SwgBlocks.Sand.Desert.getDefaultState(),
-							Blocks.SANDSTONE.getDefaultState(),
+							Blocks.STONE.getDefaultState(),
 							Blocks.GRAVEL.getDefaultState()));
 
 			var spawnSettings = new SpawnSettings.Builder();
@@ -107,6 +124,20 @@ public class SwgDimensions
 
 			var genSettings = new GenerationSettings.Builder()
 					.surfaceBuilder(surfaceBuilder);
+
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ConfiguredFeatures.ORE_DIRT);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ConfiguredFeatures.ORE_GRAVEL);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ConfiguredFeatures.ORE_DEEPSLATE);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ConfiguredFeatures.ORE_CLAY);
+
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ConfiguredFeatures.ORE_COAL);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ConfiguredFeatures.ORE_IRON);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ConfiguredFeatures.ORE_GOLD);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ConfiguredFeatures.ORE_COPPER);
+
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_TITANIUM);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_DIATIUM);
+
 			generationOptions.accept(genSettings);
 
 			return new Biome.Builder()
