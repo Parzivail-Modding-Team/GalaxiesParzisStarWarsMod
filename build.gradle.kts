@@ -17,6 +17,10 @@ repositories {
 //		name = "TerraformersMC"
 //	}
 
+	maven(url = "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases") {
+		name = "TerraformersMC Archive"
+	}
+
 	maven(url = "https://maven.shedaniel.me") {
 		name = "Shedaniel Maven"
 	}
@@ -71,6 +75,7 @@ val loader_version: String by project.ext
 val fabric_version: String by project.ext
 val cca_version: String by project.ext
 val cloth_config_version: String by project.ext
+val modmenu_version: String by project.ext
 
 base.archivesBaseName = archives_base_name
 version = getVersionName()
@@ -103,7 +108,7 @@ dependencies {
 	include("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}")
 
 	// Mod Menu
-//	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+	modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
 }
 
 tasks.processResources {
