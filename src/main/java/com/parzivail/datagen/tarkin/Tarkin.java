@@ -456,6 +456,32 @@ public class Tarkin
 				                      .build(assets);
 			}
 
+			//Ruined Wet Pourstone
+			{
+				RecipeGenerator.Shapeless.of(new ItemStack(SwgBlocks.Dirt.RuinedWetPourstone, 8), null)
+				                         .ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam).ingredient(SwgBlocks.Dirt.DesertLoam)
+				                         .ingredient(ItemTags.SAND).ingredient(ItemTags.SAND).ingredient(ItemTags.SAND)
+				                         .ingredient(Items.WHEAT).ingredient(Items.WHEAT)
+				                         .ingredient(Items.WATER_BUCKET)
+				                         .build(assets);
+
+				RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Dirt.RuinedWetPourstoneStairs, 6))
+				                      .grid3x3("crafting_left",
+				                               SwgBlocks.Dirt.RuinedWetPourstone, null, null,
+				                               SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone, null,
+				                               SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone)
+				                      .grid3x3("crafting_right",
+				                               null, null, SwgBlocks.Dirt.RuinedWetPourstone,
+				                               null, SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone,
+				                               SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone)
+				                      .build(assets);
+
+				RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Dirt.RuinedWetPourstoneSlab, 6))
+				                      .grid3x1(null,
+				                               SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone)
+				                      .build(assets);
+			}
+
 			//Pourstone
 			{
 				RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.PourstoneStairs, 6))
@@ -778,6 +804,9 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.id("block/wet_pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.id("block/wet_pourstone")).build(assets);
+		BlockGenerator.basic(SwgBlocks.Dirt.RuinedWetPourstone).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Dirt.RuinedWetPourstoneStairs, Resources.id("block/ruined_wet_pourstone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone")).build(assets);
 
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.LightPanel).build(assets);
@@ -791,7 +820,7 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Crystal.Helicite).build(assets);
 		ItemGenerator.basic(SwgItems.Crystal.Ionite).build(assets);
 		ItemGenerator.basic(SwgItems.Crystal.Lommite).build(assets);
-		ItemGenerator.basic(SwgItems.Crystal.Thorolide).build(assets);
+		ItemGenerator.basic(SwgItems.Crystal.Thorilide).build(assets);
 
 		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
@@ -1020,8 +1049,8 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Ore.Helicite)
 		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Helicite, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Thorolide)
-		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Thorolide, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
+		BlockGenerator.basic(SwgBlocks.Ore.Thorilide)
+		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Thorilide, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
 		              .build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank).build(assets);
@@ -1079,6 +1108,9 @@ public class Tarkin
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.id("block/pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.PourstoneSlab, Resources.id("block/pourstone")).build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.CrackedPourstone).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.CrackedPourstoneStairs, Resources.id("block/cracked_pourstone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.CrackedPourstoneSlab, Resources.id("block/cracked_pourstone")).build(assets);
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.LightPourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.LightPourstoneStairs, Resources.id("block/light_pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Stone.LightPourstoneSlab, Resources.id("block/light_pourstone")).build(assets);

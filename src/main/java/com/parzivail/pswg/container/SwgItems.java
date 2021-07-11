@@ -111,8 +111,8 @@ public class SwgItems
 		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("lommite_crystal")
 		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("thorolide_crystal")
-		public static final Item Thorolide = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("thorilide_crystal")
+		public static final Item Thorilide = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Nugget

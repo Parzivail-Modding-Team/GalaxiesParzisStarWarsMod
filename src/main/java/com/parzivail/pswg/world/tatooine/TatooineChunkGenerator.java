@@ -147,9 +147,9 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 
 	private BiomeSurfaceHint genDunes(double x, double z)
 	{
-		double noise = noiseSrc.noise(x / 400 - 3000, z / 400) * 25;
+		double noise = noiseSrc.noise(x / 400 - 3000, z / 400) * 18;
 
-		noise += noiseSrc.noise(x / 50, z / 50 - 3000) * 25;
+		noise += noiseSrc.noise(x / 50, z / 50 - 3000) * 15;
 
 		noise *= (1 - Math.abs(noiseSrc.rawNoise(x / 70, z / 70 + 3000)));
 
@@ -163,11 +163,10 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 		double d = 5 * s;
 
 		double blur = 0;
-		blur = blur + getWorleyDomainWarped(x / s - d, z / s - d);
-		blur = blur + getWorleyDomainWarped(x / s - d, z / s + d);
-
-		blur = blur + getWorleyDomainWarped(x / s + d, z / s - d);
-		blur = blur + getWorleyDomainWarped(x / s + d, z / s + d);
+		blur += getWorleyDomainWarped(x / s - d, z / s - d);
+		blur += getWorleyDomainWarped(x / s - d, z / s + d);
+		blur += getWorleyDomainWarped(x / s + d, z / s - d);
+		blur += getWorleyDomainWarped(x / s + d, z / s + d);
 		blur = blur / 4;
 
 		h = 1 - (h - blur);

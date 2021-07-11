@@ -13,9 +13,7 @@ import com.parzivail.util.block.connecting.SelfConnectingBlock;
 import com.parzivail.util.block.connecting.SelfConnectingGlassBlock;
 import com.parzivail.util.block.connecting.SelfConnectingNodeBlock;
 import com.parzivail.util.block.connecting.SelfConnectingStainedGlassBlock;
-import com.parzivail.util.block.mutating.DryingBlock;
-import com.parzivail.util.block.mutating.DryingSlabBlock;
-import com.parzivail.util.block.mutating.DryingStairsBlock;
+import com.parzivail.util.block.mutating.*;
 import com.parzivail.util.block.rotating.RotatingBlock;
 import com.parzivail.util.block.rotating.RotatingBlockWithBounds;
 import com.parzivail.util.block.rotating.RotatingBlockWithBoundsGuiEntity;
@@ -367,8 +365,8 @@ public class SwgBlocks
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE).strength(4.0F).breakByTool(FabricToolTags.PICKAXES, 3).requiresTool());
 		@RegistryName("zersium_ore")
 		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
-		@RegistryName("thorolide_ore")
-		public static final Block Thorolide = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
+		@RegistryName("thorilide_ore")
+		public static final Block Thorilide = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
 		@RegistryName("helicite_ore")
 		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
 	}
@@ -392,11 +390,17 @@ public class SwgBlocks
 	public static class Dirt
 	{
 		@RegistryName("wet_pourstone")
-		public static final Block WetPourstone = new DryingBlock(Stone.Pourstone, 25, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
+		public static final Block WetPourstone = new RuiningDryingBlock(Stone.Pourstone, 25, () -> Dirt.RuinedWetPourstone, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
 		@RegistryName("wet_pourstone_stairs")
-		public static final Block WetPourstoneStairs = new DryingStairsBlock(WetPourstone.getDefaultState(), Stone.PourstoneStairs, 25, AbstractBlock.Settings.copy(WetPourstone));
+		public static final Block WetPourstoneStairs = new RuiningDryingStairsBlock(WetPourstone.getDefaultState(), Stone.PourstoneStairs, 25, () -> Dirt.RuinedWetPourstoneStairs, AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("wet_pourstone_slab")
-		public static final Block WetPourstoneSlab = new DryingSlabBlock(Stone.PourstoneSlab, 25, AbstractBlock.Settings.copy(WetPourstone));
+		public static final Block WetPourstoneSlab = new RuiningDryingSlabBlock(Stone.PourstoneSlab, 25, () -> Dirt.RuinedWetPourstoneSlab, AbstractBlock.Settings.copy(WetPourstone));
+		@RegistryName("ruined_wet_pourstone")
+		public static final Block RuinedWetPourstone = new DryingBlock(Stone.CrackedPourstone, 25, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
+		@RegistryName("ruined_wet_pourstone_stairs")
+		public static final StairsBlock RuinedWetPourstoneStairs = new DryingStairsBlock(RuinedWetPourstone.getDefaultState(), Stone.CrackedPourstoneStairs, 25, AbstractBlock.Settings.copy(RuinedWetPourstone));
+		@RegistryName("ruined_wet_pourstone_slab")
+		public static final SlabBlock RuinedWetPourstoneSlab = new DryingSlabBlock(Stone.CrackedPourstoneSlab, 25, AbstractBlock.Settings.copy(RuinedWetPourstone));
 		@RegistryName("desert_loam")
 		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).breakByTool(FabricToolTags.SHOVELS));
 	}
@@ -412,6 +416,12 @@ public class SwgBlocks
 		public static final StairsBlock PourstoneStairs = new PStairsBlock(Pourstone.getDefaultState(), AbstractBlock.Settings.copy(Pourstone));
 		@RegistryName("pourstone_slab")
 		public static final SlabBlock PourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
+		@RegistryName("cracked_pourstone")
+		public static final Block CrackedPourstone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
+		@RegistryName("cracked_pourstone_stairs")
+		public static final StairsBlock CrackedPourstoneStairs = new PStairsBlock(CrackedPourstone.getDefaultState(), AbstractBlock.Settings.copy(Pourstone));
+		@RegistryName("cracked_pourstone_slab")
+		public static final SlabBlock CrackedPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(CrackedPourstone));
 		@RegistryName("light_pourstone")
 		public static final Block LightPourstone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 		@RegistryName("light_pourstone_stairs")

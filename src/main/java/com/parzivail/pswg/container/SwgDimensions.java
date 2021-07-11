@@ -54,11 +54,11 @@ public class SwgDimensions
 		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_FUNNEL_FLOWER = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.BlossomingFunnelFlower.getDefaultState(), 4).add(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 7));
 		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_POONTEN_GRASS = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.PoontenGrass.getDefaultState(), 4).add(SwgBlocks.Plant.DriedPoontenGrass.getDefaultState(), 7));
 
-		private static final ConfiguredFeature<?, ?> ORE_TITANIUM = DecoratorUtil.ore(0, 20, 2, 2, SwgBlocks.Ore.Titanium.getDefaultState(), /* TODO */ null);
-		private static final ConfiguredFeature<?, ?> ORE_DIATIUM = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Diatium.getDefaultState(), /* TODO */ null);
-		private static final ConfiguredFeature<?, ?> ORE_ZERSIUM = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Zersium.getDefaultState(), /* TODO */ null);
-		private static final ConfiguredFeature<?, ?> ORE_HELICITE = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Helicite.getDefaultState(), /* TODO */ null);
-		private static final ConfiguredFeature<?, ?> ORE_THOROLIDE = DecoratorUtil.ore(0, 63, 4, 10, SwgBlocks.Ore.Thorolide.getDefaultState(), /* TODO */ null);
+		private static final ConfiguredFeature<?, ?> ORE_TITANIUM = DecoratorUtil.ore(0, 12, 1, 1, SwgBlocks.Ore.Titanium.getDefaultState(), /* TODO */ null);
+		private static final ConfiguredFeature<?, ?> ORE_DIATIUM = DecoratorUtil.ore(0, 32, 2, 3, SwgBlocks.Ore.Diatium.getDefaultState(), /* TODO */ null);
+		private static final ConfiguredFeature<?, ?> ORE_ZERSIUM = DecoratorUtil.ore(0, 64, 4, 10, SwgBlocks.Ore.Zersium.getDefaultState(), /* TODO */ null);
+		private static final ConfiguredFeature<?, ?> ORE_HELICITE = DecoratorUtil.ore(32, 128, 6, 25, SwgBlocks.Ore.Helicite.getDefaultState(), /* TODO */ null);
+		private static final ConfiguredFeature<?, ?> ORE_THORILIDE = DecoratorUtil.ore(48, 96, 9, 4, SwgBlocks.Ore.Thorilide.getDefaultState(), /* TODO */ null);
 
 		public static void register()
 		{
@@ -74,7 +74,7 @@ public class SwgDimensions
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_diatium"), ORE_DIATIUM);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_zersium"), ORE_ZERSIUM);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_helicite"), ORE_HELICITE);
-			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_thorolide"), ORE_THOROLIDE);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_thorilide"), ORE_THORILIDE);
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_CANYONS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
@@ -143,7 +143,7 @@ public class SwgDimensions
 			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_DIATIUM);
 			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_ZERSIUM);
 			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_HELICITE);
-			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_THOROLIDE);
+			genSettings.feature(GenerationStep.Feature.UNDERGROUND_ORES, ORE_THORILIDE);
 
 			generationOptions.accept(genSettings);
 

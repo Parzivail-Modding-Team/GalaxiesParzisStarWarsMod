@@ -21,3 +21,4 @@ public class DryingBlock extends MutatingBlock
 		return WorldUtil.isSunLit(world, pos);
 	}
 }
+

@@ -12,7 +12,7 @@ blocks = [
     "ionite_ore",
     "kelerium_ore",
     "rubindum_ore",
-    "thorolide_ore",
+    "thorilide_ore",
     "titanium_ore",
     "sand_tatooine",
 ]
