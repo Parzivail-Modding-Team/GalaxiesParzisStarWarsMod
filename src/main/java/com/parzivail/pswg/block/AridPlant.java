@@ -7,11 +7,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 
-public class TatooinePlant extends PlantBlock
+public class AridPlant extends PlantBlock
 {
 	protected static final VoxelShape SHAPE = Block.createCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 13.0D, 14.0D);
 
-	public TatooinePlant(Settings settings)
+	public AridPlant(Settings settings)
 	{
 		super(settings);
 	}

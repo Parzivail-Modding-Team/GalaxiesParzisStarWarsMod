@@ -114,7 +114,7 @@ public class ModelFile
 		);
 	}
 
-	public static Collection<ModelFile> crop(Block block, IntProperty property)
+	public static Collection<ModelFile> cropStages(Block block, IntProperty property)
 	{
 		Identifier id = AssetGenerator.getRegistryName(block);
 		ArrayList<ModelFile> modelFiles = new ArrayList<>();
@@ -126,6 +126,24 @@ public class ModelFile
 					ModelFile
 							.ofModel(localId, new Identifier("block/crop"))
 							.texture("crop", IdentifierUtil.concat("block/", localId))
+			);
+		}
+
+		return modelFiles;
+	}
+
+	public static Collection<ModelFile> bushStages(Block block, IntProperty property)
+	{
+		Identifier id = AssetGenerator.getRegistryName(block);
+		ArrayList<ModelFile> modelFiles = new ArrayList<>();
+
+		for (int i : property.getValues())
+		{
+			Identifier localId = IdentifierUtil.concat(id, "_stage" + i);
+			modelFiles.add(
+					ModelFile
+							.ofModel(localId, new Identifier("block/cross"))
+							.texture("cross", IdentifierUtil.concat("block/", localId))
 			);
 		}
 

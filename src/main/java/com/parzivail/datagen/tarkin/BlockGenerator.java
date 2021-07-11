@@ -1,8 +1,8 @@
 package com.parzivail.datagen.tarkin;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.CropBlock;
 import net.minecraft.data.client.model.BlockStateSupplier;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class BlockGenerator
 {
@@ -44,11 +45,19 @@ public class BlockGenerator
 				.itemModel(ModelFile::ofBlock);
 	}
 
-	static BlockGenerator crop(CropBlock block, Identifier itemTexture)
+	static BlockGenerator cropStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)
 	{
 		return blockNoModelLangEntry(block)
-				.state((block1, modelId) -> BlockStateGenerator.crop(block1, modelId, block.getAgeProperty()))
-				.models(block1 -> ModelFile.crop(block1, block.getAgeProperty()))
+				.state((block1, modelId) -> BlockStateGenerator.stages(block1, modelId, ageProp.get()))
+				.models(block1 -> ModelFile.cropStages(block1, ageProp.get()))
+				.itemModel(block2 -> ModelFile.item(block2, itemTexture));
+	}
+
+	static BlockGenerator bushStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)
+	{
+		return blockNoModelLangEntry(block)
+				.state((block1, modelId) -> BlockStateGenerator.stages(block1, modelId, ageProp.get()))
+				.models(block1 -> ModelFile.bushStages(block1, ageProp.get()))
 				.itemModel(block2 -> ModelFile.item(block2, itemTexture));
 	}
 

@@ -36,7 +36,7 @@ public class BlockStateGenerator
 		return VariantsBlockStateSupplier.create(block, modelRandomMirror(modelId, mirroredModelId));
 	}
 
-	public static VariantsBlockStateSupplier crop(Block block, Identifier modelId, IntProperty ageProperty)
+	public static VariantsBlockStateSupplier stages(Block block, Identifier modelId, IntProperty ageProperty)
 	{
 		BlockStateVariantMap blockStateVariantMap = BlockStateVariantMap.create(ageProperty).register((integer) -> BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(modelId, "_stage" + integer)));
 		return VariantsBlockStateSupplier.create(block).coordinate(blockStateVariantMap);

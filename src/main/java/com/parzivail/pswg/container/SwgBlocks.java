@@ -4,6 +4,7 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.block.crop.ChasukaCrop;
+import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.blockentity.*;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
@@ -186,18 +187,20 @@ public class SwgBlocks
 	public static class Plant
 	{
 		@RegistryName("funnel_flower")
-		public static final Block FunnelFlower = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
-		public static final Block BlossomingFunnelFlower = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("poonten_grass")
-		public static final Block PoontenGrass = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("dried_poonten_grass")
-		public static final Block DriedPoontenGrass = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("tuber_stalk")
-		public static final Block Tuber = new TatooinePlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("chasuka")
 		@TabIgnore
 		public static final CropBlock Chasuka = new ChasukaCrop(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+		@RegistryName("hkak_bush")
+		public static final HkakBushBlock HkakBush = new HkakBushBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 	}
 
 	public static class Leaves
