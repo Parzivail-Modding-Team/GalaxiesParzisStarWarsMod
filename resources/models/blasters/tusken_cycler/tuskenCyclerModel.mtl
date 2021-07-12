@@ -1,13 +1,13 @@
-newmtl initialShadingGroup
-illum 4
-Kd 0.50 0.50 0.50
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-Ni 1.00
-newmtl lambert3SG
-illum 4
-Kd 0.00 0.00 0.00
-Ka 0.00 0.00 0.00
-Tf 1.00 1.00 1.00
-map_Kd tuskenCyclerUVlayout.png
-Ni 1.00
+# Blender MTL File: 'None'
+# Material Count: 1
+
+newmtl MAT_DIFFUSE_CUTOUT
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Kd 0.000000 0.000000 0.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.0 0.0 0.0
+Ni 1.000000
+d 1.000000
+illum 1
+map_Kd E:\\Forge\\Mods\\PSWG\\PSWG15\\resources\\models\\blasters\\dl44\\dl44layout.png
