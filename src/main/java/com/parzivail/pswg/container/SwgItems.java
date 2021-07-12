@@ -53,6 +53,9 @@ public class SwgItems
 		public static final Item ZersiumRod = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("durasteel_rod")
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
+
+		@RegistryName("stripped_japor_branch")
+		public static final Item StrippedJaporBranch = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Hoe
@@ -254,8 +257,6 @@ public class SwgItems
 		public static final Item PallieFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("pika_fruit")
 		public static final Item PikaFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
-		@RegistryName("stripped_japor_branch")
-		public static final Item StrippedJaporBranch = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("tuber")
 		public static final Item Tuber = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("cooked_eopie_loin")
