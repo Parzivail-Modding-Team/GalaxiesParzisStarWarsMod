@@ -31,11 +31,12 @@ public class RuiningDryingStairsBlock extends MutatingStairsBlock
 		return WorldUtil.isSunLit(world, pos);
 	}
 
-	public void onLandedUpon(World world, BlockState state, BlockPos pos, Entity entity, float fallDistance)
+	@Override
+	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
 	{
-		if (!world.isClient && world.random.nextFloat() < fallDistance - 0.5F && entity instanceof LivingEntity && (entity instanceof PlayerEntity || world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) && entity.getWidth() * entity.getWidth() * entity.getHeight() > 0.512F)
-			world.setBlockState(pos, pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getStateWithProperties(state), world, pos));
+		if (!world.isClient && entity instanceof LivingEntity && (entity instanceof PlayerEntity || world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) && entity.getWidth() * entity.getWidth() * entity.getHeight() > 0.512F)
+			world.setBlockState(pos, pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getDefaultState(), world, pos));
 
-		super.onLandedUpon(world, state, pos, entity, fallDistance);
+		super.onEntityCollision(state, world, pos, entity);
 	}
 }
