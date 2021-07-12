@@ -14,7 +14,6 @@ import com.parzivail.util.world.biome.BiomeSurfaceHint;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.biome.Biome;
@@ -158,28 +157,23 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 
 	private BiomeSurfaceHint genCanyons(double x, double z)
 	{
-		double s = 2;
-		double h = getWorleyDomainWarped(x / s, z / s);
-		double d = 5 * s;
+		var nx = noiseSrc.octaveNoise(x / 1500 + 1000, z / 1500, 8);
+		var nz = noiseSrc.octaveNoise(x / 1500, z / 1500 + 1000, 8);
+		var noise = noiseSrc.worley(x / 500 + nx, z / 500 + nz);
 
-		double blur = 0;
-		blur += getWorleyDomainWarped(x / s - d, z / s - d);
-		blur += getWorleyDomainWarped(x / s - d, z / s + d);
-		blur += getWorleyDomainWarped(x / s + d, z / s - d);
-		blur += getWorleyDomainWarped(x / s + d, z / s + d);
-		blur = blur / 4;
+		var d = 0.7;
+		var winding = Math.sqrt(noise);
+		var basin = (1 - (winding - d) / (1 - d));
 
-		h = 1 - (h - blur);
-		h = 1 - 1 / (2 * h) - 0.48;
-		h = h * 35;
+		double height = 0;
+		if (winding < d)
+			// Canyon tops
+			height = (basin - 1) * 10 * noiseSrc.octaveNoise(x / 500, z / 500, 6);
+		else
+			// Carved area
+			height = 50 * Math.pow(basin, 10) - 50;
 
-		h = MathHelper.clamp(h, 0, 1);
-		double j = noiseSrc.octaveNoise(x / 200f, z / 200f, 6) * 40;
-
-		var noise = (h * 0.8 + noiseSrc.octaveNoise(x / 200f, z / 200f, 3) * 0.4) * (j + 10);
-
-		// TODO: better surface hinting
-		return new BiomeSurfaceHint(MIN_HEIGHT + noise, SwgBlocks.Sand.DesertCanyon.getDefaultState());
+		return new BiomeSurfaceHint(MIN_HEIGHT + height, SwgBlocks.Stone.DesertSediment.getDefaultState());
 	}
 
 	private BiomeSurfaceHint genPlateau(double x, double z)
