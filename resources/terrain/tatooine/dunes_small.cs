@@ -22,7 +22,7 @@ class TerrainGenerator
 
 		noise += ProcNoise.Noise(x / 80, z / 80 - 3000) * 25
 
-		* Math.Pow((1 - Math.Abs(ProcNoise.RawNoise((x + dX) / 150, (z + dZ) / 150 + 3000))), 2);
+		* Math.Pow((1 - Math.Abs(ProcNoise.RawNoise((x + dX) / 150, (z + dZ) / 150 + 3000))), 0.75);
 
         return 50 + noise;
     }
