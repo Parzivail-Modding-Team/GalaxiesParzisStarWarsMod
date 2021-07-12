@@ -78,6 +78,8 @@ public class Client implements ClientModInitializer
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
+		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0xFFFFFF, SwgBlocks.Leaves.Japor);
+		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0xFFFFFF, SwgBlocks.Leaves.Japor);
 
 		// TODO: reimplement tatooine home door rendering
 		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
@@ -154,6 +156,7 @@ public class Client implements ClientModInitializer
 		RenderLayerHelper.addBlock(SwgBlocks.Glass.BlackStainedImperial, RenderLayer.getTranslucent());
 
 		RenderLayerHelper.addBlock(SwgBlocks.Leaves.Sequoia, RenderLayer.getCutoutMipped());
+		RenderLayerHelper.addBlock(SwgBlocks.Leaves.Japor, RenderLayer.getCutoutMipped());
 
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.FunnelFlower, RenderLayer.getCutout());
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.BlossomingFunnelFlower, RenderLayer.getCutout());

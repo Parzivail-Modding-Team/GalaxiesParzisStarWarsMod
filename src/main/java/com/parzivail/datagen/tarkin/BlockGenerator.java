@@ -144,6 +144,14 @@ public class BlockGenerator
 				.itemModel(ModelFile::item);
 	}
 
+	static BlockGenerator tangentCross(Block block)
+	{
+		return basic(block)
+				.state(BlockStateGenerator::tangentRotating)
+				.model(ModelFile::cross)
+				.itemModel(ModelFile::item);
+	}
+
 	static BlockGenerator tintedCross(Block block)
 	{
 		return basic(block)

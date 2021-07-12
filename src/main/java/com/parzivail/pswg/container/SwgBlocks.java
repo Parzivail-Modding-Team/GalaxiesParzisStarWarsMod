@@ -207,10 +207,17 @@ public class SwgBlocks
 	{
 		@RegistryName("sequoia_leaves")
 		public static final LeavesBlock Sequoia = createLeavesBlock();
+		@RegistryName("japor_leaves")
+		public static final BushLeavesBlock Japor = createBushLeavesBlock();
 
 		private static LeavesBlock createLeavesBlock()
 		{
-			return new LeavesBlock(AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates((state, world, pos) -> false).blockVision((state, world, pos) -> false));
+			return new LeavesBlock(AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+		}
+
+		private static BushLeavesBlock createBushLeavesBlock()
+		{
+			return new BushLeavesBlock(8, 3, AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
 		}
 	}
 
