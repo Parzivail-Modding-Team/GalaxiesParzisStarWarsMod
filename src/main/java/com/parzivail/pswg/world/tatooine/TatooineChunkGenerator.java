@@ -208,32 +208,23 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 
 	private BiomeSurfaceHint genWastes(double x, double z)
 	{
-		var dx = noiseSrc.noise(x / 5, z / 5 + 3000) * 10;
-		var dz = noiseSrc.noise(x / 5 + 3000, z / 5) * 10;
+		var flatness = noiseSrc.noise(x / 200, z / 200);
+		var noise = noiseSrc.octaveNoise(x / 100, z / 100, 4) * 15 * flatness;
 
-		var peaks = noiseSrc.octaveInvWorley((x + dx) / 100 - 3000, (z + dz) / 100, 3) * 1.2;
+		var dx = noiseSrc.rawNoise(x / 20, z / 20 + 1000) * 5;
+		var dz = noiseSrc.rawNoise(x / 20 + 1000, z / 20) * 5;
 
-		BlockState surfaceHintBlock;
+		dx += noiseSrc.rawNoise(x / 100, z / 100 + 1000) * 18;
+		dz += noiseSrc.rawNoise(x / 100 + 1000, z / 100) * 18;
 
-		double noise;
-		var peaks30 = peaks * 30;
-		if (peaks30 > 25)
-		{
-			noise = peaks30 - 20;
+		var peaks = Math.pow(1 - noiseSrc.worley((x + dx) / 300 - 2000, (z + dz) / 300), 2);
 
-			surfaceHintBlock = SwgBlocks.Stone.DesertSediment.getDefaultState();
-		}
-		else
-		{
-			noise = 5;
-			surfaceHintBlock = SwgBlocks.Sand.Desert.getDefaultState();
-		}
+		var peakHeight = Math.min(peaks * 90 - 25, 40);
 
-		noise *= 5 * (noiseSrc.noise(x / 70, z / 70) + 0.1);
+		if (peakHeight > 0)
+			return new BiomeSurfaceHint(MIN_HEIGHT + peakHeight + noise, SwgBlocks.Sand.DesertCanyon.getDefaultState());
 
-		noise += noiseSrc.octaveNoise(x / 50, z / 50 - 3000, 3) * 30;
-
-		return new BiomeSurfaceHint(MIN_HEIGHT + noise, surfaceHintBlock);
+		return new BiomeSurfaceHint(MIN_HEIGHT + noise, SwgBlocks.Sand.Desert.getDefaultState());
 	}
 
 	private BiomeSurfaceHint genMountains(double x, double z)
