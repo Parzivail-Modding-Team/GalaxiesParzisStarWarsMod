@@ -976,6 +976,7 @@ public class Tarkin
 		              .build(assets);
 
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
+		BlockGenerator.tangentCross(SwgBlocks.Leaves.Japor).build(assets);
 
 		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"), Resources.id("block/sequoia_log")).build(assets);
 		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.id("block/japor_log_top"), Resources.id("block/japor_log")).build(assets);
