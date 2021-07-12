@@ -15,13 +15,16 @@ class TerrainGenerator
     /// <returns>A height between 0 and 255, inclusive</returns>
     public double GetTerrain(double x, double z)
     {
-		var noise = ProcNoise.Noise(x / 400 - 3000, z / 400) * 25;
+        var dX = ProcNoise.RawNoise(x / 100 + 1000, z / 100) * 20;
+        var dZ = ProcNoise.RawNoise(x / 100, z / 100 + 1000) * 20;
 
-		noise += ProcNoise.Noise(x / 50, z / 50 - 3000) * 25;
+		var noise = ProcNoise.Noise(x / 400 - 3000, z / 400) * 18;
 
-		noise *= (1 - Math.Abs(ProcNoise.RawNoise(x / 70, z / 70 + 3000)));
+		noise += ProcNoise.Noise(x / 80, z / 80 - 3000) * 25
 
-        return noise;
+		* Math.Pow((1 - Math.Abs(ProcNoise.RawNoise((x + dX) / 150, (z + dZ) / 150 + 3000))), 2);
+
+        return 50 + noise;
     }
 
     /// <summary>

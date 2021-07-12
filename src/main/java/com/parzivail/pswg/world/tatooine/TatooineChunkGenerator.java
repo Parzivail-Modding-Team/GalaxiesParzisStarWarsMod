@@ -146,11 +146,13 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 
 	private BiomeSurfaceHint genDunes(double x, double z)
 	{
-		double noise = noiseSrc.noise(x / 400 - 3000, z / 400) * 18;
+		var dX = noiseSrc.rawNoise(x / 100 + 1000, z / 100) * 20;
+		var dZ = noiseSrc.rawNoise(x / 100, z / 100 + 1000) * 20;
 
-		noise += noiseSrc.noise(x / 50, z / 50 - 3000) * 15;
+		var noise = noiseSrc.noise(x / 400 - 3000, z / 400) * 18;
 
-		noise *= (1 - Math.abs(noiseSrc.rawNoise(x / 70, z / 70 + 3000)));
+		var duneShape = Math.pow((1 - Math.abs(noiseSrc.rawNoise((x + dX) / 150, (z + dZ) / 150 + 3000))), 2);
+		noise += noiseSrc.noise(x / 80, z / 80 - 3000) * duneShape * 25;
 
 		return new BiomeSurfaceHint(MIN_HEIGHT + noise, SwgBlocks.Sand.Desert.getDefaultState());
 	}
