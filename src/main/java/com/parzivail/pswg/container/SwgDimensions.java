@@ -8,6 +8,7 @@ import com.parzivail.util.Consumers;
 import com.parzivail.util.world.DecoratorUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -20,7 +21,8 @@ import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.gen.GenerationStep;
 import net.minecraft.world.gen.feature.ConfiguredFeature;
 import net.minecraft.world.gen.feature.ConfiguredFeatures;
-import net.minecraft.world.gen.feature.RandomPatchFeatureConfig;
+import net.minecraft.world.gen.feature.Feature;
+import net.minecraft.world.gen.feature.SingleStateFeatureConfig;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
@@ -52,15 +54,17 @@ public class SwgDimensions
 		public static final RegistryKey<Biome> BIOME_SALTFLATS_KEY = RegistryKey.of(Registry.BIOME_KEY, Resources.id("tatooine_salt_flats"));
 		public static final RegistryKey<Biome> BIOME_OASIS_KEY = RegistryKey.of(Registry.BIOME_KEY, Resources.id("tatooine_oasis"));
 
-		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_FUNNEL_FLOWER = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.BlossomingFunnelFlower.getDefaultState(), 4).add(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 7));
-		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_POONTEN_GRASS = DecoratorUtil.random(64, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.PoontenGrass.getDefaultState(), 4).add(SwgBlocks.Plant.DriedPoontenGrass.getDefaultState(), 7));
-		private static final ConfiguredFeature<RandomPatchFeatureConfig, ?> PATCH_HKAK_BUSHES = DecoratorUtil.random(8, blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.HkakBush.getDefaultState(), 10).add(SwgBlocks.Plant.HkakBush.getDefaultState().with(HkakBushBlock.AGE,3), 1));
+		private static final ConfiguredFeature<?, ?> PATCH_FUNNEL_FLOWER = DecoratorUtil.random(64, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.BlossomingFunnelFlower.getDefaultState(), 4).add(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 7));
+		private static final ConfiguredFeature<?, ?> PATCH_POONTEN_GRASS = DecoratorUtil.random(64, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.PoontenGrass.getDefaultState(), 4).add(SwgBlocks.Plant.DriedPoontenGrass.getDefaultState(), 7));
+		private static final ConfiguredFeature<?, ?> PATCH_HKAK_BUSHES = DecoratorUtil.random(16, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.HkakBush.getDefaultState(), 10).add(SwgBlocks.Plant.HkakBush.getDefaultState().with(HkakBushBlock.AGE,3), 1));
 
 		private static final ConfiguredFeature<?, ?> ORE_TITANIUM = DecoratorUtil.ore(0, 12, 1, 1, SwgBlocks.Ore.Titanium.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_DIATIUM = DecoratorUtil.ore(0, 32, 2, 3, SwgBlocks.Ore.Diatium.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_ZERSIUM = DecoratorUtil.ore(0, 64, 4, 10, SwgBlocks.Ore.Zersium.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_HELICITE = DecoratorUtil.ore(32, 128, 6, 25, SwgBlocks.Ore.Helicite.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_THORILIDE = DecoratorUtil.ore(48, 96, 9, 4, SwgBlocks.Ore.Thorilide.getDefaultState(), /* TODO */ null);
+
+		private static final ConfiguredFeature<?, ?> OASIS_LAKES = Feature.LAKE.configure(new SingleStateFeatureConfig(Blocks.WATER.getDefaultState())).range(DecoratorUtil.BOTTOM_TO_TOP).spreadHorizontally().applyChance(4);
 
 		public static void register()
 		{
@@ -78,6 +82,7 @@ public class SwgDimensions
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_zersium"), ORE_ZERSIUM);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_helicite"), ORE_HELICITE);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_thorilide"), ORE_THORILIDE);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_oasis_lakes"), OASIS_LAKES);
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_CANYONS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
@@ -114,10 +119,11 @@ public class SwgDimensions
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
 				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
 				addVegetalPatch(builder, PATCH_HKAK_BUSHES);
+				builder.feature(GenerationStep.Feature.LAKES, OASIS_LAKES);
 			}));
 		}
 
-		private static void addVegetalPatch(GenerationSettings.Builder builder, ConfiguredFeature<RandomPatchFeatureConfig, ?> patch)
+		private static void addVegetalPatch(GenerationSettings.Builder builder, ConfiguredFeature<?, ?> patch)
 		{
 			builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, patch.decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(8));
 		}

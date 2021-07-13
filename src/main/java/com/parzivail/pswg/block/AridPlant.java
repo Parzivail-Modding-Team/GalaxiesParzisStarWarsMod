@@ -26,6 +26,7 @@ public class AridPlant extends PlantBlock
 		Block block = floor.getBlock();
 		return BlockTags.SAND.contains(block) ||
 		       block == SwgBlocks.Dirt.DesertLoam ||
+		       block == SwgBlocks.Stone.DesertSediment ||
 		       block == SwgBlocks.Salt.Caked ||
 		       block == Blocks.GRASS_BLOCK ||
 		       block == Blocks.TERRACOTTA ||
