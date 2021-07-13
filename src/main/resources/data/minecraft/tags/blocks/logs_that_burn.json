@@ -1,6 +1,8 @@
 {
-  "replace": false,
-  "values": [
-	"#pswg:sequoia_log"
-  ]
+	"replace": false,
+	"values": [
+		"#pswg:sequoia_log",
+		"#pswg:japor_log",
+		"#pswg:tatooine_log"
+	]
 }
