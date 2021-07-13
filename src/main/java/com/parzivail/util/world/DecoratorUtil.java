@@ -26,7 +26,7 @@ public class DecoratorUtil
 	public static final ConfiguredDecorator<?> SQUARE_HEIGHTMAP_SPREAD_DOUBLE = HEIGHTMAP_SPREAD_DOUBLE.spreadHorizontally();
 	public static final RangeDecoratorConfig BOTTOM_TO_TOP = new RangeDecoratorConfig(UniformHeightProvider.create(YOffset.getBottom(), YOffset.getTop()));
 
-	public static ConfiguredFeature<?, ?> random(int tries, int chance, UniformIntProvider repeat, Consumer<DataPool.Builder<BlockState>> poolBuilder)
+	public static ConfiguredFeature<?, ?> bigPatches(int tries, int chance, UniformIntProvider repeat, Consumer<DataPool.Builder<BlockState>> poolBuilder)
 	{
 		var pool = pool();
 		poolBuilder.accept(pool);
@@ -34,6 +34,9 @@ public class DecoratorUtil
 				new RandomPatchFeatureConfig.Builder(new WeightedBlockStateProvider(pool), SimpleBlockPlacer.INSTANCE)
 						.tries(tries)
 						.cannotProject()
+						.spreadX(14)
+						.spreadY(6)
+						.spreadZ(14)
 						.build()
 		).decorate(HEIGHTMAP_SPREAD_DOUBLE).applyChance(chance).repeat(repeat);
 	}

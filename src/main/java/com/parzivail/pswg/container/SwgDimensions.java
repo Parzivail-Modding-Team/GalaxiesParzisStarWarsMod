@@ -54,9 +54,9 @@ public class SwgDimensions
 		public static final RegistryKey<Biome> BIOME_SALTFLATS_KEY = RegistryKey.of(Registry.BIOME_KEY, Resources.id("tatooine_salt_flats"));
 		public static final RegistryKey<Biome> BIOME_OASIS_KEY = RegistryKey.of(Registry.BIOME_KEY, Resources.id("tatooine_oasis"));
 
-		private static final ConfiguredFeature<?, ?> PATCH_FUNNEL_FLOWER = DecoratorUtil.random(64, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.BlossomingFunnelFlower.getDefaultState(), 4).add(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 7));
-		private static final ConfiguredFeature<?, ?> PATCH_POONTEN_GRASS = DecoratorUtil.random(64, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.PoontenGrass.getDefaultState(), 4).add(SwgBlocks.Plant.DriedPoontenGrass.getDefaultState(), 7));
-		private static final ConfiguredFeature<?, ?> PATCH_HKAK_BUSHES = DecoratorUtil.random(16, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.HkakBush.getDefaultState(), 10).add(SwgBlocks.Plant.HkakBush.getDefaultState().with(HkakBushBlock.AGE,3), 1));
+		private static final ConfiguredFeature<?, ?> PATCH_FUNNEL_FLOWER = DecoratorUtil.bigPatches(64, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.BlossomingFunnelFlower.getDefaultState(), 4).add(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 7));
+		private static final ConfiguredFeature<?, ?> PATCH_POONTEN_GRASS = DecoratorUtil.bigPatches(64, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.PoontenGrass.getDefaultState(), 4).add(SwgBlocks.Plant.DriedPoontenGrass.getDefaultState(), 7));
+		private static final ConfiguredFeature<?, ?> PATCH_HKAK_BUSHES = DecoratorUtil.bigPatches(16, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.HkakBush.getDefaultState(), 10).add(SwgBlocks.Plant.HkakBush.getDefaultState().with(HkakBushBlock.AGE, 3), 1));
 
 		private static final ConfiguredFeature<?, ?> ORE_TITANIUM = DecoratorUtil.ore(0, 12, 1, 1, SwgBlocks.Ore.Titanium.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_DIATIUM = DecoratorUtil.ore(0, 32, 2, 3, SwgBlocks.Ore.Diatium.getDefaultState(), /* TODO */ null);
