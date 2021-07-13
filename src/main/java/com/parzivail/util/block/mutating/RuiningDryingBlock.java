@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class RuiningDryingBlock extends MutatingBlock
+public class RuiningDryingBlock extends FallingMutatingBlock
 {
 	private final Supplier<Block> ruinedBlock;
 
@@ -38,5 +38,11 @@ public class RuiningDryingBlock extends MutatingBlock
 			world.setBlockState(pos, pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getDefaultState(), world, pos));
 
 		super.onEntityCollision(state, world, pos, entity);
+	}
+
+	@Override
+	protected int getFallDelay()
+	{
+		return 30;
 	}
 }
