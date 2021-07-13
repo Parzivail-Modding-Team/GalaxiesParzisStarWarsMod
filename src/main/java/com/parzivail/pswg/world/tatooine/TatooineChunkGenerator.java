@@ -162,10 +162,10 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 		double height = 0;
 		if (winding < d)
 			// Canyon tops
-			height = (basin - 1) * 10 * noiseSrc.octaveNoise(x / 500, z / 500, 6);
+			height = (basin - 1) * 10 * noiseSrc.octaveNoise(x / 500, z / 500, 6) + 60;
 		else
 			// Carved area
-			height = 50 * Math.pow(basin, 10) - 50;
+			height = 60 * Math.pow(basin, 10);
 
 		return new BiomeSurfaceHint(MIN_HEIGHT + height, SwgBlocks.Stone.DesertSediment.getDefaultState());
 	}
@@ -181,23 +181,17 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 		var surfaceNoise = noiseSrc.octaveNoise(x / 100, z / 100, 2) * 0.5;
 
 		if (h > 0.15)
-		{
-			// Surface hint: stratified sediment
 			return new BiomeSurfaceHint(MIN_HEIGHT + (0.5 + 0.15 * surfaceNoise) * 60, SwgBlocks.Stone.DesertSediment.getDefaultState());
-		}
 
 		var floorNoise = noiseSrc.rawNoise(x / 150, z / 150);
 
-		// Surface hint: loose rubble
 		return new BiomeSurfaceHint(MIN_HEIGHT + Math.max(h * 180, floorNoise * 2), SwgBlocks.Sand.DesertCanyon.getDefaultState());
 	}
 
 	private BiomeSurfaceHint genMushroomMesa(double x, double z)
 	{
-		// TODO: currently plains
-
-		var noise = noiseSrc.noise(x / 100, z / 100) * 5 + Math.abs(noiseSrc.rawNoise(x / 50, z / 50)) * 3;
-		return new BiomeSurfaceHint(noise, SwgBlocks.Sand.Desert.getDefaultState());
+		var noise = noiseSrc.octaveNoise(x / 600, z / 600, 7) * 3;
+		return new BiomeSurfaceHint(MIN_HEIGHT + noise, SwgBlocks.Sand.Desert.getDefaultState());
 	}
 
 	private BiomeSurfaceHint genWastes(double x, double z)
@@ -240,10 +234,8 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 
 	private BiomeSurfaceHint genOasis(double x, double z)
 	{
-		// TODO: currently hills
-		double noise = noiseSrc.noise(x / 100, z / 100 + 3000) * 20;
-
-		noise *= (1 - Math.abs(noiseSrc.rawNoise(x / 30 + 2000, z / 30)));
+		// TODO: better terrain
+		double noise = noiseSrc.octaveNoise(x / 100, z / 100 + 3000, 4) * 8;
 
 		return new BiomeSurfaceHint(MIN_HEIGHT + noise, SwgBlocks.Sand.Desert.getDefaultState());
 	}

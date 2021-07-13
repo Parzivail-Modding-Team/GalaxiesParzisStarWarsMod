@@ -9,6 +9,7 @@ import com.parzivail.util.Consumers;
 import com.parzivail.util.world.DecoratorUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.intprovider.ConstantIntProvider;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.registry.BuiltinRegistries;
 import net.minecraft.util.registry.Registry;
@@ -20,12 +21,15 @@ import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.dimension.DimensionOptions;
 import net.minecraft.world.gen.GenerationStep;
-import net.minecraft.world.gen.feature.ConfiguredFeature;
-import net.minecraft.world.gen.feature.ConfiguredFeatures;
-import net.minecraft.world.gen.feature.Feature;
-import net.minecraft.world.gen.feature.SingleStateFeatureConfig;
+import net.minecraft.world.gen.decorator.CountExtraDecoratorConfig;
+import net.minecraft.world.gen.decorator.Decorator;
+import net.minecraft.world.gen.feature.*;
+import net.minecraft.world.gen.feature.size.TwoLayersFeatureSize;
+import net.minecraft.world.gen.foliage.RandomSpreadFoliagePlacer;
+import net.minecraft.world.gen.stateprovider.SimpleBlockStateProvider;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
+import net.minecraft.world.gen.trunk.ForkingTrunkPlacer;
 
 import java.util.function.Consumer;
 
@@ -69,6 +73,8 @@ public class SwgDimensions
 
 		private static final ConfiguredFeature<?, ?> MESA_MUSHROOMS = MESA_MUSHROOM.configure(new SingleStateFeatureConfig(SwgBlocks.Stone.DesertSediment.getDefaultState())).decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(20);
 		private static final ConfiguredFeature<?, ?> OASIS_LAKES = Feature.LAKE.configure(new SingleStateFeatureConfig(Blocks.WATER.getDefaultState())).range(DecoratorUtil.BOTTOM_TO_TOP).spreadHorizontally().applyChance(4);
+		private static final ConfiguredFeature<?, ?> JAPOR_TREE = Feature.TREE.configure((new TreeFeatureConfig.Builder(new SimpleBlockStateProvider(SwgBlocks.Log.Japor.getDefaultState()), new ForkingTrunkPlacer(2, 3, 3), new SimpleBlockStateProvider(SwgBlocks.Leaves.Japor.getDefaultState()), new SimpleBlockStateProvider(/* TODO: japor sapling */ Blocks.AIR.getDefaultState()), new RandomSpreadFoliagePlacer(ConstantIntProvider.create(1), ConstantIntProvider.create(0), ConstantIntProvider.create(5), 3), new TwoLayersFeatureSize(1, 0, 2))).dirtProvider(new SimpleBlockStateProvider(SwgBlocks.Sand.Desert.getDefaultState())).ignoreVines().build());
+		private static final ConfiguredFeature<?, ?> JAPOR_TREES = JAPOR_TREE.decorate(DecoratorUtil.WORLD_SURFACE_SPREAD).decorate(Decorator.COUNT_EXTRA.configure(new CountExtraDecoratorConfig(2, 0.1F, 1)));
 
 		public static void register()
 		{
@@ -90,8 +96,9 @@ public class SwgDimensions
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_thorilide"), ORE_THORILIDE);
 
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_oasis_lakes"), OASIS_LAKES);
-
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_mesa_mushrooms"), MESA_MUSHROOMS);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_japor_tree"), JAPOR_TREE);
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_japor_trees"), JAPOR_TREES);
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_CANYONS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
@@ -129,6 +136,7 @@ public class SwgDimensions
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
 				addVegetalPatch(builder, PATCH_POONTEN_GRASS);
 				addVegetalPatch(builder, PATCH_HKAK_BUSHES);
+				builder.feature(GenerationStep.Feature.VEGETAL_DECORATION, JAPOR_TREES);
 				builder.feature(GenerationStep.Feature.LAKES, OASIS_LAKES);
 			}));
 		}

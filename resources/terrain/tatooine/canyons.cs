@@ -41,7 +41,7 @@ class TerrainGenerator
         else
             height = 50 * Math.Pow(basin, 10) - 50;
 
-        return 80 + height;
+        return 50 + height;
     }
 
     /// <summary>

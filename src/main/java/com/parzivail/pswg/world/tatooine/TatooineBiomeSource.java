@@ -19,13 +19,13 @@ public class TatooineBiomeSource extends BiomeSource implements BackingBiomeSour
 {
 	private static final List<BiomeEntry> BIOME_VERTICES = ImmutableList.of(
 			new BiomeEntry(SwgDimensions.Tatooine.BIOME_DUNES_KEY, 0.6f, 0.20f),
-			new BiomeEntry(SwgDimensions.Tatooine.BIOME_CANYONS_KEY, 0.45f, 0.75f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_CANYONS_KEY, 0.566f, 0.767f),
 			new BiomeEntry(SwgDimensions.Tatooine.BIOME_PLATEAU_KEY, 0.202f, 0.867f),
-			new BiomeEntry(SwgDimensions.Tatooine.BIOME_MUSHMESA_KEY, 0.9f, 0.949f),
-			new BiomeEntry(SwgDimensions.Tatooine.BIOME_WASTES_KEY, 0.819f, 0.72f),
-			new BiomeEntry(SwgDimensions.Tatooine.BIOME_MOUNTAINS_KEY, 0.743f, 0.515f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_MUSHMESA_KEY, 0.351f, 0.631f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_WASTES_KEY, 0.706f, 0.536f),
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_MOUNTAINS_KEY, 0.819f, 0.72f),
 			new BiomeEntry(SwgDimensions.Tatooine.BIOME_SALTFLATS_KEY, 0.15f, 0.325f),
-			new BiomeEntry(SwgDimensions.Tatooine.BIOME_OASIS_KEY, 0.067f, 0.057f)
+			new BiomeEntry(SwgDimensions.Tatooine.BIOME_OASIS_KEY, 0.155f, 0.089f)
 	);
 
 	public static final Codec<TatooineBiomeSource> CODEC = RecordCodecBuilder.create(instance -> instance

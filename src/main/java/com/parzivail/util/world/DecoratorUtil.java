@@ -24,6 +24,7 @@ public class DecoratorUtil
 {
 	public static final ConfiguredDecorator<HeightmapDecoratorConfig> HEIGHTMAP_SPREAD_DOUBLE = Decorator.HEIGHTMAP_SPREAD_DOUBLE.configure(new HeightmapDecoratorConfig(Heightmap.Type.MOTION_BLOCKING));
 	public static final ConfiguredDecorator<?> SQUARE_HEIGHTMAP_SPREAD_DOUBLE = HEIGHTMAP_SPREAD_DOUBLE.spreadHorizontally();
+	public static final ConfiguredDecorator<?> WORLD_SURFACE_SPREAD = Decorator.HEIGHTMAP.configure(new HeightmapDecoratorConfig(Heightmap.Type.WORLD_SURFACE_WG)).spreadHorizontally();
 	public static final RangeDecoratorConfig BOTTOM_TO_TOP = new RangeDecoratorConfig(UniformHeightProvider.create(YOffset.getBottom(), YOffset.getTop()));
 
 	public static ConfiguredFeature<?, ?> bigPatches(int tries, int chance, UniformIntProvider repeat, Consumer<DataPool.Builder<BlockState>> poolBuilder)
