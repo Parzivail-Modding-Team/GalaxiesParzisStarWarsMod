@@ -196,7 +196,7 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 	{
 		// TODO: currently plains
 
-		var noise = noiseSrc.noise(x / 100, z / 100) * 10 + Math.abs(noiseSrc.rawNoise(x / 50, z / 50)) * 5;
+		var noise = noiseSrc.noise(x / 100, z / 100) * 5 + Math.abs(noiseSrc.rawNoise(x / 50, z / 50)) * 3;
 		return new BiomeSurfaceHint(noise, SwgBlocks.Sand.Desert.getDefaultState());
 	}
 

@@ -2,6 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
+import com.parzivail.pswg.world.feature.MesaMushroomFeature;
 import com.parzivail.pswg.world.tatooine.TatooineBiomeSource;
 import com.parzivail.pswg.world.tatooine.TatooineChunkGenerator;
 import com.parzivail.util.Consumers;
@@ -54,6 +55,8 @@ public class SwgDimensions
 		public static final RegistryKey<Biome> BIOME_SALTFLATS_KEY = RegistryKey.of(Registry.BIOME_KEY, Resources.id("tatooine_salt_flats"));
 		public static final RegistryKey<Biome> BIOME_OASIS_KEY = RegistryKey.of(Registry.BIOME_KEY, Resources.id("tatooine_oasis"));
 
+		private static final MesaMushroomFeature MESA_MUSHROOM = new MesaMushroomFeature(SingleStateFeatureConfig.CODEC);
+
 		private static final ConfiguredFeature<?, ?> PATCH_FUNNEL_FLOWER = DecoratorUtil.bigPatches(64, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.BlossomingFunnelFlower.getDefaultState(), 4).add(SwgBlocks.Plant.FunnelFlower.getDefaultState(), 7));
 		private static final ConfiguredFeature<?, ?> PATCH_POONTEN_GRASS = DecoratorUtil.bigPatches(64, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.PoontenGrass.getDefaultState(), 4).add(SwgBlocks.Plant.DriedPoontenGrass.getDefaultState(), 7));
 		private static final ConfiguredFeature<?, ?> PATCH_HKAK_BUSHES = DecoratorUtil.bigPatches(16, 1, UniformIntProvider.create(10, 20), blockStateBuilder -> blockStateBuilder.add(SwgBlocks.Plant.HkakBush.getDefaultState(), 10).add(SwgBlocks.Plant.HkakBush.getDefaultState().with(HkakBushBlock.AGE, 3), 1));
@@ -64,12 +67,15 @@ public class SwgDimensions
 		private static final ConfiguredFeature<?, ?> ORE_HELICITE = DecoratorUtil.ore(32, 128, 6, 25, SwgBlocks.Ore.Helicite.getDefaultState(), /* TODO */ null);
 		private static final ConfiguredFeature<?, ?> ORE_THORILIDE = DecoratorUtil.ore(48, 96, 9, 4, SwgBlocks.Ore.Thorilide.getDefaultState(), /* TODO */ null);
 
+		private static final ConfiguredFeature<?, ?> MESA_MUSHROOMS = MESA_MUSHROOM.configure(new SingleStateFeatureConfig(SwgBlocks.Stone.DesertSediment.getDefaultState())).decorate(DecoratorUtil.SQUARE_HEIGHTMAP_SPREAD_DOUBLE).applyChance(20);
 		private static final ConfiguredFeature<?, ?> OASIS_LAKES = Feature.LAKE.configure(new SingleStateFeatureConfig(Blocks.WATER.getDefaultState())).range(DecoratorUtil.BOTTOM_TO_TOP).spreadHorizontally().applyChance(4);
 
 		public static void register()
 		{
 			Registry.register(Registry.BIOME_SOURCE, Resources.id("tatooine_source"), TatooineBiomeSource.CODEC);
 			Registry.register(Registry.CHUNK_GENERATOR, Resources.id("tatooine_generator"), TatooineChunkGenerator.CODEC);
+
+			Registry.register(Registry.FEATURE, Resources.id("mesa_mushroom"), MESA_MUSHROOM);
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_DUNES_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, GEN_NONE));
 
@@ -82,7 +88,10 @@ public class SwgDimensions
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_zersium"), ORE_ZERSIUM);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_helicite"), ORE_HELICITE);
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_ore_thorilide"), ORE_THORILIDE);
+
 			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_oasis_lakes"), OASIS_LAKES);
+
+			Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, Resources.id("tatooine_mesa_mushrooms"), MESA_MUSHROOMS);
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_CANYONS_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
@@ -98,6 +107,7 @@ public class SwgDimensions
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_MUSHMESA_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
 				addVegetalPatch(builder, PATCH_FUNNEL_FLOWER);
+				builder.feature(GenerationStep.Feature.LOCAL_MODIFICATIONS, MESA_MUSHROOMS);
 			}));
 
 			Registry.register(BuiltinRegistries.BIOME, BIOME_WASTES_KEY.getValue(), getGenericDesertBiome(SPAWN_NONE, builder -> {
