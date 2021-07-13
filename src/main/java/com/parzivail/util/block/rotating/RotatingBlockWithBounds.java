@@ -4,6 +4,8 @@ import com.parzivail.util.block.VoxelShapeUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -64,6 +66,9 @@ public class RotatingBlockWithBounds extends RotatingBlock
 
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom)
 	{
+		if (state.get(Properties.WATERLOGGED))
+			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+
 		if (requiresSubstrate == Substrate.NONE)
 			return state;
 

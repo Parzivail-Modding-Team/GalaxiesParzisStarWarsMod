@@ -94,7 +94,6 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 	public BlockTatooineHomeDoor(Settings settings)
 	{
 		super(settings);
-
 		this.setDefaultState(this.stateManager.getDefaultState().with(PART, 0));
 	}
 

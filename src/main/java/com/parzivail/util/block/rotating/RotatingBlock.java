@@ -1,5 +1,6 @@
 package com.parzivail.util.block.rotating;
 
+import com.parzivail.util.block.WaterloggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemPlacementContext;
@@ -9,7 +10,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 
-public class RotatingBlock extends Block
+public class RotatingBlock extends WaterloggableBlock
 {
 	public static final DirectionProperty FACING = Properties.FACING;
 
@@ -20,7 +21,7 @@ public class RotatingBlock extends Block
 
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
-		return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+		return super.getPlacementState(ctx).with(FACING, ctx.getPlayerFacing().getOpposite());
 	}
 
 	public BlockState rotate(BlockState state, BlockRotation rotation)
@@ -35,6 +36,7 @@ public class RotatingBlock extends Block
 
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
+		super.appendProperties(builder);
 		builder.add(FACING);
 	}
 }

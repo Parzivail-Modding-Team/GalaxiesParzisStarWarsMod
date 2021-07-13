@@ -1,9 +1,11 @@
 package com.parzivail.util.block.connecting;
 
 import com.google.common.collect.Maps;
+import com.parzivail.util.block.WaterloggableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -21,7 +23,7 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Map;
 
-public abstract class ConnectingNodeBlock extends Block
+public abstract class ConnectingNodeBlock extends WaterloggableBlock
 {
 	public static final BooleanProperty NORTH;
 	public static final BooleanProperty EAST;
@@ -61,7 +63,7 @@ public abstract class ConnectingNodeBlock extends Block
 
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
-		BlockState state = this.getDefaultState();
+		BlockState state = super.getPlacementState(ctx);
 		BlockPos pos = ctx.getBlockPos();
 		World world = ctx.getWorld();
 
@@ -133,6 +135,9 @@ public abstract class ConnectingNodeBlock extends Block
 
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState otherState, WorldAccess world, BlockPos pos, BlockPos otherPos)
 	{
+		if (state.get(Properties.WATERLOGGED))
+			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+
 		if (!state.canPlaceAt(world, pos))
 		{
 			world.getBlockTickScheduler().schedule(pos, this, 1);
@@ -170,6 +175,7 @@ public abstract class ConnectingNodeBlock extends Block
 
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
+		super.appendProperties(builder);
 		builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);
 	}
 }
