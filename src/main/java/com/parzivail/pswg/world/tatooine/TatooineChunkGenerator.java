@@ -14,7 +14,6 @@ import com.parzivail.util.world.biome.BiomeSurfaceHint;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.biome.Biome;
@@ -137,65 +136,60 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 		return noiseGenerators.get(biomeKey).generate(x, z);
 	}
 
-	private double getWorleyDomainWarped(double x, double z)
-	{
-		double offsetX = noiseSrc.noise(x / 10, z / 10 + 1000) / 10;
-		double offsetY = noiseSrc.noise(x / 10 + 1000, z / 10) / 10;
-
-		return noiseSrc.worley(x / 50 + offsetX, z / 50 + offsetY);
-	}
-
 	private BiomeSurfaceHint genDunes(double x, double z)
 	{
-		double noise = noiseSrc.noise(x / 400 - 3000, z / 400) * 18;
+		var dX = noiseSrc.rawNoise(x / 100 + 1000, z / 100) * 20;
+		var dZ = noiseSrc.rawNoise(x / 100, z / 100 + 1000) * 20;
 
-		noise += noiseSrc.noise(x / 50, z / 50 - 3000) * 15;
+		var noise = noiseSrc.noise(x / 400 - 3000, z / 400) * 18;
 
-		noise *= (1 - Math.abs(noiseSrc.rawNoise(x / 70, z / 70 + 3000)));
+		var duneShape = Math.pow((1 - Math.abs(noiseSrc.rawNoise((x + dX) / 150, (z + dZ) / 150 + 3000))), 0.75);
+		noise += noiseSrc.noise(x / 80, z / 80 - 3000) * duneShape * 25;
 
 		return new BiomeSurfaceHint(MIN_HEIGHT + noise, SwgBlocks.Sand.Desert.getDefaultState());
 	}
 
 	private BiomeSurfaceHint genCanyons(double x, double z)
 	{
-		double s = 2;
-		double h = getWorleyDomainWarped(x / s, z / s);
-		double d = 5 * s;
+		var nx = noiseSrc.octaveNoise(x / 1500 + 1000, z / 1500, 8);
+		var nz = noiseSrc.octaveNoise(x / 1500, z / 1500 + 1000, 8);
+		var noise = noiseSrc.worley(x / 500 + nx, z / 500 + nz);
 
-		double blur = 0;
-		blur += getWorleyDomainWarped(x / s - d, z / s - d);
-		blur += getWorleyDomainWarped(x / s - d, z / s + d);
-		blur += getWorleyDomainWarped(x / s + d, z / s - d);
-		blur += getWorleyDomainWarped(x / s + d, z / s + d);
-		blur = blur / 4;
+		var d = 0.7;
+		var winding = Math.sqrt(noise);
+		var basin = (1 - (winding - d) / (1 - d));
 
-		h = 1 - (h - blur);
-		h = 1 - 1 / (2 * h) - 0.48;
-		h = h * 35;
+		double height = 0;
+		if (winding < d)
+			// Canyon tops
+			height = (basin - 1) * 10 * noiseSrc.octaveNoise(x / 500, z / 500, 6);
+		else
+			// Carved area
+			height = 50 * Math.pow(basin, 10) - 50;
 
-		h = MathHelper.clamp(h, 0, 1);
-		double j = noiseSrc.octaveNoise(x / 200f, z / 200f, 6) * 40;
-
-		var noise = (h * 0.8 + noiseSrc.octaveNoise(x / 200f, z / 200f, 3) * 0.4) * (j + 10);
-
-		// TODO: better surface hinting
-		return new BiomeSurfaceHint(MIN_HEIGHT + noise, SwgBlocks.Sand.DesertCanyon.getDefaultState());
+		return new BiomeSurfaceHint(MIN_HEIGHT + height, SwgBlocks.Stone.DesertSediment.getDefaultState());
 	}
 
 	private BiomeSurfaceHint genPlateau(double x, double z)
 	{
-		var h = noiseSrc.octaveNoise(x / 500, z / 500, 5);
+		var dX = noiseSrc.rawNoise(x / 50, z / 50 + 1000) * 10;
+		var dZ = noiseSrc.rawNoise(x / 50 + 1000, z / 50) * 10;
+		var h = noiseSrc.octaveNoise((x + dX) / 500, (z + dZ) / 500, 5);
 
-		h = Math.pow(h, 2) - 0.3;
+		h = Math.pow(h, 2) - 0.2;
 
-		var surfaceNoise = noiseSrc.octaveWorley(x / 100, z / 100, 5);
+		var surfaceNoise = noiseSrc.octaveNoise(x / 100, z / 100, 2) * 0.5;
 
 		if (h > 0.15)
 		{
+			// Surface hint: stratified sediment
 			return new BiomeSurfaceHint(MIN_HEIGHT + (0.5 + 0.15 * surfaceNoise) * 60, SwgBlocks.Stone.DesertSediment.getDefaultState());
 		}
 
-		return new BiomeSurfaceHint(MIN_HEIGHT + h * 180, SwgBlocks.Sand.DesertCanyon.getDefaultState());
+		var floorNoise = noiseSrc.rawNoise(x / 150, z / 150);
+
+		// Surface hint: loose rubble
+		return new BiomeSurfaceHint(MIN_HEIGHT + Math.max(h * 180, floorNoise * 2), SwgBlocks.Sand.DesertCanyon.getDefaultState());
 	}
 
 	private BiomeSurfaceHint genMushroomMesa(double x, double z)
@@ -208,44 +202,35 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 
 	private BiomeSurfaceHint genWastes(double x, double z)
 	{
-		var dx = noiseSrc.noise(x / 5, z / 5 + 3000) * 10;
-		var dz = noiseSrc.noise(x / 5 + 3000, z / 5) * 10;
+		var flatness = noiseSrc.noise(x / 200, z / 200);
+		var noise = noiseSrc.octaveNoise(x / 100, z / 100, 4) * 15 * flatness;
 
-		var peaks = noiseSrc.octaveInvWorley((x + dx) / 100 - 3000, (z + dz) / 100, 3) * 1.2;
+		var dx = noiseSrc.rawNoise(x / 20, z / 20 + 1000) * 5;
+		var dz = noiseSrc.rawNoise(x / 20 + 1000, z / 20) * 5;
 
-		BlockState surfaceHintBlock;
+		dx += noiseSrc.rawNoise(x / 100, z / 100 + 1000) * 18;
+		dz += noiseSrc.rawNoise(x / 100 + 1000, z / 100) * 18;
 
-		double noise;
-		var peaks30 = peaks * 30;
-		if (peaks30 > 25)
-		{
-			noise = peaks30 - 20;
+		var peaks = Math.pow(1 - noiseSrc.worley((x + dx) / 300 - 2000, (z + dz) / 300), 2);
 
-			surfaceHintBlock = SwgBlocks.Stone.DesertSediment.getDefaultState();
-		}
-		else
-		{
-			noise = 5;
-			surfaceHintBlock = SwgBlocks.Sand.Desert.getDefaultState();
-		}
+		var peakHeight = Math.min(peaks * 90 - 25, 40);
 
-		noise *= 5 * (noiseSrc.noise(x / 70, z / 70) + 0.1);
+		if (peakHeight > 0)
+			return new BiomeSurfaceHint(MIN_HEIGHT + peakHeight + noise, SwgBlocks.Sand.DesertCanyon.getDefaultState());
 
-		noise += noiseSrc.octaveNoise(x / 50, z / 50 - 3000, 3) * 30;
-
-		return new BiomeSurfaceHint(MIN_HEIGHT + noise, surfaceHintBlock);
+		return new BiomeSurfaceHint(MIN_HEIGHT + noise, SwgBlocks.Sand.Desert.getDefaultState());
 	}
 
 	private BiomeSurfaceHint genMountains(double x, double z)
 	{
-		var domainWarpScale = noiseSrc.noise(x / 100 - 1000, z / 100 - 1000);
-		var dx = noiseSrc.rawNoise(x / 80 + 1000, z / 80) * domainWarpScale * 20;
-		var dz = noiseSrc.rawNoise(x / 80, z / 80 + 1000) * domainWarpScale * 20;
-		var h = noiseSrc.octaveNoise((x + dx) / 400, (z + dz) / 400, 6) * 2;
+		var domainWarpScale = noiseSrc.rawNoise(x / 50 - 1000, z / 50 - 1000);
+		var dx = noiseSrc.rawNoise(x / 40 + 1000, z / 40) * domainWarpScale * 20;
+		var dz = noiseSrc.rawNoise(x / 40, z / 40 + 1000) * domainWarpScale * 20;
+		var h = noiseSrc.octaveNoise((x + dx) / 200, (z + dz) / 200, 6) * 2;
 
-		h *= Math.pow(1.2 - noiseSrc.octaveWorley(x / 600, z / 600, 2), 3);
+		h *= Math.pow(1.2 - noiseSrc.worley(x / 300, z / 300), 2);
 
-		return new BiomeSurfaceHint(MIN_HEIGHT + h * 75, SwgBlocks.Dirt.DesertLoam.getDefaultState());
+		return new BiomeSurfaceHint(MIN_HEIGHT + h * 50, SwgBlocks.Dirt.DesertLoam.getDefaultState());
 	}
 
 	private BiomeSurfaceHint genSaltFlats(double x, double z)

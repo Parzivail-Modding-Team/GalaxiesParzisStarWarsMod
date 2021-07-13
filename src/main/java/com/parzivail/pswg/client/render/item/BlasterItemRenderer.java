@@ -113,7 +113,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			matrices.translate(-0.4f, -1, -0.5f);
 		}
 
-		var vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(modelEntry.texture));
+		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(modelEntry.texture));
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		m.render(VertexConsumerBuffer.Instance);
 

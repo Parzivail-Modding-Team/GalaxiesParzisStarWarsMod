@@ -816,6 +816,7 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.CraftingComponents.BallBearing).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.DeshWire).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.ZersiumRod).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.StrippedJaporBranch).build(assets);
 
 		ItemGenerator.basic(SwgItems.Crystal.Exonium).build(assets);
 		ItemGenerator.basic(SwgItems.Crystal.Helicite).build(assets);
@@ -861,7 +862,6 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.HkakBean).build(assets);
 		ItemGenerator.basic(SwgItems.Food.PallieFruit).build(assets);
 		ItemGenerator.basic(SwgItems.Food.PikaFruit).build(assets);
-		ItemGenerator.basic(SwgItems.Food.StrippedJaporBranch).build(assets);
 		ItemGenerator.basic(SwgItems.Food.Tuber).build(assets);
 		ItemGenerator.basic(SwgItems.Food.CookedEopieLoin).build(assets);
 		ItemGenerator.basic(SwgItems.Food.CrispyGorg).build(assets);
@@ -879,7 +879,6 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.TuberMash).build(assets);
 		ItemGenerator.basic(SwgItems.Food.VaporatorMushroom).build(assets);
 		ItemGenerator.basic(SwgItems.Food.WorrtEgg).build(assets);
-		ItemGenerator.basic(SwgItems.Food.StrippedJaporBranch).build(assets);
 
 		ItemGenerator.basic(SwgItems.MobDrops.FaaBucket).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.LaaBucket).build(assets);
@@ -976,7 +975,7 @@ public class Tarkin
 		              .build(assets);
 
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
-		BlockGenerator.tangentCross(SwgBlocks.Leaves.Japor).build(assets);
+		BlockGenerator.tangentFan(SwgBlocks.Leaves.Japor).build(assets);
 
 		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"), Resources.id("block/sequoia_log")).build(assets);
 		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.id("block/japor_log_top"), Resources.id("block/japor_log")).build(assets);

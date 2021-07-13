@@ -17,7 +17,9 @@ import com.parzivail.util.item.PHoeItem;
 import com.parzivail.util.item.PPickaxeItem;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.registry.Registry;
 
 public class SwgItems
@@ -53,6 +55,9 @@ public class SwgItems
 		public static final Item ZersiumRod = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("durasteel_rod")
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
+
+		@RegistryName("stripped_japor_branch")
+		public static final Item StrippedJaporBranch = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Hoe
@@ -254,8 +259,6 @@ public class SwgItems
 		public static final Item PallieFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("pika_fruit")
 		public static final Item PikaFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
-		@RegistryName("stripped_japor_branch")
-		public static final Item StrippedJaporBranch = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("tuber")
 		public static final Item Tuber = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.Tab));
 		@RegistryName("cooked_eopie_loin")
@@ -295,9 +298,9 @@ public class SwgItems
 	public static class MobDrops
 	{
 		@RegistryName("faa_bucket")
-		public static final Item FaaBucket = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item FaaBucket = new EntityBucketItem(SwgEntities.Fish.Faa, Fluids.WATER, SoundEvents.ITEM_BUCKET_EMPTY_FISH, (new Item.Settings()).maxCount(1).group(Galaxies.Tab));
 		@RegistryName("laa_bucket")
-		public static final Item LaaBucket = new Item(new Item.Settings().group(Galaxies.Tab));
+		public static final Item LaaBucket = new EntityBucketItem(SwgEntities.Fish.Laa, Fluids.WATER, SoundEvents.ITEM_BUCKET_EMPTY_FISH, (new Item.Settings()).maxCount(1).group(Galaxies.Tab));
 		@RegistryName("corpse_of_gorg")
 		public static final Item CorpseOfGorg = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("bantha_horn")

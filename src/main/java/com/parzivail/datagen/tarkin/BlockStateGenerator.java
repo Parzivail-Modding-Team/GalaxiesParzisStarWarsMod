@@ -69,17 +69,39 @@ public class BlockStateGenerator
 
 	private static BlockStateVariantMap createBooleanModelMap(BooleanProperty property, Identifier trueModel, Identifier falseModel)
 	{
-		return BlockStateVariantMap.create(property).register(true, BlockStateVariant.create().put(VariantSettings.MODEL, trueModel)).register(false, BlockStateVariant.create().put(VariantSettings.MODEL, falseModel));
+		return BlockStateVariantMap.create(property)
+		                           .register(true, BlockStateVariant.create().put(VariantSettings.MODEL, trueModel))
+		                           .register(false, BlockStateVariant.create().put(VariantSettings.MODEL, falseModel));
 	}
 
 	private static BlockStateVariantMap createAxisRotatedVariantMap()
 	{
-		return BlockStateVariantMap.create(Properties.AXIS).register(Direction.Axis.Y, BlockStateVariant.create()).register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90)).register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90));
+		return BlockStateVariantMap.create(Properties.AXIS)
+		                           .register(Direction.Axis.Y, BlockStateVariant.create())
+		                           .register(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90))
+		                           .register(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90));
 	}
 
 	private static BlockStateVariantMap createUpDefaultFacingVariantMap()
 	{
-		return BlockStateVariantMap.create(Properties.FACING).register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R180)).register(Direction.UP, BlockStateVariant.create()).register(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90)).register(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R180)).register(Direction.WEST, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R270)).register(Direction.EAST, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90));
+		return BlockStateVariantMap.create(Properties.FACING)
+		                           .register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R180))
+		                           .register(Direction.UP, BlockStateVariant.create())
+		                           .register(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90))
+		                           .register(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R180))
+		                           .register(Direction.WEST, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R270))
+		                           .register(Direction.EAST, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R90).put(VariantSettings.Y, VariantSettings.Rotation.R90));
+	}
+
+	private static BlockStateVariantMap createUpDefaultFacingVariantMap(Identifier wallModel, Identifier floorModel)
+	{
+		return BlockStateVariantMap.create(Properties.FACING)
+		                           .register(Direction.DOWN, BlockStateVariant.create().put(VariantSettings.X, VariantSettings.Rotation.R180).put(VariantSettings.MODEL, floorModel))
+		                           .register(Direction.UP, BlockStateVariant.create().put(VariantSettings.MODEL, floorModel))
+		                           .register(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, wallModel))
+		                           .register(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R180).put(VariantSettings.MODEL, wallModel))
+		                           .register(Direction.WEST, BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R270).put(VariantSettings.MODEL, wallModel))
+		                           .register(Direction.EAST, BlockStateVariant.create().put(VariantSettings.Y, VariantSettings.Rotation.R90).put(VariantSettings.MODEL, wallModel));
 	}
 
 	public static BlockStateSupplier slab(Block block, Identifier bottomModelId, Identifier topModelId, Identifier fullModelId)
@@ -98,5 +120,10 @@ public class BlockStateGenerator
 	public static BlockStateSupplier tangentRotating(Block block, Identifier model)
 	{
 		return VariantsBlockStateSupplier.create(block, BlockStateVariant.create().put(VariantSettings.MODEL, model)).coordinate(createUpDefaultFacingVariantMap());
+	}
+
+	public static BlockStateSupplier tangentRotating(Block block, Identifier wallModel, Identifier floorModel)
+	{
+		return VariantsBlockStateSupplier.create(block).coordinate(createUpDefaultFacingVariantMap(wallModel, floorModel));
 	}
 }

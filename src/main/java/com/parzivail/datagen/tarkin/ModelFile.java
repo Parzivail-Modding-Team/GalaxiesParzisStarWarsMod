@@ -219,6 +219,31 @@ public class ModelFile
 		);
 	}
 
+	public static Collection<ModelFile> fans(Block block)
+	{
+		Identifier wallId = IdentifierUtil.concat(AssetGenerator.getRegistryName(block), "_wall");
+		return Arrays.asList(
+				fan(block),
+				ModelFile
+						.ofModel(wallId, new Identifier("block/coral_wall_fan"))
+						.texture("fan", AssetGenerator.getTextureName(block))
+		);
+	}
+
+	public static ModelFile fan(Block block)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/coral_fan"))
+				.texture("fan", AssetGenerator.getTextureName(block));
+	}
+
+	public static ModelFile wallFan(Block block)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/coral_wall_fan"))
+				.texture("fan", AssetGenerator.getTextureName(block));
+	}
+
 	public static ModelFile cross(Block block)
 	{
 		return ModelFile

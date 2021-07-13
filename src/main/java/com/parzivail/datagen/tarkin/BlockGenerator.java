@@ -137,6 +137,22 @@ public class BlockGenerator
 		return slab(block, model, model, model);
 	}
 
+	public static BlockGenerator tangentFan(Block block)
+	{
+		return basic(block)
+				.state(BlockStateGenerator::tangentRotating)
+				.model(ModelFile::fan)
+				.itemModel(ModelFile::item);
+	}
+
+	public static BlockGenerator tangentFans(Block block)
+	{
+		return basic(block)
+				.state((block1, model) -> BlockStateGenerator.tangentRotating(block1, IdentifierUtil.concat(model, "_wall"), model))
+				.models(ModelFile::fans)
+				.itemModel(ModelFile::item);
+	}
+
 	static BlockGenerator cross(Block block)
 	{
 		return basic(block)

@@ -15,20 +15,24 @@ class TerrainGenerator
     /// <returns>A height between 0 and 255, inclusive</returns>
     public double GetTerrain(double x, double z)
     {
-        var h = ProcNoise.OctaveNoise(x / 500, z / 500, 5);
+        var dX = ProcNoise.RawNoise(x / 50, z / 50 + 1000) * 10;
+        var dZ = ProcNoise.RawNoise(x / 50 + 1000, z / 50) * 10;
+        var h = ProcNoise.OctaveNoise((x + dX) / 500, (z + dZ) / 500, 5);
 
-        h = Math.Pow(h, 2) - 0.3;
+        h = Math.Pow(h, 2) - 0.2;
 
-        var surfaceNoise = ProcNoise.OctaveWorley(x / 100, z / 100, 5);
+        var surfaceNoise = ProcNoise.OctaveNoise(x / 100, z / 100, 2) * 0.5;
 
         if (h > 0.15)
         {
             // Surface hint: stratified sediment
-            return (0.5 + 0.15 * surfaceNoise) * 60;
+            return 50 + (0.5 + 0.15 * surfaceNoise) * 60;
         }
+
+        var floorNoise = ProcNoise.RawNoise(x / 150, z / 150);
         
         // Surface hint: loose rubble
-        return h * 180;
+        return 50 + Math.Max(h * 180, floorNoise * 2);
     }
 
     /// <summary>

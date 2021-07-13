@@ -8,7 +8,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
 
-public class DryingBlock extends MutatingBlock
+public class DryingBlock extends FallingMutatingBlock
 {
 	public DryingBlock(Block target, int meanTransitionTime, Settings settings)
 	{
