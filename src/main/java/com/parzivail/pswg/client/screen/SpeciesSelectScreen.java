@@ -299,15 +299,12 @@ public class SpeciesSelectScreen extends Screen
 			return;
 
 		matrixStack.push();
-//		RenderSystem.pushMatrix();
 
 		PlayerEntity entity = client.player;
 		float f = (float)Math.atan(mouseX / 40.0F);
 		float g = (float)Math.atan(mouseY / 40.0F);
-//		RenderSystem.translatef((float)x, (float)y, 1000.0F);
-//		RenderSystem.scalef(1.0F, 1.0F, -1.0F);
 		matrixStack.translate(0.0D, 0.0D, 500.0D);
-		matrixStack.scale((float)size, (float)size, -(float)size);
+		matrixStack.scale(size, size, -size);
 		Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
 		Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
 		quaternion.hamiltonProduct(quaternion2);
@@ -334,7 +331,7 @@ public class SpeciesSelectScreen extends Screen
 		// TODO: cast renderer to PlayerEntityRendererWithModel
 
 //		renderer.renderWithTexture(SwgSpeciesModels.getTexture(species), client.player, 1, 1, matrixStack, immediate, 0xf000f0);
-		renderer.render(client.player, 1, 1, matrixStack, immediate, 0xF000F0);
+		renderer.render(client.player, 1, 1, matrixStack, immediate, 0xf000f0);
 
 		immediate.draw();
 		entity.bodyYaw = h;
@@ -344,7 +341,6 @@ public class SpeciesSelectScreen extends Screen
 		entity.headYaw = l;
 
 		matrixStack.pop();
-//		RenderSystem.popMatrix();
 	}
 
 	public void renderBackgroundTexture(int vOffset)

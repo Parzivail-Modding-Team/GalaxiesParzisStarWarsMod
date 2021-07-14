@@ -10,6 +10,7 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.Heightmap;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -18,11 +19,12 @@ public class DimensionTeleporter
 {
 	public static void teleport(Entity entity, ServerWorld world)
 	{
-		BlockPos target = world.getSpawnPos();
+		var y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
+
 		Set<PlayerPositionLookS2CPacket.Flag> set = EnumSet.noneOf(PlayerPositionLookS2CPacket.Flag.class);
 		set.add(PlayerPositionLookS2CPacket.Flag.X_ROT);
 		set.add(PlayerPositionLookS2CPacket.Flag.Y_ROT);
-		teleport(entity, world, target.getX(), target.getY(), target.getZ(), 0, 0, set);
+		teleport(entity, world, 0, y, 0, 0, 0, set);
 	}
 
 	public static void teleport(Entity entity, ServerWorld world, double x, double y, double z, float pitch, float yaw, Set<PlayerPositionLookS2CPacket.Flag> movementFlags)

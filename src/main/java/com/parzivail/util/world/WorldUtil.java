@@ -15,9 +15,9 @@ public class WorldUtil
 		int skyLight = world.getLightLevel(LightType.SKY, pos) - world.getAmbientDarkness();
 		float skyAngle = world.getSkyAngleRadians(1.0F);
 
-		float upperBoundAngle = skyAngle < 3.1415927F ? 0.0F : 6.2831855F;
+		var upperBoundAngle = skyAngle < Math.PI ? 0 : (2 * Math.PI);
 		skyAngle += (upperBoundAngle - skyAngle) * 0.2F;
-		skyLight = Math.round((float)skyLight * MathHelper.cos(skyAngle));
+		skyLight = Math.round(skyLight * MathHelper.cos(skyAngle));
 
 		skyLight = MathHelper.clamp(skyLight, 0, 15);
 
