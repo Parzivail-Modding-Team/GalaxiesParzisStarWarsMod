@@ -9,6 +9,7 @@ import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.ChunkSectionPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Heightmap;
 
@@ -19,7 +20,7 @@ public class DimensionTeleporter
 {
 	public static void teleport(Entity entity, ServerWorld world)
 	{
-		var y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, 0, 0);
+		var y = world.getChunk(ChunkSectionPos.getSectionCoord(0), ChunkSectionPos.getSectionCoord(0)).sampleHeightmap(Heightmap.Type.MOTION_BLOCKING, 0, 0) + 1;
 
 		Set<PlayerPositionLookS2CPacket.Flag> set = EnumSet.noneOf(PlayerPositionLookS2CPacket.Flag.class);
 		set.add(PlayerPositionLookS2CPacket.Flag.X_ROT);
