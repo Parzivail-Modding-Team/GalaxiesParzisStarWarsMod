@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.model.npc;
+package com.parzivail.pswg.client.model;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -10,15 +10,28 @@ import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+import java.util.function.Supplier;
+
 @Environment(EnvType.CLIENT)
 public class PlayerEntityRendererWithModel extends PlayerEntityRenderer
 {
+	private final Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> modelSupplier;
 	private Identifier overrideTexture;
 
-	public PlayerEntityRendererWithModel(EntityRendererFactory.Context ctx, boolean slim, PlayerEntityModel<AbstractClientPlayerEntity> model)
+	public PlayerEntityRendererWithModel(EntityRendererFactory.Context ctx, boolean slim, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> model)
 	{
 		super(ctx, slim);
-		this.model = model;
+		this.modelSupplier = model;
+	}
+
+	@Override
+	public PlayerEntityModel<AbstractClientPlayerEntity> getModel()
+	{
+		// This works because this method is called
+		// when the pose is set, before this.model is
+		// used directly
+		this.model = modelSupplier.get();
+		return super.getModel();
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.model.npc.PlayerEntityRendererWithModel;
+import com.parzivail.pswg.client.model.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
@@ -306,7 +306,7 @@ public class SpeciesSelectScreen extends Screen
 		matrixStack.multiply(quaternion);
 		var h = entity.bodyYaw;
 		var i = entity.getYaw();
-		var j = entity.getYaw();
+		var j = entity.getPitch();
 		var k = entity.prevHeadYaw;
 		var l = entity.headYaw;
 		entity.bodyYaw = 180.0F + f * 20.0F;

@@ -4,6 +4,8 @@ import com.parzivail.pswg.client.model.ModelAngleAnimator;
 import com.parzivail.pswg.client.model.MutableAnimatedModel;
 import com.parzivail.util.binary.KeyedReloadableLoader;
 import net.minecraft.client.model.*;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
@@ -20,17 +22,21 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 {
 	private final Map<Identifier, TexturedModelData> modelData;
-	private final ArrayList<Pair<Identifier, MutableAnimatedModel<? extends Entity>>> models;
+	private final ArrayList<Pair<Identifier, Consumer<ModelPart>>> models;
+	private final HashMap<Identifier, PlayerEntityModel<AbstractClientPlayerEntity>> playerModels;
 
 	public NemManager()
 	{
 		super("models", "nem");
 		modelData = new HashMap<>();
 		models = new ArrayList<>();
+		playerModels = new HashMap<>();
 	}
 
 	@Override
@@ -121,21 +127,28 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 		modelData.clear();
 		modelData.putAll(prepared);
 
-		// The model instances get pulled into their renderers before the models are loaded
-		// from disk but before they're actually rendered, so we can set the model root here
+		// The model loading sites return before the models are loaded from disk and before
+		// they're actually rendered, so we use a callback system to set the model part
+		// when the part becomes available
 		for (var modelInfo : models)
 		{
 			var modelId = modelInfo.getLeft();
 			var model = modelInfo.getRight();
 
-			model.setRoot(modelData.get(modelId).createModel());
+			model.accept(modelData.get(modelId).createModel());
 		}
 	}
 
 	public <T extends Entity> MutableAnimatedModel<T> getModel(Identifier modelId, ModelAngleAnimator<T> angleAnimator)
 	{
 		var model = new MutableAnimatedModel<>(angleAnimator);
-		models.add(new Pair<>(modelId, model));
+		models.add(new Pair<>(modelId, model::setRoot));
 		return model;
+	}
+
+	public Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> getPlayerModel(Identifier modelId, boolean thinArms)
+	{
+		models.add(new Pair<>(modelId, modelPart -> playerModels.put(modelId, new PlayerEntityModel<>(modelPart, thinArms))));
+		return () -> playerModels.get(modelId);
 	}
 }
