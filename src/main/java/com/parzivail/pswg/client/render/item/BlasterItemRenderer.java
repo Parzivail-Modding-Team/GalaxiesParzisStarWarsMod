@@ -17,6 +17,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 
 import java.util.HashMap;
@@ -67,6 +68,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			blasterModel = "pswg:a280";
 
 		var bdId = new Identifier(blasterModel);
+		var bt = new BlasterTag(tag);
 
 		var modelEntry = getModel(bdId);
 
@@ -103,9 +105,23 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		}
 		else if (renderMode.isFirstPerson())
 		{
-			matrices.translate(0, 1.2f, 0);
-			matrices.multiply(new Quaternion(4, 172, 0, true));
-			matrices.translate(0.2f, -0.2f, -1.2f);
+			//			matrices.translate(0, 1.2f, 0);
+			//			matrices.multiply(new Quaternion(4, 172, 0, true));
+			//			matrices.translate(0.2f, -0.2f, -1.2f);
+
+			var adsLerp = bt.getAdsLerp();
+
+			matrices.translate(
+					MathHelper.lerp(adsLerp, 0, -2.3),
+					MathHelper.lerp(adsLerp, 1.2f, 1.75f),
+					MathHelper.lerp(adsLerp, 0, 1.8f)
+			);
+			matrices.multiply(new Quaternion(0, 180, 0, true));
+			matrices.translate(
+					MathHelper.lerp(adsLerp, 0.2f, 0),
+					MathHelper.lerp(adsLerp, -0.2f, 0),
+					MathHelper.lerp(adsLerp, -1.2f, 0)
+			);
 		}
 		else
 		{

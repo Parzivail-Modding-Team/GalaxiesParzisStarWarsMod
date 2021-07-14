@@ -15,6 +15,8 @@ import com.parzivail.util.client.render.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.item.IZoomingItem;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,6 +32,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.world.World;
 
@@ -52,7 +55,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		final var stack = player.getStackInHand(hand);
 
 		if (!world.isClient)
-			BlasterTag.mutate(stack, t -> t.isAimingDownSights = !t.isAimingDownSights);
+			BlasterTag.mutate(stack, BlasterTag::toggleAds);
 
 		return TypedActionResult.fail(stack);
 	}
@@ -298,13 +301,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
+	@Environment(EnvType.CLIENT)
 	public double getFovMultiplier(ItemStack stack, World world, PlayerEntity entity)
 	{
 		var bt = new BlasterTag(stack.getOrCreateTag());
 
-		if (bt.isAimingDownSights)
-			return 0.2f;
-
-		return 1;
+		// TODO: blaster variable zoom
+		return MathHelper.lerp(bt.getAdsLerp(), 1, 0.2f);
 	}
 }
