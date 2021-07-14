@@ -1,7 +1,6 @@
 package com.parzivail.util.entity;
 
 import com.parzivail.util.math.EntityHitResult;
-import com.parzivail.util.math.MathUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -63,14 +62,6 @@ public class EntityUtil
 	{
 		Vec3d end = startPos.add(fromDir.multiply(distance));
 		return fromEntity.world.raycast(new RaycastContext(startPos, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, fromEntity));
-	}
-
-	public static Vec3d getPosition(Entity e, float tickDelta)
-	{
-		Vec3d parentPos = e.getPos();
-		Vec3d prevParentPos = new Vec3d(e.prevX, e.prevY, e.prevZ);
-
-		return MathUtil.lerp(tickDelta, prevParentPos, parentPos);
 	}
 
 	public static void setVelocityFromAngles(Entity entity, float pitch, float yaw, float roll, float scalar)

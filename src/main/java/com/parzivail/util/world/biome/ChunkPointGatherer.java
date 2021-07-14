@@ -10,11 +10,11 @@ public class ChunkPointGatherer<T>
 {
 	private static final double CHUNK_RADIUS_RATIO = Math.sqrt(1.0 / 2.0);
 
-	int halfChunkWidth;
-	double maxPointContributionRadius;
-	double maxPointContributionRadiusSq;
-	double radiusPlusHalfChunkWidth;
-	UnfilteredPointGatherer<T> unfilteredPointGatherer;
+	final int halfChunkWidth;
+	final double maxPointContributionRadius;
+	final double maxPointContributionRadiusSq;
+	final double radiusPlusHalfChunkWidth;
+	final UnfilteredPointGatherer<T> unfilteredPointGatherer;
 
 	public ChunkPointGatherer(double frequency, double maxPointContributionRadius, int chunkWidth)
 	{
@@ -22,8 +22,8 @@ public class ChunkPointGatherer<T>
 		this.maxPointContributionRadius = maxPointContributionRadius;
 		this.maxPointContributionRadiusSq = maxPointContributionRadius * maxPointContributionRadius;
 		this.radiusPlusHalfChunkWidth = maxPointContributionRadius + halfChunkWidth;
-		unfilteredPointGatherer = new UnfilteredPointGatherer<T>(frequency,
-		                                                         maxPointContributionRadius + chunkWidth * CHUNK_RADIUS_RATIO);
+		unfilteredPointGatherer = new UnfilteredPointGatherer<>(frequency,
+		                                                        maxPointContributionRadius + chunkWidth * CHUNK_RADIUS_RATIO);
 	}
 
 	public List<GatheredPoint<T>> getPointsFromChunkBase(long seed, int chunkBaseWorldX, int chunkBaseWorldZ)

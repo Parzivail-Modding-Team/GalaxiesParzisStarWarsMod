@@ -37,9 +37,7 @@ public class TwoJointIk
 	{
 		var entityPos = entity.getPos();
 
-		var l1 = upperLegLength;
-		var l2 = lowerLegLength;
-		var lTotal = l1 + l2;
+		var lTotal = upperLegLength + lowerLegLength;
 
 		var hipYaw = hip.x == footRequest.x && hip.z == footRequest.z ? entity.getYaw() : MathHelper.atan2(footRequest.z - hip.z, footRequest.x - hip.x) / Math.PI * 180 - 90;
 
@@ -58,8 +56,8 @@ public class TwoJointIk
 		var endX = footRequest.horizontalLength();
 		var endY = footRequest.y;
 
-		var lSquareDiff = l1 * l1 - l2 * l2;
-		var lSquareSum = l1 * l1 + l2 * l2;
+		var lSquareDiff = upperLegLength * upperLegLength - lowerLegLength * lowerLegLength;
+		var lSquareSum = upperLegLength * upperLegLength + lowerLegLength * lowerLegLength;
 		var dSquare = footRequest.lengthSquared();
 		var coef = lSquareDiff / (2 * dSquare);
 		var coef2 = Math.sqrt(2 * (lSquareSum / dSquare) - lSquareDiff * lSquareDiff / (dSquare * dSquare) - 1) / 2f;

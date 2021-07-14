@@ -21,13 +21,6 @@ public class ClientMathUtil
 		return new Vec3f(v4.getX(), v4.getY(), v4.getZ());
 	}
 
-	public static Vec3f transform(Vec3f v, Matrix3f m)
-	{
-		Vec3f v3 = v.copy();
-		v3.transform(m);
-		return v3;
-	}
-
 	public static Quaternion getRotation(Direction direction)
 	{
 		return switch (direction)

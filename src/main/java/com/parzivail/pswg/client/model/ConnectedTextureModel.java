@@ -107,12 +107,12 @@ public class ConnectedTextureModel extends DynamicBakedModel
 				if (capSprite != null && (cullFace == Direction.UP || cullFace == Direction.DOWN))
 					sprite = capSprite;
 
-				SubSprite subSprite = getSubSprite(sprite, 4, 4, subSpritePoint.x, subSpritePoint.y);
+				SubSprite subSprite = getSubSprite(sprite, 4, 4, subSpritePoint.x(), subSpritePoint.y());
 
-				quadEmitter.sprite(0, 0, subSprite.minU, subSprite.minV);
-				quadEmitter.sprite(1, 0, subSprite.minU, subSprite.maxV);
-				quadEmitter.sprite(2, 0, subSprite.maxU, subSprite.maxV);
-				quadEmitter.sprite(3, 0, subSprite.maxU, subSprite.minV);
+				quadEmitter.sprite(0, 0, subSprite.minU(), subSprite.minV());
+				quadEmitter.sprite(1, 0, subSprite.minU(), subSprite.maxV());
+				quadEmitter.sprite(2, 0, subSprite.maxU(), subSprite.maxV());
+				quadEmitter.sprite(3, 0, subSprite.maxU(), subSprite.minV());
 				quadEmitter.emit();
 			}
 		}

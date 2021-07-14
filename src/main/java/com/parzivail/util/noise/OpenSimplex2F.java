@@ -203,7 +203,7 @@ public class OpenSimplex2F
 		// Identify which octant of the cube we're in. This determines which cell
 		// in the other cubic lattice we're in, and also narrows down one point on each.
 		int xht = (int)(xri + 0.5), yht = (int)(yri + 0.5), zht = (int)(zri + 0.5);
-		int index = (xht << 0) | (yht << 1) | (zht << 2);
+		int index = (xht) | (yht << 1) | (zht << 2);
 
 		// Point contributions
 		double value = 0;
@@ -501,7 +501,7 @@ public class OpenSimplex2F
 		for (int i = 0; i < 8; i++)
 		{
 			int i1, j1, k1, i2, j2, k2;
-			i1 = (i >> 0) & 1;
+			i1 = (i) & 1;
 			j1 = (i >> 1) & 1;
 			k1 = (i >> 2) & 1;
 			i2 = i1 ^ 1;
@@ -546,14 +546,16 @@ public class OpenSimplex2F
 
 		for (int i = 0; i < 16; i++)
 		{
-			VERTICES_4D[i] = new LatticePoint4D((i >> 0) & 1, (i >> 1) & 1, (i >> 2) & 1, (i >> 3) & 1);
+			VERTICES_4D[i] = new LatticePoint4D((i) & 1, (i >> 1) & 1, (i >> 2) & 1, (i >> 3) & 1);
 		}
 	}
 
 	private static class LatticePoint2D
 	{
-		int xsv, ysv;
-		double dx, dy;
+		final int xsv;
+		final int ysv;
+		final double dx;
+		final double dy;
 
 		public LatticePoint2D(int xsv, int ysv)
 		{
@@ -567,8 +569,12 @@ public class OpenSimplex2F
 
 	private static class LatticePoint3D
 	{
-		public double dxr, dyr, dzr;
-		public int xrv, yrv, zrv;
+		public final double dxr;
+		public final double dyr;
+		public final double dzr;
+		public final int xrv;
+		public final int yrv;
+		public final int zrv;
 		LatticePoint3D nextOnFailure, nextOnSuccess;
 
 		public LatticePoint3D(int xrv, int yrv, int zrv, int lattice)
@@ -584,10 +590,16 @@ public class OpenSimplex2F
 
 	private static class LatticePoint4D
 	{
-		int xsv, ysv, zsv, wsv;
-		double dx, dy, dz, dw;
+		final int xsv;
+		final int ysv;
+		final int zsv;
+		final int wsv;
+		final double dx;
+		final double dy;
+		final double dz;
+		final double dw;
 		double xsi, ysi, zsi, wsi;
-		double ssiDelta;
+		final double ssiDelta;
 
 		public LatticePoint4D(int xsv, int ysv, int zsv, int wsv)
 		{
@@ -685,10 +697,10 @@ public class OpenSimplex2F
 				new Grad2(-0.38268343236509, 0.923879532511287),
 				new Grad2(-0.130526192220052, 0.99144486137381)
 		};
-		for (int i = 0; i < grad2.length; i++)
+		for (Grad2 element : grad2)
 		{
-			grad2[i].dx /= N2;
-			grad2[i].dy /= N2;
+			element.dx /= N2;
+			element.dy /= N2;
 		}
 		for (int i = 0; i < PSIZE; i++)
 		{
@@ -746,11 +758,11 @@ public class OpenSimplex2F
 				new Grad3(3.0862664687972017, 1.1721513422464978, 0.0),
 				new Grad3(1.1721513422464978, 3.0862664687972017, 0.0)
 		};
-		for (int i = 0; i < grad3.length; i++)
+		for (Grad3 item : grad3)
 		{
-			grad3[i].dx /= N3;
-			grad3[i].dy /= N3;
-			grad3[i].dz /= N3;
+			item.dx /= N3;
+			item.dy /= N3;
+			item.dz /= N3;
 		}
 		for (int i = 0; i < PSIZE; i++)
 		{
@@ -920,12 +932,12 @@ public class OpenSimplex2F
 				new Grad4(0.7821684431180708, 0.4321472685365301, 0.4321472685365301, -0.12128480194602098),
 				new Grad4(0.753341017856078, 0.37968289875261624, 0.37968289875261624, 0.37968289875261624)
 		};
-		for (int i = 0; i < grad4.length; i++)
+		for (Grad4 value : grad4)
 		{
-			grad4[i].dx /= N4;
-			grad4[i].dy /= N4;
-			grad4[i].dz /= N4;
-			grad4[i].dw /= N4;
+			value.dx /= N4;
+			value.dy /= N4;
+			value.dz /= N4;
+			value.dw /= N4;
 		}
 		for (int i = 0; i < PSIZE; i++)
 		{

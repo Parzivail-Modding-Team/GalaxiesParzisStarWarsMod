@@ -32,9 +32,7 @@ public abstract class KeyedReloadableLoader<T> extends SinglePreparationResource
 	{
 		Map<Identifier, T> map = Maps.newHashMap();
 		var i = this.startingPath.length() + 1;
-		var resources = resourceManager.findResources(this.startingPath, (s) -> {
-			return s.endsWith(fileSuffix);
-		});
+		var resources = resourceManager.findResources(this.startingPath, (s) -> s.endsWith(fileSuffix));
 
 		for (var resourceId : resources)
 		{

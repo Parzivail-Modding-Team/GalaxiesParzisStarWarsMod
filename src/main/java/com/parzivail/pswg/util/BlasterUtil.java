@@ -34,12 +34,12 @@ public class BlasterUtil
 		EntityHitResult hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
 		BlockHitResult blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player);
 
-		double entityDistance = hit == null ? Double.MAX_VALUE : hit.hit.squaredDistanceTo(player.getPos());
+		double entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
 		double blockDistance = blockHit == null ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
 
 		if (hit != null && entityDistance < blockDistance)
 		{
-			hit.entity.damage(getDamageSource(bolt, player), damage);
+			hit.entity().damage(getDamageSource(bolt, player), damage);
 		}
 		else if (blockHit != null)
 		{

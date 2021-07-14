@@ -139,7 +139,7 @@ public class ScatteredBiomeBlender
 
 	private static class BiomeEvaluation
 	{
-		int biome;
+		final int biome;
 		double tempDzSquared;
 
 		public BiomeEvaluation(int biome)

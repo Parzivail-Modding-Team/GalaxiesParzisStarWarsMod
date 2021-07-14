@@ -53,7 +53,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 	}
 
 	protected final ItemProxy itemProxy = new ItemProxy();
-	protected HashMap<ModelCacheId, Mesh> meshes = new HashMap<>();
+	protected final HashMap<ModelCacheId, Mesh> meshes = new HashMap<>();
 	protected WeakReference<List<BakedQuad>[]> quadLists = null;
 
 	public DynamicBakedModel(Sprite sprite, ModelTransformation transformation)
@@ -160,17 +160,8 @@ public abstract class DynamicBakedModel extends AbstractModel
 		}
 	}
 
-	private static class ModelCacheId
+	private record ModelCacheId(Object discriminator, Matrix4f transformation)
 	{
-		private final Object discriminator;
-		private final Matrix4f transformation;
-
-		public ModelCacheId(Object discriminator, Matrix4f transformation)
-		{
-			this.discriminator = discriminator;
-			this.transformation = transformation;
-		}
-
 		@Override
 		public int hashCode()
 		{
@@ -185,10 +176,8 @@ public abstract class DynamicBakedModel extends AbstractModel
 		{
 			if (this == o)
 				return true;
-			if (!(o instanceof ModelCacheId))
+			if (!(o instanceof ModelCacheId cacheId))
 				return false;
-
-			ModelCacheId cacheId = (ModelCacheId)o;
 
 			return Objects.equals(discriminator, cacheId.discriminator) && Objects.equals(transformation, cacheId.transformation);
 		}

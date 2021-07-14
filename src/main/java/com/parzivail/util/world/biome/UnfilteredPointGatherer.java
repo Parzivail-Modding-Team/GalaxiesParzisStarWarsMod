@@ -57,10 +57,7 @@ public class UnfilteredPointGatherer<T>
 				j++;
 			}
 		}
-		for (int j = N_VECTORS_WITH_REPETITION; j < sinCosArraySize; j++)
-		{
-			JITTER_SINCOS[j] = JITTER_SINCOS[j - N_VECTORS_WITH_REPETITION];
-		}
+		System.arraycopy(JITTER_SINCOS, 0, JITTER_SINCOS, N_VECTORS_WITH_REPETITION, sinCosArraySize - 32);
 	}
 
 	private final double frequency, inverseFrequency;
@@ -205,10 +202,8 @@ public class UnfilteredPointGatherer<T>
 
 		// Loop through pregenerated array of all points which could be in range, relative to the closest.
 		ArrayList<GatheredPoint<T>> worldPointsList = new ArrayList<>(pointsToSearch.length);
-		for (int i = 0; i < pointsToSearch.length; i++)
+		for (LatticePoint point : pointsToSearch)
 		{
-			LatticePoint point = pointsToSearch[i];
-
 			// Prime multiplications for jitter hash
 			int xsvp = xsbp + point.xsvp;
 			int zsvp = zsbp + point.zsvp;
@@ -234,7 +229,7 @@ public class UnfilteredPointGatherer<T>
 			// without the added overhead of this less limiting check.
 			// A possible alternate implementation of this could employ a callback function,
 			// to avoid adding the points to the list in the first place.
-			GatheredPoint<T> worldPoint = new GatheredPoint<T>(scaledX * inverseFrequency, scaledZ * inverseFrequency, remainingHash);
+			GatheredPoint<T> worldPoint = new GatheredPoint<>(scaledX * inverseFrequency, scaledZ * inverseFrequency, remainingHash);
 			worldPointsList.add(worldPoint);
 		}
 
@@ -243,8 +238,10 @@ public class UnfilteredPointGatherer<T>
 
 	private static class LatticePoint
 	{
-		public int xsvp, zsvp;
-		public double xv, zv;
+		public final int xsvp;
+		public final int zsvp;
+		public final double xv;
+		public final double zv;
 
 		public LatticePoint(int xsv, int zsv)
 		{

@@ -107,6 +107,9 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 			for (var i = 0; i < strChunk.numSections; i++)
 			{
 				var section = strChunk.readSection();
+				var states = section.blockStates();
+				var palette = section.palette();
+				var sY = section.y();
 
 				for (var y = 0; y < 16; y++)
 				{
@@ -114,15 +117,15 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 					{
 						for (var x = 0; x < 16; x++)
 						{
-							var stateIdx = section.blockStates[y * 256 + z * 16 + x];
-							if (stateIdx >= section.palette.length)
+							var stateIdx = states[y * 256 + z * 16 + x];
+							if (stateIdx >= palette.length)
 							{
 								Lumberjack.warn("Invalid SCARIF palette index for chunk %s,%s, block %s,%s,%s", chunkPos.x, chunkPos.z, x, y, z);
 								continue;
 							}
 
-							var blockState = section.palette[stateIdx];
-							chunk.setBlockState(pos.set(x, section.y + y, z), blockState, false);
+							var blockState = section.palette()[stateIdx];
+							chunk.setBlockState(pos.set(x, sY + y, z), blockState, false);
 						}
 					}
 				}

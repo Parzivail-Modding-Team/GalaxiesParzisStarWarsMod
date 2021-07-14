@@ -14,19 +14,9 @@ import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 
-public class ScarifStructure
+public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stream, HashMap<ChunkPos, Long> entries)
 {
 	private static final String MAGIC = "SCRF";
-	private final LittleEndianDataInputStream stream;
-	private final FileChannel file;
-	private final HashMap<ChunkPos, Long> entries;
-
-	public ScarifStructure(FileChannel file, LittleEndianDataInputStream stream, HashMap<ChunkPos, Long> entries)
-	{
-		this.file = file;
-		this.stream = stream;
-		this.entries = entries;
-	}
 
 	public static ScarifStructure read(Identifier filename)
 	{
@@ -66,7 +56,7 @@ public class ScarifStructure
 		}
 		catch (IOException e)
 		{
-			CrashReport crashReport = CrashReport.create(e, String.format("Could not load structure: %s", filename.toString()));
+			CrashReport crashReport = CrashReport.create(e, String.format("Could not load structure: %s", filename));
 			throw new CrashException(crashReport);
 		}
 	}
