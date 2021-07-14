@@ -103,9 +103,9 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		}
 		else if (renderMode.isFirstPerson())
 		{
-			matrices.translate(0, 0.9f, 0);
-			matrices.multiply(new Quaternion(0, 180, 0, true));
-			matrices.translate(-0.4f, -0.5f, -0.25f);
+			matrices.translate(0, 1.2f, 0);
+			matrices.multiply(new Quaternion(4, 172, 0, true));
+			matrices.translate(0.2f, -0.2f, -1.2f);
 		}
 		else
 		{
