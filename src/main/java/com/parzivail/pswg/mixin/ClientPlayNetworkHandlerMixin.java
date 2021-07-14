@@ -33,8 +33,8 @@ public class ClientPlayNetworkHandlerMixin
 					.styled((style) -> style
 							.withColor(TextColor.fromRgb(0x5bc0de))
 							.withUnderline(true)
-							.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://pswg.dev/download.html"))
-							.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("PSWG Homepage")))
+							.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/pswg"))
+							.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("PSWG on CurseForge")))
 					);
 			client.player.sendMessage(new TranslatableText("msg.pswg.update", versionText, urlText), false);
 		}
