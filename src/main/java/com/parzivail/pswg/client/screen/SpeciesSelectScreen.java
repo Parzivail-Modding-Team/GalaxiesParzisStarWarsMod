@@ -2,8 +2,10 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.model.npc.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
+import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -99,16 +101,16 @@ public class SpeciesSelectScreen extends Screen
 			return entries.stream().filter(swgSpeciesEntry -> playerSpecies.isSameSpecies(swgSpeciesEntry.getValue())).findFirst().orElse(null);
 		});
 
-		this.addSelectableChild(speciesVariableListWidget);
-		this.addSelectableChild(speciesListWidget);
+		this.addDrawableChild(speciesVariableListWidget);
+		this.addDrawableChild(speciesListWidget);
 
-		this.addSelectableChild(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, new LiteralText("<"), (button) -> moveToNextVariableOption(true)));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, new LiteralText("<"), (button) -> moveToNextVariableOption(true)));
 
-		this.addSelectableChild(new ButtonWidget(this.width / 2 + 100, this.height / 2 - 10, 20, 20, new LiteralText(">"), (button) -> moveToNextVariableOption(false)));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 + 100, this.height / 2 - 10, 20, 20, new LiteralText(">"), (button) -> moveToNextVariableOption(false)));
 
-		this.addSelectableChild(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> this.client.openScreen(this.parent)));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> this.client.openScreen(this.parent)));
 
-		this.addSelectableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText("gui.pswg.apply"), (button) -> {
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText("gui.pswg.apply"), (button) -> {
 			if (speciesListWidget.getSelectedOrNull() == null)
 				return;
 
@@ -136,7 +138,7 @@ public class SpeciesSelectScreen extends Screen
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketSetOwnSpecies, passedData);
 		}));
 
-		this.addSelectableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("gui.pswg.use_female_model"), this.gender == SpeciesGender.FEMALE, (checked) -> {
+		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("gui.pswg.use_female_model"), this.gender == SpeciesGender.FEMALE, (checked) -> {
 			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
 			if (this.playerSpecies != null)
 				this.playerSpecies.setGender(gender);
@@ -319,12 +321,18 @@ public class SpeciesSelectScreen extends Screen
 		var renderers = erda.getModelRenderers();
 
 		var species = SwgSpeciesRegistry.deserialize(speciesString);
-		var renderer = renderers.get("default" /*species.getModel().toString()*/);
+		var renderer = renderers.get(species.getModel().toString());
 
-		// TODO: cast renderer to PlayerEntityRendererWithModel
-
-//		renderer.renderWithTexture(SwgSpeciesModels.getTexture(species), client.player, 1, 1, matrixStack, immediate, 0xf000f0);
-		renderer.render(client.player, 1, 1, matrixStack, immediate, 0xf000f0);
+		if (renderer == null)
+		{
+			// ???
+		}
+		else if (renderer instanceof PlayerEntityRendererWithModel perwm)
+		{
+			perwm.renderWithTexture(SwgSpeciesModels.getTexture(species), client.player, 1, 1, matrixStack, immediate, 0xf000f0);
+		}
+		else
+			renderer.render(client.player, 1, 1, matrixStack, immediate, 0xf000f0);
 
 		immediate.draw();
 		entity.bodyYaw = h;

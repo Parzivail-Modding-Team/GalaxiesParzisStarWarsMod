@@ -26,7 +26,7 @@
 		"EntityClientMixin",
 		"EntityRenderDispatcherAccessor",
 		"EntityRenderDispatcherMixin",
-		"FramebufferMixin",
+		"EntityRenderersMixin",
 		"GameRendererMixin",
 		"HeldItemRendererMixin",
 		"InGameHudMixin",

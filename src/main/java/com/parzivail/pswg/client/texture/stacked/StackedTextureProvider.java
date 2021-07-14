@@ -25,7 +25,7 @@ public record StackedTextureProvider(TextureManager textureManager,
 	public Identifier loadTexture(String id, Supplier<Identifier> fallback, Supplier<Collection<Identifier>> textures)
 	{
 		var identifier = getIdentifier(id);
-		var texture = textureManager.getTexture(identifier);
+		var texture = textureManager.getOrDefault(identifier, null);
 
 		// The texture is fully loaded
 		if (texture != null)
@@ -49,7 +49,7 @@ public record StackedTextureProvider(TextureManager textureManager,
 			{
 				var minecraft = MinecraftClient.getInstance();
 				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> {
-					AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
+					AbstractTexture abstractTexture = this.textureManager.getOrDefault(identifier, null);
 					if (!(abstractTexture instanceof StackedTexture))
 					{
 						StackedTexture texture = new StackedTexture(DefaultSkinHelper.getTexture(), textures);
