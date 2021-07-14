@@ -21,8 +21,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Optional;
-
 public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
 {
 	protected final PropertyDelegate propertyDelegate;
@@ -99,17 +97,17 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	private boolean isHydratable(ItemStack stack)
 	{
 		assert this.world != null;
-		Optional<VaporatorRecipe> recipeOptional = this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world);
+		var recipeOptional = this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(stack), this.world);
 		return recipeOptional.filter(this::canAcceptOutput).isPresent();
 	}
 
 	private boolean canAcceptOutput(VaporatorRecipe recipe)
 	{
-		ItemStack outputStack = getStack(1);
+		var outputStack = getStack(1);
 		if (outputStack.isEmpty())
 			return true;
 
-		ItemStack resultStack = recipe.getOutput();
+		var resultStack = recipe.getOutput();
 
 		if (resultStack.getCount() + outputStack.getCount() > outputStack.getMaxCount())
 			return false;
@@ -128,10 +126,10 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 		if (!(be instanceof MoistureVaporatorBlockEntity t))
 			return;
 
-		ItemStack stack = t.getStack(0);
+		var stack = t.getStack(0);
 		if (t.isHydratable(stack))
 		{
-			VaporatorRecipe recipe = t.hydrate(stack);
+			var recipe = t.hydrate(stack);
 
 			if (t.collectionTimerLength == -1)
 			{
@@ -139,8 +137,8 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 			}
 			else if (t.collectionTimer <= 0)
 			{
-				ItemStack outputStack = t.getStack(1).copy();
-				ItemStack resultStack = recipe.getOutput();
+				var outputStack = t.getStack(1).copy();
+				var resultStack = recipe.getOutput();
 
 				stack.decrement(1);
 				t.setStack(0, stack.copy());

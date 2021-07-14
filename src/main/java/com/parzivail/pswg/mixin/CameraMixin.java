@@ -20,10 +20,10 @@ public class CameraMixin
 	)
 	private double clipToSpace(double desiredCameraDistance)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 		assert minecraft.player != null;
 
-		ShipEntity ship = ShipEntity.getShip(minecraft.player);
+		var ship = ShipEntity.getShip(minecraft.player);
 		if (ship != null)
 			return 0;
 

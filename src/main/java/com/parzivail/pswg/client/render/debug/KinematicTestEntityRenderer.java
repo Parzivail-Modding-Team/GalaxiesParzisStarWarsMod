@@ -8,7 +8,6 @@ import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.math.TwoJointIk;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -101,7 +100,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 		matrices.multiply(new Quaternion(Vec3f.POSITIVE_Y, 180, true));
 
 		this.model.setAngles(entity, 0, 0, 0, 0, 0);
-		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(Resources.id("textures/block/debug16.png")));
+		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(Resources.id("textures/block/debug16.png")));
 		this.model.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1.0F, 1.0F, 1.0F, 1.0F);
 
 		matrices.pop();

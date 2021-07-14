@@ -25,7 +25,7 @@ public class Transform
 	}
 
 	private final Deque<State> stack = Util.make(Queues.newArrayDeque(), (stack) -> {
-		Matrix4f matrix4f = new Matrix4f();
+		var matrix4f = new Matrix4f();
 		matrix4f.loadIdentity();
 		stack.add(new State(matrix4f));
 	});
@@ -52,7 +52,7 @@ public class Transform
 
 	public void save()
 	{
-		State state = this.stack.getLast();
+		var state = this.stack.getLast();
 		this.stack.addLast(new State(state.modelMatrix.copy()));
 	}
 

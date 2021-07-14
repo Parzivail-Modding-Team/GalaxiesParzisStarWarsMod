@@ -13,22 +13,14 @@ import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-public class PM3DFile
+public record PM3DFile(PM3DLod[] lods)
 {
 	private static final String MAGIC = "Pm3D";
 	private static final int[] ACCEPTED_VERSIONS = { 0x04 };
-
-	private final PM3DLod[] lods;
-
-	public PM3DFile(PM3DLod[] lods)
-	{
-		this.lods = lods;
-	}
 
 	public PM3DLod getLevelOfDetail(int lod)
 	{
@@ -44,7 +36,7 @@ public class PM3DFile
 		catch (NullPointerException | IOException ex)
 		{
 			ex.printStackTrace();
-			CrashReport crashReport = CrashReport.create(ex, String.format("Loading PM3D file: %s", modelFile));
+			var crashReport = CrashReport.create(ex, String.format("Loading PM3D file: %s", modelFile));
 			throw new CrashException(crashReport);
 		}
 	}
@@ -64,42 +56,42 @@ public class PM3DFile
 	private static PM3DFile load(Identifier modelFile) throws IOException
 	{
 		// TODO: convert this to a KeyedReloadableLoader
-		InputStream reader = PIO.getStream("assets", modelFile);
-		LittleEndianDataInputStream objStream = new LittleEndianDataInputStream(reader);
+		var reader = PIO.getStream("assets", modelFile);
+		var objStream = new LittleEndianDataInputStream(reader);
 
-		byte[] identBytes = new byte[MAGIC.length()];
-		int read = objStream.read(identBytes);
-		String ident = new String(identBytes);
+		var identBytes = new byte[MAGIC.length()];
+		var read = objStream.read(identBytes);
+		var ident = new String(identBytes);
 		if (!ident.equals(MAGIC) || read != identBytes.length)
 			throw new IOException("Input file not PM3D model");
 
-		int version = objStream.readInt();
+		var version = objStream.readInt();
 
 		if (!ArrayUtils.contains(ACCEPTED_VERSIONS, version))
 			throw new IOException(String.format("Input file version is 0x%s, expected one of: %s", Integer.toHexString(version), getAcceptedVersionString()));
 
-		int numLods = 1;
+		var numLods = 1;
 
 		if (version > 2)
 		{
 			numLods = objStream.readInt();
 		}
 
-		PM3DLod[] lods = new PM3DLod[numLods];
+		var lods = new PM3DLod[numLods];
 
-		for (int i = 0; i < numLods; i++)
+		for (var i = 0; i < numLods; i++)
 		{
-			int numVerts = objStream.readInt();
-			int numNormals = objStream.readInt();
-			int numUvs = objStream.readInt();
-			int numObjects = objStream.readInt();
+			var numVerts = objStream.readInt();
+			var numNormals = objStream.readInt();
+			var numUvs = objStream.readInt();
+			var numObjects = objStream.readInt();
 
-			Vec3f[] verts = loadVerts(numVerts, objStream);
-			Vec3f[] normals = loadNormals(numNormals, objStream);
-			Vec3f[] uvs = loadUvs(numUvs, objStream);
-			PM3DObject[] objects = loadObjects(numObjects, objStream);
+			var verts = loadVerts(numVerts, objStream);
+			var normals = loadNormals(numNormals, objStream);
+			var uvs = loadUvs(numUvs, objStream);
+			var objects = loadObjects(numObjects, objStream);
 
-			Box bounds = getBounds(verts);
+			var bounds = getBounds(verts);
 
 			lods[i] = new PM3DLod(modelFile, verts, normals, uvs, objects, bounds);
 		}
@@ -114,10 +106,10 @@ public class PM3DFile
 
 	private static Box getBounds(Vec3f[] verts)
 	{
-		Vec3f min = new Vec3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
-		Vec3f max = new Vec3f(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
+		var min = new Vec3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
+		var max = new Vec3f(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
 
-		for (Vec3f v : verts)
+		for (var v : verts)
 		{
 			if (v.getX() < min.getX())
 				min.set(v.getX(), min.getY(), min.getZ());
@@ -139,13 +131,13 @@ public class PM3DFile
 
 	private static Vec3f[] loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		Vec3f[] verts = new Vec3f[num];
+		var verts = new Vec3f[num];
 
-		for (int i = 0; i < num; i++)
+		for (var i = 0; i < num; i++)
 		{
-			float x = DataReader.readHalf(objStream) + 0.5f;
-			float y = DataReader.readHalf(objStream);
-			float z = DataReader.readHalf(objStream) + 0.5f;
+			var x = DataReader.readHalf(objStream) + 0.5f;
+			var y = DataReader.readHalf(objStream);
+			var z = DataReader.readHalf(objStream) + 0.5f;
 
 			verts[i] = new Vec3f(x, y, z);
 		}
@@ -155,13 +147,13 @@ public class PM3DFile
 
 	private static Vec3f[] loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		Vec3f[] verts = new Vec3f[num];
+		var verts = new Vec3f[num];
 
-		for (int i = 0; i < num; i++)
+		for (var i = 0; i < num; i++)
 		{
-			float x = DataReader.readHalf(objStream);
-			float y = DataReader.readHalf(objStream);
-			float z = DataReader.readHalf(objStream);
+			var x = DataReader.readHalf(objStream);
+			var y = DataReader.readHalf(objStream);
+			var z = DataReader.readHalf(objStream);
 
 			verts[i] = new Vec3f(x, y, z);
 		}
@@ -171,12 +163,12 @@ public class PM3DFile
 
 	private static Vec3f[] loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		Vec3f[] uvs = new Vec3f[num];
+		var uvs = new Vec3f[num];
 
-		for (int i = 0; i < num; i++)
+		for (var i = 0; i < num; i++)
 		{
-			float u = DataReader.readHalf(objStream);
-			float v = DataReader.readHalf(objStream);
+			var u = DataReader.readHalf(objStream);
+			var v = DataReader.readHalf(objStream);
 
 			uvs[i] = new Vec3f(u, v, 0);
 		}
@@ -186,25 +178,25 @@ public class PM3DFile
 
 	private static PM3DObject[] loadObjects(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		PM3DObject[] objects = new PM3DObject[num];
+		var objects = new PM3DObject[num];
 
-		for (int i = 0; i < num; i++)
+		for (var i = 0; i < num; i++)
 		{
-			String objName = DataReader.readNullTerminatedString(objStream);
-			int numFaces = objStream.readInt();
+			var objName = DataReader.readNullTerminatedString(objStream);
+			var numFaces = objStream.readInt();
 
-			ArrayList<PM3DFace> faces = new ArrayList<>();
+			var faces = new ArrayList<PM3DFace>();
 
-			for (int j = 0; j < numFaces; j++)
+			for (var j = 0; j < numFaces; j++)
 			{
-				byte material = objStream.readByte();
-				PM3DFace face = new PM3DFace(material);
-				int numVerts = objStream.readInt();
-				for (int k = 0; k < numVerts; k++)
+				var material = objStream.readByte();
+				var face = new PM3DFace(material);
+				var numVerts = objStream.readInt();
+				for (var k = 0; k < numVerts; k++)
 				{
-					int vertex = DataReader.read7BitEncodedInt(objStream);
-					int normal = DataReader.read7BitEncodedInt(objStream);
-					int texture = DataReader.read7BitEncodedInt(objStream);
+					var vertex = DataReader.read7BitEncodedInt(objStream);
+					var normal = DataReader.read7BitEncodedInt(objStream);
+					var texture = DataReader.read7BitEncodedInt(objStream);
 					face.verts.add(new PM3DVertPointer(vertex, normal, texture));
 				}
 

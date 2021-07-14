@@ -3,7 +3,6 @@ package com.parzivail.util.block.rotating;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.util.ItemScatterer;
@@ -22,14 +21,14 @@ public abstract class RotatingBlockWithEntity extends RotatingBlock implements B
 	public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data)
 	{
 		super.onSyncedBlockEvent(state, world, pos, type, data);
-		BlockEntity blockEntity = world.getBlockEntity(pos);
+		var blockEntity = world.getBlockEntity(pos);
 		return blockEntity != null && blockEntity.onSyncedBlockEvent(type, data);
 	}
 
 	@Nullable
 	public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos)
 	{
-		BlockEntity blockEntity = world.getBlockEntity(pos);
+		var blockEntity = world.getBlockEntity(pos);
 		return blockEntity instanceof NamedScreenHandlerFactory ? (NamedScreenHandlerFactory)blockEntity : null;
 	}
 
@@ -38,7 +37,7 @@ public abstract class RotatingBlockWithEntity extends RotatingBlock implements B
 	{
 		if (!state.isOf(newState.getBlock()))
 		{
-			BlockEntity blockEntity = world.getBlockEntity(pos);
+			var blockEntity = world.getBlockEntity(pos);
 			if (blockEntity instanceof Inventory)
 			{
 				ItemScatterer.spawn(world, pos, (Inventory)blockEntity);

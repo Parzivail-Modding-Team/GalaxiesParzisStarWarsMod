@@ -35,15 +35,15 @@ public class InfiniteWorleyNoise
 
 	public double eval(double nx, double ny)
 	{
-		Vec2f n = new Vec2f((float)nx, (float)ny);
-		double dis = 2d;
+		var n = new Vec2f((float)nx, (float)ny);
+		var dis = 2d;
 		for (float x = -1; x <= 1; x++)
 		{
 			for (float y = -1; y <= 1; y++)
 			{
-				Vec2f q = new Vec2f(x, y);
-				Vec2f p = MathUtil.add(MathUtil.floor(n), q);
-				double d = MathUtil.length(MathUtil.sub(MathUtil.add(R(p), q), MathUtil.fract(n)));
+				var q = new Vec2f(x, y);
+				var p = MathUtil.add(MathUtil.floor(n), q);
+				var d = MathUtil.length(MathUtil.sub(MathUtil.add(R(p), q), MathUtil.fract(n)));
 
 				if (dis <= d)
 					continue;
@@ -56,17 +56,17 @@ public class InfiniteWorleyNoise
 
 	public double eval(double nx, double ny, double nz)
 	{
-		Vec3d n = new Vec3d((float)nx, (float)ny, (float)nz);
-		double dis = 2d;
+		var n = new Vec3d((float)nx, (float)ny, (float)nz);
+		var dis = 2d;
 		for (float x = -1; x <= 1; x++)
 		{
 			for (float y = -1; y <= 1; y++)
 			{
 				for (float z = -1; z <= 1; z++)
 				{
-					Vec3d q = new Vec3d(x, y, z);
-					Vec3d p = MathUtil.floor(n).add(q);
-					double d = R(p).add(q).subtract(MathUtil.fract(n)).length();
+					var q = new Vec3d(x, y, z);
+					var p = MathUtil.floor(n).add(q);
+					var d = R(p).add(q).subtract(MathUtil.fract(n)).length();
 
 					if (dis <= d)
 						continue;

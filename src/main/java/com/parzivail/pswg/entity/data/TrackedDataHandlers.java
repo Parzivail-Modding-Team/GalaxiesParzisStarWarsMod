@@ -8,7 +8,7 @@ import net.minecraft.util.math.Quaternion;
 
 public class TrackedDataHandlers
 {
-	public static final TrackedDataHandler<Quaternion> QUATERNION = new TrackedDataHandler<Quaternion>()
+	public static final TrackedDataHandler<Quaternion> QUATERNION = new TrackedDataHandler<>()
 	{
 		@Override
 		public void write(PacketByteBuf data, Quaternion q)
@@ -22,10 +22,10 @@ public class TrackedDataHandlers
 		@Override
 		public Quaternion read(PacketByteBuf buffer)
 		{
-			float a = buffer.readFloat();
-			float b = buffer.readFloat();
-			float c = buffer.readFloat();
-			float d = buffer.readFloat();
+			var a = buffer.readFloat();
+			var b = buffer.readFloat();
+			var c = buffer.readFloat();
+			var d = buffer.readFloat();
 			return new Quaternion(b, c, d, a);
 		}
 
@@ -36,7 +36,7 @@ public class TrackedDataHandlers
 		}
 	};
 
-	public static final TrackedDataHandler<Short> SHORT = new TrackedDataHandler<Short>()
+	public static final TrackedDataHandler<Short> SHORT = new TrackedDataHandler<>()
 	{
 		@Override
 		public void write(PacketByteBuf data, Short x)

@@ -39,10 +39,10 @@ public class VoxelShapeUtil
 
 	public static VoxelShape rotate(VoxelShape shape, Direction.Axis axis, int times, float cX, float cY, float cZ)
 	{
-		VoxelShape rotatedShape = VoxelShapes.empty();
-		for (Box box : shape.getBoundingBoxes())
+		var rotatedShape = VoxelShapes.empty();
+		for (var box : shape.getBoundingBoxes())
 		{
-			VoxelShape rotatedBox = rotateAABB(box, axis, times, cX, cY, cZ);
+			var rotatedBox = rotateAABB(box, axis, times, cX, cY, cZ);
 			rotatedShape = VoxelShapes.union(rotatedShape, rotatedBox);
 		}
 		return rotatedShape;
@@ -52,18 +52,18 @@ public class VoxelShapeUtil
 	{
 		double tmp;
 
-		double minX = box.getMin(Direction.Axis.X);
-		double minY = box.getMin(Direction.Axis.Y);
-		double minZ = box.getMin(Direction.Axis.Z);
+		var minX = box.getMin(Direction.Axis.X);
+		var minY = box.getMin(Direction.Axis.Y);
+		var minZ = box.getMin(Direction.Axis.Z);
 
-		double maxX = box.getMax(Direction.Axis.X);
-		double maxY = box.getMax(Direction.Axis.Y);
-		double maxZ = box.getMax(Direction.Axis.Z);
+		var maxX = box.getMax(Direction.Axis.X);
+		var maxY = box.getMax(Direction.Axis.Y);
+		var maxZ = box.getMax(Direction.Axis.Z);
 
 		switch (axis)
 		{
 			case X:
-				for (int i = 0; i < times; i++)
+				for (var i = 0; i < times; i++)
 				{
 					tmp = minY;
 					minY = cY + minZ - cZ;
@@ -74,7 +74,7 @@ public class VoxelShapeUtil
 				}
 				break;
 			case Y:
-				for (int i = 0; i < times; i++)
+				for (var i = 0; i < times; i++)
 				{
 					tmp = minZ;
 					minZ = cZ + minX - cX;
@@ -85,7 +85,7 @@ public class VoxelShapeUtil
 				}
 				break;
 			case Z:
-				for (int i = 0; i < times; i++)
+				for (var i = 0; i < times; i++)
 				{
 					tmp = minX;
 					minX = cX + minY - cY;

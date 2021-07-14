@@ -25,7 +25,7 @@ public abstract class SpriteAtlasTextureMixin
 	@ModifyVariable(method = "loadSprite", at = @At(value = "NEW", target = "net/minecraft/client/texture/Sprite"), ordinal = 0)
 	public NativeImage spriteAddBaseLayer(NativeImage nativeImage, ResourceManager container, Sprite.Info info, int atlasWidth, int atlasHeight, int maxLevel, int x, int y) throws IOException
 	{
-		Identifier identifier = getTexturePath(info.getId());
+		var identifier = getTexturePath(info.getId());
 
 		if (container.containsResource(new Identifier(identifier.getNamespace(), identifier.getPath() + ".pswglayers")))
 			return LayeredSpriteBuilder.build(nativeImage, identifier, container, this::getTexturePath);

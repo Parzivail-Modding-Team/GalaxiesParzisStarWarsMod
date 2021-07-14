@@ -27,7 +27,7 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 
 	public static void setAngles(SinglePartEntityModel<WorrtEntity> model, WorrtEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
 		var dT = minecraft.getTickDelta();
 

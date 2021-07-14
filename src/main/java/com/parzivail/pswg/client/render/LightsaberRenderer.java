@@ -94,10 +94,10 @@ public class LightsaberRenderer
 		var thicknessBottom = 0.018f;
 		var thicknessTop = cap ? 0.012f : thicknessBottom;
 
-		int mL = 0;
-		int xL = 14;
+		var mL = 0;
+		var xL = 14;
 
-		float deltaThickness = 0.0028f;
+		var deltaThickness = 0.0028f;
 
 		var minOutputLayer = mL * thicknessBottom / deltaThickness;
 
@@ -111,13 +111,13 @@ public class LightsaberRenderer
 			var hueOffset = unstable ? (noise * 0.02f) : 0;
 
 			var x = MathUtil.remap(layer, mL, xL, minOutputLayer, 60);
-			int color = ColorUtil.fromHSV(
+			var color = ColorUtil.fromHSV(
 					getHue(glowHue + hueOffset, x),
 					getSaturation(x),
 					1
 			);
 			VertexConsumerBuffer.Instance.setColor(color, (int)(255 * getAlpha(x)));
-			float layerThickness = deltaThickness * layer;
+			var layerThickness = deltaThickness * layer;
 
 			Runnable action = () -> RenderShapes.drawSolidBoxSkewTaper(
 					VertexConsumerBuffer.Instance,

@@ -4,11 +4,9 @@ import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.PProjectileEntityDamageSource;
-import com.parzivail.util.math.EntityHitResult;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -23,19 +21,19 @@ public class BlasterUtil
 
 	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, float damage, Consumer<BlasterBoltEntity> entityInitializer)
 	{
-		final BlasterBoltEntity bolt = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world);
+		final var bolt = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world);
 		entityInitializer.accept(bolt);
 		bolt.setRange(range);
 
 		world.spawnEntity(bolt);
 
-		Vec3d start = new Vec3d(bolt.getX(), bolt.getY() + bolt.getHeight() / 2f, bolt.getZ());
+		var start = new Vec3d(bolt.getX(), bolt.getY() + bolt.getHeight() / 2f, bolt.getZ());
 
-		EntityHitResult hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
-		BlockHitResult blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player);
+		var hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
+		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player);
 
-		double entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
-		double blockDistance = blockHit == null ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
+		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
+		var blockDistance = blockHit == null ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
 
 		if (hit != null && entityDistance < blockDistance)
 		{

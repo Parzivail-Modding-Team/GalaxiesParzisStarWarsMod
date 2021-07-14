@@ -25,14 +25,14 @@ public class PlayerEntityMixin
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void tick(CallbackInfo ci)
 	{
-		PlayerEntity player = (PlayerEntity)(Object)this;
+		var player = (PlayerEntity)(Object)this;
 		if (!player.world.isClient)
 			return;
 
-		boolean meetsConditionsForLightsaberSound = LightsaberIdleSoundInstance.areConditionsMet(player);
+		var meetsConditionsForLightsaberSound = LightsaberIdleSoundInstance.areConditionsMet(player);
 		if (meetsConditionsForLightsaberSound && !metConditionsForLightsaberSound)
 		{
-			MinecraftClient minecraft = MinecraftClient.getInstance();
+			var minecraft = MinecraftClient.getInstance();
 			minecraft.getSoundManager().play(new LightsaberIdleSoundInstance(player));
 		}
 		metConditionsForLightsaberSound = meetsConditionsForLightsaberSound;

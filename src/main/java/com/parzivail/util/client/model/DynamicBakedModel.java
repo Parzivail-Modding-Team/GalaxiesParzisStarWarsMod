@@ -78,7 +78,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 
 	protected Mesh createOrCacheBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		Object cacheDiscriminator = switch (getDiscriminator())
+		var cacheDiscriminator = switch (getDiscriminator())
 				{
 					case GLOBAL -> BlockPos.ORIGIN;
 					case BLOCKSTATE -> state;
@@ -89,12 +89,12 @@ public abstract class DynamicBakedModel extends AbstractModel
 		if (cacheDiscriminator == null)
 			return createBlockMesh(blockView, state, pos, randomSupplier, context, transformation);
 
-		ModelCacheId cacheId = new ModelCacheId(cacheDiscriminator, transformation);
+		var cacheId = new ModelCacheId(cacheDiscriminator, transformation);
 
 		if (meshes.containsKey(cacheId))
 			return meshes.get(cacheId);
 
-		Mesh m = createBlockMesh(blockView, state, pos, randomSupplier, context, transformation);
+		var m = createBlockMesh(blockView, state, pos, randomSupplier, context, transformation);
 		meshes.put(cacheId, m);
 
 		return m;
@@ -102,12 +102,12 @@ public abstract class DynamicBakedModel extends AbstractModel
 
 	protected Mesh createOrCacheItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		ModelCacheId cacheId = new ModelCacheId(null, transformation);
+		var cacheId = new ModelCacheId(null, transformation);
 
 		if (meshes.containsKey(cacheId))
 			return meshes.get(cacheId);
 
-		Mesh m = createItemMesh(transformation);
+		var m = createItemMesh(transformation);
 		meshes.put(cacheId, m);
 
 		return m;
@@ -118,13 +118,13 @@ public abstract class DynamicBakedModel extends AbstractModel
 	@Override
 	public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand)
 	{
-		List<BakedQuad>[] lists = quadLists == null ? null : quadLists.get();
+		var lists = quadLists == null ? null : quadLists.get();
 		if (lists == null)
 		{
 			lists = ModelHelper.toQuadLists(createOrCacheBlockMesh(null, state, BlockPos.ORIGIN, () -> rand, null, createTransformation(state)));
 			quadLists = new WeakReference<>(lists);
 		}
-		final List<BakedQuad> result = lists[face == null ? 6 : face.getId()];
+		final var result = lists[face == null ? 6 : face.getId()];
 		return result == null ? ImmutableList.of() : result;
 	}
 

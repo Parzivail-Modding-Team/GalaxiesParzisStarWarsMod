@@ -94,9 +94,9 @@ public class BlockGenerator
 
 	static BlockGenerator stairs(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		Identifier id = AssetGenerator.getTextureName(block);
-		Identifier inner = IdentifierUtil.concat(id, "_inner");
-		Identifier outer = IdentifierUtil.concat(id, "_outer");
+		var id = AssetGenerator.getTextureName(block);
+		var inner = IdentifierUtil.concat(id, "_inner");
+		var outer = IdentifierUtil.concat(id, "_outer");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.stairs(b, inner, AssetGenerator.getTextureName(block), outer))
 				.models(b -> ModelFile.stairs(b, topTexture, sideTexture));
@@ -104,8 +104,8 @@ public class BlockGenerator
 
 	static BlockGenerator basicRandomMirror(Block block)
 	{
-		Identifier id = AssetGenerator.getTextureName(block);
-		Identifier mirrored = IdentifierUtil.concat(id, "_mirrored");
+		var id = AssetGenerator.getTextureName(block);
+		var mirrored = IdentifierUtil.concat(id, "_mirrored");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.randomMirror(b, id, mirrored))
 				.models(ModelFile::randomMirror);
@@ -118,7 +118,7 @@ public class BlockGenerator
 
 	static BlockGenerator slab(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
-		Identifier top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
+		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.slab(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.slab(b, topTexture, sideTexture));
@@ -126,7 +126,7 @@ public class BlockGenerator
 
 	static BlockGenerator slabUniqueDouble(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
-		Identifier top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
+		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.slab(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.slabUniqueDouble(b, topTexture, sideTexture));

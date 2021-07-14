@@ -76,7 +76,7 @@ class Spline
 			}
 		}
 
-		int index = Arrays.binarySearch(xx, x);
+		var index = Arrays.binarySearch(xx, x);
 		if (index > 0)
 		{
 			return yy[index];
@@ -110,7 +110,7 @@ class Spline
 		}
 		else
 		{
-			int index = Arrays.binarySearch(xx, x);
+			var index = Arrays.binarySearch(xx, x);
 			if (index > 0)
 			{
 				return yy[index];
@@ -123,7 +123,7 @@ class Spline
 		{
 			return yy[0];
 		}
-		double value = x - xx[storageIndex];
+		var value = x - xx[storageIndex];
 		return a[storageIndex] + b[storageIndex] * value + c[storageIndex] * (value * value) + d[storageIndex] * (value * value * value);
 	}
 
@@ -149,7 +149,7 @@ class Spline
 			return 0;
 		}
 
-		int index = Arrays.binarySearch(xx, x);
+		var index = Arrays.binarySearch(xx, x);
 		if (index < 0)
 		{
 			index = -(index + 1) - 1;
@@ -163,7 +163,7 @@ class Spline
 	 */
 	private void calculateCoefficients()
 	{
-		int N = yy.length;
+		var N = yy.length;
 		a = new double[N];
 		b = new double[N];
 		c = new double[N];
@@ -176,8 +176,8 @@ class Spline
 			return;
 		}
 
-		double[] h = new double[N - 1];
-		for (int i = 0; i < N - 1; i++)
+		var h = new double[N - 1];
+		for (var i = 0; i < N - 1; i++)
 		{
 			a[i] = yy[i];
 			h[i] = xx[i + 1] - xx[i];
@@ -189,9 +189,9 @@ class Spline
 		}
 		a[N - 1] = yy[N - 1];
 
-		double[][] A = new double[N - 2][N - 2];
-		double[] y = new double[N - 2];
-		for (int i = 0; i < N - 2; i++)
+		var A = new double[N - 2][N - 2];
+		var y = new double[N - 2];
+		for (var i = 0; i < N - 2; i++)
 		{
 			y[i] = 3 * ((yy[i + 2] - yy[i + 1]) / h[i + 1] - (yy[i + 1] - yy[i]) / h[i]);
 
@@ -209,7 +209,7 @@ class Spline
 		}
 		solve(A, y);
 
-		for (int i = 0; i < N - 2; i++)
+		for (var i = 0; i < N - 2; i++)
 		{
 			c[i + 1] = y[i];
 			b[i] = (a[i + 1] - a[i]) / h[i] - (2 * c[i] + c[i + 1]) / 3 * h[i];
@@ -224,8 +224,8 @@ class Spline
 	 */
 	public void solve(double[][] A, double[] b)
 	{
-		int n = b.length;
-		for (int i = 1; i < n; i++)
+		var n = b.length;
+		for (var i = 1; i < n; i++)
 		{
 			A[i][i - 1] = A[i][i - 1] / A[i - 1][i - 1];
 			A[i][i] = A[i][i] - A[i - 1][i] * A[i][i - 1];
@@ -233,7 +233,7 @@ class Spline
 		}
 
 		b[n - 1] = b[n - 1] / A[n - 1][n - 1];
-		for (int i = b.length - 2; i >= 0; i--)
+		for (var i = b.length - 2; i >= 0; i--)
 		{
 			b[i] = (b[i] - A[i][i + 1] * b[i + 1]) / A[i][i];
 		}

@@ -34,7 +34,7 @@ public abstract class DelegatedConnectingBlock extends ConnectingBlock
 
 	public BlockState withConnectionProperties(BlockView world, BlockPos pos)
 	{
-		BlockState self = this.getDefaultState();
+		var self = this.getDefaultState();
 		return this.getDefaultState()
 		           .with(DOWN, shouldConnectTo(self, world.getBlockState(pos.down())))
 		           .with(UP, shouldConnectTo(self, world.getBlockState(pos.up())))
@@ -56,7 +56,7 @@ public abstract class DelegatedConnectingBlock extends ConnectingBlock
 		else
 		{
 			// TODO: connections don't always work
-			boolean bl = shouldConnectTo(state, newState);
+			var bl = shouldConnectTo(state, newState);
 			return state.with(FACING_PROPERTIES.get(direction), bl);
 		}
 	}

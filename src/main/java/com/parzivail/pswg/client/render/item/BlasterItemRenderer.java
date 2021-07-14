@@ -77,6 +77,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		matrices.scale(0.2f, 0.2f, 0.2f);
 
 		var m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
+		var bounds = m.bounds();
 
 		if (renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.FIXED)
 		{
@@ -86,19 +87,19 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			if (renderMode == ModelTransformation.Mode.FIXED)
 			{
 				matrices.multiply(new Quaternion(0, 0, 180, true));
-				matrices.translate(-m.bounds.getXLength() * 0.75f, 0, 0);
+				matrices.translate(-bounds.getXLength() * 0.75f, 0, 0);
 			}
 
 			var angle = (float)(Math.PI / 4) * 5;
 			matrices.multiply(new Quaternion(angle, 0, 0, false));
 
-			var yi = m.bounds.getYLength() * Math.abs(Math.sin(angle)) + m.bounds.getZLength() * Math.abs(Math.cos(angle));
-			var zi = m.bounds.getYLength() * Math.abs(Math.cos(angle)) + m.bounds.getZLength() * Math.abs(Math.sin(angle));
+			var yi = bounds.getYLength() * Math.abs(Math.sin(angle)) + bounds.getZLength() * Math.abs(Math.cos(angle));
+			var zi = bounds.getYLength() * Math.abs(Math.cos(angle)) + bounds.getZLength() * Math.abs(Math.sin(angle));
 
 			var f = (float)(5 / Math.max(yi, zi));
 			matrices.scale(f, f, f);
 
-			matrices.translate(0, (float)-m.bounds.minY - m.bounds.getYLength() / 2f, (float)-m.bounds.minZ - m.bounds.getZLength() / 2f);
+			matrices.translate(0, (float)-bounds.minY - bounds.getYLength() / 2f, (float)-bounds.minZ - bounds.getZLength() / 2f);
 		}
 		else if (renderMode.isFirstPerson())
 		{
@@ -139,38 +140,29 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		switch (preferredHand)
 		{
-			case LEFT:
+			case LEFT -> {
 				leftArm.yaw = 0.1F + head.yaw;
 				leftArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
-
 				if (bt.isAimingDownSights && !bd.oneHanded)
 				{
 					rightArm.yaw = -0.1F + head.yaw - 0.4F;
 					rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
 				}
-				break;
-			case RIGHT:
+			}
+			case RIGHT -> {
 				rightArm.yaw = -0.1F + head.yaw;
 				rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
-
 				if (bt.isAimingDownSights && !bd.oneHanded)
 				{
 					leftArm.yaw = 0.1F + head.yaw + 0.4F;
 					leftArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
 				}
-				break;
+			}
 		}
 	}
 
-	private static class BlasterModelEntry
+	private record BlasterModelEntry(Supplier<PM3DFile> pm3dModel,
+	                                 Identifier texture)
 	{
-		public final Supplier<PM3DFile> pm3dModel;
-		public final Identifier texture;
-
-		private BlasterModelEntry(Supplier<PM3DFile> pm3dModel, Identifier texture)
-		{
-			this.pm3dModel = pm3dModel;
-			this.texture = texture;
-		}
 	}
 }

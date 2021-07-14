@@ -42,14 +42,12 @@ public class RemoteTexture extends ResourceTexture
 
 	private void onTextureLoaded(NativeImage image)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 		minecraft.execute(() -> {
 			this.loaded = true;
 			if (!RenderSystem.isOnRenderThread())
 			{
-				RenderSystem.recordRenderCall(() -> {
-					this.uploadTexture(image);
-				});
+				RenderSystem.recordRenderCall(() -> this.uploadTexture(image));
 			}
 			else
 			{
@@ -66,7 +64,7 @@ public class RemoteTexture extends ResourceTexture
 
 	public void load(ResourceManager manager) throws IOException
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 		minecraft.execute(() -> {
 			if (!this.loaded)
 			{
@@ -88,7 +86,7 @@ public class RemoteTexture extends ResourceTexture
 			if (this.cacheFile != null && Files.isRegularFile(cacheFile))
 			{
 				LOGGER.debug("Loading http texture from local cache ({})", this.cacheFile);
-				InputStream inputStream = Files.newInputStream(this.cacheFile);
+				var inputStream = Files.newInputStream(this.cacheFile);
 				nativeImage2 = this.loadTexture(inputStream);
 			}
 			else
@@ -126,7 +124,7 @@ public class RemoteTexture extends ResourceTexture
 							}
 
 							minecraft.execute(() -> {
-								NativeImage nativeImage = this.loadTexture(inputStream2);
+								var nativeImage = this.loadTexture(inputStream2);
 								if (nativeImage != null)
 								{
 									this.onTextureLoaded(nativeImage);

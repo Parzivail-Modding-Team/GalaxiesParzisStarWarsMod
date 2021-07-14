@@ -18,10 +18,10 @@ public class Spline2D
 	 */
 	public Spline2D(Vec2f[] points)
 	{
-		double[] x = new double[points.length];
-		double[] y = new double[points.length];
+		var x = new double[points.length];
+		var y = new double[points.length];
 
-		for (int i = 0; i < points.length; i++)
+		for (var i = 0; i < points.length; i++)
 		{
 			x[i] = points[i].x;
 			y[i] = points[i].y;
@@ -58,15 +58,15 @@ public class Spline2D
 	  of each point in the line ( i.e. first point is 0.0, end point is
 	  1.0, a point halfway on line is 0.5 ).
 	 */
-		double[] t = new double[x.length];
+		var t = new double[x.length];
 		t[0] = 0.0; // start point is always 0.0
 
 		// Calculate the partial proportions of each section between each set
 		// of points and the total length of sum of all sections
-		for (int i = 1; i < t.length; i++)
+		for (var i = 1; i < t.length; i++)
 		{
-			double lx = x[i] - x[i - 1];
-			double ly = y[i] - y[i - 1];
+			var lx = x[i] - x[i - 1];
+			var ly = y[i] - y[i - 1];
 			// If either diff is zero there is no point performing the square root
 			if (0.0 == lx)
 			{
@@ -85,7 +85,7 @@ public class Spline2D
 			t[i] += t[i - 1];
 		}
 
-		for (int i = 1; i < (t.length) - 1; i++)
+		for (var i = 1; i < (t.length) - 1; i++)
 		{
 			t[i] = t[i] / length;
 		}

@@ -50,23 +50,18 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		switch (renderMode)
 		{
-			case FIXED:
+			case FIXED -> {
 				matrices.translate(-0.2685f, 0, 0);
 				matrices.scale(1.8f, 1.8f, 1.8f);
 				matrices.multiply(new Quaternion(0, 0, 45, true));
 				matrices.translate(0, 0.04f, 0);
-				break;
-			case GUI:
+			}
+			case GUI -> {
 				matrices.translate(0, -0.08f, 0);
 				matrices.scale(1.2f, 1.2f, 1.2f);
-				break;
-			case FIRST_PERSON_LEFT_HAND:
-			case FIRST_PERSON_RIGHT_HAND:
-				matrices.translate(0, 0.05f, 0);
-				break;
-			default:
-				matrices.translate(0, -0.05f, 0);
-				break;
+			}
+			case FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND -> matrices.translate(0, 0.05f, 0);
+			default -> matrices.translate(0, -0.05f, 0);
 		}
 
 		renderDirect(stack, renderMode, matrices, vertexConsumers, light, overlay, false);
@@ -76,7 +71,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
 		matrices.push();
 		matrices.scale(0.03f, 0.03f, 0.03f);

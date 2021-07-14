@@ -63,11 +63,11 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 			noiseCache.set(new Long2ObjectLinkedOpenHashMap<>());
 
 		//return cached values
-		BiomeSurface[] res = noiseCache.get().get(pos.toLong());
+		var res = noiseCache.get().get(pos.toLong());
 		if (res != null)
 			return res;
 
-		BiomeSurface[] vals = new BiomeSurface[256];
+		var vals = new BiomeSurface[256];
 
 		generateNoise(vals, pos, 0, 16);
 
@@ -84,9 +84,9 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 
 	public void generateNoise(BiomeSurface[] noise, ChunkPos pos, int start, int size)
 	{
-		for (int x = start; x < start + size; x++)
+		for (var x = start; x < start + size; x++)
 		{
-			for (int z = 0; z < 16; z++)
+			for (var z = 0; z < 16; z++)
 			{
 				noise[(x * 16) + z] = getSurface((pos.x * 16) + x, (pos.z * 16) + z, Heightmap.Type.WORLD_SURFACE_WG, null);
 			}
@@ -120,7 +120,7 @@ public abstract class SimplexChunkGenerator extends ChunkGenerator
 
 				var chunkPos = chunk.getPos();
 
-				BiomeSurface[] requestedVals = getHeightsInChunk(chunk.getPos());
+				var requestedVals = getHeightsInChunk(chunk.getPos());
 
 				for (var z = 0; z < 16; z++)
 					for (var x = 0; x < 16; x++)

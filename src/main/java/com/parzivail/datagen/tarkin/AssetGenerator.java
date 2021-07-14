@@ -25,13 +25,13 @@ public class AssetGenerator
 
 	static Identifier getTextureName(Block block)
 	{
-		Identifier id = Registry.BLOCK.getId(block);
+		var id = Registry.BLOCK.getId(block);
 		return new Identifier(id.getNamespace(), "block/" + id.getPath());
 	}
 
 	static Identifier getTextureName(Item item)
 	{
-		Identifier id = Registry.ITEM.getId(item);
+		var id = Registry.ITEM.getId(item);
 		return new Identifier(id.getNamespace(), "item/" + id.getPath());
 	}
 

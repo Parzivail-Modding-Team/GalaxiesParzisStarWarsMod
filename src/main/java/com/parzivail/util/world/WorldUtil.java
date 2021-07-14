@@ -12,8 +12,8 @@ public class WorldUtil
 		if (!world.getDimension().hasSkyLight())
 			return false;
 
-		int skyLight = world.getLightLevel(LightType.SKY, pos) - world.getAmbientDarkness();
-		float skyAngle = world.getSkyAngleRadians(1.0F);
+		var skyLight = world.getLightLevel(LightType.SKY, pos) - world.getAmbientDarkness();
+		var skyAngle = world.getSkyAngleRadians(1.0F);
 
 		var upperBoundAngle = skyAngle < Math.PI ? 0 : (2 * Math.PI);
 		skyAngle += (upperBoundAngle - skyAngle) * 0.2F;

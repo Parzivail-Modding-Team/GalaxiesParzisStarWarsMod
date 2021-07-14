@@ -37,9 +37,8 @@ public abstract class ItemStackMixin
 	@Inject(method = "getAttributeModifiers", at = @At("RETURN"), cancellable = true)
 	private void getAttributeModifiers(EquipmentSlot equipmentSlot, CallbackInfoReturnable<Multimap<EntityAttribute, EntityAttributeModifier>> info)
 	{
-		if (getItem() instanceof ItemStackEntityAttributeModifiers)
+		if (getItem() instanceof ItemStackEntityAttributeModifiers item)
 		{
-			ItemStackEntityAttributeModifiers item = (ItemStackEntityAttributeModifiers)getItem();
 			info.setReturnValue(item.getAttributeModifiers(equipmentSlot, (ItemStack)(Object)this));
 		}
 	}

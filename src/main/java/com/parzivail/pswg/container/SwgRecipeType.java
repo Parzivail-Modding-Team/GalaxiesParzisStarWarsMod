@@ -26,14 +26,8 @@ public class SwgRecipeType
 		return type;
 	}
 
-	private static class RecipeTypeImpl<T extends Recipe<?>> implements RecipeType<T>
+	private record RecipeTypeImpl<T extends Recipe<?>>(Identifier identifier) implements RecipeType<T>
 	{
-		private final Identifier identifier;
-
-		public RecipeTypeImpl(Identifier identifier)
-		{
-			this.identifier = identifier;
-		}
 
 		public String toString()
 		{

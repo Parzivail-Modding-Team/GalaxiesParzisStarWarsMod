@@ -67,7 +67,7 @@ public class TrackedAnimationValue
 
 	public void tick()
 	{
-		byte timer = getTimer();
+		var timer = getTimer();
 
 		if (timer != 0)
 			set(isPositiveDirection(), --timer);

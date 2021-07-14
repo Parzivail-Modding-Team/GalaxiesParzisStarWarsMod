@@ -29,7 +29,7 @@ public class HalfFloat
 		if (bytes.length != 2)
 			throw new IllegalArgumentException("The supplied byte array must be exactly two bytes in length");
 
-		final ByteBuffer buffer = ByteBuffer.wrap(bytes);
+		final var buffer = ByteBuffer.wrap(bytes);
 		this.halfPrecision = buffer.getShort();
 	}
 
@@ -57,7 +57,7 @@ public class HalfFloat
 		if (number < Short.MIN_VALUE)
 			throw new IllegalArgumentException("The supplied float is too small for a two byte representation");
 
-		final int val = fromFullPrecision(number);
+		final var val = fromFullPrecision(number);
 		this.halfPrecision = (short)val;
 		this.fullPrecision = number;
 	}
@@ -93,8 +93,8 @@ public class HalfFloat
 	 */
 	private float toFullPrecision()
 	{
-		int mantisa = halfPrecision & 0x03ff;
-		int exponent = halfPrecision & 0x7c00;
+		var mantisa = halfPrecision & 0x03ff;
+		var exponent = halfPrecision & 0x7c00;
 
 		if (exponent == 0x7c00)
 			exponent = 0x3fc00;
@@ -129,10 +129,10 @@ public class HalfFloat
 	 */
 	private int fromFullPrecision(final float number)
 	{
-		int fbits = Float.floatToIntBits(number);
-		int sign = fbits >>> 16 & 0x8000;
+		var fbits = Float.floatToIntBits(number);
+		var sign = fbits >>> 16 & 0x8000;
 
-		int val = (fbits & 0x7fffffff) + 0x1000;
+		var val = (fbits & 0x7fffffff) + 0x1000;
 
 		if (val >= 0x47800000)
 		{

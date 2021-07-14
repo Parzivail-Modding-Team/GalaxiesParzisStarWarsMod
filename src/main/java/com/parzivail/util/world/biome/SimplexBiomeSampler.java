@@ -25,7 +25,7 @@ public class SimplexBiomeSampler
 
 	private static double octaveNoise(OpenSimplex2F source, double x, double z, int octaves)
 	{
-		double n = (source.noise2(x, z) + 1) / 4;
+		var n = (source.noise2(x, z) + 1) / 4;
 		if (octaves <= 1)
 			return n / (1 - 1 / Math.pow(2, octaves));
 		return n + octaveNoise(source, (x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;

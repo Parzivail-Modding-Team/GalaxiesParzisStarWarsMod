@@ -134,7 +134,7 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 
 	public <T extends Entity> MutableAnimatedModel<T> getModel(Identifier modelId, ModelAngleAnimator<T> angleAnimator)
 	{
-		var model = new MutableAnimatedModel<T>(angleAnimator);
+		var model = new MutableAnimatedModel<>(angleAnimator);
 		models.add(new Pair<>(modelId, model));
 		return model;
 	}

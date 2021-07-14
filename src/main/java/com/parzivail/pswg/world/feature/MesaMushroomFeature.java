@@ -4,14 +4,9 @@ import com.mojang.serialization.Codec;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.world.ProcNoise;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.StructureWorldAccess;
 import net.minecraft.world.gen.feature.Feature;
 import net.minecraft.world.gen.feature.SingleStateFeatureConfig;
 import net.minecraft.world.gen.feature.util.FeatureContext;
-
-import java.util.Random;
 
 public class MesaMushroomFeature extends Feature<SingleStateFeatureConfig>
 {
@@ -22,17 +17,17 @@ public class MesaMushroomFeature extends Feature<SingleStateFeatureConfig>
 
 	public boolean generate(FeatureContext<SingleStateFeatureConfig> context)
 	{
-		BlockPos origin = context.getOrigin();
-		StructureWorldAccess structureWorldAccess = context.getWorld();
-		Random random = context.getRandom();
-		ProcNoise noise = new ProcNoise(random.nextLong());
+		var origin = context.getOrigin();
+		var structureWorldAccess = context.getWorld();
+		var random = context.getRandom();
+		var noise = new ProcNoise(random.nextLong());
 
 		SingleStateFeatureConfig singleStateFeatureConfig;
 		for (singleStateFeatureConfig = context.getConfig(); origin.getY() > structureWorldAccess.getBottomY() + 3; origin = origin.down())
 		{
 			if (!structureWorldAccess.isAir(origin.down()))
 			{
-				BlockState blockState = structureWorldAccess.getBlockState(origin.down());
+				var blockState = structureWorldAccess.getBlockState(origin.down());
 				if (blockState.isOf(SwgBlocks.Sand.Desert))
 					break;
 			}
@@ -45,11 +40,11 @@ public class MesaMushroomFeature extends Feature<SingleStateFeatureConfig>
 		else
 		{
 			var height = random.nextInt(50) + 25;
-			for (int y = -3; y < height; ++y)
+			for (var y = -3; y < height; ++y)
 			{
-				for (int x = -15; x <= 15; x++)
+				for (var x = -15; x <= 15; x++)
 				{
-					for (int z = -15; z <= 15; z++)
+					for (var z = -15; z <= 15; z++)
 					{
 						var angle = Math.atan2(z, x);
 						var nX = Math.cos(angle);

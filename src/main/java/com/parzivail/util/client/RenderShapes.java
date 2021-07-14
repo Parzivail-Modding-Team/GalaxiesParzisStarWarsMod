@@ -39,8 +39,8 @@ public class RenderShapes
 	{
 		if (input == null)
 			return null;
-		float[][] result = new float[input.length][];
-		for (int r = 0; r < input.length; r++)
+		var result = new float[input.length][];
+		for (var r = 0; r < input.length; r++)
 		{
 			result[r] = input[r].clone();
 		}
@@ -88,9 +88,9 @@ public class RenderShapes
 
 	private static void box(VertexConsumerBuffer vcb, float[][] verts)
 	{
-		int[] indices = _renderClockwise ? _clockwiseVertIndices : _counterClockwiseVertIndices;
+		var indices = _renderClockwise ? _clockwiseVertIndices : _counterClockwiseVertIndices;
 
-		for (int i = 0; i < 6; i++)
+		for (var i = 0; i < 6; i++)
 		{
 			vcb.vertex(verts[_facesBox[i][indices[0]]][0], verts[_facesBox[i][indices[0]]][1], verts[_facesBox[i][indices[0]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 0);
 			vcb.vertex(verts[_facesBox[i][indices[1]]][0], verts[_facesBox[i][indices[1]]][1], verts[_facesBox[i][indices[1]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 0);

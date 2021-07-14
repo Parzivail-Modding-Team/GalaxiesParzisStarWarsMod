@@ -8,7 +8,6 @@ import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.math.ClientMathUtil;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
@@ -22,8 +21,10 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.*;
-import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.HashMap;
@@ -56,25 +57,29 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 	{
 		quadEmitter.colorIndex(1).spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF).material(getMaterial(face));
 
-		PM3DVertPointer a = face.verts.get(0);
-		PM3DVertPointer b = face.verts.get(1);
-		PM3DVertPointer c = face.verts.get(2);
-		PM3DVertPointer d = face.verts.size() == 4 ? face.verts.get(3) : c;
+		var a = face.verts.get(0);
+		var b = face.verts.get(1);
+		var c = face.verts.get(2);
+		var d = face.verts.size() == 4 ? face.verts.get(3) : c;
 
-		Vec3f vA = container.verts[a.vertex];
-		Vec3f vB = container.verts[b.vertex];
-		Vec3f vC = container.verts[c.vertex];
-		Vec3f vD = container.verts[d.vertex];
+		var verts = container.verts();
+		var normals = container.normals();
+		var uvs = container.uvs();
 
-		Vec3f nA = container.normals[a.normal];
-		Vec3f nB = container.normals[b.normal];
-		Vec3f nC = container.normals[c.normal];
-		Vec3f nD = container.normals[d.normal];
+		var vA =verts[a.vertex()];
+		var vB =verts[b.vertex()];
+		var vC =verts[c.vertex()];
+		var vD =verts[d.vertex()];
 
-		Vec3f tA = container.uvs[a.texture];
-		Vec3f tB = container.uvs[b.texture];
-		Vec3f tC = container.uvs[c.texture];
-		Vec3f tD = container.uvs[d.texture];
+		var nA = normals[a.normal()];
+		var nB = normals[b.normal()];
+		var nC = normals[c.normal()];
+		var nD = normals[d.normal()];
+
+		var tA = uvs[a.texture()];
+		var tB = uvs[b.texture()];
+		var tC = uvs[c.texture()];
+		var tD = uvs[d.texture()];
 
 		vA = ClientMathUtil.transform(vA, transformation);
 		vB = ClientMathUtil.transform(vB, transformation);
@@ -105,7 +110,7 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 				return MAT_EMISSIVE;
 			default:
 			{
-				CrashReport crashReport = CrashReport.create(null, String.format("Unknown material ID: %s", face.material));
+				var crashReport = CrashReport.create(null, String.format("Unknown material ID: %s", face.material));
 				throw new CrashException(crashReport);
 			}
 		}
@@ -129,15 +134,15 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 	{
 		if (state.getBlock() instanceof ConnectingNodeBlock)
 		{
-			MeshBuilder meshBuilder = RENDERER.meshBuilder();
-			QuadEmitter quadEmitter = meshBuilder.getEmitter();
+			var meshBuilder = RENDERER.meshBuilder();
+			var quadEmitter = meshBuilder.getEmitter();
 
-			for (PM3DObject o : container.objects)
+			for (var o : container.objects())
 			{
-				if (!"NODE_CENTER".equals(o.objName) && !state.get(ConnectingNodeBlock.FACING_PROPERTIES.get(FACING_SUBMODELS.get(o.objName))))
+				if (!"NODE_CENTER".equals(o.objName()) && !state.get(ConnectingNodeBlock.FACING_PROPERTIES.get(FACING_SUBMODELS.get(o.objName()))))
 					continue;
 
-				for (PM3DFace face : o.faces)
+				for (var face : o.faces())
 					emitFace(transformation, quadEmitter, face);
 			}
 
@@ -146,8 +151,8 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 
 		if (state.getBlock() instanceof DisplacingBlock)
 		{
-			VoxelShape shape = state.getBlock().getOutlineShape(state, blockView, pos, ShapeContext.absent());
-			Vec3d center = VoxelShapeUtil.getCenter(shape);
+			var shape = state.getBlock().getOutlineShape(state, blockView, pos, ShapeContext.absent());
+			var center = VoxelShapeUtil.getCenter(shape);
 			transformation.multiply(Matrix4f.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f));
 		}
 
@@ -162,11 +167,11 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 
 	private Mesh createMesh(Matrix4f transformation)
 	{
-		MeshBuilder meshBuilder = RENDERER.meshBuilder();
-		QuadEmitter quadEmitter = meshBuilder.getEmitter();
+		var meshBuilder = RENDERER.meshBuilder();
+		var quadEmitter = meshBuilder.getEmitter();
 
-		for (PM3DObject o : container.objects)
-			for (PM3DFace face : o.faces)
+		for (var o : container.objects())
+			for (PM3DFace face : o.faces())
 				emitFace(transformation, quadEmitter, face);
 
 		return meshBuilder.build();
@@ -175,14 +180,16 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 	@Override
 	protected Matrix4f createTransformation(BlockState state)
 	{
-		Matrix4f mat = new Matrix4f();
+		var mat = new Matrix4f();
 		mat.loadIdentity();
 
 		if (state == null)
 		{
 			// Item transformation, scale largest dimension to 1
 
-			float largestDimension = (float)Math.max(container.bounds.getXLength(), Math.max(container.bounds.getYLength(), container.bounds.getZLength()));
+			var bounds = container.bounds();
+
+			var largestDimension = (float)Math.max(bounds.getXLength(), Math.max(bounds.getYLength(), bounds.getZLength()));
 
 			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
 			mat.multiply(Matrix4f.scale(1 / largestDimension, 1 / largestDimension, 1 / largestDimension));
@@ -202,7 +209,7 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 
 		if (state.getBlock() instanceof PillarBlock)
 		{
-			Direction.Axis axis = state.get(PillarBlock.AXIS);
+			var axis = state.get(PillarBlock.AXIS);
 
 			switch (axis)
 			{

@@ -10,7 +10,6 @@ import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.ModelWithArms;
 import net.minecraft.client.render.entity.model.ModelWithHead;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,9 +40,9 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
 		if (!livingEntity.getOffHandStack().isEmpty() || livingEntity.isSwimming() || livingEntity.hasVehicle())
 			return;
 
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
-		ItemStack stack = livingEntity.getMainHandStack();
+		var stack = livingEntity.getMainHandStack();
 		if (!stack.isEmpty())
 		{
 			@Nullable

@@ -34,15 +34,15 @@ public class ChunkPointGatherer<T>
 
 	public List<GatheredPoint<T>> getPointsFromChunkCenter(long seed, int chunkCenterWorldX, int chunkCenterWorldZ)
 	{
-		List<GatheredPoint<T>> worldPoints =
+		var worldPoints =
 				unfilteredPointGatherer.getPoints(seed, chunkCenterWorldX, chunkCenterWorldZ);
-		for (int i = 0; i < worldPoints.size(); i++)
+		for (var i = 0; i < worldPoints.size(); i++)
 		{
-			GatheredPoint<T> point = worldPoints.get(i);
+			var point = worldPoints.get(i);
 
 			// Check if point contribution radius lies outside any coordinate in the chunk
-			double axisCheckValueX = Math.abs(point.getX() - chunkCenterWorldX) - halfChunkWidth;
-			double axisCheckValueZ = Math.abs(point.getZ() - chunkCenterWorldZ) - halfChunkWidth;
+			var axisCheckValueX = Math.abs(point.getX() - chunkCenterWorldX) - halfChunkWidth;
+			var axisCheckValueZ = Math.abs(point.getZ() - chunkCenterWorldZ) - halfChunkWidth;
 			if (axisCheckValueX >= maxPointContributionRadius || axisCheckValueZ >= maxPointContributionRadius
 			    || (axisCheckValueX > 0 && axisCheckValueZ > 0
 			        && axisCheckValueX * axisCheckValueX + axisCheckValueZ * axisCheckValueZ >= maxPointContributionRadiusSq))
@@ -51,7 +51,7 @@ public class ChunkPointGatherer<T>
 				// If so, remove it.
 				// Copy the last value to this value, and remove the last,
 				// to avoid shifting because order doesn't matter.
-				int lastIndex = worldPoints.size() - 1;
+				var lastIndex = worldPoints.size() - 1;
 				worldPoints.set(i, worldPoints.get(lastIndex));
 				worldPoints.remove(lastIndex);
 				i--;

@@ -63,14 +63,14 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
-		BlockState state = super.getPlacementState(ctx);
-		BlockPos pos = ctx.getBlockPos();
-		World world = ctx.getWorld();
+		var state = super.getPlacementState(ctx);
+		var pos = ctx.getBlockPos();
+		var world = ctx.getWorld();
 
-		for (Map.Entry<Direction, BooleanProperty> pair : FACING_PROPERTIES.entrySet())
+		for (var pair : FACING_PROPERTIES.entrySet())
 		{
-			BlockPos neighborPos = pos.offset(pair.getKey());
-			BlockState neighborState = world.getBlockState(neighborPos);
+			var neighborPos = pos.offset(pair.getKey());
+			var neighborState = world.getBlockState(neighborPos);
 			state = state.with(pair.getValue(), canConnectTo(world, state, neighborState, neighborPos, pair.getKey()));
 		}
 
@@ -79,15 +79,15 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 
 	public ArrayList<BlockPos> getGlobalOutlets(WorldAccess world, BlockState state, BlockPos entryPoint)
 	{
-		ArrayList<BlockPos> outlets = new ArrayList<>();
+		var outlets = new ArrayList<BlockPos>();
 
-		ArrayList<BlockPos> checked = new ArrayList<>();
-		ArrayDeque<BlockPos> q = new ArrayDeque<>();
+		var checked = new ArrayList<BlockPos>();
+		var q = new ArrayDeque<BlockPos>();
 		q.add(entryPoint);
 
 		while (!q.isEmpty())
 		{
-			BlockPos node = q.poll();
+			var node = q.poll();
 
 			checked.add(node);
 
@@ -95,7 +95,7 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 
 			outlets.addAll(getLocalOutlets(world, state, node));
 
-			for (BlockPos pos : getLocalConnections(world, state, node))
+			for (var pos : getLocalConnections(world, state, node))
 				if (!checked.contains(pos))
 					q.add(pos);
 		}
@@ -105,12 +105,12 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 
 	public ArrayList<BlockPos> getLocalOutlets(WorldAccess world, BlockState state, BlockPos pos)
 	{
-		ArrayList<BlockPos> outlets = new ArrayList<>();
+		var outlets = new ArrayList<BlockPos>();
 
-		for (Map.Entry<Direction, BooleanProperty> directions : FACING_PROPERTIES.entrySet())
+		for (var directions : FACING_PROPERTIES.entrySet())
 		{
-			BlockPos other = pos.offset(directions.getKey());
-			BlockState otherState = world.getBlockState(other);
+			var other = pos.offset(directions.getKey());
+			var otherState = world.getBlockState(other);
 			if (!canConnectTo(world, state, otherState, other, directions.getKey()) && state.get(directions.getValue()))
 				outlets.add(other);
 		}
@@ -120,12 +120,12 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 
 	public ArrayList<BlockPos> getLocalConnections(WorldAccess world, BlockState state, BlockPos pos)
 	{
-		ArrayList<BlockPos> connections = new ArrayList<>();
+		var connections = new ArrayList<BlockPos>();
 
-		for (Map.Entry<Direction, BooleanProperty> directions : FACING_PROPERTIES.entrySet())
+		for (var directions : FACING_PROPERTIES.entrySet())
 		{
-			BlockPos other = pos.offset(directions.getKey());
-			BlockState otherState = world.getBlockState(other);
+			var other = pos.offset(directions.getKey());
+			var otherState = world.getBlockState(other);
 			if (isConnectedTo(world, state, otherState, other, directions.getKey()))
 				connections.add(other);
 		}

@@ -45,22 +45,19 @@ public class RotatingBlockWithBounds extends RotatingBlock
 		if (requiresSubstrate == Substrate.NONE)
 			return super.canPlaceAt(state, world, pos);
 
-		Direction substrateDirection = getSubstrateDirection(state);
+		var substrateDirection = getSubstrateDirection(state);
 
 		switch (requiresSubstrate)
 		{
-			case BEHIND:
-			{
+			case BEHIND -> {
 				BlockPos blockPos = pos.offset(substrateDirection);
 				return sideCoversSmallSquare(world, blockPos, substrateDirection.getOpposite());
 			}
-			case BELOW:
-			{
+			case BELOW -> {
 				BlockPos blockPos = pos.down();
 				return hasTopRim(world, blockPos) || sideCoversSmallSquare(world, blockPos, Direction.UP);
 			}
-			default:
-				throw new IllegalStateException("Unexpected value: " + requiresSubstrate);
+			default -> throw new IllegalStateException("Unexpected value: " + requiresSubstrate);
 		}
 	}
 
@@ -72,7 +69,7 @@ public class RotatingBlockWithBounds extends RotatingBlock
 		if (requiresSubstrate == Substrate.NONE)
 			return state;
 
-		Direction substrateDirection = getSubstrateDirection(state);
+		var substrateDirection = getSubstrateDirection(state);
 
 		return direction.getOpposite() == substrateDirection && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
 	}

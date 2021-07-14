@@ -17,7 +17,7 @@ public class ItemConvertibleJsonCraftingComponent implements IJsonCraftingCompon
 	@Override
 	public JsonObject getIngredientObject()
 	{
-		JsonObject o = new JsonObject();
+		var o = new JsonObject();
 		o.addProperty("item", registryName.toString());
 
 		return o;
@@ -31,7 +31,7 @@ public class ItemConvertibleJsonCraftingComponent implements IJsonCraftingCompon
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		ItemConvertibleJsonCraftingComponent that = (ItemConvertibleJsonCraftingComponent)o;
+		var that = (ItemConvertibleJsonCraftingComponent)o;
 
 		return registryName.equals(that.registryName);
 	}

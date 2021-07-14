@@ -14,7 +14,7 @@ public class SpeciesVariantArgumentType implements ArgumentType<String>
 	@Override
 	public String parse(StringReader reader) throws CommandSyntaxException
 	{
-		int i = reader.getCursor();
+		var i = reader.getCursor();
 
 		while (reader.canRead() && isCharValid(reader.peek()))
 		{

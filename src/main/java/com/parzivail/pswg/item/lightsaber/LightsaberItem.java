@@ -60,7 +60,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	public static void toggle(World world, PlayerEntity player, ItemStack stack)
 	{
 		LightsaberTag.mutate(stack, lightsaberTag -> {
-			boolean success = lightsaberTag.toggle();
+			var success = lightsaberTag.toggle();
 
 			if (success && !world.isClient)
 			{
@@ -99,34 +99,28 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	@Override
 	public ImmutableMultimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack)
 	{
-		switch (slot)
-		{
-			case MAINHAND:
-				return isActive(stack) ? attribModsOnMainhand : attribModsOff;
-			case OFFHAND:
-				return isActive(stack) ? attribModsOnOffhand : attribModsOff;
-			default:
-				return ImmutableMultimap.of();
-		}
+		return switch (slot)
+				{
+					case MAINHAND -> isActive(stack) ? attribModsOnMainhand : attribModsOff;
+					case OFFHAND -> isActive(stack) ? attribModsOnOffhand : attribModsOff;
+					default -> ImmutableMultimap.of();
+				};
 	}
 
 	@Override
 	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot)
 	{
-		switch (slot)
-		{
-			case MAINHAND:
-			case OFFHAND:
-				return attribModsOff;
-			default:
-				return ImmutableMultimap.of();
-		}
+		return switch (slot)
+				{
+					case MAINHAND, OFFHAND -> attribModsOff;
+					default -> ImmutableMultimap.of();
+				};
 	}
 
 	@Override
 	public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand)
 	{
-		final ItemStack stack = player.getStackInHand(hand);
+		final var stack = player.getStackInHand(hand);
 		if (player.isSneaking())
 		{
 			toggle(world, player, stack);

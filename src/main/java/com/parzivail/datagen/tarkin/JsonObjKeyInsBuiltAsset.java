@@ -11,7 +11,6 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -35,9 +34,9 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 					json = GSON.fromJson(reader, JsonObject.class);
 				}
 
-				JsonObject objContents = (JsonObject)contents;
+				var objContents = (JsonObject)contents;
 
-				for (Map.Entry<String, JsonElement> pair : objContents.entrySet())
+				for (var pair : objContents.entrySet())
 				{
 					if (!json.has(pair.getKey()))
 						json.add(pair.getKey(), pair.getValue());
@@ -45,7 +44,7 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 
 				try (
 						Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8);
-						JsonWriter jsonWriter = new JsonWriter(writer)
+						var jsonWriter = new JsonWriter(writer)
 				)
 				{
 					jsonWriter.setIndent("\t");
@@ -77,12 +76,12 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 
 	private static JsonObject sortKeysRecursively(JsonObject jsonObject)
 	{
-		List<String> keySet = jsonObject.entrySet().stream().map(Map.Entry::getKey).sorted().collect(Collectors.toList());
-		JsonObject temp = new JsonObject();
+		var keySet = jsonObject.entrySet().stream().map(Map.Entry::getKey).sorted().collect(Collectors.toList());
+		var temp = new JsonObject();
 
-		for (String key : keySet)
+		for (var key : keySet)
 		{
-			JsonElement ele = jsonObject.get(key);
+			var ele = jsonObject.get(key);
 			if (ele.isJsonObject())
 			{
 				ele = sortKeysRecursively(ele.getAsJsonObject());
@@ -99,9 +98,9 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 
 	private static JsonArray sortKeysRecursively(JsonArray jsonArray)
 	{
-		final JsonArray temp = new JsonArray();
+		final var temp = new JsonArray();
 
-		for (JsonElement ele : jsonArray)
+		for (var ele : jsonArray)
 		{
 			if (ele.isJsonObject())
 			{

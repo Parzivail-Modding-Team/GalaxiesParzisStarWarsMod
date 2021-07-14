@@ -6,11 +6,9 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.function.Supplier;
 
-public class PM3DTexturedModel
+public record PM3DTexturedModel(Supplier<PM3DFile> file,
+                                Identifier... lodTextures)
 {
-	private final Supplier<PM3DFile> file;
-	private final Identifier[] lodTextures;
-
 	public PM3DTexturedModel(Supplier<PM3DFile> file, Identifier... lodTextures)
 	{
 		this.file = Suppliers.memoize(file::get);

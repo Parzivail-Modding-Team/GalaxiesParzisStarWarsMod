@@ -112,9 +112,9 @@ public class BuiltAsset
 
 	public static void nukeRecipeDir() throws IOException
 	{
-		Path dummyAsset = getRecipePath(Resources.id("dummy"));
+		var dummyAsset = getRecipePath(Resources.id("dummy"));
 
-		Path parentDir = dummyAsset.getParent();
+		var parentDir = dummyAsset.getParent();
 
 		if (!Files.exists(parentDir))
 			return;

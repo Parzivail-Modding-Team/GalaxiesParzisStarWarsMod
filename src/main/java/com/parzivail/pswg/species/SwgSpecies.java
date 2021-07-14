@@ -19,7 +19,7 @@ public abstract class SwgSpecies
 
 	public static Identifier getSpeciesSlug(String serializedSpecies)
 	{
-		String[] parts = serializedSpecies.split(MODEL_SEPARATOR);
+		var parts = serializedSpecies.split(MODEL_SEPARATOR);
 		return SpeciesGender.stripGender(parts[0]);
 	}
 
@@ -63,18 +63,18 @@ public abstract class SwgSpecies
 		if (serialized == null)
 			return;
 
-		String[] parts = serialized.split(MODEL_SEPARATOR);
+		var parts = serialized.split(MODEL_SEPARATOR);
 
 		this.model = new Identifier(parts[0]);
 		this.gender = SpeciesGender.fromModel(parts[0]);
 
 		if (parts.length > 1)
 		{
-			String[] variables = parts[1].split(VARIABLE_SEPARATOR);
+			var variables = parts[1].split(VARIABLE_SEPARATOR);
 
-			for (String variable : variables)
+			for (var variable : variables)
 			{
-				String[] pairParts = variable.split(VARIABLE_EQUALS, 2);
+				var pairParts = variable.split(VARIABLE_EQUALS, 2);
 				this.variables.put(pairParts[0], pairParts[1]);
 			}
 		}
@@ -90,7 +90,7 @@ public abstract class SwgSpecies
 	public void setDefaultVariables()
 	{
 		gender = SpeciesGender.MALE;
-		for (SpeciesVariable variable : getVariables())
+		for (var variable : getVariables())
 			setVariable(variable, variable.getDefaultValue());
 	}
 
@@ -121,13 +121,13 @@ public abstract class SwgSpecies
 
 	public String serialize()
 	{
-		String variablePairs = variables
+		var variablePairs = variables
 				.entrySet()
 				.stream()
 				.map(variable -> variable.getKey() + VARIABLE_EQUALS + variable.getValue())
 				.collect(Collectors.joining(VARIABLE_SEPARATOR));
 
-		return SpeciesGender.toModel(this).toString() + MODEL_SEPARATOR + variablePairs;
+		return SpeciesGender.toModel(this) + MODEL_SEPARATOR + variablePairs;
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public abstract class SwgSpecies
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		SpeciesTogruta that = (SpeciesTogruta)o;
+		var that = (SpeciesTogruta)o;
 
 		if (gender != that.gender)
 			return false;
@@ -148,7 +148,7 @@ public abstract class SwgSpecies
 	@Override
 	public int hashCode()
 	{
-		int result = getSlug().hashCode();
+		var result = getSlug().hashCode();
 		result = 31 * result + gender.hashCode();
 		result = 31 * result + variables.hashCode();
 		return result;
@@ -165,7 +165,7 @@ public abstract class SwgSpecies
 	public void copy(SwgSpecies species)
 	{
 		this.setDefaultVariables();
-		for (Map.Entry<String, String> pair : species.variables.entrySet())
+		for (var pair : species.variables.entrySet())
 			this.variables.put(pair.getKey(), pair.getValue());
 
 		this.gender = species.gender;

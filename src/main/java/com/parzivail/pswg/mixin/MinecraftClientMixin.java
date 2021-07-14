@@ -20,8 +20,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.nio.file.Path;
-
 @Mixin(MinecraftClient.class)
 @Environment(EnvType.CLIENT)
 public class MinecraftClientMixin
@@ -41,7 +39,7 @@ public class MinecraftClientMixin
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void init(RunArgs args, CallbackInfo ci)
 	{
-		Path remoteAssetDir = args.directories.assetDir.toPath().resolve("pswgRemoteAssets");
+		var remoteAssetDir = args.directories.assetDir.toPath().resolve("pswgRemoteAssets");
 		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.toString());
 		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", remoteAssetDir);
 		Client.stackedTextureProvider = new StackedTextureProvider(textureManager, "pswg:stacked");

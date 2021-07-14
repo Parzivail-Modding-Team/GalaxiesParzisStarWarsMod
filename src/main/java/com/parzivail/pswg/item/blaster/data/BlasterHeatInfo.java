@@ -23,7 +23,7 @@ public class BlasterHeatInfo
 
 	public static BlasterHeatInfo fromTag(NbtCompound compoundTag, String s)
 	{
-		NbtCompound tag = compoundTag.getCompound(s);
+		var tag = compoundTag.getCompound(s);
 
 		return new BlasterHeatInfo(
 				tag.getInt("capacity"),
@@ -37,7 +37,7 @@ public class BlasterHeatInfo
 
 	public static void toTag(NbtCompound compoundTag, String s, BlasterHeatInfo data)
 	{
-		NbtCompound tag = new NbtCompound();
+		var tag = new NbtCompound();
 
 		tag.putInt("capacity", data.capacity);
 		tag.putInt("perRound", data.perRound);

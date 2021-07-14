@@ -11,10 +11,10 @@ public class QuatUtil
 {
 	public static EulerAngle toEulerAngles(Quaternion q)
 	{
-		Vec3d forward = rotate(com.parzivail.util.math.MathUtil.POSZ, q);
+		var forward = rotate(com.parzivail.util.math.MathUtil.POSZ, q);
 
-		float yaw = -(float)Math.atan2(forward.x, forward.z);
-		float pitch = (float)Math.atan2(forward.y, Math.sqrt(forward.x * forward.x + forward.z * forward.z));
+		var yaw = -(float)Math.atan2(forward.x, forward.z);
+		var pitch = (float)Math.atan2(forward.y, Math.sqrt(forward.x * forward.x + forward.z * forward.z));
 
 		return new EulerAngle(pitch * com.parzivail.util.math.MathUtil.toDegreesf, yaw * MathUtil.toDegreesf + 180, 0);
 	}
@@ -22,10 +22,10 @@ public class QuatUtil
 	public static Vec3d rotate(Vec3d self, Quaternion q)
 	{
 		// Extract the vector part of the quaternion
-		Vec3d u = new Vec3d(q.getX(), q.getY(), q.getZ());
+		var u = new Vec3d(q.getX(), q.getY(), q.getZ());
 
 		// Extract the scalar part of the quaternion
-		float s = q.getW();
+		var s = q.getW();
 
 		// Do the math
 		return u.multiply(2.0f * u.dotProduct(self)).add(self.multiply(s * s - u.dotProduct(u))).add(u.crossProduct(self).multiply(2.0f * s));
@@ -40,12 +40,12 @@ public class QuatUtil
 			z *= 0.017453292F;
 		}
 
-		float f = MathHelper.sin(0.5F * x);
-		float g = MathHelper.cos(0.5F * x);
-		float h = MathHelper.sin(0.5F * y);
-		float i = MathHelper.cos(0.5F * y);
-		float j = MathHelper.sin(0.5F * z);
-		float k = MathHelper.cos(0.5F * z);
+		var f = MathHelper.sin(0.5F * x);
+		var g = MathHelper.cos(0.5F * x);
+		var h = MathHelper.sin(0.5F * y);
+		var i = MathHelper.cos(0.5F * y);
+		var j = MathHelper.sin(0.5F * z);
+		var k = MathHelper.cos(0.5F * z);
 		return new Quaternion(f * i * k + g * h * j, g * h * k - f * i * j, f * h * k + g * i * j, g * i * k - f * h * j);
 	}
 
@@ -65,10 +65,10 @@ public class QuatUtil
 	public static void rotateTowards(Quaternion self, Vec3d orientation, float speed, Matrix4f mat, VertexConsumer debugConsumer)
 	{
 		normalize(self);
-		Vec3d vec2 = rotate(orientation, self);
-		Vec3d cross = orientation.crossProduct(vec2).multiply(-1.0);
-		Vec3d axis = cross.normalize();
-		float f1 = (float)cross.length();
+		var vec2 = rotate(orientation, self);
+		var cross = orientation.crossProduct(vec2).multiply(-1.0);
+		var axis = cross.normalize();
+		var f1 = (float)cross.length();
 		if (debugConsumer != null)
 		{
 			debugConsumer.vertex(mat, 0.0f, 0.0f, 0.0f).color(1f, 0f, 0f, 1f).next();
@@ -80,14 +80,14 @@ public class QuatUtil
 			debugConsumer.vertex(mat, 0.0f, 0.0f, 0.0f).color(0f, 1f, 0f, 1f).next();
 			debugConsumer.vertex(mat, (float)cross.x, (float)cross.y, (float)cross.z).color(0f, 1f, 0f, 1f).next();
 		}
-		Quaternion other = new Quaternion(new Vec3f(axis), speed * f1, false);
+		var other = new Quaternion(new Vec3f(axis), speed * f1, false);
 		other.hamiltonProduct(self);
 		set(self, other);
 	}
 
 	public static Quaternion invertCopy(Quaternion q)
 	{
-		Quaternion q1 = new Quaternion(q);
+		var q1 = new Quaternion(q);
 		invert(q1);
 		return q1;
 	}
@@ -102,17 +102,17 @@ public class QuatUtil
 	 */
 	public static Vec3d project(Vec3d v, Quaternion q)
 	{
-		Quaternion c = new Quaternion(q);
+		var c = new Quaternion(q);
 		c.conjugate();
 		return rotate(v, c);
 	}
 
 	public static void normalize(Quaternion self)
 	{
-		float f = self.getX() * self.getX() + self.getY() * self.getY() + self.getZ() * self.getZ() + self.getW() * self.getW();
+		var f = self.getX() * self.getX() + self.getY() * self.getY() + self.getZ() * self.getZ() + self.getW() * self.getW();
 		if (f > 1.0E-6F)
 		{
-			float g = (float)MathHelper.fastInverseSqrt((double)f);
+			var g = (float)MathHelper.fastInverseSqrt((double)f);
 			scale(self, g);
 		}
 		else
@@ -151,33 +151,33 @@ public class QuatUtil
 			// If the inputs are too close for comfort, linearly interpolate
 			// and normalize the result.
 
-			float f = 1 - t;
+			var f = 1 - t;
 
-			float a = f * start.getW() + t * end.getW();
-			float b = f * start.getX() + t * end.getX();
-			float c = f * start.getY() + t * end.getY();
-			float d = f * start.getZ() + t * end.getZ();
+			var a = f * start.getW() + t * end.getW();
+			var b = f * start.getX() + t * end.getX();
+			var c = f * start.getY() + t * end.getY();
+			var d = f * start.getZ() + t * end.getZ();
 
-			Quaternion result = new Quaternion(b, c, d, a);
+			var result = new Quaternion(b, c, d, a);
 			normalize(result);
 			return result;
 		}
 
 		// Since dot is in range [0, DOT_THRESHOLD], acos is safe
-		double theta_0 = Math.acos(dot);        // theta_0 = angle between input vectors
-		double theta = theta_0 * t;          // theta = angle between start and result
-		double sin_theta = Math.sin(theta);     // compute this value only once
-		double sin_theta_0 = Math.sin(theta_0); // compute this value only once
+		var theta_0 = Math.acos(dot);        // theta_0 = angle between input vectors
+		var theta = theta_0 * t;          // theta = angle between start and result
+		var sin_theta = Math.sin(theta);     // compute this value only once
+		var sin_theta_0 = Math.sin(theta_0); // compute this value only once
 
-		double f1 = Math.cos(theta) - dot * sin_theta / sin_theta_0;  // == sin(theta_0 - theta) / sin(theta_0)
-		double f2 = sin_theta / sin_theta_0;
+		var f1 = Math.cos(theta) - dot * sin_theta / sin_theta_0;  // == sin(theta_0 - theta) / sin(theta_0)
+		var f2 = sin_theta / sin_theta_0;
 
-		float a = (float)(f1 * start.getW() + f2 * end.getW());
-		float b = (float)(f1 * start.getX() + f2 * end.getX());
-		float c = (float)(f1 * start.getY() + f2 * end.getY());
-		float d = (float)(f1 * start.getZ() + f2 * end.getZ());
+		var a = (float)(f1 * start.getW() + f2 * end.getW());
+		var b = (float)(f1 * start.getX() + f2 * end.getX());
+		var c = (float)(f1 * start.getY() + f2 * end.getY());
+		var d = (float)(f1 * start.getZ() + f2 * end.getZ());
 
-		Quaternion result = new Quaternion(b, c, d, a);
+		var result = new Quaternion(b, c, d, a);
 		normalize(result);
 		return result;
 	}
@@ -189,9 +189,9 @@ public class QuatUtil
 
 	public static Quaternion getRotationTowards(Vec3d from, Vec3d to)
 	{
-		Quaternion q = new Quaternion(Quaternion.IDENTITY);
-		Vec3d cross = from.crossProduct(to);
-		float w = (float)(Math.sqrt(from.lengthSquared() * to.lengthSquared()) + from.dotProduct(to));
+		var q = new Quaternion(Quaternion.IDENTITY);
+		var cross = from.crossProduct(to);
+		var w = (float)(Math.sqrt(from.lengthSquared() * to.lengthSquared()) + from.dotProduct(to));
 		set(q, w, (float)cross.x, (float)cross.y, (float)cross.z);
 		normalize(q);
 		return q;
@@ -204,7 +204,7 @@ public class QuatUtil
 
 	public static void invert(Quaternion self)
 	{
-		float l = self.getW() * self.getW() + self.getX() * self.getX() + self.getY() * self.getY() + self.getZ() * self.getZ();
+		var l = self.getW() * self.getW() + self.getX() * self.getX() + self.getY() * self.getY() + self.getZ() * self.getZ();
 		set(self, self.getW() / l, -self.getX() / l, -self.getY() / l, -self.getZ() / l);
 	}
 
@@ -215,7 +215,7 @@ public class QuatUtil
 
 	public static void updateEulerRotation(Entity entity, Quaternion rotation)
 	{
-		EulerAngle eulerAngle = toEulerAngles(rotation);
+		var eulerAngle = toEulerAngles(rotation);
 		entity.setYaw(eulerAngle.getYaw());
 		entity.setPitch(eulerAngle.getPitch());
 

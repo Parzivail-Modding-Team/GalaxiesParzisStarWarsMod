@@ -32,7 +32,7 @@ public class TatooineHomeDoorRenderer implements BlockEntityRenderer<TatooineHom
 	{
 		matrices.push();
 
-		PR3Model<TatooineHomeDoorBlockEntity, RigTatooineHomeDoor.Part> m = model.get();
+		var m = model.get();
 
 		m.renderObject(vertexConsumers.getBuffer(RenderLayer.getEntitySolid(TEXTURE_FRAME)), "Frame", blockEntity, tickDelta, matrices, light);
 

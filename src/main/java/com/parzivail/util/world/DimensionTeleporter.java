@@ -31,7 +31,7 @@ public class DimensionTeleporter
 	{
 		if (entity instanceof ServerPlayerEntity)
 		{
-			ChunkPos chunkPos = new ChunkPos(new BlockPos(x, y, z));
+			var chunkPos = new ChunkPos(new BlockPos(x, y, z));
 			world.getChunkManager().addTicket(ChunkTicketType.POST_TELEPORT, chunkPos, 1, entity.getId());
 			entity.stopRiding();
 			if (((ServerPlayerEntity)entity).isSleeping())
@@ -52,8 +52,8 @@ public class DimensionTeleporter
 		}
 		else
 		{
-			float f = MathHelper.wrapDegrees(yaw);
-			float g = MathHelper.wrapDegrees(pitch);
+			var f = MathHelper.wrapDegrees(yaw);
+			var g = MathHelper.wrapDegrees(pitch);
 			g = MathHelper.clamp(g, -90.0F, 90.0F);
 			if (world == entity.world)
 			{
@@ -63,7 +63,7 @@ public class DimensionTeleporter
 			else
 			{
 				entity.detach();
-				Entity other = entity;
+				var other = entity;
 				entity = entity.getType().create(world);
 
 				if (entity == null)

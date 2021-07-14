@@ -16,7 +16,7 @@ public class ClientMathUtil
 
 	public static Vec3f transform(Vec3f v, Matrix4f m)
 	{
-		Vector4f v4 = new Vector4f(v);
+		var v4 = new Vector4f(v);
 		v4.transform(m);
 		return new Vec3f(v4.getX(), v4.getY(), v4.getZ());
 	}

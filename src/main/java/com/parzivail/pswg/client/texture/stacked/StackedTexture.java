@@ -31,14 +31,12 @@ public class StackedTexture extends ResourceTexture
 
 	private void onTextureLoaded(NativeImage image)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 		minecraft.execute(() -> {
 			this.loaded = true;
 			if (!RenderSystem.isOnRenderThread())
 			{
-				RenderSystem.recordRenderCall(() -> {
-					this.uploadTexture(image);
-				});
+				RenderSystem.recordRenderCall(() -> this.uploadTexture(image));
 			}
 			else
 			{
@@ -55,7 +53,7 @@ public class StackedTexture extends ResourceTexture
 
 	public void load(ResourceManager manager) throws IOException
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 		minecraft.execute(() -> {
 			if (!this.loaded)
 			{
@@ -72,11 +70,11 @@ public class StackedTexture extends ResourceTexture
 			}
 		});
 
-		NativeImage[] nativeImages = new NativeImage[textures.length];
+		var nativeImages = new NativeImage[textures.length];
 
-		for (int i = 0; i < textures.length; i++)
+		for (var i = 0; i < textures.length; i++)
 		{
-			TextureData texData = TextureData.load(manager, textures[i]);
+			var texData = TextureData.load(manager, textures[i]);
 
 			nativeImages[i] = texData.getImage();
 
@@ -84,17 +82,17 @@ public class StackedTexture extends ResourceTexture
 				throw new IOException("All textures in a stack must be the same size");
 		}
 
-		NativeImage base = nativeImages[0];
+		var base = nativeImages[0];
 
-		for (int i = 1; i < nativeImages.length; i++)
+		for (var i = 1; i < nativeImages.length; i++)
 		{
-			NativeImage layerImage = nativeImages[i];
+			var layerImage = nativeImages[i];
 
-			int width = layerImage.getWidth();
-			int height = layerImage.getHeight();
-			for (int x = 0; x < width; x++)
+			var width = layerImage.getWidth();
+			var height = layerImage.getHeight();
+			for (var x = 0; x < width; x++)
 			{
-				for (int y = 0; y < height; y++)
+				for (var y = 0; y < height; y++)
 					base.setPixelColor(x, y, ColorUtil.blendColorsOnSrcAlpha(base.getPixelColor(x, y), layerImage.getPixelColor(x, y), 0xFFFFFF));
 			}
 		}

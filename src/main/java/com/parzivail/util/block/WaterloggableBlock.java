@@ -40,7 +40,7 @@ public class WaterloggableBlock extends Block implements Waterloggable
 
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
-		FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
+		var fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
 		return super.getPlacementState(ctx).with(Properties.WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
 	}
 }

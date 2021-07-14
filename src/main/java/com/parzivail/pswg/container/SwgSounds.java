@@ -6,7 +6,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class SwgSounds
 {
@@ -14,7 +13,7 @@ public class SwgSounds
 
 	private static SoundEvent of(Identifier identifier)
 	{
-		SoundEvent se = new SoundEvent(identifier);
+		var se = new SoundEvent(identifier);
 		SOUND_EVENTS.put(identifier, se);
 		return se;
 	}
@@ -26,7 +25,7 @@ public class SwgSounds
 		Blaster.register();
 		Ship.register();
 
-		for (Map.Entry<Identifier, SoundEvent> pair : SOUND_EVENTS.entrySet())
+		for (var pair : SOUND_EVENTS.entrySet())
 			Registry.register(Registry.SOUND_EVENT, pair.getKey(), pair.getValue());
 	}
 

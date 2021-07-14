@@ -6,7 +6,7 @@ public class DataGenHelper
 {
 	public static void run()
 	{
-		String tarkinArg = System.getProperty("tarkin", "");
+		var tarkinArg = System.getProperty("tarkin", "");
 		if (!tarkinArg.isEmpty())
 		{
 			try

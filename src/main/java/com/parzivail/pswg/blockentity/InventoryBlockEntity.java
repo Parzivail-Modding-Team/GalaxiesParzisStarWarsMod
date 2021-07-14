@@ -57,7 +57,7 @@ public abstract class InventoryBlockEntity extends BlockEntity implements Invent
 	@Override
 	public ItemStack removeStack(int slot, int amount)
 	{
-		ItemStack itemStack = Inventories.splitStack(inventory, slot, amount);
+		var itemStack = Inventories.splitStack(inventory, slot, amount);
 		if (!itemStack.isEmpty())
 		{
 			this.markDirty();
@@ -69,7 +69,7 @@ public abstract class InventoryBlockEntity extends BlockEntity implements Invent
 	@Override
 	public ItemStack removeStack(int slot)
 	{
-		ItemStack itemStack = inventory.get(slot);
+		var itemStack = inventory.get(slot);
 		if (itemStack.isEmpty())
 			return ItemStack.EMPTY;
 		else

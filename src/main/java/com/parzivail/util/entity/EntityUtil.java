@@ -5,14 +5,11 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 public class EntityUtil
 {
@@ -21,11 +18,11 @@ public class EntityUtil
 		Entity pointedEntity = null;
 		Vec3d hitLocation = null;
 
-		List<Entity> blacklist = Arrays.asList(exclude);
+		var blacklist = Arrays.asList(exclude);
 
 		fromDir = fromDir.normalize();
 
-		Vec3d endPos = startPos.add(fromDir.multiply(distance));
+		var endPos = startPos.add(fromDir.multiply(distance));
 		var list = fromEntity.world.getEntitiesByClass(LivingEntity.class, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
 
 		for (var entity : list)
@@ -35,12 +32,12 @@ public class EntityUtil
 
 			if (entity.collides())
 			{
-				Box box = entity.getBoundingBox();
-				Optional<Vec3d> hitvec = box.raycast(startPos, endPos);
+				var box = entity.getBoundingBox();
+				var hitvec = box.raycast(startPos, endPos);
 
 				if (hitvec.isPresent())
 				{
-					double distanceTo = startPos.distanceTo(hitvec.get());
+					var distanceTo = startPos.distanceTo(hitvec.get());
 
 					if (distanceTo < distance)
 					{
@@ -60,15 +57,15 @@ public class EntityUtil
 
 	public static BlockHitResult raycastBlocks(Vec3d startPos, Vec3d fromDir, double distance, Entity fromEntity)
 	{
-		Vec3d end = startPos.add(fromDir.multiply(distance));
+		var end = startPos.add(fromDir.multiply(distance));
 		return fromEntity.world.raycast(new RaycastContext(startPos, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, fromEntity));
 	}
 
 	public static void setVelocityFromAngles(Entity entity, float pitch, float yaw, float roll, float scalar)
 	{
-		float f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
-		float g = -MathHelper.sin((pitch + roll) * 0.017453292F);
-		float h = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+		var f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
+		var g = -MathHelper.sin((pitch + roll) * 0.017453292F);
+		var h = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
 		entity.setVelocity(scalar * f, scalar * g, scalar * h);
 	}
 }

@@ -43,15 +43,15 @@ public class LightsaberTag extends TagSerializer
 
 	public static LightsaberTag fromRootTag(NbtCompound tag)
 	{
-		NbtCompound parent = new NbtCompound();
+		var parent = new NbtCompound();
 		parent.put(SLUG.toString(), tag);
 		return new LightsaberTag(parent);
 	}
 
 	public static void mutate(ItemStack stack, Consumer<LightsaberTag> action)
 	{
-		NbtCompound nbt = stack.getOrCreateTag();
-		LightsaberTag t = new LightsaberTag(nbt);
+		var nbt = stack.getOrCreateTag();
+		var t = new LightsaberTag(nbt);
 		action.accept(t);
 
 		t.serializeAsSubtag(stack);

@@ -133,7 +133,7 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEnt
 
 		if (t.isMoving())
 		{
-			int timer = t.getTimer();
+			var timer = t.getTimer();
 
 			if (timer == 0)
 				return;
@@ -144,7 +144,7 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEnt
 
 			if (timer <= 0)
 			{
-				boolean opening = t.isOpening();
+				var opening = t.isOpening();
 				t.setDirection(!opening);
 
 				t.setTimer(0);

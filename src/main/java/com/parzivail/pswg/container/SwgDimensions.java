@@ -37,7 +37,7 @@ public class SwgDimensions
 
 	private static int getSkyColor(float temperature)
 	{
-		float f = temperature / 3.0F;
+		var f = temperature / 3.0F;
 		f = MathHelper.clamp(f, -1.0F, 1.0F);
 		return MathHelper.hsvToRgb(0.62222224F - f * 0.05F, 0.5F + f * 0.1F, 1.0F);
 	}

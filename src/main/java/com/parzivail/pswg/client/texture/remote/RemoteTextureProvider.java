@@ -38,7 +38,7 @@ public class RemoteTextureProvider
 		this.identifierRoot = identifierRoot;
 		this.skinCacheDir = skinCacheDir;
 		remoteTextureResolver = new RemoteTextureResolver();
-		this.skinCache = CacheBuilder.newBuilder().expireAfterAccess(15L, TimeUnit.SECONDS).build(new CacheLoader<Identifier, RemoteTextureUrl>()
+		this.skinCache = CacheBuilder.newBuilder().expireAfterAccess(15L, TimeUnit.SECONDS).build(new CacheLoader<>()
 		{
 			public RemoteTextureUrl load(Identifier id)
 			{
@@ -56,8 +56,8 @@ public class RemoteTextureProvider
 
 	public Identifier loadTexture(String id, Supplier<Identifier> fallback)
 	{
-		Identifier identifier = getIdentifier(id);
-		AbstractTexture texture = textureManager.getTexture(identifier);
+		var identifier = getIdentifier(id);
+		var texture = textureManager.getTexture(identifier);
 
 		// The texture is fully loaded
 		if (texture != null)
@@ -78,26 +78,24 @@ public class RemoteTextureProvider
 	{
 		// Note: `identifier` may or may not be a URL, that's up to `remoteTextureResolver` to resolve
 
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
 		Util.getMainWorkerExecutor().execute(() -> {
 			try
 			{
-				final RemoteTextureUrl remoteTextureUrl = this.skinCache.getUnchecked(identifier);
+				final var remoteTextureUrl = this.skinCache.getUnchecked(identifier);
 
-				minecraft.execute(() -> {
-					RenderSystem.recordRenderCall(() -> {
-						String string = Hashing.sha1().hashUnencodedChars(remoteTextureUrl.getHash()).toString();
-						AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
-						if (!(abstractTexture instanceof RemoteTexture))
-						{
-							Path path = this.skinCacheDir.resolve(string.length() > 2 ? string.substring(0, 2) : "xx");
-							Path path2 = path.resolve(string);
-							RemoteTexture remoteTexture = new RemoteTexture(path2, remoteTextureUrl.getUrl(), DefaultSkinHelper.getTexture());
-							this.textureManager.registerTexture(identifier, remoteTexture);
-						}
-					});
-				});
+				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> {
+					String string = Hashing.sha1().hashUnencodedChars(remoteTextureUrl.getHash()).toString();
+					AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
+					if (!(abstractTexture instanceof RemoteTexture))
+					{
+						Path path = this.skinCacheDir.resolve(string.length() > 2 ? string.substring(0, 2) : "xx");
+						Path path2 = path.resolve(string);
+						RemoteTexture remoteTexture = new RemoteTexture(path2, remoteTextureUrl.getUrl(), DefaultSkinHelper.getTexture());
+						this.textureManager.registerTexture(identifier, remoteTexture);
+					}
+				}));
 			}
 			catch (InsecureTextureException var7)
 			{

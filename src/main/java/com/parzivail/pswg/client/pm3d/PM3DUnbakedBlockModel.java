@@ -65,7 +65,7 @@ public class PM3DUnbakedBlockModel extends ClonableUnbakedModel
 	@Override
 	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> function, Set<Pair<String, String>> errors)
 	{
-		ArrayList<SpriteIdentifier> ids = new ArrayList<>();
+		var ids = new ArrayList<SpriteIdentifier>();
 
 		ids.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, baseTexture));
 		if (!baseTexture.equals(particleTexture))
@@ -81,7 +81,7 @@ public class PM3DUnbakedBlockModel extends ClonableUnbakedModel
 		if (cachedBakedModel != null)
 			return cachedBakedModel;
 
-		PM3DBakedBlockModel result = baker.apply(spriteLoader);
+		var result = baker.apply(spriteLoader);
 		cachedBakedModel = result;
 		return result;
 	}

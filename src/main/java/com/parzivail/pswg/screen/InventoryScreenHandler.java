@@ -5,7 +5,6 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.screen.slot.Slot;
 import org.jetbrains.annotations.Nullable;
 
 public class InventoryScreenHandler extends ScreenHandler
@@ -20,11 +19,11 @@ public class InventoryScreenHandler extends ScreenHandler
 
 	public ItemStack transferSlot(PlayerEntity player, int index)
 	{
-		ItemStack itemStack = ItemStack.EMPTY;
-		Slot slot = this.slots.get(index);
+		var itemStack = ItemStack.EMPTY;
+		var slot = this.slots.get(index);
 		if (slot != null && slot.hasStack())
 		{
-			ItemStack itemStack2 = slot.getStack();
+			var itemStack2 = slot.getStack();
 			itemStack = itemStack2.copy();
 			if (index < this.inventory.size())
 			{

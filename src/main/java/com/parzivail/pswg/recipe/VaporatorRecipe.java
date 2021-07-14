@@ -14,20 +14,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.world.World;
 
-public class VaporatorRecipe implements Recipe<Inventory>
+public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
+                              ItemStack result) implements Recipe<Inventory>
 {
-	private final Ingredient base;
-	private final int duration;
-	private final ItemStack result;
-	private final Identifier id;
-
-	public VaporatorRecipe(Identifier id, Ingredient base, int duration, ItemStack result)
-	{
-		this.id = id;
-		this.base = base;
-		this.duration = duration;
-		this.result = result;
-	}
 
 	public boolean matches(Inventory inv, World world)
 	{
@@ -80,17 +69,17 @@ public class VaporatorRecipe implements Recipe<Inventory>
 	{
 		public VaporatorRecipe read(Identifier identifier, JsonObject jsonObject)
 		{
-			Ingredient ingredient = Ingredient.fromJson(JsonHelper.getObject(jsonObject, "ingredient"));
-			int duration = JsonHelper.getInt(jsonObject, "duration");
-			ItemStack itemStack = ShapedRecipe.outputFromJson(JsonHelper.getObject(jsonObject, "result"));
+			var ingredient = Ingredient.fromJson(JsonHelper.getObject(jsonObject, "ingredient"));
+			var duration = JsonHelper.getInt(jsonObject, "duration");
+			var itemStack = ShapedRecipe.outputFromJson(JsonHelper.getObject(jsonObject, "result"));
 			return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
 		}
 
 		public VaporatorRecipe read(Identifier identifier, PacketByteBuf packetByteBuf)
 		{
-			Ingredient ingredient = Ingredient.fromPacket(packetByteBuf);
-			int duration = packetByteBuf.readInt();
-			ItemStack itemStack = packetByteBuf.readItemStack();
+			var ingredient = Ingredient.fromPacket(packetByteBuf);
+			var duration = packetByteBuf.readInt();
+			var itemStack = packetByteBuf.readItemStack();
 			return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
 		}
 

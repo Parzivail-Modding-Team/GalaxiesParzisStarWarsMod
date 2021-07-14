@@ -9,7 +9,6 @@ import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.ChunkPos;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
@@ -22,32 +21,32 @@ public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stre
 	{
 		try
 		{
-			FileChannel raf = DataReader.getFile("data", filename);
+			var raf = DataReader.getFile("data", filename);
 			if (raf == null)
 				throw new IOException("Could not load file");
 
-			InputStream fs = Channels.newInputStream(raf);
-			LittleEndianDataInputStream s = new LittleEndianDataInputStream(fs);
+			var fs = Channels.newInputStream(raf);
+			var s = new LittleEndianDataInputStream(fs);
 
-			byte[] identBytes = new byte[MAGIC.length()];
-			int read = s.read(identBytes);
-			String ident = new String(identBytes);
+			var identBytes = new byte[MAGIC.length()];
+			var read = s.read(identBytes);
+			var ident = new String(identBytes);
 			if (!ident.equals(MAGIC) || read != identBytes.length)
 				throw new IOException("Input file not SCARIF structure");
 
-			int version = s.readInt();
+			var version = s.readInt();
 			if (version != 2)
 				throw new IOException("Input file not SCARIF v2 structure");
 
-			int numChunks = s.readInt();
+			var numChunks = s.readInt();
 
-			HashMap<ChunkPos, Long> chunkHeaderEntries = new HashMap<>();
+			var chunkHeaderEntries = new HashMap<ChunkPos, Long>();
 
-			for (int i = 0; i < numChunks; i++)
+			for (var i = 0; i < numChunks; i++)
 			{
-				int x = s.readInt();
-				int z = s.readInt();
-				long offset = s.readLong();
+				var x = s.readInt();
+				var z = s.readInt();
+				var offset = s.readLong();
 
 				chunkHeaderEntries.put(new ChunkPos(x, z), offset);
 			}
@@ -56,7 +55,7 @@ public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stre
 		}
 		catch (IOException e)
 		{
-			CrashReport crashReport = CrashReport.create(e, String.format("Could not load structure: %s", filename));
+			var crashReport = CrashReport.create(e, String.format("Could not load structure: %s", filename));
 			throw new CrashException(crashReport);
 		}
 	}

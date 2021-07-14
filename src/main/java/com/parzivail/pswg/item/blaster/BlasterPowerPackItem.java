@@ -16,10 +16,8 @@ public class BlasterPowerPackItem extends Item
 
 	public static BlasterPowerPack getPackType(ItemStack stack)
 	{
-		if (!(stack.getItem() instanceof BlasterPowerPackItem))
+		if (!(stack.getItem() instanceof BlasterPowerPackItem ppi))
 			return null;
-
-		BlasterPowerPackItem ppi = (BlasterPowerPackItem)stack.getItem();
 
 		return new BlasterPowerPack(ppi.numShotsProvided);
 	}

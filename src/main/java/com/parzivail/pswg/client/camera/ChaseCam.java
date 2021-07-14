@@ -5,11 +5,9 @@ import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
 
 public class ChaseCam
 {
@@ -38,21 +36,21 @@ public class ChaseCam
 
 		prevPos = new Vec3d(pos.x, pos.y, pos.z);
 
-		World world = parent.world;
+		var world = parent.world;
 
-		float lerpAmount = 0.4f;
+		var lerpAmount = 0.4f;
 
-		Quaternion q = parent.getViewRotation(1);
+		var q = parent.getViewRotation(1);
 
-		float camDistTarget = getCamDistTarget(parent, q);
+		var camDistTarget = getCamDistTarget(parent, q);
 
-		Vec3d camTargetPosition = parent.getPos().add(QuatUtil.rotate(new Vec3d(0, 0, camDistTarget), q));
-		Vec3d camDpos = camTargetPosition.subtract(pos);
+		var camTargetPosition = parent.getPos().add(QuatUtil.rotate(new Vec3d(0, 0, camDistTarget), q));
+		var camDpos = camTargetPosition.subtract(pos);
 
-		Vec3d lerpPos = pos.add(camDpos.multiply(lerpAmount));
-		BlockHitResult result = world.raycast(new RaycastContext(parent.getPos(), lerpPos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, parent));
+		var lerpPos = pos.add(camDpos.multiply(lerpAmount));
+		var result = world.raycast(new RaycastContext(parent.getPos(), lerpPos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, parent));
 
-		double totalDistance = parent.getPos().distanceTo(result.getPos());
+		var totalDistance = parent.getPos().distanceTo(result.getPos());
 		if (totalDistance == 0)
 			pos = result.getPos();
 		else
@@ -61,15 +59,15 @@ public class ChaseCam
 
 	private float getCamDistTarget(ShipEntity parent, Quaternion q)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
-		Perspective perspective = minecraft.options.getPerspective();
-		int scalar = 1;
+		var perspective = minecraft.options.getPerspective();
+		var scalar = 1;
 		if (perspective == Perspective.FIRST_PERSON)
 			return 0;
 		else if (perspective == Perspective.THIRD_PERSON_FRONT)
 			scalar = -1;
-		float throttle = parent.getThrottle();
+		var throttle = parent.getThrottle();
 		return scalar * (13 + 3 * throttle);
 	}
 }

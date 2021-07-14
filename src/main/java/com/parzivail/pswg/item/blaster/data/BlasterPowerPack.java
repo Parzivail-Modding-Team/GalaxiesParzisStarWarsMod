@@ -1,11 +1,5 @@
 package com.parzivail.pswg.item.blaster.data;
 
-public class BlasterPowerPack
+public record BlasterPowerPack(int numShots)
 {
-	public final int numShots;
-
-	public BlasterPowerPack(int numShots)
-	{
-		this.numShots = numShots;
-	}
 }

@@ -60,7 +60,7 @@ public class FaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 		if (entity.isAiDisabled())
 			return;
 
-		float i = 4.3F * MathHelper.sin(0.6F * f);
+		var i = 4.3F * MathHelper.sin(0.6F * f);
 		matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(i));
 		if (!entity.isTouchingWater())
 		{

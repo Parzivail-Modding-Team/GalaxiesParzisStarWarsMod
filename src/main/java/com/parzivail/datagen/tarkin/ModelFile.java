@@ -7,7 +7,10 @@ import net.minecraft.item.Item;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.Identifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 
 public class ModelFile
 {
@@ -99,7 +102,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> slab(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		Identifier id = AssetGenerator.getRegistryName(block);
+		var id = AssetGenerator.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(id, new Identifier("block/slab"))
@@ -116,12 +119,12 @@ public class ModelFile
 
 	public static Collection<ModelFile> cropStages(Block block, IntProperty property)
 	{
-		Identifier id = AssetGenerator.getRegistryName(block);
-		ArrayList<ModelFile> modelFiles = new ArrayList<>();
+		var id = AssetGenerator.getRegistryName(block);
+		var modelFiles = new ArrayList<ModelFile>();
 
 		for (int i : property.getValues())
 		{
-			Identifier localId = IdentifierUtil.concat(id, "_stage" + i);
+			var localId = IdentifierUtil.concat(id, "_stage" + i);
 			modelFiles.add(
 					ModelFile
 							.ofModel(localId, new Identifier("block/crop"))
@@ -134,12 +137,12 @@ public class ModelFile
 
 	public static Collection<ModelFile> bushStages(Block block, IntProperty property)
 	{
-		Identifier id = AssetGenerator.getRegistryName(block);
-		ArrayList<ModelFile> modelFiles = new ArrayList<>();
+		var id = AssetGenerator.getRegistryName(block);
+		var modelFiles = new ArrayList<ModelFile>();
 
 		for (int i : property.getValues())
 		{
-			Identifier localId = IdentifierUtil.concat(id, "_stage" + i);
+			var localId = IdentifierUtil.concat(id, "_stage" + i);
 			modelFiles.add(
 					ModelFile
 							.ofModel(localId, new Identifier("block/cross"))
@@ -152,7 +155,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> slabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		Identifier id = AssetGenerator.getRegistryName(block);
+		var id = AssetGenerator.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(id, new Identifier("block/slab"))
@@ -173,10 +176,10 @@ public class ModelFile
 
 	public static Collection<ModelFile> cubes(Block block, String... suffixes)
 	{
-		Identifier id = AssetGenerator.getRegistryName(block);
-		ArrayList<ModelFile> models = new ArrayList<>();
+		var id = AssetGenerator.getRegistryName(block);
+		var models = new ArrayList<ModelFile>();
 
-		for (String suffix : suffixes)
+		for (var suffix : suffixes)
 		{
 			models.add(ModelFile
 					           .ofModel(IdentifierUtil.concat(AssetGenerator.getRegistryName(block), suffix), new Identifier("block/cube_all"))
@@ -188,7 +191,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> stairs(Block block, Identifier topTexture, Identifier sideTexture)
 	{
-		Identifier id = AssetGenerator.getRegistryName(block);
+		var id = AssetGenerator.getRegistryName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(id, new Identifier("block/stairs"))
@@ -210,7 +213,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> randomMirror(Block block)
 	{
-		Identifier mirroredId = IdentifierUtil.concat(AssetGenerator.getRegistryName(block), "_mirrored");
+		var mirroredId = IdentifierUtil.concat(AssetGenerator.getRegistryName(block), "_mirrored");
 		return Arrays.asList(
 				ModelFile.cube(block),
 				ModelFile
@@ -221,7 +224,7 @@ public class ModelFile
 
 	public static Collection<ModelFile> fans(Block block)
 	{
-		Identifier wallId = IdentifierUtil.concat(AssetGenerator.getRegistryName(block), "_wall");
+		var wallId = IdentifierUtil.concat(AssetGenerator.getRegistryName(block), "_wall");
 		return Arrays.asList(
 				fan(block),
 				ModelFile
@@ -266,15 +269,15 @@ public class ModelFile
 
 	public JsonElement build()
 	{
-		JsonObject rootElement = new JsonObject();
+		var rootElement = new JsonObject();
 
 		rootElement.addProperty("parent", parent.toString());
 
 		if (!textures.isEmpty())
 		{
-			JsonObject textureElement = new JsonObject();
+			var textureElement = new JsonObject();
 
-			for (Map.Entry<String, Identifier> entry : textures.entrySet())
+			for (var entry : textures.entrySet())
 				textureElement.addProperty(entry.getKey(), entry.getValue().toString());
 
 			rootElement.add("textures", textureElement);

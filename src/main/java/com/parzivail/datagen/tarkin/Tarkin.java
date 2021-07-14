@@ -33,7 +33,7 @@ public class Tarkin
 
 		BuiltAsset.nukeRecipeDir();
 
-		for (BuiltAsset asset : assets)
+		for (var asset : assets)
 		{
 			Lumberjack.log("Wrote %s", asset.getFilename());
 			asset.write();

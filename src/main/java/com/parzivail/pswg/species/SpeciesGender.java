@@ -23,13 +23,13 @@ public enum SpeciesGender
 
 	public static Identifier stripGender(String genderedSlug)
 	{
-		String[] parts = genderedSlug.split(GENDER_SEPARATOR, 2);
+		var parts = genderedSlug.split(GENDER_SEPARATOR, 2);
 		return new Identifier(parts[0]);
 	}
 
 	public static SpeciesGender fromModel(String genderedSlug)
 	{
-		String[] parts = genderedSlug.split(GENDER_SEPARATOR, 2);
+		var parts = genderedSlug.split(GENDER_SEPARATOR, 2);
 
 		if (parts.length == 2 && parts[1].equals(FEMALE.slug))
 			return FEMALE;
@@ -39,8 +39,8 @@ public enum SpeciesGender
 
 	public static Identifier toModel(SwgSpecies species)
 	{
-		Identifier slug = species.getSlug();
-		SpeciesGender gender = species.getGender();
+		var slug = species.getSlug();
+		var gender = species.getGender();
 		return toModel(slug, gender);
 	}
 

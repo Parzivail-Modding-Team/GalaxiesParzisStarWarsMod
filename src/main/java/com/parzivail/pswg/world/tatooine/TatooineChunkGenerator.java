@@ -238,7 +238,7 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 	private BiomeSurfaceHint genOasis(double x, double z)
 	{
 		// TODO: better terrain
-		double noise = noiseSrc.octaveNoise(x / 100, z / 100 + 3000, 4) * 8;
+		var noise = noiseSrc.octaveNoise(x / 100, z / 100 + 3000, 4) * 8;
 
 		return new BiomeSurfaceHint(MIN_HEIGHT + noise, SwgBlocks.Sand.Desert.getDefaultState());
 	}

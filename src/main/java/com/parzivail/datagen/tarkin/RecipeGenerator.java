@@ -14,7 +14,6 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public abstract class RecipeGenerator
 {
@@ -104,7 +103,7 @@ public abstract class RecipeGenerator
 
 	public void build(List<BuiltAsset> assets)
 	{
-		JsonObject root = new JsonObject();
+		var root = new JsonObject();
 
 		root.addProperty("type", type.toString());
 		if (group != null)
@@ -112,7 +111,7 @@ public abstract class RecipeGenerator
 
 		buildInto(root);
 
-		String source = "";
+		var source = "";
 		if (sourceName != null)
 			source = "_from_" + sourceName;
 
@@ -203,12 +202,12 @@ public abstract class RecipeGenerator
 		@Override
 		protected void buildInto(JsonObject jsonElement)
 		{
-			JsonArray ingredients = new JsonArray();
-			for (IJsonCraftingComponent input : inputs)
+			var ingredients = new JsonArray();
+			for (var input : inputs)
 				ingredients.add(input.getIngredientObject());
 			jsonElement.add("ingredients", ingredients);
 
-			JsonObject result = new JsonObject();
+			var result = new JsonObject();
 			result.addProperty("item", output.toString());
 			result.addProperty("count", outputCount);
 
@@ -338,19 +337,19 @@ public abstract class RecipeGenerator
 		@Override
 		public void build(List<BuiltAsset> assets)
 		{
-			for (Shape shape : shapes)
+			for (var shape : shapes)
 			{
-				IJsonCraftingComponent[][] shapeGrid = shape.grid;
+				var shapeGrid = shape.grid;
 
-				int minX = 3;
-				int maxX = -1;
+				var minX = 3;
+				var maxX = -1;
 
-				int minY = 3;
-				int maxY = -1;
+				var minY = 3;
+				var maxY = -1;
 
 				// minimize recipe size to allow shifting smaller recipes around the crafting grid
-				for (int i = 0; i < 3; i++)
-					for (int j = 0; j < 3; j++)
+				for (var i = 0; i < 3; i++)
+					for (var j = 0; j < 3; j++)
 					{
 						if (shapeGrid[j][i] == null)
 							continue;
@@ -366,24 +365,24 @@ public abstract class RecipeGenerator
 							maxY = j;
 					}
 
-				HashMap<IJsonCraftingComponent, Character> key = new HashMap<>();
-				ArrayList<String> recipe = new ArrayList<>();
+				var key = new HashMap<IJsonCraftingComponent, Character>();
+				var recipe = new ArrayList<String>();
 
 				// there can never be more than 9 ingredients in a "crafting_shaped" recipe
-				char[] ingredientKeys = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' };
-				int ingredientKeyIdx = 0;
+				var ingredientKeys = new char[] { 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i' };
+				var ingredientKeyIdx = 0;
 
 				// build pattern
-				for (int j = minY; j <= maxY; j++)
+				for (var j = minY; j <= maxY; j++)
 				{
-					StringBuilder b = new StringBuilder();
-					for (int i = minX; i <= maxX; i++)
+					var b = new StringBuilder();
+					for (var i = minX; i <= maxX; i++)
 					{
 						if (shapeGrid[j][i] == null)
 							b.append(" ");
 						else
 						{
-							IJsonCraftingComponent item = shapeGrid[j][i];
+							var item = shapeGrid[j][i];
 							if (!key.containsKey(item))
 								key.put(item, ingredientKeys[ingredientKeyIdx++]);
 
@@ -394,28 +393,28 @@ public abstract class RecipeGenerator
 				}
 
 				// serialize
-				JsonObject root = new JsonObject();
+				var root = new JsonObject();
 
 				root.addProperty("type", type.toString());
 				if (group != null)
 					root.addProperty("group", group.toString());
 
-				JsonArray pattern = new JsonArray();
+				var pattern = new JsonArray();
 				recipe.forEach(pattern::add);
 				root.add("pattern", pattern);
 
-				JsonObject keyObject = new JsonObject();
-				for (Map.Entry<IJsonCraftingComponent, Character> entry : key.entrySet())
+				var keyObject = new JsonObject();
+				for (var entry : key.entrySet())
 					keyObject.add(entry.getValue().toString(), entry.getKey().getIngredientObject());
 				root.add("key", keyObject);
 
-				JsonObject result = new JsonObject();
+				var result = new JsonObject();
 				result.addProperty("item", output.toString());
 				result.addProperty("count", outputCount);
 				root.add("result", result);
 
 				// built asset
-				String source = "";
+				var source = "";
 				if (shape.sourceName != null)
 					source = "_from_" + shape.sourceName;
 
@@ -425,7 +424,7 @@ public abstract class RecipeGenerator
 
 		private boolean anyValue(HashMap<IJsonCraftingComponent, Character> key, char c)
 		{
-			for (Map.Entry<IJsonCraftingComponent, Character> entry : key.entrySet())
+			for (var entry : key.entrySet())
 				if (entry.getValue() == c)
 					return true;
 

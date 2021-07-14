@@ -45,22 +45,21 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 
 		this.addSlot(new StrictSlot(inventory, 0, 14, 63, itemStack -> itemStack.getItem() instanceof LightsaberItem));
 
-		for (int row = 0; row < 3; ++row)
-			for (int column = 0; column < 9; ++column)
+		for (var row = 0; row < 3; ++row)
+			for (var column = 0; column < 9; ++column)
 				this.addSlot(new Slot(playerInventory, column + row * 9 + 9, column * 18 + 48, row * 18 + 159));
 
-		for (int column = 0; column < 9; ++column)
+		for (var column = 0; column < 9; ++column)
 			this.addSlot(new Slot(playerInventory, column, column * 18 + 48, 217));
 	}
 
 	public static void handleSetLighsaberTag(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		NbtCompound tag = buf.readNbt();
+		var tag = buf.readNbt();
 
 		server.execute(() -> {
-			if (player.currentScreenHandler instanceof LightsaberForgeScreenHandler)
+			if (player.currentScreenHandler instanceof LightsaberForgeScreenHandler screenHandler)
 			{
-				LightsaberForgeScreenHandler screenHandler = (LightsaberForgeScreenHandler)player.currentScreenHandler;
 				screenHandler.setLightsaberTag(tag);
 			}
 		});
@@ -68,10 +67,10 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 
 	public void setLightsaberTag(NbtCompound lightsaberTag)
 	{
-		Slot slot = this.slots.get(0);
-		ItemStack stack = slot.getStack();
+		var slot = this.slots.get(0);
+		var stack = slot.getStack();
 
-		LightsaberTag tag = LightsaberTag.fromRootTag(lightsaberTag);
+		var tag = LightsaberTag.fromRootTag(lightsaberTag);
 		tag.serializeAsSubtag(stack.getOrCreateTag());
 
 		slot.setStack(stack);
@@ -81,18 +80,16 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 	public void close(PlayerEntity player)
 	{
 		super.close(player);
-		this.context.run((world, blockPos) -> {
-			this.dropInventory(player, this.inventory);
-		});
+		this.context.run((world, blockPos) -> this.dropInventory(player, this.inventory));
 	}
 
 	public ItemStack transferSlot(PlayerEntity player, int index)
 	{
-		ItemStack itemStack = ItemStack.EMPTY;
-		Slot slot = this.slots.get(index);
+		var itemStack = ItemStack.EMPTY;
+		var slot = this.slots.get(index);
 		if (slot != null && slot.hasStack())
 		{
-			ItemStack itemStack2 = slot.getStack();
+			var itemStack2 = slot.getStack();
 			itemStack = itemStack2.copy();
 			if (index < this.inventory.size())
 			{

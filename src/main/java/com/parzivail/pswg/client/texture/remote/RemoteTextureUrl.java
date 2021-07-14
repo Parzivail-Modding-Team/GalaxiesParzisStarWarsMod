@@ -3,14 +3,8 @@ package com.parzivail.pswg.client.texture.remote;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-public class RemoteTextureUrl
+public record RemoteTextureUrl(String url)
 {
-	private final String url;
-
-	public RemoteTextureUrl(final String url)
-	{
-		this.url = url;
-	}
 
 	public String getUrl()
 	{

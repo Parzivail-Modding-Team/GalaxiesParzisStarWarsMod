@@ -10,13 +10,12 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class LootTableFile
 {
 	public static LootTableFile empty(Block block)
 	{
-		Identifier reg = AssetGenerator.getRegistryName(block);
+		var reg = AssetGenerator.getRegistryName(block);
 		return new LootTableFile(IdentifierUtil.concat("blocks/", reg), new Identifier("block"));
 	}
 
@@ -27,7 +26,7 @@ public class LootTableFile
 
 	public static LootTableFile single(Block block, ItemConvertible drop)
 	{
-		Identifier reg = AssetGenerator.getRegistryName(drop);
+		var reg = AssetGenerator.getRegistryName(drop);
 		return ofPool(block,
 		              new Pool(1)
 				              .condition(new Identifier("survives_explosion"))
@@ -42,7 +41,7 @@ public class LootTableFile
 
 	public static LootTableFile count(Block block, ItemConvertible drop, Pool.Entry.CountFunction count)
 	{
-		Identifier reg = AssetGenerator.getRegistryName(drop);
+		var reg = AssetGenerator.getRegistryName(drop);
 		return ofPool(block,
 		              new Pool(1)
 				              .entry(new Pool.Entry(new Identifier("alternatives"))
@@ -66,7 +65,7 @@ public class LootTableFile
 
 	public static LootTableFile singleFortuneBonus(Block block, ItemConvertible drop)
 	{
-		Identifier reg = AssetGenerator.getRegistryName(drop);
+		var reg = AssetGenerator.getRegistryName(drop);
 		return ofPool(block,
 		              new Pool(1)
 				              .entry(new Pool.Entry(new Identifier("alternatives"))
@@ -94,10 +93,10 @@ public class LootTableFile
 
 				if (!functions.isEmpty())
 				{
-					JsonArray functionArray = new JsonArray();
-					for (Pool.Entry.Function function : functions)
+					var functionArray = new JsonArray();
+					for (var function : functions)
 					{
-						JsonObject entryElement = new JsonObject();
+						var entryElement = new JsonObject();
 
 						function.serialize(entryElement);
 
@@ -108,10 +107,10 @@ public class LootTableFile
 
 				if (!children.isEmpty())
 				{
-					JsonArray entryArray = new JsonArray();
-					for (Pool.Entry entry : children)
+					var entryArray = new JsonArray();
+					for (var entry : children)
 					{
-						JsonObject entryElement = new JsonObject();
+						var entryElement = new JsonObject();
 
 						entry.serialize(entryElement);
 
@@ -164,9 +163,9 @@ public class LootTableFile
 
 					if (!parameters.isEmpty())
 					{
-						JsonObject paramElement = new JsonObject();
+						var paramElement = new JsonObject();
 
-						for (Map.Entry<String, Object> pair : parameters.entrySet())
+						for (var pair : parameters.entrySet())
 						{
 							if (pair.getValue() instanceof Number)
 								paramElement.addProperty(pair.getKey(), (Number)pair.getValue());
@@ -224,7 +223,7 @@ public class LootTableFile
 
 					if (range != null)
 					{
-						JsonObject countElement = new JsonObject();
+						var countElement = new JsonObject();
 
 						countElement.addProperty("min", range.min);
 						countElement.addProperty("max", range.max);
@@ -326,20 +325,20 @@ public class LootTableFile
 
 	public JsonElement build()
 	{
-		JsonObject root = new JsonObject();
+		var root = new JsonObject();
 		root.addProperty("type", type.toString());
 
-		JsonArray poolArray = new JsonArray();
+		var poolArray = new JsonArray();
 
-		for (Pool pool : pools)
+		for (var pool : pools)
 		{
-			JsonObject poolElement = new JsonObject();
+			var poolElement = new JsonObject();
 			poolElement.addProperty("rolls", pool.rolls);
 
-			JsonArray entryArray = new JsonArray();
-			for (Pool.Entry entry : pool.entries)
+			var entryArray = new JsonArray();
+			for (var entry : pool.entries)
 			{
-				JsonObject entryElement = new JsonObject();
+				var entryElement = new JsonObject();
 				entry.serialize(entryElement);
 				entryArray.add(entryElement);
 			}
@@ -347,10 +346,10 @@ public class LootTableFile
 
 			if (!pool.conditions.isEmpty())
 			{
-				JsonArray conditionArray = new JsonArray();
-				for (Pool.Condition condition : pool.conditions)
+				var conditionArray = new JsonArray();
+				for (var condition : pool.conditions)
 				{
-					JsonObject conditionElement = new JsonObject();
+					var conditionElement = new JsonObject();
 					condition.serialize(conditionElement);
 					conditionArray.add(conditionElement);
 				}

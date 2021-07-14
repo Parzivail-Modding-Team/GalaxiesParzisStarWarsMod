@@ -23,11 +23,11 @@ public class Lumberjack
 	{
 		if (!FabricLoader.getInstance().isDevelopmentEnvironment())
 			return;
-		StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-		String format = String.format(String.valueOf(message), params);
+		var trace = Thread.currentThread().getStackTrace();
+		var format = String.format(String.valueOf(message), params);
 		if (trace.length >= 3)
 		{
-			StackTraceElement stack = trace[2];
+			var stack = trace[2];
 			log("<%s#%s> %s", stack.getClassName(), stack.getMethodName(), format);
 		}
 		else

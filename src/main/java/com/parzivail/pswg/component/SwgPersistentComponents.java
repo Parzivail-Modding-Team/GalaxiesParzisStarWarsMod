@@ -99,7 +99,7 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 		switch (syncOp)
 		{
 			case 0 -> { // Full sync
-				NbtCompound tag = buf.readNbt();
+				var tag = buf.readNbt();
 				if (tag != null)
 					this.readFromNbt(tag);
 			}

@@ -7,11 +7,9 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -19,23 +17,23 @@ public class LeftClickHandler
 {
 	public static void handleInputEvents(CallbackInfo ci, @NotNull ClientPlayerInteractionManager interactionManager)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
 		if (!minecraft.options.keyAttack.isPressed())
 			return;
 
 		assert minecraft.player != null;
 
-		ShipEntity ship = ShipEntity.getShip(minecraft.player);
+		var ship = ShipEntity.getShip(minecraft.player);
 		if (ship != null)
 			return;
 
-		ItemStack stack = minecraft.player.getMainHandStack();
+		var stack = minecraft.player.getMainHandStack();
 
 		if (stack.getItem() instanceof ILeftClickConsumer)
 		{
-			TypedActionResult<ItemStack> tar = ((ILeftClickConsumer)stack.getItem()).useLeft(minecraft.player.world, minecraft.player, Hand.MAIN_HAND);
-			ActionResult ar = tar.getResult();
+			var tar = ((ILeftClickConsumer)stack.getItem()).useLeft(minecraft.player.world, minecraft.player, Hand.MAIN_HAND);
+			var ar = tar.getResult();
 
 			if (ar == ActionResult.PASS)
 				return;
@@ -50,11 +48,11 @@ public class LeftClickHandler
 
 	public static void doAttack(CallbackInfo ci)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
 		assert minecraft.player != null;
 
-		ShipEntity ship = ShipEntity.getShip(minecraft.player);
+		var ship = ShipEntity.getShip(minecraft.player);
 		if (ship != null)
 		{
 			ship.acceptLeftClick();
@@ -63,7 +61,7 @@ public class LeftClickHandler
 			return;
 		}
 
-		ItemStack stack = minecraft.player.getMainHandStack();
+		var stack = minecraft.player.getMainHandStack();
 
 		if (stack.getItem() instanceof ILeftClickConsumer)
 			ci.cancel();

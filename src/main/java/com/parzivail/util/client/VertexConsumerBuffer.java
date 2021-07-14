@@ -77,7 +77,7 @@ public enum VertexConsumerBuffer
 
 	public void vertex(Vec3f pos, Vec3f normal, float u, float v)
 	{
-		Vector4f pos4 = new Vector4f(pos);
+		var pos4 = new Vector4f(pos);
 		normal = normal.copy();
 
 		pos4.transform(matrices.getModel());
@@ -93,9 +93,9 @@ public enum VertexConsumerBuffer
 
 	public void line(float x1, float y1, float z1, float x2, float y2, float z2)
 	{
-		Vec3f start = new Vec3f(x1, y1, z1);
-		Vec3f end = new Vec3f(x2, y2, z2);
-		Vec3f normal = new Vec3f(x2, y2, z2);
+		var start = new Vec3f(x1, y1, z1);
+		var end = new Vec3f(x2, y2, z2);
+		var normal = new Vec3f(x2, y2, z2);
 		normal.subtract(start);
 		normal.normalize();
 
@@ -105,7 +105,7 @@ public enum VertexConsumerBuffer
 
 	public void line(Vec3d start, Vec3d end)
 	{
-		Vec3d normal = new Vec3d(end.x, end.y, end.z).subtract(start).normalize();
+		var normal = new Vec3d(end.x, end.y, end.z).subtract(start).normalize();
 
 		vertex((float)start.x, (float)start.y, (float)start.z, (float)normal.x, (float)normal.y, (float)normal.z,0, 0);
 		vertex((float)end.x, (float)end.y, (float)end.z, (float)normal.x, (float)normal.y, (float)normal.z,0, 0);

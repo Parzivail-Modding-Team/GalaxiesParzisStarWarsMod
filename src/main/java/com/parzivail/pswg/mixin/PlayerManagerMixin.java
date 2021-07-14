@@ -30,15 +30,15 @@ public class PlayerManagerMixin
 	@Inject(method = "Lnet/minecraft/server/PlayerManager;onPlayerConnect(Lnet/minecraft/network/ClientConnection;Lnet/minecraft/server/network/ServerPlayerEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendCommandTree(Lnet/minecraft/server/network/ServerPlayerEntity;)V", shift = At.Shift.BEFORE))
 	public void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci)
 	{
-		SwgBlasterManager loader = SwgBlasterManager.get(server);
+		var loader = SwgBlasterManager.get(server);
 		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncBlasters, loader.createPacket());
 	}
 
 	@Inject(method = "Lnet/minecraft/server/PlayerManager;onDataPacksReloaded()V", at = @At("TAIL"))
 	public void onDataPacksReloaded(CallbackInfo ci)
 	{
-		SwgBlasterManager loader = SwgBlasterManager.get(server);
-		for (ServerPlayerEntity serverPlayerEntity : this.players)
+		var loader = SwgBlasterManager.get(server);
+		for (var serverPlayerEntity : this.players)
 			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.PacketSyncBlasters, loader.createPacket());
 	}
 }

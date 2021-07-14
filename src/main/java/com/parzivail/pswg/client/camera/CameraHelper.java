@@ -15,7 +15,7 @@ public class CameraHelper
 
 	public static void applyCameraTransformations(float tickDelta, long limitTime, MatrixStack matrix, Camera camera)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 		assert minecraft.player != null;
 
 		var ship = ShipEntity.getShip(minecraft.player);
@@ -38,7 +38,7 @@ public class CameraHelper
 
 	public static void renderHand(MatrixStack matrices, Camera camera, float tickDelta, CallbackInfo ci)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
 		if (minecraft.cameraEntity instanceof MutableCameraEntity || minecraft.cameraEntity instanceof ShipEntity)
 			ci.cancel();
@@ -46,7 +46,7 @@ public class CameraHelper
 
 	public static void renderWorldHead(float tickDelta, long limitTime, MatrixStack matrix)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 		var player = minecraft.player;
 
 		assert player != null;

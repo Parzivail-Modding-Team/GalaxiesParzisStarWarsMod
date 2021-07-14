@@ -14,12 +14,12 @@ public class SwgStructures
 {
 	public static void cleanUpTemporaryFiles()
 	{
-		Path modDir = FabricLoader.getInstance().getGameDir().resolve("mods");
+		var modDir = FabricLoader.getInstance().getGameDir().resolve("mods");
 		try
 		{
-			for (Path file : (Iterable<Path>)Files.list(modDir)::iterator)
+			for (var file : (Iterable<Path>)Files.list(modDir)::iterator)
 			{
-				String name = file.getFileName().toString();
+				var name = file.getFileName().toString();
 				if (name.startsWith("zipfstmp") && name.endsWith(".tmp"))
 				{
 					try

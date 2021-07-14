@@ -35,20 +35,18 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShapes;
 
-import java.util.Random;
-
 public class SwgBlocks
 {
 	public static class Barrel
 	{
 		@RegistryName("desh_barrel")
 		public static final Block Desh = new DisplacingBlock((state, world, pos, context) -> {
-			Random r = Resources.RANDOM;
+			var r = Resources.RANDOM;
 			r.setSeed(MathHelper.hashCode(pos));
 
 			float s = 4;
-			float dx = r.nextFloat() * s;
-			float dz = r.nextFloat() * s;
+			var dx = r.nextFloat() * s;
+			var dz = r.nextFloat() * s;
 
 			return VoxelShapeUtil.getCenteredCube(9.2f, 15.6f, dx, dz);
 		}, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
@@ -306,9 +304,7 @@ public class SwgBlocks
 
 		private static PillarBlock createLitPanel(MapColor topMaterialColor, MapColor sideMaterialColor, int luminance)
 		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> {
-				return blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor;
-			}).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> luminance));
+			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> luminance));
 		}
 
 		private static PillarBlock createLitPanel(MapColor topMaterialColor, MapColor sideMaterialColor)
@@ -323,9 +319,7 @@ public class SwgBlocks
 
 		private static PillarBlock createPanel(MapColor topMaterialColor, MapColor sideMaterialColor)
 		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> {
-				return blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor;
-			}).strength(1.5F).requiresTool().sounds(BlockSoundGroup.METAL));
+			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor).strength(1.5F).requiresTool().sounds(BlockSoundGroup.METAL));
 		}
 	}
 
@@ -492,7 +486,7 @@ public class SwgBlocks
 
 	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab)
 	{
-		Item.Settings itemSettings = new Item.Settings();
+		var itemSettings = new Item.Settings();
 
 		if (!ignoreTab)
 			itemSettings = itemSettings.group(Galaxies.Tab);

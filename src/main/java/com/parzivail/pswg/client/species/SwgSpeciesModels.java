@@ -29,7 +29,7 @@ public class SwgSpeciesModels
 
 	private static void register(SwgSpeciesModel model)
 	{
-		MODELS.put(model.identifier, model);
+		MODELS.put(model.identifier(), model);
 	}
 
 	private static void register(Identifier speciesSlug, SpeciesGender gender, PlayerEntityModel<AbstractClientPlayerEntity> model)

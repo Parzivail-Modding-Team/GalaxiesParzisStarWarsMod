@@ -2,7 +2,6 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.component.SwgEntityComponents;
-import com.parzivail.pswg.component.SwgPersistentComponents;
 import com.parzivail.pswg.species.SwgSpecies;
 import com.parzivail.pswg.species.species.*;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -58,7 +57,7 @@ public class SwgSpeciesRegistry
 
 	public static SwgSpecies deserialize(String serialized)
 	{
-		Identifier id = SwgSpecies.getSpeciesSlug(serialized);
+		var id = SwgSpecies.getSpeciesSlug(serialized);
 		if (!SPECIES.containsKey(id))
 			return null;
 
@@ -79,9 +78,9 @@ public class SwgSpeciesRegistry
 
 	public static void handleSetOwnSpecies(MinecraftServer minecraftServer, ServerPlayerEntity serverPlayerEntity, ServerPlayNetworkHandler serverPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)
 	{
-		String speciesString = packetByteBuf.readString();
+		var speciesString = packetByteBuf.readString();
 
-		SwgPersistentComponents c = SwgEntityComponents.getPersistent(serverPlayerEntity);
+		var c = SwgEntityComponents.getPersistent(serverPlayerEntity);
 		c.setSpecies(deserialize(speciesString));
 	}
 }

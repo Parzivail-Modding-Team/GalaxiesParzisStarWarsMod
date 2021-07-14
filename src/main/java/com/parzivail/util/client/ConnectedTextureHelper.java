@@ -20,15 +20,15 @@ public class ConnectedTextureHelper
 
 	private static Point getPointFromConnections(int connections)
 	{
-		int x = getOffset(connections, MASK_CONNECTIONS_HORIZ, CONNECTED_LEFT, CONNECTED_RIGHT);
-		int y = getOffset(connections, MASK_CONNECTIONS_VERT, CONNECTED_UP, CONNECTED_DOWN);
+		var x = getOffset(connections, MASK_CONNECTIONS_HORIZ, CONNECTED_LEFT, CONNECTED_RIGHT);
+		var y = getOffset(connections, MASK_CONNECTIONS_VERT, CONNECTED_UP, CONNECTED_DOWN);
 
 		return new Point(x, y);
 	}
 
 	private static int getOffset(int connections, int directionMask, int connectionFlagNear, int connectionFlagFar)
 	{
-		int masked = (connections & directionMask);
+		var masked = (connections & directionMask);
 
 		if (masked == connectionFlagNear)
 			return 3;
@@ -49,59 +49,46 @@ public class ConnectedTextureHelper
 
 		switch (facing)
 		{
-			case DOWN:
-			{
+			case DOWN -> {
 				up = lateralConnect ? ConnectingBlock.SOUTH : null;
 				down = lateralConnect ? ConnectingBlock.NORTH : null;
 				left = lateralConnect ? ConnectingBlock.WEST : null;
 				right = lateralConnect ? ConnectingBlock.EAST : null;
-				break;
 			}
-			case UP:
-			{
+			case UP -> {
 				up = lateralConnect ? ConnectingBlock.NORTH : null;
 				down = lateralConnect ? ConnectingBlock.SOUTH : null;
 				left = lateralConnect ? ConnectingBlock.WEST : null;
 				right = lateralConnect ? ConnectingBlock.EAST : null;
-				break;
 			}
-			case NORTH:
-			{
+			case NORTH -> {
 				up = verticalConnect ? ConnectingBlock.UP : null;
 				down = verticalConnect ? ConnectingBlock.DOWN : null;
 				left = horizontalConnect ? ConnectingBlock.EAST : null;
 				right = horizontalConnect ? ConnectingBlock.WEST : null;
-				break;
 			}
-			case SOUTH:
-			{
+			case SOUTH -> {
 				up = verticalConnect ? ConnectingBlock.UP : null;
 				down = verticalConnect ? ConnectingBlock.DOWN : null;
 				left = horizontalConnect ? ConnectingBlock.WEST : null;
 				right = horizontalConnect ? ConnectingBlock.EAST : null;
-				break;
 			}
-			case WEST:
-			{
+			case WEST -> {
 				up = verticalConnect ? ConnectingBlock.UP : null;
 				down = verticalConnect ? ConnectingBlock.DOWN : null;
 				left = horizontalConnect ? ConnectingBlock.NORTH : null;
 				right = horizontalConnect ? ConnectingBlock.SOUTH : null;
-				break;
 			}
-			case EAST:
-			{
+			case EAST -> {
 				up = verticalConnect ? ConnectingBlock.UP : null;
 				down = verticalConnect ? ConnectingBlock.DOWN : null;
 				left = horizontalConnect ? ConnectingBlock.SOUTH : null;
 				right = horizontalConnect ? ConnectingBlock.NORTH : null;
-				break;
 			}
-			default:
-				throw new IllegalStateException("Unexpected value: " + facing);
+			default -> throw new IllegalStateException("Unexpected value: " + facing);
 		}
 
-		int connections = 0;
+		var connections = 0;
 
 		if (up != null && block.get(up))
 			connections |= CONNECTED_UP;

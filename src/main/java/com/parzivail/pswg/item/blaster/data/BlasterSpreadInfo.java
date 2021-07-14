@@ -15,7 +15,7 @@ public class BlasterSpreadInfo
 
 	public static BlasterSpreadInfo fromTag(NbtCompound compoundTag, String s)
 	{
-		NbtCompound tag = compoundTag.getCompound(s);
+		var tag = compoundTag.getCompound(s);
 
 		return new BlasterSpreadInfo(
 				tag.getFloat("horizontal"),
@@ -25,7 +25,7 @@ public class BlasterSpreadInfo
 
 	public static void toTag(NbtCompound compoundTag, String s, BlasterSpreadInfo data)
 	{
-		NbtCompound tag = new NbtCompound();
+		var tag = new NbtCompound();
 
 		tag.putFloat("horizontal", data.horizontal);
 		tag.putFloat("vertical", data.vertical);

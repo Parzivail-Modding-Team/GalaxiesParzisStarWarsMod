@@ -26,7 +26,7 @@ public class RandomCollection<T>
 
 	public T sample()
 	{
-		double value = random.nextDouble() * total;
+		var value = random.nextDouble() * total;
 		return map.higherEntry(value).getValue();
 	}
 }

@@ -12,7 +12,6 @@ import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Transform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -24,10 +23,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-
-import java.util.EnumSet;
 
 public class T65BXwing extends ShipEntity
 {
@@ -52,7 +48,7 @@ public class T65BXwing extends ShipEntity
 
 	public static T65BXwing create(World world)
 	{
-		T65BXwing ship = new T65BXwing(SwgEntities.Ship.T65bXwing, world);
+		var ship = new T65BXwing(SwgEntities.Ship.T65bXwing, world);
 		//		ship.setSettings(settings);
 		return ship;
 	}
@@ -89,18 +85,16 @@ public class T65BXwing extends ShipEntity
 	@Override
 	public void acceptFireInput()
 	{
-		Entity passenger = getPrimaryPassenger();
-		if (!(passenger instanceof PlayerEntity))
+		var passenger = getPrimaryPassenger();
+		if (!(passenger instanceof PlayerEntity player))
 			return;
 
-		PlayerEntity player = (PlayerEntity)passenger;
+		var pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(4f), getRotation());
+		var stack = new Transform();
 
-		Vec3d pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(4f), getRotation());
-		Transform stack = new Transform();
+		var cannonState = getCannonState();
 
-		byte cannonState = getCannonState();
-
-		Vec3d p = CANNON_ORDER[cannonState].getWorldPosition(stack, this);
+		var p = CANNON_ORDER[cannonState].getWorldPosition(stack, this);
 
 		BlasterUtil.fireBolt(world, player, pDir, 100, 50, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
@@ -125,7 +119,7 @@ public class T65BXwing extends ShipEntity
 	{
 		super.tick();
 
-		EnumSet<ShipControls> controls = getControls();
+		var controls = getControls();
 
 		tickControlledAnim(WING_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL1));
 		tickControlledAnim(COCKPIT_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL2));

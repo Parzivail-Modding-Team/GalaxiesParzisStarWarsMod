@@ -20,10 +20,10 @@ public enum ShipControls
 
 	public static EnumSet<ShipControls> unpack(short controls)
 	{
-		ShipControls[] allFlags = ShipControls.values();
-		EnumSet<ShipControls> flags = EnumSet.noneOf(ShipControls.class);
+		var allFlags = ShipControls.values();
+		var flags = EnumSet.noneOf(ShipControls.class);
 
-		for (ShipControls flag : allFlags)
+		for (var flag : allFlags)
 			if ((controls & flag.getFlag()) != 0)
 				flags.add(flag);
 
@@ -33,7 +33,7 @@ public enum ShipControls
 	public static short pack(EnumSet<ShipControls> controls)
 	{
 		short packed = 0;
-		for (ShipControls sc : controls)
+		for (var sc : controls)
 			packed |= sc.getFlag();
 		return packed;
 	}

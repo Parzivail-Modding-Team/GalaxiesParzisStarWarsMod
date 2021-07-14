@@ -39,7 +39,7 @@ public class SpeciesJawa extends SwgSpecies
 	@Environment(EnvType.CLIENT)
 	public Collection<Identifier> getTextureStack()
 	{
-		ArrayList<Identifier> stack = new ArrayList<>();
+		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
 //		stack.add(getGenderedGlobalTexture(gender, "clothes"));
 		return stack;

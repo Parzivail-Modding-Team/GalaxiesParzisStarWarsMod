@@ -27,19 +27,16 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Random;
 
 public enum ModelRegistry implements ModelVariantProvider
@@ -55,7 +52,7 @@ public enum ModelRegistry implements ModelVariantProvider
 
 	public static void registerConnected(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture)
 	{
-		Identifier id = Registry.BLOCK.getId(block);
+		var id = Registry.BLOCK.getId(block);
 		register(block, true, new ConnectedTextureModel.Unbaked(
 				hConnect, vConnect, lConnect,
 				new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier(id.getNamespace(), "block/" + id.getPath())),
@@ -65,12 +62,12 @@ public enum ModelRegistry implements ModelVariantProvider
 
 	public static void register(Block block, boolean registerInventoryModel, ClonableUnbakedModel unbakedModel)
 	{
-		Identifier blockId = Registry.BLOCK.getId(block);
+		var blockId = Registry.BLOCK.getId(block);
 		if (registerInventoryModel)
 			models.put(new ModelIdentifier(blockId, "inventory"), unbakedModel.copy());
-		for (BlockState state : block.getStateManager().getStates())
+		for (var state : block.getStateManager().getStates())
 		{
-			ModelIdentifier id = new ModelIdentifier(blockId, BlockModels.propertyMapToString(state.getEntries()));
+			var id = new ModelIdentifier(blockId, BlockModels.propertyMapToString(state.getEntries()));
 			models.put(id, unbakedModel.copy());
 		}
 	}
@@ -82,22 +79,22 @@ public enum ModelRegistry implements ModelVariantProvider
 	 */
 	public static void contractUVs(int spriteIndex, Sprite sprite, MutableQuadView poly)
 	{
-		final float uPixels = sprite.getWidth() / (sprite.getMaxU() - sprite.getMinU());
-		final float vPixels = sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV());
-		final float nudge = 4.0f / Math.max(vPixels, uPixels);
+		final var uPixels = sprite.getWidth() / (sprite.getMaxU() - sprite.getMinU());
+		final var vPixels = sprite.getHeight() / (sprite.getMaxV() - sprite.getMinV());
+		final var nudge = 4.0f / Math.max(vPixels, uPixels);
 
-		final float u0 = poly.spriteU(0, spriteIndex);
-		final float u1 = poly.spriteU(1, spriteIndex);
-		final float u2 = poly.spriteU(2, spriteIndex);
-		final float u3 = poly.spriteU(3, spriteIndex);
+		final var u0 = poly.spriteU(0, spriteIndex);
+		final var u1 = poly.spriteU(1, spriteIndex);
+		final var u2 = poly.spriteU(2, spriteIndex);
+		final var u3 = poly.spriteU(3, spriteIndex);
 
-		final float v0 = poly.spriteV(0, spriteIndex);
-		final float v1 = poly.spriteV(1, spriteIndex);
-		final float v2 = poly.spriteV(2, spriteIndex);
-		final float v3 = poly.spriteV(3, spriteIndex);
+		final var v0 = poly.spriteV(0, spriteIndex);
+		final var v1 = poly.spriteV(1, spriteIndex);
+		final var v2 = poly.spriteV(2, spriteIndex);
+		final var v3 = poly.spriteV(3, spriteIndex);
 
-		final float uCenter = (u0 + u1 + u2 + u3) * 0.25F;
-		final float vCenter = (v0 + v1 + v2 + v3) * 0.25F;
+		final var uCenter = (u0 + u1 + u2 + u3) * 0.25F;
+		final var vCenter = (v0 + v1 + v2 + v3) * 0.25F;
 
 		poly.sprite(0, spriteIndex, MathHelper.lerp(nudge, u0, uCenter), MathHelper.lerp(nudge, v0, vCenter));
 		poly.sprite(1, spriteIndex, MathHelper.lerp(nudge, u1, uCenter), MathHelper.lerp(nudge, v1, vCenter));
@@ -107,20 +104,20 @@ public enum ModelRegistry implements ModelVariantProvider
 
 	public static void emitBakedModelToMesh(BlockState blockState, BakedModel model, QuadEmitter qe)
 	{
-		final Random random = new Random();
+		final var random = new Random();
 
-		for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
+		for (var i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
 		{
-			final Direction cullFace = ModelHelper.faceFromIndex(i);
+			final var cullFace = ModelHelper.faceFromIndex(i);
 			random.setSeed(42);
-			final List<BakedQuad> quads = model.getQuads(blockState, cullFace, random);
+			final var quads = model.getQuads(blockState, cullFace, random);
 
 			if (quads.isEmpty())
 			{
 				continue;
 			}
 
-			for (final BakedQuad q : quads)
+			for (final var q : quads)
 			{
 				qe.fromVanilla(q.getVertexData(), 0, false);
 				qe.cullFace(cullFace);

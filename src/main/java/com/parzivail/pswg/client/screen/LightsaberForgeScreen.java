@@ -138,9 +138,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketLightsaberForgeApply, passedData);
 		}));
 
-		this.addDrawableChild(cbUnstable = new MutableCheckbox(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> {
-			commitChanges();
-		}));
+		this.addDrawableChild(cbUnstable = new MutableCheckbox(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> commitChanges()));
 
 		this.handler.addListener(this);
 	}
@@ -198,11 +196,9 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	{
 		switch (slotId)
 		{
-			case 0:
-			{
+			case 0 -> {
 				lightsaber = stack.copy();
 				onLightsaberChanged();
-				break;
 			}
 		}
 	}
@@ -221,7 +217,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -246,10 +242,10 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
 
-		int rgb = ColorUtil.fromHSV(hue, 1, 1);
-		int b = rgb & 0xFF;
-		int g = (rgb >> 8) & 0xFF;
-		int r = (rgb >> 16) & 0xFF;
+		var rgb = ColorUtil.fromHSV(hue, 1, 1);
+		var b = rgb & 0xFF;
+		var g = (rgb >> 8) & 0xFF;
+		var r = (rgb >> 16) & 0xFF;
 
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{

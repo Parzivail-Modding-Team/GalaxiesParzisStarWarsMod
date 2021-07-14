@@ -105,9 +105,8 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	{
 		var vehicle = player.getVehicle();
 
-		if (vehicle instanceof ShipEntity)
+		if (vehicle instanceof ShipEntity ship)
 		{
-			var ship = (ShipEntity)vehicle;
 
 			if (ship.getPrimaryPassenger() == player)
 				return ship;

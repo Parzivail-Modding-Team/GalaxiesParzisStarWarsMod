@@ -80,7 +80,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	static
 	{
-		for (int i = 0; i < 4; i++)
+		for (var i = 0; i < 4; i++)
 		{
 			INTERACTION_SHAPES_CLOSED[i] = VoxelShapeUtil.rotate(INTERACTION_SHAPE_CLOSED, i);
 			INTERACTION_SHAPES_OPEN[i] = VoxelShapeUtil.rotate(INTERACTION_SHAPE_OPEN, i);
@@ -117,10 +117,10 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	protected VoxelShape getShape(BlockState state, BlockView world, BlockPos pos, VoxelShape[] openShapes, VoxelShape[] closedShapes)
 	{
-		BlockPos controllerPos = getController(world, pos);
-		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
+		var controllerPos = getController(world, pos);
+		var e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
-		int rotation = (state.get(FACING).getHorizontal() + 1) % 4;
+		var rotation = (state.get(FACING).getHorizontal() + 1) % 4;
 
 		if (e == null || !e.isOpening() || e.isMoving())
 			return openShapes[rotation];
@@ -146,8 +146,8 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 			return ActionResult.SUCCESS;
 		else
 		{
-			BlockPos controllerPos = getController(world, pos);
-			TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
+			var controllerPos = getController(world, pos);
+			var e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
 			assert e != null;
 
@@ -164,14 +164,14 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify)
 	{
-		BlockPos controllerPos = getController(world, pos);
-		TatooineHomeDoorBlockEntity e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
+		var controllerPos = getController(world, pos);
+		var e = (TatooineHomeDoorBlockEntity)world.getBlockEntity(controllerPos);
 
 		if (e == null)
 			return;
 
-		boolean wasPowered = e.isPowered();
-		boolean isPowered = world.isReceivingRedstonePower(pos);
+		var wasPowered = e.isPowered();
+		var isPowered = world.isReceivingRedstonePower(pos);
 
 		if (!world.isClient && block != this)
 		{
@@ -194,7 +194,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	public boolean canPlace(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer)
 	{
-		for (int i = 1; i < SIZE; i++)
+		for (var i = 1; i < SIZE; i++)
 		{
 			pos = pos.up();
 			if (!world.isAir(pos))
@@ -209,7 +209,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 		super.onPlaced(world, pos, state, placer, itemStack);
 		if (!world.isClient)
 		{
-			for (int i = 1; i < SIZE; i++)
+			for (var i = 1; i < SIZE; i++)
 			{
 				pos = pos.up();
 				world.setBlockState(pos, SwgBlocks.Door.TatooineHomeFiller.getDefaultState().with(FACING, state.get(FACING)).with(PART, i), 3);
@@ -226,10 +226,10 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 		{
 			int part = state.get(PART);
 
-			for (int i = 0; i < part; i++)
+			for (var i = 0; i < part; i++)
 				destroyPart(world, pos.down(i + 1), player);
 
-			for (int i = 0; i < SIZE - part - 1; i++)
+			for (var i = 0; i < SIZE - part - 1; i++)
 				destroyPart(world, pos.up(i + 1), player);
 		}
 
@@ -238,7 +238,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	private void destroyPart(World world, BlockPos blockPos, PlayerEntity player)
 	{
-		BlockState blockState = world.getBlockState(blockPos);
+		var blockState = world.getBlockState(blockPos);
 		if (blockState.getBlock() instanceof BlockTatooineHomeDoor)
 		{
 			world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 35);

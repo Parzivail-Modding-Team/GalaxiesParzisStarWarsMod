@@ -10,7 +10,6 @@ import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.math.Transform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
@@ -81,10 +80,10 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 	@Override
 	public void transform(Transform stack, T65BXwing target, RigT65B.Part part)
 	{
-		Transform.State entry = stack.value();
-		Matrix4f modelMat = entry.getModel();
+		var entry = stack.value();
+		var modelMat = entry.getModel();
 
-		Quaternion objectRotation = getRotation(target, part);
+		var objectRotation = getRotation(target, part);
 
 		modelMat.multiply(objectRotation);
 	}
@@ -104,14 +103,14 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 
 		stack.multiply(target.getRotation());
 
-		Transform.State entry = stack.value();
-		Matrix4f parent = entry.getModel();
-		Matrix4f rig = RIG.objects.get(part.getPartName());
+		var entry = stack.value();
+		var parent = entry.getModel();
+		var rig = RIG.objects().get(part.getPartName());
 		parent.multiply(rig);
 
 		transform(stack, target, part);
 
-		Vec3d vec = Matrix4fAccessUtil.transform(localPosition, parent);
+		var vec = Matrix4fAccessUtil.transform(localPosition, parent);
 		stack.restore();
 
 		return vec;
@@ -141,16 +140,16 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 	public Vec3d getWorldPosition(Transform stack, T65BXwing target, RigT65B.Part part, Vec3d localPosition, float tickDelta)
 	{
 		stack.save();
-		Transform.State entry = stack.value();
-		Matrix4f parent = entry.getModel();
-		Matrix4f rig = RIG.objects.get(part.getPartName());
+		var entry = stack.value();
+		var parent = entry.getModel();
+		var rig = RIG.objects().get(part.getPartName());
 		parent.multiply(rig);
 
 		transform(stack, target, part, tickDelta);
 
 		parent.multiply(target.getRotation());
 
-		Vec3d vec = Matrix4fAccessUtil.transform(localPosition, parent);
+		var vec = Matrix4fAccessUtil.transform(localPosition, parent);
 		stack.restore();
 
 		return vec;
@@ -160,7 +159,7 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 	{
 		if (part.getPartName().startsWith("Wing"))
 		{
-			float timer = Math.abs(wingTimer);
+			var timer = Math.abs(wingTimer);
 
 			float wingAngle;
 
@@ -178,7 +177,7 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 		}
 		else if (part == RigT65B.Part.Cockpit)
 		{
-			float timer = Math.abs(cockpitTimer);
+			var timer = Math.abs(cockpitTimer);
 
 			float cockpitAngle;
 

@@ -49,7 +49,7 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 
 	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos)
 	{
-		Block block = floor.getBlock();
+		var block = floor.getBlock();
 		return BlockTags.SAND.contains(block) ||
 		       block == SwgBlocks.Dirt.DesertLoam ||
 		       block == SwgBlocks.Salt.Caked ||
@@ -88,14 +88,14 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		int i = state.get(AGE);
-		boolean isMature = i == 3;
+		var isMature = i == 3;
 		if (!isMature && player.getStackInHand(hand).isOf(Items.BONE_MEAL))
 		{
 			return ActionResult.PASS;
 		}
 		else if (i > 1)
 		{
-			int j = 1 + world.random.nextInt(2);
+			var j = 1 + world.random.nextInt(2);
 			dropStack(world, pos, new ItemStack(SwgItems.Food.HkakBean,j + (isMature ? 1 : 0)));
 
 			// TODO: new sound event
@@ -126,7 +126,7 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 
 	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state)
 	{
-		int i = Math.min(3, state.get(AGE) + 1);
+		var i = Math.min(3, state.get(AGE) + 1);
 		world.setBlockState(pos, state.with(AGE, i), Block.NOTIFY_LISTENERS);
 	}
 }

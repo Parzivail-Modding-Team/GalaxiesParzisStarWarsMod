@@ -155,7 +155,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				}
 				else if (!world.isClient)
 				{
-					bt.shotsRemaining = nextPack.getRight().numShots;
+					bt.shotsRemaining = nextPack.getRight().numShots();
 					player.getInventory().removeStack(nextPack.getLeft(), 1);
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.RELOAD, SoundCategory.PLAYERS, 1f, 1f);
 				}

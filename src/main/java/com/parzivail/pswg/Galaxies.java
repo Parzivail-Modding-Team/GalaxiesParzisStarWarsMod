@@ -4,7 +4,6 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.parzivail.datagen.DataGenHelper;
 import com.parzivail.pswg.access.IServerResourceManagerAccess;
 import com.parzivail.pswg.component.SwgEntityComponents;
-import com.parzivail.pswg.component.SwgPersistentComponents;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
@@ -33,11 +32,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.text.TranslatableText;
 
-import java.util.Collection;
 import java.util.Objects;
 
 public class Galaxies implements ModInitializer
@@ -90,7 +86,7 @@ public class Galaxies implements ModInitializer
 				                                                                             .requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
 				                                                                             .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
 				                                                                                                 .executes(context -> {
-					                                                                                                 ServerWorld world = DimensionArgumentType.getDimensionArgument(context, "dimension");
+					                                                                                                 var world = DimensionArgumentType.getDimensionArgument(context, "dimension");
 					                                                                                                 DimensionTeleporter.teleport(Objects.requireNonNull(context.getSource().getEntity()), world);
 					                                                                                                 return 1;
 				                                                                                                 }))));
@@ -101,8 +97,8 @@ public class Galaxies implements ModInitializer
 				                                                                             .then(CommandManager.argument("players", EntityArgumentType.players())
 				                                                                                                 .then(CommandManager.argument("species", StringArgumentType.greedyString())
 				                                                                                                                     .executes(context -> {
-					                                                                                                                     Collection<ServerPlayerEntity> players = EntityArgumentType.getPlayers(context, "players");
-					                                                                                                                     String species = context.getArgument("species", String.class);
+					                                                                                                                     var players = EntityArgumentType.getPlayers(context, "players");
+					                                                                                                                     var species = context.getArgument("species", String.class);
 
 					                                                                                                                     SwgSpecies swgspecies = null;
 
@@ -124,9 +120,9 @@ public class Galaxies implements ModInitializer
 						                                                                                                                     }
 					                                                                                                                     }
 
-					                                                                                                                     for (ServerPlayerEntity player : players)
+					                                                                                                                     for (var player : players)
 					                                                                                                                     {
-						                                                                                                                     SwgPersistentComponents pc = SwgEntityComponents.getPersistent(player);
+						                                                                                                                     var pc = SwgEntityComponents.getPersistent(player);
 						                                                                                                                     pc.setSpecies(swgspecies);
 					                                                                                                                     }
 

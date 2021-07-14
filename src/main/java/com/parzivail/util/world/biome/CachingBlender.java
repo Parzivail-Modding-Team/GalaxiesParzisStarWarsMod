@@ -27,15 +27,15 @@ public final class CachingBlender
 
 	public LinkedBiomeWeightMap getBlendForChunk(long seed, int chunkBaseWorldX, int chunkBaseWorldZ, BiomeEvaluationCallback callback)
 	{
-		long key = key(chunkBaseWorldX, chunkBaseWorldZ);
-		int idx = hash(key) & 511;
+		var key = key(chunkBaseWorldX, chunkBaseWorldZ);
+		var idx = hash(key) & 511;
 
 		if (this.keys[idx] == key)
 		{
 			return this.values[idx];
 		}
 
-		LinkedBiomeWeightMap weightMap = this.internal.getBlendForChunk(seed, chunkBaseWorldX, chunkBaseWorldZ, callback);
+		var weightMap = this.internal.getBlendForChunk(seed, chunkBaseWorldX, chunkBaseWorldZ, callback);
 		this.values[idx] = weightMap;
 		this.keys[idx] = key;
 

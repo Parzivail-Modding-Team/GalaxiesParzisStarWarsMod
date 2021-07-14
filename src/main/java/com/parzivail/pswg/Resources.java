@@ -1,12 +1,10 @@
 package com.parzivail.pswg;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.noise.OpenSimplex2F;
 import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.util.Identifier;
 
 import javax.annotation.Nonnull;
@@ -57,8 +55,8 @@ public class Resources
 	{
 		try
 		{
-			ModContainer container = FabricLoader.getInstance().getModContainer(Resources.MODID).orElseThrow(() -> new Exception("Could not get own mod container"));
-			String ownVersion = container.getMetadata().getVersion().getFriendlyString();
+			var container = FabricLoader.getInstance().getModContainer(Resources.MODID).orElseThrow(() -> new Exception("Could not get own mod container"));
+			var ownVersion = container.getMetadata().getVersion().getFriendlyString();
 
 			if (FabricLoader.getInstance().isDevelopmentEnvironment() || ownVersion.equals("${version}"))
 			{
@@ -66,19 +64,19 @@ public class Resources
 				return;
 			}
 
-			HttpURLConnection con = (HttpURLConnection)new URL("https://api.github.com/repos/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/releases").openConnection();
+			var con = (HttpURLConnection)new URL("https://api.github.com/repos/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/releases").openConnection();
 			con.setConnectTimeout(3000);
 			con.setReadTimeout(3000);
-			InputStreamReader isr = new InputStreamReader(con.getInputStream());
+			var isr = new InputStreamReader(con.getInputStream());
 
-			Gson g = new GsonBuilder().create();
+			var g = new GsonBuilder().create();
 
-			GithubReleaseEntry[] entries = g.fromJson(isr, GithubReleaseEntry[].class);
+			var entries = g.fromJson(isr, GithubReleaseEntry[].class);
 
 			if (entries.length == 0)
 				throw new Exception("No versions present on remote");
 
-			GithubReleaseEntry mostRecentRelease = entries[0];
+			var mostRecentRelease = entries[0];
 
 			if (isRemoteVersionNewer(ownVersion, mostRecentRelease.tag_name))
 			{

@@ -56,7 +56,7 @@ public class TatooineBiomeSource extends BiomeSource implements BackingBiomeSour
 
 	public Biome getBiomeAt(int biomeX, int biomeZ)
 	{
-		RegistryKey<Biome> key = this.biomeRegistry.getKey(this.backingSampler.sample(this.biomeRegistry, biomeX << 2, biomeZ << 2)).get();
+		var key = this.biomeRegistry.getKey(this.backingSampler.sample(this.biomeRegistry, biomeX << 2, biomeZ << 2)).get();
 
 		return this.biomeRegistry.get(key);
 	}

@@ -9,13 +9,13 @@ public class LanguageProvider
 {
 	public static LanguageProvider ofBlock(Block block)
 	{
-		Identifier reg = AssetGenerator.getRegistryName(block);
+		var reg = AssetGenerator.getRegistryName(block);
 		return new LanguageProvider(new Identifier(reg.getNamespace(), "en_us"), "block." + reg.getNamespace() + "." + reg.getPath(), reg.toString());
 	}
 
 	public static LanguageProvider ofItem(Item item)
 	{
-		Identifier reg = AssetGenerator.getRegistryName(item);
+		var reg = AssetGenerator.getRegistryName(item);
 		return new LanguageProvider(new Identifier(reg.getNamespace(), "en_us"), "item." + reg.getNamespace() + "." + reg.getPath(), reg.toString());
 	}
 
@@ -32,7 +32,7 @@ public class LanguageProvider
 
 	public BuiltAsset build()
 	{
-		JsonObject contents = new JsonObject();
+		var contents = new JsonObject();
 		contents.addProperty(key, defaultValue);
 		return BuiltAsset.lang(locale, contents);
 	}

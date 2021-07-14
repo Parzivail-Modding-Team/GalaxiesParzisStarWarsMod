@@ -42,19 +42,19 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 		super.render(matrices, mouseX, mouseY, delta);
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 
-		int i = (this.width - this.backgroundWidth) / 2;
-		int j = (this.height - this.backgroundHeight) / 2;
+		var i = (this.width - this.backgroundWidth) / 2;
+		var j = (this.height - this.backgroundHeight) / 2;
 
 		if (mouseX > i + 103 && mouseX < i + 112 && mouseY > j + 28 && mouseY < j + 58)
 		{
-			int timer = this.handler.getCollectionTimer();
+			var timer = this.handler.getCollectionTimer();
 			if (timer == -1)
 			{
 				this.renderTooltip(matrices, TEXT_IDLE, mouseX, mouseY);
 			}
 			else
 			{
-				int timerLength = this.handler.getCollectionTimerLength();
+				var timerLength = this.handler.getCollectionTimerLength();
 				if (timerLength <= 0)
 					timerLength = 1;
 				this.renderTooltip(matrices, new LiteralText(String.format("%s%%", (int)((1 - timer / (float)timerLength) * 100))), mouseX, mouseY);
@@ -71,9 +71,9 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 		var j = (this.height - this.backgroundHeight) / 2;
 		this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
-		int timer = this.handler.getCollectionTimer();
-		int timerLength = this.handler.getCollectionTimerLength();
-		int height = timerLength <= 0 ? 30 : (int)((1 - timer / (float)timerLength) * 30);
+		var timer = this.handler.getCollectionTimer();
+		var timerLength = this.handler.getCollectionTimerLength();
+		var height = timerLength <= 0 ? 30 : (int)((1 - timer / (float)timerLength) * 30);
 		this.drawTexture(matrices, i + 103, j + 28 + 30 - height, 176, 30 - height, 9, height);
 	}
 }

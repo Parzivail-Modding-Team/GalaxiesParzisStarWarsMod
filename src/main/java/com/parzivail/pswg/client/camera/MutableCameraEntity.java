@@ -44,7 +44,7 @@ public class MutableCameraEntity extends Entity
 
 	public MutableCameraEntity with(ShipEntity parent, ChaseCam camera)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
 		this.parent = parent;
 		this.camera = camera;

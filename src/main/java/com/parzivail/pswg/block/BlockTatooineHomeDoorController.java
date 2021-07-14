@@ -48,7 +48,7 @@ public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor imple
 
 	static
 	{
-		for (int i = 0; i < 4; i++)
+		for (var i = 0; i < 4; i++)
 		{
 			INTERACTION_SHAPES_CLOSED[i] = VoxelShapeUtil.rotate(INTERACTION_SHAPE_CLOSED, i);
 			INTERACTION_SHAPES_OPEN[i] = VoxelShapeUtil.rotate(INTERACTION_SHAPE_OPEN, i);

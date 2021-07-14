@@ -12,7 +12,9 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.Vector4f;
 
-public class PR3Model<T, PT extends Enum<PT>>
+public record PR3Model<T, PT extends Enum<PT>>(PR3File container,
+                                               Class<PT> partClass,
+                                               com.parzivail.pswg.client.pr3.PR3Model.TransformerFunction<T, PT> transformer)
 {
 	@FunctionalInterface
 	public interface TransformerFunction<T1, P extends Enum<P>>
@@ -20,33 +22,22 @@ public class PR3Model<T, PT extends Enum<PT>>
 		void apply(Transform stack, T1 target, P part, float tickDelta);
 	}
 
-	protected final PR3File container;
-	protected final Class<PT> partClass;
-	protected final TransformerFunction<T, PT> transformer;
-
-	public PR3Model(PR3File container, Class<PT> partClass, TransformerFunction<T, PT> transformer)
-	{
-		this.container = container;
-		this.partClass = partClass;
-		this.transformer = transformer;
-	}
-
 	private void emitFace(VertexConsumer vertexConsumer, MatrixStack.Entry matrices, PR3RenderedObject o, PR3FacePointer face, int light)
 	{
 		var modelMat = matrices.getModel();
 		var normalMat = matrices.getNormal();
 
-		var vA = o.vertices[face.a];
-		var vB = o.vertices[face.b];
-		var vC = o.vertices[face.c];
+		var vA = o.vertices[face.a()];
+		var vB = o.vertices[face.b()];
+		var vC = o.vertices[face.c()];
 
-		var nA = o.normals[face.a];
-		var nB = o.normals[face.b];
-		var nC = o.normals[face.c];
+		var nA = o.normals[face.a()];
+		var nB = o.normals[face.b()];
+		var nC = o.normals[face.c()];
 
-		var tA = o.uvs[face.a];
-		var tB = o.uvs[face.b];
-		var tC = o.uvs[face.c];
+		var tA = o.uvs[face.a()];
+		var tB = o.uvs[face.b()];
+		var tC = o.uvs[face.c()];
 
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vC, nC, tC);
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vC, nC, tC);
@@ -85,7 +76,7 @@ public class PR3Model<T, PT extends Enum<PT>>
 		var modelMat = entry.getModel();
 		modelMat.multiply(o.transformationMatrix);
 
-		Transform t = new Transform();
+		var t = new Transform();
 		transform(t, target, o.name, tickDelta);
 
 		matrices.method_34425(t.value().getModel());
@@ -112,6 +103,6 @@ public class PR3Model<T, PT extends Enum<PT>>
 
 	public PR3RenderedObject[] getObjects()
 	{
-		return container.objects;
+		return container.objects();
 	}
 }

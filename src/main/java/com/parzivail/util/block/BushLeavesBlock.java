@@ -45,7 +45,7 @@ public class BushLeavesBlock extends LeavesBlock
 
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
-		Direction direction = state.get(FACING);
+		var direction = state.get(FACING);
 		return switch (direction)
 				{
 					case NORTH -> this.NORTH_SHAPE;
@@ -59,8 +59,8 @@ public class BushLeavesBlock extends LeavesBlock
 
 	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
 	{
-		Direction direction = state.get(FACING);
-		BlockPos blockPos = pos.offset(direction.getOpposite());
+		var direction = state.get(FACING);
+		var blockPos = pos.offset(direction.getOpposite());
 		return world.getBlockState(blockPos).isSideSolidFullSquare(world, blockPos, direction);
 	}
 

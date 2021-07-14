@@ -10,7 +10,7 @@ public record Point(int x, int y)
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		Point point = (Point)o;
+		var point = (Point)o;
 
 		if (x != point.x)
 			return false;
@@ -20,7 +20,7 @@ public record Point(int x, int y)
 	@Override
 	public int hashCode()
 	{
-		int result = x;
+		var result = x;
 		result = 31 * result + y;
 		return result;
 	}

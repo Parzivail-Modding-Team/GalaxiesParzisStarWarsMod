@@ -28,11 +28,11 @@ public class KeyHandler
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketPlayerLightsaberToggle, new PacketByteBuf(Unpooled.buffer()));
 		}
 
-		ShipEntity ship = ShipEntity.getShip(mc.player);
+		var ship = ShipEntity.getShip(mc.player);
 
 		if (ship != null)
 		{
-			EnumSet<ShipControls> controls = EnumSet.noneOf(ShipControls.class);
+			var controls = EnumSet.noneOf(ShipControls.class);
 
 			if (mc.options.keyForward.isPressed())
 				controls.add(ShipControls.THROTTLE_UP);

@@ -10,7 +10,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3d;
 
 public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 {
@@ -30,18 +29,18 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 	{
 		//		super.render(entity, yaw, tickDelta, matrices, consumerProvider, light);
 
-		Vec3d velocity = entity.getVelocity();
+		var velocity = entity.getVelocity();
 		velocity = velocity.normalize();
 
 		matrices.push();
 
 		matrices.translate(0, 0.5f * entity.getHeight(), 0);
 
-		float s = MathHelper.clamp(entity.age / 2f,0.1f, 1);
+		var s = MathHelper.clamp(entity.age / 2f, 0.1f, 1);
 		matrices.scale(s, s, s);
 
-		float rPitch = (float)Math.asin(-velocity.y);
-		float rYaw = (float)Math.atan2(velocity.x, velocity.z);
+		var rPitch = (float)Math.asin(-velocity.y);
+		var rYaw = (float)Math.atan2(velocity.x, velocity.z);
 
 		matrices.multiply(new Quaternion(0, rYaw, 0, false));
 		matrices.multiply(new Quaternion((float)(rPitch + Math.PI / 2), 0, 0, false));

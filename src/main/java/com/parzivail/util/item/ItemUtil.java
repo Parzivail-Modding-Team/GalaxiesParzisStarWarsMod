@@ -7,7 +7,7 @@ public class ItemUtil
 {
 	public static boolean isInventoryEmpty(DefaultedList<ItemStack> inventory)
 	{
-		for (ItemStack itemStack : inventory)
+		for (var itemStack : inventory)
 			if (!ItemStack.EMPTY.equals(itemStack))
 				return false;
 

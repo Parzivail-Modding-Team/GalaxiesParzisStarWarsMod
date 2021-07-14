@@ -3,19 +3,14 @@ package com.parzivail.util.scarif;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.binary.DataReader;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.DefaultedRegistry;
 import net.minecraft.util.registry.Registry;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Optional;
 
 public class ScarifChunk
 {
@@ -39,16 +34,16 @@ public class ScarifChunk
 
 		try
 		{
-			int numTiles = DataReader.read7BitEncodedInt(stream);
+			var numTiles = DataReader.read7BitEncodedInt(stream);
 
-			for (int i = 0; i < numTiles; i++)
+			for (var i = 0; i < numTiles; i++)
 			{
-				int x = DataReader.read7BitEncodedInt(stream);
-				int y = DataReader.read7BitEncodedInt(stream);
-				int z = DataReader.read7BitEncodedInt(stream);
+				var x = DataReader.read7BitEncodedInt(stream);
+				var y = DataReader.read7BitEncodedInt(stream);
+				var z = DataReader.read7BitEncodedInt(stream);
 
-				int nbtLen = stream.readInt();
-				NbtCompound nbt = DataReader.readUncompressedNbt(stream, nbtLen);
+				var nbtLen = stream.readInt();
+				var nbt = DataReader.readUncompressedNbt(stream, nbtLen);
 
 				tiles.put(new BlockPos(x, y, z), nbt);
 			}
@@ -70,14 +65,14 @@ public class ScarifChunk
 		{
 			int y = stream.readByte();
 
-			int paletteSize = DataReader.read7BitEncodedInt(stream);
-			BlockState[] palette = new BlockState[paletteSize];
+			var paletteSize = DataReader.read7BitEncodedInt(stream);
+			var palette = new BlockState[paletteSize];
 
-			for (int i = 0; i < paletteSize; i++)
+			for (var i = 0; i < paletteSize; i++)
 				palette[i] = readBlockState();
 
-			int[] blockStates = new int[4096];
-			for (int i = 0; i < blockStates.length; i++)
+			var blockStates = new int[4096];
+			for (var i = 0; i < blockStates.length; i++)
 			{
 				blockStates[i] = DataReader.read7BitEncodedInt(stream);
 			}
@@ -95,23 +90,23 @@ public class ScarifChunk
 
 	public BlockState readBlockState() throws IOException
 	{
-		String name = DataReader.readNullTerminatedString(stream);
-		boolean hasProperties = stream.readByte() == 1;
+		var name = DataReader.readNullTerminatedString(stream);
+		var hasProperties = stream.readByte() == 1;
 
-		DefaultedRegistry<Block> blockRegistry = Registry.BLOCK;
-		Block block = blockRegistry.get(new Identifier(name));
-		BlockState blockState = block.getDefaultState();
+		var blockRegistry = Registry.BLOCK;
+		var block = blockRegistry.get(new Identifier(name));
+		var blockState = block.getDefaultState();
 
 		if (hasProperties)
 		{
-			StateManager<Block, BlockState> stateManager = block.getStateManager();
+			var stateManager = block.getStateManager();
 
-			int tagLen = stream.readInt();
-			NbtCompound props = DataReader.readUncompressedNbt(stream, tagLen);
+			var tagLen = stream.readInt();
+			var props = DataReader.readUncompressedNbt(stream, tagLen);
 
-			for (String key : props.getKeys())
+			for (var key : props.getKeys())
 			{
-				Property<? extends Comparable<?>> property = stateManager.getProperty(key);
+				var property = stateManager.getProperty(key);
 				if (property != null)
 					blockState = withProperty(blockState, property, key, props, blockState.toString());
 			}
@@ -122,7 +117,7 @@ public class ScarifChunk
 
 	private static <T extends Comparable<T>> BlockState withProperty(BlockState state, net.minecraft.state.property.Property<T> property, String key, NbtCompound propertiesTag, String context)
 	{
-		Optional<T> optional = property.parse(propertiesTag.getString(key));
+		var optional = property.parse(propertiesTag.getString(key));
 		if (optional.isPresent())
 			return state.with(property, optional.get());
 		else

@@ -10,7 +10,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -23,19 +22,19 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 	public void render(MinecraftClient client, VertexBuffer lightSkyBuffer, VertexBuffer darkSkyBuffer, VertexBuffer starsBuffer, MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Runnable fogApplier, CallbackInfo ci)
 	{
 		RenderSystem.disableTexture();
-		Vec3d vec3d = client.world.method_23777(client.gameRenderer.getCamera().getPos(), tickDelta);
-		float g = (float)vec3d.x;
-		float h = (float)vec3d.y;
-		float i = (float)vec3d.z;
+		var vec3d = client.world.method_23777(client.gameRenderer.getCamera().getPos(), tickDelta);
+		var g = (float)vec3d.x;
+		var h = (float)vec3d.y;
+		var i = (float)vec3d.z;
 		BackgroundRenderer.setFogBlack();
-		BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+		var bufferBuilder = Tessellator.getInstance().getBuffer();
 		RenderSystem.depthMask(false);
 		RenderSystem.setShaderColor(g, h, i, 1.0F);
-		Shader shader = RenderSystem.getShader();
+		var shader = RenderSystem.getShader();
 		lightSkyBuffer.setShader(matrices.peek().getModel(), projectionMatrix, shader);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
-		float[] fs = client.world.getSkyProperties().getFogColorOverride(client.world.getSkyAngle(tickDelta), tickDelta);
+		var fs = client.world.getSkyProperties().getFogColorOverride(client.world.getSkyAngle(tickDelta), tickDelta);
 		float s;
 		float t;
 		float p;
@@ -51,14 +50,14 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 			s = MathHelper.sin(client.world.getSkyAngleRadians(tickDelta)) < 0.0F ? 180.0F : 0.0F;
 			matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(s));
 			matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(90.0F));
-			float k = fs[0];
+			var k = fs[0];
 			t = fs[1];
-			float m = fs[2];
-			Matrix4f matrix4f2 = matrices.peek().getModel();
+			var m = fs[2];
+			var matrix4f2 = matrices.peek().getModel();
 			bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
 			bufferBuilder.vertex(matrix4f2, 0.0F, 100.0F, 0.0F).color(k, t, m, fs[3]).next();
 
-			for (int o = 0; o <= 16; ++o)
+			for (var o = 0; o <= 16; ++o)
 			{
 				p = (float)o * 6.2831855F / 16.0F;
 				q = MathHelper.sin(p);
@@ -85,7 +84,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(5 * MathHelper.sin(fractionalWeek)));
 		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(8 * MathHelper.cos(fractionalWeek)));
-		Matrix4f matrix4f3 = matrices.peek().getModel();
+		var matrix4f3 = matrices.peek().getModel();
 
 		t = 23 + 10 * MathHelper.sin(fractionalWeek);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -103,7 +102,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(5 * MathHelper.sin((float)(fractionalWeek + Math.PI))));
 		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(8 * MathHelper.cos((float)(fractionalWeek + Math.PI))));
-		Matrix4f offsetMat = matrices.peek().getModel();
+		var offsetMat = matrices.peek().getModel();
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, SUN);
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
@@ -117,10 +116,10 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 
 		t = 40;
 		RenderSystem.setShaderTexture(0, MOON_PHASES);
-		int u = client.world.getMoonPhase();
-		int v = u % 4;
-		int w = u / 4 % 2;
-		float x = (float)(v + 0) / 4.0F;
+		var u = client.world.getMoonPhase();
+		var v = u % 4;
+		var w = u / 4 % 2;
+		var x = (float)(v + 0) / 4.0F;
 		p = (float)(w + 0) / 2.0F;
 		q = (float)(v + 1) / 4.0F;
 		r = (float)(w + 1) / 2.0F;
@@ -167,7 +166,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.pop();
 
 		RenderSystem.disableTexture();
-		float ab = client.world.method_23787(tickDelta) * s;
+		var ab = client.world.method_23787(tickDelta) * s;
 		if (ab > 0.0F)
 		{
 			RenderSystem.setShaderColor(ab, ab, ab, ab);
@@ -181,7 +180,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.pop();
 		RenderSystem.disableTexture();
 		RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
-		double d = client.player.getCameraPosVec(tickDelta).y - client.world.getLevelProperties().getSkyDarknessHeight(client.world);
+		var d = client.player.getCameraPosVec(tickDelta).y - client.world.getLevelProperties().getSkyDarknessHeight(client.world);
 		if (d < 0.0D)
 		{
 			matrices.push();

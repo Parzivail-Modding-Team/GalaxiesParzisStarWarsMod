@@ -7,7 +7,7 @@ public class SoundHelper
 {
 	public static void playThrownLightsaberSound(ThrownLightsaberEntity entity)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 		minecraft.getSoundManager().play(new LightsaberThrownSoundInstance(entity));
 	}
 }

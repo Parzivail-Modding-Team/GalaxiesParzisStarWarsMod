@@ -7,36 +7,36 @@ public class ColorUtil
 {
 	public static int blendColorsOnSrcAlpha(int dest, int src, int tint)
 	{
-		float destA = NativeImage.getAlpha(dest) / 255f;
-		int destR = NativeImage.getRed(dest);
-		int destG = NativeImage.getGreen(dest);
-		int destB = NativeImage.getBlue(dest);
+		var destA = NativeImage.getAlpha(dest) / 255f;
+		var destR = NativeImage.getRed(dest);
+		var destG = NativeImage.getGreen(dest);
+		var destB = NativeImage.getBlue(dest);
 
-		float srcA = NativeImage.getAlpha(src) / 255f;
-		int srcR = NativeImage.getRed(src);
-		int srcG = NativeImage.getGreen(src);
-		int srcB = NativeImage.getBlue(src);
+		var srcA = NativeImage.getAlpha(src) / 255f;
+		var srcR = NativeImage.getRed(src);
+		var srcG = NativeImage.getGreen(src);
+		var srcB = NativeImage.getBlue(src);
 
 		//		float tintA = NativeImage.getAlpha(tint) / 255f;
-		int tintR = NativeImage.getRed(tint);
-		int tintG = NativeImage.getGreen(tint);
-		int tintB = NativeImage.getBlue(tint);
+		var tintR = NativeImage.getRed(tint);
+		var tintG = NativeImage.getGreen(tint);
+		var tintB = NativeImage.getBlue(tint);
 
 		srcR = (srcR * tintR) / 255;
 		srcG = (srcG * tintG) / 255;
 		srcB = (srcB * tintB) / 255;
 
-		int a = com.parzivail.util.math.MathUtil.clamp((int)((destA + srcA) * 255f), 0, 255);
-		int r = com.parzivail.util.math.MathUtil.clamp((int)((1 - srcA) * destR + srcA * srcR), 0, 255);
-		int g = com.parzivail.util.math.MathUtil.clamp((int)((1 - srcA) * destG + srcA * srcG), 0, 255);
-		int b = MathUtil.clamp((int)((1 - srcA) * destB + srcA * srcB), 0, 255);
+		var a = com.parzivail.util.math.MathUtil.clamp((int)((destA + srcA) * 255f), 0, 255);
+		var r = com.parzivail.util.math.MathUtil.clamp((int)((1 - srcA) * destR + srcA * srcR), 0, 255);
+		var g = com.parzivail.util.math.MathUtil.clamp((int)((1 - srcA) * destG + srcA * srcG), 0, 255);
+		var b = MathUtil.clamp((int)((1 - srcA) * destB + srcA * srcB), 0, 255);
 
 		return NativeImage.getAbgrColor(a, b, g, r);
 	}
 
 	public static int packRgb(int r, int g, int b)
 	{
-		int rgb = (r & 0xFF);
+		var rgb = (r & 0xFF);
 		rgb = (rgb << 8) + (g & 0xFF);
 		rgb = (rgb << 8) + (b & 0xFF);
 		return rgb | 0xFF000000;
@@ -51,12 +51,12 @@ public class ColorUtil
 
 	public static int fromHSV(final float hue, final float saturation, final float value)
 	{
-		final float normaliedHue = (hue - (float)Math.floor(hue));
-		final int h = (int)(normaliedHue * 6);
-		final float f = normaliedHue * 6 - h;
-		final float p = value * (1 - saturation);
-		final float q = value * (1 - f * saturation);
-		final float t = value * (1 - (1 - f) * saturation);
+		final var normaliedHue = (hue - (float)Math.floor(hue));
+		final var h = (int)(normaliedHue * 6);
+		final var f = normaliedHue * 6 - h;
+		final var p = value * (1 - saturation);
+		final var q = value * (1 - f * saturation);
+		final var t = value * (1 - (1 - f) * saturation);
 
 		return switch (h)
 				{

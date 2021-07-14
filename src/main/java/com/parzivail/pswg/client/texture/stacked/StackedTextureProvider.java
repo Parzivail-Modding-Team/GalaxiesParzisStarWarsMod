@@ -17,23 +17,15 @@ import java.util.HashMap;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
-public class StackedTextureProvider
+public record StackedTextureProvider(TextureManager textureManager,
+                                     String identifierRoot)
 {
 	private static final HashMap<String, Identifier> TEXTURE_CACHE = new HashMap<>();
 
-	private final TextureManager textureManager;
-	private final String identifierRoot;
-
-	public StackedTextureProvider(TextureManager textureManager, String identifierRoot)
-	{
-		this.textureManager = textureManager;
-		this.identifierRoot = identifierRoot;
-	}
-
 	public Identifier loadTexture(String id, Supplier<Identifier> fallback, Supplier<Collection<Identifier>> textures)
 	{
-		Identifier identifier = getIdentifier(id);
-		AbstractTexture texture = textureManager.getTexture(identifier);
+		var identifier = getIdentifier(id);
+		var texture = textureManager.getTexture(identifier);
 
 		// The texture is fully loaded
 		if (texture != null)
@@ -55,17 +47,15 @@ public class StackedTextureProvider
 		Util.getMainWorkerExecutor().execute(() -> {
 			try
 			{
-				MinecraftClient minecraft = MinecraftClient.getInstance();
-				minecraft.execute(() -> {
-					RenderSystem.recordRenderCall(() -> {
-						AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
-						if (!(abstractTexture instanceof StackedTexture))
-						{
-							StackedTexture texture = new StackedTexture(DefaultSkinHelper.getTexture(), textures);
-							this.textureManager.registerTexture(identifier, texture);
-						}
-					});
-				});
+				var minecraft = MinecraftClient.getInstance();
+				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> {
+					AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
+					if (!(abstractTexture instanceof StackedTexture))
+					{
+						StackedTexture texture = new StackedTexture(DefaultSkinHelper.getTexture(), textures);
+						this.textureManager.registerTexture(identifier, texture);
+					}
+				}));
 			}
 			catch (InsecureTextureException var7)
 			{

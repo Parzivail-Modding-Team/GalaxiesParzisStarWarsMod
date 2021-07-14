@@ -43,15 +43,15 @@ public class TagSerializer
 	{
 		this(slug);
 		Class<?> clazz = this.getClass();
-		Field[] clFields = getClassFields(clazz);
+		var clFields = getClassFields(clazz);
 
-		NbtCompound domain = source.getCompound(this.slug);
+		var domain = source.getCompound(this.slug);
 
 		try
 		{
-			for (Field f : clFields)
+			for (var f : clFields)
 			{
-				Class<?> type = f.getType();
+				var type = f.getType();
 				if (acceptField(f, type))
 					this.readField(f, type, domain);
 			}
@@ -64,7 +64,7 @@ public class TagSerializer
 
 	private static boolean acceptField(Field f, Class<?> type)
 	{
-		int mods = f.getModifiers();
+		var mods = f.getModifiers();
 		return !(Modifier.isFinal(mods) || Modifier.isStatic(mods) || Modifier.isTransient(mods)) && TYPE_SERIALIZERS.containsKey(type);
 	}
 
@@ -74,7 +74,7 @@ public class TagSerializer
 			return fieldCache.get(clazz);
 		else
 		{
-			Field[] fields = clazz.getFields();
+			var fields = clazz.getFields();
 			Arrays.sort(fields, Comparator.comparing(Field::getName));
 			fieldCache.put(clazz, fields);
 			return fields;
@@ -83,7 +83,7 @@ public class TagSerializer
 
 	private static Pair<Reader<?>, Writer<?>> getHandler(Class<?> clazz)
 	{
-		Pair<Reader<?>, Writer<?>> pair = TYPE_SERIALIZERS.get(clazz);
+		var pair = TYPE_SERIALIZERS.get(clazz);
 		if (pair == null)
 			throw new RuntimeException("No type serializer for  " + clazz);
 		return pair;
@@ -96,34 +96,34 @@ public class TagSerializer
 
 	private void readField(Field f, Class<?> clazz, NbtCompound nbt) throws IllegalArgumentException, IllegalAccessException
 	{
-		Pair<Reader<?>, Writer<?>> handler = getHandler(clazz);
+		var handler = getHandler(clazz);
 		f.set(this, handler.getLeft().read(nbt, f.getName()));
 	}
 
 	public void serializeAsSubtag(ItemStack stack)
 	{
-		NbtCompound nbt = stack.getOrCreateTag();
+		var nbt = stack.getOrCreateTag();
 		this.serializeAsSubtag(nbt);
 		stack.setTag(nbt);
 	}
 
 	public void serializeAsSubtag(NbtCompound nbt)
 	{
-		NbtCompound compound = new NbtCompound();
+		var compound = new NbtCompound();
 		this.serializeInto(compound);
 		nbt.put(slug, compound);
 	}
 
 	public NbtCompound toTag()
 	{
-		NbtCompound compound = new NbtCompound();
+		var compound = new NbtCompound();
 		this.serializeInto(compound);
 		return compound;
 	}
 
 	public NbtCompound toSubtag()
 	{
-		NbtCompound compound = new NbtCompound();
+		var compound = new NbtCompound();
 		this.serializeAsSubtag(compound);
 		return compound;
 	}
@@ -133,10 +133,10 @@ public class TagSerializer
 		try
 		{
 			Class<?> clazz = this.getClass();
-			Field[] clFields = getClassFields(clazz);
-			for (Field f : clFields)
+			var clFields = getClassFields(clazz);
+			for (var f : clFields)
 			{
-				Class<?> type = f.getType();
+				var type = f.getType();
 				if (acceptField(f, type))
 					this.writeField(f, type, nbt);
 			}
@@ -150,8 +150,8 @@ public class TagSerializer
 	@SuppressWarnings("unchecked")
 	private <T> void writeField(Field f, Class<T> clazz, NbtCompound nbt) throws IllegalArgumentException, IllegalAccessException
 	{
-		Pair<Reader<T>, Writer<T>> handler = (Pair<Reader<T>, Writer<T>>)((Object)getHandler(clazz));
-		Object obj = f.get(this);
+		var handler = (Pair<Reader<T>, Writer<T>>)((Object)getHandler(clazz));
+		var obj = f.get(this);
 		handler.getRight().write(nbt, f.getName(), (T)obj);
 	}
 

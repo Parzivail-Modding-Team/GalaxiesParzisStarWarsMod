@@ -18,24 +18,24 @@ public class PIO
 
 	public static Matrix4f readMatrix4f(DataInput s) throws IOException
 	{
-		float a00 = s.readFloat();
-		float a01 = s.readFloat();
-		float a02 = s.readFloat();
-		float a03 = s.readFloat();
-		float a10 = s.readFloat();
-		float a11 = s.readFloat();
-		float a12 = s.readFloat();
-		float a13 = s.readFloat();
-		float a20 = s.readFloat();
-		float a21 = s.readFloat();
-		float a22 = s.readFloat();
-		float a23 = s.readFloat();
-		float a30 = s.readFloat();
-		float a31 = s.readFloat();
-		float a32 = s.readFloat();
-		float a33 = s.readFloat();
+		var a00 = s.readFloat();
+		var a01 = s.readFloat();
+		var a02 = s.readFloat();
+		var a03 = s.readFloat();
+		var a10 = s.readFloat();
+		var a11 = s.readFloat();
+		var a12 = s.readFloat();
+		var a13 = s.readFloat();
+		var a20 = s.readFloat();
+		var a21 = s.readFloat();
+		var a22 = s.readFloat();
+		var a23 = s.readFloat();
+		var a30 = s.readFloat();
+		var a31 = s.readFloat();
+		var a32 = s.readFloat();
+		var a33 = s.readFloat();
 
-		Matrix4f mat = new Matrix4f();
+		var mat = new Matrix4f();
 		Matrix4fAccessUtil.set(mat, a00, a01, a02, a03, a10, a11, a12, a13, a20, a21, a22, a23, a30, a31, a32, a33);
 		return mat;
 	}

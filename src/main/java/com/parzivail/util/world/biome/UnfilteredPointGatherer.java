@@ -37,8 +37,8 @@ public class UnfilteredPointGatherer<T>
 
 	static
 	{
-		final int sinCosArraySize = N_VECTORS_WITH_REPETITION * 5 / 4;
-		final double sinCosOffsetFactor = (1.0 / JITTER_VECTOR_COUNT_MULTIPLIER);
+		final var sinCosArraySize = N_VECTORS_WITH_REPETITION * 5 / 4;
+		final var sinCosOffsetFactor = (1.0 / JITTER_VECTOR_COUNT_MULTIPLIER);
 		JITTER_SINCOS = new double[sinCosArraySize];
 		for (int i = 0, j = 0; i < N_VECTORS; i++)
 		{
@@ -71,25 +71,25 @@ public class UnfilteredPointGatherer<T>
 		// How far out in the jittered hex grid we need to look for points.
 		// Assumes the jitter can go any angle, which should only very occasionally
 		// cause us to search one more layer out than we need.
-		double maxContributingDistance = maxPointContributionRadius * frequency
-		                                 + MAX_GRIDSCALE_DISTANCE_TO_CLOSEST_POINT;
-		double maxContributingDistanceSq = maxContributingDistance * maxContributingDistance;
-		double latticeSearchRadius = maxContributingDistance * INVERSE_TRIANGLE_HEIGHT;
+		var maxContributingDistance = maxPointContributionRadius * frequency
+		                              + MAX_GRIDSCALE_DISTANCE_TO_CLOSEST_POINT;
+		var maxContributingDistanceSq = maxContributingDistance * maxContributingDistance;
+		var latticeSearchRadius = maxContributingDistance * INVERSE_TRIANGLE_HEIGHT;
 
 		// Start at the central point, and keep traversing bigger hexagonal layers outward.
 		// Exclude almost all points which can't possibly be jittered into range.
 		// The "almost" is again because we assume any jitter angle is possible,
 		// when in fact we only use a small set of uniformly distributed angles.
-		ArrayList<LatticePoint> pointsToSearchList = new ArrayList<>();
+		var pointsToSearchList = new ArrayList<LatticePoint>();
 		pointsToSearchList.add(new LatticePoint(0, 0));
-		for (int i = 1; i < latticeSearchRadius; i++)
+		for (var i = 1; i < latticeSearchRadius; i++)
 		{
-			int xsv = i;
-			int zsv = 0;
+			var xsv = i;
+			var zsv = 0;
 
 			while (zsv < i)
 			{
-				LatticePoint point = new LatticePoint(xsv, zsv);
+				var point = new LatticePoint(xsv, zsv);
 				if (point.xv * point.xv + point.zv * point.zv < maxContributingDistanceSq)
 					pointsToSearchList.add(point);
 				zsv++;
@@ -97,7 +97,7 @@ public class UnfilteredPointGatherer<T>
 
 			while (xsv > 0)
 			{
-				LatticePoint point = new LatticePoint(xsv, zsv);
+				var point = new LatticePoint(xsv, zsv);
 				if (point.xv * point.xv + point.zv * point.zv < maxContributingDistanceSq)
 					pointsToSearchList.add(point);
 				xsv--;
@@ -105,7 +105,7 @@ public class UnfilteredPointGatherer<T>
 
 			while (xsv > -i)
 			{
-				LatticePoint point = new LatticePoint(xsv, zsv);
+				var point = new LatticePoint(xsv, zsv);
 				if (point.xv * point.xv + point.zv * point.zv < maxContributingDistanceSq)
 					pointsToSearchList.add(point);
 				xsv--;
@@ -114,7 +114,7 @@ public class UnfilteredPointGatherer<T>
 
 			while (zsv > -i)
 			{
-				LatticePoint point = new LatticePoint(xsv, zsv);
+				var point = new LatticePoint(xsv, zsv);
 				if (point.xv * point.xv + point.zv * point.zv < maxContributingDistanceSq)
 					pointsToSearchList.add(point);
 				zsv--;
@@ -122,7 +122,7 @@ public class UnfilteredPointGatherer<T>
 
 			while (xsv < 0)
 			{
-				LatticePoint point = new LatticePoint(xsv, zsv);
+				var point = new LatticePoint(xsv, zsv);
 				if (point.xv * point.xv + point.zv * point.zv < maxContributingDistanceSq)
 					pointsToSearchList.add(point);
 				xsv++;
@@ -130,7 +130,7 @@ public class UnfilteredPointGatherer<T>
 
 			while (zsv < 0)
 			{
-				LatticePoint point = new LatticePoint(xsv, zsv);
+				var point = new LatticePoint(xsv, zsv);
 				if (point.xv * point.xv + point.zv * point.zv < maxContributingDistanceSq)
 					pointsToSearchList.add(point);
 				xsv++;
@@ -147,22 +147,22 @@ public class UnfilteredPointGatherer<T>
 		z *= frequency;
 
 		// Simplex 2D Skew.
-		double s = (x + z) * 0.366025403784439;
+		var s = (x + z) * 0.366025403784439;
 		double xs = x + s, zs = z + s;
 
 		// Base vertex of compressed square.
-		int xsb = (int)xs;
+		var xsb = (int)xs;
 		if (xs < xsb)
 			xsb -= 1;
-		int zsb = (int)zs;
+		var zsb = (int)zs;
 		if (zs < zsb)
 			zsb -= 1;
 		double xsi = xs - xsb, zsi = zs - zsb;
 
 		// Find closest vertex on triangle lattice.
-		double p = 2 * xsi - zsi;
-		double q = 2 * zsi - xsi;
-		double r = xsi + zsi;
+		var p = 2 * xsi - zsi;
+		var q = 2 * zsi - xsi;
+		var r = xsi + zsi;
 		if (r > 1)
 		{
 			if (p < 0)
@@ -192,35 +192,35 @@ public class UnfilteredPointGatherer<T>
 		}
 
 		// Pre-multiply for hash.
-		int xsbp = xsb * PRIME_X;
-		int zsbp = zsb * PRIME_Z;
+		var xsbp = xsb * PRIME_X;
+		var zsbp = zsb * PRIME_Z;
 
 		// Unskewed coordinate of the closest triangle lattice vertex.
 		// Everything will be relative to this.
-		double bt = (xsb + zsb) * -0.211324865405187;
+		var bt = (xsb + zsb) * -0.211324865405187;
 		double xb = xsb + bt, zb = zsb + bt;
 
 		// Loop through pregenerated array of all points which could be in range, relative to the closest.
-		ArrayList<GatheredPoint<T>> worldPointsList = new ArrayList<>(pointsToSearch.length);
-		for (LatticePoint point : pointsToSearch)
+		var worldPointsList = new ArrayList<GatheredPoint<T>>(pointsToSearch.length);
+		for (var point : pointsToSearch)
 		{
 			// Prime multiplications for jitter hash
-			int xsvp = xsbp + point.xsvp;
-			int zsvp = zsbp + point.zsvp;
+			var xsvp = xsbp + point.xsvp;
+			var zsvp = zsbp + point.zsvp;
 
 			// Compute the jitter hash
-			int hash = xsvp ^ zsvp;
+			var hash = xsvp ^ zsvp;
 			hash = (((int)(seed & 0xFFFFFFFFL) ^ hash) * 668908897)
 			       ^ (((int)(seed >> 32) ^ hash) * 35311);
 
 			// Even selection within 0-24, using pseudo-modulo technique.
-			int indexBase = (hash & 0x3FFFFFF) * 0x5555555;
-			int index = (indexBase >> 26) & VECTOR_INDEX_MASK;
-			int remainingHash = indexBase & 0x3FFFFFF; // The lower bits are still good as a normal hash.
+			var indexBase = (hash & 0x3FFFFFF) * 0x5555555;
+			var index = (indexBase >> 26) & VECTOR_INDEX_MASK;
+			var remainingHash = indexBase & 0x3FFFFFF; // The lower bits are still good as a normal hash.
 
 			// Jittered point, not yet unscaled for frequency
-			double scaledX = xb + point.xv + JITTER_SINCOS[index];
-			double scaledZ = zb + point.zv + JITTER_SINCOS[index + JITTER_SINCOS_OFFSET];
+			var scaledX = xb + point.xv + JITTER_SINCOS[index];
+			var scaledZ = zb + point.zv + JITTER_SINCOS[index + JITTER_SINCOS_OFFSET];
 
 			// Unscale the coordinate and add it to the list.
 			// "Unfiltered" means that, even if the jitter took it out of range, we don't check for that.
@@ -229,7 +229,7 @@ public class UnfilteredPointGatherer<T>
 			// without the added overhead of this less limiting check.
 			// A possible alternate implementation of this could employ a callback function,
 			// to avoid adding the points to the list in the first place.
-			GatheredPoint<T> worldPoint = new GatheredPoint<>(scaledX * inverseFrequency, scaledZ * inverseFrequency, remainingHash);
+			var worldPoint = new GatheredPoint<T>(scaledX * inverseFrequency, scaledZ * inverseFrequency, remainingHash);
 			worldPointsList.add(worldPoint);
 		}
 
@@ -247,7 +247,7 @@ public class UnfilteredPointGatherer<T>
 		{
 			this.xsvp = xsv * PRIME_X;
 			this.zsvp = zsv * PRIME_Z;
-			double t = (xsv + zsv) * -0.211324865405187;
+			var t = (xsv + zsv) * -0.211324865405187;
 			this.xv = xsv + t;
 			this.zv = zsv + t;
 		}

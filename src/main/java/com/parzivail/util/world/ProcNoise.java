@@ -70,21 +70,21 @@ public class ProcNoise
 
 	public double noiseDx(double x, double z)
 	{
-		double n = noise(x, z);
-		double d = 0.001;
+		var n = noise(x, z);
+		var d = 0.001;
 		return noise(x, z + d) - n;
 	}
 
 	public double noiseDz(double x, double z)
 	{
-		double n = noise(x, z);
-		double d = 0.001;
+		var n = noise(x, z);
+		var d = 0.001;
 		return noise(x + d, z) - n;
 	}
 
 	public double octaveNoise(double x, double z, int octaves)
 	{
-		double n = noise(x, z) / 2;
+		var n = noise(x, z) / 2;
 		if (octaves <= 1)
 			return n / (1 - 1 / Math.pow(2, octaves));
 		return n + octaveNoise((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
@@ -92,7 +92,7 @@ public class ProcNoise
 
 	public double octaveWorley(double x, double z, int octaves)
 	{
-		double n = worley(x, z) / 2;
+		var n = worley(x, z) / 2;
 		if (octaves <= 1)
 			return n / (1 - 1 / Math.pow(2, octaves));
 		return n + octaveWorley((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
@@ -100,7 +100,7 @@ public class ProcNoise
 
 	public double octaveInvWorley(double x, double z, int octaves)
 	{
-		double n = (1 - worley(x, z)) / 2;
+		var n = (1 - worley(x, z)) / 2;
 		if (octaves <= 1)
 			return n / (1 - 1 / Math.pow(2, octaves));
 		return n + octaveInvWorley((x + octaves * 100) * 2, (z + octaves * 100) * 2, octaves - 1) / 2;
@@ -124,14 +124,14 @@ public class ProcNoise
 		double dSumX = 0;
 		double dSumY = 0;
 
-		for (int i = 0; i < octaves; i++)
+		for (var i = 0; i < octaves; i++)
 		{
-			double x = (pX + warp * dSumX) * freq + i * 1000;
-			double y = (pY + warp * dSumY) * freq + i * 1000;
+			var x = (pX + warp * dSumX) * freq + i * 1000;
+			var y = (pY + warp * dSumY) * freq + i * 1000;
 
-			double nX = noise(x, y);
-			double nY = noiseDx(x, y);
-			double nZ = noiseDz(x, y);
+			var nX = noise(x, y);
+			var nY = noiseDx(x, y);
+			var nZ = noiseDz(x, y);
 
 			sum = sum + amp * (1 - Math.abs(nX));
 			dSumX = dSumX + amp * nY * -nX;

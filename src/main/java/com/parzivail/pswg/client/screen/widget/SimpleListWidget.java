@@ -2,7 +2,6 @@ package com.parzivail.pswg.client.screen.widget;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
-import net.minecraft.client.util.Window;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -110,7 +109,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 	{
 		clear();
 
-		for (T value : values)
+		for (var value : values)
 			addEntry(new com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<>(this, value));
 
 		if (!children().isEmpty())
@@ -121,7 +120,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 	{
 		clear();
 
-		for (T value : values)
+		for (var value : values)
 			addEntry(new com.parzivail.pswg.client.screen.widget.SimpleListWidget.Entry<>(this, value));
 
 		if (!children().isEmpty())
@@ -138,8 +137,8 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 	{
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 
-		Window window = client.getWindow();
-		double scaleFactor = window.getScaleFactor();
+		var window = client.getWindow();
+		var scaleFactor = window.getScaleFactor();
 
 		// TODO: where'd the scrollbar go?
 		GL11.glScissor((int)(left * scaleFactor), window.getHeight() - (int)(bottom * scaleFactor), (int)((right - left) * scaleFactor), (int)((bottom - top) * scaleFactor));

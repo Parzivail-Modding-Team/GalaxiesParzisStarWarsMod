@@ -6,22 +6,20 @@ import com.parzivail.util.client.ConnectedTextureHelper;
 import com.parzivail.util.client.SubSprite;
 import com.parzivail.util.client.model.ClonableUnbakedModel;
 import com.parzivail.util.client.model.DynamicBakedModel;
-import com.parzivail.util.math.Point;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
-import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
-import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.block.BlockModels;
-import net.minecraft.client.render.model.*;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelLoader;
+import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -58,15 +56,15 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	@Override
 	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 
-		MeshBuilder meshBuilder = RENDERER.meshBuilder();
-		QuadEmitter quadEmitter = meshBuilder.getEmitter();
+		var meshBuilder = RENDERER.meshBuilder();
+		var quadEmitter = meshBuilder.getEmitter();
 
-		final Random random = randomSupplier == null ? new Random(42) : randomSupplier.get();
+		final var random = randomSupplier == null ? new Random(42) : randomSupplier.get();
 
-		BlockModels blockModels = minecraft.getBlockRenderManager().getModels();
-		BakedModel model = blockModels.getModel(SwgBlocks.Panel.LabWall.getDefaultState());
+		var blockModels = minecraft.getBlockRenderManager().getModels();
+		var model = blockModels.getModel(SwgBlocks.Panel.LabWall.getDefaultState());
 
 		// TODO: fix item lighting
 //		if (state == null) // Assume it's an item
@@ -74,15 +72,15 @@ public class ConnectedTextureModel extends DynamicBakedModel
 //			model = Client.minecraft.getItemRenderer().getHeldItemModel(new ItemStack(SwgBlocks.Panel.LabWall), null, null);
 //		}
 
-		for (int i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
+		for (var i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
 		{
 			if (state != null && !(state.getBlock() instanceof ConnectingBlock))
 				continue;
 
-			final Direction cullFace = ModelHelper.faceFromIndex(i);
+			final var cullFace = ModelHelper.faceFromIndex(i);
 			if (cullFace != null)
 			{
-				final BooleanProperty facingProp = ConnectingBlock.FACING_PROPERTIES.get(cullFace);
+				final var facingProp = ConnectingBlock.FACING_PROPERTIES.get(cullFace);
 
 				if (state != null && state.get(facingProp))
 				{
@@ -91,23 +89,23 @@ public class ConnectedTextureModel extends DynamicBakedModel
 				}
 			}
 
-			final List<BakedQuad> quads = model.getQuads(state, cullFace, random);
+			final var quads = model.getQuads(state, cullFace, random);
 
 			if (quads.isEmpty())
 				continue;
 
-			for (final BakedQuad q : quads)
+			for (final var q : quads)
 			{
 				quadEmitter.fromVanilla(q, null, cullFace);
 
-				Point subSpritePoint = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, cullFace, hConnect, vConnect, lConnect);
+				var subSpritePoint = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, cullFace, hConnect, vConnect, lConnect);
 
-				Sprite sprite = modelSprite;
+				var sprite = modelSprite;
 
 				if (capSprite != null && (cullFace == Direction.UP || cullFace == Direction.DOWN))
 					sprite = capSprite;
 
-				SubSprite subSprite = getSubSprite(sprite, 4, 4, subSpritePoint.x(), subSpritePoint.y());
+				var subSprite = getSubSprite(sprite, 4, 4, subSpritePoint.x(), subSpritePoint.y());
 
 				quadEmitter.sprite(0, 0, subSprite.minU(), subSprite.minV());
 				quadEmitter.sprite(1, 0, subSprite.minU(), subSprite.maxV());
@@ -122,11 +120,11 @@ public class ConnectedTextureModel extends DynamicBakedModel
 
 	private static SubSprite getSubSprite(Sprite sprite, int columns, int rows, int x, int y)
 	{
-		float spriteWidth = sprite.getMaxU() - sprite.getMinU();
-		float spriteHeight = sprite.getMaxV() - sprite.getMinV();
+		var spriteWidth = sprite.getMaxU() - sprite.getMinU();
+		var spriteHeight = sprite.getMaxV() - sprite.getMinV();
 
-		float columnSpan = spriteWidth / columns;
-		float rowSpan = spriteHeight / rows;
+		var columnSpan = spriteWidth / columns;
+		var rowSpan = spriteHeight / rows;
 
 		return new SubSprite(sprite.getMinU() + x * columnSpan, sprite.getMinV() + y * rowSpan, sprite.getMinU() + (x + 1) * columnSpan, sprite.getMinV() + (y + 1) * rowSpan);
 	}
@@ -140,7 +138,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	@Override
 	protected Matrix4f createTransformation(BlockState state)
 	{
-		Matrix4f m = new Matrix4f();
+		var m = new Matrix4f();
 		m.loadIdentity();
 		return m;
 	}
@@ -186,7 +184,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		@Override
 		public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences)
 		{
-			ArrayList<SpriteIdentifier> ids = new ArrayList<>();
+			var ids = new ArrayList<SpriteIdentifier>();
 
 			ids.add(sprite);
 
@@ -202,7 +200,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 			if (cachedBakedModel != null)
 				return cachedBakedModel;
 
-			ConnectedTextureModel result = baker.apply(textureGetter);
+			var result = baker.apply(textureGetter);
 			cachedBakedModel = result;
 			return result;
 		}

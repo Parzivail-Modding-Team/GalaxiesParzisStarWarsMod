@@ -5,7 +5,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
 import com.parzivail.pswg.component.SwgEntityComponents;
-import com.parzivail.pswg.component.SwgPersistentComponents;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
@@ -20,7 +19,10 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -28,7 +30,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
@@ -73,15 +74,13 @@ public class SpeciesSelectScreen extends Screen
 	@Override
 	protected void init()
 	{
-		SwgPersistentComponents c = SwgEntityComponents.getPersistent(client.player);
+		var c = SwgEntityComponents.getPersistent(client.player);
 		playerSpecies = c.getSpecies();
 
 		if (playerSpecies != null)
 			this.gender = playerSpecies.getGender();
 
-		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, height / 2 - 91, 80, 182, 15, entry -> {
-			updateAbility();
-		});
+		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, height / 2 - 91, 80, 182, 15, entry -> updateAbility());
 		speciesVariableListWidget.setEntryFormatter(speciesVariable -> new TranslatableText(speciesVariable.getTranslationKey()));
 
 		speciesListWidget = new SimpleListWidget<>(client, width / 2 - 128 - 80, height / 2 - 91, 80, 182, 15, entry -> {
@@ -103,25 +102,19 @@ public class SpeciesSelectScreen extends Screen
 		this.addSelectableChild(speciesVariableListWidget);
 		this.addSelectableChild(speciesListWidget);
 
-		this.addSelectableChild(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, new LiteralText("<"), (button) -> {
-			moveToNextVariableOption(true);
-		}));
+		this.addSelectableChild(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, new LiteralText("<"), (button) -> moveToNextVariableOption(true)));
 
-		this.addSelectableChild(new ButtonWidget(this.width / 2 + 100, this.height / 2 - 10, 20, 20, new LiteralText(">"), (button) -> {
-			moveToNextVariableOption(false);
-		}));
+		this.addSelectableChild(new ButtonWidget(this.width / 2 + 100, this.height / 2 - 10, 20, 20, new LiteralText(">"), (button) -> moveToNextVariableOption(false)));
 
-		this.addSelectableChild(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> {
-			this.client.openScreen(this.parent);
-		}));
+		this.addSelectableChild(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> this.client.openScreen(this.parent)));
 
 		this.addSelectableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText("gui.pswg.apply"), (button) -> {
 			if (speciesListWidget.getSelectedOrNull() == null)
 				return;
 
-			PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+			var passedData = new PacketByteBuf(Unpooled.buffer());
 
-			SwgSpecies selected = speciesListWidget.getSelectedOrNull().getValue();
+			var selected = speciesListWidget.getSelectedOrNull().getValue();
 
 			if (selected == null)
 				passedData.writeString("minecraft:none");
@@ -133,7 +126,7 @@ public class SpeciesSelectScreen extends Screen
 				if (speciesVariableListWidget.getSelectedOrNull() == null)
 					return;
 
-				SpeciesVariable selectedVariable = speciesVariableListWidget.getSelectedOrNull().getValue();
+				var selectedVariable = speciesVariableListWidget.getSelectedOrNull().getValue();
 
 				this.playerSpecies.setVariable(selectedVariable, selected.getVariable(selectedVariable));
 
@@ -170,17 +163,17 @@ public class SpeciesSelectScreen extends Screen
 
 	private boolean moveToNextVariableOption(boolean left)
 	{
-		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelectedOrNull();
-		SimpleListWidget.Entry<SpeciesVariable> selectedVariableEntry = speciesVariableListWidget.getSelectedOrNull();
+		var speciesEntry = speciesListWidget.getSelectedOrNull();
+		var selectedVariableEntry = speciesVariableListWidget.getSelectedOrNull();
 		if (speciesEntry == null || selectedVariableEntry == null)
 			return false;
 
-		SwgSpecies selectedSpecies = speciesEntry.getValue();
-		SpeciesVariable selectedVariable = selectedVariableEntry.getValue();
-		String[] values = selectedVariable.getPossibleValues();
-		String selectedValue = selectedSpecies.getVariable(selectedVariable);
+		var selectedSpecies = speciesEntry.getValue();
+		var selectedVariable = selectedVariableEntry.getValue();
+		var values = selectedVariable.getPossibleValues();
+		var selectedValue = selectedSpecies.getVariable(selectedVariable);
 
-		int nextIndex = ArrayUtils.indexOf(values, selectedValue);
+		var nextIndex = ArrayUtils.indexOf(values, selectedValue);
 
 		if (left)
 		{
@@ -228,54 +221,54 @@ public class SpeciesSelectScreen extends Screen
 		this.speciesVariableListWidget.render(matrices, mouseX, mouseY, delta);
 		drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
 
-		int x = width / 2;
-		int y = height / 2;
-		int modelSize = 60;
+		var x = width / 2;
+		var y = height / 2;
+		var modelSize = 60;
 
 		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 		RenderSystem.setShaderTexture(0, CAROUSEL);
 		drawTexture(matrices, width / 2 - 128, height / 2 - 91, 0, 0, 256, 182);
 
-		SimpleListWidget.Entry<SwgSpecies> speciesEntry = speciesListWidget.getSelectedOrNull();
-		SimpleListWidget.Entry<SpeciesVariable> selectedVariableEntry = speciesVariableListWidget.getSelectedOrNull();
+		var speciesEntry = speciesListWidget.getSelectedOrNull();
+		var selectedVariableEntry = speciesVariableListWidget.getSelectedOrNull();
 		if (speciesEntry != null && selectedVariableEntry != null)
 		{
-			SwgSpecies selectedSpecies = speciesEntry.getValue();
-			SpeciesVariable selectedVariable = selectedVariableEntry.getValue();
+			var selectedSpecies = speciesEntry.getValue();
+			var selectedVariable = selectedVariableEntry.getValue();
 
-			String[] values = selectedVariable.getPossibleValues();
-			String selectedValue = selectedSpecies.getVariable(selectedVariable);
+			var values = selectedVariable.getPossibleValues();
+			var selectedValue = selectedSpecies.getVariable(selectedVariable);
 
 			if (selectedSpecies.isSameSpecies(this.playerSpecies))
 				selectedSpecies.copy(this.playerSpecies);
 
 			selectedSpecies.setGender(gender);
 
-			int selectedIndex = ArrayUtils.indexOf(values, selectedValue);
+			var selectedIndex = ArrayUtils.indexOf(values, selectedValue);
 
 			drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
 
 			matrices.push();
 
-			for (int j = 0; j < values.length; j++)
+			for (var j = 0; j < values.length; j++)
 			{
-				String value = values[j];
+				var value = values[j];
 				selectedSpecies.setVariable(selectedVariable, value);
 
 				matrices.push();
 
 				float offsetTimer = j - selectedIndex;
-				float timer = (carouselTimer - (delta * Math.signum(carouselTimer))) / (float)CAROUSEL_TIMER_MAX;
+				var timer = (carouselTimer - (delta * Math.signum(carouselTimer))) / (float)CAROUSEL_TIMER_MAX;
 
 				if (looping)
 					timer = MathHelper.lerp(timer, 0, -1 - (values.length - 1) / 20f);
 
 				offsetTimer += Ease.inCubic(timer);
-				double offset = Math.signum(offsetTimer) * Math.pow(Math.abs((offsetTimer * 0.8f)), 0.7f) * modelSize;
+				var offset = Math.signum(offsetTimer) * Math.pow(Math.abs((offsetTimer * 0.8f)), 0.7f) * modelSize;
 
 				matrices.translate((int)(x + offset), y, 0);
 
-				float scale = -Math.abs(offsetTimer / 3f) + 1;
+				var scale = -Math.abs(offsetTimer / 3f) + 1;
 				matrices.translate(0, offset / 2f * (scale + 0.3f), 0);
 				matrices.scale(scale, scale, scale);
 				matrices.translate(0, modelSize, 0);
@@ -301,31 +294,31 @@ public class SpeciesSelectScreen extends Screen
 		matrixStack.push();
 
 		PlayerEntity entity = client.player;
-		float f = (float)Math.atan(mouseX / 40.0F);
-		float g = (float)Math.atan(mouseY / 40.0F);
+		var f = (float)Math.atan(mouseX / 40.0F);
+		var g = (float)Math.atan(mouseY / 40.0F);
 		matrixStack.translate(0.0D, 0.0D, 500.0D);
 		matrixStack.scale(size, size, -size);
-		Quaternion quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
-		Quaternion quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
+		var quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
+		var quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
 		quaternion.hamiltonProduct(quaternion2);
 		matrixStack.multiply(quaternion);
-		float h = entity.bodyYaw;
-		float i = entity.getYaw();
-		float j = entity.getYaw();
-		float k = entity.prevHeadYaw;
-		float l = entity.headYaw;
+		var h = entity.bodyYaw;
+		var i = entity.getYaw();
+		var j = entity.getYaw();
+		var k = entity.prevHeadYaw;
+		var l = entity.headYaw;
 		entity.bodyYaw = 180.0F + f * 20.0F;
 		entity.setYaw(180.0F + f * 40.0F);
 		entity.setPitch(-g * 20.0F);
 		entity.headYaw = entity.getYaw();
 		entity.prevHeadYaw = entity.getYaw();
 
-		VertexConsumerProvider.Immediate immediate = client.getBufferBuilders().getEntityVertexConsumers();
+		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
 
-		EntityRenderDispatcherAccessor erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
+		var erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
 		var renderers = erda.getModelRenderers();
 
-		SwgSpecies species = SwgSpeciesRegistry.deserialize(speciesString);
+		var species = SwgSpeciesRegistry.deserialize(speciesString);
 		var renderer = renderers.get("default" /*species.getModel().toString()*/);
 
 		// TODO: cast renderer to PlayerEntityRendererWithModel
@@ -345,12 +338,12 @@ public class SpeciesSelectScreen extends Screen
 
 	public void renderBackgroundTexture(int vOffset)
 	{
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.getBuffer();
+		var tessellator = Tessellator.getInstance();
+		var bufferBuilder = tessellator.getBuffer();
 		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 		RenderSystem.setShaderTexture(0, BACKGROUND);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		float f = 32.0F;
+		var f = 32.0F;
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE_COLOR);
 		bufferBuilder.vertex(0.0D, this.height, 0.0D).texture(0.0F, (float)this.height / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();
 		bufferBuilder.vertex(this.width, this.height, 0.0D).texture((float)this.width / 32.0F, (float)this.height / 32.0F + (float)vOffset).color(64, 64, 64, 255).next();

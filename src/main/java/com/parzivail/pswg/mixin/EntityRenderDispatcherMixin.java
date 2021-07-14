@@ -28,7 +28,7 @@ public class EntityRenderDispatcherMixin
 	private void registerRenderers(ResourceManager manager, CallbackInfo ci, EntityRendererFactory.Context context)
 	{
 		for (var pair : SwgSpeciesModels.MODELS.entrySet())
-			modelRenderers.put(pair.getKey().toString(), new PlayerEntityRendererWithModel(context, false, pair.getValue().model));
+			modelRenderers.put(pair.getKey().toString(), new PlayerEntityRendererWithModel(context, false, pair.getValue().model()));
 	}
 
 //	@SuppressWarnings("unchecked")

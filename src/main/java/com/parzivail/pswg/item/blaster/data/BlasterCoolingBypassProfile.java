@@ -34,7 +34,7 @@ public class BlasterCoolingBypassProfile
 
 	public static BlasterCoolingBypassProfile fromTag(NbtCompound compoundTag, String s)
 	{
-		NbtCompound tag = compoundTag.getCompound(s);
+		var tag = compoundTag.getCompound(s);
 
 		return new BlasterCoolingBypassProfile(
 				tag.getFloat("primaryBypassTime"),
@@ -46,7 +46,7 @@ public class BlasterCoolingBypassProfile
 
 	public static void toTag(NbtCompound compoundTag, String s, BlasterCoolingBypassProfile data)
 	{
-		NbtCompound tag = new NbtCompound();
+		var tag = new NbtCompound();
 
 		tag.putFloat("primaryBypassTime", data.primaryBypassTime);
 		tag.putFloat("primaryBypassTolerance", data.primaryBypassTolerance);

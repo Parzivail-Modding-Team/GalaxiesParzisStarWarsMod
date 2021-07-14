@@ -20,7 +20,7 @@ public class DebugItem extends Item
 	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand)
 	{
-		final ThrownLightsaberEntity entity = new ThrownLightsaberEntity(SwgEntities.Misc.ThrownLightsaber, player, world);
+		final var entity = new ThrownLightsaberEntity(SwgEntities.Misc.ThrownLightsaber, player, world);
 		entity.setProperties(player, MathHelper.clamp(player.getPitch(), -89.9f, 89.9f), player.getYaw(), 0.0F, 0.6f, 0);
 		world.spawnEntity(entity);
 

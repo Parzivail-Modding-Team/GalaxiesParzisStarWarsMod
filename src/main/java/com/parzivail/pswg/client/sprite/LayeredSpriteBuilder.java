@@ -33,7 +33,7 @@ public class LayeredSpriteBuilder
 		}
 
 		SwgSpriteMetaLayered textureMeta;
-		try (final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(textureMetaResource.getInputStream(), StandardCharsets.UTF_8)))
+		try (final var bufferedReader = new BufferedReader(new InputStreamReader(textureMetaResource.getInputStream(), StandardCharsets.UTF_8)))
 		{
 			textureMeta = GSON.fromJson(bufferedReader, SwgSpriteMetaLayered.class);
 		}
@@ -47,20 +47,20 @@ public class LayeredSpriteBuilder
 		if (textureMeta.layers == null)
 			return nativeImage;
 
-		NativeImage[] layerImages = new NativeImage[textureMeta.layers.length];
-		int[] layerTints = new int[textureMeta.layers.length];
+		var layerImages = new NativeImage[textureMeta.layers.length];
+		var layerTints = new int[textureMeta.layers.length];
 
-		for (int n = 0; n < textureMeta.layers.length; n++)
+		for (var n = 0; n < textureMeta.layers.length; n++)
 		{
-			SwgSpriteMetaLayered.Layer layer = textureMeta.layers[n];
+			var layer = textureMeta.layers[n];
 
 			if (layer.texture.equals("#this"))
 				layerImages[n] = nativeImage;
 			else
 			{
 				// what should happen if a base layer has a .pswglayers file too?
-				Identifier baseLayerIdentifier = texturePathResolver.apply(new Identifier(layer.texture));
-				NativeImage baseLayerImage = NativeImage.read(resourceManager.getResource(baseLayerIdentifier).getInputStream());
+				var baseLayerIdentifier = texturePathResolver.apply(new Identifier(layer.texture));
+				var baseLayerImage = NativeImage.read(resourceManager.getResource(baseLayerIdentifier).getInputStream());
 
 				if (baseLayerImage.getHeight() != nativeImage.getHeight() || baseLayerImage.getWidth() != nativeImage.getWidth())
 					throw new RuntimeException("Layer size mismatch: overlay layer " + identifier + " (" + nativeImage.getWidth() + "x" + nativeImage.getHeight() + "), base layer " + baseLayerIdentifier + " (" + baseLayerImage.getWidth() + "x" + baseLayerImage.getHeight() + ")");
@@ -71,17 +71,17 @@ public class LayeredSpriteBuilder
 			layerTints[n] = layer.tint;
 		}
 
-		NativeImage outImage = new NativeImage(nativeImage.getWidth(), nativeImage.getHeight(), false);
+		var outImage = new NativeImage(nativeImage.getWidth(), nativeImage.getHeight(), false);
 
-		int width = nativeImage.getWidth();
-		int height = nativeImage.getHeight();
-		for (int x = 0; x < width; x++)
+		var width = nativeImage.getWidth();
+		var height = nativeImage.getHeight();
+		for (var x = 0; x < width; x++)
 		{
-			for (int y = 0; y < height; y++)
+			for (var y = 0; y < height; y++)
 			{
 				for (int layer = 0, layerImagesLength = layerImages.length; layer < layerImagesLength; layer++)
 				{
-					NativeImage layerImage = layerImages[layer];
+					var layerImage = layerImages[layer];
 					outImage.setPixelColor(x, y, ColorUtil.blendColorsOnSrcAlpha(outImage.getPixelColor(x, y), layerImage.getPixelColor(x, y), layerTints[layer]));
 				}
 			}

@@ -58,7 +58,7 @@ public class Client implements ClientModInitializer
 
 	public static boolean isShipClientControlled(ShipEntity shipEntity)
 	{
-		MinecraftClient minecraft = MinecraftClient.getInstance();
+		var minecraft = MinecraftClient.getInstance();
 		if (minecraft == null || minecraft.player == null)
 			return false;
 
