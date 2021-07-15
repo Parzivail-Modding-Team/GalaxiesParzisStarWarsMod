@@ -10,6 +10,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.AutomaticItemPlacementContext;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -19,6 +20,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -212,7 +214,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 			for (var i = 1; i < SIZE; i++)
 			{
 				pos = pos.up();
-				world.setBlockState(pos, SwgBlocks.Door.TatooineHomeFiller.getDefaultState().with(FACING, state.get(FACING)).with(PART, i), 3);
+				world.setBlockState(pos, SwgBlocks.Door.TatooineHomeFiller.getPlacementState(new AutomaticItemPlacementContext(world, pos, state.get(FACING), itemStack, Direction.UP)).with(FACING, state.get(FACING)).with(PART, i), 3);
 			}
 
 			world.updateNeighbors(pos, Blocks.AIR);

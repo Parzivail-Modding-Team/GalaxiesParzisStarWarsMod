@@ -116,7 +116,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					MathHelper.lerp(adsLerp, 1.2f, 1.75f),
 					MathHelper.lerp(adsLerp, 0, 1.8f)
 			);
-			matrices.multiply(new Quaternion(0, 180, 0, true));
+			matrices.multiply(new Quaternion(0, MathHelper.lerp(adsLerp, 172, 180), 0, true));
 			matrices.translate(
 					MathHelper.lerp(adsLerp, 0.2f, 0),
 					MathHelper.lerp(adsLerp, -0.2f, 0),
