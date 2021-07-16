@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.client.camera.CameraHelper;
 import com.parzivail.pswg.client.render.features.ForceFeatureRenderer;
-import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -28,7 +28,6 @@ public class PlayerEntityRendererMixin
 	@Inject(method = "Lnet/minecraft/client/render/entity/PlayerEntityRenderer;render(Lnet/minecraft/client/network/AbstractClientPlayerEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", at = @At("HEAD"), cancellable = true)
 	private void render(AbstractClientPlayerEntity abstractClientPlayerEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci)
 	{
-		if (ShipEntity.getShip(abstractClientPlayerEntity) != null)
-			ci.cancel();
+		CameraHelper.playerRenderHead(abstractClientPlayerEntity, ci);
 	}
 }

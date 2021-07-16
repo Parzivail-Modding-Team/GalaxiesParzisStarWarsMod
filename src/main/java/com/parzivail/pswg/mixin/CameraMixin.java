@@ -24,7 +24,7 @@ public class CameraMixin
 		assert minecraft.player != null;
 
 		var ship = ShipEntity.getShip(minecraft.player);
-		if (ship != null)
+		if (ship != null && !ship.usePlayerPerspective())
 			return 0;
 
 		return desiredCameraDistance;

@@ -10,9 +10,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
-public class EmptyRenderer extends EntityRenderer<Entity>
+public class EmptyEntityRenderer extends EntityRenderer<Entity>
 {
-	public EmptyRenderer(EntityRendererFactory.Context ctx)
+	public EmptyEntityRenderer(EntityRendererFactory.Context ctx)
 	{
 		super(ctx);
 	}
@@ -23,8 +23,8 @@ public class EmptyRenderer extends EntityRenderer<Entity>
 		super.render(entity, yaw, tickDelta, matrix, vertexConsumers, light);
 
 		var minecraft = MinecraftClient.getInstance();
-		if (!minecraft.options.debugEnabled)
-			return;
+//		if (!minecraft.options.debugEnabled)
+//			return;
 
 		var box = entity.getBoundingBox();
 

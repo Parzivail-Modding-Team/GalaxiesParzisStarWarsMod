@@ -1,7 +1,6 @@
 package com.parzivail.pswg.entity.ship;
 
 import com.parzivail.pswg.client.input.ShipControls;
-import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.rigs.RigT65B;
@@ -20,8 +19,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.world.World;
 
@@ -44,13 +41,6 @@ public class T65BXwing extends ShipEntity
 	public T65BXwing(EntityType<?> type, World world)
 	{
 		super(type, world);
-	}
-
-	public static T65BXwing create(World world)
-	{
-		var ship = new T65BXwing(SwgEntities.Ship.T65bXwing, world);
-		//		ship.setSettings(settings);
-		return ship;
 	}
 
 	@Override
@@ -126,12 +116,6 @@ public class T65BXwing extends ShipEntity
 
 		clientCockpitAnim = getCockpitAnim();
 		clientWingAnim = getWingAnim();
-	}
-
-	@Override
-	public Packet<?> createSpawnPacket()
-	{
-		return new EntitySpawnS2CPacket(this);
 	}
 
 	@Override

@@ -38,7 +38,7 @@ public class ChaseCam
 
 		var world = parent.world;
 
-		var lerpAmount = 0.4f;
+		var lerpAmount = parent.getCameraLerp();
 
 		var q = parent.getViewRotation(1);
 

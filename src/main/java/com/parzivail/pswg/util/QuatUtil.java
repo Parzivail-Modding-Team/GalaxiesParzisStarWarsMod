@@ -11,12 +11,12 @@ public class QuatUtil
 {
 	public static EulerAngle toEulerAngles(Quaternion q)
 	{
-		var forward = rotate(com.parzivail.util.math.MathUtil.POSZ, q);
+		var forward = rotate(MathUtil.POSZ, q);
 
 		var yaw = -(float)Math.atan2(forward.x, forward.z);
 		var pitch = (float)Math.atan2(forward.y, Math.sqrt(forward.x * forward.x + forward.z * forward.z));
 
-		return new EulerAngle(pitch * com.parzivail.util.math.MathUtil.toDegreesf, yaw * MathUtil.toDegreesf + 180, 0);
+		return new EulerAngle(pitch * MathUtil.toDegreesf, yaw * MathUtil.toDegreesf + 180, 0);
 	}
 
 	public static Vec3d rotate(Vec3d self, Quaternion q)

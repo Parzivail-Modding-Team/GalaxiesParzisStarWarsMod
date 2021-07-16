@@ -24,6 +24,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -188,6 +189,11 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		return camera;
 	}
 
+	public boolean usePlayerPerspective()
+	{
+		return false;
+	}
+
 	@Override
 	public void tick()
 	{
@@ -243,12 +249,15 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			setThrottle(throttle);
 		}
 
-		var forward = QuatUtil.rotate(MathUtil.NEGZ, getRotation());
-		setVelocity(forward.multiply(throttle));
+		var forward = getThrottleVelocity(throttle);
+		setVelocity(forward);
 
 		move(MovementType.SELF, getVelocity());
+	}
 
-		QuatUtil.updateEulerRotation(this, getRotation());
+	protected Vec3d getThrottleVelocity(float throttle)
+	{
+		return QuatUtil.rotate(MathUtil.NEGZ, getRotation()).multiply(throttle);
 	}
 
 	public ActionResult interact(PlayerEntity player, Hand hand)
@@ -268,9 +277,12 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	{
 		if (this.hasPassenger(passenger))
 		{
-			var vec3d = new Vec3d(0, 0, 3 * this.getPassengerList().indexOf(passenger));
-			vec3d = QuatUtil.rotate(vec3d, getRotation());
+			var q = getRotation();
 
+			var vec3d = new Vec3d(0, 0, 3 * this.getPassengerList().indexOf(passenger));
+			vec3d = QuatUtil.rotate(vec3d, q);
+
+			QuatUtil.updateEulerRotation(passenger, q);
 			passenger.setPosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
 			this.copyEntityData(passenger);
 		}
@@ -312,7 +324,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	}
 
 	@Override
-	public abstract Packet<?> createSpawnPacket();
+	public Packet<?> createSpawnPacket()
+	{
+		return new EntitySpawnS2CPacket(this);
+	}
 
 	public EnumSet<ShipControls> getControls()
 	{
@@ -344,6 +359,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	{
 		QuatUtil.normalize(q);
 		getDataTracker().set(ROTATION, q);
+
+		QuatUtil.updateEulerRotation(this, q);
+
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -418,5 +436,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	public void acceptLeftClick()
 	{
 		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipFire, new PacketByteBuf(Unpooled.buffer()));
+	}
+
+	public float getCameraLerp()
+	{
+		return 0.4f;
 	}
 }

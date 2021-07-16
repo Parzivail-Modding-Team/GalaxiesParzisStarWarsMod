@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.camera;
 
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
@@ -21,6 +22,9 @@ public class CameraHelper
 		var ship = ShipEntity.getShip(minecraft.player);
 
 		if (ship == null)
+			return;
+
+		if (ship.usePlayerPerspective())
 			return;
 
 		// Undo what is expected to be the player's current rotation transformation
@@ -55,7 +59,9 @@ public class CameraHelper
 
 		if (ship != null)
 		{
-			if (minecraft.options.getPerspective() != Perspective.FIRST_PERSON)
+			if (ship.usePlayerPerspective())
+				minecraft.cameraEntity = player;
+			else if (minecraft.options.getPerspective() != Perspective.FIRST_PERSON)
 				minecraft.cameraEntity = CameraHelper.MUTABLE_CAMERA_ENTITY.with(ship, ship.getCamera());
 			else
 				minecraft.cameraEntity = ship;
@@ -65,5 +71,12 @@ public class CameraHelper
 
 		if (minecraft.cameraEntity instanceof MutableCameraEntity || minecraft.cameraEntity instanceof ShipEntity)
 			minecraft.cameraEntity = player;
+	}
+
+	public static void playerRenderHead(AbstractClientPlayerEntity abstractClientPlayerEntity, CallbackInfo ci)
+	{
+		var ship = ShipEntity.getShip(abstractClientPlayerEntity);
+		if (ship != null && !ship.usePlayerPerspective())
+			ci.cancel();
 	}
 }

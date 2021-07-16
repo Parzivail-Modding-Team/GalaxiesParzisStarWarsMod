@@ -7,6 +7,7 @@ import com.parzivail.util.entity.PProjectileEntityDamageSource;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -33,13 +34,13 @@ public class BlasterUtil
 		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player);
 
 		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
-		var blockDistance = blockHit == null ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
+		var blockDistance = blockHit.getType() == HitResult.Type.MISS ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
 
 		if (hit != null && entityDistance < blockDistance)
 		{
 			hit.entity().damage(getDamageSource(bolt, player), damage);
 		}
-		else if (blockHit != null)
+		else if (blockHit.getType() == HitResult.Type.BLOCK)
 		{
 			// TODO: smoke puff, blaster burn mark, etc server-side stuff
 		}

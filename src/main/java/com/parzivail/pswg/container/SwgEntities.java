@@ -5,6 +5,7 @@ import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.pswg.entity.debug.KinematicTestEntity;
+import com.parzivail.pswg.entity.ship.SpeederEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.util.entity.BucketableFishEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -32,6 +33,20 @@ public class SwgEntities
 		static void register()
 		{
 			entityTypes.add(T65bXwing);
+		}
+	}
+
+	public static class Speeder
+	{
+		public static final EntityType<SpeederEntity> X34 = Registry.register(Registry.ENTITY_TYPE, Resources.id("x34_landspeeder"), FabricEntityTypeBuilder
+				.create(SpawnGroup.MISC, SpeederEntity::new)
+				.dimensions(EntityDimensions.fixed(1, 1))
+				.trackRangeBlocks(128)
+				.build());
+
+		static void register()
+		{
+			entityTypes.add(X34);
 		}
 	}
 
@@ -109,6 +124,7 @@ public class SwgEntities
 	public static void register()
 	{
 		Ship.register();
+		Speeder.register();
 		Fish.register();
 		Amphibian.register();
 		Misc.register();
