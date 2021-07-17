@@ -21,10 +21,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
@@ -252,12 +250,14 @@ public class SpeciesSelectScreen extends Screen
 
 			matrices.push();
 
+			var mat2 = RenderSystem.getModelViewStack();
+
 			for (var j = 0; j < values.length; j++)
 			{
 				var value = values[j];
 				selectedSpecies.setVariable(selectedVariable, value);
 
-				matrices.push();
+				mat2.push();
 
 				float offsetTimer = j - selectedIndex;
 				var timer = (carouselTimer - (delta * Math.signum(carouselTimer))) / (float)CAROUSEL_TIMER_MAX;
@@ -268,17 +268,19 @@ public class SpeciesSelectScreen extends Screen
 				offsetTimer += Ease.inCubic(timer);
 				var offset = Math.signum(offsetTimer) * Math.pow(Math.abs((offsetTimer * 0.8f)), 0.7f) * modelSize;
 
-				matrices.translate((int)(x + offset), y, 0);
+				mat2.translate((int)(x + offset), y, 0);
 
 				var scale = -Math.abs(offsetTimer / 3f) + 1;
-				matrices.translate(0, offset / 2f * (scale + 0.3f), 0);
-				matrices.scale(scale, scale, scale);
-				matrices.translate(0, modelSize, 0);
+				mat2.translate(0, offset / 2f * (scale + 0.3f), 0);
+				mat2.scale(scale, scale, scale);
+				mat2.translate(0, modelSize, 0);
 
-				drawEntity(matrices, selectedSpecies.serialize(), 0, 0, modelSize, (float)(x - mouseX + offset), y - modelSize / 2f - mouseY);
+				drawEntity(mat2, selectedSpecies.serialize(), 0, 0, modelSize, (float)(x - mouseX + offset), y - modelSize / 2f - mouseY);
 
-				matrices.pop();
+				mat2.pop();
 			}
+
+			RenderSystem.applyModelViewMatrix();
 
 			matrices.pop();
 
@@ -298,12 +300,15 @@ public class SpeciesSelectScreen extends Screen
 		PlayerEntity entity = client.player;
 		var f = (float)Math.atan(mouseX / 40.0F);
 		var g = (float)Math.atan(mouseY / 40.0F);
-		matrixStack.translate(0.0D, 0.0D, 500.0D);
+		matrixStack.translate(0.0D, 0.0D, 100.0D);
 		matrixStack.scale(size, size, -size);
+		RenderSystem.applyModelViewMatrix();
+
+		MatrixStack matrixStack2 = new MatrixStack();
 		var quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
 		var quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
 		quaternion.hamiltonProduct(quaternion2);
-		matrixStack.multiply(quaternion);
+		matrixStack2.multiply(quaternion);
 		var h = entity.bodyYaw;
 		var i = entity.getYaw();
 		var j = entity.getPitch();
@@ -323,16 +328,26 @@ public class SpeciesSelectScreen extends Screen
 		var species = SwgSpeciesRegistry.deserialize(speciesString);
 		var renderer = renderers.get(species.getModel().toString());
 
-		if (renderer == null)
-		{
-			// ???
-		}
-		else if (renderer instanceof PlayerEntityRendererWithModel perwm)
-		{
-			perwm.renderWithTexture(SwgSpeciesModels.getTexture(species), client.player, 1, 1, matrixStack, immediate, 0xf000f0);
-		}
-		else
-			renderer.render(client.player, 1, 1, matrixStack, immediate, 0xf000f0);
+		DiffuseLighting.method_34742();
+		EntityRenderDispatcher entityRenderDispatcher = client.getEntityRenderDispatcher();
+		quaternion2.conjugate();
+		entityRenderDispatcher.setRotation(quaternion2);
+		entityRenderDispatcher.setRenderShadows(false);
+		RenderSystem.runAsFancy(() -> {
+			if (renderer == null)
+			{
+				// How did we get here?
+				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack2, immediate, 0xf000f0);
+			}
+			else if (renderer instanceof PlayerEntityRendererWithModel perwm)
+			{
+				perwm.renderWithTexture(SwgSpeciesModels.getTexture(species), client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+			}
+			else
+				renderer.render(client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+		});
+		immediate.draw();
+		entityRenderDispatcher.setRenderShadows(true);
 
 		immediate.draw();
 		entity.bodyYaw = h;
@@ -342,6 +357,8 @@ public class SpeciesSelectScreen extends Screen
 		entity.headYaw = l;
 
 		matrixStack.pop();
+		RenderSystem.applyModelViewMatrix();
+		DiffuseLighting.enableGuiDepthLighting();
 	}
 
 	public void renderBackgroundTexture(int vOffset)
