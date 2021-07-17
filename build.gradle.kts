@@ -76,6 +76,7 @@ val fabric_version: String by project.ext
 val cca_version: String by project.ext
 val cloth_config_version: String by project.ext
 val modmenu_version: String by project.ext
+val rei_version: String by project.ext
 
 base.archivesBaseName = archives_base_name
 version = getVersionName()
@@ -109,6 +110,10 @@ dependencies {
 
 	// Mod Menu
 	modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+
+	// Roughly Enough Items
+	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
+	modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
 }
 
 tasks.processResources {

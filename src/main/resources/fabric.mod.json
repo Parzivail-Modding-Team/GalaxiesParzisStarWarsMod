@@ -26,6 +26,10 @@
 		],
 		"modmenu": [
 			"com.parzivail.pswg.compat.modmenu.GalaxiesModMenuIntegration"
+		],
+		"rei": [
+			"com.parzivail.pswg.compat.rei.plugins.GalaxiesREIClientPlugin",
+			"com.parzivail.pswg.compat.rei.plugins.GalaxiesREIServerPlugin"
 		]
 	},
 	"accessWidener": "pswg.accesswidener",
