@@ -53,10 +53,8 @@ public class LeftClickHandler
 		assert minecraft.player != null;
 
 		var ship = ShipEntity.getShip(minecraft.player);
-		if (ship != null)
+		if (ship != null && ship.acceptLeftClick(minecraft.player))
 		{
-			ship.acceptLeftClick();
-
 			ci.cancel();
 			return;
 		}

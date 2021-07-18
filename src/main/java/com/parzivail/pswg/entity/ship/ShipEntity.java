@@ -15,6 +15,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -433,9 +434,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipRotation, passedData);
 	}
 
-	public void acceptLeftClick()
+	public boolean acceptLeftClick(ClientPlayerEntity player)
 	{
 		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipFire, new PacketByteBuf(Unpooled.buffer()));
+		return true;
 	}
 
 	public float getCameraLerp()
