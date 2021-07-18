@@ -25,7 +25,7 @@ public class LeftClickHandler
 		assert minecraft.player != null;
 
 		var ship = ShipEntity.getShip(minecraft.player);
-		if (ship != null)
+		if (ship != null && !ship.usePlayerPerspective())
 			return;
 
 		var stack = minecraft.player.getMainHandStack();
