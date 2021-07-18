@@ -125,34 +125,34 @@ public class BuiltAsset
 		FileUtils.cleanDirectory(parentDir.toFile());
 	}
 
-	public static void mergeLanguageKeys(Identifier localeNewKeys, Identifier locateDestination) throws IOException
+	public static void mergeLanguageKeys(Identifier localeKeySource, Identifier locateDestination) throws IOException
 	{
-		var pathNew = getLangPath(localeNewKeys);
+		var pathKeySource = getLangPath(localeKeySource);
 		var pathDest = getLangPath(locateDestination);
 
-		JsonObject newEntries;
-		try (Reader reader = Files.newBufferedReader(pathNew, StandardCharsets.UTF_8))
+		JsonObject keySource;
+		try (Reader reader = Files.newBufferedReader(pathKeySource, StandardCharsets.UTF_8))
 		{
-			newEntries = GSON.fromJson(reader, JsonObject.class);
+			keySource = GSON.fromJson(reader, JsonObject.class);
 		}
 
-		JsonObject destEntries;
+		JsonObject valueSource;
 		try (Reader reader = Files.newBufferedReader(pathDest, StandardCharsets.UTF_8))
 		{
-			destEntries = GSON.fromJson(reader, JsonObject.class);
+			valueSource = GSON.fromJson(reader, JsonObject.class);
 		}
 
-		for (var entry : destEntries.entrySet())
+		for (var entry : valueSource.entrySet())
 		{
-			var newMember = newEntries.get(entry.getKey());
+			var newMember = keySource.get(entry.getKey());
 			if (newMember != null)
 			{
 				var oldValue = entry.getValue().getAsString();
-				newEntries.addProperty(entry.getKey(), oldValue);
+				keySource.addProperty(entry.getKey(), oldValue);
 			}
 		}
 
-		Files.delete(pathNew);
+		Files.delete(pathKeySource);
 
 		try (
 				Writer writer = Files.newBufferedWriter(pathDest, StandardCharsets.UTF_8);
@@ -160,7 +160,7 @@ public class BuiltAsset
 		)
 		{
 			jsonWriter.setIndent("\t");
-			GSON.toJson(newEntries, jsonWriter);
+			GSON.toJson(keySource, jsonWriter);
 		}
 	}
 
