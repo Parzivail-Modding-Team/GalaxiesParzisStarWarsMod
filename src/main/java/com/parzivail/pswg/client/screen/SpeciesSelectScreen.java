@@ -108,7 +108,7 @@ public class SpeciesSelectScreen extends Screen
 
 		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> this.client.openScreen(this.parent)));
 
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText("gui.pswg.apply"), (button) -> {
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText("screen.pswg.apply"), (button) -> {
 			if (speciesListWidget.getSelectedOrNull() == null)
 				return;
 
@@ -136,7 +136,7 @@ public class SpeciesSelectScreen extends Screen
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketSetOwnSpecies, passedData);
 		}));
 
-		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("gui.pswg.use_female_model"), this.gender == SpeciesGender.FEMALE, (checked) -> {
+		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("screen.pswg.species_select.use_female_model"), this.gender == SpeciesGender.FEMALE, (checked) -> {
 			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
 			if (this.playerSpecies != null)
 				this.playerSpecies.setGender(gender);

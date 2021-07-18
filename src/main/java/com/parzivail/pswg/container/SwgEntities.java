@@ -38,7 +38,7 @@ public class SwgEntities
 
 	public static class Speeder
 	{
-		public static final EntityType<SpeederEntity> X34 = Registry.register(Registry.ENTITY_TYPE, Resources.id("x34_landspeeder"), FabricEntityTypeBuilder
+		public static final EntityType<SpeederEntity> X34 = Registry.register(Registry.ENTITY_TYPE, Resources.id("landspeeder_x34"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, SpeederEntity::new)
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackRangeBlocks(128)
