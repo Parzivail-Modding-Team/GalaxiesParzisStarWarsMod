@@ -1,6 +1,1 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "pswg:item/door/tatooine_home"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/tatooine_home_door"}}

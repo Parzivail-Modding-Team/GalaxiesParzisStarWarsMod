@@ -7,16 +7,18 @@ import net.minecraft.util.Identifier;
 
 public class LanguageProvider
 {
+	public static final String OUTPUT_LOCALE = "en_us_temp";
+
 	public static LanguageProvider ofBlock(Block block)
 	{
 		var reg = AssetGenerator.getRegistryName(block);
-		return new LanguageProvider(new Identifier(reg.getNamespace(), "en_us"), "block." + reg.getNamespace() + "." + reg.getPath(), reg.toString());
+		return new LanguageProvider(new Identifier(reg.getNamespace(), OUTPUT_LOCALE), "block." + reg.getNamespace() + "." + reg.getPath(), reg.toString());
 	}
 
 	public static LanguageProvider ofItem(Item item)
 	{
 		var reg = AssetGenerator.getRegistryName(item);
-		return new LanguageProvider(new Identifier(reg.getNamespace(), "en_us"), "item." + reg.getNamespace() + "." + reg.getPath(), reg.toString());
+		return new LanguageProvider(new Identifier(reg.getNamespace(), OUTPUT_LOCALE), "item." + reg.getNamespace() + "." + reg.getPath(), reg.toString());
 	}
 
 	private final Identifier locale;

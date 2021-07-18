@@ -481,7 +481,6 @@ public class SwgBlocks
 		FlammableBlockRegistry.getDefaultInstance().add(SwgBlocks.Leaves.Sequoia, 30, 60);
 
 		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door"), Door.TatooineHomeFiller);
-		Registry.register(Registry.ITEM, Resources.id("tatooine_home_door"), new BlockTatooineHomeDoor.Item(Door.TatooineHomeController, new Item.Settings().group(Galaxies.Tab)));
 	}
 
 	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab)

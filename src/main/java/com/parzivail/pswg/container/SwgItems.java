@@ -1,6 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.block.BlockTatooineHomeDoor;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.item.DebugItem;
@@ -28,6 +29,12 @@ public class SwgItems
 	{
 		@RegistryName("debug")
 		public static final DebugItem Debug = new DebugItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));
+	}
+
+	public static class Door
+	{
+		@RegistryName("tatooine_home_door")
+		public static final Item TatooineHome = new BlockTatooineHomeDoor.Item(SwgBlocks.Door.TatooineHomeController, new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class CraftingComponents

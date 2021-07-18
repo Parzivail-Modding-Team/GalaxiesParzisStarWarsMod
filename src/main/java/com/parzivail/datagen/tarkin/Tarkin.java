@@ -1,9 +1,12 @@
 package com.parzivail.datagen.tarkin;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
+import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.InvertedLampBlock;
 import net.minecraft.item.ItemStack;
@@ -31,6 +34,8 @@ public class Tarkin
 		generateItems(assets);
 		generateRecipes(assets);
 
+		generateLangEntries(assets);
+
 		BuiltAsset.nukeRecipeDir();
 
 		for (var asset : assets)
@@ -38,6 +43,115 @@ public class Tarkin
 			Lumberjack.log("Wrote %s", asset.getFilename());
 			asset.write();
 		}
+
+		BuiltAsset.mergeLanguageKeys(Resources.id("en_us_temp"), Resources.id("en_us"));
+	}
+
+	private static void generateLangEntries(List<BuiltAsset> assets)
+	{
+		var lang = new LanguageBuilder(Resources.id(LanguageProvider.OUTPUT_LOCALE));
+
+		// Commands
+
+		var speciesCmd = lang.command("species");
+		speciesCmd.dot("invalid").build(assets);
+		speciesCmd.dot("variant").dot("invalid").build(assets);
+
+		// Containers
+		lang.container("blaster_workbench").build(assets);
+		lang.container("imperial_cube_crate").build(assets);
+		lang.container("kyber_crate").build(assets);
+		lang.container("lightsaber_forge").build(assets);
+
+		var gx8 = lang.container("moisture_vaporator_gx8");
+		gx8.build(assets);
+		gx8.dot("idle").build(assets);
+
+		lang.container("mos_eisley_crate").build(assets);
+		lang.container("segmented_crate").build(assets);
+		lang.container("toolbox").build(assets);
+
+		// Entities
+		lang.entity(SwgEntities.Misc.BlasterBolt).build(assets);
+		lang.entity(SwgEntities.Misc.KinematicTest).build(assets);
+		lang.entity(SwgEntities.Misc.ThrownLightsaber).build(assets);
+		lang.entity(SwgEntities.Ship.T65bXwing).build(assets);
+		lang.entity(SwgEntities.Speeder.X34).build(assets);
+		lang.entity(SwgEntities.Fish.Faa).build(assets);
+		lang.entity(SwgEntities.Fish.Laa).build(assets);
+		lang.entity(SwgEntities.Amphibian.Worrt).build(assets);
+
+		// Screen
+		lang.screen("apply").build(assets);
+
+		var speciesSelect = lang.screen("species_select");
+		speciesSelect.build(assets);
+		speciesSelect.dot("use_female_model").build(assets);
+
+		// Dynamic items
+		lang.item("blaster_a280").build(assets);
+		lang.item("blaster_cycler").build(assets);
+		lang.item("blaster_dc15").build(assets);
+		lang.item("blaster_dc15a").build(assets);
+		lang.item("blaster_dh17").build(assets);
+		lang.item("blaster_dl18").build(assets);
+		lang.item("blaster_dl44").build(assets);
+		lang.item("blaster_dlt19").build(assets);
+		lang.item("blaster_e11").build(assets);
+		lang.item("blaster_ee3").build(assets);
+		lang.item("blaster_jawa_ion").build(assets);
+		lang.item("blaster_rk3").build(assets);
+		lang.item("blaster_rt97c").build(assets);
+		lang.item("blaster_t21").build(assets);
+
+		// Item groups
+		lang.itemGroup("main").build(assets);
+
+		// Key categories
+		lang.keyCategory("pswg").build(assets);
+
+		// Keys
+		lang.key(Client.KEY_LIGHTSABER_TOGGLE).build(assets);
+		lang.key(Client.KEY_SHIP_INPUT_MODE_OVERRIDE).build(assets);
+		lang.key(Client.KEY_SPECIES_SELECT).build(assets);
+
+		// Messages
+		lang.message("update").build(assets);
+
+		// Species
+		var speciesLangBase = lang.cloneWithRoot("species").modid();
+
+		speciesLangBase.dot("none").build(assets);
+
+		for (var species : SwgSpeciesRegistry.getSpecies())
+		{
+			var speciesSlug = species.getSlug();
+
+			var speciesLang = speciesLangBase.dot(speciesSlug.getPath());
+			speciesLang.build(assets);
+
+			for (var variable : species.getVariables())
+			{
+				var variableLang = speciesLang.dot(variable.getName());
+				variableLang.build(assets);
+
+				for (var value : variable.getPossibleValues())
+					variableLang.dot(value).build(assets);
+			}
+		}
+
+		// Autoconfig
+		var autoconfig = lang.cloneWithRoot("text").dot("autoconfig").modid();
+		autoconfig.dot("title").build(assets);
+
+		var autoconfigOption = autoconfig.dot("option");
+
+		var autoconfigOptionInput = autoconfigOption.dot("input");
+		autoconfigOptionInput.build(assets);
+		autoconfigOptionInput.dot("@Tooltip").build(assets);
+
+		autoconfigOptionInput.dot("shipRollPriority").build(assets);
+		autoconfigOptionInput.dot("shipRollPriority").dot("@Tooltip").build(assets);
 	}
 
 	private static void generateRecipes(List<BuiltAsset> assets)
@@ -667,7 +781,7 @@ public class Tarkin
 			                               null, SwgItems.Ingot.Plasteel, null,
 			                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel,
 			                               null, Items.BLUE_DYE, null)
-				.build(assets);
+			                      .build(assets);
 
 			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.WallCluster, 4))
 			                      .grid3x3(null,
@@ -801,14 +915,6 @@ public class Tarkin
 		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
 		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
-		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.id("block/wet_pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.id("block/wet_pourstone")).build(assets);
-		BlockGenerator.basic(SwgBlocks.Dirt.RuinedWetPourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Dirt.RuinedWetPourstoneStairs, Resources.id("block/ruined_wet_pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone")).build(assets);
-
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.LightPanel).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.DisplayPanel).build(assets);
@@ -828,6 +934,16 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Crystal.Thorilide).build(assets);
 
 		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
+
+		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
+		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.id("block/wet_pourstone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.id("block/wet_pourstone")).build(assets);
+		BlockGenerator.basic(SwgBlocks.Dirt.RuinedWetPourstone).build(assets);
+		BlockGenerator.stairs(SwgBlocks.Dirt.RuinedWetPourstoneStairs, Resources.id("block/ruined_wet_pourstone")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone")).build(assets);
+
+		ItemGenerator.basic(SwgItems.Door.TatooineHome).build(assets);
 
 		ItemGenerator.basic(SwgItems.Dust.Ionite).build(assets);
 
@@ -965,6 +1081,7 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Imperial).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Segmented).build(assets);
 
+		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Door.TatooineHomeFiller).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Door.TatooineHomeController).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.RedHangar).build(assets);

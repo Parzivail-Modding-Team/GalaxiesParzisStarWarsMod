@@ -3,12 +3,15 @@ package com.parzivail.datagen.tarkin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.Lumberjack;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -94,7 +97,7 @@ public class BuiltAsset
 
 	public static BuiltAsset lang(Identifier identifier, JsonElement contents)
 	{
-		Lumberjack.log("Created lang entry %s", identifier);
+		Lumberjack.log("Created lang entry %s", contents.toString());
 		return new JsonObjKeyInsBuiltAsset(getLangPath(identifier), contents);
 	}
 
@@ -120,6 +123,45 @@ public class BuiltAsset
 			return;
 
 		FileUtils.cleanDirectory(parentDir.toFile());
+	}
+
+	public static void mergeLanguageKeys(Identifier localeNewKeys, Identifier locateDestination) throws IOException
+	{
+		var pathNew = getLangPath(localeNewKeys);
+		var pathDest = getLangPath(locateDestination);
+
+		JsonObject newEntries;
+		try (Reader reader = Files.newBufferedReader(pathNew, StandardCharsets.UTF_8))
+		{
+			newEntries = GSON.fromJson(reader, JsonObject.class);
+		}
+
+		JsonObject destEntries;
+		try (Reader reader = Files.newBufferedReader(pathDest, StandardCharsets.UTF_8))
+		{
+			destEntries = GSON.fromJson(reader, JsonObject.class);
+		}
+
+		for (var entry : destEntries.entrySet())
+		{
+			var newMember = newEntries.get(entry.getKey());
+			if (newMember != null)
+			{
+				var oldValue = entry.getValue().getAsString();
+				newEntries.addProperty(entry.getKey(), oldValue);
+			}
+		}
+
+		Files.delete(pathNew);
+
+		try (
+				Writer writer = Files.newBufferedWriter(pathDest, StandardCharsets.UTF_8);
+				var jsonWriter = new JsonWriter(writer)
+		)
+		{
+			jsonWriter.setIndent("\t");
+			GSON.toJson(newEntries, jsonWriter);
+		}
 	}
 
 	public void write()
