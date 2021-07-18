@@ -34,6 +34,7 @@
 		"LevelPropertiesMixin",
 		"LivingEntityRendererMixin",
 		"MinecraftClientMixin",
+		"MouseMixin",
 		"PlayerEntityMixin",
 		"PlayerEntityModelMixin",
 		"PlayerEntityRendererMixin",

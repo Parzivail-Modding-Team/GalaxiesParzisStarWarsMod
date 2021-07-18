@@ -23,8 +23,14 @@ public class InGameHudMixin
 	@Final
 	private MinecraftClient client;
 
+	@Shadow
+	private int scaledWidth;
+
+	@Shadow
+	private int scaledHeight;
+
 	@Inject(method = "renderCrosshair", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;blendFuncSeparate(Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;Lcom/mojang/blaze3d/platform/GlStateManager$SrcFactor;Lcom/mojang/blaze3d/platform/GlStateManager$DstFactor;)V"), cancellable = true)
-	public void renderCrossHair(MatrixStack matrices, CallbackInfo ci)
+	public void renderCrosshair(MatrixStack matrices, CallbackInfo ci)
 	{
 		assert this.client.player != null;
 
@@ -32,8 +38,24 @@ public class InGameHudMixin
 		var customHUDRenderer = ICustomHudRenderer.CUSTOM_HUD_RENDERERS.get(mainHandStack.getItem());
 		if (customHUDRenderer != null)
 		{
-			if (customHUDRenderer.render(this.client.player, Hand.MAIN_HAND, mainHandStack, matrices))
+			if (customHUDRenderer.renderCrosshair(this.client.player, Hand.MAIN_HAND, mainHandStack, matrices))
 				ci.cancel();
+		}
+	}
+
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getLastFrameDuration()F", shift = At.Shift.AFTER), cancellable = true)
+	public void render(MatrixStack matrices, float tickDelta, CallbackInfo ci)
+	{
+		if (!this.client.options.getPerspective().isFirstPerson())
+			return;
+
+		assert this.client.player != null;
+
+		var mainHandStack = this.client.player.getInventory().getMainHandStack();
+		var customHUDRenderer = ICustomHudRenderer.CUSTOM_HUD_RENDERERS.get(mainHandStack.getItem());
+		if (customHUDRenderer != null)
+		{
+			customHUDRenderer.renderOverlay(this.client.player, Hand.MAIN_HAND, mainHandStack, matrices, scaledWidth, scaledHeight, tickDelta);
 		}
 	}
 

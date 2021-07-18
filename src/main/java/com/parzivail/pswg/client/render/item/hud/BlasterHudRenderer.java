@@ -8,7 +8,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -20,10 +20,11 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 {
 	public static final BlasterHudRenderer INSTANCE = new BlasterHudRenderer();
 
+	private static final Identifier OVERLAY_BASIC_SCOPE = Resources.id("textures/misc/blaster_basic_scope.png");
 	private static final Identifier HUD_ELEMENTS_TEXTURE = Resources.id("textures/gui/blasters.png");
 
 	@Override
-	public boolean render(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
+	public boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
 	{
 		var client = MinecraftClient.getInstance();
 		var scaledWidth = client.getWindow().getScaledWidth();
@@ -110,5 +111,59 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
 
 		return bt.isAimingDownSights;
+	}
+
+	@Override
+	public void renderOverlay(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices, int scaledWidth, int scaledHeight, float tickDelta)
+	{
+		var bt = new BlasterTag(stack.getOrCreateTag());
+
+		float scale = bt.getAdsLerp();
+		int opacity = (int)(bt.getAdsLerp() * (224));
+		RenderSystem.disableDepthTest();
+		RenderSystem.depthMask(false);
+		RenderSystem.defaultBlendFunc();
+		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+		RenderSystem.setShaderTexture(0, OVERLAY_BASIC_SCOPE);
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder bufferBuilder = tessellator.getBuffer();
+		float f = (float)Math.min(scaledWidth, scaledHeight);
+		float h = Math.min((float)scaledWidth / f, (float)scaledHeight / f) * scale;
+		float i = f * h;
+		float j = f * h;
+		float k = ((float)scaledWidth - i) / 2.0F;
+		float l = ((float)scaledHeight - j) / 2.0F;
+		float m = k + i;
+		float n = l + j;
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
+		bufferBuilder.vertex(k, n, -90.0D).color(255, 255, 255, opacity).texture(0.0F, 1.0F).next();
+		bufferBuilder.vertex(m, n, -90.0D).color(255, 255, 255, opacity).texture(1.0F, 1.0F).next();
+		bufferBuilder.vertex(m, l, -90.0D).color(255, 255, 255, opacity).texture(1.0F, 0.0F).next();
+		bufferBuilder.vertex(k, l, -90.0D).color(255, 255, 255, opacity).texture(0.0F, 0.0F).next();
+		tessellator.draw();
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		RenderSystem.disableTexture();
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder.vertex(0.0D, scaledHeight, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(scaledWidth, scaledHeight, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(scaledWidth, n, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(0.0D, n, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(0.0D, l, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(scaledWidth, l, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(scaledWidth, 0.0D, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(0.0D, 0.0D, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(0.0D, n, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(k, n, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(k, l, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(0.0D, l, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(m, n, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(scaledWidth, n, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(scaledWidth, l, -90.0D).color(0, 0, 0, opacity).next();
+		bufferBuilder.vertex(m, l, -90.0D).color(0, 0, 0, opacity).next();
+		tessellator.draw();
+		RenderSystem.enableTexture();
+		RenderSystem.depthMask(true);
+		RenderSystem.enableDepthTest();
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 }

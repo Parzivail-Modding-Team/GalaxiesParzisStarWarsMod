@@ -8,6 +8,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.math.Ease;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -81,6 +82,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
 		var bounds = m.bounds();
 
+		var opacity = 1f;
+
 		if (renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.FIXED)
 		{
 			matrices.multiply(new Quaternion(90, 0, 0, true));
@@ -111,6 +114,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 			var adsLerp = bt.getAdsLerp();
 
+			opacity = Ease.outCubic(1 - adsLerp);
+
 			matrices.translate(
 					MathHelper.lerp(adsLerp, 0, -2.3),
 					MathHelper.lerp(adsLerp, 1.2f, 1.75f),
@@ -130,8 +135,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			matrices.translate(-0.4f, -1, -0.5f);
 		}
 
-		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(modelEntry.texture));
-		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
+		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 		m.render(VertexConsumerBuffer.Instance);
 
 		matrices.pop();

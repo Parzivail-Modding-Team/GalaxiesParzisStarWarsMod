@@ -20,5 +20,7 @@ public interface ICustomHudRenderer
 		CUSTOM_HUD_RENDERERS.put(item, renderer);
 	}
 
-	boolean render(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices);
+	boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices);
+
+	void renderOverlay(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices, int scaledWidth, int scaledHeight, float tickDelta);
 }
