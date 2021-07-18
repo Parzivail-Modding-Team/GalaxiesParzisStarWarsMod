@@ -23,12 +23,6 @@ public class DataReader
 		}
 	}
 
-	public static float readHalf(DataInput s) throws IOException
-	{
-		var hf = new HalfFloat(s.readShort());
-		return hf.getFullFloat();
-	}
-
 	public static int read7BitEncodedInt(InputStream is) throws IOException
 	{
 		var count = 0;

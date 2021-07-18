@@ -83,7 +83,7 @@ public record PR3File(PR3RenderedObject[] objects)
 
 		var vectors = new Vec3f[length];
 		for (var i = 0; i < length; i++)
-			vectors[i] = new Vec3f(DataReader.readHalf(objStream), DataReader.readHalf(objStream), DataReader.readHalf(objStream));
+			vectors[i] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
 
 		return vectors;
 	}

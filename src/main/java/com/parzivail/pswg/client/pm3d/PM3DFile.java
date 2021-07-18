@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public record PM3DFile(PM3DLod[] lods)
 {
 	private static final String MAGIC = "Pm3D";
-	private static final int[] ACCEPTED_VERSIONS = { 0x04 };
+	private static final int[] ACCEPTED_VERSIONS = { 0x05 };
 
 	public PM3DLod getLevelOfDetail(int lod)
 	{
@@ -36,7 +36,7 @@ public record PM3DFile(PM3DLod[] lods)
 		catch (NullPointerException | IOException ex)
 		{
 			ex.printStackTrace();
-			var crashReport = CrashReport.create(ex, String.format("Loading PM3D file: %s", modelFile));
+			var crashReport = CrashReport.create(ex, String.format("Loading PM3D file: %s (%s)", modelFile, ex.getMessage()));
 			throw new CrashException(crashReport);
 		}
 	}
@@ -70,12 +70,7 @@ public record PM3DFile(PM3DLod[] lods)
 		if (!ArrayUtils.contains(ACCEPTED_VERSIONS, version))
 			throw new IOException(String.format("Input file version is 0x%s, expected one of: %s", Integer.toHexString(version), getAcceptedVersionString()));
 
-		var numLods = 1;
-
-		if (version > 2)
-		{
-			numLods = objStream.readInt();
-		}
+		var numLods = objStream.readInt();
 
 		var lods = new PM3DLod[numLods];
 
@@ -135,9 +130,9 @@ public record PM3DFile(PM3DLod[] lods)
 
 		for (var i = 0; i < num; i++)
 		{
-			var x = DataReader.readHalf(objStream) + 0.5f;
-			var y = DataReader.readHalf(objStream);
-			var z = DataReader.readHalf(objStream) + 0.5f;
+			var x = objStream.readFloat() + 0.5f;
+			var y = objStream.readFloat();
+			var z = objStream.readFloat() + 0.5f;
 
 			verts[i] = new Vec3f(x, y, z);
 		}
@@ -151,9 +146,9 @@ public record PM3DFile(PM3DLod[] lods)
 
 		for (var i = 0; i < num; i++)
 		{
-			var x = DataReader.readHalf(objStream);
-			var y = DataReader.readHalf(objStream);
-			var z = DataReader.readHalf(objStream);
+			var x = objStream.readFloat();
+			var y = objStream.readFloat();
+			var z = objStream.readFloat();
 
 			verts[i] = new Vec3f(x, y, z);
 		}
@@ -167,8 +162,8 @@ public record PM3DFile(PM3DLod[] lods)
 
 		for (var i = 0; i < num; i++)
 		{
-			var u = DataReader.readHalf(objStream);
-			var v = DataReader.readHalf(objStream);
+			var u = objStream.readFloat();
+			var v = objStream.readFloat();
 
 			uvs[i] = new Vec3f(u, v, 0);
 		}
