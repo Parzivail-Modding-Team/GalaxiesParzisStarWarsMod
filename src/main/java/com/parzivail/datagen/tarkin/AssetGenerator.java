@@ -18,10 +18,10 @@ public class AssetGenerator
 		return Registry.ITEM.getId(item.asItem());
 	}
 
-//	static Identifier getRegistryName(Block block)
-//	{
-//		return Registry.BLOCK.getId(block);
-//	}
+	static Identifier getRegistryName(Block block)
+	{
+		return Registry.BLOCK.getId(block);
+	}
 
 	static Identifier getTextureName(Block block)
 	{

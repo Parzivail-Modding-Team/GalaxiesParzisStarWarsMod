@@ -815,7 +815,10 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.CraftingComponents.Turbine).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.BallBearing).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.DeshWire).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.DeshCoil).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.PlasteelRod).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.ZersiumRod).build(assets);
+		ItemGenerator.basic(SwgItems.CraftingComponents.DurasteelRod).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.StrippedJaporBranch).build(assets);
 
 		ItemGenerator.basic(SwgItems.Crystal.Exonium).build(assets);
