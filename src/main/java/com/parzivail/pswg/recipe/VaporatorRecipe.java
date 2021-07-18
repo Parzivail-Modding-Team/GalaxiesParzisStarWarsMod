@@ -12,6 +12,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
@@ -63,6 +64,14 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 	public RecipeType<?> getType()
 	{
 		return SwgRecipeType.Vaporator;
+	}
+
+	@Override
+	public DefaultedList<Ingredient> getIngredients()
+	{
+		var ingredients = DefaultedList.<Ingredient>of();
+		ingredients.add(this.base);
+		return ingredients;
 	}
 
 	public static class Serializer implements RecipeSerializer<VaporatorRecipe>
