@@ -46,7 +46,7 @@ public class MoistureVaporatorDisplay extends BasicDisplay
 	@Override
 	public CategoryIdentifier<?> getCategoryIdentifier()
 	{
-		return GalaxiesREICategories.MOISTURE_VAPORATOR; // XXX: replace with the actual category identifier
+		return GalaxiesREICategories.MOISTURE_VAPORATOR;
 	}
 
 	public static BasicDisplay.Serializer<MoistureVaporatorDisplay> serializer() {
