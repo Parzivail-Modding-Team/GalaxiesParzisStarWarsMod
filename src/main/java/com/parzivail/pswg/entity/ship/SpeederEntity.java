@@ -18,7 +18,7 @@ public class SpeederEntity extends ShipEntity
 
 	protected double getRepulsorSetpoint()
 	{
-		return -1;
+		return -0.5;
 	}
 
 	@Override
