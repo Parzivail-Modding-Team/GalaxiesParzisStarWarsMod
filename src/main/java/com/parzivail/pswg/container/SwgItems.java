@@ -34,7 +34,7 @@ public class SwgItems
 	public static class Door
 	{
 		@RegistryName("tatooine_home_door")
-		public static final Item TatooineHome = new BlockTatooineHomeDoor.Item(SwgBlocks.Door.TatooineHomeController, new Item.Settings().group(Galaxies.Tab));
+		public static final Item TatooineHome = new BlockTatooineHomeDoor.Item(SwgBlocks.Door.TatooineHomeBottom, new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class CraftingComponents

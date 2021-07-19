@@ -793,7 +793,7 @@ public class Tarkin
 
 		//Decoration Blocks and Machines
 		{
-			RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Door.TatooineHomeController))
+			RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Door.TatooineHome))
 			                      .grid2x3(null,
 			                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
 			                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
@@ -1081,8 +1081,8 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Imperial).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Segmented).build(assets);
 
-		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Door.TatooineHomeFiller).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Door.TatooineHomeController).build(assets);
+		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone")).build(assets);
+		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeBottom, new Identifier("block/stone")).build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.RedHangar).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.BlueHangar).build(assets);

@@ -133,7 +133,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 	@Override
 	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
 	{
-		return new ItemStack(SwgBlocks.Door.TatooineHomeController);
+		return new ItemStack(SwgBlocks.Door.TatooineHomeBottom);
 	}
 
 	protected BlockPos getController(BlockView world, BlockPos self)
@@ -214,7 +214,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 			for (var i = 1; i < SIZE; i++)
 			{
 				pos = pos.up();
-				world.setBlockState(pos, SwgBlocks.Door.TatooineHomeFiller.getPlacementState(new AutomaticItemPlacementContext(world, pos, state.get(FACING), itemStack, Direction.UP)).with(FACING, state.get(FACING)).with(PART, i), 3);
+				world.setBlockState(pos, SwgBlocks.Door.TatooineHomeTop.getPlacementState(new AutomaticItemPlacementContext(world, pos, state.get(FACING), itemStack, Direction.UP)).with(FACING, state.get(FACING)).with(PART, i), 3);
 			}
 
 			world.updateNeighbors(pos, Blocks.AIR);

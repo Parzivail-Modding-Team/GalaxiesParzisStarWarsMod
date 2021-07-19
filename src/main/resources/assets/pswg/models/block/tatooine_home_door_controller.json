@@ -1,5 +1,1 @@
-{
-  "textures": {
-    "particle": "minecraft:block/stone"
-  }
-}
+{"textures":{"particle":"minecraft:block/stone"}}

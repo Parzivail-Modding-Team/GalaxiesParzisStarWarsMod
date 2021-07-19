@@ -81,12 +81,10 @@ public class SwgBlocks
 
 	public static class Door
 	{
-		public static final BlockTatooineHomeDoor TatooineHomeFiller = new BlockTatooineHomeDoor(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 0));
-		@RegistryName("tatooine_home_door_controller")
-		@TabIgnore
-		public static final BlockTatooineHomeDoor TatooineHomeController = new BlockTatooineHomeDoorController(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 0));
+		public static final BlockTatooineHomeDoor TatooineHomeTop = new BlockTatooineHomeDoor(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 0));
+		public static final BlockTatooineHomeDoor TatooineHomeBottom = new BlockTatooineHomeDoorController(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F).breakByTool(FabricToolTags.PICKAXES, 0));
 		@RegistryName("door_tatooine_home")
-		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeController).build();
+		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottom).build();
 	}
 
 	public static class Machine
@@ -480,7 +478,8 @@ public class SwgBlocks
 
 		FlammableBlockRegistry.getDefaultInstance().add(SwgBlocks.Leaves.Sequoia, 30, 60);
 
-		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door"), Door.TatooineHomeFiller);
+		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door"), Door.TatooineHomeTop);
+		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door_controller"), Door.TatooineHomeBottom);
 	}
 
 	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab)

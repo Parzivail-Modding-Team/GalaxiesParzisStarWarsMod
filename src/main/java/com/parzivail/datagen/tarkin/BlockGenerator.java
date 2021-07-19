@@ -45,6 +45,13 @@ public class BlockGenerator
 				.itemModel(ModelFile::ofBlock);
 	}
 
+	public static BlockGenerator particleOnly(Block block, Identifier particle)
+	{
+		return blockNoModelLangEntry(block)
+				.state(BlockStateGenerator::basic)
+				.model(block1 -> ModelFile.particle(block1, particle));
+	}
+
 	static BlockGenerator cropStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)
 	{
 		return blockNoModelLangEntry(block)

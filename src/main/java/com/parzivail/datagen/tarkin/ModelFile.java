@@ -18,6 +18,11 @@ public class ModelFile
 	private final Identifier parent;
 	private final HashMap<String, Identifier> textures;
 
+	private ModelFile(Identifier filename)
+	{
+		this(filename, null);
+	}
+
 	private ModelFile(Identifier filename, Identifier parent)
 	{
 		this.filename = filename;
@@ -38,6 +43,11 @@ public class ModelFile
 	public static ModelFile ofBlockDifferentParent(Block block, Identifier parent)
 	{
 		return new ModelFile(AssetGenerator.getRegistryName(block), parent);
+	}
+
+	public static ModelFile noParent(Identifier filename)
+	{
+		return new ModelFile(filename);
 	}
 
 	public static ModelFile ofModel(Identifier filename, Identifier source)
@@ -64,6 +74,13 @@ public class ModelFile
 		return ModelFile
 				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("item/generated"))
 				.texture("layer0", textureName);
+	}
+
+	public static ModelFile particle(Block block, Identifier particle)
+	{
+		return ModelFile
+				.noParent(AssetGenerator.getRegistryName(block))
+				.texture("particle", particle);
 	}
 
 	public static ModelFile item(Item item)
@@ -271,7 +288,8 @@ public class ModelFile
 	{
 		var rootElement = new JsonObject();
 
-		rootElement.addProperty("parent", parent.toString());
+		if (parent != null)
+			rootElement.addProperty("parent", parent.toString());
 
 		if (!textures.isEmpty())
 		{
