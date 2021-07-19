@@ -1,6 +1,1 @@
-{
-	"parent": "item/generated",
-	"textures": {
-		"layer0": "pswg:item/large_pipe"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/large_pipe"}}

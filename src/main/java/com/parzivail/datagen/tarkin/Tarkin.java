@@ -37,6 +37,9 @@ public class Tarkin
 		generateLangEntries(assets);
 
 		BuiltAsset.nukeRecipeDir();
+		BuiltAsset.nukeBlockstateDir();
+		BuiltAsset.nukeBlockModelJsons();
+		BuiltAsset.nukeItemModelJsons();
 
 		for (var asset : assets)
 		{
@@ -44,6 +47,7 @@ public class Tarkin
 			asset.write();
 		}
 
+		// Synchronize the keys of the en_us locale
 		BuiltAsset.mergeLanguageKeys(Resources.id("en_us_temp"), Resources.id("en_us"));
 	}
 
@@ -1137,7 +1141,8 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Zersium).build(assets);
 		BlockGenerator.block(SwgBlocks.MaterialBlock.Ionite).build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8)
+		              .itemModel(ModelFile::blockSeparateItem).build(assets);
 
 		// TODO: adjust loot table to match vanilla raw ores
 		BlockGenerator.basic(SwgBlocks.Ore.Beskar)
@@ -1198,7 +1203,8 @@ public class Tarkin
 
 		BlockGenerator.basic(SwgBlocks.Panel.LabWall).build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Pipe.Large).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Pipe.Large)
+		              .itemModel(ModelFile::blockSeparateItem).build(assets);
 
 		BlockGenerator.cross(SwgBlocks.Plant.FunnelFlower).build(assets);
 		BlockGenerator.cross(SwgBlocks.Plant.BlossomingFunnelFlower).build(assets);

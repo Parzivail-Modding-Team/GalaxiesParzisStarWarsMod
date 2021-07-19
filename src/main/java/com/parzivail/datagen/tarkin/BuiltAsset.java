@@ -9,7 +9,9 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.util.Lumberjack;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
@@ -125,7 +127,63 @@ public class BuiltAsset
 		FileUtils.cleanDirectory(parentDir.toFile());
 	}
 
+	public static void nukeBlockModelJsons() throws IOException
+	{
+		var dummyAsset = getBlockModelPath(Resources.id("dummy"));
+
+		var parentDir = dummyAsset.getParent();
+
+		if (!Files.exists(parentDir))
+			return;
+
+		cleanDirectoryOf(parentDir.toFile(), "json");
+	}
+
+	public static void nukeItemModelJsons() throws IOException
+	{
+		var dummyAsset = getItemModelPath(Resources.id("dummy"));
+
+		var parentDir = dummyAsset.getParent();
+
+		if (!Files.exists(parentDir))
+			return;
+
+		cleanDirectoryOf(parentDir.toFile(), "json");
+	}
+
+	public static void nukeBlockstateDir() throws IOException
+	{
+		var dummyAsset = getBlockstatePath(Resources.id("dummy"));
+
+		var parentDir = dummyAsset.getParent();
+
+		if (!Files.exists(parentDir))
+			return;
+
+		FileUtils.cleanDirectory(parentDir.toFile());
+	}
+
+	public static void cleanDirectoryOf(final File directory, String extension) throws IOException
+	{
+		final File[] files = directory.listFiles();
+
+		IOException exception = null;
+		for (final File file : files)
+		{
+			if (FilenameUtils.isExtension(file.getName(), extension))
+				FileUtils.forceDelete(file);
+		}
+	}
+
 	public static void mergeLanguageKeys(Identifier localeKeySource, Identifier locateDestination) throws IOException
+	{
+		updateLanguageKeys(localeKeySource, locateDestination);
+
+		var pathKeySource = getLangPath(localeKeySource);
+		Files.delete(pathKeySource);
+	}
+
+	public static void updateLanguageKeys(Identifier localeKeySource, Identifier locateDestination) throws IOException
 	{
 		var pathKeySource = getLangPath(localeKeySource);
 		var pathDest = getLangPath(locateDestination);
@@ -152,8 +210,6 @@ public class BuiltAsset
 			}
 		}
 
-		Files.delete(pathKeySource);
-
 		try (
 				Writer writer = Files.newBufferedWriter(pathDest, StandardCharsets.UTF_8);
 				var jsonWriter = new JsonWriter(writer)
@@ -170,7 +226,8 @@ public class BuiltAsset
 		{
 			Files.createDirectories(file.getParent());
 
-			try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8)) {
+			try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8))
+			{
 				GSON.toJson(contents, writer);
 			}
 		}

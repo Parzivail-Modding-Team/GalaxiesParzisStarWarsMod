@@ -69,6 +69,13 @@ public class ModelFile
 				.texture("layer0", AssetGenerator.getTextureName(block));
 	}
 
+	public static ModelFile blockSeparateItem(Block block)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("item/generated"))
+				.texture("layer0", AssetGenerator.getTextureName(block.asItem()));
+	}
+
 	public static ModelFile item(Block block, Identifier textureName)
 	{
 		return ModelFile
