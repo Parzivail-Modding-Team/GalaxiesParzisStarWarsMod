@@ -1,7 +1,12 @@
 package com.parzivail.util.math;
 
-public record Point(int x, int y)
+public record SpriteSheetPoint(int x, int y, int sheet)
 {
+	public SpriteSheetPoint(int x, int y)
+	{
+		this(x, y, 0);
+	}
+
 	@Override
 	public boolean equals(Object o)
 	{
@@ -10,7 +15,7 @@ public record Point(int x, int y)
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		var point = (Point)o;
+		var point = (SpriteSheetPoint)o;
 
 		if (x != point.x)
 			return false;

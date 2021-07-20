@@ -6,7 +6,7 @@ import com.parzivail.util.client.ConnectedTextureHelper;
 import com.parzivail.util.client.SubSprite;
 import com.parzivail.util.client.model.ClonableUnbakedModel;
 import com.parzivail.util.client.model.DynamicBakedModel;
-import com.parzivail.util.math.Point;
+import com.parzivail.util.math.SpriteSheetPoint;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -36,17 +37,51 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public class ConnectedTextureModel extends DynamicBakedModel
 {
+	private static final Vec3f[] ORIGINS = new Vec3f[6];
+	private static final Vec3f[] DELTAU = new Vec3f[6];
+	private static final Vec3f[] DELTAV = new Vec3f[6];
+
+	static
+	{
+		ORIGINS[Direction.UP.getId()] = new Vec3f(0, 1, 0);
+		ORIGINS[Direction.DOWN.getId()] = new Vec3f(1, 0, 0);
+		ORIGINS[Direction.WEST.getId()] = new Vec3f(0, 1, 0);
+		ORIGINS[Direction.EAST.getId()] = new Vec3f(1, 1, 1);
+		ORIGINS[Direction.NORTH.getId()] = new Vec3f(1, 1, 0);
+		ORIGINS[Direction.SOUTH.getId()] = new Vec3f(0, 1, 1);
+
+		DELTAU[Direction.UP.getId()] = Vec3f.POSITIVE_X;
+		DELTAV[Direction.UP.getId()] = Vec3f.POSITIVE_Z;
+
+		DELTAU[Direction.DOWN.getId()] = Vec3f.NEGATIVE_X;
+		DELTAV[Direction.DOWN.getId()] = Vec3f.POSITIVE_Z;
+
+		DELTAU[Direction.SOUTH.getId()] = Vec3f.POSITIVE_X;
+		DELTAV[Direction.SOUTH.getId()] = Vec3f.NEGATIVE_Y;
+
+		DELTAU[Direction.NORTH.getId()] = Vec3f.NEGATIVE_X;
+		DELTAV[Direction.NORTH.getId()] = Vec3f.NEGATIVE_Y;
+
+		DELTAU[Direction.WEST.getId()] = Vec3f.POSITIVE_Z;
+		DELTAV[Direction.WEST.getId()] = Vec3f.NEGATIVE_Y;
+
+		DELTAU[Direction.EAST.getId()] = Vec3f.NEGATIVE_Z;
+		DELTAV[Direction.EAST.getId()] = Vec3f.NEGATIVE_Y;
+	}
+
 	private final boolean hConnect;
 	private final boolean vConnect;
 	private final boolean lConnect;
+	private final Sprite borderSprite;
 	private final Sprite capSprite;
 
-	public ConnectedTextureModel(boolean hConnect, boolean vConnect, boolean lConnect, Sprite sprite, Sprite capSprite)
+	public ConnectedTextureModel(boolean hConnect, boolean vConnect, boolean lConnect, Sprite blankSprite, Sprite borderSprite, Sprite capSprite)
 	{
-		super(sprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
+		super(blankSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
 		this.hConnect = hConnect;
 		this.vConnect = vConnect;
 		this.lConnect = lConnect;
+		this.borderSprite = borderSprite;
 		this.capSprite = capSprite;
 	}
 
@@ -75,62 +110,51 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		//			model = Client.minecraft.getItemRenderer().getHeldItemModel(new ItemStack(SwgBlocks.Panel.LabWall), null, null);
 		//		}
 
-		//		for (var i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
-		//		{
-		//			if (state != null && !(state.getBlock() instanceof ConnectingBlock))
-		//				continue;
-		//
-		//			final var faceDirection = ModelHelper.faceFromIndex(i);
-		//			if (faceDirection != null)
-		//			{
-		//				final var facingProp = ConnectingBlock.FACING_PROPERTIES.get(faceDirection);
-		//
-		//				if (state != null && state.get(facingProp))
-		//				{
-		//					quadEmitter.emit();
-		//					continue;
-		//				}
-		//			}
-		//
-		//			for (final var q : quads)
-		//			{
-		//				quadEmitter.fromVanilla(q, null, faceDirection);
-		//
-		//				var subSpriteEntry = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, faceDirection, hConnect, vConnect, lConnect);
-		//				var subSpritePoint = subSpriteEntry.Edges();
-		//
-		//				var sprite = modelSprite;
-		//
-		//				if (capSprite != null && (faceDirection == Direction.UP || faceDirection == Direction.DOWN))
-		//					sprite = capSprite;
-		//
-		//				var subSprite = getSubSprite(sprite, 4, 4, subSpritePoint.x(), subSpritePoint.y());
-		//
-		//				quadEmitter.sprite(0, 0, subSprite.minU(), subSprite.minV());
-		//				quadEmitter.sprite(1, 0, subSprite.minU(), subSprite.maxV());
-		//				quadEmitter.sprite(2, 0, subSprite.maxU(), subSprite.maxV());
-		//				quadEmitter.sprite(3, 0, subSprite.maxU(), subSprite.minV());
-		//				quadEmitter.emit();
-		//			}
-		//		}
+		for (var i = 0; i < ModelHelper.NULL_FACE_ID; i++)
+		{
+			if (state != null && !(state.getBlock() instanceof ConnectingBlock))
+				continue;
 
-		var faceDirection = Direction.UP;
+			final var faceDirection = ModelHelper.faceFromIndex(i);
+			if (faceDirection != null)
+			{
+				final var facingProp = ConnectingBlock.FACING_PROPERTIES.get(faceDirection);
 
-		var sprite = modelSprite;
+				if (state != null && state.get(facingProp))
+				{
+					quadEmitter.emit();
+					continue;
+				}
+			}
 
-		if (capSprite != null && (faceDirection == Direction.UP || faceDirection == Direction.DOWN))
-			sprite = capSprite;
+			var sprite = modelSprite;
 
-		Sprite blankSprite = modelSprite; // TODO
+			if (capSprite != null && (faceDirection == Direction.UP || faceDirection == Direction.DOWN))
+				sprite = capSprite;
 
-		emitTopQuad(quadEmitter, blankSprite, sprite, blockView, state, pos);
+			Vec3f min = ORIGINS[faceDirection.getId()];
+			Vec3f dU = DELTAU[faceDirection.getId()];
+			Vec3f dV = DELTAV[faceDirection.getId()];
+
+			emitTopQuad(quadEmitter, sprite, borderSprite, blockView, state, pos, faceDirection, min, dU, dV);
+		}
 
 		return meshBuilder.build();
 	}
 
-	private void emitTopQuad(QuadEmitter quadEmitter, Sprite blankSprite, Sprite borderSprite, BlockRenderView blockView, BlockState state, BlockPos pos)
+	private static Vec3f uv(Vec3f min, Vec3f dU, Vec3f dV, float u, float v)
 	{
-		var subSpriteEntry = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, Direction.UP, hConnect, vConnect, lConnect);
+		return new Vec3f(
+				min.getX() + dU.getX() * u + dV.getX() * v,
+				min.getY() + dU.getY() * u + dV.getY() * v,
+				min.getZ() + dU.getZ() * u + dV.getZ() * v
+		);
+	}
+
+	private void emitTopQuad(QuadEmitter quadEmitter, Sprite blankSprite, Sprite borderSprite, BlockRenderView blockView, BlockState state, BlockPos pos, Direction direction, Vec3f min, Vec3f dU, Vec3f dV)
+	{
+		var subSpriteEntry = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, direction, hConnect, vConnect, lConnect);
+		var normal = direction.getUnitVector();
 
 		if (subSpriteEntry == null)
 		{
@@ -139,17 +163,17 @@ public class ConnectedTextureModel extends DynamicBakedModel
 					.colorIndex(1)
 					.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
 					.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
-					.pos(0, new Vec3f(0, 1, 0))
-					.normal(0, Vec3f.POSITIVE_Y)
+					.pos(0, min)
+					.normal(0, normal)
 					.sprite(0, 0, blankSprite.getMinU(), blankSprite.getMinV())
-					.pos(1, new Vec3f(0, 1, 1))
-					.normal(1, Vec3f.POSITIVE_Y)
+					.pos(1, uv(min, dU, dV, 0, 1))
+					.normal(1, normal)
 					.sprite(1, 0, blankSprite.getMinU(), blankSprite.getMaxV())
-					.pos(2, new Vec3f(1, 1, 1))
-					.normal(2, Vec3f.POSITIVE_Y)
+					.pos(2, uv(min, dU, dV, 1, 1))
+					.normal(2, normal)
 					.sprite(2, 0, blankSprite.getMaxU(), blankSprite.getMaxV())
-					.pos(3, new Vec3f(1, 1, 0))
-					.normal(3, Vec3f.POSITIVE_Y)
+					.pos(3, uv(min, dU, dV, 1, 0))
+					.normal(3, normal)
 					.sprite(3, 0, blankSprite.getMaxU(), blankSprite.getMinV())
 					.emit();
 
@@ -163,17 +187,17 @@ public class ConnectedTextureModel extends DynamicBakedModel
 				.colorIndex(1)
 				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
 				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
-				.pos(0, new Vec3f(0, 1, 0))
-				.normal(0, Vec3f.POSITIVE_Y)
+				.pos(0, min)
+				.normal(0, normal)
 				.sprite(0, 0, subSprite.minU(), subSprite.minV())
-				.pos(1, new Vec3f(0, 1, 0.5f))
-				.normal(1, Vec3f.POSITIVE_Y)
+				.pos(1, uv(min, dU, dV, 0, 0.5f))
+				.normal(1, normal)
 				.sprite(1, 0, subSprite.minU(), subSprite.maxV())
-				.pos(2, new Vec3f(0.5f, 1, 0.5f))
-				.normal(2, Vec3f.POSITIVE_Y)
+				.pos(2, uv(min, dU, dV, 0.5f, 0.5f))
+				.normal(2, normal)
 				.sprite(2, 0, subSprite.maxU(), subSprite.maxV())
-				.pos(3, new Vec3f(0.5f, 1, 0))
-				.normal(3, Vec3f.POSITIVE_Y)
+				.pos(3, uv(min, dU, dV, 0.5f, 0))
+				.normal(3, normal)
 				.sprite(3, 0, subSprite.maxU(), subSprite.minV())
 				.emit();
 
@@ -184,17 +208,17 @@ public class ConnectedTextureModel extends DynamicBakedModel
 				.colorIndex(1)
 				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
 				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
-				.pos(0, new Vec3f(0.5f, 1, 0))
-				.normal(0, Vec3f.POSITIVE_Y)
+				.pos(0, uv(min, dU, dV, 0.5f, 0))
+				.normal(0, normal)
 				.sprite(0, 0, subSprite.minU(), subSprite.minV())
-				.pos(1, new Vec3f(0.5f, 1, 0.5f))
-				.normal(1, Vec3f.POSITIVE_Y)
+				.pos(1, uv(min, dU, dV, 0.5f, 0.5f))
+				.normal(1, normal)
 				.sprite(1, 0, subSprite.minU(), subSprite.maxV())
-				.pos(2, new Vec3f(1, 1, 0.5f))
-				.normal(2, Vec3f.POSITIVE_Y)
+				.pos(2, uv(min, dU, dV, 1, 0.5f))
+				.normal(2, normal)
 				.sprite(2, 0, subSprite.maxU(), subSprite.maxV())
-				.pos(3, new Vec3f(1, 1, 0))
-				.normal(3, Vec3f.POSITIVE_Y)
+				.pos(3, uv(min, dU, dV, 1, 0))
+				.normal(3, normal)
 				.sprite(3, 0, subSprite.maxU(), subSprite.minV())
 				.emit();
 
@@ -205,17 +229,17 @@ public class ConnectedTextureModel extends DynamicBakedModel
 				.colorIndex(1)
 				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
 				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
-				.pos(0, new Vec3f(0, 1, 0.5f))
-				.normal(0, Vec3f.POSITIVE_Y)
+				.pos(0, uv(min, dU, dV, 0, 0.5f))
+				.normal(0, normal)
 				.sprite(0, 0, subSprite.minU(), subSprite.minV())
-				.pos(1, new Vec3f(0, 1, 1))
-				.normal(1, Vec3f.POSITIVE_Y)
+				.pos(1, uv(min, dU, dV, 0, 1))
+				.normal(1, normal)
 				.sprite(1, 0, subSprite.minU(), subSprite.maxV())
-				.pos(2, new Vec3f(0.5f, 1, 1))
-				.normal(2, Vec3f.POSITIVE_Y)
+				.pos(2, uv(min, dU, dV, 0.5f, 1))
+				.normal(2, normal)
 				.sprite(2, 0, subSprite.maxU(), subSprite.maxV())
-				.pos(3, new Vec3f(0.5f, 1, 0.5f))
-				.normal(3, Vec3f.POSITIVE_Y)
+				.pos(3, uv(min, dU, dV, 0.5f, 0.5f))
+				.normal(3, normal)
 				.sprite(3, 0, subSprite.maxU(), subSprite.minV())
 				.emit();
 
@@ -226,29 +250,30 @@ public class ConnectedTextureModel extends DynamicBakedModel
 				.colorIndex(1)
 				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
 				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
-				.pos(0, new Vec3f(0.5f, 1, 0.5f))
-				.normal(0, Vec3f.POSITIVE_Y)
+				.pos(0, uv(min, dU, dV, 0.5f, 0.5f))
+				.normal(0, normal)
 				.sprite(0, 0, subSprite.minU(), subSprite.minV())
-				.pos(1, new Vec3f(0.5f, 1, 1))
-				.normal(1, Vec3f.POSITIVE_Y)
+				.pos(1, uv(min, dU, dV, 0.5f, 1))
+				.normal(1, normal)
 				.sprite(1, 0, subSprite.minU(), subSprite.maxV())
-				.pos(2, new Vec3f(1, 1, 1))
-				.normal(2, Vec3f.POSITIVE_Y)
+				.pos(2, uv(min, dU, dV, 1, 1))
+				.normal(2, normal)
 				.sprite(2, 0, subSprite.maxU(), subSprite.maxV())
-				.pos(3, new Vec3f(1, 1, 0.5f))
-				.normal(3, Vec3f.POSITIVE_Y)
+				.pos(3, uv(min, dU, dV, 1, 0.5f))
+				.normal(3, normal)
 				.sprite(3, 0, subSprite.maxU(), subSprite.minV())
 				.emit();
 	}
 
-	private static SubSprite getSubSprite(Point point, Sprite blankSprite, Sprite borderSprite, int columns, int rows)
+	private static SubSprite getSubSprite(SpriteSheetPoint point, Sprite blankSprite, Sprite borderSprite, int columns, int rows)
 	{
 		var sprite = borderSprite;
 
-		if (point.x() < 0)
+		if (point.sheet() == 1) // "blank" cornerless texture
 		{
 			sprite = blankSprite;
-			point = new Point(-point.x(), -point.y());
+			rows = 2;
+			columns = 2;
 		}
 
 		var spriteWidth = sprite.getMaxU() - sprite.getMinU();
@@ -294,16 +319,18 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		private final boolean vConnect;
 		private final boolean lConnect;
 		private final SpriteIdentifier sprite;
+		private final SpriteIdentifier borderSprite;
 		private final SpriteIdentifier capSprite;
 
-		public Unbaked(boolean hConnect, boolean vConnect, boolean lConnect, SpriteIdentifier sprite, SpriteIdentifier capSprite)
+		public Unbaked(boolean hConnect, boolean vConnect, boolean lConnect, SpriteIdentifier sprite, SpriteIdentifier borderSprite, SpriteIdentifier capSprite)
 		{
 			this.hConnect = hConnect;
 			this.vConnect = vConnect;
 			this.lConnect = lConnect;
 			this.sprite = sprite;
+			this.borderSprite = borderSprite;
 			this.capSprite = capSprite;
-			this.baker = spriteLoader -> new ConnectedTextureModel(hConnect, vConnect, lConnect, spriteLoader.apply(sprite), capSprite == null ? null : spriteLoader.apply(capSprite));
+			this.baker = spriteLoader -> new ConnectedTextureModel(hConnect, vConnect, lConnect, spriteLoader.apply(sprite), spriteLoader.apply(borderSprite), capSprite == null ? null : spriteLoader.apply(capSprite));
 		}
 
 		@Override
@@ -318,6 +345,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 			var ids = new ArrayList<SpriteIdentifier>();
 
 			ids.add(sprite);
+			ids.add(borderSprite);
 
 			if (capSprite != null)
 				ids.add(capSprite);
@@ -339,7 +367,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		@Override
 		public ClonableUnbakedModel copy()
 		{
-			return new Unbaked(hConnect, vConnect, lConnect, sprite, capSprite);
+			return new Unbaked(hConnect, vConnect, lConnect, sprite, borderSprite, capSprite);
 		}
 	}
 }

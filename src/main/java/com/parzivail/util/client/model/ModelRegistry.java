@@ -56,6 +56,7 @@ public enum ModelRegistry implements ModelVariantProvider
 		register(block, true, new ConnectedTextureModel.Unbaked(
 				hConnect, vConnect, lConnect,
 				new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier(id.getNamespace(), "block/" + id.getPath())),
+				new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border")),
 				capTexture == null ? null : new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, capTexture)
 		));
 	}
