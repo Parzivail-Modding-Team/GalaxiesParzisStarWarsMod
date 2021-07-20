@@ -31,9 +31,6 @@ public class MouseMixin
 	private MinecraftClient client;
 
 	@Unique
-	private double cursorSensitivity;
-
-	@Unique
 	private boolean modifyMouse;
 
 	@Unique
@@ -41,21 +38,6 @@ public class MouseMixin
 
 	@Unique
 	private double finalCursorDeltaY;
-
-	// Mixin really hates me doing the way saner way of doing this, so, we went with the cursed one
-	@Inject(
-			at = @At(
-					value = "FIELD",
-					target = "net.minecraft.client.option/GameOptions.smoothCameraEnabled:Z"
-			),
-			method = "updateMouse()V",
-			locals = LocalCapture.CAPTURE_FAILHARD,
-			cancellable = true
-	)
-	public void getSensitivity(CallbackInfo ci, double e, double f, double g, double h)
-	{
-		this.cursorSensitivity = h;
-	}
 
 	@Inject(
 			at = @At(
