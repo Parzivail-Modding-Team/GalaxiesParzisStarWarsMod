@@ -31,6 +31,13 @@ public class BlasterUtil
 
 		var start = new Vec3d(bolt.getX(), bolt.getY() + bolt.getHeight() / 2f, bolt.getZ());
 
+		// TODO: this would be a great slugthrower effect
+//		for (var d = 0; d < range; d++)
+//		{
+//			var vec = start.add(fromDir.multiply(d));
+//			world.addParticle(ParticleTypes.SMOKE, vec.x, vec.y, vec.z, 0, 0, 0);
+//		}
+
 		var hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
 		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.FluidHandling.ANY);
 
