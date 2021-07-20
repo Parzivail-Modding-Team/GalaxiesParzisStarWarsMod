@@ -1,29 +1,71 @@
 package com.parzivail.util.client;
 
+import com.parzivail.util.Lumberjack;
 import com.parzivail.util.math.Point;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ConnectingBlock;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
 public class ConnectedTextureHelper
 {
-	private static final int CONNECTED_UP = 0b0001;
-	private static final int CONNECTED_DOWN = 0b0010;
-	private static final int CONNECTED_LEFT = 0b0100;
-	private static final int CONNECTED_RIGHT = 0b1000;
+	public static record Sides(Point TopLeft, Point TopRight, Point BottomLeft, Point BottomRight)
+	{
+	}
+
+	private static final int CONNECTED_UP = 0b00000001;
+	private static final int CONNECTED_DOWN = 0b00000010;
+	private static final int CONNECTED_LEFT = 0b00000100;
+	private static final int CONNECTED_RIGHT = 0b00001000;
+
+	private static final int CONNECTED_UPLEFT = (CONNECTED_UP | CONNECTED_LEFT);
+	private static final int CONNECTED_UPRIGHT = (CONNECTED_UP | CONNECTED_RIGHT);
+	private static final int CONNECTED_DOWNLEFT = (CONNECTED_DOWN | CONNECTED_LEFT);
+	private static final int CONNECTED_DOWNRIGHT = (CONNECTED_DOWN | CONNECTED_RIGHT);
+
+	private static final int CONNECTED_DIAG_UPLEFT = 0b00010000;
+	private static final int CONNECTED_DIAG_UPRIGHT = 0b00100000;
+	private static final int CONNECTED_DIAG_DOWNLEFT = 0b01000000;
+	private static final int CONNECTED_DIAG_DOWNRIGHT = 0b10000000;
 
 	private static final int MASK_CONNECTIONS_VERT = 0b0011;
 	private static final int MASK_CONNECTIONS_HORIZ = 0b1100;
 
-	private static Point getPointFromConnections(int connections)
+	private static Sides getPointFromConnections(int connections)
 	{
-		var x = getOffset(connections, MASK_CONNECTIONS_HORIZ, CONNECTED_LEFT, CONNECTED_RIGHT);
-		var y = getOffset(connections, MASK_CONNECTIONS_VERT, CONNECTED_UP, CONNECTED_DOWN);
+		if (connections == 0b11111111)
+			return null;
 
-		return new Point(x, y);
+		return new Sides(
+				getCornerConnection(connections, CONNECTED_UP, CONNECTED_LEFT, CONNECTED_DIAG_UPLEFT, 0, 0),
+				getCornerConnection(connections, CONNECTED_UP, CONNECTED_RIGHT, CONNECTED_DIAG_UPRIGHT, 1, 0),
+				getCornerConnection(connections, CONNECTED_DOWN, CONNECTED_LEFT, CONNECTED_DIAG_DOWNLEFT, 0, 1),
+				getCornerConnection(connections, CONNECTED_DOWN, CONNECTED_RIGHT, CONNECTED_DIAG_DOWNRIGHT, 1, 1)
+		);
+	}
+
+	private static Point getCornerConnection(int connections, int vertEdge, int horizEdge, int diagBit, int x, int y)
+	{
+		var edgeMask = vertEdge | horizEdge;
+
+		if ((connections & edgeMask) == 0)
+			return new Point(x, y); // interior corner
+		else if ((connections & edgeMask) == edgeMask)
+		{
+			if ((connections & diagBit) == 0)
+				return new Point(x + 2, y + 2); // exterior corner
+			else
+				return new Point(-x, -y); // no corner
+		}
+		else if ((connections & horizEdge) == horizEdge)
+			return new Point(x + 2, y); // horizontal connection
+		else if ((connections & vertEdge) == vertEdge)
+			return new Point(x, y + 2); // vertical connection
+		else
+		{
+			Lumberjack.debug("Impossible connection case?");
+			return null;
+		}
 	}
 
 	private static int getOffset(int connections, int directionMask, int connectionFlagNear, int connectionFlagFar)
@@ -40,68 +82,90 @@ public class ConnectedTextureHelper
 		return 0;
 	}
 
-	public static Point getConnectedBlockTexture(BlockRenderView blockView, BlockState block, BlockPos pos, Direction facing, boolean horizontalConnect, boolean verticalConnect, boolean lateralConnect)
+	public static Sides getConnectedBlockTexture(BlockRenderView blockView, BlockState block, BlockPos pos, Direction facing, boolean horizontalConnect, boolean verticalConnect, boolean lateralConnect)
 	{
 		if (pos == null)
 			return getPointFromConnections(0);
 
-		BooleanProperty up, down, left, right;
+		Direction up, down, left, right;
 
 		switch (facing)
 		{
 			case DOWN -> {
-				up = lateralConnect ? ConnectingBlock.SOUTH : null;
-				down = lateralConnect ? ConnectingBlock.NORTH : null;
-				left = lateralConnect ? ConnectingBlock.WEST : null;
-				right = lateralConnect ? ConnectingBlock.EAST : null;
+				up = lateralConnect ? Direction.SOUTH : null;
+				down = lateralConnect ? Direction.NORTH : null;
+				left = lateralConnect ? Direction.WEST : null;
+				right = lateralConnect ? Direction.EAST : null;
 			}
 			case UP -> {
-				up = lateralConnect ? ConnectingBlock.NORTH : null;
-				down = lateralConnect ? ConnectingBlock.SOUTH : null;
-				left = lateralConnect ? ConnectingBlock.WEST : null;
-				right = lateralConnect ? ConnectingBlock.EAST : null;
+				up = lateralConnect ? Direction.NORTH : null;
+				down = lateralConnect ? Direction.SOUTH : null;
+				left = lateralConnect ? Direction.WEST : null;
+				right = lateralConnect ? Direction.EAST : null;
 			}
 			case NORTH -> {
-				up = verticalConnect ? ConnectingBlock.UP : null;
-				down = verticalConnect ? ConnectingBlock.DOWN : null;
-				left = horizontalConnect ? ConnectingBlock.EAST : null;
-				right = horizontalConnect ? ConnectingBlock.WEST : null;
+				up = verticalConnect ? Direction.UP : null;
+				down = verticalConnect ? Direction.DOWN : null;
+				left = horizontalConnect ? Direction.EAST : null;
+				right = horizontalConnect ? Direction.WEST : null;
 			}
 			case SOUTH -> {
-				up = verticalConnect ? ConnectingBlock.UP : null;
-				down = verticalConnect ? ConnectingBlock.DOWN : null;
-				left = horizontalConnect ? ConnectingBlock.WEST : null;
-				right = horizontalConnect ? ConnectingBlock.EAST : null;
+				up = verticalConnect ? Direction.UP : null;
+				down = verticalConnect ? Direction.DOWN : null;
+				left = horizontalConnect ? Direction.WEST : null;
+				right = horizontalConnect ? Direction.EAST : null;
 			}
 			case WEST -> {
-				up = verticalConnect ? ConnectingBlock.UP : null;
-				down = verticalConnect ? ConnectingBlock.DOWN : null;
-				left = horizontalConnect ? ConnectingBlock.NORTH : null;
-				right = horizontalConnect ? ConnectingBlock.SOUTH : null;
+				up = verticalConnect ? Direction.UP : null;
+				down = verticalConnect ? Direction.DOWN : null;
+				left = horizontalConnect ? Direction.NORTH : null;
+				right = horizontalConnect ? Direction.SOUTH : null;
 			}
 			case EAST -> {
-				up = verticalConnect ? ConnectingBlock.UP : null;
-				down = verticalConnect ? ConnectingBlock.DOWN : null;
-				left = horizontalConnect ? ConnectingBlock.SOUTH : null;
-				right = horizontalConnect ? ConnectingBlock.NORTH : null;
+				up = verticalConnect ? Direction.UP : null;
+				down = verticalConnect ? Direction.DOWN : null;
+				left = horizontalConnect ? Direction.SOUTH : null;
+				right = horizontalConnect ? Direction.NORTH : null;
 			}
 			default -> throw new IllegalStateException("Unexpected value: " + facing);
 		}
 
 		var connections = 0;
 
-		if (up != null && block.get(up))
+		if (up != null && shouldConnect(blockView, pos, pos.offset(up)))
 			connections |= CONNECTED_UP;
 
-		if (down != null && block.get(down))
+		if (down != null && shouldConnect(blockView, pos, pos.offset(down)))
 			connections |= CONNECTED_DOWN;
 
-		if (left != null && block.get(left))
+		if (left != null && shouldConnect(blockView, pos, pos.offset(left)))
 			connections |= CONNECTED_LEFT;
 
-		if (right != null && block.get(right))
+		if (right != null && shouldConnect(blockView, pos, pos.offset(right)))
 			connections |= CONNECTED_RIGHT;
 
+		if (up != null && left != null && shouldConnect(blockView, pos, pos.offset(up).offset(left)))
+			connections |= CONNECTED_DIAG_UPLEFT;
+
+		if (up != null && right != null && shouldConnect(blockView, pos, pos.offset(up).offset(right)))
+			connections |= CONNECTED_DIAG_UPRIGHT;
+
+		if (down != null && left != null && shouldConnect(blockView, pos, pos.offset(down).offset(left)))
+			connections |= CONNECTED_DIAG_DOWNLEFT;
+
+		if (down != null && right != null && shouldConnect(blockView, pos, pos.offset(down).offset(right)))
+			connections |= CONNECTED_DIAG_DOWNRIGHT;
+
 		return getPointFromConnections(connections);
+	}
+
+	private static boolean shouldConnect(BlockRenderView world, BlockPos a, BlockPos b)
+	{
+		return shouldConnect(world.getBlockState(a), world.getBlockState(b));
+	}
+
+	private static boolean shouldConnect(BlockState a, BlockState b)
+	{
+		return a.isOf(b.getBlock());
 	}
 }

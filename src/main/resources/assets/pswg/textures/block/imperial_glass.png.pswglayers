@@ -1,0 +1,10 @@
+{
+	"layers": [
+		{
+			"texture": "pswg:block/border_imperial_glass"
+		},
+		{
+			"texture": "#this"
+		}
+	]
+}

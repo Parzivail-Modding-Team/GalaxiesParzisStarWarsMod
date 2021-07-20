@@ -6,13 +6,15 @@ import com.parzivail.util.client.ConnectedTextureHelper;
 import com.parzivail.util.client.SubSprite;
 import com.parzivail.util.client.model.ClonableUnbakedModel;
 import com.parzivail.util.client.model.DynamicBakedModel;
+import com.parzivail.util.math.Point;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -24,6 +26,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.*;
@@ -50,7 +53,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	@Override
 	protected Discriminator getDiscriminator()
 	{
-		return Discriminator.BLOCKSTATE;
+		return Discriminator.NONE;
 	}
 
 	@Override
@@ -67,66 +70,194 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		var model = blockModels.getModel(SwgBlocks.Panel.LabWall.getDefaultState());
 
 		// TODO: fix item lighting
-//		if (state == null) // Assume it's an item
-//		{
-//			model = Client.minecraft.getItemRenderer().getHeldItemModel(new ItemStack(SwgBlocks.Panel.LabWall), null, null);
-//		}
+		//		if (state == null) // Assume it's an item
+		//		{
+		//			model = Client.minecraft.getItemRenderer().getHeldItemModel(new ItemStack(SwgBlocks.Panel.LabWall), null, null);
+		//		}
 
-		for (var i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
-		{
-			if (state != null && !(state.getBlock() instanceof ConnectingBlock))
-				continue;
+		//		for (var i = 0; i <= ModelHelper.NULL_FACE_ID; i++)
+		//		{
+		//			if (state != null && !(state.getBlock() instanceof ConnectingBlock))
+		//				continue;
+		//
+		//			final var faceDirection = ModelHelper.faceFromIndex(i);
+		//			if (faceDirection != null)
+		//			{
+		//				final var facingProp = ConnectingBlock.FACING_PROPERTIES.get(faceDirection);
+		//
+		//				if (state != null && state.get(facingProp))
+		//				{
+		//					quadEmitter.emit();
+		//					continue;
+		//				}
+		//			}
+		//
+		//			for (final var q : quads)
+		//			{
+		//				quadEmitter.fromVanilla(q, null, faceDirection);
+		//
+		//				var subSpriteEntry = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, faceDirection, hConnect, vConnect, lConnect);
+		//				var subSpritePoint = subSpriteEntry.Edges();
+		//
+		//				var sprite = modelSprite;
+		//
+		//				if (capSprite != null && (faceDirection == Direction.UP || faceDirection == Direction.DOWN))
+		//					sprite = capSprite;
+		//
+		//				var subSprite = getSubSprite(sprite, 4, 4, subSpritePoint.x(), subSpritePoint.y());
+		//
+		//				quadEmitter.sprite(0, 0, subSprite.minU(), subSprite.minV());
+		//				quadEmitter.sprite(1, 0, subSprite.minU(), subSprite.maxV());
+		//				quadEmitter.sprite(2, 0, subSprite.maxU(), subSprite.maxV());
+		//				quadEmitter.sprite(3, 0, subSprite.maxU(), subSprite.minV());
+		//				quadEmitter.emit();
+		//			}
+		//		}
 
-			final var cullFace = ModelHelper.faceFromIndex(i);
-			if (cullFace != null)
-			{
-				final var facingProp = ConnectingBlock.FACING_PROPERTIES.get(cullFace);
+		var faceDirection = Direction.UP;
 
-				if (state != null && state.get(facingProp))
-				{
-					quadEmitter.emit();
-					continue;
-				}
-			}
+		var sprite = modelSprite;
 
-			final var quads = model.getQuads(state, cullFace, random);
+		if (capSprite != null && (faceDirection == Direction.UP || faceDirection == Direction.DOWN))
+			sprite = capSprite;
 
-			if (quads.isEmpty())
-				continue;
+		Sprite blankSprite = modelSprite; // TODO
 
-			for (final var q : quads)
-			{
-				quadEmitter.fromVanilla(q, null, cullFace);
-
-				var subSpritePoint = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, cullFace, hConnect, vConnect, lConnect);
-
-				var sprite = modelSprite;
-
-				if (capSprite != null && (cullFace == Direction.UP || cullFace == Direction.DOWN))
-					sprite = capSprite;
-
-				var subSprite = getSubSprite(sprite, 4, 4, subSpritePoint.x(), subSpritePoint.y());
-
-				quadEmitter.sprite(0, 0, subSprite.minU(), subSprite.minV());
-				quadEmitter.sprite(1, 0, subSprite.minU(), subSprite.maxV());
-				quadEmitter.sprite(2, 0, subSprite.maxU(), subSprite.maxV());
-				quadEmitter.sprite(3, 0, subSprite.maxU(), subSprite.minV());
-				quadEmitter.emit();
-			}
-		}
+		emitTopQuad(quadEmitter, blankSprite, sprite, blockView, state, pos);
 
 		return meshBuilder.build();
 	}
 
-	private static SubSprite getSubSprite(Sprite sprite, int columns, int rows, int x, int y)
+	private void emitTopQuad(QuadEmitter quadEmitter, Sprite blankSprite, Sprite borderSprite, BlockRenderView blockView, BlockState state, BlockPos pos)
 	{
+		var subSpriteEntry = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, Direction.UP, hConnect, vConnect, lConnect);
+
+		if (subSpriteEntry == null)
+		{
+			// No corners or edges
+			quadEmitter
+					.colorIndex(1)
+					.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
+					.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
+					.pos(0, new Vec3f(0, 1, 0))
+					.normal(0, Vec3f.POSITIVE_Y)
+					.sprite(0, 0, blankSprite.getMinU(), blankSprite.getMinV())
+					.pos(1, new Vec3f(0, 1, 1))
+					.normal(1, Vec3f.POSITIVE_Y)
+					.sprite(1, 0, blankSprite.getMinU(), blankSprite.getMaxV())
+					.pos(2, new Vec3f(1, 1, 1))
+					.normal(2, Vec3f.POSITIVE_Y)
+					.sprite(2, 0, blankSprite.getMaxU(), blankSprite.getMaxV())
+					.pos(3, new Vec3f(1, 1, 0))
+					.normal(3, Vec3f.POSITIVE_Y)
+					.sprite(3, 0, blankSprite.getMaxU(), blankSprite.getMinV())
+					.emit();
+
+			return;
+		}
+
+		// top left
+		var subSprite = getSubSprite(subSpriteEntry.TopLeft(), blankSprite, borderSprite, 4, 4);
+
+		quadEmitter
+				.colorIndex(1)
+				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
+				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
+				.pos(0, new Vec3f(0, 1, 0))
+				.normal(0, Vec3f.POSITIVE_Y)
+				.sprite(0, 0, subSprite.minU(), subSprite.minV())
+				.pos(1, new Vec3f(0, 1, 0.5f))
+				.normal(1, Vec3f.POSITIVE_Y)
+				.sprite(1, 0, subSprite.minU(), subSprite.maxV())
+				.pos(2, new Vec3f(0.5f, 1, 0.5f))
+				.normal(2, Vec3f.POSITIVE_Y)
+				.sprite(2, 0, subSprite.maxU(), subSprite.maxV())
+				.pos(3, new Vec3f(0.5f, 1, 0))
+				.normal(3, Vec3f.POSITIVE_Y)
+				.sprite(3, 0, subSprite.maxU(), subSprite.minV())
+				.emit();
+
+		// top right
+		subSprite = getSubSprite(subSpriteEntry.TopRight(), blankSprite, borderSprite, 4, 4);
+
+		quadEmitter
+				.colorIndex(1)
+				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
+				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
+				.pos(0, new Vec3f(0.5f, 1, 0))
+				.normal(0, Vec3f.POSITIVE_Y)
+				.sprite(0, 0, subSprite.minU(), subSprite.minV())
+				.pos(1, new Vec3f(0.5f, 1, 0.5f))
+				.normal(1, Vec3f.POSITIVE_Y)
+				.sprite(1, 0, subSprite.minU(), subSprite.maxV())
+				.pos(2, new Vec3f(1, 1, 0.5f))
+				.normal(2, Vec3f.POSITIVE_Y)
+				.sprite(2, 0, subSprite.maxU(), subSprite.maxV())
+				.pos(3, new Vec3f(1, 1, 0))
+				.normal(3, Vec3f.POSITIVE_Y)
+				.sprite(3, 0, subSprite.maxU(), subSprite.minV())
+				.emit();
+
+		// bottom left
+		subSprite = getSubSprite(subSpriteEntry.BottomLeft(), blankSprite, borderSprite, 4, 4);
+
+		quadEmitter
+				.colorIndex(1)
+				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
+				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
+				.pos(0, new Vec3f(0, 1, 0.5f))
+				.normal(0, Vec3f.POSITIVE_Y)
+				.sprite(0, 0, subSprite.minU(), subSprite.minV())
+				.pos(1, new Vec3f(0, 1, 1))
+				.normal(1, Vec3f.POSITIVE_Y)
+				.sprite(1, 0, subSprite.minU(), subSprite.maxV())
+				.pos(2, new Vec3f(0.5f, 1, 1))
+				.normal(2, Vec3f.POSITIVE_Y)
+				.sprite(2, 0, subSprite.maxU(), subSprite.maxV())
+				.pos(3, new Vec3f(0.5f, 1, 0.5f))
+				.normal(3, Vec3f.POSITIVE_Y)
+				.sprite(3, 0, subSprite.maxU(), subSprite.minV())
+				.emit();
+
+		// bottom right
+		subSprite = getSubSprite(subSpriteEntry.BottomRight(), blankSprite, borderSprite, 4, 4);
+
+		quadEmitter
+				.colorIndex(1)
+				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
+				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
+				.pos(0, new Vec3f(0.5f, 1, 0.5f))
+				.normal(0, Vec3f.POSITIVE_Y)
+				.sprite(0, 0, subSprite.minU(), subSprite.minV())
+				.pos(1, new Vec3f(0.5f, 1, 1))
+				.normal(1, Vec3f.POSITIVE_Y)
+				.sprite(1, 0, subSprite.minU(), subSprite.maxV())
+				.pos(2, new Vec3f(1, 1, 1))
+				.normal(2, Vec3f.POSITIVE_Y)
+				.sprite(2, 0, subSprite.maxU(), subSprite.maxV())
+				.pos(3, new Vec3f(1, 1, 0.5f))
+				.normal(3, Vec3f.POSITIVE_Y)
+				.sprite(3, 0, subSprite.maxU(), subSprite.minV())
+				.emit();
+	}
+
+	private static SubSprite getSubSprite(Point point, Sprite blankSprite, Sprite borderSprite, int columns, int rows)
+	{
+		var sprite = borderSprite;
+
+		if (point.x() < 0)
+		{
+			sprite = blankSprite;
+			point = new Point(-point.x(), -point.y());
+		}
+
 		var spriteWidth = sprite.getMaxU() - sprite.getMinU();
 		var spriteHeight = sprite.getMaxV() - sprite.getMinV();
 
 		var columnSpan = spriteWidth / columns;
 		var rowSpan = spriteHeight / rows;
 
-		return new SubSprite(sprite.getMinU() + x * columnSpan, sprite.getMinV() + y * rowSpan, sprite.getMinU() + (x + 1) * columnSpan, sprite.getMinV() + (y + 1) * rowSpan);
+		return new SubSprite(sprite.getMinU() + point.x() * columnSpan, sprite.getMinV() + point.y() * rowSpan, sprite.getMinU() + (point.x() + 1) * columnSpan, sprite.getMinV() + (point.y() + 1) * rowSpan);
 	}
 
 	@Override
