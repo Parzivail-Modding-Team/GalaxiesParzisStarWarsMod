@@ -5,8 +5,10 @@ import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 public class SpeederEntity extends ShipEntity
@@ -32,7 +34,7 @@ public class SpeederEntity extends ShipEntity
 	{
 		super.tick();
 
-		var d = getMaxHeightInPatch(getPos(), 2 * getThrottle(), 5);
+		var d = getMaxHeightInPatch(getPos(), 1 + getThrottle(), 2, 5);
 		var setpoint = getRepulsorSetpoint();
 		if (Math.abs(d - setpoint) < 0.05f)
 			d = setpoint;
@@ -40,15 +42,27 @@ public class SpeederEntity extends ShipEntity
 		this.move(MovementType.SELF, new Vec3d(0, (d - setpoint) / 5f, 0));
 	}
 
-	protected double getMaxHeightInPatch(Vec3d start, double spacing, double range)
+	protected double getMaxHeightInPatch(Vec3d start, double spacingForward, double spacingSideways, double range)
 	{
 		var d = -Double.MAX_VALUE;
 
+		var yaw = getYaw();
+		var left = new Vec3d(Math.cos(yaw / 180 * Math.PI), 0, Math.sin(yaw / 180 * Math.PI));
+
+		yaw += 90;
+		var forward = new Vec3d(Math.cos(yaw / 180 * Math.PI), 0, Math.sin(yaw / 180 * Math.PI));
+
+		var invSidewaysSpacing = spacingForward > 1 ? 1 / spacingForward : 1;
+
 		for (var x = -1; x <= 1; x++)
 		{
-			for (var z = -1; z <= 1; z++)
+			for (double z = 0; z <= 1; z += invSidewaysSpacing)
 			{
-				var blockHit = EntityUtil.raycastBlocks(start.add(new Vec3d(x * spacing, range, z * spacing)), MathUtil.NEGY, range * 2, this);
+				var pos = start.add(left.multiply(x * spacingSideways)).add(forward.multiply(z * spacingForward * 3));
+
+				world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0.0D, 0.0D, 0.0D);
+
+				var blockHit = EntityUtil.raycastBlocks(pos, MathUtil.NEGY, range * 2, this, RaycastContext.FluidHandling.SOURCE_ONLY);
 				var blockDistance = blockHit.getType() == HitResult.Type.MISS ? -range : (blockHit.getPos().y - start.y);
 
 				if (blockDistance > d)

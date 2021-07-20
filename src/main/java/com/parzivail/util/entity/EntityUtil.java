@@ -55,10 +55,10 @@ public class EntityUtil
 		return null;
 	}
 
-	public static BlockHitResult raycastBlocks(Vec3d startPos, Vec3d fromDir, double distance, Entity fromEntity)
+	public static BlockHitResult raycastBlocks(Vec3d startPos, Vec3d fromDir, double distance, Entity fromEntity, RaycastContext.FluidHandling fluidHandling)
 	{
 		var end = startPos.add(fromDir.multiply(distance));
-		return fromEntity.world.raycast(new RaycastContext(startPos, end, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, fromEntity));
+		return fromEntity.world.raycast(new RaycastContext(startPos, end, RaycastContext.ShapeType.COLLIDER, fluidHandling, fromEntity));
 	}
 
 	public static void setVelocityFromAngles(Entity entity, float pitch, float yaw, float roll, float scalar)

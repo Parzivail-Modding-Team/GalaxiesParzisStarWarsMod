@@ -9,6 +9,7 @@ import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.function.Consumer;
@@ -31,7 +32,7 @@ public class BlasterUtil
 		var start = new Vec3d(bolt.getX(), bolt.getY() + bolt.getHeight() / 2f, bolt.getZ());
 
 		var hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
-		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player);
+		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.FluidHandling.ANY);
 
 		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
 		var blockDistance = blockHit.getType() == HitResult.Type.MISS ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
