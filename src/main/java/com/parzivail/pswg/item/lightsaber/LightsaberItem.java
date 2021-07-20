@@ -6,9 +6,11 @@ import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.render.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
+import com.parzivail.util.item.IItemEntityConsumer;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -23,7 +25,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality, IDefaultNbtProvider
+public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityConsumer
 {
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
@@ -86,6 +88,14 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
 		LightsaberTag.mutate(stack, LightsaberTag::tick);
+	}
+
+	@Override
+	public void onItemEntityCreated(ItemEntity entity, ItemStack stack)
+	{
+		LightsaberTag.mutate(stack, lightsaberTag -> {
+			lightsaberTag.finalizeMovement();
+		});
 	}
 
 	@Override
