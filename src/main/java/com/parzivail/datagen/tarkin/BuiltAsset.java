@@ -151,6 +151,18 @@ public class BuiltAsset
 		cleanDirectoryOf(parentDir.toFile(), "json");
 	}
 
+	public static void nukeBlockLootTables() throws IOException
+	{
+		var dummyAsset = getLootTablePath(Resources.id("blocks/dummy"));
+
+		var parentDir = dummyAsset.getParent();
+
+		if (!Files.exists(parentDir))
+			return;
+
+		cleanDirectoryOf(parentDir.toFile(), "json");
+	}
+
 	public static void nukeBlockstateDir() throws IOException
 	{
 		var dummyAsset = getBlockstatePath(Resources.id("dummy"));

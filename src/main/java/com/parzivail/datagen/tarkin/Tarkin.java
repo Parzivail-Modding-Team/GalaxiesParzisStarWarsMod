@@ -40,6 +40,7 @@ public class Tarkin
 		BuiltAsset.nukeBlockstateDir();
 		BuiltAsset.nukeBlockModelJsons();
 		BuiltAsset.nukeItemModelJsons();
+		BuiltAsset.nukeBlockLootTables();
 
 		for (var asset : assets)
 		{
