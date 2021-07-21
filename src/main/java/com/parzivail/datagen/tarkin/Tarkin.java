@@ -1088,39 +1088,18 @@ public class Tarkin
 		              .itemModel(ModelFile::blockSeparateItem).build(assets);
 
 		// TODO: adjust loot table to match vanilla raw ores
-		BlockGenerator.basic(SwgBlocks.Ore.Beskar)
-		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Beskar))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Chromium)
-		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Chromium))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Cortosis)
-		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Cortosis))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Desh)
-		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Desh))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Diatium)
-		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Diatium))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Titanium)
-		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Titanium))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Ionite)
-		              .lootTable(block -> LootTableFile.singleFortuneBonus(block, SwgItems.RawOre.Ionite))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Zersium)
-		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Zersium, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Lommite)
-		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Lommite, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Helicite)
-		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Helicite, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Ore.Thorilide)
-		              .lootTable(block -> LootTableFile.many(block, SwgItems.Crystal.Thorilide, new LootTableFile.Pool.Entry.CountFunction.Range(1, 3, new Identifier("uniform"))))
-		              .build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Beskar, SwgItems.RawOre.Beskar).build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Chromium, SwgItems.RawOre.Chromium).build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Cortosis, SwgItems.RawOre.Cortosis).build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Desh, SwgItems.RawOre.Desh).build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Diatium, SwgItems.RawOre.Diatium).build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Titanium, SwgItems.RawOre.Titanium).build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Ionite, SwgItems.RawOre.Ionite).build(assets);
+
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.Zersium, SwgItems.Crystal.Zersium, 1, 3).build(assets);
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.Lommite, SwgItems.Crystal.Lommite, 1, 3).build(assets);
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.Helicite, SwgItems.Crystal.Helicite, 1, 3).build(assets);
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.Thorilide, SwgItems.Crystal.Thorilide, 1, 3).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank).build(assets);
 		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelBlank).build(assets);

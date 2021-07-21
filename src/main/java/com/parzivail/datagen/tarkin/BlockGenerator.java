@@ -2,6 +2,7 @@ package com.parzivail.datagen.tarkin;
 
 import net.minecraft.block.Block;
 import net.minecraft.data.client.model.BlockStateSupplier;
+import net.minecraft.item.Item;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -180,6 +181,17 @@ public class BlockGenerator
 		return basic(block)
 				.model(ModelFile::tintedCross)
 				.itemModel(ModelFile::item);
+	}
+
+	public static BlockGenerator basicDropMany(Block block, Item item, int min, int max)
+	{
+		return BlockGenerator.basic(block)
+		                     .lootTable(block1 -> LootTableFile.many(block1, item, new LootTableFile.Pool.Entry.CountFunction.Range(min, max, new Identifier("uniform"))));
+	}
+
+	public static BlockGenerator basicDropFortuneBonus(Block block, Item item)
+	{
+		return BlockGenerator.basic(block).lootTable(block1 -> LootTableFile.singleFortuneBonus(block1, item));
 	}
 
 	@FunctionalInterface
