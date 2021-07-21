@@ -345,6 +345,8 @@ public class SwgBlocks
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).breakByTool(FabricToolTags.PICKAXES, 3).requiresTool());
 		@RegistryName("zersium_block")
 		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
+		@RegistryName("helicite_block")
+		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
 		@RegistryName("thorilide_block")
 		public static final Block Thorilide = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).breakByTool(FabricToolTags.PICKAXES, 1).requiresTool());
 	}

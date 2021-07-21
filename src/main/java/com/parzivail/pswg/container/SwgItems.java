@@ -107,8 +107,8 @@ public class SwgItems
 
 	public static class Dust
 	{
-		@RegistryName("ionite_dust")
-		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("helicite_dust")
+		public static final Item Helicite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("lommite_dust")
 		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("thorilide_dust")
@@ -123,8 +123,6 @@ public class SwgItems
 		public static final Item Exonium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("helicite_crystal")
 		public static final Item Helicite = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("ionite_crystal")
-		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("lommite_crystal")
 		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("thorilide_crystal")
@@ -153,6 +151,8 @@ public class SwgItems
 		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_nugget")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("ionite_nugget")
+		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Ingot
@@ -175,6 +175,8 @@ public class SwgItems
 		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_ingot")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("ionite_ingot")
+		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("transparisteel_ingot")
 		public static final Item Transparisteel = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
@@ -199,6 +201,8 @@ public class SwgItems
 		public static final Item Rubindum = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("raw_titanium")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("raw_ionite")
+		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Food
