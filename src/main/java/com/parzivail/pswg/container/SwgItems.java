@@ -58,8 +58,6 @@ public class SwgItems
 
 		@RegistryName("plasteel_rod")
 		public static final Item PlasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("zersium_rod")
-		public static final Item ZersiumRod = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("durasteel_rod")
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
 
@@ -111,6 +109,12 @@ public class SwgItems
 	{
 		@RegistryName("ionite_dust")
 		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("lommite_dust")
+		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("thorilide_dust")
+		public static final Item Thorilide = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("zersium_dust")
+		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Crystal
@@ -125,6 +129,14 @@ public class SwgItems
 		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("thorilide_crystal")
 		public static final Item Thorilide = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("zersium_crystal")
+		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
+	public static class Shard
+	{
+		@RegistryName("rubindum_shard")
+		public static final Item Rubindum = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Nugget
@@ -137,14 +149,10 @@ public class SwgItems
 		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("durasteel_nugget")
 		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("lommite_nugget")
-		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("plasteel_nugget")
 		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_nugget")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("zersium_nugget")
-		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Ingot
@@ -157,20 +165,18 @@ public class SwgItems
 		public static final Item Cortosis = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("desh_ingot")
 		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("kelerium_ingot")
+		public static final Item Kelerium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("diatium_ingot")
 		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("durasteel_ingot")
 		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("lommite_ingot")
-		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("plasteel_ingot")
 		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("titanium_ingot")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("transparisteel_ingot")
 		public static final Item Transparisteel = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("zersium_ingot")
-		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	// TODO: some of these might belong into Crystal, or somewhere else.
@@ -193,8 +199,6 @@ public class SwgItems
 		public static final Item Rubindum = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("raw_titanium")
 		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.Tab));
-		@RegistryName("raw_zersium")
-		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Food

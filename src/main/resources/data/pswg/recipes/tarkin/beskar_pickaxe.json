@@ -1,1 +1,1 @@
-{"type":"minecraft:crafting_shaped","group":"pswg:beskar_pickaxe","pattern":["aaa"," b "," b "],"key":{"b":{"item":"pswg:zersium_rod"},"a":{"item":"pswg:beskar_ingot"}},"result":{"item":"pswg:beskar_pickaxe","count":1}}
+{"type":"minecraft:crafting_shaped","group":"pswg:beskar_pickaxe","pattern":["aaa"," b "," b "],"key":{"a":{"item":"pswg:beskar_ingot"},"b":{"item":"pswg:durasteel_rod"}},"result":{"item":"pswg:beskar_pickaxe","count":1}}

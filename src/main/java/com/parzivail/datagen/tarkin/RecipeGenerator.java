@@ -27,6 +27,15 @@ public abstract class RecipeGenerator
 		       .build(assets);
 	}
 
+	public static void buildCrystal(List<BuiltAsset> assets, ItemConvertible dust, ItemConvertible crystal, ItemConvertible block)
+	{
+		Shapeless.of(new ItemStack(dust, 2), "crystal")
+		         .ingredient(crystal)
+		         .build(assets);
+
+		buildReversible9to1(assets, crystal, "crystal", block, "block");
+	}
+
 	public static void buildMetal(List<BuiltAsset> assets, float experience, ItemConvertible ore, ItemConvertible rawOre, ItemConvertible ingot, ItemConvertible block)
 	{
 		buildOreToIngot(assets, experience, ore, rawOre, ingot);
