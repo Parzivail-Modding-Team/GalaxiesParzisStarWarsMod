@@ -130,14 +130,15 @@ public class Tarkin
 
 		for (var species : SwgSpeciesRegistry.getSpecies())
 		{
-			var speciesSlug = species.getSlug();
-
-			var speciesLang = speciesLangBase.dot(speciesSlug.getPath());
+			var speciesLang = speciesLangBase.dot(species.getSlug().getPath());
 			speciesLang.build(assets);
 
 			for (var variable : species.getVariables())
 			{
-				var variableLang = speciesLang.dot(variable.getName());
+				var variableLangBase = speciesLangBase.dot(variable.getSpeciesSlug().getPath());
+				variableLangBase.build(assets);
+
+				var variableLang = variableLangBase.dot(variable.getName());
 				variableLang.build(assets);
 
 				for (var value : variable.getPossibleValues())

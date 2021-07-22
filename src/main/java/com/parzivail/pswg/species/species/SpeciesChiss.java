@@ -13,7 +13,7 @@ import java.util.Collection;
 public class SpeciesChiss extends SwgSpecies
 {
 	private static final SpeciesVariable VAR_EYEBROWS = new SpeciesVariable(
-			SwgSpeciesRegistry.SPECIES_CHISS,
+			SwgSpeciesRegistry.SPECIES_HUMANOID,
 			"eyebrows",
 			"black",
 			"black",
@@ -21,7 +21,7 @@ public class SpeciesChiss extends SwgSpecies
 	);
 
 	private static final SpeciesVariable VAR_HAIR = new SpeciesVariable(
-			SwgSpeciesRegistry.SPECIES_CHISS,
+			SwgSpeciesRegistry.SPECIES_HUMANOID,
 			"hair",
 			"black_1",
 			"black_1",

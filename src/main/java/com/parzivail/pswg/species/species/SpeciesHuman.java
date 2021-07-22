@@ -24,7 +24,7 @@ public class SpeciesHuman extends SwgSpecies
 	);
 
 	private static final SpeciesVariable VAR_EYEBROWS = new SpeciesVariable(
-			SwgSpeciesRegistry.SPECIES_HUMAN,
+			SwgSpeciesRegistry.SPECIES_HUMANOID,
 			"eyebrows",
 			"black",
 			"black",
@@ -34,7 +34,7 @@ public class SpeciesHuman extends SwgSpecies
 	);
 
 	private static final SpeciesVariable VAR_HAIR = new SpeciesVariable(
-			SwgSpeciesRegistry.SPECIES_HUMAN,
+			SwgSpeciesRegistry.SPECIES_HUMANOID,
 			"hair",
 			"brown_1",
 			"black_1",

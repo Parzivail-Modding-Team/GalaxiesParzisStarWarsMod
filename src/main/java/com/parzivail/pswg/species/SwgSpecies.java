@@ -25,12 +25,12 @@ public abstract class SwgSpecies
 
 	protected static Identifier getTexture(SwgSpecies species, SpeciesVariable texture)
 	{
-		return getTexture(species.getSlug(), texture.getName() + "/" + species.getVariable(texture));
+		return getTexture(texture.getSpeciesSlug(), texture.getName() + "/" + species.getVariable(texture));
 	}
 
 	protected static Identifier getGenderedTexture(SwgSpecies species, SpeciesVariable texture)
 	{
-		return getTexture(SpeciesGender.toModel(species), texture.getName() + "/" + species.getVariable(texture));
+		return getTexture(SpeciesGender.toModel(texture.getSpeciesSlug(), species.gender), texture.getName() + "/" + species.getVariable(texture));
 	}
 
 	protected static Identifier getGenderedTexture(SwgSpecies species, String texture)

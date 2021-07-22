@@ -22,6 +22,7 @@ public class SwgSpeciesRegistry
 
 	// Species with special meaning internally
 	public static final Identifier SPECIES_GLOBAL = Resources.id("global"); // "global" species contains shared textures
+	public static final Identifier SPECIES_HUMANOID = Resources.id("humanoid"); // "humanoid" species contains shared textures for the "human" model
 	public static final Identifier SPECIES_NONE = new Identifier("none"); // "none" species delegates player models back to Minecraft
 
 	// Normal species and variants

@@ -45,6 +45,11 @@ public class SpeciesVariable
 		return SwgSpeciesRegistry.getTranslationKey(species) + "." + name;
 	}
 
+	public Identifier getSpeciesSlug()
+	{
+		return species;
+	}
+
 	public String getTranslationFor(String value)
 	{
 		return getTranslationKey() + "." + value;
