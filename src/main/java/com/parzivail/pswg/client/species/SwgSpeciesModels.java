@@ -39,6 +39,7 @@ public class SwgSpeciesModels
 		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, nemSource(Resources.id("species/togruta_m")), nemSource(Resources.id("species/togruta_f")));
 		register(SwgSpeciesRegistry.SPECIES_TWILEK, nemSource(Resources.id("species/twilek")));
 		register(SwgSpeciesRegistry.SPECIES_HUMAN, nemSource(Resources.id("species/human")));
+		register(SwgSpeciesRegistry.SPECIES_CHISS, nemSource(Resources.id("species/human")));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
 	}

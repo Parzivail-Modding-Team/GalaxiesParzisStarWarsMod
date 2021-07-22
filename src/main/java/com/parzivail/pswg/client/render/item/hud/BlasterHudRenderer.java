@@ -26,6 +26,11 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	@Override
 	public boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
 	{
+		var bd = BlasterItem.getBlasterDescriptor(player.world, stack);
+
+		if (bd == null)
+			return false;
+
 		var client = MinecraftClient.getInstance();
 		var scaledWidth = client.getWindow().getScaledWidth();
 		var scaledHeight = client.getWindow().getScaledHeight();
@@ -40,7 +45,6 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 		var b = (BlasterItem)stack.getItem();
 		var bt = new BlasterTag(stack.getOrCreateTag());
-		var bd = BlasterItem.getBlasterDescriptor(player.world, stack);
 
 		var profile = bd.cooling;
 		final var crosshairIdx = 0;
