@@ -2,6 +2,7 @@ package com.parzivail.pswg.species;
 
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.species.SpeciesTogruta;
+import com.parzivail.util.client.TintedIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.util.Identifier;
@@ -53,6 +54,11 @@ public abstract class SwgSpecies
 		return new Identifier(slug.getNamespace(), "textures/species/" + slug.getPath() + "/" + texture + ".png");
 	}
 
+	protected static TintedIdentifier tint(Identifier texture, int color)
+	{
+		return new TintedIdentifier(texture.getNamespace(), texture.getPath(), color);
+	}
+
 	protected final Map<String, String> variables = new HashMap<>();
 	protected Identifier model;
 	protected SpeciesGender gender;
@@ -90,7 +96,7 @@ public abstract class SwgSpecies
 	public abstract SpeciesVariable[] getVariables();
 
 	@Environment(EnvType.CLIENT)
-	public abstract Collection<Identifier> getTextureStack();
+	public abstract Collection<Identifier> getTextureStack(SwgSpecies species);
 
 	public void setDefaultVariables()
 	{

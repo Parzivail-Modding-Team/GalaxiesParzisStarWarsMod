@@ -38,7 +38,7 @@ public class SpeciesChagrian extends SwgSpecies
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public Collection<Identifier> getTextureStack()
+	public Collection<Identifier> getTextureStack(SwgSpecies species)
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));

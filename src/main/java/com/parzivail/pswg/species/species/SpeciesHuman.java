@@ -74,13 +74,13 @@ public class SpeciesHuman extends SwgSpecies
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public Collection<Identifier> getTextureStack()
+	public Collection<Identifier> getTextureStack(SwgSpecies species)
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_SKINTONE));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
 		stack.add(getGenderedGlobalTexture(gender, "clothes"));
-		stack.add(getGlobalTexture("eyes"));
+		stack.add(tint(getGlobalTexture("eyes"), 0xFFFFFF));
 		stack.add(getTexture(this, VAR_HAIR));
 		return stack;
 	}

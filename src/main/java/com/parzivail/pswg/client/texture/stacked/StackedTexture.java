@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.texture.stacked;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.util.client.ColorUtil;
+import com.parzivail.util.client.TintedIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -71,11 +72,20 @@ public class StackedTexture extends ResourceTexture
 		});
 
 		var nativeImages = new NativeImage[textures.length];
+		var tints = new int[textures.length];
 
 		for (var i = 0; i < textures.length; i++)
 		{
-			var texData = TextureData.load(manager, textures[i]);
+			var textureId = textures[i];
 
+			if (textureId instanceof TintedIdentifier ti)
+				tints[i] = ti.getTint();
+			else
+				tints[i] = 0xFFFFFF;
+
+			var texData = TextureData.load(manager, textureId);
+
+			// TODO: allow tint encoding for layers
 			nativeImages[i] = texData.getImage();
 
 			if (nativeImages[i].getWidth() != nativeImages[0].getWidth() || nativeImages[i].getHeight() != nativeImages[0].getHeight())
@@ -93,7 +103,7 @@ public class StackedTexture extends ResourceTexture
 			for (var x = 0; x < width; x++)
 			{
 				for (var y = 0; y < height; y++)
-					base.setPixelColor(x, y, ColorUtil.blendColorsOnSrcAlpha(base.getPixelColor(x, y), layerImage.getPixelColor(x, y), 0xFFFFFF));
+					base.setPixelColor(x, y, ColorUtil.blendColorsOnSrcAlpha(base.getPixelColor(x, y), layerImage.getPixelColor(x, y), tints[i]));
 			}
 		}
 
