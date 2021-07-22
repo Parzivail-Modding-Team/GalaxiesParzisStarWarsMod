@@ -33,11 +33,12 @@ public class SwgSpeciesModels
 		register(SwgSpeciesRegistry.SPECIES_AQUALISH, nemSource(Resources.id("species/aqualish")));
 		register(SwgSpeciesRegistry.SPECIES_BITH, nemSource(Resources.id("species/bith")));
 		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
-		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, EMPTY_MODEL);
+		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, nemSource(Resources.id("species/chagrian")));
 		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, nemSource(Resources.id("species/kaminoan")));
 		register(SwgSpeciesRegistry.SPECIES_JAWA, nemSource(Resources.id("species/jawa")));
 		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, nemSource(Resources.id("species/togruta_m")), nemSource(Resources.id("species/togruta_f")));
 		register(SwgSpeciesRegistry.SPECIES_TWILEK, nemSource(Resources.id("species/twilek")));
+		register(SwgSpeciesRegistry.SPECIES_HUMAN, nemSource(Resources.id("species/human")));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
 	}

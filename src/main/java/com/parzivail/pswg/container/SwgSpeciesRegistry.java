@@ -33,6 +33,7 @@ public class SwgSpeciesRegistry
 	public static final Identifier SPECIES_KAMINOAN = Resources.id("kaminoan");
 	public static final Identifier SPECIES_TOGRUTA = Resources.id("togruta");
 	public static final Identifier SPECIES_TWILEK = Resources.id("twilek");
+	public static final Identifier SPECIES_HUMAN = Resources.id("human");
 
 	static
 	{
@@ -44,6 +45,7 @@ public class SwgSpeciesRegistry
 //		SPECIES.put(SwgSpeciesRegistry.SPECIES_KAMINOAN, SpeciesKaminoan::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_TOGRUTA, SpeciesTogruta::new);
 		SPECIES.put(SwgSpeciesRegistry.SPECIES_TWILEK, SpeciesTwilek::new);
+		SPECIES.put(SwgSpeciesRegistry.SPECIES_HUMAN, SpeciesHuman::new);
 	}
 
 	public static List<SwgSpecies> getSpecies()

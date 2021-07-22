@@ -275,7 +275,8 @@ public class SpeciesSelectScreen extends Screen
 				mat2.scale(scale, scale, scale);
 				mat2.translate(0, modelSize, 0);
 
-				drawEntity(mat2, selectedSpecies.serialize(), 0, 0, modelSize, (float)(x - mouseX + offset), y - modelSize / 2f - mouseY);
+				if (scale > 0)
+					drawEntity(mat2, selectedSpecies.serialize(), 0, 0, modelSize, (float)(x - mouseX + offset), y - modelSize / 2f - mouseY);
 
 				mat2.pop();
 			}
