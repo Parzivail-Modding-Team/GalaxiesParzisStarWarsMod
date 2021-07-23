@@ -129,7 +129,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		this.playerInventoryTitleY = this.backgroundHeight - 94;
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 
-		Function<Double, String> valueFormatter = value -> String.format("%s", (int)Math.round(value * 1000) / 1000f);
+		Function<Double, String> valueFormatter = value -> String.format("%.3f", (int)Math.round(value * 1000) / 1000f);
 
 		this.addDrawableChild(sliderHue = new MutableSlider(x + 41, y + 59, 100, 20, "Hue: %s", hue, valueFormatter, slider -> {
 			hue = (float)slider.getValue();
@@ -236,14 +236,15 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		final var stencilWidth = 238;
 		final var stencilHeight = 39;
 
-		final var hiltLength = 70;
+		final var hiltLength = 60;
 
 		matrices.push();
-		matrices.translate(x + stencilX + hiltLength, y + stencilY + stencilHeight / 2f, 100);
+		matrices.translate(x + stencilX + hiltLength, y + stencilY + stencilHeight / 2f, 500);
 
+		matrices.scale(-100, 100, 100);
 		matrices.multiply(new Quaternion(0, 0, 90, true));
-		matrices.multiply(new Quaternion(0, 135, 0, true));
-		matrices.scale(100, -100, 100);
+		matrices.multiply(new Quaternion(15, 0, 0, true));
+		matrices.multiply(new Quaternion(0, -60, 0, true));
 
 		var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
 
@@ -254,9 +255,15 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{
-			LightsaberItemRenderer.INSTANCE.renderDirect(lightsaber, ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND, matrices, immediate, 0xf000f0, 0xFFFFFF, true);
+			DiffuseLighting.disableGuiDepthLighting();
+			DiffuseLighting.enableForLevel(matrices.peek().getModel());
+
+			LightsaberItemRenderer.INSTANCE.renderDirect(lightsaber, ModelTransformation.Mode.NONE, matrices, immediate, 0xFFFFFF, OverlayTexture.DEFAULT_UV, true);
 			immediate.draw();
+
+			DiffuseLighting.enableGuiDepthLighting();
 		}
+
 		matrices.pop();
 
 		matrices.push();
