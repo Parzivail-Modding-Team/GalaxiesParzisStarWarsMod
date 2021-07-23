@@ -14,7 +14,7 @@ public class QuatUtil
 		var forward = rotate(MathUtil.POSZ, q);
 
 		var yaw = -(float)Math.atan2(forward.x, forward.z);
-		var pitch = (float)Math.atan2(forward.y, Math.sqrt(forward.x * forward.x + forward.z * forward.z));
+		var pitch = (float)Math.asin(forward.y);
 
 		return new EulerAngle(pitch * MathUtil.toDegreesf, yaw * MathUtil.toDegreesf + 180, 0);
 	}
@@ -215,6 +215,9 @@ public class QuatUtil
 
 	public static void updateEulerRotation(Entity entity, Quaternion rotation)
 	{
+		entity.prevPitch = entity.getPitch();
+		entity.prevYaw = entity.getYaw();
+
 		var eulerAngle = toEulerAngles(rotation);
 		entity.setYaw(eulerAngle.getYaw());
 		entity.setPitch(eulerAngle.getPitch());
