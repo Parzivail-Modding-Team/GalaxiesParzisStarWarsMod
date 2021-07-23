@@ -22,6 +22,7 @@ public class LightsaberTag extends TagSerializer
 	public boolean unstable;
 
 	public Identifier hilt;
+	public String owner;
 
 	public LightsaberTag(NbtCompound source)
 	{
@@ -35,10 +36,11 @@ public class LightsaberTag extends TagSerializer
 		active = false;
 		transition = 0;
 
-		bladeHue = 0.61f;
+		bladeHue = 0.33f;
 		unstable = false;
 
-		hilt = Resources.id("luke/rotj");
+		owner = "Luke Skywalker";
+		hilt = Resources.id("luke_rotj");
 	}
 
 	public static LightsaberTag fromRootTag(NbtCompound tag)

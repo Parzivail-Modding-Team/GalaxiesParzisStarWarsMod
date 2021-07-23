@@ -109,7 +109,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 		if (vehicle instanceof ShipEntity ship)
 		{
-
 			if (ship.getPrimaryPassenger() == player)
 				return ship;
 		}
@@ -284,8 +283,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			vec3d = QuatUtil.rotate(vec3d, q);
 
 			QuatUtil.updateEulerRotation(passenger, q);
+
 			passenger.setPosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
-			this.copyEntityData(passenger);
+			//			this.copyEntityData(passenger);
 		}
 	}
 
@@ -362,7 +362,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		getDataTracker().set(ROTATION, q);
 
 		QuatUtil.updateEulerRotation(this, q);
-
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -407,7 +406,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 		var shipRollPriority = Resources.CONFIG.get().input.shipRollPriority;
 
-		if (Client.KEY_SHIP_INPUT_MODE_OVERRIDE.isPressed())
+		if (!usePlayerPerspective() && Client.KEY_SHIP_INPUT_MODE_OVERRIDE.isPressed())
 			shipRollPriority = !shipRollPriority;
 
 		if (shipRollPriority)

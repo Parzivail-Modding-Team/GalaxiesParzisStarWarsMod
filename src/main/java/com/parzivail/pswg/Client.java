@@ -21,6 +21,7 @@ import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
+import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.client.EmptyEntityRenderer;
@@ -84,7 +85,7 @@ public class Client implements ClientModInitializer
 
 		// TODO: reimplement tatooine home door rendering
 		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
-//		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, EmptyBlockEntityRenderer::new);
+		//		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, EmptyBlockEntityRenderer::new);
 
 		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadPM3D(DynamicBakedModel.Discriminator.RENDER_SEED, Resources.id("models/block/barrel/mos_eisley.pm3d"), Resources.id("model/barrel/mos_eisley"), new Identifier("block/stone")));
 
@@ -194,11 +195,27 @@ public class Client implements ClientModInitializer
 	public static class ResourceManagers
 	{
 		private static NemManager nemManager;
-		private static SwgBlasterManager blasterLoader;
+		private static SwgBlasterManager blasterManager;
+		private static SwgLightsaberManager lightsaberManager;
 
-		public static SwgBlasterManager getBlasterLoader()
+		static
 		{
-			return blasterLoader;
+			// Will be reset when a world is joined, but is needed
+			// because the searchable containers are initialized
+			// *before* a world is joined -- although the search
+			// container itself will be empty, because the list
+			// hasn't been loaded from disk yet
+			registerNonreloadableManagers();
+		}
+
+		public static SwgBlasterManager getBlasterManager()
+		{
+			return blasterManager;
+		}
+
+		public static SwgLightsaberManager getLightsaberManager()
+		{
+			return lightsaberManager;
 		}
 
 		public static NemManager getNemManager()
@@ -219,7 +236,8 @@ public class Client implements ClientModInitializer
 		 */
 		public static void registerNonreloadableManagers()
 		{
-			blasterLoader = new SwgBlasterManager();
+			blasterManager = new SwgBlasterManager();
+			lightsaberManager = new SwgLightsaberManager();
 		}
 
 		/**
@@ -228,10 +246,17 @@ public class Client implements ClientModInitializer
 		public static void registerPackets()
 		{
 			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-				if (blasterLoader != null)
-					blasterLoader.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
+				if (blasterManager != null)
+					blasterManager.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
 				else
 					Lumberjack.error("Attempted to sync blaster descriptors without initializing the client loader!");
+			});
+
+			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncLightsabers, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+				if (lightsaberManager != null)
+					lightsaberManager.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
+				else
+					Lumberjack.error("Attempted to sync lightsaber descriptors without initializing the client loader!");
 			});
 		}
 	}

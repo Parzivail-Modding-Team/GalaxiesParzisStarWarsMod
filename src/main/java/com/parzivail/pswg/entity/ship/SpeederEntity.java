@@ -5,7 +5,6 @@ import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
@@ -59,8 +58,6 @@ public class SpeederEntity extends ShipEntity
 			for (double z = 0; z <= 1; z += invSidewaysSpacing)
 			{
 				var pos = start.add(left.multiply(x * spacingSideways)).add(forward.multiply(z * spacingForward * 3));
-
-				world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, 0.0D, 0.0D, 0.0D);
 
 				var blockHit = EntityUtil.raycastBlocks(pos, MathUtil.NEGY, range * 2, this, RaycastContext.FluidHandling.SOURCE_ONLY);
 				var blockDistance = blockHit.getType() == HitResult.Type.MISS ? -range : (blockHit.getPos().y - start.y);

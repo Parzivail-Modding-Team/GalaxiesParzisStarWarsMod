@@ -20,7 +20,7 @@ public class ModelLoader
 				particleTexture,
 				spriteMap -> PM3DBakedBlockModel.create(
 						discriminator,
-						PM3DFile.tryLoad(modelFile).getLevelOfDetail(0),
+						PM3DFile.tryLoad(modelFile, true).getLevelOfDetail(0),
 						baseTexture,
 						particleTexture,
 						spriteMap

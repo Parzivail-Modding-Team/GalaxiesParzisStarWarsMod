@@ -2,7 +2,9 @@ package com.parzivail.pswg.item.lightsaber;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.render.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
@@ -19,6 +21,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -48,12 +52,6 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		this.attribModsOnOffhand = builder.build();
 	}
 
-	@Override
-	public NbtCompound getDefaultTag(ItemConvertible item, int count)
-	{
-		return new LightsaberTag().toSubtag();
-	}
-
 	private static boolean isActive(ItemStack stack)
 	{
 		return !stack.isEmpty() && new LightsaberTag(stack.getOrCreateTag()).active;
@@ -72,16 +70,6 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 					world.playSound(null, player.getBlockPos(), SwgSounds.Lightsaber.STOP_CLASSIC, SoundCategory.PLAYERS, 1f, 1f);
 			}
 		});
-	}
-
-	@Override
-	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
-	{
-		if (this.isIn(group))
-		{
-			// Custom lightsaber configurations for creative mode are added here (once it is configurable)
-			stacks.add(new ItemStack(this));
-		}
 	}
 
 	@Override
@@ -104,6 +92,40 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		// maybe energy cost? otherwise leave empty, this is important to
 		// prevent SwordItem from applying damage
 		return true;
+	}
+
+	@Override
+	public Text getName(ItemStack stack)
+	{
+		var lt = new LightsaberTag(stack.getOrCreateTag());
+		return new TranslatableText(this.getTranslationKey(stack), lt.owner);
+	}
+
+	@Override
+	public NbtCompound getDefaultTag(ItemConvertible item, int count)
+	{
+		return new LightsaberTag().toSubtag();
+	}
+
+	@Override
+	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
+	{
+		if (!this.isIn(group))
+			return;
+
+		var manager = Client.ResourceManagers.getLightsaberManager();
+
+		for (var entry : manager.getData().entrySet())
+			stacks.add(forType(entry.getValue()));
+	}
+
+	private ItemStack forType(LightsaberDescriptor descriptor)
+	{
+		var stack = new ItemStack(this);
+
+		stack.getOrCreateTag().putString("model", descriptor.id.toString());
+
+		return stack;
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package com.parzivail.pswg.item.blaster;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.container.SwgSounds;
@@ -80,7 +79,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public static BlasterDescriptor getBlasterDescriptor(World world, ItemStack stack)
 	{
 		var blasterManager = SwgBlasterManager.get(world);
-		return blasterManager.getBlaster(getBlasterModel(stack));
+		return blasterManager.getData(getBlasterModel(stack));
 	}
 
 	@Override
@@ -222,11 +221,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	{
 		var tag = stack.getOrCreateTag();
 
-		var blasterModel = tag.getString("model");
-		if (blasterModel.isEmpty())
-			blasterModel = "pswg:a280";
+		var model = tag.getString("model");
+		if (model.isEmpty())
+			return super.getTranslationKey(stack);
 
-		var bdId = new Identifier(blasterModel);
+		var bdId = new Identifier(model);
 
 		return "item." + bdId.getNamespace() + ".blaster_" + bdId.getPath();
 	}
@@ -244,20 +243,20 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
 	{
-		if (group != Galaxies.Tab)
+		if (!this.isIn(group))
 			return;
 
-		var blasterLoader = Client.ResourceManagers.getBlasterLoader();
+		var manager = Client.ResourceManagers.getBlasterManager();
 
-		for (var entry : blasterLoader.getBlasters().entrySet())
+		for (var entry : manager.getData().entrySet())
 			stacks.add(forType(entry.getValue()));
 	}
 
-	private ItemStack forType(BlasterDescriptor blasterDescriptor)
+	private ItemStack forType(BlasterDescriptor descriptor)
 	{
 		var stack = new ItemStack(this);
 
-		stack.getOrCreateTag().putString("model", blasterDescriptor.id.toString());
+		stack.getOrCreateTag().putString("model", descriptor.id.toString());
 
 		return stack;
 	}

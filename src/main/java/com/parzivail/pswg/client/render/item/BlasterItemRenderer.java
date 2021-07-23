@@ -28,29 +28,32 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
 	public static final BlasterItemRenderer INSTANCE = new BlasterItemRenderer();
 
-	private static final BlasterModelEntry FALLBACK_MODEL;
-	private static final HashMap<Identifier, BlasterModelEntry> MODEL_CACHE = new HashMap<>();
+	private static final ModelEntry FALLBACK_MODEL;
+	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
 
 	static
 	{
-		FALLBACK_MODEL = new BlasterModelEntry(Suppliers.memoize(() -> PM3DFile.tryLoad(Resources.id("models/item/blaster/a280.pm3d"))), Resources.id("textures/model/blaster/a280.png"));
+		FALLBACK_MODEL = new ModelEntry(Suppliers.memoize(() -> PM3DFile.tryLoad(Resources.id("models/item/blaster/a280.pm3d"), false)), Resources.id("textures/model/blaster/a280.png"));
 	}
 
 	private BlasterItemRenderer()
 	{
 	}
 
-	private BlasterModelEntry getModel(Identifier id)
+	private ModelEntry getModel(Identifier id)
 	{
 		if (MODEL_CACHE.containsKey(id))
 			return MODEL_CACHE.get(id);
 
-		var file = PM3DFile.loadOrNull(new Identifier(id.getNamespace(), "models/item/blaster/" + id.getPath() + ".pm3d"));
+		var file = PM3DFile.loadOrNull(new Identifier(id.getNamespace(), "models/item/blaster/" + id.getPath() + ".pm3d"), false);
 
 		if (file == null)
+		{
+			MODEL_CACHE.put(id, FALLBACK_MODEL);
 			return FALLBACK_MODEL;
+		}
 
-		var entry = new BlasterModelEntry(
+		var entry = new ModelEntry(
 				Suppliers.memoize(() -> file),
 				new Identifier(id.getNamespace(), "textures/model/blaster/" + id.getPath() + ".png")
 		);
@@ -182,8 +185,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		}
 	}
 
-	private record BlasterModelEntry(Supplier<PM3DFile> pm3dModel,
-	                                 Identifier texture)
+	private record ModelEntry(Supplier<PM3DFile> pm3dModel,
+	                          Identifier texture)
 	{
 	}
 }

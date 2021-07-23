@@ -1,74 +1,39 @@
 package com.parzivail.pswg.data;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterHeatInfo;
 import com.parzivail.pswg.item.blaster.data.BlasterSpreadInfo;
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.resource.JsonDataLoader;
-import net.minecraft.resource.ResourceManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.profiler.Profiler;
 import net.minecraft.world.World;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-
-public class SwgBlasterManager extends JsonDataLoader
+public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
-	private static final Logger LOGGER = LogManager.getLogger();
-	private static final Gson GSON = (new GsonBuilder()).create();
-
-	private Map<Identifier, BlasterDescriptor> blasters = ImmutableMap.of();
-
 	public SwgBlasterManager()
 	{
-		super(GSON, "items/blasters");
+		super("items/blasters");
 	}
 
 	public static SwgBlasterManager get(MinecraftServer server)
 	{
-		return Galaxies.ResourceManagers.get(server).getBlasterLoader();
+		return Galaxies.ResourceManagers.get(server).getBlasterManager();
 	}
 
 	public static SwgBlasterManager get(World world)
 	{
 		if (world.isClient)
-			return Client.ResourceManagers.getBlasterLoader();
+			return Client.ResourceManagers.getBlasterManager();
 
 		return SwgBlasterManager.get(world.getServer());
 	}
 
-	public PacketByteBuf createPacket()
-	{
-		var passedData = new PacketByteBuf(Unpooled.buffer());
-
-		passedData.writeInt(blasters.size());
-
-		for (var entry : blasters.entrySet())
-		{
-			passedData.writeIdentifier(entry.getKey());
-			writeBlasterDescriptor(passedData, entry.getValue());
-		}
-
-		return passedData;
-	}
-
-	private void writeBlasterDescriptor(PacketByteBuf buf, BlasterDescriptor value)
+	protected void writeDataEntry(PacketByteBuf buf, BlasterDescriptor value)
 	{
 		buf.writeBoolean(value.oneHanded);
 		buf.writeFloat(value.damage);
@@ -94,23 +59,7 @@ public class SwgBlasterManager extends JsonDataLoader
 		buf.writeFloat(value.cooling.secondaryBypassTolerance);
 	}
 
-	public void handlePacket(MinecraftClient minecraftClient, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)
-	{
-		var size = packetByteBuf.readInt();
-
-		var map = new HashMap<Identifier, BlasterDescriptor>();
-
-		for (var i = 0; i < size; i++)
-		{
-			var key = packetByteBuf.readIdentifier();
-			var value = readBlasterDescriptor(key, packetByteBuf);
-			map.put(key, value);
-		}
-
-		this.blasters = ImmutableMap.copyOf(map);
-	}
-
-	private BlasterDescriptor readBlasterDescriptor(Identifier key, PacketByteBuf buf)
+	protected BlasterDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
 	{
 		var oneHanded = buf.readBoolean();
 		var damage = buf.readFloat();
@@ -150,31 +99,7 @@ public class SwgBlasterManager extends JsonDataLoader
 		);
 	}
 
-	protected void apply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler)
-	{
-		Map<Identifier, BlasterDescriptor> blasterDescriptorMap = new HashMap<>();
-
-		map.forEach((identifier, jsonElement) -> {
-			try
-			{
-				var obj = deserializeBlasterDescriptor(identifier, jsonElement);
-				blasterDescriptorMap.put(identifier, obj);
-			}
-			catch (IllegalArgumentException | JsonParseException ex)
-			{
-				LOGGER.error("Parsing error loading custom blaster {}: {}", identifier, ex.getMessage());
-			}
-		});
-
-		blasters = ImmutableMap.copyOf(blasterDescriptorMap);
-	}
-
-	public Map<Identifier, BlasterDescriptor> getBlasters()
-	{
-		return blasters;
-	}
-
-	private BlasterDescriptor deserializeBlasterDescriptor(Identifier identifier, JsonElement jsonObject)
+	protected BlasterDescriptor deserializeDataEntry(Identifier identifier, JsonElement jsonObject)
 	{
 		var version = jsonObject.getAsJsonObject().get("version").getAsInt();
 
@@ -182,10 +107,5 @@ public class SwgBlasterManager extends JsonDataLoader
 			throw new IllegalArgumentException("Can only parse version 1 blaster descriptors!");
 
 		return new BlasterDescriptor(identifier, GSON.fromJson(jsonObject, BlasterDescriptor.class));
-	}
-
-	public BlasterDescriptor getBlaster(Identifier bdId)
-	{
-		return blasters.get(bdId);
 	}
 }
