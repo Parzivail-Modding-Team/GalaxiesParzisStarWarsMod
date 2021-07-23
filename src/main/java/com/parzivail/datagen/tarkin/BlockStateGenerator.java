@@ -42,6 +42,12 @@ public class BlockStateGenerator
 		return VariantsBlockStateSupplier.create(block).coordinate(blockStateVariantMap);
 	}
 
+	public static VariantsBlockStateSupplier bloomingStages(Block block, Identifier modelId, IntProperty ageProperty, BooleanProperty bloomingProperty)
+	{
+		var blockStateVariantMap = BlockStateVariantMap.create(ageProperty, bloomingProperty).register((integer, bool) -> BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(modelId, "_stage" + integer + (bool ? "_blooming" : ""))));
+		return VariantsBlockStateSupplier.create(block).coordinate(blockStateVariantMap);
+	}
+
 	private static BlockStateVariant[] modelRandomRotation(Identifier modelId)
 	{
 		return new BlockStateVariant[] {

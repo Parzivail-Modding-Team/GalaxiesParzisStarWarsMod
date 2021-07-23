@@ -1,5 +1,6 @@
 package com.parzivail.pswg;
 
+import com.parzivail.pswg.client.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.loader.NemManager;
@@ -13,7 +14,6 @@ import com.parzivail.pswg.client.render.fish.FaaEntityRenderer;
 import com.parzivail.pswg.client.render.fish.LaaEntityRenderer;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
-import com.parzivail.pswg.client.render.item.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.render.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.render.sky.TatooineSkyRenderer;
 import com.parzivail.pswg.client.screen.*;
@@ -167,6 +167,7 @@ public class Client implements ClientModInitializer
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.Tuber, RenderLayer.getCutout());
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.Chasuka, RenderLayer.getCutout());
 		RenderLayerHelper.addBlock(SwgBlocks.Plant.HkakBush, RenderLayer.getCutout());
+		RenderLayerHelper.addBlock(SwgBlocks.Plant.MoloShrub, RenderLayer.getCutout());
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> ModelRegistry.INSTANCE);
 

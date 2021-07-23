@@ -3,6 +3,7 @@ package com.parzivail.datagen.tarkin;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
+import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
@@ -1138,6 +1139,7 @@ public class Tarkin
 
 		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2")).build(assets);
 		BlockGenerator.bushStages(SwgBlocks.Plant.HkakBush, () -> HkakBushBlock.AGE, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.HkakBush), "_stage3")).build(assets);
+		BlockGenerator.bloomingBushStages(SwgBlocks.Plant.MoloShrub, () -> MoloShrubBlock.AGE, () -> MoloShrubBlock.BLOOMING, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.MoloShrub), "_stage3_blooming")).build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.SaltyDesert).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);

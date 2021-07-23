@@ -3,8 +3,10 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.*;
+import com.parzivail.pswg.block.crop.AridPlant;
 import com.parzivail.pswg.block.crop.ChasukaCrop;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
+import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.blockentity.*;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
@@ -197,6 +199,8 @@ public class SwgBlocks
 		public static final CropBlock Chasuka = new ChasukaCrop(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("hkak_bush")
 		public static final HkakBushBlock HkakBush = new HkakBushBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+		@RegistryName("molo_shrub")
+		public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
 	}
 
 	public static class Leaves

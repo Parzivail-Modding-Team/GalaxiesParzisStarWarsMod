@@ -3,6 +3,7 @@ package com.parzivail.datagen.tarkin;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.model.BlockStateSupplier;
 import net.minecraft.item.Item;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -66,6 +67,14 @@ public class BlockGenerator
 		return blockNoModelLangEntry(block)
 				.state((block1, modelId) -> BlockStateGenerator.stages(block1, modelId, ageProp.get()))
 				.models(block1 -> ModelFile.bushStages(block1, ageProp.get()))
+				.itemModel(block2 -> ModelFile.item(block2, itemTexture));
+	}
+
+	static BlockGenerator bloomingBushStages(Block block, Supplier<IntProperty> ageProp, Supplier<BooleanProperty> bloomingProp, Identifier itemTexture)
+	{
+		return blockNoModelLangEntry(block)
+				.state((block1, modelId) -> BlockStateGenerator.bloomingStages(block1, modelId, ageProp.get(), bloomingProp.get()))
+				.models(block1 -> ModelFile.bloomingBushStages(block1, ageProp.get()))
 				.itemModel(block2 -> ModelFile.item(block2, itemTexture));
 	}
 

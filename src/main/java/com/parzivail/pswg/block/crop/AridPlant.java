@@ -1,4 +1,4 @@
-package com.parzivail.pswg.block;
+package com.parzivail.pswg.block.crop;
 
 import com.parzivail.pswg.container.SwgBlocks;
 import net.minecraft.block.*;

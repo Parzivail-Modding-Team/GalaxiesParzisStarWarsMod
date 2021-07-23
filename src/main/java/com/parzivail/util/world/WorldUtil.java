@@ -9,8 +9,18 @@ public class WorldUtil
 {
 	public static boolean isSunLit(ServerWorld world, BlockPos pos)
 	{
+		return getSunlight(world, pos) > 0;
+	}
+
+	public static boolean isNightTime(ServerWorld world)
+	{
+		return (world.getTime() - 6000) % 24000 > 12000;
+	}
+
+	private static int getSunlight(ServerWorld world, BlockPos pos)
+	{
 		if (!world.getDimension().hasSkyLight())
-			return false;
+			return 0;
 
 		var skyLight = world.getLightLevel(LightType.SKY, pos) - world.getAmbientDarkness();
 		var skyAngle = world.getSkyAngleRadians(1.0F);
@@ -19,8 +29,6 @@ public class WorldUtil
 		skyAngle += (upperBoundAngle - skyAngle) * 0.2F;
 		skyLight = Math.round(skyLight * MathHelper.cos(skyAngle));
 
-		skyLight = MathHelper.clamp(skyLight, 0, 15);
-
-		return skyLight > 0;
+		return MathHelper.clamp(skyLight, 0, 15);
 	}
 }

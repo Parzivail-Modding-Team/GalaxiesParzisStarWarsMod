@@ -177,6 +177,31 @@ public class ModelFile
 		return modelFiles;
 	}
 
+	public static Collection<ModelFile> bloomingBushStages(Block block, IntProperty property)
+	{
+		var id = AssetGenerator.getRegistryName(block);
+		var modelFiles = new ArrayList<ModelFile>();
+
+		for (int i : property.getValues())
+		{
+			var localId = IdentifierUtil.concat(id, "_stage" + i);
+			modelFiles.add(
+					ModelFile
+							.ofModel(localId, new Identifier("block/cross"))
+							.texture("cross", IdentifierUtil.concat("block/", localId))
+			);
+
+			localId = IdentifierUtil.concat(id, "_stage" + i + "_blooming");
+			modelFiles.add(
+					ModelFile
+							.ofModel(localId, new Identifier("block/cross"))
+							.texture("cross", IdentifierUtil.concat("block/", localId))
+			);
+		}
+
+		return modelFiles;
+	}
+
 	public static Collection<ModelFile> slabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		var id = AssetGenerator.getRegistryName(block);
