@@ -53,39 +53,6 @@ public class LightsaberRenderer
 		return (float)MathHelper.clamp(-0.06 * Math.exp(-0.011 * Math.pow(x - 6, 2)) + h, 0, 1);
 	}
 
-	private static void renderCore(float bladeLength, int coreColor, boolean unstable, float simplexOffset, boolean cap)
-	{
-		if (bladeLength == 0)
-			return;
-
-		final var segments = unstable ? 15 : 1;
-		final var dSegments = 1f / segments;
-		final var dLength = bladeLength / segments;
-
-		final var solidThickness = 0.027f;
-		final var cappedThickness = 0.02f;
-		final var topThickness = cap ? cappedThickness : solidThickness;
-
-		VertexConsumerBuffer.Instance.setColor(coreColor);
-
-		if (cap)
-		{
-			var dTRoundBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * (segments + 1)) * 0.005f : 0;
-			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, 0.01f, cappedThickness + dTRoundBottom, 0, bladeLength + 0.025f, 0, 0, bladeLength, 0);
-		}
-
-		for (var i = 0; i < segments; i++)
-		{
-			var topThicknessLerp = MathHelper.lerp(dSegments * (i + 1), solidThickness, topThickness);
-			var bottomThicknessLerp = MathHelper.lerp(dSegments * i, solidThickness, topThickness);
-
-			var dTTop = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * (i + 1)) * 0.005f : 0;
-			var dTBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(simplexOffset, dLength * i) * 0.005f : 0;
-
-			RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
-		}
-	}
-
 	public static void renderGlow(float bladeLength, float glowHue, boolean unstable, boolean cap)
 	{
 		if (bladeLength == 0)

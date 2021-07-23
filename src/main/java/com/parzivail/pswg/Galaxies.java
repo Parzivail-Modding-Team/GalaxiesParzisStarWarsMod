@@ -6,6 +6,7 @@ import com.parzivail.pswg.access.IServerResourceManagerAccess;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
+import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.handler.PlayerPacketHandler;
@@ -149,16 +150,23 @@ public class Galaxies implements ModInitializer
 			return ((IServerResourceManagerAccess)srm).getResourceManagers();
 		}
 
-		private final SwgBlasterManager blasterLoader;
+		private final SwgBlasterManager blasterManager;
+		private final SwgLightsaberManager lightsaberManager;
 
 		public ResourceManagers(ReloadableResourceManager resourceManager)
 		{
-			resourceManager.registerReloader(blasterLoader = new SwgBlasterManager());
+			resourceManager.registerReloader(blasterManager = new SwgBlasterManager());
+			resourceManager.registerReloader(lightsaberManager = new SwgLightsaberManager());
 		}
 
-		public SwgBlasterManager getBlasterLoader()
+		public SwgBlasterManager getBlasterManager()
 		{
-			return blasterLoader;
+			return blasterManager;
+		}
+
+		public SwgLightsaberManager getLightsaberManager()
+		{
+			return lightsaberManager;
 		}
 	}
 }

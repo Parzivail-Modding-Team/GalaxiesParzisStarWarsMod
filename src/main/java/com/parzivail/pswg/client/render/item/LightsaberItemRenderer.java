@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.render.item;
 
+import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.pm3d.PM3DFile;
-import com.parzivail.pswg.client.pm3d.PM3DTexturedModel;
 import com.parzivail.pswg.client.render.LightsaberRenderer;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
@@ -22,21 +22,44 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
-	public static final Identifier DEFAULT_MODEL;
-	public static final HashMap<Identifier, PM3DTexturedModel> MODELS = new HashMap<>();
-
 	public static final LightsaberItemRenderer INSTANCE = new LightsaberItemRenderer();
+
+	private static final ModelEntry FALLBACK_MODEL;
+	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
 
 	static
 	{
-		MODELS.put((DEFAULT_MODEL = Resources.id("luke/rotj")), new PM3DTexturedModel(
-				() -> PM3DFile.tryLoad(Resources.id("models/item/lightsaber/luke/rotj.pm3d")),
-				Resources.id("textures/model/lightsaber/luke/rotj_inventory.png"),
-				Resources.id("textures/model/lightsaber/luke/rotj.png")
-		));
+		FALLBACK_MODEL = new ModelEntry(Suppliers.memoize(() -> PM3DFile.tryLoad(Resources.id("models/item/lightsaber/luke_rotj.pm3d"), false)), Resources.id("textures/model/lightsaber/luke_rotj.png"));
+	}
+
+	private LightsaberItemRenderer()
+	{
+	}
+
+	private ModelEntry getModel(Identifier id)
+	{
+		if (MODEL_CACHE.containsKey(id))
+			return MODEL_CACHE.get(id);
+
+		var file = PM3DFile.loadOrNull(new Identifier(id.getNamespace(), "models/item/lightsaber/" + id.getPath() + ".pm3d"), false);
+
+		if (file == null)
+		{
+			MODEL_CACHE.put(id, FALLBACK_MODEL);
+			return FALLBACK_MODEL;
+		}
+
+		var entry = new ModelEntry(
+				Suppliers.memoize(() -> file),
+				new Identifier(id.getNamespace(), "textures/model/lightsaber/" + id.getPath() + ".png")
+		);
+		MODEL_CACHE.put(id, entry);
+
+		return entry;
 	}
 
 	@Override
@@ -46,22 +69,28 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
 
-		matrices.translate(-0.02f, 0.25f, 0.04f);
 
 		switch (renderMode)
 		{
-			case FIXED -> {
+			case FIXED:
 				matrices.translate(-0.2685f, 0, 0);
 				matrices.scale(1.8f, 1.8f, 1.8f);
 				matrices.multiply(new Quaternion(0, 0, 45, true));
 				matrices.translate(0, 0.04f, 0);
-			}
-			case GUI -> {
-				matrices.translate(0, -0.08f, 0);
-				matrices.scale(1.2f, 1.2f, 1.2f);
-			}
-			case FIRST_PERSON_LEFT_HAND, FIRST_PERSON_RIGHT_HAND -> matrices.translate(0, 0.05f, 0);
-			default -> matrices.translate(0, -0.05f, 0);
+				break;
+			case GUI:
+				matrices.multiply(new Quaternion(0, 0, -45, true));
+				matrices.multiply(new Quaternion(0, -45, 0, true));
+				matrices.translate(0, 0.5f, 0);
+				matrices.scale(2.1f, 2.1f, 2.1f);
+				break;
+			case FIRST_PERSON_LEFT_HAND:
+			case FIRST_PERSON_RIGHT_HAND:
+				matrices.translate(0, 0.25f, 0);
+				break;
+			default:
+				matrices.translate(0, 0.15f, 0.08f);
+				break;
 		}
 
 		renderDirect(stack, renderMode, matrices, vertexConsumers, light, overlay, false);
@@ -74,7 +103,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		var minecraft = MinecraftClient.getInstance();
 
 		matrices.push();
-		matrices.scale(0.03f, 0.03f, 0.03f);
+		matrices.scale(0.2f, 0.2f, 0.2f);
 
 		var lt = new LightsaberTag(stack.getOrCreateTag());
 
@@ -82,30 +111,18 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		var baseLength = 1.6f;
 		var lengthCoefficient = forceBlade ? 1 : lt.getSize(minecraft.getTickDelta());
 
-		var texturedModel = MODELS.get(lt.hilt);
-		if (texturedModel == null)
-			texturedModel = MODELS.get(DEFAULT_MODEL);
+		var modelEntry = getModel(lt.hilt);
 
-		var lod = 1;
-
-		if (renderMode == ModelTransformation.Mode.GUI)
-		{
-			lod = 0;
-
-			matrices.translate(8, 4, 0);
-			matrices.multiply(new Quaternion(0, 0, -45, true));
-			matrices.scale(1.5f, 1.5f, 1.5f);
-		}
-
-		var vc = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(texturedModel.getTexture(lod)));
+		var m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
+		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		texturedModel.getModel(lod).render(VertexConsumerBuffer.Instance);
+		m.render(VertexConsumerBuffer.Instance);
 
 		matrices.pop();
 
 		if (renderMode != ModelTransformation.Mode.GUI)
 		{
-			matrices.translate(0.015f, 0, 0.015f);
+//			matrices.translate(-0.015f, 0, -0.015f);
 
 			LightsaberRenderer.renderBlade(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, lt.bladeHue);
 		}
@@ -116,7 +133,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	{
 		var handSwingProgress = livingEntity.getHandSwingProgress(tickDelta);
 
-//		KeyframeInfo keyframe = idlePose.getKeyframes().get(0);
+		//		KeyframeInfo keyframe = idlePose.getKeyframes().get(0);
 
 		rightArm.pitch = -0.8727F + (MathHelper.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F / 15);
 		rightArm.yaw = -0.5672F;
@@ -137,5 +154,10 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			rightArm.pitch = (float)((double)rightArm.pitch - ((double)hx * 1.2D + (double)ix));
 			leftArm.pitch = (float)((double)leftArm.pitch - ((double)hx * 1.2D + (double)ix) * 1.2D) * 0.75F;
 		}
+	}
+
+	private record ModelEntry(Supplier<PM3DFile> pm3dModel,
+	                          Identifier texture)
+	{
 	}
 }

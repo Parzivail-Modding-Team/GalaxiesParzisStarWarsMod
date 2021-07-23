@@ -19,5 +19,6 @@ public class SwgPackets
 	public static class S2C
 	{
 		public static final Identifier PacketSyncBlasters = Resources.id("sync_blasters");
+		public static final Identifier PacketSyncLightsabers = Resources.id("sync_lightsabers");
 	}
 }

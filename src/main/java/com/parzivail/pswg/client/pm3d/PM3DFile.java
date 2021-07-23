@@ -27,11 +27,11 @@ public record PM3DFile(PM3DLod[] lods)
 		return lods[MathHelper.clamp(lod, 0, lods.length - 1)];
 	}
 
-	public static PM3DFile tryLoad(Identifier modelFile)
+	public static PM3DFile tryLoad(Identifier modelFile, boolean blockOffset)
 	{
 		try
 		{
-			return load(modelFile);
+			return load(modelFile, blockOffset);
 		}
 		catch (NullPointerException | IOException ex)
 		{
@@ -41,11 +41,11 @@ public record PM3DFile(PM3DLod[] lods)
 		}
 	}
 
-	public static PM3DFile loadOrNull(Identifier modelFile)
+	public static PM3DFile loadOrNull(Identifier modelFile, boolean blockOffset)
 	{
 		try
 		{
-			return load(modelFile);
+			return load(modelFile, blockOffset);
 		}
 		catch (NullPointerException | IOException ex)
 		{
@@ -53,7 +53,7 @@ public record PM3DFile(PM3DLod[] lods)
 		}
 	}
 
-	private static PM3DFile load(Identifier modelFile) throws IOException
+	private static PM3DFile load(Identifier modelFile, boolean blockOffset) throws IOException
 	{
 		// TODO: convert this to a KeyedReloadableLoader
 		var reader = PIO.getStream("assets", modelFile);
@@ -81,7 +81,7 @@ public record PM3DFile(PM3DLod[] lods)
 			var numUvs = objStream.readInt();
 			var numObjects = objStream.readInt();
 
-			var verts = loadVerts(numVerts, objStream);
+			var verts = loadVerts(numVerts, objStream, blockOffset);
 			var normals = loadNormals(numNormals, objStream);
 			var uvs = loadUvs(numUvs, objStream);
 			var objects = loadObjects(numObjects, objStream);
@@ -124,15 +124,21 @@ public record PM3DFile(PM3DLod[] lods)
 		return new Box(new Vec3d(min), new Vec3d(max));
 	}
 
-	private static Vec3f[] loadVerts(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static Vec3f[] loadVerts(int num, LittleEndianDataInputStream objStream, boolean blockOffset) throws IOException
 	{
 		var verts = new Vec3f[num];
 
 		for (var i = 0; i < num; i++)
 		{
-			var x = objStream.readFloat() + 0.5f;
+			var x = objStream.readFloat();
 			var y = objStream.readFloat();
-			var z = objStream.readFloat() + 0.5f;
+			var z = objStream.readFloat();
+
+			if (blockOffset)
+			{
+				x += 0.5f;
+				z += 0.5f;
+			}
 
 			verts[i] = new Vec3f(x, y, z);
 		}

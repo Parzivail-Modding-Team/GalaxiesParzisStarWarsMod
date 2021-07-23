@@ -20,6 +20,7 @@ import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
@@ -103,6 +104,8 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 	private static final Identifier TEXTURE = Resources.id("textures/gui/container/lightsaber_forge.png");
 
+	private final PlayerEntity player;
+
 	private MutableSlider sliderHue;
 	private MutableCheckbox cbUnstable;
 
@@ -115,6 +118,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		super(handler, inventory, title);
 		backgroundWidth = 256;
 		backgroundHeight = 241;
+		player = inventory.player;
 	}
 
 	protected void init()
@@ -162,6 +166,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	{
 		LightsaberTag.mutate(lightsaber, (lt) ->
 		{
+			lt.owner = player.getEntityName();
 			lt.bladeHue = hue;
 			lt.unstable = cbUnstable.isChecked();
 		});

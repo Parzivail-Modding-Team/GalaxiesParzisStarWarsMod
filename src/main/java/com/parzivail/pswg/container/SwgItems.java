@@ -347,7 +347,7 @@ public class SwgItems
 	public static class Blaster
 	{
 		@RegistryName("blaster")
-		public static final BlasterItem Blaster = new BlasterItem(new Item.Settings().maxCount(1));
+		public static final BlasterItem Blaster = new BlasterItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));
 		@RegistryName("small_power_pack")
 		public static final BlasterPowerPackItem SmallPowerPack = new BlasterPowerPackItem(75, new Item.Settings().group(Galaxies.Tab));
 	}
