@@ -60,9 +60,6 @@ public class SwgItems
 		public static final Item PlasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("durasteel_rod")
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.Tab));
-
-		@RegistryName("stripped_japor_branch")
-		public static final Item StrippedJaporBranch = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
 	public static class Hoe
@@ -205,10 +202,18 @@ public class SwgItems
 		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.Tab));
 	}
 
-	public static class Food
+	public static class Natural
 	{
+		@RegistryName("stripped_japor_branch")
+		public static final Item StrippedJaporBranch = new Item(new Item.Settings().group(Galaxies.Tab));
+		@RegistryName("molo_flower")
+		public static final Item MoloFlower = new Item(new Item.Settings().group(Galaxies.Tab));
 		@RegistryName("salt_pile")
 		public static final Item SaltPile = new Item(new Item.Settings().group(Galaxies.Tab));
+	}
+
+	public static class Food
+	{
 
 		@RegistryName("jogan_fruit")
 		public static final Item JoganFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.Tab));

@@ -869,7 +869,10 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.CraftingComponents.DeshCoil).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.PlasteelRod).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.DurasteelRod).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.StrippedJaporBranch).build(assets);
+
+		ItemGenerator.basic(SwgItems.Natural.StrippedJaporBranch).build(assets);
+		ItemGenerator.basic(SwgItems.Natural.MoloFlower).build(assets);
+		ItemGenerator.basic(SwgItems.Natural.SaltPile).build(assets);
 
 		ItemGenerator.basic(SwgItems.Crystal.Exonium).build(assets);
 		ItemGenerator.basic(SwgItems.Crystal.Helicite).build(assets);
@@ -896,7 +899,6 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Dust.Thorilide).build(assets);
 		ItemGenerator.basic(SwgItems.Dust.Zersium).build(assets);
 
-		ItemGenerator.basic(SwgItems.Food.SaltPile).build(assets);
 		ItemGenerator.basic(SwgItems.Food.JoganFruit).build(assets);
 		ItemGenerator.basic(SwgItems.Food.ChasukaLeaf).build(assets);
 		ItemGenerator.basic(SwgItems.Food.Meiloorun).build(assets);
@@ -1139,7 +1141,9 @@ public class Tarkin
 
 		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2")).build(assets);
 		BlockGenerator.bushStages(SwgBlocks.Plant.HkakBush, () -> HkakBushBlock.AGE, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.HkakBush), "_stage3")).build(assets);
-		BlockGenerator.bloomingBushStages(SwgBlocks.Plant.MoloShrub, () -> MoloShrubBlock.AGE, () -> MoloShrubBlock.BLOOMING, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.MoloShrub), "_stage3_blooming")).build(assets);
+		BlockGenerator.bloomingBushStages(SwgBlocks.Plant.MoloShrub, () -> MoloShrubBlock.AGE, () -> MoloShrubBlock.BLOOMING, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.MoloShrub), "_stage3_blooming"))
+		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Natural.MoloFlower, new LootTableFile.Pool.Entry.CountFunction.Range(0, 2, new Identifier("uniform"))))
+		              .build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.SaltyDesert).build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);

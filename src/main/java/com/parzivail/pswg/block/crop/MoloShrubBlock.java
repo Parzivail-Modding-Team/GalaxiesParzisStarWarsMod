@@ -4,7 +4,6 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.util.world.WorldUtil;
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -12,9 +11,6 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
@@ -45,7 +41,7 @@ public class MoloShrubBlock extends PlantBlock implements Fertilizable
 
 	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
 	{
-		return new ItemStack(SwgItems.Food.HkakBean);
+		return new ItemStack(SwgItems.Natural.MoloFlower);
 	}
 
 	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos)
@@ -79,12 +75,6 @@ public class MoloShrubBlock extends PlantBlock implements Fertilizable
 		finalState = finalState.with(BLOOMING, WorldUtil.isNightTime(world));
 
 		world.setBlockState(pos, finalState, Block.NOTIFY_LISTENERS);
-	}
-
-	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
-	{
-		// TODO: molo shrub harvesting?
-		return ActionResult.PASS;
 	}
 
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
