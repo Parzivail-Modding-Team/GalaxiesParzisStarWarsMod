@@ -1,8 +1,5 @@
 package com.parzivail.pswg.client.texture.remote;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.common.hash.Hashing;
 import com.mojang.authlib.minecraft.InsecureTextureException;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -20,7 +17,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
@@ -33,7 +29,6 @@ public class RemoteTextureProvider
 	private final String identifierRoot;
 	private final Path skinCacheDir;
 	private final RemoteTextureResolver remoteTextureResolver;
-	private final LoadingCache<Identifier, RemoteTextureUrl> skinCache;
 
 	public RemoteTextureProvider(TextureManager textureManager, String identifierRoot, Path skinCacheDir)
 	{
@@ -41,20 +36,6 @@ public class RemoteTextureProvider
 		this.identifierRoot = identifierRoot;
 		this.skinCacheDir = skinCacheDir;
 		remoteTextureResolver = new RemoteTextureResolver();
-		this.skinCache = CacheBuilder.newBuilder().expireAfterAccess(15L, TimeUnit.SECONDS).build(new CacheLoader<>()
-		{
-			public RemoteTextureUrl load(Identifier id)
-			{
-				try
-				{
-					return remoteTextureResolver.getTexture(id);
-				}
-				catch (Throwable var4)
-				{
-					return null;
-				}
-			}
-		});
 	}
 
 	public boolean isRemoteTexture(Identifier id)
@@ -103,7 +84,7 @@ public class RemoteTextureProvider
 		Util.getMainWorkerExecutor().execute(() -> {
 			try
 			{
-				final var remoteTextureUrl = this.skinCache.getUnchecked(identifier);
+				final var remoteTextureUrl = remoteTextureResolver.getTexture(identifier);
 
 				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> {
 					String string = Hashing.sha1().hashUnencodedChars(remoteTextureUrl.getHash()).toString();

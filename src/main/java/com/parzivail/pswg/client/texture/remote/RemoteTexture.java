@@ -19,6 +19,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 
 @Environment(EnvType.CLIENT)
@@ -96,9 +98,22 @@ public class RemoteTexture extends ResourceTexture
 			NativeImage nativeImage2;
 			if (this.cacheFile != null && Files.isRegularFile(cacheFile))
 			{
-				Lumberjack.debug("Loading http texture from local cache (%s)", this.cacheFile);
-				var inputStream = Files.newInputStream(this.cacheFile);
-				nativeImage2 = this.loadTexture(inputStream);
+				var lastModifiedTime = Files.getLastModifiedTime(cacheFile);
+				var cacheFileAge = lastModifiedTime.toInstant().until(Instant.now(), ChronoUnit.MINUTES);
+
+				if (cacheFileAge > 30)
+				{
+					Lumberjack.debug("Locally cached http texture too old (%s, age=%s min)", this.cacheFile, cacheFileAge);
+					// Allow file to regenerate if it still exists on the remote
+					Files.delete(cacheFile);
+					nativeImage2 = null;
+				}
+				else
+				{
+					Lumberjack.debug("Loading http texture from local cache (%s)", this.cacheFile);
+					var inputStream = Files.newInputStream(this.cacheFile);
+					nativeImage2 = this.loadTexture(inputStream);
+				}
 			}
 			else
 			{
