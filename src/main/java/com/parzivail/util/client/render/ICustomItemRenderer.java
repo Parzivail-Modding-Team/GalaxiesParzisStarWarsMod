@@ -11,11 +11,11 @@ import java.util.HashMap;
 
 public interface ICustomItemRenderer
 {
-	HashMap<Item, ICustomItemRenderer> ITEM_RENDERER_MAP = new HashMap<>();
+	HashMap<Item, ICustomItemRenderer> REGISTRY = new HashMap<>();
 
 	static void register(Item item, ICustomItemRenderer renderer)
 	{
-		ITEM_RENDERER_MAP.put(item, renderer);
+		REGISTRY.put(item, renderer);
 	}
 
 	void render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model);

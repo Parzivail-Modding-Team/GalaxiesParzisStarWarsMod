@@ -6,7 +6,6 @@ import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.rig.pr3r.PR3Object;
 import com.parzivail.pswg.rig.pr3r.PR3RFile;
-import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.math.Transform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -170,8 +169,8 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 
 			return switch (part)
 					{
-						case WingTopLeft, WingBottomRight -> QuatUtil.of(0, 0, -wingAngle, true);
-						case WingBottomLeft, WingTopRight -> QuatUtil.of(0, 0, wingAngle, true);
+						case WingTopLeft, WingBottomRight -> new Quaternion(0, 0, -wingAngle, true);
+						case WingBottomLeft, WingTopRight -> new Quaternion(0, 0, wingAngle, true);
 						default -> throw new IndexOutOfBoundsException();
 					};
 		}
@@ -186,7 +185,7 @@ public class RigT65B implements IModelRig<T65BXwing, RigT65B.Part>
 			else
 				cockpitAngle = 50 * timer / 20;
 
-			return QuatUtil.of(cockpitAngle, 0, 0, true);
+			return new Quaternion(cockpitAngle, 0, 0, true);
 		}
 
 		return new Quaternion(Quaternion.IDENTITY);

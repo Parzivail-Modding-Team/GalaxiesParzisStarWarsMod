@@ -7,13 +7,6 @@ import net.minecraft.util.math.*;
 @Environment(EnvType.CLIENT)
 public class ClientMathUtil
 {
-	public static final Matrix4f MATRIX_IDENTITY = new Matrix4f();
-
-	static
-	{
-		MATRIX_IDENTITY.loadIdentity();
-	}
-
 	public static Vec3f transform(Vec3f v, Matrix4f m)
 	{
 		var v4 = new Vector4f(v);

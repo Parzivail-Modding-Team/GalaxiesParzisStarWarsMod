@@ -31,24 +31,6 @@ public class QuatUtil
 		return u.multiply(2.0f * u.dotProduct(self)).add(self.multiply(s * s - u.dotProduct(u))).add(u.crossProduct(self).multiply(2.0f * s));
 	}
 
-	public static Quaternion of(float x, float y, float z, boolean degrees)
-	{
-		if (degrees)
-		{
-			x *= 0.017453292F;
-			y *= 0.017453292F;
-			z *= 0.017453292F;
-		}
-
-		var f = MathHelper.sin(0.5F * x);
-		var g = MathHelper.cos(0.5F * x);
-		var h = MathHelper.sin(0.5F * y);
-		var i = MathHelper.cos(0.5F * y);
-		var j = MathHelper.sin(0.5F * z);
-		var k = MathHelper.cos(0.5F * z);
-		return new Quaternion(f * i * k + g * h * j, g * h * k - f * i * j, f * h * k + g * i * j, g * i * k - f * h * j);
-	}
-
 	public static void putQuaternion(NbtCompound tag, Quaternion q)
 	{
 		tag.putFloat("a", q.getW());

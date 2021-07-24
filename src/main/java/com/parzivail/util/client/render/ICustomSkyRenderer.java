@@ -17,11 +17,11 @@ public interface ICustomSkyRenderer
 	/**
 	 * Do not use this directly.
 	 */
-	HashMap<Identifier, ICustomSkyRenderer> CUSTOM_SKY_RENDERERS = new HashMap<>();
+	HashMap<Identifier, ICustomSkyRenderer> CUSTOM_SKREGISTRY_RENDERERS = new HashMap<>();
 
 	static void register(Identifier worldKey, ICustomSkyRenderer renderer)
 	{
-		CUSTOM_SKY_RENDERERS.put(worldKey, renderer);
+		CUSTOM_SKREGISTRY_RENDERERS.put(worldKey, renderer);
 	}
 
 	void render(MinecraftClient client, VertexBuffer lightSkyBuffer, VertexBuffer darkSkyBuffer, VertexBuffer starsBuffer, MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Runnable fogApplier, CallbackInfo ci);

@@ -13,11 +13,11 @@ public interface ICustomHudRenderer
 	/**
 	 * Do not use this directly.
 	 */
-	HashMap<Item, ICustomHudRenderer> CUSTOM_HUD_RENDERERS = new HashMap<>();
+	HashMap<Item, ICustomHudRenderer> REGISTRY = new HashMap<>();
 
 	static void register(Item item, ICustomHudRenderer renderer)
 	{
-		CUSTOM_HUD_RENDERERS.put(item, renderer);
+		REGISTRY.put(item, renderer);
 	}
 
 	boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices);

@@ -31,11 +31,6 @@ public enum VertexConsumerBuffer
 		this.light = light;
 	}
 
-	public void setVertexConsumer(VertexConsumer vertexConsumer)
-	{
-		this.vertexConsumer = vertexConsumer;
-	}
-
 	public void setMatrices(MatrixStack.Entry matrices)
 	{
 		this.matrices = matrices;

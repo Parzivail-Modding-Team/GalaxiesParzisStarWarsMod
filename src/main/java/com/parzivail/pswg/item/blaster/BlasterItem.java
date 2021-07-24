@@ -9,7 +9,6 @@ import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.util.BlasterUtil;
-import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.client.render.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.ILeftClickConsumer;
@@ -33,6 +32,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.World;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider
@@ -181,8 +181,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var m = new Matrix4f();
 			Matrix4fAccessUtil.loadIdentity(m);
 
-			Matrix4fAccessUtil.multiply(m, QuatUtil.of(0, -player.getYaw(), 0, true));
-			Matrix4fAccessUtil.multiply(m, QuatUtil.of(player.getPitch(), 0, 0, true));
+			Matrix4fAccessUtil.multiply(m, new Quaternion(0, -player.getYaw(), 0, true));
+			Matrix4fAccessUtil.multiply(m, new Quaternion(player.getPitch(), 0, 0, true));
 
 			var hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
@@ -191,8 +191,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			float hSR = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
 			float vSR = 1; // - bd.getBarrel().getVerticalSpreadReduction();
 
-			Matrix4fAccessUtil.multiply(m, QuatUtil.of(0, hS * hSR, 0, true));
-			Matrix4fAccessUtil.multiply(m, QuatUtil.of(vS * vSR, 0, 0, true));
+			Matrix4fAccessUtil.multiply(m,new Quaternion(0, hS * hSR, 0, true));
+			Matrix4fAccessUtil.multiply(m,new Quaternion(vS * vSR, 0, 0, true));
 
 			var fromDir = Matrix4fAccessUtil.transform(com.parzivail.util.math.MathUtil.POSZ, m);
 			world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);

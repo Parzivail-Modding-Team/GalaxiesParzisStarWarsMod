@@ -51,9 +51,9 @@ public class ColorUtil
 
 	public static int fromHSV(final float hue, final float saturation, final float value)
 	{
-		final var normaliedHue = (hue - (float)Math.floor(hue));
-		final var h = (int)(normaliedHue * 6);
-		final var f = normaliedHue * 6 - h;
+		final var normalizedHue = (hue - (float)Math.floor(hue));
+		final var h = (int)(normalizedHue * 6);
+		final var f = normalizedHue * 6 - h;
 		final var p = value * (1 - saturation);
 		final var q = value * (1 - f * saturation);
 		final var t = value * (1 - (1 - f) * saturation);

@@ -9,11 +9,11 @@ import java.util.HashMap;
 
 public interface ICustomPoseItem
 {
-	HashMap<Item, ICustomPoseItem> ITEM_POSE_MAP = new HashMap<>();
+	HashMap<Item, ICustomPoseItem> REGISTRY = new HashMap<>();
 
 	static void register(Item item, ICustomPoseItem pose)
 	{
-		ITEM_POSE_MAP.put(item, pose);
+		REGISTRY.put(item, pose);
 	}
 
 	void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta);

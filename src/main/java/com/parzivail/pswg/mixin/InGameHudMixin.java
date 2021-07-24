@@ -35,7 +35,7 @@ public class InGameHudMixin
 		assert this.client.player != null;
 
 		var mainHandStack = this.client.player.getInventory().getMainHandStack();
-		var customHUDRenderer = ICustomHudRenderer.CUSTOM_HUD_RENDERERS.get(mainHandStack.getItem());
+		var customHUDRenderer = ICustomHudRenderer.REGISTRY.get(mainHandStack.getItem());
 		if (customHUDRenderer != null)
 		{
 			if (customHUDRenderer.renderCrosshair(this.client.player, Hand.MAIN_HAND, mainHandStack, matrices))
@@ -52,7 +52,7 @@ public class InGameHudMixin
 		assert this.client.player != null;
 
 		var mainHandStack = this.client.player.getInventory().getMainHandStack();
-		var customHUDRenderer = ICustomHudRenderer.CUSTOM_HUD_RENDERERS.get(mainHandStack.getItem());
+		var customHUDRenderer = ICustomHudRenderer.REGISTRY.get(mainHandStack.getItem());
 		if (customHUDRenderer != null)
 		{
 			customHUDRenderer.renderOverlay(this.client.player, Hand.MAIN_HAND, mainHandStack, matrices, scaledWidth, scaledHeight, tickDelta);

@@ -61,10 +61,10 @@ public class EntityUtil
 		return fromEntity.world.raycast(new RaycastContext(startPos, end, RaycastContext.ShapeType.COLLIDER, fluidHandling, fromEntity));
 	}
 
-	public static void setVelocityFromAngles(Entity entity, float pitch, float yaw, float roll, float scalar)
+	public static void setVelocityFromAngles(Entity entity, float pitch, float yaw, float scalar)
 	{
 		var f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
-		var g = -MathHelper.sin((pitch + roll) * 0.017453292F);
+		var g = -MathHelper.sin(pitch * 0.017453292F);
 		var h = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
 		entity.setVelocity(scalar * f, scalar * g, scalar * h);
 	}

@@ -46,7 +46,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
 		if (!stack.isEmpty())
 		{
 			@Nullable
-			final ICustomPoseItem pose = ICustomPoseItem.ITEM_POSE_MAP.get(stack.getItem());
+			final ICustomPoseItem pose = ICustomPoseItem.REGISTRY.get(stack.getItem());
 			if (pose != null)
 				pose.modifyPose(livingEntity, stack, head, rightArm, leftArm, livingEntity, limbAngle, limbDistance, animationProgress, headYaw, headPitch, minecraft.getTickDelta());
 		}

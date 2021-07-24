@@ -25,6 +25,10 @@ public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stre
 			if (raf == null)
 				throw new IOException("Could not load file");
 
+			// TODO: unpack these files to a neighbor directory of the remote asset dir, alongside
+			//  a sha256 of the file, and check both at runtime to see if they need to be re-unpacked.
+			//  Using the unpacked file will allow native seeking (it's a file, not a resource) and will
+			//  prevent those temp files from being introduced
 			var fs = Channels.newInputStream(raf);
 			var s = new LittleEndianDataInputStream(fs);
 
