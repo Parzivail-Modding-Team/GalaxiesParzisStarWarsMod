@@ -29,7 +29,7 @@ public class ClientPlayNetworkHandlerMixin
 					.styled((style) -> style
 					        .withItalic(true)
 					);
-			Text urlText = new LiteralText("https://pswg.dev/download.html")
+			Text urlText = new LiteralText("https://www.curseforge.com/minecraft/mc-mods/pswg")
 					.styled((style) -> style
 							.withColor(TextColor.fromRgb(0x5bc0de))
 							.withUnderline(true)

@@ -2,8 +2,8 @@ package com.parzivail.pswg.entity.ship;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.camera.ChaseCam;
 import com.parzivail.pswg.client.input.ShipControls;
+import com.parzivail.pswg.client.render.camera.ChaseCam;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.util.QuatUtil;
@@ -15,6 +15,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -64,6 +65,26 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	{
 		super(type, world);
 		this.inanimate = true;
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static boolean handleMouseInput(double cursorDeltaX, double cursorDeltaY)
+	{
+		var minecraft = MinecraftClient.getInstance();
+
+		var player = minecraft.player;
+
+		assert player != null;
+
+		var ship = getShip(player);
+
+		if (ship != null)
+		{
+			ship.acceptMouseInput(cursorDeltaX, cursorDeltaY);
+			return true;
+		}
+
+		return false;
 	}
 
 	public static void handleFirePacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)

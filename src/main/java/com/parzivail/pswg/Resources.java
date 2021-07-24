@@ -82,7 +82,7 @@ public class Resources
 			{
 				REMOTE_VERSION = mostRecentRelease;
 
-				Lumberjack.warn("A new version is available at https://pswg.dev/download.html: %s (vs: %s)", REMOTE_VERSION.name, ownVersion);
+				Lumberjack.warn("A new version is available at https://www.curseforge.com/minecraft/mc-mods/pswg: %s (vs: %s)", REMOTE_VERSION.name, ownVersion);
 			}
 		}
 		catch (Exception e)

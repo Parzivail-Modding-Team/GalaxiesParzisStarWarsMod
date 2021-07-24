@@ -6,7 +6,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
-import com.parzivail.util.client.render.ICustomVisualItemEquality;
+import com.parzivail.util.item.ICustomVisualItemEquality;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import com.parzivail.util.item.IItemEntityConsumer;
 import com.parzivail.util.item.ItemStackEntityAttributeModifiers;

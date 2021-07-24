@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.client.input.ShipInputHandler;
+import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.Entity;
@@ -16,7 +16,7 @@ public class EntityClientMixin
 	@Inject(method = "changeLookDirection(DD)V", at = @At("HEAD"), cancellable = true)
 	void changeLookDirection(double cursorDeltaX, double cursorDeltaY, CallbackInfo info)
 	{
-		if (ShipInputHandler.handle(cursorDeltaX, cursorDeltaY))
+		if (ShipEntity.handleMouseInput(cursorDeltaX, cursorDeltaY))
 			info.cancel();
 	}
 }

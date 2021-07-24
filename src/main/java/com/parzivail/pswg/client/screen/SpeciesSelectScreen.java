@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.model.PlayerEntityRendererWithModel;
+import com.parzivail.pswg.client.render.player.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;

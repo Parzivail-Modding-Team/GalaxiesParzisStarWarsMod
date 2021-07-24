@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.client.camera.CameraHelper;
+import com.parzivail.pswg.client.render.camera.CameraHelper;
 import com.parzivail.util.item.IZoomingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

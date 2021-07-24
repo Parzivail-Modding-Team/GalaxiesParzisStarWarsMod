@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.loader;
 
-import com.parzivail.pswg.client.pm3d.PM3DBakedBlockModel;
-import com.parzivail.pswg.client.pm3d.PM3DFile;
-import com.parzivail.pswg.client.pm3d.PM3DUnbakedBlockModel;
+import com.parzivail.pswg.client.render.pm3d.PM3DBakedBlockModel;
+import com.parzivail.pswg.client.render.pm3d.PM3DFile;
+import com.parzivail.pswg.client.render.pm3d.PM3DUnbakedBlockModel;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import net.minecraft.util.Identifier;
 

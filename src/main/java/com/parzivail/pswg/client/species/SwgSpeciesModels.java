@@ -3,7 +3,6 @@ package com.parzivail.pswg.client.species;
 import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.model.EmptyPlayerModel;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SwgSpecies;
@@ -19,17 +18,14 @@ public class SwgSpeciesModels
 {
 	public static final HashMap<Identifier, SwgSpeciesModel> MODELS = new HashMap<>();
 
-	private static final Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> EMPTY_MODEL = EmptyPlayerModel::new;
-
 	static
 	{
-		//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, new ModelBothan<>(true, 0), new ModelBothan<>(false, 0));
 		//		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, new ModelKaminoan<>(true, 0), new ModelKaminoan<>(false, 0));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
+		//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
 		register(SwgSpeciesRegistry.SPECIES_AQUALISH, nemSource(Resources.id("species/aqualish")));
 		register(SwgSpeciesRegistry.SPECIES_BITH, nemSource(Resources.id("species/bith")));
-		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
 		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, nemSource(Resources.id("species/chagrian")));
 		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, nemSource(Resources.id("species/kaminoan")));
 		register(SwgSpeciesRegistry.SPECIES_JAWA, nemSource(Resources.id("species/jawa")));

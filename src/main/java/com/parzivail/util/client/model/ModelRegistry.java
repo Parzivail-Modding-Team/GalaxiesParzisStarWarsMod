@@ -16,7 +16,7 @@
 
 package com.parzivail.util.client.model;
 
-import com.parzivail.pswg.client.model.ConnectedTextureModel;
+import com.parzivail.pswg.client.render.model.ConnectedTextureModel;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 import net.minecraft.block.Block;

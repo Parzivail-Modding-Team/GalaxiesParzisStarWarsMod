@@ -2,8 +2,8 @@ package com.parzivail.pswg.client.render.item;
 
 import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.pm3d.PM3DFile;
-import com.parzivail.pswg.client.render.LightsaberRenderer;
+import com.parzivail.pswg.client.render.entity.LightsaberRenderer;
+import com.parzivail.pswg.client.render.pm3d.PM3DFile;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;

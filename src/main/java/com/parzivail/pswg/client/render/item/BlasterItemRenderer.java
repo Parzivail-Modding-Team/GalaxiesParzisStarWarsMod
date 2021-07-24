@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.render.item;
 
 import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.pm3d.PM3DFile;
+import com.parzivail.pswg.client.render.pm3d.PM3DFile;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.client.VertexConsumerBuffer;

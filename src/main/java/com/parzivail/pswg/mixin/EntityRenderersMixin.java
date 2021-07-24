@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.google.common.collect.ImmutableMap;
-import com.parzivail.pswg.client.model.PlayerEntityRendererWithModel;
+import com.parzivail.pswg.client.render.player.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

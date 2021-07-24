@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.client.camera.CameraHelper;
-import com.parzivail.pswg.client.render.features.ForceFeatureRenderer;
+import com.parzivail.pswg.client.render.camera.CameraHelper;
+import com.parzivail.pswg.client.render.player.features.ForceFeatureRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
