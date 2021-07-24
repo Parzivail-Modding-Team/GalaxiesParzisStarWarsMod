@@ -231,22 +231,37 @@ public class SpeciesSelectScreen extends Screen
 
 		var speciesEntry = speciesListWidget.getSelectedOrNull();
 		var selectedVariableEntry = speciesVariableListWidget.getSelectedOrNull();
-		if (speciesEntry != null && selectedVariableEntry != null)
+		if (speciesEntry != null)
 		{
 			var selectedSpecies = speciesEntry.getValue();
-			var selectedVariable = selectedVariableEntry.getValue();
+			SpeciesVariable selectedVariable = null;
 
-			var values = selectedVariable.getPossibleValues();
-			var selectedValue = selectedSpecies.getVariable(selectedVariable);
+			String[] values;
+			String selectedValue;
+			int selectedIndex;
 
-			if (selectedSpecies.isSameSpecies(this.playerSpecies))
-				selectedSpecies.copy(this.playerSpecies);
+			if (selectedSpecies != null)
+			{
+				selectedVariable = selectedVariableEntry.getValue();
 
-			selectedSpecies.setGender(gender);
+				values = selectedVariable.getPossibleValues();
+				selectedValue = selectedSpecies.getVariable(selectedVariable);
 
-			var selectedIndex = ArrayUtils.indexOf(values, selectedValue);
+				if (selectedSpecies.isSameSpecies(this.playerSpecies))
+					selectedSpecies.copy(this.playerSpecies);
 
-			drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
+				selectedSpecies.setGender(gender);
+
+				selectedIndex = ArrayUtils.indexOf(values, selectedValue);
+
+				drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
+			}
+			else
+			{
+				values = new String[] { "none" };
+				selectedValue = null;
+				selectedIndex = 0;
+			}
 
 			matrices.push();
 
@@ -255,7 +270,9 @@ public class SpeciesSelectScreen extends Screen
 			for (var j = 0; j < values.length; j++)
 			{
 				var value = values[j];
-				selectedSpecies.setVariable(selectedVariable, value);
+
+				if (selectedSpecies != null)
+					selectedSpecies.setVariable(selectedVariable, value);
 
 				mat2.push();
 
@@ -276,7 +293,7 @@ public class SpeciesSelectScreen extends Screen
 				mat2.translate(0, modelSize, 0);
 
 				if (scale > 0)
-					drawEntity(mat2, selectedSpecies.serialize(), 0, 0, modelSize, (float)(x - mouseX + offset), y - modelSize / 2f - mouseY);
+					drawEntity(mat2, selectedSpecies == null ? null : selectedSpecies.serialize(), 0, 0, modelSize, (float)(x - mouseX + offset), y - modelSize / 2f - mouseY);
 
 				mat2.pop();
 			}
@@ -285,7 +302,8 @@ public class SpeciesSelectScreen extends Screen
 
 			matrices.pop();
 
-			selectedSpecies.setVariable(selectedVariable, selectedValue);
+			if (selectedSpecies != null)
+				selectedSpecies.setVariable(selectedVariable, selectedValue);
 		}
 
 		super.render(matrices, mouseX, mouseY, delta);
@@ -293,9 +311,6 @@ public class SpeciesSelectScreen extends Screen
 
 	public void drawEntity(MatrixStack matrixStack, String speciesString, int x, int y, int size, float mouseX, float mouseY)
 	{
-		if (speciesString == null)
-			return;
-
 		matrixStack.push();
 
 		PlayerEntity entity = client.player;
@@ -326,26 +341,28 @@ public class SpeciesSelectScreen extends Screen
 		var erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
 		var renderers = erda.getModelRenderers();
 
-		var species = SwgSpeciesRegistry.deserialize(speciesString);
-		var renderer = renderers.get(species.getModel().toString());
-
 		DiffuseLighting.method_34742();
 		EntityRenderDispatcher entityRenderDispatcher = client.getEntityRenderDispatcher();
 		quaternion2.conjugate();
 		entityRenderDispatcher.setRotation(quaternion2);
 		entityRenderDispatcher.setRenderShadows(false);
 		RenderSystem.runAsFancy(() -> {
-			if (renderer == null)
+			if (speciesString == null)
 			{
-				// How did we get here?
 				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack2, immediate, 0xf000f0);
 			}
-			else if (renderer instanceof PlayerEntityRendererWithModel perwm)
-			{
-				perwm.renderWithTexture(SwgSpeciesModels.getTexture(entity, species), client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
-			}
 			else
-				renderer.render(client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+			{
+				var species = SwgSpeciesRegistry.deserialize(speciesString);
+				var renderer = renderers.get(species.getModel().toString());
+
+				if (renderer instanceof PlayerEntityRendererWithModel perwm)
+				{
+					perwm.renderWithTexture(SwgSpeciesModels.getTexture(entity, species), client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+				}
+				else if (renderer != null)
+					renderer.render(client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+			}
 		});
 		immediate.draw();
 		entityRenderDispatcher.setRenderShadows(true);
