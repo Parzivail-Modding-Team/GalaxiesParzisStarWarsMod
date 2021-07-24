@@ -5,6 +5,7 @@ import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -86,11 +87,11 @@ public class SpeciesTogruta extends SwgSpecies
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public Collection<Identifier> getTextureStack(SwgSpecies species)
+	public Collection<Identifier> getTextureStack(PlayerEntity player, SwgSpecies species)
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
-		stack.add(getGenderedGlobalTexture(gender, "clothes"));
+		stack.add(getGenderedGlobalTexture(player, gender, "clothes"));
 		stack.add(getGenderedTexture(this, VAR_LOWER_MONTRAL));
 
 		if (!SpeciesVariable.isNone(this, VAR_UPPER_MONTRAL))

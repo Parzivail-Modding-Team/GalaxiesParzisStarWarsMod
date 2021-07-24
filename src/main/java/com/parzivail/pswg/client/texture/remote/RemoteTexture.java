@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.texture.remote;
 
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.util.Lumberjack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -10,8 +11,6 @@ import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -25,19 +24,27 @@ import java.util.concurrent.CompletableFuture;
 @Environment(EnvType.CLIENT)
 public class RemoteTexture extends ResourceTexture
 {
-	private static final Logger LOGGER = LogManager.getLogger();
 	@Nullable
 	private final Path cacheFile;
 	private final String url;
+	private final Runnable onResolved;
 	@Nullable
 	private CompletableFuture<?> loader;
 	private boolean loaded;
 
-	public RemoteTexture(@Nullable Path cacheFile, String url, Identifier fallbackSkin)
+	private NativeImage image;
+
+	public RemoteTexture(@Nullable Path cacheFile, String url, Identifier fallbackSkin, Runnable onResolved)
 	{
 		super(fallbackSkin);
 		this.cacheFile = cacheFile;
 		this.url = url;
+		this.onResolved = onResolved;
+	}
+
+	public NativeImage getImage()
+	{
+		return image;
 	}
 
 	private void onTextureLoaded(NativeImage image)
@@ -47,11 +54,13 @@ public class RemoteTexture extends ResourceTexture
 			this.loaded = true;
 			if (!RenderSystem.isOnRenderThread())
 			{
-				RenderSystem.recordRenderCall(() -> this.uploadTexture(image));
+				RenderSystem.recordRenderCall(() -> this.onTextureLoaded(image));
 			}
 			else
 			{
 				this.uploadTexture(image);
+				this.image = image;
+				onResolved.run();
 			}
 		});
 	}
@@ -59,7 +68,7 @@ public class RemoteTexture extends ResourceTexture
 	private void uploadTexture(NativeImage image)
 	{
 		TextureUtil.prepareImage(this.getGlId(), image.getWidth(), image.getHeight());
-		image.upload(0, 0, 0, true);
+		image.upload(0, 0, 0, false);
 	}
 
 	public void load(ResourceManager manager) throws IOException
@@ -74,18 +83,20 @@ public class RemoteTexture extends ResourceTexture
 				}
 				catch (IOException var3)
 				{
-					LOGGER.warn("Failed to load texture: {}", this.location, var3);
+					Lumberjack.warn("Failed to load texture: %s", this.location);
+					var3.printStackTrace();
 				}
 
 				this.loaded = true;
 			}
 		});
+
 		if (this.loader == null)
 		{
 			NativeImage nativeImage2;
 			if (this.cacheFile != null && Files.isRegularFile(cacheFile))
 			{
-				LOGGER.debug("Loading http texture from local cache ({})", this.cacheFile);
+				Lumberjack.debug("Loading http texture from local cache (%s)", this.cacheFile);
 				var inputStream = Files.newInputStream(this.cacheFile);
 				nativeImage2 = this.loadTexture(inputStream);
 			}
@@ -102,7 +113,7 @@ public class RemoteTexture extends ResourceTexture
 			{
 				this.loader = CompletableFuture.runAsync(() -> {
 					HttpURLConnection httpURLConnection = null;
-					LOGGER.debug("Downloading http texture from {} to {}", this.url, this.cacheFile);
+					Lumberjack.debug("Downloading http texture from %s to %s", this.url, this.cacheFile);
 
 					try
 					{
@@ -115,6 +126,7 @@ public class RemoteTexture extends ResourceTexture
 							InputStream inputStream2;
 							if (this.cacheFile != null)
 							{
+								Files.createDirectories(this.cacheFile.getParent());
 								Files.copy(httpURLConnection.getInputStream(), this.cacheFile);
 								inputStream2 = Files.newInputStream(this.cacheFile);
 							}
@@ -135,7 +147,8 @@ public class RemoteTexture extends ResourceTexture
 					}
 					catch (Exception var6)
 					{
-						LOGGER.error("Couldn't download http texture", var6);
+						Lumberjack.error("Couldn't download http texture");
+						var6.printStackTrace();
 						return;
 					}
 					finally
@@ -161,7 +174,8 @@ public class RemoteTexture extends ResourceTexture
 		}
 		catch (IOException var4)
 		{
-			LOGGER.warn("Error while loading the remote texture", var4);
+			Lumberjack.warn("Error while loading the remote texture");
+			var4.printStackTrace();
 		}
 
 		return nativeImage;

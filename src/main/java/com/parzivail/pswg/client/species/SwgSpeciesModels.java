@@ -9,6 +9,7 @@ import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SwgSpecies;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -71,11 +72,10 @@ public class SwgSpeciesModels
 		register(speciesSlug, SpeciesGender.FEMALE, androgynousModel);
 	}
 
-	public static Identifier getTexture(SwgSpecies species)
+	public static Identifier getTexture(PlayerEntity player, SwgSpecies species)
 	{
 		var hashCode = species.hashCode();
 
-		// TODO: sensible fallback texture instead of just black for a frame?
-		return Client.stackedTextureProvider.loadTexture("species/" + hashCode, () -> new Identifier(""), () -> species.getTextureStack(species));
+		return Client.stackedTextureProvider.loadTexture("species/" + hashCode, () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player, species));
 	}
 }

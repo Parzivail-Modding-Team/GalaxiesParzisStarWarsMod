@@ -55,6 +55,8 @@ public class Client implements ClientModInitializer
 
 	public static final KeyBinding KEY_SPECIES_SELECT = new KeyBinding(Resources.keyBinding("species_select"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category.pswg");
 
+	public static final Identifier TEX_TRANSPARENT = Resources.id("textures/effect/transparent.png");
+
 	public static RemoteTextureProvider remoteTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
 

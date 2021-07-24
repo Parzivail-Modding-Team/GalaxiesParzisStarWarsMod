@@ -1,10 +1,12 @@
 package com.parzivail.pswg.species;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.species.SpeciesTogruta;
-import com.parzivail.util.client.TintedIdentifier;
+import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.Collection;
@@ -44,9 +46,16 @@ public abstract class SwgSpecies
 		return getTexture(SwgSpeciesRegistry.SPECIES_GLOBAL, texture);
 	}
 
-	protected static Identifier getGenderedGlobalTexture(SpeciesGender gender, String texture)
+	protected static Identifier getGenderedGlobalTexture(PlayerEntity player, SpeciesGender gender, String texture)
 	{
-		return getTexture(SpeciesGender.toModel(SwgSpeciesRegistry.SPECIES_GLOBAL, gender), texture);
+		var id = getTexture(SpeciesGender.toModel(SwgSpeciesRegistry.SPECIES_GLOBAL, gender), texture);
+		// TODO: move to own function
+		if ("clothes".equals(texture))
+		{
+			var uuid = player.getUuidAsString();
+			return Client.remoteTextureProvider.loadTexture(String.format("character/%s", uuid), () -> id);
+		}
+		return id;
 	}
 
 	private static Identifier getTexture(Identifier slug, String texture)
@@ -96,7 +105,7 @@ public abstract class SwgSpecies
 	public abstract SpeciesVariable[] getVariables();
 
 	@Environment(EnvType.CLIENT)
-	public abstract Collection<Identifier> getTextureStack(SwgSpecies species);
+	public abstract Collection<Identifier> getTextureStack(PlayerEntity player, SwgSpecies species);
 
 	public void setDefaultVariables()
 	{

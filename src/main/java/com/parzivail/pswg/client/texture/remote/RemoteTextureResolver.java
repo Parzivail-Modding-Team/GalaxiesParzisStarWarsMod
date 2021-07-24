@@ -6,6 +6,8 @@ public class RemoteTextureResolver
 {
 	public RemoteTextureUrl getTexture(Identifier id)
 	{
-		return new RemoteTextureUrl("https://raw.githubusercontent.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/master/resources/images/logo_micro_yellow.png");
+		var remotePath = id.getPath();
+		var path = remotePath.split("/", 2);
+		return new RemoteTextureUrl(String.format("https://pswg.dev/skins/%s.png", path[1]));
 	}
 }

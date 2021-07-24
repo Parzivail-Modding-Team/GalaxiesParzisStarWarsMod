@@ -2,6 +2,8 @@ package com.parzivail.pswg.client.texture.stacked;
 
 import com.mojang.authlib.minecraft.InsecureTextureException;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.client.texture.remote.RemoteTexture;
+import com.parzivail.util.data.RemoteFallbackIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -42,6 +44,11 @@ public record StackedTextureProvider(TextureManager textureManager,
 		return fallback.get();
 	}
 
+	private void onRemoteTextureResolved(RemoteTexture remoteTexture)
+	{
+
+	}
+
 	public void loadTexture(Identifier identifier, Collection<Identifier> textures)
 	{
 		Util.getMainWorkerExecutor().execute(() -> {
@@ -52,7 +59,15 @@ public record StackedTextureProvider(TextureManager textureManager,
 					AbstractTexture abstractTexture = this.textureManager.getOrDefault(identifier, null);
 					if (!(abstractTexture instanceof StackedTexture))
 					{
-						StackedTexture texture = new StackedTexture(DefaultSkinHelper.getTexture(), textures);
+						for (var id : textures)
+						{
+							if (id instanceof RemoteFallbackIdentifier rfi)
+								rfi.addCallback(() -> {
+									TEXTURE_CACHE.values().removeIf(identifier::equals);
+								});
+						}
+
+						StackedTexture texture = new StackedTexture(identifier, DefaultSkinHelper.getTexture(), textures);
 						this.textureManager.registerTexture(identifier, texture);
 					}
 				}));

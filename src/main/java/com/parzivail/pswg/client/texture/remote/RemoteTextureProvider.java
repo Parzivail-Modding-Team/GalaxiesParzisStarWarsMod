@@ -6,6 +6,7 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.hash.Hashing;
 import com.mojang.authlib.minecraft.InsecureTextureException;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.util.data.RemoteFallbackIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -25,6 +26,7 @@ import java.util.function.Supplier;
 public class RemoteTextureProvider
 {
 	private static final HashMap<String, Identifier> TEXTURE_CACHE = new HashMap<>();
+	private static final HashMap<Identifier, RemoteFallbackIdentifier> FALLBACK_CACHE = new HashMap<>();
 
 	private final TextureManager textureManager;
 	private final String identifierRoot;
@@ -57,7 +59,7 @@ public class RemoteTextureProvider
 	public Identifier loadTexture(String id, Supplier<Identifier> fallback)
 	{
 		var identifier = getIdentifier(id);
-		var texture = textureManager.getTexture(identifier);
+		var texture = textureManager.getOrDefault(identifier, null);
 
 		// The texture is fully loaded
 		if (texture != null)
@@ -65,13 +67,19 @@ public class RemoteTextureProvider
 
 		if (!TEXTURE_CACHE.containsKey(id))
 		{
-			// The texture hasn't been stacked yet
+			// The texture hasn't been resolved yet
 			loadTexture(identifier);
 			TEXTURE_CACHE.put(id, identifier);
 		}
 
-		// The texture has been stacked but hasn't been loaded yet
-		return fallback.get();
+		if (!FALLBACK_CACHE.containsKey(identifier))
+		{
+			var fallbackId = fallback.get();
+			FALLBACK_CACHE.put(identifier, new RemoteFallbackIdentifier(fallbackId.getNamespace(), fallbackId.getPath()));
+		}
+
+		// The texture has been resolved but hasn't been loaded yet
+		return FALLBACK_CACHE.get(identifier);
 	}
 
 	public void loadTexture(Identifier identifier)
@@ -87,12 +95,14 @@ public class RemoteTextureProvider
 
 				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> {
 					String string = Hashing.sha1().hashUnencodedChars(remoteTextureUrl.getHash()).toString();
-					AbstractTexture abstractTexture = this.textureManager.getTexture(identifier);
+					AbstractTexture abstractTexture = this.textureManager.getOrDefault(identifier, null);
 					if (!(abstractTexture instanceof RemoteTexture))
 					{
 						Path path = this.skinCacheDir.resolve(string.length() > 2 ? string.substring(0, 2) : "xx");
 						Path path2 = path.resolve(string);
-						RemoteTexture remoteTexture = new RemoteTexture(path2, remoteTextureUrl.getUrl(), DefaultSkinHelper.getTexture());
+						RemoteTexture remoteTexture = new RemoteTexture(path2, remoteTextureUrl.getUrl(), DefaultSkinHelper.getTexture(), () -> {
+							FALLBACK_CACHE.get(identifier).pollCallbacks();
+						});
 						this.textureManager.registerTexture(identifier, remoteTexture);
 					}
 				}));

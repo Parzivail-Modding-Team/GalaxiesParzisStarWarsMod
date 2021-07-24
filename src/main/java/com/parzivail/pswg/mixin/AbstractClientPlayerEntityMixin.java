@@ -25,7 +25,7 @@ public class AbstractClientPlayerEntityMixin
 		if (species == null)
 			return;
 
-		cir.setReturnValue(SwgSpeciesModels.getTexture(species));
+		cir.setReturnValue(SwgSpeciesModels.getTexture((PlayerEntity)(Object)this, species));
 		cir.cancel();
 	}
 }

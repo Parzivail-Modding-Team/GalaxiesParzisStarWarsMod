@@ -1,4 +1,4 @@
-package com.parzivail.util.client;
+package com.parzivail.util.data;
 
 import net.minecraft.util.Identifier;
 

@@ -2,12 +2,14 @@ package com.parzivail.pswg.client.texture.stacked;
 
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.client.texture.remote.RemoteTexture;
 import com.parzivail.util.client.ColorUtil;
-import com.parzivail.util.client.TintedIdentifier;
+import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -21,13 +23,22 @@ import java.util.Collection;
 public class StackedTexture extends ResourceTexture
 {
 	private static final Logger LOGGER = LogManager.getLogger();
+	private final Identifier identifier;
 	private final Identifier[] textures;
 	private boolean loaded;
 
-	public StackedTexture(Identifier fallbackSkin, Collection<Identifier> textures)
+	private NativeImage image;
+
+	public StackedTexture(Identifier identifier, Identifier fallbackSkin, Collection<Identifier> textures)
 	{
 		super(fallbackSkin);
+		this.identifier = identifier;
 		this.textures = textures.toArray(new Identifier[0]);
+	}
+
+	public NativeImage getImage()
+	{
+		return image;
 	}
 
 	private void onTextureLoaded(NativeImage image)
@@ -37,11 +48,12 @@ public class StackedTexture extends ResourceTexture
 			this.loaded = true;
 			if (!RenderSystem.isOnRenderThread())
 			{
-				RenderSystem.recordRenderCall(() -> this.uploadTexture(image));
+				RenderSystem.recordRenderCall(() -> this.onTextureLoaded(image));
 			}
 			else
 			{
 				this.uploadTexture(image);
+				this.image = image;
 			}
 		});
 	}
@@ -50,6 +62,12 @@ public class StackedTexture extends ResourceTexture
 	{
 		TextureUtil.prepareImage(this.getGlId(), image.getWidth(), image.getHeight());
 		image.upload(0, 0, 0, true);
+	}
+
+	private void onRemoteTextureResolved(RemoteTexture remoteTexture)
+	{
+		var minecraft = MinecraftClient.getInstance();
+		minecraft.getTextureManager().destroyTexture(identifier);
 	}
 
 	public void load(ResourceManager manager) throws IOException
@@ -71,6 +89,8 @@ public class StackedTexture extends ResourceTexture
 			}
 		});
 
+		var textureManager = minecraft.getTextureManager();
+
 		var nativeImages = new NativeImage[textures.length];
 		var tints = new int[textures.length];
 
@@ -83,20 +103,32 @@ public class StackedTexture extends ResourceTexture
 			else
 				tints[i] = 0xFFFFFF;
 
-			var texData = TextureData.load(manager, textureId);
+			var texture = textureManager.getTexture(textureId);
 
-			// TODO: allow tint encoding for layers
-			nativeImages[i] = texData.getImage();
+			if (texture instanceof NativeImageBackedTexture nibt)
+				nativeImages[i] = nibt.getImage();
+			else if (texture instanceof RemoteTexture rt)
+				nativeImages[i] = rt.getImage();
+			else if (texture instanceof StackedTexture st)
+				nativeImages[i] = st.getImage();
+			else
+			{
+				var texData = TextureData.load(manager, textureId);
+				nativeImages[i] = texData.getImage();
+			}
 
-			if (nativeImages[i].getWidth() != nativeImages[0].getWidth() || nativeImages[i].getHeight() != nativeImages[0].getHeight())
+			if (nativeImages[i] != null && (nativeImages[i].getWidth() != nativeImages[0].getWidth() || nativeImages[i].getHeight() != nativeImages[0].getHeight()))
 				throw new IOException("All textures in a stack must be the same size");
 		}
 
 		var base = nativeImages[0];
 
-		for (var i = 1; i < nativeImages.length; i++)
+		for (var i = 0; i < nativeImages.length; i++)
 		{
 			var layerImage = nativeImages[i];
+
+			if (layerImage == null)
+				continue;
 
 			var width = layerImage.getWidth();
 			var height = layerImage.getHeight();

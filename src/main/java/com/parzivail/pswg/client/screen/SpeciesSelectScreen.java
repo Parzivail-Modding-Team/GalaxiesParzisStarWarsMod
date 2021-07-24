@@ -342,7 +342,7 @@ public class SpeciesSelectScreen extends Screen
 			}
 			else if (renderer instanceof PlayerEntityRendererWithModel perwm)
 			{
-				perwm.renderWithTexture(SwgSpeciesModels.getTexture(species), client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+				perwm.renderWithTexture(SwgSpeciesModels.getTexture(entity, species), client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
 			}
 			else
 				renderer.render(client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
