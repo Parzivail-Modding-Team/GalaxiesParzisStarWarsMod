@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.texture.stacked;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.client.texture.remote.RemoteTexture;
+import com.parzivail.util.Lumberjack;
 import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
@@ -13,8 +14,6 @@ import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -22,7 +21,6 @@ import java.util.Collection;
 @Environment(EnvType.CLIENT)
 public class StackedTexture extends ResourceTexture
 {
-	private static final Logger LOGGER = LogManager.getLogger();
 	private final Identifier identifier;
 	private final Identifier[] textures;
 	private boolean loaded;
@@ -82,7 +80,8 @@ public class StackedTexture extends ResourceTexture
 				}
 				catch (IOException var3)
 				{
-					LOGGER.warn("Failed to load texture: {}", this.location, var3);
+					Lumberjack.warn("Failed to load texture: %s", this.location);
+					var3.printStackTrace();
 				}
 
 				this.loaded = true;

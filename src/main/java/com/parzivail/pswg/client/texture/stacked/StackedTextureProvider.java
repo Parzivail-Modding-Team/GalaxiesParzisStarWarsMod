@@ -2,12 +2,10 @@ package com.parzivail.pswg.client.texture.stacked;
 
 import com.mojang.authlib.minecraft.InsecureTextureException;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.pswg.client.texture.remote.RemoteTexture;
-import com.parzivail.util.data.RemoteFallbackIdentifier;
+import com.parzivail.pswg.Client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
@@ -29,8 +27,8 @@ public record StackedTextureProvider(TextureManager textureManager,
 		var identifier = getIdentifier(id);
 		var texture = textureManager.getOrDefault(identifier, null);
 
-		// The texture is fully loaded
-		if (texture != null)
+		// The texture is fully loaded and isn't marked as dirty (i.e. the cache contains it)
+		if (texture != null && TEXTURE_CACHE.containsKey(id))
 			return identifier;
 
 		if (!TEXTURE_CACHE.containsKey(id))
@@ -44,9 +42,10 @@ public record StackedTextureProvider(TextureManager textureManager,
 		return fallback.get();
 	}
 
-	private void onRemoteTextureResolved(RemoteTexture remoteTexture)
+	private void markTextureDirty(Identifier identifier)
 	{
-
+		var size = TEXTURE_CACHE.size();
+		TEXTURE_CACHE.values().removeIf(identifier::equals);
 	}
 
 	public void loadTexture(Identifier identifier, Collection<Identifier> textures)
@@ -56,20 +55,17 @@ public record StackedTextureProvider(TextureManager textureManager,
 			{
 				var minecraft = MinecraftClient.getInstance();
 				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> {
-					AbstractTexture abstractTexture = this.textureManager.getOrDefault(identifier, null);
-					if (!(abstractTexture instanceof StackedTexture))
+					for (var id : textures)
 					{
-						for (var id : textures)
-						{
-							if (id instanceof RemoteFallbackIdentifier rfi)
-								rfi.addCallback(() -> {
-									TEXTURE_CACHE.values().removeIf(identifier::equals);
-								});
-						}
-
-						StackedTexture texture = new StackedTexture(identifier, DefaultSkinHelper.getTexture(), textures);
-						this.textureManager.registerTexture(identifier, texture);
+						Identifier remoteId = Client.remoteTextureProvider.getRemoteTextureId(id);
+						if (remoteId != null)
+							Client.remoteTextureProvider.addLoadCallback(remoteId, () -> {
+								markTextureDirty(identifier);
+							});
 					}
+
+					StackedTexture texture = new StackedTexture(identifier, DefaultSkinHelper.getTexture(), textures);
+					this.textureManager.registerTexture(identifier, texture);
 				}));
 			}
 			catch (InsecureTextureException var7)

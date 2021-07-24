@@ -6,11 +6,10 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.hash.Hashing;
 import com.mojang.authlib.minecraft.InsecureTextureException;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.util.data.RemoteFallbackIdentifier;
+import com.parzivail.util.data.FallbackIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.texture.AbstractTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
@@ -18,7 +17,9 @@ import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 
@@ -26,7 +27,7 @@ import java.util.function.Supplier;
 public class RemoteTextureProvider
 {
 	private static final HashMap<String, Identifier> TEXTURE_CACHE = new HashMap<>();
-	private static final HashMap<Identifier, RemoteFallbackIdentifier> FALLBACK_CACHE = new HashMap<>();
+	private static final HashMap<Identifier, List<Runnable>> LOAD_CALLBACKS = new HashMap<>();
 
 	private final TextureManager textureManager;
 	private final String identifierRoot;
@@ -56,6 +57,22 @@ public class RemoteTextureProvider
 		});
 	}
 
+	public boolean isRemoteTexture(Identifier id)
+	{
+		return id.toString().startsWith(identifierRoot);
+	}
+
+	public Identifier getRemoteTextureId(Identifier id)
+	{
+		if (isRemoteTexture(id))
+			return id;
+
+		if (id instanceof FallbackIdentifier fi && isRemoteTexture(fi.getSource()))
+			return fi.getSource();
+
+		return null;
+	}
+
 	public Identifier loadTexture(String id, Supplier<Identifier> fallback)
 	{
 		var identifier = getIdentifier(id);
@@ -72,14 +89,9 @@ public class RemoteTextureProvider
 			TEXTURE_CACHE.put(id, identifier);
 		}
 
-		if (!FALLBACK_CACHE.containsKey(identifier))
-		{
-			var fallbackId = fallback.get();
-			FALLBACK_CACHE.put(identifier, new RemoteFallbackIdentifier(fallbackId.getNamespace(), fallbackId.getPath()));
-		}
-
 		// The texture has been resolved but hasn't been loaded yet
-		return FALLBACK_CACHE.get(identifier);
+		var fallbackId = fallback.get();
+		return new FallbackIdentifier(fallbackId.getNamespace(), fallbackId.getPath(), identifier);
 	}
 
 	public void loadTexture(Identifier identifier)
@@ -95,22 +107,37 @@ public class RemoteTextureProvider
 
 				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> {
 					String string = Hashing.sha1().hashUnencodedChars(remoteTextureUrl.getHash()).toString();
-					AbstractTexture abstractTexture = this.textureManager.getOrDefault(identifier, null);
-					if (!(abstractTexture instanceof RemoteTexture))
-					{
-						Path path = this.skinCacheDir.resolve(string.length() > 2 ? string.substring(0, 2) : "xx");
-						Path path2 = path.resolve(string);
-						RemoteTexture remoteTexture = new RemoteTexture(path2, remoteTextureUrl.getUrl(), DefaultSkinHelper.getTexture(), () -> {
-							FALLBACK_CACHE.get(identifier).pollCallbacks();
-						});
-						this.textureManager.registerTexture(identifier, remoteTexture);
-					}
+
+					Path path = this.skinCacheDir.resolve(string.length() > 2 ? string.substring(0, 2) : "xx");
+					Path path2 = path.resolve(string);
+					RemoteTexture remoteTexture = new RemoteTexture(path2, remoteTextureUrl.getUrl(), DefaultSkinHelper.getTexture(), () -> {
+						pollCallbacks(identifier);
+					});
+					this.textureManager.registerTexture(identifier, remoteTexture);
 				}));
 			}
 			catch (InsecureTextureException var7)
 			{
 			}
 		});
+	}
+
+	public void addLoadCallback(Identifier target, Runnable callback)
+	{
+		if (!LOAD_CALLBACKS.containsKey(target))
+			LOAD_CALLBACKS.put(target, new ArrayList<>());
+
+		LOAD_CALLBACKS.get(target).add(callback);
+	}
+
+	private void pollCallbacks(Identifier identifier)
+	{
+		var callbacks = LOAD_CALLBACKS.get(identifier);
+		if (callbacks != null)
+		{
+			callbacks.forEach(Runnable::run);
+			LOAD_CALLBACKS.remove(identifier);
+		}
 	}
 
 	@NotNull

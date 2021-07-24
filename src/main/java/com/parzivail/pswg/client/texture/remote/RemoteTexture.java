@@ -174,7 +174,7 @@ public class RemoteTexture extends ResourceTexture
 		}
 		catch (IOException var4)
 		{
-			Lumberjack.warn("Error while loading the remote texture");
+			Lumberjack.warn("Error while loading remote texture");
 			var4.printStackTrace();
 		}
 
