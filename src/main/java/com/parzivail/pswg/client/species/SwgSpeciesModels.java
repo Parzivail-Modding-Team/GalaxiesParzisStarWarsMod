@@ -23,14 +23,10 @@ public class SwgSpeciesModels
 
 	static
 	{
-//		register(SwgSpeciesRegistry.SPECIES_AQUALISH, new ModelAqualish<>(true, 0), new ModelAqualish<>(false, 0));
-//		register(SwgSpeciesRegistry.SPECIES_BITH, new ModelBith<>(true, 0), new ModelBith<>(false, 0));
-//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, new ModelBothan<>(true, 0), new ModelBothan<>(false, 0));
-//		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, new ModelChagrian<>(true, 0), new ModelChagrian<>(false, 0));
-//		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, new ModelKaminoan<>(true, 0), new ModelKaminoan<>(false, 0));
-//		register(SwgSpeciesRegistry.SPECIES_JAWA, new ModelJawa<>(0), new ModelJawa<>(0));
-//		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, new ModelTogrutaM<>(0), new ModelTogrutaF<>(0));
-//		register(SwgSpeciesRegistry.SPECIES_TWILEK, new ModelTwilek<>(true, 0), new ModelTwilek<>(false, 0));
+		//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, new ModelBothan<>(true, 0), new ModelBothan<>(false, 0));
+		//		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, new ModelKaminoan<>(true, 0), new ModelKaminoan<>(false, 0));
+		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
+		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
 		register(SwgSpeciesRegistry.SPECIES_AQUALISH, nemSource(Resources.id("species/aqualish")));
 		register(SwgSpeciesRegistry.SPECIES_BITH, nemSource(Resources.id("species/bith")));
 		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
@@ -41,8 +37,6 @@ public class SwgSpeciesModels
 		register(SwgSpeciesRegistry.SPECIES_TWILEK, nemSource(Resources.id("species/twilek")));
 		register(SwgSpeciesRegistry.SPECIES_HUMAN, nemSource(Resources.id("species/human")));
 		register(SwgSpeciesRegistry.SPECIES_CHISS, nemSource(Resources.id("species/human")));
-		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
-		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
 	}
 
 	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> nemSource(Identifier id)

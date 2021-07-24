@@ -42,7 +42,6 @@ public class SpeciesJawa extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
-//		stack.add(getGenderedGlobalTexture(gender, "clothes"));
 		return stack;
 	}
 }

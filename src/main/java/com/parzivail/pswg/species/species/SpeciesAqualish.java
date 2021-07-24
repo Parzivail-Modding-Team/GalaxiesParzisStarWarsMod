@@ -43,7 +43,7 @@ public class SpeciesAqualish extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
-		stack.add(getGenderedGlobalTexture(player, gender, "clothes"));
+		stack.add(getClothes(player, gender));
 		return stack;
 	}
 }

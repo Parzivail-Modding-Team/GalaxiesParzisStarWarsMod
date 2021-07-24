@@ -7,9 +7,9 @@ public class SpeciesVariable
 {
 	public static final String NONE = "none";
 
-	public static boolean isNone(SwgSpecies species, SpeciesVariable variable)
+	public static boolean isNotEmpty(SwgSpecies species, SpeciesVariable variable)
 	{
-		return species.getVariable(variable).equals(NONE);
+		return !species.getVariable(variable).equals(NONE);
 	}
 
 	private final Identifier species;

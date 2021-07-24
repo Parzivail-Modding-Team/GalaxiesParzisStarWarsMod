@@ -46,16 +46,17 @@ public abstract class SwgSpecies
 		return getTexture(SwgSpeciesRegistry.SPECIES_GLOBAL, texture);
 	}
 
-	protected static Identifier getGenderedGlobalTexture(PlayerEntity player, SpeciesGender gender, String texture)
+	protected static Identifier getClothes(PlayerEntity player, SpeciesGender gender)
 	{
-		var id = getTexture(SpeciesGender.toModel(SwgSpeciesRegistry.SPECIES_GLOBAL, gender), texture);
-		// TODO: move to own function
-		if ("clothes".equals(texture))
-		{
-			var uuid = player.getUuidAsString();
-			return Client.remoteTextureProvider.loadTexture(String.format("character/%s", uuid), () -> id);
-		}
-		return id;
+		return Client.remoteTextureProvider.loadTexture(
+				String.format("character/%s", player.getUuidAsString()),
+				() -> getGenderedGlobalTexture(gender, "clothes")
+		);
+	}
+
+	protected static Identifier getGenderedGlobalTexture(SpeciesGender gender, String texture)
+	{
+		return getTexture(SpeciesGender.toModel(SwgSpeciesRegistry.SPECIES_GLOBAL, gender), texture);
 	}
 
 	private static Identifier getTexture(Identifier slug, String texture)

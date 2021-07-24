@@ -59,7 +59,7 @@ public class SpeciesChiss extends SwgSpecies
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, "skin"));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
-		stack.add(getGenderedGlobalTexture(player, gender, "clothes"));
+		stack.add(getClothes(player, gender));
 		stack.add(getTexture(this, VAR_HAIR));
 		return stack;
 	}

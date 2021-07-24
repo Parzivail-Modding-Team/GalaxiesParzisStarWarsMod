@@ -80,7 +80,7 @@ public class SpeciesHuman extends SwgSpecies
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_SKINTONE));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
-		stack.add(getGenderedGlobalTexture(player, gender, "clothes"));
+		stack.add(getClothes(player, gender));
 		stack.add(tint(getGlobalTexture("eyes"), 0xFFFFFF));
 		stack.add(getTexture(this, VAR_HAIR));
 		return stack;
