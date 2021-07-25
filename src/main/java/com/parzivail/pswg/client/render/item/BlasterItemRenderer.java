@@ -87,6 +87,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var opacity = 1f;
 
+		if (renderMode == ModelTransformation.Mode.GROUND)
+		{
+			matrices.translate(-0.4f, 0.9f, -0.4f);
+		}
 		if (renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.FIXED)
 		{
 			matrices.multiply(new Quaternion(90, 0, 0, true));
