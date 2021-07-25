@@ -25,6 +25,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -123,7 +124,11 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	{
 		var stack = new ItemStack(this);
 
-		stack.getOrCreateTag().putString("model", descriptor.id.toString());
+		LightsaberTag.mutate(stack, lightsaberTag -> {
+			lightsaberTag.owner = descriptor.owner;
+			lightsaberTag.hilt = new Identifier(descriptor.hilt);
+			lightsaberTag.bladeHue = descriptor.bladeHue;
+		});
 
 		return stack;
 	}

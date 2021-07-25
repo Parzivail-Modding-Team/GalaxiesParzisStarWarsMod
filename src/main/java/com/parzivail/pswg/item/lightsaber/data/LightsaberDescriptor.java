@@ -11,15 +11,23 @@ public class LightsaberDescriptor extends TagSerializer
 
 	public Identifier id;
 
+	public String owner;
+	public String hilt;
+	public float bladeHue;
+
 	public LightsaberDescriptor(NbtCompound tag)
 	{
 		super(SLUG, tag);
 	}
 
-	public LightsaberDescriptor(Identifier id)
+	public LightsaberDescriptor(Identifier id, String owner, String hilt, float bladeHue)
 	{
 		super(SLUG);
 		this.id = id;
+
+		this.owner = owner;
+		this.hilt = hilt;
+		this.bladeHue = bladeHue;
 	}
 
 	/**
@@ -30,5 +38,9 @@ public class LightsaberDescriptor extends TagSerializer
 	{
 		super(SLUG);
 		this.id = id;
+
+		this.owner = other.owner;
+		this.hilt = other.hilt;
+		this.bladeHue = other.bladeHue;
 	}
 }

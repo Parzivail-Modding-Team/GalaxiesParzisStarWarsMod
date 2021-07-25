@@ -1,4 +1,6 @@
 {
 	"version": 1,
-	"test": false
+	"owner": "Luke Skywalker",
+	"hilt": "pswg:luke_rotj",
+	"bladeHue": 0.33
 }

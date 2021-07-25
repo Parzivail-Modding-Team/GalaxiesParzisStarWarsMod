@@ -32,12 +32,18 @@ public class SwgLightsaberManager extends TypedDataLoader<LightsaberDescriptor>
 
 	protected void writeDataEntry(PacketByteBuf buf, LightsaberDescriptor value)
 	{
-//		buf.writeBoolean(value.oneHanded);
+		buf.writeString(value.owner);
+		buf.writeString(value.hilt);
+		buf.writeFloat(value.bladeHue);
 	}
 
 	protected LightsaberDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
 	{
-		return new LightsaberDescriptor(key);
+		var owner = buf.readString();
+		var hilt = buf.readString();
+		var bladeHue = buf.readFloat();
+
+		return new LightsaberDescriptor(key, owner, hilt, bladeHue);
 	}
 
 	protected LightsaberDescriptor deserializeDataEntry(Identifier identifier, JsonElement jsonObject)
