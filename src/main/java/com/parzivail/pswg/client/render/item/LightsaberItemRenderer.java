@@ -69,14 +69,18 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
 
-
 		switch (renderMode)
 		{
+			case NONE:
+				break;
+			case GROUND:
+				matrices.translate(0, 0.25f, 0);
+				break;
 			case FIXED:
-				matrices.translate(-0.2685f, 0, 0);
-				matrices.scale(1.8f, 1.8f, 1.8f);
 				matrices.multiply(new Quaternion(0, 0, 45, true));
-				matrices.translate(0, 0.04f, 0);
+				matrices.multiply(new Quaternion(0, 135, 0, true));
+				matrices.translate(0, 0.5f, 0);
+				matrices.scale(2.1f, 2.1f, 2.1f);
 				break;
 			case GUI:
 				matrices.multiply(new Quaternion(0, 0, -45, true));
