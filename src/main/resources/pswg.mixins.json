@@ -39,6 +39,7 @@
 		"PlayerEntityMixin",
 		"PlayerEntityModelMixin",
 		"PlayerEntityRendererMixin",
+		"RenderLayersAccessor",
 		"RenderLayersMixin",
 		"RenderPhaseAccessor",
 		"SpriteAtlasTextureMixin",
