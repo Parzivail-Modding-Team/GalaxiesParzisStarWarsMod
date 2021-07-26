@@ -1,9 +1,9 @@
-![Galaxies: Parzi's Star Wars Mod](https://raw.githubusercontent.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/master/resources/images/logo_big.png "Galaxies: Parzi's Star Wars Mod")
+![Galaxies: Parzi's Star Wars Mod](https://raw.githubusercontent.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/master/resources/images/logo_medium.png "Galaxies: Parzi's Star Wars Mod")
 
 # Galaxies: Parzi's Star Wars Mod (PSWG) for Minecraft+Fabric
 
-![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/total.svg) 
-![Discord](https://img.shields.io/discord/412945916476129280.svg)
+![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/total.svg "GitHub Downloads") 
+![Discord](https://img.shields.io/discord/412945916476129280.svg "Discord Server")
 
 
 In 2015, Parzi's Star Wars Mod was launched as a cooperative effort to bring together my favorite cinematic and digital worlds. Working alongside the community, we brought to life some of the most in-depth and complex systems ever implemented in a Minecraft mod, and supported over a million players worldwide.
@@ -19,6 +19,7 @@ If you'd like to help support and sustain the mod, please consider becoming a do
 
 Perks include:
 * Early mod releases and developer builds
+* Custom cosmetics for character customization
 * Your name in the credits
 
 Goals include:

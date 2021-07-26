@@ -82,53 +82,55 @@ public class Galaxies implements ModInitializer
 
 		SwgScreenTypes.register();
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
-				                                           dispatcher.register(CommandManager.literal("cdim")
-				                                                                             .requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
-				                                                                             .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
-				                                                                                                 .executes(context -> {
-					                                                                                                 var world = DimensionArgumentType.getDimensionArgument(context, "dimension");
-					                                                                                                 DimensionTeleporter.teleport(Objects.requireNonNull(context.getSource().getEntity()), world);
-					                                                                                                 return 1;
-				                                                                                                 }))));
+		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+			dispatcher.register(CommandManager.literal("cdim")
+			                                  .requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
+			                                  .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())
+			                                                      .executes(context -> {
+				                                                      var world = DimensionArgumentType.getDimensionArgument(context, "dimension");
+				                                                      DimensionTeleporter.teleport(Objects.requireNonNull(context.getSource().getEntity()), world);
+				                                                      return 1;
+			                                                      })));
+		});
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) ->
-				                                           dispatcher.register(CommandManager.literal("pswg_species")
-				                                                                             .requires(source -> source.hasPermissionLevel(2)) // same permission level as tp
-				                                                                             .then(CommandManager.argument("players", EntityArgumentType.players())
-				                                                                                                 .then(CommandManager.argument("species", StringArgumentType.greedyString())
-				                                                                                                                     .executes(context -> {
-					                                                                                                                     var players = EntityArgumentType.getPlayers(context, "players");
-					                                                                                                                     var species = context.getArgument("species", String.class);
+		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+			dispatcher.register(CommandManager.literal("pswg_species")
+			                                  .requires(source -> source.hasPermissionLevel(2)) // same permission level as tp
+			                                  .then(CommandManager.argument("players", EntityArgumentType.players())
+			                                                      .then(CommandManager.argument("species", StringArgumentType.greedyString())
+			                                                                          .executes(context -> {
+				                                                                          var players = EntityArgumentType.getPlayers(context, "players");
+				                                                                          var species = context.getArgument("species", String.class);
 
-					                                                                                                                     SwgSpecies swgspecies = null;
+				                                                                          SwgSpecies swgspecies = null;
 
-					                                                                                                                     if (!"minecraft:none".equals(species))
-					                                                                                                                     {
-						                                                                                                                     try
-						                                                                                                                     {
-							                                                                                                                     swgspecies = SwgSpeciesRegistry.deserialize(species);
-						                                                                                                                     }
-						                                                                                                                     catch (Exception e)
-						                                                                                                                     {
-							                                                                                                                     // ignored
-						                                                                                                                     }
+				                                                                          if (!"minecraft:none".equals(species))
+				                                                                          {
+					                                                                          try
+					                                                                          {
+						                                                                          swgspecies = SwgSpeciesRegistry.deserialize(species);
+					                                                                          }
+					                                                                          catch (Exception e)
+					                                                                          {
+						                                                                          // ignored
+					                                                                          }
 
-						                                                                                                                     if (swgspecies == null)
-						                                                                                                                     {
-							                                                                                                                     context.getSource().sendFeedback(new TranslatableText(Resources.command("species.invalid"), species), false);
-							                                                                                                                     return 0;
-						                                                                                                                     }
-					                                                                                                                     }
+					                                                                          if (swgspecies == null)
+					                                                                          {
+						                                                                          context.getSource().sendFeedback(new TranslatableText(Resources.command("species.invalid"), species), false);
+						                                                                          return 0;
+					                                                                          }
+				                                                                          }
 
-					                                                                                                                     for (var player : players)
-					                                                                                                                     {
-						                                                                                                                     var pc = SwgEntityComponents.getPersistent(player);
-						                                                                                                                     pc.setSpecies(swgspecies);
-					                                                                                                                     }
+				                                                                          for (var player : players)
+				                                                                          {
+					                                                                          var pc = SwgEntityComponents.getPersistent(player);
+					                                                                          pc.setSpecies(swgspecies);
+				                                                                          }
 
-					                                                                                                                     return 1;
-				                                                                                                                     })))));
+				                                                                          return 1;
+			                                                                          }))));
+		});
 
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketLightsaberForgeApply, LightsaberForgeScreenHandler::handleSetLighsaberTag);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketSetOwnSpecies, SwgSpeciesRegistry::handleSetOwnSpecies);
