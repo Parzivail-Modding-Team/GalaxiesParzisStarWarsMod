@@ -82,9 +82,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	@Override
 	public void onItemEntityCreated(ItemEntity entity, ItemStack stack)
 	{
-		LightsaberTag.mutate(stack, lightsaberTag -> {
-			lightsaberTag.finalizeMovement();
-		});
+		LightsaberTag.mutate(stack, LightsaberTag::finalizeMovement);
 	}
 
 	@Override
@@ -158,11 +156,6 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	public TypedActionResult<ItemStack> use(final World world, final PlayerEntity player, final Hand hand)
 	{
 		final var stack = player.getStackInHand(hand);
-		if (player.isSneaking())
-		{
-			toggle(world, player, stack);
-			return new TypedActionResult<>(ActionResult.CONSUME, stack);
-		}
 		return new TypedActionResult<>(ActionResult.PASS, stack);
 	}
 
