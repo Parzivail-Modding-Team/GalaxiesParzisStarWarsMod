@@ -1,4 +1,4 @@
-# Blender MTL File: 'Obiwan.blend'
+# Blender MTL File: 'QuiGon.blend'
 # Material Count: 1
 
 newmtl MAT_DIFFUSE_CUTOUT
@@ -10,4 +10,4 @@ Ke 0.0 0.0 0.0
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd E:\\Forge\\Mods\\PSWG\\PSWG15\\resources\\models\\Idk\\ObiWan.png
+map_Kd E:\\Forge\\Mods\\PSWG\\PSWG15\\resources\\models\\QuiGon.png
