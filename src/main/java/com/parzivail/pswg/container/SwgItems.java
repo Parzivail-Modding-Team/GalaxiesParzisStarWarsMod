@@ -28,7 +28,7 @@ public class SwgItems
 	public static class Debug
 	{
 		@RegistryName("debug")
-		public static final DebugItem Debug = new DebugItem(new Item.Settings().maxCount(1).group(Galaxies.Tab));
+		public static final DebugItem Debug = new DebugItem(new Item.Settings().maxCount(1));
 	}
 
 	public static class Door

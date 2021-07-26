@@ -302,6 +302,7 @@ public class SwgBlocks
 		public static final SelfConnectingBlock ImperialLightTall2 = createLitConnectingPanel(MapColor.GRAY);
 
 		@RegistryName("lab_wall")
+		@TabIgnore
 		public static final Block LabWall = new Block(FabricBlockSettings.of(Material.STONE));
 
 		private static PillarBlock createLitPanel(MapColor topMaterialColor, MapColor sideMaterialColor, int luminance)
