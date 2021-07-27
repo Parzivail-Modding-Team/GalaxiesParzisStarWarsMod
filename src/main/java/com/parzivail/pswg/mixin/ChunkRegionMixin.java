@@ -19,7 +19,7 @@ public class ChunkRegionMixin
 	private ServerWorld world;
 
 	@Inject(method = "Lnet/minecraft/world/ChunkRegion;getSeed()J", at = @At("HEAD"), cancellable = true)
-	private void canAlwaysCarveBlock(CallbackInfoReturnable<Long> cir)
+	private void getSeed(CallbackInfoReturnable<Long> cir)
 	{
 		Identifier worldId = world.getRegistryKey().getValue();
 		if (SwgDimensions.FIXED_SEED_REGISTRY.containsKey(worldId))
