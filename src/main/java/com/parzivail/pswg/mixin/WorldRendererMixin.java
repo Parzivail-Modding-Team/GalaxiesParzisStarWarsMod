@@ -35,7 +35,7 @@ public class WorldRendererMixin
 	@Inject(method = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Matrix4f;FLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Ljava/lang/Runnable;run()V", shift = At.Shift.AFTER), cancellable = true)
 	private void renderSky(MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Runnable fogApplier, CallbackInfo ci)
 	{
-		var renderer = ICustomSkyRenderer.CUSTOM_SKREGISTRY_RENDERERS.get(client.world.getRegistryKey().getValue());
+		var renderer = ICustomSkyRenderer.REGISTRY.get(client.world.getRegistryKey().getValue());
 		if (renderer != null)
 		{
 			renderer.render(client, lightSkyBuffer, darkSkyBuffer, starsBuffer, matrices, projectionMatrix, tickDelta, fogApplier, ci);

@@ -5,6 +5,7 @@
 	"mixins": [
 		"CactusBlockMixin",
 		"CarverMixin",
+		"ChunkRegionMixin",
 		"DeadBushBlockMixin",
 		"FarmlandBlockMixin",
 		"ItemEntityMixin",

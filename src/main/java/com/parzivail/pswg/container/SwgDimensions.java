@@ -9,6 +9,7 @@ import com.parzivail.pswg.world.tatooine.TatooineChunkGenerator;
 import com.parzivail.util.Consumers;
 import com.parzivail.util.world.DecoratorUtil;
 import net.minecraft.block.Blocks;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.util.registry.BuiltinRegistries;
@@ -28,10 +29,13 @@ import net.minecraft.world.gen.feature.SingleStateFeatureConfig;
 import net.minecraft.world.gen.surfacebuilder.SurfaceBuilder;
 import net.minecraft.world.gen.surfacebuilder.TernarySurfaceConfig;
 
+import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class SwgDimensions
 {
+	public static final HashMap<Identifier, Long> FIXED_SEED_REGISTRY = new HashMap<>();
+
 	private static final Consumer<SpawnSettings.Builder> SPAWN_NONE = Consumers.noop();
 	private static final Consumer<GenerationSettings.Builder> GEN_NONE = Consumers.noop();
 
@@ -75,6 +79,8 @@ public class SwgDimensions
 
 		public static void register()
 		{
+			FIXED_SEED_REGISTRY.put(WORLD_KEY.getValue(), 0L);
+
 			Registry.register(Registry.BIOME_SOURCE, Resources.id("tatooine_source"), TatooineBiomeSource.CODEC);
 			Registry.register(Registry.CHUNK_GENERATOR, Resources.id("tatooine_generator"), TatooineChunkGenerator.CODEC);
 
