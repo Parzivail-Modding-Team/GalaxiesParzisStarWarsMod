@@ -107,7 +107,7 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 			{
 				var states = section.blockStates();
 				var palette = section.palette();
-				var sY = section.y() + 10;
+				var sY = section.y();
 
 				for (var y = 0; y < 16; y++)
 				{
