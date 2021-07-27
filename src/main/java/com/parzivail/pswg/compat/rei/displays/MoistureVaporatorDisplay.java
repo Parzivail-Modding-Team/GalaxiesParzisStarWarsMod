@@ -3,6 +3,7 @@ package com.parzivail.pswg.compat.rei.displays;
 import com.parzivail.pswg.compat.rei.plugins.GalaxiesREICategories;
 import com.parzivail.pswg.recipe.VaporatorRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
@@ -14,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public class MoistureVaporatorDisplay extends BasicDisplay
+public class MoistureVaporatorDisplay extends BasicDisplay implements SimpleGridMenuDisplay
 {
 	private final int duration;
 
@@ -38,12 +39,6 @@ public class MoistureVaporatorDisplay extends BasicDisplay
 	}
 
 	@Override
-	public List<EntryIngredient> getRequiredEntries()
-	{
-		return super.getRequiredEntries();
-	}
-
-	@Override
 	public CategoryIdentifier<?> getCategoryIdentifier()
 	{
 		return GalaxiesREICategories.MOISTURE_VAPORATOR;
@@ -53,5 +48,17 @@ public class MoistureVaporatorDisplay extends BasicDisplay
 		return BasicDisplay.Serializer.of(MoistureVaporatorDisplay::new, (display, tag) -> {
 			tag.putDouble("duration", display.duration);
 		});
+	}
+
+	@Override
+	public int getWidth()
+	{
+		return 1;
+	}
+
+	@Override
+	public int getHeight()
+	{
+		return 1;
 	}
 }

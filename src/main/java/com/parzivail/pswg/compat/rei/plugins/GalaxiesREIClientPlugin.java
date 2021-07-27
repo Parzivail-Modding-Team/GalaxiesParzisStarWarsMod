@@ -9,6 +9,7 @@ import com.parzivail.pswg.recipe.VaporatorRecipe;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
+import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.util.Identifier;
 
@@ -27,5 +28,11 @@ public class GalaxiesREIClientPlugin implements REIClientPlugin
 	public void registerDisplays(DisplayRegistry registry)
 	{
 		registry.registerRecipeFiller(VaporatorRecipe.class, SwgRecipeType.Vaporator, MoistureVaporatorDisplay::new);
+	}
+
+	@Override
+	public void registerScreens(ScreenRegistry registry)
+	{
+		// TODO: register click area
 	}
 }
