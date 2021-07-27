@@ -1,9 +1,12 @@
 package com.parzivail.util.binary;
 
+import com.parzivail.util.Lumberjack;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.io.*;
 import java.nio.channels.FileChannel;
@@ -41,12 +44,10 @@ public class DataReader
 		return count;
 	}
 
-	public static NbtCompound readUncompressedNbt(InputStream s, int len) throws IOException
+	public static NbtCompound readUncompressedNbt(DataInput s, int len) throws IOException
 	{
 		var bytesNbt = new byte[len];
-		var readNbt = s.read(bytesNbt);
-		if (readNbt != bytesNbt.length)
-			throw new IOException("Invalid NBT length");
+		s.readFully(bytesNbt);
 
 		var stream = new DataInputStream(new ByteArrayInputStream(bytesNbt));
 		var tag = NbtIo.read(stream);
@@ -69,5 +70,44 @@ public class DataReader
 		}
 
 		return null;
+	}
+
+	public static BlockState readBlockState(DataInput stream) throws IOException
+	{
+		var name = readNullTerminatedString(stream);
+		var hasProperties = stream.readByte() == 1;
+
+		var blockRegistry = Registry.BLOCK;
+		var block = blockRegistry.get(new Identifier(name));
+		var blockState = block.getDefaultState();
+
+		if (hasProperties)
+		{
+			var stateManager = block.getStateManager();
+
+			var tagLen = stream.readInt();
+			var props = readUncompressedNbt(stream, tagLen);
+
+			for (var key : props.getKeys())
+			{
+				var property = stateManager.getProperty(key);
+				if (property != null)
+					blockState = withProperty(blockState, property, key, props, blockState.toString());
+			}
+		}
+
+		return blockState;
+	}
+
+	private static <T extends Comparable<T>> BlockState withProperty(BlockState state, net.minecraft.state.property.Property<T> property, String key, NbtCompound propertiesTag, String context)
+	{
+		var optional = property.parse(propertiesTag.getString(key));
+		if (optional.isPresent())
+			return state.with(property, optional.get());
+		else
+		{
+			Lumberjack.warn("Unable to read property: %s with value: %s for blockstate: %s", key, propertiesTag.getString(key), context);
+			return state;
+		}
 	}
 }

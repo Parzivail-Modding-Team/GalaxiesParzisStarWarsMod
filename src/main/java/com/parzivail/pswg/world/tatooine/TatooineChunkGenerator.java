@@ -92,11 +92,10 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 	@Override
 	protected void populateExtra(Executor executor, StructureAccessor accessor, Chunk chunk)
 	{
-		ScarifChunk strChunk = null; //SwgStructures.General.Region.get().openChunk(chunkPos);
+		ScarifChunk strChunk = null;// SwgStructures.General.Region.get().openChunk(chunk.getPos());
 		if (strChunk != null)
 		{
 			var chunkPos = chunk.getPos();
-			strChunk.init();
 			var pc = (ProtoChunk)chunk;
 
 			var pos = new BlockPos.Mutable();
@@ -104,12 +103,11 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 			for (var tile : strChunk.tiles.entrySet())
 				pc.addPendingBlockEntityNbt(tile.getValue());
 
-			for (var i = 0; i < strChunk.numSections; i++)
+			for (var section : strChunk.getSections())
 			{
-				var section = strChunk.readSection();
 				var states = section.blockStates();
 				var palette = section.palette();
-				var sY = section.y();
+				var sY = section.y() + 10;
 
 				for (var y = 0; y < 16; y++)
 				{
@@ -125,7 +123,7 @@ public class TatooineChunkGenerator extends SimplexChunkGenerator
 							}
 
 							var blockState = section.palette()[stateIdx];
-							chunk.setBlockState(pos.set(x, sY + y, z), blockState, false);
+							chunk.setBlockState(pos.set(x, sY * 16 + y, z), blockState, false);
 						}
 					}
 				}

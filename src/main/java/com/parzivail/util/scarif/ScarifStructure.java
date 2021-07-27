@@ -71,12 +71,22 @@ public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stre
 
 		try
 		{
-			file.position(entries.get(pos));
-			return new ScarifChunk(stream);
+			synchronized (stream)
+			{
+				var time = System.nanoTime();
+				//			var chunk = new ScarifChunk(file, entries.get(pos));
+				file.position(entries.get(pos));
+				var chunk = new ScarifChunk(stream);
+				var dur = System.nanoTime() - time;
+
+				Lumberjack.debug("Loaded chunk in %s ms", (dur / 1000f) / 1000);
+
+				return chunk;
+			}
 		}
 		catch (IOException e)
 		{
-			Lumberjack.error("SCARIF chunk open failed");
+			Lumberjack.error("SCARIF chunk failed to load (%s,%s)", pos.x, pos.z);
 			e.printStackTrace();
 		}
 
