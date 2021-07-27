@@ -13,6 +13,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.recipe.RecipeInputProvider;
+import net.minecraft.recipe.RecipeMatcher;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -21,7 +23,7 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
+public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory, RecipeInputProvider
 {
 	protected final PropertyDelegate propertyDelegate;
 	private int collectionTimer;
@@ -167,5 +169,11 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 
 			t.markDirty();
 		}
+	}
+
+	@Override
+	public void provideRecipeInputs(RecipeMatcher finder)
+	{
+
 	}
 }
