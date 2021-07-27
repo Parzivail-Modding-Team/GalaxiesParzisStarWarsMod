@@ -5,6 +5,7 @@ import com.parzivail.pswg.compat.rei.plugins.GalaxiesREICategories;
 import com.parzivail.pswg.compat.rei.plugins.GalaxiesREIClientPlugin;
 import com.parzivail.pswg.container.SwgBlocks;
 import it.unimi.dsi.fastutil.ints.IntList;
+import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.REIRuntime;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -19,6 +20,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
@@ -54,9 +56,13 @@ public class MoistureVaporatorCategory implements TransferDisplayCategory<Moistu
 		inputSlotPos.translate(1, 10);
 		var outputSlotPos = recipePos.clone();
 		outputSlotPos.translate(99, 10);
+		var duration = display.getDuration();
+		var df = new DecimalFormat("###.##");
 		return List.of(
 				Widgets.createRecipeBase(bounds),
 				Widgets.createTexturedWidget(REIRuntime.getInstance().isDarkThemeEnabled() ? GalaxiesREIClientPlugin.DISPLAY_TEXTURE_DARK : GalaxiesREIClientPlugin.DISPLAY_TEXTURE, bounds.getX() + 15, bounds.getY() + 15, 120, 34),
+				Widgets.createLabel(new Point(bounds.x + bounds.width - 5, bounds.y + 5),
+				                    new TranslatableText("category.pswg.vaporator.time", df.format(duration / 20d))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB),
 				Widgets.createSlot(inputSlotPos).markInput().entries(display.getInputEntries().get(0)),
 				Widgets.createSlot(outputSlotPos).disableBackground().markOutput().entries(display.getOutputEntries().get(0))
 		);
