@@ -17,14 +17,18 @@ public class BlasterTag extends TagSerializer
 	public static final Identifier SLUG = Resources.id("blaster_data");
 	public static final int ADS_TIMER_LENGTH = 5;
 
+	public byte firingMode;
+
 	public boolean isAimingDownSights;
 	public int aimingDownSightsTimer;
-	public boolean canBypassOverheat;
+
 	public int shotsRemaining;
+	public int shotTimer;
+
+	public boolean canBypassOverheat;
 	public int heat;
 	public int overheatTimer;
 	public int passiveCooldownTimer;
-	public int shotTimer;
 
 	public BlasterTag(NbtCompound source)
 	{
@@ -71,6 +75,16 @@ public class BlasterTag extends TagSerializer
 		if (isAimingDownSights)
 			return Ease.outCubic(1 - timer);
 		return Ease.inCubic(timer);
+	}
+
+	public BlasterFiringMode getFiringMode()
+	{
+		return BlasterFiringMode.ID_LOOKUP.get(firingMode);
+	}
+
+	public void setFiringMode(BlasterFiringMode mode)
+	{
+		this.firingMode = mode.getId();
 	}
 
 	public void toggleAds()

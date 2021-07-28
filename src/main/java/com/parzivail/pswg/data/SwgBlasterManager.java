@@ -9,7 +9,6 @@ import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.item.blaster.data.*;
-import com.parzivail.util.Lumberjack;
 import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -26,15 +25,13 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		@Override
 		public void write(JsonWriter out, BlasterArchetype value) throws IOException
 		{
-			out.value(value.getId());
+			out.value(value.getValue());
 		}
 
 		@Override
 		public BlasterArchetype read(JsonReader in) throws IOException
 		{
-			var str = in.nextString();
-			Lumberjack.debug("%s -> %s", str, BlasterArchetype.ID_LOOKUP.get(str));
-			return BlasterArchetype.ID_LOOKUP.get(str);
+			return BlasterArchetype.VALUE_LOOKUP.get(in.nextString());
 		}
 	}
 
@@ -46,7 +43,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 			out.beginArray();
 
 			for (var v : value)
-				out.value(v.getId());
+				out.value(v.getValue());
 
 			out.endArray();
 		}
@@ -59,7 +56,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 			var modes = EnumSet.noneOf(BlasterFiringMode.class);
 
 			while (in.hasNext())
-				modes.add(BlasterFiringMode.REVERSE_LOOKUP.get(in.nextString()));
+				modes.add(BlasterFiringMode.VALUE_LOOKUP.get(in.nextString()));
 
 			in.endArray();
 
@@ -93,7 +90,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 	protected void writeDataEntry(PacketByteBuf buf, BlasterDescriptor value)
 	{
-		buf.writeByte(value.type.getOrdinal());
+		buf.writeByte(value.type.getId());
 		buf.writeShort(BlasterFiringMode.pack(value.firingModes));
 
 		buf.writeFloat(value.damage);
@@ -121,7 +118,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 	protected BlasterDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
 	{
-		var archetype = BlasterArchetype.ORDINAL_LOOKUP.get(buf.readByte());
+		var archetype = BlasterArchetype.ID_LOOKUP.get(buf.readByte());
 		var firingModes = BlasterFiringMode.unpack(buf.readShort());
 
 		var damage = buf.readFloat();

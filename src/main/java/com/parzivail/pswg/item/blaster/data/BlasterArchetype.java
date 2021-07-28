@@ -11,37 +11,37 @@ public enum BlasterArchetype
 	SLUGTHROWER("slug", (byte)4, false),
 	ION("ion", (byte)5, true);
 
-	public static final HashMap<String, BlasterArchetype> ID_LOOKUP = new HashMap<>();
-	public static final HashMap<Byte, BlasterArchetype> ORDINAL_LOOKUP = new HashMap<>();
+	public static final HashMap<String, BlasterArchetype> VALUE_LOOKUP = new HashMap<>();
+	public static final HashMap<Byte, BlasterArchetype> ID_LOOKUP = new HashMap<>();
 
 	static
 	{
 		for (var v : values())
-			ID_LOOKUP.put(v.id, v);
+			VALUE_LOOKUP.put(v.value, v);
 
 		for (var v : values())
-			ORDINAL_LOOKUP.put(v.ordinal, v);
+			ID_LOOKUP.put(v.id, v);
 	}
 
-	private final String id;
-	private final byte ordinal;
+	private final String value;
+	private final byte id;
 	private final boolean oneHanded;
 
-	BlasterArchetype(String id, byte ordinal, boolean oneHanded)
+	BlasterArchetype(String value, byte id, boolean oneHanded)
 	{
+		this.value = value;
 		this.id = id;
-		this.ordinal = ordinal;
 		this.oneHanded = oneHanded;
 	}
 
-	public String getId()
+	public String getValue()
 	{
-		return id;
+		return value;
 	}
 
-	public byte getOrdinal()
+	public byte getId()
 	{
-		return ordinal;
+		return id;
 	}
 
 	public boolean isOneHanded()

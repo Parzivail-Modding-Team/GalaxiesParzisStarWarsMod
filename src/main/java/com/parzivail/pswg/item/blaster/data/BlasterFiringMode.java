@@ -5,38 +5,48 @@ import java.util.HashMap;
 
 public enum BlasterFiringMode
 {
-	SEMI_AUTOMATIC("semi", 0b1),
-	BURST("burst", 0b10),
-	AUTOMATIC("auto", 0b100),
-	STUN("stun", 0b1000),
-	SLUGTHROWER("slug", 0b10000),
-	ION("ion", 0b100000);
+	SEMI_AUTOMATIC("semi", (byte)0),
+	BURST("burst", (byte)1),
+	AUTOMATIC("auto", (byte)2),
+	STUN("stun", (byte)3),
+	SLUGTHROWER("slug", (byte)4),
+	ION("ion", (byte)5);
 
-	public static final HashMap<String, BlasterFiringMode> REVERSE_LOOKUP = new HashMap<>();
+	public static final HashMap<String, BlasterFiringMode> VALUE_LOOKUP = new HashMap<>();
+	public static final HashMap<Byte, BlasterFiringMode> ID_LOOKUP = new HashMap<>();
 
 	static
 	{
 		for (var v : values())
-			REVERSE_LOOKUP.put(v.id, v);
+			VALUE_LOOKUP.put(v.value, v);
+		for (var v : values())
+			ID_LOOKUP.put(v.id, v);
 	}
 
-	private final String id;
+	private final String value;
+	private final byte id;
 	private final int flag;
 
-	BlasterFiringMode(String id, int flag)
+	BlasterFiringMode(String value, byte id)
 	{
+		this.value = value;
 		this.id = id;
-		this.flag = flag;
+		this.flag = 1 << id;
 	}
 
-	public String getId()
+	public String getValue()
 	{
-		return id;
+		return value;
 	}
 
 	public int getFlag()
 	{
 		return flag;
+	}
+
+	public byte getId()
+	{
+		return id;
 	}
 
 	public static EnumSet<BlasterFiringMode> unpack(short value)

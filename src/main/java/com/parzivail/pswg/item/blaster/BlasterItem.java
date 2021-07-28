@@ -6,6 +6,7 @@ import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
+import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.util.BlasterUtil;
@@ -16,6 +17,7 @@ import com.parzivail.util.item.IZoomingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -80,6 +82,16 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	{
 		var blasterManager = SwgBlasterManager.get(world);
 		return blasterManager.getData(getBlasterModel(stack));
+	}
+
+	@Override
+	public boolean allowRepeatedLeftHold(World world, ClientPlayerEntity player, Hand mainHand)
+	{
+		final var stack = player.getStackInHand(mainHand);
+		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bd = getBlasterDescriptor(world, stack);
+
+		return bd.firingModes.contains(BlasterFiringMode.AUTOMATIC) && bt.getFiringMode() == BlasterFiringMode.AUTOMATIC;
 	}
 
 	@Override
