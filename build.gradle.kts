@@ -2,7 +2,7 @@ import java.io.ByteArrayOutputStream
 import java.util.regex.Pattern
 
 plugins {
-	id("fabric-loom") version "0.8-SNAPSHOT"
+	id("fabric-loom") version "0.9-SNAPSHOT"
 	id("maven-publish")
 }
 
@@ -64,7 +64,7 @@ fun getVersionName(): String
 }
 
 loom {
-	accessWidener = file("src/main/resources/pswg.accesswidener")
+	accessWidenerPath.set(file("src/main/resources/pswg.accesswidener"))
 }
 
 val archives_base_name: String by project.ext
