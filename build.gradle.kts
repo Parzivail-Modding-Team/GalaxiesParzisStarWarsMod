@@ -78,7 +78,7 @@ val cloth_config_version: String by project.ext
 val modmenu_version: String by project.ext
 val rei_version: String by project.ext
 
-base.archivesBaseName = archives_base_name
+base.archivesName.set(archives_base_name)
 version = getVersionName()
 group = maven_group
 
