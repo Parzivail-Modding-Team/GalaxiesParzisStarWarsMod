@@ -47,3 +47,4 @@ ehthumbs.db
 *.sw[po]
 .directory
 *~
+hs_err*.log
