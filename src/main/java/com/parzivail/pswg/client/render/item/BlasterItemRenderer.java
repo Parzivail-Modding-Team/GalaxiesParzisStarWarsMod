@@ -4,11 +4,13 @@ import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.pm3d.PM3DFile;
 import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.math.Ease;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -20,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -74,6 +77,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var bdId = new Identifier(blasterModel);
 		var bt = new BlasterTag(tag);
 
+		var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, stack);
+		if (bd == null)
+			return;
+
 		var modelEntry = getModel(bdId);
 
 		matrices.push();
@@ -121,14 +128,38 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 			var adsLerp = bt.getAdsLerp();
 
-			opacity = Ease.outCubic(1 - adsLerp);
+			opacity = 1;
+			if (bd.type == BlasterArchetype.SNIPER)
+				opacity = Ease.outCubic(1 - adsLerp);
+
+			// centerViewport = new Vec3d(-2.8f, 2.65f, -5f);
+			// rifles = new Vec3d(-2.1f, 1.6f, -1f);
+			// pistol = new Vec3d(-2.2f, 1.9f, -3f);
+
+			var adsVec = Vec3d.ZERO;
+
+			switch (bd.type)
+			{
+				case PISTOL:
+					adsVec = new Vec3d(-2.2f, 1.8f, -3f);
+					break;
+				case RIFLE:
+				case HEAVY:
+				case SLUGTHROWER:
+				case ION:
+					adsVec = new Vec3d(-2.1f, 1.6f, -1f);
+					break;
+				case SNIPER:
+					adsVec = new Vec3d(-2.8f, 2.65f, -5f);
+					break;
+			}
 
 			matrices.translate(
-					MathHelper.lerp(adsLerp, 0, -2.3),
-					MathHelper.lerp(adsLerp, 1.2f, 1.75f),
-					MathHelper.lerp(adsLerp, 0, 1.8f)
+					MathHelper.lerp(adsLerp, 0, adsVec.x),
+					MathHelper.lerp(adsLerp, 1.2f, adsVec.y),
+					MathHelper.lerp(adsLerp, 0, adsVec.z)
 			);
-			matrices.multiply(new Quaternion(0, MathHelper.lerp(adsLerp, 172, 180), 0, true));
+			matrices.multiply(new Quaternion(0, MathHelper.lerp(adsLerp, 172, 182), 0, true));
 			matrices.translate(
 					MathHelper.lerp(adsLerp, 0.2f, 0),
 					MathHelper.lerp(adsLerp, -0.2f, 0),
@@ -139,7 +170,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		{
 			matrices.translate(0, 0.9f, 0);
 			matrices.multiply(new Quaternion(0, 180, 0, true));
-			matrices.translate(-0.4f, -1, -0.5f);
+			matrices.translate(0, -0.9f, 0);
 		}
 
 		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
@@ -171,7 +202,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			case LEFT -> {
 				leftArm.yaw = 0.1F + head.yaw;
 				leftArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
-				if (bt.isAimingDownSights && !bd.oneHanded)
+				if (bt.isAimingDownSights && !bd.type.isOneHanded())
 				{
 					rightArm.yaw = -0.1F + head.yaw - 0.4F;
 					rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
@@ -180,7 +211,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			case RIGHT -> {
 				rightArm.yaw = -0.1F + head.yaw;
 				rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
-				if (bt.isAimingDownSights && !bd.oneHanded)
+				if (bt.isAimingDownSights && !bd.type.isOneHanded())
 				{
 					leftArm.yaw = 0.1F + head.yaw + 0.4F;
 					leftArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;

@@ -1,6 +1,11 @@
 {
 	"version": 1,
-	"oneHanded": true,
+	"type": "heavy",
+	"firingModes": [
+		"semi",
+		"auto",
+		"stun"
+	],
 	"damage": 3.06,
 	"range": 188.0,
 	"weight": 6.7,

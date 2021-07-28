@@ -1,6 +1,9 @@
 {
 	"version": 1,
-	"oneHanded": false,
+	"type": "rifle",
+	"firingModes": [
+		"slug"
+	],
 	"damage": 3.06,
 	"range": 188.0,
 	"weight": 6.7,

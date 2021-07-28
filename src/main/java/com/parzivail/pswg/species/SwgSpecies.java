@@ -48,9 +48,9 @@ public abstract class SwgSpecies
 
 	protected static Identifier getClothes(PlayerEntity player, SpeciesGender gender)
 	{
-		return Client.remoteTextureProvider.loadTexture(
+		return Client.remoteTextureProvider.getTexture(
 				String.format("character/%s", player.getUuidAsString()),
-				() -> getGenderedGlobalTexture(gender, "clothes")
+				getGenderedGlobalTexture(gender, "clothes")
 		);
 	}
 

@@ -23,13 +23,19 @@ import java.util.Map;
 public abstract class TypedDataLoader<T> extends JsonDataLoader
 {
 	private static final Logger LOGGER = LogManager.getLogger();
-	protected static final Gson GSON = (new GsonBuilder()).create();
+	protected final Gson GSON;
 
 	private Map<Identifier, T> data = ImmutableMap.of();
 
 	public TypedDataLoader(String dataSource)
 	{
-		super(GSON, dataSource);
+		this((new GsonBuilder()).create(), dataSource);
+	}
+
+	public TypedDataLoader(Gson gson, String dataSource)
+	{
+		super(gson, dataSource);
+		this.GSON = gson;
 	}
 
 	public PacketByteBuf createPacket()

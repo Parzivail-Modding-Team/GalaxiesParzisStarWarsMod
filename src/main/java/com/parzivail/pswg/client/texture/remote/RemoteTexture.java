@@ -26,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 @Environment(EnvType.CLIENT)
 public class RemoteTexture extends ResourceTexture
 {
+	private final Identifier remoteId;
 	@Nullable
 	private final Path cacheFile;
 	private final String url;
@@ -36,9 +37,10 @@ public class RemoteTexture extends ResourceTexture
 
 	private NativeImage image;
 
-	public RemoteTexture(@Nullable Path cacheFile, String url, Identifier fallbackSkin, Runnable onResolved)
+	public RemoteTexture(Identifier remoteId, @Nullable Path cacheFile, String url, Identifier fallbackSkin, Runnable onResolved)
 	{
 		super(fallbackSkin);
+		this.remoteId = remoteId;
 		this.cacheFile = cacheFile;
 		this.url = url;
 		this.onResolved = onResolved;
@@ -60,7 +62,10 @@ public class RemoteTexture extends ResourceTexture
 			}
 			else
 			{
-				this.uploadTexture(image);
+				if (image != null)
+					this.uploadTexture(image);
+				else
+					RemoteTextureProvider.FAILED_REMOTES.add(remoteId);
 				this.image = image;
 				onResolved.run();
 			}
@@ -158,6 +163,14 @@ public class RemoteTexture extends ResourceTexture
 								}
 							});
 							return;
+						}
+						else
+						{
+							Lumberjack.debug("No skin found on remote");
+
+							minecraft.execute(() -> {
+								this.onTextureLoaded(null);
+							});
 						}
 					}
 					catch (Exception var6)

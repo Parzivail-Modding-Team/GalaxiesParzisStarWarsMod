@@ -20,7 +20,7 @@ public enum ShipControls
 
 	public static EnumSet<ShipControls> unpack(short controls)
 	{
-		var allFlags = ShipControls.values();
+		var allFlags = values();
 		var flags = EnumSet.noneOf(ShipControls.class);
 
 		for (var flag : allFlags)

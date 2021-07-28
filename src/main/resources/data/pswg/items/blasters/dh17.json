@@ -1,6 +1,10 @@
 {
 	"version": 1,
-	"oneHanded": true,
+	"type": "pistol",
+	"firingModes": [
+		"semi",
+		"stun"
+	],
 	"damage": 2.9,
 	"range": 75.0,
 	"weight": 1.0,

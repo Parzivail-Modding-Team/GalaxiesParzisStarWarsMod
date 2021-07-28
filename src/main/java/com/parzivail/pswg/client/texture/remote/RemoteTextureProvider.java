@@ -8,7 +8,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.NotNull;
@@ -17,12 +16,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class RemoteTextureProvider
 {
 	private static final HashMap<String, Identifier> TEXTURE_CACHE = new HashMap<>();
+	static final ArrayList<Identifier> FAILED_REMOTES = new ArrayList<>();
 	private static final HashMap<Identifier, List<Runnable>> LOAD_CALLBACKS = new HashMap<>();
 
 	private final TextureManager textureManager;
@@ -54,9 +53,13 @@ public class RemoteTextureProvider
 		return null;
 	}
 
-	public Identifier loadTexture(String id, Supplier<Identifier> fallback)
+	public Identifier getTexture(String id, Identifier fallback)
 	{
 		var identifier = getIdentifier(id);
+
+		if (FAILED_REMOTES.contains(identifier))
+			return fallback;
+
 		var texture = textureManager.getOrDefault(identifier, null);
 
 		// The texture is fully loaded
@@ -66,16 +69,15 @@ public class RemoteTextureProvider
 		if (!TEXTURE_CACHE.containsKey(id))
 		{
 			// The texture hasn't been resolved yet
-			loadTexture(identifier);
+			loadTexture(identifier, fallback);
 			TEXTURE_CACHE.put(id, identifier);
 		}
 
 		// The texture has been resolved but hasn't been loaded yet
-		var fallbackId = fallback.get();
-		return new FallbackIdentifier(fallbackId.getNamespace(), fallbackId.getPath(), identifier);
+		return new FallbackIdentifier(fallback.getNamespace(), fallback.getPath(), identifier);
 	}
 
-	public void loadTexture(Identifier identifier)
+	public void loadTexture(Identifier identifier, Identifier fallback)
 	{
 		// Note: `identifier` may or may not be a URL, that's up to `remoteTextureResolver` to resolve
 
@@ -91,7 +93,7 @@ public class RemoteTextureProvider
 
 					Path path = this.skinCacheDir.resolve(string.length() > 2 ? string.substring(0, 2) : "xx");
 					Path path2 = path.resolve(string);
-					RemoteTexture remoteTexture = new RemoteTexture(path2, remoteTextureUrl.getUrl(), DefaultSkinHelper.getTexture(), () -> {
+					RemoteTexture remoteTexture = new RemoteTexture(identifier, path2, remoteTextureUrl.getUrl(), fallback, () -> {
 						pollCallbacks(identifier);
 					});
 					this.textureManager.registerTexture(identifier, remoteTexture);

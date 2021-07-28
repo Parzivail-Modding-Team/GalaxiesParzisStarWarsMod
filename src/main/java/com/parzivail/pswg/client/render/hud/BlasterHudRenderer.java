@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
@@ -121,6 +122,13 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	public void renderOverlay(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices, int scaledWidth, int scaledHeight, float tickDelta)
 	{
 		var bt = new BlasterTag(stack.getOrCreateTag());
+
+		var bd = BlasterItem.getBlasterDescriptor(player.world, stack);
+		if (bd == null)
+			return;
+
+		if (bd.type != BlasterArchetype.SNIPER)
+			return;
 
 		float scale = bt.getAdsLerp();
 		int opacity = (int)(bt.getAdsLerp() * (224));

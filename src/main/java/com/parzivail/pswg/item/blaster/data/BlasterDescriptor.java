@@ -5,12 +5,15 @@ import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
+import java.util.EnumSet;
+
 public class BlasterDescriptor extends TagSerializer
 {
 	public static final Identifier SLUG = Resources.id("blaster_model");
 
 	public Identifier id;
-	public boolean oneHanded;
+	public BlasterArchetype type;
+	public EnumSet<BlasterFiringMode> firingModes;
 	public float damage;
 	public float range;
 	public float weight;
@@ -27,11 +30,12 @@ public class BlasterDescriptor extends TagSerializer
 		super(SLUG, tag);
 	}
 
-	public BlasterDescriptor(Identifier id, boolean oneHanded, float damage, float range, float weight, int boltColor, int magazineSize, int automaticRepeatTime, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, EnumSet<BlasterFiringMode> firingModes, float damage, float range, float weight, int boltColor, int magazineSize, int automaticRepeatTime, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
 	{
 		super(SLUG);
 		this.id = id;
-		this.oneHanded = oneHanded;
+		this.type = type;
+		this.firingModes = firingModes;
 		this.damage = damage;
 		this.range = range;
 		this.weight = weight;
@@ -51,7 +55,8 @@ public class BlasterDescriptor extends TagSerializer
 	{
 		super(SLUG);
 		this.id = id;
-		this.oneHanded = other.oneHanded;
+		this.type = other.type;
+		this.firingModes = other.firingModes;
 		this.damage = other.damage;
 		this.range = other.range;
 		this.weight = other.weight;

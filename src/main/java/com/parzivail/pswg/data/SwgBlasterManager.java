@@ -1,23 +1,81 @@
 package com.parzivail.pswg.data;
 
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
-import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
-import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
-import com.parzivail.pswg.item.blaster.data.BlasterHeatInfo;
-import com.parzivail.pswg.item.blaster.data.BlasterSpreadInfo;
+import com.parzivail.pswg.item.blaster.data.*;
+import com.parzivail.util.Lumberjack;
 import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
+import java.io.IOException;
+import java.util.EnumSet;
+
 public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
+	private static class BlasterArchetypeAdapter extends TypeAdapter<BlasterArchetype>
+	{
+		@Override
+		public void write(JsonWriter out, BlasterArchetype value) throws IOException
+		{
+			out.value(value.getId());
+		}
+
+		@Override
+		public BlasterArchetype read(JsonReader in) throws IOException
+		{
+			var str = in.nextString();
+			Lumberjack.debug("%s -> %s", str, BlasterArchetype.ID_LOOKUP.get(str));
+			return BlasterArchetype.ID_LOOKUP.get(str);
+		}
+	}
+
+	private static class BlasterFiringModesAdapter extends TypeAdapter<EnumSet<BlasterFiringMode>>
+	{
+		@Override
+		public void write(JsonWriter out, EnumSet<BlasterFiringMode> value) throws IOException
+		{
+			out.beginArray();
+
+			for (var v : value)
+				out.value(v.getId());
+
+			out.endArray();
+		}
+
+		@Override
+		public EnumSet<BlasterFiringMode> read(JsonReader in) throws IOException
+		{
+			in.beginArray();
+
+			var modes = EnumSet.noneOf(BlasterFiringMode.class);
+
+			while (in.hasNext())
+				modes.add(BlasterFiringMode.REVERSE_LOOKUP.get(in.nextString()));
+
+			in.endArray();
+
+			return modes;
+		}
+	}
+
 	public SwgBlasterManager()
 	{
-		super("items/blasters");
+		super(
+				new GsonBuilder()
+						.registerTypeAdapter(BlasterArchetype.class, new BlasterArchetypeAdapter())
+						.registerTypeAdapter(TypeToken.getParameterized(EnumSet.class, BlasterFiringMode.class).getType(), new BlasterFiringModesAdapter())
+						.create(),
+				"items/blasters"
+		);
 	}
 
 	public static SwgBlasterManager get(MinecraftServer server)
@@ -35,7 +93,9 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 	protected void writeDataEntry(PacketByteBuf buf, BlasterDescriptor value)
 	{
-		buf.writeBoolean(value.oneHanded);
+		buf.writeByte(value.type.getOrdinal());
+		buf.writeShort(BlasterFiringMode.pack(value.firingModes));
+
 		buf.writeFloat(value.damage);
 		buf.writeFloat(value.range);
 		buf.writeFloat(value.weight);
@@ -61,7 +121,9 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 	protected BlasterDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
 	{
-		var oneHanded = buf.readBoolean();
+		var archetype = BlasterArchetype.ORDINAL_LOOKUP.get(buf.readByte());
+		var firingModes = BlasterFiringMode.unpack(buf.readShort());
+
 		var damage = buf.readFloat();
 		var range = buf.readFloat();
 		var weight = buf.readFloat();
@@ -86,7 +148,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 		return new BlasterDescriptor(
 				key,
-				oneHanded,
+				archetype,
+				firingModes,
 				damage,
 				range,
 				weight,
