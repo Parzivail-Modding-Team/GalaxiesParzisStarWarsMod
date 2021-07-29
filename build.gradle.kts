@@ -3,6 +3,7 @@ import java.util.regex.Pattern
 
 plugins {
 	id("fabric-loom") version "0.9-SNAPSHOT"
+	id("io.github.juuxel.loom-quiltflower") version "1.2.1"
 	id("maven-publish")
 }
 
@@ -61,6 +62,10 @@ fun getVersionName(): String
 		}
 	}
 	return version
+}
+
+quiltflower {
+	quiltflowerVersion.set("1.5.0")
 }
 
 loom {
