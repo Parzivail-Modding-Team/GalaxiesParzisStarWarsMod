@@ -2,8 +2,8 @@
 
 # Galaxies: Parzi's Star Wars Mod (PSWG) for Minecraft+Fabric
 
-![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/total.svg "GitHub Downloads") 
-![Discord](https://img.shields.io/discord/412945916476129280.svg "Discord Server")
+![GitHub downloads](https://img.shields.io/github/downloads/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/total.svg) 
+![Discord](https://img.shields.io/discord/412945916476129280.svg)
 
 
 In 2015, Parzi's Star Wars Mod was launched as a cooperative effort to bring together my favorite cinematic and digital worlds. Working alongside the community, we brought to life some of the most in-depth and complex systems ever implemented in a Minecraft mod, and supported over a million players worldwide.
