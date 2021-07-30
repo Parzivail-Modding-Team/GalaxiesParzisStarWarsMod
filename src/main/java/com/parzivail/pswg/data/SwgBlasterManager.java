@@ -16,7 +16,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
 import java.io.IOException;
-import java.util.EnumSet;
+import java.util.ArrayList;
 
 public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
@@ -35,10 +35,10 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		}
 	}
 
-	private static class BlasterFiringModesAdapter extends TypeAdapter<EnumSet<BlasterFiringMode>>
+	private static class BlasterFiringModesAdapter extends TypeAdapter<ArrayList<BlasterFiringMode>>
 	{
 		@Override
-		public void write(JsonWriter out, EnumSet<BlasterFiringMode> value) throws IOException
+		public void write(JsonWriter out, ArrayList<BlasterFiringMode> value) throws IOException
 		{
 			out.beginArray();
 
@@ -49,11 +49,11 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		}
 
 		@Override
-		public EnumSet<BlasterFiringMode> read(JsonReader in) throws IOException
+		public ArrayList<BlasterFiringMode> read(JsonReader in) throws IOException
 		{
 			in.beginArray();
 
-			var modes = EnumSet.noneOf(BlasterFiringMode.class);
+			var modes = new ArrayList<BlasterFiringMode>();
 
 			while (in.hasNext())
 				modes.add(BlasterFiringMode.VALUE_LOOKUP.get(in.nextString()));
@@ -69,7 +69,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		super(
 				new GsonBuilder()
 						.registerTypeAdapter(BlasterArchetype.class, new BlasterArchetypeAdapter())
-						.registerTypeAdapter(TypeToken.getParameterized(EnumSet.class, BlasterFiringMode.class).getType(), new BlasterFiringModesAdapter())
+						.registerTypeAdapter(TypeToken.getParameterized(ArrayList.class, BlasterFiringMode.class).getType(), new BlasterFiringModesAdapter())
 						.create(),
 				"items/blasters"
 		);

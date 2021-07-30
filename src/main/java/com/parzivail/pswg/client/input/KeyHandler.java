@@ -23,9 +23,9 @@ public class KeyHandler
 			 mc.openScreen(new SpeciesSelectScreen(mc.currentScreen));
 		}
 
-		if (Client.KEY_LIGHTSABER_TOGGLE.wasPressed())
+		if (Client.KEY_PRIMARY_ITEM_ACTION.wasPressed())
 		{
-			ClientPlayNetworking.send(SwgPackets.C2S.PacketPlayerLightsaberToggle, new PacketByteBuf(Unpooled.buffer()));
+			ClientPlayNetworking.send(SwgPackets.C2S.PacketPlayerPrimaryItemAction, new PacketByteBuf(Unpooled.buffer()));
 		}
 
 		var ship = ShipEntity.getShip(mc.player);

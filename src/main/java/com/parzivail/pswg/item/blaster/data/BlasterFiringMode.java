@@ -1,6 +1,8 @@
 package com.parzivail.pswg.item.blaster.data;
 
-import java.util.EnumSet;
+import com.parzivail.pswg.Resources;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public enum BlasterFiringMode
@@ -49,10 +51,10 @@ public enum BlasterFiringMode
 		return id;
 	}
 
-	public static EnumSet<BlasterFiringMode> unpack(short value)
+	public static ArrayList<BlasterFiringMode> unpack(short value)
 	{
 		var allFlags = values();
-		var flags = EnumSet.noneOf(BlasterFiringMode.class);
+		var flags = new ArrayList<BlasterFiringMode>();
 
 		for (var flag : allFlags)
 			if ((value & flag.getFlag()) != 0)
@@ -61,11 +63,16 @@ public enum BlasterFiringMode
 		return flags;
 	}
 
-	public static short pack(EnumSet<BlasterFiringMode> controls)
+	public static short pack(ArrayList<BlasterFiringMode> controls)
 	{
 		short packed = 0;
 		for (var sc : controls)
 			packed |= sc.getFlag();
 		return packed;
+	}
+
+	public String getTranslation()
+	{
+		return Resources.dotModId("info", "blaster_firing_mode_" + value);
 	}
 }

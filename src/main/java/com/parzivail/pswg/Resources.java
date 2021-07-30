@@ -36,19 +36,24 @@ public class Resources
 		return new Identifier(MODID, path);
 	}
 
+	public static String dotModId(String category, String str)
+	{
+		return category + "." + MODID + "." + str;
+	}
+
 	public static String container(String str)
 	{
-		return "container." + MODID + "." + str;
+		return dotModId("container", str);
 	}
 
 	public static String command(String str)
 	{
-		return "command." + MODID + "." + str;
+		return dotModId("command", str);
 	}
 
 	public static String keyBinding(String str)
 	{
-		return "key." + MODID + "." + str;
+		return dotModId("key", str);
 	}
 
 	public static void checkVersion()

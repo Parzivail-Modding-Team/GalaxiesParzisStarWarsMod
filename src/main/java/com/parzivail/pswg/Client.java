@@ -50,7 +50,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class Client implements ClientModInitializer
 {
-	public static final KeyBinding KEY_LIGHTSABER_TOGGLE = new KeyBinding(Resources.keyBinding("lightsaber_toggle"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_X, "key.category.pswg");
+	public static final KeyBinding KEY_PRIMARY_ITEM_ACTION = new KeyBinding(Resources.keyBinding("primary_item_action"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_X, "key.category.pswg");
 	public static final KeyBinding KEY_SHIP_INPUT_MODE_OVERRIDE = new KeyBinding(Resources.keyBinding("ship_input_mode_override"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_V, "key.category.pswg");
 
 	public static final KeyBinding KEY_SPECIES_SELECT = new KeyBinding(Resources.keyBinding("species_select"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category.pswg");
@@ -74,7 +74,7 @@ public class Client implements ClientModInitializer
 	{
 		Lumberjack.debug("onInitializeClient");
 
-		KeyBindingHelper.registerKeyBinding(KEY_LIGHTSABER_TOGGLE);
+		KeyBindingHelper.registerKeyBinding(KEY_PRIMARY_ITEM_ACTION);
 		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_OVERRIDE);
 		KeyBindingHelper.registerKeyBinding(KEY_SPECIES_SELECT);
 

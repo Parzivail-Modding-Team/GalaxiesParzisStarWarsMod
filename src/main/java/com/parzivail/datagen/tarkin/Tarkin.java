@@ -8,6 +8,7 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
+import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.InvertedLampBlock;
 import net.minecraft.item.ItemStack;
@@ -117,12 +118,19 @@ public class Tarkin
 		lang.keyCategory("pswg").build(assets);
 
 		// Keys
-		lang.key(Client.KEY_LIGHTSABER_TOGGLE).build(assets);
+		lang.key(Client.KEY_PRIMARY_ITEM_ACTION).build(assets);
 		lang.key(Client.KEY_SHIP_INPUT_MODE_OVERRIDE).build(assets);
 		lang.key(Client.KEY_SPECIES_SELECT).build(assets);
 
 		// Messages
 		lang.message("update").build(assets);
+
+		lang.message("blaster_mode_changed").build(assets);
+		lang.cloneWithRoot(BlasterFiringMode.SEMI_AUTOMATIC.getTranslation()).build(assets);
+		lang.cloneWithRoot(BlasterFiringMode.BURST.getTranslation()).build(assets);
+		lang.cloneWithRoot(BlasterFiringMode.AUTOMATIC.getTranslation()).build(assets);
+		lang.cloneWithRoot(BlasterFiringMode.STUN.getTranslation()).build(assets);
+		lang.cloneWithRoot(BlasterFiringMode.ION.getTranslation()).build(assets);
 
 		// Species
 		var speciesLangBase = lang.cloneWithRoot("species").modid();

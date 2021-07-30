@@ -1,5 +1,6 @@
 package com.parzivail.pswg.handler;
 
+import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.util.item.ILeftClickConsumer;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -21,13 +22,17 @@ public class PlayerPacketHandler
 		}
 	}
 
-	public static void handleLightsaberTogglePacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handlePrimaryItemAction(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
 		var stack = player.getMainHandStack();
 
 		if (stack.getItem() instanceof LightsaberItem)
 		{
 			LightsaberItem.toggle(player.world, player, stack);
+		}
+		else if (stack.getItem() instanceof BlasterItem)
+		{
+			BlasterItem.nextFireMode(player.world, player, stack);
 		}
 	}
 }

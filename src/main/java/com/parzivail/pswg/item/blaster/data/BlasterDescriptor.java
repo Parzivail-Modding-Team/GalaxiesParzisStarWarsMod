@@ -5,7 +5,7 @@ import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
-import java.util.EnumSet;
+import java.util.ArrayList;
 
 public class BlasterDescriptor extends TagSerializer
 {
@@ -13,7 +13,7 @@ public class BlasterDescriptor extends TagSerializer
 
 	public Identifier id;
 	public BlasterArchetype type;
-	public EnumSet<BlasterFiringMode> firingModes;
+	public ArrayList<BlasterFiringMode> firingModes;
 	public float damage;
 	public float range;
 	public float weight;
@@ -30,7 +30,7 @@ public class BlasterDescriptor extends TagSerializer
 		super(SLUG, tag);
 	}
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, EnumSet<BlasterFiringMode> firingModes, float damage, float range, float weight, int boltColor, int magazineSize, int automaticRepeatTime, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, int boltColor, int magazineSize, int automaticRepeatTime, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
 	{
 		super(SLUG);
 		this.id = id;

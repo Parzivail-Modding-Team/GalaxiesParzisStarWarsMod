@@ -25,7 +25,9 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -76,6 +78,28 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			blasterModel = "pswg:a280";
 
 		return new Identifier(blasterModel);
+	}
+
+	public static void nextFireMode(World world, ServerPlayerEntity player, ItemStack stack)
+	{
+		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bd = getBlasterDescriptor(world, stack);
+		var modes = bd.firingModes;
+		BlasterFiringMode currentMode;
+
+		currentMode = bt.getFiringMode();
+		var currentModeIdx = modes.indexOf(currentMode);
+
+		currentModeIdx++;
+		currentModeIdx %= modes.size();
+
+		bt.setFiringMode(currentMode = modes.get(currentModeIdx));
+
+		//			world.playSound(null, player.getBlockPos(), SwgSounds.Lightsaber.START_CLASSIC, SoundCategory.PLAYERS, 1f, 1f);
+
+		bt.serializeAsSubtag(stack);
+
+		player.sendMessage(new TranslatableText(Resources.dotModId("msg", "blaster_mode_changed"), new TranslatableText(currentMode.getTranslation())), true);
 	}
 
 	public static BlasterDescriptor getBlasterDescriptor(World world, ItemStack stack)
@@ -203,19 +227,35 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			float hSR = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
 			float vSR = 1; // - bd.getBarrel().getVerticalSpreadReduction();
 
-			Matrix4fAccessUtil.multiply(m,new Quaternion(0, hS * hSR, 0, true));
-			Matrix4fAccessUtil.multiply(m,new Quaternion(vS * vSR, 0, 0, true));
+			Matrix4fAccessUtil.multiply(m, new Quaternion(0, hS * hSR, 0, true));
+			Matrix4fAccessUtil.multiply(m, new Quaternion(vS * vSR, 0, 0, true));
 
 			var fromDir = Matrix4fAccessUtil.transform(com.parzivail.util.math.MathUtil.POSZ, m);
-			world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
 
 			var range = bd.range;
 			var damage = bd.damage;
 
-			BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
-				entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 4.0F, 0);
-				entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
-			});
+			switch (bt.getFiringMode())
+			{
+				case SEMI_AUTOMATIC:
+				case BURST:
+				case AUTOMATIC:
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
+					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
+						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 4.0F, 0);
+						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
+					});
+					break;
+				case STUN:
+					// TODO: stun bolts
+					break;
+				case SLUGTHROWER:
+					// TODO: slug bolts
+					break;
+				case ION:
+					// TODO: ion bolts
+					break;
+			}
 
 			bt.serializeAsSubtag(stack);
 		}
