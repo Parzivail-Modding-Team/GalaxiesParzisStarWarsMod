@@ -27,6 +27,11 @@
 			"pswg:blaster/dryfire"
 		]
 	},
+	"blaster.stun": {
+		"sounds": [
+			"pswg:blaster/stun"
+		]
+	},
 	"blaster.fire.a280": {
 		"sounds": [
 			"pswg:blaster/a280"

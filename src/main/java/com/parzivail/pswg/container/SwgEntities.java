@@ -2,6 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
+import com.parzivail.pswg.entity.BlasterStunBoltEntity;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.pswg.entity.debug.KinematicTestEntity;
@@ -98,6 +99,12 @@ public class SwgEntities
 	{
 		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_bolt"), FabricEntityTypeBuilder
 				.<BlasterBoltEntity>create(SpawnGroup.MISC, BlasterBoltEntity::new)
+				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+				.trackRangeBlocks(40)
+				.build());
+
+		public static final EntityType<BlasterStunBoltEntity> BlasterStunBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_stun_bolt"), FabricEntityTypeBuilder
+				.<BlasterStunBoltEntity>create(SpawnGroup.MISC, BlasterStunBoltEntity::new)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
 				.trackRangeBlocks(40)
 				.build());

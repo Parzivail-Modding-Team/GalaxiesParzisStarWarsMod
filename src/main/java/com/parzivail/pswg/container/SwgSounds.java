@@ -58,6 +58,7 @@ public class SwgSounds
 	{
 		public static final SoundEvent RELOAD = of(Resources.id("blaster.reload"));
 		public static final SoundEvent DRYFIRE = of(Resources.id("blaster.dryfire"));
+		public static final SoundEvent STUN = of(Resources.id("blaster.stun"));
 		public static final SoundEvent FIRE_A280 = of(Resources.id("blaster.fire.a280"));
 		public static final SoundEvent FIRE_BIKE = of(Resources.id("blaster.fire.bike"));
 		public static final SoundEvent FIRE_BOWCASTER = of(Resources.id("blaster.fire.bowcaster"));
