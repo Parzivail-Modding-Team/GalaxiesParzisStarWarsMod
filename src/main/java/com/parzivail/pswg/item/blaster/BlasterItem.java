@@ -57,6 +57,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	{
 		final var stack = player.getStackInHand(hand);
 
+		if (hand != Hand.MAIN_HAND)
+			return TypedActionResult.pass(stack);
+
 		if (!world.isClient)
 			BlasterTag.mutate(stack, BlasterTag::toggleAds);
 
