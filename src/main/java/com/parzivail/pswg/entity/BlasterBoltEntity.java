@@ -81,8 +81,9 @@ public class BlasterBoltEntity extends ThrownEntity
 			return;
 		}
 
-		setPitch(0);
-		setYaw(0);
+		var forward = getVelocity().normalize();
+		setYaw(-(float)Math.atan2(forward.x, forward.z));
+		setPitch((float)Math.asin(forward.y));
 
 		super.tick();
 	}

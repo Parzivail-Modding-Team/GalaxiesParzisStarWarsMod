@@ -12,6 +12,11 @@ public class PProjectileEntityDamageSource extends ProjectileDamageSource
 		super(name, projectile, source);
 	}
 
+	public PProjectileEntityDamageSource(String name, Entity source)
+	{
+		super(name, source, source);
+	}
+
 	public PProjectileEntityDamageSource setIgnoresInvulnerableFrames()
 	{
 		this.ignoresInvulnerableFrames = true;

@@ -8,7 +8,6 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 
 public class BlasterStunBoltRenderer extends EntityRenderer<BlasterBoltEntity>
@@ -36,17 +35,16 @@ public class BlasterStunBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 
 		matrices.translate(0, 0.5f * entity.getHeight(), 0);
 
-		var s = MathHelper.clamp(entity.age / 2f, 0.1f, 1);
-		matrices.scale(s, s, s);
-
 		var rPitch = (float)Math.asin(-velocity.y);
 		var rYaw = (float)Math.atan2(velocity.x, velocity.z);
 
 		matrices.multiply(new Quaternion(0, rYaw, 0, false));
-		matrices.multiply(new Quaternion((float)(rPitch + Math.PI / 2), 0, 0, false));
+		matrices.multiply(new Quaternion(rPitch, 0, 0, false));
 
-		// TODO: stun rendering
-		LightsaberRenderer.renderBlade(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, 1, false, 0.6f);
+		var age = entity.age + tickDelta;
+		var size = age / 5f;
+
+		EnergyRenderer.renderStunEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, size, velocity, 0.6f);
 
 		matrices.pop();
 	}

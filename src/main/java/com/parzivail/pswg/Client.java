@@ -24,6 +24,7 @@ import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
+import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.client.EmptyEntityRenderer;
 import com.parzivail.util.client.model.DynamicBakedModel;
@@ -263,6 +264,8 @@ public class Client implements ClientModInitializer
 				else
 					Lumberjack.error("Attempted to sync lightsaber descriptors without initializing the client loader!");
 			});
+
+			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketWorldEventSlugFired, BlasterUtil::handleSlugFired);
 		}
 	}
 }

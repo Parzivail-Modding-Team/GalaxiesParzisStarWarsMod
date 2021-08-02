@@ -10,12 +10,13 @@ import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
-public class LightsaberRenderer
+public class EnergyRenderer
 {
-	private static final RenderLayer LAYER_LIGHTSABER = RenderLayer.of("lightsaber_core", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
+	private static final RenderLayer LAYER_ENERGY = RenderLayer.of("pswg_energy", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 
-	public static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue)
+	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue)
 	{
 		VertexConsumer vc;
 
@@ -29,13 +30,70 @@ public class LightsaberRenderer
 		double dY = (float)Resources.RANDOM.nextGaussian() * shake;
 		matrices.translate(dX, 0, dY);
 
-		vc = vertexConsumers.getBuffer(LAYER_LIGHTSABER);
+		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
 		final var offset = (float)Resources.RANDOM.nextGaussian();
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		//		renderCore(totalLength, coreColor | 0xFF000000, unstable, offset, cap);
 		renderGlow(totalLength, glowHue, unstable, cap);
+	}
+
+	public static void renderStunEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float size, Vec3d normal, float glowHue)
+	{
+		VertexConsumer vc;
+
+		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
+
+		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 0.1f, 0.3f, 1, 0.7f, overlay, light);
+
+		size /= 2;
+		var nx = 0;
+		var ny = 0;
+		var nz = 1;
+		var d = size - 0.0625f;
+
+		// front cull
+		VertexConsumerBuffer.Instance.vertex(-size, size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(size, size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(d, d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-d, d, 0, nx, ny, nz, 0, 0);
+
+		VertexConsumerBuffer.Instance.vertex(size, size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(size, -size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(d, -d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(d, d, 0, nx, ny, nz, 0, 0);
+
+		VertexConsumerBuffer.Instance.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(d, -d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(size, -size, 0, nx, ny, nz, 0, 0);
+
+		VertexConsumerBuffer.Instance.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-size, size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-d, d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
+
+		// back cull
+		VertexConsumerBuffer.Instance.vertex(-d, d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(d, d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(size, size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-size, size, 0, nx, ny, nz, 0, 0);
+
+		VertexConsumerBuffer.Instance.vertex(d, d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(d, -d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(size, -size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(size, size, 0, nx, ny, nz, 0, 0);
+
+		VertexConsumerBuffer.Instance.vertex(size, -size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(d, -d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
+
+		VertexConsumerBuffer.Instance.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-d, d, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-size, size, 0, nx, ny, nz, 0, 0);
+		VertexConsumerBuffer.Instance.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
 	}
 
 	private static float getAlpha(double x)

@@ -130,6 +130,7 @@ public class Tarkin
 		lang.cloneWithRoot(BlasterFiringMode.BURST.getTranslation()).build(assets);
 		lang.cloneWithRoot(BlasterFiringMode.AUTOMATIC.getTranslation()).build(assets);
 		lang.cloneWithRoot(BlasterFiringMode.STUN.getTranslation()).build(assets);
+		lang.cloneWithRoot(BlasterFiringMode.SLUGTHROWER.getTranslation()).build(assets);
 		lang.cloneWithRoot(BlasterFiringMode.ION.getTranslation()).build(assets);
 
 		// Species

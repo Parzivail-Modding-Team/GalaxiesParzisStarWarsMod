@@ -17,6 +17,7 @@ import com.parzivail.util.item.IZoomingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -251,14 +252,14 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					break;
 				case STUN:
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
-					BlasterUtil.fireStun(world, player, fromDir, range, damage, entity -> {
-						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 4.0F, 0);
+					BlasterUtil.fireStun(world, player, fromDir, range * 0.05f, damage, entity -> {
+						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 1.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 					});
-					// TODO: stun bolts
 					break;
 				case SLUGTHROWER:
-					// TODO: slug bolts
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
+					BlasterUtil.fireSlug(world, player, fromDir, range, damage);
 					break;
 				case ION:
 					// TODO: ion bolts
@@ -317,6 +318,16 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		var stack = new ItemStack(this);
 
 		stack.getOrCreateTag().putString("model", descriptor.id.toString());
+
+		var mc = MinecraftClient.getInstance();
+		var bd = getBlasterDescriptor(mc.world, stack);
+
+		BlasterTag.mutate(stack, blasterTag -> {
+			if (bd.firingModes.isEmpty())
+				blasterTag.setFiringMode(BlasterFiringMode.SEMI_AUTOMATIC);
+			else
+				blasterTag.setFiringMode(bd.firingModes.get(0));
+		});
 
 		return stack;
 	}
