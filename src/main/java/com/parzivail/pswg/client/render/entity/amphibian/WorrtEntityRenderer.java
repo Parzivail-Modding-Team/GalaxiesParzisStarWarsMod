@@ -29,14 +29,11 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 	{
 		var minecraft = MinecraftClient.getInstance();
 
-		var dT = minecraft.getTickDelta();
-
-		var timer = entity.getAirborneTimer();
+		var timer = entity.getAirborneLerp();
 
 		if (entity.isAiDisabled())
 		{
 			timer = 0;
-			dT = 0;
 			animationProgress = 0;
 		}
 
@@ -82,9 +79,9 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 		eyeRight.pitch = headPitchRad;
 		eyeLeft.pitch = headPitchRad;
 
-		if (timer >= 0)
+		if (entity.getVelocity().y > 0)
 		{
-			var t = MathHelper.clamp((timer + dT) / 5f, 0, 1);
+			var t = MathHelper.clamp(timer, 0, 1);
 
 			body.pitch = (-MathHelper.cos(t * MathUtil.fPI) + 1) / 4f;
 			head.pitch = -(-MathHelper.cos(t * MathUtil.fPI) + 1) / 7f;
@@ -108,7 +105,7 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 		}
 		else
 		{
-			var t = MathHelper.clamp((-timer + dT) / 5f, 0, 1);
+			var t = MathHelper.clamp(1-timer, 0, 1);
 
 			// landing [0, 1)
 			body.pitch = 0.5f - (-MathHelper.cos(Ease.inCubic(t) * MathUtil.fPI) + 1) / 4f;

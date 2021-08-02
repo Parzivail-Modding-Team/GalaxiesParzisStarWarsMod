@@ -1,5 +1,7 @@
 package com.parzivail.pswg.entity.amphibian;
 
+import com.parzivail.util.entity.EntityUtil;
+import com.parzivail.util.math.MathUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityType;
@@ -8,31 +10,23 @@ import net.minecraft.entity.ai.control.MoveControl;
 import net.minecraft.entity.ai.goal.FleeEntityGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
-import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
+import net.minecraft.entity.ai.goal.WanderAroundGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 public class WorrtEntity extends AnimalEntity
 {
-	static
-	{
-		AIRBORNE_TIMER = DataTracker.registerData(WorrtEntity.class, TrackedDataHandlerRegistry.BYTE);
-	}
-
-	private static final TrackedData<Byte> AIRBORNE_TIMER;
-
 	private int jumpTicks;
 	private int jumpDuration;
 	private boolean lastOnGround;
@@ -52,7 +46,7 @@ public class WorrtEntity extends AnimalEntity
 		this.goalSelector.add(1, new WorrtEntity.EscapeDangerGoal(this, 0.5D));
 		this.goalSelector.add(4, new FleeEntityGoal<>(this, PlayerEntity.class, 8.0F, 0.3D, 0.7D));
 		this.goalSelector.add(4, new FleeEntityGoal<>(this, HostileEntity.class, 4.0F, 0.3D, 0.7D));
-		this.goalSelector.add(6, new WanderAroundFarGoal(this, 0.7D, 0.2F));
+		this.goalSelector.add(6, new WanderAroundGoal(this, 0.7D, 5000));
 		this.goalSelector.add(11, new LookAtEntityGoal(this, PlayerEntity.class, 10.0F));
 	}
 
@@ -71,15 +65,15 @@ public class WorrtEntity extends AnimalEntity
 				var vec3d = path.getNodePosition(this);
 				if (vec3d.y > this.getY() + 0.5D)
 				{
-					return 0.3F;
+					return 0.75F;
 				}
 			}
 
-			return (float)this.moveControl.getSpeed() * 0.3f;
+			return (float)this.moveControl.getSpeed() * 0.75f;
 		}
 		else
 		{
-			return 0.3F;
+			return 0.75F;
 		}
 	}
 
@@ -92,7 +86,7 @@ public class WorrtEntity extends AnimalEntity
 			var e = this.getVelocity().horizontalLengthSquared();
 			if (e < 0.01D)
 			{
-				this.updateVelocity((float)d, new Vec3d(0.0D, 0.0D, 1.0D));
+				this.updateVelocity((float)d, new Vec3d(0.0D, 0.0D, 0.5D));
 			}
 		}
 
@@ -122,42 +116,6 @@ public class WorrtEntity extends AnimalEntity
 		this.setJumping(true);
 		this.jumpDuration = 10;
 		this.jumpTicks = 0;
-	}
-
-	protected void initDataTracker()
-	{
-		super.initDataTracker();
-		this.dataTracker.startTracking(AIRBORNE_TIMER, (byte)0);
-	}
-
-	@Override
-	public void tick()
-	{
-		var airborneTimer = getAirborneTimer();
-		if (!onGround)
-		{
-			if (airborneTimer < 0)
-				setAirborneTimer((byte)0);
-
-			airborneTimer = getAirborneTimer();
-			if (airborneTimer != Byte.MAX_VALUE)
-			{
-				setAirborneTimer(++airborneTimer);
-			}
-		}
-		else
-		{
-			if (airborneTimer > 0)
-				setAirborneTimer((byte)0);
-
-			airborneTimer = getAirborneTimer();
-			if (airborneTimer != Byte.MIN_VALUE)
-			{
-				setAirborneTimer(--airborneTimer);
-			}
-		}
-
-		super.tick();
 	}
 
 	public void mobTick()
@@ -200,14 +158,13 @@ public class WorrtEntity extends AnimalEntity
 		this.lastOnGround = this.onGround;
 	}
 
-	public void setAirborneTimer(byte ticks)
+	public float getAirborneLerp()
 	{
-		dataTracker.set(AIRBORNE_TIMER, ticks);
-	}
+		var hit = EntityUtil.raycastBlocks(this.getPos(), MathUtil.NEGY, 1f, this, RaycastContext.FluidHandling.NONE);
+		if (hit.getType() == HitResult.Type.MISS)
+			return 1;
 
-	public byte getAirborneTimer()
-	{
-		return dataTracker.get(AIRBORNE_TIMER);
+		return (float)MathHelper.clamp(Math.sqrt(hit.squaredDistanceTo(this)), 0, 1);
 	}
 
 	public boolean shouldSpawnSprintingParticles()
