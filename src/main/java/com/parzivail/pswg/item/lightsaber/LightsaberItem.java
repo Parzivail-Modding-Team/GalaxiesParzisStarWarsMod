@@ -174,6 +174,6 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	@Override
 	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
-		return true;
+		return original.getItem() instanceof LightsaberItem && original.getItem() == updated.getItem();
 	}
 }

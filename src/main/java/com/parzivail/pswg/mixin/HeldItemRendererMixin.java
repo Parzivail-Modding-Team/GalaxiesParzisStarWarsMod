@@ -3,22 +3,46 @@ package com.parzivail.pswg.mixin;
 import com.parzivail.util.item.ICustomVisualItemEquality;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.item.HeldItemRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Hand;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HeldItemRenderer.class)
 @Environment(EnvType.CLIENT)
-public class HeldItemRendererMixin
+public abstract class HeldItemRendererMixin
 {
-	@Redirect(method = "updateHeldItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/ItemStack;areEqual(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/ItemStack;)Z"))
-	private boolean areStacksEqual(ItemStack original, ItemStack updated)
-	{
-		if (updated.getItem().equals(original.getItem()) && updated.getItem() instanceof ICustomVisualItemEquality)
-			return ((ICustomVisualItemEquality)updated.getItem()).areStacksVisuallyEqual(original, updated);
+	@Shadow
+	private ItemStack mainHand;
 
-		return ItemStack.areEqual(original, updated);
+	@Shadow
+	private ItemStack offHand;
+
+	@Shadow
+	@Final
+	private MinecraftClient client;
+
+	@Shadow
+	public abstract void resetEquipProgress(Hand hand);
+
+	@Inject(method = "updateHeldItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isRiding()Z", shift = At.Shift.BEFORE))
+	private void areStacksEqual(CallbackInfo ci)
+	{
+		ClientPlayerEntity clientPlayerEntity = this.client.player;
+		ItemStack mainHandStackNew = clientPlayerEntity.getMainHandStack();
+		ItemStack offHandStackNew = clientPlayerEntity.getOffHandStack();
+
+		if (!mainHandStackNew.equals(mainHand) && mainHandStackNew.getItem() instanceof ICustomVisualItemEquality icvie && icvie.areStacksVisuallyEqual(mainHand, mainHandStackNew))
+			this.mainHand = mainHandStackNew;
+
+		if (!offHandStackNew.equals(offHand) && offHandStackNew.getItem() instanceof ICustomVisualItemEquality icvie && icvie.areStacksVisuallyEqual(offHand, offHandStackNew))
+			this.offHand = offHandStackNew;
 	}
 }

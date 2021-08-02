@@ -30,9 +30,13 @@ public class BlasterTag extends TagSerializer
 	public int overheatTimer;
 	public int passiveCooldownTimer;
 
+	public long serialNumber;
+
 	public BlasterTag(NbtCompound source)
 	{
 		super(SLUG, source);
+		if (this.serialNumber == 0)
+			this.serialNumber = Resources.RANDOM.nextLong();
 	}
 
 	public static void mutate(ItemStack stack, Consumer<BlasterTag> action)
@@ -100,5 +104,10 @@ public class BlasterTag extends TagSerializer
 	public boolean isOverheatCooling()
 	{
 		return overheatTimer > 0;
+	}
+
+	public void finalizeAdsAnimation()
+	{
+		aimingDownSightsTimer = 0;
 	}
 }

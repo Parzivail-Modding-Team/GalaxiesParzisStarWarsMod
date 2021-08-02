@@ -365,9 +365,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
-		var idOriginal = getBlasterModel(original);
-		var idUpdated = getBlasterModel(updated);
-		return idOriginal.equals(idUpdated);
+		if (!(original.getItem() instanceof BlasterItem) || original.getItem() != updated.getItem())
+			return false;
+
+		var bt1 = new BlasterTag(original.getOrCreateTag());
+		var bt2 = new BlasterTag(updated.getOrCreateTag());
+		return bt1.serialNumber == bt2.serialNumber;
 	}
 
 	@Override
@@ -377,6 +380,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		var bt = new BlasterTag(stack.getOrCreateTag());
 
 		// TODO: blaster variable zoom
-		return MathHelper.lerp(bt.getAdsLerp(), 1, 0.2f);
+		var lerp = bt.getAdsLerp();
+		return MathHelper.lerp(lerp, 1, 0.2f);
 	}
 }
