@@ -59,10 +59,12 @@ public class Tarkin
 		var lang = new LanguageBuilder(Resources.id(LanguageProvider.OUTPUT_LOCALE));
 
 		// Commands
-
 		var speciesCmd = lang.command("species");
 		speciesCmd.dot("invalid").build(assets);
 		speciesCmd.dot("variant").dot("invalid").build(assets);
+
+		// Deaths
+		lang.cause_of_death("blaster").build(assets);
 
 		// Containers
 		lang.container("blaster_workbench").build(assets);

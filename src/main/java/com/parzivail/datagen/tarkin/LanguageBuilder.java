@@ -44,6 +44,11 @@ public class LanguageBuilder
 		return cloneWithRoot("container").modid().dot(value);
 	}
 
+	public LanguageBuilder cause_of_death(String value)
+	{
+		return cloneWithRoot("death").dot("attack").modid().dot(value);
+	}
+
 	public LanguageBuilder command(String value)
 	{
 		return cloneWithRoot("command").modid().dot(value);

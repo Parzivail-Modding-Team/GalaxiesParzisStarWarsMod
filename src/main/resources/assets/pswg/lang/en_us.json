@@ -144,6 +144,7 @@
 	"container.pswg.mos_eisley_crate": "Mos Eisley Crate",
 	"container.pswg.segmented_crate": "Segmented Crate",
 	"container.pswg.toolbox": "Toolbox",
+	"death.attack.pswg.blaster": "%2$s shot first, %1$s shot second",
 	"entity.pswg.blaster_bolt": "Blaster Bolt",
 	"entity.pswg.faa": "Faa",
 	"entity.pswg.kinematic_test": "entity.pswg.kinematic_test",
