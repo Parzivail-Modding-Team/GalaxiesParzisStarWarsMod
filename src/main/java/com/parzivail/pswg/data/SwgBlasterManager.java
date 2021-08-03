@@ -99,6 +99,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeInt(value.boltColor);
 		buf.writeInt(value.magazineSize);
 		buf.writeInt(value.automaticRepeatTime);
+		buf.writeInt(value.burstSize);
 
 		buf.writeFloat(value.spread.horizontal);
 		buf.writeFloat(value.spread.vertical);
@@ -127,6 +128,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var boltColor = buf.readInt();
 		var magazineSize = buf.readInt();
 		var automaticRepeatTime = buf.readInt();
+		var burstSize = buf.readInt();
 
 		var spread_horizontal = buf.readFloat();
 		var spread_vertical = buf.readFloat();
@@ -152,6 +154,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				weight,
 				boltColor,
 				magazineSize,
+				burstSize,
 				automaticRepeatTime,
 				new BlasterSpreadInfo(spread_horizontal, spread_vertical),
 				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay),

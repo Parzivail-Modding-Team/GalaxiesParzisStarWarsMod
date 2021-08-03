@@ -25,6 +25,8 @@ public class BlasterTag extends TagSerializer
 	public int shotsRemaining;
 	public int shotTimer;
 
+	public int burstTimer;
+
 	public boolean canBypassOverheat;
 	public int heat;
 	public int overheatTimer;

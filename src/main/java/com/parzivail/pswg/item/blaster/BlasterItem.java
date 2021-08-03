@@ -123,7 +123,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		var bt = new BlasterTag(stack.getOrCreateTag());
 		var bd = getBlasterDescriptor(world, stack);
 
-		return bd.firingModes.contains(BlasterFiringMode.AUTOMATIC) && bt.getFiringMode() == BlasterFiringMode.AUTOMATIC;
+		var automatic = bd.firingModes.contains(BlasterFiringMode.AUTOMATIC) && bt.getFiringMode() == BlasterFiringMode.AUTOMATIC;
+		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
+
+		return automatic || (burst && bt.burstTimer > 0);
 	}
 
 	@Override
@@ -218,6 +221,16 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			bt.overheatTimer = bd.heat.capacity + bd.heat.overheatPenalty;
 			bt.canBypassOverheat = true;
 			bt.heat = 0;
+		}
+
+		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
+
+		if (burst)
+		{
+			if (bt.burstTimer == 0)
+				bt.burstTimer = bd.burstSize;
+			else
+				bt.burstTimer--;
 		}
 
 		if (!world.isClient)

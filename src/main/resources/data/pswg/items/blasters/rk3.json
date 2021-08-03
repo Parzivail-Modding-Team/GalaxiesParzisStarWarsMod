@@ -12,6 +12,7 @@
 	"boltColor": 16711680,
 	"magazineSize": 24,
 	"automaticRepeatTime": 10.8,
+	"burstSize": 3,
 	"spread": {
 		"horizontal": 0.0,
 		"vertical": 0.0
