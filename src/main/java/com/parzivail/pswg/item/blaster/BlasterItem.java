@@ -17,8 +17,6 @@ import com.parzivail.util.item.IZoomingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -112,8 +110,14 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		return blasterManager.getData(getBlasterModel(stack));
 	}
 
+	public static BlasterDescriptor getBlasterDescriptorClient(ItemStack stack)
+	{
+		var blasterManager = Client.ResourceManagers.getBlasterManager();
+		return blasterManager.getData(getBlasterModel(stack));
+	}
+
 	@Override
-	public boolean allowRepeatedLeftHold(World world, ClientPlayerEntity player, Hand mainHand)
+	public boolean allowRepeatedLeftHold(World world, PlayerEntity player, Hand mainHand)
 	{
 		final var stack = player.getStackInHand(mainHand);
 		var bt = new BlasterTag(stack.getOrCreateTag());
@@ -319,8 +323,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 		stack.getOrCreateTag().putString("model", descriptor.id.toString());
 
-		var mc = MinecraftClient.getInstance();
-		var bd = getBlasterDescriptor(mc.world, stack);
+		var bd = getBlasterDescriptorClient(stack);
 
 		BlasterTag.mutate(stack, blasterTag -> {
 			if (bd.firingModes.isEmpty())
