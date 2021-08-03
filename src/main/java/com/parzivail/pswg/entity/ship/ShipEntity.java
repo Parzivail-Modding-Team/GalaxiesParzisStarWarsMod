@@ -16,7 +16,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
@@ -455,7 +454,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	}
 
 	@Environment(EnvType.CLIENT)
-	public boolean acceptLeftClick(ClientPlayerEntity player)
+	public boolean acceptLeftClick(PlayerEntity player)
 	{
 		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipFire, new PacketByteBuf(Unpooled.buffer()));
 		return true;
