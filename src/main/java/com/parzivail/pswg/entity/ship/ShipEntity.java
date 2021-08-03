@@ -454,6 +454,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipRotation, passedData);
 	}
 
+	@Environment(EnvType.CLIENT)
 	public boolean acceptLeftClick(ClientPlayerEntity player)
 	{
 		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipFire, new PacketByteBuf(Unpooled.buffer()));
