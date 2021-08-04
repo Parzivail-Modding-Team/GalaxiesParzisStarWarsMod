@@ -147,7 +147,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				case HEAVY:
 				case SLUGTHROWER:
 				case ION:
-					adsVec = new Vec3d(-2.1f, 1.6f, -1f);
+					adsVec = new Vec3d(-2.1f, 1.5f, -3f);
 					break;
 				case SNIPER:
 					adsVec = new Vec3d(-2.8f, 2.65f, -5f);
@@ -159,7 +159,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					MathHelper.lerp(adsLerp, 1.2f, adsVec.y),
 					MathHelper.lerp(adsLerp, 0, adsVec.z)
 			);
-			matrices.multiply(new Quaternion(0, MathHelper.lerp(adsLerp, 172, 182), 0, true));
+			matrices.multiply(new Quaternion(
+					MathHelper.lerp(adsLerp, 0, 3),
+					MathHelper.lerp(adsLerp, 172, 182),
+					0,
+					true));
 			matrices.translate(
 					MathHelper.lerp(adsLerp, 0.2f, 0),
 					MathHelper.lerp(adsLerp, -0.2f, 0),
