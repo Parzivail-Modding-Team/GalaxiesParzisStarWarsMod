@@ -1,18 +1,26 @@
 package com.parzivail.pswg.recipe;
 
 import com.google.gson.JsonObject;
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgRecipeSerializers;
 import com.parzivail.pswg.container.SwgRecipeType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.*;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import net.minecraft.world.World;
 
 public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
@@ -80,8 +88,25 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 		{
 			var ingredient = Ingredient.fromJson(JsonHelper.getObject(jsonObject, "ingredient"));
 			var duration = JsonHelper.getInt(jsonObject, "duration");
-			var itemStack = ShapedRecipe.outputFromJson(JsonHelper.getObject(jsonObject, "result"));
-			return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
+
+			var result = JsonHelper.getObject(jsonObject, "result");
+			try
+			{
+				var resultItem = result.get("item").getAsString();
+				var resultCount = JsonHelper.getInt(result, "count", 1);
+				ItemStringReader itemStringReader = (new ItemStringReader(new StringReader(resultItem), false)).consume();
+
+				var itemStack = new ItemStack(itemStringReader.getItem(), resultCount);
+				itemStack.setTag(itemStringReader.getNbt());
+				return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
+			}
+			catch (CommandSyntaxException e)
+			{
+				var crashReport = CrashReport.create(e, "Recipe parsing");
+				var element = crashReport.addElement("Recipe");
+				element.add("Identifier", identifier);
+				throw new CrashException(crashReport);
+			}
 		}
 
 		public VaporatorRecipe read(Identifier identifier, PacketByteBuf packetByteBuf)

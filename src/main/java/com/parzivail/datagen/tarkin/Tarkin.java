@@ -66,6 +66,11 @@ public class Tarkin
 		// Deaths
 		lang.cause_of_death("blaster").build(assets);
 
+		// REI categories
+		var reiVaporator = lang.category("vaporator");
+		reiVaporator.build(assets);
+		reiVaporator.dot("time").build(assets);
+
 		// Containers
 		lang.container("blaster_workbench").build(assets);
 		lang.container("imperial_cube_crate").build(assets);

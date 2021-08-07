@@ -133,6 +133,8 @@
 	"block.pswg.yellow_stained_imperial_glass": "Yellow Stained Imperial Glass",
 	"block.pswg.zersium_block": "Block of Zersium",
 	"block.pswg.zersium_ore": "Zersium Ore",
+	"category.pswg.vaporator": "Moisture Vaporator",
+	"category.pswg.vaporator.time": "%s sec",
 	"command.pswg.species.invalid": "Unknown species %s",
 	"command.pswg.species.variant.invalid": "Unknown variant %s for species %s",
 	"container.pswg.blaster_workbench": "Blaster Workbench",
