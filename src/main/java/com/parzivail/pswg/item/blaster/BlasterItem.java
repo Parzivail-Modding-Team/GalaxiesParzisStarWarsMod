@@ -10,10 +10,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.util.BlasterUtil;
-import com.parzivail.util.item.ICustomVisualItemEquality;
-import com.parzivail.util.item.IDefaultNbtProvider;
-import com.parzivail.util.item.ILeftClickConsumer;
-import com.parzivail.util.item.IZoomingItem;
+import com.parzivail.util.item.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
@@ -24,7 +21,6 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
@@ -38,7 +34,7 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.World;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionConsumer
 {
 	public BlasterItem(Settings settings)
 	{
@@ -82,7 +78,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		return new Identifier(blasterModel);
 	}
 
-	public static void nextFireMode(World world, ServerPlayerEntity player, ItemStack stack)
+	public static void nextFireMode(World world, PlayerEntity player, ItemStack stack)
 	{
 		var bt = new BlasterTag(stack.getOrCreateTag());
 		var bd = getBlasterDescriptor(world, stack);
@@ -104,6 +100,15 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		player.sendMessage(new TranslatableText(Resources.dotModId("msg", "blaster_mode_changed"), new TranslatableText(currentMode.getTranslation())), true);
 	}
 
+	public static void bypassHeat(World world, PlayerEntity player, ItemStack stack)
+	{
+		BlasterTag.mutate(stack, bt -> {
+			bt.overheatTimer = bt.heat;
+			bt.canBypassOverheat = false;
+			bt.heat = 0;
+		});
+	}
+
 	public static BlasterDescriptor getBlasterDescriptor(World world, ItemStack stack)
 	{
 		var blasterManager = SwgBlasterManager.get(world);
@@ -114,6 +119,37 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	{
 		var blasterManager = Client.ResourceManagers.getBlasterManager();
 		return blasterManager.getData(getBlasterModel(stack));
+	}
+
+	@Override
+	public void consumeAction(World world, PlayerEntity player, ItemStack stack, ItemAction action)
+	{
+		switch (action)
+		{
+			case PRIMARY:
+				nextFireMode(world, player, stack);
+				break;
+			case SECONDARY:
+				bypassHeat(world, player, stack);
+				break;
+		}
+	}
+
+	@Override
+	public float getCooldownProgress(PlayerEntity player, World world, ItemStack stack, float tickDelta)
+	{
+		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bd = getBlasterDescriptor(world, stack);
+
+		if (bt.isOverheatCooling())
+			return MathHelper.clamp((bt.overheatTimer - bd.heat.overheatDrainSpeed * tickDelta) / bd.heat.capacity, 0, 1);
+
+		var heatDelta = 0f;
+
+		if (bt.passiveCooldownTimer == 0)
+			heatDelta = bd.heat.drainSpeed * tickDelta;
+
+		return MathHelper.clamp((bt.heat - heatDelta) / bd.heat.capacity, 0, 1);
 	}
 
 	@Override

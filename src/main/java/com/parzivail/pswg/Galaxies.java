@@ -135,7 +135,7 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketLightsaberForgeApply, LightsaberForgeScreenHandler::handleSetLighsaberTag);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketSetOwnSpecies, SwgSpeciesRegistry::handleSetOwnSpecies);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerPrimaryItemAction, PlayerPacketHandler::handlePrimaryItemAction);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerItemAction, PlayerPacketHandler::handleItemAction);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipFire, ShipEntity::handleFirePacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipControls, ShipEntity::handleControlPacket);

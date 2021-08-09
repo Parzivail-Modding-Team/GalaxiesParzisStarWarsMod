@@ -6,10 +6,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
-import com.parzivail.util.item.ICustomVisualItemEquality;
-import com.parzivail.util.item.IDefaultNbtProvider;
-import com.parzivail.util.item.IItemEntityConsumer;
-import com.parzivail.util.item.ItemStackEntityAttributeModifiers;
+import com.parzivail.util.item.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
@@ -30,7 +27,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityConsumer
+public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityConsumer, IItemActionConsumer
 {
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
@@ -71,6 +68,17 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 					world.playSound(null, player.getBlockPos(), SwgSounds.Lightsaber.STOP_CLASSIC, SoundCategory.PLAYERS, 1f, 1f);
 			}
 		});
+	}
+
+	@Override
+	public void consumeAction(World world, PlayerEntity player, ItemStack stack, ItemAction action)
+	{
+		switch (action)
+		{
+			case PRIMARY:
+				toggle(world, player, stack);
+				break;
+		}
 	}
 
 	@Override

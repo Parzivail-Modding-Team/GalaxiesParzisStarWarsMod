@@ -126,6 +126,7 @@ public class Tarkin
 
 		// Keys
 		lang.key(Client.KEY_PRIMARY_ITEM_ACTION).build(assets);
+		lang.key(Client.KEY_SECONDARY_ITEM_ACTION).build(assets);
 		lang.key(Client.KEY_SHIP_INPUT_MODE_OVERRIDE).build(assets);
 		lang.key(Client.KEY_SPECIES_SELECT).build(assets);
 

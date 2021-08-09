@@ -1,8 +1,9 @@
 package com.parzivail.pswg.handler;
 
-import com.parzivail.pswg.item.blaster.BlasterItem;
-import com.parzivail.pswg.item.lightsaber.LightsaberItem;
+import com.parzivail.util.Lumberjack;
+import com.parzivail.util.item.IItemActionConsumer;
 import com.parzivail.util.item.ILeftClickConsumer;
+import com.parzivail.util.item.ItemAction;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -22,17 +23,19 @@ public class PlayerPacketHandler
 		}
 	}
 
-	public static void handlePrimaryItemAction(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	public static void handleItemAction(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
 		var stack = player.getMainHandStack();
 
-		if (stack.getItem() instanceof LightsaberItem)
+		var action = buf.readInt();
+		var actions = ItemAction.values();
+		if (action < 0 || action >= actions.length)
 		{
-			LightsaberItem.toggle(player.world, player, stack);
+			Lumberjack.warn("Player %s attempted to use invalid item action ordinal %s", player, action);
+			return;
 		}
-		else if (stack.getItem() instanceof BlasterItem)
-		{
-			BlasterItem.nextFireMode(player.world, player, stack);
-		}
+
+		if (stack.getItem() instanceof IItemActionConsumer)
+			((IItemActionConsumer)stack.getItem()).consumeAction(player.world, player, stack, actions[action]);
 	}
 }

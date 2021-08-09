@@ -10,7 +10,7 @@ public class SwgPackets
 		public static final Identifier PacketLightsaberForgeApply = Resources.id("lightsaber_forge_apply");
 		public static final Identifier PacketSetOwnSpecies = Resources.id("set_own_species");
 		public static final Identifier PacketPlayerLeftClickItem = Resources.id("player_use_left");
-		public static final Identifier PacketPlayerPrimaryItemAction = Resources.id("primary_item_action");
+		public static final Identifier PacketPlayerItemAction = Resources.id("item_action");
 		public static final Identifier PacketShipFire = Resources.id("ship_fire");
 		public static final Identifier PacketShipRotation = Resources.id("ship_rotation");
 		public static final Identifier PacketShipControls = Resources.id("ship_controls");
