@@ -1,5 +1,6 @@
 package com.parzivail.pswg.item.blaster;
 
+import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
@@ -15,6 +16,10 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.attribute.EntityAttribute;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -34,8 +39,21 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.World;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionConsumer
+import java.util.UUID;
+
+public class BlasterItem extends Item implements ItemStackEntityAttributeModifiers, ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionConsumer
 {
+	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
+	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+
+	private static final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> ATTRIB_MODS_ADS;
+
+	static {
+		ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+		builder.put(EntityAttributes.GENERIC_MOVEMENT_SPEED, ADS_SPEED_PENALTY_MODIFIER);
+		ATTRIB_MODS_ADS = builder.build();
+	}
+
 	public BlasterItem(Settings settings)
 	{
 		super(settings);
@@ -435,5 +453,16 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		// TODO: blaster variable zoom
 		var lerp = bt.getAdsLerp();
 		return MathHelper.lerp(lerp, 1, 0.2f);
+	}
+
+	@Override
+	public ImmutableMultimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack)
+	{
+		var bt = new BlasterTag(stack.getOrCreateTag());
+
+		if (bt.isAimingDownSights)
+			return ATTRIB_MODS_ADS;
+
+		return ImmutableMultimap.of();
 	}
 }
