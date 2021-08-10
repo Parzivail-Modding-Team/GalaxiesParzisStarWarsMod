@@ -301,6 +301,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
 						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 4.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
+						entity.setHue(bd.boltColor);
 					});
 					break;
 				case STUN:

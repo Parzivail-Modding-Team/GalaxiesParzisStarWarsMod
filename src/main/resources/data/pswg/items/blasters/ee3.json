@@ -10,7 +10,7 @@
 	"damage": 3.5,
 	"range": 100.0,
 	"weight": 2.9,
-	"boltColor": 16711680,
+	"boltColor": 0.98,
 	"magazineSize": 100,
 	"automaticRepeatTime": 1.5,
 	"burstSize": 3,

@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 public class BlasterBoltEntity extends ThrownEntity
 {
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Float> HUE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
 	public BlasterBoltEntity(EntityType<? extends BlasterBoltEntity> type, World world)
 	{
@@ -57,6 +58,7 @@ public class BlasterBoltEntity extends ThrownEntity
 	protected void initDataTracker()
 	{
 		dataTracker.startTracking(LIFE, 0);
+		dataTracker.startTracking(HUE, 0.0f);
 	}
 
 	private int getLife()
@@ -67,6 +69,16 @@ public class BlasterBoltEntity extends ThrownEntity
 	private void setLife(int life)
 	{
 		dataTracker.set(LIFE, life);
+	}
+
+	public float getHue()
+	{
+		return dataTracker.get(HUE);
+	}
+
+	public void setHue(float hue)
+	{
+		dataTracker.set(HUE, hue);
 	}
 
 	@Override

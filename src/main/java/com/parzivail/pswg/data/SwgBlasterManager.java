@@ -96,7 +96,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.damage);
 		buf.writeFloat(value.range);
 		buf.writeFloat(value.weight);
-		buf.writeInt(value.boltColor);
+		buf.writeFloat(value.boltColor);
 		buf.writeInt(value.magazineSize);
 		buf.writeInt(value.automaticRepeatTime);
 		buf.writeInt(value.burstSize);
@@ -125,7 +125,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var damage = buf.readFloat();
 		var range = buf.readFloat();
 		var weight = buf.readFloat();
-		var boltColor = buf.readInt();
+		var boltColor = buf.readFloat();
 		var magazineSize = buf.readInt();
 		var automaticRepeatTime = buf.readInt();
 		var burstSize = buf.readInt();

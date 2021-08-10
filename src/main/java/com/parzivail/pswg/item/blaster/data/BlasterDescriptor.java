@@ -17,7 +17,7 @@ public class BlasterDescriptor extends TagSerializer
 	public float damage;
 	public float range;
 	public float weight;
-	public int boltColor;
+	public float boltColor;
 	public int magazineSize;
 	public int automaticRepeatTime;
 
@@ -32,7 +32,7 @@ public class BlasterDescriptor extends TagSerializer
 		super(SLUG, tag);
 	}
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, int boltColor, int magazineSize, int burstSize, int automaticRepeatTime, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int burstSize, int automaticRepeatTime, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
 	{
 		super(SLUG);
 		this.id = id;

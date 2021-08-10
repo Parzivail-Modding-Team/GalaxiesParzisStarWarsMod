@@ -7,7 +7,7 @@
 	"damage": 3.06,
 	"range": 188.0,
 	"weight": 6.7,
-	"boltColor": 16711680,
+	"boltColor": 0,
 	"magazineSize": 24,
 	"automaticRepeatTime": 10.8,
 	"spread": {

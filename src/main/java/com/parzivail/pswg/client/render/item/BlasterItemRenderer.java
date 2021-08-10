@@ -141,7 +141,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			switch (bd.type)
 			{
 				case PISTOL:
-					adsVec = new Vec3d(-2.2f, 1.8f, -3f);
+					adsVec = new Vec3d(-2.2f, 1.5f, -3f);
 					break;
 				case RIFLE:
 				case HEAVY:
@@ -169,6 +169,22 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					MathHelper.lerp(adsLerp, -0.2f, 0),
 					MathHelper.lerp(adsLerp, -1.2f, 0)
 			);
+
+//			var client = MinecraftClient.getInstance();
+//			RenderSystem.setShaderTexture(0, client.player.getSkinTexture());
+//			PlayerEntityRenderer playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
+//			matrices.push();
+//			matrices.scale(5, 5, 5);
+//			float f = -1.0f;
+//
+//			matrices.translate(-0.33f, 0, 0.45f);
+//			matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(20.0F));
+//			matrices.translate(0, 5 / 8f, 0);
+//
+//			//			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-30.0F));
+//			playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
+//
+//			matrices.pop();
 		}
 		else
 		{

@@ -46,6 +46,8 @@ public class BlasterStunBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		if (size < 3 / 16f)
 			size = 3 / 16f;
 
+		size = (float)Math.pow(size, 0.75f);
+
 		EnergyRenderer.renderStunEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, size, velocity, 0.6f);
 
 		matrices.pop();
