@@ -15,7 +15,7 @@ import net.minecraft.util.math.Vec3d;
 public class EnergyRenderer
 {
 	private static final RenderLayer LAYER_ENERGY = RenderLayer.of("pswg_energy", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
-	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of("pswg_energy_add", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_ADDITIVE_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
+	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of("pswg_energy_add", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_LIGHTNING_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 
 	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue)
 	{
@@ -46,13 +46,13 @@ public class EnergyRenderer
 
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY_ADDITIVE);
 
-		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 0.1f / 2, 0.2f / 2, 1 / 2f, 0.5f, overlay, light);
+		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 0.1f, 0.2f, 1, 1.0f, overlay, light);
 
 		size /= 2;
 		var nx = 0f;
 		var ny = 0f;
 		var nz = 1f;
-		var d = size - 0.0625f;
+		var d = 0.8f * size;
 
 		// front cull
 		VertexConsumerBuffer.Instance.vertex(-size, size, 0, nx, ny, nz, 0, 0);

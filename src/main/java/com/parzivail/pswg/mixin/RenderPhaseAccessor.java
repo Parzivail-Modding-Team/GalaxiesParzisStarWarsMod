@@ -34,6 +34,12 @@ public interface RenderPhaseAccessor
 		throw new AssertionError();
 	}
 
+	@Accessor("LIGHTNING_TRANSPARENCY")
+	static RenderPhase.Transparency get_LIGHTNING_TRANSPARENCY()
+	{
+		throw new AssertionError();
+	}
+
 	@Accessor("LIGHTNING_SHADER")
 	static RenderPhase.Shader get_LIGHTNING_SHADER()
 	{

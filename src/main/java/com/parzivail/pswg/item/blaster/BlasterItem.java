@@ -305,8 +305,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					break;
 				case STUN:
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
-					BlasterUtil.fireStun(world, player, fromDir, range * 0.05f, damage, entity -> {
-						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 0.5f, 0);
+					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, damage, entity -> {
+						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 1.25f, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 					});
 					break;

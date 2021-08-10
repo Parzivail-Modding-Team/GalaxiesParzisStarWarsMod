@@ -42,7 +42,9 @@ public class BlasterStunBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		matrices.multiply(new Quaternion(rPitch, 0, 0, false));
 
 		var age = entity.age + tickDelta;
-		var size = age / 5f;
+		var size = age / 10f;
+		if (size < 3 / 16f)
+			size = 3 / 16f;
 
 		EnergyRenderer.renderStunEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, size, velocity, 0.6f);
 
