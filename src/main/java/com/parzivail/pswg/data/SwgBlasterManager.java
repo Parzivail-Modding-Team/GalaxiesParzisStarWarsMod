@@ -13,6 +13,8 @@ import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.EulerAngle;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.io.IOException;
@@ -99,6 +101,23 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.boltColor);
 		buf.writeInt(value.magazineSize);
 		buf.writeInt(value.automaticRepeatTime);
+
+		buf.writeBoolean(value.foreGripPos != null);
+		if (value.foreGripPos != null)
+		{
+			buf.writeFloat((float)value.foreGripPos.x);
+			buf.writeFloat((float)value.foreGripPos.y);
+			buf.writeFloat((float)value.foreGripPos.z);
+		}
+
+		buf.writeBoolean(value.foreGripHandAngle != null);
+		if (value.foreGripHandAngle != null)
+		{
+			buf.writeFloat(value.foreGripHandAngle.getPitch());
+			buf.writeFloat(value.foreGripHandAngle.getYaw());
+			buf.writeFloat(value.foreGripHandAngle.getRoll());
+		}
+
 		buf.writeInt(value.burstSize);
 
 		buf.writeFloat(value.spread.horizontal);
@@ -128,6 +147,29 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var boltColor = buf.readFloat();
 		var magazineSize = buf.readInt();
 		var automaticRepeatTime = buf.readInt();
+
+		var hasForeGripPos = buf.readBoolean();
+		Vec3d foreGripPos = null;
+		if (hasForeGripPos)
+		{
+			foreGripPos = new Vec3d(
+					buf.readFloat(),
+					buf.readFloat(),
+					buf.readFloat()
+			);
+		}
+
+		var hasForeGripHandAngle = buf.readBoolean();
+		EulerAngle foreGripHandAngle = null;
+		if (hasForeGripHandAngle)
+		{
+			foreGripHandAngle = new EulerAngle(
+					buf.readFloat(),
+					buf.readFloat(),
+					buf.readFloat()
+			);
+		}
+
 		var burstSize = buf.readInt();
 
 		var spread_horizontal = buf.readFloat();
@@ -154,8 +196,10 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				weight,
 				boltColor,
 				magazineSize,
-				burstSize,
 				automaticRepeatTime,
+				foreGripPos,
+				foreGripHandAngle,
+				burstSize,
 				new BlasterSpreadInfo(spread_horizontal, spread_vertical),
 				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay),
 				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance)

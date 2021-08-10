@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.render.item;
 
 import com.google.common.base.Suppliers;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.pm3d.PM3DFile;
 import com.parzivail.pswg.item.blaster.BlasterItem;
@@ -14,6 +15,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
@@ -23,6 +25,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -170,21 +173,31 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					MathHelper.lerp(adsLerp, -1.2f, 0)
 			);
 
-//			var client = MinecraftClient.getInstance();
-//			RenderSystem.setShaderTexture(0, client.player.getSkinTexture());
-//			PlayerEntityRenderer playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
-//			matrices.push();
-//			matrices.scale(5, 5, 5);
-//			float f = -1.0f;
-//
-//			matrices.translate(-0.33f, 0, 0.45f);
-//			matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(20.0F));
-//			matrices.translate(0, 5 / 8f, 0);
-//
-//			//			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-30.0F));
-//			playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
-//
-//			matrices.pop();
+			// TODO: left handed hold
+			if (renderMode == ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND && bd.foreGripPos != null && bd.foreGripHandAngle != null)
+			{
+				var client = MinecraftClient.getInstance();
+				RenderSystem.setShaderTexture(0, client.player.getSkinTexture());
+				PlayerEntityRenderer playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
+				matrices.push();
+
+				matrices.translate(bd.foreGripPos.x, bd.foreGripPos.y, -bd.foreGripPos.z);
+
+				matrices.scale(4, 4, 4);
+
+				matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(5));
+
+				matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bd.foreGripHandAngle.getPitch()));
+				matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(bd.foreGripHandAngle.getRoll()));
+				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bd.foreGripHandAngle.getYaw()));
+
+				matrices.translate(-0.415f, -0.75f, 0);
+
+				//			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-30.0F));
+				playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
+
+				matrices.pop();
+			}
 		}
 		else
 		{

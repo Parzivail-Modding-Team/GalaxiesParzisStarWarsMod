@@ -14,6 +14,16 @@
 	"magazineSize": 24,
 	"automaticRepeatTime": 10.8,
 	"burstSize": 3,
+	"foreGripPos": {
+		"x": 0,
+		"y": 0.357,
+		"z": -2.175
+	},
+	"foreGripHandAngle": {
+		"roll": 30,
+		"pitch": 30,
+		"yaw": 0
+	},
 	"spread": {
 		"horizontal": 0.0,
 		"vertical": 0.0

@@ -4,6 +4,8 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.EulerAngle;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,9 @@ public class BlasterDescriptor extends TagSerializer
 	public int magazineSize;
 	public int automaticRepeatTime;
 
+	public Vec3d foreGripPos;
+	public EulerAngle foreGripHandAngle;
+
 	public int burstSize;
 
 	public BlasterSpreadInfo spread;
@@ -32,7 +37,7 @@ public class BlasterDescriptor extends TagSerializer
 		super(SLUG, tag);
 	}
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int burstSize, int automaticRepeatTime, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, Vec3d foreGripPos, EulerAngle foreGripHandAngle, int burstSize, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
 	{
 		super(SLUG);
 		this.id = id;
@@ -44,6 +49,8 @@ public class BlasterDescriptor extends TagSerializer
 		this.boltColor = boltColor;
 		this.magazineSize = magazineSize;
 		this.automaticRepeatTime = automaticRepeatTime;
+		this.foreGripPos = foreGripPos;
+		this.foreGripHandAngle = foreGripHandAngle;
 		this.burstSize = burstSize;
 		this.spread = spread;
 		this.heat = heat;
@@ -66,6 +73,8 @@ public class BlasterDescriptor extends TagSerializer
 		this.boltColor = other.boltColor;
 		this.magazineSize = other.magazineSize;
 		this.automaticRepeatTime = other.automaticRepeatTime;
+		this.foreGripPos = other.foreGripPos;
+		this.foreGripHandAngle = other.foreGripHandAngle;
 		this.burstSize = other.burstSize;
 		this.spread = other.spread;
 		this.heat = other.heat;
