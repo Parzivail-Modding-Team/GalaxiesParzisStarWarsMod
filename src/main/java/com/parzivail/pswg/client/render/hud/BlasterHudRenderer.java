@@ -54,7 +54,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		 * Cooldown
 		 */
 
-		if (bt.isOverheatCooling() || bt.heat > 0)
+		if (bt.isCooling() || bt.heat > 0)
 		{
 			var cooldownBarX = (scaledWidth - cooldownWidth) / 2;
 
@@ -63,16 +63,16 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 			final float maxHeat = bd.heat.capacity;
 
-			if (bt.isOverheatCooling())
+			if (bt.isCooling() && (bt.coolingMode == BlasterTag.COOLING_MODE_OVERHEAT || bt.coolingMode == BlasterTag.COOLING_MODE_PENALTY_BYPASS))
 			{
-				var cooldownTimer = (bt.overheatTimer - bd.heat.overheatDrainSpeed * client.getTickDelta()) / (maxHeat + bd.heat.overheatPenalty);
+				var cooldownTimer = (bt.coolingTimer - bd.heat.overheatDrainSpeed * client.getTickDelta()) / (maxHeat + bd.heat.overheatPenalty);
 
 				cooldownTimer = MathHelper.clamp(cooldownTimer, 0, 0.98f);
 
-				// red cooldown background
+				// cooldown background
 				this.drawTexture(matrices, cooldownBarX, j + 30, 0, 16, cooldownWidth, 3);
 
-				if (bt.canBypassOverheat)
+				if (bt.canBypassCooling)
 				{
 					var primaryBypassStartX = (int)((profile.primaryBypassTime - profile.primaryBypassTolerance) * cooldownWidth);
 					var primaryBypassWidth = (int)(2 * profile.primaryBypassTolerance * cooldownWidth);
@@ -90,11 +90,25 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			}
 			else
 			{
-				float deltaHeat = 0;
-				if (bt.passiveCooldownTimer == 0)
-					deltaHeat = bd.heat.drainSpeed * client.getTickDelta();
+				var heatPercentage = 0f;
 
-				var heatPercentage = (bt.heat - deltaHeat) / maxHeat;
+				if (bt.isCooling())
+				{
+					float deltaHeat = 0;
+					if (bt.passiveCooldownTimer == 0)
+						deltaHeat = bd.heat.overheatDrainSpeed * client.getTickDelta();
+
+					heatPercentage = (bt.coolingTimer - deltaHeat) / maxHeat;
+				}
+				else
+				{
+					float deltaHeat = 0;
+					if (bt.passiveCooldownTimer == 0)
+						deltaHeat = bd.heat.drainSpeed * client.getTickDelta();
+
+					heatPercentage = (bt.heat - deltaHeat) / maxHeat;
+				}
+
 				this.drawTexture(matrices, cooldownBarX, j + 30, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
 			}
 

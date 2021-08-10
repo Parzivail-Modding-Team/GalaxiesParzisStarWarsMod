@@ -16,6 +16,10 @@ public class BlasterTag extends TagSerializer
 {
 	public static final Identifier SLUG = Resources.id("blaster_data");
 	public static final int ADS_TIMER_LENGTH = 5;
+	public static final byte COOLING_MODE_NONE = 0;
+	public static final byte COOLING_MODE_OVERHEAT = 1;
+	public static final byte COOLING_MODE_FORCED_BYPASS = 2;
+	public static final byte COOLING_MODE_PENALTY_BYPASS = 3;
 
 	public byte firingMode;
 
@@ -27,9 +31,10 @@ public class BlasterTag extends TagSerializer
 
 	public int burstTimer;
 
-	public boolean canBypassOverheat;
+	public boolean canBypassCooling;
 	public int heat;
-	public int overheatTimer;
+	public int coolingTimer;
+	public byte coolingMode;
 	public int passiveCooldownTimer;
 
 	public long serialNumber;
@@ -103,9 +108,9 @@ public class BlasterTag extends TagSerializer
 		return shotTimer == 0;
 	}
 
-	public boolean isOverheatCooling()
+	public boolean isCooling()
 	{
-		return overheatTimer > 0;
+		return coolingTimer > 0;
 	}
 
 	public void finalizeAdsAnimation()

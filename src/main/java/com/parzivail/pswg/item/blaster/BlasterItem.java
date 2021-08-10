@@ -121,8 +121,12 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public static void bypassHeat(World world, PlayerEntity player, ItemStack stack)
 	{
 		BlasterTag.mutate(stack, bt -> {
-			bt.overheatTimer = bt.heat;
-			bt.canBypassOverheat = false;
+			if (bt.isCooling())
+				return;
+
+			bt.coolingTimer = bt.heat;
+			bt.coolingMode = BlasterTag.COOLING_MODE_FORCED_BYPASS;
+			bt.canBypassCooling = false;
 			bt.heat = 0;
 		});
 	}
@@ -159,8 +163,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		var bt = new BlasterTag(stack.getOrCreateTag());
 		var bd = getBlasterDescriptor(world, stack);
 
-		if (bt.isOverheatCooling())
-			return MathHelper.clamp((bt.overheatTimer - bd.heat.overheatDrainSpeed * tickDelta) / bd.heat.capacity, 0, 1);
+		if (bt.isCooling())
+			return MathHelper.clamp((bt.coolingTimer - bd.heat.overheatDrainSpeed * tickDelta) / bd.heat.capacity, 0, 1);
 
 		var heatDelta = 0f;
 
@@ -196,9 +200,9 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		bt.shotTimer = bd.automaticRepeatTime;
 
-		if (bt.isOverheatCooling())
+		if (bt.isCooling())
 		{
-			if (world.isClient || !bt.canBypassOverheat)
+			if (world.isClient || !bt.canBypassCooling)
 			{
 				bt.serializeAsSubtag(stack);
 				return TypedActionResult.fail(stack);
@@ -206,7 +210,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 			var profile = bd.cooling;
 
-			final var cooldownTime = bt.overheatTimer / (float)bd.heat.capacity;
+			final var cooldownTime = bt.coolingTimer / (float)bd.heat.capacity;
 
 			final var primaryBypassStart = profile.primaryBypassTime - profile.primaryBypassTolerance;
 			final var primaryBypassEnd = profile.primaryBypassTime + profile.primaryBypassTolerance;
@@ -218,21 +222,24 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			if (profile.primaryBypassTolerance > 0 && cooldownTime >= primaryBypassStart && cooldownTime <= primaryBypassEnd)
 			{
 				// TODO: primary bypass sound
-				bt.overheatTimer = 0;
+				bt.coolingTimer = 0;
+				bt.coolingMode = BlasterTag.COOLING_MODE_NONE;
 
 				result = TypedActionResult.success(stack);
 			}
 			else if (profile.secondaryBypassTolerance > 0 && cooldownTime >= secondaryBypassStart && cooldownTime <= secondaryBypassEnd)
 			{
 				// TODO: secondary bypass sound
-				bt.overheatTimer = 0;
+				bt.coolingTimer = 0;
+				bt.coolingMode = BlasterTag.COOLING_MODE_NONE;
 
 				result = TypedActionResult.success(stack);
 			}
 			else
 			{
 				// TODO: failed bypass sound
-				bt.canBypassOverheat = false;
+				bt.canBypassCooling = false;
+				bt.coolingMode = BlasterTag.COOLING_MODE_PENALTY_BYPASS;
 			}
 
 			bt.serializeAsSubtag(stack);
@@ -272,8 +279,9 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		if (bt.heat > bd.heat.capacity)
 		{
 			// TODO: overheat sound
-			bt.overheatTimer = bd.heat.capacity + bd.heat.overheatPenalty;
-			bt.canBypassOverheat = true;
+			bt.coolingTimer = bd.heat.capacity + bd.heat.overheatPenalty;
+			bt.coolingMode = BlasterTag.COOLING_MODE_OVERHEAT;
+			bt.canBypassCooling = true;
 			bt.heat = 0;
 		}
 
@@ -423,8 +431,12 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		var bd = getBlasterDescriptor(world, stack);
 
 		BlasterTag.mutate(stack, blasterTag -> {
-			if (blasterTag.overheatTimer > 0)
-				blasterTag.overheatTimer -= bd.heat.overheatDrainSpeed;
+			if (blasterTag.coolingTimer > 0)
+			{
+				blasterTag.coolingTimer -= bd.heat.overheatDrainSpeed;
+				if (blasterTag.coolingTimer == 0)
+					blasterTag.coolingMode = BlasterTag.COOLING_MODE_NONE;
+			}
 
 			if (blasterTag.heat > 0 && blasterTag.passiveCooldownTimer == 0)
 				blasterTag.heat -= bd.heat.drainSpeed;
@@ -458,10 +470,13 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	@Override
 	public ImmutableMultimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot, ItemStack stack)
 	{
-		var bt = new BlasterTag(stack.getOrCreateTag());
+		if (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND)
+		{
+			var bt = new BlasterTag(stack.getOrCreateTag());
 
-		if (bt.isAimingDownSights)
-			return ATTRIB_MODS_ADS;
+			if (bt.isAimingDownSights)
+				return ATTRIB_MODS_ADS;
+		}
 
 		return ImmutableMultimap.of();
 	}
