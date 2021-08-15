@@ -1,0 +1,10 @@
+{
+    "type": "pswg:vaporator",
+    "ingredient": {
+        "item": "minecraft:glass_bottle"
+    },
+    "result": {
+        "item": "would be minecraft:potion{Potion:'minecraft:water'}"
+    },
+    "duration": 400
+}
