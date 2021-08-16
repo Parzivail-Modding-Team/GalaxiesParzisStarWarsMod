@@ -4,7 +4,7 @@
         "item": "minecraft:glass_bottle"
     },
     "result": {
-        "item": "would be minecraft:potion{Potion:'minecraft:water'}"
+        "item": "minecraft:potion{Potion:'minecraft:water'}"
     },
     "duration": 400
 }

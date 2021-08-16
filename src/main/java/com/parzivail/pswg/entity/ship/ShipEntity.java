@@ -49,7 +49,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	private ChaseCam camera;
 
 	@Environment(EnvType.CLIENT)
-	private Quaternion clientInstRotation = new Quaternion(Quaternion.IDENTITY);
+	protected Quaternion clientInstRotation = new Quaternion(Quaternion.IDENTITY);
 	@Environment(EnvType.CLIENT)
 	private Quaternion clientRotation = new Quaternion(Quaternion.IDENTITY);
 	@Environment(EnvType.CLIENT)
@@ -77,10 +77,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 		var ship = getShip(player);
 
-		if (ship != null)
+		if (ship != null && ship.isPilot(player) && ship.useMouseInput(player))
 		{
 			ship.acceptMouseInput(cursorDeltaX, cursorDeltaY);
-			return true;
+			return !ship.usePlayerPerspective();
 		}
 
 		return false;
@@ -91,7 +91,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		server.execute(() -> {
 			var ship = getShip(player);
 
-			if (ship != null)
+			if (ship != null && ship.isPilot(player))
 				ship.acceptFireInput();
 		});
 	}
@@ -106,7 +106,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		server.execute(() -> {
 			var ship = getShip(player);
 
-			if (ship != null)
+			if (ship != null && ship.isPilot(player))
 				ship.setRotation(new Quaternion(qb, qc, qd, qa));
 		});
 	}
@@ -118,7 +118,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		server.execute(() -> {
 			var ship = getShip(player);
 
-			if (ship != null)
+			if (ship != null && ship.isPilot(player))
 				ship.acceptControlInput(ShipControls.unpack(controls));
 		});
 	}
@@ -214,6 +214,16 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		return false;
 	}
 
+	public boolean isPilot(PlayerEntity player)
+	{
+		return getPrimaryPassenger() == player;
+	}
+
+	public boolean useMouseInput(PlayerEntity player)
+	{
+		return isPilot(player);
+	}
+
 	@Override
 	public void tick()
 	{
@@ -288,9 +298,19 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			return !this.world.isClient && player.startRiding(this) ? ActionResult.CONSUME : ActionResult.FAIL;
 	}
 
+	protected int getMaxPassengers()
+	{
+		return 1;
+	}
+
 	protected boolean canAddPassenger(Entity passenger)
 	{
-		return this.getPassengerList().size() < 2;
+		return this.getPassengerList().size() < getMaxPassengers();
+	}
+
+	public Vec3d getPassengerSocket(int passengerIndex)
+	{
+		return new Vec3d(0, 0, 3);
 	}
 
 	public void updatePassengerPosition(Entity passenger)
@@ -299,10 +319,11 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		{
 			var q = getRotation();
 
-			var vec3d = new Vec3d(0, 0, 3 * this.getPassengerList().indexOf(passenger));
+			var vec3d = getPassengerSocket(this.getPassengerList().indexOf(passenger));
 			vec3d = QuatUtil.rotate(vec3d, q);
 
-			QuatUtil.updateEulerRotation(passenger, q);
+			if (!usePlayerPerspective())
+				QuatUtil.updateEulerRotation(passenger, q);
 
 			passenger.setPosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
 			//			this.copyEntityData(passenger);
@@ -417,6 +438,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		if (this.firstUpdate)
 			return;
 
+		if (!allowPitchMovement())
+			mouseDy = 0;
+
 		var rotation = new Quaternion(clientInstRotation);
 		if (firstRotationUpdate)
 		{
@@ -453,9 +477,17 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipRotation, passedData);
 	}
 
+	protected boolean allowPitchMovement()
+	{
+		return true;
+	}
+
 	@Environment(EnvType.CLIENT)
 	public boolean acceptLeftClick(PlayerEntity player)
 	{
+		if (!isPilot(player))
+			return false;
+
 		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipFire, new PacketByteBuf(Unpooled.buffer()));
 		return true;
 	}

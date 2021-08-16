@@ -5,13 +5,19 @@ import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 public class SpeederEntity extends ShipEntity
 {
+	private final float yawVelocityDecay = 0.6f;
+	private float yawVelocity = 0;
+
 	public SpeederEntity(EntityType<?> type, World world)
 	{
 		super(type, world);
@@ -19,13 +25,25 @@ public class SpeederEntity extends ShipEntity
 
 	protected double getRepulsorSetpoint()
 	{
-		return -0.5;
+		return -0.4;
+	}
+
+	@Override
+	protected int getMaxPassengers()
+	{
+		return 2;
 	}
 
 	@Override
 	public boolean usePlayerPerspective()
 	{
 		return true;
+	}
+
+	@Override
+	public boolean useMouseInput(PlayerEntity player)
+	{
+		return false;
 	}
 
 	@Override
@@ -38,7 +56,33 @@ public class SpeederEntity extends ShipEntity
 		if (Math.abs(d - setpoint) < 0.05f)
 			d = setpoint;
 
-		this.move(MovementType.SELF, new Vec3d(0, (d - setpoint) / 5f, 0));
+		var pilot = getPrimaryPassenger();
+		if (pilot instanceof PlayerEntity pe)
+		{
+			if (pe.sidewaysSpeed > 0)
+				yawVelocity += 1.75f;
+			else if (pe.sidewaysSpeed < 0)
+				yawVelocity -= 1.75f;
+		}
+
+		var rotation = new Quaternion(getRotation());
+
+		var v = QuatUtil.project(com.parzivail.util.math.MathUtil.POSY, rotation);
+		rotation.hamiltonProduct(new Quaternion(new Vec3f(v), yawVelocity, true));
+
+		setRotation(rotation);
+
+		if (world.isClient)
+		{
+			clientInstRotation = new Quaternion(rotation);
+		}
+
+		for (var p : getPassengerList())
+			p.setYaw(p.getYaw() - yawVelocity);
+
+		yawVelocity *= yawVelocityDecay;
+
+		this.move(MovementType.SELF, new Vec3d(0, (d - setpoint) / 2.5f, 0));
 	}
 
 	protected double getMaxHeightInPatch(Vec3d start, double spacingForward, double spacingSideways, double range)
@@ -71,11 +115,25 @@ public class SpeederEntity extends ShipEntity
 	}
 
 	@Override
+	public Vec3d getPassengerSocket(int passengerIndex)
+	{
+		if (passengerIndex > 0)
+			return new Vec3d(-0.5f, 0.1f, 1.25f);
+		return new Vec3d(-0.5f, 0.1f, 1.25f);
+	}
+
+	@Override
 	protected Vec3d getThrottleVelocity(float throttle)
 	{
 		var d = QuatUtil.rotate(MathUtil.NEGZ, getRotation());
 		d = new Vec3d(d.x, 0.02f, d.z);
 		return d.multiply(throttle / 2);
+	}
+
+	@Override
+	protected boolean allowPitchMovement()
+	{
+		return false;
 	}
 
 	@Override

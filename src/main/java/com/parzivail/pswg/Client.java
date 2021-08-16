@@ -13,6 +13,7 @@ import com.parzivail.pswg.client.render.entity.debug.KinematicTestEntityRenderer
 import com.parzivail.pswg.client.render.entity.fish.FaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.fish.LaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.ship.T65BXwingRenderer;
+import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
 import com.parzivail.pswg.client.render.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
@@ -26,7 +27,6 @@ import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.Lumberjack;
-import com.parzivail.util.client.EmptyEntityRenderer;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.client.render.ICustomHudRenderer;
@@ -177,7 +177,7 @@ public class Client implements ClientModInitializer
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> ModelRegistry.INSTANCE);
 
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.T65bXwing, T65BXwingRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Speeder.X34, EmptyEntityRenderer::new);
+		EntityRendererRegistry.INSTANCE.register(SwgEntities.Speeder.X34, X34LandspeederRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, BlasterBoltRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterStunBolt, BlasterStunBoltRenderer::new);
 		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, ThrownLightsaberRenderer::new);

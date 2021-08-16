@@ -1,7 +1,6 @@
 package com.parzivail.pswg.client.render.camera;
 
 import com.parzivail.pswg.entity.ship.ShipEntity;
-import com.parzivail.pswg.util.QuatUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.option.Perspective;
@@ -63,7 +62,7 @@ public class CameraHelper
 			if (ship.usePlayerPerspective())
 			{
 				minecraft.cameraEntity = player;
-				QuatUtil.updateEulerRotation(minecraft.cameraEntity, ship.getViewRotation(minecraft.getTickDelta()));
+//				QuatUtil.updateEulerRotation(minecraft.cameraEntity, ship.getViewRotation(minecraft.getTickDelta()));
 			}
 			else if (minecraft.options.getPerspective() != Perspective.FIRST_PERSON)
 				minecraft.cameraEntity = CameraHelper.MUTABLE_CAMERA_ENTITY.with(ship, ship.getCamera());
