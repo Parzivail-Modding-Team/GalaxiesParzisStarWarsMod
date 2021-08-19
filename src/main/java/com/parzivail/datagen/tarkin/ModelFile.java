@@ -97,6 +97,13 @@ public class ModelFile
 				.texture("layer0", AssetGenerator.getTextureName(item));
 	}
 
+	public static ModelFile handheld_item(Item item)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(item), new Identifier("item/handheld"))
+				.texture("layer0", AssetGenerator.getTextureName(item));
+	}
+
 	public static ModelFile spawn_egg(Item item)
 	{
 		return ModelFile
