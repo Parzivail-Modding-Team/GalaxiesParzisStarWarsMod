@@ -870,9 +870,9 @@ public class Tarkin
 
 	private static void generateItems(List<BuiltAsset> assets)
 	{
-		ItemGenerator.basic(SwgItems.Axe.Durasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Axe.Titanium).build(assets);
-		ItemGenerator.basic(SwgItems.Axe.Beskar).build(assets);
+		ItemGenerator.tool(SwgItems.Axe.Durasteel).build(assets);
+		ItemGenerator.tool(SwgItems.Axe.Titanium).build(assets);
+		ItemGenerator.tool(SwgItems.Axe.Beskar).build(assets);
 
 		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
 		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
@@ -983,9 +983,9 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.MobDrops.TongueOfWorrt).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.ToughHide).build(assets);
 
-		ItemGenerator.basic(SwgItems.Hoe.Durasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Hoe.Titanium).build(assets);
-		ItemGenerator.basic(SwgItems.Hoe.Beskar).build(assets);
+		ItemGenerator.tool(SwgItems.Hoe.Durasteel).build(assets);
+		ItemGenerator.tool(SwgItems.Hoe.Titanium).build(assets);
+		ItemGenerator.tool(SwgItems.Hoe.Beskar).build(assets);
 
 		ItemGenerator.basic(SwgItems.Ingot.Beskar).build(assets);
 		ItemGenerator.basic(SwgItems.Ingot.Chromium).build(assets);
@@ -1022,13 +1022,13 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.RawOre.Rubindum).build(assets);
 		ItemGenerator.basic(SwgItems.RawOre.Titanium).build(assets);
 
-		ItemGenerator.basic(SwgItems.Pickaxe.Durasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Pickaxe.Titanium).build(assets);
-		ItemGenerator.basic(SwgItems.Pickaxe.Beskar).build(assets);
+		ItemGenerator.tool(SwgItems.Pickaxe.Durasteel).build(assets);
+		ItemGenerator.tool(SwgItems.Pickaxe.Titanium).build(assets);
+		ItemGenerator.tool(SwgItems.Pickaxe.Beskar).build(assets);
 
-		ItemGenerator.basic(SwgItems.Shovel.Durasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Shovel.Titanium).build(assets);
-		ItemGenerator.basic(SwgItems.Shovel.Beskar).build(assets);
+		ItemGenerator.tool(SwgItems.Shovel.Durasteel).build(assets);
+		ItemGenerator.tool(SwgItems.Shovel.Titanium).build(assets);
+		ItemGenerator.tool(SwgItems.Shovel.Beskar).build(assets);
 
 		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);
 

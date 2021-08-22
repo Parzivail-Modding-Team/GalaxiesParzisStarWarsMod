@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
@@ -51,7 +52,7 @@ public class SpeederEntity extends ShipEntity
 	{
 		super.tick();
 
-		var d = getMaxHeightInPatch(getPos(), 1 + getThrottle(), 2, 5);
+		var d = getMaxHeightInPatch(getPos(), 1 + getThrottle(), 2, 3);
 		var setpoint = getRepulsorSetpoint();
 		if (Math.abs(d - setpoint) < 0.05f)
 			d = setpoint;
@@ -82,7 +83,7 @@ public class SpeederEntity extends ShipEntity
 
 		yawVelocity *= yawVelocityDecay;
 
-		this.move(MovementType.SELF, new Vec3d(0, (d - setpoint) / 2.5f, 0));
+		this.move(MovementType.SELF, new Vec3d(0, (d - setpoint) / 5f, 0));
 	}
 
 	protected double getMaxHeightInPatch(Vec3d start, double spacingForward, double spacingSideways, double range)
@@ -101,7 +102,10 @@ public class SpeederEntity extends ShipEntity
 		{
 			for (double z = 0; z <= 1; z += invSidewaysSpacing)
 			{
-				var pos = start.add(left.multiply(x * spacingSideways)).add(forward.multiply(z * spacingForward * 3));
+				var pos = start.add(left.multiply(x * spacingSideways)).add(forward.multiply(z * spacingForward * 3)).add(0, range, 0);
+
+				if (!world.isAir(new BlockPos(pos)))
+					continue;
 
 				var blockHit = EntityUtil.raycastBlocks(pos, MathUtil.NEGY, range * 2, this, RaycastContext.FluidHandling.SOURCE_ONLY);
 				var blockDistance = blockHit.getType() == HitResult.Type.MISS ? -range : (blockHit.getPos().y - start.y);
@@ -118,7 +122,7 @@ public class SpeederEntity extends ShipEntity
 	public Vec3d getPassengerSocket(int passengerIndex)
 	{
 		if (passengerIndex > 0)
-			return new Vec3d(-0.5f, 0.1f, 1.25f);
+			return new Vec3d(0.5f, 0.1f, 1.25f);
 		return new Vec3d(-0.5f, 0.1f, 1.25f);
 	}
 
