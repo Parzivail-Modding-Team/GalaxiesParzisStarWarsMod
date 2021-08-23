@@ -1031,6 +1031,7 @@ public class Tarkin
 		ItemGenerator.tool(SwgItems.Shovel.Beskar).build(assets);
 
 		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);
+		ItemGenerator.basic(SwgItems.Spawners.LandspeederX34).build(assets);
 
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Faa).build(assets);
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Laa).build(assets);
