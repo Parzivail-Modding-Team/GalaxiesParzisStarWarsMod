@@ -12,7 +12,8 @@
 	"weight": 6.7,
 	"boltColor": 0.98,
 	"magazineSize": 24,
-	"automaticRepeatTime": 10.8,
+	"automaticRepeatTime": 11,
+	"burstRepeatTime": 6,
 	"burstSize": 3,
 	"foreGripPos": {
 		"x": 0,
