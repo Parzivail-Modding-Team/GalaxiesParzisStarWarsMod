@@ -290,9 +290,11 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		if (burst)
 		{
 			if (bt.burstTimer == 0)
-				bt.burstTimer = bd.burstSize;
+				bt.burstTimer = bd.burstSize - 1;
 			else
 				bt.burstTimer--;
+
+			bt.shotTimer = bd.burstRepeatTime;
 		}
 
 		if (!world.isClient)

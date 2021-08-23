@@ -21,7 +21,9 @@ public class BlasterDescriptor extends TagSerializer
 	public float weight;
 	public float boltColor;
 	public int magazineSize;
+
 	public int automaticRepeatTime;
+	public int burstRepeatTime;
 
 	public Vec3d foreGripPos;
 	public EulerAngle foreGripHandAngle;
@@ -37,7 +39,7 @@ public class BlasterDescriptor extends TagSerializer
 		super(SLUG, tag);
 	}
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, Vec3d foreGripPos, EulerAngle foreGripHandAngle, int burstSize, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, int burstRepeatTime, Vec3d foreGripPos, EulerAngle foreGripHandAngle, int burstSize, BlasterSpreadInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
 	{
 		super(SLUG);
 		this.id = id;
@@ -49,6 +51,7 @@ public class BlasterDescriptor extends TagSerializer
 		this.boltColor = boltColor;
 		this.magazineSize = magazineSize;
 		this.automaticRepeatTime = automaticRepeatTime;
+		this.burstRepeatTime = burstRepeatTime;
 		this.foreGripPos = foreGripPos;
 		this.foreGripHandAngle = foreGripHandAngle;
 		this.burstSize = burstSize;
@@ -73,6 +76,7 @@ public class BlasterDescriptor extends TagSerializer
 		this.boltColor = other.boltColor;
 		this.magazineSize = other.magazineSize;
 		this.automaticRepeatTime = other.automaticRepeatTime;
+		this.burstRepeatTime = other.burstRepeatTime;
 		this.foreGripPos = other.foreGripPos;
 		this.foreGripHandAngle = other.foreGripHandAngle;
 		this.burstSize = other.burstSize;
