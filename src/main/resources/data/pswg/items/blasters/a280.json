@@ -26,8 +26,8 @@
 		"yaw": 0
 	},
 	"spread": {
-		"horizontal": 0.0,
-		"vertical": 0.0
+		"horizontal": 0.25,
+		"vertical": 0.25
 	},
 	"heat": {
 		"capacity": 1008,
