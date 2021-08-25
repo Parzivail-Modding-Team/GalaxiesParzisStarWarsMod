@@ -14,13 +14,13 @@ repositories {
 		name = "Ladysnake Mods"
 	}
 
-//	maven(url = "https://maven.terraformersmc.com/releases") {
-//		name = "TerraformersMC"
-//	}
-
-	maven(url = "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases") {
-		name = "TerraformersMC Archive"
+	maven(url = "https://maven.terraformersmc.com/releases") {
+		name = "TerraformersMC"
 	}
+
+//	maven(url = "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases") {
+//		name = "TerraformersMC Archive"
+//	}
 
 	maven(url = "https://maven.shedaniel.me") {
 		name = "Shedaniel Maven"

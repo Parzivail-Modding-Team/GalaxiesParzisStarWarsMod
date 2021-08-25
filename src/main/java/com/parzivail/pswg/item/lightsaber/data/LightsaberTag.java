@@ -52,7 +52,7 @@ public class LightsaberTag extends TagSerializer
 
 	public static void mutate(ItemStack stack, Consumer<LightsaberTag> action)
 	{
-		var nbt = stack.getOrCreateTag();
+		var nbt = stack.getOrCreateNbt();
 		var t = new LightsaberTag(nbt);
 		action.accept(t);
 

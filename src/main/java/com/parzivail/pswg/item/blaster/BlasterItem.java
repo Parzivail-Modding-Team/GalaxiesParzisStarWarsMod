@@ -87,7 +87,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 	public static Identifier getBlasterModel(ItemStack stack)
 	{
-		var tag = stack.getOrCreateTag();
+		var tag = stack.getOrCreateNbt();
 
 		var blasterModel = tag.getString("model");
 		if (blasterModel.isEmpty())
@@ -98,7 +98,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 	public static void nextFireMode(World world, PlayerEntity player, ItemStack stack)
 	{
-		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = getBlasterDescriptor(world, stack);
 		var modes = bd.firingModes;
 		BlasterFiringMode currentMode;
@@ -160,7 +160,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	@Override
 	public float getCooldownProgress(PlayerEntity player, World world, ItemStack stack, float tickDelta)
 	{
-		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = getBlasterDescriptor(world, stack);
 
 		if (bt.isCooling())
@@ -178,7 +178,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public boolean allowRepeatedLeftHold(World world, PlayerEntity player, Hand mainHand)
 	{
 		final var stack = player.getStackInHand(mainHand);
-		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = getBlasterDescriptor(world, stack);
 
 		var automatic = bd.firingModes.contains(BlasterFiringMode.AUTOMATIC) && bt.getFiringMode() == BlasterFiringMode.AUTOMATIC;
@@ -193,7 +193,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		final var stack = player.getStackInHand(hand);
 
 		var bd = getBlasterDescriptor(world, stack);
-		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		if (!bt.isReady())
 			return TypedActionResult.fail(stack);
@@ -362,7 +362,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	@Override
 	public String getTranslationKey(ItemStack stack)
 	{
-		var tag = stack.getOrCreateTag();
+		var tag = stack.getOrCreateNbt();
 
 		var model = tag.getString("model");
 		if (model.isEmpty())
@@ -399,7 +399,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	{
 		var stack = new ItemStack(this);
 
-		stack.getOrCreateTag().putString("model", descriptor.id.toString());
+		stack.getOrCreateNbt().putString("model", descriptor.id.toString());
 
 		var bd = getBlasterDescriptorClient(stack);
 
@@ -453,8 +453,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		if (!(original.getItem() instanceof BlasterItem) || original.getItem() != updated.getItem())
 			return false;
 
-		var bt1 = new BlasterTag(original.getOrCreateTag());
-		var bt2 = new BlasterTag(updated.getOrCreateTag());
+		var bt1 = new BlasterTag(original.getOrCreateNbt());
+		var bt2 = new BlasterTag(updated.getOrCreateNbt());
 		return bt1.serialNumber == bt2.serialNumber;
 	}
 
@@ -462,7 +462,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	@Environment(EnvType.CLIENT)
 	public double getFovMultiplier(ItemStack stack, World world, PlayerEntity entity)
 	{
-		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		// TODO: blaster variable zoom
 		var lerp = bt.getAdsLerp();
@@ -474,7 +474,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	{
 		if (slot == EquipmentSlot.MAINHAND || slot == EquipmentSlot.OFFHAND)
 		{
-			var bt = new BlasterTag(stack.getOrCreateTag());
+			var bt = new BlasterTag(stack.getOrCreateNbt());
 
 			if (bt.isAimingDownSights)
 				return ATTRIB_MODS_ADS;

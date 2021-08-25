@@ -109,7 +109,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		matrices.push();
 		matrices.scale(0.2f, 0.2f, 0.2f);
 
-		var lt = new LightsaberTag(stack.getOrCreateTag());
+		var lt = new LightsaberTag(stack.getOrCreateNbt());
 
 		var unstable = lt.unstable;
 		var baseLength = 1.6f;

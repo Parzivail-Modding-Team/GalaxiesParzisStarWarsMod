@@ -66,7 +66,7 @@ public class LightsaberIdleSoundInstance extends MovingSoundInstance
 
 	private boolean tryUseStack(ItemStack stack)
 	{
-		var lt = new LightsaberTag(stack.getOrCreateTag());
+		var lt = new LightsaberTag(stack.getOrCreateNbt());
 
 		var size = lt.getSize(0);
 		if (size > 0)
@@ -88,7 +88,7 @@ public class LightsaberIdleSoundInstance extends MovingSoundInstance
 		if (!(stack.getItem() instanceof LightsaberItem))
 			return false;
 
-		var lt = new LightsaberTag(stack.getOrCreateTag());
+		var lt = new LightsaberTag(stack.getOrCreateNbt());
 		return lt.getSize(0) > 0;
 	}
 }

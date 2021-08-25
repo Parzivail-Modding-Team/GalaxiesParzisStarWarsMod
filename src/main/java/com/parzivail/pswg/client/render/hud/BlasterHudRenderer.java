@@ -45,7 +45,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		final var cooldownWidth = 61;
 
 		var b = (BlasterItem)stack.getItem();
-		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		var profile = bd.cooling;
 		final var crosshairIdx = 0;
@@ -135,7 +135,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	@Override
 	public void renderOverlay(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices, int scaledWidth, int scaledHeight, float tickDelta)
 	{
-		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		var bd = BlasterItem.getBlasterDescriptor(player.world, stack);
 		if (bd == null)

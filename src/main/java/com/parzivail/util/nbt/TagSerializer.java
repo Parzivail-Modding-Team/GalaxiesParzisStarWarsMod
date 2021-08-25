@@ -102,9 +102,9 @@ public class TagSerializer
 
 	public void serializeAsSubtag(ItemStack stack)
 	{
-		var nbt = stack.getOrCreateTag();
+		var nbt = stack.getOrCreateNbt();
 		this.serializeAsSubtag(nbt);
-		stack.setTag(nbt);
+		stack.setNbt(nbt);
 	}
 
 	public void serializeAsSubtag(NbtCompound nbt)

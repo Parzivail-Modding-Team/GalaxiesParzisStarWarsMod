@@ -71,7 +71,7 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 		var stack = slot.getStack();
 
 		var tag = LightsaberTag.fromRootTag(lightsaberTag);
-		tag.serializeAsSubtag(stack.getOrCreateTag());
+		tag.serializeAsSubtag(stack.getOrCreateNbt());
 
 		slot.setStack(stack);
 		slot.markDirty();

@@ -48,7 +48,7 @@ public class BlasterTag extends TagSerializer
 
 	public static void mutate(ItemStack stack, Consumer<BlasterTag> action)
 	{
-		var nbt = stack.getOrCreateTag();
+		var nbt = stack.getOrCreateNbt();
 		var t = new BlasterTag(nbt);
 		action.accept(t);
 		t.serializeAsSubtag(stack);

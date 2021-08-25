@@ -18,9 +18,9 @@ public class ItemUtil
 	{
 		if (left.getItem() != right.getItem())
 			return false;
-		else if (left.getTag() == null && right.getTag() != null)
+		else if (left.getNbt() == null && right.getNbt() != null)
 			return false;
 		else
-			return left.getTag() == null || left.getTag().equals(right.getTag());
+			return left.getNbt() == null || left.getNbt().equals(right.getNbt());
 	}
 }
