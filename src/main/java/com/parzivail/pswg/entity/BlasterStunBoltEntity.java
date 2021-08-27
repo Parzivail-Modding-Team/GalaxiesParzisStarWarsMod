@@ -16,3 +16,4 @@ public class BlasterStunBoltEntity extends BlasterBoltEntity
 		super(type, owner, world);
 	}
 }
+

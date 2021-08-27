@@ -21,7 +21,7 @@ public class SlugTrailParticle extends AnimatedParticle
 		this.setColorAlpha(1.0F);
 		var gray = 0.6f;
 		this.setColor(gray, gray, gray);
-		this.maxAge = (int)((double)(this.scale * 12.0F) / (Math.random() * 0.800000011920929D + 0.20000000298023224D));
+		this.maxAge = (int)((double)(this.scale * 12.0F) / (Math.random() * 0.8 + 0.2));
 		this.setSpriteForAge(spriteProvider);
 		this.collidesWithWorld = true;
 		this.velocityX = vX;
@@ -42,7 +42,7 @@ public class SlugTrailParticle extends AnimatedParticle
 
 			if (this.world.getBlockState(new BlockPos(this.x, this.y, this.z)).isAir())
 			{
-				this.velocityY += 0.007400000002235174D;
+				this.velocityY += 0.0074;
 			}
 		}
 	}

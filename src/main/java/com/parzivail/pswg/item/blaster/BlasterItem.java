@@ -340,11 +340,16 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 					});
 					break;
 				case SLUGTHROWER:
-					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
 					BlasterUtil.fireSlug(world, player, fromDir, range, damage);
 					break;
 				case ION:
-					// TODO: ion bolts
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
+					BlasterUtil.fireIon(world, player, range, entity -> {
+						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 4.0F, 0);
+						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
+						entity.setHue(bd.boltColor);
+					});
 					break;
 			}
 

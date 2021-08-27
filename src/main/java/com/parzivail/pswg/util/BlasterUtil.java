@@ -4,6 +4,7 @@ import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
+import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.PProjectileEntityDamageSource;
@@ -65,6 +66,15 @@ public class BlasterUtil
 		{
 			// TODO: smoke puff, blaster burn mark, etc server-side stuff
 		}
+	}
+
+	public static void fireIon(World world, PlayerEntity player, float range, Consumer<BlasterBoltEntity> entityInitializer)
+	{
+		final var bolt = new BlasterIonBoltEntity(SwgEntities.Misc.BlasterIonBolt, player, world);
+		entityInitializer.accept(bolt);
+		bolt.setRange(range);
+
+		world.spawnEntity(bolt);
 	}
 
 	public static void handleSlugFired(MinecraftClient minecraftClient, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)
