@@ -71,7 +71,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	@Override
 	public void render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
 	{
-		var tag = stack.getOrCreateTag();
+		var tag = stack.getOrCreateNbt();
 
 		var blasterModel = tag.getString("model");
 		if (blasterModel.isEmpty())
@@ -216,7 +216,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	@Override
 	public void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		var bt = new BlasterTag(stack.getOrCreateTag());
+		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = BlasterItem.getBlasterDescriptor(entity.world, stack);
 
 		float armPitchOffset = 0;

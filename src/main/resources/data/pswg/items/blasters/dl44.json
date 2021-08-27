@@ -10,7 +10,7 @@
 	"weight": 6.7,
 	"boltColor": 0.98,
 	"magazineSize": 24,
-	"automaticRepeatTime": 10.8,
+	"automaticRepeatTime": 20,
 	"spread": {
 		"horizontal": 0.0,
 		"vertical": 0.0

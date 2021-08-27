@@ -97,7 +97,7 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 				ItemStringReader itemStringReader = (new ItemStringReader(new StringReader(resultItem), false)).consume();
 
 				var itemStack = new ItemStack(itemStringReader.getItem(), resultCount);
-				itemStack.setTag(itemStringReader.getNbt());
+				itemStack.setNbt(itemStringReader.getNbt());
 				return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
 			}
 			catch (CommandSyntaxException e)

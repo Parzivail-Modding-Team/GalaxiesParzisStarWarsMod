@@ -54,7 +54,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 
 	private static boolean isActive(ItemStack stack)
 	{
-		return !stack.isEmpty() && new LightsaberTag(stack.getOrCreateTag()).active;
+		return !stack.isEmpty() && new LightsaberTag(stack.getOrCreateNbt()).active;
 	}
 
 	public static void toggle(World world, PlayerEntity player, ItemStack stack)
@@ -106,7 +106,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	@Override
 	public Text getName(ItemStack stack)
 	{
-		var lt = new LightsaberTag(stack.getOrCreateTag());
+		var lt = new LightsaberTag(stack.getOrCreateNbt());
 		return new TranslatableText(this.getTranslationKey(stack), lt.owner);
 	}
 

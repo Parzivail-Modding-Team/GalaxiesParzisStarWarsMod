@@ -101,6 +101,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.boltColor);
 		buf.writeInt(value.magazineSize);
 		buf.writeInt(value.automaticRepeatTime);
+		buf.writeInt(value.burstRepeatTime);
 
 		buf.writeBoolean(value.foreGripPos != null);
 		if (value.foreGripPos != null)
@@ -147,6 +148,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var boltColor = buf.readFloat();
 		var magazineSize = buf.readInt();
 		var automaticRepeatTime = buf.readInt();
+		var burstRepeatTime = buf.readInt();
 
 		var hasForeGripPos = buf.readBoolean();
 		Vec3d foreGripPos = null;
@@ -197,6 +199,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				boltColor,
 				magazineSize,
 				automaticRepeatTime,
+				burstRepeatTime,
 				foreGripPos,
 				foreGripHandAngle,
 				burstSize,

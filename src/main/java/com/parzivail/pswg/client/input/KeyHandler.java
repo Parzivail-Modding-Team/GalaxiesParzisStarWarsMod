@@ -20,7 +20,7 @@ public class KeyHandler
 			return;
 
 		if (Client.KEY_SPECIES_SELECT.wasPressed())
-			mc.openScreen(new SpeciesSelectScreen(mc.currentScreen));
+			mc.setScreen(new SpeciesSelectScreen(mc.currentScreen));
 
 		if (Client.KEY_PRIMARY_ITEM_ACTION.wasPressed())
 		{

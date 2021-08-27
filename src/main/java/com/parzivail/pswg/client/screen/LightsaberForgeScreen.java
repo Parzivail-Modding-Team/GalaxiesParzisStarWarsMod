@@ -193,7 +193,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 	private LightsaberTag getLightsaberTag()
 	{
-		return new LightsaberTag(lightsaber.getOrCreateTag());
+		return new LightsaberTag(lightsaber.getOrCreateNbt());
 	}
 
 	@Override

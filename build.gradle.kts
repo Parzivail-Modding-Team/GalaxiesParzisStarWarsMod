@@ -3,7 +3,7 @@ import java.util.regex.Pattern
 
 plugins {
 	id("fabric-loom") version "0.9-SNAPSHOT"
-	id("io.github.juuxel.loom-quiltflower") version "1.2.1"
+	id("io.github.juuxel.loom-quiltflower") version "1.3.0"
 	id("maven-publish")
 }
 
@@ -14,13 +14,13 @@ repositories {
 		name = "Ladysnake Mods"
 	}
 
-//	maven(url = "https://maven.terraformersmc.com/releases") {
-//		name = "TerraformersMC"
-//	}
-
-	maven(url = "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases") {
-		name = "TerraformersMC Archive"
+	maven(url = "https://maven.terraformersmc.com/releases") {
+		name = "TerraformersMC"
 	}
+
+//	maven(url = "https://raw.githubusercontent.com/TerraformersMC/Archive/main/releases") {
+//		name = "TerraformersMC Archive"
+//	}
 
 	maven(url = "https://maven.shedaniel.me") {
 		name = "Shedaniel Maven"

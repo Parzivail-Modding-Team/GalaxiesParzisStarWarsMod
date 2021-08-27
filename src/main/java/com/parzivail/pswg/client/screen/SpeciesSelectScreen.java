@@ -106,7 +106,7 @@ public class SpeciesSelectScreen extends Screen
 
 		this.addDrawableChild(new ButtonWidget(this.width / 2 + 100, this.height / 2 - 10, 20, 20, new LiteralText(">"), (button) -> moveToNextVariableOption(false)));
 
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> this.client.openScreen(this.parent)));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> this.client.setScreen(this.parent)));
 
 		this.addDrawableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText("screen.pswg.apply"), (button) -> {
 			if (speciesListWidget.getSelectedOrNull() == null)

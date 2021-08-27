@@ -25,13 +25,13 @@ public abstract class ItemStackMixin
 	public abstract Item getItem();
 
 	@Shadow
-	public abstract void setTag(@Nullable NbtCompound tag);
+	public abstract void setNbt(@Nullable NbtCompound tag);
 
 	@Inject(method = "Lnet/minecraft/item/ItemStack;<init>(Lnet/minecraft/item/ItemConvertible;I)V", at = @At("TAIL"))
 	private void init(ItemConvertible item, int count, CallbackInfo ci)
 	{
 		if (item instanceof IDefaultNbtProvider)
-			setTag(((IDefaultNbtProvider)item).getDefaultTag(item, count));
+			setNbt(((IDefaultNbtProvider)item).getDefaultTag(item, count));
 	}
 
 	@Inject(method = "getAttributeModifiers", at = @At("RETURN"), cancellable = true)

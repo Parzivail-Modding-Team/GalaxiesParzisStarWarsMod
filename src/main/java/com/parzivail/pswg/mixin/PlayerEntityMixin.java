@@ -60,7 +60,7 @@ public class PlayerEntityMixin
 
 		if (stack.getItem() instanceof BlasterItem)
 		{
-			if (stack.hasTag())
+			if (stack.hasNbt())
 			{
 				BlasterTag.mutate(stack, tag -> {
 					tag.isAimingDownSights = false;
@@ -71,7 +71,7 @@ public class PlayerEntityMixin
 		else if (stack.getItem() instanceof LightsaberItem)
 		{
 			// TODO: play sound
-			if (stack.hasTag())
+			if (stack.hasNbt())
 				LightsaberTag.mutate(stack, tag -> {
 					tag.active = false;
 					tag.finalizeMovement();

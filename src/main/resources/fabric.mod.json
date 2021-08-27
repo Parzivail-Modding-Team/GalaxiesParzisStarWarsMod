@@ -39,7 +39,10 @@
 	"depends": {
 		"fabricloader": ">=0.10.0",
 		"fabric": "*",
-		"minecraft": "~1.17-beta.1"
+		"minecraft": "~1.17.1"
+	},
+	"breaks": {
+		"optifabric": "*"
 	},
 	"recommends": {
 		"modmenu": "*"

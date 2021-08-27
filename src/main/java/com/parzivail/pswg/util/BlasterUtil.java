@@ -2,6 +2,7 @@ package com.parzivail.pswg.util;
 
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgPackets;
+import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
 import com.parzivail.util.entity.EntityUtil;
@@ -19,7 +20,6 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -86,7 +86,7 @@ public class BlasterUtil
 		for (var d = 0; d < distance; d++)
 		{
 			var vec = start.add(fromDir.multiply(d));
-			minecraftClient.world.addParticle(ParticleTypes.SMOKE, vec.x, vec.y, vec.z, fromDir.x, fromDir.y, fromDir.z);
+			minecraftClient.world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, fromDir.x, fromDir.y, fromDir.z);
 		}
 	}
 
@@ -132,7 +132,7 @@ public class BlasterUtil
 			ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PacketWorldEventSlugFired, passedData);
 	}
 
-	public static void fireStun(World world, PlayerEntity player, Vec3d fromDir, float range, float damage, Consumer<BlasterBoltEntity> entityInitializer)
+	public static void fireStun(World world, PlayerEntity player, Vec3d fromDir, float range, Consumer<BlasterBoltEntity> entityInitializer)
 	{
 		final var bolt = new BlasterStunBoltEntity(SwgEntities.Misc.BlasterStunBolt, player, world);
 		entityInitializer.accept(bolt);
