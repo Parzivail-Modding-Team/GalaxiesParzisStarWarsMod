@@ -196,6 +196,8 @@ public class Client implements ClientModInitializer
 
 		ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 
+		SwgParticles.register();
+
 		ResourceManagers.registerPackets();
 	}
 

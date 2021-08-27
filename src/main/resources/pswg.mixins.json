@@ -38,6 +38,7 @@
 		"LivingEntityRendererMixin",
 		"MinecraftClientMixin",
 		"MouseMixin",
+		"ParticleManagerMixin",
 		"PlayerEntityMixin",
 		"PlayerEntityModelMixin",
 		"PlayerEntityRendererMixin",
