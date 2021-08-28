@@ -1,14 +1,19 @@
 package com.parzivail.util.math;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 
 public class MathUtil
 {
+	public static final int TICKS_PER_SECOND = 20;
+
 	public static final float fPI = (float)Math.PI;
 
-	public static final double oneOverGoldenRatio = 0.61803398875;
+	public static final double ONE_OVER_GOLDEN_RATIO = 0.61803398875;
+
+	public static final float SPEED_OF_SOUND = 343f / TICKS_PER_SECOND; // m/tick
 
 	public static final Vec3d POSX = new Vec3d(1, 0, 0);
 	public static final Vec3d NEGX = new Vec3d(-1, 0, 0);
@@ -78,5 +83,18 @@ public class MathUtil
 	public static float remap(float x, float iMin, float iMax, float oMin, float oMax)
 	{
 		return (x - iMin) / (iMax - iMin) * (oMax - oMin) + oMin;
+	}
+
+	public static float calculateDopplerShift(Entity a, Entity b)
+	{
+		var velA = a.getVelocity();
+		var velB = b.getVelocity();
+
+		var posA = a.getEyePos();
+		var posB = b.getEyePos();
+
+		var relativeSpeed = posA.distanceTo(posB) - posA.add(velA).distanceTo(posB.add(velB));
+
+		return (float)(relativeSpeed / SPEED_OF_SOUND);
 	}
 }

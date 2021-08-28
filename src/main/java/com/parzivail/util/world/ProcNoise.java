@@ -108,12 +108,12 @@ public class ProcNoise
 
 	public double hashA(double x, double z)
 	{
-		return MathUtil.fract(Math.sin(MathUtil.seed(x - 173.37, _seed) * 7441.35 - 4113.21 * Math.cos(x * z) + MathUtil.seed(z - 1743.7, _seed) * 1727.93 * 1291.27) * 2853.85 + MathUtil.oneOverGoldenRatio);
+		return MathUtil.fract(Math.sin(MathUtil.seed(x - 173.37, _seed) * 7441.35 - 4113.21 * Math.cos(x * z) + MathUtil.seed(z - 1743.7, _seed) * 1727.93 * 1291.27) * 2853.85 + MathUtil.ONE_OVER_GOLDEN_RATIO);
 	}
 
 	public double hashB(double x, double z)
 	{
-		return MathUtil.fract(Math.cos(MathUtil.seed(z - 143.37, _seed) * 4113.21 - 2853.85 * Math.sin(x * z) + MathUtil.seed(x - 743.37, _seed) * 1291.27 * 1727.93) * 4113.21 + MathUtil.oneOverGoldenRatio);
+		return MathUtil.fract(Math.cos(MathUtil.seed(z - 143.37, _seed) * 4113.21 - 2853.85 * Math.sin(x * z) + MathUtil.seed(x - 743.37, _seed) * 1291.27 * 1727.93) * 4113.21 + MathUtil.ONE_OVER_GOLDEN_RATIO);
 	}
 
 	public double swissTurbulence(double pX, double pY, int octaves, double lacunarity, double gain, double warp)

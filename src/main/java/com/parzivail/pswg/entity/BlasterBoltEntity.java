@@ -1,5 +1,6 @@
 package com.parzivail.pswg.entity;
 
+import com.parzivail.pswg.client.sound.SoundHelper;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -7,6 +8,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -32,6 +34,13 @@ public class BlasterBoltEntity extends ThrownEntity
 	{
 		var ticksToLive = (int)(range / getVelocity().length());
 		setLife(ticksToLive);
+	}
+
+	@Override
+	public void onSpawnPacket(EntitySpawnS2CPacket packet)
+	{
+		super.onSpawnPacket(packet);
+		SoundHelper.playBlasterBoltHissSound(this);
 	}
 
 	@Override

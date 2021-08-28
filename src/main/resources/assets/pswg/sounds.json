@@ -17,6 +17,14 @@
 			}
 		]
 	},
+	"blaster.hiss": {
+		"sounds": [
+			{
+				"name": "pswg:blaster/hiss",
+				"attenuation_distance": 6
+			}
+		]
+	},
 	"blaster.reload": {
 		"sounds": [
 			"pswg:blaster/reload"
