@@ -10,9 +10,9 @@ import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.handler.PlayerPacketHandler;
+import com.parzivail.pswg.item.blaster.data.BlasterAxialInfo;
 import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
 import com.parzivail.pswg.item.blaster.data.BlasterHeatInfo;
-import com.parzivail.pswg.item.blaster.data.BlasterSpreadInfo;
 import com.parzivail.pswg.mixin.MinecraftServerMixin;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.species.SwgSpecies;
@@ -56,7 +56,7 @@ public class Galaxies implements ModInitializer
 
 		Resources.checkVersion();
 
-		TagSerializer.register(BlasterSpreadInfo.class, BlasterSpreadInfo::fromTag, BlasterSpreadInfo::toTag);
+		TagSerializer.register(BlasterAxialInfo.class, BlasterAxialInfo::fromTag, BlasterAxialInfo::toTag);
 		TagSerializer.register(BlasterHeatInfo.class, BlasterHeatInfo::fromTag, BlasterHeatInfo::toTag);
 		TagSerializer.register(BlasterCoolingBypassProfile.class, BlasterCoolingBypassProfile::fromTag, BlasterCoolingBypassProfile::toTag);
 

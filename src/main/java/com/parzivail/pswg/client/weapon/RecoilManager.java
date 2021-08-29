@@ -9,44 +9,73 @@ public class RecoilManager
 {
 	private static final float recoilCompAccel = 1.25f;
 
-	private static float recoilVelocity = 0;
+	private static float verticalVelocity = 0;
+	private static float horizontalVelocity = 0;
 
 	public static void tick(MinecraftClient mc)
 	{
-		if (recoilVelocity + recoilCompAccel < 0)
+		if (verticalVelocity + recoilCompAccel < 0)
 		{
-			recoilVelocity += recoilCompAccel;
+			verticalVelocity += recoilCompAccel;
 
 			if (mc.player != null)
 			{
 				var p = mc.player.getPitch(0);
 
 				mc.player.prevPitch = p;
-				mc.player.setPitch(p + recoilVelocity);
+				mc.player.setPitch(p + verticalVelocity);
 			}
 		}
 		else
+			verticalVelocity = 0;
+
+		var horizVelSign = Math.signum(horizontalVelocity);
+		var hComp = recoilCompAccel * -horizVelSign;
+		if (horizVelSign == Math.signum(horizontalVelocity + hComp))
 		{
-			recoilVelocity = 0;
+			horizontalVelocity += hComp;
+
+			if (mc.player != null)
+			{
+				var y = mc.player.getYaw(0);
+
+				mc.player.prevYaw = y;
+				mc.player.setYaw(y + horizontalVelocity);
+			}
 		}
+		else
+			horizontalVelocity = 0;
 	}
 
-	public static float getRecoilMovement(float tickDelta)
+	public static float getVerticalRecoilMovement(float tickDelta)
 	{
-		if (recoilVelocity + recoilCompAccel >= 0)
+		if (verticalVelocity + recoilCompAccel >= 0)
 			return 0;
 
-		return (recoilVelocity + recoilCompAccel) * tickDelta;
+		return (verticalVelocity + recoilCompAccel) * tickDelta;
 	}
 
-	public static void setRecoil(float amount)
+	public static float getHorizontalRecoilMovement(float tickDelta)
 	{
-		recoilVelocity = -amount;
+		var horizVelSign = Math.signum(horizontalVelocity);
+		var comp = recoilCompAccel * -horizVelSign;
+
+		if (horizVelSign != Math.signum(horizontalVelocity + comp))
+			return 0;
+
+		return (horizontalVelocity + comp) * tickDelta;
+	}
+
+	public static void setRecoil(float vertical, float horizontal)
+	{
+		verticalVelocity = -vertical;
+		horizontalVelocity = horizontal;
 	}
 
 	public static void handleAccumulateRecoil(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		var recoil = buf.readFloat();
-		setRecoil(recoil);
+		var horiz = buf.readFloat();
+		var vert = buf.readFloat();
+		setRecoil(vert, horiz);
 	}
 }

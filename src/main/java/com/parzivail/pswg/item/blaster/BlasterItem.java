@@ -376,7 +376,11 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			if (shouldRecoil)
 			{
 				var passedData = PlayerEvent.createBuffer(PlayerEvent.ACCUMULATE_RECOIL);
-				passedData.writeFloat(3);
+				var horizNoise = world.random.nextGaussian();
+				horizNoise = horizNoise * 0.3 + 0.7 * Math.signum(horizNoise);
+
+				passedData.writeFloat((float)(bd.recoil.horizontal * horizNoise));
+				passedData.writeFloat((float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
 				ServerPlayNetworking.send((ServerPlayerEntity)player, SwgPackets.S2C.PacketPlayerEvent, passedData);
 			}
 

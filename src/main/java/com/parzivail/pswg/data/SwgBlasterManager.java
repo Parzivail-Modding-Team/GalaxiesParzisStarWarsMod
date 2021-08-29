@@ -121,6 +121,9 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 		buf.writeInt(value.burstSize);
 
+		buf.writeFloat(value.recoil.horizontal);
+		buf.writeFloat(value.recoil.vertical);
+
 		buf.writeFloat(value.spread.horizontal);
 		buf.writeFloat(value.spread.vertical);
 
@@ -174,6 +177,9 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 		var burstSize = buf.readInt();
 
+		var recoil_horizontal = buf.readFloat();
+		var recoil_vertical = buf.readFloat();
+
 		var spread_horizontal = buf.readFloat();
 		var spread_vertical = buf.readFloat();
 
@@ -203,7 +209,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				foreGripPos,
 				foreGripHandAngle,
 				burstSize,
-				new BlasterSpreadInfo(spread_horizontal, spread_vertical),
+				new BlasterAxialInfo(recoil_horizontal, spread_vertical),
+				new BlasterAxialInfo(spread_horizontal, spread_vertical),
 				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay),
 				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance)
 		);

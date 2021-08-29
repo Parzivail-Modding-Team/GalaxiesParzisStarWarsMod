@@ -14,6 +14,10 @@
 	"magazineSize": 100,
 	"automaticRepeatTime": 1.5,
 	"burstSize": 3,
+	"recoil": {
+		"horizontal": 1.5,
+		"vertical": 3
+	},
 	"spread": {
 		"horizontal": 0.0,
 		"vertical": 0.0

@@ -25,6 +25,10 @@
 		"pitch": 30,
 		"yaw": 0
 	},
+	"recoil": {
+		"horizontal": 1.5,
+		"vertical": 3
+	},
 	"spread": {
 		"horizontal": 0.25,
 		"vertical": 0.25

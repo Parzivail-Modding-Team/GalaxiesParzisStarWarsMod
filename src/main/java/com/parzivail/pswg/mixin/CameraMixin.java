@@ -50,6 +50,6 @@ public abstract class CameraMixin
 		var minecraft = MinecraftClient.getInstance();
 
 		if (focusedEntity == minecraft.player)
-			this.setRotation(this.yaw, this.pitch + RecoilManager.getRecoilMovement(tickDelta));
+			this.setRotation(this.yaw + RecoilManager.getHorizontalRecoilMovement(tickDelta), this.pitch + RecoilManager.getVerticalRecoilMovement(tickDelta));
 	}
 }

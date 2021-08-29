@@ -15,6 +15,10 @@
 	"automaticRepeatTime": 16,
 	"burstRepeatTime": 8,
 	"burstSize": 3,
+	"recoil": {
+		"horizontal": 1.5,
+		"vertical": 3
+	},
 	"spread": {
 		"horizontal": 0.0,
 		"vertical": 0.0

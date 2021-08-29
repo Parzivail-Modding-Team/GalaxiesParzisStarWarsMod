@@ -11,6 +11,10 @@
 	"boltColor": 0.98,
 	"magazineSize": 24,
 	"automaticRepeatTime": 5,
+	"recoil": {
+		"horizontal": 1.5,
+		"vertical": 3
+	},
 	"spread": {
 		"horizontal": 0.0,
 		"vertical": 0.0
