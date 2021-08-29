@@ -13,7 +13,7 @@ public class MathUtil
 
 	public static final double ONE_OVER_GOLDEN_RATIO = 0.61803398875;
 
-	public static final float SPEED_OF_SOUND = 343f / TICKS_PER_SECOND; // m/tick
+	public static final float SPEED_OF_SOUND = 275f / TICKS_PER_SECOND; // m/tick
 
 	public static final Vec3d POSX = new Vec3d(1, 0, 0);
 	public static final Vec3d NEGX = new Vec3d(-1, 0, 0);
@@ -87,14 +87,15 @@ public class MathUtil
 
 	public static float calculateDopplerShift(Entity a, Entity b)
 	{
-		var velA = a.getVelocity();
-		var velB = b.getVelocity();
+		// TODO: move doppler handling to OpenAL through SoundSystem's updateListenerPosition call?
+		var velA = a.getPos().subtract(a.prevX, a.prevY, a.prevZ);
+		var velB = b.getPos().subtract(b.prevX, b.prevY, b.prevZ);
 
 		var posA = a.getEyePos();
 		var posB = b.getEyePos();
 
 		var relativeSpeed = posA.distanceTo(posB) - posA.add(velA).distanceTo(posB.add(velB));
 
-		return (float)(relativeSpeed / SPEED_OF_SOUND);
+		return MathHelper.clamp((float)(relativeSpeed / SPEED_OF_SOUND), -1, 1);
 	}
 }

@@ -65,13 +65,20 @@ public class SwgSounds
 		public static final SoundEvent FIRE_BOWCASTER = of(Resources.id("blaster.fire.bowcaster"));
 		public static final SoundEvent FIRE_CYCLER = of(Resources.id("blaster.fire.cycler"));
 		public static final SoundEvent FIRE_DH17 = of(Resources.id("blaster.fire.dh17"));
+		public static final SoundEvent FIRE_DC15 = of(Resources.id("blaster.fire.dc15"));
+		public static final SoundEvent FIRE_DC17 = of(Resources.id("blaster.fire.dc17"));
 		public static final SoundEvent FIRE_DL44 = of(Resources.id("blaster.fire.dl44"));
 		public static final SoundEvent FIRE_DLT19 = of(Resources.id("blaster.fire.dlt19"));
+		public static final SoundEvent FIRE_DLT19D = of(Resources.id("blaster.fire.dlt19d"));
+		public static final SoundEvent FIRE_DLT20A = of(Resources.id("blaster.fire.dlt20a"));
+		public static final SoundEvent FIRE_EE3 = of(Resources.id("blaster.fire.ee3"));
+		public static final SoundEvent FIRE_RK3 = of(Resources.id("blaster.fire.rk3"));
 		public static final SoundEvent FIRE_E11 = of(Resources.id("blaster.fire.e11"));
 		public static final SoundEvent FIRE_EWEB = of(Resources.id("blaster.fire.eweb"));
 		public static final SoundEvent FIRE_ION = of(Resources.id("blaster.fire.ion"));
 		public static final SoundEvent FIRE_RT97C = of(Resources.id("blaster.fire.rt97c"));
 		public static final SoundEvent FIRE_T21 = of(Resources.id("blaster.fire.t21"));
+		public static final SoundEvent FIRE_T21B = of(Resources.id("blaster.fire.t21b"));
 		public static final SoundEvent FIRE_SE14C = of(Resources.id("blaster.fire.se14c"));
 		public static final SoundEvent FIRE_DL18 = of(Resources.id("blaster.fire.dl18"));
 		public static final SoundEvent FIRE_SCOUT = of(Resources.id("blaster.fire.dl44"));
@@ -86,6 +93,7 @@ public class SwgSounds
 	public static class Ship
 	{
 		public static final SoundEvent XWINGT65B_FIRE = of(Resources.id("ship.blaster.fire.xwingt65b"));
+		public static final SoundEvent XWINGT65B_EXTERIOR = of(Resources.id("ship.exterior.xwingt65b"));
 
 		private static void register()
 		{

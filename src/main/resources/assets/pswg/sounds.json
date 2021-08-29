@@ -21,7 +21,7 @@
 		"sounds": [
 			{
 				"name": "pswg:blaster/hiss",
-				"attenuation_distance": 6
+				"attenuation_distance": 16
 			}
 		]
 	},
@@ -75,9 +75,29 @@
 			"pswg:blaster/dlt19"
 		]
 	},
+	"blaster.fire.dlt19d": {
+		"sounds": [
+			"pswg:blaster/dlt19d"
+		]
+	},
+	"blaster.fire.dlt20a": {
+		"sounds": [
+			"pswg:blaster/dlt20a"
+		]
+	},
 	"blaster.fire.e11": {
 		"sounds": [
 			"pswg:blaster/e11"
+		]
+	},
+	"blaster.fire.ee3": {
+		"sounds": [
+			"pswg:blaster/ee3"
+		]
+	},
+	"blaster.fire.rk3": {
+		"sounds": [
+			"pswg:blaster/rk3"
 		]
 	},
 	"blaster.fire.eweb": {
@@ -98,6 +118,11 @@
 	"blaster.fire.t21": {
 		"sounds": [
 			"pswg:blaster/t21"
+		]
+	},
+	"blaster.fire.t21b": {
+		"sounds": [
+			"pswg:blaster/t21b"
 		]
 	},
 	"blaster.fire.se14c": {
@@ -125,11 +150,29 @@
 			"pswg:blaster/dl44"
 		]
 	},
+	"blaster.fire.dc15": {
+		"sounds": [
+			"pswg:blaster/dc15"
+		]
+	},
+	"blaster.fire.dc17": {
+		"sounds": [
+			"pswg:blaster/dc17"
+		]
+	},
 	"ship.blaster.fire.xwingt65b": {
 		"sounds": [
 			{
 				"name": "pswg:ship/xwing/fire",
-				"attenuation_distance": 32
+				"attenuation_distance": 128
+			}
+		]
+	},
+	"ship.exterior.xwingt65b": {
+		"sounds": [
+			{
+				"name": "pswg:ship/xwing/exterior",
+				"attenuation_distance": 128
 			}
 		]
 	},

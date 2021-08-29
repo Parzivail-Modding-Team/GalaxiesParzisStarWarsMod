@@ -15,6 +15,7 @@ public class LightsaberThrownSoundInstance extends DopplerSoundInstance
 		super(entity, SwgSounds.Lightsaber.IDLE_CLASSIC, SoundCategory.PLAYERS);
 		this.repeat = true;
 		this.repeatDelay = 0;
+		this.volume = 0;
 	}
 
 	public boolean canPlay()

@@ -3,21 +3,21 @@ package com.parzivail.pswg.client.sound;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
+import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
 
 @Environment(EnvType.CLIENT)
-public class LightsaberIdleSoundInstance extends MovingSoundInstance
+public class LightsaberIdleSoundInstance extends DopplerSoundInstance
 {
 	private final PlayerEntity player;
 
 	public LightsaberIdleSoundInstance(PlayerEntity player)
 	{
-		super(SwgSounds.Lightsaber.IDLE_CLASSIC, SoundCategory.PLAYERS);
+		super(player, SwgSounds.Lightsaber.IDLE_CLASSIC, SoundCategory.PLAYERS);
 		this.player = player;
 		this.repeat = true;
 		this.repeatDelay = 0;
@@ -39,6 +39,8 @@ public class LightsaberIdleSoundInstance extends MovingSoundInstance
 
 	public void tick()
 	{
+		super.tick();
+
 		if (this.player.isRemoved())
 		{
 			this.setDone();

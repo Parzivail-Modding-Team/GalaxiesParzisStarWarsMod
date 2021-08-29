@@ -20,6 +20,7 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.world.World;
 
 public class T65BXwing extends ShipEntity
@@ -50,6 +51,12 @@ public class T65BXwing extends ShipEntity
 		getDataTracker().startTracking(WING_ANIM, new TrackedAnimationValue());
 		getDataTracker().startTracking(COCKPIT_ANIM, new TrackedAnimationValue());
 		getDataTracker().startTracking(CANNON_BITS, (byte)0);
+	}
+
+	@Override
+	protected SoundEvent getExteriorSoundEvent()
+	{
+		return SwgSounds.Ship.XWINGT65B_EXTERIOR;
 	}
 
 	public TrackedAnimationValue getWingAnim()
@@ -88,7 +95,7 @@ public class T65BXwing extends ShipEntity
 
 		BlasterUtil.fireBolt(world, player, pDir, 100, 50, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
-			blasterBoltEntity.setPos(this.getX() + p.x, this.getY() + p.y + 0.25f, this.getZ() + p.z);
+			blasterBoltEntity.setPos(this.getX() + p.x, this.getY() + p.y, this.getZ() + p.z);
 		});
 
 		world.playSound(null, player.getBlockPos(), SwgSounds.Ship.XWINGT65B_FIRE, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 10);

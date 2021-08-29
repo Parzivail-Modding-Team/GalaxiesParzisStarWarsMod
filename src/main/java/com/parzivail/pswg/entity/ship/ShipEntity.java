@@ -4,6 +4,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.client.render.camera.ChaseCam;
+import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.util.QuatUtil;
@@ -29,6 +30,7 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
@@ -94,6 +96,20 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			if (ship != null && ship.isPilot(player))
 				ship.acceptFireInput();
 		});
+	}
+
+	@Override
+	public void onSpawnPacket(EntitySpawnS2CPacket packet)
+	{
+		super.onSpawnPacket(packet);
+		var sound = getExteriorSoundEvent();
+		if (sound != null)
+			SoundHelper.playShipExteriorSound(this, sound);
+	}
+
+	protected SoundEvent getExteriorSoundEvent()
+	{
+		return null;
 	}
 
 	public static void handleRotationPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
