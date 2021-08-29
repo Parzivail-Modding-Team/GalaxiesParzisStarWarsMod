@@ -15,7 +15,7 @@ public class BlasterBoltHissSoundInstance extends DopplerSoundInstance
 		super(entity, SwgSounds.Blaster.HISS, SoundCategory.PLAYERS);
 		this.repeat = true;
 		this.repeatDelay = 0;
-		this.volume = 1.0f;
+		this.volume = 0.0f;
 	}
 
 	public boolean canPlay()
