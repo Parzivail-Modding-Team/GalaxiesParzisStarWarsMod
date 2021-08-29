@@ -315,8 +315,17 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			float hSR = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
 			float vSR = 1; // - bd.getBarrel().getVerticalSpreadReduction();
 
-			Matrix4fAccessUtil.multiply(m, new Quaternion(0, hS * hSR, 0, true));
-			Matrix4fAccessUtil.multiply(m, new Quaternion(vS * vSR, 0, 0, true));
+			if (bt.isAimingDownSights)
+			{
+				hSR = 0;
+				vSR = 0;
+			}
+
+			final var entityPitch = vS * vSR;
+			final var entityYaw = hS * hSR;
+
+			Matrix4fAccessUtil.multiply(m, new Quaternion(0, entityYaw, 0, true));
+			Matrix4fAccessUtil.multiply(m, new Quaternion(entityPitch, 0, 0, true));
 
 			var fromDir = Matrix4fAccessUtil.transform(com.parzivail.util.math.MathUtil.POSZ, m);
 
@@ -328,28 +337,28 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				case SEMI_AUTOMATIC:
 				case BURST:
 				case AUTOMATIC:
-					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
-						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 4.0F, 0);
+						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 4.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 						entity.setHue(bd.boltColor);
 					});
 					break;
 				case STUN:
-					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
+					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, entity -> {
-						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 1.25f, 0);
+						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 					});
 					break;
 				case SLUGTHROWER:
-					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireSlug(world, player, fromDir, range, damage);
 					break;
 				case ION:
-					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1 /* 1 - bd.getBarrel().getNoiseReduction() */, 1 + (float)world.random.nextGaussian() / 10);
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireIon(world, player, range, entity -> {
-						entity.setProperties(player, player.getPitch() + vS * vSR, player.getYaw() + hS * hSR, 0.0F, 4.0F, 0);
+						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 4.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 						entity.setHue(bd.boltColor);
 					});
