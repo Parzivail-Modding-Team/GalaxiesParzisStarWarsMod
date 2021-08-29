@@ -1,5 +1,6 @@
 package com.parzivail.pswg.util;
 
+import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgParticles;
@@ -8,7 +9,6 @@ import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.PProjectileEntityDamageSource;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -129,7 +129,7 @@ public class BlasterUtil
 		if (hit == null && blockHit.getType() == HitResult.Type.MISS)
 			distance = range;
 
-		var passedData = new PacketByteBuf(Unpooled.buffer());
+		var passedData = WorldEvent.createBuffer(WorldEvent.SLUG_FIRED);
 		passedData.writeDouble(start.x);
 		passedData.writeDouble(start.y);
 		passedData.writeDouble(start.z);
@@ -139,7 +139,7 @@ public class BlasterUtil
 		passedData.writeDouble(distance);
 
 		for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, end))
-			ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PacketWorldEventSlugFired, passedData);
+			ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PacketWorldEvent, passedData);
 	}
 
 	public static void fireStun(World world, PlayerEntity player, Vec3d fromDir, float range, Consumer<BlasterBoltEntity> entityInitializer)

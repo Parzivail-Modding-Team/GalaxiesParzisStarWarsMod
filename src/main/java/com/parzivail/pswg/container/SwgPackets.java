@@ -20,6 +20,7 @@ public class SwgPackets
 	{
 		public static final Identifier PacketSyncBlasters = Resources.id("sync_blasters");
 		public static final Identifier PacketSyncLightsabers = Resources.id("sync_lightsabers");
-		public static final Identifier PacketWorldEventSlugFired = Resources.id("event_slug_fired");
+		public static final Identifier PacketPlayerEvent = Resources.id("player_event");
+		public static final Identifier PacketWorldEvent = Resources.id("world_event");
 	}
 }

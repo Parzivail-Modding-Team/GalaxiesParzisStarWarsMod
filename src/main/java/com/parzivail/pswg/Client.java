@@ -1,5 +1,7 @@
 package com.parzivail.pswg;
 
+import com.parzivail.pswg.client.event.PlayerEvent;
+import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.loader.NemManager;
@@ -22,6 +24,7 @@ import com.parzivail.pswg.client.render.sky.TatooineSkyRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
+import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
@@ -83,6 +86,7 @@ public class Client implements ClientModInitializer
 		KeyBindingHelper.registerKeyBinding(KEY_SPECIES_SELECT);
 
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::handle);
+		ClientTickEvents.START_CLIENT_TICK.register(RecoilManager::tick);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
@@ -270,7 +274,37 @@ public class Client implements ClientModInitializer
 					Lumberjack.error("Attempted to sync lightsaber descriptors without initializing the client loader!");
 			});
 
-			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketWorldEventSlugFired, BlasterUtil::handleSlugFired);
+			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPlayerEvent, (client, handler, buf, responseSender) -> {
+				var eventId = buf.readByte();
+
+				if (PlayerEvent.ID_LOOKUP.containsKey(eventId))
+				{
+					var event = PlayerEvent.ID_LOOKUP.get(eventId);
+
+					switch (event)
+					{
+						case ACCUMULATE_RECOIL:
+							RecoilManager.handleAccumulateRecoil(client, handler, buf, responseSender);
+							break;
+					}
+				}
+			});
+
+			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketWorldEvent, (client, handler, buf, responseSender) -> {
+				var eventId = buf.readByte();
+
+				if (WorldEvent.ID_LOOKUP.containsKey(eventId))
+				{
+					var event = WorldEvent.ID_LOOKUP.get(eventId);
+
+					switch (event)
+					{
+						case SLUG_FIRED:
+							BlasterUtil.handleSlugFired(client, handler, buf, responseSender);
+							break;
+					}
+				}
+			});
 		}
 	}
 }

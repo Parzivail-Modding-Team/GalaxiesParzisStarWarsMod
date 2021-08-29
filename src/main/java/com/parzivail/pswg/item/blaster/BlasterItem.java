@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
+import com.parzivail.pswg.client.event.PlayerEvent;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
@@ -14,6 +16,7 @@ import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.item.*;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -26,6 +29,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
@@ -297,6 +301,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			bt.shotTimer = bd.burstRepeatTime;
 		}
 
+		// TODO: recoil
 //		player.setPitch((float)(player.getPitch(0) - 1 * (world.random.nextGaussian() / 2 + 0.5)));
 //		player.setYaw((float)(player.getYaw(0) + 1 * world.random.nextGaussian()));
 
@@ -312,17 +317,17 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
 
 			// TODO: stats customization
-			float hSR = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
-			float vSR = 1; // - bd.getBarrel().getVerticalSpreadReduction();
+			float horizontalSpreadCoef = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
+			float verticalSpreadCoef = 1; // - bd.getBarrel().getVerticalSpreadReduction();
 
 			if (bt.isAimingDownSights)
 			{
-				hSR = 0;
-				vSR = 0;
+				horizontalSpreadCoef = 0;
+				verticalSpreadCoef = 0;
 			}
 
-			final var entityPitch = vS * vSR;
-			final var entityYaw = hS * hSR;
+			final var entityPitch = vS * verticalSpreadCoef;
+			final var entityYaw = hS * horizontalSpreadCoef;
 
 			Matrix4fAccessUtil.multiply(m, new Quaternion(0, entityYaw, 0, true));
 			Matrix4fAccessUtil.multiply(m, new Quaternion(entityPitch, 0, 0, true));
@@ -331,6 +336,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 			var range = bd.range;
 			var damage = bd.damage;
+
+			var shouldRecoil = true;
 
 			switch (bt.getFiringMode())
 			{
@@ -350,6 +357,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 					});
+					shouldRecoil = false;
 					break;
 				case SLUGTHROWER:
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
@@ -363,6 +371,13 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 						entity.setHue(bd.boltColor);
 					});
 					break;
+			}
+
+			if (shouldRecoil)
+			{
+				var passedData = PlayerEvent.createBuffer(PlayerEvent.ACCUMULATE_RECOIL);
+				passedData.writeFloat(3);
+				ServerPlayNetworking.send((ServerPlayerEntity)player, SwgPackets.S2C.PacketPlayerEvent, passedData);
 			}
 
 			bt.serializeAsSubtag(stack);
