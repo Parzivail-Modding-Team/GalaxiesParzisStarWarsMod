@@ -82,6 +82,7 @@ val cca_version: String by project.ext
 val cloth_config_version: String by project.ext
 val modmenu_version: String by project.ext
 val rei_version: String by project.ext
+val libzoomer_version: String by project.ext
 
 base.archivesName.set(archives_base_name)
 version = getVersionName()
@@ -119,6 +120,10 @@ dependencies {
 	// Roughly Enough Items
 	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
 	modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
+
+	// LibZoomer
+	modImplementation("io.github.ennuil:LibZoomer:${libzoomer_version}")
+	include("io.github.ennuil:LibZoomer:${libzoomer_version}")
 }
 
 tasks.processResources {
