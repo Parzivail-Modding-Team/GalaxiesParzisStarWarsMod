@@ -37,8 +37,12 @@
 		"pswg.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.10.0",
+		"cardinal-components-base": "*",
+		"cardinal-components-entity": "*",
+		"cloth-config2": "*",
 		"fabric": "*",
+		"fabricloader": ">=0.10.0",
+		"libzoomer": "*",
 		"minecraft": "~1.17.1"
 	},
 	"breaks": {
