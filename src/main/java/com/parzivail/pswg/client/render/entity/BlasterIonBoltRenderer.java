@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.entity;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
+import com.parzivail.util.math.Ease;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -36,7 +37,7 @@ public class BlasterIonBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 
 		matrices.translate(0, 0.5f * entity.getHeight(), 0);
 
-		var s = MathHelper.clamp(entity.age / 2f, 0.1f, 1);
+		var s = MathHelper.clamp(Ease.inCubic((entity.age + tickDelta) / 2f), 0, 1);
 		matrices.scale(s, s, s);
 
 		var rPitch = (float)Math.asin(-velocity.y);

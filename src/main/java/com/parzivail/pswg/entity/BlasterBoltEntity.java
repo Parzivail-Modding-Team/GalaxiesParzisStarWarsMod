@@ -1,6 +1,7 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.client.sound.SoundHelper;
+import com.parzivail.pswg.container.SwgParticles;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -9,10 +10,11 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class BlasterBoltEntity extends ThrownEntity
@@ -114,29 +116,45 @@ public class BlasterBoltEntity extends ThrownEntity
 		super.onCollision(hitResult);
 		if (this.world.isClient)
 		{
-			for (var i = 0; i < 8; i++)
+			if (hitResult.getType() == HitResult.Type.BLOCK)
 			{
-				var pos = hitResult.getPos().add(0, getHeight() / 2f, 0);
+				var blockHit = (BlockHitResult)hitResult;
 
-				var vx = this.random.nextGaussian() * 0.02;
-				var vy = (this.random.nextGaussian() * 0.5 + 1) * 0.03f;
-				var vz = this.random.nextGaussian() * 0.02;
+				var incident = this.getVelocity().normalize();
+				var normal = new Vec3d(blockHit.getSide().getUnitVector());
 
-				if (hitResult.getType() == HitResult.Type.BLOCK)
+				var pos = hitResult.getPos();//.add(0, getHeight() / 2f, 0);
+
+				this.world.addParticle(SwgParticles.SCORCH, pos.x + normal.x * 0.01f, pos.y + normal.y * 0.01f, pos.z + normal.z * 0.01f, normal.x, normal.y, normal.z);
+
+				var reflection = normal.multiply(2 * normal.dotProduct(incident)).subtract(incident);
+
+				reflection = reflection.multiply(-1);
+
+				for (var i = 0; i < 16; i++)
 				{
-					var blockHit = (BlockHitResult)hitResult;
+					var vx = this.random.nextGaussian() * 0.03;
+					var vy = this.random.nextGaussian() * 0.03;
+					var vz = this.random.nextGaussian() * 0.03;
 
-					if (blockHit.getSide() == Direction.DOWN)
-						vy *= -2;
+					var ref1 = reflection.multiply(0.3f * (world.random.nextDouble() * 0.5 + 0.5));
+					this.world.addParticle(SwgParticles.SPARK, pos.x, pos.y, pos.z, ref1.x + vx, ref1.y + vy, ref1.z + vz);
+
+					if (i % 3 == 0)
+					{
+						var ref2 = reflection.multiply(0.15f * (world.random.nextDouble() * 0.5 + 0.5));
+						this.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(blockHit.getBlockPos())), pos.x, pos.y, pos.z, ref2.x + vx, ref2.y + vy, ref2.z + vz);
+					}
+
+					if (i % 2 == 0)
+					{
+						var ref2 = reflection.multiply(0.08f * (world.random.nextDouble() * 0.5 + 0.5));
+						this.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, ref2.x + vx, ref2.y + vy, ref2.z + vz);
+					}
 				}
-
-				this.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, vx, vy, vz);
 			}
 		}
-		else
-		{
-			this.world.sendEntityStatus(this, (byte)3);
-			this.discard();
-		}
+
+		setLife(0);
 	}
 }

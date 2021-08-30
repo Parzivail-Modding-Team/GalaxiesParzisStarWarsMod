@@ -1,32 +1,54 @@
 package com.parzivail.pswg.client.particle;
 
 import com.parzivail.util.client.particle.PParticle;
+import com.parzivail.util.math.Ease;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.particle.AnimatedParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
+import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 @Environment(EnvType.CLIENT)
-public class SlugTrailParticle extends AnimatedParticle
+public class SparkParticle extends CrossPointingParticle
 {
-	protected SlugTrailParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
+	protected SparkParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
-		super(clientWorld, x, y, z, spriteProvider, 0.0F);
-		this.field_28786 = 0.92F;
-		this.scale = (float)(Math.random() * 0.2 + 0.2);
+		super(clientWorld, x, y, z, spriteProvider);
+		this.field_28786 = 1;
+		this.scale = (float)(Math.random() * 0.05 + 0.06);
 		this.setColorAlpha(1.0F);
-		var gray = 0.6f;
-		this.setColor(gray, gray, gray);
-		this.maxAge = (int)((double)(this.scale * 12.0F) / (Math.random() * 0.8 + 0.2));
+		this.setColor(1, 0.9f, 0.8f);
+		this.maxAge = (int)(Math.random() * 10 + 5);
 		this.setSpriteForAge(spriteProvider);
 		this.collidesWithWorld = true;
 		this.velocityX = vX;
 		this.velocityY = vY;
 		this.velocityZ = vZ;
+	}
+
+	public ParticleTextureSheet getType()
+	{
+		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
+	}
+
+	public int getBrightness(float tint)
+	{
+		float f = ((float)this.age + tint) / (float)this.maxAge;
+		f = MathHelper.clamp(f, 0.0F, 1.0F);
+		int i = super.getBrightness(tint);
+		int j = i & 255;
+		int k = i >> 16 & 255;
+		j += (int)(f * 15.0F * 16.0F);
+		if (j > 240)
+		{
+			j = 240;
+		}
+
+		return j | k << 16;
 	}
 
 	public void tick()
@@ -42,8 +64,11 @@ public class SlugTrailParticle extends AnimatedParticle
 
 			if (this.world.getBlockState(new BlockPos(this.x, this.y, this.z)).isAir())
 			{
-				this.velocityY += 0.0074;
+				this.velocityY -= 0.0245;
 			}
+
+			var a = (this.age / (float)this.maxAge);
+			this.setColor(1, Ease.outCubic(0.9f * a), Ease.inCubic(0.8f * a));
 		}
 	}
 
@@ -59,7 +84,7 @@ public class SlugTrailParticle extends AnimatedParticle
 
 		public Particle createParticle(PParticle defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
 		{
-			return new SlugTrailParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
+			return new SparkParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.client.particle.ScorchParticle;
 import com.parzivail.pswg.client.particle.SlugTrailParticle;
+import com.parzivail.pswg.client.particle.SparkParticle;
 import com.parzivail.pswg.container.SwgParticles;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.particle.ParticleEffect;
@@ -21,5 +23,7 @@ public abstract class ParticleManagerMixin
 	private void registerDefaultFactories(CallbackInfo ci)
 	{
 		registerFactory(SwgParticles.SLUG_TRAIL, SlugTrailParticle.Factory::new);
+		registerFactory(SwgParticles.SPARK, SparkParticle.Factory::new);
+		registerFactory(SwgParticles.SCORCH, ScorchParticle.Factory::new);
 	}
 }

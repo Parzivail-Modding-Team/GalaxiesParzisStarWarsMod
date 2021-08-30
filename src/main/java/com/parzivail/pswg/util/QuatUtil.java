@@ -9,6 +9,9 @@ import net.minecraft.util.math.*;
 
 public class QuatUtil
 {
+	private static final Vec3d UP = new Vec3d(0, 1, 0);
+	private static final Vec3d FORWARD = new Vec3d(0, 0, 1);
+
 	public static EulerAngle toEulerAngles(Quaternion q)
 	{
 		var forward = rotate(MathUtil.POSZ, q);
@@ -17,6 +20,31 @@ public class QuatUtil
 		var pitch = (float)Math.asin(forward.y);
 
 		return new EulerAngle(pitch * MathUtil.toDegreesf, yaw * MathUtil.toDegreesf + 180, 0);
+	}
+
+	public static Quaternion lookAt(Vec3d sourcePoint, Vec3d destPoint)
+	{
+		Vec3d forwardVector = destPoint.subtract(sourcePoint).normalize();
+
+		double dot = FORWARD.dotProduct(forwardVector);
+
+		if (Math.abs(dot - (-1.0f)) < 0.000001f)
+			return new Quaternion(new Vec3f((float)UP.x, (float)UP.y, (float)UP.z), MathHelper.PI, false);
+		if (Math.abs(dot - (1.0f)) < 0.000001f)
+			return new Quaternion(Quaternion.IDENTITY);
+
+		double rotAngle = Math.acos(dot);
+		Vec3d rotAxis = FORWARD.crossProduct(forwardVector);
+		rotAxis = rotAxis.normalize();
+		return createFromAxisAngle(rotAxis, rotAngle);
+	}
+
+	// just in case you need that function also
+	public static Quaternion createFromAxisAngle(Vec3d axis, double angle)
+	{
+		var halfAngle = angle / 2;
+		var s = Math.sin(halfAngle);
+		return new Quaternion((float)(axis.x * s), (float)(axis.y * s), (float)(axis.z * s), (float)Math.cos(halfAngle));
 	}
 
 	public static Vec3d rotate(Vec3d self, Quaternion q)
