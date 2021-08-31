@@ -8,7 +8,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.BlockPos;
 
 @Environment(EnvType.CLIENT)
 public class SlugTrailParticle extends AnimatedParticle
@@ -34,16 +33,8 @@ public class SlugTrailParticle extends AnimatedParticle
 		super.tick();
 		if (!this.dead)
 		{
+			this.setColorAlpha(1);
 			this.setSpriteForAge(this.spriteProvider);
-			if (this.age > this.maxAge / 2)
-			{
-				this.setColorAlpha(1.0F - ((float)this.age - (float)(this.maxAge / 2)) / (float)this.maxAge);
-			}
-
-			if (this.world.getBlockState(new BlockPos(this.x, this.y, this.z)).isAir())
-			{
-				this.velocityY += 0.0074;
-			}
 		}
 	}
 
