@@ -14,6 +14,9 @@ import net.minecraft.util.math.MathHelper;
 @Environment(EnvType.CLIENT)
 public class ScorchParticle extends DecalParticle
 {
+	private static final int NUM_VARIANTS = 3;
+	private final int variant;
+
 	protected ScorchParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z, spriteProvider);
@@ -28,6 +31,8 @@ public class ScorchParticle extends DecalParticle
 		this.velocityY = vY;
 		this.velocityZ = vZ;
 		this.angle = clientWorld.random.nextFloat() * MathHelper.PI;
+
+		this.variant = clientWorld.random.nextInt(NUM_VARIANTS);
 	}
 
 	public ParticleTextureSheet getType()
@@ -75,6 +80,7 @@ public class ScorchParticle extends DecalParticle
 
 		if (!this.dead)
 		{
+			this.setSprite(spriteProvider.getSprite(this.variant, NUM_VARIANTS));
 			var a = MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1);
 			// this.setColor(MathHelper.clamp(Ease.outCubic(10 * a), 0, 1), MathHelper.clamp(5 * a, 0, 1), MathHelper.clamp(Ease.inCubic(4 * a), 0, 1));
 			this.setColor(MathHelper.clamp(getRed(a), 0, 1), MathHelper.clamp(getGreen(a), 0, 1), MathHelper.clamp(getBlue(a), 0, 1));
