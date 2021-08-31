@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.item;
 
 import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.pm3d.PM3DFile;
 import com.parzivail.pswg.item.blaster.BlasterItem;
@@ -129,7 +130,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			//			matrices.multiply(new Quaternion(4, 172, 0, true));
 			//			matrices.translate(0.2f, -0.2f, -1.2f);
 
-			var adsLerp = bt.getAdsLerp();
+			var z = Client.blasterZoomInstance;
+			var d = MinecraftClient.getInstance().getTickDelta();
+
+			var adsZoom = 1 / bd.adsZoom;
+			var adsLerp = 1 - (float)(z.getTransitionMode().applyZoom(1, d) - adsZoom) / (1 - adsZoom);
 
 			opacity = 1;
 			if (bd.type == BlasterArchetype.SNIPER)

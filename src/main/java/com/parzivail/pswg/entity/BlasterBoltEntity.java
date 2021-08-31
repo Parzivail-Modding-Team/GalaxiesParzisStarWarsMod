@@ -137,19 +137,19 @@ public class BlasterBoltEntity extends ThrownEntity
 					var vy = this.random.nextGaussian() * 0.03;
 					var vz = this.random.nextGaussian() * 0.03;
 
-					var ref1 = reflection.multiply(0.3f * (world.random.nextDouble() * 0.5 + 0.5));
-					this.world.addParticle(SwgParticles.SPARK, pos.x, pos.y, pos.z, ref1.x + vx, ref1.y + vy, ref1.z + vz);
+					var sparkVelocity = reflection.multiply(0.3f * (world.random.nextDouble() * 0.5 + 0.5));
+					this.world.addParticle(SwgParticles.SPARK, pos.x, pos.y, pos.z, sparkVelocity.x + vx, sparkVelocity.y + vy, sparkVelocity.z + vz);
 
 					if (i % 3 == 0)
 					{
-						var ref2 = reflection.multiply(0.15f * (world.random.nextDouble() * 0.5 + 0.5));
-						this.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(blockHit.getBlockPos())), pos.x, pos.y, pos.z, ref2.x + vx, ref2.y + vy, ref2.z + vz);
+						var debrisVelocity = reflection.multiply(0.15f * (world.random.nextDouble() * 0.5 + 0.5));
+						this.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, world.getBlockState(blockHit.getBlockPos())), pos.x, pos.y, pos.z, debrisVelocity.x + vx, debrisVelocity.y + vy, debrisVelocity.z + vz);
 					}
 
 					if (i % 2 == 0)
 					{
-						var ref2 = reflection.multiply(0.08f * (world.random.nextDouble() * 0.5 + 0.5));
-						this.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, ref2.x + vx, ref2.y + vy, ref2.z + vz);
+						var smokeVelocity = reflection.multiply(0.08f * (world.random.nextDouble() * 0.5 + 0.5));
+						this.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, smokeVelocity.x + vx, smokeVelocity.y + vy, smokeVelocity.z + vz);
 					}
 				}
 			}

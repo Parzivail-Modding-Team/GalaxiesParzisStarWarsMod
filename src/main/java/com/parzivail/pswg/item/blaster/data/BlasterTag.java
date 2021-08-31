@@ -1,11 +1,7 @@
 package com.parzivail.pswg.item.blaster.data;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.util.math.Ease;
 import com.parzivail.util.nbt.TagSerializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
@@ -15,7 +11,6 @@ import java.util.function.Consumer;
 public class BlasterTag extends TagSerializer
 {
 	public static final Identifier SLUG = Resources.id("blaster_data");
-	public static final int ADS_TIMER_LENGTH = 5;
 	public static final byte COOLING_MODE_NONE = 0;
 	public static final byte COOLING_MODE_OVERHEAT = 1;
 	public static final byte COOLING_MODE_FORCED_BYPASS = 2;
@@ -24,7 +19,6 @@ public class BlasterTag extends TagSerializer
 	public byte firingMode;
 
 	public boolean isAimingDownSights;
-	public int aimingDownSightsTimer;
 
 	public int shotsRemaining;
 	public int shotTimer;
@@ -61,31 +55,11 @@ public class BlasterTag extends TagSerializer
 
 		if (shotTimer > 0)
 			shotTimer--;
-
-		if (aimingDownSightsTimer > 0)
-			aimingDownSightsTimer--;
 	}
 
 	public void setAimingDownSights(boolean isAimingDownSights)
 	{
-		if (isAimingDownSights != this.isAimingDownSights)
-			aimingDownSightsTimer = ADS_TIMER_LENGTH;
 		this.isAimingDownSights = isAimingDownSights;
-	}
-
-	@Environment(EnvType.CLIENT)
-	public float getAdsLerp()
-	{
-		if (aimingDownSightsTimer == 0)
-			return isAimingDownSights ? 1 : 0;
-
-		var delta = MinecraftClient.getInstance().getTickDelta();
-
-		var timer = (aimingDownSightsTimer - delta) / (float)ADS_TIMER_LENGTH;
-
-		if (isAimingDownSights)
-			return Ease.outCubic(1 - timer);
-		return Ease.inCubic(timer);
 	}
 
 	public BlasterFiringMode getFiringMode()
@@ -111,10 +85,5 @@ public class BlasterTag extends TagSerializer
 	public boolean isCooling()
 	{
 		return coolingTimer > 0;
-	}
-
-	public void finalizeAdsAnimation()
-	{
-		aimingDownSightsTimer = 0;
 	}
 }

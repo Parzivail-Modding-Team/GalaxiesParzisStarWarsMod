@@ -144,8 +144,8 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		if (bd.type != BlasterArchetype.SNIPER)
 			return;
 
-		float scale = bt.getAdsLerp();
-		int opacity = (int)(bt.getAdsLerp() * (224));
+		float scale = 1; // TODO: bt.getAdsLerp();
+		int opacity = 1; // (int)(bt.getAdsLerp() * (224));
 		RenderSystem.disableDepthTest();
 		RenderSystem.depthMask(false);
 		RenderSystem.defaultBlendFunc();

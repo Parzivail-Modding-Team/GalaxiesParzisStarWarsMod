@@ -14,7 +14,7 @@ import java.util.EnumSet;
 
 public class KeyHandler
 {
-	public static void handle(MinecraftClient mc)
+	public static void tick(MinecraftClient mc)
 	{
 		if (mc.player == null)
 			return;

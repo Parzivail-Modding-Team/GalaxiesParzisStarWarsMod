@@ -62,10 +62,7 @@ public class PlayerEntityMixin
 		{
 			if (stack.hasNbt())
 			{
-				BlasterTag.mutate(stack, tag -> {
-					tag.isAimingDownSights = false;
-					tag.finalizeAdsAnimation();
-				});
+				BlasterTag.mutate(stack, tag -> tag.isAimingDownSights = false);
 			}
 		}
 		else if (stack.getItem() instanceof LightsaberItem)

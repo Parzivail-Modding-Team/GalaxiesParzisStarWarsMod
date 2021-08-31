@@ -25,6 +25,7 @@ import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.pswg.client.weapon.RecoilManager;
+import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
@@ -37,6 +38,11 @@ import com.parzivail.util.client.render.ICustomHudRenderer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.client.render.ICustomSkyRenderer;
+import io.github.ennuil.libzoomer.api.ZoomInstance;
+import io.github.ennuil.libzoomer.api.ZoomRegistry;
+import io.github.ennuil.libzoomer.api.modifiers.ZoomDivisorMouseModifier;
+import io.github.ennuil.libzoomer.api.overlays.NoZoomOverlay;
+import io.github.ennuil.libzoomer.api.transitions.SmoothTransitionMode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -67,6 +73,8 @@ public class Client implements ClientModInitializer
 	public static RemoteTextureProvider remoteTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
 
+	public static ZoomInstance blasterZoomInstance;
+
 	public static boolean isShipClientControlled(ShipEntity shipEntity)
 	{
 		var minecraft = MinecraftClient.getInstance();
@@ -85,8 +93,10 @@ public class Client implements ClientModInitializer
 		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_OVERRIDE);
 		KeyBindingHelper.registerKeyBinding(KEY_SPECIES_SELECT);
 
-		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::handle);
+		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::tick);
 		ClientTickEvents.START_CLIENT_TICK.register(RecoilManager::tick);
+
+		ClientTickEvents.END_CLIENT_TICK.register(ZoomHandler::tick);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
@@ -205,6 +215,14 @@ public class Client implements ClientModInitializer
 		SwgParticles.register();
 
 		ResourceManagers.registerPackets();
+
+		blasterZoomInstance = ZoomRegistry.registerInstance(new ZoomInstance(
+				Resources.id("blaster_zoom"),
+				10.0F,
+				new SmoothTransitionMode(),
+				new ZoomDivisorMouseModifier(),
+				new NoZoomOverlay() //new SpyglassZoomOverlay(new Identifier("libzoomertest:textures/misc/michael.png"))
+		));
 	}
 
 	public static class ResourceManagers

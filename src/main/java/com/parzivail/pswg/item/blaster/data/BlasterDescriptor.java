@@ -25,6 +25,9 @@ public class BlasterDescriptor extends TagSerializer
 	public int automaticRepeatTime;
 	public int burstRepeatTime;
 
+	// TODO: datapack
+	public float adsZoom = 5;
+
 	public Vec3d foreGripPos;
 	public EulerAngle foreGripHandAngle;
 

@@ -499,10 +499,15 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public double getFovMultiplier(ItemStack stack, World world, PlayerEntity entity)
 	{
 		var bt = new BlasterTag(stack.getOrCreateNbt());
+		var bd = BlasterItem.getBlasterDescriptor(world, stack);
 
-		// TODO: blaster variable zoom
-		var lerp = bt.getAdsLerp();
-		return MathHelper.lerp(lerp, 1, 0.2f);
+		if (bd == null)
+			return 1;
+
+		if (bt.isAimingDownSights)
+			return bd.adsZoom;
+
+		return 1;
 	}
 
 	@Override
