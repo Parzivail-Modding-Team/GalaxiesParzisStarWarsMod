@@ -22,7 +22,7 @@ public class SparkParticle extends CrossPointingParticle
 		this.field_28786 = 1;
 		this.scale = (float)(Math.random() * 0.05 + 0.06);
 		this.setColorAlpha(1.0F);
-		this.setColor(1, 1, 1);
+		this.setColor(1, 0.9f, 0.8f);
 		this.maxAge = (int)(Math.random() * 10 + 5);
 		this.setSpriteForAge(spriteProvider);
 		this.collidesWithWorld = true;
@@ -69,7 +69,7 @@ public class SparkParticle extends CrossPointingParticle
 			}
 
 			var a = (this.age / (float)this.maxAge);
-			this.setColor(1, MathHelper.clamp(Ease.outCubic(3 * a), 0, 1), MathHelper.clamp(Ease.outCubic(1.5f * a), 0, 1));
+			this.setColor(1, Ease.outCubic(0.9f * a), Ease.inCubic(0.8f * a));
 		}
 	}
 
