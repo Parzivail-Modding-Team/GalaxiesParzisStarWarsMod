@@ -27,7 +27,7 @@ public abstract class ItemStackMixin
 	@Shadow
 	public abstract void setNbt(@Nullable NbtCompound tag);
 
-	@Inject(method = "Lnet/minecraft/item/ItemStack;<init>(Lnet/minecraft/item/ItemConvertible;I)V", at = @At("TAIL"))
+	@Inject(method = "<init>(Lnet/minecraft/item/ItemConvertible;I)V", at = @At("TAIL"))
 	private void init(ItemConvertible item, int count, CallbackInfo ci)
 	{
 		if (item instanceof IDefaultNbtProvider)

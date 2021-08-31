@@ -24,7 +24,7 @@ public class RenderLayersMixin
 	@Final
 	private static Map<Block, RenderLayer> BLOCKS;
 
-	@Inject(method = "Lnet/minecraft/client/render/RenderLayers;getBlockLayer(Lnet/minecraft/block/BlockState;)Lnet/minecraft/client/render/RenderLayer;", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "getBlockLayer(Lnet/minecraft/block/BlockState;)Lnet/minecraft/client/render/RenderLayer;", at = @At("HEAD"), cancellable = true)
 	private static void getBlockLayer(BlockState state, CallbackInfoReturnable<RenderLayer> cir)
 	{
 		if (state.getBlock() instanceof BushLeavesBlock)

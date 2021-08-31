@@ -7,20 +7,23 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
 import net.minecraft.text.*;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+// TODO: check if this can be replaced by net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents.JOIN
 @Mixin(ClientPlayNetworkHandler.class)
 @Environment(EnvType.CLIENT)
 public class ClientPlayNetworkHandlerMixin
 {
+	@Final
 	@Shadow
 	private MinecraftClient client;
 
-	@Inject(method = "Lnet/minecraft/client/network/ClientPlayNetworkHandler;onGameJoin(Lnet/minecraft/network/packet/s2c/play/GameJoinS2CPacket;)V", at = @At("TAIL"))
+	@Inject(method = "onGameJoin(Lnet/minecraft/network/packet/s2c/play/GameJoinS2CPacket;)V", at = @At("TAIL"))
 	private void onJoinWorld(GameJoinS2CPacket packet, CallbackInfo ci)
 	{
 		if (client.player != null && Resources.REMOTE_VERSION != null)

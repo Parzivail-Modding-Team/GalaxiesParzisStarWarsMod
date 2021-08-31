@@ -45,7 +45,7 @@ public class MinecraftClientMixin
 		Client.stackedTextureProvider = new StackedTextureProvider(textureManager, "pswg:stacked");
 	}
 
-	@Inject(method = "Lnet/minecraft/client/MinecraftClient;initializeSearchableContainers()V", at = @At("TAIL"))
+	@Inject(method = "initializeSearchableContainers()V", at = @At("TAIL"))
 	private void initializeSearchableContainers(CallbackInfo ci)
 	{
 		// Registering the reloadable resource managers here because this method is

@@ -59,7 +59,7 @@ public class InGameHudMixin
 		}
 	}
 
-	@Inject(method = "Lnet/minecraft/client/gui/hud/InGameHud;getCameraPlayer()Lnet/minecraft/entity/player/PlayerEntity;", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "getCameraPlayer()Lnet/minecraft/entity/player/PlayerEntity;", at = @At("HEAD"), cancellable = true)
 	void getCameraPlayer(CallbackInfoReturnable<PlayerEntity> cir)
 	{
 		var camEntity = this.client.getCameraEntity();

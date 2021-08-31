@@ -28,7 +28,7 @@ public class GameRendererMixin
 		CameraHelper.renderWorldHead(tickDelta, limitTime, matrix);
 	}
 
-	@Inject(method = "Lnet/minecraft/client/render/GameRenderer;renderHand(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/Camera;F)V", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "renderHand(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/Camera;F)V", at = @At("HEAD"), cancellable = true)
 	void renderHand(MatrixStack matrices, Camera camera, float tickDelta, CallbackInfo ci)
 	{
 		CameraHelper.renderHand(matrices, camera, tickDelta, ci);

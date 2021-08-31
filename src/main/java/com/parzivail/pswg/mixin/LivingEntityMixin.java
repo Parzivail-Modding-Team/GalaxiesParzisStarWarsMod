@@ -15,7 +15,7 @@ public class LivingEntityMixin
 	@Shadow
 	protected float lastDamageTaken;
 
-	@Inject(method = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;getAttacker()Lnet/minecraft/entity/Entity;"))
+	@Inject(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;getAttacker()Lnet/minecraft/entity/Entity;"))
 	public void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
 	{
 		if (source instanceof PProjectileEntityDamageSource && ((PProjectileEntityDamageSource)source).ignoresInvulnerableFrames())

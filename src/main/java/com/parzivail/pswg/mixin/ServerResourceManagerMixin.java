@@ -24,7 +24,7 @@ public class ServerResourceManagerMixin implements IServerResourceManagerAccess
 	@Final
 	private ReloadableResourceManager resourceManager;
 
-	@Inject(method = "Lnet/minecraft/resource/ServerResourceManager;<init>(Lnet/minecraft/util/registry/DynamicRegistryManager;Lnet/minecraft/server/command/CommandManager$RegistrationEnvironment;I)V", at = @At("TAIL"))
+	@Inject(method = "<init>(Lnet/minecraft/util/registry/DynamicRegistryManager;Lnet/minecraft/server/command/CommandManager$RegistrationEnvironment;I)V", at = @At("TAIL"))
 	private void init(DynamicRegistryManager registryManager, CommandManager.RegistrationEnvironment commandEnvironment, int functionPermissionLevel, CallbackInfo ci)
 	{
 		resourceManagers = new Galaxies.ResourceManagers(resourceManager);

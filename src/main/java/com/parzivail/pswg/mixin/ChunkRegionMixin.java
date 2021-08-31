@@ -18,7 +18,7 @@ public class ChunkRegionMixin
 	@Final
 	private ServerWorld world;
 
-	@Inject(method = "Lnet/minecraft/world/ChunkRegion;getSeed()J", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "getSeed()J", at = @At("HEAD"), cancellable = true)
 	private void getSeed(CallbackInfoReturnable<Long> cir)
 	{
 		Identifier worldId = world.getRegistryKey().getValue();

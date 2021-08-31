@@ -29,9 +29,6 @@ public abstract class HeldItemRendererMixin
 	@Final
 	private MinecraftClient client;
 
-	@Shadow
-	public abstract void resetEquipProgress(Hand hand);
-
 	@Inject(method = "updateHeldItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isRiding()Z", shift = At.Shift.BEFORE))
 	private void areStacksEqual(CallbackInfo ci)
 	{
