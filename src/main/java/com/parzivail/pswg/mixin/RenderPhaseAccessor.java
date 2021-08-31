@@ -45,4 +45,10 @@ public interface RenderPhaseAccessor
 	{
 		throw new AssertionError();
 	}
+
+	@Accessor("POSITION_COLOR_TEXTURE_SHADER")
+	static RenderPhase.Shader get_POSITION_COLOR_TEXTURE_SHADER()
+	{
+		throw new AssertionError();
+	}
 }

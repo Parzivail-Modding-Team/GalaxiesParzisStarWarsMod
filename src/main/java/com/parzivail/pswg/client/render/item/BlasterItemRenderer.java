@@ -8,14 +8,14 @@ import com.parzivail.pswg.client.render.pm3d.PM3DFile;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
+import com.parzivail.pswg.mixin.RenderPhaseAccessor;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.math.Ease;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -215,7 +215,37 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 		m.render(VertexConsumerBuffer.Instance);
 
+//		var muzzlePos = new Vec3f(0, 0.6f, 4.58f);
+//
+//		vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(Resources.id("textures/model/blaster/effect/muzzleflash_0.png")));
+//		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
+//
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - 0.5f, muzzlePos.getY() - 0.5f, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 0);
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + 0.5f, muzzlePos.getY() - 0.5f, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 0);
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + 0.5f, muzzlePos.getY() + 0.5f, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 1);
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - 0.5f, muzzlePos.getY() + 0.5f, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 1);
+//
+//		vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(Resources.id("textures/model/blaster/effect/muzzleflash_forward_0.png")));
+//		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, 0xFF00FF00, light);
+//
+//		// vertical
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - 0.5f, muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 0);
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - 0.5f, muzzlePos.getZ() + 1.8f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 0);
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + 0.5f, muzzlePos.getZ() + 1.8f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 1);
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + 0.5f, muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 1);
+//
+//		// horizontal
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - 0.5f, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 0);
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - 0.5f, muzzlePos.getY(), muzzlePos.getZ() + 1.8f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 0);
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + 0.5f, muzzlePos.getY(), muzzlePos.getZ() + 1.8f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 1);
+//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + 0.5f, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 1);
+
 		matrices.pop();
+	}
+
+	private static RenderLayer getMuzzleFlashLayer(Identifier texture)
+	{
+		return RenderLayer.of("pswg:muzzle_flash2", VertexFormats.POSITION_COLOR_TEXTURE, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_POSITION_COLOR_TEXTURE_SHADER()).texture(new RenderPhase.Texture(texture, false, false)).cull(new RenderPhase.Cull(false)).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 	}
 
 	@Override
