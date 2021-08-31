@@ -37,10 +37,10 @@ public class RecoilManager
 
 			if (mc.player != null)
 			{
-				var y = mc.player.getHeadYaw();
+				var y = mc.player.getYaw();
 
-				mc.player.prevHeadYaw = y;
-				mc.player.setHeadYaw(y + horizontalVelocity);
+				mc.player.prevYaw = y;
+				mc.player.setYaw(y + horizontalVelocity);
 			}
 		}
 		else

@@ -2,7 +2,6 @@ package com.parzivail.pswg.client.particle;
 
 import com.parzivail.util.client.particle.DecalParticle;
 import com.parzivail.util.client.particle.PParticle;
-import com.parzivail.util.math.Ease;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.Particle;
@@ -28,6 +27,7 @@ public class ScorchParticle extends DecalParticle
 		this.velocityX = vX;
 		this.velocityY = vY;
 		this.velocityZ = vZ;
+		this.angle = clientWorld.random.nextFloat() * MathHelper.PI;
 	}
 
 	public ParticleTextureSheet getType()
@@ -51,13 +51,33 @@ public class ScorchParticle extends DecalParticle
 		return j | k << 16;
 	}
 
+	private float getRed(float t)
+	{
+		t *= 5;
+		return -0.0581f * t * t + 0.0982f * t + 0.963f;
+	}
+
+	private float getGreen(float t)
+	{
+		t *= 5;
+		return 0.0292f * t * t - 0.314f * t + 0.837f;
+	}
+
+	private float getBlue(float t)
+	{
+		t *= 5;
+		return 0.0166f * t * t - 0.152f * t + 0.348f;
+	}
+
 	public void tick()
 	{
 		super.tick();
+
 		if (!this.dead)
 		{
-			var a = (this.age / (float)this.maxAge);
-			this.setColor(1, Ease.inCubic(a), Ease.inCubic(a));
+			var a = MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1);
+			// this.setColor(MathHelper.clamp(Ease.outCubic(10 * a), 0, 1), MathHelper.clamp(5 * a, 0, 1), MathHelper.clamp(Ease.inCubic(4 * a), 0, 1));
+			this.setColor(MathHelper.clamp(getRed(a), 0, 1), MathHelper.clamp(getGreen(a), 0, 1), MathHelper.clamp(getBlue(a), 0, 1));
 		}
 	}
 

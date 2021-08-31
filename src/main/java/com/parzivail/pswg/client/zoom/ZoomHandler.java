@@ -15,15 +15,17 @@ public class ZoomHandler
 
 		var stack = mc.player.getMainHandStack();
 
+		var blasterZoomInstance = Client.blasterZoomInstance;
+
 		if (stack.isOf(SwgItems.Blaster.Blaster))
 		{
-			var zoomInstance = Client.blasterZoomInstance;
-
 			var b = (BlasterItem)stack.getItem();
 			var bt = new BlasterTag(stack.getOrCreateNbt());
 
-			zoomInstance.setZoom(bt.isAimingDownSights);
-			zoomInstance.setZoomDivisor(b.getFovMultiplier(stack, mc.world, mc.player));
+			blasterZoomInstance.setZoom(bt.isAimingDownSights);
+			blasterZoomInstance.setZoomDivisor(b.getFovMultiplier(stack, mc.world, mc.player));
 		}
+		else
+			blasterZoomInstance.setZoom(false);
 	}
 }

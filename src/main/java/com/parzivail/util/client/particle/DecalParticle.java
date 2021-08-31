@@ -48,6 +48,7 @@ public class DecalParticle extends AnimatedParticle
 		var normal = new Vec3d(velocityX, velocityY, velocityZ).normalize();
 
 		Quaternion rotation = QuatUtil.lookAt(Vec3d.ZERO, normal);
+		rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Z, angle, false));
 
 		var corners = new Vec3f[] {
 				new Vec3f(-1.0F, -1.0F, 0.0F),
