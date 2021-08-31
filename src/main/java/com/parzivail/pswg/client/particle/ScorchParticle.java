@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.particle;
 
+import com.parzivail.util.client.particle.DecalParticle;
 import com.parzivail.util.client.particle.PParticle;
 import com.parzivail.util.math.Ease;
 import net.fabricmc.api.EnvType;

@@ -62,10 +62,6 @@ public class BlasterUtil
 		{
 			hit.entity().damage(getDamageSource(bolt, player), damage);
 		}
-		else if (blockHit.getType() == HitResult.Type.BLOCK)
-		{
-			// TODO: smoke puff, blaster burn mark, etc server-side stuff
-		}
 	}
 
 	public static void fireIon(World world, PlayerEntity player, float range, Consumer<BlasterBoltEntity> entityInitializer)

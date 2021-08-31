@@ -301,10 +301,6 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			bt.shotTimer = bd.burstRepeatTime;
 		}
 
-		// TODO: recoil
-//		player.setPitch((float)(player.getPitch(0) - 1 * (world.random.nextGaussian() / 2 + 0.5)));
-//		player.setYaw((float)(player.getYaw(0) + 1 * world.random.nextGaussian()));
-
 		if (!world.isClient)
 		{
 			var m = new Matrix4f();

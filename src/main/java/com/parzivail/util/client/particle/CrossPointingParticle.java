@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.particle;
+package com.parzivail.util.client.particle;
 
 import com.parzivail.pswg.util.QuatUtil;
 import net.fabricmc.api.EnvType;
