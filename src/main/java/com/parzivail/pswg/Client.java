@@ -29,6 +29,7 @@ import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
+import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.Lumberjack;
@@ -319,6 +320,9 @@ public class Client implements ClientModInitializer
 					{
 						case SLUG_FIRED:
 							BlasterUtil.handleSlugFired(client, handler, buf, responseSender);
+							break;
+						case BLASTER_BOLT_HIT:
+							BlasterBoltEntity.handleBoltHit(client, handler, buf, responseSender);
 							break;
 					}
 				}

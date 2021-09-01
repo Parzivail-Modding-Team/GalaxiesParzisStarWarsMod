@@ -23,7 +23,7 @@ public class ScorchParticle extends DecalParticle
 		this.field_28786 = 1;
 		this.scale = 0.1f;
 		this.setColorAlpha(1.0F);
-		this.setColor(1, 1, 1);
+		this.setColor(MathHelper.clamp(getRed(0), 0, 1), MathHelper.clamp(getGreen(0), 0, 1), MathHelper.clamp(getBlue(0), 0, 1));
 		this.maxAge = 200;
 		this.setSpriteForAge(spriteProvider);
 		this.collidesWithWorld = false;
@@ -80,6 +80,10 @@ public class ScorchParticle extends DecalParticle
 
 		if (!this.dead)
 		{
+			var halfAge = this.maxAge / 2f;
+			if (this.age > halfAge)
+				this.setColorAlpha(1 - (this.age - halfAge) / halfAge);
+
 			this.setSprite(spriteProvider.getSprite(this.variant, NUM_VARIANTS));
 			var a = MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1);
 			// this.setColor(MathHelper.clamp(Ease.outCubic(10 * a), 0, 1), MathHelper.clamp(5 * a, 0, 1), MathHelper.clamp(Ease.inCubic(4 * a), 0, 1));

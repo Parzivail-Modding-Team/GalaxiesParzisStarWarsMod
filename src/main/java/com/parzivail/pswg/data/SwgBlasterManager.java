@@ -229,7 +229,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				foreGripPos,
 				foreGripHandAngle,
 				burstSize,
-				new BlasterAxialInfo(recoil_horizontal, spread_vertical),
+				new BlasterAxialInfo(recoil_horizontal, recoil_vertical),
 				new BlasterAxialInfo(spread_horizontal, spread_vertical),
 				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay),
 				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance)

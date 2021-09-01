@@ -7,7 +7,8 @@ import java.util.HashMap;
 
 public enum WorldEvent
 {
-	SLUG_FIRED((byte)0);
+	SLUG_FIRED((byte)0),
+	BLASTER_BOLT_HIT((byte)1);
 
 	public static final HashMap<Byte, WorldEvent> ID_LOOKUP = new HashMap<>();
 
