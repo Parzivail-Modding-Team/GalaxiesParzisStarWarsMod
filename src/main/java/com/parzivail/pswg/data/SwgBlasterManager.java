@@ -1,8 +1,6 @@
 package com.parzivail.pswg.data;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -18,10 +16,31 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
+	private static class EulerAngleDeserializer implements JsonDeserializer<EulerAngle>
+	{
+		@Override
+		public EulerAngle deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			var o = json.getAsJsonObject();
+			return new EulerAngle(o.get("pitch").getAsFloat(), o.get("yaw").getAsFloat(), o.get("roll").getAsFloat());
+		}
+	}
+
+	private static class Vec3dDeserializer implements JsonDeserializer<Vec3d>
+	{
+		@Override
+		public Vec3d deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			var o = json.getAsJsonObject();
+			return new Vec3d(o.get("x").getAsDouble(), o.get("y").getAsDouble(), o.get("z").getAsDouble());
+		}
+	}
+
 	private static class BlasterArchetypeAdapter extends TypeAdapter<BlasterArchetype>
 	{
 		@Override
@@ -71,6 +90,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		super(
 				new GsonBuilder()
 						.registerTypeAdapter(BlasterArchetype.class, new BlasterArchetypeAdapter())
+						.registerTypeAdapter(Vec3d.class, new Vec3dDeserializer())
+						.registerTypeAdapter(EulerAngle.class, new EulerAngleDeserializer())
 						.registerTypeAdapter(TypeToken.getParameterized(ArrayList.class, BlasterFiringMode.class).getType(), new BlasterFiringModesAdapter())
 						.create(),
 				"items/blasters"
