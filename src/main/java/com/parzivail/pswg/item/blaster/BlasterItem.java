@@ -301,6 +301,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			bt.shotTimer = bd.burstRepeatTime;
 		}
 
+		bt.timeSinceLastShot = 0;
+
 		if (!world.isClient)
 		{
 			var m = new Matrix4f();

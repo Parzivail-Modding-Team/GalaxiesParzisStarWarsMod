@@ -23,6 +23,7 @@ import com.parzivail.pswg.client.render.sky.TatooineSkyRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
+import com.parzivail.pswg.client.texture.tinted.stacked.TintedTextureProvider;
 import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
@@ -72,6 +73,7 @@ public class Client implements ClientModInitializer
 
 	public static RemoteTextureProvider remoteTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
+	public static TintedTextureProvider tintedTextureProvider;
 
 	public static ZoomInstance blasterZoomInstance;
 

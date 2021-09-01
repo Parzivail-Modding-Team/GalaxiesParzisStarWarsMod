@@ -22,6 +22,7 @@ public class BlasterTag extends TagSerializer
 
 	public int shotsRemaining;
 	public int shotTimer;
+	public int timeSinceLastShot;
 
 	public int burstTimer;
 
@@ -55,6 +56,9 @@ public class BlasterTag extends TagSerializer
 
 		if (shotTimer > 0)
 			shotTimer--;
+
+		if (timeSinceLastShot < 20)
+			timeSinceLastShot++;
 	}
 
 	public void setAimingDownSights(boolean isAimingDownSights)

@@ -15,6 +15,11 @@
 	"automaticRepeatTime": 11,
 	"burstRepeatTime": 6,
 	"burstSize": 3,
+	"muzzlePos": {
+		"x": 0,
+		"y": 0.6,
+		"z": -4.58
+	},
 	"foreGripPos": {
 		"x": 0,
 		"y": 0.357,

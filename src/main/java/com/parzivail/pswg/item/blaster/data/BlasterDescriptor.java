@@ -25,9 +25,10 @@ public class BlasterDescriptor extends TagSerializer
 	public int automaticRepeatTime;
 	public int burstRepeatTime;
 
-	// TODO: datapack
+	// TODO: datapack/archetype? (requires re-calculating first person ADS positions)
 	public float adsZoom = 5;
 
+	public Vec3d muzzlePos;
 	public Vec3d foreGripPos;
 	public EulerAngle foreGripHandAngle;
 
@@ -43,7 +44,7 @@ public class BlasterDescriptor extends TagSerializer
 		super(SLUG, tag);
 	}
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, int burstRepeatTime, Vec3d foreGripPos, EulerAngle foreGripHandAngle, int burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, int burstRepeatTime, Vec3d muzzlePos, Vec3d foreGripPos, EulerAngle foreGripHandAngle, int burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
 	{
 		super(SLUG);
 		this.id = id;
@@ -56,6 +57,7 @@ public class BlasterDescriptor extends TagSerializer
 		this.magazineSize = magazineSize;
 		this.automaticRepeatTime = automaticRepeatTime;
 		this.burstRepeatTime = burstRepeatTime;
+		this.muzzlePos = muzzlePos;
 		this.foreGripPos = foreGripPos;
 		this.foreGripHandAngle = foreGripHandAngle;
 		this.burstSize = burstSize;
@@ -82,6 +84,7 @@ public class BlasterDescriptor extends TagSerializer
 		this.magazineSize = other.magazineSize;
 		this.automaticRepeatTime = other.automaticRepeatTime;
 		this.burstRepeatTime = other.burstRepeatTime;
+		this.muzzlePos = other.muzzlePos;
 		this.foreGripPos = other.foreGripPos;
 		this.foreGripHandAngle = other.foreGripHandAngle;
 		this.burstSize = other.burstSize;

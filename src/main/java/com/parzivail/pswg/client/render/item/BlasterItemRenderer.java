@@ -9,9 +9,11 @@ import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.mixin.RenderPhaseAccessor;
+import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.math.Ease;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
@@ -37,6 +39,14 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	private static final ModelEntry FALLBACK_MODEL;
 	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
+
+	private static final Identifier ID_MUZZLE_FLASH_FORWARD = Resources.id("textures/model/blaster/effect/muzzleflash_forward_0.png");
+	private static final Identifier[] ID_MUZZLE_FLASHES = new Identifier[] {
+			Resources.id("textures/model/blaster/effect/muzzleflash_0.png"),
+			Resources.id("textures/model/blaster/effect/muzzleflash_5.png"),
+			Resources.id("textures/model/blaster/effect/muzzleflash_7.png"),
+			Resources.id("textures/model/blaster/effect/muzzleflash_9.png")
+	};
 
 	static
 	{
@@ -96,6 +106,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
 		var bounds = m.bounds();
 
+		var d = MinecraftClient.getInstance().getTickDelta();
 		var opacity = 1f;
 
 		if (renderMode == ModelTransformation.Mode.GROUND)
@@ -131,7 +142,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			//			matrices.translate(0.2f, -0.2f, -1.2f);
 
 			var z = Client.blasterZoomInstance;
-			var d = MinecraftClient.getInstance().getTickDelta();
 
 			var adsZoom = 1 / bd.adsZoom;
 			var adsLerp = 1 - (float)(z.getTransitionMode().applyZoom(1, d) - adsZoom) / (1 - adsZoom);
@@ -215,30 +225,50 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 		m.render(VertexConsumerBuffer.Instance);
 
-//		var muzzlePos = new Vec3f(0, 0.6f, 4.58f);
-//
-//		vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(Resources.id("textures/model/blaster/effect/muzzleflash_0.png")));
-//		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
-//
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - 0.5f, muzzlePos.getY() - 0.5f, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 0);
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + 0.5f, muzzlePos.getY() - 0.5f, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 0);
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + 0.5f, muzzlePos.getY() + 0.5f, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 1);
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - 0.5f, muzzlePos.getY() + 0.5f, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 1);
-//
-//		vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(Resources.id("textures/model/blaster/effect/muzzleflash_forward_0.png")));
-//		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, 0xFF00FF00, light);
-//
-//		// vertical
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - 0.5f, muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 0);
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - 0.5f, muzzlePos.getZ() + 1.8f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 0);
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + 0.5f, muzzlePos.getZ() + 1.8f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 1);
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + 0.5f, muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 1);
-//
-//		// horizontal
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - 0.5f, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 0);
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - 0.5f, muzzlePos.getY(), muzzlePos.getZ() + 1.8f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 0);
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + 0.5f, muzzlePos.getY(), muzzlePos.getZ() + 1.8f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 1);
-//		VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + 0.5f, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 1);
+		if (bd.muzzlePos != null && renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED)
+		{
+			opacity = MathHelper.clamp(1 - Ease.inCubic((bt.timeSinceLastShot + d) / 4f), 0, 1);
+
+			var frame = MathHelper.clamp(bt.timeSinceLastShot, 0, 3);
+
+			var color = ColorUtil.fromHSV(bd.boltColor, 1, 1);
+			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Add);
+			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASH_FORWARD, ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Add);
+
+			var colorId = String.valueOf((int)(bd.boltColor * 255));
+			var flash = Client.tintedTextureProvider.loadTexture("muzzleflash/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
+
+			var muzzlePos = new Vec3f((float)bd.muzzlePos.x, (float)bd.muzzlePos.y, -(float)bd.muzzlePos.z);
+
+			vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
+			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
+
+			final var flashradius = 0.65f;
+
+			VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY() - flashradius, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 0);
+			VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY() - flashradius, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 0);
+			VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY() + flashradius, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 1);
+			VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY() + flashradius, muzzlePos.getZ(), Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 1);
+
+			if (!renderMode.isFirstPerson())
+			{
+				var forwardFlash = Client.tintedTextureProvider.loadTexture("muzzleflash_forward/" + colorId, () -> ID_MUZZLE_FLASH_FORWARD, () -> tintedForwardId);
+				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
+				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
+
+				// vertical
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - flashradius, muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 0);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - flashradius, muzzlePos.getZ() - 0.2f + 2 * flashradius, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 0);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + flashradius, muzzlePos.getZ() - 0.2f + 2 * flashradius, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 1);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + flashradius, muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 1);
+
+				// horizontal
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 0);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f + 2 * flashradius, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 0);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f + 2 * flashradius, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 0, 1);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, Vec3f.POSITIVE_Z.getX(), Vec3f.POSITIVE_Z.getY(), Vec3f.POSITIVE_Z.getZ(), 1, 1);
+			}
+		}
 
 		matrices.pop();
 	}

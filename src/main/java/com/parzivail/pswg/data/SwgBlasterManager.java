@@ -103,6 +103,14 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeInt(value.automaticRepeatTime);
 		buf.writeInt(value.burstRepeatTime);
 
+		buf.writeBoolean(value.muzzlePos != null);
+		if (value.muzzlePos != null)
+		{
+			buf.writeFloat((float)value.muzzlePos.x);
+			buf.writeFloat((float)value.muzzlePos.y);
+			buf.writeFloat((float)value.muzzlePos.z);
+		}
+
 		buf.writeBoolean(value.foreGripPos != null);
 		if (value.foreGripPos != null)
 		{
@@ -152,6 +160,17 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var magazineSize = buf.readInt();
 		var automaticRepeatTime = buf.readInt();
 		var burstRepeatTime = buf.readInt();
+
+		var hasMuzzlePos = buf.readBoolean();
+		Vec3d muzzlePos = null;
+		if (hasMuzzlePos)
+		{
+			muzzlePos = new Vec3d(
+					buf.readFloat(),
+					buf.readFloat(),
+					buf.readFloat()
+			);
+		}
 
 		var hasForeGripPos = buf.readBoolean();
 		Vec3d foreGripPos = null;
@@ -206,6 +225,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				magazineSize,
 				automaticRepeatTime,
 				burstRepeatTime,
+				muzzlePos,
 				foreGripPos,
 				foreGripHandAngle,
 				burstSize,

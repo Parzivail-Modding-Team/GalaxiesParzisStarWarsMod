@@ -26,7 +26,7 @@ public class ScorchParticle extends DecalParticle
 		this.setColor(1, 1, 1);
 		this.maxAge = 200;
 		this.setSpriteForAge(spriteProvider);
-		this.collidesWithWorld = true;
+		this.collidesWithWorld = false;
 		this.velocityX = vX;
 		this.velocityY = vY;
 		this.velocityZ = vZ;
