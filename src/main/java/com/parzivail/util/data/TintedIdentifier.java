@@ -7,7 +7,8 @@ public class TintedIdentifier extends Identifier
 	public enum Mode
 	{
 		Multiply,
-		Add
+		Add,
+		Overlay
 	}
 
 	private final int tint;
