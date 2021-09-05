@@ -61,10 +61,10 @@ public class CrossPointingParticle extends AnimatedParticle
 		vertexConsumer.vertex(corners[2].getX(), corners[2].getY(), corners[2].getZ()).texture(l, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
 		vertexConsumer.vertex(corners[3].getX(), corners[3].getY(), corners[3].getZ()).texture(l, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
 
-		vertexConsumer.vertex(corners[3].getX(), corners[3].getY(), corners[3].getZ()).texture(m, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
-		vertexConsumer.vertex(corners[2].getX(), corners[2].getY(), corners[2].getZ()).texture(m, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
-		vertexConsumer.vertex(corners[1].getX(), corners[1].getY(), corners[1].getZ()).texture(l, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
-		vertexConsumer.vertex(corners[0].getX(), corners[0].getY(), corners[0].getZ()).texture(l, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
+		vertexConsumer.vertex(corners[3].getX(), corners[3].getY(), corners[3].getZ()).texture(l, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
+		vertexConsumer.vertex(corners[2].getX(), corners[2].getY(), corners[2].getZ()).texture(l, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
+		vertexConsumer.vertex(corners[1].getX(), corners[1].getY(), corners[1].getZ()).texture(m, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
+		vertexConsumer.vertex(corners[0].getX(), corners[0].getY(), corners[0].getZ()).texture(m, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
 
 		corners = new Vec3f[] {
 				new Vec3f(-1.0F, 0.0F, 1.0F),
@@ -86,9 +86,9 @@ public class CrossPointingParticle extends AnimatedParticle
 		vertexConsumer.vertex(corners[2].getX(), corners[2].getY(), corners[2].getZ()).texture(l, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
 		vertexConsumer.vertex(corners[3].getX(), corners[3].getY(), corners[3].getZ()).texture(l, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
 
-		vertexConsumer.vertex(corners[3].getX(), corners[3].getY(), corners[3].getZ()).texture(m, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
-		vertexConsumer.vertex(corners[2].getX(), corners[2].getY(), corners[2].getZ()).texture(m, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
-		vertexConsumer.vertex(corners[1].getX(), corners[1].getY(), corners[1].getZ()).texture(l, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
-		vertexConsumer.vertex(corners[0].getX(), corners[0].getY(), corners[0].getZ()).texture(l, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
+		vertexConsumer.vertex(corners[3].getX(), corners[3].getY(), corners[3].getZ()).texture(l, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
+		vertexConsumer.vertex(corners[2].getX(), corners[2].getY(), corners[2].getZ()).texture(l, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
+		vertexConsumer.vertex(corners[1].getX(), corners[1].getY(), corners[1].getZ()).texture(m, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
+		vertexConsumer.vertex(corners[0].getX(), corners[0].getY(), corners[0].getZ()).texture(m, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
 	}
 }

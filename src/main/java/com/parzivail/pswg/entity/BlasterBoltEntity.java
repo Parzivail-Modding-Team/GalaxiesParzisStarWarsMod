@@ -52,7 +52,8 @@ public class BlasterBoltEntity extends ThrownEntity
 
 		assert client.world != null;
 
-		client.world.addParticle(SwgParticles.SCORCH, pos.x + normal.x * 0.01f, pos.y + normal.y * 0.01f, pos.z + normal.z * 0.01f, normal.x, normal.y, normal.z);
+		var offset = 0.005 + 0.0005 * client.world.random.nextDouble();
+		client.world.addParticle(SwgParticles.SCORCH, pos.x + normal.x * offset, pos.y + normal.y * offset, pos.z + normal.z * offset, normal.x, normal.y, normal.z);
 
 		var reflection = normal.multiply(2 * normal.dotProduct(incident)).subtract(incident);
 
