@@ -43,30 +43,27 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
 
     check_extension = True
     
-    def writeSocket(self, fw, global_matrix, o):
-        """
-            Writes a socket to the output stream. Sockets are transformable
-            points on the model with a natural orientation.
-        """
-        
-        parent = o.parent.name if o.parent != None else ""
-        
-        fw("socket \"%s\" \"%s\" (%s,%s,%s,%s)\n" % (o.name, parent, o.matrix_local[0][:], o.matrix_local[1][:], o.matrix_local[2][:], o.matrix_local[3][:]))
+    def getSocket(self, global_matrix, o):
+        return {
+            "name": o.name,
+            "parent": o.parent.name if o.parent != None else None,
+            "transform": [list(row) for row in o.matrix_local]
+        }
 
-    def writeMesh(self, fw, global_matrix, mesh):
+    def getMesh(self, global_matrix, mesh):
         me = mesh.to_mesh()
 
         transform = mesh.matrix_local
         if (mesh.parent == None):
             transform = global_matrix @ transform
 
-        fw("mesh \"%s\" %s (%s,%s,%s,%s)\n" % (mesh.name, len(me.polygons), transform[0][:], transform[1][:], transform[2][:], transform[3][:]))
-
-        if (mesh.parent != None):
-            fw("parent \"%s\"\n" % mesh.parent.name)
-        
-        if (mesh.active_material != None):
-            fw("material \"%s\"\n" % mesh.active_material.name)
+        meshObj = {
+            "name": mesh.name,
+            "transform": [list(row) for row in transform],
+            "parent": mesh.parent.name if mesh.parent != None else None,
+            "material": mesh.active_material.name if mesh.active_material != None else None,
+            "faces": []
+        }
         
         for i, face in enumerate(me.polygons):
             for loop_index in face.loop_indices:
@@ -76,36 +73,49 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
                 v = vert.co
                 n = vert.normal
 
-                fw('v %s (%.7f, %.7f, %.7f) (%.7f, %.7f, %.7f) (%.7f, %.7f)\n' % (i, v[0], v[1], v[2], n[0], n[1], n[2], uv[0], uv[1]))
+                meshObj["faces"].append({
+                    "v": v[:],
+                    "n": n[:],
+                    "t": uv[:]
+                })
+        
+        return meshObj
 
     def execute(self, context):
+        import json
         scaleFactor = 1.0
 
         global_matrix = (Matrix.Scale(scaleFactor, 4) @
                          axis_conversion(to_forward='Z',
                                          to_up='Y',
                                          ).to_4x4())
+
+        modelObj = {
+            "version": 1,
+            "sockets": [],
+            "meshes": [],
+        }
+
+        for o in context.scene.objects:
+            name = o.name
+            transform = o.matrix_local
+
+            parentType = o.parent_type
+
+            if parentType != "OBJECT":
+                continue
+
+            parentName = o.parent.name if o.parent != None else None
+            type = o.type
+
+            if type == "EMPTY":
+                if o.empty_display_type == "ARROWS":
+                    modelObj["sockets"].append(self.getSocket(global_matrix, o))
+            elif type == "MESH":
+                modelObj["meshes"].append(self.getMesh(global_matrix, o))
         
-        with open(self.filepath, "w", encoding="utf8", newline="\n") as f:
-            fw = f.write
-
-            for o in context.scene.objects:
-                name = o.name
-                transform = o.matrix_local
-
-                parentType = o.parent_type
-
-                if parentType != "OBJECT":
-                    continue
-
-                parentName = o.parent.name if o.parent != None else None
-                type = o.type
-
-                if type == "EMPTY":
-                    if o.empty_display_type == "ARROWS":
-                        self.writeSocket(fw, global_matrix, o)
-                elif type == "MESH":
-                    self.writeMesh(fw, global_matrix, o)
+        with open(self.filepath, 'w') as f:
+            json.dump(modelObj, f)
 
         return {'FINISHED'}
 
