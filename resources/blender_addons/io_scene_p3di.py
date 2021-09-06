@@ -66,6 +66,8 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
         }
         
         for i, face in enumerate(me.polygons):
+            faceObj = []
+
             for loop_index in face.loop_indices:
                 vert = me.vertices[me.loops[loop_index].vertex_index]
                 uv = me.uv_layers.active.data[loop_index].uv
@@ -73,11 +75,13 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
                 v = vert.co
                 n = vert.normal
 
-                meshObj["faces"].append({
+                faceObj.append({
                     "v": v[:],
                     "n": n[:],
                     "t": uv[:]
                 })
+            
+            meshObj["faces"].append(faceObj)
         
         return meshObj
 
@@ -86,7 +90,7 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
         scaleFactor = 1.0
 
         global_matrix = (Matrix.Scale(scaleFactor, 4) @
-                         axis_conversion(to_forward='Z',
+                         axis_conversion(to_forward='-Z',
                                          to_up='Y',
                                          ).to_4x4())
 

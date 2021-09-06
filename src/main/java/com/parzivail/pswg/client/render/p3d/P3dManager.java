@@ -1,0 +1,40 @@
+package com.parzivail.pswg.client.render.p3d;
+
+import com.parzivail.util.binary.KeyedReloadableLoader;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.profiler.Profiler;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
+public class P3dManager extends KeyedReloadableLoader<P3dModel>
+{
+	private final Map<Identifier, P3dModel> modelData;
+
+	public P3dManager()
+	{
+		super("models", "p3d");
+		modelData = new HashMap<>();
+	}
+
+	@Override
+	public P3dModel readResource(ResourceManager resourceManager, Profiler profiler, InputStream stream) throws IOException
+	{
+		return P3dModel.read(stream);
+	}
+
+	public P3dModel get(Identifier identifier)
+	{
+		return modelData.get(identifier);
+	}
+
+	@Override
+	protected void apply(Map<Identifier, P3dModel> prepared, ResourceManager manager, Profiler profiler)
+	{
+		modelData.clear();
+		modelData.putAll(prepared);
+	}
+}
