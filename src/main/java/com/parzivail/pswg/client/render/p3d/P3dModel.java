@@ -5,6 +5,7 @@ import com.parzivail.pswg.util.PIO;
 import com.parzivail.util.binary.DataReader;
 import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -66,41 +67,49 @@ public class P3dModel
 		var meshes = new HashMap<String, P3dMesh>();
 		for (var mesIdx = 0; mesIdx < numMeshes; mesIdx++)
 		{
-			var name = DataReader.readNullTerminatedString(objStream);
+			P3dMesh mesh = readMesh(objStream);
 
-			var hasParent = objStream.readBoolean();
-
-			String parent = null;
-			if (hasParent)
-				parent = DataReader.readNullTerminatedString(objStream);
-
-			var transform = PIO.readMatrix4f(objStream);
-
-			var material = objStream.readByte();
-
-			var numFaces = objStream.readInt();
-			var faces = new P3dFace[numFaces];
-
-			for (var faceIdx = 0; faceIdx < numFaces; faceIdx++)
-			{
-				var positions = new Vec3f[4];
-				var normal = new Vec3f[4];
-				var texture = new Vec3f[4];
-
-				for (var vertIdx = 0; vertIdx < 4; vertIdx++)
-				{
-					positions[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
-					normal[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
-					texture[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), 0);
-				}
-
-				faces[faceIdx] = new P3dFace(positions, normal, texture);
-			}
-
-			meshes.put(name, new P3dMesh(name, parent, transform, material, faces));
+			meshes.put(mesh.name, mesh);
 		}
 
 		return new P3dModel(version, sockets, meshes);
+	}
+
+	@NotNull
+	private static P3dMesh readMesh(LittleEndianDataInputStream objStream) throws IOException
+	{
+		var name = DataReader.readNullTerminatedString(objStream);
+
+		var transform = PIO.readMatrix4f(objStream);
+
+		var material = objStream.readByte();
+
+		var numFaces = objStream.readInt();
+		var faces = new P3dFace[numFaces];
+
+		for (var faceIdx = 0; faceIdx < numFaces; faceIdx++)
+		{
+			var positions = new Vec3f[4];
+			var normal = new Vec3f[4];
+			var texture = new Vec3f[4];
+
+			for (var vertIdx = 0; vertIdx < 4; vertIdx++)
+			{
+				positions[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
+				normal[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
+				texture[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), 0);
+			}
+
+			faces[faceIdx] = new P3dFace(positions, normal, texture);
+		}
+
+		var numChildren = objStream.readInt();
+		var children = new P3dMesh[numChildren];
+
+		for (var childIdx = 0; childIdx < numChildren; childIdx++)
+			children[childIdx] = readMesh(objStream);
+
+		return new P3dMesh(name, transform, material, faces, children);
 	}
 
 	private static String getAcceptedVersionString()

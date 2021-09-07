@@ -21,6 +21,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class T65BXwing extends ShipEntity
@@ -31,7 +32,7 @@ public class T65BXwing extends ShipEntity
 	private static final TrackedData<Byte> CANNON_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final int CANNON_STATE_MASK = 0b00000011;
 
-	private static final RigT65B.Socket[] CANNON_ORDER = { RigT65B.Socket.CannonTopLeft, RigT65B.Socket.CannonBottomLeft, RigT65B.Socket.CannonTopRight, RigT65B.Socket.CannonBottomRight };
+	private static final String[] CANNON_ORDER = { "CannonTopLeft", "CannonBottomLeft", "CannonTopRight", "CannonBottomRight" };
 
 	@Environment(EnvType.CLIENT)
 	public TrackedAnimationValue clientWingAnim;
@@ -91,7 +92,8 @@ public class T65BXwing extends ShipEntity
 
 		var cannonState = getCannonState();
 
-		var p = CANNON_ORDER[cannonState].getWorldPosition(stack, this);
+		// TODO: update socketing
+		var p = RigT65B.INSTANCE.getWorldPosition(stack, this, CANNON_ORDER[cannonState], Vec3d.ZERO);
 
 		BlasterUtil.fireBolt(world, player, pDir, 100, 50, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
