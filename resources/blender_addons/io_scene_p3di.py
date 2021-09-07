@@ -62,7 +62,8 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
             "transform": [list(row) for row in transform],
             "parent": mesh.parent.name if mesh.parent != None else None,
             "material": mesh.active_material.name if mesh.active_material != None else None,
-            "faces": []
+            "faces": [],
+            "children": [self.getMesh(global_matrix, cm) for cm in mesh.children if cm.type == "MESH"]
         }
         
         for i, face in enumerate(me.polygons):
@@ -115,7 +116,7 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
             if type == "EMPTY":
                 if o.empty_display_type == "ARROWS":
                     modelObj["sockets"].append(self.getSocket(global_matrix, o))
-            elif type == "MESH":
+            elif type == "MESH" and o.parent == None:
                 modelObj["meshes"].append(self.getMesh(global_matrix, o))
         
         with open(self.filepath, 'w') as f:
