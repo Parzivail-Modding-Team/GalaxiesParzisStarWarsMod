@@ -82,7 +82,7 @@ public class P3dModel
 			if (hasParent)
 				parent = DataReader.readNullTerminatedString(objStream);
 
-			var transform = PIO.readMatrix4f(objStream);
+			var transform = DataReader.readMatrix4f(objStream);
 
 			sockets.put(name, new P3dSocket(name, parent, transform));
 		}
@@ -120,7 +120,7 @@ public class P3dModel
 	{
 		var name = DataReader.readNullTerminatedString(objStream);
 
-		var transform = PIO.readMatrix4f(objStream);
+		var transform = DataReader.readMatrix4f(objStream);
 
 		var material = hasVertexData ? objStream.readByte() : (byte)0;
 

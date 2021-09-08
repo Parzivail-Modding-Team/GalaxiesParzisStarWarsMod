@@ -52,7 +52,7 @@ public record PR3RFile(HashMap<String, Matrix4f> objects)
 		for (var i = 0; i < numObjects; i++)
 		{
 			var name = DataReader.readNullTerminatedString(objStream);
-			var transformation = PIO.readMatrix4f(objStream);
+			var transformation = DataReader.readMatrix4f(objStream);
 
 			objects.put(name, transformation);
 		}

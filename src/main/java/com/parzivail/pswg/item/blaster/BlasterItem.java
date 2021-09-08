@@ -14,6 +14,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.item.*;
+import com.parzivail.util.math.MathUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -306,10 +307,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		if (!world.isClient)
 		{
 			var m = new Matrix4f();
-			Matrix4fAccessUtil.loadIdentity(m);
+			m.loadIdentity();
 
-			Matrix4fAccessUtil.multiply(m, new Quaternion(0, -player.getYaw(), 0, true));
-			Matrix4fAccessUtil.multiply(m, new Quaternion(player.getPitch(), 0, 0, true));
+			m.multiply(new Quaternion(0, -player.getYaw(), 0, true));
+			m.multiply(new Quaternion(player.getPitch(), 0, 0, true));
 
 			var hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
@@ -327,10 +328,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			final var entityPitch = vS * verticalSpreadCoef;
 			final var entityYaw = hS * horizontalSpreadCoef;
 
-			Matrix4fAccessUtil.multiply(m, new Quaternion(0, entityYaw, 0, true));
-			Matrix4fAccessUtil.multiply(m, new Quaternion(entityPitch, 0, 0, true));
+			m.multiply(new Quaternion(0, entityYaw, 0, true));
+			m.multiply(new Quaternion(entityPitch, 0, 0, true));
 
-			var fromDir = Matrix4fAccessUtil.transform(com.parzivail.util.math.MathUtil.POSZ, m);
+			var fromDir = Matrix4fAccessUtil.transform(MathUtil.POSZ, m);
 
 			var range = bd.range;
 			var damage = bd.damage;
