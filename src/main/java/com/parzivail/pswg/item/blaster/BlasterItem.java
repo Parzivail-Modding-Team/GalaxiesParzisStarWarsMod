@@ -3,7 +3,6 @@ package com.parzivail.pswg.item.blaster;
 import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
@@ -15,6 +14,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.item.*;
 import com.parzivail.util.math.MathUtil;
+import com.parzivail.util.math.Matrix4fUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -331,7 +331,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			m.multiply(new Quaternion(0, entityYaw, 0, true));
 			m.multiply(new Quaternion(entityPitch, 0, 0, true));
 
-			var fromDir = Matrix4fAccessUtil.transform(MathUtil.POSZ, m);
+			var fromDir = Matrix4fUtil.transform(MathUtil.POSZ, m);
 
 			var range = bd.range;
 			var damage = bd.damage;

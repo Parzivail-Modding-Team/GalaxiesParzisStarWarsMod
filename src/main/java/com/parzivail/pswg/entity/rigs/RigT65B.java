@@ -1,11 +1,11 @@
 package com.parzivail.pswg.entity.rigs;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.Transform;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
@@ -50,7 +50,7 @@ public class RigT65B
 
 		stack.multiply(socket.transform);
 
-		var vec = Matrix4fAccessUtil.transform(Vec3d.ZERO, parent);
+		var vec = Matrix4fUtil.transform(Vec3d.ZERO, parent);
 		stack.restore();
 
 		return vec;

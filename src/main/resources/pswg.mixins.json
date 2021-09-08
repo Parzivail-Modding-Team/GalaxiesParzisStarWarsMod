@@ -12,7 +12,6 @@
 		"ItemEntityMixin",
 		"ItemStackMixin",
 		"LivingEntityMixin",
-		"Matrix4fMixin",
 		"MinecraftServerMixin",
 		"PlayerManagerMixin",
 		"ServerPlayNetworkHandlerMixin",

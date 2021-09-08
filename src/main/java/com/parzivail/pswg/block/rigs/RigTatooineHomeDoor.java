@@ -1,13 +1,13 @@
 package com.parzivail.pswg.block.rigs;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.rig.pr3r.PR3RFile;
 import com.parzivail.util.block.rotating.RotatingBlock;
 import com.parzivail.util.math.ClientMathUtil;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.Transform;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
@@ -87,7 +87,7 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 
 		transform(stack, target, part, tickDelta);
 
-		var vec = Matrix4fAccessUtil.transform(localPosition, parent);
+		var vec = Matrix4fUtil.transform(localPosition, parent);
 		stack.restore();
 
 		return vec;
