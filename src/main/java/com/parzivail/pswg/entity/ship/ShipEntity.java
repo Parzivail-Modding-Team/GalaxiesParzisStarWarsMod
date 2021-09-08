@@ -367,15 +367,15 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	//		return MathUtil.lerp(start, end, t);
 	//	}
 
-	protected void tickControlledAnim(TrackedData<TrackedAnimationValue> data, byte animLength, boolean keyInput)
+	protected void tickControlledAnim(TrackedData<Byte> data, byte animLength, boolean keyInput)
 	{
 		var anim = dataTracker.get(data);
-		anim.tick();
+		anim = TrackedAnimationValue.tick(anim);
 
 		if (getPrimaryPassenger() instanceof PlayerEntity)
 		{
-			if (keyInput && anim.isStopped())
-				anim.startToggled(animLength);
+			if (keyInput && TrackedAnimationValue.isStopped(anim))
+				anim = TrackedAnimationValue.startToggled(anim, animLength);
 		}
 
 		dataTracker.set(data, anim);

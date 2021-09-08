@@ -3,7 +3,7 @@ package com.parzivail.pswg.client.render.entity.ship;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.entity.ShipRenderer;
-import com.parzivail.pswg.client.render.p3d.P3dMesh;
+import com.parzivail.pswg.client.render.p3d.P3dObject;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
@@ -23,12 +23,9 @@ import net.minecraft.util.math.Vector4f;
 
 public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 {
-//	private final Supplier<PR3Model<T65BXwing, RigT65B.Part>> model;
-
 	public T65BXwingRenderer(EntityRendererFactory.Context ctx)
 	{
 		super(ctx);
-//		model = Suppliers.memoize(() -> new PR3Model<>(PR3File.tryLoad(Resources.id("models/ship/xwing_t65b.pr3")), RigT65B.Part.class, RigT65B.INSTANCE::transform));
 	}
 
 	@Override
@@ -39,11 +36,11 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 
 		var modelRef = Client.ResourceManagers.getP3dManager().get(Resources.id("ship/xwing_t65b_test_with_sockets"));
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
-		for (var mesh : modelRef.meshes.values())
+		for (var mesh : modelRef.rootMeshes)
 			renderMesh(matrix, entity, light, vertexConsumer, mesh, tickDelta);
 	}
 
-	private void renderMesh(MatrixStack matrix, T65BXwing entity, int light, VertexConsumer vertexConsumer, P3dMesh o, float tickDelta)
+	private void renderMesh(MatrixStack matrix, T65BXwing entity, int light, VertexConsumer vertexConsumer, P3dObject o, float tickDelta)
 	{
 		matrix.push();
 
@@ -56,7 +53,7 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 		var normalMat = entry.getNormal();
 
 		var t = new Transform();
-		RigT65B.INSTANCE.transform(t, entity, o.name, tickDelta);
+		t.multiply(RigT65B.INSTANCE.getPartTransformation(entity, o.name, tickDelta));
 		matrix.method_34425(t.value().getModel());
 
 		for (var face : o.faces)

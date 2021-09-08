@@ -2,8 +2,12 @@ package com.parzivail.pswg.client.render.p3d;
 
 import net.minecraft.util.math.Matrix4f;
 
+import java.util.ArrayList;
+
 public class P3dSocket
 {
+	public ArrayList<P3dObject> ancestry;
+
 	public final String name;
 	public final String parent;
 	public final Matrix4f transform;
@@ -13,5 +17,7 @@ public class P3dSocket
 		this.name = name;
 		this.parent = parent;
 		this.transform = transform;
+
+		ancestry = new ArrayList<>();
 	}
 }

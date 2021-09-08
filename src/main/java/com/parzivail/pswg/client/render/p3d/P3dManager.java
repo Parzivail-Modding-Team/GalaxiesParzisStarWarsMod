@@ -23,7 +23,8 @@ public class P3dManager extends KeyedReloadableLoader<P3dModel>
 	@Override
 	public P3dModel readResource(ResourceManager resourceManager, Profiler profiler, InputStream stream) throws IOException
 	{
-		return P3dModel.read(stream);
+		// All client-read models should have vertex data
+		return P3dModel.read(stream, true);
 	}
 
 	public P3dModel get(Identifier identifier)
