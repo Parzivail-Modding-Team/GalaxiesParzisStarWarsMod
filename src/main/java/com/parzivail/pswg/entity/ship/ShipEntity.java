@@ -415,7 +415,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 	public void setRotation(Quaternion q)
 	{
-		QuatUtil.normalize(q);
+		q.normalize();
 		getDataTracker().set(ROTATION, q);
 
 		QuatUtil.updateEulerRotation(this, q);

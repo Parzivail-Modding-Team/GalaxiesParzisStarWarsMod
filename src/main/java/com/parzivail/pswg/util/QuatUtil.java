@@ -1,6 +1,5 @@
 package com.parzivail.pswg.util;
 
-import com.parzivail.pswg.access.IQuaternionAccess;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.entity.Entity;
@@ -39,7 +38,6 @@ public class QuatUtil
 		return createFromAxisAngle(rotAxis, rotAngle);
 	}
 
-	// just in case you need that function also
 	public static Quaternion createFromAxisAngle(Vec3d axis, double angle)
 	{
 		var halfAngle = angle / 2;
@@ -49,14 +47,11 @@ public class QuatUtil
 
 	public static Vec3d rotate(Vec3d self, Quaternion q)
 	{
-		// Extract the vector part of the quaternion
 		var u = new Vec3d(q.getX(), q.getY(), q.getZ());
-
-		// Extract the scalar part of the quaternion
 		var s = q.getW();
-
-		// Do the math
-		return u.multiply(2.0f * u.dotProduct(self)).add(self.multiply(s * s - u.dotProduct(u))).add(u.crossProduct(self).multiply(2.0f * s));
+		return u.multiply(2.0f * u.dotProduct(self))
+		        .add(self.multiply(s * s - u.dotProduct(u)))
+		        .add(u.crossProduct(self).multiply(2.0f * s));
 	}
 
 	public static void putQuaternion(NbtCompound tag, Quaternion q)
@@ -74,7 +69,7 @@ public class QuatUtil
 
 	public static void rotateTowards(Quaternion self, Vec3d orientation, float speed, Matrix4f mat, VertexConsumer debugConsumer)
 	{
-		normalize(self);
+		self.normalize();
 		var vec2 = rotate(orientation, self);
 		var cross = orientation.crossProduct(vec2).multiply(-1.0);
 		var axis = cross.normalize();
@@ -92,7 +87,7 @@ public class QuatUtil
 		}
 		var other = new Quaternion(new Vec3f(axis), speed * f1, false);
 		other.hamiltonProduct(self);
-		set(self, other);
+		self.set(other.getX(), other.getY(), other.getZ(), other.getW());
 	}
 
 	public static Quaternion invertCopy(Quaternion q)
@@ -117,21 +112,7 @@ public class QuatUtil
 		return rotate(v, c);
 	}
 
-	public static void normalize(Quaternion self)
-	{
-		var f = self.getX() * self.getX() + self.getY() * self.getY() + self.getZ() * self.getZ() + self.getW() * self.getW();
-		if (f > 1.0E-6F)
-		{
-			var g = (float)MathHelper.fastInverseSqrt((double)f);
-			scale(self, g);
-		}
-		else
-		{
-			scale(self, 0f);
-		}
-	}
-
-	public static float dot_product(Quaternion q1, Quaternion q2)
+	public static float dot(Quaternion q1, Quaternion q2)
 	{
 		return q1.getW() * q2.getW() + q1.getX() * q2.getX() + q1.getY() * q2.getY() + q1.getZ() * q2.getZ();
 	}
@@ -140,11 +121,11 @@ public class QuatUtil
 	{
 		// Only unit quaternions are valid rotations.
 		// Normalize to avoid undefined behavior.
-		normalize(start);
-		normalize(end);
+		start.normalize();
+		end.normalize();
 
 		// Compute the cosine of the angle between the two vectors.
-		double dot = dot_product(start, end);
+		double dot = dot(start, end);
 
 		// If the dot product is negative, slerp won't take
 		// the shorter path. Note that end and -end are equivalent when
@@ -152,7 +133,7 @@ public class QuatUtil
 		// reversing one quaternion.
 		if (dot < 0.0f)
 		{
-			scale(end, -1);
+			end.scale(-1);
 			dot = -dot;
 		}
 
@@ -169,7 +150,7 @@ public class QuatUtil
 			var d = f * start.getZ() + t * end.getZ();
 
 			var result = new Quaternion(b, c, d, a);
-			normalize(result);
+			result.normalize();
 			return result;
 		}
 
@@ -188,13 +169,8 @@ public class QuatUtil
 		var d = (float)(f1 * start.getZ() + f2 * end.getZ());
 
 		var result = new Quaternion(b, c, d, a);
-		normalize(result);
+		result.normalize();
 		return result;
-	}
-
-	public static void set(Quaternion self, float x, float y, float z, float w)
-	{
-		IQuaternionAccess.from(self).set0(x, y, z, w);
 	}
 
 	public static Quaternion getRotationTowards(Vec3d from, Vec3d to)
@@ -202,25 +178,15 @@ public class QuatUtil
 		var q = new Quaternion(Quaternion.IDENTITY);
 		var cross = from.crossProduct(to);
 		var w = (float)(Math.sqrt(from.lengthSquared() * to.lengthSquared()) + from.dotProduct(to));
-		set(q, w, (float)cross.x, (float)cross.y, (float)cross.z);
-		normalize(q);
+		q.set(w, (float)cross.x, (float)cross.y, (float)cross.z);
+		q.normalize();
 		return q;
-	}
-
-	public static void set(Quaternion self, Quaternion other)
-	{
-		set(self, other.getW(), other.getX(), other.getY(), other.getZ());
 	}
 
 	public static void invert(Quaternion self)
 	{
 		var l = self.getW() * self.getW() + self.getX() * self.getX() + self.getY() * self.getY() + self.getZ() * self.getZ();
-		set(self, self.getW() / l, -self.getX() / l, -self.getY() / l, -self.getZ() / l);
-	}
-
-	public static void scale(Quaternion self, float factor)
-	{
-		set(self, self.getX() * factor, self.getY() * factor, self.getZ() * factor, self.getW() * factor);
+		self.set(self.getW() / l, -self.getX() / l, -self.getY() / l, -self.getZ() / l);
 	}
 
 	public static void updateEulerRotation(Entity entity, Quaternion rotation)

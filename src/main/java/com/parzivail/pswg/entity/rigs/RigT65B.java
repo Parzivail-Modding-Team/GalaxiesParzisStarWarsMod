@@ -63,16 +63,12 @@ public class RigT65B
 
 		if (part.startsWith("Wing"))
 		{
-			var timer = Math.abs(wingTimer);
-
-			float wingAngle;
-
-			timer = Ease.inCubic(timer / 20);
+			var timer = Ease.inCubic(Math.abs(wingTimer) / 20);
 
 			if (wingsOpening)
-				wingAngle = 13 * (1 - timer);
-			else
-				wingAngle = 13 * timer;
+				timer = 1 - timer;
+
+			var wingAngle = 13 * timer;
 
 			switch (part)
 			{
@@ -83,14 +79,12 @@ public class RigT65B
 		}
 		else if (part.equals("Cockpit"))
 		{
-			var timer = Math.abs(cockpitTimer);
-
-			float cockpitAngle;
+			var timer = Ease.inCubic(Math.abs(cockpitTimer) / 20);
 
 			if (cockpitOpening)
-				cockpitAngle = 50 * (20 - timer) / 20;
-			else
-				cockpitAngle = 50 * timer / 20;
+				timer = 1 - timer;
+
+			var cockpitAngle = 50 * timer;
 
 			matrix4f.multiply(new Quaternion(cockpitAngle, 0, 0, true));
 		}
