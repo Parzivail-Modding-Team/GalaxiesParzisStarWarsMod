@@ -1,6 +1,5 @@
-package com.parzivail.pswg.util;
+package com.parzivail.util.math;
 
-import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;

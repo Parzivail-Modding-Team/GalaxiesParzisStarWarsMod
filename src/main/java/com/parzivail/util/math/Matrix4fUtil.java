@@ -10,7 +10,8 @@ public class Matrix4fUtil
 	private static final float[] _matrixDataBuffer = new float[16];
 	private static final FloatBuffer _matrixBuffer;
 
-	static {
+	static
+	{
 		_matrixBuffer = FloatBuffer.wrap(_matrixDataBuffer);
 	}
 

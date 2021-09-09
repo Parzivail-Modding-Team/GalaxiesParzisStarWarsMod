@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.render.camera;
 
 import com.parzivail.pswg.entity.ship.ShipEntity;
-import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.math.MathUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.util.math.Quaternion;

@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.render.camera;
 
 import com.parzivail.pswg.entity.ship.ShipEntity;
-import com.parzivail.pswg.util.QuatUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;

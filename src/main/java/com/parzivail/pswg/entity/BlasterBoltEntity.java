@@ -3,12 +3,8 @@ package com.parzivail.pswg.entity;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.pswg.container.SwgParticles;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -16,14 +12,10 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.particle.BlockStateParticleEffect;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -42,44 +34,9 @@ public class BlasterBoltEntity extends ThrownEntity
 		super(type, owner, world);
 	}
 
-	public static void handleBoltHit(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	protected boolean shouldCreateScorch()
 	{
-		var pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-		var incident = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-		var normal = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-
-		var blockPos = new BlockPos(pos.subtract(normal.multiply(0.1f)));
-
-		assert client.world != null;
-
-		var offset = 0.005 + 0.0005 * client.world.random.nextDouble();
-		client.world.addParticle(SwgParticles.SCORCH, pos.x + normal.x * offset, pos.y + normal.y * offset, pos.z + normal.z * offset, normal.x, normal.y, normal.z);
-
-		var reflection = normal.multiply(2 * normal.dotProduct(incident)).subtract(incident);
-
-		reflection = reflection.multiply(-1);
-
-		for (var i = 0; i < 16; i++)
-		{
-			var vx = client.world.random.nextGaussian() * 0.03;
-			var vy = client.world.random.nextGaussian() * 0.03;
-			var vz = client.world.random.nextGaussian() * 0.03;
-
-			var sparkVelocity = reflection.multiply(0.3f * (client.world.random.nextDouble() * 0.5 + 0.5));
-			client.world.addParticle(SwgParticles.SPARK, pos.x, pos.y, pos.z, sparkVelocity.x + vx, sparkVelocity.y + vy, sparkVelocity.z + vz);
-
-			if (i % 3 == 0)
-			{
-				var debrisVelocity = reflection.multiply(0.15f * (client.world.random.nextDouble() * 0.5 + 0.5));
-				client.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, client.world.getBlockState(blockPos)), pos.x, pos.y, pos.z, debrisVelocity.x + vx, debrisVelocity.y + vy, debrisVelocity.z + vz);
-			}
-
-			if (i % 2 == 0)
-			{
-				var smokeVelocity = reflection.multiply(0.08f * (client.world.random.nextDouble() * 0.5 + 0.5));
-				client.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, smokeVelocity.x + vx, smokeVelocity.y + vy, smokeVelocity.z + vz);
-			}
-		}
+		return true;
 	}
 
 	public void setRange(float range)
@@ -165,7 +122,7 @@ public class BlasterBoltEntity extends ThrownEntity
 	{
 		super.onCollision(hitResult);
 
-		if (!this.world.isClient)
+		if (!this.world.isClient && shouldCreateScorch())
 		{
 			if (hitResult.getType() == HitResult.Type.BLOCK)
 			{

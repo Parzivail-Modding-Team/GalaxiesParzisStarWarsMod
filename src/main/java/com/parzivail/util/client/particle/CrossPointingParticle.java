@@ -1,6 +1,6 @@
 package com.parzivail.util.client.particle;
 
-import com.parzivail.pswg.util.QuatUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.AnimatedParticle;
