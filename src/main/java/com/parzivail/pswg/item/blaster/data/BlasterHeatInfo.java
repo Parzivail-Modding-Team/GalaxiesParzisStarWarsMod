@@ -5,13 +5,14 @@ import net.minecraft.nbt.NbtCompound;
 public class BlasterHeatInfo
 {
 	public int capacity;
-	public int perRound;
-	public int drainSpeed;
-	public int overheatPenalty;
-	public int overheatDrainSpeed;
-	public int passiveCooldownDelay;
+	public byte perRound;
+	public byte drainSpeed;
+	public byte overheatPenalty;
+	public byte overheatDrainSpeed;
+	public byte passiveCooldownDelay;
+	public byte overchargeBonus;
 
-	public BlasterHeatInfo(int capacity, int perRound, int drainSpeed, int overheatPenalty, int overheatDrainSpeed, int passiveCooldownDelay)
+	public BlasterHeatInfo(int capacity, byte perRound, byte drainSpeed, byte overheatPenalty, byte overheatDrainSpeed, byte passiveCooldownDelay, byte overchargeBonus)
 	{
 		this.capacity = capacity;
 		this.perRound = perRound;
@@ -19,6 +20,7 @@ public class BlasterHeatInfo
 		this.overheatPenalty = overheatPenalty;
 		this.overheatDrainSpeed = overheatDrainSpeed;
 		this.passiveCooldownDelay = passiveCooldownDelay;
+		this.overchargeBonus = overchargeBonus;
 	}
 
 	public static BlasterHeatInfo fromTag(NbtCompound compoundTag, String s)
@@ -27,11 +29,12 @@ public class BlasterHeatInfo
 
 		return new BlasterHeatInfo(
 				tag.getInt("capacity"),
-				tag.getInt("perRound"),
-				tag.getInt("drainSpeed"),
-				tag.getInt("overheatPenalty"),
-				tag.getInt("overheatDrainSpeed"),
-				tag.getInt("passiveCooldownDelay")
+				tag.getByte("perRound"),
+				tag.getByte("drainSpeed"),
+				tag.getByte("overheatPenalty"),
+				tag.getByte("overheatDrainSpeed"),
+				tag.getByte("passiveCooldownDelay"),
+				tag.getByte("overchargeBonus")
 		);
 	}
 
@@ -40,11 +43,12 @@ public class BlasterHeatInfo
 		var tag = new NbtCompound();
 
 		tag.putInt("capacity", data.capacity);
-		tag.putInt("perRound", data.perRound);
-		tag.putInt("drainSpeed", data.perRound);
-		tag.putInt("overheatPenalty", data.overheatPenalty);
-		tag.putInt("overheatDrainSpeed", data.overheatPenalty);
-		tag.putInt("passiveCooldownDelay", data.passiveCooldownDelay);
+		tag.putByte("perRound", data.perRound);
+		tag.putByte("drainSpeed", data.perRound);
+		tag.putByte("overheatPenalty", data.overheatPenalty);
+		tag.putByte("overheatDrainSpeed", data.overheatPenalty);
+		tag.putByte("passiveCooldownDelay", data.passiveCooldownDelay);
+		tag.putByte("overchargeBonus", data.overchargeBonus);
 
 		compoundTag.put(s, tag);
 	}

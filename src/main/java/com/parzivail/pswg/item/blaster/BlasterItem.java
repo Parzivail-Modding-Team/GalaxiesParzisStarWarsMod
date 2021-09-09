@@ -129,7 +129,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			if (bt.isCooling())
 				return;
 
-			bt.coolingTimer = bt.heat;
+			bt.ventingHeat = bt.heat;
 			bt.coolingMode = BlasterTag.COOLING_MODE_FORCED_BYPASS;
 			bt.canBypassCooling = false;
 			bt.heat = 0;
@@ -169,7 +169,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		var bd = getBlasterDescriptor(world, stack);
 
 		if (bt.isCooling())
-			return MathHelper.clamp((bt.coolingTimer - bd.heat.overheatDrainSpeed * tickDelta) / bd.heat.capacity, 0, 1);
+			return MathHelper.clamp((bt.ventingHeat - bd.heat.overheatDrainSpeed * tickDelta) / bd.heat.capacity, 0, 1);
 
 		var heatDelta = 0f;
 
@@ -189,7 +189,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		var automatic = bd.firingModes.contains(BlasterFiringMode.AUTOMATIC) && bt.getFiringMode() == BlasterFiringMode.AUTOMATIC;
 		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
 
-		return automatic || (burst && bt.burstTimer > 0);
+		return automatic || (burst && bt.burstCounter > 0);
 	}
 
 	@Override
@@ -215,7 +215,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 			var profile = bd.cooling;
 
-			final var cooldownTime = bt.coolingTimer / (float)bd.heat.capacity;
+			final var cooldownTime = bt.ventingHeat / (float)bd.heat.capacity;
 
 			final var primaryBypassStart = profile.primaryBypassTime - profile.primaryBypassTolerance;
 			final var primaryBypassEnd = profile.primaryBypassTime + profile.primaryBypassTolerance;
@@ -227,7 +227,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			if (profile.primaryBypassTolerance > 0 && cooldownTime >= primaryBypassStart && cooldownTime <= primaryBypassEnd)
 			{
 				// TODO: primary bypass sound
-				bt.coolingTimer = 0;
+				bt.ventingHeat = 0;
 				bt.coolingMode = BlasterTag.COOLING_MODE_NONE;
 
 				result = TypedActionResult.success(stack);
@@ -235,8 +235,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			else if (profile.secondaryBypassTolerance > 0 && cooldownTime >= secondaryBypassStart && cooldownTime <= secondaryBypassEnd)
 			{
 				// TODO: secondary bypass sound
-				bt.coolingTimer = 0;
+				bt.ventingHeat = 0;
 				bt.coolingMode = BlasterTag.COOLING_MODE_NONE;
+
+				bt.overchargeTimer = bd.heat.overchargeBonus;
 
 				result = TypedActionResult.success(stack);
 			}
@@ -278,13 +280,15 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		}
 
 		bt.passiveCooldownTimer = bd.heat.passiveCooldownDelay;
-		bt.heat += bd.heat.perRound;
 		bt.shotsRemaining--;
+
+		if (bt.overchargeTimer == 0)
+			bt.heat += bd.heat.perRound;
 
 		if (bt.heat > bd.heat.capacity)
 		{
 			// TODO: overheat sound
-			bt.coolingTimer = bd.heat.capacity + bd.heat.overheatPenalty;
+			bt.ventingHeat = bd.heat.capacity + bd.heat.overheatPenalty;
 			bt.coolingMode = BlasterTag.COOLING_MODE_OVERHEAT;
 			bt.canBypassCooling = true;
 			bt.heat = 0;
@@ -294,11 +298,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		if (burst)
 		{
-			if (bt.burstTimer == 0)
-				bt.burstTimer = bd.burstSize - 1;
-			else
-				bt.burstTimer--;
+			if (bt.burstCounter == 0)
+				bt.burstCounter = bd.burstSize;
 
+			bt.burstCounter--;
 			bt.shotTimer = bd.burstRepeatTime;
 		}
 
@@ -340,36 +343,34 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 			switch (bt.getFiringMode())
 			{
-				case SEMI_AUTOMATIC:
-				case BURST:
-				case AUTOMATIC:
+				case SEMI_AUTOMATIC, BURST, AUTOMATIC -> {
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
 						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 4.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 						entity.setHue(bd.boltColor);
 					});
-					break;
-				case STUN:
+				}
+				case STUN -> {
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, entity -> {
 						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 					});
 					shouldRecoil = false;
-					break;
-				case SLUGTHROWER:
+				}
+				case SLUGTHROWER -> {
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireSlug(world, player, fromDir, range, damage);
-					break;
-				case ION:
+				}
+				case ION -> {
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireIon(world, player, range, entity -> {
 						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 4.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 						entity.setHue(bd.boltColor);
 					});
-					break;
+				}
 			}
 
 			if (shouldRecoil)
@@ -467,19 +468,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	{
 		var bd = getBlasterDescriptor(world, stack);
 
-		BlasterTag.mutate(stack, blasterTag -> {
-			if (blasterTag.coolingTimer > 0)
-			{
-				blasterTag.coolingTimer -= bd.heat.overheatDrainSpeed;
-				if (blasterTag.coolingTimer == 0)
-					blasterTag.coolingMode = BlasterTag.COOLING_MODE_NONE;
-			}
-
-			if (blasterTag.heat > 0 && blasterTag.passiveCooldownTimer == 0)
-				blasterTag.heat -= bd.heat.drainSpeed;
-
-			blasterTag.tick();
-		});
+		BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
 	}
 
 	@Override

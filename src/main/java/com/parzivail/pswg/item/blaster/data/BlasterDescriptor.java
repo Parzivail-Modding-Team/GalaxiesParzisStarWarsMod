@@ -22,8 +22,8 @@ public class BlasterDescriptor extends TagSerializer
 	public float boltColor;
 	public int magazineSize;
 
-	public int automaticRepeatTime;
-	public int burstRepeatTime;
+	public byte automaticRepeatTime;
+	public byte burstRepeatTime;
 
 	// TODO: datapack/archetype? (requires re-calculating first person ADS positions)
 	public float adsZoom = 5;
@@ -32,7 +32,7 @@ public class BlasterDescriptor extends TagSerializer
 	public Vec3d foreGripPos;
 	public EulerAngle foreGripHandAngle;
 
-	public int burstSize;
+	public byte burstSize;
 
 	public BlasterAxialInfo recoil;
 	public BlasterAxialInfo spread;
@@ -44,7 +44,7 @@ public class BlasterDescriptor extends TagSerializer
 		super(SLUG, tag);
 	}
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, int burstRepeatTime, Vec3d muzzlePos, Vec3d foreGripPos, EulerAngle foreGripHandAngle, int burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, byte automaticRepeatTime, byte burstRepeatTime, Vec3d muzzlePos, Vec3d foreGripPos, EulerAngle foreGripHandAngle, byte burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
 	{
 		super(SLUG);
 		this.id = id;

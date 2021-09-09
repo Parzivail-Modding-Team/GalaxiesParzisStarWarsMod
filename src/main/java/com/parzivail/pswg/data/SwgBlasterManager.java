@@ -121,8 +121,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.weight);
 		buf.writeFloat(value.boltColor);
 		buf.writeInt(value.magazineSize);
-		buf.writeInt(value.automaticRepeatTime);
-		buf.writeInt(value.burstRepeatTime);
+		buf.writeByte(value.automaticRepeatTime);
+		buf.writeByte(value.burstRepeatTime);
 
 		buf.writeBoolean(value.muzzlePos != null);
 		if (value.muzzlePos != null)
@@ -148,7 +148,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 			buf.writeFloat(value.foreGripHandAngle.getRoll());
 		}
 
-		buf.writeInt(value.burstSize);
+		buf.writeByte(value.burstSize);
 
 		buf.writeFloat(value.recoil.horizontal);
 		buf.writeFloat(value.recoil.vertical);
@@ -157,11 +157,12 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.spread.vertical);
 
 		buf.writeInt(value.heat.capacity);
-		buf.writeInt(value.heat.perRound);
-		buf.writeInt(value.heat.drainSpeed);
-		buf.writeInt(value.heat.overheatPenalty);
-		buf.writeInt(value.heat.overheatDrainSpeed);
-		buf.writeInt(value.heat.passiveCooldownDelay);
+		buf.writeByte(value.heat.perRound);
+		buf.writeByte(value.heat.drainSpeed);
+		buf.writeByte(value.heat.overheatPenalty);
+		buf.writeByte(value.heat.overheatDrainSpeed);
+		buf.writeByte(value.heat.passiveCooldownDelay);
+		buf.writeByte(value.heat.overchargeBonus);
 
 		buf.writeFloat(value.cooling.primaryBypassTime);
 		buf.writeFloat(value.cooling.primaryBypassTolerance);
@@ -179,8 +180,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var weight = buf.readFloat();
 		var boltColor = buf.readFloat();
 		var magazineSize = buf.readInt();
-		var automaticRepeatTime = buf.readInt();
-		var burstRepeatTime = buf.readInt();
+		var automaticRepeatTime = buf.readByte();
+		var burstRepeatTime = buf.readByte();
 
 		var hasMuzzlePos = buf.readBoolean();
 		Vec3d muzzlePos = null;
@@ -215,7 +216,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 			);
 		}
 
-		var burstSize = buf.readInt();
+		var burstSize = buf.readByte();
 
 		var recoil_horizontal = buf.readFloat();
 		var recoil_vertical = buf.readFloat();
@@ -224,11 +225,12 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var spread_vertical = buf.readFloat();
 
 		var heat_capacity = buf.readInt();
-		var heat_perRound = buf.readInt();
-		var heat_drainSpeed = buf.readInt();
-		var heat_cooldownDelay = buf.readInt();
-		var heat_overheatDrainSpeed = buf.readInt();
-		var heat_passiveCooldownDelay = buf.readInt();
+		var heat_perRound = buf.readByte();
+		var heat_drainSpeed = buf.readByte();
+		var heat_cooldownDelay = buf.readByte();
+		var heat_overheatDrainSpeed = buf.readByte();
+		var heat_passiveCooldownDelay = buf.readByte();
+		var heat_overchargeBonus = buf.readByte();
 
 		var cooling_primaryBypassTime = buf.readFloat();
 		var cooling_primaryBypassTolerance = buf.readFloat();
@@ -252,7 +254,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				burstSize,
 				new BlasterAxialInfo(recoil_horizontal, recoil_vertical),
 				new BlasterAxialInfo(spread_horizontal, spread_vertical),
-				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay),
+				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay, heat_overchargeBonus),
 				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance)
 		);
 	}
