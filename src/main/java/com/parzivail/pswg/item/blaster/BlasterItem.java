@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
@@ -33,10 +34,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
-import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.*;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -81,7 +79,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		if (!world.isClient)
 			BlasterTag.mutate(stack, BlasterTag::toggleAds);
 
-		return TypedActionResult.fail(stack);
+		player.setCurrentHand(hand);
+		return TypedActionResult.pass(stack);
 	}
 
 	@Override
@@ -190,6 +189,26 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
 
 		return automatic || (burst && bt.burstCounter > 0);
+	}
+
+	@Override
+	public int getMaxUseTime(ItemStack stack)
+	{
+		return 72000;
+	}
+
+	public UseAction getUseAction(ItemStack stack)
+	{
+		return UseAction.NONE;
+	}
+
+	@Override
+	public void onStoppedUsing(ItemStack stack, World world, LivingEntity user, int remainingUseTicks)
+	{
+		var bt = new BlasterTag(stack.getOrCreateNbt());
+
+		if (!world.isClient && user.getItemUseTime() > 3 && bt.isAimingDownSights)
+			BlasterTag.mutate(stack, BlasterTag::toggleAds);
 	}
 
 	@Override
