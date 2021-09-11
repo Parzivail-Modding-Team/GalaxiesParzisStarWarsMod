@@ -266,6 +266,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		if (version != 1)
 			throw new IllegalArgumentException("Can only parse version 1 blaster descriptors!");
 
-		return new BlasterDescriptor(identifier, GSON.fromJson(jsonObject, BlasterDescriptor.class));
+		var value = GSON.fromJson(jsonObject, BlasterDescriptor.class);
+		value.id = identifier;
+		return value;
 	}
 }
