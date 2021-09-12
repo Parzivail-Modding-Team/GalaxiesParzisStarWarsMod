@@ -92,15 +92,22 @@ public class StackedTexture extends ResourceTexture
 
 		var nativeImages = new NativeImage[textures.length];
 		var tints = new int[textures.length];
+		var tintModes = new TintedIdentifier.Mode[textures.length];
 
 		for (var i = 0; i < textures.length; i++)
 		{
 			var textureId = textures[i];
 
 			if (textureId instanceof TintedIdentifier ti)
+			{
 				tints[i] = ti.getTint();
+				tintModes[i] = ti.getTintMode();
+			}
 			else
+			{
 				tints[i] = 0xFFFFFF;
+				tintModes[i] = TintedIdentifier.Mode.Multiply;
+			}
 
 			var texture = textureManager.getTexture(textureId);
 
@@ -134,7 +141,7 @@ public class StackedTexture extends ResourceTexture
 			for (var x = 0; x < width; x++)
 			{
 				for (var y = 0; y < height; y++)
-					base.setPixelColor(x, y, ColorUtil.blendColorsOnSrcAlpha(base.getPixelColor(x, y), layerImage.getPixelColor(x, y), tints[i]));
+					base.setPixelColor(x, y, ColorUtil.blendColorsOnSrcAlpha(base.getPixelColor(x, y), layerImage.getPixelColor(x, y), tints[i], tintModes[i]));
 			}
 		}
 

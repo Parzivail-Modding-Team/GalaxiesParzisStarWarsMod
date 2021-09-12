@@ -9,7 +9,7 @@ public class SwgParticles
 {
 	public static final PParticle SLUG_TRAIL = register(Resources.id("slug_trail"), true);
 	public static final PParticle SPARK = register(Resources.id("spark"), false);
-	public static final PParticle SCORCH = register(Resources.id("scorch"), false);
+	public static final PParticle SCORCH = register(Resources.id("scorch"), true);
 
 	private static PParticle register(Identifier name, boolean alwaysShow)
 	{

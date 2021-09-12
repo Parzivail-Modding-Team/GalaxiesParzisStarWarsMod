@@ -65,7 +65,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 			if (bt.isCooling() && (bt.coolingMode == BlasterTag.COOLING_MODE_OVERHEAT || bt.coolingMode == BlasterTag.COOLING_MODE_PENALTY_BYPASS))
 			{
-				var cooldownTimer = (bt.coolingTimer - bd.heat.overheatDrainSpeed * client.getTickDelta()) / (maxHeat + bd.heat.overheatPenalty);
+				var cooldownTimer = (bt.ventingHeat - bd.heat.overheatDrainSpeed * client.getTickDelta()) / (maxHeat + bd.heat.overheatPenalty);
 
 				cooldownTimer = MathHelper.clamp(cooldownTimer, 0, 0.98f);
 
@@ -98,7 +98,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 					if (bt.passiveCooldownTimer == 0)
 						deltaHeat = bd.heat.overheatDrainSpeed * client.getTickDelta();
 
-					heatPercentage = (bt.coolingTimer - deltaHeat) / maxHeat;
+					heatPercentage = (bt.ventingHeat - deltaHeat) / maxHeat;
 				}
 				else
 				{

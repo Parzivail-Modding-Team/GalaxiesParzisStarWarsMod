@@ -21,6 +21,8 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -73,15 +75,15 @@ public class BlasterUtil
 		world.spawnEntity(bolt);
 	}
 
-	public static void handleSlugFired(MinecraftClient minecraftClient, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf packetByteBuf, PacketSender packetSender)
+	public static void handleSlugFired(MinecraftClient client, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf buf, PacketSender packetSender)
 	{
-		var sx = packetByteBuf.readDouble();
-		var sy = packetByteBuf.readDouble();
-		var sz = packetByteBuf.readDouble();
-		var vx = packetByteBuf.readDouble();
-		var vy = packetByteBuf.readDouble();
-		var vz = packetByteBuf.readDouble();
-		var distance = packetByteBuf.readDouble();
+		var sx = buf.readDouble();
+		var sy = buf.readDouble();
+		var sz = buf.readDouble();
+		var vx = buf.readDouble();
+		var vy = buf.readDouble();
+		var vz = buf.readDouble();
+		var distance = buf.readDouble();
 
 		var start = new Vec3d(sx, sy, sz);
 		var fromDir = new Vec3d(vx, vy, vz);
@@ -92,7 +94,17 @@ public class BlasterUtil
 		for (var d = 0; d < distance; d++)
 		{
 			var vec = start.add(fromDir.multiply(d));
-			minecraftClient.world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, fromDir.x, fromDir.y, fromDir.z);
+			client.world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, fromDir.x, fromDir.y, fromDir.z);
+		}
+
+		var shouldScorch = buf.readBoolean();
+
+		if (shouldScorch)
+		{
+			var pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+			var normal = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+
+			createScorchParticles(client, pos, fromDir, normal, false);
 		}
 	}
 
@@ -133,6 +145,21 @@ public class BlasterUtil
 		passedData.writeDouble(fromDir.y);
 		passedData.writeDouble(fromDir.z);
 		passedData.writeDouble(distance);
+		passedData.writeBoolean(blockHit.getType() == HitResult.Type.BLOCK);
+
+		if (blockHit.getType() == HitResult.Type.BLOCK)
+		{
+			var normal = new Vec3d(blockHit.getSide().getUnitVector());
+
+			var pos = blockHit.getPos();
+
+			passedData.writeDouble(pos.x);
+			passedData.writeDouble(pos.y);
+			passedData.writeDouble(pos.z);
+			passedData.writeDouble(normal.x);
+			passedData.writeDouble(normal.y);
+			passedData.writeDouble(normal.z);
+		}
 
 		for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, end))
 			ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PacketWorldEvent, passedData);
@@ -160,6 +187,52 @@ public class BlasterUtil
 				le.addStatusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 7 * 20, 0, true, false), player);
 				le.addStatusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 4 * 20, 0, true, false), player);
 				le.addStatusEffect(new StatusEffectInstance(StatusEffects.WEAKNESS, 6 * 20, 1, true, false), player);
+			}
+		}
+	}
+
+	public static void handleBoltHit(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
+	{
+		var pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+		var incident = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+		var normal = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+
+		createScorchParticles(client, pos, incident, normal, true);
+	}
+
+	private static void createScorchParticles(MinecraftClient client, Vec3d pos, Vec3d incident, Vec3d normal, boolean energyScorch)
+	{
+		var blockPos = new BlockPos(pos.subtract(normal.multiply(0.1f)));
+
+		assert client.world != null;
+
+		var offset = 0.005 + 0.0005 * client.world.random.nextDouble();
+		var heatEncodedNormal = normal.multiply(energyScorch ? 1 : 0.3f);
+		client.world.addParticle(SwgParticles.SCORCH, pos.x + normal.x * offset, pos.y + normal.y * offset, pos.z + normal.z * offset, heatEncodedNormal.x, heatEncodedNormal.y, heatEncodedNormal.z);
+
+		var reflection = normal.multiply(2 * normal.dotProduct(incident)).subtract(incident);
+
+		reflection = reflection.multiply(-1);
+
+		for (var i = 0; i < 16; i++)
+		{
+			var vx = client.world.random.nextGaussian() * 0.03;
+			var vy = client.world.random.nextGaussian() * 0.03;
+			var vz = client.world.random.nextGaussian() * 0.03;
+
+			var sparkVelocity = reflection.multiply(0.3f * (client.world.random.nextDouble() * 0.5 + 0.5));
+			client.world.addParticle(SwgParticles.SPARK, pos.x, pos.y, pos.z, sparkVelocity.x + vx, sparkVelocity.y + vy, sparkVelocity.z + vz);
+
+			if (i % 3 == 0)
+			{
+				var debrisVelocity = reflection.multiply(0.15f * (client.world.random.nextDouble() * 0.5 + 0.5));
+				client.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, client.world.getBlockState(blockPos)), pos.x, pos.y, pos.z, debrisVelocity.x + vx, debrisVelocity.y + vy, debrisVelocity.z + vz);
+			}
+
+			if (i % 2 == 0)
+			{
+				var smokeVelocity = reflection.multiply(0.08f * (client.world.random.nextDouble() * 0.5 + 0.5));
+				client.world.addParticle(ParticleTypes.SMOKE, pos.x, pos.y, pos.z, smokeVelocity.x + vx, smokeVelocity.y + vy, smokeVelocity.z + vz);
 			}
 		}
 	}

@@ -3,6 +3,7 @@ package com.parzivail.pswg.mixin;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
+import com.parzivail.pswg.client.texture.tinted.stacked.TintedTextureProvider;
 import com.parzivail.pswg.handler.LeftClickHandler;
 import com.parzivail.util.Lumberjack;
 import net.fabricmc.api.EnvType;
@@ -43,6 +44,7 @@ public class MinecraftClientMixin
 		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.toString());
 		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", remoteAssetDir);
 		Client.stackedTextureProvider = new StackedTextureProvider(textureManager, "pswg:stacked");
+		Client.tintedTextureProvider = new TintedTextureProvider(textureManager, "pswg:tinted");
 	}
 
 	@Inject(method = "initializeSearchableContainers()V", at = @At("TAIL"))

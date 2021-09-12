@@ -17,19 +17,20 @@ public class BlasterTag extends TagSerializer
 	public static final byte COOLING_MODE_PENALTY_BYPASS = 3;
 
 	public byte firingMode;
+	public byte coolingMode;
 
 	public boolean isAimingDownSights;
+	public boolean canBypassCooling;
 
 	public int shotsRemaining;
-	public int shotTimer;
-
-	public int burstTimer;
-
-	public boolean canBypassCooling;
 	public int heat;
-	public int coolingTimer;
-	public byte coolingMode;
-	public int passiveCooldownTimer;
+	public int ventingHeat;
+
+	public byte burstCounter;
+	public byte shotTimer;
+	public byte timeSinceLastShot;
+	public byte passiveCooldownTimer;
+	public byte overchargeTimer;
 
 	public long serialNumber;
 
@@ -48,13 +49,29 @@ public class BlasterTag extends TagSerializer
 		t.serializeAsSubtag(stack);
 	}
 
-	public void tick()
+	public void tick(BlasterDescriptor bd)
 	{
 		if (passiveCooldownTimer > 0)
 			passiveCooldownTimer--;
 
 		if (shotTimer > 0)
 			shotTimer--;
+
+		if (overchargeTimer > 0)
+			overchargeTimer--;
+
+		if (timeSinceLastShot < 20)
+			timeSinceLastShot++;
+
+		if (ventingHeat > 0)
+		{
+			ventingHeat -= bd.heat.overheatDrainSpeed;
+			if (ventingHeat == 0)
+				coolingMode = BlasterTag.COOLING_MODE_NONE;
+		}
+
+		if (heat > 0 && passiveCooldownTimer == 0)
+			heat -= bd.heat.drainSpeed;
 	}
 
 	public void setAimingDownSights(boolean isAimingDownSights)
@@ -84,6 +101,6 @@ public class BlasterTag extends TagSerializer
 
 	public boolean isCooling()
 	{
-		return coolingTimer > 0;
+		return ventingHeat > 0;
 	}
 }

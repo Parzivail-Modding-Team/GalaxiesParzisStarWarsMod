@@ -52,7 +52,7 @@ public record PR3File(PR3RenderedObject[] objects)
 		{
 			var name = DataReader.readNullTerminatedString(objStream);
 			var material = DataReader.readNullTerminatedString(objStream);
-			var transformation = PIO.readMatrix4f(objStream);
+			var transformation = DataReader.readMatrix4f(objStream);
 
 			var vertices = readLengthCodedVectors(objStream);
 			var normals = readLengthCodedVectors(objStream);

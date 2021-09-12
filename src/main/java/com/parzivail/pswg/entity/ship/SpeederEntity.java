@@ -1,8 +1,8 @@
 package com.parzivail.pswg.entity.ship;
 
-import com.parzivail.pswg.util.QuatUtil;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.math.MathUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;

@@ -1,8 +1,6 @@
 package com.parzivail.pswg.data;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
@@ -18,10 +16,31 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
+	private static class EulerAngleDeserializer implements JsonDeserializer<EulerAngle>
+	{
+		@Override
+		public EulerAngle deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			var o = json.getAsJsonObject();
+			return new EulerAngle(o.get("pitch").getAsFloat(), o.get("yaw").getAsFloat(), o.get("roll").getAsFloat());
+		}
+	}
+
+	private static class Vec3dDeserializer implements JsonDeserializer<Vec3d>
+	{
+		@Override
+		public Vec3d deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			var o = json.getAsJsonObject();
+			return new Vec3d(o.get("x").getAsDouble(), o.get("y").getAsDouble(), o.get("z").getAsDouble());
+		}
+	}
+
 	private static class BlasterArchetypeAdapter extends TypeAdapter<BlasterArchetype>
 	{
 		@Override
@@ -71,6 +90,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		super(
 				new GsonBuilder()
 						.registerTypeAdapter(BlasterArchetype.class, new BlasterArchetypeAdapter())
+						.registerTypeAdapter(Vec3d.class, new Vec3dDeserializer())
+						.registerTypeAdapter(EulerAngle.class, new EulerAngleDeserializer())
 						.registerTypeAdapter(TypeToken.getParameterized(ArrayList.class, BlasterFiringMode.class).getType(), new BlasterFiringModesAdapter())
 						.create(),
 				"items/blasters"
@@ -100,8 +121,16 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.weight);
 		buf.writeFloat(value.boltColor);
 		buf.writeInt(value.magazineSize);
-		buf.writeInt(value.automaticRepeatTime);
-		buf.writeInt(value.burstRepeatTime);
+		buf.writeByte(value.automaticRepeatTime);
+		buf.writeByte(value.burstRepeatTime);
+
+		buf.writeBoolean(value.muzzlePos != null);
+		if (value.muzzlePos != null)
+		{
+			buf.writeFloat((float)value.muzzlePos.x);
+			buf.writeFloat((float)value.muzzlePos.y);
+			buf.writeFloat((float)value.muzzlePos.z);
+		}
 
 		buf.writeBoolean(value.foreGripPos != null);
 		if (value.foreGripPos != null)
@@ -119,7 +148,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 			buf.writeFloat(value.foreGripHandAngle.getRoll());
 		}
 
-		buf.writeInt(value.burstSize);
+		buf.writeByte(value.burstSize);
 
 		buf.writeFloat(value.recoil.horizontal);
 		buf.writeFloat(value.recoil.vertical);
@@ -128,11 +157,12 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.spread.vertical);
 
 		buf.writeInt(value.heat.capacity);
-		buf.writeInt(value.heat.perRound);
-		buf.writeInt(value.heat.drainSpeed);
-		buf.writeInt(value.heat.overheatPenalty);
-		buf.writeInt(value.heat.overheatDrainSpeed);
-		buf.writeInt(value.heat.passiveCooldownDelay);
+		buf.writeByte(value.heat.perRound);
+		buf.writeByte(value.heat.drainSpeed);
+		buf.writeByte(value.heat.overheatPenalty);
+		buf.writeByte(value.heat.overheatDrainSpeed);
+		buf.writeByte(value.heat.passiveCooldownDelay);
+		buf.writeByte(value.heat.overchargeBonus);
 
 		buf.writeFloat(value.cooling.primaryBypassTime);
 		buf.writeFloat(value.cooling.primaryBypassTolerance);
@@ -150,8 +180,19 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var weight = buf.readFloat();
 		var boltColor = buf.readFloat();
 		var magazineSize = buf.readInt();
-		var automaticRepeatTime = buf.readInt();
-		var burstRepeatTime = buf.readInt();
+		var automaticRepeatTime = buf.readByte();
+		var burstRepeatTime = buf.readByte();
+
+		var hasMuzzlePos = buf.readBoolean();
+		Vec3d muzzlePos = null;
+		if (hasMuzzlePos)
+		{
+			muzzlePos = new Vec3d(
+					buf.readFloat(),
+					buf.readFloat(),
+					buf.readFloat()
+			);
+		}
 
 		var hasForeGripPos = buf.readBoolean();
 		Vec3d foreGripPos = null;
@@ -175,7 +216,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 			);
 		}
 
-		var burstSize = buf.readInt();
+		var burstSize = buf.readByte();
 
 		var recoil_horizontal = buf.readFloat();
 		var recoil_vertical = buf.readFloat();
@@ -184,11 +225,12 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var spread_vertical = buf.readFloat();
 
 		var heat_capacity = buf.readInt();
-		var heat_perRound = buf.readInt();
-		var heat_drainSpeed = buf.readInt();
-		var heat_cooldownDelay = buf.readInt();
-		var heat_overheatDrainSpeed = buf.readInt();
-		var heat_passiveCooldownDelay = buf.readInt();
+		var heat_perRound = buf.readByte();
+		var heat_drainSpeed = buf.readByte();
+		var heat_cooldownDelay = buf.readByte();
+		var heat_overheatDrainSpeed = buf.readByte();
+		var heat_passiveCooldownDelay = buf.readByte();
+		var heat_overchargeBonus = buf.readByte();
 
 		var cooling_primaryBypassTime = buf.readFloat();
 		var cooling_primaryBypassTolerance = buf.readFloat();
@@ -206,12 +248,13 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				magazineSize,
 				automaticRepeatTime,
 				burstRepeatTime,
+				muzzlePos,
 				foreGripPos,
 				foreGripHandAngle,
 				burstSize,
-				new BlasterAxialInfo(recoil_horizontal, spread_vertical),
+				new BlasterAxialInfo(recoil_horizontal, recoil_vertical),
 				new BlasterAxialInfo(spread_horizontal, spread_vertical),
-				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay),
+				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay, heat_overchargeBonus),
 				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance)
 		);
 	}
@@ -223,6 +266,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		if (version != 1)
 			throw new IllegalArgumentException("Can only parse version 1 blaster descriptors!");
 
-		return new BlasterDescriptor(identifier, GSON.fromJson(jsonObject, BlasterDescriptor.class));
+		var value = GSON.fromJson(jsonObject, BlasterDescriptor.class);
+		value.id = identifier;
+		return value;
 	}
 }

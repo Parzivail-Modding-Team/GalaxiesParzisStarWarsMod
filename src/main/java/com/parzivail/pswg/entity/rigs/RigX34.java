@@ -1,11 +1,11 @@
 package com.parzivail.pswg.entity.rigs;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.access.util.Matrix4fAccessUtil;
 import com.parzivail.pswg.entity.ship.SpeederEntity;
 import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.rig.pr3r.PR3Object;
 import com.parzivail.pswg.rig.pr3r.PR3RFile;
+import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.Transform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -93,7 +93,7 @@ public class RigX34 implements IModelRig<SpeederEntity, RigX34.Part>
 
 		transform(stack, target, part);
 
-		var vec = Matrix4fAccessUtil.transform(localPosition, parent);
+		var vec = Matrix4fUtil.transform(localPosition, parent);
 		stack.restore();
 
 		return vec;
@@ -120,7 +120,7 @@ public class RigX34 implements IModelRig<SpeederEntity, RigX34.Part>
 
 		parent.multiply(target.getRotation());
 
-		var vec = Matrix4fAccessUtil.transform(localPosition, parent);
+		var vec = Matrix4fUtil.transform(localPosition, parent);
 		stack.restore();
 
 		return vec;

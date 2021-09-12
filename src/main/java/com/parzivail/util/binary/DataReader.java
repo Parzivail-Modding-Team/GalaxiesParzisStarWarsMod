@@ -6,9 +6,11 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.registry.Registry;
 
 import java.io.*;
+import java.nio.FloatBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.file.StandardOpenOption;
 
@@ -109,5 +111,19 @@ public class DataReader
 			Lumberjack.warn("Unable to read property: %s with value: %s for blockstate: %s", key, propertiesTag.getString(key), context);
 			return state;
 		}
+	}
+
+	public static Matrix4f readMatrix4f(DataInput s) throws IOException
+	{
+		var mat = new Matrix4f();
+		var dat = new float[16];
+
+		for (int i = 0; i < 16; i++)
+			dat[i] = s.readFloat();
+
+		var buf = FloatBuffer.wrap(dat);
+		mat.readRowMajor(buf);
+
+		return mat;
 	}
 }

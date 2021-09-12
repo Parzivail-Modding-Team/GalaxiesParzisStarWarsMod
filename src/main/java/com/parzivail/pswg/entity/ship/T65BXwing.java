@@ -2,15 +2,11 @@ package com.parzivail.pswg.entity.ship;
 
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.util.BlasterUtil;
-import com.parzivail.pswg.util.QuatUtil;
-import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.math.MathUtil;
+import com.parzivail.util.math.QuatUtil;
 import com.parzivail.util.math.Transform;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -25,19 +21,16 @@ import net.minecraft.world.World;
 
 public class T65BXwing extends ShipEntity
 {
-	private static final TrackedData<TrackedAnimationValue> WING_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.ANIM);
-	private static final TrackedData<TrackedAnimationValue> COCKPIT_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.ANIM);
+	private static final TrackedData<Byte> WING_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final TrackedData<Byte> COCKPIT_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 
 	private static final TrackedData<Byte> CANNON_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final int CANNON_STATE_MASK = 0b00000011;
 
-	private static final RigT65B.Socket[] CANNON_ORDER = { RigT65B.Socket.CannonTopLeft, RigT65B.Socket.CannonBottomLeft, RigT65B.Socket.CannonTopRight, RigT65B.Socket.CannonBottomRight };
+	private static final String[] CANNON_ORDER = { "CannonTopLeft", "CannonBottomLeft", "CannonTopRight", "CannonBottomRight" };
 
-	@Environment(EnvType.CLIENT)
-	public TrackedAnimationValue clientWingAnim;
-
-	@Environment(EnvType.CLIENT)
-	public TrackedAnimationValue clientCockpitAnim;
+	public byte prevWingAnim;
+	public byte prevCockpitAnim;
 
 	public T65BXwing(EntityType<?> type, World world)
 	{
@@ -48,8 +41,8 @@ public class T65BXwing extends ShipEntity
 	protected void initDataTracker()
 	{
 		super.initDataTracker();
-		getDataTracker().startTracking(WING_ANIM, new TrackedAnimationValue());
-		getDataTracker().startTracking(COCKPIT_ANIM, new TrackedAnimationValue());
+		getDataTracker().startTracking(WING_ANIM, (byte)0);
+		getDataTracker().startTracking(COCKPIT_ANIM, (byte)0);
 		getDataTracker().startTracking(CANNON_BITS, (byte)0);
 	}
 
@@ -59,24 +52,14 @@ public class T65BXwing extends ShipEntity
 		return SwgSounds.Ship.XWINGT65B_EXTERIOR;
 	}
 
-	public TrackedAnimationValue getWingAnim()
+	public byte getWingAnim()
 	{
 		return dataTracker.get(WING_ANIM);
 	}
 
-	public void setWingAnim(TrackedAnimationValue value)
-	{
-		dataTracker.set(WING_ANIM, value);
-	}
-
-	public TrackedAnimationValue getCockpitAnim()
+	public byte getCockpitAnim()
 	{
 		return dataTracker.get(COCKPIT_ANIM);
-	}
-
-	public void setCockpitAnim(TrackedAnimationValue value)
-	{
-		dataTracker.set(COCKPIT_ANIM, value);
 	}
 
 	@Override
@@ -91,7 +74,7 @@ public class T65BXwing extends ShipEntity
 
 		var cannonState = getCannonState();
 
-		var p = CANNON_ORDER[cannonState].getWorldPosition(stack, this);
+		var p = RigT65B.INSTANCE.getWorldPosition(stack, this, this.getRotation(), CANNON_ORDER[cannonState], 0);
 
 		BlasterUtil.fireBolt(world, player, pDir, 100, 50, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
@@ -116,13 +99,16 @@ public class T65BXwing extends ShipEntity
 	{
 		super.tick();
 
-		var controls = getControls();
+		prevWingAnim = dataTracker.get(WING_ANIM);
+		prevCockpitAnim = dataTracker.get(COCKPIT_ANIM);
 
-		tickControlledAnim(WING_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL1));
-		tickControlledAnim(COCKPIT_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL2));
+		if (!world.isClient)
+		{
+			var controls = getControls();
 
-		clientCockpitAnim = getCockpitAnim();
-		clientWingAnim = getWingAnim();
+			tickControlledAnim(WING_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL1));
+			tickControlledAnim(COCKPIT_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL2));
+		}
 	}
 
 	@Override
@@ -130,8 +116,8 @@ public class T65BXwing extends ShipEntity
 	{
 		super.readCustomDataFromNbt(tag);
 
-		getWingAnim().write(tag, "wingAnim");
-		getCockpitAnim().write(tag, "cockpitAnim");
+		dataTracker.set(WING_ANIM, tag.getByte("wingAnim"));
+		dataTracker.set(COCKPIT_ANIM, tag.getByte("cockpitAni"));
 
 		setCannonState(tag.getByte("cannonState"));
 	}
@@ -141,8 +127,8 @@ public class T65BXwing extends ShipEntity
 	{
 		super.writeCustomDataToNbt(tag);
 
-		setWingAnim(TrackedAnimationValue.read(tag, "wingAnim"));
-		setCockpitAnim(TrackedAnimationValue.read(tag, "cockpitAnim"));
+		tag.putByte("wingAnim", dataTracker.get(WING_ANIM));
+		tag.putByte("cockpitAnim", dataTracker.get(COCKPIT_ANIM));
 
 		tag.putByte("cannonState", getCannonState());
 	}

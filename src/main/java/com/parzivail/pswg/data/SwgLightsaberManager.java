@@ -53,6 +53,8 @@ public class SwgLightsaberManager extends TypedDataLoader<LightsaberDescriptor>
 		if (version != 1)
 			throw new IllegalArgumentException("Can only parse version 1 blaster descriptors!");
 
-		return new LightsaberDescriptor(identifier, GSON.fromJson(jsonObject, LightsaberDescriptor.class));
+		var value = GSON.fromJson(jsonObject, LightsaberDescriptor.class);
+		value.id = identifier;
+		return value;
 	}
 }

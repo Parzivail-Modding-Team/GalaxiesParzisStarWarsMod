@@ -15,5 +15,11 @@ public class BlasterStunBoltEntity extends BlasterBoltEntity
 	{
 		super(type, owner, world);
 	}
+
+	@Override
+	protected boolean shouldCreateScorch()
+	{
+		return false;
+	}
 }
 

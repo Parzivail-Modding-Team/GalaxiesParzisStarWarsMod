@@ -10,6 +10,7 @@ import net.minecraft.client.particle.ParticleTextureSheet;
 import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 
 @Environment(EnvType.CLIENT)
 public class ScorchParticle extends DecalParticle
@@ -17,20 +18,25 @@ public class ScorchParticle extends DecalParticle
 	private static final int NUM_VARIANTS = 3;
 	private final int variant;
 
-	protected ScorchParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
+	private final float heat;
+
+	protected ScorchParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, float heat, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z, spriteProvider);
 		this.field_28786 = 1;
 		this.scale = 0.1f;
 		this.setColorAlpha(1.0F);
-		this.setColor(1, 1, 1);
+		var a = MathHelper.lerp(heat, 1, MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1));
+		this.setColor(MathHelper.clamp(getRed(a), 0, 1), MathHelper.clamp(getGreen(a), 0, 1), MathHelper.clamp(getBlue(a), 0, 1));
 		this.maxAge = 200;
 		this.setSpriteForAge(spriteProvider);
-		this.collidesWithWorld = true;
+		this.collidesWithWorld = false;
 		this.velocityX = vX;
 		this.velocityY = vY;
 		this.velocityZ = vZ;
 		this.angle = clientWorld.random.nextFloat() * MathHelper.PI;
+
+		this.heat = heat;
 
 		this.variant = clientWorld.random.nextInt(NUM_VARIANTS);
 	}
@@ -80,8 +86,12 @@ public class ScorchParticle extends DecalParticle
 
 		if (!this.dead)
 		{
+			var halfAge = this.maxAge / 2f;
+			if (this.age > halfAge)
+				this.setColorAlpha(1 - (this.age - halfAge) / halfAge);
+
 			this.setSprite(spriteProvider.getSprite(this.variant, NUM_VARIANTS));
-			var a = MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1);
+			var a = MathHelper.lerp(heat, 1, MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1));
 			// this.setColor(MathHelper.clamp(Ease.outCubic(10 * a), 0, 1), MathHelper.clamp(5 * a, 0, 1), MathHelper.clamp(Ease.inCubic(4 * a), 0, 1));
 			this.setColor(MathHelper.clamp(getRed(a), 0, 1), MathHelper.clamp(getGreen(a), 0, 1), MathHelper.clamp(getBlue(a), 0, 1));
 		}
@@ -97,9 +107,12 @@ public class ScorchParticle extends DecalParticle
 			this.spriteProvider = spriteProvider;
 		}
 
-		public Particle createParticle(PParticle defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
+		public Particle createParticle(PParticle defaultParticleType, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ)
 		{
-			return new ScorchParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
+			var heatEncodedNormal = new Vec3d(vX, vY, vZ);
+			var heat = heatEncodedNormal.length();
+			var normal = heatEncodedNormal.normalize();
+			return new ScorchParticle(clientWorld, x, y, z, normal.x, normal.y, normal.z, (float)heat, this.spriteProvider);
 		}
 	}
 }

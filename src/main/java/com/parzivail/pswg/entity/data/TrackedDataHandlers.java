@@ -1,6 +1,5 @@
 package com.parzivail.pswg.entity.data;
 
-import com.parzivail.util.entity.TrackedAnimationValue;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.network.PacketByteBuf;
@@ -57,12 +56,9 @@ public class TrackedDataHandlers
 		}
 	};
 
-	public static final TrackedDataHandler<TrackedAnimationValue> ANIM = new TrackedAnimationValue.Handler();
-
 	public static void register()
 	{
 		TrackedDataHandlerRegistry.register(QUATERNION);
 		TrackedDataHandlerRegistry.register(SHORT);
-		TrackedDataHandlerRegistry.register(ANIM);
 	}
 }

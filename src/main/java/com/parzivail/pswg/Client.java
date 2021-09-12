@@ -19,10 +19,12 @@ import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
 import com.parzivail.pswg.client.render.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
+import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.render.sky.TatooineSkyRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
+import com.parzivail.pswg.client.texture.tinted.stacked.TintedTextureProvider;
 import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
@@ -72,6 +74,7 @@ public class Client implements ClientModInitializer
 
 	public static RemoteTextureProvider remoteTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
+	public static TintedTextureProvider tintedTextureProvider;
 
 	public static ZoomInstance blasterZoomInstance;
 
@@ -226,6 +229,7 @@ public class Client implements ClientModInitializer
 	public static class ResourceManagers
 	{
 		private static NemManager nemManager;
+		private static P3dManager p3dManager;
 		private static SwgBlasterManager blasterManager;
 		private static SwgLightsaberManager lightsaberManager;
 
@@ -254,12 +258,18 @@ public class Client implements ClientModInitializer
 			return nemManager;
 		}
 
+		public static P3dManager getP3dManager()
+		{
+			return p3dManager;
+		}
+
 		/**
 		 * Register managers which are used by the client to provide visuals that can be reloaded
 		 */
 		public static void registerReloadableManagers(ReloadableResourceManager resourceManager)
 		{
 			resourceManager.registerReloader(nemManager = new NemManager());
+			resourceManager.registerReloader(p3dManager = new P3dManager());
 		}
 
 		/**
@@ -317,6 +327,9 @@ public class Client implements ClientModInitializer
 					{
 						case SLUG_FIRED:
 							BlasterUtil.handleSlugFired(client, handler, buf, responseSender);
+							break;
+						case BLASTER_BOLT_HIT:
+							BlasterUtil.handleBoltHit(client, handler, buf, responseSender);
 							break;
 					}
 				}

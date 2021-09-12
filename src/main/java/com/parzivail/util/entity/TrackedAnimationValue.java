@@ -1,95 +1,59 @@
 package com.parzivail.util.entity;
 
-import net.minecraft.entity.data.TrackedDataHandler;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.math.MathHelper;
 
 public class TrackedAnimationValue
 {
-	public static class Handler implements TrackedDataHandler<TrackedAnimationValue>
-	{
-		@Override
-		public void write(PacketByteBuf buf, TrackedAnimationValue value)
-		{
-			buf.writeByte(value.bits);
-		}
-
-		@Override
-		public TrackedAnimationValue read(PacketByteBuf buf)
-		{
-			return new TrackedAnimationValue(buf.readByte());
-		}
-
-		@Override
-		public TrackedAnimationValue copy(TrackedAnimationValue value)
-		{
-			return new TrackedAnimationValue(value.bits);
-		}
-	}
-
 	private static final int DIRECTION_MASK = 0b10000000;
 	private static final int TIMER_MASK = 0b01111111;
 
-	private byte bits;
-
-	public TrackedAnimationValue(byte bits)
-	{
-		this.bits = bits;
-	}
-
-	public TrackedAnimationValue()
-	{
-		this((byte)0);
-	}
-
-	public byte getTimer()
+	public static byte getTimer(byte bits)
 	{
 		return (byte)(bits & TIMER_MASK);
 	}
 
-	public boolean isPositiveDirection()
+	public static float getTimer(byte bits, byte prevBits, float tickDelta)
+	{
+		if ((bits & DIRECTION_MASK) != (prevBits & DIRECTION_MASK))
+			return bits & TIMER_MASK;
+		return MathHelper.lerp(tickDelta, prevBits & TIMER_MASK, bits & TIMER_MASK);
+	}
+
+	public static boolean isPositiveDirection(byte bits)
 	{
 		return (bits & DIRECTION_MASK) != 0;
 	}
 
-	public boolean isStopped()
+	public static boolean isStopped(byte bits)
 	{
-		return getTimer() == 0;
+		return getTimer(bits) == 0;
 	}
 
-	public void set(boolean direction, byte timer)
+	public static byte set(boolean direction, byte timer)
 	{
 		if (direction)
 			timer |= DIRECTION_MASK;
 
-		bits = timer;
+		return timer;
 	}
 
-	public void tick()
+	public static byte tick(byte bits)
 	{
-		var timer = getTimer();
+		var timer = getTimer(bits);
 
 		if (timer != 0)
-			set(isPositiveDirection(), --timer);
+			return set(isPositiveDirection(bits), --timer);
+
+		return bits;
 	}
 
-	public void startToggled(byte value)
+	public static byte startToggled(byte bits, byte value)
 	{
-		set(!isPositiveDirection(), value);
+		return set(!isPositiveDirection(bits), value);
 	}
 
-	public void start(byte value)
+	public static byte start(byte bits, byte value)
 	{
-		set(isPositiveDirection(), value);
-	}
-
-	public void write(NbtCompound nbt, String name)
-	{
-		nbt.putByte(name, bits);
-	}
-
-	public static TrackedAnimationValue read(NbtCompound nbt, String name)
-	{
-		return new TrackedAnimationValue(nbt.getByte(name));
+		return set(isPositiveDirection(bits), value);
 	}
 }

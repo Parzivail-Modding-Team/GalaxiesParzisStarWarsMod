@@ -1,6 +1,6 @@
 package com.parzivail.util.client.particle;
 
-import com.parzivail.pswg.util.QuatUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.AnimatedParticle;
@@ -50,11 +50,13 @@ public class DecalParticle extends AnimatedParticle
 		Quaternion rotation = QuatUtil.lookAt(Vec3d.ZERO, normal);
 		rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Z, angle, false));
 
+		var z = (1 - this.age / (float)this.maxAge) * 0.005f;
+
 		var corners = new Vec3f[] {
-				new Vec3f(-1.0F, -1.0F, 0.0F),
-				new Vec3f(-1.0F, 1.0F, 0.0F),
-				new Vec3f(1.0F, 1.0F, 0.0F),
-				new Vec3f(1.0F, -1.0F, 0.0F)
+				new Vec3f(-1.0F, -1.0F, z),
+				new Vec3f(-1.0F, 1.0F, z),
+				new Vec3f(1.0F, 1.0F, z),
+				new Vec3f(1.0F, -1.0F, z)
 		};
 
 		var j = this.getSize(tickDelta);
