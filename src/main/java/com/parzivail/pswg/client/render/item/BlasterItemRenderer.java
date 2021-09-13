@@ -40,7 +40,13 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	private static final ModelEntry FALLBACK_MODEL;
 	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
 
-	private static final Identifier ID_MUZZLE_FLASH_FORWARD = Resources.id("textures/model/blaster/effect/muzzleflash_forward_0.png");
+	private static final Identifier[] ID_MUZZLE_FLASHES_FORWARD = new Identifier[] {
+			Resources.id("textures/model/blaster/effect/muzzleflash_forward_4.png"),
+			Resources.id("textures/model/blaster/effect/muzzleflash_forward_0.png"),
+			Resources.id("textures/model/blaster/effect/muzzleflash_forward_1.png"),
+			Resources.id("textures/model/blaster/effect/muzzleflash_forward_2.png"),
+			Resources.id("textures/model/blaster/effect/muzzleflash_forward_3.png")
+	};
 	private static final Identifier[] ID_MUZZLE_FLASHES = new Identifier[] {
 			Resources.id("textures/model/blaster/effect/muzzleflash_9.png"),
 			Resources.id("textures/model/blaster/effect/muzzleflash_0.png"),
@@ -240,16 +246,16 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		if (bd.muzzlePos != null && renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED)
 		{
-			opacity = MathHelper.clamp(1 - (float)Math.pow(Ease.inCubic(shotTime / ID_MUZZLE_FLASHES.length), 2), 0, 1);
+			opacity = MathHelper.clamp(1 - (float)Math.pow(Ease.inCubic(shotTime / (ID_MUZZLE_FLASHES.length - 1)), 2), 0, 1);
 
-			var frame = MathHelper.clamp(bt.timeSinceLastShot, 0, ID_MUZZLE_FLASHES.length - 1);
+			var frame = (int)Math.floor(MathHelper.clamp(bt.timeSinceLastShot + d, 0, ID_MUZZLE_FLASHES.length - 1));
 
 			var color = ColorUtil.fromHSV(bd.boltColor, 1, 1);
 			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
-			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASH_FORWARD, ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
+			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
 
 			var colorId = String.valueOf((int)(bd.boltColor * 255));
-			var flash = Client.tintedTextureProvider.loadTexture("muzzleflash8/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
+			var flash = Client.tintedTextureProvider.loadTexture("muzzleflash/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
 
 			var muzzlePos = new Vec3f((float)bd.muzzlePos.x, (float)bd.muzzlePos.y, -(float)bd.muzzlePos.z);
 
@@ -265,7 +271,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 			if (!renderMode.isFirstPerson())
 			{
-				var forwardFlash = Client.tintedTextureProvider.loadTexture("muzzleflash_forward/" + colorId, () -> ID_MUZZLE_FLASH_FORWARD, () -> tintedForwardId);
+				var forwardFlash = Client.tintedTextureProvider.loadTexture("muzzleflash_forward/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
 				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
 				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 
