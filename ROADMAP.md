@@ -8,7 +8,6 @@ Unless otherwise noted, each new update will contain the associated items, block
   * Lars Homestead
   * Kenobi Homestead
   * Jabba's Palace and Sail Barge
-   * treter
 * This update will not yet contain quests.
 ## 1.1: *Wayward Jungle* Update
 * New planet: Yavin 4
