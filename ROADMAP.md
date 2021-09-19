@@ -2,23 +2,23 @@
 Unless otherwise noted, each new update will contain the associated items, blocks, ships, NPCs, and quests for the major features. This list is meant as a brief overview. Read the full 1.0 Roadmap here: https://docs.google.com/document/d/1AA7JSn8eJkilxxEmRTSX06UnCAbHi3H0EMY759l-E5k/edit?usp=sharing
 ## 1.0: *Desert Storm* Update
 * New planets
-  * Tatooine
-  * Overworld with starting mechanics and spaceports
+_  * Tatooine
+  * Overworld with starting mechanics and spaceports_
 * New landmarks
-  * Mos Eisley
+  *_ Mos Eisley
   * Tosche Station
   * Lars Homestead
   * Kenobi Homestead
-  * Jabba's Palace
+  * Jabba's Palace_
 * New Biomes
-  * Dunes
+  * _Dunes
   * Canyons
   * Plateaus
   * Mushroom Mesas
   * Wastes
   * Mountains
   * Salt Flats
-  * Oases
+  * Oases_
 * New Random Structures
   * Tusken Camps
   * Jawa Fortresses and Sandcrawlers
