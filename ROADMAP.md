@@ -2,14 +2,14 @@
 Unless otherwise noted, each new update will contain the associated items, blocks, ships, NPCs, and quests for the major features. This list is meant as a brief overview. Read the full 1.0 Roadmap here: https://docs.google.com/document/d/1AA7JSn8eJkilxxEmRTSX06UnCAbHi3H0EMY759l-E5k/edit?usp=sharing
 ## 1.0: *Desert Storm* Update
 * **New planets**
-  * _Tatooine
-  * _Overworld with starting mechanics and spaceports
+  * _Tatooine_
+  * _Overworld with starting mechanics and spaceports_
 * **New landmarks**
-  * _Mos Eisley
-  * _Tosche Station
-  * _Lars Homestead
-  * _Kenobi Homestead
-  * _Jabba's Palace
+  * _Mos Eisley_
+  * _Tosche Station_
+  * _Lars Homestead_
+  * _Kenobi Homestead_
+  * _Jabba's Palace_
 * **New Biomes**
   * _Dunes
   * _Canyons
