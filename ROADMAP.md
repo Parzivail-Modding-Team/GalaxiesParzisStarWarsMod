@@ -11,62 +11,62 @@ Unless otherwise noted, each new update will contain the associated items, block
   * _Kenobi Homestead_
   * _Jabba's Palace_
 * **New Biomes**
-  * _Dunes
-  * _Canyons
-  * _Plateaus
-  * _Mushroom Mesas
-  * _Wastes
-  * _Mountains
-  * _Salt Flats
-  * _Oases
+  * _Dunes_
+  * _Canyons_
+  * _Plateaus_
+  * _Mushroom Mesas_
+  * _Wastes_
+  * _Mountains_
+  * _Salt Flats_
+  * _Oases_
 * **New Random Structures**
-  * _Tusken Camps
-  * _Jawa Fortresses and Sandcrawlers
-  * _Settlements
-  * _Homesteads
-  * _Mining Installations
+  * _Tusken Camps_
+  * _Jawa Fortresses and Sandcrawlers_
+  * _Settlements_
+  * _Homesteads_
+  * _Mining Installations_
 * **Immersive features**
-  * _Sandstorms
-  * _Dehydration
-  * _Starship Wrecks
+  * _Sandstorms_
+  * _Dehydration_
+  * _Starship Wrecks_
 * **New Ambient Mobs**
-  * _Banthas
-  * _Dewbacks
-  * _Womp Rats
-  * _Massiffs
-  * _Worrts
-  * _And more!
+  * _Banthas_
+  * _Dewbacks_
+  * _Womp Rats_
+  * _Massiffs_
+  * _Worrts_
+  * _And more!_
 * **NPCs and Factions**
-  * _Jawas
-  * _Tuskens
-  * _Civilians and Merchants
-  * _Bandits and Gangs
-  * _Rebels
-  * _Imperials
-  * _Droids
+  * _Jawas_
+  * _Tuskens_
+  * _Civilians and Merchants_
+  * _Bandits and Gangs_
+  * _Rebels_
+  * _Imperials_
+  * _Droids_
 * **New Vehicles**
-  * _T-65B X-Wing Starfighter
-  * _TIE/LN Starfighter
-  * _T-16 Skyhopper
-  * _AT-ST Walker
-  * _X-34 Landspeeder
+  * _T-65B X-Wing Starfighter_
+  * _TIE/LN Starfighter_
+  * _T-16 Skyhopper_
+  * _AT-ST Walker_
+  * _X-34 Landspeeder_
 * **New Weapons**
-  * _Blasters
-  * _Slugthrowers
-  * _Ion Weapons
-  * _Lightsabers
+  * _Blasters_
+  * _Slugthrowers_
+  * _Ion Weapons_
+  * _Lightsabers_
 * **New Blocks and Items**
-  * _New vegetation
-  * _New foods
-  * _New ores
-  * _New building blocks
+  * _New vegetation_
+  * _New foods_
+  * _New ores_
+  * _New building blocks_
 * **New Utility Systems**
-  * _Weapon customization
-  * _Ship customization
-  * _Character customization
-  * _Original content skins
-  * _Mining and Ore processing
-  * _Power Generators
-  * _Drink Brewing
-  * _And more!
+  * _Weapon customization_
+  * _Ship customization_
+  * _Character customization_
+  * _Original content skins_
+  * _Mining and Ore processing_
+  * _Power Generators_
+  * _Drink Brewing_
+  * _And more!_
 
