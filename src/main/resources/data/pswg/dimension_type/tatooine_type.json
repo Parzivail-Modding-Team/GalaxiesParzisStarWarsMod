@@ -9,7 +9,7 @@
 	"logical_height": 1024,
 	"has_raids": false,
 	"respawn_anchor_works": false,
-	"bed_works": false,
+	"bed_works": true,
 	"piglin_safe": false,
 	"height": 1024,
 	"min_y": 0
