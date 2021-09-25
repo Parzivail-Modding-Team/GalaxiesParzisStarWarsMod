@@ -1,6 +1,7 @@
 package com.parzivail.pswg.block.rigs;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.block.BlockTatooineHomeDoor;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.rig.pr3r.PR3RFile;
@@ -61,6 +62,10 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 		var world = target.getWorld();
 		var pos = target.getPos();
 		var block = world.getBlockState(pos);
+
+		if (!(block.getBlock() instanceof BlockTatooineHomeDoor))
+			return;
+
 		stack.multiply(ClientMathUtil.getRotation(block.get(RotatingBlock.FACING)));
 
 		if (part == Part.Door)
