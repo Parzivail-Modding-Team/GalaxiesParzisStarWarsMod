@@ -151,6 +151,8 @@ public class ConnectedTextureHelper
 
 	private static boolean shouldConnect(BlockRenderView world, BlockPos a, BlockPos b)
 	{
+		if (world == null)
+			return false;
 		return shouldConnect(world.getBlockState(a), world.getBlockState(b));
 	}
 

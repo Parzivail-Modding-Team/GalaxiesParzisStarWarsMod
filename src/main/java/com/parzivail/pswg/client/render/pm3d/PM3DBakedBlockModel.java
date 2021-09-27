@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.impl.client.indigo.renderer.mesh.MeshBuilderImpl;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.ShapeContext;
@@ -132,28 +133,31 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 	@Override
 	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		if (state.getBlock() instanceof ConnectingNodeBlock)
+		if (state != null)
 		{
-			var meshBuilder = RENDERER.meshBuilder();
-			var quadEmitter = meshBuilder.getEmitter();
-
-			for (var o : container.objects())
+			if (state.getBlock() instanceof ConnectingNodeBlock)
 			{
-				if (!"NODE_CENTER".equals(o.objName()) && !state.get(ConnectingNodeBlock.FACING_PROPERTIES.get(FACING_SUBMODELS.get(o.objName()))))
-					continue;
+				var meshBuilder = new MeshBuilderImpl();//RENDERER.meshBuilder();
+				var quadEmitter = meshBuilder.getEmitter();
 
-				for (var face : o.faces())
-					emitFace(transformation, quadEmitter, face);
+				for (var o : container.objects())
+				{
+					if (!"NODE_CENTER".equals(o.objName()) && !state.get(ConnectingNodeBlock.FACING_PROPERTIES.get(FACING_SUBMODELS.get(o.objName()))))
+						continue;
+
+					for (var face : o.faces())
+						emitFace(transformation, quadEmitter, face);
+				}
+
+				return meshBuilder.build();
 			}
 
-			return meshBuilder.build();
-		}
-
-		if (state.getBlock() instanceof DisplacingBlock)
-		{
-			var shape = state.getBlock().getOutlineShape(state, blockView, pos, ShapeContext.absent());
-			var center = VoxelShapeUtil.getCenter(shape);
-			transformation.multiply(Matrix4f.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f));
+			if (state.getBlock() instanceof DisplacingBlock)
+			{
+				var shape = state.getBlock().getOutlineShape(state, blockView, pos, ShapeContext.absent());
+				var center = VoxelShapeUtil.getCenter(shape);
+				transformation.multiply(Matrix4f.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f));
+			}
 		}
 
 		return createMesh(transformation);
@@ -167,7 +171,7 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 
 	private Mesh createMesh(Matrix4f transformation)
 	{
-		var meshBuilder = RENDERER.meshBuilder();
+		var meshBuilder = new MeshBuilderImpl();//RENDERER.meshBuilder();
 		var quadEmitter = meshBuilder.getEmitter();
 
 		for (var o : container.objects())

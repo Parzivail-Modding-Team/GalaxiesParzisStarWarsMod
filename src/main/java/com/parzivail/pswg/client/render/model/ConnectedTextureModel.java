@@ -9,11 +9,11 @@ import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.math.SpriteSheetPoint;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.impl.client.indigo.renderer.mesh.MeshBuilderImpl;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
@@ -96,7 +96,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	{
 		var minecraft = MinecraftClient.getInstance();
 
-		var meshBuilder = RENDERER.meshBuilder();
+		var meshBuilder = new MeshBuilderImpl();//RENDERER.meshBuilder();
 		var quadEmitter = meshBuilder.getEmitter();
 
 		final var random = randomSupplier == null ? new Random(42) : randomSupplier.get();
@@ -162,7 +162,6 @@ public class ConnectedTextureModel extends DynamicBakedModel
 			quadEmitter
 					.colorIndex(1)
 					.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
-					.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
 					.pos(0, min)
 					.normal(0, normal)
 					.sprite(0, 0, blankSprite.getMinU(), blankSprite.getMinV())
@@ -186,7 +185,6 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		quadEmitter
 				.colorIndex(1)
 				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
-				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
 				.pos(0, min)
 				.normal(0, normal)
 				.sprite(0, 0, subSprite.minU(), subSprite.minV())
@@ -207,7 +205,6 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		quadEmitter
 				.colorIndex(1)
 				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
-				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
 				.pos(0, uv(min, dU, dV, 0.5f, 0))
 				.normal(0, normal)
 				.sprite(0, 0, subSprite.minU(), subSprite.minV())
@@ -228,7 +225,6 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		quadEmitter
 				.colorIndex(1)
 				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
-				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
 				.pos(0, uv(min, dU, dV, 0, 0.5f))
 				.normal(0, normal)
 				.sprite(0, 0, subSprite.minU(), subSprite.minV())
@@ -249,7 +245,6 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		quadEmitter
 				.colorIndex(1)
 				.spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF)
-				.material(RendererAccess.INSTANCE.getRenderer().materialFinder().find())
 				.pos(0, uv(min, dU, dV, 0.5f, 0.5f))
 				.normal(0, normal)
 				.sprite(0, 0, subSprite.minU(), subSprite.minV())
