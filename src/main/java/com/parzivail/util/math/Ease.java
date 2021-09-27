@@ -12,4 +12,13 @@ public class Ease
 		t--;
 		return (t * t * t + 1);
 	}
+
+	public static float inOutCubic(float t)
+	{
+		t *= 2;
+		if (t < 1)
+			return t * t * t / 2;
+		t -= 2;
+		return (t * t * t + 2) / 2;
+	}
 }

@@ -97,7 +97,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 				{
 					case GLOBAL -> BlockPos.ORIGIN;
 					case BLOCKSTATE -> state;
-					case RENDER_SEED -> state.getRenderingSeed(pos);
+					case RENDER_SEED -> state == null ? 0 : state.getRenderingSeed(pos);
 					default -> null;
 				};
 

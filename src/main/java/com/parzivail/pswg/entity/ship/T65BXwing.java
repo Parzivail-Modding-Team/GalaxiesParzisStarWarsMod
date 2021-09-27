@@ -29,6 +29,9 @@ public class T65BXwing extends ShipEntity
 
 	private static final String[] CANNON_ORDER = { "CannonTopLeft", "CannonBottomLeft", "CannonTopRight", "CannonBottomRight" };
 
+	public static final int WING_ANIM_LENGTH = 40;
+	public static final int COCKPIT_ANIM_LENGTH = 20;
+
 	public byte prevWingAnim;
 	public byte prevCockpitAnim;
 
@@ -106,8 +109,8 @@ public class T65BXwing extends ShipEntity
 		{
 			var controls = getControls();
 
-			tickControlledAnim(WING_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL1));
-			tickControlledAnim(COCKPIT_ANIM, (byte)20, controls.contains(ShipControls.SPECIAL2));
+			tickControlledAnim(WING_ANIM, (byte)WING_ANIM_LENGTH, controls.contains(ShipControls.SPECIAL1));
+			tickControlledAnim(COCKPIT_ANIM, (byte)COCKPIT_ANIM_LENGTH, controls.contains(ShipControls.SPECIAL2));
 		}
 	}
 

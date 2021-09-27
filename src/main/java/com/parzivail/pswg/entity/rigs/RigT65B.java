@@ -34,7 +34,7 @@ public class RigT65B extends ModelRig<T65BXwing>
 
 		if (part.startsWith("Wing"))
 		{
-			var timer = Ease.inCubic(Math.abs(wingTimer) / 20);
+			var timer = Ease.inOutCubic(Math.abs(wingTimer) / T65BXwing.WING_ANIM_LENGTH);
 
 			if (wingsOpening)
 				timer = 1 - timer;
@@ -50,7 +50,7 @@ public class RigT65B extends ModelRig<T65BXwing>
 		}
 		else if (part.equals("Cockpit"))
 		{
-			var timer = Ease.inCubic(Math.abs(cockpitTimer) / 20);
+			var timer = Ease.inOutCubic(Math.abs(cockpitTimer) / T65BXwing.COCKPIT_ANIM_LENGTH);
 
 			if (cockpitOpening)
 				timer = 1 - timer;

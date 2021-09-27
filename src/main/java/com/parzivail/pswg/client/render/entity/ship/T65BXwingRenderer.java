@@ -58,10 +58,18 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 
 		for (var face : o.faces)
 		{
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[0], face.normal[0], face.texture[0]);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], face.normal[1], face.texture[1]);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], face.normal[2], face.texture[2]);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], face.normal[3], face.texture[3]);
+			// TODO: remove this and disable smooth faces in blender before exporting
+			var normal = new Vec3f();
+			normal.add(face.normal[0]);
+			normal.add(face.normal[1]);
+			normal.add(face.normal[2]);
+			normal.add(face.normal[3]);
+			normal.normalize();
+
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[0], normal, face.texture[0]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], normal, face.texture[1]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], normal, face.texture[2]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], normal, face.texture[3]);
 		}
 
 		for (var mesh : o.children)
