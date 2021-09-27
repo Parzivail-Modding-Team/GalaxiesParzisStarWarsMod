@@ -211,26 +211,34 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			if (renderMode == ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND && bd.foreGripPos != null && bd.foreGripHandAngle != null)
 			{
 				var client = MinecraftClient.getInstance();
-				RenderSystem.setShaderTexture(0, client.player.getSkinTexture());
-				PlayerEntityRenderer playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
-				matrices.push();
+				var player = client.player;
 
-				matrices.translate(bd.foreGripPos.x, bd.foreGripPos.y, -bd.foreGripPos.z);
+				assert player != null;
 
-				matrices.scale(4, 4, 4);
+				ItemStack altStack = player.getOffHandStack();
+				if (altStack.isEmpty())
+				{
+					RenderSystem.setShaderTexture(0, player.getSkinTexture());
+					PlayerEntityRenderer playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
+					matrices.push();
 
-				matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(5));
+					matrices.translate(bd.foreGripPos.x, bd.foreGripPos.y, -bd.foreGripPos.z);
 
-				matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bd.foreGripHandAngle.getPitch()));
-				matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(bd.foreGripHandAngle.getRoll()));
-				matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bd.foreGripHandAngle.getYaw()));
+					matrices.scale(4, 4, 4);
 
-				matrices.translate(-0.415f, -0.75f, 0);
+					matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(5));
 
-				//			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-30.0F));
-				playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
+					matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bd.foreGripHandAngle.getPitch()));
+					matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(bd.foreGripHandAngle.getRoll()));
+					matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bd.foreGripHandAngle.getYaw()));
 
-				matrices.pop();
+					matrices.translate(-0.415f, -0.75f, 0);
+
+					//			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-30.0F));
+					playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
+
+					matrices.pop();
+				}
 			}
 		}
 		else
