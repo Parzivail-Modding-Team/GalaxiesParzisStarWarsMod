@@ -2,6 +2,8 @@ package com.parzivail.pswg.entity.ship;
 
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.entity.collision.CapsuleVolume;
+import com.parzivail.pswg.entity.collision.IComplexEntityHitbox;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.math.MathUtil;
@@ -17,10 +19,16 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class T65BXwing extends ShipEntity
+public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 {
+	private static final CapsuleVolume VOL_FUSELAGE = new CapsuleVolume(new Vec3d(0, 0, 1), new Vec3d(0, 0, -4), 0.75);
+	private static final CapsuleVolume VOL_MECHANICS = new CapsuleVolume(new Vec3d(0, -0.25f, 1), new Vec3d(0, -0.25f, 4.3), 1.5);
+	private static final CapsuleVolume VOL_WING_TOP_RIGHT = new CapsuleVolume(new Vec3d(4.2, 0.27, 2.66), new Vec3d(4.2, 0.27, -3.5), 0.2);
+
 	private static final TrackedData<Byte> WING_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final TrackedData<Byte> COCKPIT_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 
@@ -94,7 +102,7 @@ public class T65BXwing extends ShipEntity
 	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
 	{
 		return 0f;
-//		return super.getEyeHeight(pose, dimensions);
+		//		return super.getEyeHeight(pose, dimensions);
 	}
 
 	@Override
@@ -149,5 +157,22 @@ public class T65BXwing extends ShipEntity
 		cannons |= cannonState & CANNON_STATE_MASK;
 
 		getDataTracker().set(CANNON_BITS, cannons);
+	}
+
+	@Override
+	public CapsuleVolume[] getCollision()
+	{
+		var pos = this.getPos();
+		var rot = getRotation();
+
+		var posMat = Matrix4f.translate((float)pos.x, (float)pos.y, (float)pos.z);
+		var wingTransform = posMat.copy();
+		wingTransform.multiply(rot);
+		wingTransform.multiply(RigT65B.INSTANCE.getPartTransformation(this, "WingTopRight", 0));
+
+		return new CapsuleVolume[] {
+				VOL_FUSELAGE.transform(rot).transform(posMat),
+				VOL_MECHANICS.transform(rot).transform(posMat)
+		};
 	}
 }

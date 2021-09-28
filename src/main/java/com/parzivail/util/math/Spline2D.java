@@ -54,7 +54,7 @@ public class Spline2D
 		}
 
 		/*
-	  Array representing the relative proportion of the total distance
+	  Array representing the relative proportion of the total squareDistance
 	  of each point in the line ( i.e. first point is 0.0, end point is
 	  1.0, a point halfway on line is 0.5 ).
 	 */

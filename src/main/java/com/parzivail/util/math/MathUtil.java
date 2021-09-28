@@ -98,4 +98,9 @@ public class MathUtil
 
 		return MathHelper.clamp((float)(relativeSpeed / SPEED_OF_SOUND), -1, 1);
 	}
+
+	public static Vec3d project(Vec3d v, Vec3d onto)
+	{
+		return onto.multiply(v.dotProduct(onto) / onto.dotProduct(onto));
+	}
 }
