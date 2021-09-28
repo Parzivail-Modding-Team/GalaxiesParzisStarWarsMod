@@ -13,7 +13,6 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.impl.client.indigo.renderer.mesh.MeshBuilderImpl;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
@@ -96,7 +95,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	{
 		var minecraft = MinecraftClient.getInstance();
 
-		var meshBuilder = new MeshBuilderImpl();//RENDERER.meshBuilder();
+		var meshBuilder = createMeshBuilder();//RENDERER.meshBuilder();
 		var quadEmitter = meshBuilder.getEmitter();
 
 		final var random = randomSupplier == null ? new Random(42) : randomSupplier.get();

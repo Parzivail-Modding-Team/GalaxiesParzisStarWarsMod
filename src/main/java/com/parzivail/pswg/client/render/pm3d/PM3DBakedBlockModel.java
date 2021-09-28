@@ -12,7 +12,6 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.fabricmc.fabric.impl.client.indigo.renderer.mesh.MeshBuilderImpl;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.ShapeContext;
@@ -137,7 +136,7 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 		{
 			if (state.getBlock() instanceof ConnectingNodeBlock)
 			{
-				var meshBuilder = new MeshBuilderImpl();//RENDERER.meshBuilder();
+				var meshBuilder = createMeshBuilder();//RENDERER.meshBuilder();
 				var quadEmitter = meshBuilder.getEmitter();
 
 				for (var o : container.objects())
@@ -171,7 +170,7 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 
 	private Mesh createMesh(Matrix4f transformation)
 	{
-		var meshBuilder = new MeshBuilderImpl();//RENDERER.meshBuilder();
+		var meshBuilder = createMeshBuilder();//RENDERER.meshBuilder();
 		var quadEmitter = meshBuilder.getEmitter();
 
 		for (var o : container.objects())

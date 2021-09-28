@@ -20,37 +20,56 @@ import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.impl.client.indigo.renderer.RenderMaterialImpl;
+import net.fabricmc.fabric.impl.client.indigo.renderer.mesh.MeshBuilderImpl;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 
 public abstract class AbstractModel implements BakedModel, FabricBakedModel
 {
-	protected static final MaterialFinder MATERIAL_FINDER;
-
-	protected final RenderMaterial MAT_DIFFUSE_OPAQUE = MATERIAL_FINDER.find();
-	protected final RenderMaterial MAT_DIFFUSE_CUTOUT = MATERIAL_FINDER.blendMode(0, BlendMode.CUTOUT_MIPPED).find();
-	protected final RenderMaterial MAT_DIFFUSE_TRANSLUCENT = MATERIAL_FINDER.blendMode(0, BlendMode.TRANSLUCENT).find();
-	protected final RenderMaterial MAT_EMISSIVE = MATERIAL_FINDER.emissive(0, true).disableAo(0, true).disableDiffuse(0, true).find();
+	protected static final RenderMaterial MAT_DIFFUSE_OPAQUE;
+	protected static final RenderMaterial MAT_DIFFUSE_CUTOUT;
+	protected static final RenderMaterial MAT_DIFFUSE_TRANSLUCENT;
+	protected static final RenderMaterial MAT_EMISSIVE;
 
 	protected final Sprite modelSprite;
 	protected final ModelTransformation transformation;
 
 	static
 	{
-		var renderer = RendererAccess.INSTANCE.getRenderer();
-		if (renderer == null)
-			MATERIAL_FINDER = new RenderMaterialImpl.Finder();
-		else
-			MATERIAL_FINDER = renderer.materialFinder();
+		var materialFinder = createMaterialFinder();
+
+		MAT_DIFFUSE_OPAQUE = materialFinder.find();
+		MAT_DIFFUSE_CUTOUT = materialFinder.blendMode(0, BlendMode.CUTOUT_MIPPED).find();
+		MAT_DIFFUSE_TRANSLUCENT = materialFinder.blendMode(0, BlendMode.TRANSLUCENT).find();
+		MAT_EMISSIVE = materialFinder.emissive(0, true).disableAo(0, true).disableDiffuse(0, true).find();
 	}
 
 	protected AbstractModel(Sprite sprite, ModelTransformation transformation)
 	{
 		modelSprite = sprite;
 		this.transformation = transformation;
+	}
+
+	protected static MaterialFinder createMaterialFinder()
+	{
+		var renderer = RendererAccess.INSTANCE.getRenderer();
+		if (renderer == null)
+			return new RenderMaterialImpl.Finder();
+		else
+			return renderer.materialFinder();
+	}
+
+	protected static MeshBuilder createMeshBuilder()
+	{
+		var renderer = RendererAccess.INSTANCE.getRenderer();
+		if (renderer == null)
+			return new MeshBuilderImpl();
+		else
+			return renderer.meshBuilder();
 	}
 
 	@Override
