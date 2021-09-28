@@ -16,7 +16,9 @@
 
 package com.parzivail.util.client.model;
 
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
+import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.impl.client.indigo.renderer.RenderMaterialImpl;
@@ -26,7 +28,7 @@ import net.minecraft.client.texture.Sprite;
 
 public abstract class AbstractModel implements BakedModel, FabricBakedModel
 {
-	protected static final RenderMaterialImpl.Finder MATERIAL_FINDER = new RenderMaterialImpl.Finder();
+	protected static final MaterialFinder MATERIAL_FINDER;
 
 	protected final RenderMaterial MAT_DIFFUSE_OPAQUE = MATERIAL_FINDER.find();
 	protected final RenderMaterial MAT_DIFFUSE_CUTOUT = MATERIAL_FINDER.blendMode(0, BlendMode.CUTOUT_MIPPED).find();
@@ -35,6 +37,15 @@ public abstract class AbstractModel implements BakedModel, FabricBakedModel
 
 	protected final Sprite modelSprite;
 	protected final ModelTransformation transformation;
+
+	static
+	{
+		var renderer = RendererAccess.INSTANCE.getRenderer();
+		if (renderer == null)
+			MATERIAL_FINDER = new RenderMaterialImpl.Finder();
+		else
+			MATERIAL_FINDER = renderer.materialFinder();
+	}
 
 	protected AbstractModel(Sprite sprite, ModelTransformation transformation)
 	{
