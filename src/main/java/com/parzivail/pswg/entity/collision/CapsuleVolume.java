@@ -29,8 +29,7 @@ public record CapsuleVolume(Vec3d start, Vec3d end, double radius)
 	public Vec3d closestDistanceTo(CapsuleVolume other)
 	{
 		var result = CollisionUtil.closestPointsOnSegments(start, end, other.start, other.end);
-		var chord = result.b().subtract(result.a());
-		return chord;
+		return result.b().subtract(result.a());
 	}
 
 	public CapsuleVolume transform(Quaternion q)
