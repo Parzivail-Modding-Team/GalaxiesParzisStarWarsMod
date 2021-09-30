@@ -5,14 +5,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.mutable.MutableObject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class ComplexCollisionManager
 {
-	public static void adjustMovementForCollisions(Entity entity, Vec3d proposedMovement, CallbackInfoReturnable<Vec3d> cir, Box box, Vec3d currentMovement)
+	public static Vec3d adjustMovementForCollisions(Entity entity, Vec3d currentMovement)
 	{
+		var box = entity.getBoundingBox();
 		if (box.getAverageSideLength() < 1.0E-7D)
-			return;
+			return currentMovement;
 
 		Box box2 = box.expand(4);
 		var complexEntities = entity.world.getOtherEntities(entity, box2, other -> other instanceof IComplexEntityHitbox iceh && roughCollidesWith(iceh, entity)).stream();
@@ -25,7 +25,7 @@ public class ComplexCollisionManager
 			collide(entity, sourceHitbox, m, (IComplexEntityHitbox)e);
 		});
 
-		cir.setReturnValue(m.getValue());
+		return m.getValue();
 	}
 
 	private static void collide(Entity entity, CapsuleVolume sourceHitbox, MutableObject<Vec3d> m, IComplexEntityHitbox e)
@@ -34,7 +34,8 @@ public class ComplexCollisionManager
 
 		for (var volume : hitbox)
 		{
-			var result = CollisionUtil.closestPointsOnSegments(sourceHitbox.start().add(m.getValue()), sourceHitbox.end().add(m.getValue()), volume.start(), volume.end());
+			var movement = m.getValue();
+			var result = CollisionUtil.closestPointsOnSegments(sourceHitbox.start().add(movement), sourceHitbox.end().add(movement), volume.start(), volume.end());
 
 			var intersectionRay = result.b().subtract(result.a());
 //			var aPos = result.a().add(rayDir.multiply(sourceHitbox.radius()));
@@ -50,17 +51,17 @@ public class ComplexCollisionManager
 				continue;
 
 			// Check if we're trying to move away from the intersection
-			if (m.getValue().dotProduct(intersectionRay) <= 0)
+			if (movement.dotProduct(intersectionRay) <= 0)
 				continue;
 
-			var rayDir = intersectionRay.normalize();
 			var intersectionLength = intersectionRay.length();
 			var overlap = intersectionLength - minDistance;
 
-			var in = m.getValue();
-			var impulse = rayDir.multiply(intersectionRay.multiply(overlap / intersectionLength).dotProduct(rayDir));
+			var rayDir = intersectionRay.normalize();
 
-			m.setValue(in.add(impulse));
+			var impulse = rayDir.multiply(overlap);
+
+			m.setValue(movement.add(impulse));
 		}
 	}
 
