@@ -15,12 +15,14 @@ public class PlayerPacketHandler
 {
 	public static void handleLeftClickPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		var stack = player.getMainHandStack();
+		server.execute(() -> {
+			var stack = player.getMainHandStack();
 
-		if (stack.getItem() instanceof ILeftClickConsumer)
-		{
-			((ILeftClickConsumer)stack.getItem()).useLeft(player.world, player, Hand.MAIN_HAND);
-		}
+			if (stack.getItem() instanceof ILeftClickConsumer)
+			{
+				((ILeftClickConsumer)stack.getItem()).useLeft(player.world, player, Hand.MAIN_HAND);
+			}
+		});
 	}
 
 	public static void handleItemAction(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
