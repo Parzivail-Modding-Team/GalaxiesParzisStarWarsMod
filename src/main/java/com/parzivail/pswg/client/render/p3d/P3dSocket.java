@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class P3dSocket
 {
-	public ArrayList<P3dObject> ancestry;
+	public ArrayList<P3dSocket> ancestry;
 
 	public final String name;
 	public final String parent;

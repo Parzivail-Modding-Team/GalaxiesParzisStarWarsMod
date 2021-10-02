@@ -6,6 +6,7 @@ import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
@@ -42,22 +43,39 @@ public class HitboxHelper
 		var up = QuatUtil.rotate(new Vec3d(volume.radius(), 0, 0), rotation);
 		var left = forward.crossProduct(up).normalize().multiply(volume.radius());
 
+		var back = forward.multiply(-1);
+		var down = up.multiply(-1);
+		var right = left.multiply(-1);
+
 		line(vertices, matrices, s, e);
 
 		line(vertices, matrices, s.add(up), e.add(up));
+		line(vertices, matrices, s.add(down), e.add(down));
+
 		line(vertices, matrices, s.add(left), e.add(left));
-		line(vertices, matrices, s.subtract(up), e.subtract(up));
-		line(vertices, matrices, s.subtract(left), e.subtract(left));
+		line(vertices, matrices, s.add(right), e.add(right));
 
-		line(vertices, matrices, s.subtract(forward), s.add(left));
-		line(vertices, matrices, s.subtract(forward), s.add(up));
-		line(vertices, matrices, s.subtract(forward), s.subtract(left));
-		line(vertices, matrices, s.subtract(forward), s.subtract(up));
+		dome(matrices, vertices, e, forward, up, left, down, right);
+		dome(matrices, vertices, s, back, up, left, down, right);
+	}
 
-		line(vertices, matrices, e.add(forward), e.add(left));
-		line(vertices, matrices, e.add(forward), e.add(up));
-		line(vertices, matrices, e.add(forward), e.subtract(left));
-		line(vertices, matrices, e.add(forward), e.subtract(up));
+	private static void dome(MatrixStack matrices, VertexConsumer vertices, Vec3d origin, Vec3d normal, Vec3d up, Vec3d left, Vec3d down, Vec3d right)
+	{
+		quarterCircle(vertices, matrices, origin, normal, up);
+		quarterCircle(vertices, matrices, origin, normal, down);
+		quarterCircle(vertices, matrices, origin, normal, left);
+		quarterCircle(vertices, matrices, origin, normal, right);
+		quarterCircle(vertices, matrices, origin, left, up);
+		quarterCircle(vertices, matrices, origin, left, down);
+		quarterCircle(vertices, matrices, origin, right, up);
+		quarterCircle(vertices, matrices, origin, right, down);
+	}
+
+	private static void quarterCircle(VertexConsumer vertices, MatrixStack ms, Vec3d origin, Vec3d r1, Vec3d r2)
+	{
+		var center = origin.add(r1.add(r2).multiply(MathHelper.SQUARE_ROOT_OF_TWO / 2));
+		line(vertices, ms, origin.add(r1), center);
+		line(vertices, ms, center, origin.add(r2));
 	}
 
 	private static void line(VertexConsumer vertices, MatrixStack ms, Vec3d start, Vec3d end)

@@ -7,7 +7,6 @@ import com.parzivail.pswg.client.render.p3d.P3dObject;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
-import com.parzivail.util.math.Transform;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -19,7 +18,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.math.Vector4f;
 
 public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 {
@@ -36,7 +34,7 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 
 		var modelRef = Client.ResourceManagers.getP3dManager().get(Resources.id("ship/xwing_t65b_test_with_sockets"));
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
-		for (var mesh : modelRef.rootMeshes)
+		for (var mesh : modelRef.rootObjects)
 			renderMesh(matrix, entity, light, vertexConsumer, mesh, tickDelta);
 	}
 
@@ -45,16 +43,13 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 		matrix.push();
 
 		var entry = matrix.peek();
-
 		entry.getNormal().multiply(new Matrix3f(o.transform));
 		entry.getModel().multiply(o.transform);
 
+		matrix.method_34425(RigT65B.INSTANCE.getPartTransformation(entity, o.name, tickDelta));
+
 		var modelMat = entry.getModel();
 		var normalMat = entry.getNormal();
-
-		var t = new Transform();
-		t.multiply(RigT65B.INSTANCE.getPartTransformation(entity, o.name, tickDelta));
-		matrix.method_34425(t.value().getModel());
 
 		for (var face : o.faces)
 		{
@@ -80,11 +75,14 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 
 	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vec3f vertex, Vec3f normal, Vec3f texCoord)
 	{
-		var v = new Vector4f(vertex.getX(), vertex.getY(), vertex.getZ(), 1.0F);
-		v.transform(modelMatrix);
-		var n = new Vec3f(normal.getX(), normal.getY(), normal.getZ());
-		n.transform(normalMatrix);
-		vertexConsumer.vertex(v.getX(), v.getY(), v.getZ(), 1, 1, 1, 1, texCoord.getX(), 1 - texCoord.getY(), OverlayTexture.DEFAULT_UV, light, n.getX(), n.getY(), n.getZ());
+		vertexConsumer
+				.vertex(modelMatrix, vertex.getX(), vertex.getY(), vertex.getZ())
+				.color(255, 255, 255, 255)
+				.texture(texCoord.getX(), 1 - texCoord.getY())
+				.overlay(OverlayTexture.DEFAULT_UV)
+				.light(light)
+				.normal(normalMatrix, normal.getX(), normal.getY(), normal.getZ())
+				.next();
 	}
 
 	@Override

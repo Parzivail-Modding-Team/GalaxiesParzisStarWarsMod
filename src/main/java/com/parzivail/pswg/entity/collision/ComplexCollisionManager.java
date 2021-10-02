@@ -38,26 +38,23 @@ public class ComplexCollisionManager
 			var result = CollisionUtil.closestPointsOnSegments(sourceHitbox.start().add(movement), sourceHitbox.end().add(movement), volume.start(), volume.end());
 
 			var intersectionRay = result.b().subtract(result.a());
-//			var aPos = result.a().add(rayDir.multiply(sourceHitbox.radius()));
-//			var bPos = result.b().subtract(rayDir.multiply(volume.radius()));
-//
-//			entity.world.addParticle(ParticleTypes.FLAME, aPos.x, aPos.y, aPos.z, 0, 0, 0);
-//			entity.world.addParticle(ParticleTypes.FLAME, bPos.x, bPos.y, bPos.z, 0, 0, 0);
 
 			var minDistance = sourceHitbox.radius() + volume.radius();
 
 			// Check if the volume is intersecting
-			if (result.squareDistance() > minDistance * minDistance)
-				continue;
-
-			// Check if we're trying to move away from the intersection
-			if (movement.dotProduct(intersectionRay) <= 0)
+			if (result.squareDistance() > minDistance * minDistance + 0.1f)
 				continue;
 
 			var intersectionLength = intersectionRay.length();
 			var overlap = intersectionLength - minDistance;
 
 			var rayDir = intersectionRay.normalize();
+
+//			var aPos = result.a().add(rayDir.multiply(sourceHitbox.radius()));
+//			var bPos = result.b().subtract(rayDir.multiply(volume.radius()));
+//
+//			entity.world.addParticle(ParticleTypes.FLAME, aPos.x, aPos.y, aPos.z, 0, 0, 0);
+//			entity.world.addParticle(ParticleTypes.FLAME, bPos.x, bPos.y, bPos.z, 0, 0, 0);
 
 			var impulse = rayDir.multiply(overlap);
 

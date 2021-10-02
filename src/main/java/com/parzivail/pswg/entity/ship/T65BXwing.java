@@ -20,14 +20,19 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 
 public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 {
-	private static final CapsuleVolume VOL_FUSELAGE = new CapsuleVolume(new Vec3d(0, 0, 1), new Vec3d(0, 0, -4), 0.75);
-	private static final CapsuleVolume VOL_MECHANICS = new CapsuleVolume(new Vec3d(0, -0.25f, 1), new Vec3d(0, -0.25f, 4.3), 1.5);
-	private static final CapsuleVolume VOL_WING_TOP_RIGHT = new CapsuleVolume(new Vec3d(4.2, 0.27, 2.66), new Vec3d(4.2, 0.27, -3.5), 0.2);
+	private static final CapsuleVolume VOL_FUSELAGE = new CapsuleVolume(new Vec3d(0, 0.12, 1), new Vec3d(0, 0.12, -4.65), 0.3);
+	private static final CapsuleVolume VOL_MECHANICS = new CapsuleVolume(new Vec3d(0, 0, 3.7), new Vec3d(0, 0, 1), 0.8);
+	private static final CapsuleVolume VOL_WING_TOP_RIGHT = new CapsuleVolume(new Vec3d(4.2, 0.27, 0.3), new Vec3d(4.2, 0.27, -5.5), 0.2);
+	private static final CapsuleVolume VOL_WING_BOTTOM_RIGHT = new CapsuleVolume(new Vec3d(4.2, -0.27, 0.3), new Vec3d(4.2, -0.27, -5.5), 0.2);
+	private static final CapsuleVolume VOL_WING_TOP_LEFT = new CapsuleVolume(new Vec3d(-4.2, 0.27, 0.3), new Vec3d(-4.2, 0.27, -5.5), 0.2);
+	private static final CapsuleVolume VOL_WING_BOTTOM_LEFT = new CapsuleVolume(new Vec3d(-4.2, -0.27, 0.3), new Vec3d(-4.2, -0.27, -5.5), 0.2);
 
 	private static final TrackedData<Byte> WING_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final TrackedData<Byte> COCKPIT_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -166,13 +171,27 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		var rot = getRotation();
 
 		var posMat = Matrix4f.translate((float)pos.x, (float)pos.y, (float)pos.z);
-		var wingTransform = posMat.copy();
-		wingTransform.multiply(rot);
-		wingTransform.multiply(RigT65B.INSTANCE.getPartTransformation(this, "WingTopRight", 0));
 
 		return new CapsuleVolume[] {
 				VOL_FUSELAGE.transform(rot).transform(posMat),
-				VOL_MECHANICS.transform(rot).transform(posMat)
+				VOL_MECHANICS.transform(rot).transform(posMat),
+				VOL_WING_TOP_RIGHT.transform(getWingCollisionTransform(rot, posMat, "WingTopRight")),
+				VOL_WING_BOTTOM_RIGHT.transform(getWingCollisionTransform(rot, posMat, "WingBottomRight")),
+				VOL_WING_TOP_LEFT.transform(getWingCollisionTransform(rot, posMat, "WingTopLeft")),
+				VOL_WING_BOTTOM_LEFT.transform(getWingCollisionTransform(rot, posMat, "WingBottomLeft"))
 		};
+	}
+
+	@NotNull
+	private Matrix4f getWingCollisionTransform(Quaternion rot, Matrix4f posMat, String wing)
+	{
+		var wingTransform = posMat.copy();
+		wingTransform.multiply(RigT65B.INSTANCE.getTransform(this, rot, wing, 0));
+		wingTransform.multiply(RigT65B.INSTANCE.getPartTransformation(this, wing, 0));
+
+		// TODO: why?
+		wingTransform.multiply(new Quaternion(90, 0, 0, true));
+
+		return wingTransform;
 	}
 }

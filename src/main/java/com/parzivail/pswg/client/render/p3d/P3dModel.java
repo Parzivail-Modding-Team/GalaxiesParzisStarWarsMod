@@ -23,16 +23,14 @@ public class P3dModel
 	private static final int[] ACCEPTED_VERSIONS = { 0x01 };
 
 	public final int version;
-	public final HashMap<String, P3dSocket> sockets;
-	public final P3dObject[] rootMeshes;
-	public final HashMap<String, P3dObject> meshMap;
+	public final HashMap<String, P3dSocket> transformables;
+	public final P3dObject[] rootObjects;
 
-	public P3dModel(int version, HashMap<String, P3dSocket> sockets, P3dObject[] rootMeshes, HashMap<String, P3dObject> meshMap)
+	public P3dModel(int version, HashMap<String, P3dSocket> transformables, P3dObject[] rootObjects)
 	{
 		this.version = version;
-		this.sockets = sockets;
-		this.rootMeshes = rootMeshes;
-		this.meshMap = meshMap;
+		this.transformables = transformables;
+		this.rootObjects = rootObjects;
 	}
 
 	public static P3dModel tryLoad(Identifier modelFile, boolean hasVertexData)
@@ -70,7 +68,7 @@ public class P3dModel
 
 		// read sockets
 		var numSockets = objStream.readInt();
-		var sockets = new HashMap<String, P3dSocket>();
+		var transformables = new HashMap<String, P3dSocket>();
 
 		for (var socketIdx = 0; socketIdx < numSockets; socketIdx++)
 		{
@@ -84,39 +82,43 @@ public class P3dModel
 
 			var transform = DataReader.readMatrix4f(objStream);
 
-			sockets.put(name, new P3dSocket(name, parent, transform));
+			transformables.put(name, new P3dSocket(name, parent, transform));
 		}
 
-		// read meshes
-		var numMeshes = objStream.readInt();
-		var meshes = new P3dObject[numMeshes];
-		var meshMap = new HashMap<String, P3dObject>();
+		// read objects
+		var numObjects = objStream.readInt();
+		var rootObjects = new P3dObject[numObjects];
 
-		for (var meshIdx = 0; meshIdx < numMeshes; meshIdx++)
+		for (var objectIdx = 0; objectIdx < numObjects; objectIdx++)
 		{
-			var mesh = readMesh(meshMap, null, objStream, hasVertexData);
-			meshMap.put(mesh.name, mesh);
+			var object = readObject(transformables, null, objStream, hasVertexData);
+			transformables.put(object.name, object);
 
-			meshes[meshIdx] = mesh;
+			rootObjects[objectIdx] = object;
 		}
 
-		// build ancestry trees for sockets which enables directly calculating transformation
-		for (var socket : sockets.values())
+		// build ancestry trees for sockets and parts which enables directly calculating transformation
+		buildAncestry(transformables);
+
+		return new P3dModel(version, transformables, rootObjects);
+	}
+
+	private static void buildAncestry(HashMap<String, P3dSocket> parts)
+	{
+		for (var part : parts.values())
 		{
-			var parent = socket.parent;
-			while (parent != null)
+			var parentName = part.parent;
+			while (parentName != null)
 			{
-				var parentMesh = meshMap.get(parent);
-				socket.ancestry.add(0, parentMesh);
-				parent = parentMesh.parent;
+				var parent = parts.get(parentName);
+				part.ancestry.add(0, parent);
+				parentName = parent.parent;
 			}
 		}
-
-		return new P3dModel(version, sockets, meshes, meshMap);
 	}
 
 	@NotNull
-	private static P3dObject readMesh(HashMap<String, P3dObject> meshes, String parent, LittleEndianDataInputStream objStream, boolean hasVertexData) throws IOException
+	private static P3dObject readObject(HashMap<String, P3dSocket> objects, String parent, LittleEndianDataInputStream objStream, boolean hasVertexData) throws IOException
 	{
 		var name = DataReader.readNullTerminatedString(objStream);
 
@@ -148,8 +150,8 @@ public class P3dModel
 
 		for (var childIdx = 0; childIdx < numChildren; childIdx++)
 		{
-			var m = readMesh(meshes, name, objStream, hasVertexData);
-			meshes.put(m.name, m);
+			var m = readObject(objects, name, objStream, hasVertexData);
+			objects.put(m.name, m);
 			children[childIdx] = m;
 		}
 
