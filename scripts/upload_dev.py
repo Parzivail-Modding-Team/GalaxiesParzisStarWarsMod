@@ -4,6 +4,11 @@ import sys
 
 import requests
 
+# Ensure working directory is correct
+os.chdir(sys.path[0])
+
+print("Current directory: " + os.getcwd())
+
 gittags = subprocess.check_output("git describe --tags").strip()
 file = f"pswg-{gittags}.jar"
 if os.path.isfile(file):
