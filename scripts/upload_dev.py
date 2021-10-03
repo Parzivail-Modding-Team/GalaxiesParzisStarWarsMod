@@ -12,5 +12,5 @@ if os.path.isfile(file):
             print("discord response: ", resp.text)
         subprocess.check_call(["curl", "--location", "--resolve=kb1000.de:443:10.244.44.214", "--request", "POST", sys.argv[2], "--form", f"file=@{file}"])
 else:
-    with requests.post(sys.argv[1], data={"content": f"Build {os.environ['BUILD_NUMBER']} failed! :x:"}) as resp:
+    with requests.post(sys.argv[1], data={"content": f"Build {os.environ['BUILD_NUMBER']} failed! \N{CROSS MARK}"}) as resp:
         print("discord response: ", resp.text)
