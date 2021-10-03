@@ -6,7 +6,7 @@ import requests
 
 print("Current directory: " + os.getcwd())
 
-gittags = subprocess.check_output("git describe --tags").strip()
+gittags = subprocess.check_output("git describe --tags").strip().decode()
 file = f"pswg-{gittags}.jar"
 print("Trying to upload", os.path.realpath(file))
 if os.path.isfile(file):
