@@ -353,7 +353,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			m.multiply(new Quaternion(0, entityYaw, 0, true));
 			m.multiply(new Quaternion(entityPitch, 0, 0, true));
 
-			var fromDir = Matrix4fUtil.transform(MathUtil.POSZ, m);
+			var fromDir = Matrix4fUtil.transform(MathUtil.POSZ, m).normalize();
 
 			var range = bd.range;
 			var damage = bd.damage;

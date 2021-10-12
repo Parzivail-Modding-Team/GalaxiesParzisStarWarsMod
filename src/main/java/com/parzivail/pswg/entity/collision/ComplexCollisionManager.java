@@ -42,7 +42,7 @@ public class ComplexCollisionManager
 			var minDistance = sourceHitbox.radius() + volume.radius();
 
 			// Check if the volume is intersecting
-			if (result.squareDistance() > minDistance * minDistance + 0.1f)
+			if (result.squareDistance() > minDistance * minDistance)
 				continue;
 
 			var intersectionLength = intersectionRay.length();

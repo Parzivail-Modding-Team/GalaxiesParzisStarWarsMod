@@ -98,7 +98,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 
 		var p = RigT65B.INSTANCE.getWorldPosition(stack, this, this.getRotation(), CANNON_ORDER[cannonState], 0);
 
-		BlasterUtil.fireBolt(world, player, pDir, 100, 50, blasterBoltEntity -> {
+		BlasterUtil.fireBolt(world, player, pDir.normalize(), 100, 50, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
 			blasterBoltEntity.setPos(this.getX() + p.x, this.getY() + p.y, this.getZ() + p.z);
 		});
