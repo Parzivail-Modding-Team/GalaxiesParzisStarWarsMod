@@ -30,7 +30,8 @@ public class PlayerEntityRendererWithModel extends PlayerEntityRenderer
 		// This works because this method is called
 		// when the pose is set, before this.model is
 		// used directly
-		this.model = modelSupplier.get();
+		if (modelSupplier != null)
+			this.model = modelSupplier.get();
 		return super.getModel();
 	}
 
