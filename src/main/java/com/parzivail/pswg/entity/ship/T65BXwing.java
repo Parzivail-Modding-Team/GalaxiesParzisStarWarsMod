@@ -29,10 +29,16 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 {
 	private static final CapsuleVolume VOL_FUSELAGE = new CapsuleVolume(new Vec3d(0, 0.12, 1), new Vec3d(0, 0.12, -4.65), 0.3);
 	private static final CapsuleVolume VOL_MECHANICS = new CapsuleVolume(new Vec3d(0, 0, 3.7), new Vec3d(0, 0, 1), 0.8);
+
 	private static final CapsuleVolume VOL_WING_TOP_RIGHT = new CapsuleVolume(new Vec3d(4.2, 0.27, 0.3), new Vec3d(4.2, 0.27, -5.5), 0.2);
 	private static final CapsuleVolume VOL_WING_BOTTOM_RIGHT = new CapsuleVolume(new Vec3d(4.2, -0.27, 0.3), new Vec3d(4.2, -0.27, -5.5), 0.2);
 	private static final CapsuleVolume VOL_WING_TOP_LEFT = new CapsuleVolume(new Vec3d(-4.2, 0.27, 0.3), new Vec3d(-4.2, 0.27, -5.5), 0.2);
 	private static final CapsuleVolume VOL_WING_BOTTOM_LEFT = new CapsuleVolume(new Vec3d(-4.2, -0.27, 0.3), new Vec3d(-4.2, -0.27, -5.5), 0.2);
+
+	private static final CapsuleVolume VOL_ENGINE_TOP_RIGHT = new CapsuleVolume(new Vec3d(1.17, 0.42, 1.6), new Vec3d(1.17, 0.42, -1.3), 0.5);
+	private static final CapsuleVolume VOL_ENGINE_BOTTOM_RIGHT = new CapsuleVolume(new Vec3d(1.17, -0.42, 1.6), new Vec3d(1.17, -0.42, -1.3), 0.5);
+	private static final CapsuleVolume VOL_ENGINE_TOP_LEFT = new CapsuleVolume(new Vec3d(-1.17, 0.42, 1.6), new Vec3d(-1.17, 0.42, -1.3), 0.5);
+	private static final CapsuleVolume VOL_ENGINE_BOTTOM_LEFT = new CapsuleVolume(new Vec3d(-1.17, -0.42, 1.6), new Vec3d(-1.17, -0.42, -1.3), 0.5);
 
 	private static final TrackedData<Byte> WING_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final TrackedData<Byte> COCKPIT_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -172,13 +178,22 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 
 		var posMat = Matrix4f.translate((float)pos.x, (float)pos.y, (float)pos.z);
 
+		var transformTopRight = getWingCollisionTransform(rot, posMat, "WingTopRight");
+		var transformBottomRight = getWingCollisionTransform(rot, posMat, "WingBottomRight");
+		var transformTopLeft = getWingCollisionTransform(rot, posMat, "WingTopLeft");
+		var transformBottomLeft = getWingCollisionTransform(rot, posMat, "WingBottomLeft");
+
 		return new CapsuleVolume[] {
 				VOL_FUSELAGE.transform(rot).transform(posMat),
 				VOL_MECHANICS.transform(rot).transform(posMat),
-				VOL_WING_TOP_RIGHT.transform(getWingCollisionTransform(rot, posMat, "WingTopRight")),
-				VOL_WING_BOTTOM_RIGHT.transform(getWingCollisionTransform(rot, posMat, "WingBottomRight")),
-				VOL_WING_TOP_LEFT.transform(getWingCollisionTransform(rot, posMat, "WingTopLeft")),
-				VOL_WING_BOTTOM_LEFT.transform(getWingCollisionTransform(rot, posMat, "WingBottomLeft"))
+				VOL_WING_TOP_RIGHT.transform(transformTopRight),
+				VOL_WING_BOTTOM_RIGHT.transform(transformBottomRight),
+				VOL_WING_TOP_LEFT.transform(transformTopLeft),
+				VOL_WING_BOTTOM_LEFT.transform(transformBottomLeft),
+				VOL_ENGINE_TOP_RIGHT.transform(transformTopRight),
+				VOL_ENGINE_BOTTOM_RIGHT.transform(transformBottomRight),
+				VOL_ENGINE_TOP_LEFT.transform(transformTopLeft),
+				VOL_ENGINE_BOTTOM_LEFT.transform(transformBottomLeft)
 		};
 	}
 
