@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","group":"minecraft:piston","pattern":["aaa","bcb","bdb"],"key":{"b":{"item":"minecraft:cobblestone"},"c":{"item":"pswg:plasteel_ingot"},"a":{"tag":"minecraft:planks"},"d":{"item":"minecraft:redstone"}},"result":{"item":"minecraft:piston","count":1}}

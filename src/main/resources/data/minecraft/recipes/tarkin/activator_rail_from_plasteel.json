@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","group":"minecraft:activator_rail","pattern":["aba","aca","aba"],"key":{"c":{"item":"minecraft:redstone_torch"},"a":{"item":"pswg:plasteel_ingot"},"b":{"item":"minecraft:stick"}},"result":{"item":"minecraft:activator_rail","count":6}}

@@ -49,6 +49,7 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 				{
 					jsonWriter.setIndent("\t");
 					GSON.toJson(sortKeysRecursively(json), jsonWriter);
+					writer.write('\n');
 				}
 			}
 			catch (IOException e)
@@ -65,6 +66,7 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 				try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.US_ASCII))
 				{
 					GSON.toJson(contents, writer);
+					writer.write('\n');
 				}
 			}
 			catch (IOException e)

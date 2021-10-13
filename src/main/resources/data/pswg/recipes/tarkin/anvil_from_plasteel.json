@@ -1,0 +1,1 @@
+{"type":"minecraft:crafting_shaped","group":"minecraft:anvil","pattern":["aaa"," b ","bbb"],"key":{"b":{"item":"pswg:plasteel_ingot"},"a":{"item":"pswg:plasteel_block"}},"result":{"item":"minecraft:anvil","count":1}}

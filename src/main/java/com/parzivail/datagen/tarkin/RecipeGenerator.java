@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.parzivail.datagen.tarkin.crafting.IJsonCraftingComponent;
 import com.parzivail.datagen.tarkin.crafting.IngredientTag;
 import com.parzivail.datagen.tarkin.crafting.ItemConvertibleJsonCraftingComponent;
+import com.parzivail.pswg.Resources;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
@@ -124,7 +125,7 @@ public abstract class RecipeGenerator
 		if (sourceName != null)
 			source = "_from_" + sourceName;
 
-		assets.add(BuiltAsset.recipe(IdentifierUtil.concat(output, source), root));
+		assets.add(BuiltAsset.recipe(Resources.id(IdentifierUtil.concat(output, source).getPath()), root));
 	}
 
 	public static class Cooking extends RecipeGenerator
@@ -427,7 +428,7 @@ public abstract class RecipeGenerator
 				if (shape.sourceName != null)
 					source = "_from_" + shape.sourceName;
 
-				assets.add(BuiltAsset.recipe(IdentifierUtil.concat(output, source), root));
+				assets.add(BuiltAsset.recipe(Resources.id(IdentifierUtil.concat(output, source).getPath()), root));
 			}
 		}
 

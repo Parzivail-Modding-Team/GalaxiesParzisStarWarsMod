@@ -1,1 +1,0 @@
-{"type":"minecraft:crafting_shaped","group":"minecraft:rail","pattern":["a a","aba","a a"],"key":{"a":{"item":"pswg:plasteel_ingot"},"b":{"item":"minecraft:stick"}},"result":{"item":"minecraft:rail","count":16}}
