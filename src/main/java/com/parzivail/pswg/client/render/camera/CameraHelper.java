@@ -14,6 +14,8 @@ public class CameraHelper
 {
 	public static final MutableCameraEntity MUTABLE_CAMERA_ENTITY = new MutableCameraEntity();
 
+	public static boolean forcePlayerRender = false;
+
 	public static void applyCameraTransformations(float tickDelta, long limitTime, MatrixStack matrix, Camera camera)
 	{
 		var minecraft = MinecraftClient.getInstance();
@@ -78,6 +80,9 @@ public class CameraHelper
 
 	public static void playerRenderHead(AbstractClientPlayerEntity abstractClientPlayerEntity, CallbackInfo ci)
 	{
+		if (forcePlayerRender)
+			return;
+
 		var ship = ShipEntity.getShip(abstractClientPlayerEntity);
 		if (ship != null && !ship.usePlayerPerspective())
 			ci.cancel();

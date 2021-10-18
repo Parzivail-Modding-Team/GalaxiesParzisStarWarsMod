@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.render.camera.CameraHelper;
 import com.parzivail.pswg.client.render.player.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
@@ -353,6 +354,8 @@ public class SpeciesSelectScreen extends Screen
 			}
 			else
 			{
+				CameraHelper.forcePlayerRender = true;
+
 				var species = SwgSpeciesRegistry.deserialize(speciesString);
 				var renderer = renderers.get(species.getModel().toString());
 
@@ -362,6 +365,8 @@ public class SpeciesSelectScreen extends Screen
 				}
 				else if (renderer != null)
 					renderer.render(client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+
+				CameraHelper.forcePlayerRender = false;
 			}
 		});
 		immediate.draw();
