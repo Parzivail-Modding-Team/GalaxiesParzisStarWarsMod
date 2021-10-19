@@ -55,8 +55,8 @@ public class ShipExteriorSoundInstance extends MovingSoundInstance
 		this.volume = Ease.inCubic(_floatingVolume.getAverage());
 
 		var mc = MinecraftClient.getInstance();
-		if (mc.cameraEntity != null)
-			this.pitch = 0.75f + _floatingPitch.getAverage() + MathUtil.calculateDopplerShift(source, mc.cameraEntity);
+		if (mc.getCameraEntity() != null)
+			this.pitch = 0.75f + _floatingPitch.getAverage() + MathUtil.calculateDopplerShift(source, mc.getCameraEntity());
 		else
 			this.pitch = 0.75f + _floatingPitch.getAverage();
 

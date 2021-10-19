@@ -21,7 +21,7 @@ public class DopplerSoundInstance extends MovingSoundInstance
 	public void tick()
 	{
 		var mc = MinecraftClient.getInstance();
-		if (mc.cameraEntity != null)
-			this.pitch = 1 + MathUtil.calculateDopplerShift(source, mc.cameraEntity);
+		if (mc.getCameraEntity() != null)
+			this.pitch = 1 + MathUtil.calculateDopplerShift(source, mc.getCameraEntity());
 	}
 }

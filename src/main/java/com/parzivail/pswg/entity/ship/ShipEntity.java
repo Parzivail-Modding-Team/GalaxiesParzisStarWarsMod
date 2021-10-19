@@ -178,7 +178,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	@Override
 	public boolean damage(DamageSource source, float amount)
 	{
-		if (this.isInvulnerableTo(source))
+		if (this.isInvulnerableTo(source) || source.getSource() == null)
 			return false;
 
 		this.kill();

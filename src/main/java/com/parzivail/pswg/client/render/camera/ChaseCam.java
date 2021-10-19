@@ -5,6 +5,7 @@ import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
@@ -48,13 +49,34 @@ public class ChaseCam
 		var camDpos = camTargetPosition.subtract(pos);
 
 		var lerpPos = pos.add(camDpos.multiply(lerpAmount));
-		var result = world.raycast(new RaycastContext(parent.getPos(), lerpPos, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, parent));
 
-		var totalDistance = parent.getPos().distanceTo(result.getPos());
-		if (totalDistance == 0)
-			pos = result.getPos();
-		else
-			pos = MathUtil.lerp((float)((totalDistance - 0.05) / totalDistance), parent.getPos(), result.getPos());
+		var parentPos = parent.getPos();
+		var dist = lerpPos.distanceTo(parentPos);
+		var targetDist = dist;
+
+		for (var i = 0; i < 8; ++i)
+		{
+			var f = (float)((i & 1) * 2 - 1);
+			var g = (float)((i >> 1 & 1) * 2 - 1);
+			var h = (float)((i >> 2 & 1) * 2 - 1);
+
+			f *= 0.1F;
+			g *= 0.1F;
+			h *= 0.1F;
+
+			var start = parentPos.add(f, g, h);
+			var end = lerpPos.add(f, g, h);
+			HitResult hitResult = world.raycast(new RaycastContext(start, end, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE, parent));
+
+			if (hitResult.getType() != HitResult.Type.MISS)
+			{
+				var d = hitResult.getPos().distanceTo(parentPos);
+				if (d < dist)
+					dist = (float)d;
+			}
+		}
+
+		pos = MathUtil.lerp((float)(dist / targetDist), parentPos, lerpPos);
 	}
 
 	private float getCamDistTarget(ShipEntity parent, Quaternion q)

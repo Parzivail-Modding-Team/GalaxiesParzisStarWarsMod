@@ -40,13 +40,16 @@ public class CameraHelper
 
 		r.conjugate();
 		matrix.multiply(r);
+
+		if (minecraft.options.getPerspective().isFirstPerson())
+			matrix.translate(0, -0.1, 0);
 	}
 
 	public static void renderHand(MatrixStack matrices, Camera camera, float tickDelta, CallbackInfo ci)
 	{
 		var minecraft = MinecraftClient.getInstance();
 
-		if (minecraft.cameraEntity instanceof MutableCameraEntity || minecraft.cameraEntity instanceof ShipEntity)
+		if (minecraft.getCameraEntity() instanceof MutableCameraEntity || minecraft.getCameraEntity() instanceof ShipEntity)
 			ci.cancel();
 	}
 
@@ -63,19 +66,19 @@ public class CameraHelper
 		{
 			if (ship.usePlayerPerspective())
 			{
-				minecraft.cameraEntity = player;
-//				QuatUtil.updateEulerRotation(minecraft.cameraEntity, ship.getViewRotation(minecraft.getTickDelta()));
+				minecraft.setCameraEntity(player);
+				//				QuatUtil.updateEulerRotation(minecraft.cameraEntity, ship.getViewRotation(minecraft.getTickDelta()));
 			}
 			else if (minecraft.options.getPerspective() != Perspective.FIRST_PERSON)
-				minecraft.cameraEntity = CameraHelper.MUTABLE_CAMERA_ENTITY.with(ship, ship.getCamera());
+				minecraft.setCameraEntity(CameraHelper.MUTABLE_CAMERA_ENTITY.with(ship, ship.getCamera()));
 			else
-				minecraft.cameraEntity = ship;
+				minecraft.setCameraEntity(ship);
 
 			return;
 		}
 
-		if (minecraft.cameraEntity instanceof MutableCameraEntity || minecraft.cameraEntity instanceof ShipEntity)
-			minecraft.cameraEntity = player;
+		if (minecraft.getCameraEntity() instanceof MutableCameraEntity || minecraft.getCameraEntity() instanceof ShipEntity)
+			minecraft.setCameraEntity(player);
 	}
 
 	public static void playerRenderHead(AbstractClientPlayerEntity abstractClientPlayerEntity, CallbackInfo ci)
