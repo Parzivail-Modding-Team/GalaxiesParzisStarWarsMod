@@ -119,6 +119,12 @@ public class SpeederEntity extends ShipEntity
 	}
 
 	@Override
+	public boolean acceptLeftClick(PlayerEntity player)
+	{
+		return false;
+	}
+
+	@Override
 	public Vec3d getPassengerSocket(int passengerIndex)
 	{
 		if (passengerIndex > 0)
