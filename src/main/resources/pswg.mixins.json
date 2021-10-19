@@ -34,6 +34,7 @@
 		"InGameHudMixin",
 		"ItemRendererMixin",
 		"LevelPropertiesMixin",
+		"MinecraftClientAccessor",
 		"MinecraftClientMixin",
 		"ParticleManagerMixin",
 		"PlayerEntityMixin",

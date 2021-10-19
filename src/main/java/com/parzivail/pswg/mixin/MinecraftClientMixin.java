@@ -38,7 +38,7 @@ public class MinecraftClientMixin
 	public ClientPlayerInteractionManager interactionManager;
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void init(RunArgs args, CallbackInfo ci)
+	private void initTail(RunArgs args, CallbackInfo ci)
 	{
 		var remoteAssetDir = args.directories.assetDir.toPath().resolve("pswgRemoteAssets");
 		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.toString());
@@ -47,8 +47,8 @@ public class MinecraftClientMixin
 		Client.tintedTextureProvider = new TintedTextureProvider(textureManager, "pswg:tinted");
 	}
 
-	@Inject(method = "initializeSearchableContainers()V", at = @At("TAIL"))
-	private void initializeSearchableContainers(CallbackInfo ci)
+	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;initializeSearchableContainers()V", shift = At.Shift.BEFORE))
+	private void initAtSearchable(RunArgs args, CallbackInfo ci)
 	{
 		// Registering the reloadable resource managers here because this method is
 		// only called once and it's before the tail of MinecraftClient's <init>,

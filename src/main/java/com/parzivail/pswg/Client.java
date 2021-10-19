@@ -31,6 +31,7 @@ import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
+import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.client.model.DynamicBakedModel;
@@ -57,6 +58,7 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.resource.ReloadableResourceManager;
 import net.minecraft.util.Identifier;
@@ -288,14 +290,26 @@ public class Client implements ClientModInitializer
 		{
 			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
 				if (blasterManager != null)
+				{
 					blasterManager.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
+					minecraftClient.execute(() -> {
+						((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
+						minecraftClient.getSearchableContainer(SearchManager.ITEM_TOOLTIP).reload();
+					});
+				}
 				else
 					Lumberjack.error("Attempted to sync blaster descriptors without initializing the client loader!");
 			});
 
 			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncLightsabers, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
 				if (lightsaberManager != null)
+				{
 					lightsaberManager.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
+					minecraftClient.execute(() -> {
+						((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
+						minecraftClient.getSearchableContainer(SearchManager.ITEM_TOOLTIP).reload();
+					});
+				}
 				else
 					Lumberjack.error("Attempted to sync lightsaber descriptors without initializing the client loader!");
 			});
