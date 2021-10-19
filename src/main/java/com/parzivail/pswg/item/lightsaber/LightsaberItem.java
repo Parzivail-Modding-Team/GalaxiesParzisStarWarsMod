@@ -7,6 +7,7 @@ import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.item.*;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ItemEntity;
@@ -26,6 +27,9 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityConsumer, IItemActionConsumer
 {
@@ -114,6 +118,13 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	public NbtCompound getDefaultTag(ItemConvertible item, int count)
 	{
 		return new LightsaberTag().toSubtag();
+	}
+
+	@Override
+	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
+	{
+		super.appendTooltip(stack, world, tooltip, context);
+		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.info"));
 	}
 
 	@Override

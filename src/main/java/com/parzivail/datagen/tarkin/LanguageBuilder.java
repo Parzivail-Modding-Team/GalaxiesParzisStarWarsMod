@@ -75,6 +75,11 @@ public class LanguageBuilder
 		return cloneWithRoot("item").modid().dot(value);
 	}
 
+	public LanguageBuilder tooltip(String value)
+	{
+		return cloneWithRoot("tooltip").modid().dot(value);
+	}
+
 	public LanguageBuilder itemGroup(String value)
 	{
 		return cloneWithRoot("itemGroup").modid().dot(value);

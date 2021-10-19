@@ -118,6 +118,9 @@ public class Tarkin
 		lang.item("blaster_rt97c").build(assets);
 		lang.item("blaster_t21").build(assets);
 
+		lang.tooltip("blaster").dot("info").build(assets);
+		lang.tooltip("lightsaber").dot("info").build(assets);
+
 		// Item groups
 		lang.itemGroup("main").build(assets);
 
