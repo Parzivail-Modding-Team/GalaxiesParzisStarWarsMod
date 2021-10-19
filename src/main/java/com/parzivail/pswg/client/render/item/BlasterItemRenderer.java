@@ -256,44 +256,47 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		{
 			opacity = MathHelper.clamp(1 - (float)Math.pow(Ease.inCubic(shotTime / (ID_MUZZLE_FLASHES.length - 1)), 2), 0, 1);
 
-			var frame = (int)Math.floor(MathHelper.clamp(bt.timeSinceLastShot + d, 0, ID_MUZZLE_FLASHES.length - 1));
-
-			var color = ColorUtil.fromHSV(bd.boltColor, 1, 1);
-			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
-			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
-
-			var colorId = String.valueOf((int)(bd.boltColor * 255));
-			var flash = Client.tintedTextureProvider.loadTexture("muzzleflash/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
-
-			var muzzlePos = new Vec3f((float)bd.muzzlePos.x, (float)bd.muzzlePos.y, -(float)bd.muzzlePos.z);
-
-			vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
-
-			final var flashradius = 0.75f;
-
-			VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY() - flashradius, muzzlePos.getZ(), 0, 0, 1, 0, 0);
-			VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY() - flashradius, muzzlePos.getZ(), 0, 0, 1, 1, 0);
-			VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY() + flashradius, muzzlePos.getZ(), 0, 0, 1, 1, 1);
-			VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY() + flashradius, muzzlePos.getZ(), 0, 0, 1, 0, 1);
-
-			if (!renderMode.isFirstPerson())
+			if (opacity > 0)
 			{
-				var forwardFlash = Client.tintedTextureProvider.loadTexture("muzzleflash_forward/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
-				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
+				var frame = (int)Math.floor(MathHelper.clamp(bt.timeSinceLastShot + d, 0, ID_MUZZLE_FLASHES.length - 1));
+
+				var color = ColorUtil.fromHSV(bd.boltColor, 1, 1);
+				var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
+				var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
+
+				var colorId = String.valueOf((int)(bd.boltColor * 255));
+				var flash = Client.tintedTextureProvider.loadTexture("muzzleflash/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
+
+				var muzzlePos = new Vec3f((float)bd.muzzlePos.x, (float)bd.muzzlePos.y, -(float)bd.muzzlePos.z);
+
+				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
 				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 
-				// vertical
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - flashradius, muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 0);
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - flashradius, muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + flashradius, muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + flashradius, muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 1);
+				final var flashradius = 0.75f;
 
-				// horizontal
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 0);
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 1);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY() - flashradius, muzzlePos.getZ(), 0, 0, 1, 0, 0);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY() - flashradius, muzzlePos.getZ(), 0, 0, 1, 1, 0);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY() + flashradius, muzzlePos.getZ(), 0, 0, 1, 1, 1);
+				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY() + flashradius, muzzlePos.getZ(), 0, 0, 1, 0, 1);
+
+				if (!renderMode.isFirstPerson())
+				{
+					var forwardFlash = Client.tintedTextureProvider.loadTexture("muzzleflash_forward/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
+					vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
+					VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
+
+					// vertical
+					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - flashradius, muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 0);
+					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - flashradius, muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
+					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + flashradius, muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
+					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + flashradius, muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 1);
+
+					// horizontal
+					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 0);
+					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
+					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
+					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 1);
+				}
 			}
 		}
 
