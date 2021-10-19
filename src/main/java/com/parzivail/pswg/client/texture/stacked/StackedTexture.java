@@ -141,7 +141,7 @@ public class StackedTexture extends ResourceTexture
 			for (var x = 0; x < width; x++)
 			{
 				for (var y = 0; y < height; y++)
-					base.setPixelColor(x, y, ColorUtil.blendColorsOnSrcAlpha(base.getPixelColor(x, y), layerImage.getPixelColor(x, y), tints[i], tintModes[i]));
+					base.setColor(x, y, ColorUtil.blendColorsOnSrcAlpha(base.getColor(x, y), layerImage.getColor(x, y), tints[i], tintModes[i]));
 			}
 		}
 

@@ -26,7 +26,7 @@ public class ColorUtil
 		var g = com.parzivail.util.math.MathUtil.clamp((int)((1 - srcA) * destG + srcA * srcG), 0, 255);
 		var b = MathUtil.clamp((int)((1 - srcA) * destB + srcA * srcB), 0, 255);
 
-		return NativeImage.getAbgrColor(a, b, g, r);
+		return NativeImage.packColor(a, b, g, r);
 	}
 
 	public static int tint(int src, int tint, TintedIdentifier.Mode tintMode)
@@ -68,7 +68,7 @@ public class ColorUtil
 			}
 		}
 
-		return NativeImage.getAbgrColor(srcA, srcB, srcG, srcR);
+		return NativeImage.packColor(srcA, srcB, srcG, srcR);
 	}
 
 	public static int packRgb(int r, int g, int b)
@@ -88,7 +88,7 @@ public class ColorUtil
 
 	public static int rgbaToAbgr(int value)
 	{
-		return NativeImage.getAbgrColor((value >>> 24) & 0xFF, (value) & 0xFF, (value >>> 8) & 0xFF, (value >>> 16) & 0xFF);
+		return NativeImage.packColor((value >>> 24) & 0xFF, (value) & 0xFF, (value >>> 8) & 0xFF, (value >>> 16) & 0xFF);
 	}
 
 	public static int fromHSV(final float hue, final float saturation, final float value)

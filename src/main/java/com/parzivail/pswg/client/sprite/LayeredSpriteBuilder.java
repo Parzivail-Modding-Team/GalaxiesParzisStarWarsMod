@@ -83,7 +83,7 @@ public class LayeredSpriteBuilder
 				for (int layer = 0, layerImagesLength = layerImages.length; layer < layerImagesLength; layer++)
 				{
 					var layerImage = layerImages[layer];
-					outImage.setPixelColor(x, y, ColorUtil.blendColorsOnSrcAlpha(outImage.getPixelColor(x, y), layerImage.getPixelColor(x, y), layerTints[layer], TintedIdentifier.Mode.Multiply));
+					outImage.setColor(x, y, ColorUtil.blendColorsOnSrcAlpha(outImage.getColor(x, y), layerImage.getColor(x, y), layerTints[layer], TintedIdentifier.Mode.Multiply));
 				}
 			}
 		}

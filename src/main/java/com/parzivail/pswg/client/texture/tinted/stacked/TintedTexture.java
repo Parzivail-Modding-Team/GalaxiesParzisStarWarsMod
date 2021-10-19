@@ -113,7 +113,7 @@ public class TintedTexture extends ResourceTexture
 		for (var x = 0; x < width; x++)
 		{
 			for (var y = 0; y < height; y++)
-				nativeImage.setPixelColor(x, y, ColorUtil.tint(nativeImage.getPixelColor(x, y), textureId.getTint(), textureId.getTintMode()));
+				nativeImage.setColor(x, y, ColorUtil.tint(nativeImage.getColor(x, y), textureId.getTint(), textureId.getTintMode()));
 		}
 
 		this.onTextureLoaded(nativeImage);
