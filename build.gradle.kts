@@ -50,17 +50,14 @@ fun getVersionName(): String
 	}
 	val version = stdout.toString().trim()
 
-	val pattern = Pattern.compile("""^([0-9.]+)\+([0-9.]+)((?:-g[0-9]+-[0-9a-f]+)?(?:-dirty)?)?${'$'}""")
-	if (!version.startsWith("1.16"))
-	{
-		val m = pattern.matcher(version)
-		if (m.matches())
-		{
-			val pre = m.group(3)
-			if (pre != null && pre.isNotEmpty())
-				return "${m.group(1)}$pre+${m.group(2)}"
-		}
-	}
+	val pattern = Pattern.compile("""^([0-9.]+)\+([0-9.]+)((?:-[0-9]+-g[0-9a-f]+)?(?:-dirty)?)?${'$'}""")
+    val m = pattern.matcher(version)
+    if (m.matches())
+    {
+        val pre = m.group(3)
+        if (pre != null && pre.isNotEmpty())
+            return "${m.group(1)}$pre+${m.group(2)}"
+    }
 	return version
 }
 
