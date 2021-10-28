@@ -12,19 +12,23 @@ class Namespace(object):
 
 parser = argparse.ArgumentParser()
 
-parser.add_argument("--webhook", action="append")
-parser.add_argument("--serverupdate", action="append")
+parser.add_argument("--webhook", type=str, action="append")
+parser.add_argument("--serverupdate", type=str, action="append")
 
-if not sys.argv[1].startswith("-"):
-    args = Namespace(webhook=[sys.argv[1]], serverupdate=[sys.argv[2]])
-else:
+if sys.argv[1].startswith("-"):
     args = parser.parse_args()
+else:
+    args = Namespace(webhook=[sys.argv[1]], serverupdate=[sys.argv[2]])
 
 print("Current directory: " + os.getcwd())
 
-gittags = subprocess.check_output("git describe --tags").strip().decode()
-m = re.match("^([0-9.]+)\\+([0-9.]+)((?:-g[0-9]+-[0-9a-f]+)?(?:-dirty)?)$", gittags)
-file = f"pswg-{m.group(1)}{m.group(3)}+{m.group(2)}.jar"
+gittags = subprocess.check_output(["git", "describe", "--tags"]).strip().decode()
+m = re.match("^([0-9.]+)\\+([0-9.]+)((?:-[0-9]+-g[0-9a-f]+)?(?:-dirty)?)$", gittags)
+if not m:
+    print(f"Warning: version {gittags} failed to parse", file=sys.stderr)
+    file = f"pswg-{gittags}.jar"
+else:
+    file = f"pswg-{m.group(1)}{m.group(3)}+{m.group(2)}.jar"
 
 print("Trying to upload", os.path.realpath(file))
 if os.path.isfile(file):
@@ -37,5 +41,6 @@ if os.path.isfile(file):
         subprocess.check_call(["curl", "--location", "--resolve", "kb1000.de:443:10.244.44.214", "--request", "POST", url, "--form", f"file=@{file}"])
 else:
     print("Did not find file")
-    with requests.post(sys.argv[1], data={"content": f"Build {os.environ['BUILD_NUMBER']} failed! \N{CROSS MARK}"}) as resp:
-        print("discord response:", resp.text)
+    for url in args.webhook:
+        with requests.post(url, data={"content": f"Build {os.environ['BUILD_NUMBER']} failed! \N{CROSS MARK}"}) as resp:
+            print("discord response:", resp.text)
