@@ -3,6 +3,7 @@ package com.parzivail.datagen.tarkin;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -80,9 +81,9 @@ public class LanguageBuilder
 		return cloneWithRoot("tooltip").modid().dot(value);
 	}
 
-	public LanguageBuilder itemGroup(String value)
+	public LanguageBuilder itemGroup(ItemGroup value)
 	{
-		return cloneWithRoot("itemGroup").modid().dot(value);
+		return cloneWithRoot("itemGroup").modid().dot(value.getName());
 	}
 
 	public LanguageBuilder key(KeyBinding key)

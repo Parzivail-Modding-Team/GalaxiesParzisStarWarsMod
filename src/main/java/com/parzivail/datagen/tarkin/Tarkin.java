@@ -1,6 +1,7 @@
 package com.parzivail.datagen.tarkin;
 
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
@@ -122,7 +123,10 @@ public class Tarkin
 		lang.tooltip("lightsaber").dot("info").build(assets);
 
 		// Item groups
-		lang.itemGroup("main").build(assets);
+		lang.itemGroup(Galaxies.TabBlocks).build(assets);
+		lang.itemGroup(Galaxies.TabItems).build(assets);
+		lang.itemGroup(Galaxies.TabBlasters).build(assets);
+		lang.itemGroup(Galaxies.TabLightsabers).build(assets);
 
 		// Key categories
 		lang.keyCategory("pswg").build(assets);

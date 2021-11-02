@@ -44,8 +44,23 @@ public class Galaxies implements ModInitializer
 		Lumberjack.setLogHeader(Resources.MODID);
 	}
 
-	public static final ItemGroup Tab = FabricItemGroupBuilder
-			.create(Resources.id("main"))
+	public static final ItemGroup TabBlocks = FabricItemGroupBuilder
+			.create(Resources.id("blocks"))
+			.icon(() -> new ItemStack(SwgBlocks.Panel.GrayImperialLightOn1))
+			.build();
+
+	public static final ItemGroup TabItems = FabricItemGroupBuilder
+			.create(Resources.id("items"))
+			.icon(() -> new ItemStack(SwgItems.Food.BlueMilk))
+			.build();
+
+	public static final ItemGroup TabBlasters = FabricItemGroupBuilder
+			.create(Resources.id("blasters"))
+			.icon(() -> new ItemStack(SwgItems.Blaster.Blaster))
+			.build();
+
+	public static final ItemGroup TabLightsabers = FabricItemGroupBuilder
+			.create(Resources.id("lightsabers"))
 			.icon(() -> new ItemStack(SwgItems.Lightsaber.Lightsaber))
 			.build();
 

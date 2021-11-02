@@ -496,7 +496,7 @@ public class SwgBlocks
 		var itemSettings = new Item.Settings();
 
 		if (!ignoreTab)
-			itemSettings = itemSettings.group(Galaxies.Tab);
+			itemSettings = itemSettings.group(Galaxies.TabBlocks);
 
 		Registry.register(Registry.BLOCK, identifier, block);
 		Registry.register(Registry.ITEM, identifier, new BlockItem(block, itemSettings));
