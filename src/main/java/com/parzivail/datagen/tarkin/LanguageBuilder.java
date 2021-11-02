@@ -83,7 +83,7 @@ public class LanguageBuilder
 
 	public LanguageBuilder itemGroup(ItemGroup value)
 	{
-		return cloneWithRoot("itemGroup").modid().dot(value.getName());
+		return cloneWithRoot("itemGroup").dot(value.getName());
 	}
 
 	public LanguageBuilder key(KeyBinding key)

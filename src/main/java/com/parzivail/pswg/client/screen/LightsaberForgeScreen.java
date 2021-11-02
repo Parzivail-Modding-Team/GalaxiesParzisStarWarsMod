@@ -107,9 +107,13 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	private final PlayerEntity player;
 
 	private MutableSlider sliderHue;
+	private MutableSlider sliderSat;
+	private MutableSlider sliderVal;
 	private MutableCheckbox cbUnstable;
 
 	private float hue;
+	private float sat;
+	private float val;
 
 	private ItemStack lightsaber = ItemStack.EMPTY;
 
@@ -136,7 +140,17 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			commitChanges();
 		}));
 
-		this.addDrawableChild(new ButtonWidget(x + this.backgroundWidth / 2 - 20, y + 124, 40, 20, new TranslatableText("Apply"), button -> {
+		this.addDrawableChild(sliderSat = new MutableSlider(x + 41, y + 82, 100, 20, "Saturation: %s", sat, valueFormatter, slider -> {
+			sat = (float)slider.getValue();
+			commitChanges();
+		}));
+
+		this.addDrawableChild(sliderVal = new MutableSlider(x + 41, y + 105, 100, 20, "Value: %s", val, valueFormatter, slider -> {
+			val = (float)slider.getValue();
+			commitChanges();
+		}));
+
+		this.addDrawableChild(new ButtonWidget(x + 173, y + 90, 40, 20, new TranslatableText("Apply"), button -> {
 			var passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeNbt(getLightsaberTag().toTag());
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketLightsaberForgeApply, passedData);
@@ -168,6 +182,8 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		{
 			lt.owner = player.getEntityName();
 			lt.bladeHue = hue;
+			lt.bladeSaturation = sat;
+			lt.bladeValue = val;
 			lt.unstable = cbUnstable.isChecked();
 		});
 	}
@@ -179,16 +195,22 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			var lt = getLightsaberTag();
 
 			hue = lt.bladeHue;
+			sat = lt.bladeSaturation;
+			val = lt.bladeValue;
 
 			cbUnstable.setChecked(lt.unstable);
 		}
 		else
 		{
 			hue = 0;
+			sat = 0;
+			val = 0;
 			cbUnstable.setChecked(false);
 		}
 
 		sliderHue.setValue(hue);
+		sliderSat.setValue(sat);
+		sliderVal.setValue(val);
 	}
 
 	private LightsaberTag getLightsaberTag()
@@ -248,7 +270,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
 
-		var rgb = ColorUtil.fromHSV(hue, 1, 1);
+		var rgb = ColorUtil.fromHSV(hue, sat, val);
 		var b = rgb & 0xFF;
 		var g = (rgb >> 8) & 0xFF;
 		var r = (rgb >> 16) & 0xFF;

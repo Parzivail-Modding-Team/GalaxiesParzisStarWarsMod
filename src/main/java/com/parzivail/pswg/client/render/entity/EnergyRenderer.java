@@ -5,6 +5,7 @@ import com.parzivail.pswg.mixin.RenderPhaseAccessor;
 import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.client.RenderShapes;
 import com.parzivail.util.client.VertexConsumerBuffer;
+import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -17,7 +18,7 @@ public class EnergyRenderer
 	private static final RenderLayer LAYER_ENERGY = RenderLayer.of("pswg:energy", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of("pswg:energy_add", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_LIGHTNING_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 
-	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue)
+	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue, float glowSat, float glowVal)
 	{
 		VertexConsumer vc;
 
@@ -37,7 +38,7 @@ public class EnergyRenderer
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		//		renderCore(totalLength, coreColor | 0xFF000000, unstable, offset, cap);
-		renderGlow(totalLength, glowHue, unstable, cap);
+		renderGlow(totalLength, glowHue, glowSat, glowVal, unstable, cap);
 	}
 
 	public static void renderStunEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float size, Vec3d normal, float glowHue)
@@ -97,14 +98,20 @@ public class EnergyRenderer
 		VertexConsumerBuffer.Instance.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
 	}
 
-	private static float getAlpha(double x)
+	private static float getAlpha(double layer)
 	{
-		return (float)MathHelper.clamp(1 - (x / 100 + 0.4) / (1 + Math.exp(-0.3 * (x - 22))), 0, 1);
+		return (float)MathHelper.clamp(1 - (layer / 100 + 0.4) / (1 + Math.exp(-0.3 * (layer - 22))), 0, 1);
 	}
 
-	private static float getSaturation(double x)
+	private static float getSaturation(double layer, double target)
 	{
-		return (float)MathHelper.clamp((x / 400 + 0.76) / (1 + Math.exp(-0.27 * (x - 10))), 0, 1);
+		var layeredSat = MathHelper.clamp((layer / 400 + 0.76) / (1 + Math.exp(-0.27 * (layer - 10))), 0, 1);
+		return (float)(layeredSat * target);
+	}
+
+	private static float getValue(double layer, double target)
+	{
+		return (float)MathHelper.lerp(Ease.outCubic((float)(layer / 75)), 1, target);
 	}
 
 	private static float getHue(double h, double x)
@@ -112,7 +119,7 @@ public class EnergyRenderer
 		return (float)MathHelper.clamp(-0.06 * Math.exp(-0.011 * Math.pow(x - 6, 2)) + h, 0, 1);
 	}
 
-	public static void renderGlow(float bladeLength, float glowHue, boolean unstable, boolean cap)
+	public static void renderGlow(float bladeLength, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
 	{
 		if (bladeLength == 0)
 			return;
@@ -139,8 +146,8 @@ public class EnergyRenderer
 			var x = MathUtil.remap(layer, mL, xL, minOutputLayer, 60);
 			var color = ColorUtil.fromHSV(
 					getHue(glowHue + hueOffset, x),
-					getSaturation(x),
-					1
+					getSaturation(x, glowSat),
+					getValue(x, glowVal)
 			);
 			VertexConsumerBuffer.Instance.setColor(color, (int)(255 * getAlpha(x)));
 			var layerThickness = deltaThickness * layer;
@@ -174,8 +181,8 @@ public class EnergyRenderer
 					noise = (float)Resources.SIMPLEX_0.noise2(globalTime, 3 * dLength * i);
 					color = ColorUtil.fromHSV(
 							0,
-							unstable ? (0.07f - noise * 0.07f) : 0,
-							1
+							(unstable ? (0.07f - noise * 0.07f) : 0) * glowSat,
+							getValue(x, glowVal)
 					);
 					VertexConsumerBuffer.Instance.setColor(color, (int)(255 * getAlpha(x)));
 

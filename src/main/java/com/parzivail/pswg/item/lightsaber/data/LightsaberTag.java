@@ -19,6 +19,9 @@ public class LightsaberTag extends TagSerializer
 	public byte transition;
 
 	public float bladeHue;
+	public float bladeSaturation;
+	public float bladeValue;
+
 	public boolean unstable;
 
 	public Identifier hilt;
@@ -37,6 +40,9 @@ public class LightsaberTag extends TagSerializer
 		transition = 0;
 
 		bladeHue = 0.33f;
+		bladeSaturation = 1;
+		bladeValue = 1;
+
 		unstable = false;
 
 		owner = "Luke Skywalker";

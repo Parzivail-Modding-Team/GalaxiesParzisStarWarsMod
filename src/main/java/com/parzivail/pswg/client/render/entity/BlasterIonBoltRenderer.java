@@ -46,7 +46,7 @@ public class BlasterIonBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		matrices.multiply(new Quaternion(0, rYaw, 0, false));
 		matrices.multiply(new Quaternion((float)(rPitch + Math.PI / 2), 0, 0, false));
 
-		EnergyRenderer.renderEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 0.04f, 1, false, entity.getHue());
+		EnergyRenderer.renderEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 0.04f, 1, false, entity.getHue(), 1, 1);
 
 		matrices.pop();
 	}

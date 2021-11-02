@@ -128,7 +128,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		{
 //			matrices.translate(-0.015f, 0, -0.015f);
 
-			EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, lt.bladeHue);
+			EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
 		}
 	}
 
