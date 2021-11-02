@@ -95,6 +95,7 @@ public class Client implements ClientModInitializer
 		Lumberjack.debug("onInitializeClient");
 
 		KeyBindingHelper.registerKeyBinding(KEY_PRIMARY_ITEM_ACTION);
+		KeyBindingHelper.registerKeyBinding(KEY_SECONDARY_ITEM_ACTION);
 		KeyBindingHelper.registerKeyBinding(KEY_SHIP_INPUT_MODE_OVERRIDE);
 		KeyBindingHelper.registerKeyBinding(KEY_SPECIES_SELECT);
 

@@ -3,7 +3,9 @@ package com.parzivail.pswg.item.lightsaber;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.item.*;
@@ -26,6 +28,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,6 +79,16 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		});
 	}
 
+	public static void throwAsEntity(World world, PlayerEntity player, ItemStack stack)
+	{
+		final var entity = new ThrownLightsaberEntity(SwgEntities.Misc.ThrownLightsaber, player, world, new LightsaberTag(stack.getOrCreateNbt()));
+		entity.setProperties(player, MathHelper.clamp(player.getPitch(), -89.9f, 89.9f), player.getYaw(), 0.0F, 0.6f, 0);
+		world.spawnEntity(entity);
+
+		if (!player.getAbilities().creativeMode)
+			stack.decrement(1);
+	}
+
 	@Override
 	public void consumeAction(World world, PlayerEntity player, ItemStack stack, ItemAction action)
 	{
@@ -83,6 +96,9 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		{
 			case PRIMARY:
 				toggle(world, player, stack);
+				break;
+			case SECONDARY:
+				throwAsEntity(world, player, stack);
 				break;
 		}
 	}

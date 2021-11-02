@@ -1,6 +1,7 @@
 package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.client.sound.SoundHelper;
+import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -15,15 +16,17 @@ import net.minecraft.world.World;
 public class ThrownLightsaberEntity extends ThrownEntity
 {
 	private static final TrackedData<Byte> LIFE = DataTracker.registerData(ThrownLightsaberEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final TrackedData<NbtCompound> LIGHTSABER_DATA = DataTracker.registerData(ThrownLightsaberEntity.class, TrackedDataHandlerRegistry.TAG_COMPOUND);
 
 	public ThrownLightsaberEntity(EntityType<? extends ThrownLightsaberEntity> type, World world)
 	{
 		super(type, world);
 	}
 
-	public ThrownLightsaberEntity(EntityType<? extends ThrownLightsaberEntity> type, LivingEntity owner, World world)
+	public ThrownLightsaberEntity(EntityType<? extends ThrownLightsaberEntity> type, LivingEntity owner, World world, LightsaberTag tag)
 	{
 		super(type, owner, world);
+		setLightsaberData(tag);
 	}
 
 	@Override
@@ -57,6 +60,7 @@ public class ThrownLightsaberEntity extends ThrownEntity
 	protected void initDataTracker()
 	{
 		dataTracker.startTracking(LIFE, (byte)0);
+		dataTracker.startTracking(LIGHTSABER_DATA, new LightsaberTag().toTag());
 	}
 
 	private byte getLife()
@@ -67,6 +71,16 @@ public class ThrownLightsaberEntity extends ThrownEntity
 	private void setLife(byte life)
 	{
 		dataTracker.set(LIFE, life);
+	}
+
+	public LightsaberTag getLightsaberData()
+	{
+		return LightsaberTag.fromRootTag(dataTracker.get(LIGHTSABER_DATA));
+	}
+
+	private void setLightsaberData(LightsaberTag data)
+	{
+		dataTracker.set(LIGHTSABER_DATA, data.toTag());
 	}
 
 	@Override

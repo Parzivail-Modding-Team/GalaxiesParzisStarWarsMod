@@ -3,7 +3,6 @@ package com.parzivail.pswg.client.render.entity;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
-import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -25,10 +24,6 @@ public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEnt
 	{
 		super(ctx);
 		this.itemRenderer = ctx.getItemRenderer();
-
-		LightsaberTag.mutate(stack, lightsaberTag -> {
-			lightsaberTag.active = true;
-		});
 	}
 
 	@Override
@@ -56,6 +51,10 @@ public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEnt
 		matrices.multiply(new Quaternion(rPitch + 90, 0, 0, true));
 
 		matrices.multiply(new Quaternion(0, 0, -(entity.age + tickDelta) * 31, true));
+
+		var lt = entity.getLightsaberData();
+		lt.active = true;
+		lt.serializeAsSubtag(stack);
 
 		this.itemRenderer.renderItem(stack, ModelTransformation.Mode.NONE, light, OverlayTexture.DEFAULT_UV, matrices, consumerProvider, 0);
 
