@@ -2,5 +2,7 @@
 	"version": 1,
 	"owner": "Qui-Gon Jinn",
 	"hilt": "pswg:qui_gon",
-	"bladeHue": 0.33
+	"bladeHue": 0.33,
+	"bladeSaturation": 1.00,
+	"bladeValue": 1.00
 }

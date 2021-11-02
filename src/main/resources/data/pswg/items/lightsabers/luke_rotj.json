@@ -2,5 +2,7 @@
 	"version": 1,
 	"owner": "Luke Skywalker",
 	"hilt": "pswg:luke_rotj",
-	"bladeHue": 0.33
+	"bladeHue": 0.33,
+	"bladeSaturation": 1.00,
+	"bladeValue": 1.00
 }

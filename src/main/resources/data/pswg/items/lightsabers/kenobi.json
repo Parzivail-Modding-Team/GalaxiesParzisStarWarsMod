@@ -2,5 +2,7 @@
 	"version": 1,
 	"owner": "Obi-Wan Kenobi",
 	"hilt": "pswg:kenobi",
-	"bladeHue": 0.62
+	"bladeHue": 0.62,
+	"bladeSaturation": 1.00,
+	"bladeValue": 1.00
 }

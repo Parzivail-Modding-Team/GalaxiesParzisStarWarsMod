@@ -2,5 +2,7 @@
 	"version": 1,
 	"owner": "Darth Vader",
 	"hilt": "pswg:vader",
-	"bladeHue": 0.0
+	"bladeHue": 0.0,
+	"bladeSaturation": 1.00,
+	"bladeValue": 1.00
 }

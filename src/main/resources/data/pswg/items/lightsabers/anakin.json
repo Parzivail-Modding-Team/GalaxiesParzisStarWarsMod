@@ -2,5 +2,7 @@
 	"version": 1,
 	"owner": "Anakin Skywalker",
 	"hilt": "pswg:anakin",
-	"bladeHue": 0.62
+	"bladeHue": 0.62,
+	"bladeSaturation": 1.00,
+	"bladeValue": 1.00
 }

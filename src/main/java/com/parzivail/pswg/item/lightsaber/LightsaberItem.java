@@ -147,6 +147,8 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 			lightsaberTag.owner = descriptor.owner;
 			lightsaberTag.hilt = new Identifier(descriptor.hilt);
 			lightsaberTag.bladeHue = descriptor.bladeHue;
+			lightsaberTag.bladeSaturation = descriptor.bladeSaturation;
+			lightsaberTag.bladeValue = descriptor.bladeValue;
 		});
 
 		return stack;
