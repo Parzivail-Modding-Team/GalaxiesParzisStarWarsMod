@@ -27,17 +27,19 @@ public class PlayerPacketHandler
 
 	public static void handleItemAction(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		var stack = player.getMainHandStack();
+		server.execute(() -> {
+			var stack = player.getMainHandStack();
 
-		var action = buf.readInt();
-		var actions = ItemAction.values();
-		if (action < 0 || action >= actions.length)
-		{
-			Lumberjack.warn("Player %s attempted to use invalid item action ordinal %s", player, action);
-			return;
-		}
+			var action = buf.readInt();
+			var actions = ItemAction.values();
+			if (action < 0 || action >= actions.length)
+			{
+				Lumberjack.warn("Player %s attempted to use invalid item action ordinal %s", player, action);
+				return;
+			}
 
-		if (stack.getItem() instanceof IItemActionConsumer)
-			((IItemActionConsumer)stack.getItem()).consumeAction(player.world, player, stack, actions[action]);
+			if (stack.getItem() instanceof IItemActionConsumer)
+				((IItemActionConsumer)stack.getItem()).consumeAction(player.world, player, stack, actions[action]);
+		});
 	}
 }
