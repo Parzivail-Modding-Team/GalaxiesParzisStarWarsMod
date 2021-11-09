@@ -4,7 +4,7 @@ import net.minecraft.util.math.Quaternion;
 
 public interface IComplexEntityHitbox
 {
-	CapsuleVolume[] getCollision();
+	ICollisionVolume[] getCollision();
 
 	Quaternion getRotation();
 }

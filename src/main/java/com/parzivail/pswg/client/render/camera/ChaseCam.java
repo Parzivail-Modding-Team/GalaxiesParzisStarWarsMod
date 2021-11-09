@@ -15,12 +15,10 @@ public class ChaseCam
 	public Vec3d prevPos;
 	public Vec3d pos;
 
-	private boolean firstTick = true;
-
 	public ChaseCam()
 	{
-		prevPos = new Vec3d(0, 0, 0);
-		pos = new Vec3d(0, 0, 0);
+		prevPos = new Vec3d(Double.NaN, Double.NaN, Double.NaN);
+		pos = new Vec3d(Double.NaN, Double.NaN, Double.NaN);
 	}
 
 	public void tick(ShipEntity parent)
@@ -28,12 +26,8 @@ public class ChaseCam
 		if (parent == null || parent.isRemoved())
 			return;
 
-		if (firstTick)
-		{
+		if (Double.isNaN(pos.x) || Double.isNaN(pos.y) || Double.isNaN(pos.z))
 			pos = parent.getPos();
-
-			firstTick = false;
-		}
 
 		prevPos = new Vec3d(pos.x, pos.y, pos.z);
 

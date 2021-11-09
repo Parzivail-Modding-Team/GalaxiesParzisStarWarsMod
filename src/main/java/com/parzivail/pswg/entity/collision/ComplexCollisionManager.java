@@ -1,6 +1,5 @@
 package com.parzivail.pswg.entity.collision;
 
-import com.parzivail.util.math.CollisionUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -14,7 +13,7 @@ public class ComplexCollisionManager
 		if (box.getAverageSideLength() < 1.0E-7D)
 			return currentMovement;
 
-		Box box2 = box.expand(4);
+		Box box2 = box.expand(5);
 		var complexEntities = entity.world.getOtherEntities(entity, box2, other -> other instanceof IComplexEntityHitbox iceh && roughCollidesWith(iceh, entity)).stream();
 
 		var sourceHitbox = CapsuleVolume.of(entity.getBoundingBox());
@@ -33,33 +32,7 @@ public class ComplexCollisionManager
 		var hitbox = e.getCollision();
 
 		for (var volume : hitbox)
-		{
-			var movement = m.getValue();
-			var result = CollisionUtil.closestPointsOnSegments(sourceHitbox.start().add(movement), sourceHitbox.end().add(movement), volume.start(), volume.end());
-
-			var intersectionRay = result.b().subtract(result.a());
-
-			var minDistance = sourceHitbox.radius() + volume.radius();
-
-			// Check if the volume is intersecting
-			if (result.squareDistance() > minDistance * minDistance)
-				continue;
-
-			var intersectionLength = intersectionRay.length();
-			var overlap = intersectionLength - minDistance;
-
-			var rayDir = intersectionRay.normalize();
-
-//			var aPos = result.a().add(rayDir.multiply(sourceHitbox.radius()));
-//			var bPos = result.b().subtract(rayDir.multiply(volume.radius()));
-//
-//			entity.world.addParticle(ParticleTypes.FLAME, aPos.x, aPos.y, aPos.z, 0, 0, 0);
-//			entity.world.addParticle(ParticleTypes.FLAME, bPos.x, bPos.y, bPos.z, 0, 0, 0);
-
-			var impulse = rayDir.multiply(overlap);
-
-			m.setValue(movement.add(impulse));
-		}
+			volume.resolveCapsuleCollision(sourceHitbox, m);
 	}
 
 	private static boolean roughCollidesWith(IComplexEntityHitbox iceh, Entity other)

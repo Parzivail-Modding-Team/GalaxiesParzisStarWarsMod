@@ -7,8 +7,92 @@ public class CollisionUtil
 {
 	private static final double EPSILON = 1e-9;
 
-	public static record ClosestPoints(Vec3d a, Vec3d b, double s, double t, double squareDistance)
+	public record ClosestPoints(Vec3d a, Vec3d b, double s, double t, double squareDistance)
 	{
+	}
+
+	public static ClosestPoints closestPointsTriangleSegment(Vec3d p, Vec3d q, Vec3d a, Vec3d b, Vec3d c)
+	{
+		var pqVsAb = closestPointsOnSegments(p, q, a, b);
+		var pqVsBc = closestPointsOnSegments(p, q, b, c);
+		var pqVsCa = closestPointsOnSegments(p, q, c, a);
+
+		var pVsAbcPt = closestPointOnTriangle(p, a, b, c);
+		var pVsAbc = new ClosestPoints(p, pVsAbcPt, 0, 0, pVsAbcPt.squaredDistanceTo(p));
+
+		var qVsAbcPt = closestPointOnTriangle(q, a, b, c);
+		var qVsAbc = new ClosestPoints(q, qVsAbcPt, 0, 0, qVsAbcPt.squaredDistanceTo(q));
+
+		var min = pqVsAb;
+
+		if (pqVsBc.squareDistance < min.squareDistance)
+			min = pqVsBc;
+
+		if (pqVsCa.squareDistance < min.squareDistance)
+			min = pqVsCa;
+
+		if (pVsAbc.squareDistance < min.squareDistance)
+			min = pVsAbc;
+
+		if (qVsAbc.squareDistance < min.squareDistance)
+			min = qVsAbc;
+
+		return min;
+	}
+
+	// From Real-Time Collision Detection by Christer Ericson
+	public static Vec3d closestPointOnTriangle(Vec3d p, Vec3d a, Vec3d b, Vec3d c)
+	{
+		var ab = b.subtract(a);
+		var ac = c.subtract(a);
+		var ap = p.subtract(a);
+
+		var d1 = ab.dotProduct(ap);
+		var d2 = ac.dotProduct(ap);
+
+		if (d1 <= 0 && d2 <= 0)
+			return a;
+
+		var bp = p.subtract(b);
+		var d3 = ab.dotProduct(bp);
+		var d4 = ac.dotProduct(bp);
+
+		if (d3 >= 0 && d4 <= d3)
+			return b;
+
+		var vc = d1 * d4 - d3 * d2;
+		if (vc <= 0 && d1 >= 0 && d3 <= 0)
+		{
+			var v = d1 / (d1 - d3);
+			return a.add(ab.multiply(v));
+		}
+
+		var cp = p.subtract(c);
+		var d5 = ab.dotProduct(cp);
+		var d6 = ac.dotProduct(cp);
+		if (d6 >= 0 && d5 <= d6) return c;
+
+		var vb = d5 * d2 - d1 * d6;
+
+		if (vb <= 0.0f && d2 >= 0.0f && d6 <= 0.0f)
+		{
+			var w = d2 / (d2 - d6);
+			return a.add(ac.multiply(w));
+		}
+
+		var va = d3 * d6 - d5 * d4;
+
+		if (va <= 0.0f && (d4 - d3) >= 0.0f && (d5 - d6) >= 0.0f)
+		{
+			var w = (d4 - d3) / ((d4 - d3) + (d5 - d6));
+			return b.add(c.subtract(b).multiply(w));
+		}
+
+		var denom = 1.0f / (va + vb + vc);
+
+		var v = vb * denom;
+		var w = vc * denom;
+		return a.add(ab.multiply(v)).add(ac.multiply(w));
 	}
 
 	// From Real-Time Collision Detection by Christer Ericson

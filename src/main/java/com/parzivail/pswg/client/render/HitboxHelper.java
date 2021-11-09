@@ -1,7 +1,9 @@
 package com.parzivail.pswg.client.render;
 
 import com.parzivail.pswg.entity.collision.CapsuleVolume;
+import com.parzivail.pswg.entity.collision.ICollisionVolume;
 import com.parzivail.pswg.entity.collision.IComplexEntityHitbox;
+import com.parzivail.pswg.entity.collision.SweptTriangleVolume;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -32,6 +34,25 @@ public class HitboxHelper
 			var volume = CapsuleVolume.of(entity.getBoundingBox());
 			renderVolume(matrices, vertices, pos, Quaternion.IDENTITY, volume);
 		}
+	}
+
+	private static void renderVolume(MatrixStack matrices, VertexConsumer vertices, Vec3d entityPos, Quaternion rotation, ICollisionVolume volume)
+	{
+		if (volume instanceof CapsuleVolume capsule)
+			renderVolume(matrices, vertices, entityPos, rotation, capsule);
+		else if (volume instanceof SweptTriangleVolume triangle)
+			renderVolume(matrices, vertices, entityPos, rotation, triangle);
+	}
+
+	private static void renderVolume(MatrixStack matrices, VertexConsumer vertices, Vec3d entityPos, Quaternion rotation, SweptTriangleVolume volume)
+	{
+		var a = volume.a().subtract(entityPos);
+		var b = volume.b().subtract(entityPos);
+		var c = volume.c().subtract(entityPos);
+
+		line(vertices, matrices, a, b);
+		line(vertices, matrices, a, c);
+		line(vertices, matrices, b, c);
 	}
 
 	private static void renderVolume(MatrixStack matrices, VertexConsumer vertices, Vec3d entityPos, Quaternion rotation, CapsuleVolume volume)
@@ -65,8 +86,10 @@ public class HitboxHelper
 		quarterCircle(vertices, matrices, origin, normal, down);
 		quarterCircle(vertices, matrices, origin, normal, left);
 		quarterCircle(vertices, matrices, origin, normal, right);
+
 		quarterCircle(vertices, matrices, origin, left, up);
 		quarterCircle(vertices, matrices, origin, left, down);
+
 		quarterCircle(vertices, matrices, origin, right, up);
 		quarterCircle(vertices, matrices, origin, right, down);
 	}

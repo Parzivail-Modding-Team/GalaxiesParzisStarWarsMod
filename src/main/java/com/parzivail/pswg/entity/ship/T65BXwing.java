@@ -3,7 +3,9 @@ package com.parzivail.pswg.entity.ship;
 import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.collision.CapsuleVolume;
+import com.parzivail.pswg.entity.collision.ICollisionVolume;
 import com.parzivail.pswg.entity.collision.IComplexEntityHitbox;
+import com.parzivail.pswg.entity.collision.SweptTriangleVolume;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.math.MathUtil;
@@ -39,6 +41,8 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 	private static final CapsuleVolume VOL_ENGINE_BOTTOM_RIGHT = new CapsuleVolume(new Vec3d(1.17, -0.42, 1.6), new Vec3d(1.17, -0.42, -1.3), 0.5);
 	private static final CapsuleVolume VOL_ENGINE_TOP_LEFT = new CapsuleVolume(new Vec3d(-1.17, 0.42, 1.6), new Vec3d(-1.17, 0.42, -1.3), 0.5);
 	private static final CapsuleVolume VOL_ENGINE_BOTTOM_LEFT = new CapsuleVolume(new Vec3d(-1.17, -0.42, 1.6), new Vec3d(-1.17, -0.42, -1.3), 0.5);
+
+	private static final SweptTriangleVolume VOL_TRIANGLE_TEST = new SweptTriangleVolume(new Vec3d(-1, 3,  -1), new Vec3d(1, 3, -1), new Vec3d(1, 3, 1), 0.2);
 
 	private static final TrackedData<Byte> WING_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final TrackedData<Byte> COCKPIT_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -171,7 +175,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 	}
 
 	@Override
-	public CapsuleVolume[] getCollision()
+	public ICollisionVolume[] getCollision()
 	{
 		var pos = this.getPos();
 		var rot = getRotation();
@@ -183,7 +187,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		var transformTopLeft = getWingCollisionTransform(rot, posMat, "WingTopLeft");
 		var transformBottomLeft = getWingCollisionTransform(rot, posMat, "WingBottomLeft");
 
-		return new CapsuleVolume[] {
+		return new ICollisionVolume[] {
 				VOL_FUSELAGE.transform(rot).transform(posMat),
 				VOL_MECHANICS.transform(rot).transform(posMat),
 				VOL_WING_TOP_RIGHT.transform(transformTopRight),
@@ -193,7 +197,12 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 				VOL_ENGINE_TOP_RIGHT.transform(transformTopRight),
 				VOL_ENGINE_BOTTOM_RIGHT.transform(transformBottomRight),
 				VOL_ENGINE_TOP_LEFT.transform(transformTopLeft),
-				VOL_ENGINE_BOTTOM_LEFT.transform(transformBottomLeft)
+				VOL_ENGINE_BOTTOM_LEFT.transform(transformBottomLeft),
+				// TODO: all of these transformations are scaled by -1, why?
+				new SweptTriangleVolume(new Vec3d(-1.7, -0.05, -0.95), new Vec3d(-4.3, -0.05, -0.95), new Vec3d(-4.3, -0.05, 0), 0.2).transform(transformTopRight),
+				new SweptTriangleVolume(new Vec3d(-1.7, -0.05, -0.95), new Vec3d(-1.7, -0.05, 0.8), new Vec3d(-4.3, -0.05, 0), 0.2).transform(transformTopRight),
+				new SweptTriangleVolume(new Vec3d(-1.7, 0.05, -0.95), new Vec3d(-4.3, 0.05, -0.95), new Vec3d(-4.3, 0.05, 0), 0.2).transform(transformBottomRight),
+				new SweptTriangleVolume(new Vec3d(-1.7, 0.05, -0.95), new Vec3d(-1.7, 0.05, 0.8), new Vec3d(-4.3, 0.05, 0), 0.2).transform(transformBottomRight)
 		};
 	}
 
