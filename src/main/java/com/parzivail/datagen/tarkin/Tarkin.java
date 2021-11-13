@@ -183,6 +183,19 @@ public class Tarkin
 
 		autoconfigOptionInput.dot("shipRollPriority").build(assets);
 		autoconfigOptionInput.dot("shipRollPriority").dot("@Tooltip").build(assets);
+
+		var autoconfigOptionView = autoconfigOption.dot("view");
+		autoconfigOptionView.build(assets);
+		autoconfigOptionView.dot("@Tooltip").build(assets);
+
+		autoconfigOptionView.dot("shipCameraStiffness").build(assets);
+		autoconfigOptionView.dot("shipCameraStiffness").dot("@Tooltip").build(assets);
+
+		autoconfigOptionView.dot("shipCameraBaseDistance").build(assets);
+		autoconfigOptionView.dot("shipCameraBaseDistance").dot("@Tooltip").build(assets);
+
+		autoconfigOptionView.dot("shipCameraSpeedDistance").build(assets);
+		autoconfigOptionView.dot("shipCameraSpeedDistance").dot("@Tooltip").build(assets);
 	}
 
 	private static void generateRecipes(List<BuiltAsset> assets)

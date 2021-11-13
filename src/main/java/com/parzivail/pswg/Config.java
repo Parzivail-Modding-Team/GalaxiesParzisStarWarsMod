@@ -15,10 +15,30 @@ public class Config implements ConfigData
 		public boolean shipRollPriority = false;
 	}
 
+	public static class View
+	{
+		@Comment("Sets the stiffness of ships' third person cameras")
+		@ConfigEntry.Gui.Tooltip
+		public float shipCameraStiffness = 0.4f;
+
+		@Comment("Scales the base distance of ships' third person cameras")
+		@ConfigEntry.Gui.Tooltip
+		public float shipCameraBaseDistance = 1;
+
+		@Comment("Scales the speed-varying distance of ships' third person cameras")
+		@ConfigEntry.Gui.Tooltip
+		public float shipCameraSpeedDistance = 1;
+	}
+
 	@ConfigEntry.Gui.CollapsibleObject
 	@Comment("Here you can change your preferred input methods.")
 	@ConfigEntry.Gui.Tooltip
 	public Input input = new Input();
+
+	@ConfigEntry.Gui.CollapsibleObject
+	@Comment("Here you can change your rendering preferences.")
+	@ConfigEntry.Gui.Tooltip
+	public View view = new View();
 
 	public void reload()
 	{

@@ -1,11 +1,13 @@
 package com.parzivail.pswg.client.render.camera;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
@@ -84,6 +86,10 @@ public class ChaseCam
 		else if (perspective == Perspective.THIRD_PERSON_FRONT)
 			scalar = -1;
 		var throttle = parent.getThrottle();
-		return scalar * (13 + 3 * throttle);
+
+		var baseMult = MathHelper.clamp(Resources.CONFIG.get().view.shipCameraBaseDistance, 0.1f, 10f);
+		var speedMult = MathHelper.clamp(Resources.CONFIG.get().view.shipCameraSpeedDistance, 0.1f, 10f);
+
+		return scalar * (13 * baseMult + 3 * speedMult * throttle);
 	}
 }

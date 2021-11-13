@@ -508,8 +508,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		return true;
 	}
 
+	@Environment(EnvType.CLIENT)
 	public float getCameraLerp()
 	{
-		return 0.4f;
+		return MathHelper.clamp(Resources.CONFIG.get().view.shipCameraStiffness, 0.1f, 1f);
 	}
 }
