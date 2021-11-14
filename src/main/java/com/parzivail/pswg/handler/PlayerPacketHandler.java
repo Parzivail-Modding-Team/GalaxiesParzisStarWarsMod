@@ -27,10 +27,11 @@ public class PlayerPacketHandler
 
 	public static void handleItemAction(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
+		var action = buf.readInt();
+
 		server.execute(() -> {
 			var stack = player.getMainHandStack();
 
-			var action = buf.readInt();
 			var actions = ItemAction.values();
 			if (action < 0 || action >= actions.length)
 			{
