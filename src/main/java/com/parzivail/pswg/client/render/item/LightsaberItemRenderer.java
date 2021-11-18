@@ -80,13 +80,13 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 				matrices.multiply(new Quaternion(0, 0, 45, true));
 				matrices.multiply(new Quaternion(0, 135, 0, true));
 				matrices.translate(0, 0.5f, 0);
-				matrices.scale(2.1f, 2.1f, 2.1f);
+				matrices.scale(2f, 2f, 2f);
 				break;
 			case GUI:
 				matrices.multiply(new Quaternion(0, 0, -45, true));
 				matrices.multiply(new Quaternion(0, -45, 0, true));
 				matrices.translate(0, 0.5f, 0);
-				matrices.scale(2.1f, 2.1f, 2.1f);
+				matrices.scale(2f, 2f, 2f);
 				break;
 			case FIRST_PERSON_LEFT_HAND:
 			case FIRST_PERSON_RIGHT_HAND:

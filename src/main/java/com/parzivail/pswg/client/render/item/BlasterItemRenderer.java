@@ -138,7 +138,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			if (renderMode == ModelTransformation.Mode.FIXED)
 			{
 				matrices.multiply(new Quaternion(0, 0, 180, true));
-				matrices.translate(-bounds.getXLength() * 0.75f, 0, 0);
+				matrices.translate(-0.5f, 0, 0);
+				matrices.scale(2f, 2f, 2f);
 			}
 
 			var angle = (float)(Math.PI / 4) * 5;
@@ -147,8 +148,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var yi = bounds.getYLength() * Math.abs(Math.sin(angle)) + bounds.getZLength() * Math.abs(Math.cos(angle));
 			var zi = bounds.getYLength() * Math.abs(Math.cos(angle)) + bounds.getZLength() * Math.abs(Math.sin(angle));
 
-			var f = (float)(5 / Math.max(yi, zi));
-			matrices.scale(f, f, f);
+			if (renderMode != ModelTransformation.Mode.FIXED)
+			{
+				var f = (float)(5 / Math.max(yi, zi));
+				matrices.scale(f, f, f);
+			}
 
 			matrices.translate(0, (float)-bounds.minY - bounds.getYLength() / 2f, (float)-bounds.minZ - bounds.getZLength() / 2f);
 		}
