@@ -12,6 +12,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.util.BlasterUtil;
+import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.*;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
@@ -447,6 +448,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	{
 		super.appendTooltip(stack, world, tooltip, context);
 		tooltip.add(new TranslatableText("tooltip.pswg.blaster.info"));
+		tooltip.add(new TranslatableText("tooltip.pswg.blaster.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 	}
 
 	@Override

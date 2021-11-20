@@ -8,6 +8,7 @@ import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
+import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.*;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -141,6 +142,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	{
 		super.appendTooltip(stack, world, tooltip, context);
 		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.info"));
+		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 	}
 
 	@Override

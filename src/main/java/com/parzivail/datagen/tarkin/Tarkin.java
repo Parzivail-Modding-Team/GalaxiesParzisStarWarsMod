@@ -120,7 +120,10 @@ public class Tarkin
 		lang.item("blaster_t21").build(assets);
 
 		lang.tooltip("blaster").dot("info").build(assets);
+		lang.tooltip("blaster").dot("controls").build(assets);
+
 		lang.tooltip("lightsaber").dot("info").build(assets);
+		lang.tooltip("lightsaber").dot("controls").build(assets);
 
 		// Item groups
 		lang.itemGroup(Galaxies.TabBlocks).build(assets);
