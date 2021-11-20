@@ -104,16 +104,22 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		if (!(passenger instanceof PlayerEntity player))
 			return;
 
-		var pDir = QuatUtil.rotate(MathUtil.NEGZ.multiply(4f), getRotation());
+		var pos = this.getPos();
+		var rotation = getRotation();
 		var stack = new Transform();
 
 		var cannonState = getCannonState();
+		var p = RigT65B.INSTANCE.getWorldPosition(stack, this, this.getRotation(), CANNON_ORDER[cannonState], 0).add(pos);
 
-		var p = RigT65B.INSTANCE.getWorldPosition(stack, this, this.getRotation(), CANNON_ORDER[cannonState], 0);
+		var convergenceDistance = 40;
+		var forward = QuatUtil.rotate(MathUtil.NEGZ.multiply(convergenceDistance), rotation);
+		var boltRotation = QuatUtil.lookAt(p, pos.add(forward));
+
+		var pDir = QuatUtil.rotate(MathUtil.POSZ.multiply(5f), boltRotation);
 
 		BlasterUtil.fireBolt(world, player, pDir.normalize(), 100, 50, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
-			blasterBoltEntity.setPos(this.getX() + p.x, this.getY() + p.y, this.getZ() + p.z);
+			blasterBoltEntity.setPos(p.x, p.y, p.z);
 		});
 
 		world.playSound(null, player.getBlockPos(), SwgSounds.Ship.XWINGT65B_FIRE, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 10);

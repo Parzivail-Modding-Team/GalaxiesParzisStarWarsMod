@@ -369,7 +369,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				case SEMI_AUTOMATIC, BURST, AUTOMATIC -> {
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
-						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 4.0F, 0);
+						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 						entity.setHue(bd.boltColor);
 					});
@@ -389,7 +389,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				case ION -> {
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireIon(world, player, range, entity -> {
-						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 4.0F, 0);
+						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 						entity.setHue(bd.boltColor);
 					});
