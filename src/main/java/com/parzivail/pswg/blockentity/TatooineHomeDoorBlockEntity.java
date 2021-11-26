@@ -28,13 +28,11 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEnt
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound tag)
+	public void writeNbt(NbtCompound tag)
 	{
 		super.writeNbt(tag);
 
 		tag.putByte("timer", timer);
-
-		return tag;
 	}
 
 	@Override

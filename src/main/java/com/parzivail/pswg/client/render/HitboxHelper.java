@@ -106,7 +106,7 @@ public class HitboxHelper
 		var d = start.subtract(end).normalize();
 
 		var entry = ms.peek();
-		vertices.vertex(entry.getModel(), (float)start.x, (float)start.y, (float)start.z).color(255, 255, 0, 255).normal(entry.getNormal(), (float)d.x, (float)d.y, (float)d.z).next();
-		vertices.vertex(entry.getModel(), (float)end.x, (float)end.y, (float)end.z).color(255, 255, 0, 255).normal(entry.getNormal(), (float)d.x, (float)d.y, (float)d.z).next();
+		vertices.vertex(entry.getPositionMatrix(), (float)start.x, (float)start.y, (float)start.z).color(255, 255, 0, 255).normal(entry.getNormalMatrix(), (float)d.x, (float)d.y, (float)d.z).next();
+		vertices.vertex(entry.getPositionMatrix(), (float)end.x, (float)end.y, (float)end.z).color(255, 255, 0, 255).normal(entry.getNormalMatrix(), (float)d.x, (float)d.y, (float)d.z).next();
 	}
 }

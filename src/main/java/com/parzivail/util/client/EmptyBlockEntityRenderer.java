@@ -36,7 +36,7 @@ public class EmptyBlockEntityRenderer<T extends BlockEntity> implements BlockEnt
 		matrices.multiply(minecraft.getEntityRenderDispatcher().getRotation());
 		matrices.scale(-f, -f, f);
 
-		var textMatrix = matrices.peek().getModel();
+		var textMatrix = matrices.peek().getPositionMatrix();
 
 		var g = minecraft.options.getTextBackgroundOpacity(0.25F);
 		var k = (int)(g * 255.0F) << 24;

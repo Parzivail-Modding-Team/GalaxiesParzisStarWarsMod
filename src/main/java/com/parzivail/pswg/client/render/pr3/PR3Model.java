@@ -24,8 +24,8 @@ public record PR3Model<T, PT extends Enum<PT>>(PR3File container,
 
 	private void emitFace(VertexConsumer vertexConsumer, MatrixStack.Entry matrices, PR3RenderedObject o, PR3FacePointer face, int light)
 	{
-		var modelMat = matrices.getModel();
-		var normalMat = matrices.getNormal();
+		var modelMat = matrices.getPositionMatrix();
+		var normalMat = matrices.getNormalMatrix();
 
 		var vA = o.vertices[face.a()];
 		var vB = o.vertices[face.b()];
@@ -73,13 +73,13 @@ public record PR3Model<T, PT extends Enum<PT>>(PR3File container,
 		matrices.push();
 
 		var entry = matrices.peek();
-		var modelMat = entry.getModel();
+		var modelMat = entry.getPositionMatrix();
 		modelMat.multiply(o.transformationMatrix);
 
 		var t = new Transform();
 		transform(t, target, o.name, tickDelta);
 
-		matrices.method_34425(t.value().getModel());
+		matrices.multiplyPositionMatrix(t.value().getModel());
 
 		for (var face : o.faces)
 			emitFace(consumer, matrices.peek(), o, face, light);

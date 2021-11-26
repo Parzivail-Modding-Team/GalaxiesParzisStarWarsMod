@@ -22,7 +22,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 	public void render(MinecraftClient client, VertexBuffer lightSkyBuffer, VertexBuffer darkSkyBuffer, VertexBuffer starsBuffer, MatrixStack matrices, Matrix4f projectionMatrix, float tickDelta, Runnable fogApplier, CallbackInfo ci)
 	{
 		RenderSystem.disableTexture();
-		var vec3d = client.world.method_23777(client.gameRenderer.getCamera().getPos(), tickDelta);
+		var vec3d = client.world.getSkyColor(client.gameRenderer.getCamera().getPos(), tickDelta);
 		var g = (float)vec3d.x;
 		var h = (float)vec3d.y;
 		var i = (float)vec3d.z;
@@ -31,10 +31,10 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		RenderSystem.depthMask(false);
 		RenderSystem.setShaderColor(g, h, i, 1.0F);
 		var shader = RenderSystem.getShader();
-		lightSkyBuffer.setShader(matrices.peek().getModel(), projectionMatrix, shader);
+		lightSkyBuffer.setShader(matrices.peek().getPositionMatrix(), projectionMatrix, shader);
 		RenderSystem.enableBlend();
 		RenderSystem.defaultBlendFunc();
-		var fs = client.world.getSkyProperties().getFogColorOverride(client.world.getSkyAngle(tickDelta), tickDelta);
+		var fs = client.world.getDimensionEffects().getFogColorOverride(client.world.getSkyAngle(tickDelta), tickDelta);
 		float s;
 		float t;
 		float p;
@@ -53,7 +53,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 			var k = fs[0];
 			t = fs[1];
 			var m = fs[2];
-			var matrix4f2 = matrices.peek().getModel();
+			var matrix4f2 = matrices.peek().getPositionMatrix();
 			bufferBuilder.begin(VertexFormat.DrawMode.TRIANGLE_FAN, VertexFormats.POSITION_COLOR);
 			bufferBuilder.vertex(matrix4f2, 0.0F, 100.0F, 0.0F).color(k, t, m, fs[3]).next();
 
@@ -84,7 +84,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(5 * MathHelper.sin(fractionalWeek)));
 		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(8 * MathHelper.cos(fractionalWeek)));
-		var matrix4f3 = matrices.peek().getModel();
+		var matrix4f3 = matrices.peek().getPositionMatrix();
 
 		t = 23 + 10 * MathHelper.sin(fractionalWeek);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -102,7 +102,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(5 * MathHelper.sin((float)(fractionalWeek + Math.PI))));
 		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(8 * MathHelper.cos((float)(fractionalWeek + Math.PI))));
-		var offsetMat = matrices.peek().getModel();
+		var offsetMat = matrices.peek().getPositionMatrix();
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, SUN);
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
@@ -119,13 +119,13 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		var u = client.world.getMoonPhase();
 		var v = u % 4;
 		var w = u / 4 % 2;
-		var x = (float)(v + 0) / 4.0F;
-		p = (float)(w + 0) / 2.0F;
+		var x = (float)(v) / 4.0F;
+		p = (float)(w) / 2.0F;
 		q = (float)(v + 1) / 4.0F;
 		r = (float)(w + 1) / 2.0F;
 		matrices.push();
 		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(-7));
-		matrix4f3 = matrices.peek().getModel();
+		matrix4f3 = matrices.peek().getPositionMatrix();
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 		bufferBuilder.vertex(matrix4f3, -t, -100.0F, t).texture(q, r).next();
 		bufferBuilder.vertex(matrix4f3, t, -100.0F, t).texture(x, r).next();
@@ -140,7 +140,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-7));
 		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(8));
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(fractionalDay * 0.1f * 360.0F));
-		matrix4f3 = matrices.peek().getModel();
+		matrix4f3 = matrices.peek().getPositionMatrix();
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 		bufferBuilder.vertex(matrix4f3, -t, -100.0F, t).texture(q, r).next();
 		bufferBuilder.vertex(matrix4f3, t, -100.0F, t).texture(x, r).next();
@@ -155,7 +155,7 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-9));
 		matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(13));
 		matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(fractionalDay * 0.2f * 360.0F));
-		matrix4f3 = matrices.peek().getModel();
+		matrix4f3 = matrices.peek().getPositionMatrix();
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_TEXTURE);
 		bufferBuilder.vertex(matrix4f3, -t, -100.0F, t).texture(q, r).next();
 		bufferBuilder.vertex(matrix4f3, t, -100.0F, t).texture(x, r).next();
@@ -170,8 +170,8 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		if (ab > 0.0F)
 		{
 			RenderSystem.setShaderColor(ab, ab, ab, ab);
-			BackgroundRenderer.method_23792();
-			starsBuffer.setShader(matrices.peek().getModel(), projectionMatrix, GameRenderer.getPositionShader());
+			BackgroundRenderer.clearFog();
+			starsBuffer.setShader(matrices.peek().getPositionMatrix(), projectionMatrix, GameRenderer.getPositionShader());
 			fogApplier.run();
 		}
 
@@ -185,11 +185,11 @@ public class TatooineSkyRenderer implements ICustomSkyRenderer
 		{
 			matrices.push();
 			matrices.translate(0.0D, 12.0D, 0.0D);
-			darkSkyBuffer.setShader(matrices.peek().getModel(), projectionMatrix, shader);
+			darkSkyBuffer.setShader(matrices.peek().getPositionMatrix(), projectionMatrix, shader);
 			matrices.pop();
 		}
 
-		if (client.world.getSkyProperties().isAlternateSkyColor())
+		if (client.world.getDimensionEffects().isAlternateSkyColor())
 		{
 			RenderSystem.setShaderColor(g * 0.2F + 0.04F, h * 0.2F + 0.04F, i * 0.6F + 0.1F, 1.0F);
 		}

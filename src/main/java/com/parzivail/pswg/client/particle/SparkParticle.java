@@ -19,7 +19,7 @@ public class SparkParticle extends CrossPointingParticle
 	protected SparkParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z, spriteProvider);
-		this.field_28786 = 1;
+		this.velocityMultiplier = 1;
 		this.scale = (float)(Math.random() * 0.05 + 0.06);
 		this.setColorAlpha(1.0F);
 		this.setColor(1, 0, 0);

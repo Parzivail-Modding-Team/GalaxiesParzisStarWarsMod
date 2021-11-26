@@ -2,8 +2,8 @@ import java.io.ByteArrayOutputStream
 import java.util.regex.Pattern
 
 plugins {
-	id("fabric-loom") version "0.9-SNAPSHOT"
-	id("io.github.juuxel.loom-quiltflower") version "1.3.0"
+	id("fabric-loom") version "0.10-SNAPSHOT"
+	id("io.github.juuxel.loom-quiltflower-mini") version "1.1.0"
 	id("maven-publish")
 }
 
@@ -28,8 +28,8 @@ repositories {
 }
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_16
-	targetCompatibility = JavaVersion.VERSION_16
+	sourceCompatibility = JavaVersion.VERSION_17
+	targetCompatibility = JavaVersion.VERSION_17
 
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 	// if it is present.
@@ -59,10 +59,6 @@ fun getVersionName(): String
             return "${m.group(1)}$pre+${m.group(2)}"
     }
 	return version
-}
-
-quiltflower {
-	quiltflowerVersion.set("1.5.0")
 }
 
 loom {
@@ -116,7 +112,7 @@ dependencies {
 
 	// Roughly Enough Items
 	modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
-	modRuntime("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
+	modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
 
 	// LibZoomer
 	modImplementation("io.github.ennuil:LibZoomer:${libzoomer_version}")
@@ -148,13 +144,7 @@ tasks.jar {
 publishing {
 	publications {
 		create<MavenPublication>("mavenJava") {
-			// add all the jars that should be included when publishing to maven
-			artifact(tasks.remapJar) {
-				builtBy(tasks.remapJar)
-			}
-			artifact(tasks.getByName<Jar>("sourcesJar")) {
-				builtBy(tasks.remapSourcesJar)
-			}
+			from(components["java"])
 		}
 	}
 
