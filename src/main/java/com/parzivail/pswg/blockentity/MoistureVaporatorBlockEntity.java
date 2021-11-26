@@ -75,11 +75,11 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound tag)
+	public void writeNbt(NbtCompound tag)
 	{
 		tag.putInt("collectionTimer", collectionTimer);
 		tag.putInt("collectionTimerLength", collectionTimerLength);
-		return super.writeNbt(tag);
+		super.writeNbt(tag);
 	}
 
 	@Override

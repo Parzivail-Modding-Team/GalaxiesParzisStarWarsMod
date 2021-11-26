@@ -370,7 +370,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				case SEMI_AUTOMATIC, BURST, AUTOMATIC -> {
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
-						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
+						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 						entity.setHue(bd.boltColor);
 					});
@@ -378,7 +378,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				case STUN -> {
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, entity -> {
-						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
+						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 					});
 					shouldRecoil = false;
@@ -390,7 +390,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				case ION -> {
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.id), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireIon(world, player, range, entity -> {
-						entity.setProperties(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
+						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
 						entity.setHue(bd.boltColor);
 					});

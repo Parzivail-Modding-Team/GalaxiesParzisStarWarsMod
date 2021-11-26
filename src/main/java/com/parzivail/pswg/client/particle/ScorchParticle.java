@@ -23,7 +23,7 @@ public class ScorchParticle extends DecalParticle
 	protected ScorchParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, float heat, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z, spriteProvider);
-		this.field_28786 = 1;
+		this.velocityMultiplier = 1;
 		this.scale = 0.1f;
 		this.setColorAlpha(1.0F);
 		var a = MathHelper.lerp(heat, 1, MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1));

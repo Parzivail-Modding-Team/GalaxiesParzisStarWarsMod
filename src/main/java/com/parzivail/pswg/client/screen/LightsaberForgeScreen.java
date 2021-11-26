@@ -278,7 +278,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		if (lightsaber.getItem() instanceof LightsaberItem)
 		{
 			DiffuseLighting.disableGuiDepthLighting();
-			DiffuseLighting.enableForLevel(matrices.peek().getModel());
+			DiffuseLighting.enableForLevel(matrices.peek().getPositionMatrix());
 
 			LightsaberItemRenderer.INSTANCE.renderDirect(lightsaber, ModelTransformation.Mode.NONE, matrices, immediate, 0xFFFFFF, OverlayTexture.DEFAULT_UV, true);
 			immediate.draw();
@@ -304,10 +304,10 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		var bufferBuilder = Tessellator.getInstance().getBuffer();
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
-		bufferBuilder.vertex(matrices.peek().getModel(), (float)x0, (float)y1, (float)z).color(r, g, b, 255).texture(u0, v1).next();
-		bufferBuilder.vertex(matrices.peek().getModel(), (float)x1, (float)y1, (float)z).color(r, g, b, 255).texture(u1, v1).next();
-		bufferBuilder.vertex(matrices.peek().getModel(), (float)x1, (float)y0, (float)z).color(r, g, b, 255).texture(u1, v0).next();
-		bufferBuilder.vertex(matrices.peek().getModel(), (float)x0, (float)y0, (float)z).color(r, g, b, 255).texture(u0, v0).next();
+		bufferBuilder.vertex(matrices.peek().getPositionMatrix(), (float)x0, (float)y1, (float)z).color(r, g, b, 255).texture(u0, v1).next();
+		bufferBuilder.vertex(matrices.peek().getPositionMatrix(), (float)x1, (float)y1, (float)z).color(r, g, b, 255).texture(u1, v1).next();
+		bufferBuilder.vertex(matrices.peek().getPositionMatrix(), (float)x1, (float)y0, (float)z).color(r, g, b, 255).texture(u1, v0).next();
+		bufferBuilder.vertex(matrices.peek().getPositionMatrix(), (float)x0, (float)y0, (float)z).color(r, g, b, 255).texture(u0, v0).next();
 		bufferBuilder.end();
 
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);

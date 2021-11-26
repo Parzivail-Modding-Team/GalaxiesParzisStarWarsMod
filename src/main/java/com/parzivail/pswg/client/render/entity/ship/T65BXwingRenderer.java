@@ -43,13 +43,13 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 		matrix.push();
 
 		var entry = matrix.peek();
-		entry.getNormal().multiply(new Matrix3f(o.transform));
-		entry.getModel().multiply(o.transform);
+		entry.getNormalMatrix().multiply(new Matrix3f(o.transform));
+		entry.getPositionMatrix().multiply(o.transform);
 
-		matrix.method_34425(RigT65B.INSTANCE.getPartTransformation(entity, o.name, tickDelta));
+		matrix.multiplyPositionMatrix(RigT65B.INSTANCE.getPartTransformation(entity, o.name, tickDelta));
 
-		var modelMat = entry.getModel();
-		var normalMat = entry.getNormal();
+		var modelMat = entry.getPositionMatrix();
+		var normalMat = entry.getNormalMatrix();
 
 		for (var face : o.faces)
 		{

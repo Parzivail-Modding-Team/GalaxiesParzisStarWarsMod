@@ -16,10 +16,10 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.source.BiomeSource;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.gen.ChunkRandom;
 import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
+import net.minecraft.world.gen.random.ChunkRandom;
 
 import java.util.HashMap;
 import java.util.Map;

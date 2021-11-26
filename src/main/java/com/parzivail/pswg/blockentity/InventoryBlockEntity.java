@@ -23,10 +23,10 @@ public abstract class InventoryBlockEntity extends BlockEntity implements Invent
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound tag)
+	public void writeNbt(NbtCompound tag)
 	{
 		Inventories.writeNbt(tag, this.inventory);
-		return super.writeNbt(tag);
+		super.writeNbt(tag);
 	}
 
 	@Override

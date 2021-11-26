@@ -15,7 +15,7 @@ public class SlugTrailParticle extends AnimatedParticle
 	protected SlugTrailParticle(ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ, SpriteProvider spriteProvider)
 	{
 		super(clientWorld, x, y, z, spriteProvider, 0.0F);
-		this.field_28786 = 0.92F;
+		this.velocityMultiplier = 0.92F;
 		this.scale = (float)(Math.random() * 0.2 + 0.2);
 		this.setColorAlpha(1.0F);
 		var gray = 0.6f;

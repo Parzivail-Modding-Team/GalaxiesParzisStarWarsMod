@@ -75,8 +75,8 @@ public enum VertexConsumerBuffer
 		var pos4 = new Vector4f(pos);
 		normal = normal.copy();
 
-		pos4.transform(matrices.getModel());
-		normal.transform(matrices.getNormal());
+		pos4.transform(matrices.getPositionMatrix());
+		normal.transform(matrices.getNormalMatrix());
 
 		vertexConsumer.vertex(pos4.getX(), pos4.getY(), pos4.getZ(), r, g, b, a, u, v, overlay, light, normal.getX(), normal.getY(), normal.getZ());
 	}

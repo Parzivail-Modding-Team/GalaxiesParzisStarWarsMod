@@ -43,7 +43,6 @@ import com.parzivail.util.client.render.ICustomSkyRenderer;
 import io.github.ennuil.libzoomer.api.ZoomInstance;
 import io.github.ennuil.libzoomer.api.ZoomRegistry;
 import io.github.ennuil.libzoomer.api.modifiers.ZoomDivisorMouseModifier;
-import io.github.ennuil.libzoomer.api.overlays.NoZoomOverlay;
 import io.github.ennuil.libzoomer.api.transitions.SmoothTransitionMode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -225,7 +224,7 @@ public class Client implements ClientModInitializer
 				10.0F,
 				new SmoothTransitionMode(),
 				new ZoomDivisorMouseModifier(),
-				new NoZoomOverlay() //new SpyglassZoomOverlay(new Identifier("libzoomertest:textures/misc/michael.png"))
+				null //new SpyglassZoomOverlay(new Identifier("libzoomertest:textures/misc/michael.png"))
 		));
 	}
 
