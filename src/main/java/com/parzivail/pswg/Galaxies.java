@@ -93,7 +93,7 @@ public class Galaxies implements ModInitializer
 
 		SwgItems.register();
 
-		SwgDimensions.Tatooine.register();
+//		SwgDimensions.Tatooine.register();
 
 		SwgScreenTypes.register();
 

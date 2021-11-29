@@ -2,9 +2,9 @@ package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.util.block.BlockEntityClientSerializable;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;

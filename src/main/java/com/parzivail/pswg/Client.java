@@ -20,7 +20,6 @@ import com.parzivail.pswg.client.render.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
-import com.parzivail.pswg.client.render.sky.TatooineSkyRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
@@ -34,12 +33,12 @@ import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.Lumberjack;
+import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
-import com.parzivail.util.client.render.ICustomSkyRenderer;
 import io.github.ennuil.libzoomer.api.ZoomInstance;
 import io.github.ennuil.libzoomer.api.ZoomRegistry;
 import io.github.ennuil.libzoomer.api.modifiers.ZoomDivisorMouseModifier;
@@ -213,7 +212,7 @@ public class Client implements ClientModInitializer
 		ICustomPoseItem.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
 		ICustomHudRenderer.register(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
 
-		ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
+//		ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 
 		SwgParticles.register();
 
@@ -348,6 +347,8 @@ public class Client implements ClientModInitializer
 					}
 				}
 			});
+
+			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketClientSync, BlockEntityClientSerializable::handle);
 		}
 	}
 }
