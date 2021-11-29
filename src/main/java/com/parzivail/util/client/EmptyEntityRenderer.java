@@ -38,7 +38,7 @@ public class EmptyEntityRenderer extends EntityRenderer<Entity>
 		matrix.multiply(this.dispatcher.getRotation());
 		matrix.scale(-f, -f, f);
 
-		var textMatrix = matrix.peek().getModel();
+		var textMatrix = matrix.peek().getPositionMatrix();
 
 		var g = minecraft.options.getTextBackgroundOpacity(0.25F);
 		var k = (int)(g * 255.0F) << 24;

@@ -44,7 +44,7 @@ public class InvertedLampBlock extends Block
 			{
 				if (bl)
 				{
-					world.getBlockTickScheduler().schedule(pos, this, 4);
+					world.createAndScheduleBlockTick(pos, this, 4);
 				}
 				else
 				{

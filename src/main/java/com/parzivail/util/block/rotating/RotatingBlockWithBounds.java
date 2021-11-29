@@ -64,7 +64,7 @@ public class RotatingBlockWithBounds extends RotatingBlock
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom)
 	{
 		if (state.get(Properties.WATERLOGGED))
-			world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+			world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 
 		if (requiresSubstrate == Substrate.NONE)
 			return state;
