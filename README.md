@@ -56,3 +56,7 @@ Some ideas and concepts Copyright or Trademark Lucasfilm LTD., LucasArts, or Dis
 Non-code assets [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/).
 
 If you are a modpack owner or distributor, you are fully responsible for supporting this mod's integration with the pack in form and function. If an issue is *caused* by this mod, you or the player is responsible for posting a support ticket/issue here.
+
+## Statistics
+
+![Alt](https://repobeats.axiom.co/api/embed/33df2ae60d2764a748647d390e079f7f89b907ce.svg "Repobeats analytics image")
