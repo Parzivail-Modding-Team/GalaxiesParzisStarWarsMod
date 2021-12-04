@@ -1,6 +1,5 @@
 package com.parzivail.util.math;
 
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.*;
@@ -66,24 +65,13 @@ public class QuatUtil
 		return new Quaternion(tag.getFloat("b"), tag.getFloat("c"), tag.getFloat("d"), tag.getFloat("a"));
 	}
 
-	public static void rotateTowards(Quaternion self, Vec3d orientation, float speed, Matrix4f mat, VertexConsumer debugConsumer)
+	public static void rotateTowards(Quaternion self, Vec3d orientation, float speed)
 	{
 		self.normalize();
 		var vec2 = rotate(orientation, self);
 		var cross = orientation.crossProduct(vec2).multiply(-1.0);
 		var axis = cross.normalize();
 		var f1 = (float)cross.length();
-		if (debugConsumer != null)
-		{
-			debugConsumer.vertex(mat, 0.0f, 0.0f, 0.0f).color(1f, 0f, 0f, 1f).next();
-			debugConsumer.vertex(mat, (float)orientation.x, (float)orientation.y, (float)orientation.z).color(1f, 0f, 0f, 1f).next();
-
-			debugConsumer.vertex(mat, 0.0f, 0.0f, 0.0f).color(0f, 0f, 1f, 1f).next();
-			debugConsumer.vertex(mat, (float)vec2.x, (float)vec2.y, (float)vec2.z).color(0f, 0f, 1f, 1f).next();
-
-			debugConsumer.vertex(mat, 0.0f, 0.0f, 0.0f).color(0f, 1f, 0f, 1f).next();
-			debugConsumer.vertex(mat, (float)cross.x, (float)cross.y, (float)cross.z).color(0f, 1f, 0f, 1f).next();
-		}
 		var other = new Quaternion(new Vec3f(axis), speed * f1, false);
 		other.hamiltonProduct(self);
 		self.set(other.getX(), other.getY(), other.getZ(), other.getW());
