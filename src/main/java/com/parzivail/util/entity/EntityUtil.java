@@ -1,11 +1,13 @@
 package com.parzivail.util.entity;
 
 import com.parzivail.util.math.EntityHitResult;
+import com.parzivail.util.math.MathUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 
@@ -58,9 +60,6 @@ public class EntityUtil
 
 	public static ArrayList<Entity> raycastEntitiesCone(Vec3d startPos, Vec3d fromDir, double maxAngleRad, double distance, Entity fromEntity, Entity[] exclude)
 	{
-		Entity pointedEntity = null;
-		Vec3d hitLocation = null;
-
 		var blacklist = Arrays.asList(exclude);
 
 		fromDir = fromDir.normalize();
@@ -95,9 +94,32 @@ public class EntityUtil
 
 	public static void setVelocityFromAngles(Entity entity, float pitch, float yaw, float scalar)
 	{
-		var f = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
-		var g = -MathHelper.sin(pitch * 0.017453292F);
-		var h = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
-		entity.setVelocity(scalar * f, scalar * g, scalar * h);
+		var look = MathUtil.anglesToLook(pitch, yaw);
+		entity.setVelocity(scalar * look.x, scalar * look.y, scalar * look.z);
+	}
+
+	public static void updateEulerRotation(Entity entity, Quaternion rotation)
+	{
+		entity.prevPitch = entity.getPitch();
+		entity.prevYaw = entity.getYaw();
+
+		var eulerAngle = QuatUtil.toEulerAngles(rotation);
+		entity.setYaw(eulerAngle.getYaw() + 180);
+		entity.setPitch(-eulerAngle.getPitch());
+
+		while (entity.getPitch() - entity.prevPitch >= 180.0F)
+		{
+			entity.prevPitch += 360.0F;
+		}
+
+		while (entity.getYaw() - entity.prevYaw < -180.0F)
+		{
+			entity.prevYaw -= 360.0F;
+		}
+
+		while (entity.getYaw() - entity.prevYaw >= 180.0F)
+		{
+			entity.prevYaw += 360.0F;
+		}
 	}
 }

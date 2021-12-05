@@ -1,6 +1,5 @@
 package com.parzivail.util.math;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.*;
 
@@ -13,34 +12,25 @@ public class QuatUtil
 	{
 		var forward = rotate(MathUtil.POSZ, q);
 
-		var yaw = -(float)Math.atan2(forward.x, forward.z);
-		var pitch = (float)Math.asin(forward.y);
-
-		return new EulerAngle(pitch * MathUtil.toDegreesf, yaw * MathUtil.toDegreesf + 180, 0);
+		return MathUtil.lookToAngles(forward);
 	}
 
 	public static Quaternion lookAt(Vec3d sourcePoint, Vec3d destPoint)
 	{
-		Vec3d forwardVector = destPoint.subtract(sourcePoint).normalize();
+		var forwardVector = destPoint.subtract(sourcePoint).normalize();
 
-		double dot = FORWARD.dotProduct(forwardVector);
+		var dot = FORWARD.dotProduct(forwardVector);
 
 		if (Math.abs(dot - (-1.0f)) < 0.000001f)
 			return new Quaternion(new Vec3f((float)UP.x, (float)UP.y, (float)UP.z), MathHelper.PI, false);
 		if (Math.abs(dot - (1.0f)) < 0.000001f)
 			return new Quaternion(Quaternion.IDENTITY);
 
-		double rotAngle = Math.acos(dot);
-		Vec3d rotAxis = FORWARD.crossProduct(forwardVector);
+		var rotAngle = Math.acos(dot);
+		var rotAxis = FORWARD.crossProduct(forwardVector);
 		rotAxis = rotAxis.normalize();
-		return createFromAxisAngle(rotAxis, rotAngle);
-	}
 
-	public static Quaternion createFromAxisAngle(Vec3d axis, double angle)
-	{
-		var halfAngle = angle / 2;
-		var s = Math.sin(halfAngle);
-		return new Quaternion((float)(axis.x * s), (float)(axis.y * s), (float)(axis.z * s), (float)Math.cos(halfAngle));
+		return new Quaternion(new Vec3f(rotAxis), (float)rotAngle, false);
 	}
 
 	public static Vec3d rotate(Vec3d self, Quaternion q)
@@ -77,11 +67,13 @@ public class QuatUtil
 		self.set(other.getX(), other.getY(), other.getZ(), other.getW());
 	}
 
-	public static Quaternion invertCopy(Quaternion q)
+	public static Quaternion getRotationTowards(Vec3d from, Vec3d to)
 	{
-		var q1 = new Quaternion(q);
-		invert(q1);
-		return q1;
+		var cross = from.crossProduct(to);
+		var w = (float)(Math.sqrt(from.lengthSquared() * to.lengthSquared()) + from.dotProduct(to));
+		var q = new Quaternion(w, (float)cross.x, (float)cross.y, (float)cross.z);
+		q.normalize();
+		return q;
 	}
 
 	/**
@@ -160,44 +152,9 @@ public class QuatUtil
 		return result;
 	}
 
-	public static Quaternion getRotationTowards(Vec3d from, Vec3d to)
+	public static Quaternion invert(Quaternion q)
 	{
-		var q = new Quaternion(Quaternion.IDENTITY);
-		var cross = from.crossProduct(to);
-		var w = (float)(Math.sqrt(from.lengthSquared() * to.lengthSquared()) + from.dotProduct(to));
-		q.set(w, (float)cross.x, (float)cross.y, (float)cross.z);
-		q.normalize();
-		return q;
-	}
-
-	public static void invert(Quaternion self)
-	{
-		var l = self.getW() * self.getW() + self.getX() * self.getX() + self.getY() * self.getY() + self.getZ() * self.getZ();
-		self.set(self.getW() / l, -self.getX() / l, -self.getY() / l, -self.getZ() / l);
-	}
-
-	public static void updateEulerRotation(Entity entity, Quaternion rotation)
-	{
-		entity.prevPitch = entity.getPitch();
-		entity.prevYaw = entity.getYaw();
-
-		var eulerAngle = toEulerAngles(rotation);
-		entity.setYaw(eulerAngle.getYaw());
-		entity.setPitch(eulerAngle.getPitch());
-
-		while (entity.getPitch() - entity.prevPitch >= 180.0F)
-		{
-			entity.prevPitch += 360.0F;
-		}
-
-		while (entity.getYaw() - entity.prevYaw < -180.0F)
-		{
-			entity.prevYaw -= 360.0F;
-		}
-
-		while (entity.getYaw() - entity.prevYaw >= 180.0F)
-		{
-			entity.prevYaw += 360.0F;
-		}
+		var l = q.getW() * q.getW() + q.getX() * q.getX() + q.getY() * q.getY() + q.getZ() * q.getZ();
+		return new Quaternion(q.getW() / l, -q.getX() / l, -q.getY() / l, -q.getZ() / l);
 	}
 }

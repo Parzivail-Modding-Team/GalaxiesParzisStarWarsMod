@@ -1,9 +1,11 @@
 package com.parzivail.util.math;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
 
 public class MathUtil
 {
@@ -102,5 +104,26 @@ public class MathUtil
 	public static Vec3d project(Vec3d v, Vec3d onto)
 	{
 		return onto.multiply(v.dotProduct(onto) / onto.dotProduct(onto));
+	}
+
+	@NotNull
+	public static Vec3d anglesToLook(float pitch, float yaw)
+	{
+		var x = -MathHelper.sin(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
+		var y = -MathHelper.sin(pitch * MathHelper.RADIANS_PER_DEGREE);
+		var z = MathHelper.cos(yaw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(pitch * MathHelper.RADIANS_PER_DEGREE);
+
+		return new Vec3d(x, y, z).normalize();
+	}
+
+	@NotNull
+	public static EulerAngle lookToAngles(Vec3d forward)
+	{
+		forward = forward.normalize();
+
+		var yaw = -(float)Math.atan2(forward.x, forward.z);
+		var pitch = -(float)Math.asin(forward.y);
+
+		return new EulerAngle(pitch * toDegreesf, yaw * toDegreesf, 0);
 	}
 }

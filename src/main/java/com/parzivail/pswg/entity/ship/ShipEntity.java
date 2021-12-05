@@ -7,6 +7,7 @@ import com.parzivail.pswg.client.render.camera.ChaseCam;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
+import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.IFlyingVehicle;
 import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.math.MathUtil;
@@ -251,7 +252,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 		viewRotation = new Quaternion(getRotation());
 
-		QuatUtil.updateEulerRotation(this, viewRotation);
+		EntityUtil.updateEulerRotation(this, viewRotation);
 
 		if (world.isClient)
 		{
@@ -341,7 +342,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			vec3d = QuatUtil.rotate(vec3d, q);
 
 			if (!usePlayerPerspective())
-				QuatUtil.updateEulerRotation(passenger, q);
+				EntityUtil.updateEulerRotation(passenger, q);
 
 			passenger.setPosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
 			//			this.copyEntityData(passenger);
@@ -479,17 +480,13 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			var currentUp = QuatUtil.rotate(new Vec3d(0, 1, 0), rotation);
 			var currentForward = QuatUtil.rotate(new Vec3d(0, 0, 1), rotation);
 
-			var yw = ea.getYaw();
-			var ptch = ea.getPitch() - 90;
+			var targetYaw = ea.getYaw() + 180;
+			var targetPitch = -ea.getPitch() - 90;
 
 			if (currentUp.y < 0)
-				ptch += 180;
+				targetPitch += 180;
 
-			var f = -MathHelper.sin(yw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(ptch * MathHelper.RADIANS_PER_DEGREE);
-			var g = -MathHelper.sin(ptch * MathHelper.RADIANS_PER_DEGREE);
-			var h = MathHelper.cos(yw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(ptch * MathHelper.RADIANS_PER_DEGREE);
-
-			var zeroRollUp = new Vec3d(f, g, h);
+			var zeroRollUp = MathUtil.anglesToLook(targetPitch, targetYaw);
 
 			var angle = Math.acos(currentUp.dotProduct(zeroRollUp) / (currentUp.length() * zeroRollUp.length()));
 
