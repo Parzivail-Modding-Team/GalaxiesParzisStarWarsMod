@@ -5,7 +5,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.entity.ShipRenderer;
 import com.parzivail.pswg.client.render.p3d.P3dObject;
 import com.parzivail.pswg.entity.rigs.RigT65B;
-import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
@@ -30,7 +29,6 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 	protected void renderModel(T65BXwing entity, float yaw, float tickDelta, MatrixStack matrix, VertexConsumerProvider vertexConsumers, int light)
 	{
 		var mc = MinecraftClient.getInstance();
-		var isClientShip = ShipEntity.getShip(mc.player) == entity;
 
 		var modelRef = Client.ResourceManagers.getP3dManager().get(Resources.id("ship/xwing_t65b_test_with_sockets"));
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));

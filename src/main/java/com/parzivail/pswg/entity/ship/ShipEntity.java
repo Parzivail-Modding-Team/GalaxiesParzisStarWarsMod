@@ -251,6 +251,8 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 		viewRotation = new Quaternion(getRotation());
 
+		QuatUtil.updateEulerRotation(this, viewRotation);
+
 		if (world.isClient)
 		{
 			if (Client.isShipClientControlled(this))
@@ -417,8 +419,6 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 	{
 		q.normalize();
 		getDataTracker().set(ROTATION, q);
-
-		QuatUtil.updateEulerRotation(this, q);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -473,10 +473,32 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			rotation.hamiltonProduct(new Quaternion(new Vec3f(0, 0, 1), -(float)mouseDx * 0.15f, true));
 		else
 		{
-			var v = QuatUtil.project(com.parzivail.util.math.MathUtil.POSY, rotation);
-			rotation.hamiltonProduct(new Quaternion(new Vec3f(v), (float)(Math.asin(v.y) * -mouseDx * 0.1f), true));
+			rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, -(float)mouseDy * 0.15f, true));
 
-			// TODO: roll back toward zero when this mode is switched to and the ship has a nonzero roll
+			var ea = QuatUtil.toEulerAngles(rotation);
+			var currentUp = QuatUtil.rotate(new Vec3d(0, 1, 0), rotation);
+
+			var yw = ea.getYaw();
+			var ptch = ea.getPitch() - 90;
+
+			if (currentUp.y < 0)
+				ptch += 180;
+
+			var f = -MathHelper.sin(yw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(ptch * MathHelper.RADIANS_PER_DEGREE);
+			var g = -MathHelper.sin(ptch * MathHelper.RADIANS_PER_DEGREE);
+			var h = MathHelper.cos(yw * MathHelper.RADIANS_PER_DEGREE) * MathHelper.cos(ptch * MathHelper.RADIANS_PER_DEGREE);
+
+			var zeroRollUp = new Vec3d(f, g, h);
+
+			var angle = Math.acos(currentUp.dotProduct(zeroRollUp) / (currentUp.length() * zeroRollUp.length()));
+
+			if (Math.abs(angle) > 0.01)
+			{
+				var zeroRollRotation = new Quaternion(new Vec3f(currentUp.crossProduct(zeroRollUp).normalize()), (float)angle, false);
+				zeroRollRotation.hamiltonProduct(rotation);
+
+				rotation = QuatUtil.slerp(rotation, zeroRollRotation, 0.005f);
+			}
 		}
 
 		rotation.hamiltonProduct(new Quaternion(new Vec3f(1, 0, 0), -(float)mouseDy * 0.1f, true));
