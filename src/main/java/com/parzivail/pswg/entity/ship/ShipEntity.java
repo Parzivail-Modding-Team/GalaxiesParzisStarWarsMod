@@ -473,7 +473,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			rotation.hamiltonProduct(new Quaternion(new Vec3f(0, 0, 1), -(float)mouseDx * 0.15f, true));
 		else
 		{
-			rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, -(float)mouseDy * 0.15f, true));
+			rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, -(float)mouseDx * 0.15f, true));
 
 			var ea = QuatUtil.toEulerAngles(rotation);
 			var currentUp = QuatUtil.rotate(new Vec3d(0, 1, 0), rotation);
