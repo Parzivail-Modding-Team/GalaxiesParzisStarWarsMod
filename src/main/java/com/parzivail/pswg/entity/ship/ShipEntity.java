@@ -477,6 +477,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 			var ea = QuatUtil.toEulerAngles(rotation);
 			var currentUp = QuatUtil.rotate(new Vec3d(0, 1, 0), rotation);
+			var currentForward = QuatUtil.rotate(new Vec3d(0, 0, 1), rotation);
 
 			var yw = ea.getYaw();
 			var ptch = ea.getPitch() - 90;
@@ -497,7 +498,11 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 				var zeroRollRotation = new Quaternion(new Vec3f(currentUp.crossProduct(zeroRollUp).normalize()), (float)angle, false);
 				zeroRollRotation.hamiltonProduct(rotation);
 
-				rotation = QuatUtil.slerp(rotation, zeroRollRotation, 0.005f);
+				// Prevent getting stuck spinning at poles by tapering off max lerp near the poles
+				var maxRotationSpeed = (float)(1 - Math.abs(Math.asin(currentForward.y) / MathHelper.HALF_PI));
+				maxRotationSpeed *= maxRotationSpeed;
+
+				rotation = QuatUtil.slerp(rotation, zeroRollRotation, 0.005f * maxRotationSpeed);
 			}
 		}
 
