@@ -3,6 +3,7 @@ package com.parzivail.pswg.entity;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
+import com.parzivail.util.binary.ByteBufHelper;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;
@@ -134,15 +135,9 @@ public class BlasterBoltEntity extends ThrownEntity
 				var pos = hitResult.getPos();
 
 				var passedData = WorldEvent.createBuffer(WorldEvent.BLASTER_BOLT_HIT);
-				passedData.writeDouble(pos.x);
-				passedData.writeDouble(pos.y);
-				passedData.writeDouble(pos.z);
-				passedData.writeDouble(incident.x);
-				passedData.writeDouble(incident.y);
-				passedData.writeDouble(incident.z);
-				passedData.writeDouble(normal.x);
-				passedData.writeDouble(normal.y);
-				passedData.writeDouble(normal.z);
+				ByteBufHelper.writeVec3d(passedData, pos);
+				ByteBufHelper.writeVec3d(passedData, incident);
+				ByteBufHelper.writeVec3d(passedData, normal);
 
 				for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, blockHit.getBlockPos()))
 					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PacketWorldEvent, passedData);

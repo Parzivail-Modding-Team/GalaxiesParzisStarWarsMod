@@ -7,6 +7,7 @@ import com.parzivail.pswg.client.render.camera.ChaseCam;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
+import com.parzivail.util.binary.ByteBufHelper;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.IFlyingVehicle;
 import com.parzivail.util.entity.TrackedAnimationValue;
@@ -115,16 +116,13 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 
 	public static void handleRotationPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		var qa = buf.readFloat();
-		var qb = buf.readFloat();
-		var qc = buf.readFloat();
-		var qd = buf.readFloat();
+		var q = ByteBufHelper.readQuaternion(buf);
 
 		server.execute(() -> {
 			var ship = getShip(player);
 
 			if (ship != null && ship.isPilot(player))
-				ship.setRotation(new Quaternion(qb, qc, qd, qa));
+				ship.setRotation(q);
 		});
 	}
 
@@ -510,10 +508,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 		clientInstRotation = new Quaternion(rotation);
 
 		var passedData = new PacketByteBuf(Unpooled.buffer());
-		passedData.writeFloat(rotation.getW());
-		passedData.writeFloat(rotation.getX());
-		passedData.writeFloat(rotation.getY());
-		passedData.writeFloat(rotation.getZ());
+		ByteBufHelper.writeQuaternion(passedData, rotation);
 		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipRotation, passedData);
 	}
 

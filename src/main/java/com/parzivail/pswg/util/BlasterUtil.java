@@ -7,6 +7,7 @@ import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
+import com.parzivail.util.binary.ByteBufHelper;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.PProjectileEntityDamageSource;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -77,18 +78,12 @@ public class BlasterUtil
 
 	public static void handleSlugFired(MinecraftClient client, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf buf, PacketSender packetSender)
 	{
-		var sx = buf.readDouble();
-		var sy = buf.readDouble();
-		var sz = buf.readDouble();
-		var vx = buf.readDouble();
-		var vy = buf.readDouble();
-		var vz = buf.readDouble();
+		var start = ByteBufHelper.readVec3d(buf);
+		var fromDir = ByteBufHelper.readVec3d(buf);
+
 		var distance = buf.readDouble();
 
-		var start = new Vec3d(sx, sy, sz);
-		var fromDir = new Vec3d(vx, vy, vz);
-
-		if (distance > 1e100)
+		if (distance > 1e5)
 			return;
 
 		for (var d = 0; d < distance; d++)
@@ -138,12 +133,8 @@ public class BlasterUtil
 			distance = range;
 
 		var passedData = WorldEvent.createBuffer(WorldEvent.SLUG_FIRED);
-		passedData.writeDouble(start.x);
-		passedData.writeDouble(start.y);
-		passedData.writeDouble(start.z);
-		passedData.writeDouble(fromDir.x);
-		passedData.writeDouble(fromDir.y);
-		passedData.writeDouble(fromDir.z);
+		ByteBufHelper.writeVec3d(passedData, start);
+		ByteBufHelper.writeVec3d(passedData, fromDir);
 		passedData.writeDouble(distance);
 		passedData.writeBoolean(blockHit.getType() == HitResult.Type.BLOCK);
 
@@ -153,12 +144,8 @@ public class BlasterUtil
 
 			var pos = blockHit.getPos();
 
-			passedData.writeDouble(pos.x);
-			passedData.writeDouble(pos.y);
-			passedData.writeDouble(pos.z);
-			passedData.writeDouble(normal.x);
-			passedData.writeDouble(normal.y);
-			passedData.writeDouble(normal.z);
+			ByteBufHelper.writeVec3d(passedData, pos);
+			ByteBufHelper.writeVec3d(passedData, normal);
 		}
 
 		for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, end))
@@ -193,9 +180,9 @@ public class BlasterUtil
 
 	public static void handleBoltHit(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		var pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-		var incident = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-		var normal = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+		var pos = ByteBufHelper.readVec3d(buf);
+		var incident = ByteBufHelper.readVec3d(buf);
+		var normal = ByteBufHelper.readVec3d(buf);
 
 		createScorchParticles(client, pos, incident, normal, true);
 	}
