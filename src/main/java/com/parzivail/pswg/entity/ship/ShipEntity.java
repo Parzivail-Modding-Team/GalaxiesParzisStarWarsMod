@@ -471,10 +471,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			shipRollPriority = !shipRollPriority;
 
 		if (shipRollPriority)
-			rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Z, -(float)mouseDx * 0.15f, true));
+			rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Z, -(float)mouseDx * 0.1f, true));
 		else
 		{
-			rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, -(float)mouseDx * 0.15f, true));
+			rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, -(float)mouseDx * 0.1f, true));
 
 			var ea = QuatUtil.toEulerAngles(rotation);
 			var currentUp = QuatUtil.rotate(new Vec3d(0, 1, 0), rotation);
