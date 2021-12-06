@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.item.blaster.data.*;
+import com.parzivail.util.data.ByteBufHelper;
 import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -124,29 +125,9 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeByte(value.automaticRepeatTime);
 		buf.writeByte(value.burstRepeatTime);
 
-		buf.writeBoolean(value.muzzlePos != null);
-		if (value.muzzlePos != null)
-		{
-			buf.writeFloat((float)value.muzzlePos.x);
-			buf.writeFloat((float)value.muzzlePos.y);
-			buf.writeFloat((float)value.muzzlePos.z);
-		}
-
-		buf.writeBoolean(value.foreGripPos != null);
-		if (value.foreGripPos != null)
-		{
-			buf.writeFloat((float)value.foreGripPos.x);
-			buf.writeFloat((float)value.foreGripPos.y);
-			buf.writeFloat((float)value.foreGripPos.z);
-		}
-
-		buf.writeBoolean(value.foreGripHandAngle != null);
-		if (value.foreGripHandAngle != null)
-		{
-			buf.writeFloat(value.foreGripHandAngle.getPitch());
-			buf.writeFloat(value.foreGripHandAngle.getYaw());
-			buf.writeFloat(value.foreGripHandAngle.getRoll());
-		}
+		ByteBufHelper.writeNullable(buf, value.muzzlePos, ByteBufHelper::writeVec3dAsSingles);
+		ByteBufHelper.writeNullable(buf, value.foreGripPos, ByteBufHelper::writeVec3dAsSingles);
+		ByteBufHelper.writeNullable(buf, value.foreGripHandAngle, ByteBufHelper::writeEulerAngle);
 
 		buf.writeByte(value.burstSize);
 
@@ -183,38 +164,9 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var automaticRepeatTime = buf.readByte();
 		var burstRepeatTime = buf.readByte();
 
-		var hasMuzzlePos = buf.readBoolean();
-		Vec3d muzzlePos = null;
-		if (hasMuzzlePos)
-		{
-			muzzlePos = new Vec3d(
-					buf.readFloat(),
-					buf.readFloat(),
-					buf.readFloat()
-			);
-		}
-
-		var hasForeGripPos = buf.readBoolean();
-		Vec3d foreGripPos = null;
-		if (hasForeGripPos)
-		{
-			foreGripPos = new Vec3d(
-					buf.readFloat(),
-					buf.readFloat(),
-					buf.readFloat()
-			);
-		}
-
-		var hasForeGripHandAngle = buf.readBoolean();
-		EulerAngle foreGripHandAngle = null;
-		if (hasForeGripHandAngle)
-		{
-			foreGripHandAngle = new EulerAngle(
-					buf.readFloat(),
-					buf.readFloat(),
-					buf.readFloat()
-			);
-		}
+		var muzzlePos = ByteBufHelper.readNullable(buf, ByteBufHelper::readVec3dAsSingles);
+		var foreGripPos = ByteBufHelper.readNullable(buf, ByteBufHelper::readVec3dAsSingles);
+		var foreGripHandAngle = ByteBufHelper.readNullable(buf, ByteBufHelper::readEulerAngle);
 
 		var burstSize = buf.readByte();
 

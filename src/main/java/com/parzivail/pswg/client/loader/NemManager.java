@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.loader;
 
 import com.parzivail.pswg.client.render.model.MutableAnimatedModel;
-import com.parzivail.util.binary.KeyedReloadableLoader;
 import com.parzivail.util.client.render.ModelAngleAnimator;
+import com.parzivail.util.data.KeyedReloadableLoader;
 import net.minecraft.client.model.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;

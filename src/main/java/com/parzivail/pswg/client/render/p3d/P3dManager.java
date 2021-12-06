@@ -1,6 +1,6 @@
 package com.parzivail.pswg.client.render.p3d;
 
-import com.parzivail.util.binary.KeyedReloadableLoader;
+import com.parzivail.util.data.KeyedReloadableLoader;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;

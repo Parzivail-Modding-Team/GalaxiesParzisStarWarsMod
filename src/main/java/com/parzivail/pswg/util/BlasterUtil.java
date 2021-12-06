@@ -7,7 +7,7 @@ import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
-import com.parzivail.util.binary.ByteBufHelper;
+import com.parzivail.util.data.ByteBufHelper;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.PProjectileEntityDamageSource;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;

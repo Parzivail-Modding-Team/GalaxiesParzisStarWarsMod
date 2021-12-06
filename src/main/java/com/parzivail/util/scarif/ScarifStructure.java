@@ -2,7 +2,7 @@ package com.parzivail.util.scarif;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.util.Lumberjack;
-import com.parzivail.util.binary.DataReader;
+import com.parzivail.util.data.DataReader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;

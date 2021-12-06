@@ -1,4 +1,4 @@
-package com.parzivail.util.binary;
+package com.parzivail.util.data;
 
 import com.parzivail.util.Lumberjack;
 import net.fabricmc.loader.api.FabricLoader;

@@ -1,4 +1,4 @@
-package com.parzivail.util.binary;
+package com.parzivail.util.data;
 
 import com.google.common.collect.Maps;
 import net.minecraft.resource.ResourceManager;

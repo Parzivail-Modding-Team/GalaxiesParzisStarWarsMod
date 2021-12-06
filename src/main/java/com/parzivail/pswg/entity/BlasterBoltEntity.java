@@ -3,7 +3,7 @@ package com.parzivail.pswg.entity;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.util.binary.ByteBufHelper;
+import com.parzivail.util.data.ByteBufHelper;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;

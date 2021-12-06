@@ -7,7 +7,7 @@ import com.parzivail.pswg.client.render.camera.ChaseCam;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
-import com.parzivail.util.binary.ByteBufHelper;
+import com.parzivail.util.data.ByteBufHelper;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.IFlyingVehicle;
 import com.parzivail.util.entity.TrackedAnimationValue;
@@ -501,7 +501,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle
 			}
 		}
 
-		rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Z, -(float)mouseDy * 0.1f, true));
+		rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_X, -(float)mouseDy * 0.1f, true));
 
 		setRotation(rotation);
 
