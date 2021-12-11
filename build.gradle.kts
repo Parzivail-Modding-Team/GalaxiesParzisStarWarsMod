@@ -135,7 +135,9 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.jar {
-	from(project.file("LICENSE"))
+	from(project.file("LICENSE")) {
+        rename { "${it}_${archives_base_name}"}
+    }
 
 	exclude("com/parzivail/datagen")
 }
