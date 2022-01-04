@@ -3,7 +3,9 @@ package com.parzivail.pswg.entity;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
+import com.parzivail.util.Lumberjack;
 import com.parzivail.util.data.ByteBufHelper;
+import com.parzivail.util.entity.IPrecisionEntity;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;
@@ -20,7 +22,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class BlasterBoltEntity extends ThrownEntity
+public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 {
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Float> HUE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
@@ -106,15 +108,14 @@ public class BlasterBoltEntity extends ThrownEntity
 		final var life = getLife() - 1;
 		setLife(life);
 
+		if (this.age == 1)
+			Lumberjack.debug(getVelocity());
+
 		if (life <= 0)
 		{
 			this.discard();
 			return;
 		}
-
-//		var forward = getVelocity().normalize();
-//		setYaw(-(float)Math.atan2(forward.x, forward.z));
-//		setPitch((float)Math.asin(forward.y));
 
 		super.tick();
 	}

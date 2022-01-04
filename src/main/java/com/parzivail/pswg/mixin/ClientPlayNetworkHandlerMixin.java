@@ -1,10 +1,14 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.world.ClientWorld;
+import net.minecraft.entity.Entity;
+import net.minecraft.network.packet.s2c.play.EntityVelocityUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
 import net.minecraft.text.*;
 import org.spongepowered.asm.mixin.Final;
@@ -22,6 +26,9 @@ public class ClientPlayNetworkHandlerMixin
 	@Final
 	@Shadow
 	private MinecraftClient client;
+
+	@Shadow
+	private ClientWorld world;
 
 	@Inject(method = "onGameJoin(Lnet/minecraft/network/packet/s2c/play/GameJoinS2CPacket;)V", at = @At("TAIL"))
 	private void onJoinWorld(GameJoinS2CPacket packet, CallbackInfo ci)
@@ -41,5 +48,16 @@ public class ClientPlayNetworkHandlerMixin
 					);
 			client.player.sendMessage(new TranslatableText("msg.pswg.update", versionText, urlText), false);
 		}
+	}
+
+	@Inject(method = "onEntityVelocityUpdate(Lnet/minecraft/network/packet/s2c/play/EntityVelocityUpdateS2CPacket;)V", at = @At("TAIL"))
+	private void onEntityVelocityUpdate(EntityVelocityUpdateS2CPacket packet, CallbackInfo ci)
+	{
+		Entity entity = this.world.getEntityById(packet.getId());
+		if (entity == null)
+			return;
+
+		if (packet instanceof PreciseEntityVelocityUpdateS2CPacket pevu)
+			entity.setVelocity(pevu.getVelocity());
 	}
 }

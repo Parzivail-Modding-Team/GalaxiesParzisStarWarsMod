@@ -10,6 +10,7 @@ import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.util.data.ByteBufHelper;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.IFlyingVehicle;
+import com.parzivail.util.entity.IPrecisionEntity;
 import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
@@ -41,7 +42,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
-public abstract class ShipEntity extends Entity implements IFlyingVehicle
+public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrecisionEntity
 {
 	private static final TrackedData<Quaternion> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
 	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);

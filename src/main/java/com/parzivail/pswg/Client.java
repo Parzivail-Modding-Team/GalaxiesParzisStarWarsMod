@@ -39,6 +39,7 @@ import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import io.github.ennuil.libzoomer.api.ZoomInstance;
 import io.github.ennuil.libzoomer.api.ZoomRegistry;
 import io.github.ennuil.libzoomer.api.modifiers.ZoomDivisorMouseModifier;
@@ -218,6 +219,44 @@ public class Client implements ClientModInitializer
 
 		ResourceManagers.registerPackets();
 
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPlayerEvent, (client, handler, buf, responseSender) -> {
+			var eventId = buf.readByte();
+
+			if (PlayerEvent.ID_LOOKUP.containsKey(eventId))
+			{
+				var event = PlayerEvent.ID_LOOKUP.get(eventId);
+
+				switch (event)
+				{
+					case ACCUMULATE_RECOIL:
+						RecoilManager.handleAccumulateRecoil(client, handler, buf, responseSender);
+						break;
+				}
+			}
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketWorldEvent, (client, handler, buf, responseSender) -> {
+			var eventId = buf.readByte();
+
+			if (WorldEvent.ID_LOOKUP.containsKey(eventId))
+			{
+				var event = WorldEvent.ID_LOOKUP.get(eventId);
+
+				switch (event)
+				{
+					case SLUG_FIRED:
+						BlasterUtil.handleSlugFired(client, handler, buf, responseSender);
+						break;
+					case BLASTER_BOLT_HIT:
+						BlasterUtil.handleBoltHit(client, handler, buf, responseSender);
+						break;
+				}
+			}
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketClientSync, BlockEntityClientSerializable::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
+
 		blasterZoomInstance = ZoomRegistry.registerInstance(new ZoomInstance(
 				Resources.id("blaster_zoom"),
 				10.0F,
@@ -312,43 +351,6 @@ public class Client implements ClientModInitializer
 				else
 					Lumberjack.error("Attempted to sync lightsaber descriptors without initializing the client loader!");
 			});
-
-			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPlayerEvent, (client, handler, buf, responseSender) -> {
-				var eventId = buf.readByte();
-
-				if (PlayerEvent.ID_LOOKUP.containsKey(eventId))
-				{
-					var event = PlayerEvent.ID_LOOKUP.get(eventId);
-
-					switch (event)
-					{
-						case ACCUMULATE_RECOIL:
-							RecoilManager.handleAccumulateRecoil(client, handler, buf, responseSender);
-							break;
-					}
-				}
-			});
-
-			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketWorldEvent, (client, handler, buf, responseSender) -> {
-				var eventId = buf.readByte();
-
-				if (WorldEvent.ID_LOOKUP.containsKey(eventId))
-				{
-					var event = WorldEvent.ID_LOOKUP.get(eventId);
-
-					switch (event)
-					{
-						case SLUG_FIRED:
-							BlasterUtil.handleSlugFired(client, handler, buf, responseSender);
-							break;
-						case BLASTER_BOLT_HIT:
-							BlasterUtil.handleBoltHit(client, handler, buf, responseSender);
-							break;
-					}
-				}
-			});
-
-			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketClientSync, BlockEntityClientSerializable::handle);
 		}
 	}
 }

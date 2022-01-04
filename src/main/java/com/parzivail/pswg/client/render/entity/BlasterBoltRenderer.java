@@ -44,7 +44,7 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		matrices.scale(s, s, s);
 
 		matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(bYaw - MathHelper.PI / 2));
-		matrices.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(bPitch + MathHelper.PI / 2));
+		matrices.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(bPitch - MathHelper.PI / 2));
 
 		EnergyRenderer.renderEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, 1, false, entity.getHue(), 1, 1);
 
