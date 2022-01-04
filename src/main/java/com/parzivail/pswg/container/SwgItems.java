@@ -360,10 +360,10 @@ public class SwgItems
 	public static class Spawners
 	{
 		@RegistryName("spawn_xwing_t65b")
-		public static final Item XwingT65b = new SpawnEntityItem(SwgEntities.Ship.T65bXwing, new Item.Settings().group(Galaxies.TabItems));
+		public static final Item XwingT65b = new SpawnEntityItem(SwgEntities.Ship.T65bXwing, new Item.Settings().group(Galaxies.TabItems), 3);
 
 		@RegistryName("spawn_landspeeder_x34")
-		public static final Item LandspeederX34 = new SpawnEntityItem(SwgEntities.Speeder.X34, new Item.Settings().group(Galaxies.TabItems));
+		public static final Item LandspeederX34 = new SpawnEntityItem(SwgEntities.Speeder.X34, new Item.Settings().group(Galaxies.TabItems), 0);
 
 		@RegistryName("spawn_faa")
 		public static final Item Faa = new SpawnEggItem(SwgEntities.Fish.Faa, 0xE9933E, 0x9471EB, new Item.Settings().group(Galaxies.TabItems));

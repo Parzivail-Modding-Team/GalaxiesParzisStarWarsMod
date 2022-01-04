@@ -23,11 +23,13 @@ import java.util.Objects;
 public class SpawnEntityItem extends Item
 {
 	private final EntityType<?> type;
+	private final int yShift;
 
-	public SpawnEntityItem(EntityType<?> type, Item.Settings settings)
+	public SpawnEntityItem(EntityType<?> type, Item.Settings settings, int yShift)
 	{
 		super(settings);
 		this.type = type;
+		this.yShift = yShift;
 	}
 
 	public ActionResult useOnBlock(ItemUsageContext context)
@@ -49,6 +51,8 @@ public class SpawnEntityItem extends Item
 				blockPos3 = blockPos;
 			else
 				blockPos3 = blockPos.offset(direction);
+
+			blockPos3.add(0, yShift, 0);
 
 			if (this.type.spawnFromItemStack((ServerWorld)world, itemStack, context.getPlayer(), blockPos3, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockPos, blockPos3) && direction == Direction.UP) != null)
 			{
