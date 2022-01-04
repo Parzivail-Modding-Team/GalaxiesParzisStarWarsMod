@@ -12,6 +12,8 @@ import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -19,6 +21,7 @@ import net.minecraft.world.World;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
@@ -110,6 +113,29 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 			return Client.ResourceManagers.getBlasterManager();
 
 		return SwgBlasterManager.get(world.getServer());
+	}
+
+	public BlasterDescriptor getDataAndAssert(Identifier key)
+	{
+		var data = super.getData(key);
+
+		if (data != null)
+			return data;
+
+		var j = CrashReport.create(new NullPointerException("Cannot get blaster descriptor for unknown key " + key.toString()), "Getting blaster descriptor");
+
+		var k = j.addElement("Blaster Manager Data");
+		k.add("Defined keys", this::getDataString);
+
+		throw new CrashException(j);
+	}
+
+	private String getDataString()
+	{
+		var data = getData();
+		if (data == null)
+			return "null";
+		return data.keySet().stream().map(Identifier::toString).collect(Collectors.joining(", "));
 	}
 
 	protected void writeDataEntry(PacketByteBuf buf, BlasterDescriptor value)

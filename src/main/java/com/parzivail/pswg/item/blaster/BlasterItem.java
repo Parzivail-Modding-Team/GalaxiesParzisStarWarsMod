@@ -143,13 +143,13 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public static BlasterDescriptor getBlasterDescriptor(World world, ItemStack stack)
 	{
 		var blasterManager = SwgBlasterManager.get(world);
-		return blasterManager.getData(getBlasterModel(stack));
+		return blasterManager.getDataAndAssert(getBlasterModel(stack));
 	}
 
 	public static BlasterDescriptor getBlasterDescriptorClient(ItemStack stack)
 	{
 		var blasterManager = Client.ResourceManagers.getBlasterManager();
-		return blasterManager.getData(getBlasterModel(stack));
+		return blasterManager.getDataAndAssert(getBlasterModel(stack));
 	}
 
 	@Override
