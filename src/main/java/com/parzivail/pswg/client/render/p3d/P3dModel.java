@@ -3,9 +3,14 @@ package com.parzivail.pswg.client.render.p3d;
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
 import com.parzivail.util.data.DataReader;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.math.Matrix3f;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -18,6 +23,12 @@ import java.util.stream.Collectors;
 
 public class P3dModel
 {
+	@FunctionalInterface
+	public interface PartTransformer<T>
+	{
+		Matrix4f transform(T target, String objectName, float tickDelta);
+	}
+
 	private static final String MODEL_MAGIC = "P3D";
 	private static final String RIG_MAGIC = "P3DR";
 	private static final int[] ACCEPTED_VERSIONS = { 0x01 };
@@ -31,6 +42,59 @@ public class P3dModel
 		this.version = version;
 		this.transformables = transformables;
 		this.rootObjects = rootObjects;
+	}
+
+	public <T> void render(MatrixStack matrix, VertexConsumer vertexConsumer, T target, PartTransformer<T> transformer, int light, float tickDelta)
+	{
+		for (var mesh : rootObjects)
+			renderMesh(matrix, target, light, vertexConsumer, mesh, tickDelta, transformer);
+	}
+
+	private <T> void renderMesh(MatrixStack matrix, T target, int light, VertexConsumer vertexConsumer, P3dObject o, float tickDelta, PartTransformer<T> transformer)
+	{
+		matrix.push();
+
+		var entry = matrix.peek();
+		entry.getNormalMatrix().multiply(new Matrix3f(o.transform));
+		entry.getPositionMatrix().multiply(o.transform);
+
+		matrix.multiplyPositionMatrix(transformer.transform(target, o.name, tickDelta));
+
+		var modelMat = entry.getPositionMatrix();
+		var normalMat = entry.getNormalMatrix();
+
+		for (var face : o.faces)
+		{
+			// TODO: remove this and disable smooth faces in blender before exporting
+			var normal = new Vec3f();
+			normal.add(face.normal[0]);
+			normal.add(face.normal[1]);
+			normal.add(face.normal[2]);
+			normal.add(face.normal[3]);
+			normal.normalize();
+
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[0], normal, face.texture[0]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], normal, face.texture[1]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], normal, face.texture[2]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], normal, face.texture[3]);
+		}
+
+		for (var mesh : o.children)
+			renderMesh(matrix, target, light, vertexConsumer, mesh, tickDelta, transformer);
+
+		matrix.pop();
+	}
+
+	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vec3f vertex, Vec3f normal, Vec3f texCoord)
+	{
+		vertexConsumer
+				.vertex(modelMatrix, vertex.getX(), vertex.getY(), vertex.getZ())
+				.color(255, 255, 255, 255)
+				.texture(texCoord.getX(), 1 - texCoord.getY())
+				.overlay(OverlayTexture.DEFAULT_UV)
+				.light(light)
+				.normal(normalMatrix, normal.getX(), normal.getY(), normal.getZ())
+				.next();
 	}
 
 	public static P3dModel tryLoad(Identifier modelFile, boolean hasVertexData)

@@ -31,5 +31,17 @@
 		"primaryBypassTolerance": 0.05,
 		"secondaryBypassTime": 0.3,
 		"secondaryBypassTolerance": 0.1
+	},
+	"attachmentMap": {
+		"1": {
+			"mutex": "barrel",
+			"id": "barrel",
+			"visualComponent": "barrel_extension"
+		},
+		"2": {
+			"mutex": "scope",
+			"id": "scope",
+			"visualComponent": "scope_extension"
+		}
 	}
 }

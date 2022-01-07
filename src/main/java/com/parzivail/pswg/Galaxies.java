@@ -10,6 +10,7 @@ import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.handler.PlayerPacketHandler;
+import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterAxialInfo;
 import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
 import com.parzivail.pswg.item.blaster.data.BlasterHeatInfo;
@@ -74,9 +75,11 @@ public class Galaxies implements ModInitializer
 		TagSerializer.register(BlasterAxialInfo.class, BlasterAxialInfo::fromTag, BlasterAxialInfo::toTag);
 		TagSerializer.register(BlasterHeatInfo.class, BlasterHeatInfo::fromTag, BlasterHeatInfo::toTag);
 		TagSerializer.register(BlasterCoolingBypassProfile.class, BlasterCoolingBypassProfile::fromTag, BlasterCoolingBypassProfile::toTag);
+		TagSerializer.register(BlasterAttachmentDescriptor.class, BlasterAttachmentDescriptor::fromTag, BlasterAttachmentDescriptor::toTag);
 
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
+
 		TrackedDataHandlers.register();
 
 		SwgRecipeType.register();

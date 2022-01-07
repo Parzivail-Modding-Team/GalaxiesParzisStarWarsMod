@@ -5,6 +5,7 @@ import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BlasterDescriptor
 {
@@ -34,7 +35,9 @@ public class BlasterDescriptor
 	public BlasterHeatInfo heat;
 	public BlasterCoolingBypassProfile cooling;
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, byte automaticRepeatTime, byte burstRepeatTime, Vec3d muzzlePos, Vec3d foreGripPos, EulerAngle foreGripHandAngle, byte burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling)
+	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
+
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, byte automaticRepeatTime, byte burstRepeatTime, Vec3d muzzlePos, Vec3d foreGripPos, EulerAngle foreGripHandAngle, byte burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap)
 	{
 		this.id = id;
 		this.type = type;
@@ -54,5 +57,6 @@ public class BlasterDescriptor
 		this.spread = spread;
 		this.heat = heat;
 		this.cooling = cooling;
+		this.attachmentMap = attachmentMap;
 	}
 }

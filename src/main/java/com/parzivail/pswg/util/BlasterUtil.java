@@ -7,7 +7,7 @@ import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
-import com.parzivail.util.data.ByteBufHelper;
+import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.PProjectileEntityDamageSource;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -78,8 +78,8 @@ public class BlasterUtil
 
 	public static void handleSlugFired(MinecraftClient client, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf buf, PacketSender packetSender)
 	{
-		var start = ByteBufHelper.readVec3d(buf);
-		var fromDir = ByteBufHelper.readVec3d(buf);
+		var start = PacketByteBufHelper.readVec3d(buf);
+		var fromDir = PacketByteBufHelper.readVec3d(buf);
 
 		var distance = buf.readDouble();
 
@@ -133,8 +133,8 @@ public class BlasterUtil
 			distance = range;
 
 		var passedData = WorldEvent.createBuffer(WorldEvent.SLUG_FIRED);
-		ByteBufHelper.writeVec3d(passedData, start);
-		ByteBufHelper.writeVec3d(passedData, fromDir);
+		PacketByteBufHelper.writeVec3d(passedData, start);
+		PacketByteBufHelper.writeVec3d(passedData, fromDir);
 		passedData.writeDouble(distance);
 		passedData.writeBoolean(blockHit.getType() == HitResult.Type.BLOCK);
 
@@ -144,8 +144,8 @@ public class BlasterUtil
 
 			var pos = blockHit.getPos();
 
-			ByteBufHelper.writeVec3d(passedData, pos);
-			ByteBufHelper.writeVec3d(passedData, normal);
+			PacketByteBufHelper.writeVec3d(passedData, pos);
+			PacketByteBufHelper.writeVec3d(passedData, normal);
 		}
 
 		for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, end))
@@ -180,9 +180,9 @@ public class BlasterUtil
 
 	public static void handleBoltHit(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		var pos = ByteBufHelper.readVec3d(buf);
-		var incident = ByteBufHelper.readVec3d(buf);
-		var normal = ByteBufHelper.readVec3d(buf);
+		var pos = PacketByteBufHelper.readVec3d(buf);
+		var incident = PacketByteBufHelper.readVec3d(buf);
+		var normal = PacketByteBufHelper.readVec3d(buf);
 
 		createScorchParticles(client, pos, incident, normal, true);
 	}

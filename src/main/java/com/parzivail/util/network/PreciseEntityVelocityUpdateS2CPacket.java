@@ -1,6 +1,6 @@
 package com.parzivail.util.network;
 
-import com.parzivail.util.data.ByteBufHelper;
+import com.parzivail.util.data.PacketByteBufHelper;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -27,14 +27,14 @@ public class PreciseEntityVelocityUpdateS2CPacket extends EntityVelocityUpdateS2
 	public PreciseEntityVelocityUpdateS2CPacket(PacketByteBuf buf)
 	{
 		super(buf);
-		this.velocity = ByteBufHelper.readVec3d(buf);
+		this.velocity = PacketByteBufHelper.readVec3d(buf);
 	}
 
 	@Override
 	public void write(PacketByteBuf buf)
 	{
 		super.write(buf);
-		ByteBufHelper.writeVec3d(buf, velocity);
+		PacketByteBufHelper.writeVec3d(buf, velocity);
 	}
 
 	public Vec3d getVelocity()

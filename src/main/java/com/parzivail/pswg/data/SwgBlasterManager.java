@@ -7,7 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.item.blaster.data.*;
-import com.parzivail.util.data.ByteBufHelper;
+import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
@@ -89,6 +90,54 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		}
 	}
 
+	private static class BlasterAttachmentDescriptorDeserializer implements JsonDeserializer<HashMap<Integer, BlasterAttachmentDescriptor>>
+	{
+		@Override
+		public HashMap<Integer, BlasterAttachmentDescriptor> deserialize(JsonElement e, Type type, JsonDeserializationContext ctx) throws JsonParseException
+		{
+			var map = new HashMap<Integer, BlasterAttachmentDescriptor>();
+
+			var obj = e.getAsJsonObject();
+
+			for (var pair : obj.entrySet())
+			{
+				var mask = Integer.parseInt(pair.getKey());
+				var data = pair.getValue().getAsJsonObject();
+
+				var mutex = data.get("mutex");
+
+				boolean foundMutex = false;
+				short mutexData = 0;
+
+				if (mutex instanceof JsonPrimitive mutexP)
+				{
+					if (mutexP.isNumber())
+					{
+						foundMutex = true;
+						mutexData = mutexP.getAsShort();
+					}
+					else if (mutexP.isString())
+					{
+						mutexData = BlasterAttachmentDescriptor.unpackMutexString(mutexP.getAsString());
+						foundMutex = mutexData >= 0;
+					}
+				}
+
+				if (!foundMutex)
+					throw new JsonParseException("Mutex must be a bitmask integer or a string reference to a named category");
+
+				String visComp = null;
+
+				if (data.has("visualComponent"))
+					visComp = data.get("visualComponent").getAsString();
+
+				map.put(mask, new BlasterAttachmentDescriptor(mutexData, data.get("id").getAsString(), visComp));
+			}
+
+			return map;
+		}
+	}
+
 	public SwgBlasterManager()
 	{
 		super(
@@ -97,6 +146,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 						.registerTypeAdapter(Vec3d.class, new Vec3dDeserializer())
 						.registerTypeAdapter(EulerAngle.class, new EulerAngleDeserializer())
 						.registerTypeAdapter(TypeToken.getParameterized(ArrayList.class, BlasterFiringMode.class).getType(), new BlasterFiringModesAdapter())
+						.registerTypeAdapter(TypeToken.getParameterized(HashMap.class, Integer.class, BlasterAttachmentDescriptor.class).getType(), new BlasterAttachmentDescriptorDeserializer())
 						.create(),
 				"items/blasters"
 		);
@@ -151,9 +201,9 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeByte(value.automaticRepeatTime);
 		buf.writeByte(value.burstRepeatTime);
 
-		ByteBufHelper.writeNullable(buf, value.muzzlePos, ByteBufHelper::writeVec3dAsSingles);
-		ByteBufHelper.writeNullable(buf, value.foreGripPos, ByteBufHelper::writeVec3dAsSingles);
-		ByteBufHelper.writeNullable(buf, value.foreGripHandAngle, ByteBufHelper::writeEulerAngle);
+		PacketByteBufHelper.writeNullable(buf, value.muzzlePos, PacketByteBufHelper::writeVec3dAsSingles);
+		PacketByteBufHelper.writeNullable(buf, value.foreGripPos, PacketByteBufHelper::writeVec3dAsSingles);
+		PacketByteBufHelper.writeNullable(buf, value.foreGripHandAngle, PacketByteBufHelper::writeEulerAngle);
 
 		buf.writeByte(value.burstSize);
 
@@ -175,6 +225,21 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.cooling.primaryBypassTolerance);
 		buf.writeFloat(value.cooling.secondaryBypassTime);
 		buf.writeFloat(value.cooling.secondaryBypassTolerance);
+
+		if (value.attachmentMap == null)
+			buf.writeByte(0);
+		else
+		{
+			buf.writeByte(value.attachmentMap.size());
+
+			for (var entry : value.attachmentMap.entrySet())
+			{
+				buf.writeInt(entry.getKey());
+				buf.writeShort(entry.getValue().mutex);
+				buf.writeString(entry.getValue().id);
+				PacketByteBufHelper.writeNullable(buf, entry.getValue().visualComponent, PacketByteBuf::writeString);
+			}
+		}
 	}
 
 	protected BlasterDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
@@ -190,9 +255,9 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var automaticRepeatTime = buf.readByte();
 		var burstRepeatTime = buf.readByte();
 
-		var muzzlePos = ByteBufHelper.readNullable(buf, ByteBufHelper::readVec3dAsSingles);
-		var foreGripPos = ByteBufHelper.readNullable(buf, ByteBufHelper::readVec3dAsSingles);
-		var foreGripHandAngle = ByteBufHelper.readNullable(buf, ByteBufHelper::readEulerAngle);
+		var muzzlePos = PacketByteBufHelper.readNullable(buf, PacketByteBufHelper::readVec3dAsSingles);
+		var foreGripPos = PacketByteBufHelper.readNullable(buf, PacketByteBufHelper::readVec3dAsSingles);
+		var foreGripHandAngle = PacketByteBufHelper.readNullable(buf, PacketByteBufHelper::readEulerAngle);
 
 		var burstSize = buf.readByte();
 
@@ -215,6 +280,20 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var cooling_secondaryBypassTime = buf.readFloat();
 		var cooling_secondaryBypassTolerance = buf.readFloat();
 
+		var attachmentMap = new HashMap<Integer, BlasterAttachmentDescriptor>();
+
+		var numAttachments = buf.readByte();
+
+		for (var attIdx = 0; attIdx < numAttachments; attIdx++)
+		{
+			var attachmmentFlag = buf.readInt();
+			var attachmmentMutex = buf.readShort();
+			var attachmentId = buf.readString();
+			var attachmentvisualComponent = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readString);
+
+			attachmentMap.put(attachmmentFlag, new BlasterAttachmentDescriptor(attachmmentMutex, attachmentId, attachmentvisualComponent));
+		}
+
 		return new BlasterDescriptor(
 				key,
 				archetype,
@@ -233,7 +312,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				new BlasterAxialInfo(recoil_horizontal, recoil_vertical),
 				new BlasterAxialInfo(spread_horizontal, spread_vertical),
 				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay, heat_overchargeBonus),
-				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance)
+				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance),
+				attachmentMap
 		);
 	}
 
