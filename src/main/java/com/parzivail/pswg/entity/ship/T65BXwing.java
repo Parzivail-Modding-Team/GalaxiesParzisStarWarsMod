@@ -233,7 +233,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		wingTransform.multiply(RigT65B.INSTANCE.getTransform(this, rot, wing, 0));
 		wingTransform.multiply(RigT65B.INSTANCE.getPartTransformation(this, wing, 0));
 
-		// TODO: why? also, this may be -90 to fix the supposed scaling issue in getCollision
+		// TODO: probably a change-of-axis problem. also, this is actually -90 to fix the supposed scaling issue in getCollision
 		wingTransform.multiply(new Quaternion(90, 0, 0, true));
 
 		return wingTransform;
