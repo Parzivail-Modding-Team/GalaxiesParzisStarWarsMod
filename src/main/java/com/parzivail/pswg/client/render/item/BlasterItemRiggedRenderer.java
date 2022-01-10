@@ -210,6 +210,7 @@ public class BlasterItemRiggedRenderer implements ICustomItemRenderer, ICustomPo
 					break;
 			}
 
+			// recoil
 			var recoilKick = recoilKickDecay(shotTime / 5f);
 
 			matrices.translate(
@@ -225,7 +226,7 @@ public class BlasterItemRiggedRenderer implements ICustomItemRenderer, ICustomPo
 			matrices.translate(
 					MathHelper.lerp(adsLerp, 0.2f, 0),
 					MathHelper.lerp(adsLerp, -0.2f, 0),
-					MathHelper.lerp(adsLerp, -1.2f, 0) - recoilKick * 0.6f
+					MathHelper.lerp(adsLerp, -1.2f, 0) - recoilKick * 0.9f
 			);
 
 			// TODO: left handed hold
@@ -270,13 +271,25 @@ public class BlasterItemRiggedRenderer implements ICustomItemRenderer, ICustomPo
 
 		var attachmentMap = getAttachmentMap(bd);
 
+		var attachmentMask = bt.attachmentBitmask;
+
 		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
-		m.render(matrices, vc, bt, getAttachmentTransformer(attachmentMap, bt.attachmentBitmask), light, d);
+		m.render(matrices, vc, bt, getAttachmentTransformer(attachmentMap, attachmentMask), light, d);
 
 		// TODO: move from BD-defined positions to model socket ones
 		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED)
 		{
-			var muzzleFlashTransform = m.transformables.getOrDefault("muzzle_flash", null);
+			var muzzleFlashSocket = "muzzle_flash";
+
+			for (var entry : attachmentMap.entrySet())
+			{
+				// TODO: is it possible to have more than one barrel equipped?
+				var possibleSocket = "muzzle_flash." + entry.getKey();
+				if ((attachmentMask & entry.getValue()) != 0 && m.transformables.containsKey(possibleSocket))
+					muzzleFlashSocket = possibleSocket;
+			}
+
+			var muzzleFlashTransform = m.transformables.getOrDefault(muzzleFlashSocket, null);
 
 			if (muzzleFlashTransform != null)
 			{
