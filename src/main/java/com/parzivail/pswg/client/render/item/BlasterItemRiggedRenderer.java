@@ -129,13 +129,17 @@ public class BlasterItemRiggedRenderer implements ICustomItemRenderer, ICustomPo
 		if (modelEntry.model == null)
 			return;
 
+		var m = modelEntry.model;
+
 		matrices.push();
 
 		model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
 
+		// TODO
+//		var mainHandSocket = m.transformables.get("main_hand");
+
 		matrices.scale(0.2f, 0.2f, 0.2f);
 
-		var m = modelEntry.model;
 		//		var bounds = m.bounds();
 
 		var d = MinecraftClient.getInstance().getTickDelta();
@@ -231,7 +235,7 @@ public class BlasterItemRiggedRenderer implements ICustomItemRenderer, ICustomPo
 
 			// TODO: left handed hold
 
-			var foreGripTransform = m.transformables.getOrDefault("off_hand", null);
+			var foreGripTransform = m.transformables.get("off_hand");
 			if (renderMode == ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND && foreGripTransform != null)
 			{
 				var client = MinecraftClient.getInstance();
@@ -271,12 +275,11 @@ public class BlasterItemRiggedRenderer implements ICustomItemRenderer, ICustomPo
 
 		var attachmentMap = getAttachmentMap(bd);
 
-		var attachmentMask = bt.attachmentBitmask;
+		var attachmentMask = 0b101; //bt.attachmentBitmask
 
 		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
 		m.render(matrices, vc, bt, getAttachmentTransformer(attachmentMap, attachmentMask), light, d);
 
-		// TODO: move from BD-defined positions to model socket ones
 		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED)
 		{
 			var muzzleFlashSocket = "muzzle_flash";

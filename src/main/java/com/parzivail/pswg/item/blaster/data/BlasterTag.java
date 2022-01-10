@@ -51,6 +51,9 @@ public class BlasterTag extends TagSerializer
 
 	public void tick(BlasterDescriptor bd)
 	{
+		if (serialNumber == 0)
+			serialNumber = Resources.RANDOM.nextLong();
+
 		if (passiveCooldownTimer > 0)
 			passiveCooldownTimer--;
 

@@ -226,6 +226,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.cooling.secondaryBypassTime);
 		buf.writeFloat(value.cooling.secondaryBypassTolerance);
 
+		buf.writeInt(value.attachmentDefault);
+
 		if (value.attachmentMap == null)
 			buf.writeByte(0);
 		else
@@ -280,6 +282,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var cooling_secondaryBypassTime = buf.readFloat();
 		var cooling_secondaryBypassTolerance = buf.readFloat();
 
+		var attachmentDefault = buf.readInt();
+
 		var attachmentMap = new HashMap<Integer, BlasterAttachmentDescriptor>();
 
 		var numAttachments = buf.readByte();
@@ -313,6 +317,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				new BlasterAxialInfo(spread_horizontal, spread_vertical),
 				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay, heat_overchargeBonus),
 				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance),
+				attachmentDefault,
 				attachmentMap
 		);
 	}

@@ -3,7 +3,6 @@ package com.parzivail.pswg.entity;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.util.Lumberjack;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.IPrecisionEntity;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -107,9 +106,6 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	{
 		final var life = getLife() - 1;
 		setLife(life);
-
-		if (this.age == 1)
-			Lumberjack.debug(getVelocity());
 
 		if (life <= 0)
 		{

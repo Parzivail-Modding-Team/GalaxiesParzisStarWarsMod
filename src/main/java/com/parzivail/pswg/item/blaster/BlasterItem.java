@@ -440,7 +440,6 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		tag.putString("model", Resources.id("a280").toString());
 		tag.putByte("shotTimer", (byte)20);
-		tag.putLong("serialNumber", Resources.RANDOM.nextLong());
 
 		return tag;
 	}
@@ -478,6 +477,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				blasterTag.setFiringMode(BlasterFiringMode.SEMI_AUTOMATIC);
 			else
 				blasterTag.setFiringMode(bd.firingModes.get(0));
+
+			blasterTag.attachmentBitmask = descriptor.attachmentDefault;
 		});
 
 		return stack;
@@ -513,6 +514,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		var bt1 = new BlasterTag(original.getOrCreateNbt());
 		var bt2 = new BlasterTag(updated.getOrCreateNbt());
+
 		return bt1.serialNumber == bt2.serialNumber;
 	}
 

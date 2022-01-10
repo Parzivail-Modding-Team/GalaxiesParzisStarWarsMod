@@ -32,6 +32,7 @@
 		"secondaryBypassTime": 0.3,
 		"secondaryBypassTolerance": 0.1
 	},
+	"attachmentDefault": 0,
 	"attachmentMap": {
 		"1": {
 			"mutex": "barrel",
