@@ -59,7 +59,17 @@ public class P3dModel
 		entry.getPositionMatrix().multiply(o.transform);
 
 		if (transformer != null)
-			matrix.multiplyPositionMatrix(transformer.transform(target, o.name, tickDelta));
+		{
+			var transform = transformer.transform(target, o.name, tickDelta);
+
+			if (transform == null)
+			{
+				matrix.pop();
+				return;
+			}
+
+			matrix.multiplyPositionMatrix(transform);
+		}
 
 		var modelMat = entry.getPositionMatrix();
 		var normalMat = entry.getNormalMatrix();

@@ -439,6 +439,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		var tag = new NbtCompound();
 
 		tag.putString("model", Resources.id("a280").toString());
+		tag.putByte("shotTimer", (byte)20);
+		tag.putLong("serialNumber", Resources.RANDOM.nextLong());
 
 		return tag;
 	}

@@ -34,14 +34,11 @@ public class BlasterTag extends TagSerializer
 
 	public long serialNumber;
 
+	public int attachmentBitmask;
+
 	public BlasterTag(NbtCompound source)
 	{
 		super(SLUG, source);
-
-		if (serialNumber == 0)
-			serialNumber = Resources.RANDOM.nextLong();
-
-		timeSinceLastShot = (byte)20;
 	}
 
 	public static void mutate(ItemStack stack, Consumer<BlasterTag> action)
