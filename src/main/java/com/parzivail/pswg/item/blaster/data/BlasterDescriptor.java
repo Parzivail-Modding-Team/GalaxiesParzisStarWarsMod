@@ -1,8 +1,6 @@
 package com.parzivail.pswg.item.blaster.data;
 
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.EulerAngle;
-import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,10 +22,6 @@ public class BlasterDescriptor
 	// TODO: datapack/archetype? (requires re-calculating first person ADS positions)
 	public float adsZoom = 5;
 
-	public Vec3d muzzlePos;
-	public Vec3d foreGripPos;
-	public EulerAngle foreGripHandAngle;
-
 	public byte burstSize;
 
 	public BlasterAxialInfo recoil;
@@ -38,7 +32,7 @@ public class BlasterDescriptor
 	public int attachmentDefault;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, byte automaticRepeatTime, byte burstRepeatTime, Vec3d muzzlePos, Vec3d foreGripPos, EulerAngle foreGripHandAngle, byte burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, int attachmentDefault, HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, byte automaticRepeatTime, byte burstRepeatTime, byte burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, int attachmentDefault, HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap)
 	{
 		this.id = id;
 		this.type = type;
@@ -50,9 +44,6 @@ public class BlasterDescriptor
 		this.magazineSize = magazineSize;
 		this.automaticRepeatTime = automaticRepeatTime;
 		this.burstRepeatTime = burstRepeatTime;
-		this.muzzlePos = muzzlePos;
-		this.foreGripPos = foreGripPos;
-		this.foreGripHandAngle = foreGripHandAngle;
 		this.burstSize = burstSize;
 		this.recoil = recoil;
 		this.spread = spread;

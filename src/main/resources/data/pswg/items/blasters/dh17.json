@@ -32,5 +32,7 @@
 		"primaryBypassTolerance": 0.03,
 		"secondaryBypassTime": 0.3,
 		"secondaryBypassTolerance": 0.07
-	}
+	},
+	"attachmentDefault": 0,
+	"attachmentMap": {}
 }

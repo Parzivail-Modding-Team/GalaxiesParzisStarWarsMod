@@ -4,9 +4,10 @@ import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.render.pm3d.PM3DFile;
+import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
+import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.mixin.RenderPhaseAccessor;
 import com.parzivail.util.client.ColorUtil;
@@ -26,9 +27,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -37,8 +38,16 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
 	public static final BlasterItemRenderer INSTANCE = new BlasterItemRenderer();
 
-	private static final ModelEntry FALLBACK_MODEL;
 	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
+
+	private static final Supplier<ModelEntry> FALLBACK_MODEL = Suppliers.memoize(() -> {
+		var p3dManager = Client.ResourceManagers.getP3dManager();
+		return new ModelEntry(p3dManager.get(Resources.id("blaster/a280")), Resources.id("textures/model/blaster/a280.png"));
+	});
+
+	private static final HashMap<Identifier, HashMap<String, Integer>> ATTACHMENT_MASK_CACHE = new HashMap<>();
+
+	private static final Matrix4f MAT_IDENTITY = new Matrix4f();
 
 	private static final Identifier[] ID_MUZZLE_FLASHES_FORWARD = new Identifier[] {
 			Resources.id("textures/model/blaster/effect/muzzleflash_forward_4.png"),
@@ -55,9 +64,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			Resources.id("textures/model/blaster/effect/muzzleflash_9.png")
 	};
 
+	private boolean skipPose = false;
+
 	static
 	{
-		FALLBACK_MODEL = new ModelEntry(Suppliers.memoize(() -> PM3DFile.tryLoad(Resources.id("models/item/blaster/a280.pm3d"), false)), Resources.id("textures/model/blaster/a280.png"));
+		MAT_IDENTITY.loadIdentity();
 	}
 
 	private BlasterItemRenderer()
@@ -69,16 +80,19 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		if (MODEL_CACHE.containsKey(id))
 			return MODEL_CACHE.get(id);
 
-		var file = PM3DFile.loadOrNull(new Identifier(id.getNamespace(), "models/item/blaster/" + id.getPath() + ".pm3d"), false);
+		var p3dManager = Client.ResourceManagers.getP3dManager();
+		var file = p3dManager.get(new Identifier(id.getNamespace(), "item/blaster/" + id.getPath()));
 
 		if (file == null)
 		{
-			MODEL_CACHE.put(id, FALLBACK_MODEL);
-			return FALLBACK_MODEL;
+			var fbModel = FALLBACK_MODEL.get();
+
+			MODEL_CACHE.put(id, fbModel);
+			return fbModel;
 		}
 
 		var entry = new ModelEntry(
-				Suppliers.memoize(() -> file),
+				file,
 				new Identifier(id.getNamespace(), "textures/model/blaster/" + id.getPath() + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
@@ -112,15 +126,21 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			return;
 
 		var modelEntry = getModel(bdId);
+		if (modelEntry.model == null)
+			return;
+
+		var m = modelEntry.model;
 
 		matrices.push();
 
 		model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
 
+		// TODO
+//		var mainHandSocket = m.transformables.get("main_hand");
+
 		matrices.scale(0.2f, 0.2f, 0.2f);
 
-		var m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
-		var bounds = m.bounds();
+		//		var bounds = m.bounds();
 
 		var d = MinecraftClient.getInstance().getTickDelta();
 		var opacity = 1f;
@@ -145,16 +165,17 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var angle = (float)(Math.PI / 4) * 5;
 			matrices.multiply(new Quaternion(angle, 0, 0, false));
 
-			var yi = bounds.getYLength() * Math.abs(Math.sin(angle)) + bounds.getZLength() * Math.abs(Math.cos(angle));
-			var zi = bounds.getYLength() * Math.abs(Math.cos(angle)) + bounds.getZLength() * Math.abs(Math.sin(angle));
-
-			if (renderMode != ModelTransformation.Mode.FIXED)
-			{
-				var f = (float)(5 / Math.max(yi, zi));
-				matrices.scale(f, f, f);
-			}
-
-			matrices.translate(0, (float)-bounds.minY - bounds.getYLength() / 2f, (float)-bounds.minZ - bounds.getZLength() / 2f);
+			// TODO: bounds
+			//			var yi = bounds.getYLength() * Math.abs(Math.sin(angle)) + bounds.getZLength() * Math.abs(Math.cos(angle));
+			//			var zi = bounds.getYLength() * Math.abs(Math.cos(angle)) + bounds.getZLength() * Math.abs(Math.sin(angle));
+			//
+			//			if (renderMode != ModelTransformation.Mode.FIXED)
+			//			{
+			//				var f = (float)(5 / Math.max(yi, zi));
+			//				matrices.scale(f, f, f);
+			//			}
+			//
+			//			matrices.translate(0, (float)-bounds.minY - bounds.getYLength() / 2f, (float)-bounds.minZ - bounds.getZLength() / 2f);
 		}
 		else if (renderMode.isFirstPerson())
 		{
@@ -193,6 +214,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					break;
 			}
 
+			// recoil
 			var recoilKick = recoilKickDecay(shotTime / 5f);
 
 			matrices.translate(
@@ -208,38 +230,37 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			matrices.translate(
 					MathHelper.lerp(adsLerp, 0.2f, 0),
 					MathHelper.lerp(adsLerp, -0.2f, 0),
-					MathHelper.lerp(adsLerp, -1.2f, 0) - recoilKick * 0.6f
+					MathHelper.lerp(adsLerp, -1.2f, 0) - recoilKick * 0.9f
 			);
 
 			// TODO: left handed hold
-			if (renderMode == ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND && bd.foreGripPos != null && bd.foreGripHandAngle != null)
+
+			var foreGripTransform = m.transformables.get("off_hand");
+			if (renderMode == ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND && foreGripTransform != null)
 			{
 				var client = MinecraftClient.getInstance();
 				var player = client.player;
 
 				assert player != null;
 
-				ItemStack altStack = player.getOffHandStack();
+				var altStack = player.getOffHandStack();
 				if (altStack.isEmpty())
 				{
 					RenderSystem.setShaderTexture(0, player.getSkinTexture());
-					PlayerEntityRenderer playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
+					var playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
 					matrices.push();
 
-					matrices.translate(bd.foreGripPos.x, bd.foreGripPos.y, -bd.foreGripPos.z);
+					// TODO: remove this when the change-of-axis is fixed in the exporter
+					matrices.multiply(new Quaternion(-90, 0, 0, true));
+					matrices.multiplyPositionMatrix(foreGripTransform.transform);
+					matrices.multiply(new Quaternion(90, 0, 0, true));
 
 					matrices.scale(4, 4, 4);
-
-					matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(5));
-
-					matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(bd.foreGripHandAngle.getPitch()));
-					matrices.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(bd.foreGripHandAngle.getRoll()));
-					matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(bd.foreGripHandAngle.getYaw()));
-
 					matrices.translate(-0.415f, -0.75f, 0);
 
-					//			matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-30.0F));
+					skipPose = true;
 					playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
+					skipPose = false;
 
 					matrices.pop();
 				}
@@ -252,59 +273,118 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			matrices.translate(0, -0.9f, 0);
 		}
 
+		var attachmentMap = getAttachmentMap(bd);
+
+		var attachmentMask = bt.attachmentBitmask;
+
 		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
-		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
-		m.render(VertexConsumerBuffer.Instance);
+		m.render(matrices, vc, bt, getAttachmentTransformer(attachmentMap, attachmentMask), light, d);
 
-		if (bd.muzzlePos != null && renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED)
+		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED)
 		{
-			opacity = MathHelper.clamp(1 - (float)Math.pow(Ease.inCubic(shotTime / (ID_MUZZLE_FLASHES.length - 1)), 2), 0, 1);
+			var muzzleFlashSocket = "muzzle_flash";
 
-			if (opacity > 0)
+			for (var entry : attachmentMap.entrySet())
 			{
-				var frame = (int)Math.floor(MathHelper.clamp(bt.timeSinceLastShot + d, 0, ID_MUZZLE_FLASHES.length - 1));
+				// TODO: is it possible to have more than one barrel equipped?
+				var possibleSocket = "muzzle_flash." + entry.getKey();
+				if ((attachmentMask & entry.getValue()) != 0 && m.transformables.containsKey(possibleSocket))
+					muzzleFlashSocket = possibleSocket;
+			}
 
-				var color = ColorUtil.fromHSV(bd.boltColor, 1, 1);
-				var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
-				var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
+			var muzzleFlashTransform = m.transformables.getOrDefault(muzzleFlashSocket, null);
 
-				var colorId = String.valueOf((int)(bd.boltColor * 255));
-				var flash = Client.tintedTextureProvider.loadTexture("muzzleflash/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
+			if (muzzleFlashTransform != null)
+			{
+				matrices.push();
 
-				var muzzlePos = new Vec3f((float)bd.muzzlePos.x, (float)bd.muzzlePos.y, -(float)bd.muzzlePos.z);
+				// TODO: remove this when the change-of-axis is fixed in the exporter
+				matrices.multiply(new Quaternion(-90, 0, 0, true));
+				matrices.multiplyPositionMatrix(muzzleFlashTransform.transform);
+				matrices.multiply(new Quaternion(90, 0, 0, true));
 
-				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
-				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
+				renderMuzzleFlash(renderMode, matrices, vertexConsumers, bt, bd, shotTime, opacity, light, overlay, d);
 
-				final var flashradius = 0.75f;
-
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY() - flashradius, muzzlePos.getZ(), 0, 0, 1, 0, 0);
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY() - flashradius, muzzlePos.getZ(), 0, 0, 1, 1, 0);
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY() + flashradius, muzzlePos.getZ(), 0, 0, 1, 1, 1);
-				VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY() + flashradius, muzzlePos.getZ(), 0, 0, 1, 0, 1);
-
-				if (!renderMode.isFirstPerson())
-				{
-					var forwardFlash = Client.tintedTextureProvider.loadTexture("muzzleflash_forward/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
-					vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
-					VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
-
-					// vertical
-					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - flashradius, muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 0);
-					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() - flashradius, muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
-					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + flashradius, muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
-					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX(), muzzlePos.getY() + flashradius, muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 1);
-
-					// horizontal
-					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 0);
-					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() - flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
-					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
-					VertexConsumerBuffer.Instance.vertex(muzzlePos.getX() + flashradius, muzzlePos.getY(), muzzlePos.getZ() - 0.2f, 0, 0, 1, 1, 1);
-				}
+				matrices.pop();
 			}
 		}
 
 		matrices.pop();
+	}
+
+	private static P3dModel.PartTransformer<BlasterTag> getAttachmentTransformer(HashMap<String, Integer> attachmentMap, int attachmentMask)
+	{
+		return (target, objectName, tickDelta) -> {
+			var attachment = attachmentMap.get(objectName);
+
+			if (attachment != null && (attachmentMask & attachment) == 0)
+				return null;
+
+			return MAT_IDENTITY;
+		};
+	}
+
+	private static HashMap<String, Integer> getAttachmentMap(BlasterDescriptor d)
+	{
+		if (ATTACHMENT_MASK_CACHE.containsKey(d.id))
+			return ATTACHMENT_MASK_CACHE.get(d.id);
+
+		var map = new HashMap<String, Integer>();
+
+		for (var entry : d.attachmentMap.entrySet())
+			map.put(entry.getValue().visualComponent, entry.getKey());
+
+		ATTACHMENT_MASK_CACHE.put(d.id, map);
+		return map;
+	}
+
+	private void renderMuzzleFlash(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, BlasterTag bt, BlasterDescriptor bd, float shotTime, float opacity, int light, int overlay, float tickDelta)
+	{
+		shotTime *= 1.2f;
+
+		VertexConsumer vc;
+		opacity = MathHelper.clamp(1 - (float)Math.pow(shotTime / (ID_MUZZLE_FLASHES.length - 1), 2), 0, 1);
+
+		if (opacity > 0)
+		{
+			var frame = (int)Math.floor(MathHelper.clamp(shotTime, 0, ID_MUZZLE_FLASHES.length - 1));
+
+			var color = ColorUtil.fromHSV(bd.boltColor, 1, 1);
+			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
+			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
+
+			var colorId = String.valueOf((int)(bd.boltColor * 255));
+			var flash = Client.tintedTextureProvider.loadTexture("muzzleflash/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
+
+			vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
+			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
+
+			final var flashradius = 0.75f;
+
+			VertexConsumerBuffer.Instance.vertex(-flashradius, -flashradius, 0, 0, 0, 1, 0, 0);
+			VertexConsumerBuffer.Instance.vertex(flashradius, -flashradius, 0, 0, 0, 1, 1, 0);
+			VertexConsumerBuffer.Instance.vertex(flashradius, flashradius, 0, 0, 0, 1, 1, 1);
+			VertexConsumerBuffer.Instance.vertex(-flashradius, flashradius, 0, 0, 0, 1, 0, 1);
+
+			if (!renderMode.isFirstPerson())
+			{
+				var forwardFlash = Client.tintedTextureProvider.loadTexture("muzzleflash_forward/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
+				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
+				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
+
+				// vertical
+				VertexConsumerBuffer.Instance.vertex(0, -flashradius, -0.2f, 0, 0, 1, 1, 0);
+				VertexConsumerBuffer.Instance.vertex(0, -flashradius, -0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
+				VertexConsumerBuffer.Instance.vertex(0, flashradius, -0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
+				VertexConsumerBuffer.Instance.vertex(0, flashradius, -0.2f, 0, 0, 1, 1, 1);
+
+				// horizontal
+				VertexConsumerBuffer.Instance.vertex(-flashradius, 0, -0.2f, 0, 0, 1, 1, 0);
+				VertexConsumerBuffer.Instance.vertex(-flashradius, 0, -0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
+				VertexConsumerBuffer.Instance.vertex(flashradius, 0, -0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
+				VertexConsumerBuffer.Instance.vertex(flashradius, 0, -0.2f, 0, 0, 1, 1, 1);
+			}
+		}
 	}
 
 	private static RenderLayer getMuzzleFlashLayer(Identifier texture)
@@ -315,6 +395,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	@Override
 	public void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
+		if (skipPose)
+			return;
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = BlasterItem.getBlasterDescriptor(entity.world, stack);
 
@@ -352,7 +434,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		}
 	}
 
-	private record ModelEntry(Supplier<PM3DFile> pm3dModel,
+	private record ModelEntry(P3dModel model,
 	                          Identifier texture)
 	{
 	}

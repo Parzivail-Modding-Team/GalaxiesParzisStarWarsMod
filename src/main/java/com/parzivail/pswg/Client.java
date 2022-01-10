@@ -17,7 +17,7 @@ import com.parzivail.pswg.client.render.entity.fish.LaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
 import com.parzivail.pswg.client.render.hud.BlasterHudRenderer;
-import com.parzivail.pswg.client.render.item.BlasterItemRiggedRenderer;
+import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.screen.*;
@@ -209,8 +209,8 @@ public class Client implements ClientModInitializer
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 
-		ICustomItemRenderer.register(SwgItems.Blaster.Blaster, BlasterItemRiggedRenderer.INSTANCE);
-		ICustomPoseItem.register(SwgItems.Blaster.Blaster, BlasterItemRiggedRenderer.INSTANCE);
+		ICustomItemRenderer.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
+		ICustomPoseItem.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
 		ICustomHudRenderer.register(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
 
 //		ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());

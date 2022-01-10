@@ -201,10 +201,6 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeByte(value.automaticRepeatTime);
 		buf.writeByte(value.burstRepeatTime);
 
-		PacketByteBufHelper.writeNullable(buf, value.muzzlePos, PacketByteBufHelper::writeVec3dAsSingles);
-		PacketByteBufHelper.writeNullable(buf, value.foreGripPos, PacketByteBufHelper::writeVec3dAsSingles);
-		PacketByteBufHelper.writeNullable(buf, value.foreGripHandAngle, PacketByteBufHelper::writeEulerAngle);
-
 		buf.writeByte(value.burstSize);
 
 		buf.writeFloat(value.recoil.horizontal);
@@ -257,10 +253,6 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var automaticRepeatTime = buf.readByte();
 		var burstRepeatTime = buf.readByte();
 
-		var muzzlePos = PacketByteBufHelper.readNullable(buf, PacketByteBufHelper::readVec3dAsSingles);
-		var foreGripPos = PacketByteBufHelper.readNullable(buf, PacketByteBufHelper::readVec3dAsSingles);
-		var foreGripHandAngle = PacketByteBufHelper.readNullable(buf, PacketByteBufHelper::readEulerAngle);
-
 		var burstSize = buf.readByte();
 
 		var recoil_horizontal = buf.readFloat();
@@ -309,9 +301,6 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				magazineSize,
 				automaticRepeatTime,
 				burstRepeatTime,
-				muzzlePos,
-				foreGripPos,
-				foreGripHandAngle,
 				burstSize,
 				new BlasterAxialInfo(recoil_horizontal, recoil_vertical),
 				new BlasterAxialInfo(spread_horizontal, spread_vertical),

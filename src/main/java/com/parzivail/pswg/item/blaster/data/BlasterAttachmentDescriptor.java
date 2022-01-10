@@ -11,6 +11,7 @@ public class BlasterAttachmentDescriptor
 	static {
 		namedMutexCategories.put("barrel", (short)0b1);
 		namedMutexCategories.put("scope", (short)0b10);
+		namedMutexCategories.put("forward_attachment", (short)0b100);
 	}
 
 	public short mutex;
