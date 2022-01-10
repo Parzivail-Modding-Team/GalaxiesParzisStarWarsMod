@@ -275,7 +275,7 @@ public class BlasterItemRiggedRenderer implements ICustomItemRenderer, ICustomPo
 
 		var attachmentMap = getAttachmentMap(bd);
 
-		var attachmentMask = 0b101; //bt.attachmentBitmask
+		var attachmentMask = bt.attachmentBitmask;
 
 		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
 		m.render(matrices, vc, bt, getAttachmentTransformer(attachmentMap, attachmentMask), light, d);
