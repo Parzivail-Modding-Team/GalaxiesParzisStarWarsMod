@@ -105,8 +105,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		if (t < 0 || t > 1)
 			return 0;
 
-		t *= 1.5f;
-		return MathHelper.clamp(1.964f * t * t * t - 5.918f * t * t + 4.454f * t, 0, 1);
+		return (float)(1 / ((Math.exp(-150 * t) + 0.00373) * (Math.exp(9.46 * t) + 266)));
+
+//		t *= 1.5f;
+//		return MathHelper.clamp(1.964f * t * t * t - 5.918f * t * t + 4.454f * t, 0, 1);
 	}
 
 	@Override
@@ -215,22 +217,22 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			}
 
 			// recoil
-			var recoilKick = recoilKickDecay(shotTime / 5f);
+			var recoilKick = recoilKickDecay(shotTime / 4.5f);
 
 			matrices.translate(
-					MathHelper.lerp(adsLerp, 0, adsVec.x),
+					MathHelper.lerp(adsLerp, -0.75, adsVec.x),
 					MathHelper.lerp(adsLerp, 1.2f, adsVec.y),
 					MathHelper.lerp(adsLerp, 0, adsVec.z)
 			);
 			matrices.multiply(new Quaternion(
-					MathHelper.lerp(adsLerp, 0, 3) + recoilKick * bd.recoil.vertical,
+					MathHelper.lerp(adsLerp, 0, 3) + recoilKick * bd.recoil.vertical * (1 - adsLerp * 0.25f),
 					MathHelper.lerp(adsLerp, 172, 182) - recoilKick * bd.recoil.horizontal,
 					0,
 					true));
 			matrices.translate(
 					MathHelper.lerp(adsLerp, 0.2f, 0),
 					MathHelper.lerp(adsLerp, -0.2f, 0),
-					MathHelper.lerp(adsLerp, -1.2f, 0) - recoilKick * 0.9f
+					MathHelper.lerp(adsLerp, -1.2f, 0) - recoilKick * (0.4 + 0.55 * adsLerp)
 			);
 
 			// TODO: left handed hold
