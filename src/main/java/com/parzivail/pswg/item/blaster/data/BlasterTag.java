@@ -41,6 +41,13 @@ public class BlasterTag extends TagSerializer
 		super(SLUG, source);
 	}
 
+	public static BlasterTag fromRootTag(NbtCompound tag)
+	{
+		var parent = new NbtCompound();
+		parent.put(SLUG.toString(), tag);
+		return new BlasterTag(parent);
+	}
+
 	public static void mutate(ItemStack stack, Consumer<BlasterTag> action)
 	{
 		var nbt = stack.getOrCreateNbt();

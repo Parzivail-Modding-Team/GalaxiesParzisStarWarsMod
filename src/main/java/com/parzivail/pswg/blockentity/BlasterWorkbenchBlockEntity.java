@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +29,6 @@ public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements
 	@Override
 	public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player)
 	{
-		return new BlasterWorkbenchScreenHandler(syncId, inv, this);
+		return new BlasterWorkbenchScreenHandler(syncId, inv, ScreenHandlerContext.create(world, pos));
 	}
 }

@@ -29,6 +29,7 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 			LightsaberForgeScreenHandler.this.onContentChanged(this);
 		}
 	};
+
 	protected final ScreenHandlerContext context;
 
 	public LightsaberForgeScreenHandler(int syncId, PlayerInventory playerInventory)
