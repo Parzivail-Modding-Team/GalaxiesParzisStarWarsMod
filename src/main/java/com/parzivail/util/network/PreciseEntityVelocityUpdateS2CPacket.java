@@ -11,22 +11,25 @@ import net.minecraft.util.math.Vec3d;
 
 public class PreciseEntityVelocityUpdateS2CPacket extends EntityVelocityUpdateS2CPacket
 {
+	private final Vec3d position;
 	private final Vec3d velocity;
 
 	public PreciseEntityVelocityUpdateS2CPacket(Entity entity)
 	{
-		this(entity.getId(), entity.getVelocity());
+		this(entity.getId(), entity.getPos(), entity.getVelocity());
 	}
 
-	public PreciseEntityVelocityUpdateS2CPacket(int id, Vec3d velocity)
+	public PreciseEntityVelocityUpdateS2CPacket(int id, Vec3d position, Vec3d velocity)
 	{
 		super(id, velocity);
+		this.position = position;
 		this.velocity = velocity;
 	}
 
 	public PreciseEntityVelocityUpdateS2CPacket(PacketByteBuf buf)
 	{
 		super(buf);
+		this.position = PacketByteBufHelper.readVec3d(buf);
 		this.velocity = PacketByteBufHelper.readVec3d(buf);
 	}
 
@@ -34,12 +37,18 @@ public class PreciseEntityVelocityUpdateS2CPacket extends EntityVelocityUpdateS2
 	public void write(PacketByteBuf buf)
 	{
 		super.write(buf);
+		PacketByteBufHelper.writeVec3d(buf, position);
 		PacketByteBufHelper.writeVec3d(buf, velocity);
 	}
 
 	public Vec3d getVelocity()
 	{
 		return velocity;
+	}
+
+	public Vec3d getPosition()
+	{
+		return position;
 	}
 
 	public static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender)

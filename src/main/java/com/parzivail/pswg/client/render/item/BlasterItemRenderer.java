@@ -106,9 +106,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			return 0;
 
 		return (float)(1 / ((Math.exp(-150 * t) + 0.00373) * (Math.exp(9.46 * t) + 266)));
-
-//		t *= 1.5f;
-//		return MathHelper.clamp(1.964f * t * t * t - 5.918f * t * t + 4.454f * t, 0, 1);
 	}
 
 	@Override

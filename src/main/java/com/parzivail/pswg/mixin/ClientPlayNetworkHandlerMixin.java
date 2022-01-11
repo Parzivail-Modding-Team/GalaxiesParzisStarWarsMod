@@ -58,6 +58,9 @@ public class ClientPlayNetworkHandlerMixin
 			return;
 
 		if (packet instanceof PreciseEntityVelocityUpdateS2CPacket pevu)
+		{
+			entity.setPosition(pevu.getPosition());
 			entity.setVelocity(pevu.getVelocity());
+		}
 	}
 }

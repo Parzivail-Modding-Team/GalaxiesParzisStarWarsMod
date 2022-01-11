@@ -219,19 +219,18 @@ public class Client implements ClientModInitializer
 
 		ResourceManagers.registerPackets();
 
+		PlayerEvent.EVENT_BUS.subscribe(PlayerEvent.ACCUMULATE_RECOIL, RecoilManager::handleAccumulateRecoil);
+
+		WorldEvent.EVENT_BUS.subscribe(WorldEvent.SLUG_FIRED, BlasterUtil::handleSlugFired);
+		WorldEvent.EVENT_BUS.subscribe(WorldEvent.BLASTER_BOLT_HIT, BlasterUtil::handleBoltHit);
+
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPlayerEvent, (client, handler, buf, responseSender) -> {
 			var eventId = buf.readByte();
 
 			if (PlayerEvent.ID_LOOKUP.containsKey(eventId))
 			{
 				var event = PlayerEvent.ID_LOOKUP.get(eventId);
-
-				switch (event)
-				{
-					case ACCUMULATE_RECOIL:
-						RecoilManager.handleAccumulateRecoil(client, handler, buf, responseSender);
-						break;
-				}
+				PlayerEvent.EVENT_BUS.publish(event, receiver -> receiver.receive(client, handler, buf, responseSender));
 			}
 		});
 
@@ -241,16 +240,7 @@ public class Client implements ClientModInitializer
 			if (WorldEvent.ID_LOOKUP.containsKey(eventId))
 			{
 				var event = WorldEvent.ID_LOOKUP.get(eventId);
-
-				switch (event)
-				{
-					case SLUG_FIRED:
-						BlasterUtil.handleSlugFired(client, handler, buf, responseSender);
-						break;
-					case BLASTER_BOLT_HIT:
-						BlasterUtil.handleBoltHit(client, handler, buf, responseSender);
-						break;
-				}
+				WorldEvent.EVENT_BUS.publish(event, receiver -> receiver.receive(client, handler, buf, responseSender));
 			}
 		});
 
