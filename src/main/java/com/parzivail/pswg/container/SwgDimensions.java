@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 public class SwgDimensions
 {
-	private static final Consumer<SpawnSettings.Builder> SPAWN_NONE = Consumers.noop();
-	private static final Consumer<GenerationSettings.Builder> GEN_NONE = Consumers.noop();
+	private static final Consumer<SpawnSettings.Builder> SPAWN_NONE = Consumers::noop;
+	private static final Consumer<GenerationSettings.Builder> GEN_NONE = Consumers::noop;
 
 	private static int getSkyColor(float temperature)
 	{

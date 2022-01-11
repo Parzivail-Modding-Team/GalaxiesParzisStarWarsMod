@@ -4,6 +4,7 @@ import com.parzivail.pswg.client.screen.slot.StrictSlot;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
+import com.parzivail.util.Consumers;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -21,7 +22,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class BlasterWorkbenchScreenHandler extends ScreenHandler
 {
-	private final Inventory inventory = new SimpleInventory(1)
+	private final Inventory inventory = new SimpleInventory(6)
 	{
 		public void markDirty()
 		{
@@ -41,17 +42,22 @@ public class BlasterWorkbenchScreenHandler extends ScreenHandler
 	{
 		super(SwgScreenTypes.Workbench.Blaster, syncId);
 		this.context = context;
-		checkSize(inventory, 1);
+		checkSize(inventory, 6);
 		inventory.onOpen(playerInventory.player);
 
-		this.addSlot(new StrictSlot(inventory, 0, 14, 63, itemStack -> itemStack.getItem() instanceof BlasterItem));
+		this.addSlot(new StrictSlot(inventory, 0, 19, 19, itemStack -> itemStack.getItem() instanceof BlasterItem));
+		this.addSlot(new StrictSlot(inventory, 1, 19, 45, Consumers::never));
+		this.addSlot(new StrictSlot(inventory, 2, 19, 63, Consumers::never));
+		this.addSlot(new StrictSlot(inventory, 3, 19, 81, Consumers::never));
+		this.addSlot(new StrictSlot(inventory, 4, 19, 99, Consumers::never));
+		this.addSlot(new StrictSlot(inventory, 5, 19, 117, Consumers::never));
 
 		for (var row = 0; row < 3; ++row)
 			for (var column = 0; column < 9; ++column)
-				this.addSlot(new Slot(playerInventory, column + row * 9 + 9, column * 18 + 48, row * 18 + 159));
+				this.addSlot(new Slot(playerInventory, column + row * 9 + 9, column * 18 + 8, row * 18 + 174));
 
 		for (var column = 0; column < 9; ++column)
-			this.addSlot(new Slot(playerInventory, column, column * 18 + 48, 217));
+			this.addSlot(new Slot(playerInventory, column, column * 18 + 8, 232));
 	}
 
 	public static void handleSetBlasterTag(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)

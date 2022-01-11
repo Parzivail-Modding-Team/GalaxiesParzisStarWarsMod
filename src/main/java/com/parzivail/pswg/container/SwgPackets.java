@@ -8,6 +8,7 @@ public class SwgPackets
 	public static class C2S
 	{
 		public static final Identifier PacketLightsaberForgeApply = Resources.id("lightsaber_forge_apply");
+		public static final Identifier PacketBlasterWorkbenchApply = Resources.id("blaster_workbench_apply");
 		public static final Identifier PacketSetOwnSpecies = Resources.id("set_own_species");
 		public static final Identifier PacketPlayerLeftClickItem = Resources.id("player_use_left");
 		public static final Identifier PacketPlayerItemAction = Resources.id("item_action");

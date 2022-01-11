@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
@@ -10,6 +11,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -17,6 +20,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Quaternion;
 
 @Environment(EnvType.CLIENT)
 public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreenHandler> implements ScreenHandlerListener
@@ -28,19 +32,30 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	public BlasterWorkbenchScreen(BlasterWorkbenchScreenHandler handler, PlayerInventory inventory, Text title)
 	{
 		super(handler, inventory, title);
-		backgroundWidth = 256;
-		backgroundHeight = 241;
+		backgroundWidth = 176;
+		backgroundHeight = 256;
+
+		this.titleY -= 1;
 	}
 
 	protected void init()
 	{
 		super.init();
 
-		this.playerInventoryTitleX = 48;
-		this.playerInventoryTitleY = this.backgroundHeight - 94;
+		this.playerInventoryTitleX = 7;
+		this.playerInventoryTitleY = this.backgroundHeight - 92;
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 
+		//		var passedData = new PacketByteBuf(Unpooled.buffer());
+		//		passedData.writeNbt(getBlasterTag().toTag());
+		//		ClientPlayNetworking.send(SwgPackets.C2S.PacketBlasterWorkbenchApply, passedData);
+
 		this.handler.addListener(this);
+	}
+
+	private BlasterTag getBlasterTag()
+	{
+		return new BlasterTag(blaster.getOrCreateNbt());
 	}
 
 	public void removed()
@@ -55,45 +70,26 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		super.render(matrices, mouseX, mouseY, delta);
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 
+		var minecraft = MinecraftClient.getInstance();
 
 		if (blaster.getItem() instanceof BlasterItem)
 		{
 			var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, blaster);
 			var bt = new BlasterTag(blaster.getOrCreateNbt());
 
-			var textY = this.y + 20;
+			matrices.push();
 
-			this.textRenderer.draw(matrices, Text.of("ID"), this.x + 50, textY, 0);
-			this.textRenderer.draw(matrices, Text.of("Bitmask"), this.x + 140, textY, 0);
-			this.textRenderer.draw(matrices, Text.of("Mutex"), this.x + 190, textY, 0);
-			textY += 1.5 * this.textRenderer.fontHeight;
+			matrices.translate(x + 90, y + 45, 10);
+			matrices.scale(-70, 70, 70);
 
-			this.textRenderer.draw(matrices, Text.of("Possible:"), this.x + 40, textY, 0);
-			textY += 1.5 * this.textRenderer.fontHeight;
+			matrices.multiply(new Quaternion(0, -90, 0, true));
+			matrices.multiply(new Quaternion(180, 0, 0, true));
 
-			for (var e : bd.attachmentMap.entrySet())
-			{
-				this.textRenderer.draw(matrices, Text.of(e.getValue().id), this.x + 50, textY, 0);
-				this.textRenderer.draw(matrices, Text.of(String.format("%6s", Integer.toBinaryString(e.getKey())).replace(' ', '0')), this.x + 140, textY, 0);
-				this.textRenderer.draw(matrices, Text.of(String.format("%6s", Integer.toBinaryString(e.getValue().mutex)).replace(' ', '0')), this.x + 190, textY, 0);
-				textY += this.textRenderer.fontHeight;
-			}
+			var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
+			BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformation.Mode.NONE, false, matrices, immediate, 0xFFFFFF, OverlayTexture.DEFAULT_UV, null);
+			immediate.draw();
 
-			textY += 0.5 * this.textRenderer.fontHeight;
-			this.textRenderer.draw(matrices, Text.of("Attached:"), this.x + 40, textY, 0);
-			this.textRenderer.draw(matrices, Text.of(String.format("%6s", Integer.toBinaryString(bt.attachmentBitmask)).replace(' ', '0')), this.x + 140, textY, 0x808080);
-			textY += 1.5 * this.textRenderer.fontHeight;
-
-			for (var e : bd.attachmentMap.entrySet())
-			{
-				if ((bt.attachmentBitmask & e.getKey()) == 0)
-					continue;
-
-				this.textRenderer.draw(matrices, Text.of(e.getValue().id), this.x + 50, textY, 0);
-				this.textRenderer.draw(matrices, Text.of(String.format("%6s", Integer.toBinaryString(e.getKey())).replace(' ', '0')), this.x + 140, textY, 0);
-				this.textRenderer.draw(matrices, Text.of(String.format("%6s", Integer.toBinaryString(e.getValue().mutex)).replace(' ', '0')), this.x + 190, textY, 0);
-				textY += this.textRenderer.fontHeight;
-			}
+			matrices.pop();
 		}
 	}
 

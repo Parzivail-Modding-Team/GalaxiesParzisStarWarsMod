@@ -132,10 +132,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		matrices.push();
 
-		model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
+		if (model != null)
+			model.getTransformation().getTransformation(renderMode).apply(leftHanded, matrices);
 
 		// TODO
-//		var mainHandSocket = m.transformables.get("main_hand");
+		//		var mainHandSocket = m.transformables.get("main_hand");
 
 		matrices.scale(0.2f, 0.2f, 0.2f);
 

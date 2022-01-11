@@ -137,7 +137,7 @@ public class SpeciesSelectScreen extends Screen
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketSetOwnSpecies, passedData);
 		}));
 
-		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("screen.pswg.species_select.use_female_model"), this.gender == SpeciesGender.FEMALE, (checked) -> {
+		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("screen.pswg.species_select.use_female_model"), this.gender == SpeciesGender.FEMALE, true, (checked) -> {
 			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
 			if (this.playerSpecies != null)
 				this.playerSpecies.setGender(gender);

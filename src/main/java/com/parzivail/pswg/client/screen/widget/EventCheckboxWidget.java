@@ -9,9 +9,9 @@ public class EventCheckboxWidget extends CheckboxWidget
 {
 	private final Consumer<Boolean> checkChanged;
 
-	public EventCheckboxWidget(int x, int y, int width, int height, Text text, boolean checked, Consumer<Boolean> checkChanged)
+	public EventCheckboxWidget(int x, int y, int width, int height, Text text, boolean checked, boolean showLabel, Consumer<Boolean> checkChanged)
 	{
-		super(x, y, width, height, text, checked);
+		super(x, y, width, height, text, checked, showLabel);
 		this.checkChanged = checkChanged;
 	}
 
@@ -20,5 +20,12 @@ public class EventCheckboxWidget extends CheckboxWidget
 	{
 		super.onPress();
 		checkChanged.accept(isChecked());
+	}
+
+	public void setChecked(boolean checked)
+	{
+		if (this.isChecked() == checked)
+			return;
+		this.onPress();
 	}
 }

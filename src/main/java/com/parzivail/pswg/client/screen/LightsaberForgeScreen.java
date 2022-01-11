@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
+import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
@@ -15,7 +16,6 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -78,30 +78,6 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		}
 	}
 
-	private static class MutableCheckbox extends CheckboxWidget
-	{
-		private final Consumer<MutableCheckbox> callback;
-
-		public MutableCheckbox(int x, int y, int width, int height, Text text, boolean checked, boolean showLabel, Consumer<MutableCheckbox> callback)
-		{
-			super(x, y, width, height, text, checked, showLabel);
-			this.callback = callback;
-		}
-
-		public void setChecked(boolean checked)
-		{
-			if (isChecked() != checked)
-				onPress();
-		}
-
-		@Override
-		public void onPress()
-		{
-			super.onPress();
-			callback.accept(this);
-		}
-	}
-
 	private static final Identifier TEXTURE = Resources.id("textures/gui/container/lightsaber_forge.png");
 
 	private final PlayerEntity player;
@@ -109,7 +85,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	private MutableSlider sliderHue;
 	private MutableSlider sliderSat;
 	private MutableSlider sliderVal;
-	private MutableCheckbox cbUnstable;
+	private EventCheckboxWidget cbUnstable;
 
 	private float hue;
 	private float sat;
@@ -156,7 +132,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketLightsaberForgeApply, passedData);
 		}));
 
-		this.addDrawableChild(cbUnstable = new MutableCheckbox(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> commitChanges()));
+		this.addDrawableChild(cbUnstable = new EventCheckboxWidget(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> commitChanges()));
 
 		this.handler.addListener(this);
 	}

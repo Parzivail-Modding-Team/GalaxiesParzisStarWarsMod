@@ -1,11 +1,13 @@
 package com.parzivail.util;
 
-import java.util.function.Consumer;
-
 public class Consumers
 {
-	public static <T> Consumer<T> noop()
+	public static <T> void noop(T value)
 	{
-		return a -> {};
+	}
+
+	public static <T> boolean never(T value)
+	{
+		return false;
 	}
 }

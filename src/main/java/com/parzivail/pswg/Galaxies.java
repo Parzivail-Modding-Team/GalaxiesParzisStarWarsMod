@@ -15,6 +15,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterAxialInfo;
 import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
 import com.parzivail.pswg.item.blaster.data.BlasterHeatInfo;
 import com.parzivail.pswg.mixin.MinecraftServerMixin;
+import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.species.SwgSpecies;
 import com.parzivail.util.Lumberjack;
@@ -151,6 +152,7 @@ public class Galaxies implements ModInitializer
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketLightsaberForgeApply, LightsaberForgeScreenHandler::handleSetLighsaberTag);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketBlasterWorkbenchApply, BlasterWorkbenchScreenHandler::handleSetBlasterTag);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketSetOwnSpecies, SwgSpeciesRegistry::handleSetOwnSpecies);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerItemAction, PlayerPacketHandler::handleItemAction);
