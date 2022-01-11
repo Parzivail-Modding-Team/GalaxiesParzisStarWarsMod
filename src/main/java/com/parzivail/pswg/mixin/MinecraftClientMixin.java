@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
 @Environment(EnvType.CLIENT)
-public class MinecraftClientMixin
+public abstract class MinecraftClientMixin
 {
 	@Shadow
 	@Final
@@ -36,6 +36,9 @@ public class MinecraftClientMixin
 	@Shadow
 	@Nullable
 	public ClientPlayerInteractionManager interactionManager;
+
+	@Shadow
+	protected abstract void doAttack();
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initTail(RunArgs args, CallbackInfo ci)
@@ -58,11 +61,17 @@ public class MinecraftClientMixin
 	}
 
 	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V", shift = At.Shift.BEFORE), cancellable = true)
-	private void handleInputEventsHandleBlockBreaking(CallbackInfo ci)
+	private void handleInputEvents$handleBlockBreaking(CallbackInfo ci)
 	{
 		// interactionManager cannot be null here
 		assert interactionManager != null;
-		LeftClickHandler.handleInputEvents(ci, interactionManager);
+		LeftClickHandler.handleInputEvents(this::doAttack, interactionManager, ci);
+	}
+
+	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;isUsingItem()Z", shift = At.Shift.BEFORE, ordinal = 0), cancellable = true)
+	private void handleInputEvents$isUsingItem(CallbackInfo ci)
+	{
+		LeftClickHandler.handleIsUsingItemAttack(this::doAttack, ci);
 	}
 
 	@Inject(method = "doAttack()V", at = @At("HEAD"), cancellable = true)

@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class LeftClickHandler
 {
-	public static void handleInputEvents(CallbackInfo ci, @NotNull ClientPlayerInteractionManager interactionManager)
+	public static void handleInputEvents(Runnable doAttackDelegate, @NotNull ClientPlayerInteractionManager interactionManager, CallbackInfo ci)
 	{
 		var minecraft = MinecraftClient.getInstance();
 
@@ -43,6 +43,23 @@ public class LeftClickHandler
 
 				interactionManager.cancelBlockBreaking();
 			}
+		}
+	}
+
+	public static void handleIsUsingItemAttack(Runnable doAttackDelegate, CallbackInfo ci)
+	{
+		var minecraft = MinecraftClient.getInstance();
+
+		assert minecraft.player != null;
+
+		var stack = minecraft.player.getMainHandStack();
+
+		// Repeated events
+		if (stack.getItem() instanceof ILeftClickConsumer)
+		{
+			if (minecraft.player.isUsingItem())
+				while (minecraft.options.keyAttack.wasPressed())
+					doAttackDelegate.run();
 		}
 	}
 
