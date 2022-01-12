@@ -28,6 +28,7 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec2f;
 
@@ -91,7 +92,9 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	public void mouseMoved(double mouseX, double mouseY)
 	{
 		if (oldMousePos != null && isDragging)
-			rotation = rotation.add(new Vec2f((float)mouseX - oldMousePos.x, (float)mouseY - oldMousePos.y));
+		{
+			rotation = new Vec2f(rotation.x + (float)mouseX - oldMousePos.x, MathHelper.clamp(rotation.y + (float)mouseY - oldMousePos.y, -20, 20));
+		}
 
 		oldMousePos = new Vec2f((float)mouseX, (float)mouseY);
 
@@ -148,13 +151,15 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			matrices.push();
 
-			matrices.translate(x + 90, y + 45, 10);
+			matrices.translate(x + 105, y + 45, 10);
 
 			// TODO: scale based on bounds
 			MatrixStackUtil.scalePos(matrices, -60, 60, 1);
 
 			matrices.multiply(new Quaternion(180 - rotation.y, 0, 0, true));
 			matrices.multiply(new Quaternion(0, 90 + rotation.x, 0, true));
+
+			matrices.translate(0, 0, 0.22f);
 
 			DiffuseLighting.enableForLevel(Matrix4fUtil.IDENTITY);
 
@@ -179,7 +184,32 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			// speed
 			drawStackedStatBar(matrices, 1, 0.75f, 103, 155);
+
+			drawScrollbar(matrices, true, 0);
+
+			drawAttachmentRow(matrices, 0, 0, 0, 0, Text.of("Attachment 1"));
+			drawAttachmentRow(matrices, 1, 0, 1, 1, Text.of("Attachment 2"));
+			drawAttachmentRow(matrices, 2, 0, 2, 2, Text.of("Attachment 3"));
 		}
+	}
+
+	private void drawScrollbar(MatrixStack matrices, boolean enabled, float percent)
+	{
+		drawTexture(matrices, x + 148, y + 70 + Math.round(36 * percent), enabled ? 228 : 243, 3, 12, 15, 256, 256);
+	}
+
+	private void drawAttachmentRow(MatrixStack matrices, int row, int iconUi, int iconVi, int state, Text attachmentText)
+	{
+		RenderSystem.setShaderTexture(0, TEXTURE);
+		drawTexture(matrices, x + 68, y + 70 + row * 17, 178, 31 + state * 17, 77, 17, 256, 256);
+		drawTexture(matrices, x + 51, y + 70 + row * 17, 178, 85 + state * 17, 17, 17, 256, 256);
+
+		if (state == 0)
+			RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
+		drawTexture(matrices, x + 52, y + 71 + row * 17, 199 + iconUi * 17, 86 + iconVi * 17, 15, 15, 256, 256);
+		RenderSystem.setShaderColor(1, 1, 1, 1);
+
+		this.textRenderer.drawWithShadow(matrices, attachmentText, x + 71, y + 74 + row * 17, state > 0 ? 0xFFFFFF : 0xA0A0A0);
 	}
 
 	private void drawStackedStatBar(MatrixStack matrices, float newValue, float oldValue, int targetX, int targetY)
