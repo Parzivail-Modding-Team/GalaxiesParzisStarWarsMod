@@ -16,6 +16,7 @@ import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.MatrixStackUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
@@ -28,7 +29,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
@@ -48,8 +48,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	private static final HashMap<Identifier, HashMap<String, Integer>> ATTACHMENT_MASK_CACHE = new HashMap<>();
 
-	private static final Matrix4f MAT_IDENTITY = new Matrix4f();
-
 	private static final Identifier[] ID_MUZZLE_FLASHES_FORWARD = new Identifier[] {
 			Resources.id("textures/model/blaster/effect/muzzleflash_forward_4.png"),
 			Resources.id("textures/model/blaster/effect/muzzleflash_forward_0.png"),
@@ -66,11 +64,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	};
 
 	private boolean skipPose = false;
-
-	static
-	{
-		MAT_IDENTITY.loadIdentity();
-	}
 
 	private BlasterItemRenderer()
 	{
@@ -321,7 +314,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			if (attachment != null && (attachmentMask & attachment) == 0)
 				return null;
 
-			return MAT_IDENTITY;
+			return Matrix4fUtil.IDENTITY;
 		};
 	}
 

@@ -10,9 +10,12 @@ public class Matrix4fUtil
 	private static final float[] _matrixDataBuffer = new float[16];
 	private static final FloatBuffer _matrixBuffer;
 
+	public static final Matrix4f IDENTITY = new Matrix4f();
+
 	static
 	{
 		_matrixBuffer = FloatBuffer.wrap(_matrixDataBuffer);
+		IDENTITY.loadIdentity();
 	}
 
 	private static int pack(int x, int y)

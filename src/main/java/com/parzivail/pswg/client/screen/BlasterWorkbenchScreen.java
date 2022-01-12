@@ -8,6 +8,7 @@ import com.parzivail.pswg.client.screen.widget.SimpleTooltipSupplier;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
+import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.MatrixStackUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -155,8 +156,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			matrices.multiply(new Quaternion(180 - rotation.y, 0, 0, true));
 			matrices.multiply(new Quaternion(0, 90 + rotation.x, 0, true));
 
-			DiffuseLighting.disableGuiDepthLighting();
-			DiffuseLighting.method_34742();
+			DiffuseLighting.enableForLevel(Matrix4fUtil.IDENTITY);
 
 			var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
 			BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformation.Mode.NONE, false, matrices, immediate, 0xf000f0, OverlayTexture.DEFAULT_UV, null);
