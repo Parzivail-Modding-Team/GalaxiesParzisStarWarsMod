@@ -33,8 +33,12 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec2f;
+import org.apache.commons.lang3.mutable.Mutable;
+import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreenHandler> implements ScreenHandlerListener
@@ -43,6 +47,11 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	private static final int numVisibleAttachmentRows = 3;
 	private static final float scrollThumbHeight = 15f;
 	private static final float scrollThumbHalfHeight = scrollThumbHeight / 2;
+
+	private static final int ROW_STATE_EMPTY = -1;
+	private static final int ROW_STATE_DISABLED = 0;
+	private static final int ROW_STATE_NORMAL = 1;
+	private static final int ROW_STATE_HOVER = 2;
 
 	private ItemStack blaster = ItemStack.EMPTY;
 
@@ -195,9 +204,9 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	{
 		this.renderBackground(matrices);
 		super.render(matrices, mouseX, mouseY, delta);
-		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 
 		var minecraft = MinecraftClient.getInstance();
+		Mutable<Text> tooltip = new MutableObject<>();
 
 		if (blaster.getItem() instanceof BlasterItem)
 		{
@@ -241,11 +250,16 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			// speed
 			drawStackedStatBar(matrices, 1, 0.75f, 103, 155);
 
-			drawAttachmentList(matrices, model, bd.attachmentMap.values().stream().toList());
+			drawAttachmentList(matrices, model, bd.attachmentMap.values().stream().toList(), descriptor -> null, tooltip::setValue, mouseX, mouseY);
 		}
+
+		if (tooltip.getValue() != null)
+			this.renderTooltip(matrices, tooltip.getValue(), mouseX, mouseY);
+
+		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 	}
 
-	private void drawAttachmentList(MatrixStack matrices, Identifier blasterModel, List<BlasterAttachmentDescriptor> attachments)
+	private void drawAttachmentList(MatrixStack matrices, Identifier blasterModel, List<BlasterAttachmentDescriptor> attachments, Function<BlasterAttachmentDescriptor, Text> errorProvider, Consumer<Text> tooltipPropogator, double mouseX, double mouseY)
 	{
 		drawScrollbar(matrices, canScroll(), scrollPosition);
 
@@ -254,15 +268,30 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		for (var i = 0; i < numVisibleAttachmentRows; i++)
 		{
 			var rowIdx = topRow + i;
-			var attachment = attachments.get(rowIdx);
-
-			var iconU = attachment.icon / 3;
-			var iconV = attachment.icon % 3;
 
 			if (rowIdx >= numAttachments)
-				drawAttachmentRow(matrices, i, 0, 0, -1, LiteralText.EMPTY);
+				drawAttachmentRow(matrices, i, 0, 0, ROW_STATE_EMPTY, LiteralText.EMPTY);
 			else
-				drawAttachmentRow(matrices, i, iconU, iconV, 1, BlasterItem.getAttachmentTranslation(blasterModel, attachment));
+			{
+				var attachment = attachments.get(rowIdx);
+				var rowState = ROW_STATE_NORMAL;
+
+				var validityError = errorProvider.apply(attachment);
+				if (validityError != null)
+				{
+					rowState = ROW_STATE_DISABLED;
+
+					var oldTexture = RenderSystem.getShaderTexture(0);
+					if (MathUtil.rectContains(x + 51, y + 70 + i * 17, 94, 17, mouseX, mouseY))
+						tooltipPropogator.accept(validityError);
+					RenderSystem.setShaderTexture(0, oldTexture);
+				}
+
+				var iconU = attachment.icon / 3;
+				var iconV = attachment.icon % 3;
+
+				drawAttachmentRow(matrices, i, iconU, iconV, rowState, BlasterItem.getAttachmentTranslation(blasterModel, attachment));
+			}
 		}
 	}
 

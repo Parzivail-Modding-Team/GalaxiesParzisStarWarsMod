@@ -9,11 +9,14 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
+import com.parzivail.pswg.data.SwgBlasterManager;
+import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.InvertedLampBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
 
@@ -172,6 +175,20 @@ public class Tarkin
 				for (var value : variable.getPossibleValues())
 					variableLang.dot(value).build(assets);
 			}
+		}
+
+		// Blaster attachments
+		var blasterManager = new SwgBlasterManager();
+		ResourceManagerUtil.forceReload(blasterManager, ResourceType.SERVER_DATA);
+		var blasterData = blasterManager.getData();
+
+		for (var blasterEntry : blasterData.entrySet())
+		{
+			var blasterId = blasterEntry.getKey();
+			var blasterDescriptor = blasterEntry.getValue();
+
+			for (var attachment : blasterDescriptor.attachmentMap.values())
+				lang.cloneWithRoot(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
 		}
 
 		// Autoconfig

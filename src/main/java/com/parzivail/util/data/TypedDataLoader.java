@@ -20,7 +20,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class TypedDataLoader<T> extends JsonDataLoader
+public abstract class TypedDataLoader<T> extends JsonDataLoader implements IExternalReloadResourceManager<Map<Identifier, JsonElement>>
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	protected final Gson GSON;
@@ -75,7 +75,7 @@ public abstract class TypedDataLoader<T> extends JsonDataLoader
 		this.data = ImmutableMap.copyOf(map);
 	}
 
-	protected void apply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler)
+	public void apply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler)
 	{
 		Map<Identifier, T> dataMap = new HashMap<>();
 
@@ -102,5 +102,11 @@ public abstract class TypedDataLoader<T> extends JsonDataLoader
 	public T getData(Identifier key)
 	{
 		return data.get(key);
+	}
+
+	@Override
+	public Map<Identifier, JsonElement> prepare(ResourceManager manager, Profiler profiler)
+	{
+		return super.prepare(manager, profiler);
 	}
 }
