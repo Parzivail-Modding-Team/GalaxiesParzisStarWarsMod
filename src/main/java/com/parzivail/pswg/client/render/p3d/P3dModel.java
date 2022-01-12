@@ -68,7 +68,8 @@ public class P3dModel
 				return;
 			}
 
-			matrix.multiplyPositionMatrix(transform);
+			entry.getPositionMatrix().multiply(transform);
+			entry.getNormalMatrix().multiply(new Matrix3f(transform));
 		}
 
 		var modelMat = entry.getPositionMatrix();

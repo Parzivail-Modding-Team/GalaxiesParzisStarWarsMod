@@ -9,6 +9,7 @@ import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
 import com.parzivail.util.client.ColorUtil;
+import com.parzivail.util.math.MatrixStackUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -239,7 +240,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		matrices.push();
 		matrices.translate(x + stencilX + hiltLength, y + stencilY + stencilHeight / 2f, 500);
 
-		matrices.scale(-100, 100, 100);
+		MatrixStackUtil.scalePos(matrices, -100, 100, 100);
 		matrices.multiply(new Quaternion(0, 0, 90, true));
 		matrices.multiply(new Quaternion(15, 0, 0, true));
 		matrices.multiply(new Quaternion(0, -60, 0, true));

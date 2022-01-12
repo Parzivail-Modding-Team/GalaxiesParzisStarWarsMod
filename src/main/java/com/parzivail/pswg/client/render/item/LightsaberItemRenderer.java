@@ -8,6 +8,7 @@ import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.math.MatrixStackUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
@@ -80,13 +81,13 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 				matrices.multiply(new Quaternion(0, 0, 45, true));
 				matrices.multiply(new Quaternion(0, 135, 0, true));
 				matrices.translate(0, 0.5f, 0);
-				matrices.scale(2f, 2f, 2f);
+				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
 				break;
 			case GUI:
 				matrices.multiply(new Quaternion(0, 0, -45, true));
 				matrices.multiply(new Quaternion(0, -45, 0, true));
 				matrices.translate(0, 0.5f, 0);
-				matrices.scale(2f, 2f, 2f);
+				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
 				break;
 			case FIRST_PERSON_LEFT_HAND:
 			case FIRST_PERSON_RIGHT_HAND:
@@ -107,7 +108,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		var minecraft = MinecraftClient.getInstance();
 
 		matrices.push();
-		matrices.scale(0.2f, 0.2f, 0.2f);
+		MatrixStackUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
 
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
 

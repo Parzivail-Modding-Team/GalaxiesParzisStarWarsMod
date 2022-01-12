@@ -16,6 +16,7 @@ import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.MatrixStackUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
@@ -138,7 +139,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		// TODO
 		//		var mainHandSocket = m.transformables.get("main_hand");
 
-		matrices.scale(0.2f, 0.2f, 0.2f);
+		MatrixStackUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
 
 		//		var bounds = m.bounds();
 
@@ -159,7 +160,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			{
 				matrices.multiply(new Quaternion(0, 0, 180, true));
 				matrices.translate(-0.5f, 0, 0);
-				matrices.scale(2f, 2f, 2f);
+				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
 			}
 
 			var angle = (float)(Math.PI / 4) * 5;
@@ -172,7 +173,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			//			if (renderMode != ModelTransformation.Mode.FIXED)
 			//			{
 			//				var f = (float)(5 / Math.max(yi, zi));
-			//				matrices.scale(f, f, f);
+			//				MatrixStackUtil.multiplyPos(matrices, f, f, f);
 			//			}
 			//
 			//			matrices.translate(0, (float)-bounds.minY - bounds.getYLength() / 2f, (float)-bounds.minZ - bounds.getZLength() / 2f);
@@ -255,7 +256,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					matrices.multiplyPositionMatrix(foreGripTransform.transform);
 					matrices.multiply(new Quaternion(90, 0, 0, true));
 
-					matrices.scale(4, 4, 4);
+					MatrixStackUtil.scalePos(matrices, 4, 4, 4);
 					matrices.translate(-0.415f, -0.75f, 0);
 
 					skipPose = true;

@@ -79,7 +79,8 @@ public record PR3Model<T, PT extends Enum<PT>>(PR3File container,
 		var t = new Transform();
 		transform(t, target, o.name, tickDelta);
 
-		matrices.multiplyPositionMatrix(t.value().getModel());
+		entry.getPositionMatrix().multiply(t.value().getModel());
+		entry.getNormalMatrix().multiply(new Matrix3f(t.value().getModel()));
 
 		for (var face : o.faces)
 			emitFace(consumer, matrices.peek(), o, face, light);

@@ -15,6 +15,7 @@ import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.MatrixStackUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -290,7 +291,7 @@ public class SpeciesSelectScreen extends Screen
 
 				var scale = -Math.abs(offsetTimer / 3f) + 1;
 				mat2.translate(0, offset / 2f * (scale + 0.3f), 0);
-				mat2.scale(scale, scale, scale);
+				MatrixStackUtil.scalePos(matrices, scale, scale, scale);
 				mat2.translate(0, modelSize, 0);
 
 				if (scale > 0)
@@ -318,7 +319,7 @@ public class SpeciesSelectScreen extends Screen
 		var f = (float)Math.atan(mouseX / 40.0F);
 		var g = (float)Math.atan(mouseY / 40.0F);
 		matrixStack.translate(0.0D, 0.0D, 100.0D);
-		matrixStack.scale(size, size, -size);
+		MatrixStackUtil.scalePos(matrixStack, size, size, -size);
 		RenderSystem.applyModelViewMatrix();
 
 		MatrixStack matrixStack2 = new MatrixStack();

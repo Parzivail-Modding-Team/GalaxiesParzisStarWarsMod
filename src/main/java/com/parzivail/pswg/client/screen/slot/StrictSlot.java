@@ -4,13 +4,13 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
-import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class StrictSlot extends Slot
 {
-	private final Function<ItemStack, Boolean> filter;
+	private final Predicate<ItemStack> filter;
 
-	public StrictSlot(Inventory inventory, int index, int x, int y, Function<ItemStack, Boolean> filter)
+	public StrictSlot(Inventory inventory, int index, int x, int y, Predicate<ItemStack> filter)
 	{
 		super(inventory, index, x, y);
 		this.filter = filter;
@@ -19,6 +19,6 @@ public class StrictSlot extends Slot
 	@Override
 	public boolean canInsert(ItemStack stack)
 	{
-		return filter.apply(stack);
+		return filter.test(stack);
 	}
 }
