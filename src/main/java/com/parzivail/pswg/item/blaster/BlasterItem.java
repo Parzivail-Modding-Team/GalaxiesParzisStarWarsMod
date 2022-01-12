@@ -7,10 +7,7 @@ import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.data.SwgBlasterManager;
-import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
-import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
-import com.parzivail.pswg.item.blaster.data.BlasterPowerPack;
-import com.parzivail.pswg.item.blaster.data.BlasterTag;
+import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.*;
@@ -44,6 +41,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -65,6 +63,21 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public BlasterItem(Settings settings)
 	{
 		super(settings);
+	}
+
+	@NotNull
+	public static Identifier getBlasterModel(NbtCompound tag)
+	{
+		var blasterModel = tag.getString("model");
+		if (blasterModel.isEmpty())
+			blasterModel = "pswg:a280";
+
+		return new Identifier(blasterModel);
+	}
+
+	public static TranslatableText getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
+	{
+		return new TranslatableText(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
 	}
 
 	@Override
@@ -124,7 +137,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		bt.serializeAsSubtag(stack);
 
-		player.sendMessage(new TranslatableText(Resources.dotModId("msg", "blaster_mode_changed"), new TranslatableText(currentMode.getTranslation())), true);
+		player.sendMessage(new TranslatableText(Resources.msg("blaster_mode_changed"), new TranslatableText(currentMode.getTranslation())), true);
 	}
 
 	public static void bypassHeat(World world, PlayerEntity player, ItemStack stack)

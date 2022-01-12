@@ -42,16 +42,19 @@
 		"1": {
 			"mutex": "barrel",
 			"id": "long_barrel",
+			"icon": 1,
 			"visualComponent": "long_barrel"
 		},
 		"2": {
 			"mutex": "barrel",
 			"id": "short_barrel",
+			"icon": 1,
 			"visualComponent": "short_barrel"
 		},
 		"4": {
 			"mutex": "scope",
 			"id": "scope",
+			"icon": 2,
 			"visualComponent": "scope"
 		}
 	}

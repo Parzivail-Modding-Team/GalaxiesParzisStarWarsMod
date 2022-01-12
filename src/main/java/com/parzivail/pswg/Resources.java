@@ -56,6 +56,16 @@ public class Resources
 		return dotModId("key", str);
 	}
 
+	public static String msg(String str)
+	{
+		return dotModId("msg", str);
+	}
+
+	public static String info(String str)
+	{
+		return dotModId("info", str);
+	}
+
 	public static void checkVersion()
 	{
 		try

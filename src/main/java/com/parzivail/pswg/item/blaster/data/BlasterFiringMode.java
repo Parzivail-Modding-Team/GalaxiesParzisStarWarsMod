@@ -73,6 +73,6 @@ public enum BlasterFiringMode
 
 	public String getTranslation()
 	{
-		return Resources.dotModId("info", "blaster_firing_mode_" + value);
+		return Resources.info("blaster_firing_mode_" + value);
 	}
 }

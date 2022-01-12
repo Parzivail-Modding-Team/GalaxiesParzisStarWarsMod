@@ -38,6 +38,7 @@
 		"1": {
 			"mutex": "barrel",
 			"id": "barrel",
+			"icon": 1,
 			"visualComponent": "barrel_extension"
 		}
 	}

@@ -39,21 +39,25 @@
 		"1": {
 			"mutex": "scope",
 			"id": "scope_d",
+			"icon": 2,
 			"visualComponent": "scope_d"
 		},
 		"2": {
 			"mutex": "scope",
 			"id": "scope_x",
+			"icon": 2,
 			"visualComponent": "scope_x"
 		},
 		"4": {
 			"mutex": "forward_attachment",
 			"id": "bipod",
+			"icon": 1,
 			"visualComponent": "bipod"
 		},
 		"8": {
 			"mutex": "forward_attachment",
 			"id": "barrel_d",
+			"icon": 1,
 			"visualComponent": "barrel_d"
 		}
 	}

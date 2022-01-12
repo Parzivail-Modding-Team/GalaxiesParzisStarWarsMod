@@ -107,11 +107,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	{
 		var tag = stack.getOrCreateNbt();
 
-		var blasterModel = tag.getString("model");
-		if (blasterModel.isEmpty())
-			blasterModel = "pswg:a280";
-
-		var bdId = new Identifier(blasterModel);
+		Identifier bdId = BlasterItem.getBlasterModel(tag);
 		var bt = new BlasterTag(tag);
 
 		var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, stack);

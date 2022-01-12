@@ -126,4 +126,9 @@ public class MathUtil
 
 		return new EulerAngle(pitch * toDegreesf, yaw * toDegreesf, 0);
 	}
+
+	public static boolean rectContains(int l, int t, int w, int h, double x, double y)
+	{
+		return x >= l && x <= l + w && y >= t && y <= t + h;
+	}
 }

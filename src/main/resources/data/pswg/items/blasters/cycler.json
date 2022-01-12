@@ -37,11 +37,13 @@
 		"1": {
 			"mutex": "barrel",
 			"id": "barrel",
+			"icon": 1,
 			"visualComponent": "barrel_extension"
 		},
 		"2": {
 			"mutex": "scope",
 			"id": "scope",
+			"icon": 2,
 			"visualComponent": "scope_extension"
 		}
 	}

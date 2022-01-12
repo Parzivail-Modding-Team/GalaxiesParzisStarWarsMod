@@ -15,12 +15,14 @@ public class BlasterAttachmentDescriptor
 	}
 
 	public short mutex;
+	public byte icon;
 	public String id;
 	public String visualComponent;
 
-	public BlasterAttachmentDescriptor(short mutex, String id, String visualComponent)
+	public BlasterAttachmentDescriptor(short mutex, byte icon, String id, String visualComponent)
 	{
 		this.mutex = mutex;
+		this.icon = icon;
 		this.id = id;
 		this.visualComponent = visualComponent;
 	}
@@ -31,6 +33,7 @@ public class BlasterAttachmentDescriptor
 
 		return new BlasterAttachmentDescriptor(
 				tag.getShort("mutex"),
+				tag.getByte("icon"),
 				tag.getString("id"),
 				tag.getString("visualComponent")
 		);
@@ -41,6 +44,7 @@ public class BlasterAttachmentDescriptor
 		var tag = new NbtCompound();
 
 		tag.putShort("mutex", data.mutex);
+		tag.putByte("icon", data.icon);
 		tag.putString("id", data.id);
 		tag.putString("visualComponent", data.visualComponent);
 

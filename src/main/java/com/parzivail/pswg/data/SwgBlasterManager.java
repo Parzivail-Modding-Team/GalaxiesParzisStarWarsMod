@@ -126,12 +126,17 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				if (!foundMutex)
 					throw new JsonParseException("Mutex must be a bitmask integer or a string reference to a named category");
 
+				byte icon = 0;
+
+				if (data.has("icon"))
+					icon = data.get("icon").getAsByte();
+
 				String visComp = null;
 
 				if (data.has("visualComponent"))
 					visComp = data.get("visualComponent").getAsString();
 
-				map.put(mask, new BlasterAttachmentDescriptor(mutexData, data.get("id").getAsString(), visComp));
+				map.put(mask, new BlasterAttachmentDescriptor(mutexData, icon, data.get("id").getAsString(), visComp));
 			}
 
 			return map;
@@ -234,6 +239,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 			{
 				buf.writeInt(entry.getKey());
 				buf.writeShort(entry.getValue().mutex);
+				buf.writeByte(entry.getValue().icon);
 				buf.writeString(entry.getValue().id);
 				PacketByteBufHelper.writeNullable(buf, entry.getValue().visualComponent, PacketByteBuf::writeString);
 			}
@@ -282,12 +288,13 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 		for (var attIdx = 0; attIdx < numAttachments; attIdx++)
 		{
-			var attachmmentFlag = buf.readInt();
-			var attachmmentMutex = buf.readShort();
+			var attachmentFlag = buf.readInt();
+			var attachmentMutex = buf.readShort();
+			var attachmentIcon = buf.readByte();
 			var attachmentId = buf.readString();
-			var attachmentvisualComponent = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readString);
+			var attachmentVisualComponent = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readString);
 
-			attachmentMap.put(attachmmentFlag, new BlasterAttachmentDescriptor(attachmmentMutex, attachmentId, attachmentvisualComponent));
+			attachmentMap.put(attachmentFlag, new BlasterAttachmentDescriptor(attachmentMutex, attachmentIcon, attachmentId, attachmentVisualComponent));
 		}
 
 		return new BlasterDescriptor(

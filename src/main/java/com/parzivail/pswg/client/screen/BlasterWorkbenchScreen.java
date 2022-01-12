@@ -6,8 +6,10 @@ import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.screen.widget.LocalTextureButtonWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleTooltipSupplier;
 import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.MatrixStackUtil;
 import net.fabricmc.api.EnvType;
@@ -38,12 +40,19 @@ import java.util.List;
 public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreenHandler> implements ScreenHandlerListener
 {
 	private static final Identifier TEXTURE = Resources.id("textures/gui/container/blaster_workbench.png");
+	private static final int numVisibleAttachmentRows = 3;
+	private static final float scrollThumbHeight = 15f;
+	private static final float scrollThumbHalfHeight = scrollThumbHeight / 2;
 
 	private ItemStack blaster = ItemStack.EMPTY;
 
-	private Vec2f rotation = new Vec2f(0, 0);
-	private Vec2f oldMousePos = null;
-	private boolean isDragging = false;
+	private Vec2f blasterViewportRotation = new Vec2f(0, 0);
+	private boolean isDraggingScrollThumb = false;
+	private boolean isDraggingBlasterViewport = false;
+
+	private float scrollPosition = 0;
+
+	private int numAttachments = 10;
 
 	public BlasterWorkbenchScreen(BlasterWorkbenchScreenHandler handler, PlayerInventory inventory, Text title)
 	{
@@ -88,26 +97,67 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 	}
 
-	@Override
-	public void mouseMoved(double mouseX, double mouseY)
+	private boolean attachmentListContains(double mouseX, double mouseY)
 	{
-		if (oldMousePos != null && isDragging)
+		return MathUtil.rectContains(x + 51, y + 69, 110, 53, mouseX, mouseY) && canScroll();
+	}
+
+	private boolean scrollbarContains(double mouseX, double mouseY)
+	{
+		return MathUtil.rectContains(x + 148, y + 70, 12, 51, mouseX, mouseY) && canScroll();
+	}
+
+	private boolean blasterViewportContains(double mouseX, double mouseY)
+	{
+		return MathUtil.rectContains(x + 52, y + 15, 108, 50, mouseX, mouseY);
+	}
+
+	@Override
+	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
+	{
+		if (attachmentListContains(mouseX, mouseY))
 		{
-			rotation = new Vec2f(rotation.x + (float)mouseX - oldMousePos.x, MathHelper.clamp(rotation.y + (float)mouseY - oldMousePos.y, -20, 20));
+			var i = numAttachments - numVisibleAttachmentRows;
+			this.scrollPosition = MathHelper.clamp((float)(this.scrollPosition - amount / i), 0, 1);
 		}
+		return true;
+	}
 
-		oldMousePos = new Vec2f((float)mouseX, (float)mouseY);
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY)
+	{
+		if (this.isDraggingScrollThumb)
+		{
+			var trackTop = y + 70;
+			var trackBottom = trackTop + 51;
+			this.scrollPosition = MathHelper.clamp((float)(mouseY - trackTop - scrollThumbHalfHeight) / (trackBottom - trackTop - scrollThumbHeight), 0, 1);
+			return true;
+		}
+		else
+		{
+			if (isDraggingBlasterViewport)
+				blasterViewportRotation = new Vec2f(blasterViewportRotation.x + (float)deltaX, MathHelper.clamp(blasterViewportRotation.y + (float)deltaY, -20, 20));
 
-		super.mouseMoved(mouseX, mouseY);
+			return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		}
 	}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button)
 	{
-		if (!isDragging && mouseX >= x + 52 && mouseX <= x + 160 && mouseY >= y + 15 && mouseY <= y + 65)
+		if (button == 0)
 		{
-			isDragging = true;
-			return true;
+			if (!isDraggingBlasterViewport && blasterViewportContains(mouseX, mouseY))
+			{
+
+				isDraggingBlasterViewport = true;
+				return true;
+			}
+			else if (this.scrollbarContains(mouseX, mouseY))
+			{
+				this.isDraggingScrollThumb = true;
+				return true;
+			}
 		}
 
 		return super.mouseClicked(mouseX, mouseY, button);
@@ -116,10 +166,10 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button)
 	{
-		if (isDragging)
+		if (button == 0)
 		{
-			isDragging = false;
-			return true;
+			this.isDraggingScrollThumb = false;
+			this.isDraggingBlasterViewport = false;
 		}
 
 		return super.mouseReleased(mouseX, mouseY, button);
@@ -136,6 +186,11 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		this.handler.removeListener(this);
 	}
 
+	private boolean canScroll()
+	{
+		return numAttachments > 3;
+	}
+
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
 		this.renderBackground(matrices);
@@ -148,6 +203,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		{
 			var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, blaster);
 			var bt = new BlasterTag(blaster.getOrCreateNbt());
+			var model = BlasterItem.getBlasterModel(blaster.getOrCreateNbt());
 
 			matrices.push();
 
@@ -156,8 +212,8 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			// TODO: scale based on bounds
 			MatrixStackUtil.scalePos(matrices, -60, 60, 1);
 
-			matrices.multiply(new Quaternion(180 - rotation.y, 0, 0, true));
-			matrices.multiply(new Quaternion(0, 90 + rotation.x, 0, true));
+			matrices.multiply(new Quaternion(180 - blasterViewportRotation.y, 0, 0, true));
+			matrices.multiply(new Quaternion(0, 90 + blasterViewportRotation.x, 0, true));
 
 			matrices.translate(0, 0, 0.22f);
 
@@ -185,21 +241,44 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			// speed
 			drawStackedStatBar(matrices, 1, 0.75f, 103, 155);
 
-			drawScrollbar(matrices, true, 0);
+			drawAttachmentList(matrices, model, bd.attachmentMap.values().stream().toList());
+		}
+	}
 
-			drawAttachmentRow(matrices, 0, 0, 0, 0, Text.of("Attachment 1"));
-			drawAttachmentRow(matrices, 1, 0, 1, 1, Text.of("Attachment 2"));
-			drawAttachmentRow(matrices, 2, 0, 2, 2, Text.of("Attachment 3"));
+	private void drawAttachmentList(MatrixStack matrices, Identifier blasterModel, List<BlasterAttachmentDescriptor> attachments)
+	{
+		drawScrollbar(matrices, canScroll(), scrollPosition);
+
+		var topRow = Math.max(Math.round(scrollPosition * (float)(numAttachments - numVisibleAttachmentRows)), 0);
+
+		for (var i = 0; i < numVisibleAttachmentRows; i++)
+		{
+			var rowIdx = topRow + i;
+			var attachment = attachments.get(rowIdx);
+
+			var iconU = attachment.icon / 3;
+			var iconV = attachment.icon % 3;
+
+			if (rowIdx >= numAttachments)
+				drawAttachmentRow(matrices, i, 0, 0, -1, LiteralText.EMPTY);
+			else
+				drawAttachmentRow(matrices, i, iconU, iconV, 1, BlasterItem.getAttachmentTranslation(blasterModel, attachment));
 		}
 	}
 
 	private void drawScrollbar(MatrixStack matrices, boolean enabled, float percent)
 	{
+		if (!enabled)
+			percent = 0;
+
 		drawTexture(matrices, x + 148, y + 70 + Math.round(36 * percent), enabled ? 228 : 243, 3, 12, 15, 256, 256);
 	}
 
 	private void drawAttachmentRow(MatrixStack matrices, int row, int iconUi, int iconVi, int state, Text attachmentText)
 	{
+		if (state == -1)
+			return;
+
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		drawTexture(matrices, x + 68, y + 70 + row * 17, 178, 31 + state * 17, 77, 17, 256, 256);
 		drawTexture(matrices, x + 51, y + 70 + row * 17, 178, 85 + state * 17, 17, 17, 256, 256);
@@ -240,6 +319,14 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 	private void onBlasterChanged()
 	{
+		scrollPosition = 0;
+		numAttachments = 0;
+
+		if (blaster.getItem() instanceof BlasterItem)
+		{
+			var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, blaster);
+			numAttachments = bd.attachmentMap.size();
+		}
 	}
 
 	@Override
