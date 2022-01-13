@@ -321,8 +321,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var map = new HashMap<String, Integer>();
 
-		for (var entry : d.attachmentMap.entrySet())
-			map.put(entry.getValue().visualComponent, entry.getKey());
+		for (var entry : d.attachmentMap.values())
+			map.put(entry.visualComponent, entry.bit);
 
 		ATTACHMENT_MASK_CACHE.put(d.id, map);
 		return map;

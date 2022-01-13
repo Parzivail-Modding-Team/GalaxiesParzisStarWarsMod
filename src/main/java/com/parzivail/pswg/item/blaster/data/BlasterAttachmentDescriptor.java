@@ -14,13 +14,15 @@ public class BlasterAttachmentDescriptor
 		namedMutexCategories.put("forward_attachment", (short)0b100);
 	}
 
+	public int bit;
 	public short mutex;
 	public byte icon;
 	public String id;
 	public String visualComponent;
 
-	public BlasterAttachmentDescriptor(short mutex, byte icon, String id, String visualComponent)
+	public BlasterAttachmentDescriptor(int bit, short mutex, byte icon, String id, String visualComponent)
 	{
+		this.bit = bit;
 		this.mutex = mutex;
 		this.icon = icon;
 		this.id = id;
@@ -32,6 +34,7 @@ public class BlasterAttachmentDescriptor
 		var tag = compoundTag.getCompound(s);
 
 		return new BlasterAttachmentDescriptor(
+				tag.getInt("bit"),
 				tag.getShort("mutex"),
 				tag.getByte("icon"),
 				tag.getString("id"),
@@ -43,6 +46,7 @@ public class BlasterAttachmentDescriptor
 	{
 		var tag = new NbtCompound();
 
+		tag.putInt("bit", data.bit);
 		tag.putShort("mutex", data.mutex);
 		tag.putByte("icon", data.icon);
 		tag.putString("id", data.id);

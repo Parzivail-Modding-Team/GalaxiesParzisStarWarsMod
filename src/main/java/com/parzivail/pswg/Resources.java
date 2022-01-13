@@ -15,6 +15,8 @@ import java.util.Random;
 
 public class Resources
 {
+	public static final String I18N_SCREEN_APPLY = "screen.pswg.apply";
+
 	public static class GithubReleaseEntry
 	{
 		public String tag_name;
@@ -39,6 +41,11 @@ public class Resources
 	public static String dotModId(String category, String str)
 	{
 		return category + "." + MODID + "." + str;
+	}
+
+	public static String screen(String str)
+	{
+		return dotModId("screen", str);
 	}
 
 	public static String container(String str)

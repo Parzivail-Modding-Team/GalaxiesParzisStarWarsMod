@@ -101,7 +101,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 			for (var pair : obj.entrySet())
 			{
-				var mask = Integer.parseInt(pair.getKey());
+				var bit = Integer.parseInt(pair.getKey());
 				var data = pair.getValue().getAsJsonObject();
 
 				var mutex = data.get("mutex");
@@ -136,7 +136,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				if (data.has("visualComponent"))
 					visComp = data.get("visualComponent").getAsString();
 
-				map.put(mask, new BlasterAttachmentDescriptor(mutexData, icon, data.get("id").getAsString(), visComp));
+				map.put(bit, new BlasterAttachmentDescriptor(bit, mutexData, icon, data.get("id").getAsString(), visComp));
 			}
 
 			return map;
@@ -288,13 +288,13 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 		for (var attIdx = 0; attIdx < numAttachments; attIdx++)
 		{
-			var attachmentFlag = buf.readInt();
+			var attachmentBit = buf.readInt();
 			var attachmentMutex = buf.readShort();
 			var attachmentIcon = buf.readByte();
 			var attachmentId = buf.readString();
 			var attachmentVisualComponent = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readString);
 
-			attachmentMap.put(attachmentFlag, new BlasterAttachmentDescriptor(attachmentMutex, attachmentIcon, attachmentId, attachmentVisualComponent));
+			attachmentMap.put(attachmentBit, new BlasterAttachmentDescriptor(attachmentBit, attachmentMutex, attachmentIcon, attachmentId, attachmentVisualComponent));
 		}
 
 		return new BlasterDescriptor(

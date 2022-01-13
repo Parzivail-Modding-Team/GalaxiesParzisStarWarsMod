@@ -5,6 +5,8 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
+import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
+import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
@@ -77,6 +79,8 @@ public class Tarkin
 
 		// Containers
 		lang.container("blaster_workbench").build(assets);
+		lang.cloneWithRoot(BlasterWorkbenchScreen.I18N_INCOMPAT_ATTACHMENT).build(assets);
+
 		lang.container("imperial_cube_crate").build(assets);
 		lang.container("kyber_crate").build(assets);
 		lang.container("lightsaber_forge").build(assets);
@@ -100,11 +104,10 @@ public class Tarkin
 		lang.entity(SwgEntities.Amphibian.Worrt).build(assets);
 
 		// Screen
-		lang.screen("apply").build(assets);
+		lang.cloneWithRoot(Resources.I18N_SCREEN_APPLY).build(assets);
 
-		var speciesSelect = lang.screen("species_select");
-		speciesSelect.build(assets);
-		speciesSelect.dot("use_female_model").build(assets);
+		lang.screen("species_select").build(assets);
+		lang.cloneWithRoot(SpeciesSelectScreen.I18N_USE_FEMALE_MODEL).build(assets);
 
 		// Dynamic items
 		lang.item("blaster_a280").build(assets);

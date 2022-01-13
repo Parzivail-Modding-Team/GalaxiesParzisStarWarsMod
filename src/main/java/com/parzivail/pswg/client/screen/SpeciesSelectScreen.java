@@ -45,6 +45,7 @@ public class SpeciesSelectScreen extends Screen
 	public static final Identifier BACKGROUND = new Identifier("textures/gui/options_background.png");
 
 	public static final Identifier CAROUSEL = Resources.id("textures/gui/species_select/carousel.png");
+	public static final String I18N_USE_FEMALE_MODEL = Resources.screen("species_select.use_female_model");
 
 	private final Screen parent;
 
@@ -110,7 +111,7 @@ public class SpeciesSelectScreen extends Screen
 
 		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> this.client.setScreen(this.parent)));
 
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText("screen.pswg.apply"), (button) -> {
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText(Resources.I18N_SCREEN_APPLY), (button) -> {
 			if (speciesListWidget.getSelectedOrNull() == null)
 				return;
 
@@ -138,7 +139,7 @@ public class SpeciesSelectScreen extends Screen
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketSetOwnSpecies, passedData);
 		}));
 
-		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText("screen.pswg.species_select.use_female_model"), this.gender == SpeciesGender.FEMALE, true, (checked) -> {
+		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText(I18N_USE_FEMALE_MODEL), this.gender == SpeciesGender.FEMALE, true, (checked) -> {
 			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
 			if (this.playerSpecies != null)
 				this.playerSpecies.setGender(gender);

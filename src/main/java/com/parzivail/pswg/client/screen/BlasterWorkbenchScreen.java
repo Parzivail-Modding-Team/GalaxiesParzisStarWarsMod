@@ -3,10 +3,12 @@ package com.parzivail.pswg.client.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
+import com.parzivail.pswg.client.screen.widget.AreaButtonWidget;
 import com.parzivail.pswg.client.screen.widget.LocalTextureButtonWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleTooltipSupplier;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
+import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.util.math.MathUtil;
@@ -29,6 +31,7 @@ import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
@@ -36,13 +39,17 @@ import net.minecraft.util.math.Vec2f;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreenHandler> implements ScreenHandlerListener
 {
+	public static final String I18N_INCOMPAT_ATTACHMENT = Resources.screen("blaster.incompatible_attachment");
+
 	private static final Identifier TEXTURE = Resources.id("textures/gui/container/blaster_workbench.png");
 	private static final int numVisibleAttachmentRows = 3;
 	private static final float scrollThumbHeight = 15f;
@@ -54,6 +61,8 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	private static final int ROW_STATE_HOVER = 2;
 
 	private ItemStack blaster = ItemStack.EMPTY;
+	private BlasterDescriptor blasterDescriptor = null;
+	private Identifier blasterModel = null;
 
 	private Vec2f blasterViewportRotation = new Vec2f(0, 0);
 	private boolean isDraggingScrollThumb = false;
@@ -61,7 +70,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 	private float scrollPosition = 0;
 
-	private int numAttachments = 10;
+	private List<BlasterAttachmentDescriptor> attachmentList = new ArrayList<>();
 
 	public BlasterWorkbenchScreen(BlasterWorkbenchScreenHandler handler, PlayerInventory inventory, Text title)
 	{
@@ -88,6 +97,10 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 		this.addDrawableChild(new LocalTextureButtonWidget(x + 76, y + 124, 22, 12, 203, 3, 203, 17, this::onCancelClicked));
 
+		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 70, 93, 17, button -> onRowClicked(0)));
+		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 87, 93, 17, button -> onRowClicked(1)));
+		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 104, 93, 17, button -> onRowClicked(2)));
+
 		this.handler.addListener(this);
 	}
 
@@ -104,6 +117,59 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	private void onCancelClicked(ButtonWidget sender)
 	{
 
+	}
+
+	private void onRowClicked(int row)
+	{
+		var topRow = getAttachmentListTopRowIdx();
+		var rowIdx = topRow + row;
+
+		if (rowIdx >= attachmentList.size())
+			return;
+
+		var attachment = attachmentList.get(rowIdx);
+
+		var bt = getBlasterTag();
+
+		var incompat = getFirstIncompatibleAttachment(bt, attachment);
+		if (incompat.isEmpty())
+			bt.attachmentBitmask ^= attachment.bit;
+
+		provideDefaultAttachments(bt);
+
+		bt.serializeAsSubtag(blaster);
+	}
+
+	private void provideDefaultAttachments(BlasterTag bt)
+	{
+		for (var attachment : attachmentList)
+		{
+			// If no attachment is attached in the bitmask category that this
+			// attachment belongs to, revert to the default attachment (which
+			// may also be zero, but at least we checked)
+			if ((attachment.mutex & bt.attachmentBitmask) == 0)
+				bt.attachmentBitmask |= (blasterDescriptor.attachmentDefault & attachment.mutex);
+		}
+	}
+
+	private Optional<BlasterAttachmentDescriptor> getFirstIncompatibleAttachment(BlasterTag bt, BlasterAttachmentDescriptor query)
+	{
+		for (var attachment : attachmentList)
+		{
+			// check if this attachment is both attached, and conflicts with the query attachment
+			if ((bt.attachmentBitmask & attachment.bit) != 0 && (attachment.mutex & query.mutex) != 0)
+				return Optional.of(attachment);
+		}
+		return Optional.empty();
+	}
+
+	private Text getAttachmentError(BlasterTag bt, BlasterAttachmentDescriptor attachment)
+	{
+		var incompat = getFirstIncompatibleAttachment(bt, attachment);
+		if (incompat.isEmpty())
+			return null;
+
+		return new TranslatableText(I18N_INCOMPAT_ATTACHMENT, BlasterItem.getAttachmentTranslation(blasterModel, incompat.get()));
 	}
 
 	private boolean attachmentListContains(double mouseX, double mouseY)
@@ -126,7 +192,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	{
 		if (attachmentListContains(mouseX, mouseY))
 		{
-			var i = numAttachments - numVisibleAttachmentRows;
+			var i = attachmentList.size() - numVisibleAttachmentRows;
 			this.scrollPosition = MathHelper.clamp((float)(this.scrollPosition - amount / i), 0, 1);
 		}
 		return true;
@@ -197,7 +263,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 	private boolean canScroll()
 	{
-		return numAttachments > 3;
+		return attachmentList.size() > 3;
 	}
 
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
@@ -210,9 +276,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 		if (blaster.getItem() instanceof BlasterItem)
 		{
-			var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, blaster);
 			var bt = new BlasterTag(blaster.getOrCreateNbt());
-			var model = BlasterItem.getBlasterModel(blaster.getOrCreateNbt());
 
 			matrices.push();
 
@@ -250,7 +314,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			// speed
 			drawStackedStatBar(matrices, 1, 0.75f, 103, 155);
 
-			drawAttachmentList(matrices, model, bd.attachmentMap.values().stream().toList(), descriptor -> null, tooltip::setValue, mouseX, mouseY);
+			drawAttachmentList(matrices, blasterModel, bt, attachmentList, this::getAttachmentError, tooltip::setValue, mouseX, mouseY);
 		}
 
 		if (tooltip.getValue() != null)
@@ -259,33 +323,37 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 	}
 
-	private void drawAttachmentList(MatrixStack matrices, Identifier blasterModel, List<BlasterAttachmentDescriptor> attachments, Function<BlasterAttachmentDescriptor, Text> errorProvider, Consumer<Text> tooltipPropogator, double mouseX, double mouseY)
+	private void drawAttachmentList(MatrixStack matrices, Identifier blasterModel, BlasterTag bt, List<BlasterAttachmentDescriptor> attachments, BiFunction<BlasterTag, BlasterAttachmentDescriptor, Text> errorProvider, Consumer<Text> tooltipPropogator, double mouseX, double mouseY)
 	{
 		drawScrollbar(matrices, canScroll(), scrollPosition);
 
-		var topRow = Math.max(Math.round(scrollPosition * (float)(numAttachments - numVisibleAttachmentRows)), 0);
+		var topRow = getAttachmentListTopRowIdx();
 
 		for (var i = 0; i < numVisibleAttachmentRows; i++)
 		{
 			var rowIdx = topRow + i;
 
-			if (rowIdx >= numAttachments)
+			if (rowIdx >= attachmentList.size())
 				drawAttachmentRow(matrices, i, 0, 0, ROW_STATE_EMPTY, LiteralText.EMPTY);
 			else
 			{
 				var attachment = attachments.get(rowIdx);
 				var rowState = ROW_STATE_NORMAL;
 
-				var validityError = errorProvider.apply(attachment);
+				var hovering = MathUtil.rectContains(x + 52, y + 70 + i * 17, 94, 16, mouseX, mouseY);
+
+				var validityError = errorProvider.apply(bt, attachment);
 				if (validityError != null)
 				{
 					rowState = ROW_STATE_DISABLED;
 
 					var oldTexture = RenderSystem.getShaderTexture(0);
-					if (MathUtil.rectContains(x + 51, y + 70 + i * 17, 94, 17, mouseX, mouseY))
+					if (hovering)
 						tooltipPropogator.accept(validityError);
 					RenderSystem.setShaderTexture(0, oldTexture);
 				}
+				else if (hovering)
+					rowState = ROW_STATE_HOVER;
 
 				var iconU = attachment.icon / 3;
 				var iconV = attachment.icon % 3;
@@ -293,6 +361,11 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 				drawAttachmentRow(matrices, i, iconU, iconV, rowState, BlasterItem.getAttachmentTranslation(blasterModel, attachment));
 			}
 		}
+	}
+
+	private int getAttachmentListTopRowIdx()
+	{
+		return Math.max(Math.round(scrollPosition * (float)(attachmentList.size() - numVisibleAttachmentRows)), 0);
 	}
 
 	private void drawScrollbar(MatrixStack matrices, boolean enabled, float percent)
@@ -349,12 +422,19 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	private void onBlasterChanged()
 	{
 		scrollPosition = 0;
-		numAttachments = 0;
 
 		if (blaster.getItem() instanceof BlasterItem)
 		{
 			var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, blaster);
-			numAttachments = bd.attachmentMap.size();
+			attachmentList = bd.attachmentMap.values().stream().toList();
+			blasterModel = BlasterItem.getBlasterModel(blaster);
+			blasterDescriptor = bd;
+		}
+		else
+		{
+			attachmentList = new ArrayList<>();
+			blasterModel = null;
+			blasterDescriptor = null;
 		}
 	}
 
