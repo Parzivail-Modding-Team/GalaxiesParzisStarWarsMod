@@ -25,6 +25,7 @@
 		"ClientLoginNetworkHandlerMixin",
 		"ClientPlayNetworkHandlerMixin",
 		"ClientRecipeBookMixin",
+		"DebugHudMixin",
 		"EntityClientMixin",
 		"EntityRenderDispatcherAccessor",
 		"EntityRenderDispatcherMixin",
