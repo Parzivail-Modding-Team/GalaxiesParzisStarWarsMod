@@ -11,8 +11,8 @@
 	"weight": 6.7,
 	"boltColor": 0.98,
 	"magazineSize": 24,
-	"automaticRepeatTime": 3.3,
-	"burstRepeatTime": 2.1,
+	"automaticRepeatTime": 3,
+	"burstRepeatTime": 2,
 	"burstSize": 3,
 	"recoil": {
 		"horizontal": 1.5,
