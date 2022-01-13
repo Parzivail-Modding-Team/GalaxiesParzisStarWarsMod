@@ -89,7 +89,12 @@ public class BlasterUtil
 		for (var d = 0; d < distance; d++)
 		{
 			var vec = start.add(fromDir.multiply(d));
-			client.world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, fromDir.x, fromDir.y, fromDir.z);
+
+			var dx = 0.01 * client.world.random.nextGaussian();
+			var dy = 0.01 * client.world.random.nextGaussian();
+			var dz = 0.01 * client.world.random.nextGaussian();
+
+			client.world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, dx, dy, dz);
 		}
 
 		var shouldScorch = buf.readBoolean();
