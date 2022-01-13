@@ -130,6 +130,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		this.addDrawableChild(new ButtonWidget(x + 173, y + 90, 40, 20, new TranslatableText("Apply"), button -> {
 			var passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeNbt(getLightsaberTag().toTag());
+			// TODO: move this to backend, don't allow client to set arbitrary tag data
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketLightsaberForgeApply, passedData);
 		}));
 

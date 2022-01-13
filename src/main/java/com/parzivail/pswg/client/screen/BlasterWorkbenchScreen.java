@@ -6,6 +6,7 @@ import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.screen.widget.AreaButtonWidget;
 import com.parzivail.pswg.client.screen.widget.LocalTextureButtonWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleTooltipSupplier;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
@@ -14,8 +15,10 @@ import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.MatrixStackUtil;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -26,6 +29,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.text.*;
@@ -56,6 +60,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	private static final int ROW_STATE_NORMAL = 1;
 	private static final int ROW_STATE_HOVER = 2;
 
+	private int originalBitmask;
 	private ItemStack blaster = ItemStack.EMPTY;
 	private BlasterDescriptor blasterDescriptor = null;
 	private Identifier blasterModel = null;
@@ -107,12 +112,19 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 	private void onBuildClicked(ButtonWidget sender)
 	{
+		// TODO: Subtract material cost for new attachments, and give back for removed ones
+		// TODO: move this to backend, don't allow client to set arbitrary tag data
 
+		var passedData = new PacketByteBuf(Unpooled.buffer());
+		passedData.writeNbt(getBlasterTag().toTag());
+		ClientPlayNetworking.send(SwgPackets.C2S.PacketBlasterWorkbenchApply, passedData);
 	}
 
 	private void onCancelClicked(ButtonWidget sender)
 	{
-
+		var bt = getBlasterTag();
+		bt.attachmentBitmask = originalBitmask;
+		bt.serializeAsSubtag(blaster);
 	}
 
 	private void onRowClicked(int row)
@@ -129,8 +141,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 		var incompat = getIncompatibleAttachments(bt, attachment);
 
-		// TODO: move this to backend and subtract material cost
-		//  for new attachments, and give back for removed ones
+		// TODO: move this to backend (use property delegates for bitmasks?)
 
 		// remove incompatible attachments
 		for (var a : incompat)
@@ -456,12 +467,16 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			attachmentList = bd.attachmentMap.values().stream().toList();
 			blasterModel = BlasterItem.getBlasterModel(blaster);
 			blasterDescriptor = bd;
+
+			var bt = new BlasterTag(blaster.getOrCreateNbt());
+			originalBitmask = bt.attachmentBitmask;
 		}
 		else
 		{
 			attachmentList = new ArrayList<>();
 			blasterModel = null;
 			blasterDescriptor = null;
+			originalBitmask = 0;
 		}
 	}
 
