@@ -16,13 +16,13 @@ public class BlasterDescriptor
 	public float boltColor;
 	public int magazineSize;
 
-	public byte automaticRepeatTime;
-	public byte burstRepeatTime;
+	public short automaticRepeatTime;
+	public short burstRepeatTime;
 
 	// TODO: datapack/archetype? (requires re-calculating first person ADS positions)
 	public float adsZoom = 5;
 
-	public byte burstSize;
+	public short burstSize;
 
 	public BlasterAxialInfo recoil;
 	public BlasterAxialInfo spread;
@@ -32,7 +32,7 @@ public class BlasterDescriptor
 	public int attachmentDefault;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, byte automaticRepeatTime, byte burstRepeatTime, byte burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, int attachmentDefault, HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, short automaticRepeatTime, short burstRepeatTime, short burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, int attachmentDefault, HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap)
 	{
 		this.id = id;
 		this.type = type;

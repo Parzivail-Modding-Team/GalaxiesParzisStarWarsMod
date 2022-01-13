@@ -203,10 +203,10 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.weight);
 		buf.writeFloat(value.boltColor);
 		buf.writeInt(value.magazineSize);
-		buf.writeByte(value.automaticRepeatTime);
-		buf.writeByte(value.burstRepeatTime);
+		buf.writeShort(value.automaticRepeatTime);
+		buf.writeShort(value.burstRepeatTime);
 
-		buf.writeByte(value.burstSize);
+		buf.writeShort(value.burstSize);
 
 		buf.writeFloat(value.recoil.horizontal);
 		buf.writeFloat(value.recoil.vertical);
@@ -215,12 +215,12 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.spread.vertical);
 
 		buf.writeInt(value.heat.capacity);
-		buf.writeByte(value.heat.perRound);
-		buf.writeByte(value.heat.drainSpeed);
-		buf.writeByte(value.heat.overheatPenalty);
-		buf.writeByte(value.heat.overheatDrainSpeed);
-		buf.writeByte(value.heat.passiveCooldownDelay);
-		buf.writeByte(value.heat.overchargeBonus);
+		buf.writeShort(value.heat.perRound);
+		buf.writeShort(value.heat.drainSpeed);
+		buf.writeShort(value.heat.overheatPenalty);
+		buf.writeShort(value.heat.overheatDrainSpeed);
+		buf.writeShort(value.heat.passiveCooldownDelay);
+		buf.writeShort(value.heat.overchargeBonus);
 
 		buf.writeFloat(value.cooling.primaryBypassTime);
 		buf.writeFloat(value.cooling.primaryBypassTolerance);
@@ -256,10 +256,10 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var weight = buf.readFloat();
 		var boltColor = buf.readFloat();
 		var magazineSize = buf.readInt();
-		var automaticRepeatTime = buf.readByte();
-		var burstRepeatTime = buf.readByte();
+		var automaticRepeatTime = buf.readShort();
+		var burstRepeatTime = buf.readShort();
 
-		var burstSize = buf.readByte();
+		var burstSize = buf.readShort();
 
 		var recoil_horizontal = buf.readFloat();
 		var recoil_vertical = buf.readFloat();
@@ -268,12 +268,12 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var spread_vertical = buf.readFloat();
 
 		var heat_capacity = buf.readInt();
-		var heat_perRound = buf.readByte();
-		var heat_drainSpeed = buf.readByte();
-		var heat_cooldownDelay = buf.readByte();
-		var heat_overheatDrainSpeed = buf.readByte();
-		var heat_passiveCooldownDelay = buf.readByte();
-		var heat_overchargeBonus = buf.readByte();
+		var heat_perRound = buf.readShort();
+		var heat_drainSpeed = buf.readShort();
+		var heat_cooldownDelay = buf.readShort();
+		var heat_overheatDrainSpeed = buf.readShort();
+		var heat_passiveCooldownDelay = buf.readShort();
+		var heat_overchargeBonus = buf.readShort();
 
 		var cooling_primaryBypassTime = buf.readFloat();
 		var cooling_primaryBypassTolerance = buf.readFloat();
