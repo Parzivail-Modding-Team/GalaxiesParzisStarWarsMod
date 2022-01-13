@@ -7,22 +7,33 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
+import java.util.function.Predicate;
+
 @Environment(value = EnvType.CLIENT)
 public class AreaButtonWidget extends ButtonWidget
 {
-	public AreaButtonWidget(int x, int y, int width, int height, PressAction pressAction)
+	private final Predicate<ButtonWidget> enabledPredicate;
+
+	public AreaButtonWidget(int x, int y, int width, int height, Predicate<ButtonWidget> enabledPredicate, PressAction pressAction)
 	{
-		this(x, y, width, height, pressAction, LiteralText.EMPTY);
+		this(x, y, width, height, enabledPredicate, pressAction, LiteralText.EMPTY);
 	}
 
-	public AreaButtonWidget(int x, int y, int width, int height, PressAction pressAction, Text text)
+	public AreaButtonWidget(int x, int y, int width, int height, Predicate<ButtonWidget> enabledPredicate, PressAction pressAction, Text text)
 	{
-		this(x, y, width, height, pressAction, EMPTY, text);
+		this(x, y, width, height, enabledPredicate, pressAction, EMPTY, text);
 	}
 
-	public AreaButtonWidget(int x, int y, int width, int height, PressAction pressAction, TooltipSupplier tooltipSupplier, Text text)
+	public AreaButtonWidget(int x, int y, int width, int height, Predicate<ButtonWidget> enabledPredicate, PressAction pressAction, TooltipSupplier tooltipSupplier, Text text)
 	{
 		super(x, y, width, height, text, pressAction, tooltipSupplier);
+		this.enabledPredicate = enabledPredicate;
+	}
+
+	@Override
+	protected boolean isValidClickButton(int button)
+	{
+		return super.isValidClickButton(button) && enabledPredicate.test(this);
 	}
 
 	@Override
