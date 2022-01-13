@@ -37,6 +37,7 @@
 		"secondaryBypassTolerance": 0.03
 	},
 	"attachmentDefault": 1,
+	"attachmentMinimum": 1,
 	"attachmentMap": {
 		"1": {
 			"mutex": 3,
