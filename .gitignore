@@ -48,3 +48,5 @@ ehthumbs.db
 .directory
 *~
 hs_err*.log
+*.blend[0-9]
+*.blend[0-9][0-9]
