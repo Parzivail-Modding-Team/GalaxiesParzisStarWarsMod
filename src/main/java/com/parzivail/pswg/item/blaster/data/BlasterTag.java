@@ -26,11 +26,11 @@ public class BlasterTag extends TagSerializer
 	public int heat;
 	public int ventingHeat;
 
-	public byte burstCounter;
-	public byte shotTimer;
-	public byte timeSinceLastShot;
-	public byte passiveCooldownTimer;
-	public byte overchargeTimer;
+	public short burstCounter;
+	public short shotTimer;
+	public short timeSinceLastShot;
+	public short passiveCooldownTimer;
+	public short overchargeTimer;
 
 	public long serialNumber;
 
