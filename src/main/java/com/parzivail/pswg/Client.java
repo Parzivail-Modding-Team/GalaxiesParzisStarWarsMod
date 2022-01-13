@@ -40,6 +40,7 @@ import com.parzivail.util.client.render.ICustomHudRenderer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
+import dev.architectury.event.events.client.ClientGuiEvent;
 import io.github.ennuil.libzoomer.api.ZoomInstance;
 import io.github.ennuil.libzoomer.api.ZoomRegistry;
 import io.github.ennuil.libzoomer.api.modifiers.ZoomDivisorMouseModifier;
@@ -102,6 +103,8 @@ public class Client implements ClientModInitializer
 		ClientTickEvents.START_CLIENT_TICK.register(RecoilManager::tick);
 
 		ClientTickEvents.END_CLIENT_TICK.register(ZoomHandler::tick);
+
+		ClientGuiEvent.DEBUG_TEXT_RIGHT.register(BlasterItemRenderer::getDebugInfo);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Leaves.Sequoia);

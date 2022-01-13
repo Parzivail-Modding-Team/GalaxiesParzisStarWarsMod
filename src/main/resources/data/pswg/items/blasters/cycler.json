@@ -33,15 +33,16 @@
 		"secondaryBypassTolerance": 0.1
 	},
 	"attachmentDefault": 0,
+	"attachmentMinimum": 0,
 	"attachmentMap": {
 		"1": {
-			"mutex": "barrel",
+			"mutex": 1,
 			"id": "barrel",
 			"icon": 1,
 			"visualComponent": "barrel_extension"
 		},
 		"2": {
-			"mutex": "scope",
+			"mutex": 2,
 			"id": "scope",
 			"icon": 2,
 			"visualComponent": "scope_extension"

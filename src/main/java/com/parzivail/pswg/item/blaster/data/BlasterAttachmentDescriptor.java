@@ -54,20 +54,4 @@ public class BlasterAttachmentDescriptor
 
 		compoundTag.put(s, tag);
 	}
-
-	public static short unpackMutexString(String s)
-	{
-		var mutex = 0;
-		var parts = s.split("\\+");
-
-		for (var part : parts)
-		{
-			if (!namedMutexCategories.containsKey(part))
-				return -1;
-
-			mutex |= namedMutexCategories.get(part);
-		}
-
-		return (short)mutex;
-	}
 }

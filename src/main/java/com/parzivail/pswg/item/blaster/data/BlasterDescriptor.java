@@ -30,9 +30,10 @@ public class BlasterDescriptor
 	public BlasterCoolingBypassProfile cooling;
 
 	public int attachmentDefault;
+	public int attachmentMinimum;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, short automaticRepeatTime, short burstRepeatTime, short burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, int attachmentDefault, HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, short automaticRepeatTime, short burstRepeatTime, short burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, int attachmentDefault, int attachmentMinimum, HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap)
 	{
 		this.id = id;
 		this.type = type;
@@ -50,6 +51,7 @@ public class BlasterDescriptor
 		this.heat = heat;
 		this.cooling = cooling;
 		this.attachmentDefault = attachmentDefault;
+		this.attachmentMinimum = attachmentMinimum;
 		this.attachmentMap = attachmentMap;
 	}
 }

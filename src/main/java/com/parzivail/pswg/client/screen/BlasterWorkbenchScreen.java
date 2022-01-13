@@ -28,10 +28,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
@@ -41,7 +38,6 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
@@ -131,9 +127,17 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 		var bt = getBlasterTag();
 
-		var incompat = getFirstIncompatibleAttachment(bt, attachment);
-		if (incompat.isEmpty())
-			bt.attachmentBitmask ^= attachment.bit;
+		var incompat = getIncompatibleAttachments(bt, attachment);
+
+		// TODO: move this to backend and subtract material cost
+		//  for new attachments, and give back for removed ones
+
+		// remove incompatible attachments
+		for (var a : incompat)
+			bt.attachmentBitmask ^= a.bit;
+
+		// apply new attachment
+		bt.attachmentBitmask ^= attachment.bit;
 
 		provideDefaultAttachments(bt);
 
@@ -146,30 +150,51 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		{
 			// If no attachment is attached in the bitmask category that this
 			// attachment belongs to, revert to the default attachment (which
-			// may also be zero, but at least we checked)
+			// may also be zero, but at least we checked). This only works
+			// if the mutex for each attachment is set to the bitfield
+			// that spans all attachments. Example:
+			//
+			// Attachment 1: bit 0b01
+			// Attachment 2: bit 0b10
+			// Mutex for both:   0b11
+			//
+			// This also means that the "minimum" attachments in a
+			// descriptor should only be set to the attachments
+			// that form the default in a required set.
+
 			if ((attachment.mutex & bt.attachmentBitmask) == 0)
-				bt.attachmentBitmask |= (blasterDescriptor.attachmentDefault & attachment.mutex);
+				bt.attachmentBitmask |= (blasterDescriptor.attachmentMinimum & attachment.mutex);
 		}
 	}
 
-	private Optional<BlasterAttachmentDescriptor> getFirstIncompatibleAttachment(BlasterTag bt, BlasterAttachmentDescriptor query)
+	private List<BlasterAttachmentDescriptor> getIncompatibleAttachments(BlasterTag bt, BlasterAttachmentDescriptor query)
 	{
+		var list = new ArrayList<BlasterAttachmentDescriptor>();
 		for (var attachment : attachmentList)
 		{
+			if (attachment == query)
+				continue;
+
 			// check if this attachment is both attached, and conflicts with the query attachment
 			if ((bt.attachmentBitmask & attachment.bit) != 0 && (attachment.mutex & query.mutex) != 0)
-				return Optional.of(attachment);
+				list.add(attachment);
 		}
-		return Optional.empty();
+		return list;
 	}
 
-	private Text getAttachmentError(BlasterTag bt, BlasterAttachmentDescriptor attachment)
+	private List<Text> getAttachmentError(BlasterTag bt, BlasterAttachmentDescriptor attachment)
 	{
-		var incompat = getFirstIncompatibleAttachment(bt, attachment);
+		var incompat = getIncompatibleAttachments(bt, attachment);
 		if (incompat.isEmpty())
 			return null;
 
-		return new TranslatableText(I18N_INCOMPAT_ATTACHMENT, BlasterItem.getAttachmentTranslation(blasterModel, incompat.get()));
+		var text = new ArrayList<Text>();
+		text.add(new TranslatableText(I18N_INCOMPAT_ATTACHMENT));
+
+		for (var a : incompat)
+			text.add(BlasterItem.getAttachmentTranslation(blasterModel, a).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xA0A0A0))));
+
+		return text;
 	}
 
 	private boolean attachmentListContains(double mouseX, double mouseY)
@@ -272,7 +297,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		super.render(matrices, mouseX, mouseY, delta);
 
 		var minecraft = MinecraftClient.getInstance();
-		Mutable<Text> tooltip = new MutableObject<>();
+		Mutable<List<Text>> tooltip = new MutableObject<>();
 
 		if (blaster.getItem() instanceof BlasterItem)
 		{
@@ -323,7 +348,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 	}
 
-	private void drawAttachmentList(MatrixStack matrices, Identifier blasterModel, BlasterTag bt, List<BlasterAttachmentDescriptor> attachments, BiFunction<BlasterTag, BlasterAttachmentDescriptor, Text> errorProvider, Consumer<Text> tooltipPropogator, double mouseX, double mouseY)
+	private void drawAttachmentList(MatrixStack matrices, Identifier blasterModel, BlasterTag bt, List<BlasterAttachmentDescriptor> attachments, BiFunction<BlasterTag, BlasterAttachmentDescriptor, List<Text>> errorProvider, Consumer<List<Text>> tooltipPropogator, double mouseX, double mouseY)
 	{
 		drawScrollbar(matrices, canScroll(), scrollPosition);
 
@@ -342,18 +367,20 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 				var hovering = MathUtil.rectContains(x + 52, y + 70 + i * 17, 94, 16, mouseX, mouseY);
 
-				var validityError = errorProvider.apply(bt, attachment);
-				if (validityError != null)
-				{
-					rowState = ROW_STATE_DISABLED;
-
-					var oldTexture = RenderSystem.getShaderTexture(0);
-					if (hovering)
-						tooltipPropogator.accept(validityError);
-					RenderSystem.setShaderTexture(0, oldTexture);
-				}
-				else if (hovering)
+				// TODO: check if the attachment is attached, and provide a way to disable it
+				if ((bt.attachmentBitmask & attachment.bit) != 0)
 					rowState = ROW_STATE_HOVER;
+				else
+				{
+					var validityError = errorProvider.apply(bt, attachment);
+					if (validityError != null)
+					{
+						var oldTexture = RenderSystem.getShaderTexture(0);
+						if (hovering)
+							tooltipPropogator.accept(validityError);
+						RenderSystem.setShaderTexture(0, oldTexture);
+					}
+				}
 
 				var iconU = attachment.icon / 3;
 				var iconV = attachment.icon % 3;

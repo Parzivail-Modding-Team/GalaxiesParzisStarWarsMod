@@ -104,27 +104,10 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				var bit = Integer.parseInt(pair.getKey());
 				var data = pair.getValue().getAsJsonObject();
 
-				var mutex = data.get("mutex");
-
-				boolean foundMutex = false;
 				short mutexData = 0;
 
-				if (mutex instanceof JsonPrimitive mutexP)
-				{
-					if (mutexP.isNumber())
-					{
-						foundMutex = true;
-						mutexData = mutexP.getAsShort();
-					}
-					else if (mutexP.isString())
-					{
-						mutexData = BlasterAttachmentDescriptor.unpackMutexString(mutexP.getAsString());
-						foundMutex = mutexData >= 0;
-					}
-				}
-
-				if (!foundMutex)
-					throw new JsonParseException("Mutex must be a bitmask integer or a string reference to a named category");
+				if (data.has("mutex"))
+					mutexData = data.get("mutex").getAsShort();
 
 				byte icon = 0;
 
@@ -228,6 +211,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		buf.writeFloat(value.cooling.secondaryBypassTolerance);
 
 		buf.writeInt(value.attachmentDefault);
+		buf.writeInt(value.attachmentMinimum);
 
 		if (value.attachmentMap == null)
 			buf.writeByte(0);
@@ -281,6 +265,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		var cooling_secondaryBypassTolerance = buf.readFloat();
 
 		var attachmentDefault = buf.readInt();
+		var attachmentMinimum = buf.readInt();
 
 		var attachmentMap = new HashMap<Integer, BlasterAttachmentDescriptor>();
 
@@ -314,6 +299,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay, heat_overchargeBonus),
 				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance),
 				attachmentDefault,
+				attachmentMinimum,
 				attachmentMap
 		);
 	}

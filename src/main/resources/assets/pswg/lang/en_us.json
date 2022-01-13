@@ -328,7 +328,7 @@
 	"msg.pswg.blaster_mode_changed": "Firing Mode: %s",
 	"msg.pswg.update": "A new PSWG update, %s, is available at %s!",
 	"screen.pswg.apply": "Apply",
-	"screen.pswg.blaster.incompatible_attachment": "Incompatible with %s",
+	"screen.pswg.blaster.incompatible_attachment": "Incompatible with:",
 	"screen.pswg.species_select": "Species Customization",
 	"screen.pswg.species_select.use_female_model": "Use Female Model",
 	"species.pswg.aqualish": "Aqualish",

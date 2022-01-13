@@ -33,6 +33,7 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
@@ -422,6 +423,44 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				}
 			}
 		}
+	}
+
+	public static void getDebugInfo(List<String> strings)
+	{
+		var mc = MinecraftClient.getInstance();
+		assert mc.player != null;
+
+		var stack = mc.player.getInventory().getMainHandStack();
+		if (stack.getItem() instanceof BlasterItem)
+		{
+			var bd = BlasterItem.getBlasterDescriptorClient(stack);
+			var bt = new BlasterTag(stack.getOrCreateNbt());
+
+			strings.add(String.format("! id=%s type=%s", bd.id, bd.type.getValue()));
+			strings.add(String.format("! dmg=%s rng=%s lbs=%s hue=%s", bd.damage, bd.range, bd.weight, bd.boltColor));
+			strings.add(String.format("! mag=%s art=%s brt=%s", bd.magazineSize, bd.automaticRepeatTime, bd.burstRepeatTime));
+			strings.add(String.format("! brst=%s attDef=%s attMin=%s", bd.burstSize, Integer.toBinaryString(bd.attachmentDefault), Integer.toBinaryString(bd.attachmentMinimum)));
+			strings.add(String.format("! rec={%s, %s} spd={%s, %s}", bd.recoil.horizontal, bd.recoil.vertical, bd.spread.horizontal, bd.spread.vertical));
+			strings.add(String.format("! heat={c=%s pr=%s ds=%s op=%s ods=%s pcd=%s ob=%s}", bd.heat.capacity, bd.heat.perRound, bd.heat.drainSpeed, bd.heat.overheatPenalty, bd.heat.overheatDrainSpeed, bd.heat.passiveCooldownDelay, bd.heat.overchargeBonus));
+			strings.add(String.format("! cool={pt=%s pd=%s st=%s sd=%s}", bd.cooling.primaryBypassTime, bd.cooling.primaryBypassTolerance, bd.cooling.secondaryBypassTime, bd.cooling.secondaryBypassTolerance));
+
+			strings.add(String.format("@ fm=%s cm=%s ads=%s cbc=%s", bt.firingMode, getCoolingModeString(bt), bt.isAimingDownSights ? "Y" : "N", bt.canBypassCooling ? "Y" : "N"));
+			strings.add(String.format("@ sr=%s h=%s vh=%s", bt.shotsRemaining, bt.heat, bt.ventingHeat));
+			strings.add(String.format("@ bc=%s st=%s tsls=%s pct=%s ot=%s", bt.burstCounter, bt.shotTimer, bt.timeSinceLastShot, bt.passiveCooldownTimer, bt.overchargeTimer));
+			strings.add(String.format("@ a=%s", Integer.toBinaryString(bt.attachmentBitmask)));
+		}
+	}
+
+	private static String getCoolingModeString(BlasterTag bt)
+	{
+		return switch (bt.coolingMode)
+		{
+			case BlasterTag.COOLING_MODE_NONE -> "N";
+			case BlasterTag.COOLING_MODE_OVERHEAT -> "O";
+			case BlasterTag.COOLING_MODE_FORCED_BYPASS -> "FB";
+			case BlasterTag.COOLING_MODE_PENALTY_BYPASS -> "PB";
+			default -> String.valueOf(bt.coolingMode);
+		};
 	}
 
 	private record ModelEntry(P3dModel model,
