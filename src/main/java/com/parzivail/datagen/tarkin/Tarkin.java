@@ -1200,10 +1200,13 @@ public class Tarkin
 		BlockGenerator.cross(SwgBlocks.Plant.DriedPoontenGrass).build(assets);
 		BlockGenerator.cross(SwgBlocks.Plant.Tuber).build(assets);
 
-		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2")).build(assets);
+		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2"))
+		              .lootTable(block1 -> LootTableFile.seedCrop(block1, SwgItems.Food.ChasukaSeeds, SwgItems.Food.ChasukaLeaf, 2, 3, 0.5714286))
+		              .build(assets);
+
 		BlockGenerator.bushStages(SwgBlocks.Plant.HkakBush, () -> HkakBushBlock.AGE, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.HkakBush), "_stage3")).build(assets);
 		BlockGenerator.bloomingBushStages(SwgBlocks.Plant.MoloShrub, () -> MoloShrubBlock.AGE, () -> MoloShrubBlock.BLOOMING, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.MoloShrub), "_stage3_blooming"))
-		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Natural.MoloFlower, new LootTableFile.Pool.Entry.CountFunction.Range(0, 2, new Identifier("uniform"))))
+		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Natural.MoloFlower, new LootTableFile.Pool.CountFunction.Range(0, 2, new Identifier("uniform"))))
 		              .build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.SaltyDesert).build(assets);

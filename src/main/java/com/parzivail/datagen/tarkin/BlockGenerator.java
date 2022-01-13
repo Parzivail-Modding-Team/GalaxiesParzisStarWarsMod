@@ -195,7 +195,7 @@ public class BlockGenerator
 	public static BlockGenerator basicDropMany(Block block, Item item, int min, int max)
 	{
 		return BlockGenerator.basic(block)
-		                     .lootTable(block1 -> LootTableFile.many(block1, item, new LootTableFile.Pool.Entry.CountFunction.Range(min, max, new Identifier("uniform"))));
+		                     .lootTable(block1 -> LootTableFile.many(block1, item, new LootTableFile.Pool.CountFunction.Range(min, max, new Identifier("uniform"))));
 	}
 
 	public static BlockGenerator basicDropFortuneBonus(Block block, Item item)

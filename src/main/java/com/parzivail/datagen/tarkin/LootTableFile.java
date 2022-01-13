@@ -39,7 +39,7 @@ public class LootTableFile
 		return single(block, block);
 	}
 
-	public static LootTableFile count(Block block, ItemConvertible drop, Pool.Entry.CountFunction count)
+	public static LootTableFile count(Block block, ItemConvertible drop, Pool.CountFunction count)
 	{
 		var reg = AssetGenerator.getRegistryName(drop);
 		return ofPool(block,
@@ -47,7 +47,7 @@ public class LootTableFile
 				              .entry(new Pool.Entry(new Identifier("alternatives"))
 						                     .child(new Pool.Entry(new Identifier("item"), reg)
 								                            .function(count)
-								                            .function(new Pool.Entry.Function(new Identifier("explosion_decay")))
+								                            .function(new Pool.Function(new Identifier("explosion_decay")))
 						                     )
 				              )
 		);
@@ -55,12 +55,38 @@ public class LootTableFile
 
 	public static LootTableFile many(Block block, ItemConvertible drop, int count)
 	{
-		return count(block, drop, new Pool.Entry.CountFunction(count));
+		return count(block, drop, new Pool.CountFunction(count));
 	}
 
-	public static LootTableFile many(Block block, ItemConvertible drop, Pool.Entry.CountFunction.Range range)
+	public static LootTableFile many(Block block, ItemConvertible drop, Pool.CountFunction.Range range)
 	{
-		return count(block, drop, new Pool.Entry.CountFunction(range));
+		return count(block, drop, new Pool.CountFunction(range));
+	}
+
+	public static LootTableFile seedCrop(Block block, ItemConvertible seeds, ItemConvertible crop, int cropAge, int extra, double probability)
+	{
+		var blockReg = AssetGenerator.getRegistryName(block);
+		var seedReg = AssetGenerator.getRegistryName(seeds);
+		var cropReg = AssetGenerator.getRegistryName(crop);
+		return empty(block)
+				.function(new Pool.Function(new Identifier("explosion_decay")))
+				.pool(new Pool(1)
+						      .entry(new Pool.Entry(new Identifier("alternatives"))
+								             .child(new Pool.Entry(new Identifier("item"), cropReg)
+										                    .condition(new Pool.Condition(new Identifier("block_state_property"))
+												                               .block(blockReg)
+												                               .property("age", cropAge)))
+								             .child(new Pool.Entry(new Identifier("item"), seedReg))))
+				.pool(new Pool(1)
+						      .condition(new Pool.Condition(new Identifier("block_state_property"))
+								                 .block(blockReg)
+								                 .property("age", cropAge))
+						      .entry(new Pool.Entry(new Identifier("item"), seedReg)
+								             .function(new Pool.Function(new Identifier("apply_bonus"))
+										                       .enchantment(new Identifier("fortune"))
+										                       .formula(new Identifier("binomial_with_bonus_count"))
+										                       .parameter("extra", extra)
+										                       .parameter("probability", probability))));
 	}
 
 	public static LootTableFile singleFortuneBonus(Block block, ItemConvertible drop)
@@ -70,11 +96,11 @@ public class LootTableFile
 		              new Pool(1)
 				              .entry(new Pool.Entry(new Identifier("alternatives"))
 						                     .child(new Pool.Entry(new Identifier("item"), reg)
-								                            .function(new Pool.Entry.Function(new Identifier("apply_bonus"))
+								                            .function(new Pool.Function(new Identifier("apply_bonus"))
 										                                      .enchantment(new Identifier("fortune"))
 										                                      .formula(new Identifier("ore_drops"))
 								                            )
-								                            .function(new Pool.Entry.Function(new Identifier("explosion_decay")))
+								                            .function(new Pool.Function(new Identifier("explosion_decay")))
 						                     )
 				              )
 		);
@@ -105,6 +131,20 @@ public class LootTableFile
 					element.add("functions", functionArray);
 				}
 
+				if (!conditions.isEmpty())
+				{
+					var conditionArray = new JsonArray();
+					for (var condition : conditions)
+					{
+						var entryElement = new JsonObject();
+
+						condition.serialize(entryElement);
+
+						conditionArray.add(entryElement);
+					}
+					element.add("conditions", conditionArray);
+				}
+
 				if (!children.isEmpty())
 				{
 					var entryArray = new JsonArray();
@@ -120,124 +160,11 @@ public class LootTableFile
 				}
 			}
 
-			public static class Function
-			{
-				Identifier function;
-				Identifier enchantment;
-				Identifier formula;
-				HashMap<String, Object> parameters;
-
-				public Function(Identifier function)
-				{
-					this.function = function;
-					this.parameters = new HashMap<>();
-				}
-
-				public Function enchantment(Identifier enchantment)
-				{
-					this.enchantment = enchantment;
-					return this;
-				}
-
-				public Function formula(Identifier formula)
-				{
-					this.formula = formula;
-					return this;
-				}
-
-				public Function parameter(String key, Object value)
-				{
-					this.parameters.put(key, value);
-					return this;
-				}
-
-				public void serialize(JsonObject entryElement)
-				{
-					entryElement.addProperty("function", function.toString());
-
-					if (enchantment != null)
-						entryElement.addProperty("enchantment", enchantment.toString());
-
-					if (formula != null)
-						entryElement.addProperty("formula", formula.toString());
-
-					if (!parameters.isEmpty())
-					{
-						var paramElement = new JsonObject();
-
-						for (var pair : parameters.entrySet())
-						{
-							if (pair.getValue() instanceof Number)
-								paramElement.addProperty(pair.getKey(), (Number)pair.getValue());
-							else if (pair.getValue() instanceof Boolean)
-								paramElement.addProperty(pair.getKey(), (Boolean)pair.getValue());
-							else if (pair.getValue() instanceof Character)
-								paramElement.addProperty(pair.getKey(), (Character)pair.getValue());
-							else if (pair.getValue() != null)
-								paramElement.addProperty(pair.getKey(), pair.getValue().toString());
-						}
-
-						entryElement.add("parameters", paramElement);
-					}
-				}
-			}
-
-			public static class CountFunction extends Function
-			{
-				public static class Range
-				{
-					float min;
-					float max;
-					Identifier type;
-
-					public Range(float min, float max, Identifier type)
-					{
-						this.min = min;
-						this.max = max;
-						this.type = type;
-					}
-				}
-
-				public Integer count = null;
-				public Range range = null;
-
-				public CountFunction(int count)
-				{
-					super(new Identifier("set_count"));
-					this.count = count;
-				}
-
-				public CountFunction(Range count)
-				{
-					super(new Identifier("set_count"));
-					this.range = count;
-				}
-
-				@Override
-				public void serialize(JsonObject entryElement)
-				{
-					super.serialize(entryElement);
-
-					if (count != null)
-						entryElement.addProperty("count", count);
-
-					if (range != null)
-					{
-						var countElement = new JsonObject();
-
-						countElement.addProperty("min", range.min);
-						countElement.addProperty("max", range.max);
-						countElement.addProperty("type", range.type.toString());
-
-						entryElement.add("count", countElement);
-					}
-				}
-			}
-
 			public final Identifier type;
 			public final Identifier name;
 			public final ArrayList<Entry> children;
 
+			public final ArrayList<Condition> conditions;
 			public final ArrayList<Function> functions;
 
 			private Entry(Identifier type, Identifier name)
@@ -247,6 +174,7 @@ public class LootTableFile
 				children = new ArrayList<>();
 
 				functions = new ArrayList<>();
+				conditions = new ArrayList<>();
 			}
 
 			private Entry(Identifier type)
@@ -265,20 +193,177 @@ public class LootTableFile
 				this.functions.add(function);
 				return this;
 			}
+
+			public Entry condition(Condition condition)
+			{
+				this.conditions.add(condition);
+				return this;
+			}
+		}
+
+		public static class Function
+		{
+			Identifier function;
+			Identifier enchantment;
+			Identifier formula;
+			HashMap<String, Object> parameters;
+
+			public Function(Identifier function)
+			{
+				this.function = function;
+				this.parameters = new HashMap<>();
+			}
+
+			public Function enchantment(Identifier enchantment)
+			{
+				this.enchantment = enchantment;
+				return this;
+			}
+
+			public Function formula(Identifier formula)
+			{
+				this.formula = formula;
+				return this;
+			}
+
+			public Function parameter(String key, Object value)
+			{
+				this.parameters.put(key, value);
+				return this;
+			}
+
+			public void serialize(JsonObject entryElement)
+			{
+				entryElement.addProperty("function", function.toString());
+
+				if (enchantment != null)
+					entryElement.addProperty("enchantment", enchantment.toString());
+
+				if (formula != null)
+					entryElement.addProperty("formula", formula.toString());
+
+				if (!parameters.isEmpty())
+				{
+					var paramElement = new JsonObject();
+
+					for (var pair : parameters.entrySet())
+					{
+						if (pair.getValue() instanceof Number)
+							paramElement.addProperty(pair.getKey(), (Number)pair.getValue());
+						else if (pair.getValue() instanceof Boolean)
+							paramElement.addProperty(pair.getKey(), (Boolean)pair.getValue());
+						else if (pair.getValue() instanceof Character)
+							paramElement.addProperty(pair.getKey(), (Character)pair.getValue());
+						else if (pair.getValue() != null)
+							paramElement.addProperty(pair.getKey(), pair.getValue().toString());
+					}
+
+					entryElement.add("parameters", paramElement);
+				}
+			}
+		}
+
+		public static class CountFunction extends Function
+		{
+			public static class Range
+			{
+				float min;
+				float max;
+				Identifier type;
+
+				public Range(float min, float max, Identifier type)
+				{
+					this.min = min;
+					this.max = max;
+					this.type = type;
+				}
+			}
+
+			public Integer count = null;
+			public Range range = null;
+
+			public CountFunction(int count)
+			{
+				super(new Identifier("set_count"));
+				this.count = count;
+			}
+
+			public CountFunction(Range count)
+			{
+				super(new Identifier("set_count"));
+				this.range = count;
+			}
+
+			@Override
+			public void serialize(JsonObject entryElement)
+			{
+				super.serialize(entryElement);
+
+				if (count != null)
+					entryElement.addProperty("count", count);
+
+				if (range != null)
+				{
+					var countElement = new JsonObject();
+
+					countElement.addProperty("min", range.min);
+					countElement.addProperty("max", range.max);
+					countElement.addProperty("type", range.type.toString());
+
+					entryElement.add("count", countElement);
+				}
+			}
 		}
 
 		public static class Condition
 		{
-			public final Identifier condition;
+			Identifier condition;
+			Identifier block;
+			HashMap<String, Object> properties;
 
-			private Condition(Identifier condition)
+			public Condition(Identifier condition)
 			{
 				this.condition = condition;
+				this.properties = new HashMap<>();
 			}
 
-			public void serialize(JsonObject element)
+			public Condition block(Identifier block)
 			{
-				element.addProperty("condition", condition.toString());
+				this.block = block;
+				return this;
+			}
+
+			public Condition property(String key, Object value)
+			{
+				this.properties.put(key, value);
+				return this;
+			}
+
+			public void serialize(JsonObject entryElement)
+			{
+				entryElement.addProperty("condition", condition.toString());
+
+				if (block != null)
+					entryElement.addProperty("block", block.toString());
+
+				if (!properties.isEmpty())
+				{
+					var paramElement = new JsonObject();
+
+					for (var pair : properties.entrySet())
+					{
+						if (pair.getValue() instanceof Number)
+							paramElement.addProperty(pair.getKey(), (Number)pair.getValue());
+						else if (pair.getValue() instanceof Boolean)
+							paramElement.addProperty(pair.getKey(), (Boolean)pair.getValue());
+						else if (pair.getValue() instanceof Character)
+							paramElement.addProperty(pair.getKey(), (Character)pair.getValue());
+						else if (pair.getValue() != null)
+							paramElement.addProperty(pair.getKey(), pair.getValue().toString());
+					}
+
+					entryElement.add("properties", paramElement);
+				}
 			}
 		}
 
@@ -304,22 +389,36 @@ public class LootTableFile
 			conditions.add(new Condition(condition));
 			return this;
 		}
+
+		public Pool condition(Condition condition)
+		{
+			conditions.add(condition);
+			return this;
+		}
 	}
 
 	public final Identifier filename;
 	public final Identifier type;
 	public final List<Pool> pools;
+	public final ArrayList<Pool.Function> functions;
 
 	public LootTableFile(Identifier filename, Identifier type)
 	{
 		this.type = type;
 		this.filename = filename;
 		this.pools = new ArrayList<>();
+		this.functions = new ArrayList<>();
 	}
 
 	public LootTableFile pool(Pool pool)
 	{
 		pools.add(pool);
+		return this;
+	}
+
+	public LootTableFile function(Pool.Function function)
+	{
+		functions.add(function);
 		return this;
 	}
 
@@ -360,6 +459,18 @@ public class LootTableFile
 		}
 
 		root.add("pools", poolArray);
+
+		if (!functions.isEmpty())
+		{
+			var conditionArray = new JsonArray();
+			for (var function : functions)
+			{
+				var functionElement = new JsonObject();
+				function.serialize(functionElement);
+				conditionArray.add(functionElement);
+			}
+			root.add("functions", conditionArray);
+		}
 
 		return root;
 	}
