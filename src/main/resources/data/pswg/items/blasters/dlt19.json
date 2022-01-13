@@ -2,7 +2,6 @@
 	"version": 1,
 	"type": "heavy",
 	"firingModes": [
-		"semi",
 		"auto",
 		"stun"
 	],
@@ -11,7 +10,7 @@
 	"weight": 6.7,
 	"boltColor": 0.98,
 	"magazineSize": 24,
-	"automaticRepeatTime": 10.8,
+	"automaticRepeatTime": 2,
 	"recoil": {
 		"horizontal": 1.5,
 		"vertical": 3
@@ -22,41 +21,40 @@
 	},
 	"heat": {
 		"capacity": 1008,
-		"perRound": 42,
-		"drainSpeed": 8,
+		"perRound": 30,
+		"drainSpeed": 9,
 		"overheatPenalty": 20,
 		"overheatDrainSpeed": 14,
 		"passiveCooldownDelay": 100
 	},
 	"cooling": {
-		"primaryBypassTime": 0.7,
-		"primaryBypassTolerance": 0.05,
+		"primaryBypassTime": 0.8,
+		"primaryBypassTolerance": 0.06,
 		"secondaryBypassTime": 0.3,
-		"secondaryBypassTolerance": 0.1
+		"secondaryBypassTolerance": 0.03
 	},
 	"attachmentDefault": 4,
-	"attachmentMinimum": 0,
 	"attachmentMap": {
 		"1": {
-			"mutex": 3,
+			"mutex": "scope",
 			"id": "scope_d",
 			"icon": 2,
 			"visualComponent": "scope_d"
 		},
 		"2": {
-			"mutex": 3,
+			"mutex": "scope",
 			"id": "scope_x",
 			"icon": 2,
 			"visualComponent": "scope_x"
 		},
 		"4": {
-			"mutex": 12,
+			"mutex": "forward_attachment",
 			"id": "bipod",
 			"icon": 1,
 			"visualComponent": "bipod"
 		},
 		"8": {
-			"mutex": 12,
+			"mutex": "forward_attachment",
 			"id": "barrel_d",
 			"icon": 1,
 			"visualComponent": "barrel_d"

@@ -1,6 +1,6 @@
 {
 	"version": 1,
-	"type": "heavy",
+	"type": "rifle",
 	"firingModes": [
 		"semi",
 		"auto",
@@ -11,7 +11,7 @@
 	"weight": 6.7,
 	"boltColor": 0.62,
 	"magazineSize": 24,
-	"automaticRepeatTime": 10.8,
+	"automaticRepeatTime": 4,
 	"recoil": {
 		"horizontal": 1.5,
 		"vertical": 3
@@ -23,16 +23,16 @@
 	"heat": {
 		"capacity": 1008,
 		"perRound": 42,
-		"drainSpeed": 8,
+		"drainSpeed": 12,
 		"overheatPenalty": 20,
 		"overheatDrainSpeed": 14,
 		"passiveCooldownDelay": 100
 	},
 	"cooling": {
 		"primaryBypassTime": 0.7,
-		"primaryBypassTolerance": 0.05,
+		"primaryBypassTolerance": 0.1,
 		"secondaryBypassTime": 0.3,
-		"secondaryBypassTolerance": 0.1
+		"secondaryBypassTolerance": 0.05
 	},
 	"attachmentDefault": 0,
 	"attachmentMap": {}

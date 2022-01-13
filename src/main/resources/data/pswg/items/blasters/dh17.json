@@ -2,7 +2,7 @@
 	"version": 1,
 	"type": "pistol",
 	"firingModes": [
-		"semi",
+		"auto",
 		"stun"
 	],
 	"damage": 2.9,
@@ -10,7 +10,7 @@
 	"weight": 1.0,
 	"boltColor": 0.98,
 	"magazineSize": 100,
-	"automaticRepeatTime": 10,
+	"automaticRepeatTime": 3,
 	"recoil": {
 		"horizontal": 1.5,
 		"vertical": 3
@@ -20,18 +20,18 @@
 		"vertical": 0.0
 	},
 	"heat": {
-		"capacity": 920,
-		"perRound": 40,
-		"drainSpeed": 8,
+		"capacity": 1008,
+		"perRound": 60,
+		"drainSpeed": 10,
 		"overheatPenalty": 54,
 		"overheatDrainSpeed": 14,
 		"passiveCooldownDelay": 18
 	},
 	"cooling": {
 		"primaryBypassTime": 0.7,
-		"primaryBypassTolerance": 0.03,
+		"primaryBypassTolerance": 0.1,
 		"secondaryBypassTime": 0.3,
-		"secondaryBypassTolerance": 0.07
+		"secondaryBypassTolerance": 0.03
 	},
 	"attachmentDefault": 0,
 	"attachmentMap": {}

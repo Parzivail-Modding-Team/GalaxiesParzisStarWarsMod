@@ -2,8 +2,6 @@
 	"version": 1,
 	"type": "rifle",
 	"firingModes": [
-		"semi",
-		"auto",
 		"burst",
 		"stun"
 	],
@@ -12,7 +10,7 @@
 	"weight": 2.9,
 	"boltColor": 0.98,
 	"magazineSize": 100,
-	"automaticRepeatTime": 1.5,
+	"burstRepeatTime": 2,
 	"burstSize": 3,
 	"recoil": {
 		"horizontal": 1.5,
@@ -23,8 +21,8 @@
 		"vertical": 0.0
 	},
 	"heat": {
-		"capacity": 1036,
-		"perRound": 37,
+		"capacity": 1008,
+		"perRound": 45,
 		"drainSpeed": 8,
 		"overheatPenalty": 54,
 		"overheatDrainSpeed": 14,
@@ -32,9 +30,9 @@
 	},
 	"cooling": {
 		"primaryBypassTime": 0.7,
-		"primaryBypassTolerance": 0.03,
-		"secondaryBypassTime": 0.3,
-		"secondaryBypassTolerance": 0.07
+		"primaryBypassTolerance": 0.07,
+		"secondaryBypassTime": 0.2,
+		"secondaryBypassTolerance": 0.03
 	},
 	"attachmentDefault": 0,
 	"attachmentMap": {}
