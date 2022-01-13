@@ -39,7 +39,7 @@
 	"attachmentDefault": 0,
 	"attachmentMap": {
 		"1": {
-			"mutex": "barrel",
+			"mutex": 1,
 			"id": "barrel",
 			"icon": 1,
 			"visualComponent": "barrel_extension"

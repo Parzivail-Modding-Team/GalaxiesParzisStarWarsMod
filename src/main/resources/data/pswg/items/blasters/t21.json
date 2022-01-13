@@ -39,19 +39,19 @@
 	"attachmentDefault": 1,
 	"attachmentMap": {
 		"1": {
-			"mutex": "barrel",
+			"mutex": 3,
 			"id": "long_barrel",
 			"icon": 1,
 			"visualComponent": "long_barrel"
 		},
 		"2": {
-			"mutex": "barrel",
+			"mutex": 3,
 			"id": "short_barrel",
 			"icon": 1,
 			"visualComponent": "short_barrel"
 		},
 		"4": {
-			"mutex": "scope",
+			"mutex": 4,
 			"id": "scope",
 			"icon": 2,
 			"visualComponent": "scope"

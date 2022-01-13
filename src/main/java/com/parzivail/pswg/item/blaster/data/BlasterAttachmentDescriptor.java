@@ -2,18 +2,8 @@ package com.parzivail.pswg.item.blaster.data;
 
 import net.minecraft.nbt.NbtCompound;
 
-import java.util.HashMap;
-
 public class BlasterAttachmentDescriptor
 {
-	public static HashMap<String, Short> namedMutexCategories = new HashMap<>();
-
-	static {
-		namedMutexCategories.put("barrel", (short)0b1);
-		namedMutexCategories.put("scope", (short)0b10);
-		namedMutexCategories.put("forward_attachment", (short)0b100);
-	}
-
 	public int bit;
 	public short mutex;
 	public byte icon;

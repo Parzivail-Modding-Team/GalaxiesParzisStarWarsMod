@@ -36,25 +36,25 @@
 	"attachmentDefault": 4,
 	"attachmentMap": {
 		"1": {
-			"mutex": "scope",
+			"mutex": 3,
 			"id": "scope_d",
 			"icon": 2,
 			"visualComponent": "scope_d"
 		},
 		"2": {
-			"mutex": "scope",
+			"mutex": 3,
 			"id": "scope_x",
 			"icon": 2,
 			"visualComponent": "scope_x"
 		},
 		"4": {
-			"mutex": "forward_attachment",
+			"mutex": 12,
 			"id": "bipod",
 			"icon": 1,
 			"visualComponent": "bipod"
 		},
 		"8": {
-			"mutex": "forward_attachment",
+			"mutex": 12,
 			"id": "barrel_d",
 			"icon": 1,
 			"visualComponent": "barrel_d"
