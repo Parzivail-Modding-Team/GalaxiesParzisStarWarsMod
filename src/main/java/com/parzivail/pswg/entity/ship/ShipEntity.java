@@ -479,13 +479,14 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 			var currentUp = QuatUtil.rotate(new Vec3d(0, 1, 0), rotation);
 			var currentForward = QuatUtil.rotate(new Vec3d(0, 0, 1), rotation);
 
-			var targetYaw = ea.getYaw() + 180;
-			var targetPitch = -ea.getPitch() - 90;
+			var targetYaw = ea.getYaw();
+			var targetPitch = ea.getPitch();
 
 			if (currentUp.y < 0)
 				targetPitch += 180;
 
-			var zeroRollUp = MathUtil.anglesToLook(targetPitch, targetYaw);
+			// up pitch is 90deg out of phase with the forward pitch
+			var zeroRollUp = MathUtil.anglesToLook(targetPitch - 90, targetYaw);
 
 			var angle = Math.acos(currentUp.dotProduct(zeroRollUp) / (currentUp.length() * zeroRollUp.length()));
 

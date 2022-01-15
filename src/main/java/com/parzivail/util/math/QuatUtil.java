@@ -10,7 +10,7 @@ public class QuatUtil
 
 	public static EulerAngle toEulerAngles(Quaternion q)
 	{
-		var forward = rotate(MathUtil.POSZ, q);
+		var forward = rotate(MathUtil.NEGZ, q);
 
 		return MathUtil.lookToAngles(forward);
 	}

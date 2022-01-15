@@ -32,26 +32,25 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 	private static final CapsuleVolume VOL_FUSELAGE = new CapsuleVolume(new Vec3d(0, 0.12, 1), new Vec3d(0, 0.12, -4.65), 0.3);
 	private static final CapsuleVolume VOL_MECHANICS = new CapsuleVolume(new Vec3d(0, 0, 3.7), new Vec3d(0, 0, 1), 0.8);
 
-	private static final CapsuleVolume VOL_CANNON_TOP_RIGHT = new CapsuleVolume(new Vec3d(4.2, 0.27, 0.3), new Vec3d(4.2, 0.27, -5.5), 0.2);
-	private static final CapsuleVolume VOL_CANNON_BOTTOM_RIGHT = new CapsuleVolume(new Vec3d(4.2, -0.27, 0.3), new Vec3d(4.2, -0.27, -5.5), 0.2);
-	private static final CapsuleVolume VOL_CANNON_TOP_LEFT = new CapsuleVolume(new Vec3d(-4.2, 0.27, 0.3), new Vec3d(-4.2, 0.27, -5.5), 0.2);
-	private static final CapsuleVolume VOL_CANNON_BOTTOM_LEFT = new CapsuleVolume(new Vec3d(-4.2, -0.27, 0.3), new Vec3d(-4.2, -0.27, -5.5), 0.2);
+	// Root model is in Y-up space when rendered but all sub-parts stay in Z-up space
+	private static final CapsuleVolume VOL_CANNON_TOP_RIGHT = new CapsuleVolume(new Vec3d(4.2,   0.27,   0.3), new Vec3d(4.2,   0.27,   -5.5), 0.2);
+	private static final CapsuleVolume VOL_CANNON_BOTTOM_RIGHT = new CapsuleVolume(new Vec3d(4.2,   -0.27,   0.3), new Vec3d(4.2,   -0.27,   -5.5), 0.2);
+	private static final CapsuleVolume VOL_CANNON_TOP_LEFT = new CapsuleVolume(new Vec3d(-4.2,   0.27,   0.3), new Vec3d(-4.2,   0.27,   -5.5), 0.2);
+	private static final CapsuleVolume VOL_CANNON_BOTTOM_LEFT = new CapsuleVolume(new Vec3d(-4.2,   -0.27,   0.3), new Vec3d(-4.2,   -0.27,   -5.5), 0.2);
 
-	private static final CapsuleVolume VOL_ENGINE_TOP_RIGHT = new CapsuleVolume(new Vec3d(1.17, 0.42, 1.6), new Vec3d(1.17, 0.42, -1.3), 0.5);
-	private static final CapsuleVolume VOL_ENGINE_BOTTOM_RIGHT = new CapsuleVolume(new Vec3d(1.17, -0.42, 1.6), new Vec3d(1.17, -0.42, -1.3), 0.5);
-	private static final CapsuleVolume VOL_ENGINE_TOP_LEFT = new CapsuleVolume(new Vec3d(-1.17, 0.42, 1.6), new Vec3d(-1.17, 0.42, -1.3), 0.5);
-	private static final CapsuleVolume VOL_ENGINE_BOTTOM_LEFT = new CapsuleVolume(new Vec3d(-1.17, -0.42, 1.6), new Vec3d(-1.17, -0.42, -1.3), 0.5);
+	private static final CapsuleVolume VOL_ENGINE_TOP_RIGHT = new CapsuleVolume(new Vec3d(1.17,   0.42,   1.6), new Vec3d(1.17,   0.42,   -1.3), 0.5);
+	private static final CapsuleVolume VOL_ENGINE_BOTTOM_RIGHT = new CapsuleVolume(new Vec3d(1.17,   -0.42,   1.6), new Vec3d(1.17,   -0.42,   -1.3), 0.5);
+	private static final CapsuleVolume VOL_ENGINE_TOP_LEFT = new CapsuleVolume(new Vec3d(-1.17,   0.42,   1.6), new Vec3d(-1.17,   0.42,   -1.3), 0.5);
+	private static final CapsuleVolume VOL_ENGINE_BOTTOM_LEFT = new CapsuleVolume(new Vec3d(-1.17,   -0.42,   1.6), new Vec3d(-1.17,   -0.42,   -1.3), 0.5);
 
-	private static final SweptTriangleVolume VOL_WING_TOP_RIGHT_A = new SweptTriangleVolume(new Vec3d(-1.7, -0.05, -0.95), new Vec3d(-4.3, -0.05, -0.95), new Vec3d(-4.3, -0.05, 0), 0.2);
-	private static final SweptTriangleVolume VOL_WING_TOP_RIGHT_B = new SweptTriangleVolume(new Vec3d(-1.7, -0.05, -0.95), new Vec3d(-1.7, -0.05, 0.8), new Vec3d(-4.3, -0.05, 0), 0.2);
-	private static final SweptTriangleVolume VOL_WING_BOTTOM_RIGHT_A = new SweptTriangleVolume(new Vec3d(-1.7, 0.05, -0.95), new Vec3d(-4.3, 0.05, -0.95), new Vec3d(-4.3, 0.05, 0), 0.2);
-	private static final SweptTriangleVolume VOL_WING_BOTTOM_RIGHT_B = new SweptTriangleVolume(new Vec3d(-1.7, 0.05, -0.95), new Vec3d(-1.7, 0.05, 0.8), new Vec3d(-4.3, 0.05, 0), 0.2);
-	private static final SweptTriangleVolume VOL_WING_TOP_LEFT_A = new SweptTriangleVolume(new Vec3d(1.7, -0.05, -0.95), new Vec3d(4.3, -0.05, -0.95), new Vec3d(4.3, -0.05, 0), 0.2);
-	private static final SweptTriangleVolume VOL_WING_TOP_LEFT_B = new SweptTriangleVolume(new Vec3d(1.7, -0.05, -0.95), new Vec3d(1.7, -0.05, 0.8), new Vec3d(4.3, -0.05, 0), 0.2);
-	private static final SweptTriangleVolume VOL_WING_BOTTOM_LEFT_A = new SweptTriangleVolume(new Vec3d(1.7, 0.05, -0.95), new Vec3d(4.3, 0.05, -0.95), new Vec3d(4.3, 0.05, 0), 0.2);
-	private static final SweptTriangleVolume VOL_WING_BOTTOM_LEFT_B = new SweptTriangleVolume(new Vec3d(1.7, 0.05, -0.95), new Vec3d(1.7, 0.05, 0.8), new Vec3d(4.3, 0.05, 0), 0.2);
-
-	private static final SweptTriangleVolume VOL_TRIANGLE_TEST = new SweptTriangleVolume(new Vec3d(-1, 3,  -1), new Vec3d(1, 3, -1), new Vec3d(1, 3, 1), 0.2);
+	private static final SweptTriangleVolume VOL_WING_TOP_RIGHT_A = new SweptTriangleVolume(new Vec3d(-1.7,   -0.05,   -0.95), new Vec3d(-4.3,   -0.05,   -0.95), new Vec3d(-4.3,   -0.05,   0), 0.2);
+	private static final SweptTriangleVolume VOL_WING_TOP_RIGHT_B = new SweptTriangleVolume(new Vec3d(-1.7,   -0.05,   -0.95), new Vec3d(-1.7,   -0.05,   0.8), new Vec3d(-4.3,   -0.05,   0), 0.2);
+	private static final SweptTriangleVolume VOL_WING_BOTTOM_RIGHT_A = new SweptTriangleVolume(new Vec3d(-1.7,   0.05,   -0.95), new Vec3d(-4.3,   0.05,   -0.95), new Vec3d(-4.3,   0.05,   0), 0.2);
+	private static final SweptTriangleVolume VOL_WING_BOTTOM_RIGHT_B = new SweptTriangleVolume(new Vec3d(-1.7,   0.05,   -0.95), new Vec3d(-1.7,   0.05,   0.8), new Vec3d(-4.3,   0.05,   0), 0.2);
+	private static final SweptTriangleVolume VOL_WING_TOP_LEFT_A = new SweptTriangleVolume(new Vec3d(1.7,   -0.05,   -0.95), new Vec3d(4.3,   -0.05,   -0.95), new Vec3d(4.3,   -0.05,   0), 0.2);
+	private static final SweptTriangleVolume VOL_WING_TOP_LEFT_B = new SweptTriangleVolume(new Vec3d(1.7,   -0.05,   -0.95), new Vec3d(1.7,   -0.05,   0.8), new Vec3d(4.3,   -0.05,   0), 0.2);
+	private static final SweptTriangleVolume VOL_WING_BOTTOM_LEFT_A = new SweptTriangleVolume(new Vec3d(1.7,   0.05,   -0.95), new Vec3d(4.3,   0.05,   -0.95), new Vec3d(4.3,   0.05,   0), 0.2);
+	private static final SweptTriangleVolume VOL_WING_BOTTOM_LEFT_B = new SweptTriangleVolume(new Vec3d(1.7,   0.05,   -0.95), new Vec3d(1.7,   0.05,   0.8), new Vec3d(4.3,   0.05,   0), 0.2);
 
 	private static final TrackedData<Byte> WING_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final TrackedData<Byte> COCKPIT_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
@@ -202,8 +201,6 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		var transformTopLeft = getWingCollisionTransform(rot, posMat, "WingTopLeft");
 		var transformBottomLeft = getWingCollisionTransform(rot, posMat, "WingBottomLeft");
 
-		// TODO: all of these transformations are scaled by -1 on the X and Y, why?
-
 		return new ICollisionVolume[] {
 				VOL_FUSELAGE.transform(rot).transform(posMat),
 				VOL_MECHANICS.transform(rot).transform(posMat),
@@ -232,9 +229,6 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		var wingTransform = posMat.copy();
 		wingTransform.multiply(RigT65B.INSTANCE.getTransform(this, rot, wing, 0));
 		wingTransform.multiply(RigT65B.INSTANCE.getPartTransformation(this, wing, 0));
-
-		// TODO: probably a change-of-axis problem. also, this is actually -90 to fix the supposed scaling issue in getCollision
-		wingTransform.multiply(new Quaternion(90, 0, 0, true));
 
 		return wingTransform;
 	}

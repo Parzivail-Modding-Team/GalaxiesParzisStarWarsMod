@@ -43,19 +43,17 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
 
     check_extension = True
     
-    def getSocket(self, global_matrix, o):
+    def getSocket(self, o):
         return {
             "name": o.name,
             "parent": o.parent.name if o.parent != None else None,
             "transform": [list(row) for row in o.matrix_local]
         }
 
-    def getMesh(self, global_matrix, mesh):
+    def getMesh(self, mesh):
         me = mesh.to_mesh()
 
         transform = mesh.matrix_local
-        if (mesh.parent == None):
-            transform = global_matrix @ transform
 
         meshObj = {
             "name": mesh.name,
@@ -63,7 +61,7 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
             "parent": mesh.parent.name if mesh.parent != None else None,
             "material": mesh.active_material.name if mesh.active_material != None else None,
             "faces": [],
-            "children": [self.getMesh(global_matrix, cm) for cm in mesh.children if cm.type == "MESH"]
+            "children": [self.getMesh(cm) for cm in mesh.children if cm.type == "MESH"]
         }
         
         for i, face in enumerate(me.polygons):
@@ -72,39 +70,30 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
             for loop_index in face.loop_indices:
                 vert = me.vertices[me.loops[loop_index].vertex_index]
                 uv = me.uv_layers.active.data[loop_index].uv
-
                 v = vert.co
-                n = vert.normal
 
                 faceObj.append({
                     "v": v[:],
-                    "n": n[:],
                     "t": uv[:]
                 })
             
-            meshObj["faces"].append(faceObj)
+            meshObj["faces"].append({
+                "normal": face.normal[:],
+                "vertices": faceObj
+            })
         
         return meshObj
 
     def execute(self, context):
         import json
-        scaleFactor = 1.0
-
-        global_matrix = (Matrix.Scale(scaleFactor, 4) @
-                         axis_conversion(to_forward='-Z',
-                                         to_up='Y',
-                                         ).to_4x4())
 
         modelObj = {
-            "version": 1,
+            "version": 2,
             "sockets": [],
             "meshes": [],
         }
 
         for o in context.scene.objects:
-            name = o.name
-            transform = o.matrix_local
-
             parentType = o.parent_type
 
             if parentType != "OBJECT":
@@ -115,9 +104,9 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
 
             if type == "EMPTY":
                 if o.empty_display_type == "ARROWS":
-                    modelObj["sockets"].append(self.getSocket(global_matrix, o))
+                    modelObj["sockets"].append(self.getSocket(o))
             elif type == "MESH" and o.parent == None:
-                modelObj["meshes"].append(self.getMesh(global_matrix, o))
+                modelObj["meshes"].append(self.getMesh(o))
         
         with open(self.filepath, 'w') as f:
             json.dump(modelObj, f)

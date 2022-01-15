@@ -104,8 +104,8 @@ public class EntityUtil
 		entity.prevYaw = entity.getYaw();
 
 		var eulerAngle = QuatUtil.toEulerAngles(rotation);
-		entity.setYaw(eulerAngle.getYaw() + 180);
-		entity.setPitch(-eulerAngle.getPitch());
+		entity.setYaw(eulerAngle.getYaw());
+		entity.setPitch(eulerAngle.getPitch());
 
 		while (entity.getPitch() - entity.prevPitch >= 180.0F)
 		{

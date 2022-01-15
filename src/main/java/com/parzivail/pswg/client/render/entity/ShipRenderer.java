@@ -5,6 +5,7 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Quaternion;
 
 public abstract class ShipRenderer<T extends ShipEntity> extends EntityRenderer<T>
 {
@@ -22,6 +23,8 @@ public abstract class ShipRenderer<T extends ShipEntity> extends EntityRenderer<
 		var r = entity.getViewRotation(tickDelta);
 		matrix.multiply(r);
 
+		// Model is in Z-up space
+		matrix.multiply(new Quaternion(-90, 0, 0, true));
 		renderModel(entity, yaw, tickDelta, matrix, vertexConsumers, light);
 
 		matrix.pop();

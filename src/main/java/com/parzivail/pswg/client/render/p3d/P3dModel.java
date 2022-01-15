@@ -11,6 +11,7 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
+import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ public class P3dModel
 
 	private static final String MODEL_MAGIC = "P3D";
 	private static final String RIG_MAGIC = "P3DR";
-	private static final int[] ACCEPTED_VERSIONS = { 0x01 };
+	private static final int[] ACCEPTED_VERSIONS = { 0x02 };
 
 	public final int version;
 	public final HashMap<String, P3dSocket> transformables;
@@ -58,6 +59,8 @@ public class P3dModel
 		entry.getPositionMatrix().multiply(o.transform);
 		entry.getNormalMatrix().multiply(new Matrix3f(o.transform));
 
+		// TODO: find way to move this to the mesh compiler
+		entry.getPositionMatrix().multiply(new Quaternion(90, 0, 0, true));
 		if (transformer != null)
 		{
 			var transform = transformer.transform(target, o.name, tickDelta);
@@ -71,6 +74,7 @@ public class P3dModel
 			entry.getPositionMatrix().multiply(transform);
 			entry.getNormalMatrix().multiply(new Matrix3f(transform));
 		}
+		entry.getPositionMatrix().multiply(new Quaternion(-90, 0, 0, true));
 
 		var modelMat = entry.getPositionMatrix();
 		var normalMat = entry.getNormalMatrix();
@@ -78,10 +82,10 @@ public class P3dModel
 		for (var face : o.faces)
 		{
 			// TODO: un-smooth normals
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[0], face.normal[0], face.texture[0]);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], face.normal[1], face.texture[1]);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], face.normal[2], face.texture[2]);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], face.normal[3], face.texture[3]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[0], face.normal, face.texture[0]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], face.normal, face.texture[1]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], face.normal, face.texture[2]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], face.normal, face.texture[3]);
 		}
 
 		for (var mesh : o.children)
@@ -133,7 +137,8 @@ public class P3dModel
 		var version = objStream.readInt();
 
 		if (!ArrayUtils.contains(ACCEPTED_VERSIONS, version))
-			throw new IOException(String.format("Input file version is 0x%s, expected one of: %s", Integer.toHexString(version), getAcceptedVersionString()));
+			return null;
+//			throw new IOException(String.format("Input file version is 0x%s, expected one of: %s", Integer.toHexString(version), getAcceptedVersionString()));
 
 		// read sockets
 		var numSockets = objStream.readInt();
@@ -201,13 +206,13 @@ public class P3dModel
 		for (var faceIdx = 0; faceIdx < numFaces; faceIdx++)
 		{
 			var positions = new Vec3f[4];
-			var normal = new Vec3f[4];
 			var texture = new Vec3f[4];
+
+			var normal = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
 
 			for (var vertIdx = 0; vertIdx < 4; vertIdx++)
 			{
 				positions[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
-				normal[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
 				texture[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), 0);
 			}
 

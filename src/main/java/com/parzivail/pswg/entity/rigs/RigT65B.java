@@ -43,8 +43,8 @@ public class RigT65B extends ModelRig<T65BXwing>
 
 			switch (part)
 			{
-				case "WingTopLeft", "WingBottomRight" -> matrix4f.multiply(new Quaternion(0, wingAngle, 0, true));
-				case "WingBottomLeft", "WingTopRight" -> matrix4f.multiply(new Quaternion(0, -wingAngle, 0, true));
+				case "WingTopLeft", "WingBottomRight" -> matrix4f.multiply(new Quaternion(0, 0, -wingAngle, true));
+				case "WingBottomLeft", "WingTopRight" -> matrix4f.multiply(new Quaternion(0, 0, wingAngle, true));
 				default -> throw new IndexOutOfBoundsException();
 			}
 		}
