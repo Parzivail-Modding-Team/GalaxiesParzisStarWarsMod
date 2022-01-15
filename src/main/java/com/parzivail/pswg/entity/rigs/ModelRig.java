@@ -32,10 +32,7 @@ public abstract class ModelRig<T>
 			mat.multiply(getPartTransformation(target, part.name, tickDelta));
 		}
 
-		// TODO: find way to move this to the mesh compiler
-		mat.multiply(new Quaternion(-90, 0, 0, true));
 		mat.multiply(socket.transform);
-		mat.multiply(new Quaternion(90, 0, 0, true));
 
 		return mat;
 	}

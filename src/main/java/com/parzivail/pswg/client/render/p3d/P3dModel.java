@@ -11,7 +11,6 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
@@ -59,8 +58,6 @@ public class P3dModel
 		entry.getPositionMatrix().multiply(o.transform);
 		entry.getNormalMatrix().multiply(new Matrix3f(o.transform));
 
-		// TODO: find way to move this to the mesh compiler
-		entry.getPositionMatrix().multiply(new Quaternion(90, 0, 0, true));
 		if (transformer != null)
 		{
 			var transform = transformer.transform(target, o.name, tickDelta);
@@ -74,7 +71,6 @@ public class P3dModel
 			entry.getPositionMatrix().multiply(transform);
 			entry.getNormalMatrix().multiply(new Matrix3f(transform));
 		}
-		entry.getPositionMatrix().multiply(new Quaternion(-90, 0, 0, true));
 
 		var modelMat = entry.getPositionMatrix();
 		var normalMat = entry.getNormalMatrix();
