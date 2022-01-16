@@ -77,7 +77,6 @@ public class P3dModel
 
 		for (var face : o.faces)
 		{
-			// TODO: un-smooth normals
 			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[0], face.normal, face.texture[0]);
 			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], face.normal, face.texture[1]);
 			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], face.normal, face.texture[2]);

@@ -143,17 +143,14 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		if (renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.FIXED)
 		{
-			matrices.multiply(new Quaternion(90, 0, 0, true));
-			matrices.multiply(new Quaternion(0, 0, -90, true));
+			matrices.multiply(new Quaternion(0, 90, 0, true));
 
 			if (renderMode == ModelTransformation.Mode.FIXED)
-			{
-				matrices.multiply(new Quaternion(0, 0, 180, true));
-				matrices.translate(-0.5f, 0, 0);
 				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
-			}
+			else
+				matrices.multiply(new Quaternion(0, 180, 0, true));
 
-			var angle = (float)(Math.PI / 4) * 5;
+			var angle = (float)(Math.PI / 4);
 			matrices.multiply(new Quaternion(angle, 0, 0, false));
 
 			// TODO: bounds
@@ -170,10 +167,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		}
 		else if (renderMode.isFirstPerson())
 		{
-			//			matrices.translate(0, 1.2f, 0);
-			//			matrices.multiply(new Quaternion(4, 172, 0, true));
-			//			matrices.translate(0.2f, -0.2f, -1.2f);
-
 			var z = Client.blasterZoomInstance;
 
 			var adsZoom = 1 / bd.adsZoom;
@@ -224,6 +217,9 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					MathHelper.lerp(adsLerp, -1.2f, 0) - recoilKick * (0.4 + 0.55 * adsLerp)
 			);
 
+			// TODO: recalculate first person placement again without this
+			matrices.multiply(new Quaternion(0, 180, 0, true));
+
 			// TODO: left handed hold
 
 			var foreGripTransform = m.transformables.get("off_hand");
@@ -241,13 +237,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					var playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
 					matrices.push();
 
-					// TODO: remove this when the change-of-axis is fixed in the exporter
-					matrices.multiply(new Quaternion(-90, 0, 0, true));
 					matrices.multiplyPositionMatrix(foreGripTransform.transform);
-					matrices.multiply(new Quaternion(90, 0, 0, true));
 
-					MatrixStackUtil.scalePos(matrices, 4, 4, 4);
-					matrices.translate(-0.415f, -0.75f, 0);
+					MatrixStackUtil.scalePos(matrices, 4, 4, -4);
+					matrices.translate(-0.35f, -0.75f, 0);
 
 					skipPose = true;
 					playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
@@ -256,12 +249,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					matrices.pop();
 				}
 			}
-		}
-		else
-		{
-			matrices.translate(0, 0.9f, 0);
-			matrices.multiply(new Quaternion(0, 180, 0, true));
-			matrices.translate(0, -0.9f, 0);
 		}
 
 		var attachmentMap = getAttachmentMap(bd);
@@ -289,10 +276,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			{
 				matrices.push();
 
-				// TODO: remove this when the change-of-axis is fixed in the exporter
-				matrices.multiply(new Quaternion(-90, 0, 0, true));
 				matrices.multiplyPositionMatrix(muzzleFlashTransform.transform);
-				matrices.multiply(new Quaternion(90, 0, 0, true));
 
 				renderMuzzleFlash(renderMode, matrices, vertexConsumers, bt, bd, shotTime, opacity, light, overlay, d);
 
@@ -387,7 +371,12 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	public void modifyPose(LivingEntity entity, ItemStack stack, ModelPart head, ModelPart rightArm, ModelPart leftArm, LivingEntity livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
 		if (skipPose)
+		{
+			rightArm.setAngles(0, 0, 0);
+			leftArm.setAngles(0, 0, 0);
 			return;
+		}
+
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 		var bd = BlasterItem.getBlasterDescriptor(entity.world, stack);
 
@@ -454,13 +443,13 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	private static String getCoolingModeString(BlasterTag bt)
 	{
 		return switch (bt.coolingMode)
-		{
-			case BlasterTag.COOLING_MODE_NONE -> "N";
-			case BlasterTag.COOLING_MODE_OVERHEAT -> "O";
-			case BlasterTag.COOLING_MODE_FORCED_BYPASS -> "FB";
-			case BlasterTag.COOLING_MODE_PENALTY_BYPASS -> "PB";
-			default -> String.valueOf(bt.coolingMode);
-		};
+				{
+					case BlasterTag.COOLING_MODE_NONE -> "N";
+					case BlasterTag.COOLING_MODE_OVERHEAT -> "O";
+					case BlasterTag.COOLING_MODE_FORCED_BYPASS -> "FB";
+					case BlasterTag.COOLING_MODE_PENALTY_BYPASS -> "PB";
+					default -> String.valueOf(bt.coolingMode);
+				};
 	}
 
 	private record ModelEntry(P3dModel model,

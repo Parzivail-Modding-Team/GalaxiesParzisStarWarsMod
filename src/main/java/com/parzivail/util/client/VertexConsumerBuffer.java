@@ -1,5 +1,6 @@
 package com.parzivail.util.client;
 
+import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
@@ -104,5 +105,15 @@ public enum VertexConsumerBuffer
 
 		vertex((float)start.x, (float)start.y, (float)start.z, (float)normal.x, (float)normal.y, (float)normal.z,0, 0);
 		vertex((float)end.x, (float)end.y, (float)end.z, (float)normal.x, (float)normal.y, (float)normal.z,0, 0);
+	}
+
+	public void axes(float scale)
+	{
+		setColor(1, 0, 0, 1);
+		line(Vec3d.ZERO, MathUtil.POSX.multiply(scale));
+		setColor(0, 1, 0, 1);
+		line(Vec3d.ZERO, MathUtil.POSY.multiply(scale));
+		setColor(0, 0, 1, 1);
+		line(Vec3d.ZERO, MathUtil.POSZ.multiply(scale));
 	}
 }
