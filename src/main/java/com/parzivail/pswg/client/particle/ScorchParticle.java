@@ -25,7 +25,7 @@ public class ScorchParticle extends DecalParticle
 		super(clientWorld, x, y, z, spriteProvider);
 		this.velocityMultiplier = 1;
 		this.scale = 0.1f;
-		this.setColorAlpha(1.0F);
+		this.setAlpha(1.0F);
 		var a = MathHelper.lerp(heat, 1, MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1));
 		this.setColor(MathHelper.clamp(getRed(a), 0, 1), MathHelper.clamp(getGreen(a), 0, 1), MathHelper.clamp(getBlue(a), 0, 1));
 		this.maxAge = 200;
@@ -88,7 +88,7 @@ public class ScorchParticle extends DecalParticle
 		{
 			var halfAge = this.maxAge / 2f;
 			if (this.age > halfAge)
-				this.setColorAlpha(1 - (this.age - halfAge) / halfAge);
+				this.setAlpha(1 - (this.age - halfAge) / halfAge);
 
 			this.setSprite(spriteProvider.getSprite(this.variant, NUM_VARIANTS));
 			var a = MathHelper.lerp(heat, 1, MathHelper.clamp((this.age / (float)this.maxAge) * 2f, 0, 1));

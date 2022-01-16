@@ -3,7 +3,7 @@ import java.util.regex.Pattern
 
 plugins {
 	id("fabric-loom") version "0.10-SNAPSHOT"
-	id("io.github.juuxel.loom-quiltflower-mini") version "1.1.0"
+	id("io.github.juuxel.loom-quiltflower-mini") version "1.2.1"
 	`maven-publish`
 }
 

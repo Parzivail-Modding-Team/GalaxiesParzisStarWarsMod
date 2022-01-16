@@ -26,7 +26,7 @@ public class DecalParticle extends AnimatedParticle
 
 		this.setSpriteForAge(this.spriteProvider);
 		if (this.age > this.maxAge / 2)
-			this.setColorAlpha(1.0F - ((float)this.age - (float)(this.maxAge / 2)) / (float)this.maxAge);
+			this.setAlpha(1.0F - ((float)this.age - (float)(this.maxAge / 2)) / (float)this.maxAge);
 
 		var normal = new Vec3d(velocityX, velocityY, velocityZ).normalize();
 		var pos = new Vec3d(this.x, this.y, this.z);
@@ -75,9 +75,9 @@ public class DecalParticle extends AnimatedParticle
 			vec3f2.add(f, g, h);
 		}
 
-		vertexConsumer.vertex(corners[3].getX(), corners[3].getY(), corners[3].getZ()).texture(m, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
-		vertexConsumer.vertex(corners[2].getX(), corners[2].getY(), corners[2].getZ()).texture(m, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
-		vertexConsumer.vertex(corners[1].getX(), corners[1].getY(), corners[1].getZ()).texture(l, n).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
-		vertexConsumer.vertex(corners[0].getX(), corners[0].getY(), corners[0].getZ()).texture(l, o).color(this.colorRed, this.colorGreen, this.colorBlue, this.colorAlpha).light(p).next();
+		vertexConsumer.vertex(corners[3].getX(), corners[3].getY(), corners[3].getZ()).texture(m, o).color(this.red, this.green, this.blue, this.alpha).light(p).next();
+		vertexConsumer.vertex(corners[2].getX(), corners[2].getY(), corners[2].getZ()).texture(m, n).color(this.red, this.green, this.blue, this.alpha).light(p).next();
+		vertexConsumer.vertex(corners[1].getX(), corners[1].getY(), corners[1].getZ()).texture(l, n).color(this.red, this.green, this.blue, this.alpha).light(p).next();
+		vertexConsumer.vertex(corners[0].getX(), corners[0].getY(), corners[0].getZ()).texture(l, o).color(this.red, this.green, this.blue, this.alpha).light(p).next();
 	}
 }

@@ -21,7 +21,7 @@ public class SparkParticle extends CrossPointingParticle
 		super(clientWorld, x, y, z, spriteProvider);
 		this.velocityMultiplier = 1;
 		this.scale = (float)(Math.random() * 0.05 + 0.06);
-		this.setColorAlpha(1.0F);
+		this.setAlpha(1.0F);
 		this.setColor(1, 0, 0);
 		this.maxAge = (int)(Math.random() * 10 + 5);
 		this.setSpriteForAge(spriteProvider);
@@ -60,7 +60,7 @@ public class SparkParticle extends CrossPointingParticle
 			this.setSpriteForAge(this.spriteProvider);
 			if (this.age > this.maxAge / 2)
 			{
-				this.setColorAlpha(1.0F - ((float)this.age - (float)(this.maxAge / 2)) / (float)this.maxAge);
+				this.setAlpha(1.0F - ((float)this.age - (float)(this.maxAge / 2)) / (float)this.maxAge);
 			}
 
 			if (this.world.getBlockState(new BlockPos(this.x, this.y, this.z)).isAir())
