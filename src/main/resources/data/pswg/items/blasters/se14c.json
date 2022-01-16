@@ -10,7 +10,7 @@
 	"range": 188.0,
 	"weight": 6.7,
 	"boltColor": 0.98,
-	"magazineSize": 24,
+	"magazineSize": 500,
 	"automaticRepeatTime": 4,
 	"burstRepeatTime": 2,
 	"burstSize": 5,

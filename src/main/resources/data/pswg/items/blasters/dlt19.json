@@ -9,7 +9,7 @@
 	"range": 188.0,
 	"weight": 6.7,
 	"boltColor": 0.98,
-	"magazineSize": 24,
+	"magazineSize": 300,
 	"automaticRepeatTime": 2,
 	"recoil": {
 		"horizontal": 1.5,

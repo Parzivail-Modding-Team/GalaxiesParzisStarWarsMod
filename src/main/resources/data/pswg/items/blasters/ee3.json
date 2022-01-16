@@ -9,7 +9,7 @@
 	"range": 100.0,
 	"weight": 2.9,
 	"boltColor": 0.98,
-	"magazineSize": 100,
+	"magazineSize": 400,
 	"burstRepeatTime": 2,
 	"burstSize": 3,
 	"recoil": {
