@@ -94,6 +94,9 @@ class ExportP3DI(bpy.types.Operator, ExportHelper):
         }
 
         for o in context.scene.objects:
+            if (not o.visible_get()):
+                continue
+            
             parentType = o.parent_type
 
             if parentType != "OBJECT":
