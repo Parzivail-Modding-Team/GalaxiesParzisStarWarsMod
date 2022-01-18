@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class BlasterDescriptor
 {
 	public Identifier id;
+	public Identifier sound;
 	public BlasterArchetype type;
 	public ArrayList<BlasterFiringMode> firingModes;
 	public float damage;
@@ -33,9 +34,10 @@ public class BlasterDescriptor
 	public int attachmentMinimum;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
 
-	public BlasterDescriptor(Identifier id, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, short automaticRepeatTime, short burstRepeatTime, short burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, int attachmentDefault, int attachmentMinimum, HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap)
+	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, ArrayList<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, short automaticRepeatTime, short burstRepeatTime, short burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, int attachmentDefault, int attachmentMinimum, HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap)
 	{
 		this.id = id;
+		this.sound = sound;
 		this.type = type;
 		this.firingModes = firingModes;
 		this.damage = damage;

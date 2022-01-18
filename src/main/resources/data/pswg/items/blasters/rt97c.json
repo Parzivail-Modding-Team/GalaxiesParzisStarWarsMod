@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "heavy",
+	"sound": "pswg:rt97c",
 	"firingModes": [
 		"auto",
 		"stun"

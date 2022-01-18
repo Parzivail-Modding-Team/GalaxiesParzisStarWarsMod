@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.render.camera;
 
+import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -53,7 +54,7 @@ public class CameraHelper
 			ci.cancel();
 	}
 
-	public static void renderWorldHead(float tickDelta, long limitTime, MatrixStack matrix)
+	public static void renderWorldHead(float tickDelta, long limitTime, MatrixStack matrix, Camera camera)
 	{
 		var minecraft = MinecraftClient.getInstance();
 		var player = minecraft.player;
@@ -89,5 +90,12 @@ public class CameraHelper
 		var ship = ShipEntity.getShip(abstractClientPlayerEntity);
 		if (ship != null && !ship.usePlayerPerspective())
 			ci.cancel();
+	}
+
+	public static void applyCameraShake(float tickDelta, long limitTime, MatrixStack matrix, Camera camera, double fov)
+	{
+		var minecraft = MinecraftClient.getInstance();
+
+		RecoilManager.applyCameraShake(minecraft, matrix, camera, tickDelta, fov);
 	}
 }

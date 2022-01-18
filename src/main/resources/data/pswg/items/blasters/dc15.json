@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "heavy",
+	"sound": "pswg:dc15",
 	"firingModes": [
 		"auto",
 		"stun"

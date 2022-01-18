@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "pistol",
+	"sound": "pswg:se14c",
 	"firingModes": [
 		"semi",
 		"burst",

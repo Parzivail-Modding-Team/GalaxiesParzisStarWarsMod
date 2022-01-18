@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "rifle",
+	"sound": "pswg:ee3",
 	"firingModes": [
 		"burst",
 		"stun"

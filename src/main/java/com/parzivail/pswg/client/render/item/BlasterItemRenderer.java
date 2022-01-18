@@ -108,7 +108,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	{
 		var tag = stack.getOrCreateNbt();
 
-		Identifier bdId = BlasterItem.getBlasterModel(tag);
+		var bdId = BlasterItem.getBlasterModel(tag);
 		var bt = new BlasterTag(tag);
 
 		var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, stack);
@@ -131,8 +131,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		MatrixStackUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
 
-		//		var bounds = m.bounds();
-
 		var d = MinecraftClient.getInstance().getTickDelta();
 		var opacity = 1f;
 
@@ -153,17 +151,16 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var angle = (float)(Math.PI / 4);
 			matrices.multiply(new Quaternion(angle, 0, 0, false));
 
-			// TODO: bounds
-			//			var yi = bounds.getYLength() * Math.abs(Math.sin(angle)) + bounds.getZLength() * Math.abs(Math.cos(angle));
-			//			var zi = bounds.getYLength() * Math.abs(Math.cos(angle)) + bounds.getZLength() * Math.abs(Math.sin(angle));
-			//
-			//			if (renderMode != ModelTransformation.Mode.FIXED)
-			//			{
-			//				var f = (float)(5 / Math.max(yi, zi));
-			//				MatrixStackUtil.multiplyPos(matrices, f, f, f);
-			//			}
-			//
-			//			matrices.translate(0, (float)-bounds.minY - bounds.getYLength() / 2f, (float)-bounds.minZ - bounds.getZLength() / 2f);
+			var yi = m.bounds.getYLength() * Math.abs(Math.sin(angle)) + m.bounds.getZLength() * Math.abs(Math.cos(angle));
+			var zi = m.bounds.getYLength() * Math.abs(Math.cos(angle)) + m.bounds.getZLength() * Math.abs(Math.sin(angle));
+
+			if (renderMode != ModelTransformation.Mode.FIXED)
+			{
+				var f = (float)(5 / Math.max(yi, zi));
+				MatrixStackUtil.scalePos(matrices, f, f, f);
+			}
+
+			matrices.translate(0, (float)-m.bounds.minY - m.bounds.getYLength() / 2f, (float)-m.bounds.minZ - m.bounds.getZLength() / 2f);
 		}
 		else if (renderMode.isFirstPerson())
 		{

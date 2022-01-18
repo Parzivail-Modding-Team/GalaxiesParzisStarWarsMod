@@ -195,6 +195,7 @@ public class Tarkin
 		}
 
 		// Autoconfig
+		// TODO: generate all of this with reflection
 		var autoconfig = lang.cloneWithRoot("text").dot("autoconfig").modid();
 		autoconfig.dot("title").build(assets);
 
@@ -219,6 +220,9 @@ public class Tarkin
 
 		autoconfigOptionView.dot("shipCameraSpeedDistance").build(assets);
 		autoconfigOptionView.dot("shipCameraSpeedDistance").dot("@Tooltip").build(assets);
+
+		autoconfigOptionView.dot("enableScreenShake").build(assets);
+		autoconfigOptionView.dot("enableScreenShake").dot("@Tooltip").build(assets);
 	}
 
 	private static void generateRecipes(List<BuiltAsset> assets)

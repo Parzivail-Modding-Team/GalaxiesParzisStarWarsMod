@@ -26,6 +26,15 @@ import java.util.stream.Collectors;
 
 public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
+	private static class IdentifierDeserializer implements JsonDeserializer<Identifier>
+	{
+		@Override
+		public Identifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
+		{
+			return new Identifier(json.getAsString());
+		}
+	}
+
 	private static class EulerAngleDeserializer implements JsonDeserializer<EulerAngle>
 	{
 		@Override
@@ -133,6 +142,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 						.registerTypeAdapter(BlasterArchetype.class, new BlasterArchetypeAdapter())
 						.registerTypeAdapter(Vec3d.class, new Vec3dDeserializer())
 						.registerTypeAdapter(EulerAngle.class, new EulerAngleDeserializer())
+						.registerTypeAdapter(Identifier.class, new IdentifierDeserializer())
 						.registerTypeAdapter(TypeToken.getParameterized(ArrayList.class, BlasterFiringMode.class).getType(), new BlasterFiringModesAdapter())
 						.registerTypeAdapter(TypeToken.getParameterized(HashMap.class, Integer.class, BlasterAttachmentDescriptor.class).getType(), new BlasterAttachmentDescriptorDeserializer())
 						.create(),
@@ -178,6 +188,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 	protected void writeDataEntry(PacketByteBuf buf, BlasterDescriptor value)
 	{
+		buf.writeString(value.sound.toString());
+
 		buf.writeByte(value.type.getId());
 		buf.writeShort(BlasterFiringMode.pack(value.firingModes));
 
@@ -232,6 +244,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 	protected BlasterDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
 	{
+		var sound = new Identifier(buf.readString());
+
 		var archetype = BlasterArchetype.ID_LOOKUP.get(buf.readByte());
 		var firingModes = BlasterFiringMode.unpack(buf.readShort());
 
@@ -284,6 +298,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 		return new BlasterDescriptor(
 				key,
+				sound,
 				archetype,
 				firingModes,
 				damage,
@@ -311,7 +326,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		if (version != 1)
 			throw new IllegalArgumentException("Can only parse version 1 blaster descriptors!");
 
-		var value = GSON.fromJson(jsonObject, BlasterDescriptor.class);
+		var value = GSON
+				.fromJson(jsonObject, BlasterDescriptor.class);
 		value.id = identifier;
 		return value;
 	}

@@ -2,19 +2,19 @@ package com.parzivail.pswg.client.render.pm3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
+import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.data.DataReader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public record PM3DFile(PM3DLod[] lods)
@@ -86,7 +86,7 @@ public record PM3DFile(PM3DLod[] lods)
 			var uvs = loadUvs(numUvs, objStream);
 			var objects = loadObjects(numObjects, objStream);
 
-			var bounds = getBounds(verts);
+			var bounds = ModelUtil.getBounds(List.of(verts));
 
 			lods[i] = new PM3DLod(modelFile, verts, normals, uvs, objects, bounds);
 		}
@@ -97,31 +97,6 @@ public record PM3DFile(PM3DLod[] lods)
 	private static String getAcceptedVersionString()
 	{
 		return Arrays.stream(ACCEPTED_VERSIONS).mapToObj(i -> "0x" + Integer.toHexString(i)).collect(Collectors.joining(", "));
-	}
-
-	private static Box getBounds(Vec3f[] verts)
-	{
-		var min = new Vec3f(Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE);
-		var max = new Vec3f(Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE);
-
-		for (var v : verts)
-		{
-			if (v.getX() < min.getX())
-				min.set(v.getX(), min.getY(), min.getZ());
-			if (v.getY() < min.getY())
-				min.set(min.getX(), v.getY(), min.getZ());
-			if (v.getZ() < min.getZ())
-				min.set(min.getX(), min.getY(), v.getZ());
-
-			if (v.getX() > max.getX())
-				max.set(v.getX(), max.getY(), max.getZ());
-			if (v.getY() > max.getY())
-				max.set(max.getX(), v.getY(), max.getZ());
-			if (v.getZ() > max.getZ())
-				max.set(max.getX(), max.getY(), v.getZ());
-		}
-
-		return new Box(new Vec3d(min), new Vec3d(max));
 	}
 
 	private static Vec3f[] loadVerts(int num, LittleEndianDataInputStream objStream, boolean blockOffset) throws IOException

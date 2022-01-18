@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "pistol",
+	"sound": "pswg:rk3",
 	"firingModes": [
 		"semi",
 		"stun"

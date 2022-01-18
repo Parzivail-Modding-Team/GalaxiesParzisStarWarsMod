@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "pistol",
+	"sound": "pswg:dl44",
 	"firingModes": [
 		"semi",
 		"stun"

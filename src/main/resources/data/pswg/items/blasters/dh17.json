@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "pistol",
+	"sound": "pswg:dh17",
 	"firingModes": [
 		"auto",
 		"stun"

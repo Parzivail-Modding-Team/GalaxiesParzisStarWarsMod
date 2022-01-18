@@ -434,6 +434,8 @@
 	"text.autoconfig.pswg.option.input.shipRollPriority.@Tooltip": "Sets whether mouse inputs should be pitch and yaw, or pitch and roll",
 	"text.autoconfig.pswg.option.view": "View",
 	"text.autoconfig.pswg.option.view.@Tooltip": "Here you can change your rendering preferences.",
+	"text.autoconfig.pswg.option.view.enableScreenShake": "Screen Shake",
+	"text.autoconfig.pswg.option.view.enableScreenShake.@Tooltip": "Enables or disables screen shake",
 	"text.autoconfig.pswg.option.view.shipCameraBaseDistance": "Ship Camera Base Distance",
 	"text.autoconfig.pswg.option.view.shipCameraBaseDistance.@Tooltip": "Scales the base distance of ships' third person cameras",
 	"text.autoconfig.pswg.option.view.shipCameraSpeedDistance": "Ship Camera Speed Distance",

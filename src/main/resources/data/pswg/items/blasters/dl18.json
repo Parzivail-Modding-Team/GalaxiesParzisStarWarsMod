@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "pistol",
+	"sound": "pswg:dl18",
 	"firingModes": [
 		"semi",
 		"stun"

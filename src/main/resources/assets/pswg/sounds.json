@@ -60,9 +60,24 @@
 			"pswg:blaster/cycler"
 		]
 	},
+	"blaster.fire.dc15": {
+		"sounds": [
+			"pswg:blaster/dc15"
+		]
+	},
+	"blaster.fire.dc17": {
+		"sounds": [
+			"pswg:blaster/dc17"
+		]
+	},
 	"blaster.fire.dh17": {
 		"sounds": [
 			"pswg:blaster/dh17"
+		]
+	},
+	"blaster.fire.dl18": {
+		"sounds": [
+			"pswg:blaster/dl18"
 		]
 	},
 	"blaster.fire.dl44": {
@@ -70,14 +85,14 @@
 			"pswg:blaster/dl44"
 		]
 	},
-	"blaster.fire.dlt19": {
-		"sounds": [
-			"pswg:blaster/dlt19"
-		]
-	},
 	"blaster.fire.dlt19d": {
 		"sounds": [
 			"pswg:blaster/dlt19d"
+		]
+	},
+	"blaster.fire.dlt19": {
+		"sounds": [
+			"pswg:blaster/dlt19"
 		]
 	},
 	"blaster.fire.dlt20a": {
@@ -95,11 +110,6 @@
 			"pswg:blaster/ee3"
 		]
 	},
-	"blaster.fire.rk3": {
-		"sounds": [
-			"pswg:blaster/rk3"
-		]
-	},
 	"blaster.fire.eweb": {
 		"sounds": [
 			"pswg:blaster/eweb"
@@ -110,19 +120,14 @@
 			"pswg:blaster/ion"
 		]
 	},
+	"blaster.fire.rk3": {
+		"sounds": [
+			"pswg:blaster/rk3"
+		]
+	},
 	"blaster.fire.rt97c": {
 		"sounds": [
 			"pswg:blaster/rt97c"
-		]
-	},
-	"blaster.fire.t21": {
-		"sounds": [
-			"pswg:blaster/t21"
-		]
-	},
-	"blaster.fire.t21b": {
-		"sounds": [
-			"pswg:blaster/t21b"
 		]
 	},
 	"blaster.fire.se14c": {
@@ -130,34 +135,14 @@
 			"pswg:blaster/se14c"
 		]
 	},
-	"blaster.fire.dl18": {
+	"blaster.fire.t21b": {
 		"sounds": [
-			"pswg:blaster/dl18"
+			"pswg:blaster/t21b"
 		]
 	},
-	"blaster.fire.scout": {
+	"blaster.fire.t21": {
 		"sounds": [
-			"pswg:blaster/dl44"
-		]
-	},
-	"blaster.fire.defender": {
-		"sounds": [
-			"pswg:blaster/dl44"
-		]
-	},
-	"blaster.fire.dl21": {
-		"sounds": [
-			"pswg:blaster/dl44"
-		]
-	},
-	"blaster.fire.dc15": {
-		"sounds": [
-			"pswg:blaster/dc15"
-		]
-	},
-	"blaster.fire.dc17": {
-		"sounds": [
-			"pswg:blaster/dc17"
+			"pswg:blaster/t21"
 		]
 	},
 	"ship.blaster.fire.xwingt65b": {

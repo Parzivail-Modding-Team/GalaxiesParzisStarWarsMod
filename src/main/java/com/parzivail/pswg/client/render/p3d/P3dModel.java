@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.p3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
+import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.data.DataReader;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
@@ -9,6 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
@@ -17,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Collectors;
@@ -36,12 +39,14 @@ public class P3dModel
 	public final int version;
 	public final HashMap<String, P3dSocket> transformables;
 	public final P3dObject[] rootObjects;
+	public final Box bounds;
 
-	public P3dModel(int version, HashMap<String, P3dSocket> transformables, P3dObject[] rootObjects)
+	public P3dModel(int version, HashMap<String, P3dSocket> transformables, P3dObject[] rootObjects, Box bounds)
 	{
 		this.version = version;
 		this.transformables = transformables;
 		this.rootObjects = rootObjects;
+		this.bounds = bounds;
 	}
 
 	public <T> void render(MatrixStack matrix, VertexConsumer vertexConsumer, T target, PartTransformer<T> transformer, int light, float tickDelta)
@@ -132,8 +137,7 @@ public class P3dModel
 		var version = objStream.readInt();
 
 		if (!ArrayUtils.contains(ACCEPTED_VERSIONS, version))
-			return null;
-//			throw new IOException(String.format("Input file version is 0x%s, expected one of: %s", Integer.toHexString(version), getAcceptedVersionString()));
+			throw new IOException(String.format("Input file version is 0x%s, expected one of: %s", Integer.toHexString(version), getAcceptedVersionString()));
 
 		// read sockets
 		var numSockets = objStream.readInt();
@@ -158,9 +162,11 @@ public class P3dModel
 		var numObjects = objStream.readInt();
 		var rootObjects = new P3dObject[numObjects];
 
+		var rawVertices = new ArrayList<Vec3f>();
+
 		for (var objectIdx = 0; objectIdx < numObjects; objectIdx++)
 		{
-			var object = readObject(transformables, null, objStream, hasVertexData);
+			var object = readObject(transformables, null, objStream, hasVertexData, rawVertices);
 			transformables.put(object.name, object);
 
 			rootObjects[objectIdx] = object;
@@ -169,7 +175,9 @@ public class P3dModel
 		// build ancestry trees for sockets and parts which enables directly calculating transformation
 		buildAncestry(transformables);
 
-		return new P3dModel(version, transformables, rootObjects);
+		var bounds = ModelUtil.getBounds(rawVertices);
+
+		return new P3dModel(version, transformables, rootObjects, bounds);
 	}
 
 	private static void buildAncestry(HashMap<String, P3dSocket> parts)
@@ -187,7 +195,7 @@ public class P3dModel
 	}
 
 	@NotNull
-	private static P3dObject readObject(HashMap<String, P3dSocket> objects, String parent, LittleEndianDataInputStream objStream, boolean hasVertexData) throws IOException
+	private static P3dObject readObject(HashMap<String, P3dSocket> objects, String parent, LittleEndianDataInputStream objStream, boolean hasVertexData, ArrayList<Vec3f> rawVertices) throws IOException
 	{
 		var name = DataReader.readNullTerminatedString(objStream);
 
@@ -209,6 +217,8 @@ public class P3dModel
 			{
 				positions[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
 				texture[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), 0);
+
+				rawVertices.add(positions[vertIdx]);
 			}
 
 			faces[faceIdx] = new P3dFace(positions, normal, texture);
@@ -219,7 +229,7 @@ public class P3dModel
 
 		for (var childIdx = 0; childIdx < numChildren; childIdx++)
 		{
-			var m = readObject(objects, name, objStream, hasVertexData);
+			var m = readObject(objects, name, objStream, hasVertexData, rawVertices);
 			objects.put(m.name, m);
 			children[childIdx] = m;
 		}

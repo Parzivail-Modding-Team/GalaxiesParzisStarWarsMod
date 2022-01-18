@@ -28,6 +28,10 @@ public class Config implements ConfigData
 		@Comment("Scales the speed-varying distance of ships' third person cameras")
 		@ConfigEntry.Gui.Tooltip
 		public float shipCameraSpeedDistance = 1;
+
+		@Comment("Enables or disables screen shake")
+		@ConfigEntry.Gui.Tooltip
+		public boolean enableScreenShake = true;
 	}
 
 	@ConfigEntry.Gui.CollapsibleObject

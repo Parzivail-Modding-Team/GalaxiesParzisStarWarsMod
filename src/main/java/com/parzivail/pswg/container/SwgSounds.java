@@ -5,6 +5,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class SwgSounds
@@ -61,32 +62,35 @@ public class SwgSounds
 		public static final SoundEvent DRYFIRE = of(Resources.id("blaster.dryfire"));
 		public static final SoundEvent STUN = of(Resources.id("blaster.stun"));
 		public static final SoundEvent FIRE_A280 = of(Resources.id("blaster.fire.a280"));
-		public static final SoundEvent FIRE_BIKE = of(Resources.id("blaster.fire.bike"));
-		public static final SoundEvent FIRE_BOWCASTER = of(Resources.id("blaster.fire.bowcaster"));
 		public static final SoundEvent FIRE_CYCLER = of(Resources.id("blaster.fire.cycler"));
-		public static final SoundEvent FIRE_DH17 = of(Resources.id("blaster.fire.dh17"));
-		public static final SoundEvent FIRE_DC15 = of(Resources.id("blaster.fire.dc15"));
-		public static final SoundEvent FIRE_DC17 = of(Resources.id("blaster.fire.dc17"));
-		public static final SoundEvent FIRE_DL44 = of(Resources.id("blaster.fire.dl44"));
-		public static final SoundEvent FIRE_DLT19 = of(Resources.id("blaster.fire.dlt19"));
-		public static final SoundEvent FIRE_DLT19D = of(Resources.id("blaster.fire.dlt19d"));
-		public static final SoundEvent FIRE_DLT20A = of(Resources.id("blaster.fire.dlt20a"));
-		public static final SoundEvent FIRE_EE3 = of(Resources.id("blaster.fire.ee3"));
-		public static final SoundEvent FIRE_RK3 = of(Resources.id("blaster.fire.rk3"));
-		public static final SoundEvent FIRE_E11 = of(Resources.id("blaster.fire.e11"));
-		public static final SoundEvent FIRE_EWEB = of(Resources.id("blaster.fire.eweb"));
 		public static final SoundEvent FIRE_ION = of(Resources.id("blaster.fire.ion"));
-		public static final SoundEvent FIRE_RT97C = of(Resources.id("blaster.fire.rt97c"));
-		public static final SoundEvent FIRE_T21 = of(Resources.id("blaster.fire.t21"));
-		public static final SoundEvent FIRE_T21B = of(Resources.id("blaster.fire.t21b"));
-		public static final SoundEvent FIRE_SE14C = of(Resources.id("blaster.fire.se14c"));
-		public static final SoundEvent FIRE_DL18 = of(Resources.id("blaster.fire.dl18"));
-		public static final SoundEvent FIRE_SCOUT = of(Resources.id("blaster.fire.dl44"));
-		public static final SoundEvent FIRE_DEFENDER = of(Resources.id("blaster.fire.dl44"));
-		public static final SoundEvent FIRE_DL21 = of(Resources.id("blaster.fire.dl44"));
 
 		private static void register()
 		{
+			// register dynamic events
+			Arrays.stream(new Identifier[] {
+					Resources.id("blaster.fire.a280"),
+					Resources.id("blaster.fire.bike"),
+					Resources.id("blaster.fire.bowcaster"),
+					Resources.id("blaster.fire.cycler"),
+					Resources.id("blaster.fire.dc15"),
+					Resources.id("blaster.fire.dc17"),
+					Resources.id("blaster.fire.dh17"),
+					Resources.id("blaster.fire.dl18"),
+					Resources.id("blaster.fire.dl44"),
+					Resources.id("blaster.fire.dlt19d"),
+					Resources.id("blaster.fire.dlt19"),
+					Resources.id("blaster.fire.dlt20a"),
+					Resources.id("blaster.fire.e11"),
+					Resources.id("blaster.fire.ee3"),
+					Resources.id("blaster.fire.eweb"),
+					Resources.id("blaster.fire.ion"),
+					Resources.id("blaster.fire.rk3"),
+					Resources.id("blaster.fire.rt97c"),
+					Resources.id("blaster.fire.se14c"),
+					Resources.id("blaster.fire.t21b"),
+					Resources.id("blaster.fire.t21")
+			}).forEach(SwgSounds::of);
 		}
 	}
 

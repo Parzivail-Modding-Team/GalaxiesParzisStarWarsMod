@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "rifle",
+	"sound": "pswg:dc15",
 	"firingModes": [
 		"semi",
 		"auto",

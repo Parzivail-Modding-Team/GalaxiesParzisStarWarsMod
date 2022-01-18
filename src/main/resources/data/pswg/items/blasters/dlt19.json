@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "heavy",
+	"sound": "pswg:dlt19",
 	"firingModes": [
 		"auto",
 		"stun"

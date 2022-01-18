@@ -1,6 +1,7 @@
 {
 	"version": 1,
 	"type": "ion",
+	"sound": "pswg:ion",
 	"firingModes": [
 		"ion"
 	],
