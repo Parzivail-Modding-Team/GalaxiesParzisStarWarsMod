@@ -50,9 +50,9 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
@@ -115,7 +115,7 @@ public class Client implements ClientModInitializer
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0xFFFFFF, SwgBlocks.Leaves.Japor);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0xFFFFFF, SwgBlocks.Leaves.Japor);
 
-		BlockEntityRendererRegistry.INSTANCE.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
+		BlockEntityRendererRegistry.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
 
 		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadPM3D(DynamicBakedModel.Discriminator.RENDER_SEED, Resources.id("models/block/barrel/mos_eisley.pm3d"), Resources.id("model/barrel/mos_eisley"), new Identifier("block/stone")));
 
@@ -201,17 +201,17 @@ public class Client implements ClientModInitializer
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> ModelRegistry.INSTANCE);
 
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Ship.T65bXwing, T65BXwingRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Speeder.X34, X34LandspeederRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterBolt, BlasterBoltRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterStunBolt, BlasterStunBoltRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.BlasterIonBolt, BlasterIonBoltRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.ThrownLightsaber, ThrownLightsaberRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Faa, FaaEntityRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Fish.Laa, LaaEntityRenderer::new);
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Amphibian.Worrt, WorrtEntityRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Ship.T65bXwing, T65BXwingRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Speeder.X34, X34LandspeederRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Misc.BlasterBolt, BlasterBoltRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Misc.BlasterStunBolt, BlasterStunBoltRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Misc.BlasterIonBolt, BlasterIonBoltRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Misc.ThrownLightsaber, ThrownLightsaberRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Fish.Faa, FaaEntityRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Fish.Laa, LaaEntityRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Amphibian.Worrt, WorrtEntityRenderer::new);
 
-		EntityRendererRegistry.INSTANCE.register(SwgEntities.Misc.KinematicTest, KinematicTestEntityRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Misc.KinematicTest, KinematicTestEntityRenderer::new);
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
