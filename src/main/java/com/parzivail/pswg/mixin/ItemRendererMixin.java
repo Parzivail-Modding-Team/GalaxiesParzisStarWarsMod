@@ -49,9 +49,9 @@ public abstract class ItemRendererMixin
 	@Inject(method = "renderGuiItemOverlay(Lnet/minecraft/client/font/TextRenderer;Lnet/minecraft/item/ItemStack;IILjava/lang/String;)V", at = @At("TAIL"))
 	private void renderGuiItemOverlay(TextRenderer renderer, ItemStack stack, int x, int y, String countLabel, CallbackInfo ci)
 	{
-		if (!stack.isEmpty() && stack.getItem() instanceof ICooldownItem)
+		var mc = MinecraftClient.getInstance();
+		if (!stack.isEmpty() && stack.getItem() instanceof ICooldownItem && mc.currentScreen == null)
 		{
-			var mc = MinecraftClient.getInstance();
 			var clientPlayerEntity = mc.player;
 			var f = clientPlayerEntity == null ? 0.0F : ((ICooldownItem)stack.getItem()).getCooldownProgress(clientPlayerEntity, clientPlayerEntity.world, stack, mc.getTickDelta());
 			if (f > 0.0F)
