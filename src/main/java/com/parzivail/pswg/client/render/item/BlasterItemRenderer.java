@@ -258,7 +258,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
 		m.render(matrices, vc, bt, getAttachmentTransformer(attachmentMap, attachmentMask), light, d);
 
-		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED)
+		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED && renderMode != ModelTransformation.Mode.GROUND)
 		{
 			var muzzleFlashSocket = "muzzle_flash";
 
