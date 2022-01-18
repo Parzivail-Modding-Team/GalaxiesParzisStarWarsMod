@@ -77,7 +77,7 @@ public class RecoilManager
 
 	public static void setRecoil(float vertical, float horizontal)
 	{
-		impulse = 10;
+		impulse = 8;
 		verticalVelocity = -vertical;
 		horizontalVelocity = horizontal;
 	}
@@ -94,8 +94,8 @@ public class RecoilManager
 		if (mc.player == null || !Resources.CONFIG.get().view.enableScreenShake)
 			return;
 
-		var t = (mc.player.age + tickDelta) * 0.65f;
-		var scale = 0.5f * Ease.inCubic(Math.max(impulse - tickDelta, 0) / 10) * (float)((fov - 13) / 60 + 1);
+		var t = (mc.player.age + tickDelta) * 0.95f;
+		var scale = 0.5f * Ease.inCubic(Math.max(impulse - tickDelta, 0) / 8) * (float)((fov - 13) / 60 + 1);
 		var x = scale * (horizontalVelocity + 1) * (float)Resources.SIMPLEX_0.noise2(0, t);
 		var y = scale * (verticalVelocity + 1) * (float)Resources.SIMPLEX_0.noise2(t, 0);
 		var z = scale * 1.1f * (float)Resources.SIMPLEX_0.noise2(t, t);
