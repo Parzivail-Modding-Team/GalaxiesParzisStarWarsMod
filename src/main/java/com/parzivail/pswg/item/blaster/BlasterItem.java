@@ -159,9 +159,11 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		return blasterManager.getDataAndAssert(getBlasterModel(stack));
 	}
 
-	public static BlasterDescriptor getBlasterDescriptorClient(ItemStack stack)
+	public static BlasterDescriptor getBlasterDescriptorClient(ItemStack stack, boolean allowNull)
 	{
 		var blasterManager = Client.ResourceManagers.getBlasterManager();
+		if (allowNull)
+			return blasterManager.getData(getBlasterModel(stack));
 		return blasterManager.getDataAndAssert(getBlasterModel(stack));
 	}
 
@@ -483,7 +485,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		stack.getOrCreateNbt().putString("model", descriptor.id.toString());
 
-		var bd = getBlasterDescriptorClient(stack);
+		var bd = getBlasterDescriptorClient(stack, false);
 
 		BlasterTag.mutate(stack, blasterTag -> {
 			if (bd.firingModes.isEmpty())

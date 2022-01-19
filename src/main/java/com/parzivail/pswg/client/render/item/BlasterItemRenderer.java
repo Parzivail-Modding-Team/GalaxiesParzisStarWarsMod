@@ -111,7 +111,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var bdId = BlasterItem.getBlasterModel(tag);
 		var bt = new BlasterTag(tag);
 
-		var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, stack);
+		var bd = BlasterItem.getBlasterDescriptorClient(stack, true);
 		if (bd == null)
 			return;
 
@@ -419,7 +419,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var stack = mc.player.getInventory().getMainHandStack();
 		if (stack.getItem() instanceof BlasterItem)
 		{
-			var bd = BlasterItem.getBlasterDescriptorClient(stack);
+			var bd = BlasterItem.getBlasterDescriptorClient(stack, true);
 			var bt = new BlasterTag(stack.getOrCreateNbt());
 
 			strings.add(String.format("! id=%s type=%s", bd.id, bd.type.getValue()));
