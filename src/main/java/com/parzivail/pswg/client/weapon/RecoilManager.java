@@ -8,6 +8,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Arm;
 import net.minecraft.util.math.Quaternion;
 
 public class RecoilManager
@@ -94,14 +95,13 @@ public class RecoilManager
 		if (mc.player == null || !Resources.CONFIG.get().view.enableScreenShake)
 			return;
 
-		var t = (mc.player.age + tickDelta) * 0.95f;
-		var scale = 0.5f * Ease.inCubic(Math.max(impulse - tickDelta, 0) / 8) * (float)((fov - 13) / 60 + 1);
-		var x = scale * (horizontalVelocity + 1) * (float)Resources.SIMPLEX_0.noise2(0, t);
-		var y = scale * (verticalVelocity + 1) * (float)Resources.SIMPLEX_0.noise2(t, 0);
-		var z = scale * 1.1f * (float)Resources.SIMPLEX_0.noise2(t, t);
+		var smoothImpulse = Ease.inCubic(Math.max(impulse - tickDelta, 0) / 6);
+		var fovCompensatedImpulse = smoothImpulse * (13 / fov);
+		matrix.translate(0, 0, -0.2 * fovCompensatedImpulse);
 
-		matrix.multiply(new Quaternion(0, 0, z, true));
-		matrix.multiply(new Quaternion(y, 0, 0, true));
-		matrix.multiply(new Quaternion(0, x, 0, true));
+		var scale = -0.4f;
+		if (mc.options.mainArm == Arm.LEFT)
+			scale = -scale;
+		matrix.multiply(new Quaternion(0, 0, scale * smoothImpulse, true));
 	}
 }
