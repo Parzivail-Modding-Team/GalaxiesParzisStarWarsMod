@@ -57,7 +57,7 @@ public class Tarkin
 		}
 
 		// Synchronize the keys of the en_us locale
-		BuiltAsset.mergeLanguageKeys(Resources.id("en_us_temp"), Resources.id("en_us"));
+		BuiltAsset.mergeLanguageKeys(Resources.id(LanguageProvider.OUTPUT_LOCALE), Resources.id(LanguageProvider.TARGET_LOCALE));
 	}
 
 	private static void generateLangEntries(List<BuiltAsset> assets)
@@ -70,7 +70,9 @@ public class Tarkin
 		speciesCmd.dot("variant").dot("invalid").build(assets);
 
 		// Deaths
-		lang.cause_of_death("blaster").build(assets);
+		var deathBlaster = lang.cause_of_death("blaster");
+		deathBlaster.build(assets);
+		deathBlaster.dot("slug").build(assets);
 
 		// REI categories
 		var reiVaporator = lang.category("vaporator");

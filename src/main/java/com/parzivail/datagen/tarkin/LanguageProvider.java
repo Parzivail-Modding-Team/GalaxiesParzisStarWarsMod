@@ -8,6 +8,7 @@ import net.minecraft.util.Identifier;
 public class LanguageProvider
 {
 	public static final String OUTPUT_LOCALE = "en_us_temp";
+	public static final String TARGET_LOCALE = "en_us";
 
 	public static LanguageProvider ofBlock(Block block)
 	{
