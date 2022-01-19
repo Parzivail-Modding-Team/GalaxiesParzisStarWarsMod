@@ -26,7 +26,8 @@
 		"drainSpeed": 8,
 		"overheatPenalty": 20,
 		"overheatDrainSpeed": 14,
-		"passiveCooldownDelay": 100
+		"passiveCooldownDelay": 100,
+		"overchargeBonus": 80
 	},
 	"cooling": {
 		"primaryBypassTime": 0.7,
