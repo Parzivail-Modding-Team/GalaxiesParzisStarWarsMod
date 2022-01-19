@@ -5,7 +5,7 @@ import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.IPrecisionEntity;
-import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
+import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;
@@ -15,6 +15,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.thrown.ThrownEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.BlockHitResult;
@@ -45,7 +46,14 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	public void setRange(float range)
 	{
 		var ticksToLive = (int)(range / getVelocity().length());
-		setLife(-ticksToLive);
+		setLife(ticksToLive);
+	}
+
+	@Override
+	public Packet<?> createSpawnPacket()
+	{
+		var entity = this.getOwner();
+		return PreciseEntitySpawnS2CPacket.createPacket(this, entity == null ? 0 : entity.getId());
 	}
 
 	@Override
@@ -53,6 +61,15 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	{
 		super.onSpawnPacket(packet);
 		SoundHelper.playBlasterBoltHissSound(this);
+
+		if (packet instanceof PreciseEntitySpawnS2CPacket pes)
+			this.setVelocity(pes.getVelocity());
+	}
+
+	@Override
+	public void setVelocity(Vec3d velocity)
+	{
+		super.setVelocity(velocity);
 	}
 
 	@Override
@@ -103,31 +120,18 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	}
 
 	@Override
-	public void onPrecisionVelocityPacket(PreciseEntityVelocityUpdateS2CPacket packet)
-	{
-		// The lifespan was set before this packet is handled. The life
-		// was set as a negative so when we get here we invert it
-		setLife(-getLife());
-	}
-
-	@Override
 	public void tick()
 	{
-		var life = getLife();
+		final var life = getLife() - 1;
+		setLife(life);
 
-		if (life > 0)
+		if (life <= 0)
 		{
-			life--;
-			setLife(life);
-
-			if (life <= 0)
-			{
-				this.discard();
-				return;
-			}
-
-			super.tick();
+			this.discard();
+			return;
 		}
+
+		super.tick();
 	}
 
 	protected void onCollision(HitResult hitResult)

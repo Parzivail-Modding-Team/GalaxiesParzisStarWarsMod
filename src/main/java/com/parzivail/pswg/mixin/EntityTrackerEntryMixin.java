@@ -30,7 +30,7 @@ public abstract class EntityTrackerEntryMixin
 		if (!(entity instanceof IPrecisionEntity))
 			return;
 
-		if (this.entity.velocityModified || this.entity.age == 0)
+		if (this.entity.velocityModified)
 		{
 			var passedData = new PacketByteBuf(Unpooled.buffer());
 			new PreciseEntityVelocityUpdateS2CPacket(this.entity).write(passedData);

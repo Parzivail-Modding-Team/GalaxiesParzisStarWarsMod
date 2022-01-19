@@ -25,5 +25,6 @@ public class SwgPackets
 		public static final Identifier PacketWorldEvent = Resources.id("wevt");
 		public static final Identifier PacketClientSync = Resources.id("csync");
 		public static final Identifier PacketPreciseEntityVelocityUpdate = Resources.id("pevel");
+		public static final Identifier PacketPreciseEntitySpawn = Resources.id("pesp");
 	}
 }

@@ -39,6 +39,7 @@ import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import io.github.ennuil.libzoomer.api.ZoomInstance;
 import io.github.ennuil.libzoomer.api.ZoomRegistry;
@@ -253,6 +254,7 @@ public class Client implements ClientModInitializer
 
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketClientSync, BlockEntityClientSerializable::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
 
 		blasterZoomInstance = ZoomRegistry.registerInstance(new ZoomInstance(
 				Resources.id("blaster_zoom"),
