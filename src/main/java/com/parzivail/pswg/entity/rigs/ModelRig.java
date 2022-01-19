@@ -1,7 +1,6 @@
 package com.parzivail.pswg.entity.rigs;
 
 import com.parzivail.pswg.client.render.p3d.P3dModel;
-import com.parzivail.pswg.client.render.p3d.P3dSocket;
 import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.Transform;
 import net.minecraft.util.Identifier;
@@ -25,7 +24,7 @@ public abstract class ModelRig<T>
 
 		mat.multiply(orientation);
 
-		P3dSocket socket = RIG.transformables.get(socketName);
+		var socket = RIG.transformables.get(socketName);
 		for (var part : socket.ancestry)
 		{
 			mat.multiply(part.transform);
