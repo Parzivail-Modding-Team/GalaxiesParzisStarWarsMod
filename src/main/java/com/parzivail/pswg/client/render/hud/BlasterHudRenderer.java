@@ -54,7 +54,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		 * Cooldown
 		 */
 
-		if (bt.isCooling() || bt.heat > 0)
+		if (bt.isCooling() || bt.heat > 0 || bt.overchargeTimer > 0)
 		{
 			var cooldownBarX = (scaledWidth - cooldownWidth) / 2;
 
@@ -100,6 +100,11 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 					heatPercentage = (bt.ventingHeat - deltaHeat) / maxHeat;
 				}
+				else if (bt.overchargeTimer > 0)
+				{
+					var deltaHeat = client.getTickDelta();
+					heatPercentage = (bt.overchargeTimer - deltaHeat) / bd.heat.overchargeBonus;
+				}
 				else
 				{
 					float deltaHeat = 0;
@@ -109,7 +114,10 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 					heatPercentage = (bt.heat - deltaHeat) / maxHeat;
 				}
 
-				this.drawTexture(matrices, cooldownBarX, j + 30, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
+				if (bt.overchargeTimer > 0)
+					this.drawTexture(matrices, cooldownBarX, j + 30, 0, 12, (int)(cooldownWidth * heatPercentage), 3);
+				else
+					this.drawTexture(matrices, cooldownBarX, j + 30, 0, 4, (int)(cooldownWidth * heatPercentage), 3);
 			}
 
 			// endcaps

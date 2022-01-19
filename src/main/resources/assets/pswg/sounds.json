@@ -42,122 +42,122 @@
 	},
 	"blaster.fire.a280": {
 		"sounds": [
-			"pswg:blaster/a280"
+			"pswg:blaster/fire/a280"
 		]
 	},
 	"blaster.fire.bike": {
 		"sounds": [
-			"pswg:blaster/bike"
+			"pswg:blaster/fire/bike"
 		]
 	},
 	"blaster.fire.bowcaster": {
 		"sounds": [
-			"pswg:blaster/bowcaster"
+			"pswg:blaster/fire/bowcaster"
 		]
 	},
 	"blaster.fire.cycler": {
 		"sounds": [
-			"pswg:blaster/cycler"
+			"pswg:blaster/fire/cycler"
 		]
 	},
 	"blaster.fire.dc15": {
 		"sounds": [
-			"pswg:blaster/dc15"
+			"pswg:blaster/fire/dc15"
 		]
 	},
 	"blaster.fire.dc17": {
 		"sounds": [
-			"pswg:blaster/dc17"
+			"pswg:blaster/fire/dc17"
 		]
 	},
 	"blaster.fire.dh17": {
 		"sounds": [
-			"pswg:blaster/dh17"
+			"pswg:blaster/fire/dh17"
 		]
 	},
 	"blaster.fire.dl18": {
 		"sounds": [
-			"pswg:blaster/dl18"
+			"pswg:blaster/fire/dl18"
 		]
 	},
 	"blaster.fire.dl44": {
 		"sounds": [
-			"pswg:blaster/dl44"
+			"pswg:blaster/fire/dl44"
 		]
 	},
 	"blaster.fire.dlt19d": {
 		"sounds": [
-			"pswg:blaster/dlt19d"
+			"pswg:blaster/fire/dlt19d"
 		]
 	},
 	"blaster.fire.dlt19": {
 		"sounds": [
-			"pswg:blaster/dlt19"
+			"pswg:blaster/fire/dlt19"
 		]
 	},
 	"blaster.fire.dlt20a": {
 		"sounds": [
-			"pswg:blaster/dlt20a"
+			"pswg:blaster/fire/dlt20a"
 		]
 	},
 	"blaster.fire.e11": {
 		"sounds": [
-			"pswg:blaster/e11"
+			"pswg:blaster/fire/e11"
 		]
 	},
 	"blaster.fire.ee3": {
 		"sounds": [
-			"pswg:blaster/ee3"
+			"pswg:blaster/fire/ee3"
 		]
 	},
 	"blaster.fire.eweb": {
 		"sounds": [
-			"pswg:blaster/eweb"
+			"pswg:blaster/fire/eweb"
 		]
 	},
 	"blaster.fire.ion": {
 		"sounds": [
-			"pswg:blaster/ion"
+			"pswg:blaster/fire/ion"
 		]
 	},
 	"blaster.fire.rk3": {
 		"sounds": [
-			"pswg:blaster/rk3"
+			"pswg:blaster/fire/rk3"
 		]
 	},
 	"blaster.fire.rt97c": {
 		"sounds": [
-			"pswg:blaster/rt97c"
+			"pswg:blaster/fire/rt97c"
 		]
 	},
 	"blaster.fire.se14c": {
 		"sounds": [
-			"pswg:blaster/se14c"
+			"pswg:blaster/fire/se14c"
 		]
 	},
 	"blaster.fire.t21b": {
 		"sounds": [
-			"pswg:blaster/t21b"
+			"pswg:blaster/fire/t21b"
 		]
 	},
 	"blaster.fire.t21": {
 		"sounds": [
-			"pswg:blaster/t21"
+			"pswg:blaster/fire/t21"
 		]
 	},
-	"blaster.primarybypass": {
+	"blaster.bypass.primary": {
 		"sounds": [
-			"pswg:blaster/primarybypass"
+			"pswg:blaster/bypass/primary"
 		]
 	},
-	"blaster.secondarybypass": {
+	"blaster.bypass.secondary": {
 		"sounds": [
-			"pswg:blaster/secondarybypass"
+			"pswg:blaster/bypass/secondary"
 		]
 	},
-	"blaster.failedbypass": {
+	"blaster.bypass.failed": {
 		"sounds": [
-			"pswg:blaster/failedbypass"
+			"pswg:blaster/bypass/failed"
 		]
 	},
 	"blaster.vent": {

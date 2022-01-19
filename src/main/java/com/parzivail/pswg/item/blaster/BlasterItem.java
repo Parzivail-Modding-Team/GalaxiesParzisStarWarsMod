@@ -268,7 +268,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				bt.ventingHeat = 0;
 				bt.coolingMode = BlasterTag.COOLING_MODE_NONE;
 
-				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.PRIMARYBYPASS, SoundCategory.PLAYERS, 1, 1);
+				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.BYPASS_PRIMARY, SoundCategory.PLAYERS, 1, 1);
 				result = TypedActionResult.success(stack);
 
 			}
@@ -279,14 +279,15 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 				bt.overchargeTimer = bd.heat.overchargeBonus;
 
-				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.SECONDARYBYPASS, SoundCategory.PLAYERS, 1, 1);
+				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.BYPASS_SECONDARY, SoundCategory.PLAYERS, 1, 1);
 				result = TypedActionResult.success(stack);
 			}
 			else
 			{
 				bt.canBypassCooling = false;
 				bt.coolingMode = BlasterTag.COOLING_MODE_PENALTY_BYPASS;
-				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.FAILEDBYPASS, SoundCategory.PLAYERS, 1, 1);
+
+				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.BYPASS_FAILED, SoundCategory.PLAYERS, 1, 1);
 			}
 
 			bt.serializeAsSubtag(stack);
@@ -303,9 +304,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				if (nextPack == null)
 				{
 					if (!world.isClient)
-					{
 						world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.DRYFIRE, SoundCategory.PLAYERS, 1f, 1f);
-					}
 
 					bt.serializeAsSubtag(stack);
 					return TypedActionResult.fail(stack);

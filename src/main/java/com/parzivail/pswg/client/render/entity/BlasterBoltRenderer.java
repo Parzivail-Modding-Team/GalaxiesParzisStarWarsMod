@@ -2,7 +2,11 @@ package com.parzivail.pswg.client.render.entity;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
+import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.item.blaster.data.BlasterTag;
+import com.parzivail.util.math.Ease;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -41,29 +45,41 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 
 		matrices.translate(0, 0.5f * entity.getHeight(), 0);
 
-		Double ownerDist = null;
-		var ownerSide = 1;
-
 		var mc = MinecraftClient.getInstance();
-		if (entity.getOwner() == mc.player)
+		var shouldScale = entity.getOwner() == mc.player && mc.options.getPerspective() == Perspective.FIRST_PERSON && mc.getCameraEntity() == mc.player;
+		var shouldOffset = shouldScale;
+
+		if (shouldScale)
+		{
+			var mainStack = mc.player.getInventory().getMainHandStack();
+			if (mainStack.getItem() instanceof BlasterItem)
+			{
+				var bt = new BlasterTag(mainStack.getOrCreateNbt());
+				shouldOffset = !bt.isAimingDownSights;
+			}
+		}
+
+		var ownerDist = 0d;
+		if (shouldScale)
 		{
 			var dist = mc.player.getCameraPosVec(tickDelta).distanceTo(entity.getLerpedPos(tickDelta));
 			ownerDist = dist;
 
-			if (mc.options.mainArm == Arm.LEFT)
-				ownerSide = -1;
-
-			var s = (float)MathHelper.clamp(dist, 0, 1);
+			var s = (float)MathHelper.clamp(dist / 1.5, 0, 1);
 			matrices.scale(s, s, s);
 		}
 
 		matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(bYaw - MathHelper.PI / 2));
 		matrices.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(bPitch - MathHelper.PI / 2));
 
-		if (ownerDist != null)
+		if (shouldOffset)
 		{
-			var d = 1 - MathHelper.clamp(ownerDist / 10, 0, 1);
-			matrices.translate(0.2f * d, 0, 0.4f * d * ownerSide);
+			var side = 1;
+			if (mc.options.mainArm == Arm.LEFT)
+				side = -1;
+
+			var d = 1 - Ease.outCubic((float)MathHelper.clamp(ownerDist / 15, 0, 1));
+			matrices.translate(0.2f * d, 0, 0.5f * d * side);
 		}
 
 		EnergyRenderer.renderEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, 1, false, entity.getHue(), 1, 1);
