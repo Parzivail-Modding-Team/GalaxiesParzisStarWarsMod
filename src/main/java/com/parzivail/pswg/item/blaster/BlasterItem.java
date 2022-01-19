@@ -265,27 +265,28 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 			if (profile.primaryBypassTolerance > 0 && cooldownTime >= primaryBypassStart && cooldownTime <= primaryBypassEnd)
 			{
-				// TODO: primary bypass sound
 				bt.ventingHeat = 0;
 				bt.coolingMode = BlasterTag.COOLING_MODE_NONE;
 
+				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.PRIMARYBYPASS, SoundCategory.PLAYERS, 1, 1);
 				result = TypedActionResult.success(stack);
+
 			}
 			else if (profile.secondaryBypassTolerance > 0 && cooldownTime >= secondaryBypassStart && cooldownTime <= secondaryBypassEnd)
 			{
-				// TODO: secondary bypass sound
 				bt.ventingHeat = 0;
 				bt.coolingMode = BlasterTag.COOLING_MODE_NONE;
 
 				bt.overchargeTimer = bd.heat.overchargeBonus;
 
+				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.SECONDARYBYPASS, SoundCategory.PLAYERS, 1, 1);
 				result = TypedActionResult.success(stack);
 			}
 			else
 			{
-				// TODO: failed bypass sound
 				bt.canBypassCooling = false;
 				bt.coolingMode = BlasterTag.COOLING_MODE_PENALTY_BYPASS;
+				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.FAILEDBYPASS, SoundCategory.PLAYERS, 1, 1);
 			}
 
 			bt.serializeAsSubtag(stack);
@@ -326,7 +327,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		if (bt.heat > bd.heat.capacity)
 		{
-			// TODO: overheat sound
+			world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.OVERHEAT, SoundCategory.PLAYERS, 1, 1);
 			bt.ventingHeat = bd.heat.capacity + bd.heat.overheatPenalty;
 			bt.coolingMode = BlasterTag.COOLING_MODE_OVERHEAT;
 			bt.canBypassCooling = true;

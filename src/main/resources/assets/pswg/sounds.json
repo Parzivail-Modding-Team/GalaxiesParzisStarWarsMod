@@ -145,6 +145,31 @@
 			"pswg:blaster/t21"
 		]
 	},
+	"blaster.primarybypass": {
+		"sounds": [
+			"pswg:blaster/primarybypass"
+		]
+	},
+	"blaster.secondarybypass": {
+		"sounds": [
+			"pswg:blaster/secondarybypass"
+		]
+	},
+	"blaster.failedbypass": {
+		"sounds": [
+			"pswg:blaster/failedbypass"
+		]
+	},
+	"blaster.vent": {
+		"sounds": [
+			"pswg:blaster/vent"
+		]
+	},
+	"blaster.overheat": {
+		"sounds": [
+			"pswg:blaster/overheat"
+		]
+	},
 	"ship.blaster.fire.xwingt65b": {
 		"sounds": [
 			{
