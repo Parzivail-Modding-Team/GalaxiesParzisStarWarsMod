@@ -5,6 +5,7 @@ import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.IPrecisionEntity;
+import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.EntityType;
@@ -44,7 +45,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	public void setRange(float range)
 	{
 		var ticksToLive = (int)(range / getVelocity().length());
-		setLife(ticksToLive);
+		setLife(-ticksToLive);
 	}
 
 	@Override
@@ -77,7 +78,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	@Override
 	protected void initDataTracker()
 	{
-		dataTracker.startTracking(LIFE, 0);
+		dataTracker.startTracking(LIFE, -1);
 		dataTracker.startTracking(HUE, 0.0f);
 	}
 
@@ -102,18 +103,31 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	}
 
 	@Override
+	public void onPrecisionVelocityPacket(PreciseEntityVelocityUpdateS2CPacket packet)
+	{
+		// The lifespan was set before this packet is handled. The life
+		// was set as a negative so when we get here we invert it
+		setLife(-getLife());
+	}
+
+	@Override
 	public void tick()
 	{
-		final var life = getLife() - 1;
-		setLife(life);
+		var life = getLife();
 
-		if (life <= 0)
+		if (life > 0)
 		{
-			this.discard();
-			return;
-		}
+			life--;
+			setLife(life);
 
-		super.tick();
+			if (life <= 0)
+			{
+				this.discard();
+				return;
+			}
+
+			super.tick();
+		}
 	}
 
 	protected void onCollision(HitResult hitResult)
