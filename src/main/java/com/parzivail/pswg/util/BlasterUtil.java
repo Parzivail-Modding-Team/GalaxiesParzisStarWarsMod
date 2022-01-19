@@ -86,7 +86,7 @@ public class BlasterUtil
 		if (distance > 1e5)
 			return;
 
-		for (var d = 0; d < distance; d++)
+		for (var d = 2; d < distance; d++)
 		{
 			var vec = start.add(fromDir.multiply(d));
 
