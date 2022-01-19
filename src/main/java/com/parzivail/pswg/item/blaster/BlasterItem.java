@@ -380,10 +380,12 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 			var shouldRecoil = true;
 
+			var heatPitchIncrease = 0.3f * (bt.heat / (float)bd.heat.capacity);
+
 			switch (bt.getFiringMode())
 			{
 				case SEMI_AUTOMATIC, BURST, AUTOMATIC -> {
-					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.sound), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.sound), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
@@ -399,11 +401,11 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 					shouldRecoil = false;
 				}
 				case SLUGTHROWER -> {
-					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.sound), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.sound), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
 					BlasterUtil.fireSlug(world, player, fromDir, range, damage);
 				}
 				case ION -> {
-					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.sound), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
+					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(getSound(bd.sound), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
 					BlasterUtil.fireIon(world, player, range, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
