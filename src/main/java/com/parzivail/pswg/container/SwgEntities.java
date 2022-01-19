@@ -100,24 +100,28 @@ public class SwgEntities
 	{
 		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_bolt"), FabricEntityTypeBuilder
 				.<BlasterBoltEntity>create(SpawnGroup.MISC, BlasterBoltEntity::new)
+				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.trackRangeBlocks(120)
 				.build());
 
 		public static final EntityType<BlasterStunBoltEntity> BlasterStunBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_stun_bolt"), FabricEntityTypeBuilder
 				.<BlasterStunBoltEntity>create(SpawnGroup.MISC, BlasterStunBoltEntity::new)
+				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.trackRangeBlocks(120)
 				.build());
 
 		public static final EntityType<BlasterIonBoltEntity> BlasterIonBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_ion_bolt"), FabricEntityTypeBuilder
 				.<BlasterIonBoltEntity>create(SpawnGroup.MISC, BlasterIonBoltEntity::new)
+				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.trackRangeBlocks(120)
 				.build());
 
 		public static final EntityType<ThrownLightsaberEntity> ThrownLightsaber = Registry.register(Registry.ENTITY_TYPE, Resources.id("thrown_lightsaber"), FabricEntityTypeBuilder
 				.<ThrownLightsaberEntity>create(SpawnGroup.MISC, ThrownLightsaberEntity::new)
+				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
 				.trackRangeBlocks(50)
 				.build());

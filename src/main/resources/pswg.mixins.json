@@ -8,7 +8,6 @@
 		"DeadBushBlockMixin",
 		"EntityMixin",
 		"EntityTrackerEntryMixin",
-		"EntityTypeMixin",
 		"FarmlandBlockMixin",
 		"ItemEntityMixin",
 		"ItemStackMixin",
