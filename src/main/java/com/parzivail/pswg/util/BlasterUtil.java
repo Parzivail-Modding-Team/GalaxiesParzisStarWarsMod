@@ -56,7 +56,7 @@ public class BlasterUtil
 		var start = new Vec3d(bolt.getX(), bolt.getY() + bolt.getHeight() / 2f, bolt.getZ());
 
 		var hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
-		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.FluidHandling.ANY);
+		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.ANY);
 
 		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
 		var blockDistance = blockHit.getType() == HitResult.Type.MISS ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
@@ -113,7 +113,7 @@ public class BlasterUtil
 		var start = player.getEyePos();
 
 		var hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
-		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.FluidHandling.ANY);
+		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE);
 
 		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
 		var blockDistance = blockHit.getType() == HitResult.Type.MISS ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);

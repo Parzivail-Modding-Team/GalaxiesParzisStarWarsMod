@@ -107,7 +107,7 @@ public class SpeederEntity extends ShipEntity
 				if (!world.isAir(new BlockPos(pos)))
 					continue;
 
-				var blockHit = EntityUtil.raycastBlocks(pos, MathUtil.NEGY, range * 2, this, RaycastContext.FluidHandling.SOURCE_ONLY);
+				var blockHit = EntityUtil.raycastBlocks(pos, MathUtil.NEGY, range * 2, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.SOURCE_ONLY);
 				var blockDistance = blockHit.getType() == HitResult.Type.MISS ? -range : (blockHit.getPos().y - start.y);
 
 				if (blockDistance > d)
