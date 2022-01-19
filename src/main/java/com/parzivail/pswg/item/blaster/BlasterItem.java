@@ -485,13 +485,11 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		stack.getOrCreateNbt().putString("model", descriptor.id.toString());
 
-		var bd = getBlasterDescriptorClient(stack, false);
-
 		BlasterTag.mutate(stack, blasterTag -> {
-			if (bd.firingModes.isEmpty())
+			if (descriptor.firingModes.isEmpty())
 				blasterTag.setFiringMode(BlasterFiringMode.SEMI_AUTOMATIC);
 			else
-				blasterTag.setFiringMode(bd.firingModes.get(0));
+				blasterTag.setFiringMode(descriptor.firingModes.get(0));
 
 			blasterTag.attachmentBitmask = descriptor.attachmentDefault;
 		});
