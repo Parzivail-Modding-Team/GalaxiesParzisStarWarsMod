@@ -99,9 +99,10 @@ public class RecoilManager
 		var fovCompensatedImpulse = smoothImpulse * (13 / fov);
 		matrix.translate(0, 0, -0.2 * fovCompensatedImpulse);
 
-		var scale = -0.4f;
+		var scale = 1;
 		if (mc.options.mainArm == Arm.LEFT)
 			scale = -scale;
-		matrix.multiply(new Quaternion(0, 0, scale * smoothImpulse, true));
+		matrix.multiply(new Quaternion(0, 0.1f * scale * smoothImpulse, 0, true));
+		matrix.multiply(new Quaternion(0, 0, -0.4f * smoothImpulse, true));
 	}
 }
