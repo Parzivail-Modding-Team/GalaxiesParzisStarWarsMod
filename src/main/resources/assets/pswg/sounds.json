@@ -155,6 +155,11 @@
 			"pswg:blaster/bypass/secondary"
 		]
 	},
+	"blaster.bypass.secondary_end": {
+		"sounds": [
+			"pswg:blaster/bypass/secondary_end"
+		]
+	},
 	"blaster.bypass.failed": {
 		"sounds": [
 			"pswg:blaster/bypass/failed"
@@ -168,6 +173,16 @@
 	"blaster.overheat": {
 		"sounds": [
 			"pswg:blaster/overheat"
+		]
+	},
+	"blaster.cooling": {
+		"sounds": [
+			"pswg:blaster/cooling"
+		]
+	},
+	"blaster.recharge": {
+		"sounds": [
+			"pswg:blaster/recharge"
 		]
 	},
 	"ship.blaster.fire.xwingt65b": {

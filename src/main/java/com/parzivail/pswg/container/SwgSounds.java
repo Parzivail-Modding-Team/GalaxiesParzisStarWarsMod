@@ -66,9 +66,12 @@ public class SwgSounds
 		public static final SoundEvent FIRE_ION = of(Resources.id("blaster.fire.ion"));
 		public static final SoundEvent BYPASS_PRIMARY = of(Resources.id("blaster.bypass.primary"));
 		public static final SoundEvent BYPASS_SECONDARY = of(Resources.id("blaster.bypass.secondary"));
+		public static final SoundEvent BYPASS_SECONDARY_END = of(Resources.id("blaster.bypass.secondary_end"));
 		public static final SoundEvent BYPASS_FAILED = of(Resources.id("blaster.bypass.failed"));
 		public static final SoundEvent VENT = of(Resources.id("blaster.vent"));
 		public static final SoundEvent OVERHEAT = of(Resources.id("blaster.overheat"));
+		public static final SoundEvent COOLING = of(Resources.id("blaster.cooling"));
+		public static final SoundEvent COOLING_RESET = of(Resources.id("blaster.recharge"));
 
 		private static void register()
 		{
