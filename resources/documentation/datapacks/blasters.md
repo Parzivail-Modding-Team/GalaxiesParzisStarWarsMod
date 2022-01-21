@@ -175,7 +175,7 @@ Attachment B  00000010  00000110
 Attachment C  00000100  00000110
 ```
 
-Since both Attachments B and C share the same mutex, and the mutex is comprised of the bitfields for both Attachment B and C, the blaster is required to have exactly one of B _or_ C attached at all times.
+Since both Attachments B and C share the same mutex, and the mutex is comprised of the bitfields for both Attachment B and C, the blaster is required to have exactly one of B _or_ C attached at all times. Hence, they are **mut**ually **ex**clusive.
 
 The examples also consider the hypothetical blaster to have these initial properties:
 
