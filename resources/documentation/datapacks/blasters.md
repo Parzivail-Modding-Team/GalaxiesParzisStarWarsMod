@@ -80,13 +80,13 @@ TODO
 
 | ID | Description | Image |
 | --- | --- | --- |
-| 0 | Blank | ![Blank icon](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtAQMAAAAA1HDZAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAADUExURQAAAKd6PdoAAAAMSURBVBgZYxgF5AIAATsAAa2ZqLAAAAAASUVORK5CYII=) |
-| 1 | Barrel | ![Barrel icon](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtAQMAAAAA1HDZAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAGUExURQAAAP///6XZn90AAAAdSURBVBjTY2AYUCD/HwgOoFEyfAwMjOgUVpUDCgCSfh/k7Gpg7AAAAABJRU5ErkJggg==) |
-| 2 | Scope | ![Scope icon](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtAQMAAAAA1HDZAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAGUExURQAAAP///6XZn90AAAAgSURBVBjTY2CgF5BvYGBgPIBO/QcCCqjG/w8Y0Sl6AQBv/jmUTQ2oUwAAAABJRU5ErkJggg==) |
-| 3 | Stock | ![Stock icon](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtAQMAAAAA1HDZAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAGUExURQAAAP///6XZn90AAAA0SURBVBjTY2CgAZD/DwQH0CgZoAQjFur/R3RK/v8PZgyKgYH9ASMmxSDfiIViqMdGURkAACHGMcCLj2z5AAAAAElFTkSuQmCC) |
-| 4 | Holographic crosshair | ![Holographic crosshair icon](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtAQMAAAAA1HDZAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAGUExURQAAAP///6XZn90AAAA/SURBVBjTY2DABpj/////D52Sb2Bg4D+ARskAVTNiUPw//jdiUHwMzERSDOwQw1Ao4rVjtR2bO7H6CKvfsQEArhZN3b5S9n8AAAAASUVORK5CYII=) |
-| 5 | Sniper crosshair | ![Sniper crosshair icon](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtAQMAAAAA1HDZAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAGUExURQAAAP///6XZn90AAABASURBVBjTY2DABpj/////D52Sb2Bn4D+ARskwsDMwYlCM//9gUnzszI1EUfJA+/6jU8Rrx247Nndi9RFWv2MDAG5KVy5Vs63mAAAAAElFTkSuQmCC) |
-| 6 | Snowflake crosshair | ![Snowflake crosshair icon](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtAQMAAAAA1HDZAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAGUExURQAAAP///6XZn90AAABISURBVBjTY2DABpj/////D52Sb2Bn4D+ARskwHpdhxKAY7B9gUgXsDIUYFB87cyM6JQ+07z86hVUldjOx2o7NnVh9hNXv2AAAlgNZCCsrE0oAAAAASUVORK5CYII=) |
+| 0 | Blank | ![Blank icon](blaster_attachment_icon_blank.png) |
+| 1 | Barrel | ![Barrel icon](blaster_attachment_icon_barrel.png) |
+| 2 | Scope | ![Scope icon](blaster_attachment_icon_scope.png) |
+| 3 | Stock | ![Stock icon](blaster_attachment_icon_stock.png) |
+| 4 | Holographic crosshair | ![Holographic crosshair icon](blaster_attachment_icon_holo_crosshair.png) |
+| 5 | Sniper crosshair | ![Sniper crosshair icon](blaster_attachment_icon_sniper_crosshair.png) |
+| 6 | Snowflake crosshair | ![Snowflake crosshair icon](blaster_attachment_icon_snowflake_crosshair.png) |
 
 ### Example
 
