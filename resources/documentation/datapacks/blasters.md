@@ -67,14 +67,14 @@ TODO
     * `primaryBypassTolerance` (number) The radius of the primary bypass target, as a percentage from 0 (disabled) to 1 (width of cooldown bar).
     * `secondaryBypassTime` (number) The center position of the secondary bypass target, from 0 (leftmost) to 1 (rightmost)
     * `secondaryBypassTolerance` (number) The radius of the secondary bypass target, as a percentage from 0 (disabled) to 1 (width of cooldown bar).
-  * `attachmentDefault` (bitmap) The set of bits corresponding to the attachments found on the blaster in the Creative inventory. (See: Attachment System)
-  * `attachmentMinimum` (bitmap) The set of bits corresponding to the attachments which will be automatically added back to the blaster if the player attempts to remove all attachments in a given category. (See: Attachment System)
+  * `attachmentDefault` (bitmap) The set of bits corresponding to the attachments found on the blaster in the Creative inventory. (See: [Attachment System](#attachment-system))
+  * `attachmentMinimum` (bitmap) The set of bits corresponding to the attachments which will be automatically added back to the blaster if the player attempts to remove all attachments in a given category. (See: [Attachment System](#attachment-system))
   * `attachmentMap` (array)
     * *n* (string) A unique bitfield that defines the following attachment
       * `id` (string) The name of the attachment rendered in the UI
-      * `visualComponent` (string) The name of the submesh that should be rendered or hidden with respect to the attachment (See: Attachment System)
-      * `icon` (integer) The icon ID that best represents the attachment (See: Icon Table)
-      * `mutex` (bitmap) The set of bits corresponding to the attachments that make up the **mut**ually-**ex**clusive attachment set this attachment belongs to (See: Attachment System)
+      * `visualComponent` (string) The name of the submesh that should be rendered or hidden with respect to the attachment (See: [Attachment System](#attachment-system))
+      * `icon` (integer) The icon ID that best represents the attachment (See: [Icon Table](#icon-table))
+      * `mutex` (bitmap) The set of bits corresponding to the attachments that make up the **mut**ually-**ex**clusive attachment set this attachment belongs to (See: [Attachment System](#attachment-system))
 
 ### Icon Table
 
@@ -175,7 +175,7 @@ Attachment B  00000010  00000110
 Attachment C  00000100  00000110
 ```
 
-Since both Attachments B and C share the same mutex, and the mutex is comprised of the bitfields for both Attachment B and C, the blaster is required to have exactly one of B _or_ C attached at all times. Hence, they are **mut**ually **ex**clusive.
+Since both Attachments B and C share the same mutex, and the mutex is comprised of the bitfields for both Attachment B and C, the blaster can have only one of B or C attached at any time. Hence, they are **mut**ually **ex**clusive. *(Note: this example blaster must have exactly one of B and C attached at all times due to the later described **attachment minimum**, see [Attachment Removal](#attachment-removal))*
 
 The examples also consider the hypothetical blaster to have these initial properties:
 
