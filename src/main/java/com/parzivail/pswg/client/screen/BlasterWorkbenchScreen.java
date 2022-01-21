@@ -51,14 +51,17 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	public static final String I18N_INCOMPAT_ATTACHMENT = Resources.screen("blaster.incompatible_attachment");
 
 	private static final Identifier TEXTURE = Resources.id("textures/gui/container/blaster_workbench.png");
-	private static final int numVisibleAttachmentRows = 3;
-	private static final float scrollThumbHeight = 15f;
-	private static final float scrollThumbHalfHeight = scrollThumbHeight / 2;
+	private static final int NUM_VISIBLE_ATTACHMENT_ROWS = 3;
+	private static final float SCROLL_THUMB_HEIGHT = 15f;
+	private static final float SCROLL_THUMB_HALF_HEIGHT = SCROLL_THUMB_HEIGHT / 2;
 
 	private static final int ROW_STATE_EMPTY = -1;
 	private static final int ROW_STATE_DISABLED = 0;
 	private static final int ROW_STATE_NORMAL = 1;
 	private static final int ROW_STATE_HOVER = 2;
+
+	private static final int BLASTER_VIEWPORT_WIDTH = 108;
+	private static final int BLASTER_VIEWPORT_HEIGHT = 50;
 
 	private int originalBitmask;
 	private ItemStack blaster = ItemStack.EMPTY;
@@ -216,7 +219,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 	private boolean blasterViewportContains(double mouseX, double mouseY)
 	{
-		return MathUtil.rectContains(x + 52, y + 15, 108, 50, mouseX, mouseY);
+		return MathUtil.rectContains(x + 52, y + 15, BLASTER_VIEWPORT_WIDTH, BLASTER_VIEWPORT_HEIGHT, mouseX, mouseY);
 	}
 
 	@Override
@@ -224,7 +227,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	{
 		if (attachmentListContains(mouseX, mouseY))
 		{
-			var i = attachmentList.size() - numVisibleAttachmentRows;
+			var i = attachmentList.size() - NUM_VISIBLE_ATTACHMENT_ROWS;
 			this.scrollPosition = MathHelper.clamp((float)(this.scrollPosition - amount / i), 0, 1);
 		}
 		return true;
@@ -237,7 +240,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		{
 			var trackTop = y + 70;
 			var trackBottom = trackTop + 51;
-			this.scrollPosition = MathHelper.clamp((float)(mouseY - trackTop - scrollThumbHalfHeight) / (trackBottom - trackTop - scrollThumbHeight), 0, 1);
+			this.scrollPosition = MathHelper.clamp((float)(mouseY - trackTop - SCROLL_THUMB_HALF_HEIGHT) / (trackBottom - trackTop - SCROLL_THUMB_HEIGHT), 0, 1);
 			return true;
 		}
 		else
@@ -312,19 +315,25 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			matrices.push();
 
-			matrices.translate(x + 105, y + 45, 10);
-
-			// TODO: scale based on bounds
-			MatrixStackUtil.scalePos(matrices, -60, 60, 1);
-
-			matrices.multiply(new Quaternion(180 - blasterViewportRotation.y, 0, 0, true));
-			matrices.multiply(new Quaternion(0, 90 + blasterViewportRotation.x, 0, true));
-
-			matrices.translate(0, 0, 0.22f);
+			matrices.translate(x + 105, y + 48, 10);
 
 			DiffuseLighting.enableForLevel(Matrix4fUtil.IDENTITY);
 
 			var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
+			var modelEntry = BlasterItemRenderer.INSTANCE.getModel(BlasterItem.getBlasterModel(blaster.getOrCreateNbt()));
+			var model = modelEntry.model();
+
+			var ratio = (float)Math.max(model.bounds.getZLength() / BLASTER_VIEWPORT_WIDTH, model.bounds.getYLength() / (BLASTER_VIEWPORT_HEIGHT * 0.6));
+
+			MatrixStackUtil.scalePos(matrices, -1 / ratio, 1 / ratio, 1);
+
+			matrices.multiply(new Quaternion(180 - blasterViewportRotation.y, 0, 0, true));
+			matrices.multiply(new Quaternion(0, 90 + blasterViewportRotation.x, 0, true));
+
+			matrices.translate(0, 0, -model.bounds.maxZ + model.bounds.getZLength() / 2);
+
+			MatrixStackUtil.scalePos(matrices, 5, 5, 5);
+
 			BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformation.Mode.NONE, false, matrices, immediate, 0xf000f0, OverlayTexture.DEFAULT_UV, null);
 			immediate.draw();
 
@@ -361,7 +370,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 		var topRow = getAttachmentListTopRowIdx();
 
-		for (var i = 0; i < numVisibleAttachmentRows; i++)
+		for (var i = 0; i < NUM_VISIBLE_ATTACHMENT_ROWS; i++)
 		{
 			var rowIdx = topRow + i;
 
@@ -399,7 +408,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 	private int getAttachmentListTopRowIdx()
 	{
-		return Math.max(Math.round(scrollPosition * (float)(attachmentList.size() - numVisibleAttachmentRows)), 0);
+		return Math.max(Math.round(scrollPosition * (float)(attachmentList.size() - NUM_VISIBLE_ATTACHMENT_ROWS)), 0);
 	}
 
 	private void drawScrollbar(MatrixStack matrices, boolean enabled, float percent)

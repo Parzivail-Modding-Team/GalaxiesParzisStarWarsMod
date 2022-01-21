@@ -33,11 +33,17 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
+	record AttachmentSuperset(Set<String> names, HashMap<String, Boolean> visuals)
+	{
+	}
+
 	public static final BlasterItemRenderer INSTANCE = new BlasterItemRenderer();
 
 	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
@@ -46,8 +52,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var p3dManager = Client.ResourceManagers.getP3dManager();
 		return new ModelEntry(p3dManager.get(Resources.id("blaster/a280")), Resources.id("textures/model/blaster/a280.png"));
 	});
-
-	private static final HashMap<Identifier, HashMap<String, Integer>> ATTACHMENT_MASK_CACHE = new HashMap<>();
 
 	private static final Identifier[] ID_MUZZLE_FLASHES_FORWARD = new Identifier[] {
 			Resources.id("textures/model/blaster/effect/muzzleflash_forward_4.png"),
@@ -70,7 +74,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	{
 	}
 
-	private ModelEntry getModel(Identifier id)
+	public ModelEntry getModel(Identifier id)
 	{
 		if (MODEL_CACHE.containsKey(id))
 			return MODEL_CACHE.get(id);
@@ -248,22 +252,20 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			}
 		}
 
-		var attachmentMap = getAttachmentMap(bd);
+		var attachmentSet = getAttachmentSet(bt, bd);
 
-		var attachmentMask = bt.attachmentBitmask;
-
-		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
-		m.render(matrices, vc, bt, getAttachmentTransformer(attachmentMap, attachmentMask), light, d);
+		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.baseTexture));
+		m.render(matrices, vc, bt, getAttachmentTransformer(attachmentSet), light, d);
 
 		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED && renderMode != ModelTransformation.Mode.GROUND)
 		{
 			var muzzleFlashSocket = "muzzle_flash";
 
-			for (var entry : attachmentMap.entrySet())
+			for (var entry : attachmentSet.names)
 			{
 				// TODO: is it possible to have more than one barrel equipped?
-				var possibleSocket = "muzzle_flash." + entry.getKey();
-				if ((attachmentMask & entry.getValue()) != 0 && m.transformables.containsKey(possibleSocket))
+				var possibleSocket = "muzzle_flash." + entry;
+				if (m.transformables.containsKey(possibleSocket))
 					muzzleFlashSocket = possibleSocket;
 			}
 
@@ -284,30 +286,33 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		matrices.pop();
 	}
 
-	private static P3dModel.PartTransformer<BlasterTag> getAttachmentTransformer(HashMap<String, Integer> attachmentMap, int attachmentMask)
+	private static P3dModel.PartTransformer<BlasterTag> getAttachmentTransformer(AttachmentSuperset attachmentSet)
 	{
 		return (target, objectName, tickDelta) -> {
-			var attachment = attachmentMap.get(objectName);
-
-			if (attachment != null && (attachmentMask & attachment) == 0)
+			if (attachmentSet.visuals.containsKey(objectName) && !attachmentSet.visuals.get(objectName))
 				return null;
 
 			return Matrix4fUtil.IDENTITY;
 		};
 	}
 
-	private static HashMap<String, Integer> getAttachmentMap(BlasterDescriptor d)
+	private static AttachmentSuperset getAttachmentSet(BlasterTag bt, BlasterDescriptor d)
 	{
-		if (ATTACHMENT_MASK_CACHE.containsKey(d.id))
-			return ATTACHMENT_MASK_CACHE.get(d.id);
+		var nameSet = new HashSet<String>();
+		var visSet = new HashMap<String, Boolean>();
 
-		var map = new HashMap<String, Integer>();
+		for (var e : d.attachmentMap.entrySet())
+		{
+			var attachment = e.getValue();
+			var attached = (bt.attachmentBitmask & e.getKey()) != 0;
 
-		for (var entry : d.attachmentMap.values())
-			map.put(entry.visualComponent, entry.bit);
+			if (attached)
+				nameSet.add(attachment.id);
 
-		ATTACHMENT_MASK_CACHE.put(d.id, map);
-		return map;
+			visSet.put(attachment.visualComponent, attached);
+		}
+
+		return new AttachmentSuperset(nameSet, visSet);
 	}
 
 	private void renderMuzzleFlash(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, BlasterTag bt, BlasterDescriptor bd, float shotTime, float opacity, int light, int overlay, float tickDelta)
@@ -331,7 +336,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 
-			final var flashradius = 0.75f;
+			final var flashradius = 0.45f;
 
 			VertexConsumerBuffer.Instance.vertex(-flashradius, -flashradius, 0, 0, 0, 1, 0, 0);
 			VertexConsumerBuffer.Instance.vertex(flashradius, -flashradius, 0, 0, 0, 1, 1, 0);
@@ -449,8 +454,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				};
 	}
 
-	private record ModelEntry(P3dModel model,
-	                          Identifier texture)
+	public record ModelEntry(P3dModel model, Identifier baseTexture)
 	{
 	}
 }
