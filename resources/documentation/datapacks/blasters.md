@@ -13,26 +13,31 @@ TODO
 
 ## JSON Component
 
-### Table of Terminology
+### Tables of Terminology
+
+#### Technical Terms
 
 | Term | Definition | Example |
 | --- | --- | --- |
-| | **Technical Terms**  | |
 | Identifier | A string consisting of a namespace and a path, separated by a colon. | `pswg:a280` |
 | Number | A decimal number | `1.23` |
 | Integer | A non-decimal number | `87654` |
 | Short integer | A non-decimal number between 1 and 32768 | `32767` |
 | Bitmap | A 32-bit integer where every bit corresponds to a boolean | `6` (`110` in binary, the first two bits are `true` and the last is `false`)
 | Bitfield | A bitmask with exactly one bit set, i.e. a power of two | `4` |
-| | **Mechanics**  | |
-| Tick | The interval at which the game updates. Ideally 1/20th of a second | |
-| Cooling | The period during which the blaster is losing heat instead of accumulating it | |
-| Venting | The period during which the blaster is cooling down and cannot be fired | |
-| Overheating | The condition when a blaster is fired without manually venting heat for long enough that the heat accumulated is greater thean the heat capacity, and the player is forced to wait for the blaster to completely cool before firing again | |
-| Overcharge | A grace period during which the blaster can be fired without accumulating heat | |
-| Cooling bypass | A way to end an overheat vent early by completing a timing-based minigame on the blaster cooldown bar | |
-| Primary bypass | The first, typically wider, cooling bypass target | |
-| Secondary bypass | The second, typically more difficult, cooling bypass target which, if triggered, provides an overcharge | |
+
+#### Mechanics
+
+| Term | Definition |
+| --- | --- |
+| Tick | The interval at which the game updates. Ideally 1/20th of a second |
+| Cooling | The period during which the blaster is losing heat instead of accumulating it |
+| Venting | The period during which the blaster is cooling down and cannot be fired |
+| Overheating | The condition when a blaster is fired without manually venting heat for long enough that the heat accumulated is greater thean the heat capacity, and the player is forced to wait for the blaster to completely cool before firing again |
+| Overcharge | A grace period during which the blaster can be fired without accumulating heat |
+| Cooling bypass | A way to end an overheat vent early by completing a timing-based minigame on the blaster cooldown bar |
+| Primary bypass | The first, typically wider, cooling bypass target |
+| Secondary bypass | The second, typically more difficult, cooling bypass target which, if triggered, provides an overcharge |
 
 ### Structure
 
@@ -73,6 +78,7 @@ TODO
     * *n* (string) A unique bitfield that defines the following attachment
       * `id` (string) The name of the attachment rendered in the UI
       * `visualComponent` (string) The name of the submesh that should be rendered or hidden with respect to the attachment (See: [Attachment System](#attachment-system))
+      * `texture` (Identifier) The optional override texture for the attachment to render with, defaulting to the blaster base texture.
       * `icon` (integer) The icon ID that best represents the attachment (See: [Icon Table](#icon-table))
       * `mutex` (bitmap) The set of bits corresponding to the attachments that make up the **mut**ually-**ex**clusive attachment set this attachment belongs to (See: [Attachment System](#attachment-system))
 
