@@ -1,6 +1,7 @@
 package com.parzivail.pswg.item.blaster.data;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 
 public class BlasterAttachmentDescriptor
 {
@@ -9,14 +10,16 @@ public class BlasterAttachmentDescriptor
 	public byte icon;
 	public String id;
 	public String visualComponent;
+	public Identifier texture;
 
-	public BlasterAttachmentDescriptor(int bit, short mutex, byte icon, String id, String visualComponent)
+	public BlasterAttachmentDescriptor(int bit, short mutex, byte icon, String id, String visualComponent, Identifier texture)
 	{
 		this.bit = bit;
 		this.mutex = mutex;
 		this.icon = icon;
 		this.id = id;
 		this.visualComponent = visualComponent;
+		this.texture = texture;
 	}
 
 	public static BlasterAttachmentDescriptor fromTag(NbtCompound compoundTag, String s)
@@ -28,7 +31,8 @@ public class BlasterAttachmentDescriptor
 				tag.getShort("mutex"),
 				tag.getByte("icon"),
 				tag.getString("id"),
-				tag.getString("visualComponent")
+				tag.getString("visualComponent"),
+				new Identifier(tag.getString("texture"))
 		);
 	}
 
@@ -41,6 +45,7 @@ public class BlasterAttachmentDescriptor
 		tag.putByte("icon", data.icon);
 		tag.putString("id", data.id);
 		tag.putString("visualComponent", data.visualComponent);
+		tag.putString("texture", data.texture.toString());
 
 		compoundTag.put(s, tag);
 	}

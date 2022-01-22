@@ -40,7 +40,11 @@ import java.util.function.Supplier;
 
 public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
-	record AttachmentSuperset(Set<String> names, HashMap<String, Boolean> visuals)
+	record AttachmentRenderData(boolean visible, Identifier texture)
+	{
+	}
+
+	record AttachmentSuperset(Set<String> names, HashMap<String, AttachmentRenderData> visuals)
 	{
 	}
 
@@ -254,8 +258,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var attachmentSet = getAttachmentSet(bt, bd);
 
-		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.baseTexture));
-		m.render(matrices, vc, bt, getAttachmentTransformer(attachmentSet), light, d);
+		m.render(matrices, vertexConsumers, bt, getAttachmentTransformer(attachmentSet), getRenderLayerProvider(modelEntry, attachmentSet), light, d);
 
 		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED && renderMode != ModelTransformation.Mode.GROUND)
 		{
@@ -286,10 +289,24 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		matrices.pop();
 	}
 
+	private P3dModel.VertexConsumerSupplier<BlasterTag> getRenderLayerProvider(ModelEntry entry, AttachmentSuperset attachmentSet)
+	{
+		return (vertexConsumerProvider, target, objectName) -> {
+			Identifier foundTexture = null;
+			if (attachmentSet.visuals.containsKey(objectName))
+				foundTexture = attachmentSet.visuals.get(objectName).texture;
+
+			if (foundTexture == null)
+				foundTexture = entry.baseTexture;
+
+			return vertexConsumerProvider.getBuffer(RenderLayer.getEntityTranslucent(foundTexture));
+		};
+	}
+
 	private static P3dModel.PartTransformer<BlasterTag> getAttachmentTransformer(AttachmentSuperset attachmentSet)
 	{
 		return (target, objectName, tickDelta) -> {
-			if (attachmentSet.visuals.containsKey(objectName) && !attachmentSet.visuals.get(objectName))
+			if (attachmentSet.visuals.containsKey(objectName) && !attachmentSet.visuals.get(objectName).visible)
 				return null;
 
 			return Matrix4fUtil.IDENTITY;
@@ -299,7 +316,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	private static AttachmentSuperset getAttachmentSet(BlasterTag bt, BlasterDescriptor d)
 	{
 		var nameSet = new HashSet<String>();
-		var visSet = new HashMap<String, Boolean>();
+		var visSet = new HashMap<String, AttachmentRenderData>();
 
 		for (var e : d.attachmentMap.entrySet())
 		{
@@ -309,7 +326,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			if (attached)
 				nameSet.add(attachment.id);
 
-			visSet.put(attachment.visualComponent, attached);
+			if (visSet.containsKey(attachment.visualComponent) && visSet.get(attachment.visualComponent).visible)
+				continue;
+
+			visSet.put(attachment.visualComponent, new AttachmentRenderData(attached, attachment.texture));
 		}
 
 		return new AttachmentSuperset(nameSet, visSet);

@@ -6,6 +6,7 @@ import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.data.DataReader;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
@@ -16,6 +17,7 @@ import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +32,12 @@ public class P3dModel
 	public interface PartTransformer<T>
 	{
 		Matrix4f transform(T target, String objectName, float tickDelta);
+	}
+
+	@FunctionalInterface
+	public interface VertexConsumerSupplier<T>
+	{
+		VertexConsumer provideLayer(VertexConsumerProvider vertexConsumerProvider, T target, String objectName);
 	}
 
 	private static final String MODEL_MAGIC = "P3D";
@@ -49,6 +57,33 @@ public class P3dModel
 		this.bounds = bounds;
 	}
 
+	public <T> void render(MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, T target, PartTransformer<T> transformer, VertexConsumerSupplier<T> vertexConsumerSupplier, int light, float tickDelta)
+	{
+		for (var mesh : rootObjects)
+			renderMesh(matrix, target, light, vertexConsumerProvider, mesh, tickDelta, transformer, vertexConsumerSupplier);
+	}
+
+	private <T> void renderMesh(MatrixStack matrix, T target, int light, VertexConsumerProvider vertexConsumerProvider, P3dObject o, float tickDelta, PartTransformer<T> transformer, VertexConsumerSupplier<T> vertexConsumerSupplier)
+	{
+		matrix.push();
+
+		var entry = transform(matrix, target, o, tickDelta, transformer);
+		if (entry == null)
+		{
+			matrix.pop();
+			return;
+		}
+
+		var vertexConsumer = vertexConsumerSupplier.provideLayer(vertexConsumerProvider, target, o.name);
+
+		emitFaces(light, o, entry, vertexConsumer);
+
+		for (var mesh : o.children)
+			renderMesh(matrix, target, light, vertexConsumerProvider, mesh, tickDelta, transformer, vertexConsumerSupplier);
+
+		matrix.pop();
+	}
+
 	public <T> void render(MatrixStack matrix, VertexConsumer vertexConsumer, T target, PartTransformer<T> transformer, int light, float tickDelta)
 	{
 		for (var mesh : rootObjects)
@@ -59,6 +94,24 @@ public class P3dModel
 	{
 		matrix.push();
 
+		var entry = transform(matrix, target, o, tickDelta, transformer);
+		if (entry == null)
+		{
+			matrix.pop();
+			return;
+		}
+
+		emitFaces(light, o, entry, vertexConsumer);
+
+		for (var mesh : o.children)
+			renderMesh(matrix, target, light, vertexConsumer, mesh, tickDelta, transformer);
+
+		matrix.pop();
+	}
+
+	@Nullable
+	private <T> MatrixStack.Entry transform(MatrixStack matrix, T target, P3dObject o, float tickDelta, PartTransformer<T> transformer)
+	{
 		var entry = matrix.peek();
 		entry.getPositionMatrix().multiply(o.transform);
 		entry.getNormalMatrix().multiply(new Matrix3f(o.transform));
@@ -69,14 +122,17 @@ public class P3dModel
 
 			if (transform == null)
 			{
-				matrix.pop();
-				return;
+				return null;
 			}
 
 			entry.getPositionMatrix().multiply(transform);
 			entry.getNormalMatrix().multiply(new Matrix3f(transform));
 		}
+		return entry;
+	}
 
+	private void emitFaces(int light, P3dObject o, MatrixStack.Entry entry, VertexConsumer vertexConsumer)
+	{
 		var modelMat = entry.getPositionMatrix();
 		var normalMat = entry.getNormalMatrix();
 
@@ -87,11 +143,6 @@ public class P3dModel
 			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], face.normal, face.texture[2]);
 			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], face.normal, face.texture[3]);
 		}
-
-		for (var mesh : o.children)
-			renderMesh(matrix, target, light, vertexConsumer, mesh, tickDelta, transformer);
-
-		matrix.pop();
 	}
 
 	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vec3f vertex, Vec3f normal, Vec3f texCoord)

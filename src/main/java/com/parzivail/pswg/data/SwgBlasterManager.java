@@ -114,21 +114,22 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				var data = pair.getValue().getAsJsonObject();
 
 				short mutexData = 0;
-
 				if (data.has("mutex"))
 					mutexData = data.get("mutex").getAsShort();
 
 				byte icon = 0;
-
 				if (data.has("icon"))
 					icon = data.get("icon").getAsByte();
 
 				String visComp = null;
-
 				if (data.has("visualComponent"))
 					visComp = data.get("visualComponent").getAsString();
 
-				map.put(bit, new BlasterAttachmentDescriptor(bit, mutexData, icon, data.get("id").getAsString(), visComp));
+				Identifier texture = null;
+				if (data.has("texture"))
+					texture = new Identifier(data.get("texture").getAsString());
+
+				map.put(bit, new BlasterAttachmentDescriptor(bit, mutexData, icon, data.get("id").getAsString(), visComp, texture));
 			}
 
 			return map;
@@ -237,6 +238,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				buf.writeShort(entry.getValue().mutex);
 				buf.writeByte(entry.getValue().icon);
 				buf.writeString(entry.getValue().id);
+				PacketByteBufHelper.writeNullable(buf, entry.getValue().texture, (buf1, value1) -> buf1.writeString(value1.toString()));
 				PacketByteBufHelper.writeNullable(buf, entry.getValue().visualComponent, PacketByteBuf::writeString);
 			}
 		}
@@ -291,9 +293,10 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 			var attachmentMutex = buf.readShort();
 			var attachmentIcon = buf.readByte();
 			var attachmentId = buf.readString();
+			var attachmentTexture = PacketByteBufHelper.readNullable(buf, buf1 -> new Identifier(buf1.readString()));
 			var attachmentVisualComponent = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readString);
 
-			attachmentMap.put(attachmentBit, new BlasterAttachmentDescriptor(attachmentBit, attachmentMutex, attachmentIcon, attachmentId, attachmentVisualComponent));
+			attachmentMap.put(attachmentBit, new BlasterAttachmentDescriptor(attachmentBit, attachmentMutex, attachmentIcon, attachmentId, attachmentVisualComponent, attachmentTexture));
 		}
 
 		return new BlasterDescriptor(

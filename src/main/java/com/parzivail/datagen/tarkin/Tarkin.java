@@ -126,6 +126,8 @@ public class Tarkin
 		lang.item("blaster_rk3").build(assets);
 		lang.item("blaster_rt97c").build(assets);
 		lang.item("blaster_t21").build(assets);
+		lang.item("blaster_se14c").build(assets);
+		lang.item("blaster_bowcaster").build(assets);
 
 		lang.tooltip("blaster").dot("info").build(assets);
 		lang.tooltip("blaster").dot("controls").build(assets);

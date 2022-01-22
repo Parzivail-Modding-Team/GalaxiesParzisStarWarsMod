@@ -36,6 +36,50 @@
 		"secondaryBypassTime": 0.2,
 		"secondaryBypassTolerance": 0.03
 	},
-	"attachmentDefault": 0,
-	"attachmentMap": {}
+	"attachmentDefault": 21,
+	"attachmentMinimum": 21,
+	"attachmentMap": {
+		"1": {
+			"mutex": 3,
+			"id": "stock_wood",
+			"icon": 3,
+			"visualComponent": "stock",
+			"texture": "pswg:textures/model/blaster/ee3_esb.png"
+		},
+		"2": {
+			"mutex": 3,
+			"id": "stock_metal",
+			"icon": 3,
+			"visualComponent": "stock",
+			"texture": "pswg:textures/model/blaster/ee3_rotj.png"
+		},
+		"4": {
+			"mutex": 12,
+			"id": "tall_scope",
+			"icon": 2,
+			"visualComponent": "tall_scope",
+			"texture": "pswg:textures/model/blaster/ee3_esb.png"
+		},
+		"8": {
+			"mutex": 12,
+			"id": "short_scope",
+			"icon": 2,
+			"visualComponent": "short_scope",
+			"texture": "pswg:textures/model/blaster/ee3_rotj.png"
+		},
+		"16": {
+			"mutex": 48,
+			"id": "smooth_barrel",
+			"icon": 1,
+			"visualComponent": "smooth_barrel",
+			"texture": "pswg:textures/model/blaster/ee3_esb.png"
+		},
+		"32": {
+			"mutex": 48,
+			"id": "vane_barrel",
+			"icon": 1,
+			"visualComponent": "vane_barrel",
+			"texture": "pswg:textures/model/blaster/ee3_rotj.png"
+		}
+	}
 }
