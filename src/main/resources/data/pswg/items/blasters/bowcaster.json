@@ -23,7 +23,7 @@
 	},
 	"heat": {
 		"capacity": 1008,
-		"perRound": 505,
+		"perRound": 100,
 		"drainSpeed": 12,
 		"overheatPenalty": 20,
 		"overheatDrainSpeed": 14,
