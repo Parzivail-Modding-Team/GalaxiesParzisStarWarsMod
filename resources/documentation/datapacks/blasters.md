@@ -25,7 +25,7 @@ Blasters require two components in a datapack to be available in-game:
 
 The mod searches for blaster models in the `assets/pswg/models/item/blaster` directory of a datapack. The name of the
 model should be the same as the name of the accompanying JSON file. Textures for each model should share the same filename
-in the directory `assets/pswg/textures/model/blaster` (unless specified otherwise, see [JSON component](#json-component)).
+in the directory `assets/pswg/textures/model/blaster` (unless specified otherwise, see [Structure](#structure)).
 
 ### Format
 
