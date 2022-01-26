@@ -97,7 +97,7 @@ If all goes well, an output file called `my_model.p3d` will be created. If somet
 you to the issue. The resulting P3D model is ready to use in-game.
 
 In the command above, the `-m` option specifies that a model file (`p3d`) should be exported. You may find it helpful to
-read the other processing and export at your disposal by running the following command in the same manner as before:
+read the other processing and export options at your disposal by running the following command in the same manner as before:
 
 ```
 P3diTools compile --help
