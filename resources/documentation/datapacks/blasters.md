@@ -3,8 +3,12 @@
 | Specification revision | Jan. 25, 2022 |
 | Supported file version |             1 |
 
+---
+
 **All information in this file is subject to change without notice. While we make our best effort to maintain backwards
 compatibility with previous revisions of this specification, we cannot guarantee it while PSWG is in alpha.**
+
+---
 
 # Blaster Datapacks
 
@@ -64,8 +68,8 @@ The following conventions will assume you're using Blender, and will use Blender
   across guns, the trigger, and therefore trigger guard, does not scale with the caliber or firepower of the gun. You may
   find it helpful to compare your model against a blaster model in the [model resource folder](https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/tree/master/resources/models).
 * Blasters may __optionally__ define any of the following sockets:
-  * `main_hand`: The position that will be gripped by the player's main hand.
-  * `off_hand`: The position *and orientation* of the player's offhand.
+  * `main_hand`: The position that will be gripped by the player's main hand. If undefined, the model origin will be used.
+  * `off_hand`: The position *and orientation* of the player's offhand. If undefined, no offhand will be rendered.
   * `muzzle_flash`: The position and orientation of the default (see `muzzle_flash.[x]`) muzzle flash animation.
   * `muzzle_flash.[x]`: The position and orientation of the muzzle flash when an attachment named `x` is attached. For
     example: A hypothetical blaster has an attachment (and Object) named `long_barrel`. If a socket named `muzzle_flash.long_barrel`
