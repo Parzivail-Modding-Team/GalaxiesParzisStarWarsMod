@@ -8,10 +8,7 @@ import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
-import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.container.SwgSpeciesRegistry;
+import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
@@ -19,9 +16,11 @@ import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.InvertedLampBlock;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
 
@@ -46,6 +45,8 @@ public class Tarkin
 		generateItems(assets);
 		generateRecipes(assets);
 
+		generateTags(assets);
+
 		generateLangEntries(assets);
 
 		BuiltAsset.nukeRecipeDir();
@@ -53,6 +54,7 @@ public class Tarkin
 		BuiltAsset.nukeBlockModelJsons();
 		BuiltAsset.nukeItemModelJsons();
 		BuiltAsset.nukeBlockLootTables();
+		BuiltAsset.nukeTags();
 
 		for (var asset : assets)
 		{
@@ -60,8 +62,13 @@ public class Tarkin
 			asset.write();
 		}
 
+		Lumberjack.log("Wrote %s assets", assets.size());
+
 		// Synchronize the keys of the en_us locale
 		BuiltAsset.mergeLanguageKeys(Resources.id(LanguageProvider.OUTPUT_LOCALE), Resources.id(LanguageProvider.TARGET_LOCALE));
+		Lumberjack.log("Merged language keys");
+
+		Lumberjack.log("Done");
 	}
 
 	private static void generateLangEntries(List<BuiltAsset> assets)
@@ -223,6 +230,23 @@ public class Tarkin
 				generateLangFromConfigAnnotations(subclassLang, assets, field.getType());
 			}
 		}
+	}
+
+	private static void generateTags(List<BuiltAsset> assets)
+	{
+		TagGenerator.forBlockTag(BlockTags.LOGS_THAT_BURN, SwgTags.Block.SEQUOIA_LOG).build(assets);
+		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Block.SEQUOIA_LOG).build(assets);
+
+		TagGenerator.forBlockTag(BlockTags.LOGS_THAT_BURN, SwgTags.Block.JAPOR_LOG).build(assets);
+		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Block.JAPOR_LOG).build(assets);
+
+		TagGenerator.forBlockTag(BlockTags.LOGS_THAT_BURN, SwgTags.Block.TATOOINE_LOG).build(assets);
+		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Block.TATOOINE_LOG).build(assets);
+
+		TagGenerator.forBlockTag(BlockTags.SAND, SwgTags.Block.DESERT_SAND).build(assets);
+		TagGenerator.forItemTag(ItemTags.SAND, SwgTags.Block.DESERT_SAND).build(assets);
+
+		TagGenerator.forBlockTag(BlockTags.WALLS, SwgTags.Block.TATOOINE_DOORS).build(assets);
 	}
 
 	private static void generateRecipes(List<BuiltAsset> assets)
@@ -917,9 +941,15 @@ public class Tarkin
 
 	private static void generateItems(List<BuiltAsset> assets)
 	{
-		ItemGenerator.tool(SwgItems.Axe.Durasteel).build(assets);
-		ItemGenerator.tool(SwgItems.Axe.Titanium).build(assets);
-		ItemGenerator.tool(SwgItems.Axe.Beskar).build(assets);
+		ItemGenerator.tool(SwgItems.Axe.Durasteel)
+		             .tag(FabricToolTags.AXES)
+		             .build(assets);
+		ItemGenerator.tool(SwgItems.Axe.Titanium)
+		             .tag(FabricToolTags.AXES)
+		             .build(assets);
+		ItemGenerator.tool(SwgItems.Axe.Beskar)
+		             .tag(FabricToolTags.AXES)
+		             .build(assets);
 
 		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
 		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
@@ -1030,9 +1060,15 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.MobDrops.TongueOfWorrt).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.ToughHide).build(assets);
 
-		ItemGenerator.tool(SwgItems.Hoe.Durasteel).build(assets);
-		ItemGenerator.tool(SwgItems.Hoe.Titanium).build(assets);
-		ItemGenerator.tool(SwgItems.Hoe.Beskar).build(assets);
+		ItemGenerator.tool(SwgItems.Hoe.Durasteel)
+		             .tag(FabricToolTags.HOES)
+		             .build(assets);
+		ItemGenerator.tool(SwgItems.Hoe.Titanium)
+		             .tag(FabricToolTags.HOES)
+		             .build(assets);
+		ItemGenerator.tool(SwgItems.Hoe.Beskar)
+		             .tag(FabricToolTags.HOES)
+		             .build(assets);
 
 		ItemGenerator.basic(SwgItems.Ingot.Beskar).build(assets);
 		ItemGenerator.basic(SwgItems.Ingot.Chromium).build(assets);
@@ -1069,13 +1105,25 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.RawOre.Rubindum).build(assets);
 		ItemGenerator.basic(SwgItems.RawOre.Titanium).build(assets);
 
-		ItemGenerator.tool(SwgItems.Pickaxe.Durasteel).build(assets);
-		ItemGenerator.tool(SwgItems.Pickaxe.Titanium).build(assets);
-		ItemGenerator.tool(SwgItems.Pickaxe.Beskar).build(assets);
+		ItemGenerator.tool(SwgItems.Pickaxe.Durasteel)
+		             .tag(FabricToolTags.PICKAXES)
+		             .build(assets);
+		ItemGenerator.tool(SwgItems.Pickaxe.Titanium)
+		             .tag(FabricToolTags.PICKAXES)
+		             .build(assets);
+		ItemGenerator.tool(SwgItems.Pickaxe.Beskar)
+		             .tag(FabricToolTags.PICKAXES)
+		             .build(assets);
 
-		ItemGenerator.tool(SwgItems.Shovel.Durasteel).build(assets);
-		ItemGenerator.tool(SwgItems.Shovel.Titanium).build(assets);
-		ItemGenerator.tool(SwgItems.Shovel.Beskar).build(assets);
+		ItemGenerator.tool(SwgItems.Shovel.Durasteel)
+		             .tag(FabricToolTags.SHOVELS)
+		             .build(assets);
+		ItemGenerator.tool(SwgItems.Shovel.Titanium)
+		             .tag(FabricToolTags.SHOVELS)
+		             .build(assets);
+		ItemGenerator.tool(SwgItems.Shovel.Beskar)
+		             .tag(FabricToolTags.SHOVELS)
+		             .build(assets);
 
 		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);
 		ItemGenerator.basic(SwgItems.Spawners.LandspeederX34).build(assets);
@@ -1096,8 +1144,12 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Imperial).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Segmented).build(assets);
 
-		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone")).build(assets);
-		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeBottom, new Identifier("block/stone")).build(assets);
+		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone"))
+		              .blockTag(SwgTags.Block.TATOOINE_DOORS)
+		              .build(assets);
+		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeBottom, new Identifier("block/stone"))
+		              .blockTag(SwgTags.Block.TATOOINE_DOORS)
+		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.RedHangar).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.BlueHangar).build(assets);
@@ -1109,16 +1161,40 @@ public class Tarkin
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
 		              .build(assets);
 
-		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia).build(assets);
-		BlockGenerator.tangentFan(SwgBlocks.Leaves.Japor).build(assets);
+		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia)
+		              .blockTag(BlockTags.LEAVES)
+		              .itemTag(ItemTags.LEAVES)
+		              .build(assets);
+		BlockGenerator.tangentFan(SwgBlocks.Leaves.Japor)
+		              .blockTag(BlockTags.LEAVES)
+		              .itemTag(ItemTags.LEAVES)
+		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"), Resources.id("block/sequoia_log")).build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.id("block/japor_log_top"), Resources.id("block/japor_log")).build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.id("block/tatooine_log_top"), Resources.id("block/tatooine_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"), Resources.id("block/sequoia_log"))
+		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.id("block/japor_log_top"), Resources.id("block/japor_log"))
+		              .blockTag(SwgTags.Block.JAPOR_LOG)
+		              .itemTag(SwgTags.Item.JAPOR_LOG)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.id("block/tatooine_log_top"), Resources.id("block/tatooine_log"))
+		              .blockTag(SwgTags.Block.TATOOINE_LOG)
+		              .itemTag(SwgTags.Item.TATOOINE_LOG)
+		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Wood.Sequoia, Resources.id("block/sequoia_log"), Resources.id("block/sequoia_log")).build(assets);
-		BlockGenerator.column(SwgBlocks.Wood.Japor, Resources.id("block/japor_log"), Resources.id("block/japor_log")).build(assets);
-		BlockGenerator.column(SwgBlocks.Wood.Tatooine, Resources.id("block/tatooine_log"), Resources.id("block/tatooine_log")).build(assets);
+		BlockGenerator.column(SwgBlocks.Wood.Sequoia, Resources.id("block/sequoia_log"), Resources.id("block/sequoia_log"))
+		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Wood.Japor, Resources.id("block/japor_log"), Resources.id("block/japor_log"))
+		              .blockTag(SwgTags.Block.JAPOR_LOG)
+		              .itemTag(SwgTags.Item.JAPOR_LOG)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Wood.Tatooine, Resources.id("block/tatooine_log"), Resources.id("block/tatooine_log"))
+		              .blockTag(SwgTags.Block.TATOOINE_LOG)
+		              .itemTag(SwgTags.Item.TATOOINE_LOG)
+		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
 
@@ -1213,9 +1289,18 @@ public class Tarkin
 		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Natural.MoloFlower, new LootTableFile.Pool.CountFunction.Range(0, 2, new Identifier("uniform"))))
 		              .build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.SaltyDesert).build(assets);
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert).build(assets);
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon).build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.SaltyDesert)
+		              .blockTag(SwgTags.Block.DESERT_SAND)
+		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert)
+		              .blockTag(SwgTags.Block.DESERT_SAND)
+		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon)
+		              .blockTag(SwgTags.Block.DESERT_SAND)
+		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked).build(assets);
 

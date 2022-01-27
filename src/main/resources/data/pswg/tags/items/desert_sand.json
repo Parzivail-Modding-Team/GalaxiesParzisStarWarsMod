@@ -1,7 +1,1 @@
-{
-	"replace": false,
-	"values": [
-		"pswg:desert_sand",
-		"pswg:desert_canyon_sand"
-	]
-}
+{"replace":false,"values":["pswg:salty_desert_sand","pswg:desert_sand","pswg:desert_canyon_sand"]}

@@ -63,7 +63,7 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 			{
 				Files.createDirectories(file.getParent());
 
-				try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.US_ASCII))
+				try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8))
 				{
 					GSON.toJson(contents, writer);
 					writer.write('\n');

@@ -18,6 +18,20 @@ public class AssetGenerator
 		return Registry.ITEM.getId(item.asItem());
 	}
 
+	static Identifier getRegistryName(Object data)
+	{
+		if (data instanceof Block block)
+			return getRegistryName(block);
+
+		if (data instanceof Item item)
+			return getRegistryName(item);
+
+		if (data instanceof ItemConvertible item)
+			return getRegistryName(item);
+
+		throw new RuntimeException("No registry getter for " + data);
+	}
+
 	static Identifier getRegistryName(Block block)
 	{
 		return Registry.BLOCK.getId(block);

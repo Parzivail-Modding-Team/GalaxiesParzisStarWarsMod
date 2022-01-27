@@ -5,6 +5,7 @@ import net.minecraft.data.client.model.BlockStateSupplier;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -214,6 +215,8 @@ public class BlockGenerator
 	private BlockStateSupplier stateSupplier;
 	private ModelFile itemModel;
 	private LanguageProvider languageProvider;
+	private final List<Tag.Identified<?>> blockTags;
+	private final List<Tag.Identified<?>> itemTags;
 
 	private final Collection<ModelFile> blockModels;
 	private final Collection<LootTableFile> lootTables;
@@ -224,6 +227,9 @@ public class BlockGenerator
 
 		this.blockModels = new ArrayList<>();
 		this.lootTables = new ArrayList<>();
+
+		this.blockTags = new ArrayList<>();
+		this.itemTags = new ArrayList<>();
 	}
 
 	public Block getBlock()
@@ -238,9 +244,11 @@ public class BlockGenerator
 
 	public void build(List<BuiltAsset> assets)
 	{
+		var regName = getRegistryName();
+
 		// blockstate
 		if (stateSupplier != null)
-			assets.add(BuiltAsset.blockstate(getRegistryName(), stateSupplier.get()));
+			assets.add(BuiltAsset.blockstate(regName, stateSupplier.get()));
 
 		if (languageProvider != null)
 			assets.add(languageProvider.build());
@@ -250,6 +258,12 @@ public class BlockGenerator
 
 		if (itemModel != null)
 			assets.add(BuiltAsset.itemModel(itemModel.getId(), itemModel.build()));
+
+		for (var tag : blockTags)
+			TagGenerator.forObject("tags/blocks", tag, regName).build(assets);
+
+		for (var tag : itemTags)
+			TagGenerator.forObject("tags/items", tag, regName).build(assets);
 
 		// loot tables
 		lootTables.forEach(lootTableFile -> assets.add(BuiltAsset.lootTable(lootTableFile.filename, lootTableFile.build())));
@@ -293,6 +307,18 @@ public class BlockGenerator
 	public BlockGenerator lootTable(Function<Block, LootTableFile> lootTableFunc)
 	{
 		this.lootTables.add(lootTableFunc.apply(block));
+		return this;
+	}
+
+	public BlockGenerator blockTag(Tag.Identified<?> tag)
+	{
+		this.blockTags.add(tag);
+		return this;
+	}
+
+	public BlockGenerator itemTag(Tag.Identified<?> tag)
+	{
+		this.itemTags.add(tag);
 		return this;
 	}
 }

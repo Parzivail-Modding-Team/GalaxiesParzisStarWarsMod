@@ -1,8 +1,1 @@
-{
-	"replace": false,
-	"values": [
-		"pswg:durasteel_hoe",
-		"pswg:titanium_hoe",
-		"pswg:beskar_hoe"
-	]
-}
+{"replace":false,"values":["pswg:durasteel_hoe","pswg:titanium_hoe","pswg:beskar_hoe"]}

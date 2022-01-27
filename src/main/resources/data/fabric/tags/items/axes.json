@@ -1,8 +1,1 @@
-{
-	"replace": false,
-	"values": [
-		"pswg:durasteel_axe",
-		"pswg:titanium_axe",
-		"pswg:beskar_axe"
-	]
-}
+{"replace":false,"values":["pswg:durasteel_axe","pswg:titanium_axe","pswg:beskar_axe"]}

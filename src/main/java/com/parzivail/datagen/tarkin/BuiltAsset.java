@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.Lumberjack;
+import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -69,6 +70,11 @@ public class BuiltAsset
 		return getAssetPath(IdentifierUtil.concat("lang/", identifier, ".json"));
 	}
 
+	private static Path getTagPath(Identifier identifier)
+	{
+		return getDataPath(IdentifierUtil.concat(identifier, ".json"));
+	}
+
 	private static Path getLootTablePath(Identifier identifier)
 	{
 		return getDataPath(IdentifierUtil.concat("loot_tables/", identifier, ".json"));
@@ -113,6 +119,12 @@ public class BuiltAsset
 	{
 		Lumberjack.log("Created recipe %s", identifier);
 		return new BuiltAsset(getRecipePath(identifier), contents);
+	}
+
+	public static BuiltAsset tag(Identifier identifier, Tag.Entry contents)
+	{
+		Lumberjack.log("Created tag %s", identifier);
+		return new JsonTagInsBuiltAsset(getTagPath(identifier), contents);
 	}
 
 	public static void nukeRecipeDir() throws IOException
@@ -163,6 +175,28 @@ public class BuiltAsset
 		cleanDirectoryOf(parentDir.toFile(), "json");
 	}
 
+	public static void nukeTags() throws IOException
+	{
+		var namespaces = new String[] { "minecraft", "fabric", Resources.MODID };
+		for (var namespace : namespaces)
+		{
+			nukeTags(new Identifier(namespace, "tags/blocks/dummy"));
+			nukeTags(new Identifier(namespace, "tags/items/dummy"));
+		}
+	}
+
+	public static void nukeTags(Identifier dummyAssetId) throws IOException
+	{
+		var dummyAsset = getTagPath(dummyAssetId);
+
+		var parentDir = dummyAsset.getParent();
+
+		if (!Files.exists(parentDir))
+			return;
+
+		cleanDirectoryOf(parentDir.toFile(), "json");
+	}
+
 	public static void nukeBlockstateDir() throws IOException
 	{
 		var dummyAsset = getBlockstatePath(Resources.id("dummy"));
@@ -199,6 +233,12 @@ public class BuiltAsset
 	{
 		var pathKeySource = getLangPath(localeKeySource);
 		var pathDest = getLangPath(locateDestination);
+
+		if (!Files.exists(pathDest))
+		{
+			Lumberjack.error("Could not find the merge destination lang file %s", pathDest);
+			return;
+		}
 
 		JsonObject keySource;
 		try (Reader reader = Files.newBufferedReader(pathKeySource, StandardCharsets.UTF_8))
