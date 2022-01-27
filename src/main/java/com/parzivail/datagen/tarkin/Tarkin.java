@@ -1,6 +1,7 @@
 package com.parzivail.datagen.tarkin;
 
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.Config;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
@@ -16,6 +17,8 @@ import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.InvertedLampBlock;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
@@ -23,6 +26,7 @@ import net.minecraft.tag.ItemTags;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -111,24 +115,7 @@ public class Tarkin
 		lang.screen("species_select").build(assets);
 		lang.cloneWithRoot(SpeciesSelectScreen.I18N_USE_FEMALE_MODEL).build(assets);
 
-		// Dynamic items
-		lang.item("blaster_a280").build(assets);
-		lang.item("blaster_cycler").build(assets);
-		lang.item("blaster_dc15").build(assets);
-		lang.item("blaster_dc15a").build(assets);
-		lang.item("blaster_dh17").build(assets);
-		lang.item("blaster_dl18").build(assets);
-		lang.item("blaster_dl44").build(assets);
-		lang.item("blaster_dlt19").build(assets);
-		lang.item("blaster_e11").build(assets);
-		lang.item("blaster_ee3").build(assets);
-		lang.item("blaster_jawa_ion").build(assets);
-		lang.item("blaster_rk3").build(assets);
-		lang.item("blaster_rt97c").build(assets);
-		lang.item("blaster_t21").build(assets);
-		lang.item("blaster_se14c").build(assets);
-		lang.item("blaster_bowcaster").build(assets);
-
+		// Item tooltips
 		lang.tooltip("blaster").dot("info").build(assets);
 		lang.tooltip("blaster").dot("controls").build(assets);
 
@@ -194,39 +181,48 @@ public class Tarkin
 			var blasterId = blasterEntry.getKey();
 			var blasterDescriptor = blasterEntry.getValue();
 
+			lang.item("blaster_" + blasterId.getPath()).build(assets);
+
 			for (var attachment : blasterDescriptor.attachmentMap.values())
 				lang.cloneWithRoot(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
 		}
 
 		// Autoconfig
-		// TODO: generate all of this with reflection
 		var autoconfig = lang.cloneWithRoot("text").dot("autoconfig").modid();
 		autoconfig.dot("title").build(assets);
 
 		var autoconfigOption = autoconfig.dot("option");
 
-		var autoconfigOptionInput = autoconfigOption.dot("input");
-		autoconfigOptionInput.build(assets);
-		autoconfigOptionInput.dot("@Tooltip").build(assets);
+		var config = Config.class;
+		generateLangFromConfigAnnotations(autoconfigOption, assets, config);
+	}
 
-		autoconfigOptionInput.dot("shipRollPriority").build(assets);
-		autoconfigOptionInput.dot("shipRollPriority").dot("@Tooltip").build(assets);
+	private static void generateLangFromConfigAnnotations(LanguageBuilder autoconfigOption, List<BuiltAsset> assets, Class<?> config)
+	{
+		var subclasses = Arrays.asList(config.getDeclaredClasses());
 
-		var autoconfigOptionView = autoconfigOption.dot("view");
-		autoconfigOptionView.build(assets);
-		autoconfigOptionView.dot("@Tooltip").build(assets);
+		for (var field : config.getDeclaredFields())
+		{
+			var fieldLang = autoconfigOption.dot(field.getName());
+			fieldLang.build(assets);
 
-		autoconfigOptionView.dot("shipCameraStiffness").build(assets);
-		autoconfigOptionView.dot("shipCameraStiffness").dot("@Tooltip").build(assets);
+			if (field.isAnnotationPresent(ConfigEntry.Gui.Tooltip.class))
+			{
+				String defaultValue = null;
 
-		autoconfigOptionView.dot("shipCameraBaseDistance").build(assets);
-		autoconfigOptionView.dot("shipCameraBaseDistance").dot("@Tooltip").build(assets);
+				var commentAnnotation = field.getAnnotation(Comment.class);
+				if (commentAnnotation != null)
+					defaultValue = commentAnnotation.value();
 
-		autoconfigOptionView.dot("shipCameraSpeedDistance").build(assets);
-		autoconfigOptionView.dot("shipCameraSpeedDistance").dot("@Tooltip").build(assets);
+				fieldLang.dot("@Tooltip").build(assets, defaultValue);
+			}
 
-		autoconfigOptionView.dot("enableScreenShake").build(assets);
-		autoconfigOptionView.dot("enableScreenShake").dot("@Tooltip").build(assets);
+			if (subclasses.contains(field.getType()))
+			{
+				var subclassLang = autoconfigOption.dot(field.getName());
+				generateLangFromConfigAnnotations(subclassLang, assets, field.getType());
+			}
+		}
 	}
 
 	private static void generateRecipes(List<BuiltAsset> assets)

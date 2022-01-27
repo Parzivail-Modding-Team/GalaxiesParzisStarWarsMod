@@ -103,12 +103,22 @@ public class LanguageBuilder
 
 	public LanguageProvider getProvider()
 	{
+		return getProvider(null);
+	}
+
+	public LanguageProvider getProvider(String defaultValue)
+	{
 		var key = String.format(data.toString(), locale.getNamespace());
-		return new LanguageProvider(locale, key, key);
+		return new LanguageProvider(locale, key, defaultValue == null ? key : defaultValue);
 	}
 
 	public void build(List<BuiltAsset> assets)
 	{
-		assets.add(getProvider().build());
+		build(assets, null);
+	}
+
+	public void build(List<BuiltAsset> assets, String defaultValue)
+	{
+		assets.add(getProvider(defaultValue).build());
 	}
 }
