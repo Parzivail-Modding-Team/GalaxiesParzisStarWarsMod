@@ -205,15 +205,15 @@ data/pswg/items/blasters/a280.json` would be referred to as `pswg:a280` internal
 
 ### Icon Table
 
-| ID  | Description           | Image                                                                        |
-|-----|-----------------------|------------------------------------------------------------------------------|
-| 0   | Blank                 | ![Blank icon](blaster_attachment_icon_blank.png)                             |
-| 1   | Barrel                | ![Barrel icon](blaster_attachment_icon_barrel.png)                           |
-| 2   | Scope                 | ![Scope icon](blaster_attachment_icon_scope.png)                             |
-| 3   | Stock                 | ![Stock icon](blaster_attachment_icon_stock.png)                             |
-| 4   | Holographic crosshair | ![Holographic crosshair icon](blaster_attachment_icon_holo_crosshair.png)    |
-| 5   | Sniper crosshair      | ![Sniper crosshair icon](blaster_attachment_icon_sniper_crosshair.png)       |
-| 6   | Snowflake crosshair   | ![Snowflake crosshair icon](blaster_attachment_icon_snowflake_crosshair.png) |
+| ID  | Description              | Image                                                                                                 |
+|-----|--------------------------|-------------------------------------------------------------------------------------------------------|
+| 0   | Blank                    | ![Blank icon](blaster_attachment_icon_blank.png)                                                      |
+| 1   | Barrel                   | ![Barrel icon](blaster_attachment_icon_barrel.png)                                                    |
+| 2   | Scope                    | ![Scope icon](blaster_attachment_icon_scope.png)                                                      |
+| 3   | Stock                    | ![Stock icon](blaster_attachment_icon_stock.png)                                                      |
+| 4   | Internal Ordnance Config | ![Internal ordnance configurator icon](blaster_attachment_icon_internal_ordnance_configurator.png)    |
+| 5   | Internal Targetting      | ![Internal targetting icon](blaster_attachment_icon_internal_targetting.png)                          |
+| 6   | Internal Cooling         | ![Internal cooling icon](blaster_attachment_icon_internal_cooling.png)                                |
 
 ### Example
 
