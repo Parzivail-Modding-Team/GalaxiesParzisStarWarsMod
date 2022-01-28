@@ -212,7 +212,7 @@ data/pswg/items/blasters/a280.json` would be referred to as `pswg:a280` internal
 | 2   | Scope                    | ![Scope icon](blaster_attachment_icon_scope.png)                                                      |
 | 3   | Stock                    | ![Stock icon](blaster_attachment_icon_stock.png)                                                      |
 | 4   | Internal Ordnance Config | ![Internal ordnance configurator icon](blaster_attachment_icon_internal_ordnance_configurator.png)    |
-| 5   | Internal Targetting      | ![Internal targetting icon](blaster_attachment_icon_internal_targetting.png)                          |
+| 5   | Internal Targeting       | ![Internal targetting icon](blaster_attachment_icon_internal_targetting.png)                          |
 | 6   | Internal Cooling         | ![Internal cooling icon](blaster_attachment_icon_internal_cooling.png)                                |
 
 ### Example
