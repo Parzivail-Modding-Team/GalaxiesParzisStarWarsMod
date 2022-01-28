@@ -1,8 +1,9 @@
 package com.parzivail.util.data;
 
 import com.google.common.collect.Maps;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.SinglePreparationResourceReloader;
+import net.minecraft.resource.ResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.profiler.Profiler;
 import org.apache.logging.log4j.LogManager;
@@ -11,8 +12,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
-public abstract class KeyedReloadableLoader<T> extends SinglePreparationResourceReloader<Map<Identifier, T>>
+public abstract class KeyedReloadableLoader<T> implements IdentifiableResourceReloadListener
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	private final String fileSuffix;
@@ -27,6 +30,14 @@ public abstract class KeyedReloadableLoader<T> extends SinglePreparationResource
 	}
 
 	public abstract T readResource(ResourceManager resourceManager, Profiler profiler, InputStream stream) throws IOException;
+
+	@Override
+	public final CompletableFuture<Void> reload(ResourceReloader.Synchronizer synchronizer, ResourceManager manager, Profiler prepareProfiler, Profiler applyProfiler, Executor prepareExecutor, Executor applyExecutor)
+	{
+		return CompletableFuture.supplyAsync(() -> this.prepare(manager, prepareProfiler), prepareExecutor)
+		                        .thenCompose(synchronizer::whenPrepared)
+		                        .thenAcceptAsync(object -> this.apply(object, manager, applyProfiler), applyExecutor);
+	}
 
 	protected Map<Identifier, T> prepare(ResourceManager resourceManager, Profiler profiler)
 	{
@@ -62,5 +73,7 @@ public abstract class KeyedReloadableLoader<T> extends SinglePreparationResource
 
 		return map;
 	}
+
+	protected abstract void apply(Map<Identifier, T> prepared, ResourceManager manager, Profiler profiler);
 }
 

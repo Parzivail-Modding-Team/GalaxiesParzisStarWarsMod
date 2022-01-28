@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.render.p3d;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.util.data.KeyedReloadableLoader;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -12,6 +13,8 @@ import java.util.Map;
 
 public class P3dManager extends KeyedReloadableLoader<P3dModel>
 {
+	public static final Identifier ID = Resources.id("pm3d_manager");
+
 	private final Map<Identifier, P3dModel> modelData;
 
 	public P3dManager()
@@ -37,5 +40,11 @@ public class P3dManager extends KeyedReloadableLoader<P3dModel>
 	{
 		modelData.clear();
 		modelData.putAll(prepared);
+	}
+
+	@Override
+	public Identifier getFabricId()
+	{
+		return ID;
 	}
 }

@@ -1,9 +1,11 @@
 package com.parzivail.pswg.client.render.item;
 
 import com.google.common.base.Suppliers;
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
@@ -18,6 +20,7 @@ import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.MatrixStackUtil;
+import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
@@ -27,18 +30,20 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.profiler.Profiler;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
-public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
+public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem, SimpleResourceReloadListener<Void>
 {
 	record AttachmentRenderData(boolean visible, Identifier texture)
 	{
@@ -47,6 +52,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	record AttachmentSuperset(Set<String> names, HashMap<String, AttachmentRenderData> visuals)
 	{
 	}
+
+	public static final Identifier ID = Resources.id("blaster_item_renderer");
 
 	public static final BlasterItemRenderer INSTANCE = new BlasterItemRenderer();
 
@@ -101,6 +108,39 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		MODEL_CACHE.put(id, entry);
 
 		return entry;
+	}
+
+	@Override
+	public Identifier getFabricId()
+	{
+		return ID;
+	}
+
+	@Override
+	public CompletableFuture<Void> reload(ResourceReloader.Synchronizer helper, ResourceManager manager, Profiler loadProfiler, Profiler applyProfiler, Executor loadExecutor, Executor applyExecutor)
+	{
+		return load(manager, loadProfiler, loadExecutor).thenCompose(helper::whenPrepared).thenCompose(
+				(o) -> apply(o, manager, applyProfiler, applyExecutor)
+		);
+	}
+
+	@Override
+	public CompletableFuture<Void> load(ResourceManager manager, Profiler profiler, Executor executor)
+	{
+		return CompletableFuture.completedFuture(null);
+	}
+
+	@Override
+	public CompletableFuture<Void> apply(Void data, ResourceManager manager, Profiler profiler, Executor executor)
+	{
+		MODEL_CACHE.clear();
+		return CompletableFuture.completedFuture(null);
+	}
+
+	@Override
+	public Collection<Identifier> getFabricDependencies()
+	{
+		return Lists.newArrayList(P3dManager.ID);
 	}
 
 	private static float recoilKickDecay(float t)

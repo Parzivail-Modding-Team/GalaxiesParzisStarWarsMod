@@ -81,6 +81,8 @@ public class Galaxies implements ModInitializer
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
 
+		Client.ResourceManagers.registerNonreloadableManagers();
+
 		TrackedDataHandlers.register();
 
 		SwgRecipeType.register();

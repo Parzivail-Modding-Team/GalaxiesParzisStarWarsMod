@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
@@ -20,7 +21,7 @@ import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class TypedDataLoader<T> extends JsonDataLoader implements IExternalReloadResourceManager<Map<Identifier, JsonElement>>
+public abstract class TypedDataLoader<T> extends JsonDataLoader implements IdentifiableResourceReloadListener, IExternalReloadResourceManager<Map<Identifier, JsonElement>>
 {
 	private static final Logger LOGGER = LogManager.getLogger();
 	protected final Gson GSON;

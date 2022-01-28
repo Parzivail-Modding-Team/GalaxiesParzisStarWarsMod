@@ -78,6 +78,12 @@ The following conventions will assume you're using Blender, and will use Blender
     attached.
 * All attachments should be visible when exported and in the location they should appear in-game.
 
+#### Tips
+
+* If you're exporting your model from BlockBench or any other program where the units are in "world space", i.e. one pixel
+is 1/16th of a block, and therefore 1/16th of a meter, scale your model by `1.6` in all dimensions, and your model will
+now have one pixel as 10cm, or 1/10th of a meter, which is the convention used in [General Model Conventions](#general-model-conventions).
+
 #### Exporting a P3Di model
 
 With the **io_scene_p3di** addon installed and enabled, simply _(File, Export, "Parzi 3D Intermediary (.p3di)")_, select

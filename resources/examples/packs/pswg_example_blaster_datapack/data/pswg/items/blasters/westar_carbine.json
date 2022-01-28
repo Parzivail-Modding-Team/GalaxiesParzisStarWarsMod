@@ -1,0 +1,63 @@
+{
+	"version": 1,
+	"type": "rifle",
+	"sound": "pswg:ee3",
+	"firingModes": [
+		"auto",
+		"semi",
+		"stun"
+	],
+	"damage": 3.06,
+	"range": 188.0,
+	"weight": 6.7,
+	"boltColor": 0.98,
+	"magazineSize": 300,
+	"automaticRepeatTime": 7,
+	"burstRepeatTime": 2,
+	"burstSize": 3,
+	"recoil": {
+		"horizontal": 1.5,
+		"vertical": 3
+	},
+	"spread": {
+		"horizontal": 0.0,
+		"vertical": 0.0
+	},
+	"heat": {
+		"capacity": 1008,
+		"perRound": 95,
+		"drainSpeed": 12,
+		"overheatPenalty": 20,
+		"overheatDrainSpeed": 14,
+		"passiveCooldownDelay": 100,
+		"overchargeBonus": 80
+	},
+	"cooling": {
+		"primaryBypassTime": 0.5,
+		"primaryBypassTolerance": 0.05,
+		"secondaryBypassTime": 0.3,
+		"secondaryBypassTolerance": 0.03
+	},
+	"attachmentDefault": 0,
+	"attachmentMinimum": 0,
+	"attachmentMap": {
+		"1": {
+			"mutex": 1,
+			"id": "scope",
+			"icon": 2,
+			"visualComponent": "scope"
+		},
+		"2": {
+			"mutex": 2,
+			"id": "stock",
+			"icon": 3,
+			"visualComponent": "stock"
+		},
+		"4": {
+			"mutex": 4,
+			"id": "underbarrel",
+			"icon": 1,
+			"visualComponent": "underbarrel"
+		}
+	}
+}

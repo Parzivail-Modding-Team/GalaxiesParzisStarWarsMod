@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.data.TypedDataLoader;
@@ -26,6 +27,8 @@ import java.util.stream.Collectors;
 
 public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
+	public static final Identifier ID = Resources.id("blaster_manager");
+
 	private static class IdentifierDeserializer implements JsonDeserializer<Identifier>
 	{
 		@Override
@@ -149,6 +152,12 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 						.create(),
 				"items/blasters"
 		);
+	}
+
+	@Override
+	public Identifier getFabricId()
+	{
+		return ID;
 	}
 
 	public static SwgBlasterManager get(MinecraftServer server)

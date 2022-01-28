@@ -50,16 +50,6 @@ public abstract class MinecraftClientMixin
 		Client.tintedTextureProvider = new TintedTextureProvider(textureManager, "pswg:tinted");
 	}
 
-	@Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;initializeSearchableContainers()V", shift = At.Shift.BEFORE))
-	private void initAtSearchable(RunArgs args, CallbackInfo ci)
-	{
-		// Registering the reloadable resource managers here because this method is
-		// only called once and it's before the tail of MinecraftClient's <init>,
-		// where the resource manager is reloaded
-
-		Client.ResourceManagers.registerReloadableManagers(resourceManager);
-	}
-
 	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V", shift = At.Shift.BEFORE), cancellable = true)
 	private void handleInputEvents$handleBlockBreaking(CallbackInfo ci)
 	{

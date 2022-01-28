@@ -22,7 +22,6 @@
 		"AbstractClientPlayerEntityMixin",
 		"BipedEntityModelMixin",
 		"CameraMixin",
-		"ClientLoginNetworkHandlerMixin",
 		"ClientPlayNetworkHandlerMixin",
 		"ClientRecipeBookMixin",
 		"DebugHudMixin",

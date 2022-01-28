@@ -3,6 +3,7 @@ package com.parzivail.pswg.data;
 import com.google.gson.JsonElement;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
@@ -12,9 +13,17 @@ import net.minecraft.world.World;
 
 public class SwgLightsaberManager extends TypedDataLoader<LightsaberDescriptor>
 {
+	public static final Identifier ID = Resources.id("blaster_manager");
+
 	public SwgLightsaberManager()
 	{
 		super("items/lightsabers");
+	}
+
+	@Override
+	public Identifier getFabricId()
+	{
+		return ID;
 	}
 
 	public static SwgLightsaberManager get(MinecraftServer server)

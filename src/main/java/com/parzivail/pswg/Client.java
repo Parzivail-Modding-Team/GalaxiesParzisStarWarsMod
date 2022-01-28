@@ -55,12 +55,13 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.resource.ReloadableResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
@@ -200,6 +201,8 @@ public class Client implements ClientModInitializer
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.HkakBush, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.MoloShrub, RenderLayer.getCutout());
 
+		ResourceManagers.registerReloadableManagers();
+
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> ModelRegistry.INSTANCE);
 
 		EntityRendererRegistry.register(SwgEntities.Ship.T65bXwing, T65BXwingRenderer::new);
@@ -221,7 +224,7 @@ public class Client implements ClientModInitializer
 		ICustomPoseItem.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
 		ICustomHudRenderer.register(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
 
-//		ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
+		//		ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 
 		SwgParticles.register();
 
@@ -272,16 +275,6 @@ public class Client implements ClientModInitializer
 		private static SwgBlasterManager blasterManager;
 		private static SwgLightsaberManager lightsaberManager;
 
-		static
-		{
-			// Will be reset when a world is joined, but is needed
-			// because the searchable containers are initialized
-			// *before* a world is joined -- although the search
-			// container itself will be empty, because the list
-			// hasn't been loaded from disk yet
-			registerNonreloadableManagers();
-		}
-
 		public static SwgBlasterManager getBlasterManager()
 		{
 			return blasterManager;
@@ -305,10 +298,11 @@ public class Client implements ClientModInitializer
 		/**
 		 * Register managers which are used by the client to provide visuals that can be reloaded
 		 */
-		public static void registerReloadableManagers(ReloadableResourceManager resourceManager)
+		public static void registerReloadableManagers()
 		{
-			resourceManager.registerReloader(nemManager = new NemManager());
-			resourceManager.registerReloader(p3dManager = new P3dManager());
+			ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(nemManager = new NemManager());
+			ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(p3dManager = new P3dManager());
+			ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(BlasterItemRenderer.INSTANCE);
 		}
 
 		/**
@@ -316,8 +310,8 @@ public class Client implements ClientModInitializer
 		 */
 		public static void registerNonreloadableManagers()
 		{
-			blasterManager = new SwgBlasterManager();
-			lightsaberManager = new SwgLightsaberManager();
+			ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(blasterManager = new SwgBlasterManager());
+			ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(lightsaberManager = new SwgLightsaberManager());
 		}
 
 		/**

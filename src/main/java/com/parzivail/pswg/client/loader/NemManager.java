@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.loader;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.model.MutableAnimatedModel;
 import com.parzivail.util.client.render.ModelAngleAnimator;
 import com.parzivail.util.data.KeyedReloadableLoader;
@@ -27,6 +28,8 @@ import java.util.function.Supplier;
 
 public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 {
+	public static final Identifier ID = Resources.id("nem_manager");
+
 	private final Map<Identifier, TexturedModelData> modelData;
 	private final ArrayList<Pair<Identifier, Consumer<ModelPart>>> models;
 	private final HashMap<Identifier, PlayerEntityModel<AbstractClientPlayerEntity>> playerModels;
@@ -150,5 +153,11 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	{
 		models.add(new Pair<>(modelId, modelPart -> playerModels.put(modelId, new PlayerEntityModel<>(modelPart, thinArms))));
 		return () -> playerModels.get(modelId);
+	}
+
+	@Override
+	public Identifier getFabricId()
+	{
+		return ID;
 	}
 }
