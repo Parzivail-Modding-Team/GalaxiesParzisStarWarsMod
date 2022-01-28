@@ -65,12 +65,11 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		super(settings);
 	}
 
-	@NotNull
 	public static Identifier getBlasterModel(NbtCompound tag)
 	{
 		var blasterModel = tag.getString("model");
 		if (blasterModel.isEmpty())
-			blasterModel = "pswg:a280";
+			return null;
 
 		return new Identifier(blasterModel);
 	}
@@ -109,13 +108,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 	public static Identifier getBlasterModel(ItemStack stack)
 	{
-		var tag = stack.getOrCreateNbt();
-
-		var blasterModel = tag.getString("model");
-		if (blasterModel.isEmpty())
-			blasterModel = "pswg:a280";
-
-		return new Identifier(blasterModel);
+		return getBlasterModel(stack.getOrCreateNbt());
 	}
 
 	public static void nextFireMode(World world, PlayerEntity player, ItemStack stack)
@@ -437,15 +430,17 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	@Override
 	public String getTranslationKey(ItemStack stack)
 	{
-		var tag = stack.getOrCreateNbt();
+		var model = getBlasterModel(stack);
+		if (model != null)
+			return getTranslationKeyForModel(model);
 
-		var model = tag.getString("model");
-		if (model.isEmpty())
-			return super.getTranslationKey(stack);
+		return super.getTranslationKey(stack);
+	}
 
-		var bdId = new Identifier(model);
-
-		return "item." + bdId.getNamespace() + ".blaster_" + bdId.getPath();
+	@NotNull
+	public static String getTranslationKeyForModel(Identifier model)
+	{
+		return "blaster." + model.getNamespace() + "." + model.getPath();
 	}
 
 	@Override

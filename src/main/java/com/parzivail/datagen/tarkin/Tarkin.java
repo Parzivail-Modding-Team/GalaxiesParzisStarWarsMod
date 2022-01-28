@@ -188,7 +188,7 @@ public class Tarkin
 			var blasterId = blasterEntry.getKey();
 			var blasterDescriptor = blasterEntry.getValue();
 
-			lang.item("blaster_" + blasterId.getPath()).build(assets);
+			lang.cloneWithRoot(BlasterItem.getTranslationKeyForModel(blasterId)).build(assets);
 
 			for (var attachment : blasterDescriptor.attachmentMap.values())
 				lang.cloneWithRoot(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);

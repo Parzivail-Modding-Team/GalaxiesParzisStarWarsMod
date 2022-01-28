@@ -155,6 +155,9 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var tag = stack.getOrCreateNbt();
 
 		var bdId = BlasterItem.getBlasterModel(tag);
+		if (bdId == null)
+			return;
+
 		var bt = new BlasterTag(tag);
 
 		var bd = BlasterItem.getBlasterDescriptor(stack, true);

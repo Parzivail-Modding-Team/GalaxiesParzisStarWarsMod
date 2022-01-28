@@ -309,7 +309,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		var minecraft = MinecraftClient.getInstance();
 		Mutable<List<Text>> tooltip = new MutableObject<>();
 
-		if (blaster.getItem() instanceof BlasterItem)
+		if (blasterModel != null && blaster.getItem() instanceof BlasterItem)
 		{
 			var bt = new BlasterTag(blaster.getOrCreateNbt());
 
@@ -320,7 +320,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			DiffuseLighting.enableForLevel(Matrix4fUtil.IDENTITY);
 
 			var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
-			var modelEntry = BlasterItemRenderer.INSTANCE.getModel(BlasterItem.getBlasterModel(blaster.getOrCreateNbt()));
+			var modelEntry = BlasterItemRenderer.INSTANCE.getModel(blasterModel);
 			var model = modelEntry.model();
 
 			var ratio = (float)Math.max(model.bounds.getZLength() / BLASTER_VIEWPORT_WIDTH, model.bounds.getYLength() / (BLASTER_VIEWPORT_HEIGHT * 0.6));
