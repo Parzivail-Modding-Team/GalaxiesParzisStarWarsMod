@@ -292,7 +292,7 @@ public class SpeciesSelectScreen extends Screen
 
 				var scale = -Math.abs(offsetTimer / 3f) + 1;
 				mat2.translate(0, offset / 2f * (scale + 0.3f), 0);
-				MatrixStackUtil.scalePos(matrices, scale, scale, scale);
+				MatrixStackUtil.scalePos(mat2, scale, scale, scale);
 				mat2.translate(0, modelSize, 0);
 
 				if (scale > 0)
