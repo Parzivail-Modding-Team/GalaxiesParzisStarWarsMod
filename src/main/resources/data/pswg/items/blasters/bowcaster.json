@@ -39,5 +39,10 @@
 	"attachmentDefault": 0,
 	"attachmentMinimum": 0,
 	"attachmentMap": {
+		"1": {
+			"mutex": 1,
+			"id": "repeater",
+			"icon": 4
+		}
 	}
 }

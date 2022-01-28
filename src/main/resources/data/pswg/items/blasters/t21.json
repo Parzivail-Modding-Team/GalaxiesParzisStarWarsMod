@@ -58,6 +58,11 @@
 			"id": "scope",
 			"icon": 2,
 			"visualComponent": "scope"
+		},
+		"8": {
+			"mutex": 8,
+			"id": "repeater",
+			"icon": 4
 		}
 	}
 }

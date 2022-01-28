@@ -61,6 +61,16 @@
 			"id": "barrel_d",
 			"icon": 1,
 			"visualComponent": "barrel_d"
+		},
+		"16": {
+			"mutex": 16,
+			"id": "cooling",
+			"icon": 6
+		},
+		"32": {
+			"mutex": 32,
+			"id": "rapidfire",
+			"icon": 4
 		}
 	}
 }

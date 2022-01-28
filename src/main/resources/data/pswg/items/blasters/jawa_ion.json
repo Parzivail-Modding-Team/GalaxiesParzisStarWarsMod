@@ -35,5 +35,16 @@
 		"secondaryBypassTolerance": 0.1
 	},
 	"attachmentDefault": 0,
-	"attachmentMap": {}
+	"attachmentMap": {
+		"1": {
+			"mutex": 3,
+			"id": "gas_conversion",
+			"icon": 4
+		},
+		"2": {
+			"mutex": 3,
+			"id": "repulsor_addon",
+			"icon": 4
+		}
+	}
 }

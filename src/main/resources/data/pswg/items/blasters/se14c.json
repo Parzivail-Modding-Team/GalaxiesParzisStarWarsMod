@@ -46,6 +46,11 @@
 			"id": "barrel",
 			"icon": 1,
 			"visualComponent": "barrel_extension"
+		},
+		"2": {
+			"mutex": 2,
+			"id": "cooling",
+			"icon": 6
 		}
 	}
 }

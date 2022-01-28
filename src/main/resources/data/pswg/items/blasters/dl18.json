@@ -36,5 +36,21 @@
 		"secondaryBypassTolerance": 0.04
 	},
 	"attachmentDefault": 0,
-	"attachmentMap": {}
+	"attachmentMap": {
+		"1": {
+			"mutex": 1,
+			"id": "firing",
+			"icon": 4
+		},
+		"2": {
+			"mutex": 2,
+			"id": "cooling",
+			"icon": 6
+		},
+		"4": {
+			"mutex": 4,
+			"id": "targeting",
+			"icon": 5
+		}
+	}
 }

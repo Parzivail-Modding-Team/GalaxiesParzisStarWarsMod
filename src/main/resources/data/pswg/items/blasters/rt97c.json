@@ -36,5 +36,16 @@
 		"secondaryBypassTolerance": 0.05
 	},
 	"attachmentDefault": 0,
-	"attachmentMap": {}
+	"attachmentMap": {
+		"1": {
+			"mutex": 1,
+			"id": "barrel",
+			"icon": 1
+		},
+		"2": {
+			"mutex": 2,
+			"id": "cooling",
+			"icon": 6
+		}
+	}
 }
