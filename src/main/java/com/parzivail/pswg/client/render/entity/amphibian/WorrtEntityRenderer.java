@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.render.entity.amphibian;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
@@ -16,7 +16,7 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 {
 	public WorrtEntityRenderer(EntityRendererFactory.Context context)
 	{
-		super(context, Client.ResourceManagers.getNemManager().getModel(Resources.id("mob/amphibian/worrt"), WorrtEntityRenderer::setAngles), 0.5f);
+		super(context, NemManager.INSTANCE.getModel(Resources.id("mob/amphibian/worrt"), WorrtEntityRenderer::setAngles), 0.5f);
 	}
 
 	@Override

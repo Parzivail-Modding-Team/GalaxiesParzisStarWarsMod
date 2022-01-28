@@ -179,7 +179,7 @@ public class Tarkin
 		}
 
 		// Blaster attachments
-		var blasterManager = new SwgBlasterManager();
+		var blasterManager = SwgBlasterManager.INSTANCE;
 		ResourceManagerUtil.forceReload(blasterManager, ResourceType.SERVER_DATA);
 		var blasterData = blasterManager.getData();
 

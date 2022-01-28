@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.render.entity.debug;
 
-import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.model.MutableAnimatedModel;
 import com.parzivail.pswg.entity.debug.KinematicTestEntity;
 import com.parzivail.util.client.VertexConsumerBuffer;
@@ -24,8 +24,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 	public KinematicTestEntityRenderer(EntityRendererFactory.Context ctx)
 	{
 		super(ctx);
-
-		model = Client.ResourceManagers.getNemManager().getModel(Resources.id("mob/debug/bantha"), KinematicTestEntityRenderer::setAngles);
+		model = NemManager.INSTANCE.getModel(Resources.id("mob/debug/bantha"), KinematicTestEntityRenderer::setAngles);
 	}
 
 	private static void setAngles(MutableAnimatedModel<KinematicTestEntity> model, KinematicTestEntity entity, float v, float v1, float v2, float v3, float v4)

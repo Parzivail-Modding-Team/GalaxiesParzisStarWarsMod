@@ -283,11 +283,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 				throttle -= 0.3f;
 
 			throttle = MathHelper.clamp(throttle, 0, 3);
-
 			setThrottle(throttle);
-
-			var forward = getThrottleVelocity(throttle);
-			setVelocity(forward);
 		}
 		else if (throttle > 0)
 		{
@@ -298,10 +294,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 			throttle = MathHelper.clamp(throttle, 0, 3);
 			setThrottle(throttle);
-
-			var forward = getThrottleVelocity(throttle);
-			setVelocity(forward);
 		}
+
+		var forward = getThrottleVelocity(throttle);
+		setVelocity(forward);
 
 		move(MovementType.SELF, getVelocity());
 	}

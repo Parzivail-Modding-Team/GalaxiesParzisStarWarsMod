@@ -201,7 +201,9 @@ public class Client implements ClientModInitializer
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.HkakBush, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.MoloShrub, RenderLayer.getCutout());
 
-		ResourceManagers.registerReloadableManagers();
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NemManager.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(P3dManager.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(BlasterItemRenderer.INSTANCE);
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> ModelRegistry.INSTANCE);
 
@@ -228,12 +230,26 @@ public class Client implements ClientModInitializer
 
 		SwgParticles.register();
 
-		ResourceManagers.registerPackets();
-
 		PlayerEvent.EVENT_BUS.subscribe(PlayerEvent.ACCUMULATE_RECOIL, RecoilManager::handleAccumulateRecoil);
 
 		WorldEvent.EVENT_BUS.subscribe(WorldEvent.SLUG_FIRED, BlasterUtil::handleSlugFired);
 		WorldEvent.EVENT_BUS.subscribe(WorldEvent.BLASTER_BOLT_HIT, BlasterUtil::handleBoltHit);
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+			SwgBlasterManager.INSTANCE.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
+			minecraftClient.execute(() -> {
+				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
+				minecraftClient.getSearchableContainer(SearchManager.ITEM_TOOLTIP).reload();
+			});
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncLightsabers, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+			SwgLightsaberManager.INSTANCE.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
+			minecraftClient.execute(() -> {
+				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
+				minecraftClient.getSearchableContainer(SearchManager.ITEM_TOOLTIP).reload();
+			});
+		});
 
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPlayerEvent, (client, handler, buf, responseSender) -> {
 			var eventId = buf.readByte();
@@ -266,84 +282,5 @@ public class Client implements ClientModInitializer
 				new ZoomDivisorMouseModifier(),
 				null //new SpyglassZoomOverlay(new Identifier("libzoomertest:textures/misc/michael.png"))
 		));
-	}
-
-	public static class ResourceManagers
-	{
-		private static NemManager nemManager;
-		private static P3dManager p3dManager;
-		private static SwgBlasterManager blasterManager;
-		private static SwgLightsaberManager lightsaberManager;
-
-		public static SwgBlasterManager getBlasterManager()
-		{
-			return blasterManager;
-		}
-
-		public static SwgLightsaberManager getLightsaberManager()
-		{
-			return lightsaberManager;
-		}
-
-		public static NemManager getNemManager()
-		{
-			return nemManager;
-		}
-
-		public static P3dManager getP3dManager()
-		{
-			return p3dManager;
-		}
-
-		/**
-		 * Register managers which are used by the client to provide visuals that can be reloaded
-		 */
-		public static void registerReloadableManagers()
-		{
-			ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(nemManager = new NemManager());
-			ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(p3dManager = new P3dManager());
-			ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(BlasterItemRenderer.INSTANCE);
-		}
-
-		/**
-		 * Register managers which are used by the server to provide content
-		 */
-		public static void registerNonreloadableManagers()
-		{
-			ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(blasterManager = new SwgBlasterManager());
-			ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(lightsaberManager = new SwgLightsaberManager());
-		}
-
-		/**
-		 * Register packets used by server resource managers to synchronize content from the client to the server
-		 */
-		public static void registerPackets()
-		{
-			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-				if (blasterManager != null)
-				{
-					blasterManager.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
-					minecraftClient.execute(() -> {
-						((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
-						minecraftClient.getSearchableContainer(SearchManager.ITEM_TOOLTIP).reload();
-					});
-				}
-				else
-					Lumberjack.error("Attempted to sync blaster descriptors without initializing the client loader!");
-			});
-
-			ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncLightsabers, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-				if (lightsaberManager != null)
-				{
-					lightsaberManager.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
-					minecraftClient.execute(() -> {
-						((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
-						minecraftClient.getSearchableContainer(SearchManager.ITEM_TOOLTIP).reload();
-					});
-				}
-				else
-					Lumberjack.error("Attempted to sync lightsaber descriptors without initializing the client loader!");
-			});
-		}
 	}
 }

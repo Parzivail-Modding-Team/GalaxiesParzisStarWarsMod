@@ -14,10 +14,11 @@ import java.util.Map;
 public class P3dManager extends KeyedReloadableLoader<P3dModel>
 {
 	public static final Identifier ID = Resources.id("pm3d_manager");
+	public static final P3dManager INSTANCE = new P3dManager();
 
 	private final Map<Identifier, P3dModel> modelData;
 
-	public P3dManager()
+	private P3dManager()
 	{
 		super("models", "p3d");
 		modelData = new HashMap<>();

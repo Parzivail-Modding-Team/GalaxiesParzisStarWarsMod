@@ -468,7 +468,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 		if (blaster.getItem() instanceof BlasterItem)
 		{
-			var bd = BlasterItem.getBlasterDescriptor(MinecraftClient.getInstance().world, blaster);
+			var bd = BlasterItem.getBlasterDescriptor(blaster);
 			attachmentList = bd.attachmentMap.values().stream().toList();
 			blasterModel = BlasterItem.getBlasterModel(blaster);
 			blasterDescriptor = bd;

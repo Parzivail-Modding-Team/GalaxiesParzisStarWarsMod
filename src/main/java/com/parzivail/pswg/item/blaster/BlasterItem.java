@@ -121,7 +121,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public static void nextFireMode(World world, PlayerEntity player, ItemStack stack)
 	{
 		var bt = new BlasterTag(stack.getOrCreateNbt());
-		var bd = getBlasterDescriptor(world, stack);
+		var bd = getBlasterDescriptor(stack);
 		var modes = bd.firingModes;
 		BlasterFiringMode currentMode;
 
@@ -153,18 +153,16 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		});
 	}
 
-	public static BlasterDescriptor getBlasterDescriptor(World world, ItemStack stack)
+	public static BlasterDescriptor getBlasterDescriptor(ItemStack stack)
 	{
-		var blasterManager = SwgBlasterManager.get(world);
-		return blasterManager.getDataAndAssert(getBlasterModel(stack));
+		return getBlasterDescriptor(stack, false);
 	}
 
-	public static BlasterDescriptor getBlasterDescriptorClient(ItemStack stack, boolean allowNull)
+	public static BlasterDescriptor getBlasterDescriptor(ItemStack stack, boolean allowNull)
 	{
-		var blasterManager = Client.ResourceManagers.getBlasterManager();
 		if (allowNull)
-			return blasterManager.getData(getBlasterModel(stack));
-		return blasterManager.getDataAndAssert(getBlasterModel(stack));
+			return SwgBlasterManager.INSTANCE.getData(getBlasterModel(stack));
+		return SwgBlasterManager.INSTANCE.getDataAndAssert(getBlasterModel(stack));
 	}
 
 	@Override
@@ -185,7 +183,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public float getCooldownProgress(PlayerEntity player, World world, ItemStack stack, float tickDelta)
 	{
 		var bt = new BlasterTag(stack.getOrCreateNbt());
-		var bd = getBlasterDescriptor(world, stack);
+		var bd = getBlasterDescriptor(stack);
 
 		if (bt.isCooling())
 			return MathHelper.clamp((bt.ventingHeat - bd.heat.overheatDrainSpeed * tickDelta) / bd.heat.capacity, 0, 1);
@@ -203,7 +201,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	{
 		final var stack = player.getStackInHand(mainHand);
 		var bt = new BlasterTag(stack.getOrCreateNbt());
-		var bd = getBlasterDescriptor(world, stack);
+		var bd = getBlasterDescriptor(stack);
 
 		var automatic = bd.firingModes.contains(BlasterFiringMode.AUTOMATIC) && bt.getFiringMode() == BlasterFiringMode.AUTOMATIC;
 		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
@@ -236,7 +234,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	{
 		final var stack = player.getStackInHand(hand);
 
-		var bd = getBlasterDescriptor(world, stack);
+		var bd = getBlasterDescriptor(stack);
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		if (!bt.isReady())
@@ -475,9 +473,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		if (!this.isIn(group))
 			return;
 
-		var manager = Client.ResourceManagers.getBlasterManager();
-
-		for (var entry : manager.getData().entrySet())
+		for (var entry : SwgBlasterManager.INSTANCE.getData().entrySet())
 			stacks.add(forType(entry.getValue()));
 	}
 
@@ -516,7 +512,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		var bd = getBlasterDescriptor(world, stack);
+		var bd = getBlasterDescriptor(stack);
 
 		BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
 	}
@@ -538,7 +534,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public double getFovMultiplier(ItemStack stack, World world, PlayerEntity entity)
 	{
 		var bt = new BlasterTag(stack.getOrCreateNbt());
-		var bd = BlasterItem.getBlasterDescriptor(world, stack);
+		var bd = BlasterItem.getBlasterDescriptor(stack);
 
 		if (bd == null)
 			return 1;

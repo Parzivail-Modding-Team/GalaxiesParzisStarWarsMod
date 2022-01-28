@@ -14,8 +14,7 @@
 		"LivingEntityMixin",
 		"MinecraftServerMixin",
 		"PlayerManagerMixin",
-		"ServerPlayNetworkHandlerMixin",
-		"ServerResourceManagerMixin"
+		"ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
 		"AbstractBlockStateMixin",

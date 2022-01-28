@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.species;
 import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SwgSpecies;
@@ -37,7 +38,7 @@ public class SwgSpeciesModels
 
 	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> nemSource(Identifier id)
 	{
-		return Client.ResourceManagers.getNemManager().getPlayerModel(id, true);
+		return NemManager.INSTANCE.getPlayerModel(id, true);
 	}
 
 	private static void register(SwgSpeciesModel model)

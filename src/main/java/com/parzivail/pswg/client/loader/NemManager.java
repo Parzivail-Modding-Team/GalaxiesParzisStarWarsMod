@@ -29,12 +29,13 @@ import java.util.function.Supplier;
 public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 {
 	public static final Identifier ID = Resources.id("nem_manager");
+	public static final NemManager INSTANCE = new NemManager();
 
 	private final Map<Identifier, TexturedModelData> modelData;
 	private final ArrayList<Pair<Identifier, Consumer<ModelPart>>> models;
 	private final HashMap<Identifier, PlayerEntityModel<AbstractClientPlayerEntity>> playerModels;
 
-	public NemManager()
+	private NemManager()
 	{
 		super("models", "nem");
 		modelData = new HashMap<>();

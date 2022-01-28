@@ -27,7 +27,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	@Override
 	public boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
 	{
-		var bd = BlasterItem.getBlasterDescriptor(player.world, stack);
+		var bd = BlasterItem.getBlasterDescriptor(stack);
 
 		if (bd == null)
 			return false;
@@ -145,7 +145,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 	{
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 
-		var bd = BlasterItem.getBlasterDescriptor(player.world, stack);
+		var bd = BlasterItem.getBlasterDescriptor(stack);
 		if (bd == null)
 			return;
 

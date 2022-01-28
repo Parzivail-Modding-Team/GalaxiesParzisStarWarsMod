@@ -32,20 +32,17 @@ public class PlayerManagerMixin
 	@Inject(method = "onPlayerConnect(Lnet/minecraft/network/ClientConnection;Lnet/minecraft/server/network/ServerPlayerEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendCommandTree(Lnet/minecraft/server/network/ServerPlayerEntity;)V", shift = At.Shift.BEFORE))
 	public void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci)
 	{
-		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncBlasters, SwgBlasterManager.get(server).createPacket());
-		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncLightsabers, SwgLightsaberManager.get(server).createPacket());
+		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
+		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
 	}
 
 	@Inject(method = "onDataPacksReloaded()V", at = @At("TAIL"))
 	public void onDataPacksReloaded(CallbackInfo ci)
 	{
-		var blasterManager = SwgBlasterManager.get(server);
-		var lightsaberManager = SwgLightsaberManager.get(server);
-
 		for (var serverPlayerEntity : this.players)
 		{
-			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.PacketSyncBlasters, blasterManager.createPacket());
-			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.PacketSyncLightsabers, lightsaberManager.createPacket());
+			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.PacketSyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
+			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.PacketSyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
 		}
 	}
 }

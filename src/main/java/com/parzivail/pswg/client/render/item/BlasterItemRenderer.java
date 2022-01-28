@@ -60,8 +60,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
 
 	private static final Supplier<ModelEntry> FALLBACK_MODEL = Suppliers.memoize(() -> {
-		var p3dManager = Client.ResourceManagers.getP3dManager();
-		return new ModelEntry(p3dManager.get(Resources.id("blaster/a280")), Resources.id("textures/model/blaster/a280.png"));
+		return new ModelEntry(P3dManager.INSTANCE.get(Resources.id("blaster/a280")), Resources.id("textures/model/blaster/a280.png"));
 	});
 
 	private static final Identifier[] ID_MUZZLE_FLASHES_FORWARD = new Identifier[] {
@@ -90,8 +89,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		if (MODEL_CACHE.containsKey(id))
 			return MODEL_CACHE.get(id);
 
-		var p3dManager = Client.ResourceManagers.getP3dManager();
-		var file = p3dManager.get(new Identifier(id.getNamespace(), "item/blaster/" + id.getPath()));
+		var file = P3dManager.INSTANCE.get(new Identifier(id.getNamespace(), "item/blaster/" + id.getPath()));
 
 		if (file == null)
 		{
@@ -159,7 +157,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var bdId = BlasterItem.getBlasterModel(tag);
 		var bt = new BlasterTag(tag);
 
-		var bd = BlasterItem.getBlasterDescriptorClient(stack, true);
+		var bd = BlasterItem.getBlasterDescriptor(stack, true);
 		if (bd == null)
 			return;
 
@@ -440,7 +438,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		}
 
 		var bt = new BlasterTag(stack.getOrCreateNbt());
-		var bd = BlasterItem.getBlasterDescriptor(entity.world, stack);
+		var bd = BlasterItem.getBlasterDescriptor(stack);
 
 		float armPitchOffset = 0;
 		float armPitchScale = 1;
@@ -484,7 +482,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		var stack = mc.player.getInventory().getMainHandStack();
 		if (stack.getItem() instanceof BlasterItem)
 		{
-			var bd = BlasterItem.getBlasterDescriptorClient(stack, true);
+			var bd = BlasterItem.getBlasterDescriptor(stack, true);
+			if (bd == null)
+				return;
+
 			var bt = new BlasterTag(stack.getOrCreateNbt());
 
 			strings.add(String.format("! id=%s type=%s", bd.id, bd.type.getValue()));

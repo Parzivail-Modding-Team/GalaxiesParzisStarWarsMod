@@ -5,6 +5,7 @@ import com.google.common.collect.Multimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
+import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
@@ -151,9 +152,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		if (!this.isIn(group))
 			return;
 
-		var manager = Client.ResourceManagers.getLightsaberManager();
-
-		for (var entry : manager.getData().entrySet())
+		for (var entry : SwgLightsaberManager.INSTANCE.getData().entrySet())
 			stacks.add(forType(entry.getValue()));
 	}
 

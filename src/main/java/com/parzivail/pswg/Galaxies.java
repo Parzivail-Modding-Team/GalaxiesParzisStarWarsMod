@@ -2,7 +2,6 @@ package com.parzivail.pswg;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.parzivail.datagen.DataGenHelper;
-import com.parzivail.pswg.access.IServerResourceManagerAccess;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
@@ -14,7 +13,6 @@ import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterAxialInfo;
 import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
 import com.parzivail.pswg.item.blaster.data.BlasterHeatInfo;
-import com.parzivail.pswg.mixin.MinecraftServerMixin;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.species.SwgSpecies;
@@ -27,13 +25,13 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.resource.ReloadableResourceManager;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.TranslatableText;
 
@@ -81,7 +79,8 @@ public class Galaxies implements ModInitializer
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
 
-		Client.ResourceManagers.registerNonreloadableManagers();
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgBlasterManager.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgLightsaberManager.INSTANCE);
 
 		TrackedDataHandlers.register();
 
@@ -164,33 +163,5 @@ public class Galaxies implements ModInitializer
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment())
 			DataGenHelper.run();
-	}
-
-	public static class ResourceManagers
-	{
-		public static ResourceManagers get(MinecraftServer server)
-		{
-			var srm = ((MinecraftServerMixin)server).getServerResourceManager();
-			return ((IServerResourceManagerAccess)srm).getResourceManagers();
-		}
-
-		private final SwgBlasterManager blasterManager;
-		private final SwgLightsaberManager lightsaberManager;
-
-		public ResourceManagers(ReloadableResourceManager resourceManager)
-		{
-			resourceManager.registerReloader(blasterManager = new SwgBlasterManager());
-			resourceManager.registerReloader(lightsaberManager = new SwgLightsaberManager());
-		}
-
-		public SwgBlasterManager getBlasterManager()
-		{
-			return blasterManager;
-		}
-
-		public SwgLightsaberManager getLightsaberManager()
-		{
-			return lightsaberManager;
-		}
 	}
 }

@@ -4,20 +4,16 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import com.parzivail.pswg.Client;
-import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -28,6 +24,7 @@ import java.util.stream.Collectors;
 public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
 	public static final Identifier ID = Resources.id("blaster_manager");
+	public static final SwgBlasterManager INSTANCE = new SwgBlasterManager();
 
 	private static class IdentifierDeserializer implements JsonDeserializer<Identifier>
 	{
@@ -139,7 +136,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		}
 	}
 
-	public SwgBlasterManager()
+	private SwgBlasterManager()
 	{
 		super(
 				new GsonBuilder()
@@ -158,19 +155,6 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 	public Identifier getFabricId()
 	{
 		return ID;
-	}
-
-	public static SwgBlasterManager get(MinecraftServer server)
-	{
-		return Galaxies.ResourceManagers.get(server).getBlasterManager();
-	}
-
-	public static SwgBlasterManager get(World world)
-	{
-		if (world.isClient)
-			return Client.ResourceManagers.getBlasterManager();
-
-		return SwgBlasterManager.get(world.getServer());
 	}
 
 	public BlasterDescriptor getDataAndAssert(Identifier key)
