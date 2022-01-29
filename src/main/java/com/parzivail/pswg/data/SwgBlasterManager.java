@@ -5,8 +5,10 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.item.blaster.data.*;
-import com.parzivail.util.data.PacketByteBufHelper;
+import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
+import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
+import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
+import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -182,137 +184,12 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 	protected void writeDataEntry(PacketByteBuf buf, BlasterDescriptor value)
 	{
-		buf.writeString(value.sound.toString());
-
-		buf.writeByte(value.type.getId());
-		buf.writeShort(BlasterFiringMode.pack(value.firingModes));
-
-		buf.writeFloat(value.damage);
-		buf.writeFloat(value.range);
-		buf.writeFloat(value.weight);
-		buf.writeFloat(value.boltColor);
-		buf.writeInt(value.magazineSize);
-		buf.writeShort(value.automaticRepeatTime);
-		buf.writeShort(value.burstRepeatTime);
-
-		buf.writeShort(value.burstSize);
-
-		buf.writeFloat(value.recoil.horizontal);
-		buf.writeFloat(value.recoil.vertical);
-
-		buf.writeFloat(value.spread.horizontal);
-		buf.writeFloat(value.spread.vertical);
-
-		buf.writeInt(value.heat.capacity);
-		buf.writeShort(value.heat.perRound);
-		buf.writeShort(value.heat.drainSpeed);
-		buf.writeShort(value.heat.overheatPenalty);
-		buf.writeShort(value.heat.overheatDrainSpeed);
-		buf.writeShort(value.heat.passiveCooldownDelay);
-		buf.writeShort(value.heat.overchargeBonus);
-
-		buf.writeFloat(value.cooling.primaryBypassTime);
-		buf.writeFloat(value.cooling.primaryBypassTolerance);
-		buf.writeFloat(value.cooling.secondaryBypassTime);
-		buf.writeFloat(value.cooling.secondaryBypassTolerance);
-
-		buf.writeInt(value.attachmentDefault);
-		buf.writeInt(value.attachmentMinimum);
-
-		if (value.attachmentMap == null)
-			buf.writeByte(0);
-		else
-		{
-			buf.writeByte(value.attachmentMap.size());
-
-			for (var entry : value.attachmentMap.entrySet())
-			{
-				buf.writeInt(entry.getKey());
-				buf.writeShort(entry.getValue().mutex);
-				buf.writeByte(entry.getValue().icon);
-				buf.writeString(entry.getValue().id);
-				PacketByteBufHelper.writeNullable(buf, entry.getValue().texture, (buf1, value1) -> buf1.writeString(value1.toString()));
-				PacketByteBufHelper.writeNullable(buf, entry.getValue().visualComponent, PacketByteBuf::writeString);
-			}
-		}
+		value.write(buf);
 	}
 
 	protected BlasterDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
 	{
-		var sound = new Identifier(buf.readString());
-
-		var archetype = BlasterArchetype.ID_LOOKUP.get(buf.readByte());
-		var firingModes = BlasterFiringMode.unpack(buf.readShort());
-
-		var damage = buf.readFloat();
-		var range = buf.readFloat();
-		var weight = buf.readFloat();
-		var boltColor = buf.readFloat();
-		var magazineSize = buf.readInt();
-		var automaticRepeatTime = buf.readShort();
-		var burstRepeatTime = buf.readShort();
-
-		var burstSize = buf.readShort();
-
-		var recoil_horizontal = buf.readFloat();
-		var recoil_vertical = buf.readFloat();
-
-		var spread_horizontal = buf.readFloat();
-		var spread_vertical = buf.readFloat();
-
-		var heat_capacity = buf.readInt();
-		var heat_perRound = buf.readShort();
-		var heat_drainSpeed = buf.readShort();
-		var heat_cooldownDelay = buf.readShort();
-		var heat_overheatDrainSpeed = buf.readShort();
-		var heat_passiveCooldownDelay = buf.readShort();
-		var heat_overchargeBonus = buf.readShort();
-
-		var cooling_primaryBypassTime = buf.readFloat();
-		var cooling_primaryBypassTolerance = buf.readFloat();
-		var cooling_secondaryBypassTime = buf.readFloat();
-		var cooling_secondaryBypassTolerance = buf.readFloat();
-
-		var attachmentDefault = buf.readInt();
-		var attachmentMinimum = buf.readInt();
-
-		var attachmentMap = new HashMap<Integer, BlasterAttachmentDescriptor>();
-
-		var numAttachments = buf.readByte();
-
-		for (var attIdx = 0; attIdx < numAttachments; attIdx++)
-		{
-			var attachmentBit = buf.readInt();
-			var attachmentMutex = buf.readShort();
-			var attachmentIcon = buf.readByte();
-			var attachmentId = buf.readString();
-			var attachmentTexture = PacketByteBufHelper.readNullable(buf, buf1 -> new Identifier(buf1.readString()));
-			var attachmentVisualComponent = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readString);
-
-			attachmentMap.put(attachmentBit, new BlasterAttachmentDescriptor(attachmentBit, attachmentMutex, attachmentIcon, attachmentId, attachmentVisualComponent, attachmentTexture));
-		}
-
-		return new BlasterDescriptor(
-				key,
-				sound,
-				archetype,
-				firingModes,
-				damage,
-				range,
-				weight,
-				boltColor,
-				magazineSize,
-				automaticRepeatTime,
-				burstRepeatTime,
-				burstSize,
-				new BlasterAxialInfo(recoil_horizontal, recoil_vertical),
-				new BlasterAxialInfo(spread_horizontal, spread_vertical),
-				new BlasterHeatInfo(heat_capacity, heat_perRound, heat_drainSpeed, heat_cooldownDelay, heat_overheatDrainSpeed, heat_passiveCooldownDelay, heat_overchargeBonus),
-				new BlasterCoolingBypassProfile(cooling_primaryBypassTime, cooling_primaryBypassTolerance, cooling_secondaryBypassTime, cooling_secondaryBypassTolerance),
-				attachmentDefault,
-				attachmentMinimum,
-				attachmentMap
-		);
+		return BlasterDescriptor.read(buf, key);
 	}
 
 	protected BlasterDescriptor deserializeDataEntry(Identifier identifier, JsonElement jsonObject)

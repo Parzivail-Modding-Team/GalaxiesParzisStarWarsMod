@@ -9,15 +9,10 @@ import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.handler.PlayerPacketHandler;
-import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
-import com.parzivail.pswg.item.blaster.data.BlasterAxialInfo;
-import com.parzivail.pswg.item.blaster.data.BlasterCoolingBypassProfile;
-import com.parzivail.pswg.item.blaster.data.BlasterHeatInfo;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.species.SwgSpecies;
 import com.parzivail.util.Lumberjack;
-import com.parzivail.util.nbt.TagSerializer;
 import com.parzivail.util.world.DimensionTeleporter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
@@ -70,11 +65,6 @@ public class Galaxies implements ModInitializer
 		Lumberjack.debug("onInitialize");
 
 		Resources.checkVersion();
-
-		TagSerializer.register(BlasterAxialInfo.class, BlasterAxialInfo::fromTag, BlasterAxialInfo::toTag);
-		TagSerializer.register(BlasterHeatInfo.class, BlasterHeatInfo::fromTag, BlasterHeatInfo::toTag);
-		TagSerializer.register(BlasterCoolingBypassProfile.class, BlasterCoolingBypassProfile::fromTag, BlasterCoolingBypassProfile::toTag);
-		TagSerializer.register(BlasterAttachmentDescriptor.class, BlasterAttachmentDescriptor::fromTag, BlasterAttachmentDescriptor::toTag);
 
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);

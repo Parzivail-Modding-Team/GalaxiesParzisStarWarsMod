@@ -34,10 +34,7 @@ public class EnergyRenderer
 
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
-		final var offset = (float)Resources.RANDOM.nextGaussian();
-
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		//		renderCore(totalLength, coreColor | 0xFF000000, unstable, offset, cap);
 		renderGlow(totalLength, glowHue, glowSat, glowVal, unstable, cap);
 	}
 

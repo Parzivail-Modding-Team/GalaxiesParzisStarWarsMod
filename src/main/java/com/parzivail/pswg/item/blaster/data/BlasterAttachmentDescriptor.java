@@ -1,6 +1,7 @@
 package com.parzivail.pswg.item.blaster.data;
 
-import net.minecraft.nbt.NbtCompound;
+import com.parzivail.util.data.PacketByteBufHelper;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public class BlasterAttachmentDescriptor
@@ -22,31 +23,25 @@ public class BlasterAttachmentDescriptor
 		this.texture = texture;
 	}
 
-	public static BlasterAttachmentDescriptor fromTag(NbtCompound compoundTag, String s)
+	public static BlasterAttachmentDescriptor read(PacketByteBuf buf)
 	{
-		var tag = compoundTag.getCompound(s);
+		var bit = buf.readInt();
+		var mutex = buf.readShort();
+		var icon = buf.readByte();
+		var id = buf.readString();
+		var texture = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readIdentifier);
+		var visualComponent = PacketByteBufHelper.readNullable(buf, PacketByteBuf::readString);
 
-		return new BlasterAttachmentDescriptor(
-				tag.getInt("bit"),
-				tag.getShort("mutex"),
-				tag.getByte("icon"),
-				tag.getString("id"),
-				tag.getString("visualComponent"),
-				new Identifier(tag.getString("texture"))
-		);
+		return new BlasterAttachmentDescriptor(bit, mutex, icon, id, visualComponent, texture);
 	}
 
-	public static void toTag(NbtCompound compoundTag, String s, BlasterAttachmentDescriptor data)
+	public void write(PacketByteBuf buf)
 	{
-		var tag = new NbtCompound();
-
-		tag.putInt("bit", data.bit);
-		tag.putShort("mutex", data.mutex);
-		tag.putByte("icon", data.icon);
-		tag.putString("id", data.id);
-		tag.putString("visualComponent", data.visualComponent);
-		tag.putString("texture", data.texture.toString());
-
-		compoundTag.put(s, tag);
+		buf.writeInt(bit);
+		buf.writeShort(mutex);
+		buf.writeByte(icon);
+		buf.writeString(id);
+		PacketByteBufHelper.writeNullable(buf, texture, PacketByteBuf::writeIdentifier);
+		PacketByteBufHelper.writeNullable(buf, visualComponent, PacketByteBuf::writeString);
 	}
 }

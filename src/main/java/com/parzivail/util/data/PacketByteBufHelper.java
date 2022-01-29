@@ -1,10 +1,13 @@
 package com.parzivail.util.data;
 
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.EulerAngle;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+
+import java.util.HashMap;
 
 public class PacketByteBufHelper
 {
@@ -35,6 +38,44 @@ public class PacketByteBufHelper
 			return null;
 
 		return reader.read(buf);
+	}
+
+	public static <TK, TV> void writeHashMap(PacketByteBuf buf, HashMap<TK, TV> map, PacketByteBufWriter<TK> keyWriter, PacketByteBufWriter<TV> valueWriter)
+	{
+		buf.writeInt(map.size());
+
+		for (var pair : map.entrySet())
+		{
+			keyWriter.write(buf, pair.getKey());
+			valueWriter.write(buf, pair.getValue());
+		}
+	}
+
+	public static <TK, TV> HashMap<TK, TV> readHashMap(PacketByteBuf buf, PacketByteBufReader<TK> keyReader, PacketByteBufReader<TV> valueReader)
+	{
+		var size = buf.readInt();
+
+		var map = new HashMap<TK, TV>(size);
+
+		for (var i = 0; i < size; i++)
+		{
+			var k = keyReader.read(buf);
+			var v = valueReader.read(buf);
+
+			map.put(k, v);
+		}
+
+		return map;
+	}
+
+	public static void writeIdentifier(PacketByteBuf buf, Identifier i)
+	{
+		buf.writeString(i.toString());
+	}
+
+	public static Identifier readIdentifier(PacketByteBuf buf)
+	{
+		return new Identifier(buf.readString());
 	}
 
 	public static void writeQuaternion(PacketByteBuf buf, Quaternion q)

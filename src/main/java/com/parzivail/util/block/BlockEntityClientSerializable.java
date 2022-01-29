@@ -45,13 +45,14 @@ public interface BlockEntityClientSerializable
 		var targetWorldId = buf.readIdentifier();
 		var tag = buf.readNbt();
 
-		// Is this safe to keep on the network thread?
-		var world = minecraftClient.world;
-		var targetWorld = RegistryKey.of(Registry.WORLD_KEY, targetWorldId);
+		minecraftClient.execute(() -> {
+			var world = minecraftClient.world;
+			var targetWorld = RegistryKey.of(Registry.WORLD_KEY, targetWorldId);
 
-		if (world == null || !world.getRegistryKey().equals(targetWorld) || !(world.getBlockEntity(targetPos) instanceof BlockEntityClientSerializable tile))
-			return;
+			if (world == null || !world.getRegistryKey().equals(targetWorld) || !(world.getBlockEntity(targetPos) instanceof BlockEntityClientSerializable tile))
+				return;
 
-		tile.fromClientTag(tag);
+			tile.fromClientTag(tag);
+		});
 	}
 }

@@ -1,6 +1,6 @@
 package com.parzivail.pswg.item.blaster.data;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 
 public class BlasterAxialInfo
 {
@@ -13,23 +13,16 @@ public class BlasterAxialInfo
 		this.vertical = vertical;
 	}
 
-	public static BlasterAxialInfo fromTag(NbtCompound compoundTag, String s)
+	public static BlasterAxialInfo read(PacketByteBuf buf)
 	{
-		var tag = compoundTag.getCompound(s);
-
-		return new BlasterAxialInfo(
-				tag.getFloat("horizontal"),
-				tag.getFloat("vertical")
-		);
+		var h = buf.readFloat();
+		var v = buf.readFloat();
+		return new BlasterAxialInfo(h, v);
 	}
 
-	public static void toTag(NbtCompound compoundTag, String s, BlasterAxialInfo data)
+	public void write(PacketByteBuf buf)
 	{
-		var tag = new NbtCompound();
-
-		tag.putFloat("horizontal", data.horizontal);
-		tag.putFloat("vertical", data.vertical);
-
-		compoundTag.put(s, tag);
+		buf.writeFloat(horizontal);
+		buf.writeFloat(vertical);
 	}
 }

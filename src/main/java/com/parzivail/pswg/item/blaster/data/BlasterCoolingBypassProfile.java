@@ -1,7 +1,7 @@
 package com.parzivail.pswg.item.blaster.data;
 
 import com.parzivail.pswg.Resources;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
@@ -32,27 +32,20 @@ public class BlasterCoolingBypassProfile
 		this.secondaryBypassTolerance = secondaryBypassTolerance;
 	}
 
-	public static BlasterCoolingBypassProfile fromTag(NbtCompound compoundTag, String s)
+	public static BlasterCoolingBypassProfile read(PacketByteBuf buf)
 	{
-		var tag = compoundTag.getCompound(s);
-
-		return new BlasterCoolingBypassProfile(
-				tag.getFloat("primaryBypassTime"),
-				tag.getFloat("primaryBypassTolerance"),
-				tag.getFloat("secondaryBypassTime"),
-				tag.getFloat("secondaryBypassTolerance")
-		);
+		var primaryBypassTime = buf.readFloat();
+		var primaryBypassTolerance = buf.readFloat();
+		var secondaryBypassTime = buf.readFloat();
+		var secondaryBypassTolerance = buf.readFloat();
+		return new BlasterCoolingBypassProfile(primaryBypassTime, primaryBypassTolerance, secondaryBypassTime, secondaryBypassTolerance);
 	}
 
-	public static void toTag(NbtCompound compoundTag, String s, BlasterCoolingBypassProfile data)
+	public void write(PacketByteBuf buf)
 	{
-		var tag = new NbtCompound();
-
-		tag.putFloat("primaryBypassTime", data.primaryBypassTime);
-		tag.putFloat("primaryBypassTolerance", data.primaryBypassTolerance);
-		tag.putFloat("secondaryBypassTime", data.secondaryBypassTime);
-		tag.putFloat("secondaryBypassTolerance", data.secondaryBypassTolerance);
-
-		compoundTag.put(s, tag);
+		buf.writeFloat(primaryBypassTime);
+		buf.writeFloat(primaryBypassTolerance);
+		buf.writeFloat(secondaryBypassTime);
+		buf.writeFloat(secondaryBypassTolerance);
 	}
 }

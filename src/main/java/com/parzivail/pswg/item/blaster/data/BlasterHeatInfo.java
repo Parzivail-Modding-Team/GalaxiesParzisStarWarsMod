@@ -1,6 +1,6 @@
 package com.parzivail.pswg.item.blaster.data;
 
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 
 public class BlasterHeatInfo
 {
@@ -23,33 +23,26 @@ public class BlasterHeatInfo
 		this.overchargeBonus = overchargeBonus;
 	}
 
-	public static BlasterHeatInfo fromTag(NbtCompound compoundTag, String s)
+	public static BlasterHeatInfo read(PacketByteBuf buf)
 	{
-		var tag = compoundTag.getCompound(s);
-
-		return new BlasterHeatInfo(
-				tag.getInt("capacity"),
-				tag.getShort("perRound"),
-				tag.getShort("drainSpeed"),
-				tag.getShort("overheatPenalty"),
-				tag.getShort("overheatDrainSpeed"),
-				tag.getShort("passiveCooldownDelay"),
-				tag.getShort("overchargeBonus")
-		);
+		var capacity = buf.readInt();
+		var perRound = buf.readShort();
+		var drainSpeed = buf.readShort();
+		var overheatPenalty = buf.readShort();
+		var overheatDrainSpeed = buf.readShort();
+		var passiveCooldownDelay = buf.readShort();
+		var overchargeBonus = buf.readShort();
+		return new BlasterHeatInfo(capacity, perRound, drainSpeed, overheatPenalty, overheatDrainSpeed, passiveCooldownDelay, overchargeBonus);
 	}
 
-	public static void toTag(NbtCompound compoundTag, String s, BlasterHeatInfo data)
+	public void write(PacketByteBuf buf)
 	{
-		var tag = new NbtCompound();
-
-		tag.putInt("capacity", data.capacity);
-		tag.putShort("perRound", data.perRound);
-		tag.putShort("drainSpeed", data.perRound);
-		tag.putShort("overheatPenalty", data.overheatPenalty);
-		tag.putShort("overheatDrainSpeed", data.overheatPenalty);
-		tag.putShort("passiveCooldownDelay", data.passiveCooldownDelay);
-		tag.putShort("overchargeBonus", data.overchargeBonus);
-
-		compoundTag.put(s, tag);
+		buf.writeInt(capacity);
+		buf.writeShort(perRound);
+		buf.writeShort(drainSpeed);
+		buf.writeShort(overheatPenalty);
+		buf.writeShort(overheatDrainSpeed);
+		buf.writeShort(passiveCooldownDelay);
+		buf.writeShort(overchargeBonus);
 	}
 }
