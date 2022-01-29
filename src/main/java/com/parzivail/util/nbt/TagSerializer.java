@@ -1,20 +1,16 @@
 package com.parzivail.util.nbt;
 
+import com.parzivail.util.data.ReflectionSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 
-public class TagSerializer
+public class TagSerializer extends ReflectionSerializer<NbtCompound>
 {
-	private static final HashMap<Class<?>, Pair<Reader<?>, Writer<?>>> TYPE_SERIALIZERS = new HashMap<>();
-	private static final HashMap<Class<?>, Field[]> fieldCache = new HashMap<>();
+	private static final HashMap<Class<?>, Pair<Reader<NbtCompound, ?>, Writer<NbtCompound, ?>>> TYPE_SERIALIZERS = new HashMap<>();
 
 	static
 	{
@@ -62,42 +58,15 @@ public class TagSerializer
 		}
 	}
 
-	private static boolean acceptField(Field f, Class<?> type)
+	@Override
+	protected Pair<Reader<NbtCompound, ?>, Writer<NbtCompound, ?>> getHandler(Class<?> clazz)
 	{
-		var mods = f.getModifiers();
-		return !(Modifier.isFinal(mods) || Modifier.isStatic(mods) || Modifier.isTransient(mods)) && TYPE_SERIALIZERS.containsKey(type);
+		return TYPE_SERIALIZERS.get(clazz);
 	}
 
-	private static Field[] getClassFields(Class<?> clazz)
-	{
-		if (fieldCache.containsKey(clazz))
-			return fieldCache.get(clazz);
-		else
-		{
-			var fields = clazz.getFields();
-			Arrays.sort(fields, Comparator.comparing(Field::getName));
-			fieldCache.put(clazz, fields);
-			return fields;
-		}
-	}
-
-	private static Pair<Reader<?>, Writer<?>> getHandler(Class<?> clazz)
-	{
-		var pair = TYPE_SERIALIZERS.get(clazz);
-		if (pair == null)
-			throw new RuntimeException("No type serializer for  " + clazz);
-		return pair;
-	}
-
-	public static <T> void register(Class<T> type, Reader<? extends T> reader, Writer<? super T> writer)
+	public static <T> void register(Class<T> type, Reader<NbtCompound, ? extends T> reader, Writer<NbtCompound, ? super T> writer)
 	{
 		TYPE_SERIALIZERS.put(type, Pair.of(reader, writer));
-	}
-
-	private void readField(Field f, Class<?> clazz, NbtCompound nbt) throws IllegalArgumentException, IllegalAccessException
-	{
-		var handler = getHandler(clazz);
-		f.set(this, handler.getLeft().read(nbt, f.getName()));
 	}
 
 	public void serializeAsSubtag(ItemStack stack)
@@ -145,23 +114,5 @@ public class TagSerializer
 		{
 			throw new RuntimeException("Error at writing NBT " + this, e);
 		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private <T> void writeField(Field f, Class<T> clazz, NbtCompound nbt) throws IllegalArgumentException, IllegalAccessException
-	{
-		var handler = (Pair<Reader<T>, Writer<T>>)((Object)getHandler(clazz));
-		var obj = f.get(this);
-		handler.getRight().write(nbt, f.getName(), (T)obj);
-	}
-
-	public interface Reader<T>
-	{
-		T read(NbtCompound nbt, String name);
-	}
-
-	public interface Writer<T>
-	{
-		void write(NbtCompound nbt, String name, T t);
 	}
 }
