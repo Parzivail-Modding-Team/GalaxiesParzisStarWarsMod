@@ -36,6 +36,12 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEnt
 	}
 
 	@Override
+	public NbtCompound toInitialChunkDataNbt()
+	{
+		return toClientTag(super.toInitialChunkDataNbt());
+	}
+
+	@Override
 	public void readNbt(NbtCompound tag)
 	{
 		super.readNbt(tag);
@@ -110,13 +116,14 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEnt
 	{
 		setTimer(ANIMATION_TIME);
 		setMoving(true);
+		sync();
 	}
 
 	@Environment(EnvType.CLIENT)
 	public float getAnimationTime(float tickDelta)
 	{
 		if (isMoving())
-			return (getTimer() - tickDelta + 1) / ANIMATION_TIME;
+			return (getTimer() - tickDelta) / ANIMATION_TIME;
 
 		return 1;
 	}
@@ -147,12 +154,13 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEnt
 
 				t.setTimer(0);
 				t.setMoving(false);
+
+				t.sync();
 			}
 			else
 				t.setTimer(timer);
 
-			if (!world.isClient)
-				t.sync();
+			be.markDirty();
 		}
 	}
 }
