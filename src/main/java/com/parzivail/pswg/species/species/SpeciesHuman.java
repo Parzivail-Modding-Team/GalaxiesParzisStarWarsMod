@@ -24,38 +24,6 @@ public class SpeciesHuman extends SwgSpecies
 			"sand"
 	);
 
-	private static final SpeciesVariable VAR_EYEBROWS = new SpeciesVariable(
-			SwgSpeciesRegistry.SPECIES_HUMANOID,
-			"eyebrows",
-			"black",
-			"black",
-			"blonde",
-			"brown",
-			"white"
-	);
-
-	private static final SpeciesVariable VAR_HAIR = new SpeciesVariable(
-			SwgSpeciesRegistry.SPECIES_HUMANOID,
-			"hair",
-			"brown_1",
-			"black_1",
-			"black_2",
-			"black_3",
-			"black_4",
-			"blonde_1",
-			"blonde_2",
-			"blonde_3",
-			"blonde_4",
-			"brown_1",
-			"brown_2",
-			"brown_3",
-			"brown_4",
-			"gray_1",
-			"gray_2",
-			"gray_3",
-			"gray_4"
-	);
-
 	public SpeciesHuman(String serialized)
 	{
 		super(serialized);
@@ -70,7 +38,7 @@ public class SpeciesHuman extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_SKINTONE, VAR_EYEBROWS, VAR_HAIR };
+		return new SpeciesVariable[] { VAR_SKINTONE, VAR_HUMANOID_EYEBROWS, VAR_HUMANOID_HAIR };
 	}
 
 	@Override
@@ -79,10 +47,10 @@ public class SpeciesHuman extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_SKINTONE));
-		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
+		stack.add(getGenderedTexture(this, VAR_HUMANOID_EYEBROWS));
 		stack.add(getClothes(player, gender));
 		stack.add(tint(getGlobalTexture("eyes"), 0xFFFFFF));
-		stack.add(getTexture(this, VAR_HAIR));
+		stack.add(getTexture(this, VAR_HUMANOID_HAIR));
 		return stack;
 	}
 }

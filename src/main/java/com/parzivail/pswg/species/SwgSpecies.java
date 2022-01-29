@@ -20,6 +20,37 @@ public abstract class SwgSpecies
 	private static final String VARIABLE_SEPARATOR = ",";
 	private static final String MODEL_SEPARATOR = ";";
 
+	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new SpeciesVariable(
+			SwgSpeciesRegistry.SPECIES_HUMANOID,
+			"eyebrows",
+			"black",
+			"black",
+			"blonde",
+			"brown",
+			"white"
+	);
+	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new SpeciesVariable(
+			SwgSpeciesRegistry.SPECIES_HUMANOID,
+			"hair",
+			"brown_1",
+			"black_1",
+			"black_2",
+			"black_3",
+			"black_4",
+			"blonde_1",
+			"blonde_2",
+			"blonde_3",
+			"blonde_4",
+			"brown_1",
+			"brown_2",
+			"brown_3",
+			"brown_4",
+			"gray_1",
+			"gray_2",
+			"gray_3",
+			"gray_4"
+	);
+
 	public static Identifier getSpeciesSlug(String serializedSpecies)
 	{
 		var parts = serializedSpecies.split(MODEL_SEPARATOR);
@@ -186,8 +217,7 @@ public abstract class SwgSpecies
 	public void copy(SwgSpecies species)
 	{
 		this.setDefaultVariables();
-		for (var pair : species.variables.entrySet())
-			this.variables.put(pair.getKey(), pair.getValue());
+		this.variables.putAll(species.variables);
 
 		this.gender = species.gender;
 	}
