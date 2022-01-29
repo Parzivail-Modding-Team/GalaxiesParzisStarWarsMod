@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 
 public class SwgLightsaberManager extends TypedDataLoader<LightsaberDescriptor>
 {
-	public static final Identifier ID = Resources.id("blaster_manager");
+	public static final Identifier ID = Resources.id("lightsaber_manager");
 	public static final SwgLightsaberManager INSTANCE = new SwgLightsaberManager();
 
 	private SwgLightsaberManager()

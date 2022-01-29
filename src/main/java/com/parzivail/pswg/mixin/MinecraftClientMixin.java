@@ -1,6 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.pswg.client.texture.tinted.stacked.TintedTextureProvider;
@@ -48,6 +49,8 @@ public abstract class MinecraftClientMixin
 		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", remoteAssetDir);
 		Client.stackedTextureProvider = new StackedTextureProvider(textureManager, "pswg:stacked");
 		Client.tintedTextureProvider = new TintedTextureProvider(textureManager, "pswg:tinted");
+
+		Client.registerRenderLayer(EnergyRenderer.LAYER_ENERGY);
 	}
 
 	@Inject(method = "handleInputEvents()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;handleBlockBreaking(Z)V", shift = At.Shift.BEFORE), cancellable = true)

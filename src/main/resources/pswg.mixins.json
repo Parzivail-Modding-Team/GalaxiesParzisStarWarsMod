@@ -20,6 +20,7 @@
 		"AbstractBlockStateMixin",
 		"AbstractClientPlayerEntityMixin",
 		"BipedEntityModelMixin",
+		"BufferBuilderStorageAccessor",
 		"CameraMixin",
 		"ClientPlayNetworkHandlerMixin",
 		"ClientRecipeBookMixin",

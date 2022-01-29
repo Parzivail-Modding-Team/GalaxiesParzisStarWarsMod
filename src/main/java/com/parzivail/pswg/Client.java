@@ -30,6 +30,7 @@ import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
+import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.Lumberjack;
@@ -58,6 +59,7 @@ import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.util.InputUtil;
@@ -282,5 +284,10 @@ public class Client implements ClientModInitializer
 				new ZoomDivisorMouseModifier(),
 				null //new SpyglassZoomOverlay(new Identifier("libzoomertest:textures/misc/michael.png"))
 		));
+	}
+
+	public static void registerRenderLayer(RenderLayer layer)
+	{
+		((BufferBuilderStorageAccessor)MinecraftClient.getInstance().getBufferBuilders()).entityBuilders().put(layer, new BufferBuilder(layer.getExpectedBufferSize()));
 	}
 }
