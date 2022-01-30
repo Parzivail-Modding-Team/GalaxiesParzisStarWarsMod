@@ -43,7 +43,7 @@ public class SpeciesTwilek extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_BODY };
+		return new SpeciesVariable[] { VAR_BODY, SwgSpecies.VAR_HUMANOID_EYEBROWS };
 	}
 
 	@Override
@@ -52,6 +52,7 @@ public class SpeciesTwilek extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
+		stack.add(getGenderedTexture(this, VAR_HUMANOID_EYEBROWS));
 		stack.add(getClothes(player, gender));
 		stack.add(getGlobalTexture("eyes"));
 		return stack;

@@ -15,7 +15,7 @@ public class BlasterBoltHissSoundInstance extends DopplerSoundInstance
 		super(entity, SwgSounds.Blaster.HISS, SoundCategory.PLAYERS);
 		this.repeat = true;
 		this.repeatDelay = 0;
-		this.volume = 1.0f;
+		this.volume = 0.0f;
 	}
 
 	public boolean canPlay()
@@ -38,6 +38,7 @@ public class BlasterBoltHissSoundInstance extends DopplerSoundInstance
 			return;
 		}
 
+		this.volume = 1;
 		this.x = (float)this.source.getX();
 		this.y = (float)this.source.getY();
 		this.z = (float)this.source.getZ();

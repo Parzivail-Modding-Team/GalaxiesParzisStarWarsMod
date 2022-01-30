@@ -91,7 +91,6 @@ public class SpeciesTogruta extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
-		stack.add(getClothes(player, gender));
 		stack.add(getGenderedTexture(this, VAR_LOWER_MONTRAL));
 
 		if (SpeciesVariable.isNotEmpty(this, VAR_UPPER_MONTRAL))
@@ -102,6 +101,7 @@ public class SpeciesTogruta extends SwgSpecies
 
 		stack.add(getGlobalTexture("eyes"));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
+		stack.add(getClothes(player, gender));
 		return stack;
 	}
 }
