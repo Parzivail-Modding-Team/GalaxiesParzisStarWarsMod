@@ -56,7 +56,7 @@ public abstract class CallbackTexture extends ResourceTexture
 	private void upload(NativeImage image, boolean blur, boolean clamp)
 	{
 		TextureUtil.prepareImage(this.getGlId(), 0, image.getWidth(), image.getHeight());
-		image.upload(0, 0, 0, 0, 0, image.getWidth(), image.getHeight(), blur, clamp, false, true);
+		image.upload(0, 0, 0, 0, 0, image.getWidth(), image.getHeight(), blur, clamp, false, false);
 	}
 
 	public void load(ResourceManager manager) throws IOException

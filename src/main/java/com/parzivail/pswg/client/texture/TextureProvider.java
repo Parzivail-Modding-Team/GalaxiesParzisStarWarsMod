@@ -2,7 +2,6 @@ package com.parzivail.pswg.client.texture;
 
 import com.mojang.authlib.minecraft.InsecureTextureException;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.pswg.Client;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.data.FallbackIdentifier;
 import net.minecraft.client.MinecraftClient;
@@ -43,7 +42,7 @@ public abstract class TextureProvider<TData>
 
 	public boolean isProviderFor(Identifier cacheId)
 	{
-		return cacheId.getPath().equals(root.getPath()) && cacheId.getPath().startsWith(root.getPath());
+		return cacheId.getNamespace().equals(root.getNamespace()) && cacheId.getPath().startsWith(root.getPath());
 	}
 
 	public Identifier getProvidedId(Identifier cacheId)
@@ -73,12 +72,16 @@ public abstract class TextureProvider<TData>
 	{
 		for (var provider : TEXTURE_PROVIDERS)
 		{
-			if (provider.isProviderFor(dependencyCacheId) && !provider.isReady(dependencyCacheId))
+			var providerCacheId = provider.getProvidedId(dependencyCacheId);
+
+			if (providerCacheId != null && !provider.isReady(dependencyCacheId))
 			{
-				Client.remoteTextureProvider.addLoadCallback(dependencyCacheId, () -> {
-					markTextureDirty(cacheId);
+				provider.addLoadCallback(dependencyCacheId, (success) -> {
+					if (success)
+						markTextureDirty(cacheId);
 				});
 
+				Lumberjack.debug("%s -> %s found dependency on %s for %s", this.getClass().getSimpleName(), cacheId, provider.root, dependencyCacheId);
 				// There should only be one provider for each cache ID
 				break;
 			}
@@ -102,7 +105,8 @@ public abstract class TextureProvider<TData>
 		}
 
 		// The texture has been stacked but hasn't been loaded yet
-		return fallback.get();
+		var fallbackId = fallback.get();
+		return new FallbackIdentifier(fallbackId.getNamespace(), fallbackId.getPath(), cacheId);
 	}
 
 	protected abstract CallbackTexture createTexture(Identifier destId, TData requestData, Consumer<Boolean> callback);
@@ -125,6 +129,7 @@ public abstract class TextureProvider<TData>
 
 	public void addLoadCallback(Identifier target, Consumer<Boolean> callback)
 	{
+		Lumberjack.debug("%s addLoadCallback", this.getClass().getSimpleName());
 		if (!LOAD_CALLBACKS.containsKey(target))
 			LOAD_CALLBACKS.put(target, new ArrayList<>());
 
@@ -133,6 +138,7 @@ public abstract class TextureProvider<TData>
 
 	private void pollCallbacks(Identifier identifier, boolean success)
 	{
+		Lumberjack.debug("%s pollCallbacks (success: %s)", this.getClass().getSimpleName(), success);
 		var callbacks = LOAD_CALLBACKS.get(identifier);
 		if (callbacks == null)
 			return;

@@ -2,7 +2,6 @@ package com.parzivail.pswg.client.texture.stacked;
 
 import com.parzivail.pswg.client.texture.CallbackTexture;
 import com.parzivail.pswg.client.texture.remote.RemoteTexture;
-import com.parzivail.pswg.client.texture.tinted.TintedTexture;
 import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
@@ -56,12 +55,10 @@ public class StackedTexture extends CallbackTexture
 
 			if (texture instanceof NativeImageBackedTexture nibt)
 				nativeImages[i] = nibt.getImage();
-			else if (texture instanceof RemoteTexture rt)
-				nativeImages[i] = rt.getImage();
-			else if (texture instanceof StackedTexture st)
-				nativeImages[i] = st.getImage();
-			else if (texture instanceof TintedTexture tt)
-				nativeImages[i] = tt.getImage();
+			else if (texture instanceof RemoteTexture t)
+				nativeImages[i] = t.getImage();
+			else if (texture instanceof CallbackTexture t)
+				nativeImages[i] = t.getImage();
 			else
 			{
 				var texData = TextureData.load(manager, textureId);

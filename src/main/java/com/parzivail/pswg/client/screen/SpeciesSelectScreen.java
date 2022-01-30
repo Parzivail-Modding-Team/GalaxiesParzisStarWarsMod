@@ -253,7 +253,7 @@ public class SpeciesSelectScreen extends Screen
 				selectedVariable = selectedVariableEntry.getValue();
 				if (selectedVariable instanceof SpeciesColorVariable scv)
 				{
-					values = new String[] { "00fd00" };
+					values = new String[] { "ff0000" };
 				}
 				else
 					values = selectedVariable.getPossibleValues();
