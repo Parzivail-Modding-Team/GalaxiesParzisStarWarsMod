@@ -23,6 +23,7 @@ public class RemoteTextureProvider
 	private static final HashMap<String, Identifier> TEXTURE_CACHE = new HashMap<>();
 	static final ArrayList<Identifier> FAILED_REMOTES = new ArrayList<>();
 	private static final HashMap<Identifier, List<Runnable>> LOAD_CALLBACKS = new HashMap<>();
+	private static final ArrayList<Identifier> PRELOAD_LIST = new ArrayList<>();
 
 	private final TextureManager textureManager;
 	private final String identifierRoot;
@@ -107,6 +108,12 @@ public class RemoteTextureProvider
 
 	public void addLoadCallback(Identifier target, Runnable callback)
 	{
+		if (PRELOAD_LIST.contains(target))
+		{
+			callback.run();
+			PRELOAD_LIST.remove(target);
+		}
+
 		if (!LOAD_CALLBACKS.containsKey(target))
 			LOAD_CALLBACKS.put(target, new ArrayList<>());
 
@@ -121,6 +128,8 @@ public class RemoteTextureProvider
 			callbacks.forEach(Runnable::run);
 			LOAD_CALLBACKS.remove(identifier);
 		}
+		else
+			PRELOAD_LIST.add(identifier);
 	}
 
 	@NotNull

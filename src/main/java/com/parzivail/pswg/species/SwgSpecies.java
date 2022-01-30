@@ -95,9 +95,13 @@ public abstract class SwgSpecies
 		return new Identifier(slug.getNamespace(), "textures/species/" + slug.getPath() + "/" + texture + ".png");
 	}
 
-	protected static TintedIdentifier tint(Identifier texture, int color)
+	protected static Identifier tint(Identifier texture, SwgSpecies species, SpeciesColorVariable variable)
 	{
-		return new TintedIdentifier(texture.getNamespace(), texture.getPath(), color);
+		return Client.tintedTextureProvider.getId(
+				texture.getNamespace() + "/" + texture.getPath() + "/" + species.getVariable(variable),
+				() -> texture,
+				() -> new TintedIdentifier(texture.getNamespace(), texture.getPath(), Integer.parseUnsignedInt(species.getVariable(variable), 16))
+		);
 	}
 
 	protected final Map<String, String> variables = new HashMap<>();

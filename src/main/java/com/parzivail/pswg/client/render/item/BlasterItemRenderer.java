@@ -392,7 +392,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
 
 			var colorId = String.valueOf((int)(bd.boltColor * 255));
-			var flash = Client.tintedTextureProvider.loadTexture("muzzleflash/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
+			var flash = Client.tintedTextureProvider.getId("muzzleflash/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
 
 			vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
 			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
@@ -406,7 +406,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 			if (!renderMode.isFirstPerson())
 			{
-				var forwardFlash = Client.tintedTextureProvider.loadTexture("muzzleflash_forward/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
+				var forwardFlash = Client.tintedTextureProvider.getId("muzzleflash_forward/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
 				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
 				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 

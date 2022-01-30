@@ -11,6 +11,7 @@ import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
+import com.parzivail.pswg.species.SpeciesColorVariable;
 import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
@@ -173,6 +174,10 @@ public class SpeciesSelectScreen extends Screen
 
 		var selectedSpecies = speciesEntry.getValue();
 		var selectedVariable = selectedVariableEntry.getValue();
+
+		if (selectedVariable instanceof SpeciesColorVariable)
+			return false;
+
 		var values = selectedVariable.getPossibleValues();
 		var selectedValue = selectedSpecies.getVariable(selectedVariable);
 
@@ -246,16 +251,21 @@ public class SpeciesSelectScreen extends Screen
 			if (selectedSpecies != null)
 			{
 				selectedVariable = selectedVariableEntry.getValue();
+				if (selectedVariable instanceof SpeciesColorVariable scv)
+				{
+					values = new String[] { "00fd00" };
+				}
+				else
+					values = selectedVariable.getPossibleValues();
 
-				values = selectedVariable.getPossibleValues();
 				selectedValue = selectedSpecies.getVariable(selectedVariable);
+
+				selectedIndex = Math.max(ArrayUtils.indexOf(values, selectedValue), 0);
 
 				if (selectedSpecies.isSameSpecies(this.playerSpecies))
 					selectedSpecies.copy(this.playerSpecies);
 
 				selectedSpecies.setGender(gender);
-
-				selectedIndex = ArrayUtils.indexOf(values, selectedValue);
 
 				drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
 			}

@@ -67,6 +67,6 @@ public class SwgSpeciesModels
 	{
 		var hashCode = species.hashCode();
 
-		return Client.stackedTextureProvider.loadTexture("species/" + hashCode, () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player, species));
+		return Client.stackedTextureProvider.getId("species/" + hashCode, () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player, species));
 	}
 }

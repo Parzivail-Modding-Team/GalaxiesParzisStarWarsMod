@@ -23,7 +23,7 @@ import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
-import com.parzivail.pswg.client.texture.tinted.stacked.TintedTextureProvider;
+import com.parzivail.pswg.client.texture.tinted.TintedTextureProvider;
 import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
