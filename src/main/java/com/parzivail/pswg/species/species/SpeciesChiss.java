@@ -13,6 +13,27 @@ import java.util.Collection;
 
 public class SpeciesChiss extends SwgSpecies
 {
+	protected static final SpeciesVariable VAR_EYEBROWS = new SpeciesVariable(
+			SwgSpeciesRegistry.SPECIES_HUMANOID,
+			"eyebrows",
+			"black",
+			"black",
+			"white"
+	);
+	protected static final SpeciesVariable VAR_HAIR = new SpeciesVariable(
+			SwgSpeciesRegistry.SPECIES_HUMANOID,
+			"hair",
+			"brown_1",
+			"black_1",
+			"black_2",
+			"black_3",
+			"black_4",
+			"gray_1",
+			"gray_2",
+			"gray_3",
+			"gray_4"
+	);
+
 	public SpeciesChiss(String serialized)
 	{
 		super(serialized);
@@ -27,7 +48,7 @@ public class SpeciesChiss extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_HUMANOID_EYEBROWS, VAR_HUMANOID_HAIR };
+		return new SpeciesVariable[] { VAR_EYEBROWS, VAR_HAIR };
 	}
 
 	@Override
@@ -36,9 +57,9 @@ public class SpeciesChiss extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, "skin"));
-		stack.add(getGenderedTexture(this, VAR_HUMANOID_EYEBROWS));
+		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
 		stack.add(getClothes(player, gender));
-		stack.add(getTexture(this, VAR_HUMANOID_HAIR));
+		stack.add(getTexture(this, VAR_HAIR));
 		return stack;
 	}
 }

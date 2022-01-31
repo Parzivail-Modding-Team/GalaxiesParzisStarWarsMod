@@ -30,6 +30,7 @@ public abstract class SwgSpecies
 			"brown",
 			"white"
 	);
+
 	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new SpeciesVariable(
 			SwgSpeciesRegistry.SPECIES_HUMANOID,
 			"hair",
@@ -50,6 +51,12 @@ public abstract class SwgSpecies
 			"gray_2",
 			"gray_3",
 			"gray_4"
+	);
+
+	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(
+			SwgSpeciesRegistry.SPECIES_HUMANOID,
+			"eye_color",
+			0xFFFFFF
 	);
 
 	public static Identifier getSpeciesSlug(String serializedSpecies)

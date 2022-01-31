@@ -34,7 +34,7 @@ public class SpeciesChagrian extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_BODY };
+		return new SpeciesVariable[] { VAR_BODY, VAR_HUMANOID_EYEBROWS, VAR_HUMANOID_EYE_COLOR };
 	}
 
 	@Override
@@ -43,7 +43,9 @@ public class SpeciesChagrian extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
+		stack.add(getGenderedTexture(this, VAR_HUMANOID_EYEBROWS));
 		stack.add(getClothes(player, gender));
+		stack.add(tint(getGlobalTexture("eyes"), this, VAR_HUMANOID_EYE_COLOR));
 		return stack;
 	}
 }
