@@ -25,9 +25,9 @@ Pale Yellow - ffc876
 
 TWI'LEK:
 Purple - b092de
-Yellow - ffd53d* * * can't get this one to be warm enough and bright enough
+Yellow - ffd53d * * * can't get this one to be warm enough and bright enough
 Magenta - e67acb
-White - f4e7ff* * * can't get this one to be saturated and bright enough
+White - f4e7ff * * * can't get this one to be saturated and bright enough
 Blue - 607ee0
 Green - 9ccf6d
 Lime - c6de4c
@@ -44,4 +44,19 @@ CHISS:
 4 - 9dbfff
 5 - 95a2ff
 6 - 92b4e3
+
+CHAGRIAN:
+Blue - 637dab
+Black - 31363e
+Cyan - 4f9ccd
+Light Blue - 8fbde1
+Gray - 99aab7
+
+HUMAN: 
+Ivory - ffdbcc * * * can't get this one to be saturated and bright enough
+Limestone - ffdcc6 * * * can't get this one to be saturated and bright enough
+Almond - be8260
+Sand - ffd7ae  * * * can't get this one to be saturated and bright enough
+Chocolate - 6f4b33
+
 
