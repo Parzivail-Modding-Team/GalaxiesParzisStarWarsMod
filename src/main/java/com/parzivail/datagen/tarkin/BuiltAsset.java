@@ -181,6 +181,7 @@ public class BuiltAsset
 		for (var namespace : namespaces)
 		{
 			nukeTags(new Identifier(namespace, "tags/blocks/dummy"));
+			nukeTags(new Identifier(namespace, "tags/blocks/mineable/dummy"));
 			nukeTags(new Identifier(namespace, "tags/items/dummy"));
 		}
 	}

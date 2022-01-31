@@ -1222,7 +1222,7 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Chromium).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Cortosis).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Desh).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Diatium).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Diatium) .build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Durasteel).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Lommite).build(assets);
 		BlockGenerator.basic(SwgBlocks.MaterialBlock.Plasteel).build(assets);
