@@ -47,7 +47,7 @@ public abstract class MinecraftClientMixin
 	{
 		var remoteAssetDir = args.directories.assetDir.toPath().resolve("pswgRemoteAssets");
 		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.toString());
-		Client.remoteTextureProvider = new RemoteTextureProvider(textureManager, "pswg:remote", remoteAssetDir);
+		Client.remoteTextureProvider = new RemoteTextureProvider(Resources.id("///remote"), textureManager, remoteAssetDir);
 		Client.stackedTextureProvider = new StackedTextureProvider(Resources.id("///stacked"), textureManager);
 		Client.tintedTextureProvider = new TintedTextureProvider(Resources.id("///tinted"), textureManager);
 

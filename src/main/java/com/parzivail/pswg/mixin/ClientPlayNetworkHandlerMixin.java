@@ -1,6 +1,8 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.entity.IPrecisionEntity;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import net.fabricmc.api.EnvType;
@@ -34,20 +36,31 @@ public class ClientPlayNetworkHandlerMixin
 	@Inject(method = "onGameJoin(Lnet/minecraft/network/packet/s2c/play/GameJoinS2CPacket;)V", at = @At("TAIL"))
 	private void onJoinWorld(GameJoinS2CPacket packet, CallbackInfo ci)
 	{
-		if (client.player != null && Resources.REMOTE_VERSION != null)
+		if (client.player != null)
 		{
-			Text versionText = new LiteralText(Resources.REMOTE_VERSION.name)
-					.styled((style) -> style
-					        .withItalic(true)
-					);
-			Text urlText = new LiteralText("https://www.curseforge.com/minecraft/mc-mods/pswg")
-					.styled((style) -> style
-							.withColor(TextColor.fromRgb(0x5bc0de))
-							.withUnderline(true)
-							.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/pswg"))
-							.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("PSWG on CurseForge")))
-					);
-			client.player.sendMessage(new TranslatableText("msg.pswg.update", versionText, urlText), false);
+			if (Resources.REMOTE_VERSION != null)
+			{
+				Text versionText = new LiteralText(Resources.REMOTE_VERSION.name)
+						.styled((style) -> style
+								.withItalic(true)
+						);
+				Text urlText = new LiteralText("https://www.curseforge.com/minecraft/mc-mods/pswg")
+						.styled((style) -> style
+								.withColor(TextColor.fromRgb(0x5bc0de))
+								.withUnderline(true)
+								.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/pswg"))
+								.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("PSWG on CurseForge")))
+						);
+				client.player.sendMessage(new TranslatableText("msg.pswg.update", versionText, urlText), false);
+			}
+
+			var config = Resources.CONFIG.get();
+			if (config.client.showCharacterCustomizeTip)
+			{
+				client.player.sendMessage(new TranslatableText("msg.pswg.tip.customize_character", TextUtil.stylizeKeybind(Client.KEY_SPECIES_SELECT.getBoundKeyLocalizedText())), false);
+				config.client.showCharacterCustomizeTip = false;
+				Resources.CONFIG.save();
+			}
 		}
 	}
 

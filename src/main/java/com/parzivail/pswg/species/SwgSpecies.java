@@ -3,6 +3,7 @@ package com.parzivail.pswg.species;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.species.species.SpeciesTogruta;
+import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -79,9 +80,9 @@ public abstract class SwgSpecies
 
 	protected static Identifier getClothes(PlayerEntity player, SpeciesGender gender)
 	{
-		return Client.remoteTextureProvider.getTexture(
+		return Client.remoteTextureProvider.getId(
 				String.format("character/%s", player.getUuidAsString()),
-				getGenderedGlobalTexture(gender, "clothes")
+				() -> getGenderedGlobalTexture(gender, "clothes")
 		);
 	}
 
@@ -100,7 +101,7 @@ public abstract class SwgSpecies
 		return Client.tintedTextureProvider.getId(
 				texture.getNamespace() + "/" + texture.getPath() + "/" + species.getVariable(variable),
 				() -> texture,
-				() -> new TintedIdentifier(texture.getNamespace(), texture.getPath(), Integer.parseUnsignedInt(species.getVariable(variable), 16))
+				() -> new TintedIdentifier(texture.getNamespace(), texture.getPath(), ColorUtil.rgbaToAbgr(Integer.parseUnsignedInt(species.getVariable(variable), 16)))
 		);
 	}
 

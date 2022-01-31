@@ -7,6 +7,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 @Environment(value = EnvType.CLIENT)
 public class LocalTextureButtonWidget extends ButtonWidget
@@ -17,6 +18,8 @@ public class LocalTextureButtonWidget extends ButtonWidget
 	private final int textureHeight;
 	private final int hoveredU;
 	private final int hoveredV;
+
+	private Identifier texture = null;
 
 	public LocalTextureButtonWidget(int x, int y, int width, int height, int u, int v, ButtonWidget.PressAction pressAction)
 	{
@@ -49,9 +52,19 @@ public class LocalTextureButtonWidget extends ButtonWidget
 		this.hoveredV = hoveredV;
 	}
 
+	public void setTexture(Identifier texture)
+	{
+		this.texture = texture;
+	}
+
 	@Override
 	public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
+		var oldTexture = RenderSystem.getShaderTexture(0);
+
+		if (texture != null)
+			RenderSystem.setShaderTexture(0, texture);
+
 		var tU = this.u;
 		var tV = this.v;
 
@@ -64,7 +77,6 @@ public class LocalTextureButtonWidget extends ButtonWidget
 		RenderSystem.enableDepthTest();
 		drawTexture(matrices, this.x, this.y, tU, tV, this.width, this.height, this.textureWidth, this.textureHeight);
 
-		var oldTexture = RenderSystem.getShaderTexture(0);
 		if (this.hovered)
 			this.renderTooltip(matrices, mouseX, mouseY);
 		RenderSystem.setShaderTexture(0, oldTexture);

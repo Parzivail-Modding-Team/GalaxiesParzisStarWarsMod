@@ -32,6 +32,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -148,7 +149,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY)
 	{
-		if (this.getFocused() != null && this.isDragging() && button == 0 && this.getFocused().mouseDragged(mouseX, mouseY, button, deltaX, deltaY))
+		if (this.getFocused() != null && this.isDragging() && button == GLFW.GLFW_MOUSE_BUTTON_LEFT && this.getFocused().mouseDragged(mouseX, mouseY, button, deltaX, deltaY))
 			return true;
 
 		return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);

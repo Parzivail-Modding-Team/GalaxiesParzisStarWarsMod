@@ -147,6 +147,8 @@ public class Tarkin
 		// Messages
 		lang.message("update").build(assets);
 
+		lang.message("tip").dot("customize_character").build(assets);
+
 		lang.message("blaster_mode_changed").build(assets);
 		lang.cloneWithRoot(BlasterFiringMode.SEMI_AUTOMATIC.getTranslation()).build(assets);
 		lang.cloneWithRoot(BlasterFiringMode.BURST.getTranslation()).build(assets);

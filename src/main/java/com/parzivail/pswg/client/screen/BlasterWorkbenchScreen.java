@@ -39,6 +39,7 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec2f;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +256,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button)
 	{
-		if (button == 0)
+		if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT)
 		{
 			if (!isDraggingBlasterViewport && blasterViewportContains(mouseX, mouseY))
 			{
@@ -276,7 +277,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button)
 	{
-		if (button == 0)
+		if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT)
 		{
 			this.isDraggingScrollThumb = false;
 			this.isDraggingBlasterViewport = false;

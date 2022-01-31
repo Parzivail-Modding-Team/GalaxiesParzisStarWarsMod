@@ -34,6 +34,13 @@ public class Config implements ConfigData
 		public boolean enableScreenShake = true;
 	}
 
+	public static class Client
+	{
+		@Comment("Show the character customization tip at next world join")
+		@ConfigEntry.Gui.Tooltip
+		public boolean showCharacterCustomizeTip = true;
+	}
+
 	@ConfigEntry.Gui.CollapsibleObject
 	@Comment("Here you can change your preferred input methods.")
 	@ConfigEntry.Gui.Tooltip
@@ -43,6 +50,11 @@ public class Config implements ConfigData
 	@Comment("Here you can change your rendering preferences.")
 	@ConfigEntry.Gui.Tooltip
 	public View view = new View();
+
+	@ConfigEntry.Gui.CollapsibleObject
+	@Comment("Here you can change general client options.")
+	@ConfigEntry.Gui.Tooltip
+	public Client client = new Client();
 
 	public void reload()
 	{

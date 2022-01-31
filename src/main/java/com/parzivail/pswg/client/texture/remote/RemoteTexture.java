@@ -1,13 +1,11 @@
 package com.parzivail.pswg.client.texture.remote;
 
-import com.mojang.blaze3d.platform.TextureUtil;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.client.texture.CallbackTexture;
 import com.parzivail.util.Lumberjack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
@@ -22,67 +20,30 @@ import java.nio.file.Path;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public class RemoteTexture extends ResourceTexture
+public class RemoteTexture extends CallbackTexture
 {
 	private final Identifier remoteId;
 	@Nullable
 	private final Path cacheFile;
 	private final String url;
-	private final Runnable onResolved;
 	@Nullable
 	private CompletableFuture<?> loader;
-	private boolean loaded;
 
-	private NativeImage image;
-
-	public RemoteTexture(Identifier remoteId, @Nullable Path cacheFile, String url, Identifier fallbackSkin, Runnable onResolved)
+	public RemoteTexture(Identifier remoteId, @Nullable Path cacheFile, String url, Identifier fallbackSkin, Consumer<Boolean> onResolved)
 	{
-		super(fallbackSkin);
+		super(fallbackSkin, onResolved);
 		this.remoteId = remoteId;
 		this.cacheFile = cacheFile;
 		this.url = url;
-		this.onResolved = onResolved;
-	}
-
-	public NativeImage getImage()
-	{
-		return image;
-	}
-
-	private void onTextureLoaded(NativeImage image)
-	{
-		var minecraft = MinecraftClient.getInstance();
-		minecraft.execute(() -> {
-			this.loaded = true;
-			if (!RenderSystem.isOnRenderThread())
-			{
-				RenderSystem.recordRenderCall(() -> this.onTextureLoaded(image));
-			}
-			else
-			{
-				if (image != null)
-					this.uploadTexture(image);
-				else
-					RemoteTextureProvider.FAILED_REMOTES.add(remoteId);
-				this.image = image;
-				onResolved.run();
-			}
-		});
-	}
-
-	private void uploadTexture(NativeImage image)
-	{
-		TextureUtil.prepareImage(this.getGlId(), image.getWidth(), image.getHeight());
-		image.upload(0, 0, 0, false);
 	}
 
 	public void load(ResourceManager manager) throws IOException
 	{
-		var minecraft = MinecraftClient.getInstance();
-		minecraft.execute(() -> {
-			if (!this.loaded)
+		MinecraftClient.getInstance().execute(() -> {
+			if (!this.isLoaded)
 			{
 				try
 				{
@@ -94,10 +55,17 @@ public class RemoteTexture extends ResourceTexture
 					var3.printStackTrace();
 				}
 
-				this.loaded = true;
+				this.isLoaded = true;
 			}
 		});
 
+		generateImage(manager);
+	}
+
+	@Override
+	protected NativeImage generateImage(ResourceManager manager) throws IOException
+	{
+		var minecraft = MinecraftClient.getInstance();
 		if (this.loader == null)
 		{
 			NativeImage nativeImage2;
@@ -117,7 +85,7 @@ public class RemoteTexture extends ResourceTexture
 				{
 					Lumberjack.debug("Loading http texture from local cache (%s)", this.cacheFile);
 					var inputStream = Files.newInputStream(this.cacheFile);
-					nativeImage2 = this.loadTexture(inputStream);
+					nativeImage2 = this.readImage(inputStream);
 				}
 			}
 			else
@@ -127,7 +95,7 @@ public class RemoteTexture extends ResourceTexture
 
 			if (nativeImage2 != null)
 			{
-				this.onTextureLoaded(nativeImage2);
+				this.complete(nativeImage2);
 			}
 			else
 			{
@@ -156,10 +124,10 @@ public class RemoteTexture extends ResourceTexture
 							}
 
 							minecraft.execute(() -> {
-								var nativeImage = this.loadTexture(inputStream2);
+								var nativeImage = this.readImage(inputStream2);
 								if (nativeImage != null)
 								{
-									this.onTextureLoaded(nativeImage);
+									this.complete(nativeImage);
 								}
 							});
 							return;
@@ -169,7 +137,7 @@ public class RemoteTexture extends ResourceTexture
 							Lumberjack.debug("No skin found on remote");
 
 							minecraft.execute(() -> {
-								this.onTextureLoaded(null);
+								this.complete(null);
 							});
 						}
 					}
@@ -189,10 +157,11 @@ public class RemoteTexture extends ResourceTexture
 				}, Util.getMainWorkerExecutor());
 			}
 		}
+		return null;
 	}
 
 	@Nullable
-	private NativeImage loadTexture(InputStream stream)
+	private NativeImage readImage(InputStream stream)
 	{
 		NativeImage nativeImage = null;
 

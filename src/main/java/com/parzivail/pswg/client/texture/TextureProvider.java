@@ -19,6 +19,7 @@ import java.util.function.Supplier;
 public abstract class TextureProvider<TData>
 {
 	private static final ArrayList<Identifier> TEXTURE_CACHE = new ArrayList<>();
+	private static final ArrayList<Identifier> FAILURE_CACHE = new ArrayList<>();
 	private static final HashMap<Identifier, List<Consumer<Boolean>>> LOAD_CALLBACKS = new HashMap<>();
 
 	public static final ArrayList<TextureProvider<?>> TEXTURE_PROVIDERS = new ArrayList<>();
@@ -35,7 +36,7 @@ public abstract class TextureProvider<TData>
 	}
 
 	@NotNull
-	private Identifier createCacheId(String requestName)
+	protected Identifier createCacheId(String requestName)
 	{
 		return new Identifier(root.getNamespace(), root.getPath() + "/" + requestName);
 	}
@@ -65,7 +66,13 @@ public abstract class TextureProvider<TData>
 
 	protected void markTextureDirty(Identifier cacheId)
 	{
+		Lumberjack.debug("%s -> invalidated %s", this.getClass().getSimpleName(), cacheId);
 		TEXTURE_CACHE.removeIf(cacheId::equals);
+	}
+
+	protected void markTextureFailure(Identifier cacheId)
+	{
+		FAILURE_CACHE.add(cacheId);
 	}
 
 	protected void registerDependencyCallbacks(Identifier cacheId, Identifier dependencyCacheId)
@@ -76,12 +83,13 @@ public abstract class TextureProvider<TData>
 
 			if (providerCacheId != null && !provider.isReady(dependencyCacheId))
 			{
-				provider.addLoadCallback(dependencyCacheId, (success) -> {
+				Lumberjack.debug("%s -> %s found dependency on %s for %s", this.getClass().getSimpleName(), cacheId, provider.root, providerCacheId);
+
+				provider.addLoadCallback(providerCacheId, (success) -> {
 					if (success)
 						markTextureDirty(cacheId);
 				});
 
-				Lumberjack.debug("%s -> %s found dependency on %s for %s", this.getClass().getSimpleName(), cacheId, provider.root, dependencyCacheId);
 				// There should only be one provider for each cache ID
 				break;
 			}
@@ -91,6 +99,10 @@ public abstract class TextureProvider<TData>
 	public Identifier getId(String requestName, Supplier<Identifier> fallback, Supplier<TData> requestFulfiller)
 	{
 		var cacheId = createCacheId(requestName);
+
+		if (FAILURE_CACHE.contains(cacheId))
+			return fallback.get();
+
 		var texture = textureManager.getOrDefault(cacheId, null);
 
 		// The texture is fully loaded and isn't marked as dirty (i.e. the cache contains it)
@@ -129,7 +141,15 @@ public abstract class TextureProvider<TData>
 
 	public void addLoadCallback(Identifier target, Consumer<Boolean> callback)
 	{
-		Lumberjack.debug("%s addLoadCallback", this.getClass().getSimpleName());
+		Lumberjack.debug("%s addLoadCallback [%s]", this.getClass().getSimpleName(), target);
+
+		if (isReady(target))
+		{
+			Lumberjack.debug("%s addLoadCallback [%s]: target was ready, immediately firing", this.getClass().getSimpleName(), target);
+			callback.accept(true);
+			return;
+		}
+
 		if (!LOAD_CALLBACKS.containsKey(target))
 			LOAD_CALLBACKS.put(target, new ArrayList<>());
 
@@ -138,11 +158,16 @@ public abstract class TextureProvider<TData>
 
 	private void pollCallbacks(Identifier identifier, boolean success)
 	{
-		Lumberjack.debug("%s pollCallbacks (success: %s)", this.getClass().getSimpleName(), success);
+		Lumberjack.debug("%s pollCallbacks [%s] (success: %s)", this.getClass().getSimpleName(), identifier, success);
+
 		var callbacks = LOAD_CALLBACKS.get(identifier);
 		if (callbacks == null)
+		{
+			Lumberjack.debug("%s pollCallbacks [%s]: skipped, no callbacks registered", this.getClass().getSimpleName(), identifier);
 			return;
+		}
 
+		Lumberjack.debug("%s pollCallbacks [%s]: found %s registered callbacks", this.getClass().getSimpleName(), identifier, callbacks.size());
 		callbacks.forEach(callback -> callback.accept(success));
 		LOAD_CALLBACKS.remove(identifier);
 	}

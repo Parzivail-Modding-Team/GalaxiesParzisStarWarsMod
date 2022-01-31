@@ -1,17 +1,13 @@
 package com.parzivail.pswg.species;
 
+import com.parzivail.util.client.ColorUtil;
 import net.minecraft.util.Identifier;
 
 public class SpeciesColorVariable extends SpeciesVariable
 {
 	public SpeciesColorVariable(Identifier parent, String name, int defaultValue)
 	{
-		super(parent, name, getHexString(defaultValue));
-	}
-
-	private static String getHexString(int color)
-	{
-		return String.format("%06x", color & 0xFFFFFF);
+		super(parent, name, ColorUtil.toResourceId(defaultValue));
 	}
 
 	@Override

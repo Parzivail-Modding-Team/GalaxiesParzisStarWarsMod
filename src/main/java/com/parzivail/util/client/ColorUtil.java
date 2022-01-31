@@ -111,4 +111,9 @@ public class ColorUtil
 					default -> 0;
 				};
 	}
+
+	public static String toResourceId(int color)
+	{
+		return String.format("%06x", color & 0xFFFFFF);
+	}
 }

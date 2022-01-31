@@ -5,6 +5,7 @@ import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -39,7 +40,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 		@Override
 		public boolean mouseClicked(double mouseX, double mouseY, int button)
 		{
-			if (button == 0)
+			if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT)
 			{
 				parent.setSelected(this);
 				return true;

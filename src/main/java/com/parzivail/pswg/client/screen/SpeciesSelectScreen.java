@@ -1,11 +1,14 @@
 package com.parzivail.pswg.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.camera.CameraHelper;
 import com.parzivail.pswg.client.render.player.PlayerEntityRendererWithModel;
 import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
+import com.parzivail.pswg.client.screen.widget.LocalTextureButtonWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
+import com.parzivail.pswg.client.screen.widget.SimpleSliderWidget;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.SwgPackets;
@@ -15,6 +18,8 @@ import com.parzivail.pswg.species.SpeciesColorVariable;
 import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
+import com.parzivail.util.Lumberjack;
+import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MatrixStackUtil;
 import io.netty.buffer.Unpooled;
@@ -53,6 +58,11 @@ public class SpeciesSelectScreen extends Screen
 	private SimpleListWidget<SwgSpecies> speciesListWidget;
 	private SimpleListWidget<SpeciesVariable> speciesVariableListWidget;
 
+	private SimpleSliderWidget sliderR;
+	private SimpleSliderWidget sliderG;
+	private SimpleSliderWidget sliderB;
+	private LocalTextureButtonWidget buttonColorApply;
+
 	private static final int CAROUSEL_TIMER_MAX = 6;
 	private int carouselTimer = 0;
 	private boolean looping = false;
@@ -60,6 +70,8 @@ public class SpeciesSelectScreen extends Screen
 	private final List<SwgSpecies> availableSpecies;
 	private SwgSpecies playerSpecies;
 	private SpeciesGender gender = SpeciesGender.MALE;
+
+	private String lastRenderedSpeciesString;
 
 	public SpeciesSelectScreen(Screen parent)
 	{
@@ -84,7 +96,7 @@ public class SpeciesSelectScreen extends Screen
 		if (playerSpecies != null)
 			this.gender = playerSpecies.getGender();
 
-		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, height / 2 - 91, 80, 182, 15, entry -> updateAbility());
+		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, height / 2 - 91, 80, 100, 15, entry -> updateAbility());
 		speciesVariableListWidget.setEntryFormatter(speciesVariable -> new TranslatableText(speciesVariable.getTranslationKey()));
 
 		speciesListWidget = new SimpleListWidget<>(client, width / 2 - 128 - 80, height / 2 - 91, 80, 182, 15, entry -> {
@@ -100,7 +112,10 @@ public class SpeciesSelectScreen extends Screen
 		speciesListWidget.setEntrySelector(entries -> {
 			if (playerSpecies == null)
 				return entries.get(1);
-			return entries.stream().filter(swgSpeciesEntry -> playerSpecies.isSameSpecies(swgSpeciesEntry.getValue())).findFirst().orElse(null);
+			var sameSpecies = entries.stream().filter(swgSpeciesEntry -> playerSpecies.isSameSpecies(swgSpeciesEntry.getValue())).findFirst().orElse(null);
+			if (sameSpecies != null)
+				sameSpecies.getValue().copy(playerSpecies);
+			return sameSpecies;
 		});
 
 		this.addDrawableChild(speciesVariableListWidget);
@@ -146,8 +161,49 @@ public class SpeciesSelectScreen extends Screen
 				this.playerSpecies.setGender(gender);
 		}));
 
+		this.addDrawableChild(sliderR = new SimpleSliderWidget(this.width / 2 + 132, this.height / 2 + 58, 75, 4, 0, 184, 8, 189, 0, 189, 6, 8, 256, 256, simpleSliderWidget -> {
+			onSliderColorChanged();
+		}));
+
+		this.addDrawableChild(sliderG = new SimpleSliderWidget(this.width / 2 + 132, this.height / 2 + 68, 75, 4, 0, 184, 8, 189, 0, 189, 6, 8, 256, 256, simpleSliderWidget -> {
+			onSliderColorChanged();
+		}));
+
+		this.addDrawableChild(sliderB = new SimpleSliderWidget(this.width / 2 + 132, this.height / 2 + 78, 75, 4, 0, 184, 8, 189, 0, 189, 6, 8, 256, 256, simpleSliderWidget -> {
+			onSliderColorChanged();
+		}));
+
+		this.addDrawableChild(buttonColorApply = new LocalTextureButtonWidget(this.width / 2 + 194, this.height / 2 + 35, 11, 10, 90, 184, 77, 184, this::onPress));
+
+		sliderR.setTexture(CAROUSEL);
+		sliderG.setTexture(CAROUSEL);
+		sliderB.setTexture(CAROUSEL);
+		buttonColorApply.setTexture(CAROUSEL);
+
 		speciesListWidget.setEntries(availableSpecies);
-		speciesListWidget.setSelected(speciesListWidget.getEntries().get(1));
+	}
+
+	private void onSliderColorApplied()
+	{
+		var speciesEntry = speciesListWidget.getSelectedOrNull();
+		var selectedVariableEntry = speciesVariableListWidget.getSelectedOrNull();
+		if (speciesEntry == null || selectedVariableEntry == null)
+			return;
+
+		var selectedSpecies = speciesEntry.getValue();
+		var selectedVariable = selectedVariableEntry.getValue();
+
+		if (!(selectedVariable instanceof SpeciesColorVariable))
+			return;
+
+		var r = sliderR.getValue();
+		var g = sliderG.getValue();
+		var b = sliderB.getValue();
+		selectedSpecies.setVariable(selectedVariable, ColorUtil.toResourceId(ColorUtil.packFloatRgb(r, g, b)));
+	}
+
+	private void onSliderColorChanged()
+	{
 	}
 
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers)
@@ -201,6 +257,18 @@ public class SpeciesSelectScreen extends Screen
 	}
 
 	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int button)
+	{
+		if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT)
+		{
+			sliderR.commit();
+			sliderG.commit();
+			sliderB.commit();
+		}
+		return super.mouseReleased(mouseX, mouseY, button);
+	}
+
+	@Override
 	public void tick()
 	{
 		super.tick();
@@ -237,6 +305,11 @@ public class SpeciesSelectScreen extends Screen
 		RenderSystem.setShaderTexture(0, CAROUSEL);
 		drawTexture(matrices, width / 2 - 128, height / 2 - 91, 0, 0, 256, 182);
 
+		sliderR.visible = false;
+		sliderG.visible = false;
+		sliderB.visible = false;
+		buttonColorApply.visible = false;
+
 		var speciesEntry = speciesListWidget.getSelectedOrNull();
 		var selectedVariableEntry = speciesVariableListWidget.getSelectedOrNull();
 		if (speciesEntry != null)
@@ -251,21 +324,26 @@ public class SpeciesSelectScreen extends Screen
 			if (selectedSpecies != null)
 			{
 				selectedVariable = selectedVariableEntry.getValue();
+
 				if (selectedVariable instanceof SpeciesColorVariable scv)
 				{
-					values = new String[] { "ff0000" };
+					sliderR.visible = true;
+					sliderG.visible = true;
+					sliderB.visible = true;
+					buttonColorApply.visible = true;
+
+					renderColorPreview(x, y);
+
+					values = new String[] { selectedSpecies.getVariable(selectedVariable) };
 				}
 				else
 					values = selectedVariable.getPossibleValues();
 
 				selectedValue = selectedSpecies.getVariable(selectedVariable);
 
-				selectedIndex = Math.max(ArrayUtils.indexOf(values, selectedValue), 0);
-
-				if (selectedSpecies.isSameSpecies(this.playerSpecies))
-					selectedSpecies.copy(this.playerSpecies);
-
 				selectedSpecies.setGender(gender);
+
+				selectedIndex = Math.max(0, ArrayUtils.indexOf(values, selectedValue));
 
 				drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
 			}
@@ -290,7 +368,7 @@ public class SpeciesSelectScreen extends Screen
 				mat2.push();
 
 				float offsetTimer = j - selectedIndex;
-				var timer = (carouselTimer - (delta * Math.signum(carouselTimer))) / (float)CAROUSEL_TIMER_MAX;
+				var timer = carouselTimer / (float)CAROUSEL_TIMER_MAX;
 
 				if (looping)
 					timer = MathHelper.lerp(timer, 0, -1 - (values.length - 1) / 20f);
@@ -322,20 +400,50 @@ public class SpeciesSelectScreen extends Screen
 		super.render(matrices, mouseX, mouseY, delta);
 	}
 
+	private void renderColorPreview(int x, int y)
+	{
+		var x0 = x + 132;
+		var x1 = x0 + 60;
+		var y0 = y + 30;
+		var y1 = y0 + 20;
+
+		var u0 = 0;
+		var u1 = 10;
+		var v0 = 0;
+		var v1 = 10;
+
+		var z = 0;
+
+		var r = sliderR.getValue();
+		var g = sliderG.getValue();
+		var b = sliderB.getValue();
+
+		var bufferBuilder = Tessellator.getInstance().getBuffer();
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder.vertex((float)x0, (float)y1, (float)z).color(r, g, b, 1).texture(u0, v1).next();
+		bufferBuilder.vertex((float)x1, (float)y1, (float)z).color(r, g, b, 1).texture(u1, v1).next();
+		bufferBuilder.vertex((float)x1, (float)y0, (float)z).color(r, g, b, 1).texture(u1, v0).next();
+		bufferBuilder.vertex((float)x0, (float)y0, (float)z).color(r, g, b, 1).texture(u0, v0).next();
+		bufferBuilder.end();
+
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		BufferRenderer.draw(bufferBuilder);
+	}
+
 	public void drawEntity(MatrixStack matrixStack, String speciesString, int x, int y, int size, float mouseX, float mouseY)
 	{
 		matrixStack.push();
 
 		PlayerEntity entity = client.player;
-		var f = (float)Math.atan(mouseX / 40.0F);
-		var g = (float)Math.atan(mouseY / 40.0F);
+		var mouseYaw = (float)Math.atan(mouseX / 40.0F);
+		var mousePitch = (float)Math.atan(mouseY / 40.0F);
 		matrixStack.translate(0.0D, 0.0D, 100.0D);
 		MatrixStackUtil.scalePos(matrixStack, size, size, -size);
 		RenderSystem.applyModelViewMatrix();
 
 		MatrixStack matrixStack2 = new MatrixStack();
 		var quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
-		var quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(g * 20.0F);
+		var quaternion2 = Vec3f.POSITIVE_X.getDegreesQuaternion(mousePitch * 20.0F);
 		quaternion.hamiltonProduct(quaternion2);
 		matrixStack2.multiply(quaternion);
 		var h = entity.bodyYaw;
@@ -343,9 +451,9 @@ public class SpeciesSelectScreen extends Screen
 		var j = entity.getPitch();
 		var k = entity.prevHeadYaw;
 		var l = entity.headYaw;
-		entity.bodyYaw = 180.0F + f * 20.0F;
-		entity.setYaw(180.0F + f * 40.0F);
-		entity.setPitch(-g * 20.0F);
+		entity.bodyYaw = 180.0F + mouseYaw * 20.0F;
+		entity.setYaw(180.0F + mouseYaw * 40.0F);
+		entity.setPitch(-mousePitch * 20.0F);
 		entity.headYaw = entity.getYaw();
 		entity.prevHeadYaw = entity.getYaw();
 
@@ -369,11 +477,26 @@ public class SpeciesSelectScreen extends Screen
 				CameraHelper.forcePlayerRender = true;
 
 				var species = SwgSpeciesRegistry.deserialize(speciesString);
+
 				var renderer = renderers.get(species.getModel().toString());
 
 				if (renderer instanceof PlayerEntityRendererWithModel perwm)
 				{
-					perwm.renderWithTexture(SwgSpeciesModels.getTexture(entity, species), client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+					var texture = SwgSpeciesModels.getTexture(entity, species);
+
+					if (texture.equals(Client.TEX_TRANSPARENT) && lastRenderedSpeciesString != null)
+					{
+						var prevSpecies = SwgSpeciesRegistry.deserialize(lastRenderedSpeciesString);
+						if (species.isSameSpecies(prevSpecies))
+						{
+							texture = SwgSpeciesModels.getTexture(entity, prevSpecies);
+							Lumberjack.debug("-> swapped with %s", texture);
+						}
+					}
+					else
+						lastRenderedSpeciesString = speciesString;
+
+					perwm.renderWithTexture(texture, client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
 				}
 				else if (renderer != null)
 					renderer.render(client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
@@ -392,6 +515,7 @@ public class SpeciesSelectScreen extends Screen
 		entity.headYaw = l;
 
 		matrixStack.pop();
+
 		RenderSystem.applyModelViewMatrix();
 		DiffuseLighting.enableGuiDepthLighting();
 	}
@@ -410,5 +534,10 @@ public class SpeciesSelectScreen extends Screen
 		bufferBuilder.vertex(this.width, 0.0D, 0.0D).texture((float)this.width / 32.0F, (float)vOffset).color(64, 64, 64, 255).next();
 		bufferBuilder.vertex(0.0D, 0.0D, 0.0D).texture(0.0F, (float)vOffset).color(64, 64, 64, 255).next();
 		tessellator.draw();
+	}
+
+	private void onPress(ButtonWidget button)
+	{
+		onSliderColorApplied();
 	}
 }
