@@ -246,7 +246,7 @@ public class Tarkin
 		TagGenerator.forBlockTag(BlockTags.LOGS_THAT_BURN, SwgTags.Block.TATOOINE_LOG).build(assets);
 		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Block.TATOOINE_LOG).build(assets);
 
-		TagGenerator.forBlockTag(BlockTags.SAND, SwgTags.Block.DESERT_SAND).build(assets);
+		TagGenerator.forBlockTag(BlockTags.SHOVEL_MINEABLE, SwgTags.Block.DESERT_SAND).build(assets);
 		TagGenerator.forItemTag(ItemTags.SAND, SwgTags.Block.DESERT_SAND).build(assets);
 
 		TagGenerator.forBlockTag(BlockTags.WALLS, SwgTags.Block.TATOOINE_DOORS).build(assets);
@@ -1416,22 +1416,18 @@ public class Tarkin
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.SaltyDesert)
 		              .blockTag(SwgTags.Block.DESERT_SAND)
-		              .blockTag(BlockTags.SHOVEL_MINEABLE)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert)
 		              .blockTag(SwgTags.Block.DESERT_SAND)
-		              .blockTag(BlockTags.SHOVEL_MINEABLE)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.DesertCanyon)
 		              .blockTag(SwgTags.Block.DESERT_SAND)
-		              .blockTag(BlockTags.SHOVEL_MINEABLE)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked)
-		              .blockTag(BlockTags.SHOVEL_MINEABLE)
 		              .build(assets);
 
 		BlockGenerator.staticColumn(SwgBlocks.Stone.DesertSediment, Resources.id("block/desert_sediment_top"), Resources.id("block/desert_sediment"))
