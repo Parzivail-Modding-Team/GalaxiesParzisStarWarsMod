@@ -106,7 +106,7 @@ public class SwgBlocks
 	public static class Pipe
 	{
 		@RegistryName("large_pipe")
-		public static final Block Large = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).materialColor(MapColor.GRAY).nonOpaque().strength(3.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
+		public static final Block Large = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).breakByTool(FabricToolTags.PICKAXES, 0).requiresTool());
 	}
 
 	public static class Tank
@@ -230,10 +230,10 @@ public class SwgBlocks
 		@RegistryName("tatooine_log")
 		public static final PillarBlock Tatooine = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 
-		private static PillarBlock createLogBlock(MapColor topMaterialColor, MapColor sideMaterialColor)
+		private static PillarBlock createLogBlock(MapColor topMapColor, MapColor sideMapColor)
 		{
 			return new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, blockState ->
-					blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+					blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		}
 	}
 
@@ -263,9 +263,9 @@ public class SwgBlocks
 	public static class Panel
 	{
 		@RegistryName("black_imperial_panel_blank")
-		public static final Block BlackImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final Block BlackImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
-		public static final Block GrayImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).materialColor(MapColor.GRAY).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final Block GrayImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
@@ -305,24 +305,24 @@ public class SwgBlocks
 		@TabIgnore
 		public static final Block LabWall = new Block(FabricBlockSettings.of(Material.STONE));
 
-		private static PillarBlock createLitPanel(MapColor topMaterialColor, MapColor sideMaterialColor, int luminance)
+		private static PillarBlock createLitPanel(MapColor topMapColor, MapColor sideMapColor, int luminance)
 		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> luminance));
+			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> luminance));
 		}
 
-		private static PillarBlock createLitPanel(MapColor topMaterialColor, MapColor sideMaterialColor)
+		private static PillarBlock createLitPanel(MapColor topMapColor, MapColor sideMapColor)
 		{
-			return createLitPanel(topMaterialColor, sideMaterialColor, 15);
+			return createLitPanel(topMapColor, sideMapColor, 15);
 		}
 
-		private static SelfConnectingBlock createLitConnectingPanel(MapColor materialColor)
+		private static SelfConnectingBlock createLitConnectingPanel(MapColor mapColor)
 		{
-			return new SelfConnectingBlock(AbstractBlock.Settings.of(Material.METAL, materialColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> 15));
+			return new SelfConnectingBlock(AbstractBlock.Settings.of(Material.METAL, mapColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> 15));
 		}
 
-		private static PillarBlock createPanel(MapColor topMaterialColor, MapColor sideMaterialColor)
+		private static PillarBlock createPanel(MapColor topMapColor, MapColor sideMapColor)
 		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMaterialColor : sideMaterialColor).strength(1.5F).requiresTool().sounds(BlockSoundGroup.METAL));
+			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(1.5F).requiresTool().sounds(BlockSoundGroup.METAL));
 		}
 	}
 
