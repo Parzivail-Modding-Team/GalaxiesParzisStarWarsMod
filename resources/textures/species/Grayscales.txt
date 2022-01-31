@@ -1,0 +1,47 @@
+presets:
+
+HAIR:
+Brown - 37281e
+Black - 1f1f1f
+Sandy - c6a26e
+Blonde - f2ce85
+Platinum - f8e7c6
+White - edf2f1
+Gray - b8bcbc
+Red - d34e3f
+Orange - e48652
+
+TOGRUTA:
+Light Blue - d5eeff
+Blue - 55a6c8
+Red - d95b4b
+Pink - ffc2be
+Yellow - f1ae3f
+Green - 69b34c
+Orange - ed8f43
+Lilac - eacefc
+Turquoise - 2e8e6d
+Pale Yellow - ffc876
+
+TWI'LEK:
+Purple - b092de
+Yellow - ffd53d* * * can't get this one to be warm enough and bright enough
+Magenta - e67acb
+White - f4e7ff* * * can't get this one to be saturated and bright enough
+Blue - 607ee0
+Green - 9ccf6d
+Lime - c6de4c
+Orange - f1ad5c
+Flesh - ffc092
+Pink - ffaddb
+Cyan - 7dd7d2
+Red - eb4a53
+
+CHISS:
+1 - 85b9da
+2 - 63b2e7
+3 - 207bcc
+4 - 9dbfff
+5 - 95a2ff
+6 - 92b4e3
+
