@@ -16,6 +16,7 @@ import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.InvertedLampBlock;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -246,6 +247,7 @@ public class Tarkin
 		TagGenerator.forItemTag(ItemTags.LOGS_THAT_BURN, SwgTags.Block.TATOOINE_LOG).build(assets);
 
 		TagGenerator.forBlockTag(BlockTags.SAND, SwgTags.Block.DESERT_SAND).build(assets);
+		TagGenerator.forBlockTag(BlockTags.SHOVEL_MINEABLE, SwgTags.Block.DESERT_SAND).build(assets);
 		TagGenerator.forItemTag(ItemTags.SAND, SwgTags.Block.DESERT_SAND).build(assets);
 
 		TagGenerator.forBlockTag(BlockTags.WALLS, SwgTags.Block.TATOOINE_DOORS).build(assets);
@@ -1137,68 +1139,100 @@ public class Tarkin
 
 	private static void generateBlocks(List<BuiltAsset> assets)
 	{
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Barrel.Desh).build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OrangeKyber).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.GrayKyber).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.BlackKyber).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Toolbox).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Imperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Segmented).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Barrel.Desh)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OrangeKyber)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.GrayKyber)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.BlackKyber)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Toolbox)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Imperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Segmented)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone"))
 		              .blockTag(SwgTags.Block.TATOOINE_DOORS)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeBottom, new Identifier("block/stone"))
 		              .blockTag(SwgTags.Block.TATOOINE_DOORS)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.RedHangar).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.BlueHangar).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.WallCluster).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.RedHangar)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.BlueHangar)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.WallCluster)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Light.Fixture)
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
 		              .models(block -> ModelFile.cubes(block, "", "_on"))
 		              .itemModel(block -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_on")))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
 		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia)
 		              .blockTag(BlockTags.LEAVES)
+		              .blockTag(FabricMineableTags.SHEARS_MINEABLE)
 		              .itemTag(ItemTags.LEAVES)
 		              .build(assets);
 		BlockGenerator.tangentFan(SwgBlocks.Leaves.Japor)
 		              .blockTag(BlockTags.LEAVES)
+		              .blockTag(FabricMineableTags.SHEARS_MINEABLE)
 		              .itemTag(ItemTags.LEAVES)
 		              .build(assets);
 
 		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"), Resources.id("block/sequoia_log"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.id("block/japor_log_top"), Resources.id("block/japor_log"))
 		              .blockTag(SwgTags.Block.JAPOR_LOG)
+		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.JAPOR_LOG)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.id("block/tatooine_log_top"), Resources.id("block/tatooine_log"))
 		              .blockTag(SwgTags.Block.TATOOINE_LOG)
+		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.TATOOINE_LOG)
 		              .build(assets);
 
 		BlockGenerator.column(SwgBlocks.Wood.Sequoia, Resources.id("block/sequoia_log"), Resources.id("block/sequoia_log"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Wood.Japor, Resources.id("block/japor_log"), Resources.id("block/japor_log"))
 		              .blockTag(SwgTags.Block.JAPOR_LOG)
+		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.JAPOR_LOG)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Wood.Tatooine, Resources.id("block/tatooine_log"), Resources.id("block/tatooine_log"))
 		              .blockTag(SwgTags.Block.TATOOINE_LOG)
+		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.TATOOINE_LOG)
 		              .build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.Imperial).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.WhiteStainedImperial).build(assets);
@@ -1218,63 +1252,153 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.RedStainedImperial).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlackStainedImperial).build(assets);
 
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Beskar).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Chromium).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Cortosis).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Desh).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Diatium).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Durasteel).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Lommite).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Plasteel).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Titanium).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Zersium).build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Helicite).build(assets);
-		BlockGenerator.block(SwgBlocks.MaterialBlock.Ionite).build(assets);
-		BlockGenerator.block(SwgBlocks.MaterialBlock.Thorilide).build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Beskar)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Chromium)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Cortosis)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Desh)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Diatium)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Durasteel)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Lommite)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Plasteel)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Titanium)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Zersium)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.MaterialBlock.Helicite)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.block(SwgBlocks.MaterialBlock.Ionite)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.block(SwgBlocks.MaterialBlock.Thorilide)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8)
-		              .itemModel(ModelFile::blockSeparateItem).build(assets);
+		              .itemModel(ModelFile::blockSeparateItem)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		// TODO: adjust loot table to match vanilla raw ores
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Beskar, SwgItems.RawOre.Beskar).build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Chromium, SwgItems.RawOre.Chromium).build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Cortosis, SwgItems.RawOre.Cortosis).build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Desh, SwgItems.RawOre.Desh).build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Diatium, SwgItems.RawOre.Diatium).build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Titanium, SwgItems.RawOre.Titanium).build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Ionite, SwgItems.RawOre.Ionite).build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Beskar, SwgItems.RawOre.Beskar)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Chromium, SwgItems.RawOre.Chromium)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Cortosis, SwgItems.RawOre.Cortosis)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Desh, SwgItems.RawOre.Desh)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Diatium, SwgItems.RawOre.Diatium)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Titanium, SwgItems.RawOre.Titanium)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Ionite, SwgItems.RawOre.Ionite)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.Zersium, SwgItems.Crystal.Zersium, 1, 3).build(assets);
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.Lommite, SwgItems.Crystal.Lommite, 1, 3).build(assets);
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.Helicite, SwgItems.Crystal.Helicite, 1, 3).build(assets);
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.Thorilide, SwgItems.Crystal.Thorilide, 1, 3).build(assets);
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.Zersium, SwgItems.Crystal.Zersium, 1, 3)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.Lommite, SwgItems.Crystal.Lommite, 1, 3)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.Helicite, SwgItems.Crystal.Helicite, 1, 3)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.Thorilide, SwgItems.Crystal.Thorilide, 1, 3)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank).build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelBlank).build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelBlank)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff1, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff2, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn1, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn2, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff1, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff2, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn1, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn2, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern1, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern2, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern3, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern4, Resources.id("block/gray_imperial_panel_blank")).build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern5, Resources.id("block/gray_imperial_panel_blank")).build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern1, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern2, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern3, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern4, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern5, Resources.id("block/gray_imperial_panel_blank"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall1).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall2).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall1)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall2)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Panel.LabWall).build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.LabWall)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Pipe.Large)
-		              .itemModel(ModelFile::blockSeparateItem).build(assets);
+		              .itemModel(ModelFile::blockSeparateItem)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.cross(SwgBlocks.Plant.FunnelFlower).build(assets);
 		BlockGenerator.cross(SwgBlocks.Plant.BlossomingFunnelFlower).build(assets);
@@ -1304,45 +1428,102 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked).build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked)
+		              .build(assets);
 
-		BlockGenerator.staticColumn(SwgBlocks.Stone.DesertSediment, Resources.id("block/desert_sediment_top"), Resources.id("block/desert_sediment")).build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Stone.DesertSediment, Resources.id("block/desert_sediment_top"), Resources.id("block/desert_sediment"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Massassi).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiSlab, Resources.id("block/massassi_stone")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiStairs, Resources.id("block/massassi_stone")).build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Massassi)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MassassiSlab, Resources.id("block/massassi_stone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.MassassiStairs, Resources.id("block/massassi_stone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);
-		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MassassiSmoothSlab, Resources.id("block/smooth_massassi_stone_slab_double"), Resources.id("block/smooth_massassi_stone"), Resources.id("block/smooth_massassi_stone_slab_side")).build(assets);
+		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MassassiSmoothSlab, Resources.id("block/smooth_massassi_stone_slab_double"), Resources.id("block/smooth_massassi_stone"), Resources.id("block/smooth_massassi_stone_slab_side"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.id("block/massassi_stone_bricks")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.id("block/massassi_stone_bricks")).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.id("block/massassi_stone_bricks"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.id("block/massassi_stone_bricks"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.id("block/pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.PourstoneSlab, Resources.id("block/pourstone")).build(assets);
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.CrackedPourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.CrackedPourstoneStairs, Resources.id("block/cracked_pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.CrackedPourstoneSlab, Resources.id("block/cracked_pourstone")).build(assets);
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.LightPourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.LightPourstoneStairs, Resources.id("block/light_pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.LightPourstoneSlab, Resources.id("block/light_pourstone")).build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.id("block/pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.PourstoneSlab, Resources.id("block/pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.CrackedPourstone)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.CrackedPourstoneStairs, Resources.id("block/cracked_pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.CrackedPourstoneSlab, Resources.id("block/cracked_pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.LightPourstone)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.LightPourstoneStairs, Resources.id("block/light_pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.LightPourstoneSlab, Resources.id("block/light_pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.IlumSlab, Resources.id("block/ilum_stone")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.IlumStairs, Resources.id("block/ilum_stone")).build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.IlumSmooth).build(assets);
-		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.IlumSmoothSlab, Resources.id("block/smooth_ilum_stone_slab_double"), Resources.id("block/smooth_ilum_stone"), Resources.id("block/smooth_ilum_stone_slab_side")).build(assets);
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.IlumSlab, Resources.id("block/ilum_stone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.IlumStairs, Resources.id("block/ilum_stone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Stone.IlumSmooth)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.IlumSmoothSlab, Resources.id("block/smooth_ilum_stone_slab_double"), Resources.id("block/smooth_ilum_stone"), Resources.id("block/smooth_ilum_stone_slab_side"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumBricks).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.IlumBrickSlab, Resources.id("block/ilum_stone_bricks")).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.IlumBrickStairs, Resources.id("block/ilum_stone_bricks")).build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.IlumChiseledBricks).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.IlumBrickSlab, Resources.id("block/ilum_stone_bricks"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.IlumBrickStairs, Resources.id("block/ilum_stone_bricks"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Stone.IlumChiseledBricks)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.Fusion).build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.Fusion)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.staticColumn(SwgBlocks.Vent.Air, Resources.id("block/air_vent_top"), Resources.id("block/air_vent_side")).build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Vent.Air, Resources.id("block/air_vent_top"), Resources.id("block/air_vent_side"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Workbench.Blaster).build(assets);
-		BlockGenerator.basic(SwgBlocks.Workbench.Lightsaber).build(assets);
+		BlockGenerator.basic(SwgBlocks.Workbench.Blaster)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Workbench.Lightsaber)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 	}
 }

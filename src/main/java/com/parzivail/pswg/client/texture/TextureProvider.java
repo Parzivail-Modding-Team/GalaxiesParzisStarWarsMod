@@ -66,7 +66,6 @@ public abstract class TextureProvider<TData>
 
 	protected void markTextureDirty(Identifier cacheId)
 	{
-		Lumberjack.debug("%s -> invalidated %s", this.getClass().getSimpleName(), cacheId);
 		TEXTURE_CACHE.removeIf(cacheId::equals);
 	}
 
@@ -83,8 +82,6 @@ public abstract class TextureProvider<TData>
 
 			if (providerCacheId != null && !provider.isReady(dependencyCacheId))
 			{
-				Lumberjack.debug("%s -> %s found dependency on %s for %s", this.getClass().getSimpleName(), cacheId, provider.root, providerCacheId);
-
 				provider.addLoadCallback(providerCacheId, (success) -> {
 					if (success)
 						markTextureDirty(cacheId);
@@ -141,11 +138,8 @@ public abstract class TextureProvider<TData>
 
 	public void addLoadCallback(Identifier target, Consumer<Boolean> callback)
 	{
-		Lumberjack.debug("%s addLoadCallback [%s]", this.getClass().getSimpleName(), target);
-
 		if (isReady(target))
 		{
-			Lumberjack.debug("%s addLoadCallback [%s]: target was ready, immediately firing", this.getClass().getSimpleName(), target);
 			callback.accept(true);
 			return;
 		}
@@ -158,16 +152,10 @@ public abstract class TextureProvider<TData>
 
 	private void pollCallbacks(Identifier identifier, boolean success)
 	{
-		Lumberjack.debug("%s pollCallbacks [%s] (success: %s)", this.getClass().getSimpleName(), identifier, success);
-
 		var callbacks = LOAD_CALLBACKS.get(identifier);
 		if (callbacks == null)
-		{
-			Lumberjack.debug("%s pollCallbacks [%s]: skipped, no callbacks registered", this.getClass().getSimpleName(), identifier);
 			return;
-		}
 
-		Lumberjack.debug("%s pollCallbacks [%s]: found %s registered callbacks", this.getClass().getSimpleName(), identifier, callbacks.size());
 		callbacks.forEach(callback -> callback.accept(success));
 		LOAD_CALLBACKS.remove(identifier);
 	}
