@@ -30,9 +30,15 @@ public class SwgSounds
 			Registry.register(Registry.SOUND_EVENT, pair.getKey(), pair.getValue());
 	}
 
+	public static void registerIfAbsent(Identifier id)
+	{
+		if (!Registry.SOUND_EVENT.containsId(id))
+			Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
+	}
+
 	public static SoundEvent getOrDefault(Identifier sound, SoundEvent fallback)
 	{
-		return SOUND_EVENTS.getOrDefault(sound, fallback);
+		return Registry.SOUND_EVENT.getOrEmpty(sound).orElse(fallback);
 	}
 
 	public static class Lightsaber
