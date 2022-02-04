@@ -6,6 +6,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
@@ -74,6 +76,17 @@ public abstract class TypedDataLoader<T> extends JsonDataLoader implements Ident
 		}
 
 		this.data = ImmutableMap.copyOf(map);
+
+		onClientDataLoaded();
+	}
+
+	@Environment(EnvType.CLIENT)
+	protected void onClientDataLoaded()
+	{
+	}
+
+	protected void onServerDataLoaded()
+	{
 	}
 
 	public void apply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler)
@@ -93,6 +106,8 @@ public abstract class TypedDataLoader<T> extends JsonDataLoader implements Ident
 		});
 
 		data = ImmutableMap.copyOf(dataMap);
+
+		onServerDataLoaded();
 	}
 
 	public Map<Identifier, T> getData()

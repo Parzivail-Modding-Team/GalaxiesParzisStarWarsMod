@@ -1,0 +1,7 @@
+{
+	"blaster.fire.westar_carbine": {
+		"sounds": [
+			"pswg:blaster/fire/turbolaser"
+		]
+	}
+}
