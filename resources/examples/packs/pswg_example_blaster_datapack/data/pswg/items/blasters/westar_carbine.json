@@ -1,7 +1,7 @@
 {
 	"version": 1,
 	"type": "rifle",
-	"sound": "pswg:ee3",
+	"sound": "pswg:westar_carbine",
 	"firingModes": [
 		"auto",
 		"semi",
@@ -10,7 +10,7 @@
 	"damage": 3.06,
 	"range": 188.0,
 	"weight": 6.7,
-	"boltColor": 0.98,
+	"boltColor": 0.1667,
 	"magazineSize": 300,
 	"automaticRepeatTime": 7,
 	"burstRepeatTime": 2,
