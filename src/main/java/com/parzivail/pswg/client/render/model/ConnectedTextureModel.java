@@ -71,15 +71,17 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	private final boolean hConnect;
 	private final boolean vConnect;
 	private final boolean lConnect;
+	private final EnumSet<Direction> capDirections;
 	private final Sprite borderSprite;
 	private final Sprite capSprite;
 
-	public ConnectedTextureModel(boolean hConnect, boolean vConnect, boolean lConnect, Sprite blankSprite, Sprite borderSprite, Sprite capSprite)
+	public ConnectedTextureModel(boolean hConnect, boolean vConnect, boolean lConnect, EnumSet<Direction> capDirections, Sprite blankSprite, Sprite borderSprite, Sprite capSprite)
 	{
 		super(blankSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
 		this.hConnect = hConnect;
 		this.vConnect = vConnect;
 		this.lConnect = lConnect;
+		this.capDirections = capDirections;
 		this.borderSprite = borderSprite;
 		this.capSprite = capSprite;
 	}
@@ -128,7 +130,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 
 			var sprite = modelSprite;
 
-			if (capSprite != null && (faceDirection == Direction.UP || faceDirection == Direction.DOWN))
+			if (capSprite != null && capDirections.contains(faceDirection))
 				sprite = capSprite;
 
 			Vec3f min = ORIGINS[faceDirection.getId()];
@@ -312,19 +314,21 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		private final boolean hConnect;
 		private final boolean vConnect;
 		private final boolean lConnect;
+		private final EnumSet<Direction> capDirections;
 		private final SpriteIdentifier sprite;
 		private final SpriteIdentifier borderSprite;
 		private final SpriteIdentifier capSprite;
 
-		public Unbaked(boolean hConnect, boolean vConnect, boolean lConnect, SpriteIdentifier sprite, SpriteIdentifier borderSprite, SpriteIdentifier capSprite)
+		public Unbaked(boolean hConnect, boolean vConnect, boolean lConnect, EnumSet<Direction> capDirections, SpriteIdentifier sprite, SpriteIdentifier borderSprite, SpriteIdentifier capSprite)
 		{
 			this.hConnect = hConnect;
 			this.vConnect = vConnect;
 			this.lConnect = lConnect;
+			this.capDirections = capDirections;
 			this.sprite = sprite;
 			this.borderSprite = borderSprite;
 			this.capSprite = capSprite;
-			this.baker = spriteLoader -> new ConnectedTextureModel(hConnect, vConnect, lConnect, spriteLoader.apply(sprite), spriteLoader.apply(borderSprite), capSprite == null ? null : spriteLoader.apply(capSprite));
+			this.baker = spriteLoader -> new ConnectedTextureModel(hConnect, vConnect, lConnect, capDirections, spriteLoader.apply(sprite), spriteLoader.apply(borderSprite), capSprite == null ? null : spriteLoader.apply(capSprite));
 		}
 
 		@Override
@@ -361,7 +365,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		@Override
 		public ClonableUnbakedModel copy()
 		{
-			return new Unbaked(hConnect, vConnect, lConnect, sprite, borderSprite, capSprite);
+			return new Unbaked(hConnect, vConnect, lConnect, capDirections.clone(), sprite, borderSprite, capSprite);
 		}
 	}
 }
