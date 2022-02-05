@@ -18,7 +18,6 @@ import com.parzivail.pswg.species.SpeciesColorVariable;
 import com.parzivail.pswg.species.SpeciesGender;
 import com.parzivail.pswg.species.SpeciesVariable;
 import com.parzivail.pswg.species.SwgSpecies;
-import com.parzivail.util.Lumberjack;
 import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MatrixStackUtil;
@@ -490,7 +489,6 @@ public class SpeciesSelectScreen extends Screen
 						if (species.isSameSpecies(prevSpecies))
 						{
 							texture = SwgSpeciesModels.getTexture(entity, prevSpecies);
-							Lumberjack.debug("-> swapped with %s", texture);
 						}
 					}
 					else
