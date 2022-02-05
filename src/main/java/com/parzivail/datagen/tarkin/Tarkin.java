@@ -1340,6 +1340,26 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
+//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutout)
+//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+//		              .build(assets);
+//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutoutPipes)
+//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+//		              .build(assets);
+
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBordered)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelSplit)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelThinBordered)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.ExternalImperialPlatingConnectedBorder)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
 		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_blank"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
@@ -1383,6 +1403,14 @@ public class Tarkin
 		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern5, Resources.id("block/gray_imperial_panel_blank"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialPanelTall1)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialPanelTall2)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall1)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)

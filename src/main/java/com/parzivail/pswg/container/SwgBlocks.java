@@ -24,7 +24,6 @@ import com.parzivail.util.block.rotating.RotatingBlockWithGuiEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
@@ -262,8 +261,20 @@ public class SwgBlocks
 
 	public static class Panel
 	{
+//		@RegistryName("imperial_cutout")
+//		public static final SelfConnectingBlock ImperialCutout = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+//		@RegistryName("imperial_cutout_pipes")
+//		public static final SelfConnectingBlock ImperialCutoutPipes = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_blank")
 		public static final Block BlackImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		@RegistryName("black_imperial_panel_bordered")
+		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		@RegistryName("black_imperial_panel_split")
+		public static final SelfConnectingBlock BlackImperialPanelSplit = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		@RegistryName("black_imperial_panel_thin_bordered")
+		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		@RegistryName("external_imperial_plating")
+		public static final SelfConnectingBlock ExternalImperialPlatingConnectedBorder = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
 		public static final Block GrayImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_pattern_1")
@@ -295,6 +306,11 @@ public class SwgBlocks
 		public static final PillarBlock GrayImperialLightOn1 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_light_on_2")
 		public static final PillarBlock GrayImperialLightOn2 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+
+		@RegistryName("gray_imperial_tall_panel_1")
+		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		@RegistryName("gray_imperial_tall_panel_2")
+		public static final SelfConnectingBlock ImperialPanelTall2 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 
 		@RegistryName("gray_imperial_tall_light_1")
 		public static final SelfConnectingBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY);

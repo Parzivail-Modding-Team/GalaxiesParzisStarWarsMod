@@ -23,12 +23,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 
 public enum ModelRegistry implements ModelVariantProvider
@@ -45,11 +47,35 @@ public enum ModelRegistry implements ModelVariantProvider
 	public static void registerConnected(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture)
 	{
 		var id = Registry.BLOCK.getId(block);
+		registerConnected(
+				block, hConnect, vConnect, lConnect, capTexture,
+				new Identifier(id.getNamespace(), "block/" + id.getPath()),
+				new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border")
+		);
+	}
+
+	public static void registerConnected(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture, Identifier centerTexture)
+	{
+		var id = Registry.BLOCK.getId(block);
+		registerConnected(
+				block, hConnect, vConnect, lConnect, capTexture,
+				centerTexture,
+				new Identifier(id.getNamespace(), "block/" + id.getPath())
+		);
+	}
+
+	public static void registerConnected(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture, Identifier centerTexture, Identifier borderTexture)
+	{
+		registerConnected(block, hConnect, vConnect, lConnect, capTexture, centerTexture, borderTexture, EnumSet.of(Direction.UP, Direction.DOWN));
+	}
+
+	public static void registerConnected(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture, Identifier centerTexture, Identifier borderTexture, EnumSet<Direction> capDirections)
+	{
 		register(block, true, new ConnectedTextureModel.Unbaked(
-				hConnect, vConnect, lConnect,
-				new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier(id.getNamespace(), "block/" + id.getPath())),
-				new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, new Identifier(id.getNamespace(), "block/" + id.getPath() + "_border")),
-				capTexture == null ? null : new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, capTexture)
+				hConnect, vConnect, lConnect, capDirections,
+				new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, centerTexture),
+				new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, borderTexture),
+				capTexture == null ? null : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, capTexture)
 		));
 	}
 
