@@ -159,7 +159,7 @@ public class Client implements ClientModInitializer
 //		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialCutoutPipes, true, false, true, Resources.id("block/imperial_cutout_pipes_face"), Resources.id("block/imperial_cutout_pipes_face"), Resources.id("block/imperial_cutout_pipes_border"), EnumSet.of(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));
 
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelBordered, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSplit, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
+		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSplit, true, true, true, null, Resources.id("block/black_imperial_panel_split_center"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelThinBordered, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ExternalImperialPlatingConnectedBorder);
 
