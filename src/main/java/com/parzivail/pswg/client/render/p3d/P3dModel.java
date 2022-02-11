@@ -2,11 +2,18 @@ package com.parzivail.pswg.client.render.p3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
+import com.parzivail.util.client.model.AbstractModel;
 import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.data.DataReader;
+import com.parzivail.util.math.ClientMathUtil;
+import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
+import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
@@ -24,6 +31,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class P3dModel
@@ -57,6 +66,12 @@ public class P3dModel
 		this.bounds = bounds;
 	}
 
+	public void renderBlock(MatrixStack matrix, QuadEmitter quadEmitter, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, Supplier<Random> randomSupplier, RenderContext context, Sprite sprite)
+	{
+		for (var mesh : rootObjects)
+			renderMesh(matrix, quadEmitter, mesh, target, transformer, randomSupplier, context, sprite);
+	}
+
 	public <T> void render(MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, T target, PartTransformer<T> transformer, VertexConsumerSupplier<T> vertexConsumerSupplier, int light, float tickDelta)
 	{
 		for (var mesh : rootObjects)
@@ -80,6 +95,25 @@ public class P3dModel
 
 		for (var mesh : o.children)
 			renderMesh(matrix, target, light, vertexConsumerProvider, mesh, tickDelta, transformer, vertexConsumerSupplier);
+
+		matrix.pop();
+	}
+
+	private <T> void renderMesh(MatrixStack matrix, QuadEmitter quadEmitter, P3dObject o, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, Supplier<Random> randomSupplier, RenderContext context, Sprite sprite)
+	{
+		matrix.push();
+
+		var entry = transform(matrix, target, o, 0, transformer);
+		if (entry == null)
+		{
+			matrix.pop();
+			return;
+		}
+
+		emitFaces(o, entry, quadEmitter, sprite);
+
+		for (var mesh : o.children)
+			renderMesh(matrix, quadEmitter, mesh, target, transformer, randomSupplier, context, sprite);
 
 		matrix.pop();
 	}
@@ -142,6 +176,54 @@ public class P3dModel
 			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], face.normal, face.texture[1]);
 			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], face.normal, face.texture[2]);
 			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], face.normal, face.texture[3]);
+		}
+	}
+
+	private void emitFaces(P3dObject o, MatrixStack.Entry entry, QuadEmitter quadEmitter, Sprite sprite)
+	{
+		var modelMat = entry.getPositionMatrix();
+		var normalMat = entry.getNormalMatrix();
+
+		for (var face : o.faces)
+		{
+			quadEmitter.colorIndex(1).spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF).material(getBlockMaterial(o.material));
+
+			var vA = ClientMathUtil.transform(face.positions[0], modelMat);
+			var vB = ClientMathUtil.transform(face.positions[1], modelMat);
+			var vC = ClientMathUtil.transform(face.positions[2], modelMat);
+			var vD = ClientMathUtil.transform(face.positions[3], modelMat);
+
+			var n = new Vec3f(face.normal.getX(), face.normal.getY(), face.normal.getZ());
+			n.transform(normalMat);
+
+			quadEmitter.pos(0, vA).normal(0, n).sprite(0, 0, face.texture[0].getX(), 1 - face.texture[0].getY());
+			quadEmitter.pos(1, vB).normal(1, n).sprite(1, 0, face.texture[1].getX(), 1 - face.texture[1].getY());
+			quadEmitter.pos(2, vC).normal(2, n).sprite(2, 0, face.texture[2].getX(), 1 - face.texture[2].getY());
+			quadEmitter.pos(3, vD).normal(3, n).sprite(3, 0, face.texture[3].getX(), 1 - face.texture[3].getY());
+
+			quadEmitter.spriteBake(0, sprite, MutableQuadView.BAKE_NORMALIZED);
+
+			quadEmitter.emit();
+		}
+	}
+
+	private RenderMaterial getBlockMaterial(byte material)
+	{
+		switch (material)
+		{
+			case 0:
+				return AbstractModel.MAT_DIFFUSE_OPAQUE;
+			case 1:
+				return AbstractModel.MAT_DIFFUSE_CUTOUT;
+			case 2:
+				return AbstractModel.MAT_DIFFUSE_TRANSLUCENT;
+			case 3:
+				return AbstractModel.MAT_EMISSIVE;
+			default:
+			{
+				var crashReport = CrashReport.create(null, String.format("Unknown material ID: %s", material));
+				throw new CrashException(crashReport);
+			}
 		}
 	}
 

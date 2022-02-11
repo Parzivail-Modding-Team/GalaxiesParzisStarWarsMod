@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.render.pm3d;
+package com.parzivail.pswg.client.render.p3d;
 
 import com.parzivail.util.client.model.BaseUnbakedBlockModel;
 import com.parzivail.util.client.model.ClonableUnbakedModel;
@@ -8,15 +8,15 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.Function;
 
-public class PM3DUnbakedBlockModel extends BaseUnbakedBlockModel<PM3DBakedBlockModel>
+public class P3DUnbakedBlockModel extends BaseUnbakedBlockModel<P3DBakedBlockModel>
 {
-	public PM3DUnbakedBlockModel(Identifier baseTexture, Identifier particleTexture, Function<Function<SpriteIdentifier, Sprite>, PM3DBakedBlockModel> baker)
+	public P3DUnbakedBlockModel(Identifier baseTexture, Identifier particleTexture, Function<Function<SpriteIdentifier, Sprite>, P3DBakedBlockModel> baker)
 	{
 		super(baseTexture, particleTexture, baker);
 	}
 
 	public ClonableUnbakedModel copy()
 	{
-		return new PM3DUnbakedBlockModel(baseTexture, particleTexture, baker);
+		return new P3DUnbakedBlockModel(baseTexture, particleTexture, baker);
 	}
 }

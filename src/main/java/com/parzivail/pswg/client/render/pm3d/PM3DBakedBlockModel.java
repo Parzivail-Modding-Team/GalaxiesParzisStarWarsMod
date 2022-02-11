@@ -17,6 +17,7 @@ import net.minecraft.block.PillarBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
@@ -35,22 +36,22 @@ import java.util.function.Supplier;
 
 public class PM3DBakedBlockModel extends DynamicBakedModel
 {
-	private final Discriminator discriminator;
+	private final CacheMethod cacheMethod;
 	private final Sprite baseSprite;
 	private final PM3DLod container;
 
-	private PM3DBakedBlockModel(Discriminator discriminator, Sprite baseSprite, Sprite particleSprite, PM3DLod container)
+	private PM3DBakedBlockModel(CacheMethod cacheMethod, Sprite baseSprite, Sprite particleSprite, PM3DLod container)
 	{
 		super(particleSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
-		this.discriminator = discriminator;
+		this.cacheMethod = cacheMethod;
 		this.baseSprite = baseSprite;
 		this.container = container;
 	}
 
 	@Override
-	protected Discriminator getDiscriminator()
+	protected CacheMethod getDiscriminator()
 	{
-		return discriminator;
+		return cacheMethod;
 	}
 
 	private void emitFace(Matrix4f transformation, QuadEmitter quadEmitter, PM3DFace face)
@@ -66,10 +67,10 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 		var normals = container.normals();
 		var uvs = container.uvs();
 
-		var vA =verts[a.vertex()];
-		var vB =verts[b.vertex()];
-		var vC =verts[c.vertex()];
-		var vD =verts[d.vertex()];
+		var vA = verts[a.vertex()];
+		var vB = verts[b.vertex()];
+		var vC = verts[c.vertex()];
+		var vD = verts[d.vertex()];
 
 		var nA = normals[a.normal()];
 		var nB = normals[b.normal()];
@@ -163,7 +164,7 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createItemMesh(Matrix4f transformation)
+	protected Mesh createItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		return createMesh(transformation);
 	}
@@ -233,9 +234,9 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 		return mat;
 	}
 
-	public static PM3DBakedBlockModel create(Discriminator discriminator, PM3DLod container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
+	public static PM3DBakedBlockModel create(CacheMethod cacheMethod, PM3DLod container, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
 	{
-		return new PM3DBakedBlockModel(discriminator, spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, particleTexture)), container);
+		return new PM3DBakedBlockModel(cacheMethod, spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, particleTexture)), container);
 	}
 
 	@Override

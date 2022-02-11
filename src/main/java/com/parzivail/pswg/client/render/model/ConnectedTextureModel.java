@@ -22,6 +22,7 @@ import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -87,9 +88,9 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Discriminator getDiscriminator()
+	protected CacheMethod getDiscriminator()
 	{
-		return Discriminator.NONE;
+		return CacheMethod.NO_CACHING;
 	}
 
 	@Override
@@ -282,7 +283,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createItemMesh(Matrix4f transformation)
+	protected Mesh createItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		return createBlockMesh(null, null, null, null, null, transformation);
 	}

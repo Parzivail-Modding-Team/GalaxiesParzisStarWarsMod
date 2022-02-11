@@ -45,12 +45,12 @@ import java.util.function.Supplier;
  */
 public abstract class DynamicBakedModel extends AbstractModel
 {
-	public enum Discriminator
+	public enum CacheMethod
 	{
-		NONE,
-		GLOBAL,
-		BLOCKSTATE,
-		RENDER_SEED
+		SINGLETON,
+		BLOCKSTATE_KEY,
+		RENDER_SEED_KEY,
+		NO_CACHING
 	}
 
 	// These are dirty hacks to at least have some semblance of "working" models when
@@ -82,22 +82,22 @@ public abstract class DynamicBakedModel extends AbstractModel
 		return false;
 	}
 
-	protected Discriminator getDiscriminator()
+	protected CacheMethod getDiscriminator()
 	{
-		return Discriminator.GLOBAL;
+		return CacheMethod.SINGLETON;
 	}
 
 	protected abstract Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation);
 
-	protected abstract Mesh createItemMesh(Matrix4f transformation);
+	protected abstract Mesh createItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation);
 
 	protected Mesh createOrCacheBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		var cacheDiscriminator = switch (getDiscriminator())
 				{
-					case GLOBAL -> BlockPos.ORIGIN;
-					case BLOCKSTATE -> state;
-					case RENDER_SEED -> state == null ? 0 : state.getRenderingSeed(pos);
+					case SINGLETON -> BlockPos.ORIGIN;
+					case BLOCKSTATE_KEY -> state;
+					case RENDER_SEED_KEY -> state == null ? 0 : state.getRenderingSeed(pos);
 					default -> null;
 				};
 
@@ -122,7 +122,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 		if (meshes.containsKey(cacheId))
 			return meshes.get(cacheId);
 
-		var m = createItemMesh(transformation);
+		var m = createItemMesh(stack, randomSupplier, context, transformation);
 		meshes.put(cacheId, m);
 
 		return m;

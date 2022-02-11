@@ -30,10 +30,10 @@ import net.minecraft.client.texture.Sprite;
 
 public abstract class AbstractModel implements BakedModel, FabricBakedModel
 {
-	protected static final RenderMaterial MAT_DIFFUSE_OPAQUE;
-	protected static final RenderMaterial MAT_DIFFUSE_CUTOUT;
-	protected static final RenderMaterial MAT_DIFFUSE_TRANSLUCENT;
-	protected static final RenderMaterial MAT_EMISSIVE;
+	public static final RenderMaterial MAT_DIFFUSE_OPAQUE;
+	public static final RenderMaterial MAT_DIFFUSE_CUTOUT;
+	public static final RenderMaterial MAT_DIFFUSE_TRANSLUCENT;
+	public static final RenderMaterial MAT_EMISSIVE;
 
 	protected final Sprite modelSprite;
 	protected final ModelTransformation transformation;
