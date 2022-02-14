@@ -1,4 +1,4 @@
-// Made with Blockbench 4.1.4
+// Made with Blockbench 4.1.3
 // Exported for Minecraft version 1.17 with Mojang mappings
 // Paste this class into your mod and generate all required imports
 
@@ -64,7 +64,7 @@ public class PSWG_Stormtrooper<T extends Entity> extends EntityModel<T> {
 
 		PartDefinition head2 = Head.addOrReplaceChild("head2", CubeListBuilder.create(), PartPose.offsetAndRotation(0.0F, -2.25F, -4.5F, -0.1745F, 0.0F, 0.0F));
 
-		PartDefinition cube_r1 = head2.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, 68).addBox(-2.0F, -3.75F, -6.25F, 4.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 2.5F, 5.25F, -0.0873F, 0.0F, 0.0F));
+		PartDefinition cube_r1 = head2.addOrReplaceChild("cube_r1", CubeListBuilder.create().texOffs(0, 68).addBox(-2.0F, -4.25F, -6.25F, 4.0F, 5.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(0.0F, 2.5F, 5.25F, -0.0873F, 0.0F, 0.0F));
 
 		PartDefinition head3 = Head.addOrReplaceChild("head3", CubeListBuilder.create().texOffs(23, 78).addBox(4.25F, -7.0F, -4.0F, 1.0F, 2.0F, 4.0F, new CubeDeformation(0.0F))
 		.texOffs(23, 78).addBox(4.25F, -7.0F, -5.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 0.0F, -1.0F));
