@@ -101,9 +101,7 @@ public class Galaxies implements ModInitializer
 				                                                      DimensionTeleporter.teleport(Objects.requireNonNull(context.getSource().getEntity()), world);
 				                                                      return 1;
 			                                                      })));
-		});
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
 			dispatcher.register(CommandManager.literal("pswg_species")
 			                                  .requires(source -> source.hasPermissionLevel(2)) // same permission level as tp
 			                                  .then(CommandManager.argument("players", EntityArgumentType.players())
