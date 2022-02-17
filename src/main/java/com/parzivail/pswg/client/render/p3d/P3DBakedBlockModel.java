@@ -19,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.BlockRenderView;
@@ -53,22 +54,22 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		if (state != null)
 		{
 			// TODO: find better way to bake connecting models
-//			if (state.getBlock() instanceof ConnectingNodeBlock)
-//			{
-//				var meshBuilder = createMeshBuilder();
-//				var quadEmitter = meshBuilder.getEmitter();
-//
-//				for (var o : container.objects())
-//				{
-//					if (!"NODE_CENTER".equals(o.objName()) && !state.get(ConnectingNodeBlock.FACING_PROPERTIES.get(FACING_SUBMODELS.get(o.objName()))))
-//						continue;
-//
-//					for (var face : o.faces())
-//						emitFace(transformation, quadEmitter, face);
-//				}
-//
-//				return meshBuilder.build();
-//			}
+			//			if (state.getBlock() instanceof ConnectingNodeBlock)
+			//			{
+			//				var meshBuilder = createMeshBuilder();
+			//				var quadEmitter = meshBuilder.getEmitter();
+			//
+			//				for (var o : container.objects())
+			//				{
+			//					if (!"NODE_CENTER".equals(o.objName()) && !state.get(ConnectingNodeBlock.FACING_PROPERTIES.get(FACING_SUBMODELS.get(o.objName()))))
+			//						continue;
+			//
+			//					for (var face : o.faces())
+			//						emitFace(transformation, quadEmitter, face);
+			//				}
+			//
+			//				return meshBuilder.build();
+			//			}
 
 			if (state.getBlock() instanceof DisplacingBlock)
 			{
@@ -95,7 +96,9 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		var model = P3dManager.INSTANCE.get(modelId);
 
 		var ms = new MatrixStack();
-		ms.multiplyPositionMatrix(transformation);
+		var e = ms.peek();
+		e.getPositionMatrix().multiply(transformation);
+		e.getNormalMatrix().multiply(new Matrix3f(transformation));
 
 		// blocks are centered in P3D models
 		ms.translate(0.5f, 0, 0.5f);
@@ -129,9 +132,9 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 			var largestDimension = 0.625f * (float)Math.max(bounds.getXLength(), Math.max(bounds.getYLength(), bounds.getZLength()));
 
 			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
+			mat.multiply(new Quaternion(0, 90, 0, true));
 			mat.multiply(Matrix4f.scale(1 / largestDimension, 1 / largestDimension, 1 / largestDimension));
 			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
-			mat.multiply(new Quaternion(0, -90, 0, true));
 
 			return mat;
 		}

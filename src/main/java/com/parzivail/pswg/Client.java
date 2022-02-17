@@ -142,8 +142,9 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Crate.Imperial, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/imperial_cube.pm3d"), Resources.id("model/crate/imperial_cube"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Crate.Segmented, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/segmented.pm3d"), Resources.id("model/crate/segmented"), new Identifier("block/stone")));
 
-		ModelRegistry.register(SwgBlocks.Light.RedHangar, true, ModelLoader.loadPM3D(Resources.id("models/block/light/hangar_light.pm3d"), Resources.id("model/light/red_hangar_light"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Light.BlueHangar, true, ModelLoader.loadPM3D(Resources.id("models/block/light/hangar_light.pm3d"), Resources.id("model/light/blue_hangar_light"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Light.RedHangar, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/light/hangar_light"), Resources.id("model/light/red_hangar_light"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Light.BlueHangar, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/light/hangar_light"), Resources.id("model/light/blue_hangar_light"), new Identifier("block/stone")));
+
 		ModelRegistry.register(SwgBlocks.Light.WallCluster, true, ModelLoader.loadPM3D(Resources.id("models/block/light/wall_cluster.pm3d"), Resources.id("model/light/wall_cluster"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadPM3D(Resources.id("models/block/machine_spoked.pm3d"), Resources.id("model/machine_spoked"), new Identifier("block/stone")));
