@@ -1293,7 +1293,6 @@ public class Tarkin
 		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8)
-		              .itemModel(ModelFile::blockSeparateItem)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
