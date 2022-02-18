@@ -130,10 +130,21 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 			var bounds = model.bounds;
 
 			var largestDimension = 0.625f * (float)Math.max(bounds.getXLength(), Math.max(bounds.getYLength(), bounds.getZLength()));
+			var scale = 1 / largestDimension;
+
+			var minX = (float)bounds.minX * 0.625f;
+			var maxX = (float)bounds.maxX * 0.625f;
+			var minZ = (float)bounds.minZ * 0.625f;
+			var maxZ = (float)bounds.maxZ * 0.625f;
+
+			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
+			mat.multiply(Matrix4f.scale(scale, scale, scale));
+			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+
+			mat.multiply(Matrix4f.translate((maxX - minX) / 2 - maxX, 0, (maxZ - minZ) / 2 - maxZ));
 
 			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
 			mat.multiply(new Quaternion(0, 90, 0, true));
-			mat.multiply(Matrix4f.scale(1 / largestDimension, 1 / largestDimension, 1 / largestDimension));
 			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
 
 			return mat;

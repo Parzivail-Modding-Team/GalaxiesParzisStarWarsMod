@@ -195,6 +195,7 @@ public class P3dModel
 
 			var n = new Vec3f(face.normal.getX(), face.normal.getY(), face.normal.getZ());
 			n.transform(normalMat);
+			n.normalize();
 
 			quadEmitter.pos(0, vA).normal(0, n).sprite(0, 0, face.texture[0].getX(), 1 - face.texture[0].getY());
 			quadEmitter.pos(1, vB).normal(1, n).sprite(1, 0, face.texture[1].getX(), 1 - face.texture[1].getY());

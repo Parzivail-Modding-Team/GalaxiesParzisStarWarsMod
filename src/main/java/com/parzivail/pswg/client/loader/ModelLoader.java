@@ -10,11 +10,13 @@ import net.minecraft.util.Identifier;
 
 public class ModelLoader
 {
+	@Deprecated(since = "0.0.60-alpha", forRemoval = true)
 	public static PM3DUnbakedBlockModel loadPM3D(Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
 	{
 		return loadPM3D(DynamicBakedModel.CacheMethod.SINGLETON, modelFile, baseTexture, particleTexture);
 	}
 
+	@Deprecated(since = "0.0.60-alpha", forRemoval = true)
 	public static PM3DUnbakedBlockModel loadPM3D(DynamicBakedModel.CacheMethod cacheMethod, Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
 	{
 		return new PM3DUnbakedBlockModel(
