@@ -1,0 +1,35 @@
+{
+	"version": 1,
+	"variables": {
+		"eyebrows": {
+			"defaultValue": "black",
+			"possibleValues": [
+				"black",
+				"blonde",
+				"brown",
+				"white"
+			]
+		},
+		"hair": {
+			"defaultValue": "brown_1",
+			"possibleValues": [
+				"black_1",
+				"black_2",
+				"black_3",
+				"black_4",
+				"blonde_1",
+				"blonde_2",
+				"blonde_3",
+				"blonde_4",
+				"brown_1",
+				"brown_2",
+				"brown_3",
+				"brown_4",
+				"gray_1",
+				"gray_2",
+				"gray_3",
+				"gray_4"
+			]
+		}
+	}
+}

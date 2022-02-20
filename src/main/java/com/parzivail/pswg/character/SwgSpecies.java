@@ -21,37 +21,8 @@ public abstract class SwgSpecies
 	private static final String VARIABLE_SEPARATOR = ",";
 	private static final String MODEL_SEPARATOR = ";";
 
-	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new SpeciesStringVariable(
-			SwgSpeciesRegistry.SPECIES_HUMANOID,
-			"eyebrows",
-			"black",
-			"black",
-			"blonde",
-			"brown",
-			"white"
-	);
-
-	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new SpeciesStringVariable(
-			SwgSpeciesRegistry.SPECIES_HUMANOID,
-			"hair",
-			"brown_1",
-			"black_1",
-			"black_2",
-			"black_3",
-			"black_4",
-			"blonde_1",
-			"blonde_2",
-			"blonde_3",
-			"blonde_4",
-			"brown_1",
-			"brown_2",
-			"brown_3",
-			"brown_4",
-			"gray_1",
-			"gray_2",
-			"gray_3",
-			"gray_4"
-	);
+	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eyebrows");
+	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "hair");
 
 	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(
 			SwgSpeciesRegistry.SPECIES_HUMANOID,
