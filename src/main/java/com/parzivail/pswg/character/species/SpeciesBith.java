@@ -1,6 +1,6 @@
 package com.parzivail.pswg.character.species;
 
-import com.parzivail.pswg.character.SpeciesStringVariable;
+import com.parzivail.pswg.character.DatapackedSpeciesVariable;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -14,13 +14,7 @@ import java.util.Collection;
 
 public class SpeciesBith extends SwgSpecies
 {
-	private static final SpeciesVariable VAR_BODY = new SpeciesStringVariable(SwgSpeciesRegistry.SPECIES_BITH,
-	                                                                          "body",
-	                                                                          "white",
-	                                                                          "green",
-	                                                                          "pink",
-	                                                                          "white"
-	);
+	private static final SpeciesVariable VAR_BODY = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_BITH, "body");
 
 	public SpeciesBith(String serialized)
 	{

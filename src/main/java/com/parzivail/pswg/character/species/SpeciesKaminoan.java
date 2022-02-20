@@ -1,6 +1,6 @@
 package com.parzivail.pswg.character.species;
 
-import com.parzivail.pswg.character.SpeciesStringVariable;
+import com.parzivail.pswg.character.DatapackedSpeciesVariable;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -14,13 +14,7 @@ import java.util.Collection;
 
 public class SpeciesKaminoan extends SwgSpecies
 {
-	private static final SpeciesVariable VAR_BODY = new SpeciesStringVariable(SwgSpeciesRegistry.SPECIES_KAMINOAN,
-	                                                                          "body",
-	                                                                          "white",
-	                                                                          "blue",
-	                                                                          "purple",
-	                                                                          "white"
-	);
+	private static final SpeciesVariable VAR_BODY = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_KAMINOAN, "body");
 
 	public SpeciesKaminoan(String serialized)
 	{
@@ -44,9 +38,9 @@ public class SpeciesKaminoan extends SwgSpecies
 	public Collection<Identifier> getTextureStack(PlayerEntity player, SwgSpecies species)
 	{
 		var stack = new ArrayList<Identifier>();
-//		stack.add(getGenderedTexture(this, getVariable(VAR_BODY)));
-//		stack.add(getGenderedTexture(this, "clothes"));
-//		stack.add(getTexture(this, "eyes"));
+		//		stack.add(getGenderedTexture(this, getVariable(VAR_BODY)));
+		//		stack.add(getGenderedTexture(this, "clothes"));
+		//		stack.add(getTexture(this, "eyes"));
 		return stack;
 	}
 }

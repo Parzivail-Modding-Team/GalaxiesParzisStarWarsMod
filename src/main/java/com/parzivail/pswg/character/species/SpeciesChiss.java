@@ -1,6 +1,6 @@
 package com.parzivail.pswg.character.species;
 
-import com.parzivail.pswg.character.SpeciesStringVariable;
+import com.parzivail.pswg.character.DatapackedSpeciesVariable;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -14,26 +14,8 @@ import java.util.Collection;
 
 public class SpeciesChiss extends SwgSpecies
 {
-	protected static final SpeciesVariable VAR_EYEBROWS = new SpeciesStringVariable(
-			SwgSpeciesRegistry.SPECIES_HUMANOID,
-			"eyebrows",
-			"black",
-			"black",
-			"white"
-	);
-	protected static final SpeciesVariable VAR_HAIR = new SpeciesStringVariable(
-			SwgSpeciesRegistry.SPECIES_HUMANOID,
-			"hair",
-			"brown_1",
-			"black_1",
-			"black_2",
-			"black_3",
-			"black_4",
-			"gray_1",
-			"gray_2",
-			"gray_3",
-			"gray_4"
-	);
+	protected static final SpeciesVariable VAR_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "eyebrows");
+	protected static final SpeciesVariable VAR_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "hair");
 
 	public SpeciesChiss(String serialized)
 	{

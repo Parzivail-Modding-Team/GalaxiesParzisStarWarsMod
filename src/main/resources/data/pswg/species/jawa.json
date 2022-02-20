@@ -1,0 +1,13 @@
+{
+	"version": 1,
+	"variables": {
+		"body": {
+			"defaultValue": "white",
+			"possibleValues": [
+				"blue",
+				"purple",
+				"white"
+			]
+		}
+	}
+}

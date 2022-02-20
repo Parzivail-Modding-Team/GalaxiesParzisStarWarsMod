@@ -8,7 +8,7 @@ import java.util.List;
 public abstract class SpeciesVariable
 {
 	public static final String NONE = "none";
-	protected final Identifier sourceSpecies;
+	protected final Identifier targetSpecies;
 	protected final String name;
 
 	public static boolean isNotEmpty(SwgSpecies species, SpeciesVariable variable)
@@ -16,9 +16,9 @@ public abstract class SpeciesVariable
 		return !species.getVariable(variable).equals(NONE);
 	}
 
-	public SpeciesVariable(Identifier sourceSpecies, String name)
+	public SpeciesVariable(Identifier targetSpecies, String name)
 	{
-		this.sourceSpecies = sourceSpecies;
+		this.targetSpecies = targetSpecies;
 		this.name = name;
 	}
 
@@ -31,14 +31,19 @@ public abstract class SpeciesVariable
 		return name;
 	}
 
-	public Identifier getSpeciesSlug()
+	public Identifier getTargetSpeciesSlug()
 	{
-		return sourceSpecies;
+		return targetSpecies;
+	}
+
+	public Identifier getDefiningSpeciesSlug()
+	{
+		return targetSpecies;
 	}
 
 	public String getTranslationKey()
 	{
-		return SwgSpeciesRegistry.getTranslationKey(sourceSpecies) + "." + name;
+		return SwgSpeciesRegistry.getTranslationKey(getDefiningSpeciesSlug()) + "." + name;
 	}
 
 	public String getTranslationFor(String value)

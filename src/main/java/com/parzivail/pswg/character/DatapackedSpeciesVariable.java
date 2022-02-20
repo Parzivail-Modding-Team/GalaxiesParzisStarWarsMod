@@ -15,14 +15,26 @@ public class DatapackedSpeciesVariable extends SpeciesVariable
 	@Override
 	public List<String> getPossibleValues()
 	{
-		var desc = SwgSpeciesManager.INSTANCE.getDataAndAssert(sourceSpecies);
+		var desc = SwgSpeciesManager.INSTANCE.getDataAndAssert(targetSpecies);
 		return desc.variables.get(name).possibleValues;
 	}
 
 	@Override
 	public String getDefaultValue()
 	{
-		var desc = SwgSpeciesManager.INSTANCE.getDataAndAssert(sourceSpecies);
+		var desc = SwgSpeciesManager.INSTANCE.getDataAndAssert(targetSpecies);
 		return desc.variables.get(name).defaultValue;
+	}
+
+	@Override
+	public Identifier getDefiningSpeciesSlug()
+	{
+		var desc = SwgSpeciesManager.INSTANCE.getDataAndAssert(targetSpecies);
+		var variable = desc.variables.get(name);
+
+		if (variable.definingSpecies != null)
+			return variable.definingSpecies;
+
+		return super.getDefiningSpeciesSlug();
 	}
 }

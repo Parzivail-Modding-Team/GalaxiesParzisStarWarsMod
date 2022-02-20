@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.character.SpeciesDescriptor;
+import com.parzivail.util.data.IdentifierDeserializer;
 import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
@@ -20,7 +21,9 @@ public class SwgSpeciesManager extends TypedDataLoader<SpeciesDescriptor>
 	private SwgSpeciesManager()
 	{
 		super(
-				new GsonBuilder().create(),
+				new GsonBuilder()
+						.registerTypeAdapter(Identifier.class, new IdentifierDeserializer())
+						.create(),
 				"species"
 		);
 	}

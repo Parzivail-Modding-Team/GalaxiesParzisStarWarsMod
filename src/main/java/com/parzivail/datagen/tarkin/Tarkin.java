@@ -173,7 +173,7 @@ public class Tarkin
 
 			for (var variable : species.getVariables())
 			{
-				var variableLangBase = speciesLangBase.dot(variable.getSpeciesSlug().getPath());
+				var variableLangBase = speciesLangBase.dot(variable.getTargetSpeciesSlug().getPath());
 				variableLangBase.build(assets);
 
 				var variableLang = variableLangBase.dot(variable.getName());

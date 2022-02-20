@@ -16,7 +16,7 @@ public class SpeciesTogruta extends SwgSpecies
 {
 	private static final SpeciesVariable VAR_BODY = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "body");
 	private static final SpeciesVariable VAR_FACE = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "face");
-	private static final SpeciesVariable VAR_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "eyebrow");
+	private static final SpeciesVariable VAR_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "eyebrows");
 	private static final SpeciesVariable VAR_LOWER_MONTRAL = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "lower_montral");
 	private static final SpeciesVariable VAR_UPPER_MONTRAL = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "upper_montral");
 
