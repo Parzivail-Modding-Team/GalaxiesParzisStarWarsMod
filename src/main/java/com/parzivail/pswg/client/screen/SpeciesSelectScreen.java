@@ -137,8 +137,7 @@ public class SpeciesSelectScreen extends Screen
 				passedData.writeString("minecraft:none");
 			else
 			{
-				if (!selected.isSameSpecies(playerSpecies))
-					this.playerSpecies = SwgSpeciesRegistry.deserialize(selected.serialize());
+				this.playerSpecies = SwgSpeciesRegistry.deserialize(selected.serialize());
 
 				if (speciesVariableListWidget.getSelectedOrNull() == null)
 					return;
@@ -150,6 +149,7 @@ public class SpeciesSelectScreen extends Screen
 				passedData.writeString(this.playerSpecies.serialize());
 			}
 
+			// TODO: verify species variables on server
 			ClientPlayNetworking.send(SwgPackets.C2S.PacketSetOwnSpecies, passedData);
 		}));
 
