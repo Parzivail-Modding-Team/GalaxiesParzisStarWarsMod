@@ -1,5 +1,6 @@
 package com.parzivail.pswg.character.species;
 
+import com.parzivail.pswg.character.DatapackedSpeciesVariable;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -13,60 +14,11 @@ import java.util.Collection;
 
 public class SpeciesTogruta extends SwgSpecies
 {
-	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA,
-	                                                                    "body",
-	                                                                    "orange",
-	                                                                    "blue",
-	                                                                    "green",
-	                                                                    "light_blue",
-	                                                                    "lilac",
-	                                                                    "orange",
-	                                                                    "pink",
-	                                                                    "red",
-	                                                                    "yellow"
-	);
-
-	private static final SpeciesVariable VAR_FACE = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA,
-	                                                                    "face",
-	                                                                    SpeciesVariable.NONE,
-	                                                                    SpeciesVariable.NONE,
-	                                                                    "1",
-	                                                                    "2",
-	                                                                    "3",
-	                                                                    "4",
-	                                                                    "5",
-	                                                                    "6",
-	                                                                    "7"
-	);
-
-	private static final SpeciesVariable VAR_EYEBROWS = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA,
-	                                                                        "eyebrow",
-	                                                                        "default",
-	                                                                        "default"
-	);
-
-	private static final SpeciesVariable VAR_LOWER_MONTRAL = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA,
-	                                                                             "lower_montral",
-	                                                                             "cream",
-	                                                                             "beige",
-	                                                                             "cream",
-	                                                                             "white"
-	);
-
-	private static final SpeciesVariable VAR_UPPER_MONTRAL = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA,
-	                                                                             "upper_montral",
-	                                                                             "blue",
-	                                                                             SpeciesVariable.NONE,
-	                                                                             "blue",
-	                                                                             "brown",
-	                                                                             "dark_blue",
-	                                                                             "green",
-	                                                                             "light_green",
-	                                                                             "pink",
-	                                                                             "purple",
-	                                                                             "red",
-	                                                                             "turquoise"
-	);
+	private static final SpeciesVariable VAR_BODY = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "body");
+	private static final SpeciesVariable VAR_FACE = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "face");
+	private static final SpeciesVariable VAR_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "eyebrow");
+	private static final SpeciesVariable VAR_LOWER_MONTRAL = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "lower_montral");
+	private static final SpeciesVariable VAR_UPPER_MONTRAL = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TOGRUTA, "upper_montral");
 
 	public SpeciesTogruta(String serialized)
 	{

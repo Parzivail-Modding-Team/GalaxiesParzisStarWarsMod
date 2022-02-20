@@ -1,5 +1,6 @@
 package com.parzivail.pswg.character.species;
 
+import com.parzivail.pswg.character.SpeciesStringVariable;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -13,7 +14,7 @@ import java.util.Collection;
 
 public class SpeciesHuman extends SwgSpecies
 {
-	private static final SpeciesVariable VAR_SKINTONE = new SpeciesVariable(
+	private static final SpeciesVariable VAR_SKINTONE = new SpeciesStringVariable(
 			SwgSpeciesRegistry.SPECIES_HUMAN,
 			"skin_tone",
 			"almond",

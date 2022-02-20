@@ -21,7 +21,7 @@ public abstract class SwgSpecies
 	private static final String VARIABLE_SEPARATOR = ",";
 	private static final String MODEL_SEPARATOR = ";";
 
-	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new SpeciesVariable(
+	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new SpeciesStringVariable(
 			SwgSpeciesRegistry.SPECIES_HUMANOID,
 			"eyebrows",
 			"black",
@@ -31,7 +31,7 @@ public abstract class SwgSpecies
 			"white"
 	);
 
-	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new SpeciesVariable(
+	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new SpeciesStringVariable(
 			SwgSpeciesRegistry.SPECIES_HUMANOID,
 			"hair",
 			"brown_1",

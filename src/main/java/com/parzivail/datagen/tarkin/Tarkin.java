@@ -10,6 +10,7 @@ import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
+import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.util.Lumberjack;
@@ -159,6 +160,8 @@ public class Tarkin
 		lang.cloneWithRoot(BlasterFiringMode.ION.getTranslation()).build(assets);
 
 		// Species
+		var speciesManager = SwgSpeciesManager.INSTANCE;
+		ResourceManagerUtil.forceReload(speciesManager, ResourceType.SERVER_DATA);
 		var speciesLangBase = lang.cloneWithRoot("species").modid();
 
 		speciesLangBase.dot("none").build(assets);

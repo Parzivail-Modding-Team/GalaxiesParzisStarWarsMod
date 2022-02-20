@@ -38,7 +38,6 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
-import org.apache.commons.lang3.ArrayUtils;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.List;
@@ -233,10 +232,10 @@ public class SpeciesSelectScreen extends Screen
 		if (selectedVariable instanceof SpeciesColorVariable)
 			return false;
 
-		var values = selectedVariable.getPossibleValues();
+		List<String> values = selectedVariable.getPossibleValues();
 		var selectedValue = selectedSpecies.getVariable(selectedVariable);
 
-		var nextIndex = ArrayUtils.indexOf(values, selectedValue);
+		var nextIndex = values.indexOf(selectedValue);
 
 		if (left)
 		{
@@ -249,9 +248,9 @@ public class SpeciesSelectScreen extends Screen
 			carouselTimer = CAROUSEL_TIMER_MAX;
 		}
 
-		looping = nextIndex == values.length || nextIndex == -1;
+		looping = nextIndex == values.size() || nextIndex == -1;
 
-		selectedSpecies.setVariable(selectedVariable, values[(values.length + nextIndex) % values.length]);
+		selectedSpecies.setVariable(selectedVariable, values.get((values.size() + nextIndex) % values.size()));
 		return true;
 	}
 
@@ -316,7 +315,7 @@ public class SpeciesSelectScreen extends Screen
 			var selectedSpecies = speciesEntry.getValue();
 			SpeciesVariable selectedVariable = null;
 
-			String[] values;
+			List<String> values;
 			String selectedValue;
 			int selectedIndex;
 
@@ -333,7 +332,7 @@ public class SpeciesSelectScreen extends Screen
 
 					renderColorPreview(x, y);
 
-					values = new String[] { selectedSpecies.getVariable(selectedVariable) };
+					values = List.of(selectedSpecies.getVariable(selectedVariable));
 				}
 				else
 					values = selectedVariable.getPossibleValues();
@@ -342,13 +341,13 @@ public class SpeciesSelectScreen extends Screen
 
 				selectedSpecies.setGender(gender);
 
-				selectedIndex = Math.max(0, ArrayUtils.indexOf(values, selectedValue));
+				selectedIndex = Math.max(0, values.indexOf(selectedValue));
 
 				drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
 			}
 			else
 			{
-				values = new String[] { "none" };
+				values = List.of(SpeciesVariable.NONE);
 				selectedValue = null;
 				selectedIndex = 0;
 			}
@@ -357,9 +356,9 @@ public class SpeciesSelectScreen extends Screen
 
 			var mat2 = RenderSystem.getModelViewStack();
 
-			for (var j = 0; j < values.length; j++)
+			for (var j = 0; j < values.size(); j++)
 			{
-				var value = values[j];
+				var value = values.get(j);
 
 				if (selectedSpecies != null)
 					selectedSpecies.setVariable(selectedVariable, value);
@@ -370,7 +369,7 @@ public class SpeciesSelectScreen extends Screen
 				var timer = carouselTimer / (float)CAROUSEL_TIMER_MAX;
 
 				if (looping)
-					timer = MathHelper.lerp(timer, 0, -1 - (values.length - 1) / 20f);
+					timer = MathHelper.lerp(timer, 0, -1 - (values.size() - 1) / 20f);
 
 				offsetTimer += Ease.inCubic(timer);
 				var offset = Math.signum(offsetTimer) * Math.pow(Math.abs((offsetTimer * 0.8f)), 0.7f) * modelSize;

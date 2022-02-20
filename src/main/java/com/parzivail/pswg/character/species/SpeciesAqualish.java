@@ -1,5 +1,6 @@
 package com.parzivail.pswg.character.species;
 
+import com.parzivail.pswg.character.SpeciesStringVariable;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -13,11 +14,11 @@ import java.util.Collection;
 
 public class SpeciesAqualish extends SwgSpecies
 {
-	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_AQUALISH,
-	                                                             "body",
-	                                                             "beige",
-	                                                             "beige",
-	                                                             "green"
+	private static final SpeciesVariable VAR_BODY = new SpeciesStringVariable(SwgSpeciesRegistry.SPECIES_AQUALISH,
+	                                                                          "body",
+	                                                                          "beige",
+	                                                                          "beige",
+	                                                                          "green"
 	);
 
 	public SpeciesAqualish(String serialized)

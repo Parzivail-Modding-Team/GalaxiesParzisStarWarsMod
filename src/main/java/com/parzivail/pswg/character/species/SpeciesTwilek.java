@@ -1,5 +1,6 @@
 package com.parzivail.pswg.character.species;
 
+import com.parzivail.pswg.character.SpeciesStringVariable;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -13,20 +14,20 @@ import java.util.Collection;
 
 public class SpeciesTwilek extends SwgSpecies
 {
-	private static final SpeciesVariable VAR_BODY = new SpeciesVariable(SwgSpeciesRegistry.SPECIES_TWILEK,
-			"body",
-			"green",
-			"blue",
-			"cyan",
-			"green",
-			"lime",
-			"magenta",
-			"orange",
-			"pink",
-			"purple",
-			"red",
-			"white",
-			"yellow"
+	private static final SpeciesVariable VAR_BODY = new SpeciesStringVariable(SwgSpeciesRegistry.SPECIES_TWILEK,
+	                                                                          "body",
+	                                                                          "green",
+	                                                                          "blue",
+	                                                                          "cyan",
+	                                                                          "green",
+	                                                                          "lime",
+	                                                                          "magenta",
+	                                                                          "orange",
+	                                                                          "pink",
+	                                                                          "purple",
+	                                                                          "red",
+	                                                                          "white",
+	                                                                          "yellow"
 	);
 
 	public SpeciesTwilek(String serialized)
