@@ -2,16 +2,17 @@ package com.parzivail.pswg;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.parzivail.datagen.DataGenHelper;
+import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
+import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.handler.PlayerPacketHandler;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
-import com.parzivail.pswg.species.SwgSpecies;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.world.DimensionTeleporter;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -71,6 +72,7 @@ public class Galaxies implements ModInitializer
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgBlasterManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgLightsaberManager.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgSpeciesManager.INSTANCE);
 
 		TrackedDataHandlers.register();
 

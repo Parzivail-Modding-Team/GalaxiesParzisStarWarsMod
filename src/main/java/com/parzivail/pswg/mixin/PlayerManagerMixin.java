@@ -3,9 +3,9 @@ package com.parzivail.pswg.mixin;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
+import com.parzivail.pswg.data.SwgSpeciesManager;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Final;
@@ -22,10 +22,6 @@ public class PlayerManagerMixin
 {
 	@Shadow
 	@Final
-	private MinecraftServer server;
-
-	@Shadow
-	@Final
 	private List<ServerPlayerEntity> players;
 
 	// TODO: check if this can be replaced with net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN
@@ -34,6 +30,7 @@ public class PlayerManagerMixin
 	{
 		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
 		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
+		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
 	}
 
 	@Inject(method = "onDataPacksReloaded()V", at = @At("TAIL"))
@@ -43,6 +40,7 @@ public class PlayerManagerMixin
 		{
 			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.PacketSyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
 			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.PacketSyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
+			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.PacketSyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
 		}
 	}
 }

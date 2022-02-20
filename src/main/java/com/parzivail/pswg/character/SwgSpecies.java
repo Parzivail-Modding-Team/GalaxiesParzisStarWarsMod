@@ -1,8 +1,8 @@
-package com.parzivail.pswg.species;
+package com.parzivail.pswg.character;
 
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.character.species.SpeciesTogruta;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import com.parzivail.pswg.species.species.SpeciesTogruta;
 import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;

@@ -1,0 +1,60 @@
+{
+	"version": 1,
+	"variables": {
+		"body": {
+			"defaultValue": "orange",
+			"possibleValues": [
+				"blue",
+				"green",
+				"light_blue",
+				"lilac",
+				"orange",
+				"pink",
+				"red",
+				"yellow"
+			]
+		},
+		"face": {
+			"defaultValue": "none",
+			"possibleValues": [
+				"none",
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6",
+				"7"
+			]
+		},
+		"eyebrow": {
+			"defaultValue": "default",
+			"possibleValues": [
+				"default"
+			]
+		},
+		"lower_montral": {
+			"defaultValue": "cream",
+			"possibleValues": [
+				"beige",
+				"cream",
+				"white"
+			]
+		},
+		"upper_montral": {
+			"defaultValue": "blue",
+			"possibleValues": [
+				"none",
+				"blue",
+				"brown",
+				"dark_blue",
+				"green",
+				"light_green",
+				"pink",
+				"purple",
+				"red",
+				"turquoise"
+			]
+		}
+	}
+}

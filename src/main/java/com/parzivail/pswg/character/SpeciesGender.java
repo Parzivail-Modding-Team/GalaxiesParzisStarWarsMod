@@ -1,4 +1,4 @@
-package com.parzivail.pswg.species;
+package com.parzivail.pswg.character;
 
 import net.minecraft.util.Identifier;
 

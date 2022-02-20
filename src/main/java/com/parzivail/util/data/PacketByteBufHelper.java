@@ -7,6 +7,8 @@ import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 public class PacketByteBufHelper
@@ -38,6 +40,22 @@ public class PacketByteBufHelper
 			return null;
 
 		return reader.read(buf);
+	}
+
+	public static <T> void writeMany(PacketByteBuf buf, Collection<T> value, PacketByteBufWriter<T> writer)
+	{
+		buf.writeInt(value.size());
+		for (T t : value)
+			writer.write(buf, t);
+	}
+
+	public static <T> ArrayList<T> readMany(PacketByteBuf buf, PacketByteBufReader<T> reader)
+	{
+		var n = buf.readInt();
+		var arr = new ArrayList<T>();
+		for (var i = 0; i < n; i++)
+			arr.add(reader.read(buf));
+		return arr;
 	}
 
 	public static <TK, TV> void writeHashMap(PacketByteBuf buf, HashMap<TK, TV> map, PacketByteBufWriter<TK> keyWriter, PacketByteBufWriter<TV> valueWriter)

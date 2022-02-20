@@ -1,8 +1,8 @@
-package com.parzivail.pswg.species.species;
+package com.parzivail.pswg.character.species;
 
+import com.parzivail.pswg.character.SpeciesVariable;
+import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import com.parzivail.pswg.species.SpeciesVariable;
-import com.parzivail.pswg.species.SwgSpecies;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;

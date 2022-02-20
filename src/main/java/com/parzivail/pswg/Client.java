@@ -29,6 +29,7 @@ import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
+import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
@@ -265,6 +266,8 @@ public class Client implements ClientModInitializer
 				minecraftClient.getSearchableContainer(SearchManager.ITEM_TOOLTIP).reload();
 			});
 		});
+
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncSpecies, SwgSpeciesManager.INSTANCE::handlePacket);
 
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPlayerEvent, (client, handler, buf, responseSender) -> {
 			var eventId = buf.readByte();

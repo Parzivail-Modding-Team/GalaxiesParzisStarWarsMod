@@ -11,13 +11,12 @@ import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
 import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
+import com.parzivail.util.data.IdentifierDeserializer;
 import com.parzivail.util.data.TypedDataLoader;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.EulerAngle;
-import net.minecraft.util.math.Vec3d;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -29,35 +28,6 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 {
 	public static final Identifier ID = Resources.id("blaster_manager");
 	public static final SwgBlasterManager INSTANCE = new SwgBlasterManager();
-
-	private static class IdentifierDeserializer implements JsonDeserializer<Identifier>
-	{
-		@Override
-		public Identifier deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-		{
-			return new Identifier(json.getAsString());
-		}
-	}
-
-	private static class EulerAngleDeserializer implements JsonDeserializer<EulerAngle>
-	{
-		@Override
-		public EulerAngle deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-		{
-			var o = json.getAsJsonObject();
-			return new EulerAngle(o.get("pitch").getAsFloat(), o.get("yaw").getAsFloat(), o.get("roll").getAsFloat());
-		}
-	}
-
-	private static class Vec3dDeserializer implements JsonDeserializer<Vec3d>
-	{
-		@Override
-		public Vec3d deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException
-		{
-			var o = json.getAsJsonObject();
-			return new Vec3d(o.get("x").getAsDouble(), o.get("y").getAsDouble(), o.get("z").getAsDouble());
-		}
-	}
 
 	private static class BlasterArchetypeAdapter extends TypeAdapter<BlasterArchetype>
 	{
@@ -145,8 +115,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		super(
 				new GsonBuilder()
 						.registerTypeAdapter(BlasterArchetype.class, new BlasterArchetypeAdapter())
-						.registerTypeAdapter(Vec3d.class, new Vec3dDeserializer())
-						.registerTypeAdapter(EulerAngle.class, new EulerAngleDeserializer())
+//						.registerTypeAdapter(Vec3d.class, new Vec3dDeserializer())
+//						.registerTypeAdapter(EulerAngle.class, new EulerAngleDeserializer())
 						.registerTypeAdapter(Identifier.class, new IdentifierDeserializer())
 						.registerTypeAdapter(TypeToken.getParameterized(ArrayList.class, BlasterFiringMode.class).getType(), new BlasterFiringModesAdapter())
 						.registerTypeAdapter(TypeToken.getParameterized(HashMap.class, Integer.class, BlasterAttachmentDescriptor.class).getType(), new BlasterAttachmentDescriptorDeserializer())

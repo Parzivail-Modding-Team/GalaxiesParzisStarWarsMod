@@ -1,9 +1,9 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.character.SwgSpecies;
+import com.parzivail.pswg.character.species.*;
 import com.parzivail.pswg.component.SwgEntityComponents;
-import com.parzivail.pswg.species.SwgSpecies;
-import com.parzivail.pswg.species.species.*;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
