@@ -84,12 +84,6 @@ public class BlasterWorkbenchScreenHandler extends ScreenHandler
 		slot.markDirty();
 	}
 
-	public void close(PlayerEntity player)
-	{
-		super.close(player);
-		this.context.run((world, blockPos) -> this.dropInventory(player, this.inventory));
-	}
-
 	public ItemStack transferSlot(PlayerEntity player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;
