@@ -5,6 +5,7 @@ import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.loader.NemManager;
+import com.parzivail.pswg.client.render.block.BlasterWorkbenchWeaponRenderer;
 import com.parzivail.pswg.client.render.block.TatooineHomeDoorRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterIonBoltRenderer;
@@ -129,6 +130,7 @@ public class Client implements ClientModInitializer
 		ScreenRegistry.register(SwgScreenTypes.Workbench.Lightsaber, LightsaberForgeScreen::new);
 
 		BlockEntityRendererRegistry.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
+		BlockEntityRendererRegistry.register(SwgBlocks.Workbench.BlasterBlockEntityType, BlasterWorkbenchWeaponRenderer::new);
 
 		ModelRegistry.register(SwgBlocks.Workbench.Blaster, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/blaster_workbench"), Resources.id("model/blaster_workbench"), Resources.id("model/blaster_workbench_particle")));
 

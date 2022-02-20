@@ -2,7 +2,10 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.block.*;
+import com.parzivail.pswg.block.BlockMoistureVaporator;
+import com.parzivail.pswg.block.BlockTatooineHomeDoor;
+import com.parzivail.pswg.block.BlockTatooineHomeDoorController;
+import com.parzivail.pswg.block.LightsaberForgeBlock;
 import com.parzivail.pswg.block.crop.AridPlant;
 import com.parzivail.pswg.block.crop.ChasukaCrop;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
@@ -171,7 +174,7 @@ public class SwgBlocks
 	public static class Workbench
 	{
 		@RegistryName("blaster_workbench")
-		public static final Block Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block Blaster = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool(), BlasterWorkbenchBlockEntity::new);
 		@RegistryName("blaster_workbench")
 		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = FabricBlockEntityTypeBuilder.create(BlasterWorkbenchBlockEntity::new, Blaster).build();
 
