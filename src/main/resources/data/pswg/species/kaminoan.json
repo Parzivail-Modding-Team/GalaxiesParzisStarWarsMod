@@ -2,10 +2,11 @@
 	"version": 1,
 	"variables": {
 		"body": {
-			"defaultValue": "beige",
+			"defaultValue": "white",
 			"possibleValues": [
-				"beige",
-				"green"
+				"blue",
+				"purple",
+				"white"
 			]
 		}
 	}

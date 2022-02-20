@@ -6,6 +6,7 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
+import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
 import com.parzivail.pswg.container.*;
@@ -164,7 +165,7 @@ public class Tarkin
 		ResourceManagerUtil.forceReload(speciesManager, ResourceType.SERVER_DATA);
 		var speciesLangBase = lang.cloneWithRoot("species").modid();
 
-		speciesLangBase.dot("none").build(assets);
+		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);
 
 		for (var species : SwgSpeciesRegistry.getSpecies())
 		{
@@ -173,14 +174,10 @@ public class Tarkin
 
 			for (var variable : species.getVariables())
 			{
-				var variableLangBase = speciesLangBase.dot(variable.getTargetSpeciesSlug().getPath());
-				variableLangBase.build(assets);
-
-				var variableLang = variableLangBase.dot(variable.getName());
-				variableLang.build(assets);
+				lang.cloneWithRoot(variable.getTranslationKey()).build(assets);
 
 				for (var value : variable.getPossibleValues())
-					variableLang.dot(value).build(assets);
+					lang.cloneWithRoot(variable.getTranslationFor(value)).build(assets);
 			}
 		}
 
