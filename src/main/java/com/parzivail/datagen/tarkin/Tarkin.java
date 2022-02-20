@@ -1038,7 +1038,7 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.CrispyGorg).build(assets);
 		ItemGenerator.basic(SwgItems.Food.DebDeb).build(assets);
 		ItemGenerator.basic(SwgItems.Food.DewbackEgg).build(assets);
-		ItemGenerator.basic(SwgItems.Food.DewbackOmlette).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DewbackOmelette).build(assets);
 		ItemGenerator.basic(SwgItems.Food.EopieLoin).build(assets);
 		ItemGenerator.basic(SwgItems.Food.HubbaGourd).build(assets);
 		ItemGenerator.basic(SwgItems.Food.JerbaRack).build(assets);

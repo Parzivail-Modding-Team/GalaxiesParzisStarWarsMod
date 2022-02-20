@@ -287,8 +287,8 @@ public class SwgItems
 		public static final Item CrispyGorg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("dewback_egg")
 		public static final Item DewbackEgg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
-		@RegistryName("dewback_omlette")
-		public static final Item DewbackOmlette = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
+		@RegistryName("dewback_omelette")
+		public static final Item DewbackOmelette = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("jerba_rack")
 		public static final Item JerbaRack = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("jerba_rib")
