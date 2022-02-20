@@ -35,7 +35,7 @@ public class SpeciesKaminoan extends SwgSpecies
 
 	@Override
 	@Environment(EnvType.CLIENT)
-	public Collection<Identifier> getTextureStack(PlayerEntity player, SwgSpecies species)
+	public Collection<Identifier> getTextureStack(PlayerEntity player)
 	{
 		var stack = new ArrayList<Identifier>();
 		//		stack.add(getGenderedTexture(this, getVariable(VAR_BODY)));

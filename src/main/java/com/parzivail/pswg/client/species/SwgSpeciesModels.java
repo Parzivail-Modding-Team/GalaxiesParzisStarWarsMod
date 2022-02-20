@@ -66,6 +66,6 @@ public class SwgSpeciesModels
 	public static Identifier getTexture(PlayerEntity player, SwgSpecies species)
 	{
 		var hashCode = species.hashCode();
-		return Client.stackedTextureProvider.getId(String.format("species/%08x", hashCode), () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player, species));
+		return Client.stackedTextureProvider.getId(String.format("species/%08x", hashCode), () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player));
 	}
 }

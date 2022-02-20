@@ -24,16 +24,28 @@ public abstract class SwgSpecies
 	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eyebrows");
 	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "hair");
 
-	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(
-			SwgSpeciesRegistry.SPECIES_HUMANOID,
-			"eye_color",
-			0xFFFFFF
-	);
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_UNDERLAYER = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_underlayer");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_TOPS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_top");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOTTOMS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_bottom");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BELTS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_belt");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_BOOTS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_boots");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_GLOVES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_gloves");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_ACCESSORIES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_accessories");
+	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_OUTERWEAR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_outerwear");
+
+	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eye_color", 0xFFFFFF);
 
 	public static Identifier getSpeciesSlug(String serializedSpecies)
 	{
 		var parts = serializedSpecies.split(MODEL_SEPARATOR);
 		return SpeciesGender.stripGender(parts[0]);
+	}
+
+	protected static void appendOptionalLayer(Collection<Identifier> stack, SwgSpecies species, SpeciesVariable variable)
+	{
+		if (species.getVariable(variable).equals(SpeciesVariable.NONE))
+			return;
+		stack.add(getTexture(species, variable));
 	}
 
 	protected static Identifier getTexture(SwgSpecies species, SpeciesVariable texture)
@@ -120,7 +132,7 @@ public abstract class SwgSpecies
 	public abstract SpeciesVariable[] getVariables();
 
 	@Environment(EnvType.CLIENT)
-	public abstract Collection<Identifier> getTextureStack(PlayerEntity player, SwgSpecies species);
+	public abstract Collection<Identifier> getTextureStack(PlayerEntity player);
 
 	public void setDefaultVariables()
 	{

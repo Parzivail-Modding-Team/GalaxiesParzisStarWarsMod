@@ -30,6 +30,76 @@
 				"gray_3",
 				"gray_4"
 			]
+		},
+		"clothes_underlayer": {
+			"defaultValue": "none",
+			"possibleValues": [
+				"none"
+			]
+		},
+		"clothes_top": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"tatooine_civ_1",
+				"the_gunslinger",
+				"the_marshall"
+			]
+		},
+		"clothes_bottom": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"tatooine_civ_1",
+				"the_gunslinger",
+				"the_marshall"
+			]
+		},
+		"clothes_belt": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"none",
+				"default",
+				"tatooine_civ_1",
+				"the_gunslinger",
+				"the_marshall"
+			]
+		},
+		"clothes_boots": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"none",
+				"default",
+				"imperial_pilot",
+				"rebel_pilot",
+				"tatooine_civ_1",
+				"the_gunslinger",
+				"the_marshall"
+			]
+		},
+		"clothes_gloves": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"none",
+				"imperial_pilot",
+				"rebel_pilot",
+				"tatooine_civ_1",
+				"the_gunslinger",
+				"the_marshall"
+			]
+		},
+		"clothes_accessories": {
+			"defaultValue": "none",
+			"possibleValues": [
+				"none",
+				"the_marshall"
+			]
+		},
+		"clothes_outerwear": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"none",
+				"tatooine_civ_1",
+				"the_gunslinger"
+			]
 		}
 	}
 }
