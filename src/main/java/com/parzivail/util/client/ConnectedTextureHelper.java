@@ -11,8 +11,8 @@ import java.util.Optional;
 
 public class ConnectedTextureHelper
 {
-	public static record Sides(SpriteSheetPoint TopLeft, SpriteSheetPoint TopRight, SpriteSheetPoint BottomLeft,
-	                           SpriteSheetPoint BottomRight)
+	public record Sides(SpriteSheetPoint TopLeft, SpriteSheetPoint TopRight, SpriteSheetPoint BottomLeft,
+	                    SpriteSheetPoint BottomRight)
 	{
 	}
 
@@ -76,10 +76,10 @@ public class ConnectedTextureHelper
 		switch (facing)
 		{
 			case DOWN -> {
-				up = lateralConnect ? Optional.of(Direction.SOUTH) : Optional.empty();
-				down = lateralConnect ? Optional.of(Direction.NORTH) : Optional.empty();
-				left = lateralConnect ? Optional.of(Direction.WEST) : Optional.empty();
-				right = lateralConnect ? Optional.of(Direction.EAST) : Optional.empty();
+				up = lateralConnect ? Optional.of(Direction.NORTH) : Optional.empty();
+				down = lateralConnect ? Optional.of(Direction.SOUTH) : Optional.empty();
+				left = lateralConnect ? Optional.of(Direction.EAST) : Optional.empty();
+				right = lateralConnect ? Optional.of(Direction.WEST) : Optional.empty();
 			}
 			case UP -> {
 				up = lateralConnect ? Optional.of(Direction.NORTH) : Optional.empty();
