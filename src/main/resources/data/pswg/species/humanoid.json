@@ -42,6 +42,10 @@
 			"possibleValues": [
 				"tatooine_civ_1",
 				"the_gunslinger",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
 				"the_marshall"
 			]
 		},
@@ -49,6 +53,10 @@
 			"defaultValue": "tatooine_civ_1",
 			"possibleValues": [
 				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
 				"the_gunslinger",
 				"the_marshall"
 			]
@@ -59,6 +67,10 @@
 				"none",
 				"default",
 				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
 				"the_gunslinger",
 				"the_marshall"
 			]
@@ -71,6 +83,10 @@
 				"imperial_pilot",
 				"rebel_pilot",
 				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
 				"the_gunslinger",
 				"the_marshall"
 			]
@@ -82,6 +98,10 @@
 				"imperial_pilot",
 				"rebel_pilot",
 				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
 				"the_gunslinger",
 				"the_marshall"
 			]
@@ -98,6 +118,10 @@
 			"possibleValues": [
 				"none",
 				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
 				"the_gunslinger"
 			]
 		}
