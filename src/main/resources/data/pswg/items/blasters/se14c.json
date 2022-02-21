@@ -43,7 +43,7 @@
 	"attachmentMap": {
 		"1": {
 			"mutex": 1,
-			"id": "barrel",
+			"id": "barrel_extension",
 			"icon": 1,
 			"visualComponent": "barrel_extension"
 		},
