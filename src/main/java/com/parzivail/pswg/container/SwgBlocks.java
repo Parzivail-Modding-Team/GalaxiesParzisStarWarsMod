@@ -11,6 +11,7 @@ import com.parzivail.pswg.block.crop.ChasukaCrop;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.blockentity.*;
+import com.parzivail.pswg.container.registry.Flammable;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.container.registry.TabIgnore;
@@ -26,7 +27,6 @@ import com.parzivail.util.block.rotating.RotatingBlockWithBoundsGuiEntity;
 import com.parzivail.util.block.rotating.RotatingBlockWithGuiEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
@@ -187,29 +187,39 @@ public class SwgBlocks
 	public static class Plant
 	{
 		@RegistryName("funnel_flower")
+		@Flammable(burn = 60, spread = 100)
 		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
+		@Flammable(burn = 60, spread = 100)
 		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("poonten_grass")
+		@Flammable(burn = 60, spread = 100)
 		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("dried_poonten_grass")
+		@Flammable(burn = 60, spread = 100)
 		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("tuber_stalk")
+		@Flammable(burn = 60, spread = 100)
 		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("chasuka")
 		@TabIgnore
+		@Flammable(burn = 60, spread = 100)
 		public static final CropBlock Chasuka = new ChasukaCrop(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("hkak_bush")
+		@Flammable(burn = 60, spread = 100)
 		public static final HkakBushBlock HkakBush = new HkakBushBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("molo_shrub")
+		@Flammable(burn = 60, spread = 100)
 		public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
 	}
 
 	public static class Leaves
 	{
 		@RegistryName("sequoia_leaves")
+		@Flammable(burn = 30, spread = 60)
 		public static final LeavesBlock Sequoia = createLeavesBlock();
 		@RegistryName("japor_leaves")
+		@Flammable(burn = 30, spread = 60)
 		public static final BushLeavesBlock Japor = createBushLeavesBlock();
 
 		private static LeavesBlock createLeavesBlock()
@@ -226,10 +236,13 @@ public class SwgBlocks
 	public static class Log
 	{
 		@RegistryName("sequoia_log")
+		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock Sequoia = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("japor_log")
+		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock Japor = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("tatooine_log")
+		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock Tatooine = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 
 		private static PillarBlock createLogBlock(MapColor topMapColor, MapColor sideMapColor)
@@ -242,10 +255,13 @@ public class SwgBlocks
 	public static class Wood
 	{
 		@RegistryName("sequoia_wood")
+		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock Sequoia = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("japor_wood")
+		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock Japor = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("tatooine_wood")
+		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock Tatooine = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 	}
 
@@ -504,7 +520,7 @@ public class SwgBlocks
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Block.class, SwgBlocks::registerBlock);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
-		FlammableBlockRegistry.getDefaultInstance().add(SwgBlocks.Leaves.Sequoia, 30, 60);
+		RegistryHelper.registerFlammable(SwgBlocks.class);
 
 		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door"), Door.TatooineHomeTop);
 		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door_controller"), Door.TatooineHomeBottom);
