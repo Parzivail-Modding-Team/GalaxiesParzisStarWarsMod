@@ -8,11 +8,13 @@ import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
 public class SwgSpeciesModels
@@ -67,5 +69,19 @@ public class SwgSpeciesModels
 	{
 		var hashCode = species.hashCode();
 		return Client.stackedTextureProvider.getId(String.format("species/%08x", hashCode), () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player));
+	}
+
+	public static void mutateModel(PlayerEntity entity, SwgSpecies species, PlayerEntityRenderer renderer)
+	{
+		var model = renderer.getModel();
+		try
+		{
+			var chest = model.body.getChild("chest");
+			chest.visible = species.getGender() == SpeciesGender.FEMALE;
+		}
+		catch (NoSuchElementException e)
+		{
+			// ignored
+		}
 	}
 }

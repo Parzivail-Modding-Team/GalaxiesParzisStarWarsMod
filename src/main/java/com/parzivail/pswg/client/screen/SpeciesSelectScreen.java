@@ -477,6 +477,7 @@ public class SpeciesSelectScreen extends Screen
 				var species = SwgSpeciesRegistry.deserialize(speciesString);
 
 				var renderer = renderers.get(species.getModel().toString());
+				SwgSpeciesModels.mutateModel(client.player, species, renderer);
 
 				if (renderer instanceof PlayerEntityRendererWithModel perwm)
 				{
