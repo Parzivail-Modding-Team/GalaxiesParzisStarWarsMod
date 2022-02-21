@@ -1023,7 +1023,7 @@ public class Tarkin
 
 		ItemGenerator.basic(SwgItems.Food.AhrisaBowl).build(assets);
 		ItemGenerator.basic(SwgItems.Food.BlackMelon).build(assets);
-		ItemGenerator.basic(SwgItems.Food.ChasukaSeeds).build(assets);
+		ItemGenerator.basic(SwgItems.Seeds.ChasukaSeeds).build(assets);
 		ItemGenerator.basic(SwgItems.Food.DesertPlums).build(assets);
 		ItemGenerator.basic(SwgItems.Food.DriedPoontenGrass).build(assets);
 		ItemGenerator.basic(SwgItems.Food.HarounBread).build(assets);
@@ -1434,7 +1434,7 @@ public class Tarkin
 		BlockGenerator.cross(SwgBlocks.Plant.Tuber).build(assets);
 
 		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2"))
-		              .lootTable(block1 -> LootTableFile.seedCrop(block1, SwgItems.Food.ChasukaSeeds, SwgItems.Food.ChasukaLeaf, 2, 3, 0.5714286))
+		              .lootTable(block1 -> LootTableFile.seedCrop(block1, SwgItems.Seeds.ChasukaSeeds, SwgItems.Food.ChasukaLeaf, 2, 3, 0.5714286))
 		              .build(assets);
 
 		BlockGenerator.bushStages(SwgBlocks.Plant.HkakBush, () -> HkakBushBlock.AGE, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.HkakBush), "_stage3")).build(assets);

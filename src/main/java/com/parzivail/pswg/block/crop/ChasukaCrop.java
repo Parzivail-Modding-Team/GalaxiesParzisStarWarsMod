@@ -45,7 +45,7 @@ public class ChasukaCrop extends CropBlock
 	@Environment(EnvType.CLIENT)
 	protected ItemConvertible getSeedsItem()
 	{
-		return SwgItems.Food.ChasukaSeeds;
+		return SwgItems.Seeds.ChasukaSeeds;
 	}
 
 	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
