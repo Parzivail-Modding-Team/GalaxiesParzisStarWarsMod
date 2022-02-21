@@ -20,6 +20,7 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
@@ -140,6 +141,12 @@ public class Galaxies implements ModInitializer
 
 				                                                                          return 1;
 			                                                                          }))));
+		});
+
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.PacketSyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
+			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.PacketSyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
+			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.PacketSyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketLightsaberForgeApply, LightsaberForgeScreenHandler::handleSetLighsaberTag);

@@ -24,15 +24,6 @@ public class PlayerManagerMixin
 	@Final
 	private List<ServerPlayerEntity> players;
 
-	// TODO: check if this can be replaced with net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN
-	@Inject(method = "onPlayerConnect(Lnet/minecraft/network/ClientConnection;Lnet/minecraft/server/network/ServerPlayerEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/PlayerManager;sendCommandTree(Lnet/minecraft/server/network/ServerPlayerEntity;)V", shift = At.Shift.BEFORE))
-	public void onPlayerConnect(ClientConnection connection, ServerPlayerEntity player, CallbackInfo ci)
-	{
-		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
-		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
-		ServerPlayNetworking.send(player, SwgPackets.S2C.PacketSyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
-	}
-
 	@Inject(method = "onDataPacksReloaded()V", at = @At("TAIL"))
 	public void onDataPacksReloaded(CallbackInfo ci)
 	{

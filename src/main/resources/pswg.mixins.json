@@ -1,7 +1,7 @@
 {
 	"required": true,
 	"package": "com.parzivail.pswg.mixin",
-	"compatibilityLevel": "JAVA_8",
+	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"CactusBlockMixin",
 		"CarverMixin",
