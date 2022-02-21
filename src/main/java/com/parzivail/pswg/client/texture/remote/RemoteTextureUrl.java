@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public record RemoteTextureUrl(String url)
 {
-
 	public String getUrl()
 	{
 		return url;

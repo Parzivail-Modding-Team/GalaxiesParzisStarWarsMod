@@ -73,7 +73,7 @@ public class SpeciesHuman extends SwgSpecies
 		                                  VAR_HUMANOID_CLOTHES_ACCESSORIES,
 		                                  VAR_HUMANOID_CLOTHES_OUTERWEAR
 		);
-		return Client.stackedTextureProvider.getId(String.format("clothing/%08x", hashCode), () -> Client.TEX_TRANSPARENT, () -> createClothingStack(species, player));
+		return Client.stackedTextureProvider.getId(String.format("clothing/%08x", hashCode), () -> getGenderedGlobalTexture(species.getGender(), "clothes"), () -> createClothingStack(species, player));
 	}
 
 	private static Collection<Identifier> createClothingStack(SwgSpecies species, PlayerEntity player)

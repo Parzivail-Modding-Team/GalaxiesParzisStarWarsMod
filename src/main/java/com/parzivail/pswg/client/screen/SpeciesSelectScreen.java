@@ -69,8 +69,6 @@ public class SpeciesSelectScreen extends Screen
 	private SwgSpecies playerSpecies;
 	private SpeciesGender gender = SpeciesGender.MALE;
 
-	private String lastRenderedSpeciesString;
-
 	public SpeciesSelectScreen(Screen parent)
 	{
 		super(new TranslatableText("screen.pswg.species_select"));
@@ -483,18 +481,9 @@ public class SpeciesSelectScreen extends Screen
 				{
 					var texture = SwgSpeciesModels.getTexture(entity, species);
 
-					if (texture.equals(Client.TEX_TRANSPARENT) && lastRenderedSpeciesString != null)
-					{
-						var prevSpecies = SwgSpeciesRegistry.deserialize(lastRenderedSpeciesString);
-						if (species.isSameSpecies(prevSpecies))
-						{
-							texture = SwgSpeciesModels.getTexture(entity, prevSpecies);
-						}
-					}
-					else
-						lastRenderedSpeciesString = speciesString;
+					if (!texture.equals(Client.TEX_TRANSPARENT))
+						perwm.renderWithTexture(texture, client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
 
-					perwm.renderWithTexture(texture, client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
 				}
 				else if (renderer != null)
 					renderer.render(client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
