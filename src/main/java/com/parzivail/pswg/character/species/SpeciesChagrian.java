@@ -15,6 +15,7 @@ import java.util.Collection;
 public class SpeciesChagrian extends SwgSpecies
 {
 	private static final SpeciesVariable VAR_BODY = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHAGRIAN, "body");
+	protected static final SpeciesVariable VAR_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHAGRIAN, "eyebrows");
 
 	public SpeciesChagrian(String serialized)
 	{
@@ -30,7 +31,7 @@ public class SpeciesChagrian extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_BODY, VAR_HUMANOID_EYEBROWS, VAR_HUMANOID_EYE_COLOR };
+		return new SpeciesVariable[] { VAR_BODY, VAR_EYEBROWS, VAR_HUMANOID_EYE_COLOR };
 	}
 
 	@Override

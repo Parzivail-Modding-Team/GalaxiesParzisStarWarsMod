@@ -16,6 +16,12 @@
 				"white",
 				"yellow"
 			]
+		},
+		"eyebrows": {
+			"defaultValue": "black",
+			"possibleValues": [
+				"black"
+			]
 		}
 	}
 }

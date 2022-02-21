@@ -15,6 +15,7 @@ import java.util.Collection;
 public class SpeciesTwilek extends SwgSpecies
 {
 	private static final SpeciesVariable VAR_BODY = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TWILEK, "body");
+	protected static final SpeciesVariable VAR_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_TWILEK, "eyebrows");
 
 	public SpeciesTwilek(String serialized)
 	{
@@ -30,7 +31,7 @@ public class SpeciesTwilek extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_BODY, VAR_HUMANOID_EYEBROWS, VAR_HUMANOID_EYE_COLOR };
+		return new SpeciesVariable[] { VAR_BODY, VAR_EYEBROWS, VAR_HUMANOID_EYE_COLOR };
 	}
 
 	@Override
