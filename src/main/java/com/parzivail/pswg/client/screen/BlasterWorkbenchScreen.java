@@ -76,6 +76,8 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	private float scrollPosition = 0;
 
 	private List<BlasterAttachmentDescriptor> attachmentList = new ArrayList<>();
+	private LocalTextureButtonWidget buildButton;
+	private LocalTextureButtonWidget cancelButton;
 
 	public BlasterWorkbenchScreen(BlasterWorkbenchScreenHandler handler, PlayerInventory inventory, Text title)
 	{
@@ -94,15 +96,16 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		this.playerInventoryTitleY = this.backgroundHeight - 92;
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 
-		this.addDrawableChild(new LocalTextureButtonWidget(x + 51, y + 124, 22, 12, 178, 3, 178, 17, 256, 256, this::onBuildClicked, new SimpleTooltipSupplier(this, this::getBuildTooltip), LiteralText.EMPTY));
-
-		this.addDrawableChild(new LocalTextureButtonWidget(x + 76, y + 124, 22, 12, 203, 3, 203, 17, this::onCancelClicked));
+		this.addDrawableChild(buildButton = new LocalTextureButtonWidget(x + 51, y + 124, 22, 12, 178, 3, 178, 17, 256, 256, this::onBuildClicked, new SimpleTooltipSupplier(this, this::getBuildTooltip), LiteralText.EMPTY));
+		this.addDrawableChild(cancelButton = new LocalTextureButtonWidget(x + 76, y + 124, 22, 12, 203, 3, 203, 17, this::onCancelClicked));
 
 		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 70, 93, 17, button -> attachmentList.size() > 0, button -> onRowClicked(0)));
 		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 87, 93, 17, button -> attachmentList.size() > 1, button -> onRowClicked(1)));
 		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 104, 93, 17, button -> attachmentList.size() > 2, button -> onRowClicked(2)));
 
 		this.handler.addListener(this);
+
+		onBlasterChanged();
 	}
 
 	private List<? extends OrderedText> getBuildTooltip()
@@ -476,6 +479,9 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			var bt = new BlasterTag(blaster.getOrCreateNbt());
 			originalBitmask = bt.attachmentBitmask;
+
+			buildButton.visible = true;
+			cancelButton.visible = true;
 		}
 		else
 		{
@@ -483,6 +489,9 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			blasterModel = null;
 			blasterDescriptor = null;
 			originalBitmask = 0;
+
+			buildButton.visible = false;
+			cancelButton.visible = false;
 		}
 	}
 
