@@ -7,15 +7,16 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.*;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 public class SpeederEntity extends ShipEntity
 {
+	private record PathfindResult(boolean success, double height)
+	{
+	}
+
 	private final float yawVelocityDecay = 0.6f;
 	private float yawVelocity = 0;
 
@@ -52,11 +53,6 @@ public class SpeederEntity extends ShipEntity
 	{
 		super.tick();
 
-		var d = getMaxHeightInPatch(getPos(), 1 + getThrottle(), 2, 3);
-		var setpoint = getRepulsorSetpoint();
-		if (Math.abs(d - setpoint) < 0.05f)
-			d = setpoint;
-
 		var pilot = getPrimaryPassenger();
 		if (pilot instanceof PlayerEntity pe)
 		{
@@ -83,12 +79,23 @@ public class SpeederEntity extends ShipEntity
 
 		yawVelocity *= yawVelocityDecay;
 
-		this.move(MovementType.SELF, new Vec3d(0, (d - setpoint) / 5f, 0));
+		var result = getMaxHeightInPatch(getPos(), 1 + getThrottle(), 2, 3);
+		if (result.success)
+		{
+			var d = result.height;
+
+			var setpoint = getRepulsorSetpoint();
+			if (Math.abs(d - setpoint) < 0.05f)
+				d = setpoint;
+
+			this.move(MovementType.SELF, new Vec3d(0, (d - setpoint) / 5f, 0));
+		}
 	}
 
-	protected double getMaxHeightInPatch(Vec3d start, double spacingForward, double spacingSideways, double range)
+	protected PathfindResult getMaxHeightInPatch(Vec3d start, double spacingForward, double spacingSideways, double range)
 	{
 		var d = -Double.MAX_VALUE;
+		var success = false;
 
 		var yaw = getYaw();
 		var left = new Vec3d(Math.cos(yaw / 180 * Math.PI), 0, Math.sin(yaw / 180 * Math.PI));
@@ -96,7 +103,7 @@ public class SpeederEntity extends ShipEntity
 		yaw += 90;
 		var forward = new Vec3d(Math.cos(yaw / 180 * Math.PI), 0, Math.sin(yaw / 180 * Math.PI));
 
-		var invSidewaysSpacing = spacingForward > 1 ? 1 / spacingForward : 1;
+		var invSidewaysSpacing = MathHelper.clamp(1 / spacingForward, 0.2, 1);
 
 		for (var x = -1; x <= 1; x++)
 		{
@@ -111,11 +118,14 @@ public class SpeederEntity extends ShipEntity
 				var blockDistance = blockHit.getType() == HitResult.Type.MISS ? -range : (blockHit.getPos().y - start.y);
 
 				if (blockDistance > d)
+				{
 					d = blockDistance;
+					success = true;
+				}
 			}
 		}
 
-		return d;
+		return new PathfindResult(success, success ? d : 0);
 	}
 
 	@Override
