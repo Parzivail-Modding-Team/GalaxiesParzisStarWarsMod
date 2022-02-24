@@ -1,0 +1,129 @@
+{
+	"version": 1,
+	"variables": {
+		"eyebrows": {
+			"defaultValue": "black",
+			"possibleValues": [
+				"black",
+				"blonde",
+				"brown",
+				"white"
+			]
+		},
+		"hair": {
+			"defaultValue": "brown_1",
+			"possibleValues": [
+				"black_1",
+				"black_2",
+				"black_3",
+				"black_4",
+				"blonde_1",
+				"blonde_2",
+				"blonde_3",
+				"blonde_4",
+				"brown_1",
+				"brown_2",
+				"brown_3",
+				"brown_4",
+				"gray_1",
+				"gray_2",
+				"gray_3",
+				"gray_4"
+			]
+		},
+		"clothes_underlayer": {
+			"defaultValue": "none",
+			"possibleValues": [
+				"none"
+			]
+		},
+		"clothes_top": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"tatooine_civ_1",
+				"the_gunslinger",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
+				"the_marshall"
+			]
+		},
+		"clothes_bottom": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
+				"the_gunslinger",
+				"the_marshall"
+			]
+		},
+		"clothes_belt": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"none",
+				"default",
+				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
+				"the_gunslinger",
+				"the_marshall"
+			]
+		},
+		"clothes_boots": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"none",
+				"default",
+				"imperial_pilot",
+				"rebel_pilot",
+				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
+				"the_gunslinger",
+				"the_marshall"
+			]
+		},
+		"clothes_gloves": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"none",
+				"imperial_pilot",
+				"rebel_pilot",
+				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
+				"the_gunslinger",
+				"the_marshall"
+			]
+		},
+		"clothes_accessories": {
+			"defaultValue": "none",
+			"possibleValues": [
+				"none",
+				"the_marshall"
+			]
+		},
+		"clothes_outerwear": {
+			"defaultValue": "tatooine_civ_1",
+			"possibleValues": [
+				"none",
+				"tatooine_civ_1",
+				"jedi1",
+				"smuggler1",
+				"smuggler2",
+				"the_knight",
+				"the_gunslinger"
+			]
+		}
+	}
+}

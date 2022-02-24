@@ -21,6 +21,7 @@ public class SwgPackets
 	{
 		public static final Identifier PacketSyncBlasters = Resources.id("sync_blasters");
 		public static final Identifier PacketSyncLightsabers = Resources.id("sync_lightsabers");
+		public static final Identifier PacketSyncSpecies = Resources.id("sync_species");
 		public static final Identifier PacketPlayerEvent = Resources.id("pevt");
 		public static final Identifier PacketWorldEvent = Resources.id("wevt");
 		public static final Identifier PacketClientSync = Resources.id("csync");

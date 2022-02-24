@@ -141,6 +141,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 	public static ShipEntity getShip(PlayerEntity player)
 	{
+		if (player == null)
+			return null;
+
 		var vehicle = player.getVehicle();
 
 		if (vehicle instanceof ShipEntity ship)

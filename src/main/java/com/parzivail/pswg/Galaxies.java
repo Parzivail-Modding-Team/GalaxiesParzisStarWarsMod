@@ -2,16 +2,17 @@ package com.parzivail.pswg;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.parzivail.datagen.DataGenHelper;
+import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
+import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.handler.PlayerPacketHandler;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
-import com.parzivail.pswg.species.SwgSpecies;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.world.DimensionTeleporter;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -19,6 +20,7 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
@@ -71,6 +73,7 @@ public class Galaxies implements ModInitializer
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgBlasterManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgLightsaberManager.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgSpeciesManager.INSTANCE);
 
 		TrackedDataHandlers.register();
 
@@ -138,6 +141,12 @@ public class Galaxies implements ModInitializer
 
 				                                                                          return 1;
 			                                                                          }))));
+		});
+
+		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.PacketSyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
+			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.PacketSyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
+			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.PacketSyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketLightsaberForgeApply, LightsaberForgeScreenHandler::handleSetLighsaberTag);

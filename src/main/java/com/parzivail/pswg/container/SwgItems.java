@@ -212,13 +212,19 @@ public class SwgItems
 		public static final Item SaltPile = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
+	public static class Seeds
+	{
+		@RegistryName("chasuka_seeds")
+		public static final Item ChasukaSeeds = new AliasedBlockItem(SwgBlocks.Plant.Chasuka, new Item.Settings().group(Galaxies.TabItems));
+	}
+
 	public static class Food
 	{
 
 		@RegistryName("jogan_fruit")
 		public static final Item JoganFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("chasuka_leaf")
-		public static final Item ChasukaLeaf = new AliasedBlockItem(SwgBlocks.Plant.Chasuka, new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
+		public static final Item ChasukaLeaf = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("meiloorun")
 		public static final Item Meiloorun = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 
@@ -265,8 +271,6 @@ public class SwgItems
 		public static final Item AhrisaBowl = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("black_melon")
 		public static final Item BlackMelon = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
-		@RegistryName("chasuka_seeds")
-		public static final Item ChasukaSeeds = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("desert_plums")
 		public static final Item DesertPlums = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("dried_poonten_grass_bushel")
@@ -287,8 +291,8 @@ public class SwgItems
 		public static final Item CrispyGorg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("dewback_egg")
 		public static final Item DewbackEgg = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
-		@RegistryName("dewback_omlette")
-		public static final Item DewbackOmlette = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
+		@RegistryName("dewback_omelette")
+		public static final Item DewbackOmelette = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(6).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("jerba_rack")
 		public static final Item JerbaRack = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("jerba_rib")

@@ -1,5 +1,6 @@
 package com.parzivail.pswg.screen;
 
+import com.parzivail.pswg.blockentity.BlasterWorkbenchBlockEntity;
 import com.parzivail.pswg.client.screen.slot.StrictSlot;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.item.blaster.BlasterItem;
@@ -14,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -22,35 +22,27 @@ import net.minecraft.server.network.ServerPlayerEntity;
 
 public class BlasterWorkbenchScreenHandler extends ScreenHandler
 {
-	private final Inventory inventory = new SimpleInventory(6)
-	{
-		public void markDirty()
-		{
-			super.markDirty();
-			BlasterWorkbenchScreenHandler.this.onContentChanged(this);
-		}
-	};
-
-	protected final ScreenHandlerContext context;
+	private final Inventory inventory;
 
 	public BlasterWorkbenchScreenHandler(int syncId, PlayerInventory playerInventory)
 	{
-		this(syncId, playerInventory, ScreenHandlerContext.EMPTY);
+		this(syncId, playerInventory, new SimpleInventory(6));
 	}
 
-	public BlasterWorkbenchScreenHandler(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context)
+	public BlasterWorkbenchScreenHandler(int syncId, PlayerInventory playerInventory, Inventory blockInventory)
 	{
 		super(SwgScreenTypes.Workbench.Blaster, syncId);
-		this.context = context;
+		this.inventory = blockInventory;
 		checkSize(inventory, 6);
 		inventory.onOpen(playerInventory.player);
 
-		this.addSlot(new StrictSlot(inventory, 0, 19, 19, itemStack -> itemStack.getItem() instanceof BlasterItem));
-		this.addSlot(new StrictSlot(inventory, 1, 19, 45, Consumers::never));
-		this.addSlot(new StrictSlot(inventory, 2, 19, 63, Consumers::never));
-		this.addSlot(new StrictSlot(inventory, 3, 19, 81, Consumers::never));
-		this.addSlot(new StrictSlot(inventory, 4, 19, 99, Consumers::never));
-		this.addSlot(new StrictSlot(inventory, 5, 19, 117, Consumers::never));
+		var onDirtyCallback = (Runnable)() -> onContentChanged(inventory);
+		this.addSlot(new StrictSlot(inventory, BlasterWorkbenchBlockEntity.SLOT_BLASTER, 19, 19, itemStack -> itemStack.getItem() instanceof BlasterItem, onDirtyCallback));
+		this.addSlot(new StrictSlot(inventory, BlasterWorkbenchBlockEntity.SLOT_1, 19, 45, Consumers::never, onDirtyCallback));
+		this.addSlot(new StrictSlot(inventory, BlasterWorkbenchBlockEntity.SLOT_ROD, 19, 63, Consumers::never, onDirtyCallback));
+		this.addSlot(new StrictSlot(inventory, BlasterWorkbenchBlockEntity.SLOT_PLATE, 19, 81, Consumers::never, onDirtyCallback));
+		this.addSlot(new StrictSlot(inventory, BlasterWorkbenchBlockEntity.SLOT_COIL, 19, 99, Consumers::never, onDirtyCallback));
+		this.addSlot(new StrictSlot(inventory, BlasterWorkbenchBlockEntity.SLOT_BOX, 19, 117, Consumers::never, onDirtyCallback));
 
 		for (var row = 0; row < 3; ++row)
 			for (var column = 0; column < 9; ++column)
@@ -72,22 +64,16 @@ public class BlasterWorkbenchScreenHandler extends ScreenHandler
 		});
 	}
 
-	public void setBlasterTag(NbtCompound lightsaberTag)
+	public void setBlasterTag(NbtCompound blasterTag)
 	{
-		var slot = this.slots.get(0);
+		var slot = this.slots.get(BlasterWorkbenchBlockEntity.SLOT_BLASTER);
 		var stack = slot.getStack();
 
-		var tag = BlasterTag.fromRootTag(lightsaberTag);
+		var tag = BlasterTag.fromRootTag(blasterTag);
 		tag.serializeAsSubtag(stack.getOrCreateNbt());
 
 		slot.setStack(stack);
 		slot.markDirty();
-	}
-
-	public void close(PlayerEntity player)
-	{
-		super.close(player);
-		this.context.run((world, blockPos) -> this.dropInventory(player, this.inventory));
 	}
 
 	public ItemStack transferSlot(PlayerEntity player, int index)

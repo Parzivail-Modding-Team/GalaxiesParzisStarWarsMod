@@ -1,0 +1,15 @@
+{
+	"version": 1,
+	"variables": {
+		"skin_tone": {
+			"defaultValue": "almond",
+			"possibleValues": [
+				"almond",
+				"chocolate",
+				"ivory",
+				"limestone",
+				"sand"
+			]
+		}
+	}
+}

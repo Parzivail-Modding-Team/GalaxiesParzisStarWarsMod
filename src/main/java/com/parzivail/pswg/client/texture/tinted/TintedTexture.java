@@ -1,7 +1,6 @@
 package com.parzivail.pswg.client.texture.tinted;
 
 import com.parzivail.pswg.client.texture.CallbackTexture;
-import com.parzivail.pswg.client.texture.remote.RemoteTexture;
 import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
@@ -36,8 +35,6 @@ public class TintedTexture extends CallbackTexture
 		NativeImage nativeImage;
 		if (tex instanceof NativeImageBackedTexture nibt)
 			nativeImage = nibt.getImage();
-		else if (tex instanceof RemoteTexture t)
-			nativeImage = t.getImage();
 		else if (tex instanceof CallbackTexture t)
 			nativeImage = t.getImage();
 		else

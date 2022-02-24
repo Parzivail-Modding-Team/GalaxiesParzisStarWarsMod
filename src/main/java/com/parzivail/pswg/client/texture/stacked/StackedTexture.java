@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.texture.stacked;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.texture.CallbackTexture;
-import com.parzivail.pswg.client.texture.remote.RemoteTexture;
 import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
@@ -36,9 +36,14 @@ public class StackedTexture extends CallbackTexture
 		var tints = new int[textures.length];
 		var tintModes = new TintedIdentifier.Mode[textures.length];
 
+		NativeImage baseImage = null;
+
 		for (var i = 0; i < textures.length; i++)
 		{
 			var textureId = textures[i];
+
+			if (textureId.equals(Client.TEX_TRANSPARENT))
+				continue;
 
 			if (textureId instanceof TintedIdentifier ti)
 			{
@@ -55,8 +60,6 @@ public class StackedTexture extends CallbackTexture
 
 			if (texture instanceof NativeImageBackedTexture nibt)
 				nativeImages[i] = nibt.getImage();
-			else if (texture instanceof RemoteTexture t)
-				nativeImages[i] = t.getImage();
 			else if (texture instanceof CallbackTexture t)
 				nativeImages[i] = t.getImage();
 			else
@@ -65,11 +68,15 @@ public class StackedTexture extends CallbackTexture
 				nativeImages[i] = texData.getImage();
 			}
 
-			if (nativeImages[i] != null && (nativeImages[i].getWidth() != nativeImages[0].getWidth() || nativeImages[i].getHeight() != nativeImages[0].getHeight()))
+			if (baseImage == null)
+				baseImage = nativeImages[i];
+
+			if (nativeImages[i] != null && (nativeImages[i].getWidth() != baseImage.getWidth() || nativeImages[i].getHeight() != baseImage.getHeight()))
 				throw new IOException("All textures in a stack must be the same size");
 		}
 
-		var base = nativeImages[0];
+		if (baseImage == null)
+			throw new IOException("Empty texture stack");
 
 		for (var i = 0; i < nativeImages.length; i++)
 		{
@@ -83,10 +90,10 @@ public class StackedTexture extends CallbackTexture
 			for (var x = 0; x < width; x++)
 			{
 				for (var y = 0; y < height; y++)
-					base.setColor(x, y, ColorUtil.blendColorsOnSrcAlpha(base.getColor(x, y), layerImage.getColor(x, y), tints[i], tintModes[i]));
+					baseImage.setColor(x, y, ColorUtil.blendColorsOnSrcAlpha(baseImage.getColor(x, y), layerImage.getColor(x, y), tints[i], tintModes[i]));
 			}
 		}
 
-		return base;
+		return baseImage;
 	}
 }

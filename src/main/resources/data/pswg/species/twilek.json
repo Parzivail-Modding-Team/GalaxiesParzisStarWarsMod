@@ -1,0 +1,27 @@
+{
+	"version": 1,
+	"variables": {
+		"body": {
+			"defaultValue": "green",
+			"possibleValues": [
+				"blue",
+				"cyan",
+				"green",
+				"lime",
+				"magenta",
+				"orange",
+				"pink",
+				"purple",
+				"red",
+				"white",
+				"yellow"
+			]
+		},
+		"eyebrows": {
+			"defaultValue": "black",
+			"possibleValues": [
+				"black"
+			]
+		}
+	}
+}

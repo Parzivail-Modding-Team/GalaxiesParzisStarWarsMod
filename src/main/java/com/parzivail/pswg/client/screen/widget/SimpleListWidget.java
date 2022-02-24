@@ -60,9 +60,9 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 	private Function<T, Text> entryFormatter = entry -> new TranslatableText(entry.toString());
 	private Function<List<Entry<T>>, Entry<T>> entrySelector = entries -> entries.get(0);
 
-	public SimpleListWidget(MinecraftClient minecraftClient, int x, int y, int width, int key, int itemHeight, Consumer<T> onSelectionChanged)
+	public SimpleListWidget(MinecraftClient minecraftClient, int x, int y, int width, int height, int itemHeight, Consumer<T> onSelectionChanged)
 	{
-		super(minecraftClient, width, key, y, y + key, itemHeight);
+		super(minecraftClient, width, height, y, y + height, itemHeight);
 		this.onSelectionChanged = onSelectionChanged;
 		this.setLeftPos(x);
 		this.setRenderBackground(false);
@@ -82,14 +82,14 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 	@Override
 	public int getRowWidth()
 	{
-		return width - 4;
+		return width - 10;
 	}
 
 	@Override
 	protected int getScrollbarPositionX()
 	{
 		// Fix selecting not working correctly when the left position is modified
-		return this.left + this.width / 2 + 124;
+		return this.left + this.width - 6;
 	}
 
 	@Override
@@ -141,7 +141,6 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 		var window = client.getWindow();
 		var scaleFactor = window.getScaleFactor();
 
-		// TODO: where'd the scrollbar go?
 		GL11.glScissor((int)(left * scaleFactor), window.getHeight() - (int)(bottom * scaleFactor), (int)((right - left) * scaleFactor), (int)((bottom - top) * scaleFactor));
 
 		super.render(matrices, mouseX, mouseY, delta);

@@ -6,10 +6,12 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
+import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
+import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.util.Lumberjack;
@@ -159,9 +161,11 @@ public class Tarkin
 		lang.cloneWithRoot(BlasterFiringMode.ION.getTranslation()).build(assets);
 
 		// Species
+		var speciesManager = SwgSpeciesManager.INSTANCE;
+		ResourceManagerUtil.forceReload(speciesManager, ResourceType.SERVER_DATA);
 		var speciesLangBase = lang.cloneWithRoot("species").modid();
 
-		speciesLangBase.dot("none").build(assets);
+		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);
 
 		for (var species : SwgSpeciesRegistry.getSpecies())
 		{
@@ -170,14 +174,10 @@ public class Tarkin
 
 			for (var variable : species.getVariables())
 			{
-				var variableLangBase = speciesLangBase.dot(variable.getSpeciesSlug().getPath());
-				variableLangBase.build(assets);
-
-				var variableLang = variableLangBase.dot(variable.getName());
-				variableLang.build(assets);
+				lang.cloneWithRoot(variable.getTranslationKey()).build(assets);
 
 				for (var value : variable.getPossibleValues())
-					variableLang.dot(value).build(assets);
+					lang.cloneWithRoot(variable.getTranslationFor(value)).build(assets);
 			}
 		}
 
@@ -1023,7 +1023,7 @@ public class Tarkin
 
 		ItemGenerator.basic(SwgItems.Food.AhrisaBowl).build(assets);
 		ItemGenerator.basic(SwgItems.Food.BlackMelon).build(assets);
-		ItemGenerator.basic(SwgItems.Food.ChasukaSeeds).build(assets);
+		ItemGenerator.basic(SwgItems.Seeds.ChasukaSeeds).build(assets);
 		ItemGenerator.basic(SwgItems.Food.DesertPlums).build(assets);
 		ItemGenerator.basic(SwgItems.Food.DriedPoontenGrass).build(assets);
 		ItemGenerator.basic(SwgItems.Food.HarounBread).build(assets);
@@ -1035,7 +1035,7 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.CrispyGorg).build(assets);
 		ItemGenerator.basic(SwgItems.Food.DebDeb).build(assets);
 		ItemGenerator.basic(SwgItems.Food.DewbackEgg).build(assets);
-		ItemGenerator.basic(SwgItems.Food.DewbackOmlette).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DewbackOmelette).build(assets);
 		ItemGenerator.basic(SwgItems.Food.EopieLoin).build(assets);
 		ItemGenerator.basic(SwgItems.Food.HubbaGourd).build(assets);
 		ItemGenerator.basic(SwgItems.Food.JerbaRack).build(assets);
@@ -1434,7 +1434,7 @@ public class Tarkin
 		BlockGenerator.cross(SwgBlocks.Plant.Tuber).build(assets);
 
 		BlockGenerator.cropStages(SwgBlocks.Plant.Chasuka, SwgBlocks.Plant.Chasuka::getAgeProperty, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.Chasuka), "_stage2"))
-		              .lootTable(block1 -> LootTableFile.seedCrop(block1, SwgItems.Food.ChasukaSeeds, SwgItems.Food.ChasukaLeaf, 2, 3, 0.5714286))
+		              .lootTable(block1 -> LootTableFile.seedCrop(block1, SwgItems.Seeds.ChasukaSeeds, SwgItems.Food.ChasukaLeaf, 2, 3, 0.5714286))
 		              .build(assets);
 
 		BlockGenerator.bushStages(SwgBlocks.Plant.HkakBush, () -> HkakBushBlock.AGE, IdentifierUtil.concat(AssetGenerator.getTextureName(SwgBlocks.Plant.HkakBush), "_stage3")).build(assets);

@@ -1,6 +1,8 @@
 package com.parzivail.pswg.container.registry;
 
 import com.parzivail.pswg.Resources;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.minecraft.block.Block;
 
 import java.lang.reflect.Modifier;
 
@@ -22,6 +24,31 @@ public class RegistryHelper
 				try
 				{
 					registryFunction.accept((T)field.get(null), Resources.id(annotation.value()), field.getAnnotation(TabIgnore.class) != null);
+				}
+				catch (IllegalAccessException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static void registerFlammable(Class<?> rootClazz)
+	{
+		for (var clazz : rootClazz.getClasses())
+		{
+			// Register inner classes
+			registerFlammable(clazz);
+
+			for (var field : clazz.getFields())
+			{
+				var annotation = field.getAnnotation(Flammable.class);
+				if (!Modifier.isStatic(field.getModifiers()) || annotation == null || !Block.class.isAssignableFrom(field.getType()))
+					continue;
+
+				try
+				{
+					FlammableBlockRegistry.getDefaultInstance().add((Block)field.get(null), annotation.burn(), annotation.spread());
 				}
 				catch (IllegalAccessException e)
 				{
