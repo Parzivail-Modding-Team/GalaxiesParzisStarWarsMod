@@ -18,7 +18,6 @@ import net.minecraft.util.Identifier;
 public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScreenHandler>
 {
 	private static final Identifier TEXTURE = Resources.id("textures/gui/container/moisture_vaporator.png");
-	private static final Text TEXT_IDLE = new TranslatableText(Resources.container("moisture_vaporator_gx8.idle"));
 
 	public MoistureVaporatorScreen(MoistureVaporatorScreenHandler handler, PlayerInventory inventory, Text title)
 	{
@@ -41,25 +40,6 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 		this.renderBackground(matrices);
 		super.render(matrices, mouseX, mouseY, delta);
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
-
-		var i = (this.width - this.backgroundWidth) / 2;
-		var j = (this.height - this.backgroundHeight) / 2;
-
-		if (mouseX > i + 103 && mouseX < i + 112 && mouseY > j + 28 && mouseY < j + 58)
-		{
-			var timer = this.handler.getCollectionTimer();
-			if (timer == -1)
-			{
-				this.renderTooltip(matrices, TEXT_IDLE, mouseX, mouseY);
-			}
-			else
-			{
-				var timerLength = this.handler.getCollectionTimerLength();
-				if (timerLength <= 0)
-					timerLength = 1;
-				this.renderTooltip(matrices, new LiteralText(String.format("%s%%", (int)((1 - timer / (float)timerLength) * 100))), mouseX, mouseY);
-			}
-		}
 	}
 
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)

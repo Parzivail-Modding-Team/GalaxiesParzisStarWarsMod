@@ -103,7 +103,6 @@ public class Tarkin
 
 		var gx8 = lang.container("moisture_vaporator_gx8");
 		gx8.build(assets);
-		gx8.dot("idle").build(assets);
 
 		lang.container("mos_eisley_crate").build(assets);
 		lang.container("segmented_crate").build(assets);

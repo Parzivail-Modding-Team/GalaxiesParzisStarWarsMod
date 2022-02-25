@@ -1,11 +1,13 @@
 package com.parzivail.pswg.compat.rei.plugins;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.screen.MoistureVaporatorScreen;
 import com.parzivail.pswg.compat.rei.categories.MoistureVaporatorCategory;
 import com.parzivail.pswg.compat.rei.displays.MoistureVaporatorDisplay;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgRecipeType;
 import com.parzivail.pswg.recipe.VaporatorRecipe;
+import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
@@ -33,6 +35,6 @@ public class GalaxiesREIClientPlugin implements REIClientPlugin
 	@Override
 	public void registerScreens(ScreenRegistry registry)
 	{
-		// TODO: register click area
+		registry.registerContainerClickArea(new Rectangle(61, 26 , 52, 32), MoistureVaporatorScreen.class, GalaxiesREICategories.MOISTURE_VAPORATOR);
 	}
 }
