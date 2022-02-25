@@ -7,6 +7,7 @@ import com.parzivail.pswg.entity.BlasterStunBoltEntity;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.pswg.entity.debug.KinematicTestEntity;
+import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.entity.ship.SpeederEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.util.entity.BucketableFishEntity;
@@ -96,6 +97,25 @@ public class SwgEntities
 		}
 	}
 
+	public static class Droid
+	{
+		public static final EntityType<AstromechEntity> AstroR2 = Registry.register(
+				Registry.ENTITY_TYPE,
+				Resources.id("artoo"),
+				FabricEntityTypeBuilder
+						.create(SpawnGroup.MISC, AstromechEntity::new)
+						.dimensions(EntityDimensions.fixed(1, 1))
+						.trackRangeBlocks(128)
+						.build()
+		);
+
+		static void register()
+		{
+			entityTypes.add(AstroR2);
+			FabricDefaultAttributeRegistry.register(AstroR2, AstromechEntity.createAttributes());
+		}
+	}
+
 	public static class Misc
 	{
 		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_bolt"), FabricEntityTypeBuilder
@@ -145,6 +165,7 @@ public class SwgEntities
 		Speeder.register();
 		Fish.register();
 		Amphibian.register();
+		Droid.register();
 		Misc.register();
 	}
 }
