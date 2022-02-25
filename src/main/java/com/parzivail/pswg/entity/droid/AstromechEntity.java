@@ -3,10 +3,12 @@ package com.parzivail.pswg.entity.droid;
 import com.parzivail.util.world.InventoryUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.goal.LookAroundGoal;
+import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
@@ -15,12 +17,12 @@ import net.minecraft.util.Arm;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
-public class AstromechEntity extends LivingEntity
+public class AstromechEntity extends MobEntity
 {
 	private final DefaultedList<ItemStack> heldItems = DefaultedList.ofSize(2, ItemStack.EMPTY);
 	private final DefaultedList<ItemStack> armorItems = DefaultedList.ofSize(4, ItemStack.EMPTY);
 
-	public AstromechEntity(EntityType<? extends LivingEntity> type, World world)
+	public AstromechEntity(EntityType<? extends MobEntity> type, World world)
 	{
 		super(type, world);
 	}
@@ -28,6 +30,13 @@ public class AstromechEntity extends LivingEntity
 	public static DefaultAttributeContainer.Builder createAttributes()
 	{
 		return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 8.0D);
+	}
+
+	@Override
+	protected void initGoals()
+	{
+		this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
+		this.goalSelector.add(7, new LookAroundGoal(this));
 	}
 
 	@Override
@@ -67,6 +76,12 @@ public class AstromechEntity extends LivingEntity
 			default:
 				return ItemStack.EMPTY;
 		}
+	}
+
+	@Override
+	public void tick()
+	{
+		super.tick();
 	}
 
 	@Override

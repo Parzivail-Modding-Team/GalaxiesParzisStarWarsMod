@@ -2,6 +2,8 @@ package com.parzivail.pswg.entity.rigs;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
+import com.parzivail.util.math.Ease;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
@@ -20,15 +22,30 @@ public class RigR2 extends ModelRig<AstromechEntity>
 		var m = new Matrix4f();
 		m.loadIdentity();
 
-		var bodyAngle = 0f;
-		var tiltAngle = 30f;
+		var t = 0;
 
-		if (part.equals("body"))
-			m.multiply(new Quaternion(Vec3f.POSITIVE_X, bodyAngle, true));
-		else if (part.equals("left_shoulder") || part.equals("right_shoulder"))
-			m.multiply(new Quaternion(Vec3f.POSITIVE_X, -bodyAngle - tiltAngle, true));
-		else if (part.equals("left_foot") || part.equals("right_foot"))
-			m.multiply(new Quaternion(Vec3f.POSITIVE_X, tiltAngle, true));
+		var fullyExtendedLeg = 6.315f / 16;
+		var legVisibleExt = 0.8f / 16;
+
+		var headYaw = MathHelper.lerpAngleDegrees(tickDelta, target.prevHeadYaw, target.headYaw);
+		var headPitch = -MathHelper.lerpAngleDegrees(tickDelta, target.prevPitch, target.getPitch()) * 0.2f * MathHelper.cos((float)(headYaw / 180 * Math.PI));
+
+		var pushAngle = Ease.inCubic(t) * 15f;
+		var bodyAngle = MathHelper.lerp(Ease.outCubic(t), headPitch, (23f + pushAngle));
+		var centerLegExtension = Ease.outCubic(t) * fullyExtendedLeg;
+		var legExtT = MathHelper.clamp((centerLegExtension - legVisibleExt) / (fullyExtendedLeg - legVisibleExt), 0, 1);
+		var centerFootAngle = Ease.inCubic(legExtT) * (pushAngle - bodyAngle);
+
+		switch (part)
+		{
+			case "left_leg" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, -pushAngle, true));
+			case "right_foot" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, pushAngle, true));
+			case "right_shoulder" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, -bodyAngle, true));
+			case "center_leg" -> m.multiplyByTranslation(0, -centerLegExtension, 0);
+			case "center_foot" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, centerFootAngle, true));
+			case "body" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, bodyAngle, true));
+			case "head" -> m.multiply(new Quaternion(Vec3f.POSITIVE_Y, -headYaw, true));
+		}
 
 		return m;
 	}
