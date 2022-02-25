@@ -22,7 +22,7 @@ public class RigR2 extends ModelRig<AstromechEntity>
 		var m = new Matrix4f();
 		m.loadIdentity();
 
-		var t = 0;
+		var t = target.getLegDeltaExtension(tickDelta);
 
 		var fullyExtendedLeg = 6.315f / 16;
 		var legVisibleExt = 0.8f / 16;

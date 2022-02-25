@@ -1,5 +1,6 @@
 package com.parzivail.pswg.entity.droid;
 
+import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.world.InventoryUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -7,6 +8,9 @@ import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -19,8 +23,13 @@ import net.minecraft.world.World;
 
 public class AstromechEntity extends MobEntity
 {
+	private static final TrackedData<Byte> LEG_ANIM = DataTracker.registerData(AstromechEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final byte LEG_ANIM_LENGTH = 18;
+
 	private final DefaultedList<ItemStack> heldItems = DefaultedList.ofSize(2, ItemStack.EMPTY);
 	private final DefaultedList<ItemStack> armorItems = DefaultedList.ofSize(4, ItemStack.EMPTY);
+
+	private byte prevLegExtensionTimer;
 
 	public AstromechEntity(EntityType<? extends MobEntity> type, World world)
 	{
@@ -43,6 +52,18 @@ public class AstromechEntity extends MobEntity
 	protected void initDataTracker()
 	{
 		super.initDataTracker();
+		this.dataTracker.startTracking(LEG_ANIM, (byte)0);
+	}
+
+	public float getLegDeltaExtension(float tickDelta)
+	{
+		var anim = dataTracker.get(LEG_ANIM);
+		var timer = TrackedAnimationValue.getTimer(anim, prevLegExtensionTimer, tickDelta) / LEG_ANIM_LENGTH;
+
+		if (TrackedAnimationValue.isPositiveDirection(anim))
+			timer = 1 - timer;
+
+		return timer;
 	}
 
 	@Override
@@ -82,6 +103,16 @@ public class AstromechEntity extends MobEntity
 	public void tick()
 	{
 		super.tick();
+
+		prevLegExtensionTimer = dataTracker.get(LEG_ANIM);
+
+		var anim = TrackedAnimationValue.tick(prevLegExtensionTimer);
+
+		boolean shouldToggleLeg = this.age % 200 == 0;
+		if (TrackedAnimationValue.isStopped(anim) && shouldToggleLeg)
+			anim = TrackedAnimationValue.startToggled(anim, LEG_ANIM_LENGTH);
+
+		dataTracker.set(LEG_ANIM, anim);
 	}
 
 	@Override

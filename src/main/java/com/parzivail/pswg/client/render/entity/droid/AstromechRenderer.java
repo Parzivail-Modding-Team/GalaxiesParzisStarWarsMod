@@ -28,6 +28,7 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 		matrix.push();
 
 		MatrixStackUtil.scalePos(matrix, 10 / 16f, 10 / 16f, 10 / 16f);
+		MatrixStackUtil.scalePos(matrix, 1.2f, 1.2f, 1.2f);
 		matrix.multiply(new Quaternion(Vec3f.POSITIVE_Y, 180, true));
 
 		//		var r = entity.getViewRotation(tickDelta);
