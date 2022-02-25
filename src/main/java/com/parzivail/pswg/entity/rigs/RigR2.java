@@ -27,7 +27,8 @@ public class RigR2 extends ModelRig<AstromechEntity>
 		var fullyExtendedLeg = 6.315f / 16;
 		var legVisibleExt = 0.8f / 16;
 
-		var headYaw = MathHelper.lerpAngleDegrees(tickDelta, target.prevHeadYaw, target.headYaw);
+		var bodyYaw = MathHelper.lerp(tickDelta, target.prevYaw, target.getYaw());
+		var headYaw = MathHelper.lerpAngleDegrees(tickDelta, target.prevHeadYaw, target.headYaw) - bodyYaw;
 		var headPitch = -MathHelper.lerpAngleDegrees(tickDelta, target.prevPitch, target.getPitch()) * 0.2f * MathHelper.cos((float)(headYaw / 180 * Math.PI));
 
 		var pushAngle = Ease.inCubic(t) * 15f;

@@ -19,6 +19,7 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 	public AstromechRenderer(EntityRendererFactory.Context ctx)
 	{
 		super(ctx);
+		this.shadowRadius = 0.4f;
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 
 		MatrixStackUtil.scalePos(matrix, 10 / 16f, 10 / 16f, 10 / 16f);
 		MatrixStackUtil.scalePos(matrix, 1.2f, 1.2f, 1.2f);
-		matrix.multiply(new Quaternion(Vec3f.POSITIVE_Y, 180, true));
+		matrix.multiply(new Quaternion(Vec3f.POSITIVE_Y, 180 - yaw, true));
 
 		//		var r = entity.getViewRotation(tickDelta);
 		//		matrix.multiply(r);
