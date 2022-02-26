@@ -85,6 +85,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	{
 		final var entity = new ThrownLightsaberEntity(SwgEntities.Misc.ThrownLightsaber, player, world, new LightsaberTag(stack.getOrCreateNbt()));
 		entity.setVelocity(player, MathHelper.clamp(player.getPitch(), -89.9f, 89.9f), player.getYaw(), 0.0F, 0.6f, 0);
+		entity.velocityModified = entity.velocityDirty = true;
 		world.spawnEntity(entity);
 
 		if (!player.getAbilities().creativeMode)

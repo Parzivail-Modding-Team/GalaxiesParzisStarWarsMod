@@ -2,6 +2,7 @@ package com.parzivail.pswg.entity;
 
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
+import com.parzivail.util.entity.IPrecisionEntity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -13,7 +14,7 @@ import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
 
-public class ThrownLightsaberEntity extends ThrownEntity
+public class ThrownLightsaberEntity extends ThrownEntity implements IPrecisionEntity
 {
 	private static final TrackedData<Byte> LIFE = DataTracker.registerData(ThrownLightsaberEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final TrackedData<NbtCompound> LIGHTSABER_DATA = DataTracker.registerData(ThrownLightsaberEntity.class, TrackedDataHandlerRegistry.TAG_COMPOUND);

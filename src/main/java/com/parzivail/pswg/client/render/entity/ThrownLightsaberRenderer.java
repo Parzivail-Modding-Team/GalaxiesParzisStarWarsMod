@@ -37,18 +37,18 @@ public class ThrownLightsaberRenderer extends EntityRenderer<ThrownLightsaberEnt
 	{
 		//		super.render(entity, yaw, tickDelta, matrices, consumerProvider, light);
 
-		var velocity = entity.getVelocity();
-
 		matrices.push();
 
 		matrices.translate(0, 0.5f * entity.getHeight(), 0);
 
-		var d3 = Math.sqrt(velocity.x * velocity.x + velocity.z * velocity.z);
-		var rYaw = (float)(Math.atan2(velocity.z, velocity.x) * 180.0D / Math.PI) - 90.0F;
-		var rPitch = (float)(-(Math.atan2(velocity.y, d3) * 180.0D / Math.PI));
+		var velocity = entity.getVelocity();
+		velocity = velocity.normalize();
 
-		matrices.multiply(new Quaternion(0, -rYaw, 0, true));
-		matrices.multiply(new Quaternion(rPitch + 90, 0, 0, true));
+		var bYaw = (float)Math.atan2(velocity.x, velocity.z);
+		var bPitch = (float)Math.asin(velocity.y);
+
+		matrices.multiply(new Quaternion(0, bYaw, 0, false));
+		matrices.multiply(new Quaternion((float)(Math.PI / 2) - bPitch, 0, 0, false));
 
 		matrices.multiply(new Quaternion(0, 0, -(entity.age + tickDelta) * 31, true));
 
