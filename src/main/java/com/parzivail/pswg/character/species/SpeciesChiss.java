@@ -14,8 +14,9 @@ import java.util.Collection;
 
 public class SpeciesChiss extends SwgSpecies
 {
-	protected static final SpeciesVariable VAR_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "eyebrows");
-	protected static final SpeciesVariable VAR_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "hair");
+	private static final SpeciesVariable VAR_BODY = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "body");
+	private static final SpeciesVariable VAR_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "eyebrows");
+	private static final SpeciesVariable VAR_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "hair");
 
 	public SpeciesChiss(String serialized)
 	{
@@ -31,7 +32,18 @@ public class SpeciesChiss extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_EYEBROWS, VAR_HAIR };
+		return new SpeciesVariable[] {
+				VAR_BODY,
+				VAR_EYEBROWS,
+				VAR_HAIR,
+				VAR_HUMANOID_CLOTHES_TOPS,
+				VAR_HUMANOID_CLOTHES_BOTTOMS,
+				VAR_HUMANOID_CLOTHES_BELTS,
+				VAR_HUMANOID_CLOTHES_BOOTS,
+				VAR_HUMANOID_CLOTHES_GLOVES,
+				VAR_HUMANOID_CLOTHES_ACCESSORIES,
+				VAR_HUMANOID_CLOTHES_OUTERWEAR
+		};
 	}
 
 	@Override
@@ -39,9 +51,9 @@ public class SpeciesChiss extends SwgSpecies
 	public Collection<Identifier> getTextureStack(PlayerEntity player)
 	{
 		var stack = new ArrayList<Identifier>();
-		stack.add(getGenderedTexture(this, "skin"));
+		stack.add(getGenderedTexture(this, VAR_BODY));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
-		stack.add(getClothes(player, gender));
+		stack.add(getClothes(this, player));
 		stack.add(getTexture(this, VAR_HAIR));
 		return stack;
 	}

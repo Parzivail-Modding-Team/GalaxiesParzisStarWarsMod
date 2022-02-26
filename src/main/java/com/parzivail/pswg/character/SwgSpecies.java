@@ -10,6 +10,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +69,50 @@ public abstract class SwgSpecies
 		return getTexture(SwgSpeciesRegistry.SPECIES_GLOBAL, texture);
 	}
 
-	protected static Identifier getClothes(PlayerEntity player, SpeciesGender gender)
+	protected static Identifier getClothes(SwgSpecies species, PlayerEntity player)
+	{
+		return Client.remoteTextureProvider.getId(
+				String.format("character/%s", player.getUuidAsString()),
+				() -> SwgSpecies.getClothingStack(species, player)
+		);
+	}
+
+	private static int hashVariableValues(SwgSpecies species, SpeciesVariable... variables)
+	{
+		var hash = 0;
+		for (var variable : variables)
+			hash = 31 * hash + species.getVariable(variable).hashCode();
+		return hash;
+	}
+
+	private static Identifier getClothingStack(SwgSpecies species, PlayerEntity player)
+	{
+		var hashCode = SwgSpecies.hashVariableValues(species,
+		                                             VAR_HUMANOID_CLOTHES_TOPS,
+		                                             VAR_HUMANOID_CLOTHES_BOTTOMS,
+		                                             VAR_HUMANOID_CLOTHES_BELTS,
+		                                             VAR_HUMANOID_CLOTHES_BOOTS,
+		                                             VAR_HUMANOID_CLOTHES_GLOVES,
+		                                             VAR_HUMANOID_CLOTHES_ACCESSORIES,
+		                                             VAR_HUMANOID_CLOTHES_OUTERWEAR
+		);
+		return Client.stackedTextureProvider.getId(String.format("clothing/%08x", hashCode), () -> getGenderedGlobalTexture(species.getGender(), "clothes"), () -> SwgSpecies.createClothingStack(species, player));
+	}
+
+	private static Collection<Identifier> createClothingStack(SwgSpecies species, PlayerEntity player)
+	{
+		var stack = new ArrayList<Identifier>();
+		stack.add(getTexture(species, VAR_HUMANOID_CLOTHES_TOPS));
+		stack.add(getTexture(species, VAR_HUMANOID_CLOTHES_BOTTOMS));
+		appendOptionalLayer(stack, species, VAR_HUMANOID_CLOTHES_BELTS);
+		appendOptionalLayer(stack, species, VAR_HUMANOID_CLOTHES_BOOTS);
+		appendOptionalLayer(stack, species, VAR_HUMANOID_CLOTHES_GLOVES);
+		appendOptionalLayer(stack, species, VAR_HUMANOID_CLOTHES_ACCESSORIES);
+		appendOptionalLayer(stack, species, VAR_HUMANOID_CLOTHES_OUTERWEAR);
+		return stack;
+	}
+
+	protected static Identifier getDefaultClothes(PlayerEntity player, SpeciesGender gender)
 	{
 		return Client.remoteTextureProvider.getId(
 				String.format("character/%s", player.getUuidAsString()),
@@ -81,7 +125,7 @@ public abstract class SwgSpecies
 		return getTexture(SpeciesGender.toModel(SwgSpeciesRegistry.SPECIES_GLOBAL, gender), texture);
 	}
 
-	private static Identifier getTexture(Identifier slug, String texture)
+	protected static Identifier getTexture(Identifier slug, String texture)
 	{
 		return new Identifier(slug.getNamespace(), "textures/species/" + slug.getPath() + "/" + texture + ".png");
 	}

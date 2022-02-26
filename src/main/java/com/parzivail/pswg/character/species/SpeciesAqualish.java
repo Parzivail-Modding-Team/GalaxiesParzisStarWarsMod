@@ -30,7 +30,16 @@ public class SpeciesAqualish extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_BODY };
+		return new SpeciesVariable[] {
+				VAR_BODY,
+				VAR_HUMANOID_CLOTHES_TOPS,
+				VAR_HUMANOID_CLOTHES_BOTTOMS,
+				VAR_HUMANOID_CLOTHES_BELTS,
+				VAR_HUMANOID_CLOTHES_BOOTS,
+				VAR_HUMANOID_CLOTHES_GLOVES,
+				VAR_HUMANOID_CLOTHES_ACCESSORIES,
+				VAR_HUMANOID_CLOTHES_OUTERWEAR
+		};
 	}
 
 	@Override
@@ -39,7 +48,7 @@ public class SpeciesAqualish extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
-		stack.add(getClothes(player, gender));
+		stack.add(getClothes(this, player));
 		return stack;
 	}
 }

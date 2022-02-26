@@ -34,7 +34,21 @@ public class SpeciesTogruta extends SwgSpecies
 	@Override
 	public SpeciesVariable[] getVariables()
 	{
-		return new SpeciesVariable[] { VAR_BODY, VAR_FACE, VAR_EYEBROWS, VAR_LOWER_MONTRAL, VAR_UPPER_MONTRAL, VAR_HUMANOID_EYE_COLOR };
+		return new SpeciesVariable[] {
+				VAR_BODY,
+				VAR_FACE,
+				VAR_EYEBROWS,
+				VAR_LOWER_MONTRAL,
+				VAR_UPPER_MONTRAL,
+				VAR_HUMANOID_EYE_COLOR,
+				VAR_HUMANOID_CLOTHES_TOPS,
+				VAR_HUMANOID_CLOTHES_BOTTOMS,
+				VAR_HUMANOID_CLOTHES_BELTS,
+				VAR_HUMANOID_CLOTHES_BOOTS,
+				VAR_HUMANOID_CLOTHES_GLOVES,
+				VAR_HUMANOID_CLOTHES_ACCESSORIES,
+				VAR_HUMANOID_CLOTHES_OUTERWEAR
+		};
 	}
 
 	@Override
@@ -53,7 +67,7 @@ public class SpeciesTogruta extends SwgSpecies
 
 		stack.add(tint(getGlobalTexture("eyes"), this, VAR_HUMANOID_EYE_COLOR));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
-		stack.add(getClothes(player, gender));
+		stack.add(getClothes(this, player));
 		return stack;
 	}
 }

@@ -22,6 +22,17 @@
 				"gray_3",
 				"gray_4"
 			]
+		},
+		"body": {
+			"defaultValue": "1",
+			"possibleValues": [
+				"1",
+				"2",
+				"3",
+				"4",
+				"5",
+				"6"
+			]
 		}
 	}
 }
