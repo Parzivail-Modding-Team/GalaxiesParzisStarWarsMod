@@ -155,7 +155,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 				PacketByteBufHelper.writeVec3d(passedData, normal);
 
 				for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, blockHit.getBlockPos()))
-					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PacketWorldEvent, passedData);
+					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.WorldEvent, passedData);
 			}
 		}
 

@@ -71,7 +71,7 @@ public class LeftClickHandler
 		if (ar == ActionResult.PASS)
 			return false;
 
-		ClientPlayNetworking.send(SwgPackets.C2S.PacketPlayerLeftClickItem, new PacketByteBuf(Unpooled.buffer()));
+		ClientPlayNetworking.send(SwgPackets.C2S.PlayerLeftClickItem, new PacketByteBuf(Unpooled.buffer()));
 		return true;
 	}
 

@@ -120,7 +120,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 		var passedData = new PacketByteBuf(Unpooled.buffer());
 		passedData.writeNbt(getBlasterTag().toTag());
-		ClientPlayNetworking.send(SwgPackets.C2S.PacketBlasterWorkbenchApply, passedData);
+		ClientPlayNetworking.send(SwgPackets.C2S.BlasterWorkbenchApply, passedData);
 	}
 
 	private void onCancelClicked(ButtonWidget sender)

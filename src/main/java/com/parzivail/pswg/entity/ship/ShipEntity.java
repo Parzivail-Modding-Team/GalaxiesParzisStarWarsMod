@@ -442,7 +442,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		{
 			var passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeShort(ShipControls.pack(controls));
-			ClientPlayNetworking.send(SwgPackets.C2S.PacketShipControls, passedData);
+			ClientPlayNetworking.send(SwgPackets.C2S.ShipControls, passedData);
 		}
 	}
 
@@ -513,7 +513,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 		var passedData = new PacketByteBuf(Unpooled.buffer());
 		PacketByteBufHelper.writeQuaternion(passedData, rotation);
-		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipRotation, passedData);
+		ClientPlayNetworking.send(SwgPackets.C2S.ShipRotation, passedData);
 	}
 
 	protected boolean allowPitchMovement()
@@ -527,7 +527,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		if (!isPilot(player))
 			return false;
 
-		ClientPlayNetworking.send(SwgPackets.C2S.PacketShipFire, new PacketByteBuf(Unpooled.buffer()));
+		ClientPlayNetworking.send(SwgPackets.C2S.ShipFire, new PacketByteBuf(Unpooled.buffer()));
 		return true;
 	}
 

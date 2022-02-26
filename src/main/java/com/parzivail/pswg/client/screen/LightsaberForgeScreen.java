@@ -132,7 +132,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			var passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeNbt(getLightsaberTag().toTag());
 			// TODO: move this to backend, don't allow client to set arbitrary tag data
-			ClientPlayNetworking.send(SwgPackets.C2S.PacketLightsaberForgeApply, passedData);
+			ClientPlayNetworking.send(SwgPackets.C2S.LightsaberForgeApply, passedData);
 		}));
 
 		this.addDrawableChild(cbUnstable = new EventCheckboxWidget(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> commitChanges()));

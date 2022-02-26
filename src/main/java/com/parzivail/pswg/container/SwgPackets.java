@@ -7,25 +7,26 @@ public class SwgPackets
 {
 	public static class C2S
 	{
-		public static final Identifier PacketLightsaberForgeApply = Resources.id("lightsaber_forge_apply");
-		public static final Identifier PacketBlasterWorkbenchApply = Resources.id("blaster_workbench_apply");
-		public static final Identifier PacketSetOwnSpecies = Resources.id("set_own_species");
-		public static final Identifier PacketPlayerLeftClickItem = Resources.id("player_use_left");
-		public static final Identifier PacketPlayerItemAction = Resources.id("item_action");
-		public static final Identifier PacketShipFire = Resources.id("ship_fire");
-		public static final Identifier PacketShipRotation = Resources.id("srot");
-		public static final Identifier PacketShipControls = Resources.id("sctrl");
+		public static final Identifier LightsaberForgeApply = Resources.id("lightsaber_forge_apply");
+		public static final Identifier BlasterWorkbenchApply = Resources.id("blaster_workbench_apply");
+		public static final Identifier SetOwnSpecies = Resources.id("set_own_species");
+		public static final Identifier PlayerLeftClickItem = Resources.id("player_use_left");
+		public static final Identifier PlayerItemAction = Resources.id("item_action");
+		public static final Identifier ShipFire = Resources.id("ship_fire");
+		public static final Identifier ShipRotation = Resources.id("srot");
+		public static final Identifier ShipControls = Resources.id("sctrl");
 	}
 
 	public static class S2C
 	{
-		public static final Identifier PacketSyncBlasters = Resources.id("sync_blasters");
-		public static final Identifier PacketSyncLightsabers = Resources.id("sync_lightsabers");
-		public static final Identifier PacketSyncSpecies = Resources.id("sync_species");
-		public static final Identifier PacketPlayerEvent = Resources.id("pevt");
-		public static final Identifier PacketWorldEvent = Resources.id("wevt");
-		public static final Identifier PacketClientSync = Resources.id("csync");
-		public static final Identifier PacketPreciseEntityVelocityUpdate = Resources.id("pevel");
-		public static final Identifier PacketPreciseEntitySpawn = Resources.id("pesp");
+		public static final Identifier SyncBlasters = Resources.id("sync_blasters");
+		public static final Identifier SyncLightsabers = Resources.id("sync_lightsabers");
+		public static final Identifier SyncSpecies = Resources.id("sync_species");
+		public static final Identifier PlayerEvent = Resources.id("pevt");
+		public static final Identifier WorldEvent = Resources.id("wevt");
+		public static final Identifier SyncBlockToClient = Resources.id("csync");
+		public static final Identifier PreciseEntityVelocityUpdate = Resources.id("pevel");
+		public static final Identifier PreciseEntitySpawn = Resources.id("pesp");
+		public static final Identifier OpenEntityInventory = Resources.id("entity_inventory");
 	}
 }

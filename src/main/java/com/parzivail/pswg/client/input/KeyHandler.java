@@ -58,6 +58,6 @@ public class KeyHandler
 	{
 		var passedData = new PacketByteBuf(Unpooled.buffer());
 		passedData.writeInt(action.ordinal());
-		ClientPlayNetworking.send(SwgPackets.C2S.PacketPlayerItemAction, passedData);
+		ClientPlayNetworking.send(SwgPackets.C2S.PlayerItemAction, passedData);
 	}
 }

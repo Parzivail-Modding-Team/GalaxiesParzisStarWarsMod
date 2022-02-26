@@ -144,19 +144,19 @@ public class Galaxies implements ModInitializer
 		});
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.PacketSyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
-			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.PacketSyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
-			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.PacketSyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
+			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.SyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
+			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.SyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
+			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
 		});
 
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketLightsaberForgeApply, LightsaberForgeScreenHandler::handleSetLighsaberTag);
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketBlasterWorkbenchApply, BlasterWorkbenchScreenHandler::handleSetBlasterTag);
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketSetOwnSpecies, SwgSpeciesRegistry::handleSetOwnSpecies);
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketPlayerItemAction, PlayerPacketHandler::handleItemAction);
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipFire, ShipEntity::handleFirePacket);
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipRotation, ShipEntity::handleRotationPacket);
-		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PacketShipControls, ShipEntity::handleControlPacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.LightsaberForgeApply, LightsaberForgeScreenHandler::handleSetLighsaberTag);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.BlasterWorkbenchApply, BlasterWorkbenchScreenHandler::handleSetBlasterTag);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.SetOwnSpecies, SwgSpeciesRegistry::handleSetOwnSpecies);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PlayerLeftClickItem, PlayerPacketHandler::handleLeftClickPacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.PlayerItemAction, PlayerPacketHandler::handleItemAction);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipFire, ShipEntity::handleFirePacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipRotation, ShipEntity::handleRotationPacket);
+		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipControls, ShipEntity::handleControlPacket);
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment())
 			DataGenHelper.run();

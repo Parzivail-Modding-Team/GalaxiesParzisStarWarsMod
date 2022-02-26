@@ -44,6 +44,7 @@ import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import io.github.ennuil.libzoomer.api.ZoomInstance;
@@ -287,7 +288,7 @@ public class Client implements ClientModInitializer
 			}
 		});
 
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
 			SwgBlasterManager.INSTANCE.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
 			minecraftClient.execute(() -> {
 				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
@@ -295,7 +296,7 @@ public class Client implements ClientModInitializer
 			});
 		});
 
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncLightsabers, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncLightsabers, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
 			SwgLightsaberManager.INSTANCE.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
 			minecraftClient.execute(() -> {
 				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
@@ -303,9 +304,9 @@ public class Client implements ClientModInitializer
 			});
 		});
 
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketSyncSpecies, SwgSpeciesManager.INSTANCE::handlePacket);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE::handlePacket);
 
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPlayerEvent, (client, handler, buf, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PlayerEvent, (client, handler, buf, responseSender) -> {
 			var eventId = buf.readByte();
 
 			if (PlayerEvent.ID_LOOKUP.containsKey(eventId))
@@ -315,7 +316,7 @@ public class Client implements ClientModInitializer
 			}
 		});
 
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketWorldEvent, (client, handler, buf, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.WorldEvent, (client, handler, buf, responseSender) -> {
 			var eventId = buf.readByte();
 
 			if (WorldEvent.ID_LOOKUP.containsKey(eventId))
@@ -325,9 +326,10 @@ public class Client implements ClientModInitializer
 			}
 		});
 
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketClientSync, BlockEntityClientSerializable::handle);
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PacketPreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncBlockToClient, BlockEntityClientSerializable::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntityVelocityUpdate, PreciseEntityVelocityUpdateS2CPacket::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
+		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);
 
 		blasterZoomInstance = ZoomRegistry.registerInstance(new ZoomInstance(
 				Resources.id("blaster_zoom"),

@@ -1,8 +1,11 @@
 package com.parzivail.pswg.entity.droid;
 
+import com.parzivail.pswg.client.screen.AstromechScreen;
+import com.parzivail.pswg.screen.AstromechScreenHandler;
+import com.parzivail.util.entity.EntityWithInventory;
 import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.entity.ai.SlowTurningMoveControl;
-import com.parzivail.util.world.InventoryUtil;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
@@ -17,11 +20,18 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -29,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
 
-public class AstromechEntity extends PathAwareEntity
+public class AstromechEntity extends PathAwareEntity implements EntityWithInventory<AstromechScreenHandler>
 {
 	private static class ExtendLegGoal extends Goal
 	{
@@ -198,8 +208,7 @@ public class AstromechEntity extends PathAwareEntity
 	private static final TrackedData<Byte> LEG_ANIM = DataTracker.registerData(AstromechEntity.class, TrackedDataHandlerRegistry.BYTE);
 	private static final byte LEG_ANIM_LENGTH = 18;
 
-	private final DefaultedList<ItemStack> heldItems = DefaultedList.ofSize(2, ItemStack.EMPTY);
-	private final DefaultedList<ItemStack> armorItems = DefaultedList.ofSize(4, ItemStack.EMPTY);
+	protected SimpleInventory inventory = new SimpleInventory(5);
 
 	private ExtendLegGoal extendLegGoal;
 	private byte prevLegExtensionTimer;
@@ -223,6 +232,37 @@ public class AstromechEntity extends PathAwareEntity
 		this.goalSelector.add(5, new ExtendLegGoal(this, false));
 		this.goalSelector.add(6, new LookAtEntityGoal(this, PlayerEntity.class, 6.0F));
 		this.goalSelector.add(7, new LookAroundGoal(this));
+	}
+
+	@Override
+	public ActionResult interactMob(PlayerEntity player, Hand hand)
+	{
+		if (player.shouldCancelInteraction())
+		{
+			if (!this.world.isClient)
+				EntityWithInventory.openScreen((ServerPlayerEntity)player, this);
+			return ActionResult.success(this.world.isClient);
+		}
+
+		return super.interactMob(player, hand);
+	}
+
+	@Override
+	public Inventory getInventory()
+	{
+		return inventory;
+	}
+
+	@Override
+	public Screen createScreen(AstromechScreenHandler handler, PlayerInventory playerInventory)
+	{
+		return new AstromechScreen(handler, playerInventory, this);
+	}
+
+	@Override
+	public AstromechScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory)
+	{
+		return new AstromechScreenHandler(syncId, playerInventory, inventory, this);
 	}
 
 	@Override
@@ -251,34 +291,25 @@ public class AstromechEntity extends PathAwareEntity
 	@Override
 	public void readCustomDataFromNbt(NbtCompound nbt)
 	{
-		InventoryUtil.readFromNbt(nbt, "ArmorItems", armorItems);
-		InventoryUtil.readFromNbt(nbt, "HandItems", heldItems);
+		inventory.readNbtList(nbt.getList("Inventory", NbtElement.COMPOUND_TYPE));
 	}
 
 	@Override
 	public Iterable<ItemStack> getItemsHand()
 	{
-		return heldItems;
+		return DefaultedList.of();
 	}
 
 	@Override
 	public Iterable<ItemStack> getArmorItems()
 	{
-		return armorItems;
+		return DefaultedList.of();
 	}
 
 	@Override
 	public ItemStack getEquippedStack(EquipmentSlot slot)
 	{
-		switch (slot.getType())
-		{
-			case HAND:
-				return this.heldItems.get(slot.getEntitySlotId());
-			case ARMOR:
-				return this.armorItems.get(slot.getEntitySlotId());
-			default:
-				return ItemStack.EMPTY;
-		}
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -291,17 +322,6 @@ public class AstromechEntity extends PathAwareEntity
 	@Override
 	public void equipStack(EquipmentSlot slot, ItemStack stack)
 	{
-		this.processEquippedStack(stack);
-		switch (slot.getType())
-		{
-			case HAND:
-				this.onEquipStack(stack);
-				this.heldItems.set(slot.getEntitySlotId(), stack);
-				break;
-			case ARMOR:
-				this.onEquipStack(stack);
-				this.armorItems.set(slot.getEntitySlotId(), stack);
-		}
 	}
 
 	@Override
@@ -309,8 +329,7 @@ public class AstromechEntity extends PathAwareEntity
 	{
 		super.writeCustomDataToNbt(nbt);
 
-		InventoryUtil.writeToNbt(nbt, "ArmorItems", armorItems);
-		InventoryUtil.writeToNbt(nbt, "HandItems", heldItems);
+		nbt.put("Inventory", inventory.toNbtList());
 	}
 
 	@Override

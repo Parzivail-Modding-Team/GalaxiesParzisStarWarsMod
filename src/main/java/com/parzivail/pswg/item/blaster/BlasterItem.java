@@ -413,7 +413,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 				passedData.writeFloat((float)(bd.recoil.horizontal * horizNoise));
 				passedData.writeFloat((float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
-				ServerPlayNetworking.send((ServerPlayerEntity)player, SwgPackets.S2C.PacketPlayerEvent, passedData);
+				ServerPlayNetworking.send((ServerPlayerEntity)player, SwgPackets.S2C.PlayerEvent, passedData);
 			}
 
 			bt.serializeAsSubtag(stack);

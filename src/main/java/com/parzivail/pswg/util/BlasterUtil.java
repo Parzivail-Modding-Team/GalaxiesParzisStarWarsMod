@@ -154,7 +154,7 @@ public class BlasterUtil
 		}
 
 		for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, end))
-			ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PacketWorldEvent, passedData);
+			ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.WorldEvent, passedData);
 	}
 
 	public static void fireStun(World world, PlayerEntity player, Vec3d fromDir, float range, Consumer<BlasterBoltEntity> entityInitializer)

@@ -45,7 +45,7 @@ public class PreciseEntitySpawnS2CPacket extends EntitySpawnS2CPacket
 	{
 		var passedData = new PacketByteBuf(Unpooled.buffer());
 		new PreciseEntitySpawnS2CPacket(entity, entityData).write(passedData);
-		return ServerPlayNetworking.createS2CPacket(SwgPackets.S2C.PacketPreciseEntitySpawn, passedData);
+		return ServerPlayNetworking.createS2CPacket(SwgPackets.S2C.PreciseEntitySpawn, passedData);
 	}
 
 	public static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender)

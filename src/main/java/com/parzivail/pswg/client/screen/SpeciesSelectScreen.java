@@ -148,7 +148,7 @@ public class SpeciesSelectScreen extends Screen
 			}
 
 			// TODO: verify species variables on server
-			ClientPlayNetworking.send(SwgPackets.C2S.PacketSetOwnSpecies, passedData);
+			ClientPlayNetworking.send(SwgPackets.C2S.SetOwnSpecies, passedData);
 		}));
 
 		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText(I18N_USE_FEMALE_MODEL), this.gender == SpeciesGender.FEMALE, true, (checked) -> {

@@ -34,7 +34,7 @@ public interface BlockEntityClientSerializable
 				passedData.writeNbt(toClientTag(new NbtCompound()));
 
 				for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)level, entity.getPos()))
-					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.PacketClientSync, passedData);
+					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.SyncBlockToClient, passedData);
 			}
 		}
 	}

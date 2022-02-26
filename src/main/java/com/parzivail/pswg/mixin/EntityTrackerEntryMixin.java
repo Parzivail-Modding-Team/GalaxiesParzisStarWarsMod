@@ -34,7 +34,7 @@ public abstract class EntityTrackerEntryMixin
 		{
 			var passedData = new PacketByteBuf(Unpooled.buffer());
 			new PreciseEntityVelocityUpdateS2CPacket(this.entity).write(passedData);
-			this.sendSyncPacket(ServerPlayNetworking.createS2CPacket(SwgPackets.S2C.PacketPreciseEntityVelocityUpdate, passedData));
+			this.sendSyncPacket(ServerPlayNetworking.createS2CPacket(SwgPackets.S2C.PreciseEntityVelocityUpdate, passedData));
 			this.entity.velocityModified = false;
 		}
 		ci.cancel();
