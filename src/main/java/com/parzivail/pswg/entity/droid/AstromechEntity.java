@@ -248,6 +248,12 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	}
 
 	@Override
+	public int getEntityId()
+	{
+		return getId();
+	}
+
+	@Override
 	public Inventory getInventory()
 	{
 		return inventory;

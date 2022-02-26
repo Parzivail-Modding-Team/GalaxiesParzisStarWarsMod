@@ -26,14 +26,14 @@ public interface EntityWithInventory<T extends ScreenHandler>
 		var inventory = entity.getInventory();
 
 		var buf = new PacketByteBuf(Unpooled.buffer());
-		new OpenEntityInventoryS2CPacket(playera.getScreenHandlerSyncId(), inventory.size(), entity.getId()).write(buf);
+		new OpenEntityInventoryS2CPacket(playera.getScreenHandlerSyncId(), inventory.size(), entity.getEntityId()).write(buf);
 		ServerPlayNetworking.send(player, SwgPackets.S2C.OpenEntityInventory, buf);
 		player.currentScreenHandler = entity.createScreenHandler(playera.getScreenHandlerSyncId(), player.getInventory(), inventory);
 
 		playera.invokeOnScreenHandlerOpened(player.currentScreenHandler);
 	}
 
-	int getId();
+	int getEntityId();
 
 	Inventory getInventory();
 
