@@ -1,6 +1,0 @@
-// com/parzivail/pswg/container/SwgItems.java
-@RegistryName("$$REGNAME$$")
-public static final Item $$FIELD$$ = new Item(new Item.Settings().group(Galaxies.Tab));
-
-// assets/pswg/lang/en_us.json
-"item.pswg.$$REGNAME$$": "$$FRIENDLYNAME$$",

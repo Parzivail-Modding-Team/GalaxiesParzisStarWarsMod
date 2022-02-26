@@ -1,6 +1,0 @@
-// com/parzivail/pswg/container/SwgBlocks.java
-@RegistryName("$$REGNAME$$")
-public static final Block $$FIELD$$ = new Block(FabricBlockSettings.of(Material.STONE));
-
-// assets/pswg/lang/en_us.json
-"block.pswg.$$REGNAME$$": "$$FRIENDLYNAME$$",

@@ -1,8 +1,0 @@
-{
-	"parent": "minecraft:block/inner_stairs",
-	"textures": {
-		"bottom": "pswg:block/$$SRCREGNAME$$",
-		"top": "pswg:block/$$SRCREGNAME$$",
-		"side": "pswg:block/$$SRCREGNAME$$"
-	}
-}
