@@ -34,6 +34,7 @@ public class SpeciesPantoran extends SwgSpecies
 				VAR_TATTOOS,
 				VAR_HUMANOID_EYEBROWS,
 				VAR_HUMANOID_HAIR,
+				VAR_HUMANOID_EYE_COLOR,
 				VAR_HUMANOID_CLOTHES_TOPS,
 				VAR_HUMANOID_CLOTHES_BOTTOMS,
 				VAR_HUMANOID_CLOTHES_BELTS,
@@ -55,6 +56,7 @@ public class SpeciesPantoran extends SwgSpecies
 			stack.add(getTexture(this, VAR_TATTOOS));
 
 		stack.add(getGenderedTexture(this, VAR_HUMANOID_EYEBROWS));
+		stack.add(tint(getGlobalTexture("eyes"), this, VAR_HUMANOID_EYE_COLOR));
 		stack.add(getClothes(this, player));
 		stack.add(getTexture(this, VAR_HUMANOID_HAIR));
 		return stack;
