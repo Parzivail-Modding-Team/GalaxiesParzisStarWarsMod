@@ -13,6 +13,7 @@
 		"hair": {
 			"defaultValue": "brown_1",
 			"possibleValues": [
+				"none",
 				"black_1",
 				"black_2",
 				"black_3",
