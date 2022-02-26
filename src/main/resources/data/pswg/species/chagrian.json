@@ -5,7 +5,10 @@
 			"defaultValue": "blue",
 			"possibleValues": [
 				"blue",
-				"black"
+				"black",
+				"cyan",
+				"gray",
+				"light_blue"
 			]
 		},
 		"eyebrows": {
