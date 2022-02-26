@@ -25,7 +25,9 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 	@Override
 	public void render(T entity, float yaw, float tickDelta, MatrixStack matrix, VertexConsumerProvider vertexConsumers, int light)
 	{
-		super.render(entity, yaw, tickDelta, matrix, vertexConsumers, light);
+		if (entity.hasCustomName())
+			this.renderLabelIfPresent(entity, entity.getDisplayName(), matrix, vertexConsumers, light);
+
 		matrix.push();
 
 		MatrixStackUtil.scalePos(matrix, 10 / 16f, 10 / 16f, 10 / 16f);

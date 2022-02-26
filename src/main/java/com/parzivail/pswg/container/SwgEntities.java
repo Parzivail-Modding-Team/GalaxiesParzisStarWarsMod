@@ -104,7 +104,7 @@ public class SwgEntities
 				Resources.id("artoo"),
 				FabricEntityTypeBuilder
 						.create(SpawnGroup.MISC, AstromechEntity::new)
-						.dimensions(EntityDimensions.fixed(1, 1))
+						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
 						.trackRangeBlocks(128)
 						.build()
 		);
