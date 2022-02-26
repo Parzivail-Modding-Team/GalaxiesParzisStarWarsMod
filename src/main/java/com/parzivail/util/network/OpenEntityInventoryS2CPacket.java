@@ -1,5 +1,6 @@
 package com.parzivail.util.network;
 
+import com.parzivail.pswg.client.screen.ScreenHelper;
 import com.parzivail.util.entity.EntityWithInventory;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
@@ -45,7 +46,7 @@ public class OpenEntityInventoryS2CPacket
 				var simpleInventory = new SimpleInventory(packet.getSlotCount());
 				var handler = inventoryEntity.createScreenHandler(packet.getSyncId(), clientPlayerEntity.getInventory(), simpleInventory);
 				clientPlayerEntity.currentScreenHandler = handler;
-				client.setScreen(inventoryEntity.createScreen(handler, clientPlayerEntity.getInventory()));
+				client.setScreen(ScreenHelper.createEntityScreen(handler, clientPlayerEntity.getInventory(), inventoryEntity));
 			}
 		});
 	}

@@ -5,7 +5,6 @@ import com.parzivail.pswg.mixin.ServerPlayerEntityAccessor;
 import com.parzivail.util.network.OpenEntityInventoryS2CPacket;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
@@ -36,8 +35,6 @@ public interface EntityWithInventory<T extends ScreenHandler>
 	int getEntityId();
 
 	Inventory getInventory();
-
-	Screen createScreen(T handler, PlayerInventory playerInventory);
 
 	T createScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory);
 }
