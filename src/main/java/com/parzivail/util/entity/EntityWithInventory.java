@@ -5,7 +5,6 @@ import com.parzivail.pswg.mixin.ServerPlayerEntityAccessor;
 import com.parzivail.util.network.OpenEntityInventoryS2CPacket;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.network.PacketByteBuf;
@@ -26,18 +25,16 @@ public interface EntityWithInventory<T extends ScreenHandler>
 		var inventory = entity.getInventory();
 
 		var buf = new PacketByteBuf(Unpooled.buffer());
-		new OpenEntityInventoryS2CPacket(playera.getScreenHandlerSyncId(), inventory.size(), entity.getId()).write(buf);
+		new OpenEntityInventoryS2CPacket(playera.getScreenHandlerSyncId(), inventory.size(), entity.getEntityId()).write(buf);
 		ServerPlayNetworking.send(player, SwgPackets.S2C.OpenEntityInventory, buf);
 		player.currentScreenHandler = entity.createScreenHandler(playera.getScreenHandlerSyncId(), player.getInventory(), inventory);
 
 		playera.invokeOnScreenHandlerOpened(player.currentScreenHandler);
 	}
 
-	int getId();
+	int getEntityId();
 
 	Inventory getInventory();
-
-	Screen createScreen(T handler, PlayerInventory playerInventory);
 
 	T createScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory);
 }

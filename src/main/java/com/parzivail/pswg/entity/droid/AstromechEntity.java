@@ -1,11 +1,9 @@
 package com.parzivail.pswg.entity.droid;
 
-import com.parzivail.pswg.client.screen.AstromechScreen;
 import com.parzivail.pswg.screen.AstromechScreenHandler;
 import com.parzivail.util.entity.EntityWithInventory;
 import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.entity.ai.SlowTurningMoveControl;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
@@ -248,15 +246,15 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	}
 
 	@Override
-	public Inventory getInventory()
+	public int getEntityId()
 	{
-		return inventory;
+		return getId();
 	}
 
 	@Override
-	public Screen createScreen(AstromechScreenHandler handler, PlayerInventory playerInventory)
+	public Inventory getInventory()
 	{
-		return new AstromechScreen(handler, playerInventory, this);
+		return inventory;
 	}
 
 	@Override
