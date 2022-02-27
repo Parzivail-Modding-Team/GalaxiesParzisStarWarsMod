@@ -303,6 +303,18 @@ public class SwgBlocks
 		public static final PillarBlock GrayImperialPanelPattern4 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_5")
 		public static final PillarBlock GrayImperialPanelPattern5 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_6")
+		public static final PillarBlock GrayImperialPanelPattern6 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_7")
+		public static final PillarBlock GrayImperialPanelPattern7 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_8")
+		public static final PillarBlock GrayImperialPanelPattern8 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_9")
+		public static final PillarBlock GrayImperialPanelPattern9 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_10")
+		public static final PillarBlock GrayImperialPanelPattern10 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_11")
+		public static final PillarBlock GrayImperialPanelPattern11 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 
 		@RegistryName("gray_imperial_light_half_1")
 		public static final PillarBlock GrayImperialLightHalf1 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY, 8);
