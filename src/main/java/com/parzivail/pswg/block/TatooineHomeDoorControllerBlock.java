@@ -16,7 +16,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor implements BlockEntityProvider
+public class TatooineHomeDoorControllerBlock extends TatooineHomeDoorBlock implements BlockEntityProvider
 {
 	private static final VoxelShape INTERACTION_SHAPE_CLOSED = VoxelShapes.union(
 			VoxelShapes.cuboid(0.25, 0, 0, 0.75, 1, 0.0625),
@@ -57,7 +57,7 @@ public class BlockTatooineHomeDoorController extends BlockTatooineHomeDoor imple
 		}
 	}
 
-	public BlockTatooineHomeDoorController(Settings settings)
+	public TatooineHomeDoorControllerBlock(Settings settings)
 	{
 		super(settings);
 	}

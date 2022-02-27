@@ -5,6 +5,7 @@ import com.parzivail.pswg.client.render.p3d.P3DUnbakedBlockModel;
 import com.parzivail.pswg.client.render.pm3d.PM3DBakedBlockModel;
 import com.parzivail.pswg.client.render.pm3d.PM3DFile;
 import com.parzivail.pswg.client.render.pm3d.PM3DUnbakedBlockModel;
+import com.parzivail.util.client.model.ClonableUnbakedModel;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import net.minecraft.util.Identifier;
 
@@ -38,11 +39,26 @@ public class ModelLoader
 				baseTexture,
 				particleTexture,
 				spriteMap -> P3DBakedBlockModel.create(
+						spriteMap,
 						cacheMethod,
-						modelFile,
 						baseTexture,
 						particleTexture,
-						spriteMap
+						modelFile
+				)
+		);
+	}
+
+	public static ClonableUnbakedModel loadPicklingP3D(Identifier baseTexture, Identifier particleTexture, Identifier... modelFiles)
+	{
+		return new P3DUnbakedBlockModel(
+				baseTexture,
+				particleTexture,
+				spriteMap -> P3DBakedBlockModel.create(
+						spriteMap,
+						DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY,
+						baseTexture,
+						particleTexture,
+						modelFiles
 				)
 		);
 	}

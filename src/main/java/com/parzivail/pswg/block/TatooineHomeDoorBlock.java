@@ -27,7 +27,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class BlockTatooineHomeDoor extends RotatingBlock
+public class TatooineHomeDoorBlock extends RotatingBlock
 {
 	static
 	{
@@ -36,9 +36,9 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	public static class Item extends BlockItem
 	{
-		private final BlockTatooineHomeDoor block;
+		private final TatooineHomeDoorBlock block;
 
-		public Item(BlockTatooineHomeDoor block, net.minecraft.item.Item.Settings settings)
+		public Item(TatooineHomeDoorBlock block, net.minecraft.item.Item.Settings settings)
 		{
 			super(block, settings);
 			this.block = block;
@@ -93,7 +93,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 
 	public static final IntProperty PART;
 
-	public BlockTatooineHomeDoor(Settings settings)
+	public TatooineHomeDoorBlock(Settings settings)
 	{
 		super(settings);
 		this.setDefaultState(this.stateManager.getDefaultState().with(PART, 0));
@@ -241,7 +241,7 @@ public class BlockTatooineHomeDoor extends RotatingBlock
 	private void destroyPart(World world, BlockPos blockPos, PlayerEntity player)
 	{
 		var blockState = world.getBlockState(blockPos);
-		if (blockState.getBlock() instanceof BlockTatooineHomeDoor)
+		if (blockState.getBlock() instanceof TatooineHomeDoorBlock)
 		{
 			world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 35);
 			world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));

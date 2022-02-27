@@ -20,11 +20,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-public class BlockMoistureVaporator extends RotatingBlockWithEntity implements IMoistureProvider
+public class MoistureVaporatorBlock extends RotatingBlockWithEntity implements IMoistureProvider
 {
 	private final VoxelShape shape;
 
-	public BlockMoistureVaporator(Settings settings)
+	public MoistureVaporatorBlock(Settings settings)
 	{
 		super(settings);
 

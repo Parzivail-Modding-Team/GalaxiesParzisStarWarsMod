@@ -1,7 +1,7 @@
 package com.parzivail.pswg.block.rigs;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.block.BlockTatooineHomeDoor;
+import com.parzivail.pswg.block.TatooineHomeDoorBlock;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.rig.pr3r.PR3RFile;
@@ -13,7 +13,7 @@ import com.parzivail.util.math.Transform;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 
-public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntity, RigTatooineHomeDoor.Part>
+public class TatooineHomeDoorRig implements IModelRig<TatooineHomeDoorBlockEntity, TatooineHomeDoorRig.Part>
 {
 	public enum Part
 	{
@@ -34,11 +34,11 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 		}
 	}
 
-	public static final RigTatooineHomeDoor INSTANCE = new RigTatooineHomeDoor();
+	public static final TatooineHomeDoorRig INSTANCE = new TatooineHomeDoorRig();
 
 	private static final PR3RFile RIG = PR3RFile.tryLoad(Resources.id("rigs/block/door/tatooine_home.pr3r"));
 
-	private RigTatooineHomeDoor()
+	private TatooineHomeDoorRig()
 	{
 	}
 
@@ -63,7 +63,7 @@ public class RigTatooineHomeDoor implements IModelRig<TatooineHomeDoorBlockEntit
 		var pos = target.getPos();
 		var block = world.getBlockState(pos);
 
-		if (!(block.getBlock() instanceof BlockTatooineHomeDoor))
+		if (!(block.getBlock() instanceof TatooineHomeDoorBlock))
 			return;
 
 		stack.multiply(ClientMathUtil.getRotation(block.get(RotatingBlock.FACING)));

@@ -2,10 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.block.BlockMoistureVaporator;
-import com.parzivail.pswg.block.BlockTatooineHomeDoor;
-import com.parzivail.pswg.block.BlockTatooineHomeDoorController;
-import com.parzivail.pswg.block.LightsaberForgeBlock;
+import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.block.crop.AridPlant;
 import com.parzivail.pswg.block.crop.ChasukaCrop;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
@@ -85,8 +82,8 @@ public class SwgBlocks
 
 	public static class Door
 	{
-		public static final BlockTatooineHomeDoor TatooineHomeTop = new BlockTatooineHomeDoor(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F));
-		public static final BlockTatooineHomeDoor TatooineHomeBottom = new BlockTatooineHomeDoorController(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F));
+		public static final TatooineHomeDoorBlock TatooineHomeTop = new TatooineHomeDoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F));
+		public static final TatooineHomeDoorBlock TatooineHomeBottom = new TatooineHomeDoorControllerBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F));
 		@RegistryName("door_tatooine_home")
 		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottom).build();
 	}
@@ -100,7 +97,7 @@ public class SwgBlocks
 	public static class MoistureVaporator
 	{
 		@RegistryName("gx8_moisture_vaporator")
-		public static final BlockMoistureVaporator Gx8 = new BlockMoistureVaporator(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(10.0F).requiresTool());
+		public static final MoistureVaporatorBlock Gx8 = new MoistureVaporatorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(10.0F).requiresTool());
 		@RegistryName("gx8_moisture_vaporator")
 		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = FabricBlockEntityTypeBuilder.create(MoistureVaporatorBlockEntity::new, Gx8).build();
 	}
@@ -275,7 +272,7 @@ public class SwgBlocks
 		@RegistryName("blue_hangar_light")
 		public static final Block BlueHangar = new RotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), RotatingBlockWithBounds.Substrate.BELOW, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("wall_cluster_light")
-		public static final Block WallCluster = new RotatingBlockWithBounds(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).noCollision().sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
+		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(VoxelShapes.cuboid(0, 0.0625f, 0.0625f, 0.0625f, 0.9375f, 0.9375f), RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).noCollision().sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 	}
 
 	public static class Panel

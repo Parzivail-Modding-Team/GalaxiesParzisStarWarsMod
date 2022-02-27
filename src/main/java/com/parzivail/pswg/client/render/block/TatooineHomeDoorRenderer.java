@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.render.block;
 
 import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.block.rigs.RigTatooineHomeDoor;
+import com.parzivail.pswg.block.rigs.TatooineHomeDoorRig;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.client.render.pr3.PR3File;
 import com.parzivail.pswg.client.render.pr3.PR3Model;
@@ -17,14 +17,14 @@ import java.util.function.Supplier;
 
 public class TatooineHomeDoorRenderer implements BlockEntityRenderer<TatooineHomeDoorBlockEntity>
 {
-	private final Supplier<PR3Model<TatooineHomeDoorBlockEntity, RigTatooineHomeDoor.Part>> model;
+	private final Supplier<PR3Model<TatooineHomeDoorBlockEntity, TatooineHomeDoorRig.Part>> model;
 
 	private static final Identifier TEXTURE_FRAME = Resources.id("textures/model/door/tatooine_home/frame.png");
 	private static final Identifier TEXTURE_DOOR = Resources.id("textures/model/door/tatooine_home/door.png");
 
 	public TatooineHomeDoorRenderer(BlockEntityRendererFactory.Context ctx)
 	{
-		model = Suppliers.memoize(() -> new PR3Model<>(PR3File.tryLoad(Resources.id("models/block/door/tatooine_home.pr3")), RigTatooineHomeDoor.Part.class, RigTatooineHomeDoor.INSTANCE::transform));
+		model = Suppliers.memoize(() -> new PR3Model<>(PR3File.tryLoad(Resources.id("models/block/door/tatooine_home.pr3")), TatooineHomeDoorRig.Part.class, TatooineHomeDoorRig.INSTANCE::transform));
 	}
 
 	@Override

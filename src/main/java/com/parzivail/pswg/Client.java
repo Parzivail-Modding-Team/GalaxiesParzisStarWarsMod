@@ -144,6 +144,8 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.register(SwgBlocks.MoistureVaporator.Gx8, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/gx8"), Resources.id("model/gx8"), Resources.id("model/gx8_particle")));
 
+		ModelRegistry.register(SwgBlocks.Light.WallCluster, true, ModelLoader.loadPicklingP3D(Resources.id("model/light/cluster"), Resources.id("model/light/cluster_particle"), Resources.id("block/light/cluster_light_1"), Resources.id("block/light/cluster_light_2"), Resources.id("block/light/cluster_light_3")));
+
 		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadPM3D(DynamicBakedModel.CacheMethod.RENDER_SEED_KEY, Resources.id("models/block/barrel/mos_eisley.pm3d"), Resources.id("model/barrel/mos_eisley"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Tank.Fusion, true, ModelLoader.loadPM3D(Resources.id("models/block/tank/fusion.pm3d"), Resources.id("model/tank/fusion"), new Identifier("block/stone")));
@@ -154,8 +156,6 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/mos_eisley.pm3d"), Resources.id("model/crate/mos_eisley"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Crate.Imperial, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/imperial_cube.pm3d"), Resources.id("model/crate/imperial_cube"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Crate.Segmented, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/segmented.pm3d"), Resources.id("model/crate/segmented"), new Identifier("block/stone")));
-
-		ModelRegistry.register(SwgBlocks.Light.WallCluster, true, ModelLoader.loadPM3D(Resources.id("models/block/light/wall_cluster.pm3d"), Resources.id("model/light/wall_cluster"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadPM3D(Resources.id("models/block/machine_spoked.pm3d"), Resources.id("model/machine_spoked"), new Identifier("block/stone")));
 

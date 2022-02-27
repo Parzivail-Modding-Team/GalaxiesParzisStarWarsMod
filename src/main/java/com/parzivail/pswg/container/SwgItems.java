@@ -1,7 +1,7 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
-import com.parzivail.pswg.block.BlockTatooineHomeDoor;
+import com.parzivail.pswg.block.TatooineHomeDoorBlock;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.item.DebugItem;
@@ -34,7 +34,7 @@ public class SwgItems
 	public static class Door
 	{
 		@RegistryName("tatooine_home_door")
-		public static final Item TatooineHome = new BlockTatooineHomeDoor.Item(SwgBlocks.Door.TatooineHomeBottom, new Item.Settings().group(Galaxies.TabBlocks));
+		public static final Item TatooineHome = new TatooineHomeDoorBlock.Item(SwgBlocks.Door.TatooineHomeBottom, new Item.Settings().group(Galaxies.TabBlocks));
 	}
 
 	public static class CraftingComponents

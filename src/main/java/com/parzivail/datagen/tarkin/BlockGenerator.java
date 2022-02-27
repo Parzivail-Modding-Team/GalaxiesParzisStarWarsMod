@@ -1,5 +1,6 @@
 package com.parzivail.datagen.tarkin;
 
+import com.parzivail.util.block.IPicklingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.model.BlockStateSupplier;
 import net.minecraft.item.Item;
@@ -38,6 +39,12 @@ public class BlockGenerator
 	{
 		return blockNoModelLangEntry(block)
 				.lootTable(LootTableFile::singleSelf);
+	}
+
+	public static <T extends Block & IPicklingBlock> BlockGenerator blockNoModelPicklingDrops(T block)
+	{
+		return blockNoModelLangEntry(block)
+				.lootTable(block1 -> LootTableFile.pickling(block));
 	}
 
 	public static BlockGenerator block(Block block)

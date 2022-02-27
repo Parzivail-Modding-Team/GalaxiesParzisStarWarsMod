@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.render.p3d;
 
 import com.parzivail.util.block.DisplacingBlock;
+import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.RotatingBlock;
 import com.parzivail.util.client.model.DynamicBakedModel;
@@ -32,14 +33,14 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 {
 	private final CacheMethod cacheMethod;
 	private final Sprite baseSprite;
-	private final Identifier modelId;
+	private final Identifier[] modelIds;
 
-	private P3DBakedBlockModel(CacheMethod cacheMethod, Sprite baseSprite, Sprite particleSprite, Identifier modelId)
+	private P3DBakedBlockModel(CacheMethod cacheMethod, Sprite baseSprite, Sprite particleSprite, Identifier[] modelIds)
 	{
 		super(particleSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
 		this.cacheMethod = cacheMethod;
 		this.baseSprite = baseSprite;
-		this.modelId = modelId;
+		this.modelIds = modelIds;
 	}
 
 	@Override
@@ -93,6 +94,20 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		var meshBuilder = createMeshBuilder();
 		var quadEmitter = meshBuilder.getEmitter();
 
+		var modelId = modelIds[0];
+
+		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget)
+		{
+			var state = blockRenderTarget.getState();
+			if (blockRenderTarget.getState().getBlock() instanceof IPicklingBlock pb)
+			{
+				var pickleProp = pb.getPickleProperty();
+				var pickle = state.get(pickleProp) - 1;
+				if (pickle >= 0 && pickle < modelIds.length)
+					modelId = modelIds[pickle];
+			}
+		}
+
 		var model = P3dManager.INSTANCE.get(modelId);
 
 		var ms = new MatrixStack();
@@ -121,6 +136,16 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		var mat = new Matrix4f();
 		mat.loadIdentity();
 
+		var modelId = modelIds[0];
+
+		if (state != null && state.getBlock() instanceof IPicklingBlock pb)
+		{
+			var pickleProp = pb.getPickleProperty();
+			var pickle = state.get(pickleProp) - 1;
+			if (pickle >= 0 && pickle < modelIds.length)
+				modelId = modelIds[pickle];
+		}
+
 		var model = P3dManager.INSTANCE.get(modelId);
 
 		if (state == null)
@@ -134,6 +159,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 
 			var minX = (float)bounds.minX * 0.625f;
 			var maxX = (float)bounds.maxX * 0.625f;
+			var minY = (float)bounds.minY * 0.625f;
 			var minZ = (float)bounds.minZ * 0.625f;
 			var maxZ = (float)bounds.maxZ * 0.625f;
 
@@ -141,7 +167,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 			mat.multiply(Matrix4f.scale(scale, scale, scale));
 			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
 
-			mat.multiply(Matrix4f.translate((maxX - minX) / 2 - maxX, 0, (maxZ - minZ) / 2 - maxZ));
+			mat.multiply(Matrix4f.translate((maxX - minX) / 2 - maxX, -minY, (maxZ - minZ) / 2 - maxZ));
 
 			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
 			mat.multiply(new Quaternion(0, 90, 0, true));
@@ -182,9 +208,9 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		return mat;
 	}
 
-	public static P3DBakedBlockModel create(CacheMethod cacheMethod, Identifier model, Identifier baseTexture, Identifier particleTexture, Function<SpriteIdentifier, Sprite> spriteMap)
+	public static P3DBakedBlockModel create(Function<SpriteIdentifier, Sprite> spriteMap, CacheMethod cacheMethod, Identifier baseTexture, Identifier particleTexture, Identifier... models)
 	{
-		return new P3DBakedBlockModel(cacheMethod, spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, particleTexture)), model);
+		return new P3DBakedBlockModel(cacheMethod, spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, particleTexture)), models);
 	}
 
 	@Override

@@ -1176,7 +1176,7 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.BlueHangar)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.WallCluster)
+		BlockGenerator.blockNoModelPicklingDrops(SwgBlocks.Light.WallCluster)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 

@@ -3,6 +3,7 @@ package com.parzivail.datagen.tarkin;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.parzivail.util.block.IPicklingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.Identifier;
@@ -37,6 +38,30 @@ public class LootTableFile
 	public static LootTableFile singleSelf(Block block)
 	{
 		return single(block, block);
+	}
+
+	public static <T extends Block & IPicklingBlock> LootTableFile pickling(T block)
+	{
+		var reg = AssetGenerator.getRegistryName(block);
+
+		var entry = new Pool.Entry(new Identifier("item"), reg);
+
+		var pickleProp = block.getPickleProperty();
+		pickleProp.getValues().stream().sorted().forEachOrdered(i -> {
+			if (i <= 1)
+				return;
+
+			entry.function(new Pool.CountFunction(i)
+					               .add(false)
+					               .condition(new Pool.Condition(new Identifier("block_state_property"))
+							                          .block(reg)
+							                          .property(pickleProp.getName(), String.valueOf(i)))
+			);
+		});
+
+		entry.function(new Pool.Function(new Identifier("explosion_decay")));
+
+		return ofPool(block, new Pool(1).entry(entry));
 	}
 
 	public static LootTableFile count(Block block, ItemConvertible drop, Pool.CountFunction count)
@@ -207,11 +232,14 @@ public class LootTableFile
 			Identifier enchantment;
 			Identifier formula;
 			HashMap<String, Object> parameters;
+			List<Condition> conditions;
+			Boolean add;
 
 			public Function(Identifier function)
 			{
 				this.function = function;
 				this.parameters = new HashMap<>();
+				this.conditions = new ArrayList<>();
 			}
 
 			public Function enchantment(Identifier enchantment)
@@ -223,6 +251,18 @@ public class LootTableFile
 			public Function formula(Identifier formula)
 			{
 				this.formula = formula;
+				return this;
+			}
+
+			public Function add(boolean add)
+			{
+				this.add = add;
+				return this;
+			}
+
+			public Function condition(Condition condition)
+			{
+				this.conditions.add(condition);
 				return this;
 			}
 
@@ -241,6 +281,23 @@ public class LootTableFile
 
 				if (formula != null)
 					entryElement.addProperty("formula", formula.toString());
+
+				if (add != null)
+					entryElement.addProperty("add", add);
+
+				if (!conditions.isEmpty())
+				{
+					var conditionArray = new JsonArray();
+					for (var condition : conditions)
+					{
+						var conditionElement = new JsonObject();
+
+						condition.serialize(conditionElement);
+
+						conditionArray.add(conditionElement);
+					}
+					entryElement.add("conditions", conditionArray);
+				}
 
 				if (!parameters.isEmpty())
 				{
