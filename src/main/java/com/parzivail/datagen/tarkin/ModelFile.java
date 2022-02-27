@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -162,6 +163,31 @@ public class ModelFile
 							.texture("crop", IdentifierUtil.concat("block/", localId))
 			);
 		}
+
+		return modelFiles;
+	}
+
+	public static Collection<ModelFile> accumulatingLayers(Block block)
+	{
+		var id = AssetGenerator.getRegistryName(block);
+		var modelFiles = new ArrayList<ModelFile>();
+
+		for (int i : Properties.LAYERS.getValues())
+		{
+			if (i >= 8)
+				continue;
+
+			var localId = IdentifierUtil.concat(id, "_height" + i * 2);
+			// TODO: remove dependency on block/snow_heightN?
+			modelFiles.add(
+					ModelFile
+							.ofModel(localId, new Identifier("block/snow_height" + i * 2))
+							.texture("particle", IdentifierUtil.concat("block/", id))
+							.texture("texture", IdentifierUtil.concat("block/", id))
+			);
+		}
+
+		modelFiles.add(ModelFile.cube(block));
 
 		return modelFiles;
 	}

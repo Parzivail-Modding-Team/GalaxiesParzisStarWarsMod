@@ -420,6 +420,8 @@ public class SwgBlocks
 		public static final Block SaltyDesert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 		@RegistryName("desert_sand")
 		public static final Block Desert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
+		@RegistryName("loose_desert_sand")
+		public static final Block LooseDesert = new AccumulatingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F), Desert::getPlacementState);
 		@RegistryName("desert_canyon_sand")
 		public static final Block DesertCanyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 	}

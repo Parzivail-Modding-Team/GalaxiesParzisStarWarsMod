@@ -62,6 +62,14 @@ public class BlockGenerator
 				.model(block1 -> ModelFile.particle(block1, particle));
 	}
 
+	static BlockGenerator accumulatingLayers(Block block)
+	{
+		return blockNoModelLangEntry(block)
+				.state((block1, modelId) -> BlockStateGenerator.accumulatingLayers(block1, modelId))
+				.models(ModelFile::accumulatingLayers)
+				.itemModel(ModelFile::ofBlock);
+	}
+
 	static BlockGenerator cropStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)
 	{
 		return blockNoModelLangEntry(block)

@@ -42,6 +42,19 @@ public class BlockStateGenerator
 		return VariantsBlockStateSupplier.create(block).coordinate(blockStateVariantMap);
 	}
 
+	public static VariantsBlockStateSupplier accumulatingLayers(Block block, Identifier modelId)
+	{
+		return VariantsBlockStateSupplier
+				.create(block)
+				.coordinate(BlockStateVariantMap
+						            .create(Properties.LAYERS)
+						            .register(integer -> BlockStateVariant
+								            .create()
+								            .put(VariantSettings.MODEL, integer < 8 ? IdentifierUtil.concat(modelId, "_height" + integer * 2) : modelId)
+						            )
+				);
+	}
+
 	public static VariantsBlockStateSupplier bloomingStages(Block block, Identifier modelId, IntProperty ageProperty, BooleanProperty bloomingProperty)
 	{
 		var blockStateVariantMap = BlockStateVariantMap.create(ageProperty, bloomingProperty).register((integer, bool) -> BlockStateVariant.create().put(VariantSettings.MODEL, IdentifierUtil.concat(modelId, "_stage" + integer + (bool ? "_blooming" : ""))));
