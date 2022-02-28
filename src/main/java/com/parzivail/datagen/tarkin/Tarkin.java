@@ -1477,6 +1477,11 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
 
+		BlockGenerator.basicRandomRotation(SwgBlocks.Sandstone.Canyon)
+		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .build(assets);
+
 		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked)
 		              .build(assets);
 
