@@ -99,13 +99,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget)
 		{
 			var state = blockRenderTarget.getState();
-			if (blockRenderTarget.getState().getBlock() instanceof IPicklingBlock pb)
-			{
-				var pickleProp = pb.getPickleProperty();
-				var pickle = state.get(pickleProp) - 1;
-				if (pickle >= 0 && pickle < modelIds.length)
-					modelId = modelIds[pickle];
-			}
+			modelId = getPickleModel(modelId, state);
 		}
 
 		var model = P3dManager.INSTANCE.get(modelId);
@@ -130,21 +124,25 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		return meshBuilder.build();
 	}
 
+	private Identifier getPickleModel(Identifier defaultModel, BlockState state)
+	{
+		if (state != null && state.getBlock() instanceof IPicklingBlock pb)
+		{
+			var pickleProp = pb.getPickleProperty();
+			var pickle = state.get(pickleProp) - 1;
+			if (pickle >= 0 && pickle < modelIds.length)
+				defaultModel = modelIds[pickle];
+		}
+		return defaultModel;
+	}
+
 	@Override
 	protected Matrix4f createTransformation(BlockState state)
 	{
 		var mat = new Matrix4f();
 		mat.loadIdentity();
 
-		var modelId = modelIds[0];
-
-		if (state != null && state.getBlock() instanceof IPicklingBlock pb)
-		{
-			var pickleProp = pb.getPickleProperty();
-			var pickle = state.get(pickleProp) - 1;
-			if (pickle >= 0 && pickle < modelIds.length)
-				modelId = modelIds[pickle];
-		}
+		var modelId = getPickleModel(modelIds[0], state);
 
 		var model = P3dManager.INSTANCE.get(modelId);
 
