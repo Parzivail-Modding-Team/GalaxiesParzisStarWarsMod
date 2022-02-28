@@ -41,6 +41,11 @@ public class ModelFile
 		return new ModelFile(AssetGenerator.getRegistryName(block), AssetGenerator.getTextureName(block));
 	}
 
+	public static ModelFile ofAccumulatingBlock(Block block)
+	{
+		return new ModelFile(AssetGenerator.getRegistryName(block), IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_height2"));
+	}
+
 	public static ModelFile ofBlockDifferentParent(Block block, Identifier parent)
 	{
 		return new ModelFile(AssetGenerator.getRegistryName(block), parent);

@@ -65,9 +65,9 @@ public class BlockGenerator
 	static BlockGenerator accumulatingLayers(Block block)
 	{
 		return blockNoModelLangEntry(block)
-				.state((block1, modelId) -> BlockStateGenerator.accumulatingLayers(block1, modelId))
+				.state(BlockStateGenerator::accumulatingLayers)
 				.models(ModelFile::accumulatingLayers)
-				.itemModel(ModelFile::ofBlock);
+				.itemModel(ModelFile::ofAccumulatingBlock);
 	}
 
 	static BlockGenerator cropStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)

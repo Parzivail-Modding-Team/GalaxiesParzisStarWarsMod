@@ -1,23 +1,54 @@
 package com.parzivail.pswg.block;
 
 import com.parzivail.util.block.IPicklingBlock;
+import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.RotatingBlockWithBounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
 public class ClusterLightBlock extends RotatingBlockWithBounds implements IPicklingBlock
 {
 	public static final IntProperty CLUSTER_SIZE = IntProperty.of("cluster_size", 1, 3);
 
-	public ClusterLightBlock(VoxelShape shape, Substrate requiresSubstrate, Settings settings)
+	private static final VoxelShape SHAPE_SINGLE = VoxelShapes.cuboid(0, 5.5f / 16, 5.5f / 16, 4 / 16f, 10.5f / 16, 10.5f / 16);
+	private static final VoxelShape SHAPE_DOUBLE = VoxelShapes.union(
+			VoxelShapes.cuboid(0, 5.5f / 16, (5.5f - 7 + 3.5f) / 16, 4 / 16f, 10.5f / 16, (10.5f - 7 + 3.5f) / 16),
+			VoxelShapes.cuboid(0, 5.5f / 16, (5.5f + 3.5f) / 16, 4 / 16f, 10.5f / 16, (10.5f + 3.5f) / 16)
+	);
+	private static final VoxelShape SHAPE_TRIPLE = VoxelShapes.union(
+			VoxelShapes.cuboid(0, (5.5f + 3.5f) / 16, (5.5f - 7 + 3.5f) / 16, 4 / 16f, (10.5f + 3.5f) / 16, (10.5f - 7 + 3.5f) / 16),
+			VoxelShapes.cuboid(0, (5.5f + 3.5f) / 16, (5.5f + 3.5f) / 16, 4 / 16f, (10.5f + 3.5f) / 16, (10.5f + 3.5f) / 16),
+			VoxelShapes.cuboid(0, (5.5f - 3.5f) / 16, 5.5f / 16, 4 / 16f, (10.5f - 3.5f) / 16, 10.5f / 16)
+	);
+
+	public ClusterLightBlock(Substrate requiresSubstrate, Settings settings)
 	{
-		super(shape, requiresSubstrate, settings);
+		super(null, requiresSubstrate, settings);
 		this.setDefaultState(this.stateManager.getDefaultState().with(CLUSTER_SIZE, 1));
+	}
+
+	@Override
+	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
+	{
+		var size = state.get(CLUSTER_SIZE);
+
+		var shape = switch (size)
+				{
+					default -> SHAPE_SINGLE;
+					case 2 -> SHAPE_DOUBLE;
+					case 3 -> SHAPE_TRIPLE;
+				};
+
+		return VoxelShapeUtil.rotate(shape, (state.get(FACING).getHorizontal() + 1) % 4);
 	}
 
 	@Nullable
