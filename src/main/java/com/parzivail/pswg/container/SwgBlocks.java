@@ -168,6 +168,18 @@ public class SwgBlocks
 		public static final Block Air = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
 	}
 
+	public static class Grate
+	{
+		@RegistryName("imperial_opaque_grate_1")
+		public static final Block ImperialOpaque1 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("imperial_opaque_grate_2")
+		public static final Block ImperialOpaque2 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("imperial_opaque_grate_3")
+		public static final Block ImperialOpaque3 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("imperial_opaque_grate_4")
+		public static final Block ImperialOpaque4 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+	}
+
 	public static class Workbench
 	{
 		@RegistryName("blaster_workbench")
