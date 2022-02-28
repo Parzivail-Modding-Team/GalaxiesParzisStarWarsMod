@@ -144,7 +144,8 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	{
 		super.appendTooltip(stack, world, tooltip, context);
 		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.info"));
-		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+//		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 	}
 
 	@Override

@@ -630,6 +630,6 @@
 	"text.autoconfig.pswg.title": "Galaxies: Parzi's Star Wars Mod",
 	"tooltip.pswg.blaster.controls": "Change firing mode: %s, Vent: %s",
 	"tooltip.pswg.blaster.info": "Blaster",
-	"tooltip.pswg.lightsaber.controls": "Toggle: %s, Throw: %s",
+	"tooltip.pswg.lightsaber.controls": "Toggle: %s",
 	"tooltip.pswg.lightsaber.info": "Lightsaber"
 }
