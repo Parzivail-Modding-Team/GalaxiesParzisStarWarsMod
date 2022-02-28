@@ -438,6 +438,12 @@ public class SwgBlocks
 		public static final Block DesertCanyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 	}
 
+	public static class Sandstone
+	{
+		@RegistryName("canyon_sandstone")
+		public static final Block Canyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+	}
+
 	public static class Salt
 	{
 		@RegistryName("caked_salt")
