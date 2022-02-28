@@ -277,6 +277,9 @@ public class SwgBlocks
 
 	public static class Panel
 	{
+		@RegistryName("rusted_metal")
+		public static final SelfConnectingBlock RustedMetal = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BROWN).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+
 //		@RegistryName("imperial_cutout")
 //		public static final SelfConnectingBlock ImperialCutout = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 //		@RegistryName("imperial_cutout_pipes")
@@ -291,6 +294,8 @@ public class SwgBlocks
 		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("external_imperial_plating")
 		public static final SelfConnectingBlock ExternalImperialPlatingConnectedBorder = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		@RegistryName("large_imperial_plating")
+		public static final SelfConnectingBlock LargeImperialPlatingConnectedBorder = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
 		public static final Block GrayImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_pattern_1")

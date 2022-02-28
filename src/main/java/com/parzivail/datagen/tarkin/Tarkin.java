@@ -1332,6 +1332,10 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
+		BlockGenerator.basic(SwgBlocks.Panel.RustedMetal)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
 		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
@@ -1356,6 +1360,9 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Panel.ExternalImperialPlatingConnectedBorder)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.LargeImperialPlatingConnectedBorder)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
