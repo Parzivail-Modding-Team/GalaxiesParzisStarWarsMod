@@ -1,44 +1,86 @@
 package com.parzivail.pswg.client.render.block;
 
-import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.block.rigs.TatooineHomeDoorRig;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
-import com.parzivail.pswg.client.render.pr3.PR3File;
-import com.parzivail.pswg.client.render.pr3.PR3Model;
+import com.parzivail.pswg.client.render.p3d.P3dManager;
+import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.util.block.rotating.RotatingBlock;
+import com.parzivail.util.math.ClientMathUtil;
+import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.Matrix4fUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Supplier;
+import net.minecraft.util.math.Matrix4f;
 
 public class TatooineHomeDoorRenderer implements BlockEntityRenderer<TatooineHomeDoorBlockEntity>
 {
-	private final Supplier<PR3Model<TatooineHomeDoorBlockEntity, TatooineHomeDoorRig.Part>> model;
-
+	private static final Identifier MODEL = Resources.id("block/tatooine_home_door");
 	private static final Identifier TEXTURE_FRAME = Resources.id("textures/model/door/tatooine_home/frame.png");
 	private static final Identifier TEXTURE_DOOR = Resources.id("textures/model/door/tatooine_home/door.png");
 
 	public TatooineHomeDoorRenderer(BlockEntityRendererFactory.Context ctx)
 	{
-		model = Suppliers.memoize(() -> new PR3Model<>(PR3File.tryLoad(Resources.id("models/block/door/tatooine_home.pr3")), TatooineHomeDoorRig.Part.class, TatooineHomeDoorRig.INSTANCE::transform));
+	}
+
+	private static Matrix4f transform(TatooineHomeDoorBlockEntity target, String objectName, float tickDelta)
+	{
+		var m = new Matrix4f();
+		m.loadIdentity();
+
+		if (objectName.equals("door"))
+		{
+			var timer = target.getAnimationTime(tickDelta);
+
+			if (target.isOpening())
+				m.multiplyByTranslation(0, 0, 0.845f * Ease.outCubic(1 - timer));
+			else
+				m.multiplyByTranslation(0, 0, 0.845f * Ease.inCubic(timer));
+		}
+
+		m.multiply(Matrix4fUtil.SCALE_10_16THS);
+		m.multiply(QuatUtil.ROT_Y_POS90);
+
+		return m;
+	}
+
+	private static VertexConsumer provideLayer(VertexConsumerProvider vertexConsumerProvider, TatooineHomeDoorBlockEntity target, String objectName)
+	{
+		var texture = TEXTURE_DOOR;
+		if (objectName.equals("frame"))
+			texture = TEXTURE_FRAME;
+
+		return vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(texture));
 	}
 
 	@Override
 	public void render(TatooineHomeDoorBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
 	{
+		var world = blockEntity.getWorld();
+		if (world == null)
+			return;
+
+		var state = world.getBlockState(blockEntity.getPos());
+		if (!state.isOf(SwgBlocks.Door.TatooineHomeBottom))
+			return;
+
+		var model = P3dManager.INSTANCE.get(MODEL);
+		if (model == null)
+			return;
+
+		var rotation = state.get(RotatingBlock.FACING);
+
 		matrices.push();
 
-		var m = model.get();
+		matrices.translate(0.5, 0, 0.5);
+		matrices.multiply(ClientMathUtil.getRotation(rotation));
 
-		m.renderObject(vertexConsumers.getBuffer(RenderLayer.getEntitySolid(TEXTURE_FRAME)), "Frame", blockEntity, tickDelta, matrices, light);
-
-//		m.renderObject(vertexConsumers.getBuffer(LAYER_STENCIL_MASK), "StencilMask", blockEntity, tickDelta, matrices, light);
-		m.renderObject(vertexConsumers.getBuffer(RenderLayer.getEntitySolid(TEXTURE_DOOR)), "Door", blockEntity, tickDelta, matrices, light);
-
+		model.render(matrices, vertexConsumers, blockEntity, TatooineHomeDoorRenderer::transform, TatooineHomeDoorRenderer::provideLayer, light, tickDelta);
 		matrices.pop();
 	}
 }

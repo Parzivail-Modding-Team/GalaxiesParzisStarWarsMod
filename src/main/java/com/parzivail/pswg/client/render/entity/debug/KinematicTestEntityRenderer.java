@@ -5,6 +5,7 @@ import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.model.MutableAnimatedModel;
 import com.parzivail.pswg.entity.debug.KinematicTestEntity;
 import com.parzivail.util.client.VertexConsumerBuffer;
+import com.parzivail.util.math.QuatUtil;
 import com.parzivail.util.math.TwoJointIk;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
@@ -96,7 +97,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 
 		matrices.scale(-1.0F, -1.0F, 1.0F);
 		matrices.translate(0.0D, -1.5010000467300415D, 0.0D);
-		matrices.multiply(new Quaternion(Vec3f.POSITIVE_Y, 180, true));
+		matrices.multiply(QuatUtil.ROT_Y_180);
 
 		this.model.setAngles(entity, 0, 0, 0, 0, 0);
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(Resources.id("textures/block/debug16.png")));

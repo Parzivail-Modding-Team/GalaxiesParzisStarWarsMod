@@ -30,8 +30,8 @@ public class CrossPointingParticle extends AnimatedParticle
 		var h = (float)(MathHelper.lerp(tickDelta, this.prevPosZ, this.z) - vec3d.getZ());
 
 		Quaternion rotation = QuatUtil.lookAt(Vec3d.ZERO, new Vec3d(velocityX, velocityY, velocityZ));
-		rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, 90, true));
-		rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_X, 45, true));
+		rotation.hamiltonProduct(QuatUtil.ROT_Y_POS90);
+		rotation.hamiltonProduct(QuatUtil.ROT_X_POS45);
 
 		var corners = new Vec3f[] {
 				new Vec3f(-1.0F, -1.0F, 0.0F),

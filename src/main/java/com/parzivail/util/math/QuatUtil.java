@@ -5,6 +5,14 @@ import net.minecraft.util.math.*;
 
 public class QuatUtil
 {
+	public static final Quaternion ROT_X_POS45 = new Quaternion(Vec3f.POSITIVE_X, 45, true);
+
+	public static final Quaternion ROT_Y_POS10 = new Quaternion(Vec3f.POSITIVE_Y, 10, true);
+	public static final Quaternion ROT_Y_POS90 = new Quaternion(Vec3f.POSITIVE_Y, 90, true);
+	public static final Quaternion ROT_Y_180 = new Quaternion(Vec3f.POSITIVE_Y, 180, true);
+
+	public static final Quaternion ROT_Z_POS80 = new Quaternion(Vec3f.POSITIVE_Z, 80, true);
+
 	private static final Vec3d UP = new Vec3d(0, 1, 0);
 	private static final Vec3d FORWARD = new Vec3d(0, 0, 1);
 

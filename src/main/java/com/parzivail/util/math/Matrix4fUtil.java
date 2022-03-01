@@ -11,6 +11,7 @@ public class Matrix4fUtil
 	private static final FloatBuffer _matrixBuffer;
 
 	public static final Matrix4f IDENTITY = new Matrix4f();
+	public static final Matrix4f SCALE_10_16THS = Matrix4f.scale(10 / 16f, 10 / 16f, 10 / 16f);
 
 	static
 	{

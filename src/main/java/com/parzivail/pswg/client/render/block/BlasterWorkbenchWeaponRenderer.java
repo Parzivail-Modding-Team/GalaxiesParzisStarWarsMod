@@ -7,13 +7,12 @@ import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
 import com.parzivail.util.block.rotating.RotatingBlock;
 import com.parzivail.util.math.ClientMathUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
 
 public class BlasterWorkbenchWeaponRenderer implements BlockEntityRenderer<BlasterWorkbenchBlockEntity>
 {
@@ -52,8 +51,8 @@ public class BlasterWorkbenchWeaponRenderer implements BlockEntityRenderer<Blast
 		else
 			matrices.translate(5 / 16.0, 14 / 16.0, -3 / 16.0);
 
-		matrices.multiply(new Quaternion(Vec3f.POSITIVE_Y, 10, true));
-		matrices.multiply(new Quaternion(Vec3f.POSITIVE_Z, 80, true));
+		matrices.multiply(QuatUtil.ROT_Y_POS10);
+		matrices.multiply(QuatUtil.ROT_Z_POS80);
 
 		BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformation.Mode.NONE, false, matrices, vertexConsumers, light, overlay, null);
 
