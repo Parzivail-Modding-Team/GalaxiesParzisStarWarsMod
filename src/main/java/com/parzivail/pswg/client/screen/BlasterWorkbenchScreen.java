@@ -327,14 +327,14 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			var modelEntry = BlasterItemRenderer.INSTANCE.getModel(blasterModel);
 			var model = modelEntry.model();
 
-			var ratio = (float)Math.max(model.bounds.getZLength() / BLASTER_VIEWPORT_WIDTH, model.bounds.getYLength() / (BLASTER_VIEWPORT_HEIGHT * 0.6));
+			var ratio = (float)Math.max(model.bounds().getZLength() / BLASTER_VIEWPORT_WIDTH, model.bounds().getYLength() / (BLASTER_VIEWPORT_HEIGHT * 0.6));
 
 			MatrixStackUtil.scalePos(matrices, -1 / ratio, 1 / ratio, 1);
 
 			matrices.multiply(new Quaternion(180 - blasterViewportRotation.y, 0, 0, true));
 			matrices.multiply(new Quaternion(0, 90 + blasterViewportRotation.x, 0, true));
 
-			matrices.translate(0, 0, -model.bounds.maxZ + model.bounds.getZLength() / 2);
+			matrices.translate(0, 0, -model.bounds().maxZ + model.bounds().getZLength() / 2);
 
 			MatrixStackUtil.scalePos(matrices, 5, 5, 5);
 

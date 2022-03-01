@@ -200,8 +200,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var angle = (float)(Math.PI / 4);
 			matrices.multiply(new Quaternion(angle, 0, 0, false));
 
-			var yi = m.bounds.getYLength() * Math.abs(Math.sin(angle)) + m.bounds.getZLength() * Math.abs(Math.cos(angle));
-			var zi = m.bounds.getYLength() * Math.abs(Math.cos(angle)) + m.bounds.getZLength() * Math.abs(Math.sin(angle));
+			var yi = m.bounds().getYLength() * Math.abs(Math.sin(angle)) + m.bounds().getZLength() * Math.abs(Math.cos(angle));
+			var zi = m.bounds().getYLength() * Math.abs(Math.cos(angle)) + m.bounds().getZLength() * Math.abs(Math.sin(angle));
 
 			if (renderMode != ModelTransformation.Mode.FIXED)
 			{
@@ -209,7 +209,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				MatrixStackUtil.scalePos(matrices, f, f, f);
 			}
 
-			matrices.translate(0, (float)-m.bounds.minY - m.bounds.getYLength() / 2f, (float)-m.bounds.minZ - m.bounds.getZLength() / 2f);
+			matrices.translate(0, (float)-m.bounds().minY - m.bounds().getYLength() / 2f, (float)-m.bounds().minZ - m.bounds().getZLength() / 2f);
 		}
 		else if (renderMode.isFirstPerson())
 		{
@@ -268,7 +268,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 			// TODO: left handed hold
 
-			var foreGripTransform = m.transformables.get("off_hand");
+			var foreGripTransform = m.transformables().get("off_hand");
 			if (renderMode == ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND && foreGripTransform != null)
 			{
 				var client = MinecraftClient.getInstance();
@@ -309,11 +309,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			{
 				// TODO: is it possible to have more than one barrel equipped?
 				var possibleSocket = "muzzle_flash." + entry;
-				if (m.transformables.containsKey(possibleSocket))
+				if (m.transformables().containsKey(possibleSocket))
 					muzzleFlashSocket = possibleSocket;
 			}
 
-			var muzzleFlashTransform = m.transformables.getOrDefault(muzzleFlashSocket, null);
+			var muzzleFlashTransform = m.transformables().getOrDefault(muzzleFlashSocket, null);
 
 			if (muzzleFlashTransform != null)
 			{

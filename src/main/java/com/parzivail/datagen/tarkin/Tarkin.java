@@ -838,12 +838,12 @@ public class Tarkin
 		                      .build(assets);
 
 		//Decoration Blocks and Machines
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Door.TatooineHome))
-		                      .grid2x3(null,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
-		                      .build(assets);
+//		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Door.TatooineHome))
+//		                      .grid2x3(null,
+//		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
+//		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
+//		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+//		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Vent.Air, 3))
 		                      .grid3x3(null,
@@ -990,7 +990,8 @@ public class Tarkin
 		BlockGenerator.stairs(SwgBlocks.Dirt.RuinedWetPourstoneStairs, Resources.id("block/ruined_wet_pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone")).build(assets);
 
-		ItemGenerator.basic(SwgItems.Door.TatooineHome).build(assets);
+		for (var i : SwgItems.Door.TatooineHome)
+			ItemGenerator.basic(i).build(assets);
 
 		ItemGenerator.basic(SwgItems.Dust.Helicite).build(assets);
 		ItemGenerator.basic(SwgItems.Dust.Lommite).build(assets);
@@ -1165,10 +1166,10 @@ public class Tarkin
 		              .blockTag(SwgTags.Block.TATOOINE_DOORS)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeBottom, new Identifier("block/stone"))
-		              .blockTag(SwgTags.Block.TATOOINE_DOORS)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
+		SwgBlocks.Door.TatooineHomeBottoms.values().forEach(b -> BlockGenerator.particleOnly(b, new Identifier("block/stone"))
+		                                                                       .blockTag(SwgTags.Block.TATOOINE_DOORS)
+		                                                                       .blockTag(BlockTags.PICKAXE_MINEABLE)
+		                                                                       .build(assets));
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.RedHangar)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1343,12 +1344,12 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutout)
-//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-//		              .build(assets);
-//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutoutPipes)
-//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-//		              .build(assets);
+		//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutout)
+		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		//		              .build(assets);
+		//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutoutPipes)
+		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		//		              .build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBordered)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1434,7 +1435,6 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialPanelTall2)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Panel.ImperialLightTall1)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)

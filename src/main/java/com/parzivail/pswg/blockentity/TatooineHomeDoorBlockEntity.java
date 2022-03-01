@@ -1,5 +1,6 @@
 package com.parzivail.pswg.blockentity;
 
+import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.util.block.BlockEntityClientSerializable;
@@ -9,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -20,11 +22,19 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEnt
 	private static final byte MASK_DIRECTION = (byte)0b01000000;
 	private static final byte MASK_POWERED = (byte)0b00100000;
 	private static final byte MASK_TIMER = (byte)0b00011111;
+
 	private byte timer = 0;
+	private final DyeColor color;
 
 	public TatooineHomeDoorBlockEntity(BlockPos pos, BlockState state)
 	{
 		super(SwgBlocks.Door.TatooineHomeBlockEntityType, pos, state);
+		this.color = (state.getBlock() instanceof TatooineHomeDoorControllerBlock b) ? b.getColor() : null;
+	}
+
+	public DyeColor getColor()
+	{
+		return color;
 	}
 
 	@Override

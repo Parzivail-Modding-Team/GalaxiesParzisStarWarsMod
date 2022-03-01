@@ -133,7 +133,7 @@ public class TatooineHomeDoorBlock extends RotatingBlock
 	@Override
 	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
 	{
-		return new ItemStack(SwgBlocks.Door.TatooineHomeBottom);
+		return new ItemStack(world.getBlockState(pos.down()).getBlock());
 	}
 
 	protected BlockPos getController(BlockView world, BlockPos self)

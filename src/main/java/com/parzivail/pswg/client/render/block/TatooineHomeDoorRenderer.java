@@ -1,9 +1,9 @@
 package com.parzivail.pswg.client.render.block;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
-import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.rotating.RotatingBlock;
 import com.parzivail.util.math.ClientMathUtil;
 import com.parzivail.util.math.Ease;
@@ -15,14 +15,22 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.Matrix4f;
+
+import java.util.HashMap;
 
 public class TatooineHomeDoorRenderer implements BlockEntityRenderer<TatooineHomeDoorBlockEntity>
 {
 	private static final Identifier MODEL = Resources.id("block/tatooine_home_door");
 	private static final Identifier TEXTURE_FRAME = Resources.id("textures/model/door/tatooine_home/frame.png");
 	private static final Identifier TEXTURE_DOOR = Resources.id("textures/model/door/tatooine_home/door.png");
+	private static final HashMap<DyeColor, Identifier> TEXTURE_DOOR_COLORS = Util.make(new HashMap<>(), (m) -> {
+		for (var d : DyeColor.values())
+			m.put(d, Resources.id("textures/model/door/tatooine_home/door_" + d.getName() + ".png"));
+	});
 
 	public TatooineHomeDoorRenderer(BlockEntityRendererFactory.Context ctx)
 	{
@@ -51,9 +59,9 @@ public class TatooineHomeDoorRenderer implements BlockEntityRenderer<TatooineHom
 
 	private static VertexConsumer provideLayer(VertexConsumerProvider vertexConsumerProvider, TatooineHomeDoorBlockEntity target, String objectName)
 	{
-		var texture = TEXTURE_DOOR;
-		if (objectName.equals("frame"))
-			texture = TEXTURE_FRAME;
+		var texture = TEXTURE_FRAME;
+		if (objectName.equals("door"))
+			texture = TEXTURE_DOOR_COLORS.getOrDefault(target.getColor(), TEXTURE_DOOR);
 
 		return vertexConsumerProvider.getBuffer(RenderLayer.getEntityCutout(texture));
 	}
@@ -66,7 +74,7 @@ public class TatooineHomeDoorRenderer implements BlockEntityRenderer<TatooineHom
 			return;
 
 		var state = world.getBlockState(blockEntity.getPos());
-		if (!state.isOf(SwgBlocks.Door.TatooineHomeBottom))
+		if (!(state.getBlock() instanceof TatooineHomeDoorControllerBlock))
 			return;
 
 		var model = P3dManager.INSTANCE.get(MODEL);

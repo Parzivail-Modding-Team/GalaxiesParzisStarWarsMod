@@ -31,9 +31,13 @@ import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
+
+import java.util.Arrays;
+import java.util.HashMap;
 
 public class SwgBlocks
 {
@@ -82,9 +86,12 @@ public class SwgBlocks
 	public static class Door
 	{
 		public static final TatooineHomeDoorBlock TatooineHomeTop = new TatooineHomeDoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F));
-		public static final TatooineHomeDoorBlock TatooineHomeBottom = new TatooineHomeDoorControllerBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F));
+		public static final HashMap<String, TatooineHomeDoorControllerBlock> TatooineHomeBottoms = Util.make(new HashMap<>(), m -> {
+			m.put("", new TatooineHomeDoorControllerBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F)));
+			Arrays.stream(DyeColor.values()).forEach(color -> m.put(color.getName(), new TatooineHomeDoorControllerBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F))));
+		});
 		@RegistryName("door_tatooine_home")
-		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottom).build();
+		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottoms.values().toArray(new Block[0])).build();
 	}
 
 	public static class Machine
@@ -291,10 +298,10 @@ public class SwgBlocks
 		@RegistryName("rusted_metal")
 		public static final SelfConnectingBlock RustedMetal = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BROWN).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 
-//		@RegistryName("imperial_cutout")
-//		public static final SelfConnectingBlock ImperialCutout = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
-//		@RegistryName("imperial_cutout_pipes")
-//		public static final SelfConnectingBlock ImperialCutoutPipes = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		//		@RegistryName("imperial_cutout")
+		//		public static final SelfConnectingBlock ImperialCutout = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		//		@RegistryName("imperial_cutout_pipes")
+		//		public static final SelfConnectingBlock ImperialCutoutPipes = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_blank")
 		public static final Block BlackImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_bordered")
@@ -527,7 +534,6 @@ public class SwgBlocks
 		//@RegistryName("chiseled_massassi_stone_bricks")
 		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 
-
 		@RegistryName("ilum_stone")
 		public static final Block Ilum = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 		@RegistryName("ilum_stone_stairs")
@@ -556,7 +562,15 @@ public class SwgBlocks
 		RegistryHelper.registerFlammable(SwgBlocks.class);
 
 		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door"), Door.TatooineHomeTop);
-		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door_controller"), Door.TatooineHomeBottom);
+
+		for (var block : Door.TatooineHomeBottoms.values())
+		{
+			var color = block.getColor();
+			if (color == null)
+				Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door_controller"), block);
+			else
+				Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door_controller_" + color.getName()), block);
+		}
 	}
 
 	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab)

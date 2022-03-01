@@ -35,7 +35,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-public class P3dModel
+public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P3dObject[] rootObjects, Box bounds)
 {
 	@FunctionalInterface
 	public interface PartTransformer<T>
@@ -52,19 +52,6 @@ public class P3dModel
 	private static final String MODEL_MAGIC = "P3D";
 	private static final String RIG_MAGIC = "P3DR";
 	private static final int[] ACCEPTED_VERSIONS = { 0x02 };
-
-	public final int version;
-	public final HashMap<String, P3dSocket> transformables;
-	public final P3dObject[] rootObjects;
-	public final Box bounds;
-
-	public P3dModel(int version, HashMap<String, P3dSocket> transformables, P3dObject[] rootObjects, Box bounds)
-	{
-		this.version = version;
-		this.transformables = transformables;
-		this.rootObjects = rootObjects;
-		this.bounds = bounds;
-	}
 
 	public void renderBlock(MatrixStack matrix, QuadEmitter quadEmitter, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, Supplier<Random> randomSupplier, RenderContext context, Sprite sprite)
 	{

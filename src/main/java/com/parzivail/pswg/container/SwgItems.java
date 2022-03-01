@@ -1,7 +1,9 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.TatooineHomeDoorBlock;
+import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
 import com.parzivail.pswg.item.DebugItem;
@@ -23,6 +25,8 @@ import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.registry.Registry;
 
+import java.util.List;
+
 public class SwgItems
 {
 	public static class Debug
@@ -33,8 +37,11 @@ public class SwgItems
 
 	public static class Door
 	{
-		@RegistryName("tatooine_home_door")
-		public static final Item TatooineHome = new TatooineHomeDoorBlock.Item(SwgBlocks.Door.TatooineHomeBottom, new Item.Settings().group(Galaxies.TabBlocks));
+		public static final List<TatooineHomeDoorBlock.Item> TatooineHome = SwgBlocks.Door.TatooineHomeBottoms
+				.values()
+				.stream()
+				.map(b -> new TatooineHomeDoorBlock.Item(b, new Item.Settings().group(Galaxies.TabBlocks)))
+				.toList();
 	}
 
 	public static class CraftingComponents
@@ -388,5 +395,14 @@ public class SwgItems
 	public static void register()
 	{
 		RegistryHelper.registerAnnotatedFields(SwgItems.class, Item.class, (instance, registryName, ignoreTab) -> Registry.register(Registry.ITEM, registryName, instance));
+
+		for (var i : Door.TatooineHome)
+		{
+			var color = ((TatooineHomeDoorControllerBlock)i.getBlock()).getColor();
+			if (color == null)
+				Registry.register(Registry.ITEM, Resources.id("tatooine_home_door"), i);
+			else
+				Registry.register(Registry.ITEM, Resources.id("tatooine_home_door_" + color.getName()), i);
+		}
 	}
 }

@@ -24,7 +24,7 @@ public abstract class ModelRig<T>
 
 		mat.multiply(orientation);
 
-		var socket = RIG.transformables.get(socketName);
+		var socket = RIG.transformables().get(socketName);
 		for (var part : socket.ancestry)
 		{
 			mat.multiply(part.transform);

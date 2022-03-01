@@ -150,7 +150,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		{
 			// Item transformation, scale largest dimension to 1
 
-			var bounds = model.bounds;
+			var bounds = model.bounds();
 
 			var largestDimension = 0.625f * (float)Math.max(bounds.getXLength(), Math.max(bounds.getYLength(), bounds.getZLength()));
 			var scale = 1 / largestDimension;

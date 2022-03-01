@@ -9,6 +9,8 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -57,9 +59,17 @@ public class TatooineHomeDoorControllerBlock extends TatooineHomeDoorBlock imple
 		}
 	}
 
-	public TatooineHomeDoorControllerBlock(Settings settings)
+	private final DyeColor color;
+
+	public TatooineHomeDoorControllerBlock(DyeColor color, Settings settings)
 	{
 		super(settings);
+		this.color = color;
+	}
+
+	public DyeColor getColor()
+	{
+		return color;
 	}
 
 	@Override
@@ -72,6 +82,12 @@ public class TatooineHomeDoorControllerBlock extends TatooineHomeDoorBlock imple
 	public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return getShape(state, world, pos, COLLISION_SHAPES_OPEN, COLLISION_SHAPES_CLOSED);
+	}
+
+	@Override
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
+	{
+		return new ItemStack(this);
 	}
 
 	@Override
