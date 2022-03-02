@@ -1013,6 +1013,8 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.DeathStickRed).build(assets);
 		ItemGenerator.basic(SwgItems.Food.DeathStickYellow).build(assets);
 
+		ItemGenerator.basic(SwgItems.Food.MysteriousSmoothie).build(assets);
+
 		ItemGenerator.basic(SwgItems.Food.BlueMilk).build(assets);
 		ItemGenerator.basic(SwgItems.Food.BlueYogurt).build(assets);
 

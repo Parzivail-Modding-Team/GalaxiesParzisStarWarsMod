@@ -263,6 +263,9 @@ public class SwgItems
 		@RegistryName("death_stick_yellow")
 		public static final Item DeathStickYellow = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 0.8F).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()).group(Galaxies.TabItems));
 
+		@RegistryName("mysterious_smoothie")
+		public static final Item MysteriousSmoothie = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 200), 0.8F).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()).group(Galaxies.TabItems));
+
 		// TODO: consider turning this into a Fluid
 		@RegistryName("blue_milk")
 		public static final Item BlueMilk = new MilkBucketItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
