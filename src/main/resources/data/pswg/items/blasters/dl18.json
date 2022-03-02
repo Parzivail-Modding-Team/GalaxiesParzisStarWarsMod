@@ -50,7 +50,14 @@
 		"4": {
 			"mutex": 4,
 			"id": "targeting",
-			"icon": 5
+			"icon": 5,
+			"visualComponent": "barrel"
+		},
+		"8": {
+			"mutex": 8,
+			"id": "scope",
+			"icon": 2,
+			"visualComponent": "scope"
 		}
 	}
 }

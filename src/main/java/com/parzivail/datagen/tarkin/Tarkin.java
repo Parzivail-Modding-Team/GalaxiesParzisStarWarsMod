@@ -1160,10 +1160,15 @@ public class Tarkin
 		              .build(assets);
 
 		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone"))
+		              .itemModel(ModelFile::ofBlock)
 		              .blockTag(SwgTags.Block.TATOOINE_DOORS)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		SwgBlocks.Door.TatooineHomeBottoms.values().forEach(b -> BlockGenerator.particleOnly(b, new Identifier("block/stone"))
+		                                                                       .itemModel(block -> {
+																				   var reg = AssetGenerator.getRegistryName(block);
+			                                                                       return ModelFile.ofModel(new Identifier(reg.getNamespace(), reg.getPath().replace("controller_", "")), AssetGenerator.getTextureName(block));
+		                                                                       })
 		                                                                       .blockTag(SwgTags.Block.TATOOINE_DOORS)
 		                                                                       .blockTag(BlockTags.PICKAXE_MINEABLE)
 		                                                                       .build(assets));
