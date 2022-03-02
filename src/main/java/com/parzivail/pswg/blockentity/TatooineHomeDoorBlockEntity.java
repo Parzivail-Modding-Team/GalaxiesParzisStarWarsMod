@@ -23,7 +23,7 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEnt
 	private static final byte MASK_POWERED = (byte)0b00100000;
 	private static final byte MASK_TIMER = (byte)0b00011111;
 
-	private byte timer = 0;
+	private byte timer = MASK_DIRECTION;
 	private final DyeColor color;
 
 	public TatooineHomeDoorBlockEntity(BlockPos pos, BlockState state)

@@ -253,6 +253,9 @@ public class Client implements ClientModInitializer
 		ICustomPoseItem.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
 		ICustomHudRenderer.register(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
 
+		for (var i : SwgItems.Door.TatooineHome)
+			ICustomItemRenderer.register(i, TatooineHomeDoorRenderer.ITEM_RENDERER_INSTANCE);
+
 		//		ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 
 		SwgParticles.register();

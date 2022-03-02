@@ -81,14 +81,18 @@ public enum ModelRegistry implements ModelVariantProvider
 
 	public static void register(Block block, boolean registerInventoryModel, ClonableUnbakedModel unbakedModel)
 	{
-		var blockId = Registry.BLOCK.getId(block);
 		if (registerInventoryModel)
-			models.put(new ModelIdentifier(blockId, "inventory"), unbakedModel.copy());
+			registerInventory(block, unbakedModel);
 		for (var state : block.getStateManager().getStates())
 		{
-			var id = new ModelIdentifier(blockId, BlockModels.propertyMapToString(state.getEntries()));
+			var id = new ModelIdentifier(Registry.BLOCK.getId(block), BlockModels.propertyMapToString(state.getEntries()));
 			models.put(id, unbakedModel.copy());
 		}
+	}
+
+	public static void registerInventory(Block block, ClonableUnbakedModel unbakedModel)
+	{
+		models.put(new ModelIdentifier(Registry.BLOCK.getId(block), "inventory"), unbakedModel.copy());
 	}
 
 	@Override

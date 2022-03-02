@@ -7,6 +7,7 @@ import com.parzivail.util.block.rotating.RotatingBlock;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.math.ClientMathUtil;
 import com.parzivail.util.math.MatrixStackUtil;
+import com.parzivail.util.math.QuatUtil;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -24,6 +25,7 @@ import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.world.BlockRenderView;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 import java.util.function.Function;
@@ -139,8 +141,6 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 	@Override
 	protected Matrix4f createTransformation(BlockState state)
 	{
-		var mat = new Matrix4f();
-		mat.loadIdentity();
 
 		var modelId = getPickleModel(modelIds[0], state);
 
@@ -150,29 +150,11 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		{
 			// Item transformation, scale largest dimension to 1
 
-			var bounds = model.bounds();
-
-			var largestDimension = 0.625f * (float)Math.max(bounds.getXLength(), Math.max(bounds.getYLength(), bounds.getZLength()));
-			var scale = 1 / largestDimension;
-
-			var minX = (float)bounds.minX * 0.625f;
-			var maxX = (float)bounds.maxX * 0.625f;
-			var minY = (float)bounds.minY * 0.625f;
-			var minZ = (float)bounds.minZ * 0.625f;
-			var maxZ = (float)bounds.maxZ * 0.625f;
-
-			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
-			mat.multiply(Matrix4f.scale(scale, scale, scale));
-			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
-
-			mat.multiply(Matrix4f.translate((maxX - minX) / 2 - maxX, -minY, (maxZ - minZ) / 2 - maxZ));
-
-			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
-			mat.multiply(new Quaternion(0, 90, 0, true));
-			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
-
-			return mat;
+			return getItemTransformation(model);
 		}
+
+		var mat = new Matrix4f();
+		mat.loadIdentity();
 
 		if (state.getBlock() instanceof RotatingBlock)
 		{
@@ -202,6 +184,36 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 					break;
 			}
 		}
+
+		return mat;
+	}
+
+	@NotNull
+	public static Matrix4f getItemTransformation(P3dModel model)
+	{
+		var mat = new Matrix4f();
+		mat.loadIdentity();
+
+		var bounds = model.bounds();
+
+		var largestDimension = 0.625f * (float)Math.max(bounds.getXLength(), Math.max(bounds.getYLength(), bounds.getZLength()));
+		var scale = 1 / largestDimension;
+
+		var minX = (float)bounds.minX * 0.625f;
+		var maxX = (float)bounds.maxX * 0.625f;
+		var minY = (float)bounds.minY * 0.625f;
+		var minZ = (float)bounds.minZ * 0.625f;
+		var maxZ = (float)bounds.maxZ * 0.625f;
+
+		mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
+		mat.multiply(Matrix4f.scale(scale, scale, scale));
+		mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+
+		mat.multiply(Matrix4f.translate((maxX - minX) / 2 - maxX, -minY, (maxZ - minZ) / 2 - maxZ));
+
+		mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
+		mat.multiply(QuatUtil.ROT_Y_POS90);
+		mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
 
 		return mat;
 	}

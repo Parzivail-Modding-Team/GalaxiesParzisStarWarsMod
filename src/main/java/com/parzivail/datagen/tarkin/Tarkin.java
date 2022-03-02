@@ -990,9 +990,6 @@ public class Tarkin
 		BlockGenerator.stairs(SwgBlocks.Dirt.RuinedWetPourstoneStairs, Resources.id("block/ruined_wet_pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone")).build(assets);
 
-		for (var i : SwgItems.Door.TatooineHome)
-			ItemGenerator.basic(i).build(assets);
-
 		ItemGenerator.basic(SwgItems.Dust.Helicite).build(assets);
 		ItemGenerator.basic(SwgItems.Dust.Lommite).build(assets);
 		ItemGenerator.basic(SwgItems.Dust.Thorilide).build(assets);
