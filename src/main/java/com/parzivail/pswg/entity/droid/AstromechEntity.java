@@ -246,6 +246,12 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	}
 
 	@Override
+	public boolean canImmediatelyDespawn(double distanceSquared)
+	{
+		return false;
+	}
+
+	@Override
 	public int getEntityId()
 	{
 		return getId();
