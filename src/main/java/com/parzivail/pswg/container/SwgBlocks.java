@@ -53,7 +53,7 @@ public class SwgBlocks
 			var dz = r.nextFloat() * s;
 
 			return VoxelShapeUtil.getCenteredCube(9.2f, 15.6f, dx, dz);
-		}, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F).requiresTool());
+		}, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(2.5F).requiresTool());
 	}
 
 	public static class Crate
@@ -85,10 +85,10 @@ public class SwgBlocks
 
 	public static class Door
 	{
-		public static final TatooineHomeDoorBlock TatooineHomeTop = new TatooineHomeDoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F));
+		public static final TatooineHomeDoorBlock TatooineHomeTop = new TatooineHomeDoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F));
 		public static final HashMap<String, TatooineHomeDoorControllerBlock> TatooineHomeBottoms = Util.make(new HashMap<>(), m -> {
-			m.put("", new TatooineHomeDoorControllerBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F)));
-			Arrays.stream(DyeColor.values()).forEach(color -> m.put(color.getName(), new TatooineHomeDoorControllerBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.0F))));
+			m.put("", new TatooineHomeDoorControllerBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F)));
+			Arrays.stream(DyeColor.values()).forEach(color -> m.put(color.getName(), new TatooineHomeDoorControllerBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F))));
 		});
 		@RegistryName("door_tatooine_home")
 		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottoms.values().toArray(new Block[0])).build();
@@ -97,13 +97,13 @@ public class SwgBlocks
 	public static class Machine
 	{
 		@RegistryName("spoked_machine")
-		public static final RotatingBlock Spoked = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), RotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(5.0F).requiresTool());
+		public static final RotatingBlock Spoked = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), RotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 	}
 
 	public static class MoistureVaporator
 	{
 		@RegistryName("gx8_moisture_vaporator")
-		public static final MoistureVaporatorBlock Gx8 = new MoistureVaporatorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(10.0F).requiresTool());
+		public static final MoistureVaporatorBlock Gx8 = new MoistureVaporatorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(10.0F).requiresTool());
 		@RegistryName("gx8_moisture_vaporator")
 		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = FabricBlockEntityTypeBuilder.create(MoistureVaporatorBlockEntity::new, Gx8).build();
 	}
@@ -111,13 +111,13 @@ public class SwgBlocks
 	public static class Pipe
 	{
 		@RegistryName("large_pipe")
-		public static final Block Large = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block Large = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
 	}
 
 	public static class Tank
 	{
 		@RegistryName("fusion_fuel_tank")
-		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
 	public static class Glass
@@ -171,19 +171,19 @@ public class SwgBlocks
 	public static class Vent
 	{
 		@RegistryName("air_vent")
-		public static final Block Air = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block Air = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
 	public static class Grate
 	{
 		@RegistryName("imperial_opaque_grate_1")
-		public static final Block ImperialOpaque1 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block ImperialOpaque1 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("imperial_opaque_grate_2")
-		public static final Block ImperialOpaque2 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block ImperialOpaque2 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("imperial_opaque_grate_3")
-		public static final Block ImperialOpaque3 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block ImperialOpaque3 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("imperial_opaque_grate_4")
-		public static final Block ImperialOpaque4 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block ImperialOpaque4 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
 	public static class Workbench
@@ -296,26 +296,26 @@ public class SwgBlocks
 	public static class Panel
 	{
 		@RegistryName("rusted_metal")
-		public static final SelfConnectingBlock RustedMetal = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BROWN).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock RustedMetal = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BROWN).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 
 		//		@RegistryName("imperial_cutout")
 		//		public static final SelfConnectingBlock ImperialCutout = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		//		@RegistryName("imperial_cutout_pipes")
 		//		public static final SelfConnectingBlock ImperialCutoutPipes = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_blank")
-		public static final Block BlackImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final Block BlackImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_bordered")
-		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_split")
-		public static final SelfConnectingBlock BlackImperialPanelSplit = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock BlackImperialPanelSplit = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_thin_bordered")
-		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("external_imperial_plating")
-		public static final SelfConnectingBlock ExternalImperialPlatingConnectedBorder = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock ExternalImperialPlatingConnectedBorder = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("large_imperial_plating")
-		public static final SelfConnectingBlock LargeImperialPlatingConnectedBorder = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock LargeImperialPlatingConnectedBorder = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
-		public static final Block GrayImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final Block GrayImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
@@ -359,9 +359,9 @@ public class SwgBlocks
 		public static final PillarBlock GrayImperialLightOn2 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 
 		@RegistryName("gray_imperial_tall_panel_1")
-		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_tall_panel_2")
-		public static final SelfConnectingBlock ImperialPanelTall2 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock ImperialPanelTall2 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 
 		@RegistryName("gray_imperial_tall_light_1")
 		public static final SelfConnectingBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY);
@@ -374,7 +374,7 @@ public class SwgBlocks
 
 		private static PillarBlock createLitPanel(MapColor topMapColor, MapColor sideMapColor, int luminance)
 		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> luminance));
+			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.COPPER).luminance(value -> luminance));
 		}
 
 		private static PillarBlock createLitPanel(MapColor topMapColor, MapColor sideMapColor)
@@ -384,43 +384,43 @@ public class SwgBlocks
 
 		private static SelfConnectingBlock createLitConnectingPanel(MapColor mapColor)
 		{
-			return new SelfConnectingBlock(AbstractBlock.Settings.of(Material.METAL, mapColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.METAL).luminance(value -> 15));
+			return new SelfConnectingBlock(AbstractBlock.Settings.of(Material.METAL, mapColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.COPPER).luminance(value -> 15));
 		}
 
 		private static PillarBlock createPanel(MapColor topMapColor, MapColor sideMapColor)
 		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(1.5F).requiresTool().sounds(BlockSoundGroup.METAL));
+			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(1.5F).requiresTool().sounds(BlockSoundGroup.COPPER));
 		}
 	}
 
 	public static class MaterialBlock
 	{
 		@RegistryName("beskar_block")
-		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 		@RegistryName("chromium_block")
-		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).requiresTool());
+		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
 		@RegistryName("cortosis_block")
 		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 		@RegistryName("desh_block")
-		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).requiresTool());
+		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
 		@RegistryName("diatium_block")
 		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 		@RegistryName("durasteel_block")
-		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 		@RegistryName("ionite_block")
 		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(5.0F).luminance(3).requiresTool());
 		@RegistryName("lommite_block")
-		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 		@RegistryName("plasteel_block")
 		public static final SelfConnectingBlock Plasteel = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).requiresTool());
 		@RegistryName("titanium_block")
-		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 		@RegistryName("zersium_block")
-		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 		@RegistryName("helicite_block")
 		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 		@RegistryName("thorilide_block")
-		public static final Block Thorilide = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+		public static final Block Thorilide = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 	}
 
 	public static class Ore
