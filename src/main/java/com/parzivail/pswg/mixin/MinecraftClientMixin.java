@@ -14,7 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.resource.ReloadableResourceManager;
+import net.minecraft.resource.ReloadableResourceManagerImpl;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,7 +33,7 @@ public abstract class MinecraftClientMixin
 
 	@Shadow
 	@Final
-	private ReloadableResourceManager resourceManager;
+	private ReloadableResourceManagerImpl resourceManager;
 
 	@Shadow
 	@Nullable

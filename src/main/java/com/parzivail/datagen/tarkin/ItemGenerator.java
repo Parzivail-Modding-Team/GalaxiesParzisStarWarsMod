@@ -2,6 +2,7 @@ package com.parzivail.datagen.tarkin;
 
 import net.minecraft.item.Item;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class ItemGenerator
 	}
 
 	private LanguageProvider languageProvider;
-	private final List<Tag.Identified<?>> tags;
+	private final List<TagKey<?>> tags;
 
 	private final Item item;
 	private final Collection<ModelFile> itemModels;
@@ -73,17 +74,10 @@ public class ItemGenerator
 		return this;
 	}
 
-	public ItemGenerator tag(Tag.Identified<?> tag)
+	public ItemGenerator tag(TagKey<?> tag)
 	{
 		this.tags.add(tag);
 		return this;
-	}
-
-	public ItemGenerator tag(Tag<?> tag)
-	{
-		if (!(tag instanceof Tag.Identified<?> id))
-			throw new RuntimeException("Tag is not identified");
-		return tag(id);
 	}
 
 	public void build(List<BuiltAsset> assets)

@@ -337,13 +337,13 @@ public class Client implements ClientModInitializer
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.PreciseEntitySpawn, PreciseEntitySpawnS2CPacket::handle);
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.OpenEntityInventory, OpenEntityInventoryS2CPacket::handle);
 
-		blasterZoomInstance = ZoomRegistry.registerInstance(new ZoomInstance(
+		blasterZoomInstance = new ZoomInstance(
 				Resources.id("blaster_zoom"),
 				10.0F,
 				new SmoothTransitionMode(),
 				new ZoomDivisorMouseModifier(),
 				null //new SpyglassZoomOverlay(new Identifier("libzoomertest:textures/misc/michael.png"))
-		));
+		);
 	}
 
 	public static void registerRenderLayer(RenderLayer layer)

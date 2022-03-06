@@ -31,7 +31,7 @@ public class LeftClickHandler
 		// Repeated events
 		if (stack.getItem() instanceof ILeftClickConsumer lcc)
 		{
-			if (!minecraft.options.keyAttack.isPressed())
+			if (!minecraft.options.attackKey.isPressed())
 				return;
 
 			ci.cancel();
@@ -58,7 +58,7 @@ public class LeftClickHandler
 		if (stack.getItem() instanceof ILeftClickConsumer)
 		{
 			if (minecraft.player.isUsingItem())
-				while (minecraft.options.keyAttack.wasPressed())
+				while (minecraft.options.attackKey.wasPressed())
 					doAttackDelegate.run();
 		}
 	}

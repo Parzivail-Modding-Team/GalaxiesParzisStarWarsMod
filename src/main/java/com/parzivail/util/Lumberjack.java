@@ -1,17 +1,18 @@
 package com.parzivail.util;
 
+import com.parzivail.pswg.Resources;
 import net.fabricmc.loader.api.FabricLoader;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Lumberjack
 {
-	private static Logger logger = LogManager.getLogger();
+	private static Logger logger = LoggerFactory.getLogger(Resources.MODID);
 
 	public static void setLogHeader(String header)
 	{
-		logger = LogManager.getLogger(header);
+		logger = LoggerFactory.getLogger(header);
 	}
 
 	/**
@@ -19,12 +20,12 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void debug(Object message, Object... params)
+	public static void debug(@NotNull String message, Object... params)
 	{
 		if (!FabricLoader.getInstance().isDevelopmentEnvironment())
 			return;
 		var trace = Thread.currentThread().getStackTrace();
-		var format = String.format(String.valueOf(message), params);
+		var format = String.format(message, params);
 		if (trace.length >= 3)
 		{
 			var stack = trace[2];
@@ -41,12 +42,7 @@ public class Lumberjack
 	 */
 	public static void info(Object message)
 	{
-		log(Level.INFO, String.valueOf(message));
-	}
-
-	private static void log(Level level, String message)
-	{
-		logger.log(level, message);
+		logger.info(String.valueOf(message));
 	}
 
 	/**
@@ -64,9 +60,9 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void log(Object message, Object... params)
+	public static void log(@NotNull String message, Object... params)
 	{
-		info(String.format(String.valueOf(message), params));
+		info(String.format(message, params));
 	}
 
 	/**
@@ -74,9 +70,9 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void warn(Object message, Object... params)
+	public static void warn(@NotNull String message, Object... params)
 	{
-		log(Level.WARN, String.format(String.valueOf(message), params));
+		logger.warn(String.format(message, params));
 	}
 
 	/**
@@ -84,9 +80,9 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void error(Object message, Object... params)
+	public static void error(@NotNull String message, Object... params)
 	{
-		log(Level.ERROR, String.format(String.valueOf(message), params));
+		logger.error(String.format(message, params));
 	}
 
 	/**
@@ -94,8 +90,8 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void trace(Object message, Object... params)
+	public static void trace(@NotNull String message, Object... params)
 	{
-		log(Level.TRACE, String.format(String.valueOf(message), params));
+		logger.trace(String.format(message, params));
 	}
 }
