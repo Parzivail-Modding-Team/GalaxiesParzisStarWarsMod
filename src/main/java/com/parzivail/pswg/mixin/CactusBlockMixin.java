@@ -16,8 +16,8 @@ public abstract class CactusBlockMixin
 	@Inject(method = "canPlaceAt", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
 	private void canPlaceAt(BlockState state, WorldView world, BlockPos pos, CallbackInfoReturnable<Boolean> cir)
 	{
-		var below = world.getBlockState(pos.down()).getBlock();
-		if (SwgTags.Block.DESERT_SAND.contains(below))
+		var below = world.getBlockState(pos.down());
+		if (below.isIn(SwgTags.Block.DESERT_SAND))
 			cir.setReturnValue(true);
 	}
 }
