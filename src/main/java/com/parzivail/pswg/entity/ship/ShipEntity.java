@@ -68,7 +68,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	public ShipEntity(EntityType<?> type, World world)
 	{
 		super(type, world);
-		this.inanimate = true;
+		this.intersectionChecked = true;
 	}
 
 	@Environment(EnvType.CLIENT)

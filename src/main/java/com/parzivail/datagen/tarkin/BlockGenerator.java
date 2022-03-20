@@ -2,11 +2,11 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.util.block.IPicklingBlock;
 import net.minecraft.block.Block;
-import net.minecraft.data.client.model.BlockStateSupplier;
+import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -230,8 +230,8 @@ public class BlockGenerator
 	private BlockStateSupplier stateSupplier;
 	private ModelFile itemModel;
 	private LanguageProvider languageProvider;
-	private final List<Tag.Identified<?>> blockTags;
-	private final List<Tag.Identified<?>> itemTags;
+	private final List<TagKey<Block>> blockTags;
+	private final List<TagKey<?>> itemTags;
 
 	private final Collection<ModelFile> blockModels;
 	private final Collection<LootTableFile> lootTables;
@@ -274,7 +274,7 @@ public class BlockGenerator
 		if (itemModel != null)
 			assets.add(BuiltAsset.itemModel(itemModel.getId(), itemModel.build()));
 
-		for (var tag : blockTags)
+		for (TagKey<Block> tag : blockTags)
 			TagGenerator.forObject("tags/blocks", tag, regName).build(assets);
 
 		for (var tag : itemTags)
@@ -325,13 +325,13 @@ public class BlockGenerator
 		return this;
 	}
 
-	public BlockGenerator blockTag(Tag.Identified<?> tag)
+	public BlockGenerator blockTag(TagKey<Block> tag)
 	{
 		this.blockTags.add(tag);
 		return this;
 	}
 
-	public BlockGenerator itemTag(Tag.Identified<?> tag)
+	public BlockGenerator itemTag(TagKey<Item> tag)
 	{
 		this.itemTags.add(tag);
 		return this;

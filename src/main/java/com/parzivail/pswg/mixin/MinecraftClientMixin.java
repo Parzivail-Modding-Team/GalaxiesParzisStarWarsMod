@@ -14,7 +14,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.RunArgs;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.client.texture.TextureManager;
-import net.minecraft.resource.ReloadableResourceManager;
+import net.minecraft.resource.ReloadableResourceManagerImpl;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftClient.class)
 @Environment(EnvType.CLIENT)
@@ -33,14 +34,14 @@ public abstract class MinecraftClientMixin
 
 	@Shadow
 	@Final
-	private ReloadableResourceManager resourceManager;
+	private ReloadableResourceManagerImpl resourceManager;
 
 	@Shadow
 	@Nullable
 	public ClientPlayerInteractionManager interactionManager;
 
 	@Shadow
-	protected abstract void doAttack();
+	protected abstract boolean doAttack();
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initTail(RunArgs args, CallbackInfo ci)
@@ -68,9 +69,9 @@ public abstract class MinecraftClientMixin
 		LeftClickHandler.handleIsUsingItemAttack(this::doAttack, ci);
 	}
 
-	@Inject(method = "doAttack()V", at = @At("HEAD"), cancellable = true)
-	private void doAttack(CallbackInfo ci)
+	@Inject(method = "doAttack()Z", at = @At("HEAD"), cancellable = true)
+	private void doAttack(CallbackInfoReturnable<Boolean> cir)
 	{
-		LeftClickHandler.doAttack(ci);
+		LeftClickHandler.doAttack(cir);
 	}
 }
