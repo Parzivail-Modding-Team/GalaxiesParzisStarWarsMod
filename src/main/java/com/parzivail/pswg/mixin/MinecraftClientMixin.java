@@ -41,7 +41,7 @@ public abstract class MinecraftClientMixin
 	public ClientPlayerInteractionManager interactionManager;
 
 	@Shadow
-	protected abstract void doAttack();
+	protected abstract boolean doAttack();
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initTail(RunArgs args, CallbackInfo ci)
