@@ -32,9 +32,11 @@ public class ResourceManagerUtil
 			resourceManager.registerReloader(reloader);
 
 			var list = new ArrayList<ResourcePack>();
-			ModResourcePackCreator.CLIENT_RESOURCE_PACK_PROVIDER.register(resourcePackProfile -> list.add(resourcePackProfile.createResourcePack()));
+			new ModResourcePackCreator(type).register(resourcePackProfile -> list.add(resourcePackProfile.createResourcePack()));
 
-			resourceManager.reload(Util.getMainWorkerExecutor(), Util.getMainWorkerExecutor(), CompletableFuture.completedFuture(Unit.INSTANCE), list);
+			resourceManager.reload(Util.getMainWorkerExecutor(), Util.getMainWorkerExecutor(), CompletableFuture.completedFuture(Unit.INSTANCE), list)
+			               .whenComplete()
+			               .join();
 		}
 	}
 }
