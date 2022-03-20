@@ -22,6 +22,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftClient.class)
 @Environment(EnvType.CLIENT)
@@ -68,9 +69,9 @@ public abstract class MinecraftClientMixin
 		LeftClickHandler.handleIsUsingItemAttack(this::doAttack, ci);
 	}
 
-	@Inject(method = "doAttack()V", at = @At("HEAD"), cancellable = true)
-	private void doAttack(CallbackInfo ci)
+	@Inject(method = "doAttack()Z", at = @At("HEAD"), cancellable = true)
+	private void doAttack(CallbackInfoReturnable<Boolean> cir)
 	{
-		LeftClickHandler.doAttack(ci);
+		LeftClickHandler.doAttack(cir);
 	}
 }
