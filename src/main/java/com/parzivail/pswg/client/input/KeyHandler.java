@@ -38,16 +38,16 @@ public class KeyHandler
 		{
 			var controls = EnumSet.noneOf(ShipControls.class);
 
-			if (mc.options.keyForward.isPressed())
+			if (mc.options.forwardKey.isPressed())
 				controls.add(ShipControls.THROTTLE_UP);
 
-			if (mc.options.keyBack.isPressed())
+			if (mc.options.backKey.isPressed())
 				controls.add(ShipControls.THROTTLE_DOWN);
 
-			if (mc.options.keyRight.isPressed())
+			if (mc.options.rightKey.isPressed())
 				controls.add(ShipControls.SPECIAL1);
 
-			if (mc.options.keyLeft.isPressed())
+			if (mc.options.leftKey.isPressed())
 				controls.add(ShipControls.SPECIAL2);
 
 			ship.acceptControlInput(controls);

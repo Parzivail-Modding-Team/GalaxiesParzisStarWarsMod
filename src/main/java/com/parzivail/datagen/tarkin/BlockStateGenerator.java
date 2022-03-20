@@ -4,7 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.block.enums.StairShape;
-import net.minecraft.data.client.model.*;
+import net.minecraft.data.client.*;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;

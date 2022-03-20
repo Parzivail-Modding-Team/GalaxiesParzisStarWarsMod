@@ -47,7 +47,7 @@ public class MoloShrubBlock extends PlantBlock implements Fertilizable
 	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos)
 	{
 		var block = floor.getBlock();
-		return BlockTags.SAND.contains(block) ||
+		return floor.isIn(BlockTags.SAND) ||
 		       block == SwgBlocks.Dirt.DesertLoam ||
 		       block == SwgBlocks.Salt.Caked ||
 		       block == Blocks.GRASS_BLOCK ||

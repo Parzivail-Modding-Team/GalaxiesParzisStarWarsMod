@@ -10,6 +10,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -85,11 +86,13 @@ public abstract class RecipeGenerator
 		if (o instanceof IJsonCraftingComponent)
 			return (IJsonCraftingComponent)o;
 
-		if (o instanceof ItemConvertible)
-			return new ItemConvertibleJsonCraftingComponent((ItemConvertible)o);
+		if (o instanceof ItemConvertible itemConvertible)
+			return new ItemConvertibleJsonCraftingComponent(itemConvertible);
 
-		if (o instanceof Tag.Identified<?>)
-			return new IngredientTag(((Tag.Identified<?>)o).getId());
+		if  (o instanceof TagKey<?> tagKey)
+		{
+			return new IngredientTag(tagKey.id());
+		}
 
 		throw new IllegalArgumentException();
 	}

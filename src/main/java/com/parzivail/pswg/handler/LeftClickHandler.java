@@ -13,6 +13,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 public class LeftClickHandler
 {
@@ -31,7 +32,7 @@ public class LeftClickHandler
 		// Repeated events
 		if (stack.getItem() instanceof ILeftClickConsumer lcc)
 		{
-			if (!minecraft.options.keyAttack.isPressed())
+			if (!minecraft.options.attackKey.isPressed())
 				return;
 
 			ci.cancel();
@@ -58,7 +59,7 @@ public class LeftClickHandler
 		if (stack.getItem() instanceof ILeftClickConsumer)
 		{
 			if (minecraft.player.isUsingItem())
-				while (minecraft.options.keyAttack.wasPressed())
+				while (minecraft.options.attackKey.wasPressed())
 					doAttackDelegate.run();
 		}
 	}
@@ -75,7 +76,7 @@ public class LeftClickHandler
 		return true;
 	}
 
-	public static void doAttack(CallbackInfo ci)
+	public static void doAttack(CallbackInfoReturnable<Boolean> cir)
 	{
 		var minecraft = MinecraftClient.getInstance();
 
@@ -84,7 +85,7 @@ public class LeftClickHandler
 		var ship = ShipEntity.getShip(minecraft.player);
 		if (ship != null && ship.acceptLeftClick(minecraft.player))
 		{
-			ci.cancel();
+			cir.setReturnValue(false);
 			return;
 		}
 
@@ -93,8 +94,8 @@ public class LeftClickHandler
 		// Single-fire events
 		if (stack.getItem() instanceof ILeftClickConsumer lcc)
 		{
-			useItemLeft(ci, minecraft.player, lcc);
-			ci.cancel();
+			useItemLeft(cir, minecraft.player, lcc);
+			cir.setReturnValue(false);
 		}
 	}
 }

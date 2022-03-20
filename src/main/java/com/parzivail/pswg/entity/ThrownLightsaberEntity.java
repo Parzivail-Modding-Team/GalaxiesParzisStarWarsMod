@@ -17,7 +17,7 @@ import net.minecraft.world.World;
 public class ThrownLightsaberEntity extends ThrownEntity implements IPrecisionEntity
 {
 	private static final TrackedData<Byte> LIFE = DataTracker.registerData(ThrownLightsaberEntity.class, TrackedDataHandlerRegistry.BYTE);
-	private static final TrackedData<NbtCompound> LIGHTSABER_DATA = DataTracker.registerData(ThrownLightsaberEntity.class, TrackedDataHandlerRegistry.TAG_COMPOUND);
+	private static final TrackedData<NbtCompound> LIGHTSABER_DATA = DataTracker.registerData(ThrownLightsaberEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
 
 	public ThrownLightsaberEntity(EntityType<? extends ThrownLightsaberEntity> type, World world)
 	{

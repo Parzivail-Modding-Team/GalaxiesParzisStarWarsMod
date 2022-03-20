@@ -19,7 +19,6 @@ import com.parzivail.util.block.InvertedLampBlock;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
-import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
@@ -946,13 +945,10 @@ public class Tarkin
 	private static void generateItems(List<BuiltAsset> assets)
 	{
 		ItemGenerator.tool(SwgItems.Axe.Durasteel)
-		             .tag(FabricToolTags.AXES)
 		             .build(assets);
 		ItemGenerator.tool(SwgItems.Axe.Titanium)
-		             .tag(FabricToolTags.AXES)
 		             .build(assets);
 		ItemGenerator.tool(SwgItems.Axe.Beskar)
-		             .tag(FabricToolTags.AXES)
 		             .build(assets);
 
 		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
@@ -1065,13 +1061,10 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.MobDrops.ToughHide).build(assets);
 
 		ItemGenerator.tool(SwgItems.Hoe.Durasteel)
-		             .tag(FabricToolTags.HOES)
 		             .build(assets);
 		ItemGenerator.tool(SwgItems.Hoe.Titanium)
-		             .tag(FabricToolTags.HOES)
 		             .build(assets);
 		ItemGenerator.tool(SwgItems.Hoe.Beskar)
-		             .tag(FabricToolTags.HOES)
 		             .build(assets);
 
 		ItemGenerator.basic(SwgItems.Ingot.Beskar).build(assets);
@@ -1110,23 +1103,17 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.RawOre.Titanium).build(assets);
 
 		ItemGenerator.tool(SwgItems.Pickaxe.Durasteel)
-		             .tag(FabricToolTags.PICKAXES)
 		             .build(assets);
 		ItemGenerator.tool(SwgItems.Pickaxe.Titanium)
-		             .tag(FabricToolTags.PICKAXES)
 		             .build(assets);
 		ItemGenerator.tool(SwgItems.Pickaxe.Beskar)
-		             .tag(FabricToolTags.PICKAXES)
 		             .build(assets);
 
 		ItemGenerator.tool(SwgItems.Shovel.Durasteel)
-		             .tag(FabricToolTags.SHOVELS)
 		             .build(assets);
 		ItemGenerator.tool(SwgItems.Shovel.Titanium)
-		             .tag(FabricToolTags.SHOVELS)
 		             .build(assets);
 		ItemGenerator.tool(SwgItems.Shovel.Beskar)
-		             .tag(FabricToolTags.SHOVELS)
 		             .build(assets);
 
 		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);

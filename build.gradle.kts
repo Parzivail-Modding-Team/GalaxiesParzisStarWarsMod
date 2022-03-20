@@ -95,11 +95,11 @@ dependencies {
 	modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
 
 	// CCA Base
-	modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${cca_version}")
-	include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${cca_version}")
+	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
+	include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
 	// CCA Entity
-	modImplementation("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${cca_version}")
-	include("io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${cca_version}")
+	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}")
+	include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${cca_version}")
 
 	// Cloth Config
 	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
