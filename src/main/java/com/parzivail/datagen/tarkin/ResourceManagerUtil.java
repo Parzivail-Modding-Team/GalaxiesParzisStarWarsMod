@@ -1,12 +1,11 @@
 package com.parzivail.datagen.tarkin;
 
-import com.parzivail.util.data.IExternalReloadResourceManager;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
-import net.minecraft.resource.ReloadableResourceManagerImpl;
-import net.minecraft.resource.ResourceReloader;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.profiler.DummyProfiler;
+import net.minecraft.resource.*;
+import net.minecraft.util.Unit;
+import net.minecraft.util.Util;
 
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 public class ResourceManagerUtil
@@ -26,12 +25,16 @@ public class ResourceManagerUtil
 		}
 	}
 
-	public static <T> void forceReload(IExternalReloadResourceManager<T> reloader, ResourceType type)
+	public static <T> void forceReload(SinglePreparationResourceReloader<T> reloader, ResourceType type)
 	{
-		var resourceManager = new ReloadableResourceManagerImpl(type);
-		ModResourcePackCreator.CLIENT_RESOURCE_PACK_PROVIDER.register(resourcePackProfile -> {
-			resourceManager.addPack(resourcePackProfile.createResourcePack());
-		});
-		reloader.apply(reloader.prepare(resourceManager, DummyProfiler.INSTANCE), resourceManager, DummyProfiler.INSTANCE);
+		try (var resourceManager = new ReloadableResourceManagerImpl(type))
+		{
+			resourceManager.registerReloader(reloader);
+
+			var list = new ArrayList<ResourcePack>();
+			ModResourcePackCreator.CLIENT_RESOURCE_PACK_PROVIDER.register(resourcePackProfile -> list.add(resourcePackProfile.createResourcePack()));
+
+			resourceManager.reload(Util.getMainWorkerExecutor(), Util.getMainWorkerExecutor(), CompletableFuture.completedFuture(Unit.INSTANCE), list);
+		}
 	}
 }
