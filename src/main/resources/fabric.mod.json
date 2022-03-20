@@ -43,7 +43,7 @@
 		"fabric": "*",
 		"fabricloader": ">=0.10.0",
 		"libzoomer": "*",
-		"minecraft": "1.18.x"
+		"minecraft": "~1.18.2"
 	},
 	"breaks": {
 		"optifabric": "*"
