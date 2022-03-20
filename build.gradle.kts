@@ -76,6 +76,7 @@ val cloth_config_version: String by project.ext
 val modmenu_version: String by project.ext
 val rei_version: String by project.ext
 val libzoomer_version: String by project.ext
+val trinkets_version: String by project.ext
 
 base.archivesName.set(archives_base_name)
 version = getVersionName()
@@ -117,6 +118,10 @@ dependencies {
 	// LibZoomer
 	modImplementation("io.github.ennuil:LibZoomer:${libzoomer_version}")
 	include("io.github.ennuil:LibZoomer:${libzoomer_version}")
+
+	// Trinkets
+	modImplementation("dev.emi:trinkets:${trinkets_version}")
+	include("dev.emi:trinkets:${trinkets_version}")
 }
 
 tasks.processResources {
