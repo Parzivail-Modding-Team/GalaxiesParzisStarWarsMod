@@ -21,14 +21,14 @@ public class RegistryHelper
 		}
 	}
 
-	public static class BlockStairsSlabVariants
+	public static class BlockStairsSlabWallVariants
 	{
 		public final Block block;
 		public final StairsBlock stairs;
 		public final SlabBlock slab;
 		public final WallBlock wall;
 
-		public BlockStairsSlabVariants(Block block)
+		public BlockStairsSlabWallVariants(Block block)
 		{
 			this.block = block;
 			this.stairs = new PStairsBlock(block.getDefaultState(), AbstractBlock.Settings.copy(block));

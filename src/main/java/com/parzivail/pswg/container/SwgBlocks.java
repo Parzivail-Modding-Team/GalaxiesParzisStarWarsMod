@@ -315,7 +315,7 @@ public class SwgBlocks
 		public static final Block ImperialCutoutCaged = new PillarBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 
 		@RegistryName("black_imperial_panel_blank")
-		public static final Block BlackImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final RegistryHelper.BlockStairsSlabWallVariants BlackImperialPanelBlank = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
 		@RegistryName("black_imperial_panel_bordered")
 		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_split")
@@ -331,7 +331,7 @@ public class SwgBlocks
 		@RegistryName("mossy_large_imperial_plating")
 		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
-		public static final Block GrayImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final RegistryHelper.BlockStairsSlabWallVariants GrayImperialPanelBlank = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
@@ -533,11 +533,11 @@ public class SwgBlocks
 		public static final Block DesertSediment = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
 
 		@RegistryName("pourstone")
-		public static final RegistryHelper.BlockStairsSlabVariants Pourstone = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final RegistryHelper.BlockStairsSlabWallVariants Pourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("smooth_pourstone")
-		public static final RegistryHelper.BlockStairsSlabVariants SmoothPourstone = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final RegistryHelper.BlockStairsSlabWallVariants SmoothPourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("cracked_pourstone")
-		public static final RegistryHelper.BlockStairsSlabVariants CrackedPourstone = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
+		public static final RegistryHelper.BlockStairsSlabWallVariants CrackedPourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
 
 		@RegistryName("pourstone")
 		public static final RegistryHelper.DyedBlockVariants DyedPourstone = new RegistryHelper.DyedBlockVariants(color -> new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
@@ -549,13 +549,13 @@ public class SwgBlocks
 		public static final RegistryHelper.DyedBlockVariants DyedPourstoneWall = new RegistryHelper.DyedBlockVariants(color -> new WallBlock(AbstractBlock.Settings.copy(DyedPourstone.get(color))));
 
 		@RegistryName("massassi_stone")
-		public static final RegistryHelper.BlockStairsSlabVariants Massassi = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.BlockStairsSlabWallVariants Massassi = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_massassi_stone")
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_massassi_stone_slab")
 		public static final SlabBlock MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
 		@RegistryName("massassi_stone_bricks")
-		public static final RegistryHelper.BlockStairsSlabVariants MassassiBricks = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.BlockStairsSlabWallVariants MassassiBricks = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		//@RegistryName("chiseled_massassi_stone_bricks")
 		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 
@@ -564,16 +564,16 @@ public class SwgBlocks
 		@RegistryName("mossy_smooth_massassi_stone_slab")
 		public static final SlabBlock MossyMassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MossyMassassiSmooth));
 		@RegistryName("mossy_massassi_stone_bricks")
-		public static final RegistryHelper.BlockStairsSlabVariants MossyMassassiBricks = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.BlockStairsSlabWallVariants MossyMassassiBricks = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 
 		@RegistryName("ilum_stone")
-		public static final RegistryHelper.BlockStairsSlabVariants Ilum = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.BlockStairsSlabWallVariants Ilum = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_ilum_stone")
 		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_ilum_stone_slab")
 		public static final SlabBlock IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
 		@RegistryName("ilum_stone_bricks")
-		public static final RegistryHelper.BlockStairsSlabVariants IlumBricks = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.BlockStairsSlabWallVariants IlumBricks = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("chiseled_ilum_stone_bricks")
 		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 	}
@@ -581,7 +581,7 @@ public class SwgBlocks
 	public static void register()
 	{
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Block.class, SwgBlocks::registerBlock);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.BlockStairsSlabVariants.class, SwgBlocks::registerBlockStabStairs);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.BlockStairsSlabWallVariants.class, SwgBlocks::registerBlockStabStairs);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedBlockVariants.class, SwgBlocks::registerDyedBlocks);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
@@ -599,7 +599,7 @@ public class SwgBlocks
 		}
 	}
 
-	private static void registerBlockStabStairs(RegistryHelper.BlockStairsSlabVariants t, Identifier identifier, boolean b)
+	private static void registerBlockStabStairs(RegistryHelper.BlockStairsSlabWallVariants t, Identifier identifier, boolean b)
 	{
 		registerBlock(t.block, identifier, false);
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), false);

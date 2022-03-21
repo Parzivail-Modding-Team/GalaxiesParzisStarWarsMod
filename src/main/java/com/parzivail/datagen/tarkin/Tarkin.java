@@ -1208,12 +1208,8 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelBlank)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
+		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Panel.BlackImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Panel.GrayImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
 
 		//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutout)
 		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1419,32 +1415,14 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MassassiSmoothSlab, Resources.id("block/smooth_massassi_stone_slab_double"), Resources.id("block/smooth_massassi_stone"), Resources.id("block/smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks.block).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiBricks.slab, Resources.id("block/massassi_stone_bricks"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBricks.stairs, Resources.id("block/massassi_stone_bricks"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.wall(SwgBlocks.Stone.MassassiBricks.wall, Resources.id("block/massassi_stone_bricks"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
+		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Stone.MassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
 		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiSmooth).build(assets);
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MossyMassassiSmoothSlab, Resources.id("block/mossy_smooth_massassi_stone_slab_double"), Resources.id("block/mossy_smooth_massassi_stone"), Resources.id("block/mossy_smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiBricks.block).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MossyMassassiBricks.slab, Resources.id("block/mossy_massassi_stone_bricks"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MossyMassassiBricks.stairs, Resources.id("block/mossy_massassi_stone_bricks"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.wall(SwgBlocks.Stone.MossyMassassiBricks.wall, Resources.id("block/mossy_massassi_stone_bricks"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
+		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Stone.MossyMassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1520,16 +1498,7 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.IlumSmoothSlab, Resources.id("block/smooth_ilum_stone_slab_double"), Resources.id("block/smooth_ilum_stone"), Resources.id("block/smooth_ilum_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.IlumBricks.block).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.IlumBricks.slab, Resources.id("block/ilum_stone_bricks"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.IlumBricks.stairs, Resources.id("block/ilum_stone_bricks"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.wall(SwgBlocks.Stone.IlumBricks.wall, Resources.id("block/ilum_stone_bricks"))
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
+		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Stone.IlumBricks, BlockTags.PICKAXE_MINEABLE, assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumChiseledBricks)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);

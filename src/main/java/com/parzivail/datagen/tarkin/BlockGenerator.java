@@ -1,5 +1,6 @@
 package com.parzivail.datagen.tarkin;
 
+import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.util.block.IPicklingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateSupplier;
@@ -228,6 +229,28 @@ public class BlockGenerator
 	public static BlockGenerator basicDropFortuneBonus(Block block, Item item)
 	{
 		return BlockGenerator.basic(block).lootTable(block1 -> LootTableFile.singleFortuneBonus(block1, item));
+	}
+
+	public static void basicBlockStairsSlabVariants(RegistryHelper.BlockStairsSlabWallVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	{
+		blockStairsSlabVariants(variants, BlockGenerator::basic, miningTag, assets);
+	}
+
+	public static void blockStairsSlabVariants(RegistryHelper.BlockStairsSlabWallVariants variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	{
+		var id = AssetGenerator.getTextureName(variants.block);
+		generatorFunction.apply(variants.block)
+		              .blockTag(miningTag)
+		              .build(assets);
+		BlockGenerator.slab(variants.slab, id)
+		              .blockTag(miningTag)
+		              .build(assets);
+		BlockGenerator.stairs(variants.stairs, id)
+		              .blockTag(miningTag)
+		              .build(assets);
+		BlockGenerator.wall(variants.wall, id)
+		              .blockTag(miningTag)
+		              .build(assets);
 	}
 
 	@FunctionalInterface
