@@ -6,6 +6,7 @@ import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -155,6 +156,16 @@ public class BlockGenerator
 		return basic(block)
 				.state((b, modelId) -> BlockStateGenerator.slab(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.slab(b, topTexture, sideTexture));
+	}
+
+	static BlockGenerator wall(Block block, Identifier texture)
+	{
+		var id = AssetGenerator.getTextureName(block);
+		return blockNoModelDefaultDrops(block)
+				.state((b, modelId) -> BlockStateGenerator.wall(block, IdentifierUtil.concat(id, "_post"), IdentifierUtil.concat(id, "_side"), IdentifierUtil.concat(id, "_side_tall")))
+				.itemModel(b -> ModelFile.wallInventory(b, texture))
+				.models(b -> ModelFile.wall(b, texture))
+				.blockTag(BlockTags.WALLS);
 	}
 
 	static BlockGenerator slabUniqueDouble(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)

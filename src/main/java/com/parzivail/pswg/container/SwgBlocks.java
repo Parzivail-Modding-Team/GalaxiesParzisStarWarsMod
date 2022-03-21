@@ -540,6 +540,8 @@ public class SwgBlocks
 		public static final RegistryHelper.DyedBlockVariants DyedPourstoneStairs = new RegistryHelper.DyedBlockVariants(color -> new PStairsBlock(DyedPourstone.get(color).getDefaultState(), AbstractBlock.Settings.copy(DyedPourstone.get(color))));
 		@RegistryName("pourstone_slab")
 		public static final RegistryHelper.DyedBlockVariants DyedPourstoneSlab = new RegistryHelper.DyedBlockVariants(color -> new SlabBlock(AbstractBlock.Settings.copy(DyedPourstone.get(color))));
+		@RegistryName("pourstone_wall")
+		public static final RegistryHelper.DyedBlockVariants DyedPourstoneWall = new RegistryHelper.DyedBlockVariants(color -> new WallBlock(AbstractBlock.Settings.copy(DyedPourstone.get(color))));
 
 		@RegistryName("massassi_stone")
 		public static final RegistryHelper.BlockStairsSlabVariants Massassi = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
@@ -597,6 +599,7 @@ public class SwgBlocks
 		registerBlock(t.block, identifier, false);
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), false);
 		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), false);
+		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), false);
 	}
 
 	private static void registerDyedBlocks(RegistryHelper.DyedBlockVariants t, Identifier identifier, boolean b)

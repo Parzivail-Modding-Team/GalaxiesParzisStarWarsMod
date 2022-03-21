@@ -3,10 +3,7 @@ package com.parzivail.pswg.container.registry;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.block.PStairsBlock;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.SlabBlock;
-import net.minecraft.block.StairsBlock;
+import net.minecraft.block.*;
 import net.minecraft.util.DyeColor;
 
 import java.lang.reflect.Modifier;
@@ -29,12 +26,14 @@ public class RegistryHelper
 		public final Block block;
 		public final StairsBlock stairs;
 		public final SlabBlock slab;
+		public final WallBlock wall;
 
 		public BlockStairsSlabVariants(Block block)
 		{
 			this.block = block;
 			this.stairs = new PStairsBlock(block.getDefaultState(), AbstractBlock.Settings.copy(block));
 			this.slab = new SlabBlock(AbstractBlock.Settings.copy(block));
+			this.wall = new WallBlock(AbstractBlock.Settings.copy(block));
 		}
 	}
 

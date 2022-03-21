@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.enums.BlockHalf;
 import net.minecraft.block.enums.SlabType;
 import net.minecraft.block.enums.StairShape;
+import net.minecraft.block.enums.WallShape;
 import net.minecraft.data.client.*;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -129,6 +130,62 @@ public class BlockStateGenerator
 		                                                                               .register(SlabType.BOTTOM, BlockStateVariant.create().put(VariantSettings.MODEL, bottomModelId))
 		                                                                               .register(SlabType.TOP, BlockStateVariant.create().put(VariantSettings.MODEL, topModelId))
 		                                                                               .register(SlabType.DOUBLE, BlockStateVariant.create().put(VariantSettings.MODEL, fullModelId)));
+	}
+
+	public static BlockStateSupplier wall(Block block, Identifier postModelId, Identifier lowSideModelId, Identifier tallSideModelId)
+	{
+		return MultipartBlockStateSupplier.create(block)
+		                                  .with(When.create().set(Properties.UP, true), BlockStateVariant.create().put(VariantSettings.MODEL, postModelId))
+		                                  .with(
+				                                  When.create().set(Properties.NORTH_WALL_SHAPE, WallShape.LOW),
+				                                  BlockStateVariant.create().put(VariantSettings.MODEL, lowSideModelId).put(VariantSettings.UVLOCK, true)
+		                                  )
+		                                  .with(
+				                                  When.create().set(Properties.EAST_WALL_SHAPE, WallShape.LOW),
+				                                  BlockStateVariant.create()
+				                                                   .put(VariantSettings.MODEL, lowSideModelId)
+				                                                   .put(VariantSettings.Y, VariantSettings.Rotation.R90)
+				                                                   .put(VariantSettings.UVLOCK, true)
+		                                  )
+		                                  .with(
+				                                  When.create().set(Properties.SOUTH_WALL_SHAPE, WallShape.LOW),
+				                                  BlockStateVariant.create()
+				                                                   .put(VariantSettings.MODEL, lowSideModelId)
+				                                                   .put(VariantSettings.Y, VariantSettings.Rotation.R180)
+				                                                   .put(VariantSettings.UVLOCK, true)
+		                                  )
+		                                  .with(
+				                                  When.create().set(Properties.WEST_WALL_SHAPE, WallShape.LOW),
+				                                  BlockStateVariant.create()
+				                                                   .put(VariantSettings.MODEL, lowSideModelId)
+				                                                   .put(VariantSettings.Y, VariantSettings.Rotation.R270)
+				                                                   .put(VariantSettings.UVLOCK, true)
+		                                  )
+		                                  .with(
+				                                  When.create().set(Properties.NORTH_WALL_SHAPE, WallShape.TALL),
+				                                  BlockStateVariant.create().put(VariantSettings.MODEL, tallSideModelId).put(VariantSettings.UVLOCK, true)
+		                                  )
+		                                  .with(
+				                                  When.create().set(Properties.EAST_WALL_SHAPE, WallShape.TALL),
+				                                  BlockStateVariant.create()
+				                                                   .put(VariantSettings.MODEL, tallSideModelId)
+				                                                   .put(VariantSettings.Y, VariantSettings.Rotation.R90)
+				                                                   .put(VariantSettings.UVLOCK, true)
+		                                  )
+		                                  .with(
+				                                  When.create().set(Properties.SOUTH_WALL_SHAPE, WallShape.TALL),
+				                                  BlockStateVariant.create()
+				                                                   .put(VariantSettings.MODEL, tallSideModelId)
+				                                                   .put(VariantSettings.Y, VariantSettings.Rotation.R180)
+				                                                   .put(VariantSettings.UVLOCK, true)
+		                                  )
+		                                  .with(
+				                                  When.create().set(Properties.WEST_WALL_SHAPE, WallShape.TALL),
+				                                  BlockStateVariant.create()
+				                                                   .put(VariantSettings.MODEL, tallSideModelId)
+				                                                   .put(VariantSettings.Y, VariantSettings.Rotation.R270)
+				                                                   .put(VariantSettings.UVLOCK, true)
+		                                  );
 	}
 
 	public static BlockStateSupplier stairs(Block block, Identifier innerModelId, Identifier regularModelId, Identifier outerModelId)

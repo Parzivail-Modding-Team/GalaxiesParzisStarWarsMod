@@ -154,6 +154,29 @@ public class ModelFile
 		);
 	}
 
+	public static ModelFile wallInventory(Block block, Identifier texture)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/wall_inventory"))
+				.texture("wall", texture);
+	}
+
+	public static Collection<ModelFile> wall(Block block, Identifier texture)
+	{
+		var id = AssetGenerator.getRegistryName(block);
+		return Arrays.asList(
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_post"), new Identifier("block/template_wall_post"))
+						.texture("wall", texture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_side"), new Identifier("block/template_wall_side"))
+						.texture("wall", texture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_side_tall"), new Identifier("block/template_wall_side_tall"))
+						.texture("wall", texture)
+		);
+	}
+
 	public static Collection<ModelFile> cropStages(Block block, IntProperty property)
 	{
 		var id = AssetGenerator.getRegistryName(block);
