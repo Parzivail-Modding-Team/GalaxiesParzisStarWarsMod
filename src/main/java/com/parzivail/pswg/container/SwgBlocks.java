@@ -318,9 +318,13 @@ public class SwgBlocks
 		@RegistryName("black_imperial_panel_thin_bordered")
 		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("external_imperial_plating")
-		public static final SelfConnectingBlock ExternalImperialPlatingConnectedBorder = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock ExternalImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("large_imperial_plating")
-		public static final SelfConnectingBlock LargeImperialPlatingConnectedBorder = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock LargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		@RegistryName("rusted_large_imperial_plating")
+		public static final SelfConnectingBlock RustedLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		@RegistryName("mossy_large_imperial_plating")
+		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
 		public static final Block GrayImperialPanelBlank = new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_pattern_1")
@@ -329,18 +333,38 @@ public class SwgBlocks
 		public static final PillarBlock GrayImperialPanelPattern2 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_3")
 		public static final PillarBlock GrayImperialPanelPattern3 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_3")
+		public static final PillarBlock RustedGrayImperialPanelPattern3 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_3")
+		public static final PillarBlock MossyGrayImperialPanelPattern3 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_4")
 		public static final PillarBlock GrayImperialPanelPattern4 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_4")
+		public static final PillarBlock RustedGrayImperialPanelPattern4 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_4")
+		public static final PillarBlock MossyGrayImperialPanelPattern4 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_5")
 		public static final PillarBlock GrayImperialPanelPattern5 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_5")
+		public static final PillarBlock RustedGrayImperialPanelPattern5 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_5")
+		public static final PillarBlock MossyGrayImperialPanelPattern5 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_6")
 		public static final PillarBlock GrayImperialPanelPattern6 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_6")
+		public static final PillarBlock RustedGrayImperialPanelPattern6 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_6")
+		public static final PillarBlock MossyGrayImperialPanelPattern6 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_7")
 		public static final PillarBlock GrayImperialPanelPattern7 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_8")
 		public static final PillarBlock GrayImperialPanelPattern8 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_9")
 		public static final PillarBlock GrayImperialPanelPattern9 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_9")
+		public static final PillarBlock RustedGrayImperialPanelPattern9 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_9")
+		public static final PillarBlock MossyGrayImperialPanelPattern9 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_10")
 		public static final PillarBlock GrayImperialPanelPattern10 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_11")

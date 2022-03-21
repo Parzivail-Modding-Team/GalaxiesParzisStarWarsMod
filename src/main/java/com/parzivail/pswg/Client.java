@@ -171,8 +171,10 @@ public class Client implements ClientModInitializer
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelBordered, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSplit, true, true, true, null, Resources.id("block/black_imperial_panel_split_center"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelThinBordered, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.ExternalImperialPlatingConnectedBorder);
-		ModelRegistry.registerConnected(SwgBlocks.Panel.LargeImperialPlatingConnectedBorder);
+		ModelRegistry.registerConnected(SwgBlocks.Panel.ExternalImperialPlatingConnected);
+		ModelRegistry.registerConnected(SwgBlocks.Panel.LargeImperialPlatingConnected);
+		ModelRegistry.registerConnected(SwgBlocks.Panel.RustedLargeImperialPlatingConnected);
+		ModelRegistry.registerConnected(SwgBlocks.Panel.MossyLargeImperialPlatingConnected);
 
 		ModelRegistry.registerConnected(SwgBlocks.Panel.RustedMetal);
 
