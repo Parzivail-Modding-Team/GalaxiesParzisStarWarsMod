@@ -1194,6 +1194,20 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
+		BlockGenerator.column(SwgBlocks.Panel.ImperialCutoutPipes, Resources.id("block/imperial_cutout_pipes_face"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.ImperialCutoutCagedPipes, Resources.id("block/imperial_cutout_pipes_face"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.column(SwgBlocks.Panel.ImperialCutout, Resources.id("block/imperial_cutout_face"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Panel.ImperialCutoutCaged, Resources.id("block/imperial_cutout_face"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
 		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBlank)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
