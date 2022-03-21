@@ -3,6 +3,7 @@ package com.parzivail.util.client;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.math.SpriteSheetPoint;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ConnectingBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
@@ -119,45 +120,42 @@ public class ConnectedTextureHelper
 
 		var connections = 0;
 
-		if (up.isPresent() && shouldConnect(blockView, pos, pos.offset(up.get())))
+		if (hasConnection(block, up))
 			connections |= CONNECTED_UP;
 
-		if (down.isPresent() && shouldConnect(blockView, pos, pos.offset(down.get())))
+		if (hasConnection(block, down))
 			connections |= CONNECTED_DOWN;
 
-		if (left.isPresent() && shouldConnect(blockView, pos, pos.offset(left.get())))
+		if (hasConnection(block, left))
 			connections |= CONNECTED_LEFT;
 
-		if (right.isPresent() && shouldConnect(blockView, pos, pos.offset(right.get())))
+		if (hasConnection(block, right))
 			connections |= CONNECTED_RIGHT;
 
 		if (connections == 0) // Break early if no connections, don't need to check diagonal
 			return getPointFromConnections(connections);
 
-		if (up.isPresent() && left.isPresent() && shouldConnect(blockView, pos, pos.offset(up.get()).offset(left.get())))
+		if (up.isPresent() && hasConnection(block, up) && hasConnection(blockView.getBlockState(pos.offset(up.get())), left))
 			connections |= CONNECTED_DIAG_UPLEFT;
 
-		if (up.isPresent() && right.isPresent() && shouldConnect(blockView, pos, pos.offset(up.get()).offset(right.get())))
+		if (up.isPresent() && right.isPresent() && hasConnection(block, up) && hasConnection(blockView.getBlockState(pos.offset(up.get())), right))
 			connections |= CONNECTED_DIAG_UPRIGHT;
 
-		if (down.isPresent() && left.isPresent() && shouldConnect(blockView, pos, pos.offset(down.get()).offset(left.get())))
+		if (down.isPresent() && hasConnection(block, down) && hasConnection(blockView.getBlockState(pos.offset(down.get())), left))
 			connections |= CONNECTED_DIAG_DOWNLEFT;
 
-		if (down.isPresent() && right.isPresent() && shouldConnect(blockView, pos, pos.offset(down.get()).offset(right.get())))
+		if (down.isPresent() && hasConnection(block, down) && hasConnection(blockView.getBlockState(pos.offset(down.get())), right))
 			connections |= CONNECTED_DIAG_DOWNRIGHT;
 
 		return getPointFromConnections(connections);
 	}
 
-	private static boolean shouldConnect(BlockRenderView world, BlockPos a, BlockPos b)
+	private static boolean hasConnection(BlockState block, Optional<Direction> direction)
 	{
-		if (world == null)
+		if (direction.isEmpty())
 			return false;
-		return shouldConnect(world.getBlockState(a), world.getBlockState(b));
-	}
 
-	private static boolean shouldConnect(BlockState a, BlockState b)
-	{
-		return a.isOf(b.getBlock());
+		var prop = ConnectingBlock.FACING_PROPERTIES.get(direction.get());
+		return block.getBlock() instanceof ConnectingBlock && block.get(prop);
 	}
 }
