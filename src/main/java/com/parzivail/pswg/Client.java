@@ -216,6 +216,9 @@ public class Client implements ClientModInitializer
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.RedStainedImperial, RenderLayer.getTranslucent());
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.BlackStainedImperial, RenderLayer.getTranslucent());
 
+		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Vent.Imperial, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Vent.ImperialGrated, RenderLayer.getCutout());
+
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Leaves.Sequoia, RenderLayer.getCutoutMipped());
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Leaves.Japor, RenderLayer.getCutoutMipped());
 

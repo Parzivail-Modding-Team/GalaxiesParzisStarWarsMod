@@ -106,6 +106,15 @@ public class BlockGenerator
 		return basic(block).model(ModelFile::leaves);
 	}
 
+	static BlockGenerator trapdoor(Block block)
+	{
+		return basic(block)
+				.state(BlockStateGenerator::trapdoor)
+				.models(ModelFile::trapdoor)
+				.itemModel(block1 -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block1), "_bottom")))
+				.blockTag(BlockTags.TRAPDOORS);
+	}
+
 	static BlockGenerator column(Block block, Identifier topTexture)
 	{
 		return basic(block)

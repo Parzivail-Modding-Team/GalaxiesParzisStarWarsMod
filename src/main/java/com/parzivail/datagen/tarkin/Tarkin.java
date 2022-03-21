@@ -1511,6 +1511,13 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
+		BlockGenerator.trapdoor(SwgBlocks.Vent.Imperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.trapdoor(SwgBlocks.Vent.ImperialGrated)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
 		BlockGenerator.basic(SwgBlocks.Grate.ImperialOpaque1)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);

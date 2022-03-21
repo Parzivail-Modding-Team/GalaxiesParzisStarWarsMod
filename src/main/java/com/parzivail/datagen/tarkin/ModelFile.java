@@ -154,6 +154,23 @@ public class ModelFile
 		);
 	}
 
+	public static Collection<ModelFile> trapdoor(Block block)
+	{
+		var id = AssetGenerator.getRegistryName(block);
+		var texture = AssetGenerator.getTextureName(block);
+		return Arrays.asList(
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_bottom"), new Identifier("block/template_orientable_trapdoor_bottom"))
+						.texture("texture", texture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_open"), new Identifier("block/template_orientable_trapdoor_open"))
+						.texture("texture", texture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/template_orientable_trapdoor_top"))
+						.texture("texture", texture)
+		);
+	}
+
 	public static ModelFile wallInventory(Block block, Identifier texture)
 	{
 		return ModelFile

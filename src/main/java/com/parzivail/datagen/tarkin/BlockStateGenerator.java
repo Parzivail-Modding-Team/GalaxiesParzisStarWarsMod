@@ -82,6 +82,11 @@ public class BlockStateGenerator
 		};
 	}
 
+	public static BlockStateSupplier trapdoor(Block block, Identifier modelId)
+	{
+		return BlockStateModelGenerator.createOrientableTrapdoorBlockState(block, IdentifierUtil.concat(modelId, "_top"), IdentifierUtil.concat(modelId, "_bottom"), IdentifierUtil.concat(modelId, "_open"));
+	}
+
 	public static BlockStateSupplier column(Block block, Identifier modelId)
 	{
 		return VariantsBlockStateSupplier.create(block, BlockStateVariant.create().put(VariantSettings.MODEL, modelId)).coordinate(createAxisRotatedVariantMap());
