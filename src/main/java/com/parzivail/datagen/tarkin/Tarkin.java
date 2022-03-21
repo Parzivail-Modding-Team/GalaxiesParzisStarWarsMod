@@ -665,103 +665,6 @@ public class Tarkin
 		                               SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone)
 		                      .build(assets);
 
-		//Ilum Blocks
-		//Ilum Stone
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumStairs, 6))
-		                      .grid3x3("crafting_left",
-		                               SwgBlocks.Stone.Ilum, null, null,
-		                               SwgBlocks.Stone.Ilum, SwgBlocks.Stone.Ilum, null,
-		                               SwgBlocks.Stone.Ilum, SwgBlocks.Stone.Ilum, SwgBlocks.Stone.Ilum)
-		                      .grid3x3("crafting_right",
-		                               null, null, SwgBlocks.Stone.Ilum,
-		                               null, SwgBlocks.Stone.Ilum, SwgBlocks.Stone.Ilum,
-		                               SwgBlocks.Stone.Ilum, SwgBlocks.Stone.Ilum, SwgBlocks.Stone.Ilum)
-		                      .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumSlab, 6))
-		                      .grid3x1(null,
-		                               SwgBlocks.Stone.Ilum, SwgBlocks.Stone.Ilum, SwgBlocks.Stone.Ilum)
-		                      .build(assets);
-
-		//Smooth Ilum Stone
-		RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Stone.Ilum, SwgBlocks.Stone.IlumSmooth).experience(0.1F)
-		                       .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumSmoothSlab, 6))
-		                      .grid3x1(null,
-		                               SwgBlocks.Stone.IlumSmooth, SwgBlocks.Stone.IlumSmooth, SwgBlocks.Stone.IlumSmooth)
-		                      .build(assets);
-
-		//Ilum Stone Bricks
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumBricks, 4))
-		                      .fill2x2(null, SwgBlocks.Stone.Ilum)
-		                      .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumBrickStairs, 6))
-		                      .grid3x3("crafting_left",
-		                               SwgBlocks.Stone.IlumBricks, null, null,
-		                               SwgBlocks.Stone.IlumBricks, SwgBlocks.Stone.IlumBricks, null,
-		                               SwgBlocks.Stone.IlumBricks, SwgBlocks.Stone.IlumBricks, SwgBlocks.Stone.IlumBricks)
-		                      .grid3x3("crafting_right",
-		                               null, null, SwgBlocks.Stone.IlumBricks,
-		                               null, SwgBlocks.Stone.IlumBricks, SwgBlocks.Stone.IlumBricks,
-		                               SwgBlocks.Stone.IlumBricks, SwgBlocks.Stone.IlumBricks, SwgBlocks.Stone.IlumBricks)
-		                      .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumBrickSlab, 6))
-		                      .grid3x1(null,
-		                               SwgBlocks.Stone.IlumBricks, SwgBlocks.Stone.IlumBricks, SwgBlocks.Stone.IlumBricks)
-		                      .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumChiseledBricks))
-		                      .fill1x2(null, SwgBlocks.Stone.IlumBrickSlab)
-		                      .build(assets);
-
-		//Massassi Blocks
-		//Massassi Stone
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiStairs, 6))
-		                      .grid3x3("crafting_left",
-		                               SwgBlocks.Stone.Massassi, null, null,
-		                               SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi, null,
-		                               SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi)
-		                      .grid3x3("crafting_right",
-		                               null, null, SwgBlocks.Stone.Massassi,
-		                               null, SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi,
-		                               SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi)
-		                      .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiSlab, 6))
-		                      .grid3x1(null,
-		                               SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi, SwgBlocks.Stone.Massassi)
-		                      .build(assets);
-		//Smooth Massassi Stone
-		RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Stone.Massassi, SwgBlocks.Stone.MassassiSmooth).experience(0.1F)
-		                       .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiSmoothSlab, 6))
-		                      .grid3x1(null,
-		                               SwgBlocks.Stone.MassassiSmooth, SwgBlocks.Stone.MassassiSmooth, SwgBlocks.Stone.MassassiSmooth)
-		                      .build(assets);
-		//Massassi Stone Bricks
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiBricks, 4))
-		                      .fill2x2(null, SwgBlocks.Stone.Massassi)
-		                      .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiBrickStairs, 6))
-		                      .grid3x3("crafting_left",
-		                               SwgBlocks.Stone.MassassiBricks, null, null,
-		                               SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks, null,
-		                               SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks)
-		                      .grid3x3("crafting_right",
-		                               null, null, SwgBlocks.Stone.MassassiBricks,
-		                               null, SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks,
-		                               SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks)
-		                      .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiBrickSlab, 6))
-		                      .grid3x1(null,
-		                               SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks, SwgBlocks.Stone.MassassiBricks)
-		                      .build(assets);
 
 		//RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiChiseledBricks))
 		//                     .fill1x2(null, SwgBlocks.Stone.MassassiBrickSlab)
@@ -1486,24 +1389,24 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Massassi)
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Massassi.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiSlab, Resources.id("block/massassi_stone"))
+		BlockGenerator.slab(SwgBlocks.Stone.Massassi.slab, Resources.id("block/massassi_stone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiStairs, Resources.id("block/massassi_stone"))
+		BlockGenerator.stairs(SwgBlocks.Stone.Massassi.stairs, Resources.id("block/massassi_stone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.MassassiSmooth).build(assets);
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MassassiSmoothSlab, Resources.id("block/smooth_massassi_stone_slab_double"), Resources.id("block/smooth_massassi_stone"), Resources.id("block/smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MassassiBrickSlab, Resources.id("block/massassi_stone_bricks"))
+		BlockGenerator.basic(SwgBlocks.Stone.MassassiBricks.block).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MassassiBricks.slab, Resources.id("block/massassi_stone_bricks"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBrickStairs, Resources.id("block/massassi_stone_bricks"))
+		BlockGenerator.stairs(SwgBlocks.Stone.MassassiBricks.stairs, Resources.id("block/massassi_stone_bricks"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
@@ -1512,39 +1415,39 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MossyMassassiSmoothSlab, Resources.id("block/mossy_smooth_massassi_stone_slab_double"), Resources.id("block/mossy_smooth_massassi_stone"), Resources.id("block/mossy_smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiBricks).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.MossyMassassiBrickSlab, Resources.id("block/mossy_massassi_stone_bricks"))
+		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiBricks.block).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MossyMassassiBricks.slab, Resources.id("block/mossy_massassi_stone_bricks"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.MossyMassassiBrickStairs, Resources.id("block/mossy_massassi_stone_bricks"))
+		BlockGenerator.stairs(SwgBlocks.Stone.MossyMassassiBricks.stairs, Resources.id("block/mossy_massassi_stone_bricks"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone)
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.PourstoneStairs, Resources.id("block/pourstone"))
+		BlockGenerator.stairs(SwgBlocks.Stone.Pourstone.stairs, Resources.id("block/pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.PourstoneSlab, Resources.id("block/pourstone"))
+		BlockGenerator.slab(SwgBlocks.Stone.Pourstone.slab, Resources.id("block/pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.CrackedPourstone)
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.CrackedPourstone.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.CrackedPourstoneStairs, Resources.id("block/cracked_pourstone"))
+		BlockGenerator.stairs(SwgBlocks.Stone.CrackedPourstone.stairs, Resources.id("block/cracked_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.CrackedPourstoneSlab, Resources.id("block/cracked_pourstone"))
+		BlockGenerator.slab(SwgBlocks.Stone.CrackedPourstone.slab, Resources.id("block/cracked_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.SmoothPourstone)
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.SmoothPourstone.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.SmoothPourstoneStairs, Resources.id("block/smooth_pourstone"))
+		BlockGenerator.stairs(SwgBlocks.Stone.SmoothPourstone.stairs, Resources.id("block/smooth_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.SmoothPourstoneSlab, Resources.id("block/smooth_pourstone"))
+		BlockGenerator.slab(SwgBlocks.Stone.SmoothPourstone.slab, Resources.id("block/smooth_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
@@ -1553,21 +1456,21 @@ public class Tarkin
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
 			              .build(assets);
 		for (var pair : SwgBlocks.Stone.DyedPourstoneStairs.entrySet())
-			BlockGenerator.stairs(pair.getValue(), Resources.id(String.format("block/%s_pourstone", pair.getKey())))
+			BlockGenerator.stairs(pair.getValue(), Resources.id(String.format("block/%s_pourstone", pair.getKey().getName())))
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
 			              .build(assets);
 		for (var pair : SwgBlocks.Stone.DyedPourstoneSlab.entrySet())
-			BlockGenerator.slab(pair.getValue(), Resources.id(String.format("block/%s_pourstone", pair.getKey())))
+			BlockGenerator.slab(pair.getValue(), Resources.id(String.format("block/%s_pourstone", pair.getKey().getName())))
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
 			              .build(assets);
 
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum)
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.IlumSlab, Resources.id("block/ilum_stone"))
+		BlockGenerator.slab(SwgBlocks.Stone.Ilum.slab, Resources.id("block/ilum_stone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.IlumStairs, Resources.id("block/ilum_stone"))
+		BlockGenerator.stairs(SwgBlocks.Stone.Ilum.stairs, Resources.id("block/ilum_stone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumSmooth)
@@ -1576,11 +1479,11 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.IlumSmoothSlab, Resources.id("block/smooth_ilum_stone_slab_double"), Resources.id("block/smooth_ilum_stone"), Resources.id("block/smooth_ilum_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Stone.IlumBricks).build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.IlumBrickSlab, Resources.id("block/ilum_stone_bricks"))
+		BlockGenerator.basic(SwgBlocks.Stone.IlumBricks.block).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.IlumBricks.slab, Resources.id("block/ilum_stone_bricks"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.IlumBrickStairs, Resources.id("block/ilum_stone_bricks"))
+		BlockGenerator.stairs(SwgBlocks.Stone.IlumBricks.stairs, Resources.id("block/ilum_stone_bricks"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumChiseledBricks)

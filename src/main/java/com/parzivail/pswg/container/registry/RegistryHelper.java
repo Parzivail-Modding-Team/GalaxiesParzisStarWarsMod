@@ -1,13 +1,43 @@
 package com.parzivail.pswg.container.registry;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.util.block.PStairsBlock;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.SlabBlock;
+import net.minecraft.block.StairsBlock;
+import net.minecraft.util.DyeColor;
 
 import java.lang.reflect.Modifier;
+import java.util.HashMap;
+import java.util.function.Function;
 
 public class RegistryHelper
 {
+	public static class DyedBlockVariants extends HashMap<DyeColor, Block>
+	{
+		public DyedBlockVariants(Function<DyeColor, Block> blockFunction)
+		{
+			for (var color : DyeColor.values())
+				put(color, blockFunction.apply(color));
+		}
+	}
+
+	public static class BlockStairsSlabVariants
+	{
+		public final Block block;
+		public final StairsBlock stairs;
+		public final SlabBlock slab;
+
+		public BlockStairsSlabVariants(Block block)
+		{
+			this.block = block;
+			this.stairs = new PStairsBlock(block.getDefaultState(), AbstractBlock.Settings.copy(block));
+			this.slab = new SlabBlock(AbstractBlock.Settings.copy(block));
+		}
+	}
+
 	public static <T> void registerAnnotatedFields(Class<?> rootClazz, Class<T> registryType, RegistryMethod<T> registryFunction)
 	{
 		for (var clazz : rootClazz.getClasses())

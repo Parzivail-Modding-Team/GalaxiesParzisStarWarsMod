@@ -507,17 +507,17 @@ public class SwgBlocks
 	public static class Dirt
 	{
 		@RegistryName("wet_pourstone")
-		public static final Block WetPourstone = new RuiningDryingBlock(Stone.Pourstone, 10, () -> Dirt.RuinedWetPourstone, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision());
+		public static final Block WetPourstone = new RuiningDryingBlock(Stone.Pourstone.block, 10, () -> Dirt.RuinedWetPourstone, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision());
 		@RegistryName("wet_pourstone_stairs")
-		public static final Block WetPourstoneStairs = new RuiningDryingStairsBlock(WetPourstone.getDefaultState(), Stone.PourstoneStairs, 10, () -> Dirt.RuinedWetPourstoneStairs, AbstractBlock.Settings.copy(WetPourstone));
+		public static final Block WetPourstoneStairs = new RuiningDryingStairsBlock(WetPourstone.getDefaultState(), Stone.Pourstone.stairs, 10, () -> Dirt.RuinedWetPourstoneStairs, AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("wet_pourstone_slab")
-		public static final Block WetPourstoneSlab = new RuiningDryingSlabBlock(Stone.PourstoneSlab, 10, () -> Dirt.RuinedWetPourstoneSlab, AbstractBlock.Settings.copy(WetPourstone));
+		public static final Block WetPourstoneSlab = new RuiningDryingSlabBlock(Stone.Pourstone.slab, 10, () -> Dirt.RuinedWetPourstoneSlab, AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("ruined_wet_pourstone")
-		public static final Block RuinedWetPourstone = new DryingBlock(Stone.CrackedPourstone, 10, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F));
+		public static final Block RuinedWetPourstone = new DryingBlock(Stone.CrackedPourstone.block, 10, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F));
 		@RegistryName("ruined_wet_pourstone_stairs")
-		public static final StairsBlock RuinedWetPourstoneStairs = new DryingStairsBlock(RuinedWetPourstone.getDefaultState(), Stone.CrackedPourstoneStairs, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
+		public static final StairsBlock RuinedWetPourstoneStairs = new DryingStairsBlock(RuinedWetPourstone.getDefaultState(), Stone.CrackedPourstone.stairs, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
 		@RegistryName("ruined_wet_pourstone_slab")
-		public static final SlabBlock RuinedWetPourstoneSlab = new DryingSlabBlock(Stone.CrackedPourstoneSlab, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
+		public static final SlabBlock RuinedWetPourstoneSlab = new DryingSlabBlock(Stone.CrackedPourstone.slab, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
 		@RegistryName("desert_loam")
 		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 	}
@@ -528,50 +528,27 @@ public class SwgBlocks
 		public static final Block DesertSediment = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
 
 		@RegistryName("pourstone")
-		public static final Block Pourstone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
-		@RegistryName("pourstone_stairs")
-		public static final StairsBlock PourstoneStairs = new PStairsBlock(Pourstone.getDefaultState(), AbstractBlock.Settings.copy(Pourstone));
-		@RegistryName("pourstone_slab")
-		public static final SlabBlock PourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(Pourstone));
+		public static final RegistryHelper.BlockStairsSlabVariants Pourstone = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("smooth_pourstone")
-		public static final Block SmoothPourstone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
-		@RegistryName("smooth_pourstone_stairs")
-		public static final StairsBlock SmoothPourstoneStairs = new PStairsBlock(SmoothPourstone.getDefaultState(), AbstractBlock.Settings.copy(SmoothPourstone));
-		@RegistryName("smooth_pourstone_slab")
-		public static final SlabBlock SmoothPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(SmoothPourstone));
+		public static final RegistryHelper.BlockStairsSlabVariants SmoothPourstone = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("cracked_pourstone")
-		public static final Block CrackedPourstone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool());
-		@RegistryName("cracked_pourstone_stairs")
-		public static final StairsBlock CrackedPourstoneStairs = new PStairsBlock(CrackedPourstone.getDefaultState(), AbstractBlock.Settings.copy(SmoothPourstone));
-		@RegistryName("cracked_pourstone_slab")
-		public static final SlabBlock CrackedPourstoneSlab = new SlabBlock(AbstractBlock.Settings.copy(CrackedPourstone));
+		public static final RegistryHelper.BlockStairsSlabVariants CrackedPourstone = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
 
-		public static final HashMap<String, Block> DyedPourstone = Util.make(new HashMap<>(), m -> {
-			Arrays.stream(DyeColor.values()).forEach(color -> m.put(color.getName(), new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool())));
-		});
-		public static final HashMap<String, StairsBlock> DyedPourstoneStairs = Util.make(new HashMap<>(), m -> {
-			Arrays.stream(DyeColor.values()).forEach(color -> m.put(color.getName(), new PStairsBlock(DyedPourstone.get(color.getName()).getDefaultState(), AbstractBlock.Settings.copy(DyedPourstone.get(color.getName())))));
-		});
-		public static final HashMap<String, SlabBlock> DyedPourstoneSlab = Util.make(new HashMap<>(), m -> {
-			Arrays.stream(DyeColor.values()).forEach(color -> m.put(color.getName(), new SlabBlock(AbstractBlock.Settings.copy(DyedPourstone.get(color.getName())))));
-		});
+		@RegistryName("pourstone")
+		public static final RegistryHelper.DyedBlockVariants DyedPourstone = new RegistryHelper.DyedBlockVariants(color -> new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		@RegistryName("pourstone_stairs")
+		public static final RegistryHelper.DyedBlockVariants DyedPourstoneStairs = new RegistryHelper.DyedBlockVariants(color -> new PStairsBlock(DyedPourstone.get(color).getDefaultState(), AbstractBlock.Settings.copy(DyedPourstone.get(color))));
+		@RegistryName("pourstone_slab")
+		public static final RegistryHelper.DyedBlockVariants DyedPourstoneSlab = new RegistryHelper.DyedBlockVariants(color -> new SlabBlock(AbstractBlock.Settings.copy(DyedPourstone.get(color))));
 
 		@RegistryName("massassi_stone")
-		public static final Block Massassi = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
-		@RegistryName("massassi_stone_stairs")
-		public static final StairsBlock MassassiStairs = new PStairsBlock(Massassi.getDefaultState(), AbstractBlock.Settings.copy(Massassi));
-		@RegistryName("massassi_stone_slab")
-		public static final SlabBlock MassassiSlab = new SlabBlock(AbstractBlock.Settings.copy(Massassi));
+		public static final RegistryHelper.BlockStairsSlabVariants Massassi = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_massassi_stone")
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_massassi_stone_slab")
 		public static final SlabBlock MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
 		@RegistryName("massassi_stone_bricks")
-		public static final Block MassassiBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
-		@RegistryName("massassi_stone_brick_stairs")
-		public static final StairsBlock MassassiBrickStairs = new PStairsBlock(MassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MassassiBricks));
-		@RegistryName("massassi_stone_brick_slab")
-		public static final SlabBlock MassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiBricks));
+		public static final RegistryHelper.BlockStairsSlabVariants MassassiBricks = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		//@RegistryName("chiseled_massassi_stone_bricks")
 		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 
@@ -580,28 +557,16 @@ public class SwgBlocks
 		@RegistryName("mossy_smooth_massassi_stone_slab")
 		public static final SlabBlock MossyMassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MossyMassassiSmooth));
 		@RegistryName("mossy_massassi_stone_bricks")
-		public static final Block MossyMassassiBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
-		@RegistryName("mossy_massassi_stone_brick_stairs")
-		public static final StairsBlock MossyMassassiBrickStairs = new PStairsBlock(MossyMassassiBricks.getDefaultState(), AbstractBlock.Settings.copy(MossyMassassiBricks));
-		@RegistryName("mossy_massassi_stone_brick_slab")
-		public static final SlabBlock MossyMassassiBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(MossyMassassiBricks));
+		public static final RegistryHelper.BlockStairsSlabVariants MossyMassassiBricks = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 
 		@RegistryName("ilum_stone")
-		public static final Block Ilum = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
-		@RegistryName("ilum_stone_stairs")
-		public static final StairsBlock IlumStairs = new PStairsBlock(Ilum.getDefaultState(), AbstractBlock.Settings.copy(Ilum));
-		@RegistryName("ilum_stone_slab")
-		public static final SlabBlock IlumSlab = new SlabBlock(AbstractBlock.Settings.copy(Ilum));
+		public static final RegistryHelper.BlockStairsSlabVariants Ilum = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_ilum_stone")
 		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_ilum_stone_slab")
 		public static final SlabBlock IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
 		@RegistryName("ilum_stone_bricks")
-		public static final Block IlumBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
-		@RegistryName("ilum_stone_brick_stairs")
-		public static final StairsBlock IlumBrickStairs = new PStairsBlock(IlumBricks.getDefaultState(), AbstractBlock.Settings.copy(IlumBricks));
-		@RegistryName("ilum_stone_brick_slab")
-		public static final SlabBlock IlumBrickSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumBricks));
+		public static final RegistryHelper.BlockStairsSlabVariants IlumBricks = new RegistryHelper.BlockStairsSlabVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("chiseled_ilum_stone_bricks")
 		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 	}
@@ -609,6 +574,8 @@ public class SwgBlocks
 	public static void register()
 	{
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Block.class, SwgBlocks::registerBlock);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.BlockStairsSlabVariants.class, SwgBlocks::registerBlockStabStairs);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedBlockVariants.class, SwgBlocks::registerDyedBlocks);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
 		RegistryHelper.registerFlammable(SwgBlocks.class);
@@ -623,10 +590,19 @@ public class SwgBlocks
 			else
 				Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door_controller_" + color.getName()), block);
 		}
+	}
 
-		Stone.DyedPourstone.forEach((key, value) -> registerBlock(value, Resources.id(key + "_pourstone"), false));
-		Stone.DyedPourstoneSlab.forEach((key, value) -> registerBlock(value, Resources.id(key + "_pourstone_stairs"), false));
-		Stone.DyedPourstoneStairs.forEach((key, value) -> registerBlock(value, Resources.id(key + "_pourstone_slab"), false));
+	private static void registerBlockStabStairs(RegistryHelper.BlockStairsSlabVariants t, Identifier identifier, boolean b)
+	{
+		registerBlock(t.block, identifier, false);
+		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), false);
+		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), false);
+	}
+
+	private static void registerDyedBlocks(RegistryHelper.DyedBlockVariants t, Identifier identifier, boolean b)
+	{
+		for (var entry : t.entrySet())
+			registerBlock(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), false);
 	}
 
 	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab)

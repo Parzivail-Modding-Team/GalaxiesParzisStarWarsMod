@@ -1,1 +1,1 @@
-{"parent":"minecraft:block/slab","textures":{"side":"pswg:block/cyan_pourstone","top":"pswg:block/cyan_pourstone","bottom":"pswg:block/cyan_pourstone"}}
+{"parent":"minecraft:block/stairs","textures":{"side":"pswg:block/cyan_pourstone","top":"pswg:block/cyan_pourstone","bottom":"pswg:block/cyan_pourstone"}}
