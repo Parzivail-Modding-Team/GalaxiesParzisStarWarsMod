@@ -280,6 +280,13 @@ public class SwgBlocks
 		public static final PillarBlock Tatooine = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 	}
 
+	public static class Planks
+	{
+		@RegistryName("japor_planks")
+		@Flammable(burn = 5, spread = 20)
+		public static final Block Japor = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
+	}
+
 	public static class Light
 	{
 		@RegistryName("light_fixture")

@@ -1181,6 +1181,10 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.TATOOINE_LOG)
 		              .build(assets);
 
+		BlockGenerator.block(SwgBlocks.Planks.Japor)
+		              .blockTag(BlockTags.AXE_MINEABLE)
+		              .build(assets);
+
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
