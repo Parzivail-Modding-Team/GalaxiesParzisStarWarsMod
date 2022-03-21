@@ -665,47 +665,6 @@ public class Tarkin
 		                               SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone)
 		                      .build(assets);
 
-		//Pourstone
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.PourstoneStairs, 6))
-		                      .grid3x3("crafting_left",
-		                               SwgBlocks.Stone.Pourstone, null, null,
-		                               SwgBlocks.Stone.Pourstone, SwgBlocks.Stone.Pourstone, null,
-		                               SwgBlocks.Stone.Pourstone, SwgBlocks.Stone.Pourstone, SwgBlocks.Stone.Pourstone)
-		                      .grid3x3("crafting_right",
-		                               null, null, SwgBlocks.Stone.Pourstone,
-		                               null, SwgBlocks.Stone.Pourstone, SwgBlocks.Stone.Pourstone,
-		                               SwgBlocks.Stone.Pourstone, SwgBlocks.Stone.Pourstone, SwgBlocks.Stone.Pourstone)
-		                      .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.PourstoneSlab, 6))
-		                      .grid3x1("crafting",
-		                               SwgBlocks.Stone.Pourstone, SwgBlocks.Stone.Pourstone, SwgBlocks.Stone.Pourstone)
-		                      .build(assets);
-
-		RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Dirt.WetPourstone, SwgBlocks.Stone.Pourstone).experience(0.1F)
-		                       .build(assets);
-		RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Dirt.WetPourstoneStairs, SwgBlocks.Stone.PourstoneStairs).experience(0.1F)
-		                       .build(assets);
-		RecipeGenerator.Cooking.smelting("smelting", SwgBlocks.Dirt.WetPourstoneSlab, SwgBlocks.Stone.PourstoneSlab).experience(0.1F)
-		                       .build(assets);
-
-		//Light Pourstone
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.LightPourstoneStairs, 6))
-		                      .grid3x3("crafting_left",
-		                               SwgBlocks.Stone.LightPourstone, null, null,
-		                               SwgBlocks.Stone.LightPourstone, SwgBlocks.Stone.LightPourstone, null,
-		                               SwgBlocks.Stone.LightPourstone, SwgBlocks.Stone.LightPourstone, SwgBlocks.Stone.LightPourstone)
-		                      .grid3x3("crafting_right",
-		                               null, null, SwgBlocks.Stone.LightPourstone,
-		                               null, SwgBlocks.Stone.LightPourstone, SwgBlocks.Stone.LightPourstone,
-		                               SwgBlocks.Stone.LightPourstone, SwgBlocks.Stone.LightPourstone, SwgBlocks.Stone.LightPourstone)
-		                      .build(assets);
-
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.LightPourstoneSlab, 6))
-		                      .grid3x1(null,
-		                               SwgBlocks.Stone.LightPourstone, SwgBlocks.Stone.LightPourstone, SwgBlocks.Stone.LightPourstone)
-		                      .build(assets);
-
 		//Ilum Blocks
 		//Ilum Stone
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.IlumStairs, 6))
@@ -837,12 +796,12 @@ public class Tarkin
 		                      .build(assets);
 
 		//Decoration Blocks and Machines
-//		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Door.TatooineHome))
-//		                      .grid2x3(null,
-//		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
-//		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
-//		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
-//		                      .build(assets);
+		//		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Door.TatooineHome))
+		//		                      .grid2x3(null,
+		//		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
+		//		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
+		//		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+		//		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Vent.Air, 3))
 		                      .grid3x3(null,
@@ -1155,7 +1114,7 @@ public class Tarkin
 		              .build(assets);
 		SwgBlocks.Door.TatooineHomeBottoms.values().forEach(b -> BlockGenerator.particleOnly(b, new Identifier("block/stone"))
 		                                                                       .itemModel(block -> {
-																				   var reg = AssetGenerator.getRegistryName(block);
+			                                                                       var reg = AssetGenerator.getRegistryName(block);
 			                                                                       return ModelFile.ofModel(new Identifier(reg.getNamespace(), reg.getPath().replace("controller_", "")), AssetGenerator.getTextureName(block));
 		                                                                       })
 		                                                                       .blockTag(SwgTags.Block.TATOOINE_DOORS)
@@ -1509,6 +1468,18 @@ public class Tarkin
 		              .build(assets);
 		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
+		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiSmooth).build(assets);
+		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MossyMassassiSmoothSlab, Resources.id("block/mossy_smooth_massassi_stone_slab_double"), Resources.id("block/mossy_smooth_massassi_stone"), Resources.id("block/mossy_smooth_massassi_stone_slab_side"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiBricks).build(assets);
+		BlockGenerator.slab(SwgBlocks.Stone.MossyMassassiBrickSlab, Resources.id("block/mossy_massassi_stone_bricks"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Stone.MossyMassassiBrickStairs, Resources.id("block/mossy_massassi_stone_bricks"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
@@ -1527,15 +1498,28 @@ public class Tarkin
 		BlockGenerator.slab(SwgBlocks.Stone.CrackedPourstoneSlab, Resources.id("block/cracked_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.LightPourstone)
+		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.SmoothPourstone)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.stairs(SwgBlocks.Stone.LightPourstoneStairs, Resources.id("block/light_pourstone"))
+		BlockGenerator.stairs(SwgBlocks.Stone.SmoothPourstoneStairs, Resources.id("block/smooth_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.LightPourstoneSlab, Resources.id("block/light_pourstone"))
+		BlockGenerator.slab(SwgBlocks.Stone.SmoothPourstoneSlab, Resources.id("block/smooth_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
+
+		for (var pair : SwgBlocks.Stone.DyedPourstone.entrySet())
+			BlockGenerator.basicRandomMirror(pair.getValue())
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
+		for (var pair : SwgBlocks.Stone.DyedPourstoneStairs.entrySet())
+			BlockGenerator.stairs(pair.getValue(), Resources.id(String.format("block/%s_pourstone", pair.getKey())))
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
+		for (var pair : SwgBlocks.Stone.DyedPourstoneSlab.entrySet())
+			BlockGenerator.slab(pair.getValue(), Resources.id(String.format("block/%s_pourstone", pair.getKey())))
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
