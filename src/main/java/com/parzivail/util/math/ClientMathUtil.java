@@ -18,8 +18,8 @@ public class ClientMathUtil
 	{
 		return switch (direction)
 				{
-					case DOWN -> new Quaternion(90, 0, 0, true);
-					case UP -> new Quaternion(-90, 0, 0, true);
+					case DOWN -> new Quaternion(0, 0, -90, true);
+					case UP -> new Quaternion(0, 0, 90, true);
 					case NORTH -> new Quaternion(0, 90, 0, true);
 					case SOUTH -> new Quaternion(0, -90, 0, true);
 					case WEST -> new Quaternion(0, 180, 0, true);

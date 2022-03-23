@@ -48,7 +48,7 @@ public class ClusterLightBlock extends RotatingBlockWithBounds implements IPickl
 					case 3 -> SHAPE_TRIPLE;
 				};
 
-		return VoxelShapeUtil.rotate(shape, (state.get(FACING).getHorizontal() + 1) % 4);
+		return VoxelShapeUtil.rotateToFace(shape, state.get(FACING));
 	}
 
 	@Nullable
@@ -60,7 +60,7 @@ public class ClusterLightBlock extends RotatingBlockWithBounds implements IPickl
 		if (blockState.isOf(this))
 			return blockState.with(CLUSTER_SIZE, Math.min(3, blockState.get(CLUSTER_SIZE) + 1));
 
-		return super.getPlacementState(ctx);
+		return super.getPlacementStateBlockBased(ctx);
 	}
 
 	@Override

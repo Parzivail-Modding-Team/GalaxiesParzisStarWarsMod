@@ -158,11 +158,11 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 
 		if (state.getBlock() instanceof RotatingBlock)
 		{
-			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
+			mat.multiply(Matrix4f.translate(0.5f, 0.5f, 0.5f));
 
 			mat.multiply(ClientMathUtil.getRotation(state.get(RotatingBlock.FACING)));
 
-			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+			mat.multiply(Matrix4f.translate(-0.5f, -0.5f, -0.5f));
 		}
 
 		if (state.getBlock() instanceof PillarBlock)

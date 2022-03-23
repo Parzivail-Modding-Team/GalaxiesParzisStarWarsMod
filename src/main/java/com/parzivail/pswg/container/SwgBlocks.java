@@ -108,6 +108,14 @@ public class SwgBlocks
 		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = FabricBlockEntityTypeBuilder.create(MoistureVaporatorBlockEntity::new, Gx8).build();
 	}
 
+	public static class Power
+	{
+		@RegistryName("power_coupling")
+		public static final Block Coupling = new PowerCouplingBlock(RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("power_coupling")
+		public static final BlockEntityType<PowerCouplingBlockEntity> CouplingBlockEntityType = FabricBlockEntityTypeBuilder.create(PowerCouplingBlockEntity::new, Coupling).build();
+	}
+
 	public static class Pipe
 	{
 		@RegistryName("large_pipe")

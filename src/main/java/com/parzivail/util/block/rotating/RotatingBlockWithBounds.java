@@ -35,8 +35,7 @@ public class RotatingBlockWithBounds extends RotatingBlock
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
-		// East isn't zero, but everything defaults to facing east
-		return VoxelShapeUtil.rotate(shape, (state.get(FACING).getHorizontal() + 1) % 4);
+		return VoxelShapeUtil.rotateToFace(shape, state.get(FACING));
 	}
 
 	@Override
@@ -71,7 +70,7 @@ public class RotatingBlockWithBounds extends RotatingBlock
 
 		var substrateDirection = getSubstrateDirection(state);
 
-		return direction.getOpposite() == substrateDirection && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
+		return direction == substrateDirection && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : state;
 	}
 
 	private Direction getSubstrateDirection(BlockState state)

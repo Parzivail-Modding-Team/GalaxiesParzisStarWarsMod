@@ -6,6 +6,7 @@ import com.parzivail.pswg.block.TatooineHomeDoorBlock;
 import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
+import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.SpawnEntityItem;
 import com.parzivail.pswg.item.blaster.BlasterItem;
@@ -42,6 +43,12 @@ public class SwgItems
 				.stream()
 				.map(b -> new TatooineHomeDoorBlock.Item(b, new Item.Settings().group(Galaxies.TabBlocks)))
 				.toList();
+	}
+
+	public static class Cable
+	{
+		@RegistryName("insulated_desh_cable")
+		public static final Item Power = new CableItem(new Item.Settings().group(Galaxies.TabItems));
 	}
 
 	public static class CraftingComponents

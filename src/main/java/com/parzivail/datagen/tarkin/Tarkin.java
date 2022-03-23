@@ -840,6 +840,8 @@ public class Tarkin
 
 		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
+		ItemGenerator.basic(SwgItems.Cable.Power).build(assets);
+
 		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
 		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.id("block/wet_pourstone")).build(assets);
@@ -1151,6 +1153,10 @@ public class Tarkin
 		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.MoistureVaporator.Gx8)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Power.Coupling)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 

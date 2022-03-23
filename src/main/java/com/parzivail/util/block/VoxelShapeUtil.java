@@ -32,6 +32,16 @@ public class VoxelShapeUtil
 		return VoxelShapes.cuboid(0.5 - length, 0, 0.5 - width, 0.5 + length, height, 0.5 + width);
 	}
 
+	public static VoxelShape rotateToFace(VoxelShape shape, Direction direction)
+	{
+		if (direction == Direction.UP)
+			return VoxelShapeUtil.rotate(shape, Direction.Axis.Z, 3, 0.5f, 0.5f, 0.5f);
+		if (direction == Direction.DOWN)
+			return VoxelShapeUtil.rotate(shape, Direction.Axis.Z, 1, 0.5f, 0.5f, 0.5f);
+		// East isn't zero, but everything defaults to facing east
+		return VoxelShapeUtil.rotate(shape, (direction.getHorizontal() + 1) % 4);
+	}
+
 	public static VoxelShape rotate(VoxelShape shape, int times)
 	{
 		return rotate(shape, Direction.Axis.Y, times, 0.5f, 0, 0.5f);
