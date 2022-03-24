@@ -88,18 +88,18 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 
 		for (var u = 0; u <= 12; ++u)
 		{
-			renderLeashPiece(vertexConsumer, matrix4f, j, k, l, q, r, s, t, m, m, o, p, u, false);
+			renderCableSegment(vertexConsumer, matrix4f, j, k, l, q, r, s, t, m, m, o, p, u, false);
 		}
 
 		for (var u = 12; u >= 0; --u)
 		{
-			renderLeashPiece(vertexConsumer, matrix4f, j, k, l, q, r, s, t, m, 0.0F, o, p, u, true);
+			renderCableSegment(vertexConsumer, matrix4f, j, k, l, q, r, s, t, m, 0.0F, o, p, u, true);
 		}
 
 		matrices.pop();
 	}
 
-	private static void renderLeashPiece(VertexConsumer vertexConsumer, Matrix4f positionMatrix, float f, float g, float h, int leashedEntityBlockLight, int holdingEntityBlockLight, int leashedEntitySkyLight, int holdingEntitySkyLight, float i, float j, float k, float l, int pieceIndex, boolean isLeashKnot)
+	private static void renderCableSegment(VertexConsumer vertexConsumer, Matrix4f positionMatrix, float f, float g, float h, int leashedEntityBlockLight, int holdingEntityBlockLight, int leashedEntitySkyLight, int holdingEntitySkyLight, float i, float j, float k, float l, int pieceIndex, boolean isLeashKnot)
 	{
 		var m = (float)pieceIndex / 12.0F;
 		var n = (int)MathHelper.lerp(m, (float)leashedEntityBlockLight, (float)holdingEntityBlockLight);
