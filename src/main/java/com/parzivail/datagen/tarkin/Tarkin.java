@@ -850,6 +850,8 @@ public class Tarkin
 		BlockGenerator.stairs(SwgBlocks.Dirt.RuinedWetPourstoneStairs, Resources.id("block/ruined_wet_pourstone")).build(assets);
 		BlockGenerator.slab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone")).build(assets);
 
+		BlockGenerator.basicRandomRotation(SwgBlocks.Gravel.Jundland).build(assets);
+
 		ItemGenerator.basic(SwgItems.Dust.Helicite).build(assets);
 		ItemGenerator.basic(SwgItems.Dust.Lommite).build(assets);
 		ItemGenerator.basic(SwgItems.Dust.Thorilide).build(assets);
@@ -1055,6 +1057,11 @@ public class Tarkin
 		              .build(assets);
 
 		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"), Resources.id("block/sequoia_log"))
+		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .blockTag(BlockTags.AXE_MINEABLE)
+		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Log.MossySequoia, Resources.id("block/mossy_sequoia_log_top"), Resources.id("block/mossy_sequoia_log"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
@@ -1384,6 +1391,14 @@ public class Tarkin
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Pit)
+		              .blockTag(SwgTags.Block.DESERT_SAND)
+		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Fine)
+		              .blockTag(SwgTags.Block.DESERT_SAND)
+		              .itemTag(SwgTags.Item.DESERT_SAND)
+		              .build(assets);
 		BlockGenerator.accumulatingLayers(SwgBlocks.Sand.LooseDesert)
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
@@ -1393,7 +1408,36 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sandstone.Canyon)
+		BlockGenerator.basicRandomRotation(SwgBlocks.Stone.Canyon)
+		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Stone.CanyonBricks)
+		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Stone.PolishedCanyon, Resources.id("block/canyon_stone"), Resources.id("block/polished_canyon_stone"))
+		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Stone.ChiseledCanyon, Resources.id("block/canyon_stone"), Resources.id("block/chiseled_canyon_stone"))
+		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .build(assets);
+
+		BlockGenerator.basic(SwgBlocks.Sandstone.Desert)
+		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Sandstone.SmoothDesert, Resources.id("block/desert_sandstone"), Resources.id("block/smooth_desert_sandstone"))
+		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Sandstone.PolishedDesert, Resources.id("block/desert_sandstone"), Resources.id("block/polished_desert_sandstone"))
+		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .build(assets);
+		BlockGenerator.staticColumn(SwgBlocks.Sandstone.ChiseledDesert, Resources.id("block/desert_sandstone"), Resources.id("block/chiseled_desert_sandstone"))
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
@@ -1401,7 +1445,11 @@ public class Tarkin
 		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked)
 		              .build(assets);
 
-		BlockGenerator.staticColumn(SwgBlocks.Stone.DesertSediment, Resources.id("block/desert_sediment_top"), Resources.id("block/desert_sediment"))
+		BlockGenerator.basicRandomRotation(SwgBlocks.Stone.CanyonCobble)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Stone.DurasteelConnectedPourstone)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 

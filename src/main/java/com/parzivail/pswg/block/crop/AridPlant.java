@@ -23,10 +23,11 @@ public class AridPlant extends PlantBlock
 
 	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos)
 	{
+		// TODO: tags
 		var block = floor.getBlock();
 		return floor.isIn(BlockTags.SAND) ||
 		       block == SwgBlocks.Dirt.DesertLoam ||
-		       block == SwgBlocks.Stone.DesertSediment ||
+		       block == SwgBlocks.Sandstone.Desert ||
 		       block == SwgBlocks.Salt.Caked ||
 		       block == Blocks.GRASS_BLOCK ||
 		       block == Blocks.TERRACOTTA ||

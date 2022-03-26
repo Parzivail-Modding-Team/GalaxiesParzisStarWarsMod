@@ -266,6 +266,9 @@ public class SwgBlocks
 		@RegistryName("sequoia_log")
 		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock Sequoia = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
+		@RegistryName("mossy_sequoia_log")
+		@Flammable(burn = 5, spread = 5)
+		public static final PillarBlock MossySequoia = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("japor_log")
 		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock Japor = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
@@ -504,6 +507,10 @@ public class SwgBlocks
 		public static final Block SaltyDesert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 		@RegistryName("desert_sand")
 		public static final Block Desert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
+		@RegistryName("pit_sand")
+		public static final Block Pit = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
+		@RegistryName("fine_sand")
+		public static final Block Fine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 		@RegistryName("loose_desert_sand")
 		public static final Block LooseDesert = new AccumulatingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F), Desert::getPlacementState);
 		@RegistryName("desert_canyon_sand")
@@ -512,8 +519,14 @@ public class SwgBlocks
 
 	public static class Sandstone
 	{
-		@RegistryName("canyon_sandstone")
-		public static final Block Canyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("desert_sandstone")
+		public static final Block Desert = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
+		@RegistryName("smooth_desert_sandstone")
+		public static final Block SmoothDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("polished_desert_sandstone")
+		public static final Block PolishedDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("chiseled_desert_sandstone")
+		public static final Block ChiseledDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 	}
 
 	public static class Salt
@@ -540,10 +553,25 @@ public class SwgBlocks
 		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 	}
 
+	public static class Gravel
+	{
+		@RegistryName("jundland_gravel")
+		public static final Block Jundland = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
+	}
+
 	public static class Stone
 	{
-		@RegistryName("desert_sediment")
-		public static final Block DesertSediment = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
+		@RegistryName("canyon_stone")
+		public static final Block Canyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("canyon_stone_bricks")
+		public static final Block CanyonBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("polished_canyon_stone")
+		public static final Block PolishedCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("chiseled_canyon_stone")
+		public static final Block ChiseledCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+
+		@RegistryName("canyon_cobblestone")
+		public static final Block CanyonCobble = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
 
 		@RegistryName("pourstone")
 		public static final RegistryHelper.BlockStairsSlabWallVariants Pourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
@@ -551,6 +579,9 @@ public class SwgBlocks
 		public static final RegistryHelper.BlockStairsSlabWallVariants SmoothPourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("cracked_pourstone")
 		public static final RegistryHelper.BlockStairsSlabWallVariants CrackedPourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
+
+		@RegistryName("durasteel_bordered_pourstone")
+		public static final SelfConnectingBlock DurasteelConnectedPourstone = new SelfConnectingBlock(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 
 		@RegistryName("pourstone")
 		public static final RegistryHelper.DyedBlockVariants DyedPourstone = new RegistryHelper.DyedBlockVariants(color -> new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));

@@ -184,6 +184,8 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.registerConnected(SwgBlocks.MaterialBlock.Plasteel);
 
+		ModelRegistry.registerConnected(SwgBlocks.Stone.DurasteelConnectedPourstone);
+
 		ModelRegistry.registerConnected(SwgBlocks.Glass.Imperial);
 		ModelRegistry.registerConnected(SwgBlocks.Glass.WhiteStainedImperial);
 		ModelRegistry.registerConnected(SwgBlocks.Glass.OrangeStainedImperial);
