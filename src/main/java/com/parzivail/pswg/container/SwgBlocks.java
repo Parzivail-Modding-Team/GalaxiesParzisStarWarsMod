@@ -560,7 +560,7 @@ public class SwgBlocks
 	public static class Gravel
 	{
 		@RegistryName("jundland_gravel")
-		public static final Block Jundland = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
+		public static final FallingBlock Jundland = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 	}
 
 	public static class Stone
