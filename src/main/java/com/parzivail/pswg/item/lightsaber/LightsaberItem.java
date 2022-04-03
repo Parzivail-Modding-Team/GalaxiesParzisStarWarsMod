@@ -101,7 +101,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 				toggle(world, player, stack);
 				break;
 			case SECONDARY:
-				throwAsEntity(world, player, stack);
+//				throwAsEntity(world, player, stack);
 				break;
 		}
 	}
