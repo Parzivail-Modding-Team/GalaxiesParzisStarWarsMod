@@ -1,1 +1,1 @@
-{"parent":"minecraft:block/cube_column","textures":{"side":"pswg:block/polished_canyon_stone","end":"pswg:block/canyon_stone"}}
+{"parent":"minecraft:block/cube_all","textures":{"all":"pswg:block/polished_canyon_stone"}}

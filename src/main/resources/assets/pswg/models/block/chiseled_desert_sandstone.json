@@ -1,1 +1,1 @@
-{"parent":"minecraft:block/cube_column","textures":{"side":"pswg:block/chiseled_desert_sandstone","end":"pswg:block/desert_sandstone"}}
+{"parent":"minecraft:block/cube_all","textures":{"all":"pswg:block/chiseled_desert_sandstone"}}

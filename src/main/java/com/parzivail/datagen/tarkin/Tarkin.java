@@ -1446,11 +1446,11 @@ public class Tarkin
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
-		BlockGenerator.staticColumn(SwgBlocks.Stone.PolishedCanyon, Resources.id("block/canyon_stone"), Resources.id("block/polished_canyon_stone"))
+		BlockGenerator.basic(SwgBlocks.Stone.PolishedCanyon)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
-		BlockGenerator.staticColumn(SwgBlocks.Stone.ChiseledCanyon, Resources.id("block/canyon_stone"), Resources.id("block/chiseled_canyon_stone"))
+		BlockGenerator.basic(SwgBlocks.Stone.ChiseledCanyon)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
@@ -1459,15 +1459,15 @@ public class Tarkin
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
-		BlockGenerator.staticColumn(SwgBlocks.Sandstone.SmoothDesert, Resources.id("block/desert_sandstone"), Resources.id("block/smooth_desert_sandstone"))
+		BlockGenerator.basic(SwgBlocks.Sandstone.SmoothDesert)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
-		BlockGenerator.staticColumn(SwgBlocks.Sandstone.PolishedDesert, Resources.id("block/desert_sandstone"), Resources.id("block/polished_desert_sandstone"))
+		BlockGenerator.basic(SwgBlocks.Sandstone.PolishedDesert)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
-		BlockGenerator.staticColumn(SwgBlocks.Sandstone.ChiseledDesert, Resources.id("block/desert_sandstone"), Resources.id("block/chiseled_desert_sandstone"))
+		BlockGenerator.basic(SwgBlocks.Sandstone.ChiseledDesert)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
