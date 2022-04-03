@@ -237,7 +237,7 @@ public class SwgBlocks
 		@Flammable(burn = 60, spread = 100)
 		public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("vaporator_mushroom_colony")
-		public static final Block VaporatorMushroom = new VaporatorMushroomBlock(AbstractBlock.Settings.of(Material.PLANT, MapColor.BROWN).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.GRASS).postProcess(BlockUtil::always));
+		public static final Block VaporatorMushroom = new VaporatorMushroomBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
 	public static class Leaves

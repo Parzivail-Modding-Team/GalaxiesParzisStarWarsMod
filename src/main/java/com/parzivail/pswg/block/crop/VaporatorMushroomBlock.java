@@ -1,6 +1,8 @@
 package com.parzivail.pswg.block.crop;
 
+import com.parzivail.pswg.container.SwgItems;
 import net.minecraft.block.*;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -20,6 +22,11 @@ public class VaporatorMushroomBlock extends PlantBlock
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return SHAPE;
+	}
+
+	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
+	{
+		return new ItemStack(SwgItems.Food.VaporatorMushroom);
 	}
 
 	@Override
