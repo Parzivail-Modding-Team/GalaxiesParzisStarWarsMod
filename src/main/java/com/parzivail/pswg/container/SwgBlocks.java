@@ -3,10 +3,7 @@ package com.parzivail.pswg.container;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.*;
-import com.parzivail.pswg.block.crop.AridPlant;
-import com.parzivail.pswg.block.crop.ChasukaCrop;
-import com.parzivail.pswg.block.crop.HkakBushBlock;
-import com.parzivail.pswg.block.crop.MoloShrubBlock;
+import com.parzivail.pswg.block.crop.*;
 import com.parzivail.pswg.blockentity.*;
 import com.parzivail.pswg.container.registry.Flammable;
 import com.parzivail.pswg.container.registry.RegistryHelper;
@@ -239,6 +236,8 @@ public class SwgBlocks
 		@RegistryName("molo_shrub")
 		@Flammable(burn = 60, spread = 100)
 		public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
+		@RegistryName("vaporator_mushroom_colony")
+		public static final Block VaporatorMushroom = new VaporatorMushroomBlock(AbstractBlock.Settings.of(Material.PLANT, MapColor.BROWN).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.GRASS).postProcess(BlockUtil::always));
 	}
 
 	public static class Leaves

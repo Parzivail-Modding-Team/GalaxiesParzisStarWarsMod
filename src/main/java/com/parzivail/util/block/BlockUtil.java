@@ -24,4 +24,9 @@ public class BlockUtil
 	{
 		return false;
 	}
+
+	public static boolean always(BlockState blockState, BlockView blockView, BlockPos blockPos)
+	{
+		return true;
+	}
 }

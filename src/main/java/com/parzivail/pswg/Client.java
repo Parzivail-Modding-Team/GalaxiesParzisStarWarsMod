@@ -236,6 +236,7 @@ public class Client implements ClientModInitializer
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.Chasuka, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.HkakBush, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.MoloShrub, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.VaporatorMushroom, RenderLayer.getCutout());
 
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NemManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(P3dManager.INSTANCE);

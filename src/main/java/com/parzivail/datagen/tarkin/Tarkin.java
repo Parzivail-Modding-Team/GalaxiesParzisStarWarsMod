@@ -1387,6 +1387,12 @@ public class Tarkin
 		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Natural.MoloFlower, new LootTableFile.Pool.CountFunction.Range(0, 2, new Identifier("uniform"))))
 		              .build(assets);
 
+		BlockGenerator.block(SwgBlocks.Plant.VaporatorMushroom)
+		              .model(ModelFile::cross)
+		              .itemModel(ModelFile::item)
+		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Food.VaporatorMushroom, new LootTableFile.Pool.CountFunction.Range(1, 3, new Identifier("uniform"))))
+		              .build(assets);
+
 		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.SaltyDesert)
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
