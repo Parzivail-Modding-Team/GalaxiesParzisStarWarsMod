@@ -2,6 +2,7 @@ package com.parzivail.datagen.tarkin;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.parzivail.pswg.Resources;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.IntProperty;
@@ -65,6 +66,13 @@ public class ModelFile
 	{
 		return ModelFile
 				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_all"))
+				.texture("all", AssetGenerator.getTextureName(block));
+	}
+
+	public static ModelFile cube_no_cull(Block block)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), Resources.id("block/template/double_cull_cube_all"))
 				.texture("all", AssetGenerator.getTextureName(block));
 	}
 

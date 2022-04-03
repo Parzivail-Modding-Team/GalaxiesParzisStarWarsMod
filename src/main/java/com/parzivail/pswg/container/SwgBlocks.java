@@ -125,6 +125,13 @@ public class SwgBlocks
 		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
+	public static class Cage
+	{
+		public static final Block Creature = new CreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
+		public static final Block CreatureTerrarium = new CreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
+		public static final RegistryHelper.DyedBlockVariants DyedCreatureTerrarium = new RegistryHelper.DyedBlockVariants(color -> new CreatureCageBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
+	}
+
 	public static class Glass
 	{
 		@RegistryName("imperial_glass")
@@ -630,6 +637,18 @@ public class SwgBlocks
 
 		RegistryHelper.registerFlammable(SwgBlocks.class);
 
+		for (var entry : Cage.DyedCreatureTerrarium.entrySet())
+		{
+			var id = Resources.id(entry.getKey().getName() + "_stained_creature_terrarium");
+			Registry.register(Registry.BLOCK, id, entry.getValue());
+			Registry.register(Registry.ITEM, id, new CreatureCageBlock.Item((CreatureCageBlock)entry.getValue(), new Item.Settings().group(Galaxies.TabBlocks)));
+		}
+		Registry.register(Registry.BLOCK, Resources.id("creature_terrarium"), Cage.CreatureTerrarium);
+		Registry.register(Registry.ITEM, Resources.id("creature_terrarium"), new CreatureCageBlock.Item((CreatureCageBlock)SwgBlocks.Cage.CreatureTerrarium, new Item.Settings().group(Galaxies.TabBlocks)));
+
+		Registry.register(Registry.BLOCK, Resources.id("creature_cage"), Cage.Creature);
+		Registry.register(Registry.ITEM, Resources.id("creature_cage"), new CreatureCageBlock.Item((CreatureCageBlock)SwgBlocks.Cage.Creature, new Item.Settings().group(Galaxies.TabBlocks)));
+
 		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door"), Door.TatooineHomeTop);
 
 		for (var block : Door.TatooineHomeBottoms.values())
@@ -642,18 +661,18 @@ public class SwgBlocks
 		}
 	}
 
-	private static void registerBlockStabStairs(RegistryHelper.BlockStairsSlabWallVariants t, Identifier identifier, boolean b)
+	private static void registerBlockStabStairs(RegistryHelper.BlockStairsSlabWallVariants t, Identifier identifier, boolean ignoreTab)
 	{
-		registerBlock(t.block, identifier, false);
-		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), false);
-		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), false);
-		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), false);
+		registerBlock(t.block, identifier, ignoreTab);
+		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
+		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), ignoreTab);
+		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), ignoreTab);
 	}
 
-	private static void registerDyedBlocks(RegistryHelper.DyedBlockVariants t, Identifier identifier, boolean b)
+	private static void registerDyedBlocks(RegistryHelper.DyedBlockVariants t, Identifier identifier, boolean ignoreTab)
 	{
 		for (var entry : t.entrySet())
-			registerBlock(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), false);
+			registerBlock(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);
 	}
 
 	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab)

@@ -225,6 +225,12 @@ public class Client implements ClientModInitializer
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Vent.Imperial, RenderLayer.getCutout());
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Vent.ImperialGrated, RenderLayer.getCutout());
 
+		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Cage.Creature, RenderLayer.getCutout());
+		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Cage.CreatureTerrarium, RenderLayer.getCutout());
+
+		for (var b : SwgBlocks.Cage.DyedCreatureTerrarium.values())
+			BlockRenderLayerMap.INSTANCE.putBlock(b, RenderLayer.getTranslucent());
+
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Leaves.Sequoia, RenderLayer.getCutoutMipped());
 		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Leaves.Japor, RenderLayer.getCutoutMipped());
 

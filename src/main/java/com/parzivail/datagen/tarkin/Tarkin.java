@@ -665,7 +665,6 @@ public class Tarkin
 		                               SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone, SwgBlocks.Dirt.RuinedWetPourstone)
 		                      .build(assets);
 
-
 		//RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Stone.MassassiChiseledBricks))
 		//                     .fill1x2(null, SwgBlocks.Stone.MassassiBrickSlab)
 		//                     .build(assets);
@@ -1031,6 +1030,28 @@ public class Tarkin
 		                                                                       .blockTag(SwgTags.Block.TATOOINE_DOORS)
 		                                                                       .blockTag(BlockTags.PICKAXE_MINEABLE)
 		                                                                       .build(assets));
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Cage.Creature)
+		              .state(BlockStateGenerator::basic)
+		              .model(ModelFile::cube_no_cull)
+		              .itemModel(ModelFile::ofBlock)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Cage.CreatureTerrarium)
+		              .state(BlockStateGenerator::basic)
+		              .model(ModelFile::cube_no_cull)
+		              .itemModel(ModelFile::ofBlock)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		for (var b : SwgBlocks.Cage.DyedCreatureTerrarium.values())
+			BlockGenerator.blockNoModelDefaultDrops(b)
+			              .state(BlockStateGenerator::basic)
+			              .model(ModelFile::cube_no_cull)
+			              .itemModel(ModelFile::ofBlock)
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.RedHangar)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
