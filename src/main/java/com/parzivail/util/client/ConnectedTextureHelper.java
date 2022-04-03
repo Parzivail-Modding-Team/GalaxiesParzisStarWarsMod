@@ -64,7 +64,7 @@ public class ConnectedTextureHelper
 	public static Sides getConnectedBlockTexture(BlockRenderView blockView, BlockState block, BlockPos pos, Direction facing, boolean horizontalConnect, boolean verticalConnect, boolean lateralConnect)
 	{
 		if (block == null)
-			return null;
+			return getPointFromConnections(0);
 
 		if (pos == null)
 		{
