@@ -1612,9 +1612,6 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Grate.ImperialOpaque3)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Grate.ImperialOpaque4)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Workbench.Blaster)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
