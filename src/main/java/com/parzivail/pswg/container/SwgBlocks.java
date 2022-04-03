@@ -302,9 +302,9 @@ public class SwgBlocks
 
 	public static class Planks
 	{
-		@RegistryName("japor_planks")
+		@RegistryName("japor")
 		@Flammable(burn = 5, spread = 20)
-		public static final Block Japor = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD));
+		public static final RegistryHelper.PlankStairsSlabFenceGateVariants Japor = new RegistryHelper.PlankStairsSlabFenceGateVariants(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 	}
 
 	public static class Light
@@ -630,6 +630,7 @@ public class SwgBlocks
 	{
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Block.class, SwgBlocks::registerBlock);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.BlockStairsSlabWallVariants.class, SwgBlocks::registerBlockStabStairs);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.PlankStairsSlabFenceGateVariants.class, SwgBlocks::registerPlankStabFenceGate);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedBlockVariants.class, SwgBlocks::registerDyedBlocks);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
@@ -665,6 +666,15 @@ public class SwgBlocks
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
 		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), ignoreTab);
 		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), ignoreTab);
+	}
+
+	private static void registerPlankStabFenceGate(RegistryHelper.PlankStairsSlabFenceGateVariants t, Identifier identifier, boolean ignoreTab)
+	{
+		registerBlock(t.plank, Resources.id(identifier.getPath() + "_planks"), ignoreTab);
+		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
+		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), ignoreTab);
+		registerBlock(t.fence, Resources.id(identifier.getPath() + "_fence"), ignoreTab);
+		registerBlock(t.gate, Resources.id(identifier.getPath() + "_fence_gate"), ignoreTab);
 	}
 
 	private static void registerDyedBlocks(RegistryHelper.DyedBlockVariants t, Identifier identifier, boolean ignoreTab)

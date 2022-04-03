@@ -19,6 +19,7 @@ import com.parzivail.util.block.InvertedLampBlock;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
+import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
@@ -1032,14 +1033,14 @@ public class Tarkin
 		                                                                       .build(assets));
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Cage.Creature)
-		              .state(BlockStateGenerator::basic)
+		              .state(BlockStateModelGenerator::createSingletonBlockState)
 		              .model(ModelFile::cube_no_cull)
 		              .itemModel(ModelFile::ofBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Cage.CreatureTerrarium)
-		              .state(BlockStateGenerator::basic)
+		              .state(BlockStateModelGenerator::createSingletonBlockState)
 		              .model(ModelFile::cube_no_cull)
 		              .itemModel(ModelFile::ofBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1047,7 +1048,7 @@ public class Tarkin
 
 		for (var b : SwgBlocks.Cage.DyedCreatureTerrarium.values())
 			BlockGenerator.blockNoModelDefaultDrops(b)
-			              .state(BlockStateGenerator::basic)
+			              .state(BlockStateModelGenerator::createSingletonBlockState)
 			              .model(ModelFile::cube_no_cull)
 			              .itemModel(ModelFile::ofBlock)
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1118,9 +1119,7 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.TATOOINE_LOG)
 		              .build(assets);
 
-		BlockGenerator.block(SwgBlocks.Planks.Japor)
-		              .blockTag(BlockTags.AXE_MINEABLE)
-		              .build(assets);
+		BlockGenerator.basicBlockStairsSlabFenceGateVariants(SwgBlocks.Planks.Japor, BlockTags.AXE_MINEABLE, assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1246,8 +1245,8 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Panel.BlackImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
-		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Panel.GrayImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Panel.BlackImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Panel.GrayImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
 
 		//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutout)
 		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1476,7 +1475,7 @@ public class Tarkin
 		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked)
 		              .build(assets);
 
-		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Stone.CanyonCobble, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Stone.CanyonCobble, BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Stone.DurasteelConnectedPourstone)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1498,7 +1497,7 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MassassiSmoothSlab, Resources.id("block/smooth_massassi_stone_slab_double"), Resources.id("block/smooth_massassi_stone"), Resources.id("block/smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Stone.MassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Stone.MassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
 		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiSmooth)
@@ -1507,7 +1506,7 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MossyMassassiSmoothSlab, Resources.id("block/mossy_smooth_massassi_stone_slab_double"), Resources.id("block/mossy_smooth_massassi_stone"), Resources.id("block/mossy_smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Stone.MossyMassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Stone.MossyMassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1583,7 +1582,7 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.IlumSmoothSlab, Resources.id("block/smooth_ilum_stone_slab_double"), Resources.id("block/smooth_ilum_stone"), Resources.id("block/smooth_ilum_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Stone.IlumBricks, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Stone.IlumBricks, BlockTags.PICKAXE_MINEABLE, assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumChiseledBricks)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);

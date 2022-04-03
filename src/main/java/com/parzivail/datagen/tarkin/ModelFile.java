@@ -346,6 +346,41 @@ public class ModelFile
 		);
 	}
 
+	public static Collection<ModelFile> fence(Block block, Identifier texture)
+	{
+		var id = AssetGenerator.getRegistryName(block);
+		return Arrays.asList(
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_post"), new Identifier("block/fence_post"))
+						.texture("texture", texture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_side"), new Identifier("block/fence_side"))
+						.texture("texture", texture),
+				ModelFile
+						.ofModel(id, new Identifier("block/fence_inventory"))
+						.texture("texture", texture)
+		);
+	}
+
+	public static Collection<ModelFile> fenceGate(Block block, Identifier texture)
+	{
+		var id = AssetGenerator.getRegistryName(block);
+		return Arrays.asList(
+				ModelFile
+						.ofModel(id, new Identifier("block/template_fence_gate"))
+						.texture("texture", texture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_open"), new Identifier("block/template_fence_gate_open"))
+						.texture("texture", texture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_wall"), new Identifier("block/template_fence_gate_wall"))
+						.texture("texture", texture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_wall_open"), new Identifier("block/template_fence_gate_wall_open"))
+						.texture("texture", texture)
+		);
+	}
+
 	public static Collection<ModelFile> randomMirror(Block block)
 	{
 		var mirroredId = IdentifierUtil.concat(AssetGenerator.getRegistryName(block), "_mirrored");

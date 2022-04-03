@@ -37,6 +37,24 @@ public class RegistryHelper
 		}
 	}
 
+	public static class PlankStairsSlabFenceGateVariants
+	{
+		public final Block plank;
+		public final StairsBlock stairs;
+		public final SlabBlock slab;
+		public final FenceBlock fence;
+		public final FenceGateBlock gate;
+
+		public PlankStairsSlabFenceGateVariants(Block plank)
+		{
+			this.plank = plank;
+			this.stairs = new PStairsBlock(plank.getDefaultState(), AbstractBlock.Settings.copy(plank));
+			this.slab = new SlabBlock(AbstractBlock.Settings.copy(plank));
+			this.fence = new FenceBlock(AbstractBlock.Settings.copy(plank));
+			this.gate = new FenceGateBlock(AbstractBlock.Settings.copy(plank));
+		}
+	}
+
 	public static <T> void registerAnnotatedFields(Class<?> rootClazz, Class<T> registryType, RegistryMethod<T> registryFunction)
 	{
 		for (var clazz : rootClazz.getClasses())

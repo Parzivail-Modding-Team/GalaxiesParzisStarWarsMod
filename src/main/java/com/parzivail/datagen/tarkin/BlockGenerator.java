@@ -3,6 +3,7 @@ package com.parzivail.datagen.tarkin;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.util.block.IPicklingBlock;
 import net.minecraft.block.Block;
+import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.BooleanProperty;
@@ -52,7 +53,7 @@ public class BlockGenerator
 	public static BlockGenerator block(Block block)
 	{
 		return blockNoModelLangEntry(block)
-				.state(BlockStateGenerator::basic)
+				.state(BlockStateModelGenerator::createSingletonBlockState)
 				.model(ModelFile::cube)
 				.itemModel(ModelFile::ofBlock);
 	}
@@ -60,7 +61,7 @@ public class BlockGenerator
 	public static BlockGenerator particleOnly(Block block, Identifier particle)
 	{
 		return blockNoModelLangEntry(block)
-				.state(BlockStateGenerator::basic)
+				.state(BlockStateModelGenerator::createSingletonBlockState)
 				.model(block1 -> ModelFile.particle(block1, particle));
 	}
 
@@ -98,7 +99,7 @@ public class BlockGenerator
 
 	static BlockGenerator basicRandomRotation(Block block)
 	{
-		return basic(block).state(BlockStateGenerator::randomRotation);
+		return basic(block).state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations);
 	}
 
 	static BlockGenerator leaves(Block block)
@@ -118,21 +119,21 @@ public class BlockGenerator
 	static BlockGenerator column(Block block, Identifier topTexture)
 	{
 		return basic(block)
-				.state(BlockStateGenerator::column)
+				.state(BlockStateModelGenerator::createAxisRotatedBlockState)
 				.model(b -> ModelFile.column(b, topTexture, AssetGenerator.getTextureName(block)));
 	}
 
 	static BlockGenerator column(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		return basic(block)
-				.state(BlockStateGenerator::column)
+				.state(BlockStateModelGenerator::createAxisRotatedBlockState)
 				.model(b -> ModelFile.column(b, topTexture, sideTexture));
 	}
 
 	static BlockGenerator staticColumn(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		return basic(block)
-				.state(BlockStateGenerator::basic)
+				.state(BlockStateModelGenerator::createSingletonBlockState)
 				.model(b -> ModelFile.column(b, topTexture, sideTexture));
 	}
 
@@ -142,7 +143,7 @@ public class BlockGenerator
 		var inner = IdentifierUtil.concat(id, "_inner");
 		var outer = IdentifierUtil.concat(id, "_outer");
 		return basic(block)
-				.state((b, modelId) -> BlockStateGenerator.stairs(b, inner, AssetGenerator.getTextureName(block), outer))
+				.state((b, modelId) -> BlockStateModelGenerator.createStairsBlockState(b, inner, AssetGenerator.getTextureName(block), outer))
 				.models(b -> ModelFile.stairs(b, topTexture, sideTexture));
 	}
 
@@ -151,7 +152,7 @@ public class BlockGenerator
 		var id = AssetGenerator.getTextureName(block);
 		var mirrored = IdentifierUtil.concat(id, "_mirrored");
 		return basic(block)
-				.state((b, modelId) -> BlockStateGenerator.randomMirror(b, id, mirrored))
+				.state((b, modelId) -> BlockStateModelGenerator.createBlockStateWithTwoModelAndRandomInversion(b, id, mirrored))
 				.models(ModelFile::randomMirror);
 	}
 
@@ -164,7 +165,7 @@ public class BlockGenerator
 	{
 		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
 		return basic(block)
-				.state((b, modelId) -> BlockStateGenerator.slab(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
+				.state((b, modelId) -> BlockStateModelGenerator.createSlabBlockState(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.slab(b, topTexture, sideTexture));
 	}
 
@@ -172,7 +173,7 @@ public class BlockGenerator
 	{
 		var id = AssetGenerator.getTextureName(block);
 		return blockNoModelDefaultDrops(block)
-				.state((b, modelId) -> BlockStateGenerator.wall(block, IdentifierUtil.concat(id, "_post"), IdentifierUtil.concat(id, "_side"), IdentifierUtil.concat(id, "_side_tall")))
+				.state((b, modelId) -> BlockStateModelGenerator.createWallBlockState(block, IdentifierUtil.concat(id, "_post"), IdentifierUtil.concat(id, "_side"), IdentifierUtil.concat(id, "_side_tall")))
 				.itemModel(b -> ModelFile.wallInventory(b, texture))
 				.models(b -> ModelFile.wall(b, texture))
 				.blockTag(BlockTags.WALLS);
@@ -182,13 +183,32 @@ public class BlockGenerator
 	{
 		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
 		return basic(block)
-				.state((b, modelId) -> BlockStateGenerator.slab(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
+				.state((b, modelId) -> BlockStateModelGenerator.createSlabBlockState(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
 				.models(b -> ModelFile.slabUniqueDouble(b, topTexture, sideTexture));
 	}
 
 	static BlockGenerator slab(Block block, Identifier model)
 	{
 		return slab(block, model, model, model);
+	}
+
+	static BlockGenerator fence(Block block, Identifier texture)
+	{
+		var post = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_post");
+		var side = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_side");
+		return basic(block)
+				.state((b, modelId) -> BlockStateModelGenerator.createFenceBlockState(block, post, side))
+				.models(b -> ModelFile.fence(b, texture));
+	}
+
+	static BlockGenerator fenceGate(Block block, Identifier texture)
+	{
+		var open = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_open");
+		var wallClosed = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_wall");
+		var wallOpen = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_wall_open");
+		return basic(block)
+				.state((b, modelId) -> BlockStateModelGenerator.createFenceGateBlockState(block, open, AssetGenerator.getTextureName(block), wallOpen, wallClosed))
+				.models(b -> ModelFile.fenceGate(b, texture));
 	}
 
 	public static BlockGenerator tangentFan(Block block)
@@ -240,7 +260,7 @@ public class BlockGenerator
 		return BlockGenerator.basic(block).lootTable(block1 -> LootTableFile.singleFortuneBonus(block1, item));
 	}
 
-	public static void basicBlockStairsSlabVariants(RegistryHelper.BlockStairsSlabWallVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void basicBlockStairsSlabWallVariants(RegistryHelper.BlockStairsSlabWallVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		blockStairsSlabVariants(variants, BlockGenerator::basic, miningTag, assets);
 	}
@@ -249,16 +269,48 @@ public class BlockGenerator
 	{
 		var id = AssetGenerator.getTextureName(variants.block);
 		generatorFunction.apply(variants.block)
-		              .blockTag(miningTag)
-		              .build(assets);
+		                 .blockTag(miningTag)
+		                 .build(assets);
 		BlockGenerator.slab(variants.slab, id)
 		              .blockTag(miningTag)
+		              .blockTag(BlockTags.SLABS)
 		              .build(assets);
 		BlockGenerator.stairs(variants.stairs, id)
 		              .blockTag(miningTag)
+		              .blockTag(BlockTags.STAIRS)
 		              .build(assets);
 		BlockGenerator.wall(variants.wall, id)
 		              .blockTag(miningTag)
+		              .blockTag(BlockTags.WALLS)
+		              .build(assets);
+	}
+
+	public static void basicBlockStairsSlabFenceGateVariants(RegistryHelper.PlankStairsSlabFenceGateVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	{
+		basicBlockStairsSlabFenceGateVariants(variants, BlockGenerator::basic, miningTag, assets);
+	}
+
+	public static void basicBlockStairsSlabFenceGateVariants(RegistryHelper.PlankStairsSlabFenceGateVariants variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	{
+		var id = AssetGenerator.getTextureName(variants.plank);
+		generatorFunction.apply(variants.plank)
+		                 .blockTag(miningTag)
+		                 .build(assets);
+		BlockGenerator.slab(variants.slab, id)
+		              .blockTag(miningTag)
+		              .blockTag(BlockTags.SLABS)
+		              .build(assets);
+		BlockGenerator.stairs(variants.stairs, id)
+		              .blockTag(miningTag)
+		              .blockTag(BlockTags.STAIRS)
+		              .build(assets);
+		BlockGenerator.fence(variants.fence, id)
+		              .blockTag(miningTag)
+		              .blockTag(BlockTags.FENCES)
+		              .build(assets);
+		BlockGenerator.fenceGate(variants.gate, id)
+		              .blockTag(miningTag)
+		              .blockTag(BlockTags.FENCE_GATES)
 		              .build(assets);
 	}
 
