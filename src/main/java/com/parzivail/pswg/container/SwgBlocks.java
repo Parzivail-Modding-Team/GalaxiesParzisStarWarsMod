@@ -571,7 +571,7 @@ public class SwgBlocks
 		public static final Block ChiseledCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 
 		@RegistryName("canyon_cobblestone")
-		public static final Block CanyonCobble = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
+		public static final RegistryHelper.BlockStairsSlabWallVariants CanyonCobble = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 
 		@RegistryName("pourstone")
 		public static final RegistryHelper.BlockStairsSlabWallVariants Pourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));

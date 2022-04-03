@@ -58,7 +58,8 @@ public class SpeciesPantoran extends SwgSpecies
 		stack.add(getGenderedTexture(this, VAR_HUMANOID_EYEBROWS));
 		stack.add(tint(getGlobalTexture("eyes"), this, VAR_HUMANOID_EYE_COLOR));
 		stack.add(getClothes(this, player));
-		stack.add(getTexture(this, VAR_HUMANOID_HAIR));
+		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_HAIR))
+			stack.add(getTexture(this, VAR_HUMANOID_HAIR));
 		return stack;
 	}
 }

@@ -876,9 +876,13 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.DeathStickYellow).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.MysteriousSmoothie).build(assets);
+		ItemGenerator.basic(SwgItems.Food.AbsynthesizedMalt).build(assets);
+		ItemGenerator.basic(SwgItems.Food.CoronetCocktail).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.BlueMilk).build(assets);
+		ItemGenerator.basic(SwgItems.Food.BlueMilkGlass).build(assets);
 		ItemGenerator.basic(SwgItems.Food.BlueYogurt).build(assets);
+		ItemGenerator.basic(SwgItems.Food.BanthaCookie).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.QrikkiBread).build(assets);
 		ItemGenerator.basic(SwgItems.Food.QrikkiWaffle).build(assets);
@@ -1395,7 +1399,7 @@ public class Tarkin
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Fine)
+		BlockGenerator.basic(SwgBlocks.Sand.Fine)
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
@@ -1445,9 +1449,7 @@ public class Tarkin
 		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked)
 		              .build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Stone.CanyonCobble)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
+		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Stone.CanyonCobble, BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Stone.DurasteelConnectedPourstone)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1472,7 +1474,9 @@ public class Tarkin
 		BlockGenerator.basicBlockStairsSlabVariants(SwgBlocks.Stone.MassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
 		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiSmooth).build(assets);
+		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiSmooth)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MossyMassassiSmoothSlab, Resources.id("block/mossy_smooth_massassi_stone_slab_double"), Resources.id("block/mossy_smooth_massassi_stone"), Resources.id("block/mossy_smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
