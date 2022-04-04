@@ -1277,95 +1277,95 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf1, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf2, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf3, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf4, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightHalf5, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff1, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff1, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff2, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOff2, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn1, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn1, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn2, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialLightOn2, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern1, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern1, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern2, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern2, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern3, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern3, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern3, Resources.id("block/rusted_gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern3, Resources.id("block/rusted_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Panel.MossyGrayImperialPanelPattern3, Resources.id("block/mossy_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern4, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern4, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern4, Resources.id("block/rusted_gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern4, Resources.id("block/rusted_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Panel.MossyGrayImperialPanelPattern4, Resources.id("block/mossy_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern5, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern5, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern5, Resources.id("block/rusted_gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern5, Resources.id("block/rusted_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Panel.MossyGrayImperialPanelPattern5, Resources.id("block/mossy_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern6, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern6, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern6, Resources.id("block/rusted_gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern6, Resources.id("block/rusted_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Panel.MossyGrayImperialPanelPattern6, Resources.id("block/mossy_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern7, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern7, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern8, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern8, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern9, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern9, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern9, Resources.id("block/rusted_gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.RustedGrayImperialPanelPattern9, Resources.id("block/rusted_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.column(SwgBlocks.Panel.MossyGrayImperialPanelPattern9, Resources.id("block/mossy_gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern10, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern10, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern11, Resources.id("block/gray_imperial_panel_blank"))
+		BlockGenerator.column(SwgBlocks.Panel.GrayImperialPanelPattern11, Resources.id("block/gray_imperial_panel_pattern_3"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
