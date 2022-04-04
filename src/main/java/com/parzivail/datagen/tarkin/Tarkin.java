@@ -1597,7 +1597,7 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Workbench.Blaster)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Workbench.Lightsaber)
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Workbench.Lightsaber)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 	}
