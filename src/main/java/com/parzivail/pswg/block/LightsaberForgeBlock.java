@@ -16,8 +16,9 @@ public class LightsaberForgeBlock extends RotatingBlockWithGuiEntity
 			VoxelShapes.cuboid(0, 10 / 16f, 0, 1, 13 / 16f, 1),
 			VoxelShapes.cuboid(1 / 16f, 5 / 16f, 0, 15 / 16f, 7 / 16f, 10 / 16f),
 			VoxelShapes.cuboid(1 / 16f, 0, 10 / 16f, 15 / 16f, 10 / 16f, 15 / 16f),
-			VoxelShapes.cuboid(0, 13 / 16f, 0.4f / 16f, 5.25f / 16f, 1, 8.5f / 16f),
-			VoxelShapes.cuboid(2.5f / 16f, 13 / 16f, 11.5f / 16f, 5.5f / 16f, 15.75f / 16f, 14.5f / 16f)
+			VoxelShapes.cuboid(4f / 16f, 13 / 16f, 4f / 16f, 8f / 16f, 1, 1),
+			VoxelShapes.cuboid(9f / 16f, 13 / 16f, 0, 13f / 16f, 14f / 16f, 6f / 16f),
+			VoxelShapes.cuboid(9.5f / 16f, 13 / 16f, 4f / 16f, 12.5f / 16f, 15.75f / 16f, 5f / 16f)
 	);
 	private static final VoxelShape[] SHAPE_ROTATIONS = new VoxelShape[4];
 
@@ -35,14 +36,6 @@ public class LightsaberForgeBlock extends RotatingBlockWithGuiEntity
 	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
-		var shape = VoxelShapes.union(
-				VoxelShapes.cuboid(0, 10 / 16f, 0, 1, 13 / 16f, 1),
-				VoxelShapes.cuboid(1 / 16f, 5 / 16f, 0, 15 / 16f, 7 / 16f, 10 / 16f),
-				VoxelShapes.cuboid(1 / 16f, 0, 10 / 16f, 15 / 16f, 10 / 16f, 15 / 16f),
-				VoxelShapes.cuboid(4f / 16f, 13 / 16f, 4f / 16f, 8f / 16f, 1, 1),
-				VoxelShapes.cuboid(9f / 16f, 13 / 16f, 0, 13f / 16f, 14f / 16f, 6f / 16f),
-				VoxelShapes.cuboid(9.5f / 16f, 13 / 16f, 4f / 16f, 12.5f / 16f, 15.75f / 16f, 5f / 16f)
-		);
-		return VoxelShapeUtil.rotate(shape, (state.get(FACING).getHorizontal() + 1) % 4);
+		return SHAPE_ROTATIONS[(state.get(FACING).getHorizontal() + 1) % 4];
 	}
 }
