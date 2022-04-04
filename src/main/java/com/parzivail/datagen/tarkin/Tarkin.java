@@ -1455,7 +1455,7 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Sandstone.Desert)
+		BlockGenerator.staticColumn(SwgBlocks.Sandstone.Desert, Resources.id("block/smooth_desert_sandstone"))
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);

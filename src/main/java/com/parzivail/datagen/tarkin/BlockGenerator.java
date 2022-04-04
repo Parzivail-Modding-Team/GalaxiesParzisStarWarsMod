@@ -130,6 +130,13 @@ public class BlockGenerator
 				.model(b -> ModelFile.column(b, topTexture, sideTexture));
 	}
 
+	static BlockGenerator staticColumn(Block block, Identifier topTexture)
+	{
+		return basic(block)
+				.state(BlockStateModelGenerator::createSingletonBlockState)
+				.model(b -> ModelFile.column(b, topTexture, AssetGenerator.getTextureName(block)));
+	}
+
 	static BlockGenerator staticColumn(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		return basic(block)
