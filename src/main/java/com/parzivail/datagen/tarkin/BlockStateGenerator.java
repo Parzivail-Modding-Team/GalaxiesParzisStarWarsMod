@@ -48,6 +48,11 @@ public class BlockStateGenerator
 		return BlockStateModelGenerator.createOrientableTrapdoorBlockState(block, IdentifierUtil.concat(modelId, "_top"), IdentifierUtil.concat(modelId, "_bottom"), IdentifierUtil.concat(modelId, "_open"));
 	}
 
+	public static BlockStateSupplier door(Block block, Identifier modelId)
+	{
+		return BlockStateModelGenerator.createDoorBlockState(block, IdentifierUtil.concat(modelId, "_bottom"), IdentifierUtil.concat(modelId, "_bottom_hinge"), IdentifierUtil.concat(modelId, "_top"), IdentifierUtil.concat(modelId, "_top_hinge"));
+	}
+
 	private static BlockStateVariantMap createBooleanModelMap(BooleanProperty property, Identifier trueModel, Identifier falseModel)
 	{
 		return BlockStateVariantMap.create(property)

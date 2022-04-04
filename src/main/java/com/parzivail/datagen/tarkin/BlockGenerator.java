@@ -107,13 +107,27 @@ public class BlockGenerator
 		return basic(block).model(ModelFile::leaves);
 	}
 
-	static BlockGenerator trapdoor(Block block)
+	static BlockGenerator trapdoor(Block block, Identifier texture)
 	{
 		return basic(block)
 				.state(BlockStateGenerator::trapdoor)
-				.models(ModelFile::trapdoor)
+				.models(block1 -> ModelFile.trapdoor(block, texture))
 				.itemModel(block1 -> ModelFile.ofBlockDifferentParent(block, IdentifierUtil.concat(AssetGenerator.getTextureName(block1), "_bottom")))
 				.blockTag(BlockTags.TRAPDOORS);
+	}
+
+	static BlockGenerator trapdoor(Block block)
+	{
+		return trapdoor(block, AssetGenerator.getTextureName(block));
+	}
+
+	static BlockGenerator door(Block block, Identifier itemTexture)
+	{
+		return basic(block)
+				.state(BlockStateGenerator::door)
+				.models(block1 -> ModelFile.door(block, AssetGenerator.getTextureName(block)))
+				.itemModel(block1 -> ModelFile.item(block, itemTexture))
+				.blockTag(BlockTags.DOORS);
 	}
 
 	static BlockGenerator column(Block block, Identifier topTexture)
@@ -318,6 +332,14 @@ public class BlockGenerator
 		BlockGenerator.fenceGate(variants.gate, id)
 		              .blockTag(miningTag)
 		              .blockTag(BlockTags.FENCE_GATES)
+		              .build(assets);
+		BlockGenerator.trapdoor(variants.trapdoor)
+		              .blockTag(miningTag)
+		              .blockTag(BlockTags.TRAPDOORS)
+		              .build(assets);
+		BlockGenerator.door(variants.door, AssetGenerator.getTextureName(variants.door.asItem()))
+		              .blockTag(miningTag)
+		              .blockTag(BlockTags.DOORS)
 		              .build(assets);
 	}
 

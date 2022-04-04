@@ -53,6 +53,8 @@ public class RegistryHelper
 		public final SlabBlock slab;
 		public final FenceBlock fence;
 		public final FenceGateBlock gate;
+		public final TrapdoorBlock trapdoor;
+		public final DoorBlock door;
 
 		public PlankStairsSlabFenceGateVariants(Block plank)
 		{
@@ -61,6 +63,8 @@ public class RegistryHelper
 			this.slab = new SlabBlock(AbstractBlock.Settings.copy(plank));
 			this.fence = new FenceBlock(AbstractBlock.Settings.copy(plank));
 			this.gate = new FenceGateBlock(AbstractBlock.Settings.copy(plank));
+			this.trapdoor = new TrapdoorBlock(AbstractBlock.Settings.copy(plank));
+			this.door = new DoorBlock(AbstractBlock.Settings.copy(plank));
 		}
 	}
 

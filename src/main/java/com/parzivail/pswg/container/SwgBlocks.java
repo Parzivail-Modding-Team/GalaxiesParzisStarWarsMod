@@ -676,6 +676,8 @@ public class SwgBlocks
 		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), ignoreTab);
 		registerBlock(t.fence, Resources.id(identifier.getPath() + "_fence"), ignoreTab);
 		registerBlock(t.gate, Resources.id(identifier.getPath() + "_fence_gate"), ignoreTab);
+		registerBlock(t.trapdoor, Resources.id(identifier.getPath() + "_trapdoor"), ignoreTab);
+		registerBlock(t.door, Resources.id(identifier.getPath() + "_door"), ignoreTab);
 	}
 
 	private static void registerDyedBlocks(RegistryHelper.DyedBlockVariants t, Identifier identifier, boolean ignoreTab)

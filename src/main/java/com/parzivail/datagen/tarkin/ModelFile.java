@@ -162,10 +162,9 @@ public class ModelFile
 		);
 	}
 
-	public static Collection<ModelFile> trapdoor(Block block)
+	public static Collection<ModelFile> trapdoor(Block block, Identifier texture)
 	{
 		var id = AssetGenerator.getRegistryName(block);
-		var texture = AssetGenerator.getTextureName(block);
 		return Arrays.asList(
 				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_bottom"), new Identifier("block/template_orientable_trapdoor_bottom"))
@@ -176,6 +175,31 @@ public class ModelFile
 				ModelFile
 						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/template_orientable_trapdoor_top"))
 						.texture("texture", texture)
+		);
+	}
+
+	public static Collection<ModelFile> door(Block block, Identifier texture)
+	{
+		var id = AssetGenerator.getRegistryName(block);
+		var textureTop = IdentifierUtil.concat(texture, "_top");
+		var textureBottom = IdentifierUtil.concat(texture, "_bottom");
+		return Arrays.asList(
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_bottom"), new Identifier("block/door_bottom"))
+						.texture("top", textureTop)
+						.texture("bottom", textureBottom),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_bottom_hinge"), new Identifier("block/door_bottom_rh"))
+						.texture("top", textureTop)
+						.texture("bottom", textureBottom),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/door_top"))
+						.texture("top", textureTop)
+						.texture("bottom", textureBottom),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top_hinge"), new Identifier("block/door_top_rh"))
+						.texture("top", textureTop)
+						.texture("bottom", textureBottom)
 		);
 	}
 
