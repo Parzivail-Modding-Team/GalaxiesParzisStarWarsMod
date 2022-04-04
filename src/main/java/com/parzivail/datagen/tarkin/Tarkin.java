@@ -1548,21 +1548,7 @@ public class Tarkin
 		              .build(assets);
 
 		for (var pair : SwgBlocks.Stone.DyedPourstone.entrySet())
-			BlockGenerator.basicRandomMirror(pair.getValue())
-			              .blockTag(BlockTags.PICKAXE_MINEABLE)
-			              .build(assets);
-		for (var pair : SwgBlocks.Stone.DyedPourstoneStairs.entrySet())
-			BlockGenerator.stairs(pair.getValue(), Resources.id(String.format("block/%s_pourstone", pair.getKey().getName())))
-			              .blockTag(BlockTags.PICKAXE_MINEABLE)
-			              .build(assets);
-		for (var pair : SwgBlocks.Stone.DyedPourstoneSlab.entrySet())
-			BlockGenerator.slab(pair.getValue(), Resources.id(String.format("block/%s_pourstone", pair.getKey().getName())))
-			              .blockTag(BlockTags.PICKAXE_MINEABLE)
-			              .build(assets);
-		for (var pair : SwgBlocks.Stone.DyedPourstoneWall.entrySet())
-			BlockGenerator.wall(pair.getValue(), Resources.id(String.format("block/%s_pourstone", pair.getKey().getName())))
-			              .blockTag(BlockTags.PICKAXE_MINEABLE)
-			              .build(assets);
+			BlockGenerator.basicBlockStairsSlabWallVariants(pair.getValue(), BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)

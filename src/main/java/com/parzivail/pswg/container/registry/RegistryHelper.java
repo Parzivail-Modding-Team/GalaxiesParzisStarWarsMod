@@ -21,6 +21,15 @@ public class RegistryHelper
 		}
 	}
 
+	public static class DyedBlockStairsSlabWallVariants extends HashMap<DyeColor, BlockStairsSlabWallVariants>
+	{
+		public DyedBlockStairsSlabWallVariants(Function<DyeColor, BlockStairsSlabWallVariants> blockFunction)
+		{
+			for (var color : DyeColor.values())
+				put(color, blockFunction.apply(color));
+		}
+	}
+
 	public static class BlockStairsSlabWallVariants
 	{
 		public final Block block;

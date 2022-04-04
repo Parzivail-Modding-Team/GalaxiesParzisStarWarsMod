@@ -588,13 +588,7 @@ public class SwgBlocks
 		public static final SelfConnectingBlock DurasteelConnectedPourstone = new SelfConnectingBlock(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 
 		@RegistryName("pourstone")
-		public static final RegistryHelper.DyedBlockVariants DyedPourstone = new RegistryHelper.DyedBlockVariants(color -> new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
-		@RegistryName("pourstone_stairs")
-		public static final RegistryHelper.DyedBlockVariants DyedPourstoneStairs = new RegistryHelper.DyedBlockVariants(color -> new PStairsBlock(DyedPourstone.get(color).getDefaultState(), AbstractBlock.Settings.copy(DyedPourstone.get(color))));
-		@RegistryName("pourstone_slab")
-		public static final RegistryHelper.DyedBlockVariants DyedPourstoneSlab = new RegistryHelper.DyedBlockVariants(color -> new SlabBlock(AbstractBlock.Settings.copy(DyedPourstone.get(color))));
-		@RegistryName("pourstone_wall")
-		public static final RegistryHelper.DyedBlockVariants DyedPourstoneWall = new RegistryHelper.DyedBlockVariants(color -> new WallBlock(AbstractBlock.Settings.copy(DyedPourstone.get(color))));
+		public static final RegistryHelper.DyedBlockStairsSlabWallVariants DyedPourstone = new RegistryHelper.DyedBlockStairsSlabWallVariants(color -> new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool())));
 
 		@RegistryName("massassi_stone")
 		public static final RegistryHelper.BlockStairsSlabWallVariants Massassi = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
@@ -630,6 +624,7 @@ public class SwgBlocks
 	{
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Block.class, SwgBlocks::registerBlock);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.BlockStairsSlabWallVariants.class, SwgBlocks::registerBlockStabStairs);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedBlockStairsSlabWallVariants.class, SwgBlocks::registerBlockStabStairs);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.PlankStairsSlabFenceGateVariants.class, SwgBlocks::registerPlankStabFenceGate);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedBlockVariants.class, SwgBlocks::registerDyedBlocks);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
@@ -666,6 +661,12 @@ public class SwgBlocks
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
 		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), ignoreTab);
 		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), ignoreTab);
+	}
+
+	private static void registerBlockStabStairs(RegistryHelper.DyedBlockStairsSlabWallVariants t, Identifier identifier, boolean ignoreTab)
+	{
+		for (var entry : t.entrySet())
+			registerBlockStabStairs(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);
 	}
 
 	private static void registerPlankStabFenceGate(RegistryHelper.PlankStairsSlabFenceGateVariants t, Identifier identifier, boolean ignoreTab)
