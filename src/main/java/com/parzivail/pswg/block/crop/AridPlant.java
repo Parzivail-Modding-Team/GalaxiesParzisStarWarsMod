@@ -27,7 +27,6 @@ public class AridPlant extends PlantBlock
 		var block = floor.getBlock();
 		return floor.isIn(BlockTags.SAND) ||
 		       block == SwgBlocks.Dirt.DesertLoam ||
-		       block == SwgBlocks.Sandstone.Desert ||
 		       block == SwgBlocks.Salt.Caked ||
 		       block == Blocks.GRASS_BLOCK ||
 		       block == Blocks.TERRACOTTA ||

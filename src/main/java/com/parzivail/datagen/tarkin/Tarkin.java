@@ -1438,10 +1438,8 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Stone.Canyon)
-		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
-		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
-		              .build(assets);
+		BlockGenerator.blockStairsSlabVariants(SwgBlocks.Stone.Canyon, BlockGenerator::basicRandomRotation, SwgTags.Block.DESERT_SANDSTONE, assets);
+
 		BlockGenerator.basic(SwgBlocks.Stone.CanyonBricks)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
@@ -1455,10 +1453,8 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
 
-		BlockGenerator.staticColumn(SwgBlocks.Sandstone.Desert, Resources.id("block/smooth_desert_sandstone"))
-		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
-		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
-		              .build(assets);
+		BlockGenerator.blockStairsSlabVariants(SwgBlocks.Sandstone.Desert, b -> BlockGenerator.staticColumn(b, Resources.id("block/smooth_desert_sandstone")), SwgTags.Block.DESERT_SANDSTONE, assets);
+
 		BlockGenerator.basic(SwgBlocks.Sandstone.SmoothDesert)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)

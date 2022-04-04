@@ -524,7 +524,7 @@ public class SwgBlocks
 	public static class Sandstone
 	{
 		@RegistryName("desert_sandstone")
-		public static final Block Desert = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
+		public static final RegistryHelper.BlockStairsSlabWallVariants Desert = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("smooth_desert_sandstone")
 		public static final Block SmoothDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("polished_desert_sandstone")
@@ -566,7 +566,7 @@ public class SwgBlocks
 	public static class Stone
 	{
 		@RegistryName("canyon_stone")
-		public static final Block Canyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		public static final RegistryHelper.BlockStairsSlabWallVariants Canyon = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F)));
 		@RegistryName("canyon_stone_bricks")
 		public static final Block CanyonBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("polished_canyon_stone")
