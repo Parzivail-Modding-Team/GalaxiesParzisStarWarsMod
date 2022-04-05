@@ -137,7 +137,8 @@ public class BlockGenerator
 
 	static BlockGenerator door(Block block, Identifier itemTexture)
 	{
-		return basic(block)
+		return block(block)
+				.lootTable(LootTableFile::door)
 				.state(BlockStateGenerator::door)
 				.models(block1 -> ModelFile.door(block, AssetGenerator.getTextureName(block)))
 				.itemModel(block1 -> ModelFile.item(block, itemTexture))

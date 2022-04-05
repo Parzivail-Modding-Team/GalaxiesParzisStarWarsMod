@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.parzivail.util.block.IPicklingBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.util.Identifier;
 
@@ -129,6 +130,20 @@ public class LootTableFile
 						                     )
 				              )
 		);
+	}
+
+	public static LootTableFile door(Block block)
+	{
+		var reg = AssetGenerator.getRegistryName(block);
+		return empty(block)
+				.pool(new Pool(1)
+						      .entry(new Pool.Entry(new Identifier("item"), reg)
+								             .condition(new Pool.Condition(new Identifier("block_state_property"))
+										                        .block(reg)
+										                        .property("half", DoubleBlockHalf.LOWER.asString()))
+						      )
+						      .condition(new Identifier("survives_explosion"))
+				);
 	}
 
 	public static class Pool
