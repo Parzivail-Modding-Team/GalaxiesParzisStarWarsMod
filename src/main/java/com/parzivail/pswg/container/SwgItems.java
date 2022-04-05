@@ -6,6 +6,7 @@ import com.parzivail.pswg.block.TatooineHomeDoorBlock;
 import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.container.registry.RegistryName;
+import com.parzivail.pswg.container.registry.RegistryOrder;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.SpawnEntityItem;
@@ -30,12 +31,14 @@ import java.util.List;
 
 public class SwgItems
 {
+	@RegistryOrder(order = 0)
 	public static class Debug
 	{
 		@RegistryName("debug")
 		public static final DebugItem Debug = new DebugItem(new Item.Settings().maxCount(1));
 	}
 
+	@RegistryOrder(order = 1)
 	public static class Door
 	{
 		public static final List<TatooineHomeDoorBlock.Item> TatooineHome = SwgBlocks.Door.TatooineHomeBottoms
@@ -45,12 +48,14 @@ public class SwgItems
 				.toList();
 	}
 
+	@RegistryOrder(order = 2)
 	public static class Cable
 	{
 		@RegistryName("insulated_desh_cable")
 		public static final Item Power = new CableItem(new Item.Settings().group(Galaxies.TabItems));
 	}
 
+	@RegistryOrder(order = 3)
 	public static class CraftingComponents
 	{
 		@RegistryName("electric_motor")
@@ -76,146 +81,133 @@ public class SwgItems
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	public static class Hoe
-	{
-		@RegistryName("durasteel_hoe")
-		public static final ToolItem Durasteel = new PHoeItem(DurasteelToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("titanium_hoe")
-		public static final ToolItem Titanium = new PHoeItem(TitaniumToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("beskar_hoe")
-		public static final ToolItem Beskar = new PHoeItem(BeskarToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.TabItems));
-	}
-
-	public static class Axe
-	{
-		@RegistryName("durasteel_axe")
-		public static final ToolItem Durasteel = new PAxeItem(DurasteelToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("titanium_axe")
-		public static final ToolItem Titanium = new PAxeItem(TitaniumToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("beskar_axe")
-		public static final ToolItem Beskar = new PAxeItem(BeskarToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.TabItems));
-	}
-
-	public static class Shovel
-	{
-		@RegistryName("durasteel_shovel")
-		public static final ToolItem Durasteel = new ShovelItem(DurasteelToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("titanium_shovel")
-		public static final ToolItem Titanium = new ShovelItem(TitaniumToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("beskar_shovel")
-		public static final ToolItem Beskar = new ShovelItem(BeskarToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings().group(Galaxies.TabItems));
-	}
-
-	public static class Pickaxe
-	{
-		@RegistryName("durasteel_pickaxe")
-		public static final ToolItem Durasteel = new PPickaxeItem(DurasteelToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("titanium_pickaxe")
-		public static final ToolItem Titanium = new PPickaxeItem(TitaniumToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("beskar_pickaxe")
-		public static final ToolItem Beskar = new PPickaxeItem(BeskarToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.TabItems));
-	}
-
-	public static class Dust
-	{
-		@RegistryName("helicite_dust")
-		public static final Item Helicite = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("lommite_dust")
-		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("thorilide_dust")
-		public static final Item Thorilide = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("zersium_dust")
-		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.TabItems));
-	}
-
-	public static class Crystal
-	{
-		@RegistryName("exonium")
-		public static final Item Exonium = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("helicite_crystal")
-		public static final Item Helicite = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("lommite_crystal")
-		public static final Item Lommite = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("thorilide_crystal")
-		public static final Item Thorilide = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("zersium_crystal")
-		public static final Item Zersium = new Item(new Item.Settings().group(Galaxies.TabItems));
-	}
-
-	public static class Shard
-	{
-		@RegistryName("rubindum_shard")
-		public static final Item Rubindum = new Item(new Item.Settings().group(Galaxies.TabItems));
-	}
-
-	public static class Nugget
-	{
-		@RegistryName("chromium_nugget")
-		public static final Item Chromium = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("desh_nugget")
-		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("diatium_nugget")
-		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("durasteel_nugget")
-		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("plasteel_nugget")
-		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("titanium_nugget")
-		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("ionite_nugget")
-		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.TabItems));
-	}
-
-	public static class Ingot
+	@RegistryOrder(order = 4)
+	public static class Material
 	{
 		@RegistryName("beskar_ingot")
-		public static final Item Beskar = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item BeskarIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("beskar_shovel")
+		public static final ToolItem BeskarShovel = new ShovelItem(BeskarToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("beskar_pickaxe")
+		public static final ToolItem BeskarPickaxe = new PPickaxeItem(BeskarToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("beskar_axe")
+		public static final ToolItem BeskarAxe = new PAxeItem(BeskarToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("beskar_hoe")
+		public static final ToolItem BeskarHoe = new PHoeItem(BeskarToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.TabItems));
+
 		@RegistryName("chromium_ingot")
-		public static final Item Chromium = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item ChromiumIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("chromium_nugget")
+		public static final Item ChromiumNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
+
 		@RegistryName("cortosis_ingot")
-		public static final Item Cortosis = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item CortosisIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+
 		@RegistryName("desh_ingot")
-		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("kelerium_ingot")
-		public static final Item Kelerium = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item DeshIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("desh_nugget")
+		public static final Item DeshNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
+
 		@RegistryName("diatium_ingot")
-		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item DiatiumIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("diatium_nugget")
+		public static final Item DiatiumNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
+
 		@RegistryName("durasteel_ingot")
-		public static final Item Durasteel = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("plasteel_ingot")
-		public static final Item Plasteel = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("titanium_ingot")
-		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item DurasteelIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("durasteel_nugget")
+		public static final Item DurasteelNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("durasteel_shovel")
+		public static final ToolItem DurasteelShovel = new ShovelItem(DurasteelToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("durasteel_axe")
+		public static final ToolItem DurasteelAxe = new PAxeItem(DurasteelToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("durasteel_hoe")
+		public static final ToolItem DurasteelHoe = new PHoeItem(DurasteelToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("durasteel_pickaxe")
+		public static final ToolItem DurasteelPickaxe = new PPickaxeItem(DurasteelToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("exonium")
+		public static final Item ExoniumCrystal = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("helicite_crystal")
+		public static final Item HeliciteCrystal = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("helicite_dust")
+		public static final Item HeliciteDust = new Item(new Item.Settings().group(Galaxies.TabItems));
+
 		@RegistryName("ionite_ingot")
-		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item IoniteIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("ionite_nugget")
+		public static final Item IoniteNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("kelerium_ingot")
+		public static final Item KeleriumIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("lommite_crystal")
+		public static final Item LommiteCrystal = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("lommite_dust")
+		public static final Item LommiteDust = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("plasteel_ingot")
+		public static final Item PlasteelIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("plasteel_nugget")
+		public static final Item PlasteelNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("rubindum_shard")
+		public static final Item RubindumShard = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("thorilide_crystal")
+		public static final Item ThorilideCrystal = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("thorilide_dust")
+		public static final Item ThorilideDust = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("titanium_ingot")
+		public static final Item TitaniumIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("titanium_nugget")
+		public static final Item TitaniumNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("titanium_shovel")
+		public static final ToolItem TitaniumShovel = new ShovelItem(TitaniumToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("titanium_pickaxe")
+		public static final ToolItem TitaniumPickaxe = new PPickaxeItem(TitaniumToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("titanium_axe")
+		public static final ToolItem TitaniumAxe = new PAxeItem(TitaniumToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("titanium_hoe")
+		public static final ToolItem TitaniumHoe = new PHoeItem(TitaniumToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.TabItems));
+
 		@RegistryName("transparisteel_ingot")
-		public static final Item Transparisteel = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item TransparisteelIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("zersium_crystal")
+		public static final Item ZersiumCrystal = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("zersium_dust")
+		public static final Item ZersiumDust = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
 	// TODO: some of these might belong into Crystal, or somewhere else.
 	//  Also, check if the names are consistent with vanilla 1.17.
+	@RegistryOrder(order = 5)
 	public static class RawOre
 	{
 		@RegistryName("raw_beskar")
-		public static final Item Beskar = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item BeskarRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("raw_chromium")
-		public static final Item Chromium = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item ChromiumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("raw_cortosis")
-		public static final Item Cortosis = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item CortosisRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("raw_desh")
-		public static final Item Desh = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item DeshRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("raw_diatium")
-		public static final Item Diatium = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item DiatiumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("raw_kelerium")
-		public static final Item Kelerium = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item KeleriumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("raw_rubindum")
-		public static final Item Rubindum = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item RubindumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("raw_titanium")
-		public static final Item Titanium = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item TitaniumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("raw_ionite")
-		public static final Item Ionite = new Item(new Item.Settings().group(Galaxies.TabItems));
+		public static final Item IoniteRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
+	@RegistryOrder(order = 6)
 	public static class Natural
 	{
 		@RegistryName("stripped_japor_branch")
@@ -226,12 +218,14 @@ public class SwgItems
 		public static final Item SaltPile = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
+	@RegistryOrder(order = 7)
 	public static class Seeds
 	{
 		@RegistryName("chasuka_seeds")
 		public static final Item ChasukaSeeds = new AliasedBlockItem(SwgBlocks.Plant.Chasuka, new Item.Settings().group(Galaxies.TabItems));
 	}
 
+	@RegistryOrder(order = 8)
 	public static class Food
 	{
 
@@ -345,6 +339,7 @@ public class SwgItems
 		public static final Item HubbaGourd = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 	}
 
+	@RegistryOrder(order = 9)
 	public static class MobDrops
 	{
 		@RegistryName("faa_bucket")
@@ -379,6 +374,7 @@ public class SwgItems
 		public static final Item ToughHide = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
+	@RegistryOrder(order = 10)
 	public static class Blaster
 	{
 		@RegistryName("blaster")
@@ -387,6 +383,7 @@ public class SwgItems
 		public static final BlasterPowerPackItem SmallPowerPack = new BlasterPowerPackItem(75, new Item.Settings().group(Galaxies.TabBlasters));
 	}
 
+	@RegistryOrder(order = 11)
 	public static class Spawners
 	{
 		@RegistryName("spawn_xwing_t65b")
@@ -405,6 +402,7 @@ public class SwgItems
 		public static final Item Worrt = new SpawnEggItem(SwgEntities.Amphibian.Worrt, 0x5B482C, 0x635735, new Item.Settings().group(Galaxies.TabItems));
 	}
 
+	@RegistryOrder(order = 12)
 	public static class Lightsaber
 	{
 		@RegistryName("lightsaber")

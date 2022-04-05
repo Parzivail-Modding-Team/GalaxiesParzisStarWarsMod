@@ -42,6 +42,6 @@ public class TitaniumToolMaterial implements ToolMaterial
 	@Override
 	public Ingredient getRepairIngredient()
 	{
-		return Ingredient.ofItems(SwgItems.Ingot.Titanium);
+		return Ingredient.ofItems(SwgItems.Material.TitaniumIngot);
 	}
 }

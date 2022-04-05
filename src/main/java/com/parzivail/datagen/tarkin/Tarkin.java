@@ -260,8 +260,8 @@ public class Tarkin
 				assets,
 				5.0F,
 				SwgBlocks.Ore.BeskarOre,
-				SwgItems.RawOre.Beskar,
-				SwgItems.Ingot.Beskar,
+				SwgItems.RawOre.BeskarRaw,
+				SwgItems.Material.BeskarIngot,
 				SwgBlocks.Ore.BeskarBlock
 		);
 
@@ -269,9 +269,9 @@ public class Tarkin
 				assets,
 				1.0F,
 				SwgBlocks.Ore.ChromiumOre,
-				SwgItems.RawOre.Chromium,
-				SwgItems.Ingot.Chromium,
-				SwgItems.Nugget.Chromium,
+				SwgItems.RawOre.ChromiumRaw,
+				SwgItems.Material.ChromiumIngot,
+				SwgItems.Material.ChromiumNugget,
 				SwgBlocks.Ore.ChromiumBlock
 		);
 
@@ -279,8 +279,8 @@ public class Tarkin
 				assets,
 				4.0F,
 				SwgBlocks.Ore.CortosisOre,
-				SwgItems.RawOre.Cortosis,
-				SwgItems.Ingot.Cortosis,
+				SwgItems.RawOre.CortosisRaw,
+				SwgItems.Material.CortosisIngot,
 				SwgBlocks.Ore.CortosisBlock
 		);
 
@@ -288,9 +288,9 @@ public class Tarkin
 				assets,
 				0.4F,
 				SwgBlocks.Ore.DeshOre,
-				SwgItems.RawOre.Desh,
-				SwgItems.Ingot.Desh,
-				SwgItems.Nugget.Desh,
+				SwgItems.RawOre.DeshRaw,
+				SwgItems.Material.DeshIngot,
+				SwgItems.Material.DeshNugget,
 				SwgBlocks.Ore.DeshBlock
 		);
 
@@ -298,9 +298,9 @@ public class Tarkin
 				assets,
 				0.7F,
 				SwgBlocks.Ore.DiatiumOre,
-				SwgItems.RawOre.Diatium,
-				SwgItems.Ingot.Diatium,
-				SwgItems.Nugget.Diatium,
+				SwgItems.RawOre.DiatiumRaw,
+				SwgItems.Material.DiatiumIngot,
+				SwgItems.Material.DiatiumNugget,
 				SwgBlocks.Ore.DiatiumBlock
 		);
 
@@ -312,9 +312,9 @@ public class Tarkin
 				assets,
 				2.0F,
 				SwgBlocks.Ore.TitaniumOre,
-				SwgItems.RawOre.Titanium,
-				SwgItems.Ingot.Titanium,
-				SwgItems.Nugget.Titanium,
+				SwgItems.RawOre.TitaniumRaw,
+				SwgItems.Material.TitaniumIngot,
+				SwgItems.Material.TitaniumNugget,
 				SwgBlocks.Ore.TitaniumBlock
 		);
 
@@ -322,9 +322,9 @@ public class Tarkin
 				assets,
 				2.0F,
 				SwgBlocks.Ore.IoniteOre,
-				SwgItems.RawOre.Ionite,
-				SwgItems.Ingot.Ionite,
-				SwgItems.Nugget.Ionite,
+				SwgItems.RawOre.IoniteRaw,
+				SwgItems.Material.IoniteIngot,
+				SwgItems.Material.IoniteNugget,
 				SwgBlocks.Ore.IoniteBlock
 		);
 
@@ -332,29 +332,29 @@ public class Tarkin
 
 		RecipeGenerator.buildCrystal(
 				assets,
-				SwgItems.Dust.Helicite,
-				SwgItems.Crystal.Helicite,
+				SwgItems.Material.HeliciteDust,
+				SwgItems.Material.HeliciteCrystal,
 				SwgBlocks.Ore.HeliciteBlock
 		);
 
 		RecipeGenerator.buildCrystal(
 				assets,
-				SwgItems.Dust.Lommite,
-				SwgItems.Crystal.Lommite,
+				SwgItems.Material.LommiteDust,
+				SwgItems.Material.LommiteCrystal,
 				SwgBlocks.Ore.LommiteBlock
 		);
 
 		RecipeGenerator.buildCrystal(
 				assets,
-				SwgItems.Dust.Thorilide,
-				SwgItems.Crystal.Thorilide,
+				SwgItems.Material.ThorilideDust,
+				SwgItems.Material.ThorilideCrystal,
 				SwgBlocks.Ore.ThorilideBlock
 		);
 
 		RecipeGenerator.buildCrystal(
 				assets,
-				SwgItems.Dust.Zersium,
-				SwgItems.Crystal.Zersium,
+				SwgItems.Material.ZersiumDust,
+				SwgItems.Material.ZersiumCrystal,
 				SwgBlocks.Ore.ZersiumBlock
 		);
 
@@ -369,250 +369,250 @@ public class Tarkin
 		RecipeGenerator.Shaped.of(new ItemStack(Items.ANVIL))
 		                      .grid3x3("plasteel",
 		                               SwgBlocks.Composite.PlasteelBlock, SwgBlocks.Composite.PlasteelBlock, SwgBlocks.Composite.PlasteelBlock,
-		                               null, SwgItems.Ingot.Plasteel, null,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+		                               null, SwgItems.Material.PlasteelIngot, null,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.BLAST_FURNACE))
 		                      .grid3x3("plasteel",
-		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, Items.FURNACE, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, Items.FURNACE, SwgItems.Material.PlasteelIngot,
 		                               Items.SMOOTH_STONE, Items.SMOOTH_STONE, Items.SMOOTH_STONE)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.BUCKET))
 		                      .grid3x2("plasteel",
-		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
-		                               null, SwgItems.Ingot.Plasteel, null)
+		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
+		                               null, SwgItems.Material.PlasteelIngot, null)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.CAULDRON))
 		                      .grid3x3("plasteel",
-		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.CHAIN))
 		                      .grid1x3("plasteel",
-		                               SwgItems.Nugget.Plasteel,
-		                               SwgItems.Ingot.Plasteel,
-		                               SwgItems.Nugget.Plasteel)
+		                               SwgItems.Material.PlasteelNugget,
+		                               SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelNugget)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.COMPASS))
 		                      .grid3x3("plasteel",
-		                               null, SwgItems.Ingot.Plasteel, null,
-		                               SwgItems.Ingot.Plasteel, Items.REDSTONE, SwgItems.Ingot.Plasteel,
-		                               null, SwgItems.Ingot.Plasteel, null)
+		                               null, SwgItems.Material.PlasteelIngot, null,
+		                               SwgItems.Material.PlasteelIngot, Items.REDSTONE, SwgItems.Material.PlasteelIngot,
+		                               null, SwgItems.Material.PlasteelIngot, null)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.SHEARS))
 		                      .grid2x2("plasteel_left",
-		                               SwgItems.Ingot.Plasteel, null,
-		                               null, SwgItems.Ingot.Plasteel)
+		                               SwgItems.Material.PlasteelIngot, null,
+		                               null, SwgItems.Material.PlasteelIngot)
 		                      .grid2x2("plasteel_right",
-		                               null, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, null)
+		                               null, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, null)
 		                      .build(assets);
 		RecipeGenerator.Shapeless.of(new ItemStack(Items.FLINT_AND_STEEL), "plasteel")
-		                         .ingredient(SwgItems.Ingot.Plasteel)
+		                         .ingredient(SwgItems.Material.PlasteelIngot)
 		                         .ingredient(Items.FLINT)
 		                         .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.CROSSBOW))
 		                      .grid3x3("plasteel",
-		                               Items.STICK, SwgItems.Ingot.Plasteel, Items.STICK,
+		                               Items.STICK, SwgItems.Material.PlasteelIngot, Items.STICK,
 		                               Items.STRING, Items.TRIPWIRE_HOOK, Items.STRING,
 		                               null, Items.STICK, null)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.SHIELD))
 		                      .grid3x3("plasteel",
-		                               ItemTags.PLANKS, SwgItems.Ingot.Plasteel, ItemTags.PLANKS,
+		                               ItemTags.PLANKS, SwgItems.Material.PlasteelIngot, ItemTags.PLANKS,
 		                               ItemTags.PLANKS, ItemTags.PLANKS, ItemTags.PLANKS,
 		                               null, ItemTags.PLANKS, null)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.HEAVY_WEIGHTED_PRESSURE_PLATE))
-		                      .grid2x1("plasteel", SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+		                      .grid2x1("plasteel", SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.HOPPER))
 		                      .grid3x3("plasteel",
-		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, Items.CHEST, SwgItems.Ingot.Plasteel,
-		                               null, SwgItems.Ingot.Plasteel, null)
+		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, Items.CHEST, SwgItems.Material.PlasteelIngot,
+		                               null, SwgItems.Material.PlasteelIngot, null)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.MINECART))
 		                      .grid3x2("plasteel",
-		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.RAIL, 16))
 		                      .grid3x3("plasteel",
-		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, Items.STICK, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel)
+		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, Items.STICK, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.ACTIVATOR_RAIL, 6))
 		                      .grid3x3("plasteel",
-		                               SwgItems.Ingot.Plasteel, Items.STICK, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, Items.REDSTONE_TORCH, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, Items.STICK, SwgItems.Ingot.Plasteel)
+		                               SwgItems.Material.PlasteelIngot, Items.STICK, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, Items.REDSTONE_TORCH, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, Items.STICK, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.DETECTOR_RAIL, 6))
 		                      .grid3x3("plasteel",
-		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, Items.STONE_PRESSURE_PLATE, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, Items.REDSTONE, SwgItems.Ingot.Plasteel)
+		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, Items.STONE_PRESSURE_PLATE, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, Items.REDSTONE, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.PISTON))
 		                      .grid3x3("plasteel",
 		                               ItemTags.PLANKS, ItemTags.PLANKS, ItemTags.PLANKS,
-		                               Items.COBBLESTONE, SwgItems.Ingot.Plasteel, Items.COBBLESTONE,
+		                               Items.COBBLESTONE, SwgItems.Material.PlasteelIngot, Items.COBBLESTONE,
 		                               Items.COBBLESTONE, Items.REDSTONE, Items.COBBLESTONE)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.SMITHING_TABLE))
 		                      .grid2x3("plasteel",
-		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot,
 		                               ItemTags.PLANKS, ItemTags.PLANKS,
 		                               ItemTags.PLANKS, ItemTags.PLANKS)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.STONECUTTER))
 		                      .grid3x2("plasteel",
-		                               null, SwgItems.Ingot.Plasteel, null,
+		                               null, SwgItems.Material.PlasteelIngot, null,
 		                               Items.STONE, Items.STONE, Items.STONE)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.TRIPWIRE_HOOK, 2))
 		                      .grid1x3("plasteel",
-		                               SwgItems.Ingot.Plasteel,
+		                               SwgItems.Material.PlasteelIngot,
 		                               Items.STICK,
 		                               ItemTags.PLANKS)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(Items.LANTERN))
 		                      .grid3x3("plasteel",
-		                               SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel,
-		                               SwgItems.Nugget.Plasteel, Items.TORCH, SwgItems.Nugget.Plasteel,
-		                               SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel)
+		                               SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget,
+		                               SwgItems.Material.PlasteelNugget, Items.TORCH, SwgItems.Material.PlasteelNugget,
+		                               SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(Items.SOUL_LANTERN))
 		                      .grid3x3("plasteel",
-		                               SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel,
-		                               SwgItems.Nugget.Plasteel, Items.SOUL_TORCH, SwgItems.Nugget.Plasteel,
-		                               SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Nugget.Plasteel)
+		                               SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget,
+		                               SwgItems.Material.PlasteelNugget, Items.SOUL_TORCH, SwgItems.Material.PlasteelNugget,
+		                               SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelNugget)
 		                      .build(assets);
 
 		//Tools
 		//Axes
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Axe.Durasteel))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.DurasteelAxe))
 		                      .grid3x3("crafting_left",
-		                               SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel, null,
-		                               SwgItems.Ingot.Durasteel, SwgItems.CraftingComponents.DurasteelRod, null,
+		                               SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot, null,
+		                               SwgItems.Material.DurasteelIngot, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .grid3x3("crafting_right",
-		                               null, SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel,
-		                               null, SwgItems.CraftingComponents.DurasteelRod, SwgItems.Ingot.Durasteel,
+		                               null, SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot,
+		                               null, SwgItems.CraftingComponents.DurasteelRod, SwgItems.Material.DurasteelIngot,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Axe.Titanium))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.TitaniumAxe))
 		                      .grid3x3("crafting_left",
-		                               SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium, null,
-		                               SwgItems.Ingot.Titanium, SwgItems.CraftingComponents.DurasteelRod, null,
+		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, null,
+		                               SwgItems.Material.TitaniumIngot, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .grid3x3("crafting_right",
-		                               null, SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium,
-		                               null, SwgItems.CraftingComponents.DurasteelRod, SwgItems.Ingot.Titanium,
+		                               null, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot,
+		                               null, SwgItems.CraftingComponents.DurasteelRod, SwgItems.Material.TitaniumIngot,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Axe.Beskar))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.BeskarAxe))
 		                      .grid3x3("crafting_left",
-		                               SwgItems.Ingot.Beskar, SwgItems.Ingot.Beskar, null,
-		                               SwgItems.Ingot.Beskar, SwgItems.CraftingComponents.DurasteelRod, null,
+		                               SwgItems.Material.BeskarIngot, SwgItems.Material.BeskarIngot, null,
+		                               SwgItems.Material.BeskarIngot, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .grid3x3("crafting_right",
-		                               null, SwgItems.Ingot.Beskar, SwgItems.Ingot.Beskar,
-		                               null, SwgItems.CraftingComponents.DurasteelRod, SwgItems.Ingot.Beskar,
+		                               null, SwgItems.Material.BeskarIngot, SwgItems.Material.BeskarIngot,
+		                               null, SwgItems.CraftingComponents.DurasteelRod, SwgItems.Material.BeskarIngot,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 		//Hoes
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Hoe.Durasteel))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.DurasteelHoe))
 		                      .grid3x3("crafting_left",
-		                               SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel, null,
+		                               SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .grid3x3("crafting_right",
-		                               null, SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel,
+		                               null, SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Hoe.Titanium))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.TitaniumHoe))
 		                      .grid3x3("crafting_left",
-		                               SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium, null,
+		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .grid3x3("crafting_right",
-		                               null, SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium,
+		                               null, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Hoe.Beskar))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.BeskarHoe))
 		                      .grid3x3("crafting_left",
-		                               SwgItems.Ingot.Beskar, SwgItems.Ingot.Beskar, null,
+		                               SwgItems.Material.BeskarIngot, SwgItems.Material.BeskarIngot, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .grid3x3("crafting_right",
-		                               null, SwgItems.Ingot.Beskar, SwgItems.Ingot.Beskar,
+		                               null, SwgItems.Material.BeskarIngot, SwgItems.Material.BeskarIngot,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 		//Pickaxes
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Pickaxe.Durasteel))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.DurasteelPickaxe))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel,
+		                               SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Pickaxe.Titanium))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.TitaniumPickaxe))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium,
+		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Pickaxe.Beskar))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.BeskarPickaxe))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Beskar, SwgItems.Ingot.Beskar, SwgItems.Ingot.Beskar,
+		                               SwgItems.Material.BeskarIngot, SwgItems.Material.BeskarIngot, SwgItems.Material.BeskarIngot,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 		//Shovels
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Shovel.Durasteel))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.DurasteelShovel))
 		                      .grid3x3(null,
-		                               null, SwgItems.Ingot.Durasteel, null,
+		                               null, SwgItems.Material.DurasteelIngot, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Shovel.Titanium))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.TitaniumShovel))
 		                      .grid3x3(null,
-		                               null, SwgItems.Ingot.Titanium, null,
+		                               null, SwgItems.Material.TitaniumIngot, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Shovel.Beskar))
+		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.Material.BeskarShovel))
 		                      .grid3x3(null,
-		                               null, SwgItems.Ingot.Beskar, null,
+		                               null, SwgItems.Material.BeskarIngot, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null,
 		                               null, SwgItems.CraftingComponents.DurasteelRod, null)
 		                      .build(assets);
@@ -680,22 +680,22 @@ public class Tarkin
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.RedHangar, 4))
 		                      .grid3x3(null,
-		                               null, SwgItems.Ingot.Plasteel, null,
-		                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel,
+		                               null, SwgItems.Material.PlasteelIngot, null,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.CraftingComponents.LightPanel, SwgItems.Material.PlasteelIngot,
 		                               null, Items.RED_DYE, null)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.BlueHangar, 4))
 		                      .grid3x3(null,
-		                               null, SwgItems.Ingot.Plasteel, null,
-		                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel,
+		                               null, SwgItems.Material.PlasteelIngot, null,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.CraftingComponents.LightPanel, SwgItems.Material.PlasteelIngot,
 		                               null, Items.BLUE_DYE, null)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Light.WallCluster, 4))
 		                      .grid3x3(null,
-		                               null, SwgItems.Ingot.Plasteel, null,
-		                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel,
-		                               null, SwgItems.Ingot.Plasteel, null)
+		                               null, SwgItems.Material.PlasteelIngot, null,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.CraftingComponents.LightPanel, SwgItems.Material.PlasteelIngot,
+		                               null, SwgItems.Material.PlasteelIngot, null)
 		                      .build(assets);
 
 		//Decoration Blocks and Machines
@@ -708,57 +708,57 @@ public class Tarkin
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Vent.Air, 3))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Nugget.Plasteel, SwgItems.Ingot.Plasteel)
+		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelNugget, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Pipe.Large))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel,
+		                               SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot,
 		                               null, null, null,
-		                               SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel, SwgItems.Ingot.Durasteel)
+		                               SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot, SwgItems.Material.DurasteelIngot)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Barrel.Desh))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Desh, null, SwgItems.Ingot.Desh,
-		                               SwgItems.Ingot.Desh, null, SwgItems.Ingot.Desh,
-		                               SwgItems.Ingot.Desh, SwgItems.Ingot.Desh, SwgItems.Ingot.Desh)
+		                               SwgItems.Material.DeshIngot, null, SwgItems.Material.DeshIngot,
+		                               SwgItems.Material.DeshIngot, null, SwgItems.Material.DeshIngot,
+		                               SwgItems.Material.DeshIngot, SwgItems.Material.DeshIngot, SwgItems.Material.DeshIngot)
 		                      .build(assets);
 
 		//Crates
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.OrangeKyber))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium,
-		                               SwgItems.Ingot.Titanium, Items.ORANGE_DYE, SwgItems.Ingot.Titanium,
-		                               SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium)
+		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot,
+		                               SwgItems.Material.TitaniumIngot, Items.ORANGE_DYE, SwgItems.Material.TitaniumIngot,
+		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.GrayKyber))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium,
-		                               SwgItems.Ingot.Titanium, Items.GRAY_DYE, SwgItems.Ingot.Titanium,
-		                               SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium)
+		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot,
+		                               SwgItems.Material.TitaniumIngot, Items.GRAY_DYE, SwgItems.Material.TitaniumIngot,
+		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.BlackKyber))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium,
-		                               SwgItems.Ingot.Titanium, Items.BLACK_DYE, SwgItems.Ingot.Titanium,
-		                               SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium, SwgItems.Ingot.Titanium)
+		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot,
+		                               SwgItems.Material.TitaniumIngot, Items.BLACK_DYE, SwgItems.Material.TitaniumIngot,
+		                               SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot, SwgItems.Material.TitaniumIngot)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.Toolbox))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Desh, SwgItems.Ingot.Desh, SwgItems.Ingot.Desh,
-		                               SwgItems.Ingot.Desh, null, SwgItems.Ingot.Desh,
+		                               SwgItems.Material.DeshIngot, SwgItems.Material.DeshIngot, SwgItems.Material.DeshIngot,
+		                               SwgItems.Material.DeshIngot, null, SwgItems.Material.DeshIngot,
 		                               Items.IRON_INGOT, Items.IRON_INGOT, Items.IRON_INGOT)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.Imperial))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Plasteel, SwgItems.CraftingComponents.LightPanel, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, null, SwgItems.Ingot.Plasteel,
-		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
+		                               SwgItems.Material.PlasteelIngot, SwgItems.CraftingComponents.LightPanel, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
+		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
 		//Crafting Components
@@ -770,25 +770,25 @@ public class Tarkin
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.DeshWire, 9))
 		                      .grid3x1("ingot",
-		                               SwgItems.Ingot.Desh, SwgItems.Ingot.Desh, SwgItems.Ingot.Desh)
+		                               SwgItems.Material.DeshIngot, SwgItems.Material.DeshIngot, SwgItems.Material.DeshIngot)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.DeshWire))
 		                      .grid3x1("nugget",
-		                               SwgItems.Nugget.Desh, SwgItems.Nugget.Desh, SwgItems.Nugget.Desh)
+		                               SwgItems.Material.DeshNugget, SwgItems.Material.DeshNugget, SwgItems.Material.DeshNugget)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.DurasteelRod))
-		                      .fill1x3(null, SwgItems.Ingot.Durasteel)
+		                      .fill1x3(null, SwgItems.Material.DurasteelIngot)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.PlasteelRod))
-		                      .fill1x3(null, SwgItems.Ingot.Plasteel)
+		                      .fill1x3(null, SwgItems.Material.PlasteelIngot)
 		                      .build(assets);
 
 		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.BallBearing))
 		                      .grid3x3(null,
-		                               SwgItems.Nugget.Durasteel, SwgItems.Nugget.Durasteel, SwgItems.Nugget.Durasteel,
-		                               SwgItems.Nugget.Durasteel, null, SwgItems.Nugget.Durasteel,
-		                               SwgItems.Nugget.Durasteel, SwgItems.Nugget.Durasteel, SwgItems.Nugget.Durasteel)
+		                               SwgItems.Material.DurasteelNugget, SwgItems.Material.DurasteelNugget, SwgItems.Material.DurasteelNugget,
+		                               SwgItems.Material.DurasteelNugget, null, SwgItems.Material.DurasteelNugget,
+		                               SwgItems.Material.DurasteelNugget, SwgItems.Material.DurasteelNugget, SwgItems.Material.DurasteelNugget)
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.ElectricMotor))
 		                      .grid3x3(null,
@@ -798,19 +798,19 @@ public class Tarkin
 		                      .build(assets);
 		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.Turbine))
 		                      .grid3x3(null,
-		                               SwgItems.Ingot.Durasteel, null, SwgItems.Ingot.Durasteel,
+		                               SwgItems.Material.DurasteelIngot, null, SwgItems.Material.DurasteelIngot,
 		                               null, SwgItems.CraftingComponents.BallBearing, null,
-		                               SwgItems.Ingot.Durasteel, null, SwgItems.Ingot.Durasteel)
+		                               SwgItems.Material.DurasteelIngot, null, SwgItems.Material.DurasteelIngot)
 		                      .build(assets);
 	}
 
 	private static void generateItems(List<BuiltAsset> assets)
 	{
-		ItemGenerator.tool(SwgItems.Axe.Durasteel)
+		ItemGenerator.tool(SwgItems.Material.DurasteelAxe)
 		             .build(assets);
-		ItemGenerator.tool(SwgItems.Axe.Titanium)
+		ItemGenerator.tool(SwgItems.Material.TitaniumAxe)
 		             .build(assets);
-		ItemGenerator.tool(SwgItems.Axe.Beskar)
+		ItemGenerator.tool(SwgItems.Material.BeskarAxe)
 		             .build(assets);
 
 		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
@@ -830,13 +830,13 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Natural.MoloFlower).build(assets);
 		ItemGenerator.basic(SwgItems.Natural.SaltPile).build(assets);
 
-		ItemGenerator.basic(SwgItems.Crystal.Exonium).build(assets);
-		ItemGenerator.basic(SwgItems.Crystal.Helicite).build(assets);
-		ItemGenerator.basic(SwgItems.Crystal.Lommite).build(assets);
-		ItemGenerator.basic(SwgItems.Crystal.Thorilide).build(assets);
-		ItemGenerator.basic(SwgItems.Crystal.Zersium).build(assets);
+		ItemGenerator.basic(SwgItems.Material.ExoniumCrystal).build(assets);
+		ItemGenerator.basic(SwgItems.Material.HeliciteCrystal).build(assets);
+		ItemGenerator.basic(SwgItems.Material.LommiteCrystal).build(assets);
+		ItemGenerator.basic(SwgItems.Material.ThorilideCrystal).build(assets);
+		ItemGenerator.basic(SwgItems.Material.ZersiumCrystal).build(assets);
 
-		ItemGenerator.basic(SwgItems.Shard.Rubindum).build(assets);
+		ItemGenerator.basic(SwgItems.Material.RubindumShard).build(assets);
 
 		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
@@ -852,10 +852,10 @@ public class Tarkin
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Gravel.Jundland).build(assets);
 
-		ItemGenerator.basic(SwgItems.Dust.Helicite).build(assets);
-		ItemGenerator.basic(SwgItems.Dust.Lommite).build(assets);
-		ItemGenerator.basic(SwgItems.Dust.Thorilide).build(assets);
-		ItemGenerator.basic(SwgItems.Dust.Zersium).build(assets);
+		ItemGenerator.basic(SwgItems.Material.HeliciteDust).build(assets);
+		ItemGenerator.basic(SwgItems.Material.LommiteDust).build(assets);
+		ItemGenerator.basic(SwgItems.Material.ThorilideDust).build(assets);
+		ItemGenerator.basic(SwgItems.Material.ZersiumDust).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.JoganFruit).build(assets);
 		ItemGenerator.basic(SwgItems.Food.ChasukaLeaf).build(assets);
@@ -930,60 +930,60 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.MobDrops.TongueOfWorrt).build(assets);
 		ItemGenerator.basic(SwgItems.MobDrops.ToughHide).build(assets);
 
-		ItemGenerator.tool(SwgItems.Hoe.Durasteel)
+		ItemGenerator.tool(SwgItems.Material.DurasteelHoe)
 		             .build(assets);
-		ItemGenerator.tool(SwgItems.Hoe.Titanium)
+		ItemGenerator.tool(SwgItems.Material.TitaniumHoe)
 		             .build(assets);
-		ItemGenerator.tool(SwgItems.Hoe.Beskar)
+		ItemGenerator.tool(SwgItems.Material.BeskarHoe)
 		             .build(assets);
 
-		ItemGenerator.basic(SwgItems.Ingot.Beskar).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Chromium).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Cortosis).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Desh).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Kelerium).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Ionite).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Diatium).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Durasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Plasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Titanium).build(assets);
-		ItemGenerator.basic(SwgItems.Ingot.Transparisteel).build(assets);
+		ItemGenerator.basic(SwgItems.Material.BeskarIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.ChromiumIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.CortosisIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.DeshIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.KeleriumIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.IoniteIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.DiatiumIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.DurasteelIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.PlasteelIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.TitaniumIngot).build(assets);
+		ItemGenerator.basic(SwgItems.Material.TransparisteelIngot).build(assets);
 
 		ItemGenerator.empty(SwgItems.Lightsaber.Lightsaber).build(assets);
 
 		// TODO: ItemGenerator.basic(SwgItems.Nugget.Beskar).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Chromium).build(assets);
+		ItemGenerator.basic(SwgItems.Material.ChromiumNugget).build(assets);
 		// TODO: ItemGenerator.basic(SwgItems.Nugget.Cortosis).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Desh).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Diatium).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Durasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Plasteel).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Titanium).build(assets);
-		ItemGenerator.basic(SwgItems.Nugget.Ionite).build(assets);
+		ItemGenerator.basic(SwgItems.Material.DeshNugget).build(assets);
+		ItemGenerator.basic(SwgItems.Material.DiatiumNugget).build(assets);
+		ItemGenerator.basic(SwgItems.Material.DurasteelNugget).build(assets);
+		ItemGenerator.basic(SwgItems.Material.PlasteelNugget).build(assets);
+		ItemGenerator.basic(SwgItems.Material.TitaniumNugget).build(assets);
+		ItemGenerator.basic(SwgItems.Material.IoniteNugget).build(assets);
 		// TODO: ItemGenerator.basic(SwgItems.Nugget.Transparisteel).build(assets);
 
-		ItemGenerator.basic(SwgItems.RawOre.Beskar).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Ionite).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Chromium).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Cortosis).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Desh).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Diatium).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Kelerium).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Rubindum).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.Titanium).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.BeskarRaw).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.IoniteRaw).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.ChromiumRaw).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.CortosisRaw).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.DeshRaw).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.DiatiumRaw).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.KeleriumRaw).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.RubindumRaw).build(assets);
+		ItemGenerator.basic(SwgItems.RawOre.TitaniumRaw).build(assets);
 
-		ItemGenerator.tool(SwgItems.Pickaxe.Durasteel)
+		ItemGenerator.tool(SwgItems.Material.DurasteelPickaxe)
 		             .build(assets);
-		ItemGenerator.tool(SwgItems.Pickaxe.Titanium)
+		ItemGenerator.tool(SwgItems.Material.TitaniumPickaxe)
 		             .build(assets);
-		ItemGenerator.tool(SwgItems.Pickaxe.Beskar)
+		ItemGenerator.tool(SwgItems.Material.BeskarPickaxe)
 		             .build(assets);
 
-		ItemGenerator.tool(SwgItems.Shovel.Durasteel)
+		ItemGenerator.tool(SwgItems.Material.DurasteelShovel)
 		             .build(assets);
-		ItemGenerator.tool(SwgItems.Shovel.Titanium)
+		ItemGenerator.tool(SwgItems.Material.TitaniumShovel)
 		             .build(assets);
-		ItemGenerator.tool(SwgItems.Shovel.Beskar)
+		ItemGenerator.tool(SwgItems.Material.BeskarShovel)
 		             .build(assets);
 
 		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);
@@ -1198,38 +1198,38 @@ public class Tarkin
 		              .build(assets);
 
 		// TODO: adjust loot table to match vanilla raw ores
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.BeskarOre, SwgItems.RawOre.Beskar)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.BeskarOre, SwgItems.RawOre.BeskarRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.ChromiumOre, SwgItems.RawOre.Chromium)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.ChromiumOre, SwgItems.RawOre.ChromiumRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.CortosisOre, SwgItems.RawOre.Cortosis)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.CortosisOre, SwgItems.RawOre.CortosisRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DeshOre, SwgItems.RawOre.Desh)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DeshOre, SwgItems.RawOre.DeshRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DiatiumOre, SwgItems.RawOre.Diatium)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DiatiumOre, SwgItems.RawOre.DiatiumRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.TitaniumOre, SwgItems.RawOre.Titanium)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.TitaniumOre, SwgItems.RawOre.TitaniumRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.IoniteOre, SwgItems.RawOre.Ionite)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.IoniteOre, SwgItems.RawOre.IoniteRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.ZersiumOre, SwgItems.Crystal.Zersium, 1, 3)
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.ZersiumOre, SwgItems.Material.ZersiumCrystal, 1, 3)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.LommiteOre, SwgItems.Crystal.Lommite, 1, 3)
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.LommiteOre, SwgItems.Material.LommiteCrystal, 1, 3)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.HeliciteOre, SwgItems.Crystal.Helicite, 1, 3)
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.HeliciteOre, SwgItems.Material.HeliciteCrystal, 1, 3)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.ThorilideOre, SwgItems.Crystal.Thorilide, 1, 3)
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.ThorilideOre, SwgItems.Material.ThorilideCrystal, 1, 3)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 

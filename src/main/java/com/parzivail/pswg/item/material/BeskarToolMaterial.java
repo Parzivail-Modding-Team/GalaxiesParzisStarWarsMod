@@ -41,6 +41,6 @@ public class BeskarToolMaterial implements ToolMaterial
 	@Override
 	public Ingredient getRepairIngredient()
 	{
-		return Ingredient.ofItems(SwgItems.Ingot.Beskar);
+		return Ingredient.ofItems(SwgItems.Material.BeskarIngot);
 	}
 }

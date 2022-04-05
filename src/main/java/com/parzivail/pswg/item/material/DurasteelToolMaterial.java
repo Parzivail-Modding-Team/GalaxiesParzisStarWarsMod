@@ -42,6 +42,6 @@ public class DurasteelToolMaterial implements ToolMaterial
 	@Override
 	public Ingredient getRepairIngredient()
 	{
-		return Ingredient.ofItems(SwgItems.Ingot.Durasteel);
+		return Ingredient.ofItems(SwgItems.Material.DurasteelIngot);
 	}
 }
