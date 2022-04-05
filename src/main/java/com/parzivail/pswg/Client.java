@@ -30,6 +30,8 @@ import com.parzivail.pswg.client.texture.tinted.TintedTextureProvider;
 import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
+import com.parzivail.pswg.container.registry.ClientRegistryData;
+import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
@@ -63,6 +65,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.minecraft.block.Block;
+import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.BufferBuilder;
@@ -176,74 +180,9 @@ public class Client implements ClientModInitializer
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelBordered, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSplit, true, true, true, null, Resources.id("block/black_imperial_panel_split_center"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelThinBordered, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
-		ModelRegistry.registerConnected(SwgBlocks.Panel.ExternalImperialPlatingConnected);
-		ModelRegistry.registerConnected(SwgBlocks.Panel.LargeImperialPlatingConnected);
-		ModelRegistry.registerConnected(SwgBlocks.Panel.RustedLargeImperialPlatingConnected);
-		ModelRegistry.registerConnected(SwgBlocks.Panel.MossyLargeImperialPlatingConnected);
 
-		ModelRegistry.registerConnected(SwgBlocks.Panel.RustedMetal);
-
-		ModelRegistry.registerConnected(SwgBlocks.MaterialBlock.Plasteel);
-
-		ModelRegistry.registerConnected(SwgBlocks.Stone.DurasteelConnectedPourstone);
-
-		ModelRegistry.registerConnected(SwgBlocks.Glass.Imperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.WhiteStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.OrangeStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.MagentaStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.LightBlueStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.YellowStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.LimeStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.PinkStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.GrayStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.LightGrayStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.CyanStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.PurpleStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.BlueStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.BrownStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.GreenStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.RedStainedImperial);
-		ModelRegistry.registerConnected(SwgBlocks.Glass.BlackStainedImperial);
-
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.Imperial, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.WhiteStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.OrangeStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.MagentaStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.LightBlueStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.YellowStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.LimeStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.PinkStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.GrayStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.LightGrayStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.CyanStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.PurpleStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.BlueStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.BrownStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.GreenStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.RedStainedImperial, RenderLayer.getTranslucent());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Glass.BlackStainedImperial, RenderLayer.getTranslucent());
-
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Vent.Imperial, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Vent.ImperialGrated, RenderLayer.getCutout());
-
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Cage.Creature, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Cage.CreatureTerrarium, RenderLayer.getCutout());
-
-		for (var b : SwgBlocks.Cage.DyedCreatureTerrarium.values())
-			BlockRenderLayerMap.INSTANCE.putBlock(b, RenderLayer.getTranslucent());
-
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Leaves.Sequoia, RenderLayer.getCutoutMipped());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Leaves.Japor, RenderLayer.getCutoutMipped());
-
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.FunnelFlower, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.BlossomingFunnelFlower, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.PoontenGrass, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.DriedPoontenGrass, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.Tuber, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.Chasuka, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.HkakBush, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.MoloShrub, RenderLayer.getCutout());
-		BlockRenderLayerMap.INSTANCE.putBlock(SwgBlocks.Plant.VaporatorMushroom, RenderLayer.getCutout());
+		RegistryHelper.register(SwgBlocks.class, ClientRegistryData.class, Block.class, Client::registerBlockData);
+		RegistryHelper.register(SwgBlocks.class, ClientRegistryData.class, RegistryHelper.DyedBlocks.class, Client::registerDyedBlockData);
 
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NemManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(P3dManager.INSTANCE);
@@ -362,6 +301,30 @@ public class Client implements ClientModInitializer
 				new ZoomDivisorMouseModifier(),
 				null //new SpyglassZoomOverlay(new Identifier("libzoomertest:textures/misc/michael.png"))
 		);
+	}
+
+	private static void registerBlockData(ClientRegistryData data, Block block)
+	{
+		switch (data.renderLayer())
+		{
+			case CUTOUT -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutout());
+			case CUTOUT_MIPPED -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutoutMipped());
+			case TRANSLUCENT -> BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getTranslucent());
+		}
+
+		if (data.isConnected())
+		{
+			if (block instanceof ConnectingBlock cb)
+				ModelRegistry.registerConnected(cb);
+			else
+				Lumberjack.error("Attempted to auto-register connecting model for non-connecting block %s", block);
+		}
+	}
+
+	private static void registerDyedBlockData(ClientRegistryData data, RegistryHelper.DyedBlocks blocks)
+	{
+		for (var block : blocks.values())
+			registerBlockData(data, block);
 	}
 
 	public static void registerRenderLayer(RenderLayer layer)

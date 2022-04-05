@@ -6,38 +6,40 @@ import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.util.DyeColor;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public class RegistryHelper
 {
-	public static class DyedBlockVariants extends HashMap<DyeColor, Block>
+	public static class DyedBlocks extends HashMap<DyeColor, Block>
 	{
-		public DyedBlockVariants(Function<DyeColor, Block> blockFunction)
+		public DyedBlocks(Function<DyeColor, Block> blockFunction)
 		{
 			for (var color : DyeColor.values())
 				put(color, blockFunction.apply(color));
 		}
 	}
 
-	public static class DyedBlockStairsSlabWallVariants extends HashMap<DyeColor, BlockStairsSlabWallVariants>
+	public static class DyedStoneVariants extends HashMap<DyeColor, StoneVariants>
 	{
-		public DyedBlockStairsSlabWallVariants(Function<DyeColor, BlockStairsSlabWallVariants> blockFunction)
+		public DyedStoneVariants(Function<DyeColor, StoneVariants> blockFunction)
 		{
 			for (var color : DyeColor.values())
 				put(color, blockFunction.apply(color));
 		}
 	}
 
-	public static class BlockStairsSlabWallVariants
+	public static class StoneVariants
 	{
 		public final Block block;
 		public final StairsBlock stairs;
 		public final SlabBlock slab;
 		public final WallBlock wall;
 
-		public BlockStairsSlabWallVariants(Block block)
+		public StoneVariants(Block block)
 		{
 			this.block = block;
 			this.stairs = new PStairsBlock(block.getDefaultState(), AbstractBlock.Settings.copy(block));
@@ -46,7 +48,7 @@ public class RegistryHelper
 		}
 	}
 
-	public static class PlankStairsSlabFenceGateVariants
+	public static class WoodVariants
 	{
 		public final Block plank;
 		public final StairsBlock stairs;
@@ -56,7 +58,7 @@ public class RegistryHelper
 		public final TrapdoorBlock trapdoor;
 		public final DoorBlock door;
 
-		public PlankStairsSlabFenceGateVariants(Block plank)
+		public WoodVariants(Block plank)
 		{
 			this.plank = plank;
 			this.stairs = new PStairsBlock(plank.getDefaultState(), AbstractBlock.Settings.copy(plank));
@@ -109,6 +111,31 @@ public class RegistryHelper
 				try
 				{
 					FlammableBlockRegistry.getDefaultInstance().add((Block)field.get(null), annotation.burn(), annotation.spread());
+				}
+				catch (IllegalAccessException e)
+				{
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	public static <TA extends Annotation, TB> void register(Class<?> rootClazz, Class<TA> annotationClazz, Class<TB> acceptClazz, BiConsumer<TA, TB> registryFunction)
+	{
+		for (var clazz : rootClazz.getClasses())
+		{
+			// Register inner classes
+			register(clazz, annotationClazz, acceptClazz, registryFunction);
+
+			for (var field : clazz.getFields())
+			{
+				var annotation = field.getAnnotation(annotationClazz);
+				if (!Modifier.isStatic(field.getModifiers()) || annotation == null || !acceptClazz.isAssignableFrom(field.getType()))
+					continue;
+
+				try
+				{
+					registryFunction.accept(annotation, (TB)field.get(null));
 				}
 				catch (IllegalAccessException e)
 				{

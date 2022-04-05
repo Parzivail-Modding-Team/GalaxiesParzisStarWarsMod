@@ -86,13 +86,9 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 		{
 			var ele = jsonObject.get(key);
 			if (ele.isJsonObject())
-			{
 				ele = sortKeysRecursively(ele.getAsJsonObject());
-			}
 			else if (ele.isJsonArray())
-			{
 				ele = sortElementsRecursively(ele.getAsJsonArray());
-			}
 			temp.add(key, ele);
 		}
 
@@ -110,13 +106,9 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 		for (var ele : sortedData)
 		{
 			if (ele.isJsonObject())
-			{
 				ele = sortKeysRecursively(ele.getAsJsonObject());
-			}
 			else if (ele.isJsonArray())
-			{
 				ele = sortElementsRecursively(ele.getAsJsonArray());
-			}
 			temp.add(ele);
 		}
 
@@ -131,9 +123,9 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 			var p2 = o2.getAsJsonPrimitive();
 
 			if (p1.isNumber() && p2.isNumber())
-				return Comparator.<Double>naturalOrder().compare(p1.getAsDouble(), p2.getAsDouble());
+				return p1.getAsBigDecimal().compareTo(p2.getAsBigDecimal());
 			else
-				return Comparator.<String>naturalOrder().compare(p1.getAsString(), p2.getAsString());
+				return p1.getAsString().compareTo(p2.getAsString());
 		}
 
 		return Comparator.<Integer>naturalOrder().compare(o1.hashCode(), o2.hashCode());

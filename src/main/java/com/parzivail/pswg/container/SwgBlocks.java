@@ -5,10 +5,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.block.crop.*;
 import com.parzivail.pswg.blockentity.*;
-import com.parzivail.pswg.container.registry.Flammable;
-import com.parzivail.pswg.container.registry.RegistryHelper;
-import com.parzivail.pswg.container.registry.RegistryName;
-import com.parzivail.pswg.container.registry.TabIgnore;
+import com.parzivail.pswg.container.registry.*;
 import com.parzivail.util.block.*;
 import com.parzivail.util.block.connecting.SelfConnectingBlock;
 import com.parzivail.util.block.connecting.SelfConnectingGlassBlock;
@@ -127,46 +124,66 @@ public class SwgBlocks
 
 	public static class Cage
 	{
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Creature = new WaterloggableCreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block CreatureTerrarium = new CreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
-		public static final RegistryHelper.DyedBlockVariants DyedCreatureTerrarium = new RegistryHelper.DyedBlockVariants(color -> new CreatureCageBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
+		@ClientRegistryData(renderLayer = RenderLayerHint.TRANSLUCENT)
+		public static final RegistryHelper.DyedBlocks DyedCreatureTerrarium = new RegistryHelper.DyedBlocks(color -> new CreatureCageBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
 	}
 
 	public static class Glass
 	{
 		@RegistryName("imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.CUTOUT)
 		public static final SelfConnectingGlassBlock Imperial = createSelfConnectingGlass();
 		@RegistryName("white_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock WhiteStainedImperial = createSelfConnectingStainedGlass(DyeColor.WHITE);
 		@RegistryName("orange_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock OrangeStainedImperial = createSelfConnectingStainedGlass(DyeColor.ORANGE);
 		@RegistryName("magenta_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock MagentaStainedImperial = createSelfConnectingStainedGlass(DyeColor.MAGENTA);
 		@RegistryName("light_blue_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock LightBlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_BLUE);
 		@RegistryName("yellow_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock YellowStainedImperial = createSelfConnectingStainedGlass(DyeColor.YELLOW);
 		@RegistryName("lime_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock LimeStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIME);
 		@RegistryName("pink_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock PinkStainedImperial = createSelfConnectingStainedGlass(DyeColor.PINK);
 		@RegistryName("gray_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock GrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.GRAY);
 		@RegistryName("light_gray_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock LightGrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_GRAY);
 		@RegistryName("cyan_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock CyanStainedImperial = createSelfConnectingStainedGlass(DyeColor.CYAN);
 		@RegistryName("purple_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock PurpleStainedImperial = createSelfConnectingStainedGlass(DyeColor.PURPLE);
 		@RegistryName("blue_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock BlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLUE);
 		@RegistryName("brown_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock BrownStainedImperial = createSelfConnectingStainedGlass(DyeColor.BROWN);
 		@RegistryName("green_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock GreenStainedImperial = createSelfConnectingStainedGlass(DyeColor.GREEN);
 		@RegistryName("red_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock RedStainedImperial = createSelfConnectingStainedGlass(DyeColor.RED);
 		@RegistryName("black_stained_imperial_glass")
+		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock BlackStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLACK);
 
 		private static SelfConnectingGlassBlock createSelfConnectingGlass()
@@ -186,8 +203,10 @@ public class SwgBlocks
 		public static final Block Air = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 
 		@RegistryName("imperial_vent")
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Imperial = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
 		@RegistryName("imperial_grated_vent")
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block ImperialGrated = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
 	}
 
@@ -218,30 +237,39 @@ public class SwgBlocks
 	{
 		@RegistryName("funnel_flower")
 		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
 		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("poonten_grass")
 		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("dried_poonten_grass")
 		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("tuber_stalk")
 		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("chasuka")
 		@TabIgnore
 		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final CropBlock Chasuka = new ChasukaCrop(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("hkak_bush")
 		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final HkakBushBlock HkakBush = new HkakBushBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("molo_shrub")
 		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("vaporator_mushroom_colony")
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block VaporatorMushroom = new VaporatorMushroomBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
@@ -249,9 +277,11 @@ public class SwgBlocks
 	{
 		@RegistryName("sequoia_leaves")
 		@Flammable(burn = 30, spread = 60)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final LeavesBlock Sequoia = createLeavesBlock();
 		@RegistryName("japor_leaves")
 		@Flammable(burn = 30, spread = 60)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final BushLeavesBlock Japor = createBushLeavesBlock();
 
 		private static LeavesBlock createLeavesBlock()
@@ -307,10 +337,10 @@ public class SwgBlocks
 	{
 		@RegistryName("japor")
 		@Flammable(burn = 5, spread = 20)
-		public static final RegistryHelper.PlankStairsSlabFenceGateVariants Japor = new RegistryHelper.PlankStairsSlabFenceGateVariants(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
+		public static final RegistryHelper.WoodVariants Japor = new RegistryHelper.WoodVariants(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 		@RegistryName("sequoia")
 		@Flammable(burn = 5, spread = 20)
-		public static final RegistryHelper.PlankStairsSlabFenceGateVariants Sequoia = new RegistryHelper.PlankStairsSlabFenceGateVariants(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
+		public static final RegistryHelper.WoodVariants Sequoia = new RegistryHelper.WoodVariants(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 	}
 
 	public static class Light
@@ -329,6 +359,7 @@ public class SwgBlocks
 	public static class Panel
 	{
 		@RegistryName("rusted_metal")
+		@ClientRegistryData(isConnected = true)
 		public static final SelfConnectingBlock RustedMetal = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BROWN).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 
 		@RegistryName("imperial_cutout_pipes")
@@ -341,7 +372,7 @@ public class SwgBlocks
 		public static final Block ImperialCutoutCaged = new PillarBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 
 		@RegistryName("black_imperial_panel_blank")
-		public static final RegistryHelper.BlockStairsSlabWallVariants BlackImperialPanelBlank = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneVariants BlackImperialPanelBlank = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
 		@RegistryName("black_imperial_panel_bordered")
 		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_split")
@@ -349,15 +380,19 @@ public class SwgBlocks
 		@RegistryName("black_imperial_panel_thin_bordered")
 		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("external_imperial_plating")
+		@ClientRegistryData(isConnected = true)
 		public static final SelfConnectingBlock ExternalImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("large_imperial_plating")
+		@ClientRegistryData(isConnected = true)
 		public static final SelfConnectingBlock LargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("rusted_large_imperial_plating")
+		@ClientRegistryData(isConnected = true)
 		public static final SelfConnectingBlock RustedLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("mossy_large_imperial_plating")
+		@ClientRegistryData(isConnected = true)
 		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
-		public static final RegistryHelper.BlockStairsSlabWallVariants GrayImperialPanelBlank = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneVariants GrayImperialPanelBlank = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
@@ -474,6 +509,7 @@ public class SwgBlocks
 		@RegistryName("lommite_block")
 		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 		@RegistryName("plasteel_block")
+		@ClientRegistryData(isConnected = true)
 		public static final SelfConnectingBlock Plasteel = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).requiresTool());
 		@RegistryName("titanium_block")
 		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
@@ -530,7 +566,7 @@ public class SwgBlocks
 	public static class Sandstone
 	{
 		@RegistryName("desert_sandstone")
-		public static final RegistryHelper.BlockStairsSlabWallVariants Desert = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final RegistryHelper.StoneVariants Desert = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("smooth_desert_sandstone")
 		public static final Block SmoothDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("polished_desert_sandstone")
@@ -572,7 +608,7 @@ public class SwgBlocks
 	public static class Stone
 	{
 		@RegistryName("canyon_stone")
-		public static final RegistryHelper.BlockStairsSlabWallVariants Canyon = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F)));
+		public static final RegistryHelper.StoneVariants Canyon = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F)));
 		@RegistryName("canyon_stone_bricks")
 		public static final Block CanyonBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("polished_canyon_stone")
@@ -581,29 +617,30 @@ public class SwgBlocks
 		public static final Block ChiseledCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 
 		@RegistryName("canyon_cobblestone")
-		public static final RegistryHelper.BlockStairsSlabWallVariants CanyonCobble = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final RegistryHelper.StoneVariants CanyonCobble = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 
 		@RegistryName("pourstone")
-		public static final RegistryHelper.BlockStairsSlabWallVariants Pourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final RegistryHelper.StoneVariants Pourstone = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("smooth_pourstone")
-		public static final RegistryHelper.BlockStairsSlabWallVariants SmoothPourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final RegistryHelper.StoneVariants SmoothPourstone = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("cracked_pourstone")
-		public static final RegistryHelper.BlockStairsSlabWallVariants CrackedPourstone = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
+		public static final RegistryHelper.StoneVariants CrackedPourstone = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
 
 		@RegistryName("durasteel_bordered_pourstone")
+		@ClientRegistryData(isConnected = true)
 		public static final SelfConnectingBlock DurasteelConnectedPourstone = new SelfConnectingBlock(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 
 		@RegistryName("pourstone")
-		public static final RegistryHelper.DyedBlockStairsSlabWallVariants DyedPourstone = new RegistryHelper.DyedBlockStairsSlabWallVariants(color -> new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool())));
+		public static final RegistryHelper.DyedStoneVariants DyedPourstone = new RegistryHelper.DyedStoneVariants(color -> new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool())));
 
 		@RegistryName("massassi_stone")
-		public static final RegistryHelper.BlockStairsSlabWallVariants Massassi = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneVariants Massassi = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_massassi_stone")
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_massassi_stone_slab")
 		public static final SlabBlock MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
 		@RegistryName("massassi_stone_bricks")
-		public static final RegistryHelper.BlockStairsSlabWallVariants MassassiBricks = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneVariants MassassiBricks = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		//@RegistryName("chiseled_massassi_stone_bricks")
 		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 
@@ -612,16 +649,16 @@ public class SwgBlocks
 		@RegistryName("mossy_smooth_massassi_stone_slab")
 		public static final SlabBlock MossyMassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MossyMassassiSmooth));
 		@RegistryName("mossy_massassi_stone_bricks")
-		public static final RegistryHelper.BlockStairsSlabWallVariants MossyMassassiBricks = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneVariants MossyMassassiBricks = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 
 		@RegistryName("ilum_stone")
-		public static final RegistryHelper.BlockStairsSlabWallVariants Ilum = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneVariants Ilum = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_ilum_stone")
 		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_ilum_stone_slab")
 		public static final SlabBlock IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
 		@RegistryName("ilum_stone_bricks")
-		public static final RegistryHelper.BlockStairsSlabWallVariants IlumBricks = new RegistryHelper.BlockStairsSlabWallVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneVariants IlumBricks = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("chiseled_ilum_stone_bricks")
 		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 	}
@@ -629,10 +666,10 @@ public class SwgBlocks
 	public static void register()
 	{
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Block.class, SwgBlocks::registerBlock);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.BlockStairsSlabWallVariants.class, SwgBlocks::registerBlockStabStairs);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedBlockStairsSlabWallVariants.class, SwgBlocks::registerBlockStabStairs);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.PlankStairsSlabFenceGateVariants.class, SwgBlocks::registerPlankStabFenceGate);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedBlockVariants.class, SwgBlocks::registerDyedBlocks);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.StoneVariants.class, SwgBlocks::registerBlockStabStairs);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedStoneVariants.class, SwgBlocks::registerBlockStabStairs);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.WoodVariants.class, SwgBlocks::registerPlankStabFenceGate);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedBlocks.class, SwgBlocks::registerDyedBlocks);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
 		RegistryHelper.registerFlammable(SwgBlocks.class);
@@ -661,7 +698,7 @@ public class SwgBlocks
 		}
 	}
 
-	private static void registerBlockStabStairs(RegistryHelper.BlockStairsSlabWallVariants t, Identifier identifier, boolean ignoreTab)
+	private static void registerBlockStabStairs(RegistryHelper.StoneVariants t, Identifier identifier, boolean ignoreTab)
 	{
 		registerBlock(t.block, identifier, ignoreTab);
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
@@ -669,13 +706,13 @@ public class SwgBlocks
 		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), ignoreTab);
 	}
 
-	private static void registerBlockStabStairs(RegistryHelper.DyedBlockStairsSlabWallVariants t, Identifier identifier, boolean ignoreTab)
+	private static void registerBlockStabStairs(RegistryHelper.DyedStoneVariants t, Identifier identifier, boolean ignoreTab)
 	{
 		for (var entry : t.entrySet())
 			registerBlockStabStairs(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);
 	}
 
-	private static void registerPlankStabFenceGate(RegistryHelper.PlankStairsSlabFenceGateVariants t, Identifier identifier, boolean ignoreTab)
+	private static void registerPlankStabFenceGate(RegistryHelper.WoodVariants t, Identifier identifier, boolean ignoreTab)
 	{
 		registerBlock(t.plank, Resources.id(identifier.getPath() + "_planks"), ignoreTab);
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
@@ -686,7 +723,7 @@ public class SwgBlocks
 		registerBlock(t.door, Resources.id(identifier.getPath() + "_door"), ignoreTab);
 	}
 
-	private static void registerDyedBlocks(RegistryHelper.DyedBlockVariants t, Identifier identifier, boolean ignoreTab)
+	private static void registerDyedBlocks(RegistryHelper.DyedBlocks t, Identifier identifier, boolean ignoreTab)
 	{
 		for (var entry : t.entrySet())
 			registerBlock(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);

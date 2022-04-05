@@ -296,12 +296,12 @@ public class BlockGenerator
 		return BlockGenerator.basic(block).lootTable(block1 -> LootTableFile.singleFortuneBonus(block1, item));
 	}
 
-	public static void basicBlockStairsSlabWallVariants(RegistryHelper.BlockStairsSlabWallVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void basicBlockStairsSlabWallVariants(RegistryHelper.StoneVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		blockStairsSlabVariants(variants, BlockGenerator::basic, miningTag, assets);
 	}
 
-	public static void blockStairsSlabVariants(RegistryHelper.BlockStairsSlabWallVariants variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void blockStairsSlabVariants(RegistryHelper.StoneVariants variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		var id = AssetGenerator.getTextureName(variants.block);
 		generatorFunction.apply(variants.block)
@@ -321,12 +321,12 @@ public class BlockGenerator
 		              .build(assets);
 	}
 
-	public static void basicBlockStairsSlabFenceGateVariants(RegistryHelper.PlankStairsSlabFenceGateVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void basicBlockStairsSlabFenceGateVariants(RegistryHelper.WoodVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		basicBlockStairsSlabFenceGateVariants(variants, BlockGenerator::basic, miningTag, assets);
 	}
 
-	public static void basicBlockStairsSlabFenceGateVariants(RegistryHelper.PlankStairsSlabFenceGateVariants variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void basicBlockStairsSlabFenceGateVariants(RegistryHelper.WoodVariants variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		var id = AssetGenerator.getTextureName(variants.plank);
 		generatorFunction.apply(variants.plank)
