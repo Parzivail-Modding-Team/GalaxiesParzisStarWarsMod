@@ -69,6 +69,13 @@ public class ModelFile
 				.texture("all", AssetGenerator.getTextureName(block));
 	}
 
+	public static ModelFile cube(Block block, Identifier texture)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_all"))
+				.texture("all", texture);
+	}
+
 	public static ModelFile cube_no_cull(Block block)
 	{
 		return ModelFile

@@ -270,6 +270,9 @@ public class SwgBlocks
 		@RegistryName("sequoia_log")
 		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock Sequoia = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
+		@RegistryName("stripped_sequoia_log")
+		@Flammable(burn = 5, spread = 5)
+		public static final PillarBlock StrippedSequoia = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("mossy_sequoia_log")
 		@Flammable(burn = 5, spread = 5)
 		public static final PillarBlock MossySequoia = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
@@ -291,13 +294,13 @@ public class SwgBlocks
 	{
 		@RegistryName("sequoia_wood")
 		@Flammable(burn = 5, spread = 5)
-		public static final PillarBlock Sequoia = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		public static final Block Sequoia = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("japor_wood")
 		@Flammable(burn = 5, spread = 5)
-		public static final PillarBlock Japor = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		public static final Block Japor = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("tatooine_wood")
 		@Flammable(burn = 5, spread = 5)
-		public static final PillarBlock Tatooine = new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		public static final Block Tatooine = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 	}
 
 	public static class Planks
@@ -305,6 +308,9 @@ public class SwgBlocks
 		@RegistryName("japor")
 		@Flammable(burn = 5, spread = 20)
 		public static final RegistryHelper.PlankStairsSlabFenceGateVariants Japor = new RegistryHelper.PlankStairsSlabFenceGateVariants(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
+		@RegistryName("sequoia")
+		@Flammable(burn = 5, spread = 20)
+		public static final RegistryHelper.PlankStairsSlabFenceGateVariants Sequoia = new RegistryHelper.PlankStairsSlabFenceGateVariants(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 	}
 
 	public static class Light

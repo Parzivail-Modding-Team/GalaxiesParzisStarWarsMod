@@ -27,6 +27,12 @@ public class BlockGenerator
 				.lootTable(LootTableFile::singleSelf);
 	}
 
+	public static BlockGenerator basic(Block block, Identifier texture)
+	{
+		return block(block, texture)
+				.lootTable(LootTableFile::singleSelf);
+	}
+
 	public static BlockGenerator blockNoModelLangEntry(Block block)
 	{
 		return new BlockGenerator(block)
@@ -55,6 +61,14 @@ public class BlockGenerator
 		return blockNoModelLangEntry(block)
 				.state(BlockStateModelGenerator::createSingletonBlockState)
 				.model(ModelFile::cube)
+				.itemModel(ModelFile::ofBlock);
+	}
+
+	public static BlockGenerator block(Block block, Identifier texture)
+	{
+		return blockNoModelLangEntry(block)
+				.state(BlockStateModelGenerator::createSingletonBlockState)
+				.model(block1 -> ModelFile.cube(block1, texture))
 				.itemModel(ModelFile::ofBlock);
 	}
 

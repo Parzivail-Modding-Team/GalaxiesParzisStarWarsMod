@@ -1082,44 +1082,50 @@ public class Tarkin
 		              .itemTag(ItemTags.LEAVES)
 		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"), Resources.id("block/sequoia_log"))
+		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Log.MossySequoia, Resources.id("block/mossy_sequoia_log_top"), Resources.id("block/mossy_sequoia_log"))
+		BlockGenerator.column(SwgBlocks.Log.StrippedSequoia, Resources.id("block/stripped_sequoia_log_top"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.id("block/japor_log_top"), Resources.id("block/japor_log"))
+		BlockGenerator.column(SwgBlocks.Log.MossySequoia, Resources.id("block/mossy_sequoia_log_top"))
+		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
+		              .blockTag(BlockTags.AXE_MINEABLE)
+		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
+		              .build(assets);
+		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.id("block/japor_log_top"))
 		              .blockTag(SwgTags.Block.JAPOR_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.JAPOR_LOG)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.id("block/tatooine_log_top"), Resources.id("block/tatooine_log"))
+		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.id("block/tatooine_log_top"))
 		              .blockTag(SwgTags.Block.TATOOINE_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.TATOOINE_LOG)
 		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Wood.Sequoia, Resources.id("block/sequoia_log"), Resources.id("block/sequoia_log"))
+		BlockGenerator.basic(SwgBlocks.Wood.Sequoia, Resources.id("block/sequoia_log"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Wood.Japor, Resources.id("block/japor_log"), Resources.id("block/japor_log"))
+		BlockGenerator.basic(SwgBlocks.Wood.Japor, Resources.id("block/japor_log"))
 		              .blockTag(SwgTags.Block.JAPOR_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.JAPOR_LOG)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Wood.Tatooine, Resources.id("block/tatooine_log"), Resources.id("block/tatooine_log"))
+		BlockGenerator.basic(SwgBlocks.Wood.Tatooine, Resources.id("block/tatooine_log"))
 		              .blockTag(SwgTags.Block.TATOOINE_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.TATOOINE_LOG)
 		              .build(assets);
 
 		BlockGenerator.basicBlockStairsSlabFenceGateVariants(SwgBlocks.Planks.Japor, BlockTags.AXE_MINEABLE, assets);
+		BlockGenerator.basicBlockStairsSlabFenceGateVariants(SwgBlocks.Planks.Sequoia, BlockTags.AXE_MINEABLE, assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
