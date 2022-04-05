@@ -3,7 +3,7 @@ package com.parzivail.pswg.client.render.p3d;
 import com.parzivail.util.block.DisplacingBlock;
 import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
-import com.parzivail.util.block.rotating.RotatingBlock;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.math.ClientMathUtil;
 import com.parzivail.util.math.MatrixStackUtil;
@@ -156,11 +156,11 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		var mat = new Matrix4f();
 		mat.loadIdentity();
 
-		if (state.getBlock() instanceof RotatingBlock)
+		if (state.getBlock() instanceof WaterloggableRotatingBlock)
 		{
 			mat.multiply(Matrix4f.translate(0.5f, 0.5f, 0.5f));
 
-			mat.multiply(ClientMathUtil.getRotation(state.get(RotatingBlock.FACING)));
+			mat.multiply(ClientMathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
 
 			mat.multiply(Matrix4f.translate(-0.5f, -0.5f, -0.5f));
 		}

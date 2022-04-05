@@ -3,7 +3,7 @@ package com.parzivail.pswg.block;
 import com.parzivail.pswg.blockentity.PowerCouplingBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.VoxelShapeUtil;
-import com.parzivail.util.block.rotating.RotatingBlockWithBounds;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBounds;
 import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -18,7 +18,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class PowerCouplingBlock extends RotatingBlockWithBounds implements BlockEntityProvider
+public class PowerCouplingBlock extends WaterloggableRotatingBlockWithBounds implements BlockEntityProvider
 {
 	private static final VoxelShape SHAPE_SINGLE = VoxelShapes.cuboid(0, 5.5f / 16, 5.5f / 16, 4 / 16f, 10.5f / 16, 10.5f / 16);
 

@@ -5,7 +5,7 @@ import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.client.render.p3d.P3DBakedBlockModel;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
-import com.parzivail.util.block.rotating.RotatingBlock;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.math.ClientMathUtil;
 import com.parzivail.util.math.Ease;
@@ -134,7 +134,7 @@ public class TatooineHomeDoorRenderer implements BlockEntityRenderer<TatooineHom
 		if (model == null)
 			return;
 
-		var rotation = state.get(RotatingBlock.FACING);
+		var rotation = state.get(WaterloggableRotatingBlock.FACING);
 
 		matrices.push();
 

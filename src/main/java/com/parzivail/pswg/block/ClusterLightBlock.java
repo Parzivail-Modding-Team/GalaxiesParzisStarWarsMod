@@ -2,7 +2,7 @@ package com.parzivail.pswg.block;
 
 import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
-import com.parzivail.util.block.rotating.RotatingBlockWithBounds;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -15,7 +15,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
-public class ClusterLightBlock extends RotatingBlockWithBounds implements IPicklingBlock
+public class ClusterLightBlock extends WaterloggableRotatingBlockWithBounds implements IPicklingBlock
 {
 	public static final IntProperty CLUSTER_SIZE = IntProperty.of("cluster_size", 1, 3);
 

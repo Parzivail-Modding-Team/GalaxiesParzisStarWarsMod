@@ -10,11 +10,11 @@ import net.minecraft.world.BlockView;
 
 import java.util.function.BiFunction;
 
-public class RotatingBlockWithBoundsGuiEntity extends RotatingBlockWithGuiEntity
+public class WaterloggableRotatingBlockWithBoundsGuiEntity extends WaterloggableRotatingBlockWithGuiEntity
 {
 	private final VoxelShape shape;
 
-	public RotatingBlockWithBoundsGuiEntity(VoxelShape shape, Settings settings, BiFunction<BlockPos, BlockState, BlockEntity> blockEntitySupplier)
+	public WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShape shape, Settings settings, BiFunction<BlockPos, BlockState, BlockEntity> blockEntitySupplier)
 	{
 		super(settings.dynamicBounds(), blockEntitySupplier);
 		this.shape = shape;

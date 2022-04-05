@@ -30,11 +30,5 @@ public class DryingBlock extends FallingMutatingBlock
 		entity.slowMovement(state, new Vec3d(0.25, 1.5, 0.25));
 		super.onEntityCollision(state, world, pos, entity);
 	}
-
-	@Override
-	protected int getFallDelay()
-	{
-		return 30;
-	}
 }
 

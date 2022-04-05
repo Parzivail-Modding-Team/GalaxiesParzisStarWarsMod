@@ -2,7 +2,7 @@ package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.blockentity.BlasterWorkbenchBlockEntity;
 import com.parzivail.util.block.VoxelShapeUtil;
-import com.parzivail.util.block.rotating.RotatingBlockWithGuiEntity;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithGuiEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.util.math.BlockPos;
@@ -10,7 +10,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public class BlasterWorkbenchBlock extends RotatingBlockWithGuiEntity
+public class BlasterWorkbenchBlock extends WaterloggableRotatingBlockWithGuiEntity
 {
 	private static final VoxelShape SHAPE = VoxelShapes.union(
 			VoxelShapes.cuboid(0, 10 / 16f, 0, 1, 13 / 16f, 1),

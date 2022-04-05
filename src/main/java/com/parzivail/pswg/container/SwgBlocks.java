@@ -12,10 +12,10 @@ import com.parzivail.util.block.connecting.SelfConnectingGlassBlock;
 import com.parzivail.util.block.connecting.SelfConnectingNodeBlock;
 import com.parzivail.util.block.connecting.SelfConnectingStainedGlassBlock;
 import com.parzivail.util.block.mutating.*;
-import com.parzivail.util.block.rotating.RotatingBlock;
-import com.parzivail.util.block.rotating.RotatingBlockWithBounds;
-import com.parzivail.util.block.rotating.RotatingBlockWithBoundsGuiEntity;
-import com.parzivail.util.block.rotating.RotatingBlockWithGuiEntity;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBounds;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBoundsGuiEntity;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithGuiEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -73,7 +73,7 @@ public class SwgBlocks
 		public static final RegistryHelper.StoneProducts CrackedPourstone = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
 
 		@RegistryName("durasteel_bordered_pourstone")
-		@ClientRegistryData(isConnected = true)
+		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock DurasteelConnectedPourstone = new SelfConnectingBlock(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 
 		@RegistryName("pourstone")
@@ -125,8 +125,6 @@ public class SwgBlocks
 	@RegistryOrder(3)
 	public static class Sand
 	{
-		@RegistryName("salty_desert_sand")
-		public static final Block SaltyDesert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 		@RegistryName("desert_sand")
 		public static final Block Desert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 		@RegistryName("pit_sand")
@@ -176,40 +174,40 @@ public class SwgBlocks
 	public static class Plant
 	{
 		@RegistryName("funnel_flower")
-		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
-		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("poonten_grass")
-		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("dried_poonten_grass")
-		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("tuber_stalk")
-		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("chasuka")
 		@TabIgnore
-		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final CropBlock Chasuka = new ChasukaCrop(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("hkak_bush")
-		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final HkakBushBlock HkakBush = new HkakBushBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("molo_shrub")
-		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("vaporator_mushroom_colony")
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block VaporatorMushroom = new VaporatorMushroomBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
@@ -217,44 +215,44 @@ public class SwgBlocks
 	public class Tree
 	{
 		@RegistryName("sequoia_leaves")
-		@ServerRegistryData(fireBurn = 30, fireSpread = 60)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final LeavesBlock SequoiaLeaves = createLeavesBlock();
 		@RegistryName("sequoia_wood")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final Block SequoiaWood = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("sequoia_log")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock SequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("stripped_sequoia_log")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock StrippedSequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("mossy_sequoia_log")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock MossySequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("sequoia")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 20)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 		public static final RegistryHelper.WoodProducts SequoiaProducts = new RegistryHelper.WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 
 		@RegistryName("japor_leaves")
-		@ServerRegistryData(fireBurn = 30, fireSpread = 60)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final BushLeavesBlock JaporLeaves = createBushLeavesBlock();
 		@RegistryName("japor_wood")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final Block JaporWood = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("japor_log")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock JaporLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("japor")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 20)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
 		public static final RegistryHelper.WoodProducts JaporProducts = new RegistryHelper.WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 
 		@RegistryName("tatooine_wood")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final Block TatooineWood = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("tatooine_log")
-		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
+		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock TatooineLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 
 		private static LeavesBlock createLeavesBlock()
@@ -339,7 +337,7 @@ public class SwgBlocks
 		@RegistryName("durasteel_block")
 		public static final Block DurasteelBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 		@RegistryName("plasteel_block")
-		@ClientRegistryData(isConnected = true)
+		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock PlasteelBlock = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).requiresTool());
 	}
 
@@ -347,55 +345,55 @@ public class SwgBlocks
 	public static class Glass
 	{
 		@RegistryName("imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.CUTOUT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.CUTOUT)
 		public static final SelfConnectingGlassBlock Imperial = createSelfConnectingGlass();
 		@RegistryName("white_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock WhiteStainedImperial = createSelfConnectingStainedGlass(DyeColor.WHITE);
 		@RegistryName("orange_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock OrangeStainedImperial = createSelfConnectingStainedGlass(DyeColor.ORANGE);
 		@RegistryName("magenta_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock MagentaStainedImperial = createSelfConnectingStainedGlass(DyeColor.MAGENTA);
 		@RegistryName("light_blue_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock LightBlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_BLUE);
 		@RegistryName("yellow_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock YellowStainedImperial = createSelfConnectingStainedGlass(DyeColor.YELLOW);
 		@RegistryName("lime_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock LimeStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIME);
 		@RegistryName("pink_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock PinkStainedImperial = createSelfConnectingStainedGlass(DyeColor.PINK);
 		@RegistryName("gray_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock GrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.GRAY);
 		@RegistryName("light_gray_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock LightGrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_GRAY);
 		@RegistryName("cyan_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock CyanStainedImperial = createSelfConnectingStainedGlass(DyeColor.CYAN);
 		@RegistryName("purple_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock PurpleStainedImperial = createSelfConnectingStainedGlass(DyeColor.PURPLE);
 		@RegistryName("blue_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock BlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLUE);
 		@RegistryName("brown_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock BrownStainedImperial = createSelfConnectingStainedGlass(DyeColor.BROWN);
 		@RegistryName("green_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock GreenStainedImperial = createSelfConnectingStainedGlass(DyeColor.GREEN);
 		@RegistryName("red_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock RedStainedImperial = createSelfConnectingStainedGlass(DyeColor.RED);
 		@RegistryName("black_stained_imperial_glass")
-		@ClientRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final SelfConnectingStainedGlassBlock BlackStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLACK);
 
 		private static SelfConnectingGlassBlock createSelfConnectingGlass()
@@ -413,7 +411,7 @@ public class SwgBlocks
 	public static class Panel
 	{
 		@RegistryName("rusted_metal")
-		@ClientRegistryData(isConnected = true)
+		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock RustedMetal = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BROWN).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 
 		@RegistryName("imperial_cutout_pipes")
@@ -434,80 +432,81 @@ public class SwgBlocks
 		@RegistryName("black_imperial_panel_thin_bordered")
 		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("external_imperial_plating")
-		@ClientRegistryData(isConnected = true)
+		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock ExternalImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("large_imperial_plating")
-		@ClientRegistryData(isConnected = true)
+		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock LargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("rusted_large_imperial_plating")
-		@ClientRegistryData(isConnected = true)
+		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock RustedLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("mossy_large_imperial_plating")
-		@ClientRegistryData(isConnected = true)
+		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
 		public static final RegistryHelper.StoneProducts GrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
-		@RegistryName("gray_imperial_panel_pattern_1")
-		public static final PillarBlock GrayImperialPanelPattern1 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_2")
-		public static final PillarBlock GrayImperialPanelPattern2 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_3")
-		public static final PillarBlock GrayImperialPanelPattern3 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("rusted_gray_imperial_panel_pattern_3")
-		public static final PillarBlock RustedGrayImperialPanelPattern3 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("mossy_gray_imperial_panel_pattern_3")
-		public static final PillarBlock MossyGrayImperialPanelPattern3 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_4")
-		public static final PillarBlock GrayImperialPanelPattern4 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("rusted_gray_imperial_panel_pattern_4")
-		public static final PillarBlock RustedGrayImperialPanelPattern4 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("mossy_gray_imperial_panel_pattern_4")
-		public static final PillarBlock MossyGrayImperialPanelPattern4 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_5")
-		public static final PillarBlock GrayImperialPanelPattern5 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("rusted_gray_imperial_panel_pattern_5")
-		public static final PillarBlock RustedGrayImperialPanelPattern5 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("mossy_gray_imperial_panel_pattern_5")
-		public static final PillarBlock MossyGrayImperialPanelPattern5 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_6")
-		public static final PillarBlock GrayImperialPanelPattern6 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("rusted_gray_imperial_panel_pattern_6")
-		public static final PillarBlock RustedGrayImperialPanelPattern6 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("mossy_gray_imperial_panel_pattern_6")
-		public static final PillarBlock MossyGrayImperialPanelPattern6 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_7")
-		public static final PillarBlock GrayImperialPanelPattern7 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_8")
-		public static final PillarBlock GrayImperialPanelPattern8 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_9")
-		public static final PillarBlock GrayImperialPanelPattern9 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("rusted_gray_imperial_panel_pattern_9")
-		public static final PillarBlock RustedGrayImperialPanelPattern9 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("mossy_gray_imperial_panel_pattern_9")
-		public static final PillarBlock MossyGrayImperialPanelPattern9 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_10")
-		public static final PillarBlock GrayImperialPanelPattern10 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_panel_pattern_11")
-		public static final PillarBlock GrayImperialPanelPattern11 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 
-		@RegistryName("gray_imperial_light_half_1")
-		public static final PillarBlock GrayImperialLightHalf1 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY, 8);
-		@RegistryName("gray_imperial_light_half_2")
-		public static final PillarBlock GrayImperialLightHalf2 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY, 8);
-		@RegistryName("gray_imperial_light_half_3")
-		public static final PillarBlock GrayImperialLightHalf3 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY, 8);
-		@RegistryName("gray_imperial_light_half_4")
-		public static final PillarBlock GrayImperialLightHalf4 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY, 8);
-		@RegistryName("gray_imperial_light_half_5")
-		public static final PillarBlock GrayImperialLightHalf5 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY, 8);
-		@RegistryName("gray_imperial_light_off_1")
-		public static final PillarBlock GrayImperialLightOff1 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
-		@RegistryName("gray_imperial_light_off_2")
-		public static final PillarBlock GrayImperialLightOff2 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_3")
+		public static final Block GrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_3")
+		public static final Block RustedGrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_3")
+		public static final Block MossyGrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_4")
+		public static final Block GrayImperialPanelPattern4 = createPanel(MapColor.GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_4")
+		public static final Block RustedGrayImperialPanelPattern4 = createPanel(MapColor.GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_4")
+		public static final Block MossyGrayImperialPanelPattern4 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_5")
+		public static final Block GrayImperialPanelPattern5 = createPanel(MapColor.GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_5")
+		public static final Block RustedGrayImperialPanelPattern5 = createPanel(MapColor.GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_5")
+		public static final Block MossyGrayImperialPanelPattern5 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_6")
+		public static final Block GrayImperialPanelPattern6 = createPanel(MapColor.GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_6")
+		public static final Block RustedGrayImperialPanelPattern6 = createPanel(MapColor.GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_6")
+		public static final Block MossyGrayImperialPanelPattern6 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_7")
+		public static final Block GrayImperialPanelPattern7 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_8")
+		public static final Block GrayImperialPanelPattern8 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_9")
+		public static final Block GrayImperialPanelPattern9 = createPanel(MapColor.GRAY);
+		@RegistryName("rusted_gray_imperial_panel_pattern_9")
+		public static final Block RustedGrayImperialPanelPattern9 = createPanel(MapColor.GRAY);
+		@RegistryName("mossy_gray_imperial_panel_pattern_9")
+		public static final Block MossyGrayImperialPanelPattern9 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_10")
+		public static final Block GrayImperialPanelPattern10 = createPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_panel_pattern_11")
+		public static final Block GrayImperialPanelPattern11 = createPanel(MapColor.GRAY);
+
 		@RegistryName("gray_imperial_light_on_1")
-		public static final PillarBlock GrayImperialLightOn1 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		public static final Block GrayImperialLightOn1 = createLitPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_light_on_2")
-		public static final PillarBlock GrayImperialLightOn2 = createLitPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		public static final Block GrayImperialLightOn2 = createLitPanel(MapColor.GRAY);
+		@RegistryName("gray_imperial_light_half_1")
+		public static final Block GrayImperialLightHalf1 = createLitPanel(MapColor.GRAY, 8);
+		@RegistryName("gray_imperial_light_half_2")
+		public static final Block GrayImperialLightHalf2 = createLitPanel(MapColor.GRAY, 8);
+		@RegistryName("gray_imperial_light_half_3")
+		public static final Block GrayImperialLightHalf3 = createLitPanel(MapColor.GRAY, 8);
+		@RegistryName("gray_imperial_light_half_4")
+		public static final Block GrayImperialLightHalf4 = createLitPanel(MapColor.GRAY, 8);
+		@RegistryName("gray_imperial_light_half_5")
+		public static final Block GrayImperialLightHalf5 = createLitPanel(MapColor.GRAY, 8);
+		@RegistryName("gray_imperial_light_off_1")
+		public static final Block GrayImperialLightOff1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_light_off_2")
+		public static final Block GrayImperialLightOff2 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_1")
+		public static final PillarBlock GrayImperialPanelPattern1 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
+		@RegistryName("gray_imperial_panel_pattern_2")
+		public static final PillarBlock GrayImperialPanelPattern2 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 
 		@RegistryName("gray_imperial_tall_panel_1")
 		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
@@ -523,14 +522,14 @@ public class SwgBlocks
 		@TabIgnore
 		public static final Block LabWall = new Block(FabricBlockSettings.of(Material.STONE));
 
-		private static PillarBlock createLitPanel(MapColor topMapColor, MapColor sideMapColor, int luminance)
+		private static PillarBlock createLitPanel(MapColor topMapColor, int luminance)
 		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.COPPER).luminance(value -> luminance));
+			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, topMapColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.COPPER).luminance(value -> luminance));
 		}
 
-		private static PillarBlock createLitPanel(MapColor topMapColor, MapColor sideMapColor)
+		private static PillarBlock createLitPanel(MapColor topMapColor)
 		{
-			return createLitPanel(topMapColor, sideMapColor, 15);
+			return createLitPanel(topMapColor, 15);
 		}
 
 		private static SelfConnectingBlock createLitConnectingPanel(MapColor mapColor)
@@ -538,7 +537,12 @@ public class SwgBlocks
 			return new SelfConnectingBlock(AbstractBlock.Settings.of(Material.METAL, mapColor).strength(2.0F).requiresTool().sounds(BlockSoundGroup.COPPER).luminance(value -> 15));
 		}
 
-		private static PillarBlock createPanel(MapColor topMapColor, MapColor sideMapColor)
+		private static Block createPanel(MapColor topMapColor)
+		{
+			return new Block(AbstractBlock.Settings.of(Material.METAL, topMapColor).strength(1.5F).requiresTool().sounds(BlockSoundGroup.COPPER));
+		}
+
+		private static PillarBlock createPillarPanel(MapColor topMapColor, MapColor sideMapColor)
 		{
 			return new PillarBlock(AbstractBlock.Settings.of(Material.METAL, (blockState) -> blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(1.5F).requiresTool().sounds(BlockSoundGroup.COPPER));
 		}
@@ -562,10 +566,10 @@ public class SwgBlocks
 		public static final Block Air = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 
 		@RegistryName("imperial_vent")
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Imperial = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
 		@RegistryName("imperial_grated_vent")
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block ImperialGrated = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
 	}
 
@@ -576,11 +580,11 @@ public class SwgBlocks
 		public static final Block Fixture = new InvertedLampBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(BlockUtil.createLightLevelFromBlockState(15)).strength(0.3F));
 
 		@RegistryName("red_hangar_light")
-		public static final Block RedHangar = new RotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), RotatingBlockWithBounds.Substrate.BELOW, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
+		public static final Block RedHangar = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.BELOW, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("blue_hangar_light")
-		public static final Block BlueHangar = new RotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), RotatingBlockWithBounds.Substrate.BELOW, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
+		public static final Block BlueHangar = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.BELOW, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("wall_cluster_light")
-		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
+		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(WaterloggableRotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 	}
 
 	@RegistryOrder(16)
@@ -599,26 +603,26 @@ public class SwgBlocks
 	public static class Crate
 	{
 		@RegistryName("orange_kyber_crate")
-		public static final RotatingBlockWithGuiEntity OrangeKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
+		public static final WaterloggableRotatingBlockWithGuiEntity OrangeKyber = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("gray_kyber_crate")
-		public static final RotatingBlockWithGuiEntity GrayKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
+		public static final WaterloggableRotatingBlockWithGuiEntity GrayKyber = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("black_kyber_crate")
-		public static final RotatingBlockWithGuiEntity BlackKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
+		public static final WaterloggableRotatingBlockWithGuiEntity BlackKyber = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("kyber_crate")
 		public static final BlockEntityType<CrateOctagonBlockEntity> KyberCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateOctagonBlockEntity::new, OrangeKyber, GrayKyber, BlackKyber).build();
 
 		@RegistryName("toolbox")
-		public static final RotatingBlockWithGuiEntity Toolbox = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateMosEisleyBlockEntity::new);
+		public static final WaterloggableRotatingBlockWithGuiEntity Toolbox = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateMosEisleyBlockEntity::new);
 		@RegistryName("toolbox")
 		public static final BlockEntityType<CrateMosEisleyBlockEntity> ToolboxBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateMosEisleyBlockEntity::new, Toolbox).build();
 
 		@RegistryName("imperial_crate")
-		public static final RotatingBlockWithGuiEntity Imperial = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateImperialCubeBlockEntity::new);
+		public static final WaterloggableRotatingBlockWithGuiEntity Imperial = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateImperialCubeBlockEntity::new);
 		@RegistryName("imperial_crate")
 		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateImperialCubeBlockEntity::new, Imperial).build();
 
 		@RegistryName("segmented_crate")
-		public static final RotatingBlockWithBoundsGuiEntity Segmented = new RotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(28, 14, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
+		public static final WaterloggableRotatingBlockWithBoundsGuiEntity Segmented = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(28, 14, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
 		@RegistryName("segmented_crate")
 		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, Segmented).build();
 	}
@@ -643,7 +647,7 @@ public class SwgBlocks
 	public static class Machine
 	{
 		@RegistryName("spoked_machine")
-		public static final RotatingBlock Spoked = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), RotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
+		public static final WaterloggableRotatingBlock Spoked = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 	}
 
 	@RegistryOrder(20)
@@ -659,7 +663,7 @@ public class SwgBlocks
 	public static class Power
 	{
 		@RegistryName("power_coupling")
-		public static final Block Coupling = new PowerCouplingBlock(RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block Coupling = new PowerCouplingBlock(WaterloggableRotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("power_coupling")
 		public static final BlockEntityType<PowerCouplingBlockEntity> CouplingBlockEntityType = FabricBlockEntityTypeBuilder.create(PowerCouplingBlockEntity::new, Coupling).build();
 	}
@@ -675,17 +679,17 @@ public class SwgBlocks
 	public static class Tank
 	{
 		@RegistryName("fusion_fuel_tank")
-		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block Fusion = new WaterloggableRotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
 	@RegistryOrder(24)
 	public static class Cage
 	{
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Creature = new WaterloggableCreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block CreatureTerrarium = new CreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
-		@ClientRegistryData(renderLayer = RenderLayerHint.TRANSLUCENT)
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final RegistryHelper.DyedBlocks DyedCreatureTerrarium = new RegistryHelper.DyedBlocks(color -> new CreatureCageBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
 	}
 
@@ -694,7 +698,7 @@ public class SwgBlocks
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Object.class, SwgBlocks::tryRegisterBlock);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
-		RegistryHelper.register(SwgBlocks.class, ServerRegistryData.class, Block.class, SwgBlocks::registerServerData);
+		RegistryHelper.register(SwgBlocks.class, ServerBlockRegistryData.class, Block.class, SwgBlocks::registerServerData);
 
 		for (var entry : Cage.DyedCreatureTerrarium.entrySet())
 		{
@@ -720,7 +724,7 @@ public class SwgBlocks
 		}
 	}
 
-	private static void registerServerData(ServerRegistryData data, Block block)
+	private static void registerServerData(ServerBlockRegistryData data, Block block)
 	{
 		if (data.fireBurn() != 0 || data.fireSpread() != 0)
 			FlammableBlockRegistry.getDefaultInstance().add(block, data.fireBurn(), data.fireSpread());

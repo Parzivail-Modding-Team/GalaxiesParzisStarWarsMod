@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-public @interface ClientRegistryData
+public @interface ServerBlockRegistryData
 {
-	boolean isConnected() default false;
+	int fireBurn() default 0;
 
-	RenderLayerHint renderLayer() default RenderLayerHint.NONE;
+	int fireSpread() default 0;
 }

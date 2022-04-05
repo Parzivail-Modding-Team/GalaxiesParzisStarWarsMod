@@ -3,7 +3,7 @@ package com.parzivail.pswg.block;
 import com.parzivail.pswg.blockentity.MoistureVaporatorBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.VoxelShapeUtil;
-import com.parzivail.util.block.rotating.RotatingBlockWithEntity;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
@@ -20,7 +20,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
-public class MoistureVaporatorBlock extends RotatingBlockWithEntity implements IMoistureProvider
+public class MoistureVaporatorBlock extends WaterloggableRotatingBlockWithEntity implements IMoistureProvider
 {
 	private final VoxelShape shape;
 

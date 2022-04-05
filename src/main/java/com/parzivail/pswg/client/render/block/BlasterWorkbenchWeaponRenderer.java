@@ -5,7 +5,7 @@ import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
-import com.parzivail.util.block.rotating.RotatingBlock;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.math.ClientMathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -38,7 +38,7 @@ public class BlasterWorkbenchWeaponRenderer implements BlockEntityRenderer<Blast
 
 		matrices.push();
 
-		var rotation = state.get(RotatingBlock.FACING);
+		var rotation = state.get(WaterloggableRotatingBlock.FACING);
 
 		matrices.translate(0.5, 0, 0.5);
 		matrices.multiply(ClientMathUtil.getRotation(rotation));

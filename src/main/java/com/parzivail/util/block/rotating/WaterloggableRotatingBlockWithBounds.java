@@ -13,7 +13,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
-public class RotatingBlockWithBounds extends RotatingBlock
+public class WaterloggableRotatingBlockWithBounds extends WaterloggableRotatingBlock
 {
 	public enum Substrate
 	{
@@ -25,7 +25,7 @@ public class RotatingBlockWithBounds extends RotatingBlock
 	private final VoxelShape shape;
 	private final Substrate requiresSubstrate;
 
-	public RotatingBlockWithBounds(VoxelShape shape, Substrate requiresSubstrate, Settings settings)
+	public WaterloggableRotatingBlockWithBounds(VoxelShape shape, Substrate requiresSubstrate, Settings settings)
 	{
 		super(settings.dynamicBounds());
 		this.shape = shape;

@@ -1,1 +1,1 @@
-{"parent":"minecraft:block/cube_column","textures":{"side":"pswg:block/mossy_gray_imperial_panel_pattern_6","end":"pswg:block/mossy_gray_imperial_panel_pattern_3"}}
+{"parent":"minecraft:block/cube_all","textures":{"all":"pswg:block/mossy_gray_imperial_panel_pattern_6"}}

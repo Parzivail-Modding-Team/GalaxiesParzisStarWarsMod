@@ -11,11 +11,11 @@ import net.minecraft.world.World;
 
 import java.util.function.BiFunction;
 
-public class RotatingBlockWithGuiEntity extends RotatingBlockWithEntity
+public class WaterloggableRotatingBlockWithGuiEntity extends WaterloggableRotatingBlockWithEntity
 {
 	private final BiFunction<BlockPos, BlockState, BlockEntity> blockEntityBiFunction;
 
-	public RotatingBlockWithGuiEntity(Settings settings, BiFunction<BlockPos, BlockState, BlockEntity> blockEntityBiFunction)
+	public WaterloggableRotatingBlockWithGuiEntity(Settings settings, BiFunction<BlockPos, BlockState, BlockEntity> blockEntityBiFunction)
 	{
 		super(settings);
 		this.blockEntityBiFunction = blockEntityBiFunction;

@@ -3,7 +3,7 @@ package com.parzivail.pswg.block;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.VoxelShapeUtil;
-import com.parzivail.util.block.rotating.RotatingBlock;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,7 +27,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class TatooineHomeDoorBlock extends RotatingBlock
+public class TatooineHomeDoorBlock extends WaterloggableRotatingBlock
 {
 	static
 	{

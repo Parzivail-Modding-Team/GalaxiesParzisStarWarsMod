@@ -11,9 +11,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
-public abstract class RotatingBlockWithEntity extends RotatingBlock implements BlockEntityProvider
+public abstract class WaterloggableRotatingBlockWithEntity extends WaterloggableRotatingBlock implements BlockEntityProvider
 {
-	protected RotatingBlockWithEntity(AbstractBlock.Settings settings)
+	protected WaterloggableRotatingBlockWithEntity(AbstractBlock.Settings settings)
 	{
 		super(settings);
 	}

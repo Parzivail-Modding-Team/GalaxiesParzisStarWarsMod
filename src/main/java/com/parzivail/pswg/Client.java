@@ -30,7 +30,7 @@ import com.parzivail.pswg.client.texture.tinted.TintedTextureProvider;
 import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.container.registry.ClientRegistryData;
+import com.parzivail.pswg.container.registry.ClientBlockRegistryData;
 import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
@@ -181,8 +181,8 @@ public class Client implements ClientModInitializer
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSplit, true, true, true, null, Resources.id("block/black_imperial_panel_split_center"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelThinBordered, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 
-		RegistryHelper.register(SwgBlocks.class, ClientRegistryData.class, Block.class, Client::registerBlockData);
-		RegistryHelper.register(SwgBlocks.class, ClientRegistryData.class, RegistryHelper.DyedBlocks.class, Client::registerDyedBlockData);
+		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, Block.class, Client::registerBlockData);
+		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, RegistryHelper.DyedBlocks.class, Client::registerDyedBlockData);
 
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NemManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(P3dManager.INSTANCE);
@@ -303,7 +303,7 @@ public class Client implements ClientModInitializer
 		);
 	}
 
-	private static void registerBlockData(ClientRegistryData data, Block block)
+	private static void registerBlockData(ClientBlockRegistryData data, Block block)
 	{
 		switch (data.renderLayer())
 		{
@@ -321,7 +321,7 @@ public class Client implements ClientModInitializer
 		}
 	}
 
-	private static void registerDyedBlockData(ClientRegistryData data, RegistryHelper.DyedBlocks blocks)
+	private static void registerDyedBlockData(ClientBlockRegistryData data, RegistryHelper.DyedBlocks blocks)
 	{
 		for (var block : blocks.values())
 			registerBlockData(data, block);

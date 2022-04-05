@@ -10,11 +10,11 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 
-public class RotatingBlock extends WaterloggableBlock
+public class WaterloggableRotatingBlock extends WaterloggableBlock
 {
 	public static final DirectionProperty FACING = Properties.FACING;
 
-	public RotatingBlock(Settings settings)
+	public WaterloggableRotatingBlock(Settings settings)
 	{
 		super(settings);
 	}

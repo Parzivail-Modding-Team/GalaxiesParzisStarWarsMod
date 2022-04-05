@@ -3,7 +3,7 @@ package com.parzivail.pswg.client.render.pm3d;
 import com.parzivail.util.block.DisplacingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.connecting.ConnectingNodeBlock;
-import com.parzivail.util.block.rotating.RotatingBlock;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.math.ClientMathUtil;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
@@ -202,11 +202,11 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 			return mat;
 		}
 
-		if (state.getBlock() instanceof RotatingBlock)
+		if (state.getBlock() instanceof WaterloggableRotatingBlock)
 		{
 			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
 
-			mat.multiply(ClientMathUtil.getRotation(state.get(RotatingBlock.FACING)));
+			mat.multiply(ClientMathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
 
 			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
 		}

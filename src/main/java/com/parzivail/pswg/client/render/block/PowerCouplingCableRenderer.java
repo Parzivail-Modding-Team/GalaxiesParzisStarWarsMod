@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.render.block;
 
 import com.parzivail.pswg.blockentity.PowerCouplingBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.util.block.rotating.RotatingBlock;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.math.ClientMathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -39,7 +39,7 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 		matrices.push();
 
 		var offsetMatrices = new MatrixStack();
-		var rotation = state.get(RotatingBlock.FACING);
+		var rotation = state.get(WaterloggableRotatingBlock.FACING);
 		offsetMatrices.multiply(ClientMathUtil.getRotation(rotation));
 		var offset = Matrix4fUtil.transform(new Vec3d(-5 / 16f, 0, 0), offsetMatrices.peek().getPositionMatrix());
 
@@ -58,7 +58,7 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 			var destVec3 = new Vec3d(pos.getX(), pos.getY(), pos.getZ()).subtract(offset);
 
 			var destOffsetMatrices = new MatrixStack();
-			var destRotation = targetState.get(RotatingBlock.FACING);
+			var destRotation = targetState.get(WaterloggableRotatingBlock.FACING);
 			destOffsetMatrices.multiply(ClientMathUtil.getRotation(destRotation));
 			var destOffset = Matrix4fUtil.transform(new Vec3d(-5 / 16f, 0, 0), destOffsetMatrices.peek().getPositionMatrix());
 
