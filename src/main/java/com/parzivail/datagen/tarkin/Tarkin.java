@@ -259,49 +259,49 @@ public class Tarkin
 		RecipeGenerator.buildMetal(
 				assets,
 				5.0F,
-				SwgBlocks.Ore.Beskar,
+				SwgBlocks.Ore.BeskarOre,
 				SwgItems.RawOre.Beskar,
 				SwgItems.Ingot.Beskar,
-				SwgBlocks.MaterialBlock.Beskar
+				SwgBlocks.Ore.BeskarBlock
 		);
 
 		RecipeGenerator.buildMetal(
 				assets,
 				1.0F,
-				SwgBlocks.Ore.Chromium,
+				SwgBlocks.Ore.ChromiumOre,
 				SwgItems.RawOre.Chromium,
 				SwgItems.Ingot.Chromium,
 				SwgItems.Nugget.Chromium,
-				SwgBlocks.MaterialBlock.Chromium
+				SwgBlocks.Ore.ChromiumBlock
 		);
 
 		RecipeGenerator.buildMetal(
 				assets,
 				4.0F,
-				SwgBlocks.Ore.Cortosis,
+				SwgBlocks.Ore.CortosisOre,
 				SwgItems.RawOre.Cortosis,
 				SwgItems.Ingot.Cortosis,
-				SwgBlocks.MaterialBlock.Cortosis
+				SwgBlocks.Ore.CortosisBlock
 		);
 
 		RecipeGenerator.buildMetal(
 				assets,
 				0.4F,
-				SwgBlocks.Ore.Desh,
+				SwgBlocks.Ore.DeshOre,
 				SwgItems.RawOre.Desh,
 				SwgItems.Ingot.Desh,
 				SwgItems.Nugget.Desh,
-				SwgBlocks.MaterialBlock.Desh
+				SwgBlocks.Ore.DeshBlock
 		);
 
 		RecipeGenerator.buildMetal(
 				assets,
 				0.7F,
-				SwgBlocks.Ore.Diatium,
+				SwgBlocks.Ore.DiatiumOre,
 				SwgItems.RawOre.Diatium,
 				SwgItems.Ingot.Diatium,
 				SwgItems.Nugget.Diatium,
-				SwgBlocks.MaterialBlock.Diatium
+				SwgBlocks.Ore.DiatiumBlock
 		);
 
 		// TODO: durasteel
@@ -311,21 +311,21 @@ public class Tarkin
 		RecipeGenerator.buildMetal(
 				assets,
 				2.0F,
-				SwgBlocks.Ore.Titanium,
+				SwgBlocks.Ore.TitaniumOre,
 				SwgItems.RawOre.Titanium,
 				SwgItems.Ingot.Titanium,
 				SwgItems.Nugget.Titanium,
-				SwgBlocks.MaterialBlock.Titanium
+				SwgBlocks.Ore.TitaniumBlock
 		);
 
 		RecipeGenerator.buildMetal(
 				assets,
 				2.0F,
-				SwgBlocks.Ore.Ionite,
+				SwgBlocks.Ore.IoniteOre,
 				SwgItems.RawOre.Ionite,
 				SwgItems.Ingot.Ionite,
 				SwgItems.Nugget.Ionite,
-				SwgBlocks.MaterialBlock.Ionite
+				SwgBlocks.Ore.IoniteBlock
 		);
 
 		// Crystals
@@ -334,28 +334,28 @@ public class Tarkin
 				assets,
 				SwgItems.Dust.Helicite,
 				SwgItems.Crystal.Helicite,
-				SwgBlocks.MaterialBlock.Helicite
+				SwgBlocks.Ore.HeliciteBlock
 		);
 
 		RecipeGenerator.buildCrystal(
 				assets,
 				SwgItems.Dust.Lommite,
 				SwgItems.Crystal.Lommite,
-				SwgBlocks.MaterialBlock.Lommite
+				SwgBlocks.Ore.LommiteBlock
 		);
 
 		RecipeGenerator.buildCrystal(
 				assets,
 				SwgItems.Dust.Thorilide,
 				SwgItems.Crystal.Thorilide,
-				SwgBlocks.MaterialBlock.Thorilide
+				SwgBlocks.Ore.ThorilideBlock
 		);
 
 		RecipeGenerator.buildCrystal(
 				assets,
 				SwgItems.Dust.Zersium,
 				SwgItems.Crystal.Zersium,
-				SwgBlocks.MaterialBlock.Zersium
+				SwgBlocks.Ore.ZersiumBlock
 		);
 
 		//Food
@@ -368,7 +368,7 @@ public class Tarkin
 		//Plasteel alternative recipes
 		RecipeGenerator.Shaped.of(new ItemStack(Items.ANVIL))
 		                      .grid3x3("plasteel",
-		                               SwgBlocks.MaterialBlock.Plasteel, SwgBlocks.MaterialBlock.Plasteel, SwgBlocks.MaterialBlock.Plasteel,
+		                               SwgBlocks.Composite.PlasteelBlock, SwgBlocks.Composite.PlasteelBlock, SwgBlocks.Composite.PlasteelBlock,
 		                               null, SwgItems.Ingot.Plasteel, null,
 		                               SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel, SwgItems.Ingot.Plasteel)
 		                      .build(assets);
@@ -1071,61 +1071,61 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.leaves(SwgBlocks.Leaves.Sequoia)
+		BlockGenerator.leaves(SwgBlocks.Tree.SequoiaLeaves)
 		              .blockTag(BlockTags.LEAVES)
 		              .blockTag(FabricMineableTags.SHEARS_MINEABLE)
 		              .itemTag(ItemTags.LEAVES)
 		              .build(assets);
-		BlockGenerator.tangentFan(SwgBlocks.Leaves.Japor)
+		BlockGenerator.tangentFan(SwgBlocks.Tree.JaporLeaves)
 		              .blockTag(BlockTags.LEAVES)
 		              .blockTag(FabricMineableTags.SHEARS_MINEABLE)
 		              .itemTag(ItemTags.LEAVES)
 		              .build(assets);
 
-		BlockGenerator.column(SwgBlocks.Log.Sequoia, Resources.id("block/sequoia_log_top"))
+		BlockGenerator.column(SwgBlocks.Tree.SequoiaLog, Resources.id("block/sequoia_log_top"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Log.StrippedSequoia, Resources.id("block/stripped_sequoia_log_top"))
+		BlockGenerator.column(SwgBlocks.Tree.StrippedSequoiaLog, Resources.id("block/stripped_sequoia_log_top"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Log.MossySequoia, Resources.id("block/mossy_sequoia_log_top"))
+		BlockGenerator.column(SwgBlocks.Tree.MossySequoiaLog, Resources.id("block/mossy_sequoia_log_top"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Japor, Resources.id("block/japor_log_top"))
+		BlockGenerator.column(SwgBlocks.Tree.JaporLog, Resources.id("block/japor_log_top"))
 		              .blockTag(SwgTags.Block.JAPOR_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.JAPOR_LOG)
 		              .build(assets);
-		BlockGenerator.column(SwgBlocks.Log.Tatooine, Resources.id("block/tatooine_log_top"))
+		BlockGenerator.column(SwgBlocks.Tree.TatooineLog, Resources.id("block/tatooine_log_top"))
 		              .blockTag(SwgTags.Block.TATOOINE_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.TATOOINE_LOG)
 		              .build(assets);
 
-		BlockGenerator.basic(SwgBlocks.Wood.Sequoia, Resources.id("block/sequoia_log"))
+		BlockGenerator.basic(SwgBlocks.Tree.SequoiaWood, Resources.id("block/sequoia_log"))
 		              .blockTag(SwgTags.Block.SEQUOIA_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.SEQUOIA_LOG)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Wood.Japor, Resources.id("block/japor_log"))
+		BlockGenerator.basic(SwgBlocks.Tree.JaporWood, Resources.id("block/japor_log"))
 		              .blockTag(SwgTags.Block.JAPOR_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.JAPOR_LOG)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Wood.Tatooine, Resources.id("block/tatooine_log"))
+		BlockGenerator.basic(SwgBlocks.Tree.TatooineWood, Resources.id("block/tatooine_log"))
 		              .blockTag(SwgTags.Block.TATOOINE_LOG)
 		              .blockTag(BlockTags.AXE_MINEABLE)
 		              .itemTag(SwgTags.Item.TATOOINE_LOG)
 		              .build(assets);
 
-		BlockGenerator.basicBlockStairsSlabFenceGateVariants(SwgBlocks.Planks.Japor, BlockTags.AXE_MINEABLE, assets);
-		BlockGenerator.basicBlockStairsSlabFenceGateVariants(SwgBlocks.Planks.Sequoia, BlockTags.AXE_MINEABLE, assets);
+		BlockGenerator.basicWoodProducts(SwgBlocks.Tree.JaporProducts, BlockTags.AXE_MINEABLE, assets);
+		BlockGenerator.basicWoodProducts(SwgBlocks.Tree.SequoiaProducts, BlockTags.AXE_MINEABLE, assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1149,43 +1149,43 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.RedStainedImperial).build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlackStainedImperial).build(assets);
 
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Beskar)
+		BlockGenerator.basic(SwgBlocks.Ore.BeskarBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Chromium)
+		BlockGenerator.basic(SwgBlocks.Ore.ChromiumBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Cortosis)
+		BlockGenerator.basic(SwgBlocks.Ore.CortosisBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Desh)
+		BlockGenerator.basic(SwgBlocks.Ore.DeshBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Diatium)
+		BlockGenerator.basic(SwgBlocks.Ore.DiatiumBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Durasteel)
+		BlockGenerator.basic(SwgBlocks.Composite.DurasteelBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Lommite)
+		BlockGenerator.basic(SwgBlocks.Ore.LommiteBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Plasteel)
+		BlockGenerator.basic(SwgBlocks.Composite.PlasteelBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Titanium)
+		BlockGenerator.basic(SwgBlocks.Ore.TitaniumBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Zersium)
+		BlockGenerator.basic(SwgBlocks.Ore.ZersiumBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.MaterialBlock.Helicite)
+		BlockGenerator.basic(SwgBlocks.Ore.HeliciteBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.block(SwgBlocks.MaterialBlock.Ionite)
+		BlockGenerator.block(SwgBlocks.Ore.IoniteBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.block(SwgBlocks.MaterialBlock.Thorilide)
+		BlockGenerator.block(SwgBlocks.Ore.ThorilideBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
@@ -1198,38 +1198,38 @@ public class Tarkin
 		              .build(assets);
 
 		// TODO: adjust loot table to match vanilla raw ores
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Beskar, SwgItems.RawOre.Beskar)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.BeskarOre, SwgItems.RawOre.Beskar)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Chromium, SwgItems.RawOre.Chromium)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.ChromiumOre, SwgItems.RawOre.Chromium)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Cortosis, SwgItems.RawOre.Cortosis)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.CortosisOre, SwgItems.RawOre.Cortosis)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Desh, SwgItems.RawOre.Desh)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DeshOre, SwgItems.RawOre.Desh)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Diatium, SwgItems.RawOre.Diatium)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DiatiumOre, SwgItems.RawOre.Diatium)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Titanium, SwgItems.RawOre.Titanium)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.TitaniumOre, SwgItems.RawOre.Titanium)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.Ionite, SwgItems.RawOre.Ionite)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.IoniteOre, SwgItems.RawOre.Ionite)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.Zersium, SwgItems.Crystal.Zersium, 1, 3)
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.ZersiumOre, SwgItems.Crystal.Zersium, 1, 3)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.Lommite, SwgItems.Crystal.Lommite, 1, 3)
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.LommiteOre, SwgItems.Crystal.Lommite, 1, 3)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.Helicite, SwgItems.Crystal.Helicite, 1, 3)
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.HeliciteOre, SwgItems.Crystal.Helicite, 1, 3)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropMany(SwgBlocks.Ore.Thorilide, SwgItems.Crystal.Thorilide, 1, 3)
+		BlockGenerator.basicDropMany(SwgBlocks.Ore.ThorilideOre, SwgItems.Crystal.Thorilide, 1, 3)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
@@ -1251,8 +1251,8 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Panel.BlackImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
-		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Panel.GrayImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.BlackImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.GrayImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
 
 		//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutout)
 		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1444,7 +1444,7 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
 
-		BlockGenerator.blockStairsSlabVariants(SwgBlocks.Stone.Canyon, BlockGenerator::basicRandomRotation, SwgTags.Block.DESERT_SANDSTONE, assets);
+		BlockGenerator.stoneProducts(SwgBlocks.Stone.Canyon, BlockGenerator::basicRandomRotation, SwgTags.Block.DESERT_SANDSTONE, assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.CanyonBricks)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
@@ -1459,7 +1459,7 @@ public class Tarkin
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);
 
-		BlockGenerator.blockStairsSlabVariants(SwgBlocks.Sandstone.Desert, b -> BlockGenerator.staticColumn(b, Resources.id("block/smooth_desert_sandstone")), SwgTags.Block.DESERT_SANDSTONE, assets);
+		BlockGenerator.stoneProducts(SwgBlocks.Sandstone.Desert, b -> BlockGenerator.staticColumn(b, Resources.id("block/smooth_desert_sandstone")), SwgTags.Block.DESERT_SANDSTONE, assets);
 
 		BlockGenerator.basic(SwgBlocks.Sandstone.SmoothDesert)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
@@ -1477,7 +1477,7 @@ public class Tarkin
 		BlockGenerator.basicRandomRotation(SwgBlocks.Salt.Caked)
 		              .build(assets);
 
-		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Stone.CanyonCobble, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.CanyonCobble, BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Stone.DurasteelConnectedPourstone)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1499,7 +1499,7 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MassassiSmoothSlab, Resources.id("block/smooth_massassi_stone_slab_double"), Resources.id("block/smooth_massassi_stone"), Resources.id("block/smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Stone.MassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.MassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
 		//BlockGenerator.basic(SwgBlocks.Stone.MassassiChiseledBricks).build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Stone.MossyMassassiSmooth)
@@ -1508,7 +1508,7 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.MossyMassassiSmoothSlab, Resources.id("block/mossy_smooth_massassi_stone_slab_double"), Resources.id("block/mossy_smooth_massassi_stone"), Resources.id("block/mossy_smooth_massassi_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Stone.MossyMassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.MossyMassassiBricks, BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Pourstone.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1550,7 +1550,7 @@ public class Tarkin
 		              .build(assets);
 
 		for (var pair : SwgBlocks.Stone.DyedPourstone.entrySet())
-			BlockGenerator.basicBlockStairsSlabWallVariants(pair.getValue(), BlockTags.PICKAXE_MINEABLE, assets);
+			BlockGenerator.basicStoneProducts(pair.getValue(), BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1570,7 +1570,7 @@ public class Tarkin
 		BlockGenerator.slabUniqueDouble(SwgBlocks.Stone.IlumSmoothSlab, Resources.id("block/smooth_ilum_stone_slab_double"), Resources.id("block/smooth_ilum_stone"), Resources.id("block/smooth_ilum_stone_slab_side"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicBlockStairsSlabWallVariants(SwgBlocks.Stone.IlumBricks, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Stone.IlumBricks, BlockTags.PICKAXE_MINEABLE, assets);
 		BlockGenerator.basic(SwgBlocks.Stone.IlumChiseledBricks)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);

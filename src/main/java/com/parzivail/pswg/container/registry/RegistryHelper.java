@@ -8,7 +8,9 @@ import net.minecraft.util.DyeColor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -23,23 +25,23 @@ public class RegistryHelper
 		}
 	}
 
-	public static class DyedStoneVariants extends HashMap<DyeColor, StoneVariants>
+	public static class DyedStoneProducts extends HashMap<DyeColor, StoneProducts>
 	{
-		public DyedStoneVariants(Function<DyeColor, StoneVariants> blockFunction)
+		public DyedStoneProducts(Function<DyeColor, StoneProducts> blockFunction)
 		{
 			for (var color : DyeColor.values())
 				put(color, blockFunction.apply(color));
 		}
 	}
 
-	public static class StoneVariants
+	public static class StoneProducts
 	{
 		public final Block block;
 		public final StairsBlock stairs;
 		public final SlabBlock slab;
 		public final WallBlock wall;
 
-		public StoneVariants(Block block)
+		public StoneProducts(Block block)
 		{
 			this.block = block;
 			this.stairs = new PStairsBlock(block.getDefaultState(), AbstractBlock.Settings.copy(block));
@@ -48,7 +50,7 @@ public class RegistryHelper
 		}
 	}
 
-	public static class WoodVariants
+	public static class WoodProducts
 	{
 		public final Block plank;
 		public final StairsBlock stairs;
@@ -58,7 +60,7 @@ public class RegistryHelper
 		public final TrapdoorBlock trapdoor;
 		public final DoorBlock door;
 
-		public WoodVariants(Block plank)
+		public WoodProducts(Block plank)
 		{
 			this.plank = plank;
 			this.stairs = new PStairsBlock(plank.getDefaultState(), AbstractBlock.Settings.copy(plank));
@@ -72,7 +74,7 @@ public class RegistryHelper
 
 	public static <T> void registerAnnotatedFields(Class<?> rootClazz, Class<T> registryType, RegistryMethod<T> registryFunction)
 	{
-		for (var clazz : rootClazz.getClasses())
+		for (var clazz : getSortedClasses(rootClazz))
 		{
 			// Register inner classes
 			registerAnnotatedFields(clazz, registryType, registryFunction);
@@ -97,7 +99,7 @@ public class RegistryHelper
 
 	public static void registerFlammable(Class<?> rootClazz)
 	{
-		for (var clazz : rootClazz.getClasses())
+		for (var clazz : getSortedClasses(rootClazz))
 		{
 			// Register inner classes
 			registerFlammable(clazz);
@@ -122,7 +124,7 @@ public class RegistryHelper
 
 	public static <TA extends Annotation, TB> void register(Class<?> rootClazz, Class<TA> annotationClazz, Class<TB> acceptClazz, BiConsumer<TA, TB> registryFunction)
 	{
-		for (var clazz : rootClazz.getClasses())
+		for (var clazz : getSortedClasses(rootClazz))
 		{
 			// Register inner classes
 			register(clazz, annotationClazz, acceptClazz, registryFunction);
@@ -143,5 +145,25 @@ public class RegistryHelper
 				}
 			}
 		}
+	}
+
+	private static List<Class<?>> getSortedClasses(Class<?> rootClazz)
+	{
+		var classes = rootClazz.getClasses();
+		return Arrays.stream(classes).sorted(RegistryHelper::compareClassRegistryOrder).toList();
+	}
+
+	private static int compareClassRegistryOrder(Class<?> a, Class<?> b)
+	{
+		return Integer.compare(getRegistryOrder(a), getRegistryOrder(b));
+	}
+
+	private static int getRegistryOrder(Class<?> a)
+	{
+		var annotation = a.getAnnotation(RegistryOrder.class);
+		if (annotation == null)
+			return Integer.MAX_VALUE;
+
+		return annotation.order();
 	}
 }

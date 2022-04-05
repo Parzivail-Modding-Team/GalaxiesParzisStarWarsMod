@@ -24,8 +24,8 @@ public class JaporTreeFeature extends Feature<SingleStateFeatureConfig>
 		var random = context.getRandom();
 		var noise = new ProcNoise(random.nextLong());
 
-		var trunk = SwgBlocks.Log.Japor.getDefaultState();
-		var leaves = SwgBlocks.Leaves.Japor.getDefaultState().with(BushLeavesBlock.DISTANCE, 1);
+		var trunk = SwgBlocks.Tree.JaporLog.getDefaultState();
+		var leaves = SwgBlocks.Tree.JaporLeaves.getDefaultState().with(BushLeavesBlock.DISTANCE, 1);
 
 		for (; origin.getY() > structureWorldAccess.getBottomY() + 3; origin = origin.down())
 		{

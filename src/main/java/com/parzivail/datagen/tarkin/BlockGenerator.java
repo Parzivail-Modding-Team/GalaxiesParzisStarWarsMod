@@ -296,12 +296,12 @@ public class BlockGenerator
 		return BlockGenerator.basic(block).lootTable(block1 -> LootTableFile.singleFortuneBonus(block1, item));
 	}
 
-	public static void basicBlockStairsSlabWallVariants(RegistryHelper.StoneVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void basicStoneProducts(RegistryHelper.StoneProducts variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
-		blockStairsSlabVariants(variants, BlockGenerator::basic, miningTag, assets);
+		stoneProducts(variants, BlockGenerator::basic, miningTag, assets);
 	}
 
-	public static void blockStairsSlabVariants(RegistryHelper.StoneVariants variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void stoneProducts(RegistryHelper.StoneProducts variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		var id = AssetGenerator.getTextureName(variants.block);
 		generatorFunction.apply(variants.block)
@@ -321,12 +321,12 @@ public class BlockGenerator
 		              .build(assets);
 	}
 
-	public static void basicBlockStairsSlabFenceGateVariants(RegistryHelper.WoodVariants variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void basicWoodProducts(RegistryHelper.WoodProducts variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
-		basicBlockStairsSlabFenceGateVariants(variants, BlockGenerator::basic, miningTag, assets);
+		woodProducts(variants, BlockGenerator::basic, miningTag, assets);
 	}
 
-	public static void basicBlockStairsSlabFenceGateVariants(RegistryHelper.WoodVariants variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void woodProducts(RegistryHelper.WoodProducts variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		var id = AssetGenerator.getTextureName(variants.plank);
 		generatorFunction.apply(variants.plank)

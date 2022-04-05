@@ -35,103 +35,314 @@ import java.util.HashMap;
 
 public class SwgBlocks
 {
-	public static class Barrel
+	@RegistryOrder(order = 0)
+	public static class Workbench
 	{
-		@RegistryName("desh_barrel")
-		public static final Block Desh = new DisplacingBlock((state, world, pos, context) -> {
-			var r = Resources.RANDOM;
-			r.setSeed(MathHelper.hashCode(pos));
+		@RegistryName("blaster_workbench")
+		public static final Block Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("blaster_workbench")
+		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = FabricBlockEntityTypeBuilder.create(BlasterWorkbenchBlockEntity::new, Blaster).build();
 
-			float s = 4;
-			var dx = r.nextFloat() * s;
-			var dz = r.nextFloat() * s;
-
-			return VoxelShapeUtil.getCenteredCube(9.2f, 15.6f, dx, dz);
-		}, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(2.5F).requiresTool());
+		@RegistryName("lightsaber_forge")
+		public static final Block Lightsaber = new LightsaberForgeBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(2.5F));
+		@RegistryName("lightsaber_forge")
+		public static final BlockEntityType<LightsaberForgeBlockEntity> LightsaberBlockEntityType = FabricBlockEntityTypeBuilder.create(LightsaberForgeBlockEntity::new, Lightsaber).build();
 	}
 
-	public static class Crate
+	@RegistryOrder(order = 1)
+	public static class Stone
 	{
-		@RegistryName("orange_kyber_crate")
-		public static final RotatingBlockWithGuiEntity OrangeKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
-		@RegistryName("gray_kyber_crate")
-		public static final RotatingBlockWithGuiEntity GrayKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
-		@RegistryName("black_kyber_crate")
-		public static final RotatingBlockWithGuiEntity BlackKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
-		@RegistryName("kyber_crate")
-		public static final BlockEntityType<CrateOctagonBlockEntity> KyberCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateOctagonBlockEntity::new, OrangeKyber, GrayKyber, BlackKyber).build();
+		@RegistryName("canyon_stone")
+		public static final RegistryHelper.StoneProducts Canyon = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F)));
+		@RegistryName("canyon_stone_bricks")
+		public static final Block CanyonBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("polished_canyon_stone")
+		public static final Block PolishedCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("chiseled_canyon_stone")
+		public static final Block ChiseledCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 
-		@RegistryName("toolbox")
-		public static final RotatingBlockWithGuiEntity Toolbox = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateMosEisleyBlockEntity::new);
-		@RegistryName("toolbox")
-		public static final BlockEntityType<CrateMosEisleyBlockEntity> ToolboxBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateMosEisleyBlockEntity::new, Toolbox).build();
+		@RegistryName("canyon_cobblestone")
+		public static final RegistryHelper.StoneProducts CanyonCobble = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 
-		@RegistryName("imperial_crate")
-		public static final RotatingBlockWithGuiEntity Imperial = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateImperialCubeBlockEntity::new);
-		@RegistryName("imperial_crate")
-		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateImperialCubeBlockEntity::new, Imperial).build();
+		@RegistryName("pourstone")
+		public static final RegistryHelper.StoneProducts Pourstone = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		@RegistryName("smooth_pourstone")
+		public static final RegistryHelper.StoneProducts SmoothPourstone = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		@RegistryName("cracked_pourstone")
+		public static final RegistryHelper.StoneProducts CrackedPourstone = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
 
-		@RegistryName("segmented_crate")
-		public static final RotatingBlockWithBoundsGuiEntity Segmented = new RotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(28, 14, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
-		@RegistryName("segmented_crate")
-		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, Segmented).build();
+		@RegistryName("durasteel_bordered_pourstone")
+		@ClientRegistryData(isConnected = true)
+		public static final SelfConnectingBlock DurasteelConnectedPourstone = new SelfConnectingBlock(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+
+		@RegistryName("pourstone")
+		public static final RegistryHelper.DyedStoneProducts DyedPourstone = new RegistryHelper.DyedStoneProducts(color -> new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool())));
+
+		@RegistryName("massassi_stone")
+		public static final RegistryHelper.StoneProducts Massassi = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		@RegistryName("smooth_massassi_stone")
+		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
+		@RegistryName("smooth_massassi_stone_slab")
+		public static final SlabBlock MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
+		@RegistryName("massassi_stone_bricks")
+		public static final RegistryHelper.StoneProducts MassassiBricks = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		//@RegistryName("chiseled_massassi_stone_bricks")
+		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
+
+		@RegistryName("mossy_smooth_massassi_stone")
+		public static final Block MossyMassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
+		@RegistryName("mossy_smooth_massassi_stone_slab")
+		public static final SlabBlock MossyMassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MossyMassassiSmooth));
+		@RegistryName("mossy_massassi_stone_bricks")
+		public static final RegistryHelper.StoneProducts MossyMassassiBricks = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+
+		@RegistryName("ilum_stone")
+		public static final RegistryHelper.StoneProducts Ilum = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		@RegistryName("smooth_ilum_stone")
+		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
+		@RegistryName("smooth_ilum_stone_slab")
+		public static final SlabBlock IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
+		@RegistryName("ilum_stone_bricks")
+		public static final RegistryHelper.StoneProducts IlumBricks = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		@RegistryName("chiseled_ilum_stone_bricks")
+		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 	}
 
-	public static class Door
+	@RegistryOrder(order = 2)
+	public static class Sandstone
 	{
-		public static final TatooineHomeDoorBlock TatooineHomeTop = new TatooineHomeDoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F));
-		public static final HashMap<String, TatooineHomeDoorControllerBlock> TatooineHomeBottoms = Util.make(new HashMap<>(), m -> {
-			m.put("", new TatooineHomeDoorControllerBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F)));
-			Arrays.stream(DyeColor.values()).forEach(color -> m.put(color.getName(), new TatooineHomeDoorControllerBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F))));
-		});
-		@RegistryName("door_tatooine_home")
-		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottoms.values().toArray(new Block[0])).build();
+		@RegistryName("desert_sandstone")
+		public static final RegistryHelper.StoneProducts Desert = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		@RegistryName("smooth_desert_sandstone")
+		public static final Block SmoothDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("polished_desert_sandstone")
+		public static final Block PolishedDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("chiseled_desert_sandstone")
+		public static final Block ChiseledDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 	}
 
-	public static class Machine
+	@RegistryOrder(order = 3)
+	public static class Sand
 	{
-		@RegistryName("spoked_machine")
-		public static final RotatingBlock Spoked = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), RotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
+		@RegistryName("salty_desert_sand")
+		public static final Block SaltyDesert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
+		@RegistryName("desert_sand")
+		public static final Block Desert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
+		@RegistryName("pit_sand")
+		public static final Block Pit = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
+		@RegistryName("fine_sand")
+		public static final Block Fine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
+		@RegistryName("loose_desert_sand")
+		public static final Block LooseDesert = new AccumulatingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F), Desert::getPlacementState);
+		@RegistryName("canyon_sand")
+		public static final Block Canyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 	}
 
-	public static class MoistureVaporator
+	@RegistryOrder(order = 4)
+	public static class Salt
 	{
-		@RegistryName("gx8_moisture_vaporator")
-		public static final MoistureVaporatorBlock Gx8 = new MoistureVaporatorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(10.0F).requiresTool());
-		@RegistryName("gx8_moisture_vaporator")
-		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = FabricBlockEntityTypeBuilder.create(MoistureVaporatorBlockEntity::new, Gx8).build();
+		@RegistryName("caked_salt")
+		public static final Block Caked = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 	}
 
-	public static class Power
+	@RegistryOrder(order = 5)
+	public static class Gravel
 	{
-		@RegistryName("power_coupling")
-		public static final Block Coupling = new PowerCouplingBlock(RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
-		@RegistryName("power_coupling")
-		public static final BlockEntityType<PowerCouplingBlockEntity> CouplingBlockEntityType = FabricBlockEntityTypeBuilder.create(PowerCouplingBlockEntity::new, Coupling).build();
+		@RegistryName("jundland_gravel")
+		public static final FallingBlock Jundland = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 	}
 
-	public static class Pipe
+	@RegistryOrder(order = 6)
+	public static class Dirt
 	{
-		@RegistryName("large_pipe")
-		public static final Block Large = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("wet_pourstone")
+		public static final Block WetPourstone = new RuiningDryingBlock(Stone.Pourstone.block, 10, () -> Dirt.RuinedWetPourstone, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision());
+		@RegistryName("wet_pourstone_stairs")
+		public static final Block WetPourstoneStairs = new RuiningDryingStairsBlock(WetPourstone.getDefaultState(), Stone.Pourstone.stairs, 10, () -> Dirt.RuinedWetPourstoneStairs, AbstractBlock.Settings.copy(WetPourstone));
+		@RegistryName("wet_pourstone_slab")
+		public static final Block WetPourstoneSlab = new RuiningDryingSlabBlock(Stone.Pourstone.slab, 10, () -> Dirt.RuinedWetPourstoneSlab, AbstractBlock.Settings.copy(WetPourstone));
+		@RegistryName("ruined_wet_pourstone")
+		public static final Block RuinedWetPourstone = new DryingBlock(Stone.CrackedPourstone.block, 10, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F));
+		@RegistryName("ruined_wet_pourstone_stairs")
+		public static final StairsBlock RuinedWetPourstoneStairs = new DryingStairsBlock(RuinedWetPourstone.getDefaultState(), Stone.CrackedPourstone.stairs, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
+		@RegistryName("ruined_wet_pourstone_slab")
+		public static final SlabBlock RuinedWetPourstoneSlab = new DryingSlabBlock(Stone.CrackedPourstone.slab, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
+		@RegistryName("desert_loam")
+		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 	}
 
-	public static class Tank
+	@RegistryOrder(order = 7)
+	public static class Plant
 	{
-		@RegistryName("fusion_fuel_tank")
-		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
-	}
-
-	public static class Cage
-	{
+		@RegistryName("funnel_flower")
+		@Flammable(burn = 60, spread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block Creature = new WaterloggableCreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
+		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("blossoming_funnel_flower")
+		@Flammable(burn = 60, spread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block CreatureTerrarium = new CreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
-		@ClientRegistryData(renderLayer = RenderLayerHint.TRANSLUCENT)
-		public static final RegistryHelper.DyedBlocks DyedCreatureTerrarium = new RegistryHelper.DyedBlocks(color -> new CreatureCageBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
+		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("poonten_grass")
+		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("dried_poonten_grass")
+		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("tuber_stalk")
+		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		@RegistryName("chasuka")
+		@TabIgnore
+		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final CropBlock Chasuka = new ChasukaCrop(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+		@RegistryName("hkak_bush")
+		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final HkakBushBlock HkakBush = new HkakBushBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
+		@RegistryName("molo_shrub")
+		@Flammable(burn = 60, spread = 100)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
+		@RegistryName("vaporator_mushroom_colony")
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final Block VaporatorMushroom = new VaporatorMushroomBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
+	@RegistryOrder(order = 8)
+	public class Tree
+	{
+		@RegistryName("sequoia_leaves")
+		@Flammable(burn = 30, spread = 60)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		public static final LeavesBlock SequoiaLeaves = createLeavesBlock();
+		@RegistryName("sequoia_wood")
+		@Flammable(burn = 5, spread = 5)
+		public static final Block SequoiaWood = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		@RegistryName("sequoia_log")
+		@Flammable(burn = 5, spread = 5)
+		public static final PillarBlock SequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
+		@RegistryName("stripped_sequoia_log")
+		@Flammable(burn = 5, spread = 5)
+		public static final PillarBlock StrippedSequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
+		@RegistryName("mossy_sequoia_log")
+		@Flammable(burn = 5, spread = 5)
+		public static final PillarBlock MossySequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
+		@RegistryName("sequoia")
+		@Flammable(burn = 5, spread = 20)
+		public static final RegistryHelper.WoodProducts SequoiaProducts = new RegistryHelper.WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
+
+		@RegistryName("japor_leaves")
+		@Flammable(burn = 30, spread = 60)
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		public static final BushLeavesBlock JaporLeaves = createBushLeavesBlock();
+		@RegistryName("japor_wood")
+		@Flammable(burn = 5, spread = 5)
+		public static final Block JaporWood = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		@RegistryName("japor_log")
+		@Flammable(burn = 5, spread = 5)
+		public static final PillarBlock JaporLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
+		@RegistryName("japor")
+		@Flammable(burn = 5, spread = 20)
+		public static final RegistryHelper.WoodProducts JaporProducts = new RegistryHelper.WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
+
+		@RegistryName("tatooine_wood")
+		@Flammable(burn = 5, spread = 5)
+		public static final Block TatooineWood = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		@RegistryName("tatooine_log")
+		@Flammable(burn = 5, spread = 5)
+		public static final PillarBlock TatooineLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
+
+		private static LeavesBlock createLeavesBlock()
+		{
+			return new LeavesBlock(AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
+		}
+
+		private static BushLeavesBlock createBushLeavesBlock()
+		{
+			return new BushLeavesBlock(8, 3, AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).sounds(BlockSoundGroup.GRASS).noCollision());
+		}
+
+		private static PillarBlock createLogBlock(MapColor topMapColor, MapColor sideMapColor)
+		{
+			return new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, blockState ->
+					blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
+		}
+	}
+
+	@RegistryOrder(order = 9)
+	public static class Ore
+	{
+		@RegistryName("beskar_ore")
+		public static final Block BeskarOre = new Block(FabricBlockSettings.of(Material.STONE).strength(5.0F).requiresTool());
+		@RegistryName("beskar_block")
+		public static final Block BeskarBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+
+		@RegistryName("chromium_ore")
+		public static final Block ChromiumOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
+		@RegistryName("chromium_block")
+		public static final Block ChromiumBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
+
+		@RegistryName("cortosis_ore")
+		public static final Block CortosisOre = new Block(FabricBlockSettings.of(Material.STONE).strength(5.0F).requiresTool());
+		@RegistryName("cortosis_block")
+		public static final Block CortosisBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+
+		@RegistryName("desh_ore")
+		public static final Block DeshOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
+		@RegistryName("desh_block")
+		public static final Block DeshBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
+
+		@RegistryName("diatium_ore")
+		public static final Block DiatiumOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
+		@RegistryName("diatium_block")
+		public static final Block DiatiumBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+
+		@RegistryName("ionite_ore")
+		public static final Block IoniteOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
+		@RegistryName("ionite_block")
+		public static final Block IoniteBlock = new Block(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(5.0F).luminance(3).requiresTool());
+
+		@RegistryName("lommite_ore")
+		public static final Block LommiteOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
+		@RegistryName("lommite_block")
+		public static final Block LommiteBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+
+		@RegistryName("titanium_ore")
+		public static final Block TitaniumOre = new Block(FabricBlockSettings.of(Material.STONE).strength(4.0F).requiresTool());
+		@RegistryName("titanium_block")
+		public static final Block TitaniumBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+
+		@RegistryName("zersium_ore")
+		public static final Block ZersiumOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
+		@RegistryName("zersium_block")
+		public static final Block ZersiumBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+
+		@RegistryName("thorilide_ore")
+		public static final Block ThorilideOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
+		@RegistryName("thorilide_block")
+		public static final Block ThorilideBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+
+		@RegistryName("helicite_ore")
+		public static final Block HeliciteOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
+		@RegistryName("helicite_block")
+		public static final Block HeliciteBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
+	}
+
+	@RegistryOrder(order = 10)
+	public static class Composite
+	{
+		@RegistryName("durasteel_block")
+		public static final Block DurasteelBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+		@RegistryName("plasteel_block")
+		@ClientRegistryData(isConnected = true)
+		public static final SelfConnectingBlock PlasteelBlock = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).requiresTool());
+	}
+
+	@RegistryOrder(order = 11)
 	public static class Glass
 	{
 		@RegistryName("imperial_glass")
@@ -197,165 +408,7 @@ public class SwgBlocks
 		}
 	}
 
-	public static class Vent
-	{
-		@RegistryName("air_vent")
-		public static final Block Air = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
-
-		@RegistryName("imperial_vent")
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block Imperial = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
-		@RegistryName("imperial_grated_vent")
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block ImperialGrated = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
-	}
-
-	public static class Grate
-	{
-		@RegistryName("imperial_opaque_grate_1")
-		public static final Block ImperialOpaque1 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
-		@RegistryName("imperial_opaque_grate_2")
-		public static final Block ImperialOpaque2 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
-		@RegistryName("imperial_opaque_grate_3")
-		public static final Block ImperialOpaque3 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
-	}
-
-	public static class Workbench
-	{
-		@RegistryName("blaster_workbench")
-		public static final Block Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
-		@RegistryName("blaster_workbench")
-		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = FabricBlockEntityTypeBuilder.create(BlasterWorkbenchBlockEntity::new, Blaster).build();
-
-		@RegistryName("lightsaber_forge")
-		public static final Block Lightsaber = new LightsaberForgeBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(2.5F));
-		@RegistryName("lightsaber_forge")
-		public static final BlockEntityType<LightsaberForgeBlockEntity> LightsaberBlockEntityType = FabricBlockEntityTypeBuilder.create(LightsaberForgeBlockEntity::new, Lightsaber).build();
-	}
-
-	public static class Plant
-	{
-		@RegistryName("funnel_flower")
-		@Flammable(burn = 60, spread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
-		@RegistryName("blossoming_funnel_flower")
-		@Flammable(burn = 60, spread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
-		@RegistryName("poonten_grass")
-		@Flammable(burn = 60, spread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
-		@RegistryName("dried_poonten_grass")
-		@Flammable(burn = 60, spread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
-		@RegistryName("tuber_stalk")
-		@Flammable(burn = 60, spread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
-		@RegistryName("chasuka")
-		@TabIgnore
-		@Flammable(burn = 60, spread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final CropBlock Chasuka = new ChasukaCrop(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
-		@RegistryName("hkak_bush")
-		@Flammable(burn = 60, spread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final HkakBushBlock HkakBush = new HkakBushBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
-		@RegistryName("molo_shrub")
-		@Flammable(burn = 60, spread = 100)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
-		@RegistryName("vaporator_mushroom_colony")
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block VaporatorMushroom = new VaporatorMushroomBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
-	}
-
-	public static class Leaves
-	{
-		@RegistryName("sequoia_leaves")
-		@Flammable(burn = 30, spread = 60)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		public static final LeavesBlock Sequoia = createLeavesBlock();
-		@RegistryName("japor_leaves")
-		@Flammable(burn = 30, spread = 60)
-		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		public static final BushLeavesBlock Japor = createBushLeavesBlock();
-
-		private static LeavesBlock createLeavesBlock()
-		{
-			return new LeavesBlock(AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).sounds(BlockSoundGroup.GRASS).nonOpaque().suffocates(BlockUtil::never).blockVision(BlockUtil::never));
-		}
-
-		private static BushLeavesBlock createBushLeavesBlock()
-		{
-			return new BushLeavesBlock(8, 3, AbstractBlock.Settings.of(Material.LEAVES).strength(0.2F).sounds(BlockSoundGroup.GRASS).noCollision());
-		}
-	}
-
-	public static class Log
-	{
-		@RegistryName("sequoia_log")
-		@Flammable(burn = 5, spread = 5)
-		public static final PillarBlock Sequoia = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
-		@RegistryName("stripped_sequoia_log")
-		@Flammable(burn = 5, spread = 5)
-		public static final PillarBlock StrippedSequoia = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
-		@RegistryName("mossy_sequoia_log")
-		@Flammable(burn = 5, spread = 5)
-		public static final PillarBlock MossySequoia = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
-		@RegistryName("japor_log")
-		@Flammable(burn = 5, spread = 5)
-		public static final PillarBlock Japor = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
-		@RegistryName("tatooine_log")
-		@Flammable(burn = 5, spread = 5)
-		public static final PillarBlock Tatooine = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
-
-		private static PillarBlock createLogBlock(MapColor topMapColor, MapColor sideMapColor)
-		{
-			return new PillarBlock(AbstractBlock.Settings.of(Material.WOOD, blockState ->
-					blockState.get(PillarBlock.AXIS) == Direction.Axis.Y ? topMapColor : sideMapColor).strength(2.0F).sounds(BlockSoundGroup.WOOD));
-		}
-	}
-
-	public static class Wood
-	{
-		@RegistryName("sequoia_wood")
-		@Flammable(burn = 5, spread = 5)
-		public static final Block Sequoia = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
-		@RegistryName("japor_wood")
-		@Flammable(burn = 5, spread = 5)
-		public static final Block Japor = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
-		@RegistryName("tatooine_wood")
-		@Flammable(burn = 5, spread = 5)
-		public static final Block Tatooine = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
-	}
-
-	public static class Planks
-	{
-		@RegistryName("japor")
-		@Flammable(burn = 5, spread = 20)
-		public static final RegistryHelper.WoodVariants Japor = new RegistryHelper.WoodVariants(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
-		@RegistryName("sequoia")
-		@Flammable(burn = 5, spread = 20)
-		public static final RegistryHelper.WoodVariants Sequoia = new RegistryHelper.WoodVariants(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
-	}
-
-	public static class Light
-	{
-		@RegistryName("light_fixture")
-		public static final Block Fixture = new InvertedLampBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(BlockUtil.createLightLevelFromBlockState(15)).strength(0.3F));
-
-		@RegistryName("red_hangar_light")
-		public static final Block RedHangar = new RotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), RotatingBlockWithBounds.Substrate.BELOW, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
-		@RegistryName("blue_hangar_light")
-		public static final Block BlueHangar = new RotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), RotatingBlockWithBounds.Substrate.BELOW, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
-		@RegistryName("wall_cluster_light")
-		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
-	}
-
+	@RegistryOrder(order = 12)
 	public static class Panel
 	{
 		@RegistryName("rusted_metal")
@@ -372,7 +425,7 @@ public class SwgBlocks
 		public static final Block ImperialCutoutCaged = new PillarBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 
 		@RegistryName("black_imperial_panel_blank")
-		public static final RegistryHelper.StoneVariants BlackImperialPanelBlank = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneProducts BlackImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
 		@RegistryName("black_imperial_panel_bordered")
 		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_split")
@@ -392,7 +445,7 @@ public class SwgBlocks
 		@ClientRegistryData(isConnected = true)
 		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
-		public static final RegistryHelper.StoneVariants GrayImperialPanelBlank = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneProducts GrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
 		@RegistryName("gray_imperial_panel_pattern_1")
 		public static final PillarBlock GrayImperialPanelPattern1 = createPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 		@RegistryName("gray_imperial_panel_pattern_2")
@@ -490,186 +543,154 @@ public class SwgBlocks
 		}
 	}
 
-	public static class MaterialBlock
+	@RegistryOrder(order = 13)
+	public static class Grate
 	{
-		@RegistryName("beskar_block")
-		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-		@RegistryName("chromium_block")
-		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
-		@RegistryName("cortosis_block")
-		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
-		@RegistryName("desh_block")
-		public static final Block Desh = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
-		@RegistryName("diatium_block")
-		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
-		@RegistryName("durasteel_block")
-		public static final Block Durasteel = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-		@RegistryName("ionite_block")
-		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(5.0F).luminance(3).requiresTool());
-		@RegistryName("lommite_block")
-		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-		@RegistryName("plasteel_block")
-		@ClientRegistryData(isConnected = true)
-		public static final SelfConnectingBlock Plasteel = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).requiresTool());
-		@RegistryName("titanium_block")
-		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-		@RegistryName("zersium_block")
-		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
-		@RegistryName("helicite_block")
-		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
-		@RegistryName("thorilide_block")
-		public static final Block Thorilide = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
+		@RegistryName("imperial_opaque_grate_1")
+		public static final Block ImperialOpaque1 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("imperial_opaque_grate_2")
+		public static final Block ImperialOpaque2 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("imperial_opaque_grate_3")
+		public static final Block ImperialOpaque3 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
-	public static class Ore
+	@RegistryOrder(order = 14)
+	public static class Vent
 	{
-		@RegistryName("beskar_ore")
-		public static final Block Beskar = new Block(FabricBlockSettings.of(Material.STONE).strength(5.0F).requiresTool());
-		@RegistryName("chromium_ore")
-		public static final Block Chromium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
-		@RegistryName("cortosis_ore")
-		public static final Block Cortosis = new Block(FabricBlockSettings.of(Material.STONE).strength(5.0F).requiresTool());
-		@RegistryName("desh_ore")
-		public static final Block Desh = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
-		@RegistryName("diatium_ore")
-		public static final Block Diatium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
-		@RegistryName("ionite_ore")
-		public static final Block Ionite = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
-		@RegistryName("lommite_ore")
-		public static final Block Lommite = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
-		@RegistryName("titanium_ore")
-		public static final Block Titanium = new Block(FabricBlockSettings.of(Material.STONE).strength(4.0F).requiresTool());
-		@RegistryName("zersium_ore")
-		public static final Block Zersium = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
-		@RegistryName("thorilide_ore")
-		public static final Block Thorilide = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
-		@RegistryName("helicite_ore")
-		public static final Block Helicite = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
+		@RegistryName("air_vent")
+		public static final Block Air = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+
+		@RegistryName("imperial_vent")
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final Block Imperial = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
+		@RegistryName("imperial_grated_vent")
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final Block ImperialGrated = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
 	}
 
-	public static class Sand
+	@RegistryOrder(order = 15)
+	public static class Light
 	{
-		@RegistryName("salty_desert_sand")
-		public static final Block SaltyDesert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
-		@RegistryName("desert_sand")
-		public static final Block Desert = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
-		@RegistryName("pit_sand")
-		public static final Block Pit = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
-		@RegistryName("fine_sand")
-		public static final Block Fine = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
-		@RegistryName("loose_desert_sand")
-		public static final Block LooseDesert = new AccumulatingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F), Desert::getPlacementState);
-		@RegistryName("canyon_sand")
-		public static final Block Canyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
+		@RegistryName("light_fixture")
+		public static final Block Fixture = new InvertedLampBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(BlockUtil.createLightLevelFromBlockState(15)).strength(0.3F));
+
+		@RegistryName("red_hangar_light")
+		public static final Block RedHangar = new RotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), RotatingBlockWithBounds.Substrate.BELOW, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
+		@RegistryName("blue_hangar_light")
+		public static final Block BlueHangar = new RotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), RotatingBlockWithBounds.Substrate.BELOW, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
+		@RegistryName("wall_cluster_light")
+		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 	}
 
-	public static class Sandstone
+	@RegistryOrder(order = 16)
+	public static class Door
 	{
-		@RegistryName("desert_sandstone")
-		public static final RegistryHelper.StoneVariants Desert = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
-		@RegistryName("smooth_desert_sandstone")
-		public static final Block SmoothDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
-		@RegistryName("polished_desert_sandstone")
-		public static final Block PolishedDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
-		@RegistryName("chiseled_desert_sandstone")
-		public static final Block ChiseledDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		public static final TatooineHomeDoorBlock TatooineHomeTop = new TatooineHomeDoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F));
+		public static final HashMap<String, TatooineHomeDoorControllerBlock> TatooineHomeBottoms = Util.make(new HashMap<>(), m -> {
+			m.put("", new TatooineHomeDoorControllerBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F)));
+			Arrays.stream(DyeColor.values()).forEach(color -> m.put(color.getName(), new TatooineHomeDoorControllerBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F))));
+		});
+		@RegistryName("door_tatooine_home")
+		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottoms.values().toArray(new Block[0])).build();
 	}
 
-	public static class Salt
+	@RegistryOrder(order = 17)
+	public static class Crate
 	{
-		@RegistryName("caked_salt")
-		public static final Block Caked = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
+		@RegistryName("orange_kyber_crate")
+		public static final RotatingBlockWithGuiEntity OrangeKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
+		@RegistryName("gray_kyber_crate")
+		public static final RotatingBlockWithGuiEntity GrayKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
+		@RegistryName("black_kyber_crate")
+		public static final RotatingBlockWithGuiEntity BlackKyber = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
+		@RegistryName("kyber_crate")
+		public static final BlockEntityType<CrateOctagonBlockEntity> KyberCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateOctagonBlockEntity::new, OrangeKyber, GrayKyber, BlackKyber).build();
+
+		@RegistryName("toolbox")
+		public static final RotatingBlockWithGuiEntity Toolbox = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateMosEisleyBlockEntity::new);
+		@RegistryName("toolbox")
+		public static final BlockEntityType<CrateMosEisleyBlockEntity> ToolboxBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateMosEisleyBlockEntity::new, Toolbox).build();
+
+		@RegistryName("imperial_crate")
+		public static final RotatingBlockWithGuiEntity Imperial = new RotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateImperialCubeBlockEntity::new);
+		@RegistryName("imperial_crate")
+		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateImperialCubeBlockEntity::new, Imperial).build();
+
+		@RegistryName("segmented_crate")
+		public static final RotatingBlockWithBoundsGuiEntity Segmented = new RotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(28, 14, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
+		@RegistryName("segmented_crate")
+		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, Segmented).build();
 	}
 
-	public static class Dirt
+	@RegistryOrder(order = 18)
+	public static class Barrel
 	{
-		@RegistryName("wet_pourstone")
-		public static final Block WetPourstone = new RuiningDryingBlock(Stone.Pourstone.block, 10, () -> Dirt.RuinedWetPourstone, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision());
-		@RegistryName("wet_pourstone_stairs")
-		public static final Block WetPourstoneStairs = new RuiningDryingStairsBlock(WetPourstone.getDefaultState(), Stone.Pourstone.stairs, 10, () -> Dirt.RuinedWetPourstoneStairs, AbstractBlock.Settings.copy(WetPourstone));
-		@RegistryName("wet_pourstone_slab")
-		public static final Block WetPourstoneSlab = new RuiningDryingSlabBlock(Stone.Pourstone.slab, 10, () -> Dirt.RuinedWetPourstoneSlab, AbstractBlock.Settings.copy(WetPourstone));
-		@RegistryName("ruined_wet_pourstone")
-		public static final Block RuinedWetPourstone = new DryingBlock(Stone.CrackedPourstone.block, 10, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F));
-		@RegistryName("ruined_wet_pourstone_stairs")
-		public static final StairsBlock RuinedWetPourstoneStairs = new DryingStairsBlock(RuinedWetPourstone.getDefaultState(), Stone.CrackedPourstone.stairs, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
-		@RegistryName("ruined_wet_pourstone_slab")
-		public static final SlabBlock RuinedWetPourstoneSlab = new DryingSlabBlock(Stone.CrackedPourstone.slab, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
-		@RegistryName("desert_loam")
-		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
+		@RegistryName("desh_barrel")
+		public static final Block Desh = new DisplacingBlock((state, world, pos, context) -> {
+			var r = Resources.RANDOM;
+			r.setSeed(MathHelper.hashCode(pos));
+
+			float s = 4;
+			var dx = r.nextFloat() * s;
+			var dz = r.nextFloat() * s;
+
+			return VoxelShapeUtil.getCenteredCube(9.2f, 15.6f, dx, dz);
+		}, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(2.5F).requiresTool());
 	}
 
-	public static class Gravel
+	@RegistryOrder(order = 19)
+	public static class Machine
 	{
-		@RegistryName("jundland_gravel")
-		public static final FallingBlock Jundland = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
+		@RegistryName("spoked_machine")
+		public static final RotatingBlock Spoked = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), RotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 	}
 
-	public static class Stone
+	@RegistryOrder(order = 20)
+	public static class MoistureVaporator
 	{
-		@RegistryName("canyon_stone")
-		public static final RegistryHelper.StoneVariants Canyon = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F)));
-		@RegistryName("canyon_stone_bricks")
-		public static final Block CanyonBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
-		@RegistryName("polished_canyon_stone")
-		public static final Block PolishedCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
-		@RegistryName("chiseled_canyon_stone")
-		public static final Block ChiseledCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
+		@RegistryName("gx8_moisture_vaporator")
+		public static final MoistureVaporatorBlock Gx8 = new MoistureVaporatorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(10.0F).requiresTool());
+		@RegistryName("gx8_moisture_vaporator")
+		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = FabricBlockEntityTypeBuilder.create(MoistureVaporatorBlockEntity::new, Gx8).build();
+	}
 
-		@RegistryName("canyon_cobblestone")
-		public static final RegistryHelper.StoneVariants CanyonCobble = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+	@RegistryOrder(order = 21)
+	public static class Power
+	{
+		@RegistryName("power_coupling")
+		public static final Block Coupling = new PowerCouplingBlock(RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("power_coupling")
+		public static final BlockEntityType<PowerCouplingBlockEntity> CouplingBlockEntityType = FabricBlockEntityTypeBuilder.create(PowerCouplingBlockEntity::new, Coupling).build();
+	}
 
-		@RegistryName("pourstone")
-		public static final RegistryHelper.StoneVariants Pourstone = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
-		@RegistryName("smooth_pourstone")
-		public static final RegistryHelper.StoneVariants SmoothPourstone = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
-		@RegistryName("cracked_pourstone")
-		public static final RegistryHelper.StoneVariants CrackedPourstone = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
+	@RegistryOrder(order = 22)
+	public static class Pipe
+	{
+		@RegistryName("large_pipe")
+		public static final Block Large = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
+	}
 
-		@RegistryName("durasteel_bordered_pourstone")
-		@ClientRegistryData(isConnected = true)
-		public static final SelfConnectingBlock DurasteelConnectedPourstone = new SelfConnectingBlock(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
+	@RegistryOrder(order = 23)
+	public static class Tank
+	{
+		@RegistryName("fusion_fuel_tank")
+		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+	}
 
-		@RegistryName("pourstone")
-		public static final RegistryHelper.DyedStoneVariants DyedPourstone = new RegistryHelper.DyedStoneVariants(color -> new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool())));
-
-		@RegistryName("massassi_stone")
-		public static final RegistryHelper.StoneVariants Massassi = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
-		@RegistryName("smooth_massassi_stone")
-		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
-		@RegistryName("smooth_massassi_stone_slab")
-		public static final SlabBlock MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
-		@RegistryName("massassi_stone_bricks")
-		public static final RegistryHelper.StoneVariants MassassiBricks = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
-		//@RegistryName("chiseled_massassi_stone_bricks")
-		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
-
-		@RegistryName("mossy_smooth_massassi_stone")
-		public static final Block MossyMassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
-		@RegistryName("mossy_smooth_massassi_stone_slab")
-		public static final SlabBlock MossyMassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MossyMassassiSmooth));
-		@RegistryName("mossy_massassi_stone_bricks")
-		public static final RegistryHelper.StoneVariants MossyMassassiBricks = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
-
-		@RegistryName("ilum_stone")
-		public static final RegistryHelper.StoneVariants Ilum = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
-		@RegistryName("smooth_ilum_stone")
-		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
-		@RegistryName("smooth_ilum_stone_slab")
-		public static final SlabBlock IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
-		@RegistryName("ilum_stone_bricks")
-		public static final RegistryHelper.StoneVariants IlumBricks = new RegistryHelper.StoneVariants(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
-		@RegistryName("chiseled_ilum_stone_bricks")
-		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
+	@RegistryOrder(order = 24)
+	public static class Cage
+	{
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final Block Creature = new WaterloggableCreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
+		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		public static final Block CreatureTerrarium = new CreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
+		@ClientRegistryData(renderLayer = RenderLayerHint.TRANSLUCENT)
+		public static final RegistryHelper.DyedBlocks DyedCreatureTerrarium = new RegistryHelper.DyedBlocks(color -> new CreatureCageBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
 	}
 
 	public static void register()
 	{
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Block.class, SwgBlocks::registerBlock);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.StoneVariants.class, SwgBlocks::registerBlockStabStairs);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedStoneVariants.class, SwgBlocks::registerBlockStabStairs);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.WoodVariants.class, SwgBlocks::registerPlankStabFenceGate);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, RegistryHelper.DyedBlocks.class, SwgBlocks::registerDyedBlocks);
+		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Object.class, SwgBlocks::tryRegisterBlock);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
 		RegistryHelper.registerFlammable(SwgBlocks.class);
@@ -698,7 +719,21 @@ public class SwgBlocks
 		}
 	}
 
-	private static void registerBlockStabStairs(RegistryHelper.StoneVariants t, Identifier identifier, boolean ignoreTab)
+	private static void tryRegisterBlock(Object o, Identifier identifier, boolean ignoreTab)
+	{
+		if (o instanceof Block block)
+			registerBlock(block, identifier, ignoreTab);
+		else if (o instanceof RegistryHelper.StoneProducts variants)
+			registerStoneProducts(variants, identifier, ignoreTab);
+		else if (o instanceof RegistryHelper.DyedStoneProducts variants)
+			registerDyedStoneProducts(variants, identifier, ignoreTab);
+		else if (o instanceof RegistryHelper.WoodProducts variants)
+			registerWoodProducts(variants, identifier, ignoreTab);
+		else if (o instanceof RegistryHelper.DyedBlocks blocks)
+			registerDyedBlocks(blocks, identifier, ignoreTab);
+	}
+
+	private static void registerStoneProducts(RegistryHelper.StoneProducts t, Identifier identifier, boolean ignoreTab)
 	{
 		registerBlock(t.block, identifier, ignoreTab);
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
@@ -706,13 +741,13 @@ public class SwgBlocks
 		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), ignoreTab);
 	}
 
-	private static void registerBlockStabStairs(RegistryHelper.DyedStoneVariants t, Identifier identifier, boolean ignoreTab)
+	private static void registerDyedStoneProducts(RegistryHelper.DyedStoneProducts t, Identifier identifier, boolean ignoreTab)
 	{
 		for (var entry : t.entrySet())
-			registerBlockStabStairs(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);
+			registerStoneProducts(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);
 	}
 
-	private static void registerPlankStabFenceGate(RegistryHelper.WoodVariants t, Identifier identifier, boolean ignoreTab)
+	private static void registerWoodProducts(RegistryHelper.WoodProducts t, Identifier identifier, boolean ignoreTab)
 	{
 		registerBlock(t.plank, Resources.id(identifier.getPath() + "_planks"), ignoreTab);
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
