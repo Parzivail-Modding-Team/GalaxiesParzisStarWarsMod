@@ -76,7 +76,7 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 		}
 	}
 
-	private static JsonObject sortKeysRecursively(JsonObject jsonObject)
+	public static JsonObject sortKeysRecursively(JsonObject jsonObject)
 	{
 		var keySet = jsonObject.entrySet().stream().map(Map.Entry::getKey).sorted().collect(Collectors.toList());
 		var temp = new JsonObject();

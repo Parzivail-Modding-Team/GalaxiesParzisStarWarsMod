@@ -45,7 +45,7 @@ public class JsonTagInsBuiltAsset extends BuiltAsset
 					var jsonWriter = new JsonWriter(writer)
 			)
 			{
-				GSON.toJson(tag.toJson(), jsonWriter);
+				GSON.toJson(JsonObjKeyInsBuiltAsset.sortKeysRecursively(tag.toJson()), jsonWriter);
 				writer.write('\n');
 			}
 		}
