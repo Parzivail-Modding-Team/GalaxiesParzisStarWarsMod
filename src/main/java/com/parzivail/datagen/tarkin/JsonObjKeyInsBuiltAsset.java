@@ -11,8 +11,9 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 {
@@ -78,7 +79,7 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 
 	public static JsonObject sortKeysRecursively(JsonObject jsonObject)
 	{
-		var keySet = jsonObject.entrySet().stream().map(Map.Entry::getKey).sorted().collect(Collectors.toList());
+		var keySet = jsonObject.entrySet().stream().map(Map.Entry::getKey).sorted().toList();
 		var temp = new JsonObject();
 
 		for (var key : keySet)
@@ -90,7 +91,7 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 			}
 			else if (ele.isJsonArray())
 			{
-				ele = sortKeysRecursively(ele.getAsJsonArray());
+				ele = sortElementsRecursively(ele.getAsJsonArray());
 			}
 			temp.add(key, ele);
 		}
@@ -98,11 +99,15 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 		return temp;
 	}
 
-	private static JsonArray sortKeysRecursively(JsonArray jsonArray)
+	private static JsonArray sortElementsRecursively(JsonArray jsonArray)
 	{
 		final var temp = new JsonArray();
 
-		for (var ele : jsonArray)
+		final var data = new ArrayList<JsonElement>();
+		jsonArray.forEach(data::add);
+		final var sortedData = data.stream().sorted(JsonObjKeyInsBuiltAsset::tryCompareElement).toList();
+
+		for (var ele : sortedData)
 		{
 			if (ele.isJsonObject())
 			{
@@ -110,11 +115,27 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 			}
 			else if (ele.isJsonArray())
 			{
-				ele = sortKeysRecursively(ele.getAsJsonArray());
+				ele = sortElementsRecursively(ele.getAsJsonArray());
 			}
 			temp.add(ele);
 		}
 
 		return temp;
+	}
+
+	private static int tryCompareElement(JsonElement o1, JsonElement o2)
+	{
+		if (o1.isJsonPrimitive() && o2.isJsonPrimitive())
+		{
+			var p1 = o1.getAsJsonPrimitive();
+			var p2 = o2.getAsJsonPrimitive();
+
+			if (p1.isNumber() && p2.isNumber())
+				return Comparator.<Double>naturalOrder().compare(p1.getAsDouble(), p2.getAsDouble());
+			else
+				return Comparator.<String>naturalOrder().compare(p1.getAsString(), p2.getAsString());
+		}
+
+		return Comparator.<Integer>naturalOrder().compare(o1.hashCode(), o2.hashCode());
 	}
 }
