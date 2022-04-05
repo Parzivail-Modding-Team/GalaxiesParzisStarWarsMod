@@ -2,7 +2,6 @@ package com.parzivail.pswg.container.registry;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.block.PStairsBlock;
-import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.util.DyeColor;
 
@@ -97,31 +96,6 @@ public class RegistryHelper
 		}
 	}
 
-	public static void registerFlammable(Class<?> rootClazz)
-	{
-		for (var clazz : getSortedClasses(rootClazz))
-		{
-			// Register inner classes
-			registerFlammable(clazz);
-
-			for (var field : clazz.getFields())
-			{
-				var annotation = field.getAnnotation(Flammable.class);
-				if (!Modifier.isStatic(field.getModifiers()) || annotation == null || !Block.class.isAssignableFrom(field.getType()))
-					continue;
-
-				try
-				{
-					FlammableBlockRegistry.getDefaultInstance().add((Block)field.get(null), annotation.burn(), annotation.spread());
-				}
-				catch (IllegalAccessException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
 	public static <TA extends Annotation, TB> void register(Class<?> rootClazz, Class<TA> annotationClazz, Class<TB> acceptClazz, BiConsumer<TA, TB> registryFunction)
 	{
 		for (var clazz : getSortedClasses(rootClazz))
@@ -164,6 +138,6 @@ public class RegistryHelper
 		if (annotation == null)
 			return Integer.MAX_VALUE;
 
-		return annotation.order();
+		return annotation.value();
 	}
 }

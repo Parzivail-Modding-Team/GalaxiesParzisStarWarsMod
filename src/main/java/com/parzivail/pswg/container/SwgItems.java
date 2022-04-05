@@ -31,14 +31,14 @@ import java.util.List;
 
 public class SwgItems
 {
-	@RegistryOrder(order = 0)
+	@RegistryOrder(0)
 	public static class Debug
 	{
 		@RegistryName("debug")
 		public static final DebugItem Debug = new DebugItem(new Item.Settings().maxCount(1));
 	}
 
-	@RegistryOrder(order = 1)
+	@RegistryOrder(1)
 	public static class Door
 	{
 		public static final List<TatooineHomeDoorBlock.Item> TatooineHome = SwgBlocks.Door.TatooineHomeBottoms
@@ -48,14 +48,14 @@ public class SwgItems
 				.toList();
 	}
 
-	@RegistryOrder(order = 2)
+	@RegistryOrder(2)
 	public static class Cable
 	{
 		@RegistryName("insulated_desh_cable")
 		public static final Item Power = new CableItem(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(order = 3)
+	@RegistryOrder(3)
 	public static class CraftingComponents
 	{
 		@RegistryName("electric_motor")
@@ -81,7 +81,7 @@ public class SwgItems
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(order = 4)
+	@RegistryOrder(4)
 	public static class Material
 	{
 		@RegistryName("beskar_ingot")
@@ -184,7 +184,7 @@ public class SwgItems
 
 	// TODO: some of these might belong into Crystal, or somewhere else.
 	//  Also, check if the names are consistent with vanilla 1.17.
-	@RegistryOrder(order = 5)
+	@RegistryOrder(5)
 	public static class RawOre
 	{
 		@RegistryName("raw_beskar")
@@ -207,7 +207,7 @@ public class SwgItems
 		public static final Item IoniteRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(order = 6)
+	@RegistryOrder(6)
 	public static class Natural
 	{
 		@RegistryName("stripped_japor_branch")
@@ -218,14 +218,14 @@ public class SwgItems
 		public static final Item SaltPile = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(order = 7)
+	@RegistryOrder(7)
 	public static class Seeds
 	{
 		@RegistryName("chasuka_seeds")
 		public static final Item ChasukaSeeds = new AliasedBlockItem(SwgBlocks.Plant.Chasuka, new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(order = 8)
+	@RegistryOrder(8)
 	public static class Food
 	{
 
@@ -339,7 +339,7 @@ public class SwgItems
 		public static final Item HubbaGourd = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(order = 9)
+	@RegistryOrder(9)
 	public static class MobDrops
 	{
 		@RegistryName("faa_bucket")
@@ -374,7 +374,7 @@ public class SwgItems
 		public static final Item ToughHide = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(order = 10)
+	@RegistryOrder(10)
 	public static class Blaster
 	{
 		@RegistryName("blaster")
@@ -383,7 +383,7 @@ public class SwgItems
 		public static final BlasterPowerPackItem SmallPowerPack = new BlasterPowerPackItem(75, new Item.Settings().group(Galaxies.TabBlasters));
 	}
 
-	@RegistryOrder(order = 11)
+	@RegistryOrder(11)
 	public static class Spawners
 	{
 		@RegistryName("spawn_xwing_t65b")
@@ -402,7 +402,7 @@ public class SwgItems
 		public static final Item Worrt = new SpawnEggItem(SwgEntities.Amphibian.Worrt, 0x5B482C, 0x635735, new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(order = 12)
+	@RegistryOrder(12)
 	public static class Lightsaber
 	{
 		@RegistryName("lightsaber")

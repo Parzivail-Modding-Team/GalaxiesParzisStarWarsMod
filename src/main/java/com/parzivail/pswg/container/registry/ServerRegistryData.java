@@ -6,10 +6,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
-public @interface Flammable
+@Target({ ElementType.FIELD })
+public @interface ServerRegistryData
 {
-	int burn();
+	int fireBurn() default 0;
 
-	int spread();
+	int fireSpread() default 0;
 }

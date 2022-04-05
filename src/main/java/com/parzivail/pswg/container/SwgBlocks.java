@@ -18,6 +18,7 @@ import com.parzivail.util.block.rotating.RotatingBlockWithBoundsGuiEntity;
 import com.parzivail.util.block.rotating.RotatingBlockWithGuiEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
@@ -35,7 +36,7 @@ import java.util.HashMap;
 
 public class SwgBlocks
 {
-	@RegistryOrder(order = 0)
+	@RegistryOrder(0)
 	public static class Workbench
 	{
 		@RegistryName("blaster_workbench")
@@ -49,7 +50,7 @@ public class SwgBlocks
 		public static final BlockEntityType<LightsaberForgeBlockEntity> LightsaberBlockEntityType = FabricBlockEntityTypeBuilder.create(LightsaberForgeBlockEntity::new, Lightsaber).build();
 	}
 
-	@RegistryOrder(order = 1)
+	@RegistryOrder(1)
 	public static class Stone
 	{
 		@RegistryName("canyon_stone")
@@ -108,7 +109,7 @@ public class SwgBlocks
 		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 	}
 
-	@RegistryOrder(order = 2)
+	@RegistryOrder(2)
 	public static class Sandstone
 	{
 		@RegistryName("desert_sandstone")
@@ -121,7 +122,7 @@ public class SwgBlocks
 		public static final Block ChiseledDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 	}
 
-	@RegistryOrder(order = 3)
+	@RegistryOrder(3)
 	public static class Sand
 	{
 		@RegistryName("salty_desert_sand")
@@ -138,21 +139,21 @@ public class SwgBlocks
 		public static final Block Canyon = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 	}
 
-	@RegistryOrder(order = 4)
+	@RegistryOrder(4)
 	public static class Salt
 	{
 		@RegistryName("caked_salt")
 		public static final Block Caked = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.SAND).strength(0.5F));
 	}
 
-	@RegistryOrder(order = 5)
+	@RegistryOrder(5)
 	public static class Gravel
 	{
 		@RegistryName("jundland_gravel")
 		public static final FallingBlock Jundland = new FallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 	}
 
-	@RegistryOrder(order = 6)
+	@RegistryOrder(6)
 	public static class Dirt
 	{
 		@RegistryName("wet_pourstone")
@@ -171,40 +172,40 @@ public class SwgBlocks
 		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 	}
 
-	@RegistryOrder(order = 7)
+	@RegistryOrder(7)
 	public static class Plant
 	{
 		@RegistryName("funnel_flower")
-		@Flammable(burn = 60, spread = 100)
+		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
-		@Flammable(burn = 60, spread = 100)
+		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("poonten_grass")
-		@Flammable(burn = 60, spread = 100)
+		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("dried_poonten_grass")
-		@Flammable(burn = 60, spread = 100)
+		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("tuber_stalk")
-		@Flammable(burn = 60, spread = 100)
+		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 		@RegistryName("chasuka")
 		@TabIgnore
-		@Flammable(burn = 60, spread = 100)
+		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final CropBlock Chasuka = new ChasukaCrop(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("hkak_bush")
-		@Flammable(burn = 60, spread = 100)
+		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final HkakBushBlock HkakBush = new HkakBushBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().ticksRandomly().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("molo_shrub")
-		@Flammable(burn = 60, spread = 100)
+		@ServerRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final MoloShrubBlock MoloShrub = new MoloShrubBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.CROP));
 		@RegistryName("vaporator_mushroom_colony")
@@ -212,48 +213,48 @@ public class SwgBlocks
 		public static final Block VaporatorMushroom = new VaporatorMushroomBlock(AbstractBlock.Settings.of(Material.PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
 	}
 
-	@RegistryOrder(order = 8)
+	@RegistryOrder(8)
 	public class Tree
 	{
 		@RegistryName("sequoia_leaves")
-		@Flammable(burn = 30, spread = 60)
+		@ServerRegistryData(fireBurn = 30, fireSpread = 60)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final LeavesBlock SequoiaLeaves = createLeavesBlock();
 		@RegistryName("sequoia_wood")
-		@Flammable(burn = 5, spread = 5)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final Block SequoiaWood = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("sequoia_log")
-		@Flammable(burn = 5, spread = 5)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock SequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("stripped_sequoia_log")
-		@Flammable(burn = 5, spread = 5)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock StrippedSequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("mossy_sequoia_log")
-		@Flammable(burn = 5, spread = 5)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock MossySequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("sequoia")
-		@Flammable(burn = 5, spread = 20)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 20)
 		public static final RegistryHelper.WoodProducts SequoiaProducts = new RegistryHelper.WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 
 		@RegistryName("japor_leaves")
-		@Flammable(burn = 30, spread = 60)
+		@ServerRegistryData(fireBurn = 30, fireSpread = 60)
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final BushLeavesBlock JaporLeaves = createBushLeavesBlock();
 		@RegistryName("japor_wood")
-		@Flammable(burn = 5, spread = 5)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final Block JaporWood = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("japor_log")
-		@Flammable(burn = 5, spread = 5)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock JaporLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("japor")
-		@Flammable(burn = 5, spread = 20)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 20)
 		public static final RegistryHelper.WoodProducts JaporProducts = new RegistryHelper.WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 
 		@RegistryName("tatooine_wood")
-		@Flammable(burn = 5, spread = 5)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final Block TatooineWood = new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F).sounds(BlockSoundGroup.WOOD));
 		@RegistryName("tatooine_log")
-		@Flammable(burn = 5, spread = 5)
+		@ServerRegistryData(fireBurn = 5, fireSpread = 5)
 		public static final PillarBlock TatooineLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 
 		private static LeavesBlock createLeavesBlock()
@@ -273,7 +274,7 @@ public class SwgBlocks
 		}
 	}
 
-	@RegistryOrder(order = 9)
+	@RegistryOrder(9)
 	public static class Ore
 	{
 		@RegistryName("beskar_ore")
@@ -332,7 +333,7 @@ public class SwgBlocks
 		public static final Block HeliciteBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 	}
 
-	@RegistryOrder(order = 10)
+	@RegistryOrder(10)
 	public static class Composite
 	{
 		@RegistryName("durasteel_block")
@@ -342,7 +343,7 @@ public class SwgBlocks
 		public static final SelfConnectingBlock PlasteelBlock = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).requiresTool());
 	}
 
-	@RegistryOrder(order = 11)
+	@RegistryOrder(11)
 	public static class Glass
 	{
 		@RegistryName("imperial_glass")
@@ -408,7 +409,7 @@ public class SwgBlocks
 		}
 	}
 
-	@RegistryOrder(order = 12)
+	@RegistryOrder(12)
 	public static class Panel
 	{
 		@RegistryName("rusted_metal")
@@ -543,7 +544,7 @@ public class SwgBlocks
 		}
 	}
 
-	@RegistryOrder(order = 13)
+	@RegistryOrder(13)
 	public static class Grate
 	{
 		@RegistryName("imperial_opaque_grate_1")
@@ -554,7 +555,7 @@ public class SwgBlocks
 		public static final Block ImperialOpaque3 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
-	@RegistryOrder(order = 14)
+	@RegistryOrder(14)
 	public static class Vent
 	{
 		@RegistryName("air_vent")
@@ -568,7 +569,7 @@ public class SwgBlocks
 		public static final Block ImperialGrated = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
 	}
 
-	@RegistryOrder(order = 15)
+	@RegistryOrder(15)
 	public static class Light
 	{
 		@RegistryName("light_fixture")
@@ -582,7 +583,7 @@ public class SwgBlocks
 		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(RotatingBlockWithBounds.Substrate.BEHIND, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 	}
 
-	@RegistryOrder(order = 16)
+	@RegistryOrder(16)
 	public static class Door
 	{
 		public static final TatooineHomeDoorBlock TatooineHomeTop = new TatooineHomeDoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F));
@@ -594,7 +595,7 @@ public class SwgBlocks
 		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottoms.values().toArray(new Block[0])).build();
 	}
 
-	@RegistryOrder(order = 17)
+	@RegistryOrder(17)
 	public static class Crate
 	{
 		@RegistryName("orange_kyber_crate")
@@ -622,7 +623,7 @@ public class SwgBlocks
 		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, Segmented).build();
 	}
 
-	@RegistryOrder(order = 18)
+	@RegistryOrder(18)
 	public static class Barrel
 	{
 		@RegistryName("desh_barrel")
@@ -638,14 +639,14 @@ public class SwgBlocks
 		}, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(2.5F).requiresTool());
 	}
 
-	@RegistryOrder(order = 19)
+	@RegistryOrder(19)
 	public static class Machine
 	{
 		@RegistryName("spoked_machine")
 		public static final RotatingBlock Spoked = new RotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), RotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 	}
 
-	@RegistryOrder(order = 20)
+	@RegistryOrder(20)
 	public static class MoistureVaporator
 	{
 		@RegistryName("gx8_moisture_vaporator")
@@ -654,7 +655,7 @@ public class SwgBlocks
 		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = FabricBlockEntityTypeBuilder.create(MoistureVaporatorBlockEntity::new, Gx8).build();
 	}
 
-	@RegistryOrder(order = 21)
+	@RegistryOrder(21)
 	public static class Power
 	{
 		@RegistryName("power_coupling")
@@ -663,21 +664,21 @@ public class SwgBlocks
 		public static final BlockEntityType<PowerCouplingBlockEntity> CouplingBlockEntityType = FabricBlockEntityTypeBuilder.create(PowerCouplingBlockEntity::new, Coupling).build();
 	}
 
-	@RegistryOrder(order = 22)
+	@RegistryOrder(22)
 	public static class Pipe
 	{
 		@RegistryName("large_pipe")
 		public static final Block Large = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
 	}
 
-	@RegistryOrder(order = 23)
+	@RegistryOrder(23)
 	public static class Tank
 	{
 		@RegistryName("fusion_fuel_tank")
 		public static final Block Fusion = new RotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
-	@RegistryOrder(order = 24)
+	@RegistryOrder(24)
 	public static class Cage
 	{
 		@ClientRegistryData(renderLayer = RenderLayerHint.CUTOUT)
@@ -693,7 +694,7 @@ public class SwgBlocks
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Object.class, SwgBlocks::tryRegisterBlock);
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
-		RegistryHelper.registerFlammable(SwgBlocks.class);
+		RegistryHelper.register(SwgBlocks.class, ServerRegistryData.class, Block.class, SwgBlocks::registerServerData);
 
 		for (var entry : Cage.DyedCreatureTerrarium.entrySet())
 		{
@@ -717,6 +718,12 @@ public class SwgBlocks
 			else
 				Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door_controller_" + color.getName()), block);
 		}
+	}
+
+	private static void registerServerData(ServerRegistryData data, Block block)
+	{
+		if (data.fireBurn() != 0 || data.fireSpread() != 0)
+			FlammableBlockRegistry.getDefaultInstance().add(block, data.fireBurn(), data.fireSpread());
 	}
 
 	private static void tryRegisterBlock(Object o, Identifier identifier, boolean ignoreTab)
