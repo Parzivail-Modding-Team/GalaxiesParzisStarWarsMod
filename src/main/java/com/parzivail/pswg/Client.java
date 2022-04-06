@@ -8,6 +8,7 @@ import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.block.BlasterWorkbenchWeaponRenderer;
 import com.parzivail.pswg.client.render.block.PowerCouplingCableRenderer;
 import com.parzivail.pswg.client.render.block.TatooineHomeDoorRenderer;
+import com.parzivail.pswg.client.render.block.TerrariumRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterIonBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterStunBoltRenderer;
@@ -41,6 +42,7 @@ import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.BlockEntityClientSerializable;
+import com.parzivail.util.client.StatelessWaterRenderer;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.client.model.ModelRegistry;
@@ -141,6 +143,7 @@ public class Client implements ClientModInitializer
 		BlockEntityRendererRegistry.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
 		BlockEntityRendererRegistry.register(SwgBlocks.Workbench.BlasterBlockEntityType, BlasterWorkbenchWeaponRenderer::new);
 		BlockEntityRendererRegistry.register(SwgBlocks.Power.CouplingBlockEntityType, PowerCouplingCableRenderer::new);
+		BlockEntityRendererRegistry.register(SwgBlocks.Cage.CreatureTerrariumBlockEntityType, TerrariumRenderer::new);
 
 		ModelRegistry.register(SwgBlocks.Workbench.Blaster, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/blaster_workbench"), Resources.id("model/blaster_workbench"), Resources.id("model/workbench_particle")));
 		ModelRegistry.register(SwgBlocks.Workbench.Lightsaber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/lightsaber_forge"), Resources.id("model/lightsaber_forge"), Resources.id("model/workbench_particle")));
@@ -187,6 +190,7 @@ public class Client implements ClientModInitializer
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NemManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(P3dManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(BlasterItemRenderer.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(StatelessWaterRenderer.INSTANCE);
 
 		ModelLoadingRegistry.INSTANCE.registerVariantProvider(r -> ModelRegistry.INSTANCE);
 

@@ -685,10 +685,15 @@ public class SwgBlocks
 	@RegistryOrder(24)
 	public static class Cage
 	{
+		@RegistryName("creature_cage")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Creature = new WaterloggableCreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
+		@RegistryName("creature_terrarium")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block CreatureTerrarium = new CreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
+		public static final Block CreatureTerrarium = new TerrariumBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
+		@RegistryName("creature_terrarium")
+		public static final BlockEntityType<TerrariumBlockEntity> CreatureTerrariumBlockEntityType = FabricBlockEntityTypeBuilder.create(TerrariumBlockEntity::new, CreatureTerrarium).build();
+		@RegistryName("stained_creature_terrarium")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final RegistryHelper.DyedBlocks DyedCreatureTerrarium = new RegistryHelper.DyedBlocks(color -> new CreatureCageBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
 	}
@@ -699,18 +704,6 @@ public class SwgBlocks
 		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
 		RegistryHelper.register(SwgBlocks.class, ServerBlockRegistryData.class, Block.class, SwgBlocks::registerServerData);
-
-		for (var entry : Cage.DyedCreatureTerrarium.entrySet())
-		{
-			var id = Resources.id(entry.getKey().getName() + "_stained_creature_terrarium");
-			Registry.register(Registry.BLOCK, id, entry.getValue());
-			Registry.register(Registry.ITEM, id, new CreatureCageBlock.Item((CreatureCageBlock)entry.getValue(), new Item.Settings().group(Galaxies.TabBlocks)));
-		}
-		Registry.register(Registry.BLOCK, Resources.id("creature_terrarium"), Cage.CreatureTerrarium);
-		Registry.register(Registry.ITEM, Resources.id("creature_terrarium"), new CreatureCageBlock.Item((CreatureCageBlock)SwgBlocks.Cage.CreatureTerrarium, new Item.Settings().group(Galaxies.TabBlocks)));
-
-		Registry.register(Registry.BLOCK, Resources.id("creature_cage"), Cage.Creature);
-		Registry.register(Registry.ITEM, Resources.id("creature_cage"), new CreatureCageBlock.Item((CreatureCageBlock)SwgBlocks.Cage.Creature, new Item.Settings().group(Galaxies.TabBlocks)));
 
 		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door"), Door.TatooineHomeTop);
 
