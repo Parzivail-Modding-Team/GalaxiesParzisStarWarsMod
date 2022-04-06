@@ -65,11 +65,11 @@ public class WorrtEntity extends AnimalEntity
 				var vec3d = path.getNodePosition(this);
 				if (vec3d.y > this.getY() + 0.5D)
 				{
-					return 0.75F;
+					return 0.5F;
 				}
 			}
 
-			return (float)this.moveControl.getSpeed() * 0.75f;
+			return (float)this.moveControl.getSpeed() * 0.5f;
 		}
 		else
 		{
