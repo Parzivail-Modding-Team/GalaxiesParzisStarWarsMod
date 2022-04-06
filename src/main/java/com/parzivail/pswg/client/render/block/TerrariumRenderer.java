@@ -2,7 +2,6 @@ package com.parzivail.pswg.client.render.block;
 
 import com.parzivail.pswg.block.TerrariumBlock;
 import com.parzivail.pswg.blockentity.TerrariumBlockEntity;
-import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.client.StatelessWaterRenderer;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.RenderLayers;
@@ -27,7 +26,7 @@ public class TerrariumRenderer implements BlockEntityRenderer<TerrariumBlockEnti
 			return;
 
 		var state = world.getBlockState(blockEntity.getPos());
-		if (!state.isOf(SwgBlocks.Cage.CreatureTerrarium))
+		if (!(state.getBlock() instanceof TerrariumBlock))
 			return;
 
 		matrices.push();
