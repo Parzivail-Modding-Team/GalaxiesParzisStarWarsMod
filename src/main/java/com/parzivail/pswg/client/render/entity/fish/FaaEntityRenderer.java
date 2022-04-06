@@ -24,7 +24,7 @@ public class FaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 		return Resources.id("textures/entity/fish/faa.png");
 	}
 
-	public static void setAngles(SinglePartEntityModel<FishEntity> model, FishEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)
+	public static void setAngles(SinglePartEntityModel<FishEntity> model, FishEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitc, float tickDelta)
 	{
 		if (entity.isAiDisabled())
 			animationProgress = 0;

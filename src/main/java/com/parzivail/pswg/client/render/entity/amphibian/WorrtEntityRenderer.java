@@ -24,9 +24,9 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 		return Resources.id("textures/entity/amphibian/worrt.png");
 	}
 
-	public static void setAngles(SinglePartEntityModel<WorrtEntity> model, WorrtEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)
+	public static void setAngles(SinglePartEntityModel<WorrtEntity> model, WorrtEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, float tickDelta)
 	{
-		var timer = entity.getAirborneLerp();
+		var timer = entity.getAirborneLerp(tickDelta);
 
 		if (entity.isAiDisabled())
 		{
@@ -102,7 +102,7 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 		}
 		else
 		{
-			var t = MathHelper.clamp(1-timer, 0, 1);
+			var t = MathHelper.clamp(1 - timer, 0, 1);
 
 			// landing [0, 1)
 			body.pitch = 0.5f - (-MathHelper.cos(Ease.inCubic(t) * MathUtil.fPI) + 1) / 4f;

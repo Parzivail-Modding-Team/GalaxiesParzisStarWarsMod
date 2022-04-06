@@ -28,7 +28,7 @@ public class KinematicTestEntityRenderer extends EntityRenderer<KinematicTestEnt
 		model = NemManager.INSTANCE.getModel(Resources.id("mob/debug/bantha"), KinematicTestEntityRenderer::setAngles);
 	}
 
-	private static void setAngles(MutableAnimatedModel<KinematicTestEntity> model, KinematicTestEntity entity, float v, float v1, float v2, float v3, float v4)
+	private static void setAngles(MutableAnimatedModel<KinematicTestEntity> model, KinematicTestEntity entity, float v, float v1, float v2, float v3, float v4, float tickDelta)
 	{
 		var body = model.getPart().getChild("body");
 		var leftFrontLeg = body.getChild("leftFrontLeg");

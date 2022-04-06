@@ -66,6 +66,23 @@ public class TerrariumBlock extends CreatureCageBlock implements BlockEntityProv
 	}
 
 	@Override
+	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player)
+	{
+		super.onBreak(world, pos, state, player);
+
+		if (!world.isClient)
+		{
+			var tile = world.getBlockEntity(pos);
+			if (!(tile instanceof TerrariumBlockEntity tbe) || !tbe.hasContainedEntity())
+				return;
+
+			var entity = tbe.getContainedEntity();
+			entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+			world.spawnEntity(entity);
+		}
+	}
+
+	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		var stack = player.getStackInHand(hand);

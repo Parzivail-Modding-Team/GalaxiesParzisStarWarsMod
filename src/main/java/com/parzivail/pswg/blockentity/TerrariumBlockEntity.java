@@ -61,7 +61,7 @@ public class TerrariumBlockEntity extends BlockEntity implements BlockEntityClie
 
 	public boolean hasContainedEntity()
 	{
-		return containedEntity != null;
+		return getContainedEntity() != null;
 	}
 
 	public Entity getContainedEntity()

@@ -158,13 +158,15 @@ public class WorrtEntity extends AnimalEntity
 		this.lastOnGround = this.onGround;
 	}
 
-	public float getAirborneLerp()
+	@Environment(EnvType.CLIENT)
+	public float getAirborneLerp(float tickDelta)
 	{
-		var hit = EntityUtil.raycastBlocks(this.getPos(), MathUtil.NEGY, 1f, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE);
+		var pos = this.getLerpedPos(tickDelta);
+		var hit = EntityUtil.raycastBlocks(pos, MathUtil.NEGY, 1f, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE);
 		if (hit.getType() == HitResult.Type.MISS)
 			return 1;
 
-		return (float)MathHelper.clamp(Math.sqrt(hit.squaredDistanceTo(this)), 0, 1);
+		return (float)MathHelper.clamp(hit.getPos().distanceTo(pos), 0, 1);
 	}
 
 	public boolean shouldSpawnSprintingParticles()
