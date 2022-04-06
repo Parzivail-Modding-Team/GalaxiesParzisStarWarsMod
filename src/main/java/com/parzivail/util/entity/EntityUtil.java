@@ -4,7 +4,9 @@ import com.parzivail.util.math.EntityHitResult;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Quaternion;
@@ -16,6 +18,14 @@ import java.util.Arrays;
 
 public class EntityUtil
 {
+	public static NbtCompound serializeEntity(Entity e)
+	{
+		var nbtCompound = new NbtCompound();
+		nbtCompound.putString("id", EntityType.getId(e.getType()).toString());
+		e.writeNbt(nbtCompound);
+		return nbtCompound;
+	}
+
 	public static EntityHitResult raycastEntities(Vec3d startPos, Vec3d fromDir, double distance, Entity fromEntity, Entity[] exclude)
 	{
 		Entity pointedEntity = null;

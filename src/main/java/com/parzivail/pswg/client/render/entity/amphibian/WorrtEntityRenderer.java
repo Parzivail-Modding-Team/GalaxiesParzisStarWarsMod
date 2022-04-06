@@ -5,7 +5,6 @@ import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
@@ -27,8 +26,6 @@ public class WorrtEntityRenderer extends MobEntityRenderer<WorrtEntity, SinglePa
 
 	public static void setAngles(SinglePartEntityModel<WorrtEntity> model, WorrtEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)
 	{
-		var minecraft = MinecraftClient.getInstance();
-
 		var timer = entity.getAirborneLerp();
 
 		if (entity.isAiDisabled())

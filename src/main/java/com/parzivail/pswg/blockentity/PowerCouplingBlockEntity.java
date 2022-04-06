@@ -60,6 +60,7 @@ public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntity
 
 		targetPositions.add(pos);
 		sync();
+		markDirty();
 		return true;
 	}
 
