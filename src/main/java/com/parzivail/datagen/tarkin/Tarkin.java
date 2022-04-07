@@ -260,7 +260,7 @@ public class Tarkin
 				assets,
 				5.0F,
 				SwgBlocks.Ore.BeskarOre,
-				SwgItems.RawOre.BeskarRaw,
+				SwgItems.Material.BeskarRaw,
 				SwgItems.Material.BeskarIngot,
 				SwgBlocks.Ore.BeskarBlock
 		);
@@ -269,7 +269,7 @@ public class Tarkin
 				assets,
 				1.0F,
 				SwgBlocks.Ore.ChromiumOre,
-				SwgItems.RawOre.ChromiumRaw,
+				SwgItems.Material.ChromiumRaw,
 				SwgItems.Material.ChromiumIngot,
 				SwgItems.Material.ChromiumNugget,
 				SwgBlocks.Ore.ChromiumBlock
@@ -279,7 +279,7 @@ public class Tarkin
 				assets,
 				4.0F,
 				SwgBlocks.Ore.CortosisOre,
-				SwgItems.RawOre.CortosisRaw,
+				SwgItems.Material.CortosisRaw,
 				SwgItems.Material.CortosisIngot,
 				SwgBlocks.Ore.CortosisBlock
 		);
@@ -288,7 +288,7 @@ public class Tarkin
 				assets,
 				0.4F,
 				SwgBlocks.Ore.DeshOre,
-				SwgItems.RawOre.DeshRaw,
+				SwgItems.Material.DeshRaw,
 				SwgItems.Material.DeshIngot,
 				SwgItems.Material.DeshNugget,
 				SwgBlocks.Ore.DeshBlock
@@ -298,7 +298,7 @@ public class Tarkin
 				assets,
 				0.7F,
 				SwgBlocks.Ore.DiatiumOre,
-				SwgItems.RawOre.DiatiumRaw,
+				SwgItems.Material.DiatiumRaw,
 				SwgItems.Material.DiatiumIngot,
 				SwgItems.Material.DiatiumNugget,
 				SwgBlocks.Ore.DiatiumBlock
@@ -312,7 +312,7 @@ public class Tarkin
 				assets,
 				2.0F,
 				SwgBlocks.Ore.TitaniumOre,
-				SwgItems.RawOre.TitaniumRaw,
+				SwgItems.Material.TitaniumRaw,
 				SwgItems.Material.TitaniumIngot,
 				SwgItems.Material.TitaniumNugget,
 				SwgBlocks.Ore.TitaniumBlock
@@ -322,7 +322,7 @@ public class Tarkin
 				assets,
 				2.0F,
 				SwgBlocks.Ore.IoniteOre,
-				SwgItems.RawOre.IoniteRaw,
+				SwgItems.Material.IoniteRaw,
 				SwgItems.Material.IoniteIngot,
 				SwgItems.Material.IoniteNugget,
 				SwgBlocks.Ore.IoniteBlock
@@ -857,6 +857,8 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Material.ThorilideDust).build(assets);
 		ItemGenerator.basic(SwgItems.Material.ZersiumDust).build(assets);
 
+		ItemGenerator.basic(SwgItems.FoodPrep.DurasteelCup).build(assets);
+
 		ItemGenerator.basic(SwgItems.Food.JoganFruit).build(assets);
 		ItemGenerator.basic(SwgItems.Food.ChasukaLeaf).build(assets);
 		ItemGenerator.basic(SwgItems.Food.Meiloorun).build(assets);
@@ -878,6 +880,12 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.MysteriousSmoothie).build(assets);
 		ItemGenerator.basic(SwgItems.Food.AbsynthesizedMalt).build(assets);
 		ItemGenerator.basic(SwgItems.Food.CoronetCocktail).build(assets);
+
+		ItemGenerator.basic(SwgItems.Food.ClassicSoda).build(assets);
+		ItemGenerator.basic(SwgItems.Food.DietSoda).build(assets);
+		ItemGenerator.basic(SwgItems.Food.CitrusSoda).build(assets);
+
+		ItemGenerator.basic(SwgItems.Food.BottledWater).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.BlueMilk).build(assets);
 		ItemGenerator.basic(SwgItems.Food.BlueMilkGlass).build(assets);
@@ -962,15 +970,15 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Material.IoniteNugget).build(assets);
 		// TODO: ItemGenerator.basic(SwgItems.Nugget.Transparisteel).build(assets);
 
-		ItemGenerator.basic(SwgItems.RawOre.BeskarRaw).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.IoniteRaw).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.ChromiumRaw).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.CortosisRaw).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.DeshRaw).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.DiatiumRaw).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.KeleriumRaw).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.RubindumRaw).build(assets);
-		ItemGenerator.basic(SwgItems.RawOre.TitaniumRaw).build(assets);
+		ItemGenerator.basic(SwgItems.Material.BeskarRaw).build(assets);
+		ItemGenerator.basic(SwgItems.Material.IoniteRaw).build(assets);
+		ItemGenerator.basic(SwgItems.Material.ChromiumRaw).build(assets);
+		ItemGenerator.basic(SwgItems.Material.CortosisRaw).build(assets);
+		ItemGenerator.basic(SwgItems.Material.DeshRaw).build(assets);
+		ItemGenerator.basic(SwgItems.Material.DiatiumRaw).build(assets);
+		ItemGenerator.basic(SwgItems.Material.KeleriumRaw).build(assets);
+		ItemGenerator.basic(SwgItems.Material.RubindumRaw).build(assets);
+		ItemGenerator.basic(SwgItems.Material.TitaniumRaw).build(assets);
 
 		ItemGenerator.tool(SwgItems.Material.DurasteelPickaxe)
 		             .build(assets);
@@ -1198,25 +1206,25 @@ public class Tarkin
 		              .build(assets);
 
 		// TODO: adjust loot table to match vanilla raw ores
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.BeskarOre, SwgItems.RawOre.BeskarRaw)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.BeskarOre, SwgItems.Material.BeskarRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.ChromiumOre, SwgItems.RawOre.ChromiumRaw)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.ChromiumOre, SwgItems.Material.ChromiumRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.CortosisOre, SwgItems.RawOre.CortosisRaw)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.CortosisOre, SwgItems.Material.CortosisRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DeshOre, SwgItems.RawOre.DeshRaw)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DeshOre, SwgItems.Material.DeshRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DiatiumOre, SwgItems.RawOre.DiatiumRaw)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.DiatiumOre, SwgItems.Material.DiatiumRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.TitaniumOre, SwgItems.RawOre.TitaniumRaw)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.TitaniumOre, SwgItems.Material.TitaniumRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.IoniteOre, SwgItems.RawOre.IoniteRaw)
+		BlockGenerator.basicDropFortuneBonus(SwgBlocks.Ore.IoniteOre, SwgItems.Material.IoniteRaw)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 

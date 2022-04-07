@@ -84,6 +84,8 @@ public class SwgItems
 	@RegistryOrder(4)
 	public static class Material
 	{
+		@RegistryName("raw_beskar")
+		public static final Item BeskarRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("beskar_ingot")
 		public static final Item BeskarIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("beskar_shovel")
@@ -95,19 +97,27 @@ public class SwgItems
 		@RegistryName("beskar_hoe")
 		public static final ToolItem BeskarHoe = new PHoeItem(BeskarToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings().group(Galaxies.TabItems));
 
+		@RegistryName("raw_chromium")
+		public static final Item ChromiumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("chromium_ingot")
 		public static final Item ChromiumIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("chromium_nugget")
 		public static final Item ChromiumNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
 
+		@RegistryName("raw_cortosis")
+		public static final Item CortosisRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("cortosis_ingot")
 		public static final Item CortosisIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
 
+		@RegistryName("raw_desh")
+		public static final Item DeshRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("desh_ingot")
 		public static final Item DeshIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("desh_nugget")
 		public static final Item DeshNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
 
+		@RegistryName("raw_diatium")
+		public static final Item DiatiumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("diatium_ingot")
 		public static final Item DiatiumIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("diatium_nugget")
@@ -134,11 +144,15 @@ public class SwgItems
 		@RegistryName("helicite_dust")
 		public static final Item HeliciteDust = new Item(new Item.Settings().group(Galaxies.TabItems));
 
+		@RegistryName("raw_ionite")
+		public static final Item IoniteRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("ionite_ingot")
 		public static final Item IoniteIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("ionite_nugget")
 		public static final Item IoniteNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
 
+		@RegistryName("raw_kelerium")
+		public static final Item KeleriumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("kelerium_ingot")
 		public static final Item KeleriumIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
 
@@ -152,6 +166,8 @@ public class SwgItems
 		@RegistryName("plasteel_nugget")
 		public static final Item PlasteelNugget = new Item(new Item.Settings().group(Galaxies.TabItems));
 
+		@RegistryName("raw_rubindum")
+		public static final Item RubindumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("rubindum_shard")
 		public static final Item RubindumShard = new Item(new Item.Settings().group(Galaxies.TabItems));
 
@@ -160,6 +176,8 @@ public class SwgItems
 		@RegistryName("thorilide_dust")
 		public static final Item ThorilideDust = new Item(new Item.Settings().group(Galaxies.TabItems));
 
+		@RegistryName("raw_titanium")
+		public static final Item TitaniumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("titanium_ingot")
 		public static final Item TitaniumIngot = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("titanium_nugget")
@@ -182,31 +200,6 @@ public class SwgItems
 		public static final Item ZersiumDust = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	// TODO: some of these might belong into Crystal, or somewhere else.
-	//  Also, check if the names are consistent with vanilla 1.17.
-	@RegistryOrder(5)
-	public static class RawOre
-	{
-		@RegistryName("raw_beskar")
-		public static final Item BeskarRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("raw_chromium")
-		public static final Item ChromiumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("raw_cortosis")
-		public static final Item CortosisRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("raw_desh")
-		public static final Item DeshRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("raw_diatium")
-		public static final Item DiatiumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("raw_kelerium")
-		public static final Item KeleriumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("raw_rubindum")
-		public static final Item RubindumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("raw_titanium")
-		public static final Item TitaniumRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
-		@RegistryName("raw_ionite")
-		public static final Item IoniteRaw = new Item(new Item.Settings().group(Galaxies.TabItems));
-	}
-
 	@RegistryOrder(6)
 	public static class Natural
 	{
@@ -226,9 +219,15 @@ public class SwgItems
 	}
 
 	@RegistryOrder(8)
+	public static class FoodPrep
+	{
+		@RegistryName("durasteel_cup")
+		public static final Item DurasteelCup = new Item(new Item.Settings().group(Galaxies.TabItems));
+	}
+
+	@RegistryOrder(9)
 	public static class Food
 	{
-
 		@RegistryName("jogan_fruit")
 		public static final Item JoganFruit = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("chasuka_leaf")
@@ -260,17 +259,27 @@ public class SwgItems
 		public static final Item FlangthPlate = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(8).saturationModifier(0.8F).meat().build()).group(Galaxies.TabItems));
 
 		@RegistryName("death_stick_red")
-		public static final Item DeathStickRed = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200), 0.8F).statusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200), 1).build()).group(Galaxies.TabItems));
+		public static final Item DeathStickRed = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.INSTANT_HEALTH, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.BLINDNESS, 200), 1).build()).group(Galaxies.TabItems));
 		@RegistryName("death_stick_yellow")
-		public static final Item DeathStickYellow = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 0.8F).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()).group(Galaxies.TabItems));
+		public static final Item DeathStickYellow = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()).group(Galaxies.TabItems));
 
 		@RegistryName("mysterious_smoothie")
-		public static final Item MysteriousSmoothie = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 200), 0.8F).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()).group(Galaxies.TabItems));
+		public static final Item MysteriousSmoothie = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.JUMP_BOOST, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 0.5f).build()).group(Galaxies.TabItems));
 
 		@RegistryName("absynthesized_malt")
-		public static final Item AbsynthesizedMalt = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.LUCK, 200), 0.8F).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()).group(Galaxies.TabItems));
+		public static final Item AbsynthesizedMalt = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.LUCK, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 0.5f).build()).group(Galaxies.TabItems));
 		@RegistryName("coronet_cocktail")
-		public static final Item CoronetCocktail = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 200), 0.8F).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 1).build()).group(Galaxies.TabItems));
+		public static final Item CoronetCocktail = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.FIRE_RESISTANCE, 200), 1).statusEffect(new StatusEffectInstance(StatusEffects.NAUSEA, 200), 0.5f).build()).group(Galaxies.TabItems));
+
+		@RegistryName("classic_soda")
+		public static final Item ClassicSoda = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).build()).group(Galaxies.TabItems));
+		@RegistryName("diet_soda")
+		public static final Item DietSoda = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).build()).group(Galaxies.TabItems));
+		@RegistryName("citrus_soda")
+		public static final Item CitrusSoda = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SPEED, 200), 1).build()).group(Galaxies.TabItems));
+
+		@RegistryName("bottled_water")
+		public static final Item BottledWater = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(3).saturationModifier(0.3F).snack().alwaysEdible().statusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 200), 1).build()).group(Galaxies.TabItems));
 
 		// TODO: consider turning this into a Fluid
 		@RegistryName("blue_milk")
@@ -339,7 +348,7 @@ public class SwgItems
 		public static final Item HubbaGourd = new Item(new Item.Settings().food(new FoodComponent.Builder().hunger(2).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(9)
+	@RegistryOrder(10)
 	public static class MobDrops
 	{
 		@RegistryName("faa_bucket")
@@ -374,7 +383,7 @@ public class SwgItems
 		public static final Item ToughHide = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(10)
+	@RegistryOrder(11)
 	public static class Blaster
 	{
 		@RegistryName("blaster")
@@ -383,7 +392,7 @@ public class SwgItems
 		public static final BlasterPowerPackItem SmallPowerPack = new BlasterPowerPackItem(75, new Item.Settings().group(Galaxies.TabBlasters));
 	}
 
-	@RegistryOrder(11)
+	@RegistryOrder(12)
 	public static class Spawners
 	{
 		@RegistryName("spawn_xwing_t65b")
@@ -402,7 +411,7 @@ public class SwgItems
 		public static final Item Worrt = new SpawnEggItem(SwgEntities.Amphibian.Worrt, 0x5B482C, 0x635735, new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(12)
+	@RegistryOrder(13)
 	public static class Lightsaber
 	{
 		@RegistryName("lightsaber")
