@@ -5,8 +5,10 @@
 			"defaultValue": "orange",
 			"possibleValues": [
 				"blue",
+				"gray",
 				"green",
 				"light_blue",
+				"light_gray",
 				"lilac",
 				"orange",
 				"pink",
