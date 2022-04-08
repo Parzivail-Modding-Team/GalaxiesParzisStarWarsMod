@@ -77,6 +77,7 @@ import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.*;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
@@ -168,6 +169,10 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Crate.Imperial, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/imperial_cube.pm3d"), Resources.id("model/crate/imperial_cube"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Crate.Segmented, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/segmented.pm3d"), Resources.id("model/crate/segmented"), new Identifier("block/stone")));
 
+		ModelRegistry.register(SwgBlocks.Crate.ImperialCorrugatedCrate, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("model/corrugated_crate/imperial"), Resources.id("model/corrugated_crate/imperial_particle")));
+		for (var color : DyeColor.values())
+			ModelRegistry.register(SwgBlocks.Crate.CorrugatedCrate.get(color), true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("model/corrugated_crate/" + color.getName()), Resources.id("model/corrugated_crate/" + color.getName() + "_particle")));
+
 		ModelRegistry.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadPM3D(Resources.id("models/block/machine_spoked.pm3d"), Resources.id("model/machine_spoked"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Pipe.Large, false, ModelLoader.loadPM3D(Resources.id("models/block/pipe_thick.pm3d"), Resources.id("model/pipe_thick"), new Identifier("block/stone")));
@@ -177,8 +182,8 @@ public class Client implements ClientModInitializer
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialLightTall1, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialLightTall2, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
 
-//		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialCutout, true, false, true, Resources.id("block/imperial_cutout_face"), Resources.id("block/imperial_cutout_face"), Resources.id("block/imperial_cutout_border"), EnumSet.of(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));
-//		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialCutoutPipes, true, false, true, Resources.id("block/imperial_cutout_pipes_face"), Resources.id("block/imperial_cutout_pipes_face"), Resources.id("block/imperial_cutout_pipes_border"), EnumSet.of(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));
+		//		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialCutout, true, false, true, Resources.id("block/imperial_cutout_face"), Resources.id("block/imperial_cutout_face"), Resources.id("block/imperial_cutout_border"), EnumSet.of(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));
+		//		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialCutoutPipes, true, false, true, Resources.id("block/imperial_cutout_pipes_face"), Resources.id("block/imperial_cutout_pipes_face"), Resources.id("block/imperial_cutout_pipes_border"), EnumSet.of(Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST));
 
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelBordered, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelSplit, true, true, true, null, Resources.id("block/black_imperial_panel_split_center"));

@@ -602,6 +602,11 @@ public class SwgBlocks
 	@RegistryOrder(17)
 	public static class Crate
 	{
+		@RegistryName("corrugated_crate")
+		public static final RegistryHelper.DyedBlocks CorrugatedCrate = new RegistryHelper.DyedBlocks(color -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(14, 16), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F)));
+		@RegistryName("imperial_corrugated_crate")
+		public static final Block ImperialCorrugatedCrate = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(14, 16), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F));
+
 		@RegistryName("orange_kyber_crate")
 		public static final WaterloggableRotatingBlockWithGuiEntity OrangeKyber = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("gray_kyber_crate")

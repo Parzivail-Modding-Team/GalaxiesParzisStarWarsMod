@@ -1007,6 +1007,7 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Barrel.Desh)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
+
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OrangeKyber)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
@@ -1025,6 +1026,14 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Segmented)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.ImperialCorrugatedCrate)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		for (var block : SwgBlocks.Crate.CorrugatedCrate.values())
+			BlockGenerator.blockNoModelDefaultDrops(block)
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
 
 		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone"))
 		              .itemModel(ModelFile::ofBlock)
