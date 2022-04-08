@@ -1023,7 +1023,13 @@ public class Tarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Imperial)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Segmented)
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.BrownSegmented)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.GraySegmented)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.GrayPanel)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
