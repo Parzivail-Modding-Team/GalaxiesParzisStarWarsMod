@@ -3,6 +3,7 @@ package com.parzivail.pswg.container.registry;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.block.PStairsBlock;
 import net.minecraft.block.*;
+import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
 
 import java.lang.annotation.Annotation;
@@ -15,12 +16,28 @@ import java.util.function.Function;
 
 public class RegistryHelper
 {
-	public static class DyedBlocks extends HashMap<DyeColor, Block>
+	public static class Dyed<T> extends HashMap<DyeColor, T>
+	{
+		public Dyed(Function<DyeColor, T> generator)
+		{
+			for (var color : DyeColor.values())
+				put(color, generator.apply(color));
+		}
+	}
+
+	public static class DyedItems extends Dyed<Item>
+	{
+		public DyedItems(Function<DyeColor, Item> blockFunction)
+		{
+			super(blockFunction);
+		}
+	}
+
+	public static class DyedBlocks extends Dyed<Block>
 	{
 		public DyedBlocks(Function<DyeColor, Block> blockFunction)
 		{
-			for (var color : DyeColor.values())
-				put(color, blockFunction.apply(color));
+			super(blockFunction);
 		}
 	}
 

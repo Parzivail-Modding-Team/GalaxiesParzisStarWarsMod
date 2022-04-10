@@ -25,6 +25,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.List;
@@ -223,6 +224,10 @@ public class SwgItems
 	{
 		@RegistryName("durasteel_cup")
 		public static final Item DurasteelCup = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("desh_cup")
+		public static final Item DeshCup = new Item(new Item.Settings().group(Galaxies.TabItems));
+		@RegistryName("cup")
+		public static final RegistryHelper.DyedItems Cups = new RegistryHelper.DyedItems(color -> new Item(new Item.Settings().group(Galaxies.TabItems)));
 	}
 
 	@RegistryOrder(9)
@@ -420,7 +425,7 @@ public class SwgItems
 
 	public static void register()
 	{
-		RegistryHelper.registerAnnotatedFields(SwgItems.class, Item.class, (instance, registryName, ignoreTab) -> Registry.register(Registry.ITEM, registryName, instance));
+		RegistryHelper.registerAnnotatedFields(SwgItems.class, Object.class, SwgItems::tryRegisterItem);
 
 		for (var i : Door.TatooineHome)
 		{
@@ -430,5 +435,14 @@ public class SwgItems
 			else
 				Registry.register(Registry.ITEM, Resources.id("tatooine_home_door_" + color.getName()), i);
 		}
+	}
+
+	private static void tryRegisterItem(Object o, Identifier identifier, boolean ignoreTab)
+	{
+		if (o instanceof Item item)
+			Registry.register(Registry.ITEM, identifier, item);
+		else if (o instanceof RegistryHelper.DyedItems items)
+			for (var entry : items.entrySet())
+				Registry.register(Registry.ITEM, Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue());
 	}
 }
