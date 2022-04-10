@@ -228,6 +228,12 @@ public class SwgItems
 		public static final Item DeshCup = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("cup")
 		public static final RegistryHelper.DyedItems Cups = new RegistryHelper.DyedItems(color -> new Item(new Item.Settings().group(Galaxies.TabItems)));
+		@RegistryName("glass")
+		public static final RegistryHelper.NumberedItems Glasses = new RegistryHelper.NumberedItems(10, i -> new Item(new Item.Settings().group(Galaxies.TabItems)));
+		@RegistryName("glass_bottle")
+		public static final RegistryHelper.NumberedItems GlassBottles = new RegistryHelper.NumberedItems(2, i -> new Item(new Item.Settings().group(Galaxies.TabItems)));
+		@RegistryName("plastic_bottle")
+		public static final RegistryHelper.NumberedItems PlasticBottles = new RegistryHelper.NumberedItems(2, i -> new Item(new Item.Settings().group(Galaxies.TabItems)));
 	}
 
 	@RegistryOrder(9)
@@ -444,5 +450,8 @@ public class SwgItems
 		else if (o instanceof RegistryHelper.DyedItems items)
 			for (var entry : items.entrySet())
 				Registry.register(Registry.ITEM, Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue());
+		else if (o instanceof RegistryHelper.NumberedItems items)
+			for (var i = 0; i < items.size(); i++)
+				Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_" + (i + 1)), items.get(i));
 	}
 }

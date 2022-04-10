@@ -861,6 +861,12 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.FoodPrep.DeshCup).build(assets);
 		for (var entry : SwgItems.FoodPrep.Cups.entrySet())
 			ItemGenerator.basic(entry.getValue()).build(assets);
+		for (var entry : SwgItems.FoodPrep.Glasses)
+			ItemGenerator.basic(entry).build(assets);
+		for (var entry : SwgItems.FoodPrep.GlassBottles)
+			ItemGenerator.basic(entry).build(assets);
+		for (var entry : SwgItems.FoodPrep.PlasticBottles)
+			ItemGenerator.basic(entry).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.JoganFruit).build(assets);
 		ItemGenerator.basic(SwgItems.Food.ChasukaLeaf).build(assets);

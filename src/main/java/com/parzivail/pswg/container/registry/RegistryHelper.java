@@ -8,6 +8,7 @@ import net.minecraft.util.DyeColor;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,28 @@ import java.util.function.Function;
 
 public class RegistryHelper
 {
+	public static class Numbered<T> extends ArrayList<T>
+	{
+		/**
+		 *
+		 * @param count 1 ... count
+		 * @param generator
+		 */
+		public Numbered(int count, Function<Integer, T> generator)
+		{
+			for (var i = 1; i <= count; i++)
+				add(generator.apply(i));
+		}
+	}
+
+	public static class NumberedItems extends Numbered<Item>
+	{
+		public NumberedItems(int count, Function<Integer, Item> blockFunction)
+		{
+			super(count, blockFunction);
+		}
+	}
+
 	public static class Dyed<T> extends HashMap<DyeColor, T>
 	{
 		public Dyed(Function<DyeColor, T> generator)
