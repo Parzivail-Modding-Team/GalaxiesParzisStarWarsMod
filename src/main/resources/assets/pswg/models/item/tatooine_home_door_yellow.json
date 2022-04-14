@@ -1,1 +1,1 @@
-{"parent":"pswg:block/tatooine_home_door_controller_yellow"}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/yellow_tatooine_home_door"}}

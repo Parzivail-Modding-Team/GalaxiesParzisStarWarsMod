@@ -1057,8 +1057,17 @@ public class Tarkin
 		              .build(assets);
 		SwgBlocks.Door.TatooineHomeBottoms.values().forEach(b -> BlockGenerator.particleOnly(b, new Identifier("block/stone"))
 		                                                                       .itemModel(block -> {
+																				   // Cursed generator method because the block names have the color position swapped, and the
+			                                                                       // controller is actually the item in your inventory
 			                                                                       var reg = AssetGenerator.getRegistryName(block);
-			                                                                       return ModelFile.ofModel(new Identifier(reg.getNamespace(), reg.getPath().replace("controller_", "")), AssetGenerator.getTextureName(block));
+																				   var id = new Identifier(reg.getNamespace(), reg.getPath().replace("_controller", ""));
+																				   var itemTexturePath = reg.getPath().replace("_controller", "");
+																				   if (itemTexturePath.startsWith("tatooine_home_door_"))
+																					   itemTexturePath = itemTexturePath.replace("tatooine_home_door_", "") + "_tatooine_home_door";
+																				   var texId = new Identifier(reg.getNamespace(), "item/" + itemTexturePath);
+																				   return ModelFile
+																						   .ofModel(id, new Identifier("item/generated"))
+																						   .texture("layer0", texId);
 		                                                                       })
 		                                                                       .blockTag(SwgTags.Block.TATOOINE_DOORS)
 		                                                                       .blockTag(BlockTags.PICKAXE_MINEABLE)
