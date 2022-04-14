@@ -89,7 +89,8 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		if (data != null)
 			return data;
 
-		var j = CrashReport.create(new NullPointerException("Cannot get blaster descriptor for unknown key " + key.toString()), "Getting blaster descriptor");
+		var keyName = key == null ? "[null]" : '"' + key.toString() + '"';
+		var j = CrashReport.create(new NullPointerException("Cannot get blaster descriptor for unknown key " + keyName), "Getting blaster descriptor");
 
 		var k = j.addElement("Blaster Manager Data");
 		k.add("Defined keys", this::getDataString);

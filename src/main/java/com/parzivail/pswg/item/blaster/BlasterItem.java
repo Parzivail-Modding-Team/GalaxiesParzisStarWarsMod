@@ -176,7 +176,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public float getCooldownProgress(PlayerEntity player, World world, ItemStack stack, float tickDelta)
 	{
 		var bt = new BlasterTag(stack.getOrCreateNbt());
-		var bd = getBlasterDescriptor(stack);
+		var bd = getBlasterDescriptor(stack, true);
+
+		if (bd == null)
+			return 0;
 
 		if (bt.isCooling())
 			return MathHelper.clamp((bt.ventingHeat - bd.heat.overheatDrainSpeed * tickDelta) / bd.heat.capacity, 0, 1);
