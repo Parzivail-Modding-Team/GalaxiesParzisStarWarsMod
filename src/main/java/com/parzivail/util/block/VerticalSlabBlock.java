@@ -104,9 +104,27 @@ public class VerticalSlabBlock extends Block implements Waterloggable
 
 			if (ctx.getPlayer() != null && ctx.getPlayer().isSneaking())
 			{
-				return direction != Direction.DOWN && (direction == Direction.UP || !(ctx.getHitPos().y - (double)blockPos.getY() > 0.5))
-				       ? blockState2
-				       : blockState2.with(TYPE, SlabType.TOP);
+				if (direction != Direction.DOWN && direction != Direction.UP)
+				{
+					// Place horizontal slab adjacent to a block
+					return ctx.getHitPos().y - (double)blockPos.getY() > 0.5 ? blockState2.with(TYPE, SlabType.TOP) : blockState2;
+				}
+				else
+				{
+					// Place vertical slab above or below block
+					var playerLookDir = Direction.fromRotation(ctx.getPlayerYaw());
+
+					var axis = playerLookDir.getAxis();
+					var half = SlabType.BOTTOM;
+
+					switch (axis)
+					{
+						case X -> half = (ctx.getHitPos().x - (double)blockPos.getX() > 0.5) ? SlabType.TOP : SlabType.BOTTOM;
+						case Z -> half = (ctx.getHitPos().z - (double)blockPos.getZ() > 0.5) ? SlabType.TOP : SlabType.BOTTOM;
+					}
+
+					return this.getDefaultState().with(TYPE, half).with(AXIS, axis).with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+				}
 			}
 			else
 			{
