@@ -1,18 +1,18 @@
 package com.parzivail.util.block.mutating;
 
+import com.parzivail.util.block.VerticalSlabBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.Random;
 
-public class MutatingSlabBlock extends SlabBlock
+public class MutatingSlabBlock extends VerticalSlabBlock
 {
-	private final SlabBlock target;
+	private final VerticalSlabBlock target;
 	private final int meanTransitionTime;
 
-	public MutatingSlabBlock(SlabBlock target, int meanTransitionTime, Settings settings)
+	public MutatingSlabBlock(VerticalSlabBlock target, int meanTransitionTime, Settings settings)
 	{
 		super(settings.ticksRandomly());
 		this.target = target;
@@ -25,7 +25,7 @@ public class MutatingSlabBlock extends SlabBlock
 			return;
 
 		if (random.nextInt(meanTransitionTime) == 0)
-			world.setBlockState(pos, target.getDefaultState().with(TYPE, state.get(TYPE)).with(WATERLOGGED, state.get(WATERLOGGED)), 2);
+			world.setBlockState(pos, target.getDefaultState().with(TYPE, state.get(TYPE)).with(AXIS, state.get(AXIS)).with(WATERLOGGED, state.get(WATERLOGGED)), 2);
 	}
 
 	protected boolean canTransition(BlockState state, ServerWorld world, BlockPos pos, Random random)

@@ -197,12 +197,12 @@ public class BlockGenerator
 		return stairs(block, texture, texture);
 	}
 
-	static BlockGenerator slab(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
+	static BlockGenerator verticalSlab(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
 		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
 		return basic(block)
-				.state((b, modelId) -> BlockStateModelGenerator.createSlabBlockState(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
-				.models(b -> ModelFile.slab(b, topTexture, sideTexture));
+				.state((b, modelId) -> BlockStateGenerator.createVerticalSlabBlockState(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
+				.models(b -> ModelFile.verticalSlab(b, topTexture, sideTexture));
 	}
 
 	static BlockGenerator wall(Block block, Identifier texture)
@@ -223,9 +223,9 @@ public class BlockGenerator
 				.models(b -> ModelFile.slabUniqueDouble(b, topTexture, sideTexture));
 	}
 
-	static BlockGenerator slab(Block block, Identifier model)
+	static BlockGenerator verticalSlab(Block block, Identifier model)
 	{
-		return slab(block, model, model, model);
+		return verticalSlab(block, model, model, model);
 	}
 
 	static BlockGenerator fence(Block block, Identifier texture)
@@ -307,7 +307,7 @@ public class BlockGenerator
 		generatorFunction.apply(variants.block)
 		                 .blockTag(miningTag)
 		                 .build(assets);
-		BlockGenerator.slab(variants.slab, id)
+		BlockGenerator.verticalSlab(variants.slab, id)
 		              .blockTag(miningTag)
 		              .blockTag(BlockTags.SLABS)
 		              .build(assets);
@@ -332,7 +332,7 @@ public class BlockGenerator
 		generatorFunction.apply(variants.plank)
 		                 .blockTag(miningTag)
 		                 .build(assets);
-		BlockGenerator.slab(variants.slab, id)
+		BlockGenerator.verticalSlab(variants.slab, id)
 		              .blockTag(miningTag)
 		              .blockTag(BlockTags.SLABS)
 		              .build(assets);

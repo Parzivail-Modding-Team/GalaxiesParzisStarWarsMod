@@ -845,10 +845,10 @@ public class Tarkin
 		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
 		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.id("block/wet_pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.id("block/wet_pourstone")).build(assets);
+		BlockGenerator.verticalSlab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.id("block/wet_pourstone")).build(assets);
 		BlockGenerator.basic(SwgBlocks.Dirt.RuinedWetPourstone).build(assets);
 		BlockGenerator.stairs(SwgBlocks.Dirt.RuinedWetPourstoneStairs, Resources.id("block/ruined_wet_pourstone")).build(assets);
-		BlockGenerator.slab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone")).build(assets);
+		BlockGenerator.verticalSlab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone")).build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Gravel.Jundland).build(assets);
 
@@ -1514,7 +1514,7 @@ public class Tarkin
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Massassi.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.Massassi.slab, Resources.id("block/massassi_stone"))
+		BlockGenerator.verticalSlab(SwgBlocks.Stone.Massassi.slab, Resources.id("block/massassi_stone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.Massassi.stairs, Resources.id("block/massassi_stone"))
@@ -1544,7 +1544,7 @@ public class Tarkin
 		BlockGenerator.stairs(SwgBlocks.Stone.Pourstone.stairs, Resources.id("block/pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.Pourstone.slab, Resources.id("block/pourstone"))
+		BlockGenerator.verticalSlab(SwgBlocks.Stone.Pourstone.slab, Resources.id("block/pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.wall(SwgBlocks.Stone.Pourstone.wall, Resources.id("block/pourstone"))
@@ -1557,7 +1557,7 @@ public class Tarkin
 		BlockGenerator.stairs(SwgBlocks.Stone.CrackedPourstone.stairs, Resources.id("block/cracked_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.CrackedPourstone.slab, Resources.id("block/cracked_pourstone"))
+		BlockGenerator.verticalSlab(SwgBlocks.Stone.CrackedPourstone.slab, Resources.id("block/cracked_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.wall(SwgBlocks.Stone.CrackedPourstone.wall, Resources.id("block/cracked_pourstone"))
@@ -1570,7 +1570,7 @@ public class Tarkin
 		BlockGenerator.stairs(SwgBlocks.Stone.SmoothPourstone.stairs, Resources.id("block/smooth_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.SmoothPourstone.slab, Resources.id("block/smooth_pourstone"))
+		BlockGenerator.verticalSlab(SwgBlocks.Stone.SmoothPourstone.slab, Resources.id("block/smooth_pourstone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.wall(SwgBlocks.Stone.SmoothPourstone.wall, Resources.id("block/smooth_pourstone"))
@@ -1583,7 +1583,7 @@ public class Tarkin
 		BlockGenerator.basicRandomMirror(SwgBlocks.Stone.Ilum.block)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.slab(SwgBlocks.Stone.Ilum.slab, Resources.id("block/ilum_stone"))
+		BlockGenerator.verticalSlab(SwgBlocks.Stone.Ilum.slab, Resources.id("block/ilum_stone"))
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.stairs(SwgBlocks.Stone.Ilum.stairs, Resources.id("block/ilum_stone"))

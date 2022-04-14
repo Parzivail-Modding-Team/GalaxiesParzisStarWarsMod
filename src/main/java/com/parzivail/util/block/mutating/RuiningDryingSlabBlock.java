@@ -1,9 +1,9 @@
 package com.parzivail.util.block.mutating;
 
 import com.google.common.base.Suppliers;
+import com.parzivail.util.block.VerticalSlabBlock;
 import com.parzivail.util.world.WorldUtil;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.SlabBlock;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,9 +17,9 @@ import java.util.function.Supplier;
 
 public class RuiningDryingSlabBlock extends MutatingSlabBlock
 {
-	private final Supplier<SlabBlock> ruinedBlock;
+	private final Supplier<VerticalSlabBlock> ruinedBlock;
 
-	public RuiningDryingSlabBlock(SlabBlock target, int meanTransitionTime, Supplier<SlabBlock> ruinedBlock, Settings settings)
+	public RuiningDryingSlabBlock(VerticalSlabBlock target, int meanTransitionTime, Supplier<VerticalSlabBlock> ruinedBlock, Settings settings)
 	{
 		super(target, meanTransitionTime, settings);
 		this.ruinedBlock = Suppliers.memoize(ruinedBlock::get);

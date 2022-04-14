@@ -2,6 +2,7 @@ package com.parzivail.pswg.container.registry;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.block.PStairsBlock;
+import com.parzivail.util.block.VerticalSlabBlock;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
@@ -77,14 +78,14 @@ public class RegistryHelper
 	{
 		public final Block block;
 		public final StairsBlock stairs;
-		public final SlabBlock slab;
+		public final VerticalSlabBlock slab;
 		public final WallBlock wall;
 
 		public StoneProducts(Block block)
 		{
 			this.block = block;
 			this.stairs = new PStairsBlock(block.getDefaultState(), AbstractBlock.Settings.copy(block));
-			this.slab = new SlabBlock(AbstractBlock.Settings.copy(block));
+			this.slab = new VerticalSlabBlock(AbstractBlock.Settings.copy(block));
 			this.wall = new WallBlock(AbstractBlock.Settings.copy(block));
 		}
 	}
@@ -93,7 +94,7 @@ public class RegistryHelper
 	{
 		public final Block plank;
 		public final StairsBlock stairs;
-		public final SlabBlock slab;
+		public final VerticalSlabBlock slab;
 		public final FenceBlock fence;
 		public final FenceGateBlock gate;
 		public final TrapdoorBlock trapdoor;
@@ -103,7 +104,7 @@ public class RegistryHelper
 		{
 			this.plank = plank;
 			this.stairs = new PStairsBlock(plank.getDefaultState(), AbstractBlock.Settings.copy(plank));
-			this.slab = new SlabBlock(AbstractBlock.Settings.copy(plank));
+			this.slab = new VerticalSlabBlock(AbstractBlock.Settings.copy(plank));
 			this.fence = new FenceBlock(AbstractBlock.Settings.copy(plank));
 			this.gate = new FenceGateBlock(AbstractBlock.Settings.copy(plank));
 			this.trapdoor = new TrapdoorBlock(AbstractBlock.Settings.copy(plank));
