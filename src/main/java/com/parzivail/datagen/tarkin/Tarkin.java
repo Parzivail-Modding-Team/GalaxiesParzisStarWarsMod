@@ -1293,7 +1293,29 @@ public class Tarkin
 		              .build(assets);
 
 		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.BlackImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.WhiteImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
 		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.GrayImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
+
+		for (var e : SwgBlocks.Panel.BlackImperialPanelPatternA)
+			BlockGenerator.basic(e)
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
+		for (var e : SwgBlocks.Panel.BlackImperialPanelPatternB)
+			BlockGenerator.basic(e)
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
+		for (var e : SwgBlocks.Panel.BlackImperialPanelPatternC)
+			BlockGenerator.basic(e)
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
+		for (var e : SwgBlocks.Panel.BlackImperialPanelPatternD)
+			BlockGenerator.basic(e)
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
+		for (var e : SwgBlocks.Panel.BlackImperialPanelPatternE)
+			BlockGenerator.basic(e)
+			              .blockTag(BlockTags.PICKAXE_MINEABLE)
+			              .build(assets);
 
 		//		BlockGenerator.basic(SwgBlocks.Panel.ImperialCutout)
 		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1499,6 +1521,10 @@ public class Tarkin
 		BlockGenerator.stoneProducts(SwgBlocks.Sandstone.Desert, b -> BlockGenerator.staticColumn(b, Resources.id("block/smooth_desert_sandstone")), SwgTags.Block.DESERT_SANDSTONE, assets);
 
 		BlockGenerator.basic(SwgBlocks.Sandstone.SmoothDesert)
+		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
+		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
+		              .build(assets);
+		BlockGenerator.staticColumnTopBottom(SwgBlocks.Sandstone.Dunestone)
 		              .blockTag(SwgTags.Block.DESERT_SANDSTONE)
 		              .itemTag(SwgTags.Item.DESERT_SANDSTONE)
 		              .build(assets);

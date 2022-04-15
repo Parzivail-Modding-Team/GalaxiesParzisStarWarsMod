@@ -152,6 +152,25 @@ public class ModelFile
 				.texture("side", sideTexture);
 	}
 
+	public static ModelFile columnTopBottom(Block block, Identifier topTexture, Identifier sideTexture, Identifier bottomTexture)
+	{
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_bottom_top"))
+				.texture("top", topTexture)
+				.texture("bottom", bottomTexture)
+				.texture("side", sideTexture);
+	}
+
+	public static ModelFile columnTopBottom(Block block)
+	{
+		var tex = AssetGenerator.getTextureName(block);
+		return ModelFile
+				.ofModel(AssetGenerator.getRegistryName(block), new Identifier("block/cube_bottom_top"))
+				.texture("top", IdentifierUtil.concat(tex, "_top"))
+				.texture("bottom", IdentifierUtil.concat(tex, "_bottom"))
+				.texture("side", tex);
+	}
+
 	public static Collection<ModelFile> verticalSlab(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		var id = AssetGenerator.getRegistryName(block);

@@ -34,7 +34,15 @@ public class RegistryHelper
 
 	public static class NumberedItems extends Numbered<Item>
 	{
-		public NumberedItems(int count, Function<Integer, Item> blockFunction)
+		public NumberedItems(int count, Function<Integer, Item> itemFunction)
+		{
+			super(count, itemFunction);
+		}
+	}
+
+	public static class NumberedBlocks extends Numbered<Block>
+	{
+		public NumberedBlocks(int count, Function<Integer, Block> blockFunction)
 		{
 			super(count, blockFunction);
 		}

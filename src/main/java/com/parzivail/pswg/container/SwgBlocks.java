@@ -114,6 +114,8 @@ public class SwgBlocks
 	{
 		@RegistryName("desert_sandstone")
 		public static final RegistryHelper.StoneProducts Desert = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		@RegistryName("dunestone")
+		public static final Block Dunestone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
 		@RegistryName("smooth_desert_sandstone")
 		public static final Block SmoothDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("polished_desert_sandstone")
@@ -425,6 +427,8 @@ public class SwgBlocks
 
 		@RegistryName("black_imperial_panel_blank")
 		public static final RegistryHelper.StoneProducts BlackImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		@RegistryName("white_imperial_panel_blank")
+		public static final RegistryHelper.StoneProducts WhiteImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
 		@RegistryName("black_imperial_panel_bordered")
 		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("black_imperial_panel_split")
@@ -445,6 +449,17 @@ public class SwgBlocks
 		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 		@RegistryName("gray_imperial_panel_blank")
 		public static final RegistryHelper.StoneProducts GrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+
+		@RegistryName("black_imperial_panel_pattern_a")
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternA = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		@RegistryName("black_imperial_panel_pattern_b")
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternB = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		@RegistryName("black_imperial_panel_pattern_c")
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternC = new RegistryHelper.NumberedBlocks(2, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		@RegistryName("black_imperial_panel_pattern_d")
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternD = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		@RegistryName("black_imperial_panel_pattern_e")
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternE = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
 
 		@RegistryName("gray_imperial_panel_pattern_3")
 		public static final Block GrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
@@ -744,6 +759,8 @@ public class SwgBlocks
 			registerWoodProducts(variants, identifier, ignoreTab);
 		else if (o instanceof RegistryHelper.DyedBlocks blocks)
 			registerDyedBlocks(blocks, identifier, ignoreTab);
+		else if (o instanceof RegistryHelper.NumberedBlocks blocks)
+			registerNumberedBlocks(blocks, identifier, ignoreTab);
 	}
 
 	private static void registerStoneProducts(RegistryHelper.StoneProducts t, Identifier identifier, boolean ignoreTab)
@@ -758,6 +775,12 @@ public class SwgBlocks
 	{
 		for (var entry : t.entrySet())
 			registerStoneProducts(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);
+	}
+
+	private static void registerNumberedBlocks(RegistryHelper.NumberedBlocks t, Identifier identifier, boolean ignoreTab)
+	{
+		for (var i = 0; i < t.size(); i++)
+			registerBlock(t.get(i), Resources.id(identifier.getPath() + "_" + (i + 1)), ignoreTab);
 	}
 
 	private static void registerWoodProducts(RegistryHelper.WoodProducts t, Identifier identifier, boolean ignoreTab)

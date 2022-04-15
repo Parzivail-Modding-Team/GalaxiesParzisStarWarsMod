@@ -173,6 +173,13 @@ public class BlockGenerator
 				.model(b -> ModelFile.column(b, topTexture, sideTexture));
 	}
 
+	static BlockGenerator staticColumnTopBottom(Block block)
+	{
+		return basic(block)
+				.state(BlockStateModelGenerator::createSingletonBlockState)
+				.model(ModelFile::columnTopBottom);
+	}
+
 	static BlockGenerator stairs(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		var id = AssetGenerator.getTextureName(block);
