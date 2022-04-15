@@ -412,6 +412,8 @@ public class SwgBlocks
 	@RegistryOrder(12)
 	public static class Panel
 	{
+		private static final FabricBlockSettings IMPERIAL_PANEL_SETTINGS = FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool();
+
 		@RegistryName("rusted_metal")
 		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock RustedMetal = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BROWN).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
@@ -426,60 +428,60 @@ public class SwgBlocks
 		public static final Block ImperialCutoutCaged = new PillarBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 
 		@RegistryName("black_imperial_panel_blank")
-		public static final RegistryHelper.StoneProducts BlackImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneProducts BlackImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS));
 		@RegistryName("white_imperial_panel_blank")
-		public static final RegistryHelper.StoneProducts WhiteImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneProducts WhiteImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS));
 		@RegistryName("black_imperial_panel_tile")
 		public static final Block BlackImperialPanelTile = createPanel(MapColor.GRAY);
 		@RegistryName("black_imperial_panel_sectional")
-		public static final SelfConnectingBlock BlackImperialPanelSectional = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock BlackImperialPanelSectional = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("black_imperial_panel_sectional_1")
-		public static final SelfConnectingBlock BlackImperialPanelSectional1 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock BlackImperialPanelSectional1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("black_imperial_panel_sectional_2")
-		public static final SelfConnectingBlock BlackImperialPanelSectional2 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock BlackImperialPanelSectional2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("gray_imperial_panel_sectional")
-		public static final SelfConnectingBlock GrayImperialPanelSectional = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock GrayImperialPanelSectional = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("gray_imperial_panel_sectional_1")
-		public static final SelfConnectingBlock GrayImperialPanelSectional1 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock GrayImperialPanelSectional1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("gray_imperial_panel_sectional_2")
-		public static final SelfConnectingBlock GrayImperialPanelSectional2 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock GrayImperialPanelSectional2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("white_imperial_panel_sectional")
-		public static final SelfConnectingBlock WhiteImperialPanelSectional = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock WhiteImperialPanelSectional = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
 		@RegistryName("white_imperial_panel_sectional_1")
-		public static final SelfConnectingBlock WhiteImperialPanelSectional1 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock WhiteImperialPanelSectional1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
 		@RegistryName("white_imperial_panel_sectional_2")
-		public static final SelfConnectingBlock WhiteImperialPanelSectional2 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock WhiteImperialPanelSectional2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
 		@RegistryName("black_imperial_panel_bordered")
-		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("black_imperial_panel_split")
-		public static final SelfConnectingBlock BlackImperialPanelSplit = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock BlackImperialPanelSplit = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("black_imperial_panel_thin_bordered")
-		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("external_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
-		public static final SelfConnectingBlock ExternalImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock ExternalImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("large_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
-		public static final SelfConnectingBlock LargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock LargeImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("rusted_large_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
-		public static final SelfConnectingBlock RustedLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock RustedLargeImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("mossy_large_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
-		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("gray_imperial_panel_blank")
-		public static final RegistryHelper.StoneProducts GrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.StoneProducts GrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY)));
 
 		@RegistryName("black_imperial_panel_pattern_a")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternA = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternA = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 		@RegistryName("black_imperial_panel_pattern_b")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternB = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternB = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 		@RegistryName("black_imperial_panel_pattern_c")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternC = new RegistryHelper.NumberedBlocks(2, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternC = new RegistryHelper.NumberedBlocks(2, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 		@RegistryName("black_imperial_panel_pattern_d")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternD = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternD = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 		@RegistryName("black_imperial_panel_pattern_e")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternE = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.GRAY).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool()));
+		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternE = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 
 		@RegistryName("gray_imperial_panel_pattern_3")
 		public static final Block GrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
@@ -544,9 +546,9 @@ public class SwgBlocks
 		public static final PillarBlock GrayImperialPanelPattern2 = createPillarPanel(MapColor.GRAY, MapColor.LIGHT_GRAY);
 
 		@RegistryName("gray_imperial_tall_panel_1")
-		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock ImperialPanelTall1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("gray_imperial_tall_panel_2")
-		public static final SelfConnectingBlock ImperialPanelTall2 = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BLACK).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
+		public static final SelfConnectingBlock ImperialPanelTall2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 
 		@RegistryName("gray_imperial_tall_light_1")
 		public static final SelfConnectingBlock ImperialLightTall1 = createLitConnectingPanel(MapColor.GRAY);
