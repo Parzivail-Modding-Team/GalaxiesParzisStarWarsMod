@@ -132,6 +132,9 @@ public class Tarkin
 		lang.tooltip("lightsaber").dot("info").build(assets);
 		lang.tooltip("lightsaber").dot("controls").build(assets);
 
+		// Lore
+		lang.lore(SwgItems.Food.Kreetlejuice).build(assets);
+
 		// Item groups
 		lang.itemGroup(Galaxies.TabBlocks).build(assets);
 		lang.itemGroup(Galaxies.TabItems).build(assets);
@@ -887,6 +890,7 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Food.DeathStickYellow).build(assets);
 
 		ItemGenerator.basic(SwgItems.Food.MysteriousSmoothie).build(assets);
+		ItemGenerator.basic(SwgItems.Food.Kreetlejuice).build(assets);
 		ItemGenerator.basic(SwgItems.Food.AbsynthesizedMalt).build(assets);
 		ItemGenerator.basic(SwgItems.Food.CoronetCocktail).build(assets);
 
@@ -1296,6 +1300,10 @@ public class Tarkin
 		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.WhiteImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
 		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.GrayImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
 
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelTile)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
 		for (var e : SwgBlocks.Panel.BlackImperialPanelPatternA)
 			BlockGenerator.basic(e)
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1324,6 +1332,33 @@ public class Tarkin
 		//		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		//		              .build(assets);
 
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelSectional)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelSectional1)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelSectional2)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelSectional)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelSectional1)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelSectional2)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.WhiteImperialPanelSectional)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.WhiteImperialPanelSectional1)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.WhiteImperialPanelSectional2)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelBordered)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);

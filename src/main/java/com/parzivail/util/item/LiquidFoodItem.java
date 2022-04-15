@@ -16,3 +16,4 @@ public class LiquidFoodItem extends Item
 		return UseAction.DRINK;
 	}
 }
+
