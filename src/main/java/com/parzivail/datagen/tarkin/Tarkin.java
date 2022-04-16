@@ -1299,6 +1299,7 @@ public class Tarkin
 		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.BlackImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
 		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.WhiteImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
 		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.GrayImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
+		BlockGenerator.basicStoneProducts(SwgBlocks.Panel.LightGrayImperialPanelBlank, BlockTags.PICKAXE_MINEABLE, assets);
 
 		BlockGenerator.basic(SwgBlocks.Panel.BlackImperialPanelTile)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
@@ -1350,6 +1351,15 @@ public class Tarkin
 		BlockGenerator.basic(SwgBlocks.Panel.GrayImperialPanelSectional2)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.LightGrayImperialPanelSectional)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.LightGrayImperialPanelSectional1)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.LightGrayImperialPanelSectional2)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Panel.WhiteImperialPanelSectional)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
@@ -1378,6 +1388,9 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Panel.MossyLargeImperialPlatingConnected)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Panel.LargeLightGrayImperialPlatingConnected)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 

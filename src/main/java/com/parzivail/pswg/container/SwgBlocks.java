@@ -429,6 +429,10 @@ public class SwgBlocks
 
 		@RegistryName("black_imperial_panel_blank")
 		public static final RegistryHelper.StoneProducts BlackImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS));
+		@RegistryName("gray_imperial_panel_blank")
+		public static final RegistryHelper.StoneProducts GrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY)));
+		@RegistryName("light_gray_imperial_panel_blank")
+		public static final RegistryHelper.StoneProducts LightGrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.LIGHT_GRAY)));
 		@RegistryName("white_imperial_panel_blank")
 		public static final RegistryHelper.StoneProducts WhiteImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS));
 		@RegistryName("black_imperial_panel_tile")
@@ -445,6 +449,12 @@ public class SwgBlocks
 		public static final SelfConnectingBlock GrayImperialPanelSectional1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("gray_imperial_panel_sectional_2")
 		public static final SelfConnectingBlock GrayImperialPanelSectional2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+		@RegistryName("light_gray_imperial_panel_sectional")
+		public static final SelfConnectingBlock LightGrayImperialPanelSectional = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+		@RegistryName("light_gray_imperial_panel_sectional_1")
+		public static final SelfConnectingBlock LightGrayImperialPanelSectional1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+		@RegistryName("light_gray_imperial_panel_sectional_2")
+		public static final SelfConnectingBlock LightGrayImperialPanelSectional2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("white_imperial_panel_sectional")
 		public static final SelfConnectingBlock WhiteImperialPanelSectional = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
 		@RegistryName("white_imperial_panel_sectional_1")
@@ -460,6 +470,7 @@ public class SwgBlocks
 		@RegistryName("external_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock ExternalImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
+
 		@RegistryName("large_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock LargeImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
@@ -469,8 +480,9 @@ public class SwgBlocks
 		@RegistryName("mossy_large_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
-		@RegistryName("gray_imperial_panel_blank")
-		public static final RegistryHelper.StoneProducts GrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY)));
+		@RegistryName("large_light_gray_imperial_plating")
+		@ClientBlockRegistryData(isConnected = true)
+		public static final SelfConnectingBlock LargeLightGrayImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 
 		@RegistryName("black_imperial_panel_pattern_a")
 		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternA = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
