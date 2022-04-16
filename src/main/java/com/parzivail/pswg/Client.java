@@ -206,6 +206,7 @@ public class Client implements ClientModInitializer
 
 		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, Block.class, Client::registerBlockData);
 		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, RegistryHelper.DyedBlocks.class, Client::registerDyedBlockData);
+		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, RegistryHelper.NumberedBlocks.class, Client::registerNumberedBlockData);
 
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NemManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(P3dManager.INSTANCE);
@@ -345,6 +346,12 @@ public class Client implements ClientModInitializer
 	private static void registerDyedBlockData(ClientBlockRegistryData data, RegistryHelper.DyedBlocks blocks)
 	{
 		for (var block : blocks.values())
+			registerBlockData(data, block);
+	}
+
+	private static void registerNumberedBlockData(ClientBlockRegistryData data, RegistryHelper.NumberedBlocks blocks)
+	{
+		for (var block : blocks)
 			registerBlockData(data, block);
 	}
 

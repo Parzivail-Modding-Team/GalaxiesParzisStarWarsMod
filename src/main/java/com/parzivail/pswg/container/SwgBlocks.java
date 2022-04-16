@@ -600,12 +600,11 @@ public class SwgBlocks
 	@RegistryOrder(13)
 	public static class Grate
 	{
-		@RegistryName("imperial_opaque_grate_1")
-		public static final Block ImperialOpaque1 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
-		@RegistryName("imperial_opaque_grate_2")
-		public static final Block ImperialOpaque2 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
-		@RegistryName("imperial_opaque_grate_3")
-		public static final Block ImperialOpaque3 = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("imperial_opaque_grate")
+		public static final RegistryHelper.NumberedBlocks ImperialOpaque = new RegistryHelper.NumberedBlocks(3, (i) -> new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool()));
+		@RegistryName("imperial_grate")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		public static final RegistryHelper.NumberedBlocks ImperialTrapdoor = new RegistryHelper.NumberedBlocks(5, (i) -> new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool()));
 	}
 
 	@RegistryOrder(14)
