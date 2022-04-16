@@ -135,7 +135,7 @@ public class Client implements ClientModInitializer
 
 		ScreenRegistry.register(SwgScreenTypes.Crate.Octagon, CrateOctagonScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.Crate.MosEisley, CrateGenericSmallScreen::new);
-		ScreenRegistry.register(SwgScreenTypes.Crate.ImperialCube, CrateGenericSmallScreen::new);
+		ScreenRegistry.register(SwgScreenTypes.Crate.Corrugated, CrateGenericSmallScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.Crate.Segmented, CrateGenericSmallScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.MoistureVaporator.GX8, MoistureVaporatorScreen::new);
 		ScreenRegistry.register(SwgScreenTypes.Workbench.Blaster, BlasterWorkbenchScreen::new);
@@ -166,7 +166,6 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Crate.GrayKyber, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/octagon.pm3d"), Resources.id("model/crate/octagon_gray"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/octagon.pm3d"), Resources.id("model/crate/octagon_black"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/mos_eisley.pm3d"), Resources.id("model/crate/mos_eisley"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Crate.Imperial, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/imperial_cube.pm3d"), Resources.id("model/crate/imperial_cube"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Crate.BrownSegmented, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("model/segmented_crate/brown"), Resources.id("model/segmented_crate/brown_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.GraySegmented, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("model/segmented_crate/gray"), Resources.id("model/segmented_crate/gray_particle")));

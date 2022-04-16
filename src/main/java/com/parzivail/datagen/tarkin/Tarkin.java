@@ -97,7 +97,7 @@ public class Tarkin
 		lang.container("blaster_workbench").build(assets);
 		lang.cloneWithRoot(BlasterWorkbenchScreen.I18N_INCOMPAT_ATTACHMENT).build(assets);
 
-		lang.container("imperial_cube_crate").build(assets);
+		lang.container("corrugated_crate").build(assets);
 		lang.container("kyber_crate").build(assets);
 		lang.container("lightsaber_forge").build(assets);
 
@@ -757,13 +757,6 @@ public class Tarkin
 		                               Items.IRON_INGOT, Items.IRON_INGOT, Items.IRON_INGOT)
 		                      .build(assets);
 
-		RecipeGenerator.Shaped.of(new ItemStack(SwgBlocks.Crate.Imperial))
-		                      .grid3x3(null,
-		                               SwgItems.Material.PlasteelIngot, SwgItems.CraftingComponents.LightPanel, SwgItems.Material.PlasteelIngot,
-		                               SwgItems.Material.PlasteelIngot, null, SwgItems.Material.PlasteelIngot,
-		                               SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot, SwgItems.Material.PlasteelIngot)
-		                      .build(assets);
-
 		//Crafting Components
 		RecipeGenerator.Shaped.of(new ItemStack(SwgItems.CraftingComponents.DeshCoil))
 		                      .grid3x3(null,
@@ -1031,9 +1024,6 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Toolbox)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Imperial)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.BrownSegmented)

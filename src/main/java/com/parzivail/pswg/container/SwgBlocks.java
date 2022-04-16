@@ -651,9 +651,11 @@ public class SwgBlocks
 	public static class Crate
 	{
 		@RegistryName("corrugated_crate")
-		public static final RegistryHelper.DyedBlocks CorrugatedCrate = new RegistryHelper.DyedBlocks(color -> new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(14, 16), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F)));
+		public static final RegistryHelper.DyedBlocks CorrugatedCrate = new RegistryHelper.DyedBlocks(color -> new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new));
 		@RegistryName("imperial_corrugated_crate")
-		public static final Block ImperialCorrugatedCrate = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(14, 16), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F));
+		public static final Block ImperialCorrugatedCrate = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new);
+		@RegistryName("corrugated_crate")
+		public static final BlockEntityType<CrateCorrugatedBlockEntity> CorrugatedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateCorrugatedBlockEntity::new, BlockUtil.concat(CorrugatedCrate, ImperialCorrugatedCrate)).build();
 
 		@RegistryName("orange_kyber_crate")
 		public static final WaterloggableRotatingBlockWithGuiEntity OrangeKyber = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
@@ -668,11 +670,6 @@ public class SwgBlocks
 		public static final WaterloggableRotatingBlockWithGuiEntity Toolbox = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateMosEisleyBlockEntity::new);
 		@RegistryName("toolbox")
 		public static final BlockEntityType<CrateMosEisleyBlockEntity> ToolboxBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateMosEisleyBlockEntity::new, Toolbox).build();
-
-		@RegistryName("imperial_crate")
-		public static final WaterloggableRotatingBlockWithGuiEntity Imperial = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateImperialCubeBlockEntity::new);
-		@RegistryName("imperial_crate")
-		public static final BlockEntityType<CrateImperialCubeBlockEntity> ImperialCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateImperialCubeBlockEntity::new, Imperial).build();
 
 		@RegistryName("segmented_crate")
 		public static final WaterloggableRotatingBlockWithBoundsGuiEntity BrownSegmented = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);

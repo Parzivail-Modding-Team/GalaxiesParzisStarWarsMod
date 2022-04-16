@@ -13,22 +13,22 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
-public class CrateImperialCubeBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
+public class CrateCorrugatedBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
 {
-	public CrateImperialCubeBlockEntity(BlockPos pos, BlockState state)
+	public CrateCorrugatedBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(SwgBlocks.Crate.ImperialCrateBlockEntityType, pos, state, 15);
+		super(SwgBlocks.Crate.CorrugatedCrateBlockEntityType, pos, state, 15);
 	}
 
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("imperial_cube_crate"));
+		return new TranslatableText(Resources.container("corrugated_crate"));
 	}
 
 	@Override
 	public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player)
 	{
-		return new CrateGenericSmallScreenHandler(SwgScreenTypes.Crate.ImperialCube, syncId, inv, this);
+		return new CrateGenericSmallScreenHandler(SwgScreenTypes.Crate.Corrugated, syncId, inv, this);
 	}
 }
