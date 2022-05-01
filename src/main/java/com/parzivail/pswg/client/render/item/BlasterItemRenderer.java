@@ -226,23 +226,12 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			// rifles = new Vec3d(-2.1f, 1.6f, -1f);
 			// pistol = new Vec3d(-2.2f, 1.9f, -3f);
 
-			var adsVec = Vec3d.ZERO;
-
-			switch (bd.type)
-			{
-				case PISTOL:
-					adsVec = new Vec3d(-2.2f, 1.5f, -3f);
-					break;
-				case RIFLE:
-				case HEAVY:
-				case SLUGTHROWER:
-				case ION:
-					adsVec = new Vec3d(-2.1f, 1.5f, -3f);
-					break;
-				case SNIPER:
-					adsVec = new Vec3d(-2.8f, 2.65f, -5f);
-					break;
-			}
+			var adsVec = switch (bd.type)
+					{
+						case PISTOL -> new Vec3d(-2.2f, 1.5f, -3f);
+						case RIFLE, HEAVY, SLUGTHROWER, ION -> new Vec3d(-2.1f, 1.5f, -3f);
+						case SNIPER -> new Vec3d(-2.8f, 2.65f, -5f);
+					};
 
 			// recoil
 			var recoilKick = recoilKickDecay(shotTime / 4.5f);
@@ -456,7 +445,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		switch (preferredHand)
 		{
-			case LEFT -> {
+			case LEFT ->
+			{
 				leftArm.yaw = 0.1F + head.yaw;
 				leftArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
 				if (bt.isAimingDownSights && !bd.type.isOneHanded())
@@ -465,7 +455,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
 				}
 			}
-			case RIGHT -> {
+			case RIGHT ->
+			{
 				rightArm.yaw = -0.1F + head.yaw;
 				rightArm.pitch = -1.5707964F + head.pitch * armPitchScale + armPitchOffset;
 				if (bt.isAimingDownSights && !bd.type.isOneHanded())

@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture;
 public class SpeciesVariantArgumentType implements ArgumentType<String>
 {
 	@Override
-	public String parse(StringReader reader) throws CommandSyntaxException
+	public String parse(StringReader reader)
 	{
 		var i = reader.getCursor();
 

@@ -214,7 +214,7 @@ public class SwgBlocks
 	}
 
 	@RegistryOrder(8)
-	public class Tree
+	public static class Tree
 	{
 		@RegistryName("sequoia_leaves")
 		@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)

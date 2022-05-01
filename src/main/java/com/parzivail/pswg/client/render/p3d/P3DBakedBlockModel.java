@@ -76,7 +76,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 
 			if (state.getBlock() instanceof DisplacingBlock)
 			{
-				var shape = state.getBlock().getOutlineShape(state, blockView, pos, ShapeContext.absent());
+				var shape = state.getOutlineShape(blockView, pos, ShapeContext.absent());
 				var center = VoxelShapeUtil.getCenter(shape);
 				transformation.multiply(Matrix4f.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f));
 			}

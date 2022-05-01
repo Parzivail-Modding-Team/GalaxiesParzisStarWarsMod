@@ -163,12 +163,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	{
 		switch (action)
 		{
-			case PRIMARY:
-				nextFireMode(world, player, stack);
-				break;
-			case SECONDARY:
-				bypassHeat(world, player, stack);
-				break;
+			case PRIMARY -> nextFireMode(world, player, stack);
+			case SECONDARY -> bypassHeat(world, player, stack);
 		}
 	}
 

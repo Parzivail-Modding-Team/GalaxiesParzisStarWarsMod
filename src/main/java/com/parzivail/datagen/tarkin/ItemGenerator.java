@@ -1,7 +1,6 @@
 package com.parzivail.datagen.tarkin;
 
 import net.minecraft.item.Item;
-import net.minecraft.tag.Tag;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.registry.Registry;
 

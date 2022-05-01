@@ -52,10 +52,10 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 	private static final SweptTriangleVolume VOL_WING_BOTTOM_LEFT_A = new SweptTriangleVolume(new Vec3d(1.7, 0.05, -0.95), new Vec3d(4.3, 0.05, -0.95), new Vec3d(4.3, 0.05, 0), 0.2);
 	private static final SweptTriangleVolume VOL_WING_BOTTOM_LEFT_B = new SweptTriangleVolume(new Vec3d(1.7, 0.05, -0.95), new Vec3d(1.7, 0.05, 0.8), new Vec3d(4.3, 0.05, 0), 0.2);
 
-	private static final TrackedData<Byte> WING_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
-	private static final TrackedData<Byte> COCKPIT_ANIM = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final TrackedData<Byte> WING_ANIM = DataTracker.registerData(T65BXwing.class, TrackedDataHandlerRegistry.BYTE);
+	private static final TrackedData<Byte> COCKPIT_ANIM = DataTracker.registerData(T65BXwing.class, TrackedDataHandlerRegistry.BYTE);
 
-	private static final TrackedData<Byte> CANNON_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final TrackedData<Byte> CANNON_BITS = DataTracker.registerData(T65BXwing.class, TrackedDataHandlerRegistry.BYTE);
 	private static final int CANNON_STATE_MASK = 0b00000011;
 
 	private static final String[] CANNON_ORDER = { "CannonTopLeft", "CannonBottomLeft", "CannonTopRight", "CannonBottomRight" };

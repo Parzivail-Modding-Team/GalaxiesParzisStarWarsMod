@@ -7,7 +7,6 @@ import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.function.Supplier;
 
 public class SwgStructures
@@ -15,10 +14,9 @@ public class SwgStructures
 	public static void cleanUpTemporaryFiles()
 	{
 		var modDir = FabricLoader.getInstance().getGameDir().resolve("mods");
-		try
+		try (var fileStream = Files.list(modDir))
 		{
-			for (var file : (Iterable<Path>)Files.list(modDir)::iterator)
-			{
+			fileStream.forEach(file -> {
 				var name = file.getFileName().toString();
 				if (name.startsWith("zipfstmp") && name.endsWith(".tmp"))
 				{
@@ -32,7 +30,7 @@ public class SwgStructures
 						// and the file is being used.
 					}
 				}
-			}
+			});
 		}
 		catch (IOException ignored)
 		{

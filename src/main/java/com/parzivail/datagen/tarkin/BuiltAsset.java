@@ -214,7 +214,6 @@ public class BuiltAsset
 	{
 		final File[] files = directory.listFiles();
 
-		IOException exception = null;
 		for (final File file : files)
 		{
 			if (FilenameUtils.isExtension(file.getName(), extension))

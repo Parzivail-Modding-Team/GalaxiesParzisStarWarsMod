@@ -40,7 +40,7 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHandler> implements ScreenHandlerListener
 {
-	private class MutableSlider extends SliderWidget
+	private static class MutableSlider extends SliderWidget
 	{
 		private final String translationKey;
 		private final Function<Double, String> valueFormatter;

@@ -43,7 +43,7 @@ public class InGameHudMixin
 		}
 	}
 
-	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getLastFrameDuration()F", shift = At.Shift.AFTER), cancellable = true)
+	@Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/MinecraftClient;getLastFrameDuration()F", shift = At.Shift.AFTER))
 	public void render(MatrixStack matrices, float tickDelta, CallbackInfo ci)
 	{
 		if (!this.client.options.getPerspective().isFirstPerson())

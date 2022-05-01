@@ -35,7 +35,7 @@ public class WorrtEntity extends AnimalEntity
 	public WorrtEntity(EntityType<? extends WorrtEntity> entityType, World world)
 	{
 		super(entityType, world);
-		this.jumpControl = new WorrtEntity.WorrtJumpControl(this);
+		this.jumpControl = new WorrtJumpControl(this);
 		this.moveControl = new WorrtEntity.WorrtMoveControl(this);
 		this.setSpeed(0.0D);
 	}
@@ -305,7 +305,7 @@ public class WorrtEntity extends AnimalEntity
 		}
 	}
 
-	public class WorrtJumpControl extends JumpControl
+	public static class WorrtJumpControl extends JumpControl
 	{
 		private final WorrtEntity worrt;
 		private boolean field_24091;

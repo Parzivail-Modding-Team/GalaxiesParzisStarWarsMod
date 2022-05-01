@@ -62,7 +62,7 @@ public class DataReader
 		try
 		{
 			var container = FabricLoader.getInstance().getModContainer(resourceLocation.getNamespace()).orElseThrow(IllegalStateException::new);
-			var path = container.getPath(domain + "/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath());
+			var path = container.findPath(domain + "/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath()).orElseThrow(IllegalStateException::new);
 
 			return FileChannel.open(path, StandardOpenOption.READ);
 		}

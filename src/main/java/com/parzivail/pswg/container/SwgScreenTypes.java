@@ -2,23 +2,25 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.screen.*;
-import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 public class SwgScreenTypes
 {
 	public static class Crate
 	{
-		public static final ScreenHandlerType<CrateOctagonScreenHandler> Octagon = ScreenHandlerRegistry.registerSimple(Resources.id("kyber_crate"), CrateOctagonScreenHandler::new);
-		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> MosEisley = ScreenHandlerRegistry.registerSimple(Resources.id("mos_eisley_crate"), makeScreenHandler(Crate.MosEisley));
-		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Corrugated = ScreenHandlerRegistry.registerSimple(Resources.id("corrugated"), makeScreenHandler(Crate.Corrugated));
-		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Segmented = ScreenHandlerRegistry.registerSimple(Resources.id("segmented"), makeScreenHandler(Crate.Segmented));
+		public static final ScreenHandlerType<CrateOctagonScreenHandler> Octagon = Registry.register(Registry.SCREEN_HANDLER, Resources.id("kyber_crate"), new ScreenHandlerType<>(CrateOctagonScreenHandler::new));
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> MosEisley = Registry.register(Registry.SCREEN_HANDLER, Resources.id("mos_eisley_crate"), makeScreenHandler(() -> Crate.MosEisley));
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Corrugated = Registry.register(Registry.SCREEN_HANDLER, Resources.id("corrugated"), makeScreenHandler(() -> Crate.Corrugated));
+		public static final ScreenHandlerType<CrateGenericSmallScreenHandler> Segmented = Registry.register(Registry.SCREEN_HANDLER, Resources.id("segmented"), makeScreenHandler(() -> Crate.Segmented));
 
 		@NotNull
-		private static ScreenHandlerRegistry.SimpleClientHandlerFactory<CrateGenericSmallScreenHandler> makeScreenHandler(ScreenHandlerType<?> handlerType)
+		private static ScreenHandlerType<CrateGenericSmallScreenHandler> makeScreenHandler(Supplier<ScreenHandlerType<CrateGenericSmallScreenHandler>> handlerType)
 		{
-			return (sId, inv) -> new CrateGenericSmallScreenHandler(handlerType, sId, inv);
+			return new ScreenHandlerType<>((sId, inv) -> new CrateGenericSmallScreenHandler(handlerType.get(), sId, inv));
 		}
 
 		static void register()
@@ -29,7 +31,7 @@ public class SwgScreenTypes
 
 	public static class MoistureVaporator
 	{
-		public static final ScreenHandlerType<MoistureVaporatorScreenHandler> GX8 = ScreenHandlerRegistry.registerSimple(Resources.id("gx8_moisture_vaporator"), MoistureVaporatorScreenHandler::new);
+		public static final ScreenHandlerType<MoistureVaporatorScreenHandler> GX8 = Registry.register(Registry.SCREEN_HANDLER, Resources.id("gx8_moisture_vaporator"), new ScreenHandlerType<>(MoistureVaporatorScreenHandler::new));
 
 		static void register()
 		{
@@ -39,8 +41,8 @@ public class SwgScreenTypes
 
 	public static class Workbench
 	{
-		public static final ScreenHandlerType<BlasterWorkbenchScreenHandler> Blaster = ScreenHandlerRegistry.registerSimple(Resources.id("blaster_workbench"), BlasterWorkbenchScreenHandler::new);
-		public static final ScreenHandlerType<LightsaberForgeScreenHandler> Lightsaber = ScreenHandlerRegistry.registerSimple(Resources.id("lightsaber_forge"), LightsaberForgeScreenHandler::new);
+		public static final ScreenHandlerType<BlasterWorkbenchScreenHandler> Blaster = Registry.register(Registry.SCREEN_HANDLER, Resources.id("blaster_workbench"), new ScreenHandlerType<>(BlasterWorkbenchScreenHandler::new));
+		public static final ScreenHandlerType<LightsaberForgeScreenHandler> Lightsaber = Registry.register(Registry.SCREEN_HANDLER, Resources.id("lightsaber_forge"), new ScreenHandlerType<>(LightsaberForgeScreenHandler::new));
 
 		static void register()
 		{

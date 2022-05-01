@@ -9,7 +9,7 @@ import net.minecraft.util.registry.Registry;
 
 public class PParticle extends ParticleType<PParticle> implements ParticleEffect
 {
-	private static final ParticleEffect.Factory<PParticle> PARAMETER_FACTORY = new ParticleEffect.Factory<PParticle>()
+	private static final ParticleEffect.Factory<PParticle> PARAMETER_FACTORY = new ParticleEffect.Factory<>()
 	{
 		public PParticle read(ParticleType<PParticle> particleType, StringReader stringReader)
 		{

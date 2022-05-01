@@ -200,7 +200,8 @@ public class StatelessWaterRenderer implements SimpleResourceReloadListener<Void
 
 				switch (direction)
 				{
-					case NORTH:
+					case NORTH ->
+					{
 						y1 = levelNW;
 						y2 = levelNE;
 						x1 = 0;
@@ -208,8 +209,9 @@ public class StatelessWaterRenderer implements SimpleResourceReloadListener<Void
 						z1 = 0.001f;
 						z2 = 0.001f;
 						renderThisSide = renderN;
-						break;
-					case SOUTH:
+					}
+					case SOUTH ->
+					{
 						y1 = levelSE;
 						y2 = levelSW;
 						x1 = 1.0;
@@ -217,8 +219,9 @@ public class StatelessWaterRenderer implements SimpleResourceReloadListener<Void
 						z1 = 1.0 - 0.001F;
 						z2 = 1.0 - 0.001F;
 						renderThisSide = renderS;
-						break;
-					case WEST:
+					}
+					case WEST ->
+					{
 						y1 = levelSW;
 						y2 = levelNW;
 						x1 = 0.001F;
@@ -226,8 +229,9 @@ public class StatelessWaterRenderer implements SimpleResourceReloadListener<Void
 						z1 = 1.0;
 						z2 = 0;
 						renderThisSide = renderW;
-						break;
-					default:
+					}
+					default ->
+					{
 						y1 = levelNE;
 						y2 = levelSE;
 						x1 = 1.0 - 0.001F;
@@ -235,6 +239,7 @@ public class StatelessWaterRenderer implements SimpleResourceReloadListener<Void
 						z1 = 0;
 						z2 = 1.0;
 						renderThisSide = renderE;
+					}
 				}
 
 				if (renderThisSide)
