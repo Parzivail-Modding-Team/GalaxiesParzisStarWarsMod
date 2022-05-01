@@ -3,7 +3,7 @@ import java.util.regex.Pattern
 
 plugins {
 	id("fabric-loom") version "0.11-SNAPSHOT"
-	id("io.github.juuxel.loom-quiltflower") version "1.6.0"
+	id("io.github.juuxel.loom-quiltflower") version "1.7.1"
 	`maven-publish`
 }
 
@@ -63,6 +63,10 @@ fun getVersionName(): String
 
 loom {
 	accessWidenerPath.set(file("src/main/resources/pswg.accesswidener"))
+}
+
+quiltflower {
+	quiltflowerVersion.set("1.8.1")
 }
 
 val archives_base_name: String by project.ext

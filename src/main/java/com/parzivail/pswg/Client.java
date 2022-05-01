@@ -65,11 +65,11 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.RenderLayer;
@@ -133,13 +133,13 @@ public class Client implements ClientModInitializer
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0xFFFFFF, SwgBlocks.Tree.JaporLeaves);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0xFFFFFF, SwgBlocks.Tree.JaporLeaves);
 
-		ScreenRegistry.register(SwgScreenTypes.Crate.Octagon, CrateOctagonScreen::new);
-		ScreenRegistry.register(SwgScreenTypes.Crate.MosEisley, CrateGenericSmallScreen::new);
-		ScreenRegistry.register(SwgScreenTypes.Crate.Corrugated, CrateGenericSmallScreen::new);
-		ScreenRegistry.register(SwgScreenTypes.Crate.Segmented, CrateGenericSmallScreen::new);
-		ScreenRegistry.register(SwgScreenTypes.MoistureVaporator.GX8, MoistureVaporatorScreen::new);
-		ScreenRegistry.register(SwgScreenTypes.Workbench.Blaster, BlasterWorkbenchScreen::new);
-		ScreenRegistry.register(SwgScreenTypes.Workbench.Lightsaber, LightsaberForgeScreen::new);
+		HandledScreens.register(SwgScreenTypes.Crate.Octagon, CrateOctagonScreen::new);
+		HandledScreens.register(SwgScreenTypes.Crate.MosEisley, CrateGenericSmallScreen::new);
+		HandledScreens.register(SwgScreenTypes.Crate.Corrugated, CrateGenericSmallScreen::new);
+		HandledScreens.register(SwgScreenTypes.Crate.Segmented, CrateGenericSmallScreen::new);
+		HandledScreens.register(SwgScreenTypes.MoistureVaporator.GX8, MoistureVaporatorScreen::new);
+		HandledScreens.register(SwgScreenTypes.Workbench.Blaster, BlasterWorkbenchScreen::new);
+		HandledScreens.register(SwgScreenTypes.Workbench.Lightsaber, LightsaberForgeScreen::new);
 
 		BlockEntityRendererRegistry.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
 		BlockEntityRendererRegistry.register(SwgBlocks.Workbench.BlasterBlockEntityType, BlasterWorkbenchWeaponRenderer::new);

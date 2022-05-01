@@ -6,8 +6,8 @@ import com.parzivail.util.noise.OpenSimplex2F;
 import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nonnull;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -33,7 +33,7 @@ public class Resources
 
 	public static GithubReleaseEntry REMOTE_VERSION = null;
 
-	public static Identifier id(@Nonnull String path)
+	public static Identifier id(@NotNull String path)
 	{
 		return new Identifier(MODID, path);
 	}
