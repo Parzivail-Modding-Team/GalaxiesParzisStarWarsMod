@@ -12,6 +12,7 @@
 		"ItemEntityMixin",
 		"ItemStackMixin",
 		"LivingEntityMixin",
+		"PlayerEntityMixin",
 		"PlayerManagerMixin",
 		"ServerPlayerEntityAccessor",
 		"ServerPlayNetworkHandlerMixin"
@@ -37,7 +38,7 @@
 		"MinecraftClientAccessor",
 		"MinecraftClientMixin",
 		"ParticleManagerMixin",
-		"PlayerEntityMixin",
+		"PlayerEntityClientMixin",
 		"PlayerEntityModelMixin",
 		"PlayerEntityRendererMixin",
 		"RenderLayersMixin",
