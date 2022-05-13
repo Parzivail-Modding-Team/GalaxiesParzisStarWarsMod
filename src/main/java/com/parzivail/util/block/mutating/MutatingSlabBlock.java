@@ -25,7 +25,7 @@ public class MutatingSlabBlock extends VerticalSlabBlock
 			return;
 
 		if (random.nextInt(meanTransitionTime) == 0)
-			world.setBlockState(pos, target.getDefaultState().with(TYPE, state.get(TYPE)).with(AXIS, state.get(AXIS)).with(WATERLOGGED, state.get(WATERLOGGED)), 2);
+			world.setBlockState(pos, target.getStateWithProperties(state), NOTIFY_LISTENERS);
 	}
 
 	protected boolean canTransition(BlockState state, ServerWorld world, BlockPos pos, Random random)

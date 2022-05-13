@@ -26,7 +26,7 @@ public class MutatingStairsBlock extends StairsBlock
 			return;
 
 		if (random.nextInt(meanTransitionTime) == 0)
-			world.setBlockState(pos, target.getDefaultState().with(FACING, state.get(FACING)).with(HALF, state.get(HALF)).with(SHAPE, state.get(SHAPE)).with(WATERLOGGED, state.get(WATERLOGGED)), 2);
+			world.setBlockState(pos, target.getStateWithProperties(state), NOTIFY_LISTENERS);
 	}
 
 	protected boolean canTransition(BlockState state, ServerWorld world, BlockPos pos, Random random)
