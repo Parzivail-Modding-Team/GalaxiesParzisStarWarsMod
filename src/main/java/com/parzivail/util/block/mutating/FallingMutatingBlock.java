@@ -26,7 +26,7 @@ public class FallingMutatingBlock extends FallingBlock
 			return;
 
 		if (random.nextInt(meanTransitionTime) == 0)
-			world.setBlockState(pos, target.getDefaultState(), 2);
+			world.setBlockState(pos, target.getStateWithProperties(state), NOTIFY_LISTENERS);
 	}
 
 	protected boolean canTransition(BlockState state, ServerWorld world, BlockPos pos, Random random)

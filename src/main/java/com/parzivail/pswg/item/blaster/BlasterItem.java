@@ -52,13 +52,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
 
-	private static final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> ATTRIB_MODS_ADS;
-
-	static {
-		ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(EntityAttributes.GENERIC_MOVEMENT_SPEED, ADS_SPEED_PENALTY_MODIFIER);
-		ATTRIB_MODS_ADS = builder.build();
-	}
+	private static final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> ATTRIB_MODS_ADS =
+			ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+			                 .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, ADS_SPEED_PENALTY_MODIFIER)
+			                 .build();
 
 	public BlasterItem(Settings settings)
 	{
@@ -260,7 +257,6 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.BYPASS_PRIMARY, SoundCategory.PLAYERS, 1, 1);
 				result = TypedActionResult.success(stack);
-
 			}
 			else if (profile.secondaryBypassTolerance > 0 && cooldownTime >= secondaryBypassStart && cooldownTime <= secondaryBypassEnd)
 			{
@@ -508,7 +504,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	{
 		var bd = getBlasterDescriptor(stack);
 
-		BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
+		if (!world.isClient)
+			BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
 	}
 
 	@Override

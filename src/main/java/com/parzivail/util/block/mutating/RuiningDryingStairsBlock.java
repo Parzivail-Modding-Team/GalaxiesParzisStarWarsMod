@@ -35,7 +35,7 @@ public class RuiningDryingStairsBlock extends MutatingStairsBlock
 	public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity)
 	{
 		if (!world.isClient && entity instanceof LivingEntity && (entity instanceof PlayerEntity || world.getGameRules().getBoolean(GameRules.DO_MOB_GRIEFING)) && entity.getWidth() * entity.getWidth() * entity.getHeight() > 0.512F)
-			world.setBlockState(pos, pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getDefaultState(), world, pos));
+			world.setBlockState(pos, pushEntitiesUpBeforeBlockChange(state, ruinedBlock.get().getStateWithProperties(state), world, pos));
 
 		super.onEntityCollision(state, world, pos, entity);
 	}

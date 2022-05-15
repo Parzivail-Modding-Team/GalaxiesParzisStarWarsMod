@@ -15,6 +15,7 @@
 		"PlayerEntityMixin",
 		"PlayerManagerMixin",
 		"ServerPlayerEntityAccessor",
+		"ServerPlayerEntityMixin",
 		"ServerPlayNetworkHandlerMixin"
 	],
 	"client": [
