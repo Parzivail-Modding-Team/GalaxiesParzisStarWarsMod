@@ -24,6 +24,8 @@ public abstract class SwgSpecies
 
 	protected static final SpeciesVariable VAR_HUMANOID_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eyebrows");
 	protected static final SpeciesVariable VAR_HUMANOID_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "hair");
+	protected static final SpeciesVariable VAR_HUMANOID_SCARS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "scars");
+	protected static final SpeciesVariable VAR_HUMANOID_TATTOOS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "tattoos");
 
 	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_UNDERLAYER = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_underlayer");
 	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_TOPS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_top");
@@ -35,6 +37,7 @@ public abstract class SwgSpecies
 	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_OUTERWEAR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_outerwear");
 
 	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eye_color", 0x000000);
+	protected static final SpeciesColorVariable VAR_HUMANOID_TATTOO_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "tattoo_color", 0x000000);
 
 	public static Identifier getSpeciesSlug(String serializedSpecies)
 	{

@@ -1,6 +1,6 @@
 package com.parzivail.pswg.client.event;
 
-import com.parzivail.util.generics.MappingEventBus;
+import com.parzivail.util.generics.SingleConsumerEventBus;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
@@ -12,7 +12,7 @@ public enum PlayerEvent
 	ACCUMULATE_RECOIL((byte)0);
 
 	public static final HashMap<Byte, PlayerEvent> ID_LOOKUP = new HashMap<>();
-	public static final MappingEventBus<PlayerEvent, ClientPlayNetworking.PlayChannelHandler> EVENT_BUS = new MappingEventBus<>();
+	public static final SingleConsumerEventBus<PlayerEvent, ClientPlayNetworking.PlayChannelHandler> EVENT_BUS = new SingleConsumerEventBus<>();
 
 	static
 	{

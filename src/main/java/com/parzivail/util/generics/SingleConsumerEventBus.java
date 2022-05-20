@@ -3,7 +3,7 @@ package com.parzivail.util.generics;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-public class MappingEventBus<TE, TC>
+public class SingleConsumerEventBus<TE, TC>
 {
 	private final HashMap<TE, TC> EVENT_HANDLERS = new HashMap<>();
 
@@ -12,7 +12,7 @@ public class MappingEventBus<TE, TC>
 		EVENT_HANDLERS.put(event, handler);
 	}
 
-	public void unsubscribe(TE event, TC handler)
+	public void unsubscribe(TE event)
 	{
 		EVENT_HANDLERS.remove(event);
 	}

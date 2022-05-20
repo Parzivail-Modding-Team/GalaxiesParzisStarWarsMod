@@ -1,6 +1,6 @@
 package com.parzivail.pswg.client.event;
 
-import com.parzivail.util.generics.MappingEventBus;
+import com.parzivail.util.generics.SingleConsumerEventBus;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.PacketByteBuf;
@@ -13,7 +13,7 @@ public enum WorldEvent
 	BLASTER_BOLT_HIT((byte)1);
 
 	public static final HashMap<Byte, WorldEvent> ID_LOOKUP = new HashMap<>();
-	public static final MappingEventBus<WorldEvent, ClientPlayNetworking.PlayChannelHandler> EVENT_BUS = new MappingEventBus<>();
+	public static final SingleConsumerEventBus<WorldEvent, ClientPlayNetworking.PlayChannelHandler> EVENT_BUS = new SingleConsumerEventBus<>();
 
 	static
 	{

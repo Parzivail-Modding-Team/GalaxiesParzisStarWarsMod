@@ -10,6 +10,36 @@
 				"white"
 			]
 		},
+		"scars": {
+			"defaultValue": "none",
+			"possibleValues": [
+				"none",
+				"scar_head_1",
+				"scar_head_2",
+				"scar_head_3",
+				"scar_head_4"
+			]
+		},
+		"tattoos": {
+			"defaultValue": "none",
+			"possibleValues": [
+				"none",
+				"tattoo_head_1",
+				"tattoo_head_2",
+				"tattoo_head_3",
+				"tattoo_head_4",
+				"tattoo_head_5",
+				"tattoo_head_6",
+				"tattoo_head_7",
+				"tattoo_head_8",
+				"tattoo_leftarm_1",
+				"tattoo_leftarm_2",
+				"tattoo_leftarm_3",
+				"tattoo_rightarm_1",
+				"tattoo_rightarm_2",
+				"tattoo_rightarm_3"
+			]
+		},
 		"hair": {
 			"defaultValue": "brown_1",
 			"possibleValues": [

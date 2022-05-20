@@ -35,6 +35,9 @@ public class SpeciesChiss extends SwgSpecies
 		return new SpeciesVariable[] {
 				VAR_BODY,
 				VAR_EYEBROWS,
+				VAR_HUMANOID_SCARS,
+				VAR_HUMANOID_TATTOOS,
+				VAR_HUMANOID_TATTOO_COLOR,
 				VAR_HAIR,
 				VAR_HUMANOID_CLOTHES_TOPS,
 				VAR_HUMANOID_CLOTHES_BOTTOMS,
@@ -52,6 +55,10 @@ public class SpeciesChiss extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, VAR_BODY));
+		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_SCARS))
+			stack.add(getTexture(this, VAR_HUMANOID_SCARS));
+		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_TATTOOS))
+			stack.add(tint(getTexture(this, VAR_HUMANOID_TATTOOS), this, VAR_HUMANOID_TATTOO_COLOR));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
 		stack.add(getClothes(this, player));
 		stack.add(getTexture(this, VAR_HAIR));

@@ -32,6 +32,7 @@ public class SpeciesPantoran extends SwgSpecies
 	{
 		return new SpeciesVariable[] {
 				VAR_TATTOOS,
+				VAR_HUMANOID_SCARS,
 				VAR_HUMANOID_EYEBROWS,
 				VAR_HUMANOID_HAIR,
 				VAR_HUMANOID_EYE_COLOR,
@@ -51,6 +52,9 @@ public class SpeciesPantoran extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getGenderedTexture(this, "skin"));
+
+		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_SCARS))
+			stack.add(getTexture(this, VAR_HUMANOID_SCARS));
 
 		if (SpeciesVariable.isNotEmpty(this, VAR_TATTOOS))
 			stack.add(getTexture(this, VAR_TATTOOS));
