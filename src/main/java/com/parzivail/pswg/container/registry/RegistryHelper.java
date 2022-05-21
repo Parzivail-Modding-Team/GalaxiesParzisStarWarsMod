@@ -4,6 +4,9 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.util.block.PStairsBlock;
 import com.parzivail.util.block.VerticalSlabBlock;
 import net.minecraft.block.*;
+import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
 
@@ -79,6 +82,22 @@ public class RegistryHelper
 		{
 			for (var color : DyeColor.values())
 				put(color, blockFunction.apply(color));
+		}
+	}
+
+	public static class ArmorItems
+	{
+		public final ArmorItem helmet;
+		public final ArmorItem chestplate;
+		public final ArmorItem leggings;
+		public final ArmorItem boots;
+
+		public ArmorItems(ArmorMaterial material, Item.Settings settings)
+		{
+			helmet = new ArmorItem(material, EquipmentSlot.HEAD, settings);
+			chestplate = new ArmorItem(material, EquipmentSlot.CHEST, settings);
+			leggings = new ArmorItem(material, EquipmentSlot.LEGS, settings);
+			boots = new ArmorItem(material, EquipmentSlot.FEET, settings);
 		}
 	}
 

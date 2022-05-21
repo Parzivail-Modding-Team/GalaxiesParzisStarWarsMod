@@ -5,6 +5,7 @@ import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.loader.NemManager;
+import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.client.render.block.BlasterWorkbenchWeaponRenderer;
 import com.parzivail.pswg.client.render.block.PowerCouplingCableRenderer;
 import com.parzivail.pswg.client.render.block.TatooineHomeDoorRenderer;
@@ -226,6 +227,8 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2, AstromechRenderer::new);
 
 		EntityRendererRegistry.register(SwgEntities.Misc.KinematicTest, KinematicTestEntityRenderer::new);
+
+		ArmorRenderer.register(SwgItems.Armor.Stormtrooper, Resources.id("armor/stormtrooper_default"), Resources.id("armor/stormtrooper_slim"), Resources.id("textures/armor/stormtrooper.png"));
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);

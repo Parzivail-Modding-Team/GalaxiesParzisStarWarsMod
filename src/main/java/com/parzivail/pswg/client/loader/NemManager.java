@@ -6,8 +6,10 @@ import com.parzivail.util.client.render.ModelAngleAnimator;
 import com.parzivail.util.data.KeyedReloadableLoader;
 import net.minecraft.client.model.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtIo;
@@ -34,6 +36,7 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	private final Map<Identifier, TexturedModelData> modelData;
 	private final ArrayList<Pair<Identifier, Consumer<ModelPart>>> models;
 	private final HashMap<Identifier, PlayerEntityModel<AbstractClientPlayerEntity>> playerModels;
+	private final HashMap<Identifier, BipedEntityModel<? extends LivingEntity>> bipedModels;
 
 	private NemManager()
 	{
@@ -41,6 +44,7 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 		modelData = new HashMap<>();
 		models = new ArrayList<>();
 		playerModels = new HashMap<>();
+		bipedModels = new HashMap<>();
 	}
 
 	@Override
@@ -154,6 +158,12 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	{
 		models.add(new Pair<>(modelId, modelPart -> playerModels.put(modelId, new PlayerEntityModel<>(modelPart, thinArms))));
 		return () -> playerModels.get(modelId);
+	}
+
+	public Supplier<BipedEntityModel<? extends LivingEntity>> getBipedModel(Identifier modelId)
+	{
+		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityModel<>(modelPart))));
+		return () -> bipedModels.get(modelId);
 	}
 
 	@Override

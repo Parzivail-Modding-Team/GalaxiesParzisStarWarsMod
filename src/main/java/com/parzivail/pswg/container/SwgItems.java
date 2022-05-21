@@ -37,6 +37,13 @@ public class SwgItems
 	}
 
 	@RegistryOrder(1)
+	public static class Armor
+	{
+		@RegistryName("stormtrooper")
+		public static final RegistryHelper.ArmorItems Stormtrooper = new RegistryHelper.ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+	}
+
+	@RegistryOrder(2)
 	public static class Door
 	{
 		public static final List<TatooineHomeDoorBlock.Item> TatooineHome = SwgBlocks.Door.TatooineHomeBottoms
@@ -46,14 +53,14 @@ public class SwgItems
 				.toList();
 	}
 
-	@RegistryOrder(2)
+	@RegistryOrder(3)
 	public static class Cable
 	{
 		@RegistryName("insulated_desh_cable")
 		public static final Item Power = new CableItem(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(3)
+	@RegistryOrder(4)
 	public static class CraftingComponents
 	{
 		@RegistryName("electric_motor")
@@ -79,7 +86,7 @@ public class SwgItems
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.TabItems));
 	}
 
-	@RegistryOrder(4)
+	@RegistryOrder(5)
 	public static class Material
 	{
 		@RegistryName("raw_beskar")
@@ -446,6 +453,13 @@ public class SwgItems
 	{
 		if (o instanceof Item item)
 			Registry.register(Registry.ITEM, identifier, item);
+		else if (o instanceof RegistryHelper.ArmorItems armorItems)
+		{
+			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_helmet"), armorItems.helmet);
+			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_chestplate"), armorItems.chestplate);
+			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_leggings"), armorItems.leggings);
+			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_boots"), armorItems.boots);
+		}
 		else if (o instanceof RegistryHelper.DyedItems items)
 			for (var entry : items.entrySet())
 				Registry.register(Registry.ITEM, Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue());

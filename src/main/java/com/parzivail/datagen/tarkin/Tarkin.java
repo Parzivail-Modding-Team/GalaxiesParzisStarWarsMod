@@ -836,17 +836,12 @@ public class Tarkin
 
 		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
+		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.helmet).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.chestplate).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.leggings).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.boots).build(assets);
+
 		ItemGenerator.basic(SwgItems.Cable.Power).build(assets);
-
-		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam).build(assets);
-		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.id("block/wet_pourstone")).build(assets);
-		BlockGenerator.verticalSlab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.id("block/wet_pourstone")).build(assets);
-		BlockGenerator.basic(SwgBlocks.Dirt.RuinedWetPourstone).build(assets);
-		BlockGenerator.stairs(SwgBlocks.Dirt.RuinedWetPourstoneStairs, Resources.id("block/ruined_wet_pourstone")).build(assets);
-		BlockGenerator.verticalSlab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone")).build(assets);
-
-		BlockGenerator.basicRandomRotation(SwgBlocks.Gravel.Jundland).build(assets);
 
 		ItemGenerator.basic(SwgItems.Material.HeliciteDust).build(assets);
 		ItemGenerator.basic(SwgItems.Material.LommiteDust).build(assets);
@@ -1166,23 +1161,83 @@ public class Tarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.Imperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.WhiteStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.OrangeStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.MagentaStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LightBlueStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.YellowStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LimeStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.PinkStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.GrayStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LightGrayStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.CyanStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.PurpleStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlueStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BrownStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.GreenStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.RedStainedImperial).build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlackStainedImperial).build(assets);
+		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Dirt.WetPourstoneStairs, Resources.id("block/wet_pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.verticalSlab(SwgBlocks.Dirt.WetPourstoneSlab, Resources.id("block/wet_pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.basic(SwgBlocks.Dirt.RuinedWetPourstone)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.stairs(SwgBlocks.Dirt.RuinedWetPourstoneStairs, Resources.id("block/ruined_wet_pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.verticalSlab(SwgBlocks.Dirt.RuinedWetPourstoneSlab, Resources.id("block/ruined_wet_pourstone"))
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.basicRandomRotation(SwgBlocks.Gravel.Jundland)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.Imperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.WhiteStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.OrangeStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.MagentaStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LightBlueStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.YellowStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LimeStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.PinkStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.GrayStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.LightGrayStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.CyanStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.PurpleStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlueStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BrownStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.GreenStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.RedStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Glass.BlackStainedImperial)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Ore.BeskarBlock)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)

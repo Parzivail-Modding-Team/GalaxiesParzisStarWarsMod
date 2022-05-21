@@ -21,6 +21,7 @@
 	"client": [
 		"AbstractBlockStateMixin",
 		"AbstractClientPlayerEntityMixin",
+		"ArmorFeatureRendererMixin",
 		"BipedEntityModelMixin",
 		"BufferBuilderStorageAccessor",
 		"CameraMixin",
