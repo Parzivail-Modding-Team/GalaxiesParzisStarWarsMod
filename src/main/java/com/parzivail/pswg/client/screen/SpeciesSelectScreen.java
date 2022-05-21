@@ -8,7 +8,7 @@ import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.render.camera.CameraHelper;
-import com.parzivail.pswg.client.render.player.PlayerEntityRendererWithModel;
+import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.screen.widget.EventCheckboxWidget;
 import com.parzivail.pswg.client.screen.widget.LocalTextureButtonWidget;
 import com.parzivail.pswg.client.screen.widget.SimpleListWidget;
@@ -477,7 +477,7 @@ public class SpeciesSelectScreen extends Screen
 				var renderer = renderers.get(species.getModel().toString());
 				SwgSpeciesModels.mutateModel(client.player, species, renderer);
 
-				if (renderer instanceof PlayerEntityRendererWithModel perwm)
+				if (renderer instanceof PlayerSpeciesModelRenderer perwm)
 				{
 					var texture = SwgSpeciesModels.getTexture(entity, species);
 

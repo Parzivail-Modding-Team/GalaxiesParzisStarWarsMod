@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.google.common.collect.ImmutableMap;
-import com.parzivail.pswg.client.render.player.PlayerEntityRendererWithModel;
+import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.species.SwgSpeciesModels;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,6 +25,6 @@ public class EntityRenderersMixin
 	private static void registerRenderers(EntityRendererFactory.Context ctx, CallbackInfoReturnable<Map<String, EntityRenderer<? extends PlayerEntity>>> cir, ImmutableMap.Builder<String, EntityRenderer<? extends PlayerEntity>> builder)
 	{
 		for (var pair : SwgSpeciesModels.MODELS.entrySet())
-			builder.put(pair.getKey().toString(), new PlayerEntityRendererWithModel(ctx, false, pair.getValue().model()));
+			builder.put(pair.getKey().toString(), new PlayerSpeciesModelRenderer(ctx, true, pair.getValue().model(), pair.getValue().animator()));
 	}
 }

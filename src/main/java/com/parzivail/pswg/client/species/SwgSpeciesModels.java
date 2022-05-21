@@ -6,12 +6,15 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.loader.NemManager;
+import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
+import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
 import java.util.HashMap;
 import java.util.NoSuchElementException;
@@ -27,16 +30,16 @@ public class SwgSpeciesModels
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_M, new ModelWookiee<>(true, 0)));
 		//		register(new SwgSpeciesModel(SwgSpeciesRegistry.SPECIES_WOOKIEE_F, new ModelWookiee<>(false, 0)));
 		//		register(SwgSpeciesRegistry.SPECIES_BOTHAN, EMPTY_MODEL);
-		register(SwgSpeciesRegistry.SPECIES_AQUALISH, nemSource(Resources.id("species/aqualish")));
-		register(SwgSpeciesRegistry.SPECIES_BITH, nemSource(Resources.id("species/bith")));
-		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, nemSource(Resources.id("species/chagrian")));
-		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, nemSource(Resources.id("species/kaminoan")));
-		register(SwgSpeciesRegistry.SPECIES_JAWA, nemSource(Resources.id("species/jawa")));
-		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, nemSource(Resources.id("species/togruta_m")), nemSource(Resources.id("species/togruta_f")));
-		register(SwgSpeciesRegistry.SPECIES_TWILEK, nemSource(Resources.id("species/twilek")));
-		register(SwgSpeciesRegistry.SPECIES_HUMAN, nemSource(Resources.id("species/human")));
-		register(SwgSpeciesRegistry.SPECIES_CHISS, nemSource(Resources.id("species/human")));
-		register(SwgSpeciesRegistry.SPECIES_PANTORAN, nemSource(Resources.id("species/human")));
+		register(SwgSpeciesRegistry.SPECIES_AQUALISH, nemSource(Resources.id("species/aqualish")), null);
+		register(SwgSpeciesRegistry.SPECIES_BITH, nemSource(Resources.id("species/bith")), null);
+		register(SwgSpeciesRegistry.SPECIES_CHAGRIAN, nemSource(Resources.id("species/chagrian")), null);
+		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, nemSource(Resources.id("species/kaminoan")), null);
+		register(SwgSpeciesRegistry.SPECIES_JAWA, nemSource(Resources.id("species/jawa")), null);
+		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, nemSource(Resources.id("species/togruta_m")), nemSource(Resources.id("species/togruta_f")), null);
+		register(SwgSpeciesRegistry.SPECIES_TWILEK, nemSource(Resources.id("species/twilek")), SwgSpeciesModels::animateTwilek);
+		register(SwgSpeciesRegistry.SPECIES_HUMAN, nemSource(Resources.id("species/human")), null);
+		register(SwgSpeciesRegistry.SPECIES_CHISS, nemSource(Resources.id("species/human")), null);
+		register(SwgSpeciesRegistry.SPECIES_PANTORAN, nemSource(Resources.id("species/human")), null);
 	}
 
 	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> nemSource(Identifier id)
@@ -49,21 +52,21 @@ public class SwgSpeciesModels
 		MODELS.put(model.identifier(), model);
 	}
 
-	private static void register(Identifier speciesSlug, SpeciesGender gender, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> model)
+	private static void register(Identifier speciesSlug, SpeciesGender gender, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> model, PlayerSpeciesModelRenderer.Animator animator)
 	{
-		register(new SwgSpeciesModel(SpeciesGender.toModel(speciesSlug, gender), Suppliers.memoize(model::get)));
+		register(new SwgSpeciesModel(SpeciesGender.toModel(speciesSlug, gender), Suppliers.memoize(model::get), animator));
 	}
 
-	private static void register(Identifier speciesSlug, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> male, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> female)
+	private static void register(Identifier speciesSlug, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> male, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> female, PlayerSpeciesModelRenderer.Animator animator)
 	{
-		register(speciesSlug, SpeciesGender.MALE, male);
-		register(speciesSlug, SpeciesGender.FEMALE, female);
+		register(speciesSlug, SpeciesGender.MALE, male, animator);
+		register(speciesSlug, SpeciesGender.FEMALE, female, animator);
 	}
 
-	private static void register(Identifier speciesSlug, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> androgynousModel)
+	private static void register(Identifier speciesSlug, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> androgynousModel, PlayerSpeciesModelRenderer.Animator animator)
 	{
-		register(speciesSlug, SpeciesGender.MALE, androgynousModel);
-		register(speciesSlug, SpeciesGender.FEMALE, androgynousModel);
+		register(speciesSlug, SpeciesGender.MALE, androgynousModel, animator);
+		register(speciesSlug, SpeciesGender.FEMALE, androgynousModel, animator);
 	}
 
 	public static Identifier getTexture(PlayerEntity player, SwgSpecies species)
@@ -84,5 +87,30 @@ public class SwgSpeciesModels
 		{
 			// ignored
 		}
+	}
+
+	public static void animateTwilek(AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta)
+	{
+		var h = entity.getPitch(tickDelta) / MathUtil.toDegreesf;
+		var h2 = (float)Math.pow(h, 2);
+		var h3 = (float)Math.pow(h, 3);
+		var h4 = (float)Math.pow(h, 4);
+
+		var tailBaseL = model.head.getChild("TailBaseL");
+		var tailMidL = tailBaseL.getChild("TailMidL");
+		var tailLowerL = tailMidL.getChild("TailLowerL");
+
+		var tailBaseR = model.head.getChild("TailBaseR");
+		var tailMidR = tailBaseR.getChild("TailMidR");
+		var tailLowerR = tailMidR.getChild("TailLowerR");
+
+		// https://www.desmos.com/calculator/52kcd69qgc
+		tailBaseL.pitch = tailBaseR.pitch = (-2.34f * h3 + 11.05f * h2 + 3.4f * h + 7.06f) / MathUtil.toDegreesf;
+		tailMidL.pitch = tailMidR.pitch = (5.11f * h4 + 2.01f * h3 - 10.2f * h2 - 26.38f * h - 1.48f) / MathUtil.toDegreesf;
+		tailLowerL.pitch = tailLowerR.pitch = (-3.15f * h4 + 2.57f * h2 - 23.03f * h - 2.93f) / MathUtil.toDegreesf;
+
+		var y = (entity.getYaw(tickDelta) - MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)) / MathUtil.toDegreesf;
+		tailBaseL.roll = Math.max(0, y / 3f);
+		tailBaseR.roll = Math.min(0, y / 3f);
 	}
 }
