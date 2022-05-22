@@ -86,9 +86,9 @@ Plugin.register('export_nemi', {
 					let groupData = {
 						"parent": group.parent.name,
 						"rot": {
-							"pitch": Math.degToRad(-group.rotation[0]),
-							"yaw": Math.degToRad(-group.rotation[1]),
-							"roll": Math.degToRad(-group.rotation[2])
+							"pitch": -group.rotation[0],
+							"yaw": -group.rotation[1],
+							"roll": -group.rotation[2]
 						},
 						"boxes": []
 					};
