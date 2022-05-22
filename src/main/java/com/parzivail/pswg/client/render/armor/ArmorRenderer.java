@@ -3,11 +3,13 @@ package com.parzivail.pswg.client.render.armor;
 import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.registry.RegistryHelper;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EquipmentSlot;
@@ -22,7 +24,13 @@ import java.util.function.Supplier;
 
 public class ArmorRenderer
 {
-	private record Entry(Supplier<BipedEntityModel<? extends LivingEntity>> defaultModelSupplier, Supplier<BipedEntityModel<? extends LivingEntity>> slimModelSupplier, Identifier texture)
+	@FunctionalInterface
+	private interface ArmorRenderTransformer
+	{
+		void transform(BipedEntityModel<LivingEntity> armorModel);
+	}
+
+	private record Entry(Supplier<BipedEntityModel<LivingEntity>> defaultModelSupplier, Supplier<BipedEntityModel<LivingEntity>> slimModelSupplier, Identifier texture)
 	{
 	}
 
@@ -38,7 +46,66 @@ public class ArmorRenderer
 		ITEM_MODELKEY_MAP.put(itemSet.boots, defaultModelId);
 	}
 
-	public static <T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> void renderArmor(M contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot armorSlot, int light, A model, CallbackInfo ci)
+	public static void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci, PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel)
+	{
+		renderWithTransformation(player, EquipmentSlot.CHEST, matrices, vertexConsumers, light, (armorModel) -> {
+			// This is the same as doing contextModel.setAttributes(armorModel) but gets around the generics issue
+			armorModel.handSwingProgress = playerEntityModel.handSwingProgress;
+			armorModel.sneaking = playerEntityModel.sneaking;
+			armorModel.leaningPitch = playerEntityModel.leaningPitch;
+			armorModel.child = false;
+			armorModel.riding = playerEntityModel.riding;
+
+			armorModel.leftArmPose = playerEntityModel.leftArmPose;
+			armorModel.rightArmPose = playerEntityModel.leftArmPose;
+
+			armorModel.rightArm.copyTransform(playerEntityModel.rightArm);
+			armorModel.leftArm.copyTransform(playerEntityModel.leftArm);
+
+			armorModel.head.visible = false;
+			armorModel.hat.visible = false;
+			armorModel.body.visible = false;
+			armorModel.rightLeg.visible = false;
+			armorModel.leftLeg.visible = false;
+
+			armorModel.rightArm.visible = arm == playerEntityModel.rightArm;
+			armorModel.leftArm.visible = arm == playerEntityModel.leftArm;
+		});
+	}
+
+	public static <T extends LivingEntity, M extends BipedEntityModel<T>,A extends BipedEntityModel<T>> void renderArmor(M contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot armorSlot, int light, A model, CallbackInfo ci)
+	{
+		renderWithTransformation(entity, armorSlot, matrices, vertexConsumers, light, (armorModel) -> {
+			// This is the same as doing contextModel.setAttributes(armorModel) but gets around the generics issue
+			armorModel.handSwingProgress = contextModel.handSwingProgress;
+			armorModel.riding = contextModel.riding;
+			armorModel.child = contextModel.child;
+
+			armorModel.leftArmPose = contextModel.leftArmPose;
+			armorModel.rightArmPose = contextModel.rightArmPose;
+			armorModel.sneaking = contextModel.sneaking;
+
+			armorModel.head.copyTransform(contextModel.head);
+			armorModel.hat.copyTransform(contextModel.hat);
+			armorModel.body.copyTransform(contextModel.body);
+			armorModel.rightArm.copyTransform(contextModel.rightArm);
+			armorModel.leftArm.copyTransform(contextModel.leftArm);
+			armorModel.rightLeg.copyTransform(contextModel.rightLeg);
+			armorModel.leftLeg.copyTransform(contextModel.leftLeg);
+
+			armorModel.head.visible = armorSlot == EquipmentSlot.HEAD;
+			armorModel.hat.visible = armorSlot == EquipmentSlot.HEAD;
+			armorModel.body.visible = armorSlot == EquipmentSlot.CHEST;
+			armorModel.rightArm.visible = armorSlot == EquipmentSlot.CHEST;
+			armorModel.leftArm.visible = armorSlot == EquipmentSlot.CHEST;
+			armorModel.rightLeg.visible = armorSlot == EquipmentSlot.LEGS;
+			armorModel.leftLeg.visible = armorSlot == EquipmentSlot.LEGS;
+
+			ci.cancel();
+		});
+	}
+
+	private static void renderWithTransformation(LivingEntity entity, EquipmentSlot armorSlot, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, ArmorRenderTransformer transformer)
 	{
 		var itemStack = entity.getEquippedStack(armorSlot);
 		if (itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getSlotType() == armorSlot && ITEM_MODELKEY_MAP.containsKey(armorItem))
@@ -67,34 +134,9 @@ public class ArmorRenderer
 
 			var armorModel = armorModelSupplier.get();
 
-			// This is the same as doing contextModel.setAttributes(armorModel) but gets around the generics issue
-			armorModel.handSwingProgress = contextModel.handSwingProgress;
-			armorModel.riding = contextModel.riding;
-			armorModel.child = contextModel.child;
-
-			armorModel.leftArmPose = contextModel.leftArmPose;
-			armorModel.rightArmPose = contextModel.rightArmPose;
-			armorModel.sneaking = contextModel.sneaking;
-
-			armorModel.head.copyTransform(contextModel.head);
-			armorModel.hat.copyTransform(contextModel.hat);
-			armorModel.body.copyTransform(contextModel.body);
-			armorModel.rightArm.copyTransform(contextModel.rightArm);
-			armorModel.leftArm.copyTransform(contextModel.leftArm);
-			armorModel.rightLeg.copyTransform(contextModel.rightLeg);
-			armorModel.leftLeg.copyTransform(contextModel.leftLeg);
-
-			armorModel.head.visible = armorSlot == EquipmentSlot.HEAD;
-			armorModel.hat.visible = armorSlot == EquipmentSlot.HEAD;
-			armorModel.body.visible = armorSlot == EquipmentSlot.CHEST;
-			armorModel.rightArm.visible = armorSlot == EquipmentSlot.CHEST;
-			armorModel.leftArm.visible = armorSlot == EquipmentSlot.CHEST;
-			armorModel.rightLeg.visible = armorSlot == EquipmentSlot.LEGS;
-			armorModel.leftLeg.visible = armorSlot == EquipmentSlot.LEGS;
+			transformer.transform(armorModel);
 
 			armorModel.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
-
-			ci.cancel();
 		}
 	}
 }

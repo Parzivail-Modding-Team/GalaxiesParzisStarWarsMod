@@ -36,7 +36,7 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	private final Map<Identifier, TexturedModelData> modelData;
 	private final ArrayList<Pair<Identifier, Consumer<ModelPart>>> models;
 	private final HashMap<Identifier, PlayerEntityModel<AbstractClientPlayerEntity>> playerModels;
-	private final HashMap<Identifier, BipedEntityModel<? extends LivingEntity>> bipedModels;
+	private final HashMap<Identifier, BipedEntityModel<LivingEntity>> bipedModels;
 
 	private NemManager()
 	{
@@ -160,7 +160,7 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 		return () -> playerModels.get(modelId);
 	}
 
-	public Supplier<BipedEntityModel<? extends LivingEntity>> getBipedModel(Identifier modelId)
+	public Supplier<BipedEntityModel<LivingEntity>> getBipedModel(Identifier modelId)
 	{
 		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityModel<>(modelPart))));
 		return () -> bipedModels.get(modelId);
