@@ -36,7 +36,7 @@ public class EntityUtil
 		fromDir = fromDir.normalize();
 
 		var endPos = startPos.add(fromDir.multiply(distance));
-		var list = fromEntity.world.getEntitiesByClass(LivingEntity.class, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
+		var list = fromEntity.world.getEntitiesByClass(Entity.class, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
 
 		for (var entity : list)
 		{
