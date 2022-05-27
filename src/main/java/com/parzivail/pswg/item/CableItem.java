@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -45,7 +44,7 @@ public class CableItem extends Item
 			var sourceY = source.getInt("y");
 			var sourceZ = source.getInt("z");
 
-			tooltip.add(new TranslatableText(TooltipUtil.getStatusKey(this), sourceX, sourceY, sourceZ));
+			tooltip.add(TooltipUtil.getStatus(this, sourceX, sourceY, sourceZ));
 		}
 	}
 
