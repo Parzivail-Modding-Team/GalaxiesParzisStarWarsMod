@@ -48,7 +48,7 @@ public class Galaxies implements ModInitializer
 
 	public static final ItemGroup TabItems = FabricItemGroupBuilder
 			.create(Resources.id("items"))
-			.icon(() -> new ItemStack(SwgItems.Food.BlueMilk))
+			.icon(() -> new ItemStack(SwgItems.Armor.Stormtrooper.helmet))
 			.build();
 
 	public static final ItemGroup TabBlasters = FabricItemGroupBuilder
