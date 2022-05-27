@@ -1,6 +1,6 @@
 package com.parzivail.datagen.tarkin;
 
-import com.parzivail.util.client.LoreUtil;
+import com.parzivail.util.client.TooltipUtil;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -85,7 +85,12 @@ public class LanguageBuilder
 
 	public LanguageBuilder lore(Item item)
 	{
-		return cloneWithRoot(LoreUtil.getLore(item).getKey());
+		return cloneWithRoot(TooltipUtil.getLoreKey(item));
+	}
+
+	public LanguageBuilder status(Item item)
+	{
+		return cloneWithRoot(TooltipUtil.getStatusKey(item));
 	}
 
 	public LanguageBuilder itemGroup(ItemGroup value)

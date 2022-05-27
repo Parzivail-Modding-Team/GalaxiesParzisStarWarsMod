@@ -51,11 +51,13 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 		int i = 0;
 		for (var pos : blockEntity.getTargets())
 		{
-			var targetState = world.getBlockState(pos);
+			var targetPos = pos.add(src);
+
+			var targetState = world.getBlockState(targetPos);
 			if (!targetState.isOf(SwgBlocks.Power.Coupling))
 				continue;
 
-			var destVec3 = new Vec3d(pos.getX(), pos.getY(), pos.getZ()).subtract(offset);
+			var destVec3 = new Vec3d(targetPos.getX(), targetPos.getY(), targetPos.getZ()).subtract(offset);
 
 			var destOffsetMatrices = new MatrixStack();
 			var destRotation = targetState.get(WaterloggableRotatingBlock.FACING);

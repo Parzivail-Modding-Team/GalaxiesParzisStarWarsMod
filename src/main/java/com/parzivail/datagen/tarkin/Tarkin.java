@@ -134,6 +134,7 @@ public class Tarkin
 
 		// Lore
 		lang.lore(SwgItems.Food.Kreetlejuice).build(assets);
+		lang.status(SwgItems.Cable.Power).build(assets);
 
 		// Item groups
 		lang.itemGroup(Galaxies.TabBlocks).build(assets);

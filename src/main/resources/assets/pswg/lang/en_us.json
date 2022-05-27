@@ -961,5 +961,6 @@
 	"tooltip.pswg.blaster.info": "Blaster",
 	"tooltip.pswg.lightsaber.controls": "Toggle: %s",
 	"tooltip.pswg.lightsaber.info": "Lightsaber",
-	"tooltip.pswg.lore.kreetlejuice": "§o§7People ignore the strange and unusual."
+	"tooltip.pswg.lore.kreetlejuice": "§o§7People ignore the strange and unusual.",
+	"tooltip.pswg.status.insulated_desh_cable": "Connected to: (%s, %s, %s)"
 }

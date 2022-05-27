@@ -49,7 +49,7 @@ public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntity
 
 	private void removeFrom(BlockPos pos)
 	{
-		targetPositions.remove(pos);
+		targetPositions.remove(pos.subtract(this.pos));
 		sync();
 	}
 
@@ -58,7 +58,7 @@ public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntity
 		if (!(world.getBlockEntity(pos) instanceof PowerCouplingBlockEntity))
 			return false;
 
-		targetPositions.add(pos);
+		targetPositions.add(pos.subtract(this.pos));
 		sync();
 		markDirty();
 		return true;
@@ -94,11 +94,11 @@ public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntity
 			return;
 
 		var invalidTargets = t.getTargets().stream().filter(pos -> {
-			var targetState = world.getBlockState(pos);
+			var targetState = world.getBlockState(pos.add(t.pos));
 			return !targetState.isOf(SwgBlocks.Power.Coupling);
 		}).toList();
 
 		for (var target : invalidTargets)
-			t.removeFrom(target);
+			t.removeFrom(target.add(t.pos));
 	}
 }
