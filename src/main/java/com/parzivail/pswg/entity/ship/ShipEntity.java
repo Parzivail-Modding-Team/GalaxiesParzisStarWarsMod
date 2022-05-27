@@ -312,6 +312,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 	public ActionResult interact(PlayerEntity player, Hand hand)
 	{
+		var config = Resources.CONFIG.get();
+		if (!player.hasPermissionLevel(config.server.vehiclePermissionLevel))
+			return ActionResult.FAIL;
+
 		if (player.shouldCancelInteraction())
 			return ActionResult.FAIL;
 		else

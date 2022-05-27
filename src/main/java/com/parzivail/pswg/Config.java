@@ -41,6 +41,17 @@ public class Config implements ConfigData
 		public boolean showCharacterCustomizeTip = true;
 	}
 
+	public static class Server
+	{
+		@Comment("Prevents players under a certain permission level from accessing vehicles")
+		@ConfigEntry.Gui.Tooltip
+		public int vehiclePermissionLevel = 0;
+
+		@Comment("Allows blasters to damage entities that are non-living (item frames, armor stands, etc.)")
+		@ConfigEntry.Gui.Tooltip
+		public boolean allowBlasterNonlivingDamage = false;
+	}
+
 	@ConfigEntry.Gui.CollapsibleObject
 	@Comment("Here you can change your preferred input methods.")
 	@ConfigEntry.Gui.Tooltip
@@ -55,6 +66,11 @@ public class Config implements ConfigData
 	@Comment("Here you can change general client options.")
 	@ConfigEntry.Gui.Tooltip
 	public Client client = new Client();
+
+	@ConfigEntry.Gui.CollapsibleObject
+	@Comment("Here you can change general server options.")
+	@ConfigEntry.Gui.Tooltip
+	public Server server = new Server();
 
 	public void reload()
 	{

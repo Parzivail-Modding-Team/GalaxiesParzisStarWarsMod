@@ -1,5 +1,6 @@
 package com.parzivail.pswg.util;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgPackets;
@@ -55,7 +56,7 @@ public class BlasterUtil
 
 		var start = new Vec3d(bolt.getX(), bolt.getY() + bolt.getHeight() / 2f, bolt.getZ());
 
-		var hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
+		var hit = EntityUtil.raycastEntities(getTargetedEntityClass(), start, fromDir, range, player, new Entity[] { player });
 		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.ANY);
 
 		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
@@ -112,7 +113,7 @@ public class BlasterUtil
 	{
 		var start = player.getEyePos();
 
-		var hit = EntityUtil.raycastEntities(start, fromDir, range, player, new Entity[] { player });
+		var hit = EntityUtil.raycastEntities(getTargetedEntityClass(), start, fromDir, range, player, new Entity[] { player });
 		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE);
 
 		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
@@ -155,6 +156,15 @@ public class BlasterUtil
 
 		for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, end))
 			ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.WorldEvent, passedData);
+	}
+
+	private static Class<? extends Entity> getTargetedEntityClass()
+	{
+		var config = Resources.CONFIG.get();
+		if (config.server.allowBlasterNonlivingDamage)
+			return Entity.class;
+
+		return LivingEntity.class;
 	}
 
 	public static void fireStun(World world, PlayerEntity player, Vec3d fromDir, float range, Consumer<BlasterBoltEntity> entityInitializer)

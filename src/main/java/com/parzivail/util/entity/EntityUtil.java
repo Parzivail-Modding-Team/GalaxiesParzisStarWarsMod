@@ -26,7 +26,7 @@ public class EntityUtil
 		return nbtCompound;
 	}
 
-	public static EntityHitResult raycastEntities(Vec3d startPos, Vec3d fromDir, double distance, Entity fromEntity, Entity[] exclude)
+	public static EntityHitResult raycastEntities(Class<? extends Entity> clazz, Vec3d startPos, Vec3d fromDir, double distance, Entity fromEntity, Entity[] exclude)
 	{
 		Entity pointedEntity = null;
 		Vec3d hitLocation = null;
@@ -36,7 +36,7 @@ public class EntityUtil
 		fromDir = fromDir.normalize();
 
 		var endPos = startPos.add(fromDir.multiply(distance));
-		var list = fromEntity.world.getEntitiesByClass(Entity.class, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
+		var list = fromEntity.world.getEntitiesByClass(clazz, fromEntity.getBoundingBox().stretch(fromDir.x * distance, fromDir.y * distance, fromDir.z * distance).expand(1, 1, 1), EntityPredicates.EXCEPT_SPECTATOR);
 
 		for (var entity : list)
 		{
