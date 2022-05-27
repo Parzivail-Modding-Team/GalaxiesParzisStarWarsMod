@@ -16,6 +16,7 @@ import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
@@ -44,6 +45,15 @@ public class ArmorRenderer
 		ITEM_MODELKEY_MAP.put(itemSet.chestplate, defaultModelId);
 		ITEM_MODELKEY_MAP.put(itemSet.leggings, defaultModelId);
 		ITEM_MODELKEY_MAP.put(itemSet.boots, defaultModelId);
+	}
+
+	public static ItemStack getModArmor(LivingEntity entity, EquipmentSlot slot)
+	{
+		var itemStack = entity.getEquippedStack(slot);
+		if (itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getSlotType() == slot && ITEM_MODELKEY_MAP.containsKey(armorItem))
+			return itemStack;
+
+		return null;
 	}
 
 	public static void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci, PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel)
@@ -107,9 +117,10 @@ public class ArmorRenderer
 
 	private static void renderWithTransformation(LivingEntity entity, EquipmentSlot armorSlot, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, ArmorRenderTransformer transformer)
 	{
-		var itemStack = entity.getEquippedStack(armorSlot);
-		if (itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getSlotType() == armorSlot && ITEM_MODELKEY_MAP.containsKey(armorItem))
+		var itemStack = getModArmor(entity, armorSlot);
+		if (itemStack != null)
 		{
+			var armorItem = itemStack.getItem();
 			var modelKey = ITEM_MODELKEY_MAP.get(armorItem);
 			var armorModelEntry = MODELKEY_MODEL_MAP.get(modelKey);
 

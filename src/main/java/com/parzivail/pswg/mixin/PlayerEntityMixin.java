@@ -1,10 +1,13 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.world.InventoryUtil;
+import net.minecraft.client.render.entity.PlayerModelPart;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,6 +15,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin
@@ -54,5 +58,18 @@ public class PlayerEntityMixin
 
 		self.getInventory().setStack(resultSlot, stack);
 		lastSelectedItemRef = self.getMainHandStack();
+	}
+
+	@Inject(method = "isPartVisible(Lnet/minecraft/client/render/entity/PlayerModelPart;)Z", at = @At("HEAD"), cancellable = true)
+	public void a(PlayerModelPart modelPart, CallbackInfoReturnable<Boolean> cir)
+	{
+		var self = (PlayerEntity)(Object)this;
+
+		if (modelPart == PlayerModelPart.HAT && ArmorRenderer.getModArmor(self, EquipmentSlot.HEAD) != null)
+			cir.setReturnValue(false);
+		else if ((modelPart == PlayerModelPart.LEFT_SLEEVE || modelPart == PlayerModelPart.RIGHT_SLEEVE) && ArmorRenderer.getModArmor(self, EquipmentSlot.CHEST) != null)
+			cir.setReturnValue(false);
+		else if ((modelPart == PlayerModelPart.LEFT_PANTS_LEG || modelPart == PlayerModelPart.RIGHT_PANTS_LEG) && ArmorRenderer.getModArmor(self, EquipmentSlot.LEGS) != null)
+			cir.setReturnValue(false);
 	}
 }
