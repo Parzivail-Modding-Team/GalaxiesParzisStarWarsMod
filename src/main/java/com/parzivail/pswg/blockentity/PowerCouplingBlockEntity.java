@@ -11,12 +11,15 @@ import net.minecraft.nbt.NbtLong;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntityClientSerializable
 {
-	Set<BlockPos> targetPositions = new HashSet<>();
+	private int syncTimer = 0;
+	private final Set<BlockPos> targetPositions = new HashSet<>();
+	private final HashMap<BlockPos, Integer> removalQueue = new HashMap<>();
 
 	public PowerCouplingBlockEntity(BlockPos pos, BlockState state)
 	{
@@ -43,6 +46,9 @@ public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntity
 		var targets = tag.getList("targets", NbtElement.LONG_TYPE);
 		for (var target : targets)
 			targetPositions.add(BlockPos.fromLong(((NbtLong)target).longValue()));
+
+		if (world != null && !world.isClient)
+			syncTimer = 10;
 
 		super.readNbt(tag);
 	}
@@ -99,6 +105,29 @@ public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntity
 		}).toList();
 
 		for (var target : invalidTargets)
-			t.removeFrom(target.add(t.pos));
+		{
+			if (!t.removalQueue.containsKey(target))
+				t.removalQueue.put(target, 10);
+
+			var timer = t.removalQueue.get(target);
+
+			if (timer == 0)
+				t.removeFrom(target.add(t.pos));
+			else
+				t.removalQueue.put(target, timer - 1);
+		}
+
+		// Remove all positions from the queue which are not currently invalid
+		t.removalQueue.keySet().retainAll(t.removalQueue.keySet().stream().filter(invalidTargets::contains).toList());
+
+		if (t.syncTimer > 0)
+		{
+			t.syncTimer--;
+			if (t.syncTimer == 0)
+			{
+				t.sync();
+				t.markDirty();
+			}
+		}
 	}
 }
