@@ -52,7 +52,7 @@ public class SpawnEntityItem extends Item
 			else
 				blockPos3 = blockPos.offset(direction);
 
-			blockPos3.add(0, yShift, 0);
+			blockPos3 = blockPos3.add(0, yShift, 0);
 
 			if (this.type.spawnFromItemStack((ServerWorld)world, itemStack, context.getPlayer(), blockPos3, SpawnReason.SPAWN_EGG, true, !Objects.equals(blockPos, blockPos3) && direction == Direction.UP) != null)
 			{

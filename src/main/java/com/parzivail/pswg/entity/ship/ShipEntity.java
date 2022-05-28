@@ -19,6 +19,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -108,6 +109,16 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		var sound = getExteriorSoundEvent();
 		if (sound != null)
 			SoundHelper.playShipExteriorSound(this, sound);
+	}
+
+	@Override
+	protected void playStepSound(BlockPos pos, BlockState state)
+	{
+	}
+
+	@Override
+	protected void playSwimSound(float volume)
+	{
 	}
 
 	protected SoundEvent getExteriorSoundEvent()
