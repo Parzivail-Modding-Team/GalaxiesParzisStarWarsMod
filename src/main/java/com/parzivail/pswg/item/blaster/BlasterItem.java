@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.event.PlayerEvent;
+import com.parzivail.pswg.compat.gravitychanger.GravityChangerCompat;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.data.SwgBlasterManager;
@@ -36,10 +37,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -359,7 +357,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			m.multiply(new Quaternion(0, entityYaw, 0, true));
 			m.multiply(new Quaternion(entityPitch, 0, 0, true));
 
-			var fromDir = Matrix4fUtil.transform(MathUtil.POSZ, m).normalize();
+			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, Matrix4fUtil.transform(MathUtil.POSZ, m).normalize());
 
 			var range = bd.range;
 			var damage = bd.damage;
@@ -374,7 +372,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 30 + heatPitchIncrease);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
-						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
+						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 						entity.setHue(bd.boltColor);
 					});
 				}
@@ -382,7 +380,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
-						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
+						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 					});
 					shouldRecoil = false;
 				}
@@ -394,7 +392,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
 					BlasterUtil.fireIon(world, player, range, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
-						entity.setPos(player.getX(), player.getEyeY() - entity.getHeight() / 2f, player.getZ());
+						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 						entity.setHue(bd.boltColor);
 					});
 				}

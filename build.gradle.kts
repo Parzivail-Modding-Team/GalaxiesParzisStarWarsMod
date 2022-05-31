@@ -25,6 +25,10 @@ repositories {
 	maven(url = "https://maven.shedaniel.me") {
 		name = "Shedaniel Maven"
 	}
+
+	maven(url = "https://api.modrinth.com/maven") {
+		name = "Modrinth"
+	}
 }
 
 java {
@@ -81,6 +85,7 @@ val modmenu_version: String by project.ext
 val rei_version: String by project.ext
 val libzoomer_version: String by project.ext
 val trinkets_version: String by project.ext
+val gravity_changer_version: String by project.ext
 
 base.archivesName.set(archives_base_name)
 version = getVersionName()
@@ -126,6 +131,10 @@ dependencies {
 	// Trinkets
 	modImplementation("dev.emi:trinkets:${trinkets_version}")
 	include("dev.emi:trinkets:${trinkets_version}")
+
+	// Gravity Changer
+	modCompileOnly("maven.modrinth:fusions-gravity-api:${gravity_changer_version}")
+	//include("maven.modrinth:fusions-gravity-api:${gravity_changer_version}")
 }
 
 tasks.processResources {
