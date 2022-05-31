@@ -2,8 +2,8 @@ import java.io.ByteArrayOutputStream
 import java.util.regex.Pattern
 
 plugins {
-	id("fabric-loom") version "0.11-SNAPSHOT"
-	id("io.github.juuxel.loom-quiltflower") version "1.7.1"
+	id("fabric-loom") version "0.12-SNAPSHOT"
+	id("io.github.juuxel.loom-quiltflower") version "1.7.2"
 	`maven-publish`
 }
 
