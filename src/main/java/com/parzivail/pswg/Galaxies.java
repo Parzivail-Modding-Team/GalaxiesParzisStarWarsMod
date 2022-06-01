@@ -66,10 +66,11 @@ public class Galaxies implements ModInitializer
 	{
 		Lumberjack.debug("onInitialize");
 
-		Resources.checkVersion();
-
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
+
+		if (!Resources.CONFIG.get().disableUpdateCheck)
+			Resources.checkVersion();
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgBlasterManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgLightsaberManager.INSTANCE);

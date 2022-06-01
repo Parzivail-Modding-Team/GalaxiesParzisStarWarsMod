@@ -72,6 +72,10 @@ public class Config implements ConfigData
 	@ConfigEntry.Gui.Tooltip
 	public Server server = new Server();
 
+	@ConfigEntry.Gui.Excluded
+	@Comment("Disable update checker")
+	public boolean disableUpdateCheck = false;
+
 	public void reload()
 	{
 		// TODO: change priority with keybind
