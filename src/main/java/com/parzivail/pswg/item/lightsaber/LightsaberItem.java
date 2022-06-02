@@ -210,7 +210,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	@Override
 	public boolean isEnchantable(ItemStack stack)
 	{
-		return true;
+		return false;
 	}
 
 	@Override
