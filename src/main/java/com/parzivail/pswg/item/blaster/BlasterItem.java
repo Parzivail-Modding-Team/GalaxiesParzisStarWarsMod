@@ -42,6 +42,7 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -54,6 +55,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
 			                 .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, ADS_SPEED_PENALTY_MODIFIER)
 			                 .build();
+
+	private static final HashMap<BlasterAttachmentFunction, Float> SPREAD_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.REDUCE_SPREAD, 0.4f);
+	});
 
 	public BlasterItem(Settings settings)
 	{
@@ -341,9 +346,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			var hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
 
-			// TODO: stats customization
-			float horizontalSpreadCoef = 1; // - bd.getBarrel().getHorizontalSpreadReduction();
-			float verticalSpreadCoef = 1; // - bd.getBarrel().getVerticalSpreadReduction();
+			// TODO: custom spread reduction?
+			var spread = bt.mapWithAttachment(bd, SPREAD_MAP).orElse(1f);
+			float horizontalSpreadCoef = spread;
+			float verticalSpreadCoef = spread;
 
 			if (bt.isAimingDownSights)
 			{
