@@ -56,6 +56,7 @@
 		"4": {
 			"mutex": 12,
 			"id": "tall_scope",
+			"function": "scope",
 			"icon": 2,
 			"visualComponent": "tall_scope",
 			"texture": "pswg:textures/model/blaster/ee3_esb.png"
@@ -63,6 +64,7 @@
 		"8": {
 			"mutex": 12,
 			"id": "short_scope",
+			"function": "scope",
 			"icon": 2,
 			"visualComponent": "short_scope",
 			"texture": "pswg:textures/model/blaster/ee3_rotj.png"

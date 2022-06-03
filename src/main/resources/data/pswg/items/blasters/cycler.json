@@ -46,6 +46,7 @@
 		"2": {
 			"mutex": 2,
 			"id": "scope",
+			"function": "sniper_scope",
 			"icon": 2,
 			"visualComponent": "scope_extension"
 		}

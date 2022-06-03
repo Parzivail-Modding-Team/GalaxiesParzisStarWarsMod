@@ -1,6 +1,8 @@
 package com.parzivail.pswg.client.render.camera;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.weapon.RecoilManager;
+import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.MinecraftClient;
@@ -52,6 +54,13 @@ public class CameraHelper
 		var minecraft = MinecraftClient.getInstance();
 
 		if (minecraft.getCameraEntity() instanceof MutableCameraEntity || minecraft.getCameraEntity() instanceof ShipEntity)
+			ci.cancel();
+
+		if (minecraft.player == null)
+			return;
+
+		var stack = minecraft.player.getMainHandStack();
+		if (stack.isOf(SwgItems.Blaster.Blaster) && Client.blasterZoomInstance.isOverlayActive())
 			ci.cancel();
 	}
 

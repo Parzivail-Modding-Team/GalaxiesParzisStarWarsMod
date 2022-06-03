@@ -8,7 +8,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.item.blaster.BlasterItem;
-import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.mixin.RenderPhaseAccessor;
@@ -219,8 +218,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var adsLerp = 1 - (float)(z.getTransitionMode().applyZoom(1, d) - adsZoom) / (1 - adsZoom);
 
 			opacity = 1;
-			if (bd.type == BlasterArchetype.SNIPER)
-				opacity = Ease.outCubic(1 - adsLerp);
+			if (z.isOverlayActive())
+				opacity = Ease.inCubic(1 - adsLerp);
 
 			// centerViewport = new Vec3d(-2.8f, 2.65f, -5f);
 			// rifles = new Vec3d(-2.1f, 1.6f, -1f);
@@ -288,7 +287,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var attachmentSet = getAttachmentSet(bt, bd);
 
-		m.render(matrices, vertexConsumers, bt, getAttachmentTransformer(attachmentSet), getRenderLayerProvider(modelEntry, attachmentSet), light, d);
+		m.render(matrices, vertexConsumers, bt, getAttachmentTransformer(attachmentSet), getRenderLayerProvider(modelEntry, attachmentSet), light, d, 255, 255, 255, (int)(255 * opacity));
 
 		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED && renderMode != ModelTransformation.Mode.GROUND)
 		{

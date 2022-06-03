@@ -88,7 +88,7 @@ public class TatooineHomeDoorRenderer implements BlockEntityRenderer<TatooineHom
 		matrices.translate(0.5, 0, 0.5);
 		matrices.multiply(ClientMathUtil.getRotation(rotation));
 
-		model.render(matrices, vertexConsumers, blockEntity, TatooineHomeDoorRenderer::transform, TatooineHomeDoorRenderer::provideLayer, light, tickDelta);
+		model.render(matrices, vertexConsumers, blockEntity, TatooineHomeDoorRenderer::transform, TatooineHomeDoorRenderer::provideLayer, light, tickDelta, 255, 255, 255, 255);
 		matrices.pop();
 	}
 }

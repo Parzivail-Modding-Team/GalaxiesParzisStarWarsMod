@@ -5,10 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.blaster.BlasterItem;
-import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
-import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
-import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
-import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
+import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.util.data.IdentifierDeserializer;
 import com.parzivail.util.data.StringInteropAdapter;
 import com.parzivail.util.data.TypedDataLoader;
@@ -48,6 +45,10 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				if (data.has("icon"))
 					icon = data.get("icon").getAsByte();
 
+				var func = BlasterAttachmentFunction.NONE;
+				if (data.has("function"))
+					func = BlasterAttachmentFunction.VALUE_LOOKUP.get(data.get("function").getAsString());
+
 				String visComp = null;
 				if (data.has("visualComponent"))
 					visComp = data.get("visualComponent").getAsString();
@@ -56,7 +57,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 				if (data.has("texture"))
 					texture = new Identifier(data.get("texture").getAsString());
 
-				map.put(bit, new BlasterAttachmentDescriptor(bit, mutexData, icon, data.get("id").getAsString(), visComp, texture));
+				map.put(bit, new BlasterAttachmentDescriptor(bit, mutexData, icon, data.get("id").getAsString(), func, visComp, texture));
 			}
 
 			return map;

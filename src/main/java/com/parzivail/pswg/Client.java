@@ -54,7 +54,9 @@ import com.parzivail.util.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import io.github.ennuil.libzoomer.api.ZoomInstance;
+import io.github.ennuil.libzoomer.api.ZoomOverlay;
 import io.github.ennuil.libzoomer.api.modifiers.ZoomDivisorMouseModifier;
+import io.github.ennuil.libzoomer.api.overlays.SpyglassZoomOverlay;
 import io.github.ennuil.libzoomer.api.transitions.SmoothTransitionMode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -99,6 +101,8 @@ public class Client implements ClientModInitializer
 	public static TintedTextureProvider tintedTextureProvider;
 
 	public static ZoomInstance blasterZoomInstance;
+	public static ZoomOverlay blasterZoomOverlayDefault = new SpyglassZoomOverlay(Resources.id("textures/gui/overlay/default.png"));
+	public static ZoomOverlay blasterZoomOverlaySniper = new SpyglassZoomOverlay(Resources.id("textures/gui/overlay/sniper.png"));
 
 	public static boolean isShipClientControlled(ShipEntity shipEntity)
 	{
@@ -324,7 +328,7 @@ public class Client implements ClientModInitializer
 				10.0F,
 				new SmoothTransitionMode(),
 				new ZoomDivisorMouseModifier(),
-				null //new SpyglassZoomOverlay(new Identifier("libzoomertest:textures/misc/michael.png"))
+				blasterZoomOverlaySniper
 		);
 	}
 

@@ -41,12 +41,14 @@
 		"1": {
 			"mutex": 3,
 			"id": "scope_d",
+			"function": "scope",
 			"icon": 2,
 			"visualComponent": "scope_d"
 		},
 		"2": {
 			"mutex": 3,
 			"id": "scope_x",
+			"function": "sniper_scope",
 			"icon": 2,
 			"visualComponent": "scope_x"
 		},

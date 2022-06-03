@@ -59,13 +59,13 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 			renderMesh(matrix, quadEmitter, mesh, target, transformer, randomSupplier, context, sprite);
 	}
 
-	public <T> void render(MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, T target, PartTransformer<T> transformer, VertexConsumerSupplier<T> vertexConsumerSupplier, int light, float tickDelta)
+	public <T> void render(MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, T target, PartTransformer<T> transformer, VertexConsumerSupplier<T> vertexConsumerSupplier, int light, float tickDelta, int r, int g, int b, int a)
 	{
 		for (var mesh : rootObjects)
-			renderMesh(matrix, target, light, vertexConsumerProvider, mesh, tickDelta, transformer, vertexConsumerSupplier);
+			renderMesh(matrix, target, light, vertexConsumerProvider, mesh, tickDelta, transformer, vertexConsumerSupplier, r, g, b, a);
 	}
 
-	private <T> void renderMesh(MatrixStack matrix, T target, int light, VertexConsumerProvider vertexConsumerProvider, P3dObject o, float tickDelta, PartTransformer<T> transformer, VertexConsumerSupplier<T> vertexConsumerSupplier)
+	private <T> void renderMesh(MatrixStack matrix, T target, int light, VertexConsumerProvider vertexConsumerProvider, P3dObject o, float tickDelta, PartTransformer<T> transformer, VertexConsumerSupplier<T> vertexConsumerSupplier, int r, int g, int b, int a)
 	{
 		matrix.push();
 
@@ -78,10 +78,10 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 
 		var vertexConsumer = vertexConsumerSupplier.provideLayer(vertexConsumerProvider, target, o.name);
 
-		emitFaces(light, o, entry, vertexConsumer);
+		emitFaces(light, o, entry, vertexConsumer, r, g, b, a);
 
 		for (var mesh : o.children)
-			renderMesh(matrix, target, light, vertexConsumerProvider, mesh, tickDelta, transformer, vertexConsumerSupplier);
+			renderMesh(matrix, target, light, vertexConsumerProvider, mesh, tickDelta, transformer, vertexConsumerSupplier, r, g, b, a);
 
 		matrix.pop();
 	}
@@ -105,13 +105,13 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		matrix.pop();
 	}
 
-	public <T> void render(MatrixStack matrix, VertexConsumer vertexConsumer, T target, PartTransformer<T> transformer, int light, float tickDelta)
+	public <T> void render(MatrixStack matrix, VertexConsumer vertexConsumer, T target, PartTransformer<T> transformer, int light, float tickDelta, int r, int g, int b, int a)
 	{
 		for (var mesh : rootObjects)
-			renderMesh(matrix, target, light, vertexConsumer, mesh, tickDelta, transformer);
+			renderMesh(matrix, target, light, vertexConsumer, mesh, tickDelta, transformer, r, g, b, a);
 	}
 
-	private <T> void renderMesh(MatrixStack matrix, T target, int light, VertexConsumer vertexConsumer, P3dObject o, float tickDelta, PartTransformer<T> transformer)
+	private <T> void renderMesh(MatrixStack matrix, T target, int light, VertexConsumer vertexConsumer, P3dObject o, float tickDelta, PartTransformer<T> transformer, int r, int g, int b, int a)
 	{
 		matrix.push();
 
@@ -122,10 +122,10 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 			return;
 		}
 
-		emitFaces(light, o, entry, vertexConsumer);
+		emitFaces(light, o, entry, vertexConsumer, r, g, b, a);
 
 		for (var mesh : o.children)
-			renderMesh(matrix, target, light, vertexConsumer, mesh, tickDelta, transformer);
+			renderMesh(matrix, target, light, vertexConsumer, mesh, tickDelta, transformer, r, g, b, a);
 
 		matrix.pop();
 	}
@@ -152,17 +152,17 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		return entry;
 	}
 
-	private void emitFaces(int light, P3dObject o, MatrixStack.Entry entry, VertexConsumer vertexConsumer)
+	private void emitFaces(int light, P3dObject o, MatrixStack.Entry entry, VertexConsumer vertexConsumer, int r, int g, int b, int a)
 	{
 		var modelMat = entry.getPositionMatrix();
 		var normalMat = entry.getNormalMatrix();
 
 		for (var face : o.faces)
 		{
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[0], face.normal, face.texture[0]);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], face.normal, face.texture[1]);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], face.normal, face.texture[2]);
-			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], face.normal, face.texture[3]);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[0], face.normal, face.texture[0], r, g, b, a);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[1], face.normal, face.texture[1], r, g, b, a);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[2], face.normal, face.texture[2], r, g, b, a);
+			emitVertex(light, vertexConsumer, modelMat, normalMat, face.positions[3], face.normal, face.texture[3], r, g, b, a);
 		}
 	}
 
@@ -215,11 +215,11 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		}
 	}
 
-	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vec3f vertex, Vec3f normal, Vec3f texCoord)
+	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vec3f vertex, Vec3f normal, Vec3f texCoord, int r, int g, int b, int a)
 	{
 		vertexConsumer
 				.vertex(modelMatrix, vertex.getX(), vertex.getY(), vertex.getZ())
-				.color(255, 255, 255, 255)
+				.color(r, g, b, a)
 				.texture(texCoord.getX(), 1 - texCoord.getY())
 				.overlay(OverlayTexture.DEFAULT_UV)
 				.light(light)

@@ -56,6 +56,7 @@
 		"8": {
 			"mutex": 8,
 			"id": "scope",
+			"function": "scope",
 			"icon": 2,
 			"visualComponent": "scope"
 		}
