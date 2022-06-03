@@ -205,5 +205,29 @@
 		"sounds": [
 			"pswg:door/pneumatic"
 		]
+	},
+	"ambient.imperial_speech": {
+		"sounds": [
+			{
+				"name": "pswg:ambient/imperial_speech",
+				"attenuation_distance": 32
+			}
+		]
+	},
+	"ambient.marketplace": {
+		"sounds": [
+			{
+				"name": "pswg:ambient/marketplace",
+				"attenuation_distance": 128
+			}
+		]
+	},
+	"ambient.the_vortices_song1": {
+		"sounds": [
+			{
+				"name": "pswg:ambient/the_vortices_song1",
+				"attenuation_distance": 32
+			}
+		]
 	}
 }

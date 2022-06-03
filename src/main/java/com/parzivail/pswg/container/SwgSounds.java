@@ -21,6 +21,7 @@ public class SwgSounds
 
 	public static void register()
 	{
+		Ambient.register();
 		Door.register();
 		Lightsaber.register();
 		Blaster.register();
@@ -39,6 +40,17 @@ public class SwgSounds
 	public static SoundEvent getOrDefault(Identifier sound, SoundEvent fallback)
 	{
 		return Registry.SOUND_EVENT.getOrEmpty(sound).orElse(fallback);
+	}
+
+	public static class Ambient
+	{
+		public static final SoundEvent IMPERIAL_SPEECH = of(Resources.id("ambient.imperial_speech"));
+		public static final SoundEvent MARKETPLACE = of(Resources.id("ambient.marketplace"));
+		public static final SoundEvent VORTICES_SONG1 = of(Resources.id("ambient.the_vortices_song1"));
+
+		private static void register()
+		{
+		}
 	}
 
 	public static class Lightsaber
