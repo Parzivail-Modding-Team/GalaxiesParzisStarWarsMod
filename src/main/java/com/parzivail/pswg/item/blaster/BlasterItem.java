@@ -60,6 +60,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		h.put(BlasterAttachmentFunction.REDUCE_SPREAD, 0.4f);
 	});
 
+	private static final HashMap<BlasterAttachmentFunction, Float> RECOIL_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 0.4f);
+	});
+
 	public BlasterItem(Settings settings)
 	{
 		super(settings);
@@ -410,8 +414,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				var horizNoise = world.random.nextGaussian();
 				horizNoise = horizNoise * 0.3 + 0.7 * Math.signum(horizNoise);
 
-				passedData.writeFloat((float)(bd.recoil.horizontal * horizNoise));
-				passedData.writeFloat((float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
+				var recoilAmount = bt.mapWithAttachment(bd, RECOIL_MAP).orElse(1f);
+
+				passedData.writeFloat(recoilAmount * (float)(bd.recoil.horizontal * horizNoise));
+				passedData.writeFloat(recoilAmount * (float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
 				ServerPlayNetworking.send((ServerPlayerEntity)player, SwgPackets.S2C.PlayerEvent, passedData);
 			}
 
