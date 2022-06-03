@@ -328,7 +328,7 @@ public class Client implements ClientModInitializer
 				10.0F,
 				new SmoothTransitionMode(),
 				new ZoomDivisorMouseModifier(),
-				blasterZoomOverlaySniper
+				null
 		);
 	}
 

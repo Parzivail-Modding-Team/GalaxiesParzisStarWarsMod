@@ -40,16 +40,19 @@
 		"1": {
 			"mutex": 1,
 			"id": "firing",
+			"function": "allow_auto_fire",
 			"icon": 4
 		},
 		"2": {
 			"mutex": 2,
 			"id": "cooling",
+			"function": "improve_cooling",
 			"icon": 6
 		},
 		"4": {
 			"mutex": 4,
 			"id": "targeting",
+			"function": "reduce_spread",
 			"icon": 5,
 			"visualComponent": "barrel"
 		},

@@ -44,12 +44,14 @@
 		"1": {
 			"mutex": 3,
 			"id": "long_barrel",
+			"function": "reduce_spread",
 			"icon": 1,
 			"visualComponent": "long_barrel"
 		},
 		"2": {
 			"mutex": 3,
 			"id": "short_barrel",
+			"function": "increase_damage",
 			"icon": 1,
 			"visualComponent": "short_barrel"
 		},
@@ -63,6 +65,7 @@
 		"8": {
 			"mutex": 8,
 			"id": "repeater",
+			"function": "allow_auto_fire",
 			"icon": 4
 		}
 	}

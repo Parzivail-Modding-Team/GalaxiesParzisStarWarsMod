@@ -40,11 +40,13 @@
 		"1": {
 			"mutex": 1,
 			"id": "barrel",
+			"function": "reduce_spread",
 			"icon": 1
 		},
 		"2": {
 			"mutex": 2,
 			"id": "cooling",
+			"function": "improve_cooling",
 			"icon": 6
 		}
 	}

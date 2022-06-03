@@ -44,12 +44,14 @@
 		"1": {
 			"mutex": 1,
 			"id": "barrel_extension",
+			"function": "reduce_spread",
 			"icon": 1,
 			"visualComponent": "barrel_extension"
 		},
 		"2": {
 			"mutex": 2,
 			"id": "cooling",
+			"function": "improve_cooling",
 			"icon": 6
 		}
 	}

@@ -42,6 +42,7 @@
 		"1": {
 			"mutex": 1,
 			"id": "repeater",
+			"function": "allow_burst_fire",
 			"icon": 4
 		}
 	}

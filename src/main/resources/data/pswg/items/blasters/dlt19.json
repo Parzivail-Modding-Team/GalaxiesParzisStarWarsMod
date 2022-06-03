@@ -55,23 +55,27 @@
 		"4": {
 			"mutex": 12,
 			"id": "bipod",
+			"function": "reduce_recoil",
 			"icon": 1,
 			"visualComponent": "bipod"
 		},
 		"8": {
 			"mutex": 12,
 			"id": "barrel_d",
+			"function": "reduce_spread",
 			"icon": 1,
 			"visualComponent": "barrel_d"
 		},
 		"16": {
 			"mutex": 16,
 			"id": "cooling",
+			"function": "improve_cooling",
 			"icon": 6
 		},
 		"32": {
 			"mutex": 32,
 			"id": "rapidfire",
+			"function": "increase_fire_rate",
 			"icon": 4
 		}
 	}

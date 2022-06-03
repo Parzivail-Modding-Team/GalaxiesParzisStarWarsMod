@@ -42,6 +42,7 @@
 		"1": {
 			"mutex": 3,
 			"id": "stock_wood",
+			"function": "reduce_recoil",
 			"icon": 3,
 			"visualComponent": "stock",
 			"texture": "pswg:textures/model/blaster/ee3_esb.png"
@@ -49,6 +50,7 @@
 		"2": {
 			"mutex": 3,
 			"id": "stock_metal",
+			"function": "reduce_spread",
 			"icon": 3,
 			"visualComponent": "stock",
 			"texture": "pswg:textures/model/blaster/ee3_rotj.png"
@@ -72,6 +74,7 @@
 		"16": {
 			"mutex": 48,
 			"id": "smooth_barrel",
+			"function": "increase_range",
 			"icon": 1,
 			"visualComponent": "smooth_barrel",
 			"texture": "pswg:textures/model/blaster/ee3_esb.png"
@@ -79,6 +82,7 @@
 		"32": {
 			"mutex": 48,
 			"id": "vane_barrel",
+			"function": "allow_burst_fire",
 			"icon": 1,
 			"visualComponent": "vane_barrel",
 			"texture": "pswg:textures/model/blaster/ee3_rotj.png"

@@ -6,6 +6,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class BlasterTag extends TagSerializer
@@ -82,6 +84,23 @@ public class BlasterTag extends TagSerializer
 
 		if (heat > 0 && passiveCooldownTimer == 0)
 			heat -= bd.heat.drainSpeed;
+	}
+
+	public <T> Optional<T> mapWithAttachment(BlasterDescriptor bd, HashMap<BlasterAttachmentFunction, T> map)
+	{
+		for (var attachment : bd.attachmentMap.values())
+		{
+			if (attachment.function == BlasterAttachmentFunction.NONE)
+				continue;
+
+			if ((attachment.bit & attachmentBitmask) != 0)
+			{
+				if (map.containsKey(attachment.function))
+					return Optional.of(map.get(attachment.function));
+			}
+		}
+
+		return Optional.empty();
 	}
 
 	public void setAimingDownSights(boolean isAimingDownSights)

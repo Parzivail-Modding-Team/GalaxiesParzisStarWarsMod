@@ -8,9 +8,17 @@ import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import io.github.ennuil.libzoomer.api.ZoomOverlay;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
+import net.minecraft.util.Util;
+
+import java.util.HashMap;
 
 public class ZoomHandler
 {
+	private static final HashMap<BlasterAttachmentFunction, ZoomOverlay> ZOOM_OVERLAYS = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.DEFAULT_SCOPE, Client.blasterZoomOverlayDefault);
+		h.put(BlasterAttachmentFunction.SNIPER_SCOPE, Client.blasterZoomOverlaySniper);
+	});
+
 	public static void tick(MinecraftClient mc)
 	{
 		if (mc.player == null)
@@ -32,24 +40,7 @@ public class ZoomHandler
 			ZoomOverlay overlay = null;
 
 			if (mc.options.getPerspective() == Perspective.FIRST_PERSON)
-			{
-				for (var attachment : bd.attachmentMap.values())
-				{
-					if ((attachment.bit & bt.attachmentBitmask) != 0)
-					{
-						if (attachment.function == BlasterAttachmentFunction.DEFAULT_SCOPE)
-						{
-							overlay = Client.blasterZoomOverlayDefault;
-							break;
-						}
-						else if (attachment.function == BlasterAttachmentFunction.SNIPER_SCOPE)
-						{
-							overlay = Client.blasterZoomOverlaySniper;
-							break;
-						}
-					}
-				}
-			}
+				overlay = bt.mapWithAttachment(bd, ZOOM_OVERLAYS).orElse(null);
 
 			blasterZoomInstance.setZoomOverlay(overlay);
 		}
