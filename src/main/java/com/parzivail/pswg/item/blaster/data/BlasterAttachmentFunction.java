@@ -15,7 +15,8 @@ public enum BlasterAttachmentFunction
 	ALLOW_BURST("allow_burst_fire", (byte)8),
 	ION_TO_GAS_CONVERSION("ion_to_gas_conversion", (byte)9),
 	ION_TO_REPULSOR_CONVERSION("ion_to_repulsor_conversion", (byte)10),
-	INCREASE_DAMAGE("increase_damage", (byte)11);
+	INCREASE_DAMAGE("increase_damage", (byte)11),
+	INCREASE_RANGE("increase_range", (byte)12);
 
 	public static final HashMap<String, BlasterAttachmentFunction> VALUE_LOOKUP = new HashMap<>();
 	public static final HashMap<Byte, BlasterAttachmentFunction> ID_LOOKUP = new HashMap<>();

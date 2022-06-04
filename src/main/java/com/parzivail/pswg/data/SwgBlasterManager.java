@@ -6,6 +6,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.*;
+import com.parzivail.util.Lumberjack;
 import com.parzivail.util.data.IdentifierDeserializer;
 import com.parzivail.util.data.StringInteropAdapter;
 import com.parzivail.util.data.TypedDataLoader;
@@ -47,7 +48,16 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 				var func = BlasterAttachmentFunction.NONE;
 				if (data.has("function"))
-					func = BlasterAttachmentFunction.VALUE_LOOKUP.get(data.get("function").getAsString());
+				{
+					var funcStr = data.get("function").getAsString();
+					func = BlasterAttachmentFunction.VALUE_LOOKUP.get(funcStr);
+
+					if (func == null)
+					{
+						Lumberjack.warn("Replacing unknown attachment function %s with NONE", funcStr);
+						func = BlasterAttachmentFunction.NONE;
+					}
+				}
 
 				String visComp = null;
 				if (data.has("visualComponent"))
