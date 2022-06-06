@@ -11,14 +11,14 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class TerrariumBlockEntity extends BlockEntity implements BlockEntityClientSerializable
+public class CreatureCageBlockEntity extends BlockEntity implements BlockEntityClientSerializable
 {
 	private NbtCompound containedEntityData;
 	private Entity containedEntity;
 
-	public TerrariumBlockEntity(BlockPos pos, BlockState state)
+	public CreatureCageBlockEntity(BlockPos pos, BlockState state)
 	{
-		super(SwgBlocks.Cage.CreatureTerrariumBlockEntityType, pos, state);
+		super(SwgBlocks.Cage.CreatureCageBlockEntityType, pos, state);
 	}
 
 	@Override
@@ -80,16 +80,18 @@ public class TerrariumBlockEntity extends BlockEntity implements BlockEntityClie
 
 	public static <T extends BlockEntity> void serverTick(World world, BlockPos blockPos, BlockState state, T be)
 	{
-		if (!(be instanceof TerrariumBlockEntity t))
-			return;
+		if (!(be instanceof CreatureCageBlockEntity t))
+		{
+		}
 
 //		t.tickEntity();
 	}
 
 	public static <T extends BlockEntity> void clientTick(World world, BlockPos blockPos, BlockState state, T be)
 	{
-		if (!(be instanceof TerrariumBlockEntity t))
-			return;
+		if (!(be instanceof CreatureCageBlockEntity t))
+		{
+		}
 
 //		t.tickEntity();
 	}

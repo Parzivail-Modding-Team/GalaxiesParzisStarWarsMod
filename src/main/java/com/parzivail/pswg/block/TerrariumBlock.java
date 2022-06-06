@@ -1,17 +1,7 @@
 package com.parzivail.pswg.block;
 
-import com.parzivail.pswg.blockentity.TerrariumBlockEntity;
-import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.util.entity.EntityUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockEntityProvider;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
@@ -29,12 +19,10 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
-import org.jetbrains.annotations.Nullable;
 
-public class TerrariumBlock extends CreatureCageBlock implements BlockEntityProvider
+public class TerrariumBlock extends CreatureCageBlock
 {
 	public static final IntProperty WATER_LEVEL = IntProperty.of("water", 0, 9);
 
@@ -47,39 +35,6 @@ public class TerrariumBlock extends CreatureCageBlock implements BlockEntityProv
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		builder.add(WATER_LEVEL);
-	}
-
-	@Nullable
-	@Override
-	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
-	{
-		return new TerrariumBlockEntity(pos, state);
-	}
-
-	@Nullable
-	@Override
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type)
-	{
-		if (type != SwgBlocks.Cage.CreatureTerrariumBlockEntityType)
-			return null;
-		return world.isClient ? TerrariumBlockEntity::clientTick : TerrariumBlockEntity::serverTick;
-	}
-
-	@Override
-	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player)
-	{
-		super.onBreak(world, pos, state, player);
-
-		if (!world.isClient)
-		{
-			var tile = world.getBlockEntity(pos);
-			if (!(tile instanceof TerrariumBlockEntity tbe) || !tbe.hasContainedEntity())
-				return;
-
-			var entity = tbe.getContainedEntity();
-			entity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-			world.spawnEntity(entity);
-		}
 	}
 
 	@Override
@@ -98,34 +53,8 @@ public class TerrariumBlock extends CreatureCageBlock implements BlockEntityProv
 			return interact(world, pos, player, hand, stack, new ItemStack(Items.GLASS_BOTTLE), state.with(WATER_LEVEL, waterLevel + 3), SoundEvents.ITEM_BOTTLE_EMPTY);
 		else if (item == Items.GLASS_BOTTLE && waterLevel >= 3)
 			return interact(world, pos, player, hand, stack, PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.WATER), state.with(WATER_LEVEL, waterLevel - 3), SoundEvents.ITEM_BOTTLE_FILL);
-		else if (item == Items.LEAD)
-		{
-			var tile = world.getBlockEntity(pos);
-			if (!(tile instanceof TerrariumBlockEntity tbe) || tbe.hasContainedEntity())
-				return ActionResult.PASS;
 
-			var x = pos.getX();
-			var y = pos.getY();
-			var z = pos.getZ();
-
-			for (var mobEntity : world.getNonSpectatingEntities(MobEntity.class, new Box((double)x - 7.0, (double)y - 7.0, (double)z - 7.0, (double)x + 7.0, (double)y + 7.0, (double)z + 7.0)))
-			{
-				if (mobEntity.getHoldingEntity() == player)
-				{
-					mobEntity.detachLeash(true, false);
-
-					EntityType.getEntityFromNbt(EntityUtil.serializeEntity(mobEntity), world)
-					          .ifPresent(entity -> {
-						          tbe.setContainedEntity(entity);
-						          mobEntity.remove(Entity.RemovalReason.DISCARDED);
-					          });
-
-					return ActionResult.success(world.isClient);
-				}
-			}
-		}
-
-		return ActionResult.PASS;
+		return super.onUse(state, world, pos, player, hand, hit);
 	}
 
 	private static ActionResult interact(World world, BlockPos pos, PlayerEntity player, Hand hand, ItemStack inputStack, ItemStack outputStack, BlockState state, SoundEvent soundEvent)

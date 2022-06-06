@@ -1,7 +1,8 @@
 package com.parzivail.pswg.client.render.block;
 
+import com.parzivail.pswg.block.CreatureCageBlock;
 import com.parzivail.pswg.block.TerrariumBlock;
-import com.parzivail.pswg.blockentity.TerrariumBlockEntity;
+import com.parzivail.pswg.blockentity.CreatureCageBlockEntity;
 import com.parzivail.util.client.StatelessWaterRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.world.BiomeColors;
@@ -14,21 +15,21 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.math.Vec3d;
 
-public class TerrariumRenderer implements BlockEntityRenderer<TerrariumBlockEntity>
+public class TerrariumRenderer implements BlockEntityRenderer<CreatureCageBlockEntity>
 {
 	public TerrariumRenderer(BlockEntityRendererFactory.Context ctx)
 	{
 	}
 
 	@Override
-	public void render(TerrariumBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
+	public void render(CreatureCageBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay)
 	{
 		var world = blockEntity.getWorld();
 		if (world == null)
 			return;
 
 		var state = world.getBlockState(blockEntity.getPos());
-		if (!(state.getBlock() instanceof TerrariumBlock))
+		if (!(state.getBlock() instanceof CreatureCageBlock))
 			return;
 
 		matrices.push();
@@ -59,6 +60,9 @@ public class TerrariumRenderer implements BlockEntityRenderer<TerrariumBlockEnti
 		}
 
 		matrices.pop();
+
+		if (!state.contains(TerrariumBlock.WATER_LEVEL))
+			return;
 
 		var waterState = state.get(TerrariumBlock.WATER_LEVEL);
 		if (waterState > 0)

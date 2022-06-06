@@ -749,7 +749,7 @@ public class SwgBlocks
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.TRANSLUCENT)
 		public static final RegistryHelper.DyedBlocks DyedCreatureTerrarium = new RegistryHelper.DyedBlocks(color -> new TerrariumBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
 		@RegistryName("creature_terrarium")
-		public static final BlockEntityType<TerrariumBlockEntity> CreatureTerrariumBlockEntityType = FabricBlockEntityTypeBuilder.create(TerrariumBlockEntity::new, BlockUtil.concat(DyedCreatureTerrarium, CreatureTerrarium)).build();
+		public static final BlockEntityType<CreatureCageBlockEntity> CreatureCageBlockEntityType = FabricBlockEntityTypeBuilder.create(CreatureCageBlockEntity::new, BlockUtil.concat(DyedCreatureTerrarium, CreatureTerrarium, Creature)).build();
 	}
 
 	public static void register()
