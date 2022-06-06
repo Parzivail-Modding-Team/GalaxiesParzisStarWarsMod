@@ -118,6 +118,7 @@ public class Tarkin
 		lang.entity(SwgEntities.Fish.Laa).build(assets);
 		lang.entity(SwgEntities.Amphibian.Worrt).build(assets);
 		lang.entity(SwgEntities.Droid.AstroR2).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2Imperial).build(assets);
 
 		// Screen
 		lang.cloneWithRoot(Resources.I18N_SCREEN_APPLY).build(assets);

@@ -1,5 +1,6 @@
 package com.parzivail.pswg.entity.droid;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.screen.AstromechScreenHandler;
 import com.parzivail.util.entity.EntityWithInventory;
 import com.parzivail.util.entity.TrackedAnimationValue;
@@ -30,6 +31,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -39,6 +41,23 @@ import java.util.EnumSet;
 
 public class AstromechEntity extends PathAwareEntity implements EntityWithInventory<AstromechScreenHandler>
 {
+	public enum Variant
+	{
+		D2("r2d2"),
+		Q5("r2q5");
+
+		private final String textureId;
+
+		Variant(String textureId)
+		{
+			this.textureId = textureId;
+		}
+
+		public Identifier getTextureId()
+		{
+			return Resources.id(String.format("textures/droid/%s.png", textureId));
+		}
+	}
 	private static class ExtendLegGoal extends Goal
 	{
 		private final AstromechEntity droid;
@@ -210,10 +229,12 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 
 	private ExtendLegGoal extendLegGoal;
 	private byte prevLegExtensionTimer;
+	private final Variant variant;
 
-	public AstromechEntity(EntityType<? extends PathAwareEntity> type, World world)
+	public AstromechEntity(EntityType<? extends PathAwareEntity> type, World world, Variant variant)
 	{
 		super(type, world);
+		this.variant = variant;
 		this.moveControl = new SlowTurningMoveControl(this, 6);
 	}
 
@@ -243,6 +264,11 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 		}
 
 		return super.interactMob(player, hand);
+	}
+
+	public Variant getVariant()
+	{
+		return variant;
 	}
 
 	@Override

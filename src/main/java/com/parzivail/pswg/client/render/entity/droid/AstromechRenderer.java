@@ -48,6 +48,6 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 	@Override
 	public Identifier getTexture(T entity)
 	{
-		return Resources.id("textures/droid/r2d2.png");
+		return entity.getVariant().getTextureId();
 	}
 }

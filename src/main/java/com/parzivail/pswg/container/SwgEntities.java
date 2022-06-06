@@ -103,7 +103,17 @@ public class SwgEntities
 				Registry.ENTITY_TYPE,
 				Resources.id("artoo"),
 				FabricEntityTypeBuilder
-						.create(SpawnGroup.MISC, AstromechEntity::new)
+						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, AstromechEntity.Variant.D2))
+						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
+						.trackRangeBlocks(128)
+						.build()
+		);
+
+		public static final EntityType<AstromechEntity> AstroR2Imperial = Registry.register(
+				Registry.ENTITY_TYPE,
+				Resources.id("artoo_imperial"),
+				FabricEntityTypeBuilder
+						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, AstromechEntity.Variant.Q5))
 						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
 						.trackRangeBlocks(128)
 						.build()
@@ -112,7 +122,9 @@ public class SwgEntities
 		static void register()
 		{
 			entityTypes.add(AstroR2);
+			entityTypes.add(AstroR2Imperial);
 			FabricDefaultAttributeRegistry.register(AstroR2, AstromechEntity.createAttributes());
+			FabricDefaultAttributeRegistry.register(AstroR2Imperial, AstromechEntity.createAttributes());
 		}
 	}
 

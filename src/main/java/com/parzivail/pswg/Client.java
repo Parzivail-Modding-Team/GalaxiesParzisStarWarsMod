@@ -229,6 +229,7 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Fish.Laa, LaaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Amphibian.Worrt, WorrtEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Imperial, AstromechRenderer::new);
 
 		EntityRendererRegistry.register(SwgEntities.Misc.KinematicTest, KinematicTestEntityRenderer::new);
 
