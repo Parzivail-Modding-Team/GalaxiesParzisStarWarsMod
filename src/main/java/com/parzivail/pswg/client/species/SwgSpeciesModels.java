@@ -40,6 +40,7 @@ public class SwgSpeciesModels
 		register(SwgSpeciesRegistry.SPECIES_HUMAN, nemSource(Resources.id("species/human")), null);
 		register(SwgSpeciesRegistry.SPECIES_CHISS, nemSource(Resources.id("species/human")), null);
 		register(SwgSpeciesRegistry.SPECIES_PANTORAN, nemSource(Resources.id("species/human")), null);
+		register(SwgSpeciesRegistry.SPECIES_WOOKIEE, nemSource(Resources.id("species/wookiee")), null);
 	}
 
 	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> nemSource(Identifier id)

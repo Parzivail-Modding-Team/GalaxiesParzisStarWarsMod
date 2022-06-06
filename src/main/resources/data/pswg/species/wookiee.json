@@ -1,0 +1,14 @@
+{
+	"version": 1,
+	"variables": {
+		"body": {
+			"defaultValue": "chestnut",
+			"possibleValues": [
+				"black",
+				"brown",
+				"chestnut",
+				"gray"
+			]
+		}
+	}
+}
