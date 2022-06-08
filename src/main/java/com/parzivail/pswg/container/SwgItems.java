@@ -303,9 +303,9 @@ public class SwgItems
 
 		// TODO: consider turning this into a Fluid
 		@RegistryName("blue_milk")
-		public static final Item BlueMilk = new MilkBucketItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
+		public static final Item BlueMilk = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).snack().saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("blue_milk_glass")
-		public static final Item BlueMilkGlass = new MilkBucketItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
+		public static final Item BlueMilkGlass = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).snack().saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("blue_yogurt")
 		public static final Item BlueYogurt = new LiquidFoodItem(new Item.Settings().food(new FoodComponent.Builder().hunger(4).saturationModifier(0.3F).build()).group(Galaxies.TabItems));
 		@RegistryName("bantha_cookie")
