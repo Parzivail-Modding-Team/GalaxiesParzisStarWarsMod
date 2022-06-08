@@ -59,9 +59,10 @@ public class SpeciesChiss extends SwgSpecies
 			stack.add(getTexture(this, VAR_HUMANOID_SCARS));
 		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_TATTOOS))
 			stack.add(tint(getTexture(this, VAR_HUMANOID_TATTOOS), this, VAR_HUMANOID_TATTOO_COLOR));
+		stack.add(getTexture(getSlug(), "eyes"));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
-		stack.add(getClothes(this, player));
 		stack.add(getTexture(this, VAR_HAIR));
+		stack.add(getClothes(this, player));
 		return stack;
 	}
 }
