@@ -184,6 +184,8 @@ public class BuiltAsset
 			nukeTags(new Identifier(namespace, "tags/blocks/mineable/dummy"));
 			nukeTags(new Identifier(namespace, "tags/items/dummy"));
 		}
+
+		nukeTags(new Identifier("trinkets", "tags/items/chest/dummy"));
 	}
 
 	public static void nukeTags(Identifier dummyAssetId) throws IOException
