@@ -28,6 +28,12 @@ public class SpeciesJawa extends SwgSpecies
 	}
 
 	@Override
+	public float getScaleFactor()
+	{
+		return 0.65f;
+	}
+
+	@Override
 	public SpeciesVariable[] getVariables()
 	{
 		return new SpeciesVariable[] { VAR_BODY };

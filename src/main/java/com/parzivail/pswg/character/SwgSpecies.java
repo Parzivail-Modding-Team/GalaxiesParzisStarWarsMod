@@ -193,6 +193,11 @@ public abstract class SwgSpecies
 		return model;
 	}
 
+	public float getScaleFactor()
+	{
+		return 1;
+	}
+
 	public SpeciesGender getGender()
 	{
 		return gender;

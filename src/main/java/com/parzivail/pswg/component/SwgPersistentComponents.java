@@ -43,6 +43,12 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 	public void readFromNbt(NbtCompound tag)
 	{
 		species = tag.getString("species");
+		onSpeciesChange();
+	}
+
+	private void onSpeciesChange()
+	{
+		provider.calculateDimensions();
 	}
 
 	@Override
@@ -103,7 +109,11 @@ public class SwgPersistentComponents implements ComponentV3, AutoSyncedComponent
 				if (tag != null)
 					this.readFromNbt(tag);
 			}
-			case SPECIES_SYNCOP -> species = buf.readString();
+			case SPECIES_SYNCOP ->
+			{
+				species = buf.readString();
+				onSpeciesChange();
+			}
 		}
 	}
 

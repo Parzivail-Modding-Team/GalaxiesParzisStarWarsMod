@@ -1,12 +1,15 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
+import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.world.InventoryUtil;
 import net.minecraft.client.render.entity.PlayerModelPart;
+import net.minecraft.entity.EntityDimensions;
+import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -18,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(PlayerEntity.class)
-public class PlayerEntityMixin
+public abstract class PlayerEntityMixin
 {
 	@Unique
 	private ItemStack lastSelectedItemRef;
@@ -63,7 +66,7 @@ public class PlayerEntityMixin
 	}
 
 	@Inject(method = "isPartVisible(Lnet/minecraft/client/render/entity/PlayerModelPart;)Z", at = @At("HEAD"), cancellable = true)
-	public void a(PlayerModelPart modelPart, CallbackInfoReturnable<Boolean> cir)
+	public void isPartVisible(PlayerModelPart modelPart, CallbackInfoReturnable<Boolean> cir)
 	{
 		var self = (PlayerEntity)(Object)this;
 
@@ -73,5 +76,45 @@ public class PlayerEntityMixin
 			cir.setReturnValue(false);
 		else if ((modelPart == PlayerModelPart.LEFT_PANTS_LEG || modelPart == PlayerModelPart.RIGHT_PANTS_LEG) && ArmorRenderer.getModArmor(self, EquipmentSlot.LEGS) != null)
 			cir.setReturnValue(false);
+	}
+
+	@Inject(method = "getDimensions(Lnet/minecraft/entity/EntityPose;)Lnet/minecraft/entity/EntityDimensions;", at = @At("RETURN"), cancellable = true)
+	public void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir)
+	{
+		var self = (PlayerEntity)(Object)this;
+
+		var pc = SwgEntityComponents.getPersistent(self);
+
+		var species = pc.getSpecies();
+		if (species == null)
+			return;
+
+		var f = species.getScaleFactor();
+		if (f == 1)
+			return;
+
+		var value = cir.getReturnValue();
+		cir.setReturnValue(value.scaled(f));
+	}
+
+	@Inject(method = "getActiveEyeHeight(Lnet/minecraft/entity/EntityPose;Lnet/minecraft/entity/EntityDimensions;)F", at = @At("RETURN"), cancellable = true)
+	public void getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir)
+	{
+		var self = (PlayerEntity)(Object)this;
+		if (self.age == 0)
+			return;
+
+		var pc = SwgEntityComponents.getPersistent(self);
+
+		var species = pc.getSpecies();
+		if (species == null)
+			return;
+
+		var f = species.getScaleFactor();
+		if (f == 1)
+			return;
+
+		var value = cir.getReturnValue();
+		cir.setReturnValue(value * f);
 	}
 }

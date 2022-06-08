@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.camera;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.weapon.RecoilManager;
+import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.util.math.QuatUtil;
@@ -92,14 +93,37 @@ public class CameraHelper
 			minecraft.setCameraEntity(player);
 	}
 
-	public static void playerRenderHead(AbstractClientPlayerEntity abstractClientPlayerEntity, CallbackInfo ci)
+	public static void playerRenderHead(AbstractClientPlayerEntity player, MatrixStack matrixStack, CallbackInfo ci)
 	{
 		if (forcePlayerRender)
 			return;
 
-		var ship = ShipEntity.getShip(abstractClientPlayerEntity);
+		var ship = ShipEntity.getShip(player);
 		if (ship != null && !ship.usePlayerPerspective())
+		{
 			ci.cancel();
+			return;
+		}
+
+		var pc = SwgEntityComponents.getPersistent(player);
+		var species = pc.getSpecies();
+		if (species == null)
+			return;
+
+		var f = species.getScaleFactor();
+
+		matrixStack.push();
+		matrixStack.scale(f, f, f);
+	}
+
+	public static void playerRenderReturn(AbstractClientPlayerEntity player, MatrixStack matrixStack, CallbackInfo ci)
+	{
+		var pc = SwgEntityComponents.getPersistent(player);
+		var species = pc.getSpecies();
+		if (species == null)
+			return;
+
+		matrixStack.pop();
 	}
 
 	public static void applyCameraShake(float tickDelta, long limitTime, MatrixStack matrix, Camera camera, double fov)
