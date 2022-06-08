@@ -53,7 +53,8 @@
 		"clothes_underlayer": {
 			"defaultValue": "none",
 			"possibleValues": [
-				"none"
+				"none",
+				"imperial_body_glove"
 			]
 		},
 		"clothes_top": {
@@ -78,7 +79,6 @@
 				"the_knight",
 				"the_gunslinger",
 				"the_marshall",
-				"imperial_body_glove",
 				"jumpsuit"
 			]
 		},

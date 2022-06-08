@@ -92,6 +92,7 @@ public abstract class SwgSpecies
 	private static Identifier getClothingStack(SwgSpecies species, PlayerEntity player)
 	{
 		var hashCode = SwgSpecies.hashVariableValues(species,
+		                                             VAR_HUMANOID_CLOTHES_UNDERLAYER,
 		                                             VAR_HUMANOID_CLOTHES_TOPS,
 		                                             VAR_HUMANOID_CLOTHES_BOTTOMS,
 		                                             VAR_HUMANOID_CLOTHES_BELTS,
@@ -100,14 +101,23 @@ public abstract class SwgSpecies
 		                                             VAR_HUMANOID_CLOTHES_ACCESSORIES,
 		                                             VAR_HUMANOID_CLOTHES_OUTERWEAR
 		);
-		return Client.stackedTextureProvider.getId(String.format("clothing/%08x", hashCode), () -> getGenderedGlobalTexture(species.getGender(), "clothes"), () -> SwgSpecies.createClothingStack(species, player));
+		return Client.stackedTextureProvider.getId(
+				String.format("clothing/%08x", hashCode),
+				() -> getGenderedGlobalTexture(species.getGender(), "clothes"),
+				() -> SwgSpecies.createClothingStack(species, player)
+		);
 	}
 
 	private static Collection<Identifier> createClothingStack(SwgSpecies species, PlayerEntity player)
 	{
 		var stack = new ArrayList<Identifier>();
-		stack.add(getTexture(species, VAR_HUMANOID_CLOTHES_TOPS));
-		stack.add(getTexture(species, VAR_HUMANOID_CLOTHES_BOTTOMS));
+		if (species.getVariable(VAR_HUMANOID_CLOTHES_UNDERLAYER).equals(SpeciesVariable.NONE))
+		{
+			stack.add(getTexture(species, VAR_HUMANOID_CLOTHES_TOPS));
+			stack.add(getTexture(species, VAR_HUMANOID_CLOTHES_BOTTOMS));
+		}
+		else
+			stack.add(getTexture(species, VAR_HUMANOID_CLOTHES_UNDERLAYER));
 		appendOptionalLayer(stack, species, VAR_HUMANOID_CLOTHES_BELTS);
 		appendOptionalLayer(stack, species, VAR_HUMANOID_CLOTHES_BOOTS);
 		appendOptionalLayer(stack, species, VAR_HUMANOID_CLOTHES_GLOVES);
