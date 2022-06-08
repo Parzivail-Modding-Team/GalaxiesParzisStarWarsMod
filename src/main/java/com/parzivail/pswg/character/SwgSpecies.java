@@ -36,8 +36,8 @@ public abstract class SwgSpecies
 	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_ACCESSORIES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_accessories");
 	protected static final SpeciesVariable VAR_HUMANOID_CLOTHES_OUTERWEAR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "clothes_outerwear");
 
-	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eye_color", 0x000000);
-	protected static final SpeciesColorVariable VAR_HUMANOID_TATTOO_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "tattoo_color", 0x000000);
+	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eye_color", 0x226622);
+	protected static final SpeciesColorVariable VAR_HUMANOID_TATTOO_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "tattoo_color", 0x665544);
 
 	public static Identifier getSpeciesSlug(String serializedSpecies)
 	{
