@@ -50,6 +50,20 @@
 				"4"
 			]
 		},
+		"hair_color": {
+			"defaultValue": "37281e",
+			"possibleValues": [
+				"37281e",
+				"1f1f1f",
+				"c6a26e",
+				"f2ce85",
+				"f8e7c6",
+				"edf2f1",
+				"b8bcbc",
+				"d34e3f",
+				"e48652"
+			]
+		},
 		"clothes_underlayer": {
 			"defaultValue": "none",
 			"possibleValues": [

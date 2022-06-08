@@ -38,7 +38,7 @@ public abstract class SwgSpecies
 
 	protected static final SpeciesColorVariable VAR_HUMANOID_EYE_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "eye_color", 0x226622);
 	protected static final SpeciesColorVariable VAR_HUMANOID_TATTOO_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "tattoo_color", 0x665544);
-	protected static final SpeciesColorVariable VAR_HUMANOID_HAIR_COLOR = new SpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "hair_color", 0x905424);
+	protected static final SpeciesColorVariable VAR_HUMANOID_HAIR_COLOR = new DatapackedSpeciesColorVariable(SwgSpeciesRegistry.SPECIES_HUMANOID, "hair_color");
 
 	public static Identifier getSpeciesSlug(String serializedSpecies)
 	{

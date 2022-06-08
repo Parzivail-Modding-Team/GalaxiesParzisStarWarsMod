@@ -11,16 +11,21 @@
 		},
 		"hair": {
 			"definingSpecies": "pswg:humanoid",
-			"defaultValue": "black_1",
+			"defaultValue": "1",
 			"possibleValues": [
-				"black_1",
-				"black_2",
-				"black_3",
-				"black_4",
-				"gray_1",
-				"gray_2",
-				"gray_3",
-				"gray_4"
+				"1",
+				"2",
+				"3",
+				"4"
+			]
+		},
+		"hair_color": {
+			"defaultValue": "1f1f1f",
+			"possibleValues": [
+				"1f1f1f",
+				"f8e7c6",
+				"edf2f1",
+				"b8bcbc"
 			]
 		},
 		"body": {

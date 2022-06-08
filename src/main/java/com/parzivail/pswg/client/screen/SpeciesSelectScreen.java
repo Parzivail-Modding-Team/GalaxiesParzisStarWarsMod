@@ -239,7 +239,7 @@ public class SpeciesSelectScreen extends Screen
 		var selectedSpecies = speciesEntry.getValue();
 		var selectedVariable = selectedVariableEntry.getValue();
 
-		if (selectedVariable instanceof SpeciesColorVariable)
+		if (selectedVariable instanceof SpeciesColorVariable && selectedVariable.getPossibleValues().isEmpty())
 			return false;
 
 		List<String> values = selectedVariable.getPossibleValues();
@@ -333,7 +333,7 @@ public class SpeciesSelectScreen extends Screen
 			{
 				selectedVariable = selectedVariableEntry.getValue();
 
-				if (selectedVariable instanceof SpeciesColorVariable scv)
+				if (selectedVariable instanceof SpeciesColorVariable && selectedVariable.getPossibleValues().isEmpty())
 				{
 					sliderR.visible = true;
 					sliderG.visible = true;

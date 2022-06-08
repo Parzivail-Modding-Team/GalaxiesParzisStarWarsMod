@@ -1,8 +1,6 @@
 package com.parzivail.pswg.character.species;
 
-import com.parzivail.pswg.character.DatapackedSpeciesVariable;
-import com.parzivail.pswg.character.SpeciesVariable;
-import com.parzivail.pswg.character.SwgSpecies;
+import com.parzivail.pswg.character.*;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -17,6 +15,7 @@ public class SpeciesChiss extends SwgSpecies
 	private static final SpeciesVariable VAR_BODY = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "body");
 	private static final SpeciesVariable VAR_EYEBROWS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "eyebrows");
 	private static final SpeciesVariable VAR_HAIR = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_CHISS, "hair");
+	private static final SpeciesColorVariable VAR_HAIR_COLOR = new DatapackedSpeciesColorVariable(SwgSpeciesRegistry.SPECIES_CHISS, "hair_color");
 
 	public SpeciesChiss(String serialized)
 	{
@@ -39,6 +38,7 @@ public class SpeciesChiss extends SwgSpecies
 				VAR_HUMANOID_TATTOOS,
 				VAR_HUMANOID_TATTOO_COLOR,
 				VAR_HAIR,
+				VAR_HAIR_COLOR,
 				VAR_HUMANOID_CLOTHES_UNDERLAYER,
 				VAR_HUMANOID_CLOTHES_TOPS,
 				VAR_HUMANOID_CLOTHES_BOTTOMS,
@@ -62,7 +62,8 @@ public class SpeciesChiss extends SwgSpecies
 			stack.add(tint(getTexture(this, VAR_HUMANOID_TATTOOS), this, VAR_HUMANOID_TATTOO_COLOR));
 		stack.add(getTexture(getSlug(), "eyes"));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
-		stack.add(getTexture(this, VAR_HAIR));
+		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_HAIR))
+			stack.add(tint(getTexture(this, VAR_HUMANOID_HAIR), this, VAR_HUMANOID_HAIR_COLOR));
 		stack.add(getClothes(this, player));
 		return stack;
 	}
