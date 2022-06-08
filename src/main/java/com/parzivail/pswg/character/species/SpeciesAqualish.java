@@ -15,6 +15,7 @@ import java.util.Collection;
 public class SpeciesAqualish extends SwgSpecies
 {
 	private static final SpeciesVariable VAR_BODY = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_AQUALISH, "body");
+	private static final SpeciesVariable VAR_EYES = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_AQUALISH, "eyes");
 
 	public SpeciesAqualish(String serialized)
 	{
@@ -32,6 +33,7 @@ public class SpeciesAqualish extends SwgSpecies
 	{
 		return new SpeciesVariable[] {
 				VAR_BODY,
+				VAR_EYES,
 				VAR_HUMANOID_SCARS,
 				VAR_HUMANOID_TATTOOS,
 				VAR_HUMANOID_TATTOO_COLOR,
@@ -55,6 +57,7 @@ public class SpeciesAqualish extends SwgSpecies
 			stack.add(getTexture(this, VAR_HUMANOID_SCARS));
 		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_TATTOOS))
 			stack.add(tint(getTexture(this, VAR_HUMANOID_TATTOOS), this, VAR_HUMANOID_TATTOO_COLOR));
+		stack.add(getTexture(this, VAR_EYES));
 		stack.add(getClothes(this, player));
 		return stack;
 	}

@@ -1,15 +1,12 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
-import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.world.InventoryUtil;
 import net.minecraft.client.render.entity.PlayerModelPart;
-import net.minecraft.entity.EntityDimensions;
-import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -78,43 +75,44 @@ public abstract class PlayerEntityMixin
 			cir.setReturnValue(false);
 	}
 
-	@Inject(method = "getDimensions(Lnet/minecraft/entity/EntityPose;)Lnet/minecraft/entity/EntityDimensions;", at = @At("RETURN"), cancellable = true)
-	public void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir)
-	{
-		var self = (PlayerEntity)(Object)this;
-
-		var pc = SwgEntityComponents.getPersistent(self);
-
-		var species = pc.getSpecies();
-		if (species == null)
-			return;
-
-		var f = species.getScaleFactor();
-		if (f == 1)
-			return;
-
-		var value = cir.getReturnValue();
-		cir.setReturnValue(value.scaled(f));
-	}
-
-	@Inject(method = "getActiveEyeHeight(Lnet/minecraft/entity/EntityPose;Lnet/minecraft/entity/EntityDimensions;)F", at = @At("RETURN"), cancellable = true)
-	public void getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir)
-	{
-		var self = (PlayerEntity)(Object)this;
-		if (self.age == 0)
-			return;
-
-		var pc = SwgEntityComponents.getPersistent(self);
-
-		var species = pc.getSpecies();
-		if (species == null)
-			return;
-
-		var f = species.getScaleFactor();
-		if (f == 1)
-			return;
-
-		var value = cir.getReturnValue();
-		cir.setReturnValue(value * f);
-	}
+	// TODO: collisions sometimes break
+//	@Inject(method = "getDimensions(Lnet/minecraft/entity/EntityPose;)Lnet/minecraft/entity/EntityDimensions;", at = @At("RETURN"), cancellable = true)
+//	public void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir)
+//	{
+//		var self = (PlayerEntity)(Object)this;
+//
+//		var pc = SwgEntityComponents.getPersistent(self);
+//
+//		var species = pc.getSpecies();
+//		if (species == null)
+//			return;
+//
+//		var f = species.getScaleFactor();
+//		if (f == 1)
+//			return;
+//
+//		var value = cir.getReturnValue();
+//		cir.setReturnValue(value.scaled(f));
+//	}
+//
+//	@Inject(method = "getActiveEyeHeight(Lnet/minecraft/entity/EntityPose;Lnet/minecraft/entity/EntityDimensions;)F", at = @At("RETURN"), cancellable = true)
+//	public void getActiveEyeHeight(EntityPose pose, EntityDimensions dimensions, CallbackInfoReturnable<Float> cir)
+//	{
+//		var self = (PlayerEntity)(Object)this;
+//		if (self.age == 0)
+//			return;
+//
+//		var pc = SwgEntityComponents.getPersistent(self);
+//
+//		var species = pc.getSpecies();
+//		if (species == null)
+//			return;
+//
+//		var f = species.getScaleFactor();
+//		if (f == 1)
+//			return;
+//
+//		var value = cir.getReturnValue();
+//		cir.setReturnValue(value * f);
+//	}
 }
