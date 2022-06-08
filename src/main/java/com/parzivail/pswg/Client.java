@@ -234,6 +234,7 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Misc.KinematicTest, KinematicTestEntityRenderer::new);
 
 		ArmorRenderer.register(SwgItems.Armor.Stormtrooper, Resources.id("armor/stormtrooper_default"), Resources.id("armor/stormtrooper_slim"), Resources.id("textures/armor/stormtrooper.png"));
+		ArmorRenderer.register(SwgItems.Armor.RebelPilot, Resources.id("armor/rebel_pilot"), Resources.id("armor/rebel_pilot"), Resources.id("textures/armor/rebel_pilot_visor_up.png"));
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);

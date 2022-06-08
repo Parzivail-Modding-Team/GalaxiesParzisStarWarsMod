@@ -843,6 +843,8 @@ public class Tarkin
 		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.leggings).build(assets);
 		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.boots).build(assets);
 
+		ItemGenerator.basic(SwgItems.Armor.RebelPilot).build(assets);
+
 		ItemGenerator.basic(SwgItems.Cable.Power).build(assets);
 
 		ItemGenerator.basic(SwgItems.Material.HeliciteDust).build(assets);

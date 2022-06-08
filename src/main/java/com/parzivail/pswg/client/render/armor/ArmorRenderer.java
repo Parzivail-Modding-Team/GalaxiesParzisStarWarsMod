@@ -40,11 +40,17 @@ public class ArmorRenderer
 
 	public static void register(RegistryHelper.ArmorItems itemSet, Identifier defaultModelId, Identifier slimModelId, Identifier textureId)
 	{
-		MODELKEY_MODEL_MAP.put(defaultModelId, new Entry(NemManager.INSTANCE.getBipedModel(defaultModelId), NemManager.INSTANCE.getBipedModel(slimModelId), textureId));
-		ITEM_MODELKEY_MAP.put(itemSet.helmet, defaultModelId);
-		ITEM_MODELKEY_MAP.put(itemSet.chestplate, defaultModelId);
-		ITEM_MODELKEY_MAP.put(itemSet.leggings, defaultModelId);
-		ITEM_MODELKEY_MAP.put(itemSet.boots, defaultModelId);
+		register(itemSet.helmet, defaultModelId, slimModelId, textureId);
+		register(itemSet.chestplate, defaultModelId, slimModelId, textureId);
+		register(itemSet.leggings, defaultModelId, slimModelId, textureId);
+		register(itemSet.boots, defaultModelId, slimModelId, textureId);
+	}
+
+	public static void register(ArmorItem item, Identifier defaultModelId, Identifier slimModelId, Identifier textureId)
+	{
+		if (!MODELKEY_MODEL_MAP.containsKey(defaultModelId))
+			MODELKEY_MODEL_MAP.put(defaultModelId, new Entry(NemManager.INSTANCE.getBipedModel(defaultModelId), NemManager.INSTANCE.getBipedModel(slimModelId), textureId));
+		ITEM_MODELKEY_MAP.put(item, defaultModelId);
 	}
 
 	public static ItemStack getModArmor(LivingEntity entity, EquipmentSlot slot)
@@ -83,7 +89,7 @@ public class ArmorRenderer
 		});
 	}
 
-	public static <T extends LivingEntity, M extends BipedEntityModel<T>,A extends BipedEntityModel<T>> void renderArmor(M contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot armorSlot, int light, A model, CallbackInfo ci)
+	public static <T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> void renderArmor(M contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot armorSlot, int light, A model, CallbackInfo ci)
 	{
 		renderWithTransformation(entity, armorSlot, matrices, vertexConsumers, light, (armorModel) -> {
 			// This is the same as doing contextModel.setAttributes(armorModel) but gets around the generics issue
