@@ -37,6 +37,7 @@ public class SpeciesHuman extends SwgSpecies
 				VAR_HUMANOID_TATTOO_COLOR,
 				VAR_HUMANOID_EYEBROWS,
 				VAR_HUMANOID_HAIR,
+				VAR_HUMANOID_HAIR_COLOR,
 				VAR_HUMANOID_EYE_COLOR,
 				VAR_HUMANOID_CLOTHES_TOPS,
 				VAR_HUMANOID_CLOTHES_BOTTOMS,
@@ -63,7 +64,7 @@ public class SpeciesHuman extends SwgSpecies
 		stack.add(getGenderedTexture(this, VAR_HUMANOID_EYEBROWS));
 		stack.add(getClothes(this, player));
 		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_HAIR))
-			stack.add(getTexture(this, VAR_HUMANOID_HAIR));
+			stack.add(tint(getTexture(this, VAR_HUMANOID_HAIR), this, VAR_HUMANOID_HAIR_COLOR));
 		return stack;
 	}
 }

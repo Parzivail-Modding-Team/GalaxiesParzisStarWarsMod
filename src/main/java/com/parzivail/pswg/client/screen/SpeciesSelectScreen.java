@@ -81,6 +81,18 @@ public class SpeciesSelectScreen extends Screen
 
 	private void updateAbility()
 	{
+		var selectedVarEntry = speciesVariableListWidget.getSelectedOrNull();
+		if (selectedVarEntry != null)
+		{
+			var selectedVar = selectedVarEntry.getValue();
+			if (selectedVar instanceof SpeciesColorVariable)
+			{
+				var color = Integer.parseUnsignedInt(playerSpecies.getVariable(selectedVar), 16);
+				sliderR.setValue(((color & 0xFF0000) >> 16) / 255f);
+				sliderG.setValue(((color & 0xFF00) >> 8) / 255f);
+				sliderB.setValue((color & 0xFF) / 255f);
+			}
+		}
 	}
 
 	@Override

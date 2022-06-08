@@ -60,6 +60,11 @@ public class SimpleSliderWidget extends ButtonWidget
 		this.value = MathHelper.clamp((float)((mouseX - this.x) / (this.width - 2)), 0, 1);
 	}
 
+	public void setValue(float v)
+	{
+		this.value = v;
+	}
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button)
 	{
