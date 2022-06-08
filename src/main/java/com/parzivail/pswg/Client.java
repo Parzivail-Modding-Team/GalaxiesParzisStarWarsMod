@@ -53,6 +53,7 @@ import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
+import dev.emi.trinkets.api.TrinketsApi;
 import io.github.ennuil.libzoomer.api.ZoomInstance;
 import io.github.ennuil.libzoomer.api.ZoomOverlay;
 import io.github.ennuil.libzoomer.api.modifiers.ZoomDivisorMouseModifier;
@@ -233,8 +234,54 @@ public class Client implements ClientModInitializer
 
 		EntityRendererRegistry.register(SwgEntities.Misc.KinematicTest, KinematicTestEntityRenderer::new);
 
-		ArmorRenderer.register(SwgItems.Armor.Stormtrooper, Resources.id("armor/stormtrooper_default"), Resources.id("armor/stormtrooper_slim"), Resources.id("textures/armor/stormtrooper.png"));
-		ArmorRenderer.register(SwgItems.Armor.RebelPilot, Resources.id("armor/rebel_pilot"), Resources.id("armor/rebel_pilot"), Resources.id("textures/armor/rebel_pilot_visor_up.png"));
+		ArmorRenderer.register(
+				SwgItems.Armor.Stormtrooper,
+				Resources.id("armor/stormtrooper_default"),
+				Resources.id("armor/stormtrooper_slim"),
+				Resources.id("textures/armor/stormtrooper.png")
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.Sandtrooper,
+				Resources.id("armor/sandtrooper_default"),
+				Resources.id("textures/armor/sandtrooper_default.png"),
+				Resources.id("armor/sandtrooper_slim"),
+				Resources.id("textures/armor/sandtrooper_slim.png")
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.Deathtrooper,
+				Resources.id("armor/deathtrooper_default"),
+				Resources.id("textures/armor/deathtrooper_default.png"),
+				Resources.id("armor/deathtrooper_slim"),
+				Resources.id("textures/armor/deathtrooper_slim.png")
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.Jumptrooper,
+				Resources.id("armor/jumptrooper_default"),
+				Resources.id("textures/armor/jumptrooper_default.png"),
+				Resources.id("armor/jumptrooper_slim"),
+				Resources.id("textures/armor/jumptrooper_slim.png")
+		);
+		ArmorRenderer.registerTransformer(Resources.id("armor/jumptrooper_default"), (entity, model) -> {
+			var hasJetpack = TrinketsApi
+					.getTrinketComponent(entity)
+					.map(trinketComponent -> trinketComponent.isEquipped(SwgItems.Armor.JumptrooperJetpack))
+					.orElse(false);
+
+			model.body.getChild("torso1").visible = hasJetpack;
+			model.head.getChild("helmet5").visible = hasJetpack;
+			model.head.getChild("helmet6").visible = hasJetpack;
+			model.head.getChild("helmet7").visible = hasJetpack;
+			model.head.getChild("helmet8").visible = hasJetpack;
+			model.head.getChild("helmet9").visible = hasJetpack;
+			model.head.getChild("helmet10").visible = hasJetpack;
+		});
+		ArmorRenderer.register(
+				SwgItems.Armor.RebelPilot,
+				Resources.id("armor/rebel_pilot"),
+				Resources.id("textures/armor/rebel_pilot_visor_up.png"),
+				Resources.id("armor/rebel_pilot"),
+				Resources.id("textures/armor/rebel_pilot_visor_up.png")
+		);
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
 		ICustomPoseItem.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);

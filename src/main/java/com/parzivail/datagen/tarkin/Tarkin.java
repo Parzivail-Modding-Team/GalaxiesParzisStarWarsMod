@@ -25,7 +25,9 @@ import net.minecraft.item.Items;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.ItemTags;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -804,6 +806,8 @@ public class Tarkin
 
 	private static void generateItems(List<BuiltAsset> assets)
 	{
+		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(Registry.ITEM_KEY, new Identifier("trinkets", "chest/back"));
+
 		ItemGenerator.tool(SwgItems.Material.DurasteelAxe)
 		             .build(assets);
 		ItemGenerator.tool(SwgItems.Material.TitaniumAxe)
@@ -838,11 +842,13 @@ public class Tarkin
 
 		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
-		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.helmet).build(assets);
-		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.chestplate).build(assets);
-		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.leggings).build(assets);
-		ItemGenerator.basic(SwgItems.Armor.Stormtrooper.boots).build(assets);
-
+		ItemGenerator.armor(SwgItems.Armor.Stormtrooper, assets);
+		ItemGenerator.armor(SwgItems.Armor.Sandtrooper, assets);
+		ItemGenerator.armor(SwgItems.Armor.Deathtrooper, assets);
+		ItemGenerator.armor(SwgItems.Armor.Jumptrooper, assets);
+		ItemGenerator.basic(SwgItems.Armor.JumptrooperJetpack)
+				.tag(TAG_TRINKETS_CHEST_BACK)
+				.build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelPilot).build(assets);
 
 		ItemGenerator.basic(SwgItems.Cable.Power).build(assets);

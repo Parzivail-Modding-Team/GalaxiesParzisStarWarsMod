@@ -17,6 +17,7 @@ import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
 import com.parzivail.pswg.item.material.TitaniumToolMaterial;
 import com.parzivail.util.item.*;
+import dev.emi.trinkets.api.TrinketItem;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -42,6 +43,14 @@ public class SwgItems
 	{
 		@RegistryName("stormtrooper")
 		public static final RegistryHelper.ArmorItems Stormtrooper = new RegistryHelper.ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("sandtrooper")
+		public static final RegistryHelper.ArmorItems Sandtrooper = new RegistryHelper.ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("deathtrooper")
+		public static final RegistryHelper.ArmorItems Deathtrooper = new RegistryHelper.ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("jumptrooper")
+		public static final RegistryHelper.ArmorItems Jumptrooper = new RegistryHelper.ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("jumptrooper_jetpack")
+		public static final TrinketItem JumptrooperJetpack = new TrinketItem(new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_pilot_helmet")
 		public static final ArmorItem RebelPilot = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 	}
