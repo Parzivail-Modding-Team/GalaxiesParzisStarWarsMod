@@ -7,6 +7,13 @@
 				"beige",
 				"green"
 			]
+		},
+		"eyes": {
+			"defaultValue": "two",
+			"possibleValues": [
+				"two",
+				"four"
+			]
 		}
 	}
 }

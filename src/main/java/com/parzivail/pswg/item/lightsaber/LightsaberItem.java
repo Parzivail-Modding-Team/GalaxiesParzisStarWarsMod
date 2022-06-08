@@ -73,12 +73,17 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 
 			if (success && !world.isClient)
 			{
-				if (lightsaberTag.active)
-					world.playSound(null, player.getBlockPos(), SwgSounds.Lightsaber.START_CLASSIC, SoundCategory.PLAYERS, 1f, 1f);
-				else
-					world.playSound(null, player.getBlockPos(), SwgSounds.Lightsaber.STOP_CLASSIC, SoundCategory.PLAYERS, 1f, 1f);
+				playSound(world, player, lightsaberTag);
 			}
 		});
+	}
+
+	public static void playSound(World world, PlayerEntity player, LightsaberTag lightsaberTag)
+	{
+		if (lightsaberTag.active)
+			world.playSound(null, player.getBlockPos(), SwgSounds.Lightsaber.START_CLASSIC, SoundCategory.PLAYERS, 1f, 1f);
+		else
+			world.playSound(null, player.getBlockPos(), SwgSounds.Lightsaber.STOP_CLASSIC, SoundCategory.PLAYERS, 1f, 1f);
 	}
 
 	public static void throwAsEntity(World world, PlayerEntity player, ItemStack stack)

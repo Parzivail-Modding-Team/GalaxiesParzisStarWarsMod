@@ -41,6 +41,7 @@ public class SpeciesWookiee extends SwgSpecies
 	{
 		var stack = new ArrayList<Identifier>();
 		stack.add(getTexture(this, VAR_BODY));
+		stack.add(getTexture(getSlug(), "eyes"));
 		return stack;
 	}
 }

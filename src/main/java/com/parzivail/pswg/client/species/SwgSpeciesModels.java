@@ -110,7 +110,7 @@ public class SwgSpeciesModels
 		tailMidL.pitch = tailMidR.pitch = (5.11f * h4 + 2.01f * h3 - 10.2f * h2 - 26.38f * h - 1.48f) / MathUtil.toDegreesf;
 		tailLowerL.pitch = tailLowerR.pitch = (-3.15f * h4 + 2.57f * h2 - 23.03f * h - 2.93f) / MathUtil.toDegreesf;
 
-		var y = (entity.getYaw(tickDelta) - MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)) / MathUtil.toDegreesf;
+		var y = MathHelper.wrapDegrees(entity.getYaw(tickDelta) - MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)) / MathUtil.toDegreesf;
 		tailBaseL.roll = Math.max(0, y / 3f);
 		tailBaseR.roll = Math.min(0, y / 3f);
 	}

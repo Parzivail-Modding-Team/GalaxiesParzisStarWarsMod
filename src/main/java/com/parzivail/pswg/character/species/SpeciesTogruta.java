@@ -74,6 +74,7 @@ public class SpeciesTogruta extends SwgSpecies
 		if (SpeciesVariable.isNotEmpty(this, VAR_FACE))
 			stack.add(getTexture(this, VAR_FACE));
 
+		stack.add(getGlobalTexture("eyes_whites"));
 		stack.add(tint(getGlobalTexture("eyes"), this, VAR_HUMANOID_EYE_COLOR));
 		stack.add(getGenderedTexture(this, VAR_EYEBROWS));
 		stack.add(getClothes(this, player));

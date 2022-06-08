@@ -58,9 +58,10 @@ public class SpeciesTwilek extends SwgSpecies
 			stack.add(getTexture(this, VAR_HUMANOID_SCARS));
 		if (SpeciesVariable.isNotEmpty(this, VAR_HUMANOID_TATTOOS))
 			stack.add(tint(getTexture(this, VAR_HUMANOID_TATTOOS), this, VAR_HUMANOID_TATTOO_COLOR));
+		stack.add(getGlobalTexture("eyes_whites"));
+		stack.add(tint(getGlobalTexture("eyes"), this, VAR_HUMANOID_EYE_COLOR));
 		stack.add(getGenderedTexture(this, VAR_HUMANOID_EYEBROWS));
 		stack.add(getClothes(this, player));
-		stack.add(tint(getGlobalTexture("eyes"), this, VAR_HUMANOID_EYE_COLOR));
 		return stack;
 	}
 }
