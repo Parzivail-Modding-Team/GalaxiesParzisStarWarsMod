@@ -51,9 +51,9 @@ public abstract class PlayerEntityMixin
 			// TODO: play sound
 			if (stack.hasNbt())
 				LightsaberTag.mutate(stack, tag -> {
-					tag.active = false;
-					if (!self.world.isClient && tag.transition == 0)
+					if (!self.world.isClient && tag.active)
 						LightsaberItem.playSound(self.world, self, tag);
+					tag.active = false;
 					tag.finalizeMovement();
 				});
 		}
