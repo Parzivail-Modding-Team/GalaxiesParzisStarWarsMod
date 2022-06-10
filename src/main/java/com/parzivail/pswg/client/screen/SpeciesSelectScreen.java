@@ -87,7 +87,8 @@ public class SpeciesSelectScreen extends Screen
 			var selectedVar = selectedVarEntry.getValue();
 			if (selectedVar instanceof SpeciesColorVariable)
 			{
-				var color = Integer.parseUnsignedInt(playerSpecies.getVariable(selectedVar), 16);
+				var colorStr = playerSpecies == null ? selectedVar.getDefaultValue() : playerSpecies.getVariable(selectedVar);
+				var color = Integer.parseUnsignedInt(colorStr, 16);
 				sliderR.setValue(((color & 0xFF0000) >> 16) / 255f);
 				sliderG.setValue(((color & 0xFF00) >> 8) / 255f);
 				sliderB.setValue((color & 0xFF) / 255f);
