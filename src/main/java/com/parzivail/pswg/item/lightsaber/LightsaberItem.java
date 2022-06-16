@@ -24,7 +24,6 @@ import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
@@ -135,7 +134,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	public Text getName(ItemStack stack)
 	{
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
-		return new TranslatableText(this.getTranslationKey(stack), lt.owner);
+		return Text.translatable(this.getTranslationKey(stack), lt.owner);
 	}
 
 	@Override
@@ -148,9 +147,9 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
 	{
 		super.appendTooltip(stack, world, tooltip, context);
-		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.info"));
-//		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
-		tooltip.add(new TranslatableText("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+		tooltip.add(Text.translatable("tooltip.pswg.lightsaber.info"));
+//		tooltip.add(Text.translatable("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+		tooltip.add(Text.translatable("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 	}
 
 	@Override

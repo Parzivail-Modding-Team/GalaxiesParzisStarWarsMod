@@ -94,7 +94,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		var minecraft = MinecraftClient.getInstance();
 
@@ -283,7 +283,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	protected Mesh createItemMesh(ItemStack stack, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		return createBlockMesh(null, null, null, null, null, transformation);
 	}

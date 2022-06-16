@@ -100,7 +100,7 @@ public class RecoilManager
 		matrix.translate(0, 0, -0.2 * fovCompensatedImpulse);
 
 		var scale = 1;
-		if (mc.options.mainArm == Arm.LEFT)
+		if (mc.options.getMainArm().getValue() == Arm.LEFT)
 			scale = -scale;
 		matrix.multiply(new Quaternion(0, 0.1f * scale * smoothImpulse, 0, true));
 		matrix.multiply(new Quaternion(0, 0, -0.4f * smoothImpulse, true));

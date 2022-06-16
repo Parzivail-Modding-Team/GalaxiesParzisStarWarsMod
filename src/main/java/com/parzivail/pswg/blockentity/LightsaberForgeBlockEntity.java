@@ -11,7 +11,6 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class LightsaberForgeBlockEntity extends BlockEntity implements NamedScreenHandlerFactory
@@ -24,7 +23,7 @@ public class LightsaberForgeBlockEntity extends BlockEntity implements NamedScre
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("lightsaber_forge"));
+		return Text.translatable(Resources.container("lightsaber_forge"));
 	}
 
 	@Override

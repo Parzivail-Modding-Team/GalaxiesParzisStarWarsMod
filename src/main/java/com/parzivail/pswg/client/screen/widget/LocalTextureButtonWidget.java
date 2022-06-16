@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -33,7 +32,7 @@ public class LocalTextureButtonWidget extends ButtonWidget
 
 	public LocalTextureButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction)
 	{
-		this(x, y, width, height, u, v, hoveredU, hoveredV, textureWidth, textureHeight, pressAction, LiteralText.EMPTY);
+		this(x, y, width, height, u, v, hoveredU, hoveredV, textureWidth, textureHeight, pressAction, Text.empty());
 	}
 
 	public LocalTextureButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction, Text text)

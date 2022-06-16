@@ -12,7 +12,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory, BlockEntityClientSerializable
@@ -32,7 +31,7 @@ public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("blaster_workbench"));
+		return Text.translatable(Resources.container("blaster_workbench"));
 	}
 
 	@Override

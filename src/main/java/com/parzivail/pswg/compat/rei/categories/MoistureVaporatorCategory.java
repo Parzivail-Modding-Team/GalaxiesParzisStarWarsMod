@@ -16,7 +16,6 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -33,7 +32,7 @@ public class MoistureVaporatorCategory implements DisplayCategory<MoistureVapora
 	@Override
 	public Text getTitle()
 	{
-		return new TranslatableText("category.pswg.vaporator");
+		return Text.translatable("category.pswg.vaporator");
 	}
 
 	@Override
@@ -52,7 +51,7 @@ public class MoistureVaporatorCategory implements DisplayCategory<MoistureVapora
 				Widgets.createRecipeBase(bounds),
 				Widgets.createTexturedWidget(REIRuntime.getInstance().isDarkThemeEnabled() ? GalaxiesREIClientPlugin.DISPLAY_TEXTURE_DARK : GalaxiesREIClientPlugin.DISPLAY_TEXTURE, bounds.getX() + 15, bounds.getY() + 15, 120, 34),
 				Widgets.createLabel(new Point(bounds.x + bounds.width - 5, bounds.y + 5),
-				                    new TranslatableText("category.pswg.vaporator.time", df.format(duration / 20d))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB),
+				                    Text.translatable("category.pswg.vaporator.time", df.format(duration / 20d))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB),
 				Widgets.createSlot(inputSlotPos).markInput().entries(display.getInputEntries().get(0)),
 				Widgets.createSlot(outputSlotPos).disableBackground().markOutput().entries(display.getOutputEntries().get(0))
 		);

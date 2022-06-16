@@ -306,23 +306,23 @@ public class Client implements ClientModInitializer
 
 				if (!config.disableUpdateCheck && Resources.REMOTE_VERSION != null)
 				{
-					Text versionText = new LiteralText(Resources.REMOTE_VERSION.name)
+					Text versionText = Text.literal(Resources.REMOTE_VERSION.name)
 							.styled((style) -> style
 									.withItalic(true)
 							);
-					Text urlText = new LiteralText("https://www.curseforge.com/minecraft/mc-mods/pswg")
+					Text urlText = Text.literal("https://www.curseforge.com/minecraft/mc-mods/pswg")
 							.styled((style) -> style
 									.withColor(TextColor.fromRgb(0x5bc0de))
 									.withUnderline(true)
 									.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/pswg"))
-									.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new LiteralText("PSWG on CurseForge")))
+									.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("PSWG on CurseForge")))
 							);
-					client.player.sendMessage(new TranslatableText("msg.pswg.update", versionText, urlText), false);
+					client.player.sendMessage(Text.translatable("msg.pswg.update", versionText, urlText), false);
 				}
 
 				if (config.client.showCharacterCustomizeTip)
 				{
-					client.player.sendMessage(new TranslatableText("msg.pswg.tip.customize_character", TextUtil.stylizeKeybind(Client.KEY_SPECIES_SELECT.getBoundKeyLocalizedText())), false);
+					client.player.sendMessage(Text.translatable("msg.pswg.tip.customize_character", TextUtil.stylizeKeybind(Client.KEY_SPECIES_SELECT.getBoundKeyLocalizedText())), false);
 					config.client.showCharacterCustomizeTip = false;
 					Resources.CONFIG.save();
 				}

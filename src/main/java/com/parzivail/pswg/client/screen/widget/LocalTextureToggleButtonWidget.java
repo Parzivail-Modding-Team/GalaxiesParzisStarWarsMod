@@ -5,7 +5,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 @Environment(value = EnvType.CLIENT)
@@ -34,7 +33,7 @@ public class LocalTextureToggleButtonWidget extends ButtonWidget
 
 	public LocalTextureToggleButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction)
 	{
-		this(x, y, width, height, u, v, hoveredU, hoveredV, pressedU, pressedV, textureWidth, textureHeight, pressAction, LiteralText.EMPTY);
+		this(x, y, width, height, u, v, hoveredU, hoveredV, pressedU, pressedV, textureWidth, textureHeight, pressAction, Text.empty());
 	}
 
 	public LocalTextureToggleButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction, Text text)

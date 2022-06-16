@@ -4,7 +4,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
 import java.util.function.Predicate;
@@ -16,7 +15,7 @@ public class AreaButtonWidget extends ButtonWidget
 
 	public AreaButtonWidget(int x, int y, int width, int height, Predicate<ButtonWidget> enabledPredicate, PressAction pressAction)
 	{
-		this(x, y, width, height, enabledPredicate, pressAction, LiteralText.EMPTY);
+		this(x, y, width, height, enabledPredicate, pressAction, Text.empty());
 	}
 
 	public AreaButtonWidget(int x, int y, int width, int height, Predicate<ButtonWidget> enabledPredicate, PressAction pressAction, Text text)

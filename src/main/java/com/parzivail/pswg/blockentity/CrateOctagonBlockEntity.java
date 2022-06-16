@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class CrateOctagonBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
@@ -22,7 +21,7 @@ public class CrateOctagonBlockEntity extends InventoryBlockEntity implements Nam
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("kyber_crate"));
+		return Text.translatable(Resources.container("kyber_crate"));
 	}
 
 	@Override
