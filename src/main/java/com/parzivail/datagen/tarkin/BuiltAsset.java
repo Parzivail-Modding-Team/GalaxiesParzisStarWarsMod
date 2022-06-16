@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.Lumberjack;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagEntry;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -121,7 +121,7 @@ public class BuiltAsset
 		return new BuiltAsset(getRecipePath(identifier), contents);
 	}
 
-	public static BuiltAsset tag(Identifier identifier, Tag.Entry contents)
+	public static BuiltAsset tag(Identifier identifier, TagEntry contents)
 	{
 		Lumberjack.log("Created tag %s", identifier);
 		return new JsonTagInsBuiltAsset(getTagPath(identifier), contents);

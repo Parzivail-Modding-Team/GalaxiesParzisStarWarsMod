@@ -27,9 +27,6 @@ public abstract class SpriteAtlasTextureMixin
 	{
 		var identifier = getTexturePath(info.getId());
 
-		if (container.containsResource(new Identifier(identifier.getNamespace(), identifier.getPath() + ".pswglayers")))
-			return LayeredSpriteBuilder.build(nativeImage, identifier, container, this::getTexturePath);
-
-		return nativeImage;
+		return LayeredSpriteBuilder.build(nativeImage, identifier, container, this::getTexturePath);
 	}
 }

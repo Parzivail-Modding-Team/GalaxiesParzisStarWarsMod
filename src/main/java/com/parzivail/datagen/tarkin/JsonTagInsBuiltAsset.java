@@ -3,6 +3,8 @@ package com.parzivail.datagen.tarkin;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagBuilder;
+import net.minecraft.tag.TagEntry;
 import net.minecraft.util.JsonHelper;
 
 import java.io.IOException;
@@ -16,7 +18,7 @@ public class JsonTagInsBuiltAsset extends BuiltAsset
 {
 	private final Tag.Entry contents;
 
-	protected JsonTagInsBuiltAsset(Path file, Tag.Entry contents)
+	protected JsonTagInsBuiltAsset(Path file, TagEntry contents)
 	{
 		super(file, null);
 		this.contents = contents;
@@ -27,7 +29,7 @@ public class JsonTagInsBuiltAsset extends BuiltAsset
 	{
 		try
 		{
-			var tag = Tag.Builder.create();
+			var tag = TagBuilder.create();
 			if (Files.exists(file))
 			{
 				try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8))

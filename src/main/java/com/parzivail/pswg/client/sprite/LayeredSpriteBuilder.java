@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class LayeredSpriteBuilder
@@ -21,17 +22,9 @@ public class LayeredSpriteBuilder
 
 	public static NativeImage build(NativeImage nativeImage, Identifier identifier, ResourceManager resourceManager, Function<Identifier, Identifier> texturePathResolver) throws IOException
 	{
-		Resource textureMetaResource;
-		try
-		{
-			textureMetaResource = resourceManager.getResource(new Identifier(identifier.getNamespace(), identifier.getPath() + ".pswglayers"));
-		}
-		catch (IOException ex)
-		{
-			Lumberjack.error("Error loading pswglayers resource:");
-			ex.printStackTrace();
+		Resource textureMetaResource = resourceManager.getResource(new Identifier(identifier.getNamespace(), identifier.getPath() + ".pswglayers")).orElse(null);
+		if (textureMetaResource == null)
 			return nativeImage;
-		}
 
 		SwgSpriteMetaLayered textureMeta;
 		try (final var bufferedReader = new BufferedReader(new InputStreamReader(textureMetaResource.getInputStream(), StandardCharsets.UTF_8)))

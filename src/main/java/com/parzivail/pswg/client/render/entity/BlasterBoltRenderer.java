@@ -75,7 +75,7 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		if (shouldOffset)
 		{
 			var side = 1;
-			if (mc.options.mainArm == Arm.LEFT)
+			if (mc.options.getMainArm().getValue() == Arm.LEFT)
 				side = -1;
 
 			var d = 1 - Ease.outCubic((float)MathHelper.clamp(ownerDist / 15, 0, 1));

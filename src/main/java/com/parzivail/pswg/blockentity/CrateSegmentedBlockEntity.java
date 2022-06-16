@@ -10,7 +10,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class CrateSegmentedBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory
@@ -23,7 +22,7 @@ public class CrateSegmentedBlockEntity extends InventoryBlockEntity implements N
 	@Override
 	public Text getDisplayName()
 	{
-		return new TranslatableText(Resources.container("segmented_crate"));
+		return Text.translatable(Resources.container("segmented_crate"));
 	}
 
 	@Override

@@ -30,7 +30,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.command.CommandManager;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.util.Objects;
 
@@ -129,7 +129,7 @@ public class Galaxies implements ModInitializer
 
 					                                                                          if (swgspecies == null)
 					                                                                          {
-						                                                                          context.getSource().sendFeedback(new TranslatableText(Resources.command("species.invalid"), species), false);
+						                                                                          context.getSource().sendFeedback(Text.translatable(Resources.command("species.invalid"), species), false);
 						                                                                          return 0;
 					                                                                          }
 				                                                                          }

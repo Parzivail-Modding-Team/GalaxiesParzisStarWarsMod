@@ -97,7 +97,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		this.playerInventoryTitleY = this.backgroundHeight - 92;
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 
-		this.addDrawableChild(buildButton = new LocalTextureButtonWidget(x + 51, y + 124, 22, 12, 178, 3, 178, 17, 256, 256, this::onBuildClicked, new SimpleTooltipSupplier(this, this::getBuildTooltip), LiteralText.EMPTY));
+		this.addDrawableChild(buildButton = new LocalTextureButtonWidget(x + 51, y + 124, 22, 12, 178, 3, 178, 17, 256, 256, this::onBuildClicked, new SimpleTooltipSupplier(this, this::getBuildTooltip), Text.empty()));
 		this.addDrawableChild(cancelButton = new LocalTextureButtonWidget(x + 76, y + 124, 22, 12, 203, 3, 203, 17, this::onCancelClicked));
 
 		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 70, 93, 17, button -> attachmentList.size() > 0, button -> onRowClicked(0)));
@@ -204,10 +204,10 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			return null;
 
 		var text = new ArrayList<Text>();
-		text.add(new TranslatableText(I18N_INCOMPAT_ATTACHMENT));
+		text.add(Text.translatable(I18N_INCOMPAT_ATTACHMENT));
 
 		for (var a : incompat)
-			text.add(BlasterItem.getAttachmentTranslation(blasterModel, a).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xA0A0A0))));
+			text.add(BlasterItem.getAttachmentTranslation(blasterModel, a).copy().setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xA0A0A0))));
 
 		return text;
 	}
@@ -382,7 +382,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			var rowIdx = topRow + i;
 
 			if (rowIdx >= attachmentList.size())
-				drawAttachmentRow(matrices, i, 0, 0, ROW_STATE_EMPTY, LiteralText.EMPTY);
+				drawAttachmentRow(matrices, i, 0, 0, ROW_STATE_EMPTY, Text.empty());
 			else
 			{
 				var attachment = attachments.get(rowIdx);

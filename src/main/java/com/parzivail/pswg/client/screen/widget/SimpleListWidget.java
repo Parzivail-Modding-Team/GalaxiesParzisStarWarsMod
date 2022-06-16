@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.AlwaysSelectedEntryListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
@@ -57,7 +56,7 @@ public class SimpleListWidget<T> extends AlwaysSelectedEntryListWidget<SimpleLis
 
 	private final Consumer<T> onSelectionChanged;
 
-	private Function<T, Text> entryFormatter = entry -> new TranslatableText(entry.toString());
+	private Function<T, Text> entryFormatter = entry -> Text.translatable(entry.toString());
 	private Function<List<Entry<T>>, Entry<T>> entrySelector = entries -> entries.get(0);
 
 	public SimpleListWidget(MinecraftClient minecraftClient, int x, int y, int width, int height, int itemHeight, Consumer<T> onSelectionChanged)

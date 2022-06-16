@@ -26,15 +26,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3f;
@@ -71,7 +70,7 @@ public class SpeciesSelectScreen extends Screen
 
 	public SpeciesSelectScreen(Screen parent)
 	{
-		super(new TranslatableText("screen.pswg.species_select"));
+		super(Text.translatable("screen.pswg.species_select"));
 		this.parent = parent;
 
 		availableSpecies = SwgSpeciesRegistry.getSpecies();
@@ -106,7 +105,7 @@ public class SpeciesSelectScreen extends Screen
 			this.gender = playerSpecies.getGender();
 
 		speciesVariableListWidget = new SimpleListWidget<>(client, width / 2 + 128, height / 2 - 91, 80, 100, 15, entry -> updateAbility());
-		speciesVariableListWidget.setEntryFormatter(speciesVariable -> new TranslatableText(speciesVariable.getTranslationKey()));
+		speciesVariableListWidget.setEntryFormatter(speciesVariable -> Text.translatable(speciesVariable.getTranslationKey()));
 
 		speciesListWidget = new SimpleListWidget<>(client, width / 2 - 128 - 80, height / 2 - 91, 80, 182, 15, entry -> {
 			if (entry != null)
@@ -117,7 +116,7 @@ public class SpeciesSelectScreen extends Screen
 				speciesVariableListWidget.clear();
 			updateAbility();
 		});
-		speciesListWidget.setEntryFormatter(species -> new TranslatableText(SwgSpeciesRegistry.getTranslationKey(species)));
+		speciesListWidget.setEntryFormatter(species -> Text.translatable(SwgSpeciesRegistry.getTranslationKey(species)));
 		speciesListWidget.setEntrySelector(entries -> {
 			if (playerSpecies == null)
 				return entries.get(1);
@@ -130,13 +129,13 @@ public class SpeciesSelectScreen extends Screen
 		this.addDrawableChild(speciesVariableListWidget);
 		this.addDrawableChild(speciesListWidget);
 
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, new LiteralText("<"), (button) -> moveToNextVariableOption(true)));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 120, this.height / 2 - 10, 20, 20, Text.literal("<"), (button) -> moveToNextVariableOption(true)));
 
-		this.addDrawableChild(new ButtonWidget(this.width / 2 + 100, this.height / 2 - 10, 20, 20, new LiteralText(">"), (button) -> moveToNextVariableOption(false)));
+		this.addDrawableChild(new ButtonWidget(this.width / 2 + 100, this.height / 2 - 10, 20, 20, Text.literal(">"), (button) -> moveToNextVariableOption(false)));
 
 		this.addDrawableChild(new ButtonWidget(this.width / 2 - 100 - 75, this.height - 26, 95, 20, ScreenTexts.BACK, (button) -> this.client.setScreen(this.parent)));
 
-		this.addDrawableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, new TranslatableText(Resources.I18N_SCREEN_APPLY), (button) -> {
+		this.addDrawableChild(new ButtonWidget(this.width / 2 - 60, this.height - 26, 120, 20, Text.translatable(Resources.I18N_SCREEN_APPLY), (button) -> {
 			if (speciesListWidget.getSelectedOrNull() == null)
 				return;
 
@@ -164,7 +163,7 @@ public class SpeciesSelectScreen extends Screen
 			ClientPlayNetworking.send(SwgPackets.C2S.SetOwnSpecies, passedData);
 		}));
 
-		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, new TranslatableText(I18N_USE_FEMALE_MODEL), this.gender == SpeciesGender.FEMALE, true, (checked) -> {
+		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, Text.translatable(I18N_USE_FEMALE_MODEL), this.gender == SpeciesGender.FEMALE, true, (checked) -> {
 			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
 			if (this.playerSpecies != null)
 				this.playerSpecies.setGender(gender);
@@ -357,7 +356,7 @@ public class SpeciesSelectScreen extends Screen
 
 				selectedIndex = Math.max(0, values.indexOf(selectedValue));
 
-				drawCenteredText(matrices, this.textRenderer, new TranslatableText(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
+				drawCenteredText(matrices, this.textRenderer, Text.translatable(selectedVariable.getTranslationFor(selectedValue)), this.width / 2, height / 2 + 70, 16777215);
 			}
 			else
 			{

@@ -34,7 +34,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.*;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
@@ -78,9 +77,9 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		return new Identifier(blasterModel);
 	}
 
-	public static TranslatableText getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
+	public static Text getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
 	{
-		return new TranslatableText(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
+		return Text.translatable(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
 	}
 
 	@Override
@@ -134,7 +133,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		bt.serializeAsSubtag(stack);
 
-		player.sendMessage(new TranslatableText(Resources.msg("blaster_mode_changed"), new TranslatableText(currentMode.getTranslation())), true);
+		player.sendMessage(Text.translatable(Resources.msg("blaster_mode_changed"), Text.translatable(currentMode.getTranslation())), true);
 	}
 
 	public static void bypassHeat(World world, PlayerEntity player, ItemStack stack)
@@ -464,8 +463,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
 	{
 		super.appendTooltip(stack, world, tooltip, context);
-		tooltip.add(new TranslatableText("tooltip.pswg.blaster.info"));
-		tooltip.add(new TranslatableText("tooltip.pswg.blaster.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+		tooltip.add(Text.translatable("tooltip.pswg.blaster.info"));
+		tooltip.add(Text.translatable("tooltip.pswg.blaster.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 	}
 
 	@Override

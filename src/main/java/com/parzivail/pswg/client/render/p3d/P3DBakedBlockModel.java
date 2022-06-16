@@ -24,10 +24,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Matrix3f;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -52,7 +52,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		if (state != null)
 		{
@@ -86,7 +86,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	protected Mesh createItemMesh(ItemStack stack, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		return createMesh(new P3DBlockRenderTarget.Item(stack), randomSupplier, context, transformation);
 	}

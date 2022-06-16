@@ -27,9 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 import org.lwjgl.glfw.GLFW;
@@ -48,7 +46,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		public MutableSlider(int x, int y, int width, int height, String translationKey, double value, Function<Double, String> valueFormatter, Consumer<MutableSlider> callback)
 		{
-			super(x, y, width, height, LiteralText.EMPTY, value);
+			super(x, y, width, height, Text.empty(), value);
 			this.translationKey = translationKey;
 			this.valueFormatter = valueFormatter;
 			this.callback = callback;
@@ -58,7 +56,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		@Override
 		protected void updateMessage()
 		{
-			setMessage(new TranslatableText(translationKey, valueFormatter.apply(value)));
+			setMessage(Text.translatable(translationKey, valueFormatter.apply(value)));
 		}
 
 		@Override
@@ -129,14 +127,14 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			commitChanges();
 		}));
 
-		this.addDrawableChild(new ButtonWidget(x + 173, y + 90, 40, 20, new TranslatableText("Apply"), button -> {
+		this.addDrawableChild(new ButtonWidget(x + 173, y + 90, 40, 20, Text.translatable("Apply"), button -> {
 			var passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeNbt(getLightsaberTag().toTag());
 			// TODO: move this to backend, don't allow client to set arbitrary tag data
 			ClientPlayNetworking.send(SwgPackets.C2S.LightsaberForgeApply, passedData);
 		}));
 
-		this.addDrawableChild(cbUnstable = new EventCheckboxWidget(x + 173, y + 65, 20, 20, new TranslatableText("Unstable"), false, true, mutableCheckbox -> commitChanges()));
+		this.addDrawableChild(cbUnstable = new EventCheckboxWidget(x + 173, y + 65, 20, 20, Text.translatable("Unstable"), false, true, mutableCheckbox -> commitChanges()));
 
 		this.handler.addListener(this);
 	}

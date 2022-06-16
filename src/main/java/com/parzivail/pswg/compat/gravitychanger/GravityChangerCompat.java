@@ -1,7 +1,7 @@
 package com.parzivail.pswg.compat.gravitychanger;
 
-import me.andrew.gravitychanger.api.GravityChangerAPI;
-import me.andrew.gravitychanger.util.RotationUtil;
+import com.fusionflux.fusions_gravity_api.api.GravityChangerAPI;
+import com.fusionflux.fusions_gravity_api.util.RotationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 

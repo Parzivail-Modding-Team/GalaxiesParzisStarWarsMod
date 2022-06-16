@@ -12,11 +12,10 @@ import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-
-import java.util.Random;
 
 public class MoloShrubBlock extends PlantBlock implements Fertilizable
 {
@@ -39,13 +38,11 @@ public class MoloShrubBlock extends PlantBlock implements Fertilizable
 		this.setDefaultState(this.stateManager.getDefaultState().with(AGE, 0).with(BLOOMING, false));
 	}
 
-	@Override
 	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
 	{
 		return new ItemStack(SwgItems.Natural.MoloFlower);
 	}
 
-	@Override
 	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos)
 	{
 		var block = floor.getBlock();
@@ -58,7 +55,6 @@ public class MoloShrubBlock extends PlantBlock implements Fertilizable
 		       block == Blocks.PODZOL;
 	}
 
-	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		if (state.get(AGE) == 0)
@@ -67,7 +63,6 @@ public class MoloShrubBlock extends PlantBlock implements Fertilizable
 			return state.get(AGE) < 3 ? LARGE_SHAPE : super.getOutlineShape(state, world, pos, context);
 	}
 
-	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		int i = state.get(AGE);
@@ -81,26 +76,22 @@ public class MoloShrubBlock extends PlantBlock implements Fertilizable
 		world.setBlockState(pos, finalState, Block.NOTIFY_LISTENERS);
 	}
 
-	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		builder.add(AGE, BLOOMING);
 	}
 
-	@Override
 	public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient)
 	{
 		return state.get(AGE) < 3;
 	}
 
-	@Override
-	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state)
+	public boolean canGrow(World world, net.minecraft.util.math.random.Random random, BlockPos pos, BlockState state)
 	{
 		return true;
 	}
 
-	@Override
-	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state)
+	public void grow(ServerWorld world, net.minecraft.util.math.random.Random random, BlockPos pos, BlockState state)
 	{
 		var i = Math.min(3, state.get(AGE) + 1);
 		world.setBlockState(pos, state.with(AGE, i), Block.NOTIFY_LISTENERS);
