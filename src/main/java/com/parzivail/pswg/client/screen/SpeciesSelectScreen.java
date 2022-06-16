@@ -215,6 +215,7 @@ public class SpeciesSelectScreen extends Screen
 	{
 	}
 
+	@Override
 	public boolean keyPressed(int keyCode, int scanCode, int modifiers)
 	{
 		if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_RIGHT)
@@ -288,6 +289,7 @@ public class SpeciesSelectScreen extends Screen
 			carouselTimer++;
 	}
 
+	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
 	{
 		if (Math.abs(mouseX - width / 2) < 128 && Math.abs(mouseY - height / 2) < 91)
@@ -299,6 +301,7 @@ public class SpeciesSelectScreen extends Screen
 		return super.mouseScrolled(mouseX, mouseY, amount);
 	}
 
+	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
 		this.renderBackground(matrices);
@@ -520,6 +523,7 @@ public class SpeciesSelectScreen extends Screen
 		DiffuseLighting.enableGuiDepthLighting();
 	}
 
+	@Override
 	public void renderBackgroundTexture(int vOffset)
 	{
 		var tessellator = Tessellator.getInstance();

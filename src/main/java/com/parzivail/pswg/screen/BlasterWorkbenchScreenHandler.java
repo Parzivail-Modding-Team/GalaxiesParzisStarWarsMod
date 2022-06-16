@@ -76,6 +76,7 @@ public class BlasterWorkbenchScreenHandler extends ScreenHandler
 		slot.markDirty();
 	}
 
+	@Override
 	public ItemStack transferSlot(PlayerEntity player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;

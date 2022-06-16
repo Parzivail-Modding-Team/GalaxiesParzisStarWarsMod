@@ -24,6 +24,7 @@ public class CrateGenericSmallScreen extends HandledScreen<CrateGenericSmallScre
 		backgroundHeight = 168;
 	}
 
+	@Override
 	protected void init()
 	{
 		super.init();
@@ -32,6 +33,7 @@ public class CrateGenericSmallScreen extends HandledScreen<CrateGenericSmallScre
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 	}
 
+	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
 		this.renderBackground(matrices);
@@ -39,6 +41,7 @@ public class CrateGenericSmallScreen extends HandledScreen<CrateGenericSmallScre
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 	}
 
+	@Override
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
 	{
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);

@@ -17,6 +17,7 @@ public class InventoryScreenHandler extends ScreenHandler
 		this.inventory = inventory;
 	}
 
+	@Override
 	public ItemStack transferSlot(PlayerEntity player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;

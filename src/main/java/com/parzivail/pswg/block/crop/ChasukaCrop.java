@@ -32,22 +32,26 @@ public class ChasukaCrop extends CropBlock
 		super(settings);
 	}
 
+	@Override
 	public IntProperty getAgeProperty()
 	{
 		return AGE;
 	}
 
+	@Override
 	public int getMaxAge()
 	{
 		return 2;
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	protected ItemConvertible getSeedsItem()
 	{
 		return SwgItems.Seeds.ChasukaSeeds;
 	}
 
+	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		if (random.nextInt(3) != 0)
@@ -56,16 +60,19 @@ public class ChasukaCrop extends CropBlock
 		}
 	}
 
+	@Override
 	protected int getGrowthAmount(World world)
 	{
 		return super.getGrowthAmount(world) / 3;
 	}
 
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		builder.add(AGE);
 	}
 
+	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return AGE_TO_SHAPE[state.get(this.getAgeProperty())];

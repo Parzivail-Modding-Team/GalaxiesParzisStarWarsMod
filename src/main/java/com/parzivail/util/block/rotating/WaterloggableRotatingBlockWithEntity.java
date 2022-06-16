@@ -18,6 +18,7 @@ public abstract class WaterloggableRotatingBlockWithEntity extends Waterloggable
 		super(settings);
 	}
 
+	@Override
 	public boolean onSyncedBlockEvent(BlockState state, World world, BlockPos pos, int type, int data)
 	{
 		super.onSyncedBlockEvent(state, world, pos, type, data);
@@ -25,6 +26,7 @@ public abstract class WaterloggableRotatingBlockWithEntity extends Waterloggable
 		return blockEntity != null && blockEntity.onSyncedBlockEvent(type, data);
 	}
 
+	@Override
 	@Nullable
 	public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos)
 	{

@@ -23,6 +23,7 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 {
 	private final Inventory inventory = new SimpleInventory(1)
 	{
+		@Override
 		public void markDirty()
 		{
 			super.markDirty();
@@ -78,12 +79,14 @@ public class LightsaberForgeScreenHandler extends ScreenHandler
 		slot.markDirty();
 	}
 
+	@Override
 	public void close(PlayerEntity player)
 	{
 		super.close(player);
 		this.context.run((world, blockPos) -> this.dropInventory(player, this.inventory));
 	}
 
+	@Override
 	public ItemStack transferSlot(PlayerEntity player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;

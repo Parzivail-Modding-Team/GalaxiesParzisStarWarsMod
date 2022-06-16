@@ -27,16 +27,19 @@ public class LightsaberIdleSoundInstance extends DopplerSoundInstance
 		this.z = (float)player.getZ();
 	}
 
+	@Override
 	public boolean canPlay()
 	{
 		return !this.player.isSilent();
 	}
 
+	@Override
 	public boolean shouldAlwaysPlay()
 	{
 		return true;
 	}
 
+	@Override
 	public void tick()
 	{
 		super.tick();

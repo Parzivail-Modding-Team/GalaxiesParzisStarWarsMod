@@ -41,6 +41,7 @@ public class SlowTurningMoveControl extends MoveControl
 		return true;
 	}
 
+	@Override
 	public void tick()
 	{
 		if (this.state == SlowTurningMoveControl.State.STRAFE)

@@ -11,11 +11,13 @@ public class PParticle extends ParticleType<PParticle> implements ParticleEffect
 {
 	private static final ParticleEffect.Factory<PParticle> PARAMETER_FACTORY = new ParticleEffect.Factory<>()
 	{
+		@Override
 		public PParticle read(ParticleType<PParticle> particleType, StringReader stringReader)
 		{
 			return (PParticle)particleType;
 		}
 
+		@Override
 		public PParticle read(ParticleType<PParticle> particleType, PacketByteBuf packetByteBuf)
 		{
 			return (PParticle)particleType;
@@ -28,20 +30,24 @@ public class PParticle extends ParticleType<PParticle> implements ParticleEffect
 		super(alwaysShow, PARAMETER_FACTORY);
 	}
 
+	@Override
 	public PParticle getType()
 	{
 		return this;
 	}
 
+	@Override
 	public Codec<PParticle> getCodec()
 	{
 		return this.codec;
 	}
 
+	@Override
 	public void write(PacketByteBuf buf)
 	{
 	}
 
+	@Override
 	public String asString()
 	{
 		return Registry.PARTICLE_TYPE.getId(this).toString();

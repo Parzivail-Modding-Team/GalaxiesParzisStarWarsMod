@@ -28,6 +28,7 @@ public class SlugTrailParticle extends AnimatedParticle
 		this.velocityZ = vZ;
 	}
 
+	@Override
 	public void tick()
 	{
 		super.tick();
@@ -48,6 +49,7 @@ public class SlugTrailParticle extends AnimatedParticle
 			this.spriteProvider = spriteProvider;
 		}
 
+		@Override
 		public Particle createParticle(PParticle defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
 		{
 			return new SlugTrailParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);

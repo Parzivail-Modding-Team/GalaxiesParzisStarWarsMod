@@ -31,11 +31,13 @@ public class SparkParticle extends CrossPointingParticle
 		this.velocityZ = vZ;
 	}
 
+	@Override
 	public ParticleTextureSheet getType()
 	{
 		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
 	}
 
+	@Override
 	public int getBrightness(float tint)
 	{
 		float f = ((float)this.age + tint) / (float)this.maxAge;
@@ -52,6 +54,7 @@ public class SparkParticle extends CrossPointingParticle
 		return j | k << 16;
 	}
 
+	@Override
 	public void tick()
 	{
 		super.tick();
@@ -83,6 +86,7 @@ public class SparkParticle extends CrossPointingParticle
 			this.spriteProvider = spriteProvider;
 		}
 
+		@Override
 		public Particle createParticle(PParticle defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
 		{
 			return new SparkParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);

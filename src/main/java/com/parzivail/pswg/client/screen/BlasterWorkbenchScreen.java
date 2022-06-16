@@ -88,6 +88,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		this.titleY -= 1;
 	}
 
+	@Override
 	protected void init()
 	{
 		super.init();
@@ -294,6 +295,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		return new BlasterTag(blaster.getOrCreateNbt());
 	}
 
+	@Override
 	public void removed()
 	{
 		super.removed();
@@ -305,6 +307,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		return attachmentList.size() > 3;
 	}
 
+	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
 		this.renderBackground(matrices);
@@ -500,6 +503,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	{
 	}
 
+	@Override
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
 	{
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);

@@ -60,6 +60,7 @@ public class WaterloggableRotatingBlockWithBounds extends WaterloggableRotatingB
 		}
 	}
 
+	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom)
 	{
 		if (state.get(Properties.WATERLOGGED))

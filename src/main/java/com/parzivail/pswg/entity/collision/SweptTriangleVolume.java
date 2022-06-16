@@ -10,11 +10,13 @@ import org.apache.commons.lang3.mutable.MutableObject;
 
 public record SweptTriangleVolume(Vec3d a, Vec3d b, Vec3d c, double radius) implements ICollisionVolume
 {
+	@Override
 	public ICollisionVolume transform(Quaternion q)
 	{
 		return new SweptTriangleVolume(QuatUtil.rotate(a, q), QuatUtil.rotate(b, q), QuatUtil.rotate(c, q), radius);
 	}
 
+	@Override
 	public ICollisionVolume transform(Matrix4f m)
 	{
 		return new SweptTriangleVolume(Matrix4fUtil.transform(a, m), Matrix4fUtil.transform(b, m), Matrix4fUtil.transform(c, m), radius);

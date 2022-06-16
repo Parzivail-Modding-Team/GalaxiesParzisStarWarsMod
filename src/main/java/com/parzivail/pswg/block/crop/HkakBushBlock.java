@@ -42,11 +42,13 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 		this.setDefaultState(this.stateManager.getDefaultState().with(AGE, 0));
 	}
 
+	@Override
 	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
 	{
 		return new ItemStack(SwgItems.Food.HkakBean);
 	}
 
+	@Override
 	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos)
 	{
 		var block = floor.getBlock();
@@ -59,6 +61,7 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 		       block == Blocks.PODZOL;
 	}
 
+	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		if (state.get(AGE) == 0)
@@ -71,11 +74,13 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 		}
 	}
 
+	@Override
 	public boolean hasRandomTicks(BlockState state)
 	{
 		return state.get(AGE) < 3;
 	}
 
+	@Override
 	public void randomTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		int i = state.get(AGE);
@@ -85,6 +90,7 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 		}
 	}
 
+	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		int i = state.get(AGE);
@@ -109,21 +115,25 @@ public class HkakBushBlock extends PlantBlock implements Fertilizable
 		}
 	}
 
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		builder.add(AGE);
 	}
 
+	@Override
 	public boolean isFertilizable(BlockView world, BlockPos pos, BlockState state, boolean isClient)
 	{
 		return state.get(AGE) < 3;
 	}
 
+	@Override
 	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state)
 	{
 		return true;
 	}
 
+	@Override
 	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state)
 	{
 		var i = Math.min(3, state.get(AGE) + 1);

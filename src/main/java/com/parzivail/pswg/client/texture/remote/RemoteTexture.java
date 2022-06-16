@@ -40,6 +40,7 @@ public class RemoteTexture extends CallbackTexture
 		this.url = url;
 	}
 
+	@Override
 	public void load(ResourceManager manager) throws IOException
 	{
 		MinecraftClient.getInstance().execute(() -> {

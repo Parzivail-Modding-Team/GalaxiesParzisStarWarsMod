@@ -29,6 +29,7 @@ public class SwgRecipeType
 	private record RecipeTypeImpl<T extends Recipe<?>>(Identifier identifier) implements RecipeType<T>
 	{
 
+		@Override
 		public String toString()
 		{
 			return identifier.toString();

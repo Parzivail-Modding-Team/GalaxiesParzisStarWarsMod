@@ -59,6 +59,7 @@ public abstract class CallbackTexture extends ResourceTexture
 		image.upload(0, 0, 0, 0, 0, image.getWidth(), image.getHeight(), blur, clamp, false, false);
 	}
 
+	@Override
 	public void load(ResourceManager manager) throws IOException
 	{
 		MinecraftClient.getInstance().execute(() -> {

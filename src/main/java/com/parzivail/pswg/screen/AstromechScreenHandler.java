@@ -50,6 +50,7 @@ public class AstromechScreenHandler extends ScreenHandler
 		       && this.entity.distanceTo(player) < 8.0F;
 	}
 
+	@Override
 	public ItemStack transferSlot(PlayerEntity player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;

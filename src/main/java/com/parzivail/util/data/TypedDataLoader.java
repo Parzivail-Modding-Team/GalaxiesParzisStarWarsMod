@@ -89,6 +89,7 @@ public abstract class TypedDataLoader<T> extends JsonDataLoader implements Ident
 	{
 	}
 
+	@Override
 	public void apply(Map<Identifier, JsonElement> map, ResourceManager resourceManager, Profiler profiler)
 	{
 		Map<Identifier, T> dataMap = new HashMap<>();

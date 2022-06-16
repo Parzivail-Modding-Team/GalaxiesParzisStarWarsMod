@@ -61,6 +61,7 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 
 	abstract boolean isConnectedTo(WorldAccess world, BlockState state, BlockState otherState, BlockPos otherPos, Direction direction);
 
+	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		var state = super.getPlacementState(ctx);
@@ -133,6 +134,7 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 		return connections;
 	}
 
+	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState otherState, WorldAccess world, BlockPos pos, BlockPos otherPos)
 	{
 		if (state.get(Properties.WATERLOGGED))
@@ -149,6 +151,7 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 		}
 	}
 
+	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		if (!player.getAbilities().allowModifyWorld || !player.getStackInHand(hand).isEmpty())
@@ -173,6 +176,7 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 		}
 	}
 
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		super.appendProperties(builder);

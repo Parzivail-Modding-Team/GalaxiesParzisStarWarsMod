@@ -27,29 +27,34 @@ public class BucketableFishEntity extends SchoolingFishEntity
 		return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 3.0D);
 	}
 
+	@Override
 	public ItemStack getBucketItem()
 	{
 		return new ItemStack(bucket);
 	}
 
+	@Override
 	protected SoundEvent getAmbientSound()
 	{
 		// TODO
 		return SoundEvents.ENTITY_COD_AMBIENT;
 	}
 
+	@Override
 	protected SoundEvent getDeathSound()
 	{
 		// TODO
 		return SoundEvents.ENTITY_COD_DEATH;
 	}
 
+	@Override
 	protected SoundEvent getHurtSound(DamageSource source)
 	{
 		// TODO
 		return SoundEvents.ENTITY_COD_HURT;
 	}
 
+	@Override
 	protected SoundEvent getFlopSound()
 	{
 		// TODO

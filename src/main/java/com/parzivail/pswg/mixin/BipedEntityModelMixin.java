@@ -34,7 +34,7 @@ public abstract class BipedEntityModelMixin<T extends LivingEntity> extends Anim
 	@Shadow
 	public ModelPart leftArm;
 
-	@Inject(method = "setAngles", at = @At(value = "TAIL"))
+	@Inject(method = "setAngles(Lnet/minecraft/entity/LivingEntity;FFFFF)V", at = @At(value = "TAIL"))
 	public void setAnglesMixin(T livingEntity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch, CallbackInfo info)
 	{
 		if (!livingEntity.getOffHandStack().isEmpty() || livingEntity.isSwimming() || livingEntity.hasVehicle())

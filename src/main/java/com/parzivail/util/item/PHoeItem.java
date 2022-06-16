@@ -28,6 +28,7 @@ public class PHoeItem extends HoeItem
 		this.attributeModifiers = builder.build();
 	}
 
+	@Override
 	public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(EquipmentSlot slot)
 	{
 		return slot == EquipmentSlot.MAINHAND ? this.attributeModifiers : super.getAttributeModifiers(slot);

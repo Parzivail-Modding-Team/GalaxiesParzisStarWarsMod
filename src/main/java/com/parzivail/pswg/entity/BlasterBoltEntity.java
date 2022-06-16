@@ -134,6 +134,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		super.tick();
 	}
 
+	@Override
 	protected void onCollision(HitResult hitResult)
 	{
 		super.onCollision(hitResult);

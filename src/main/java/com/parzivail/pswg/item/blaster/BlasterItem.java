@@ -211,6 +211,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		return 72000;
 	}
 
+	@Override
 	public UseAction getUseAction(ItemStack stack)
 	{
 		return UseAction.NONE;

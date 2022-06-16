@@ -16,17 +16,20 @@ public class SelfConnectingGlassBlock extends SelfConnectingBlock
 		super(settings);
 	}
 
+	@Override
 	public VoxelShape getCameraCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return VoxelShapes.empty();
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos)
 	{
 		return 1.0F;
 	}
 
+	@Override
 	public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos)
 	{
 		return true;

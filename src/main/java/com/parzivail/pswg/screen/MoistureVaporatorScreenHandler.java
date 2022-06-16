@@ -72,6 +72,7 @@ public class MoistureVaporatorScreenHandler extends AbstractRecipeScreenHandler<
 		return this.world.getRecipeManager().getFirstMatch(SwgRecipeType.Vaporator, new SimpleInventory(itemStack), this.world).isPresent();
 	}
 
+	@Override
 	public ItemStack transferSlot(PlayerEntity player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;

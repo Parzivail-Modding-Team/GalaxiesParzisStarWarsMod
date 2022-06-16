@@ -20,16 +20,19 @@ public class WaterloggableBlock extends Block implements Waterloggable
 		this.setDefaultState(this.stateManager.getDefaultState().with(Properties.WATERLOGGED, false));
 	}
 
+	@Override
 	public FluidState getFluidState(BlockState state)
 	{
 		return state.get(Properties.WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
 	}
 
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		builder.add(Properties.WATERLOGGED);
 	}
 
+	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		if (state.get(Properties.WATERLOGGED))
@@ -38,6 +41,7 @@ public class WaterloggableBlock extends Block implements Waterloggable
 		return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 
+	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		var fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());

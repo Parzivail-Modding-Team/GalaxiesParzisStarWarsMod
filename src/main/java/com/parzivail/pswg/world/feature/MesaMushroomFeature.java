@@ -15,6 +15,7 @@ public class MesaMushroomFeature extends Feature<SingleStateFeatureConfig>
 		super(codec);
 	}
 
+	@Override
 	public boolean generate(FeatureContext<SingleStateFeatureConfig> context)
 	{
 		var origin = context.getOrigin();

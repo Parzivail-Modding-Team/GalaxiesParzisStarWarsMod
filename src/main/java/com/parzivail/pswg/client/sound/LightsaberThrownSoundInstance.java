@@ -18,16 +18,19 @@ public class LightsaberThrownSoundInstance extends DopplerSoundInstance
 		this.volume = 0;
 	}
 
+	@Override
 	public boolean canPlay()
 	{
 		return !this.source.isSilent();
 	}
 
+	@Override
 	public boolean shouldAlwaysPlay()
 	{
 		return true;
 	}
 
+	@Override
 	public void tick()
 	{
 		super.tick();

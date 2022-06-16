@@ -27,6 +27,7 @@ public abstract class DelegatedConnectingBlock extends ConnectingBlock
 		);
 	}
 
+	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		return this.withConnectionProperties(ctx.getWorld(), ctx.getBlockPos());
@@ -46,6 +47,7 @@ public abstract class DelegatedConnectingBlock extends ConnectingBlock
 
 	protected abstract boolean shouldConnectTo(BlockState self, BlockState other);
 
+	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom)
 	{
 		if (!state.canPlaceAt(world, pos))
@@ -61,6 +63,7 @@ public abstract class DelegatedConnectingBlock extends ConnectingBlock
 		}
 	}
 
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		builder.add(NORTH, EAST, SOUTH, WEST, UP, DOWN);

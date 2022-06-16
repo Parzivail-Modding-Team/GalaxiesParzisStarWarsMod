@@ -43,6 +43,7 @@ public class BushLeavesBlock extends LeavesBlock
 		this.WEST_SHAPE = Block.createCuboidShape(16 - height, xzOffset, xzOffset, 16.0D, 16 - xzOffset, 16 - xzOffset);
 	}
 
+	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		var direction = state.get(FACING);
@@ -57,6 +58,7 @@ public class BushLeavesBlock extends LeavesBlock
 				};
 	}
 
+	@Override
 	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
 	{
 		var direction = state.get(FACING);
@@ -64,33 +66,39 @@ public class BushLeavesBlock extends LeavesBlock
 		return world.getBlockState(blockPos).isSideSolidFullSquare(world, blockPos, direction);
 	}
 
+	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		return direction == state.get(FACING).getOpposite() && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
 
+	@Override
 	@Nullable
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		return super.getPlacementState(ctx).with(FACING, ctx.getSide());
 	}
 
+	@Override
 	public BlockState rotate(BlockState state, BlockRotation rotation)
 	{
 		return state.with(FACING, rotation.rotate(state.get(FACING)));
 	}
 
+	@Override
 	public BlockState mirror(BlockState state, BlockMirror mirror)
 	{
 		return state.rotate(mirror.getRotation(state.get(FACING)));
 	}
 
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		super.appendProperties(builder);
 		builder.add(FACING);
 	}
 
+	@Override
 	public PistonBehavior getPistonBehavior(BlockState state)
 	{
 		return PistonBehavior.DESTROY;

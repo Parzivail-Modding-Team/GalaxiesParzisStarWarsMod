@@ -15,6 +15,7 @@ public class P3DUnbakedBlockModel extends BaseUnbakedBlockModel<P3DBakedBlockMod
 		super(baseTexture, particleTexture, baker);
 	}
 
+	@Override
 	public ClonableUnbakedModel copy()
 	{
 		return new P3DUnbakedBlockModel(baseTexture, particleTexture, baker);

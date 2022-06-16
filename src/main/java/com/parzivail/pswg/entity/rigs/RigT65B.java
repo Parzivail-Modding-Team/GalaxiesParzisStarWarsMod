@@ -16,6 +16,7 @@ public class RigT65B extends ModelRig<T65BXwing>
 		super(Resources.id("rigs/ship/xwing_t65b.p3dr"));
 	}
 
+	@Override
 	public Matrix4f getPartTransformation(T65BXwing target, String part, float tickDelta)
 	{
 		var wingAnim = target.getWingAnim();

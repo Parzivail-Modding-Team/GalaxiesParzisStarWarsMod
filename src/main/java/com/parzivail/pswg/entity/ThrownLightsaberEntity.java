@@ -99,6 +99,7 @@ public class ThrownLightsaberEntity extends ThrownEntity implements IPrecisionEn
 		super.tick();
 	}
 
+	@Override
 	protected void onCollision(HitResult hitResult)
 	{
 		super.onCollision(hitResult);

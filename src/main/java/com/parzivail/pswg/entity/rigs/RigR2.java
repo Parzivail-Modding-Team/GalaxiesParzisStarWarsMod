@@ -17,6 +17,7 @@ public class RigR2 extends ModelRig<AstromechEntity>
 		super(Resources.id("rigs/droid/r2.p3dr"));
 	}
 
+	@Override
 	public Matrix4f getPartTransformation(AstromechEntity target, String part, float tickDelta)
 	{
 		var m = new Matrix4f();

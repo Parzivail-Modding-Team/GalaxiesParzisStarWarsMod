@@ -11,6 +11,7 @@ public class LiquidFoodItem extends Item
 		super(settings);
 	}
 
+	@Override
 	public UseAction getUseAction(ItemStack stack)
 	{
 		return UseAction.DRINK;

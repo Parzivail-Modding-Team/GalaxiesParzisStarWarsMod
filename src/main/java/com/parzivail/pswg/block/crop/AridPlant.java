@@ -16,11 +16,13 @@ public class AridPlant extends PlantBlock
 		super(settings);
 	}
 
+	@Override
 	public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context)
 	{
 		return SHAPE;
 	}
 
+	@Override
 	protected boolean canPlantOnTop(BlockState floor, BlockView world, BlockPos pos)
 	{
 		// TODO: tags
@@ -51,6 +53,7 @@ public class AridPlant extends PlantBlock
 		       block == Blocks.PODZOL;
 	}
 
+	@Override
 	public AbstractBlock.OffsetType getOffsetType()
 	{
 		return AbstractBlock.OffsetType.XZ;

@@ -29,12 +29,14 @@ public class InvertedLampBlock extends Block
 		this.setDefaultState(this.getDefaultState().with(LIT, true));
 	}
 
+	@Override
 	@Nullable
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		return this.getDefaultState().with(LIT, !ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos()));
 	}
 
+	@Override
 	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify)
 	{
 		if (!world.isClient)
@@ -54,6 +56,7 @@ public class InvertedLampBlock extends Block
 		}
 	}
 
+	@Override
 	public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random)
 	{
 		if (state.get(LIT) && world.isReceivingRedstonePower(pos))
@@ -62,6 +65,7 @@ public class InvertedLampBlock extends Block
 		}
 	}
 
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		builder.add(LIT);

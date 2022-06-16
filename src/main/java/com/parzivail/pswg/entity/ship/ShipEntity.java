@@ -172,6 +172,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		return getBoundingBox().expand(5);
 	}
 
+	@Override
 	protected float getEyeHeight(EntityPose pose, EntityDimensions dimensions)
 	{
 		return getHeight() / 2f;
@@ -321,6 +322,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		return QuatUtil.rotate(MathUtil.NEGZ, getRotation()).multiply(throttle);
 	}
 
+	@Override
 	public ActionResult interact(PlayerEntity player, Hand hand)
 	{
 		var config = Resources.CONFIG.get();
@@ -338,6 +340,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		return 1;
 	}
 
+	@Override
 	protected boolean canAddPassenger(Entity passenger)
 	{
 		return this.getPassengerList().size() < getMaxPassengers();
@@ -348,6 +351,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		return new Vec3d(0, 0, 3);
 	}
 
+	@Override
 	public void updatePassengerPosition(Entity passenger)
 	{
 		if (this.hasPassenger(passenger))
@@ -371,6 +375,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		this.setYaw(entity.getYaw());
 	}
 
+	@Override
 	@Nullable
 	public Entity getPrimaryPassenger()
 	{

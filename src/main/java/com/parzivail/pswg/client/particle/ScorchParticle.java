@@ -41,11 +41,13 @@ public class ScorchParticle extends DecalParticle
 		this.variant = clientWorld.random.nextInt(NUM_VARIANTS);
 	}
 
+	@Override
 	public ParticleTextureSheet getType()
 	{
 		return ParticleTextureSheet.PARTICLE_SHEET_TRANSLUCENT;
 	}
 
+	@Override
 	public int getBrightness(float tint)
 	{
 		float f = ((float)this.age + tint) / (float)this.maxAge;
@@ -80,6 +82,7 @@ public class ScorchParticle extends DecalParticle
 		return 0.0166f * t * t - 0.152f * t + 0.348f;
 	}
 
+	@Override
 	public void tick()
 	{
 		super.tick();
@@ -107,6 +110,7 @@ public class ScorchParticle extends DecalParticle
 			this.spriteProvider = spriteProvider;
 		}
 
+		@Override
 		public Particle createParticle(PParticle defaultParticleType, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ)
 		{
 			var heatEncodedNormal = new Vec3d(vX, vY, vZ);

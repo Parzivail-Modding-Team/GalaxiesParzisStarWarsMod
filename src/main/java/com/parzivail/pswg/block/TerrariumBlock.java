@@ -32,6 +32,7 @@ public class TerrariumBlock extends CreatureCageBlock
 		this.setDefaultState(this.stateManager.getDefaultState().with(WATER_LEVEL, 0));
 	}
 
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		builder.add(WATER_LEVEL);

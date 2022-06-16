@@ -103,6 +103,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		player = inventory.player;
 	}
 
+	@Override
 	protected void init()
 	{
 		super.init();
@@ -140,6 +141,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		this.handler.addListener(this);
 	}
 
+	@Override
 	public void removed()
 	{
 		super.removed();
@@ -214,6 +216,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	{
 	}
 
+	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
 		this.renderBackground(matrices);
@@ -221,6 +224,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 	}
 
+	@Override
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
 	{
 		var minecraft = MinecraftClient.getInstance();

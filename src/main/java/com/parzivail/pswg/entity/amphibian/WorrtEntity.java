@@ -40,6 +40,7 @@ public class WorrtEntity extends AnimalEntity
 		this.setSpeed(0.0D);
 	}
 
+	@Override
 	protected void initGoals()
 	{
 		this.goalSelector.add(1, new SwimGoal(this));
@@ -55,6 +56,7 @@ public class WorrtEntity extends AnimalEntity
 		return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 4.0D).add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 1.0D);
 	}
 
+	@Override
 	protected float getJumpVelocity()
 	{
 		if (!this.horizontalCollision && (!this.moveControl.isMoving() || !(this.moveControl.getTargetY() > this.getY() + 0.5D)))
@@ -77,6 +79,7 @@ public class WorrtEntity extends AnimalEntity
 		}
 	}
 
+	@Override
 	protected void jump()
 	{
 		super.jump();
@@ -102,6 +105,7 @@ public class WorrtEntity extends AnimalEntity
 		this.moveControl.moveTo(this.moveControl.getTargetX(), this.moveControl.getTargetY(), this.moveControl.getTargetZ(), speed);
 	}
 
+	@Override
 	public void setJumping(boolean jumping)
 	{
 		super.setJumping(jumping);
@@ -118,6 +122,7 @@ public class WorrtEntity extends AnimalEntity
 		this.jumpTicks = 0;
 	}
 
+	@Override
 	public void mobTick()
 	{
 		if (this.ticksUntilJump > 0)
@@ -169,6 +174,7 @@ public class WorrtEntity extends AnimalEntity
 		return (float)MathHelper.clamp(hit.getPos().distanceTo(pos), 0, 1);
 	}
 
+	@Override
 	public boolean shouldSpawnSprintingParticles()
 	{
 		return false;
@@ -207,6 +213,7 @@ public class WorrtEntity extends AnimalEntity
 		this.method_6621();
 	}
 
+	@Override
 	public void tickMovement()
 	{
 		super.tickMovement();
@@ -222,11 +229,13 @@ public class WorrtEntity extends AnimalEntity
 		}
 	}
 
+	@Override
 	public WorrtEntity createChild(ServerWorld serverWorld, PassiveEntity passiveEntity)
 	{
 		return null;
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	public void handleStatus(byte status)
 	{
@@ -242,6 +251,7 @@ public class WorrtEntity extends AnimalEntity
 		}
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	public Vec3d getLeashOffset()
 	{
@@ -258,6 +268,7 @@ public class WorrtEntity extends AnimalEntity
 			this.worrt = worrt;
 		}
 
+		@Override
 		public void tick()
 		{
 			super.tick();
@@ -276,6 +287,7 @@ public class WorrtEntity extends AnimalEntity
 			this.worrt = owner;
 		}
 
+		@Override
 		public void tick()
 		{
 			if (this.worrt.onGround && !this.worrt.jumping && !((WorrtEntity.WorrtJumpControl)this.worrt.jumpControl).isActive())
@@ -290,6 +302,7 @@ public class WorrtEntity extends AnimalEntity
 			super.tick();
 		}
 
+		@Override
 		public void moveTo(double x, double y, double z, double speed)
 		{
 			if (this.worrt.isTouchingWater())
@@ -331,6 +344,7 @@ public class WorrtEntity extends AnimalEntity
 			this.field_24091 = bl;
 		}
 
+		@Override
 		public void tick()
 		{
 			if (this.active)

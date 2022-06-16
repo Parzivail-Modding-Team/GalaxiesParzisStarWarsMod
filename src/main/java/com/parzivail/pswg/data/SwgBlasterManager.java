@@ -131,16 +131,19 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		return data.keySet().stream().map(Identifier::toString).collect(Collectors.joining(", "));
 	}
 
+	@Override
 	protected void writeDataEntry(PacketByteBuf buf, BlasterDescriptor value)
 	{
 		value.write(buf);
 	}
 
+	@Override
 	protected BlasterDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
 	{
 		return BlasterDescriptor.read(buf, key);
 	}
 
+	@Override
 	protected BlasterDescriptor deserializeDataEntry(Identifier identifier, JsonElement jsonObject)
 	{
 		var version = jsonObject.getAsJsonObject().get("version").getAsInt();

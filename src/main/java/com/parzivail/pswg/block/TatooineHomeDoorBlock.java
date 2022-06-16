@@ -99,6 +99,7 @@ public class TatooineHomeDoorBlock extends WaterloggableRotatingBlock
 		this.setDefaultState(this.stateManager.getDefaultState().with(PART, 0));
 	}
 
+	@Override
 	protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
 	{
 		super.appendProperties(builder);
@@ -164,6 +165,7 @@ public class TatooineHomeDoorBlock extends WaterloggableRotatingBlock
 		}
 	}
 
+	@Override
 	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify)
 	{
 		var controllerPos = getController(world, pos);
@@ -206,6 +208,7 @@ public class TatooineHomeDoorBlock extends WaterloggableRotatingBlock
 		return true;
 	}
 
+	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack)
 	{
 		super.onPlaced(world, pos, state, placer, itemStack);
@@ -222,6 +225,7 @@ public class TatooineHomeDoorBlock extends WaterloggableRotatingBlock
 		}
 	}
 
+	@Override
 	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player)
 	{
 		if (!world.isClient)

@@ -27,6 +27,7 @@ public class WaterloggableRotatingBlockWithGuiEntity extends WaterloggableRotati
 		return blockEntityBiFunction.apply(pos, state);
 	}
 
+	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		if (world.isClient)

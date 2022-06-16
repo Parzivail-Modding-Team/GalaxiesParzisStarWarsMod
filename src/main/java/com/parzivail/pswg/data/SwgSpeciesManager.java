@@ -67,16 +67,19 @@ public class SwgSpeciesManager extends TypedDataLoader<SpeciesDescriptor>
 		return data.keySet().stream().map(Identifier::toString).collect(Collectors.joining(", "));
 	}
 
+	@Override
 	protected void writeDataEntry(PacketByteBuf buf, SpeciesDescriptor value)
 	{
 		value.write(buf);
 	}
 
+	@Override
 	protected SpeciesDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
 	{
 		return SpeciesDescriptor.read(buf, key);
 	}
 
+	@Override
 	protected SpeciesDescriptor deserializeDataEntry(Identifier identifier, JsonElement jsonObject)
 	{
 		var version = jsonObject.getAsJsonObject().get("version").getAsInt();

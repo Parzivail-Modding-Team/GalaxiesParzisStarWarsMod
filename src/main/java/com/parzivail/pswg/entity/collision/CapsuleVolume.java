@@ -43,11 +43,13 @@ public record CapsuleVolume(Vec3d start, Vec3d end, double radius) implements IC
 //		return null;
 //	}
 
+	@Override
 	public ICollisionVolume transform(Quaternion q)
 	{
 		return new CapsuleVolume(QuatUtil.rotate(start, q), QuatUtil.rotate(end, q), radius);
 	}
 
+	@Override
 	public ICollisionVolume transform(Matrix4f m)
 	{
 		return new CapsuleVolume(Matrix4fUtil.transform(start, m), Matrix4fUtil.transform(end, m), radius);

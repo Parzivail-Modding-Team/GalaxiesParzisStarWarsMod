@@ -34,6 +34,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 		super(SwgBlocks.MoistureVaporator.Gx8BlockEntityType, pos, state, 2);
 		this.propertyDelegate = new PropertyDelegate()
 		{
+			@Override
 			public int get(int index)
 			{
 				return switch (index)
@@ -44,6 +45,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 						};
 			}
 
+			@Override
 			public void set(int index, int value)
 			{
 				switch (index)
@@ -55,6 +57,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 				}
 			}
 
+			@Override
 			public int size()
 			{
 				return 2;

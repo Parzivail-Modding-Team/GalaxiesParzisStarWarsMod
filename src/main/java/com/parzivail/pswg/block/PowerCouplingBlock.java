@@ -27,6 +27,7 @@ public class PowerCouplingBlock extends WaterloggableRotatingBlockWithBounds imp
 		super(VoxelShapes.empty(), requiresSubstrate, settings);
 	}
 
+	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
 		return super.getPlacementStateBlockBased(ctx);

@@ -28,6 +28,7 @@ public class BlasterIonBoltEntity extends BlasterBoltEntity
 		this.world.addParticle(ParticleTypes.EFFECT, pos.x, pos.y + this.getHeight() / 2, pos.z, 0, 0, 0);
 	}
 
+	@Override
 	protected void onEntityHit(EntityHitResult entityHitResult)
 	{
 		super.onEntityHit(entityHitResult);

@@ -29,16 +29,19 @@ public class ShipExteriorSoundInstance extends MovingSoundInstance
 		this.volume = 0f;
 	}
 
+	@Override
 	public boolean canPlay()
 	{
 		return !this.source.isSilent();
 	}
 
+	@Override
 	public boolean shouldAlwaysPlay()
 	{
 		return true;
 	}
 
+	@Override
 	public void tick()
 	{
 		if (this.source.isRemoved())

@@ -23,6 +23,7 @@ public class SwgLightsaberManager extends TypedDataLoader<LightsaberDescriptor>
 		return ID;
 	}
 
+	@Override
 	protected void writeDataEntry(PacketByteBuf buf, LightsaberDescriptor value)
 	{
 		buf.writeString(value.owner);
@@ -32,6 +33,7 @@ public class SwgLightsaberManager extends TypedDataLoader<LightsaberDescriptor>
 		buf.writeFloat(value.bladeValue);
 	}
 
+	@Override
 	protected LightsaberDescriptor readDataEntry(Identifier key, PacketByteBuf buf)
 	{
 		var owner = buf.readString();
@@ -43,6 +45,7 @@ public class SwgLightsaberManager extends TypedDataLoader<LightsaberDescriptor>
 		return new LightsaberDescriptor(key, owner, hilt, bladeHue, bladeSaturation, bladeValue);
 	}
 
+	@Override
 	protected LightsaberDescriptor deserializeDataEntry(Identifier identifier, JsonElement jsonObject)
 	{
 		var version = jsonObject.getAsJsonObject().get("version").getAsInt();

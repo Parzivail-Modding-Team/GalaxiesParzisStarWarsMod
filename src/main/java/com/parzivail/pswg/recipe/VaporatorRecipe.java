@@ -27,22 +27,26 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
                               ItemStack result) implements Recipe<Inventory>
 {
 
+	@Override
 	public boolean matches(Inventory inv, World world)
 	{
 		return this.base.test(inv.getStack(0));
 	}
 
+	@Override
 	public ItemStack craft(Inventory inv)
 	{
 		return this.getOutput().copy();
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	public boolean fits(int width, int height)
 	{
 		return width * height >= 1;
 	}
 
+	@Override
 	public ItemStack getOutput()
 	{
 		return this.result;
@@ -53,22 +57,26 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 		return duration;
 	}
 
+	@Override
 	@Environment(EnvType.CLIENT)
 	public ItemStack createIcon()
 	{
 		return new ItemStack(SwgBlocks.MoistureVaporator.Gx8);
 	}
 
+	@Override
 	public Identifier getId()
 	{
 		return this.id;
 	}
 
+	@Override
 	public RecipeSerializer<?> getSerializer()
 	{
 		return SwgRecipeSerializers.Vaporator;
 	}
 
+	@Override
 	public RecipeType<?> getType()
 	{
 		return SwgRecipeType.Vaporator;
@@ -84,6 +92,7 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 
 	public static class Serializer implements RecipeSerializer<VaporatorRecipe>
 	{
+		@Override
 		public VaporatorRecipe read(Identifier identifier, JsonObject jsonObject)
 		{
 			var ingredient = Ingredient.fromJson(JsonHelper.getObject(jsonObject, "ingredient"));
@@ -109,6 +118,7 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 			}
 		}
 
+		@Override
 		public VaporatorRecipe read(Identifier identifier, PacketByteBuf packetByteBuf)
 		{
 			var ingredient = Ingredient.fromPacket(packetByteBuf);
@@ -117,6 +127,7 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 			return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
 		}
 
+		@Override
 		public void write(PacketByteBuf packetByteBuf, VaporatorRecipe recipe)
 		{
 			recipe.base.write(packetByteBuf);

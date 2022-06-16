@@ -24,6 +24,7 @@ public class VaporatorMushroomBlock extends PlantBlock
 		return SHAPE;
 	}
 
+	@Override
 	public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state)
 	{
 		return new ItemStack(SwgItems.Food.VaporatorMushroom);

@@ -32,6 +32,7 @@ public class SpawnEntityItem extends Item
 		this.yShift = yShift;
 	}
 
+	@Override
 	public ActionResult useOnBlock(ItemUsageContext context)
 	{
 		var world = context.getWorld();
@@ -63,6 +64,7 @@ public class SpawnEntityItem extends Item
 		}
 	}
 
+	@Override
 	public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand)
 	{
 		var itemStack = user.getStackInHand(hand);

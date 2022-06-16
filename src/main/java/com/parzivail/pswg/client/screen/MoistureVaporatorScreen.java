@@ -24,6 +24,7 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 		backgroundHeight = 166;
 	}
 
+	@Override
 	protected void init()
 	{
 		super.init();
@@ -33,6 +34,7 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 	}
 
+	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
 		this.renderBackground(matrices);
@@ -40,6 +42,7 @@ public class MoistureVaporatorScreen extends HandledScreen<MoistureVaporatorScre
 		this.drawMouseoverTooltip(matrices, mouseX, mouseY);
 	}
 
+	@Override
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
 	{
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);

@@ -31,6 +31,7 @@ public abstract class BaseUnbakedBlockModel<T extends AbstractModel> extends Clo
 		this.baker = baker;
 	}
 
+	@Override
 	public abstract ClonableUnbakedModel copy();
 
 	@Override

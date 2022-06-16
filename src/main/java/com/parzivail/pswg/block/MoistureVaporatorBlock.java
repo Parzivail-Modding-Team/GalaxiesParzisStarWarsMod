@@ -58,6 +58,7 @@ public class MoistureVaporatorBlock extends WaterloggableRotatingBlockWithEntity
 		return world.isClient ? null : MoistureVaporatorBlockEntity::serverTick;
 	}
 
+	@Override
 	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
 	{
 		if (world.isClient)
