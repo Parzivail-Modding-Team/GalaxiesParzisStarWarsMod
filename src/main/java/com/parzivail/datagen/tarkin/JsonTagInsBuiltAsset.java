@@ -1,11 +1,12 @@
 package com.parzivail.datagen.tarkin;
 
-import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
-import net.minecraft.tag.Tag;
-import net.minecraft.tag.TagBuilder;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+import com.parzivail.util.Lumberjack;
 import net.minecraft.tag.TagEntry;
-import net.minecraft.util.JsonHelper;
+import net.minecraft.tag.TagFile;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -13,10 +14,11 @@ import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 public class JsonTagInsBuiltAsset extends BuiltAsset
 {
-	private final Tag.Entry contents;
+	private final TagEntry contents;
 
 	protected JsonTagInsBuiltAsset(Path file, TagEntry contents)
 	{
@@ -29,25 +31,29 @@ public class JsonTagInsBuiltAsset extends BuiltAsset
 	{
 		try
 		{
-			var tag = TagBuilder.create();
+			ArrayList<TagEntry> entries;
+
 			if (Files.exists(file))
 			{
 				try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8))
 				{
-					tag.read(JsonHelper.deserialize(GSON, reader, JsonObject.class), "TARKIN");
+					entries = new ArrayList<>(TagFile.CODEC.parse(new Dynamic<>(JsonOps.INSTANCE, JsonParser.parseReader(reader))).getOrThrow(false, Lumberjack::error).entries());
 				}
 			}
 			else
+			{
+				entries = new ArrayList<>();
 				Files.createDirectories(file.getParent());
+			}
 
-			tag.add(contents, "TARKIN");
+			entries.add(contents);
 
 			try (
 					Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8);
 					var jsonWriter = new JsonWriter(writer)
 			)
 			{
-				GSON.toJson(JsonObjKeyInsBuiltAsset.sortKeysRecursively(tag.toJson()), jsonWriter);
+				GSON.toJson(JsonObjKeyInsBuiltAsset.sortElementsRecursively(TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(entries, false)).getOrThrow(false, Lumberjack::error)), jsonWriter);
 				writer.write('\n');
 			}
 		}

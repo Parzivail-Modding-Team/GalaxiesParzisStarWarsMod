@@ -43,27 +43,27 @@ public abstract class KeyedReloadableLoader<T> implements IdentifiableResourceRe
 	{
 		Map<Identifier, T> map = Maps.newHashMap();
 		var i = this.startingPath.length() + 1;
-		var resources = resourceManager.findResources(this.startingPath, (s) -> s.endsWith(fileSuffix));
+		var resources = resourceManager.findResources(this.startingPath, (s) -> s.getPath().endsWith(fileSuffix));
 
-		for (var resourceId : resources)
+		for (var resourceEntry : resources.entrySet())
 		{
+			var resourceId = resourceEntry.getKey();
 			var resourcePath = resourceId.getPath();
 			var resourceIdWithoutExt = new Identifier(resourceId.getNamespace(), resourcePath.substring(i, resourcePath.length() - fileSuffixLength));
 
-			try (var resource = resourceManager.getResource(resourceId))
+			var resource = resourceEntry.getValue();
+
+			try (var inputStream = resource.getInputStream())
 			{
-				try (var inputStream = resource.getInputStream())
+				var element = readResource(resourceManager, profiler, inputStream);
+				if (element != null)
 				{
-					var element = readResource(resourceManager, profiler, inputStream);
-					if (element != null)
-					{
-						var popped = map.put(resourceIdWithoutExt, element);
-						if (popped != null)
-							throw new IllegalStateException("Duplicate data file ignored with ID " + resourceIdWithoutExt);
-					}
-					else
-						LOGGER.error("Couldn't load data file {} from {} as it's null or empty", resourceIdWithoutExt, resourceId);
+					var popped = map.put(resourceIdWithoutExt, element);
+					if (popped != null)
+						throw new IllegalStateException("Duplicate data file ignored with ID " + resourceIdWithoutExt);
 				}
+				else
+					LOGGER.error("Couldn't load data file {} from {} as it's null or empty", resourceIdWithoutExt, resourceId);
 			}
 			catch (Exception ex)
 			{

@@ -52,10 +52,4 @@ public class AridPlant extends PlantBlock
 		       block == Blocks.COARSE_DIRT ||
 		       block == Blocks.PODZOL;
 	}
-
-	@Override
-	public AbstractBlock.OffsetType getOffsetType()
-	{
-		return AbstractBlock.OffsetType.XZ;
-	}
 }

@@ -34,6 +34,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.*;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.*;
@@ -77,9 +78,9 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		return new Identifier(blasterModel);
 	}
 
-	public static Text getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
+	public static TranslatableTextContent getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
 	{
-		return Text.translatable(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
+		return new TranslatableTextContent(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
 	}
 
 	@Override

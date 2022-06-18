@@ -13,7 +13,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.Optional;
 import java.util.function.Function;
 
 public class LayeredSpriteBuilder
@@ -54,7 +53,7 @@ public class LayeredSpriteBuilder
 			{
 				// what should happen if a base layer has a .pswglayers file too?
 				var baseLayerIdentifier = texturePathResolver.apply(new Identifier(layer.texture));
-				var baseLayerImage = NativeImage.read(resourceManager.getResource(baseLayerIdentifier).getInputStream());
+				var baseLayerImage = NativeImage.read(resourceManager.getResource(baseLayerIdentifier).orElseThrow().getInputStream());
 
 				if (baseLayerImage.getHeight() != nativeImage.getHeight() || baseLayerImage.getWidth() != nativeImage.getWidth())
 					throw new RuntimeException("Layer size mismatch: overlay layer " + identifier + " (" + nativeImage.getWidth() + "x" + nativeImage.getHeight() + "), base layer " + baseLayerIdentifier + " (" + baseLayerImage.getWidth() + "x" + baseLayerImage.getHeight() + ")");

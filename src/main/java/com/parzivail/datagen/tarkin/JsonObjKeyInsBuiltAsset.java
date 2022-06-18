@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -77,7 +78,17 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 		}
 	}
 
-	public static JsonObject sortKeysRecursively(JsonObject jsonObject)
+	@NotNull
+	public static JsonElement sortElementsRecursively(@NotNull JsonElement ele)
+	{
+		if (ele instanceof JsonObject obj)
+			ele = sortKeysRecursively(obj);
+		else if (ele instanceof JsonArray arr)
+			ele = sortElementsRecursively(arr);
+		return ele;
+	}
+
+	public static @NotNull JsonObject sortKeysRecursively(@NotNull JsonObject jsonObject)
 	{
 		var keySet = jsonObject.entrySet().stream().map(Map.Entry::getKey).sorted().toList();
 		var temp = new JsonObject();
@@ -85,17 +96,13 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 		for (var key : keySet)
 		{
 			var ele = jsonObject.get(key);
-			if (ele.isJsonObject())
-				ele = sortKeysRecursively(ele.getAsJsonObject());
-			else if (ele.isJsonArray())
-				ele = sortElementsRecursively(ele.getAsJsonArray());
-			temp.add(key, ele);
+			temp.add(key, sortElementsRecursively(ele));
 		}
 
 		return temp;
 	}
 
-	private static JsonArray sortElementsRecursively(JsonArray jsonArray)
+	private static @NotNull JsonArray sortElementsRecursively(@NotNull JsonArray jsonArray)
 	{
 		final var temp = new JsonArray();
 
@@ -105,11 +112,7 @@ public class JsonObjKeyInsBuiltAsset extends BuiltAsset
 
 		for (var ele : sortedData)
 		{
-			if (ele.isJsonObject())
-				ele = sortKeysRecursively(ele.getAsJsonObject());
-			else if (ele.isJsonArray())
-				ele = sortElementsRecursively(ele.getAsJsonArray());
-			temp.add(ele);
+			temp.add(sortElementsRecursively(ele));
 		}
 
 		return temp;
