@@ -19,7 +19,7 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -96,7 +96,7 @@ public class Galaxies implements ModInitializer
 
 		SwgScreenTypes.register();
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			dispatcher.register(CommandManager.literal("cdim")
 			                                  .requires(source -> source.hasPermissionLevel(2) && source.getEntity() != null) // same permission level as tp
 			                                  .then(CommandManager.argument("dimension", DimensionArgumentType.dimension())

@@ -207,7 +207,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		text.add(Text.translatable(I18N_INCOMPAT_ATTACHMENT));
 
 		for (var a : incompat)
-			text.add(BlasterItem.getAttachmentTranslation(blasterModel, a).copy().setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xA0A0A0))));
+			text.add(MutableText.of(BlasterItem.getAttachmentTranslation(blasterModel, a)).setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xA0A0A0))));
 
 		return text;
 	}
@@ -408,7 +408,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 				var iconU = attachment.icon / 3;
 				var iconV = attachment.icon % 3;
 
-				drawAttachmentRow(matrices, i, iconU, iconV, rowState, BlasterItem.getAttachmentTranslation(blasterModel, attachment));
+				drawAttachmentRow(matrices, i, iconU, iconV, rowState, MutableText.of(BlasterItem.getAttachmentTranslation(blasterModel, attachment)));
 			}
 		}
 	}

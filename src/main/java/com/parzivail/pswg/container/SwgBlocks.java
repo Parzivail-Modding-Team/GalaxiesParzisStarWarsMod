@@ -178,23 +178,23 @@ public class SwgBlocks
 		@RegistryName("funnel_flower")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block FunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().offsetType(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("blossoming_funnel_flower")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block BlossomingFunnelFlower = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().offsetType(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("poonten_grass")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block PoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().offsetType(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("dried_poonten_grass")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block DriedPoontenGrass = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().offsetType(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("tuber_stalk")
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
-		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().sounds(BlockSoundGroup.GRASS));
+		public static final Block Tuber = new AridPlant(AbstractBlock.Settings.of(Material.REPLACEABLE_PLANT).noCollision().breakInstantly().offsetType(AbstractBlock.OffsetType.XZ).sounds(BlockSoundGroup.GRASS));
 		@RegistryName("chasuka")
 		@TabIgnore
 		@ServerBlockRegistryData(fireBurn = 60, fireSpread = 100)

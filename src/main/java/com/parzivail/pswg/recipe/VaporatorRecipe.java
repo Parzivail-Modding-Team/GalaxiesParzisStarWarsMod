@@ -8,6 +8,7 @@ import com.parzivail.pswg.container.SwgRecipeSerializers;
 import com.parzivail.pswg.container.SwgRecipeType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.command.CommandRegistryWrapper;
 import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -21,6 +22,7 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
 public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
@@ -103,10 +105,10 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 			{
 				var resultItem = result.get("item").getAsString();
 				var resultCount = JsonHelper.getInt(result, "count", 1);
-				ItemStringReader itemStringReader = (new ItemStringReader(new StringReader(resultItem), false)).consume();
+				var itemResult = ItemStringReader.item(CommandRegistryWrapper.of(Registry.ITEM), new StringReader(resultItem));
 
-				var itemStack = new ItemStack(itemStringReader.getItem(), resultCount);
-				itemStack.setNbt(itemStringReader.getNbt());
+				var itemStack = new ItemStack(itemResult.item(), resultCount);
+				itemStack.setNbt(itemResult.nbt());
 				return new VaporatorRecipe(identifier, ingredient, duration, itemStack);
 			}
 			catch (CommandSyntaxException e)
