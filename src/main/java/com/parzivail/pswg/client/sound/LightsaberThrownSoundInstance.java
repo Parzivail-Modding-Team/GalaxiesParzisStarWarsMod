@@ -5,6 +5,7 @@ import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.sound.SoundCategory;
 
 @Environment(EnvType.CLIENT)
@@ -12,7 +13,7 @@ public class LightsaberThrownSoundInstance extends DopplerSoundInstance
 {
 	public LightsaberThrownSoundInstance(ThrownLightsaberEntity entity)
 	{
-		super(entity, SwgSounds.Lightsaber.IDLE_CLASSIC, SoundCategory.PLAYERS);
+		super(entity, SwgSounds.Lightsaber.IDLE_CLASSIC, SoundCategory.PLAYERS, SoundInstance.createRandom());
 		this.repeat = true;
 		this.repeatDelay = 0;
 		this.volume = 0;

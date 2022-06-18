@@ -10,6 +10,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Environment(EnvType.CLIENT)
 public interface MinecraftClientAccessor
 {
-	@Invoker("initializeSearchableContainers")
-	void invokeInitializeSearchableContainers();
+	@Invoker("initializeSearchProviders")
+	void invokeInitializeSearchProviders();
 }

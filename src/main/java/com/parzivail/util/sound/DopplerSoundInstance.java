@@ -6,14 +6,15 @@ import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.random.Random;
 
 public class DopplerSoundInstance extends MovingSoundInstance
 {
 	protected final Entity source;
 
-	protected DopplerSoundInstance(Entity source, SoundEvent soundEvent, SoundCategory soundCategory)
+	protected DopplerSoundInstance(Entity source, SoundEvent soundEvent, SoundCategory soundCategory, Random random)
 	{
-		super(soundEvent, soundCategory);
+		super(soundEvent, soundCategory, random);
 		this.source = source;
 	}
 

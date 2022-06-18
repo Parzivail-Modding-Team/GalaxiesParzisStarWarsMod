@@ -30,7 +30,7 @@ import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.pswg.client.texture.tinted.TintedTextureProvider;
 import com.parzivail.pswg.client.weapon.RecoilManager;
-import com.parzivail.pswg.client.zoom.ZoomHandler;
+import com.parzivail.pswg.client.zoom.*;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.container.registry.ClientBlockRegistryData;
 import com.parzivail.pswg.container.registry.RegistryHelper;
@@ -54,11 +54,6 @@ import com.parzivail.util.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import dev.emi.trinkets.api.TrinketsApi;
-import io.github.ennuil.libzoomer.api.ZoomInstance;
-import io.github.ennuil.libzoomer.api.ZoomOverlay;
-import io.github.ennuil.libzoomer.api.modifiers.ZoomDivisorMouseModifier;
-import io.github.ennuil.libzoomer.api.overlays.SpyglassZoomOverlay;
-import io.github.ennuil.libzoomer.api.transitions.SmoothTransitionMode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -77,10 +72,15 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.search.ReloadableSearchProvider;
 import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.text.*;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.Text;
+import net.minecraft.text.TextColor;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -332,16 +332,16 @@ public class Client implements ClientModInitializer
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
 			SwgBlasterManager.INSTANCE.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
 			minecraftClient.execute(() -> {
-				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
-				minecraftClient.getSearchableContainer(SearchManager.ITEM_TOOLTIP).reload();
+				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchProviders();
+				((ReloadableSearchProvider<ItemStack>)minecraftClient.getSearchProvider(SearchManager.ITEM_TOOLTIP)).reload();
 			});
 		});
 
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncLightsabers, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
 			SwgLightsaberManager.INSTANCE.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
 			minecraftClient.execute(() -> {
-				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchableContainers();
-				minecraftClient.getSearchableContainer(SearchManager.ITEM_TOOLTIP).reload();
+				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchProviders();
+				((ReloadableSearchProvider<ItemStack>)minecraftClient.getSearchProvider(SearchManager.ITEM_TOOLTIP)).reload();
 			});
 		});
 
@@ -376,8 +376,7 @@ public class Client implements ClientModInitializer
 				Resources.id("blaster_zoom"),
 				10.0F,
 				new SmoothTransitionMode(),
-				new ZoomDivisorMouseModifier(),
-				null
+				new ZoomDivisorMouseModifier()
 		);
 	}
 
