@@ -51,7 +51,17 @@ public class BlockStateGenerator
 
 	public static BlockStateSupplier door(Block block, Identifier modelId)
 	{
-		return BlockStateModelGenerator.createDoorBlockState(block, IdentifierUtil.concat(modelId, "_bottom"), IdentifierUtil.concat(modelId, "_bottom_hinge"), IdentifierUtil.concat(modelId, "_top"), IdentifierUtil.concat(modelId, "_top_hinge"));
+		return BlockStateModelGenerator.createDoorBlockState(
+				block,
+				IdentifierUtil.concat(modelId, "_bottom_left"),
+				IdentifierUtil.concat(modelId, "_bottom_left_open"),
+				IdentifierUtil.concat(modelId, "_bottom_right"),
+				IdentifierUtil.concat(modelId, "_bottom_right_open"),
+				IdentifierUtil.concat(modelId, "_top_left"),
+				IdentifierUtil.concat(modelId, "_top_left_open"),
+				IdentifierUtil.concat(modelId, "_top_right"),
+				IdentifierUtil.concat(modelId, "_top_right_open")
+		);
 	}
 
 	private static BlockStateVariantMap createBooleanModelMap(BooleanProperty property, Identifier trueModel, Identifier falseModel)
