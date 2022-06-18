@@ -231,19 +231,35 @@ public class ModelFile
 		var textureBottom = IdentifierUtil.concat(texture, "_bottom");
 		return Arrays.asList(
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_bottom"), new Identifier("block/door_bottom"))
+						.ofModel(IdentifierUtil.concat(id, "_bottom_left"), new Identifier("block/door_bottom_left"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_bottom_hinge"), new Identifier("block/door_bottom_rh"))
+						.ofModel(IdentifierUtil.concat(id, "_bottom_left_open"), new Identifier("block/door_bottom_left_open"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/door_top"))
+						.ofModel(IdentifierUtil.concat(id, "_bottom_right"), new Identifier("block/door_bottom_right"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom),
 				ModelFile
-						.ofModel(IdentifierUtil.concat(id, "_top_hinge"), new Identifier("block/door_top_rh"))
+						.ofModel(IdentifierUtil.concat(id, "_bottom_right_open"), new Identifier("block/door_bottom_right_open"))
+						.texture("top", textureTop)
+						.texture("bottom", textureBottom),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top_left"), new Identifier("block/door_top_left"))
+						.texture("top", textureTop)
+						.texture("bottom", textureBottom),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top_left_open"), new Identifier("block/door_top_left_open"))
+						.texture("top", textureTop)
+						.texture("bottom", textureBottom),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top_right"), new Identifier("block/door_top_right"))
+						.texture("top", textureTop)
+						.texture("bottom", textureBottom),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top_right_open"), new Identifier("block/door_top_right_open"))
 						.texture("top", textureTop)
 						.texture("bottom", textureBottom)
 		);
