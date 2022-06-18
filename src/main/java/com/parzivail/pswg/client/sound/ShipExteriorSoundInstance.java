@@ -11,6 +11,7 @@ import net.minecraft.client.sound.MovingSoundInstance;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 
 @Environment(EnvType.CLIENT)
 public class ShipExteriorSoundInstance extends MovingSoundInstance
@@ -20,9 +21,9 @@ public class ShipExteriorSoundInstance extends MovingSoundInstance
 	private final MovingAverage _floatingPitch = new MovingAverage(10, 0.75f);
 	private final MovingAverage _floatingVolume = new MovingAverage(10, 0);
 
-	public ShipExteriorSoundInstance(ShipEntity source, SoundEvent sound)
+	public ShipExteriorSoundInstance(ShipEntity source, SoundEvent sound, Random random)
 	{
-		super(sound, SoundCategory.PLAYERS);
+		super(sound, SoundCategory.PLAYERS, random);
 		this.source = source;
 		this.repeat = true;
 		this.repeatDelay = 0;

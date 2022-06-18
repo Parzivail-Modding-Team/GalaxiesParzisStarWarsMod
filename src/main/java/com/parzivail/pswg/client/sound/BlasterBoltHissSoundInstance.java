@@ -5,6 +5,7 @@ import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.sound.SoundCategory;
 
 @Environment(EnvType.CLIENT)
@@ -12,7 +13,7 @@ public class BlasterBoltHissSoundInstance extends DopplerSoundInstance
 {
 	public BlasterBoltHissSoundInstance(BlasterBoltEntity entity)
 	{
-		super(entity, SwgSounds.Blaster.HISS, SoundCategory.PLAYERS);
+		super(entity, SwgSounds.Blaster.HISS, SoundCategory.PLAYERS, SoundInstance.createRandom());
 		this.repeat = true;
 		this.repeatDelay = 0;
 		this.volume = 0.0f;

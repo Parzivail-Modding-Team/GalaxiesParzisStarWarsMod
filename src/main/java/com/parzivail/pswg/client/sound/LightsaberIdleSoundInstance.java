@@ -6,6 +6,7 @@ import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -17,7 +18,7 @@ public class LightsaberIdleSoundInstance extends DopplerSoundInstance
 
 	public LightsaberIdleSoundInstance(PlayerEntity player)
 	{
-		super(player, SwgSounds.Lightsaber.IDLE_CLASSIC, SoundCategory.PLAYERS);
+		super(player, SwgSounds.Lightsaber.IDLE_CLASSIC, SoundCategory.PLAYERS, SoundInstance.createRandom());
 		this.player = player;
 		this.repeat = true;
 		this.repeatDelay = 0;

@@ -27,8 +27,10 @@
 		"modmenu": [
 			"com.parzivail.pswg.compat.modmenu.GalaxiesModMenuIntegration"
 		],
-		"rei": [
-			"com.parzivail.pswg.compat.rei.plugins.GalaxiesREIClientPlugin",
+		"rei_client": [
+			"com.parzivail.pswg.compat.rei.plugins.GalaxiesREIClientPlugin"
+		],
+		"rei_server": [
 			"com.parzivail.pswg.compat.rei.plugins.GalaxiesREIServerPlugin"
 		]
 	},
@@ -41,9 +43,8 @@
 		"cardinal-components-entity": "*",
 		"cloth-config2": "*",
 		"fabric": "*",
-		"fabricloader": ">=0.10.0",
-		"libzoomer": "*",
-		"minecraft": "~1.18.2"
+		"fabricloader": ">=0.14.8",
+		"minecraft": "~1.19"
 	},
 	"breaks": {
 		"optifabric": "*"

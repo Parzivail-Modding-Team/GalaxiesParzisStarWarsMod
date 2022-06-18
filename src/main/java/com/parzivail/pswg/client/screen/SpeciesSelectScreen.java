@@ -435,10 +435,9 @@ public class SpeciesSelectScreen extends Screen
 		bufferBuilder.vertex((float)x1, (float)y1, (float)z).color(r, g, b, 1).texture(u1, v1).next();
 		bufferBuilder.vertex((float)x1, (float)y0, (float)z).color(r, g, b, 1).texture(u1, v0).next();
 		bufferBuilder.vertex((float)x0, (float)y0, (float)z).color(r, g, b, 1).texture(u0, v0).next();
-		bufferBuilder.end();
 
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
-		BufferRenderer.draw(bufferBuilder);
+		BufferRenderer.drawWithShader(bufferBuilder.end());
 	}
 
 	public void drawEntity(MatrixStack matrixStack, String speciesString, int x, int y, int size, float mouseX, float mouseY)

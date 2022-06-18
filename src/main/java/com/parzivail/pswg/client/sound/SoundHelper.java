@@ -4,6 +4,7 @@ import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.sound.SoundEvent;
 
 public class SoundHelper
@@ -23,6 +24,6 @@ public class SoundHelper
 	public static void playShipExteriorSound(ShipEntity entity, SoundEvent sound)
 	{
 		var minecraft = MinecraftClient.getInstance();
-		minecraft.getSoundManager().play(new ShipExteriorSoundInstance(entity, sound));
+		minecraft.getSoundManager().play(new ShipExteriorSoundInstance(entity, sound, SoundInstance.createRandom()));
 	}
 }

@@ -125,8 +125,8 @@ dependencies {
 	modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
 
 	// LibZoomer
-	modImplementation("io.github.ennuil:LibZoomer:${libzoomer_version}")
-	include("io.github.ennuil:LibZoomer:${libzoomer_version}")
+//	modImplementation("io.github.ennuil:LibZoomer:${libzoomer_version}")
+//	include("io.github.ennuil:LibZoomer:${libzoomer_version}")
 
 	// Trinkets
 	modImplementation("dev.emi:trinkets:${trinkets_version}")
