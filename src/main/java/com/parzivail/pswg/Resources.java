@@ -9,7 +9,6 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Random;
 
@@ -86,7 +85,7 @@ public class Resources
 				return;
 			}
 
-			var con = (HttpURLConnection)new URL("https://api.github.com/repos/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/releases").openConnection();
+			var con = new URL("https://api.github.com/repos/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/releases").openConnection();
 			con.setConnectTimeout(3000);
 			con.setReadTimeout(3000);
 			var isr = new InputStreamReader(con.getInputStream());
