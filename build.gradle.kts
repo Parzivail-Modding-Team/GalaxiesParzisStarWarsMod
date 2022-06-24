@@ -133,7 +133,7 @@ dependencies {
 	include("dev.emi:trinkets:${trinkets_version}")
 
 	// Gravity Changer
-	modCompileOnly("maven.modrinth:fusions-gravity-api:${gravity_changer_version}")
+	modCompileOnly("maven.modrinth:gravity-api:${gravity_changer_version}")
 	//include("maven.modrinth:fusions-gravity-api:${gravity_changer_version}")
 }
 
