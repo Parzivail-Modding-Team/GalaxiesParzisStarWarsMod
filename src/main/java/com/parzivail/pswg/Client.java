@@ -236,12 +236,14 @@ public class Client implements ClientModInitializer
 
 		ArmorRenderer.register(
 				SwgItems.Armor.Stormtrooper,
+				Resources.id("stormtrooper"),
 				Resources.id("armor/stormtrooper_default"),
 				Resources.id("armor/stormtrooper_slim"),
 				Resources.id("textures/armor/stormtrooper.png")
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.Sandtrooper,
+				Resources.id("sandtrooper"),
 				Resources.id("armor/sandtrooper_default"),
 				Resources.id("textures/armor/sandtrooper_default.png"),
 				Resources.id("armor/sandtrooper_slim"),
@@ -249,6 +251,7 @@ public class Client implements ClientModInitializer
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.Deathtrooper,
+				Resources.id("deathtrooper"),
 				Resources.id("armor/deathtrooper_default"),
 				Resources.id("textures/armor/deathtrooper_default.png"),
 				Resources.id("armor/deathtrooper_slim"),
@@ -256,12 +259,13 @@ public class Client implements ClientModInitializer
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.Jumptrooper,
+				Resources.id("jumptrooper"),
 				Resources.id("armor/jumptrooper_default"),
 				Resources.id("textures/armor/jumptrooper_default.png"),
 				Resources.id("armor/jumptrooper_slim"),
 				Resources.id("textures/armor/jumptrooper_slim.png")
 		);
-		ArmorRenderer.registerTransformer(Resources.id("armor/jumptrooper_default"), (entity, model) -> {
+		ArmorRenderer.registerTransformer(Resources.id("jumptrooper"), (entity, model) -> {
 			var hasJetpack = TrinketsApi
 					.getTrinketComponent(entity)
 					.map(trinketComponent -> trinketComponent.isEquipped(SwgItems.Armor.JumptrooperJetpack))
@@ -277,10 +281,27 @@ public class Client implements ClientModInitializer
 		});
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelPilot,
+				Resources.id("rebel_pilot"),
 				Resources.id("armor/rebel_pilot"),
 				Resources.id("textures/armor/rebel_pilot_visor_up.png"),
 				Resources.id("armor/rebel_pilot"),
 				Resources.id("textures/armor/rebel_pilot_visor_up.png")
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.RebelForest,
+				Resources.id("rebel_forest"),
+				Resources.id("armor/rebel_light"),
+				Resources.id("textures/armor/rebel_forest.png"),
+				Resources.id("armor/rebel_light"),
+				Resources.id("textures/armor/rebel_forest.png")
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.RebelTropical,
+				Resources.id("rebel_tropical"),
+				Resources.id("armor/rebel_light"),
+				Resources.id("textures/armor/rebel_tropical.png"),
+				Resources.id("armor/rebel_light"),
+				Resources.id("textures/armor/rebel_tropical.png")
 		);
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
