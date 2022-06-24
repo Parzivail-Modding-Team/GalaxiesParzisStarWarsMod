@@ -850,6 +850,8 @@ public class Tarkin
 				.tag(TAG_TRINKETS_CHEST_BACK)
 				.build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelPilot).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.RebelForest).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.RebelTropical).build(assets);
 
 		ItemGenerator.basic(SwgItems.Cable.Power).build(assets);
 

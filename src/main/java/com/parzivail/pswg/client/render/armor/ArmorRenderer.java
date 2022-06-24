@@ -39,32 +39,32 @@ public class ArmorRenderer
 	private static final HashMap<Identifier, Entry> MODELKEY_MODEL_MAP = new HashMap<>();
 	private static final HashMap<Identifier, ArmorRenderTransformer> MODELKEY_TRANSFORMER_MAP = new HashMap<>();
 
-	public static void register(RegistryHelper.ArmorItems itemSet, Identifier defaultModelId, Identifier slimModelId, Identifier textureId)
+	public static void register(RegistryHelper.ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier slimModelId, Identifier textureId)
 	{
-		register(itemSet.helmet, defaultModelId, textureId, slimModelId, textureId);
-		register(itemSet.chestplate, defaultModelId, textureId, slimModelId, textureId);
-		register(itemSet.leggings, defaultModelId, textureId, slimModelId, textureId);
-		register(itemSet.boots, defaultModelId, textureId, slimModelId, textureId);
+		register(itemSet.helmet, modelKey, defaultModelId, textureId, slimModelId, textureId);
+		register(itemSet.chestplate, modelKey, defaultModelId, textureId, slimModelId, textureId);
+		register(itemSet.leggings, modelKey, defaultModelId, textureId, slimModelId, textureId);
+		register(itemSet.boots, modelKey, defaultModelId, textureId, slimModelId, textureId);
 	}
 
-	public static void register(RegistryHelper.ArmorItems itemSet, Identifier defaultModelId, Identifier defaultTextureId, Identifier slimModelId, Identifier slimTextureId)
+	public static void register(RegistryHelper.ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier defaultTextureId, Identifier slimModelId, Identifier slimTextureId)
 	{
-		register(itemSet.helmet, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
-		register(itemSet.chestplate, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
-		register(itemSet.leggings, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
-		register(itemSet.boots, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
+		register(itemSet.helmet, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
+		register(itemSet.chestplate, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
+		register(itemSet.leggings, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
+		register(itemSet.boots, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
 	}
 
-	public static void register(ArmorItem item, Identifier defaultModelId, Identifier defaultTextureId, Identifier slimModelId, Identifier slimTextureId)
+	public static void register(ArmorItem item, Identifier modelKey, Identifier defaultModelId, Identifier defaultTextureId, Identifier slimModelId, Identifier slimTextureId)
 	{
-		if (!MODELKEY_MODEL_MAP.containsKey(defaultModelId))
-			MODELKEY_MODEL_MAP.put(defaultModelId, new Entry(NemManager.INSTANCE.getBipedModel(defaultModelId), NemManager.INSTANCE.getBipedModel(slimModelId), defaultTextureId, slimTextureId));
-		ITEM_MODELKEY_MAP.put(item, defaultModelId);
+		if (!MODELKEY_MODEL_MAP.containsKey(modelKey))
+			MODELKEY_MODEL_MAP.put(modelKey, new Entry(NemManager.INSTANCE.getBipedModel(defaultModelId), NemManager.INSTANCE.getBipedModel(slimModelId), defaultTextureId, slimTextureId));
+		ITEM_MODELKEY_MAP.put(item, modelKey);
 	}
 
-	public static void registerTransformer(Identifier defaultModelId, ArmorRenderTransformer transformer)
+	public static void registerTransformer(Identifier modelKey, ArmorRenderTransformer transformer)
 	{
-		MODELKEY_TRANSFORMER_MAP.put(defaultModelId, transformer);
+		MODELKEY_TRANSFORMER_MAP.put(modelKey, transformer);
 	}
 
 	public static ItemStack getModArmor(LivingEntity entity, EquipmentSlot slot)

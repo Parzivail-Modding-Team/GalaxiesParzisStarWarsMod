@@ -53,6 +53,10 @@ public class SwgItems
 		public static final TrinketItem JumptrooperJetpack = new TrinketItem(new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_pilot_helmet")
 		public static final ArmorItem RebelPilot = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("rebel_forest_helmet")
+		public static final ArmorItem RebelForest = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("rebel_tropical_helmet")
+		public static final ArmorItem RebelTropical = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 	}
 
 	@RegistryOrder(2)
