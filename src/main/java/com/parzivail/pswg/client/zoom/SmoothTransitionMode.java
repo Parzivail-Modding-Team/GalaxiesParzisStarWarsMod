@@ -7,6 +7,6 @@ public class SmoothTransitionMode
 {
 	public float applyZoom(int i, float d)
 	{
-		return d;
+		return i;
 	}
 }
