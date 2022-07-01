@@ -1,0 +1,10 @@
+# Made in Blockbench 4.2.3
+newmtl m_0
+map_Kd imperial_scaffold_stair_front.png 
+newmtl m_1
+map_Kd imperial_scaffold_stair_side.png 
+newmtl m_2
+map_Kd imperial_scaffold_stair_top.png 
+newmtl m_3
+map_Kd imperial_scaffold_stair_back.png 
+newmtl none

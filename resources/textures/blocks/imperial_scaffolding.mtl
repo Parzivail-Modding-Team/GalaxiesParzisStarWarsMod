@@ -1,0 +1,6 @@
+# Made in Blockbench 4.2.3
+newmtl m_0
+map_Kd imperial_scaffold_end.png 
+newmtl m_1
+map_Kd imperial_scaffold_side.png 
+newmtl none
