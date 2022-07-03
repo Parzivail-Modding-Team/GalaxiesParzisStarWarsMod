@@ -1,0 +1,75 @@
+{
+	"schemaVersion": 1,
+	"id": "pswg-core",
+	"version": "${version}",
+	"name": "Galaxies: Parzi's Star Wars Mod (Core)",
+	"description": "Explore the galaxy with Galaxies: Parzi's Star Wars Mod!",
+	"authors": [
+		"parzivail",
+		"kb1000"
+	],
+	"contact": {
+		"homepage": "https://pswg.dev/",
+		"issues": "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/issues",
+		"sources": "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/pswg/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.parzivail.pswg.Galaxies"
+		],
+		"client": [
+			"com.parzivail.pswg.Client"
+		],
+		"cardinal-components-entity": [
+			"com.parzivail.pswg.component.SwgEntityComponents"
+		],
+		"modmenu": [
+			"com.parzivail.pswg.compat.modmenu.GalaxiesModMenuIntegration"
+		],
+		"rei_client": [
+			"com.parzivail.pswg.compat.rei.plugins.GalaxiesREIClientPlugin"
+		],
+		"rei_server": [
+			"com.parzivail.pswg.compat.rei.plugins.GalaxiesREIServerPlugin"
+		]
+	},
+	"accessWidener": "pswg.accesswidener",
+	"mixins": [
+		"pswg.mixins.json"
+	],
+	"depends": {
+		"cardinal-components-base": "*",
+		"cardinal-components-entity": "*",
+		"cloth-config2": "*",
+		"fabric": "*",
+		"fabricloader": ">=0.14.8",
+		"minecraft": "~1.19",
+		"trinkets": "*"
+	},
+	"breaks": {
+		"optifabric": "*"
+	},
+	"recommends": {
+		"modmenu": "*"
+	},
+	"custom": {
+		"cardinal-components": [
+			"pswg:persistent",
+			"pswg:volatile"
+		],
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.pswg.dev"
+			},
+			"parent": {
+				"id": "pswg",
+				"name": "Galaxies: Parzi's Star Wars Mod",
+				"description": "Explore the galaxy with Galaxies: Parzi's Star Wars Mod!",
+				"icon": "assets/pswg/icon.png"
+			}
+		}
+	}
+}
