@@ -9,6 +9,8 @@ plugins {
 }
 
 subprojects {
+    if (!file("project.gradle.kts").exists()) return@subprojects
+
 	apply(plugin = "pswg-submodule-dependencies")
 	apply(plugin = "fabric-loom")
 	apply(plugin = "io.github.juuxel.loom-quiltflower")
@@ -45,6 +47,8 @@ val versionName: String = run {
 }
 
 allprojects {
+    if (!file("project.gradle.kts").exists()) return@allprojects
+
 	repositories {
 		mavenCentral()
 
@@ -83,7 +87,8 @@ allprojects {
 		quiltflowerVersion.set("1.8.1")
 	}
 
-	base.archivesName.set(if (project.parent != null) "$archives_base_name-${project.name}" else archives_base_name)
+    if (project.parent != null)
+    	base.archivesName.set(if (project.name.startsWith(archives_base_name)) project.name else "$archives_base_name-${project.name}")
 	version = versionName
 	group = maven_group
 
@@ -140,4 +145,8 @@ allprojects {
 	}
 
 	apply(from = "project.gradle.kts")
+}
+
+tasks.assemble {
+	setDependsOn(setOf<Task>()) // let's not take half a minute to build an empty project
 }

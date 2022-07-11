@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "pswg-core",
+	"id": "pswg",
 	"version": "${version}",
-	"name": "Galaxies: Parzi's Star Wars Mod (Core)",
+	"name": "Galaxies: Parzi's Star Wars Mod",
 	"description": "Explore the galaxy with Galaxies: Parzi's Star Wars Mod!",
 	"authors": [
 		"parzivail",
@@ -64,12 +64,6 @@
 		"modmenu": {
 			"links": {
 				"modmenu.discord": "https://discord.pswg.dev"
-			},
-			"parent": {
-				"id": "pswg",
-				"name": "Galaxies: Parzi's Star Wars Mod",
-				"description": "Explore the galaxy with Galaxies: Parzi's Star Wars Mod!",
-				"icon": "assets/pswg/icon.png"
 			}
 		}
 	}

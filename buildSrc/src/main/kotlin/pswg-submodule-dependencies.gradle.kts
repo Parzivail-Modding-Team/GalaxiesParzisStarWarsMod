@@ -57,9 +57,16 @@ fun importFrom(dependencyProject: Project, relation: ConfigurationType): Boolean
 }
 
 afterEvaluate {
-	for (configType in ConfigurationType.values())
-		for (dependency in project.configurations[configType.gradleConfig]?.dependencies ?: setOf())
+	for ((configType, dependencies) in ConfigurationType.values()
+		.associateWithTo(EnumMap(ConfigurationType::class.java)) {
+			project.configurations[it.gradleConfig]?.dependencies?.toSet() ?: setOf()
+		})
+		for (dependency in dependencies)
 			if (dependency is ProjectDependency && dependency.targetConfiguration == "namedElements") {
 				importFrom(dependency.dependencyProject, configType)
 			}
+}
+
+tasks.assemble {
+	this.dependsOn()
 }

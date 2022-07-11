@@ -8,4 +8,5 @@ pluginManagement {
 	}
 }
 
-include(":core")
+include(":projects:pswg")
+include(":projects:addon-test")

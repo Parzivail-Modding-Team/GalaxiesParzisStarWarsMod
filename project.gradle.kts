@@ -1,10 +1,4 @@
 dependencies {
-	"api"(project(":core", configuration = "namedElements"))
-	"include"(project(":core"))
-}
-
-open class CITask : DefaultTask()
-
-tasks.register<CITask>("ci") {
-	dependsOn(tasks["build"])
+	"runtimeOnly"(project(":projects:pswg", configuration = "namedElements"))
+	"runtimeOnly"(project(":projects:addon-test", configuration = "namedElements"))
 }

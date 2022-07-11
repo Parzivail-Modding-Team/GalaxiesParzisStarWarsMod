@@ -1,8 +1,8 @@
 {
 	"schemaVersion": 1,
-	"id": "pswg",
+	"id": "pswg-addon-test",
 	"version": "${version}",
-	"name": "Galaxies: Parzi's Star Wars Mod",
+	"name": "Galaxies: Parzi's Star Wars Mod (Addon Test)",
 	"description": "Explore the galaxy with Galaxies: Parzi's Star Wars Mod!",
 	"authors": [
 		"parzivail",
@@ -18,15 +18,12 @@
 	"icon": "assets/pswg/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"modmenu": [
-			"com.parzivail.pswg.compat.modmenu.GalaxiesModMenuIntegration"
-		]
 	},
 	"depends": {
 		"fabric": "*",
 		"fabricloader": ">=0.14.8",
 		"minecraft": "~1.19",
-		"pswg-core": "${version}"
+		"pswg": "${version}"
 	},
 	"custom": {
 		"modmenu": {
