@@ -6,11 +6,11 @@ import com.parzivail.util.noise.OpenSimplex2F;
 import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Random;
 
 public class Resources
 {
@@ -27,7 +27,7 @@ public class Resources
 	public static final boolean IS_DEBUG = System.getenv("PSWG_DEBUG") != null && Boolean.parseBoolean(System.getenv("PSWG_DEBUG"));
 
 	public static final OpenSimplex2F SIMPLEX_0 = new OpenSimplex2F(0);
-	public static final Random RANDOM = new Random();
+	public static final Random RANDOM = Random.createThreadSafe();
 	public static ConfigHolder<Config> CONFIG;
 
 	public static GithubReleaseEntry REMOTE_VERSION = null;
