@@ -42,14 +42,15 @@ fun importFrom(dependencyProject: Project, relation: ConfigurationType): Boolean
 			val innerRelation = computeType(relation, configType)
 			if (innerRelation != null) {
 				for (dependency in dependencyProject.configurations[configType.gradleConfig]?.dependencies ?: setOf())
-					if (dependency !is ProjectDependency || (dependency.targetConfiguration != "namedElements" || importFrom(
+					if (dependency !is ClientModule && (dependency !is ProjectDependency || (dependency.targetConfiguration != "namedElements" || importFrom(
 							dependency.dependencyProject,
 							innerRelation
 						))
-					)
+					))
 						innerRelation.gradleConfig(dependency.copy())
 				for (dependency in dependencyProject.configurations[configType.loomConfig]?.dependencies ?: setOf())
-					innerRelation.loomConfig(dependency.copy())
+					if (dependency !is ClientModule)
+						innerRelation.loomConfig(dependency.copy())
 			}
 		}
 	}
