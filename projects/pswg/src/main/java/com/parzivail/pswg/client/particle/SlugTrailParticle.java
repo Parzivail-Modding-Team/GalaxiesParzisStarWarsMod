@@ -16,11 +16,11 @@ public class SlugTrailParticle extends AnimatedParticle
 	{
 		super(clientWorld, x, y, z, spriteProvider, 0.0F);
 		this.velocityMultiplier = 0.92F;
-		this.scale = (float)(Math.random() * 0.2 + 0.2);
+		this.scale = this.random.nextFloat() * 0.2f + 0.2f;
 		this.setAlpha(1.0F);
 		var gray = 0.6f;
 		this.setColor(gray, gray, gray);
-		this.maxAge = (int)((double)(this.scale * 12.0F) / (Math.random() * 0.8 + 0.2));
+		this.maxAge = (int)((double)(this.scale * 12.0F) / (this.random.nextFloat() * 0.8 + 0.2));
 		this.setSpriteForAge(spriteProvider);
 		this.collidesWithWorld = true;
 		this.velocityX = vX;

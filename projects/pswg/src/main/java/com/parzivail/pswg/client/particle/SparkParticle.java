@@ -20,10 +20,10 @@ public class SparkParticle extends CrossPointingParticle
 	{
 		super(clientWorld, x, y, z, spriteProvider);
 		this.velocityMultiplier = 1;
-		this.scale = (float)(Math.random() * 0.05 + 0.06);
+		this.scale = (float)(this.random.nextFloat() * 0.05 + 0.06);
 		this.setAlpha(1.0F);
 		this.setColor(1, 0, 0);
-		this.maxAge = (int)(Math.random() * 10 + 5);
+		this.maxAge = (int)(this.random.nextFloat() * 10 + 5);
 		this.setSpriteForAge(spriteProvider);
 		this.collidesWithWorld = true;
 		this.velocityX = vX;

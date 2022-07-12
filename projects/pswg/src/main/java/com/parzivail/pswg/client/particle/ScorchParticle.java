@@ -34,11 +34,11 @@ public class ScorchParticle extends DecalParticle
 		this.velocityX = vX;
 		this.velocityY = vY;
 		this.velocityZ = vZ;
-		this.angle = clientWorld.random.nextFloat() * MathHelper.PI;
+		this.angle = this.random.nextFloat() * MathHelper.PI;
 
 		this.heat = heat;
 
-		this.variant = clientWorld.random.nextInt(NUM_VARIANTS);
+		this.variant = this.random.nextInt(NUM_VARIANTS);
 	}
 
 	@Override
