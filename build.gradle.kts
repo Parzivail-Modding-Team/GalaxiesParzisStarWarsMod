@@ -126,7 +126,7 @@ allprojects {
 			rename { "${it}_${archives_base_name}"}
 		}
 
-		exclude("com/parzivail/datagen")
+//		exclude("com/parzivail/datagen")
 	}
 
 	// configure the maven publication
