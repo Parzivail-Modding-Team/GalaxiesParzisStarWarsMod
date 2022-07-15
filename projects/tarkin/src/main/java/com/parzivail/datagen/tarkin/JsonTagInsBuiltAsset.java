@@ -54,7 +54,6 @@ public class JsonTagInsBuiltAsset extends BuiltAsset
 			)
 			{
 				GSON.toJson(JsonObjKeyInsBuiltAsset.sortElementsRecursively(TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(entries, false)).getOrThrow(false, Lumberjack::error)), jsonWriter);
-				writer.write('\r');
 				writer.write('\n');
 			}
 		}
