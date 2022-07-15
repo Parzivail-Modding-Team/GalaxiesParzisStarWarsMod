@@ -7,11 +7,10 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class AssetGenerator
 {
-	private static Path rootDir = Paths.get("..", "src", "main", "resources");
+	private static Path rootDir = null;
 
 	public static Identifier getRegistryName(ItemConvertible item)
 	{
@@ -56,6 +55,9 @@ public class AssetGenerator
 
 	public static Path getRootDir()
 	{
+		if (rootDir == null)
+			throw new RuntimeException("Output directory cannot be null");
+
 		return rootDir;
 	}
 }

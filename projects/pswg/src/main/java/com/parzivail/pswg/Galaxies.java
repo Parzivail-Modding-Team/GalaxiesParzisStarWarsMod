@@ -1,7 +1,6 @@
 package com.parzivail.pswg;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
-import com.parzivail.datagen.DataGenHelper;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.*;
@@ -23,7 +22,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
@@ -158,8 +156,5 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipFire, ShipEntity::handleFirePacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipRotation, ShipEntity::handleRotationPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipControls, ShipEntity::handleControlPacket);
-
-		if (FabricLoader.getInstance().isDevelopmentEnvironment())
-			DataGenHelper.run();
 	}
 }

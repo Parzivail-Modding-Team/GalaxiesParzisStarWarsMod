@@ -29,6 +29,7 @@ import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,8 +39,9 @@ import java.util.List;
  */
 public class Tarkin
 {
-	public static void main(String arg) throws Exception
+	public static void main() throws Exception
 	{
+		AssetGenerator.setOutputRoot(Path.of(System.getenv("TARKIN_OUT_DIR")));
 		Lumberjack.setLogHeader("TARKIN");
 
 		//		AssetGenerator.setOutputRoot(Paths.get("..", "TEMP", "src", "main", "resources"));

@@ -18,6 +18,9 @@
 	"icon": "assets/pswg/icon.png",
 	"environment": "*",
 	"entrypoints": {
+		"main": [
+			"com.parzivail.datagen.DataGenHelper"
+		]
 	},
 	"depends": {
 		"fabric": "*",
