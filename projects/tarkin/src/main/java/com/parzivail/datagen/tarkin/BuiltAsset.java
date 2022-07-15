@@ -271,6 +271,7 @@ public class BuiltAsset
 		{
 			jsonWriter.setIndent("\t");
 			GSON.toJson(keySource, jsonWriter);
+			writer.write('\r');
 			writer.write('\n');
 		}
 	}
@@ -284,6 +285,7 @@ public class BuiltAsset
 			try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8))
 			{
 				GSON.toJson(contents, writer);
+				writer.write('\r');
 				writer.write('\n');
 			}
 		}
