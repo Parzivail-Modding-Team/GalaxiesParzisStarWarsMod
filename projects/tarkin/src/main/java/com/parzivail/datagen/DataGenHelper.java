@@ -1,12 +1,12 @@
 package com.parzivail.datagen;
 
 import com.parzivail.datagen.tarkin.Tarkin;
-import net.fabricmc.api.ClientModInitializer;
+import com.parzivail.pswg.api.PswgAddon;
 
-public class DataGenHelper implements ClientModInitializer
+public class DataGenHelper implements PswgAddon
 {
 	@Override
-	public void onInitializeClient()
+	public void onPswgReady()
 	{
 		try
 		{
