@@ -1,6 +1,6 @@
 package com.parzivail.util.block;
 
-import com.parzivail.pswg.container.registry.RegistryHelper;
+import com.parzivail.util.registry.DyedBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -32,7 +32,7 @@ public class BlockUtil
 		return true;
 	}
 
-	public static Block[] concat(RegistryHelper.DyedBlocks dyedSet, Block... blockSet)
+	public static Block[] concat(DyedBlocks dyedSet, Block... blockSet)
 	{
 		var blocks = new Block[dyedSet.size() + blockSet.length];
 		var i = 0;

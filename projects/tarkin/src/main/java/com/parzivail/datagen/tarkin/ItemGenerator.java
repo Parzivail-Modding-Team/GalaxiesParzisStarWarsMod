@@ -1,6 +1,6 @@
 package com.parzivail.datagen.tarkin;
 
-import com.parzivail.pswg.container.registry.RegistryHelper;
+import com.parzivail.util.registry.ArmorItems;
 import net.minecraft.item.Item;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.registry.Registry;
@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class ItemGenerator
 {
-	static void armor(RegistryHelper.ArmorItems armorItems, List<BuiltAsset> assets)
+	static void armor(ArmorItems armorItems, List<BuiltAsset> assets)
 	{
 		basic(armorItems.helmet).build(assets);
 		basic(armorItems.chestplate).build(assets);

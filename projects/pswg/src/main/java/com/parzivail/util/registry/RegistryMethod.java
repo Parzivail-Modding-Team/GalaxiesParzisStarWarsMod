@@ -1,4 +1,4 @@
-package com.parzivail.pswg.container.registry;
+package com.parzivail.util.registry;
 
 import net.minecraft.util.Identifier;
 

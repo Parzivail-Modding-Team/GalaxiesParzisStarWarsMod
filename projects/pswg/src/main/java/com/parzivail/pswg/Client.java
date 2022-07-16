@@ -33,8 +33,6 @@ import com.parzivail.pswg.client.texture.tinted.TintedTextureProvider;
 import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.*;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.container.registry.ClientBlockRegistryData;
-import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
@@ -54,6 +52,10 @@ import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
+import com.parzivail.util.registry.ClientBlockRegistryData;
+import com.parzivail.util.registry.DyedBlocks;
+import com.parzivail.util.registry.NumberedBlocks;
+import com.parzivail.util.registry.RegistryHelper;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -212,8 +214,8 @@ public class Client implements ClientModInitializer
 		ModelRegistry.registerConnected(SwgBlocks.Panel.BlackImperialPanelThinBordered, true, true, true, null, Resources.id("block/black_imperial_panel_blank"));
 
 		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, Block.class, Client::registerBlockData);
-		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, RegistryHelper.DyedBlocks.class, Client::registerDyedBlockData);
-		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, RegistryHelper.NumberedBlocks.class, Client::registerNumberedBlockData);
+		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, DyedBlocks.class, Client::registerDyedBlockData);
+		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, NumberedBlocks.class, Client::registerNumberedBlockData);
 
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NemManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(P3dManager.INSTANCE);
@@ -424,13 +426,13 @@ public class Client implements ClientModInitializer
 		}
 	}
 
-	private static void registerDyedBlockData(ClientBlockRegistryData data, RegistryHelper.DyedBlocks blocks)
+	private static void registerDyedBlockData(ClientBlockRegistryData data, DyedBlocks blocks)
 	{
 		for (var block : blocks.values())
 			registerBlockData(data, block);
 	}
 
-	private static void registerNumberedBlockData(ClientBlockRegistryData data, RegistryHelper.NumberedBlocks blocks)
+	private static void registerNumberedBlockData(ClientBlockRegistryData data, NumberedBlocks blocks)
 	{
 		for (var block : blocks)
 			registerBlockData(data, block);

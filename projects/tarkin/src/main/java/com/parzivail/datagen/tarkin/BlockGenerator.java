@@ -1,7 +1,8 @@
 package com.parzivail.datagen.tarkin;
 
-import com.parzivail.pswg.container.registry.RegistryHelper;
 import com.parzivail.util.block.IPicklingBlock;
+import com.parzivail.util.registry.StoneProducts;
+import com.parzivail.util.registry.WoodProducts;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
@@ -303,12 +304,12 @@ public class BlockGenerator
 		return BlockGenerator.basic(block).lootTable(block1 -> LootTableFile.singleFortuneBonus(block1, item));
 	}
 
-	public static void basicStoneProducts(RegistryHelper.StoneProducts variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void basicStoneProducts(StoneProducts variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		stoneProducts(variants, BlockGenerator::basic, miningTag, assets);
 	}
 
-	public static void stoneProducts(RegistryHelper.StoneProducts variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void stoneProducts(StoneProducts variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		var id = AssetGenerator.getTextureName(variants.block);
 		generatorFunction.apply(variants.block)
@@ -328,12 +329,12 @@ public class BlockGenerator
 		              .build(assets);
 	}
 
-	public static void basicWoodProducts(RegistryHelper.WoodProducts variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void basicWoodProducts(WoodProducts variants, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		woodProducts(variants, BlockGenerator::basic, miningTag, assets);
 	}
 
-	public static void woodProducts(RegistryHelper.WoodProducts variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
+	public static void woodProducts(WoodProducts variants, Function<Block, BlockGenerator> generatorFunction, TagKey<Block> miningTag, List<BuiltAsset> assets)
 	{
 		var id = AssetGenerator.getTextureName(variants.plank);
 		generatorFunction.apply(variants.plank)

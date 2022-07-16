@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.render.armor;
 
 import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.component.SwgEntityComponents;
-import com.parzivail.pswg.container.registry.RegistryHelper;
+import com.parzivail.util.registry.ArmorItems;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
@@ -39,7 +39,7 @@ public class ArmorRenderer
 	private static final HashMap<Identifier, Entry> MODELKEY_MODEL_MAP = new HashMap<>();
 	private static final HashMap<Identifier, ArmorRenderTransformer> MODELKEY_TRANSFORMER_MAP = new HashMap<>();
 
-	public static void register(RegistryHelper.ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier slimModelId, Identifier textureId)
+	public static void register(ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier slimModelId, Identifier textureId)
 	{
 		register(itemSet.helmet, modelKey, defaultModelId, textureId, slimModelId, textureId);
 		register(itemSet.chestplate, modelKey, defaultModelId, textureId, slimModelId, textureId);
@@ -47,7 +47,7 @@ public class ArmorRenderer
 		register(itemSet.boots, modelKey, defaultModelId, textureId, slimModelId, textureId);
 	}
 
-	public static void register(RegistryHelper.ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier defaultTextureId, Identifier slimModelId, Identifier slimTextureId)
+	public static void register(ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier defaultTextureId, Identifier slimModelId, Identifier slimTextureId)
 	{
 		register(itemSet.helmet, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
 		register(itemSet.chestplate, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);

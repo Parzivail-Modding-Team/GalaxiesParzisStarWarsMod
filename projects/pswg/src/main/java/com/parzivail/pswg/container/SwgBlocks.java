@@ -5,7 +5,6 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.block.crop.*;
 import com.parzivail.pswg.blockentity.*;
-import com.parzivail.pswg.container.registry.*;
 import com.parzivail.util.block.*;
 import com.parzivail.util.block.connecting.SelfConnectingBlock;
 import com.parzivail.util.block.connecting.SelfConnectingGlassBlock;
@@ -16,6 +15,7 @@ import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBounds;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBoundsGuiEntity;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithGuiEntity;
+import com.parzivail.util.registry.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -54,7 +54,7 @@ public class SwgBlocks
 	public static class Stone
 	{
 		@RegistryName("canyon_stone")
-		public static final RegistryHelper.StoneProducts Canyon = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F)));
+		public static final StoneProducts Canyon = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F)));
 		@RegistryName("canyon_stone_bricks")
 		public static final Block CanyonBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("polished_canyon_stone")
@@ -63,30 +63,30 @@ public class SwgBlocks
 		public static final Block ChiseledCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 
 		@RegistryName("canyon_cobblestone")
-		public static final RegistryHelper.StoneProducts CanyonCobble = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final StoneProducts CanyonCobble = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 
 		@RegistryName("pourstone")
-		public static final RegistryHelper.StoneProducts Pourstone = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final StoneProducts Pourstone = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("smooth_pourstone")
-		public static final RegistryHelper.StoneProducts SmoothPourstone = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final StoneProducts SmoothPourstone = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("cracked_pourstone")
-		public static final RegistryHelper.StoneProducts CrackedPourstone = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
+		public static final StoneProducts CrackedPourstone = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.0F).requiresTool()));
 
 		@RegistryName("durasteel_bordered_pourstone")
 		@ClientBlockRegistryData(isConnected = true)
 		public static final SelfConnectingBlock DurasteelConnectedPourstone = new SelfConnectingBlock(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(1.5F).requiresTool());
 
 		@RegistryName("pourstone")
-		public static final RegistryHelper.DyedStoneProducts DyedPourstone = new RegistryHelper.DyedStoneProducts(color -> new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool())));
+		public static final DyedStoneProducts DyedPourstone = new DyedStoneProducts(color -> new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool())));
 
 		@RegistryName("massassi_stone")
-		public static final RegistryHelper.StoneProducts Massassi = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final StoneProducts Massassi = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_massassi_stone")
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_massassi_stone_slab")
 		public static final SlabBlock MassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
 		@RegistryName("massassi_stone_bricks")
-		public static final RegistryHelper.StoneProducts MassassiBricks = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final StoneProducts MassassiBricks = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		//@RegistryName("chiseled_massassi_stone_bricks")
 		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 
@@ -95,16 +95,16 @@ public class SwgBlocks
 		@RegistryName("mossy_smooth_massassi_stone_slab")
 		public static final SlabBlock MossyMassassiSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(MossyMassassiSmooth));
 		@RegistryName("mossy_massassi_stone_bricks")
-		public static final RegistryHelper.StoneProducts MossyMassassiBricks = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final StoneProducts MossyMassassiBricks = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 
 		@RegistryName("ilum_stone")
-		public static final RegistryHelper.StoneProducts Ilum = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final StoneProducts Ilum = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_ilum_stone")
 		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_ilum_stone_slab")
 		public static final SlabBlock IlumSmoothSlab = new SlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
 		@RegistryName("ilum_stone_bricks")
-		public static final RegistryHelper.StoneProducts IlumBricks = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
+		public static final StoneProducts IlumBricks = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("chiseled_ilum_stone_bricks")
 		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 	}
@@ -113,7 +113,7 @@ public class SwgBlocks
 	public static class Sandstone
 	{
 		@RegistryName("desert_sandstone")
-		public static final RegistryHelper.StoneProducts Desert = new RegistryHelper.StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
+		public static final StoneProducts Desert = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool()));
 		@RegistryName("dunestone")
 		public static final Block Dunestone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
 		@RegistryName("smooth_desert_sandstone")
@@ -234,7 +234,7 @@ public class SwgBlocks
 		public static final PillarBlock MossySequoiaLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("sequoia")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
-		public static final RegistryHelper.WoodProducts SequoiaProducts = new RegistryHelper.WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
+		public static final WoodProducts SequoiaProducts = new WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 
 		@RegistryName("japor_leaves")
 		@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
@@ -248,7 +248,7 @@ public class SwgBlocks
 		public static final PillarBlock JaporLog = createLogBlock(MapColor.OAK_TAN, MapColor.BROWN);
 		@RegistryName("japor")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 20)
-		public static final RegistryHelper.WoodProducts JaporProducts = new RegistryHelper.WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
+		public static final WoodProducts JaporProducts = new WoodProducts(new Block(AbstractBlock.Settings.of(Material.WOOD, MapColor.OAK_TAN).strength(2.0F, 3.0F).sounds(BlockSoundGroup.WOOD)));
 
 		@RegistryName("tatooine_wood")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
@@ -428,13 +428,13 @@ public class SwgBlocks
 		public static final Block ImperialCutoutCaged = new PillarBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 
 		@RegistryName("black_imperial_panel_blank")
-		public static final RegistryHelper.StoneProducts BlackImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS));
+		public static final StoneProducts BlackImperialPanelBlank = new StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS));
 		@RegistryName("gray_imperial_panel_blank")
-		public static final RegistryHelper.StoneProducts GrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY)));
+		public static final StoneProducts GrayImperialPanelBlank = new StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY)));
 		@RegistryName("light_gray_imperial_panel_blank")
-		public static final RegistryHelper.StoneProducts LightGrayImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.LIGHT_GRAY)));
+		public static final StoneProducts LightGrayImperialPanelBlank = new StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.LIGHT_GRAY)));
 		@RegistryName("white_imperial_panel_blank")
-		public static final RegistryHelper.StoneProducts WhiteImperialPanelBlank = new RegistryHelper.StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS));
+		public static final StoneProducts WhiteImperialPanelBlank = new StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS));
 		@RegistryName("black_imperial_panel_tile")
 		public static final Block BlackImperialPanelTile = createPanel(MapColor.GRAY);
 		@RegistryName("black_imperial_panel_sectional")
@@ -485,15 +485,15 @@ public class SwgBlocks
 		public static final SelfConnectingBlock LargeLightGrayImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 
 		@RegistryName("black_imperial_panel_pattern_a")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternA = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
+		public static final NumberedBlocks BlackImperialPanelPatternA = new NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 		@RegistryName("black_imperial_panel_pattern_b")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternB = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
+		public static final NumberedBlocks BlackImperialPanelPatternB = new NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 		@RegistryName("black_imperial_panel_pattern_c")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternC = new RegistryHelper.NumberedBlocks(2, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
+		public static final NumberedBlocks BlackImperialPanelPatternC = new NumberedBlocks(2, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 		@RegistryName("black_imperial_panel_pattern_d")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternD = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
+		public static final NumberedBlocks BlackImperialPanelPatternD = new NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 		@RegistryName("black_imperial_panel_pattern_e")
-		public static final RegistryHelper.NumberedBlocks BlackImperialPanelPatternE = new RegistryHelper.NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
+		public static final NumberedBlocks BlackImperialPanelPatternE = new NumberedBlocks(4, (i) -> new Block(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK)));
 
 		@RegistryName("gray_imperial_panel_pattern_3")
 		public static final Block GrayImperialPanelPattern3 = createPanel(MapColor.GRAY);
@@ -601,10 +601,10 @@ public class SwgBlocks
 	public static class Grate
 	{
 		@RegistryName("imperial_opaque_grate")
-		public static final RegistryHelper.NumberedBlocks ImperialOpaque = new RegistryHelper.NumberedBlocks(3, (i) -> new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool()));
+		public static final NumberedBlocks ImperialOpaque = new NumberedBlocks(3, (i) -> new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool()));
 		@RegistryName("imperial_grate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		public static final RegistryHelper.NumberedBlocks ImperialTrapdoor = new RegistryHelper.NumberedBlocks(5, (i) -> new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool()));
+		public static final NumberedBlocks ImperialTrapdoor = new NumberedBlocks(5, (i) -> new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool()));
 	}
 
 	@RegistryOrder(14)
@@ -651,7 +651,7 @@ public class SwgBlocks
 	public static class Crate
 	{
 		@RegistryName("corrugated_crate")
-		public static final RegistryHelper.DyedBlocks CorrugatedCrate = new RegistryHelper.DyedBlocks(color -> new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new));
+		public static final DyedBlocks CorrugatedCrate = new DyedBlocks(color -> new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new));
 		@RegistryName("imperial_corrugated_crate")
 		public static final Block ImperialCorrugatedCrate = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new);
 		@RegistryName("corrugated_crate")
@@ -747,15 +747,15 @@ public class SwgBlocks
 		public static final Block CreatureTerrarium = new TerrariumBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
 		@RegistryName("stained_creature_terrarium")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.TRANSLUCENT)
-		public static final RegistryHelper.DyedBlocks DyedCreatureTerrarium = new RegistryHelper.DyedBlocks(color -> new TerrariumBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
+		public static final DyedBlocks DyedCreatureTerrarium = new DyedBlocks(color -> new TerrariumBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool()));
 		@RegistryName("creature_terrarium")
 		public static final BlockEntityType<CreatureCageBlockEntity> CreatureCageBlockEntityType = FabricBlockEntityTypeBuilder.create(CreatureCageBlockEntity::new, BlockUtil.concat(DyedCreatureTerrarium, CreatureTerrarium, Creature)).build();
 	}
 
 	public static void register()
 	{
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, Object.class, SwgBlocks::tryRegisterBlock);
-		RegistryHelper.registerAnnotatedFields(SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
+		RegistryHelper.registerAutoId(Resources.MODID, SwgBlocks.class, Object.class, SwgBlocks::tryRegisterBlock);
+		RegistryHelper.registerAutoId(Resources.MODID, SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 
 		RegistryHelper.register(SwgBlocks.class, ServerBlockRegistryData.class, Block.class, SwgBlocks::registerServerData);
 
@@ -781,19 +781,19 @@ public class SwgBlocks
 	{
 		if (o instanceof Block block)
 			registerBlock(block, identifier, ignoreTab);
-		else if (o instanceof RegistryHelper.StoneProducts variants)
+		else if (o instanceof StoneProducts variants)
 			registerStoneProducts(variants, identifier, ignoreTab);
-		else if (o instanceof RegistryHelper.DyedStoneProducts variants)
+		else if (o instanceof DyedStoneProducts variants)
 			registerDyedStoneProducts(variants, identifier, ignoreTab);
-		else if (o instanceof RegistryHelper.WoodProducts variants)
+		else if (o instanceof WoodProducts variants)
 			registerWoodProducts(variants, identifier, ignoreTab);
-		else if (o instanceof RegistryHelper.DyedBlocks blocks)
+		else if (o instanceof DyedBlocks blocks)
 			registerDyedBlocks(blocks, identifier, ignoreTab);
-		else if (o instanceof RegistryHelper.NumberedBlocks blocks)
+		else if (o instanceof NumberedBlocks blocks)
 			registerNumberedBlocks(blocks, identifier, ignoreTab);
 	}
 
-	private static void registerStoneProducts(RegistryHelper.StoneProducts t, Identifier identifier, boolean ignoreTab)
+	private static void registerStoneProducts(StoneProducts t, Identifier identifier, boolean ignoreTab)
 	{
 		registerBlock(t.block, identifier, ignoreTab);
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
@@ -801,19 +801,19 @@ public class SwgBlocks
 		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), ignoreTab);
 	}
 
-	private static void registerDyedStoneProducts(RegistryHelper.DyedStoneProducts t, Identifier identifier, boolean ignoreTab)
+	private static void registerDyedStoneProducts(DyedStoneProducts t, Identifier identifier, boolean ignoreTab)
 	{
 		for (var entry : t.entrySet())
 			registerStoneProducts(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);
 	}
 
-	private static void registerNumberedBlocks(RegistryHelper.NumberedBlocks t, Identifier identifier, boolean ignoreTab)
+	private static void registerNumberedBlocks(NumberedBlocks t, Identifier identifier, boolean ignoreTab)
 	{
 		for (var i = 0; i < t.size(); i++)
 			registerBlock(t.get(i), Resources.id(identifier.getPath() + "_" + (i + 1)), ignoreTab);
 	}
 
-	private static void registerWoodProducts(RegistryHelper.WoodProducts t, Identifier identifier, boolean ignoreTab)
+	private static void registerWoodProducts(WoodProducts t, Identifier identifier, boolean ignoreTab)
 	{
 		registerBlock(t.plank, Resources.id(identifier.getPath() + "_planks"), ignoreTab);
 		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
@@ -824,7 +824,7 @@ public class SwgBlocks
 		registerBlock(t.door, Resources.id(identifier.getPath() + "_door"), ignoreTab);
 	}
 
-	private static void registerDyedBlocks(RegistryHelper.DyedBlocks t, Identifier identifier, boolean ignoreTab)
+	private static void registerDyedBlocks(DyedBlocks t, Identifier identifier, boolean ignoreTab)
 	{
 		for (var entry : t.entrySet())
 			registerBlock(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);

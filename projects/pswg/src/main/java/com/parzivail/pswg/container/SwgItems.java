@@ -4,9 +4,6 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.TatooineHomeDoorBlock;
 import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
-import com.parzivail.pswg.container.registry.RegistryHelper;
-import com.parzivail.pswg.container.registry.RegistryName;
-import com.parzivail.pswg.container.registry.RegistryOrder;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.SpawnEntityItem;
@@ -17,6 +14,7 @@ import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
 import com.parzivail.pswg.item.material.TitaniumToolMaterial;
 import com.parzivail.util.item.*;
+import com.parzivail.util.registry.*;
 import dev.emi.trinkets.api.TrinketItem;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -42,13 +40,13 @@ public class SwgItems
 	public static class Armor
 	{
 		@RegistryName("stormtrooper")
-		public static final RegistryHelper.ArmorItems Stormtrooper = new RegistryHelper.ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		public static final ArmorItems Stormtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("sandtrooper")
-		public static final RegistryHelper.ArmorItems Sandtrooper = new RegistryHelper.ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		public static final ArmorItems Sandtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("deathtrooper")
-		public static final RegistryHelper.ArmorItems Deathtrooper = new RegistryHelper.ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		public static final ArmorItems Deathtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("jumptrooper")
-		public static final RegistryHelper.ArmorItems Jumptrooper = new RegistryHelper.ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		public static final ArmorItems Jumptrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("jumptrooper_jetpack")
 		public static final TrinketItem JumptrooperJetpack = new TrinketItem(new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_pilot_helmet")
@@ -247,13 +245,13 @@ public class SwgItems
 		@RegistryName("desh_cup")
 		public static final Item DeshCup = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("cup")
-		public static final RegistryHelper.DyedItems Cups = new RegistryHelper.DyedItems(color -> new Item(new Item.Settings().group(Galaxies.TabItems)));
+		public static final DyedItems Cups = new DyedItems(color -> new Item(new Item.Settings().group(Galaxies.TabItems)));
 		@RegistryName("glass")
-		public static final RegistryHelper.NumberedItems Glasses = new RegistryHelper.NumberedItems(10, i -> new Item(new Item.Settings().group(Galaxies.TabItems)));
+		public static final NumberedItems Glasses = new NumberedItems(10, i -> new Item(new Item.Settings().group(Galaxies.TabItems)));
 		@RegistryName("glass_bottle")
-		public static final RegistryHelper.NumberedItems GlassBottles = new RegistryHelper.NumberedItems(3, i -> new Item(new Item.Settings().group(Galaxies.TabItems)));
+		public static final NumberedItems GlassBottles = new NumberedItems(3, i -> new Item(new Item.Settings().group(Galaxies.TabItems)));
 		@RegistryName("plastic_bottle")
-		public static final RegistryHelper.NumberedItems PlasticBottles = new RegistryHelper.NumberedItems(2, i -> new Item(new Item.Settings().group(Galaxies.TabItems)));
+		public static final NumberedItems PlasticBottles = new NumberedItems(2, i -> new Item(new Item.Settings().group(Galaxies.TabItems)));
 	}
 
 	@RegistryOrder(9)
@@ -453,7 +451,7 @@ public class SwgItems
 
 	public static void register()
 	{
-		RegistryHelper.registerAnnotatedFields(SwgItems.class, Object.class, SwgItems::tryRegisterItem);
+		RegistryHelper.registerAutoId(Resources.MODID, SwgItems.class, Object.class, SwgItems::tryRegisterItem);
 
 		for (var i : Door.TatooineHome)
 		{
@@ -469,17 +467,17 @@ public class SwgItems
 	{
 		if (o instanceof Item item)
 			Registry.register(Registry.ITEM, identifier, item);
-		else if (o instanceof RegistryHelper.ArmorItems armorItems)
+		else if (o instanceof ArmorItems armorItems)
 		{
 			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_helmet"), armorItems.helmet);
 			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_chestplate"), armorItems.chestplate);
 			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_leggings"), armorItems.leggings);
 			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_boots"), armorItems.boots);
 		}
-		else if (o instanceof RegistryHelper.DyedItems items)
+		else if (o instanceof DyedItems items)
 			for (var entry : items.entrySet())
 				Registry.register(Registry.ITEM, Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue());
-		else if (o instanceof RegistryHelper.NumberedItems items)
+		else if (o instanceof NumberedItems items)
 			for (var i = 0; i < items.size(); i++)
 				Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_" + (i + 1)), items.get(i));
 	}
