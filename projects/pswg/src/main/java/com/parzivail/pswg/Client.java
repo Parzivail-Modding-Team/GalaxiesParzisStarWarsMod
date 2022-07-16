@@ -402,8 +402,8 @@ public class Client implements ClientModInitializer
 				new ZoomDivisorMouseModifier()
 		);
 
-		Lumberjack.info("Loading PSWG addons via pswg-addon-client");
-		EntrypointUtils.invoke("pswg-addon-client", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
+		Lumberjack.info("Loading PSWG addons via pswg-client-addon");
+		EntrypointUtils.invoke("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
 	}
 
 	private static void registerBlockData(ClientBlockRegistryData data, Block block)

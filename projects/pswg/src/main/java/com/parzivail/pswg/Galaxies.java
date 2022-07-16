@@ -159,7 +159,7 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipRotation, ShipEntity::handleRotationPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipControls, ShipEntity::handleControlPacket);
 
-		Lumberjack.info("Loading PSWG addons via pswg-addon-main");
-		EntrypointUtils.invoke("pswg-addon-main", PswgAddon.class, PswgAddon::onPswgReady);
+		Lumberjack.info("Loading PSWG addons via pswg-addon");
+		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
 	}
 }
