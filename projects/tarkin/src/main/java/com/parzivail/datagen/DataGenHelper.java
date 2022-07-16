@@ -1,12 +1,12 @@
 package com.parzivail.datagen;
 
 import com.parzivail.datagen.tarkin.Tarkin;
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
 
-public class DataGenHelper implements ModInitializer
+public class DataGenHelper implements ClientModInitializer
 {
 	@Override
-	public void onInitialize()
+	public void onInitializeClient()
 	{
 		try
 		{
