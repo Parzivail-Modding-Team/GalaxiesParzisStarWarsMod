@@ -1,5 +1,6 @@
 package com.parzivail.pswg;
 
+import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.input.KeyHandler;
@@ -65,6 +66,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.MinecraftClient;
@@ -399,6 +401,9 @@ public class Client implements ClientModInitializer
 				new SmoothTransitionMode(),
 				new ZoomDivisorMouseModifier()
 		);
+
+		Lumberjack.info("Loading PSWG addons via pswg-addon-client");
+		EntrypointUtils.invoke("pswg-addon-client", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
 	}
 
 	private static void registerBlockData(ClientBlockRegistryData data, Block block)
