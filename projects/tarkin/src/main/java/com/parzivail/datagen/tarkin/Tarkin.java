@@ -39,10 +39,11 @@ import java.util.List;
  */
 public class Tarkin
 {
+	public static final Lumberjack LOG = new Lumberjack("TARKIN");
+
 	public static void main() throws Exception
 	{
 		AssetGenerator.setOutputRoot(Path.of(System.getenv("TARKIN_OUT_DIR")));
-		Lumberjack.setLogHeader("TARKIN");
 
 		//		AssetGenerator.setOutputRoot(Paths.get("..", "TEMP", "src", "main", "resources"));
 
@@ -65,17 +66,17 @@ public class Tarkin
 
 		for (var asset : assets)
 		{
-			Lumberjack.log("Wrote %s", asset.getFilename());
+			Galaxies.LOG.log("Wrote %s", asset.getFilename());
 			asset.write();
 		}
 
-		Lumberjack.log("Wrote %s assets", assets.size());
+		Galaxies.LOG.log("Wrote %s assets", assets.size());
 
 		// Synchronize the keys of the en_us locale
 		BuiltAsset.mergeLanguageKeys(Resources.id(LanguageProvider.OUTPUT_LOCALE), Resources.id(LanguageProvider.TARGET_LOCALE));
-		Lumberjack.log("Merged language keys");
+		Galaxies.LOG.log("Merged language keys");
 
-		Lumberjack.log("Done");
+		Galaxies.LOG.log("Done");
 	}
 
 	private static void generateLangEntries(List<BuiltAsset> assets)

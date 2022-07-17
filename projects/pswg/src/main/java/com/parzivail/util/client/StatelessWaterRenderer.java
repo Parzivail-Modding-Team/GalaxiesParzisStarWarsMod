@@ -1,6 +1,6 @@
 package com.parzivail.util.client;
 
-import com.parzivail.pswg.Resources;
+import com.parzivail.util.ParziUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
@@ -25,7 +25,7 @@ import java.util.concurrent.Executor;
 @Environment(EnvType.CLIENT)
 public class StatelessWaterRenderer implements SimpleResourceReloadListener<Void>
 {
-	public static final Identifier ID = Resources.id("stateless_water_renderer");
+	public static final Identifier ID = ParziUtil.id("stateless_water_renderer");
 	public static final StatelessWaterRenderer INSTANCE = new StatelessWaterRenderer();
 
 	private final Sprite[] waterSprites = new Sprite[2];

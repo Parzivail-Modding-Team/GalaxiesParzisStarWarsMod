@@ -1,6 +1,5 @@
-package com.parzivail.pswg.client.render.model;
+package com.parzivail.util.client.render;
 
-import com.parzivail.util.client.render.ModelAngleAnimator;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;

@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stream, HashMap<ChunkPos, Long> entries)
 {
+	public static final Lumberjack LOG = new Lumberjack("SCARIF");
 	private static final String MAGIC = "SCRF";
 
 	public static ScarifStructure read(Identifier filename)
@@ -79,14 +80,14 @@ public record ScarifStructure(FileChannel file, LittleEndianDataInputStream stre
 				var chunk = new ScarifChunk(stream);
 				var dur = System.nanoTime() - time;
 
-				Lumberjack.debug("Loaded chunk in %s ms", (dur / 1000f) / 1000);
+				LOG.debug("Loaded chunk in %s ms", (dur / 1000f) / 1000);
 
 				return chunk;
 			}
 		}
 		catch (IOException e)
 		{
-			Lumberjack.error("SCARIF chunk failed to load (%s,%s)", pos.x, pos.z);
+			LOG.error("SCARIF chunk failed to load (%s,%s)", pos.x, pos.z);
 			e.printStackTrace();
 		}
 

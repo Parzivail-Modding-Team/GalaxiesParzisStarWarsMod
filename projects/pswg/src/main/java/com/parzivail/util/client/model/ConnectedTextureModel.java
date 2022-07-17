@@ -1,11 +1,8 @@
-package com.parzivail.pswg.client.render.model;
+package com.parzivail.util.client.model;
 
 import com.mojang.datafixers.util.Pair;
-import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.client.ConnectedTextureHelper;
 import com.parzivail.util.client.SubSprite;
-import com.parzivail.util.client.model.ClonableUnbakedModel;
-import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.math.SpriteSheetPoint;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,7 +12,6 @@ import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConnectingBlock;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
@@ -96,15 +92,12 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	@Override
 	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		var minecraft = MinecraftClient.getInstance();
+//		var minecraft = MinecraftClient.getInstance();
 
 		var meshBuilder = createMeshBuilder();//RENDERER.meshBuilder();
 		var quadEmitter = meshBuilder.getEmitter();
 
-		final var random = randomSupplier == null ? new Random(42) : randomSupplier.get();
-
-		var blockModels = minecraft.getBlockRenderManager().getModels();
-		var model = blockModels.getModel(SwgBlocks.Panel.LabWall.getDefaultState());
+//		var blockModels = minecraft.getBlockRenderManager().getModels();
 
 		// TODO: fix item lighting
 		//		if (state == null) // Assume it's an item

@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.sprite;
 
 import com.google.gson.Gson;
-import com.parzivail.util.Lumberjack;
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import net.minecraft.client.texture.NativeImage;
@@ -32,7 +32,7 @@ public class LayeredSpriteBuilder
 		}
 		catch (Exception ex)
 		{
-			Lumberjack.error("Error loading pswglayers JSON:");
+			Galaxies.LOG.error("Error loading pswglayers JSON:");
 			ex.printStackTrace();
 			return nativeImage;
 		}

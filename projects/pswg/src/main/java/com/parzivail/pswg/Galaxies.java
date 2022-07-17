@@ -36,10 +36,7 @@ import java.util.Objects;
 
 public class Galaxies implements ModInitializer
 {
-	static
-	{
-		Lumberjack.setLogHeader(Resources.MODID);
-	}
+	public static final Lumberjack LOG = new Lumberjack(Resources.MODID);
 
 	public static final ItemGroup TabBlocks = FabricItemGroupBuilder
 			.create(Resources.id("blocks"))
@@ -64,7 +61,7 @@ public class Galaxies implements ModInitializer
 	@Override
 	public void onInitialize()
 	{
-		Lumberjack.debug("onInitialize");
+		Galaxies.LOG.debug("onInitialize");
 
 		AutoConfig.register(Config.class, JanksonConfigSerializer::new);
 		Resources.CONFIG = AutoConfig.getConfigHolder(Config.class);
@@ -159,7 +156,7 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipRotation, ShipEntity::handleRotationPacket);
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.ShipControls, ShipEntity::handleControlPacket);
 
-		Lumberjack.info("Loading PSWG addons via pswg-addon");
+		Galaxies.LOG.info("Loading PSWG addons via pswg-addon");
 		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
 	}
 }

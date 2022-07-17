@@ -53,7 +53,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	public Packet<?> createSpawnPacket()
 	{
 		var entity = this.getOwner();
-		return PreciseEntitySpawnS2CPacket.createPacket(this, entity == null ? 0 : entity.getId());
+		return PreciseEntitySpawnS2CPacket.createPacket(SwgPackets.S2C.PreciseEntitySpawn, this, entity == null ? 0 : entity.getId());
 	}
 
 	@Override

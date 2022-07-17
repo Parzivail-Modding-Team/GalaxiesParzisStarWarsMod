@@ -1,6 +1,5 @@
 package com.parzivail.datagen.tarkin;
 
-import com.parzivail.util.Lumberjack;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
@@ -52,7 +51,7 @@ public class AssetGenerator
 	public static void setOutputRoot(Path rootDir)
 	{
 		AssetGenerator.rootDir = rootDir;
-		Lumberjack.info(String.format("Set output directory to: %s", rootDir.toAbsolutePath()));
+		Tarkin.LOG.info(String.format("Set output directory to: %s", rootDir.toAbsolutePath()));
 	}
 
 	public static Path getRootDir()

@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.texture;
 
 import com.mojang.authlib.minecraft.InsecureTextureException;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.util.Lumberjack;
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.util.data.FallbackIdentifier;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.TextureManager;
@@ -130,7 +130,7 @@ public abstract class TextureProvider<TData>
 			}
 			catch (InsecureTextureException insecureTextureException)
 			{
-				Lumberjack.warn("Attempt to load insecure texture blocked: %s ", cacheId);
+				Galaxies.LOG.warn("Attempt to load insecure texture blocked: %s ", cacheId);
 				insecureTextureException.printStackTrace();
 			}
 		});

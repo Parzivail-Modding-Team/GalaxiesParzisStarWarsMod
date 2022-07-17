@@ -1,6 +1,5 @@
 package com.parzivail.util.network;
 
-import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.util.data.PacketByteBufHelper;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -11,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 
 public class PreciseEntitySpawnS2CPacket extends EntitySpawnS2CPacket
@@ -41,11 +41,11 @@ public class PreciseEntitySpawnS2CPacket extends EntitySpawnS2CPacket
 		return velocity;
 	}
 
-	public static Packet<?> createPacket(Entity entity, int entityData)
+	public static Packet<?> createPacket(Identifier id, Entity entity, int entityData)
 	{
 		var passedData = new PacketByteBuf(Unpooled.buffer());
 		new PreciseEntitySpawnS2CPacket(entity, entityData).write(passedData);
-		return ServerPlayNetworking.createS2CPacket(SwgPackets.S2C.PreciseEntitySpawn, passedData);
+		return ServerPlayNetworking.createS2CPacket(id, passedData);
 	}
 
 	public static void handle(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buf, PacketSender sender)

@@ -2,6 +2,7 @@ package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
@@ -12,6 +13,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
 public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements NamedScreenHandlerFactory, BlockEntityClientSerializable
@@ -72,5 +74,11 @@ public class BlasterWorkbenchBlockEntity extends InventoryBlockEntity implements
 	{
 		compoundTag.put("blaster", inventory.get(SLOT_BLASTER).writeNbt(new NbtCompound()));
 		return compoundTag;
+	}
+
+	@Override
+	public Identifier getSyncPacketId()
+	{
+		return SwgPackets.S2C.SyncBlockToClient;
 	}
 }

@@ -1,6 +1,6 @@
 package com.parzivail.util.client;
 
-import com.parzivail.util.Lumberjack;
+import com.parzivail.util.ParziUtil;
 import com.parzivail.util.math.SpriteSheetPoint;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConnectingBlock;
@@ -56,7 +56,7 @@ public class ConnectedTextureHelper
 			return new SpriteSheetPoint(x, y + 2); // vertical connection
 		else
 		{
-			Lumberjack.debug("Impossible connection case?");
+			ParziUtil.LOG.debug("Impossible connection case?");
 			return null;
 		}
 	}

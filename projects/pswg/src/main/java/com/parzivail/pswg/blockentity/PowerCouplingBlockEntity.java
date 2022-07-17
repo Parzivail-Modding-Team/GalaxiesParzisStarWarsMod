@@ -1,6 +1,7 @@
 package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -8,6 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtLong;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -129,5 +131,11 @@ public class PowerCouplingBlockEntity extends BlockEntity implements BlockEntity
 				t.markDirty();
 			}
 		}
+	}
+
+	@Override
+	public Identifier getSyncPacketId()
+	{
+		return SwgPackets.S2C.SyncBlockToClient;
 	}
 }

@@ -91,7 +91,7 @@ package com.parzivail.pswg.world.tatooine;
 //							var stateIdx = states[y * 256 + z * 16 + x];
 //							if (stateIdx >= palette.length)
 //							{
-//								Lumberjack.warn("Invalid SCARIF palette index for chunk %s,%s, block %s,%s,%s", chunkPos.x, chunkPos.z, x, y, z);
+//								Galaxies.LOG.warn("Invalid SCARIF palette index for chunk %s,%s, block %s,%s,%s", chunkPos.x, chunkPos.z, x, y, z);
 //								continue;
 //							}
 //

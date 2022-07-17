@@ -39,8 +39,8 @@ import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
+import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.pswg.util.BlasterUtil;
-import com.parzivail.util.Lumberjack;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.client.StatelessWaterRenderer;
 import com.parzivail.util.client.TextUtil;
@@ -49,7 +49,6 @@ import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
-import com.parzivail.util.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import com.parzivail.util.registry.ClientBlockRegistryData;
@@ -126,7 +125,7 @@ public class Client implements ClientModInitializer
 	@Override
 	public void onInitializeClient()
 	{
-		Lumberjack.debug("onInitializeClient");
+		Galaxies.LOG.debug("onInitializeClient");
 
 		KeyBindingHelper.registerKeyBinding(KEY_PRIMARY_ITEM_ACTION);
 		KeyBindingHelper.registerKeyBinding(KEY_SECONDARY_ITEM_ACTION);
@@ -404,7 +403,7 @@ public class Client implements ClientModInitializer
 				new ZoomDivisorMouseModifier()
 		);
 
-		Lumberjack.info("Loading PSWG addons via pswg-client-addon");
+		Galaxies.LOG.info("Loading PSWG addons via pswg-client-addon");
 		EntrypointUtils.invoke("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
 	}
 
@@ -422,7 +421,7 @@ public class Client implements ClientModInitializer
 			if (block instanceof ConnectingBlock cb)
 				ModelRegistry.registerConnected(cb);
 			else
-				Lumberjack.error("Attempted to auto-register connecting model for non-connecting block %s", block);
+				Galaxies.LOG.error("Attempted to auto-register connecting model for non-connecting block %s", block);
 		}
 	}
 

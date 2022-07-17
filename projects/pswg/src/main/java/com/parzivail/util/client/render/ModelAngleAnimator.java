@@ -1,6 +1,5 @@
 package com.parzivail.util.client.render;
 
-import com.parzivail.pswg.client.render.model.MutableAnimatedModel;
 import net.minecraft.entity.Entity;
 
 @FunctionalInterface

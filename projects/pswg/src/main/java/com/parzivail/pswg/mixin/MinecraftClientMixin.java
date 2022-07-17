@@ -1,13 +1,13 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.pswg.client.texture.tinted.TintedTextureProvider;
 import com.parzivail.pswg.handler.LeftClickHandler;
-import com.parzivail.util.Lumberjack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -47,7 +47,7 @@ public abstract class MinecraftClientMixin
 	private void initTail(RunArgs args, CallbackInfo ci)
 	{
 		var remoteAssetDir = args.directories.assetDir.toPath().resolve("pswgRemoteAssets");
-		Lumberjack.debug("Remote asset directory: %s", remoteAssetDir.toString());
+		Galaxies.LOG.debug("Remote asset directory: %s", remoteAssetDir.toString());
 		Client.remoteTextureProvider = new RemoteTextureProvider(Resources.id("///remote"), textureManager, remoteAssetDir);
 		Client.stackedTextureProvider = new StackedTextureProvider(Resources.id("///stacked"), textureManager);
 		Client.tintedTextureProvider = new TintedTextureProvider(Resources.id("///tinted"), textureManager);

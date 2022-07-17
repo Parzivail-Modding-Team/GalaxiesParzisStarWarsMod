@@ -84,29 +84,38 @@ public class BlasterUtil
 
 		var distance = buf.readDouble();
 
-		if (distance > 1e5)
-			return;
-
-		for (var d = 2; d < distance; d++)
-		{
-			var vec = start.add(fromDir.multiply(d));
-
-			var dx = 0.01 * client.world.random.nextGaussian();
-			var dy = 0.01 * client.world.random.nextGaussian();
-			var dz = 0.01 * client.world.random.nextGaussian();
-
-			client.world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, dx, dy, dz);
-		}
-
 		var shouldScorch = buf.readBoolean();
+		Vec3d scorchPos = null;
+		Vec3d scorchNormal = null;
 
 		if (shouldScorch)
 		{
-			var pos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-			var normal = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-
-			createScorchParticles(client, pos, fromDir, normal, false);
+			scorchPos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
+			scorchNormal = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
 		}
+
+		var finalScorchPos = scorchPos;
+		var finalScorchNormal = scorchNormal;
+		client.execute(() -> {
+			if (distance > 1e5)
+				return;
+
+			for (var d = 2; d < distance; d++)
+			{
+				var vec = start.add(fromDir.multiply(d));
+
+				var dx = 0.01 * client.world.random.nextGaussian();
+				var dy = 0.01 * client.world.random.nextGaussian();
+				var dz = 0.01 * client.world.random.nextGaussian();
+
+				client.world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, dx, dy, dz);
+			}
+
+			if (shouldScorch)
+			{
+				createScorchParticles(client, finalScorchPos, fromDir, finalScorchNormal, false);
+			}
+		});
 	}
 
 	public static void fireSlug(World world, PlayerEntity player, Vec3d fromDir, float range, float damage)
@@ -199,7 +208,7 @@ public class BlasterUtil
 		var incident = PacketByteBufHelper.readVec3d(buf);
 		var normal = PacketByteBufHelper.readVec3d(buf);
 
-		createScorchParticles(client, pos, incident, normal, true);
+		client.execute(() -> createScorchParticles(client, pos, incident, normal, true));
 	}
 
 	private static void createScorchParticles(MinecraftClient client, Vec3d pos, Vec3d incident, Vec3d normal, boolean energyScorch)

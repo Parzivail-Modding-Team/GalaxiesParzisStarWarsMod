@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.mojang.serialization.Lifecycle;
-import com.parzivail.util.Lumberjack;
+import com.parzivail.pswg.Galaxies;
 import net.minecraft.world.level.LevelProperties;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +22,7 @@ public class LevelPropertiesMixin
 	{
 		if (lifecycle == Lifecycle.experimental())
 		{
-			Lumberjack.warn("Supressing EXPERIMENTAL level lifecycle");
+			Galaxies.LOG.warn("Supressing EXPERIMENTAL level lifecycle");
 			cir.setReturnValue(Lifecycle.stable());
 			cir.cancel();
 		}

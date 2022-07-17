@@ -1,7 +1,6 @@
 package com.parzivail.pswg;
 
 import com.google.gson.GsonBuilder;
-import com.parzivail.util.Lumberjack;
 import com.parzivail.util.noise.OpenSimplex2F;
 import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -81,7 +80,7 @@ public class Resources
 
 			if (FabricLoader.getInstance().isDevelopmentEnvironment() || ownVersion.equals("${version}"))
 			{
-				Lumberjack.log("Will not perform version check in a development environment");
+				Galaxies.LOG.log("Will not perform version check in a development environment");
 				return;
 			}
 
@@ -103,12 +102,12 @@ public class Resources
 			{
 				REMOTE_VERSION = mostRecentRelease;
 
-				Lumberjack.warn("A new version is available at https://www.curseforge.com/minecraft/mc-mods/pswg: %s (vs: %s)", REMOTE_VERSION.name, ownVersion);
+				Galaxies.LOG.warn("A new version is available at https://www.curseforge.com/minecraft/mc-mods/pswg: %s (vs: %s)", REMOTE_VERSION.name, ownVersion);
 			}
 		}
 		catch (Exception e)
 		{
-			Lumberjack.error("Failed to check for updates: %s", e.getMessage());
+			Galaxies.LOG.error("Failed to check for updates: %s", e.getMessage());
 		}
 	}
 

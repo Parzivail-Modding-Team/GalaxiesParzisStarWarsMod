@@ -2,7 +2,7 @@ package com.parzivail.pswg.client.texture;
 
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.util.Lumberjack;
+import com.parzivail.pswg.Galaxies;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
@@ -71,7 +71,7 @@ public abstract class CallbackTexture extends ResourceTexture
 				}
 				catch (IOException var3)
 				{
-					Lumberjack.warn("Failed to load texture: %s", this.location);
+					Galaxies.LOG.warn("Failed to load texture: %s", this.location);
 					var3.printStackTrace();
 				}
 

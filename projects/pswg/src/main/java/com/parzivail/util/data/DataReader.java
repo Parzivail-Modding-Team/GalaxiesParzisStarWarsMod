@@ -1,6 +1,6 @@
 package com.parzivail.util.data;
 
-import com.parzivail.util.Lumberjack;
+import com.parzivail.util.ParziUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
@@ -108,7 +108,7 @@ public class DataReader
 			return state.with(property, optional.get());
 		else
 		{
-			Lumberjack.warn("Unable to read property: %s with value: %s for blockstate: %s", key, propertiesTag.getString(key), context);
+			ParziUtil.LOG.warn("Unable to read property: %s with value: %s for blockstate: %s", key, propertiesTag.getString(key), context);
 			return state;
 		}
 	}

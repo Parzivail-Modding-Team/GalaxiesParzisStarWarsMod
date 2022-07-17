@@ -75,9 +75,10 @@ public abstract class TypedDataLoader<T> extends JsonDataLoader implements Ident
 			map.put(key, value);
 		}
 
-		this.data = ImmutableMap.copyOf(map);
-
-		onClientDataLoaded();
+		minecraftClient.execute(() -> {
+			this.data = ImmutableMap.copyOf(map);
+			onClientDataLoaded();
+		});
 	}
 
 	@Environment(EnvType.CLIENT)

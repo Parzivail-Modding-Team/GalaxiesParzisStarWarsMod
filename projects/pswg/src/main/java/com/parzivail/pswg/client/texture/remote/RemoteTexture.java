@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.texture.remote;
 
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.client.texture.CallbackTexture;
-import com.parzivail.util.Lumberjack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -52,7 +52,7 @@ public class RemoteTexture extends CallbackTexture
 				}
 				catch (IOException var3)
 				{
-					Lumberjack.warn("Failed to load texture: %s", this.location);
+					Galaxies.LOG.warn("Failed to load texture: %s", this.location);
 					var3.printStackTrace();
 				}
 
@@ -77,14 +77,14 @@ public class RemoteTexture extends CallbackTexture
 
 				if (cacheFileAge > 30)
 				{
-					Lumberjack.debug("Locally cached http texture too old (%s, age=%s min)", this.cacheFile, cacheFileAge);
+					Galaxies.LOG.debug("Locally cached http texture too old (%s, age=%s min)", this.cacheFile, cacheFileAge);
 					// Allow file to regenerate if it still exists on the remote
 					Files.delete(cacheFile);
 					nativeImage2 = null;
 				}
 				else
 				{
-					Lumberjack.debug("Loading http texture from local cache (%s)", this.cacheFile);
+					Galaxies.LOG.debug("Loading http texture from local cache (%s)", this.cacheFile);
 					var inputStream = Files.newInputStream(this.cacheFile);
 					nativeImage2 = this.readImage(inputStream);
 				}
@@ -102,7 +102,7 @@ public class RemoteTexture extends CallbackTexture
 			{
 				this.loader = CompletableFuture.runAsync(() -> {
 					HttpURLConnection httpURLConnection = null;
-					Lumberjack.debug("Downloading http texture from %s to %s", this.url, this.cacheFile);
+					Galaxies.LOG.debug("Downloading http texture from %s to %s", this.url, this.cacheFile);
 
 					try
 					{
@@ -135,7 +135,7 @@ public class RemoteTexture extends CallbackTexture
 						}
 						else
 						{
-							Lumberjack.debug("No skin found on remote");
+							Galaxies.LOG.debug("No skin found on remote");
 
 							minecraft.execute(() -> {
 								this.complete(null);
@@ -144,7 +144,7 @@ public class RemoteTexture extends CallbackTexture
 					}
 					catch (Exception var6)
 					{
-						Lumberjack.error("Couldn't download http texture");
+						Galaxies.LOG.error("Couldn't download http texture");
 						var6.printStackTrace();
 						return;
 					}
@@ -172,7 +172,7 @@ public class RemoteTexture extends CallbackTexture
 		}
 		catch (IOException var4)
 		{
-			Lumberjack.warn("Error while loading remote texture");
+			Galaxies.LOG.warn("Error while loading remote texture");
 			var4.printStackTrace();
 		}
 

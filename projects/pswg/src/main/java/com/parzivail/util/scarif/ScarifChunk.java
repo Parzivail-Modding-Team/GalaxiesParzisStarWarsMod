@@ -1,7 +1,6 @@
 package com.parzivail.util.scarif;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.parzivail.util.Lumberjack;
 import com.parzivail.util.data.DataReader;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
@@ -56,7 +55,7 @@ public class ScarifChunk
 			}
 			catch (IOException e)
 			{
-				Lumberjack.error("SCARIF chunk failed to load section " + sectionIdx);
+				ScarifStructure.LOG.error("SCARIF chunk failed to load section " + sectionIdx);
 				e.printStackTrace();
 			}
 		}

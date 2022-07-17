@@ -6,7 +6,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
 import com.parzivail.pswg.Resources;
-import com.parzivail.util.Lumberjack;
 import net.minecraft.tag.TagEntry;
 import net.minecraft.util.Identifier;
 import org.apache.commons.io.FileUtils;
@@ -87,43 +86,43 @@ public class BuiltAsset
 
 	public static BuiltAsset blockstate(Identifier identifier, JsonElement contents)
 	{
-		Lumberjack.log("Created blockstate %s", identifier);
+		Tarkin.LOG.log("Created blockstate %s", identifier);
 		return new BuiltAsset(getBlockstatePath(identifier), contents);
 	}
 
 	public static BuiltAsset blockModel(Identifier identifier, JsonElement contents)
 	{
-		Lumberjack.log("Created block model %s", identifier);
+		Tarkin.LOG.log("Created block model %s", identifier);
 		return new BuiltAsset(getBlockModelPath(identifier), contents);
 	}
 
 	public static BuiltAsset itemModel(Identifier identifier, JsonElement contents)
 	{
-		Lumberjack.log("Created item model %s", identifier);
+		Tarkin.LOG.log("Created item model %s", identifier);
 		return new BuiltAsset(getItemModelPath(identifier), contents);
 	}
 
 	public static BuiltAsset lang(Identifier identifier, JsonElement contents)
 	{
-		Lumberjack.log("Created lang entry %s", contents.toString());
+		Tarkin.LOG.log("Created lang entry %s", contents.toString());
 		return new JsonObjKeyInsBuiltAsset(getLangPath(identifier), contents);
 	}
 
 	public static BuiltAsset lootTable(Identifier identifier, JsonElement contents)
 	{
-		Lumberjack.log("Created loot table %s", identifier);
+		Tarkin.LOG.log("Created loot table %s", identifier);
 		return new BuiltAsset(getLootTablePath(identifier), contents);
 	}
 
 	public static BuiltAsset recipe(Identifier identifier, JsonElement contents)
 	{
-		Lumberjack.log("Created recipe %s", identifier);
+		Tarkin.LOG.log("Created recipe %s", identifier);
 		return new BuiltAsset(getRecipePath(identifier), contents);
 	}
 
 	public static BuiltAsset tag(Identifier identifier, TagEntry contents)
 	{
-		Lumberjack.log("Created tag %s", identifier);
+		Tarkin.LOG.log("Created tag %s", identifier);
 		return new JsonTagInsBuiltAsset(getTagPath(identifier), contents);
 	}
 
@@ -238,7 +237,7 @@ public class BuiltAsset
 
 		if (!Files.exists(pathDest))
 		{
-			Lumberjack.error("Could not find the merge destination lang file %s", pathDest);
+			Tarkin.LOG.error("Could not find the merge destination lang file %s", pathDest);
 			return;
 		}
 

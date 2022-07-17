@@ -87,7 +87,9 @@ public class RecoilManager
 	{
 		var horiz = buf.readFloat();
 		var vert = buf.readFloat();
-		setRecoil(vert, horiz);
+		client.execute(() -> {
+			setRecoil(vert, horiz);
+		});
 	}
 
 	public static void applyCameraShake(MinecraftClient mc, MatrixStack matrix, Camera camera, float tickDelta, double fov)

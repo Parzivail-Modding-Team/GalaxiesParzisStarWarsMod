@@ -1,6 +1,7 @@
 package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.entity.EntityUtil;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -101,5 +103,11 @@ public class CreatureCageBlockEntity extends BlockEntity implements BlockEntityC
 		var entity = getContainedEntity();
 		if (entity != null)
 			entity.tick();
+	}
+
+	@Override
+	public Identifier getSyncPacketId()
+	{
+		return SwgPackets.S2C.SyncBlockToClient;
 	}
 }

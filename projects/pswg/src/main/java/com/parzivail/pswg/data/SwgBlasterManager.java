@@ -2,11 +2,11 @@ package com.parzivail.pswg.data;
 
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.*;
-import com.parzivail.util.Lumberjack;
 import com.parzivail.util.data.IdentifierDeserializer;
 import com.parzivail.util.data.StringInteropAdapter;
 import com.parzivail.util.data.TypedDataLoader;
@@ -54,7 +54,7 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 
 					if (func == null)
 					{
-						Lumberjack.warn("Replacing unknown attachment function %s with NONE", funcStr);
+						Galaxies.LOG.warn("Replacing unknown attachment function %s with NONE", funcStr);
 						func = BlasterAttachmentFunction.NONE;
 					}
 				}

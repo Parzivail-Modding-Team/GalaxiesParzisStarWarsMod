@@ -2,6 +2,7 @@ package com.parzivail.pswg.blockentity;
 
 import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import net.fabricmc.api.EnvType;
@@ -11,6 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -172,5 +174,11 @@ public class TatooineHomeDoorBlockEntity extends BlockEntity implements BlockEnt
 
 			be.markDirty();
 		}
+	}
+
+	@Override
+	public Identifier getSyncPacketId()
+	{
+		return SwgPackets.S2C.SyncBlockToClient;
 	}
 }

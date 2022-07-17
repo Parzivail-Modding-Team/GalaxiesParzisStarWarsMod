@@ -1,6 +1,5 @@
 package com.parzivail.util;
 
-import com.parzivail.pswg.Resources;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -8,9 +7,9 @@ import org.slf4j.LoggerFactory;
 
 public class Lumberjack
 {
-	private static Logger logger = LoggerFactory.getLogger(Resources.MODID);
+	private final Logger logger;
 
-	public static void setLogHeader(String header)
+	public Lumberjack(String header)
 	{
 		logger = LoggerFactory.getLogger(header);
 	}
@@ -20,7 +19,7 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void debug(@NotNull String message, Object... params)
+	public void debug(@NotNull String message, Object... params)
 	{
 		if (!FabricLoader.getInstance().isDevelopmentEnvironment())
 			return;
@@ -40,7 +39,7 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void info(Object message)
+	public void info(Object message)
 	{
 		logger.info(String.valueOf(message));
 	}
@@ -50,7 +49,7 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void log(Object message)
+	public void log(Object message)
 	{
 		info(String.valueOf(message));
 	}
@@ -60,7 +59,7 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void log(@NotNull String message, Object... params)
+	public void log(@NotNull String message, Object... params)
 	{
 		info(String.format(message, params));
 	}
@@ -70,7 +69,7 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void warn(@NotNull String message, Object... params)
+	public void warn(@NotNull String message, Object... params)
 	{
 		logger.warn(String.format(message, params));
 	}
@@ -80,7 +79,7 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void error(@NotNull String message, Object... params)
+	public void error(@NotNull String message, Object... params)
 	{
 		logger.error(String.format(message, params));
 	}
@@ -90,7 +89,7 @@ public class Lumberjack
 	 *
 	 * @param message The message to print
 	 */
-	public static void trace(@NotNull String message, Object... params)
+	public void trace(@NotNull String message, Object... params)
 	{
 		logger.trace(String.format(message, params));
 	}

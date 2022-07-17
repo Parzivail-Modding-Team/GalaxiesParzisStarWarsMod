@@ -1,6 +1,6 @@
 package com.parzivail.pswg.handler;
 
-import com.parzivail.util.Lumberjack;
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.util.item.IItemActionConsumer;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.item.ItemAction;
@@ -35,7 +35,7 @@ public class PlayerPacketHandler
 			var actions = ItemAction.values();
 			if (action < 0 || action >= actions.length)
 			{
-				Lumberjack.warn("Player %s attempted to use invalid item action ordinal %s", player, action);
+				Galaxies.LOG.warn("Player %s attempted to use invalid item action ordinal %s", player, action);
 				return;
 			}
 

@@ -2,9 +2,9 @@ package com.parzivail.pswg.client.render.entity.debug;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.loader.NemManager;
-import com.parzivail.pswg.client.render.model.MutableAnimatedModel;
 import com.parzivail.pswg.entity.debug.KinematicTestEntity;
 import com.parzivail.util.client.VertexConsumerBuffer;
+import com.parzivail.util.client.render.MutableAnimatedModel;
 import com.parzivail.util.math.QuatUtil;
 import com.parzivail.util.math.TwoJointIk;
 import net.minecraft.client.render.OverlayTexture;

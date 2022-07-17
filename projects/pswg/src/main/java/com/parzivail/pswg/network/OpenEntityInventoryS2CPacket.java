@@ -1,7 +1,7 @@
-package com.parzivail.util.network;
+package com.parzivail.pswg.network;
 
 import com.parzivail.pswg.client.screen.ScreenHelper;
-import com.parzivail.util.entity.EntityWithInventory;
+import com.parzivail.pswg.entity.EntityWithInventory;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

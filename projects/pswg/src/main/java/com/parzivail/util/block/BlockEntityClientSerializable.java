@@ -1,6 +1,5 @@
 package com.parzivail.util.block;
 
-import com.parzivail.pswg.container.SwgPackets;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -11,6 +10,7 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 
@@ -19,6 +19,8 @@ public interface BlockEntityClientSerializable
 	void fromClientTag(NbtCompound tag);
 
 	NbtCompound toClientTag(NbtCompound tag);
+
+	Identifier getSyncPacketId();
 
 	default void sync()
 	{
@@ -34,7 +36,7 @@ public interface BlockEntityClientSerializable
 				passedData.writeNbt(toClientTag(new NbtCompound()));
 
 				for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)level, entity.getPos()))
-					ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.SyncBlockToClient, passedData);
+					ServerPlayNetworking.send(trackingPlayer, getSyncPacketId(), passedData);
 			}
 		}
 	}
