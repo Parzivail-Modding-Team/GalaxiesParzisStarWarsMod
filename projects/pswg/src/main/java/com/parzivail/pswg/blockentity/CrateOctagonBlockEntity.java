@@ -3,6 +3,7 @@ package com.parzivail.pswg.blockentity;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.screen.CrateOctagonScreenHandler;
+import com.parzivail.util.blockentity.InventoryBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

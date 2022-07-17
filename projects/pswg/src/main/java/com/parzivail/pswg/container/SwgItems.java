@@ -6,7 +6,6 @@ import com.parzivail.pswg.block.TatooineHomeDoorBlock;
 import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
-import com.parzivail.pswg.item.SpawnEntityItem;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.BlasterPowerPackItem;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;

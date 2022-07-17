@@ -3,11 +3,12 @@ package com.parzivail.pswg.mixin;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.SkinRemoteTextureResolver;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
-import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
-import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
-import com.parzivail.pswg.client.texture.tinted.TintedTextureProvider;
 import com.parzivail.pswg.handler.LeftClickHandler;
+import com.parzivail.util.client.texture.remote.RemoteTextureProvider;
+import com.parzivail.util.client.texture.stacked.StackedTextureProvider;
+import com.parzivail.util.client.texture.tinted.TintedTextureProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -48,8 +49,8 @@ public abstract class MinecraftClientMixin
 	{
 		var remoteAssetDir = args.directories.assetDir.toPath().resolve("pswgRemoteAssets");
 		Galaxies.LOG.debug("Remote asset directory: %s", remoteAssetDir.toString());
-		Client.remoteTextureProvider = new RemoteTextureProvider(Resources.id("///remote"), textureManager, remoteAssetDir);
-		Client.stackedTextureProvider = new StackedTextureProvider(Resources.id("///stacked"), textureManager);
+		Client.remoteSkinTextureProvider = new RemoteTextureProvider(Resources.id("///remote_skin"), textureManager, Client.TEX_TRANSPARENT, new SkinRemoteTextureResolver(), remoteAssetDir);
+		Client.stackedTextureProvider = new StackedTextureProvider(Resources.id("///stacked"), textureManager, Client.TEX_TRANSPARENT);
 		Client.tintedTextureProvider = new TintedTextureProvider(Resources.id("///tinted"), textureManager);
 
 		Client.registerRenderLayer(EnergyRenderer.LAYER_ENERGY);

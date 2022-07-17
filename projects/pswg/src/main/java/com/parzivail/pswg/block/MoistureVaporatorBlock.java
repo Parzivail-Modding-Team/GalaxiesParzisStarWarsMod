@@ -2,6 +2,7 @@ package com.parzivail.pswg.block;
 
 import com.parzivail.pswg.blockentity.MoistureVaporatorBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.util.block.IMoistureProvider;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithEntity;
 import net.minecraft.block.BlockState;

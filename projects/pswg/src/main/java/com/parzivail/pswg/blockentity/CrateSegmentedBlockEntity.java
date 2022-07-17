@@ -4,6 +4,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.screen.CrateGenericSmallScreenHandler;
+import com.parzivail.util.blockentity.InventoryBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.block.IMoistureProvider;
+import com.parzivail.util.block.IMoistureProvider;
 import net.minecraft.block.FarmlandBlock;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.WorldView;

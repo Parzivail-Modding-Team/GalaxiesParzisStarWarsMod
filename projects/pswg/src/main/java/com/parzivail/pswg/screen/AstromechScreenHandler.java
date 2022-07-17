@@ -1,7 +1,7 @@
 package com.parzivail.pswg.screen;
 
-import com.parzivail.pswg.client.screen.slot.StrictSlot;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
+import com.parzivail.util.inventory.StrictSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;

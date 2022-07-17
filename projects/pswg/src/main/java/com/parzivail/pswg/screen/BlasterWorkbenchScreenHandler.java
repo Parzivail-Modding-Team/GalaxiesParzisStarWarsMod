@@ -1,11 +1,11 @@
 package com.parzivail.pswg.screen;
 
 import com.parzivail.pswg.blockentity.BlasterWorkbenchBlockEntity;
-import com.parzivail.pswg.client.screen.slot.StrictSlot;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.Consumers;
+import com.parzivail.util.inventory.StrictSlot;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;

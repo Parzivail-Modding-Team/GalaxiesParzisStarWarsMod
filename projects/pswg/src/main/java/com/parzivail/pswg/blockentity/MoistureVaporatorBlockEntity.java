@@ -5,6 +5,7 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgRecipeType;
 import com.parzivail.pswg.recipe.VaporatorRecipe;
 import com.parzivail.pswg.screen.MoistureVaporatorScreenHandler;
+import com.parzivail.util.blockentity.InventoryBlockEntity;
 import com.parzivail.util.item.ItemUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;

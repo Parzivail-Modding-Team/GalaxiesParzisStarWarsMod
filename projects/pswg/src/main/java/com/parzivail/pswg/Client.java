@@ -27,9 +27,6 @@ import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.screen.*;
-import com.parzivail.pswg.client.texture.remote.RemoteTextureProvider;
-import com.parzivail.pswg.client.texture.stacked.StackedTextureProvider;
-import com.parzivail.pswg.client.texture.tinted.TintedTextureProvider;
 import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.*;
 import com.parzivail.pswg.container.*;
@@ -49,6 +46,9 @@ import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.client.texture.remote.RemoteTextureProvider;
+import com.parzivail.util.client.texture.stacked.StackedTextureProvider;
+import com.parzivail.util.client.texture.tinted.TintedTextureProvider;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import com.parzivail.util.registry.ClientBlockRegistryData;
@@ -100,7 +100,7 @@ public class Client implements ClientModInitializer
 
 	public static final Identifier TEX_TRANSPARENT = Resources.id("textures/effect/transparent.png");
 
-	public static RemoteTextureProvider remoteTextureProvider;
+	public static RemoteTextureProvider remoteSkinTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
 	public static TintedTextureProvider tintedTextureProvider;
 

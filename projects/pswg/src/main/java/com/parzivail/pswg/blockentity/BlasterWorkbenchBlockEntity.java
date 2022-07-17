@@ -5,6 +5,7 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.util.block.BlockEntityClientSerializable;
+import com.parzivail.util.blockentity.InventoryBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
