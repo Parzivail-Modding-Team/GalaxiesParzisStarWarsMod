@@ -11,3 +11,4 @@ pluginManagement {
 include(":projects:pswg")
 include(":projects:tarkin")
 include(":projects:addon-test")
+include(":projects:addon-clonewars")
