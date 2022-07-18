@@ -1,6 +1,8 @@
 package com.parzivail.util.registry;
 
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
@@ -74,5 +76,24 @@ public class RegistryHelper
 			return Integer.MAX_VALUE;
 
 		return annotation.value();
+	}
+
+	public static void tryRegisterItem(Object o, Identifier identifier, boolean ignoreTab)
+	{
+		if (o instanceof Item item)
+			Registry.register(Registry.ITEM, identifier, item);
+		else if (o instanceof ArmorItems armorItems)
+		{
+			Registry.register(Registry.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_helmet"), armorItems.helmet);
+			Registry.register(Registry.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_chestplate"), armorItems.chestplate);
+			Registry.register(Registry.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_leggings"), armorItems.leggings);
+			Registry.register(Registry.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_boots"), armorItems.boots);
+		}
+		else if (o instanceof DyedItems items)
+			for (var entry : items.entrySet())
+				Registry.register(Registry.ITEM, new Identifier(identifier.getNamespace(), entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue());
+		else if (o instanceof NumberedItems items)
+			for (var i = 0; i < items.size(); i++)
+				Registry.register(Registry.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_" + (i + 1)), items.get(i));
 	}
 }

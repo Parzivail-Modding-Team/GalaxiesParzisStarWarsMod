@@ -21,7 +21,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import java.util.List;
@@ -450,7 +449,7 @@ public class SwgItems
 
 	public static void register()
 	{
-		RegistryHelper.registerAutoId(Resources.MODID, SwgItems.class, Object.class, SwgItems::tryRegisterItem);
+		RegistryHelper.registerAutoId(Resources.MODID, SwgItems.class, Object.class, RegistryHelper::tryRegisterItem);
 
 		for (var i : Door.TatooineHome)
 		{
@@ -460,24 +459,5 @@ public class SwgItems
 			else
 				Registry.register(Registry.ITEM, Resources.id("tatooine_home_door_" + color.getName()), i);
 		}
-	}
-
-	private static void tryRegisterItem(Object o, Identifier identifier, boolean ignoreTab)
-	{
-		if (o instanceof Item item)
-			Registry.register(Registry.ITEM, identifier, item);
-		else if (o instanceof ArmorItems armorItems)
-		{
-			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_helmet"), armorItems.helmet);
-			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_chestplate"), armorItems.chestplate);
-			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_leggings"), armorItems.leggings);
-			Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_boots"), armorItems.boots);
-		}
-		else if (o instanceof DyedItems items)
-			for (var entry : items.entrySet())
-				Registry.register(Registry.ITEM, Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue());
-		else if (o instanceof NumberedItems items)
-			for (var i = 0; i < items.size(); i++)
-				Registry.register(Registry.ITEM, Resources.id(identifier.getPath() + "_" + (i + 1)), items.get(i));
 	}
 }

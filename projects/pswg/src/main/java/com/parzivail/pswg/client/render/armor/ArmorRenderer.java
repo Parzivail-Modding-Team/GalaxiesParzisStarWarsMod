@@ -28,7 +28,7 @@ public class ArmorRenderer
 	@FunctionalInterface
 	public interface ArmorRenderTransformer
 	{
-		void transform(LivingEntity entity, BipedEntityModel<LivingEntity> armorModel);
+		void transform(LivingEntity entity, boolean slim, BipedEntityModel<LivingEntity> armorModel);
 	}
 
 	private record Entry(Supplier<BipedEntityModel<LivingEntity>> defaultModelSupplier, Supplier<BipedEntityModel<LivingEntity>> slimModelSupplier, Identifier defaultTetxure, Identifier slimTexture)
@@ -38,6 +38,14 @@ public class ArmorRenderer
 	private static final HashMap<Item, Identifier> ITEM_MODELKEY_MAP = new HashMap<>();
 	private static final HashMap<Identifier, Entry> MODELKEY_MODEL_MAP = new HashMap<>();
 	private static final HashMap<Identifier, ArmorRenderTransformer> MODELKEY_TRANSFORMER_MAP = new HashMap<>();
+
+	public static void register(ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier textureId)
+	{
+		register(itemSet.helmet, modelKey, defaultModelId, textureId, defaultModelId, textureId);
+		register(itemSet.chestplate, modelKey, defaultModelId, textureId, defaultModelId, textureId);
+		register(itemSet.leggings, modelKey, defaultModelId, textureId, defaultModelId, textureId);
+		register(itemSet.boots, modelKey, defaultModelId, textureId, defaultModelId, textureId);
+	}
 
 	public static void register(ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier slimModelId, Identifier textureId)
 	{
@@ -78,7 +86,7 @@ public class ArmorRenderer
 
 	public static void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci, PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel)
 	{
-		renderWithTransformation(player, EquipmentSlot.CHEST, matrices, vertexConsumers, light, (entity, armorModel) -> {
+		renderWithTransformation(player, EquipmentSlot.CHEST, matrices, vertexConsumers, light, (entity, slim, armorModel) -> {
 			// This is the same as doing contextModel.setAttributes(armorModel) but gets around the generics issue
 			armorModel.handSwingProgress = playerEntityModel.handSwingProgress;
 			armorModel.sneaking = playerEntityModel.sneaking;
@@ -105,7 +113,7 @@ public class ArmorRenderer
 
 	public static <T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> void renderArmor(M contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot armorSlot, int light, A model, CallbackInfo ci)
 	{
-		renderWithTransformation(entity, armorSlot, matrices, vertexConsumers, light, (livingEntity, armorModel) -> {
+		renderWithTransformation(entity, armorSlot, matrices, vertexConsumers, light, (livingEntity, slim, armorModel) -> {
 			// This is the same as doing contextModel.setAttributes(armorModel) but gets around the generics issue
 			armorModel.handSwingProgress = contextModel.handSwingProgress;
 			armorModel.riding = contextModel.riding;
@@ -147,38 +155,44 @@ public class ArmorRenderer
 			var texture = armorModelEntry.defaultTetxure;
 			var armorModelSupplier = armorModelEntry.defaultModelSupplier;
 
-			if (entity instanceof AbstractClientPlayerEntity player)
+			var shouldUseSlimModel = entityRequiresSlimModel(entity);
+
+			if (shouldUseSlimModel)
 			{
-				// Use the slim model if the player's model is slim
-				if (player.getModel().equals("slim"))
-				{
-					armorModelSupplier = armorModelEntry.slimModelSupplier;
-					texture = armorModelEntry.slimTexture;
-				}
-				else
-				{
-					// Also use the slim model if the player has customized
-					// their character, since all PSWG species use the slim
-					// model
-					var pc = SwgEntityComponents.getPersistent(player);
-					if (pc.getSpecies() != null)
-					{
-						armorModelSupplier = armorModelEntry.slimModelSupplier;
-						texture = armorModelEntry.slimTexture;
-					}
-				}
+				armorModelSupplier = armorModelEntry.slimModelSupplier;
+				texture = armorModelEntry.slimTexture;
 			}
 
 			var armorModel = armorModelSupplier.get();
 
-			transformer.transform(entity, armorModel);
+			transformer.transform(entity, shouldUseSlimModel, armorModel);
 
 			var registeredTransformer = MODELKEY_TRANSFORMER_MAP.get(modelKey);
 			if (registeredTransformer != null)
-				registeredTransformer.transform(entity, armorModel);
+				registeredTransformer.transform(entity, shouldUseSlimModel, armorModel);
 
 			var vertexConsumer = ItemRenderer.getArmorGlintConsumer(vertexConsumers, RenderLayer.getArmorCutoutNoCull(texture), false, false);
 			armorModel.render(matrices, vertexConsumer, light, OverlayTexture.DEFAULT_UV, 1, 1, 1, 1);
 		}
+	}
+
+	private static boolean entityRequiresSlimModel(LivingEntity entity)
+	{
+		if (entity instanceof AbstractClientPlayerEntity player)
+		{
+			// Use the slim model if the player's model is slim
+			if (player.getModel().equals("slim"))
+				return true;
+			else
+			{
+				// Also use the slim model if the player has customized
+				// their character, since all PSWG species use the slim
+				// model
+				var pc = SwgEntityComponents.getPersistent(player);
+				return pc.getSpecies() != null;
+			}
+		}
+
+		return false;
 	}
 }

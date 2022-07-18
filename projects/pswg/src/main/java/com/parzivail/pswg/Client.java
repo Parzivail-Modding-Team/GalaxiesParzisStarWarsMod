@@ -268,7 +268,7 @@ public class Client implements ClientModInitializer
 				Resources.id("armor/jumptrooper_slim"),
 				Resources.id("textures/armor/jumptrooper_slim.png")
 		);
-		ArmorRenderer.registerTransformer(Resources.id("jumptrooper"), (entity, model) -> {
+		ArmorRenderer.registerTransformer(Resources.id("jumptrooper"), (entity, slim, model) -> {
 			var hasJetpack = TrinketsApi
 					.getTrinketComponent(entity)
 					.map(trinketComponent -> trinketComponent.isEquipped(SwgItems.Armor.JumptrooperJetpack))
