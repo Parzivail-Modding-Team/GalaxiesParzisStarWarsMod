@@ -1,6 +1,5 @@
 package com.parzivail.pswgtcw;
 
-import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswgtcw.client.ClonetrooperArmorTransformer;
@@ -12,10 +11,10 @@ public class PswgTcwAddonClient implements PswgClientAddon
 	{
 		var clonetrooperArmorModelKey = PswgTcwAddon.id("clonetrooper");
 		ArmorRenderer.register(
-				TcwItems.Armor.Clonetrooper,
+				TcwItems.Armor.Phase1Clone,
 				clonetrooperArmorModelKey,
-				new ArmorRenderer.Assets(Resources.id("armor/clonetrooper"),
-				                         Resources.id("textures/armor/clonetrooper.png")),
+				new ArmorRenderer.Assets(PswgTcwAddon.id("armor/clonetrooper"),
+				                         PswgTcwAddon.id("textures/armor/clonetrooper.png")),
 				ArmorRenderer.Metadata.DEFAULT
 		);
 		ArmorRenderer.registerTransformer(clonetrooperArmorModelKey, new ClonetrooperArmorTransformer(false));

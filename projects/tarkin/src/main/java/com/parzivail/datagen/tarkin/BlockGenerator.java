@@ -80,7 +80,7 @@ public class BlockGenerator
 				.model(block1 -> ModelFile.particle(block1, particle));
 	}
 
-	static BlockGenerator accumulatingLayers(Block block)
+	public static BlockGenerator accumulatingLayers(Block block)
 	{
 		return blockNoModelLangEntry(block)
 				.state(BlockStateGenerator::accumulatingLayers)
@@ -88,7 +88,7 @@ public class BlockGenerator
 				.itemModel(ModelFile::ofAccumulatingBlock);
 	}
 
-	static BlockGenerator cropStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)
+	public static BlockGenerator cropStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)
 	{
 		return blockNoModelLangEntry(block)
 				.state((block1, modelId) -> BlockStateGenerator.stages(block1, modelId, ageProp.get()))
@@ -96,7 +96,7 @@ public class BlockGenerator
 				.itemModel(block2 -> ModelFile.item(block2, itemTexture));
 	}
 
-	static BlockGenerator bushStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)
+	public static BlockGenerator bushStages(Block block, Supplier<IntProperty> ageProp, Identifier itemTexture)
 	{
 		return blockNoModelLangEntry(block)
 				.state((block1, modelId) -> BlockStateGenerator.stages(block1, modelId, ageProp.get()))
@@ -104,7 +104,7 @@ public class BlockGenerator
 				.itemModel(block2 -> ModelFile.item(block2, itemTexture));
 	}
 
-	static BlockGenerator bloomingBushStages(Block block, Supplier<IntProperty> ageProp, Supplier<BooleanProperty> bloomingProp, Identifier itemTexture)
+	public static BlockGenerator bloomingBushStages(Block block, Supplier<IntProperty> ageProp, Supplier<BooleanProperty> bloomingProp, Identifier itemTexture)
 	{
 		return blockNoModelLangEntry(block)
 				.state((block1, modelId) -> BlockStateGenerator.bloomingStages(block1, modelId, ageProp.get(), bloomingProp.get()))
@@ -112,17 +112,17 @@ public class BlockGenerator
 				.itemModel(block2 -> ModelFile.item(block2, itemTexture));
 	}
 
-	static BlockGenerator basicRandomRotation(Block block)
+	public static BlockGenerator basicRandomRotation(Block block)
 	{
 		return basic(block).state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations);
 	}
 
-	static BlockGenerator leaves(Block block)
+	public static BlockGenerator leaves(Block block)
 	{
 		return basic(block).model(ModelFile::leaves);
 	}
 
-	static BlockGenerator trapdoor(Block block, Identifier texture)
+	public static BlockGenerator trapdoor(Block block, Identifier texture)
 	{
 		return basic(block)
 				.state(BlockStateGenerator::trapdoor)
@@ -131,12 +131,12 @@ public class BlockGenerator
 				.blockTag(BlockTags.TRAPDOORS);
 	}
 
-	static BlockGenerator trapdoor(Block block)
+	public static BlockGenerator trapdoor(Block block)
 	{
 		return trapdoor(block, AssetGenerator.getTextureName(block));
 	}
 
-	static BlockGenerator door(Block block, Identifier itemTexture)
+	public static BlockGenerator door(Block block, Identifier itemTexture)
 	{
 		return block(block)
 				.lootTable(LootTableFile::door)
@@ -146,42 +146,42 @@ public class BlockGenerator
 				.blockTag(BlockTags.DOORS);
 	}
 
-	static BlockGenerator column(Block block, Identifier topTexture)
+	public static BlockGenerator column(Block block, Identifier topTexture)
 	{
 		return basic(block)
 				.state(BlockStateModelGenerator::createAxisRotatedBlockState)
 				.model(b -> ModelFile.column(b, topTexture, AssetGenerator.getTextureName(block)));
 	}
 
-	static BlockGenerator column(Block block, Identifier topTexture, Identifier sideTexture)
+	public static BlockGenerator column(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		return basic(block)
 				.state(BlockStateModelGenerator::createAxisRotatedBlockState)
 				.model(b -> ModelFile.column(b, topTexture, sideTexture));
 	}
 
-	static BlockGenerator staticColumn(Block block, Identifier topTexture)
+	public static BlockGenerator staticColumn(Block block, Identifier topTexture)
 	{
 		return basic(block)
 				.state(BlockStateModelGenerator::createSingletonBlockState)
 				.model(b -> ModelFile.column(b, topTexture, AssetGenerator.getTextureName(block)));
 	}
 
-	static BlockGenerator staticColumn(Block block, Identifier topTexture, Identifier sideTexture)
+	public static BlockGenerator staticColumn(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		return basic(block)
 				.state(BlockStateModelGenerator::createSingletonBlockState)
 				.model(b -> ModelFile.column(b, topTexture, sideTexture));
 	}
 
-	static BlockGenerator staticColumnTopBottom(Block block)
+	public static BlockGenerator staticColumnTopBottom(Block block)
 	{
 		return basic(block)
 				.state(BlockStateModelGenerator::createSingletonBlockState)
 				.model(ModelFile::columnTopBottom);
 	}
 
-	static BlockGenerator stairs(Block block, Identifier topTexture, Identifier sideTexture)
+	public static BlockGenerator stairs(Block block, Identifier topTexture, Identifier sideTexture)
 	{
 		var id = AssetGenerator.getTextureName(block);
 		var inner = IdentifierUtil.concat(id, "_inner");
@@ -191,7 +191,7 @@ public class BlockGenerator
 				.models(b -> ModelFile.stairs(b, topTexture, sideTexture));
 	}
 
-	static BlockGenerator basicRandomMirror(Block block)
+	public static BlockGenerator basicRandomMirror(Block block)
 	{
 		var id = AssetGenerator.getTextureName(block);
 		var mirrored = IdentifierUtil.concat(id, "_mirrored");
@@ -200,12 +200,12 @@ public class BlockGenerator
 				.models(ModelFile::randomMirror);
 	}
 
-	static BlockGenerator stairs(Block block, Identifier texture)
+	public static BlockGenerator stairs(Block block, Identifier texture)
 	{
 		return stairs(block, texture, texture);
 	}
 
-	static BlockGenerator verticalSlab(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
+	public static BlockGenerator verticalSlab(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
 		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
 		return basic(block)
@@ -213,7 +213,7 @@ public class BlockGenerator
 				.models(b -> ModelFile.verticalSlab(b, topTexture, sideTexture));
 	}
 
-	static BlockGenerator wall(Block block, Identifier texture)
+	public static BlockGenerator wall(Block block, Identifier texture)
 	{
 		var id = AssetGenerator.getTextureName(block);
 		return blockNoModelDefaultDrops(block)
@@ -223,7 +223,7 @@ public class BlockGenerator
 				.blockTag(BlockTags.WALLS);
 	}
 
-	static BlockGenerator slabUniqueDouble(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
+	public static BlockGenerator slabUniqueDouble(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
 	{
 		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
 		return basic(block)
@@ -231,12 +231,12 @@ public class BlockGenerator
 				.models(b -> ModelFile.slabUniqueDouble(b, topTexture, sideTexture));
 	}
 
-	static BlockGenerator verticalSlab(Block block, Identifier model)
+	public static BlockGenerator verticalSlab(Block block, Identifier model)
 	{
 		return verticalSlab(block, model, model, model);
 	}
 
-	static BlockGenerator fence(Block block, Identifier texture)
+	public static BlockGenerator fence(Block block, Identifier texture)
 	{
 		var post = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_post");
 		var side = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_side");
@@ -245,7 +245,7 @@ public class BlockGenerator
 				.models(b -> ModelFile.fence(b, texture));
 	}
 
-	static BlockGenerator fenceGate(Block block, Identifier texture)
+	public static BlockGenerator fenceGate(Block block, Identifier texture)
 	{
 		var open = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_open");
 		var wallClosed = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_wall");
@@ -271,14 +271,14 @@ public class BlockGenerator
 				.itemModel(ModelFile::item);
 	}
 
-	static BlockGenerator cross(Block block)
+	public static BlockGenerator cross(Block block)
 	{
 		return basic(block)
 				.model(ModelFile::cross)
 				.itemModel(ModelFile::item);
 	}
 
-	static BlockGenerator tangentCross(Block block)
+	public static BlockGenerator tangentCross(Block block)
 	{
 		return basic(block)
 				.state(BlockStateGenerator::tangentRotating)
@@ -286,7 +286,7 @@ public class BlockGenerator
 				.itemModel(ModelFile::item);
 	}
 
-	static BlockGenerator tintedCross(Block block)
+	public static BlockGenerator tintedCross(Block block)
 	{
 		return basic(block)
 				.model(ModelFile::tintedCross)

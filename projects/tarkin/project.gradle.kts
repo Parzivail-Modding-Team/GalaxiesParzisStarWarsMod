@@ -1,5 +1,6 @@
 dependencies {
     "api"(project(":projects:pswg", configuration = "namedElements"))
+    "api"(project(":projects:addon-clonewars", configuration = "namedElements"))
 }
 
 val cloth_config_version: String by project.ext

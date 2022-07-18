@@ -17,7 +17,7 @@ public class AssetGenerator
 		return Registry.ITEM.getId(item.asItem());
 	}
 
-	static Identifier getRegistryName(Object data)
+	public static Identifier getRegistryName(Object data)
 	{
 		if (data instanceof Block block)
 			return getRegistryName(block);
@@ -31,18 +31,18 @@ public class AssetGenerator
 		throw new RuntimeException("No registry getter for " + data);
 	}
 
-	static Identifier getRegistryName(Block block)
+	public static Identifier getRegistryName(Block block)
 	{
 		return Registry.BLOCK.getId(block);
 	}
 
-	static Identifier getTextureName(Block block)
+	public static Identifier getTextureName(Block block)
 	{
 		var id = Registry.BLOCK.getId(block);
 		return new Identifier(id.getNamespace(), "block/" + id.getPath());
 	}
 
-	static Identifier getTextureName(Item item)
+	public static Identifier getTextureName(Item item)
 	{
 		var id = Registry.ITEM.getId(item);
 		return new Identifier(id.getNamespace(), "item/" + id.getPath());

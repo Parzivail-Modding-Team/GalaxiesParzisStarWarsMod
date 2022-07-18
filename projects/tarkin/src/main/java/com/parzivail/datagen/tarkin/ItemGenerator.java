@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class ItemGenerator
 {
-	static void armor(ArmorItems armorItems, List<BuiltAsset> assets)
+	public static void armor(ArmorItems armorItems, List<BuiltAsset> assets)
 	{
 		basic(armorItems.helmet).build(assets);
 		basic(armorItems.chestplate).build(assets);
@@ -31,25 +31,25 @@ public class ItemGenerator
 				.lang(LanguageProvider::ofItem);
 	}
 
-	static ItemGenerator basic(Item item)
+	public static ItemGenerator basic(Item item)
 	{
 		return itemNoModelLangEntry(item)
 				.model(ModelFile::item);
 	}
 
-	static ItemGenerator tool(Item item)
+	public static ItemGenerator tool(Item item)
 	{
 		return itemNoModelLangEntry(item)
 				.model(ModelFile::handheld_item);
 	}
 
-	static ItemGenerator spawn_egg(Item item)
+	public static ItemGenerator spawn_egg(Item item)
 	{
 		return itemNoModelLangEntry(item)
 				.model(ModelFile::spawn_egg);
 	}
 
-	static ItemGenerator empty(Item block)
+	public static ItemGenerator empty(Item block)
 	{
 		return itemNoModelLangEntry(block)
 				.model(ModelFile::empty);

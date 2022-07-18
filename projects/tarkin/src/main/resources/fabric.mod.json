@@ -18,7 +18,7 @@
 	"icon": "assets/pswg/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"pswg-addon": [
+		"pswg-client-addon": [
 			"com.parzivail.datagen.DataGenHelper"
 		]
 	},
