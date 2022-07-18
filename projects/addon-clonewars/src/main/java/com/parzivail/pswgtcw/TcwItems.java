@@ -14,5 +14,7 @@ public class TcwItems
 	{
 		@RegistryName("phase1_clonetrooper")
 		public static final ArmorItems Phase1Clone = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("phase2_clonetrooper")
+		public static final ArmorItems Phase2Clone = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 	}
 }

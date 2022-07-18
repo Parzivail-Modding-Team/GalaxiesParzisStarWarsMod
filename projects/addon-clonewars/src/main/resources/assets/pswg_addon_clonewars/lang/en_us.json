@@ -2,5 +2,9 @@
 	"item.pswg_addon_clonewars.phase1_clonetrooper_boots": "Phase 1 Clone Boots",
 	"item.pswg_addon_clonewars.phase1_clonetrooper_chestplate": "Phase 1 Clone Chestplate",
 	"item.pswg_addon_clonewars.phase1_clonetrooper_helmet": "Phase 1 Clone Helmet",
-	"item.pswg_addon_clonewars.phase1_clonetrooper_leggings": "Phase 1 Clone Leggings"
+	"item.pswg_addon_clonewars.phase1_clonetrooper_leggings": "Phase 1 Clone Leggings",
+	"item.pswg_addon_clonewars.phase2_clonetrooper_boots": "Phase 2 Clone Boots",
+	"item.pswg_addon_clonewars.phase2_clonetrooper_chestplate": "Phase 2 Clone Chestplate",
+	"item.pswg_addon_clonewars.phase2_clonetrooper_helmet": "Phase 2 Clone Helmet",
+	"item.pswg_addon_clonewars.phase2_clonetrooper_leggings": "Phase 2 Clone Leggings"
 }

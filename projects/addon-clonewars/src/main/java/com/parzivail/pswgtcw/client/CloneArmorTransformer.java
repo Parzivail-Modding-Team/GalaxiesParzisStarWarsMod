@@ -4,7 +4,7 @@ import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
 import net.minecraft.entity.LivingEntity;
 
-public class ClonetrooperArmorTransformer implements ArmorRenderer.ArmorRenderTransformer
+public class CloneArmorTransformer implements ArmorRenderer.ArmorRenderTransformer
 {
 	private static final String PART_HEAD_PHASE1 = "phase1";
 	private static final String PART_HEAD_PHASE2 = "phase2";
@@ -23,7 +23,7 @@ public class ClonetrooperArmorTransformer implements ArmorRenderer.ArmorRenderTr
 
 	private final boolean isPhase2;
 
-	public ClonetrooperArmorTransformer(boolean isPhase2)
+	public CloneArmorTransformer(boolean isPhase2)
 	{
 		this.isPhase2 = isPhase2;
 	}

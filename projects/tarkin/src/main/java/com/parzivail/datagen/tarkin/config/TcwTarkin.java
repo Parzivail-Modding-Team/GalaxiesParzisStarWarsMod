@@ -11,5 +11,6 @@ public class TcwTarkin
 	public static void build(List<BuiltAsset> assets)
 	{
 		ItemGenerator.armor(TcwItems.Armor.Phase1Clone, assets);
+		ItemGenerator.armor(TcwItems.Armor.Phase2Clone, assets);
 	}
 }
