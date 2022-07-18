@@ -14,8 +14,9 @@ public class PswgTcwAddonClient implements PswgClientAddon
 		ArmorRenderer.register(
 				TcwItems.Armor.Clonetrooper,
 				clonetrooperArmorModelKey,
-				Resources.id("armor/clonetrooper"),
-				Resources.id("textures/armor/clonetrooper.png")
+				new ArmorRenderer.Assets(Resources.id("armor/clonetrooper"),
+				                         Resources.id("textures/armor/clonetrooper.png")),
+				ArmorRenderer.Metadata.DEFAULT
 		);
 		ArmorRenderer.registerTransformer(clonetrooperArmorModelKey, new ClonetrooperArmorTransformer(false));
 	}

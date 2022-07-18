@@ -6,12 +6,15 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.loader.NemManager;
+import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.util.math.MathUtil;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -20,8 +23,10 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 import java.util.function.Supplier;
 
-public class SwgSpeciesModels
+public class SwgSpeciesRenderer
 {
+	private static final HashMap<SwgSpecies, ModelPart> FEMALE_CUBE_CACHE = new HashMap<>();
+
 	public static final HashMap<Identifier, SwgSpeciesModel> MODELS = new HashMap<>();
 
 	static
@@ -36,7 +41,7 @@ public class SwgSpeciesModels
 		register(SwgSpeciesRegistry.SPECIES_KAMINOAN, nemSource(Resources.id("species/kaminoan")), null);
 		register(SwgSpeciesRegistry.SPECIES_JAWA, nemSource(Resources.id("species/jawa")), null);
 		register(SwgSpeciesRegistry.SPECIES_TOGRUTA, nemSource(Resources.id("species/togruta_m")), nemSource(Resources.id("species/togruta_f")), null);
-		register(SwgSpeciesRegistry.SPECIES_TWILEK, nemSource(Resources.id("species/twilek")), SwgSpeciesModels::animateTwilek);
+		register(SwgSpeciesRegistry.SPECIES_TWILEK, nemSource(Resources.id("species/twilek")), SwgSpeciesRenderer::animateTwilek);
 		register(SwgSpeciesRegistry.SPECIES_HUMAN, nemSource(Resources.id("species/human")), null);
 		register(SwgSpeciesRegistry.SPECIES_CHISS, nemSource(Resources.id("species/human")), null);
 		register(SwgSpeciesRegistry.SPECIES_PANTORAN, nemSource(Resources.id("species/human")), null);
@@ -79,15 +84,40 @@ public class SwgSpeciesModels
 	public static void mutateModel(PlayerEntity entity, SwgSpecies species, PlayerEntityRenderer renderer)
 	{
 		var model = renderer.getModel();
-		try
+		if (!FEMALE_CUBE_CACHE.containsKey(species))
 		{
-			var chest = model.body.getChild("chest");
-			chest.visible = species.getGender() == SpeciesGender.FEMALE;
+			try
+			{
+				var chest = model.body.getChild("chest");
+				FEMALE_CUBE_CACHE.put(species, chest);
+			}
+			catch (NoSuchElementException e)
+			{
+				FEMALE_CUBE_CACHE.put(species, null);
+			}
 		}
-		catch (NoSuchElementException e)
+
+		var chest = FEMALE_CUBE_CACHE.get(species);
+		if (chest == null)
+			return;
+
+		var isFemale = species.getGender() == SpeciesGender.FEMALE;
+		var armorHidesCube = false;
+
+		var armorPair = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST);
+		if (armorPair != null)
 		{
-			// ignored
+			var metadata = ArmorRenderer.getMetadata(armorPair.getLeft());
+			armorHidesCube = metadata.femaleModelAction() == ArmorRenderer.FemaleChestplateAction.HIDE_CUBE;
 		}
+		else
+		{
+			var vanillaArmor = ArmorRenderer.getVanillaArmor(entity, EquipmentSlot.CHEST);
+			if (vanillaArmor != null)
+				armorHidesCube = true;
+		}
+
+		chest.visible = isFemale && !armorHidesCube;
 	}
 
 	public static void animateTwilek(AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta)

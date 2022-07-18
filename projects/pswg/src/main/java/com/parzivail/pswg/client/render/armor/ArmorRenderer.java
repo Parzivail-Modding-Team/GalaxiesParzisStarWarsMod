@@ -18,6 +18,7 @@ import net.minecraft.item.ArmorItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashMap;
@@ -25,6 +26,31 @@ import java.util.function.Supplier;
 
 public class ArmorRenderer
 {
+	public enum FemaleChestplateAction
+	{
+		KEEP_CUBE,
+		HIDE_CUBE,
+		CUBE_COPY_ARMOR_TEXTURE
+	}
+
+	public record Assets(Identifier slimModelId, Identifier slimTextureId, Identifier defaultModelId, Identifier defaultTextureId)
+	{
+		public Assets(Identifier commonModelId, Identifier commonTextureId)
+		{
+			this(commonModelId, commonTextureId, commonModelId, commonTextureId);
+		}
+
+		public Assets(Identifier slimModelId, Identifier defaultModelId, Identifier commonTextureId)
+		{
+			this(slimModelId, commonTextureId, defaultModelId, commonTextureId);
+		}
+	}
+
+	public record Metadata(FemaleChestplateAction femaleModelAction)
+	{
+		public static final Metadata DEFAULT = new Metadata(FemaleChestplateAction.HIDE_CUBE);
+	}
+
 	@FunctionalInterface
 	public interface ArmorRenderTransformer
 	{
@@ -38,36 +64,30 @@ public class ArmorRenderer
 	private static final HashMap<Item, Identifier> ITEM_MODELKEY_MAP = new HashMap<>();
 	private static final HashMap<Identifier, Entry> MODELKEY_MODEL_MAP = new HashMap<>();
 	private static final HashMap<Identifier, ArmorRenderTransformer> MODELKEY_TRANSFORMER_MAP = new HashMap<>();
+	private static final HashMap<Identifier, Metadata> MODELKEY_METADATA_MAP = new HashMap<>();
 
-	public static void register(ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier textureId)
+	public static void register(ArmorItems itemSet, Identifier id, Assets assets, Metadata metadata)
 	{
-		register(itemSet.helmet, modelKey, defaultModelId, textureId, defaultModelId, textureId);
-		register(itemSet.chestplate, modelKey, defaultModelId, textureId, defaultModelId, textureId);
-		register(itemSet.leggings, modelKey, defaultModelId, textureId, defaultModelId, textureId);
-		register(itemSet.boots, modelKey, defaultModelId, textureId, defaultModelId, textureId);
+		register(itemSet.helmet, id, assets);
+		register(itemSet.chestplate, id, assets);
+		register(itemSet.leggings, id, assets);
+		register(itemSet.boots, id, assets);
+
+		MODELKEY_METADATA_MAP.put(id, metadata);
 	}
 
-	public static void register(ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier slimModelId, Identifier textureId)
+	public static void register(ArmorItem item, Identifier id, Assets assets, Metadata metadata)
 	{
-		register(itemSet.helmet, modelKey, defaultModelId, textureId, slimModelId, textureId);
-		register(itemSet.chestplate, modelKey, defaultModelId, textureId, slimModelId, textureId);
-		register(itemSet.leggings, modelKey, defaultModelId, textureId, slimModelId, textureId);
-		register(itemSet.boots, modelKey, defaultModelId, textureId, slimModelId, textureId);
+		register(item, id, assets);
+
+		MODELKEY_METADATA_MAP.put(id, metadata);
 	}
 
-	public static void register(ArmorItems itemSet, Identifier modelKey, Identifier defaultModelId, Identifier defaultTextureId, Identifier slimModelId, Identifier slimTextureId)
+	public static void register(ArmorItem item, Identifier id, Assets assets)
 	{
-		register(itemSet.helmet, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
-		register(itemSet.chestplate, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
-		register(itemSet.leggings, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
-		register(itemSet.boots, modelKey, defaultModelId, defaultTextureId, slimModelId, slimTextureId);
-	}
-
-	public static void register(ArmorItem item, Identifier modelKey, Identifier defaultModelId, Identifier defaultTextureId, Identifier slimModelId, Identifier slimTextureId)
-	{
-		if (!MODELKEY_MODEL_MAP.containsKey(modelKey))
-			MODELKEY_MODEL_MAP.put(modelKey, new Entry(NemManager.INSTANCE.getBipedModel(defaultModelId), NemManager.INSTANCE.getBipedModel(slimModelId), defaultTextureId, slimTextureId));
-		ITEM_MODELKEY_MAP.put(item, modelKey);
+		if (!MODELKEY_MODEL_MAP.containsKey(id))
+			MODELKEY_MODEL_MAP.put(id, new Entry(NemManager.INSTANCE.getBipedModel(assets.defaultModelId), NemManager.INSTANCE.getBipedModel(assets.slimModelId), assets.defaultTextureId, assets.slimTextureId));
+		ITEM_MODELKEY_MAP.put(item, id);
 	}
 
 	public static void registerTransformer(Identifier modelKey, ArmorRenderTransformer transformer)
@@ -75,10 +95,24 @@ public class ArmorRenderer
 		MODELKEY_TRANSFORMER_MAP.put(modelKey, transformer);
 	}
 
-	public static ItemStack getModArmor(LivingEntity entity, EquipmentSlot slot)
+	public static Metadata getMetadata(Identifier id)
+	{
+		return MODELKEY_METADATA_MAP.get(id);
+	}
+
+	public static Pair<Identifier, ItemStack> getModArmor(LivingEntity entity, EquipmentSlot slot)
 	{
 		var itemStack = entity.getEquippedStack(slot);
 		if (itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getSlotType() == slot && ITEM_MODELKEY_MAP.containsKey(armorItem))
+			return new Pair<>(ITEM_MODELKEY_MAP.get(armorItem), itemStack);
+
+		return null;
+	}
+
+	public static ItemStack getVanillaArmor(LivingEntity entity, EquipmentSlot slot)
+	{
+		var itemStack = entity.getEquippedStack(slot);
+		if (itemStack.getItem() instanceof ArmorItem armorItem && armorItem.getSlotType() == slot)
 			return itemStack;
 
 		return null;
@@ -145,12 +179,10 @@ public class ArmorRenderer
 
 	private static void renderWithTransformation(LivingEntity entity, EquipmentSlot armorSlot, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, ArmorRenderTransformer transformer)
 	{
-		var itemStack = getModArmor(entity, armorSlot);
-		if (itemStack != null)
+		var armorPair = getModArmor(entity, armorSlot);
+		if (armorPair != null)
 		{
-			var armorItem = itemStack.getItem();
-			var modelKey = ITEM_MODELKEY_MAP.get(armorItem);
-			var armorModelEntry = MODELKEY_MODEL_MAP.get(modelKey);
+			var armorModelEntry = MODELKEY_MODEL_MAP.get(armorPair.getLeft());
 
 			var texture = armorModelEntry.defaultTetxure;
 			var armorModelSupplier = armorModelEntry.defaultModelSupplier;
@@ -167,7 +199,7 @@ public class ArmorRenderer
 
 			transformer.transform(entity, shouldUseSlimModel, armorModel);
 
-			var registeredTransformer = MODELKEY_TRANSFORMER_MAP.get(modelKey);
+			var registeredTransformer = MODELKEY_TRANSFORMER_MAP.get(armorPair.getLeft());
 			if (registeredTransformer != null)
 				registeredTransformer.transform(entity, shouldUseSlimModel, armorModel);
 

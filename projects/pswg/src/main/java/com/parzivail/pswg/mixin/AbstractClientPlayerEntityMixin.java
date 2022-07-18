@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.client.species.SwgSpeciesModels;
+import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -30,7 +30,7 @@ public class AbstractClientPlayerEntityMixin
 		if (species == null)
 			return;
 
-		var speciesTexture = SwgSpeciesModels.getTexture((PlayerEntity)(Object)this, species);
+		var speciesTexture = SwgSpeciesRenderer.getTexture((PlayerEntity)(Object)this, species);
 
 		if (speciesTexture.equals(Client.TEX_TRANSPARENT))
 		{

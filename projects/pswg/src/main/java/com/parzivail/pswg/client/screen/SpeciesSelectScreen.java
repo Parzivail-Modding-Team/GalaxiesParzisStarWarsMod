@@ -9,7 +9,7 @@ import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.render.camera.CameraHelper;
 import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
-import com.parzivail.pswg.client.species.SwgSpeciesModels;
+import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
@@ -489,11 +489,11 @@ public class SpeciesSelectScreen extends Screen
 				var species = SwgSpeciesRegistry.deserialize(speciesString);
 
 				var renderer = renderers.get(species.getModel().toString());
-				SwgSpeciesModels.mutateModel(client.player, species, renderer);
+				SwgSpeciesRenderer.mutateModel(client.player, species, renderer);
 
 				if (renderer instanceof PlayerSpeciesModelRenderer perwm)
 				{
-					var texture = SwgSpeciesModels.getTexture(entity, species);
+					var texture = SwgSpeciesRenderer.getTexture(entity, species);
 
 					if (!texture.equals(Client.TEX_TRANSPARENT))
 						perwm.renderWithTexture(texture, client.player, 1, 1, matrixStack2, immediate, 0xf000f0);

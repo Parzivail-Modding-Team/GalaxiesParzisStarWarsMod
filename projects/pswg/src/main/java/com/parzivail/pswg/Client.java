@@ -240,33 +240,37 @@ public class Client implements ClientModInitializer
 		ArmorRenderer.register(
 				SwgItems.Armor.Stormtrooper,
 				Resources.id("stormtrooper"),
-				Resources.id("armor/stormtrooper_default"),
-				Resources.id("armor/stormtrooper_slim"),
-				Resources.id("textures/armor/stormtrooper.png")
+				new ArmorRenderer.Assets(Resources.id("armor/stormtrooper_slim"),
+				                         Resources.id("armor/stormtrooper_default"),
+				                         Resources.id("textures/armor/stormtrooper.png")),
+				ArmorRenderer.Metadata.DEFAULT
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.Sandtrooper,
 				Resources.id("sandtrooper"),
-				Resources.id("armor/sandtrooper_default"),
-				Resources.id("textures/armor/sandtrooper_default.png"),
-				Resources.id("armor/sandtrooper_slim"),
-				Resources.id("textures/armor/sandtrooper_slim.png")
+				new ArmorRenderer.Assets(Resources.id("armor/sandtrooper_slim"),
+				                         Resources.id("textures/armor/sandtrooper_slim.png"),
+				                         Resources.id("armor/sandtrooper_default"),
+				                         Resources.id("textures/armor/sandtrooper_default.png")),
+				ArmorRenderer.Metadata.DEFAULT
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.Deathtrooper,
 				Resources.id("deathtrooper"),
-				Resources.id("armor/deathtrooper_default"),
-				Resources.id("textures/armor/deathtrooper_default.png"),
-				Resources.id("armor/deathtrooper_slim"),
-				Resources.id("textures/armor/deathtrooper_slim.png")
+				new ArmorRenderer.Assets(Resources.id("armor/deathtrooper_slim"),
+				                         Resources.id("textures/armor/deathtrooper_slim.png"),
+				                         Resources.id("armor/deathtrooper_default"),
+				                         Resources.id("textures/armor/deathtrooper_default.png")),
+				ArmorRenderer.Metadata.DEFAULT
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.Jumptrooper,
 				Resources.id("jumptrooper"),
-				Resources.id("armor/jumptrooper_default"),
-				Resources.id("textures/armor/jumptrooper_default.png"),
-				Resources.id("armor/jumptrooper_slim"),
-				Resources.id("textures/armor/jumptrooper_slim.png")
+				new ArmorRenderer.Assets(Resources.id("armor/jumptrooper_slim"),
+				                         Resources.id("textures/armor/jumptrooper_slim.png"),
+				                         Resources.id("armor/jumptrooper_default"),
+				                         Resources.id("textures/armor/jumptrooper_default.png")),
+				ArmorRenderer.Metadata.DEFAULT
 		);
 		ArmorRenderer.registerTransformer(Resources.id("jumptrooper"), (entity, slim, model) -> {
 			var hasJetpack = TrinketsApi
@@ -285,26 +289,23 @@ public class Client implements ClientModInitializer
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelPilot,
 				Resources.id("rebel_pilot"),
-				Resources.id("armor/rebel_pilot"),
-				Resources.id("textures/armor/rebel_pilot_visor_up.png"),
-				Resources.id("armor/rebel_pilot"),
-				Resources.id("textures/armor/rebel_pilot_visor_up.png")
+				new ArmorRenderer.Assets(Resources.id("armor/rebel_pilot"),
+				                         Resources.id("textures/armor/rebel_pilot_visor_up.png")),
+				ArmorRenderer.Metadata.DEFAULT
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelForest,
 				Resources.id("rebel_forest"),
-				Resources.id("armor/rebel_light"),
-				Resources.id("textures/armor/rebel_forest.png"),
-				Resources.id("armor/rebel_light"),
-				Resources.id("textures/armor/rebel_forest.png")
+				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
+				                         Resources.id("textures/armor/rebel_forest.png")),
+				ArmorRenderer.Metadata.DEFAULT
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelTropical,
 				Resources.id("rebel_tropical"),
-				Resources.id("armor/rebel_light"),
-				Resources.id("textures/armor/rebel_tropical.png"),
-				Resources.id("armor/rebel_light"),
-				Resources.id("textures/armor/rebel_tropical.png")
+				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
+				                         Resources.id("textures/armor/rebel_tropical.png")),
+				ArmorRenderer.Metadata.DEFAULT
 		);
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
@@ -331,16 +332,16 @@ public class Client implements ClientModInitializer
 				if (!config.disableUpdateCheck && Resources.REMOTE_VERSION != null)
 				{
 					Text versionText = Text.literal(Resources.REMOTE_VERSION.name)
-							.styled((style) -> style
-									.withItalic(true)
-							);
+					                       .styled((style) -> style
+							                       .withItalic(true)
+					                       );
 					Text urlText = Text.literal("https://www.curseforge.com/minecraft/mc-mods/pswg")
-							.styled((style) -> style
-									.withColor(TextColor.fromRgb(0x5bc0de))
-									.withUnderline(true)
-									.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/pswg"))
-									.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("PSWG on CurseForge")))
-							);
+					                   .styled((style) -> style
+							                   .withColor(TextColor.fromRgb(0x5bc0de))
+							                   .withUnderline(true)
+							                   .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://www.curseforge.com/minecraft/mc-mods/pswg"))
+							                   .withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.literal("PSWG on CurseForge")))
+					                   );
 					client.player.sendMessage(Text.translatable("msg.pswg.update", versionText, urlText), false);
 				}
 

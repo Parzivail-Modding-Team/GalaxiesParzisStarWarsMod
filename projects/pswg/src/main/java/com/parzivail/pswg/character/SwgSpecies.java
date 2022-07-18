@@ -1,7 +1,6 @@
 package com.parzivail.pswg.character;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.character.species.SpeciesTogruta;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.data.TintedIdentifier;
@@ -248,7 +247,7 @@ public abstract class SwgSpecies
 		if (o == null || getClass() != o.getClass())
 			return false;
 
-		var that = (SpeciesTogruta)o;
+		var that = (SwgSpecies)o;
 
 		if (gender != that.gender)
 			return false;
