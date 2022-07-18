@@ -29,7 +29,7 @@
 	"depends": {
 		"fabric": "*",
 		"fabricloader": ">=0.14.8",
-		"minecraft": "~1.19",
+		"minecraft": ">=1.19",
 		"pswg": ">=0.0.74+1.19.0"
 	},
 	"custom": {
