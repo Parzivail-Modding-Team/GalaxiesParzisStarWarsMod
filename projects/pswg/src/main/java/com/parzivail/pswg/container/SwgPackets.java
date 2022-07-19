@@ -15,6 +15,7 @@ public class SwgPackets
 		public static final Identifier ShipFire = Resources.id("ship_fire");
 		public static final Identifier ShipRotation = Resources.id("srot");
 		public static final Identifier ShipControls = Resources.id("sctrl");
+		public static final Identifier JetpackControls = Resources.id("jctrl");
 	}
 
 	public static class S2C

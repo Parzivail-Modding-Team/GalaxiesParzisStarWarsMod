@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.render.armor;
 import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.util.registry.ArmorItems;
+import dev.emi.trinkets.api.TrinketItem;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.OverlayTexture;
@@ -83,7 +84,12 @@ public class ArmorRenderer
 		MODELKEY_METADATA_MAP.put(id, metadata);
 	}
 
-	public static void register(ArmorItem item, Identifier id, Assets assets)
+	public static void register(TrinketItem item, Identifier id)
+	{
+		ITEM_MODELKEY_MAP.put(item, id);
+	}
+
+	public static void register(Item item, Identifier id, Assets assets)
 	{
 		if (!MODELKEY_MODEL_MAP.containsKey(id))
 			MODELKEY_MODEL_MAP.put(id, new Entry(NemManager.INSTANCE.getBipedModel(assets.defaultModelId), NemManager.INSTANCE.getBipedModel(assets.slimModelId), assets.defaultTextureId, assets.slimTextureId));

@@ -4,6 +4,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ship.ShipEntity;
+import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.util.item.ItemAction;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -51,6 +52,43 @@ public class KeyHandler
 				controls.add(ShipControls.SPECIAL2);
 
 			ship.acceptControlInput(controls);
+		}
+
+		var jetpack = JetpackItem.getEquippedJetpack(mc.player);
+		if (!jetpack.isEmpty())
+		{
+			var originalControls = ((IJetpackControlContainer)mc.player).pswg_getJetpackControls();
+			var controls = EnumSet.noneOf(JetpackControls.class);
+
+			if (mc.options.forwardKey.isPressed())
+				controls.add(JetpackControls.FORWARD);
+
+			if (mc.options.backKey.isPressed())
+				controls.add(JetpackControls.BACKWARD);
+
+			if (mc.options.rightKey.isPressed())
+				controls.add(JetpackControls.RIGHT);
+
+			if (mc.options.leftKey.isPressed())
+				controls.add(JetpackControls.LEFT);
+
+			if (mc.options.sprintKey.isPressed())
+				controls.add(JetpackControls.TURBO);
+
+			if (mc.options.jumpKey.isPressed())
+				controls.add(JetpackControls.ASCEND);
+
+			if (mc.options.sneakKey.isPressed())
+				controls.add(JetpackControls.DESCEND);
+
+			if (!controls.equals(originalControls))
+			{
+				var passedData = new PacketByteBuf(Unpooled.buffer());
+				passedData.writeShort(JetpackControls.pack(controls));
+				ClientPlayNetworking.send(SwgPackets.C2S.JetpackControls, passedData);
+			}
+
+			((IJetpackControlContainer)mc.player).pswg_setJetpackControls(controls);
 		}
 	}
 

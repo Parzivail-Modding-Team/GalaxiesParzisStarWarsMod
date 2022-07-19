@@ -8,6 +8,7 @@ import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.BlasterPowerPackItem;
+import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
@@ -46,7 +47,7 @@ public class SwgItems
 		@RegistryName("jumptrooper")
 		public static final ArmorItems Jumptrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("jumptrooper_jetpack")
-		public static final TrinketItem JumptrooperJetpack = new TrinketItem(new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		public static final TrinketItem JumptrooperJetpack = new JetpackItem(new Item.Settings().maxCount(1).group(Galaxies.TabItems), new JetpackItem.Stats(1, 1, 1, 1, 1, 1, 1, 1, 1, 1));
 		@RegistryName("rebel_pilot_helmet")
 		public static final ArmorItem RebelPilot = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_forest_helmet")

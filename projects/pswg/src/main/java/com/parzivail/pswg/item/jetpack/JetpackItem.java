@@ -1,43 +1,61 @@
 package com.parzivail.pswg.item.jetpack;
 
+import com.parzivail.pswg.client.input.IJetpackControlContainer;
+import com.parzivail.pswg.client.input.JetpackControls;
 import com.parzivail.pswg.item.jetpack.data.JetpackTag;
 import com.parzivail.util.item.IDefaultNbtProvider;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EquipmentSlot;
+import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.TrinketItem;
+import dev.emi.trinkets.api.TrinketsApi;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.ArmorMaterial;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
-public class JetpackItem extends ArmorItem implements IDefaultNbtProvider
+public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 {
-	private final Stats stats;
-
-	public record Stats(float speedSide, float speedHoverAscend, float speedHoverDescend, float speedHoverSlow, float accelVert, float speedVert, float sprintSpeed, float sprintSpeedVert, float fuelUsage, float sprintFuelUsageModifier)
+	public record Stats(
+			float verticalSpeed,
+			float strafeSpeed,
+			float strafeHoverSpeed,
+			float hoverAscendSpeed,
+			float hoverDescendSpeed,
+			float verticalAcceleration,
+			float strafeSprintSpeed,
+			float verticalSprintSpeed,
+			float fuelConsumptionPerTick,
+			float sprintFuelConsumptionModifier
+	)
 	{
 	}
 
-	public JetpackItem(ArmorMaterial material, EquipmentSlot slot, Stats stats, Settings settings)
+	private final Stats stats;
+
+	public JetpackItem(Settings settings, Stats stats)
 	{
-		super(material, slot, settings);
+		super(settings);
 		this.stats = stats;
 	}
 
 	public static ItemStack getEquippedJetpack(LivingEntity entity)
 	{
-		var stack = entity.getEquippedStack(EquipmentSlot.CHEST);
-		if (!stack.isEmpty() && stack.getItem() instanceof JetpackItem)
-			return stack;
+		var t = TrinketsApi.getTrinketComponent(entity);
+		if (t.isEmpty())
+			return ItemStack.EMPTY;
 
-		// TODO: trinkets
+		var c = t.get();
+		var item = c.getEquipped(stack -> stack.getItem() instanceof JetpackItem);
+		if (item.isEmpty())
+			return ItemStack.EMPTY;
 
-		return ItemStack.EMPTY;
+		return item.get(0).getRight();
 	}
 
 	@Override
@@ -52,39 +70,43 @@ public class JetpackItem extends ArmorItem implements IDefaultNbtProvider
 		player.setVelocity(motion.x, y, motion.z);
 	}
 
-	/*
-		Based on jetpack code from Iron Jetpacks (MIT licensed)
-	 */
-	@Override
-	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
+	public static void handeControlPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
-		if (!(entity instanceof LivingEntity living))
-			return;
+		var controls = buf.readShort();
+		server.execute(() -> ((IJetpackControlContainer)player).pswg_setJetpackControls(JetpackControls.unpack(controls)));
+	}
 
-		var chest = getEquippedJetpack(living);
+	/*
+			Based on jetpack code from Iron Jetpacks (MIT licensed)
+		 */
+	@Override
+	public void tick(ItemStack stack, SlotReference slot, LivingEntity living)
+	{
+		var world = living.world;
 
-		if (!chest.isEmpty())
+		if (!stack.isEmpty())
 		{
-			var jt = new JetpackTag(chest.getOrCreateNbt());
+			var jt = new JetpackTag(stack.getOrCreateNbt());
 
-			if (jt.enabled)
+			if (jt.enabled || true)
 			{
-				var isHoldingUp = false;
-				var isHoldingDown = false;
-				var isHoldingForward = false;
-				var isHoldingBackward = false;
-				var isHoldingLeft = false;
-				var isHoldingRight = false;
-				var isHoldingSprint = false;
+				var jcc = ((IJetpackControlContainer)living);
+				var controls = jcc.pswg_getJetpackControls();
+
+				var isHoldingUp = controls.contains(JetpackControls.ASCEND);
+				var isHoldingDown = controls.contains(JetpackControls.DESCEND);
+				var isHoldingForward = controls.contains(JetpackControls.FORWARD);
+				var isHoldingBackward = controls.contains(JetpackControls.BACKWARD);
+				var isHoldingLeft = controls.contains(JetpackControls.LEFT);
+				var isHoldingRight = controls.contains(JetpackControls.RIGHT);
+				var isHoldingTurbo = controls.contains(JetpackControls.TURBO);
 
 				if (isHoldingUp || (jt.isHovering && !living.isOnGround()))
 				{
-					var jetpack = stats;
-
 					var motionY = living.getVelocity().y;
-					var hoverSpeed = isHoldingDown ? jetpack.speedHoverDescend : jetpack.speedHoverSlow;
-					var currentAccel = jetpack.accelVert * (motionY < 0.3D ? 2.5D : 1.0D);
-					var currentSpeedVertical = jetpack.speedVert * (living.isTouchingWater() ? 0.4D : 1.0D);
+					var hoverSpeed = isHoldingDown ? stats.hoverDescendSpeed : stats.strafeHoverSpeed;
+					var currentAccel = stats.verticalAcceleration * (motionY < 0.3D ? 2.5D : 1.0D);
+					var currentSpeedVertical = stats.verticalSpeed * (living.isTouchingWater() ? 0.4D : 1.0D);
 
 					var containsEnoughFuel = false;
 
@@ -92,16 +114,19 @@ public class JetpackItem extends ArmorItem implements IDefaultNbtProvider
 						containsEnoughFuel = true;
 					else
 					{
-						var fuelUsage = living.isSprinting() || isHoldingSprint ? jetpack.fuelUsage * jetpack.sprintFuelUsageModifier : jetpack.fuelUsage;
+						var fuelUsage = living.isSprinting() || isHoldingTurbo ? stats.fuelConsumptionPerTick * stats.sprintFuelConsumptionModifier : stats.fuelConsumptionPerTick;
 
 						// TODO: consume fuel
+						jt.serializeAsSubtag(stack);
 						containsEnoughFuel = true;
 					}
+
+					jt.throttle = 0.5f;
 
 					if (containsEnoughFuel)
 					{
 						double throttle = jt.throttle;
-						double verticalSprintMulti = motionY >= 0 && isHoldingSprint ? jetpack.sprintSpeedVert : 1.0D;
+						var verticalSprintMulti = motionY >= 0 && isHoldingTurbo ? stats.verticalSprintSpeed : 1.0D;
 
 						if (isHoldingUp)
 						{
@@ -113,11 +138,11 @@ public class JetpackItem extends ArmorItem implements IDefaultNbtProvider
 							{
 								if (isHoldingDown)
 								{
-									setVerticalVelocity(living, Math.min(motionY + currentAccel, -jetpack.speedHoverSlow) * throttle);
+									setVerticalVelocity(living, Math.min(motionY + currentAccel, -stats.strafeHoverSpeed) * throttle);
 								}
 								else
 								{
-									setVerticalVelocity(living, Math.min(motionY + currentAccel, jetpack.speedHoverAscend) * throttle * verticalSprintMulti);
+									setVerticalVelocity(living, Math.min(motionY + currentAccel, stats.hoverAscendSpeed) * throttle * verticalSprintMulti);
 								}
 							}
 						}
@@ -126,27 +151,27 @@ public class JetpackItem extends ArmorItem implements IDefaultNbtProvider
 							setVerticalVelocity(living, Math.min(motionY + currentAccel, -hoverSpeed) * throttle);
 						}
 
-						double speedSideways = (living.isSneaking() ? jetpack.speedSide * 0.5F : jetpack.speedSide) * throttle;
-						double speedForward = (living.isSprinting() ? speedSideways * jetpack.sprintSpeed : speedSideways) * throttle;
+						var speedSideways = (living.isSneaking() ? stats.strafeSpeed * 0.5F : stats.strafeSpeed) * throttle;
+						var speedForward = (living.isSprinting() ? speedSideways * stats.strafeSprintSpeed : speedSideways) * throttle;
 
 						if (isHoldingForward)
 						{
-							living.move(MovementType.PLAYER, new Vec3d(0, 0, speedForward));
+							living.travel(new Vec3d(0, 0, speedForward));
 						}
 
 						if (isHoldingBackward)
 						{
-							living.move(MovementType.PLAYER, new Vec3d(0, 0, -speedSideways * 0.8F));
+							living.travel(new Vec3d(0, 0, -speedSideways * 0.8F));
 						}
 
 						if (isHoldingLeft)
 						{
-							living.move(MovementType.PLAYER, new Vec3d(speedSideways, 0, 0));
+							living.travel(new Vec3d(speedSideways, 0, 0));
 						}
 
 						if (isHoldingRight)
 						{
-							living.move(MovementType.PLAYER, new Vec3d(-speedSideways, 0, 0));
+							living.travel(new Vec3d(-speedSideways, 0, 0));
 						}
 
 						if (!world.isClient)
