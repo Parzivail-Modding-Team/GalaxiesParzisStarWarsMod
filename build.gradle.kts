@@ -1,5 +1,4 @@
 import java.io.ByteArrayOutputStream
-import java.util.regex.Pattern
 
 plugins {
 	id("pswg-submodule-dependencies")
@@ -9,7 +8,7 @@ plugins {
 }
 
 subprojects {
-    if (!file("project.gradle.kts").exists()) return@subprojects
+	if (!file("project.gradle.kts").exists()) return@subprojects
 
 	apply(plugin = "pswg-submodule-dependencies")
 	apply(plugin = "fabric-loom")
@@ -33,21 +32,20 @@ val versionName: String = run {
 		commandLine = listOf("git", "describe", "--tags", "--dirty")
 		standardOutput = stdout
 	}
-	val version = stdout.toString().trim()
+	val describe = stdout.toString().trim()
 
-	val pattern = Pattern.compile("""^([0-9.]+)\+([0-9.]+)((?:-[0-9]+-g[0-9a-f]+)?(?:-dirty)?)?${'$'}""")
-	val m = pattern.matcher(version)
-	if (m.matches())
-	{
-		val pre = m.group(3)
-		if (pre != null && pre.isNotEmpty())
-			return@run "${m.group(1)}$pre+${m.group(2)}"
-	}
-	version
+	val regex =
+		Regex("""^(0|[1-9][0-9]+)(?:\.(0|[1-9][0-9]+)(?:\.(0|[1-9][0-9]+))?)?\+[0-9.]+((?:-[0-9]+-g[0-9a-f]+)?(?:-dirty)?)?${'$'}""")
+	val m = regex.matchEntire(describe)!!
+	val (majorString, minorString, patchString, pre) = m.destructured
+	val major = majorString.toIntOrNull() ?: 0
+	val minor = minorString.toIntOrNull() ?: 0
+	val patch = (patchString.toIntOrNull() ?: 0) + if (pre.isNotEmpty()) 1 else 0
+	"$major.$minor.$patch${if (pre == "-dirty") "-dev-0-dirty" else if (pre.isNotEmpty()) "-dev$pre" else ""}+$minecraft_version"
 }
 
 allprojects {
-    if (!file("project.gradle.kts").exists()) return@allprojects
+	if (!file("project.gradle.kts").exists()) return@allprojects
 
 	repositories {
 		mavenCentral()
@@ -87,8 +85,8 @@ allprojects {
 		quiltflowerVersion.set("1.8.1")
 	}
 
-    if (project.parent != null)
-    	base.archivesName.set(if (project.name.startsWith(archives_base_name)) project.name else "$archives_base_name-${project.name}")
+	if (project.parent != null)
+		base.archivesName.set(if (project.name.startsWith(archives_base_name)) project.name else "$archives_base_name-${project.name}")
 	version = versionName
 	group = maven_group
 
@@ -123,10 +121,8 @@ allprojects {
 
 	tasks.jar {
 		from(project.file("LICENSE")) {
-			rename { "${it}_${archives_base_name}"}
+			rename { "${it}_${archives_base_name}" }
 		}
-
-//		exclude("com/parzivail/datagen")
 	}
 
 	// configure the maven publication
