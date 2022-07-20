@@ -121,7 +121,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 						containsEnoughFuel = true;
 					}
 
-					jt.throttle = 0.5f;
+					jt.throttle = 1f;
 
 					if (containsEnoughFuel)
 					{

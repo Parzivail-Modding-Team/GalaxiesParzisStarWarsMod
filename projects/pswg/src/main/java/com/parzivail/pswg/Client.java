@@ -34,6 +34,7 @@ import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
+import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
@@ -78,6 +79,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.search.ReloadableSearchProvider;
 import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.ClickEvent;
@@ -266,23 +268,28 @@ public class Client implements ClientModInitializer
 		ArmorRenderer.register(
 				SwgItems.Armor.Jumptrooper,
 				Resources.id("jumptrooper"),
-				new ArmorRenderer.Assets(Resources.id("armor/jumptrooper_slim"),
-				                         Resources.id("textures/armor/jumptrooper_slim.png"),
-				                         Resources.id("armor/jumptrooper_default"),
-				                         Resources.id("textures/armor/jumptrooper_default.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				new ArmorRenderer.Assets(Resources.id("armor/jumptrooper"),
+				                         Resources.id("textures/armor/jumptrooper.png")),
+				new ArmorRenderer.Metadata(ArmorRenderer.ArmThicknessAction.AUTO_THICKNESS, ArmorRenderer.FemaleChestplateAction.HIDE_CUBE)
 		);
-		ArmorRenderer.register(
+		ArmorRenderer.registerExtra(
 				SwgItems.Armor.JumptrooperJetpack,
-				Resources.id("jumptrooper")
+				JetpackItem::getEquippedJetpack,
+				Resources.id("jumptrooper"),
+				EquipmentSlot.CHEST
 		);
 		ArmorRenderer.registerTransformer(Resources.id("jumptrooper"), (entity, slim, model) -> {
+			var hasChestplate = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST) != null;
 			var hasJetpack = TrinketsApi
 					.getTrinketComponent(entity)
 					.map(trinketComponent -> trinketComponent.isEquipped(SwgItems.Armor.JumptrooperJetpack))
 					.orElse(false);
 
-			model.body.getChild("torso1").visible = hasJetpack;
+			model.leftArm.visible = hasChestplate;
+			model.rightArm.visible = hasChestplate;
+			model.body.getChild("chest").visible = hasChestplate;
+
+			model.body.getChild("jetpack").visible = hasJetpack;
 			model.head.getChild("helmet5").visible = hasJetpack;
 			model.head.getChild("helmet6").visible = hasJetpack;
 			model.head.getChild("helmet7").visible = hasJetpack;
