@@ -24,11 +24,11 @@ else:
 
 print("Current directory: " + os.getcwd())
 
-file, = (file for file in os.listdir(".") if file.rpartition("-") not in {"-sources.jar", "-javadoc.jar", "-dev.jar"})
+files = [file for file in os.listdir(".") if file.rpartition("-")[2] not in {"sources.jar", "javadoc.jar", "dev.jar"}]
 
-print("Trying to upload", os.path.realpath(file))
-if os.path.isfile(file):
-    print("Found file")
+if files:
+    file, = files
+    print("Trying to upload", os.path.realpath(file))
     for url in args.webhook:
         with open(file, "rb") as fp:
             with requests.post(url, files={"file": fp}, data={
