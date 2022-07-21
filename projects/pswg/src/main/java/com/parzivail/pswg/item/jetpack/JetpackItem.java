@@ -152,7 +152,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 				}
 				else
 				{
-					if (!force.equals(Vec3d.ZERO) && living instanceof ClientPlayerEntity playerEntity)
+					if (world.isClient && !force.equals(Vec3d.ZERO) && living instanceof ClientPlayerEntity playerEntity)
 						playerEntity.networkHandler.sendPacket(new ClientCommandC2SPacket(living, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
 
 					force = Vec3d.ZERO;
