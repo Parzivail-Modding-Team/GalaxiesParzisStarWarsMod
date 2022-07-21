@@ -8,31 +8,26 @@ import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MovementType;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
+import java.util.Optional;
+
 public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 {
-	public record Stats(
-			float verticalSpeed,
-			float strafeSpeed,
-			float strafeHoverSpeed,
-			float hoverAscendSpeed,
-			float hoverDescendSpeed,
-			float verticalAcceleration,
-			float strafeSprintSpeed,
-			float verticalSprintSpeed,
-			float fuelConsumptionPerTick,
-			float sprintFuelConsumptionModifier
-	)
+	public record Stats()
 	{
 	}
 
@@ -76,6 +71,49 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 		server.execute(() -> ((IJetpackDataContainer)player).pswg_setJetpackControls(JetpackControls.unpack(controls)));
 	}
 
+	public static Optional<Boolean> tickFallFlying(LivingEntity entity, ItemStack jetpack, boolean flyFalling)
+	{
+		var jt = new JetpackTag(jetpack.getOrCreateNbt());
+		var jc = ((IJetpackDataContainer)entity);
+		var controls = jc.pswg_getJetpackControls();
+
+		return Optional.of(controls.contains(JetpackControls.DESCEND) && !entity.isOnGround());
+	}
+
+	public static boolean travel(LivingEntity entity, ItemStack jetpack)
+	{
+		var jc = ((IJetpackDataContainer)entity);
+		var controls = jc.pswg_getJetpackControls();
+		if (!controls.contains(JetpackControls.ASCEND))
+			return false;
+
+		var velocity = entity.getVelocity();
+		if (velocity.y > -0.5)
+		{
+			entity.fallDistance = 1.0F;
+		}
+
+		var acceleration = entity.getRotationVector();
+		acceleration = acceleration.multiply(jc.pswg_getJetpackForce().y);
+
+		entity.setVelocity(velocity.multiply(0.9f).add(acceleration));
+
+		entity.move(MovementType.SELF, entity.getVelocity());
+		if (entity.horizontalCollision && !entity.world.isClient)
+		{
+			var o = entity.getVelocity().horizontalLength();
+			if (o > 0.0F)
+			{
+				entity.playSound(entity.getFallSounds().small(), 1.0F, 1.0F);
+				entity.damage(DamageSource.FLY_INTO_WALL, (float)o);
+			}
+		}
+
+		jc.pswg_tryCancelFallFlying();
+
+		return true;
+	}
+
 	/*
 			Based on jetpack code from Iron Jetpacks (MIT licensed)
 		 */
@@ -113,89 +151,17 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 					living.fallDistance = 0;
 				}
 				else
+				{
+					if (!force.equals(Vec3d.ZERO) && living instanceof ClientPlayerEntity playerEntity)
+						playerEntity.networkHandler.sendPacket(new ClientCommandC2SPacket(living, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
+
 					force = Vec3d.ZERO;
+				}
 
-				jc.pswg_setJetpackForce(new Vec3d(0, MathHelper.clamp(force.y, 0, 0.15f), 0));
-
-				//				if (isHoldingUp || (jt.isHovering && !living.isOnGround()))
-				//				{
-				//					var velY = living.getVelocity().y;
-				//					var hoverSpeed = isHoldingDown ? stats.hoverDescendSpeed : stats.strafeHoverSpeed;
-				//					var currentAccel = stats.verticalAcceleration * (velY < 0.3D ? 2.5D : 1.0D);
-				//					var currentSpeedVertical = stats.verticalSpeed * (living.isTouchingWater() ? 0.4D : 1.0D);
-				//
-				//					var containsEnoughFuel = false;
-				//
-				//					if (living instanceof PlayerEntity player && player.isCreative())
-				//						containsEnoughFuel = true;
-				//					else
-				//					{
-				//						var fuelUsage = living.isSprinting() || isHoldingTurbo ? stats.fuelConsumptionPerTick * stats.sprintFuelConsumptionModifier : stats.fuelConsumptionPerTick;
-				//
-				//						// TODO: consume fuel
-				//						jt.serializeAsSubtag(stack);
-				//						containsEnoughFuel = true;
-				//					}
-				//
-				//					jt.throttle = 1f;
-				//
-				//					if (containsEnoughFuel)
-				//					{
-				//						double throttle = jt.throttle;
-				//						var verticalSprintMulti = velY >= 0 && isHoldingTurbo ? stats.verticalSprintSpeed : 1.0D;
-				//
-				//						if (isHoldingUp)
-				//						{
-				//							setVerticalVelocity(living, Math.min(Math.max(velY, 0) + 0.08f, 2) * throttle);
-				//
-				//							if (!jt.isHovering)
-				//							{
-				//								setVerticalVelocity(living, Math.min(velY + currentAccel, currentSpeedVertical) * throttle * verticalSprintMulti);
-				//							}
-				//							else
-				//							{
-				//								if (isHoldingDown)
-				//								{
-				//									setVerticalVelocity(living, Math.min(velY + currentAccel, -stats.strafeHoverSpeed) * throttle);
-				//								}
-				//								else
-				//								{
-				//									setVerticalVelocity(living, Math.min(velY + currentAccel, stats.hoverAscendSpeed) * throttle * verticalSprintMulti);
-				//								}
-				//							}
-				//						}
-				//						else
-				//						{
-				//							setVerticalVelocity(living, Math.min(velY + currentAccel, -hoverSpeed) * throttle);
-				//						}
-				//
-				//						var speedSideways = (living.isSneaking() ? stats.strafeSpeed * 0.5F : stats.strafeSpeed) * throttle;
-				//						var speedForward = (living.isSprinting() ? speedSideways * stats.strafeSprintSpeed : speedSideways) * throttle;
-				//
-				//						if (isHoldingForward)
-				//						{
-				//							living.travel(new Vec3d(0, 0, speedForward));
-				//						}
-				//
-				//						if (isHoldingBackward)
-				//						{
-				//							living.travel(new Vec3d(0, 0, -speedSideways * 0.8F));
-				//						}
-				//
-				//						if (isHoldingLeft)
-				//						{
-				//							living.travel(new Vec3d(speedSideways, 0, 0));
-				//						}
-				//
-				//						if (isHoldingRight)
-				//						{
-				//							living.travel(new Vec3d(-speedSideways, 0, 0));
-				//						}
-				//
-				//						if (!world.isClient)
-				//							living.fallDistance = 0.0F;
-				//					}
-				//				}
+				var maxThrust = 0.15f;
+//				if (living.isFallFlying())
+//					maxThrust /= 2;
+				jc.pswg_setJetpackForce(new Vec3d(0, MathHelper.clamp(force.y, 0, maxThrust), 0));
 			}
 		}
 	}

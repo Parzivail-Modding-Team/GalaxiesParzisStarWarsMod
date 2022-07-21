@@ -13,4 +13,6 @@ public interface IJetpackDataContainer
 	void pswg_setJetpackForce(Vec3d force);
 
 	Vec3d pswg_getJetpackForce();
+
+	void pswg_tryCancelFallFlying();
 }
