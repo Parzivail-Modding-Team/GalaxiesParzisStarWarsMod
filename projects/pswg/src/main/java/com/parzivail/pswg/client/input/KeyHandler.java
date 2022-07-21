@@ -73,7 +73,7 @@ public class KeyHandler
 				controls.add(JetpackControls.LEFT);
 
 			if (mc.options.sprintKey.isPressed())
-				controls.add(JetpackControls.TURBO);
+				controls.add(JetpackControls.MODE);
 
 			if (mc.options.jumpKey.isPressed())
 				controls.add(JetpackControls.ASCEND);

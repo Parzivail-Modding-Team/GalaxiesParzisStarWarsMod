@@ -4,7 +4,7 @@ import java.util.EnumSet;
 
 public enum JetpackControls
 {
-	NONE(0), FORWARD(0b1), BACKWARD(0b10), LEFT(0b100), RIGHT(0b1000), ASCEND(0b10000), DESCEND(0b100000), TURBO(0b1000000);
+	NONE(0), FORWARD(0b1), BACKWARD(0b10), LEFT(0b100), RIGHT(0b1000), ASCEND(0b10000), DESCEND(0b100000), MODE(0b1000000);
 
 	private final short flag;
 

@@ -8,7 +8,6 @@ import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
@@ -16,7 +15,6 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -77,7 +75,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 		var jc = ((IJetpackDataContainer)entity);
 		var controls = jc.pswg_getJetpackControls();
 
-		return Optional.of(controls.contains(JetpackControls.DESCEND) && !entity.isOnGround());
+		return Optional.of(controls.contains(JetpackControls.MODE) && !entity.isOnGround());
 	}
 
 	public static boolean travel(LivingEntity entity, ItemStack jetpack)
@@ -96,7 +94,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 		var acceleration = entity.getRotationVector();
 		acceleration = acceleration.multiply(jc.pswg_getJetpackForce().y);
 
-		entity.setVelocity(velocity.multiply(0.9f).add(acceleration));
+		entity.setVelocity(velocity.multiply(0.95f).add(acceleration));
 
 		entity.move(MovementType.SELF, entity.getVelocity());
 		if (entity.horizontalCollision && !entity.world.isClient)
@@ -138,7 +136,17 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 				var isHoldingBackward = controls.contains(JetpackControls.BACKWARD);
 				var isHoldingLeft = controls.contains(JetpackControls.LEFT);
 				var isHoldingRight = controls.contains(JetpackControls.RIGHT);
-				var isHoldingTurbo = controls.contains(JetpackControls.TURBO);
+				var isHoldingMode = controls.contains(JetpackControls.MODE);
+
+//				var oldThrottle = jt.throttle;
+//				if (isHoldingUp)
+//					jt.throttle += 0.1f;
+//				else if (isHoldingDown)
+//					jt.throttle -= 0.1f;
+//
+//				jt.throttle = MathHelper.clamp(jt.throttle, 0, 1);
+//				if (jt.throttle != oldThrottle)
+//					jt.serializeAsSubtag(stack);
 
 				if (isHoldingUp)
 				{
@@ -150,17 +158,14 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 
 					living.fallDistance = 0;
 				}
-				else
+				else if (isHoldingDown || !living.isFallFlying())
 				{
-					if (world.isClient && !force.equals(Vec3d.ZERO) && living instanceof ClientPlayerEntity playerEntity)
-						playerEntity.networkHandler.sendPacket(new ClientCommandC2SPacket(living, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
-
 					force = Vec3d.ZERO;
 				}
 
 				var maxThrust = 0.15f;
-//				if (living.isFallFlying())
-//					maxThrust /= 2;
+				if (living.isFallFlying())
+					maxThrust /= 2;
 				jc.pswg_setJetpackForce(new Vec3d(0, MathHelper.clamp(force.y, 0, maxThrust), 0));
 			}
 		}
