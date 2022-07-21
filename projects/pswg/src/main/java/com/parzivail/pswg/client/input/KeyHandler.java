@@ -57,7 +57,7 @@ public class KeyHandler
 		var jetpack = JetpackItem.getEquippedJetpack(mc.player);
 		if (!jetpack.isEmpty())
 		{
-			var originalControls = ((IJetpackControlContainer)mc.player).pswg_getJetpackControls();
+			var originalControls = ((IJetpackDataContainer)mc.player).pswg_getJetpackControls();
 			var controls = EnumSet.noneOf(JetpackControls.class);
 
 			if (mc.options.forwardKey.isPressed())
@@ -88,7 +88,7 @@ public class KeyHandler
 				ClientPlayNetworking.send(SwgPackets.C2S.JetpackControls, passedData);
 			}
 
-			((IJetpackControlContainer)mc.player).pswg_setJetpackControls(controls);
+			((IJetpackDataContainer)mc.player).pswg_setJetpackControls(controls);
 		}
 	}
 

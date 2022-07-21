@@ -180,16 +180,7 @@ public class ArmorRenderer
 	public static <T extends LivingEntity, M extends BipedEntityModel<T>, A extends BipedEntityModel<T>> void renderArmor(M contextModel, MatrixStack matrices, VertexConsumerProvider vertexConsumers, T entity, EquipmentSlot armorSlot, int light, A model, CallbackInfo ci)
 	{
 		renderWithTransformation(entity, getModArmor(entity, armorSlot), matrices, vertexConsumers, light, (entity1, slim, armorModel) -> {
-			setupArmorTransform(entity1, slim, armorModel, contextModel);
-
-			armorModel.head.visible = armorSlot == EquipmentSlot.HEAD;
-			armorModel.hat.visible = armorSlot == EquipmentSlot.HEAD;
-			armorModel.body.visible = armorSlot == EquipmentSlot.CHEST;
-			armorModel.rightArm.visible = armorSlot == EquipmentSlot.CHEST;
-			armorModel.leftArm.visible = armorSlot == EquipmentSlot.CHEST;
-			armorModel.rightLeg.visible = armorSlot == EquipmentSlot.LEGS;
-			armorModel.leftLeg.visible = armorSlot == EquipmentSlot.LEGS;
-
+			setupArmorTransformAndVisibility(contextModel, armorSlot, entity1, slim, armorModel);
 			ci.cancel();
 		});
 	}
@@ -205,18 +196,25 @@ public class ArmorRenderer
 
 			var armorModelEntry = ITEM_MODELKEY_MAP.get(armorItem.getItem());
 
-			renderWithTransformation(entity, new Pair<>(armorModelEntry, armorItem), matrices, vertexConsumers, light, (entity1, slim, armorModel) -> {
-				setupArmorTransform(entity1, slim, armorModel, contextModel);
+			var armorSlot = pair.getRight();
 
-				armorModel.head.visible = false;
-				armorModel.hat.visible = false;
-				armorModel.body.visible = false;
-				armorModel.rightArm.visible = true;
-				armorModel.leftArm.visible = true;
-				armorModel.rightLeg.visible = false;
-				armorModel.leftLeg.visible = false;
+			renderWithTransformation(entity, new Pair<>(armorModelEntry, armorItem), matrices, vertexConsumers, light, (entity1, slim, armorModel) -> {
+				setupArmorTransformAndVisibility(contextModel, armorSlot, entity1, slim, armorModel);
 			});
 		}
+	}
+
+	private static <M extends BipedEntityModel<T>, T extends LivingEntity> void setupArmorTransformAndVisibility(M contextModel, EquipmentSlot armorSlot, LivingEntity entity1, boolean slim, BipedEntityModel<LivingEntity> armorModel)
+	{
+		setupArmorTransform(entity1, slim, armorModel, contextModel);
+
+		armorModel.head.visible = armorSlot == EquipmentSlot.HEAD;
+		armorModel.hat.visible = armorSlot == EquipmentSlot.HEAD;
+		armorModel.body.visible = armorSlot == EquipmentSlot.CHEST;
+		armorModel.rightArm.visible = armorSlot == EquipmentSlot.CHEST;
+		armorModel.leftArm.visible = armorSlot == EquipmentSlot.CHEST;
+		armorModel.rightLeg.visible = armorSlot == EquipmentSlot.LEGS;
+		armorModel.leftLeg.visible = armorSlot == EquipmentSlot.LEGS;
 	}
 
 	private static void renderWithTransformation(LivingEntity entity, Pair<Identifier, ItemStack> armorPair, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, ArmorRenderTransformer transformer)
