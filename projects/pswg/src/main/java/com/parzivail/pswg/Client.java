@@ -50,13 +50,13 @@ import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.util.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.util.client.texture.tinted.TintedTextureProvider;
+import com.parzivail.util.item.TrinketUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
 import com.parzivail.util.registry.ClientBlockRegistryData;
 import com.parzivail.util.registry.DyedBlocks;
 import com.parzivail.util.registry.NumberedBlocks;
 import com.parzivail.util.registry.RegistryHelper;
-import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -247,15 +247,35 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/stormtrooper.png")),
 				ArmorRenderer.Metadata.DEFAULT
 		);
+		var sandtrooperId = Resources.id("sandtrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Sandtrooper,
-				Resources.id("sandtrooper"),
+				sandtrooperId,
 				new ArmorRenderer.Assets(Resources.id("armor/sandtrooper_slim"),
 				                         Resources.id("textures/armor/sandtrooper_slim.png"),
 				                         Resources.id("armor/sandtrooper_default"),
 				                         Resources.id("textures/armor/sandtrooper_default.png")),
 				ArmorRenderer.Metadata.DEFAULT
 		);
+		ArmorRenderer.registerExtra(
+				SwgItems.Armor.SandtrooperBackpack,
+				entity -> TrinketUtil.getEquipped(entity, SwgItems.Armor.SandtrooperBackpack),
+				sandtrooperId,
+				EquipmentSlot.CHEST
+		);
+		ArmorRenderer.registerTransformer(sandtrooperId, (entity, slim, model) -> {
+			var modArmor = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST);
+			var hasChestplate = modArmor != null && modArmor.getLeft().equals(sandtrooperId);
+			var hasPack = !TrinketUtil.getEquipped(entity, SwgItems.Armor.SandtrooperBackpack).isEmpty();
+
+			model.leftArm.visible = hasChestplate;
+			model.rightArm.visible = hasChestplate;
+			model.body.getChild("chest").visible = hasChestplate;
+			model.body.getChild("pauldron").visible = hasChestplate;
+
+			model.body.getChild("backpack").visible = hasPack;
+		});
+
 		ArmorRenderer.register(
 				SwgItems.Armor.Deathtrooper,
 				Resources.id("deathtrooper"),
@@ -283,22 +303,19 @@ public class Client implements ClientModInitializer
 		ArmorRenderer.registerTransformer(jumptrooperId, (entity, slim, model) -> {
 			var modArmor = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST);
 			var hasChestplate = modArmor != null && modArmor.getLeft().equals(jumptrooperId);
-			var hasJetpack = TrinketsApi
-					.getTrinketComponent(entity)
-					.map(trinketComponent -> trinketComponent.isEquipped(SwgItems.Armor.JumptrooperJetpack))
-					.orElse(false);
+			var hasPack = !TrinketUtil.getEquipped(entity, SwgItems.Armor.JumptrooperJetpack).isEmpty();
 
 			model.leftArm.visible = hasChestplate;
 			model.rightArm.visible = hasChestplate;
 			model.body.getChild("chest").visible = hasChestplate;
 
-			model.body.getChild("jetpack").visible = hasJetpack;
-			model.head.getChild("helmet5").visible = hasJetpack;
-			model.head.getChild("helmet6").visible = hasJetpack;
-			model.head.getChild("helmet7").visible = hasJetpack;
-			model.head.getChild("helmet8").visible = hasJetpack;
-			model.head.getChild("helmet9").visible = hasJetpack;
-			model.head.getChild("helmet10").visible = hasJetpack;
+			model.body.getChild("jetpack").visible = hasPack;
+			model.head.getChild("helmet5").visible = hasPack;
+			model.head.getChild("helmet6").visible = hasPack;
+			model.head.getChild("helmet7").visible = hasPack;
+			model.head.getChild("helmet8").visible = hasPack;
+			model.head.getChild("helmet9").visible = hasPack;
+			model.head.getChild("helmet10").visible = hasPack;
 		});
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelPilot,

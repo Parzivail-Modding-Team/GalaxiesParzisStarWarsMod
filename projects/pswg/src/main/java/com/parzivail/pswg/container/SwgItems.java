@@ -42,6 +42,8 @@ public class SwgItems
 		public static final ArmorItems Stormtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("sandtrooper")
 		public static final ArmorItems Sandtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("sandtrooper_backpack")
+		public static final TrinketItem SandtrooperBackpack = new TrinketItem(new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("deathtrooper")
 		public static final ArmorItems Deathtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("jumptrooper")

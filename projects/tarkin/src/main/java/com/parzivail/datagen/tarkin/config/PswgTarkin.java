@@ -802,6 +802,9 @@ public class PswgTarkin
 
 		ItemGenerator.armor(SwgItems.Armor.Stormtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Sandtrooper, assets);
+		ItemGenerator.basic(SwgItems.Armor.SandtrooperBackpack)
+		             .tag(TAG_TRINKETS_CHEST_BACK)
+		             .build(assets);
 		ItemGenerator.armor(SwgItems.Armor.Deathtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Jumptrooper, assets);
 		ItemGenerator.basic(SwgItems.Armor.JumptrooperJetpack)
