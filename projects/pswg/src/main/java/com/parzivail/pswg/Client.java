@@ -265,9 +265,11 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/deathtrooper_default.png")),
 				ArmorRenderer.Metadata.DEFAULT
 		);
+
+		var jumptrooperId = Resources.id("jumptrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Jumptrooper,
-				Resources.id("jumptrooper"),
+				jumptrooperId,
 				new ArmorRenderer.Assets(Resources.id("armor/jumptrooper"),
 				                         Resources.id("textures/armor/jumptrooper.png")),
 				new ArmorRenderer.Metadata(ArmorRenderer.ArmThicknessAction.AUTO_THICKNESS, ArmorRenderer.FemaleChestplateAction.HIDE_CUBE)
@@ -275,11 +277,12 @@ public class Client implements ClientModInitializer
 		ArmorRenderer.registerExtra(
 				SwgItems.Armor.JumptrooperJetpack,
 				JetpackItem::getEquippedJetpack,
-				Resources.id("jumptrooper"),
+				jumptrooperId,
 				EquipmentSlot.CHEST
 		);
-		ArmorRenderer.registerTransformer(Resources.id("jumptrooper"), (entity, slim, model) -> {
-			var hasChestplate = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST) != null;
+		ArmorRenderer.registerTransformer(jumptrooperId, (entity, slim, model) -> {
+			var modArmor = ArmorRenderer.getModArmor(entity, EquipmentSlot.CHEST);
+			var hasChestplate = modArmor != null && modArmor.getLeft().equals(jumptrooperId);
 			var hasJetpack = TrinketsApi
 					.getTrinketComponent(entity)
 					.map(trinketComponent -> trinketComponent.isEquipped(SwgItems.Armor.JumptrooperJetpack))
