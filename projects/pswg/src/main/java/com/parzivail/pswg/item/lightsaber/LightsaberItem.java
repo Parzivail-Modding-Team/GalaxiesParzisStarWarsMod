@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityConsumer, IItemActionConsumer
+public class LightsaberItem extends SwordItem implements ItemStackEntityAttributeModifiers, ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityCreateListener, IItemActionListener, IItemHotbarListener
 {
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
@@ -97,7 +97,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	}
 
 	@Override
-	public void consumeAction(World world, PlayerEntity player, ItemStack stack, ItemAction action)
+	public void onItemAction(World world, PlayerEntity player, ItemStack stack, ItemAction action)
 	{
 		switch (action)
 		{
@@ -221,5 +221,17 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
 		return original.getItem() instanceof LightsaberItem && original.getItem() == updated.getItem();
+	}
+
+	@Override
+	public boolean onItemDeselected(PlayerEntity player, ItemStack stack)
+	{
+		LightsaberTag.mutate(stack, tag -> {
+			if (!player.world.isClient && tag.active)
+				LightsaberItem.playSound(player.world, player, tag);
+			tag.active = false;
+			tag.finalizeMovement();
+		});
+		return true;
 	}
 }

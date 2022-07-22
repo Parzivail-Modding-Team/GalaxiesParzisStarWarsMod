@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class BlasterItem extends Item implements ItemStackEntityAttributeModifiers, ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionConsumer
+public class BlasterItem extends Item implements ItemStackEntityAttributeModifiers, ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener
 {
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -164,7 +164,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	}
 
 	@Override
-	public void consumeAction(World world, PlayerEntity player, ItemStack stack, ItemAction action)
+	public void onItemAction(World world, PlayerEntity player, ItemStack stack, ItemAction action)
 	{
 		switch (action)
 		{
@@ -567,5 +567,26 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		}
 
 		return ImmutableMultimap.of();
+	}
+
+	@Override
+	public boolean onItemSelected(PlayerEntity player, ItemStack stack)
+	{
+		var bd = getBlasterDescriptor(stack);
+		BlasterTag.mutate(stack, tag -> {
+			// Prevent stacking your hotbar to spamming shots by adding a pullout penalty
+			tag.ventingHeat = bd.heat.capacity / 4;
+			tag.coolingMode = BlasterTag.COOLING_MODE_OVERHEAT;
+		});
+		return true;
+	}
+
+	@Override
+	public boolean onItemDeselected(PlayerEntity player, ItemStack stack)
+	{
+		BlasterTag.mutate(stack, tag -> {
+			tag.isAimingDownSights = false;
+		});
+		return true;
 	}
 }

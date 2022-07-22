@@ -1,10 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
-import com.parzivail.pswg.item.blaster.BlasterItem;
-import com.parzivail.pswg.item.blaster.data.BlasterTag;
-import com.parzivail.pswg.item.lightsaber.LightsaberItem;
-import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
+import com.parzivail.util.item.IItemHotbarListener;
 import com.parzivail.util.world.InventoryUtil;
 import net.minecraft.client.render.entity.PlayerModelPart;
 import net.minecraft.entity.EquipmentSlot;
@@ -21,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class PlayerEntityMixin
 {
 	@Unique
-	private ItemStack lastSelectedItemRef;
+	private ItemStack previousStackRef;
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getMainHandStack()Lnet/minecraft/item/ItemStack;", shift = At.Shift.BEFORE))
 	private void onTick(CallbackInfo ci)
@@ -29,37 +26,24 @@ public abstract class PlayerEntityMixin
 		var self = (PlayerEntity)(Object)this;
 		var inv = self.getInventory();
 
-		var resultSlot = InventoryUtil.getSlotWithStack(inv, lastSelectedItemRef);
+		var previousStackSlot = InventoryUtil.getSlotWithStack(inv, previousStackRef);
 
-		if (resultSlot == -1 || resultSlot == inv.selectedSlot)
+		if (previousStackSlot == -1 || previousStackSlot == inv.selectedSlot)
 		{
-			lastSelectedItemRef = self.getMainHandStack();
+			previousStackRef = self.getMainHandStack();
 			return;
 		}
 
-		var stack = lastSelectedItemRef;
+		var prevStack = previousStackRef;
+		var currentStack = self.getMainHandStack();
 
-		if (stack.getItem() instanceof BlasterItem)
-		{
-			if (stack.hasNbt())
-			{
-				BlasterTag.mutate(stack, tag -> tag.isAimingDownSights = false);
-			}
-		}
-		else if (stack.getItem() instanceof LightsaberItem)
-		{
-			// TODO: play sound
-			if (stack.hasNbt())
-				LightsaberTag.mutate(stack, tag -> {
-					if (!self.world.isClient && tag.active)
-						LightsaberItem.playSound(self.world, self, tag);
-					tag.active = false;
-					tag.finalizeMovement();
-				});
-		}
+		if (currentStack.getItem() instanceof IItemHotbarListener listener && listener.onItemSelected(self, currentStack))
+			self.getInventory().setStack(inv.selectedSlot, currentStack);
 
-		self.getInventory().setStack(resultSlot, stack);
-		lastSelectedItemRef = self.getMainHandStack();
+		if (prevStack.getItem() instanceof IItemHotbarListener listener && listener.onItemDeselected(self, prevStack))
+			self.getInventory().setStack(previousStackSlot, prevStack);
+
+		previousStackRef = self.getMainHandStack();
 	}
 
 	@Inject(method = "isPartVisible(Lnet/minecraft/client/render/entity/PlayerModelPart;)Z", at = @At("HEAD"), cancellable = true)

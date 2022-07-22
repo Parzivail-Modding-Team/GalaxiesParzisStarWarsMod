@@ -1,7 +1,7 @@
 package com.parzivail.util.network;
 
 import com.parzivail.util.ParziUtil;
-import com.parzivail.util.item.IItemActionConsumer;
+import com.parzivail.util.item.IItemActionListener;
 import com.parzivail.util.item.ILeftClickConsumer;
 import com.parzivail.util.item.ItemAction;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -39,8 +39,8 @@ public class PlayerPacketHandler
 				return;
 			}
 
-			if (stack.getItem() instanceof IItemActionConsumer)
-				((IItemActionConsumer)stack.getItem()).consumeAction(player.world, player, stack, actions[action]);
+			if (stack.getItem() instanceof IItemActionListener)
+				((IItemActionListener)stack.getItem()).onItemAction(player.world, player, stack, actions[action]);
 		});
 	}
 }
