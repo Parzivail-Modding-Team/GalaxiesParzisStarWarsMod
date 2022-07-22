@@ -8,6 +8,7 @@ import dev.emi.trinkets.api.SlotReference;
 import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.TrinketsApi;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
@@ -15,6 +16,7 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.c2s.play.ClientCommandC2SPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -112,9 +114,6 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 		return true;
 	}
 
-	/*
-			Based on jetpack code from Iron Jetpacks (MIT licensed)
-		 */
 	@Override
 	public void tick(ItemStack stack, SlotReference slot, LivingEntity living)
 	{
@@ -161,6 +160,11 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 				else if (isHoldingDown || !living.isFallFlying())
 				{
 					force = Vec3d.ZERO;
+				}
+				else if (isHoldingMode && !living.isOnGround() && !living.isFallFlying())
+				{
+					if (world.isClient && living instanceof ClientPlayerEntity playerEntity)
+						playerEntity.networkHandler.sendPacket(new ClientCommandC2SPacket(living, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
 				}
 
 				var maxThrust = 0.15f;
