@@ -22,6 +22,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -47,7 +48,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class BlasterItem extends Item implements ItemStackEntityAttributeModifiers, ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener
+public class BlasterItem extends Item implements ItemStackEntityAttributeModifiers, ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
 {
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -588,5 +589,25 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			tag.isAimingDownSights = false;
 		});
 		return true;
+	}
+
+	@Override
+	public boolean onItemEntityTick(ItemEntity entity, ItemStack stack)
+	{
+		var oldNbtHashcode = stack.getOrCreateNbt().hashCode();
+
+		var bd = getBlasterDescriptor(stack, true);
+		if (bd == null)
+		{
+			Galaxies.LOG.warn("Removed unknown blaster %s from item entity %s", getBlasterModel(stack), entity);
+			entity.discard();
+			return false;
+		}
+
+		BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
+		var changed = stack.getOrCreateNbt().hashCode() != oldNbtHashcode;
+		if (changed)
+			Galaxies.LOG.debug("changed");
+		return changed;
 	}
 }

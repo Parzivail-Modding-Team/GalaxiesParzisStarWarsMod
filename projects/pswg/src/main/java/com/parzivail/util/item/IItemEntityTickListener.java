@@ -3,7 +3,7 @@ package com.parzivail.util.item;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.item.ItemStack;
 
-public interface IItemEntityCreateListener
+public interface IItemEntityTickListener
 {
-	void onItemEntityCreated(ItemEntity entity, ItemStack stack);
+	boolean onItemEntityTick(ItemEntity entity, ItemStack stack);
 }
