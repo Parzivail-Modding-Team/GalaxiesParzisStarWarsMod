@@ -268,8 +268,8 @@ public class Client implements ClientModInitializer
 			var hasChestplate = modArmor != null && modArmor.getLeft().equals(sandtrooperId);
 			var hasPack = !TrinketUtil.getEquipped(entity, SwgItems.Armor.SandtrooperBackpack).isEmpty();
 
-			model.leftArm.visible = hasChestplate;
-			model.rightArm.visible = hasChestplate;
+			model.leftArm.visible = model.leftArm.visible && hasChestplate;
+			model.rightArm.visible = model.rightArm.visible && hasChestplate;
 			model.body.getChild("chest").visible = hasChestplate;
 			model.body.getChild("pauldron").visible = hasChestplate;
 
@@ -305,8 +305,8 @@ public class Client implements ClientModInitializer
 			var hasChestplate = modArmor != null && modArmor.getLeft().equals(jumptrooperId);
 			var hasPack = !TrinketUtil.getEquipped(entity, SwgItems.Armor.JumptrooperJetpack).isEmpty();
 
-			model.leftArm.visible = hasChestplate;
-			model.rightArm.visible = hasChestplate;
+			model.leftArm.visible = model.leftArm.visible && hasChestplate;
+			model.rightArm.visible = model.rightArm.visible && hasChestplate;
 			model.body.getChild("chest").visible = hasChestplate;
 
 			model.body.getChild("jetpack").visible = hasPack;
