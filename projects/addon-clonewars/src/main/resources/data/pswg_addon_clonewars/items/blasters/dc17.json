@@ -1,7 +1,7 @@
 {
 	"version": 1,
 	"type": "pistol",
-	"sound": "pswg:dc17",
+	"sound": "pswg_addon_clonewars:dc17",
 	"firingModes": [
 		"semi",
 		"stun"

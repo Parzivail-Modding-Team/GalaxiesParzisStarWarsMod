@@ -2,6 +2,7 @@ package com.parzivail.pswg.item.blaster;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.compat.gravitychanger.GravityChangerCompat;
@@ -513,7 +514,14 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	@Override
 	public void inventoryTick(ItemStack stack, World world, Entity entity, int slot, boolean selected)
 	{
-		var bd = getBlasterDescriptor(stack);
+		var bd = getBlasterDescriptor(stack, true);
+		if (bd == null)
+		{
+			// remove erroring blasters -- assume an addon has been removed
+			stack.decrement(stack.getCount());
+			Galaxies.LOG.warn("Removed unknown blaster %s from %s", getBlasterModel(stack), entity);
+			return;
+		}
 
 		if (!world.isClient)
 			BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));

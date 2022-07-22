@@ -20,6 +20,16 @@
 				"13",
 				"14"
 			]
+		},
+		"hair_color": {
+			"defaultValue": "bc519c",
+			"possibleValues": [
+				"efbbff",
+				"fad6ff",
+				"915590",
+				"37477e",
+				"bc519c"
+			]
 		}
 	}
 }

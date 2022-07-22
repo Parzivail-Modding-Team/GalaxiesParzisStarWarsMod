@@ -7,29 +7,24 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
-import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
-import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.data.SwgBlasterManager;
-import com.parzivail.pswg.data.SwgSpeciesManager;
-import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.container.SwgBlocks;
+import com.parzivail.pswg.container.SwgEntities;
+import com.parzivail.pswg.container.SwgItems;
+import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.util.block.InvertedLampBlock;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class PswgTarkin
@@ -126,78 +121,13 @@ public class PswgTarkin
 		lang.cloneWithRoot(BlasterFiringMode.ION.getTranslation()).build(assets);
 
 		// Species
-		var speciesManager = SwgSpeciesManager.INSTANCE;
-		ResourceManagerUtil.forceReload(speciesManager, ResourceType.SERVER_DATA);
-		var speciesLangBase = lang.cloneWithRoot("species").modid();
-
-		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);
-
-		for (var species : SwgSpeciesRegistry.getSpecies())
-		{
-			var speciesLang = speciesLangBase.dot(species.getSlug().getPath());
-			speciesLang.build(assets);
-
-			for (var variable : species.getVariables())
-			{
-				lang.cloneWithRoot(variable.getTranslationKey()).build(assets);
-
-				for (var value : variable.getPossibleValues())
-					lang.cloneWithRoot(variable.getTranslationFor(value)).build(assets);
-			}
-		}
+		Tarkin.generateSpeciesLang(assets, lang, Resources.MODID);
 
 		// Blaster attachments
-		var blasterManager = SwgBlasterManager.INSTANCE;
-		ResourceManagerUtil.forceReload(blasterManager, ResourceType.SERVER_DATA);
-		var blasterData = blasterManager.getData();
-
-		for (var blasterEntry : blasterData.entrySet())
-		{
-			var blasterId = blasterEntry.getKey();
-			var blasterDescriptor = blasterEntry.getValue();
-
-			lang.cloneWithRoot(BlasterItem.getTranslationKeyForModel(blasterId)).build(assets);
-
-			for (var attachment : blasterDescriptor.attachmentMap.values())
-				lang.cloneWithRoot(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
-		}
+		Tarkin.generateBlasterLang(assets, lang, Resources.MODID);
 
 		// Autoconfig
-		var autoconfig = lang.cloneWithRoot("text").dot("autoconfig").modid();
-		autoconfig.dot("title").build(assets);
-
-		var autoconfigOption = autoconfig.dot("option");
-
-		var config = Config.class;
-		generateLangFromConfigAnnotations(autoconfigOption, assets, config);
-	}
-
-	private static void generateLangFromConfigAnnotations(LanguageBuilder autoconfigOption, List<BuiltAsset> assets, Class<?> config)
-	{
-		var subclasses = Arrays.asList(config.getDeclaredClasses());
-
-		for (var field : config.getDeclaredFields())
-		{
-			var fieldLang = autoconfigOption.dot(field.getName());
-			fieldLang.build(assets);
-
-			if (field.isAnnotationPresent(ConfigEntry.Gui.Tooltip.class))
-			{
-				String defaultValue = null;
-
-				var commentAnnotation = field.getAnnotation(Comment.class);
-				if (commentAnnotation != null)
-					defaultValue = commentAnnotation.value();
-
-				fieldLang.dot("@Tooltip").build(assets, defaultValue);
-			}
-
-			if (subclasses.contains(field.getType()))
-			{
-				var subclassLang = autoconfigOption.dot(field.getName());
-				generateLangFromConfigAnnotations(subclassLang, assets, field.getType());
-			}
-		}
+		Tarkin.generateConfigLang(assets, lang, Config.class);
 	}
 
 	public static void generateTags(List<BuiltAsset> assets)

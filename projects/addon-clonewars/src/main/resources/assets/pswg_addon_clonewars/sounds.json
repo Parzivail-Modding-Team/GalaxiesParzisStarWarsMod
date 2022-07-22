@@ -1,7 +1,7 @@
 {
 	"blaster.fire.dc17": {
 		"sounds": [
-			"pswg:blaster/fire/dc17"
+			"pswg_addon_clonewars:blaster/fire/dc17"
 		]
 	}
 }

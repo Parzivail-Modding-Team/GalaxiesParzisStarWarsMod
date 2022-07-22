@@ -1,8 +1,6 @@
 package com.parzivail.pswg.character.species;
 
-import com.parzivail.pswg.character.DatapackedSpeciesVariable;
-import com.parzivail.pswg.character.SpeciesVariable;
-import com.parzivail.pswg.character.SwgSpecies;
+import com.parzivail.pswg.character.*;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -15,6 +13,7 @@ import java.util.Collection;
 public class SpeciesPantoran extends SwgSpecies
 {
 	private static final SpeciesVariable VAR_TATTOOS = new DatapackedSpeciesVariable(SwgSpeciesRegistry.SPECIES_PANTORAN, "tattoos");
+	private static final SpeciesColorVariable VAR_HAIR_COLOR = new DatapackedSpeciesColorVariable(SwgSpeciesRegistry.SPECIES_PANTORAN, "hair_color");
 
 	public SpeciesPantoran(String serialized)
 	{
@@ -35,7 +34,7 @@ public class SpeciesPantoran extends SwgSpecies
 				VAR_HUMANOID_SCARS,
 				VAR_HUMANOID_EYEBROWS,
 				VAR_HUMANOID_HAIR,
-				VAR_HUMANOID_HAIR_COLOR,
+				VAR_HAIR_COLOR,
 				VAR_HUMANOID_EYE_COLOR,
 				VAR_HUMANOID_CLOTHES_UNDERLAYER,
 				VAR_HUMANOID_CLOTHES_TOPS,
