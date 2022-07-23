@@ -4,6 +4,9 @@ import com.google.gson.GsonBuilder;
 import com.parzivail.util.noise.OpenSimplex2F;
 import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.SemanticVersion;
+import net.fabricmc.loader.api.Version;
+import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.NotNull;
@@ -76,9 +79,8 @@ public class Resources
 		try
 		{
 			var container = FabricLoader.getInstance().getModContainer(Resources.MODID).orElseThrow(() -> new Exception("Could not get own mod container"));
-			var ownVersion = container.getMetadata().getVersion().getFriendlyString();
 
-			if (FabricLoader.getInstance().isDevelopmentEnvironment() || ownVersion.equals("${version}"))
+			if (FabricLoader.getInstance().isDevelopmentEnvironment() || !(container.getMetadata().getVersion() instanceof SemanticVersion ownVersion))
 			{
 				Galaxies.LOG.log("Will not perform version check in a development environment");
 				return;
@@ -98,11 +100,11 @@ public class Resources
 
 			var mostRecentRelease = entries[0];
 
-			if (isRemoteVersionNewer(ownVersion, mostRecentRelease.tag_name))
+			if (isRemoteVersionNewer(ownVersion, SemanticVersion.parse(mostRecentRelease.tag_name)))
 			{
 				REMOTE_VERSION = mostRecentRelease;
 
-				Galaxies.LOG.warn("A new version is available at https://www.curseforge.com/minecraft/mc-mods/pswg: %s (vs: %s)", REMOTE_VERSION.name, ownVersion);
+				Galaxies.LOG.warn("A new version is available at https://www.curseforge.com/minecraft/mc-mods/pswg: %s (vs: %s)", REMOTE_VERSION.name, container.getMetadata().getVersion());
 			}
 		}
 		catch (Exception e)
@@ -111,9 +113,8 @@ public class Resources
 		}
 	}
 
-	private static boolean isRemoteVersionNewer(String local, String remote)
+	private static boolean isRemoteVersionNewer(SemanticVersion local, SemanticVersion remote)
 	{
-		// TODO: actual version comparison
-		return !local.equals(remote);
+		return local.compareTo((Version)remote) < 0;
 	}
 }
