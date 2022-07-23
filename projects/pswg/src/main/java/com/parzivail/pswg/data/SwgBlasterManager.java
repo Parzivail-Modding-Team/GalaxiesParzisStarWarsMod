@@ -4,8 +4,6 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.util.data.IdentifierDeserializer;
 import com.parzivail.util.data.StringInteropAdapter;
@@ -107,20 +105,6 @@ public class SwgBlasterManager extends TypedDataLoader<BlasterDescriptor>
 		k.add("Defined keys", this::getDataString);
 
 		throw new CrashException(j);
-	}
-
-	@Override
-	protected void onServerDataLoaded()
-	{
-		for (var entry : getData().values())
-			SwgSounds.registerIfAbsent(BlasterItem.modelIdToSoundId(entry.sound));
-	}
-
-	@Override
-	protected void onClientDataLoaded()
-	{
-		for (var entry : getData().values())
-			SwgSounds.registerIfAbsent(BlasterItem.modelIdToSoundId(entry.sound));
 	}
 
 	private String getDataString()
