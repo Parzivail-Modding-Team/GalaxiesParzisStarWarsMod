@@ -66,6 +66,9 @@ public class LeftClickHandler
 
 	private static boolean useItemLeft(CallbackInfo ci, PlayerEntity player, ILeftClickConsumer lcc)
 	{
+		if (player.isSpectator())
+			return false;
+
 		var tar = lcc.useLeft(player.world, player, Hand.MAIN_HAND);
 		var ar = tar.getResult();
 

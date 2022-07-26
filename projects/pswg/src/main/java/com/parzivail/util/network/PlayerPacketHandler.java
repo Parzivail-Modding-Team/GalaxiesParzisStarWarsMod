@@ -16,6 +16,9 @@ public class PlayerPacketHandler
 	public static void handleLeftClickPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
 		server.execute(() -> {
+			if (player.isSpectator())
+				return;
+
 			var stack = player.getMainHandStack();
 
 			if (stack.getItem() instanceof ILeftClickConsumer)
