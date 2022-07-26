@@ -141,26 +141,34 @@ public class EnergyRenderer
 			var hueOffset = unstable ? (noise * 0.02f) : 0;
 
 			var x = MathUtil.remap(layer, mL, xL, minOutputLayer, 60);
+			var alpha = getAlpha(x);
+			if (alpha < 16 / 255f)
+				continue;
+
 			var color = ColorUtil.fromHSV(
 					getHue(glowHue + hueOffset, x),
 					getSaturation(x, glowSat),
 					getValue(x, glowVal)
 			);
-			VertexConsumerBuffer.Instance.setColor(color, (int)(255 * getAlpha(x)));
+			VertexConsumerBuffer.Instance.setColor(color, (int)(255 * alpha));
 			var layerThickness = deltaThickness * layer;
 
-			Runnable action = () -> RenderShapes.drawSolidBoxSkewTaper(
-					VertexConsumerBuffer.Instance,
-					thicknessTop + layerThickness,
-					thicknessBottom + layerThickness,
-					0, bladeLength + layerThickness, 0,
-					0, -layerThickness, 0
-			);
-
 			if (layer > 0)
-				RenderShapes.invertCull(action);
+			{
+				// glow layers
+				RenderShapes.invertCull(true);
+				RenderShapes.drawSolidBoxSkewTaper(
+						VertexConsumerBuffer.Instance,
+						thicknessTop + layerThickness,
+						thicknessBottom + layerThickness,
+						0, bladeLength + layerThickness, 0,
+						0, -layerThickness, 0
+				);
+				RenderShapes.invertCull(false);
+			}
 			else
 			{
+				// core layer
 				final var segments = unstable ? 35 : 1;
 				final var dSegments = 1f / segments;
 				final var dLength = bladeLength / segments;

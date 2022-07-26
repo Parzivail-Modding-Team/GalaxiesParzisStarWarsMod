@@ -99,10 +99,8 @@ public class RenderShapes
 		}
 	}
 
-	public static void invertCull(Runnable action)
+	public static void invertCull(boolean invert)
 	{
-		_renderClockwise = true;
-		action.run();
-		_renderClockwise = false;
+		_renderClockwise = invert;
 	}
 }
