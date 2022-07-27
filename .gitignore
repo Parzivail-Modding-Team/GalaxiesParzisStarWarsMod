@@ -24,6 +24,7 @@ bin/
 # fabric
 
 run/
+run_server/
 remappedSrc/
 
 # python

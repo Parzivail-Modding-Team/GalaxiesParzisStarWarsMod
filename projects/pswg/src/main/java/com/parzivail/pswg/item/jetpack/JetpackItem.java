@@ -161,8 +161,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 				{
 					force = Vec3d.ZERO;
 				}
-
-				if (isHoldingMode && !living.isOnGround() && !living.isFallFlying())
+				else if (isHoldingMode && !living.isOnGround() && !living.isFallFlying())
 				{
 					if (world.isClient && living instanceof ClientPlayerEntity playerEntity)
 						playerEntity.networkHandler.sendPacket(new ClientCommandC2SPacket(living, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
