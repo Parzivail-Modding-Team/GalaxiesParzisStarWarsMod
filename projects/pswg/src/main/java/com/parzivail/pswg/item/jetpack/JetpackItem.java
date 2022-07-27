@@ -12,6 +12,7 @@ import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -77,7 +78,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 		var jc = ((IJetpackDataContainer)entity);
 		var controls = jc.pswg_getJetpackControls();
 
-		return Optional.of(controls.contains(JetpackControls.MODE) && !entity.isOnGround());
+		return Optional.of(!(entity.isOnGround() || controls.contains(JetpackControls.DESCEND)));
 	}
 
 	public static boolean travel(LivingEntity entity, ItemStack jetpack)
@@ -165,6 +166,9 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 				{
 					if (world.isClient && living instanceof ClientPlayerEntity playerEntity)
 						playerEntity.networkHandler.sendPacket(new ClientCommandC2SPacket(living, ClientCommandC2SPacket.Mode.START_FALL_FLYING));
+
+					if (living instanceof PlayerEntity playerEntity)
+						playerEntity.startFallFlying();
 				}
 
 				var maxThrust = 0.15f;
