@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.input;
 
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.client.screen.CharacterScreen;
 import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.entity.ship.ShipEntity;
@@ -8,6 +9,7 @@ import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.util.item.ItemAction;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.network.PacketByteBuf;
 
@@ -21,7 +23,12 @@ public class KeyHandler
 			return;
 
 		if (Client.KEY_SPECIES_SELECT.wasPressed())
-			mc.setScreen(new SpeciesSelectScreen(mc.currentScreen));
+		{
+			if (FabricLoader.getInstance().isDevelopmentEnvironment())
+				mc.setScreen(new CharacterScreen(mc.currentScreen));
+			else
+				mc.setScreen(new SpeciesSelectScreen(mc.currentScreen));
+		}
 
 		if (Client.KEY_PRIMARY_ITEM_ACTION.wasPressed())
 		{
