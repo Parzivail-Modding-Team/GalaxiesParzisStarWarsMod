@@ -24,7 +24,7 @@ public class KeyHandler
 
 		if (Client.KEY_SPECIES_SELECT.wasPressed())
 		{
-			if (FabricLoader.getInstance().isDevelopmentEnvironment())
+			if (FabricLoader.getInstance().isDevelopmentEnvironment() && !mc.player.isSneaking())
 				mc.setScreen(new CharacterScreen(mc.currentScreen));
 			else
 				mc.setScreen(new SpeciesSelectScreen(mc.currentScreen));
