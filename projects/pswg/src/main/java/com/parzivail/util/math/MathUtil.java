@@ -129,6 +129,6 @@ public class MathUtil
 
 	public static boolean rectContains(int l, int t, int w, int h, double x, double y)
 	{
-		return x >= l && x <= l + w && y >= t && y <= t + h;
+		return x >= l && x < l + w && y >= t && y < t + h;
 	}
 }

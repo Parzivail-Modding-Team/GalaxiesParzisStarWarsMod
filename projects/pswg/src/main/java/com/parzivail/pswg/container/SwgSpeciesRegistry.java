@@ -30,13 +30,17 @@ public class SwgSpeciesRegistry
 	public static final Identifier SPECIES_BITH = Resources.id("bith");
 	public static final Identifier SPECIES_BOTHAN = Resources.id("bothan");
 	public static final Identifier SPECIES_CHAGRIAN = Resources.id("chagrian");
+	public static final Identifier SPECIES_CHISS = Resources.id("chiss");
+	public static final Identifier SPECIES_DEVARONIAN = Resources.id("devaronian");
+	public static final Identifier SPECIES_DUROS = Resources.id("duros");
+	public static final Identifier SPECIES_HUMAN = Resources.id("human");
 	public static final Identifier SPECIES_JAWA = Resources.id("jawa");
 	public static final Identifier SPECIES_KAMINOAN = Resources.id("kaminoan");
-	public static final Identifier SPECIES_TOGRUTA = Resources.id("togruta");
-	public static final Identifier SPECIES_TWILEK = Resources.id("twilek");
-	public static final Identifier SPECIES_HUMAN = Resources.id("human");
-	public static final Identifier SPECIES_CHISS = Resources.id("chiss");
 	public static final Identifier SPECIES_PANTORAN = Resources.id("pantoran");
+	public static final Identifier SPECIES_RODIAN = Resources.id("rodian");
+	public static final Identifier SPECIES_TOGRUTA = Resources.id("togruta");
+	public static final Identifier SPECIES_TRANDOSHAN = Resources.id("trandoshan");
+	public static final Identifier SPECIES_TWILEK = Resources.id("twilek");
 	public static final Identifier SPECIES_WOOKIEE = Resources.id("wookiee");
 
 	static
