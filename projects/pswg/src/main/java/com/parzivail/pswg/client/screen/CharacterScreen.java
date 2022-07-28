@@ -5,6 +5,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.camera.CameraHelper;
 import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
+import com.parzivail.pswg.client.species.SwgSpeciesIcons;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
@@ -22,9 +23,6 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 @Environment(EnvType.CLIENT)
 public class CharacterScreen extends Screen
@@ -122,39 +120,10 @@ public class CharacterScreen extends Screen
 			new BlittableAsset(0, 364, 20, 18, 512, 512),
 			new BlittableAsset(20, 364, 20, 18, 512, 512)
 	), 188, 210);
-	private static final BlitRectangle EXIT_BUTTON = new BlitRectangle(new HoverableBlittableAsset(
+	private static final BlitRectangle EXPORT_BUTTON = new BlitRectangle(new HoverableBlittableAsset(
 			new BlittableAsset(0, 384, 20, 18, 512, 512),
 			new BlittableAsset(20, 384, 20, 18, 512, 512)
 	), 218, 210);
-
-	private static final HashMap<Identifier, HoverableBlittableAsset> SPECIES_ICON_MAP = new LinkedHashMap<>();
-
-	private static HoverableBlittableAsset makeSpeciesIcon(int row)
-	{
-		return new HoverableBlittableAsset(
-				new BlittableAsset(457, 15 * row, 15, 15, 512, 512),
-				new BlittableAsset(472, 15 * row, 15, 15, 512, 512)
-		);
-	}
-
-	static
-	{
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_AQUALISH, makeSpeciesIcon(6));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_BITH, makeSpeciesIcon(1));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_CHAGRIAN, makeSpeciesIcon(4));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_CHISS, makeSpeciesIcon(11));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_DEVARONIAN, makeSpeciesIcon(7));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_DUROS, makeSpeciesIcon(3));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_HUMAN, makeSpeciesIcon(10));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_JAWA, makeSpeciesIcon(8));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_KAMINOAN, makeSpeciesIcon(14));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_PANTORAN, makeSpeciesIcon(9));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_RODIAN, makeSpeciesIcon(0));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_TOGRUTA, makeSpeciesIcon(2));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_TRANDOSHAN, makeSpeciesIcon(12));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_TWILEK, makeSpeciesIcon(5));
-		SPECIES_ICON_MAP.put(SwgSpeciesRegistry.SPECIES_WOOKIEE, makeSpeciesIcon(13));
-	}
 
 	private final Screen parent;
 
@@ -236,42 +205,40 @@ public class CharacterScreen extends Screen
 		BACKGROUND_PATCH.setOrigin(x, y);
 		BACKGROUND_PATCH.blit(matrices);
 
-		var lineHeight = 20;
-		var contentHeight = lineHeight * SPECIES_ICON_MAP.size();
+		var allSpecies = SwgSpeciesRegistry.ALL_SPECIES.get();
+		SCROLLBAR.setScrollInputFactor(allSpecies.size());
+
+		var lineHeight = 25;
+		var contentHeight = lineHeight * allSpecies.size();
 		var areaHeight = 190;
 		var scrollAmount = Math.max(0, contentHeight - areaHeight);
 
-		var lineContentHeight = 15;
+		var lineContentHeight = 20;
 		var lineOffsetY = (lineHeight - lineContentHeight) / 2;
 
-		SCROLLBAR.setScrollInputFactor(SPECIES_ICON_MAP.size());
-
 		var iconY = -(int)(scrollAmount * SCROLLBAR.getScroll());
-		for (var entry : SPECIES_ICON_MAP.entrySet())
+		for (var entry : allSpecies)
 		{
-			var icon = entry.getValue();
-
-			icon.setHovering(
-					entry.getKey().equals(SwgSpeciesRegistry.SPECIES_TOGRUTA) ||
-					(!SCROLLBAR.isScrolling() && MathUtil.rectContains(x + 7, y + 25 + iconY + lineOffsetY, 80, lineHeight, mouseX, mouseY))
-			);
-
 			if (iconY >= -lineHeight && iconY <= areaHeight)
 			{
-				icon.blit(matrices, x + 7, y + 25 + iconY + lineOffsetY);
+				var hovering = entry.getSlug().equals(SwgSpeciesRegistry.SPECIES_TOGRUTA);
+
+				SwgSpeciesIcons.renderLarge(matrices, x + 7, y + 25 + iconY + lineOffsetY, entry.getSlug(), hovering);
 			}
 			iconY += lineHeight;
 		}
 
 		iconY = -(int)(scrollAmount * SCROLLBAR.getScroll());
-		for (var entry : SPECIES_ICON_MAP.entrySet())
+		for (var entry : allSpecies)
 		{
 			if (iconY >= -lineHeight && iconY <= areaHeight)
 			{
-				var key = entry.getKey();
-				var translatedText = Text.translatable(SwgSpeciesRegistry.getTranslationKey(key));
+				var hovering = entry.getSlug().equals(SwgSpeciesRegistry.SPECIES_TOGRUTA) ||
+				               (!SCROLLBAR.isScrolling() && MathUtil.rectContains(x + 7, y + 25 + iconY + lineOffsetY, 80, lineContentHeight, mouseX, mouseY));
+
+				var translatedText = Text.translatable(SwgSpeciesRegistry.getTranslationKey(entry.getSlug()));
 				var wrapped = this.textRenderer.wrapLines(translatedText, 60);
-				this.textRenderer.draw(matrices, wrapped.get(0), x + 26, y + 29 + iconY + lineOffsetY, entry.getValue().isHovering() ? 0xFFFFFF : 0x000000);
+				this.textRenderer.draw(matrices, wrapped.get(0), x + 30, y + 31 + iconY + lineOffsetY, hovering ? 0xFFFFFF : 0x000000);
 			}
 
 			iconY += lineHeight;
@@ -287,7 +254,7 @@ public class CharacterScreen extends Screen
 		GENDER_TOGGLE.setOrigin(x, y);
 		NEXT_PAGE_BTN.setOrigin(x, y);
 		SAVE_BUTTON.setOrigin(x, y);
-		EXIT_BUTTON.setOrigin(x, y);
+		EXPORT_BUTTON.setOrigin(x, y);
 
 		SCROLLBAR.updateMouseState(mouseX, mouseY);
 		LEFT_ARROW.updateMouseState(mouseX, mouseY);
@@ -296,7 +263,7 @@ public class CharacterScreen extends Screen
 		GENDER_TOGGLE.updateMouseState(mouseX, mouseY);
 		NEXT_PAGE_BTN.updateMouseState(mouseX, mouseY);
 		SAVE_BUTTON.updateMouseState(mouseX, mouseY);
-		EXIT_BUTTON.updateMouseState(mouseX, mouseY);
+		EXPORT_BUTTON.updateMouseState(mouseX, mouseY);
 
 		SCROLLBAR_TRACK.blitVertical(matrices, x + 90, y + 25, 190);
 		SCROLLBAR.blit(matrices);
@@ -306,7 +273,7 @@ public class CharacterScreen extends Screen
 		GENDER_TOGGLE.blit(matrices);
 		NEXT_PAGE_BTN.blit(matrices);
 		SAVE_BUTTON.blit(matrices);
-		EXIT_BUTTON.blit(matrices);
+		EXPORT_BUTTON.blit(matrices);
 
 		var rsm = RenderSystem.getModelViewStack();
 		rsm.push();

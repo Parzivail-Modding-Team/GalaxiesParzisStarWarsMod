@@ -73,7 +73,7 @@ public class SpeciesSelectScreen extends Screen
 		super(Text.translatable("screen.pswg.species_select"));
 		this.parent = parent;
 
-		availableSpecies = SwgSpeciesRegistry.getSpecies();
+		availableSpecies = SwgSpeciesRegistry.ALL_SPECIES.get();
 
 		availableSpecies.add(0, null);
 	}

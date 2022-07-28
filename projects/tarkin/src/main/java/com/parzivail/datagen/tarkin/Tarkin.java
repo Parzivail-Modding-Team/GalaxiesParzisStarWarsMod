@@ -74,7 +74,7 @@ public class Tarkin
 
 		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);
 
-		for (var species : SwgSpeciesRegistry.getSpecies())
+		for (var species : SwgSpeciesRegistry.ALL_SPECIES.get())
 		{
 			if (!species.getSlug().getNamespace().equals(namespace))
 				continue;
