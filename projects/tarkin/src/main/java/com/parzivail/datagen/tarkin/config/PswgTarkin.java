@@ -78,7 +78,17 @@ public class PswgTarkin
 
 		// Screen
 		lang.cloneWithRoot(Resources.I18N_SCREEN_APPLY).build(assets);
+		lang.cloneWithRoot(Resources.I18N_SCREEN_RANDOM).build(assets);
+		lang.cloneWithRoot(Resources.I18N_SCREEN_GENDER_MALE).build(assets);
+		lang.cloneWithRoot(Resources.I18N_SCREEN_GENDER_FEMALE).build(assets);
+		lang.cloneWithRoot(Resources.I18N_SCREEN_SAVE_PRESET).build(assets);
+		lang.cloneWithRoot(Resources.I18N_SCREEN_EXPORT_PRESET).build(assets);
+
 		lang.cloneWithRoot(CharacterScreen.I18N_TITLE).build(assets);
+		lang.cloneWithRoot(CharacterScreen.I18N_CHOOSE_SPECIES).build(assets);
+		lang.cloneWithRoot(CharacterScreen.I18N_CHOOSE_OPTION).build(assets);
+		lang.cloneWithRoot(CharacterScreen.I18N_NEXT_PAGE).build(assets);
+		lang.cloneWithRoot(CharacterScreen.I18N_PREVIOUS_PAGE).build(assets);
 
 		lang.screen("species_select").build(assets);
 		lang.cloneWithRoot(SpeciesSelectScreen.I18N_USE_FEMALE_MODEL).build(assets);

@@ -6,7 +6,6 @@ import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.SemanticVersion;
 import net.fabricmc.loader.api.Version;
-import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.NotNull;
@@ -17,6 +16,11 @@ import java.net.URL;
 public class Resources
 {
 	public static final String I18N_SCREEN_APPLY = "screen.pswg.apply";
+	public static final String I18N_SCREEN_RANDOM = "screen.pswg.random";
+	public static final String I18N_SCREEN_GENDER_MALE = "screen.pswg.male";
+	public static final String I18N_SCREEN_GENDER_FEMALE = "screen.pswg.female";
+	public static final String I18N_SCREEN_SAVE_PRESET = "screen.pswg.save_preset";
+	public static final String I18N_SCREEN_EXPORT_PRESET = "screen.pswg.export_preset";
 
 	public static class GithubReleaseEntry
 	{

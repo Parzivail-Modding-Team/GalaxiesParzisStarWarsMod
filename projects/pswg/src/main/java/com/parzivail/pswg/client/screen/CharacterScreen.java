@@ -31,11 +31,30 @@ import net.minecraft.util.math.Vec3f;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class CharacterScreen extends Screen
 {
+	private static class HoveringEntry
+	{
+		private final BlitRectangle area;
+		private final long timeStartHovering;
+
+		public HoveringEntry(BlitRectangle area)
+		{
+			this.area = area;
+			this.timeStartHovering = System.currentTimeMillis();
+		}
+
+		public boolean shouldShowTooltip()
+		{
+			return System.currentTimeMillis() - timeStartHovering > 1000;
+		}
+	}
+
 	private enum Page
 	{
 		SPECIES,
@@ -43,6 +62,10 @@ public class CharacterScreen extends Screen
 	}
 
 	public static final String I18N_TITLE = "screen.pswg.character";
+	public static final String I18N_CHOOSE_SPECIES = "screen.pswg.character.choose_species";
+	public static final String I18N_CHOOSE_OPTION = "screen.pswg.character.choose_option";
+	public static final String I18N_NEXT_PAGE = "screen.pswg.character.next_page";
+	public static final String I18N_PREVIOUS_PAGE = "screen.pswg.character.previous_page";
 	private static final Identifier OPTIONS_BACKGROUND = new Identifier("textures/gui/options_background.png");
 	private static final Identifier BACKGROUND = Resources.id("textures/gui/character/background.png");
 
@@ -174,6 +197,10 @@ public class CharacterScreen extends Screen
 	@SuppressWarnings("rawtypes")
 	private final ArrayList<BlitRectangle> blitRectangles = new ArrayList<>();
 
+	@SuppressWarnings("rawtypes")
+	private final HashMap<BlitRectangle, Supplier<Text>> hoverText = new HashMap<>();
+	private HoveringEntry hoveringEntry = null;
+
 	private Page page = Page.SPECIES;
 
 	private SwgSpecies previewSpecies = null;
@@ -198,6 +225,14 @@ public class CharacterScreen extends Screen
 		blitRectangles.add(SAVE_BUTTON);
 		blitRectangles.add(EXPORT_BUTTON);
 		blitRectangles.add(APPLY_BTN);
+
+		hoverText.put(RANDOM_BUTTON, () -> Text.translatable(Resources.I18N_SCREEN_RANDOM));
+		hoverText.put(GENDER_TOGGLE, () -> Text.translatable(GENDER_TOGGLE.getBlittable().isToggled() ? Resources.I18N_SCREEN_GENDER_FEMALE : Resources.I18N_SCREEN_GENDER_MALE));
+		hoverText.put(NEXT_PAGE_BTN, () -> Text.translatable(I18N_NEXT_PAGE));
+		hoverText.put(PREV_PAGE_BTN, () -> Text.translatable(I18N_PREVIOUS_PAGE));
+		hoverText.put(APPLY_BTN, () -> Text.translatable(Resources.I18N_SCREEN_APPLY));
+		hoverText.put(SAVE_BUTTON, () -> Text.translatable(Resources.I18N_SCREEN_SAVE_PRESET));
+		hoverText.put(EXPORT_BUTTON, () -> Text.translatable(Resources.I18N_SCREEN_EXPORT_PRESET));
 	}
 
 	private void updateAbility()
@@ -540,13 +575,32 @@ public class CharacterScreen extends Screen
 			if (previewSpecies != null)
 				TextUtil.drawArea(matrices, textRenderer, x + 260, y + 40, 150, Text.translatable(SwgSpeciesLore.DESCRIPTION.createLanguageKey(previewSpecies.getSlug())));
 			else
-				TextUtil.drawArea(matrices, textRenderer, x + 260, y + 40, 150, Text.literal("Pick a species on the left to begin customizing your character!"));
+				TextUtil.drawArea(matrices, textRenderer, x + 260, y + 40, 150, Text.translatable(I18N_CHOOSE_SPECIES));
 		}
 		else
 		{
 			if (previewVariable == null)
-				TextUtil.drawArea(matrices, textRenderer, x + 260, y + 40, 150, Text.literal("Choose one of the categories on the left to fine-tune your style!"));
+				TextUtil.drawArea(matrices, textRenderer, x + 260, y + 40, 150, Text.translatable(I18N_CHOOSE_OPTION));
 		}
+
+		if (hoveringEntry != null)
+		{
+			if (!hoveringEntry.area.contains(mouseX, mouseY))
+				hoveringEntry = null;
+
+			if (hoveringEntry != null && hoverText.containsKey(hoveringEntry.area) && hoveringEntry.shouldShowTooltip())
+				renderTooltip(matrices, hoverText.get(hoveringEntry.area).get(), mouseX, mouseY);
+		}
+
+		if (hoveringEntry == null)
+		{
+			blitRectangles
+					.stream()
+					.filter(blitRectangle -> blitRectangle.contains(mouseX, mouseY))
+					.findFirst()
+					.ifPresent(rect -> hoveringEntry = new HoveringEntry(rect));
+		}
+
 
 		super.render(matrices, mouseX, mouseY, delta);
 	}
