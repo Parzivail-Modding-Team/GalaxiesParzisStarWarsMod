@@ -1,6 +1,6 @@
 package com.parzivail.util.item;
 
-import com.parzivail.util.client.TooltipUtil;
+import com.parzivail.util.client.LoreUtil;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -20,6 +20,6 @@ public class LoreLiquidFoodItem extends LiquidFoodItem
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
 	{
 		super.appendTooltip(stack, world, tooltip, context);
-		tooltip.add(TooltipUtil.getLore(stack.getItem()));
+		tooltip.add(LoreUtil.getLore(stack.getItem()));
 	}
 }

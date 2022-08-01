@@ -4,6 +4,7 @@ import com.parzivail.datagen.tarkin.config.PswgTarkin;
 import com.parzivail.datagen.tarkin.config.TcwTarkin;
 import com.parzivail.pswg.Config;
 import com.parzivail.pswg.character.SpeciesVariable;
+import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
@@ -78,8 +79,11 @@ public class Tarkin
 		{
 			if (!species.getSlug().getNamespace().equals(namespace))
 				continue;
-			var speciesLang = speciesLangBase.dot(species.getSlug().getPath());
-			speciesLang.build(assets);
+
+			for (var lore : SwgSpeciesLore.values())
+				lang.cloneWithRoot(lore.createLanguageKey(species.getSlug())).build(assets);
+
+			speciesLangBase.dot(species.getSlug().getPath()).build(assets);
 
 			for (var variable : species.getVariables())
 			{

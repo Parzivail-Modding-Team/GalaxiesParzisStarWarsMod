@@ -59,12 +59,12 @@ public abstract class SwgSpecies
 
 	protected static Identifier getGenderedTexture(SwgSpecies species, SpeciesVariable texture)
 	{
-		return getTexture(SpeciesGender.toModel(texture.getDefiningSpeciesSlug(), species.gender), texture.getName() + "/" + species.getVariable(texture));
+		return getTexture(toModel(texture.getDefiningSpeciesSlug(), species.gender), texture.getName() + "/" + species.getVariable(texture));
 	}
 
 	protected static Identifier getGenderedTexture(SwgSpecies species, String texture)
 	{
-		return getTexture(SpeciesGender.toModel(species), texture);
+		return getTexture(toModel(species), texture);
 	}
 
 	protected static Identifier getGlobalTexture(String texture)
@@ -135,7 +135,7 @@ public abstract class SwgSpecies
 
 	protected static Identifier getGenderedGlobalTexture(SpeciesGender gender, String texture)
 	{
-		return getTexture(SpeciesGender.toModel(SwgSpeciesRegistry.SPECIES_GLOBAL, gender), texture);
+		return getTexture(toModel(SwgSpeciesRegistry.SPECIES_GLOBAL, gender), texture);
 	}
 
 	protected static Identifier getTexture(Identifier slug, String texture)
@@ -170,7 +170,7 @@ public abstract class SwgSpecies
 		var parts = serialized.split(MODEL_SEPARATOR);
 
 		this.model = new Identifier(parts[0]);
-		this.gender = SpeciesGender.fromModel(parts[0]);
+		this.gender = fromModel(parts[0]);
 
 		if (parts.length > 1)
 		{
@@ -182,6 +182,28 @@ public abstract class SwgSpecies
 				this.variables.put(pairParts[0], pairParts[1]);
 			}
 		}
+	}
+
+	public static SpeciesGender fromModel(String genderedSlug)
+	{
+		var parts = genderedSlug.split(SpeciesGender.GENDER_SEPARATOR, 2);
+
+		if (parts.length == 2 && parts[1].equals(SpeciesGender.FEMALE.getSlug()))
+			return SpeciesGender.FEMALE;
+
+		return SpeciesGender.MALE;
+	}
+
+	public static Identifier toModel(SwgSpecies species)
+	{
+		var slug = species.getSlug();
+		var gender = species.getGender();
+		return toModel(slug, gender);
+	}
+
+	public static Identifier toModel(Identifier species, SpeciesGender gender)
+	{
+		return new Identifier(species.getNamespace(), species.getPath() + SpeciesGender.GENDER_SEPARATOR + gender.getSlug());
 	}
 
 	public abstract Identifier getSlug();
@@ -236,7 +258,7 @@ public abstract class SwgSpecies
 				.map(variable -> variable.getKey() + VARIABLE_EQUALS + variable.getValue())
 				.collect(Collectors.joining(VARIABLE_SEPARATOR));
 
-		return SpeciesGender.toModel(this) + MODEL_SEPARATOR + variablePairs;
+		return toModel(this) + MODEL_SEPARATOR + variablePairs;
 	}
 
 	@Override

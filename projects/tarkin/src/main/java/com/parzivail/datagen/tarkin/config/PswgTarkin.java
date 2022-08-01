@@ -8,6 +8,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
+import com.parzivail.pswg.client.screen.CharacterScreen;
 import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
@@ -77,6 +78,7 @@ public class PswgTarkin
 
 		// Screen
 		lang.cloneWithRoot(Resources.I18N_SCREEN_APPLY).build(assets);
+		lang.cloneWithRoot(CharacterScreen.I18N_TITLE).build(assets);
 
 		lang.screen("species_select").build(assets);
 		lang.cloneWithRoot(SpeciesSelectScreen.I18N_USE_FEMALE_MODEL).build(assets);

@@ -8,23 +8,6 @@ import net.minecraft.util.registry.Registry;
 
 public class TooltipUtil
 {
-	public static Text getLore(Item item, Object... args)
-	{
-		var reg = Registry.ITEM.getId(item);
-		return Text.translatable(getLoreKey(reg), args).formatted(Formatting.GRAY, Formatting.ITALIC);
-	}
-
-	public static String getLoreKey(Item item)
-	{
-		var reg = Registry.ITEM.getId(item);
-		return getLoreKey(reg);
-	}
-
-	private static String getLoreKey(Identifier registryId)
-	{
-		return "tooltip." + registryId.getNamespace() + ".lore." + registryId.getPath();
-	}
-
 	public static Text getStatus(Item item, Object... args)
 	{
 		var reg = Registry.ITEM.getId(item);

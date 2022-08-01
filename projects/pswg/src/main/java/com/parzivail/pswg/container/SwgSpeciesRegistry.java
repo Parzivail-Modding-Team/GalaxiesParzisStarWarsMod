@@ -2,6 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.character.species.*;
 import com.parzivail.pswg.component.SwgEntityComponents;
@@ -79,6 +80,11 @@ public class SwgSpeciesRegistry
 			return null;
 
 		return SPECIES.get(id).apply(serialized);
+	}
+
+	public static SwgSpecies create(Identifier species, SpeciesGender gender)
+	{
+		return SPECIES.get(species).apply(SwgSpecies.toModel(species, gender).toString());
 	}
 
 	public static String getTranslationKey(SwgSpecies species)

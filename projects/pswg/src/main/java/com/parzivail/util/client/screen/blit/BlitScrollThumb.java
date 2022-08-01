@@ -4,7 +4,7 @@ import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 
-public class BlitScrollbar
+public class BlitScrollThumb
 {
 	private int originX;
 	private int originY;
@@ -14,11 +14,13 @@ public class BlitScrollbar
 	private final int trackHeight;
 	private final IBlittable thumb;
 
+	private boolean visible;
+
 	private boolean scrolling;
 	private float scroll;
 	private float scrollInputFactor = 1;
 
-	public BlitScrollbar(IBlittable thumb, int trackX, int trackY, int trackHeight)
+	public BlitScrollThumb(IBlittable thumb, int trackX, int trackY, int trackHeight)
 	{
 		this.thumb = thumb;
 		this.trackX = trackX;
@@ -28,6 +30,9 @@ public class BlitScrollbar
 
 	public void blit(MatrixStack matrices)
 	{
+		if (!visible)
+			return;
+
 		thumb.blit(matrices, this.originX + trackX, this.originY + trackY + (int)((trackHeight - thumb.height()) * scroll));
 	}
 
@@ -47,6 +52,11 @@ public class BlitScrollbar
 		this.scrolling = scrolling;
 	}
 
+	public void setVisible(boolean visible)
+	{
+		this.visible = visible;
+	}
+
 	public float getScroll()
 	{
 		return scroll;
@@ -64,11 +74,17 @@ public class BlitScrollbar
 
 	public boolean contains(int mouseX, int mouseY)
 	{
+		if (!visible)
+			return false;
+
 		return MathUtil.rectContains(this.originX + trackX, this.originY + trackY, thumb.width(), trackHeight, mouseX, mouseY);
 	}
 
 	public void updateMouseState(int mouseX, int mouseY)
 	{
+		if (!visible)
+			return;
+
 		if (thumb instanceof IHoverable h)
 			h.setHovering(scrolling || MathUtil.rectContains(this.originX + trackX, this.originY + trackY + (int)((trackHeight - thumb.height()) * scroll), thumb.width(), thumb.height(), mouseX, mouseY));
 
@@ -79,6 +95,9 @@ public class BlitScrollbar
 
 	public void inputScroll(double amount)
 	{
+		if (!visible)
+			return;
+
 		scroll = (float)MathHelper.clamp(scroll - amount / scrollInputFactor, 0, 1);
 	}
 }

@@ -60,7 +60,7 @@ public class SwgSpeciesRenderer
 
 	private static void register(Identifier speciesSlug, SpeciesGender gender, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> model, PlayerSpeciesModelRenderer.Animator animator)
 	{
-		register(new SwgSpeciesModel(SpeciesGender.toModel(speciesSlug, gender), Suppliers.memoize(model::get), animator));
+		register(new SwgSpeciesModel(SwgSpecies.toModel(speciesSlug, gender), Suppliers.memoize(model::get), animator));
 	}
 
 	private static void register(Identifier speciesSlug, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> male, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> female, PlayerSpeciesModelRenderer.Animator animator)

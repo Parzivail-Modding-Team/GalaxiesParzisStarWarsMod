@@ -7,7 +7,7 @@ public enum SpeciesGender
 	MALE("m"),
 	FEMALE("f");
 
-	private static final String GENDER_SEPARATOR = "/";
+	public static final String GENDER_SEPARATOR = "/";
 
 	private final String slug;
 
@@ -25,27 +25,5 @@ public enum SpeciesGender
 	{
 		var parts = genderedSlug.split(GENDER_SEPARATOR, 2);
 		return new Identifier(parts[0]);
-	}
-
-	public static SpeciesGender fromModel(String genderedSlug)
-	{
-		var parts = genderedSlug.split(GENDER_SEPARATOR, 2);
-
-		if (parts.length == 2 && parts[1].equals(FEMALE.slug))
-			return FEMALE;
-
-		return MALE;
-	}
-
-	public static Identifier toModel(SwgSpecies species)
-	{
-		var slug = species.getSlug();
-		var gender = species.getGender();
-		return toModel(slug, gender);
-	}
-
-	public static Identifier toModel(Identifier species, SpeciesGender gender)
-	{
-		return new Identifier(species.getNamespace(), species.getPath() + GENDER_SEPARATOR + gender.slug);
 	}
 }

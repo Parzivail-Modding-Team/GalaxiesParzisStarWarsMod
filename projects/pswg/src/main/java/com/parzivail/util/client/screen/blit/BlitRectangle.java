@@ -3,9 +3,9 @@ package com.parzivail.util.client.screen.blit;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.util.math.MatrixStack;
 
-public class BlitRectangle
+public class BlitRectangle<T extends IBlittable>
 {
-	private final IBlittable blittable;
+	private final T blittable;
 
 	public int x;
 	public int y;
@@ -15,7 +15,9 @@ public class BlitRectangle
 	public int originX;
 	public int originY;
 
-	public BlitRectangle(IBlittable blittable, int x, int y, int width, int height)
+	public boolean visible = true;
+
+	public BlitRectangle(T blittable, int x, int y, int width, int height)
 	{
 		this.blittable = blittable;
 		this.x = x;
@@ -24,18 +26,26 @@ public class BlitRectangle
 		this.height = height;
 	}
 
-	public BlitRectangle(IBlittable blittable, int x, int y)
+	public T getBlittable()
+	{
+		return blittable;
+	}
+
+	public BlitRectangle(T blittable, int x, int y)
 	{
 		this(blittable, x, y, blittable.width(), blittable.height());
 	}
 
 	public boolean contains(int pX, int pY)
 	{
-		return MathUtil.rectContains(originX + x, originY + y, width, height, pX, pY);
+		return visible && MathUtil.rectContains(originX + x, originY + y, width, height, pX, pY);
 	}
 
 	public void updateMouseState(int mouseX, int mouseY)
 	{
+		if (!visible)
+			return;
+
 		if (!(blittable instanceof IHoverable hoverable))
 			return;
 
@@ -50,6 +60,8 @@ public class BlitRectangle
 
 	public void blit(MatrixStack matrices)
 	{
+		if (!visible)
+			return;
 		blittable.blit(matrices, originX + x, originY + y, width, height);
 	}
 }
