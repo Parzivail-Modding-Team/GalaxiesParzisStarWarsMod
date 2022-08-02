@@ -12,18 +12,25 @@ import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.client.species.SwgSpeciesIcons;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
+import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
+import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.screen.blit.*;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.MatrixStackUtil;
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
@@ -80,12 +87,16 @@ public class CharacterScreen extends Screen
 	private static final int LIST_ROW_CONTENT_HEIGHT = 20;
 	private static final int LIST_ROW_CONTENT_CENTERING_OFFSET = (LIST_ROW_HEIGHT - LIST_ROW_CONTENT_HEIGHT) / 2;
 
+	private final BlitRectangle<BlittableAsset> TRANSPARENT_VIEWPORT_BACKGROUND = new BlitRectangle<>(
+			new BlittableAsset(16, 251, 25, 25, 512, 512),
+			270, 178, 25, 25
+	);
 	private static final BlittableAsset LIST_BG_PATCH = new BlittableAsset(10, 241, 8, 8, 512, 512);
-	private static final BlitRectangle<BlittableAsset> LEFT_LIST_CUTOUT = new BlitRectangle<>(
+	private final BlitRectangle<BlittableAsset> LEFT_LIST_CUTOUT = new BlitRectangle<>(
 			LIST_BG_PATCH,
 			SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, 79, 190
 	);
-	private static final BlitRectangle<BlittableAsset> RIGHT_LIST_CUTOUT = new BlitRectangle<>(
+	private final BlitRectangle<BlittableAsset> RIGHT_LIST_CUTOUT = new BlitRectangle<>(
 			LIST_BG_PATCH,
 			OPTION_LIST_PANEL_X, OPTION_LIST_PANEL_Y, 150, 117
 	);
@@ -96,52 +107,34 @@ public class CharacterScreen extends Screen
 			new BlittableAsset(0, 246, 3, 3, 512, 512),
 			1, 1
 	);
-	private static final BlitScrollThumb LEFT_SCROLL_THUMB = new BlitScrollThumb(
-			new HoverableBlittableAsset(
-					new BlittableAsset(0, 251, 7, 15, 512, 512),
-					new BlittableAsset(7, 251, 7, 15, 512, 512)
-			),
-			88, 24, 192
-	);
-	private static final BlitScrollThumb RIGHT_SCROLL_THUMB = new BlitScrollThumb(
-			new HoverableBlittableAsset(
-					new BlittableAsset(0, 251, 7, 15, 512, 512),
-					new BlittableAsset(7, 251, 7, 15, 512, 512)
-			),
-			415, 41, 117
-	);
 
 	private static final BlittableAsset SLIDER_TRACK = new BlittableAsset(0, 424, 8, 4, 512, 512);
-	private static final Blittable3Patch SLIDER_WHITE = new Blittable3Patch(
+	private static final Blittable3Patch SLIDER_TRACK_WHITE = new Blittable3Patch(
 			new BlittableAsset(0, 430, 4, 4, 512, 512),
 			SLIDER_TRACK,
 			new BlittableAsset(5, 430, 5, 4, 512, 512),
 			2, 2
 	);
-	private static final Blittable3Patch SLIDER_RED = new Blittable3Patch(
+	private static final Blittable3Patch SLIDER_TRACK_RED = new Blittable3Patch(
 			new BlittableAsset(0, 436, 4, 4, 512, 512),
 			SLIDER_TRACK,
 			new BlittableAsset(5, 436, 5, 4, 512, 512),
 			2, 2
 	);
-	private static final Blittable3Patch SLIDER_GREEN = new Blittable3Patch(
+	private static final Blittable3Patch SLIDER_TRACK_GREEN = new Blittable3Patch(
 			new BlittableAsset(0, 442, 4, 4, 512, 512),
 			SLIDER_TRACK,
 			new BlittableAsset(5, 442, 5, 4, 512, 512),
 			2, 2
 	);
-	private static final Blittable3Patch SLIDER_BLUE = new Blittable3Patch(
+	private static final Blittable3Patch SLIDER_TRACK_BLUE = new Blittable3Patch(
 			new BlittableAsset(0, 448, 4, 4, 512, 512),
 			SLIDER_TRACK,
 			new BlittableAsset(5, 448, 5, 4, 512, 512),
 			2, 2
 	);
-	private static final HoverableBlittableAsset SLIDER_THUMB = new HoverableBlittableAsset(
-			new BlittableAsset(0, 268, 6, 8, 512, 512),
-			new BlittableAsset(6, 268, 6, 8, 512, 512)
-	);
 
-	private static final BlitRectangle<HoverableBlittableAsset> LEFT_ARROW = new BlitRectangle<>(
+	private final BlitRectangle<HoverableBlittableAsset> LEFT_ARROW = new BlitRectangle<>(
 			new HoverableBlittableAsset(
 					new BlittableAsset(0, 278, 7, 11, 512, 512),
 					new BlittableAsset(7, 278, 7, 11, 512, 512)
@@ -149,7 +142,7 @@ public class CharacterScreen extends Screen
 			126,
 			110
 	);
-	private static final BlitRectangle<HoverableBlittableAsset> RIGHT_ARROW = new BlitRectangle<>(
+	private final BlitRectangle<HoverableBlittableAsset> RIGHT_ARROW = new BlitRectangle<>(
 			new HoverableBlittableAsset(
 					new BlittableAsset(0, 291, 7, 11, 512, 512),
 					new BlittableAsset(7, 291, 7, 11, 512, 512)
@@ -157,23 +150,23 @@ public class CharacterScreen extends Screen
 			233,
 			110
 	);
-	private static final BlitRectangle<HoverableBlittableAsset> NEXT_PAGE_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
+	private final BlitRectangle<HoverableBlittableAsset> NEXT_PAGE_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
 			new BlittableAsset(0, 304, 42, 18, 512, 512),
 			new BlittableAsset(42, 304, 42, 18, 512, 512)
 	), 313, 210);
-	private static final BlitRectangle<HoverableBlittableAsset> PREV_PAGE_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
+	private final BlitRectangle<HoverableBlittableAsset> PREV_PAGE_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
 			new BlittableAsset(86, 304, 42, 18, 512, 512),
 			new BlittableAsset(128, 304, 42, 18, 512, 512)
 	), 313, 210);
-	private static final BlitRectangle<HoverableBlittableAsset> APPLY_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
+	private final BlitRectangle<HoverableBlittableAsset> APPLY_BTN = new BlitRectangle<>(new HoverableBlittableAsset(
 			new BlittableAsset(0, 324, 42, 18, 512, 512),
 			new BlittableAsset(42, 324, 42, 18, 512, 512)
 	), 313, 210);
-	private static final BlitRectangle<HoverableBlittableAsset> RANDOM_BUTTON = new BlitRectangle<>(new HoverableBlittableAsset(
+	private final BlitRectangle<HoverableBlittableAsset> RANDOM_BUTTON = new BlitRectangle<>(new HoverableBlittableAsset(
 			new BlittableAsset(0, 344, 20, 18, 512, 512),
 			new BlittableAsset(20, 344, 20, 18, 512, 512)
 	), 128, 210);
-	private static final BlitRectangle<TogglableBlittableAsset> GENDER_TOGGLE = new BlitRectangle<>(new TogglableBlittableAsset(
+	private final BlitRectangle<TogglableBlittableAsset> GENDER_TOGGLE = new BlitRectangle<>(new TogglableBlittableAsset(
 			new HoverableBlittableAsset(
 					new BlittableAsset(0, 404, 20, 18, 512, 512),
 					new BlittableAsset(20, 404, 20, 18, 512, 512)
@@ -183,14 +176,58 @@ public class CharacterScreen extends Screen
 					new BlittableAsset(60, 404, 20, 18, 512, 512)
 			)
 	), 158, 210);
-	private static final BlitRectangle<HoverableBlittableAsset> SAVE_BUTTON = new BlitRectangle<>(new HoverableBlittableAsset(
+	private final BlitRectangle<HoverableBlittableAsset> SAVE_BUTTON = new BlitRectangle<>(new HoverableBlittableAsset(
 			new BlittableAsset(0, 364, 20, 18, 512, 512),
 			new BlittableAsset(20, 364, 20, 18, 512, 512)
 	), 188, 210);
-	private static final BlitRectangle<HoverableBlittableAsset> EXPORT_BUTTON = new BlitRectangle<>(new HoverableBlittableAsset(
+	private final BlitRectangle<HoverableBlittableAsset> EXPORT_BUTTON = new BlitRectangle<>(new HoverableBlittableAsset(
 			new BlittableAsset(0, 384, 20, 18, 512, 512),
 			new BlittableAsset(20, 384, 20, 18, 512, 512)
 	), 218, 210);
+
+	private final BlitScrollThumb LEFT_SCROLL_THUMB = new BlitScrollThumb(
+			new HoverableBlittableAsset(
+					new BlittableAsset(0, 251, 7, 15, 512, 512),
+					new BlittableAsset(7, 251, 7, 15, 512, 512)
+			),
+			88, 24, 192
+	);
+	private final BlitScrollThumb RIGHT_SCROLL_THUMB = new BlitScrollThumb(
+			new HoverableBlittableAsset(
+					new BlittableAsset(0, 251, 7, 15, 512, 512),
+					new BlittableAsset(7, 251, 7, 15, 512, 512)
+			),
+			415, 41, 117
+	);
+
+	private final BlitScrollThumb WHITE_SCROLL_THUMB = new BlitScrollThumb(
+			new HoverableBlittableAsset(
+					new BlittableAsset(0, 268, 6, 8, 512, 512),
+					new BlittableAsset(6, 268, 6, 8, 512, 512)
+			),
+			270, 163, 140
+	);
+	private final BlitScrollThumb RED_SCROLL_THUMB = new BlitScrollThumb(
+			new HoverableBlittableAsset(
+					new BlittableAsset(0, 268, 6, 8, 512, 512),
+					new BlittableAsset(6, 268, 6, 8, 512, 512)
+			),
+			305, 176, 105
+	);
+	private final BlitScrollThumb GREEN_SCROLL_THUMB = new BlitScrollThumb(
+			new HoverableBlittableAsset(
+					new BlittableAsset(0, 268, 6, 8, 512, 512),
+					new BlittableAsset(6, 268, 6, 8, 512, 512)
+			),
+			305, 186, 105
+	);
+	private final BlitScrollThumb BLUE_SCROLL_THUMB = new BlitScrollThumb(
+			new HoverableBlittableAsset(
+					new BlittableAsset(0, 268, 6, 8, 512, 512),
+					new BlittableAsset(6, 268, 6, 8, 512, 512)
+			),
+			305, 196, 105
+	);
 
 	private final Screen parent;
 
@@ -242,6 +279,10 @@ public class CharacterScreen extends Screen
 	@Override
 	protected void init()
 	{
+		var mc = MinecraftClient.getInstance();
+		var components = SwgEntityComponents.getPersistent(mc.player);
+		if (components.getSpecies() != null)
+			previewSpecies = SwgSpeciesRegistry.deserialize(components.getSpecies().serialize());
 	}
 
 	@Override
@@ -295,12 +336,42 @@ public class CharacterScreen extends Screen
 		if (button != GLFW.GLFW_MOUSE_BUTTON_1)
 			return super.mouseClicked(mouseX, mouseY, button);
 
+		if (APPLY_BTN.contains((int)mouseX, (int)mouseY))
+		{
+			applySpecies();
+			return true;
+		}
+
 		if (PREV_PAGE_BTN.contains((int)mouseX, (int)mouseY))
 		{
 			page = Page.SPECIES;
 			previewVariable = null;
 			previewVariableValue = null;
 			LEFT_SCROLL_THUMB.setScroll(0);
+			return true;
+		}
+
+		if (WHITE_SCROLL_THUMB.containsHorizontal((int)mouseX, (int)mouseY))
+		{
+			WHITE_SCROLL_THUMB.setScrolling(true);
+			return true;
+		}
+
+		if (RED_SCROLL_THUMB.containsHorizontal((int)mouseX, (int)mouseY))
+		{
+			RED_SCROLL_THUMB.setScrolling(true);
+			return true;
+		}
+
+		if (GREEN_SCROLL_THUMB.containsHorizontal((int)mouseX, (int)mouseY))
+		{
+			GREEN_SCROLL_THUMB.setScrolling(true);
+			return true;
+		}
+
+		if (BLUE_SCROLL_THUMB.containsHorizontal((int)mouseX, (int)mouseY))
+		{
+			BLUE_SCROLL_THUMB.setScrolling(true);
 			return true;
 		}
 
@@ -323,6 +394,11 @@ public class CharacterScreen extends Screen
 				// TODO: choose value player has applied, if applicable
 				previewVariableValue = previewSpecies.getVariable(variables[i]);
 				RIGHT_SCROLL_THUMB.setScroll(0);
+
+				if (previewVariable instanceof SpeciesColorVariable)
+					setSliderColor(Integer.parseUnsignedInt(previewVariableValue, 16));
+				else
+					setSliderColor(0);
 				return true;
 			}
 		}
@@ -350,18 +426,26 @@ public class CharacterScreen extends Screen
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
 
+	private void setSliderColor(int color)
+	{
+		WHITE_SCROLL_THUMB.setScroll(((color >> 24) & 0xFF) / 255f);
+		RED_SCROLL_THUMB.setScroll(((color >> 16) & 0xFF) / 255f);
+		GREEN_SCROLL_THUMB.setScroll(((color >> 8) & 0xFF) / 255f);
+		BLUE_SCROLL_THUMB.setScroll((color & 0xFF) / 255f);
+	}
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button)
 	{
 		if (button == GLFW.GLFW_MOUSE_BUTTON_1)
 		{
-			if (LEFT_SCROLL_THUMB.contains((int)mouseX, (int)mouseY))
+			if (LEFT_SCROLL_THUMB.containsVertical((int)mouseX, (int)mouseY))
 			{
 				LEFT_SCROLL_THUMB.setScrolling(true);
 				return true;
 			}
 
-			if (RIGHT_SCROLL_THUMB.contains((int)mouseX, (int)mouseY))
+			if (RIGHT_SCROLL_THUMB.containsVertical((int)mouseX, (int)mouseY))
 			{
 				RIGHT_SCROLL_THUMB.setScrolling(true);
 				return true;
@@ -400,7 +484,11 @@ public class CharacterScreen extends Screen
 						if (possibleValues.isEmpty())
 						{
 							if (variable instanceof SpeciesColorVariable)
-								previewSpecies.setVariable(variable, Integer.toHexString(Resources.RANDOM.nextInt()));
+							{
+								var value = Integer.toHexString(Resources.RANDOM.nextInt());
+								previewSpecies.setVariable(variable, value);
+								setSliderColor(Integer.parseUnsignedInt(value, 16));
+							}
 							continue;
 						}
 
@@ -426,17 +514,23 @@ public class CharacterScreen extends Screen
 		if (button != GLFW.GLFW_MOUSE_BUTTON_1)
 			return super.mouseReleased(mouseX, mouseY, button);
 
-		//		if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT)
-		//		{
-		//			sliderR.commit();
-		//			sliderG.commit();
-		//			sliderB.commit();
-		//		}
 		return super.mouseReleased(mouseX, mouseY, button);
 	}
 
 	private boolean mouseReleasedPageVariables(double mouseX, double mouseY, int button)
 	{
+		if (WHITE_SCROLL_THUMB.isScrolling() || RED_SCROLL_THUMB.isScrolling() || GREEN_SCROLL_THUMB.isScrolling() || BLUE_SCROLL_THUMB.isScrolling())
+		{
+			// TODO: alpha
+			if (previewSpecies != null && previewVariable instanceof SpeciesColorVariable)
+				previewSpecies.setVariable(previewVariable, Integer.toHexString(ColorUtil.packFloatArgb(RED_SCROLL_THUMB.getScroll(), GREEN_SCROLL_THUMB.getScroll(), BLUE_SCROLL_THUMB.getScroll(), WHITE_SCROLL_THUMB.getScroll())));
+		}
+
+		WHITE_SCROLL_THUMB.setScrolling(false);
+		RED_SCROLL_THUMB.setScrolling(false);
+		GREEN_SCROLL_THUMB.setScrolling(false);
+		BLUE_SCROLL_THUMB.setScrolling(false);
+
 		return super.mouseReleased(mouseX, mouseY, button);
 	}
 
@@ -462,29 +556,32 @@ public class CharacterScreen extends Screen
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
 	{
-		if (LEFT_LIST_CUTOUT.contains((int)mouseX, (int)mouseY) || LEFT_SCROLL_THUMB.contains((int)mouseX, (int)mouseY))
+		if (LEFT_LIST_CUTOUT.contains((int)mouseX, (int)mouseY) || LEFT_SCROLL_THUMB.containsVertical((int)mouseX, (int)mouseY))
 		{
 			LEFT_SCROLL_THUMB.inputScroll(amount);
 			return true;
 		}
 
-		if (RIGHT_LIST_CUTOUT.contains((int)mouseX, (int)mouseY) || RIGHT_SCROLL_THUMB.contains((int)mouseX, (int)mouseY))
+		if (RIGHT_LIST_CUTOUT.contains((int)mouseX, (int)mouseY) || RIGHT_SCROLL_THUMB.containsVertical((int)mouseX, (int)mouseY))
 		{
 			RIGHT_SCROLL_THUMB.inputScroll(amount);
 			return true;
 		}
 
-		switch (page)
-		{
-			case SPECIES ->
-			{
-			}
-			case VARIABLES ->
-			{
-			}
-		}
-
 		return super.mouseScrolled(mouseX, mouseY, amount);
+	}
+
+	private void applySpecies()
+	{
+		var passedData = new PacketByteBuf(Unpooled.buffer());
+
+		if (previewSpecies == null)
+			passedData.writeString("minecraft:none");
+		else
+			passedData.writeString(this.previewSpecies.serialize());
+
+		// TODO: verify species variables on server
+		ClientPlayNetworking.send(SwgPackets.C2S.SetOwnSpecies, passedData);
 	}
 
 	@Override
@@ -501,6 +598,11 @@ public class CharacterScreen extends Screen
 		RIGHT_LIST_CUTOUT.setOrigin(x, y);
 		LEFT_SCROLL_THUMB.setOrigin(x, y);
 		RIGHT_SCROLL_THUMB.setOrigin(x, y);
+		WHITE_SCROLL_THUMB.setOrigin(x, y);
+		RED_SCROLL_THUMB.setOrigin(x, y);
+		GREEN_SCROLL_THUMB.setOrigin(x, y);
+		BLUE_SCROLL_THUMB.setOrigin(x, y);
+		TRANSPARENT_VIEWPORT_BACKGROUND.setOrigin(x, y);
 		blitRectangles.forEach(blitRectangle -> blitRectangle.setOrigin(x, y));
 
 		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
@@ -528,16 +630,43 @@ public class CharacterScreen extends Screen
 		APPLY_BTN.visible = !isSpeciesPage;
 		APPLY_BTN.x = 313 + 42 + 10;
 
-		LEFT_SCROLL_THUMB.updateMouseState(mouseX, mouseY);
-		RIGHT_SCROLL_THUMB.updateMouseState(mouseX, mouseY);
+		LEFT_ARROW.visible = false;
+		RIGHT_ARROW.visible = false;
+
+		LEFT_SCROLL_THUMB.updateMouseStateVertical(mouseX, mouseY);
+		RIGHT_SCROLL_THUMB.updateMouseStateVertical(mouseX, mouseY);
+		WHITE_SCROLL_THUMB.updateMouseStateHorizontal(mouseX, mouseY);
+		RED_SCROLL_THUMB.updateMouseStateHorizontal(mouseX, mouseY);
+		GREEN_SCROLL_THUMB.updateMouseStateHorizontal(mouseX, mouseY);
+		BLUE_SCROLL_THUMB.updateMouseStateHorizontal(mouseX, mouseY);
 		blitRectangles.forEach(blitRectangle -> blitRectangle.updateMouseState(mouseX, mouseY));
 
 		SCROLLBAR_TRACK.blitVertical(matrices, x + 90, y + 25, 190);
-		LEFT_SCROLL_THUMB.blit(matrices);
+		LEFT_SCROLL_THUMB.blitVertical(matrices);
+
+		var isColorVariable = previewVariable instanceof SpeciesColorVariable scv && scv.getPossibleValues().isEmpty();
 		if (!isSpeciesPage)
 		{
 			SCROLLBAR_TRACK.blitVertical(matrices, x + 417, y + 42, 115);
-			RIGHT_SCROLL_THUMB.blit(matrices);
+			RIGHT_SCROLL_THUMB.blitVertical(matrices);
+
+			WHITE_SCROLL_THUMB.setVisible(isColorVariable);
+			RED_SCROLL_THUMB.setVisible(isColorVariable);
+			GREEN_SCROLL_THUMB.setVisible(isColorVariable);
+			BLUE_SCROLL_THUMB.setVisible(isColorVariable);
+
+			if (isColorVariable)
+			{
+				SLIDER_TRACK_WHITE.blitHorizontal(matrices, x + 270, y + 165, 140);
+				SLIDER_TRACK_RED.blitHorizontal(matrices, x + 305, y + 178, 105);
+				SLIDER_TRACK_GREEN.blitHorizontal(matrices, x + 305, y + 188, 105);
+				SLIDER_TRACK_BLUE.blitHorizontal(matrices, x + 305, y + 198, 105);
+
+				WHITE_SCROLL_THUMB.blitHorizontal(matrices);
+				RED_SCROLL_THUMB.blitHorizontal(matrices);
+				GREEN_SCROLL_THUMB.blitHorizontal(matrices);
+				BLUE_SCROLL_THUMB.blitHorizontal(matrices);
+			}
 		}
 		blitRectangles.forEach(blitRectangle -> blitRectangle.blit(matrices));
 
@@ -581,6 +710,13 @@ public class CharacterScreen extends Screen
 		{
 			if (previewVariable == null)
 				TextUtil.drawArea(matrices, textRenderer, x + 260, y + 40, 150, Text.translatable(I18N_CHOOSE_OPTION));
+
+			if (isColorVariable)
+			{
+				RenderSystem.setShaderTexture(0, BACKGROUND);
+				TRANSPARENT_VIEWPORT_BACKGROUND.blit(matrices);
+				renderColorPreview(x + 270, y + 178, 25, RED_SCROLL_THUMB.getScroll(), GREEN_SCROLL_THUMB.getScroll(), BLUE_SCROLL_THUMB.getScroll(), WHITE_SCROLL_THUMB.getScroll());
+			}
 		}
 
 		if (hoveringEntry != null)
@@ -601,8 +737,22 @@ public class CharacterScreen extends Screen
 					.ifPresent(rect -> hoveringEntry = new HoveringEntry(rect));
 		}
 
-
 		super.render(matrices, mouseX, mouseY, delta);
+	}
+
+	private static void renderColorPreview(int x, int y, int size, float r, float g, float b, float a)
+	{
+		var bufferBuilder = Tessellator.getInstance().getBuffer();
+		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
+		bufferBuilder.vertex(x, y + size, 0).color(r, g, b, a).texture(0, 1).next();
+		bufferBuilder.vertex(x + size, y + size, 0).color(r, g, b, a).texture(1, 1).next();
+		bufferBuilder.vertex(x + size, y, 0).color(r, g, b, a).texture(1, 0).next();
+		bufferBuilder.vertex(x, y, 0).color(r, g, b, a).texture(0, 0).next();
+
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		RenderSystem.enableBlend();
+		BufferRenderer.drawWithShader(bufferBuilder.end());
+		RenderSystem.disableBlend();
 	}
 
 	private void renderLeftScrollPanelPageVariables(MatrixStack matrices, int mouseX, int mouseY, int x, int y)

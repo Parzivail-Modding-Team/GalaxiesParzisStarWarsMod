@@ -90,7 +90,7 @@ public class Galaxies implements ModInitializer
 
 		SwgItems.register();
 
-//		SwgDimensions.Tatooine.register();
+		//		SwgDimensions.Tatooine.register();
 
 		SwgScreenTypes.register();
 
@@ -114,7 +114,7 @@ public class Galaxies implements ModInitializer
 
 				                                                                          SwgSpecies swgspecies = null;
 
-				                                                                          if (!"minecraft:none".equals(species))
+				                                                                          if (!"minecraft:none" .equals(species))
 				                                                                          {
 					                                                                          try
 					                                                                          {
@@ -140,6 +140,15 @@ public class Galaxies implements ModInitializer
 
 				                                                                          return 1;
 			                                                                          }))));
+
+			dispatcher.register(CommandManager.literal("pswg_clear_species")
+			                                  .executes(context -> {
+				                                  SwgEntityComponents
+						                                  .getPersistent(context.getSource().getPlayerOrThrow())
+						                                  .setSpecies(null);
+
+				                                  return 1;
+			                                  }));
 		});
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
