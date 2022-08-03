@@ -68,7 +68,9 @@
 			"defaultValue": "none",
 			"possibleValues": [
 				"none",
-				"imperial_body_glove"
+				"body_glove",
+				"jumpsuit",
+				"radar_technician"
 			]
 		},
 		"clothes_top": {
@@ -80,7 +82,10 @@
 				"smuggler1",
 				"smuggler2",
 				"the_knight",
-				"the_marshall"
+				"the_marshall",
+				"imperial_director",
+				"imperial_officer_gray",
+				"imperial_officer_khaki"
 			]
 		},
 		"clothes_bottom": {
@@ -93,7 +98,9 @@
 				"the_knight",
 				"the_gunslinger",
 				"the_marshall",
-				"jumpsuit"
+				"imperial_director",
+				"imperial_officer_gray",
+				"imperial_officer_khaki"
 			]
 		},
 		"clothes_belt": {
@@ -107,7 +114,8 @@
 				"smuggler2",
 				"the_knight",
 				"the_gunslinger",
-				"the_marshall"
+				"the_marshall",
+				"imperial_officer"
 			]
 		},
 		"clothes_boots": {
@@ -121,9 +129,11 @@
 				"jedi1",
 				"smuggler1",
 				"smuggler2",
+				"smuggler3",
 				"the_knight",
 				"the_gunslinger",
-				"the_marshall"
+				"the_marshall",
+				"imperial_officer"
 			]
 		},
 		"clothes_gloves": {
@@ -138,7 +148,8 @@
 				"smuggler2",
 				"the_knight",
 				"the_gunslinger",
-				"the_marshall"
+				"the_marshall",
+				"imperial_officer"
 			]
 		},
 		"clothes_accessories": {
@@ -156,8 +167,14 @@
 				"jedi1",
 				"smuggler1",
 				"smuggler2",
+				"smuggler3",
 				"the_knight",
-				"the_gunslinger"
+				"the_gunslinger",
+				"ballistic",
+				"heavy1",
+				"light1",
+				"radar_technician",
+				"senatorial_vest"
 			]
 		}
 	}

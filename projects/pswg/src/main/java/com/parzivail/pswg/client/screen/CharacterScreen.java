@@ -318,7 +318,7 @@ public class CharacterScreen extends Screen
 		{
 			if (scrollOffset + LIST_ROW_HEIGHT * i < -LIST_ROW_HEIGHT
 			    || scrollOffset + LIST_ROW_HEIGHT * i > LEFT_LIST_CUTOUT.height
-			    || !listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, (int)mouseX, (int)mouseY, scrollOffset + LIST_ROW_HEIGHT * i))
+			    || !listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, (int)mouseX, (int)mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width))
 				continue;
 
 			previewVariable = null;
@@ -386,7 +386,7 @@ public class CharacterScreen extends Screen
 			{
 				if (scrollOffset + LIST_ROW_HEIGHT * i < -LIST_ROW_HEIGHT
 				    || scrollOffset + LIST_ROW_HEIGHT * i > LEFT_LIST_CUTOUT.height
-				    || !listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, (int)mouseX, (int)mouseY, scrollOffset + LIST_ROW_HEIGHT * i))
+				    || !listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, (int)mouseX, (int)mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width))
 					continue;
 
 				previewVariable = variables[i];
@@ -414,7 +414,7 @@ public class CharacterScreen extends Screen
 			{
 				if (scrollOffset + LIST_ROW_HEIGHT * i < -LIST_ROW_HEIGHT
 				    || scrollOffset + LIST_ROW_HEIGHT * i > RIGHT_LIST_CUTOUT.height
-				    || !listItemContains(OPTION_LIST_PANEL_X, OPTION_LIST_PANEL_Y, (int)mouseX, (int)mouseY, scrollOffset + LIST_ROW_HEIGHT * i))
+				    || !listItemContains(OPTION_LIST_PANEL_X, OPTION_LIST_PANEL_Y, (int)mouseX, (int)mouseY, scrollOffset + LIST_ROW_HEIGHT * i, RIGHT_LIST_CUTOUT.width))
 					continue;
 
 				previewVariableValue = options.get(i);
@@ -777,7 +777,7 @@ public class CharacterScreen extends Screen
 				continue;
 
 			var entry = variables[i];
-			var hovering = entry == previewVariable || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i));
+			var hovering = entry == previewVariable || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width));
 
 			var translatedText = Text.translatable(entry.getTranslationKey());
 			var wrapped = this.textRenderer.wrapLines(translatedText, 80);
@@ -807,10 +807,10 @@ public class CharacterScreen extends Screen
 				continue;
 
 			var entry = options.get(i);
-			var hovering = Objects.equals(entry, previewVariableValue) || (!RIGHT_SCROLL_THUMB.isScrolling() && listItemContains(OPTION_LIST_PANEL_X, OPTION_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i));
+			var hovering = Objects.equals(entry, previewVariableValue) || (!RIGHT_SCROLL_THUMB.isScrolling() && listItemContains(OPTION_LIST_PANEL_X, OPTION_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i, RIGHT_LIST_CUTOUT.width));
 
 			var translatedText = Text.translatable(previewVariable.getTranslationFor(entry));
-			var wrapped = this.textRenderer.wrapLines(translatedText, 107);
+			var wrapped = this.textRenderer.wrapLines(translatedText, 150);
 			this.textRenderer.draw(matrices, wrapped.get(0), x + OPTION_LIST_PANEL_X + 7, y + OPTION_LIST_PANEL_Y + 6 + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, hovering ? 0xFFFFFF : 0x000000);
 		}
 	}
@@ -831,7 +831,7 @@ public class CharacterScreen extends Screen
 				continue;
 
 			var entry = allSpecies.get(i);
-			var hovering = entry.getSlug().equals(selectedSpeciesSlug) || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i));
+			var hovering = entry.getSlug().equals(selectedSpeciesSlug) || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width));
 			SwgSpeciesIcons.renderLargeCircle(matrices, x + SPECIES_LIST_PANEL_X, y + SPECIES_LIST_PANEL_Y + scrollOffset + LIST_ROW_CONTENT_CENTERING_OFFSET + LIST_ROW_HEIGHT * i, entry.getSlug(), hovering);
 		}
 
@@ -841,7 +841,7 @@ public class CharacterScreen extends Screen
 				continue;
 
 			var entry = allSpecies.get(i);
-			var hovering = entry.getSlug().equals(selectedSpeciesSlug) || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i));
+			var hovering = entry.getSlug().equals(selectedSpeciesSlug) || (!LEFT_SCROLL_THUMB.isScrolling() && listItemContains(SPECIES_LIST_PANEL_X, SPECIES_LIST_PANEL_Y, mouseX, mouseY, scrollOffset + LIST_ROW_HEIGHT * i, LEFT_LIST_CUTOUT.width));
 
 			var translatedText = Text.translatable(SwgSpeciesRegistry.getTranslationKey(entry.getSlug()));
 			var wrapped = this.textRenderer.wrapLines(translatedText, 60);
@@ -849,7 +849,7 @@ public class CharacterScreen extends Screen
 		}
 	}
 
-	private boolean listItemContains(int listX, int listY, int mouseX, int mouseY, int rowY)
+	private boolean listItemContains(int listX, int listY, int mouseX, int mouseY, int rowY, int rowWidth)
 	{
 		var x = width / 2 - HALF_WIDTH;
 		var y = height / 2 - HALF_HEIGHT;
@@ -857,7 +857,7 @@ public class CharacterScreen extends Screen
 		return MathUtil.rectContains(
 				x + listX,
 				y + listY + LIST_ROW_CONTENT_CENTERING_OFFSET + rowY,
-				LEFT_LIST_CUTOUT.width,
+				rowWidth,
 				LIST_ROW_CONTENT_HEIGHT,
 				mouseX, mouseY
 		);
