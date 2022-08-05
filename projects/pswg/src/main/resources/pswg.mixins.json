@@ -42,7 +42,6 @@
 		"MinecraftClientMixin",
 		"ParticleManagerMixin",
 		"PlayerEntityClientMixin",
-		"PlayerEntityModelMixin",
 		"PlayerEntityRendererMixin",
 		"RenderLayersMixin",
 		"RenderPhaseAccessor",

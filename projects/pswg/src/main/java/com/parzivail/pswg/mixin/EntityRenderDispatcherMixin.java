@@ -1,7 +1,6 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.render.HitboxHelper;
-import com.parzivail.pswg.client.species.SwgSpeciesRenderer;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,8 +41,7 @@ public class EntityRenderDispatcherMixin
 			return;
 
 		var renderer = (EntityRenderer<T>)modelRenderers.get(species.getModel().toString());
-		if (renderer instanceof PlayerEntityRenderer per)
-			SwgSpeciesRenderer.mutateModel((PlayerEntity)entity, species, per);
+
 		cir.setReturnValue(renderer);
 		cir.cancel();
 	}

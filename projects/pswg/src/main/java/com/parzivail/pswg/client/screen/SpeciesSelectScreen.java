@@ -472,6 +472,8 @@ public class SpeciesSelectScreen extends Screen
 		var erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
 		var renderers = erda.getModelRenderers();
 
+		var tickDelta = client.getTickDelta();
+
 		DiffuseLighting.method_34742();
 		EntityRenderDispatcher entityRenderDispatcher = client.getEntityRenderDispatcher();
 		quaternion2.conjugate();
@@ -480,7 +482,7 @@ public class SpeciesSelectScreen extends Screen
 		RenderSystem.runAsFancy(() -> {
 			if (speciesString == null)
 			{
-				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F, matrixStack2, immediate, 0xf000f0);
+				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, tickDelta, matrixStack2, immediate, 0xf000f0);
 			}
 			else
 			{
@@ -489,8 +491,6 @@ public class SpeciesSelectScreen extends Screen
 				var species = SwgSpeciesRegistry.deserialize(speciesString);
 
 				var renderer = renderers.get(species.getModel().toString());
-				SwgSpeciesRenderer.mutateModel(client.player, species, renderer);
-
 				if (renderer instanceof PlayerSpeciesModelRenderer perwm)
 				{
 					var texture = SwgSpeciesRenderer.getTexture(entity, species);
