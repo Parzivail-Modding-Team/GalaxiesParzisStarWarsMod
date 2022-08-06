@@ -185,7 +185,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	}
 
 	@Override
-	public boolean collides()
+	public boolean canHit()
 	{
 		return !this.isRemoved();
 	}

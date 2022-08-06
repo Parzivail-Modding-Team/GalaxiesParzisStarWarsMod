@@ -30,6 +30,7 @@ dependencies {
 	// Roughly Enough Items
 	"modCompileOnly"("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
 	"modRuntimeOnly"("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
+	"modRuntimeOnly"("dev.architectury:architectury-fabric:6.0.37") // TODO: remove once REI gets their stuff together
 
 	// LibZoomer
 	//	modImplementation("io.github.ennuil:LibZoomer:${libzoomer_version}")

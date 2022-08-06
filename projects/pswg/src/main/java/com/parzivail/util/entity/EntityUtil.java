@@ -43,7 +43,7 @@ public class EntityUtil
 			if (blacklist.contains(entity))
 				continue;
 
-			if (entity.collides())
+			if (entity.canHit())
 			{
 				var box = entity.getBoundingBox();
 				var hitvec = box.raycast(startPos, endPos);
@@ -83,7 +83,7 @@ public class EntityUtil
 			if (blacklist.contains(entity))
 				continue;
 
-			if (entity.collides())
+			if (entity.canHit())
 			{
 				var entityDirVec = entity.getPos().subtract(startPos).normalize();
 				if (Math.acos(entityDirVec.dotProduct(fromDir)) > maxAngleRad)
