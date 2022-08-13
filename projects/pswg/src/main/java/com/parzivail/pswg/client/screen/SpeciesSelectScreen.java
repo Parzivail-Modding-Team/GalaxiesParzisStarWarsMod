@@ -496,7 +496,7 @@ public class SpeciesSelectScreen extends Screen
 					var texture = SwgSpeciesRenderer.getTexture(entity, species);
 
 					if (!texture.equals(Client.TEX_TRANSPARENT))
-						perwm.renderWithTexture(texture, client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+						perwm.renderWithOverrides(species, texture, client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
 
 				}
 				else if (renderer != null)

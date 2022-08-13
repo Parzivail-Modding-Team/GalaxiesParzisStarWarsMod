@@ -27,9 +27,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -867,7 +867,7 @@ public class CharacterScreen extends Screen
 	{
 		matrixStack.push();
 
-		PlayerEntity entity = client.player;
+		AbstractClientPlayerEntity entity = client.player;
 		var mouseYaw = (float)Math.atan(mouseX / 40.0F);
 		var mousePitch = (float)Math.atan(mouseY / 40.0F);
 		MatrixStackUtil.scalePos(matrixStack, size, size, -size);
@@ -883,8 +883,8 @@ public class CharacterScreen extends Screen
 		var j = entity.getPitch();
 		var k = entity.prevHeadYaw;
 		var l = entity.headYaw;
-		entity.bodyYaw = 180.0F + mouseYaw * 20.0F;
-		entity.setYaw(180.0F + mouseYaw * 40.0F);
+		entity.bodyYaw = 180 + mouseYaw * 20.0F;
+		entity.setYaw(180 + mouseYaw * 40.0F);
 		entity.setPitch(-mousePitch * 20.0F);
 		entity.headYaw = entity.getYaw();
 		entity.prevHeadYaw = entity.getYaw();
@@ -906,7 +906,7 @@ public class CharacterScreen extends Screen
 		RenderSystem.runAsFancy(() -> {
 			if (species == null)
 			{
-				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, tickDelta, matrixStack2, immediate, 0xf000f0);
+				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0, 1, matrixStack2, immediate, 0xf000f0);
 			}
 			else
 			{
@@ -921,18 +921,18 @@ public class CharacterScreen extends Screen
 					{
 						// Continue rendering previous model while current texture is loading
 						if (previousRenderer != null && previousTexture != null)
-							previousRenderer.renderWithTexture(previousTexture, client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+							previousRenderer.renderWithOverrides(species, previousTexture, entity, 0, 1, matrixStack2, immediate, 0xf000f0);
 					}
 					else
 					{
-						perwm.renderWithTexture(texture, client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+						perwm.renderWithOverrides(species, texture, entity, 0, 1, matrixStack2, immediate, 0xf000f0);
 						previousTexture = texture;
 					}
 
 					previousRenderer = perwm;
 				}
 				else if (renderer != null)
-					renderer.render(client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+					renderer.render(entity, 1, 1, matrixStack2, immediate, 0xf000f0);
 
 				CameraHelper.forcePlayerRender = false;
 			}

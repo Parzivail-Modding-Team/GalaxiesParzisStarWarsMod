@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.render.player;
 
 import com.parzivail.pswg.character.SpeciesGender;
+import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import net.fabricmc.api.EnvType;
@@ -27,6 +28,8 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 
 	private final Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> modelSupplier;
 	private final Animator animator;
+
+	private SwgSpecies overrideSpecies;
 	private Identifier overrideTexture;
 
 	public PlayerSpeciesModelRenderer(EntityRendererFactory.Context ctx, boolean slim, Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> model, Animator animator)
@@ -69,12 +72,20 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 
 	private void setGenderSpecificCubes(AbstractClientPlayerEntity player)
 	{
-		var components = SwgEntityComponents.getPersistent(player);
-		var species = components.getSpecies();
-		if (species == null)
+		var model = getModel();
+
+		if (!model.body.hasChild("chest"))
 			return;
 
-		var model = getModel();
+		var species = overrideSpecies;
+		if (species == null)
+		{
+			var components = SwgEntityComponents.getPersistent(player);
+			species = components.getSpecies();
+			if (species == null)
+				return;
+		}
+
 
 		var chest = model.body.getChild("chest");
 		if (chest == null)
@@ -99,10 +110,14 @@ public class PlayerSpeciesModelRenderer extends PlayerEntityRenderer
 		chest.visible = isFemale && !armorHidesCube;
 	}
 
-	public void renderWithTexture(Identifier texture, AbstractClientPlayerEntity abstractClientPlayerEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i)
+	public void renderWithOverrides(SwgSpecies species, Identifier texture, AbstractClientPlayerEntity abstractClientPlayerEntity, float yaw, float tickDelta, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i)
 	{
+		overrideSpecies = species;
 		overrideTexture = texture;
-		this.render(abstractClientPlayerEntity, f, g, matrixStack, vertexConsumerProvider, i);
+
+		this.render(abstractClientPlayerEntity, yaw, tickDelta, matrixStack, vertexConsumerProvider, i);
+
+		overrideSpecies = null;
 		overrideTexture = null;
 	}
 }

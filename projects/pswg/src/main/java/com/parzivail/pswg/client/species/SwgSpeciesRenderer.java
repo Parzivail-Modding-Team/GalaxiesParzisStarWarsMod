@@ -76,6 +76,9 @@ public class SwgSpeciesRenderer
 
 	public static void animateTwilek(AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta)
 	{
+		if (!model.head.hasChild("TailBaseL"))
+			return;
+
 		var h = entity.getPitch(tickDelta) / MathUtil.toDegreesf;
 		var h2 = (float)Math.pow(h, 2);
 		var h3 = (float)Math.pow(h, 3);
