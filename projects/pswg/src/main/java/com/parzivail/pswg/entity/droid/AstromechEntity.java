@@ -326,7 +326,7 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	}
 
 	@Override
-	public Iterable<ItemStack> getItemsHand()
+	public Iterable<ItemStack> getHandItems()
 	{
 		return DefaultedList.of();
 	}
