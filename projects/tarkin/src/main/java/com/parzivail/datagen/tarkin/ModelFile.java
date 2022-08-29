@@ -265,6 +265,55 @@ public class ModelFile
 		);
 	}
 
+	public static Collection<ModelFile> verticalSlabUniqueDouble(Block block, Identifier topTexture, Identifier sideTexture)
+	{
+		var id = AssetGenerator.getRegistryName(block);
+		return Arrays.asList(
+				ModelFile
+						.ofModel(id, new Identifier("block/slab"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top"), new Identifier("block/slab_top"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_double"), new Identifier("block/cube_column"))
+						.texture("end", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_x"), Resources.id("block/template/slab_x"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top_x"), Resources.id("block/template/slab_top_x"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_double_x"), new Identifier("block/cube_column"))
+						.texture("end", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_z"), Resources.id("block/template/slab_z"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_top_z"), Resources.id("block/template/slab_top_z"))
+						.texture("bottom", topTexture)
+						.texture("top", topTexture)
+						.texture("side", sideTexture),
+				ModelFile
+						.ofModel(IdentifierUtil.concat(id, "_double_z"), new Identifier("block/cube_column"))
+						.texture("end", topTexture)
+						.texture("side", sideTexture)
+		);
+	}
+
 	public static ModelFile wallInventory(Block block, Identifier texture)
 	{
 		return ModelFile

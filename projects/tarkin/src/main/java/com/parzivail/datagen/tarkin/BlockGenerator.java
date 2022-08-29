@@ -231,6 +231,14 @@ public class BlockGenerator
 				.models(b -> ModelFile.slabUniqueDouble(b, topTexture, sideTexture));
 	}
 
+	public static BlockGenerator verticalSlabUniqueDouble(Block block, Identifier fullSlabModel, Identifier topTexture, Identifier sideTexture)
+	{
+		var top = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_top");
+		return basic(block)
+				.state((b, modelId) -> BlockStateGenerator.createVerticalSlabBlockState(block, AssetGenerator.getTextureName(block), top, fullSlabModel))
+				.models(b -> ModelFile.verticalSlabUniqueDouble(b, topTexture, sideTexture));
+	}
+
 	public static BlockGenerator verticalSlab(Block block, Identifier model)
 	{
 		return verticalSlab(block, model, model, model);

@@ -46,5 +46,5 @@ dependencies {
 	//include("maven.modrinth:fusions-gravity-api:${gravity_changer_version}")
 
 	// Iris
-	"modImplementation"("maven.modrinth:iris:${iris_version}")
+	//	"modImplementation"("maven.modrinth:iris:${iris_version}")
 }
