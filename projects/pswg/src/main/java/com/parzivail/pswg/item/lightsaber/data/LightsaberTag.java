@@ -95,6 +95,17 @@ public class LightsaberTag extends TagSerializer
 		return Ease.inCubic(-(transition + partialTicks) / TRANSITION_TICKS);
 	}
 
+	public float getLinearSize(float partialTicks)
+	{
+		if (transition == 0)
+			return active ? 1 : 0;
+
+		if (transition > 0)
+			return 1 - (transition - partialTicks) / TRANSITION_TICKS;
+
+		return -(transition + partialTicks) / TRANSITION_TICKS;
+	}
+
 	public void finalizeMovement()
 	{
 		transition = 0;

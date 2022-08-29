@@ -11,6 +11,7 @@ import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.*;
+import com.parzivail.util.math.Ease;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -63,6 +64,13 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	private static boolean isActive(ItemStack stack)
 	{
 		return !stack.isEmpty() && new LightsaberTag(stack.getOrCreateNbt()).active;
+	}
+
+	// Synthetic override of IrisItemLightProvider::getLightEmission
+	public int getLightEmission(PlayerEntity player, ItemStack stack)
+	{
+		var lt = new LightsaberTag(stack.getOrCreateNbt());
+		return (int)Math.ceil(11 * Ease.outCubic(lt.getLinearSize(1)));
 	}
 
 	public static void toggle(World world, PlayerEntity player, ItemStack stack)

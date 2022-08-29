@@ -33,6 +33,7 @@ public class BlasterTag extends TagSerializer
 	public short timeSinceLastShot;
 	public short passiveCooldownTimer;
 	public short overchargeTimer;
+	public short readyTimer;
 
 	public long serialNumber;
 
@@ -71,6 +72,9 @@ public class BlasterTag extends TagSerializer
 
 		if (overchargeTimer > 0)
 			overchargeTimer--;
+
+		if (readyTimer > 0)
+			readyTimer--;
 
 		if (timeSinceLastShot < 20)
 			timeSinceLastShot++;
@@ -125,7 +129,7 @@ public class BlasterTag extends TagSerializer
 
 	public boolean isReady()
 	{
-		return shotTimer == 0;
+		return shotTimer == 0 && readyTimer == 0;
 	}
 
 	public boolean isCooling()

@@ -576,8 +576,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		var bd = getBlasterDescriptor(stack);
 		BlasterTag.mutate(stack, tag -> {
 			// Prevent stacking your hotbar to spamming shots by adding a pullout penalty
-			tag.ventingHeat = bd.heat.capacity / 4;
-			tag.coolingMode = BlasterTag.COOLING_MODE_OVERHEAT;
+			tag.readyTimer = (short)(bd.heat.capacity / 5 / bd.heat.drainSpeed);
 		});
 		return true;
 	}
