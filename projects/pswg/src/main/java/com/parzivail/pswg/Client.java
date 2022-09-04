@@ -16,7 +16,7 @@ import com.parzivail.pswg.client.render.entity.BlasterIonBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterStunBoltRenderer;
 import com.parzivail.pswg.client.render.entity.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.entity.amphibian.WorrtEntityRenderer;
-import com.parzivail.pswg.client.render.entity.debug.KinematicTestEntityRenderer;
+import com.parzivail.pswg.client.render.entity.debug.BanthaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.droid.AstromechRenderer;
 import com.parzivail.pswg.client.render.entity.fish.FaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.fish.LaaEntityRenderer;
@@ -234,10 +234,9 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Fish.Faa, FaaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Fish.Laa, LaaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Amphibian.Worrt, WorrtEntityRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Mammal.Bantha, BanthaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2, AstromechRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Imperial, AstromechRenderer::new);
-
-		EntityRendererRegistry.register(SwgEntities.Misc.KinematicTest, KinematicTestEntityRenderer::new);
 
 		ArmorRenderer.register(
 				SwgItems.Armor.Stormtrooper,

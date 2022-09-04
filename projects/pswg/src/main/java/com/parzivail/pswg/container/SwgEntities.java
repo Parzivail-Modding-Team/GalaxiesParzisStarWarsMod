@@ -6,8 +6,8 @@ import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
-import com.parzivail.pswg.entity.debug.KinematicTestEntity;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
+import com.parzivail.pswg.entity.mammal.BanthaEntity;
 import com.parzivail.pswg.entity.ship.SpeederEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.util.entity.BucketableFishEntity;
@@ -55,7 +55,6 @@ public class SwgEntities
 
 	public static class Amphibian
 	{
-
 		public static final EntityType<WorrtEntity> Worrt = Registry.register(
 				Registry.ENTITY_TYPE,
 				Resources.id("worrt"),
@@ -66,6 +65,20 @@ public class SwgEntities
 		{
 			entityTypes.add(Worrt);
 			FabricDefaultAttributeRegistry.register(Worrt, WorrtEntity.createAttributes());
+		}
+	}
+
+	public static class Mammal
+	{
+		public static final EntityType<BanthaEntity> Bantha = Registry.register(Registry.ENTITY_TYPE, Resources.id("bantha"), FabricEntityTypeBuilder
+				.create(SpawnGroup.MISC, BanthaEntity::new)
+				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+				.build());
+
+		static void register()
+		{
+			entityTypes.add(Bantha);
+			FabricDefaultAttributeRegistry.register(Bantha, BanthaEntity.createAttributes());
 		}
 	}
 
@@ -158,14 +171,8 @@ public class SwgEntities
 				.trackRangeBlocks(50)
 				.build());
 
-		public static final EntityType<KinematicTestEntity> KinematicTest = Registry.register(Registry.ENTITY_TYPE, Resources.id("kinematic_test"), FabricEntityTypeBuilder
-				.create(SpawnGroup.MISC, KinematicTestEntity::new)
-				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
-				.build());
-
 		static void register()
 		{
-			entityTypes.add(KinematicTest);
 			entityTypes.add(BlasterBolt);
 			entityTypes.add(ThrownLightsaber);
 		}
@@ -177,6 +184,7 @@ public class SwgEntities
 		Speeder.register();
 		Fish.register();
 		Amphibian.register();
+		Mammal.register();
 		Droid.register();
 		Misc.register();
 	}
