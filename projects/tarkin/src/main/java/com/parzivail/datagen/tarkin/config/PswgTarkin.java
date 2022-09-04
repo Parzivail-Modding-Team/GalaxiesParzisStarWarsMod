@@ -66,13 +66,13 @@ public class PswgTarkin
 
 		// Entities
 		lang.entity(SwgEntities.Misc.BlasterBolt).build(assets);
-		lang.entity(SwgEntities.Misc.KinematicTest).build(assets);
 		lang.entity(SwgEntities.Misc.ThrownLightsaber).build(assets);
 		lang.entity(SwgEntities.Ship.T65bXwing).build(assets);
 		lang.entity(SwgEntities.Speeder.X34).build(assets);
 		lang.entity(SwgEntities.Fish.Faa).build(assets);
 		lang.entity(SwgEntities.Fish.Laa).build(assets);
 		lang.entity(SwgEntities.Amphibian.Worrt).build(assets);
+		lang.entity(SwgEntities.Mammal.Bantha).build(assets);
 		lang.entity(SwgEntities.Droid.AstroR2).build(assets);
 		lang.entity(SwgEntities.Droid.AstroR2Imperial).build(assets);
 
