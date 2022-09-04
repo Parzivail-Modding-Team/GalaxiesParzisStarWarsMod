@@ -3,6 +3,7 @@ package com.parzivail.pswg.item.lightsaber;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.data.SwgLightsaberManager;
@@ -69,8 +70,9 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	// Synthetic override of IrisItemLightProvider::getLightEmission
 	public int getLightEmission(PlayerEntity player, ItemStack stack)
 	{
+		var config = Resources.CONFIG.getConfig();
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
-		return (int)Math.ceil(11 * Ease.outCubic(lt.getLinearSize(1)));
+		return (int)Math.ceil(config.view.lightsaberShaderBrightness * Ease.outCubic(lt.getLinearSize(1)));
 	}
 
 	public static void toggle(World world, PlayerEntity player, ItemStack stack)

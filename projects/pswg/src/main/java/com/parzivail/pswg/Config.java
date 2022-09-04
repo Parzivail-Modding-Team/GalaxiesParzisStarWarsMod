@@ -32,6 +32,11 @@ public class Config implements ConfigData
 		@Comment("Enables or disables screen shake")
 		@ConfigEntry.Gui.Tooltip
 		public boolean enableScreenShake = true;
+
+		@Comment("The ambient brightness of an ignited lightsaber when shaders are installed and active")
+		@ConfigEntry.BoundedDiscrete(min = 0, max = 15)
+		@ConfigEntry.Gui.Tooltip
+		public int lightsaberShaderBrightness = 11;
 	}
 
 	public static class Client
