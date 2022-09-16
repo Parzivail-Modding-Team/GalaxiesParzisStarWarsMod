@@ -492,7 +492,10 @@ public class CharacterScreen extends Screen
 							continue;
 						}
 
-						previewSpecies.setVariable(variable, possibleValues.get(Resources.RANDOM.nextInt(possibleValues.size())));
+						if (possibleValues.contains("none") && Resources.RANDOM.nextFloat() < 0.5)
+							previewSpecies.setVariable(variable, "none");
+						else
+							previewSpecies.setVariable(variable, possibleValues.get(Resources.RANDOM.nextInt(possibleValues.size())));
 					}
 
 					if (previewVariable != null)
