@@ -72,8 +72,10 @@ public class StackedTexture extends CallbackTexture
 			if (baseImage == null)
 				baseImage = nativeImages[i];
 
-			if (nativeImages[i] != null && (nativeImages[i].getWidth() != baseImage.getWidth() || nativeImages[i].getHeight() != baseImage.getHeight()))
-				throw new IOException("All textures in a stack must be the same size");
+			if (nativeImages[i] != null && nativeImages[i].getWidth() == 0 && nativeImages[i].getHeight() == 0)
+				throw new IOException("Failed to load texture while stacking: " + textureId);
+			else if (nativeImages[i] != null && (nativeImages[i].getWidth() != baseImage.getWidth() || nativeImages[i].getHeight() != baseImage.getHeight()))
+				throw new IOException("Failed to stack texture (size mismatch): " + textureId);
 		}
 
 		if (baseImage == null)
