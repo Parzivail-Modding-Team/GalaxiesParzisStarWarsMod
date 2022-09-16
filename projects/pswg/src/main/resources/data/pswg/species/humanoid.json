@@ -50,8 +50,7 @@
 				"4",
 				"5",
 				"6",
-				"7",
-				"8"
+				"7"
 			]
 		},
 		"hair_color": {
@@ -74,13 +73,14 @@
 				"none",
 				"body_glove",
 				"jumpsuit",
-				"radar_technician"
+				"radar_technician",
+				"imperial_pilot"
 			]
 		},
 		"clothes_top": {
-			"defaultValue": "tatooine_civ_1",
+			"defaultValue": "tatooine_civ1",
 			"possibleValues": [
-				"tatooine_civ_1",
+				"tatooine_civ1",
 				"the_gunslinger",
 				"jedi1",
 				"smuggler1",
@@ -90,13 +90,21 @@
 				"the_marshall",
 				"imperial_director",
 				"imperial_officer_gray",
-				"imperial_officer_khaki"
+				"imperial_officer_khaki",
+				"kakashi_black",
+				"kakashi_dark_blue",
+				"kakashi_sleeveless_black",
+				"kakashi_sleeveless_dark_blue",
+				"kakashi_tan",
+				"shirt_black",
+				"shirt_brown",
+				"vest"
 			]
 		},
 		"clothes_bottom": {
-			"defaultValue": "tatooine_civ_1",
+			"defaultValue": "tatooine_civ1",
 			"possibleValues": [
-				"tatooine_civ_1",
+				"tatooine_civ1",
 				"jedi1",
 				"smuggler1",
 				"smuggler2",
@@ -106,32 +114,37 @@
 				"the_marshall",
 				"imperial_director",
 				"imperial_officer_gray",
-				"imperial_officer_khaki"
+				"imperial_officer_khaki",
+				"cargo_brown",
+				"cargo_green"
 			]
 		},
 		"clothes_belt": {
-			"defaultValue": "tatooine_civ_1",
+			"defaultValue": "tatooine_civ1",
 			"possibleValues": [
 				"none",
 				"default",
-				"tatooine_civ_1",
+				"tatooine_civ1",
 				"jedi1",
+				"jedi2",
 				"smuggler1",
 				"smuggler2",
 				"the_knight",
 				"the_gunslinger",
 				"the_marshall",
-				"imperial_officer"
+				"imperial_officer",
+				"imperial_pilot"
 			]
 		},
 		"clothes_boots": {
-			"defaultValue": "tatooine_civ_1",
+			"defaultValue": "tatooine_civ1",
 			"possibleValues": [
 				"none",
 				"default",
-				"imperial_pilot",
+				"imperial_pilot1",
+				"imperial_pilot2",
 				"rebel_pilot",
-				"tatooine_civ_1",
+				"tatooine_civ1",
 				"jedi1",
 				"smuggler1",
 				"smuggler2",
@@ -144,12 +157,13 @@
 			]
 		},
 		"clothes_gloves": {
-			"defaultValue": "tatooine_civ_1",
+			"defaultValue": "tatooine_civ1",
 			"possibleValues": [
 				"none",
-				"imperial_pilot",
+				"imperial_pilot1",
+				"imperial_pilot2",
 				"rebel_pilot",
-				"tatooine_civ_1",
+				"tatooine_civ1",
 				"jedi1",
 				"smuggler1",
 				"smuggler2",
@@ -163,14 +177,25 @@
 			"defaultValue": "none",
 			"possibleValues": [
 				"none",
-				"the_marshall"
+				"the_marshall",
+				"goggles_black",
+				"goggles_green",
+				"goggles_orange",
+				"mouthcover_black",
+				"mouthcover_blue",
+				"mouthcover_red",
+				"scarf_blue",
+				"scarf_brown",
+				"scarf_green",
+				"scarf_tan",
+				"yes"
 			]
 		},
 		"clothes_outerwear": {
-			"defaultValue": "tatooine_civ_1",
+			"defaultValue": "tatooine_civ1",
 			"possibleValues": [
 				"none",
-				"tatooine_civ_1",
+				"tatooine_civ1",
 				"jedi1",
 				"smuggler1",
 				"smuggler2",
@@ -178,10 +203,19 @@
 				"the_knight",
 				"the_gunslinger",
 				"ballistic",
-				"heavy1",
 				"light1",
 				"radar_technician",
-				"senatorial_vest"
+				"senatorial_vest",
+				"heavy_blue",
+				"heavy_green",
+				"jedi_robe_brown",
+				"jedi_robe_tan",
+				"shroud_black",
+				"shroud_brown",
+				"shroud_tan",
+				"sleeveless",
+				"vest1",
+				"vest2"
 			]
 		}
 	}
