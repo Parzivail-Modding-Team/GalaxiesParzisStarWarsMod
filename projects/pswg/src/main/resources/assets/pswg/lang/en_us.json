@@ -1037,6 +1037,12 @@
 	"text.autoconfig.pswg.title": "Galaxies: Parzi's Star Wars Mod",
 	"tooltip.pswg.blaster.controls": "Change firing mode: %s, Vent: %s",
 	"tooltip.pswg.blaster.info": "Blaster",
+	"tooltip.pswg.blaster.stats.damage": "Damage: %.1f",
+	"tooltip.pswg.blaster.stats.heat": "Heat Capacity: %f (-%f/t)",
+	"tooltip.pswg.blaster.stats.range": "Range: %f blocks",
+	"tooltip.pswg.blaster.stats.recoil": "Recoil: (%.2f, %.2f)",
+	"tooltip.pswg.blaster.stats.spread": "Spread: (%.2f, %.2f)",
+	"tooltip.pswg.blaster.stats.unknown": "Unknown Stats",
 	"tooltip.pswg.lightsaber.controls": "Toggle: %s",
 	"tooltip.pswg.lightsaber.info": "Lightsaber",
 	"tooltip.pswg.status.insulated_desh_cable": "Connected to: (%s, %s, %s)"

@@ -466,8 +466,19 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
 	{
 		super.appendTooltip(stack, world, tooltip, context);
-		tooltip.add(Text.translatable("tooltip.pswg.blaster.info"));
 		tooltip.add(Text.translatable("tooltip.pswg.blaster.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+
+		var bd = getBlasterDescriptor(stack, true);
+		if (bd == null)
+			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.unknown"));
+		else
+		{
+			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.heat", bd.heat.capacity, bd.heat.drainSpeed));
+			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.recoil", bd.recoil.horizontal, bd.recoil.vertical));
+			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.spread", bd.spread.horizontal, bd.spread.vertical));
+			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.damage", bd.damage));
+			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.range", bd.range));
+		}
 	}
 
 	@Override

@@ -96,6 +96,13 @@ public class PswgTarkin
 		// Item tooltips
 		lang.tooltip("blaster").dot("info").build(assets);
 		lang.tooltip("blaster").dot("controls").build(assets);
+		var blasterStats = lang.tooltip("blaster").dot("stats");
+		blasterStats.dot("unknown").build(assets);
+		blasterStats.dot("heat").build(assets);
+		blasterStats.dot("recoil").build(assets);
+		blasterStats.dot("spread").build(assets);
+		blasterStats.dot("damage").build(assets);
+		blasterStats.dot("range").build(assets);
 
 		lang.tooltip("lightsaber").dot("info").build(assets);
 		lang.tooltip("lightsaber").dot("controls").build(assets);
