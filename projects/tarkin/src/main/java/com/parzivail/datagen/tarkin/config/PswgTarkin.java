@@ -750,8 +750,8 @@ public class PswgTarkin
 		ItemGenerator.armor(SwgItems.Armor.Deathtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Jumptrooper, assets);
 		ItemGenerator.basic(SwgItems.Armor.JumptrooperJetpack)
-				.tag(TAG_TRINKETS_CHEST_BACK)
-				.build(assets);
+		             .tag(TAG_TRINKETS_CHEST_BACK)
+		             .build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelPilot).build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelForest).build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelTropical).build(assets);
@@ -1490,15 +1490,20 @@ public class PswgTarkin
 		              .lootTable(block1 -> LootTableFile.many(block1, SwgItems.Food.VaporatorMushroom, new LootTableFile.Pool.CountFunction.Range(1, 3, new Identifier("uniform"))))
 		              .build(assets);
 
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Desert)
+		BlockGenerator.block(SwgBlocks.Sand.Desert)
+		              .state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations)
+		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.1f, 2))
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Pit)
+		BlockGenerator.block(SwgBlocks.Sand.Pit)
+		              .state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations)
+		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.24f, 2))
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
-		BlockGenerator.basic(SwgBlocks.Sand.Fine)
+		BlockGenerator.block(SwgBlocks.Sand.Fine)
+		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.18f, 2))
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
@@ -1506,7 +1511,9 @@ public class PswgTarkin
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);
-		BlockGenerator.basicRandomRotation(SwgBlocks.Sand.Canyon)
+		BlockGenerator.block(SwgBlocks.Sand.Canyon)
+		              .state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations)
+		              .lootTable(LootTableFile.singleSelfWithBonus(SwgItems.Food.BlackMelon, 0.04f, 2))
 		              .blockTag(SwgTags.Block.DESERT_SAND)
 		              .itemTag(SwgTags.Item.DESERT_SAND)
 		              .build(assets);

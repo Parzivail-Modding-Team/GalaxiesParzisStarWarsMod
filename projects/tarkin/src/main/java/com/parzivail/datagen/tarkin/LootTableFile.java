@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 
 public class LootTableFile
 {
@@ -39,6 +40,29 @@ public class LootTableFile
 	public static LootTableFile singleSelf(Block block)
 	{
 		return single(block, block);
+	}
+
+	public static Function<Block, LootTableFile> singleSelfWithBonus(ItemConvertible bonus, float chance, int fortuneBonusMultiplier)
+	{
+		return block -> {
+			var regSelf = AssetGenerator.getRegistryName(block);
+			var regBonus = AssetGenerator.getRegistryName(bonus);
+			return ofPool(block,
+			              new Pool(1)
+					              .condition(new Identifier("survives_explosion"))
+					              .entry(new Pool.Entry(new Identifier("item"), regSelf))
+					              .entry(new Pool.Entry(new Identifier("item"), regBonus)
+							                     .condition(new Pool.Condition(new Identifier("random_chance"))
+									                                .chance(chance))
+							                     .function(new Pool.Function(new Identifier("explosion_decay")))
+							                     .function(new Pool.Function(new Identifier("apply_bonus"))
+									                               .enchantment(new Identifier("fortune"))
+									                               .formula(new Identifier("uniform_bonus_count"))
+									                               .parameter("bonusMultiplier", fortuneBonusMultiplier)
+							                     )
+					              )
+			);
+		};
 	}
 
 	public static <T extends Block & IPicklingBlock> LootTableFile pickling(T block)
@@ -391,12 +415,19 @@ public class LootTableFile
 		{
 			Identifier condition;
 			Identifier block;
+			Float chance = null;
 			HashMap<String, Object> properties;
 
 			public Condition(Identifier condition)
 			{
 				this.condition = condition;
 				this.properties = new HashMap<>();
+			}
+
+			public Condition chance(float chance)
+			{
+				this.chance = chance;
+				return this;
 			}
 
 			public Condition block(Identifier block)
@@ -414,6 +445,9 @@ public class LootTableFile
 			public void serialize(JsonObject entryElement)
 			{
 				entryElement.addProperty("condition", condition.toString());
+
+				if (this.chance != null)
+					entryElement.addProperty("chance", chance);
 
 				if (block != null)
 					entryElement.addProperty("block", block.toString());
