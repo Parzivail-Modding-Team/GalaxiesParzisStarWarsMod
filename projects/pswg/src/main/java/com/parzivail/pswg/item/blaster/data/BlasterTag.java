@@ -35,7 +35,7 @@ public class BlasterTag extends TagSerializer
 	public short overchargeTimer;
 	public short readyTimer;
 
-	public long serialNumber;
+	public long uid;
 
 	public int attachmentBitmask;
 
@@ -61,8 +61,8 @@ public class BlasterTag extends TagSerializer
 
 	public void tick(BlasterDescriptor bd)
 	{
-		if (serialNumber == 0)
-			serialNumber = Resources.RANDOM.nextLong();
+		if (uid == 0)
+			uid = Resources.RANDOM.nextLong();
 
 		if (passiveCooldownTimer > 0)
 			passiveCooldownTimer--;

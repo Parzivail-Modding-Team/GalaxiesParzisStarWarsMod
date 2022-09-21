@@ -27,6 +27,8 @@ public class LightsaberTag extends TagSerializer
 	public Identifier hilt;
 	public String owner;
 
+	public long uid;
+
 	public LightsaberTag(NbtCompound source)
 	{
 		super(SLUG, source);
@@ -77,6 +79,9 @@ public class LightsaberTag extends TagSerializer
 
 	public void tick()
 	{
+		if (uid == 0)
+			uid = Resources.RANDOM.nextLong();
+
 		if (transition > 0)
 			transition--;
 

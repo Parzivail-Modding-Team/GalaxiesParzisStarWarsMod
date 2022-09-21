@@ -230,7 +230,13 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	@Override
 	public boolean areStacksVisuallyEqual(ItemStack original, ItemStack updated)
 	{
-		return original.getItem() instanceof LightsaberItem && original.getItem() == updated.getItem();
+		if (!(original.getItem() instanceof LightsaberItem && original.getItem() == updated.getItem()))
+			return false;
+
+		var origTag = new LightsaberTag(original.getOrCreateNbt());
+		var newTag = new LightsaberTag(updated.getOrCreateNbt());
+
+		return origTag.uid == newTag.uid;
 	}
 
 	@Override
@@ -238,9 +244,11 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	{
 		LightsaberTag.mutate(stack, tag -> {
 			if (!player.world.isClient && tag.active)
+			{
+				tag.active = false;
+				tag.finalizeMovement();
 				LightsaberItem.playSound(player.world, player, tag);
-			tag.active = false;
-			tag.finalizeMovement();
+			}
 		});
 		return true;
 	}

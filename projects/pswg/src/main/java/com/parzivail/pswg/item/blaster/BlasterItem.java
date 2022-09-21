@@ -548,7 +548,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		var bt1 = new BlasterTag(original.getOrCreateNbt());
 		var bt2 = new BlasterTag(updated.getOrCreateNbt());
 
-		return bt1.serialNumber == bt2.serialNumber;
+		return bt1.uid == bt2.uid;
 	}
 
 	@Override
