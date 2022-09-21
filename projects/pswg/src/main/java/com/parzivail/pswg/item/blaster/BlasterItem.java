@@ -229,7 +229,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	}
 
 	@Override
-	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity player, Hand hand)
+	public TypedActionResult<ItemStack> useLeft(World world, PlayerEntity player, Hand hand, boolean isRepeatEvent)
 	{
 		final var stack = player.getStackInHand(hand);
 
@@ -243,7 +243,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 
 		if (bt.isCooling())
 		{
-			if (world.isClient || !bt.canBypassCooling)
+			if (world.isClient || !bt.canBypassCooling || isRepeatEvent)
 			{
 				bt.serializeAsSubtag(stack);
 				return TypedActionResult.fail(stack);

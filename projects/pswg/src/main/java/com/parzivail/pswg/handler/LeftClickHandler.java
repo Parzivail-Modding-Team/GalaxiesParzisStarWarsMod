@@ -39,7 +39,7 @@ public class LeftClickHandler
 
 			if (lcc.allowRepeatedLeftHold(minecraft.player.world, minecraft.player, Hand.MAIN_HAND))
 			{
-				if (useItemLeft(ci, minecraft.player, lcc))
+				if (useItemLeft(ci, minecraft.player, lcc, true))
 					return;
 
 				interactionManager.cancelBlockBreaking();
@@ -64,18 +64,20 @@ public class LeftClickHandler
 		}
 	}
 
-	private static boolean useItemLeft(CallbackInfo ci, PlayerEntity player, ILeftClickConsumer lcc)
+	private static boolean useItemLeft(CallbackInfo ci, PlayerEntity player, ILeftClickConsumer lcc, boolean isRepeatEvent)
 	{
 		if (player.isSpectator())
 			return false;
 
-		var tar = lcc.useLeft(player.world, player, Hand.MAIN_HAND);
+		var tar = lcc.useLeft(player.world, player, Hand.MAIN_HAND, isRepeatEvent);
 		var ar = tar.getResult();
 
 		if (ar == ActionResult.PASS)
 			return false;
 
-		ClientPlayNetworking.send(SwgPackets.C2S.PlayerLeftClickItem, new PacketByteBuf(Unpooled.buffer()));
+		var passedData = new PacketByteBuf(Unpooled.buffer());
+		passedData.writeBoolean(isRepeatEvent);
+		ClientPlayNetworking.send(SwgPackets.C2S.PlayerLeftClickItem, passedData);
 		return true;
 	}
 
@@ -97,7 +99,7 @@ public class LeftClickHandler
 		// Single-fire events
 		if (stack.getItem() instanceof ILeftClickConsumer lcc)
 		{
-			useItemLeft(cir, minecraft.player, lcc);
+			useItemLeft(cir, minecraft.player, lcc, false);
 			cir.setReturnValue(false);
 		}
 	}

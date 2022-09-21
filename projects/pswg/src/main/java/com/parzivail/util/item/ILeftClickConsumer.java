@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 
 public interface ILeftClickConsumer
 {
-	TypedActionResult<ItemStack> useLeft(World world, PlayerEntity user, Hand hand);
+	TypedActionResult<ItemStack> useLeft(World world, PlayerEntity user, Hand hand, boolean isRepeatEvent);
 
 	boolean allowRepeatedLeftHold(World world, PlayerEntity player, Hand mainHand);
 }

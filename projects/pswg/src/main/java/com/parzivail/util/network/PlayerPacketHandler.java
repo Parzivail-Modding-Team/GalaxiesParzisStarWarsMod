@@ -15,6 +15,8 @@ public class PlayerPacketHandler
 {
 	public static void handleLeftClickPacket(MinecraftServer server, ServerPlayerEntity player, ServerPlayNetworkHandler handler, PacketByteBuf buf, PacketSender responseSender)
 	{
+		var isRepeatEvent = buf.readBoolean();
+
 		server.execute(() -> {
 			if (player.isSpectator())
 				return;
@@ -22,9 +24,7 @@ public class PlayerPacketHandler
 			var stack = player.getMainHandStack();
 
 			if (stack.getItem() instanceof ILeftClickConsumer)
-			{
-				((ILeftClickConsumer)stack.getItem()).useLeft(player.world, player, Hand.MAIN_HAND);
-			}
+				((ILeftClickConsumer)stack.getItem()).useLeft(player.world, player, Hand.MAIN_HAND, isRepeatEvent);
 		});
 	}
 
