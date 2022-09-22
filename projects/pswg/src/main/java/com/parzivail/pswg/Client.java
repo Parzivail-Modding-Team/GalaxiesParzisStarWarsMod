@@ -30,12 +30,10 @@ import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.*;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
-import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.block.BlockEntityClientSerializable;
@@ -75,11 +73,8 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.search.ReloadableSearchProvider;
-import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.EquipmentSlot;
-import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.text.ClickEvent;
 import net.minecraft.text.HoverEvent;
@@ -381,14 +376,6 @@ public class Client implements ClientModInitializer
 					Resources.CONFIG.save();
 				}
 			}
-		});
-
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-			SwgBlasterManager.INSTANCE.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
-			minecraftClient.execute(() -> {
-				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchProviders();
-				((ReloadableSearchProvider<ItemStack>)minecraftClient.getSearchProvider(SearchManager.ITEM_TOOLTIP)).reload();
-			});
 		});
 
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE::handlePacket);

@@ -6,7 +6,6 @@ import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.*;
-import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
@@ -70,7 +69,6 @@ public class Galaxies implements ModInitializer
 		if (!Resources.CONFIG.get().disableUpdateCheck)
 			Resources.checkVersion();
 
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgBlasterManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgSpeciesManager.INSTANCE);
 
 		TrackedDataHandlers.register();
@@ -151,7 +149,6 @@ public class Galaxies implements ModInitializer
 		});
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.SyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
 			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
 		});
 

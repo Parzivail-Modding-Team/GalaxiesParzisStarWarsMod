@@ -405,8 +405,8 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 					}
 				}
 
-				var iconU = attachment.icon / 3;
-				var iconV = attachment.icon % 3;
+				var iconU = attachment.category.getId() / 3;
+				var iconV = attachment.category.getId() % 3;
 
 				drawAttachmentRow(matrices, i, iconU, iconV, rowState, MutableText.of(BlasterItem.getAttachmentTranslation(blasterModel, attachment)));
 			}

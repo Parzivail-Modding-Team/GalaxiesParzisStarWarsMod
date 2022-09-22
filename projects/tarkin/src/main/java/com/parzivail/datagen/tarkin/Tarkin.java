@@ -3,10 +3,10 @@ package com.parzivail.datagen.tarkin;
 import com.parzivail.datagen.tarkin.config.PswgTarkin;
 import com.parzivail.datagen.tarkin.config.TcwTarkin;
 import com.parzivail.pswg.Config;
+import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.util.Lumberjack;
@@ -97,9 +97,7 @@ public class Tarkin
 
 	public static void generateBlasterLang(List<BuiltAsset> assets, LanguageBuilder lang, String namespace)
 	{
-		var blasterManager = SwgBlasterManager.INSTANCE;
-		ResourceManagerUtil.forceReload(blasterManager, ResourceType.SERVER_DATA);
-		var blasterData = blasterManager.getData();
+		var blasterData = PswgContent.getBlasterPresets();
 
 		for (var blasterEntry : blasterData.entrySet())
 		{

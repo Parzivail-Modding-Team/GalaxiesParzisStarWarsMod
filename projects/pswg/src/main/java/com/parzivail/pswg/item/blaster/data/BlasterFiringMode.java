@@ -4,6 +4,7 @@ import com.parzivail.pswg.Resources;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public enum BlasterFiringMode
 {
@@ -51,7 +52,7 @@ public enum BlasterFiringMode
 		return id;
 	}
 
-	public static ArrayList<BlasterFiringMode> unpack(short value)
+	public static List<BlasterFiringMode> unpack(short value)
 	{
 		var allFlags = values();
 		var flags = new ArrayList<BlasterFiringMode>();
@@ -63,7 +64,7 @@ public enum BlasterFiringMode
 		return flags;
 	}
 
-	public static short pack(ArrayList<BlasterFiringMode> controls)
+	public static short pack(List<BlasterFiringMode> controls)
 	{
 		short packed = 0;
 		for (var sc : controls)

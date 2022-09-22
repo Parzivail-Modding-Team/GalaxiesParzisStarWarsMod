@@ -167,7 +167,7 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		if (!this.isIn(group))
 			return;
 
-		for (var entry : PswgContent.getLightsaberPresets())
+		for (var entry : PswgContent.getLightsaberPresets().values())
 			stacks.add(forType(entry));
 	}
 

@@ -1,7 +1,6 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.PlayerManager;
@@ -27,7 +26,6 @@ public class PlayerManagerMixin
 	{
 		for (var serverPlayerEntity : this.players)
 		{
-			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.SyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
 			ServerPlayNetworking.send(serverPlayerEntity, SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
 		}
 	}

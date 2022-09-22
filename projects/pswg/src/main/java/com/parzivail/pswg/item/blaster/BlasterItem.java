@@ -4,11 +4,11 @@ import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.compat.gravitychanger.GravityChangerCompat;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.data.SwgBlasterManager;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.client.TextUtil;
@@ -160,8 +160,8 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	public static BlasterDescriptor getBlasterDescriptor(ItemStack stack, boolean allowNull)
 	{
 		if (allowNull)
-			return SwgBlasterManager.INSTANCE.getData(getBlasterModel(stack));
-		return SwgBlasterManager.INSTANCE.getDataAndAssert(getBlasterModel(stack));
+			return PswgContent.getBlasterPreset(getBlasterModel(stack));
+		return PswgContent.assertBlasterPreset(getBlasterModel(stack));
 	}
 
 	@Override
@@ -239,7 +239,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		if (!bt.isReady())
 			return TypedActionResult.fail(stack);
 
-		bt.shotTimer = bd.automaticRepeatTime;
+		bt.shotTimer = (short)bd.automaticRepeatTime;
 
 		if (bt.isCooling())
 		{
@@ -273,7 +273,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 				bt.ventingHeat = 0;
 				bt.coolingMode = BlasterTag.COOLING_MODE_NONE;
 
-				bt.overchargeTimer = bd.heat.overchargeBonus;
+				bt.overchargeTimer = (short)bd.heat.overchargeBonus;
 
 				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.BYPASS_SECONDARY, SoundCategory.PLAYERS, 1, 1);
 				result = TypedActionResult.success(stack);
@@ -314,7 +314,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 			}
 		}
 
-		bt.passiveCooldownTimer = bd.heat.passiveCooldownDelay;
+		bt.passiveCooldownTimer = (short)bd.heat.passiveCooldownDelay;
 		bt.shotsRemaining--;
 
 		if (bt.overchargeTimer == 0)
@@ -334,10 +334,10 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		if (burst)
 		{
 			if (bt.burstCounter == 0)
-				bt.burstCounter = bd.burstSize;
+				bt.burstCounter = (short)bd.burstSize;
 
 			bt.burstCounter--;
-			bt.shotTimer = bd.burstRepeatTime;
+			bt.shotTimer = (short)bd.burstRepeatTime;
 		}
 
 		bt.timeSinceLastShot = 0;
@@ -487,7 +487,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 		if (!this.isIn(group))
 			return;
 
-		for (var entry : SwgBlasterManager.INSTANCE.getData().entrySet())
+		for (var entry : PswgContent.getBlasterPresets().entrySet())
 			stacks.add(forType(entry.getValue()));
 	}
 
