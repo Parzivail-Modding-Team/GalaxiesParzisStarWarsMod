@@ -24,6 +24,12 @@
 		"client": [
 			"com.parzivail.pswg.Client"
 		],
+		"pswg-addon": [
+			"com.parzivail.pswg.BaseContent"
+		],
+		"pswg-client-addon": [
+			"com.parzivail.pswg.BaseContent"
+		],
 		"cardinal-components-entity": [
 			"com.parzivail.pswg.component.SwgEntityComponents"
 		],

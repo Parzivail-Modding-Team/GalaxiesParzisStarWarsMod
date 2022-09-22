@@ -2,11 +2,11 @@ package com.parzivail.pswg;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.parzivail.pswg.api.PswgAddon;
+import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
-import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.data.TrackedDataHandlers;
 import com.parzivail.pswg.entity.ship.ShipEntity;
@@ -71,7 +71,6 @@ public class Galaxies implements ModInitializer
 			Resources.checkVersion();
 
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgBlasterManager.INSTANCE);
-		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgLightsaberManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(SwgSpeciesManager.INSTANCE);
 
 		TrackedDataHandlers.register();
@@ -153,7 +152,6 @@ public class Galaxies implements ModInitializer
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.SyncBlasters, SwgBlasterManager.INSTANCE.createPacket());
-			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.SyncLightsabers, SwgLightsaberManager.INSTANCE.createPacket());
 			ServerPlayNetworking.send(handler.player, SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE.createPacket());
 		});
 
@@ -169,5 +167,7 @@ public class Galaxies implements ModInitializer
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-addon");
 		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
+
+		PswgContent.bake();
 	}
 }

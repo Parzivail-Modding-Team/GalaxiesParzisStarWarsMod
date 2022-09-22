@@ -21,7 +21,6 @@ public class SwgPackets
 	public static class S2C
 	{
 		public static final Identifier SyncBlasters = Resources.id("sync_blasters");
-		public static final Identifier SyncLightsabers = Resources.id("sync_lightsabers");
 		public static final Identifier SyncSpecies = Resources.id("sync_species");
 		public static final Identifier PlayerEvent = Resources.id("pevt");
 		public static final Identifier WorldEvent = Resources.id("wevt");

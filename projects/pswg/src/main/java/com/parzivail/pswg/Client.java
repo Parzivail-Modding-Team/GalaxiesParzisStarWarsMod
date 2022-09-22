@@ -31,7 +31,6 @@ import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.*;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgBlasterManager;
-import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
@@ -386,14 +385,6 @@ public class Client implements ClientModInitializer
 
 		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncBlasters, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
 			SwgBlasterManager.INSTANCE.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
-			minecraftClient.execute(() -> {
-				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchProviders();
-				((ReloadableSearchProvider<ItemStack>)minecraftClient.getSearchProvider(SearchManager.ITEM_TOOLTIP)).reload();
-			});
-		});
-
-		ClientPlayNetworking.registerGlobalReceiver(SwgPackets.S2C.SyncLightsabers, (minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender) -> {
-			SwgLightsaberManager.INSTANCE.handlePacket(minecraftClient, clientPlayNetworkHandler, packetByteBuf, packetSender);
 			minecraftClient.execute(() -> {
 				((MinecraftClientAccessor)minecraftClient).invokeInitializeSearchProviders();
 				((ReloadableSearchProvider<ItemStack>)minecraftClient.getSearchProvider(SearchManager.ITEM_TOOLTIP)).reload();

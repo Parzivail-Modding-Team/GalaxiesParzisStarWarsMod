@@ -4,9 +4,9 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.data.SwgLightsaberManager;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
@@ -28,7 +28,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
@@ -168,8 +167,8 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		if (!this.isIn(group))
 			return;
 
-		for (var entry : SwgLightsaberManager.INSTANCE.getData().entrySet())
-			stacks.add(forType(entry.getValue()));
+		for (var entry : PswgContent.getLightsaberPresets())
+			stacks.add(forType(entry));
 	}
 
 	private ItemStack forType(LightsaberDescriptor descriptor)
@@ -177,11 +176,11 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		var stack = new ItemStack(this);
 
 		LightsaberTag.mutate(stack, lightsaberTag -> {
-			lightsaberTag.owner = descriptor.owner;
-			lightsaberTag.hilt = new Identifier(descriptor.hilt);
-			lightsaberTag.bladeHue = descriptor.bladeHue;
-			lightsaberTag.bladeSaturation = descriptor.bladeSaturation;
-			lightsaberTag.bladeValue = descriptor.bladeValue;
+			lightsaberTag.owner = descriptor.ownerName();
+			lightsaberTag.hilt = descriptor.hiltModel();
+			lightsaberTag.bladeHue = descriptor.bladeHue();
+			lightsaberTag.bladeSaturation = descriptor.bladeSaturation();
+			lightsaberTag.bladeValue = descriptor.bladeValue();
 		});
 
 		return stack;
