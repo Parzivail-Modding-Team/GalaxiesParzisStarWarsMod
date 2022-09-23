@@ -116,7 +116,7 @@ public class SwgEntities
 				Registry.ENTITY_TYPE,
 				Resources.id("artoo"),
 				FabricEntityTypeBuilder
-						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, AstromechEntity.Variant.D2))
+						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2d2")))
 						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
 						.trackRangeBlocks(128)
 						.build()
@@ -126,7 +126,7 @@ public class SwgEntities
 				Registry.ENTITY_TYPE,
 				Resources.id("artoo_imperial"),
 				FabricEntityTypeBuilder
-						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, AstromechEntity.Variant.Q5))
+						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2q5")))
 						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
 						.trackRangeBlocks(128)
 						.build()

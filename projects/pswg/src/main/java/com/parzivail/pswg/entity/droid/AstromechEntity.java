@@ -6,6 +6,7 @@ import com.parzivail.pswg.entity.EntityWithInventory;
 import com.parzivail.pswg.screen.AstromechScreenHandler;
 import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.entity.ai.SlowTurningMoveControl;
+import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.ai.NoPenaltyTargeting;
@@ -39,26 +40,11 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import java.util.Objects;
+import java.util.Optional;
 
 public class AstromechEntity extends PathAwareEntity implements EntityWithInventory<AstromechScreenHandler>
 {
-	public enum Variant
-	{
-		D2("r2d2"),
-		Q5("r2q5");
-
-		private final String textureId;
-
-		Variant(String textureId)
-		{
-			this.textureId = textureId;
-		}
-
-		public Identifier getTextureId()
-		{
-			return Resources.id(String.format("textures/droid/%s.png", textureId));
-		}
-	}
 	private static class ExtendLegGoal extends Goal
 	{
 		private final AstromechEntity droid;
@@ -223,19 +209,83 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 		}
 	}
 
+	public static class AstromechParameters extends TagSerializer
+	{
+		private static final Identifier SLUG = Resources.id("astromech_parameters");
+
+		public static AstromechParameters fromRootTag(NbtCompound tag)
+		{
+			var parent = new NbtCompound();
+			parent.put(SLUG.toString(), tag);
+			return new AstromechParameters(parent);
+		}
+
+		public static Optional<AstromechParameters> get(NbtCompound tag)
+		{
+			if (tag.contains(SLUG.toString()))
+				return Optional.of(new AstromechParameters(tag));
+			return Optional.empty();
+		}
+
+		public String series;
+
+		public boolean usingPaintPreset;
+		public String paintPreset;
+
+		public int baseTint;
+		public int domeTint;
+		public int paintTint;
+
+		public AstromechParameters(String preset)
+		{
+			super(SLUG);
+			series = "r";
+
+			usingPaintPreset = true;
+			paintPreset = preset;
+
+			baseTint = 0;
+			domeTint = 0;
+			paintTint = 0;
+		}
+
+		public AstromechParameters(NbtCompound nbt)
+		{
+			super(SLUG, nbt);
+		}
+
+		@Override
+		public boolean equals(Object o)
+		{
+			if (this == o)
+				return true;
+			if (o == null || getClass() != o.getClass())
+				return false;
+			AstromechParameters that = (AstromechParameters)o;
+			return usingPaintPreset == that.usingPaintPreset && baseTint == that.baseTint && paintTint == that.paintTint && domeTint == that.domeTint && series.equals(that.series) && paintPreset.equals(that.paintPreset);
+		}
+
+		@Override
+		public int hashCode()
+		{
+			return Objects.hash(series, usingPaintPreset, paintPreset, paintTint, domeTint, baseTint);
+		}
+	}
+
 	private static final TrackedData<Byte> LEG_ANIM = DataTracker.registerData(AstromechEntity.class, TrackedDataHandlerRegistry.BYTE);
+	private static final TrackedData<NbtCompound> PARAMETERS = DataTracker.registerData(AstromechEntity.class, TrackedDataHandlerRegistry.NBT_COMPOUND);
 	private static final byte LEG_ANIM_LENGTH = 18;
 
 	protected SimpleInventory inventory = new SimpleInventory(5);
 
 	private ExtendLegGoal extendLegGoal;
 	private byte prevLegExtensionTimer;
-	private final Variant variant;
+	private final AstromechParameters defaultParameters;
 
-	public AstromechEntity(EntityType<? extends PathAwareEntity> type, World world, Variant variant)
+	public AstromechEntity(EntityType<? extends PathAwareEntity> type, World world, AstromechParameters defaultParameters)
 	{
 		super(type, world);
-		this.variant = variant;
+		this.defaultParameters = defaultParameters;
 		this.moveControl = new SlowTurningMoveControl(this, 6);
 	}
 
@@ -267,11 +317,6 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 		return super.interactMob(player, hand);
 	}
 
-	public Variant getVariant()
-	{
-		return variant;
-	}
-
 	@Override
 	public boolean canImmediatelyDespawn(double distanceSquared)
 	{
@@ -301,6 +346,7 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	{
 		super.initDataTracker();
 		this.dataTracker.startTracking(LEG_ANIM, (byte)0);
+		this.dataTracker.startTracking(PARAMETERS, new AstromechParameters("missingno").toTag());
 	}
 
 	public float getLegDeltaExtension(float tickDelta)
@@ -317,12 +363,6 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	private void requestLegExtension()
 	{
 		extendLegGoal.isRequested = true;
-	}
-
-	@Override
-	public void readCustomDataFromNbt(NbtCompound nbt)
-	{
-		inventory.readNbtList(nbt.getList("Inventory", NbtElement.COMPOUND_TYPE));
 	}
 
 	@Override
@@ -355,12 +395,30 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	{
 	}
 
+	public AstromechParameters getParameters()
+	{
+		return AstromechParameters.fromRootTag(dataTracker.get(PARAMETERS));
+	}
+
+	public void setParameters(AstromechParameters parameters)
+	{
+		dataTracker.set(PARAMETERS, parameters.toTag());
+	}
+
+	@Override
+	public void readCustomDataFromNbt(NbtCompound nbt)
+	{
+		inventory.readNbtList(nbt.getList("Inventory", NbtElement.COMPOUND_TYPE));
+		setParameters(AstromechParameters.get(nbt).orElse(defaultParameters));
+	}
+
 	@Override
 	public void writeCustomDataToNbt(NbtCompound nbt)
 	{
 		super.writeCustomDataToNbt(nbt);
 
 		nbt.put("Inventory", inventory.toNbtList());
+		getParameters().serializeAsSubtag(nbt);
 	}
 
 	@Override

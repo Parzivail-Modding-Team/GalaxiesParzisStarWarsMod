@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.render.entity.droid;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
@@ -14,8 +15,19 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer<T>
 {
+	private static final Identifier FALLBACK_R_TEXTURE = Resources.id("textures/droid/r/preset/r2d2.png");
+
+	private static final Identifier PARAMETRIC_R_BASE_TEXTURE = Resources.id("textures/droid/r/base.png");
+	private static final Identifier PARAMETRIC_R_DETAIL_TEXTURE = Resources.id("textures/droid/r/details.png");
+	private static final Identifier PARAMETRIC_R_WIRE_TEXTURE = Resources.id("textures/droid/r/wires.png");
+	private static final Identifier PARAMETRIC_R_2_DOME_TEXTURE = Resources.id("textures/droid/r/2/dome.png");
+	private static final Identifier PARAMETRIC_R_PAINT_TEXTURE = Resources.id("textures/droid/r/design/1.png");
+
 	public AstromechRenderer(EntityRendererFactory.Context ctx)
 	{
 		super(ctx);
@@ -31,7 +43,6 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 		matrix.push();
 
 		MatrixStackUtil.scalePos(matrix, 10 / 16f, 10 / 16f, 10 / 16f);
-		MatrixStackUtil.scalePos(matrix, 1.2f, 1.2f, 1.2f);
 		matrix.multiply(new Quaternion(Vec3f.POSITIVE_Y, 180 - yaw, true));
 
 		//		var r = entity.getViewRotation(tickDelta);
@@ -45,9 +56,32 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 		matrix.pop();
 	}
 
+	private Collection<Identifier> createTextureStack(AstromechEntity.AstromechParameters parameters)
+	{
+		var stack = new ArrayList<Identifier>();
+
+		if (parameters.usingPaintPreset)
+			stack.add(Resources.id(String.format("textures/droid/r/preset/%s.png", parameters.paintPreset)));
+		else
+		{
+			stack.add(Client.tintTexture(PARAMETRIC_R_BASE_TEXTURE, parameters.baseTint));
+			stack.add(Client.tintTexture(PARAMETRIC_R_2_DOME_TEXTURE, parameters.domeTint));
+			stack.add(Client.tintTexture(PARAMETRIC_R_PAINT_TEXTURE, parameters.paintTint));
+			stack.add(PARAMETRIC_R_DETAIL_TEXTURE);
+			stack.add(PARAMETRIC_R_WIRE_TEXTURE);
+		}
+
+		return stack;
+	}
+
 	@Override
 	public Identifier getTexture(T entity)
 	{
-		return entity.getVariant().getTextureId();
+		var parameters = entity.getParameters();
+		return Client.stackedTextureProvider.getId(
+				String.format("astromech/%08x", parameters.hashCode()),
+				() -> FALLBACK_R_TEXTURE,
+				() -> createTextureStack(parameters)
+		);
 	}
 }

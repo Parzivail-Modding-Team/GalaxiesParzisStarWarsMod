@@ -108,7 +108,7 @@ public class ColorUtil
 		                (int)(a * 255));
 	}
 
-	public static int rgbaToAbgr(int value)
+	public static int argbToAbgr(int value)
 	{
 		return NativeImage.packColor((value >>> 24) & 0xFF, (value) & 0xFF, (value >>> 8) & 0xFF, (value >>> 16) & 0xFF);
 	}

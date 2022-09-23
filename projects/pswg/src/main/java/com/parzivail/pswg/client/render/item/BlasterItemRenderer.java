@@ -376,8 +376,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var frame = (int)Math.floor(MathHelper.clamp(shotTime, 0, ID_MUZZLE_FLASHES.length - 1));
 
 			var color = ColorUtil.fromHSV(bd.boltColor, 1, 1);
-			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
-			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], ColorUtil.rgbaToAbgr(color), TintedIdentifier.Mode.Overlay);
+			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], ColorUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
+			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], ColorUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
 
 			var colorId = String.valueOf((int)(bd.boltColor * 255));
 			var flash = Client.tintedTextureProvider.getId("muzzleflash/" + ColorUtil.toResourceId(color) + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);

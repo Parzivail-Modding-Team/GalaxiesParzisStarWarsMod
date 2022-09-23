@@ -34,8 +34,8 @@ dependencies {
 	"modRuntimeOnly"("dev.architectury:architectury-fabric:6.0.37") // TODO: remove once REI gets their stuff together
 
 	// LibZoomer
-	//	modImplementation("io.github.ennuil:LibZoomer:${libzoomer_version}")
-	//	include("io.github.ennuil:LibZoomer:${libzoomer_version}")
+	//	"modImplementation"("com.parzivail.internal:LibZoomer:${libzoomer_version}")
+	//	"include"("com.parzivail.internal:LibZoomer:${libzoomer_version}")
 
 	// Trinkets
 	"modImplementation"("dev.emi:trinkets:${trinkets_version}")

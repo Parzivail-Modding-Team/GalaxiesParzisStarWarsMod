@@ -2,8 +2,6 @@ package com.parzivail.pswg.character;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import com.parzivail.util.client.ColorUtil;
-import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
@@ -145,11 +143,7 @@ public abstract class SwgSpecies
 
 	protected static Identifier tint(Identifier texture, SwgSpecies species, SpeciesColorVariable variable)
 	{
-		return Client.tintedTextureProvider.getId(
-				texture.getNamespace() + "/" + texture.getPath() + "/" + species.getVariable(variable),
-				() -> texture,
-				() -> new TintedIdentifier(texture.getNamespace(), texture.getPath(), ColorUtil.rgbaToAbgr(Integer.parseUnsignedInt(species.getVariable(variable), 16)))
-		);
+		return Client.tintTexture(texture, Integer.parseUnsignedInt(species.getVariable(variable), 16));
 	}
 
 	protected final Map<String, String> variables = new HashMap<>();

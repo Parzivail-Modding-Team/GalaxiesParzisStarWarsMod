@@ -25,8 +25,8 @@ public class RigR2 extends ModelRig<AstromechEntity>
 
 		var t = target.getLegDeltaExtension(tickDelta);
 
-		var fullyExtendedLeg = 6.315f / 16;
-		var legVisibleExt = 0.8f / 16;
+		var fullyExtendedLeg = 0.4535f;
+		var legVisibleExt = 0.05f;
 
 		var bodyYaw = MathHelper.lerp(tickDelta, target.prevYaw, target.getYaw());
 		var headYaw = MathHelper.lerpAngleDegrees(tickDelta, target.prevHeadYaw, target.headYaw) - bodyYaw;

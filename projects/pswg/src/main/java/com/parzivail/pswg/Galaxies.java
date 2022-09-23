@@ -165,6 +165,7 @@ public class Galaxies implements ModInitializer
 		Galaxies.LOG.info("Loading PSWG addons via pswg-addon");
 		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
 
+		Galaxies.LOG.info("Baking PSWG addon content");
 		PswgContent.bake();
 	}
 }

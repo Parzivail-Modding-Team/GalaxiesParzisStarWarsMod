@@ -36,7 +36,7 @@ public class LightsaberTag extends TagSerializer
 
 	public LightsaberTag()
 	{
-		super(SLUG, new NbtCompound());
+		super(SLUG);
 
 		active = false;
 		transition = 0;

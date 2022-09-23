@@ -37,6 +37,7 @@ import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.block.BlockEntityClientSerializable;
+import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.client.StatelessWaterRenderer;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
@@ -47,6 +48,7 @@ import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.util.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.util.client.texture.tinted.TintedTextureProvider;
+import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.item.TrinketUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
@@ -116,6 +118,15 @@ public class Client implements ClientModInitializer
 	public static void getRightDebugText(List<String> strings)
 	{
 		BlasterItemRenderer.getDebugInfo(strings);
+	}
+
+	public static Identifier tintTexture(Identifier texture, int color)
+	{
+		return Client.tintedTextureProvider.getId(
+				texture.getNamespace() + "/" + texture.getPath() + "/" + Integer.toHexString(color),
+				() -> texture,
+				() -> new TintedIdentifier(texture.getNamespace(), texture.getPath(), ColorUtil.argbToAbgr(color))
+		);
 	}
 
 	@Override
