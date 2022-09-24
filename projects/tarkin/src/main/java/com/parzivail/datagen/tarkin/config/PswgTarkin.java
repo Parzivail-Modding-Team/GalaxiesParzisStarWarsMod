@@ -931,13 +931,16 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.OrangeKyber)
+		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Crate.OrangeKyber)
+		              .lootTable(LootTableFile::multiBlockOnlyCenter)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.GrayKyber)
+		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Crate.GrayKyber)
+		              .lootTable(LootTableFile::multiBlockOnlyCenter)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.BlackKyber)
+		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Crate.BlackKyber)
+		              .lootTable(LootTableFile::multiBlockOnlyCenter)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Toolbox)

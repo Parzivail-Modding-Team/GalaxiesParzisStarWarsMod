@@ -98,7 +98,7 @@ public abstract class TextureProvider<TData>
 		var cacheId = createCacheId(requestName);
 
 		if (FAILURE_CACHE.contains(cacheId))
-			return fallback.get();
+			return fallback == null ? cacheId : fallback.get();
 
 		var texture = textureManager.getOrDefault(cacheId, null);
 
@@ -114,6 +114,12 @@ public abstract class TextureProvider<TData>
 		}
 
 		// The texture has been stacked but hasn't been loaded yet
+
+		// Don't use a fallback if none is supplied
+		if (fallback == null)
+			return cacheId;
+
+		// Return the requested fallback
 		var fallbackId = fallback.get();
 		return new FallbackIdentifier(fallbackId.getNamespace(), fallbackId.getPath(), cacheId);
 	}
@@ -126,7 +132,7 @@ public abstract class TextureProvider<TData>
 			try
 			{
 				var minecraft = MinecraftClient.getInstance();
-				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> this.textureManager.registerTexture(cacheId, createTexture(cacheId, request, success -> pollCallbacks(cacheId, success)))));
+				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> bakeTextureSync(cacheId, request)));
 			}
 			catch (InsecureTextureException insecureTextureException)
 			{
@@ -134,6 +140,11 @@ public abstract class TextureProvider<TData>
 				insecureTextureException.printStackTrace();
 			}
 		});
+	}
+
+	protected void bakeTextureSync(Identifier cacheId, TData request)
+	{
+		this.textureManager.registerTexture(cacheId, createTexture(cacheId, request, success -> pollCallbacks(cacheId, success)));
 	}
 
 	public void addLoadCallback(Identifier target, Consumer<Boolean> callback)

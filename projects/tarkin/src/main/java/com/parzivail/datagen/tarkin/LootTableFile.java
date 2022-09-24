@@ -4,9 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.parzivail.util.block.IPicklingBlock;
+import com.parzivail.util.block.rotating.WaterloggableRotating3BlockWithGuiEntity;
 import net.minecraft.block.Block;
+import net.minecraft.block.DoorBlock;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -164,7 +167,21 @@ public class LootTableFile
 						      .entry(new Pool.Entry(new Identifier("item"), reg)
 								             .condition(new Pool.Condition(new Identifier("block_state_property"))
 										                        .block(reg)
-										                        .property("half", DoubleBlockHalf.LOWER.asString()))
+										                        .property(DoorBlock.HALF, DoubleBlockHalf.LOWER))
+						      )
+						      .condition(new Identifier("survives_explosion"))
+				);
+	}
+
+	public static LootTableFile multiBlockOnlyCenter(Block block)
+	{
+		var reg = AssetGenerator.getRegistryName(block);
+		return empty(block)
+				.pool(new Pool(1)
+						      .entry(new Pool.Entry(new Identifier("item"), reg)
+								             .condition(new Pool.Condition(new Identifier("block_state_property"))
+										                        .block(reg)
+										                        .property(WaterloggableRotating3BlockWithGuiEntity.SIDE, WaterloggableRotating3BlockWithGuiEntity.Side.MIDDLE))
 						      )
 						      .condition(new Identifier("survives_explosion"))
 				);
@@ -439,6 +456,12 @@ public class LootTableFile
 			public Condition property(String key, Object value)
 			{
 				this.properties.put(key, value);
+				return this;
+			}
+
+			public <T extends Comparable<T>> Condition property(Property<T> key, T value)
+			{
+				this.properties.put(key.getName(), value.toString());
 				return this;
 			}
 

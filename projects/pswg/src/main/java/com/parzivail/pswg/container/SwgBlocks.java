@@ -657,9 +657,9 @@ public class SwgBlocks
 		@RegistryName("orange_kyber_crate")
 		public static final WaterloggableRotating3BlockWithGuiEntity OrangeKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("gray_kyber_crate")
-		public static final WaterloggableRotatingBlockWithGuiEntity GrayKyber = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
+		public static final WaterloggableRotating3BlockWithGuiEntity GrayKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("black_kyber_crate")
-		public static final WaterloggableRotatingBlockWithGuiEntity BlackKyber = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
+		public static final WaterloggableRotating3BlockWithGuiEntity BlackKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("kyber_crate")
 		public static final BlockEntityType<CrateOctagonBlockEntity> KyberCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateOctagonBlockEntity::new, OrangeKyber, GrayKyber, BlackKyber).build();
 

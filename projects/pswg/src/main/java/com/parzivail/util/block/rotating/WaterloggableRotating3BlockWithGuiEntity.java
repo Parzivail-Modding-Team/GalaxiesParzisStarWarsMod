@@ -95,21 +95,25 @@ public class WaterloggableRotating3BlockWithGuiEntity extends WaterloggableRotat
 			{
 				world.setBlockState(pos.west(), state.with(SIDE, Side.LEFT), Block.NOTIFY_ALL);
 				world.setBlockState(pos.east(), state.with(SIDE, Side.RIGHT), Block.NOTIFY_ALL);
+				return;
 			}
 			case SOUTH ->
 			{
 				world.setBlockState(pos.west(), state.with(SIDE, Side.RIGHT), Block.NOTIFY_ALL);
 				world.setBlockState(pos.east(), state.with(SIDE, Side.LEFT), Block.NOTIFY_ALL);
+				return;
 			}
 			case EAST ->
 			{
 				world.setBlockState(pos.north(), state.with(SIDE, Side.LEFT), Block.NOTIFY_ALL);
 				world.setBlockState(pos.south(), state.with(SIDE, Side.RIGHT), Block.NOTIFY_ALL);
+				return;
 			}
 			case WEST ->
 			{
 				world.setBlockState(pos.north(), state.with(SIDE, Side.RIGHT), Block.NOTIFY_ALL);
 				world.setBlockState(pos.south(), state.with(SIDE, Side.LEFT), Block.NOTIFY_ALL);
+				return;
 			}
 		}
 

@@ -1,1 +1,28 @@
-{"type":"minecraft:block","pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"pswg:orange_kyber_crate"}],"conditions":[{"condition":"minecraft:survives_explosion"}]}]}
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "pswg:orange_kyber_crate",
+					"conditions": [
+						{
+							"condition": "minecraft:block_state_property",
+							"block": "pswg:orange_kyber_crate",
+							"properties": {
+								"side": "MIDDLE"
+							}
+						}
+					]
+				}
+			],
+			"conditions": [
+				{
+					"condition": "minecraft:survives_explosion"
+				}
+			]
+		}
+	]
+}

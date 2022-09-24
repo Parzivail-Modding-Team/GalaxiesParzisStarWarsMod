@@ -37,7 +37,6 @@ import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.block.BlockEntityClientSerializable;
-import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.client.StatelessWaterRenderer;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
@@ -48,7 +47,6 @@ import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.util.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.util.client.texture.tinted.TintedTextureProvider;
-import com.parzivail.util.data.TintedIdentifier;
 import com.parzivail.util.item.TrinketUtil;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
 import com.parzivail.util.network.PreciseEntityVelocityUpdateS2CPacket;
@@ -86,6 +84,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Client implements ClientModInitializer
@@ -122,11 +121,10 @@ public class Client implements ClientModInitializer
 
 	public static Identifier tintTexture(Identifier texture, int color)
 	{
-		return Client.tintedTextureProvider.getId(
-				texture.getNamespace() + "/" + texture.getPath() + "/" + Integer.toHexString(color),
-				() -> texture,
-				() -> new TintedIdentifier(texture.getNamespace(), texture.getPath(), ColorUtil.argbToAbgr(color))
-		);
+		var textureId = texture.getNamespace() + "/" + texture.getPath() + "/" + Integer.toHexString(color);
+		if (Client.tintedTextureProvider == null)
+			return TintedTextureProvider.enqueueEarly(textureId, texture, color);
+		return Client.tintedTextureProvider.tint(textureId, texture, color);
 	}
 
 	@Override
@@ -178,9 +176,9 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.register(SwgBlocks.Tank.Fusion, true, ModelLoader.loadPM3D(Resources.id("models/block/tank/fusion.pm3d"), Resources.id("model/tank/fusion"), new Identifier("block/stone")));
 
-		ModelRegistry.register(SwgBlocks.Crate.OrangeKyber, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/octagon.pm3d"), Resources.id("model/crate/octagon_orange"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Crate.GrayKyber, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/octagon.pm3d"), Resources.id("model/crate/octagon_gray"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/octagon.pm3d"), Resources.id("model/crate/octagon_black"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.OrangeKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0xFFA417), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.GrayKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0x686868), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0x3E3E3E), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/mos_eisley.pm3d"), Resources.id("model/crate/mos_eisley"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Crate.BrownSegmented, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("model/segmented_crate/brown"), Resources.id("model/segmented_crate/brown_particle")));
@@ -425,6 +423,18 @@ public class Client implements ClientModInitializer
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-client-addon");
 		EntrypointUtils.invoke("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
+	}
+
+	private Identifier getKyberCrateTexture(int tint)
+	{
+		var stack = new ArrayList<Identifier>();
+		stack.add(Client.tintTexture(Resources.id("textures/model/crate/kyber_base.png"), tint));
+		stack.add(Resources.id("textures/model/crate/kyber_overlay.png"));
+
+		var textureId = String.format("kyber_crate/%08x", tint);
+		if (Client.stackedTextureProvider == null)
+			return StackedTextureProvider.enqueueEarly(textureId, stack);
+		return Client.stackedTextureProvider.getId(textureId, null, () -> stack);
 	}
 
 	private static void registerBlockData(ClientBlockRegistryData data, Block block)

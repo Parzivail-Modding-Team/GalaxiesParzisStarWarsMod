@@ -1,12 +1,14 @@
 package com.parzivail.util.client.texture.remote;
 
 import com.google.common.hash.Hashing;
+import com.parzivail.pswg.Resources;
 import com.parzivail.util.client.texture.CallbackTexture;
 import com.parzivail.util.client.texture.TextureProvider;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -15,16 +17,24 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public class RemoteTextureProvider extends TextureProvider<Identifier>
 {
+	public static final Identifier ROOT = Resources.id("///remote_skin");
+
 	private final Identifier transparentTexture;
 	private final Path skinCacheDir;
 	private final RemoteTextureResolver remoteTextureResolver;
 
-	public RemoteTextureProvider(Identifier cacheIdRoot, TextureManager textureManager, Identifier transparentTexture, RemoteTextureResolver remoteTextureResolver, Path skinCacheDir)
+	public RemoteTextureProvider(TextureManager textureManager, Identifier transparentTexture, RemoteTextureResolver remoteTextureResolver, Path skinCacheDir)
 	{
-		super(cacheIdRoot, textureManager);
+		super(ROOT, textureManager);
 		this.transparentTexture = transparentTexture;
 		this.skinCacheDir = skinCacheDir;
 		this.remoteTextureResolver = remoteTextureResolver;
+	}
+
+	@NotNull
+	public static Identifier getCacheId(String requestName)
+	{
+		return new Identifier(ROOT.getNamespace(), ROOT.getPath() + "/" + requestName);
 	}
 
 	public Identifier getId(String requestName, Supplier<Identifier> fallback)
