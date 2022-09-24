@@ -13,11 +13,14 @@ import java.util.stream.Collectors;
 
 public class PswgContent
 {
+	private static boolean isBaked = false;
+
 	private static Map<Identifier, LightsaberDescriptor> lightsaberPresets = new HashMap<>();
 	private static Map<Identifier, BlasterDescriptor> blasterPresets = new HashMap<>();
 
 	public static void registerLightsaberPreset(LightsaberDescriptor... descriptors)
 	{
+		checkBaked();
 		for (var entry : descriptors)
 			lightsaberPresets.put(entry.id(), entry);
 	}
@@ -29,6 +32,7 @@ public class PswgContent
 
 	public static void registerBlasterPreset(BlasterDescriptor... descriptors)
 	{
+		checkBaked();
 		for (var entry : descriptors)
 			blasterPresets.put(entry.id, entry);
 	}
@@ -65,9 +69,19 @@ public class PswgContent
 		return blasterPresets.keySet().stream().map(Identifier::toString).collect(Collectors.joining(", "));
 	}
 
+	private static void checkBaked()
+	{
+		if (!isBaked)
+			return;
+
+		throw new CrashException(CrashReport.create(new IllegalStateException("Cannot add content after registry is frozen"), "Updating PSWG content registry"));
+	}
+
 	public static void bake()
 	{
 		lightsaberPresets = ImmutableMap.copyOf(lightsaberPresets);
 		blasterPresets = ImmutableMap.copyOf(blasterPresets);
+
+		isBaked = true;
 	}
 }

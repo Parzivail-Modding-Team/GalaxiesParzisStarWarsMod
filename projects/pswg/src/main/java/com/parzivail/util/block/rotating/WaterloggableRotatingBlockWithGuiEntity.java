@@ -24,7 +24,14 @@ public class WaterloggableRotatingBlockWithGuiEntity extends WaterloggableRotati
 	@Override
 	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
 	{
+		if (!getBlockEntityUsePos(state, pos).equals(pos))
+			return null;
 		return blockEntityBiFunction.apply(pos, state);
+	}
+
+	protected BlockPos getBlockEntityUsePos(BlockState state, BlockPos pos)
+	{
+		return pos;
 	}
 
 	@Override
@@ -34,7 +41,7 @@ public class WaterloggableRotatingBlockWithGuiEntity extends WaterloggableRotati
 			return ActionResult.SUCCESS;
 		else
 		{
-			player.openHandledScreen(state.createScreenHandlerFactory(world, pos));
+			player.openHandledScreen(state.createScreenHandlerFactory(world, getBlockEntityUsePos(state, pos)));
 			return ActionResult.CONSUME;
 		}
 	}

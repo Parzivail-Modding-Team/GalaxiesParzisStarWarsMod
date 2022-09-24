@@ -11,10 +11,7 @@ import com.parzivail.util.block.connecting.SelfConnectingGlassBlock;
 import com.parzivail.util.block.connecting.SelfConnectingNodeBlock;
 import com.parzivail.util.block.connecting.SelfConnectingStainedGlassBlock;
 import com.parzivail.util.block.mutating.*;
-import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
-import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBounds;
-import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithBoundsGuiEntity;
-import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithGuiEntity;
+import com.parzivail.util.block.rotating.*;
 import com.parzivail.util.registry.*;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -658,7 +655,7 @@ public class SwgBlocks
 		public static final BlockEntityType<CrateCorrugatedBlockEntity> CorrugatedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateCorrugatedBlockEntity::new, BlockUtil.concat(CorrugatedCrate, ImperialCorrugatedCrate)).build();
 
 		@RegistryName("orange_kyber_crate")
-		public static final WaterloggableRotatingBlockWithGuiEntity OrangeKyber = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
+		public static final WaterloggableRotating3BlockWithGuiEntity OrangeKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("gray_kyber_crate")
 		public static final WaterloggableRotatingBlockWithGuiEntity GrayKyber = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("black_kyber_crate")

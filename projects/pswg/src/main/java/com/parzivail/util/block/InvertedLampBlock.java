@@ -15,12 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class InvertedLampBlock extends Block
 {
-	static
-	{
-		LIT = RedstoneTorchBlock.LIT;
-	}
-
-	public static final BooleanProperty LIT;
+	public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
 
 	public InvertedLampBlock(AbstractBlock.Settings settings)
 	{

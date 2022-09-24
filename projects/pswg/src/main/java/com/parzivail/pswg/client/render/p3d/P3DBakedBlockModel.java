@@ -3,6 +3,7 @@ package com.parzivail.pswg.client.render.p3d;
 import com.parzivail.util.block.DisplacingBlock;
 import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
+import com.parzivail.util.block.rotating.WaterloggableRotating3BlockWithGuiEntity;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.math.ClientMathUtil;
@@ -80,6 +81,12 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 				var center = VoxelShapeUtil.getCenter(shape);
 				transformation.multiply(Matrix4f.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f));
 			}
+			else if (state.getBlock() instanceof WaterloggableRotating3BlockWithGuiEntity)
+			{
+				var side = state.get(WaterloggableRotating3BlockWithGuiEntity.SIDE);
+				if (side != WaterloggableRotating3BlockWithGuiEntity.Side.MIDDLE)
+					return createMeshBuilder().build();
+			}
 		}
 
 		return createMesh(new P3DBlockRenderTarget.Block(blockView, state, pos), randomSupplier, context, transformation);
@@ -141,7 +148,6 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 	@Override
 	protected Matrix4f createTransformation(BlockState state)
 	{
-
 		var modelId = getPickleModel(modelIds[0], state);
 
 		var model = P3dManager.INSTANCE.get(modelId);
