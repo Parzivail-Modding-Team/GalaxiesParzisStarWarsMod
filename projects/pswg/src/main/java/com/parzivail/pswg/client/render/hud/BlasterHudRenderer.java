@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.hud;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
@@ -50,6 +51,8 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var profile = bd.cooling;
 		final var crosshairIdx = 0;
 
+		var tickDelta = Client.getTickDelta();
+
 		/*
 		 * Cooldown
 		 */
@@ -65,7 +68,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 			if (bt.isCooling() && (bt.coolingMode == BlasterTag.COOLING_MODE_OVERHEAT || bt.coolingMode == BlasterTag.COOLING_MODE_PENALTY_BYPASS))
 			{
-				var cooldownTimer = (bt.ventingHeat - bd.heat.overheatDrainSpeed * client.getTickDelta()) / (maxHeat + bd.heat.overheatPenalty);
+				var cooldownTimer = (bt.ventingHeat - bd.heat.overheatDrainSpeed * tickDelta) / (maxHeat + bd.heat.overheatPenalty);
 
 				cooldownTimer = MathHelper.clamp(cooldownTimer, 0, 0.98f);
 
@@ -90,7 +93,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			}
 			else if (bt.readyTimer > 0)
 			{
-				var readyTimer = (bt.readyTimer - client.getTickDelta()) / (bd.heat.capacity / 5 / bd.heat.drainSpeed);
+				var readyTimer = (bt.readyTimer - tickDelta) / (bd.heat.capacity / 5 / bd.heat.drainSpeed);
 
 				readyTimer = MathHelper.clamp(readyTimer, 0, 0.98f);
 
@@ -108,20 +111,20 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				{
 					float deltaHeat = 0;
 					if (bt.passiveCooldownTimer == 0)
-						deltaHeat = bd.heat.overheatDrainSpeed * client.getTickDelta();
+						deltaHeat = bd.heat.overheatDrainSpeed * tickDelta;
 
 					heatPercentage = (bt.ventingHeat - deltaHeat) / maxHeat;
 				}
 				else if (bt.overchargeTimer > 0)
 				{
-					var deltaHeat = client.getTickDelta();
+					var deltaHeat = tickDelta;
 					heatPercentage = (bt.overchargeTimer - deltaHeat) / bd.heat.overchargeBonus;
 				}
 				else
 				{
 					float deltaHeat = 0;
 					if (bt.passiveCooldownTimer == 0)
-						deltaHeat = bd.heat.drainSpeed * client.getTickDelta();
+						deltaHeat = bd.heat.drainSpeed * tickDelta;
 
 					heatPercentage = (bt.heat - deltaHeat) / maxHeat;
 				}

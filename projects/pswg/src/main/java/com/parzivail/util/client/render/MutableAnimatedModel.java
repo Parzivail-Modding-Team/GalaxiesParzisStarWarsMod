@@ -1,6 +1,6 @@
 package com.parzivail.util.client.render;
 
-import net.minecraft.client.MinecraftClient;
+import com.parzivail.pswg.Client;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
 import net.minecraft.entity.Entity;
@@ -30,7 +30,6 @@ public class MutableAnimatedModel<T extends Entity> extends SinglePartEntityMode
 	@Override
 	public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch)
 	{
-		var mc = MinecraftClient.getInstance();
-		angleAnimator.setAngles(this, entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch, mc.getTickDelta());
+		angleAnimator.setAngles(this, entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch, Client.getTickDelta());
 	}
 }

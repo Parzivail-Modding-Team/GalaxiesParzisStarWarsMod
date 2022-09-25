@@ -472,7 +472,7 @@ public class SpeciesSelectScreen extends Screen
 		var erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
 		var renderers = erda.getModelRenderers();
 
-		var tickDelta = client.getTickDelta();
+		var tickDelta = Client.getTickDelta();
 
 		DiffuseLighting.method_34742();
 		EntityRenderDispatcher entityRenderDispatcher = client.getEntityRenderDispatcher();

@@ -899,8 +899,6 @@ public class CharacterScreen extends Screen
 		var erda = (EntityRenderDispatcherAccessor)client.getEntityRenderDispatcher();
 		var renderers = erda.getModelRenderers();
 
-		var tickDelta = client.getTickDelta();
-
 		DiffuseLighting.method_34742();
 		var entityRenderDispatcher = client.getEntityRenderDispatcher();
 		quaternion2.conjugate();
@@ -909,7 +907,7 @@ public class CharacterScreen extends Screen
 		RenderSystem.runAsFancy(() -> {
 			if (species == null)
 			{
-				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0, 1, matrixStack2, immediate, 0xf000f0);
+				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0, Client.getTickDelta(), matrixStack2, immediate, 0xf000f0);
 			}
 			else
 			{

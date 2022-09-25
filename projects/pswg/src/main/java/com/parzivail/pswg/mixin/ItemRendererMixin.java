@@ -1,6 +1,7 @@
 package com.parzivail.pswg.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.pswg.Client;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.item.ICooldownItem;
 import net.fabricmc.api.EnvType;
@@ -53,7 +54,7 @@ public abstract class ItemRendererMixin
 		if (!stack.isEmpty() && stack.getItem() instanceof ICooldownItem && mc.currentScreen == null)
 		{
 			var clientPlayerEntity = mc.player;
-			var f = clientPlayerEntity == null ? 0.0F : ((ICooldownItem)stack.getItem()).getCooldownProgress(clientPlayerEntity, clientPlayerEntity.world, stack, mc.getTickDelta());
+			var f = clientPlayerEntity == null ? 0.0F : ((ICooldownItem)stack.getItem()).getCooldownProgress(clientPlayerEntity, clientPlayerEntity.world, stack, Client.getTickDelta());
 			if (f > 0.0F)
 			{
 				RenderSystem.disableDepthTest();

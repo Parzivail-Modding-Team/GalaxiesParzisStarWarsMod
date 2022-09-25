@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.render.item;
 
 import com.google.common.base.Suppliers;
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.pswg.client.render.pm3d.PM3DFile;
@@ -114,7 +115,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		var unstable = lt.unstable;
 		var baseLength = 1.6f;
-		var lengthCoefficient = forceBlade ? 1 : lt.getSize(minecraft.getTickDelta());
+		var lengthCoefficient = forceBlade ? 1 : lt.getSize(Client.getTickDelta());
 
 		var modelEntry = getModel(lt.hilt);
 

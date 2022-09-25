@@ -28,12 +28,13 @@ import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.weapon.RecoilManager;
-import com.parzivail.pswg.client.zoom.*;
+import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
+import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.block.BlockEntityClientSerializable;
@@ -124,6 +125,14 @@ public class Client implements ClientModInitializer
 		BlasterItemRenderer.getDebugInfo(strings);
 	}
 
+	public static float getTickDelta()
+	{
+		var mc = MinecraftClient.getInstance();
+		if (mc.isPaused())
+			return ((MinecraftClientAccessor)mc).getPausedTickDelta();
+		return mc.getTickDelta();
+	}
+
 	public static Identifier tintTexture(Identifier texture, int color)
 	{
 		var textureId = texture.getNamespace() + "/" + texture.getPath() + "/" + Integer.toHexString(color);
@@ -181,9 +190,9 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.register(SwgBlocks.Tank.Fusion, true, ModelLoader.loadPM3D(Resources.id("models/block/tank/fusion.pm3d"), Resources.id("model/tank/fusion"), new Identifier("block/stone")));
 
-		ModelRegistry.register(SwgBlocks.Crate.OrangeKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0xFFA417), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Crate.GrayKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0x686868), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0x3E3E3E), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.OrangeKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0xFFA417), Resources.id("model/crate/kyber_orange_particle")));
+		ModelRegistry.register(SwgBlocks.Crate.GrayKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0x686868), Resources.id("model/crate/kyber_gray_particle")));
+		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0x3E3E3E), Resources.id("model/crate/kyber_black_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/mos_eisley.pm3d"), Resources.id("model/crate/mos_eisley"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Crate.BrownSegmented, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("model/segmented_crate/brown"), Resources.id("model/segmented_crate/brown_particle")));

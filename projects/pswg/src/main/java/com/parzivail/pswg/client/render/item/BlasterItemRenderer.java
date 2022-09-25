@@ -179,7 +179,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		MatrixStackUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
 
-		var d = MinecraftClient.getInstance().getTickDelta();
+		var d = Client.getTickDelta();
 		var opacity = 1f;
 
 		var shotTime = bt.timeSinceLastShot + d;
