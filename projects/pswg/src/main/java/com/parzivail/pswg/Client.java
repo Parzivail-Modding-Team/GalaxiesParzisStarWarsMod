@@ -54,6 +54,11 @@ import com.parzivail.util.registry.ClientBlockRegistryData;
 import com.parzivail.util.registry.DyedBlocks;
 import com.parzivail.util.registry.NumberedBlocks;
 import com.parzivail.util.registry.RegistryHelper;
+import io.github.ennuil.libzoomer.api.ZoomInstance;
+import io.github.ennuil.libzoomer.api.ZoomOverlay;
+import io.github.ennuil.libzoomer.api.modifiers.ZoomDivisorMouseModifier;
+import io.github.ennuil.libzoomer.api.overlays.SpyglassZoomOverlay;
+import io.github.ennuil.libzoomer.api.transitions.SmoothTransitionMode;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -418,7 +423,8 @@ public class Client implements ClientModInitializer
 				Resources.id("blaster_zoom"),
 				10.0F,
 				new SmoothTransitionMode(),
-				new ZoomDivisorMouseModifier()
+				new ZoomDivisorMouseModifier(),
+				null
 		);
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-client-addon");

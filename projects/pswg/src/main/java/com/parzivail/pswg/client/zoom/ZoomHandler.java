@@ -5,6 +5,7 @@ import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterAttachmentFunction;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
+import io.github.ennuil.libzoomer.api.ZoomOverlay;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.util.Util;
