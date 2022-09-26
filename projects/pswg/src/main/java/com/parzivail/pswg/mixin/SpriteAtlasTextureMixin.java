@@ -53,7 +53,7 @@ public abstract class SpriteAtlasTextureMixin
 				cir.setReturnValue(new Sprite((SpriteAtlasTexture)(Object)this, info, maxLevel, atlasWidth, atlasHeight, x, y, image));
 			}
 			else
-				Galaxies.LOG.debug("Failed, was not CallbackTexture");
+				Galaxies.LOG.debug("Failed, was %s (not CallbackTexture)", texture == null ? "[null]" : texture.getClass().getSimpleName());
 		}
 	}
 
@@ -84,7 +84,7 @@ public abstract class SpriteAtlasTextureMixin
 					Galaxies.LOG.debug("Success (%s,%s)", image.getWidth(), image.getHeight());
 				}
 				else
-					Galaxies.LOG.debug("Failed, was not CallbackTexture");
+					Galaxies.LOG.debug("Failed, was %s (not CallbackTexture)", texture == null ? "[null]" : texture.getClass().getSimpleName());
 			}
 		}
 	}

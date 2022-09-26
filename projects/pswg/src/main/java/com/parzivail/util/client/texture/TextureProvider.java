@@ -144,6 +144,7 @@ public abstract class TextureProvider<TData>
 
 	protected void bakeTextureSync(Identifier cacheId, TData request)
 	{
+		ParziUtil.LOG.debug("Registering texture %s", cacheId);
 		this.textureManager.registerTexture(cacheId, createTexture(cacheId, request, success -> pollCallbacks(cacheId, success)));
 	}
 
