@@ -49,7 +49,7 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 		//		matrix.multiply(r);
 
 		var modelRef = P3dManager.INSTANCE.get(Resources.id("droid/r2"));
-		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
+		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
 
 		modelRef.render(matrix, vertexConsumer, entity, RigR2.INSTANCE::getPartTransformation, light, tickDelta, 255, 255, 255, 255);
 

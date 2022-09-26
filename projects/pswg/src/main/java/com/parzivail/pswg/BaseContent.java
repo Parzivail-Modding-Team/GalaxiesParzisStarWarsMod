@@ -131,7 +131,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						new BlasterAxialInfo(1.5f, 3),
 						new BlasterAxialInfo(0, 0),
 						new BlasterHeatInfo(1008, 120, 8, 20, 14, 100, 80),
-						new BlasterCoolingBypassProfile(0.5f, 0.5f, 0.3f, 0.02f),
+						new BlasterCoolingBypassProfile(0.5f, 0.05f, 0.3f, 0.02f),
 						new BlasterAttachmentBuilder().build()
 				),
 				new BlasterDescriptor(
