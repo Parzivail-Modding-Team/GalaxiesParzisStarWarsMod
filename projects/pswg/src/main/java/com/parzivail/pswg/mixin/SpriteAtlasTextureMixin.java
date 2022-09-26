@@ -9,6 +9,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.metadata.AnimationResourceMetadata;
 import net.minecraft.client.texture.NativeImage;
+import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.resource.ResourceManager;
@@ -49,11 +50,13 @@ public abstract class SpriteAtlasTextureMixin
 			if (texture instanceof CallbackTexture ct)
 			{
 				var image = ct.getImage();
-				Galaxies.LOG.debug("Success (%s,%s)", image.getWidth(), image.getHeight());
+				Galaxies.LOG.debug("Success %s (%s,%s)", id, image.getWidth(), image.getHeight());
 				cir.setReturnValue(new Sprite((SpriteAtlasTexture)(Object)this, info, maxLevel, atlasWidth, atlasHeight, x, y, image));
 			}
+			else if (texture instanceof ResourceTexture rt)
+				Galaxies.LOG.debug("Failed %s, was Resource %s", id, ((ResourceTextureAccessor)rt).getLocation());
 			else
-				Galaxies.LOG.debug("Failed, was %s (not CallbackTexture)", texture == null ? "[null]" : texture.getClass().getSimpleName());
+				Galaxies.LOG.debug("Failed %s, was %s (not CallbackTexture)", id, texture == null ? "[null]" : texture.getClass().getSimpleName());
 		}
 	}
 
@@ -81,10 +84,12 @@ public abstract class SpriteAtlasTextureMixin
 
 					ids.remove(id);
 
-					Galaxies.LOG.debug("Success (%s,%s)", image.getWidth(), image.getHeight());
+					Galaxies.LOG.debug("Success %s (%s,%s)", id, image.getWidth(), image.getHeight());
 				}
+				else if (texture instanceof ResourceTexture rt)
+					Galaxies.LOG.debug("Failed %s, was Resource %s", id, ((ResourceTextureAccessor)rt).getLocation());
 				else
-					Galaxies.LOG.debug("Failed, was %s (not CallbackTexture)", texture == null ? "[null]" : texture.getClass().getSimpleName());
+					Galaxies.LOG.debug("Failed %s, was %s (not CallbackTexture)", id, texture == null ? "[null]" : texture.getClass().getSimpleName());
 			}
 		}
 	}
