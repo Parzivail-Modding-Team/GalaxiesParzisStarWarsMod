@@ -44,13 +44,16 @@ public abstract class SpriteAtlasTextureMixin
 		var id = info.getId();
 		if (id.getNamespace().equals(Resources.MODID) && id.getPath().startsWith("///"))
 		{
+			Galaxies.LOG.debug("Trying to inject sprite %s", id);
 			var texture = textureManager.getTexture(id);
 			if (texture instanceof CallbackTexture ct)
 			{
 				var image = ct.getImage();
-				Galaxies.LOG.debug("Injected %sx%s sprite for %s", image.getWidth(), image.getHeight(), id);
+				Galaxies.LOG.debug("Success (%s,%s)", image.getWidth(), image.getHeight());
 				cir.setReturnValue(new Sprite((SpriteAtlasTexture)(Object)this, info, maxLevel, atlasWidth, atlasHeight, x, y, image));
 			}
+			else
+				Galaxies.LOG.debug("Failed, was not CallbackTexture");
 		}
 	}
 
@@ -69,6 +72,7 @@ public abstract class SpriteAtlasTextureMixin
 		{
 			if (id.getNamespace().equals(Resources.MODID) && id.getPath().startsWith("///"))
 			{
+				Galaxies.LOG.debug("Trying to load sprite %s", id);
 				var texture = textureManager.getTexture(id);
 				if (texture instanceof CallbackTexture ct)
 				{
@@ -76,7 +80,11 @@ public abstract class SpriteAtlasTextureMixin
 					spriteInfo.add(new Sprite.Info(id, image.getWidth(), image.getHeight(), AnimationResourceMetadata.EMPTY));
 
 					ids.remove(id);
+
+					Galaxies.LOG.debug("Success (%s,%s)", image.getWidth(), image.getHeight());
 				}
+				else
+					Galaxies.LOG.debug("Failed, was not CallbackTexture");
 			}
 		}
 	}
