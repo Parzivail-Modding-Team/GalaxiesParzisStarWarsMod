@@ -8,10 +8,12 @@ import org.slf4j.LoggerFactory;
 public class Lumberjack
 {
 	private final Logger logger;
+	private final boolean forceDebugLog;
 
 	public Lumberjack(String header)
 	{
 		logger = LoggerFactory.getLogger(header);
+		forceDebugLog = Boolean.parseBoolean(System.getProperty("pswg.debug", "false"));
 	}
 
 	/**
@@ -21,7 +23,7 @@ public class Lumberjack
 	 */
 	public void debug(@NotNull String message, Object... params)
 	{
-		if (!FabricLoader.getInstance().isDevelopmentEnvironment())
+		if (!FabricLoader.getInstance().isDevelopmentEnvironment() && !forceDebugLog)
 			return;
 		var trace = Thread.currentThread().getStackTrace();
 		var format = String.format(message, params);
