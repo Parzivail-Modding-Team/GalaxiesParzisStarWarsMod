@@ -10,26 +10,13 @@ import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class StackedTextureProvider extends TextureProvider<Collection<Identifier>>
 {
-	private record EarlyEntry(String textureId, Collection<Identifier> stack)
-	{
-	}
-
-	private static final ArrayList<EarlyEntry> earlyQueue = new ArrayList<>();
-
 	public static final Identifier ROOT = Resources.id("///stacked");
-
-	public static Identifier enqueueEarly(String textureId, Collection<Identifier> stack)
-	{
-		earlyQueue.add(new EarlyEntry(textureId, stack));
-		return getCacheId(textureId);
-	}
 
 	private final Identifier transparentTexture;
 
@@ -37,9 +24,6 @@ public class StackedTextureProvider extends TextureProvider<Collection<Identifie
 	{
 		super(ROOT, textureManager);
 		this.transparentTexture = transparentTexture;
-
-		for (EarlyEntry entry : earlyQueue)
-			bakeTextureSync(getCacheId(entry.textureId), entry.stack);
 	}
 
 	@NotNull

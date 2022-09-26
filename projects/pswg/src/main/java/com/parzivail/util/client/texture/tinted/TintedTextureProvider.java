@@ -12,32 +12,16 @@ import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class TintedTextureProvider extends TextureProvider<TintedIdentifier>
 {
-	private record EarlyEntry(String textureId, Identifier texture, int color)
-	{
-	}
-
-	private static final ArrayList<EarlyEntry> earlyQueue = new ArrayList<>();
-
 	public static final Identifier ROOT = Resources.id("///tinted");
-
-	public static Identifier enqueueEarly(String textureId, Identifier texture, int color)
-	{
-		earlyQueue.add(new EarlyEntry(textureId, texture, color));
-		return getCacheId(textureId);
-	}
 
 	public TintedTextureProvider(TextureManager textureManager)
 	{
 		super(ROOT, textureManager);
-
-		for (EarlyEntry entry : earlyQueue)
-			bakeTextureSync(getCacheId(entry.textureId), new TintedIdentifier(entry.texture.getNamespace(), entry.texture.getPath(), ColorUtil.argbToAbgr(entry.color)));
 	}
 
 	public Identifier tint(String textureId, Identifier texture, int color)

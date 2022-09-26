@@ -90,7 +90,6 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Client implements ClientModInitializer
@@ -136,8 +135,6 @@ public class Client implements ClientModInitializer
 	public static Identifier tintTexture(Identifier texture, int color)
 	{
 		var textureId = texture.getNamespace() + "/" + texture.getPath() + "/" + Integer.toHexString(color);
-		if (Client.tintedTextureProvider == null)
-			return TintedTextureProvider.enqueueEarly(textureId, texture, color);
 		return Client.tintedTextureProvider.tint(textureId, texture, color);
 	}
 
@@ -190,9 +187,9 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.register(SwgBlocks.Tank.Fusion, true, ModelLoader.loadPM3D(Resources.id("models/block/tank/fusion.pm3d"), Resources.id("model/tank/fusion"), new Identifier("block/stone")));
 
-		ModelRegistry.register(SwgBlocks.Crate.OrangeKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0xFFA417), Resources.id("model/crate/kyber_orange_particle")));
-		ModelRegistry.register(SwgBlocks.Crate.GrayKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0x686868), Resources.id("model/crate/kyber_gray_particle")));
-		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), getKyberCrateTexture(0x3E3E3E), Resources.id("model/crate/kyber_black_particle")));
+		ModelRegistry.register(SwgBlocks.Crate.OrangeKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), Resources.id("model/crate/kyber_orange"), Resources.id("model/crate/kyber_orange_particle")));
+		ModelRegistry.register(SwgBlocks.Crate.GrayKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), Resources.id("model/crate/kyber_gray"), Resources.id("model/crate/kyber_gray_particle")));
+		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), Resources.id("model/crate/kyber_black"), Resources.id("model/crate/kyber_black_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadPM3D(Resources.id("models/block/crate/mos_eisley.pm3d"), Resources.id("model/crate/mos_eisley"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Crate.BrownSegmented, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("model/segmented_crate/brown"), Resources.id("model/segmented_crate/brown_particle")));
@@ -438,18 +435,6 @@ public class Client implements ClientModInitializer
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-client-addon");
 		EntrypointUtils.invoke("pswg-client-addon", PswgClientAddon.class, PswgClientAddon::onPswgClientReady);
-	}
-
-	private Identifier getKyberCrateTexture(int tint)
-	{
-		var stack = new ArrayList<Identifier>();
-		stack.add(Client.tintTexture(Resources.id("textures/model/crate/kyber_base.png"), tint));
-		stack.add(Resources.id("textures/model/crate/kyber_overlay.png"));
-
-		var textureId = String.format("kyber_crate/%08x", tint);
-		if (Client.stackedTextureProvider == null)
-			return StackedTextureProvider.enqueueEarly(textureId, stack);
-		return Client.stackedTextureProvider.getId(textureId, null, () -> stack);
 	}
 
 	private static void registerBlockData(ClientBlockRegistryData data, Block block)
