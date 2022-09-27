@@ -8,42 +8,12 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.thread.ThreadExecutor;
 
 import java.io.IOException;
 import java.util.function.Consumer;
 
 public abstract class CallbackTexture extends ResourceTexture
 {
-	private static final ThreadExecutor<Runnable> dummyExecutor = new ThreadExecutor<Runnable>("pswg:dummy")
-	{
-		@Override
-		protected Runnable createTask(Runnable runnable)
-		{
-			return runnable;
-		}
-
-		@Override
-		protected boolean canExecute(Runnable task)
-		{
-			return false;
-		}
-
-		@Override
-		protected Thread getThread()
-		{
-			return null;
-		}
-
-		@Override
-		public void execute(Runnable runnable)
-		{
-			runnable.run();
-		}
-	};
-
-	public static boolean FORCE_SYNCHRONOUS = false;
-
 	protected final Consumer<Boolean> completionCallback;
 	protected boolean isLoaded;
 	protected NativeImage image;
@@ -57,7 +27,7 @@ public abstract class CallbackTexture extends ResourceTexture
 	protected void complete(NativeImage image)
 	{
 		var minecraft = MinecraftClient.getInstance();
-		(FORCE_SYNCHRONOUS ? dummyExecutor : minecraft).execute(() -> {
+		minecraft.execute(() -> {
 			this.isLoaded = true;
 			if (!RenderSystem.isOnRenderThread())
 			{
@@ -92,7 +62,7 @@ public abstract class CallbackTexture extends ResourceTexture
 	@Override
 	public void load(ResourceManager manager) throws IOException
 	{
-		(FORCE_SYNCHRONOUS ? dummyExecutor : MinecraftClient.getInstance()).execute(() -> {
+		MinecraftClient.getInstance().execute(() -> {
 			if (!this.isLoaded)
 			{
 				try

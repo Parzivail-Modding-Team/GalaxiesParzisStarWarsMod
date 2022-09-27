@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -24,12 +23,6 @@ public class StackedTextureProvider extends TextureProvider<Collection<Identifie
 	{
 		super(ROOT, textureManager);
 		this.transparentTexture = transparentTexture;
-	}
-
-	@NotNull
-	public static Identifier getCacheId(String requestName)
-	{
-		return new Identifier(ROOT.getNamespace(), ROOT.getPath() + "/" + requestName);
 	}
 
 	@Override

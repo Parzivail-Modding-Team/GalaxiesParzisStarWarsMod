@@ -8,7 +8,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.function.Consumer;
@@ -29,12 +28,6 @@ public class RemoteTextureProvider extends TextureProvider<Identifier>
 		this.transparentTexture = transparentTexture;
 		this.skinCacheDir = skinCacheDir;
 		this.remoteTextureResolver = remoteTextureResolver;
-	}
-
-	@NotNull
-	public static Identifier getCacheId(String requestName)
-	{
-		return new Identifier(ROOT.getNamespace(), ROOT.getPath() + "/" + requestName);
 	}
 
 	public Identifier getId(String requestName, Supplier<Identifier> fallback)

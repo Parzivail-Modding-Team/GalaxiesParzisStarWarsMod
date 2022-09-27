@@ -5,7 +5,6 @@ import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.client.SkinRemoteTextureResolver;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.pswg.handler.LeftClickHandler;
-import com.parzivail.util.client.texture.CallbackTexture;
 import com.parzivail.util.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.util.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.util.client.texture.tinted.TintedTextureProvider;
@@ -50,11 +49,9 @@ public abstract class MinecraftClientMixin
 		var remoteAssetDir = args.directories.assetDir.toPath().resolve("pswgRemoteAssets");
 		Galaxies.LOG.debug("Remote asset directory: %s", remoteAssetDir.toString());
 
-		CallbackTexture.FORCE_SYNCHRONOUS = true;
 		Client.remoteSkinTextureProvider = new RemoteTextureProvider(textureManager, Client.TEX_TRANSPARENT, new SkinRemoteTextureResolver(), remoteAssetDir);
-		Client.tintedTextureProvider = new TintedTextureProvider(textureManager);
 		Client.stackedTextureProvider = new StackedTextureProvider(textureManager, Client.TEX_TRANSPARENT);
-		CallbackTexture.FORCE_SYNCHRONOUS = false;
+		Client.tintedTextureProvider = new TintedTextureProvider(textureManager);
 
 		Client.registerRenderLayer(EnergyRenderer.LAYER_ENERGY);
 	}

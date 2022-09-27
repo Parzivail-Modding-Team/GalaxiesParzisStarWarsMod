@@ -132,7 +132,7 @@ public abstract class TextureProvider<TData>
 			try
 			{
 				var minecraft = MinecraftClient.getInstance();
-				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> bakeTextureSync(cacheId, request)));
+				minecraft.execute(() -> RenderSystem.recordRenderCall(() -> registerTexture(cacheId, request)));
 			}
 			catch (InsecureTextureException insecureTextureException)
 			{
@@ -142,7 +142,7 @@ public abstract class TextureProvider<TData>
 		});
 	}
 
-	protected void bakeTextureSync(Identifier cacheId, TData request)
+	protected void registerTexture(Identifier cacheId, TData request)
 	{
 		ParziUtil.LOG.debug("Registering texture %s", cacheId);
 		this.textureManager.registerTexture(cacheId, createTexture(cacheId, request, success -> pollCallbacks(cacheId, success)));
