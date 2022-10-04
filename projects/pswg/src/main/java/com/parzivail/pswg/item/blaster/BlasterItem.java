@@ -63,7 +63,7 @@ public class BlasterItem extends Item implements ItemStackEntityAttributeModifie
 	});
 
 	private static final HashMap<BlasterAttachmentFunction, Float> RECOIL_MAP = Util.make(new HashMap<>(), (h) -> {
-		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 0.4f);
+		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 0.7f);
 	});
 
 	public BlasterItem(Settings settings)
