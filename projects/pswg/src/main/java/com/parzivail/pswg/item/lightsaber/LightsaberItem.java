@@ -14,6 +14,7 @@ import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.*;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.meta.ImplicitOverride;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -68,14 +69,14 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 		return !stack.isEmpty() && new LightsaberTag(stack.getOrCreateNbt()).active;
 	}
 
-	// Synthetic override of IrisItemLightProvider::getLightColor
+	@ImplicitOverride("IrisItemLightProvider::getLightColor")
 	public Vec3f getLightColor(PlayerEntity player, ItemStack stack)
 	{
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
 		return ColorUtil.hsvToRgb(lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
 	}
 
-	// Synthetic override of IrisItemLightProvider::getLightEmission
+	@ImplicitOverride("IrisItemLightProvider::getLightEmission")
 	public int getLightEmission(PlayerEntity player, ItemStack stack)
 	{
 		var config = Resources.CONFIG.getConfig();
