@@ -252,7 +252,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						new BlasterHeatInfo(1008, 85, 20, 20, 14, 100, 80),
 						new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.03f),
 						new BlasterAttachmentBuilder()
-								.attachment(1, "barrel_extension", BlasterAttachmentFunction.REDUCE_SPREAD, BlasterAttachmentCategory.BARREL)
+								.attachment(1, "barrel_extension", BlasterAttachmentFunction.REDUCE_SPREAD, BlasterAttachmentCategory.BARREL, "barrel_extension", null)
 								.attachment(2, "cooling", BlasterAttachmentFunction.IMPROVE_COOLING, BlasterAttachmentCategory.INTERNAL_COOLING)
 								.build()
 				),
