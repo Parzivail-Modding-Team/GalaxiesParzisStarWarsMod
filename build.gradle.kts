@@ -3,7 +3,7 @@ import java.io.ByteArrayOutputStream
 plugins {
 	id("pswg-submodule-dependencies")
 	id("fabric-loom")
-	id("io.github.juuxel.loom-quiltflower") version "1.7.2"
+	id("io.github.juuxel.loom-quiltflower")
 	`maven-publish`
 }
 
