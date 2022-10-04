@@ -5,7 +5,7 @@ import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.blockentity.TatooineHomeDoorBlockEntity;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
-import com.parzivail.util.math.ClientMathUtil;
+import com.parzivail.util.client.math.ClientMathUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.QuatUtil;

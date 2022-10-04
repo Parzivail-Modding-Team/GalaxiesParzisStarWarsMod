@@ -2,10 +2,10 @@ package com.parzivail.pswg.client.render.p3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
+import com.parzivail.util.client.math.ClientMathUtil;
 import com.parzivail.util.client.model.AbstractModel;
 import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.data.DataReader;
-import com.parzivail.util.math.ClientMathUtil;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;

@@ -12,6 +12,7 @@ import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.*;
+import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
@@ -31,6 +32,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -64,6 +66,13 @@ public class LightsaberItem extends SwordItem implements ItemStackEntityAttribut
 	private static boolean isActive(ItemStack stack)
 	{
 		return !stack.isEmpty() && new LightsaberTag(stack.getOrCreateNbt()).active;
+	}
+
+	// Synthetic override of IrisItemLightProvider::getLightColor
+	public Vec3f getLightColor(PlayerEntity player, ItemStack stack)
+	{
+		var lt = new LightsaberTag(stack.getOrCreateNbt());
+		return ColorUtil.hsvToRgb(lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
 	}
 
 	// Synthetic override of IrisItemLightProvider::getLightEmission

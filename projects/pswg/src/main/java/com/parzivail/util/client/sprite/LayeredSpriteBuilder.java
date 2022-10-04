@@ -2,7 +2,7 @@ package com.parzivail.util.client.sprite;
 
 import com.google.gson.Gson;
 import com.parzivail.util.ParziUtil;
-import com.parzivail.util.client.ColorUtil;
+import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.data.TintedIdentifier;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.resource.Resource;
@@ -75,7 +75,7 @@ public class LayeredSpriteBuilder
 				for (int layer = 0, layerImagesLength = layerImages.length; layer < layerImagesLength; layer++)
 				{
 					var layerImage = layerImages[layer];
-					outImage.setColor(x, y, ColorUtil.blendColorsOnSrcAlpha(outImage.getColor(x, y), layerImage.getColor(x, y), layerTints[layer], TintedIdentifier.Mode.Multiply));
+					outImage.setColor(x, y, NativeImageUtil.blendColorsOnSrcAlpha(outImage.getColor(x, y), layerImage.getColor(x, y), layerTints[layer], TintedIdentifier.Mode.Multiply));
 				}
 			}
 		}

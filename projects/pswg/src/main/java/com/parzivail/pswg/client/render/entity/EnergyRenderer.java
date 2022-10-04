@@ -2,9 +2,9 @@ package com.parzivail.pswg.client.render.entity;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.mixin.RenderPhaseAccessor;
-import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.client.RenderShapes;
 import com.parzivail.util.client.VertexConsumerBuffer;
+import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.*;
@@ -145,7 +145,7 @@ public class EnergyRenderer
 			if (alpha < 16 / 255f)
 				continue;
 
-			var color = ColorUtil.fromHSV(
+			var color = ColorUtil.hsvToRgbInt(
 					getHue(glowHue + hueOffset, x),
 					getSaturation(x, glowSat),
 					getValue(x, glowVal)
@@ -184,7 +184,7 @@ public class EnergyRenderer
 					var dTBottom = unstable ? (float)Resources.SIMPLEX_0.noise2(globalTime, dLengthTime * dLength * i) * 0.005f : 0;
 
 					noise = (float)Resources.SIMPLEX_0.noise2(globalTime, 3 * dLength * i);
-					color = ColorUtil.fromHSV(
+					color = ColorUtil.hsvToRgbInt(
 							0,
 							(unstable ? (0.07f - noise * 0.07f) : 0) * glowSat,
 							getValue(x, glowVal)

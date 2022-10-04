@@ -1,6 +1,6 @@
 package com.parzivail.pswg.character;
 
-import com.parzivail.util.client.ColorUtil;
+import com.parzivail.util.math.ColorUtil;
 import net.minecraft.util.Identifier;
 
 import java.util.List;

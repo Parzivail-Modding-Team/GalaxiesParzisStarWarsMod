@@ -1,6 +1,6 @@
 package com.parzivail.util.client.texture.tinted;
 
-import com.parzivail.util.client.ColorUtil;
+import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.client.texture.CallbackTexture;
 import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
@@ -51,7 +51,7 @@ public class TintedTexture extends CallbackTexture
 		for (var x = 0; x < width; x++)
 		{
 			for (var y = 0; y < height; y++)
-				nativeImage.setColor(x, y, ColorUtil.tint(nativeImage.getColor(x, y), texture.getTint(), texture.getTintMode()));
+				nativeImage.setColor(x, y, NativeImageUtil.tint(nativeImage.getColor(x, y), texture.getTint(), texture.getTintMode()));
 		}
 
 		return nativeImage;

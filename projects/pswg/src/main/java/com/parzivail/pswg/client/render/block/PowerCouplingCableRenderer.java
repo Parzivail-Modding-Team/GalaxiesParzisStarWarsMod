@@ -3,7 +3,7 @@ package com.parzivail.pswg.client.render.block;
 import com.parzivail.pswg.blockentity.PowerCouplingBlockEntity;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
-import com.parzivail.util.math.ClientMathUtil;
+import com.parzivail.util.client.math.ClientMathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;

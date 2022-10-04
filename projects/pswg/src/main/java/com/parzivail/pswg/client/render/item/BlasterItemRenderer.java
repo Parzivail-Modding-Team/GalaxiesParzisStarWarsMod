@@ -11,11 +11,12 @@ import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.mixin.RenderPhaseAccessor;
-import com.parzivail.util.client.ColorUtil;
+import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.data.TintedIdentifier;
+import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.MatrixStackUtil;
@@ -375,9 +376,9 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		{
 			var frame = (int)Math.floor(MathHelper.clamp(shotTime, 0, ID_MUZZLE_FLASHES.length - 1));
 
-			var color = ColorUtil.fromHSV(bd.boltColor, 1, 1);
-			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], ColorUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
-			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], ColorUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
+			var color = ColorUtil.hsvToRgbInt(bd.boltColor, 1, 1);
+			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], NativeImageUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
+			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], NativeImageUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
 
 			var colorId = String.valueOf((int)(bd.boltColor * 255));
 			var flash = Client.tintedTextureProvider.getId("muzzleflash/" + ColorUtil.toResourceId(color) + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);

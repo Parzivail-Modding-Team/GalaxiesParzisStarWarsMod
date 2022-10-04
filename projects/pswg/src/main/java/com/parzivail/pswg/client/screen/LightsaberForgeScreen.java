@@ -7,8 +7,8 @@ import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.pswg.screen.LightsaberForgeScreenHandler;
-import com.parzivail.util.client.ColorUtil;
 import com.parzivail.util.client.screen.EventCheckboxWidget;
+import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.MatrixStackUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
@@ -251,7 +251,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 
 		var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
 
-		var rgb = ColorUtil.fromHSV(hue, sat, val);
+		var rgb = ColorUtil.hsvToRgbInt(hue, sat, val);
 		var b = rgb & 0xFF;
 		var g = (rgb >> 8) & 0xFF;
 		var r = (rgb >> 16) & 0xFF;

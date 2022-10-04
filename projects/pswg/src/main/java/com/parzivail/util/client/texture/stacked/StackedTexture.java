@@ -1,6 +1,6 @@
 package com.parzivail.util.client.texture.stacked;
 
-import com.parzivail.util.client.ColorUtil;
+import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.client.texture.CallbackTexture;
 import com.parzivail.util.data.TintedIdentifier;
 import net.fabricmc.api.EnvType;
@@ -93,7 +93,7 @@ public class StackedTexture extends CallbackTexture
 			for (var x = 0; x < width; x++)
 			{
 				for (var y = 0; y < height; y++)
-					baseImage.setColor(x, y, ColorUtil.blendColorsOnSrcAlpha(baseImage.getColor(x, y), layerImage.getColor(x, y), tints[i], tintModes[i]));
+					baseImage.setColor(x, y, NativeImageUtil.blendColorsOnSrcAlpha(baseImage.getColor(x, y), layerImage.getColor(x, y), tints[i], tintModes[i]));
 			}
 		}
 

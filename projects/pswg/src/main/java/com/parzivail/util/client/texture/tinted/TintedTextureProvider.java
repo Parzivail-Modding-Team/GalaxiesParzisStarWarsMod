@@ -1,7 +1,7 @@
 package com.parzivail.util.client.texture.tinted;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.util.client.ColorUtil;
+import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.client.texture.CallbackTexture;
 import com.parzivail.util.client.texture.TextureProvider;
 import com.parzivail.util.data.TintedIdentifier;
@@ -28,7 +28,7 @@ public class TintedTextureProvider extends TextureProvider<TintedIdentifier>
 		return getId(
 				textureId,
 				() -> texture,
-				() -> new TintedIdentifier(texture.getNamespace(), texture.getPath(), ColorUtil.argbToAbgr(color))
+				() -> new TintedIdentifier(texture.getNamespace(), texture.getPath(), NativeImageUtil.argbToAbgr(color))
 		);
 	}
 
