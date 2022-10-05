@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.particle;
 
 import com.parzivail.util.client.particle.CrossPointingParticle;
-import com.parzivail.util.client.particle.PParticle;
+import com.parzivail.util.client.particle.PParticleType;
 import com.parzivail.util.math.Ease;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -77,7 +77,7 @@ public class SparkParticle extends CrossPointingParticle
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static class Factory implements ParticleFactory<PParticle>
+	public static class Factory implements ParticleFactory<PParticleType>
 	{
 		private final SpriteProvider spriteProvider;
 
@@ -87,7 +87,7 @@ public class SparkParticle extends CrossPointingParticle
 		}
 
 		@Override
-		public Particle createParticle(PParticle defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
+		public Particle createParticle(PParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
 		{
 			return new SparkParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
 		}

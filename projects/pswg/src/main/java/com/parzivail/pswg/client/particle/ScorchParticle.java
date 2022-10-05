@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.particle;
 
 import com.parzivail.util.client.particle.DecalParticle;
-import com.parzivail.util.client.particle.PParticle;
+import com.parzivail.util.client.particle.PParticleType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.Particle;
@@ -101,7 +101,7 @@ public class ScorchParticle extends DecalParticle
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static class Factory implements ParticleFactory<PParticle>
+	public static class Factory implements ParticleFactory<PParticleType>
 	{
 		private final SpriteProvider spriteProvider;
 
@@ -111,7 +111,7 @@ public class ScorchParticle extends DecalParticle
 		}
 
 		@Override
-		public Particle createParticle(PParticle defaultParticleType, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ)
+		public Particle createParticle(PParticleType defaultParticleType, ClientWorld clientWorld, double x, double y, double z, double vX, double vY, double vZ)
 		{
 			var heatEncodedNormal = new Vec3d(vX, vY, vZ);
 			var heat = heatEncodedNormal.length();

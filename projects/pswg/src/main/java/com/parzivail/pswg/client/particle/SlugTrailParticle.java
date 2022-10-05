@@ -1,6 +1,6 @@
 package com.parzivail.pswg.client.particle;
 
-import com.parzivail.util.client.particle.PParticle;
+import com.parzivail.util.client.particle.PParticleType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.particle.AnimatedParticle;
@@ -40,7 +40,7 @@ public class SlugTrailParticle extends AnimatedParticle
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static class Factory implements ParticleFactory<PParticle>
+	public static class Factory implements ParticleFactory<PParticleType>
 	{
 		private final SpriteProvider spriteProvider;
 
@@ -50,7 +50,7 @@ public class SlugTrailParticle extends AnimatedParticle
 		}
 
 		@Override
-		public Particle createParticle(PParticle defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
+		public Particle createParticle(PParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
 		{
 			return new SlugTrailParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);
 		}
