@@ -1088,6 +1088,7 @@ public class PswgTarkin
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .blockTag(BlockTags.DEAD_BUSH_MAY_PLACE_ON)
 		              .build(assets);
 		BlockGenerator.basic(SwgBlocks.Dirt.WetPourstone)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)

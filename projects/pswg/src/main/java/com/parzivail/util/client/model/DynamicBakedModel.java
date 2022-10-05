@@ -38,7 +38,10 @@ import net.minecraft.world.BlockView;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 /**
