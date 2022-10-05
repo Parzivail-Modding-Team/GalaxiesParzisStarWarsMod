@@ -41,6 +41,9 @@
 		],
 		"rei_server": [
 			"com.parzivail.pswg.compat.rei.plugins.GalaxiesREIServerPlugin"
+		],
+		"dynamiclights": [
+			"com.parzivail.pswg.compat.lambdynlights.LambDynamicLightsIntegration"
 		]
 	},
 	"accessWidener": "pswg.accesswidener",

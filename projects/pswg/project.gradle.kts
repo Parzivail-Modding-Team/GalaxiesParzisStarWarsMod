@@ -10,6 +10,7 @@ val libzoomer_version: String by project.ext
 val trinkets_version: String by project.ext
 val gravity_changer_version: String by project.ext
 val iris_version: String by project.ext
+val lambdynamiclights_version: String by project.ext
 
 dependencies {
 	// CCA Base
@@ -27,6 +28,9 @@ dependencies {
 
 	// Mod Menu
 	"modImplementation"("com.terraformersmc:modmenu:${modmenu_version}")
+
+	// LambDynamicLights
+	"modImplementation"("dev.lambdaurora:lambdynamiclights:${lambdynamiclights_version}")
 
 	// Roughly Enough Items
 	"modCompileOnly"("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")

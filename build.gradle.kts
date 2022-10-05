@@ -66,6 +66,10 @@ allprojects {
 			name = "Shedaniel Maven"
 		}
 
+		maven(url = "https://maven.gegy.dev") {
+			name = "Gegy Maven"
+		}
+
 		maven(url = "https://api.modrinth.com/maven") {
 			name = "Modrinth"
 		}
