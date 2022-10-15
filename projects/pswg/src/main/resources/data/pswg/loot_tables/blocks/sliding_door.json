@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "pswg:sliding_door",
+					"conditions": [
+						{
+							"condition": "minecraft:block_state_property",
+							"block": "pswg:sliding_door",
+							"properties": {
+								"half": "lower"
+							}
+						}
+					]
+				}
+			],
+			"conditions": [
+				{
+					"condition": "minecraft:survives_explosion"
+				}
+			]
+		}
+	]
+}

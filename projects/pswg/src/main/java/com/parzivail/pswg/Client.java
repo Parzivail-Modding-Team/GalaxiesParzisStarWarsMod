@@ -7,10 +7,7 @@ import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
-import com.parzivail.pswg.client.render.block.BlasterWorkbenchWeaponRenderer;
-import com.parzivail.pswg.client.render.block.PowerCouplingCableRenderer;
-import com.parzivail.pswg.client.render.block.TatooineHomeDoorRenderer;
-import com.parzivail.pswg.client.render.block.TerrariumRenderer;
+import com.parzivail.pswg.client.render.block.*;
 import com.parzivail.pswg.client.render.entity.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterIonBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterStunBoltRenderer;
@@ -25,6 +22,7 @@ import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
 import com.parzivail.pswg.client.render.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
+import com.parzivail.pswg.client.render.p3d.P3DBlockRendererRegistry;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.weapon.RecoilManager;
@@ -170,6 +168,21 @@ public class Client implements ClientModInitializer
 		BlockEntityRendererRegistry.register(SwgBlocks.Workbench.BlasterBlockEntityType, BlasterWorkbenchWeaponRenderer::new);
 		BlockEntityRendererRegistry.register(SwgBlocks.Power.CouplingBlockEntityType, PowerCouplingCableRenderer::new);
 		BlockEntityRendererRegistry.register(SwgBlocks.Cage.CreatureCageBlockEntityType, TerrariumRenderer::new);
+
+		ModelRegistry.register(
+				SwgBlocks.Door.Sliding1x2,
+				true,
+				ModelLoader.withDyeColors(
+						ModelLoader.loadP3D(
+								DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY,
+								Resources.id("block/tatooine_home_door"),
+								Resources.id("model/door/sliding_1x2/frame"),
+								Resources.id("model/workbench_particle")
+						),
+						(model, color) -> model.withTexture("door_" + color.getName(), Resources.id("model/door/sliding_1x2/door_" + color.getName()))
+				)
+		);
+		P3DBlockRendererRegistry.register(SwgBlocks.Door.Sliding1x2, new SlidingDoubleDoorRenderer());
 
 		ModelRegistry.register(SwgBlocks.Workbench.Blaster, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/blaster_workbench"), Resources.id("model/blaster_workbench"), Resources.id("model/workbench_particle")));
 		ModelRegistry.register(SwgBlocks.Workbench.Lightsaber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/lightsaber_forge"), Resources.id("model/lightsaber_forge"), Resources.id("model/workbench_particle")));

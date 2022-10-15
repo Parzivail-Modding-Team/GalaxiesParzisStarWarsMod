@@ -7,7 +7,10 @@ import com.parzivail.pswg.client.render.pm3d.PM3DFile;
 import com.parzivail.pswg.client.render.pm3d.PM3DUnbakedBlockModel;
 import com.parzivail.util.client.model.ClonableUnbakedModel;
 import com.parzivail.util.client.model.DynamicBakedModel;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+
+import java.util.function.BiFunction;
 
 public class ModelLoader
 {
@@ -23,7 +26,7 @@ public class ModelLoader
 		return new PM3DUnbakedBlockModel(
 				baseTexture,
 				particleTexture,
-				spriteMap -> PM3DBakedBlockModel.create(
+				(m, spriteMap) -> PM3DBakedBlockModel.create(
 						cacheMethod,
 						PM3DFile.tryLoad(modelFile, true).getLevelOfDetail(0),
 						baseTexture,
@@ -38,14 +41,22 @@ public class ModelLoader
 		return new P3DUnbakedBlockModel(
 				baseTexture,
 				particleTexture,
-				spriteMap -> P3DBakedBlockModel.create(
+				(m, spriteMap) -> P3DBakedBlockModel.create(
 						spriteMap,
 						cacheMethod,
 						baseTexture,
 						particleTexture,
+						((P3DUnbakedBlockModel)m).getAdditionalTextures(),
 						modelFile
 				)
 		);
+	}
+
+	public static P3DUnbakedBlockModel withDyeColors(P3DUnbakedBlockModel model, BiFunction<P3DUnbakedBlockModel, DyeColor, P3DUnbakedBlockModel> dyer)
+	{
+		for (var color : DyeColor.values())
+			model = dyer.apply(model, color);
+		return model;
 	}
 
 	public static ClonableUnbakedModel loadPicklingP3D(Identifier baseTexture, Identifier particleTexture, Identifier... modelFiles)
@@ -53,11 +64,12 @@ public class ModelLoader
 		return new P3DUnbakedBlockModel(
 				baseTexture,
 				particleTexture,
-				spriteMap -> P3DBakedBlockModel.create(
+				(m, spriteMap) -> P3DBakedBlockModel.create(
 						spriteMap,
 						DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY,
 						baseTexture,
 						particleTexture,
+						((P3DUnbakedBlockModel)m).getAdditionalTextures(),
 						modelFiles
 				)
 		);

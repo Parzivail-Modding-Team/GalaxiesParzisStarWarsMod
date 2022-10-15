@@ -734,6 +734,8 @@ public class PswgTarkin
 		ItemGenerator.basic(SwgItems.CraftingComponents.DeshCoil).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.PlasteelRod).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.DurasteelRod).build(assets);
+		for (var entry : SwgItems.CraftingComponents.DoorInsert.entrySet())
+			ItemGenerator.basic(entry.getValue()).build(assets);
 
 		ItemGenerator.basic(SwgItems.Natural.StrippedJaporBranch).build(assets);
 		ItemGenerator.basic(SwgItems.Natural.MoloFlower).build(assets);
@@ -963,6 +965,11 @@ public class PswgTarkin
 			BlockGenerator.blockNoModelDefaultDrops(block)
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
 			              .build(assets);
+
+		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Door.Sliding1x2)
+		              .lootTable(LootTableFile::door)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone"))
 		              .itemModel(ModelFile::ofBlock)

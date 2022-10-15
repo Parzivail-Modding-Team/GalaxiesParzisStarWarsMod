@@ -642,6 +642,9 @@ public class SwgBlocks
 		});
 		@RegistryName("door_tatooine_home")
 		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottoms.values().toArray(new Block[0])).build();
+
+		@RegistryName("sliding_door")
+		public static final Block Sliding1x2 = new Sliding1x2DoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
 	@RegistryOrder(17)

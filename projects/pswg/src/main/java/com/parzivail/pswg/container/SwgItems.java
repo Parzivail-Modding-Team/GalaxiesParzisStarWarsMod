@@ -6,6 +6,7 @@ import com.parzivail.pswg.block.TatooineHomeDoorBlock;
 import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
+import com.parzivail.pswg.item.DoorInsertItem;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.BlasterPowerPackItem;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
@@ -99,6 +100,9 @@ public class SwgItems
 		public static final Item PlasteelRod = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("durasteel_rod")
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("door_insert")
+		public static final DyedItems DoorInsert = new DyedItems(color -> new DoorInsertItem(color, new Item.Settings().group(Galaxies.TabItems)));
 	}
 
 	@RegistryOrder(5)

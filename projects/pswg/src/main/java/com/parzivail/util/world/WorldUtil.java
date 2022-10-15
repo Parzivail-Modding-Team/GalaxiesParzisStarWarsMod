@@ -1,6 +1,6 @@
 package com.parzivail.util.world;
 
-import com.parzivail.pswg.block.SlidingDoubleDoorBlock;
+import com.parzivail.pswg.block.Sliding1x2DoorBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -43,12 +43,12 @@ public class WorldUtil
 
 	public static void destroyDoubleBlockFromBottom(World world, BlockPos pos, BlockState state, PlayerEntity player)
 	{
-		DoubleBlockHalf doubleBlockHalf = state.get(SlidingDoubleDoorBlock.HALF);
+		DoubleBlockHalf doubleBlockHalf = state.get(Sliding1x2DoorBlock.HALF);
 		if (doubleBlockHalf == DoubleBlockHalf.UPPER)
 		{
 			BlockPos blockPos = pos.down();
 			BlockState blockState = world.getBlockState(blockPos);
-			if (blockState.isOf(state.getBlock()) && blockState.get(SlidingDoubleDoorBlock.HALF) == DoubleBlockHalf.LOWER)
+			if (blockState.isOf(state.getBlock()) && blockState.get(Sliding1x2DoorBlock.HALF) == DoubleBlockHalf.LOWER)
 			{
 				BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
 				world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);

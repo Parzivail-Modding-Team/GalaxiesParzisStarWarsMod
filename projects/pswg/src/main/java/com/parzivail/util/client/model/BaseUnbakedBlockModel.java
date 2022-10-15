@@ -19,12 +19,18 @@ import java.util.function.Function;
 
 public abstract class BaseUnbakedBlockModel<T extends AbstractModel> extends ClonableUnbakedModel
 {
+	@FunctionalInterface
+	public interface BakerFunction<TM, T>
+	{
+		T bake(TM model, Function<SpriteIdentifier, Sprite> spriteBaker);
+	}
+
 	protected final Identifier baseTexture;
 	protected final Identifier particleTexture;
-	protected final Function<Function<SpriteIdentifier, Sprite>, T> baker;
+	protected final BakerFunction<BaseUnbakedBlockModel<T>, T> baker;
 	protected T cachedBakedModel = null;
 
-	public BaseUnbakedBlockModel(Identifier baseTexture, Identifier particleTexture, Function<Function<SpriteIdentifier, Sprite>, T> baker)
+	public BaseUnbakedBlockModel(Identifier baseTexture, Identifier particleTexture, BakerFunction<BaseUnbakedBlockModel<T>, T> baker)
 	{
 		this.baseTexture = baseTexture;
 		this.particleTexture = particleTexture;
@@ -59,7 +65,7 @@ public abstract class BaseUnbakedBlockModel<T extends AbstractModel> extends Clo
 		if (cachedBakedModel != null)
 			return cachedBakedModel;
 
-		var result = baker.apply(spriteLoader);
+		var result = baker.bake(this, spriteLoader);
 		cachedBakedModel = result;
 		return result;
 	}

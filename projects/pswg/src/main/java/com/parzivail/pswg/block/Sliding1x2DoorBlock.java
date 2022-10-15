@@ -1,5 +1,6 @@
 package com.parzivail.pswg.block;
 
+import com.parzivail.pswg.item.DoorInsertItem;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.world.WorldUtil;
@@ -16,9 +17,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
+import net.minecraft.util.*;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -31,8 +33,9 @@ import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
+import java.util.Optional;
 
-public class SlidingDoubleDoorBlock extends WaterloggableRotatingBlock
+public class Sliding1x2DoorBlock extends WaterloggableRotatingBlock
 {
 	private enum ShapeKeyType
 	{
@@ -109,11 +112,12 @@ public class SlidingDoubleDoorBlock extends WaterloggableRotatingBlock
 	public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
 	public static final BooleanProperty OPEN = Properties.OPEN;
 	public static final BooleanProperty POWERED = Properties.POWERED;
+	public static final IntProperty DOOR_COLOR = IntProperty.of("door_color", 0, 17);
 
-	public SlidingDoubleDoorBlock(Settings settings)
+	public Sliding1x2DoorBlock(Settings settings)
 	{
 		super(settings);
-		this.setDefaultState(this.stateManager.getDefaultState().with(HALF, DoubleBlockHalf.LOWER).with(OPEN, false).with(POWERED, false));
+		this.setDefaultState(this.getDefaultState().with(HALF, DoubleBlockHalf.LOWER).with(OPEN, true).with(POWERED, false).with(DOOR_COLOR, 0));
 	}
 
 	@Override
@@ -123,11 +127,22 @@ public class SlidingDoubleDoorBlock extends WaterloggableRotatingBlock
 		builder.add(HALF);
 		builder.add(OPEN);
 		builder.add(POWERED);
+		builder.add(DOOR_COLOR);
 	}
 
 	private static int getRotationKey(Direction direction)
 	{
 		return (direction.getHorizontal() + 1) % 4;
+	}
+
+	public static Optional<DyeColor> getDoorColor(BlockState state)
+	{
+		var color = state.get(DOOR_COLOR);
+
+		if (color == 0)
+			return Optional.empty();
+
+		return Optional.of(DyeColor.byId(color - 1));
 	}
 
 	@Override
@@ -167,6 +182,31 @@ public class SlidingDoubleDoorBlock extends WaterloggableRotatingBlock
 	}
 
 	@Override
+	public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
+	{
+		if (getDoorColor(state).isEmpty() && player.getStackInHand(hand).getItem() instanceof DoorInsertItem dii)
+		{
+			// TODO: allow door removing
+			// TODO: drop door insert when broken
+			state = state.with(DOOR_COLOR, dii.getColor().getId() + 1).with(OPEN, state.get(POWERED));
+
+			if (!player.getAbilities().creativeMode)
+				player.getStackInHand(hand).decrement(1);
+		}
+		else if (getDoorColor(state).isPresent())
+		{
+			// Do not allow door to be cycled (i.e. closed from its
+			// default-open state) if there is no door insert
+			state = state.cycle(OPEN);
+			playOpenCloseSound(world, pos, state.get(OPEN));
+			world.emitGameEvent(player, state.get(OPEN) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
+		}
+
+		world.setBlockState(pos, state, Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+		return ActionResult.success(world.isClient);
+	}
+
+	@Override
 	public void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify)
 	{
 		boolean bl = world.isReceivingRedstonePower(pos) || world.isReceivingRedstonePower(pos.offset(state.get(HALF) == DoubleBlockHalf.LOWER ? Direction.UP : Direction.DOWN));
@@ -187,7 +227,7 @@ public class SlidingDoubleDoorBlock extends WaterloggableRotatingBlock
 	{
 		DoubleBlockHalf doubleBlockHalf = state.get(HALF);
 		if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP))
-			return neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf ? state.with(FACING, neighborState.get(FACING)).with(OPEN, neighborState.get(OPEN)).with(POWERED, neighborState.get(POWERED)) : Blocks.AIR.getDefaultState();
+			return neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf ? state.with(FACING, neighborState.get(FACING)).with(OPEN, neighborState.get(OPEN)).with(DOOR_COLOR, neighborState.get(DOOR_COLOR)).with(POWERED, neighborState.get(POWERED)) : Blocks.AIR.getDefaultState();
 		else
 			return doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
@@ -203,7 +243,7 @@ public class SlidingDoubleDoorBlock extends WaterloggableRotatingBlock
 			return null;
 
 		boolean bl = world.isReceivingRedstonePower(blockPos) || world.isReceivingRedstonePower(blockPos.up());
-		return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(OPEN, bl).with(HALF, DoubleBlockHalf.LOWER).with(POWERED, bl);
+		return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(HALF, DoubleBlockHalf.LOWER).with(POWERED, bl);
 	}
 
 	@Override
