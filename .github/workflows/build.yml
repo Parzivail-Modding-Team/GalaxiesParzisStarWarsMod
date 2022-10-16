@@ -14,7 +14,7 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v3
         with:
-          fetch-depth: 100
+          fetch-depth: 0
       - name: validate gradle wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: setup jdk ${{ matrix.java }}
