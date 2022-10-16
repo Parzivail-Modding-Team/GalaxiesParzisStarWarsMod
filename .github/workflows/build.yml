@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 100
       - name: validate gradle wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: setup jdk ${{ matrix.java }}
@@ -33,8 +35,9 @@ jobs:
       - name: upload
         if: always() && github.ref == 'refs/heads/master' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
         run: |
+          mkdir -p projects/pswg/build/libs
+          cd projects/pswg/build/libs
           pip install -r ../../../../scripts/requirements.txt
           python ../../../../scripts/upload_dev.py --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }}
-        working-directory: projects/pswg/build/libs
         env:
           BUILD_NUMBER: ${{ github.run_number }}
