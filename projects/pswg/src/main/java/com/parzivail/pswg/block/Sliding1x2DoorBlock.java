@@ -1,13 +1,17 @@
 package com.parzivail.pswg.block;
 
+import com.parzivail.pswg.blockentity.SlidingDoorBlockEntity;
 import com.parzivail.pswg.item.DoorInsertItem;
 import com.parzivail.util.block.VoxelShapeUtil;
-import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
+import com.parzivail.util.block.rotating.WaterloggableRotatingBlockWithEntity;
 import com.parzivail.util.world.WorldUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -35,7 +39,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Optional;
 
-public class Sliding1x2DoorBlock extends WaterloggableRotatingBlock
+public class Sliding1x2DoorBlock extends WaterloggableRotatingBlockWithEntity
 {
 	private enum ShapeKeyType
 	{
@@ -111,13 +115,14 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlock
 
 	public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;
 	public static final BooleanProperty OPEN = Properties.OPEN;
+	public static final BooleanProperty MOVING = BooleanProperty.of("moving");
 	public static final BooleanProperty POWERED = Properties.POWERED;
 	public static final IntProperty DOOR_COLOR = IntProperty.of("door_color", 0, 17);
 
 	public Sliding1x2DoorBlock(Settings settings)
 	{
 		super(settings);
-		this.setDefaultState(this.getDefaultState().with(HALF, DoubleBlockHalf.LOWER).with(OPEN, true).with(POWERED, false).with(DOOR_COLOR, 0));
+		this.setDefaultState(this.getDefaultState().with(HALF, DoubleBlockHalf.LOWER).with(MOVING, false).with(OPEN, true).with(POWERED, false).with(DOOR_COLOR, 0));
 	}
 
 	@Override
@@ -126,6 +131,7 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlock
 		super.appendProperties(builder);
 		builder.add(HALF);
 		builder.add(OPEN);
+		builder.add(MOVING);
 		builder.add(POWERED);
 		builder.add(DOOR_COLOR);
 	}
@@ -198,6 +204,11 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlock
 			// Do not allow door to be cycled (i.e. closed from its
 			// default-open state) if there is no door insert
 			state = state.cycle(OPEN);
+
+			var be = (SlidingDoorBlockEntity)world.getBlockEntity((state.get(HALF) == DoubleBlockHalf.LOWER) ? pos : pos.down());
+			be.start(state.get(OPEN));
+			state = state.with(MOVING, true);
+
 			playOpenCloseSound(world, pos, state.get(OPEN));
 			world.emitGameEvent(player, state.get(OPEN) ? GameEvent.BLOCK_OPEN : GameEvent.BLOCK_CLOSE, pos);
 		}
@@ -227,7 +238,7 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlock
 	{
 		DoubleBlockHalf doubleBlockHalf = state.get(HALF);
 		if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP))
-			return neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf ? state.with(FACING, neighborState.get(FACING)).with(OPEN, neighborState.get(OPEN)).with(DOOR_COLOR, neighborState.get(DOOR_COLOR)).with(POWERED, neighborState.get(POWERED)) : Blocks.AIR.getDefaultState();
+			return neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf ? state.with(FACING, neighborState.get(FACING)).with(MOVING, neighborState.get(MOVING)).with(OPEN, neighborState.get(OPEN)).with(DOOR_COLOR, neighborState.get(DOOR_COLOR)).with(POWERED, neighborState.get(POWERED)) : Blocks.AIR.getDefaultState();
 		else
 			return doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 	}
@@ -268,5 +279,22 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlock
 	public long getRenderingSeed(BlockState state, BlockPos pos)
 	{
 		return MathHelper.hashCode(pos.getX(), pos.down(state.get(HALF) == DoubleBlockHalf.LOWER ? 0 : 1).getY(), pos.getZ());
+	}
+
+	@Override
+	public BlockEntity createBlockEntity(BlockPos pos, BlockState state)
+	{
+		if (state.get(HALF) != DoubleBlockHalf.LOWER)
+			return null;
+		return new SlidingDoorBlockEntity(pos, state);
+	}
+
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type)
+	{
+		if (state.get(HALF) != DoubleBlockHalf.LOWER)
+			return null;
+		return SlidingDoorBlockEntity::tick;
 	}
 }

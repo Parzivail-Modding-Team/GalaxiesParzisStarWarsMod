@@ -645,6 +645,8 @@ public class SwgBlocks
 
 		@RegistryName("sliding_door")
 		public static final Block Sliding1x2 = new Sliding1x2DoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("sliding_door")
+		public static final BlockEntityType<SlidingDoorBlockEntity> SlidingBlockEntityType = FabricBlockEntityTypeBuilder.create(SlidingDoorBlockEntity::new, Sliding1x2).build();
 	}
 
 	@RegistryOrder(17)

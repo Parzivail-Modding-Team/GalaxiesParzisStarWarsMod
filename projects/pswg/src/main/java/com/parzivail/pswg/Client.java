@@ -182,7 +182,9 @@ public class Client implements ClientModInitializer
 						(model, color) -> model.withTexture("door_" + color.getName(), Resources.id("model/door/sliding_1x2/door_" + color.getName()))
 				)
 		);
-		P3DBlockRendererRegistry.register(SwgBlocks.Door.Sliding1x2, new SlidingDoubleDoorRenderer());
+		var slidingDoorRenderer = new SlidingDoubleDoorRenderer();
+		P3DBlockRendererRegistry.register(SwgBlocks.Door.Sliding1x2, slidingDoorRenderer);
+		BlockEntityRendererRegistry.register(SwgBlocks.Door.SlidingBlockEntityType, ctx -> slidingDoorRenderer);
 
 		ModelRegistry.register(SwgBlocks.Workbench.Blaster, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/blaster_workbench"), Resources.id("model/blaster_workbench"), Resources.id("model/workbench_particle")));
 		ModelRegistry.register(SwgBlocks.Workbench.Lightsaber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/lightsaber_forge"), Resources.id("model/lightsaber_forge"), Resources.id("model/workbench_particle")));
