@@ -22,13 +22,15 @@ files = [file for file in os.listdir(".") if file.rpartition("-")[2] not in {"so
 if files and args.result == "success":
     file, = files
     print("Trying to upload", os.path.realpath(file))
-    for url in args.webhook:
-        with open(file, "rb") as fp:
-            with requests.post(url, files={"file": fp}, data={
-                    "content": f"Build {os.environ['BUILD_NUMBER']} built! <:mc_cake:711406798292254792>"}) as resp:
-                print("discord response:", resp.text)
-    for url in args.serverupdate:
-        subprocess.check_call(["curl", "--location", "--request", "POST", url, "--form", f"file=@{file}"])
+    if args.webhook:
+        for url in args.webhook:
+            with open(file, "rb") as fp:
+                with requests.post(url, files={"file": fp}, data={
+                        "content": f"Build {os.environ['BUILD_NUMBER']} built! <:mc_cake:711406798292254792>"}) as resp:
+                    print("discord response:", resp.text)
+    if args.serverupdate:
+        for url in args.serverupdate:
+            subprocess.check_call(["curl", "--location", "--request", "POST", url, "--form", f"file=@{file}"])
 else:
     if not files:
         print("Did not find file")
