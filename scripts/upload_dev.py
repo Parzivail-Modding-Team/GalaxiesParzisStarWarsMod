@@ -7,26 +7,19 @@ import sys
 import requests
 
 
-class Namespace(object):
-    def __init__(self, **kw):
-        self.__dict__.update(kw)
-
-
 parser = argparse.ArgumentParser()
 
+parser.add_argument("--result", type=str, default="success")
 parser.add_argument("--webhook", type=str, action="append")
 parser.add_argument("--serverupdate", type=str, action="append")
 
-if sys.argv[1].startswith("-"):
-    args = parser.parse_args()
-else:
-    args = Namespace(webhook=[sys.argv[1]], serverupdate=[sys.argv[2]])
+args = parser.parse_args()
 
 print("Current directory: " + os.getcwd())
 
 files = [file for file in os.listdir(".") if file.rpartition("-")[2] not in {"sources.jar", "javadoc.jar", "dev.jar"}]
 
-if files:
+if files and args.result == "success":
     file, = files
     print("Trying to upload", os.path.realpath(file))
     for url in args.webhook:
@@ -37,7 +30,8 @@ if files:
     for url in args.serverupdate:
         subprocess.check_call(["curl", "--location", "--request", "POST", url, "--form", f"file=@{file}"])
 else:
-    print("Did not find file")
+    if not files:
+        print("Did not find file")
     for url in args.webhook:
         with requests.post(url, data={"content": f"Build {os.environ['BUILD_NUMBER']} failed! \N{CROSS MARK}"}) as resp:
             print("discord response:", resp.text)
