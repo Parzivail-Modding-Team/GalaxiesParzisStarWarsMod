@@ -33,7 +33,7 @@ jobs:
       - name: upload
         if: always() && github.ref == 'refs/heads/master' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
         run: |
-          pip install requests
+          pip install -r ../../../../scripts/requirements.txt
           python ../../../../scripts/upload_dev.py --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }}
         working-directory: projects/pswg/build/libs
         env:
