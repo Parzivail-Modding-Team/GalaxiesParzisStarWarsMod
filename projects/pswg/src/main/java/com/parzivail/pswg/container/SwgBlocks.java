@@ -27,6 +27,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.shape.VoxelShapes;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -605,6 +606,15 @@ public class SwgBlocks
 	}
 
 	@RegistryOrder(14)
+	public static class Scaffold
+	{
+		@RegistryName("scaffold")
+		public static final Block Scaffold = new WaterloggableBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("scaffold_stairs")
+		public static final Block ScaffoldStairs = new WaterloggableRotatingBlockWithBounds(VoxelShapes.union(VoxelShapes.cuboid(0, 0, 0, 1, 0.5, 1), VoxelShapes.cuboid(0, 0.5, 0, 0.5, 1, 1)), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+	}
+
+	@RegistryOrder(15)
 	public static class Vent
 	{
 		@RegistryName("air_vent")
@@ -618,7 +628,7 @@ public class SwgBlocks
 		public static final Block ImperialGrated = new AccessibleMetalTrapdoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool().allowsSpawning((state, world, pos, type) -> false));
 	}
 
-	@RegistryOrder(15)
+	@RegistryOrder(16)
 	public static class Light
 	{
 		@RegistryName("light_fixture")
@@ -630,9 +640,11 @@ public class SwgBlocks
 		public static final Block BlueHangar = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("wall_cluster_light")
 		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
+		@RegistryName("tall_lamp")
+		public static final Block TallLamp = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(6, 6, 24), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 	}
 
-	@RegistryOrder(16)
+	@RegistryOrder(17)
 	public static class Door
 	{
 		public static final TatooineHomeDoorBlock TatooineHomeTop = new TatooineHomeDoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F));
@@ -649,7 +661,7 @@ public class SwgBlocks
 		public static final BlockEntityType<SlidingDoorBlockEntity> SlidingBlockEntityType = FabricBlockEntityTypeBuilder.create(SlidingDoorBlockEntity::new, Sliding1x2).build();
 	}
 
-	@RegistryOrder(17)
+	@RegistryOrder(18)
 	public static class Crate
 	{
 		@RegistryName("corrugated_crate")
@@ -683,7 +695,7 @@ public class SwgBlocks
 		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, BrownSegmented, GraySegmented, GrayPanel).build();
 	}
 
-	@RegistryOrder(18)
+	@RegistryOrder(19)
 	public static class Barrel
 	{
 		@RegistryName("desh_barrel")
@@ -699,14 +711,14 @@ public class SwgBlocks
 		}, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(2.5F).requiresTool());
 	}
 
-	@RegistryOrder(19)
+	@RegistryOrder(20)
 	public static class Machine
 	{
 		@RegistryName("spoked_machine")
 		public static final WaterloggableRotatingBlock Spoked = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 	}
 
-	@RegistryOrder(20)
+	@RegistryOrder(21)
 	public static class MoistureVaporator
 	{
 		@RegistryName("gx8_moisture_vaporator")
@@ -715,7 +727,7 @@ public class SwgBlocks
 		public static final BlockEntityType<MoistureVaporatorBlockEntity> Gx8BlockEntityType = FabricBlockEntityTypeBuilder.create(MoistureVaporatorBlockEntity::new, Gx8).build();
 	}
 
-	@RegistryOrder(21)
+	@RegistryOrder(22)
 	public static class Power
 	{
 		@RegistryName("power_coupling")
@@ -724,21 +736,21 @@ public class SwgBlocks
 		public static final BlockEntityType<PowerCouplingBlockEntity> CouplingBlockEntityType = FabricBlockEntityTypeBuilder.create(PowerCouplingBlockEntity::new, Coupling).build();
 	}
 
-	@RegistryOrder(22)
+	@RegistryOrder(23)
 	public static class Pipe
 	{
 		@RegistryName("large_pipe")
 		public static final Block Large = new SelfConnectingNodeBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).mapColor(MapColor.GRAY).nonOpaque().strength(3.5F).requiresTool());
 	}
 
-	@RegistryOrder(23)
+	@RegistryOrder(24)
 	public static class Tank
 	{
 		@RegistryName("fusion_fuel_tank")
 		public static final Block Fusion = new WaterloggableRotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
-	@RegistryOrder(24)
+	@RegistryOrder(25)
 	public static class Cage
 	{
 		@RegistryName("creature_cage")

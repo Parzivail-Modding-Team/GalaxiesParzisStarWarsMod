@@ -197,7 +197,11 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.register(SwgBlocks.Power.Coupling, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/power_coupling"), Resources.id("model/power_coupling"), Resources.id("model/power_coupling_particle")));
 
+		ModelRegistry.register(SwgBlocks.Scaffold.Scaffold, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/scaffold"), Resources.id("model/scaffold"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Scaffold.ScaffoldStairs, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/scaffold_stairs"), Resources.id("model/scaffold_stairs"), new Identifier("block/stone")));
+
 		ModelRegistry.register(SwgBlocks.Light.WallCluster, true, ModelLoader.loadPicklingP3D(Resources.id("model/light/cluster"), Resources.id("model/light/cluster_particle"), Resources.id("block/light/cluster_light_1"), Resources.id("block/light/cluster_light_2"), Resources.id("block/light/cluster_light_3")));
+		ModelRegistry.register(SwgBlocks.Light.TallLamp, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/light/tall_lamp"), Resources.id("model/light/tall_lamp"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadPM3D(DynamicBakedModel.CacheMethod.RENDER_SEED_KEY, Resources.id("models/block/barrel/mos_eisley.pm3d"), Resources.id("model/barrel/mos_eisley"), new Identifier("block/stone")));
 

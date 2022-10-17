@@ -1032,6 +1032,9 @@ public class PswgTarkin
 		BlockGenerator.blockNoModelPicklingDrops(SwgBlocks.Light.WallCluster)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.TallLamp)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.basic(SwgBlocks.Light.Fixture)
 		              .state((block, modelId) -> BlockStateGenerator.forBooleanProperty(block, InvertedLampBlock.LIT, IdentifierUtil.concat(modelId, "_on"), modelId))
@@ -1679,6 +1682,14 @@ public class PswgTarkin
 		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.Fusion)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Scaffold.Scaffold)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Scaffold.ScaffoldStairs)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
