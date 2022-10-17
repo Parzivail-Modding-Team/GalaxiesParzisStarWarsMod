@@ -31,7 +31,7 @@ import net.minecraft.util.math.random.Random;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-public class SlidingDoubleDoorRenderer implements IP3DBlockRenderer, BlockEntityRenderer<SlidingDoorBlockEntity>
+public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRenderer<SlidingDoorBlockEntity>
 {
 	private static final Identifier MODEL = Resources.id("block/tatooine_home_door");
 	private static final Identifier TEX_FRAME = Resources.id("textures/model/door/sliding_1x2/frame.png");
@@ -82,7 +82,7 @@ public class SlidingDoubleDoorRenderer implements IP3DBlockRenderer, BlockEntity
 				matrices,
 				quadEmitter,
 				target,
-				SlidingDoubleDoorRenderer::transformBlockState,
+				SlidingDoorRenderer::transformBlockState,
 				(target1, objectName) -> objectName.equals("frame") ? baseSprite : additionalSprites.get("door_" + finalDoorColor.getName()),
 				randomSupplier,
 				renderContext
@@ -146,7 +146,7 @@ public class SlidingDoubleDoorRenderer implements IP3DBlockRenderer, BlockEntity
 		matrices.translate(0.5, 0, 0.5);
 		matrices.multiply(ClientMathUtil.getRotation(rotation));
 
-		model.render(matrices, vertexConsumers, entity, SlidingDoubleDoorRenderer::transformBlockEntity, SlidingDoubleDoorRenderer::provideLayer, light, tickDelta, 255, 255, 255, 255);
+		model.render(matrices, vertexConsumers, entity, SlidingDoorRenderer::transformBlockEntity, SlidingDoorRenderer::provideLayer, light, tickDelta, 255, 255, 255, 255);
 		matrices.pop();
 	}
 }

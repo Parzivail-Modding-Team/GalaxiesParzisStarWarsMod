@@ -38,6 +38,7 @@
 		"LivingEntityJetpackMixin",
 		"MinecraftClientAccessor",
 		"MinecraftClientMixin",
+		"ModelPartAccessor",
 		"PlayerEntityClientMixin",
 		"PlayerEntityRendererMixin",
 		"RenderLayersMixin",

@@ -73,6 +73,7 @@ public class PswgTarkin
 		lang.entity(SwgEntities.Fish.Laa).build(assets);
 		lang.entity(SwgEntities.Amphibian.Worrt).build(assets);
 		lang.entity(SwgEntities.Mammal.Bantha).build(assets);
+		lang.entity(SwgEntities.Rodent.SandSkitter).build(assets);
 		lang.entity(SwgEntities.Droid.AstroR2).build(assets);
 		lang.entity(SwgEntities.Droid.AstroR2Imperial).build(assets);
 
@@ -764,6 +765,10 @@ public class PswgTarkin
 		ItemGenerator.basic(SwgItems.Armor.RebelPilot).build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelForest).build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelTropical).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.BlackImperialOfficer).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.GrayImperialOfficer).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.LightGrayImperialOfficer).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.KhakiImperialOfficer).build(assets);
 
 		ItemGenerator.basic(SwgItems.Cable.Power).build(assets);
 
@@ -925,6 +930,8 @@ public class PswgTarkin
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Faa).build(assets);
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Laa).build(assets);
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Worrt).build(assets);
+		ItemGenerator.spawn_egg(SwgItems.Spawners.Bantha).build(assets);
+		ItemGenerator.spawn_egg(SwgItems.Spawners.SandSkitter).build(assets);
 	}
 
 	public static void generateBlocks(List<BuiltAsset> assets)

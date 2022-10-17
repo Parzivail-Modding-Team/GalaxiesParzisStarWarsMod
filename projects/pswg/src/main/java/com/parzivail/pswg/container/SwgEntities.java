@@ -8,6 +8,7 @@ import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.entity.mammal.BanthaEntity;
+import com.parzivail.pswg.entity.rodent.SandSkitterEntity;
 import com.parzivail.pswg.entity.ship.SpeederEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.util.entity.BucketableFishEntity;
@@ -79,6 +80,21 @@ public class SwgEntities
 		{
 			entityTypes.add(Bantha);
 			FabricDefaultAttributeRegistry.register(Bantha, BanthaEntity.createAttributes());
+		}
+	}
+
+	public static class Rodent
+	{
+		public static final EntityType<SandSkitterEntity> SandSkitter = Registry.register(Registry.ENTITY_TYPE, Resources.id("sand_skitter"), FabricEntityTypeBuilder
+				.create(SpawnGroup.MISC, SandSkitterEntity::new)
+				.dimensions(EntityDimensions.fixed(0.4f, 0.3f))
+				.trackRangeBlocks(8)
+				.build());
+
+		static void register()
+		{
+			entityTypes.add(SandSkitter);
+			FabricDefaultAttributeRegistry.register(SandSkitter, SandSkitterEntity.createAttributes());
 		}
 	}
 
@@ -185,6 +201,7 @@ public class SwgEntities
 		Fish.register();
 		Amphibian.register();
 		Mammal.register();
+		Rodent.register();
 		Droid.register();
 		Misc.register();
 	}

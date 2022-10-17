@@ -17,6 +17,7 @@ import com.parzivail.pswg.client.render.entity.droid.AstromechRenderer;
 import com.parzivail.pswg.client.render.entity.fish.FaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.fish.LaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.mammal.BanthaEntityRenderer;
+import com.parzivail.pswg.client.render.entity.rodent.SandSkitterEntityRenderer;
 import com.parzivail.pswg.client.render.entity.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
 import com.parzivail.pswg.client.render.hud.BlasterHudRenderer;
@@ -182,7 +183,7 @@ public class Client implements ClientModInitializer
 						(model, color) -> model.withTexture("door_" + color.getName(), Resources.id("model/door/sliding_1x2/door_" + color.getName()))
 				)
 		);
-		var slidingDoorRenderer = new SlidingDoubleDoorRenderer();
+		var slidingDoorRenderer = new SlidingDoorRenderer();
 		P3DBlockRendererRegistry.register(SwgBlocks.Door.Sliding1x2, slidingDoorRenderer);
 		BlockEntityRendererRegistry.register(SwgBlocks.Door.SlidingBlockEntityType, ctx -> slidingDoorRenderer);
 
@@ -264,6 +265,7 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Fish.Laa, LaaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Amphibian.Worrt, WorrtEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Mammal.Bantha, BanthaEntityRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Rodent.SandSkitter, SandSkitterEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2, AstromechRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Imperial, AstromechRenderer::new);
 
@@ -364,6 +366,34 @@ public class Client implements ClientModInitializer
 				Resources.id("rebel_tropical"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
 				                         Resources.id("textures/armor/rebel_tropical.png")),
+				ArmorRenderer.Metadata.DEFAULT
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.BlackImperialOfficer,
+				Resources.id("black_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_black.png")),
+				ArmorRenderer.Metadata.DEFAULT
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.GrayImperialOfficer,
+				Resources.id("gray_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_gray.png")),
+				ArmorRenderer.Metadata.DEFAULT
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.LightGrayImperialOfficer,
+				Resources.id("light_gray_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_light_gray.png")),
+				ArmorRenderer.Metadata.DEFAULT
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.KhakiImperialOfficer,
+				Resources.id("khaki_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_khaki.png")),
 				ArmorRenderer.Metadata.DEFAULT
 		);
 

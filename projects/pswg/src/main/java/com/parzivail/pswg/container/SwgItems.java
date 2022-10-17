@@ -57,6 +57,14 @@ public class SwgItems
 		public static final ArmorItem RebelForest = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_tropical_helmet")
 		public static final ArmorItem RebelTropical = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("black_imperial_officer_hat")
+		public static final ArmorItem BlackImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("gray_imperial_officer_hat")
+		public static final ArmorItem GrayImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("light_gray_imperial_officer_hat")
+		public static final ArmorItem LightGrayImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("khaki_imperial_officer_hat")
+		public static final ArmorItem KhakiImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 	}
 
 	@RegistryOrder(2)
@@ -445,6 +453,12 @@ public class SwgItems
 
 		@RegistryName("spawn_worrt")
 		public static final Item Worrt = new SpawnEggItem(SwgEntities.Amphibian.Worrt, 0x5B482C, 0x635735, new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("spawn_bantha")
+		public static final Item Bantha = new SpawnEggItem(SwgEntities.Mammal.Bantha, 0x362318, 0xD1B693, new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("spawn_sand_skitter")
+		public static final Item SandSkitter = new SpawnEggItem(SwgEntities.Rodent.SandSkitter, 0x4F3733, 0xE2946E, new Item.Settings().group(Galaxies.TabItems));
 	}
 
 	@RegistryOrder(13)
