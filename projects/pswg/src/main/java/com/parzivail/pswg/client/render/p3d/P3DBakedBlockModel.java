@@ -111,10 +111,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		var modelId = modelIds[0];
 
 		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget)
-		{
-			var state = blockRenderTarget.getState();
-			modelId = getPickleModel(modelId, state);
-		}
+			modelId = getPickleModel(modelId, blockRenderTarget.getState());
 
 		var model = P3dManager.INSTANCE.get(modelId);
 
@@ -133,7 +130,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		ms.multiply(new Quaternion(0, -90, 0, true));
 
 		Block block = null;
-		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget)
+		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget && blockRenderTarget.getState() != null)
 			block = blockRenderTarget.getState().getBlock();
 		else if (target instanceof P3DBlockRenderTarget.Item itemRenderTarget && itemRenderTarget.getStack().getItem() instanceof BlockItem blockItem)
 			block = blockItem.getBlock();
