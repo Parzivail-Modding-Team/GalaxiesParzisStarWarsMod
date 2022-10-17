@@ -609,7 +609,7 @@ public class SwgBlocks
 	public static class Scaffold
 	{
 		@RegistryName("scaffold")
-		public static final Block Scaffold = new WaterloggableBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block Scaffold = new ScaffoldBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("scaffold_stairs")
 		public static final Block ScaffoldStairs = new WaterloggableRotatingBlockWithBounds(VoxelShapes.union(VoxelShapes.cuboid(0, 0, 0, 1, 0.5, 1), VoxelShapes.cuboid(0, 0.5, 0, 0.5, 1, 1)), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
