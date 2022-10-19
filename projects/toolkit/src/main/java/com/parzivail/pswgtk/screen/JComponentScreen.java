@@ -1,9 +1,9 @@
 package com.parzivail.pswgtk.screen;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.pswg.Resources;
-import com.parzivail.pswgtk.awt.PostEventAction;
-import com.parzivail.pswgtk.awt.TextureBackedContentWrapper;
+import com.parzivail.pswgtk.swing.PostEventAction;
+import com.parzivail.pswgtk.swing.TextureBackedContentWrapper;
 import jdk.swing.interop.LightweightFrameWrapper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.*;
@@ -14,28 +14,20 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.security.AccessController;
-import java.util.function.Supplier;
 
-public class JComponentScreen extends Screen
+public abstract class JComponentScreen extends Screen
 {
-	public static final String I18N_TOOLKIT_HOME = Resources.screen("toolkit_home");
-
 	private final Screen parent;
-	private JComponent root;
 	private final Thread swingThread;
 	private final LightweightFrameWrapper frame;
 	private TextureBackedContentWrapper contentWrapper;
 
-	public JComponentScreen(Screen parent, Supplier<JComponent> root)
+	public JComponentScreen(Screen parent, Text title)
 	{
-		super(Text.translatable(I18N_TOOLKIT_HOME));
+		super(title);
 		this.parent = parent;
 
-		System.setProperty("java.awt.headless", "false");
-		this.root = root.get();
-
 		this.frame = new LightweightFrameWrapper();
-
 		this.swingThread = new Thread(null, this::runSwing, "pswg-toolkit-awt");
 	}
 
@@ -45,6 +37,10 @@ public class JComponentScreen extends Screen
 
 		var window = this.client.getWindow();
 		runOnEDT(() -> {
+
+			var root = buildInterface();
+			root.setBackground(new Color(TextureBackedContentWrapper.MASK_COLOR));
+
 			contentWrapper = new TextureBackedContentWrapper(root);
 			frame.setContent(contentWrapper);
 			frame.setBounds(0, 0, window.getFramebufferWidth(), window.getFramebufferHeight());
@@ -52,6 +48,8 @@ public class JComponentScreen extends Screen
 
 		frame.setVisible(true);
 	}
+
+	protected abstract JComponent buildInterface();
 
 	@Override
 	protected void init()
@@ -151,19 +149,32 @@ public class JComponentScreen extends Screen
 	public void close()
 	{
 		assert this.client != null;
+
 		this.client.setScreen(this.parent);
+
+		if (swingThread != null)
+			swingThread.interrupt();
 	}
 
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
-		//		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFFF0F0F0, 0xFFF0F0F0);
-		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
+		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFFF0F0F0, 0xFFF0F0F0);
 
+		renderContent();
+		renderInterface();
+	}
+
+	protected abstract void renderContent();
+
+	private void renderInterface()
+	{
 		if (contentWrapper != null)
 		{
 			var widthFraction = contentWrapper.getVisibleWidthFraction();
 			var heightFraction = contentWrapper.getVisibleHeightFraction();
+
+			RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
 
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder bufferBuilder = tessellator.getBuffer();
@@ -177,7 +188,5 @@ public class JComponentScreen extends Screen
 			bufferBuilder.vertex(0, 0, 0).texture(0, 0).color(255, 255, 255, 255).next();
 			tessellator.draw();
 		}
-
-		super.render(matrices, mouseX, mouseY, delta);
 	}
 }

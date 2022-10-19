@@ -2,8 +2,7 @@ package com.parzivail.pswgtk;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgClientAddon;
-import com.parzivail.pswgtk.screen.JComponentScreen;
-import com.parzivail.pswgtk.swing.ToolkitHomeInterface;
+import com.parzivail.pswgtk.ui.ToolkitHomeScreen;
 import com.parzivail.util.Lumberjack;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Identifier;
@@ -18,11 +17,12 @@ public class ToolkitClient implements PswgClientAddon
 
 	public static Screen createHomeScreen(Screen parent)
 	{
-		return new JComponentScreen(parent, ToolkitHomeInterface::new);
+		return new ToolkitHomeScreen(parent);
 	}
 
 	@Override
 	public void onPswgClientReady()
 	{
+		System.setProperty("java.awt.headless", "false");
 	}
 }

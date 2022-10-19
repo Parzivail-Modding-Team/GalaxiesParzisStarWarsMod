@@ -1,4 +1,4 @@
-package com.parzivail.pswgtk.awt;
+package com.parzivail.pswgtk.swing;
 
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.TextureUtil;
@@ -17,6 +17,8 @@ import java.nio.IntBuffer;
 
 public class TextureBackedContentWrapper extends LightweightContentWrapper
 {
+	public static final int MASK_COLOR = 0xFFFF00FF;
+
 	private record BufferData(int[] buffer, int x, int y, int width, int height, int lineStride)
 	{
 	}
@@ -42,6 +44,15 @@ public class TextureBackedContentWrapper extends LightweightContentWrapper
 			RenderSystem.recordRenderCall(() -> uploadTexture(destroy, x, y, width, height));
 		else
 		{
+			// TODO: replace with fragment shader?
+			for (int y1 = y; y1 < height; y1++)
+				for (int x1 = x; x1 < width; x1++)
+				{
+					var i = y1 * pixelBuffer.lineStride + x1;
+					if (pixelBuffer.buffer[i] == MASK_COLOR)
+						pixelBuffer.buffer[i] = 0;
+				}
+
 			if (destroy && textureId != -1)
 			{
 				TextureUtil.releaseTextureId(textureId);

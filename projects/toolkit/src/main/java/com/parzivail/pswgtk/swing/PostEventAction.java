@@ -1,4 +1,4 @@
-package com.parzivail.pswgtk.awt;
+package com.parzivail.pswgtk.swing;
 
 import java.awt.*;
 import java.security.PrivilegedAction;
