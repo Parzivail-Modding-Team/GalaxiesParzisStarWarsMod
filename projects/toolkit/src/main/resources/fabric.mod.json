@@ -1,0 +1,41 @@
+{
+	"schemaVersion": 1,
+	"id": "pswg-toolkit",
+	"version": "${version}",
+	"name": "PSWG Toolkit",
+	"description": "Tools for mod developers and addon authors",
+	"authors": [
+		"parzivail",
+		"Sindavar",
+		"kb1000"
+	],
+	"contact": {
+		"homepage": "https://pswg.dev/",
+		"issues": "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/issues",
+		"sources": "https://github.com/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod"
+	},
+	"license": "LGPL-3.0",
+	"icon": "assets/pswg/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"pswg-client-addon": [
+			"com.parzivail.pswgtk.ToolkitClient"
+		]
+	},
+	"mixins": [
+		"pswg-toolkit.mixins.json"
+	],
+	"depends": {
+		"fabric-api": "*",
+		"fabricloader": ">=0.14.8",
+		"minecraft": "~1.19",
+		"pswg": "${version}"
+	},
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.pswg.dev"
+			}
+		}
+	}
+}
