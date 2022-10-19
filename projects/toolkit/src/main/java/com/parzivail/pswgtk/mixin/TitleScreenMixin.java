@@ -28,7 +28,7 @@ public class TitleScreenMixin extends Screen
 
 		this.addDrawableChild(new TexturedButtonWidget(this.width / 2 - 124, l + 24 * 2, 20, 20, 0, 0, 20, ToolkitClient.TEX_TOOLKIT, 64, 64, (button) -> {
 			assert this.client != null;
-			this.client.setScreen(ToolkitClient.createScreen(this));
+			this.client.setScreen(ToolkitClient.createHomeScreen(this));
 		}, Text.translatable(ToolkitClient.I18N_TOOLKIT)));
 	}
 }

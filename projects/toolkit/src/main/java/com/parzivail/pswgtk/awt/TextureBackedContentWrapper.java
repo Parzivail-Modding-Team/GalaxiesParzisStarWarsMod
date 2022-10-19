@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswgtk.ToolkitClient;
 import jdk.swing.interop.DragSourceContextWrapper;
 import jdk.swing.interop.LightweightContentWrapper;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
@@ -24,25 +25,39 @@ public class TextureBackedContentWrapper extends LightweightContentWrapper
 	private BufferData pixelBuffer;
 	private int textureId = -1;
 
+	private int width = 0;
+	private int height = 0;
+
 	public TextureBackedContentWrapper(JComponent component)
 	{
 		this.component = component;
 	}
 
-	private void uploadTexture(int x, int y, int width, int height)
+	private void uploadTexture(boolean destroy, int x, int y, int width, int height)
 	{
 		if (pixelBuffer == null)
 			return;
 
 		if (!RenderSystem.isOnRenderThread())
-			RenderSystem.recordRenderCall(() -> uploadTexture(x, y, width, height));
+			RenderSystem.recordRenderCall(() -> uploadTexture(destroy, x, y, width, height));
 		else
 		{
+			if (destroy && textureId != -1)
+			{
+				TextureUtil.releaseTextureId(textureId);
+				textureId = -1;
+			}
+
 			if (textureId == -1)
 			{
 				textureId = TextureUtil.generateTextureId();
 				RenderSystem.bindTexture(textureId);
-				TextureUtil.initTexture(IntBuffer.wrap(pixelBuffer.buffer), pixelBuffer.width, pixelBuffer.height);
+
+				IntBuffer intBuffer = BufferUtils.createIntBuffer(pixelBuffer.buffer.length);
+				intBuffer.put(pixelBuffer.buffer);
+				intBuffer.flip();
+
+				TextureUtil.initTexture(intBuffer, pixelBuffer.width, pixelBuffer.height);
 			}
 			else
 			{
@@ -58,25 +73,45 @@ public class TextureBackedContentWrapper extends LightweightContentWrapper
 		return textureId;
 	}
 
-	private void uploadTexture()
+	public float getVisibleWidthFraction()
 	{
-		uploadTexture(pixelBuffer.x, pixelBuffer.y, pixelBuffer.width, pixelBuffer.height);
+		if (pixelBuffer == null)
+			return 1;
+		return width / (float)pixelBuffer.width;
+	}
+
+	public float getVisibleHeightFraction()
+	{
+		if (pixelBuffer == null)
+			return 1;
+		return height / (float)pixelBuffer.height;
+	}
+
+	private void uploadTexture(boolean destroy)
+	{
+		uploadTexture(destroy, pixelBuffer.x, pixelBuffer.y, pixelBuffer.width, pixelBuffer.height);
 	}
 
 	@Override
 	public void imageBufferReset(int[] data, int x, int y, int width, int height, int linestride)
 	{
-		ToolkitClient.LOG.info("imageBufferReset");
+		this.width = width;
+		this.height = height;
+
+		var destroy = pixelBuffer != null && (width != pixelBuffer.width || height != pixelBuffer.height);
 		pixelBuffer = new BufferData(data, x, y, width, height, linestride);
-		uploadTexture();
+		uploadTexture(destroy);
 	}
 
 	@Override
 	public void imageBufferReset(int[] data, int x, int y, int width, int height, int linestride, double scaleX, double scaleY)
 	{
-		ToolkitClient.LOG.info("imageBufferReset[scale]");
+		this.width = width;
+		this.height = height;
+
+		var destroy = pixelBuffer != null && (width != pixelBuffer.width || height != pixelBuffer.height);
 		pixelBuffer = new BufferData(data, x, y, width, height, linestride);
-		uploadTexture();
+		uploadTexture(destroy);
 	}
 
 	@Override
@@ -88,56 +123,49 @@ public class TextureBackedContentWrapper extends LightweightContentWrapper
 	@Override
 	public void paintLock()
 	{
-		ToolkitClient.LOG.info("paintLock");
 	}
 
 	@Override
 	public void paintUnlock()
 	{
-		ToolkitClient.LOG.info("paintUnlock");
 	}
 
 	@Override
 	public void imageReshaped(int x, int y, int width, int height)
 	{
-		ToolkitClient.LOG.info("imageReshaped");
+		this.width = width;
+		this.height = height;
 	}
 
 	@Override
 	public void imageUpdated(int dirtyX, int dirtyY, int dirtyWidth, int dirtyHeight)
 	{
-		ToolkitClient.LOG.info("imageUpdated");
-		uploadTexture(dirtyX, dirtyY, dirtyWidth, dirtyHeight);
+		uploadTexture(false, dirtyX, dirtyY, dirtyWidth, dirtyHeight);
 	}
 
 	@Override
 	public void focusGrabbed()
 	{
-		ToolkitClient.LOG.info("focusGrabbed");
 	}
 
 	@Override
 	public void focusUngrabbed()
 	{
-		ToolkitClient.LOG.info("focusUngrabbed");
 	}
 
 	@Override
 	public void preferredSizeChanged(int width, int height)
 	{
-		ToolkitClient.LOG.info("preferredSizeChanged");
 	}
 
 	@Override
 	public void maximumSizeChanged(int width, int height)
 	{
-		ToolkitClient.LOG.info("maximumSizeChanged");
 	}
 
 	@Override
 	public void minimumSizeChanged(int width, int height)
 	{
-		ToolkitClient.LOG.info("minimumSizeChanged");
 	}
 
 	@Override
