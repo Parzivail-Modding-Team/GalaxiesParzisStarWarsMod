@@ -23,9 +23,9 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseListener
 	{
 		var panel = new JPanel();
 
-		var b = new JButton("Button");
-		b.addMouseListener(ToolkitHomeScreen.this);
-		panel.add(b);
+		JTextField tb;
+		panel.add(tb = new JTextField(50));
+		panel.add(new JButton("Button"));
 
 		return panel;
 	}
