@@ -3,7 +3,6 @@ package com.parzivail.pswgtk.swing;
 import com.mojang.blaze3d.platform.GlConst;
 import com.mojang.blaze3d.platform.TextureUtil;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.pswgtk.ToolkitClient;
 import jdk.swing.interop.DragSourceContextWrapper;
 import jdk.swing.interop.LightweightContentWrapper;
 import org.lwjgl.BufferUtils;
@@ -194,12 +193,10 @@ public class TextureBackedContentWrapper extends LightweightContentWrapper
 	@Override
 	public void addDropTarget(DropTarget dt)
 	{
-		ToolkitClient.LOG.info("addDropTarget");
 	}
 
 	@Override
 	public void removeDropTarget(DropTarget dt)
 	{
-		ToolkitClient.LOG.info("removeDropTarget");
 	}
 }

@@ -4,14 +4,19 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswgtk.swing.PostEventAction;
 import com.parzivail.pswgtk.swing.TextureBackedContentWrapper;
+import com.parzivail.pswgtk.util.GlfwKeyUtil;
 import jdk.swing.interop.LightweightFrameWrapper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import org.lwjgl.glfw.GLFW;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.security.AccessController;
 
@@ -37,7 +42,6 @@ public abstract class JComponentScreen extends Screen
 
 		var window = this.client.getWindow();
 		runOnEDT(() -> {
-
 			var root = buildInterface();
 			root.setBackground(new Color(TextureBackedContentWrapper.MASK_COLOR));
 
@@ -47,6 +51,9 @@ public abstract class JComponentScreen extends Screen
 		});
 
 		frame.setVisible(true);
+
+		var dummyEvent = frame.createUngrabEvent(frame);
+		dispatchEvent(new FocusEvent((Component)dummyEvent.getSource(), FocusEvent.FOCUS_GAINED));
 	}
 
 	protected abstract JComponent buildInterface();
@@ -143,6 +150,59 @@ public abstract class JComponentScreen extends Screen
 		));
 
 		super.mouseMoved(mouseX, mouseY);
+	}
+
+	@Override
+	public boolean keyPressed(int keyCode, int scanCode, int modifiers)
+	{
+		var vk = glfwToSwingKeyCode(keyCode);
+		dispatchEvent(frame.createKeyEvent(
+				frame, KeyEvent.KEY_PRESSED, System.currentTimeMillis(),
+				glfwToSwingModifiers(modifiers), vk, (char)vk
+		));
+		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Override
+	public boolean keyReleased(int keyCode, int scanCode, int modifiers)
+	{
+		var vk = glfwToSwingKeyCode(keyCode);
+		dispatchEvent(frame.createKeyEvent(
+				frame, KeyEvent.KEY_RELEASED, System.currentTimeMillis(),
+				glfwToSwingModifiers(modifiers), vk, (char)vk
+		));
+		return super.keyPressed(keyCode, scanCode, modifiers);
+	}
+
+	@Override
+	public boolean charTyped(char chr, int modifiers)
+	{
+		dispatchEvent(frame.createKeyEvent(
+				frame, KeyEvent.KEY_TYPED, System.currentTimeMillis(),
+				glfwToSwingModifiers(modifiers), KeyEvent.VK_UNDEFINED, chr
+		));
+		return super.charTyped(chr, modifiers);
+	}
+
+	private static int glfwToSwingModifiers(int glfwModifiers)
+	{
+		int mods = 0;
+
+		if ((glfwModifiers & GLFW.GLFW_MOD_CONTROL) != 0)
+			mods |= InputEvent.CTRL_DOWN_MASK;
+		if ((glfwModifiers & GLFW.GLFW_MOD_ALT) != 0)
+			mods |= InputEvent.ALT_DOWN_MASK;
+		if ((glfwModifiers & GLFW.GLFW_MOD_SHIFT) != 0)
+			mods |= InputEvent.SHIFT_DOWN_MASK;
+		if ((glfwModifiers & GLFW.GLFW_MOD_SUPER) != 0)
+			mods |= InputEvent.META_DOWN_MASK;
+
+		return mods;
+	}
+
+	private static int glfwToSwingKeyCode(int glfwScanCode)
+	{
+		return GlfwKeyUtil.getAwtGet(glfwScanCode);
 	}
 
 	@Override
