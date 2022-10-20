@@ -1,5 +1,6 @@
 package com.parzivail.pswgtk;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.pswgtk.ui.ToolkitHomeScreen;
@@ -24,5 +25,6 @@ public class ToolkitClient implements PswgClientAddon
 	public void onPswgClientReady()
 	{
 		System.setProperty("java.awt.headless", "false");
+		FlatLightLaf.setup();
 	}
 }

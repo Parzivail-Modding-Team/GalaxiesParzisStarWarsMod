@@ -27,6 +27,8 @@ public abstract class JComponentScreen extends Screen
 	private final LightweightFrameWrapper frame;
 	private TextureBackedContentWrapper contentWrapper;
 
+	private int mouseButtonMask = 0;
+
 	public JComponentScreen(Screen parent, Text title)
 	{
 		super(title);
@@ -34,6 +36,7 @@ public abstract class JComponentScreen extends Screen
 
 		this.frame = new LightweightFrameWrapper();
 		this.swingThread = new Thread(null, this::runSwing, "pswg-toolkit-awt");
+		swingThread.start();
 	}
 
 	private void runSwing()
@@ -42,10 +45,7 @@ public abstract class JComponentScreen extends Screen
 
 		var window = this.client.getWindow();
 		runOnEDT(() -> {
-			var root = buildInterface();
-			root.setBackground(new Color(TextureBackedContentWrapper.MASK_COLOR));
-
-			contentWrapper = new TextureBackedContentWrapper(root);
+			contentWrapper = new TextureBackedContentWrapper(buildInterface());
 			frame.setContent(contentWrapper);
 			frame.setBounds(0, 0, window.getFramebufferWidth(), window.getFramebufferHeight());
 		});
@@ -64,9 +64,6 @@ public abstract class JComponentScreen extends Screen
 		assert this.client != null;
 
 		super.init();
-
-		if (!this.swingThread.isAlive())
-			swingThread.start();
 
 		var window = this.client.getWindow();
 		runOnEDT(() -> {
@@ -111,10 +108,11 @@ public abstract class JComponentScreen extends Screen
 
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
+		this.mouseButtonMask |= glfwToSwingMouseButtonMask(button);
 		dispatchEvent(frame.createMouseEvent(
-				frame, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), 0,
+				frame, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), this.mouseButtonMask,
 				x, y, x, y,
-				1, false, MouseEvent.BUTTON1 + button
+				1, button == GLFW.GLFW_MOUSE_BUTTON_RIGHT, glfwToSwingMouseButton(button)
 		));
 
 		return super.mouseClicked(mouseX, mouseY, button);
@@ -127,10 +125,16 @@ public abstract class JComponentScreen extends Screen
 
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
+		this.mouseButtonMask &= ~glfwToSwingMouseButtonMask(button);
 		dispatchEvent(frame.createMouseEvent(
-				frame, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), 0,
+				frame, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), this.mouseButtonMask,
 				x, y, x, y,
-				1, false, MouseEvent.BUTTON1 + button
+				1, button == GLFW.GLFW_MOUSE_BUTTON_RIGHT, glfwToSwingMouseButton(button)
+		));
+		dispatchEvent(frame.createMouseEvent(
+				frame, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), this.mouseButtonMask,
+				x, y, x, y,
+				1, button == GLFW.GLFW_MOUSE_BUTTON_RIGHT, glfwToSwingMouseButton(button)
 		));
 
 		return super.mouseReleased(mouseX, mouseY, button);
@@ -144,7 +148,7 @@ public abstract class JComponentScreen extends Screen
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
 		dispatchEvent(frame.createMouseEvent(
-				frame, MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), 0,
+				frame, this.mouseButtonMask != 0 ? MouseEvent.MOUSE_DRAGGED : MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), this.mouseButtonMask,
 				x, y, x, y,
 				0, false, MouseEvent.NOBUTTON
 		));
@@ -158,7 +162,7 @@ public abstract class JComponentScreen extends Screen
 		var vk = glfwToSwingKeyCode(keyCode);
 		dispatchEvent(frame.createKeyEvent(
 				frame, KeyEvent.KEY_PRESSED, System.currentTimeMillis(),
-				glfwToSwingModifiers(modifiers), vk, (char)vk
+				glfwToSwingKeyModifiers(modifiers), vk, (char)vk
 		));
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
@@ -169,7 +173,7 @@ public abstract class JComponentScreen extends Screen
 		var vk = glfwToSwingKeyCode(keyCode);
 		dispatchEvent(frame.createKeyEvent(
 				frame, KeyEvent.KEY_RELEASED, System.currentTimeMillis(),
-				glfwToSwingModifiers(modifiers), vk, (char)vk
+				glfwToSwingKeyModifiers(modifiers), vk, (char)vk
 		));
 		return super.keyPressed(keyCode, scanCode, modifiers);
 	}
@@ -179,14 +183,14 @@ public abstract class JComponentScreen extends Screen
 	{
 		dispatchEvent(frame.createKeyEvent(
 				frame, KeyEvent.KEY_TYPED, System.currentTimeMillis(),
-				glfwToSwingModifiers(modifiers), KeyEvent.VK_UNDEFINED, chr
+				glfwToSwingKeyModifiers(modifiers), KeyEvent.VK_UNDEFINED, chr
 		));
 		return super.charTyped(chr, modifiers);
 	}
 
-	private static int glfwToSwingModifiers(int glfwModifiers)
+	private int glfwToSwingKeyModifiers(int glfwModifiers)
 	{
-		int mods = 0;
+		int mods = this.mouseButtonMask;
 
 		if ((glfwModifiers & GLFW.GLFW_MOD_CONTROL) != 0)
 			mods |= InputEvent.CTRL_DOWN_MASK;
@@ -200,9 +204,32 @@ public abstract class JComponentScreen extends Screen
 		return mods;
 	}
 
+	private static int glfwToSwingMouseButtonMask(int glfwButton)
+	{
+		if (glfwButton == GLFW.GLFW_MOUSE_BUTTON_LEFT)
+			return MouseEvent.BUTTON1_DOWN_MASK;
+		else if (glfwButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE)
+			return MouseEvent.BUTTON2_DOWN_MASK;
+		else if (glfwButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT)
+			return MouseEvent.BUTTON3_DOWN_MASK;
+
+		return 0;
+	}
+
 	private static int glfwToSwingKeyCode(int glfwScanCode)
 	{
 		return GlfwKeyUtil.getAwtGet(glfwScanCode);
+	}
+
+	private static int glfwToSwingMouseButton(int glfwButton)
+	{
+		if (glfwButton == GLFW.GLFW_MOUSE_BUTTON_LEFT)
+			return MouseEvent.BUTTON1;
+		else if (glfwButton == GLFW.GLFW_MOUSE_BUTTON_MIDDLE)
+			return MouseEvent.BUTTON2;
+		else if (glfwButton == GLFW.GLFW_MOUSE_BUTTON_RIGHT)
+			return MouseEvent.BUTTON3;
+		return MouseEvent.NOBUTTON;
 	}
 
 	@Override
@@ -219,7 +246,7 @@ public abstract class JComponentScreen extends Screen
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
-		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFFF0F0F0, 0xFFF0F0F0);
+		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
 
 		renderContent();
 		renderInterface();
