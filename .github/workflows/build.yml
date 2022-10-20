@@ -43,6 +43,6 @@ jobs:
           mkdir -p projects/pswg/build/libs
           cd projects/pswg/build/libs
           pip install -r ../../../../scripts/requirements.txt
-          python ../../../../scripts/upload_dev.py --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }}
+          python ../../../../scripts/upload_dev.py --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }} --serverupdate ${{ secrets.SERVER_UPDATER }}
         env:
           BUILD_NUMBER: ${{ github.run_number }}
