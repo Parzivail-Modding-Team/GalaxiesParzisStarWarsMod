@@ -21,7 +21,7 @@ public class TitleScreenMixin extends Screen
 		super(Text.empty());
 	}
 
-	@Inject(method = "Lnet/minecraft/client/gui/screen/TitleScreen;init()V", at = @At("TAIL"))
+	@Inject(method = "init()V", at = @At("TAIL"))
 	void init(CallbackInfo ci)
 	{
 		int l = this.height / 4 + 48;
