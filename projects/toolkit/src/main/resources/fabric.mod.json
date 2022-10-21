@@ -2,7 +2,7 @@
 	"schemaVersion": 1,
 	"id": "pswg-toolkit",
 	"version": "${version}",
-	"name": "PSWG Toolkit",
+	"name": "Aurek Toolkit",
 	"description": "Tools for mod developers and addon authors",
 	"authors": [
 		"parzivail",
