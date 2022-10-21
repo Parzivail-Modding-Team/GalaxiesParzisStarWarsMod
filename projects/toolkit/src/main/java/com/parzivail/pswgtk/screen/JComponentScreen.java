@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.*;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Vec2f;
 import org.lwjgl.glfw.GLFW;
 
 import javax.swing.*;
@@ -25,7 +26,9 @@ public abstract class JComponentScreen extends Screen
 	private final Screen parent;
 	private final Thread swingThread;
 	private final LightweightFrameWrapper frame;
+
 	private TextureBackedContentWrapper contentWrapper;
+	private Rectangle hostRectangle;
 
 	private int mouseButtonMask = 0;
 
@@ -36,7 +39,6 @@ public abstract class JComponentScreen extends Screen
 
 		this.frame = new LightweightFrameWrapper();
 		this.swingThread = new Thread(null, this::runSwing, "pswg-toolkit-awt");
-		swingThread.start();
 	}
 
 	private void runSwing()
@@ -45,7 +47,7 @@ public abstract class JComponentScreen extends Screen
 
 		var window = this.client.getWindow();
 		runOnEDT(() -> {
-			contentWrapper = new TextureBackedContentWrapper(buildInterface());
+			contentWrapper = new TextureBackedContentWrapper(getRootComponent());
 			frame.setContent(contentWrapper);
 			frame.setBounds(0, 0, window.getFramebufferWidth(), window.getFramebufferHeight());
 		});
@@ -56,7 +58,7 @@ public abstract class JComponentScreen extends Screen
 		dispatchEvent(new FocusEvent((Component)dummyEvent.getSource(), FocusEvent.FOCUS_GAINED));
 	}
 
-	protected abstract JComponent buildInterface();
+	protected abstract JComponent getRootComponent();
 
 	@Override
 	protected void init()
@@ -65,14 +67,8 @@ public abstract class JComponentScreen extends Screen
 
 		super.init();
 
-		var window = this.client.getWindow();
-		runOnEDT(() -> {
-			if (contentWrapper != null)
-			{
-				contentWrapper.getComponent().setBounds(0, 0, window.getFramebufferWidth(), window.getFramebufferHeight());
-				frame.setBounds(0, 0, window.getFramebufferWidth(), window.getFramebufferHeight());
-			}
-		});
+		if (this.contentWrapper == null && !swingThread.isAlive())
+			swingThread.start();
 	}
 
 	private void dispatchEvent(AWTEvent event)
@@ -233,6 +229,21 @@ public abstract class JComponentScreen extends Screen
 	}
 
 	@Override
+	public void tick()
+	{
+		var window = this.client.getWindow();
+		var currentRect = new Rectangle(window.getX(), window.getY(), window.getFramebufferWidth(), window.getFramebufferHeight());
+		if (!currentRect.equals(hostRectangle))
+		{
+			this.hostRectangle = currentRect;
+			runOnEDT(() -> {
+				this.frame.setBounds(currentRect.x, currentRect.y, currentRect.width, currentRect.height);
+				this.contentWrapper.getComponent().setBounds(0, 0, currentRect.width, currentRect.height);
+			});
+		}
+	}
+
+	@Override
 	public void close()
 	{
 		assert this.client != null;
@@ -241,6 +252,14 @@ public abstract class JComponentScreen extends Screen
 
 		if (swingThread != null)
 			swingThread.interrupt();
+	}
+
+	protected Vec2f transformSwingToScreen(Vec2f point)
+	{
+		return new Vec2f(
+				this.width * point.x / this.client.getWindow().getFramebufferWidth(),
+				this.height * point.y / this.client.getWindow().getFramebufferHeight()
+		);
 	}
 
 	@Override
