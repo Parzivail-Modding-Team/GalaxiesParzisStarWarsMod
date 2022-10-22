@@ -37,11 +37,13 @@ public class SwgBlocks
 	public static class Workbench
 	{
 		@RegistryName("blaster_workbench")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Blaster = new BlasterWorkbenchBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("blaster_workbench")
 		public static final BlockEntityType<BlasterWorkbenchBlockEntity> BlasterBlockEntityType = FabricBlockEntityTypeBuilder.create(BlasterWorkbenchBlockEntity::new, Blaster).build();
 
 		@RegistryName("lightsaber_forge")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block Lightsaber = new LightsaberForgeBlock(FabricBlockSettings.of(Material.WOOD).sounds(BlockSoundGroup.WOOD).strength(2.5F));
 		@RegistryName("lightsaber_forge")
 		public static final BlockEntityType<LightsaberForgeBlockEntity> LightsaberBlockEntityType = FabricBlockEntityTypeBuilder.create(LightsaberForgeBlockEntity::new, Lightsaber).build();
@@ -610,6 +612,7 @@ public class SwgBlocks
 		@RegistryName("scaffold")
 		public static final Block Scaffold = new ScaffoldBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("scaffold_stairs")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final Block ScaffoldStairs = new LimitedStairsBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
@@ -634,8 +637,10 @@ public class SwgBlocks
 		public static final Block Fixture = new InvertedLampBlock(FabricBlockSettings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(BlockUtil.createLightLevelFromBlockState(15)).strength(0.3F));
 
 		@RegistryName("red_hangar_light")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final Block RedHangar = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("blue_hangar_light")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final Block BlueHangar = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("wall_cluster_light")
 		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
@@ -746,6 +751,7 @@ public class SwgBlocks
 	public static class Tank
 	{
 		@RegistryName("fusion_fuel_tank")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final Block Fusion = new WaterloggableRotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
