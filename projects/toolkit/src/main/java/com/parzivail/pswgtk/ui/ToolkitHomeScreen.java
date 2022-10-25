@@ -3,6 +3,7 @@ package com.parzivail.pswgtk.ui;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswgtk.screen.JComponentScreen;
+import com.parzivail.pswgtk.swing.ClickListener;
 import com.parzivail.pswgtk.swing.TextureBackedContentWrapper;
 import com.parzivail.pswgtk.world.ParametricBlockRenderView;
 import io.wispforest.worldmesher.WorldMesh;
@@ -15,13 +16,13 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec2f;
+import net.minecraft.world.BlockRenderView;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-public class ToolkitHomeScreen extends JComponentScreen implements MouseListener
+public class ToolkitHomeScreen extends JComponentScreen
 {
 	public static final String I18N_TOOLKIT_HOME = Resources.screen("toolkit_home");
 
@@ -29,16 +30,22 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseListener
 	private final JPanel contentPanel;
 	private final JButton rebuildButton;
 
+	private final BlockRenderView world;
 	private final WorldMesh mesh;
 
 	public ToolkitHomeScreen(Screen parent)
 	{
 		super(parent, Text.translatable(I18N_TOOLKIT_HOME));
 
+		this.mesh = new WorldMesh.Builder(this.world = new ParametricBlockRenderView(this::getBlockState), BlockPos.ORIGIN, new BlockPos(256, 256, 256))
+				.build();
+
 		var panel = new JPanel();
 
 		panel.add(this.rebuildButton = new JButton("Rebuild"));
-		this.rebuildButton.addMouseListener(this);
+
+		// TODO: https://github.com/gliscowo/worldmesher/pull/4
+		ClickListener.add(this.rebuildButton, this::rebuildClicked);
 
 		this.root = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		this.root.setLeftComponent(panel);
@@ -46,20 +53,17 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseListener
 		this.contentPanel = new JPanel();
 		this.contentPanel.setBackground(new Color(TextureBackedContentWrapper.MASK_COLOR));
 		this.root.setRightComponent(contentPanel);
-
-		mesh = new WorldMesh.Builder(new ParametricBlockRenderView(this::getBlockState), BlockPos.ORIGIN, new BlockPos(32, 32, 32))
-				.build();
 	}
 
 	private BlockState getBlockState(BlockPos pos)
 	{
-		var x = pos.getX() - 16;
-		var y = pos.getY() - 16;
-		var z = pos.getZ() - 16;
-		var R = 12;
-		var r = 6;
+		var x = pos.getX() - 128;
+		var y = pos.getY() - 128;
+		var z = pos.getZ() - 128;
+		var R = 96;
+		var r = 32;
 		if (Math.pow(R - Math.sqrt(x * x + z * z), 2) + y * y <= r * r)
-			return Blocks.FIRE.getDefaultState();
+			return Blocks.STONE.getDefaultState();
 		return Blocks.AIR.getDefaultState();
 	}
 
@@ -79,36 +83,9 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseListener
 		return new Vec2f(contentPanel.getWidth(), contentPanel.getHeight());
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e)
+	private void rebuildClicked(MouseEvent e)
 	{
-		if (e.getSource() == rebuildButton)
-		{
-			// TODO: if you render a set of blocks that use one render layer,
-			//  delete those blocks, add new blocks which use a different render
-			//  layer, and scheduleRebuild, the original blocks remain
-			mesh.scheduleRebuild();
-		}
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e)
-	{
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e)
-	{
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e)
-	{
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e)
-	{
+		mesh.scheduleRebuild();
 	}
 
 	@Override
@@ -128,7 +105,7 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseListener
 
 		rsm.translate(contentCenter.x, contentCenter.y, 50);
 		rsm.scale(1, -1, 1);
-		var f = 6;
+		var f = 1;
 		rsm.scale(f, f, f);
 		//		rsm.scale(100, 100, 100);
 		RenderSystem.applyModelViewMatrix();
@@ -141,7 +118,7 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseListener
 		ms.multiply(new Quaternion(30, 0, 0, true));
 		ms.multiply(new Quaternion(0, (System.currentTimeMillis() % 36000) / 100f, 0, true));
 
-		ms.translate(-16, -16, -16);
+		ms.translate(-128, -128, -128);
 
 		//		VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
 		//		var model = ir.getModel(stack, null, null, 0);
