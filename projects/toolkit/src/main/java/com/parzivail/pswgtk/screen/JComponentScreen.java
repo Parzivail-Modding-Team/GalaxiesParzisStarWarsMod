@@ -15,10 +15,7 @@ import org.lwjgl.glfw.GLFW;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.security.AccessController;
 
 public abstract class JComponentScreen extends Screen
@@ -85,6 +82,26 @@ public abstract class JComponentScreen extends Screen
 			SwingUtilities.invokeLater(r);
 	}
 
+	private void onMouseScrolled(MouseWheelEvent event)
+	{
+	}
+
+	private void onMousePressed(MouseEvent event)
+	{
+	}
+
+	private void onMouseReleased(MouseEvent releaseEvent)
+	{
+	}
+
+	private void onMouseClicked(MouseEvent clickEvent)
+	{
+	}
+
+	private void onMouseMoved(MouseEvent event)
+	{
+	}
+
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
 	{
@@ -92,7 +109,9 @@ public abstract class JComponentScreen extends Screen
 
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
-		dispatchEvent(frame.createMouseWheelEvent(frame, 0, x, y, (int)amount));
+		var event = frame.createMouseWheelEvent(frame, 0, x, y, (int)amount);
+		dispatchEvent(event);
+		onMouseScrolled(event);
 
 		return super.mouseScrolled(mouseX, mouseY, amount);
 	}
@@ -105,11 +124,13 @@ public abstract class JComponentScreen extends Screen
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
 		this.mouseButtonMask |= glfwToSwingMouseButtonMask(button);
-		dispatchEvent(frame.createMouseEvent(
+		var event = frame.createMouseEvent(
 				frame, MouseEvent.MOUSE_PRESSED, System.currentTimeMillis(), this.mouseButtonMask,
 				x, y, x, y,
 				1, button == GLFW.GLFW_MOUSE_BUTTON_RIGHT, glfwToSwingMouseButton(button)
-		));
+		);
+		dispatchEvent(event);
+		onMousePressed(event);
 
 		return super.mouseClicked(mouseX, mouseY, button);
 	}
@@ -122,16 +143,20 @@ public abstract class JComponentScreen extends Screen
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
 		this.mouseButtonMask &= ~glfwToSwingMouseButtonMask(button);
-		dispatchEvent(frame.createMouseEvent(
+		var releaseEvent = frame.createMouseEvent(
 				frame, MouseEvent.MOUSE_RELEASED, System.currentTimeMillis(), this.mouseButtonMask,
 				x, y, x, y,
 				1, button == GLFW.GLFW_MOUSE_BUTTON_RIGHT, glfwToSwingMouseButton(button)
-		));
-		dispatchEvent(frame.createMouseEvent(
+		);
+		dispatchEvent(releaseEvent);
+		onMouseReleased(releaseEvent);
+		var clickEvent = frame.createMouseEvent(
 				frame, MouseEvent.MOUSE_CLICKED, System.currentTimeMillis(), this.mouseButtonMask,
 				x, y, x, y,
 				1, button == GLFW.GLFW_MOUSE_BUTTON_RIGHT, glfwToSwingMouseButton(button)
-		));
+		);
+		dispatchEvent(clickEvent);
+		onMouseClicked(clickEvent);
 
 		return super.mouseReleased(mouseX, mouseY, button);
 	}
@@ -143,11 +168,13 @@ public abstract class JComponentScreen extends Screen
 
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
-		dispatchEvent(frame.createMouseEvent(
+		var event = frame.createMouseEvent(
 				frame, this.mouseButtonMask != 0 ? MouseEvent.MOUSE_DRAGGED : MouseEvent.MOUSE_MOVED, System.currentTimeMillis(), this.mouseButtonMask,
 				x, y, x, y,
 				0, false, MouseEvent.NOBUTTON
-		));
+		);
+		dispatchEvent(event);
+		onMouseMoved(event);
 
 		super.mouseMoved(mouseX, mouseY);
 	}
@@ -267,13 +294,13 @@ public abstract class JComponentScreen extends Screen
 	{
 		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
 
-		renderContent();
-		renderInterface();
+		renderContent(matrices);
+		renderInterface(matrices);
 	}
 
-	protected abstract void renderContent();
+	protected abstract void renderContent(MatrixStack matrices);
 
-	private void renderInterface()
+	private void renderInterface(MatrixStack matrices)
 	{
 		if (contentWrapper != null)
 		{
