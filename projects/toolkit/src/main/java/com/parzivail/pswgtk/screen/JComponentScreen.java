@@ -26,6 +26,7 @@ public abstract class JComponentScreen extends Screen
 
 	private TextureBackedContentWrapper contentWrapper;
 	private Rectangle hostRectangle;
+	private boolean isContentReady;
 
 	private int mouseButtonMask = 0;
 
@@ -47,6 +48,7 @@ public abstract class JComponentScreen extends Screen
 			contentWrapper = new TextureBackedContentWrapper(getRootComponent());
 			frame.setContent(contentWrapper);
 			frame.setBounds(0, 0, window.getFramebufferWidth(), window.getFramebufferHeight());
+			isContentReady = true;
 		});
 
 		frame.setVisible(true);
@@ -258,6 +260,9 @@ public abstract class JComponentScreen extends Screen
 	@Override
 	public void tick()
 	{
+		if (!isContentReady)
+			return;
+
 		var window = this.client.getWindow();
 		var currentRect = new Rectangle(window.getX(), window.getY(), window.getFramebufferWidth(), window.getFramebufferHeight());
 		if (!currentRect.equals(hostRectangle))

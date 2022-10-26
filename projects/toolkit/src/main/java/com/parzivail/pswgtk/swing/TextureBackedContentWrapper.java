@@ -73,7 +73,13 @@ public class TextureBackedContentWrapper extends LightweightContentWrapper
 			{
 				RenderSystem.bindTexture(textureId);
 				//				GL11.glTexSubImage2D(GlConst.GL_TEXTURE_2D, 0, x, y, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer.buffer);
-				GL11.glTexSubImage2D(GlConst.GL_TEXTURE_2D, 0, pixelBuffer.x, pixelBuffer.y, pixelBuffer.width, pixelBuffer.height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer.buffer);
+
+				GL11.glPixelStorei(GL11.GL_UNPACK_ROW_LENGTH, pixelBuffer.width);
+				GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 4);
+				GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_PIXELS, x);
+				GL11.glPixelStorei(GL11.GL_UNPACK_SKIP_ROWS, y);
+
+				GL11.glTexSubImage2D(GlConst.GL_TEXTURE_2D, 0, x, y, width, height, GL12.GL_BGRA, GL12.GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer.buffer);
 			}
 		}
 	}
