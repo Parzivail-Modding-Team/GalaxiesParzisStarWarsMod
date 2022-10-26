@@ -2,11 +2,11 @@ package com.parzivail.pswgtk.ui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswgtk.render.ChunkedWorldMesh;
 import com.parzivail.pswgtk.screen.JComponentScreen;
 import com.parzivail.pswgtk.swing.ClickListener;
 import com.parzivail.pswgtk.swing.TextureBackedContentWrapper;
 import com.parzivail.pswgtk.world.ParametricBlockRenderView;
-import io.wispforest.worldmesher.WorldMesh;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,6 +14,7 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.world.BlockRenderView;
@@ -31,14 +32,13 @@ public class ToolkitHomeScreen extends JComponentScreen
 	private final JButton rebuildButton;
 
 	private final BlockRenderView world;
-	private final WorldMesh mesh;
+	private final ChunkedWorldMesh mesh;
 
 	public ToolkitHomeScreen(Screen parent)
 	{
 		super(parent, Text.translatable(I18N_TOOLKIT_HOME));
 
-		this.mesh = new WorldMesh.Builder(this.world = new ParametricBlockRenderView(this::getBlockState), BlockPos.ORIGIN, new BlockPos(256, 256, 256))
-				.build();
+		this.mesh = new ChunkedWorldMesh(this.world = new ParametricBlockRenderView(this::getBlockState), ChunkPos.ORIGIN, new ChunkPos(8, 8), 0, 128);
 
 		var panel = new JPanel();
 
@@ -57,11 +57,11 @@ public class ToolkitHomeScreen extends JComponentScreen
 
 	private BlockState getBlockState(BlockPos pos)
 	{
-		var x = pos.getX() - 128;
-		var y = pos.getY() - 128;
-		var z = pos.getZ() - 128;
-		var R = 96;
-		var r = 32;
+		var x = pos.getX() - 64;
+		var y = pos.getY() - 64;
+		var z = pos.getZ() - 64;
+		var R = 48;
+		var r = 16;
 		if (Math.pow(R - Math.sqrt(x * x + z * z), 2) + y * y <= r * r)
 			return Blocks.STONE.getDefaultState();
 		return Blocks.AIR.getDefaultState();
@@ -93,9 +93,6 @@ public class ToolkitHomeScreen extends JComponentScreen
 	{
 		assert this.client != null;
 
-		if (!mesh.canRender())
-			return;
-
 		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
 		var rsm = RenderSystem.getModelViewStack();
@@ -118,7 +115,8 @@ public class ToolkitHomeScreen extends JComponentScreen
 		ms.multiply(new Quaternion(30, 0, 0, true));
 		ms.multiply(new Quaternion(0, (System.currentTimeMillis() % 36000) / 100f, 0, true));
 
-		ms.translate(-128, -128, -128);
+		var dim = mesh.getDimensions();
+		ms.translate(-dim.getX() / 2f, -dim.getY() / 2f, -dim.getZ() / 2f);
 
 		//		VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(Tessellator.getInstance().getBuffer());
 		//		var model = ir.getModel(stack, null, null, 0);
