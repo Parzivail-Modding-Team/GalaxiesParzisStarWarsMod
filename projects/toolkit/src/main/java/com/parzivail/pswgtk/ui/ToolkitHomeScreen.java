@@ -59,6 +59,8 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 	private Vec2f prevMousePos = Vec2f.ZERO;
 	private int zoomExponent = 0;
 
+	private SliceController slice;
+
 	public ToolkitHomeScreen(Screen parent)
 	{
 		super(parent, Text.translatable(I18N_TOOLKIT_HOME));
@@ -89,6 +91,7 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 		if (this.mesh != null)
 			this.mesh.close();
 		this.mesh = new ChunkedWorldMesh(this.world, ChunkPos.ORIGIN, new ChunkPos(chunkSideLength, chunkSideLength), minY, maxY);
+		this.slice = new SliceController(this.mesh);
 	}
 
 	private final OpenSimplex2F noise = new OpenSimplex2F(0);
