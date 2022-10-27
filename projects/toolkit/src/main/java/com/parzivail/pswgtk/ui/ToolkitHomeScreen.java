@@ -59,8 +59,6 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 	private Vec2f prevMousePos = Vec2f.ZERO;
 	private int zoomExponent = 0;
 
-	private SliceController slice;
-
 	public ToolkitHomeScreen(Screen parent)
 	{
 		super(parent, Text.translatable(I18N_TOOLKIT_HOME));
@@ -72,6 +70,7 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 
 		// TODO: https://github.com/gliscowo/worldmesher/pull/4
 		panel.add(EventHelper.click(new JButton("Rebuild"), this::rebuildClicked));
+		panel.add(EventHelper.click(new JButton("Slice"), this::sliceClicked));
 
 		this.root = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		this.root.setLeftComponent(panel);
@@ -91,7 +90,7 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 		if (this.mesh != null)
 			this.mesh.close();
 		this.mesh = new ChunkedWorldMesh(this.world, ChunkPos.ORIGIN, new ChunkPos(chunkSideLength, chunkSideLength), minY, maxY);
-		this.slice = new SliceController(this.mesh);
+		this.mesh.populateRenderMap();
 	}
 
 	private final OpenSimplex2F noise = new OpenSimplex2F(0);
@@ -108,6 +107,9 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 
 		var d = this.mesh.getDimensions();
 		if (x < 0 || x > d.getX() || z < 0 || z > d.getZ() || y < 0 || y > d.getY())
+			return Blocks.AIR.getDefaultState();
+
+		if (mesh.getSlice().shouldChunkBeEmpty(pos.getX() >> 4, pos.getZ() >> 4))
 			return Blocks.AIR.getDefaultState();
 
 		//		var height = noise.noise2(x / 100f, z / 100f) + noise.noise2(x / 20f, z / 20f) / 1.5f;
@@ -164,6 +166,12 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 	private void rebuildClicked(MouseEvent e)
 	{
 		mesh.scheduleRebuild();
+	}
+
+	private void sliceClicked(MouseEvent e)
+	{
+		mesh.getSlice().setValueX(8);
+		mesh.getSlice().setActiveX(false);
 	}
 
 	private void contentPanelPressed(MouseEvent mouseEvent)

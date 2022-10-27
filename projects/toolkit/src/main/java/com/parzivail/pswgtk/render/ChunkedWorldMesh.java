@@ -1,5 +1,6 @@
 package com.parzivail.pswgtk.render;
 
+import com.parzivail.pswgtk.ui.SliceController;
 import io.wispforest.worldmesher.WorldMesh;
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -13,16 +14,28 @@ public class ChunkedWorldMesh
 	private final Long2ObjectMap<WorldMesh> renderMap;
 	private final BlockRenderView world;
 	private final ChunkPos min;
+	private final ChunkPos max;
+	private final int minY;
+	private final int maxY;
 	private final Vec3i dimensions;
+	private final SliceController slice;
 
 	public ChunkedWorldMesh(BlockRenderView world, ChunkPos min, ChunkPos max, int minY, int maxY)
 	{
 		this.world = world;
 		this.min = min;
+		this.max = max;
+		this.minY = minY;
+		this.maxY = maxY;
 
 		this.dimensions = new Vec3i((max.x - min.x) << 4, maxY - minY, (max.z - min.z) << 4);
 
 		this.renderMap = new Long2ObjectArrayMap<>((max.x - min.x) * (max.z - min.z));
+		this.slice = new SliceController(this);
+	}
+
+	public void populateRenderMap()
+	{
 		ChunkPos.stream(min, max).forEach(chunkPos -> {
 			this.renderMap.put(
 					chunkPos.toLong(),
@@ -33,9 +46,24 @@ public class ChunkedWorldMesh
 		});
 	}
 
+	public ChunkPos getMin()
+	{
+		return min;
+	}
+
+	public ChunkPos getMax()
+	{
+		return max;
+	}
+
 	public Vec3i getDimensions()
 	{
 		return dimensions;
+	}
+
+	public SliceController getSlice()
+	{
+		return slice;
 	}
 
 	public void scheduleRebuild()
@@ -66,6 +94,9 @@ public class ChunkedWorldMesh
 			var chunkX = (int)chunkPos;
 			var chunkZ = (int)(chunkPos >> 32);
 
+			if (isChunkHidden(chunkX, chunkZ))
+				continue;
+
 			var dX = chunkX - min.x;
 			var dZ = chunkZ - min.z;
 
@@ -87,5 +118,10 @@ public class ChunkedWorldMesh
 	public void close()
 	{
 		renderMap.values().forEach(WorldMesh::reset);
+	}
+
+	public boolean isChunkHidden(int chunkX, int chunkZ)
+	{
+		return !slice.shouldChunkRender(chunkX, chunkZ);
 	}
 }
