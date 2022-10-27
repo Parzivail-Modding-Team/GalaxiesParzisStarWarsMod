@@ -1,13 +1,15 @@
 package com.parzivail.pswgtk.swing;
 
-import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.function.Consumer;
 
 public class EventHelper
 {
-	public static void click(JComponent target, Consumer<MouseEvent> handler)
+	public static <T extends Component> T click(T target, Consumer<MouseEvent> handler)
 	{
 		target.addMouseListener(new MouseAdapter()
 		{
@@ -17,9 +19,10 @@ public class EventHelper
 				handler.accept(e);
 			}
 		});
+		return target;
 	}
 
-	public static void press(JComponent target, Consumer<MouseEvent> handler)
+	public static <T extends Component> T press(T target, Consumer<MouseEvent> handler)
 	{
 		target.addMouseListener(new MouseAdapter()
 		{
@@ -29,5 +32,19 @@ public class EventHelper
 				handler.accept(e);
 			}
 		});
+		return target;
+	}
+
+	public static <T extends Component> T keyPressed(T target, Consumer<KeyEvent> handler)
+	{
+		target.addKeyListener(new KeyAdapter()
+		{
+			@Override
+			public void keyPressed(KeyEvent e)
+			{
+				handler.accept(e);
+			}
+		});
+		return target;
 	}
 }

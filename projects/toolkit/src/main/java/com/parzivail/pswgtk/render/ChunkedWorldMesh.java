@@ -24,7 +24,12 @@ public class ChunkedWorldMesh
 
 		this.renderMap = new Long2ObjectArrayMap<>((max.x - min.x) * (max.z - min.z));
 		ChunkPos.stream(min, max).forEach(chunkPos -> {
-			this.renderMap.put(chunkPos.toLong(), new WorldMesh.Builder(world, chunkPos.getStartPos().add(0, minY, 0), chunkPos.getStartPos().add(15, maxY, 15)).build());
+			this.renderMap.put(
+					chunkPos.toLong(),
+					new WorldMesh.Builder(world, chunkPos.getStartPos().add(0, minY, 0), chunkPos.getStartPos().add(15, maxY, 15))
+							.enableGlobalNeighbors()
+							.build()
+			);
 		});
 	}
 
@@ -68,10 +73,11 @@ public class ChunkedWorldMesh
 			matrixStack.translate(dX << 4, 0, dZ << 4);
 			if (state.isBuildStage)
 			{
-				var f = 16 / 17f;
-				matrixStack.translate(8, dimensions.getY() / 2f, 8);
-				matrixStack.scale(f, f, f);
-				matrixStack.translate(-8, -dimensions.getY() / 2f, -8);
+				var lateralFactor = 16 / 17f;
+				var height = dimensions.getY();
+				matrixStack.translate(8, height / 2f, 8);
+				matrixStack.scale(lateralFactor, 1, lateralFactor);
+				matrixStack.translate(-8, -height / 2f, -8);
 			}
 			mesh.render(matrixStack);
 			matrixStack.pop();
