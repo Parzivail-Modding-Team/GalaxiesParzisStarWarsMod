@@ -83,4 +83,9 @@ public class ChunkedWorldMesh
 			matrixStack.pop();
 		}
 	}
+
+	public void close()
+	{
+		renderMap.values().forEach(WorldMesh::reset);
+	}
 }

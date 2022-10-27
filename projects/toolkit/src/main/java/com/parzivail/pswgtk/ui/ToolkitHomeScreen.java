@@ -7,13 +7,15 @@ import com.parzivail.pswgtk.screen.JComponentScreen;
 import com.parzivail.pswgtk.swing.EventHelper;
 import com.parzivail.pswgtk.swing.TextureBackedContentWrapper;
 import com.parzivail.pswgtk.util.AnimatedFloat;
-import com.parzivail.pswgtk.world.ParametricBlockRenderView;
+import com.parzivail.pswgtk.world.ProceduralBlockRenderView;
+import com.parzivail.util.noise.OpenSimplex2F;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.*;
 import net.minecraft.world.BlockRenderView;
@@ -27,16 +29,21 @@ import java.util.HashMap;
 
 public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionListener
 {
+	private static <T> void putNumpadEmu(HashMap<Integer, T> map, int key, T value)
+	{
+		map.put(key, value);
+		map.put(key + KeyEvent.VK_NUMPAD0, value);
+	}
+
 	public static final String I18N_TOOLKIT_HOME = Resources.screen("toolkit_home");
 
-	private static final HashMap<Integer, Direction> VIEWPORT_CAMERA_PRESETS = Util.make(() -> {
-		var h = new HashMap<Integer, Direction>();
-		h.put(KeyEvent.VK_1, Direction.SOUTH);
-		h.put(KeyEvent.VK_NUMPAD1, Direction.SOUTH);
-		h.put(KeyEvent.VK_7, Direction.UP);
-		h.put(KeyEvent.VK_NUMPAD7, Direction.UP);
-		h.put(KeyEvent.VK_3, Direction.EAST);
-		h.put(KeyEvent.VK_NUMPAD3, Direction.EAST);
+	private static final HashMap<Integer, Pair<Vec3f, Vec3f>> VIEWPORT_DIRECTION_PRESETS = Util.make(() -> {
+		var h = new HashMap<Integer, Pair<Vec3f, Vec3f>>();
+		putNumpadEmu(h, KeyEvent.VK_1, new Pair<>(Direction.SOUTH.getUnitVector(), Direction.NORTH.getUnitVector()));
+		putNumpadEmu(h, KeyEvent.VK_7, new Pair<>(Direction.UP.getUnitVector(), Direction.DOWN.getUnitVector()));
+		putNumpadEmu(h, KeyEvent.VK_3, new Pair<>(Direction.EAST.getUnitVector(), Direction.WEST.getUnitVector()));
+		putNumpadEmu(h, KeyEvent.VK_9, new Pair<>(new Vec3f(1, 1, 1), new Vec3f(-1, 1, 1)));
+		putNumpadEmu(h, KeyEvent.VK_5, new Pair<>(new Vec3f(1, 1, -1), new Vec3f(-1, 1, -1)));
 		return h;
 	});
 
@@ -44,11 +51,11 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 	private final JPanel contentPanel;
 
 	private final BlockRenderView world;
-	private final ChunkedWorldMesh mesh;
 
-	private final AnimatedFloat yaw = new AnimatedFloat(1.5f, 0.1f, 45);
-	private final AnimatedFloat pitch = new AnimatedFloat(1.5f, 0.1f, 60);
+	private final AnimatedFloat yaw = new AnimatedFloat(1, 0.1f, 45);
+	private final AnimatedFloat pitch = new AnimatedFloat(1, 0.1f, 60);
 
+	private ChunkedWorldMesh mesh;
 	private Vec2f prevMousePos = Vec2f.ZERO;
 	private int zoomExponent = 0;
 
@@ -56,7 +63,8 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 	{
 		super(parent, Text.translatable(I18N_TOOLKIT_HOME));
 
-		this.mesh = new ChunkedWorldMesh(this.world = new ParametricBlockRenderView(this::getBlockState), ChunkPos.ORIGIN, new ChunkPos(8, 8), 0, 128);
+		this.world = new ProceduralBlockRenderView(this::getBlockState);
+		createMesh(16, 0, 128);
 
 		var panel = new JPanel();
 
@@ -76,16 +84,62 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 		this.root.setRightComponent(contentPanel);
 	}
 
+	private void createMesh(int chunkSideLength, int minY, int maxY)
+	{
+		if (this.mesh != null)
+			this.mesh.close();
+		this.mesh = new ChunkedWorldMesh(this.world, ChunkPos.ORIGIN, new ChunkPos(chunkSideLength, chunkSideLength), minY, maxY);
+	}
+
+	private final OpenSimplex2F noise = new OpenSimplex2F(0);
+
 	private BlockState getBlockState(BlockPos pos)
 	{
-		var x = pos.getX() - 64 + 0.5;
-		var y = pos.getY() - 64 + 0.5;
-		var z = pos.getZ() - 64 + 0.5;
-		var R = 48;
-		var r = 16;
-		if (Math.pow(R - Math.sqrt(x * x + z * z), 2) + y * y <= r * r)
+		//		var x = pos.getX() - 64 + 0.5;
+		//		var y = pos.getY() - 64 + 0.5;
+		//		var z = pos.getZ() - 64 + 0.5;
+
+		var x = pos.getX();
+		var y = pos.getY();
+		var z = pos.getZ();
+
+		var d = this.mesh.getDimensions();
+		if (x < 0 || x > d.getX() || z < 0 || z > d.getZ() || y < 0 || y > d.getY())
+			return Blocks.AIR.getDefaultState();
+
+		//		var height = noise.noise2(x / 100f, z / 100f) + noise.noise2(x / 20f, z / 20f) / 1.5f;
+		var height = noise.noise2(x / 100f, z / 100f) + noise.noise2(x / 50f, z / 50f) / 2;
+		height *= 5;
+		height += 32;
+		height = (int)height;
+		if (y == height)
+			return Blocks.GRASS_BLOCK.getDefaultState();
+		else if (y == 0)
+			return Blocks.BEDROCK.getDefaultState();
+		else if (y < height && Math.abs(y - height) < 10)
+			return Blocks.DIRT.getDefaultState();
+		else if (y < height)
 			return Blocks.STONE.getDefaultState();
+		//		var R = 48;
+		//		var r = 16;
+		//		if (Math.pow(R - Math.sqrt(x * x + z * z), 2) + y * y <= r * r)
+		//		{
+		//			if (z == 0.5 && x > 0)
+		//				return Blocks.RED_WOOL.getDefaultState();
+		//			if (x == 0.5 && z > 0)
+		//				return Blocks.BLUE_WOOL.getDefaultState();
+		//			return Blocks.STONE.getDefaultState();
+		//		}
 		return Blocks.AIR.getDefaultState();
+	}
+
+	@Override
+	public void close()
+	{
+		if (this.mesh != null)
+			this.mesh.close();
+
+		super.close();
 	}
 
 	@Override
@@ -118,16 +172,9 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 	private void contentPanelKeyPressed(KeyEvent e)
 	{
 		var c = e.getKeyCode();
-		var cameraPreset = VIEWPORT_CAMERA_PRESETS.get(c);
+		var cameraPreset = VIEWPORT_DIRECTION_PRESETS.get(c);
 		if (cameraPreset != null)
-		{
-			var scale = e.isShiftDown() ? -1 : 1;
-
-			var vec3d = new Vec3d(cameraPreset.getUnitVector()).multiply(scale);
-			double d = vec3d.horizontalLength();
-			this.yaw.setTarget((float)(MathHelper.atan2(vec3d.x, vec3d.z) * MathHelper.DEGREES_PER_RADIAN));
-			this.pitch.setTarget((float)(MathHelper.atan2(vec3d.y, d) * MathHelper.DEGREES_PER_RADIAN));
-		}
+			setCameraPosition(e.isShiftDown() ? cameraPreset.getRight() : cameraPreset.getLeft());
 		else
 		{
 			if (c == KeyEvent.VK_4 || c == KeyEvent.VK_NUMPAD4)
@@ -139,6 +186,14 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 			else if (c == KeyEvent.VK_2 || c == KeyEvent.VK_NUMPAD2)
 				this.pitch.setTarget(this.pitch.getValue() - 22.5f);
 		}
+	}
+
+	private void setCameraPosition(Vec3f pos)
+	{
+		var vec3d = new Vec3d(pos).normalize();
+		double d = vec3d.horizontalLength();
+		this.yaw.setTarget((float)(MathHelper.atan2(vec3d.x, vec3d.z) * MathHelper.DEGREES_PER_RADIAN));
+		this.pitch.setTarget((float)(MathHelper.atan2(vec3d.y, d) * MathHelper.DEGREES_PER_RADIAN));
 	}
 
 	@Override

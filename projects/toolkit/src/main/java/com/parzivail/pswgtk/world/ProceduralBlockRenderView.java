@@ -15,12 +15,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Function;
 
-public class ParametricBlockRenderView implements BlockRenderView, ChunkProvider
+public class ProceduralBlockRenderView implements BlockRenderView, ChunkProvider
 {
 	private final LightingProvider lightingProvider;
 	private final Function<BlockPos, BlockState> blockGetter;
 
-	public ParametricBlockRenderView(Function<BlockPos, BlockState> blockGetter)
+	public ProceduralBlockRenderView(Function<BlockPos, BlockState> blockGetter)
 	{
 		this.blockGetter = blockGetter;
 		this.lightingProvider = new LightingProvider(this, true, true);
@@ -50,7 +50,7 @@ public class ParametricBlockRenderView implements BlockRenderView, ChunkProvider
 	@Override
 	public int getColor(BlockPos pos, ColorResolver colorResolver)
 	{
-		return 0xFFFFFF;
+		return 0x22BB00;
 	}
 
 	@Nullable
