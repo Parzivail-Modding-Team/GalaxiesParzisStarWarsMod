@@ -447,6 +447,9 @@ public class SwgItems
 		@RegistryName("spawn_landspeeder_x34")
 		public static final Item LandspeederX34 = new SpawnEntityItem(SwgEntities.Speeder.X34, new Item.Settings().group(Galaxies.TabItems), 0);
 
+		@RegistryName("spawn_zephyr_j")
+		public static final Item ZephyrJ = new SpawnEntityItem(SwgEntities.Speeder.ZephyrJ, new Item.Settings().group(Galaxies.TabItems), 0);
+
 		@RegistryName("spawn_faa")
 		public static final Item Faa = new SpawnEggItem(SwgEntities.Fish.Faa, 0xE9933E, 0x9471EB, new Item.Settings().group(Galaxies.TabItems));
 

@@ -69,6 +69,7 @@ public class PswgTarkin
 		lang.entity(SwgEntities.Misc.ThrownLightsaber).build(assets);
 		lang.entity(SwgEntities.Ship.T65bXwing).build(assets);
 		lang.entity(SwgEntities.Speeder.X34).build(assets);
+		lang.entity(SwgEntities.Speeder.ZephyrJ).build(assets);
 		lang.entity(SwgEntities.Fish.Faa).build(assets);
 		lang.entity(SwgEntities.Fish.Laa).build(assets);
 		lang.entity(SwgEntities.Amphibian.Worrt).build(assets);
@@ -927,6 +928,7 @@ public class PswgTarkin
 
 		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);
 		ItemGenerator.basic(SwgItems.Spawners.LandspeederX34).build(assets);
+		ItemGenerator.basic(SwgItems.Spawners.ZephyrJ).build(assets);
 
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Faa).build(assets);
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Laa).build(assets);

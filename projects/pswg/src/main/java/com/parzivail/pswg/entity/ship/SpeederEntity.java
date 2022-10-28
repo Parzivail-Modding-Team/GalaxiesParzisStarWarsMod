@@ -135,14 +135,6 @@ public class SpeederEntity extends ShipEntity
 	}
 
 	@Override
-	public Vec3d getPassengerSocket(int passengerIndex)
-	{
-		if (passengerIndex > 0)
-			return new Vec3d(0.5f, 0.1f, 1.25f);
-		return new Vec3d(-0.5f, 0.1f, 1.25f);
-	}
-
-	@Override
 	protected Vec3d getThrottleVelocity(float throttle)
 	{
 		var d = QuatUtil.rotate(MathUtil.NEGZ, getRotation());

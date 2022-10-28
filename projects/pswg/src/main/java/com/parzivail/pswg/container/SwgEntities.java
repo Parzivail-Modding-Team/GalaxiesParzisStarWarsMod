@@ -9,8 +9,9 @@ import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.entity.mammal.BanthaEntity;
 import com.parzivail.pswg.entity.rodent.SandSkitterEntity;
-import com.parzivail.pswg.entity.ship.SpeederEntity;
 import com.parzivail.pswg.entity.ship.T65BXwing;
+import com.parzivail.pswg.entity.ship.X34LandspeederEntity;
+import com.parzivail.pswg.entity.ship.ZephyrJEntity;
 import com.parzivail.util.entity.BucketableFishEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
@@ -42,8 +43,14 @@ public class SwgEntities
 
 	public static class Speeder
 	{
-		public static final EntityType<SpeederEntity> X34 = Registry.register(Registry.ENTITY_TYPE, Resources.id("landspeeder_x34"), FabricEntityTypeBuilder
-				.create(SpawnGroup.MISC, SpeederEntity::new)
+		public static final EntityType<X34LandspeederEntity> X34 = Registry.register(Registry.ENTITY_TYPE, Resources.id("landspeeder_x34"), FabricEntityTypeBuilder
+				.create(SpawnGroup.MISC, X34LandspeederEntity::new)
+				.dimensions(EntityDimensions.fixed(1, 1))
+				.trackRangeBlocks(128)
+				.build());
+
+		public static final EntityType<ZephyrJEntity> ZephyrJ = Registry.register(Registry.ENTITY_TYPE, Resources.id("zephyr_j"), FabricEntityTypeBuilder
+				.create(SpawnGroup.MISC, ZephyrJEntity::new)
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackRangeBlocks(128)
 				.build());
@@ -51,6 +58,7 @@ public class SwgEntities
 		static void register()
 		{
 			entityTypes.add(X34);
+			entityTypes.add(ZephyrJ);
 		}
 	}
 
