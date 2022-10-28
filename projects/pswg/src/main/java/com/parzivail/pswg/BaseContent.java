@@ -95,7 +95,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						Resources.id("dh17"),
 						BlasterArchetype.PISTOL,
 						List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN),
-						2.9f, 75, 1, 0.98f, 500,
+						3.06f, 75, 1, 0.98f, 500,
 						3, 0, 0,
 						new BlasterAxialInfo(1.5f, 3),
 						new BlasterAxialInfo(0, 0),
