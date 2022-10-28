@@ -36,7 +36,7 @@ jobs:
         id: gradle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: --stacktrace clean build
+          arguments: --stacktrace --parallel clean build
       - name: upload
         if: always() && github.ref == 'refs/heads/master' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
         run: |
