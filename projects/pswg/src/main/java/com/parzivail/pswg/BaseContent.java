@@ -195,7 +195,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 								.build()
 				),
 				new BlasterDescriptor(
-						Resources.id("jawa_ion"),
+						Resources.id("ca87"),
 						Resources.id("ion"),
 						BlasterArchetype.ION,
 						List.of(BlasterFiringMode.ION),
