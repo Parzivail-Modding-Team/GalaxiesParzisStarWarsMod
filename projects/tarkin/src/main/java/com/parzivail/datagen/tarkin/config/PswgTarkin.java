@@ -753,6 +753,7 @@ public class PswgTarkin
 		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
 		ItemGenerator.armor(SwgItems.Armor.Stormtrooper, assets);
+		ItemGenerator.armor(SwgItems.Armor.Purgetrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Sandtrooper, assets);
 		ItemGenerator.basic(SwgItems.Armor.SandtrooperBackpack)
 		             .tag(TAG_TRINKETS_CHEST_BACK)

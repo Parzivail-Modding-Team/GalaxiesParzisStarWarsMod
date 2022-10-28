@@ -1,7 +1,7 @@
 package com.parzivail.pswgtcw.client;
 
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
+import com.parzivail.pswg.client.render.armor.BipedEntityArmorModel;
 import net.minecraft.entity.LivingEntity;
 
 public class CloneArmorTransformer implements ArmorRenderer.ArmorRenderTransformer
@@ -24,7 +24,7 @@ public class CloneArmorTransformer implements ArmorRenderer.ArmorRenderTransform
 	}
 
 	@Override
-	public void transform(LivingEntity entity, boolean slim, BipedEntityModel<LivingEntity> armorModel)
+	public void transform(LivingEntity entity, boolean slim, BipedEntityArmorModel<LivingEntity> armorModel)
 	{
 		var helmetPhase1 = armorModel.head.getChild(PART_HEAD_PHASE1);
 		var helmetPhase2 = armorModel.head.getChild(PART_HEAD_PHASE2);

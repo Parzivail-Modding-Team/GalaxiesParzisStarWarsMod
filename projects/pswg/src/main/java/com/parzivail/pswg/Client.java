@@ -279,7 +279,14 @@ public class Client implements ClientModInitializer
 				new ArmorRenderer.Assets(Resources.id("armor/stormtrooper_slim"),
 				                         Resources.id("armor/stormtrooper_default"),
 				                         Resources.id("textures/armor/stormtrooper.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.Purgetrooper,
+				Resources.id("purgetrooper"),
+				new ArmorRenderer.Assets(Resources.id("armor/purgetrooper"),
+				                         Resources.id("textures/armor/purgetrooper.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 		var sandtrooperId = Resources.id("sandtrooper");
 		ArmorRenderer.register(
@@ -289,7 +296,7 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/sandtrooper_slim.png"),
 				                         Resources.id("armor/sandtrooper_default"),
 				                         Resources.id("textures/armor/sandtrooper_default.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.registerExtra(
 				SwgItems.Armor.SandtrooperBackpack,
@@ -317,7 +324,7 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/deathtrooper_slim.png"),
 				                         Resources.id("armor/deathtrooper_default"),
 				                         Resources.id("textures/armor/deathtrooper_default.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 
 		var jumptrooperId = Resources.id("jumptrooper");
@@ -326,7 +333,7 @@ public class Client implements ClientModInitializer
 				jumptrooperId,
 				new ArmorRenderer.Assets(Resources.id("armor/jumptrooper"),
 				                         Resources.id("textures/armor/jumptrooper.png")),
-				new ArmorRenderer.Metadata(ArmorRenderer.ArmThicknessAction.AUTO_THICKNESS, ArmorRenderer.FemaleChestplateAction.HIDE_CUBE)
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.registerExtra(
 				SwgItems.Armor.JumptrooperJetpack,
@@ -356,49 +363,49 @@ public class Client implements ClientModInitializer
 				Resources.id("rebel_pilot"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_pilot"),
 				                         Resources.id("textures/armor/rebel_pilot_visor_up.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelForest,
 				Resources.id("rebel_forest"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
 				                         Resources.id("textures/armor/rebel_forest.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelTropical,
 				Resources.id("rebel_tropical"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
 				                         Resources.id("textures/armor/rebel_tropical.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.BlackImperialOfficer,
 				Resources.id("black_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_black.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.GrayImperialOfficer,
 				Resources.id("gray_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_gray.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.LightGrayImperialOfficer,
 				Resources.id("light_gray_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_light_gray.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.KhakiImperialOfficer,
 				Resources.id("khaki_imperial_officer_hat"),
 				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
 				                         Resources.id("textures/armor/imperial_officer_hat_khaki.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);

@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.loader;
 
 import com.google.common.collect.ImmutableList;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.render.armor.BipedEntityArmorModel;
 import com.parzivail.pswg.mixin.ModelPartAccessor;
 import com.parzivail.util.client.render.ModelAngleAnimator;
 import com.parzivail.util.client.render.MutableAnimatedModel;
@@ -167,6 +168,12 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	{
 		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityModel<>(ensureBipedParts(modelPart)))));
 		return () -> bipedModels.get(modelId);
+	}
+
+	public Supplier<BipedEntityArmorModel<LivingEntity>> getBipedArmorModel(Identifier modelId)
+	{
+		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityArmorModel<>(ensureBipedParts(modelPart)))));
+		return () -> (BipedEntityArmorModel<LivingEntity>)bipedModels.get(modelId);
 	}
 
 	private static ModelPart ensureBipedParts(ModelPart modelPart)
