@@ -289,8 +289,8 @@ public abstract class JComponentScreen extends Screen
 	protected Vec2f transformSwingToScreen(Vec2f point)
 	{
 		return new Vec2f(
-				this.width * point.x / this.client.getWindow().getFramebufferWidth(),
-				this.height * point.y / this.client.getWindow().getFramebufferHeight()
+				(int)(this.width * point.x / this.client.getWindow().getFramebufferWidth()),
+				(int)(this.height * point.y / this.client.getWindow().getFramebufferHeight())
 		);
 	}
 
