@@ -66,14 +66,10 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 		this.world = new ProceduralBlockRenderView(this::getBlockState);
 		createMesh(16, 0, 128);
 
-		var panel = new JPanel();
-
-		// TODO: https://github.com/gliscowo/worldmesher/pull/4
-		panel.add(EventHelper.click(new JButton("Rebuild"), this::rebuildClicked));
-		panel.add(EventHelper.click(new JButton("Slice"), this::sliceClicked));
+		var worldgenControls = new WorldgenControls(this.mesh);
 
 		this.root = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-		this.root.setLeftComponent(panel);
+		this.root.setLeftComponent(worldgenControls.getRoot());
 
 		this.contentPanel = new JPanel();
 		this.contentPanel.setFocusable(true);
@@ -106,7 +102,7 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 		var z = pos.getZ();
 
 		var d = this.mesh.getDimensions();
-		if (x < 0 || x > d.getX() || z < 0 || z > d.getZ() || y < 0 || y > d.getY())
+		if (x < 0 || x >= d.getX() || z < 0 || z >= d.getZ() || y < 0 || y >= d.getY())
 			return Blocks.AIR.getDefaultState();
 
 		if (mesh.getSlice().shouldChunkBeEmpty(pos.getX() >> 4, pos.getZ() >> 4))
@@ -161,17 +157,6 @@ public class ToolkitHomeScreen extends JComponentScreen implements MouseMotionLi
 	private Vec2f getContentSize()
 	{
 		return new Vec2f(contentPanel.getWidth(), contentPanel.getHeight());
-	}
-
-	private void rebuildClicked(MouseEvent e)
-	{
-		mesh.scheduleRebuild();
-	}
-
-	private void sliceClicked(MouseEvent e)
-	{
-		mesh.getSlice().setValueX(8);
-		mesh.getSlice().setActiveX(false);
 	}
 
 	private void contentPanelPressed(MouseEvent mouseEvent)

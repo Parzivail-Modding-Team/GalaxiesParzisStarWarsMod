@@ -133,6 +133,22 @@ public class SliceController
 
 	public boolean shouldChunkBeEmpty(int x, int z)
 	{
-		return (isActiveX && (x == valueX) != reverseX) || (isActiveZ && (z == valueZ) != reverseZ);
+		if (isActiveX)
+		{
+			if (x == valueX && !reverseX)
+				return true;
+			if (x == valueX - 1 && reverseX)
+				return true;
+		}
+
+		if (isActiveZ)
+		{
+			if (z == valueZ && !reverseZ)
+				return true;
+			if (z == valueZ - 1 && reverseZ)
+				return true;
+		}
+
+		return false;
 	}
 }

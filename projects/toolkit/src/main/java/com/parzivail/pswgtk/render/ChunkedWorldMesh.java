@@ -46,6 +46,16 @@ public class ChunkedWorldMesh
 		});
 	}
 
+	public void setSeed(int seed)
+	{
+
+	}
+
+	public int getSeed()
+	{
+		return 0;
+	}
+
 	public ChunkPos getMin()
 	{
 		return min;

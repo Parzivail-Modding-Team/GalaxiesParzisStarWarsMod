@@ -1,11 +1,10 @@
 package com.parzivail.pswgtk.swing;
 
+import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class EventHelper
 {
@@ -46,5 +45,27 @@ public class EventHelper
 			}
 		});
 		return target;
+	}
+
+	public static void createDependency(JCheckBox source, Component... components)
+	{
+		ActionListener l = e -> {
+			for (var c : components)
+				c.setEnabled(source.isSelected());
+		};
+		source.addActionListener(l);
+		l.actionPerformed(null);
+	}
+
+	public static void bindSelected(JCheckBox source, Supplier<Boolean> initializer, Consumer<Boolean> destination)
+	{
+		source.setSelected(initializer.get());
+		source.addActionListener(e -> destination.accept(source.isSelected()));
+	}
+
+	public static void bindIntValue(JSpinner source, Supplier<Integer> initializer, Consumer<Integer> destination)
+	{
+		source.setValue(initializer.get());
+		source.addChangeListener(e -> destination.accept((int)source.getValue()));
 	}
 }
