@@ -290,6 +290,14 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/purgetrooper.png")),
 				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
+		ArmorRenderer.register(
+				SwgItems.Armor.ImperialPilotHelmet,
+				SwgItems.Armor.ImperialPilotKit,
+				Resources.id("imperial_pilot"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_pilot"),
+				                         Resources.id("textures/armor/imperial_pilot.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+		);
 		var sandtrooperId = Resources.id("sandtrooper");
 		ArmorRenderer.register(
 				SwgItems.Armor.Sandtrooper,

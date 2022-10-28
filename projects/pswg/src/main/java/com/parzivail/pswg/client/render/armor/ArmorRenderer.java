@@ -95,7 +95,13 @@ public class ArmorRenderer
 	public static void register(ArmorItem item, Identifier id, Assets assets, Metadata metadata)
 	{
 		register(item, id, assets);
+		MODELKEY_METADATA_MAP.put(id, metadata);
+	}
 
+	public static void register(ArmorItem a, ArmorItem b, Identifier id, Assets assets, Metadata metadata)
+	{
+		register(a, id, assets);
+		register(b, id, assets);
 		MODELKEY_METADATA_MAP.put(id, metadata);
 	}
 

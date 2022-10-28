@@ -53,6 +53,10 @@ public class SwgItems
 		public static final ArmorItems Jumptrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("jumptrooper_jetpack")
 		public static final TrinketItem JumptrooperJetpack = new JetpackItem(new Item.Settings().maxCount(1).group(Galaxies.TabItems), new JetpackItem.Stats());
+		@RegistryName("imperial_pilot_helmet")
+		public static final ArmorItem ImperialPilotHelmet = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("imperial_pilot_kit")
+		public static final ArmorItem ImperialPilotKit = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.CHEST, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_pilot_helmet")
 		public static final ArmorItem RebelPilot = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_forest_helmet")

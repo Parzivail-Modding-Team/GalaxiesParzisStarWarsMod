@@ -764,6 +764,10 @@ public class PswgTarkin
 		ItemGenerator.basic(SwgItems.Armor.JumptrooperJetpack)
 		             .tag(TAG_TRINKETS_CHEST_BACK)
 		             .build(assets);
+		ItemGenerator.basic(SwgItems.Armor.ImperialPilotHelmet)
+		             .build(assets);
+		ItemGenerator.basic(SwgItems.Armor.ImperialPilotKit)
+		             .build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelPilot).build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelForest).build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelTropical).build(assets);
