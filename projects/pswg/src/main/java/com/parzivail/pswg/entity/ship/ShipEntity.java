@@ -233,9 +233,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	public ChaseCam getCamera()
 	{
 		if (camera == null)
-		{
 			camera = new ChaseCam();
-		}
 
 		return camera;
 	}
@@ -363,6 +361,8 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 			if (!usePlayerPerspective())
 				EntityUtil.updateEulerRotation(passenger, q);
+			else
+				passenger.setBodyYaw(this.getYaw());
 
 			passenger.setPosition(this.getX() + vec3d.x, this.getY() + vec3d.y, this.getZ() + vec3d.z);
 			//			this.copyEntityData(passenger);

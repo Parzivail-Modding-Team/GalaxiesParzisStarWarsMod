@@ -12,6 +12,18 @@ public class X34LandspeederEntity extends SpeederEntity
 	}
 
 	@Override
+	protected double getRepulsorSetpoint()
+	{
+		return -0.4;
+	}
+
+	@Override
+	protected int getMaxPassengers()
+	{
+		return 2;
+	}
+
+	@Override
 	public Vec3d getPassengerSocket(int passengerIndex)
 	{
 		if (passengerIndex > 0)

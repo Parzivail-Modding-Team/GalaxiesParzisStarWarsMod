@@ -27,13 +27,7 @@ public class SpeederEntity extends ShipEntity
 
 	protected double getRepulsorSetpoint()
 	{
-		return -0.4;
-	}
-
-	@Override
-	protected int getMaxPassengers()
-	{
-		return 2;
+		return 0;
 	}
 
 	@Override
