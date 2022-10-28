@@ -69,12 +69,18 @@ public class SlidingDoorBlockEntity extends BlockEntity implements BlockEntityCl
 
 	public boolean isMoving()
 	{
-		return world.getBlockState(pos).get(Sliding1x2DoorBlock.MOVING);
+		var state = world.getBlockState(pos);
+		if (!(state.getBlock() instanceof Sliding1x2DoorBlock))
+			return false;
+		return state.get(Sliding1x2DoorBlock.MOVING);
 	}
 
 	public void setMoving(boolean moving)
 	{
-		world.setBlockState(pos, world.getBlockState(pos).with(Sliding1x2DoorBlock.MOVING, moving), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+		var state = world.getBlockState(pos);
+		if (!(state.getBlock() instanceof Sliding1x2DoorBlock))
+			return;
+		world.setBlockState(pos, state.with(Sliding1x2DoorBlock.MOVING, moving), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
 	}
 
 	public boolean isOpening()

@@ -73,7 +73,7 @@ public class SwgEntities
 	{
 		public static final EntityType<BanthaEntity> Bantha = Registry.register(Registry.ENTITY_TYPE, Resources.id("bantha"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, BanthaEntity::new)
-				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))
+				.dimensions(EntityDimensions.fixed(3, 3))
 				.build());
 
 		static void register()
