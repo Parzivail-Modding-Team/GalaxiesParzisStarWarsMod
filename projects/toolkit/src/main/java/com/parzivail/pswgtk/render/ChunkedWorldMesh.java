@@ -40,7 +40,7 @@ public class ChunkedWorldMesh
 			this.renderMap.put(
 					chunkPos.toLong(),
 					new WorldMesh.Builder(world, chunkPos.getStartPos().add(0, minY, 0), chunkPos.getStartPos().add(15, maxY, 15))
-							.enableGlobalNeighbors()
+							// TODO: .enableGlobalNeighbors()
 							.build()
 			);
 		});
@@ -127,7 +127,7 @@ public class ChunkedWorldMesh
 
 	public void close()
 	{
-		renderMap.values().forEach(WorldMesh::reset);
+		// TODO: renderMap.values().forEach(WorldMesh::reset);
 	}
 
 	public boolean isChunkHidden(int chunkX, int chunkZ)
