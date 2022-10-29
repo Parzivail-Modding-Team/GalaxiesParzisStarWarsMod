@@ -16,6 +16,7 @@
 
 package com.parzivail.util.client.model;
 
+import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.BlendMode;
 import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
@@ -27,6 +28,8 @@ import net.fabricmc.fabric.impl.client.indigo.renderer.mesh.MeshBuilderImpl;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
+
+import java.util.Optional;
 
 public abstract class AbstractModel implements BakedModel, FabricBakedModel
 {
@@ -56,20 +59,18 @@ public abstract class AbstractModel implements BakedModel, FabricBakedModel
 
 	protected static MaterialFinder createMaterialFinder()
 	{
-		var renderer = RendererAccess.INSTANCE.getRenderer();
-		if (renderer == null)
-			return new RenderMaterialImpl.Finder();
-		else
-			return renderer.materialFinder();
+		return Optional
+				.ofNullable(RendererAccess.INSTANCE.getRenderer()).map(Renderer::materialFinder)
+				.or(IndiumCompat::getMaterialFinder)
+				.orElse(new RenderMaterialImpl.Finder());
 	}
 
 	protected static MeshBuilder createMeshBuilder()
 	{
-		var renderer = RendererAccess.INSTANCE.getRenderer();
-		if (renderer == null)
-			return new MeshBuilderImpl();
-		else
-			return renderer.meshBuilder();
+		return Optional
+				.ofNullable(RendererAccess.INSTANCE.getRenderer()).map(Renderer::meshBuilder)
+				.or(IndiumCompat::getMeshBuilder)
+				.orElse(new MeshBuilderImpl());
 	}
 
 	@Override
