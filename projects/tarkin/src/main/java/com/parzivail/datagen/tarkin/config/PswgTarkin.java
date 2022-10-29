@@ -75,8 +75,12 @@ public class PswgTarkin
 		lang.entity(SwgEntities.Amphibian.Worrt).build(assets);
 		lang.entity(SwgEntities.Mammal.Bantha).build(assets);
 		lang.entity(SwgEntities.Rodent.SandSkitter).build(assets);
-		lang.entity(SwgEntities.Droid.AstroR2).build(assets);
-		lang.entity(SwgEntities.Droid.AstroR2Imperial).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2D2).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2Q5).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2KP).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2R7).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2Y10).build(assets);
+		lang.entity(SwgEntities.Droid.AstroQTKT).build(assets);
 
 		// Screen
 		lang.cloneWithRoot(Resources.I18N_SCREEN_APPLY).build(assets);

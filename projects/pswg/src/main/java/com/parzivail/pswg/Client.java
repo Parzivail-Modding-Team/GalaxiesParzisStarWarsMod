@@ -272,8 +272,12 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Amphibian.Worrt, WorrtEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Mammal.Bantha, BanthaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Rodent.SandSkitter, SandSkitterEntityRenderer::new);
-		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2, AstromechRenderer::new);
-		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Imperial, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2D2, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Q5, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2KP, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2R7, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Y10, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroQTKT, AstromechRenderer::new);
 
 		ArmorRenderer.register(
 				SwgItems.Armor.Stormtrooper,

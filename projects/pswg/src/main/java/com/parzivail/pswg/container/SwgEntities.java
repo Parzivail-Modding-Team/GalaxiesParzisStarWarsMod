@@ -136,9 +136,9 @@ public class SwgEntities
 
 	public static class Droid
 	{
-		public static final EntityType<AstromechEntity> AstroR2 = Registry.register(
+		public static final EntityType<AstromechEntity> AstroR2D2 = Registry.register(
 				Registry.ENTITY_TYPE,
-				Resources.id("artoo"),
+				Resources.id("artoo_detoo"),
 				FabricEntityTypeBuilder
 						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2d2")))
 						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
@@ -146,9 +146,9 @@ public class SwgEntities
 						.build()
 		);
 
-		public static final EntityType<AstromechEntity> AstroR2Imperial = Registry.register(
+		public static final EntityType<AstromechEntity> AstroR2Q5 = Registry.register(
 				Registry.ENTITY_TYPE,
-				Resources.id("artoo_imperial"),
+				Resources.id("artoo_cuefive"),
 				FabricEntityTypeBuilder
 						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2q5")))
 						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
@@ -156,12 +156,60 @@ public class SwgEntities
 						.build()
 		);
 
+		public static final EntityType<AstromechEntity> AstroR2KP = Registry.register(
+				Registry.ENTITY_TYPE,
+				Resources.id("artoo_kaype"),
+				FabricEntityTypeBuilder
+						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2kp")))
+						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
+						.trackRangeBlocks(128)
+						.build()
+		);
+
+		public static final EntityType<AstromechEntity> AstroR2R7 = Registry.register(
+				Registry.ENTITY_TYPE,
+				Resources.id("artoo_arseven"),
+				FabricEntityTypeBuilder
+						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2r7")))
+						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
+						.trackRangeBlocks(128)
+						.build()
+		);
+
+		public static final EntityType<AstromechEntity> AstroR2Y10 = Registry.register(
+				Registry.ENTITY_TYPE,
+				Resources.id("artoo_wyten"),
+				FabricEntityTypeBuilder
+						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2y10")))
+						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
+						.trackRangeBlocks(128)
+						.build()
+		);
+
+		public static final EntityType<AstromechEntity> AstroQTKT = Registry.register(
+				Registry.ENTITY_TYPE,
+				Resources.id("cutee_katee"),
+				FabricEntityTypeBuilder
+						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("qtkt")))
+						.dimensions(EntityDimensions.fixed(0.75f, 1.2f))
+						.trackRangeBlocks(128)
+						.build()
+		);
+
 		static void register()
 		{
-			entityTypes.add(AstroR2);
-			entityTypes.add(AstroR2Imperial);
-			FabricDefaultAttributeRegistry.register(AstroR2, AstromechEntity.createAttributes());
-			FabricDefaultAttributeRegistry.register(AstroR2Imperial, AstromechEntity.createAttributes());
+			entityTypes.add(AstroR2D2);
+			entityTypes.add(AstroR2Q5);
+			entityTypes.add(AstroR2KP);
+			entityTypes.add(AstroR2R7);
+			entityTypes.add(AstroR2Y10);
+			entityTypes.add(AstroQTKT);
+			FabricDefaultAttributeRegistry.register(AstroR2D2, AstromechEntity.createAttributes());
+			FabricDefaultAttributeRegistry.register(AstroR2Q5, AstromechEntity.createAttributes());
+			FabricDefaultAttributeRegistry.register(AstroR2KP, AstromechEntity.createAttributes());
+			FabricDefaultAttributeRegistry.register(AstroR2R7, AstromechEntity.createAttributes());
+			FabricDefaultAttributeRegistry.register(AstroR2Y10, AstromechEntity.createAttributes());
+			FabricDefaultAttributeRegistry.register(AstroQTKT, AstromechEntity.createAttributes());
 		}
 	}
 
