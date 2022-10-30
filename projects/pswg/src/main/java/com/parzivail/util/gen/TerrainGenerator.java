@@ -1,10 +1,10 @@
 package com.parzivail.util.gen;
 
 import com.parzivail.util.gen.biome.TerrainBiome;
-import com.parzivail.util.gen.world.ChunkView;
 import com.parzivail.util.gen.decoration.ConfiguredDecoration;
 import com.parzivail.util.gen.mc.MinecraftChunkView;
 import com.parzivail.util.gen.terrain.TerrainBuilder;
+import com.parzivail.util.gen.world.ChunkView;
 import com.parzivail.util.gen.world.WorldGenView;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleOpenHashMap;
@@ -38,7 +38,7 @@ public final class TerrainGenerator
 		if (chunk instanceof MinecraftChunkView mc) {
 			buildMinecraftChunk(mc, noises);
 		} else {
-
+			buildGenericChunk(chunk, noises);
 		}
 	}
 
