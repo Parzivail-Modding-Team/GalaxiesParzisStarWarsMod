@@ -3,7 +3,6 @@ package com.parzivail.pswg.world.feature;
 import com.mojang.serialization.Codec;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.BushLeavesBlock;
-import com.parzivail.util.world.ProcNoise;
 import net.minecraft.block.Block;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.gen.feature.Feature;
@@ -23,7 +22,6 @@ public class JaporTreeFeature extends Feature<SingleStateFeatureConfig>
 		var origin = context.getOrigin();
 		var structureWorldAccess = context.getWorld();
 		var random = context.getRandom();
-		var noise = new ProcNoise(random.nextLong());
 
 		var trunk = SwgBlocks.Tree.JaporLog.getDefaultState();
 		var leaves = SwgBlocks.Tree.JaporLeaves.getDefaultState().with(BushLeavesBlock.DISTANCE, 1);
