@@ -1,8 +1,11 @@
 package com.parzivail.util.gen;
 
 import com.parzivail.util.gen.biome.TerrainBiome;
+import com.parzivail.util.gen.world.ChunkView;
 import com.parzivail.util.gen.decoration.ConfiguredDecoration;
+import com.parzivail.util.gen.mc.MinecraftChunkView;
 import com.parzivail.util.gen.terrain.TerrainBuilder;
+import com.parzivail.util.gen.world.WorldGenView;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleOpenHashMap;
 import net.minecraft.block.Blocks;
@@ -10,8 +13,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.StructureWorldAccess;
-import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.ChunkSection;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 
@@ -28,20 +29,28 @@ public final class TerrainGenerator
 		this.cg = cg;
 	}
 
-	public void buildNoise(Chunk chunk)
+	public void buildNoise(ChunkView chunk)
 	{
 		ChunkPos pos = chunk.getPos();
 		double[][] noises = new double[25][49];
 		sampleNoises(noises, pos.x << 2, pos.z << 2);
 
-//		BlockPos.Mutable mutable = new BlockPos.Mutable();
+		if (chunk instanceof MinecraftChunkView mc) {
+			buildMinecraftChunk(mc, noises);
+		} else {
+
+		}
+	}
+
+	private void buildMinecraftChunk(MinecraftChunkView chunk, double[][] noises)
+	{
 		for (int nX = 0; nX < 4; nX++)
 		{
 			for (int nZ = 0; nZ < 4; nZ++)
 			{
 				for (int nY = 0; nY < 48; nY++)
 				{
-					ChunkSection section = chunk.getSectionArray()[nY >> 1];
+					ChunkSection section = chunk.chunk().getSectionArray()[nY >> 1];
 
 					double x0y0z0 = noises[getNoiseIndex(nX, nZ)][nY];
 					double x1y0z0 = noises[getNoiseIndex(nX + 1, nZ)][nY];
@@ -79,8 +88,62 @@ public final class TerrainGenerator
 
 								double noise = MathHelper.lerp(zP, z0, z1);
 
-//								mutable.set(rX, rY, rZ);
 								section.setBlockState(rX, rY & 15, rZ, noise > 0 ? Blocks.STONE.getDefaultState() : Blocks.AIR.getDefaultState(), false);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void buildGenericChunk(ChunkView chunk, double[][] noises)
+	{
+		BlockPos.Mutable pos = new BlockPos.Mutable();
+		for (int nX = 0; nX < 4; nX++)
+		{
+			for (int nZ = 0; nZ < 4; nZ++)
+			{
+				for (int nY = 0; nY < 48; nY++)
+				{
+					double x0y0z0 = noises[getNoiseIndex(nX, nZ)][nY];
+					double x1y0z0 = noises[getNoiseIndex(nX + 1, nZ)][nY];
+					double x0y0z1 = noises[getNoiseIndex(nX, nZ + 1)][nY];
+					double x1y0z1 = noises[getNoiseIndex(nX + 1, nZ + 1)][nY];
+
+					double x0y1z0 = noises[getNoiseIndex(nX, nZ)][nY + 1];
+					double x1y1z0 = noises[getNoiseIndex(nX + 1, nZ)][nY + 1];
+					double x0y1z1 = noises[getNoiseIndex(nX, nZ + 1)][nY + 1];
+					double x1y1z1 = noises[getNoiseIndex(nX + 1, nZ + 1)][nY + 1];
+
+
+					for (int pY = 0; pY < 8; pY++)
+					{
+						double yP = pY / 8.0;
+						int rY = (nY * 8 + pY) - 64;
+
+						double x0z0 = MathHelper.lerp(yP, x0y0z0, x0y1z0);
+						double x1z0 = MathHelper.lerp(yP, x1y0z0, x1y1z0);
+						double x0z1 = MathHelper.lerp(yP, x0y0z1, x0y1z1);
+						double x1z1 = MathHelper.lerp(yP, x1y0z1, x1y1z1);
+
+						for (int pX = 0; pX < 4; pX++)
+						{
+							double xP = pX / 4.0;
+							int rX = nX * 4 + pX;
+
+							double z0 = MathHelper.lerp(xP, x0z0, x1z0);
+							double z1 = MathHelper.lerp(xP, x0z1, x1z1);
+
+							for (int pZ = 0; pZ < 4; pZ++)
+							{
+								double zP = pZ / 4.0;
+								int rZ = nZ * 4 + pZ;
+
+								double noise = MathHelper.lerp(zP, z0, z1);
+
+								pos.set(rX, rY, rZ);
+								chunk.setBlockState(pos, noise > 0 ? Blocks.STONE.getDefaultState() : Blocks.AIR.getDefaultState());
 							}
 						}
 					}
@@ -124,7 +187,7 @@ public final class TerrainGenerator
 		}
 	}
 
-	public void buildSurface(Chunk chunk)
+	public void buildSurface(ChunkView chunk)
 	{
 		for (int x = 0; x < 16; x++)
 		{
@@ -137,7 +200,7 @@ public final class TerrainGenerator
 		}
 	}
 
-	public void generateDecorations(StructureWorldAccess world, Chunk chunk) {
+	public void generateDecorations(WorldGenView world, ChunkView chunk) {
 		TerrainBiome biome = biomes.getBiome(chunk.getPos().x * 4 + 2, chunk.getPos().z * 4 + 2);
 
 		Random random = new Random();

@@ -1,8 +1,8 @@
 package com.parzivail.util.gen.surface;
 
+import com.parzivail.util.gen.world.ChunkView;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.chunk.Chunk;
 
 public class DefaultSurfaceBuilder extends SurfaceBuilder
 {
@@ -15,7 +15,7 @@ public class DefaultSurfaceBuilder extends SurfaceBuilder
 	}
 
 	@Override
-	public void build(Chunk chunk, int x, int z, int height, BlockState defaultBlock, BlockState defaultFluid)
+	public void build(ChunkView chunk, int x, int z, int height, BlockState defaultBlock, BlockState defaultFluid)
 	{
 		int genDepth = 0;
 
@@ -27,9 +27,9 @@ public class DefaultSurfaceBuilder extends SurfaceBuilder
 
 			if (chunk.getBlockState(pos).isOf(defaultBlock.getBlock())) {
 				if (genDepth == 0) {
-					chunk.setBlockState(pos, surface, false);
+					chunk.setBlockState(pos, surface);
 				} else if (genDepth < 4) {
-					chunk.setBlockState(pos, belowSurface, false);
+					chunk.setBlockState(pos, belowSurface);
 				}
 
 				genDepth++;

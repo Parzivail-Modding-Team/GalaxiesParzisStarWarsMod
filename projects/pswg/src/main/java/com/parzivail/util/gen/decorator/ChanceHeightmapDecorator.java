@@ -1,5 +1,6 @@
 package com.parzivail.util.gen.decorator;
 
+import com.parzivail.util.gen.world.WorldGenView;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.StructureWorldAccess;
@@ -28,7 +29,7 @@ public class ChanceHeightmapDecorator extends Decorator
 	}
 
 	@Override
-	public List<BlockPos> findPositions(StructureWorldAccess world, ChunkGenerator generator, Random random, BlockPos pos)
+	public List<BlockPos> findPositions(WorldGenView world, ChunkGenerator generator, Random random, BlockPos pos)
 	{
 		List<BlockPos> list = new ArrayList<>();
 

@@ -3,7 +3,6 @@ package com.parzivail.util.gen.mc;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.util.gen.TerrainGenerator;
-import com.parzivail.util.world.biome.BackingBiomeSource;
 import net.minecraft.block.BlockState;
 import net.minecraft.structure.StructureSet;
 import net.minecraft.structure.StructureTemplateManager;
@@ -11,7 +10,6 @@ import net.minecraft.util.dynamic.RegistryOps;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.DynamicRegistryManager;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntryList;
 import net.minecraft.world.ChunkRegion;
 import net.minecraft.world.HeightLimitView;
 import net.minecraft.world.Heightmap;
@@ -67,7 +65,7 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	@Override
 	public void buildSurface(ChunkRegion region, StructureAccessor structures, NoiseConfig noiseConfig, Chunk chunk)
 	{
-		this.backing.buildSurface(chunk);
+		this.backing.buildSurface(new MinecraftChunkView(chunk));
 	}
 
 	@Override
@@ -85,7 +83,7 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	@Override
 	public CompletableFuture<Chunk> populateNoise(Executor executor, Blender blender, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk)
 	{
-		this.backing.buildNoise(chunk);
+		this.backing.buildNoise(new MinecraftChunkView(chunk));
 
 		return CompletableFuture.completedFuture(chunk);
 	}
@@ -99,7 +97,7 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	@Override
 	public void generateFeatures(StructureWorldAccess world, Chunk chunk, StructureAccessor structureAccessor)
 	{
-		this.backing.generateDecorations(world, chunk);
+		this.backing.generateDecorations(new MinecraftWorldView(world), new MinecraftChunkView(chunk));
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.parzivail.util.gen.decoration;
 
 import com.parzivail.util.gen.noise.OctaveNoise;
+import com.parzivail.util.gen.world.WorldGenView;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.StructureWorldAccess;
@@ -11,7 +12,7 @@ import java.util.Random;
 public class RockDecoration extends Decoration
 {
 	@Override
-	public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random random, BlockPos pos)
+	public boolean generate(WorldGenView world, ChunkGenerator generator, Random random, BlockPos pos)
 	{
 		OctaveNoise noise = new OctaveNoise(1, new Random(world.getSeed()), 6.0, 6.0, 1.0, 2.0, 2.0);
 
@@ -32,7 +33,7 @@ public class RockDecoration extends Decoration
 						continue;
 					}
 
-					world.setBlockState(pos.add(x, y, z), Blocks.DEEPSLATE.getDefaultState(), 3);
+					world.setBlockState(pos.add(x, y, z), Blocks.DEEPSLATE.getDefaultState());
 				}
 			}
 		}

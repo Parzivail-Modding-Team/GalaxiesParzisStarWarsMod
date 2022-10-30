@@ -1,5 +1,6 @@
 package com.parzivail.util.gen.decoration;
 
+import com.parzivail.util.gen.world.WorldGenView;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +29,7 @@ public class PatchDecoration extends Decoration
 	}
 
 	@Override
-	public boolean generate(StructureWorldAccess world, ChunkGenerator generator, Random random, BlockPos pos)
+	public boolean generate(WorldGenView world, ChunkGenerator generator, Random random, BlockPos pos)
 	{
 
 		for (int i = 0; i < size; i++)
@@ -46,7 +47,7 @@ public class PatchDecoration extends Decoration
 
 			if (targets.contains(world.getBlockState(p.down()).getBlock()) && world.isAir(p))
 			{
-				world.setBlockState(p, state, 3);
+				world.setBlockState(p, state);
 			}
 		}
 
