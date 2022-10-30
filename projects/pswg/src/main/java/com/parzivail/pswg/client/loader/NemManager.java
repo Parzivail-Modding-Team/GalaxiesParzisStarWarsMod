@@ -1,12 +1,16 @@
 package com.parzivail.pswg.client.loader;
 
+import com.google.common.collect.ImmutableList;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.client.render.armor.BipedEntityArmorModel;
+import com.parzivail.pswg.mixin.ModelPartAccessor;
 import com.parzivail.util.client.render.ModelAngleAnimator;
 import com.parzivail.util.client.render.MutableAnimatedModel;
 import com.parzivail.util.data.KeyedReloadableLoader;
 import net.minecraft.client.model.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -162,8 +166,41 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 
 	public Supplier<BipedEntityModel<LivingEntity>> getBipedModel(Identifier modelId)
 	{
-		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityModel<>(modelPart))));
+		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityModel<>(ensureBipedParts(modelPart)))));
 		return () -> bipedModels.get(modelId);
+	}
+
+	public Supplier<BipedEntityArmorModel<LivingEntity>> getBipedArmorModel(Identifier modelId)
+	{
+		models.add(new Pair<>(modelId, modelPart -> bipedModels.put(modelId, new BipedEntityArmorModel<>(ensureBipedParts(modelPart)))));
+		return () -> (BipedEntityArmorModel<LivingEntity>)bipedModels.get(modelId);
+	}
+
+	private static ModelPart ensureBipedParts(ModelPart modelPart)
+	{
+		var mpa = (ModelPartAccessor)(Object)modelPart;
+
+		if (!modelPart.hasChild(EntityModelPartNames.HEAD))
+			mpa.getChildren().put(EntityModelPartNames.HEAD, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.HAT))
+			mpa.getChildren().put(EntityModelPartNames.HAT, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.BODY))
+			mpa.getChildren().put(EntityModelPartNames.BODY, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.RIGHT_ARM))
+			mpa.getChildren().put(EntityModelPartNames.RIGHT_ARM, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.LEFT_ARM))
+			mpa.getChildren().put(EntityModelPartNames.LEFT_ARM, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.RIGHT_LEG))
+			mpa.getChildren().put(EntityModelPartNames.RIGHT_LEG, createEmptyModelPart());
+		if (!modelPart.hasChild(EntityModelPartNames.LEFT_LEG))
+			mpa.getChildren().put(EntityModelPartNames.LEFT_LEG, createEmptyModelPart());
+
+		return modelPart;
+	}
+
+	private static ModelPart createEmptyModelPart()
+	{
+		return new ModelPart(ImmutableList.of(), Map.of());
 	}
 
 	@Override

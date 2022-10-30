@@ -46,7 +46,8 @@ fun importFrom(dependencyProject: Project, relation: ConfigurationType): Boolean
 							dependency.dependencyProject,
 							innerRelation
 						))
-					))
+								)
+					)
 						innerRelation.gradleConfig(dependency.copy())
 				for (dependency in dependencyProject.configurations[configType.loomConfig]?.dependencies ?: setOf())
 					if (dependency !is ClientModule)
@@ -61,11 +62,24 @@ afterEvaluate {
 	for ((configType, dependencies) in ConfigurationType.values()
 		.associateWithTo(EnumMap(ConfigurationType::class.java)) {
 			project.configurations[it.gradleConfig]?.dependencies?.toSet() ?: setOf()
-		})
+		}) {
 		for (dependency in dependencies)
 			if (dependency is ProjectDependency && dependency.targetConfiguration == "namedElements") {
 				importFrom(dependency.dependencyProject, configType)
 			}
+	}
+
+	for ((configType, dependencies) in ConfigurationType.values()
+		.associateWithTo(EnumMap(ConfigurationType::class.java)) {
+			project.configurations[it.gradleConfig]?.dependencies?.toSet() ?: setOf()
+		}) {
+		for (dependency in dependencies)
+			if (dependency is ProjectDependency) {
+				tasks.classes {
+					dependsOn(dependency.dependencyProject.tasks.named("classes"))
+				}
+			}
+	}
 }
 
 tasks.assemble {

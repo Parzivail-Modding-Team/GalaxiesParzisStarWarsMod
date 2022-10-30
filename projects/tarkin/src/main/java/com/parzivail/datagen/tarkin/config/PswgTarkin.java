@@ -69,12 +69,18 @@ public class PswgTarkin
 		lang.entity(SwgEntities.Misc.ThrownLightsaber).build(assets);
 		lang.entity(SwgEntities.Ship.T65bXwing).build(assets);
 		lang.entity(SwgEntities.Speeder.X34).build(assets);
+		lang.entity(SwgEntities.Speeder.ZephyrJ).build(assets);
 		lang.entity(SwgEntities.Fish.Faa).build(assets);
 		lang.entity(SwgEntities.Fish.Laa).build(assets);
 		lang.entity(SwgEntities.Amphibian.Worrt).build(assets);
 		lang.entity(SwgEntities.Mammal.Bantha).build(assets);
-		lang.entity(SwgEntities.Droid.AstroR2).build(assets);
-		lang.entity(SwgEntities.Droid.AstroR2Imperial).build(assets);
+		lang.entity(SwgEntities.Rodent.SandSkitter).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2D2).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2Q5).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2KP).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2R7).build(assets);
+		lang.entity(SwgEntities.Droid.AstroR2Y10).build(assets);
+		lang.entity(SwgEntities.Droid.AstroQTKT).build(assets);
 
 		// Screen
 		lang.cloneWithRoot(Resources.I18N_SCREEN_APPLY).build(assets);
@@ -734,6 +740,8 @@ public class PswgTarkin
 		ItemGenerator.basic(SwgItems.CraftingComponents.DeshCoil).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.PlasteelRod).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.DurasteelRod).build(assets);
+		for (var entry : SwgItems.CraftingComponents.DoorInsert.entrySet())
+			ItemGenerator.basic(entry.getValue()).build(assets);
 
 		ItemGenerator.basic(SwgItems.Natural.StrippedJaporBranch).build(assets);
 		ItemGenerator.basic(SwgItems.Natural.MoloFlower).build(assets);
@@ -750,6 +758,7 @@ public class PswgTarkin
 		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
 		ItemGenerator.armor(SwgItems.Armor.Stormtrooper, assets);
+		ItemGenerator.armor(SwgItems.Armor.Purgetrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Sandtrooper, assets);
 		ItemGenerator.basic(SwgItems.Armor.SandtrooperBackpack)
 		             .tag(TAG_TRINKETS_CHEST_BACK)
@@ -759,9 +768,17 @@ public class PswgTarkin
 		ItemGenerator.basic(SwgItems.Armor.JumptrooperJetpack)
 		             .tag(TAG_TRINKETS_CHEST_BACK)
 		             .build(assets);
+		ItemGenerator.basic(SwgItems.Armor.ImperialPilotHelmet)
+		             .build(assets);
+		ItemGenerator.basic(SwgItems.Armor.ImperialPilotKit)
+		             .build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelPilot).build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelForest).build(assets);
 		ItemGenerator.basic(SwgItems.Armor.RebelTropical).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.BlackImperialOfficer).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.GrayImperialOfficer).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.LightGrayImperialOfficer).build(assets);
+		ItemGenerator.basic(SwgItems.Armor.KhakiImperialOfficer).build(assets);
 
 		ItemGenerator.basic(SwgItems.Cable.Power).build(assets);
 
@@ -919,10 +936,13 @@ public class PswgTarkin
 
 		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);
 		ItemGenerator.basic(SwgItems.Spawners.LandspeederX34).build(assets);
+		ItemGenerator.basic(SwgItems.Spawners.ZephyrJ).build(assets);
 
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Faa).build(assets);
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Laa).build(assets);
 		ItemGenerator.spawn_egg(SwgItems.Spawners.Worrt).build(assets);
+		ItemGenerator.spawn_egg(SwgItems.Spawners.Bantha).build(assets);
+		ItemGenerator.spawn_egg(SwgItems.Spawners.SandSkitter).build(assets);
 	}
 
 	public static void generateBlocks(List<BuiltAsset> assets)
@@ -963,6 +983,11 @@ public class PswgTarkin
 			BlockGenerator.blockNoModelDefaultDrops(block)
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
 			              .build(assets);
+
+		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Door.Sliding1x2)
+		              .lootTable(LootTableFile::door)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone"))
 		              .itemModel(ModelFile::ofBlock)
@@ -1016,6 +1041,9 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		BlockGenerator.blockNoModelPicklingDrops(SwgBlocks.Light.WallCluster)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Light.TallLamp)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
@@ -1665,6 +1693,14 @@ public class PswgTarkin
 		              .build(assets);
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.Fusion)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Scaffold.Scaffold)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Scaffold.ScaffoldStairs)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 

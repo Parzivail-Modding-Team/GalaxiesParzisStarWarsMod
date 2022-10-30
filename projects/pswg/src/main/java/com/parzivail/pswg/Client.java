@@ -7,10 +7,7 @@ import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
-import com.parzivail.pswg.client.render.block.BlasterWorkbenchWeaponRenderer;
-import com.parzivail.pswg.client.render.block.PowerCouplingCableRenderer;
-import com.parzivail.pswg.client.render.block.TatooineHomeDoorRenderer;
-import com.parzivail.pswg.client.render.block.TerrariumRenderer;
+import com.parzivail.pswg.client.render.block.*;
 import com.parzivail.pswg.client.render.entity.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterIonBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterStunBoltRenderer;
@@ -20,11 +17,14 @@ import com.parzivail.pswg.client.render.entity.droid.AstromechRenderer;
 import com.parzivail.pswg.client.render.entity.fish.FaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.fish.LaaEntityRenderer;
 import com.parzivail.pswg.client.render.entity.mammal.BanthaEntityRenderer;
+import com.parzivail.pswg.client.render.entity.rodent.SandSkitterEntityRenderer;
 import com.parzivail.pswg.client.render.entity.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
+import com.parzivail.pswg.client.render.entity.ship.ZephyrJRenderer;
 import com.parzivail.pswg.client.render.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
+import com.parzivail.pswg.client.render.p3d.P3DBlockRendererRegistry;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.weapon.RecoilManager;
@@ -171,6 +171,23 @@ public class Client implements ClientModInitializer
 		BlockEntityRendererRegistry.register(SwgBlocks.Power.CouplingBlockEntityType, PowerCouplingCableRenderer::new);
 		BlockEntityRendererRegistry.register(SwgBlocks.Cage.CreatureCageBlockEntityType, TerrariumRenderer::new);
 
+		ModelRegistry.register(
+				SwgBlocks.Door.Sliding1x2,
+				true,
+				ModelLoader.withDyeColors(
+						ModelLoader.loadP3D(
+								DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY,
+								Resources.id("block/tatooine_home_door"),
+								Resources.id("model/door/sliding_1x2/frame"),
+								Resources.id("model/workbench_particle")
+						),
+						(model, color) -> model.withTexture("door_" + color.getName(), Resources.id("model/door/sliding_1x2/door_" + color.getName()))
+				)
+		);
+		var slidingDoorRenderer = new SlidingDoorRenderer();
+		P3DBlockRendererRegistry.register(SwgBlocks.Door.Sliding1x2, slidingDoorRenderer);
+		BlockEntityRendererRegistry.register(SwgBlocks.Door.SlidingBlockEntityType, ctx -> slidingDoorRenderer);
+
 		ModelRegistry.register(SwgBlocks.Workbench.Blaster, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/blaster_workbench"), Resources.id("model/blaster_workbench"), Resources.id("model/workbench_particle")));
 		ModelRegistry.register(SwgBlocks.Workbench.Lightsaber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/lightsaber_forge"), Resources.id("model/lightsaber_forge"), Resources.id("model/workbench_particle")));
 
@@ -181,7 +198,11 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.register(SwgBlocks.Power.Coupling, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/power_coupling"), Resources.id("model/power_coupling"), Resources.id("model/power_coupling_particle")));
 
+		ModelRegistry.register(SwgBlocks.Scaffold.Scaffold, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/scaffold"), Resources.id("model/scaffold"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Scaffold.ScaffoldStairs, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/scaffold_stairs"), Resources.id("model/scaffold_stairs"), new Identifier("block/stone")));
+
 		ModelRegistry.register(SwgBlocks.Light.WallCluster, true, ModelLoader.loadPicklingP3D(Resources.id("model/light/cluster"), Resources.id("model/light/cluster_particle"), Resources.id("block/light/cluster_light_1"), Resources.id("block/light/cluster_light_2"), Resources.id("block/light/cluster_light_3")));
+		ModelRegistry.register(SwgBlocks.Light.TallLamp, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/light/tall_lamp"), Resources.id("model/light/tall_lamp"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadPM3D(DynamicBakedModel.CacheMethod.RENDER_SEED_KEY, Resources.id("models/block/barrel/mos_eisley.pm3d"), Resources.id("model/barrel/mos_eisley"), new Identifier("block/stone")));
 
@@ -241,6 +262,7 @@ public class Client implements ClientModInitializer
 
 		EntityRendererRegistry.register(SwgEntities.Ship.T65bXwing, T65BXwingRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Speeder.X34, X34LandspeederRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Speeder.ZephyrJ, ZephyrJRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Misc.BlasterBolt, BlasterBoltRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Misc.BlasterStunBolt, BlasterStunBoltRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Misc.BlasterIonBolt, BlasterIonBoltRenderer::new);
@@ -249,8 +271,13 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Fish.Laa, LaaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Amphibian.Worrt, WorrtEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Mammal.Bantha, BanthaEntityRenderer::new);
-		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2, AstromechRenderer::new);
-		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Imperial, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Rodent.SandSkitter, SandSkitterEntityRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2D2, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Q5, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2KP, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2R7, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroR2Y10, AstromechRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Droid.AstroQTKT, AstromechRenderer::new);
 
 		ArmorRenderer.register(
 				SwgItems.Armor.Stormtrooper,
@@ -258,7 +285,22 @@ public class Client implements ClientModInitializer
 				new ArmorRenderer.Assets(Resources.id("armor/stormtrooper_slim"),
 				                         Resources.id("armor/stormtrooper_default"),
 				                         Resources.id("textures/armor/stormtrooper.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.Purgetrooper,
+				Resources.id("purgetrooper"),
+				new ArmorRenderer.Assets(Resources.id("armor/purgetrooper"),
+				                         Resources.id("textures/armor/purgetrooper.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.ImperialPilotHelmet,
+				SwgItems.Armor.ImperialPilotKit,
+				Resources.id("imperial_pilot"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_pilot"),
+				                         Resources.id("textures/armor/imperial_pilot.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 		var sandtrooperId = Resources.id("sandtrooper");
 		ArmorRenderer.register(
@@ -268,7 +310,7 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/sandtrooper_slim.png"),
 				                         Resources.id("armor/sandtrooper_default"),
 				                         Resources.id("textures/armor/sandtrooper_default.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.registerExtra(
 				SwgItems.Armor.SandtrooperBackpack,
@@ -296,7 +338,7 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/deathtrooper_slim.png"),
 				                         Resources.id("armor/deathtrooper_default"),
 				                         Resources.id("textures/armor/deathtrooper_default.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 
 		var jumptrooperId = Resources.id("jumptrooper");
@@ -305,7 +347,7 @@ public class Client implements ClientModInitializer
 				jumptrooperId,
 				new ArmorRenderer.Assets(Resources.id("armor/jumptrooper"),
 				                         Resources.id("textures/armor/jumptrooper.png")),
-				new ArmorRenderer.Metadata(ArmorRenderer.ArmThicknessAction.AUTO_THICKNESS, ArmorRenderer.FemaleChestplateAction.HIDE_CUBE)
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.registerExtra(
 				SwgItems.Armor.JumptrooperJetpack,
@@ -335,21 +377,49 @@ public class Client implements ClientModInitializer
 				Resources.id("rebel_pilot"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_pilot"),
 				                         Resources.id("textures/armor/rebel_pilot_visor_up.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelForest,
 				Resources.id("rebel_forest"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
 				                         Resources.id("textures/armor/rebel_forest.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 		ArmorRenderer.register(
 				SwgItems.Armor.RebelTropical,
 				Resources.id("rebel_tropical"),
 				new ArmorRenderer.Assets(Resources.id("armor/rebel_light"),
 				                         Resources.id("textures/armor/rebel_tropical.png")),
-				ArmorRenderer.Metadata.DEFAULT
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.BlackImperialOfficer,
+				Resources.id("black_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_black.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.GrayImperialOfficer,
+				Resources.id("gray_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_gray.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.LightGrayImperialOfficer,
+				Resources.id("light_gray_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_light_gray.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
+		);
+		ArmorRenderer.register(
+				SwgItems.Armor.KhakiImperialOfficer,
+				Resources.id("khaki_imperial_officer_hat"),
+				new ArmorRenderer.Assets(Resources.id("armor/imperial_officer_hat"),
+				                         Resources.id("textures/armor/imperial_officer_hat_khaki.png")),
+				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 
 		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);

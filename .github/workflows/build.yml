@@ -1,0 +1,48 @@
+name: build
+on: [pull_request, push]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        # Use these Java versions
+        java: [
+          17,    # Current Java LTS & minimum supported by Minecraft
+        ]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: validate gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: setup jdk ${{ matrix.java }}
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+      - name: setup python for uploader
+        uses: actions/setup-python@v4
+        with:
+          python-version : '3.10'
+          cache: pip
+      - name: cache loom-cache
+        uses: actions/cache@v3
+        with:
+          path: .gradle/loom-cache
+          key: loom-cache-${{ hashFiles('gradle.properties') }}
+      - name: build
+        id: gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: --stacktrace --parallel clean build
+      - name: upload
+        if: always() && github.ref == 'refs/heads/master' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
+        run: |
+          mkdir -p projects/pswg/build/libs
+          cd projects/pswg/build/libs
+          pip install -r ../../../../scripts/requirements.txt
+          python ../../../../scripts/upload_dev.py --result ${{ steps.gradle.outcome }} --webhook ${{ secrets.DISCORD_DEV_FEED_WEBHOOK }} --serverupdate ${{ secrets.SERVER_UPDATER }}
+        env:
+          BUILD_NUMBER: ${{ github.run_number }}

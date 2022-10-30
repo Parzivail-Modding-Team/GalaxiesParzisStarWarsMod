@@ -12,12 +12,14 @@ import com.parzivail.util.math.QuatUtil;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.PillarBlock;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
@@ -29,6 +31,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -36,13 +39,15 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 {
 	private final CacheMethod cacheMethod;
 	private final Sprite baseSprite;
+	private HashMap<String, Sprite> additionalSprites;
 	private final Identifier[] modelIds;
 
-	private P3DBakedBlockModel(CacheMethod cacheMethod, Sprite baseSprite, Sprite particleSprite, Identifier[] modelIds)
+	private P3DBakedBlockModel(CacheMethod cacheMethod, Sprite baseSprite, Sprite particleSprite, HashMap<String, Sprite> additionalSprites, Identifier[] modelIds)
 	{
 		super(particleSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
 		this.cacheMethod = cacheMethod;
 		this.baseSprite = baseSprite;
+		this.additionalSprites = additionalSprites;
 		this.modelIds = modelIds;
 	}
 
@@ -106,10 +111,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		var modelId = modelIds[0];
 
 		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget)
-		{
-			var state = blockRenderTarget.getState();
-			modelId = getPickleModel(modelId, state);
-		}
+			modelId = getPickleModel(modelId, blockRenderTarget.getState());
 
 		var model = P3dManager.INSTANCE.get(modelId);
 
@@ -127,8 +129,13 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		// P3D models are +Z forward
 		ms.multiply(new Quaternion(0, -90, 0, true));
 
-		// TODO: allow transformers
-		model.renderBlock(ms, quadEmitter, target, null, randomSupplier, context, baseSprite);
+		Block block = null;
+		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget && blockRenderTarget.getState() != null)
+			block = blockRenderTarget.getState().getBlock();
+		else if (target instanceof P3DBlockRenderTarget.Item itemRenderTarget && itemRenderTarget.getStack().getItem() instanceof BlockItem blockItem)
+			block = blockItem.getBlock();
+
+		P3DBlockRendererRegistry.get(block).renderBlock(ms, quadEmitter, target, randomSupplier, context, model, baseSprite, additionalSprites);
 
 		return meshBuilder.build();
 	}
@@ -224,9 +231,20 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		return mat;
 	}
 
-	public static P3DBakedBlockModel create(Function<SpriteIdentifier, Sprite> spriteMap, CacheMethod cacheMethod, Identifier baseTexture, Identifier particleTexture, Identifier... models)
+	public static P3DBakedBlockModel create(Function<SpriteIdentifier, Sprite> spriteMap, CacheMethod cacheMethod, Identifier baseTexture, Identifier particleTexture, HashMap<String, Identifier> additionalTextures, Identifier... models)
 	{
-		return new P3DBakedBlockModel(cacheMethod, spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, baseTexture)), spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, particleTexture)), models);
+		HashMap<String, Sprite> additionalSprites = new HashMap<>();
+
+		for (var entry : additionalTextures.entrySet())
+			additionalSprites.put(entry.getKey(), spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, entry.getValue())));
+
+		return new P3DBakedBlockModel(
+				cacheMethod,
+				spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, baseTexture)),
+				spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, particleTexture)),
+				additionalSprites,
+				models
+		);
 	}
 
 	@Override

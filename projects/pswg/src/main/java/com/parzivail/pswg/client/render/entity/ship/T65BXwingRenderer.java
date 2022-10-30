@@ -22,7 +22,7 @@ public class T65BXwingRenderer extends ShipRenderer<T65BXwing>
 	protected void renderModel(T65BXwing entity, float yaw, float tickDelta, MatrixStack matrix, VertexConsumerProvider vertexConsumers, int light)
 	{
 		var modelRef = P3dManager.INSTANCE.get(Resources.id("ship/xwing_t65b"));
-		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntitySolid(getTexture(entity)));
+		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
 
 		modelRef.render(matrix, vertexConsumer, entity, RigT65B.INSTANCE::getPartTransformation, light, tickDelta, 255, 255, 255, 255);
 	}

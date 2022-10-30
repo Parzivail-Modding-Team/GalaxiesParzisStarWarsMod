@@ -16,10 +16,12 @@
 
 package com.parzivail.util.client.model;
 
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelVariantProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.ConnectingBlock;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
@@ -87,6 +89,7 @@ public enum ModelRegistry implements ModelVariantProvider
 			var id = new ModelIdentifier(Registry.BLOCK.getId(block), BlockModels.propertyMapToString(state.getEntries()));
 			models.put(id, unbakedModel.copy());
 		}
+		BlockRenderLayerMap.INSTANCE.putBlock(block, RenderLayer.getCutoutMipped());
 	}
 
 	public static void registerInventory(Block block, ClonableUnbakedModel unbakedModel)

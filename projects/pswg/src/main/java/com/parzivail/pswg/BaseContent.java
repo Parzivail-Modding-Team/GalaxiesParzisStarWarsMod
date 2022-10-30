@@ -95,7 +95,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						Resources.id("dh17"),
 						BlasterArchetype.PISTOL,
 						List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN),
-						2.9f, 75, 1, 0.98f, 500,
+						3.06f, 75, 1, 0.98f, 500,
 						3, 0, 0,
 						new BlasterAxialInfo(1.5f, 3),
 						new BlasterAxialInfo(0, 0),
@@ -195,7 +195,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 								.build()
 				),
 				new BlasterDescriptor(
-						Resources.id("jawa_ion"),
+						Resources.id("ca87"),
 						Resources.id("ion"),
 						BlasterArchetype.ION,
 						List.of(BlasterFiringMode.ION),

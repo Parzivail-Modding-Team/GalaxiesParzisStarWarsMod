@@ -1,0 +1,6 @@
+{
+	"parent": "minecraft:item/generated",
+	"textures": {
+		"layer0": "pswg:item/light_gray_imperial_officer_hat"
+	}
+}

@@ -6,6 +6,7 @@ import com.parzivail.pswg.block.TatooineHomeDoorBlock;
 import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
+import com.parzivail.pswg.item.DoorInsertItem;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.BlasterPowerPackItem;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
@@ -40,6 +41,8 @@ public class SwgItems
 	{
 		@RegistryName("stormtrooper")
 		public static final ArmorItems Stormtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("purgetrooper")
+		public static final ArmorItems Purgetrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("sandtrooper")
 		public static final ArmorItems Sandtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("sandtrooper_backpack")
@@ -50,12 +53,24 @@ public class SwgItems
 		public static final ArmorItems Jumptrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("jumptrooper_jetpack")
 		public static final TrinketItem JumptrooperJetpack = new JetpackItem(new Item.Settings().maxCount(1).group(Galaxies.TabItems), new JetpackItem.Stats());
+		@RegistryName("imperial_pilot_helmet")
+		public static final ArmorItem ImperialPilotHelmet = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("imperial_pilot_kit")
+		public static final ArmorItem ImperialPilotKit = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.CHEST, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_pilot_helmet")
 		public static final ArmorItem RebelPilot = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_forest_helmet")
 		public static final ArmorItem RebelForest = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 		@RegistryName("rebel_tropical_helmet")
 		public static final ArmorItem RebelTropical = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("black_imperial_officer_hat")
+		public static final ArmorItem BlackImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("gray_imperial_officer_hat")
+		public static final ArmorItem GrayImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("light_gray_imperial_officer_hat")
+		public static final ArmorItem LightGrayImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
+		@RegistryName("khaki_imperial_officer_hat")
+		public static final ArmorItem KhakiImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1).group(Galaxies.TabItems));
 	}
 
 	@RegistryOrder(2)
@@ -99,6 +114,9 @@ public class SwgItems
 		public static final Item PlasteelRod = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("durasteel_rod")
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("door_insert")
+		public static final DyedItems DoorInsert = new DyedItems(color -> new DoorInsertItem(color, new Item.Settings().group(Galaxies.TabItems)));
 	}
 
 	@RegistryOrder(5)
@@ -433,6 +451,9 @@ public class SwgItems
 		@RegistryName("spawn_landspeeder_x34")
 		public static final Item LandspeederX34 = new SpawnEntityItem(SwgEntities.Speeder.X34, new Item.Settings().group(Galaxies.TabItems), 0);
 
+		@RegistryName("spawn_zephyr_j")
+		public static final Item ZephyrJ = new SpawnEntityItem(SwgEntities.Speeder.ZephyrJ, new Item.Settings().group(Galaxies.TabItems), 0);
+
 		@RegistryName("spawn_faa")
 		public static final Item Faa = new SpawnEggItem(SwgEntities.Fish.Faa, 0xE9933E, 0x9471EB, new Item.Settings().group(Galaxies.TabItems));
 
@@ -441,6 +462,12 @@ public class SwgItems
 
 		@RegistryName("spawn_worrt")
 		public static final Item Worrt = new SpawnEggItem(SwgEntities.Amphibian.Worrt, 0x5B482C, 0x635735, new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("spawn_bantha")
+		public static final Item Bantha = new SpawnEggItem(SwgEntities.Mammal.Bantha, 0x362318, 0xD1B693, new Item.Settings().group(Galaxies.TabItems));
+
+		@RegistryName("spawn_sand_skitter")
+		public static final Item SandSkitter = new SpawnEggItem(SwgEntities.Rodent.SandSkitter, 0x4F3733, 0xE2946E, new Item.Settings().group(Galaxies.TabItems));
 	}
 
 	@RegistryOrder(13)

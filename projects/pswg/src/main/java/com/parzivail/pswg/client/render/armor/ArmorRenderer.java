@@ -56,16 +56,18 @@ public class ArmorRenderer
 
 	public record Metadata(ArmThicknessAction armThicknessAction, FemaleChestplateAction femaleModelAction)
 	{
-		public static final Metadata DEFAULT = new Metadata(ArmThicknessAction.NONE, FemaleChestplateAction.HIDE_CUBE);
+		public static final Metadata MANUAL_ARMS_HIDE_CHEST = new Metadata(ArmThicknessAction.NONE, FemaleChestplateAction.HIDE_CUBE);
+		public static final Metadata AUTO_ARMS_HIDE_CHEST = new Metadata(ArmThicknessAction.AUTO_THICKNESS, FemaleChestplateAction.HIDE_CUBE);
 	}
 
 	@FunctionalInterface
 	public interface ArmorRenderTransformer
 	{
-		void transform(LivingEntity entity, boolean slim, BipedEntityModel<LivingEntity> armorModel);
+		void transform(LivingEntity entity, boolean slim, BipedEntityArmorModel<LivingEntity> armorModel);
 	}
 
-	private record Entry(Supplier<BipedEntityModel<LivingEntity>> defaultModelSupplier, Supplier<BipedEntityModel<LivingEntity>> slimModelSupplier, Identifier defaultTetxure, Identifier slimTexture)
+	private record Entry(Supplier<BipedEntityArmorModel<LivingEntity>> defaultModelSupplier, Supplier<BipedEntityArmorModel<LivingEntity>> slimModelSupplier,
+	                     Identifier defaultTetxure, Identifier slimTexture)
 	{
 	}
 
@@ -93,7 +95,13 @@ public class ArmorRenderer
 	public static void register(ArmorItem item, Identifier id, Assets assets, Metadata metadata)
 	{
 		register(item, id, assets);
+		MODELKEY_METADATA_MAP.put(id, metadata);
+	}
 
+	public static void register(ArmorItem a, ArmorItem b, Identifier id, Assets assets, Metadata metadata)
+	{
+		register(a, id, assets);
+		register(b, id, assets);
 		MODELKEY_METADATA_MAP.put(id, metadata);
 	}
 
@@ -106,7 +114,7 @@ public class ArmorRenderer
 	public static void register(Item item, Identifier id, Assets assets)
 	{
 		if (!MODELKEY_MODEL_MAP.containsKey(id))
-			MODELKEY_MODEL_MAP.put(id, new Entry(NemManager.INSTANCE.getBipedModel(assets.defaultModelId), NemManager.INSTANCE.getBipedModel(assets.slimModelId), assets.defaultTextureId, assets.slimTextureId));
+			MODELKEY_MODEL_MAP.put(id, new Entry(NemManager.INSTANCE.getBipedArmorModel(assets.defaultModelId), NemManager.INSTANCE.getBipedArmorModel(assets.slimModelId), assets.defaultTextureId, assets.slimTextureId));
 		ITEM_MODELKEY_MAP.put(item, id);
 	}
 
@@ -138,7 +146,7 @@ public class ArmorRenderer
 		return null;
 	}
 
-	private static <T extends LivingEntity, M extends BipedEntityModel<T>> void setupArmorTransform(LivingEntity livingEntity, boolean slim, BipedEntityModel<LivingEntity> armorModel, M contextModel)
+	private static <T extends LivingEntity, M extends BipedEntityModel<T>> void setupArmorTransform(LivingEntity livingEntity, boolean slim, BipedEntityArmorModel<LivingEntity> armorModel, M contextModel)
 	{
 		// This is the same as doing contextModel.setAttributes(armorModel) but gets around the generics issue
 		armorModel.handSwingProgress = contextModel.handSwingProgress;
@@ -157,6 +165,8 @@ public class ArmorRenderer
 		armorModel.leftArm.copyTransform(contextModel.leftArm);
 		armorModel.rightLeg.copyTransform(contextModel.rightLeg);
 		armorModel.leftLeg.copyTransform(contextModel.leftLeg);
+		armorModel.getLeftBoot().ifPresent(p -> p.copyTransform(contextModel.leftLeg));
+		armorModel.getRightBoot().ifPresent(p -> p.copyTransform(contextModel.rightLeg));
 	}
 
 	public static void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci, PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel)
@@ -171,6 +181,8 @@ public class ArmorRenderer
 			armorModel.body.visible = false;
 			armorModel.rightLeg.visible = false;
 			armorModel.leftLeg.visible = false;
+			armorModel.getLeftBoot().ifPresent(p -> p.visible = false);
+			armorModel.getRightBoot().ifPresent(p -> p.visible = false);
 
 			armorModel.rightArm.visible = arm == playerEntityModel.rightArm;
 			armorModel.leftArm.visible = arm == playerEntityModel.leftArm;
@@ -204,7 +216,7 @@ public class ArmorRenderer
 		}
 	}
 
-	private static <M extends BipedEntityModel<T>, T extends LivingEntity> void setupArmorTransformAndVisibility(M contextModel, EquipmentSlot armorSlot, LivingEntity entity1, boolean slim, BipedEntityModel<LivingEntity> armorModel)
+	private static <M extends BipedEntityModel<T>, T extends LivingEntity> void setupArmorTransformAndVisibility(M contextModel, EquipmentSlot armorSlot, LivingEntity entity1, boolean slim, BipedEntityArmorModel<LivingEntity> armorModel)
 	{
 		setupArmorTransform(entity1, slim, armorModel, contextModel);
 
@@ -215,6 +227,8 @@ public class ArmorRenderer
 		armorModel.leftArm.visible = armorSlot == EquipmentSlot.CHEST;
 		armorModel.rightLeg.visible = armorSlot == EquipmentSlot.LEGS;
 		armorModel.leftLeg.visible = armorSlot == EquipmentSlot.LEGS;
+		armorModel.getLeftBoot().ifPresent(p -> p.visible = armorSlot == EquipmentSlot.FEET);
+		armorModel.getRightBoot().ifPresent(p -> p.visible = armorSlot == EquipmentSlot.FEET);
 	}
 
 	private static void renderWithTransformation(LivingEntity entity, Pair<Identifier, ItemStack> armorPair, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, ArmorRenderTransformer transformer)

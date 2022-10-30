@@ -49,14 +49,20 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		VertexConsumer provideLayer(VertexConsumerProvider vertexConsumerProvider, T target, String objectName);
 	}
 
+	@FunctionalInterface
+	public interface SpriteSupplier<T>
+	{
+		Sprite provideLayer(T target, String objectName);
+	}
+
 	private static final String MODEL_MAGIC = "P3D";
 	private static final String RIG_MAGIC = "P3DR";
 	private static final int[] ACCEPTED_VERSIONS = { 0x02 };
 
-	public void renderBlock(MatrixStack matrix, QuadEmitter quadEmitter, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, Supplier<Random> randomSupplier, RenderContext context, Sprite sprite)
+	public void renderBlock(MatrixStack matrix, QuadEmitter quadEmitter, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, SpriteSupplier<P3DBlockRenderTarget> spriteSupplier, Supplier<Random> randomSupplier, RenderContext context)
 	{
 		for (var mesh : rootObjects)
-			renderMesh(matrix, quadEmitter, mesh, target, transformer, randomSupplier, context, sprite);
+			renderMesh(matrix, quadEmitter, mesh, target, transformer, spriteSupplier, randomSupplier, context);
 	}
 
 	public <T> void render(MatrixStack matrix, VertexConsumerProvider vertexConsumerProvider, T target, PartTransformer<T> transformer, VertexConsumerSupplier<T> vertexConsumerSupplier, int light, float tickDelta, int r, int g, int b, int a)
@@ -86,7 +92,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		matrix.pop();
 	}
 
-	private <T> void renderMesh(MatrixStack matrix, QuadEmitter quadEmitter, P3dObject o, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, Supplier<Random> randomSupplier, RenderContext context, Sprite sprite)
+	private void renderMesh(MatrixStack matrix, QuadEmitter quadEmitter, P3dObject o, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, SpriteSupplier<P3DBlockRenderTarget> spriteSupplier, Supplier<Random> randomSupplier, RenderContext context)
 	{
 		matrix.push();
 
@@ -97,10 +103,11 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 			return;
 		}
 
+		var sprite = spriteSupplier.provideLayer(target, o.name);
 		emitFaces(o, entry, quadEmitter, sprite);
 
 		for (var mesh : o.children)
-			renderMesh(matrix, quadEmitter, mesh, target, transformer, randomSupplier, context, sprite);
+			renderMesh(matrix, quadEmitter, mesh, target, transformer, spriteSupplier, randomSupplier, context);
 
 		matrix.pop();
 	}

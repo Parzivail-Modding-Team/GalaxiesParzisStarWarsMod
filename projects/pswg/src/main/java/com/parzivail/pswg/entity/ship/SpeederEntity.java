@@ -27,13 +27,7 @@ public class SpeederEntity extends ShipEntity
 
 	protected double getRepulsorSetpoint()
 	{
-		return -0.4;
-	}
-
-	@Override
-	protected int getMaxPassengers()
-	{
-		return 2;
+		return 0;
 	}
 
 	@Override
@@ -132,14 +126,6 @@ public class SpeederEntity extends ShipEntity
 	public boolean acceptLeftClick(PlayerEntity player)
 	{
 		return false;
-	}
-
-	@Override
-	public Vec3d getPassengerSocket(int passengerIndex)
-	{
-		if (passengerIndex > 0)
-			return new Vec3d(0.5f, 0.1f, 1.25f);
-		return new Vec3d(-0.5f, 0.1f, 1.25f);
 	}
 
 	@Override
