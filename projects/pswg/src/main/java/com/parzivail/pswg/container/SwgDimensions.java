@@ -1,10 +1,22 @@
 package com.parzivail.pswg.container;
 
+import com.parzivail.pswg.Resources;
 import com.parzivail.util.Consumers;
+import com.parzivail.util.gen.biome.TerrainBiomes;
+import com.parzivail.util.gen.mc.GalaxiesBiomeSource;
+import com.parzivail.util.gen.mc.GalaxiesChunkGenerator;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.util.registry.BuiltinRegistries;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
+import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.dimension.DimensionTypes;
 
+import java.util.OptionalLong;
 import java.util.function.Consumer;
 
 public class SwgDimensions
@@ -12,11 +24,42 @@ public class SwgDimensions
 	private static final Consumer<SpawnSettings.Builder> SPAWN_NONE = Consumers::noop;
 	private static final Consumer<GenerationSettings.Builder> GEN_NONE = Consumers::noop;
 
+	public static final RegistryKey<DimensionType> TATOOINE = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, Resources.id("tatooine"));
+
 	private static int getSkyColor(float temperature)
 	{
 		var f = temperature / 3.0F;
 		f = MathHelper.clamp(f, -1.0F, 1.0F);
 		return MathHelper.hsvToRgb(0.62222224F - f * 0.05F, 0.5F + f * 0.1F, 1.0F);
+	}
+
+	public static void register() {
+		Registry.register(Registry.BIOME_SOURCE, Resources.id("galaxies"), GalaxiesBiomeSource.CODEC);
+		Registry.register(Registry.CHUNK_GENERATOR, Resources.id("galaxies"), GalaxiesChunkGenerator.CODEC);
+
+		BuiltinRegistries.add(
+				BuiltinRegistries.DIMENSION_TYPE,
+				TATOOINE,
+				new DimensionType(
+						/*fixedTime = */ OptionalLong.of(6000),
+						/*hasSkyLight = */ true,
+						/*hasCeiling = */ false,
+						/*ultraWarm = */ false,
+						/*natural = */ false,
+						/*coordinateScale = */ 1.0,
+						/*bedWorks = */ false,
+						/*respawnAnchorWorks = */ false,
+						/*minY = */ -64,
+						/*height = */ 384,
+						/*logicalHeight = */ 384,
+						/*infiniburn = */ BlockTags.INFINIBURN_OVERWORLD,
+						/*effectsLocation = */ DimensionTypes.OVERWORLD_ID,
+						/*ambientLight = */ 0.0F,
+						/*monsterSettings = */ new DimensionType.MonsterSettings(false, true, UniformIntProvider.create(0, 7), 0)
+				)
+		);
+
+		TerrainBiomes.init();
 	}
 
 //	public static class Tatooine
