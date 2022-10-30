@@ -1,6 +1,6 @@
 package com.parzivail.pswgtk.render;
 
-import com.parzivail.pswgtk.ui.SliceController;
+import com.parzivail.pswgtk.world.SliceController;
 import io.wispforest.worldmesher.WorldMesh;
 import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;

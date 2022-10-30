@@ -10,11 +10,11 @@ import net.minecraft.util.Identifier;
 
 public class ToolkitClient implements PswgClientAddon
 {
-	public static final String MODID = "pswg-toolkit";
+	public static final String MODID = "aurek";
 	public static final Lumberjack LOG = new Lumberjack(MODID);
 
 	public static final String I18N_TOOLKIT = Resources.screen("toolkit");
-	public static final Identifier TEX_TOOLKIT = Resources.id("textures/gui/toolkit_button.png");
+	public static final Identifier TEX_TOOLKIT = new Identifier(MODID, "textures/gui/toolkit_button.png");
 
 	public static Screen createHomeScreen(Screen parent)
 	{

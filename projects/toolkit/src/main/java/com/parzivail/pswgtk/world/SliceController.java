@@ -1,4 +1,4 @@
-package com.parzivail.pswgtk.ui;
+package com.parzivail.pswgtk.world;
 
 import com.parzivail.pswgtk.render.ChunkedWorldMesh;
 import net.minecraft.util.math.ChunkPos;
