@@ -135,12 +135,12 @@ public class ToolkitWorldgenScreen extends JComponentScreen implements MouseMoti
 	}
 
 	@Override
-	public void close()
+	public void removed()
 	{
 		if (this.mesh != null)
 			this.mesh.close();
 
-		super.close();
+		super.removed();
 	}
 
 	@Override

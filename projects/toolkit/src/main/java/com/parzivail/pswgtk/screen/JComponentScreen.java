@@ -107,7 +107,8 @@ public abstract class JComponentScreen extends Screen
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double amount)
 	{
-		assert this.client != null;
+		if (this.client == null)
+			return false;
 
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
@@ -115,13 +116,14 @@ public abstract class JComponentScreen extends Screen
 		dispatchEvent(event);
 		onMouseScrolled(event);
 
-		return super.mouseScrolled(mouseX, mouseY, amount);
+		return true;
 	}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button)
 	{
-		assert this.client != null;
+		if (this.client == null)
+			return false;
 
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
@@ -140,7 +142,8 @@ public abstract class JComponentScreen extends Screen
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button)
 	{
-		assert this.client != null;
+		if (this.client == null)
+			return false;
 
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
@@ -166,7 +169,8 @@ public abstract class JComponentScreen extends Screen
 	@Override
 	public void mouseMoved(double mouseX, double mouseY)
 	{
-		assert this.client != null;
+		if (this.client == null)
+			return;
 
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
@@ -177,8 +181,6 @@ public abstract class JComponentScreen extends Screen
 		);
 		dispatchEvent(event);
 		onMouseMoved(event);
-
-		super.mouseMoved(mouseX, mouseY);
 	}
 
 	@Override
@@ -189,7 +191,14 @@ public abstract class JComponentScreen extends Screen
 				frame, KeyEvent.KEY_PRESSED, System.currentTimeMillis(),
 				glfwToSwingKeyModifiers(modifiers), vk, (char)vk
 		));
-		return super.keyPressed(keyCode, scanCode, modifiers);
+
+		if (this.client == null)
+			return false;
+
+		if (keyCode == GLFW.GLFW_KEY_ESCAPE)
+			this.client.setScreen(this.parent);
+
+		return true;
 	}
 
 	@Override
@@ -200,7 +209,7 @@ public abstract class JComponentScreen extends Screen
 				frame, KeyEvent.KEY_RELEASED, System.currentTimeMillis(),
 				glfwToSwingKeyModifiers(modifiers), vk, (char)vk
 		));
-		return super.keyPressed(keyCode, scanCode, modifiers);
+		return true;
 	}
 
 	@Override
@@ -210,7 +219,7 @@ public abstract class JComponentScreen extends Screen
 				frame, KeyEvent.KEY_TYPED, System.currentTimeMillis(),
 				glfwToSwingKeyModifiers(modifiers), KeyEvent.VK_UNDEFINED, chr
 		));
-		return super.charTyped(chr, modifiers);
+		return true;
 	}
 
 	private int glfwToSwingKeyModifiers(int glfwModifiers)
@@ -278,10 +287,11 @@ public abstract class JComponentScreen extends Screen
 	@Override
 	public void close()
 	{
-		assert this.client != null;
+	}
 
-		this.client.setScreen(this.parent);
-
+	@Override
+	public void removed()
+	{
 		if (swingThread != null)
 			swingThread.interrupt();
 	}

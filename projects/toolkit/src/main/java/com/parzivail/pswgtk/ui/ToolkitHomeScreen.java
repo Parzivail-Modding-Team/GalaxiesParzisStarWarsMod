@@ -5,6 +5,7 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswgtk.screen.JComponentScreen;
+import com.parzivail.pswgtk.swing.EventHelper;
 import com.parzivail.pswgtk.swing.NodeTreeModel;
 import com.parzivail.pswgtk.util.LangUtil;
 import net.minecraft.client.gui.screen.Screen;
@@ -133,8 +134,7 @@ public class ToolkitHomeScreen extends JComponentScreen
 		);
 
 		availableTools.addTreeSelectionListener(e -> {
-			@SuppressWarnings("unchecked")
-			var tool = (NodeTreeModel.Node<Tool>)availableTools.getLastSelectedPathComponent();
+			NodeTreeModel.Node<Tool> tool = getSelectedTool();
 
 			if (tool.value == null)
 			{
@@ -147,10 +147,28 @@ public class ToolkitHomeScreen extends JComponentScreen
 				tbToolDesc.setText(tool.value.getDescription());
 			}
 
-			bRunTool.setVisible(tool.value != null);
+			bRunTool.setVisible(tool.value != null && tool.value.screenProvider != null);
 		});
 
 		availableTools.addSelectionRow(0);
+
+		EventHelper.click(bRunTool, mouseEvent -> {
+			assert this.client != null;
+
+			var tool = getSelectedTool();
+			if (tool.value != null && tool.value.screenProvider != null)
+			{
+				this.client.execute(() -> {
+					this.client.setScreen(tool.value.screenProvider.apply(this));
+				});
+			}
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	private NodeTreeModel.Node<Tool> getSelectedTool()
+	{
+		return (NodeTreeModel.Node<Tool>)availableTools.getLastSelectedPathComponent();
 	}
 
 	@Override
