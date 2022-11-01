@@ -39,6 +39,7 @@ jobs:
           arguments: --stacktrace --parallel clean build
       - name: upload
         if: always() && github.ref == 'refs/heads/master' && (steps.gradle.outcome == 'success' || steps.gradle.outcome == 'failure')
+        continue-on-error: true
         run: |
           mkdir -p projects/pswg/build/libs
           cd projects/pswg/build/libs
