@@ -73,6 +73,10 @@ allprojects {
 		maven(url = "https://api.modrinth.com/maven") {
 			name = "Modrinth"
 		}
+
+		maven(url = "https://www.jetbrains.com/intellij-repository/releases/") {
+			name = "JetBrains"
+		}
 	}
 
 	java {
@@ -121,6 +125,7 @@ allprojects {
 	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
 	tasks.withType<JavaCompile> {
 		options.encoding = "UTF-8"
+		options.compilerArgs.addAll(arrayOf("-Xmaxerrs", "1000", "-Xdiags:verbose"))
 	}
 
 	tasks.jar {
