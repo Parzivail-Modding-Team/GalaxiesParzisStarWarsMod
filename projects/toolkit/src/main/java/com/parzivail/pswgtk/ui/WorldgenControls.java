@@ -99,7 +99,7 @@ public class WorldgenControls
 	{
 		this.mesh = mesh;
 
-		EventHelper.click(bGenerate, e -> mesh.scheduleRebuild());
+		EventHelper.click(bGenerate, e -> mesh.scheduleRegererate());
 
 		EventHelper.createDependency(cbSliceX, cbReverseX, nudSliceX);
 		EventHelper.createDependency(cbSliceZ, cbReverseZ, nudSliceZ);

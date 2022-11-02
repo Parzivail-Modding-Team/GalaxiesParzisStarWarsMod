@@ -1,18 +1,22 @@
 package com.parzivail.pswgtk.render;
 
+import com.parzivail.pswgtk.world.GeneratingBlockRenderView;
 import com.parzivail.pswgtk.world.SliceController;
 import io.wispforest.worldmesher.WorldMesh;
-import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectAVLTreeMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.BlockRenderView;
+
+import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 public class ChunkedWorldMesh
 {
 	private final Long2ObjectMap<WorldMesh> renderMap;
-	private final BlockRenderView world;
+	private final GeneratingBlockRenderView world;
 	private final ChunkPos min;
 	private final ChunkPos max;
 	private final int minY;
@@ -20,7 +24,7 @@ public class ChunkedWorldMesh
 	private final Vec3i dimensions;
 	private final SliceController slice;
 
-	public ChunkedWorldMesh(BlockRenderView world, ChunkPos min, ChunkPos max, int minY, int maxY)
+	public ChunkedWorldMesh(GeneratingBlockRenderView world, ChunkPos min, ChunkPos max, int minY, int maxY)
 	{
 		this.world = world;
 		this.min = min;
@@ -28,18 +32,15 @@ public class ChunkedWorldMesh
 		this.minY = minY;
 		this.maxY = maxY;
 
-		this.dimensions = new Vec3i((max.x - min.x) << 4, maxY - minY, (max.z - min.z) << 4);
+		this.dimensions = new Vec3i((max.x - min.x + 1) << 4, maxY - minY, (max.z - min.z + 1) << 4);
 
-		this.renderMap = new Long2ObjectArrayMap<>((max.x - min.x) * (max.z - min.z));
+		this.renderMap = new Long2ObjectAVLTreeMap<>();
 		this.slice = new SliceController(this);
-	}
 
-	public void populateRenderMap()
-	{
-		ChunkPos.stream(min, max).forEach(chunkPos -> {
+		ChunkPos.stream(min, max).forEach(pos -> {
 			this.renderMap.put(
-					chunkPos.toLong(),
-					new WorldMesh.Builder(world, chunkPos.getStartPos().add(0, minY, 0), chunkPos.getStartPos().add(15, maxY, 15))
+					pos.toLong(),
+					new WorldMesh.Builder(world, pos.getStartPos().add(0, minY, 0), pos.getStartPos().add(15, maxY, 15))
 							// TODO: .enableGlobalNeighbors()
 							.build()
 			);
@@ -54,6 +55,16 @@ public class ChunkedWorldMesh
 	public int getSeed()
 	{
 		return 0;
+	}
+
+	public int getMinY()
+	{
+		return minY;
+	}
+
+	public int getMaxY()
+	{
+		return maxY;
 	}
 
 	public ChunkPos getMin()
@@ -76,9 +87,39 @@ public class ChunkedWorldMesh
 		return slice;
 	}
 
-	public void scheduleRebuild()
+	public void scheduleRegererate()
 	{
-		renderMap.values().forEach(WorldMesh::scheduleRebuild);
+		CompletableFuture.runAsync(() -> {
+			// Schedule worldgen
+			var regenFutures = new ArrayList<CompletableFuture<Void>>();
+			for (var entry : renderMap.keySet())
+			{
+				var pos = new ChunkPos(entry);
+				var regenFuture = CompletableFuture.runAsync(() -> world.regenerate(pos), Util.getMainWorkerExecutor());
+				regenFutures.add(regenFuture);
+
+				regenFuture.whenComplete((unused, throwable) -> {
+					scheduleRebuild(pos);
+				});
+			}
+
+			// Block decoration until worldgen has completed
+			for (var f : regenFutures)
+				f.join();
+
+			// Schedule decoration
+			var decorateFutures = new ArrayList<CompletableFuture<Void>>();
+			for (var entry : renderMap.keySet())
+				decorateFutures.add(CompletableFuture.runAsync(() -> world.decorate(new ChunkPos(entry)), Util.getMainWorkerExecutor()));
+
+			// Wait until decoration has completed
+			for (var f : decorateFutures)
+				f.join();
+
+			// Rebuild modified chunk
+			for (var dirtyPos : world.getDirtyChunks())
+				scheduleRebuild(new ChunkPos(dirtyPos));
+		}, Util.getMainWorkerExecutor());
 	}
 
 	public void scheduleRebuild(ChunkPos pos)
@@ -88,13 +129,17 @@ public class ChunkedWorldMesh
 			return;
 
 		mesh.scheduleRebuild();
+		world.clearDirty(pos.toLong());
 	}
 
 	public void render(MatrixStack matrixStack)
 	{
+
 		for (var entry : renderMap.long2ObjectEntrySet())
 		{
 			var mesh = entry.getValue();
+			if (mesh == null)
+				return;
 
 			var state = mesh.getState();
 			if (!state.canRender)

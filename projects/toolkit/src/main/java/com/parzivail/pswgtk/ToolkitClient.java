@@ -10,6 +10,9 @@ import net.minecraft.util.Identifier;
 
 public class ToolkitClient implements PswgClientAddon
 {
+	//	public static final ExecutorService UI_WORKER = WorkerUtil.createWorker("ui", 1);
+	//	public static final ExecutorService WORLDGEN_WORKER = WorkerUtil.createWorker("worldgen", 8);
+
 	public static final String MODID = "aurek";
 	public static final Lumberjack LOG = new Lumberjack(MODID);
 

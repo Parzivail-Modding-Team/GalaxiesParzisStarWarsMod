@@ -1,6 +1,5 @@
 package com.parzivail.pswgtk.world;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -13,16 +12,12 @@ import net.minecraft.world.chunk.light.LightingProvider;
 import net.minecraft.world.level.ColorResolver;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.Function;
-
-public class ProceduralBlockRenderView implements BlockRenderView, ChunkProvider
+public abstract class ProceduralBlockRenderView implements BlockRenderView, ChunkProvider
 {
 	private final LightingProvider lightingProvider;
-	private final Function<BlockPos, BlockState> blockGetter;
 
-	public ProceduralBlockRenderView(Function<BlockPos, BlockState> blockGetter)
+	public ProceduralBlockRenderView()
 	{
-		this.blockGetter = blockGetter;
 		this.lightingProvider = new LightingProvider(this, true, true);
 	}
 
@@ -58,12 +53,6 @@ public class ProceduralBlockRenderView implements BlockRenderView, ChunkProvider
 	public BlockEntity getBlockEntity(BlockPos pos)
 	{
 		return null;
-	}
-
-	@Override
-	public BlockState getBlockState(BlockPos pos)
-	{
-		return blockGetter.apply(pos);
 	}
 
 	@Override

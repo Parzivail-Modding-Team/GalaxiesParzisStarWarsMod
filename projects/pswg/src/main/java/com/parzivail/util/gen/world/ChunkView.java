@@ -10,7 +10,7 @@ import net.minecraft.world.Heightmap;
 
 public interface ChunkView extends BlockView
 {
-	ChunkPos getPos();
+	ChunkPos getChunkPos();
 
 	int sampleHeightmap(Heightmap.Type type, int x, int z);
 

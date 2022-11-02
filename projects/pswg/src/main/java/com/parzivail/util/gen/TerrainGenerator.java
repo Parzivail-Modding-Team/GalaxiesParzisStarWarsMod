@@ -31,7 +31,7 @@ public final class TerrainGenerator
 
 	public void buildNoise(ChunkView chunk)
 	{
-		ChunkPos pos = chunk.getPos();
+		ChunkPos pos = chunk.getChunkPos();
 		double[][] noises = new double[25][49];
 		sampleNoises(noises, pos.x << 2, pos.z << 2);
 
@@ -194,23 +194,23 @@ public final class TerrainGenerator
 			for (int z = 0; z < 16; z++)
 			{
 				// TODO: biome interpolator class
-				TerrainBiome biome = biomes.getBiome(chunk.getPos().x * 4 + (x >> 2), chunk.getPos().z * 4 + (z >> 2));
+				TerrainBiome biome = biomes.getBiome(chunk.getChunkPos().x * 4 + (x >> 2), chunk.getChunkPos().z * 4 + (z >> 2));
 				biome.surface().build(chunk, x, z, chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z), Blocks.STONE.getDefaultState(), Blocks.WATER.getDefaultState());
 			}
 		}
 	}
 
 	public void generateDecorations(WorldGenView world, ChunkView chunk) {
-		TerrainBiome biome = biomes.getBiome(chunk.getPos().x * 4 + 2, chunk.getPos().z * 4 + 2);
+		TerrainBiome biome = biomes.getBiome(chunk.getChunkPos().x * 4 + 2, chunk.getChunkPos().z * 4 + 2);
 
 		Random random = new Random();
-		long popSeed = setPopulationSeed(random, world.getSeed(), chunk.getPos().x, chunk.getPos().z);
+		long popSeed = setPopulationSeed(random, world.getSeed(), chunk.getChunkPos().x, chunk.getChunkPos().z);
 		int i = 0;
 		for (ConfiguredDecoration decoration : biome.decorations())
 		{
 			setDecoratorSeed(random, popSeed, 1, ++i);
 
-			decoration.generate(world, this.cg, random, chunk.getPos().getStartPos());
+			decoration.generate(world, this.cg, random, chunk.getChunkPos().getStartPos());
 		}
 	}
 

@@ -13,9 +13,8 @@ import org.jetbrains.annotations.Nullable;
 
 public record MinecraftChunkView(Chunk chunk) implements ChunkView
 {
-
 	@Override
-	public ChunkPos getPos()
+	public ChunkPos getChunkPos()
 	{
 		return chunk.getPos();
 	}
