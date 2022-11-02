@@ -2,7 +2,6 @@ package com.parzivail.pswgtk.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.parzivail.pswgtk.swing.PostEventAction;
 import com.parzivail.pswgtk.swing.TextureBackedContentWrapper;
 import com.parzivail.pswgtk.util.GlfwKeyUtil;
 import jdk.swing.interop.LightweightFrameWrapper;
@@ -16,7 +15,6 @@ import org.lwjgl.glfw.GLFW;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.AccessController;
 
 public abstract class JComponentScreen extends Screen
 {
@@ -72,8 +70,7 @@ public abstract class JComponentScreen extends Screen
 
 	private void dispatchEvent(AWTEvent event)
 	{
-		@SuppressWarnings("removal")
-		var dummy = AccessController.doPrivileged(new PostEventAction(event));
+		Toolkit.getDefaultToolkit().getSystemEventQueue().postEvent(event);
 	}
 
 	private static void runOnEDT(final Runnable r)
