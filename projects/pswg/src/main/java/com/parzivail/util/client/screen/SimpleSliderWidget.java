@@ -31,7 +31,7 @@ public class SimpleSliderWidget extends ButtonWidget
 	public SimpleSliderWidget(int x, int y, int width, int height, int trackU, int trackV, int thumbU, int thumbV, int thumbHoverU, int thumbHoverV, int thumbWidth, int thumbHeight, int textureWidth, int textureHeight, Consumer<SimpleSliderWidget> onChange)
 	{
 		super(x, y, width, height, Text.of(""), button -> {
-		});
+		}, EMPTY_TOOLTIP, DEFAULT_NARRATION_SUPPLIER);
 		this.trackU = trackU;
 		this.trackV = trackV;
 		this.thumbU = thumbU;
@@ -57,7 +57,7 @@ public class SimpleSliderWidget extends ButtonWidget
 
 	private void setValueFromMouseX(double mouseX)
 	{
-		this.value = MathHelper.clamp((float)((mouseX - this.x) / (this.width - 2)), 0, 1);
+		this.value = MathHelper.clamp((float)((mouseX - this.getX()) / (this.width - 2)), 0, 1);
 	}
 
 	public void setValue(float v)
@@ -79,7 +79,7 @@ public class SimpleSliderWidget extends ButtonWidget
 
 	private boolean clientAreaContains(double x, double y)
 	{
-		return x >= this.x && x <= this.x + width && y >= this.y && y <= this.y + height;
+		return x >= this.getX() && x <= this.getX() + width && y >= this.getY() && y <= this.getY() + height;
 	}
 
 	@Override
@@ -124,9 +124,9 @@ public class SimpleSliderWidget extends ButtonWidget
 
 		RenderSystem.enableDepthTest();
 
-		drawTexture(matrices, this.x, this.y, this.trackU, this.trackV, this.width, this.height, this.textureWidth, this.textureHeight);
+		drawTexture(matrices, this.getX(), this.getY(), this.trackU, this.trackV, this.width, this.height, this.textureWidth, this.textureHeight);
 
-		drawTexture(matrices, this.x + 1 + Math.round(value * (width - 2)) - this.thumbWidth / 2, this.y - (this.thumbHeight - this.height) / 2, tU, tV, this.thumbWidth, this.thumbHeight, this.textureWidth, this.textureHeight);
+		drawTexture(matrices, this.getX() + 1 + Math.round(value * (width - 2)) - this.thumbWidth / 2, this.getY() - (this.thumbHeight - this.height) / 2, tU, tV, this.thumbWidth, this.thumbHeight, this.textureWidth, this.textureHeight);
 
 		if (this.isHovered())
 			this.renderTooltip(matrices, mouseX, mouseY);

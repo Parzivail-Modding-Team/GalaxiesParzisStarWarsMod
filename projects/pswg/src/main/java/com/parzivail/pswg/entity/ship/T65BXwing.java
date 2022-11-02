@@ -27,12 +27,12 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 import java.util.function.Function;
 
@@ -249,7 +249,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		var pos = this.getPos();
 		var rot = getRotation();
 
-		var posMat = Matrix4f.translate((float)pos.x, (float)pos.y, (float)pos.z);
+		var posMat = new Matrix4f().translate((float)pos.x, (float)pos.y, (float)pos.z);
 
 		var transformTopRight = getWingCollisionTransform(rot, posMat, "WingTopRight");
 		var transformBottomRight = getWingCollisionTransform(rot, posMat, "WingBottomRight");
@@ -279,11 +279,11 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 	}
 
 	@NotNull
-	private Matrix4f getWingCollisionTransform(Quaternion rot, Matrix4f posMat, String wing)
+	private Matrix4f getWingCollisionTransform(Quaternionf rot, Matrix4f posMat, String wing)
 	{
-		var wingTransform = posMat.copy();
-		wingTransform.multiply(RigT65B.INSTANCE.getTransform(this, rot, wing, 0));
-		wingTransform.multiply(RigT65B.INSTANCE.getPartTransformation(this, wing, 0));
+		var wingTransform = new Matrix4f(posMat);
+		wingTransform.mul(RigT65B.INSTANCE.getTransform(this, rot, wing, 0));
+		wingTransform.mul(RigT65B.INSTANCE.getPartTransformation(this, wing, 0));
 
 		return wingTransform;
 	}

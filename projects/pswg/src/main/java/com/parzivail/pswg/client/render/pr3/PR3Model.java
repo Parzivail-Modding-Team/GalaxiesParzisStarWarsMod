@@ -7,14 +7,14 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.math.Vector4f;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public record PR3Model<T, PT extends Enum<PT>>(PR3File container,
                                                Class<PT> partClass,
-                                               com.parzivail.pswg.client.render.pr3.PR3Model.TransformerFunction<T, PT> transformer)
+                                               PR3Model.TransformerFunction<T, PT> transformer)
 {
 	@FunctionalInterface
 	public interface TransformerFunction<T1, P extends Enum<P>>
@@ -45,13 +45,13 @@ public record PR3Model<T, PT extends Enum<PT>>(PR3File container,
 		emitVertex(light, vertexConsumer, modelMat, normalMat, vA, nA, tA);
 	}
 
-	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vec3f vertex, Vec3f normal, Vec3f texCoord)
+	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vector3f vertex, Vector3f normal, Vector3f texCoord)
 	{
-		var v = new Vector4f(vertex.getX(), vertex.getY(), vertex.getZ(), 1.0F);
-		v.transform(modelMatrix);
-		var n = new Vec3f(-normal.getX(), -normal.getY(), -normal.getZ());
-		n.transform(normalMatrix);
-		vertexConsumer.vertex(v.getX(), v.getY(), v.getZ(), 1, 1, 1, 1, texCoord.getX(), 1 - texCoord.getY(), OverlayTexture.DEFAULT_UV, light, n.getX(), n.getY(), n.getZ());
+		var v = new Vector4f(vertex.x, vertex.y, vertex.z, 1.0F);
+		v.mul(modelMatrix);
+		var n = new Vector3f(-normal.x, -normal.y, -normal.z);
+		n.mul(normalMatrix);
+		vertexConsumer.vertex(v.x, v.y, v.z, 1, 1, 1, 1, texCoord.x, 1 - texCoord.y, OverlayTexture.DEFAULT_UV, light, n.x, n.y, n.z);
 	}
 
 	public void render(T target, VertexConsumerProvider vertexConsumers, Identifier texture, MatrixStack matrices, int light, float tickDelta)
@@ -74,13 +74,13 @@ public record PR3Model<T, PT extends Enum<PT>>(PR3File container,
 
 		var entry = matrices.peek();
 		var modelMat = entry.getPositionMatrix();
-		modelMat.multiply(o.transformationMatrix);
+		modelMat.mul(o.transformationMatrix);
 
 		var t = new Transform();
 		transform(t, target, o.name, tickDelta);
 
-		entry.getPositionMatrix().multiply(t.value().getModel());
-		entry.getNormalMatrix().multiply(new Matrix3f(t.value().getModel()));
+		entry.getPositionMatrix().mul(t.value().getModel());
+		entry.getNormalMatrix().mul(new Matrix3f(t.value().getModel()));
 
 		for (var face : o.faces)
 			emitFace(consumer, matrices.peek(), o, face, light);

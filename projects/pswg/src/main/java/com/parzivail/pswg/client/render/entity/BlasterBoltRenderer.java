@@ -15,7 +15,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Arm;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Quaternionf;
 
 public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 {
@@ -69,8 +69,8 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 			matrices.scale(s, s, s);
 		}
 
-		matrices.multiply(Vec3f.POSITIVE_Y.getRadialQuaternion(bYaw - MathHelper.PI / 2));
-		matrices.multiply(Vec3f.POSITIVE_Z.getRadialQuaternion(bPitch - MathHelper.PI / 2));
+		matrices.multiply(new Quaternionf().rotationY(bYaw - MathHelper.PI / 2));
+		matrices.multiply(new Quaternionf().rotationZ(bPitch - MathHelper.PI / 2));
 
 		if (shouldOffset)
 		{

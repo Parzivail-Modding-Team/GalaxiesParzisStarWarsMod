@@ -36,10 +36,10 @@ import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.text.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec2f;
 import org.apache.commons.lang3.mutable.Mutable;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -335,8 +335,8 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			MatrixStackUtil.scalePos(matrices, -1 / ratio, 1 / ratio, 1);
 
-			matrices.multiply(new Quaternion(180 - blasterViewportRotation.y, 0, 0, true));
-			matrices.multiply(new Quaternion(0, 90 + blasterViewportRotation.x, 0, true));
+			matrices.multiply(new Quaternionf().rotationX(MathUtil.toRadians(180 - blasterViewportRotation.y)));
+			matrices.multiply(new Quaternionf().rotationY(MathUtil.toRadians(90 + blasterViewportRotation.x)));
 
 			matrices.translate(0, 0, -model.bounds().maxZ + model.bounds().getZLength() / 2);
 

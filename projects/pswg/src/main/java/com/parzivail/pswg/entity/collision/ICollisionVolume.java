@@ -1,9 +1,9 @@
 package com.parzivail.pswg.entity.collision;
 
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 public interface ICollisionVolume
 {
@@ -11,7 +11,7 @@ public interface ICollisionVolume
 //
 //	Vec3d closestDistanceTo(ICollisionVolume other);
 
-	ICollisionVolume transform(Quaternion q);
+	ICollisionVolume transform(Quaternionf q);
 
 	ICollisionVolume transform(Matrix4f m);
 

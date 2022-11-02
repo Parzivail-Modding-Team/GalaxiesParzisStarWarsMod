@@ -2,8 +2,8 @@ package com.parzivail.util.math;
 
 import com.google.common.collect.Queues;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 import java.util.Deque;
 
@@ -25,35 +25,33 @@ public class Transform
 	}
 
 	private final Deque<State> stack = Util.make(Queues.newArrayDeque(), (stack) -> {
-		var matrix4f = new Matrix4f();
-		matrix4f.loadIdentity();
-		stack.add(new State(matrix4f));
+		stack.add(new State(new Matrix4f()));
 	});
 
 	public void translate(double x, double y, double z)
 	{
-		this.stack.getLast().modelMatrix.multiplyByTranslation((float)x, (float)y, (float)z);
+		this.stack.getLast().modelMatrix.translate((float)x, (float)y, (float)z);
 	}
 
 	public void scale(float x, float y, float z)
 	{
-		this.stack.getLast().modelMatrix.multiply(Matrix4f.scale(x, y, z));
+		this.stack.getLast().modelMatrix.scale(x, y, z);
 	}
 
 	public void multiply(Matrix4f matrix4f)
 	{
-		this.stack.getLast().modelMatrix.multiply(matrix4f);
+		this.stack.getLast().modelMatrix.mul(matrix4f);
 	}
 
-	public void multiply(Quaternion quaternion)
+	public void multiply(Quaternionf quaternion)
 	{
-		this.stack.getLast().modelMatrix.multiply(quaternion);
+		this.stack.getLast().modelMatrix.rotate(quaternion);
 	}
 
 	public void save()
 	{
 		var state = this.stack.getLast();
-		this.stack.addLast(new State(state.modelMatrix.copy()));
+		this.stack.addLast(new State(new Matrix4f(state.modelMatrix)));
 	}
 
 	public void restore()
@@ -73,6 +71,6 @@ public class Transform
 
 	public void loadIdentity()
 	{
-		this.stack.getLast().modelMatrix.loadIdentity();
+		this.stack.getLast().modelMatrix.identity();
 	}
 }

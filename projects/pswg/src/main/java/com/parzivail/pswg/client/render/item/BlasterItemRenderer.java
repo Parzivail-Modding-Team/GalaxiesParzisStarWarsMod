@@ -16,10 +16,7 @@ import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.data.TintedIdentifier;
-import com.parzivail.util.math.ColorUtil;
-import com.parzivail.util.math.Ease;
-import com.parzivail.util.math.Matrix4fUtil;
-import com.parzivail.util.math.MatrixStackUtil;
+import com.parzivail.util.math.*;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
@@ -34,9 +31,9 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
+import org.joml.Quaternionf;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -190,15 +187,15 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		if (renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.FIXED)
 		{
-			matrices.multiply(new Quaternion(0, 90, 0, true));
+			matrices.multiply(new Quaternionf().rotationY((float)(Math.PI / 2)));
 
 			if (renderMode == ModelTransformation.Mode.FIXED)
 				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
 			else
-				matrices.multiply(new Quaternion(0, 180, 0, true));
+				matrices.multiply(new Quaternionf().rotationY((float)Math.PI));
 
 			var angle = (float)(Math.PI / 4);
-			matrices.multiply(new Quaternion(angle, 0, 0, false));
+			matrices.multiply(new Quaternionf().rotationX(MathUtil.toRadians(angle)));
 
 			var yi = m.bounds().getYLength() * Math.abs(Math.sin(angle)) + m.bounds().getZLength() * Math.abs(Math.cos(angle));
 			var zi = m.bounds().getYLength() * Math.abs(Math.cos(angle)) + m.bounds().getZLength() * Math.abs(Math.sin(angle));
@@ -241,11 +238,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					MathHelper.lerp(adsLerp, 1.2f, adsVec.y),
 					MathHelper.lerp(adsLerp, 0, adsVec.z)
 			);
-			matrices.multiply(new Quaternion(
-					MathHelper.lerp(adsLerp, 0, 3) + recoilKick * bd.recoil.vertical * (0.1f + 0.05f * adsLerp),
-					MathHelper.lerp(adsLerp, 172, 182) - recoilKick * bd.recoil.horizontal,
-					0,
-					true));
+			matrices.multiply(new Quaternionf().rotationXYZ(
+					MathUtil.toRadians(MathHelper.lerp(adsLerp, 0, 3) + recoilKick * bd.recoil.vertical * (0.1f + 0.05f * adsLerp)),
+					MathUtil.toRadians(MathHelper.lerp(adsLerp, 172, 182) - recoilKick * bd.recoil.horizontal),
+					0
+			));
 			matrices.translate(
 					MathHelper.lerp(adsLerp, 0.2f, 0),
 					MathHelper.lerp(adsLerp, -0.2f, 0),
@@ -253,7 +250,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			);
 
 			// TODO: recalculate first person placement again without this
-			matrices.multiply(new Quaternion(0, 180, 0, true));
+			matrices.multiply(new Quaternionf().rotationY((float)Math.PI));
 
 			// TODO: left handed hold
 

@@ -38,12 +38,12 @@ public class LocalTextureToggleButtonWidget extends ButtonWidget
 
 	public LocalTextureToggleButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction, Text text)
 	{
-		this(x, y, width, height, u, v, hoveredU, hoveredV, pressedU, pressedV, textureWidth, textureHeight, pressAction, EMPTY, text);
+		this(x, y, width, height, u, v, hoveredU, hoveredV, pressedU, pressedV, textureWidth, textureHeight, pressAction, EMPTY_TOOLTIP, text);
 	}
 
 	public LocalTextureToggleButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int pressedU, int pressedV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction, ButtonWidget.TooltipSupplier tooltipSupplier, Text text)
 	{
-		super(x, y, width, height, text, pressAction, tooltipSupplier);
+		super(x, y, width, height, text, pressAction, tooltipSupplier, DEFAULT_NARRATION_SUPPLIER);
 		this.textureWidth = textureWidth;
 		this.textureHeight = textureHeight;
 		this.u = u;
@@ -82,7 +82,7 @@ public class LocalTextureToggleButtonWidget extends ButtonWidget
 		}
 
 		RenderSystem.enableDepthTest();
-		drawTexture(matrices, this.x, this.y, tU, tV, this.width, this.height, this.textureWidth, this.textureHeight);
+		drawTexture(matrices, this.getX(), this.getY(), tU, tV, this.width, this.height, this.textureWidth, this.textureHeight);
 
 		var oldTexture = RenderSystem.getShaderTexture(0);
 		if (this.hovered)

@@ -20,12 +20,12 @@ public class AreaButtonWidget extends ButtonWidget
 
 	public AreaButtonWidget(int x, int y, int width, int height, Predicate<ButtonWidget> enabledPredicate, PressAction pressAction, Text text)
 	{
-		this(x, y, width, height, enabledPredicate, pressAction, EMPTY, text);
+		this(x, y, width, height, enabledPredicate, pressAction, EMPTY_TOOLTIP, text);
 	}
 
 	public AreaButtonWidget(int x, int y, int width, int height, Predicate<ButtonWidget> enabledPredicate, PressAction pressAction, TooltipSupplier tooltipSupplier, Text text)
 	{
-		super(x, y, width, height, text, pressAction, tooltipSupplier);
+		super(x, y, width, height, text, pressAction, tooltipSupplier, DEFAULT_NARRATION_SUPPLIER);
 		this.enabledPredicate = enabledPredicate;
 	}
 

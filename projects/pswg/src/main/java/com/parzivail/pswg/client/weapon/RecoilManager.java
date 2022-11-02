@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.weapon;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.MathUtil;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -9,7 +10,7 @@ import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Arm;
-import net.minecraft.util.math.Quaternion;
+import org.joml.Quaternionf;
 
 public class RecoilManager
 {
@@ -104,7 +105,7 @@ public class RecoilManager
 		var scale = 1;
 		if (mc.options.getMainArm().getValue() == Arm.LEFT)
 			scale = -scale;
-		matrix.multiply(new Quaternion(0, 0.1f * scale * smoothImpulse, 0, true));
-		matrix.multiply(new Quaternion(0, 0, -0.4f * smoothImpulse, true));
+		matrix.multiply(new Quaternionf().rotationY(MathUtil.toRadians(0.1f * scale * smoothImpulse)));
+		matrix.multiply(new Quaternionf().rotationZ(MathUtil.toRadians(-0.4f * smoothImpulse)));
 	}
 }

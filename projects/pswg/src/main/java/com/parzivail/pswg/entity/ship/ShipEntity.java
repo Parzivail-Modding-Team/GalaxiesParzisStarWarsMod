@@ -30,6 +30,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -37,15 +38,19 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Quaternionf;
 
 import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrecisionEntity
 {
-	private static final TrackedData<Quaternion> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
+	private static final TrackedData<Quaternionf> ROTATION = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.QUATERNION);
 	private static final TrackedData<Float> THROTTLE = DataTracker.registerData(ShipEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Short> CONTROL_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
 	private static final TrackedData<Short> SHIELD_BITS = DataTracker.registerData(ShipEntity.class, TrackedDataHandlers.SHORT);
@@ -55,16 +60,16 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	private ChaseCam camera;
 
 	@Environment(EnvType.CLIENT)
-	protected Quaternion clientInstRotation = new Quaternion(Quaternion.IDENTITY);
+	protected Quaternionf clientInstRotation = new Quaternionf(QuatUtil.IDENTITY);
 	@Environment(EnvType.CLIENT)
-	private Quaternion clientRotation = new Quaternion(Quaternion.IDENTITY);
+	private Quaternionf clientRotation = new Quaternionf(QuatUtil.IDENTITY);
 	@Environment(EnvType.CLIENT)
-	private Quaternion clientPrevRotation = new Quaternion(Quaternion.IDENTITY);
+	private Quaternionf clientPrevRotation = new Quaternionf(QuatUtil.IDENTITY);
 	@Environment(EnvType.CLIENT)
 	private boolean firstRotationUpdate = true;
 
-	private Quaternion viewRotation = new Quaternion(Quaternion.IDENTITY);
-	private Quaternion viewPrevRotation = new Quaternion(Quaternion.IDENTITY);
+	private Quaternionf viewRotation = new Quaternionf(QuatUtil.IDENTITY);
+	private Quaternionf viewPrevRotation = new Quaternionf(QuatUtil.IDENTITY);
 
 	public ShipEntity(EntityType<?> type, World world)
 	{
@@ -204,7 +209,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	@Override
 	protected void initDataTracker()
 	{
-		getDataTracker().startTracking(ROTATION, new Quaternion(Quaternion.IDENTITY));
+		getDataTracker().startTracking(ROTATION, new Quaternionf(QuatUtil.IDENTITY));
 		getDataTracker().startTracking(THROTTLE, 0f);
 		getDataTracker().startTracking(CONTROL_BITS, (short)0);
 		getDataTracker().startTracking(SHIELD_BITS, (short)0);
@@ -215,16 +220,14 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	protected void readCustomDataFromNbt(NbtCompound tag)
 	{
 		if (tag.contains("rotation"))
-			setRotation(QuatUtil.getQuaternion(tag.getCompound("rotation")));
+			setRotation(QuatUtil.getQuaternion(tag, "rotation"));
 		setThrottle(tag.getFloat("throttle"));
 	}
 
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound tag)
 	{
-		var qTag = new NbtCompound();
-		QuatUtil.putQuaternion(qTag, getRotation());
-		tag.put("rotation", qTag);
+		QuatUtil.putQuaternion(tag, "rotation", getRotation());
 
 		tag.putFloat("throttle", getThrottle());
 	}
@@ -256,13 +259,13 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	@Override
 	public void tick()
 	{
-		viewPrevRotation = new Quaternion(viewRotation);
+		viewPrevRotation = new Quaternionf(viewRotation);
 
 		super.tick();
 		if (this.isLogicalSideForUpdatingMovement())
 			this.updateTrackedPosition(this.getX(), this.getY(), this.getZ());
 
-		viewRotation = new Quaternion(getRotation());
+		viewRotation = new Quaternionf(getRotation());
 
 		EntityUtil.updateEulerRotation(this, viewRotation);
 
@@ -270,13 +273,13 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		{
 			if (Client.isShipClientControlled(this))
 			{
-				clientPrevRotation = new Quaternion(clientRotation);
-				clientRotation = new Quaternion(clientInstRotation);
+				clientPrevRotation = new Quaternionf(clientRotation);
+				clientRotation = new Quaternionf(clientInstRotation);
 			}
 			else
 			{
-				clientPrevRotation = new Quaternion(viewPrevRotation);
-				clientRotation = new Quaternion(viewRotation);
+				clientPrevRotation = new Quaternionf(viewPrevRotation);
+				clientRotation = new Quaternionf(viewRotation);
 			}
 
 			var camera = getCamera();
@@ -406,7 +409,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	}
 
 	@Override
-	public Packet<?> createSpawnPacket()
+	public Packet<ClientPlayPacketListener> createSpawnPacket()
 	{
 		return new EntitySpawnS2CPacket(this);
 	}
@@ -432,19 +435,19 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 			getDataTracker().set(THROTTLE, t);
 	}
 
-	public Quaternion getRotation()
+	public Quaternionf getRotation()
 	{
 		return getDataTracker().get(ROTATION);
 	}
 
-	public void setRotation(Quaternion q)
+	public void setRotation(Quaternionf q)
 	{
 		q.normalize();
 		getDataTracker().set(ROTATION, q);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public Quaternion getViewRotation(float t)
+	public Quaternionf getViewRotation(float t)
 	{
 		var start = clientPrevRotation;
 		var end = clientRotation;
@@ -479,10 +482,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		if (!allowPitchMovement())
 			mouseDy = 0;
 
-		var rotation = new Quaternion(clientInstRotation);
+		var rotation = new Quaternionf(clientInstRotation);
 		if (firstRotationUpdate)
 		{
-			rotation = new Quaternion(getRotation());
+			rotation = new Quaternionf(getRotation());
 			firstRotationUpdate = false;
 		}
 
@@ -492,10 +495,10 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 			shipRollPriority = !shipRollPriority;
 
 		if (shipRollPriority)
-			rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Z, -(float)mouseDx * 0.1f, true));
+			rotation.rotateZ(MathUtil.toRadians(-(float)mouseDx * 0.1f));
 		else
 		{
-			rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Y, -(float)mouseDx * 0.1f, true));
+			rotation.rotateY(MathUtil.toRadians(-(float)mouseDx * 0.1f));
 
 			var ea = QuatUtil.toEulerAngles(rotation);
 			var currentUp = QuatUtil.rotate(new Vec3d(0, 1, 0), rotation);
@@ -514,8 +517,9 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 			if (Math.abs(angle) > 0.01)
 			{
-				var zeroRollRotation = new Quaternion(new Vec3f(currentUp.crossProduct(zeroRollUp).normalize()), (float)angle, false);
-				zeroRollRotation.hamiltonProduct(rotation);
+				Vec3d vec3d = currentUp.crossProduct(zeroRollUp).normalize();
+				var zeroRollRotation = new Quaternionf().rotationAxis((float)angle, vec3d.toVector3f());
+				zeroRollRotation.mul(rotation);
 
 				// Prevent getting stuck spinning at poles by tapering off max lerp near the poles
 				var maxRotationSpeed = (float)(1 - Math.abs(Math.asin(currentForward.y) / MathHelper.HALF_PI));
@@ -525,11 +529,11 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 			}
 		}
 
-		rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_X, -(float)mouseDy * 0.1f, true));
+		rotation.rotateX(MathUtil.toRadians(-(float)mouseDy * 0.1f));
 
 		setRotation(rotation);
 
-		clientInstRotation = new Quaternion(rotation);
+		clientInstRotation = new Quaternionf(rotation);
 
 		var passedData = new PacketByteBuf(Unpooled.buffer());
 		PacketByteBufHelper.writeQuaternion(passedData, rotation);

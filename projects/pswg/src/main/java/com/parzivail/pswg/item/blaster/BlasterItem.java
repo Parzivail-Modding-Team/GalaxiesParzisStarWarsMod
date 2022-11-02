@@ -39,10 +39,13 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.*;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.HashMap;
 import java.util.List;
@@ -345,10 +348,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (!world.isClient)
 		{
 			var m = new Matrix4f();
-			m.loadIdentity();
 
-			m.multiply(new Quaternion(0, -player.getYaw(), 0, true));
-			m.multiply(new Quaternion(player.getPitch(), 0, 0, true));
+			m.rotateY(MathUtil.toRadians(-player.getYaw()));
+			m.rotateX(MathUtil.toRadians(player.getPitch()));
 
 			var hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
@@ -367,8 +369,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			final var entityPitch = vS * verticalSpreadCoef;
 			final var entityYaw = hS * horizontalSpreadCoef;
 
-			m.multiply(new Quaternion(0, entityYaw, 0, true));
-			m.multiply(new Quaternion(entityPitch, 0, 0, true));
+			m.rotateY(MathUtil.toRadians(entityYaw));
+			m.rotateX(MathUtil.toRadians(entityPitch));
 
 			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, Matrix4fUtil.transform(MathUtil.POSZ, m).normalize());
 

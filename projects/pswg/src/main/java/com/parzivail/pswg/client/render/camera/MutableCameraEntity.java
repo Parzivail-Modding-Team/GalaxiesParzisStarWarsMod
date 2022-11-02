@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
 
 public class MutableCameraEntity extends Entity
 {
@@ -37,7 +38,7 @@ public class MutableCameraEntity extends Entity
 	}
 
 	@Override
-	public Packet<?> createSpawnPacket()
+	public Packet<ClientPlayPacketListener> createSpawnPacket()
 	{
 		return null;
 	}

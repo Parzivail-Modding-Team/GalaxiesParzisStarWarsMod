@@ -2,7 +2,7 @@ package com.parzivail.pswg.entity.rigs;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.ship.SpeederEntity;
-import net.minecraft.util.math.Matrix4f;
+import org.joml.Matrix4f;
 
 public class RigZephyrJ extends ModelRig<SpeederEntity>
 {
@@ -16,8 +16,6 @@ public class RigZephyrJ extends ModelRig<SpeederEntity>
 	@Override
 	public Matrix4f getPartTransformation(SpeederEntity target, String part, float tickDelta)
 	{
-		Matrix4f matrix4f = new Matrix4f();
-		matrix4f.loadIdentity();
-		return matrix4f;
+		return new Matrix4f();
 	}
 }

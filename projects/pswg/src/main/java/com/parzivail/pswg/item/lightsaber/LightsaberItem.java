@@ -33,9 +33,9 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.List;
 
@@ -70,7 +70,7 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	}
 
 	@ImplicitOverride("IrisItemLightProvider::getLightColor")
-	public Vec3f getLightColor(PlayerEntity player, ItemStack stack)
+	public Vector3f getLightColor(PlayerEntity player, ItemStack stack)
 	{
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
 		return ColorUtil.hsvToRgb(lt.bladeHue, lt.bladeSaturation, lt.bladeValue);

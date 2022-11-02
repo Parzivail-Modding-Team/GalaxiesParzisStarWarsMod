@@ -28,6 +28,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -428,7 +429,7 @@ public class AstromechEntity extends PathAwareEntity implements EntityWithInvent
 	}
 
 	@Override
-	public Packet<?> createSpawnPacket()
+	public Packet<ClientPlayPacketListener> createSpawnPacket()
 	{
 		return new EntitySpawnS2CPacket(this);
 	}

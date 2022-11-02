@@ -19,13 +19,13 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.random.Random;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -141,8 +141,8 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 	private <T> MatrixStack.Entry transform(MatrixStack matrix, T target, P3dObject o, float tickDelta, PartTransformer<T> transformer)
 	{
 		var entry = matrix.peek();
-		entry.getPositionMatrix().multiply(o.transform);
-		entry.getNormalMatrix().multiply(new Matrix3f(o.transform));
+		entry.getPositionMatrix().mul(o.transform);
+		entry.getNormalMatrix().mul(new Matrix3f(o.transform));
 
 		if (transformer != null)
 		{
@@ -153,8 +153,8 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 				return null;
 			}
 
-			entry.getPositionMatrix().multiply(transform);
-			entry.getNormalMatrix().multiply(new Matrix3f(transform));
+			entry.getPositionMatrix().mul(transform);
+			entry.getNormalMatrix().mul(new Matrix3f(transform));
 		}
 		return entry;
 	}
@@ -187,14 +187,14 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 			var vC = ClientMathUtil.transform(face.positions[2], modelMat);
 			var vD = ClientMathUtil.transform(face.positions[3], modelMat);
 
-			var n = new Vec3f(face.normal.getX(), face.normal.getY(), face.normal.getZ());
-			n.transform(normalMat);
+			var n = new Vector3f(face.normal.x, face.normal.y, face.normal.z);
+			n.mul(normalMat);
 			n.normalize();
 
-			quadEmitter.pos(0, vA).normal(0, n).sprite(0, 0, face.texture[0].getX(), 1 - face.texture[0].getY());
-			quadEmitter.pos(1, vB).normal(1, n).sprite(1, 0, face.texture[1].getX(), 1 - face.texture[1].getY());
-			quadEmitter.pos(2, vC).normal(2, n).sprite(2, 0, face.texture[2].getX(), 1 - face.texture[2].getY());
-			quadEmitter.pos(3, vD).normal(3, n).sprite(3, 0, face.texture[3].getX(), 1 - face.texture[3].getY());
+			quadEmitter.pos(0, vA).normal(0, n).sprite(0, 0, face.texture[0].x, 1 - face.texture[0].y);
+			quadEmitter.pos(1, vB).normal(1, n).sprite(1, 0, face.texture[1].x, 1 - face.texture[1].y);
+			quadEmitter.pos(2, vC).normal(2, n).sprite(2, 0, face.texture[2].x, 1 - face.texture[2].y);
+			quadEmitter.pos(3, vD).normal(3, n).sprite(3, 0, face.texture[3].x, 1 - face.texture[3].y);
 
 			quadEmitter.spriteBake(0, sprite, MutableQuadView.BAKE_NORMALIZED);
 
@@ -222,15 +222,15 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		}
 	}
 
-	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vec3f vertex, Vec3f normal, Vec3f texCoord, int r, int g, int b, int a)
+	private void emitVertex(int light, VertexConsumer vertexConsumer, Matrix4f modelMatrix, Matrix3f normalMatrix, Vector3f vertex, Vector3f normal, Vector3f texCoord, int r, int g, int b, int a)
 	{
 		vertexConsumer
-				.vertex(modelMatrix, vertex.getX(), vertex.getY(), vertex.getZ())
+				.vertex(modelMatrix, vertex.x, vertex.y, vertex.z)
 				.color(r, g, b, a)
-				.texture(texCoord.getX(), 1 - texCoord.getY())
+				.texture(texCoord.x, 1 - texCoord.y)
 				.overlay(OverlayTexture.DEFAULT_UV)
 				.light(light)
-				.normal(normalMatrix, normal.getX(), normal.getY(), normal.getZ())
+				.normal(normalMatrix, normal.x, normal.y, normal.z)
 				.next();
 	}
 
@@ -290,7 +290,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		var numObjects = objStream.readInt();
 		var rootObjects = new P3dObject[numObjects];
 
-		var rawVertices = new ArrayList<Vec3f>();
+		var rawVertices = new ArrayList<Vector3f>();
 
 		for (var objectIdx = 0; objectIdx < numObjects; objectIdx++)
 		{
@@ -323,7 +323,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 	}
 
 	@NotNull
-	private static P3dObject readObject(HashMap<String, P3dSocket> objects, String parent, LittleEndianDataInputStream objStream, boolean hasVertexData, ArrayList<Vec3f> rawVertices) throws IOException
+	private static P3dObject readObject(HashMap<String, P3dSocket> objects, String parent, LittleEndianDataInputStream objStream, boolean hasVertexData, ArrayList<Vector3f> rawVertices) throws IOException
 	{
 		var name = DataReader.readNullTerminatedString(objStream);
 
@@ -336,15 +336,15 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 
 		for (var faceIdx = 0; faceIdx < numFaces; faceIdx++)
 		{
-			var positions = new Vec3f[4];
-			var texture = new Vec3f[4];
+			var positions = new Vector3f[4];
+			var texture = new Vector3f[4];
 
-			var normal = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
+			var normal = new Vector3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
 
 			for (var vertIdx = 0; vertIdx < 4; vertIdx++)
 			{
-				positions[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
-				texture[vertIdx] = new Vec3f(objStream.readFloat(), objStream.readFloat(), 0);
+				positions[vertIdx] = new Vector3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
+				texture[vertIdx] = new Vector3f(objStream.readFloat(), objStream.readFloat(), 0);
 
 				rawVertices.add(positions[vertIdx]);
 			}

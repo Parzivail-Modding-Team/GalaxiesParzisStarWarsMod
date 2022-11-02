@@ -1,6 +1,6 @@
 package com.parzivail.util.math;
 
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 public class ColorUtil
 {
@@ -55,7 +55,7 @@ public class ColorUtil
 				};
 	}
 
-	public static Vec3f hsvToRgb(final float hue, final float saturation, final float value)
+	public static Vector3f hsvToRgb(final float hue, final float saturation, final float value)
 	{
 		final var normalizedHue = (hue - (float)Math.floor(hue));
 		final var h = (int)(normalizedHue * 6);
@@ -66,13 +66,13 @@ public class ColorUtil
 
 		return switch (h)
 				{
-					case 0 -> new Vec3f(value, t, p);
-					case 1 -> new Vec3f(q, value, p);
-					case 2 -> new Vec3f(p, value, t);
-					case 3 -> new Vec3f(p, q, value);
-					case 4 -> new Vec3f(t, p, value);
-					case 5 -> new Vec3f(value, p, q);
-					default -> new Vec3f(0, 0, 0);
+					case 0 -> new Vector3f(value, t, p);
+					case 1 -> new Vector3f(q, value, p);
+					case 2 -> new Vector3f(p, value, t);
+					case 3 -> new Vector3f(p, q, value);
+					case 4 -> new Vector3f(t, p, value);
+					case 5 -> new Vector3f(value, p, q);
+					default -> new Vector3f(0, 0, 0);
 				};
 	}
 

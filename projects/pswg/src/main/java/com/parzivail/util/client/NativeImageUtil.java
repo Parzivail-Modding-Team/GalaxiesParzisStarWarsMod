@@ -21,9 +21,9 @@ public class NativeImageUtil
 		var srcG = NativeImage.getGreen(src);
 		var srcB = NativeImage.getBlue(src);
 
-		var a = com.parzivail.util.math.MathUtil.clamp((int)((destA + srcA) * 255f), 0, 255);
-		var r = com.parzivail.util.math.MathUtil.clamp((int)((1 - srcA) * destR + srcA * srcR), 0, 255);
-		var g = com.parzivail.util.math.MathUtil.clamp((int)((1 - srcA) * destG + srcA * srcG), 0, 255);
+		var a = MathUtil.clamp((int)((destA + srcA) * 255f), 0, 255);
+		var r = MathUtil.clamp((int)((1 - srcA) * destR + srcA * srcR), 0, 255);
+		var g = MathUtil.clamp((int)((1 - srcA) * destG + srcA * srcG), 0, 255);
 		var b = MathUtil.clamp((int)((1 - srcA) * destB + srcA * srcB), 0, 255);
 
 		return NativeImage.packColor(a, b, g, r);

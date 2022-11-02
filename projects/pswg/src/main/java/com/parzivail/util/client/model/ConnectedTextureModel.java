@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.parzivail.util.client.ConnectedTextureHelper;
 import com.parzivail.util.client.SubSprite;
 import com.parzivail.util.math.SpriteSheetPoint;
+import com.parzivail.util.math.Vec3fUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -22,9 +23,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
+import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.*;
 import java.util.function.Function;
@@ -33,36 +35,36 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public class ConnectedTextureModel extends DynamicBakedModel
 {
-	private static final Vec3f[] ORIGINS = new Vec3f[6];
-	private static final Vec3f[] DELTAU = new Vec3f[6];
-	private static final Vec3f[] DELTAV = new Vec3f[6];
+	private static final Vector3f[] ORIGINS = new Vector3f[6];
+	private static final Vector3f[] DELTAU = new Vector3f[6];
+	private static final Vector3f[] DELTAV = new Vector3f[6];
 
 	static
 	{
-		ORIGINS[Direction.UP.getId()] = new Vec3f(0, 1, 0);
-		ORIGINS[Direction.DOWN.getId()] = new Vec3f(1, 0, 0);
-		ORIGINS[Direction.WEST.getId()] = new Vec3f(0, 1, 0);
-		ORIGINS[Direction.EAST.getId()] = new Vec3f(1, 1, 1);
-		ORIGINS[Direction.NORTH.getId()] = new Vec3f(1, 1, 0);
-		ORIGINS[Direction.SOUTH.getId()] = new Vec3f(0, 1, 1);
+		ORIGINS[Direction.UP.getId()] = new Vector3f(0, 1, 0);
+		ORIGINS[Direction.DOWN.getId()] = new Vector3f(1, 0, 0);
+		ORIGINS[Direction.WEST.getId()] = new Vector3f(0, 1, 0);
+		ORIGINS[Direction.EAST.getId()] = new Vector3f(1, 1, 1);
+		ORIGINS[Direction.NORTH.getId()] = new Vector3f(1, 1, 0);
+		ORIGINS[Direction.SOUTH.getId()] = new Vector3f(0, 1, 1);
 
-		DELTAU[Direction.UP.getId()] = Vec3f.POSITIVE_X;
-		DELTAV[Direction.UP.getId()] = Vec3f.POSITIVE_Z;
+		DELTAU[Direction.UP.getId()] = Vec3fUtil.POSITIVE_X;
+		DELTAV[Direction.UP.getId()] = Vec3fUtil.POSITIVE_Z;
 
-		DELTAU[Direction.DOWN.getId()] = Vec3f.NEGATIVE_X;
-		DELTAV[Direction.DOWN.getId()] = Vec3f.POSITIVE_Z;
+		DELTAU[Direction.DOWN.getId()] = Vec3fUtil.NEGATIVE_X;
+		DELTAV[Direction.DOWN.getId()] = Vec3fUtil.POSITIVE_Z;
 
-		DELTAU[Direction.SOUTH.getId()] = Vec3f.POSITIVE_X;
-		DELTAV[Direction.SOUTH.getId()] = Vec3f.NEGATIVE_Y;
+		DELTAU[Direction.SOUTH.getId()] = Vec3fUtil.POSITIVE_X;
+		DELTAV[Direction.SOUTH.getId()] = Vec3fUtil.NEGATIVE_Y;
 
-		DELTAU[Direction.NORTH.getId()] = Vec3f.NEGATIVE_X;
-		DELTAV[Direction.NORTH.getId()] = Vec3f.NEGATIVE_Y;
+		DELTAU[Direction.NORTH.getId()] = Vec3fUtil.NEGATIVE_X;
+		DELTAV[Direction.NORTH.getId()] = Vec3fUtil.NEGATIVE_Y;
 
-		DELTAU[Direction.WEST.getId()] = Vec3f.POSITIVE_Z;
-		DELTAV[Direction.WEST.getId()] = Vec3f.NEGATIVE_Y;
+		DELTAU[Direction.WEST.getId()] = Vec3fUtil.POSITIVE_Z;
+		DELTAV[Direction.WEST.getId()] = Vec3fUtil.NEGATIVE_Y;
 
-		DELTAU[Direction.EAST.getId()] = Vec3f.NEGATIVE_Z;
-		DELTAV[Direction.EAST.getId()] = Vec3f.NEGATIVE_Y;
+		DELTAU[Direction.EAST.getId()] = Vec3fUtil.NEGATIVE_Z;
+		DELTAV[Direction.EAST.getId()] = Vec3fUtil.NEGATIVE_Y;
 	}
 
 	private final boolean hConnect;
@@ -90,7 +92,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 //		var minecraft = MinecraftClient.getInstance();
 
@@ -127,9 +129,9 @@ public class ConnectedTextureModel extends DynamicBakedModel
 			if (capSprite != null && capDirections.contains(faceDirection))
 				sprite = capSprite;
 
-			Vec3f min = ORIGINS[faceDirection.getId()];
-			Vec3f dU = DELTAU[faceDirection.getId()];
-			Vec3f dV = DELTAV[faceDirection.getId()];
+			Vector3f min = ORIGINS[faceDirection.getId()];
+			Vector3f dU = DELTAU[faceDirection.getId()];
+			Vector3f dV = DELTAV[faceDirection.getId()];
 
 			emitTopQuad(quadEmitter, sprite, borderSprite, blockView, state, pos, faceDirection, min, dU, dV);
 		}
@@ -137,16 +139,16 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		return meshBuilder.build();
 	}
 
-	private static Vec3f uv(Vec3f min, Vec3f dU, Vec3f dV, float u, float v)
+	private static Vector3f uv(Vector3f min, Vector3f dU, Vector3f dV, float u, float v)
 	{
-		return new Vec3f(
-				min.getX() + dU.getX() * u + dV.getX() * v,
-				min.getY() + dU.getY() * u + dV.getY() * v,
-				min.getZ() + dU.getZ() * u + dV.getZ() * v
+		return new Vector3f(
+				min.x + dU.x * u + dV.x * v,
+				min.y + dU.y * u + dV.y * v,
+				min.z + dU.z * u + dV.z * v
 		);
 	}
 
-	private void emitTopQuad(QuadEmitter quadEmitter, Sprite blankSprite, Sprite borderSprite, BlockRenderView blockView, BlockState state, BlockPos pos, Direction direction, Vec3f min, Vec3f dU, Vec3f dV)
+	private void emitTopQuad(QuadEmitter quadEmitter, Sprite blankSprite, Sprite borderSprite, BlockRenderView blockView, BlockState state, BlockPos pos, Direction direction, Vector3f min, Vector3f dU, Vector3f dV)
 	{
 		var subSpriteEntry = ConnectedTextureHelper.getConnectedBlockTexture(blockView, state, pos, direction, hConnect, vConnect, lConnect);
 		var normal = direction.getUnitVector();
@@ -276,7 +278,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createItemMesh(ItemStack stack, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	protected Mesh createItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		return createBlockMesh(null, null, null, null, null, transformation);
 	}
@@ -284,9 +286,7 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	@Override
 	protected Matrix4f createTransformation(BlockState state)
 	{
-		var m = new Matrix4f();
-		m.loadIdentity();
-		return m;
+		return new Matrix4f();
 	}
 
 	@Override

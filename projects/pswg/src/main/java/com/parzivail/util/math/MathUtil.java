@@ -131,4 +131,8 @@ public class MathUtil
 	{
 		return x >= l && x < l + w && y >= t && y < t + h;
 	}
+
+	public static float toRadians(float degrees) {
+		return (degrees * (float)Math.PI / 180);
+	}
 }

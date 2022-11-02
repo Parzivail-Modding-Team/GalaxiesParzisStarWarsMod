@@ -4,8 +4,8 @@ import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.math.Vector4f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 public enum VertexConsumerBuffer
 {
@@ -71,28 +71,28 @@ public enum VertexConsumerBuffer
 		this.light = light;
 	}
 
-	public void vertex(Vec3f pos, Vec3f normal, float u, float v)
+	public void vertex(Vector3f pos, Vector3f normal, float u, float v)
 	{
-		var pos4 = new Vector4f(pos);
-		normal = normal.copy();
+		var pos4 = new Vector4f(pos.x, pos.y, pos.z, 1);
+		normal = new Vector3f(normal);
 
-		pos4.transform(matrices.getPositionMatrix());
-		normal.transform(matrices.getNormalMatrix());
+		pos4.mul(matrices.getPositionMatrix());
+		normal.mul(matrices.getNormalMatrix());
 
-		vertexConsumer.vertex(pos4.getX(), pos4.getY(), pos4.getZ(), r, g, b, a, u, v, overlay, light, normal.getX(), normal.getY(), normal.getZ());
+		vertexConsumer.vertex(pos4.x, pos4.y, pos4.z, r, g, b, a, u, v, overlay, light, normal.x, normal.y, normal.z);
 	}
 
 	public void vertex(float x, float y, float z, float nx, float ny, float nz, float u, float v)
 	{
-		vertex(new Vec3f(x, y, z), new Vec3f(nx, ny, nz), u, v);
+		vertex(new Vector3f(x, y, z), new Vector3f(nx, ny, nz), u, v);
 	}
 
 	public void line(float x1, float y1, float z1, float x2, float y2, float z2)
 	{
-		var start = new Vec3f(x1, y1, z1);
-		var end = new Vec3f(x2, y2, z2);
-		var normal = new Vec3f(x2, y2, z2);
-		normal.subtract(start);
+		var start = new Vector3f(x1, y1, z1);
+		var end = new Vector3f(x2, y2, z2);
+		var normal = new Vector3f(x2, y2, z2);
+		normal.sub(start);
 		normal.normalize();
 
 		vertex(start, normal,0, 0);

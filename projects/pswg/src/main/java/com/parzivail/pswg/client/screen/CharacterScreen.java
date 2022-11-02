@@ -33,8 +33,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.MathHelper;
+import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -708,8 +708,8 @@ public class CharacterScreen extends Screen
 		var rsm = RenderSystem.getModelViewStack();
 		rsm.push();
 		rsm.translate(x + 182, y + 190, 50);
-		rsm.multiply(new Quaternion(-22, 0, 0, true));
-		rsm.multiply(new Quaternion(0, -45, 0, true));
+		rsm.multiply(new Quaternionf().rotationX(MathUtil.toRadians(-22)));
+		rsm.multiply(new Quaternionf().rotationY(MathUtil.toRadians(-45)));
 		drawEntity(rsm, previewSpecies, 0, 0, 80);
 		rsm.pop();
 		RenderSystem.applyModelViewMatrix();
@@ -914,7 +914,7 @@ public class CharacterScreen extends Screen
 		RenderSystem.applyModelViewMatrix();
 
 		var matrixStack2 = new MatrixStack();
-		var quaternion = Vec3f.POSITIVE_Z.getDegreesQuaternion(180.0F);
+		Quaternionf quaternion = new Quaternionf().rotationZ(MathHelper.PI);
 		matrixStack2.multiply(quaternion);
 		var h = entity.bodyYaw;
 		var i = entity.getYaw();
