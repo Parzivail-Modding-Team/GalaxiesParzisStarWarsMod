@@ -8,6 +8,7 @@ import com.parzivail.util.gen.world.ChunkView;
 import com.parzivail.util.gen.world.WorldGenView;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleMap;
 import it.unimi.dsi.fastutil.objects.Reference2DoubleOpenHashMap;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -22,11 +23,13 @@ public final class TerrainGenerator
 {
 	private final BiomeGenerator biomes;
 	private final ChunkGenerator cg;
+	private final BlockState geology;
 
-	public TerrainGenerator(long seed, BiomeGenerator biomes, ChunkGenerator cg)
+	public TerrainGenerator(long seed, BiomeGenerator biomes, ChunkGenerator cg, BlockState geology)
 	{
 		this.biomes = biomes;
 		this.cg = cg;
+		this.geology = geology;
 	}
 
 	public void buildNoise(ChunkView chunk)
@@ -88,7 +91,7 @@ public final class TerrainGenerator
 
 								double noise = MathHelper.lerp(zP, z0, z1);
 
-								section.setBlockState(rX, rY & 15, rZ, noise > 0 ? Blocks.STONE.getDefaultState() : Blocks.AIR.getDefaultState(), false);
+								section.setBlockState(rX, rY & 15, rZ, noise > 0 ? geology : Blocks.AIR.getDefaultState(), false);
 							}
 						}
 					}

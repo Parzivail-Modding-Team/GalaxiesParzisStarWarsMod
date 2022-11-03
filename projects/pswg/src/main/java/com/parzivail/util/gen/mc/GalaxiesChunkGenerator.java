@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.util.gen.TerrainGenerator;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.structure.StructureSet;
 import net.minecraft.structure.StructureTemplateManager;
 import net.minecraft.util.dynamic.RegistryOps;
@@ -31,7 +32,6 @@ import java.util.concurrent.Executor;
 
 public class GalaxiesChunkGenerator extends ChunkGenerator
 {
-
 	public static final Codec<GalaxiesChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			RegistryOps.createRegistryCodec(Registry.STRUCTURE_SET_KEY).forGetter(chunkGenerator -> chunkGenerator.structureSetRegistry),
 			BiomeSource.CODEC.fieldOf("biome_source").forGetter(c -> c.biomeSource)
@@ -43,11 +43,12 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	{
 		super(structureSetRegistry, Optional.empty(), biomeSource);
 
-		if (!(biomeSource instanceof GalaxiesBiomeSource bs)) {
+		if (!(biomeSource instanceof GalaxiesBiomeSource bs))
+		{
 			throw new IllegalStateException("Biome source must be galaxies biome source");
 		}
 
-		this.backing = new TerrainGenerator(100, bs.getBackingGen(), this);
+		this.backing = new TerrainGenerator(100, bs.getBackingGen(), this, Blocks.STONE.getDefaultState());
 	}
 
 	@Override

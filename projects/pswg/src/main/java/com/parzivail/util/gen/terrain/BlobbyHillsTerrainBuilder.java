@@ -18,6 +18,10 @@ public class BlobbyHillsTerrainBuilder extends TerrainBuilder
 	{
 		// Desmos, normal: \frac{-x+8}{2}
 		// Desmos, hilly: \frac{-(x*1.6)+9}{4}
-		return (noise.sample(x, y, z) * 1.6) + ((-y + 9.0) / 4.0);
+
+		var localNoiseX = noise.sample(x / 5f, -y / 5f, z / 5f) * 4;
+		var localNoiseZ = noise.sample(x / 5f, y / 5f, z / 5f) * 4;
+
+		return (noise.sample(x - y * localNoiseX, y, z - y * localNoiseZ)) + (-y + 8) / 2f;
 	}
 }

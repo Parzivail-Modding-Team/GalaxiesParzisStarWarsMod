@@ -18,7 +18,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 
 public class GeneratingBlockRenderView extends ProceduralBlockRenderView implements WorldGenView
 {
-	private final TerrainGenerator terrainGenerator = new TerrainGenerator(0, new BiomeGenerator(0), null);
+	private final TerrainGenerator terrainGenerator = new TerrainGenerator(0, new BiomeGenerator(0), null, Blocks.STONE.getDefaultState());
 	private final Long2ObjectMap<ChunkView> chunks = new Long2ObjectAVLTreeMap<>();
 	private final Set<Long> dirtyChunks = new ConcurrentSkipListSet<>();
 
