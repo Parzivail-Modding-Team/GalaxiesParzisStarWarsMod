@@ -4,49 +4,66 @@ import java.util.Random;
 
 public final class OctaveNoise
 {
-    private final OpenSimplexNoise[] octaves;
-    private final double horizontalFrequency;
-    private final double verticalFrequency;
-    private final double amplitude;
-    private final double lacunarity;
-    private final double persistence;
+	private final OpenSimplexNoise[] octaves;
+	private final double horizontalFrequency;
+	private final double verticalFrequency;
+	private final double amplitude;
+	private final double lacunarity;
+	private final double persistence;
+	private final double maxAmplitude;
 
-    public OctaveNoise(int octaves, Random random, double horizontalFrequency, double verticalFrequency, double amplitude, double lacunarity, double persistence) {
-        this.horizontalFrequency = horizontalFrequency;
-        this.verticalFrequency = verticalFrequency;
-        this.amplitude = amplitude;
-        this.lacunarity = lacunarity;
-        this.persistence = persistence;
+	public OctaveNoise(int octaves, Random random, double horizontalFrequency, double verticalFrequency, double amplitude, double lacunarity, double persistence)
+	{
+		this.horizontalFrequency = horizontalFrequency;
+		this.verticalFrequency = verticalFrequency;
+		this.amplitude = amplitude;
+		this.lacunarity = lacunarity;
+		this.persistence = persistence;
 
-        this.octaves = new OpenSimplexNoise[octaves];
-        for (int i = 0; i < octaves; i++) {
-            this.octaves[i] = new OpenSimplexNoise(random.nextLong());
-        }
-    }
+		this.octaves = new OpenSimplexNoise[octaves];
+		for (int i = 0; i < octaves; i++)
+			this.octaves[i] = new OpenSimplexNoise(random.nextLong());
 
-    public double sample(double x, double z) {
-        return this.sample(x, 0, z);
-    }
+		var persistenceRatio = 1 / persistence;
+		this.maxAmplitude = (1 - Math.pow(persistenceRatio, octaves)) / (1 - persistenceRatio);
+	}
 
-    public double sample(double x, double y, double z) {
-        double sum = 0;
+	public double sample(double x, double z)
+	{
+		return this.sample(x, 0, z);
+	}
 
-        x /= this.horizontalFrequency;
-        y /= this.verticalFrequency;
-        z /= this.horizontalFrequency;
+	public double normalizedSample(double x, double z)
+	{
+		return this.sample(x, z) / this.maxAmplitude;
+	}
 
-        double amplitude = this.amplitude;
+	public double sample(double x, double y, double z)
+	{
+		double sum = 0;
 
-        for (OpenSimplexNoise octave : this.octaves) {
-            sum += octave.sample(x, y, z) * amplitude;
+		x /= this.horizontalFrequency;
+		y /= this.verticalFrequency;
+		z /= this.horizontalFrequency;
 
-            amplitude /= this.persistence;
+		double amplitude = this.amplitude;
 
-            x *= this.lacunarity;
-            y *= this.lacunarity;
-            z *= this.lacunarity;
-        }
+		for (OpenSimplexNoise octave : this.octaves)
+		{
+			sum += octave.sample(x, y, z) * amplitude;
 
-        return sum;
-    }
+			amplitude /= this.persistence;
+
+			x *= this.lacunarity;
+			y *= this.lacunarity;
+			z *= this.lacunarity;
+		}
+
+		return sum;
+	}
+
+	public double normalizedSample(double x, double y, double z)
+	{
+		return this.sample(x, y, z) / this.maxAmplitude;
+	}
 }

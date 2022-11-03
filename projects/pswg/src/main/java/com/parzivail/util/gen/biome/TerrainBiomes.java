@@ -4,7 +4,7 @@ import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.gen.decoration.ConfiguredDecoration;
 import com.parzivail.util.gen.decoration.PatchDecoration;
 import com.parzivail.util.gen.decorator.CountHeightmapDecorator;
-import com.parzivail.util.gen.surface.DefaultSurfaceBuilder;
+import com.parzivail.util.gen.surface.TwoStateSurfaceBuilder;
 import com.parzivail.util.gen.terrain.BlobbyHillsTerrainBuilder;
 import net.minecraft.world.biome.BiomeKeys;
 
@@ -14,7 +14,7 @@ public class TerrainBiomes
 {
 	public static final TerrainBiome TATOOINE_DUNES = new TerrainBiome(
 			BiomeKeys.TAIGA,
-			new DefaultSurfaceBuilder(SwgBlocks.Sand.Desert.getDefaultState(), SwgBlocks.Sand.Desert.getDefaultState()),
+			new TwoStateSurfaceBuilder(SwgBlocks.Sand.Desert.getDefaultState(), 3, SwgBlocks.Sandstone.SmoothDesert.getDefaultState(), 8),
 			new BlobbyHillsTerrainBuilder(),
 			List.of(
 					ConfiguredDecoration.of(
