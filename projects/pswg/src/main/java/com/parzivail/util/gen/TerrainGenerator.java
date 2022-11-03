@@ -198,7 +198,7 @@ public final class TerrainGenerator
 			{
 				// TODO: biome interpolator class
 				TerrainBiome biome = biomes.getBiome(chunk.getChunkPos().x * 4 + (x >> 2), chunk.getChunkPos().z * 4 + (z >> 2));
-				biome.surface().build(chunk, x, z, chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z), Blocks.STONE.getDefaultState(), Blocks.WATER.getDefaultState());
+				biome.surface().build(chunk, x, z, chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z), geology, Blocks.WATER.getDefaultState());
 			}
 		}
 	}
