@@ -14,7 +14,7 @@ public class TerrainBiomes
 {
 	public static final TerrainBiome TATOOINE_DUNES = new TerrainBiome(
 			BiomeKeys.TAIGA,
-			new TwoStateSurfaceBuilder(SwgBlocks.Sand.Desert.getDefaultState(), 3, SwgBlocks.Sandstone.SmoothDesert.getDefaultState(), 8),
+			new TwoStateSurfaceBuilder(SwgBlocks.Sand.Desert.getDefaultState(), 3, SwgBlocks.Sandstone.SmoothDesert.getDefaultState(), 16),
 			new BlobbyHillsTerrainBuilder(),
 			List.of(
 					ConfiguredDecoration.of(
