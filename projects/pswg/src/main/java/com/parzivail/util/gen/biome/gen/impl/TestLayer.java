@@ -10,6 +10,6 @@ public class TestLayer implements InitLayer
 	@Override
 	public int sample(LayerSampleContext<?> context, int x, int z)
 	{
-		return BiomeList.getId(TerrainBiomes.TATOOINE_DUNES);
+		return context.nextInt(2) == 0 ? BiomeList.getId(TerrainBiomes.TATOOINE_SOFT_DUNES) : BiomeList.getId(TerrainBiomes.TATOOINE_CRAGGY_DUNES);
 	}
 }
