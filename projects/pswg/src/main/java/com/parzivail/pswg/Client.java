@@ -340,6 +340,13 @@ public class Client implements ClientModInitializer
 				                         Resources.id("textures/armor/deathtrooper_default.png")),
 				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
+		ArmorRenderer.register(
+				SwgItems.Armor.Scouttrooper,
+				Resources.id("scouttrooper"),
+				new ArmorRenderer.Assets(Resources.id("armor/scouttrooper"),
+				                         Resources.id("textures/armor/scouttrooper.png")),
+				ArmorRenderer.Metadata.AUTO_ARMS_HIDE_CHEST
+		);
 
 		var jumptrooperId = Resources.id("jumptrooper");
 		ArmorRenderer.register(

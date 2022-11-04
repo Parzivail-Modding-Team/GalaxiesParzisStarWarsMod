@@ -764,6 +764,7 @@ public class PswgTarkin
 		             .tag(TAG_TRINKETS_CHEST_BACK)
 		             .build(assets);
 		ItemGenerator.armor(SwgItems.Armor.Deathtrooper, assets);
+		ItemGenerator.armor(SwgItems.Armor.Scouttrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Jumptrooper, assets);
 		ItemGenerator.basic(SwgItems.Armor.JumptrooperJetpack)
 		             .tag(TAG_TRINKETS_CHEST_BACK)
