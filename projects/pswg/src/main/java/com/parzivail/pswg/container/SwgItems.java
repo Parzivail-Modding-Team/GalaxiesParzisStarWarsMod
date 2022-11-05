@@ -2,8 +2,6 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.block.TatooineHomeDoorBlock;
-import com.parzivail.pswg.block.TatooineHomeDoorControllerBlock;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.DoorInsertItem;
@@ -23,9 +21,6 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.registry.Registry;
-
-import java.util.List;
 
 public class SwgItems
 {
@@ -78,11 +73,8 @@ public class SwgItems
 	@RegistryOrder(2)
 	public static class Door
 	{
-		public static final List<TatooineHomeDoorBlock.Item> TatooineHome = SwgBlocks.Door.TatooineHomeBottoms
-				.values()
-				.stream()
-				.map(b -> new TatooineHomeDoorBlock.Item(b, new Item.Settings().group(Galaxies.TabBlocks)))
-				.toList();
+		@RegistryName("door_insert")
+		public static final DyedItems DoorInsert = new DyedItems(color -> new DoorInsertItem(color, new Item.Settings().group(Galaxies.TabItems)));
 	}
 
 	@RegistryOrder(3)
@@ -116,9 +108,6 @@ public class SwgItems
 		public static final Item PlasteelRod = new Item(new Item.Settings().group(Galaxies.TabItems));
 		@RegistryName("durasteel_rod")
 		public static final Item DurasteelRod = new Item(new Item.Settings().group(Galaxies.TabItems));
-
-		@RegistryName("door_insert")
-		public static final DyedItems DoorInsert = new DyedItems(color -> new DoorInsertItem(color, new Item.Settings().group(Galaxies.TabItems)));
 	}
 
 	@RegistryOrder(5)
@@ -482,14 +471,5 @@ public class SwgItems
 	public static void register()
 	{
 		RegistryHelper.registerAutoId(Resources.MODID, SwgItems.class, Object.class, RegistryHelper::tryRegisterItem);
-
-		for (var i : Door.TatooineHome)
-		{
-			var color = ((TatooineHomeDoorControllerBlock)i.getBlock()).getColor();
-			if (color == null)
-				Registry.register(Registry.ITEM, Resources.id("tatooine_home_door"), i);
-			else
-				Registry.register(Registry.ITEM, Resources.id("tatooine_home_door_" + color.getName()), i);
-		}
 	}
 }

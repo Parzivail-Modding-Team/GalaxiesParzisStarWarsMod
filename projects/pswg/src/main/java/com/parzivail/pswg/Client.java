@@ -7,7 +7,10 @@ import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
-import com.parzivail.pswg.client.render.block.*;
+import com.parzivail.pswg.client.render.block.BlasterWorkbenchWeaponRenderer;
+import com.parzivail.pswg.client.render.block.PowerCouplingCableRenderer;
+import com.parzivail.pswg.client.render.block.SlidingDoorRenderer;
+import com.parzivail.pswg.client.render.block.TerrariumRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterIonBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterStunBoltRenderer;
@@ -166,7 +169,6 @@ public class Client implements ClientModInitializer
 		HandledScreens.register(SwgScreenTypes.Workbench.Blaster, BlasterWorkbenchScreen::new);
 		HandledScreens.register(SwgScreenTypes.Workbench.Lightsaber, LightsaberForgeScreen::new);
 
-		BlockEntityRendererRegistry.register(SwgBlocks.Door.TatooineHomeBlockEntityType, TatooineHomeDoorRenderer::new);
 		BlockEntityRendererRegistry.register(SwgBlocks.Workbench.BlasterBlockEntityType, BlasterWorkbenchWeaponRenderer::new);
 		BlockEntityRendererRegistry.register(SwgBlocks.Power.CouplingBlockEntityType, PowerCouplingCableRenderer::new);
 		BlockEntityRendererRegistry.register(SwgBlocks.Cage.CreatureCageBlockEntityType, TerrariumRenderer::new);

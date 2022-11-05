@@ -740,7 +740,7 @@ public class PswgTarkin
 		ItemGenerator.basic(SwgItems.CraftingComponents.DeshCoil).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.PlasteelRod).build(assets);
 		ItemGenerator.basic(SwgItems.CraftingComponents.DurasteelRod).build(assets);
-		for (var entry : SwgItems.CraftingComponents.DoorInsert.entrySet())
+		for (var entry : SwgItems.Door.DoorInsert.entrySet())
 			ItemGenerator.basic(entry.getValue()).build(assets);
 
 		ItemGenerator.basic(SwgItems.Natural.StrippedJaporBranch).build(assets);
@@ -990,29 +990,6 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .blockTag(SwgTags.Block.SLIDING_DOORS)
 		              .build(assets);
-
-		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone"))
-		              .itemModel(ModelFile::ofBlock)
-		              .blockTag(SwgTags.Block.SLIDING_DOORS)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		SwgBlocks.Door.TatooineHomeBottoms.values().forEach(b -> BlockGenerator.particleOnly(b, new Identifier("block/stone"))
-		                                                                       .itemModel(block -> {
-			                                                                       // Cursed generator method because the block names have the color position swapped, and the
-			                                                                       // controller is actually the item in your inventory
-			                                                                       var reg = AssetGenerator.getRegistryName(block);
-			                                                                       var id = new Identifier(reg.getNamespace(), reg.getPath().replace("_controller", ""));
-			                                                                       var itemTexturePath = reg.getPath().replace("_controller", "");
-			                                                                       if (itemTexturePath.startsWith("tatooine_home_door_"))
-				                                                                       itemTexturePath = itemTexturePath.replace("tatooine_home_door_", "") + "_tatooine_home_door";
-			                                                                       var texId = new Identifier(reg.getNamespace(), "item/" + itemTexturePath);
-			                                                                       return ModelFile
-					                                                                       .ofModel(id, new Identifier("item/generated"))
-					                                                                       .texture("layer0", texId);
-		                                                                       })
-		                                                                       .blockTag(SwgTags.Block.SLIDING_DOORS)
-		                                                                       .blockTag(BlockTags.PICKAXE_MINEABLE)
-		                                                                       .build(assets));
 
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Cage.Creature)
 		              .state(BlockStateModelGenerator::createSingletonBlockState)

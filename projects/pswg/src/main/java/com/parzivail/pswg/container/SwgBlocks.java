@@ -24,13 +24,9 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
-
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class SwgBlocks
 {
@@ -655,14 +651,6 @@ public class SwgBlocks
 	@RegistryOrder(17)
 	public static class Door
 	{
-		public static final TatooineHomeDoorBlock TatooineHomeTop = new TatooineHomeDoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F));
-		public static final HashMap<String, TatooineHomeDoorControllerBlock> TatooineHomeBottoms = Util.make(new HashMap<>(), m -> {
-			m.put("", new TatooineHomeDoorControllerBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F)));
-			Arrays.stream(DyeColor.values()).forEach(color -> m.put(color.getName(), new TatooineHomeDoorControllerBlock(color, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.0F))));
-		});
-		@RegistryName("door_tatooine_home")
-		public static final BlockEntityType<TatooineHomeDoorBlockEntity> TatooineHomeBlockEntityType = FabricBlockEntityTypeBuilder.create(TatooineHomeDoorBlockEntity::new, TatooineHomeBottoms.values().toArray(new Block[0])).build();
-
 		@RegistryName("sliding_door")
 		public static final Block Sliding1x2 = new Sliding1x2DoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("sliding_door")
@@ -793,19 +781,7 @@ public class SwgBlocks
 	{
 		RegistryHelper.registerAutoId(Resources.MODID, SwgBlocks.class, Object.class, SwgBlocks::tryRegisterBlock);
 		RegistryHelper.registerAutoId(Resources.MODID, SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
-
 		RegistryHelper.register(SwgBlocks.class, ServerBlockRegistryData.class, Block.class, SwgBlocks::registerServerData);
-
-		Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door"), Door.TatooineHomeTop);
-
-		for (var block : Door.TatooineHomeBottoms.values())
-		{
-			var color = block.getColor();
-			if (color == null)
-				Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door_controller"), block);
-			else
-				Registry.register(Registry.BLOCK, Resources.id("tatooine_home_door_controller_" + color.getName()), block);
-		}
 	}
 
 	private static void registerServerData(ServerBlockRegistryData data, Block block)
