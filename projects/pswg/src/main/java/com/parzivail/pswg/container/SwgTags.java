@@ -12,7 +12,7 @@ public class SwgTags
 		public static final TagKey<net.minecraft.block.Block> DESERT_SANDSTONE = register("desert_sandstone");
 		public static final TagKey<net.minecraft.block.Block> JAPOR_LOG = register("japor_log");
 		public static final TagKey<net.minecraft.block.Block> SEQUOIA_LOG = register("sequoia_log");
-		public static final TagKey<net.minecraft.block.Block> TATOOINE_DOORS = register("tatooine_doors");
+		public static final TagKey<net.minecraft.block.Block> SLIDING_DOORS = register("sliding_doors");
 		public static final TagKey<net.minecraft.block.Block> TATOOINE_LOG = register("tatooine_log");
 
 		private static TagKey<net.minecraft.block.Block> register(String id) {

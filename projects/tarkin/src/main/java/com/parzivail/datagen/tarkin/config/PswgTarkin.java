@@ -170,7 +170,7 @@ public class PswgTarkin
 		TagGenerator.forBlockTag(BlockTags.SHOVEL_MINEABLE, SwgTags.Block.DESERT_SAND).build(assets);
 		TagGenerator.forItemTag(ItemTags.SAND, SwgTags.Block.DESERT_SAND).build(assets);
 
-		TagGenerator.forBlockTag(BlockTags.WALLS, SwgTags.Block.TATOOINE_DOORS).build(assets);
+		TagGenerator.forBlockTag(BlockTags.WALLS, SwgTags.Block.SLIDING_DOORS).build(assets);
 	}
 
 	public static void generateRecipes(List<BuiltAsset> assets)
@@ -988,11 +988,12 @@ public class PswgTarkin
 		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Door.Sliding1x2)
 		              .lootTable(LootTableFile::door)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .blockTag(SwgTags.Block.SLIDING_DOORS)
 		              .build(assets);
 
 		BlockGenerator.particleOnly(SwgBlocks.Door.TatooineHomeTop, new Identifier("block/stone"))
 		              .itemModel(ModelFile::ofBlock)
-		              .blockTag(SwgTags.Block.TATOOINE_DOORS)
+		              .blockTag(SwgTags.Block.SLIDING_DOORS)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 		SwgBlocks.Door.TatooineHomeBottoms.values().forEach(b -> BlockGenerator.particleOnly(b, new Identifier("block/stone"))
@@ -1009,7 +1010,7 @@ public class PswgTarkin
 					                                                                       .ofModel(id, new Identifier("item/generated"))
 					                                                                       .texture("layer0", texId);
 		                                                                       })
-		                                                                       .blockTag(SwgTags.Block.TATOOINE_DOORS)
+		                                                                       .blockTag(SwgTags.Block.SLIDING_DOORS)
 		                                                                       .blockTag(BlockTags.PICKAXE_MINEABLE)
 		                                                                       .build(assets));
 

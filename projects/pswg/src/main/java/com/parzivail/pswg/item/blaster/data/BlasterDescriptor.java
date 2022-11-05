@@ -25,6 +25,8 @@ public class BlasterDescriptor
 
 	public int burstSize;
 
+	public int quickdrawDelay;
+
 	public BlasterAxialInfo recoil;
 	public BlasterAxialInfo spread;
 	public BlasterHeatInfo heat;
@@ -34,7 +36,7 @@ public class BlasterDescriptor
 	public int attachmentMinimum;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
 
-	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
+	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, int quickdrawDelay, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
 	{
 		this.id = id;
 		this.sound = sound;
@@ -48,6 +50,7 @@ public class BlasterDescriptor
 		this.automaticRepeatTime = automaticRepeatTime;
 		this.burstRepeatTime = burstRepeatTime;
 		this.burstSize = burstSize;
+		this.quickdrawDelay = quickdrawDelay;
 		this.recoil = recoil;
 		this.spread = spread;
 		this.heat = heat;

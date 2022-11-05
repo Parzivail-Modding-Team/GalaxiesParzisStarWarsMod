@@ -587,7 +587,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		var bd = getBlasterDescriptor(stack);
 		BlasterTag.mutate(stack, tag -> {
 			// Prevent stacking your hotbar to spamming shots by adding a pullout penalty
-			tag.readyTimer = (short)(bd.heat.capacity / 5 / bd.heat.drainSpeed);
+			tag.readyTimer = (short)bd.quickdrawDelay;
 		});
 		return true;
 	}
