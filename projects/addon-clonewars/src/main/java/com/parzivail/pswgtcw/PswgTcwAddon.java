@@ -29,7 +29,7 @@ public class PswgTcwAddon implements PswgAddon
 						BlasterArchetype.PISTOL,
 						List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN),
 						3.06f, 188, 2, 0.62f, 50,
-						2, 4, 3,
+						2, 4, 3, 8,
 						new BlasterAxialInfo(1.5f, 3),
 						new BlasterAxialInfo(0, 0),
 						new BlasterHeatInfo(1008, 150, 8, 20, 30, 100, 60),
