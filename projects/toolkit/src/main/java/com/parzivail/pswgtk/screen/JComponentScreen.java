@@ -51,11 +51,16 @@ public abstract class JComponentScreen extends Screen
 
 		frame.setVisible(true);
 
-		var dummyEvent = frame.createUngrabEvent(frame);
-		dispatchEvent(new FocusEvent((Component)dummyEvent.getSource(), FocusEvent.FOCUS_GAINED));
+		dispatchEvent(new FocusEvent(getSource(), FocusEvent.FOCUS_GAINED));
 	}
 
 	protected abstract JComponent getRootComponent();
+
+	protected Component getSource()
+	{
+		var dummyEvent = frame.createUngrabEvent(frame);
+		return (Component)dummyEvent.getSource();
+	}
 
 	@Override
 	protected void init()
@@ -310,7 +315,9 @@ public abstract class JComponentScreen extends Screen
 		renderInterface(matrices);
 	}
 
-	protected abstract void renderContent(MatrixStack matrices);
+	protected void renderContent(MatrixStack matrices)
+	{
+	}
 
 	private void renderInterface(MatrixStack matrices)
 	{
