@@ -6,15 +6,15 @@ import com.parzivail.pswgtk.ToolkitClient;
 import com.parzivail.pswgtk.model.nemi.NemiModel;
 import com.parzivail.pswgtk.screen.JComponentScreen;
 import com.parzivail.pswgtk.swing.EventHelper;
+import com.parzivail.pswgtk.util.DialogUtil;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.Reader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class NemiCompilerScreen extends JComponentScreen
 {
@@ -33,27 +33,21 @@ public class NemiCompilerScreen extends JComponentScreen
 
 	private void click(MouseEvent mouseEvent)
 	{
-		final JFileChooser fc = new JFileChooser();
+		DialogUtil.openFile("Open Model", false, "*.nemi")
+		          .ifPresent(NemiCompilerScreen::openModel);
+	}
 
-		Action details = fc.getActionMap().get("viewTypeDetails");
-		details.actionPerformed(null);
-
-		fc.setFileFilter(new FileNameExtensionFilter("NEMi Models", "nemi"));
-		int returnVal = fc.showOpenDialog(getSource());
-
-		if (returnVal == JFileChooser.APPROVE_OPTION)
+	private static void openModel(String path)
+	{
+		try (Reader reader = Files.newBufferedReader(Path.of(path)))
 		{
-			File file = fc.getSelectedFile();
-			try (Reader reader = Files.newBufferedReader(file.toPath()))
-			{
-				var gson = new Gson();
-				var nemi = gson.fromJson(reader, NemiModel.class);
-				ToolkitClient.LOG.info(nemi);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
+			var gson = new Gson();
+			var nemi = gson.fromJson(reader, NemiModel.class);
+			ToolkitClient.LOG.info(nemi);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
 		}
 	}
 }
