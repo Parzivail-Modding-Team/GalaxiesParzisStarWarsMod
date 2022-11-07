@@ -92,7 +92,7 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 
 		var transform = ModelTransform.of(x, y, z, pitch, yaw, roll);
 
-		var partBuilder = ModelPartBuilder.create().mirrored(mirrored);
+		var partBuilder = ModelPartBuilder.create();
 
 		var cuboids = part.getList("cuboids", NbtElement.COMPOUND_TYPE);
 		for (var i = 0; i < cuboids.size(); i++)
@@ -117,8 +117,9 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 			var cTex = cuboid.getCompound("tex");
 			var cU = cTex.getInt("u");
 			var cV = cTex.getInt("v");
+			var cMirrored = cTex.getBoolean("mirrored");
 
-			partBuilder = partBuilder.cuboid(
+			partBuilder = partBuilder.mirrored(cMirrored || mirrored).cuboid(
 					"",
 					cX, cY, cZ,
 					cSX, cSY, cSZ,

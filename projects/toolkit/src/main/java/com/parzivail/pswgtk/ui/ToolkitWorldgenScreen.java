@@ -31,7 +31,7 @@ public class ToolkitWorldgenScreen extends JComponentScreen implements MouseMoti
 		map.put(key + KeyEvent.VK_NUMPAD0, value);
 	}
 
-	public static final String I18N_TOOLKIT_WORLDGEN = Resources.screen("toolkit_worldgen");
+	private static final String I18N_TOOLKIT_WORLDGEN = Resources.screen("toolkit_worldgen");
 
 	private static final HashMap<Integer, Pair<Vec3f, Vec3f>> VIEWPORT_DIRECTION_PRESETS = Util.make(() -> {
 		var h = new HashMap<Integer, Pair<Vec3f, Vec3f>>();

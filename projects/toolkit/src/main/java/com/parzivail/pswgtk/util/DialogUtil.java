@@ -1,5 +1,6 @@
 package com.parzivail.pswgtk.util;
 
+import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
@@ -64,7 +65,7 @@ public class DialogUtil
 		}
 	}
 
-	public static Optional<String> openFile(String title, boolean allowMultiple, String... filters)
+	public static Optional<String[]> openFile(String title, boolean allowMultiple, String... filters)
 	{
 		try (MemoryStack stack = MemoryStack.stackPush())
 		{
@@ -72,7 +73,24 @@ public class DialogUtil
 			for (var filter : filters)
 				patterns.put(stack.UTF8(filter));
 			patterns.flip();
-			return Optional.ofNullable(TinyFileDialogs.tinyfd_openFileDialog(title, "", patterns, null, allowMultiple));
+
+			var result = TinyFileDialogs.tinyfd_openFileDialog(title, "", patterns, null, allowMultiple);
+			if (result == null)
+				return Optional.empty();
+			return Optional.of(StringUtils.split(result, '|'));
+		}
+	}
+
+	public static Optional<String> saveFile(String title, String... filters)
+	{
+		try (MemoryStack stack = MemoryStack.stackPush())
+		{
+			var patterns = stack.mallocPointer(filters.length);
+			for (var filter : filters)
+				patterns.put(stack.UTF8(filter));
+			patterns.flip();
+
+			return Optional.ofNullable(TinyFileDialogs.tinyfd_saveFileDialog(title, "", patterns, null));
 		}
 	}
 
