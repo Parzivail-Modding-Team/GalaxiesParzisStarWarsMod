@@ -98,7 +98,7 @@ public class WorldgenControls
 	{
 		this.mesh = mesh;
 
-		EventHelper.click(bGenerate, e -> mesh.scheduleRegererate());
+		EventHelper.action(bGenerate, e -> mesh.scheduleRegererate());
 
 		EventHelper.createDependency(cbSliceX, cbReverseX, nudSliceX);
 		EventHelper.createDependency(cbSliceZ, cbReverseZ, nudSliceZ);
@@ -107,7 +107,7 @@ public class WorldgenControls
 
 		nudSeed.setModel(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
 		EventHelper.bindIntValue(nudSeed, mesh::getSeed, mesh::setSeed);
-		EventHelper.click(bRandomizeSeed, mouseEvent -> nudSeed.setValue(random.nextInt()));
+		EventHelper.action(bRandomizeSeed, e -> nudSeed.setValue(random.nextInt()));
 
 		var slice = this.mesh.getSlice();
 		EventHelper.bindSelected(cbSliceX, slice::isActiveX, slice::setActiveX);

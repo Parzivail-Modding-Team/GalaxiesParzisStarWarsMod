@@ -52,9 +52,11 @@ public final class NemiVec3
 	@Override
 	public String toString()
 	{
-		return "NemiPosition[" +
-		       "x=" + x + ", " +
-		       "y=" + y + ", " +
-		       "z=" + z + ']';
+		return "(" + x + ", " + y + ", " + z + ")";
+	}
+
+	public String toIntString()
+	{
+		return "(" + (int)x + ", " + (int)y + ", " + (int)z + ")";
 	}
 }

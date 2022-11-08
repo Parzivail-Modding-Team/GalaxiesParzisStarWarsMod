@@ -114,7 +114,7 @@ public abstract class JComponentScreen extends Screen
 
 		var x = (int)this.client.mouse.getX();
 		var y = (int)this.client.mouse.getY();
-		var event = frame.createMouseWheelEvent(frame, 0, x, y, (int)amount);
+		var event = frame.createMouseWheelEvent(frame, 0, x, y, -(int)amount);
 		dispatchEvent(event);
 		onMouseScrolled(event);
 

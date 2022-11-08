@@ -8,6 +8,12 @@ import java.util.function.Supplier;
 
 public class EventHelper
 {
+	public static <T extends AbstractButton> T action(T target, Consumer<ActionEvent> handler)
+	{
+		target.addActionListener(handler::accept);
+		return target;
+	}
+
 	public static <T extends Component> T click(T target, Consumer<MouseEvent> handler)
 	{
 		target.addMouseListener(new MouseAdapter()

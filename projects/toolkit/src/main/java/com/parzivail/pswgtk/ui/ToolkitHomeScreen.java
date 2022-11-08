@@ -152,7 +152,7 @@ public class ToolkitHomeScreen extends JComponentScreen
 
 		availableTools.addSelectionRow(0);
 
-		EventHelper.click(bRunTool, mouseEvent -> {
+		EventHelper.action(bRunTool, e -> {
 			assert this.client != null;
 
 			var tool = getSelectedTool();

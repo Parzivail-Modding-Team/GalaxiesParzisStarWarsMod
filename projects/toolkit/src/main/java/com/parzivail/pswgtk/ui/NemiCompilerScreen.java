@@ -6,6 +6,9 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswgtk.model.nemi.NemiModel;
 import com.parzivail.pswgtk.screen.JComponentScreen;
+import com.parzivail.pswgtk.swing.EventHelper;
+import com.parzivail.pswgtk.ui.model.NemiModelProject;
+import com.parzivail.pswgtk.ui.model.TabModelController;
 import com.parzivail.pswgtk.util.DialogUtil;
 import com.parzivail.pswgtk.util.FileUtil;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,7 +17,7 @@ import net.minecraft.text.Text;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -40,12 +43,9 @@ public class NemiCompilerScreen extends JComponentScreen
 	private void $$$setupUI$$$()
 	{
 		rootPanel = new JPanel();
-		rootPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
+		rootPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, 0));
 		openFiles = new JTabbedPane();
 		rootPanel.add(openFiles, new GridConstraints(1, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(200, 200), null, 0, false));
-		final JPanel panel1 = new JPanel();
-		panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-		openFiles.addTab("Untitled", panel1);
 		menuBar = new JMenuBar();
 		rootPanel.add(menuBar, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 	}
@@ -65,15 +65,19 @@ public class NemiCompilerScreen extends JComponentScreen
 	private JTabbedPane openFiles;
 	private JMenuBar menuBar;
 
-	private NemiModel model;
+	private TabModelController<NemiModelProject> tabController;
 
 	protected NemiCompilerScreen(Screen parent)
 	{
 		super(parent, Text.translatable(I18N_TOOLKIT_NEMI_COMPILER));
 
 		var menu = new JMenu("File");
-		menu.add(new JMenuItem("Open NEMi..."));
+		menu.add(EventHelper.action(new JMenuItem("Open NEMi..."), this::openNemi));
+		menu.add(new JSeparator());
+		menu.add(EventHelper.action(new JMenuItem("Export NEM..."), this::exportNem));
 		menuBar.add(menu);
+
+		tabController = new TabModelController<>(openFiles);
 	}
 
 	@Override
@@ -82,10 +86,14 @@ public class NemiCompilerScreen extends JComponentScreen
 		return rootPanel;
 	}
 
-	private void click(MouseEvent mouseEvent)
+	private void openNemi(ActionEvent e)
 	{
 		DialogUtil.openFile("Open Model", false, "*.nemi")
 		          .ifPresent(paths -> openModel(paths[0]));
+	}
+
+	private void exportNem(ActionEvent e)
+	{
 		DialogUtil.saveFile("Save Model", "*.nem")
 		          .ifPresent(this::saveModel);
 	}
@@ -93,6 +101,9 @@ public class NemiCompilerScreen extends JComponentScreen
 	private void saveModel(String path)
 	{
 		path = FileUtil.ensureExtension(path, ".nem");
+
+		var project = tabController.getSelected();
+		var model = project.getModel();
 
 		var nem = model.createNem();
 
@@ -108,16 +119,11 @@ public class NemiCompilerScreen extends JComponentScreen
 		}
 	}
 
-	public void setModel(NemiModel model)
-	{
-		this.model = model;
-	}
-
 	private void openModel(String path)
 	{
 		try (Reader reader = Files.newBufferedReader(Path.of(path)))
 		{
-			setModel(gson.fromJson(reader, NemiModel.class));
+			tabController.add(new NemiModelProject(path, gson.fromJson(reader, NemiModel.class)));
 		}
 		catch (Exception e)
 		{
