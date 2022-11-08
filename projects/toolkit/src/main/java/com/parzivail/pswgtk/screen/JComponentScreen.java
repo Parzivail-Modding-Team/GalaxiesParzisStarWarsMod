@@ -51,15 +51,15 @@ public abstract class JComponentScreen extends Screen
 
 		frame.setVisible(true);
 
-		dispatchEvent(new FocusEvent(getSource(), FocusEvent.FOCUS_GAINED));
+		dispatchEvent(new FocusEvent(getFrame(), FocusEvent.FOCUS_GAINED));
 	}
 
 	protected abstract JComponent getRootComponent();
 
-	protected Component getSource()
+	protected Frame getFrame()
 	{
 		var dummyEvent = frame.createUngrabEvent(frame);
-		return (Component)dummyEvent.getSource();
+		return (Frame)dummyEvent.getSource();
 	}
 
 	@Override
