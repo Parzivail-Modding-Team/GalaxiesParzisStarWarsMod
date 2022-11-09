@@ -23,12 +23,6 @@
         <properties/>
         <border type="none"/>
         <children>
-          <component id="6a56c" class="javax.swing.JTree" binding="modelTree">
-            <constraints>
-              <splitpane position="left"/>
-            </constraints>
-            <properties/>
-          </component>
           <grid id="6616e" binding="contentPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
@@ -38,15 +32,28 @@
             <border type="none"/>
             <children/>
           </grid>
+          <scrollpane id="3deb8">
+            <constraints>
+              <splitpane position="left"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="6a56c" class="javax.swing.JTree" binding="modelTree">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
         </children>
       </splitpane>
       <tabbedpane id="e3ea2" binding="openFiles">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="200" height="65"/>
-          </grid>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
         </constraints>
-        <properties/>
+        <properties>
+          <tabLayoutPolicy value="1"/>
+        </properties>
         <border type="none"/>
         <children/>
       </tabbedpane>

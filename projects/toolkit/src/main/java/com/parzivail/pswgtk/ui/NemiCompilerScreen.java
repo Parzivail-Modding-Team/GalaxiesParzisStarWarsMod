@@ -14,6 +14,7 @@ import com.parzivail.pswgtk.ui.model.TabModelController;
 import com.parzivail.pswgtk.util.DialogUtil;
 import com.parzivail.pswgtk.util.FileUtil;
 import com.parzivail.util.math.MatrixStackUtil;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -58,13 +59,16 @@ public class NemiCompilerScreen extends JComponentScreen
 		rootPanel.add(menuBar, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 		final JSplitPane splitPane1 = new JSplitPane();
 		rootPanel.add(splitPane1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(200, 200), null, 0, false));
-		modelTree = new JTree();
-		splitPane1.setLeftComponent(modelTree);
 		contentPanel = new JPanel();
 		contentPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
 		splitPane1.setRightComponent(contentPanel);
+		final JScrollPane scrollPane1 = new JScrollPane();
+		splitPane1.setLeftComponent(scrollPane1);
+		modelTree = new JTree();
+		scrollPane1.setViewportView(modelTree);
 		openFiles = new JTabbedPane();
-		rootPanel.add(openFiles, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 65), null, 0, false));
+		openFiles.setTabLayoutPolicy(1);
+		rootPanel.add(openFiles, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 	}
 
 	/**
@@ -94,7 +98,7 @@ public class NemiCompilerScreen extends JComponentScreen
 		super(parent, Text.translatable(I18N_TOOLKIT_NEMI_COMPILER));
 
 		var menu = new JMenu("File");
-		menu.add(EventHelper.action(new JMenuItem("Open NEMi..."), this::openNemi));
+		menu.add(EventHelper.action(new JMenuItem("Open..."), this::openModel));
 		menu.add(new JSeparator());
 		menu.add(EventHelper.action(new JMenuItem("Export NEM..."), this::exportNem));
 		menuBar.add(menu);
@@ -103,6 +107,8 @@ public class NemiCompilerScreen extends JComponentScreen
 
 		tabController = new TabModelController<>(openFiles, this::selectedModelChanged);
 		modelTree.setModel(null);
+
+		modelTree.setMinimumSize(new Dimension(10, 100));
 	}
 
 	@Override
@@ -155,10 +161,15 @@ public class NemiCompilerScreen extends JComponentScreen
 
 		var ms = new MatrixStack();
 		viewportController.rotate(ms, tickDelta);
+		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
+
+		ms.push();
+		ms.translate(-0.5f, -1, -0.5f);
+		client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
+		ms.pop();
+
 		ms.multiply(new Quaternion(0, 0, 180, true));
 		ms.translate(0, -1.5f, 0);
-
-		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
 		selectedModel.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 		immediate.draw();
 
@@ -166,10 +177,18 @@ public class NemiCompilerScreen extends JComponentScreen
 		RenderSystem.applyModelViewMatrix();
 	}
 
-	private void openNemi(ActionEvent e)
+	private void openModel(ActionEvent e)
 	{
-		DialogUtil.openFile("Open Model", false, "*.nemi")
+		DialogUtil.openFile("Open Model", "NEM Models (*.nemi, *.nem)", false, "*.nemi", "*.nem")
 		          .ifPresent(paths -> openModel(paths[0]));
+	}
+
+	private void openModel(String path)
+	{
+		if (path.endsWith(".nem"))
+			openNem(path);
+		else if (path.endsWith(".nemi"))
+			openNemi(path);
 	}
 
 	private void exportNem(ActionEvent e)
@@ -197,11 +216,26 @@ public class NemiCompilerScreen extends JComponentScreen
 		}
 	}
 
-	private void openModel(String path)
+	private void openNemi(String path)
 	{
 		try (Reader reader = Files.newBufferedReader(Path.of(path)))
 		{
 			tabController.add(new NemiModelProject(path, gson.fromJson(reader, NemiModel.class)));
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	private void openNem(String path)
+	{
+		try
+		{
+			var nbt = NbtIo.read(new File(path));
+			if (nbt == null)
+				return;
+			tabController.add(new NemiModelProject(path, nbt));
 		}
 		catch (Exception e)
 		{

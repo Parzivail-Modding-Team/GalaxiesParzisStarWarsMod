@@ -3,6 +3,7 @@ package com.parzivail.pswgtk.ui.model;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -69,8 +70,21 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 	public boolean add(TModel tModel)
 	{
 		models.add(tModel);
-		this.tabContainer.add(tModel.getTitle(), new JLabel());
+		this.tabContainer.add(tModel.getTitle(), createEmptyTabContents());
 		return true;
+	}
+
+	private JComponent createEmptyTabContents()
+	{
+		var p = new JPanel();
+		var empty = new Dimension(0, 0);
+		p.setSize(empty);
+		p.setMinimumSize(empty);
+		p.setMaximumSize(empty);
+		p.setPreferredSize(empty);
+		p.setVisible(false);
+		p.setBorder(BorderFactory.createEmptyBorder());
+		return p;
 	}
 
 	@Override
@@ -94,7 +108,7 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 	{
 		var result = models.addAll(c);
 		for (var c1 : c)
-			this.tabContainer.add(c1.getTitle(), new JLabel());
+			this.tabContainer.add(c1.getTitle(), createEmptyTabContents());
 		return result;
 	}
 

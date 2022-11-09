@@ -131,7 +131,7 @@ public final class NemiModel
 		parent.put(partName, partTag);
 	}
 
-	public static String getUniqueName(HashMap<NemiPart, String> existingNames, String partName, NemiPart part)
+	public static <T> String getUniqueName(HashMap<T, String> existingNames, String partName, T part)
 	{
 		if (existingNames.containsKey(part))
 			return existingNames.get(part);

@@ -54,9 +54,4 @@ public final class NemiVec3
 	{
 		return "(" + x + ", " + y + ", " + z + ")";
 	}
-
-	public String toIntString()
-	{
-		return "(" + (int)x + ", " + (int)y + ", " + (int)z + ")";
-	}
 }

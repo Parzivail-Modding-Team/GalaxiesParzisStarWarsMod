@@ -65,7 +65,7 @@ public class DialogUtil
 		}
 	}
 
-	public static Optional<String[]> openFile(String title, boolean allowMultiple, String... filters)
+	public static Optional<String[]> openFile(String title, String singleFilterName, boolean allowMultiple, String... filters)
 	{
 		try (MemoryStack stack = MemoryStack.stackPush())
 		{
@@ -74,7 +74,7 @@ public class DialogUtil
 				patterns.put(stack.UTF8(filter));
 			patterns.flip();
 
-			var result = TinyFileDialogs.tinyfd_openFileDialog(title, "", patterns, null, allowMultiple);
+			var result = TinyFileDialogs.tinyfd_openFileDialog(title, "", patterns, singleFilterName, allowMultiple);
 			if (result == null)
 				return Optional.empty();
 			return Optional.of(StringUtils.split(result, '|'));
