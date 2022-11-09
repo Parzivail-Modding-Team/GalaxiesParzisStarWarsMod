@@ -8,9 +8,21 @@ import java.util.function.Supplier;
 
 public class EventHelper
 {
+	public static KeyStroke ctrl(int key)
+	{
+		return KeyStroke.getKeyStroke(key, KeyEvent.CTRL_DOWN_MASK);
+	}
+
 	public static <T extends AbstractButton> T action(T target, Consumer<ActionEvent> handler)
 	{
 		target.addActionListener(handler::accept);
+		return target;
+	}
+
+	public static <T extends JMenuItem> T action(T target, KeyStroke bind, Consumer<ActionEvent> handler)
+	{
+		target.addActionListener(handler::accept);
+		target.setAccelerator(bind);
 		return target;
 	}
 

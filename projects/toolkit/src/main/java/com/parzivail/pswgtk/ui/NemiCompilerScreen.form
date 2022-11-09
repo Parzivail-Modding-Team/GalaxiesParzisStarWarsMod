@@ -20,7 +20,9 @@
             <preferred-size width="200" height="200"/>
           </grid>
         </constraints>
-        <properties/>
+        <properties>
+          <continuousLayout value="false"/>
+        </properties>
         <border type="none"/>
         <children>
           <grid id="6616e" binding="contentPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -36,12 +38,16 @@
             <constraints>
               <splitpane position="left"/>
             </constraints>
-            <properties/>
+            <properties>
+              <minimumSize width="150" height="0"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="6a56c" class="javax.swing.JTree" binding="modelTree">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <maximumSize width="-1" height="-1"/>
+                </properties>
               </component>
             </children>
           </scrollpane>

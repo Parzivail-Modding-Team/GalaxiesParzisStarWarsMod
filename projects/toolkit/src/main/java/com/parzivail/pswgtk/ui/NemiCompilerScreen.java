@@ -29,6 +29,7 @@ import net.minecraft.util.math.Vec2f;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -58,13 +59,16 @@ public class NemiCompilerScreen extends JComponentScreen
 		menuBar = new JMenuBar();
 		rootPanel.add(menuBar, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
 		final JSplitPane splitPane1 = new JSplitPane();
+		splitPane1.setContinuousLayout(false);
 		rootPanel.add(splitPane1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(200, 200), null, 0, false));
 		contentPanel = new JPanel();
 		contentPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
 		splitPane1.setRightComponent(contentPanel);
 		final JScrollPane scrollPane1 = new JScrollPane();
+		scrollPane1.setMinimumSize(new Dimension(150, 0));
 		splitPane1.setLeftComponent(scrollPane1);
 		modelTree = new JTree();
+		modelTree.setMaximumSize(new Dimension(-1, -1));
 		scrollPane1.setViewportView(modelTree);
 		openFiles = new JTabbedPane();
 		openFiles.setTabLayoutPolicy(1);
@@ -98,7 +102,8 @@ public class NemiCompilerScreen extends JComponentScreen
 		super(parent, Text.translatable(I18N_TOOLKIT_NEMI_COMPILER));
 
 		var menu = new JMenu("File");
-		menu.add(EventHelper.action(new JMenuItem("Open..."), this::openModel));
+		menu.setMnemonic(KeyEvent.VK_F);
+		menu.add(EventHelper.action(new JMenuItem("Open...", KeyEvent.VK_O), EventHelper.ctrl(KeyEvent.VK_O), this::openModel));
 		menu.add(new JSeparator());
 		menu.add(EventHelper.action(new JMenuItem("Export NEM..."), this::exportNem));
 		menuBar.add(menu);
@@ -107,8 +112,6 @@ public class NemiCompilerScreen extends JComponentScreen
 
 		tabController = new TabModelController<>(openFiles, this::selectedModelChanged);
 		modelTree.setModel(null);
-
-		modelTree.setMinimumSize(new Dimension(10, 100));
 	}
 
 	@Override
