@@ -39,11 +39,11 @@ public class PanelViewportController implements MouseMotionListener
 	private final JPanel panel;
 	private final AnimatedFloat yaw = new AnimatedFloat(1, 0.1f, 45);
 	private final AnimatedFloat pitch = new AnimatedFloat(1, 0.1f, 60);
-	private final AnimatedFloat x = new AnimatedFloat(1, 0.1f, 0);
-	private final AnimatedFloat y = new AnimatedFloat(1, 0.1f, 0);
+	private final AnimatedFloat x = new AnimatedFloat(1, 1, 0);
+	private final AnimatedFloat y = new AnimatedFloat(1, 1, 0);
+	private final AnimatedFloat zoomExponent = new AnimatedFloat(2, 0.01f, 0);
 
 	private Vec2f prevMousePos = Vec2f.ZERO;
-	private int zoomExponent = 0;
 
 	public PanelViewportController(Screen screen, JPanel panel)
 	{
@@ -52,7 +52,7 @@ public class PanelViewportController implements MouseMotionListener
 		panel.setFocusable(true);
 		panel.setBackground(new Color(TextureBackedContentWrapper.MASK_COLOR));
 		panel.addMouseMotionListener(this);
-		panel.addMouseWheelListener(e -> this.zoomExponent -= e.getWheelRotation());
+		panel.addMouseWheelListener(e -> this.zoomExponent.setTarget(this.zoomExponent.getTarget() - e.getWheelRotation()));
 		EventHelper.press(panel, this::contentPanelPressed);
 		EventHelper.keyPressed(panel, this::contentPanelKeyPressed);
 	}
@@ -139,6 +139,8 @@ public class PanelViewportController implements MouseMotionListener
 
 		x.tick();
 		y.tick();
+
+		zoomExponent.tick();
 	}
 
 	public Vec2f transformSwingToScreen(Vec2f point)
@@ -159,7 +161,7 @@ public class PanelViewportController implements MouseMotionListener
 		var contentCenter = transformSwingToScreen(contentTopLeft.add(getContentSize().multiply(0.5f)).add(new Vec2f(windowX, windowY)));
 
 		ms.translate(contentCenter.x, contentCenter.y, 50);
-		var f = (float)Math.pow(10, zoomExponent / 10.0);
+		var f = (float)Math.pow(10, zoomExponent.getValue() / 10);
 		ms.scale(f, f, 1);
 	}
 

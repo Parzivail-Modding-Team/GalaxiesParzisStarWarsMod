@@ -8,7 +8,7 @@
 	"tool.title.worldgen_visualizer": "Worldgen Visualizer",
 	"tool.description.worldgen_visualizer": "Quickly create, inspect, and regenerate chunks without loading a world.",
 	"tool.title.nemi_compiler": "NEMi Compiler",
-	"tool.description.nemi_compiler": "Compile NBT Entity Model intermediary files (NEMi), produced by the PSWG plugin for entity modeling software, into NBT Entity Model files (NEM).",
+	"tool.description.nemi_compiler": "View and compile NBT Entity Model intermediary files (NEMi), produced by the PSWG plugin for entity modeling software, into NBT Entity Model files (NEM), and view existing NEM models.",
 	"tool.title.p3di_compiler": "P3Di Compiler",
 	"tool.description.p3di_compiler": "Compile P3D model intermediary files (P3Di), produced by the PSWG plugin for Blender, into P3D model files (P3D)."
 }

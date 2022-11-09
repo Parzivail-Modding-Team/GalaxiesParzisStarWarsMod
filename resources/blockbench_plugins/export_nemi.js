@@ -88,7 +88,7 @@ Plugin.register('export_nemi', {
 						"rot": {
 							"pitch": -group.rotation[0],
 							"yaw": -group.rotation[1],
-							"roll": -group.rotation[2]
+							"roll": group.rotation[2]
 						},
 						"boxes": []
 					};

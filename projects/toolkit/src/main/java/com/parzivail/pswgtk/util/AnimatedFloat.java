@@ -43,6 +43,11 @@ public class AnimatedFloat
 		this.target = target;
 	}
 
+	public float getTarget()
+	{
+		return target;
+	}
+
 	public void setValue(float value)
 	{
 		this.target = value;
