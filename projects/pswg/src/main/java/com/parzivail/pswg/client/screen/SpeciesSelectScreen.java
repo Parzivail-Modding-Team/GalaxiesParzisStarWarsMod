@@ -482,7 +482,7 @@ public class SpeciesSelectScreen extends Screen
 		RenderSystem.runAsFancy(() -> {
 			if (speciesString == null)
 			{
-				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, tickDelta, matrixStack2, immediate, 0xf000f0);
+				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0.0F, tickDelta, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 			}
 			else
 			{
@@ -496,11 +496,11 @@ public class SpeciesSelectScreen extends Screen
 					var texture = SwgSpeciesRenderer.getTexture(entity, species);
 
 					if (!texture.equals(Client.TEX_TRANSPARENT))
-						perwm.renderWithOverrides(species, texture, client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+						perwm.renderWithOverrides(species, texture, client.player, 1, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 
 				}
 				else if (renderer != null)
-					renderer.render(client.player, 1, 1, matrixStack2, immediate, 0xf000f0);
+					renderer.render(client.player, 1, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 
 				CameraHelper.forcePlayerRender = false;
 			}

@@ -9,7 +9,6 @@ import com.parzivail.pswgtk.swing.EventHelper;
 import com.parzivail.pswgtk.swing.NodeTreeModel;
 import com.parzivail.pswgtk.util.LangUtil;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 import javax.swing.*;
@@ -175,11 +174,5 @@ public class ToolkitHomeScreen extends JComponentScreen
 	protected JComponent getRootComponent()
 	{
 		return root;
-	}
-
-	@Override
-	protected void renderContent(MatrixStack matrices)
-	{
-
 	}
 }

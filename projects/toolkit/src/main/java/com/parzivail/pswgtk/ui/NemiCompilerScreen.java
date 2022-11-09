@@ -3,7 +3,9 @@ package com.parzivail.pswgtk.ui;
 import com.google.gson.Gson;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswgtk.ToolkitClient;
 import com.parzivail.pswgtk.model.nemi.NemiModel;
 import com.parzivail.pswgtk.screen.JComponentScreen;
 import com.parzivail.pswgtk.swing.EventHelper;
@@ -11,9 +13,17 @@ import com.parzivail.pswgtk.ui.model.NemiModelProject;
 import com.parzivail.pswgtk.ui.model.TabModelController;
 import com.parzivail.pswgtk.util.DialogUtil;
 import com.parzivail.pswgtk.util.FileUtil;
+import com.parzivail.util.math.MatrixStackUtil;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec2f;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,10 +54,17 @@ public class NemiCompilerScreen extends JComponentScreen
 	{
 		rootPanel = new JPanel();
 		rootPanel.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, 0));
-		openFiles = new JTabbedPane();
-		rootPanel.add(openFiles, new GridConstraints(1, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(200, 200), null, 0, false));
 		menuBar = new JMenuBar();
 		rootPanel.add(menuBar, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+		final JSplitPane splitPane1 = new JSplitPane();
+		rootPanel.add(splitPane1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, new Dimension(200, 200), null, 0, false));
+		modelTree = new JTree();
+		splitPane1.setLeftComponent(modelTree);
+		contentPanel = new JPanel();
+		contentPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+		splitPane1.setRightComponent(contentPanel);
+		openFiles = new JTabbedPane();
+		rootPanel.add(openFiles, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 65), null, 0, false));
 	}
 
 	/**
@@ -61,11 +78,16 @@ public class NemiCompilerScreen extends JComponentScreen
 	private static final Gson gson = new Gson();
 	private static final String I18N_TOOLKIT_NEMI_COMPILER = Resources.screen("nemi_compiler");
 
+	private final TabModelController<NemiModelProject> tabController;
+	private final PanelViewportController viewportController;
+
 	private JPanel rootPanel;
 	private JTabbedPane openFiles;
 	private JMenuBar menuBar;
+	private JTree modelTree;
+	private JPanel contentPanel;
 
-	private TabModelController<NemiModelProject> tabController;
+	private NemiModelProject selectedModel;
 
 	protected NemiCompilerScreen(Screen parent)
 	{
@@ -77,13 +99,71 @@ public class NemiCompilerScreen extends JComponentScreen
 		menu.add(EventHelper.action(new JMenuItem("Export NEM..."), this::exportNem));
 		menuBar.add(menu);
 
-		tabController = new TabModelController<>(openFiles);
+		viewportController = new PanelViewportController(this, contentPanel);
+
+		tabController = new TabModelController<>(openFiles, this::selectedModelChanged);
+		modelTree.setModel(null);
 	}
 
 	@Override
 	protected JComponent getRootComponent()
 	{
 		return rootPanel;
+	}
+
+	private Vec2f getContentTopLeft()
+	{
+		return new Vec2f(contentPanel.getX(), contentPanel.getY());
+	}
+
+	private Vec2f getContentSize()
+	{
+		return new Vec2f(contentPanel.getWidth(), contentPanel.getHeight());
+	}
+
+	private void selectedModelChanged(NemiModelProject nemiModelProject)
+	{
+		selectedModel = nemiModelProject;
+		modelTree.setModel(nemiModelProject.getTreeModel());
+	}
+
+	@Override
+	public void tick()
+	{
+		super.tick();
+
+		viewportController.tick();
+	}
+
+	@Override
+	protected void renderContent(MatrixStack matrices)
+	{
+		if (selectedModel == null)
+			return;
+
+		assert this.client != null;
+		var tickDelta = this.client.getTickDelta();
+
+		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+
+		var rsm = RenderSystem.getModelViewStack();
+		rsm.push();
+
+		viewportController.setup(rsm, tickDelta);
+		MatrixStackUtil.scalePos(rsm, 16, -16, 16);
+		RenderSystem.applyModelViewMatrix();
+
+		var ms = new MatrixStack();
+		viewportController.rotate(ms, tickDelta);
+		ms.multiply(new Quaternion(0, 0, 180, true));
+		ms.translate(0, -1.5f, 0);
+
+		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
+		selectedModel.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
+		immediate.draw();
+
+		rsm.pop();
+		RenderSystem.applyModelViewMatrix();
 	}
 
 	private void openNemi(ActionEvent e)
@@ -103,9 +183,7 @@ public class NemiCompilerScreen extends JComponentScreen
 		path = FileUtil.ensureExtension(path, ".nem");
 
 		var project = tabController.getSelected();
-		var model = project.getModel();
-
-		var nem = model.createNem();
+		var nem = project.getCompiledModel();
 
 		try
 		{

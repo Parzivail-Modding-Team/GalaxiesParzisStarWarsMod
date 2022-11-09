@@ -1,11 +1,12 @@
 package com.parzivail.pswgtk.ui.model;
 
+import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswgtk.model.nemi.NemiModel;
 import com.parzivail.pswgtk.model.nemi.NemiPart;
 import com.parzivail.pswgtk.swing.NodeTreeModel;
-import com.parzivail.pswgtk.ui.SplitTreeContentView;
+import net.minecraft.client.model.ModelPart;
+import net.minecraft.nbt.NbtCompound;
 
-import javax.swing.*;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Objects;
@@ -21,20 +22,22 @@ public class NemiModelProject implements TabModel
 
 	private final String filename;
 	private final NemiModel model;
+	private final NbtCompound compiledModel;
+	private final ModelPart modelPart;
 
-	private final SplitTreeContentView contentView;
+	private final NodeTreeModel<NodeType> treeModel;
 
 	public NemiModelProject(String filename, NemiModel model)
 	{
 		this.filename = filename;
 		this.model = model;
-
-		contentView = new SplitTreeContentView();
+		this.compiledModel = model.createNem();
+		this.modelPart = NemManager.buildModel(this.compiledModel).createModel();
 
 		var uniqueNames = new HashMap<NemiPart, String>();
 		var node = new NodeTreeModel.Node<>("[root]", NodeType.Root);
 		buildNode(uniqueNames, model.parts(), null, node);
-		contentView.getTree().setModel(new NodeTreeModel<>(node));
+		this.treeModel = new NodeTreeModel<>(node);
 	}
 
 	private static void buildNode(HashMap<NemiPart, String> uniqueNames, HashMap<String, NemiPart> parts, String parentKey, NodeTreeModel.Node<NodeType> parent)
@@ -57,9 +60,24 @@ public class NemiModelProject implements TabModel
 		}
 	}
 
+	public NodeTreeModel<NodeType> getTreeModel()
+	{
+		return treeModel;
+	}
+
 	public NemiModel getModel()
 	{
 		return model;
+	}
+
+	public NbtCompound getCompiledModel()
+	{
+		return compiledModel;
+	}
+
+	public ModelPart getModelPart()
+	{
+		return modelPart;
 	}
 
 	@Override
@@ -72,12 +90,6 @@ public class NemiModelProject implements TabModel
 	public boolean tryClose()
 	{
 		return true;
-	}
-
-	@Override
-	public JComponent getContents()
-	{
-		return contentView.getRoot();
 	}
 
 	@Override

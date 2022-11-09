@@ -21,8 +21,8 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.profiler.Profiler;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -54,10 +54,12 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	@Override
 	public TexturedModelData readResource(ResourceManager resourceManager, Profiler profiler, InputStream stream) throws IOException
 	{
-		DataInput d = new DataInputStream(stream);
+		return buildModel(NbtIo.read(new DataInputStream(stream)));
+	}
 
-		var nbt = NbtIo.read(d);
-
+	@NotNull
+	public static TexturedModelData buildModel(NbtCompound nbt)
+	{
 		var modelData = new ModelData();
 		var root = modelData.getRoot();
 

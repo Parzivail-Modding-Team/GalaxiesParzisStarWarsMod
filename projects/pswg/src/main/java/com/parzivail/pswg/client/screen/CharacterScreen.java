@@ -907,7 +907,7 @@ public class CharacterScreen extends Screen
 		RenderSystem.runAsFancy(() -> {
 			if (species == null)
 			{
-				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0, 1, matrixStack2, immediate, 0xf000f0);
+				entityRenderDispatcher.render(entity, 0.0D, 0.0D, 0.0D, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 			}
 			else
 			{
@@ -922,18 +922,18 @@ public class CharacterScreen extends Screen
 					{
 						// Continue rendering previous model while current texture is loading
 						if (previousRenderer != null && previousTexture != null)
-							previousRenderer.renderWithOverrides(species, previousTexture, entity, 0, 1, matrixStack2, immediate, 0xf000f0);
+							previousRenderer.renderWithOverrides(species, previousTexture, entity, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 					}
 					else
 					{
-						perwm.renderWithOverrides(species, texture, entity, 0, 1, matrixStack2, immediate, 0xf000f0);
+						perwm.renderWithOverrides(species, texture, entity, 0, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 						previousTexture = texture;
 					}
 
 					previousRenderer = perwm;
 				}
 				else if (renderer != null)
-					renderer.render(entity, 1, 1, matrixStack2, immediate, 0xf000f0);
+					renderer.render(entity, 1, 1, matrixStack2, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 
 				CameraHelper.forcePlayerRender = false;
 			}

@@ -6,16 +6,19 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.function.Consumer;
 
 public class TabModelController<TModel extends TabModel> implements Collection<TModel>
 {
 	private final ArrayList<TModel> models = new ArrayList<>();
 	private final JTabbedPane tabContainer;
 
-	public TabModelController(JTabbedPane tabContainer)
+	public TabModelController(JTabbedPane tabContainer, Consumer<TModel> onModelChanged)
 	{
 		this.tabContainer = tabContainer;
 		tabContainer.removeAll();
+
+		tabContainer.addChangeListener(e -> onModelChanged.accept(getSelected()));
 	}
 
 	public TModel getSelected()
@@ -65,8 +68,9 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 	@Override
 	public boolean add(TModel tModel)
 	{
-		this.tabContainer.add(tModel.getTitle(), tModel.getContents());
-		return models.add(tModel);
+		models.add(tModel);
+		this.tabContainer.add(tModel.getTitle(), new JLabel());
+		return true;
 	}
 
 	@Override
@@ -88,9 +92,10 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 	@Override
 	public boolean addAll(@NotNull Collection<? extends TModel> c)
 	{
+		var result = models.addAll(c);
 		for (var c1 : c)
-			this.tabContainer.add(c1.getTitle(), c1.getContents());
-		return models.addAll(c);
+			this.tabContainer.add(c1.getTitle(), new JLabel());
+		return result;
 	}
 
 	@Override
