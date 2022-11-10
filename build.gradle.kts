@@ -1,7 +1,7 @@
 import java.io.ByteArrayOutputStream
 
 plugins {
-	id("pswg-submodule-dependencies")
+	id("com.parzivail.internal.pswg-submodule-dependencies")
 	id("fabric-loom")
 	id("io.github.juuxel.loom-quiltflower")
 	`maven-publish`
@@ -10,7 +10,7 @@ plugins {
 subprojects {
 	if (!file("project.gradle.kts").exists()) return@subprojects
 
-	apply(plugin = "pswg-submodule-dependencies")
+	apply(plugin = "com.parzivail.internal.pswg-submodule-dependencies")
 	apply(plugin = "fabric-loom")
 	apply(plugin = "io.github.juuxel.loom-quiltflower")
 	apply(plugin = "maven-publish")
