@@ -11,6 +11,10 @@ public class RigT65B extends ModelRig<T65BXwing>
 {
 	public static final RigT65B INSTANCE = new RigT65B();
 
+	public static final String[] CANNONS = new String[] { "CannonTopLeft", "CannonBottomLeft", "CannonTopRight", "CannonBottomRight" };
+	public static final String[] WINGS = new String[] { "WingTopLeft", "WingBottomLeft", "WingTopRight", "WingBottomRight" };
+	public static final String[] ENGINES = new String[] { "EngineTopLeft", "EngineBottomLeft", "EngineTopRight", "EngineBottomRight" };
+
 	private RigT65B()
 	{
 		super(Resources.id("rigs/ship/xwing_t65b.p3dr"));

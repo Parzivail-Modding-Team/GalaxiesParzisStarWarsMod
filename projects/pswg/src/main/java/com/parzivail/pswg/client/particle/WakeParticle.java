@@ -21,6 +21,8 @@ public class WakeParticle extends BlockDustParticle
 		}
 	}
 
+	private final float maxScale;
+
 	public WakeParticle(ClientWorld world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BlockState state)
 	{
 		super(world, x, y, z, velocityX, velocityY, velocityZ, state);
@@ -28,16 +30,20 @@ public class WakeParticle extends BlockDustParticle
 		this.velocityY = velocityY + (Math.random() * 2.0 - 1.0) * velocityY * 0.1f;
 		this.velocityX = (Math.random() * 2.0 - 1.0) * velocityX;
 		this.velocityZ = (Math.random() * 2.0 - 1.0) * velocityZ;
+
+		this.maxScale = 0.04F * (this.random.nextFloat() * this.random.nextFloat() * 6.0F + 1.0F);
 	}
 
 	@Override
 	public void tick()
 	{
+		this.scale = this.maxScale * (float)Math.min(Math.pow(20f * this.age / this.maxAge, 4), 1);
+
 		this.prevPosX = this.x;
 		this.prevPosY = this.y;
 		this.prevPosZ = this.z;
 
-		if (this.maxAge-- <= 0)
+		if (this.age++ >= maxAge)
 			this.markDead();
 		else
 		{
@@ -49,7 +55,10 @@ public class WakeParticle extends BlockDustParticle
 			this.velocityZ *= 0.98;
 
 			if (this.onGround)
-				this.markDead();
+			{
+				this.velocityX *= 0.7;
+				this.velocityZ *= 0.7;
+			}
 		}
 	}
 }

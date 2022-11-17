@@ -24,6 +24,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
@@ -167,13 +168,17 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 			int maxParticles = (int)(15 * velocityLength * velocityLength);
 			var steps = (5 * velocityLength + 1);
 
-			spawnWakeParticles(maxDistance, (dt) -> RigT65B.INSTANCE.getWorldPosition(stack, this, getViewRotation(dt), "CannonBottomLeft", dt).add(this.getLerpedPos(dt)), velocityLength, rayDir, maxParticles, steps);
-			spawnWakeParticles(maxDistance, (dt) -> RigT65B.INSTANCE.getWorldPosition(stack, this, getViewRotation(dt), "CannonBottomRight", dt).add(this.getLerpedPos(dt)), velocityLength, rayDir, maxParticles, steps);
+			for (var cannon : RigT65B.CANNONS)
+				spawnWakeParticles(maxDistance, (dt) -> RigT65B.INSTANCE.getWorldPosition(stack, this, getViewRotation(dt), cannon, dt).add(this.getLerpedPos(dt)), velocityLength, rayDir, maxParticles, steps);
+			for (var engine : RigT65B.ENGINES)
+				spawnWakeParticles(maxDistance, (dt) -> RigT65B.INSTANCE.getWorldPosition(stack, this, getViewRotation(dt), engine, dt).add(this.getLerpedPos(dt)), velocityLength, rayDir, maxParticles, steps);
 		}
 	}
 
 	private void spawnWakeParticles(float maxDistance, Function<Float, Vec3d> sourcePosSupplier, double velocityLength, Vec3d rayDir, int maxParticles, double steps)
 	{
+		var velSquared = velocityLength * velocityLength;
+
 		var ddt = 1 / steps;
 		for (var dt = 0f; dt <= 1; dt += ddt)
 		{
@@ -181,21 +186,21 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 			var blockHit = EntityUtil.raycastBlocks(sourcePos, rayDir, maxDistance, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.ANY);
 			if (blockHit.getType() != HitResult.Type.MISS)
 			{
-				var particle = new BlockStateParticleEffect(SwgParticles.WAKE, world.getBlockState(blockHit.getBlockPos()));
+				var state = world.getBlockState(blockHit.getBlockPos());
+				var particle = state.getFluidState().isIn(FluidTags.WATER) ? SwgParticles.WATER_WAKE : new BlockStateParticleEffect(SwgParticles.WAKE, state);
 
 				var hitPos = blockHit.getPos();
-				var dist = hitPos.distanceTo(sourcePos);
+				var dist = Math.max(hitPos.distanceTo(sourcePos), 0.5f);
 				var count = (MathHelper.clamp(15 / dist, 0, maxParticles)) / steps;
 
-				var sqrtDist = Math.sqrt(dist);
-				var lateralVelocity = Math.pow(velocityLength / (1.8f * sqrtDist), 2);
-				var verticalVelocity = Math.pow(velocityLength / (2.5f * sqrtDist), 2);
+				var lateralVelocity = velSquared / (3.24 * dist);
+				var verticalVelocity = velSquared / (6.25 * dist);
 
 				for (int i = 0; i < count; i++)
 				{
 					if (this.random.nextFloat() * 2 > velocityLength)
 						continue;
-					this.world.addParticle(particle, hitPos.x, hitPos.y, hitPos.z, lateralVelocity, verticalVelocity, lateralVelocity);
+					this.world.addParticle(particle, hitPos.x + this.random.nextGaussian() / 4, hitPos.y, hitPos.z + this.random.nextGaussian() / 4, lateralVelocity, verticalVelocity, lateralVelocity);
 				}
 			}
 		}
