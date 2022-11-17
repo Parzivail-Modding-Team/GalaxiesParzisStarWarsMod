@@ -1,6 +1,7 @@
 package com.parzivail.pswg.entity.ship;
 
 import com.parzivail.pswg.client.input.ShipControls;
+import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.collision.CapsuleVolume;
 import com.parzivail.pswg.entity.collision.ICollisionVolume;
@@ -8,6 +9,7 @@ import com.parzivail.pswg.entity.collision.IComplexEntityHitbox;
 import com.parzivail.pswg.entity.collision.SweptTriangleVolume;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.util.BlasterUtil;
+import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import com.parzivail.util.math.Transform;
@@ -19,13 +21,19 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.hit.HitResult;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Function;
 
 public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 {
@@ -148,6 +156,48 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 
 			tickControlledAnim(WING_ANIM, (byte)WING_ANIM_LENGTH, controls.contains(ShipControls.SPECIAL1));
 			tickControlledAnim(COCKPIT_ANIM, (byte)COCKPIT_ANIM_LENGTH, controls.contains(ShipControls.SPECIAL2));
+		}
+		else
+		{
+			var stack = new Transform();
+
+			float maxDistance = 10;
+			var velocityLength = getVelocity().length();
+			var rayDir = MathUtil.NEGY;
+			int maxParticles = (int)(15 * velocityLength * velocityLength);
+			var steps = (5 * velocityLength + 1);
+
+			spawnWakeParticles(maxDistance, (dt) -> RigT65B.INSTANCE.getWorldPosition(stack, this, getViewRotation(dt), "CannonBottomLeft", dt).add(this.getLerpedPos(dt)), velocityLength, rayDir, maxParticles, steps);
+			spawnWakeParticles(maxDistance, (dt) -> RigT65B.INSTANCE.getWorldPosition(stack, this, getViewRotation(dt), "CannonBottomRight", dt).add(this.getLerpedPos(dt)), velocityLength, rayDir, maxParticles, steps);
+		}
+	}
+
+	private void spawnWakeParticles(float maxDistance, Function<Float, Vec3d> sourcePosSupplier, double velocityLength, Vec3d rayDir, int maxParticles, double steps)
+	{
+		var ddt = 1 / steps;
+		for (var dt = 0f; dt <= 1; dt += ddt)
+		{
+			var sourcePos = sourcePosSupplier.apply(dt);
+			var blockHit = EntityUtil.raycastBlocks(sourcePos, rayDir, maxDistance, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.ANY);
+			if (blockHit.getType() != HitResult.Type.MISS)
+			{
+				var particle = new BlockStateParticleEffect(SwgParticles.WAKE, world.getBlockState(blockHit.getBlockPos()));
+
+				var hitPos = blockHit.getPos();
+				var dist = hitPos.distanceTo(sourcePos);
+				var count = (MathHelper.clamp(15 / dist, 0, maxParticles)) / steps;
+
+				var sqrtDist = Math.sqrt(dist);
+				var lateralVelocity = Math.pow(velocityLength / (1.8f * sqrtDist), 2);
+				var verticalVelocity = Math.pow(velocityLength / (2.5f * sqrtDist), 2);
+
+				for (int i = 0; i < count; i++)
+				{
+					if (this.random.nextFloat() * 2 > velocityLength)
+						continue;
+					this.world.addParticle(particle, hitPos.x, hitPos.y, hitPos.z, lateralVelocity, verticalVelocity, lateralVelocity);
+				}
+			}
 		}
 	}
 
