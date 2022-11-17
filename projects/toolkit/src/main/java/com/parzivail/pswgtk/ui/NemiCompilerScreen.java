@@ -158,8 +158,9 @@ public class NemiCompilerScreen extends JComponentScreen
 		var rsm = RenderSystem.getModelViewStack();
 		rsm.push();
 
+		MatrixStackUtil.scalePos(rsm, 1, -1, 1);
 		viewportController.setup(rsm, tickDelta);
-		MatrixStackUtil.scalePos(rsm, 16, -16, 16);
+		MatrixStackUtil.scalePos(rsm, 16, 16, 16);
 		RenderSystem.applyModelViewMatrix();
 
 		var ms = new MatrixStack();

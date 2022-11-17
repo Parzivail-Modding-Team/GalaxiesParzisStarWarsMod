@@ -135,7 +135,7 @@ public class ToolkitHomeScreen extends JComponentScreen
 		availableTools.addTreeSelectionListener(e -> {
 			NodeTreeModel.Node<Tool> tool = getSelectedTool();
 
-			if (tool.value == null)
+			if (tool == null || tool.value == null)
 			{
 				lToolTitle.setText("");
 				tbToolDesc.setText("");

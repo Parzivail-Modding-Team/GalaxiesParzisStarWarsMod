@@ -160,7 +160,7 @@ public class PanelViewportController implements MouseMotionListener
 		var contentTopLeft = getContentTopLeft();
 		var contentCenter = transformSwingToScreen(contentTopLeft.add(getContentSize().multiply(0.5f)).add(new Vec2f(windowX, windowY)));
 
-		ms.translate(contentCenter.x, contentCenter.y, 50);
+		ms.translate(contentCenter.x, -contentCenter.y, 50);
 		var f = (float)Math.pow(10, zoomExponent.getValue() / 10);
 		ms.scale(f, f, 1);
 	}
