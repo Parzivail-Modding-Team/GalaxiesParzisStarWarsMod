@@ -56,7 +56,7 @@
 		"cloth-config2": "*",
 		"fabric-api": ">=0.59.0",
 		"fabricloader": ">=0.14.8",
-		"minecraft": "~1.19",
+		"minecraft": "1.19.2",
 		"trinkets": "*"
 	},
 	"breaks": {
