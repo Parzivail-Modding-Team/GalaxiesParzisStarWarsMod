@@ -45,8 +45,8 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			return MODEL_CACHE.get(id);
 
 		var entry = new ModelEntry(
-				id,
-				new Identifier(id.getNamespace(), "textures/" + id.getPath() + ".png")
+				new Identifier(id.getNamespace(), "item/lightsaber/" + id.getPath()),
+				new Identifier(id.getNamespace(), "textures/model/lightsaber/" + id.getPath() + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
 
@@ -109,8 +109,15 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		var modelEntry = getModel(lt.hilt);
 
 		var m = P3dManager.INSTANCE.get(modelEntry.model);
-		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
-		m.render(matrices, vc, null, null, light, 1, 1, 1, 1, 1);
+		var t = modelEntry.texture;
+		if (m == null)
+		{
+			m = P3dManager.INSTANCE.get(FALLBACK_MODEL.model);
+			t = FALLBACK_MODEL.texture;
+		}
+
+		final var renderedTexture = t;
+		m.render(matrices, vertexConsumers, lt, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(renderedTexture)), light, 0, 255, 255, 255, 255);
 
 		matrices.pop();
 
