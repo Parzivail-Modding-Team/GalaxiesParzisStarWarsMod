@@ -1,6 +1,1 @@
-{
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "pswg:item/purgetrooper_boots"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/purgetrooper_boots"}}

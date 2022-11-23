@@ -1,6 +1,1 @@
-{
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "pswg:item/purple_door_insert"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/purple_door_insert"}}

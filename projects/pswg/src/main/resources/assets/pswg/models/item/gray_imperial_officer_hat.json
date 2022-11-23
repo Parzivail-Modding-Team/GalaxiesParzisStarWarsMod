@@ -1,6 +1,1 @@
-{
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "pswg:item/gray_imperial_officer_hat"
-	}
-}
+{"parent":"minecraft:item/generated","textures":{"layer0":"pswg:item/gray_imperial_officer_hat"}}
