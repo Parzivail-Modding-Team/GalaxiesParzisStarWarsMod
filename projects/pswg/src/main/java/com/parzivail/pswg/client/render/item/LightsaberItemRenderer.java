@@ -1,12 +1,10 @@
 package com.parzivail.pswg.client.render.item;
 
-import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
-import com.parzivail.pswg.client.render.pm3d.PM3DFile;
+import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
-import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.math.MatrixStackUtil;
@@ -24,7 +22,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 
 import java.util.HashMap;
-import java.util.function.Supplier;
 
 public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 {
@@ -35,7 +32,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 	static
 	{
-		FALLBACK_MODEL = new ModelEntry(Suppliers.memoize(() -> PM3DFile.tryLoad(Resources.id("models/item/lightsaber/luke_rotj.pm3d"), false)), Resources.id("textures/model/lightsaber/luke_rotj.png"));
+		FALLBACK_MODEL = new ModelEntry(Resources.id("item/lightsaber/luke_rotj"), Resources.id("textures/item/lightsaber/luke_rotj.png"));
 	}
 
 	private LightsaberItemRenderer()
@@ -47,17 +44,9 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		if (MODEL_CACHE.containsKey(id))
 			return MODEL_CACHE.get(id);
 
-		var file = PM3DFile.loadOrNull(new Identifier(id.getNamespace(), "models/item/lightsaber/" + id.getPath() + ".pm3d"), false);
-
-		if (file == null)
-		{
-			MODEL_CACHE.put(id, FALLBACK_MODEL);
-			return FALLBACK_MODEL;
-		}
-
 		var entry = new ModelEntry(
-				Suppliers.memoize(() -> file),
-				new Identifier(id.getNamespace(), "textures/model/lightsaber/" + id.getPath() + ".png")
+				id,
+				new Identifier(id.getNamespace(), "textures/" + id.getPath() + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
 
@@ -119,10 +108,9 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		var modelEntry = getModel(lt.hilt);
 
-		var m = modelEntry.pm3dModel.get().getLevelOfDetail(0);
+		var m = P3dManager.INSTANCE.get(modelEntry.model);
 		var vc = vertexConsumers.getBuffer(RenderLayer.getEntityTranslucent(modelEntry.texture));
-		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		m.render(VertexConsumerBuffer.Instance);
+		m.render(matrices, vc, null, null, light, 1, 1, 1, 1, 1);
 
 		matrices.pop();
 
@@ -162,7 +150,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		}
 	}
 
-	private record ModelEntry(Supplier<PM3DFile> pm3dModel,
+	private record ModelEntry(Identifier model,
 	                          Identifier texture)
 	{
 	}
