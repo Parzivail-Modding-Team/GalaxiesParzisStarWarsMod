@@ -4,6 +4,7 @@ import com.parzivail.pswg.api.PswgAddon;
 import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.item.blaster.data.*;
+import com.parzivail.pswg.item.lightsaber.data.LightsaberBladeType;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 
 import java.util.List;
@@ -296,13 +297,14 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 	private static void registerLightsabers()
 	{
 		PswgContent.registerLightsaberPreset(
-				new LightsaberDescriptor(Resources.id("anakin"), "Anakin Skywalker", Resources.id("anakin"), 0.62f, 1, 1),
-				new LightsaberDescriptor(Resources.id("ezra_padawan"), "Ezra Bridger", Resources.id("ezra_padawan"), 0.33f, 1, 1),
-				new LightsaberDescriptor(Resources.id("kenobi"), "Obi-Wan Kenobi", Resources.id("kenobi"), 0.62f, 1, 1),
-				new LightsaberDescriptor(Resources.id("kenobi_padawan"), "Padawan Obi-Wan Kenobi", Resources.id("kenobi_padawan"), 0.62f, 1, 1),
-				new LightsaberDescriptor(Resources.id("luke_rotj"), "Luke Skywalker", Resources.id("luke_rotj"), 0.33f, 1, 1),
-				new LightsaberDescriptor(Resources.id("qui_gon"), "Qui-Gon Jinn", Resources.id("qui_gon"), 0.33f, 1, 1),
-				new LightsaberDescriptor(Resources.id("vader"), "Darth Vader", Resources.id("vader"), 0, 1, 1)
+				new LightsaberDescriptor(Resources.id("anakin"), "Anakin Skywalker", 0.62f, 1, 1, LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("ezra_padawan"), "Ezra Bridger", 0.33f, 1, 1, LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("kenobi"), "Obi-Wan Kenobi", 0.62f, 1, 1, LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("kenobi_padawan"), "Padawan Obi-Wan Kenobi", 0.62f, 1, 1, LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("luke_rotj"), "Luke Skywalker", 0.33f, 1, 1, LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("qui_gon"), "Qui-Gon Jinn", 0.33f, 1, 1, LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("darksaber"), null, 0.33f, 1, 1, LightsaberBladeType.DARKSABER),
+				new LightsaberDescriptor(Resources.id("vader"), "Darth Vader", 0, 1, 1, LightsaberBladeType.DEFAULT)
 		);
 	}
 

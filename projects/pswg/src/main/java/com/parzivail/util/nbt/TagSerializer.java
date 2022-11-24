@@ -22,10 +22,25 @@ public class TagSerializer extends ReflectionSerializer<NbtCompound>
 		register(double.class, NbtCompound::getDouble, NbtCompound::putDouble);
 		register(boolean.class, NbtCompound::getBoolean, NbtCompound::putBoolean);
 		register(char.class, (nbt, field) -> nbt.getString(field).charAt(0), (nbt, field, a) -> nbt.putString(field, String.valueOf(a)));
-		register(String.class, NbtCompound::getString, NbtCompound::putString);
+		register(String.class, TagSerializer::getString, TagSerializer::putString);
 		register(Identifier.class, (nbt, field) -> new Identifier(nbt.getString(field)), (nbt, field, a) -> nbt.putString(field, a.toString()));
 		register(NbtCompound.class, NbtCompound::getCompound, NbtCompound::put);
 		register(ItemStack.class, (nbt, field) -> ItemStack.fromNbt(nbt.getCompound(field)), (nbt, field, a) -> nbt.put(field, a.writeNbt(new NbtCompound())));
+	}
+
+	private static void putString(NbtCompound nbtCompound, String key, String value)
+	{
+		if (value == null)
+			nbtCompound.remove(key);
+		else
+			nbtCompound.putString(key, value);
+	}
+
+	private static String getString(NbtCompound nbtCompound, String key)
+	{
+		if (!nbtCompound.contains(key))
+			return null;
+		return nbtCompound.getString(key);
 	}
 
 	private final String slug;

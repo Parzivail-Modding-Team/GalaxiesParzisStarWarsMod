@@ -153,7 +153,14 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	public Text getName(ItemStack stack)
 	{
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
-		return Text.translatable(this.getTranslationKey(stack), lt.owner);
+		return Text.translatable(this.getTranslationKey(lt, stack), lt.owner);
+	}
+
+	public String getTranslationKey(LightsaberTag tag, ItemStack stack)
+	{
+		if (tag.owner == null)
+			return super.getTranslationKey(stack) + "." + tag.hilt.getPath();
+		return super.getTranslationKey(stack);
 	}
 
 	@Override
@@ -187,7 +194,7 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 
 		LightsaberTag.mutate(stack, lightsaberTag -> {
 			lightsaberTag.owner = descriptor.ownerName();
-			lightsaberTag.hilt = descriptor.hiltModel();
+			lightsaberTag.hilt = descriptor.id();
 			lightsaberTag.bladeHue = descriptor.bladeHue();
 			lightsaberTag.bladeSaturation = descriptor.bladeSaturation();
 			lightsaberTag.bladeValue = descriptor.bladeValue();

@@ -113,6 +113,9 @@ public class PswgTarkin
 		lang.tooltip("lightsaber").dot("info").build(assets);
 		lang.tooltip("lightsaber").dot("controls").build(assets);
 
+		// Item
+		lang.item("lightsaber").dot("darksaber").build(assets);
+
 		// Lore
 		lang.lore(SwgItems.Food.Kreetlejuice).build(assets);
 		lang.status(SwgItems.Cable.Power).build(assets);

@@ -22,6 +22,7 @@ public class RenderShapes
 	private static final int[] _clockwiseVertIndices = new int[] {3, 2, 1, 0};
 
 	private static boolean _renderClockwise = false;
+	private static int _skipFace = -1;
 
 	static
 	{
@@ -62,6 +63,11 @@ public class RenderShapes
 		box(vcb, thicknessTop, thicknessBottom, topX, topY, topZ, bottomX, bottomY, bottomZ);
 	}
 
+	public static void skipFace(int skipFace)
+	{
+		_skipFace = skipFace;
+	}
+
 	private static void box(VertexConsumerBuffer vcb, float thicknessTop, float thicknessBottom, float topX, float topY, float topZ, float bottomX, float bottomY, float bottomZ)
 	{
 		_vertsBoxSkew[0][0] = _vertsBoxSkew[1][0] = -thicknessBottom + bottomX;
@@ -92,6 +98,8 @@ public class RenderShapes
 
 		for (var i = 0; i < 6; i++)
 		{
+			if (i == _skipFace)
+				continue;
 			vcb.vertex(verts[_facesBox[i][indices[0]]][0], verts[_facesBox[i][indices[0]]][1], verts[_facesBox[i][indices[0]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 0);
 			vcb.vertex(verts[_facesBox[i][indices[1]]][0], verts[_facesBox[i][indices[1]]][1], verts[_facesBox[i][indices[1]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 0);
 			vcb.vertex(verts[_facesBox[i][indices[2]]][0], verts[_facesBox[i][indices[2]]][1], verts[_facesBox[i][indices[2]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 1);

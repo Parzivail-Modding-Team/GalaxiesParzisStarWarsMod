@@ -30,6 +30,33 @@ public class PswgContent
 		return lightsaberPresets;
 	}
 
+	public static LightsaberDescriptor getLightsaberPreset(Identifier key)
+	{
+		return lightsaberPresets.get(key);
+	}
+
+	public static LightsaberDescriptor assertLightsaberPreset(Identifier key)
+	{
+		var data = getLightsaberPreset(key);
+		if (data != null)
+			return data;
+
+		var keyName = key == null ? "[null]" : '"' + key.toString() + '"';
+		var j = CrashReport.create(new NullPointerException("Cannot get lightsaber descriptor for unknown key " + keyName), "Getting lightsaber descriptor");
+
+		var k = j.addElement("Lightsaber Manager Data");
+		k.add("Defined keys", PswgContent::getLightsaberDataString);
+
+		throw new CrashException(j);
+	}
+
+	private static String getLightsaberDataString()
+	{
+		if (lightsaberPresets == null)
+			return "null";
+		return lightsaberPresets.keySet().stream().map(Identifier::toString).collect(Collectors.joining(", "));
+	}
+
 	public static void registerBlasterPreset(BlasterDescriptor... descriptors)
 	{
 		checkBaked();

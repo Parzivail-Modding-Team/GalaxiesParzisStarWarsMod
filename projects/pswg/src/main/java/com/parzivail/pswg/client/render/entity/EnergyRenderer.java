@@ -18,6 +18,23 @@ public class EnergyRenderer
 	public static final RenderLayer LAYER_ENERGY = RenderLayer.of("pswg:energy", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of("pswg:energy_add", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_LIGHTNING_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 
+	public static void renderDarksaber(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient)
+	{
+		VertexConsumer vc;
+
+		var totalLength = baseLength * lengthCoefficient;
+		var shake = (1.1f - lengthCoefficient) * 0.004f;
+
+		double dX = (float)Resources.RANDOM.nextGaussian() * shake;
+		double dY = (float)Resources.RANDOM.nextGaussian() * shake;
+		matrices.translate(dX, 0, dY);
+
+		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
+
+		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+		renderDarksaberGlow(totalLength);
+	}
+
 	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue, float glowSat, float glowVal)
 	{
 		VertexConsumer vc;
@@ -193,6 +210,76 @@ public class EnergyRenderer
 
 					RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
 				}
+			}
+		}
+	}
+
+	public static void renderDarksaberGlow(float bladeLength)
+	{
+		if (bladeLength == 0)
+			return;
+
+		var thicknessBottom = 0.02f;
+		var thicknessTop = 0.018f;
+
+		var mL = 0;
+		var xL = 14;
+
+		var deltaThickness = 0.0028f;
+
+		var minOutputLayer = mL * thicknessBottom / deltaThickness;
+
+		for (var layer = mL; layer <= xL; layer++)
+		{
+			var x = MathUtil.remap(layer, mL, xL, minOutputLayer, 70);
+			var alpha = getAlpha(x);
+			if (alpha < 16 / 255f)
+				continue;
+
+			var layerThickness = deltaThickness * layer;
+
+			if (layer > 0)
+			{
+				VertexConsumerBuffer.Instance.setColor(0xFFFFFF, (int)(255 * alpha));
+
+				// glow layers
+				RenderShapes.invertCull(true);
+				RenderShapes.skipFace(1);
+				RenderShapes.drawSolidBoxSkewTaper(
+						VertexConsumerBuffer.Instance,
+						thicknessTop + layerThickness,
+						thicknessBottom + layerThickness,
+						0, bladeLength * 0.6f + layerThickness, 0,
+						0, -layerThickness, 0
+				);
+				RenderShapes.skipFace(3);
+				RenderShapes.drawSolidBoxSkewTaper(
+						VertexConsumerBuffer.Instance,
+						thicknessTop / 4f + layerThickness,
+						thicknessTop + layerThickness,
+						0, bladeLength + layerThickness, thicknessTop * 0.75f,
+						0, bladeLength * 0.6f + layerThickness, 0
+				);
+				RenderShapes.skipFace(-1);
+				RenderShapes.invertCull(false);
+			}
+			else
+			{
+				VertexConsumerBuffer.Instance.setColor(0x101010, (int)(255 * getAlpha(x)));
+				RenderShapes.drawSolidBoxSkewTaper(
+						VertexConsumerBuffer.Instance,
+						thicknessTop,
+						thicknessBottom,
+						0, bladeLength * 0.6f, 0,
+						0, 0, 0
+				);
+				RenderShapes.drawSolidBoxSkewTaper(
+						VertexConsumerBuffer.Instance,
+						thicknessTop / 4f,
+						thicknessTop,
+						0, bladeLength, thicknessTop * 0.75f,
+						0, bladeLength * 0.6f, 0
+				);
 			}
 		}
 	}

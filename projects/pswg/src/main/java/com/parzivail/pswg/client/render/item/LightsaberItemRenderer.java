@@ -2,8 +2,10 @@ package com.parzivail.pswg.client.render.item;
 
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
+import com.parzivail.pswg.item.lightsaber.data.LightsaberBladeType;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
@@ -123,9 +125,15 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		if (renderMode != ModelTransformation.Mode.GUI)
 		{
-//			matrices.translate(-0.015f, 0, -0.015f);
+			//			matrices.translate(-0.015f, 0, -0.015f);
 
-			EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
+			var ld = PswgContent.getLightsaberPreset(lt.hilt);
+			var bladeType = ld == null ? LightsaberBladeType.DEFAULT : ld.bladeType();
+
+			if (bladeType == LightsaberBladeType.DARKSABER)
+				EnergyRenderer.renderDarksaber(renderMode, matrices, vertexConsumers, light, overlay, 1.2f, lengthCoefficient);
+			else
+				EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
 		}
 	}
 
