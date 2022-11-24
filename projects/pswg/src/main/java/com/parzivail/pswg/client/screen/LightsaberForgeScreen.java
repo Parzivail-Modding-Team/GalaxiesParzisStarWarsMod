@@ -200,12 +200,10 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	@Override
 	public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack)
 	{
-		switch (slotId)
+		if (slotId == 0)
 		{
-			case 0 -> {
-				lightsaber = stack.copy();
-				onLightsaberChanged();
-			}
+			lightsaber = stack.copy();
+			onLightsaberChanged();
 		}
 	}
 
@@ -261,7 +259,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			DiffuseLighting.disableGuiDepthLighting();
 			DiffuseLighting.enableForLevel(matrices.peek().getPositionMatrix());
 
-			LightsaberItemRenderer.INSTANCE.renderDirect(lightsaber, ModelTransformation.Mode.NONE, matrices, immediate, 0xFFFFFF, OverlayTexture.DEFAULT_UV, true);
+			LightsaberItemRenderer.INSTANCE.renderDirect(lightsaber, ModelTransformation.Mode.NONE, matrices, immediate, 0xFFFFFF, OverlayTexture.DEFAULT_UV, true, true);
 			immediate.draw();
 
 			DiffuseLighting.enableGuiDepthLighting();

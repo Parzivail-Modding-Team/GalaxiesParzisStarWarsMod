@@ -302,7 +302,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					muzzleFlashSocket = possibleSocket;
 			}
 
-			var muzzleFlashTransform = m.transformables().getOrDefault(muzzleFlashSocket, null);
+			var muzzleFlashTransform = m.transformables().get(muzzleFlashSocket);
 
 			if (muzzleFlashTransform != null)
 			{

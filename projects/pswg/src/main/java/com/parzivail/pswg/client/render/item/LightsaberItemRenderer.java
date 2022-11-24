@@ -9,8 +9,8 @@ import com.parzivail.pswg.item.lightsaber.data.LightsaberBladeType;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.MatrixStackUtil;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.HashMap;
 
@@ -65,40 +66,34 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		switch (renderMode)
 		{
 			case NONE:
-				break;
 			case GROUND:
-				matrices.translate(0, 0.25f, 0);
+			case HEAD:
+			case FIRST_PERSON_LEFT_HAND:
+			case FIRST_PERSON_RIGHT_HAND:
+				break;
+			case THIRD_PERSON_LEFT_HAND:
+			case THIRD_PERSON_RIGHT_HAND:
+				matrices.translate(0, 0, 0.08f);
 				break;
 			case FIXED:
 				matrices.multiply(new Quaternion(0, 0, 45, true));
 				matrices.multiply(new Quaternion(0, 135, 0, true));
-				matrices.translate(0, 0.5f, 0);
 				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
 				break;
 			case GUI:
 				matrices.multiply(new Quaternion(0, 0, -45, true));
 				matrices.multiply(new Quaternion(0, -45, 0, true));
-				matrices.translate(0, 0.5f, 0);
 				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
-				break;
-			case FIRST_PERSON_LEFT_HAND:
-			case FIRST_PERSON_RIGHT_HAND:
-				matrices.translate(0, 0.25f, 0);
-				break;
-			default:
-				matrices.translate(0, 0.15f, 0.08f);
 				break;
 		}
 
-		renderDirect(stack, renderMode, matrices, vertexConsumers, light, overlay, false);
+		renderDirect(stack, renderMode, matrices, vertexConsumers, light, overlay, false, true);
 
 		matrices.pop();
 	}
 
-	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade)
+	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade, boolean useHandPos)
 	{
-		var minecraft = MinecraftClient.getInstance();
-
 		matrices.push();
 		MatrixStackUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
 
@@ -116,6 +111,13 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		{
 			m = P3dManager.INSTANCE.get(FALLBACK_MODEL.model);
 			t = FALLBACK_MODEL.texture;
+		}
+
+		var handPos = m.transformables().get("main_hand");
+		if (useHandPos && handPos != null)
+		{
+			var translate = Matrix4fUtil.transform(new Vec3d(0, 0, 0), handPos.transform);
+			matrices.translate(-translate.x, -translate.y, -translate.z);
 		}
 
 		final var renderedTexture = t;
