@@ -6,6 +6,7 @@ import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberBladeType;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
+import net.fabricmc.loader.api.FabricLoader;
 
 import java.util.List;
 
@@ -307,6 +308,11 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 				new LightsaberDescriptor(Resources.id("darksaber"), null, 0.33f, 1, 1, LightsaberBladeType.DARKSABER),
 				new LightsaberDescriptor(Resources.id("vader"), "Darth Vader", 0, 1, 1, LightsaberBladeType.DEFAULT)
 		);
+
+		if (FabricLoader.getInstance().isDevelopmentEnvironment())
+			PswgContent.registerLightsaberPreset(
+					new LightsaberDescriptor(Resources.id("rig_test"), "parzi", 0.62f, 1, 1, LightsaberBladeType.DEFAULT)
+			);
 	}
 
 	@Override
