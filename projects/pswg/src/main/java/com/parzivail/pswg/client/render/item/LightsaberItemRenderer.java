@@ -113,30 +113,72 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			t = FALLBACK_MODEL.texture;
 		}
 
-		var handPos = m.transformables().get("main_hand");
-		if (useHandPos && handPos != null)
+		matrices.push();
+		var handSocket = m.transformables().get("main_hand");
+		var handPos = new Vec3d(0, 0, 0);
+		if (useHandPos)
 		{
-			var translate = Matrix4fUtil.transform(new Vec3d(0, 0, 0), handPos.transform);
-			matrices.translate(-translate.x, -translate.y, -translate.z);
+			if (handSocket != null)
+				handPos = Matrix4fUtil.transform(handPos, handSocket.transform);
+			else
+				handPos = new Vec3d(0, -0.85f, 0);
 		}
+
+		matrices.translate(-handPos.x, -handPos.y, -handPos.z);
 
 		final var renderedTexture = t;
 		m.render(matrices, vertexConsumers, lt, null, (v, tag, obj) -> v.getBuffer(RenderLayer.getEntityCutout(renderedTexture)), light, 0, 255, 255, 255, 255);
+		matrices.pop();
 
 		matrices.pop();
 
 		if (renderMode != ModelTransformation.Mode.GUI)
 		{
-			//			matrices.translate(-0.015f, 0, -0.015f);
-
 			var ld = PswgContent.getLightsaberPreset(lt.hilt);
 			var bladeType = ld == null ? LightsaberBladeType.DEFAULT : ld.bladeType();
 
-			if (bladeType == LightsaberBladeType.DARKSABER)
-				EnergyRenderer.renderDarksaber(renderMode, matrices, vertexConsumers, light, overlay, 1.2f, lengthCoefficient);
-			else
-				EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, baseLength, lengthCoefficient, true, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
+			var socketedBlades = 0;
+			for (var o : m.transformables().values())
+			{
+				if (!o.name.startsWith("blade_"))
+					continue;
+
+				socketedBlades++;
+
+				matrices.push();
+
+				matrices.scale(0.2f, 0.2f, 0.2f);
+				matrices.translate(-handPos.x, -handPos.y, -handPos.z);
+				matrices.multiplyPositionMatrix(o.transform);
+				// TODO: Can this -Z scale be moved into client code instead of compiled?
+				// https://github.com/Parzivail-Modding-Team/P3diTools/blob/master/P3diTools/Program.cs#L439
+				matrices.scale(5, 5, -5);
+
+				var length = baseLength;
+				if (o.name.startsWith("blade_cross"))
+					length = 0.3f;
+
+				renderBlade(renderMode, matrices, vertexConsumers, light, overlay, lt, unstable, lengthCoefficient, bladeType, length);
+
+				matrices.pop();
+			}
+
+			if (socketedBlades == 0)
+			{
+				matrices.scale(0.2f, 0.2f, 0.2f);
+				matrices.translate(-handPos.x, -handPos.y, -handPos.z);
+				matrices.scale(5, 5, 5);
+				renderBlade(renderMode, matrices, vertexConsumers, light, overlay, lt, unstable, lengthCoefficient, bladeType, baseLength);
+			}
 		}
+	}
+
+	private static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, LightsaberTag lt, boolean unstable, float lengthCoefficient, LightsaberBladeType bladeType, float length)
+	{
+		if (bladeType == LightsaberBladeType.DARKSABER)
+			EnergyRenderer.renderDarksaber(renderMode, matrices, vertexConsumers, light, overlay, 1.2f, lengthCoefficient);
+		else
+			EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, length, lengthCoefficient, true, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
 	}
 
 	@Override
