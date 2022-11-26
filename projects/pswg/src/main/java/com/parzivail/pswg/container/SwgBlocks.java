@@ -27,8 +27,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
-import java.util.Random;
-
 public class SwgBlocks
 {
 	@RegistryOrder(0)
@@ -706,15 +704,7 @@ public class SwgBlocks
 	{
 		@RegistryName("desh_barrel")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		public static final Block Desh = new DisplacingBlock((state, world, pos, context) -> {
-			var r = new Random(state.getRenderingSeed(pos));
-
-			float s = 4;
-			var dx = r.nextFloat() * s;
-			var dz = r.nextFloat() * s;
-
-			return VoxelShapeUtil.getCenteredCube(9.2f, 15.6f, dx, dz);
-		}, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(2.5F).requiresTool());
+		public static final Block Desh = new DeshBarrelBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(2.5F).requiresTool());
 	}
 
 	@RegistryOrder(20)
