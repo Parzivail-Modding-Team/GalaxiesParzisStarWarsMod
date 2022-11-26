@@ -192,7 +192,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 			if (discriminator == null)
 				return transformation.hashCode() * 31;
 
-			return (transformation.hashCode() * 31) + discriminator.hashCode();
+			return discriminator.hashCode();
 		}
 
 		@Override
@@ -203,7 +203,10 @@ public abstract class DynamicBakedModel extends AbstractModel
 			if (!(o instanceof ModelCacheId cacheId))
 				return false;
 
-			return Objects.equals(discriminator, cacheId.discriminator) && Objects.equals(transformation, cacheId.transformation);
+			if (this.discriminator == null && cacheId.discriminator == null)
+				return Objects.equals(transformation, cacheId.transformation);
+
+			return Objects.equals(discriminator, cacheId.discriminator);
 		}
 	}
 }

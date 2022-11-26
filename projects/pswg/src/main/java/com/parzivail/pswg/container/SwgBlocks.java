@@ -25,8 +25,9 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.registry.Registry;
+
+import java.util.Random;
 
 public class SwgBlocks
 {
@@ -706,8 +707,7 @@ public class SwgBlocks
 		@RegistryName("desh_barrel")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final Block Desh = new DisplacingBlock((state, world, pos, context) -> {
-			var r = Resources.RANDOM;
-			r.setSeed(MathHelper.hashCode(pos));
+			var r = new Random(state.getRenderingSeed(pos));
 
 			float s = 4;
 			var dx = r.nextFloat() * s;

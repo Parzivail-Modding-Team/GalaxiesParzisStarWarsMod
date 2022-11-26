@@ -39,7 +39,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 {
 	private final CacheMethod cacheMethod;
 	private final Sprite baseSprite;
-	private HashMap<String, Sprite> additionalSprites;
+	private final HashMap<String, Sprite> additionalSprites;
 	private final Identifier[] modelIds;
 
 	private P3DBakedBlockModel(CacheMethod cacheMethod, Sprite baseSprite, Sprite particleSprite, HashMap<String, Sprite> additionalSprites, Identifier[] modelIds)
@@ -80,11 +80,11 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 			//				return meshBuilder.build();
 			//			}
 
-			if (state.getBlock() instanceof DisplacingBlock)
+			if (state.getBlock() instanceof DisplacingBlock db)
 			{
-				var shape = state.getOutlineShape(blockView, pos, ShapeContext.absent());
+				var shape = db.getOutlineShape(state, blockView, pos, ShapeContext.absent());
 				var center = VoxelShapeUtil.getCenter(shape);
-				transformation.multiply(Matrix4f.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f));
+				transformation.multiplyByTranslation((float)center.x - 0.5f, 0, (float)center.z - 0.5f);
 			}
 			else if (state.getBlock() instanceof WaterloggableRotating3BlockWithGuiEntity)
 			{
