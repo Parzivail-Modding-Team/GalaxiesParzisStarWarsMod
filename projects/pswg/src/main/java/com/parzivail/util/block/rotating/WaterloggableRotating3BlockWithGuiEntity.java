@@ -64,6 +64,7 @@ public class WaterloggableRotating3BlockWithGuiEntity extends WaterloggableRotat
 		return pos;
 	}
 
+	@Override
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos)
 	{
 		if (!neighborState.isOf(this))
@@ -85,6 +86,7 @@ public class WaterloggableRotating3BlockWithGuiEntity extends WaterloggableRotat
 		return state;
 	}
 
+	@Override
 	public void onPlaced(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack itemStack)
 	{
 		var rotation = state.get(FACING);
@@ -120,6 +122,7 @@ public class WaterloggableRotating3BlockWithGuiEntity extends WaterloggableRotat
 		ParziUtil.LOG.error("Invalid rotation for 3-block: %s @ %s", rotation, pos);
 	}
 
+	@Override
 	public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos)
 	{
 		var peripheral = getPeripheralPos(pos, state);

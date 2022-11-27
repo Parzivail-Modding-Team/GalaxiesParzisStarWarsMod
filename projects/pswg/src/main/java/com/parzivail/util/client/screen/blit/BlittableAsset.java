@@ -5,11 +5,13 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public record BlittableAsset(int u, int v, int width, int height, int sourceWidth, int sourceHeight) implements IBlittable
 {
+	@Override
 	public void blit(MatrixStack matrices, int destX, int destY)
 	{
 		blit(matrices, destX, destY, width, height);
 	}
 
+	@Override
 	public void blit(MatrixStack matrices, int destX, int destY, int destWidth, int destHeight)
 	{
 		DrawableHelper.drawTexture(matrices, destX, destY, destWidth, destHeight, u, v, width, height, sourceWidth, sourceHeight);

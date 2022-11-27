@@ -30,6 +30,7 @@ public class SwgParticles
 	{
 		var particleType = Registry.register(Registry.PARTICLE_TYPE, name, new ParticleType<BlockStateParticleEffect>(alwaysShow, BlockStateParticleEffect.PARAMETERS_FACTORY)
 		{
+			@Override
 			public Codec<BlockStateParticleEffect> getCodec()
 			{
 				return BlockStateParticleEffect.createCodec(this);

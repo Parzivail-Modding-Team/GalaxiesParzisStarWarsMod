@@ -29,6 +29,7 @@ public class WorkerUtil
 			executorService = new ForkJoinPool(numThreads, (forkJoinPool) -> {
 				ForkJoinWorkerThread forkJoinWorkerThread = new ForkJoinWorkerThread(forkJoinPool)
 				{
+					@Override
 					protected void onTermination(Throwable throwable)
 					{
 						if (throwable != null)

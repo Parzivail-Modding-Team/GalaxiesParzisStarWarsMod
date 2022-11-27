@@ -58,7 +58,7 @@ public class SpeederEntity extends ShipEntity
 
 		var rotation = new Quaternion(getRotation());
 
-		var v = QuatUtil.project(com.parzivail.util.math.MathUtil.POSY, rotation);
+		var v = QuatUtil.project(MathUtil.POSY, rotation);
 		rotation.hamiltonProduct(new Quaternion(new Vec3f(v), yawVelocity, true));
 
 		setRotation(rotation);

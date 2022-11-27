@@ -30,11 +30,13 @@ public class WaterWakeParticle extends SpriteBillboardParticle
 		this.velocityZ = (Math.random() * 2.0 - 1.0) * velocityZ;
 	}
 
+	@Override
 	public ParticleTextureSheet getType()
 	{
 		return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
 	}
 
+	@Override
 	public void tick()
 	{
 		this.scale = this.maxScale * (float)Math.min(Math.pow(20f * this.age / this.maxAge, 4), 1);
@@ -73,6 +75,7 @@ public class WaterWakeParticle extends SpriteBillboardParticle
 			this.spriteProvider = spriteProvider;
 		}
 
+		@Override
 		public Particle createParticle(PParticleType defaultParticleType, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
 		{
 			return new WaterWakeParticle(clientWorld, d, e, f, g, h, i, this.spriteProvider);

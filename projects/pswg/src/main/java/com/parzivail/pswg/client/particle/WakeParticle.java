@@ -14,6 +14,7 @@ public class WakeParticle extends BlockDustParticle
 	@Environment(EnvType.CLIENT)
 	public static class Factory implements ParticleFactory<BlockStateParticleEffect>
 	{
+		@Override
 		public Particle createParticle(BlockStateParticleEffect blockStateParticleEffect, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i)
 		{
 			BlockState blockState = blockStateParticleEffect.getBlockState();

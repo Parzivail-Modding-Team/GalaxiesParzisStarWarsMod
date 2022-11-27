@@ -28,18 +28,22 @@ public final class CachingLayerContext implements LayerSampleContext<CachingLaye
         return seed;
     }
 
+    @Override
     public CachingLayerSampler createSampler(LayerOperator layerOperator) {
         return new CachingLayerSampler(this.cacheCapacity, layerOperator);
     }
 
+    @Override
     public CachingLayerSampler createSampler(LayerOperator layerOperator, CachingLayerSampler cachingLayerSampler) {
         return new CachingLayerSampler(Math.min(1024, cachingLayerSampler.getCapacity() * 4), layerOperator);
     }
 
+    @Override
     public CachingLayerSampler createSampler(LayerOperator layerOperator, CachingLayerSampler cachingLayerSampler, CachingLayerSampler cachingLayerSampler2) {
         return new CachingLayerSampler(Math.min(1024, Math.max(cachingLayerSampler.getCapacity(), cachingLayerSampler2.getCapacity()) * 4), layerOperator);
     }
 
+    @Override
     public void initSeed(long x, long y) {
         long l = this.worldSeed;
         l = mixSeed(l, x);
@@ -49,6 +53,7 @@ public final class CachingLayerContext implements LayerSampleContext<CachingLaye
         this.localSeed = l;
     }
 
+    @Override
     public int nextInt(int bound) {
         int i = (int) Math.floorMod(this.localSeed >> 24, (long) bound);
         this.localSeed = mixSeed(this.localSeed, this.worldSeed);

@@ -16,6 +16,7 @@ public enum ScaleLayer implements ParentedLayer
         return y >> 1;
     }
 
+    @Override
     public int sample(LayerSampleContext<?> context, LayerSampler parent, int x, int z) {
         int tl = parent.sample(this.transformX(x), this.transformZ(z));
 

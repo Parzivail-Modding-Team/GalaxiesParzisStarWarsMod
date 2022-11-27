@@ -16,6 +16,7 @@ public final class CachingLayerSampler implements LayerSampler {
         this.cacheCapacity = cacheCapacity;
     }
 
+    @Override
     public int sample(int x, int z) {
         return this.cache.get(x, z);
     }

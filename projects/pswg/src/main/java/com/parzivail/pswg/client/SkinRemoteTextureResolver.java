@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier;
 
 public class SkinRemoteTextureResolver implements RemoteTextureResolver
 {
+	@Override
 	public RemoteTextureUrl getTexture(Identifier id)
 	{
 		var remotePath = id.getPath();

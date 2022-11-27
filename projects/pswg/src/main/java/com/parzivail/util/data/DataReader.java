@@ -5,6 +5,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.registry.Registry;
@@ -101,7 +102,7 @@ public class DataReader
 		return blockState;
 	}
 
-	private static <T extends Comparable<T>> BlockState withProperty(BlockState state, net.minecraft.state.property.Property<T> property, String key, NbtCompound propertiesTag, String context)
+	private static <T extends Comparable<T>> BlockState withProperty(BlockState state, Property<T> property, String key, NbtCompound propertiesTag, String context)
 	{
 		var optional = property.parse(propertiesTag.getString(key));
 		if (optional.isPresent())

@@ -9,6 +9,7 @@ classes/
 
 /.idea/*
 !/.idea/codeStyles
+!/.idea/inspectionProfiles
 !/.idea/uiDesigner.xml
 *.iml
 *.ipr
