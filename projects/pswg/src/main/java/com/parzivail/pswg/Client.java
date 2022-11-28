@@ -29,6 +29,7 @@ import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
 import com.parzivail.pswg.client.render.p3d.P3DBlockRendererRegistry;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
+import com.parzivail.pswg.client.render.sky.SpaceSkyRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.client.zoom.ZoomHandler;
@@ -37,6 +38,7 @@ import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
+import com.parzivail.pswg.mixin.DimensionEffectsAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.pswg.util.BlasterUtil;
@@ -254,6 +256,8 @@ public class Client implements ClientModInitializer
 		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, Block.class, Client::registerBlockData);
 		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, DyedBlocks.class, Client::registerDyedBlockData);
 		RegistryHelper.register(SwgBlocks.class, ClientBlockRegistryData.class, NumberedBlocks.class, Client::registerNumberedBlockData);
+
+		DimensionEffectsAccessor.get_BY_IDENTIFIER().put(SwgDimensions.TATOOINE.getValue(), new SpaceSkyRenderer.Effect());
 
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NemManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(P3dManager.INSTANCE);

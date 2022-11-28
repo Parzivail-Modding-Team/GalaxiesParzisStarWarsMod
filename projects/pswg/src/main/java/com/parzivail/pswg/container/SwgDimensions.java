@@ -14,7 +14,6 @@ import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.dimension.DimensionType;
-import net.minecraft.world.dimension.DimensionTypes;
 
 import java.util.OptionalLong;
 import java.util.function.Consumer;
@@ -53,7 +52,7 @@ public class SwgDimensions
 						/*height = */ 384,
 						/*logicalHeight = */ 384,
 						/*infiniburn = */ BlockTags.INFINIBURN_OVERWORLD,
-						/*effectsLocation = */ DimensionTypes.OVERWORLD_ID,
+						/*effectsLocation = */ TATOOINE.getValue(),
 						/*ambientLight = */ 0.0F,
 						/*monsterSettings = */ new DimensionType.MonsterSettings(false, true, UniformIntProvider.create(0, 7), 0)
 				)
