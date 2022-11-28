@@ -4,6 +4,8 @@ on:
   push:
     paths-ignore:
       - resources/**
+    branches-ignore:
+      - l10n
 
 jobs:
   build:
