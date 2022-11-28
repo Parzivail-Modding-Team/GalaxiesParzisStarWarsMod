@@ -138,15 +138,6 @@ public class Galaxies implements ModInitializer
 
 				                                                                          return 1;
 			                                                                          }))));
-
-			dispatcher.register(CommandManager.literal("pswg_clear_species")
-			                                  .executes(context -> {
-				                                  SwgEntityComponents
-						                                  .getPersistent(context.getSource().getPlayerOrThrow())
-						                                  .setSpecies(null);
-
-				                                  return 1;
-			                                  }));
 		});
 
 		ServerLifecycleEvents.SYNC_DATA_PACK_CONTENTS.register((player, joined) -> ServerPlayNetworking.send(player, SwgPackets.S2C.SyncSpecies, SwgSpeciesManager.INSTANCE.createPacket()));

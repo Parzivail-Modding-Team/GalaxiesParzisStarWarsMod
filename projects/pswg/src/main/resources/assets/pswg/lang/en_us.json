@@ -713,6 +713,7 @@
 	"screen.pswg.character": "Create a Character",
 	"screen.pswg.character.choose_option": "Choose one of the categories on the left to fine-tune your style!",
 	"screen.pswg.character.choose_species": "Pick a species on the left to begin customizing your character!",
+	"screen.pswg.character.clear_species": "Remove customization",
 	"screen.pswg.character.next_page": "Customize further",
 	"screen.pswg.character.previous_page": "Pick another species",
 	"screen.pswg.export_preset": "Export Preset",

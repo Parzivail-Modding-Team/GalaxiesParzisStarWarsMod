@@ -95,6 +95,7 @@ public class PswgTarkin
 		lang.cloneWithRoot(CharacterScreen.I18N_CHOOSE_OPTION).build(assets);
 		lang.cloneWithRoot(CharacterScreen.I18N_NEXT_PAGE).build(assets);
 		lang.cloneWithRoot(CharacterScreen.I18N_PREVIOUS_PAGE).build(assets);
+		lang.cloneWithRoot(CharacterScreen.I18N_CLEAR_SPECIES).build(assets);
 
 		lang.screen("species_select").build(assets);
 		lang.cloneWithRoot(SpeciesSelectScreen.I18N_USE_FEMALE_MODEL).build(assets);

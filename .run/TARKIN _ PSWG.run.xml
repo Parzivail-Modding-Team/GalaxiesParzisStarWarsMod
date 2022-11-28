@@ -1,12 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="TARKIN | PSWG" type="Application" factoryName="Application">
     <option name="ALTERNATIVE_JRE_PATH" value="temurin-17 (2)" />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <envs>
       <env name="TARKIN_OUT_DIR" value="$PROJECT_DIR$/projects/pswg/src/main/resources" />
     </envs>
     <option name="MAIN_CLASS_NAME" value="net.fabricmc.devlaunchinjector.Main" />
-    <module name="PSWG15.projects.tarkin.main" />
+    <module name="GalaxiesParzisStarWarsMod.projects.tarkin.main"/>
     <option name="VM_PARAMETERS" value="-Dfabric.dli.config=$PROJECT_DIR$/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=client -Dfabric.dli.main=net.fabricmc.loader.impl.launch.knot.KnotClient -Dtarkin=pswg" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run/" />
     <method v="2">
