@@ -229,6 +229,8 @@ public class EnergyRenderer
 
 		var minOutputLayer = mL * thicknessBottom / deltaThickness;
 
+		RenderShapes.setScale(0.5f, 1, 1);
+
 		for (var layer = mL; layer <= xL; layer++)
 		{
 			var x = MathUtil.remap(layer, mL, xL, minOutputLayer, 70);
@@ -282,6 +284,8 @@ public class EnergyRenderer
 				);
 			}
 		}
+
+		RenderShapes.resetScale();
 	}
 
 	public static void renderLayer(BufferBuilderStorage bufferBuilders)

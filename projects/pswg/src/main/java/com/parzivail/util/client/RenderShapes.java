@@ -18,11 +18,14 @@ public class RenderShapes
 			{ 0, 1, 2, 3 }, { 3, 2, 6, 7 }, { 7, 6, 5, 4 }, { 4, 5, 1, 0 }, { 5, 6, 2, 1 }, { 7, 4, 0, 3 }
 	};
 
-	private static final int[] _counterClockwiseVertIndices = new int[] {0, 1, 2, 3};
-	private static final int[] _clockwiseVertIndices = new int[] {3, 2, 1, 0};
+	private static final int[] _counterClockwiseVertIndices = new int[] { 0, 1, 2, 3 };
+	private static final int[] _clockwiseVertIndices = new int[] { 3, 2, 1, 0 };
 
 	private static boolean _renderClockwise = false;
 	private static int _skipFace = -1;
+	private static float scaleX = 1;
+	private static float scaleY = 1;
+	private static float scaleZ = 1;
 
 	static
 	{
@@ -100,11 +103,25 @@ public class RenderShapes
 		{
 			if (i == _skipFace)
 				continue;
-			vcb.vertex(verts[_facesBox[i][indices[0]]][0], verts[_facesBox[i][indices[0]]][1], verts[_facesBox[i][indices[0]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 0);
-			vcb.vertex(verts[_facesBox[i][indices[1]]][0], verts[_facesBox[i][indices[1]]][1], verts[_facesBox[i][indices[1]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 0);
-			vcb.vertex(verts[_facesBox[i][indices[2]]][0], verts[_facesBox[i][indices[2]]][1], verts[_facesBox[i][indices[2]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 1);
-			vcb.vertex(verts[_facesBox[i][indices[3]]][0], verts[_facesBox[i][indices[3]]][1], verts[_facesBox[i][indices[3]]][2], _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 1);
+			vcb.vertex(verts[_facesBox[i][indices[0]]][0] * scaleX, verts[_facesBox[i][indices[0]]][1] * scaleY, verts[_facesBox[i][indices[0]]][2] * scaleZ, _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 0);
+			vcb.vertex(verts[_facesBox[i][indices[1]]][0] * scaleX, verts[_facesBox[i][indices[1]]][1] * scaleY, verts[_facesBox[i][indices[1]]][2] * scaleZ, _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 0);
+			vcb.vertex(verts[_facesBox[i][indices[2]]][0] * scaleX, verts[_facesBox[i][indices[2]]][1] * scaleY, verts[_facesBox[i][indices[2]]][2] * scaleZ, _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 1, 1);
+			vcb.vertex(verts[_facesBox[i][indices[3]]][0] * scaleX, verts[_facesBox[i][indices[3]]][1] * scaleY, verts[_facesBox[i][indices[3]]][2] * scaleZ, _normalsBox[i][0], _normalsBox[i][1], _normalsBox[i][2], 0, 1);
 		}
+	}
+
+	public static void setScale(float x, float y, float z)
+	{
+		scaleX = x;
+		scaleY = y;
+		scaleZ = z;
+	}
+
+	public static void resetScale()
+	{
+		scaleX = 1;
+		scaleY = 1;
+		scaleZ = 1;
 	}
 
 	public static void invertCull(boolean invert)
