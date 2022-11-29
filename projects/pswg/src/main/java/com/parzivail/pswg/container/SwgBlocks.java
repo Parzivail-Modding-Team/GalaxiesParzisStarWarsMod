@@ -26,6 +26,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.shape.VoxelShapes;
 
 public class SwgBlocks
 {
@@ -713,6 +714,9 @@ public class SwgBlocks
 		@RegistryName("spoked_machine")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final WaterloggableRotatingBlock Spoked = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
+		@RegistryName("electrostatic_repeller")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		public static final WaterloggableRotatingBlock ElectrostaticRepeller = new WaterloggableRotatingBlockWithBounds(VoxelShapes.cuboid(0, 5.5f / 16, 5.5f / 16, 4 / 16f, 10.5f / 16, 10.5f / 16), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 	}
 
 	@RegistryOrder(21)

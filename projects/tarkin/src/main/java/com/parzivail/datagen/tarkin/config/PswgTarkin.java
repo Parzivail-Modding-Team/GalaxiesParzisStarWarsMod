@@ -1096,6 +1096,9 @@ public class PswgTarkin
 		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.Spoked)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Machine.ElectrostaticRepeller)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
 
 		BlockGenerator.basicRandomRotation(SwgBlocks.Dirt.DesertLoam)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)

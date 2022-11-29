@@ -1,5 +1,6 @@
 package com.parzivail.pswg.client.loader;
 
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.client.render.p3d.P3DBakedBlockModel;
 import com.parzivail.pswg.client.render.p3d.P3DUnbakedBlockModel;
 import com.parzivail.pswg.client.render.pm3d.PM3DBakedBlockModel;
@@ -38,6 +39,9 @@ public class ModelLoader
 
 	public static P3DUnbakedBlockModel loadP3D(DynamicBakedModel.CacheMethod cacheMethod, Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
 	{
+		if (particleTexture.equals(new Identifier("block/stone")))
+			Galaxies.LOG.warn("Model %s does not have a particle texture", modelFile);
+
 		return new P3DUnbakedBlockModel(
 				baseTexture,
 				particleTexture,

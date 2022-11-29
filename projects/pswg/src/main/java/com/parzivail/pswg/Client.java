@@ -227,6 +227,7 @@ public class Client implements ClientModInitializer
 			ModelRegistry.register(SwgBlocks.Crate.CorrugatedCrate.get(color), true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("model/corrugated_crate/" + color.getName()), Resources.id("model/corrugated_crate/" + color.getName() + "_particle")));
 
 		ModelRegistry.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadPM3D(Resources.id("models/block/machine_spoked.pm3d"), Resources.id("model/machine_spoked"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Machine.ElectrostaticRepeller, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/electrostatic_repeller"), Resources.id("model/electrostatic_repeller"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Pipe.Large, false, ModelLoader.loadPM3D(Resources.id("models/block/pipe_thick.pm3d"), Resources.id("model/pipe_thick"), new Identifier("block/stone")));
 
