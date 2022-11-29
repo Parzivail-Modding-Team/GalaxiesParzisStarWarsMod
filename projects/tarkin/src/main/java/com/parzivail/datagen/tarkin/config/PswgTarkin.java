@@ -1675,7 +1675,10 @@ public class PswgTarkin
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.Fusion)
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.FusionFuel)
+		              .blockTag(BlockTags.PICKAXE_MINEABLE)
+		              .build(assets);
+		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Tank.StarshipFuel)
 		              .blockTag(BlockTags.PICKAXE_MINEABLE)
 		              .build(assets);
 

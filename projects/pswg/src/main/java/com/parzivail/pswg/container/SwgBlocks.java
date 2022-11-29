@@ -748,7 +748,10 @@ public class SwgBlocks
 	{
 		@RegistryName("fusion_fuel_tank")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		public static final Block Fusion = new WaterloggableRotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+		public static final Block FusionFuel = new WaterloggableRotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
+		@RegistryName("starship_fuel_tank")
+		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		public static final Block StarshipFuel = new WaterloggableRotatingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 	}
 
 	@RegistryOrder(25)
