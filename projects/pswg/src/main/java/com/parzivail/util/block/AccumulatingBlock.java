@@ -22,7 +22,7 @@ public class AccumulatingBlock extends Block
 	public static final int maxTotalLayers = 8;
 	public static final int maxPathfindingLayers = 5;
 
-	private static final IntProperty LAYERS = Properties.LAYERS;
+	protected static final IntProperty LAYERS = Properties.LAYERS;
 	protected static final VoxelShape[] LAYERS_TO_SHAPE = new VoxelShape[] {
 			VoxelShapes.empty(),
 			Block.createCuboidShape(0.0, 0.0, 0.0, 16.0, 2.0, 16.0),
