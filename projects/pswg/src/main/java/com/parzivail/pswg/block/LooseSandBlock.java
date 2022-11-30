@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class LooseSandBlock extends AccumulatingBlock
 {
 	// TODO: move to a repellent manager to also manage where not to naturally deposit sand via weather
-	private static final int REPELLENT_RADIUS = 4;
+	private static final int REPELLENT_RADIUS = 8;
 	private static final int REPELLENT_RADIUS_SQUARED = REPELLENT_RADIUS * REPELLENT_RADIUS;
 
 	public LooseSandBlock(AbstractBlock.Settings settings, Function<ItemPlacementContext, BlockState> fullBlockState)
