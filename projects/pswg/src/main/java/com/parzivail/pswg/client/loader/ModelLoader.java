@@ -40,11 +40,12 @@ public class ModelLoader
 	public static P3DUnbakedBlockModel loadP3D(DynamicBakedModel.CacheMethod cacheMethod, Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
 	{
 		if (particleTexture.equals(new Identifier("block/stone")))
-			Galaxies.LOG.warn("Model %s does not have a particle texture", modelFile);
+			Galaxies.LOG.warn("Model[%s]+Texture[%s] does not have a particle texture", modelFile, baseTexture);
 
 		return new P3DUnbakedBlockModel(
 				baseTexture,
 				particleTexture,
+
 				(m, spriteMap) -> P3DBakedBlockModel.create(
 						spriteMap,
 						cacheMethod,

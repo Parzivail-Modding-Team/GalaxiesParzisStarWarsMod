@@ -210,7 +210,7 @@ public class Client implements ClientModInitializer
 
 		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.RENDER_SEED_KEY, Resources.id("block/desh_barrel"), Resources.id("model/desh_barrel"), new Identifier("block/stone")));
 
-		ModelRegistry.register(SwgBlocks.Tank.FusionFuel, true, ModelLoader.loadPM3D(Resources.id("models/block/tank/fusion.pm3d"), Resources.id("model/tank/fusion"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Tank.FusionFuel, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/fusion_fuel_tank"), Resources.id("model/fusion_fuel_tank"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Tank.StarshipFuel, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/starship_fuel_tank"), Resources.id("model/starship_fuel_tank"), new Identifier("block/stone")));
 
 		ModelRegistry.register(SwgBlocks.Crate.OrangeKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), Resources.id("model/crate/kyber_orange"), Resources.id("model/crate/kyber_orange_particle")));
