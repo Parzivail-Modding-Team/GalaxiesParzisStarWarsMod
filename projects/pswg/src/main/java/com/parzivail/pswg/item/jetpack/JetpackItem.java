@@ -2,6 +2,7 @@ package com.parzivail.pswg.item.jetpack;
 
 import com.parzivail.pswg.client.input.IJetpackDataContainer;
 import com.parzivail.pswg.client.input.JetpackControls;
+import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.item.jetpack.data.JetpackTag;
 import com.parzivail.util.item.IDefaultNbtProvider;
 import dev.emi.trinkets.api.SlotReference;
@@ -74,15 +75,27 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 
 	public static Optional<Boolean> tickFallFlying(LivingEntity entity, ItemStack jetpack, boolean flyFalling)
 	{
-		var jt = new JetpackTag(jetpack.getOrCreateNbt());
+		if (ShipEntity.getShip(entity) != null)
+			return Optional.empty();
+
+//		var jt = new JetpackTag(jetpack.getOrCreateNbt());
 		var jc = ((IJetpackDataContainer)entity);
 		var controls = jc.pswg_getJetpackControls();
 
-		return Optional.of(!(entity.isOnGround() || controls.contains(JetpackControls.DESCEND)));
+		if (entity.isOnGround() || controls.contains(JetpackControls.DESCEND))
+			return Optional.of(false);
+
+		if (controls.contains(JetpackControls.MODE))
+			return Optional.of(true);
+
+		return Optional.empty();
 	}
 
 	public static boolean travel(LivingEntity entity, ItemStack jetpack)
 	{
+		if (ShipEntity.getShip(entity) != null)
+			return false;
+
 		var jc = ((IJetpackDataContainer)entity);
 		var controls = jc.pswg_getJetpackControls();
 		if (!controls.contains(JetpackControls.ASCEND))
@@ -124,7 +137,7 @@ public class JetpackItem extends TrinketItem implements IDefaultNbtProvider
 		{
 			var jt = new JetpackTag(stack.getOrCreateNbt());
 
-			if (jt.enabled || true)
+			if (true)
 			{
 				var jc = ((IJetpackDataContainer)living);
 				var force = jc.pswg_getJetpackForce();

@@ -150,7 +150,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		});
 	}
 
-	public static ShipEntity getShip(PlayerEntity player)
+	public static ShipEntity getShip(LivingEntity player)
 	{
 		if (player == null)
 			return null;
