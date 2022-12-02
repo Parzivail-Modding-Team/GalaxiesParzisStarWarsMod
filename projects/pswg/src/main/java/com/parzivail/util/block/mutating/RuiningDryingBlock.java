@@ -19,9 +19,9 @@ public class RuiningDryingBlock extends FallingMutatingBlock
 {
 	private final Supplier<Block> ruinedBlock;
 
-	public RuiningDryingBlock(Block target, int meanTransitionTime, Supplier<Block> ruinedBlock, Settings settings)
+	public RuiningDryingBlock(Block target, int meanTransitionTime, Supplier<Block> ruinedBlock, Settings settings, int dustColor)
 	{
-		super(target, meanTransitionTime, settings);
+		super(target, meanTransitionTime, settings, dustColor);
 		this.ruinedBlock = Suppliers.memoize(ruinedBlock::get);
 	}
 

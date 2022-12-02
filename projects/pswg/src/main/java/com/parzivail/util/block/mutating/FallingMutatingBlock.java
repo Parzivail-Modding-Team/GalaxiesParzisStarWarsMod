@@ -1,20 +1,20 @@
 package com.parzivail.util.block.mutating;
 
+import com.parzivail.util.block.PFallingBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.FallingBlock;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 
-public class FallingMutatingBlock extends FallingBlock
+public class FallingMutatingBlock extends PFallingBlock
 {
 	private final Block target;
 	private final int meanTransitionTime;
 
-	public FallingMutatingBlock(Block target, int meanTransitionTime, Settings settings)
+	public FallingMutatingBlock(Block target, int meanTransitionTime, Settings settings, int dustColor)
 	{
-		super(settings.ticksRandomly());
+		super(settings.ticksRandomly(), dustColor);
 		this.target = target;
 		this.meanTransitionTime = meanTransitionTime;
 	}

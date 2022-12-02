@@ -12,9 +12,9 @@ import net.minecraft.world.World;
 
 public class DryingBlock extends FallingMutatingBlock
 {
-	public DryingBlock(Block target, int meanTransitionTime, Settings settings)
+	public DryingBlock(Block target, int meanTransitionTime, Settings settings, int dustColor)
 	{
-		super(target, meanTransitionTime, settings);
+		super(target, meanTransitionTime, settings, dustColor);
 	}
 
 	@Override
