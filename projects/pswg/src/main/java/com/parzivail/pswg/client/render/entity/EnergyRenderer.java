@@ -35,6 +35,48 @@ public class EnergyRenderer
 		renderDarksaberGlow(totalLength);
 	}
 
+	public static void renderBrick(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient, float glowHue, float glowSat, float glowVal)
+	{
+		VertexConsumer vc;
+
+		var totalLength = baseLength * lengthCoefficient;
+		var shake = (1.1f - lengthCoefficient) * 0.004f;
+
+		double dX = (float)Resources.RANDOM.nextGaussian() * shake;
+		double dY = (float)Resources.RANDOM.nextGaussian() * shake;
+		matrices.translate(dX, 0, dY);
+
+		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
+
+		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+
+		var thickness = 0.018f;
+
+		var color = ColorUtil.hsvToRgbInt(glowHue, glowSat, glowVal);
+		VertexConsumerBuffer.Instance.setColor(color, 128);
+
+		// glow layers
+		RenderShapes.invertCull(true);
+		RenderShapes.drawSolidBoxSkewTaper(
+				VertexConsumerBuffer.Instance,
+				thickness,
+				thickness,
+				0, totalLength, 0,
+				0, 0, 0
+		);
+		RenderShapes.invertCull(false);
+
+		RenderShapes.invertCull(true);
+		RenderShapes.drawSolidBoxSkewTaper(
+				VertexConsumerBuffer.Instance,
+				thickness * 0.6f,
+				thickness * 0.6f,
+				0, 0.3f * totalLength, 0,
+				0, 0.35f * totalLength, 0
+		);
+		RenderShapes.invertCull(false);
+	}
+
 	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue, float glowSat, float glowVal)
 	{
 		VertexConsumer vc;

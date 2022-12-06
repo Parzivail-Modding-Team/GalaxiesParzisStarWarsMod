@@ -177,6 +177,8 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	{
 		if (bladeType == LightsaberBladeType.DARKSABER)
 			EnergyRenderer.renderDarksaber(renderMode, matrices, vertexConsumers, light, overlay, 1.2f, lengthCoefficient);
+		else if (bladeType == LightsaberBladeType.BRICK)
+			EnergyRenderer.renderBrick(renderMode, matrices, vertexConsumers, light, overlay, length, lengthCoefficient, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
 		else
 			EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, length, lengthCoefficient, true, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
 	}

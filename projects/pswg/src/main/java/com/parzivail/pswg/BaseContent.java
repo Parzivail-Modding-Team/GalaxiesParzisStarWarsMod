@@ -303,6 +303,8 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 				new LightsaberDescriptor(Resources.id("kenobi"), "Obi-Wan Kenobi", 0.62f, 1, 1, LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("luke_rotj"), "Luke Skywalker", 0.33f, 1, 1, LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("qui_gon"), "Qui-Gon Jinn", 0.33f, 1, 1, LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("bob"), "Jedi Bob", 0.33f, 1, 1, LightsaberBladeType.BRICK),
+				new LightsaberDescriptor(Resources.id("kestis"), "Cal Kestis", 0.73f, 1, 1, LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("maul_half"), "Darth Maul", 0, 1, 1, LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("darksaber"), null, 0, 0, 0, LightsaberBladeType.DARKSABER),
 				new LightsaberDescriptor(Resources.id("vader"), "Darth Vader", 0, 1, 1, LightsaberBladeType.DEFAULT)
