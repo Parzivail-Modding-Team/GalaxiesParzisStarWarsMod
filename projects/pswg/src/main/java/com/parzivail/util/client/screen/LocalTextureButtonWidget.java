@@ -37,12 +37,7 @@ public class LocalTextureButtonWidget extends ButtonWidget
 
 	public LocalTextureButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction, Text text)
 	{
-		this(x, y, width, height, u, v, hoveredU, hoveredV, textureWidth, textureHeight, pressAction, EMPTY_TOOLTIP, text);
-	}
-
-	public LocalTextureButtonWidget(int x, int y, int width, int height, int u, int v, int hoveredU, int hoveredV, int textureWidth, int textureHeight, ButtonWidget.PressAction pressAction, ButtonWidget.TooltipSupplier tooltipSupplier, Text text)
-	{
-		super(x, y, width, height, text, pressAction, tooltipSupplier, DEFAULT_NARRATION_SUPPLIER);
+		super(x, y, width, height, text, pressAction, DEFAULT_NARRATION_SUPPLIER);
 		this.textureWidth = textureWidth;
 		this.textureHeight = textureHeight;
 		this.u = u;

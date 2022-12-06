@@ -7,12 +7,12 @@ import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.data.client.BlockStateSupplier;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -409,7 +409,7 @@ public class BlockGenerator
 
 	private Identifier getRegistryName()
 	{
-		return Registry.BLOCK.getId(block);
+		return Registries.BLOCK.getId(block);
 	}
 
 	public void build(List<BuiltAsset> assets)

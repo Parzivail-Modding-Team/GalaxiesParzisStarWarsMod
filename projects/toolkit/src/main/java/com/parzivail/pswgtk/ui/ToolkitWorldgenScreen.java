@@ -79,7 +79,7 @@ public class ToolkitWorldgenScreen extends JComponentScreen
 		assert this.client != null;
 		var tickDelta = this.client.getTickDelta();
 
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 
 		var rsm = RenderSystem.getModelViewStack();
 		rsm.push();

@@ -20,11 +20,11 @@ import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.ItemTags;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.List;
 
@@ -723,7 +723,7 @@ public class PswgTarkin
 
 	public static void generateItems(List<BuiltAsset> assets)
 	{
-		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(Registry.ITEM_KEY, new Identifier("trinkets", "chest/back"));
+		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
 
 		ItemGenerator.tool(SwgItems.Material.DurasteelAxe)
 		             .build(assets);

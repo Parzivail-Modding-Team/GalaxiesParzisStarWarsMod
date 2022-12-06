@@ -7,22 +7,23 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.List;
 
 public class LanguageBuilder
 {
 	private final Identifier locale;
-	private final StringBuilder data;
+	private final String data;
 
 	public LanguageBuilder(Identifier locale)
 	{
-		this(locale, new StringBuilder());
+		this(locale, "");
 	}
 
-	public LanguageBuilder(Identifier locale, StringBuilder builder)
+	public LanguageBuilder(Identifier locale, String builder)
 	{
 		this.locale = locale;
 		this.data = builder;
@@ -30,7 +31,7 @@ public class LanguageBuilder
 
 	public LanguageBuilder dot(String value)
 	{
-		return new LanguageBuilder(locale, new StringBuilder(data).append('.').append(value));
+		return new LanguageBuilder(locale, data + '.' + value);
 	}
 
 	public LanguageBuilder modid()
@@ -40,7 +41,7 @@ public class LanguageBuilder
 
 	public LanguageBuilder cloneWithRoot(String root)
 	{
-		return new LanguageBuilder(locale, new StringBuilder(data).append(root));
+		return new LanguageBuilder(locale, data + root);
 	}
 
 	public LanguageBuilder container(String value)
@@ -65,7 +66,7 @@ public class LanguageBuilder
 
 	public LanguageBuilder entity(EntityType<? extends Entity> entity)
 	{
-		var entityId = Registry.ENTITY_TYPE.getId(entity);
+		var entityId = Registries.ENTITY_TYPE.getId(entity);
 		return cloneWithRoot("entity").modid().dot(entityId.getPath());
 	}
 
@@ -96,12 +97,12 @@ public class LanguageBuilder
 
 	public LanguageBuilder itemGroup(ItemGroup value)
 	{
-		return cloneWithRoot("itemGroup").dot(value.getName());
+		return new LanguageBuilder(locale, ((TranslatableTextContent)value.getDisplayName().getContent()).getKey());
 	}
 
 	public LanguageBuilder key(KeyBinding key)
 	{
-		return new LanguageBuilder(locale, new StringBuilder(key.getTranslationKey()));
+		return new LanguageBuilder(locale, key.getTranslationKey());
 	}
 
 	public LanguageBuilder message(String value)
@@ -121,7 +122,7 @@ public class LanguageBuilder
 
 	public LanguageProvider getProvider(String defaultValue)
 	{
-		var key = String.format(data.toString(), locale.getNamespace());
+		var key = String.format(data, locale.getNamespace());
 		return new LanguageProvider(locale, key, defaultValue == null ? key : defaultValue);
 	}
 

@@ -3,12 +3,18 @@ package com.parzivail.pswgtk.ui;
 import com.parzivail.pswgtk.swing.EventHelper;
 import com.parzivail.pswgtk.swing.TextureBackedContentWrapper;
 import com.parzivail.pswgtk.util.AnimatedFloat;
+import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,13 +31,13 @@ public class PanelViewportController implements MouseMotionListener
 		map.put(key + KeyEvent.VK_NUMPAD0, value);
 	}
 
-	private static final HashMap<Integer, Pair<Vec3f, Vec3f>> VIEWPORT_DIRECTION_PRESETS = Util.make(() -> {
-		var h = new HashMap<Integer, Pair<Vec3f, Vec3f>>();
+	private static final HashMap<Integer, Pair<Vector3f, Vector3f>> VIEWPORT_DIRECTION_PRESETS = Util.make(() -> {
+		var h = new HashMap<Integer, Pair<Vector3f, Vector3f>>();
 		putNumpadEmu(h, KeyEvent.VK_1, new Pair<>(Direction.SOUTH.getUnitVector(), Direction.NORTH.getUnitVector()));
 		putNumpadEmu(h, KeyEvent.VK_7, new Pair<>(Direction.UP.getUnitVector(), Direction.DOWN.getUnitVector()));
 		putNumpadEmu(h, KeyEvent.VK_3, new Pair<>(Direction.EAST.getUnitVector(), Direction.WEST.getUnitVector()));
-		putNumpadEmu(h, KeyEvent.VK_9, new Pair<>(new Vec3f(1, 1, 1), new Vec3f(-1, 1, 1)));
-		putNumpadEmu(h, KeyEvent.VK_5, new Pair<>(new Vec3f(1, 1, -1), new Vec3f(-1, 1, -1)));
+		putNumpadEmu(h, KeyEvent.VK_9, new Pair<>(new Vector3f(1, 1, 1), new Vector3f(-1, 1, 1)));
+		putNumpadEmu(h, KeyEvent.VK_5, new Pair<>(new Vector3f(1, 1, -1), new Vector3f(-1, 1, -1)));
 		return h;
 	});
 
@@ -89,7 +95,7 @@ public class PanelViewportController implements MouseMotionListener
 		this.panel.requestFocus();
 	}
 
-	private void setCameraPosition(Vec3f pos)
+	private void setCameraPosition(Vector3f pos)
 	{
 		var vec3d = new Vec3d(pos).normalize();
 		double d = vec3d.horizontalLength();
@@ -167,7 +173,7 @@ public class PanelViewportController implements MouseMotionListener
 
 	public void rotate(MatrixStack ms, float tickDelta)
 	{
-		ms.multiply(new Quaternion(pitch.getValue(tickDelta), 0, 0, true));
-		ms.multiply(new Quaternion(0, yaw.getValue(tickDelta), 0, true));
+		ms.multiply(new Quaternionf().rotationX(MathUtil.toRadians(pitch.getValue(tickDelta))));
+		ms.multiply(new Quaternionf().rotationY(MathUtil.toRadians(yaw.getValue(tickDelta))));
 	}
 }

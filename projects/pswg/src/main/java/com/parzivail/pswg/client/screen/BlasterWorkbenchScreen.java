@@ -11,7 +11,6 @@ import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.util.client.screen.AreaButtonWidget;
 import com.parzivail.util.client.screen.LocalTextureButtonWidget;
-import com.parzivail.util.client.screen.SimpleTooltipSupplier;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.MatrixStackUtil;
@@ -98,7 +97,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 		this.playerInventoryTitleY = this.backgroundHeight - 92;
 		this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
 
-		this.addDrawableChild(buildButton = new LocalTextureButtonWidget(x + 51, y + 124, 22, 12, 178, 3, 178, 17, 256, 256, this::onBuildClicked, new SimpleTooltipSupplier(this, this::getBuildTooltip), Text.empty()));
+		this.addDrawableChild(buildButton = new LocalTextureButtonWidget(x + 51, y + 124, 22, 12, 178, 3, 178, 17, 256, 256, this::onBuildClicked, Text.empty()));
 		this.addDrawableChild(cancelButton = new LocalTextureButtonWidget(x + 76, y + 124, 22, 12, 203, 3, 203, 17, this::onCancelClicked));
 
 		this.addDrawableChild(new AreaButtonWidget(x + 52, y + 70, 93, 17, button -> attachmentList.size() > 0, button -> onRowClicked(0)));
@@ -507,7 +506,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	@Override
 	protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY)
 	{
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		var i = (this.width - this.backgroundWidth) / 2;

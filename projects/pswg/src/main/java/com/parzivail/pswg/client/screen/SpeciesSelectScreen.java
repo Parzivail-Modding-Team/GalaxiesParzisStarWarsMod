@@ -129,13 +129,13 @@ public class SpeciesSelectScreen extends Screen
 		this.addDrawableChild(speciesVariableListWidget);
 		this.addDrawableChild(speciesListWidget);
 
-		this.addDrawableChild(ButtonWidget.createBuilder(Text.literal("<"), (button) -> moveToNextVariableOption(true)).setPositionAndSize(this.width / 2 - 120, this.height / 2 - 10, 20, 20).build());
+		this.addDrawableChild(ButtonWidget.builder(Text.literal("<"), (button) -> moveToNextVariableOption(true)).dimensions(this.width / 2 - 120, this.height / 2 - 10, 20, 20).build());
 
-		this.addDrawableChild(ButtonWidget.createBuilder(Text.literal(">"), (button) -> moveToNextVariableOption(false)).setPositionAndSize(this.width / 2 + 100, this.height / 2 - 10, 20, 20).build());
+		this.addDrawableChild(ButtonWidget.builder(Text.literal(">"), (button) -> moveToNextVariableOption(false)).dimensions(this.width / 2 + 100, this.height / 2 - 10, 20, 20).build());
 
-		this.addDrawableChild(ButtonWidget.createBuilder(ScreenTexts.BACK, (button) -> this.client.setScreen(this.parent)).setPositionAndSize(this.width / 2 - 100 - 75, this.height - 26, 95, 20).build());
+		this.addDrawableChild(ButtonWidget.builder(ScreenTexts.BACK, (button) -> this.client.setScreen(this.parent)).dimensions(this.width / 2 - 100 - 75, this.height - 26, 95, 20).build());
 
-		this.addDrawableChild(ButtonWidget.createBuilder(Text.translatable(Resources.I18N_SCREEN_APPLY), (button) -> {
+		this.addDrawableChild(ButtonWidget.builder(Text.translatable(Resources.I18N_SCREEN_APPLY), (button) -> {
 			if (speciesListWidget.getSelectedOrNull() == null)
 				return;
 
@@ -161,7 +161,7 @@ public class SpeciesSelectScreen extends Screen
 
 			// TODO: verify species variables on server
 			ClientPlayNetworking.send(SwgPackets.C2S.SetOwnSpecies, passedData);
-		}).setPositionAndSize(this.width / 2 - 60, this.height - 26, 120, 20).build());
+		}).dimensions(this.width / 2 - 60, this.height - 26, 120, 20).build());
 
 		this.addDrawableChild(new EventCheckboxWidget(this.width / 2 + 105 - 25, this.height - 26, 20, 20, Text.translatable(I18N_USE_FEMALE_MODEL), this.gender == SpeciesGender.FEMALE, true, (checked) -> {
 			gender = checked ? SpeciesGender.FEMALE : SpeciesGender.MALE;
@@ -312,7 +312,7 @@ public class SpeciesSelectScreen extends Screen
 		var y = height / 2;
 		var modelSize = 60;
 
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 		RenderSystem.setShaderTexture(0, CAROUSEL);
 		drawTexture(matrices, width / 2 - 128, height / 2 - 91, 0, 0, 256, 182);
 
@@ -436,8 +436,8 @@ public class SpeciesSelectScreen extends Screen
 		bufferBuilder.vertex((float)x1, (float)y0, (float)z).color(r, g, b, 1).texture(u1, v0).next();
 		bufferBuilder.vertex((float)x0, (float)y0, (float)z).color(r, g, b, 1).texture(u0, v0).next();
 
-		RenderSystem.setShader(GameRenderer::getPositionColorShader);
-		BufferRenderer.drawWithShader(bufferBuilder.end());
+		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 	}
 
 	public void drawEntity(MatrixStack matrixStack, String speciesString, int x, int y, int size, float mouseX, float mouseY)
@@ -526,7 +526,7 @@ public class SpeciesSelectScreen extends Screen
 	{
 		var tessellator = Tessellator.getInstance();
 		var bufferBuilder = tessellator.getBuffer();
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 		RenderSystem.setShaderTexture(0, BACKGROUND);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		var f = 32.0F;

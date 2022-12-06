@@ -5,7 +5,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.ParticleEffect;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
 
 public class PParticleType extends ParticleType<PParticleType> implements ParticleEffect
 {
@@ -50,6 +50,6 @@ public class PParticleType extends ParticleType<PParticleType> implements Partic
 	@Override
 	public String asString()
 	{
-		return Registry.PARTICLE_TYPE.getId(this).toString();
+		return Registries.PARTICLE_TYPE.getId(this).toString();
 	}
 }

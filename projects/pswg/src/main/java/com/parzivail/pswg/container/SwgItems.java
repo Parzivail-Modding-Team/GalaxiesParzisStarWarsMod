@@ -15,12 +15,16 @@ import com.parzivail.pswg.item.material.TitaniumToolMaterial;
 import com.parzivail.util.item.*;
 import com.parzivail.util.registry.*;
 import dev.emi.trinkets.api.TrinketItem;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
+
+import java.lang.annotation.Annotation;
 
 public class SwgItems
 {
@@ -471,5 +475,17 @@ public class SwgItems
 	public static void register()
 	{
 		RegistryHelper.registerAutoId(Resources.MODID, SwgItems.class, Object.class, RegistryHelper::tryRegisterItem);
+
+		RegistryHelper.register(SwgItems.class, ServerItemRegistryData.class, ItemConvertible.class, SwgItems::registerServerData);
+	}
+
+	static void registerServerData(ServerItemRegistryData data, ItemConvertible itemConvertible)
+	{
+		var item = itemConvertible.asItem();
+		// FIXME: find a good way to do this without registering an event handler per item
+		if (data.itemGroup() != null && !data.itemGroup().isEmpty())
+		{
+			ItemGroupEvents.modifyEntriesEvent(new Identifier(data.itemGroup())).register(item instanceof ICustomItemGroupStacks customStacks ? customStacks::appendStacks : (entries -> entries.add(item)));
+		}
 	}
 }

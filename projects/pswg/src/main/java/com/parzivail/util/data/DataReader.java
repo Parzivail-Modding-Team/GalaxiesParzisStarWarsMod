@@ -5,9 +5,9 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtIo;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 import org.joml.Matrix4f;
 
 import java.io.*;
@@ -79,7 +79,7 @@ public class DataReader
 		var name = readNullTerminatedString(stream);
 		var hasProperties = stream.readByte() == 1;
 
-		var blockRegistry = Registry.BLOCK;
+		var blockRegistry = Registries.BLOCK;
 		var block = blockRegistry.get(new Identifier(name));
 		var blockState = block.getDefaultState();
 

@@ -20,12 +20,14 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShapes;
 
 public class SwgBlocks
@@ -779,6 +781,8 @@ public class SwgBlocks
 		RegistryHelper.registerAutoId(Resources.MODID, SwgBlocks.class, Object.class, SwgBlocks::tryRegisterBlock);
 		RegistryHelper.registerAutoId(Resources.MODID, SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 		RegistryHelper.register(SwgBlocks.class, ServerBlockRegistryData.class, Block.class, SwgBlocks::registerServerData);
+
+		RegistryHelper.register(SwgBlocks.class, ServerItemRegistryData.class, ItemConvertible.class, SwgItems::registerServerData); // TODO: this doesn't handle the block group wrappers
 	}
 
 	private static void registerServerData(ServerBlockRegistryData data, Block block)
@@ -847,12 +851,12 @@ public class SwgBlocks
 		if (!ignoreTab)
 			itemSettings = itemSettings.group(Galaxies.TabBlocks);
 
-		Registry.register(Registry.BLOCK, identifier, block);
-		Registry.register(Registry.ITEM, identifier, new BlockItem(block, itemSettings));
+		Registry.register(Registries.BLOCK, identifier, block);
+		Registry.register(Registries.ITEM, identifier, new BlockItem(block, itemSettings));
 	}
 
 	public static void registerBlockEntityType(BlockEntityType<?> blockEntityType, Identifier identifier, boolean ignoreTab)
 	{
-		Registry.register(Registry.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
+		Registry.register(Registries.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
 	}
 }

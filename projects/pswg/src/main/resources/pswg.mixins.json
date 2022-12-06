@@ -44,7 +44,6 @@
 		"PlayerEntityClientMixin",
 		"PlayerEntityRendererMixin",
 		"RenderLayersMixin",
-		"RenderPhaseAccessor",
 		"SpriteAtlasTextureMixin",
 		"WorldRendererMixin"
 	],

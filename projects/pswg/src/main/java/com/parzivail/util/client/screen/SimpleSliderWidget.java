@@ -31,7 +31,7 @@ public class SimpleSliderWidget extends ButtonWidget
 	public SimpleSliderWidget(int x, int y, int width, int height, int trackU, int trackV, int thumbU, int thumbV, int thumbHoverU, int thumbHoverV, int thumbWidth, int thumbHeight, int textureWidth, int textureHeight, Consumer<SimpleSliderWidget> onChange)
 	{
 		super(x, y, width, height, Text.of(""), button -> {
-		}, EMPTY_TOOLTIP, DEFAULT_NARRATION_SUPPLIER);
+		}, DEFAULT_NARRATION_SUPPLIER);
 		this.trackU = trackU;
 		this.trackV = trackV;
 		this.thumbU = thumbU;

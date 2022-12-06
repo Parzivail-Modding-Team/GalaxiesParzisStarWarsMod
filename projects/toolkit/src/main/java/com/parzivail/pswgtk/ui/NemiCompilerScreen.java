@@ -23,8 +23,9 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Quaternion;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
+import org.joml.Quaternionf;
 
 import javax.swing.*;
 import java.awt.*;
@@ -153,7 +154,7 @@ public class NemiCompilerScreen extends JComponentScreen
 		assert this.client != null;
 		var tickDelta = this.client.getTickDelta();
 
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 
 		var rsm = RenderSystem.getModelViewStack();
 		rsm.push();
@@ -172,7 +173,7 @@ public class NemiCompilerScreen extends JComponentScreen
 		client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 		ms.pop();
 
-		ms.multiply(new Quaternion(0, 0, 180, true));
+		ms.multiply(new Quaternionf().rotationZ(MathHelper.PI));
 		ms.translate(0, -1.5f, 0);
 		selectedModel.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 		immediate.draw();

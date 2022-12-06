@@ -640,7 +640,7 @@ public class CharacterScreen extends Screen
 		TRANSPARENT_VIEWPORT_BACKGROUND.setOrigin(x, y);
 		blitRectangles.forEach(blitRectangle -> blitRectangle.setOrigin(x, y));
 
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 		RenderSystem.setShaderTexture(0, BACKGROUND);
 
 		LEFT_LIST_CUTOUT.blit(matrices);
@@ -791,9 +791,9 @@ public class CharacterScreen extends Screen
 		bufferBuilder.vertex(x + size, y, 0).color(r, g, b, a).texture(1, 0).next();
 		bufferBuilder.vertex(x, y, 0).color(r, g, b, a).texture(0, 0).next();
 
-		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 		RenderSystem.enableBlend();
-		BufferRenderer.drawWithShader(bufferBuilder.end());
+		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 		RenderSystem.disableBlend();
 	}
 
@@ -992,7 +992,7 @@ public class CharacterScreen extends Screen
 	{
 		var tessellator = Tessellator.getInstance();
 		var bufferBuilder = tessellator.getBuffer();
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 		RenderSystem.setShaderTexture(0, OPTIONS_BACKGROUND);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		var f = 32.0F;

@@ -24,10 +24,10 @@ import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.registry.Registries;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public enum ModelRegistry implements ModelVariantProvider
 
 	public static void registerConnected(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture)
 	{
-		var id = Registry.BLOCK.getId(block);
+		var id = Registries.BLOCK.getId(block);
 		registerConnected(
 				block, hConnect, vConnect, lConnect, capTexture,
 				new Identifier(id.getNamespace(), "block/" + id.getPath()),
@@ -55,7 +55,7 @@ public enum ModelRegistry implements ModelVariantProvider
 
 	public static void registerConnected(ConnectingBlock block, boolean hConnect, boolean vConnect, boolean lConnect, Identifier capTexture, Identifier centerTexture)
 	{
-		var id = Registry.BLOCK.getId(block);
+		var id = Registries.BLOCK.getId(block);
 		registerConnected(
 				block, hConnect, vConnect, lConnect, capTexture,
 				centerTexture,
@@ -84,14 +84,14 @@ public enum ModelRegistry implements ModelVariantProvider
 			registerInventory(block, unbakedModel);
 		for (var state : block.getStateManager().getStates())
 		{
-			var id = new ModelIdentifier(Registry.BLOCK.getId(block), BlockModels.propertyMapToString(state.getEntries()));
+			var id = new ModelIdentifier(Registries.BLOCK.getId(block), BlockModels.propertyMapToString(state.getEntries()));
 			models.put(id, unbakedModel.copy());
 		}
 	}
 
 	public static void registerInventory(Block block, ClonableUnbakedModel unbakedModel)
 	{
-		models.put(new ModelIdentifier(Registry.BLOCK.getId(block), "inventory"), unbakedModel.copy());
+		models.put(new ModelIdentifier(Registries.BLOCK.getId(block), "inventory"), unbakedModel.copy());
 	}
 
 	@Override
