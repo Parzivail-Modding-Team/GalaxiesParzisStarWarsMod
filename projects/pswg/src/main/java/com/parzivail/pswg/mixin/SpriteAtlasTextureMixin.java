@@ -24,6 +24,6 @@ public abstract class SpriteAtlasTextureMixin
 	@ModifyVariable(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/NativeImage;getWidth()I", shift = At.Shift.BEFORE, ordinal = 0), ordinal = 0)
 	public NativeImage spriteAddBaseLayer(NativeImage value, Identifier id, Resource resource) throws IOException
 	{
-		return LayeredSpriteBuilder.build(value, getTexturePath(id), container, this::getTexturePath);
+		return LayeredSpriteBuilder.build(value, getTexturePath(id), resourceManager, this::getTexturePath);
 	}
 }

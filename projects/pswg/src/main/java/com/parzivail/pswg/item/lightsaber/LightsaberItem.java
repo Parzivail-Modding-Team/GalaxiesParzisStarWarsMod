@@ -39,7 +39,7 @@ import org.joml.Vector3f;
 
 import java.util.List;
 
-public class LightsaberItem extends SwordItem implements ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityStackSetListener, IItemActionListener, IItemHotbarListener
+public class LightsaberItem extends SwordItem implements ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityStackSetListener, IItemActionListener, IItemHotbarListener, ITabStackProvider
 {
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
@@ -181,9 +181,6 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
 	{
-		if (!this.isIn(group))
-			return;
-
 		for (var entry : PswgContent.getLightsaberPresets().values())
 			stacks.add(forType(entry));
 	}

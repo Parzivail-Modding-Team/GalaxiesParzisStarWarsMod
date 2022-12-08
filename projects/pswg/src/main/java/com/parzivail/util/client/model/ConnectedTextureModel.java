@@ -14,8 +14,8 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ConnectingBlock;
 import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.Baker;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -25,6 +25,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -94,12 +95,12 @@ public class ConnectedTextureModel extends DynamicBakedModel
 	@Override
 	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-//		var minecraft = MinecraftClient.getInstance();
+		//		var minecraft = MinecraftClient.getInstance();
 
 		var meshBuilder = createMeshBuilder();//RENDERER.meshBuilder();
 		var quadEmitter = meshBuilder.getEmitter();
 
-//		var blockModels = minecraft.getBlockRenderManager().getModels();
+		//		var blockModels = minecraft.getBlockRenderManager().getModels();
 
 		// TODO: fix item lighting
 		//		if (state == null) // Assume it's an item
@@ -332,6 +333,25 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		}
 
 		@Override
+		public void setParents(Function<Identifier, UnbakedModel> modelLoader)
+		{
+			// TODO: parents?
+		}
+
+		@Nullable
+		@Override
+		public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId)
+		{
+			if (cachedBakedModel != null)
+				return cachedBakedModel;
+
+			var result = this.baker.apply(textureGetter);
+			cachedBakedModel = result;
+			return result;
+		}
+
+		// TODO: no longer required?
+		//		@Override
 		public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences)
 		{
 			var ids = new ArrayList<SpriteIdentifier>();
@@ -343,17 +363,6 @@ public class ConnectedTextureModel extends DynamicBakedModel
 				ids.add(capSprite);
 
 			return ids;
-		}
-
-		@Override
-		public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId)
-		{
-			if (cachedBakedModel != null)
-				return cachedBakedModel;
-
-			var result = baker.apply(textureGetter);
-			cachedBakedModel = result;
-			return result;
 		}
 
 		@Override

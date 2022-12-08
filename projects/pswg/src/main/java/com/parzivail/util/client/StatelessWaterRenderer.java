@@ -138,9 +138,7 @@ public class StatelessWaterRenderer implements SimpleResourceReloadListener<Void
 
 				var avgU = (u0 + u1 + u2 + u3) / 4.0F;
 				var avgV = (v0 + v1 + v2 + v3) / 4.0F;
-				var oneOverWidthCoverage = (float)sprites[0].getWidth() / (sprites[0].getMaxU() - sprites[0].getMinU());
-				var oneOverHeightCoverage = (float)sprites[0].getHeight() / (sprites[0].getMaxV() - sprites[0].getMinV());
-				var coverageProportion = 4.0F / Math.max(oneOverHeightCoverage, oneOverWidthCoverage);
+				float coverageProportion = sprites[0].getAnimationFrameDelta();
 
 				u0 = MathHelper.lerp(coverageProportion, u0, avgU);
 				u1 = MathHelper.lerp(coverageProportion, u1, avgU);

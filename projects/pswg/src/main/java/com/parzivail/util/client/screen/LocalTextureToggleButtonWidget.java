@@ -80,8 +80,8 @@ public class LocalTextureToggleButtonWidget extends ButtonWidget
 		drawTexture(matrices, this.getX(), this.getY(), tU, tV, this.width, this.height, this.textureWidth, this.textureHeight);
 
 		var oldTexture = RenderSystem.getShaderTexture(0);
-		if (this.hovered)
-			this.renderTooltip(matrices, mouseX, mouseY);
+		//		if (this.hovered)
+		//			this.renderTooltip(matrices, mouseX, mouseY);
 		RenderSystem.setShaderTexture(0, oldTexture);
 	}
 }

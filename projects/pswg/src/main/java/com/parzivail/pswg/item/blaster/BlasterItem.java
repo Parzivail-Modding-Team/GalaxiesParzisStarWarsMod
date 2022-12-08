@@ -51,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener, ITabStackProvider
 {
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -486,9 +486,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
 	{
-		if (!this.isIn(group))
-			return;
-
 		for (var entry : PswgContent.getBlasterPresets().entrySet())
 			stacks.add(forType(entry.getValue()));
 	}

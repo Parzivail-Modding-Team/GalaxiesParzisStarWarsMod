@@ -2,6 +2,7 @@ package com.parzivail.pswgtcw;
 
 import com.parzivail.pswg.api.PswgAddon;
 import com.parzivail.pswg.api.PswgContent;
+import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.*;
@@ -19,7 +20,7 @@ public class PswgTcwAddon implements PswgAddon
 	@Override
 	public void onPswgReady()
 	{
-		RegistryHelper.registerAutoId(MODID, TcwItems.class, Object.class, RegistryHelper::tryRegisterItem);
+		RegistryHelper.registerAutoId(MODID, TcwItems.class, Object.class, SwgItems::tryRegisterItem);
 		SwgSounds.registerIfAbsent(BlasterItem.modelIdToSoundId(id("dc17")));
 
 		PswgContent.registerBlasterPreset(

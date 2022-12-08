@@ -71,8 +71,8 @@ public class LocalTextureButtonWidget extends ButtonWidget
 		RenderSystem.enableDepthTest();
 		drawTexture(matrices, this.getX(), this.getY(), tU, tV, this.width, this.height, this.textureWidth, this.textureHeight);
 
-		if (this.hovered)
-			this.renderTooltip(matrices, mouseX, mouseY);
+		//		if (this.hovered)
+		//			this.renderTooltip(matrices, mouseX, mouseY);
 		RenderSystem.setShaderTexture(0, oldTexture);
 	}
 }

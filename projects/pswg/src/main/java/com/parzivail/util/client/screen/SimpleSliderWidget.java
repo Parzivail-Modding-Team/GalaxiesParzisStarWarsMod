@@ -128,8 +128,8 @@ public class SimpleSliderWidget extends ButtonWidget
 
 		drawTexture(matrices, this.getX() + 1 + Math.round(value * (width - 2)) - this.thumbWidth / 2, this.getY() - (this.thumbHeight - this.height) / 2, tU, tV, this.thumbWidth, this.thumbHeight, this.textureWidth, this.textureHeight);
 
-		if (this.isHovered())
-			this.renderTooltip(matrices, mouseX, mouseY);
+		//		if (this.isHovered())
+		//			this.renderTooltip(matrices, mouseX, mouseY);
 		RenderSystem.setShaderTexture(0, oldTexture);
 	}
 

@@ -1,8 +1,5 @@
 package com.parzivail.util.registry;
 
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 
 import java.lang.annotation.Annotation;
@@ -23,7 +20,8 @@ public class RegistryHelper
 
 			try
 			{
-				registryFunction.accept((T)field.get(null), new Identifier(namespace, annotation.value()), field.getAnnotation(TabIgnore.class) != null);
+				var tabInclude = field.getAnnotation(TabInclude.class);
+				registryFunction.accept((T)field.get(null), new Identifier(namespace, annotation.value()), field.getAnnotation(TabIgnore.class) != null, tabInclude == null ? null : tabInclude.value());
 			}
 			catch (IllegalAccessException e)
 			{
@@ -77,24 +75,5 @@ public class RegistryHelper
 			return Integer.MAX_VALUE;
 
 		return annotation.value();
-	}
-
-	public static void tryRegisterItem(Object o, Identifier identifier, boolean ignoreTab)
-	{
-		if (o instanceof Item item)
-			Registry.register(Registries.ITEM, identifier, item);
-		else if (o instanceof ArmorItems armorItems)
-		{
-			Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_helmet"), armorItems.helmet);
-			Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_chestplate"), armorItems.chestplate);
-			Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_leggings"), armorItems.leggings);
-			Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_boots"), armorItems.boots);
-		}
-		else if (o instanceof DyedItems items)
-			for (var entry : items.entrySet())
-				Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue());
-		else if (o instanceof NumberedItems items)
-			for (var i = 0; i < items.size(); i++)
-				Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_" + (i + 1)), items.get(i));
 	}
 }
