@@ -47,6 +47,8 @@ public final class TerrainGenerator
 
 	private void buildMinecraftChunk(MinecraftChunkView chunk, double[][] noises)
 	{
+		Heightmap floor = chunk.chunk().getHeightmap(Heightmap.Type.OCEAN_FLOOR_WG);
+		Heightmap surface = chunk.chunk().getHeightmap(Heightmap.Type.WORLD_SURFACE_WG);
 		for (int nX = 0; nX < 4; nX++)
 		{
 			for (int nZ = 0; nZ < 4; nZ++)
@@ -91,7 +93,12 @@ public final class TerrainGenerator
 
 								double noise = MathHelper.lerp(zP, z0, z1);
 
-								section.setBlockState(rX, rY & 15, rZ, noise > 0 ? geology : Blocks.AIR.getDefaultState(), false);
+								BlockState state = noise > 0 ? geology : Blocks.AIR.getDefaultState();
+
+								floor.trackUpdate(rX, rY, rZ, state);
+								surface.trackUpdate(rX, rY, rZ, state);
+
+								section.setBlockState(rX, rY & 15, rZ, state, false);
 							}
 						}
 					}
@@ -146,7 +153,7 @@ public final class TerrainGenerator
 								double noise = MathHelper.lerp(zP, z0, z1);
 
 								pos.set(rX, rY, rZ);
-								chunk.setBlockState(pos, noise > 0 ? Blocks.STONE.getDefaultState() : Blocks.AIR.getDefaultState());
+								chunk.setBlockState(pos, noise > 0 ? geology : Blocks.AIR.getDefaultState());
 							}
 						}
 					}
@@ -198,7 +205,8 @@ public final class TerrainGenerator
 			{
 				// TODO: biome interpolator class
 				TerrainBiome biome = biomes.getBiome(chunk.getChunkPos().x * 4 + (x >> 2), chunk.getChunkPos().z * 4 + (z >> 2));
-				biome.surface().build(chunk, x, z, chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z), geology, Blocks.WATER.getDefaultState());
+				int height = chunk.sampleHeightmap(Heightmap.Type.WORLD_SURFACE_WG, x, z);
+				biome.surface().build(chunk, x, z, height, geology, Blocks.WATER.getDefaultState());
 			}
 		}
 	}

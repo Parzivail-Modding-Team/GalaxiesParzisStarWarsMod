@@ -14,7 +14,7 @@ import java.util.List;
 public class TerrainBiomes
 {
 	public static final TerrainBiome TATOOINE_CRAGGY_DUNES = new TerrainBiome(
-			BiomeKeys.TAIGA,
+			BiomeKeys.PLAINS,
 			new TwoStateSurfaceBuilder(SwgBlocks.Sand.Desert.getDefaultState(), 3, SwgBlocks.Sandstone.SmoothDesert.getDefaultState(), 16),
 			new CraggyDunesTerrainBuilder(),
 			List.of(
