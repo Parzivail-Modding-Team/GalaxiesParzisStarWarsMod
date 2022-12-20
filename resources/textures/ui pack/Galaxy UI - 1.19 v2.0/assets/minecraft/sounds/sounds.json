@@ -1,0 +1,35 @@
+{
+	"ui.button.click": {
+		"sounds": [
+			"random/click_stereo"
+		]
+	},
+	"ui.stonecutter.select_recipe": {
+		"sounds": [
+			"random/click_stereo"
+		]
+	},
+	"item.book.page_turn": {
+		"sounds": [{
+				"name": "item/book/starwars_open_flip1",
+				"volume": 2.0
+			},
+			{
+				"name": "item/book/starwars_open_flip2",
+				"volume": 2.0
+			},
+			{
+				"name": "item/book/starwars_open_flip3",
+				"volume": 2.0
+			}
+		],
+		"subtitle": "subtitles.item.book.page_turn"
+	},
+	"item.book.put": {
+		"sounds": [
+			"item/book/starwars_close_put1",
+			"item/book/starwars_close_put2"
+		],
+		"subtitle": "subtitles.item.book.put"
+	}
+}
