@@ -322,6 +322,7 @@ public class CharacterScreen extends Screen
 		{
 			previewSpecies = null;
 			applySpecies();
+			close();
 		}
 
 		var allSpecies = SwgSpeciesRegistry.ALL_SPECIES.get();
