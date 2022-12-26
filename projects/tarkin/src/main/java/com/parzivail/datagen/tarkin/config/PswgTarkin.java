@@ -732,7 +732,8 @@ public class PswgTarkin
 		ItemGenerator.tool(SwgItems.Material.BeskarAxe)
 		             .build(assets);
 
-		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
+		// TODO: move to addons
+//		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
 		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
 
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
