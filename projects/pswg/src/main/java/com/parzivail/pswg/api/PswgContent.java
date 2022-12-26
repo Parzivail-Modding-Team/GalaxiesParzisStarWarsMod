@@ -69,33 +69,6 @@ public class PswgContent
 		return blasterPresets;
 	}
 
-	public static BlasterDescriptor getBlasterPreset(Identifier key)
-	{
-		return blasterPresets.get(key);
-	}
-
-	public static BlasterDescriptor assertBlasterPreset(Identifier key)
-	{
-		var data = getBlasterPreset(key);
-		if (data != null)
-			return data;
-
-		var keyName = key == null ? "[null]" : '"' + key.toString() + '"';
-		var j = CrashReport.create(new NullPointerException("Cannot get blaster descriptor for unknown key " + keyName), "Getting blaster descriptor");
-
-		var k = j.addElement("Blaster Manager Data");
-		k.add("Defined keys", PswgContent::getBlasterDataString);
-
-		throw new CrashException(j);
-	}
-
-	private static String getBlasterDataString()
-	{
-		if (blasterPresets == null)
-			return "null";
-		return blasterPresets.keySet().stream().map(Identifier::toString).collect(Collectors.joining(", "));
-	}
-
 	private static void checkBaked()
 	{
 		if (!isBaked)

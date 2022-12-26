@@ -2,6 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
 import com.parzivail.pswg.item.DoorInsertItem;
@@ -21,6 +22,8 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.*;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class SwgItems
 {
@@ -427,8 +430,6 @@ public class SwgItems
 	@RegistryOrder(11)
 	public static class Blaster
 	{
-		@RegistryName("blaster")
-		public static final BlasterItem Blaster = new BlasterItem(new Item.Settings().maxCount(1).group(Galaxies.TabBlasters));
 		@RegistryName("small_power_pack")
 		public static final BlasterPowerPackItem SmallPowerPack = new BlasterPowerPackItem(75, new Item.Settings().group(Galaxies.TabBlasters));
 	}
@@ -471,5 +472,18 @@ public class SwgItems
 	public static void register()
 	{
 		RegistryHelper.registerAutoId(Resources.MODID, SwgItems.class, Object.class, RegistryHelper::tryRegisterItem);
+	}
+
+	public static void registerAddons()
+	{
+		for (var blaster : PswgContent.getBlasterPresets().entrySet())
+		{
+			var id = blaster.getKey();
+			Registry.register(
+					Registry.ITEM,
+					new Identifier(id.getNamespace(), "blaster_" + id.getPath()),
+					new BlasterItem(new Item.Settings().maxCount(1).group(Galaxies.TabBlasters), id, blaster.getValue())
+			);
+		}
 	}
 }

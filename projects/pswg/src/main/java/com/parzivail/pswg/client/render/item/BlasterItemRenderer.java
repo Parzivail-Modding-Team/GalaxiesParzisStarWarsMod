@@ -152,13 +152,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	@Override
 	public void render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
 	{
-		var tag = stack.getOrCreateNbt();
-
-		var bdId = BlasterItem.getBlasterModel(tag);
+		var bdId = BlasterItem.getBlasterModel(stack);
 		if (bdId == null)
 			return;
 
-		var bt = new BlasterTag(tag);
+		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		var bd = BlasterItem.getBlasterDescriptor(stack, true);
 		if (bd == null)

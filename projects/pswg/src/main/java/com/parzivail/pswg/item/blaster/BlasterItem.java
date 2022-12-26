@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.compat.gravitychanger.GravityChangerCompat;
 import com.parzivail.pswg.container.SwgPackets;
@@ -30,7 +29,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -38,7 +36,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.*;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.crash.CrashException;
+import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
@@ -66,18 +65,14 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 0.7f);
 	});
 
-	public BlasterItem(Settings settings)
+	private final Identifier model;
+	private final BlasterDescriptor descriptor;
+
+	public BlasterItem(Settings settings, Identifier model, BlasterDescriptor descriptor)
 	{
 		super(settings);
-	}
-
-	public static Identifier getBlasterModel(NbtCompound tag)
-	{
-		var blasterModel = tag.getString("model");
-		if (blasterModel.isEmpty())
-			return null;
-
-		return new Identifier(blasterModel);
+		this.model = model;
+		this.descriptor = descriptor;
 	}
 
 	public static TranslatableTextContent getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
@@ -114,7 +109,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static Identifier getBlasterModel(ItemStack stack)
 	{
-		return getBlasterModel(stack.getOrCreateNbt());
+		if (stack.getItem() instanceof BlasterItem bi)
+			return bi.model;
+		return null;
 	}
 
 	public static void nextFireMode(World world, PlayerEntity player, ItemStack stack)
@@ -159,9 +156,13 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static BlasterDescriptor getBlasterDescriptor(ItemStack stack, boolean allowNull)
 	{
+		if (stack.getItem() instanceof BlasterItem bi)
+			return bi.descriptor;
 		if (allowNull)
-			return PswgContent.getBlasterPreset(getBlasterModel(stack));
-		return PswgContent.assertBlasterPreset(getBlasterModel(stack));
+			return null;
+
+		var j = CrashReport.create(new NullPointerException("Cannot get blaster descriptor for unknown stack " + stack.toString()), "Getting blaster descriptor");
+		throw new CrashException(j);
 	}
 
 	@Override
@@ -381,7 +382,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			switch (bt.getFiringMode())
 			{
-				case SEMI_AUTOMATIC, BURST, AUTOMATIC -> {
+				case SEMI_AUTOMATIC, BURST, AUTOMATIC ->
+				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 30 + heatPitchIncrease);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
@@ -389,7 +391,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 						entity.setHue(bd.boltColor);
 					});
 				}
-				case STUN -> {
+				case STUN ->
+				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
 					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
@@ -397,11 +400,13 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					});
 					shouldRecoil = false;
 				}
-				case SLUGTHROWER -> {
+				case SLUGTHROWER ->
+				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
 					BlasterUtil.fireSlug(world, player, fromDir, range, damage);
 				}
-				case ION -> {
+				case ION ->
+				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
 					BlasterUtil.fireIon(world, player, range, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
@@ -454,11 +459,17 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@Override
 	public NbtCompound getDefaultTag(ItemConvertible item, int count)
 	{
+		var blasterTag = new BlasterTag(new NbtCompound());
+		if (descriptor.firingModes.isEmpty())
+			blasterTag.setFiringMode(BlasterFiringMode.SEMI_AUTOMATIC);
+		else
+			blasterTag.setFiringMode(descriptor.firingModes.get(0));
+
+		blasterTag.attachmentBitmask = descriptor.attachmentDefault;
+		blasterTag.shotTimer = (short)descriptor.automaticRepeatTime;
+
 		var tag = new NbtCompound();
-
-		tag.putString("model", Resources.id("a280").toString());
-		tag.putByte("shotTimer", (byte)20);
-
+		blasterTag.serializeAsSubtag(tag);
 		return tag;
 	}
 
@@ -479,34 +490,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.damage", bd.damage));
 			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.range", bd.range));
 		}
-	}
-
-	@Override
-	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
-	{
-		if (!this.isIn(group))
-			return;
-
-		for (var entry : PswgContent.getBlasterPresets().entrySet())
-			stacks.add(forType(entry.getValue()));
-	}
-
-	private ItemStack forType(BlasterDescriptor descriptor)
-	{
-		var stack = new ItemStack(this);
-
-		stack.getOrCreateNbt().putString("model", descriptor.id.toString());
-
-		BlasterTag.mutate(stack, blasterTag -> {
-			if (descriptor.firingModes.isEmpty())
-				blasterTag.setFiringMode(BlasterFiringMode.SEMI_AUTOMATIC);
-			else
-				blasterTag.setFiringMode(descriptor.firingModes.get(0));
-
-			blasterTag.attachmentBitmask = descriptor.attachmentDefault;
-		});
-
-		return stack;
 	}
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(PlayerEntity player)

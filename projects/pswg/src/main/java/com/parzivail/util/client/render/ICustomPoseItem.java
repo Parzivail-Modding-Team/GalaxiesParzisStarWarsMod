@@ -9,9 +9,9 @@ import java.util.HashMap;
 
 public interface ICustomPoseItem
 {
-	HashMap<Item, ICustomPoseItem> REGISTRY = new HashMap<>();
+	HashMap<Class<? extends Item>, ICustomPoseItem> REGISTRY = new HashMap<>();
 
-	static void register(Item item, ICustomPoseItem pose)
+	static void register(Class<? extends Item> item, ICustomPoseItem pose)
 	{
 		REGISTRY.put(item, pose);
 	}

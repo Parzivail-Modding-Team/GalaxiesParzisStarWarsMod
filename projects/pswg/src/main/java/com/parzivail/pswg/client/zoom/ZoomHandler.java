@@ -1,7 +1,6 @@
 package com.parzivail.pswg.client.zoom;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterAttachmentFunction;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
@@ -28,9 +27,8 @@ public class ZoomHandler
 
 		var blasterZoomInstance = Client.blasterZoomInstance;
 
-		if (stack.isOf(SwgItems.Blaster.Blaster))
+		if (stack.getItem() instanceof BlasterItem b)
 		{
-			var b = (BlasterItem)stack.getItem();
 			var bt = new BlasterTag(stack.getOrCreateNbt());
 			var bd = BlasterItem.getBlasterDescriptor(stack);
 

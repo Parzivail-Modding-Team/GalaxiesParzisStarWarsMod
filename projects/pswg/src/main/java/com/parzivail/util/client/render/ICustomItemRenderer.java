@@ -11,9 +11,9 @@ import java.util.HashMap;
 
 public interface ICustomItemRenderer
 {
-	HashMap<Item, ICustomItemRenderer> REGISTRY = new HashMap<>();
+	HashMap<Class<? extends Item>, ICustomItemRenderer> REGISTRY = new HashMap<>();
 
-	static void register(Item item, ICustomItemRenderer renderer)
+	static void register(Class<? extends Item> item, ICustomItemRenderer renderer)
 	{
 		REGISTRY.put(item, renderer);
 	}

@@ -31,6 +31,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
+import net.minecraft.util.registry.Registry;
 
 import java.util.Objects;
 
@@ -50,7 +51,7 @@ public class Galaxies implements ModInitializer
 
 	public static final ItemGroup TabBlasters = FabricItemGroupBuilder
 			.create(Resources.id("blasters"))
-			.icon(() -> new ItemStack(SwgItems.Blaster.Blaster))
+			.icon(() -> new ItemStack(Registry.ITEM.get(Resources.id("blaster_a280"))))
 			.build();
 
 	public static final ItemGroup TabLightsabers = FabricItemGroupBuilder
@@ -157,5 +158,7 @@ public class Galaxies implements ModInitializer
 
 		Galaxies.LOG.info("Baking PSWG addon content");
 		PswgContent.bake();
+
+		SwgItems.registerAddons();
 	}
 }

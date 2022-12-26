@@ -13,9 +13,9 @@ public interface ICustomHudRenderer
 	/**
 	 * Do not use this directly.
 	 */
-	HashMap<Item, ICustomHudRenderer> REGISTRY = new HashMap<>();
+	HashMap<Class<? extends Item>, ICustomHudRenderer> REGISTRY = new HashMap<>();
 
-	static void register(Item item, ICustomHudRenderer renderer)
+	static void register(Class<? extends Item> item, ICustomHudRenderer renderer)
 	{
 		REGISTRY.put(item, renderer);
 	}

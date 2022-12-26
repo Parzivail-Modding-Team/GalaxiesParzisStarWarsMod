@@ -36,7 +36,9 @@ import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
+import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
+import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.DimensionEffectsAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
@@ -437,12 +439,12 @@ public class Client implements ClientModInitializer
 				ArmorRenderer.Metadata.MANUAL_ARMS_HIDE_CHEST
 		);
 
-		ICustomItemRenderer.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
-		ICustomPoseItem.register(SwgItems.Lightsaber.Lightsaber, LightsaberItemRenderer.INSTANCE);
+		ICustomItemRenderer.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
+		ICustomPoseItem.register(LightsaberItem.class, LightsaberItemRenderer.INSTANCE);
 
-		ICustomItemRenderer.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
-		ICustomPoseItem.register(SwgItems.Blaster.Blaster, BlasterItemRenderer.INSTANCE);
-		ICustomHudRenderer.register(SwgItems.Blaster.Blaster, BlasterHudRenderer.INSTANCE);
+		ICustomItemRenderer.register(BlasterItem.class, BlasterItemRenderer.INSTANCE);
+		ICustomPoseItem.register(BlasterItem.class, BlasterItemRenderer.INSTANCE);
+		ICustomHudRenderer.register(BlasterItem.class, BlasterHudRenderer.INSTANCE);
 
 		//		TODO: ICustomSkyRenderer.register(SwgDimensions.Tatooine.WORLD_KEY.getValue(), new TatooineSkyRenderer());
 
