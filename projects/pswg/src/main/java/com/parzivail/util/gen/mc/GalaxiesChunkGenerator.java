@@ -23,6 +23,7 @@ import net.minecraft.world.gen.StructureAccessor;
 import net.minecraft.world.gen.chunk.Blender;
 import net.minecraft.world.gen.chunk.ChunkGenerator;
 import net.minecraft.world.gen.chunk.VerticalBlockSample;
+import net.minecraft.world.gen.chunk.placement.StructurePlacementCalculator;
 import net.minecraft.world.gen.noise.NoiseConfig;
 
 import java.util.List;
@@ -33,14 +34,13 @@ import java.util.concurrent.Executor;
 public class GalaxiesChunkGenerator extends ChunkGenerator
 {
 	public static final Codec<GalaxiesChunkGenerator> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			RegistryOps.createRegistryCodec(Registry.STRUCTURE_SET_KEY).forGetter(chunkGenerator -> chunkGenerator.structureSetRegistry),
 			BiomeSource.CODEC.fieldOf("biome_source").forGetter(c -> c.biomeSource)	).apply(instance, GalaxiesChunkGenerator::new));
 
 	private final TerrainGenerator backing;
 
-	public GalaxiesChunkGenerator(Registry<StructureSet> structureSetRegistry, BiomeSource biomeSource)
+	public GalaxiesChunkGenerator( BiomeSource biomeSource)
 	{
-		super(structureSetRegistry, Optional.empty(), biomeSource);
+		super(biomeSource);
 
 		if (!(biomeSource instanceof GalaxiesBiomeSource bs))
 		{
@@ -89,7 +89,7 @@ public class GalaxiesChunkGenerator extends ChunkGenerator
 	}
 
 	@Override
-	public void setStructureStarts(DynamicRegistryManager registryManager, NoiseConfig noiseConfig, StructureAccessor structureAccessor, Chunk chunk, StructureTemplateManager structureTemplateManager, long seed)
+	public void setStructureStarts(DynamicRegistryManager registryManager, StructurePlacementCalculator placementCalculator, StructureAccessor structureAccessor, Chunk chunk, StructureTemplateManager structureTemplateManager)
 	{
 
 	}
