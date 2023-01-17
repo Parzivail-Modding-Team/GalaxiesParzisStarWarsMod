@@ -70,8 +70,8 @@ public class SwgSpeciesRenderer
 
 	public static Identifier getTexture(PlayerEntity player, SwgSpecies species)
 	{
-		var hashCode = species.hashCode();
-		return Client.stackedTextureProvider.getId(String.format("species/%08x", hashCode), () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player));
+		var hashCode = species.longHashCode();
+		return Client.stackedTextureProvider.getId(String.format("species/%016x", hashCode), () -> Client.TEX_TRANSPARENT, () -> species.getTextureStack(player));
 	}
 
 	public static void animateTwilek(AbstractClientPlayerEntity entity, PlayerEntityModel<AbstractClientPlayerEntity> model, PlayerSpeciesModelRenderer renderer, float tickDelta)

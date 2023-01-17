@@ -78,11 +78,27 @@ public abstract class SwgSpecies
 		);
 	}
 
-	private static int hashVariableValues(SwgSpecies species, SpeciesVariable... variables)
+	private static long longHashCode(String s)
 	{
-		var hash = 0;
+		var h = 0L;
+		for (byte v : s.getBytes())
+			h = 31 * h + (v & 0xff);
+		return h;
+	}
+
+	private static long hashVariableValues(SwgSpecies species, SpeciesVariable... variables)
+	{
+		var hash = 0L;
 		for (var variable : variables)
-			hash = 31 * hash + species.getVariable(variable).hashCode();
+			hash = 31 * hash + longHashCode(species.getVariable(variable));
+		return hash;
+	}
+
+	private static long hashVariableValues(Map<String, String> variables)
+	{
+		var hash = 0L;
+		for (var variable : variables.entrySet())
+			hash = 31 * hash + longHashCode(variable.getKey() + "=" + variable.getValue());
 		return hash;
 	}
 
@@ -273,9 +289,14 @@ public abstract class SwgSpecies
 	@Override
 	public int hashCode()
 	{
-		var result = getSlug().hashCode();
+		return (int)longHashCode();
+	}
+
+	public long longHashCode()
+	{
+		var result = longHashCode(getSlug().toString());
 		result = 31 * result + gender.hashCode();
-		result = 31 * result + variables.hashCode();
+		result = 31 * result + hashVariableValues(variables);
 		return result;
 	}
 
