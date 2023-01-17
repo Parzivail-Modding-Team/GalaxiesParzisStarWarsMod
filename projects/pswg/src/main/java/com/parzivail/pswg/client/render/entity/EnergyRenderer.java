@@ -18,7 +18,7 @@ public class EnergyRenderer
 	public static final RenderLayer LAYER_ENERGY = RenderLayer.of("pswg:energy", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of("pswg:energy_add", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_LIGHTNING_SHADER()).transparency(RenderPhaseAccessor.get_LIGHTNING_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
 
-	public static void renderDarksaber(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient)
+	public static void renderDarksaber(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient, float glowHue, float glowSat, float glowVal)
 	{
 		VertexConsumer vc;
 
@@ -32,7 +32,7 @@ public class EnergyRenderer
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderDarksaberGlow(totalLength);
+		renderDarksaberGlow(totalLength, glowHue, glowSat, glowVal);
 	}
 
 	public static void renderBrick(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient, float glowHue, float glowSat, float glowVal)
@@ -256,7 +256,7 @@ public class EnergyRenderer
 		}
 	}
 
-	public static void renderDarksaberGlow(float bladeLength)
+	public static void renderDarksaberGlow(float bladeLength, float glowHue, float glowSat, float glowVal)
 	{
 		if (bladeLength == 0)
 			return;
@@ -284,7 +284,12 @@ public class EnergyRenderer
 
 			if (layer > 0)
 			{
-				VertexConsumerBuffer.Instance.setColor(0xFFFFFF, (int)(255 * alpha));
+				var color = ColorUtil.hsvToRgbInt(
+						getHue(glowHue, x),
+						getSaturation(x, glowSat),
+						getValue(x, glowVal)
+				);
+				VertexConsumerBuffer.Instance.setColor(color, (int)(255 * alpha));
 
 				// glow layers
 				RenderShapes.invertCull(true);
