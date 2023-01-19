@@ -1,9 +1,9 @@
 package com.parzivail.pswgtk;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.parzivail.imgui.ImguiTestScreen;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgClientAddon;
-import com.parzivail.pswgtk.ui.ToolkitHomeScreen;
 import com.parzivail.util.Lumberjack;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Identifier;
@@ -22,7 +22,7 @@ public class ToolkitClient implements PswgClientAddon
 
 	public static Screen createHomeScreen(Screen parent)
 	{
-		return new ToolkitHomeScreen(parent);
+		return new ImguiTestScreen(parent);
 	}
 
 	@Override

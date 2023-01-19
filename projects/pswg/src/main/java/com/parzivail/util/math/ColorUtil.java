@@ -80,4 +80,24 @@ public class ColorUtil
 	{
 		return String.format("%06x", color & 0xFFFFFF);
 	}
+
+	public static float argbGetAf(int color)
+	{
+		return ((color & 0xFF000000) >> 24) / 255f;
+	}
+
+	public static float argbGetRf(int color)
+	{
+		return ((color & 0xFF0000) >> 16) / 255f;
+	}
+
+	public static float argbGetGf(int color)
+	{
+		return ((color & 0xFF00) >> 8) / 255f;
+	}
+
+	public static float argbGetBf(int color)
+	{
+		return (color & 0xFF) / 255f;
+	}
 }
