@@ -20,8 +20,7 @@ public class ImguiTestScreen extends ImguiScreen
 
 	public ImguiTestScreen(Screen parent)
 	{
-		super(Text.translatable(I18N_TOOLKIT_HOME));
-		this.parent = parent;
+		super(parent, Text.translatable(I18N_TOOLKIT_HOME));
 	}
 
 	@Override

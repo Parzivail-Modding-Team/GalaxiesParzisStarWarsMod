@@ -12,57 +12,16 @@ import org.lwjgl.system.MemoryUtil;
 
 public abstract class ImguiScreen extends Screen
 {
+	private static String glslVersion = null;
+
 	private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
 	private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
-	private String glslVersion = null;
-
-	/**
-	 * Pointer to the native GLFW window.
-	 */
 	protected long handle;
 
-	protected ImguiScreen(Text title)
-	{
-		super(title);
-	}
+	private boolean shouldDispose;
 
-	@Override
-	protected void init()
-	{
-		if (handle == 0)
-		{
-			initWindow();
-			initImGui();
-			imGuiGlfw.init(handle, true);
-			imGuiGl3.init(glslVersion);
-		}
-	}
-
-	/**
-	 * Method to dispose all used application resources and destroy its window.
-	 */
-	protected void dispose()
-	{
-		imGuiGl3.dispose();
-		imGuiGlfw.dispose();
-		disposeImGui();
-	}
-
-	/**
-	 * Method to create and initialize GLFW window.
-	 */
-	protected void initWindow()
-	{
-		decideGlGlslVersions();
-
-		handle = GLFW.glfwGetCurrentContext();
-
-		if (handle == MemoryUtil.NULL)
-			throw new RuntimeException("Failed to create the GLFW window");
-	}
-
-	private void decideGlGlslVersions()
+	static
 	{
 		final boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac");
 		if (isMac)
@@ -71,12 +30,46 @@ public abstract class ImguiScreen extends Screen
 			glslVersion = "#version 130";
 	}
 
-	/**
-	 * Method to initialize Dear ImGui context. Could be overridden to do custom Dear ImGui setup before application start.
-	 */
-	protected void initImGui()
+	private Screen parent;
+
+	protected ImguiScreen(Screen parent, Text title)
 	{
-		ImGui.createContext();
+		super(title);
+		this.parent = parent;
+	}
+
+	@Override
+	protected void init()
+	{
+		if (handle == 0)
+		{
+			handle = GLFW.glfwGetCurrentContext();
+
+			if (handle == MemoryUtil.NULL)
+				throw new RuntimeException("Failed to create the GLFW window");
+
+			ImGui.createContext();
+			imGuiGlfw.init(handle, true);
+			imGuiGl3.init(glslVersion);
+		}
+	}
+
+	@Override
+	public void close()
+	{
+		shouldDispose = true;
+	}
+
+	/**
+	 * Method to dispose all used application resources and destroy its window.
+	 */
+	protected void dispose()
+	{
+		handle = 0;
+
+		imGuiGl3.dispose();
+		imGuiGlfw.dispose();
+		ImGui.destroyContext();
 	}
 
 	/**
@@ -145,29 +138,20 @@ public abstract class ImguiScreen extends Screen
 		}
 	}
 
-	/**
-	 * Method to destroy Dear ImGui context.
-	 */
-	protected void disposeImGui()
-	{
-		ImGui.destroyContext();
-	}
-
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
 		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
 
 		if (handle != 0)
-			this.runFrame();
-	}
-
-	@Override
-	public void close()
-	{
-		super.close();
-
-		dispose();
-		handle = 0;
+		{
+			if (shouldDispose)
+			{
+				dispose();
+				client.setScreen(parent);
+			}
+			else
+				this.runFrame();
+		}
 	}
 }
