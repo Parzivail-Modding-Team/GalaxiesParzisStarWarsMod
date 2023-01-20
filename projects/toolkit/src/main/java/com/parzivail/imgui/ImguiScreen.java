@@ -48,10 +48,15 @@ public abstract class ImguiScreen extends Screen
 			if (handle == MemoryUtil.NULL)
 				throw new RuntimeException("Failed to create the GLFW window");
 
-			ImGui.createContext();
+			initImgui();
 			imGuiGlfw.init(handle, true);
 			imGuiGl3.init(glslVersion);
 		}
+	}
+
+	protected void initImgui()
+	{
+		ImGui.createContext();
 	}
 
 	@Override
@@ -141,7 +146,7 @@ public abstract class ImguiScreen extends Screen
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
-		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF000000, 0xFF000000);
+		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF464A55, 0xFF1A283E);
 
 		if (handle != 0)
 		{
