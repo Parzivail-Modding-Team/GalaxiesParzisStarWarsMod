@@ -2,14 +2,12 @@ package com.parzivail.imgui;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswgtk.ToolkitClient;
+import com.parzivail.pswgtk.util.LangUtil;
 import imgui.ImFont;
 import imgui.ImFontConfig;
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import imgui.flag.ImGuiConfigFlags;
-import imgui.flag.ImGuiDockNodeFlags;
-import imgui.flag.ImGuiStyleVar;
-import imgui.flag.ImGuiWindowFlags;
+import imgui.flag.*;
 import imgui.type.ImBoolean;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -22,7 +20,7 @@ import java.nio.file.Paths;
 
 public class ImguiTestScreen extends ImguiScreen
 {
-	public static final String I18N_TOOLKIT_HOME = Resources.screen("toolkit_home");
+	public static final String I18N_TOOLKIT_HOME = Resources.screen("toolkit.home");
 
 	private Screen parent;
 
@@ -37,9 +35,8 @@ public class ImguiTestScreen extends ImguiScreen
 
 	public static byte[] getBytes(String domain, Identifier resourceLocation) throws URISyntaxException, IOException
 	{
-		return Files.readAllBytes(Paths.get(
-				ToolkitClient.class.getClassLoader().getResource(domain + "/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath()).toURI()
-		));
+		var resource = ToolkitClient.class.getClassLoader().getResource(domain + "/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath());
+		return Files.readAllBytes(Paths.get(resource.toURI()));
 	}
 
 	@Override
@@ -59,7 +56,11 @@ public class ImguiTestScreen extends ImguiScreen
 		try
 		{
 			latinFont = io.getFonts().addFontFromMemoryTTF(getBytes("assets", ToolkitClient.id("font/inter_v.ttf")), 18, fontConfig);
-			aurebeshFont = io.getFonts().addFontFromMemoryTTF(getBytes("assets", ToolkitClient.id("font/aurebesh.ttf")), 18, fontConfig);
+
+			fontConfig.setMergeMode(true);
+			iconFont = io.getFonts().addFontFromMemoryTTF(getBytes("assets", ToolkitClient.id("font/icons.ttf")), 18, fontConfig, AurekIconFont.ICON_RANGE);
+
+			fontConfig.setMergeMode(false);
 			iconFont = io.getFonts().addFontFromMemoryTTF(getBytes("assets", ToolkitClient.id("font/icons.ttf")), 18, fontConfig, AurekIconFont.ICON_RANGE);
 			io.getFonts().build();
 		}
@@ -94,7 +95,9 @@ public class ImguiTestScreen extends ImguiScreen
 
 			if (ImGui.beginMenuBar())
 			{
-				if (ImGui.beginMenu("Aurek"))
+				// TODO: add aurek logo to icon font
+				// TODO: scale down discord logo
+				if (ImGui.beginMenu(AurekIconFont.pswg_micro_logo + " Aurek"))
 				{
 					if (ImGui.menuItem("Exit"))
 						close();
@@ -105,19 +108,62 @@ public class ImguiTestScreen extends ImguiScreen
 				ImGui.endMenuBar();
 			}
 
-			if (ImGui.begin("Small Window", ImGuiWindowFlags.AlwaysAutoResize))
+			if (ImGui.begin("Tools"))
 			{
-				ImGui.text("Hello, World!");
-				ImGui.pushFont(iconFont);
-				ImGui.text(AurekIconFont.pswg_micro_logo);
-				ImGui.text(AurekIconFont.discord);
-				ImGui.text(AurekIconFont.fabric);
-				ImGui.text(AurekIconFont.curseforge);
-				ImGui.text(AurekIconFont.modrinth);
-				ImGui.popFont();
-				ImGui.pushFont(aurebeshFont);
-				ImGui.text("Hello, World!");
-				ImGui.popFont();
+				var tableFlags = ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable | ImGuiTableFlags.Hideable | ImGuiTableFlags.ScrollY
+				                 | ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV | ImGuiTableFlags.NoBordersInBody;
+				if (ImGui.beginTable("available_tools", 3, tableFlags))
+				{
+					ImGui.tableSetupColumn("Tool", ImGuiTableColumnFlags.WidthFixed);
+					ImGui.tableSetupColumn("Actions", ImGuiTableColumnFlags.WidthFixed);
+					ImGui.tableSetupColumn("Description", ImGuiTableColumnFlags.WidthStretch);
+					ImGui.tableSetupScrollFreeze(0, 1);
+					ImGui.tableHeadersRow();
+
+					for (var category : ToolkitClient.TOOLS.entrySet())
+					{
+						var name = category.getKey();
+						var tools = category.getValue();
+
+						ImGui.pushID(name);
+
+						ImGui.tableNextRow();
+						ImGui.tableNextColumn();
+
+						var expanded = ImGui.treeNodeEx(LangUtil.translate(name), ImGuiTreeNodeFlags.SpanFullWidth);
+						ImGui.tableNextColumn();
+						ImGui.tableNextColumn();
+
+						if (expanded)
+						{
+							for (var tool : tools)
+							{
+								ImGui.pushID(name);
+								ImGui.tableNextRow();
+
+								ImGui.tableNextColumn();
+								ImGui.treeNodeEx(LangUtil.translate(tool.getTitle()), ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.NoTreePushOnOpen | ImGuiTreeNodeFlags.SpanFullWidth);
+
+								ImGui.tableNextColumn();
+								if (ImGui.button("Run"))
+								{
+									// Run
+								}
+
+								ImGui.tableNextColumn();
+								ImGui.textWrapped(LangUtil.translate(tool.getDescription()));
+
+								ImGui.popID();
+							}
+
+							ImGui.treePop();
+						}
+
+						ImGui.popID();
+					}
+
+					ImGui.endTable();
+				}
 			}
 			ImGui.end();
 

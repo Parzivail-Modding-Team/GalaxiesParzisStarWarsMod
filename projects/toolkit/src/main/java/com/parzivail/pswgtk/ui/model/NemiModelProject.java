@@ -2,7 +2,7 @@ package com.parzivail.pswgtk.ui.model;
 
 import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswgtk.model.nemi.NemiModel;
-import com.parzivail.pswgtk.swing.NodeTreeModel;
+import com.parzivail.pswgtk.util.NodeTreeModel;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;

@@ -1,7 +1,5 @@
 package com.parzivail.pswgtk.ui;
 
-import com.parzivail.pswgtk.swing.EventHelper;
-import com.parzivail.pswgtk.swing.TextureBackedContentWrapper;
 import com.parzivail.pswgtk.util.AnimatedFloat;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -11,7 +9,6 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.*;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -50,11 +47,11 @@ public class PanelViewportController implements MouseMotionListener
 		this.screen = screen;
 		this.panel = panel;
 		panel.setFocusable(true);
-		panel.setBackground(new Color(TextureBackedContentWrapper.MASK_COLOR));
+		//		panel.setBackground(new Color(TextureBackedContentWrapper.MASK_COLOR));
 		panel.addMouseMotionListener(this);
 		panel.addMouseWheelListener(e -> this.zoomExponent.setTarget(this.zoomExponent.getTarget() - e.getWheelRotation()));
-		EventHelper.press(panel, this::contentPanelPressed);
-		EventHelper.keyPressed(panel, this::contentPanelKeyPressed);
+		//		EventHelper.press(panel, this::contentPanelPressed);
+		//		EventHelper.keyPressed(panel, this::contentPanelKeyPressed);
 	}
 
 	private void contentPanelKeyPressed(KeyEvent e)

@@ -1,11 +1,8 @@
-package com.parzivail.pswgtk.swing;
+package com.parzivail.pswgtk.util;
 
-import javax.swing.event.TreeModelListener;
-import javax.swing.tree.TreeModel;
-import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 
-public class NodeTreeModel<TValue> implements TreeModel
+public class NodeTreeModel<TValue>
 {
 	public static class Node<TValue>
 	{
@@ -40,57 +37,34 @@ public class NodeTreeModel<TValue> implements TreeModel
 		this.root = root;
 	}
 
-	@Override
 	public Object getRoot()
 	{
 		return root;
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
 	public Object getChild(Object parent, int index)
 	{
 		return ((Node<TValue>)parent).children.get(index);
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
 	public int getChildCount(Object parent)
 	{
 		return ((Node<TValue>)parent).children.size();
 	}
 
-	@Override
 	@SuppressWarnings("unchecked")
 	public boolean isLeaf(Object node)
 	{
 		return ((Node<TValue>)node).children.isEmpty();
 	}
 
-	@Override
-	public void valueForPathChanged(TreePath path, Object newValue)
-	{
-
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
 	public int getIndexOfChild(Object parent, Object child)
 	{
 		if (parent == null || child == null)
 			return -1;
 		return ((Node<TValue>)parent).children.indexOf((Node<TValue>)child);
-	}
-
-	@Override
-	public void addTreeModelListener(TreeModelListener l)
-	{
-
-	}
-
-	@Override
-	public void removeTreeModelListener(TreeModelListener l)
-	{
-
 	}
 }

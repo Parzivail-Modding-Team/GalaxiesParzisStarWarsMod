@@ -1,9 +1,9 @@
 package com.parzivail.pswgtk.ui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.imgui.ImguiScreen;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswgtk.render.ChunkedWorldMesh;
-import com.parzivail.pswgtk.screen.JComponentScreen;
 import com.parzivail.pswgtk.world.GeneratingBlockRenderView;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
@@ -13,7 +13,7 @@ import net.minecraft.util.math.ChunkPos;
 
 import javax.swing.*;
 
-public class ToolkitWorldgenScreen extends JComponentScreen
+public class ToolkitWorldgenScreen extends ImguiScreen
 {
 	private static final String I18N_TOOLKIT_WORLDGEN = Resources.screen("toolkit_worldgen");
 
@@ -60,12 +60,6 @@ public class ToolkitWorldgenScreen extends JComponentScreen
 	}
 
 	@Override
-	protected JComponent getRootComponent()
-	{
-		return root;
-	}
-
-	@Override
 	public void tick()
 	{
 		super.tick();
@@ -73,7 +67,6 @@ public class ToolkitWorldgenScreen extends JComponentScreen
 		viewportController.tick();
 	}
 
-	@Override
 	protected void renderContent(MatrixStack matrices)
 	{
 		assert this.client != null;
@@ -107,5 +100,11 @@ public class ToolkitWorldgenScreen extends JComponentScreen
 		matrices.translate(contentTopLeftMc.x, contentTopLeftMc.y, 1000);
 		textRenderer.draw(matrices, client.fpsDebugString, 10, 10, 0xFFFFFF);
 		matrices.pop();
+	}
+
+	@Override
+	public void process()
+	{
+
 	}
 }
