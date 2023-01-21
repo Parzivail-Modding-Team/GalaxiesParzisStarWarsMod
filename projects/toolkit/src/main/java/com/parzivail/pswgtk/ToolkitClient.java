@@ -17,12 +17,17 @@ public class ToolkitClient implements PswgClientAddon
 	public static final Lumberjack LOG = new Lumberjack(MODID);
 
 	public static final String I18N_TOOLKIT = Resources.screen("toolkit");
-	public static final Identifier TEX_TOOLKIT = new Identifier(MODID, "textures/gui/toolkit_button.png");
-	public static final Identifier TEX_DEBUG = new Identifier(MODID, "textures/debug.png");
+	public static final Identifier TEX_TOOLKIT = id("textures/gui/toolkit_button.png");
+	public static final Identifier TEX_DEBUG = id("textures/debug.png");
 
 	public static Screen createHomeScreen(Screen parent)
 	{
 		return new ImguiTestScreen(parent);
+	}
+
+	public static Identifier id(String path)
+	{
+		return new Identifier(MODID, path);
 	}
 
 	@Override
