@@ -17,9 +17,9 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 	public TabModelController(JTabbedPane tabContainer, Consumer<TModel> onModelChanged)
 	{
 		this.tabContainer = tabContainer;
-		tabContainer.removeAll();
-
-		tabContainer.addChangeListener(e -> onModelChanged.accept(getSelected()));
+		//		tabContainer.removeAll();
+		//
+		//		tabContainer.addChangeListener(e -> onModelChanged.accept(getSelected()));
 	}
 
 	public TModel getSelected()

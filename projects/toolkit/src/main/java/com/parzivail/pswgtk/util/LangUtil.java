@@ -8,11 +8,4 @@ public class LangUtil
 	{
 		return Language.getInstance().get(key);
 	}
-
-	public static String tryTranslate(String key)
-	{
-		if (key.charAt(0) == '$')
-			return translate(key.substring(1));
-		return key;
-	}
 }

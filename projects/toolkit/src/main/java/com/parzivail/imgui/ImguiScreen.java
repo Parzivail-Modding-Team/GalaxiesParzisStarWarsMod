@@ -1,14 +1,25 @@
 package com.parzivail.imgui;
 
+import com.parzivail.pswgtk.ToolkitClient;
+import imgui.ImFont;
+import imgui.ImFontConfig;
 import imgui.ImGui;
+import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryUtil;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 public abstract class ImguiScreen extends Screen
 {
@@ -19,7 +30,11 @@ public abstract class ImguiScreen extends Screen
 
 	protected long handle;
 
-	private boolean shouldDispose;
+	protected ImFont latinFont;
+	protected ImFont aurebeshFont;
+	protected ImFont iconFont;
+
+	private Optional<Screen> nextScreen = Optional.empty();
 
 	static
 	{
@@ -36,6 +51,12 @@ public abstract class ImguiScreen extends Screen
 	{
 		super(title);
 		this.parent = parent;
+	}
+
+	public static byte[] getBytes(String domain, Identifier resourceLocation) throws URISyntaxException, IOException
+	{
+		var resource = ToolkitClient.class.getClassLoader().getResource(domain + "/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath());
+		return Files.readAllBytes(Paths.get(resource.toURI()));
 	}
 
 	@Override
@@ -57,12 +78,45 @@ public abstract class ImguiScreen extends Screen
 	protected void initImgui()
 	{
 		ImGui.createContext();
+		setupDefaultFonts();
+	}
+
+	protected void setupDefaultFonts()
+	{
+		final ImGuiIO io = imgui.internal.ImGui.getIO();
+		io.setIniFilename(null);
+		io.addConfigFlags(ImGuiConfigFlags.NavEnableKeyboard);
+		io.addConfigFlags(ImGuiConfigFlags.DockingEnable);
+		io.setConfigDockingWithShift(true);
+		io.setConfigViewportsNoTaskBarIcon(true);
+
+		final ImFontConfig fontConfig = new ImFontConfig();
+
+		try
+		{
+			latinFont = io.getFonts().addFontFromMemoryTTF(getBytes("assets", ToolkitClient.id("font/inter_v.ttf")), 18, fontConfig);
+
+			fontConfig.setMergeMode(true);
+			iconFont = io.getFonts().addFontFromMemoryTTF(getBytes("assets", ToolkitClient.id("font/icons.ttf")), 18, fontConfig, AurekIconFont.ICON_RANGE);
+			io.getFonts().build();
+		}
+		catch (URISyntaxException | IOException e)
+		{
+			throw new RuntimeException(e);
+		}
+
+		fontConfig.destroy();
 	}
 
 	@Override
 	public void close()
 	{
-		shouldDispose = true;
+		setScreen(parent);
+	}
+
+	protected void setScreen(Screen screen)
+	{
+		nextScreen = Optional.ofNullable(screen);
 	}
 
 	/**
@@ -150,10 +204,10 @@ public abstract class ImguiScreen extends Screen
 
 		if (handle != 0)
 		{
-			if (shouldDispose)
+			if (nextScreen.isPresent())
 			{
 				dispose();
-				client.setScreen(parent);
+				client.setScreen(nextScreen.get());
 			}
 			else
 				this.runFrame();

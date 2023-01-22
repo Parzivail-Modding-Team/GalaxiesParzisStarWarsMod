@@ -1,5 +1,7 @@
 package com.parzivail.pswgtk.util;
 
+import imgui.internal.ImGui;
+
 import java.util.ArrayList;
 
 public class NodeTreeModel<TValue>
@@ -28,6 +30,15 @@ public class NodeTreeModel<TValue>
 			this.children.add(node);
 			return this;
 		}
+
+		public void render()
+		{
+			if (ImGui.treeNode(LangUtil.translate(title)))
+			{
+				children.forEach(Node::render);
+				ImGui.treePop();
+			}
+		}
 	}
 
 	private final Node<TValue> root;
@@ -37,34 +48,36 @@ public class NodeTreeModel<TValue>
 		this.root = root;
 	}
 
-	public Object getRoot()
+	public Node<TValue> getRoot()
 	{
 		return root;
 	}
 
-	@SuppressWarnings("unchecked")
-	public Object getChild(Object parent, int index)
+	public Object getChild(Node<TValue> parent, int index)
 	{
-		return ((Node<TValue>)parent).children.get(index);
+		return parent.children.get(index);
 	}
 
-	@SuppressWarnings("unchecked")
-	public int getChildCount(Object parent)
+	public int getChildCount(Node<TValue> parent)
 	{
-		return ((Node<TValue>)parent).children.size();
+		return parent.children.size();
 	}
 
-	@SuppressWarnings("unchecked")
-	public boolean isLeaf(Object node)
+	public boolean isLeaf(Node<TValue> node)
 	{
-		return ((Node<TValue>)node).children.isEmpty();
+		return node.children.isEmpty();
 	}
 
-	@SuppressWarnings("unchecked")
-	public int getIndexOfChild(Object parent, Object child)
+	public int getIndexOfChild(Node<TValue> parent, Node<TValue> child)
 	{
 		if (parent == null || child == null)
 			return -1;
-		return ((Node<TValue>)parent).children.indexOf((Node<TValue>)child);
+		return parent.children.indexOf(child);
+	}
+
+	public void render()
+	{
+		ImGui.setNextItemOpen(true);
+		root.render();
 	}
 }

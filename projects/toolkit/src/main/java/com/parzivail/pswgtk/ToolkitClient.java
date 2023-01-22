@@ -1,13 +1,14 @@
 package com.parzivail.pswgtk;
 
 import com.google.common.collect.ImmutableList;
-import com.parzivail.imgui.ImguiTestScreen;
+import com.parzivail.imgui.ToolkitHomeScreen;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.pswgtk.ui.NemiCompilerScreen;
 import com.parzivail.pswgtk.ui.ToolkitWorldgenScreen;
 import com.parzivail.pswgtk.util.LangUtil;
 import com.parzivail.util.Lumberjack;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.util.Identifier;
 
@@ -37,6 +38,12 @@ public class ToolkitClient implements PswgClientAddon
 		{
 			return LangUtil.translate("tool.description." + id);
 		}
+
+		public Screen getScreen()
+		{
+			var mc = MinecraftClient.getInstance();
+			return screenProvider.apply(mc.currentScreen);
+		}
 	}
 
 	//	public static final ExecutorService UI_WORKER = WorkerUtil.createWorker("ui", 1);
@@ -64,7 +71,7 @@ public class ToolkitClient implements PswgClientAddon
 
 	public static Screen createHomeScreen(Screen parent)
 	{
-		return new ImguiTestScreen(parent);
+		return new ToolkitHomeScreen(parent);
 	}
 
 	public static Identifier id(String path)

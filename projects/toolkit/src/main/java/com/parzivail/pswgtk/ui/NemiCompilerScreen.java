@@ -10,7 +10,15 @@ import com.parzivail.pswgtk.ui.model.NemiModelProject;
 import com.parzivail.pswgtk.ui.model.TabModelController;
 import com.parzivail.pswgtk.util.DialogUtil;
 import com.parzivail.pswgtk.util.FileUtil;
+import com.parzivail.pswgtk.util.LangUtil;
 import com.parzivail.util.math.MatrixStackUtil;
+import imgui.flag.ImGuiDir;
+import imgui.flag.ImGuiDockNodeFlags;
+import imgui.flag.ImGuiStyleVar;
+import imgui.flag.ImGuiWindowFlags;
+import imgui.internal.ImGui;
+import imgui.type.ImBoolean;
+import imgui.type.ImInt;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
@@ -25,7 +33,6 @@ import net.minecraft.util.math.Vec2f;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -35,9 +42,12 @@ public class NemiCompilerScreen extends ImguiScreen
 {
 	private static final Gson gson = new Gson();
 	private static final String I18N_TOOLKIT_NEMI_COMPILER = Resources.screen("nemi_compiler");
+	private static final ImInt INT_NULL = new ImInt(0);
 
 	private final TabModelController<NemiModelProject> tabController;
-	private final PanelViewportController viewportController;
+	private final PanelViewportController viewportController = null;
+
+	private boolean setupDock = true;
 
 	private JPanel rootPanel;
 	private JTabbedPane openFiles;
@@ -51,17 +61,17 @@ public class NemiCompilerScreen extends ImguiScreen
 	{
 		super(parent, Text.translatable(I18N_TOOLKIT_NEMI_COMPILER));
 
-		var menu = new JMenu("File");
-		menu.setMnemonic(KeyEvent.VK_F);
+		//		var menu = new JMenu("File");
+		//		menu.setMnemonic(KeyEvent.VK_F);
 		//		menu.add(EventHelper.action(new JMenuItem("Open...", KeyEvent.VK_O), EventHelper.ctrl(KeyEvent.VK_O), this::openModel));
-		menu.add(new JSeparator());
+		//		menu.add(new JSeparator());
 		//		menu.add(EventHelper.action(new JMenuItem("Export NEM..."), this::exportNem));
-		menuBar.add(menu);
+		//		menuBar.add(menu);
 
-		viewportController = new PanelViewportController(this, contentPanel);
+		//		viewportController = new PanelViewportController(this, contentPanel);
 
 		tabController = new TabModelController<>(openFiles, this::selectedModelChanged);
-		modelTree.setModel(null);
+		//		modelTree.setModel(null);
 	}
 
 	private Vec2f getContentTopLeft()
@@ -83,7 +93,7 @@ public class NemiCompilerScreen extends ImguiScreen
 	@Override
 	public void tick()
 	{
-		viewportController.tick();
+		//		viewportController.tick();
 	}
 
 	protected void renderContent(MatrixStack matrices)
@@ -122,7 +132,7 @@ public class NemiCompilerScreen extends ImguiScreen
 		RenderSystem.applyModelViewMatrix();
 	}
 
-	private void openModel(ActionEvent e)
+	private void openModel()
 	{
 		DialogUtil.openFile("Open Model", "NEM Models (*.nemi, *.nem)", false, "*.nemi", "*.nem")
 		          .ifPresent(paths -> openModel(paths[0]));
@@ -191,6 +201,83 @@ public class NemiCompilerScreen extends ImguiScreen
 	@Override
 	public void process()
 	{
+		var flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.MenuBar;
+		flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBackground;
+		flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus | ImGuiWindowFlags.NoDecoration;
 
+		var v = ImGui.getMainViewport();
+
+		ImGui.setNextWindowPos(0, 0);
+		ImGui.setNextWindowSize(v.getSizeX(), v.getSizeY());
+
+		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
+
+		if (ImGui.begin(LangUtil.translate(I18N_TOOLKIT_NEMI_COMPILER), new ImBoolean(true), flags))
+		{
+			ImGui.popStyleVar();
+
+			var dockspaceId = ImGui.getID("nemi_dockspace");
+			ImGui.dockSpace(dockspaceId, 0, 0, ImGuiDockNodeFlags.PassthruCentralNode);
+
+			if (ImGui.beginMenuBar())
+			{
+				if (ImGui.beginMenu(LangUtil.translate(I18N_TOOLKIT_NEMI_COMPILER)))
+				{
+					if (ImGui.menuItem("Open..."))
+						openModel();
+
+					ImGui.separator();
+
+					if (ImGui.menuItem("Exit"))
+						close();
+
+					ImGui.endMenu();
+				}
+
+				ImGui.endMenuBar();
+			}
+
+			if (setupDock)
+			{
+				setupDock = false;
+
+				var outId = new ImInt(dockspaceId);
+				var dockLeftId = ImGui.dockBuilderSplitNode(dockspaceId, ImGuiDir.Left, 0.3f, INT_NULL, outId);
+
+				ImGui.dockBuilderDockWindow("Model Tree", dockLeftId);
+				ImGui.dockBuilderDockWindow("Viewport", outId.get());
+				ImGui.dockBuilderFinish(dockspaceId);
+			}
+
+			if (ImGui.begin("Model Tree"))
+			{
+				if (selectedModel == null)
+					ImGui.textDisabled("No model selected");
+				else
+					selectedModel.getTreeModel().render();
+			}
+			ImGui.end();
+
+			if (ImGui.begin("Viewport"))
+			{
+				if (ImGui.beginTabBar("open_projects"))
+				{
+					for (var model : tabController)
+					{
+						if (ImGui.beginTabItem(model.getTitle()))
+						{
+							ImGui.text(model.getCompiledModel().toString());
+							ImGui.endTabItem();
+						}
+					}
+
+					ImGui.endTabBar();
+				}
+			}
+			ImGui.end();
+		}
+		else
+			ImGui.popStyleVar();
+		ImGui.end();
 	}
 }
