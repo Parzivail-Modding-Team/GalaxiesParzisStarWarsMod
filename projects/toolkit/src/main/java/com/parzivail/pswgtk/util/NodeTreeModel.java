@@ -1,5 +1,6 @@
 package com.parzivail.pswgtk.util;
 
+import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.internal.ImGui;
 
 import java.util.ArrayList;
@@ -33,7 +34,13 @@ public class NodeTreeModel<TValue>
 
 		public void render()
 		{
-			if (ImGui.treeNode(LangUtil.translate(title)))
+			if (children.isEmpty())
+			{
+				ImGui.treeNodeEx(LangUtil.translate(title), ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.NoTreePushOnOpen | ImGuiTreeNodeFlags.SpanFullWidth);
+				return;
+			}
+
+			if (ImGui.treeNodeEx(LangUtil.translate(title), ImGuiTreeNodeFlags.SpanFullWidth))
 			{
 				children.forEach(Node::render);
 				ImGui.treePop();

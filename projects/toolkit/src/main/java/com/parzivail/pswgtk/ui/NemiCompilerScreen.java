@@ -1,18 +1,16 @@
 package com.parzivail.pswgtk.ui;
 
 import com.google.gson.Gson;
-import com.mojang.blaze3d.platform.GlConst;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.imgui.ImguiScreen;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswgtk.ToolkitClient;
 import com.parzivail.pswgtk.model.nemi.NemiModel;
-import com.parzivail.pswgtk.render.TextureFramebuffer;
 import com.parzivail.pswgtk.ui.model.NemiModelProject;
 import com.parzivail.pswgtk.ui.model.TabModelController;
 import com.parzivail.pswgtk.util.DialogUtil;
 import com.parzivail.pswgtk.util.FileUtil;
+import com.parzivail.pswgtk.util.ImGuiHelper;
 import com.parzivail.pswgtk.util.LangUtil;
 import com.parzivail.util.math.MatrixStackUtil;
 import imgui.flag.ImGuiDir;
@@ -30,8 +28,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Quaternion;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL30;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.io.Reader;
@@ -45,9 +42,7 @@ public class NemiCompilerScreen extends ImguiScreen
 	private static final ImInt INT_NULL = new ImInt(0);
 
 	private final TabModelController<NemiModelProject> tabController;
-	private final PanelViewportController viewportController = new PanelViewportController();
-
-	private final TextureFramebuffer modelFbo = new TextureFramebuffer(true);
+	private final Viewport viewport = new Viewport();
 
 	private boolean firstFrame = true;
 
@@ -68,7 +63,7 @@ public class NemiCompilerScreen extends ImguiScreen
 	@Override
 	public void tick()
 	{
-		viewportController.tick();
+		viewport.tick();
 	}
 
 	private void openModel()
@@ -139,12 +134,17 @@ public class NemiCompilerScreen extends ImguiScreen
 	@Override
 	public void process()
 	{
+		boolean shouldExportProject = false;
+
 		if (ImGui.beginMainMenuBar())
 		{
 			if (ImGui.beginMenu(LangUtil.translate(I18N_TOOLKIT_NEMI_COMPILER)))
 			{
-				if (ImGui.menuItem("Open..."))
+				if (ImGui.menuItem("Open...", "Ctrl+O"))
 					openModel();
+
+				if (ImGui.menuItem("Export NEM...", "Ctrl+E"))
+					shouldExportProject = true;
 
 				ImGui.separator();
 
@@ -156,6 +156,11 @@ public class NemiCompilerScreen extends ImguiScreen
 
 			ImGui.endMainMenuBar();
 		}
+
+		if (ImGuiHelper.isCtrlDown() && ImGui.isKeyDown(GLFW.GLFW_KEY_O))
+			openModel();
+		if (ImGuiHelper.isCtrlDown() && ImGui.isKeyDown(GLFW.GLFW_KEY_E))
+			shouldExportProject = true;
 
 		var v = ImGui.getMainViewport();
 		ImGui.setNextWindowPos(v.getWorkPosX(), v.getWorkPosY());
@@ -194,31 +199,22 @@ public class NemiCompilerScreen extends ImguiScreen
 						{
 							selectedProject = model;
 
+							assert this.client != null;
 							var tickDelta = client.getTickDelta();
 
-							modelFbo.resizeIfRequired((int)ImGui.getContentRegionAvailX(), (int)ImGui.getContentRegionAvailY());
-
-							// TODO: https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp#L7629
-							// TODO: integrate into/replace ViewportController
-							viewportController.pollInput(modelFbo);
-
-							var previousFbo = GL11.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
-							modelFbo.beginWrite(false);
-							assert this.client != null;
-
-							RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT, false);
+							viewport.capture(false, true);
 
 							RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
 
 							var ms = new MatrixStack();
 
 							var f = 1 / (float)client.getWindow().getScaleFactor();
-							MatrixStackUtil.scalePos(ms, f, -f, f);
-							viewportController.setup(ms, modelFbo, tickDelta);
+							MatrixStackUtil.scalePos(ms, f, f, f);
+							viewport.translateAndZoom(ms, tickDelta);
 							MatrixStackUtil.scalePos(ms, 16, 16, 16);
 							MatrixStackUtil.scalePos(ms, 10, 10, 10);
 
-							viewportController.rotate(ms, tickDelta);
+							viewport.rotate(ms, tickDelta);
 							var immediate = client.getBufferBuilders().getEntityVertexConsumers();
 
 							ms.push();
@@ -231,9 +227,7 @@ public class NemiCompilerScreen extends ImguiScreen
 							model.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 							immediate.draw();
 
-							GlStateManager._glBindFramebuffer(GlConst.GL_FRAMEBUFFER, previousFbo);
-
-							ImGui.image(modelFbo.getColorAttachment(), modelFbo.textureWidth, modelFbo.textureHeight, 0, 1, 1, 0);
+							viewport.draw();
 
 							ImGui.endTabItem();
 						}
@@ -252,6 +246,9 @@ public class NemiCompilerScreen extends ImguiScreen
 					selectedProject.getTreeModel().render();
 			}
 			ImGui.end();
+
+			if (shouldExportProject && selectedProject != null)
+				exportNem(selectedProject);
 		}
 		else
 			ImGui.popStyleVar();

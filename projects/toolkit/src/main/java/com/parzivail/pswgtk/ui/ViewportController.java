@@ -1,6 +1,7 @@
 package com.parzivail.pswgtk.ui;
 
 import com.parzivail.pswgtk.util.AnimatedFloat;
+import com.parzivail.pswgtk.util.ImGuiHelper;
 import imgui.flag.ImGuiMouseButton;
 import imgui.internal.ImGui;
 import net.minecraft.client.gl.Framebuffer;
@@ -12,7 +13,8 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
 
-public class PanelViewportController
+@Deprecated
+public class ViewportController
 {
 	private static <T> void putNumpadEmu(HashMap<Integer, T> map, int key, T value)
 	{
@@ -38,18 +40,8 @@ public class PanelViewportController
 
 	private Vec2f prevMousePos = Vec2f.ZERO;
 
-	public PanelViewportController()
+	public ViewportController()
 	{
-	}
-
-	private boolean isShiftDown()
-	{
-		return ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT);
-	}
-
-	private boolean isCtrlDown()
-	{
-		return ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL);
 	}
 
 	private void setCameraPosition(Vec3f pos)
@@ -60,10 +52,10 @@ public class PanelViewportController
 		this.pitch.setTarget((float)(MathHelper.atan2(vec3d.y, d) * MathHelper.DEGREES_PER_RADIAN));
 	}
 
-	public void pollInput(Framebuffer framebuffer)
+	public void pollInput(int width, int height)
 	{
 		var cursorPos = ImGui.getCursorPos();
-		ImGui.invisibleButton("viewport_input", framebuffer.textureWidth, framebuffer.textureHeight);
+		ImGui.invisibleButton("viewport_input", width, height);
 		ImGui.setCursorPos(cursorPos.x, cursorPos.y);
 		var hovered = ImGui.isItemHovered();
 
@@ -99,8 +91,8 @@ public class PanelViewportController
 			if (ImGui.isKeyPressed(cameraPresetEntry.getKey()))
 			{
 				var cameraPreset = cameraPresetEntry.getValue();
-				setCameraPosition(isShiftDown() ? cameraPreset.getRight() : cameraPreset.getLeft());
-				if (isCtrlDown())
+				setCameraPosition(ImGuiHelper.isShiftDown() ? cameraPreset.getRight() : cameraPreset.getLeft());
+				if (ImGuiHelper.isCtrlDown())
 				{
 					this.x.setTarget(0);
 					this.y.setTarget(0);
@@ -131,9 +123,9 @@ public class PanelViewportController
 		zoomExponent.tick();
 	}
 
-	public void setup(MatrixStack ms, Framebuffer framebuffer, float tickDelta)
+	public void translateAndZoom(MatrixStack ms, Framebuffer framebuffer, float tickDelta)
 	{
-		ms.translate(framebuffer.textureWidth / 2f + this.x.getValue(tickDelta), -(framebuffer.textureHeight / 2f + this.y.getValue(tickDelta)), 50);
+		ms.translate(framebuffer.textureWidth / 2f + this.x.getValue(tickDelta), (framebuffer.textureHeight / 2f + this.y.getValue(tickDelta)), 50);
 		var f = (float)Math.pow(10, zoomExponent.getValue() / 10);
 		ms.scale(f, f, 1);
 	}

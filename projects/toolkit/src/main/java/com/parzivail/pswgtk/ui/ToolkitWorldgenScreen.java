@@ -19,7 +19,7 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 	private final JPanel contentPanel;
 
 	private final GeneratingBlockRenderView world;
-	private final PanelViewportController viewportController;
+	private final ViewportController viewportController;
 
 	private ChunkedWorldMesh mesh;
 
@@ -44,7 +44,7 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 		this.root.setLeftComponent(worldgenControls.getRoot());
 
 		this.contentPanel = new JPanel();
-		viewportController = new PanelViewportController();
+		viewportController = new ViewportController();
 		this.root.setRightComponent(contentPanel);
 	}
 
