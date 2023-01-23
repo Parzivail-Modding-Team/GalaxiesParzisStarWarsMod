@@ -1,11 +1,14 @@
 package com.parzivail.pswgtk.ui;
 
 import com.google.gson.Gson;
+import com.mojang.blaze3d.platform.GlConst;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.imgui.ImguiScreen;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswgtk.ToolkitClient;
 import com.parzivail.pswgtk.model.nemi.NemiModel;
+import com.parzivail.pswgtk.render.TextureFramebuffer;
 import com.parzivail.pswgtk.ui.model.NemiModelProject;
 import com.parzivail.pswgtk.ui.model.TabModelController;
 import com.parzivail.pswgtk.util.DialogUtil;
@@ -13,11 +16,9 @@ import com.parzivail.pswgtk.util.FileUtil;
 import com.parzivail.pswgtk.util.LangUtil;
 import com.parzivail.util.math.MatrixStackUtil;
 import imgui.flag.ImGuiDir;
-import imgui.flag.ImGuiDockNodeFlags;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
-import imgui.type.ImBoolean;
 import imgui.type.ImInt;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
@@ -30,9 +31,9 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec2f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL30;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -47,15 +48,9 @@ public class NemiCompilerScreen extends ImguiScreen
 	private final TabModelController<NemiModelProject> tabController;
 	private final PanelViewportController viewportController = null;
 
-	private boolean setupDock = true;
+	private final TextureFramebuffer modelFbo = new TextureFramebuffer(true);
 
-	private JPanel rootPanel;
-	private JTabbedPane openFiles;
-	private JMenuBar menuBar;
-	private JTree modelTree;
-	private JPanel contentPanel;
-
-	private NemiModelProject selectedModel;
+	private boolean firstFrame = true;
 
 	public NemiCompilerScreen(Screen parent)
 	{
@@ -70,24 +65,18 @@ public class NemiCompilerScreen extends ImguiScreen
 
 		//		viewportController = new PanelViewportController(this, contentPanel);
 
-		tabController = new TabModelController<>(openFiles, this::selectedModelChanged);
+		tabController = new TabModelController<>();
 		//		modelTree.setModel(null);
 	}
 
 	private Vec2f getContentTopLeft()
 	{
-		return new Vec2f(contentPanel.getX(), contentPanel.getY());
+		return new Vec2f(0, 0);
 	}
 
 	private Vec2f getContentSize()
 	{
-		return new Vec2f(contentPanel.getWidth(), contentPanel.getHeight());
-	}
-
-	private void selectedModelChanged(NemiModelProject nemiModelProject)
-	{
-		selectedModel = nemiModelProject;
-		//		modelTree.setModel(nemiModelProject.getTreeModel());
+		return new Vec2f(0, 0);
 	}
 
 	@Override
@@ -96,11 +85,8 @@ public class NemiCompilerScreen extends ImguiScreen
 		//		viewportController.tick();
 	}
 
-	protected void renderContent(MatrixStack matrices)
+	protected void renderContent(MatrixStack matrices, NemiModelProject selectedModel)
 	{
-		if (selectedModel == null)
-			return;
-
 		assert this.client != null;
 		var tickDelta = this.client.getTickDelta();
 
@@ -146,17 +132,16 @@ public class NemiCompilerScreen extends ImguiScreen
 			openNemi(path);
 	}
 
-	private void exportNem(ActionEvent e)
+	private void exportNem(NemiModelProject project)
 	{
 		DialogUtil.saveFile("Save Model", "*.nem")
-		          .ifPresent(this::saveModel);
+		          .ifPresent(path -> saveModel(path, project));
 	}
 
-	private void saveModel(String path)
+	private void saveModel(String path, NemiModelProject project)
 	{
 		path = FileUtil.ensureExtension(path, ".nem");
 
-		var project = tabController.getSelected();
 		var nem = project.getCompiledModel();
 
 		try
@@ -201,45 +186,40 @@ public class NemiCompilerScreen extends ImguiScreen
 	@Override
 	public void process()
 	{
-		var flags = ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoDocking | ImGuiWindowFlags.MenuBar;
-		flags |= ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBackground;
-		flags |= ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoNavFocus | ImGuiWindowFlags.NoDecoration;
+		if (ImGui.beginMainMenuBar())
+		{
+			if (ImGui.beginMenu(LangUtil.translate(I18N_TOOLKIT_NEMI_COMPILER)))
+			{
+				if (ImGui.menuItem("Open..."))
+					openModel();
+
+				ImGui.separator();
+
+				if (ImGui.menuItem("Exit"))
+					close();
+
+				ImGui.endMenu();
+			}
+
+			ImGui.endMainMenuBar();
+		}
 
 		var v = ImGui.getMainViewport();
-
-		ImGui.setNextWindowPos(0, 0);
-		ImGui.setNextWindowSize(v.getSizeX(), v.getSizeY());
+		ImGui.setNextWindowPos(v.getWorkPosX(), v.getWorkPosY());
+		ImGui.setNextWindowSize(v.getWorkSizeX(), v.getWorkSizeY());
 
 		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
 
-		if (ImGui.begin(LangUtil.translate(I18N_TOOLKIT_NEMI_COMPILER), new ImBoolean(true), flags))
+		if (ImGui.begin(LangUtil.translate(I18N_TOOLKIT_NEMI_COMPILER), ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBackground))
 		{
 			ImGui.popStyleVar();
 
 			var dockspaceId = ImGui.getID("nemi_dockspace");
-			ImGui.dockSpace(dockspaceId, 0, 0, ImGuiDockNodeFlags.PassthruCentralNode);
+			ImGui.dockSpace(dockspaceId);
 
-			if (ImGui.beginMenuBar())
+			if (firstFrame)
 			{
-				if (ImGui.beginMenu(LangUtil.translate(I18N_TOOLKIT_NEMI_COMPILER)))
-				{
-					if (ImGui.menuItem("Open..."))
-						openModel();
-
-					ImGui.separator();
-
-					if (ImGui.menuItem("Exit"))
-						close();
-
-					ImGui.endMenu();
-				}
-
-				ImGui.endMenuBar();
-			}
-
-			if (setupDock)
-			{
-				setupDock = false;
+				firstFrame = false;
 
 				var outId = new ImInt(dockspaceId);
 				var dockLeftId = ImGui.dockBuilderSplitNode(dockspaceId, ImGuiDir.Left, 0.3f, INT_NULL, outId);
@@ -249,16 +229,9 @@ public class NemiCompilerScreen extends ImguiScreen
 				ImGui.dockBuilderFinish(dockspaceId);
 			}
 
-			if (ImGui.begin("Model Tree"))
-			{
-				if (selectedModel == null)
-					ImGui.textDisabled("No model selected");
-				else
-					selectedModel.getTreeModel().render();
-			}
-			ImGui.end();
+			NemiModelProject selectedProject = null;
 
-			if (ImGui.begin("Viewport"))
+			if (ImGui.begin("Viewport", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove))
 			{
 				if (ImGui.beginTabBar("open_projects"))
 				{
@@ -266,13 +239,61 @@ public class NemiCompilerScreen extends ImguiScreen
 					{
 						if (ImGui.beginTabItem(model.getTitle()))
 						{
-							ImGui.text(model.getCompiledModel().toString());
+							selectedProject = model;
+
+							modelFbo.resizeIfRequired((int)ImGui.getContentRegionAvailX(), (int)ImGui.getContentRegionAvailY());
+
+							// TODO: https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp#L7629
+							// TODO: integrate into/replace ViewportController
+							ImGui.invisibleButton("viewport_input", modelFbo.textureWidth, modelFbo.textureHeight);
+
+							var previousFbo = GL11.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
+							modelFbo.beginWrite(false);
+							assert this.client != null;
+
+							RenderSystem.clear(GL11.GL_DEPTH_BUFFER_BIT | GL11.GL_COLOR_BUFFER_BIT, false);
+
+							RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+
+							var ms = new MatrixStack();
+
+							var f = 1 / (float)client.getWindow().getScaleFactor();
+							MatrixStackUtil.scalePos(ms, f, -f, f);
+							ms.translate(modelFbo.textureWidth / 2f, -modelFbo.textureHeight / 2f, 50);
+							MatrixStackUtil.scalePos(ms, 16, 16, 16);
+							MatrixStackUtil.scalePos(ms, 10, 10, 10);
+
+							var immediate = client.getBufferBuilders().getEntityVertexConsumers();
+
+							ms.push();
+							ms.translate(-0.5f, -1, -0.5f);
+							client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
+							ms.pop();
+
+							ms.multiply(new Quaternion(0, 0, 180, true));
+							ms.translate(0, -1.5f, 0);
+							model.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
+							immediate.draw();
+
+							GlStateManager._glBindFramebuffer(GlConst.GL_FRAMEBUFFER, previousFbo);
+
+							ImGui.image(modelFbo.getColorAttachment(), modelFbo.textureWidth, modelFbo.textureHeight, 0, 1, 1, 0);
+
 							ImGui.endTabItem();
 						}
 					}
 
 					ImGui.endTabBar();
 				}
+			}
+			ImGui.end();
+
+			if (ImGui.begin("Model Tree", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove))
+			{
+				if (selectedProject == null)
+					ImGui.textDisabled("No project selected");
+				else
+					selectedProject.getTreeModel().render();
 			}
 			ImGui.end();
 		}

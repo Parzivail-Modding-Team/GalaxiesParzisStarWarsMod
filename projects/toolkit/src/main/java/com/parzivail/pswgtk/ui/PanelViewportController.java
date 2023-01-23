@@ -121,12 +121,12 @@ public class PanelViewportController implements MouseMotionListener
 
 	public Vec2f getContentTopLeft()
 	{
-		return new Vec2f(panel.getX(), panel.getY());
+		return new Vec2f(0, 0);
 	}
 
 	public Vec2f getContentSize()
 	{
-		return new Vec2f(panel.getWidth(), panel.getHeight());
+		return new Vec2f(0, 0);
 	}
 
 	public void tick()

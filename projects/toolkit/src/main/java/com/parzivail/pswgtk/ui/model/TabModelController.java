@@ -7,24 +7,13 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.function.Consumer;
 
 public class TabModelController<TModel extends TabModel> implements Collection<TModel>
 {
 	private final ArrayList<TModel> models = new ArrayList<>();
-	private final JTabbedPane tabContainer;
 
-	public TabModelController(JTabbedPane tabContainer, Consumer<TModel> onModelChanged)
+	public TabModelController()
 	{
-		this.tabContainer = tabContainer;
-		//		tabContainer.removeAll();
-		//
-		//		tabContainer.addChangeListener(e -> onModelChanged.accept(getSelected()));
-	}
-
-	public TModel getSelected()
-	{
-		return models.get(tabContainer.getSelectedIndex());
 	}
 
 	@Override
@@ -69,9 +58,7 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 	@Override
 	public boolean add(TModel tModel)
 	{
-		models.add(tModel);
-		this.tabContainer.add(tModel.getTitle(), createEmptyTabContents());
-		return true;
+		return models.add(tModel);
 	}
 
 	private JComponent createEmptyTabContents()
@@ -93,7 +80,6 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 		var model = models.indexOf(o);
 		if (!models.get(model).tryClose())
 			return false;
-		this.tabContainer.remove(model);
 		return models.remove(o);
 	}
 
@@ -106,10 +92,7 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 	@Override
 	public boolean addAll(@NotNull Collection<? extends TModel> c)
 	{
-		var result = models.addAll(c);
-		for (var c1 : c)
-			this.tabContainer.add(c1.getTitle(), createEmptyTabContents());
-		return result;
+		return models.addAll(c);
 	}
 
 	@Override
@@ -133,7 +116,6 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 			TModel model = models.get(i);
 			if (!model.tryClose())
 				continue;
-			this.tabContainer.remove(i);
 			discarded.add(model);
 		}
 
