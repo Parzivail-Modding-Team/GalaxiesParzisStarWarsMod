@@ -1,12 +1,10 @@
 package com.parzivail.pswgtk.ui;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.imgui.ImguiScreen;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswgtk.render.ChunkedWorldMesh;
 import com.parzivail.pswgtk.world.GeneratingBlockRenderView;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.ChunkPos;
@@ -46,7 +44,7 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 		this.root.setLeftComponent(worldgenControls.getRoot());
 
 		this.contentPanel = new JPanel();
-		viewportController = new PanelViewportController(this, contentPanel);
+		viewportController = new PanelViewportController();
 		this.root.setRightComponent(contentPanel);
 	}
 
@@ -69,37 +67,37 @@ public class ToolkitWorldgenScreen extends ImguiScreen
 
 	protected void renderContent(MatrixStack matrices)
 	{
-		assert this.client != null;
-		var tickDelta = this.client.getTickDelta();
-
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-
-		var rsm = RenderSystem.getModelViewStack();
-		rsm.push();
-
-		rsm.scale(1, -1, 1);
-		viewportController.setup(rsm, tickDelta);
-		RenderSystem.applyModelViewMatrix();
-
-		var dim = mesh.getDimensions();
-
-		var ms = new MatrixStack();
-		ms.multiplyPositionMatrix(RenderSystem.getModelViewMatrix());
-		viewportController.rotate(ms, tickDelta);
-
-		ms.translate(-dim.getX() / 2f, -dim.getY() / 2f, -dim.getZ() / 2f);
-
-		this.mesh.render(ms);
-
-		rsm.pop();
-		RenderSystem.applyModelViewMatrix();
-
-		var contentTopLeftMc = viewportController.transformSwingToScreen(viewportController.getContentTopLeft());
-
-		matrices.push();
-		matrices.translate(contentTopLeftMc.x, contentTopLeftMc.y, 1000);
-		textRenderer.draw(matrices, client.fpsDebugString, 10, 10, 0xFFFFFF);
-		matrices.pop();
+		//		assert this.client != null;
+		//		var tickDelta = this.client.getTickDelta();
+		//
+		//		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+		//
+		//		var rsm = RenderSystem.getModelViewStack();
+		//		rsm.push();
+		//
+		//		rsm.scale(1, -1, 1);
+		//		viewportController.setup(rsm, tickDelta);
+		//		RenderSystem.applyModelViewMatrix();
+		//
+		//		var dim = mesh.getDimensions();
+		//
+		//		var ms = new MatrixStack();
+		//		ms.multiplyPositionMatrix(RenderSystem.getModelViewMatrix());
+		//		viewportController.rotate(ms, tickDelta);
+		//
+		//		ms.translate(-dim.getX() / 2f, -dim.getY() / 2f, -dim.getZ() / 2f);
+		//
+		//		this.mesh.render(ms);
+		//
+		//		rsm.pop();
+		//		RenderSystem.applyModelViewMatrix();
+		//
+		//		var contentTopLeftMc = viewportController.transformSwingToScreen(viewportController.getContentTopLeft());
+		//
+		//		matrices.push();
+		//		matrices.translate(contentTopLeftMc.x, contentTopLeftMc.y, 1000);
+		//		textRenderer.draw(matrices, client.fpsDebugString, 10, 10, 0xFFFFFF);
+		//		matrices.pop();
 	}
 
 	@Override

@@ -1,39 +1,35 @@
 package com.parzivail.pswgtk.ui;
 
 import com.parzivail.pswgtk.util.AnimatedFloat;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
+import imgui.flag.ImGuiMouseButton;
+import imgui.internal.ImGui;
+import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.*;
+import org.lwjgl.glfw.GLFW;
 
-import javax.swing.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
 import java.util.HashMap;
 
-public class PanelViewportController implements MouseMotionListener
+public class PanelViewportController
 {
 	private static <T> void putNumpadEmu(HashMap<Integer, T> map, int key, T value)
 	{
-		map.put(key, value);
-		map.put(key + KeyEvent.VK_NUMPAD0, value);
+		map.put(key + GLFW.GLFW_KEY_0, value);
+		map.put(key + GLFW.GLFW_KEY_KP_0, value);
 	}
 
 	private static final HashMap<Integer, Pair<Vec3f, Vec3f>> VIEWPORT_DIRECTION_PRESETS = Util.make(() -> {
 		var h = new HashMap<Integer, Pair<Vec3f, Vec3f>>();
-		putNumpadEmu(h, KeyEvent.VK_1, new Pair<>(Direction.SOUTH.getUnitVector(), Direction.NORTH.getUnitVector()));
-		putNumpadEmu(h, KeyEvent.VK_7, new Pair<>(Direction.UP.getUnitVector(), Direction.DOWN.getUnitVector()));
-		putNumpadEmu(h, KeyEvent.VK_3, new Pair<>(Direction.EAST.getUnitVector(), Direction.WEST.getUnitVector()));
-		putNumpadEmu(h, KeyEvent.VK_9, new Pair<>(new Vec3f(1, 1, 1), new Vec3f(-1, 1, 1)));
-		putNumpadEmu(h, KeyEvent.VK_5, new Pair<>(new Vec3f(1, 1, -1), new Vec3f(-1, 1, -1)));
+		putNumpadEmu(h, 1, new Pair<>(Direction.SOUTH.getUnitVector(), Direction.NORTH.getUnitVector()));
+		putNumpadEmu(h, 7, new Pair<>(Direction.UP.getUnitVector(), Direction.DOWN.getUnitVector()));
+		putNumpadEmu(h, 3, new Pair<>(Direction.EAST.getUnitVector(), Direction.WEST.getUnitVector()));
+		putNumpadEmu(h, 9, new Pair<>(new Vec3f(1, 1, 1), new Vec3f(-1, 1, 1)));
+		putNumpadEmu(h, 5, new Pair<>(new Vec3f(1, 1, -1), new Vec3f(-1, 1, -1)));
 		return h;
 	});
 
-	private final Screen screen;
-	private final JPanel panel;
 	private final AnimatedFloat yaw = new AnimatedFloat(1, 0.1f, 45);
 	private final AnimatedFloat pitch = new AnimatedFloat(1, 0.1f, 60);
 	private final AnimatedFloat x = new AnimatedFloat(1, 1, 0);
@@ -42,48 +38,18 @@ public class PanelViewportController implements MouseMotionListener
 
 	private Vec2f prevMousePos = Vec2f.ZERO;
 
-	public PanelViewportController(Screen screen, JPanel panel)
+	public PanelViewportController()
 	{
-		this.screen = screen;
-		this.panel = panel;
-		panel.setFocusable(true);
-		//		panel.setBackground(new Color(TextureBackedContentWrapper.MASK_COLOR));
-		panel.addMouseMotionListener(this);
-		panel.addMouseWheelListener(e -> this.zoomExponent.setTarget(this.zoomExponent.getTarget() - e.getWheelRotation()));
-		//		EventHelper.press(panel, this::contentPanelPressed);
-		//		EventHelper.keyPressed(panel, this::contentPanelKeyPressed);
 	}
 
-	private void contentPanelKeyPressed(KeyEvent e)
+	private boolean isShiftDown()
 	{
-		var c = e.getKeyCode();
-		var cameraPreset = VIEWPORT_DIRECTION_PRESETS.get(c);
-		if (cameraPreset != null)
-		{
-			setCameraPosition(e.isShiftDown() ? cameraPreset.getRight() : cameraPreset.getLeft());
-			if (e.isControlDown())
-			{
-				this.x.setTarget(0);
-				this.y.setTarget(0);
-			}
-		}
-		else
-		{
-			if (c == KeyEvent.VK_4 || c == KeyEvent.VK_NUMPAD4)
-				this.yaw.setTarget(this.yaw.getValue() + 22.5f);
-			else if (c == KeyEvent.VK_6 || c == KeyEvent.VK_NUMPAD6)
-				this.yaw.setTarget(this.yaw.getValue() - 22.5f);
-			else if (c == KeyEvent.VK_8 || c == KeyEvent.VK_NUMPAD8)
-				this.pitch.setTarget(this.pitch.getValue() + 22.5f);
-			else if (c == KeyEvent.VK_2 || c == KeyEvent.VK_NUMPAD2)
-				this.pitch.setTarget(this.pitch.getValue() - 22.5f);
-		}
+		return ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT);
 	}
 
-	private void contentPanelPressed(MouseEvent e)
+	private boolean isCtrlDown()
 	{
-		prevMousePos = new Vec2f(e.getXOnScreen(), e.getYOnScreen());
-		this.panel.requestFocus();
+		return ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL);
 	}
 
 	private void setCameraPosition(Vec3f pos)
@@ -94,39 +60,64 @@ public class PanelViewportController implements MouseMotionListener
 		this.pitch.setTarget((float)(MathHelper.atan2(vec3d.y, d) * MathHelper.DEGREES_PER_RADIAN));
 	}
 
-	@Override
-	public void mouseDragged(MouseEvent e)
+	public void pollInput(Framebuffer framebuffer)
 	{
-		var pos = new Vec2f(e.getXOnScreen(), e.getYOnScreen());
+		var cursorPos = ImGui.getCursorPos();
+		ImGui.invisibleButton("viewport_input", framebuffer.textureWidth, framebuffer.textureHeight);
+		ImGui.setCursorPos(cursorPos.x, cursorPos.y);
+		var hovered = ImGui.isItemHovered();
+
+		var pos = new Vec2f(ImGui.getMousePosX(), ImGui.getMousePosY());
 		var delta = pos.add(prevMousePos.multiply(-1));
 
-		if ((e.getModifiersEx() & MouseEvent.BUTTON1_DOWN_MASK) != 0)
+		if (hovered)
 		{
-			this.pitch.setValue((this.pitch.getValue() + delta.y / 4) % 360);
-			this.yaw.setValue((this.yaw.getValue() + delta.x / 4) % 360);
-		}
-		else if ((e.getModifiersEx() & MouseEvent.BUTTON3_DOWN_MASK) != 0)
-		{
-			this.y.setValue((this.y.getValue() + delta.y));
-			this.x.setValue((this.x.getValue() + delta.x));
+			if (ImGui.isMouseDragging(ImGuiMouseButton.Left))
+			{
+				this.pitch.setValue((this.pitch.getValue() + delta.y / 4) % 360);
+				this.yaw.setValue((this.yaw.getValue() + delta.x / 4) % 360);
+			}
+			else if (ImGui.isMouseDragging(ImGuiMouseButton.Right))
+			{
+				this.y.setValue((this.y.getValue() + delta.y));
+				this.x.setValue((this.x.getValue() + delta.x));
+			}
+
+			var io = ImGui.getIO();
+			this.zoomExponent.setTarget(this.zoomExponent.getTarget() + io.getMouseWheel());
 		}
 
 		prevMousePos = pos;
+
+		pollKeyboard();
 	}
 
-	@Override
-	public void mouseMoved(MouseEvent e)
+	private void pollKeyboard()
 	{
-	}
+		for (var cameraPresetEntry : VIEWPORT_DIRECTION_PRESETS.entrySet())
+		{
+			if (ImGui.isKeyPressed(cameraPresetEntry.getKey()))
+			{
+				var cameraPreset = cameraPresetEntry.getValue();
+				setCameraPosition(isShiftDown() ? cameraPreset.getRight() : cameraPreset.getLeft());
+				if (isCtrlDown())
+				{
+					this.x.setTarget(0);
+					this.y.setTarget(0);
+				}
 
-	public Vec2f getContentTopLeft()
-	{
-		return new Vec2f(0, 0);
-	}
+				return;
+			}
+		}
 
-	public Vec2f getContentSize()
-	{
-		return new Vec2f(0, 0);
+		if (ImGui.isKeyPressed(GLFW.GLFW_KEY_4) || ImGui.isKeyPressed(GLFW.GLFW_KEY_KP_4))
+			this.yaw.setTarget(this.yaw.getValue() + 22.5f);
+		else if (ImGui.isKeyPressed(GLFW.GLFW_KEY_6) || ImGui.isKeyPressed(GLFW.GLFW_KEY_KP_6))
+			this.yaw.setTarget(this.yaw.getValue() - 22.5f);
+		else if (ImGui.isKeyPressed(GLFW.GLFW_KEY_8) || ImGui.isKeyPressed(GLFW.GLFW_KEY_KP_8))
+			this.pitch.setTarget(this.pitch.getValue() + 22.5f);
+		else if (ImGui.isKeyPressed(GLFW.GLFW_KEY_2) || ImGui.isKeyPressed(GLFW.GLFW_KEY_KP_2))
+			this.pitch.setTarget(this.pitch.getValue() - 22.5f);
 	}
 
 	public void tick()
@@ -140,24 +131,9 @@ public class PanelViewportController implements MouseMotionListener
 		zoomExponent.tick();
 	}
 
-	public Vec2f transformSwingToScreen(Vec2f point)
+	public void setup(MatrixStack ms, Framebuffer framebuffer, float tickDelta)
 	{
-		var client = MinecraftClient.getInstance();
-		return new Vec2f(
-				(int)(screen.width * point.x / client.getWindow().getFramebufferWidth()),
-				(int)(screen.height * point.y / client.getWindow().getFramebufferHeight())
-		);
-	}
-
-	public void setup(MatrixStack ms, float tickDelta)
-	{
-		var windowX = x.getValue(tickDelta);
-		var windowY = y.getValue(tickDelta);
-
-		var contentTopLeft = getContentTopLeft();
-		var contentCenter = transformSwingToScreen(contentTopLeft.add(getContentSize().multiply(0.5f)).add(new Vec2f(windowX, windowY)));
-
-		ms.translate(contentCenter.x, -contentCenter.y, 50);
+		ms.translate(framebuffer.textureWidth / 2f + this.x.getValue(tickDelta), -(framebuffer.textureHeight / 2f + this.y.getValue(tickDelta)), 50);
 		var f = (float)Math.pow(10, zoomExponent.getValue() / 10);
 		ms.scale(f, f, 1);
 	}

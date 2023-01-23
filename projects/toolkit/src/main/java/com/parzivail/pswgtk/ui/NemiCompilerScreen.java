@@ -30,7 +30,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec2f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
@@ -46,7 +45,7 @@ public class NemiCompilerScreen extends ImguiScreen
 	private static final ImInt INT_NULL = new ImInt(0);
 
 	private final TabModelController<NemiModelProject> tabController;
-	private final PanelViewportController viewportController = null;
+	private final PanelViewportController viewportController = new PanelViewportController();
 
 	private final TextureFramebuffer modelFbo = new TextureFramebuffer(true);
 
@@ -63,59 +62,13 @@ public class NemiCompilerScreen extends ImguiScreen
 		//		menu.add(EventHelper.action(new JMenuItem("Export NEM..."), this::exportNem));
 		//		menuBar.add(menu);
 
-		//		viewportController = new PanelViewportController(this, contentPanel);
-
 		tabController = new TabModelController<>();
-		//		modelTree.setModel(null);
-	}
-
-	private Vec2f getContentTopLeft()
-	{
-		return new Vec2f(0, 0);
-	}
-
-	private Vec2f getContentSize()
-	{
-		return new Vec2f(0, 0);
 	}
 
 	@Override
 	public void tick()
 	{
-		//		viewportController.tick();
-	}
-
-	protected void renderContent(MatrixStack matrices, NemiModelProject selectedModel)
-	{
-		assert this.client != null;
-		var tickDelta = this.client.getTickDelta();
-
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-
-		var rsm = RenderSystem.getModelViewStack();
-		rsm.push();
-
-		MatrixStackUtil.scalePos(rsm, 1, -1, 1);
-		viewportController.setup(rsm, tickDelta);
-		MatrixStackUtil.scalePos(rsm, 16, 16, 16);
-		RenderSystem.applyModelViewMatrix();
-
-		var ms = new MatrixStack();
-		viewportController.rotate(ms, tickDelta);
-		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
-
-		ms.push();
-		ms.translate(-0.5f, -1, -0.5f);
-		client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
-		ms.pop();
-
-		ms.multiply(new Quaternion(0, 0, 180, true));
-		ms.translate(0, -1.5f, 0);
-		selectedModel.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
-		immediate.draw();
-
-		rsm.pop();
-		RenderSystem.applyModelViewMatrix();
+		viewportController.tick();
 	}
 
 	private void openModel()
@@ -231,7 +184,7 @@ public class NemiCompilerScreen extends ImguiScreen
 
 			NemiModelProject selectedProject = null;
 
-			if (ImGui.begin("Viewport", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove))
+			if (ImGui.begin("Viewport", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollWithMouse))
 			{
 				if (ImGui.beginTabBar("open_projects"))
 				{
@@ -241,11 +194,13 @@ public class NemiCompilerScreen extends ImguiScreen
 						{
 							selectedProject = model;
 
+							var tickDelta = client.getTickDelta();
+
 							modelFbo.resizeIfRequired((int)ImGui.getContentRegionAvailX(), (int)ImGui.getContentRegionAvailY());
 
 							// TODO: https://github.com/ocornut/imgui/blob/master/imgui_demo.cpp#L7629
 							// TODO: integrate into/replace ViewportController
-							ImGui.invisibleButton("viewport_input", modelFbo.textureWidth, modelFbo.textureHeight);
+							viewportController.pollInput(modelFbo);
 
 							var previousFbo = GL11.glGetInteger(GL30.GL_DRAW_FRAMEBUFFER_BINDING);
 							modelFbo.beginWrite(false);
@@ -259,10 +214,11 @@ public class NemiCompilerScreen extends ImguiScreen
 
 							var f = 1 / (float)client.getWindow().getScaleFactor();
 							MatrixStackUtil.scalePos(ms, f, -f, f);
-							ms.translate(modelFbo.textureWidth / 2f, -modelFbo.textureHeight / 2f, 50);
+							viewportController.setup(ms, modelFbo, tickDelta);
 							MatrixStackUtil.scalePos(ms, 16, 16, 16);
 							MatrixStackUtil.scalePos(ms, 10, 10, 10);
 
+							viewportController.rotate(ms, tickDelta);
 							var immediate = client.getBufferBuilders().getEntityVertexConsumers();
 
 							ms.push();
