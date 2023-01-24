@@ -2,14 +2,12 @@ package com.parzivail.pswg.entity.rodent;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.brain.*;
 import net.minecraft.entity.ai.brain.task.*;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.World;
 
 import java.util.Optional;
@@ -45,20 +43,21 @@ public class SandSkitterBrain
 
 	private static void addIdleActivities(Brain<SandSkitterEntity> brain)
 	{
-		brain.setTaskList(
-				Activity.IDLE,
-				ImmutableList.of(
-						Pair.of(1, new WalkTowardsLookTargetTask<>(SandSkitterBrain::getLikedLookTarget, 4, 16, 2.25F)),
-						Pair.of(2, new TimeLimitedTask<>(new FollowMobTask((sandSkitter) -> true, 6.0F), UniformIntProvider.create(30, 60))),
-						Pair.of(3, new RandomTask<>(
-								ImmutableList.of(
-										Pair.of(new NoPenaltyStrollTask(1.0F), 2),
-										Pair.of(new GoTowardsLookTarget(1.0F, 3), 2),
-										Pair.of(new WaitTask(30, 60), 1)
-								)
-						))),
-				ImmutableSet.of()
-		);
+		// TODO:
+		//		brain.setTaskList(
+		//				Activity.IDLE,
+		//				ImmutableList.of(
+		//						Pair.of(1, new WalkTowardsLookTargetTask<>(SandSkitterBrain::getLikedLookTarget, 4, 16, 2.25F)),
+		//						Pair.of(2, new TimeLimitedTask<>(new FollowMobTask((sandSkitter) -> true, 6.0F), UniformIntProvider.create(30, 60))),
+		//						Pair.of(3, new RandomTask<>(
+		//								ImmutableList.of(
+		//										Pair.of(new NoPenaltyStrollTask(1.0F), 2),
+		//										Pair.of(new GoTowardsLookTarget(1.0F, 3), 2),
+		//										Pair.of(new WaitTask(30, 60), 1)
+		//								)
+		//						))),
+		//				ImmutableSet.of()
+		//		);
 	}
 
 	public static void updateActivities(SandSkitterEntity allay)
