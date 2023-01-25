@@ -1,5 +1,6 @@
 package com.parzivail.pswg.container;
 
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.block.crop.*;
@@ -19,7 +20,6 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
@@ -28,6 +28,8 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShapes;
+
+import java.util.ArrayList;
 
 public class SwgBlocks
 {
@@ -780,8 +782,6 @@ public class SwgBlocks
 		RegistryHelper.registerAutoId(Resources.MODID, SwgBlocks.class, Object.class, SwgBlocks::tryRegisterBlock);
 		RegistryHelper.registerAutoId(Resources.MODID, SwgBlocks.class, BlockEntityType.class, SwgBlocks::registerBlockEntityType);
 		RegistryHelper.register(SwgBlocks.class, ServerBlockRegistryData.class, Block.class, SwgBlocks::registerServerData);
-
-		RegistryHelper.register(SwgBlocks.class, ServerItemRegistryData.class, ItemConvertible.class, SwgItems::registerServerData); // TODO: this doesn't handle the block group wrappers
 	}
 
 	private static void registerServerData(ServerBlockRegistryData data, Block block)
@@ -849,7 +849,11 @@ public class SwgBlocks
 
 		if (!ignoreTab)
 		{
-			// TODO: add to tabs somehow
+			var tab = tabOverride == null ? Galaxies.TabBlocks.getId() : Resources.id(tabOverride);
+			if (!SwgItems.ITEM_GROUPS.containsKey(tab))
+				SwgItems.ITEM_GROUPS.put(tab, new ArrayList<>());
+
+			SwgItems.ITEM_GROUPS.get(tab).add(block);
 		}
 
 		Registry.register(Registries.BLOCK, identifier, block);

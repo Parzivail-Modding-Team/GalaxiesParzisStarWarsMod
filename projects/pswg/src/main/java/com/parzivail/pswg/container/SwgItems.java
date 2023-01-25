@@ -1,5 +1,6 @@
 package com.parzivail.pswg.container;
 
+import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.CableItem;
 import com.parzivail.pswg.item.DebugItem;
@@ -24,6 +25,9 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SwgItems
 {
@@ -474,44 +478,57 @@ public class SwgItems
 		public static final LightsaberItem Lightsaber = new LightsaberItem(new Item.Settings().maxCount(1));
 	}
 
+	static HashMap<Identifier, ArrayList<ItemConvertible>> ITEM_GROUPS = new HashMap<>();
+
 	public static void register()
 	{
 		RegistryHelper.registerAutoId(Resources.MODID, SwgItems.class, Object.class, SwgItems::tryRegisterItem);
 
-		RegistryHelper.register(SwgItems.class, ServerItemRegistryData.class, ItemConvertible.class, SwgItems::registerServerData);
+		for (var entry : ITEM_GROUPS.entrySet())
+		{
+			var group = entry.getKey();
+			var items = entry.getValue();
+
+			ItemGroupEvents.modifyEntriesEvent(group).register(entries -> {
+				for (var item : items)
+					if (item instanceof ICustomItemGroupStacks customStacks)
+						customStacks.appendStacks(entries);
+					else
+						entries.add(item);
+			});
+		}
 	}
 
 	public static void tryRegisterItem(Object o, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
-		if (!ignoreTab)
-		{
-			// TODO: add to tabs somehow, take into account ITabStackProviders
-		}
-
 		if (o instanceof Item item)
-			Registry.register(Registries.ITEM, identifier, item);
+			registerWithTab(identifier, item, ignoreTab, tabOverride);
 		else if (o instanceof ArmorItems armorItems)
 		{
-			Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_helmet"), armorItems.helmet);
-			Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_chestplate"), armorItems.chestplate);
-			Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_leggings"), armorItems.leggings);
-			Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_boots"), armorItems.boots);
+			registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_helmet"), armorItems.helmet, ignoreTab, tabOverride);
+			registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_chestplate"), armorItems.chestplate, ignoreTab, tabOverride);
+			registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_leggings"), armorItems.leggings, ignoreTab, tabOverride);
+			registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_boots"), armorItems.boots, ignoreTab, tabOverride);
 		}
 		else if (o instanceof DyedItems items)
 			for (var entry : items.entrySet())
-				Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue());
+				registerWithTab(new Identifier(identifier.getNamespace(), entry.getKey().getName() + "_" + identifier.getPath()), entry.getValue(), ignoreTab, tabOverride);
 		else if (o instanceof NumberedItems items)
 			for (var i = 0; i < items.size(); i++)
-				Registry.register(Registries.ITEM, new Identifier(identifier.getNamespace(), identifier.getPath() + "_" + (i + 1)), items.get(i));
+				registerWithTab(new Identifier(identifier.getNamespace(), identifier.getPath() + "_" + (i + 1)), items.get(i), ignoreTab, tabOverride);
 	}
 
-	static void registerServerData(ServerItemRegistryData data, ItemConvertible itemConvertible)
+	private static void registerWithTab(Identifier identifier, Item item, boolean ignoreTab, String tabOverride)
 	{
-		var item = itemConvertible.asItem();
-		// FIXME: find a good way to do this without registering an event handler per item
-		if (data.itemGroup() != null && !data.itemGroup().isEmpty())
+		if (!ignoreTab)
 		{
-			ItemGroupEvents.modifyEntriesEvent(new Identifier(data.itemGroup())).register(item instanceof ICustomItemGroupStacks customStacks ? customStacks::appendStacks : (entries -> entries.add(item)));
+			var tab = tabOverride == null ? Galaxies.TabItems.getId() : Resources.id(tabOverride);
+			if (!ITEM_GROUPS.containsKey(tab))
+				ITEM_GROUPS.put(tab, new ArrayList<>());
+
+			ITEM_GROUPS.get(tab).add(item);
 		}
+
+		Registry.register(Registries.ITEM, identifier, item);
 	}
 }
