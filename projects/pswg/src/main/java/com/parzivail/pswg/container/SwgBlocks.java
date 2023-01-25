@@ -809,38 +809,38 @@ public class SwgBlocks
 	private static void registerStoneProducts(StoneProducts t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		registerBlock(t.block, identifier, ignoreTab, tabOverride);
-		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab, tabOverride);
-		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), ignoreTab, tabOverride);
-		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), ignoreTab, tabOverride);
+		registerBlock(t.stairs, new Identifier(identifier.getNamespace(), identifier.getPath() + "_stairs"), ignoreTab, tabOverride);
+		registerBlock(t.slab, new Identifier(identifier.getNamespace(), identifier.getPath() + "_slab"), ignoreTab, tabOverride);
+		registerBlock(t.wall, new Identifier(identifier.getNamespace(), identifier.getPath() + "_wall"), ignoreTab, tabOverride);
 	}
 
 	private static void registerDyedStoneProducts(DyedStoneProducts t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		for (var entry : t.entrySet())
-			registerStoneProducts(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab, tabOverride);
+			registerStoneProducts(entry.getValue(), new Identifier(identifier.getNamespace(), entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab, tabOverride);
 	}
 
 	private static void registerNumberedBlocks(NumberedBlocks t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		for (var i = 0; i < t.size(); i++)
-			registerBlock(t.get(i), Resources.id(identifier.getPath() + "_" + (i + 1)), ignoreTab, tabOverride);
+			registerBlock(t.get(i), new Identifier(identifier.getNamespace(), identifier.getPath() + "_" + (i + 1)), ignoreTab, tabOverride);
 	}
 
 	private static void registerWoodProducts(WoodProducts t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
-		registerBlock(t.plank, Resources.id(identifier.getPath() + "_planks"), ignoreTab, tabOverride);
-		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab, tabOverride);
-		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), ignoreTab, tabOverride);
-		registerBlock(t.fence, Resources.id(identifier.getPath() + "_fence"), ignoreTab, tabOverride);
-		registerBlock(t.gate, Resources.id(identifier.getPath() + "_fence_gate"), ignoreTab, tabOverride);
-		registerBlock(t.trapdoor, Resources.id(identifier.getPath() + "_trapdoor"), ignoreTab, tabOverride);
-		registerBlock(t.door, Resources.id(identifier.getPath() + "_door"), ignoreTab, tabOverride);
+		registerBlock(t.plank, new Identifier(identifier.getNamespace(), identifier.getPath() + "_planks"), ignoreTab, tabOverride);
+		registerBlock(t.stairs, new Identifier(identifier.getNamespace(), identifier.getPath() + "_stairs"), ignoreTab, tabOverride);
+		registerBlock(t.slab, new Identifier(identifier.getNamespace(), identifier.getPath() + "_slab"), ignoreTab, tabOverride);
+		registerBlock(t.fence, new Identifier(identifier.getNamespace(), identifier.getPath() + "_fence"), ignoreTab, tabOverride);
+		registerBlock(t.gate, new Identifier(identifier.getNamespace(), identifier.getPath() + "_fence_gate"), ignoreTab, tabOverride);
+		registerBlock(t.trapdoor, new Identifier(identifier.getNamespace(), identifier.getPath() + "_trapdoor"), ignoreTab, tabOverride);
+		registerBlock(t.door, new Identifier(identifier.getNamespace(), identifier.getPath() + "_door"), ignoreTab, tabOverride);
 	}
 
 	private static void registerDyedBlocks(DyedBlocks t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		for (var entry : t.entrySet())
-			registerBlock(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab, tabOverride);
+			registerBlock(entry.getValue(), new Identifier(identifier.getNamespace(), entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab, tabOverride);
 	}
 
 	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab, String tabOverride)
@@ -849,7 +849,7 @@ public class SwgBlocks
 
 		if (!ignoreTab)
 		{
-			var tab = tabOverride == null ? Galaxies.TabBlocks.getId() : Resources.id(tabOverride);
+			var tab = tabOverride == null ? Galaxies.TabBlocks.getId() : new Identifier(identifier.getNamespace(), tabOverride);
 			if (!SwgItems.ITEM_GROUPS.containsKey(tab))
 				SwgItems.ITEM_GROUPS.put(tab, new ArrayList<>());
 
