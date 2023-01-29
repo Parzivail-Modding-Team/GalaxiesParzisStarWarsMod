@@ -28,10 +28,10 @@ import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
-import net.minecraft.util.registry.Registry;
 
 import java.util.Objects;
 
@@ -51,7 +51,7 @@ public class Galaxies implements ModInitializer
 
 	public static final ItemGroup TabBlasters = FabricItemGroup
 			.builder(Resources.id("blasters"))
-			.icon(() -> new ItemStack(Registry.ITEM.get(Resources.id("blaster_a280"))))
+			.icon(() -> new ItemStack(Registries.ITEM.get(Resources.id("blaster_a280"))))
 			.build();
 
 	public static final ItemGroup TabLightsabers = FabricItemGroup

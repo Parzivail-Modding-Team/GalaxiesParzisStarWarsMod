@@ -5,15 +5,15 @@ import com.parzivail.util.Consumers;
 import com.parzivail.util.gen.biome.TerrainBiomes;
 import com.parzivail.util.gen.mc.GalaxiesBiomeSource;
 import com.parzivail.util.gen.mc.GalaxiesChunkGenerator;
-import net.minecraft.registry.*;
-import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.dimension.DimensionType;
 
-import java.util.OptionalLong;
 import java.util.function.Consumer;
 
 public class SwgDimensions

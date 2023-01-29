@@ -537,7 +537,7 @@ public class SwgItems
 		{
 			var id = blaster.getKey();
 			Registry.register(
-					Registry.ITEM,
+					Registries.ITEM,
 					new Identifier(id.getNamespace(), "blaster_" + id.getPath()),
 					new BlasterItem(new Item.Settings().maxCount(1).group(Galaxies.TabBlasters), id, blaster.getValue())
 			);

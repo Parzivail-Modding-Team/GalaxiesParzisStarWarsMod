@@ -12,6 +12,7 @@ import com.parzivail.pswgtk.util.DialogUtil;
 import com.parzivail.pswgtk.util.FileUtil;
 import com.parzivail.pswgtk.util.ImGuiHelper;
 import com.parzivail.pswgtk.util.LangUtil;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.MatrixStackUtil;
 import imgui.flag.ImGuiDir;
 import imgui.flag.ImGuiStyleVar;
@@ -27,10 +28,9 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.text.Text;
-import org.lwjgl.glfw.GLFW;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec2f;
 import org.joml.Quaternionf;
+import org.lwjgl.glfw.GLFW;
 
 import java.io.File;
 import java.io.Reader;
@@ -243,7 +243,7 @@ public class NemiCompilerScreen extends ImguiScreen
 
 							viewport.capture(false, true);
 
-							RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
+							RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
 
 							var ms = new MatrixStack();
 
@@ -261,7 +261,7 @@ public class NemiCompilerScreen extends ImguiScreen
 							client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 							ms.pop();
 
-							ms.multiply(new Quaternion(0, 0, 180, true));
+							ms.multiply(new Quaternionf().rotationZ(MathUtil.fPI));
 							ms.translate(0, -1.5f, 0);
 							model.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 							immediate.draw();

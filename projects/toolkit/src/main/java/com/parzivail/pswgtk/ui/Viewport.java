@@ -6,13 +6,19 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswgtk.render.TextureFramebuffer;
 import com.parzivail.pswgtk.util.AnimatedFloat;
 import com.parzivail.pswgtk.util.ImGuiHelper;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.MatrixStackUtil;
 import imgui.flag.ImGuiMouseButton;
 import imgui.internal.ImGui;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Pair;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec2f;
+import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
@@ -27,13 +33,13 @@ public class Viewport
 		map.put(key + GLFW.GLFW_KEY_KP_0, value);
 	}
 
-	private static final HashMap<Integer, Pair<Vec3f, Vec3f>> VIEWPORT_DIRECTION_PRESETS = Util.make(() -> {
-		var h = new HashMap<Integer, Pair<Vec3f, Vec3f>>();
+	private static final HashMap<Integer, Pair<Vector3f, Vector3f>> VIEWPORT_DIRECTION_PRESETS = Util.make(() -> {
+		var h = new HashMap<Integer, Pair<Vector3f, Vector3f>>();
 		putNumpadEmu(h, 1, new Pair<>(Direction.SOUTH.getUnitVector(), Direction.NORTH.getUnitVector()));
 		putNumpadEmu(h, 7, new Pair<>(Direction.UP.getUnitVector(), Direction.DOWN.getUnitVector()));
 		putNumpadEmu(h, 3, new Pair<>(Direction.EAST.getUnitVector(), Direction.WEST.getUnitVector()));
-		putNumpadEmu(h, 9, new Pair<>(new Vec3f(1, 1, 1), new Vec3f(-1, 1, 1)));
-		putNumpadEmu(h, 5, new Pair<>(new Vec3f(1, 1, -1), new Vec3f(-1, 1, -1)));
+		putNumpadEmu(h, 9, new Pair<>(new Vector3f(1, 1, 1), new Vector3f(-1, 1, 1)));
+		putNumpadEmu(h, 5, new Pair<>(new Vector3f(1, 1, -1), new Vector3f(-1, 1, -1)));
 		return h;
 	});
 
@@ -148,11 +154,11 @@ public class Viewport
 
 	public void rotate(MatrixStack ms, float tickDelta)
 	{
-		ms.multiply(new Quaternion(pitch.getValue(tickDelta), 0, 0, true));
-		ms.multiply(new Quaternion(0, yaw.getValue(tickDelta), 0, true));
+		ms.multiply(new Quaternionf().rotationX(MathUtil.toRadians(pitch.getValue(tickDelta))));
+		ms.multiply(new Quaternionf().rotationY(MathUtil.toRadians(yaw.getValue(tickDelta))));
 	}
 
-	private void setCameraPosition(Vec3f pos)
+	private void setCameraPosition(Vector3f pos)
 	{
 		var vec3d = new Vec3d(pos).normalize();
 		double d = vec3d.horizontalLength();

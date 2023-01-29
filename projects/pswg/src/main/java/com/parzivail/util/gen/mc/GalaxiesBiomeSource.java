@@ -3,7 +3,6 @@ package com.parzivail.util.gen.mc;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.parzivail.util.gen.BiomeGenerator;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryEntryLookup;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.RegistryOps;
