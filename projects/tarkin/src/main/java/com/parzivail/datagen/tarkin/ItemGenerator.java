@@ -2,8 +2,8 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.util.registry.ArmorItems;
 import net.minecraft.item.Item;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.TagKey;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -96,6 +96,6 @@ public class ItemGenerator
 			assets.add(languageProvider.build());
 
 		for (var tag : tags)
-			TagGenerator.forObject("tags/items", tag, Registry.ITEM.getId(item)).build(assets);
+			TagGenerator.forObject("tags/items", tag, Registries.ITEM.getId(item)).build(assets);
 	}
 }

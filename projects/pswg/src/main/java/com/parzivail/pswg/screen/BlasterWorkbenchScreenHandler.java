@@ -77,7 +77,7 @@ public class BlasterWorkbenchScreenHandler extends ScreenHandler
 	}
 
 	@Override
-	public ItemStack transferSlot(PlayerEntity player, int index)
+	public ItemStack quickMove(PlayerEntity player, int index)
 	{
 		var itemStack = ItemStack.EMPTY;
 		var slot = this.slots.get(index);

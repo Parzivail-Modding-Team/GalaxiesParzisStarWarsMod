@@ -18,7 +18,8 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class SwgEntities
 
 	public static class Ship
 	{
-		public static final EntityType<T65BXwing> T65bXwing = Registry.register(Registry.ENTITY_TYPE, Resources.id("xwing_t65b"), FabricEntityTypeBuilder
+		public static final EntityType<T65BXwing> T65bXwing = Registry.register(Registries.ENTITY_TYPE, Resources.id("xwing_t65b"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, T65BXwing::new)
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackRangeBlocks(128)
@@ -43,13 +44,13 @@ public class SwgEntities
 
 	public static class Speeder
 	{
-		public static final EntityType<X34LandspeederEntity> X34 = Registry.register(Registry.ENTITY_TYPE, Resources.id("landspeeder_x34"), FabricEntityTypeBuilder
+		public static final EntityType<X34LandspeederEntity> X34 = Registry.register(Registries.ENTITY_TYPE, Resources.id("landspeeder_x34"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, X34LandspeederEntity::new)
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackRangeBlocks(128)
 				.build());
 
-		public static final EntityType<ZephyrJEntity> ZephyrJ = Registry.register(Registry.ENTITY_TYPE, Resources.id("zephyr_j"), FabricEntityTypeBuilder
+		public static final EntityType<ZephyrJEntity> ZephyrJ = Registry.register(Registries.ENTITY_TYPE, Resources.id("zephyr_j"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, ZephyrJEntity::new)
 				.dimensions(EntityDimensions.fixed(1, 1))
 				.trackRangeBlocks(128)
@@ -65,7 +66,7 @@ public class SwgEntities
 	public static class Amphibian
 	{
 		public static final EntityType<WorrtEntity> Worrt = Registry.register(
-				Registry.ENTITY_TYPE,
+				Registries.ENTITY_TYPE,
 				Resources.id("worrt"),
 				FabricEntityTypeBuilder.create(SpawnGroup.CREATURE, WorrtEntity::new).dimensions(EntityDimensions.fixed(0.6f, 0.6f)).build()
 		);
@@ -79,7 +80,7 @@ public class SwgEntities
 
 	public static class Mammal
 	{
-		public static final EntityType<BanthaEntity> Bantha = Registry.register(Registry.ENTITY_TYPE, Resources.id("bantha"), FabricEntityTypeBuilder
+		public static final EntityType<BanthaEntity> Bantha = Registry.register(Registries.ENTITY_TYPE, Resources.id("bantha"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, BanthaEntity::new)
 				.dimensions(EntityDimensions.fixed(3, 3))
 				.build());
@@ -93,7 +94,7 @@ public class SwgEntities
 
 	public static class Rodent
 	{
-		public static final EntityType<SandSkitterEntity> SandSkitter = Registry.register(Registry.ENTITY_TYPE, Resources.id("sand_skitter"), FabricEntityTypeBuilder
+		public static final EntityType<SandSkitterEntity> SandSkitter = Registry.register(Registries.ENTITY_TYPE, Resources.id("sand_skitter"), FabricEntityTypeBuilder
 				.create(SpawnGroup.MISC, SandSkitterEntity::new)
 				.dimensions(EntityDimensions.fixed(0.4f, 0.3f))
 				.trackRangeBlocks(8)
@@ -109,7 +110,7 @@ public class SwgEntities
 	public static class Fish
 	{
 		public static final EntityType<BucketableFishEntity> Faa = Registry.register(
-				Registry.ENTITY_TYPE,
+				Registries.ENTITY_TYPE,
 				Resources.id("faa"),
 				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, SwgItems.MobDrops.FaaBucket))
 				                       .dimensions(EntityDimensions.fixed(0.5F, 0.3F))
@@ -117,7 +118,7 @@ public class SwgEntities
 		);
 
 		public static final EntityType<BucketableFishEntity> Laa = Registry.register(
-				Registry.ENTITY_TYPE,
+				Registries.ENTITY_TYPE,
 				Resources.id("laa"),
 				FabricEntityTypeBuilder.create(SpawnGroup.WATER_AMBIENT, (EntityType<BucketableFishEntity> entityType, World world) -> new BucketableFishEntity(entityType, world, SwgItems.MobDrops.LaaBucket))
 				                       .dimensions(EntityDimensions.fixed(0.5F, 0.3F))
@@ -137,7 +138,7 @@ public class SwgEntities
 	public static class Droid
 	{
 		public static final EntityType<AstromechEntity> AstroR2D2 = Registry.register(
-				Registry.ENTITY_TYPE,
+				Registries.ENTITY_TYPE,
 				Resources.id("artoo_detoo"),
 				FabricEntityTypeBuilder
 						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2d2")))
@@ -147,7 +148,7 @@ public class SwgEntities
 		);
 
 		public static final EntityType<AstromechEntity> AstroR2Q5 = Registry.register(
-				Registry.ENTITY_TYPE,
+				Registries.ENTITY_TYPE,
 				Resources.id("artoo_cuefive"),
 				FabricEntityTypeBuilder
 						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2q5")))
@@ -157,7 +158,7 @@ public class SwgEntities
 		);
 
 		public static final EntityType<AstromechEntity> AstroR2KP = Registry.register(
-				Registry.ENTITY_TYPE,
+				Registries.ENTITY_TYPE,
 				Resources.id("artoo_kaype"),
 				FabricEntityTypeBuilder
 						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2kp")))
@@ -167,7 +168,7 @@ public class SwgEntities
 		);
 
 		public static final EntityType<AstromechEntity> AstroR2R7 = Registry.register(
-				Registry.ENTITY_TYPE,
+				Registries.ENTITY_TYPE,
 				Resources.id("artoo_arseven"),
 				FabricEntityTypeBuilder
 						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2r7")))
@@ -177,7 +178,7 @@ public class SwgEntities
 		);
 
 		public static final EntityType<AstromechEntity> AstroR2Y10 = Registry.register(
-				Registry.ENTITY_TYPE,
+				Registries.ENTITY_TYPE,
 				Resources.id("artoo_wyten"),
 				FabricEntityTypeBuilder
 						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("r2y10")))
@@ -187,7 +188,7 @@ public class SwgEntities
 		);
 
 		public static final EntityType<AstromechEntity> AstroQTKT = Registry.register(
-				Registry.ENTITY_TYPE,
+				Registries.ENTITY_TYPE,
 				Resources.id("cutee_katee"),
 				FabricEntityTypeBuilder
 						.<AstromechEntity>create(SpawnGroup.MISC, (type, world) -> new AstromechEntity(type, world, new AstromechEntity.AstromechParameters("qtkt")))
@@ -215,28 +216,28 @@ public class SwgEntities
 
 	public static class Misc
 	{
-		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_bolt"), FabricEntityTypeBuilder
+		public static final EntityType<BlasterBoltEntity> BlasterBolt = Registry.register(Registries.ENTITY_TYPE, Resources.id("blaster_bolt"), FabricEntityTypeBuilder
 				.<BlasterBoltEntity>create(SpawnGroup.MISC, BlasterBoltEntity::new)
 				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.trackRangeBlocks(120)
 				.build());
 
-		public static final EntityType<BlasterStunBoltEntity> BlasterStunBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_stun_bolt"), FabricEntityTypeBuilder
+		public static final EntityType<BlasterStunBoltEntity> BlasterStunBolt = Registry.register(Registries.ENTITY_TYPE, Resources.id("blaster_stun_bolt"), FabricEntityTypeBuilder
 				.<BlasterStunBoltEntity>create(SpawnGroup.MISC, BlasterStunBoltEntity::new)
 				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.trackRangeBlocks(120)
 				.build());
 
-		public static final EntityType<BlasterIonBoltEntity> BlasterIonBolt = Registry.register(Registry.ENTITY_TYPE, Resources.id("blaster_ion_bolt"), FabricEntityTypeBuilder
+		public static final EntityType<BlasterIonBoltEntity> BlasterIonBolt = Registry.register(Registries.ENTITY_TYPE, Resources.id("blaster_ion_bolt"), FabricEntityTypeBuilder
 				.<BlasterIonBoltEntity>create(SpawnGroup.MISC, BlasterIonBoltEntity::new)
 				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.1f, 0.1f))
 				.trackRangeBlocks(120)
 				.build());
 
-		public static final EntityType<ThrownLightsaberEntity> ThrownLightsaber = Registry.register(Registry.ENTITY_TYPE, Resources.id("thrown_lightsaber"), FabricEntityTypeBuilder
+		public static final EntityType<ThrownLightsaberEntity> ThrownLightsaber = Registry.register(Registries.ENTITY_TYPE, Resources.id("thrown_lightsaber"), FabricEntityTypeBuilder
 				.<ThrownLightsaberEntity>create(SpawnGroup.MISC, ThrownLightsaberEntity::new)
 				.forceTrackedVelocityUpdates(false)
 				.dimensions(EntityDimensions.fixed(0.5f, 0.5f))

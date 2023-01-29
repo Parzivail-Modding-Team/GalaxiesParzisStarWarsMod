@@ -9,9 +9,9 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
+import org.joml.Quaternionf;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -108,7 +108,7 @@ public class EntityUtil
 		entity.setVelocity(scalar * look.x, scalar * look.y, scalar * look.z);
 	}
 
-	public static void updateEulerRotation(Entity entity, Quaternion rotation)
+	public static void updateEulerRotation(Entity entity, Quaternionf rotation)
 	{
 		entity.prevPitch = entity.getPitch();
 		entity.prevYaw = entity.getYaw();

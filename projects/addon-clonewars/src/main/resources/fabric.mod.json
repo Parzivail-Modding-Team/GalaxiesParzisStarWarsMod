@@ -30,9 +30,9 @@
 	"depends": {
 		"fabric-api": "*",
 		"fabricloader": ">=0.14.8",
-		"minecraft": ">=1.19.2",
+		"minecraft": "1.19.3",
 		"pswg": [
-			">=0.0.86+1.19.2",
+			">=0.0.90+1.19.3",
 			"${version}"
 		]
 	},

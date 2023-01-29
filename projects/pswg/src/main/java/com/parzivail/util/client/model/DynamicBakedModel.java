@@ -31,10 +31,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
+import org.joml.Matrix4f;
 
 import javax.annotation.Nullable;
 import java.lang.ref.WeakReference;
@@ -91,11 +91,11 @@ public abstract class DynamicBakedModel extends AbstractModel
 		return CacheMethod.SINGLETON;
 	}
 
-	protected abstract Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation);
+	protected abstract Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation);
 
-	protected abstract Mesh createItemMesh(ItemStack stack, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation);
+	protected abstract Mesh createItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation);
 
-	protected Mesh createOrCacheBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	protected Mesh createOrCacheBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		var cacheDiscriminator = switch (getDiscriminator())
 				{
@@ -135,7 +135,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 	protected abstract Matrix4f createTransformation(BlockState state);
 
 	@Override
-	public List<BakedQuad> getQuads(BlockState state, Direction face, net.minecraft.util.math.random.Random rand)
+	public List<BakedQuad> getQuads(BlockState state, Direction face, Random rand)
 	{
 		var lists = quadLists == null ? null : quadLists.get();
 		if (lists == null)
@@ -153,7 +153,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 	}
 
 	@Override
-	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context)
+	public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context)
 	{
 		context.meshConsumer().accept(createOrCacheBlockMesh(blockView, state, pos, randomSupplier, context, createTransformation(state)));
 	}
@@ -165,7 +165,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 	}
 
 	@Override
-	public void emitItemQuads(ItemStack stack, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context)
+	public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context)
 	{
 		context.meshConsumer().accept(createOrCacheItemMesh(stack, randomSupplier, context, createTransformation(null)));
 	}
@@ -174,7 +174,7 @@ public abstract class DynamicBakedModel extends AbstractModel
 	{
 		public ItemProxy()
 		{
-			super(null, null, null, Collections.emptyList());
+			super(null, null, Collections.emptyList());
 		}
 
 		@Override

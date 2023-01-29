@@ -24,10 +24,9 @@ import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
+import org.joml.Matrix4f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,10 +86,10 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 		vC = ClientMathUtil.transform(vC, transformation);
 		vD = ClientMathUtil.transform(vD, transformation);
 
-		quadEmitter.pos(0, vA).normal(0, nA).sprite(0, 0, tA.getX(), 1 - tA.getY());
-		quadEmitter.pos(1, vB).normal(1, nB).sprite(1, 0, tB.getX(), 1 - tB.getY());
-		quadEmitter.pos(2, vC).normal(2, nC).sprite(2, 0, tC.getX(), 1 - tC.getY());
-		quadEmitter.pos(3, vD).normal(3, nD).sprite(3, 0, tD.getX(), 1 - tD.getY());
+		quadEmitter.pos(0, vA).normal(0, nA).sprite(0, 0, tA.x, 1 - tA.y);
+		quadEmitter.pos(1, vB).normal(1, nB).sprite(1, 0, tB.x, 1 - tB.y);
+		quadEmitter.pos(2, vC).normal(2, nC).sprite(2, 0, tC.x, 1 - tC.y);
+		quadEmitter.pos(3, vD).normal(3, nD).sprite(3, 0, tD.x, 1 - tD.y);
 
 		quadEmitter.spriteBake(0, baseSprite, MutableQuadView.BAKE_NORMALIZED);
 
@@ -99,22 +98,18 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 
 	private RenderMaterial getMaterial(PM3DFace face)
 	{
-		switch (face.material)
+		return switch (face.material)
 		{
-			case 0:
-				return MAT_DIFFUSE_OPAQUE;
-			case 1:
-				return MAT_DIFFUSE_CUTOUT;
-			case 2:
-				return MAT_DIFFUSE_TRANSLUCENT;
-			case 3:
-				return MAT_EMISSIVE;
-			default:
+			case 0 -> MAT_DIFFUSE_OPAQUE;
+			case 1 -> MAT_DIFFUSE_CUTOUT;
+			case 2 -> MAT_DIFFUSE_TRANSLUCENT;
+			case 3 -> MAT_EMISSIVE;
+			default ->
 			{
 				var crashReport = CrashReport.create(null, String.format("Unknown material ID: %s", face.material));
 				throw new CrashException(crashReport);
 			}
-		}
+		};
 	}
 
 	public static final Map<String, Direction> FACING_SUBMODELS;
@@ -156,7 +151,7 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 			{
 				var shape = state.getOutlineShape(blockView, pos, ShapeContext.absent());
 				var center = VoxelShapeUtil.getCenter(shape);
-				transformation.multiply(Matrix4f.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f));
+				transformation.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f);
 			}
 		}
 
@@ -185,7 +180,6 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 	protected Matrix4f createTransformation(BlockState state)
 	{
 		var mat = new Matrix4f();
-		mat.loadIdentity();
 
 		if (state == null)
 		{
@@ -195,20 +189,20 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 
 			var largestDimension = (float)Math.max(bounds.getXLength(), Math.max(bounds.getYLength(), bounds.getZLength()));
 
-			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
-			mat.multiply(Matrix4f.scale(1 / largestDimension, 1 / largestDimension, 1 / largestDimension));
-			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+			mat.translate(0.5f, 0, 0.5f);
+			mat.scale(1 / largestDimension, 1 / largestDimension, 1 / largestDimension);
+			mat.translate(-0.5f, 0, -0.5f);
 
 			return mat;
 		}
 
 		if (state.getBlock() instanceof WaterloggableRotatingBlock)
 		{
-			mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
+			mat.translate(0.5f, 0, 0.5f);
 
-			mat.multiply(ClientMathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
+			mat.rotate(ClientMathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
 
-			mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+			mat.translate(-0.5f, 0, -0.5f);
 		}
 
 		if (state.getBlock() instanceof PillarBlock)
@@ -218,13 +212,13 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 			switch (axis)
 			{
 				case X:
-					mat.multiply(new Quaternion(0, 0, -90, true));
-					mat.multiply(Matrix4f.translate(-1, 0, 0));
+					mat.rotateZ((float)(Math.PI / -2));
+					mat.translate(-1, 0, 0);
 					break;
 				case Z:
-					mat.multiply(new Quaternion(0, -90, 0, true));
-					mat.multiply(new Quaternion(0, 0, -90, true));
-					mat.multiply(Matrix4f.translate(-1, 0, -1));
+					mat.rotateY((float)(Math.PI / -2));
+					mat.rotateZ((float)(Math.PI / -2));
+					mat.translate(-1, 0, -1);
 					break;
 				case Y:
 					break;

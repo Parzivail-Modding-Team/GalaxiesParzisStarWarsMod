@@ -16,6 +16,7 @@ import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -42,12 +43,13 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener, ITabStackProvider
 {
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -346,10 +348,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (!world.isClient)
 		{
 			var m = new Matrix4f();
-			m.loadIdentity();
 
-			m.multiply(new Quaternion(0, -player.getYaw(), 0, true));
-			m.multiply(new Quaternion(player.getPitch(), 0, 0, true));
+			m.rotateY(MathUtil.toRadians(-player.getYaw()));
+			m.rotateX(MathUtil.toRadians(player.getPitch()));
 
 			var hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
@@ -368,8 +369,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			final var entityPitch = vS * verticalSpreadCoef;
 			final var entityYaw = hS * horizontalSpreadCoef;
 
-			m.multiply(new Quaternion(0, entityYaw, 0, true));
-			m.multiply(new Quaternion(entityPitch, 0, 0, true));
+			m.rotateY(MathUtil.toRadians(entityYaw));
+			m.rotateX(MathUtil.toRadians(entityPitch));
 
 			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, Matrix4fUtil.transform(MathUtil.POSZ, m).normalize());
 
@@ -490,6 +491,31 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.damage", bd.damage));
 			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.range", bd.range));
 		}
+	}
+
+	@Override
+	public void appendStacks(FabricItemGroupEntries entries)
+	{
+		for (var entry : PswgContent.getBlasterPresets().entrySet())
+			entries.add(forType(entry.getValue()));
+	}
+
+	private ItemStack forType(BlasterDescriptor descriptor)
+	{
+		var stack = new ItemStack(this);
+
+		stack.getOrCreateNbt().putString("model", descriptor.id.toString());
+
+		BlasterTag.mutate(stack, blasterTag -> {
+			if (descriptor.firingModes.isEmpty())
+				blasterTag.setFiringMode(BlasterFiringMode.SEMI_AUTOMATIC);
+			else
+				blasterTag.setFiringMode(descriptor.firingModes.get(0));
+
+			blasterTag.attachmentBitmask = descriptor.attachmentDefault;
+		});
+
+		return stack;
 	}
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(PlayerEntity player)

@@ -24,12 +24,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Matrix3f;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -58,7 +58,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	protected Mesh createBlockMesh(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		if (state != null)
 		{
@@ -84,7 +84,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 			{
 				var shape = db.getOutlineShape(state, blockView, pos, ShapeContext.absent());
 				var center = VoxelShapeUtil.getCenter(shape);
-				transformation.multiplyByTranslation((float)center.x - 0.5f, 0, (float)center.z - 0.5f);
+				transformation.translate((float)center.x - 0.5f, 0, (float)center.z - 0.5f);
 			}
 			else if (state.getBlock() instanceof WaterloggableRotating3BlockWithGuiEntity)
 			{
@@ -98,7 +98,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 	}
 
 	@Override
-	protected Mesh createItemMesh(ItemStack stack, Supplier<net.minecraft.util.math.random.Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	protected Mesh createItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		return createMesh(new P3DBlockRenderTarget.Item(stack), randomSupplier, context, transformation);
 	}
@@ -117,8 +117,8 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 
 		var ms = new MatrixStack();
 		var e = ms.peek();
-		e.getPositionMatrix().multiply(transformation);
-		e.getNormalMatrix().multiply(new Matrix3f(transformation));
+		e.getPositionMatrix().mul(transformation);
+		e.getNormalMatrix().mul(new Matrix3f(transformation));
 
 		// blocks are centered in P3D models
 		ms.translate(0.5f, 0, 0.5f);
@@ -127,7 +127,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		MatrixStackUtil.scalePos(ms, 0.625f, 0.625f, 0.625f);
 
 		// P3D models are +Z forward
-		ms.multiply(new Quaternion(0, -90, 0, true));
+		ms.multiply(new Quaternionf().rotationY((float)(Math.PI / -2)));
 
 		Block block = null;
 		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget && blockRenderTarget.getState() != null)
@@ -167,15 +167,14 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		}
 
 		var mat = new Matrix4f();
-		mat.loadIdentity();
 
 		if (state.getBlock() instanceof WaterloggableRotatingBlock)
 		{
-			mat.multiply(Matrix4f.translate(0.5f, 0.5f, 0.5f));
+			mat.translate(0.5f, 0.5f, 0.5f);
 
-			mat.multiply(ClientMathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
+			mat.rotate(ClientMathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
 
-			mat.multiply(Matrix4f.translate(-0.5f, -0.5f, -0.5f));
+			mat.translate(-0.5f, -0.5f, -0.5f);
 		}
 
 		if (state.getBlock() instanceof PillarBlock)
@@ -185,13 +184,13 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 			switch (axis)
 			{
 				case X:
-					mat.multiply(new Quaternion(0, 0, -90, true));
-					mat.multiply(Matrix4f.translate(-1, 0, 0));
+					mat.rotateZ((float)(Math.PI / -2));
+					mat.translate(-1, 0, 0);
 					break;
 				case Z:
-					mat.multiply(new Quaternion(0, -90, 0, true));
-					mat.multiply(new Quaternion(0, 0, -90, true));
-					mat.multiply(Matrix4f.translate(-1, 0, -1));
+					mat.rotateY((float)(Math.PI / -2));
+					mat.rotateZ((float)(Math.PI / -2));
+					mat.translate(-1, 0, -1);
 					break;
 				case Y:
 					break;
@@ -205,7 +204,6 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 	public static Matrix4f getItemTransformation(P3dModel model)
 	{
 		var mat = new Matrix4f();
-		mat.loadIdentity();
 
 		var bounds = model.bounds();
 
@@ -218,15 +216,15 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		var minZ = (float)bounds.minZ * 0.625f;
 		var maxZ = (float)bounds.maxZ * 0.625f;
 
-		mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
-		mat.multiply(Matrix4f.scale(scale, scale, scale));
-		mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+		mat.translate(0.5f, 0, 0.5f);
+		mat.scale(scale, scale, scale);
+		mat.translate(-0.5f, 0, -0.5f);
 
-		mat.multiply(Matrix4f.translate((maxX - minX) / 2 - maxX, -minY, (maxZ - minZ) / 2 - maxZ));
+		mat.translate((maxX - minX) / 2 - maxX, -minY, (maxZ - minZ) / 2 - maxZ);
 
-		mat.multiply(Matrix4f.translate(0.5f, 0, 0.5f));
-		mat.multiply(QuatUtil.ROT_Y_POS90);
-		mat.multiply(Matrix4f.translate(-0.5f, 0, -0.5f));
+		mat.translate(0.5f, 0, 0.5f);
+		mat.rotate(QuatUtil.ROT_Y_POS90);
+		mat.translate(-0.5f, 0, -0.5f);
 
 		return mat;
 	}

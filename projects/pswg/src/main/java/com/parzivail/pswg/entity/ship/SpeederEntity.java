@@ -7,9 +7,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MovementType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
+import org.joml.Quaternionf;
 
 public class SpeederEntity extends ShipEntity
 {
@@ -56,16 +59,16 @@ public class SpeederEntity extends ShipEntity
 				yawVelocity -= 1.75f;
 		}
 
-		var rotation = new Quaternion(getRotation());
+		var rotation = new Quaternionf(getRotation());
 
 		var v = QuatUtil.project(MathUtil.POSY, rotation);
-		rotation.hamiltonProduct(new Quaternion(new Vec3f(v), yawVelocity, true));
+		rotation.rotateAxis(MathUtil.toRadians(yawVelocity), v.toVector3f());
 
 		setRotation(rotation);
 
 		if (world.isClient)
 		{
-			clientInstRotation = new Quaternion(rotation);
+			clientInstRotation = new Quaternionf(rotation);
 		}
 
 		for (var p : getPassengerList())

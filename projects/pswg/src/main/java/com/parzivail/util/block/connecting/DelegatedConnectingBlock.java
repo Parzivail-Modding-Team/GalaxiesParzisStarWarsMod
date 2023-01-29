@@ -52,7 +52,7 @@ public abstract class DelegatedConnectingBlock extends ConnectingBlock
 	{
 		if (!state.canPlaceAt(world, pos))
 		{
-			world.createAndScheduleBlockTick(pos, this, 1);
+			world.scheduleBlockTick(pos, this, 1);
 			return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
 		}
 		else

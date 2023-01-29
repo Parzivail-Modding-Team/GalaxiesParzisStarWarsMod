@@ -12,8 +12,8 @@ import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Math;
+import org.joml.Quaternionf;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +43,7 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 		matrix.push();
 
 		MatrixStackUtil.scalePos(matrix, 10 / 16f, 10 / 16f, 10 / 16f);
-		matrix.multiply(new Quaternion(Vec3f.POSITIVE_Y, 180 - yaw, true));
+		matrix.multiply(new Quaternionf().rotationY(Math.toRadians(180 - yaw)));
 
 		//		var r = entity.getViewRotation(tickDelta);
 		//		matrix.multiply(r);

@@ -20,13 +20,16 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShapes;
+
+import java.util.ArrayList;
 
 public class SwgBlocks
 {
@@ -787,72 +790,78 @@ public class SwgBlocks
 			FlammableBlockRegistry.getDefaultInstance().add(block, data.fireBurn(), data.fireSpread());
 	}
 
-	private static void tryRegisterBlock(Object o, Identifier identifier, boolean ignoreTab)
+	private static void tryRegisterBlock(Object o, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		if (o instanceof Block block)
-			registerBlock(block, identifier, ignoreTab);
+			registerBlock(block, identifier, ignoreTab, tabOverride);
 		else if (o instanceof StoneProducts variants)
-			registerStoneProducts(variants, identifier, ignoreTab);
+			registerStoneProducts(variants, identifier, ignoreTab, tabOverride);
 		else if (o instanceof DyedStoneProducts variants)
-			registerDyedStoneProducts(variants, identifier, ignoreTab);
+			registerDyedStoneProducts(variants, identifier, ignoreTab, tabOverride);
 		else if (o instanceof WoodProducts variants)
-			registerWoodProducts(variants, identifier, ignoreTab);
+			registerWoodProducts(variants, identifier, ignoreTab, tabOverride);
 		else if (o instanceof DyedBlocks blocks)
-			registerDyedBlocks(blocks, identifier, ignoreTab);
+			registerDyedBlocks(blocks, identifier, ignoreTab, tabOverride);
 		else if (o instanceof NumberedBlocks blocks)
-			registerNumberedBlocks(blocks, identifier, ignoreTab);
+			registerNumberedBlocks(blocks, identifier, ignoreTab, tabOverride);
 	}
 
-	private static void registerStoneProducts(StoneProducts t, Identifier identifier, boolean ignoreTab)
+	private static void registerStoneProducts(StoneProducts t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
-		registerBlock(t.block, identifier, ignoreTab);
-		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
-		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), ignoreTab);
-		registerBlock(t.wall, Resources.id(identifier.getPath() + "_wall"), ignoreTab);
+		registerBlock(t.block, identifier, ignoreTab, tabOverride);
+		registerBlock(t.stairs, new Identifier(identifier.getNamespace(), identifier.getPath() + "_stairs"), ignoreTab, tabOverride);
+		registerBlock(t.slab, new Identifier(identifier.getNamespace(), identifier.getPath() + "_slab"), ignoreTab, tabOverride);
+		registerBlock(t.wall, new Identifier(identifier.getNamespace(), identifier.getPath() + "_wall"), ignoreTab, tabOverride);
 	}
 
-	private static void registerDyedStoneProducts(DyedStoneProducts t, Identifier identifier, boolean ignoreTab)
+	private static void registerDyedStoneProducts(DyedStoneProducts t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		for (var entry : t.entrySet())
-			registerStoneProducts(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);
+			registerStoneProducts(entry.getValue(), new Identifier(identifier.getNamespace(), entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab, tabOverride);
 	}
 
-	private static void registerNumberedBlocks(NumberedBlocks t, Identifier identifier, boolean ignoreTab)
+	private static void registerNumberedBlocks(NumberedBlocks t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		for (var i = 0; i < t.size(); i++)
-			registerBlock(t.get(i), Resources.id(identifier.getPath() + "_" + (i + 1)), ignoreTab);
+			registerBlock(t.get(i), new Identifier(identifier.getNamespace(), identifier.getPath() + "_" + (i + 1)), ignoreTab, tabOverride);
 	}
 
-	private static void registerWoodProducts(WoodProducts t, Identifier identifier, boolean ignoreTab)
+	private static void registerWoodProducts(WoodProducts t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
-		registerBlock(t.plank, Resources.id(identifier.getPath() + "_planks"), ignoreTab);
-		registerBlock(t.stairs, Resources.id(identifier.getPath() + "_stairs"), ignoreTab);
-		registerBlock(t.slab, Resources.id(identifier.getPath() + "_slab"), ignoreTab);
-		registerBlock(t.fence, Resources.id(identifier.getPath() + "_fence"), ignoreTab);
-		registerBlock(t.gate, Resources.id(identifier.getPath() + "_fence_gate"), ignoreTab);
-		registerBlock(t.trapdoor, Resources.id(identifier.getPath() + "_trapdoor"), ignoreTab);
-		registerBlock(t.door, Resources.id(identifier.getPath() + "_door"), ignoreTab);
+		registerBlock(t.plank, new Identifier(identifier.getNamespace(), identifier.getPath() + "_planks"), ignoreTab, tabOverride);
+		registerBlock(t.stairs, new Identifier(identifier.getNamespace(), identifier.getPath() + "_stairs"), ignoreTab, tabOverride);
+		registerBlock(t.slab, new Identifier(identifier.getNamespace(), identifier.getPath() + "_slab"), ignoreTab, tabOverride);
+		registerBlock(t.fence, new Identifier(identifier.getNamespace(), identifier.getPath() + "_fence"), ignoreTab, tabOverride);
+		registerBlock(t.gate, new Identifier(identifier.getNamespace(), identifier.getPath() + "_fence_gate"), ignoreTab, tabOverride);
+		registerBlock(t.trapdoor, new Identifier(identifier.getNamespace(), identifier.getPath() + "_trapdoor"), ignoreTab, tabOverride);
+		registerBlock(t.door, new Identifier(identifier.getNamespace(), identifier.getPath() + "_door"), ignoreTab, tabOverride);
 	}
 
-	private static void registerDyedBlocks(DyedBlocks t, Identifier identifier, boolean ignoreTab)
+	private static void registerDyedBlocks(DyedBlocks t, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		for (var entry : t.entrySet())
-			registerBlock(entry.getValue(), Resources.id(entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab);
+			registerBlock(entry.getValue(), new Identifier(identifier.getNamespace(), entry.getKey().getName() + "_" + identifier.getPath()), ignoreTab, tabOverride);
 	}
 
-	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab)
+	public static void registerBlock(Block block, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
 		var itemSettings = new Item.Settings();
 
 		if (!ignoreTab)
-			itemSettings = itemSettings.group(Galaxies.TabBlocks);
+		{
+			var tab = tabOverride == null ? Galaxies.TabBlocks.getId() : new Identifier(identifier.getNamespace(), tabOverride);
+			if (!SwgItems.ITEM_GROUPS.containsKey(tab))
+				SwgItems.ITEM_GROUPS.put(tab, new ArrayList<>());
 
-		Registry.register(Registry.BLOCK, identifier, block);
-		Registry.register(Registry.ITEM, identifier, new BlockItem(block, itemSettings));
+			SwgItems.ITEM_GROUPS.get(tab).add(block);
+		}
+
+		Registry.register(Registries.BLOCK, identifier, block);
+		Registry.register(Registries.ITEM, identifier, new BlockItem(block, itemSettings));
 	}
 
-	public static void registerBlockEntityType(BlockEntityType<?> blockEntityType, Identifier identifier, boolean ignoreTab)
+	public static void registerBlockEntityType(BlockEntityType<?> blockEntityType, Identifier identifier, boolean ignoreTab, String tabOverride)
 	{
-		Registry.register(Registry.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
+		Registry.register(Registries.BLOCK_ENTITY_TYPE, identifier, blockEntityType);
 	}
 }

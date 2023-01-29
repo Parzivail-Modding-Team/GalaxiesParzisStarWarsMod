@@ -8,7 +8,11 @@ import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.world.ClientWorld;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
 public class DecalParticle extends AnimatedParticle
@@ -47,16 +51,16 @@ public class DecalParticle extends AnimatedParticle
 		// We're abusing the velocity component as a normal vector
 		var normal = new Vec3d(velocityX, velocityY, velocityZ).normalize();
 
-		Quaternion rotation = QuatUtil.lookAt(Vec3d.ZERO, normal);
-		rotation.hamiltonProduct(new Quaternion(Vec3f.POSITIVE_Z, angle, false));
+		Quaternionf rotation = QuatUtil.lookAt(Vec3d.ZERO, normal);
+		rotation.rotateZ(angle);
 
 		var z = (1 - this.age / (float)this.maxAge) * 0.005f;
 
-		var corners = new Vec3f[] {
-				new Vec3f(-1.0F, -1.0F, z),
-				new Vec3f(-1.0F, 1.0F, z),
-				new Vec3f(1.0F, 1.0F, z),
-				new Vec3f(1.0F, -1.0F, z)
+		var corners = new Vector3f[] {
+				new Vector3f(-1.0F, -1.0F, z),
+				new Vector3f(-1.0F, 1.0F, z),
+				new Vector3f(1.0F, 1.0F, z),
+				new Vector3f(1.0F, -1.0F, z)
 		};
 
 		var j = this.getSize(tickDelta);
@@ -71,13 +75,13 @@ public class DecalParticle extends AnimatedParticle
 		{
 			var vec3f2 = corners[k];
 			vec3f2.rotate(rotation);
-			vec3f2.scale(j);
+			vec3f2.mul(j);
 			vec3f2.add(f, g, h);
 		}
 
-		vertexConsumer.vertex(corners[3].getX(), corners[3].getY(), corners[3].getZ()).texture(m, o).color(this.red, this.green, this.blue, this.alpha).light(p).next();
-		vertexConsumer.vertex(corners[2].getX(), corners[2].getY(), corners[2].getZ()).texture(m, n).color(this.red, this.green, this.blue, this.alpha).light(p).next();
-		vertexConsumer.vertex(corners[1].getX(), corners[1].getY(), corners[1].getZ()).texture(l, n).color(this.red, this.green, this.blue, this.alpha).light(p).next();
-		vertexConsumer.vertex(corners[0].getX(), corners[0].getY(), corners[0].getZ()).texture(l, o).color(this.red, this.green, this.blue, this.alpha).light(p).next();
+		vertexConsumer.vertex(corners[3].x, corners[3].y, corners[3].z).texture(m, o).color(this.red, this.green, this.blue, this.alpha).light(p).next();
+		vertexConsumer.vertex(corners[2].x, corners[2].y, corners[2].z).texture(m, n).color(this.red, this.green, this.blue, this.alpha).light(p).next();
+		vertexConsumer.vertex(corners[1].x, corners[1].y, corners[1].z).texture(l, n).color(this.red, this.green, this.blue, this.alpha).light(p).next();
+		vertexConsumer.vertex(corners[0].x, corners[0].y, corners[0].z).texture(l, o).color(this.red, this.green, this.blue, this.alpha).light(p).next();
 	}
 }

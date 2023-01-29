@@ -8,9 +8,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
+import org.joml.Quaternionf;
 
 public class ChaseCam
 {
@@ -75,7 +75,7 @@ public class ChaseCam
 		pos = MathUtil.lerp((float)(dist / targetDist), parentPos, lerpPos);
 	}
 
-	private float getCamDistTarget(ShipEntity parent, Quaternion q)
+	private float getCamDistTarget(ShipEntity parent, Quaternionf q)
 	{
 		var minecraft = MinecraftClient.getInstance();
 

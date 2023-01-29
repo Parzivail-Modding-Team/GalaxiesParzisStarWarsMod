@@ -1,10 +1,10 @@
 package com.parzivail.pswg.entity.collision;
 
-import net.minecraft.util.math.Quaternion;
+import org.joml.Quaternionf;
 
 public interface IComplexEntityHitbox
 {
 	ICollisionVolume[] getCollision();
 
-	Quaternion getRotation();
+	Quaternionf getRotation();
 }

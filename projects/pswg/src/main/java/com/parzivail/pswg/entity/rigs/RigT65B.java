@@ -4,8 +4,8 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.ship.T65BXwing;
 import com.parzivail.util.entity.TrackedAnimationValue;
 import com.parzivail.util.math.Ease;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
+import com.parzivail.util.math.MathUtil;
+import org.joml.Matrix4f;
 
 public class RigT65B extends ModelRig<T65BXwing>
 {
@@ -35,7 +35,6 @@ public class RigT65B extends ModelRig<T65BXwing>
 	private Matrix4f getPartTransformation(String part, boolean wingsOpening, float wingTimer, boolean cockpitOpening, float cockpitTimer)
 	{
 		Matrix4f matrix4f = new Matrix4f();
-		matrix4f.loadIdentity();
 
 		if (part.startsWith("Wing"))
 		{
@@ -48,8 +47,8 @@ public class RigT65B extends ModelRig<T65BXwing>
 
 			switch (part)
 			{
-				case "WingTopLeft", "WingBottomRight" -> matrix4f.multiply(new Quaternion(0, 0, -wingAngle, true));
-				case "WingBottomLeft", "WingTopRight" -> matrix4f.multiply(new Quaternion(0, 0, wingAngle, true));
+				case "WingTopLeft", "WingBottomRight" -> matrix4f.rotateZ(MathUtil.toRadians(-wingAngle));
+				case "WingBottomLeft", "WingTopRight" -> matrix4f.rotateZ(MathUtil.toRadians(wingAngle));
 				default -> throw new IndexOutOfBoundsException();
 			}
 		}
@@ -62,7 +61,7 @@ public class RigT65B extends ModelRig<T65BXwing>
 
 			var cockpitAngle = 50 * timer;
 
-			matrix4f.multiply(new Quaternion(cockpitAngle, 0, 0, true));
+			matrix4f.rotateX(MathUtil.toRadians(cockpitAngle));
 		}
 
 		return matrix4f;

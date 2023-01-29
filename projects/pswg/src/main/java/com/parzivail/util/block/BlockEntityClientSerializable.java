@@ -9,10 +9,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 
 public interface BlockEntityClientSerializable
 {
@@ -49,7 +49,7 @@ public interface BlockEntityClientSerializable
 
 		minecraftClient.execute(() -> {
 			var world = minecraftClient.world;
-			var targetWorld = RegistryKey.of(Registry.WORLD_KEY, targetWorldId);
+			var targetWorld = RegistryKey.of(RegistryKeys.WORLD, targetWorldId);
 
 			if (world == null || !world.getRegistryKey().equals(targetWorld) || !(world.getBlockEntity(targetPos) instanceof BlockEntityClientSerializable tile))
 				return;

@@ -9,8 +9,8 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
 
 public class HitboxHelper
 {
@@ -32,11 +32,11 @@ public class HitboxHelper
 		else
 		{
 			var volume = CapsuleVolume.of(entity.getBoundingBox());
-			renderVolume(matrices, vertices, pos, Quaternion.IDENTITY, volume);
+			renderVolume(matrices, vertices, pos, QuatUtil.IDENTITY, volume);
 		}
 	}
 
-	private static void renderVolume(MatrixStack matrices, VertexConsumer vertices, Vec3d entityPos, Quaternion rotation, ICollisionVolume volume)
+	private static void renderVolume(MatrixStack matrices, VertexConsumer vertices, Vec3d entityPos, Quaternionf rotation, ICollisionVolume volume)
 	{
 		if (volume instanceof CapsuleVolume capsule)
 			renderVolume(matrices, vertices, entityPos, rotation, capsule);
@@ -44,7 +44,7 @@ public class HitboxHelper
 			renderVolume(matrices, vertices, entityPos, rotation, triangle);
 	}
 
-	private static void renderVolume(MatrixStack matrices, VertexConsumer vertices, Vec3d entityPos, Quaternion rotation, SweptTriangleVolume volume)
+	private static void renderVolume(MatrixStack matrices, VertexConsumer vertices, Vec3d entityPos, Quaternionf rotation, SweptTriangleVolume volume)
 	{
 		var a = volume.a().subtract(entityPos);
 		var b = volume.b().subtract(entityPos);
@@ -55,7 +55,7 @@ public class HitboxHelper
 		line(vertices, matrices, b, c);
 	}
 
-	private static void renderVolume(MatrixStack matrices, VertexConsumer vertices, Vec3d entityPos, Quaternion rotation, CapsuleVolume volume)
+	private static void renderVolume(MatrixStack matrices, VertexConsumer vertices, Vec3d entityPos, Quaternionf rotation, CapsuleVolume volume)
 	{
 		var s = volume.start().subtract(entityPos);
 		var e = volume.end().subtract(entityPos);

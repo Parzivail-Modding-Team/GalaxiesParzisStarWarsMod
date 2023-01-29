@@ -1,7 +1,5 @@
 package com.parzivail.util.gen.biome.gen.system;
 
-import net.minecraft.util.math.MathHelper;
-
 public final class CachingLayerContext implements LayerSampleContext<CachingLayerSampler> {
     private final int cacheCapacity;
     private final long worldSeed;

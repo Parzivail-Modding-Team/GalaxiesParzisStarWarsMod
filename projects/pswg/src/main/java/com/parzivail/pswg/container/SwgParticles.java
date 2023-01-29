@@ -8,8 +8,9 @@ import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.minecraft.client.particle.ParticleFactory;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 public class SwgParticles
 {
@@ -21,14 +22,14 @@ public class SwgParticles
 
 	private static PParticleType register(Identifier name, boolean alwaysShow, ParticleFactoryRegistry.PendingParticleFactory<PParticleType> factory)
 	{
-		var particleType = Registry.register(Registry.PARTICLE_TYPE, name, new PParticleType(alwaysShow));
+		var particleType = Registry.register(Registries.PARTICLE_TYPE, name, new PParticleType(alwaysShow));
 		ParticleFactoryRegistry.getInstance().register(particleType, factory);
 		return particleType;
 	}
 
 	private static ParticleType<BlockStateParticleEffect> registerBlockStateBased(Identifier name, boolean alwaysShow, ParticleFactory<BlockStateParticleEffect> factory)
 	{
-		var particleType = Registry.register(Registry.PARTICLE_TYPE, name, new ParticleType<BlockStateParticleEffect>(alwaysShow, BlockStateParticleEffect.PARAMETERS_FACTORY)
+		var particleType = Registry.register(Registries.PARTICLE_TYPE, name, new ParticleType<BlockStateParticleEffect>(alwaysShow, BlockStateParticleEffect.PARAMETERS_FACTORY)
 		{
 			@Override
 			public Codec<BlockStateParticleEffect> getCodec()

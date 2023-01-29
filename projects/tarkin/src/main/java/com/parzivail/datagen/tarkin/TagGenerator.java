@@ -1,7 +1,7 @@
 package com.parzivail.datagen.tarkin;
 
-import net.minecraft.tag.TagEntry;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.tag.TagEntry;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 import java.util.List;

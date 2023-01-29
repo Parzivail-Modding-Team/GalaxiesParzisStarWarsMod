@@ -21,8 +21,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
 
 import java.util.HashMap;
 
@@ -35,7 +35,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 	static
 	{
-		FALLBACK_MODEL = new ModelEntry(Resources.id("item/lightsaber/luke_rotj"), Resources.id("textures/item/lightsaber/luke_rotj.png"));
+		FALLBACK_MODEL = new ModelEntry(Resources.id("item/lightsaber/luke_rotj"), Resources.id("textures/item/model/lightsaber/luke_rotj.png"));
 	}
 
 	private LightsaberItemRenderer()
@@ -49,7 +49,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		var entry = new ModelEntry(
 				new Identifier(id.getNamespace(), "item/lightsaber/" + id.getPath()),
-				new Identifier(id.getNamespace(), "textures/model/lightsaber/" + id.getPath() + ".png")
+				new Identifier(id.getNamespace(), "textures/item/model/lightsaber/" + id.getPath() + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
 
@@ -76,13 +76,13 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 				matrices.translate(0, 0, 0.08f);
 				break;
 			case FIXED:
-				matrices.multiply(new Quaternion(0, 0, 45, true));
-				matrices.multiply(new Quaternion(0, 135, 0, true));
+				matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / 4)));
+				matrices.multiply(new Quaternionf().rotationY((float)(135 * Math.PI / 180)));
 				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
 				break;
 			case GUI:
-				matrices.multiply(new Quaternion(0, 0, -45, true));
-				matrices.multiply(new Quaternion(0, -45, 0, true));
+				matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / -4)));
+				matrices.multiply(new Quaternionf().rotationY((float)(Math.PI / -4)));
 				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
 				break;
 		}

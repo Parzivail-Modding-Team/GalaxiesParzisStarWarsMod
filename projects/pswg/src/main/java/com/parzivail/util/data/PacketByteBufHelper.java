@@ -3,9 +3,9 @@ package com.parzivail.util.data;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.EulerAngle;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -96,21 +96,21 @@ public class PacketByteBufHelper
 		return new Identifier(buf.readString());
 	}
 
-	public static void writeQuaternion(PacketByteBuf buf, Quaternion q)
+	public static void writeQuaternion(PacketByteBuf buf, Quaternionf q)
 	{
-		buf.writeFloat(q.getW());
-		buf.writeFloat(q.getX());
-		buf.writeFloat(q.getY());
-		buf.writeFloat(q.getZ());
+		buf.writeFloat(q.w);
+		buf.writeFloat(q.x);
+		buf.writeFloat(q.y);
+		buf.writeFloat(q.z);
 	}
 
-	public static Quaternion readQuaternion(PacketByteBuf buf)
+	public static Quaternionf readQuaternion(PacketByteBuf buf)
 	{
 		var qa = buf.readFloat();
 		var qb = buf.readFloat();
 		var qc = buf.readFloat();
 		var qd = buf.readFloat();
-		return new Quaternion(qb, qc, qd, qa);
+		return new Quaternionf(qb, qc, qd, qa);
 	}
 
 	public static void writeVec3d(PacketByteBuf buf, Vec3d v)
@@ -138,22 +138,22 @@ public class PacketByteBufHelper
 
 	public static void writeVec3dAsSingles(PacketByteBuf buf, Vec3d v)
 	{
-		writeVec3f(buf, new Vec3f(v));
+		writeVec3f(buf, v.toVector3f());
 	}
 
-	public static void writeVec3f(PacketByteBuf buf, Vec3f v)
+	public static void writeVec3f(PacketByteBuf buf, Vector3f v)
 	{
-		buf.writeFloat(v.getX());
-		buf.writeFloat(v.getY());
-		buf.writeFloat(v.getZ());
+		buf.writeFloat(v.x);
+		buf.writeFloat(v.y);
+		buf.writeFloat(v.z);
 	}
 
-	public static Vec3f readVec3f(PacketByteBuf buf)
+	public static Vector3f readVec3f(PacketByteBuf buf)
 	{
 		var x = buf.readFloat();
 		var y = buf.readFloat();
 		var z = buf.readFloat();
-		return new Vec3f(x, y, z);
+		return new Vector3f(x, y, z);
 	}
 
 	public static void writeEulerAngle(PacketByteBuf buf, EulerAngle e)

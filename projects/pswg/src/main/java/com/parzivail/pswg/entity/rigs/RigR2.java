@@ -3,10 +3,9 @@ package com.parzivail.pswg.entity.rigs;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.MathUtil;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Matrix4f;
 
 public class RigR2 extends ModelRig<AstromechEntity>
 {
@@ -21,7 +20,6 @@ public class RigR2 extends ModelRig<AstromechEntity>
 	public Matrix4f getPartTransformation(AstromechEntity target, String part, float tickDelta)
 	{
 		var m = new Matrix4f();
-		m.loadIdentity();
 
 		var t = target.getLegDeltaExtension(tickDelta);
 
@@ -40,13 +38,13 @@ public class RigR2 extends ModelRig<AstromechEntity>
 
 		switch (part)
 		{
-			case "left_leg" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, -pushAngle, true));
-			case "right_foot" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, pushAngle, true));
-			case "right_shoulder" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, -bodyAngle, true));
-			case "center_leg" -> m.multiplyByTranslation(0, -centerLegExtension, 0);
-			case "center_foot" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, centerFootAngle, true));
-			case "body" -> m.multiply(new Quaternion(Vec3f.POSITIVE_X, bodyAngle, true));
-			case "head" -> m.multiply(new Quaternion(Vec3f.POSITIVE_Y, -headYaw, true));
+			case "left_leg" -> m.rotateX(MathUtil.toRadians(-pushAngle));
+			case "right_foot" -> m.rotateX(MathUtil.toRadians(pushAngle));
+			case "right_shoulder" -> m.rotateX(MathUtil.toRadians(-bodyAngle));
+			case "center_leg" -> m.translate(0, -centerLegExtension, 0);
+			case "center_foot" -> m.rotateX(MathUtil.toRadians(centerFootAngle));
+			case "body" -> m.rotateX(MathUtil.toRadians(bodyAngle));
+			case "head" -> m.rotateY(MathUtil.toRadians(-headYaw));
 		}
 
 		return m;

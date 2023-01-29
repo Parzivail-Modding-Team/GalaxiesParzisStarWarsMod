@@ -3,35 +3,35 @@ package com.parzivail.pswg.entity.data;
 import net.minecraft.entity.data.TrackedDataHandler;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.Quaternion;
+import org.joml.Quaternionf;
 
 public class TrackedDataHandlers
 {
-	public static final TrackedDataHandler<Quaternion> QUATERNION = new TrackedDataHandler<>()
+	public static final TrackedDataHandler<Quaternionf> QUATERNION = new TrackedDataHandler<>()
 	{
 		@Override
-		public void write(PacketByteBuf data, Quaternion q)
+		public void write(PacketByteBuf data, Quaternionf q)
 		{
-			data.writeFloat(q.getW());
-			data.writeFloat(q.getX());
-			data.writeFloat(q.getY());
-			data.writeFloat(q.getZ());
+			data.writeFloat(q.w);
+			data.writeFloat(q.x);
+			data.writeFloat(q.y);
+			data.writeFloat(q.z);
 		}
 
 		@Override
-		public Quaternion read(PacketByteBuf buffer)
+		public Quaternionf read(PacketByteBuf buffer)
 		{
 			var a = buffer.readFloat();
 			var b = buffer.readFloat();
 			var c = buffer.readFloat();
 			var d = buffer.readFloat();
-			return new Quaternion(b, c, d, a);
+			return new Quaternionf(b, c, d, a);
 		}
 
 		@Override
-		public Quaternion copy(Quaternion q)
+		public Quaternionf copy(Quaternionf q)
 		{
-			return new Quaternion(q);
+			return new Quaternionf(q);
 		}
 	};
 

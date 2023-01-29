@@ -27,8 +27,10 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.text.Text;
-import net.minecraft.util.math.Quaternion;
 import org.lwjgl.glfw.GLFW;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec2f;
+import org.joml.Quaternionf;
 
 import java.io.File;
 import java.io.Reader;
@@ -66,7 +68,44 @@ public class NemiCompilerScreen extends ImguiScreen
 		viewport.tick();
 	}
 
-	private void openModel()
+	@Override
+	protected void renderContent(MatrixStack matrices)
+	{
+		if (selectedModel == null)
+			return;
+
+		assert this.client != null;
+		var tickDelta = this.client.getTickDelta();
+
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+
+		var rsm = RenderSystem.getModelViewStack();
+		rsm.push();
+
+		MatrixStackUtil.scalePos(rsm, 1, -1, 1);
+		viewportController.setup(rsm, tickDelta);
+		MatrixStackUtil.scalePos(rsm, 16, 16, 16);
+		RenderSystem.applyModelViewMatrix();
+
+		var ms = new MatrixStack();
+		viewportController.rotate(ms, tickDelta);
+		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
+
+		ms.push();
+		ms.translate(-0.5f, -1, -0.5f);
+		client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
+		ms.pop();
+
+		ms.multiply(new Quaternionf().rotationZ(MathHelper.PI));
+		ms.translate(0, -1.5f, 0);
+		selectedModel.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
+		immediate.draw();
+
+		rsm.pop();
+		RenderSystem.applyModelViewMatrix();
+	}
+
+	private void openModel(ActionEvent e)
 	{
 		DialogUtil.openFile("Open Model", "NEM Models (*.nemi, *.nem)", false, "*.nemi", "*.nem")
 		          .ifPresent(paths -> openModel(paths[0]));

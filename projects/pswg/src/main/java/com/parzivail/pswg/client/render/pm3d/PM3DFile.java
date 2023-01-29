@@ -8,8 +8,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
 import org.apache.commons.lang3.ArrayUtils;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,9 +99,9 @@ public record PM3DFile(PM3DLod[] lods)
 		return Arrays.stream(ACCEPTED_VERSIONS).mapToObj(i -> "0x" + Integer.toHexString(i)).collect(Collectors.joining(", "));
 	}
 
-	private static Vec3f[] loadVerts(int num, LittleEndianDataInputStream objStream, boolean blockOffset) throws IOException
+	private static Vector3f[] loadVerts(int num, LittleEndianDataInputStream objStream, boolean blockOffset) throws IOException
 	{
-		var verts = new Vec3f[num];
+		var verts = new Vector3f[num];
 
 		for (var i = 0; i < num; i++)
 		{
@@ -115,15 +115,15 @@ public record PM3DFile(PM3DLod[] lods)
 				z += 0.5f;
 			}
 
-			verts[i] = new Vec3f(x, y, z);
+			verts[i] = new Vector3f(x, y, z);
 		}
 
 		return verts;
 	}
 
-	private static Vec3f[] loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static Vector3f[] loadNormals(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		var verts = new Vec3f[num];
+		var verts = new Vector3f[num];
 
 		for (var i = 0; i < num; i++)
 		{
@@ -131,22 +131,22 @@ public record PM3DFile(PM3DLod[] lods)
 			var y = objStream.readFloat();
 			var z = objStream.readFloat();
 
-			verts[i] = new Vec3f(x, y, z);
+			verts[i] = new Vector3f(x, y, z);
 		}
 
 		return verts;
 	}
 
-	private static Vec3f[] loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
+	private static Vector3f[] loadUvs(int num, LittleEndianDataInputStream objStream) throws IOException
 	{
-		var uvs = new Vec3f[num];
+		var uvs = new Vector3f[num];
 
 		for (var i = 0; i < num; i++)
 		{
 			var u = objStream.readFloat();
 			var v = objStream.readFloat();
 
-			uvs[i] = new Vec3f(u, v, 0);
+			uvs[i] = new Vector3f(u, v, 0);
 		}
 
 		return uvs;

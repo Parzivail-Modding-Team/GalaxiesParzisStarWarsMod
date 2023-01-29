@@ -10,16 +10,12 @@ import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
-import com.parzivail.pswg.mixin.RenderPhaseAccessor;
 import com.parzivail.util.client.NativeImageUtil;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.data.TintedIdentifier;
-import com.parzivail.util.math.ColorUtil;
-import com.parzivail.util.math.Ease;
-import com.parzivail.util.math.Matrix4fUtil;
-import com.parzivail.util.math.MatrixStackUtil;
+import com.parzivail.util.math.*;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
@@ -34,9 +30,9 @@ import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceReloader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
+import org.joml.Quaternionf;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -60,22 +56,22 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
 
 	private static final Supplier<ModelEntry> FALLBACK_MODEL = Suppliers.memoize(() -> {
-		return new ModelEntry(P3dManager.INSTANCE.get(Resources.id("blaster/a280")), Resources.id("textures/model/blaster/a280.png"));
+		return new ModelEntry(P3dManager.INSTANCE.get(Resources.id("blaster/a280")), Resources.id("textures/item/model/blaster/a280.png"));
 	});
 
 	private static final Identifier[] ID_MUZZLE_FLASHES_FORWARD = new Identifier[] {
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_4.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_0.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_1.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_2.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_3.png")
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_4.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_0.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_1.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_2.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_3.png")
 	};
 	private static final Identifier[] ID_MUZZLE_FLASHES = new Identifier[] {
-			Resources.id("textures/model/blaster/effect/muzzleflash_9.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_0.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_5.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_7.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_9.png")
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_9.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_0.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_5.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_7.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_9.png")
 	};
 
 	private boolean skipPose = false;
@@ -101,7 +97,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var entry = new ModelEntry(
 				file,
-				new Identifier(id.getNamespace(), "textures/model/blaster/" + id.getPath() + ".png")
+				new Identifier(id.getNamespace(), "textures/item/model/blaster/" + id.getPath() + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
 
@@ -188,15 +184,15 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		if (renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.FIXED)
 		{
-			matrices.multiply(new Quaternion(0, 90, 0, true));
+			matrices.multiply(new Quaternionf().rotationY((float)(Math.PI / 2)));
 
 			if (renderMode == ModelTransformation.Mode.FIXED)
 				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
 			else
-				matrices.multiply(new Quaternion(0, 180, 0, true));
+				matrices.multiply(new Quaternionf().rotationY((float)Math.PI));
 
 			var angle = (float)(Math.PI / 4);
-			matrices.multiply(new Quaternion(angle, 0, 0, false));
+			matrices.multiply(new Quaternionf().rotationX(MathUtil.toRadians(angle)));
 
 			var yi = m.bounds().getYLength() * Math.abs(Math.sin(angle)) + m.bounds().getZLength() * Math.abs(Math.cos(angle));
 			var zi = m.bounds().getYLength() * Math.abs(Math.cos(angle)) + m.bounds().getZLength() * Math.abs(Math.sin(angle));
@@ -239,11 +235,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 					MathHelper.lerp(adsLerp, 1.2f, adsVec.y),
 					MathHelper.lerp(adsLerp, 0, adsVec.z)
 			);
-			matrices.multiply(new Quaternion(
-					MathHelper.lerp(adsLerp, 0, 3) + recoilKick * bd.recoil.vertical * (0.1f + 0.05f * adsLerp),
-					MathHelper.lerp(adsLerp, 172, 182) - recoilKick * bd.recoil.horizontal,
-					0,
-					true));
+			matrices.multiply(new Quaternionf().rotationXYZ(
+					MathUtil.toRadians(MathHelper.lerp(adsLerp, 0, 3) + recoilKick * bd.recoil.vertical * (0.1f + 0.05f * adsLerp)),
+					MathUtil.toRadians(MathHelper.lerp(adsLerp, 172, 182) - recoilKick * bd.recoil.horizontal),
+					0
+			));
 			matrices.translate(
 					MathHelper.lerp(adsLerp, 0.2f, 0),
 					MathHelper.lerp(adsLerp, -0.2f, 0),
@@ -251,7 +247,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			);
 
 			// TODO: recalculate first person placement again without this
-			matrices.multiply(new Quaternion(0, 180, 0, true));
+			matrices.multiply(new Quaternionf().rotationY((float)Math.PI));
 
 			// TODO: left handed hold
 
@@ -414,7 +410,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 	private static RenderLayer getMuzzleFlashLayer(Identifier texture)
 	{
-		return RenderLayer.of("pswg:muzzle_flash2", VertexFormats.POSITION_COLOR_TEXTURE, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().shader(RenderPhaseAccessor.get_POSITION_COLOR_TEXTURE_SHADER()).texture(new RenderPhase.Texture(texture, false, false)).cull(new RenderPhase.Cull(false)).transparency(RenderPhaseAccessor.get_TRANSLUCENT_TRANSPARENCY()).layering(RenderPhaseAccessor.get_VIEW_OFFSET_Z_LAYERING()).build(true));
+		return RenderLayer.of("pswg:muzzle_flash2", VertexFormats.POSITION_COLOR_TEXTURE, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().program(RenderPhase.POSITION_COLOR_TEXTURE_PROGRAM).texture(new RenderPhase.Texture(texture, false, false)).cull(new RenderPhase.Cull(false)).transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY).layering(RenderPhase.VIEW_OFFSET_Z_LAYERING).build(true));
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapdoorBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -15,7 +16,7 @@ public class AccessibleMetalTrapdoorBlock extends TrapdoorBlock
 {
 	public AccessibleMetalTrapdoorBlock(Settings settings)
 	{
-		super(settings);
+		super(settings, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class AccessibleMetalTrapdoorBlock extends TrapdoorBlock
 		state = state.cycle(OPEN);
 		world.setBlockState(pos, state, Block.NOTIFY_LISTENERS);
 		if (state.get(WATERLOGGED))
-			world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 
 		this.playToggleSound(player, world, pos, state.get(OPEN));
 		return ActionResult.success(world.isClient);

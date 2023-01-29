@@ -15,6 +15,7 @@ import com.parzivail.util.item.*;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.meta.ImplicitOverride;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -24,22 +25,24 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.ToolMaterials;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.List;
 
-public class LightsaberItem extends SwordItem implements ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityStackSetListener, IItemActionListener, IItemHotbarListener
+public class LightsaberItem extends SwordItem implements ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityStackSetListener, IItemActionListener, IItemHotbarListener, ITabStackProvider
 {
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
@@ -70,7 +73,7 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	}
 
 	@ImplicitOverride("IrisItemLightProvider::getLightColor")
-	public Vec3f getLightColor(PlayerEntity player, ItemStack stack)
+	public Vector3f getLightColor(PlayerEntity player, ItemStack stack)
 	{
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
 		return ColorUtil.hsvToRgb(lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
@@ -179,13 +182,10 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	}
 
 	@Override
-	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
+	public void appendStacks(FabricItemGroupEntries entries)
 	{
-		if (!this.isIn(group))
-			return;
-
 		for (var entry : PswgContent.getLightsaberPresets().values())
-			stacks.add(forType(entry));
+			entries.add(forType(entry));
 	}
 
 	private ItemStack forType(LightsaberDescriptor descriptor)

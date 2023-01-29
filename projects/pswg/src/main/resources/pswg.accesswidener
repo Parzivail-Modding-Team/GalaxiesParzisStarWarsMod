@@ -1,6 +1,6 @@
 accessWidener	v1	named
 accessible	class	net/minecraft/client/particle/ParticleManager$SpriteAwareFactory
-accessible	class	net/minecraft/client/render/RenderPhase$Shader
+accessible	class	net/minecraft/client/render/RenderPhase$ShaderProgram
 accessible	class	net/minecraft/client/render/RenderPhase$Transparency
 accessible	class	net/minecraft/client/render/RenderPhase$Layering
 accessible	class	net/minecraft/client/render/RenderPhase$Texture

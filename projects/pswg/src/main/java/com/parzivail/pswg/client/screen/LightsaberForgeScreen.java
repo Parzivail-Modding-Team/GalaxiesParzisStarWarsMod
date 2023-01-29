@@ -29,7 +29,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Quaternion;
+import org.joml.Quaternionf;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -127,12 +127,12 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 			commitChanges();
 		}));
 
-		this.addDrawableChild(new ButtonWidget(x + 173, y + 90, 40, 20, Text.translatable("Apply"), button -> {
+		this.addDrawableChild(ButtonWidget.builder(Text.translatable("Apply"), button -> {
 			var passedData = new PacketByteBuf(Unpooled.buffer());
 			passedData.writeNbt(getLightsaberTag().toTag());
 			// TODO: move this to backend, don't allow client to set arbitrary tag data
 			ClientPlayNetworking.send(SwgPackets.C2S.LightsaberForgeApply, passedData);
-		}));
+		}).dimensions(x + 173, y + 90, 40, 20).build());
 
 		this.addDrawableChild(cbUnstable = new EventCheckboxWidget(x + 173, y + 65, 20, 20, Text.translatable("Unstable"), false, true, mutableCheckbox -> commitChanges()));
 
@@ -225,7 +225,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 	{
 		var minecraft = MinecraftClient.getInstance();
 
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, TEXTURE);
 		var i = (this.width - this.backgroundWidth) / 2;
@@ -243,9 +243,9 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		matrices.translate(x + stencilX + hiltLength, y + stencilY + stencilHeight / 2f, 500);
 
 		MatrixStackUtil.scalePos(matrices, -100, 100, 100);
-		matrices.multiply(new Quaternion(0, 0, 90, true));
-		matrices.multiply(new Quaternion(15, 0, 0, true));
-		matrices.multiply(new Quaternion(0, -60, 0, true));
+		matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / 2)));
+		matrices.multiply(new Quaternionf().rotationX((float)(Math.PI / 12)));
+		matrices.multiply(new Quaternionf().rotationY((float)(Math.PI / 3)));
 
 		var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
 
@@ -288,8 +288,8 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		bufferBuilder.vertex(matrices.peek().getPositionMatrix(), (float)x1, (float)y0, (float)z).color(r, g, b, 255).texture(u1, v0).next();
 		bufferBuilder.vertex(matrices.peek().getPositionMatrix(), (float)x0, (float)y0, (float)z).color(r, g, b, 255).texture(u0, v0).next();
 
-		RenderSystem.setShader(GameRenderer::getPositionColorShader);
-		BufferRenderer.drawWithShader(bufferBuilder.end());
+		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+		BufferRenderer.drawWithGlobalProgram(bufferBuilder.end());
 
 		matrices.pop();
 	}
