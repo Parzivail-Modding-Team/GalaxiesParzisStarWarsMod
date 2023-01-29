@@ -72,7 +72,6 @@ import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -84,6 +83,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.block.entity.BlockEntityRendererFactories;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.resource.ResourceType;
@@ -171,9 +171,9 @@ public class Client implements ClientModInitializer
 		HandledScreens.register(SwgScreenTypes.Workbench.Blaster, BlasterWorkbenchScreen::new);
 		HandledScreens.register(SwgScreenTypes.Workbench.Lightsaber, LightsaberForgeScreen::new);
 
-		BlockEntityRendererRegistry.register(SwgBlocks.Workbench.BlasterBlockEntityType, BlasterWorkbenchWeaponRenderer::new);
-		BlockEntityRendererRegistry.register(SwgBlocks.Power.CouplingBlockEntityType, PowerCouplingCableRenderer::new);
-		BlockEntityRendererRegistry.register(SwgBlocks.Cage.CreatureCageBlockEntityType, TerrariumRenderer::new);
+		BlockEntityRendererFactories.register(SwgBlocks.Workbench.BlasterBlockEntityType, BlasterWorkbenchWeaponRenderer::new);
+		BlockEntityRendererFactories.register(SwgBlocks.Power.CouplingBlockEntityType, PowerCouplingCableRenderer::new);
+		BlockEntityRendererFactories.register(SwgBlocks.Cage.CreatureCageBlockEntityType, TerrariumRenderer::new);
 
 		ModelRegistry.register(
 				SwgBlocks.Door.Sliding1x2,
@@ -190,7 +190,7 @@ public class Client implements ClientModInitializer
 		);
 		var slidingDoorRenderer = new SlidingDoorRenderer();
 		P3DBlockRendererRegistry.register(SwgBlocks.Door.Sliding1x2, slidingDoorRenderer);
-		BlockEntityRendererRegistry.register(SwgBlocks.Door.SlidingBlockEntityType, ctx -> slidingDoorRenderer);
+		BlockEntityRendererFactories.register(SwgBlocks.Door.SlidingBlockEntityType, ctx -> slidingDoorRenderer);
 
 		ModelRegistry.register(SwgBlocks.Workbench.Blaster, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/blaster_workbench"), Resources.id("block/model/blaster_workbench"), Resources.id("block/model/workbench_particle")));
 		ModelRegistry.register(SwgBlocks.Workbench.Lightsaber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/lightsaber_forge"), Resources.id("block/model/lightsaber_forge"), Resources.id("block/model/workbench_particle")));
