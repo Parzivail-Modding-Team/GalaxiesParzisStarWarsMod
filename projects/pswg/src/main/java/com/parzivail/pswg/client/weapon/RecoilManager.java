@@ -95,14 +95,15 @@ public class RecoilManager
 
 	public static void applyCameraShake(MinecraftClient mc, MatrixStack matrix, Camera camera, float tickDelta, double fov)
 	{
-		if (mc.player == null || !Resources.CONFIG.get().view.enableScreenShake)
+		if (mc.player == null || !Resources.CONFIG.get().view.enableScreenShake || fov < 1)
 			return;
 
 		var smoothImpulse = Ease.inCubic(Math.max(impulse - tickDelta, 0) / 6);
 		var fovCompensatedImpulse = smoothImpulse * (13 / fov);
-		matrix.translate(0, 0, -0.2 * fovCompensatedImpulse);
+		var dz = -0.2 * fovCompensatedImpulse;
+		matrix.translate(0, 0, dz);
 
-		var scale = 1;
+		var scale = -1;
 		if (mc.options.getMainArm().getValue() == Arm.LEFT)
 			scale = -scale;
 		matrix.multiply(new Quaternionf().rotationY(MathUtil.toRadians(0.1f * scale * smoothImpulse)));

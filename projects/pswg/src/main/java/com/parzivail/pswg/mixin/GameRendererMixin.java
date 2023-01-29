@@ -33,8 +33,7 @@ public class GameRendererMixin
 	@Inject(method = "renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/util/math/MatrixStack;multiplyPositionMatrix(Lorg/joml/Matrix4f;)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
 	void applyCameraTransformations$multiply(float tickDelta, long limitTime, MatrixStack matrices, CallbackInfo ci, boolean bl, Camera camera, MatrixStack matrixStack, double fov)
 	{
-		// TODO:
-		//		CameraHelper.applyCameraShake(tickDelta, limitTime, matrices, camera, fov);
+		CameraHelper.applyCameraShake(tickDelta, limitTime, matrices, camera, fov);
 	}
 
 	@Inject(method = "renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", at = @At(value = "HEAD"))
