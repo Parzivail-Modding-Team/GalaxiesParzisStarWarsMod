@@ -56,22 +56,22 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	private static final HashMap<Identifier, ModelEntry> MODEL_CACHE = new HashMap<>();
 
 	private static final Supplier<ModelEntry> FALLBACK_MODEL = Suppliers.memoize(() -> {
-		return new ModelEntry(P3dManager.INSTANCE.get(Resources.id("blaster/a280")), Resources.id("textures/model/blaster/a280.png"));
+		return new ModelEntry(P3dManager.INSTANCE.get(Resources.id("blaster/a280")), Resources.id("textures/item/model/blaster/a280.png"));
 	});
 
 	private static final Identifier[] ID_MUZZLE_FLASHES_FORWARD = new Identifier[] {
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_4.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_0.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_1.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_2.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_forward_3.png")
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_4.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_0.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_1.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_2.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_forward_3.png")
 	};
 	private static final Identifier[] ID_MUZZLE_FLASHES = new Identifier[] {
-			Resources.id("textures/model/blaster/effect/muzzleflash_9.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_0.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_5.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_7.png"),
-			Resources.id("textures/model/blaster/effect/muzzleflash_9.png")
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_9.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_0.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_5.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_7.png"),
+			Resources.id("textures/item/model/blaster/effect/muzzleflash_9.png")
 	};
 
 	private boolean skipPose = false;
@@ -97,7 +97,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var entry = new ModelEntry(
 				file,
-				new Identifier(id.getNamespace(), "textures/model/blaster/" + id.getPath() + ".png")
+				new Identifier(id.getNamespace(), "textures/item/model/blaster/" + id.getPath() + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
 

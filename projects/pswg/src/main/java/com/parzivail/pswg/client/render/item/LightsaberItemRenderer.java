@@ -35,7 +35,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 	static
 	{
-		FALLBACK_MODEL = new ModelEntry(Resources.id("item/lightsaber/luke_rotj"), Resources.id("textures/item/lightsaber/luke_rotj.png"));
+		FALLBACK_MODEL = new ModelEntry(Resources.id("item/lightsaber/luke_rotj"), Resources.id("textures/item/model/lightsaber/luke_rotj.png"));
 	}
 
 	private LightsaberItemRenderer()
@@ -49,7 +49,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 
 		var entry = new ModelEntry(
 				new Identifier(id.getNamespace(), "item/lightsaber/" + id.getPath()),
-				new Identifier(id.getNamespace(), "textures/model/lightsaber/" + id.getPath() + ".png")
+				new Identifier(id.getNamespace(), "textures/item/model/lightsaber/" + id.getPath() + ".png")
 		);
 		MODEL_CACHE.put(id, entry);
 
