@@ -259,7 +259,7 @@ public class BlockGenerator
 		var wallClosed = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_wall");
 		var wallOpen = IdentifierUtil.concat(AssetGenerator.getTextureName(block), "_wall_open");
 		return basic(block)
-				.state((b, modelId) -> BlockStateModelGenerator.createFenceGateBlockState(block, open, AssetGenerator.getTextureName(block), wallOpen, wallClosed))
+				.state((b, modelId) -> BlockStateModelGenerator.createFenceGateBlockState(block, open, AssetGenerator.getTextureName(block), wallOpen, wallClosed, true))
 				.models(b -> ModelFile.fenceGate(b, texture));
 	}
 
