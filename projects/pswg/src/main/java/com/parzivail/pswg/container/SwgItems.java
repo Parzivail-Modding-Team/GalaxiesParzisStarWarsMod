@@ -437,7 +437,7 @@ public class SwgItems
 	public static class Blaster
 	{
 		@RegistryName("small_power_pack")
-		@TabInclude("blasters")
+		@TabInclude("pswg:blasters")
 		public static final BlasterPowerPackItem SmallPowerPack = new BlasterPowerPackItem(75, new Item.Settings());
 	}
 
@@ -473,7 +473,7 @@ public class SwgItems
 	public static class Lightsaber
 	{
 		@RegistryName("lightsaber")
-		@TabInclude("lightsabers")
+		@TabInclude("pswg:lightsabers")
 		public static final LightsaberItem Lightsaber = new LightsaberItem(new Item.Settings().maxCount(1));
 	}
 
@@ -521,7 +521,7 @@ public class SwgItems
 	{
 		if (!ignoreTab)
 		{
-			var tab = tabOverride == null ? Galaxies.TabItems.getId() : Resources.id(tabOverride);
+			var tab = tabOverride == null ? Galaxies.TabItems.getId() : new Identifier(tabOverride);
 			if (!ITEM_GROUPS.containsKey(tab))
 				ITEM_GROUPS.put(tab, new ArrayList<>());
 
@@ -536,10 +536,11 @@ public class SwgItems
 		for (var blaster : PswgContent.getBlasterPresets().entrySet())
 		{
 			var id = blaster.getKey();
-			Registry.register(
-					Registries.ITEM,
+			registerWithTab(
 					new Identifier(id.getNamespace(), "blaster_" + id.getPath()),
-					new BlasterItem(new Item.Settings().maxCount(1).group(Galaxies.TabBlasters), id, blaster.getValue())
+					new BlasterItem(new Item.Settings().maxCount(1), id, blaster.getValue()),
+					false,
+					Galaxies.TabBlasters.getId().toString()
 			);
 		}
 	}
