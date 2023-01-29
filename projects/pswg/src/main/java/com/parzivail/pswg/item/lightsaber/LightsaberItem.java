@@ -15,6 +15,7 @@ import com.parzivail.util.item.*;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.meta.ImplicitOverride;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EquipmentSlot;
@@ -24,14 +25,16 @@ import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
+import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.SwordItem;
+import net.minecraft.item.ToolMaterials;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -179,10 +182,10 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	}
 
 	@Override
-	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
+	public void appendStacks(FabricItemGroupEntries entries)
 	{
 		for (var entry : PswgContent.getLightsaberPresets().values())
-			stacks.add(forType(entry));
+			entries.add(forType(entry));
 	}
 
 	private ItemStack forType(LightsaberDescriptor descriptor)

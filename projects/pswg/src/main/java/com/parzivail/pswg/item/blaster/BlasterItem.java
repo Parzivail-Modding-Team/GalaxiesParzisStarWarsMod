@@ -17,6 +17,7 @@ import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -30,7 +31,6 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -38,7 +38,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.*;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -484,10 +483,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	}
 
 	@Override
-	public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks)
+	public void appendStacks(FabricItemGroupEntries entries)
 	{
 		for (var entry : PswgContent.getBlasterPresets().entrySet())
-			stacks.add(forType(entry.getValue()));
+			entries.add(forType(entry.getValue()));
 	}
 
 	private ItemStack forType(BlasterDescriptor descriptor)

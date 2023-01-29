@@ -35,6 +35,7 @@ public class SwgItems
 	public static class Debug
 	{
 		@RegistryName("debug")
+		@TabIgnore
 		public static final DebugItem Debug = new DebugItem(new Item.Settings().maxCount(1));
 	}
 
@@ -491,7 +492,7 @@ public class SwgItems
 
 			ItemGroupEvents.modifyEntriesEvent(group).register(entries -> {
 				for (var item : items)
-					if (item instanceof ICustomItemGroupStacks customStacks)
+					if (item instanceof ITabStackProvider customStacks)
 						customStacks.appendStacks(entries);
 					else
 						entries.add(item);

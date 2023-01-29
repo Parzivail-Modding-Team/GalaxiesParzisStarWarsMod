@@ -1,10 +1,8 @@
 package com.parzivail.util.item;
 
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 
 public interface ITabStackProvider
 {
-	void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks);
+	void appendStacks(FabricItemGroupEntries entries);
 }
