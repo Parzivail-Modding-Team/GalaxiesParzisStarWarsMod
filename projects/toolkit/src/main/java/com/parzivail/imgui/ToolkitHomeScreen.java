@@ -45,9 +45,7 @@ public class ToolkitHomeScreen extends ImguiScreen
 
 			if (ImGui.beginMenuBar())
 			{
-				// TODO: add aurek logo to icon font
-				// TODO: scale down discord logo
-				if (ImGui.beginMenu(AurekIconFont.pswg_micro_logo + " Aurek"))
+				if (ImGui.beginMenu(AurekIconFont.aurek + " Aurek"))
 				{
 					if (ImGui.menuItem("Exit"))
 						close();
