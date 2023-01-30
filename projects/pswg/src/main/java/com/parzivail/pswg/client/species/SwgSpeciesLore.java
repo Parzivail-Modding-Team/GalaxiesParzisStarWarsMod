@@ -1,6 +1,6 @@
 package com.parzivail.pswg.client.species;
 
-import com.parzivail.util.client.LoreUtil;
+import com.parzivail.util.client.TooltipUtil;
 import net.minecraft.util.Identifier;
 
 public enum SwgSpeciesLore
@@ -16,6 +16,6 @@ public enum SwgSpeciesLore
 
 	public String createLanguageKey(Identifier slug)
 	{
-		return LoreUtil.getLoreKey("species", new Identifier(slug.getNamespace(), slug.getPath() + "." + langKey));
+		return TooltipUtil.getLoreKey("species", new Identifier(slug.getNamespace(), slug.getPath() + "." + langKey));
 	}
 }

@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMultimap;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.compat.gravitychanger.GravityChangerCompat;
 import com.parzivail.pswg.container.SwgPackets;
@@ -12,12 +11,12 @@ import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.client.TextUtil;
+import com.parzivail.util.client.TooltipUtil;
 import com.parzivail.util.item.*;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
@@ -52,7 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener, ITabStackProvider
+public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
 {
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
@@ -485,22 +484,15 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 		var bd = getBlasterDescriptor(stack, true);
 		if (bd == null)
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.unknown"));
+			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.unknown")));
 		else
 		{
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.heat", bd.heat.capacity, bd.heat.drainSpeed));
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.recoil", bd.recoil.horizontal, bd.recoil.vertical));
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.spread", bd.spread.horizontal, bd.spread.vertical));
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.damage", bd.damage));
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.range", bd.range));
+			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.heat", bd.heat.capacity, bd.heat.drainSpeed)));
+			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.recoil", bd.recoil.horizontal, bd.recoil.vertical)));
+			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.spread", bd.spread.horizontal, bd.spread.vertical)));
+			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.damage", bd.damage)));
+			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.range", bd.range)));
 		}
-	}
-
-	@Override
-	public void appendStacks(FabricItemGroupEntries entries)
-	{
-		for (var entry : PswgContent.getBlasterPresets().entrySet())
-			entries.add(forType(entry.getValue()));
 	}
 
 	private ItemStack forType(BlasterDescriptor descriptor)
