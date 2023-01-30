@@ -1069,7 +1069,7 @@
 	"tooltip.pswg.blaster.stats.recoil": "Recoil: (%.2f, %.2f)",
 	"tooltip.pswg.blaster.stats.spread": "Spread: (%.2f, %.2f)",
 	"tooltip.pswg.blaster.stats.unknown": "Unknown Stats",
-	"tooltip.pswg.blaster.type": "tooltip.pswg.blaster.type",
+	"tooltip.pswg.blaster.type": "Type: ",
 	"tooltip.pswg.lightsaber.controls": "Toggle: %s",
 	"tooltip.pswg.lightsaber.info": "§bLightsaber",
 	"tooltip.pswg.status.insulated_desh_cable": "Connected to: (%s, %s, %s)"

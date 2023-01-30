@@ -2,6 +2,7 @@
 # Set default behavior to automatically normalize line endings.
 ###############################################################################
 * text=auto
+*.json text eol=lf
 
 # Make .bat files valid
 *.bat text eol=crlf
