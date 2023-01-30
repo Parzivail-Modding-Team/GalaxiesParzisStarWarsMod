@@ -71,7 +71,7 @@ public class Tarkin
 	{
 		var speciesManager = SwgSpeciesManager.INSTANCE;
 		ResourceManagerUtil.forceReload(speciesManager, ResourceType.SERVER_DATA);
-		var speciesLangBase = lang.cloneWithRoot("species").modid();
+		var speciesLangBase = lang.entry("species").modid();
 
 		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);
 
@@ -81,16 +81,16 @@ public class Tarkin
 				continue;
 
 			for (var lore : SwgSpeciesLore.values())
-				lang.cloneWithRoot(lore.createLanguageKey(species.getSlug())).build(assets);
+				lang.entry(lore.createLanguageKey(species.getSlug())).build(assets);
 
 			speciesLangBase.dot(species.getSlug().getPath()).build(assets);
 
 			for (var variable : species.getVariables())
 			{
-				lang.cloneWithRoot(variable.getTranslationKey()).build(assets);
+				lang.entry(variable.getTranslationKey()).build(assets);
 
 				for (var value : variable.getPossibleValues())
-					lang.cloneWithRoot(variable.getTranslationFor(value)).build(assets);
+					lang.entry(variable.getTranslationFor(value)).build(assets);
 			}
 		}
 	}
@@ -107,16 +107,16 @@ public class Tarkin
 
 			var blasterDescriptor = blasterEntry.getValue();
 
-			lang.cloneWithRoot(BlasterItem.getTranslationKeyForModel(blasterId)).build(assets);
+			lang.entry(BlasterItem.getTranslationKeyForModel(blasterId)).build(assets);
 
 			for (var attachment : blasterDescriptor.attachmentMap.values())
-				lang.cloneWithRoot(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
+				lang.entry(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
 		}
 	}
 
 	public static void generateConfigLang(List<BuiltAsset> assets, LanguageBuilder lang, Class<Config> config)
 	{
-		var autoconfig = lang.cloneWithRoot("text").dot("autoconfig").modid();
+		var autoconfig = lang.entry("text").dot("autoconfig").modid();
 		autoconfig.dot("title").build(assets);
 		var autoconfigOption = autoconfig.dot("option");
 		generateLangFromConfigAnnotations(autoconfigOption, assets, config);

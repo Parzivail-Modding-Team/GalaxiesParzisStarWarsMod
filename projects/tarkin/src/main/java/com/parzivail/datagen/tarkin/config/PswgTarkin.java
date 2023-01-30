@@ -9,12 +9,13 @@ import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.CharacterScreen;
-import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.pswg.container.SwgEntities;
 import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgTags;
+import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
+import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.util.block.InvertedLampBlock;
 import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.minecraft.data.client.BlockStateModelGenerator;
@@ -51,7 +52,7 @@ public class PswgTarkin
 
 		// Containers
 		lang.container("blaster_workbench").build(assets);
-		lang.cloneWithRoot(BlasterWorkbenchScreen.I18N_INCOMPAT_ATTACHMENT).build(assets);
+		lang.entry(BlasterWorkbenchScreen.I18N_INCOMPAT_ATTACHMENT).build(assets);
 
 		lang.container("corrugated_crate").build(assets);
 		lang.container("kyber_crate").build(assets);
@@ -83,36 +84,32 @@ public class PswgTarkin
 		lang.entity(SwgEntities.Droid.AstroQTKT).build(assets);
 
 		// Screen
-		lang.cloneWithRoot(Resources.I18N_SCREEN_APPLY).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_RANDOM).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_GENDER_MALE).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_GENDER_FEMALE).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_SAVE_PRESET).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_EXPORT_PRESET).build(assets);
+		lang.entry(Resources.I18N_SCREEN_APPLY).build(assets);
+		lang.entry(Resources.I18N_SCREEN_RANDOM).build(assets);
+		lang.entry(Resources.I18N_SCREEN_GENDER_MALE).build(assets);
+		lang.entry(Resources.I18N_SCREEN_GENDER_FEMALE).build(assets);
+		lang.entry(Resources.I18N_SCREEN_SAVE_PRESET).build(assets);
+		lang.entry(Resources.I18N_SCREEN_EXPORT_PRESET).build(assets);
 
-		lang.cloneWithRoot(CharacterScreen.I18N_TITLE).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_CHOOSE_SPECIES).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_CHOOSE_OPTION).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_NEXT_PAGE).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_PREVIOUS_PAGE).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_CLEAR_SPECIES).build(assets);
-
-		lang.screen("species_select").build(assets);
-		lang.cloneWithRoot(SpeciesSelectScreen.I18N_USE_FEMALE_MODEL).build(assets);
+		lang.entry(CharacterScreen.I18N_TITLE).build(assets);
+		lang.entry(CharacterScreen.I18N_CHOOSE_SPECIES).build(assets);
+		lang.entry(CharacterScreen.I18N_CHOOSE_OPTION).build(assets);
+		lang.entry(CharacterScreen.I18N_NEXT_PAGE).build(assets);
+		lang.entry(CharacterScreen.I18N_PREVIOUS_PAGE).build(assets);
+		lang.entry(CharacterScreen.I18N_CLEAR_SPECIES).build(assets);
 
 		// Item tooltips
-		lang.tooltip("blaster").dot("info").build(assets);
-		lang.tooltip("blaster").dot("controls").build(assets);
-		var blasterStats = lang.tooltip("blaster").dot("stats");
-		blasterStats.dot("unknown").build(assets);
-		blasterStats.dot("heat").build(assets);
-		blasterStats.dot("recoil").build(assets);
-		blasterStats.dot("spread").build(assets);
-		blasterStats.dot("damage").build(assets);
-		blasterStats.dot("range").build(assets);
+		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_TYPE).build(assets);
+		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_CONTROLS).build(assets);
+		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_NO_STATS).build(assets);
+		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_HEAT).build(assets);
+		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_RECOIL).build(assets);
+		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_SPREAD).build(assets);
+		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_DAMAGE).build(assets);
+		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_RANGE).build(assets);
 
-		lang.tooltip("lightsaber").dot("info").build(assets);
-		lang.tooltip("lightsaber").dot("controls").build(assets);
+		lang.entry(LightsaberItem.I18N_TOOLTIP_LIGHTSABER_INFO).build(assets);
+		lang.entry(LightsaberItem.I18N_TOOLTIP_LIGHTSABER_CONTROLS).build(assets);
 
 		// Item
 		lang.item("lightsaber").dot("darksaber").build(assets);
@@ -141,13 +138,9 @@ public class PswgTarkin
 
 		lang.message("tip").dot("customize_character").build(assets);
 
-		lang.message("blaster_mode_changed").build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.SEMI_AUTOMATIC.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.BURST.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.AUTOMATIC.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.STUN.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.SLUGTHROWER.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.ION.getTranslation()).build(assets);
+		lang.entry(BlasterItem.I18N_MESSAGE_MODE_CHANGED).build(assets);
+		for (var value : BlasterFiringMode.values())
+			lang.entry(value.getTranslation()).build(assets);
 
 		// Species
 		Tarkin.generateSpeciesLang(assets, lang, Resources.MODID);
@@ -733,7 +726,7 @@ public class PswgTarkin
 		             .build(assets);
 
 		// TODO: move to addons
-//		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
+		//		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
 		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
 
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);

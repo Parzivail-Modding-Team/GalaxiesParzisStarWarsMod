@@ -48,4 +48,9 @@ public enum BlasterArchetype
 	{
 		return oneHanded;
 	}
+
+	public String getLangKey()
+	{
+		return String.format("blaster.pswg.archetype.%s", value);
+	}
 }

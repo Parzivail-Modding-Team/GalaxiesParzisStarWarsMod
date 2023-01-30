@@ -38,60 +38,60 @@ public class LanguageBuilder
 		return dot("%1$s");
 	}
 
-	public LanguageBuilder cloneWithRoot(String root)
+	public LanguageBuilder entry(String root)
 	{
 		return new LanguageBuilder(locale, data + root);
 	}
 
 	public LanguageBuilder container(String value)
 	{
-		return cloneWithRoot("container").modid().dot(value);
+		return entry("container").modid().dot(value);
 	}
 
 	public LanguageBuilder category(String value)
 	{
-		return cloneWithRoot("category").modid().dot(value);
+		return entry("category").modid().dot(value);
 	}
 
 	public LanguageBuilder cause_of_death(String value)
 	{
-		return cloneWithRoot("death").dot("attack").modid().dot(value);
+		return entry("death").dot("attack").modid().dot(value);
 	}
 
 	public LanguageBuilder command(String value)
 	{
-		return cloneWithRoot("command").modid().dot(value);
+		return entry("command").modid().dot(value);
 	}
 
 	public LanguageBuilder entity(EntityType<? extends Entity> entity)
 	{
 		var entityId = Registries.ENTITY_TYPE.getId(entity);
-		return cloneWithRoot("entity").modid().dot(entityId.getPath());
+		return entry("entity").modid().dot(entityId.getPath());
 	}
 
 	public LanguageBuilder screen(String value)
 	{
-		return cloneWithRoot("screen").modid().dot(value);
+		return entry("screen").modid().dot(value);
 	}
 
 	public LanguageBuilder item(String value)
 	{
-		return cloneWithRoot("item").modid().dot(value);
+		return entry("item").modid().dot(value);
 	}
 
 	public LanguageBuilder tooltip(String value)
 	{
-		return cloneWithRoot("tooltip").modid().dot(value);
+		return entry("tooltip").modid().dot(value);
 	}
 
 	public LanguageBuilder lore(Item item)
 	{
-		return cloneWithRoot(TooltipUtil.getLoreKey(item));
+		return entry(TooltipUtil.getLoreKey(item));
 	}
 
 	public LanguageBuilder status(Item item)
 	{
-		return cloneWithRoot(TooltipUtil.getStatusKey(item));
+		return entry(TooltipUtil.getStatusKey(item));
 	}
 
 	public LanguageBuilder itemGroup(ItemGroup value)
@@ -106,12 +106,12 @@ public class LanguageBuilder
 
 	public LanguageBuilder message(String value)
 	{
-		return cloneWithRoot("msg").modid().dot(value);
+		return entry("msg").modid().dot(value);
 	}
 
 	public LanguageBuilder keyCategory(String value)
 	{
-		return cloneWithRoot("key").dot("category").dot(value);
+		return entry("key").dot("category").dot(value);
 	}
 
 	public LanguageProvider getProvider()

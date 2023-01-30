@@ -53,6 +53,16 @@ import java.util.UUID;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
 {
+	public static final String I18N_TOOLTIP_BLASTER_TYPE = Resources.tooltip("blaster.type");
+	public static final String I18N_TOOLTIP_BLASTER_CONTROLS = Resources.tooltip("blaster.controls");
+	public static final String I18N_TOOLTIP_BLASTER_NO_STATS = Resources.tooltip("blaster.stats.unknown");
+	public static final String I18N_TOOLTIP_BLASTER_STATS_HEAT = Resources.tooltip("blaster.stats.heat");
+	public static final String I18N_TOOLTIP_BLASTER_STATS_RECOIL = Resources.tooltip("blaster.stats.recoil");
+	public static final String I18N_TOOLTIP_BLASTER_STATS_SPREAD = Resources.tooltip("blaster.stats.spread");
+	public static final String I18N_TOOLTIP_BLASTER_STATS_DAMAGE = Resources.tooltip("blaster.stats.damage");
+	public static final String I18N_TOOLTIP_BLASTER_STATS_RANGE = Resources.tooltip("blaster.stats.range");
+	public static final String I18N_MESSAGE_MODE_CHANGED = Resources.msg("blaster_mode_changed");
+
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
 
@@ -137,7 +147,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 		bt.serializeAsSubtag(stack);
 
-		player.sendMessage(Text.translatable(Resources.msg("blaster_mode_changed"), Text.translatable(currentMode.getTranslation())), true);
+		player.sendMessage(Text.translatable(I18N_MESSAGE_MODE_CHANGED, Text.translatable(currentMode.getTranslation())), true);
 	}
 
 	public static void bypassHeat(World world, PlayerEntity player, ItemStack stack)
@@ -480,18 +490,19 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
 	{
 		super.appendTooltip(stack, world, tooltip, context);
-		tooltip.add(Text.translatable("tooltip.pswg.blaster.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+		tooltip.add(Text.translatable(I18N_TOOLTIP_BLASTER_CONTROLS, TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 
 		var bd = getBlasterDescriptor(stack, true);
 		if (bd == null)
-			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.unknown")));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_NO_STATS)));
 		else
 		{
-			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.heat", bd.heat.capacity, bd.heat.drainSpeed)));
-			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.recoil", bd.recoil.horizontal, bd.recoil.vertical)));
-			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.spread", bd.spread.horizontal, bd.spread.vertical)));
-			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.damage", bd.damage)));
-			tooltip.add(TooltipUtil.note(Text.translatable("tooltip.pswg.blaster.stats.range", bd.range)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_TYPE, bd.type.getLangKey())));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_HEAT, bd.heat.capacity, bd.heat.drainSpeed)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_RECOIL, bd.recoil.horizontal, bd.recoil.vertical)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_SPREAD, bd.spread.horizontal, bd.spread.vertical)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_DAMAGE, bd.damage)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_RANGE, bd.range)));
 		}
 	}
 

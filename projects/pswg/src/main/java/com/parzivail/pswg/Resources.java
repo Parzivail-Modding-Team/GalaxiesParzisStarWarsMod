@@ -78,6 +78,11 @@ public class Resources
 		return dotModId("info", str);
 	}
 
+	public static String tooltip(String str)
+	{
+		return dotModId("tooltip", str);
+	}
+
 	public static void checkVersion()
 	{
 		try

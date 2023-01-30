@@ -44,6 +44,9 @@ import java.util.List;
 
 public class LightsaberItem extends SwordItem implements ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityStackSetListener, IItemActionListener, IItemHotbarListener, ITabStackProvider
 {
+	public static final String I18N_TOOLTIP_LIGHTSABER_INFO = Resources.tooltip("lightsaber.info");
+	public static final String I18N_TOOLTIP_LIGHTSABER_CONTROLS = Resources.tooltip("lightsaber.controls");
+
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnMainhand;
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOnOffhand;
@@ -176,9 +179,9 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
 	{
 		super.appendTooltip(stack, world, tooltip, context);
-		tooltip.add(Text.translatable("tooltip.pswg.lightsaber.info"));
+		tooltip.add(Text.translatable(I18N_TOOLTIP_LIGHTSABER_INFO));
 //		tooltip.add(Text.translatable("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
-		tooltip.add(Text.translatable("tooltip.pswg.lightsaber.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+		tooltip.add(Text.translatable(I18N_TOOLTIP_LIGHTSABER_CONTROLS, TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 	}
 
 	@Override
