@@ -2,9 +2,7 @@ package com.parzivail.pswg.item.blaster.data;
 
 import com.parzivail.pswg.Resources;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public enum BlasterFiringMode
 {
@@ -50,26 +48,6 @@ public enum BlasterFiringMode
 	public byte getId()
 	{
 		return id;
-	}
-
-	public static List<BlasterFiringMode> unpack(short value)
-	{
-		var allFlags = values();
-		var flags = new ArrayList<BlasterFiringMode>();
-
-		for (var flag : allFlags)
-			if ((value & flag.getFlag()) != 0)
-				flags.add(flag);
-
-		return flags;
-	}
-
-	public static short pack(List<BlasterFiringMode> controls)
-	{
-		short packed = 0;
-		for (var sc : controls)
-			packed |= sc.getFlag();
-		return packed;
 	}
 
 	public String getTranslation()
