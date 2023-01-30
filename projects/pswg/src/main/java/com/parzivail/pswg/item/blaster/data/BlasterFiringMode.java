@@ -26,23 +26,16 @@ public enum BlasterFiringMode
 
 	private final String value;
 	private final byte id;
-	private final int flag;
 
 	BlasterFiringMode(String value, byte id)
 	{
 		this.value = value;
 		this.id = id;
-		this.flag = 1 << id;
 	}
 
 	public String getValue()
 	{
 		return value;
-	}
-
-	public int getFlag()
-	{
-		return flag;
 	}
 
 	public byte getId()

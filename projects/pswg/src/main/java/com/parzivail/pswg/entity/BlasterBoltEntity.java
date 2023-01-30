@@ -29,14 +29,17 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Float> HUE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
+	private boolean ignoreWater;
+
 	public BlasterBoltEntity(EntityType<? extends BlasterBoltEntity> type, World world)
 	{
 		super(type, world);
 	}
 
-	public BlasterBoltEntity(EntityType<? extends BlasterBoltEntity> type, LivingEntity owner, World world)
+	public BlasterBoltEntity(EntityType<? extends BlasterBoltEntity> type, LivingEntity owner, World world, boolean ignoreWater)
 	{
 		super(type, owner, world);
+		this.ignoreWater = ignoreWater;
 	}
 
 	protected boolean shouldCreateScorch()
@@ -78,6 +81,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	{
 		super.writeCustomDataToNbt(tag);
 		tag.putInt("life", getLife());
+		tag.putBoolean("ignoreWater", ignoreWater);
 	}
 
 	@Override
@@ -85,6 +89,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	{
 		super.readCustomDataFromNbt(tag);
 		setLife(tag.getInt("life"));
+		ignoreWater = tag.getBoolean("ignoreWater");
 	}
 
 	@Override
@@ -145,6 +150,10 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 			if (hitResult.getType() == HitResult.Type.BLOCK)
 			{
 				var blockHit = (BlockHitResult)hitResult;
+
+				var blockPos = blockHit.getBlockPos();
+				if (world.isWater(blockPos) && ignoreWater)
+					return;
 
 				var incident = this.getVelocity().normalize();
 				var normal = new Vec3d(blockHit.getSide().getUnitVector());

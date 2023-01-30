@@ -14,7 +14,10 @@ public enum BlasterAttachmentFunction
 	ION_TO_GAS_CONVERSION("ion_to_gas_conversion", (byte)9),
 	ION_TO_REPULSOR_CONVERSION("ion_to_repulsor_conversion", (byte)10),
 	INCREASE_DAMAGE("increase_damage", (byte)11),
-	INCREASE_RANGE("increase_range", (byte)12);
+	INCREASE_RANGE("increase_range", (byte)12),
+	WATERPROOF_BOLTS("waterproof_bolts", (byte)13),
+	WATERPROOF_FIRING("waterproof_firing", (byte)14),
+	;
 
 	private final String value;
 	private final byte id;

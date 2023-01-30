@@ -329,6 +329,18 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			}
 		}
 
+		boolean canFireUnderwater = bt.mapWithAttachment(bd, BlasterAttachmentFunction.WATERPROOF_FIRING, true)
+		                              .orElse(bd.waterBehavior == BlasterWaterBehavior.CAN_FIRE_UNDERWATER);
+
+		if (!canFireUnderwater && player.isSubmergedInWater())
+		{
+			if (!world.isClient)
+				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.DRYFIRE, SoundCategory.PLAYERS, 1f, 1f);
+
+			bt.serializeAsSubtag(stack);
+			return TypedActionResult.fail(stack);
+		}
+
 		bt.passiveCooldownTimer = (short)bd.heat.passiveCooldownDelay;
 		bt.shotsRemaining--;
 
@@ -393,12 +405,15 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			var heatPitchIncrease = 0.15f * (bt.heat / (float)bd.heat.capacity);
 
+			boolean passThroughWater = bt.mapWithAttachment(bd, BlasterAttachmentFunction.WATERPROOF_BOLTS, true)
+			                             .orElse(bd.waterBehavior != BlasterWaterBehavior.NONE);
+
 			switch (bt.getFiringMode())
 			{
 				case SEMI_AUTOMATIC, BURST, AUTOMATIC ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 30 + heatPitchIncrease);
-					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
+					BlasterUtil.fireBolt(world, player, fromDir, range, damage, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 						entity.setHue(bd.boltColor);
@@ -407,7 +422,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				case STUN ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
-					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, entity -> {
+					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 					});
@@ -416,12 +431,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				case SLUGTHROWER ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
-					BlasterUtil.fireSlug(world, player, fromDir, range, damage);
+					BlasterUtil.fireSlug(world, player, fromDir, range, damage, passThroughWater);
 				}
 				case ION ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
-					BlasterUtil.fireIon(world, player, range, entity -> {
+					BlasterUtil.fireIon(world, player, range, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 						entity.setHue(bd.boltColor);
