@@ -13,7 +13,7 @@ val iris_version: String by project.ext
 val lambdynamiclights_version: String by project.ext
 
 dependencies {
-	"compileOnly"(project(":projects:tarkin-api", configuration = "namedElements"))
+	"compileOnly"(project(":projects:tarkin-api"))
 
 	// CCA Base
 	"modImplementation"("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
