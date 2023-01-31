@@ -33,6 +33,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class BlasterUtil
 {
@@ -46,7 +47,7 @@ public class BlasterUtil
 		return new PProjectileEntityDamageSource("pswg.blaster.slug", attacker).setIgnoresInvulnerableFrames().setProjectile();
 	}
 
-	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, float damage, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)
+	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, Function<Double, Double> damage, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)
 	{
 		final var bolt = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world, ignoreWater);
 		entityInitializer.accept(bolt);
@@ -64,7 +65,7 @@ public class BlasterUtil
 
 		if (hit != null && entityDistance < blockDistance)
 		{
-			hit.entity().damage(getDamageSource(bolt, player), damage);
+			hit.entity().damage(getDamageSource(bolt, player), (float)(double)damage.apply(entityDistance));
 		}
 	}
 
@@ -119,7 +120,7 @@ public class BlasterUtil
 		});
 	}
 
-	public static void fireSlug(World world, PlayerEntity player, Vec3d fromDir, float range, float damage, boolean ignoreWater)
+	public static void fireSlug(World world, PlayerEntity player, Vec3d fromDir, float range, Function<Double, Double> damage, boolean ignoreWater)
 	{
 		var start = player.getEyePos();
 
@@ -132,7 +133,7 @@ public class BlasterUtil
 
 		if (hit != null && entityDistance < blockDistance)
 		{
-			hit.entity().damage(getSlugDamageSource(player), damage);
+			hit.entity().damage(getSlugDamageSource(player), (float)(double)damage.apply(entityDistance));
 			end = new BlockPos(hit.hit());
 		}
 		else if (blockHit.getType() == HitResult.Type.BLOCK)

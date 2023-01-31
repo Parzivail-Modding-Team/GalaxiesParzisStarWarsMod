@@ -50,6 +50,7 @@ import org.joml.Matrix4f;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
 {
@@ -399,7 +400,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, Matrix4fUtil.transform(MathUtil.POSZ, m).normalize());
 
 			var range = bd.range;
-			var damage = bd.damage;
+			Function<Double, Double> damage = (x) -> bd.damage * bd.damageFalloff.apply(x / range);
 
 			var shouldRecoil = true;
 

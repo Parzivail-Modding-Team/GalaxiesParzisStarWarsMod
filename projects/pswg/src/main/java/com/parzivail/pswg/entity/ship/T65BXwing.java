@@ -125,7 +125,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 
 		var pDir = QuatUtil.rotate(MathUtil.POSZ.multiply(5f), boltRotation);
 
-		BlasterUtil.fireBolt(world, player, pDir.normalize(), 100, 50, true, blasterBoltEntity -> {
+		BlasterUtil.fireBolt(world, player, pDir.normalize(), 100, distance -> (double)50, true, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
 			blasterBoltEntity.setPos(p.x, p.y, p.z);
 		});
