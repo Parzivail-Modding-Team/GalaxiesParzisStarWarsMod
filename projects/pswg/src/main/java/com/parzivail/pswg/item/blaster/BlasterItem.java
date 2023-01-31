@@ -10,6 +10,7 @@ import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.pswg.util.BlasterUtil;
+import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.TooltipUtil;
 import com.parzivail.util.item.*;
@@ -54,14 +55,23 @@ import java.util.function.Function;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
 {
+	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_TYPE = Resources.tooltip("blaster.type");
+	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_CONTROLS = Resources.tooltip("blaster.controls");
+	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_NO_STATS = Resources.tooltip("blaster.stats.unknown");
+	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_STATS_HEAT = Resources.tooltip("blaster.stats.heat");
+	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_STATS_RECOIL = Resources.tooltip("blaster.stats.recoil");
+	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_STATS_SPREAD = Resources.tooltip("blaster.stats.spread");
+	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_STATS_DAMAGE = Resources.tooltip("blaster.stats.damage");
+	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_STATS_RANGE = Resources.tooltip("blaster.stats.range");
+	@TarkinLang
 	public static final String I18N_MESSAGE_MODE_CHANGED = Resources.msg("blaster_mode_changed");
 
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");

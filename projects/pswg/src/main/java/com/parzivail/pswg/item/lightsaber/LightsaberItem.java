@@ -10,6 +10,7 @@ import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.ThrownLightsaberEntity;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
+import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.item.*;
 import com.parzivail.util.math.ColorUtil;
@@ -44,7 +45,9 @@ import java.util.List;
 
 public class LightsaberItem extends SwordItem implements ICustomVisualItemEquality, IDefaultNbtProvider, IItemEntityStackSetListener, IItemActionListener, IItemHotbarListener, ITabStackProvider
 {
+	@TarkinLang
 	public static final String I18N_TOOLTIP_LIGHTSABER_INFO = Resources.tooltip("lightsaber.info");
+	@TarkinLang
 	public static final String I18N_TOOLTIP_LIGHTSABER_CONTROLS = Resources.tooltip("lightsaber.controls");
 
 	private final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> attribModsOff;

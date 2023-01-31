@@ -16,6 +16,7 @@ import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import com.parzivail.pswg.mixin.EntityRenderDispatcherAccessor;
+import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.screen.blit.*;
 import com.parzivail.util.math.ColorUtil;
@@ -68,12 +69,19 @@ public class CharacterScreen extends Screen
 		VARIABLES
 	}
 
+	@TarkinLang
 	public static final String I18N_TITLE = "screen.pswg.character";
+	@TarkinLang
 	public static final String I18N_CHOOSE_SPECIES = "screen.pswg.character.choose_species";
+	@TarkinLang
 	public static final String I18N_CHOOSE_OPTION = "screen.pswg.character.choose_option";
+	@TarkinLang
 	public static final String I18N_NEXT_PAGE = "screen.pswg.character.next_page";
+	@TarkinLang
 	public static final String I18N_PREVIOUS_PAGE = "screen.pswg.character.previous_page";
+	@TarkinLang
 	public static final String I18N_CLEAR_SPECIES = "screen.pswg.character.clear_species";
+
 	private static final Identifier OPTIONS_BACKGROUND = new Identifier("textures/gui/options_background.png");
 	private static final Identifier BACKGROUND = Resources.id("textures/gui/character/background.png");
 

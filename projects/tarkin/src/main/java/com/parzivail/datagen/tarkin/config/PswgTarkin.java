@@ -5,14 +5,15 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Config;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
+import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.CharacterScreen;
-import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.container.SwgTags;
+import com.parzivail.pswg.client.species.SwgSpeciesLore;
+import com.parzivail.pswg.container.*;
+import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
@@ -25,6 +26,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -83,33 +85,10 @@ public class PswgTarkin
 		lang.entity(SwgEntities.Droid.AstroR2Y10).build(assets);
 		lang.entity(SwgEntities.Droid.AstroQTKT).build(assets);
 
-		// Screen
-		lang.entry(Resources.I18N_SCREEN_APPLY).build(assets);
-		lang.entry(Resources.I18N_SCREEN_RANDOM).build(assets);
-		lang.entry(Resources.I18N_SCREEN_GENDER_MALE).build(assets);
-		lang.entry(Resources.I18N_SCREEN_GENDER_FEMALE).build(assets);
-		lang.entry(Resources.I18N_SCREEN_SAVE_PRESET).build(assets);
-		lang.entry(Resources.I18N_SCREEN_EXPORT_PRESET).build(assets);
-
-		lang.entry(CharacterScreen.I18N_TITLE).build(assets);
-		lang.entry(CharacterScreen.I18N_CHOOSE_SPECIES).build(assets);
-		lang.entry(CharacterScreen.I18N_CHOOSE_OPTION).build(assets);
-		lang.entry(CharacterScreen.I18N_NEXT_PAGE).build(assets);
-		lang.entry(CharacterScreen.I18N_PREVIOUS_PAGE).build(assets);
-		lang.entry(CharacterScreen.I18N_CLEAR_SPECIES).build(assets);
-
-		// Item tooltips
-		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_TYPE).build(assets);
-		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_CONTROLS).build(assets);
-		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_NO_STATS).build(assets);
-		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_HEAT).build(assets);
-		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_RECOIL).build(assets);
-		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_SPREAD).build(assets);
-		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_DAMAGE).build(assets);
-		lang.entry(BlasterItem.I18N_TOOLTIP_BLASTER_STATS_RANGE).build(assets);
-
-		lang.entry(LightsaberItem.I18N_TOOLTIP_LIGHTSABER_INFO).build(assets);
-		lang.entry(LightsaberItem.I18N_TOOLTIP_LIGHTSABER_CONTROLS).build(assets);
+		Tarkin.registerLangFields(Resources.class, lang, assets);
+		Tarkin.registerLangFields(CharacterScreen.class, lang, assets);
+		Tarkin.registerLangFields(BlasterItem.class, lang, assets);
+		Tarkin.registerLangFields(LightsaberItem.class, lang, assets);
 
 		// Item
 		lang.item("lightsaber").dot("darksaber").build(assets);
@@ -143,13 +122,13 @@ public class PswgTarkin
 			lang.entry(value.getTranslation()).build(assets);
 
 		// Species
-		Tarkin.generateSpeciesLang(assets, lang, Resources.MODID);
+		generateSpeciesLang(assets, lang, Resources.MODID);
 
 		// Blaster attachments
-		Tarkin.generateBlasterLang(assets, lang, Resources.MODID);
+		generateBlasterLang(assets, lang, Resources.MODID);
 
 		// Autoconfig
-		Tarkin.generateConfigLang(assets, lang, Config.class);
+		generateConfigLang(assets, lang, Config.class);
 	}
 
 	public static void generateTags(List<BuiltAsset> assets)
@@ -1722,5 +1701,60 @@ public class PswgTarkin
 		generateRecipes(assets);
 		generateTags(assets);
 		generateLangEntries(assets);
+	}
+
+	public static void generateSpeciesLang(List<BuiltAsset> assets, LanguageBuilder lang, String namespace)
+	{
+		var speciesManager = SwgSpeciesManager.INSTANCE;
+		ResourceManagerUtil.forceReload(speciesManager, ResourceType.SERVER_DATA);
+		var speciesLangBase = lang.entry("species").modid();
+
+		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);
+
+		for (var species : SwgSpeciesRegistry.ALL_SPECIES.get())
+		{
+			if (!species.getSlug().getNamespace().equals(namespace))
+				continue;
+
+			for (var lore : SwgSpeciesLore.values())
+				lang.entry(lore.createLanguageKey(species.getSlug())).build(assets);
+
+			speciesLangBase.dot(species.getSlug().getPath()).build(assets);
+
+			for (var variable : species.getVariables())
+			{
+				lang.entry(variable.getTranslationKey()).build(assets);
+
+				for (var value : variable.getPossibleValues())
+					lang.entry(variable.getTranslationFor(value)).build(assets);
+			}
+		}
+	}
+
+	public static void generateBlasterLang(List<BuiltAsset> assets, LanguageBuilder lang, String namespace)
+	{
+		var blasterData = PswgContent.getBlasterPresets();
+
+		for (var blasterEntry : blasterData.entrySet())
+		{
+			var blasterId = blasterEntry.getKey();
+			if (!blasterId.getNamespace().equals(namespace))
+				continue;
+
+			var blasterDescriptor = blasterEntry.getValue();
+
+			lang.entry(BlasterItem.getTranslationKeyForModel(blasterId)).build(assets);
+
+			for (var attachment : blasterDescriptor.attachmentMap.values())
+				lang.entry(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
+		}
+	}
+
+	public static void generateConfigLang(List<BuiltAsset> assets, LanguageBuilder lang, Class<Config> config)
+	{
+		var autoconfig = lang.entry("text").dot("autoconfig").modid();
+		autoconfig.dot("title").build(assets);
+		var autoconfigOption = autoconfig.dot("option");
+		Tarkin.generateLangFromConfigAnnotations(autoconfigOption, assets, config);
 	}
 }
