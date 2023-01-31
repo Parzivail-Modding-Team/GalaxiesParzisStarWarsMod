@@ -197,28 +197,28 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Workbench.Blaster, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/blaster_workbench"), Resources.id("block/model/blaster_workbench"), Resources.id("block/model/workbench_particle")));
 		ModelRegistry.register(SwgBlocks.Workbench.Lightsaber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/lightsaber_forge"), Resources.id("block/model/lightsaber_forge"), Resources.id("block/model/workbench_particle")));
 
-		ModelRegistry.register(SwgBlocks.Light.RedHangar, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/light/hangar_light"), Resources.id("block/model/light/red_hangar_light"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Light.BlueHangar, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/light/hangar_light"), Resources.id("block/model/light/blue_hangar_light"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Light.RedHangar, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/light/hangar_light"), Resources.id("block/model/light/red_hangar_light"), Resources.id("block/model/light/hangar_light_particle")));
+		ModelRegistry.register(SwgBlocks.Light.BlueHangar, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/light/hangar_light"), Resources.id("block/model/light/blue_hangar_light"), Resources.id("block/model/light/hangar_light_particle")));
 
 		ModelRegistry.register(SwgBlocks.MoistureVaporator.Gx8, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/gx8"), Resources.id("block/model/gx8"), Resources.id("block/model/gx8_particle")));
 
 		ModelRegistry.register(SwgBlocks.Power.Coupling, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/power_coupling"), Resources.id("block/model/power_coupling"), Resources.id("block/model/power_coupling_particle")));
 
-		ModelRegistry.register(SwgBlocks.Scaffold.Scaffold, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/scaffold"), Resources.id("block/model/scaffold"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Scaffold.ScaffoldStairs, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/scaffold_stairs"), Resources.id("block/model/scaffold_stairs"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Scaffold.Scaffold, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/scaffold"), Resources.id("block/model/scaffold"), Resources.id("block/model/scaffold_particle")));
+		ModelRegistry.register(SwgBlocks.Scaffold.ScaffoldStairs, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/scaffold_stairs"), Resources.id("block/model/scaffold_stairs"), Resources.id("block/model/scaffold_particle")));
 
 		ModelRegistry.register(SwgBlocks.Light.WallCluster, true, ModelLoader.loadPicklingP3D(Resources.id("block/model/light/cluster"), Resources.id("block/model/light/cluster_particle"), Resources.id("block/light/cluster_light_1"), Resources.id("block/light/cluster_light_2"), Resources.id("block/light/cluster_light_3")));
-		ModelRegistry.register(SwgBlocks.Light.TallLamp, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/light/tall_lamp"), Resources.id("block/model/light/tall_lamp"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Light.TallLamp, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/light/tall_lamp"), Resources.id("block/model/light/tall_lamp"), Resources.id("block/model/light/tall_lamp_particle")));
 
-		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.RENDER_SEED_KEY, Resources.id("block/desh_barrel"), Resources.id("block/model/desh_barrel"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Barrel.Desh, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.RENDER_SEED_KEY, Resources.id("block/desh_barrel"), Resources.id("block/model/desh_barrel"), Resources.id("block/model/desh_barrel_particle")));
 
-		ModelRegistry.register(SwgBlocks.Tank.FusionFuel, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/fusion_fuel_tank"), Resources.id("block/model/fusion_fuel_tank"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Tank.StarshipFuel, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/starship_fuel_tank"), Resources.id("block/model/starship_fuel_tank"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Tank.FusionFuel, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/fusion_fuel_tank"), Resources.id("block/model/fusion_fuel_tank"), Resources.id("block/model/fusion_fuel_tank_particle")));
+		ModelRegistry.register(SwgBlocks.Tank.StarshipFuel, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/starship_fuel_tank"), Resources.id("block/model/starship_fuel_tank"), Resources.id("block/model/starship_fuel_tank_particle")));
 
 		ModelRegistry.register(SwgBlocks.Crate.OrangeKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), Resources.id("block/model/crate/kyber_orange"), Resources.id("block/model/crate/kyber_orange_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.GrayKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), Resources.id("block/model/crate/kyber_gray"), Resources.id("block/model/crate/kyber_gray_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.BlackKyber, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/crate/kyber"), Resources.id("block/model/crate/kyber_black"), Resources.id("block/model/crate/kyber_black_particle")));
-		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/stool"), Resources.id("block/model/stool"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Crate.Toolbox, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/stool"), Resources.id("block/model/stool"), Resources.id("block/model/stool_particle")));
 
 		ModelRegistry.register(SwgBlocks.Crate.BrownSegmented, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("block/model/segmented_crate/brown"), Resources.id("block/model/segmented_crate/brown_particle")));
 		ModelRegistry.register(SwgBlocks.Crate.GraySegmented, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/segmented_crate"), Resources.id("block/model/segmented_crate/gray"), Resources.id("block/model/segmented_crate/gray_particle")));
@@ -229,7 +229,7 @@ public class Client implements ClientModInitializer
 			ModelRegistry.register(SwgBlocks.Crate.CorrugatedCrate.get(color), true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/corrugated_crate"), Resources.id("block/model/corrugated_crate/" + color.getName()), Resources.id("block/model/corrugated_crate/" + color.getName() + "_particle")));
 
 		ModelRegistry.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadPM3D(Resources.id("models/block/machine_spoked.pm3d"), Resources.id("block/model/machine_spoked"), new Identifier("block/stone")));
-		ModelRegistry.register(SwgBlocks.Machine.ElectrostaticRepeller, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/electrostatic_repeller"), Resources.id("block/model/electrostatic_repeller"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Machine.ElectrostaticRepeller, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/electrostatic_repeller"), Resources.id("block/model/electrostatic_repeller"), Resources.id("block/model/electrostatic_repeller_particle")));
 
 		ModelRegistry.register(SwgBlocks.Pipe.Large, false, ModelLoader.loadPM3D(Resources.id("models/block/pipe_thick.pm3d"), Resources.id("block/model/pipe_thick"), new Identifier("block/stone")));
 
