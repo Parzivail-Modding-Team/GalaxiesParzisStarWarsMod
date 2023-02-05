@@ -1,6 +1,7 @@
 package com.parzivail.pswg;
 
 import com.google.gson.GsonBuilder;
+import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.noise.OpenSimplex2F;
 import me.shedaniel.autoconfig.ConfigHolder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -15,11 +16,17 @@ import java.net.URL;
 
 public class Resources
 {
+	@TarkinLang
 	public static final String I18N_SCREEN_APPLY = "screen.pswg.apply";
+	@TarkinLang
 	public static final String I18N_SCREEN_RANDOM = "screen.pswg.random";
+	@TarkinLang
 	public static final String I18N_SCREEN_GENDER_MALE = "screen.pswg.male";
+	@TarkinLang
 	public static final String I18N_SCREEN_GENDER_FEMALE = "screen.pswg.female";
+	@TarkinLang
 	public static final String I18N_SCREEN_SAVE_PRESET = "screen.pswg.save_preset";
+	@TarkinLang
 	public static final String I18N_SCREEN_EXPORT_PRESET = "screen.pswg.export_preset";
 
 	public static class GithubReleaseEntry
@@ -76,6 +83,11 @@ public class Resources
 	public static String info(String str)
 	{
 		return dotModId("info", str);
+	}
+
+	public static String tooltip(String str)
+	{
+		return dotModId("tooltip", str);
 	}
 
 	public static void checkVersion()

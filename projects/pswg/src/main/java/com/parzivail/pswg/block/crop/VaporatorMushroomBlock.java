@@ -3,7 +3,7 @@ package com.parzivail.pswg.block.crop;
 import com.parzivail.pswg.container.SwgItems;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tag.BlockTags;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;

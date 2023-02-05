@@ -33,6 +33,7 @@ import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class BlasterUtil
 {
@@ -46,9 +47,9 @@ public class BlasterUtil
 		return new PProjectileEntityDamageSource("pswg.blaster.slug", attacker).setIgnoresInvulnerableFrames().setProjectile();
 	}
 
-	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, float damage, Consumer<BlasterBoltEntity> entityInitializer)
+	public static void fireBolt(World world, PlayerEntity player, Vec3d fromDir, float range, Function<Double, Double> damage, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)
 	{
-		final var bolt = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world);
+		final var bolt = new BlasterBoltEntity(SwgEntities.Misc.BlasterBolt, player, world, ignoreWater);
 		entityInitializer.accept(bolt);
 		bolt.setRange(range);
 
@@ -57,22 +58,24 @@ public class BlasterUtil
 		var start = new Vec3d(bolt.getX(), bolt.getY() + bolt.getHeight() / 2f, bolt.getZ());
 
 		var hit = EntityUtil.raycastEntities(getTargetedEntityClass(), start, fromDir, range, player, new Entity[] { player });
-		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.ANY);
+		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.COLLIDER, ignoreWater ? RaycastContext.FluidHandling.NONE : RaycastContext.FluidHandling.ANY);
 
 		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
 		var blockDistance = blockHit.getType() == HitResult.Type.MISS ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
 
 		if (hit != null && entityDistance < blockDistance)
 		{
-			hit.entity().damage(getDamageSource(bolt, player), damage);
+			hit.entity().damage(getDamageSource(bolt, player), (float)(double)damage.apply(entityDistance));
 		}
 	}
 
-	public static void fireIon(World world, PlayerEntity player, float range, Consumer<BlasterBoltEntity> entityInitializer)
+	public static void fireIon(World world, PlayerEntity player, float range, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)
 	{
-		final var bolt = new BlasterIonBoltEntity(SwgEntities.Misc.BlasterIonBolt, player, world);
+		final var bolt = new BlasterIonBoltEntity(SwgEntities.Misc.BlasterIonBolt, player, world, ignoreWater);
 		entityInitializer.accept(bolt);
 		bolt.setRange(range);
+
+		// TODO: ion effects
 
 		world.spawnEntity(bolt);
 	}
@@ -97,10 +100,11 @@ public class BlasterUtil
 		var finalScorchPos = scorchPos;
 		var finalScorchNormal = scorchNormal;
 		client.execute(() -> {
-			if (distance > 1e5)
+			if (distance > 1e5 || distance < 2)
 				return;
 
-			for (var d = 2; d < distance; d++)
+			var sqrtDistance = Math.sqrt(distance);
+			for (var d = 2; d < sqrtDistance; d++)
 			{
 				var vec = start.add(fromDir.multiply(d));
 
@@ -112,18 +116,16 @@ public class BlasterUtil
 			}
 
 			if (shouldScorch)
-			{
-				createScorchParticles(client, finalScorchPos, fromDir, finalScorchNormal, false);
-			}
+				createScorchParticles(client, finalScorchPos, fromDir, finalScorchNormal, true);
 		});
 	}
 
-	public static void fireSlug(World world, PlayerEntity player, Vec3d fromDir, float range, float damage)
+	public static void fireSlug(World world, PlayerEntity player, Vec3d fromDir, float range, Function<Double, Double> damage, boolean ignoreWater)
 	{
 		var start = player.getEyePos();
 
 		var hit = EntityUtil.raycastEntities(getTargetedEntityClass(), start, fromDir, range, player, new Entity[] { player });
-		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.VISUAL, RaycastContext.FluidHandling.NONE);
+		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.VISUAL, ignoreWater ? RaycastContext.FluidHandling.NONE : RaycastContext.FluidHandling.ANY);
 
 		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
 		var blockDistance = blockHit.getType() == HitResult.Type.MISS ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
@@ -131,7 +133,7 @@ public class BlasterUtil
 
 		if (hit != null && entityDistance < blockDistance)
 		{
-			hit.entity().damage(getSlugDamageSource(player), damage);
+			hit.entity().damage(getSlugDamageSource(player), (float)(double)damage.apply(entityDistance));
 			end = new BlockPos(hit.hit());
 		}
 		else if (blockHit.getType() == HitResult.Type.BLOCK)
@@ -176,9 +178,9 @@ public class BlasterUtil
 		return LivingEntity.class;
 	}
 
-	public static void fireStun(World world, PlayerEntity player, Vec3d fromDir, float range, Consumer<BlasterBoltEntity> entityInitializer)
+	public static void fireStun(World world, PlayerEntity player, Vec3d fromDir, float range, boolean ignoreWater, Consumer<BlasterBoltEntity> entityInitializer)
 	{
-		final var bolt = new BlasterStunBoltEntity(SwgEntities.Misc.BlasterStunBolt, player, world);
+		final var bolt = new BlasterStunBoltEntity(SwgEntities.Misc.BlasterStunBolt, player, world, ignoreWater);
 		entityInitializer.accept(bolt);
 		bolt.setRange(range);
 
@@ -189,6 +191,7 @@ public class BlasterUtil
 		var hit = EntityUtil.raycastEntitiesCone(start, fromDir, 10 / 180f * Math.PI, range, player, new Entity[] { player });
 
 		// TODO: prevent stunning through walls
+		// TODO: ignore water
 
 		for (var e : hit)
 		{

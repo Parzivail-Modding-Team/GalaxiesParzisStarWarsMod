@@ -2,10 +2,12 @@ package com.parzivail.pswgtcw;
 
 import com.parzivail.pswg.api.PswgAddon;
 import com.parzivail.pswg.api.PswgContent;
+import com.parzivail.pswg.container.SwgItems;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.util.Lumberjack;
+import com.parzivail.util.math.Falloff;
 import com.parzivail.util.registry.RegistryHelper;
 import net.minecraft.util.Identifier;
 
@@ -19,7 +21,7 @@ public class PswgTcwAddon implements PswgAddon
 	@Override
 	public void onPswgReady()
 	{
-		RegistryHelper.registerAutoId(MODID, TcwItems.class, Object.class, RegistryHelper::tryRegisterItem);
+		RegistryHelper.registerAutoId(MODID, TcwItems.class, Object.class, SwgItems::tryRegisterItem);
 		SwgSounds.registerIfAbsent(BlasterItem.modelIdToSoundId(id("dc17")));
 
 		PswgContent.registerBlasterPreset(
@@ -28,7 +30,9 @@ public class PswgTcwAddon implements PswgAddon
 						id("dc17"),
 						BlasterArchetype.PISTOL,
 						List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN),
-						3.06f, 188, 2, 0.62f, 50,
+						BlasterWaterBehavior.NONE,
+						3.06f, Falloff.cliff(0.3),
+						188, 2, 0.62f, 50,
 						2, 4, 3, 8,
 						new BlasterAxialInfo(1.5f, 3),
 						new BlasterAxialInfo(0, 0),

@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.entity.fish;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.loader.NemManager;
+import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.entity.model.SinglePartEntityModel;
@@ -9,7 +10,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.passive.FishEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Quaternionf;
 
 public class LaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartEntityModel<FishEntity>>
 {
@@ -64,11 +65,11 @@ public class LaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 			return;
 
 		var i = 4.3F * MathHelper.sin(0.6F * f);
-		matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(i));
+		matrixStack.multiply(new Quaternionf().rotationY(MathUtil.toRadians(i)));
 		if (!entity.isTouchingWater())
 		{
-			matrixStack.translate(0.10000000149011612D, 0.10000000149011612D, -0.10000000149011612D);
-			matrixStack.multiply(Vec3f.POSITIVE_Z.getDegreesQuaternion(90.0F));
+			matrixStack.translate(0.1f, 1f, -1f);
+			matrixStack.multiply(new Quaternionf().rotationZ((float)(Math.PI / 2)));
 		}
 	}
 }

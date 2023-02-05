@@ -10,7 +10,7 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Quaternion;
+import org.joml.Quaternionf;
 
 public class BlasterIonBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 {
@@ -43,8 +43,8 @@ public class BlasterIonBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		var rPitch = (float)Math.asin(-velocity.y);
 		var rYaw = (float)Math.atan2(velocity.x, velocity.z);
 
-		matrices.multiply(new Quaternion(0, rYaw, 0, false));
-		matrices.multiply(new Quaternion((float)(rPitch + Math.PI / 2), 0, 0, false));
+		matrices.multiply(new Quaternionf().rotationXYZ(0, rYaw, 0));
+		matrices.multiply(new Quaternionf().rotationXYZ((float)(rPitch + Math.PI / 2), 0, 0));
 
 		EnergyRenderer.renderEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 0.04f, 1, false, entity.getHue(), 1, 1);
 

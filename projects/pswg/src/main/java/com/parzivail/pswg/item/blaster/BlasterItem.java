@@ -10,7 +10,9 @@ import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.pswg.util.BlasterUtil;
+import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.TextUtil;
+import com.parzivail.util.client.TooltipUtil;
 import com.parzivail.util.item.*;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Matrix4fUtil;
@@ -38,17 +40,40 @@ import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.*;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4f;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
 {
+	@TarkinLang
+	public static final String I18N_TOOLTIP_BLASTER_TYPE = Resources.tooltip("blaster.type");
+	@TarkinLang
+	public static final String I18N_TOOLTIP_BLASTER_CONTROLS = Resources.tooltip("blaster.controls");
+	@TarkinLang
+	public static final String I18N_TOOLTIP_BLASTER_NO_STATS = Resources.tooltip("blaster.stats.unknown");
+	@TarkinLang
+	public static final String I18N_TOOLTIP_BLASTER_STATS_HEAT = Resources.tooltip("blaster.stats.heat");
+	@TarkinLang
+	public static final String I18N_TOOLTIP_BLASTER_STATS_RECOIL = Resources.tooltip("blaster.stats.recoil");
+	@TarkinLang
+	public static final String I18N_TOOLTIP_BLASTER_STATS_SPREAD = Resources.tooltip("blaster.stats.spread");
+	@TarkinLang
+	public static final String I18N_TOOLTIP_BLASTER_STATS_DAMAGE = Resources.tooltip("blaster.stats.damage");
+	@TarkinLang
+	public static final String I18N_TOOLTIP_BLASTER_STATS_RANGE = Resources.tooltip("blaster.stats.range");
+	@TarkinLang
+	public static final String I18N_MESSAGE_MODE_CHANGED = Resources.msg("blaster_mode_changed");
+
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
 
@@ -133,7 +158,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 		bt.serializeAsSubtag(stack);
 
-		player.sendMessage(Text.translatable(Resources.msg("blaster_mode_changed"), Text.translatable(currentMode.getTranslation())), true);
+		player.sendMessage(Text.translatable(I18N_MESSAGE_MODE_CHANGED, Text.translatable(currentMode.getTranslation())), true);
 	}
 
 	public static void bypassHeat(World world, PlayerEntity player, ItemStack stack)
@@ -315,6 +340,18 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			}
 		}
 
+		boolean canFireUnderwater = bt.mapWithAttachment(bd, BlasterAttachmentFunction.WATERPROOF_FIRING, true)
+		                              .orElse(bd.waterBehavior == BlasterWaterBehavior.CAN_FIRE_UNDERWATER);
+
+		if (!canFireUnderwater && player.isSubmergedInWater())
+		{
+			if (!world.isClient)
+				world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.DRYFIRE, SoundCategory.PLAYERS, 1f, 1f);
+
+			bt.serializeAsSubtag(stack);
+			return TypedActionResult.fail(stack);
+		}
+
 		bt.passiveCooldownTimer = (short)bd.heat.passiveCooldownDelay;
 		bt.shotsRemaining--;
 
@@ -346,10 +383,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (!world.isClient)
 		{
 			var m = new Matrix4f();
-			m.loadIdentity();
 
-			m.multiply(new Quaternion(0, -player.getYaw(), 0, true));
-			m.multiply(new Quaternion(player.getPitch(), 0, 0, true));
+			m.rotateY(MathUtil.toRadians(-player.getYaw()));
+			m.rotateX(MathUtil.toRadians(player.getPitch()));
 
 			var hS = (world.random.nextFloat() * 2 - 1) * bd.spread.horizontal;
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
@@ -368,24 +404,27 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			final var entityPitch = vS * verticalSpreadCoef;
 			final var entityYaw = hS * horizontalSpreadCoef;
 
-			m.multiply(new Quaternion(0, entityYaw, 0, true));
-			m.multiply(new Quaternion(entityPitch, 0, 0, true));
+			m.rotateY(MathUtil.toRadians(entityYaw));
+			m.rotateX(MathUtil.toRadians(entityPitch));
 
 			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, Matrix4fUtil.transform(MathUtil.POSZ, m).normalize());
 
 			var range = bd.range;
-			var damage = bd.damage;
+			Function<Double, Double> damage = (x) -> bd.damage * bd.damageFalloff.apply(x / range);
 
 			var shouldRecoil = true;
 
 			var heatPitchIncrease = 0.15f * (bt.heat / (float)bd.heat.capacity);
+
+			boolean passThroughWater = bt.mapWithAttachment(bd, BlasterAttachmentFunction.WATERPROOF_BOLTS, true)
+			                             .orElse(bd.waterBehavior != BlasterWaterBehavior.NONE);
 
 			switch (bt.getFiringMode())
 			{
 				case SEMI_AUTOMATIC, BURST, AUTOMATIC ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 30 + heatPitchIncrease);
-					BlasterUtil.fireBolt(world, player, fromDir, range, damage, entity -> {
+					BlasterUtil.fireBolt(world, player, fromDir, range, damage, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 						entity.setHue(bd.boltColor);
@@ -394,7 +433,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				case STUN ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.Blaster.STUN, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 20);
-					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, entity -> {
+					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 					});
@@ -403,12 +442,12 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				case SLUGTHROWER ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
-					BlasterUtil.fireSlug(world, player, fromDir, range, damage);
+					BlasterUtil.fireSlug(world, player, fromDir, range, damage, passThroughWater);
 				}
 				case ION ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
-					BlasterUtil.fireIon(world, player, range, entity -> {
+					BlasterUtil.fireIon(world, player, range, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 						entity.setHue(bd.boltColor);
@@ -477,19 +516,38 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context)
 	{
 		super.appendTooltip(stack, world, tooltip, context);
-		tooltip.add(Text.translatable("tooltip.pswg.blaster.controls", TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
+		tooltip.add(Text.translatable(I18N_TOOLTIP_BLASTER_CONTROLS, TextUtil.stylizeKeybind(Client.KEY_PRIMARY_ITEM_ACTION.getBoundKeyLocalizedText()), TextUtil.stylizeKeybind(Client.KEY_SECONDARY_ITEM_ACTION.getBoundKeyLocalizedText())));
 
 		var bd = getBlasterDescriptor(stack, true);
 		if (bd == null)
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.unknown"));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_NO_STATS)));
 		else
 		{
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.heat", bd.heat.capacity, bd.heat.drainSpeed));
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.recoil", bd.recoil.horizontal, bd.recoil.vertical));
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.spread", bd.spread.horizontal, bd.spread.vertical));
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.damage", bd.damage));
-			tooltip.add(Text.translatable("tooltip.pswg.blaster.stats.range", bd.range));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_TYPE, bd.type.getLangKey())));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_HEAT, bd.heat.capacity, bd.heat.drainSpeed)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_RECOIL, bd.recoil.horizontal, bd.recoil.vertical)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_SPREAD, bd.spread.horizontal, bd.spread.vertical)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_DAMAGE, bd.damage)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_RANGE, bd.range)));
 		}
+	}
+
+	private ItemStack forType(BlasterDescriptor descriptor)
+	{
+		var stack = new ItemStack(this);
+
+		stack.getOrCreateNbt().putString("model", descriptor.id.toString());
+
+		BlasterTag.mutate(stack, blasterTag -> {
+			if (descriptor.firingModes.isEmpty())
+				blasterTag.setFiringMode(BlasterFiringMode.SEMI_AUTOMATIC);
+			else
+				blasterTag.setFiringMode(descriptor.firingModes.get(0));
+
+			blasterTag.attachmentBitmask = descriptor.attachmentDefault;
+		});
+
+		return stack;
 	}
 
 	private Pair<Integer, BlasterPowerPack> getAnotherPack(PlayerEntity player)

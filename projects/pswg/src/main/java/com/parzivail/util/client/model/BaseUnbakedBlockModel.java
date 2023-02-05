@@ -2,15 +2,14 @@ package com.parzivail.util.client.model;
 
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.Baker;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,6 +46,13 @@ public abstract class BaseUnbakedBlockModel<T extends AbstractModel> extends Clo
 	}
 
 	@Override
+	public void setParents(Function<Identifier, UnbakedModel> modelLoader)
+	{
+		// TODO: parents?
+	}
+
+	// TODO: doesn't seem required anymore?
+	//	@Override
 	public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> function, Set<Pair<String, String>> errors)
 	{
 		var ids = new ArrayList<SpriteIdentifier>();
@@ -58,14 +64,14 @@ public abstract class BaseUnbakedBlockModel<T extends AbstractModel> extends Clo
 		return ids;
 	}
 
+	@org.jetbrains.annotations.Nullable
 	@Override
-	@Nullable
-	public BakedModel bake(ModelLoader modelLoader, Function<SpriteIdentifier, Sprite> spriteLoader, ModelBakeSettings modelBakeSettings, Identifier identifier)
+	public BakedModel bake(Baker baker, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId)
 	{
 		if (cachedBakedModel != null)
 			return cachedBakedModel;
 
-		var result = baker.bake(this, spriteLoader);
+		var result = this.baker.bake(this, textureGetter);
 		cachedBakedModel = result;
 		return result;
 	}

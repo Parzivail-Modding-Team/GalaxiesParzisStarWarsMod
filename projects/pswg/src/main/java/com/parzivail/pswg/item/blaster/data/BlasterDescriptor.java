@@ -4,6 +4,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Function;
 
 public class BlasterDescriptor
 {
@@ -11,7 +12,9 @@ public class BlasterDescriptor
 	public Identifier sound;
 	public BlasterArchetype type;
 	public List<BlasterFiringMode> firingModes;
+	public BlasterWaterBehavior waterBehavior;
 	public float damage;
+	public Function<Double, Double> damageFalloff;
 	public float range;
 	public float weight;
 	public float boltColor;
@@ -36,13 +39,15 @@ public class BlasterDescriptor
 	public int attachmentMinimum;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
 
-	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, float damage, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, int quickdrawDelay, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
+	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, BlasterWaterBehavior waterBehavior, float damage, Function<Double, Double> damageFalloff, float range, float weight, float boltColor, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, int quickdrawDelay, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
 	{
 		this.id = id;
 		this.sound = sound;
 		this.type = type;
 		this.firingModes = firingModes;
+		this.waterBehavior = waterBehavior;
 		this.damage = damage;
+		this.damageFalloff = damageFalloff;
 		this.range = range;
 		this.weight = weight;
 		this.boltColor = boltColor;

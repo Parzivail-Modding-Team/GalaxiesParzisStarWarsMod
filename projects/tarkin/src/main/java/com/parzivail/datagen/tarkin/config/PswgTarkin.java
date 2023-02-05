@@ -5,26 +5,29 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Config;
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.block.crop.HkakBushBlock;
 import com.parzivail.pswg.block.crop.MoloShrubBlock;
+import com.parzivail.pswg.character.SpeciesVariable;
 import com.parzivail.pswg.client.screen.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.screen.CharacterScreen;
-import com.parzivail.pswg.client.screen.SpeciesSelectScreen;
-import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.container.SwgItems;
-import com.parzivail.pswg.container.SwgTags;
+import com.parzivail.pswg.client.species.SwgSpeciesLore;
+import com.parzivail.pswg.container.*;
+import com.parzivail.pswg.data.SwgSpeciesManager;
+import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
+import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.util.block.InvertedLampBlock;
 import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.ItemTags;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.registry.tag.TagKey;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.List;
 
@@ -51,7 +54,7 @@ public class PswgTarkin
 
 		// Containers
 		lang.container("blaster_workbench").build(assets);
-		lang.cloneWithRoot(BlasterWorkbenchScreen.I18N_INCOMPAT_ATTACHMENT).build(assets);
+		lang.entry(BlasterWorkbenchScreen.I18N_INCOMPAT_ATTACHMENT).build(assets);
 
 		lang.container("corrugated_crate").build(assets);
 		lang.container("kyber_crate").build(assets);
@@ -82,37 +85,10 @@ public class PswgTarkin
 		lang.entity(SwgEntities.Droid.AstroR2Y10).build(assets);
 		lang.entity(SwgEntities.Droid.AstroQTKT).build(assets);
 
-		// Screen
-		lang.cloneWithRoot(Resources.I18N_SCREEN_APPLY).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_RANDOM).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_GENDER_MALE).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_GENDER_FEMALE).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_SAVE_PRESET).build(assets);
-		lang.cloneWithRoot(Resources.I18N_SCREEN_EXPORT_PRESET).build(assets);
-
-		lang.cloneWithRoot(CharacterScreen.I18N_TITLE).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_CHOOSE_SPECIES).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_CHOOSE_OPTION).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_NEXT_PAGE).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_PREVIOUS_PAGE).build(assets);
-		lang.cloneWithRoot(CharacterScreen.I18N_CLEAR_SPECIES).build(assets);
-
-		lang.screen("species_select").build(assets);
-		lang.cloneWithRoot(SpeciesSelectScreen.I18N_USE_FEMALE_MODEL).build(assets);
-
-		// Item tooltips
-		lang.tooltip("blaster").dot("info").build(assets);
-		lang.tooltip("blaster").dot("controls").build(assets);
-		var blasterStats = lang.tooltip("blaster").dot("stats");
-		blasterStats.dot("unknown").build(assets);
-		blasterStats.dot("heat").build(assets);
-		blasterStats.dot("recoil").build(assets);
-		blasterStats.dot("spread").build(assets);
-		blasterStats.dot("damage").build(assets);
-		blasterStats.dot("range").build(assets);
-
-		lang.tooltip("lightsaber").dot("info").build(assets);
-		lang.tooltip("lightsaber").dot("controls").build(assets);
+		Tarkin.registerLangFields(Resources.class, lang, assets);
+		Tarkin.registerLangFields(CharacterScreen.class, lang, assets);
+		Tarkin.registerLangFields(BlasterItem.class, lang, assets);
+		Tarkin.registerLangFields(LightsaberItem.class, lang, assets);
 
 		// Item
 		lang.item("lightsaber").dot("darksaber").build(assets);
@@ -141,22 +117,18 @@ public class PswgTarkin
 
 		lang.message("tip").dot("customize_character").build(assets);
 
-		lang.message("blaster_mode_changed").build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.SEMI_AUTOMATIC.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.BURST.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.AUTOMATIC.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.STUN.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.SLUGTHROWER.getTranslation()).build(assets);
-		lang.cloneWithRoot(BlasterFiringMode.ION.getTranslation()).build(assets);
+		lang.entry(BlasterItem.I18N_MESSAGE_MODE_CHANGED).build(assets);
+		for (var value : BlasterFiringMode.values())
+			lang.entry(value.getTranslation()).build(assets);
 
 		// Species
-		Tarkin.generateSpeciesLang(assets, lang, Resources.MODID);
+		generateSpeciesLang(assets, lang, Resources.MODID);
 
 		// Blaster attachments
-		Tarkin.generateBlasterLang(assets, lang, Resources.MODID);
+		generateBlasterLang(assets, lang, Resources.MODID);
 
 		// Autoconfig
-		Tarkin.generateConfigLang(assets, lang, Config.class);
+		generateConfigLang(assets, lang, Config.class);
 	}
 
 	public static void generateTags(List<BuiltAsset> assets)
@@ -723,7 +695,7 @@ public class PswgTarkin
 
 	public static void generateItems(List<BuiltAsset> assets)
 	{
-		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(Registry.ITEM_KEY, new Identifier("trinkets", "chest/back"));
+		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
 
 		ItemGenerator.tool(SwgItems.Material.DurasteelAxe)
 		             .build(assets);
@@ -733,7 +705,7 @@ public class PswgTarkin
 		             .build(assets);
 
 		// TODO: move to addons
-//		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
+		//		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
 		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
 
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
@@ -1729,5 +1701,60 @@ public class PswgTarkin
 		generateRecipes(assets);
 		generateTags(assets);
 		generateLangEntries(assets);
+	}
+
+	public static void generateSpeciesLang(List<BuiltAsset> assets, LanguageBuilder lang, String namespace)
+	{
+		var speciesManager = SwgSpeciesManager.INSTANCE;
+		ResourceManagerUtil.forceReload(speciesManager, ResourceType.SERVER_DATA);
+		var speciesLangBase = lang.entry("species").modid();
+
+		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);
+
+		for (var species : SwgSpeciesRegistry.ALL_SPECIES.get())
+		{
+			if (!species.getSlug().getNamespace().equals(namespace))
+				continue;
+
+			for (var lore : SwgSpeciesLore.values())
+				lang.entry(lore.createLanguageKey(species.getSlug())).build(assets);
+
+			speciesLangBase.dot(species.getSlug().getPath()).build(assets);
+
+			for (var variable : species.getVariables())
+			{
+				lang.entry(variable.getTranslationKey()).build(assets);
+
+				for (var value : variable.getPossibleValues())
+					lang.entry(variable.getTranslationFor(value)).build(assets);
+			}
+		}
+	}
+
+	public static void generateBlasterLang(List<BuiltAsset> assets, LanguageBuilder lang, String namespace)
+	{
+		var blasterData = PswgContent.getBlasterPresets();
+
+		for (var blasterEntry : blasterData.entrySet())
+		{
+			var blasterId = blasterEntry.getKey();
+			if (!blasterId.getNamespace().equals(namespace))
+				continue;
+
+			var blasterDescriptor = blasterEntry.getValue();
+
+			lang.entry(BlasterItem.getTranslationKeyForModel(blasterId)).build(assets);
+
+			for (var attachment : blasterDescriptor.attachmentMap.values())
+				lang.entry(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
+		}
+	}
+
+	public static void generateConfigLang(List<BuiltAsset> assets, LanguageBuilder lang, Class<Config> config)
+	{
+		var autoconfig = lang.entry("text").dot("autoconfig").modid();
+		autoconfig.dot("title").build(assets);
+		var autoconfigOption = autoconfig.dot("option");
+		Tarkin.generateLangFromConfigAnnotations(autoconfigOption, assets, config);
 	}
 }

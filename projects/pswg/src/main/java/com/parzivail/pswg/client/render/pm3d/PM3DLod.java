@@ -3,10 +3,10 @@ package com.parzivail.pswg.client.render.pm3d;
 import com.parzivail.util.client.VertexConsumerBuffer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
-public record PM3DLod(Identifier identifier, Vec3f[] verts,
-                      Vec3f[] normals, Vec3f[] uvs,
+public record PM3DLod(Identifier identifier, Vector3f[] verts,
+                      Vector3f[] normals, Vector3f[] uvs,
                       PM3DObject[] objects, Box bounds)
 {
 
@@ -29,9 +29,9 @@ public record PM3DLod(Identifier identifier, Vec3f[] verts,
 		var tC = uvs[c.texture()];
 		var tD = uvs[d.texture()];
 
-		vcb.vertex(verts[a.vertex()], normals[a.normal()], tA.getX(), 1 - tA.getY());
-		vcb.vertex(verts[b.vertex()], normals[b.normal()], tB.getX(), 1 - tB.getY());
-		vcb.vertex(verts[c.vertex()], normals[c.normal()], tC.getX(), 1 - tC.getY());
-		vcb.vertex(verts[d.vertex()], normals[d.normal()], tD.getX(), 1 - tD.getY());
+		vcb.vertex(verts[a.vertex()], normals[a.normal()], tA.x, 1 - tA.y);
+		vcb.vertex(verts[b.vertex()], normals[b.normal()], tB.x, 1 - tB.y);
+		vcb.vertex(verts[c.vertex()], normals[c.normal()], tC.x, 1 - tC.y);
+		vcb.vertex(verts[d.vertex()], normals[d.normal()], tD.x, 1 - tD.y);
 	}
 }

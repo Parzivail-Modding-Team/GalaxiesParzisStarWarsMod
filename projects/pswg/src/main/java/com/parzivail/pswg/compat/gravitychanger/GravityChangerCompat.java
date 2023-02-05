@@ -1,7 +1,5 @@
 package com.parzivail.pswg.compat.gravitychanger;
 
-import com.fusionflux.gravity_api.api.GravityChangerAPI;
-import com.fusionflux.gravity_api.util.RotationUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 
@@ -19,15 +17,16 @@ interface IGravityChangerCompat
 	private static IGravityChangerCompat getInstance() {
 		IGravityChangerCompat instance;
 		try {
-			Class.forName("me.andrew.gravitychanger.util.RotationUtil", false, IGravityChangerCompat.class.getClassLoader());
-			instance = new IGravityChangerCompat()
+			Class.forName("com.fusionflux.gravity_api.util.RotationUtil", false, IGravityChangerCompat.class.getClassLoader());
+			throw new LinkageError(); // TODO
+			/*instance = new IGravityChangerCompat()
 			{
 				@Override
 				public Vec3d vecPlayerToWorld(Entity entity, Vec3d vec)
 				{
 					return RotationUtil.vecPlayerToWorld(vec, GravityChangerAPI.getGravityDirection(entity));
 				}
-			};
+			};*/
 		} catch (LinkageError | ClassNotFoundException e) {
 			instance = new IGravityChangerCompat()
 			{

@@ -1,8 +1,8 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 
 public class SwgTags
 {
@@ -16,7 +16,7 @@ public class SwgTags
 		public static final TagKey<net.minecraft.block.Block> TATOOINE_LOG = register("tatooine_log");
 
 		private static TagKey<net.minecraft.block.Block> register(String id) {
-			return TagKey.of(Registry.BLOCK_KEY, Resources.id(id));
+			return TagKey.of(RegistryKeys.BLOCK, Resources.id(id));
 		}
 	}
 
@@ -29,7 +29,7 @@ public class SwgTags
 		public static final TagKey<net.minecraft.item.Item> TATOOINE_LOG = register("tatooine_log");
 
 		private static TagKey<net.minecraft.item.Item> register(String id) {
-			return TagKey.of(Registry.ITEM_KEY, Resources.id(id));
+			return TagKey.of(RegistryKeys.ITEM, Resources.id(id));
 		}
 	}
 }

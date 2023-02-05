@@ -37,7 +37,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var scaledWidth = client.getWindow().getScaledWidth();
 		var scaledHeight = client.getWindow().getScaledHeight();
 
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShader(GameRenderer::getPositionTexProgram);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
 		RenderSystem.setShaderTexture(0, HUD_ELEMENTS_TEXTURE);
 
@@ -172,7 +172,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		RenderSystem.disableDepthTest();
 		RenderSystem.depthMask(false);
 		RenderSystem.defaultBlendFunc();
-		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+		RenderSystem.setShader(GameRenderer::getPositionColorTexProgram);
 		RenderSystem.setShaderTexture(0, OVERLAY_BASIC_SCOPE);
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder bufferBuilder = tessellator.getBuffer();
@@ -190,7 +190,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		bufferBuilder.vertex(m, l, -90.0D).color(255, 255, 255, opacity).texture(1.0F, 0.0F).next();
 		bufferBuilder.vertex(k, l, -90.0D).color(255, 255, 255, opacity).texture(0.0F, 0.0F).next();
 		tessellator.draw();
-		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
 		RenderSystem.disableTexture();
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 		bufferBuilder.vertex(0.0D, scaledHeight, -90.0D).color(0, 0, 0, opacity).next();

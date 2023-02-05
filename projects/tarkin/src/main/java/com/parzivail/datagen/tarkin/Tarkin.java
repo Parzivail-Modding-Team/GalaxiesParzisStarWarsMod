@@ -2,23 +2,19 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.datagen.tarkin.config.PswgTarkin;
 import com.parzivail.datagen.tarkin.config.TcwTarkin;
-import com.parzivail.pswg.Config;
-import com.parzivail.pswg.api.PswgContent;
-import com.parzivail.pswg.character.SpeciesVariable;
-import com.parzivail.pswg.client.species.SwgSpeciesLore;
-import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import com.parzivail.pswg.data.SwgSpeciesManager;
-import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.Lumberjack;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * T.A.R.K.I.N. - Text Asset Record-Keeping, Integration, and Normalization
@@ -67,62 +63,7 @@ public class Tarkin
 		LOG.log("Done");
 	}
 
-	public static void generateSpeciesLang(List<BuiltAsset> assets, LanguageBuilder lang, String namespace)
-	{
-		var speciesManager = SwgSpeciesManager.INSTANCE;
-		ResourceManagerUtil.forceReload(speciesManager, ResourceType.SERVER_DATA);
-		var speciesLangBase = lang.cloneWithRoot("species").modid();
-
-		speciesLangBase.dot(SpeciesVariable.NONE).build(assets);
-
-		for (var species : SwgSpeciesRegistry.ALL_SPECIES.get())
-		{
-			if (!species.getSlug().getNamespace().equals(namespace))
-				continue;
-
-			for (var lore : SwgSpeciesLore.values())
-				lang.cloneWithRoot(lore.createLanguageKey(species.getSlug())).build(assets);
-
-			speciesLangBase.dot(species.getSlug().getPath()).build(assets);
-
-			for (var variable : species.getVariables())
-			{
-				lang.cloneWithRoot(variable.getTranslationKey()).build(assets);
-
-				for (var value : variable.getPossibleValues())
-					lang.cloneWithRoot(variable.getTranslationFor(value)).build(assets);
-			}
-		}
-	}
-
-	public static void generateBlasterLang(List<BuiltAsset> assets, LanguageBuilder lang, String namespace)
-	{
-		var blasterData = PswgContent.getBlasterPresets();
-
-		for (var blasterEntry : blasterData.entrySet())
-		{
-			var blasterId = blasterEntry.getKey();
-			if (!blasterId.getNamespace().equals(namespace))
-				continue;
-
-			var blasterDescriptor = blasterEntry.getValue();
-
-			lang.cloneWithRoot(BlasterItem.getTranslationKeyForModel(blasterId)).build(assets);
-
-			for (var attachment : blasterDescriptor.attachmentMap.values())
-				lang.cloneWithRoot(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
-		}
-	}
-
-	public static void generateConfigLang(List<BuiltAsset> assets, LanguageBuilder lang, Class<Config> config)
-	{
-		var autoconfig = lang.cloneWithRoot("text").dot("autoconfig").modid();
-		autoconfig.dot("title").build(assets);
-		var autoconfigOption = autoconfig.dot("option");
-		generateLangFromConfigAnnotations(autoconfigOption, assets, config);
-	}
-
-	private static void generateLangFromConfigAnnotations(LanguageBuilder autoconfigOption, List<BuiltAsset> assets, Class<?> config)
+	public static void generateLangFromConfigAnnotations(LanguageBuilder autoconfigOption, List<BuiltAsset> assets, Class<?> config)
 	{
 		var subclasses = Arrays.asList(config.getDeclaredClasses());
 
@@ -148,5 +89,32 @@ public class Tarkin
 				generateLangFromConfigAnnotations(subclassLang, assets, field.getType());
 			}
 		}
+	}
+
+	public static <T> void consumeFields(Class<? extends Annotation> annotationClazz, Class<?> rootClazz, Class<T> registryType, Consumer<T> consumer)
+	{
+		for (var field : rootClazz.getFields())
+		{
+			var annotation = field.getAnnotation(annotationClazz);
+			if (!Modifier.isStatic(field.getModifiers()) || annotation == null || !registryType.isAssignableFrom(field.getType()))
+				continue;
+
+			try
+			{
+				consumer.accept((T)field.get(null));
+			}
+			catch (IllegalAccessException e)
+			{
+				e.printStackTrace();
+			}
+		}
+
+		for (var clazz : rootClazz.getClasses())
+			consumeFields(annotationClazz, clazz, registryType, consumer);
+	}
+
+	public static void registerLangFields(Class<?> rootClazz, LanguageBuilder languageBuilder, List<BuiltAsset> assets)
+	{
+		consumeFields(TarkinLang.class, rootClazz, String.class, s -> languageBuilder.entry(s).build(assets));
 	}
 }

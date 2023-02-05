@@ -13,6 +13,8 @@ val iris_version: String by project.ext
 val lambdynamiclights_version: String by project.ext
 
 dependencies {
+	"compileOnly"(project(":projects:tarkin-api"))
+
 	// CCA Base
 	"modImplementation"("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
 	"include"("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${cca_version}")
@@ -35,7 +37,7 @@ dependencies {
 	// Roughly Enough Items
 	"modCompileOnly"("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
 	"modRuntimeOnly"("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
-	"modRuntimeOnly"("dev.architectury:architectury-fabric:6.2.46") // TODO: remove once REI gets their stuff together
+	"modRuntimeOnly"("dev.architectury:architectury-fabric:7.0.52") // TODO: remove once REI gets their stuff together
 
 	// LibZoomer
 	"modImplementation"("com.parzivail.internal:LibZoomer:${libzoomer_version}")

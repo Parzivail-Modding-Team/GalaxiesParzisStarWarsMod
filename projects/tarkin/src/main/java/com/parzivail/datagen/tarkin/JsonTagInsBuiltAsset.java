@@ -4,8 +4,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonWriter;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
-import net.minecraft.tag.TagEntry;
-import net.minecraft.tag.TagFile;
+import net.minecraft.registry.tag.TagEntry;
+import net.minecraft.registry.tag.TagFile;
 
 import java.io.IOException;
 import java.io.Reader;

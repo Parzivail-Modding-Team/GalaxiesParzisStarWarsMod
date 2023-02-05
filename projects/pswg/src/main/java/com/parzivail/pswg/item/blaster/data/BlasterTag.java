@@ -107,6 +107,23 @@ public class BlasterTag extends TagSerializer
 		return Optional.empty();
 	}
 
+	public <T> Optional<T> mapWithAttachment(BlasterDescriptor bd, BlasterAttachmentFunction function, T value)
+	{
+		for (var attachment : bd.attachmentMap.values())
+		{
+			if (attachment.function == BlasterAttachmentFunction.NONE)
+				continue;
+
+			if ((attachment.bit & attachmentBitmask) != 0)
+			{
+				if (attachment.function == function)
+					return Optional.of(value);
+			}
+		}
+
+		return Optional.empty();
+	}
+
 	public void setAimingDownSights(boolean isAimingDownSights)
 	{
 		this.isAimingDownSights = isAimingDownSights;

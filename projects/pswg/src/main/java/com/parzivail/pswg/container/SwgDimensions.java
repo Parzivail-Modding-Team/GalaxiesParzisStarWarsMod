@@ -5,17 +5,15 @@ import com.parzivail.util.Consumers;
 import com.parzivail.util.gen.biome.TerrainBiomes;
 import com.parzivail.util.gen.mc.GalaxiesBiomeSource;
 import com.parzivail.util.gen.mc.GalaxiesChunkGenerator;
-import net.minecraft.tag.BlockTags;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.intprovider.UniformIntProvider;
-import net.minecraft.util.registry.BuiltinRegistries;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.biome.GenerationSettings;
 import net.minecraft.world.biome.SpawnSettings;
 import net.minecraft.world.dimension.DimensionType;
 
-import java.util.OptionalLong;
 import java.util.function.Consumer;
 
 public class SwgDimensions
@@ -23,7 +21,7 @@ public class SwgDimensions
 	private static final Consumer<SpawnSettings.Builder> SPAWN_NONE = Consumers::noop;
 	private static final Consumer<GenerationSettings.Builder> GEN_NONE = Consumers::noop;
 
-	public static final RegistryKey<DimensionType> TATOOINE = RegistryKey.of(Registry.DIMENSION_TYPE_KEY, Resources.id("tatooine"));
+	public static final RegistryKey<DimensionType> TATOOINE = RegistryKey.of(RegistryKeys.DIMENSION_TYPE, Resources.id("tatooine"));
 
 	private static int getSkyColor(float temperature)
 	{
@@ -33,30 +31,30 @@ public class SwgDimensions
 	}
 
 	public static void register() {
-		Registry.register(Registry.BIOME_SOURCE, Resources.id("galaxies"), GalaxiesBiomeSource.CODEC);
-		Registry.register(Registry.CHUNK_GENERATOR, Resources.id("galaxies"), GalaxiesChunkGenerator.CODEC);
+		Registry.register(Registries.BIOME_SOURCE, Resources.id("galaxies"), GalaxiesBiomeSource.CODEC);
+		Registry.register(Registries.CHUNK_GENERATOR, Resources.id("galaxies"), GalaxiesChunkGenerator.CODEC);
 
-		BuiltinRegistries.add(
-				BuiltinRegistries.DIMENSION_TYPE,
-				TATOOINE,
-				new DimensionType(
-						/*fixedTime = */ OptionalLong.empty(),
-						/*hasSkyLight = */ true,
-						/*hasCeiling = */ false,
-						/*ultraWarm = */ false,
-						/*natural = */ false,
-						/*coordinateScale = */ 1.0,
-						/*bedWorks = */ true,
-						/*respawnAnchorWorks = */ false,
-						/*minY = */ -64,
-						/*height = */ 384,
-						/*logicalHeight = */ 384,
-						/*infiniburn = */ BlockTags.INFINIBURN_OVERWORLD,
-						/*effectsLocation = */ TATOOINE.getValue(),
-						/*ambientLight = */ 0.0F,
-						/*monsterSettings = */ new DimensionType.MonsterSettings(false, true, UniformIntProvider.create(0, 7), 0)
-				)
-		);
+//		Registry.register(
+//				Registries.,
+//				TATOOINE,
+//				new DimensionType(
+//						/*fixedTime = */ OptionalLong.empty(),
+//						/*hasSkyLight = */ true,
+//						/*hasCeiling = */ false,
+//						/*ultraWarm = */ false,
+//						/*natural = */ false,
+//						/*coordinateScale = */ 1.0,
+//						/*bedWorks = */ true,
+//						/*respawnAnchorWorks = */ false,
+//						/*minY = */ -64,
+//						/*height = */ 384,
+//						/*logicalHeight = */ 384,
+//						/*infiniburn = */ BlockTags.INFINIBURN_OVERWORLD,
+//						/*effectsLocation = */ TATOOINE.getValue(),
+//						/*ambientLight = */ 0.0F,
+//						/*monsterSettings = */ new DimensionType.MonsterSettings(false, true, UniformIntProvider.create(0, 7), 0)
+//				)
+//		);
 
 		TerrainBiomes.init();
 	}

@@ -5,14 +5,14 @@ import com.parzivail.pswg.client.weapon.RecoilManager;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.Quaternion;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 public class CameraHelper
@@ -35,13 +35,13 @@ public class CameraHelper
 			return;
 
 		// Undo what is expected to be the player's current rotation transformation
-		matrix.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-(camera.getYaw() + 180.0F)));
-		matrix.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(-camera.getPitch()));
+		matrix.multiply(new Quaternionf().rotationY(MathUtil.toRadians(-(camera.getYaw() + 180.0F))));
+		matrix.multiply(new Quaternionf().rotationX(MathUtil.toRadians(-camera.getPitch())));
 
-		var r = new Quaternion(ship.getViewRotation(tickDelta));
+		var r = new Quaternionf(ship.getViewRotation(tickDelta));
 
 		if (minecraft.options.getPerspective() == Perspective.THIRD_PERSON_FRONT)
-			r.hamiltonProduct(QuatUtil.ROT_Y_180);
+			r.mul(QuatUtil.ROT_Y_180);
 
 		r.conjugate();
 		matrix.multiply(r);

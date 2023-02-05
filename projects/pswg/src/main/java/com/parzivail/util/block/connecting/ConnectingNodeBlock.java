@@ -138,11 +138,11 @@ public abstract class ConnectingNodeBlock extends WaterloggableBlock
 	public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState otherState, WorldAccess world, BlockPos pos, BlockPos otherPos)
 	{
 		if (state.get(Properties.WATERLOGGED))
-			world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+			world.scheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
 
 		if (!state.canPlaceAt(world, pos))
 		{
-			world.createAndScheduleBlockTick(pos, this, 1);
+			world.scheduleBlockTick(pos, this, 1);
 			return super.getStateForNeighborUpdate(state, direction, otherState, world, pos, otherPos);
 		}
 		else

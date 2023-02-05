@@ -1,9 +1,10 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class SwgSounds
 
 	private static SoundEvent of(Identifier identifier)
 	{
-		var se = new SoundEvent(identifier);
+		var se = SoundEvent.of(identifier);
 		SOUND_EVENTS.put(identifier, se);
 		return se;
 	}
@@ -27,18 +28,18 @@ public class SwgSounds
 		Ship.register();
 
 		for (var pair : SOUND_EVENTS.entrySet())
-			Registry.register(Registry.SOUND_EVENT, pair.getKey(), pair.getValue());
+			Registry.register(Registries.SOUND_EVENT, pair.getKey(), pair.getValue());
 	}
 
 	public static void registerIfAbsent(Identifier id)
 	{
-		if (!Registry.SOUND_EVENT.containsId(id))
-			Registry.register(Registry.SOUND_EVENT, id, new SoundEvent(id));
+		if (!Registries.SOUND_EVENT.containsId(id))
+			Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
 	}
 
 	public static SoundEvent getOrDefault(Identifier sound, SoundEvent fallback)
 	{
-		return Registry.SOUND_EVENT.getOrEmpty(sound).orElse(fallback);
+		return Registries.SOUND_EVENT.getOrEmpty(sound).orElse(fallback);
 	}
 
 	public static class Lightsaber

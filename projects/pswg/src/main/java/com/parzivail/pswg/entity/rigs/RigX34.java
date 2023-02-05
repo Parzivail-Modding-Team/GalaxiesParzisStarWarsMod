@@ -6,11 +6,12 @@ import com.parzivail.pswg.rig.IModelRig;
 import com.parzivail.pswg.rig.pr3r.PR3Object;
 import com.parzivail.pswg.rig.pr3r.PR3RFile;
 import com.parzivail.util.math.Matrix4fUtil;
+import com.parzivail.util.math.QuatUtil;
 import com.parzivail.util.math.Transform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
+import org.joml.Quaternionf;
 
 public class RigX34 implements IModelRig<SpeederEntity, RigX34.Part>
 {
@@ -71,10 +72,10 @@ public class RigX34 implements IModelRig<SpeederEntity, RigX34.Part>
 
 		var objectRotation = getRotation(target, part);
 
-		modelMat.multiply(objectRotation);
+		modelMat.rotate(objectRotation);
 	}
 
-	private Quaternion getRotation(SpeederEntity entity, RigX34.Part part)
+	private Quaternionf getRotation(SpeederEntity entity, RigX34.Part part)
 	{
 		return getRotation(part);
 	}
@@ -89,7 +90,7 @@ public class RigX34 implements IModelRig<SpeederEntity, RigX34.Part>
 		var entry = stack.value();
 		var parent = entry.getModel();
 		var rig = RIG.objects().get(part.getPartName());
-		parent.multiply(rig);
+		parent.mul(rig);
 
 		transform(stack, target, part);
 
@@ -114,11 +115,11 @@ public class RigX34 implements IModelRig<SpeederEntity, RigX34.Part>
 		var entry = stack.value();
 		var parent = entry.getModel();
 		var rig = RIG.objects().get(part.getPartName());
-		parent.multiply(rig);
+		parent.mul(rig);
 
 		transform(stack, target, part, tickDelta);
 
-		parent.multiply(target.getRotation());
+		parent.rotate(target.getRotation());
 
 		var vec = Matrix4fUtil.transform(localPosition, parent);
 		stack.restore();
@@ -126,8 +127,8 @@ public class RigX34 implements IModelRig<SpeederEntity, RigX34.Part>
 		return vec;
 	}
 
-	private Quaternion getRotation(Part part)
+	private Quaternionf getRotation(Part part)
 	{
-		return new Quaternion(Quaternion.IDENTITY);
+		return new Quaternionf(QuatUtil.IDENTITY);
 	}
 }

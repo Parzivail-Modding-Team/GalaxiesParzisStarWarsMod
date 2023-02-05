@@ -3,8 +3,6 @@ package com.parzivail.util.gen.biome.gen.system;
 import com.parzivail.util.gen.biome.BiomeList;
 import com.parzivail.util.gen.biome.TerrainBiome;
 
-import java.util.List;
-
 public final class BiomeSampler
 {
     private final CachingLayerSampler sampler;

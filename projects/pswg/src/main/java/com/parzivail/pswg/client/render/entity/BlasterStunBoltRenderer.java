@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Quaternion;
+import org.joml.Quaternionf;
 
 public class BlasterStunBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 {
@@ -38,8 +38,8 @@ public class BlasterStunBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 		var rPitch = (float)Math.asin(-velocity.y);
 		var rYaw = (float)Math.atan2(velocity.x, velocity.z);
 
-		matrices.multiply(new Quaternion(0, rYaw, 0, false));
-		matrices.multiply(new Quaternion(rPitch, 0, 0, false));
+		matrices.multiply(new Quaternionf().rotationY(rYaw));
+		matrices.multiply(new Quaternionf().rotationX(rPitch));
 
 		var age = entity.age + tickDelta;
 		var size = age / 10f;

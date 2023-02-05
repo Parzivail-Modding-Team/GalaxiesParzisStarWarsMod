@@ -1,28 +1,28 @@
 package com.parzivail.datagen.tarkin;
 
-import com.parzivail.util.client.LoreUtil;
 import com.parzivail.util.client.TooltipUtil;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.List;
 
 public class LanguageBuilder
 {
 	private final Identifier locale;
-	private final StringBuilder data;
+	private final String data;
 
 	public LanguageBuilder(Identifier locale)
 	{
-		this(locale, new StringBuilder());
+		this(locale, "");
 	}
 
-	public LanguageBuilder(Identifier locale, StringBuilder builder)
+	public LanguageBuilder(Identifier locale, String builder)
 	{
 		this.locale = locale;
 		this.data = builder;
@@ -30,7 +30,7 @@ public class LanguageBuilder
 
 	public LanguageBuilder dot(String value)
 	{
-		return new LanguageBuilder(locale, new StringBuilder(data).append('.').append(value));
+		return new LanguageBuilder(locale, data + '.' + value);
 	}
 
 	public LanguageBuilder modid()
@@ -38,80 +38,80 @@ public class LanguageBuilder
 		return dot("%1$s");
 	}
 
-	public LanguageBuilder cloneWithRoot(String root)
+	public LanguageBuilder entry(String root)
 	{
-		return new LanguageBuilder(locale, new StringBuilder(data).append(root));
+		return new LanguageBuilder(locale, data + root);
 	}
 
 	public LanguageBuilder container(String value)
 	{
-		return cloneWithRoot("container").modid().dot(value);
+		return entry("container").modid().dot(value);
 	}
 
 	public LanguageBuilder category(String value)
 	{
-		return cloneWithRoot("category").modid().dot(value);
+		return entry("category").modid().dot(value);
 	}
 
 	public LanguageBuilder cause_of_death(String value)
 	{
-		return cloneWithRoot("death").dot("attack").modid().dot(value);
+		return entry("death").dot("attack").modid().dot(value);
 	}
 
 	public LanguageBuilder command(String value)
 	{
-		return cloneWithRoot("command").modid().dot(value);
+		return entry("command").modid().dot(value);
 	}
 
 	public LanguageBuilder entity(EntityType<? extends Entity> entity)
 	{
-		var entityId = Registry.ENTITY_TYPE.getId(entity);
-		return cloneWithRoot("entity").modid().dot(entityId.getPath());
+		var entityId = Registries.ENTITY_TYPE.getId(entity);
+		return entry("entity").modid().dot(entityId.getPath());
 	}
 
 	public LanguageBuilder screen(String value)
 	{
-		return cloneWithRoot("screen").modid().dot(value);
+		return entry("screen").modid().dot(value);
 	}
 
 	public LanguageBuilder item(String value)
 	{
-		return cloneWithRoot("item").modid().dot(value);
+		return entry("item").modid().dot(value);
 	}
 
 	public LanguageBuilder tooltip(String value)
 	{
-		return cloneWithRoot("tooltip").modid().dot(value);
+		return entry("tooltip").modid().dot(value);
 	}
 
 	public LanguageBuilder lore(Item item)
 	{
-		return cloneWithRoot(LoreUtil.getLoreKey(item));
+		return entry(TooltipUtil.getLoreKey(item));
 	}
 
 	public LanguageBuilder status(Item item)
 	{
-		return cloneWithRoot(TooltipUtil.getStatusKey(item));
+		return entry(TooltipUtil.getStatusKey(item));
 	}
 
 	public LanguageBuilder itemGroup(ItemGroup value)
 	{
-		return cloneWithRoot("itemGroup").dot(value.getName());
+		return new LanguageBuilder(locale, ((TranslatableTextContent)value.getDisplayName().getContent()).getKey());
 	}
 
 	public LanguageBuilder key(KeyBinding key)
 	{
-		return new LanguageBuilder(locale, new StringBuilder(key.getTranslationKey()));
+		return new LanguageBuilder(locale, key.getTranslationKey());
 	}
 
 	public LanguageBuilder message(String value)
 	{
-		return cloneWithRoot("msg").modid().dot(value);
+		return entry("msg").modid().dot(value);
 	}
 
 	public LanguageBuilder keyCategory(String value)
 	{
-		return cloneWithRoot("key").dot("category").dot(value);
+		return entry("key").dot("category").dot(value);
 	}
 
 	public LanguageProvider getProvider()
@@ -121,7 +121,7 @@ public class LanguageBuilder
 
 	public LanguageProvider getProvider(String defaultValue)
 	{
-		var key = String.format(data.toString(), locale.getNamespace());
+		var key = String.format(data, locale.getNamespace());
 		return new LanguageProvider(locale, key, defaultValue == null ? key : defaultValue);
 	}
 

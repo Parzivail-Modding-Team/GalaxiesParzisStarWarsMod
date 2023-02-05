@@ -3,7 +3,7 @@ package com.parzivail.util.gen.biome;
 import com.parzivail.util.gen.decoration.ConfiguredDecoration;
 import com.parzivail.util.gen.surface.SurfaceBuilder;
 import com.parzivail.util.gen.terrain.TerrainBuilder;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.biome.Biome;
 
 import java.util.List;

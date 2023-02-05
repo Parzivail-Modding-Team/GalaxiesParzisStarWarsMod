@@ -11,9 +11,9 @@ public class BlasterStunBoltEntity extends BlasterBoltEntity
 		super(type, world);
 	}
 
-	public BlasterStunBoltEntity(EntityType<? extends BlasterStunBoltEntity> type, LivingEntity owner, World world)
+	public BlasterStunBoltEntity(EntityType<? extends BlasterStunBoltEntity> type, LivingEntity owner, World world, boolean ignoreWater)
 	{
-		super(type, owner, world);
+		super(type, owner, world, ignoreWater);
 	}
 
 	@Override

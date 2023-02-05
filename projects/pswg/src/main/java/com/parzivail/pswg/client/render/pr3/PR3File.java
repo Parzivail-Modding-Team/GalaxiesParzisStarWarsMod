@@ -6,7 +6,7 @@ import com.parzivail.util.data.DataReader;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.crash.CrashException;
 import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.math.Vec3f;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 
@@ -77,13 +77,13 @@ public record PR3File(PR3RenderedObject[] objects)
 		return faces;
 	}
 
-	private static Vec3f[] readLengthCodedVectors(LittleEndianDataInputStream objStream) throws IOException
+	private static Vector3f[] readLengthCodedVectors(LittleEndianDataInputStream objStream) throws IOException
 	{
 		var length = DataReader.read7BitEncodedInt(objStream);
 
-		var vectors = new Vec3f[length];
+		var vectors = new Vector3f[length];
 		for (var i = 0; i < length; i++)
-			vectors[i] = new Vec3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
+			vectors[i] = new Vector3f(objStream.readFloat(), objStream.readFloat(), objStream.readFloat());
 
 		return vectors;
 	}

@@ -25,8 +25,8 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Matrix4f;
 import net.minecraft.util.math.random.Random;
+import org.joml.Matrix4f;
 
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -40,7 +40,6 @@ public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRender
 	private static Matrix4f transformBlockState(P3DBlockRenderTarget target, String objectName, float tickDelta)
 	{
 		var m = new Matrix4f();
-		m.loadIdentity();
 
 		if (!(target instanceof P3DBlockRenderTarget.Block blockRenderTarget))
 		{
@@ -60,7 +59,7 @@ public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRender
 				return null;
 
 			if (state.get(Sliding1x2DoorBlock.OPEN))
-				m.multiplyByTranslation(1.352f, 0, 0);
+				m.translate(1.352f, 0, 0);
 		}
 
 		return m;
@@ -95,9 +94,8 @@ public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRender
 			return null;
 
 		var m = new Matrix4f();
-		m.loadIdentity();
 
-		m.multiply(Matrix4fUtil.SCALE_10_16THS);
+		m.mul(Matrix4fUtil.SCALE_10_16THS);
 
 		var state = target.getOccupiedState();
 		if (Sliding1x2DoorBlock.getDoorColor(state).isEmpty())
@@ -106,11 +104,11 @@ public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRender
 		var timer = target.getAnimationTime(tickDelta);
 
 		if (target.isOpening())
-			m.multiplyByTranslation(0, 0, 1.352f * Ease.outCubic(1 - timer));
+			m.translate(0, 0, 1.352f * Ease.outCubic(1 - timer));
 		else
-			m.multiplyByTranslation(0, 0, 1.352f * Ease.inCubic(timer));
+			m.translate(0, 0, 1.352f * Ease.inCubic(timer));
 
-		m.multiply(QuatUtil.ROT_Y_POS90);
+		m.rotate(QuatUtil.ROT_Y_POS90);
 
 		return m;
 	}

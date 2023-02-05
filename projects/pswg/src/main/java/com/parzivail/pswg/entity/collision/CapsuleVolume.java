@@ -4,10 +4,10 @@ import com.parzivail.util.math.CollisionUtil;
 import com.parzivail.util.math.Matrix4fUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Matrix4f;
-import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.mutable.MutableObject;
+import org.joml.Matrix4f;
+import org.joml.Quaternionf;
 
 public record CapsuleVolume(Vec3d start, Vec3d end, double radius) implements ICollisionVolume
 {
@@ -44,7 +44,7 @@ public record CapsuleVolume(Vec3d start, Vec3d end, double radius) implements IC
 //	}
 
 	@Override
-	public ICollisionVolume transform(Quaternion q)
+	public ICollisionVolume transform(Quaternionf q)
 	{
 		return new CapsuleVolume(QuatUtil.rotate(start, q), QuatUtil.rotate(end, q), radius);
 	}

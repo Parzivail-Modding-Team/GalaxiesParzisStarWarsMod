@@ -1,6 +1,6 @@
 package com.parzivail.pswg.rig.pr3r;
 
-import net.minecraft.util.math.Matrix4f;
+import org.joml.Matrix4f;
 
 public class PR3Object
 {

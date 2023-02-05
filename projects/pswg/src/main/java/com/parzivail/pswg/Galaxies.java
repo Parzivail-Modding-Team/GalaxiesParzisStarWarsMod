@@ -18,9 +18,9 @@ import com.parzivail.util.world.DimensionTeleporter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.impl.entrypoint.EntrypointUtils;
@@ -28,10 +28,10 @@ import net.minecraft.command.argument.DimensionArgumentType;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.text.Text;
-import net.minecraft.util.registry.Registry;
 
 import java.util.Objects;
 
@@ -39,23 +39,23 @@ public class Galaxies implements ModInitializer
 {
 	public static final Lumberjack LOG = new Lumberjack(Resources.MODID);
 
-	public static final ItemGroup TabBlocks = FabricItemGroupBuilder
-			.create(Resources.id("blocks"))
+	public static final ItemGroup TabBlocks = FabricItemGroup
+			.builder(Resources.id("blocks"))
 			.icon(() -> new ItemStack(SwgBlocks.Panel.GrayImperialLightOn1))
 			.build();
 
-	public static final ItemGroup TabItems = FabricItemGroupBuilder
-			.create(Resources.id("items"))
+	public static final ItemGroup TabItems = FabricItemGroup
+			.builder(Resources.id("items"))
 			.icon(() -> new ItemStack(SwgItems.Armor.Stormtrooper.helmet))
 			.build();
 
-	public static final ItemGroup TabBlasters = FabricItemGroupBuilder
-			.create(Resources.id("blasters"))
-			.icon(() -> new ItemStack(Registry.ITEM.get(Resources.id("blaster_a280"))))
+	public static final ItemGroup TabBlasters = FabricItemGroup
+			.builder(Resources.id("blasters"))
+			.icon(() -> new ItemStack(Registries.ITEM.get(Resources.id("blaster_a280"))))
 			.build();
 
-	public static final ItemGroup TabLightsabers = FabricItemGroupBuilder
-			.create(Resources.id("lightsabers"))
+	public static final ItemGroup TabLightsabers = FabricItemGroup
+			.builder(Resources.id("lightsabers"))
 			.icon(() -> new ItemStack(SwgItems.Lightsaber.Lightsaber))
 			.build();
 
