@@ -56,8 +56,6 @@ import java.util.function.Function;
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
 {
 	@TarkinLang
-	public static final String I18N_TOOLTIP_BLASTER_TYPE = Resources.tooltip("blaster.type");
-	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_CONTROLS = Resources.tooltip("blaster.controls");
 	@TarkinLang
 	public static final String I18N_TOOLTIP_BLASTER_NO_STATS = Resources.tooltip("blaster.stats.unknown");
@@ -523,7 +521,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_NO_STATS)));
 		else
 		{
-			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_TYPE, bd.type.getLangKey())));
+			tooltip.add(TooltipUtil.note(Text.translatable(bd.type.getLangKey())));
 			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_HEAT, bd.heat.capacity, bd.heat.drainSpeed)));
 			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_RECOIL, bd.recoil.horizontal, bd.recoil.vertical)));
 			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_SPREAD, bd.spread.horizontal, bd.spread.vertical)));
