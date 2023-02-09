@@ -15,6 +15,7 @@ import com.parzivail.pswg.client.species.SwgSpeciesLore;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
 import com.parzivail.pswg.item.blaster.data.BlasterFiringMode;
 import com.parzivail.pswg.item.lightsaber.LightsaberItem;
 import com.parzivail.util.block.InvertedLampBlock;
@@ -1748,6 +1749,9 @@ public class PswgTarkin
 			for (var attachment : blasterDescriptor.attachmentMap.values())
 				lang.entry(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
 		}
+
+		for (var value : BlasterArchetype.values())
+			lang.entry(value.getLangKey()).build(assets);
 	}
 
 	public static void generateConfigLang(List<BuiltAsset> assets, LanguageBuilder lang, Class<Config> config)

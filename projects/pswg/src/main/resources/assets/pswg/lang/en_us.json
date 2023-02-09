@@ -1,5 +1,11 @@
 {
 	"blaster.pswg.a280": "§oBlasTech§r A-280",
+	"blaster.pswg.archetype.heavy": "Heavy Blaster",
+	"blaster.pswg.archetype.ion": "Ion Cannon",
+	"blaster.pswg.archetype.pistol": "Blaster Pistol",
+	"blaster.pswg.archetype.rifle": "Blaster Rifle",
+	"blaster.pswg.archetype.slug": "Slugthrower",
+	"blaster.pswg.archetype.sniper": "Sniper Blaster Rifle",
 	"blaster.pswg.bowcaster": "Bowcaster",
 	"blaster.pswg.bowcaster.attachment.repeater": "Repeater",
 	"blaster.pswg.ca87": "CA-87 Blaster",
@@ -1069,7 +1075,6 @@
 	"tooltip.pswg.blaster.stats.recoil": "Recoil: (%.2f, %.2f)",
 	"tooltip.pswg.blaster.stats.spread": "Spread: (%.2f, %.2f)",
 	"tooltip.pswg.blaster.stats.unknown": "Unknown Stats",
-	"tooltip.pswg.blaster.type": "Type: ",
 	"tooltip.pswg.lightsaber.controls": "Toggle: %s",
 	"tooltip.pswg.lightsaber.info": "§bLightsaber",
 	"tooltip.pswg.status.insulated_desh_cable": "Connected to: (%s, %s, %s)"
