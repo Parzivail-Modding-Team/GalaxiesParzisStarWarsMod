@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "pswg_addon_clonewars",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"name": "PSWG Addon: Clone Wars Era",
 	"description": "Watch those wrist rockets! Bringing Clone Wars-era content to a galaxy near you.",
 	"authors": [

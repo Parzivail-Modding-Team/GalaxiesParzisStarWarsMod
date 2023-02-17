@@ -426,6 +426,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 						entity.setHue(bd.boltColor);
+
+						entity.setLength(bd.boltLength);
+						entity.setRadius(bd.boltRadius);
 					});
 				}
 				case STUN ->
@@ -434,6 +437,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
+
+						entity.setLength(bd.boltLength);
+						entity.setRadius(bd.boltRadius);
 					});
 					shouldRecoil = false;
 				}
@@ -449,6 +455,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
 						entity.setHue(bd.boltColor);
+						entity.setLength(0.04f);
 					});
 				}
 			}

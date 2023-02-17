@@ -76,7 +76,7 @@ public class EnergyRenderer
 		RenderShapes.invertCull(false);
 	}
 
-	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue, float glowSat, float glowVal)
+	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, float radiusCoefficient, boolean cap, float glowHue, float glowSat, float glowVal)
 	{
 		VertexConsumer vc;
 
@@ -93,7 +93,7 @@ public class EnergyRenderer
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderGlow(totalLength, glowHue, glowSat, glowVal, unstable, cap);
+		renderGlow(totalLength, radiusCoefficient, glowHue, glowSat, glowVal, unstable, cap);
 	}
 
 	public static void renderStunEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float size, Vec3d normal, float glowHue)
@@ -174,18 +174,18 @@ public class EnergyRenderer
 		return (float)MathHelper.clamp(-0.06 * Math.exp(-0.011 * Math.pow(x - 6, 2)) + h, 0, 1);
 	}
 
-	public static void renderGlow(float bladeLength, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
+	public static void renderGlow(float bladeLength, float radiusCoefficient, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
 	{
 		if (bladeLength == 0)
 			return;
 
-		var thicknessBottom = 0.018f;
-		var thicknessTop = cap ? 0.012f : thicknessBottom;
+		var thicknessBottom = radiusCoefficient * 0.018f;
+		var thicknessTop = radiusCoefficient * (cap ? 0.012f : thicknessBottom);
 
 		var mL = 0;
 		var xL = 14;
 
-		var deltaThickness = 0.0028f;
+		var deltaThickness = radiusCoefficient * 0.0028f;
 
 		var minOutputLayer = mL * thicknessBottom / deltaThickness;
 

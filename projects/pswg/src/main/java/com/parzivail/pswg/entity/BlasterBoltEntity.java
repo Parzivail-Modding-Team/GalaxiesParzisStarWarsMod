@@ -28,6 +28,8 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 {
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Float> HUE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
+	private static final TrackedData<Float> LENGTH = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
+	private static final TrackedData<Float> RADIUS = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 
 	private boolean ignoreWater;
 
@@ -103,6 +105,8 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	{
 		dataTracker.startTracking(LIFE, -1);
 		dataTracker.startTracking(HUE, 0.0f);
+		dataTracker.startTracking(LENGTH, 1f);
+		dataTracker.startTracking(RADIUS, 1f);
 	}
 
 	private int getLife()
@@ -123,6 +127,26 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	public void setHue(float hue)
 	{
 		dataTracker.set(HUE, hue);
+	}
+
+	public float getRadius()
+	{
+		return dataTracker.get(RADIUS);
+	}
+
+	public void setRadius(float radius)
+	{
+		dataTracker.set(RADIUS, radius);
+	}
+
+	public float getLength()
+	{
+		return dataTracker.get(LENGTH);
+	}
+
+	public void setLength(float length)
+	{
+		dataTracker.set(LENGTH, length);
 	}
 
 	@Override

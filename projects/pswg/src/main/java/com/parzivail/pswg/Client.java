@@ -12,7 +12,6 @@ import com.parzivail.pswg.client.render.block.PowerCouplingCableRenderer;
 import com.parzivail.pswg.client.render.block.SlidingDoorRenderer;
 import com.parzivail.pswg.client.render.block.TerrariumRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterBoltRenderer;
-import com.parzivail.pswg.client.render.entity.BlasterIonBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterStunBoltRenderer;
 import com.parzivail.pswg.client.render.entity.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.entity.amphibian.WorrtEntityRenderer;
@@ -275,7 +274,7 @@ public class Client implements ClientModInitializer
 		EntityRendererRegistry.register(SwgEntities.Speeder.ZephyrJ, ZephyrJRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Misc.BlasterBolt, BlasterBoltRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Misc.BlasterStunBolt, BlasterStunBoltRenderer::new);
-		EntityRendererRegistry.register(SwgEntities.Misc.BlasterIonBolt, BlasterIonBoltRenderer::new);
+		EntityRendererRegistry.register(SwgEntities.Misc.BlasterIonBolt, BlasterBoltRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Misc.ThrownLightsaber, ThrownLightsaberRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Fish.Faa, FaaEntityRenderer::new);
 		EntityRendererRegistry.register(SwgEntities.Fish.Laa, LaaEntityRenderer::new);
