@@ -6,6 +6,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
+import com.parzivail.pswg.item.blaster.data.BlasterAttachmentFunction;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
@@ -16,7 +17,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.HashMap;
 
 public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRenderer
 {
@@ -24,6 +28,12 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 	private static final Identifier OVERLAY_BASIC_SCOPE = Resources.id("textures/misc/blaster_basic_scope.png");
 	private static final Identifier HUD_ELEMENTS_TEXTURE = Resources.id("textures/gui/blasters.png");
+	private static final HashMap<BlasterAttachmentFunction, Integer> CROSSHAIR_ATTACHMENT_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.SNIPER_SCOPE, 2);
+		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 5);
+		h.put(BlasterAttachmentFunction.REDUCE_SPREAD, 9);
+		h.put(BlasterAttachmentFunction.WATERPROOF_FIRING, 4);
+	});
 
 	@Override
 	public boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
@@ -49,7 +59,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		var profile = bd.cooling;
-		final var crosshairIdx = 0;
+		final var crosshairIdx = bt.mapWithAttachment(bd, CROSSHAIR_ATTACHMENT_MAP).orElse(bd.defaultCrosshair);
 
 		var tickDelta = Client.getTickDelta();
 
@@ -146,7 +156,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		if (bt.isAimingDownSights)
 		{
 			RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-			this.drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62, 0, 15, 15);
+			this.drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
 			RenderSystem.defaultBlendFunc();
 		}
 

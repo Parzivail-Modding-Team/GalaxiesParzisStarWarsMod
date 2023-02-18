@@ -34,6 +34,7 @@ public class PswgTcwAddon implements PswgAddon
 						3.06f, Falloff.cliff(0.3),
 						188, 2, 0.62f, 1, 1,
 						50, 2, 4, 3, 8,
+						0,
 						new BlasterAxialInfo(1.5f, 3),
 						new BlasterAxialInfo(0, 0),
 						new BlasterHeatInfo(1008, 150, 8, 20, 30, 100, 60),

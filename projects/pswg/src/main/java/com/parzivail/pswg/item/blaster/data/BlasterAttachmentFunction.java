@@ -17,6 +17,7 @@ public enum BlasterAttachmentFunction
 	INCREASE_RANGE("increase_range", (byte)12),
 	WATERPROOF_BOLTS("waterproof_bolts", (byte)13),
 	WATERPROOF_FIRING("waterproof_firing", (byte)14),
+	INCREASE_DAMAGE_RANGE("increase_damage_range", (byte)15),
 	;
 
 	private final String value;

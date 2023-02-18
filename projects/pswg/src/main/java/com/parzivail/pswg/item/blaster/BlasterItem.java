@@ -408,7 +408,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, Matrix4fUtil.transform(MathUtil.POSZ, m).normalize());
 
 			var range = bd.range;
-			Function<Double, Double> damage = (x) -> bd.damage * bd.damageFalloff.apply(x / range);
+			var damageRange = bt.mapWithAttachment(bd, BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, range * 1.5f).orElse(range);
+			Function<Double, Double> damage = (x) -> bd.damage * bd.damageFalloff.apply(x / damageRange);
 
 			var shouldRecoil = true;
 
