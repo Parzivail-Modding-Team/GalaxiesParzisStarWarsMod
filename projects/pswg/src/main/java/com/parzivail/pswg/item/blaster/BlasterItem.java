@@ -354,7 +354,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		bt.shotsRemaining--;
 
 		if (bt.overchargeTimer == 0)
-			bt.heat += bd.heat.perRound;
+			bt.heat += bt.mapWithAttachment(bd, BlasterAttachmentFunction.IMPROVE_COOLING, bd.heat.perRound * 3 / 5).orElse(bd.heat.perRound);
 
 		if (bt.heat > bd.heat.capacity)
 		{
