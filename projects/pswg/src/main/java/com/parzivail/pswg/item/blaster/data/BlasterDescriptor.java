@@ -30,6 +30,7 @@ public class BlasterDescriptor
 
 	public int burstSize;
 
+	public int burstGap;
 	public int quickdrawDelay;
 
 	public int defaultCrosshair;
@@ -43,7 +44,7 @@ public class BlasterDescriptor
 	public int attachmentMinimum;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
 
-	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, BlasterWaterBehavior waterBehavior, float damage, Function<Double, Double> damageFalloff, float range, float weight, float boltColor, float boltLength, float boltRadius, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, int quickdrawDelay, int defaultCrosshair, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
+	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, BlasterWaterBehavior waterBehavior, float damage, Function<Double, Double> damageFalloff, float range, float weight, float boltColor, float boltLength, float boltRadius, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, int burstGap, int quickdrawDelay, int defaultCrosshair, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
 	{
 		this.id = id;
 		this.sound = sound;
@@ -61,6 +62,7 @@ public class BlasterDescriptor
 		this.automaticRepeatTime = automaticRepeatTime;
 		this.burstRepeatTime = burstRepeatTime;
 		this.burstSize = burstSize;
+		this.burstGap = burstGap;
 		this.quickdrawDelay = quickdrawDelay;
 		this.defaultCrosshair = defaultCrosshair;
 		this.recoil = recoil;

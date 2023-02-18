@@ -76,7 +76,7 @@ public class BlasterTag extends TagSerializer
 		if (readyTimer > 0)
 			readyTimer--;
 
-		if (timeSinceLastShot < 20)
+		if (timeSinceLastShot < 100)
 			timeSinceLastShot++;
 
 		if (ventingHeat > 0)

@@ -350,6 +350,25 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			return TypedActionResult.fail(stack);
 		}
 
+		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
+
+		if (burst)
+		{
+			if (bt.burstCounter == 0)
+			{
+				if (bt.timeSinceLastShot < bd.burstRepeatTime * bd.burstGap)
+				{
+					bt.serializeAsSubtag(stack);
+					return TypedActionResult.fail(stack);
+				}
+
+				bt.burstCounter = (short)bd.burstSize;
+			}
+
+			bt.burstCounter--;
+			bt.shotTimer = (short)bd.burstRepeatTime;
+		}
+
 		bt.passiveCooldownTimer = (short)bd.heat.passiveCooldownDelay;
 		bt.shotsRemaining--;
 
@@ -363,17 +382,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			bt.coolingMode = BlasterTag.COOLING_MODE_OVERHEAT;
 			bt.canBypassCooling = true;
 			bt.heat = 0;
-		}
-
-		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
-
-		if (burst)
-		{
-			if (bt.burstCounter == 0)
-				bt.burstCounter = (short)bd.burstSize;
-
-			bt.burstCounter--;
-			bt.shotTimer = (short)bd.burstRepeatTime;
 		}
 
 		bt.timeSinceLastShot = 0;
