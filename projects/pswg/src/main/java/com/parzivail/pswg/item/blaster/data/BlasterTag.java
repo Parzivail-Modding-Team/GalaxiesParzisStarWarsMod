@@ -107,6 +107,7 @@ public class BlasterTag extends TagSerializer
 		return Optional.empty();
 	}
 
+
 	public <T> Optional<T> mapWithAttachment(BlasterDescriptor bd, BlasterAttachmentFunction function, T value)
 	{
 		for (var attachment : bd.attachmentMap.values())
@@ -122,6 +123,44 @@ public class BlasterTag extends TagSerializer
 		}
 
 		return Optional.empty();
+	}
+
+	public float stackWithAttachment(BlasterDescriptor bd, HashMap<BlasterAttachmentFunction, Float> map)
+	{
+		var coefficient = 1;
+
+		for (var attachment : bd.attachmentMap.values())
+		{
+			if (attachment.function == BlasterAttachmentFunction.NONE)
+				continue;
+
+			if ((attachment.bit & attachmentBitmask) != 0)
+			{
+				if (map.containsKey(attachment.function))
+					coefficient *= map.get(attachment.function);
+			}
+		}
+
+		return coefficient;
+	}
+
+	public float stackWithAttachment(BlasterDescriptor bd, BlasterAttachmentFunction function, float multiplier)
+	{
+		var coefficient = 1;
+
+		for (var attachment : bd.attachmentMap.values())
+		{
+			if (attachment.function == BlasterAttachmentFunction.NONE)
+				continue;
+
+			if ((attachment.bit & attachmentBitmask) != 0)
+			{
+				if (attachment.function == function)
+					multiplier *= coefficient;
+			}
+		}
+
+		return coefficient;
 	}
 
 	public void setAimingDownSights(boolean isAimingDownSights)

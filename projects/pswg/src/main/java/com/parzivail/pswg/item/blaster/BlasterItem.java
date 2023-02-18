@@ -354,7 +354,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		bt.shotsRemaining--;
 
 		if (bt.overchargeTimer == 0)
-			bt.heat += bt.mapWithAttachment(bd, BlasterAttachmentFunction.IMPROVE_COOLING, bd.heat.perRound * 3 / 5).orElse(bd.heat.perRound);
+			bt.heat += (int)(bd.heat.perRound * bt.stackWithAttachment(bd, BlasterAttachmentFunction.IMPROVE_COOLING, 0.6f));
 
 		if (bt.heat > bd.heat.capacity)
 		{
@@ -389,7 +389,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
 
 			// TODO: custom spread reduction?
-			var spread = bt.mapWithAttachment(bd, SPREAD_MAP).orElse(1f);
+			var spread = bt.stackWithAttachment(bd, SPREAD_MAP);
 			float horizontalSpreadCoef = spread;
 			float verticalSpreadCoef = spread;
 
@@ -408,7 +408,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, Matrix4fUtil.transform(MathUtil.POSZ, m).normalize());
 
 			var range = bd.range;
-			var damageRange = bt.mapWithAttachment(bd, BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, range * 1.5f).orElse(range);
+			var damageRange = range * bt.stackWithAttachment(bd, BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, 1.5f);
 			Function<Double, Double> damage = (x) -> bd.damage * bd.damageFalloff.apply(x / damageRange);
 
 			var shouldRecoil = true;
@@ -467,7 +467,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				var horizNoise = world.random.nextGaussian();
 				horizNoise = horizNoise * 0.3 + 0.7 * Math.signum(horizNoise);
 
-				var recoilAmount = bt.mapWithAttachment(bd, RECOIL_MAP).orElse(1f);
+				var recoilAmount = bt.stackWithAttachment(bd, RECOIL_MAP);
 
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.horizontal * horizNoise));
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
