@@ -48,9 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
@@ -75,10 +73,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
 
-	private static final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> ATTRIB_MODS_ADS =
-			ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-			                 .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, ADS_SPEED_PENALTY_MODIFIER)
-			                 .build();
+	private static final HashSet<Float> requestedSpeedModifiers = new HashSet<>();
+	private static final HashMap<Float, ImmutableMultimap<EntityAttribute, EntityAttributeModifier>> ATTRIB_MODS_ADS = new HashMap<>();
 
 	private static final HashMap<BlasterAttachmentFunction, Float> SPREAD_MAP = Util.make(new HashMap<>(), (h) -> {
 		h.put(BlasterAttachmentFunction.REDUCE_SPREAD, 0.4f);
@@ -87,6 +83,21 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	private static final HashMap<BlasterAttachmentFunction, Float> RECOIL_MAP = Util.make(new HashMap<>(), (h) -> {
 		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 0.7f);
 	});
+
+	public static void bakeAttributeModifiers(Map<Identifier, BlasterDescriptor> blasterPresets)
+	{
+		for (var d : blasterPresets.values())
+		{
+			if (ATTRIB_MODS_ADS.containsKey(d.adsSpeedModifier))
+				continue;
+
+			var modifierId = UUID.nameUUIDFromBytes(String.format("pswg:ads_speed_penalty/%f", d.adsSpeedModifier).getBytes());
+			var modifier = new EntityAttributeModifier(modifierId, "pswg:ads_speed_penalty", d.adsSpeedModifier, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+			ATTRIB_MODS_ADS.put(d.adsSpeedModifier, ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+			                                        .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, modifier)
+			                                        .build());
+		}
+	}
 
 	private final Identifier model;
 	private final BlasterDescriptor descriptor;
@@ -630,7 +641,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var bt = new BlasterTag(stack.getOrCreateNbt());
 
 			if (bt.isAimingDownSights)
-				return ATTRIB_MODS_ADS;
+			{
+				var bd = getBlasterDescriptor(stack);
+				return ATTRIB_MODS_ADS.get(bd.adsSpeedModifier);
+			}
 		}
 
 		return ImmutableMultimap.of();

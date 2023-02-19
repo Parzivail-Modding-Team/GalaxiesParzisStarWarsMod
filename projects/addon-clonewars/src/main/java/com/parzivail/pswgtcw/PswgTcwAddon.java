@@ -32,7 +32,7 @@ public class PswgTcwAddon implements PswgAddon
 						List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(0.3),
-						188, 2, 0.62f, 1, 1,
+						188, -0.5f, 2, 0.62f, 1, 1,
 						50, 2, 4, 3, 2, 8,
 						0,
 						new BlasterAxialInfo(1.5f, 3),

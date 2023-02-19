@@ -1,6 +1,7 @@
 package com.parzivail.pswg.api;
 
 import com.google.common.collect.ImmutableMap;
+import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
 import net.minecraft.util.Identifier;
@@ -81,6 +82,8 @@ public class PswgContent
 	{
 		lightsaberPresets = ImmutableMap.copyOf(lightsaberPresets);
 		blasterPresets = ImmutableMap.copyOf(blasterPresets);
+
+		BlasterItem.bakeAttributeModifiers(blasterPresets);
 
 		isBaked = true;
 	}
