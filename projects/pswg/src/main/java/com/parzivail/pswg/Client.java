@@ -451,7 +451,6 @@ public class Client implements ClientModInitializer
 
 		PlayerEvent.EVENT_BUS.subscribe(PlayerEvent.ACCUMULATE_RECOIL, RecoilManager::handleAccumulateRecoil);
 
-		WorldEvent.EVENT_BUS.subscribe(WorldEvent.SLUG_FIRED, BlasterUtil::handleSlugFired);
 		WorldEvent.EVENT_BUS.subscribe(WorldEvent.BLASTER_BOLT_HIT, BlasterUtil::handleBoltHit);
 
 		ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {

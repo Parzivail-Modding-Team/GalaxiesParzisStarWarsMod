@@ -370,11 +370,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		{
 			var frame = (int)Math.floor(MathHelper.clamp(shotTime, 0, ID_MUZZLE_FLASHES.length - 1));
 
-			var color = ColorUtil.hsvToRgbInt(bd.boltColor, 1, 1);
+			var color = ColorUtil.hsvToRgbInt(bd.boltHue, 1, 1);
 			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], NativeImageUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
 			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], NativeImageUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
 
-			var colorId = String.valueOf((int)(bd.boltColor * 255));
+			var colorId = String.valueOf((int)(bd.boltHue * 255));
 			var flash = Client.tintedTextureProvider.getId("muzzleflash/" + ColorUtil.toResourceId(color) + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
 
 			vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
@@ -477,7 +477,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var bt = new BlasterTag(stack.getOrCreateNbt());
 
 			strings.add(String.format("! id=%s type=%s", bd.id, bd.type.getValue()));
-			strings.add(String.format("! dmg=%s rng=%s lbs=%s hue=%s", bd.damage, bd.range, bd.weight, bd.boltColor));
+			strings.add(String.format("! dmg=%s rng=%s lbs=%s hue=%s", bd.damage, bd.range, bd.weight, bd.boltHue));
 			strings.add(String.format("! mag=%s art=%s brt=%s", bd.magazineSize, bd.automaticRepeatTime, bd.burstRepeatTime));
 			strings.add(String.format("! brst=%s attDef=%s attMin=%s", bd.burstSize, Integer.toBinaryString(bd.attachmentDefault), Integer.toBinaryString(bd.attachmentMinimum)));
 			strings.add(String.format("! rec={%s, %s} spd={%s, %s}", bd.recoil.horizontal, bd.recoil.vertical, bd.spread.horizontal, bd.spread.vertical));

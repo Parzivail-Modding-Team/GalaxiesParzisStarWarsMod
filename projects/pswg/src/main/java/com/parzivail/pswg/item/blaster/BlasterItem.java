@@ -439,16 +439,19 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			switch (bt.getFiringMode())
 			{
-				case SEMI_AUTOMATIC, BURST, AUTOMATIC ->
+				case SEMI_AUTOMATIC, BURST, AUTOMATIC, SLUGTHROWER ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 30 + heatPitchIncrease);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
-						entity.setHue(bd.boltColor);
+						entity.setHue(bd.boltHue);
 
 						entity.setLength(bd.boltLength);
 						entity.setRadius(bd.boltRadius);
+
+						if (bt.getFiringMode() == BlasterFiringMode.SLUGTHROWER)
+							entity.setSmoldering(true);
 					});
 				}
 				case STUN ->
@@ -463,18 +466,13 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					});
 					shouldRecoil = false;
 				}
-				case SLUGTHROWER ->
-				{
-					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
-					BlasterUtil.fireSlug(world, player, fromDir, range, damage, passThroughWater);
-				}
 				case ION ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_ION), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
 					BlasterUtil.fireIon(world, player, range, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
-						entity.setHue(bd.boltColor);
+						entity.setHue(bd.boltHue);
 						entity.setLength(0.04f);
 					});
 				}

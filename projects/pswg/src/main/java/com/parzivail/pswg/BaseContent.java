@@ -64,7 +64,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.SLUGTHROWER),
 						BlasterWaterBehavior.CAN_FIRE_UNDERWATER,
 						8, Falloff.cliff(10),
-						188f, -0.5f, 6.7f, 0, 1, 1,
+						188f, -0.5f, 6.7f, 0, 1, 0.75f,
 						100, 6, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
