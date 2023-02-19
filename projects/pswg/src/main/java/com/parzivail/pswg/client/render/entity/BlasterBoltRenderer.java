@@ -82,7 +82,7 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 			matrices.translate(0.2f * d, 0, 0.5f * d * side);
 		}
 
-		EnergyRenderer.renderEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, entity.getLength(), entity.getRadius(), false, entity.getHue(), 1, 1);
+		EnergyRenderer.renderEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, false, 1.5f, entity.getLength(), entity.getRadius(), false, 0, 0, 0, entity.getHue(), 1, 1);
 
 		matrices.pop();
 	}

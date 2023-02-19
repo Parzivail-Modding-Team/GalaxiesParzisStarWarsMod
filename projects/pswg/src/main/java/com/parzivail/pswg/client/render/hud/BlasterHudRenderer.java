@@ -99,7 +99,10 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				}
 
 				// cursor
-				this.drawTexture(matrices, (int)(cooldownBarX + cooldownTimer * cooldownWidth - 1), j + 28, 0, 24, 3, 7);
+				matrices.push();
+				matrices.translate(cooldownBarX + cooldownTimer * cooldownWidth - 1, 0, 0);
+				this.drawTexture(matrices, 0, j + 28, 0, 24, 3, 7);
+				matrices.pop();
 			}
 			else if (bt.readyTimer > 0)
 			{
@@ -111,7 +114,10 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				this.drawTexture(matrices, cooldownBarX, j + 30, 0, 32, cooldownWidth, 3);
 
 				// cursor
-				this.drawTexture(matrices, (int)(cooldownBarX + readyTimer * cooldownWidth - 1), j + 28, 0, 24, 3, 7);
+				matrices.push();
+				matrices.translate(cooldownBarX + readyTimer * cooldownWidth - 1, 0, 0);
+				this.drawTexture(matrices, 0, j + 28, 0, 24, 3, 7);
+				matrices.pop();
 			}
 			else
 			{
@@ -127,8 +133,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				}
 				else if (bt.overchargeTimer > 0)
 				{
-					var deltaHeat = tickDelta;
-					heatPercentage = (bt.overchargeTimer - deltaHeat) / bd.heat.overchargeBonus;
+					heatPercentage = (bt.overchargeTimer - tickDelta) / bd.heat.overchargeBonus;
 				}
 				else
 				{

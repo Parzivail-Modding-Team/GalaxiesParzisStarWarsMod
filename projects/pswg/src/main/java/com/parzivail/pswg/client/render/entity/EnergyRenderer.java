@@ -76,7 +76,7 @@ public class EnergyRenderer
 		RenderShapes.invertCull(false);
 	}
 
-	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, float radiusCoefficient, boolean cap, float glowHue, float glowSat, float glowVal)
+	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, float radiusCoefficient, boolean cap, float coreHue, float coreSat, float coreVal, float glowHue, float glowSat, float glowVal)
 	{
 		VertexConsumer vc;
 
@@ -93,7 +93,7 @@ public class EnergyRenderer
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderGlow(totalLength, radiusCoefficient, glowHue, glowSat, glowVal, unstable, cap);
+		renderGlow(totalLength, radiusCoefficient, coreHue, coreSat, coreVal, glowHue, glowSat, glowVal, unstable, cap);
 	}
 
 	public static void renderStunEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float size, Vec3d normal, float glowHue)
@@ -174,7 +174,7 @@ public class EnergyRenderer
 		return (float)MathHelper.clamp(-0.06 * Math.exp(-0.011 * Math.pow(x - 6, 2)) + h, 0, 1);
 	}
 
-	public static void renderGlow(float bladeLength, float radiusCoefficient, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
+	public static void renderGlow(float bladeLength, float radiusCoefficient, float coreHue, float coreSat, float coreVal, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
 	{
 		if (bladeLength == 0)
 			return;
@@ -243,7 +243,7 @@ public class EnergyRenderer
 
 					noise = (float)Resources.SIMPLEX_0.noise2(globalTime, 3 * dLength * i);
 					color = ColorUtil.hsvToRgbInt(
-							0,
+							coreHue,
 							(unstable ? (0.07f - noise * 0.07f) : 0) * glowSat,
 							getValue(x, glowVal)
 					);

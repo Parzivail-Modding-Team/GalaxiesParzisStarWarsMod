@@ -180,7 +180,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		else if (bladeType == LightsaberBladeType.BRICK)
 			EnergyRenderer.renderBrick(renderMode, matrices, vertexConsumers, light, overlay, length, lengthCoefficient, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
 		else
-			EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, length, lengthCoefficient, 1, true, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
+			EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, length, lengthCoefficient, 1, true, 0, 0, 0, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
 	}
 
 	@Override
