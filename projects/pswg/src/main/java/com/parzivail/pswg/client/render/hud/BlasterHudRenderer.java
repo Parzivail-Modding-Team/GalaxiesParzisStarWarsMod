@@ -106,7 +106,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 			}
 			else if (bt.readyTimer > 0)
 			{
-				var readyTimer = (bt.readyTimer - tickDelta) / (bd.heat.capacity / 5 / bd.heat.drainSpeed);
+				var readyTimer = (bt.readyTimer - tickDelta) / bd.quickdrawDelay;
 
 				readyTimer = MathHelper.clamp(readyTimer, 0, 0.98f);
 
