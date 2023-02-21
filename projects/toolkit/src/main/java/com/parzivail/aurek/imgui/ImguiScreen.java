@@ -28,7 +28,7 @@ public abstract class ImguiScreen extends Screen
 	private final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
 	private final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
-	protected long handle;
+	protected static long handle;
 
 	protected ImFont latinFont;
 	protected ImFont aurebeshFont;
@@ -70,9 +70,10 @@ public abstract class ImguiScreen extends Screen
 				throw new RuntimeException("Failed to create the GLFW window");
 
 			initImgui();
-			imGuiGlfw.init(handle, true);
-			imGuiGl3.init(glslVersion);
 		}
+
+		imGuiGlfw.init(handle, true);
+		imGuiGl3.init(glslVersion);
 	}
 
 	protected void initImgui()
@@ -146,15 +147,6 @@ public abstract class ImguiScreen extends Screen
 	}
 
 	/**
-	 * Main application loop.
-	 */
-	public void run()
-	{
-		while (!GLFW.glfwWindowShouldClose(handle))
-			runFrame();
-	}
-
-	/**
 	 * Method used to run the next frame.
 	 */
 	protected void runFrame()
@@ -200,17 +192,19 @@ public abstract class ImguiScreen extends Screen
 	@Override
 	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta)
 	{
-		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF464A55, 0xFF1A283E);
+		drawBackground(matrices);
 
 		if (handle != 0)
 		{
 			if (nextScreen.isPresent())
-			{
-				dispose();
 				client.setScreen(nextScreen.get());
-			}
 			else
 				this.runFrame();
 		}
+	}
+
+	protected void drawBackground(MatrixStack matrices)
+	{
+		this.fillGradient(matrices, 0, 0, this.width, this.height, 0xFF464A55, 0xFF1A283E);
 	}
 }
