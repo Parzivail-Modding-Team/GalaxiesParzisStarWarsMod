@@ -1,15 +1,25 @@
 package com.parzivail.aurek.editor;
 
+import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
+import com.rits.cloning.Cloner;
 import imgui.internal.ImGui;
 import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class BlasterEditor implements IDirectItemEditor
 {
+	private static final Cloner CLONER = new Cloner();
+	private static Map<Identifier, BlasterDescriptor> originalPresets = null;
+
 	private BlasterEditor()
 	{
 	}
@@ -17,6 +27,15 @@ public class BlasterEditor implements IDirectItemEditor
 	@Override
 	public void process(MinecraftClient client, ItemStack stack)
 	{
+		if (originalPresets == null)
+		{
+			originalPresets = new HashMap<>();
+
+			for (var entry : PswgContent.getBlasterPresets().entrySet())
+				// We directly modify the blaster descriptor in memory, so a deep clone is required to enable "reset to default"
+				originalPresets.put(entry.getKey(), CLONER.shallowClone(entry.getValue()));
+		}
+
 		if (!(stack.getItem() instanceof BlasterItem blaster))
 			return;
 
@@ -76,6 +95,9 @@ public class BlasterEditor implements IDirectItemEditor
 				iPtr[0] = bd.quickdrawDelay;
 				if (ImGui.sliderInt("Quickdraw Delay", iPtr, 1, 100))
 					bd.quickdrawDelay = iPtr[0];
+
+				if (ImGui.button("Discard Changes"))
+					CLONER.copyPropertiesOfInheritedClass(originalPresets.get(bd.id), bd);
 
 				ImGui.endTabItem();
 			}

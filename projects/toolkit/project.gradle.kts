@@ -7,8 +7,8 @@ repositories {
 dependencies {
 	"api"(project(":projects:pswg", configuration = "namedElements"))
 
-	"modImplementation"("com.jetbrains.intellij.java:java-gui-forms-rt:222.4345.14")
-	"include"("com.jetbrains.intellij.java:java-gui-forms-rt:222.4345.14")
+	"modImplementation"("io.github.kostaskougios:cloning:1.10.3")
+	"include"("io.github.kostaskougios:cloning:1.10.3")
 
 	"modImplementation"("io.github.spair:imgui-java-binding:1.86.6")
 	"include"("io.github.spair:imgui-java-binding:1.86.6")
