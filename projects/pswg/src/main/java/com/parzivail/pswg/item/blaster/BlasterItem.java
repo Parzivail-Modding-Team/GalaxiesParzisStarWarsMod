@@ -602,7 +602,21 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		}
 
 		if (!world.isClient)
-			BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
+		{
+			var shouldContinueBurst = false;
+
+			var bt = new BlasterTag(stack.getOrCreateNbt());
+
+			if (bt.burstCounter > 0)
+				shouldContinueBurst = true;
+
+			bt.tick(bd);
+
+			bt.serializeAsSubtag(stack);
+
+			if (shouldContinueBurst && entity instanceof PlayerEntity player && slot == player.getInventory().selectedSlot)
+				useLeft(world, player, Hand.MAIN_HAND, true);
+		}
 	}
 
 	@Override
