@@ -62,7 +62,8 @@ public abstract class ImguiScreen extends Screen
 	@Override
 	protected void init()
 	{
-		if (handle == 0)
+		var needsWindowInit = handle == MemoryUtil.NULL;
+		if (needsWindowInit)
 		{
 			handle = GLFW.glfwGetCurrentContext();
 
@@ -72,7 +73,7 @@ public abstract class ImguiScreen extends Screen
 			initImgui();
 		}
 
-		imGuiGlfw.init(handle, true);
+		imGuiGlfw.init(handle, needsWindowInit);
 		imGuiGl3.init(glslVersion);
 	}
 

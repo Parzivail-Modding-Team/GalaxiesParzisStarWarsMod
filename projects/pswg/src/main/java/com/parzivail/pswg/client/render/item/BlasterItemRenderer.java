@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.api.BlasterTransformer;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.item.blaster.BlasterItem;
@@ -45,7 +46,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	{
 	}
 
-	record AttachmentSuperset(Set<String> names, HashMap<String, AttachmentRenderData> visuals)
+	public record AttachmentSuperset(Set<String> names, HashMap<String, AttachmentRenderData> visuals)
 	{
 	}
 
@@ -179,6 +180,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var shotTime = bt.timeSinceLastShot + d;
 
+		var attachmentSet = getAttachmentSet(bt, bd);
+
+		for (var t : BlasterTransformer.REGISTRY)
+			t.preTransform(matrices, m, bt, bd, attachmentSet, renderMode, light, d, opacity);
+
 		if (renderMode == ModelTransformation.Mode.GROUND)
 			matrices.translate(-0.4f, 0.9f, -0.4f);
 
@@ -268,8 +274,15 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 					matrices.multiplyPositionMatrix(foreGripTransform.transform);
 
-					MatrixStackUtil.scalePos(matrices, 4, 4, -4);
-					matrices.translate(-0.35f, -0.75f, 0);
+					MatrixStackUtil.scalePos(matrices, 1, 1, -1);
+
+					// TODO: datapack
+					MatrixStackUtil.scalePos(matrices, 4, 4, 4);
+
+					for (var t : BlasterTransformer.REGISTRY)
+						t.transformHand(matrices, m, bt, bd, attachmentSet, renderMode, light, d, opacity);
+
+					matrices.translate(0, -0.625f, 0);
 
 					skipPose = true;
 					playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
@@ -280,9 +293,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			}
 		}
 
-		var attachmentSet = getAttachmentSet(bt, bd);
-
 		m.render(matrices, vertexConsumers, bt, getAttachmentTransformer(attachmentSet), getRenderLayerProvider(modelEntry, attachmentSet), light, d, 255, 255, 255, (int)(255 * opacity));
+
+		for (var t : BlasterTransformer.REGISTRY)
+			t.postTransform(matrices, m, bt, bd, attachmentSet, renderMode, light, d, opacity);
 
 		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED && renderMode != ModelTransformation.Mode.GROUND)
 		{
@@ -418,7 +432,9 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	{
 		if (skipPose)
 		{
+			rightArm.setPivot(0, 0, 0);
 			rightArm.setAngles(0, 0, 0);
+			leftArm.setPivot(0, 0, 0);
 			leftArm.setAngles(0, 0, 0);
 			return;
 		}

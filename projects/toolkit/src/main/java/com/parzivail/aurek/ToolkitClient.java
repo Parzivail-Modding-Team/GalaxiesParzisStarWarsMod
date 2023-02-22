@@ -8,6 +8,7 @@ import com.parzivail.aurek.ui.NemiCompilerScreen;
 import com.parzivail.aurek.ui.ToolkitWorldgenScreen;
 import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.api.BlasterTransformer;
 import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.util.Lumberjack;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -100,6 +101,8 @@ public class ToolkitClient implements PswgClientAddon
 			if (KEY_INGAME_UI.wasPressed())
 				client.setScreen(new DirectItemEditorImguiScreen());
 		});
+
+		BlasterTransformer.register(BlasterEditor.TRANSFORMER);
 
 		BlasterEditor.register();
 	}
