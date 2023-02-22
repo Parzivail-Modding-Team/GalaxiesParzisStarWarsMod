@@ -35,6 +35,10 @@ public class BlasterEditor implements IDirectItemEditor
 		public float y;
 		public float z;
 
+		public float sx;
+		public float sy;
+		public float sz;
+
 		public float handScale = 1;
 
 		@Override
@@ -52,6 +56,7 @@ public class BlasterEditor implements IDirectItemEditor
 					pitch * MathHelper.RADIANS_PER_DEGREE,
 					roll * MathHelper.RADIANS_PER_DEGREE
 			));
+			MatrixStackUtil.scalePos(matrices, sx, sy, sz);
 		}
 
 		@Override
@@ -112,6 +117,18 @@ public class BlasterEditor implements IDirectItemEditor
 				f.set(TRANSFORMER.z);
 				if (ImGui.inputFloat("Z", f, 0.05f))
 					TRANSFORMER.z = f.get();
+
+				f.set(TRANSFORMER.sx);
+				if (ImGui.inputFloat("Scale X", f, 0.05f))
+					TRANSFORMER.sx = f.get();
+
+				f.set(TRANSFORMER.sy);
+				if (ImGui.inputFloat("Scale Y", f, 0.05f))
+					TRANSFORMER.sy = f.get();
+
+				f.set(TRANSFORMER.sz);
+				if (ImGui.inputFloat("Scale Z", f, 0.05f))
+					TRANSFORMER.sz = f.get();
 
 				f.set(TRANSFORMER.handScale);
 				if (ImGui.inputFloat("Hand Scale", f, 0.05f))
