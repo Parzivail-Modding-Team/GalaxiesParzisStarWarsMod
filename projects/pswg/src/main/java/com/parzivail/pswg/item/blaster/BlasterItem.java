@@ -393,6 +393,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			bt.coolingMode = BlasterTag.COOLING_MODE_OVERHEAT;
 			bt.canBypassCooling = true;
 			bt.heat = 0;
+
+			bt.burstCounter = 0;
 		}
 
 		bt.timeSinceLastShot = 0;
