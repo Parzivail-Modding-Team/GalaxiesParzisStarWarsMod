@@ -176,11 +176,11 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	private static void renderBlade(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, LightsaberTag lt, boolean unstable, float lengthCoefficient, LightsaberBladeType bladeType, float length)
 	{
 		if (bladeType == LightsaberBladeType.DARKSABER)
-			EnergyRenderer.renderDarksaber(renderMode, matrices, vertexConsumers, light, overlay, 1.2f, lengthCoefficient, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
+			EnergyRenderer.renderDarksaber(renderMode, matrices, vertexConsumers, light, overlay, 1.2f, lengthCoefficient, lt.bladeColor);
 		else if (bladeType == LightsaberBladeType.BRICK)
-			EnergyRenderer.renderBrick(renderMode, matrices, vertexConsumers, light, overlay, length, lengthCoefficient, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
+			EnergyRenderer.renderBrick(renderMode, matrices, vertexConsumers, light, overlay, length, lengthCoefficient, lt.bladeColor);
 		else
-			EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, length, lengthCoefficient, 1, true, lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
+			EnergyRenderer.renderEnergy(renderMode, matrices, vertexConsumers, light, overlay, unstable, length, lengthCoefficient, 1, true, lt.bladeColor);
 	}
 
 	@Override

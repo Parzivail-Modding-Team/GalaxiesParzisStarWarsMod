@@ -28,7 +28,7 @@ import net.minecraft.world.World;
 public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 {
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	private static final TrackedData<Float> HUE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
+	private static final TrackedData<Integer> COLOR = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
 	private static final TrackedData<Float> LENGTH = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Float> RADIUS = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Boolean> SMOLDERING = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -106,7 +106,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	protected void initDataTracker()
 	{
 		dataTracker.startTracking(LIFE, -1);
-		dataTracker.startTracking(HUE, 0.0f);
+		dataTracker.startTracking(COLOR, 0);
 		dataTracker.startTracking(LENGTH, 1f);
 		dataTracker.startTracking(RADIUS, 1f);
 		dataTracker.startTracking(SMOLDERING, false);
@@ -122,14 +122,14 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		dataTracker.set(LIFE, life);
 	}
 
-	public float getHue()
+	public int getColor()
 	{
-		return dataTracker.get(HUE);
+		return dataTracker.get(COLOR);
 	}
 
-	public void setHue(float hue)
+	public void setColor(int color)
 	{
-		dataTracker.set(HUE, hue);
+		dataTracker.set(COLOR, color);
 	}
 
 	public float getRadius()

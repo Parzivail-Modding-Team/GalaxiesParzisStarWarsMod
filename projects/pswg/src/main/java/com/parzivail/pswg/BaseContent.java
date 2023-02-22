@@ -6,6 +6,7 @@ import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.item.blaster.data.*;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberBladeType;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberDescriptor;
+import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Falloff;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -30,7 +31,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.BURST, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(0.5),
-						188f, -0.5f, 6.7f, 0.98f, 1, 1,
+						188f, -0.5f, 6.7f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						500, 3, 2, 3, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -46,7 +47,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.SEMI_AUTOMATIC),
 						BlasterWaterBehavior.BOLTS_PASS_THROUGH_WATER,
 						3.06f, Falloff.cliff(2),
-						188f, -0.5f, 6.7f, 0.98f, 1.25f, 1,
+						188f, -0.5f, 6.7f, ColorUtil.packHsv(0.98f, 1, 1), 1.25f, 1,
 						300, 7, 2, 3, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -83,7 +84,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(2),
-						188f, -0.5f, 6.7f, 0.62f, 1, 1,
+						188f, -0.5f, 6.7f, ColorUtil.packHsv(0.62f, 1, 1), 1, 1,
 						300, 3, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -99,7 +100,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(0.5),
-						188f, -0.5f, 6.7f, 0.62f, 1, 1,
+						188f, -0.5f, 6.7f, ColorUtil.packHsv(0.62f, 1, 1), 1, 1,
 						400, 4, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -115,7 +116,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(0.15),
-						75, -0.5f, 1, 0.98f, 1, 1,
+						75, -0.5f, 1, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						500, 3, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -131,7 +132,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(0.15),
-						75, -0.5f, 6.7f, 0.98f, 1, 1,
+						75, -0.5f, 6.7f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						500, 4, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -152,7 +153,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(0.1),
-						188, -0.25f, 6.7f, 0.98f, 1, 1,
+						188, -0.25f, 6.7f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						500, 5, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -168,7 +169,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(2),
-						188f, -0.5f, 6.7f, 0.98f, 1, 1,
+						188f, -0.5f, 6.7f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						300, 2, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -192,7 +193,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						1.75f, Falloff.cliff(0.5),
-						188f, -0.5f, 2.7f, 0.98f, 1, 1,
+						188f, -0.5f, 2.7f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						400, 4, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -208,7 +209,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.BURST, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.5f, Falloff.cliff(0.5),
-						100, -0.5f, 2.9f, 0.98f, 1, 1,
+						100, -0.5f, 2.9f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						400, 0, 2, 3, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -237,7 +238,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.ION),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.linear(),
-						188f, -0.5f, 6.7f, 0.62f, 1, 1,
+						188f, -0.5f, 6.7f, ColorUtil.packHsv(0.62f, 1, 1), 1, 1,
 						100, 11, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -256,7 +257,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.ION),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.linear(),
-						188f, -0.5f, 6.7f, 0.62f, 1, 1,
+						188f, -0.5f, 6.7f, ColorUtil.packHsv(0.62f, 1, 1), 1, 1,
 						100, 11, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -273,7 +274,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(0.15),
-						188, -0.5f, 6.7f, 0.98f, 1, 1,
+						188, -0.5f, 6.7f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						500, 4, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -291,7 +292,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(2),
-						188f, -0.5f, 6.7f, 0.98f, 1, 1.25f,
+						188f, -0.5f, 6.7f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1.25f,
 						300, 2, 0, 0, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -309,7 +310,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.BURST, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(0.15),
-						188, -0.5f, 6.7f, 0.98f, 1, 1,
+						188, -0.5f, 6.7f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						500, 4, 2, 5, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -328,7 +329,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.BURST, BlasterFiringMode.STUN),
 						BlasterWaterBehavior.NONE,
 						3.06f, Falloff.cliff(2),
-						188f, -0.5f, 6.7f, 0.98f, 1, 1,
+						188f, -0.5f, 6.7f, ColorUtil.packHsv(0.98f, 1, 1), 1, 1,
 						300, 7, 2, 3, 2, 10,
 						0,
 						new BlasterAxialInfo(1.5f, 3),
@@ -350,21 +351,21 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 	private static void registerLightsabers()
 	{
 		PswgContent.registerLightsaberPreset(
-				new LightsaberDescriptor(Resources.id("anakin"), "Anakin Skywalker", 0.62f, 1, 1, LightsaberBladeType.DEFAULT),
-				new LightsaberDescriptor(Resources.id("ezra_padawan"), "Ezra Bridger", 0.33f, 1, 1, LightsaberBladeType.DEFAULT),
-				new LightsaberDescriptor(Resources.id("kenobi"), "Obi-Wan Kenobi", 0.62f, 1, 1, LightsaberBladeType.DEFAULT),
-				new LightsaberDescriptor(Resources.id("luke_rotj"), "Luke Skywalker", 0.33f, 1, 1, LightsaberBladeType.DEFAULT),
-				new LightsaberDescriptor(Resources.id("qui_gon"), "Qui-Gon Jinn", 0.33f, 1, 1, LightsaberBladeType.DEFAULT),
-				new LightsaberDescriptor(Resources.id("bob"), "Jedi Bob", 0.33f, 1, 1, LightsaberBladeType.BRICK),
-				new LightsaberDescriptor(Resources.id("kestis"), "Cal Kestis", 0.73f, 1, 1, LightsaberBladeType.DEFAULT),
-				new LightsaberDescriptor(Resources.id("maul_half"), "Darth Maul", 0, 1, 1, LightsaberBladeType.DEFAULT),
-				new LightsaberDescriptor(Resources.id("darksaber"), null, 0, 0, 1, LightsaberBladeType.DARKSABER),
-				new LightsaberDescriptor(Resources.id("vader"), "Darth Vader", 0, 1, 1, LightsaberBladeType.DEFAULT)
+				new LightsaberDescriptor(Resources.id("anakin"), "Anakin Skywalker", ColorUtil.packHsv(0.62f, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("ezra_padawan"), "Ezra Bridger", ColorUtil.packHsv(0.33f, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("kenobi"), "Obi-Wan Kenobi", ColorUtil.packHsv(0.62f, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("luke_rotj"), "Luke Skywalker", ColorUtil.packHsv(0.33f, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("qui_gon"), "Qui-Gon Jinn", ColorUtil.packHsv(0.33f, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("bob"), "Jedi Bob", ColorUtil.packHsv(0.33f, 1, 1), LightsaberBladeType.BRICK),
+				new LightsaberDescriptor(Resources.id("kestis"), "Cal Kestis", ColorUtil.packHsv(0.73f, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("maul_half"), "Darth Maul", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("darksaber"), null, ColorUtil.packHsv(0, 0, 1), LightsaberBladeType.DARKSABER),
+				new LightsaberDescriptor(Resources.id("vader"), "Darth Vader", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT)
 		);
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment())
 			PswgContent.registerLightsaberPreset(
-					new LightsaberDescriptor(Resources.id("rig_test"), "parzi", 0.62f, 1, 1, LightsaberBladeType.DEFAULT)
+					new LightsaberDescriptor(Resources.id("rig_test"), "parzi", ColorUtil.packHsv(0.62f, 1, 1), LightsaberBladeType.DEFAULT)
 			);
 	}
 

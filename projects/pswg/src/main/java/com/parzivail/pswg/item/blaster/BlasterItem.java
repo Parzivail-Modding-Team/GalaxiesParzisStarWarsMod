@@ -447,7 +447,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
-						entity.setHue(bd.boltHue);
+						entity.setColor(bd.boltColor);
 
 						entity.setLength(bd.boltLength);
 						entity.setRadius(bd.boltRadius);
@@ -474,7 +474,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					BlasterUtil.fireIon(world, player, range, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
-						entity.setHue(bd.boltHue);
+						entity.setColor(bd.boltColor);
 						entity.setLength(0.04f);
 					});
 				}

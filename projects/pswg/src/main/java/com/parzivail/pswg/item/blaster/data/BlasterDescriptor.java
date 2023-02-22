@@ -18,7 +18,7 @@ public class BlasterDescriptor
 	public float range;
 	public float adsSpeedModifier;
 	public float weight;
-	public float boltHue;
+	public int boltColor;
 	public float boltLength;
 	public float boltRadius;
 	public int magazineSize;
@@ -45,7 +45,7 @@ public class BlasterDescriptor
 	public int attachmentMinimum;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
 
-	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, BlasterWaterBehavior waterBehavior, float damage, Function<Double, Double> damageFalloff, float range, float adsSpeedModifier, float weight, float boltHue, float boltLength, float boltRadius, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, int burstGap, int quickdrawDelay, int defaultCrosshair, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
+	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, BlasterWaterBehavior waterBehavior, float damage, Function<Double, Double> damageFalloff, float range, float adsSpeedModifier, float weight, int boltColor, float boltLength, float boltRadius, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, int burstGap, int quickdrawDelay, int defaultCrosshair, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
 	{
 		this.id = id;
 		this.sound = sound;
@@ -57,7 +57,7 @@ public class BlasterDescriptor
 		this.range = range;
 		this.adsSpeedModifier = adsSpeedModifier;
 		this.weight = weight;
-		this.boltHue = boltHue;
+		this.boltColor = boltColor;
 		this.boltLength = boltLength;
 		this.boltRadius = boltRadius;
 		this.magazineSize = magazineSize;

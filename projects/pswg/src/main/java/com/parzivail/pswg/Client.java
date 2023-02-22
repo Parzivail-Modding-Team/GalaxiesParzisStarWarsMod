@@ -127,7 +127,6 @@ public class Client implements ClientModInitializer
 
 	public static void getRightDebugText(List<String> strings)
 	{
-		BlasterItemRenderer.getDebugInfo(strings);
 	}
 
 	public static float getTickDelta()
