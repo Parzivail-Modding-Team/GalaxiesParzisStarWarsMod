@@ -8,7 +8,8 @@ import java.util.function.Function;
 
 public class BlasterDescriptor
 {
-	public Identifier id;
+	public final Identifier id;
+
 	public Identifier sound;
 	public BlasterArchetype type;
 	public List<BlasterFiringMode> firingModes;
@@ -48,6 +49,7 @@ public class BlasterDescriptor
 	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, BlasterWaterBehavior waterBehavior, float damage, Function<Double, Double> damageFalloff, float range, float adsSpeedModifier, float weight, int boltColor, float boltLength, float boltRadius, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, int burstGap, int quickdrawDelay, int defaultCrosshair, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
 	{
 		this.id = id;
+
 		this.sound = sound;
 		this.type = type;
 		this.firingModes = firingModes;

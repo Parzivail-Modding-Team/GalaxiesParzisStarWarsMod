@@ -154,6 +154,7 @@ public class Galaxies implements ModInitializer
 		ServerPlayNetworking.registerGlobalReceiver(SwgPackets.C2S.JetpackControls, JetpackItem::handeControlPacket);
 
 		Galaxies.LOG.info("Loading PSWG addons via pswg-addon");
+		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgStarting);
 		EntrypointUtils.invoke("pswg-addon", PswgAddon.class, PswgAddon::onPswgReady);
 
 		Galaxies.LOG.info("Baking PSWG addon content");

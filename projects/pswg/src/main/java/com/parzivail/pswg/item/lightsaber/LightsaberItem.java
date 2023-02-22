@@ -199,9 +199,9 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 		var stack = new ItemStack(this);
 
 		LightsaberTag.mutate(stack, lightsaberTag -> {
-			lightsaberTag.owner = descriptor.ownerName();
-			lightsaberTag.hilt = descriptor.id();
-			lightsaberTag.bladeColor = descriptor.bladeColor();
+			lightsaberTag.owner = descriptor.ownerName;
+			lightsaberTag.hilt = descriptor.id;
+			lightsaberTag.bladeColor = descriptor.bladeColor;
 		});
 
 		return stack;

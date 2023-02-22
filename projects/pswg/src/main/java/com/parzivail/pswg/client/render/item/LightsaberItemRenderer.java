@@ -135,7 +135,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		if (renderMode != ModelTransformation.Mode.GUI)
 		{
 			var ld = PswgContent.getLightsaberPreset(lt.hilt);
-			var bladeType = ld == null ? LightsaberBladeType.DEFAULT : ld.bladeType();
+			var bladeType = ld == null ? LightsaberBladeType.DEFAULT : ld.bladeType;
 
 			var socketedBlades = 0;
 			for (var o : m.transformables().values())
