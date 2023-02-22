@@ -127,7 +127,7 @@ public class BlasterTag extends TagSerializer
 
 	public float stackWithAttachment(BlasterDescriptor bd, HashMap<BlasterAttachmentFunction, Float> map)
 	{
-		var coefficient = 1;
+		var coefficient = 1f;
 
 		for (var attachment : bd.attachmentMap.values())
 		{
@@ -146,7 +146,7 @@ public class BlasterTag extends TagSerializer
 
 	public float stackWithAttachment(BlasterDescriptor bd, BlasterAttachmentFunction function, float multiplier)
 	{
-		var coefficient = 1;
+		var coefficient = 1f;
 
 		for (var attachment : bd.attachmentMap.values())
 		{
