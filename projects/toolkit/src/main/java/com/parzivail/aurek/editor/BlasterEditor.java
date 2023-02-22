@@ -9,6 +9,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.math.MatrixStackUtil;
 import com.rits.cloning.Cloner;
+import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiDataType;
 import imgui.internal.ImGui;
 import imgui.type.*;
@@ -35,7 +36,7 @@ public class BlasterEditor implements IDirectItemEditor
 		public float y;
 		public float z;
 
-		public float scale;
+		public float scale = 1;
 
 		public float handScale = 1;
 
@@ -143,9 +144,12 @@ public class BlasterEditor implements IDirectItemEditor
 				if (ImGui.inputFloat("Weight", f, 0.5f))
 					bd.weight = f.get();
 
-				f.set(bd.boltHue);
-				if (ImGui.inputFloat("Bolt Hue", f, 0.05f))
-					bd.boltHue = f.get();
+				var color = new float[3];
+				color[0] = bd.boltHue;
+				color[1] = 1;
+				color[2] = 1;
+				if (ImGui.colorPicker3("Bolt Color", color, ImGuiColorEditFlags.InputHSV | ImGuiColorEditFlags.DisplayHSV | ImGuiColorEditFlags.Float | ImGuiColorEditFlags.NoAlpha))
+					bd.boltHue = color[0];
 
 				f.set(bd.boltLength);
 				if (ImGui.inputFloat("Bolt Length", f, 0.25f))
