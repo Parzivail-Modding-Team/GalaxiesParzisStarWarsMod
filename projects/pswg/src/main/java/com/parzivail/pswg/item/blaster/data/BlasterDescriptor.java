@@ -50,6 +50,8 @@ public class BlasterDescriptor
 	{
 		this.id = id;
 		this.type = type;
+
+		this.sound = id;
 	}
 
 	public BlasterDescriptor sound(Identifier sound)
