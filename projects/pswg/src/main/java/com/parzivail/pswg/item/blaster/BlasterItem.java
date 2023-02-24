@@ -114,6 +114,31 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		return new TranslatableTextContent(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
 	}
 
+	public static boolean areBothHandsOccupied(LivingEntity entity)
+	{
+		if (entity == null)
+			return false;
+
+		var mainHandStack = entity.getMainHandStack();
+		var offHandStack = entity.getOffHandStack();
+
+		var occupiedHands = 0;
+
+		if (mainHandStack.getItem() instanceof BlasterItem)
+		{
+			var mainBd = getBlasterDescriptor(mainHandStack);
+			occupiedHands += mainBd.type.isOneHanded() ? 1 : 2;
+		}
+
+		if (offHandStack.getItem() instanceof BlasterItem)
+		{
+			var offBd = getBlasterDescriptor(offHandStack);
+			occupiedHands += offBd.type.isOneHanded() ? 1 : 2;
+		}
+
+		return occupiedHands > 1;
+	}
+
 	@Override
 	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
 	{

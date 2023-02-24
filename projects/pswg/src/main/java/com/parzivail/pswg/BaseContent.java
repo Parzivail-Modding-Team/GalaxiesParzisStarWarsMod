@@ -160,9 +160,9 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 								             .attachment(2, "short_scope", BlasterAttachmentFunction.DEFAULT_SCOPE, BlasterAttachmentCategory.SCOPE, "short_scope", Resources.id("textures/item/model/blaster/ee3_rotj.png"))
 								             .attachment(3, "smooth_barrel", BlasterAttachmentFunction.INCREASE_RANGE, BlasterAttachmentCategory.BARREL, "smooth_barrel", Resources.id("textures/item/model/blaster/ee3_esb.png"))
 								             .attachment(3, "vane_barrel", BlasterAttachmentFunction.ALLOW_BURST, BlasterAttachmentCategory.BARREL, "vane_barrel", Resources.id("textures/item/model/blaster/ee3_rotj.png"))
-								             .required(1, "stock_wood")
-								             .required(2, "tall_scope")
-								             .required(3, "smooth_barrel")
+								             .requireLayer(1, "stock_wood")
+								             .requireLayer(2, "tall_scope")
+								             .requireLayer(3, "smooth_barrel")
 								             .build()),
 				new BlasterDescriptor(Resources.id("ca87"), BlasterArchetype.ION)
 						.firingBehavior(List.of(BlasterFiringMode.ION), BlasterWaterBehavior.NONE)
@@ -241,7 +241,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 								             .attachment(1, "short_barrel", BlasterAttachmentFunction.INCREASE_DAMAGE, BlasterAttachmentCategory.BARREL, "short_barrel", null)
 								             .attachment(2, "scope", BlasterAttachmentFunction.DEFAULT_SCOPE, BlasterAttachmentCategory.SCOPE, "scope", null)
 								             .attachment(3, "repeater", BlasterAttachmentFunction.ALLOW_AUTO, BlasterAttachmentCategory.INTERNAL_ORDNANCE_CONFIG)
-								             .required(1, "long_barrel")
+								             .requireLayer(1, "long_barrel")
 								             .build())
 		);
 	}
