@@ -44,7 +44,7 @@ public class BlasterDescriptor
 
 	public int attachmentDefault;
 	public int attachmentMinimum;
-	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
+	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap = new HashMap<>();
 
 	public BlasterDescriptor(Identifier id, BlasterArchetype type)
 	{

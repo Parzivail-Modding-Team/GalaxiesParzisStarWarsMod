@@ -35,7 +35,6 @@ public class PswgTcwAddon implements PswgAddon
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 150, 8, 20, 30, 100, 60))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.45f, 0.05f))
-						.attachments(new BlasterAttachmentBuilder().build())
 		);
 	}
 

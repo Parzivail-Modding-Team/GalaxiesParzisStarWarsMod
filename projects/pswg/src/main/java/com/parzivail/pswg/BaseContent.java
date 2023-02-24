@@ -34,8 +34,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 42, 12, 20, 14, 100, 80))
-						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f))
-						.attachments(new BlasterAttachmentBuilder().build()),
+						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f)),
 				new BlasterDescriptor(Resources.id("bowcaster"), BlasterArchetype.HEAVY)
 						.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC), BlasterWaterBehavior.BOLTS_PASS_THROUGH_WATER)
 						.mechanicalProperties(6.7f, -0.5f, 10, 300)
@@ -70,8 +69,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 42, 12, 20, 14, 100, 80))
-						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f))
-						.attachments(new BlasterAttachmentBuilder().build()),
+						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f)),
 				new BlasterDescriptor(Resources.id("dc15a"), BlasterArchetype.RIFLE)
 						.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
 						.mechanicalProperties(6.7f, -0.5f, 10, 400)
@@ -81,8 +79,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 42, 12, 20, 14, 100, 80))
-						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f))
-						.attachments(new BlasterAttachmentBuilder().build()),
+						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f)),
 				new BlasterDescriptor(Resources.id("dh17"), BlasterArchetype.PISTOL)
 						.firingBehavior(List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
 						.mechanicalProperties(1, -0.5f, 10, 500)
@@ -92,8 +89,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 60, 10, 54, 14, 18, 80))
-						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.03f))
-						.attachments(new BlasterAttachmentBuilder().build()),
+						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.03f)),
 				new BlasterDescriptor(Resources.id("dl18"), BlasterArchetype.PISTOL)
 						.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
 						.mechanicalProperties(6.7f, -0.5f, 10, 500)
@@ -117,8 +113,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 120, 8, 20, 14, 100, 80))
-						.cooling(new BlasterCoolingBypassProfile(0.5f, 0.05f, 0.3f, 0.02f))
-						.attachments(new BlasterAttachmentBuilder().build()),
+						.cooling(new BlasterCoolingBypassProfile(0.5f, 0.05f, 0.3f, 0.02f)),
 				new BlasterDescriptor(Resources.id("dlt19"), BlasterArchetype.HEAVY)
 						.firingBehavior(List.of(BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
 						.mechanicalProperties(6.7f, -0.5f, 10, 300)
@@ -147,8 +142,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 55, 10, 54, 14, 10, 80))
-						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.07f, 0.3f, 0.03f))
-						.attachments(new BlasterAttachmentBuilder().build()),
+						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.07f, 0.3f, 0.03f)),
 				new BlasterDescriptor(Resources.id("ee3"), BlasterArchetype.RIFLE)
 						.firingBehavior(List.of(BlasterFiringMode.BURST, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
 						.mechanicalProperties(2.9f, -0.5f, 10, 400)
@@ -191,9 +185,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.recoil(new BlasterAxialInfo(1.5f, 3))
 						.spread(new BlasterAxialInfo(0, 0))
 						.heat(new BlasterHeatInfo(1008, 42, 8, 20, 14, 100, 80))
-						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.05f, 0.3f, 0.01f))
-						.attachments(new BlasterAttachmentBuilder()
-								             .build()),
+						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.05f, 0.3f, 0.01f)),
 				new BlasterDescriptor(Resources.id("rk3"), BlasterArchetype.PISTOL)
 						.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
 						.mechanicalProperties(6.7f, -0.5f, 10, 500)
