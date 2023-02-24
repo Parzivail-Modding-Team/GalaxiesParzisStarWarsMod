@@ -24,16 +24,16 @@ public class BlasterDescriptor
 	public float boltRadius;
 	public int magazineSize;
 
-	public int automaticRepeatTime;
-	public int burstRepeatTime;
+	public int automaticRepeatTime = 1;
+	public int burstRepeatTime = 1;
 
 	// TODO: datapack/archetype? (requires re-calculating first person ADS positions)
 	public float adsZoom = 5;
 
 	public int burstSize;
 
-	public int burstGap;
-	public int quickdrawDelay;
+	public int burstGap = 1;
+	public int quickdrawDelay = 1;
 
 	public int defaultCrosshair;
 
@@ -46,35 +46,99 @@ public class BlasterDescriptor
 	public int attachmentMinimum;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap;
 
-	public BlasterDescriptor(Identifier id, Identifier sound, BlasterArchetype type, List<BlasterFiringMode> firingModes, BlasterWaterBehavior waterBehavior, float damage, Function<Double, Double> damageFalloff, float range, float adsSpeedModifier, float weight, int boltColor, float boltLength, float boltRadius, int magazineSize, int automaticRepeatTime, int burstRepeatTime, int burstSize, int burstGap, int quickdrawDelay, int defaultCrosshair, BlasterAxialInfo recoil, BlasterAxialInfo spread, BlasterHeatInfo heat, BlasterCoolingBypassProfile cooling, BlasterAttachmentMap attachmentMap)
+	public BlasterDescriptor(Identifier id, BlasterArchetype type)
 	{
 		this.id = id;
-
-		this.sound = sound;
 		this.type = type;
+	}
+
+	public BlasterDescriptor sound(Identifier sound)
+	{
+		this.sound = sound;
+		return this;
+	}
+
+	public BlasterDescriptor crosshair(int defaultCrosshair)
+	{
+		this.defaultCrosshair = defaultCrosshair;
+		return this;
+	}
+
+	public BlasterDescriptor firingBehavior(List<BlasterFiringMode> firingModes, BlasterWaterBehavior waterBehavior)
+	{
 		this.firingModes = firingModes;
 		this.waterBehavior = waterBehavior;
-		this.damage = damage;
-		this.damageFalloff = damageFalloff;
-		this.range = range;
+		return this;
+	}
+
+	public BlasterDescriptor mechanicalProperties(float weight, float adsSpeedModifier, int quickdrawDelay, int magazineSize)
+	{
 		this.adsSpeedModifier = adsSpeedModifier;
 		this.weight = weight;
+		this.quickdrawDelay = quickdrawDelay;
+		this.magazineSize = magazineSize;
+		return this;
+	}
+
+	public BlasterDescriptor damage(float damage, float range, Function<Double, Double> damageFalloff)
+	{
+		this.damage = damage;
+		this.range = range;
+		this.damageFalloff = damageFalloff;
+		return this;
+	}
+
+	public BlasterDescriptor bolt(int boltColor, float boltLength, float boltRadius)
+	{
 		this.boltColor = boltColor;
 		this.boltLength = boltLength;
 		this.boltRadius = boltRadius;
-		this.magazineSize = magazineSize;
+		return this;
+	}
+
+	public BlasterDescriptor autoParameters(int automaticRepeatTime)
+	{
 		this.automaticRepeatTime = automaticRepeatTime;
+		return this;
+	}
+
+	public BlasterDescriptor burstParameters(int burstRepeatTime, int burstSize, int burstGap)
+	{
 		this.burstRepeatTime = burstRepeatTime;
 		this.burstSize = burstSize;
 		this.burstGap = burstGap;
-		this.quickdrawDelay = quickdrawDelay;
-		this.defaultCrosshair = defaultCrosshair;
+		return this;
+	}
+
+	public BlasterDescriptor recoil(BlasterAxialInfo recoil)
+	{
 		this.recoil = recoil;
+		return this;
+	}
+
+	public BlasterDescriptor spread(BlasterAxialInfo spread)
+	{
 		this.spread = spread;
+		return this;
+	}
+
+	public BlasterDescriptor heat(BlasterHeatInfo heat)
+	{
 		this.heat = heat;
+		return this;
+	}
+
+	public BlasterDescriptor cooling(BlasterCoolingBypassProfile cooling)
+	{
 		this.cooling = cooling;
+		return this;
+	}
+
+	public BlasterDescriptor attachments(BlasterAttachmentMap attachmentMap)
+	{
 		this.attachmentDefault = attachmentMap.attachmentDefault();
 		this.attachmentMinimum = attachmentMap.attachmentMinimum();
 		this.attachmentMap = attachmentMap.attachmentMap();
+		return this;
 	}
 }
