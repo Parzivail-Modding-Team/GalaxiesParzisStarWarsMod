@@ -26,22 +26,16 @@ public class PswgTcwAddon implements PswgAddon
 		SwgSounds.registerIfAbsent(BlasterItem.modelIdToSoundId(id("dc17")));
 
 		PswgContent.registerBlasterPreset(
-				new BlasterDescriptor(
-						id("dc17"),
-						id("dc17"),
-						BlasterArchetype.PISTOL,
-						List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN),
-						BlasterWaterBehavior.NONE,
-						3.06f, Falloff.cliff(0.3),
-						188, -0.5f, 2, ColorUtil.packHsv(0.62f, 1, 1), 1, 1,
-						50, 2, 4, 3, 2, 8,
-						0,
-						new BlasterAxialInfo(1.5f, 3),
-						new BlasterAxialInfo(0, 0),
-						new BlasterHeatInfo(1008, 150, 8, 20, 30, 100, 60),
-						new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.45f, 0.05f),
-						new BlasterAttachmentBuilder().build()
-				)
+				new BlasterDescriptor(id("dc17"), BlasterArchetype.PISTOL)
+						.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
+						.mechanicalProperties(2, -0.5f, 8, 50)
+						.damage(3.06f, 188, Falloff.cliff(0.3))
+						.bolt(ColorUtil.packHsv(0.62f, 1, 1), 1, 1)
+						.recoil(new BlasterAxialInfo(1.5f, 3))
+						.spread(new BlasterAxialInfo(0, 0))
+						.heat(new BlasterHeatInfo(1008, 150, 8, 20, 30, 100, 60))
+						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.45f, 0.05f))
+						.attachments(new BlasterAttachmentBuilder().build())
 		);
 	}
 
