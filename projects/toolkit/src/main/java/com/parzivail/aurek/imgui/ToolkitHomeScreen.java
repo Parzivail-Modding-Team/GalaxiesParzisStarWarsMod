@@ -101,7 +101,7 @@ public class ToolkitHomeScreen extends ImguiScreen
 
 								ImGui.tableNextColumn();
 								if (ImGui.button("Run"))
-									setScreen(tool.getScreen());
+									client.setScreen(tool.getScreen());
 
 								ImGui.tableNextColumn();
 								ImGui.textWrapped(LangUtil.translate(tool.getDescription()));
