@@ -16,13 +16,13 @@ public class MinecraftClientMixin
 		ImGuiHelper.init();
 	}
 
-	@Inject(method = "render(Z)V", at = @At(value = "INVOKE", target = "render(FJZ)V", shift = At.Shift.BEFORE))
+	@Inject(method = "render(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;render(FJZ)V", shift = At.Shift.BEFORE))
 	private void preRender(CallbackInfo ci)
 	{
 		ImGuiHelper.startFrame();
 	}
 
-	@Inject(method = "render(Z)V", at = @At(value = "INVOKE", target = "render(FJZ)V", shift = At.Shift.AFTER))
+	@Inject(method = "render(Z)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;render(FJZ)V", shift = At.Shift.AFTER))
 	private void postRender(CallbackInfo ci)
 	{
 		ImGuiHelper.endFrame();
