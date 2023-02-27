@@ -37,9 +37,10 @@ public class BlasterAttachmentBuilder
 		return this;
 	}
 
-	public BlasterAttachmentBuilder required(int layer)
+	public BlasterAttachmentBuilder requireLayer(int layer, String presetId)
 	{
 		requiredLayers.add(layer);
+		layerDefaults.put(layer, presetId);
 		return this;
 	}
 

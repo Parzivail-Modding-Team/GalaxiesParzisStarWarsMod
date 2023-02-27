@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.api.BlasterTransformer;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.item.blaster.BlasterItem;
@@ -34,7 +35,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.profiler.Profiler;
 import org.joml.Quaternionf;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
@@ -45,7 +49,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	{
 	}
 
-	record AttachmentSuperset(Set<String> names, HashMap<String, AttachmentRenderData> visuals)
+	public record AttachmentSuperset(Set<String> names, HashMap<String, AttachmentRenderData> visuals)
 	{
 	}
 
@@ -179,6 +183,11 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 		var shotTime = bt.timeSinceLastShot + d;
 
+		var attachmentSet = getAttachmentSet(bt, bd);
+
+		for (var t : BlasterTransformer.REGISTRY)
+			t.preTransform(matrices, m, bt, bd, attachmentSet, renderMode, light, d, opacity);
+
 		if (renderMode == ModelTransformation.Mode.GROUND)
 			matrices.translate(-0.4f, 0.9f, -0.4f);
 
@@ -268,8 +277,15 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 					matrices.multiplyPositionMatrix(foreGripTransform.transform);
 
-					MatrixStackUtil.scalePos(matrices, 4, 4, -4);
-					matrices.translate(-0.35f, -0.75f, 0);
+					MatrixStackUtil.scalePos(matrices, 1, 1, -1);
+
+					// TODO: datapack
+					MatrixStackUtil.scalePos(matrices, 4, 4, 4);
+
+					for (var t : BlasterTransformer.REGISTRY)
+						t.transformHand(matrices, m, bt, bd, attachmentSet, renderMode, light, d, opacity);
+
+					matrices.translate(0, -0.625f, 0);
 
 					skipPose = true;
 					playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
@@ -280,9 +296,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			}
 		}
 
-		var attachmentSet = getAttachmentSet(bt, bd);
-
 		m.render(matrices, vertexConsumers, bt, getAttachmentTransformer(attachmentSet), getRenderLayerProvider(modelEntry, attachmentSet), light, d, 255, 255, 255, (int)(255 * opacity));
+
+		for (var t : BlasterTransformer.REGISTRY)
+			t.postTransform(matrices, m, bt, bd, attachmentSet, renderMode, light, d, opacity);
 
 		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED && renderMode != ModelTransformation.Mode.GROUND)
 		{
@@ -370,11 +387,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		{
 			var frame = (int)Math.floor(MathHelper.clamp(shotTime, 0, ID_MUZZLE_FLASHES.length - 1));
 
-			var color = ColorUtil.hsvToRgbInt(bd.boltColor, 1, 1);
+			var color = ColorUtil.hsvToRgbInt(ColorUtil.hsvGetH(bd.boltColor), ColorUtil.hsvGetS(bd.boltColor), ColorUtil.hsvGetV(bd.boltColor));
 			var tintedId = new TintedIdentifier(ID_MUZZLE_FLASHES[frame], NativeImageUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
 			var tintedForwardId = new TintedIdentifier(ID_MUZZLE_FLASHES_FORWARD[frame], NativeImageUtil.argbToAbgr(color), TintedIdentifier.Mode.Overlay);
 
-			var colorId = String.valueOf((int)(bd.boltColor * 255));
 			var flash = Client.tintedTextureProvider.getId("muzzleflash/" + ColorUtil.toResourceId(color) + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
 
 			vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
@@ -389,7 +405,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 			if (!renderMode.isFirstPerson())
 			{
-				var forwardFlash = Client.tintedTextureProvider.getId("muzzleflash_forward/" + colorId + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
+				var forwardFlash = Client.tintedTextureProvider.getId("muzzleflash_forward/" + ColorUtil.toResourceId(color) + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
 				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
 				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 
@@ -418,7 +434,9 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	{
 		if (skipPose)
 		{
+			rightArm.setPivot(0, 0, 0);
 			rightArm.setAngles(0, 0, 0);
+			leftArm.setPivot(0, 0, 0);
 			leftArm.setAngles(0, 0, 0);
 			return;
 		}
@@ -460,47 +478,6 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				}
 			}
 		}
-	}
-
-	public static void getDebugInfo(List<String> strings)
-	{
-		var mc = MinecraftClient.getInstance();
-		assert mc.player != null;
-
-		var stack = mc.player.getInventory().getMainHandStack();
-		if (stack.getItem() instanceof BlasterItem)
-		{
-			var bd = BlasterItem.getBlasterDescriptor(stack, true);
-			if (bd == null)
-				return;
-
-			var bt = new BlasterTag(stack.getOrCreateNbt());
-
-			strings.add(String.format("! id=%s type=%s", bd.id, bd.type.getValue()));
-			strings.add(String.format("! dmg=%s rng=%s lbs=%s hue=%s", bd.damage, bd.range, bd.weight, bd.boltColor));
-			strings.add(String.format("! mag=%s art=%s brt=%s", bd.magazineSize, bd.automaticRepeatTime, bd.burstRepeatTime));
-			strings.add(String.format("! brst=%s attDef=%s attMin=%s", bd.burstSize, Integer.toBinaryString(bd.attachmentDefault), Integer.toBinaryString(bd.attachmentMinimum)));
-			strings.add(String.format("! rec={%s, %s} spd={%s, %s}", bd.recoil.horizontal, bd.recoil.vertical, bd.spread.horizontal, bd.spread.vertical));
-			strings.add(String.format("! heat={c=%s pr=%s ds=%s op=%s ods=%s pcd=%s ob=%s}", bd.heat.capacity, bd.heat.perRound, bd.heat.drainSpeed, bd.heat.overheatPenalty, bd.heat.overheatDrainSpeed, bd.heat.passiveCooldownDelay, bd.heat.overchargeBonus));
-			strings.add(String.format("! cool={pt=%s pd=%s st=%s sd=%s}", bd.cooling.primaryBypassTime, bd.cooling.primaryBypassTolerance, bd.cooling.secondaryBypassTime, bd.cooling.secondaryBypassTolerance));
-
-			strings.add(String.format("@ fm=%s cm=%s ads=%s cbc=%s", bt.firingMode, getCoolingModeString(bt), bt.isAimingDownSights ? "Y" : "N", bt.canBypassCooling ? "Y" : "N"));
-			strings.add(String.format("@ sr=%s h=%s vh=%s", bt.shotsRemaining, bt.heat, bt.ventingHeat));
-			strings.add(String.format("@ bc=%s st=%s tsls=%s pct=%s ot=%s", bt.burstCounter, bt.shotTimer, bt.timeSinceLastShot, bt.passiveCooldownTimer, bt.overchargeTimer));
-			strings.add(String.format("@ a=%s", Integer.toBinaryString(bt.attachmentBitmask)));
-		}
-	}
-
-	private static String getCoolingModeString(BlasterTag bt)
-	{
-		return switch (bt.coolingMode)
-				{
-					case BlasterTag.COOLING_MODE_NONE -> "N";
-					case BlasterTag.COOLING_MODE_OVERHEAT -> "O";
-					case BlasterTag.COOLING_MODE_FORCED_BYPASS -> "FB";
-					case BlasterTag.COOLING_MODE_PENALTY_BYPASS -> "PB";
-					default -> String.valueOf(bt.coolingMode);
-				};
 	}
 
 	public record ModelEntry(P3dModel model, Identifier baseTexture)

@@ -6,6 +6,7 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
+import com.parzivail.pswg.item.blaster.data.BlasterAttachmentFunction;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
@@ -16,7 +17,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.HashMap;
 
 public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRenderer
 {
@@ -24,6 +28,12 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 
 	private static final Identifier OVERLAY_BASIC_SCOPE = Resources.id("textures/misc/blaster_basic_scope.png");
 	private static final Identifier HUD_ELEMENTS_TEXTURE = Resources.id("textures/gui/blasters.png");
+	private static final HashMap<BlasterAttachmentFunction, Integer> CROSSHAIR_ATTACHMENT_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.SNIPER_SCOPE, 2);
+		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 5);
+		h.put(BlasterAttachmentFunction.REDUCE_SPREAD, 9);
+		h.put(BlasterAttachmentFunction.WATERPROOF_FIRING, 4);
+	});
 
 	@Override
 	public boolean renderCrosshair(PlayerEntity player, Hand hand, ItemStack stack, MatrixStack matrices)
@@ -49,7 +59,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		var profile = bd.cooling;
-		final var crosshairIdx = 0;
+		final var crosshairIdx = bt.mapWithAttachment(bd, CROSSHAIR_ATTACHMENT_MAP).orElse(bd.defaultCrosshair);
 
 		var tickDelta = Client.getTickDelta();
 
@@ -89,11 +99,14 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				}
 
 				// cursor
-				this.drawTexture(matrices, (int)(cooldownBarX + cooldownTimer * cooldownWidth - 1), j + 28, 0, 24, 3, 7);
+				matrices.push();
+				matrices.translate(cooldownBarX + cooldownTimer * cooldownWidth - 1, 0, 0);
+				this.drawTexture(matrices, 0, j + 28, 0, 24, 3, 7);
+				matrices.pop();
 			}
 			else if (bt.readyTimer > 0)
 			{
-				var readyTimer = (bt.readyTimer - tickDelta) / (bd.heat.capacity / 5 / bd.heat.drainSpeed);
+				var readyTimer = (bt.readyTimer - tickDelta) / bd.quickdrawDelay;
 
 				readyTimer = MathHelper.clamp(readyTimer, 0, 0.98f);
 
@@ -101,7 +114,10 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				this.drawTexture(matrices, cooldownBarX, j + 30, 0, 32, cooldownWidth, 3);
 
 				// cursor
-				this.drawTexture(matrices, (int)(cooldownBarX + readyTimer * cooldownWidth - 1), j + 28, 0, 24, 3, 7);
+				matrices.push();
+				matrices.translate(cooldownBarX + readyTimer * cooldownWidth - 1, 0, 0);
+				this.drawTexture(matrices, 0, j + 28, 0, 24, 3, 7);
+				matrices.pop();
 			}
 			else
 			{
@@ -117,8 +133,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 				}
 				else if (bt.overchargeTimer > 0)
 				{
-					var deltaHeat = tickDelta;
-					heatPercentage = (bt.overchargeTimer - deltaHeat) / bd.heat.overchargeBonus;
+					heatPercentage = (bt.overchargeTimer - tickDelta) / bd.heat.overchargeBonus;
 				}
 				else
 				{
@@ -146,7 +161,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		if (bt.isAimingDownSights)
 		{
 			RenderSystem.blendFuncSeparate(GlStateManager.SrcFactor.ONE_MINUS_DST_COLOR, GlStateManager.DstFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SrcFactor.ONE, GlStateManager.DstFactor.ZERO);
-			this.drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62, 0, 15, 15);
+			this.drawTexture(matrices, (scaledWidth - 15) / 2, (scaledHeight - 15) / 2, 62 + 16 * crosshairIdx, 0, 15, 15);
 			RenderSystem.defaultBlendFunc();
 		}
 

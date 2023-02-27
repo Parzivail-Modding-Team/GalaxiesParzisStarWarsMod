@@ -82,7 +82,7 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 	public Vector3f getLightColor(PlayerEntity player, ItemStack stack)
 	{
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
-		return ColorUtil.hsvToRgb(lt.bladeHue, lt.bladeSaturation, lt.bladeValue);
+		return ColorUtil.hsvToRgb(ColorUtil.hsvGetH(lt.bladeColor), ColorUtil.hsvGetS(lt.bladeColor), ColorUtil.hsvGetV(lt.bladeColor));
 	}
 
 	@ImplicitOverride("IrisItemLightProvider::getLightEmission")
@@ -199,11 +199,9 @@ public class LightsaberItem extends SwordItem implements ICustomVisualItemEquali
 		var stack = new ItemStack(this);
 
 		LightsaberTag.mutate(stack, lightsaberTag -> {
-			lightsaberTag.owner = descriptor.ownerName();
-			lightsaberTag.hilt = descriptor.id();
-			lightsaberTag.bladeHue = descriptor.bladeHue();
-			lightsaberTag.bladeSaturation = descriptor.bladeSaturation();
-			lightsaberTag.bladeValue = descriptor.bladeValue();
+			lightsaberTag.owner = descriptor.ownerName;
+			lightsaberTag.hilt = descriptor.id;
+			lightsaberTag.bladeColor = descriptor.bladeColor;
 		});
 
 		return stack;

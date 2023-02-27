@@ -1,5 +1,6 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.util.entity.PProjectileEntityDamageSource;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -20,5 +21,12 @@ public class LivingEntityMixin
 	{
 		if (source instanceof PProjectileEntityDamageSource && ((PProjectileEntityDamageSource)source).ignoresInvulnerableFrames())
 			lastDamageTaken = 0;
+	}
+
+	@Inject(method = "isClimbing()Z", at = @At("HEAD"), cancellable = true)
+	public void isClimbing(CallbackInfoReturnable<Boolean> cir)
+	{
+		if (BlasterItem.areBothHandsOccupied((LivingEntity)(Object)this))
+			cir.setReturnValue(false);
 	}
 }

@@ -160,9 +160,7 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		LightsaberTag.mutate(lightsaber, (lt) ->
 		{
 			lt.owner = player.getEntityName();
-			lt.bladeHue = hue;
-			lt.bladeSaturation = sat;
-			lt.bladeValue = val;
+			lt.bladeColor = ColorUtil.packHsv(hue, sat, val);
 			lt.unstable = cbUnstable.isChecked();
 		});
 	}
@@ -173,9 +171,9 @@ public class LightsaberForgeScreen extends HandledScreen<LightsaberForgeScreenHa
 		{
 			var lt = getLightsaberTag();
 
-			hue = lt.bladeHue;
-			sat = lt.bladeSaturation;
-			val = lt.bladeValue;
+			hue = ColorUtil.hsvGetH(lt.bladeColor);
+			sat = ColorUtil.hsvGetS(lt.bladeColor);
+			val = ColorUtil.hsvGetV(lt.bladeColor);
 
 			cbUnstable.setChecked(lt.unstable);
 		}

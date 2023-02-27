@@ -3,6 +3,7 @@ package com.parzivail.pswg.entity;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
+import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.IPrecisionEntity;
 import com.parzivail.util.network.PreciseEntitySpawnS2CPacket;
@@ -27,7 +28,10 @@ import net.minecraft.world.World;
 public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 {
 	private static final TrackedData<Integer> LIFE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
-	private static final TrackedData<Float> HUE = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
+	private static final TrackedData<Integer> COLOR = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.INTEGER);
+	private static final TrackedData<Float> LENGTH = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
+	private static final TrackedData<Float> RADIUS = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
+	private static final TrackedData<Boolean> SMOLDERING = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
 	private boolean ignoreWater;
 
@@ -102,7 +106,10 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	protected void initDataTracker()
 	{
 		dataTracker.startTracking(LIFE, -1);
-		dataTracker.startTracking(HUE, 0.0f);
+		dataTracker.startTracking(COLOR, 0);
+		dataTracker.startTracking(LENGTH, 1f);
+		dataTracker.startTracking(RADIUS, 1f);
+		dataTracker.startTracking(SMOLDERING, false);
 	}
 
 	private int getLife()
@@ -115,14 +122,44 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		dataTracker.set(LIFE, life);
 	}
 
-	public float getHue()
+	public int getColor()
 	{
-		return dataTracker.get(HUE);
+		return dataTracker.get(COLOR);
 	}
 
-	public void setHue(float hue)
+	public void setColor(int color)
 	{
-		dataTracker.set(HUE, hue);
+		dataTracker.set(COLOR, color);
+	}
+
+	public float getRadius()
+	{
+		return dataTracker.get(RADIUS);
+	}
+
+	public void setRadius(float radius)
+	{
+		dataTracker.set(RADIUS, radius);
+	}
+
+	public float getLength()
+	{
+		return dataTracker.get(LENGTH);
+	}
+
+	public void setLength(float length)
+	{
+		dataTracker.set(LENGTH, length);
+	}
+
+	public boolean isSmoldering()
+	{
+		return dataTracker.get(SMOLDERING);
+	}
+
+	public void setSmoldering(boolean smoldering)
+	{
+		dataTracker.set(SMOLDERING, smoldering);
 	}
 
 	@Override
@@ -135,6 +172,25 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		{
 			this.discard();
 			return;
+		}
+
+		if (world.isClient && age > 1 && isSmoldering())
+		{
+			var vec = getPos();
+			var vel = getVelocity();
+			var n = 10;
+			var dVel = vel.multiply(1f / n);
+
+			for (var i = 0; i < n; i++)
+			{
+				var dx = 0.01 * world.random.nextGaussian();
+				var dy = 0.01 * world.random.nextGaussian();
+				var dz = 0.01 * world.random.nextGaussian();
+
+				world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, dx, dy, dz);
+
+				vec = vec.add(dVel);
+			}
 		}
 
 		super.tick();

@@ -19,7 +19,7 @@
 	"environment": "client",
 	"entrypoints": {
 		"pswg-client-addon": [
-			"com.parzivail.pswgtk.ToolkitClient"
+			"com.parzivail.aurek.ToolkitClient"
 		]
 	},
 	"mixins": [

@@ -2,6 +2,19 @@ package com.parzivail.pswg.item.lightsaber.data;
 
 import net.minecraft.util.Identifier;
 
-public record LightsaberDescriptor(Identifier id, String ownerName, float bladeHue, float bladeSaturation, float bladeValue, LightsaberBladeType bladeType)
+public final class LightsaberDescriptor
 {
+	public final Identifier id;
+
+	public String ownerName;
+	public int bladeColor;
+	public LightsaberBladeType bladeType;
+
+	public LightsaberDescriptor(Identifier id, String ownerName, int bladeColor, LightsaberBladeType bladeType)
+	{
+		this.id = id;
+		this.ownerName = ownerName;
+		this.bladeColor = bladeColor;
+		this.bladeType = bladeType;
+	}
 }

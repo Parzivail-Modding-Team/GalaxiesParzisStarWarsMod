@@ -34,6 +34,14 @@ public class ColorUtil
 		                (int)(a * 255));
 	}
 
+	public static int packHsv(final float h, final float s, final float v)
+	{
+		return packArgb((int)(h * 255),
+		                (int)(s * 255),
+		                (int)(v * 255),
+		                0);
+	}
+
 	public static int hsvToRgbInt(final float hue, final float saturation, final float value)
 	{
 		final var normalizedHue = (hue - (float)Math.floor(hue));
@@ -96,7 +104,17 @@ public class ColorUtil
 		return ((color & 0xFF00) >> 8) / 255f;
 	}
 
-	public static float argbGetBf(int color)
+	public static float hsvGetH(int color)
+	{
+		return ((color & 0xFF0000) >> 16) / 255f;
+	}
+
+	public static float hsvGetS(int color)
+	{
+		return ((color & 0xFF00) >> 8) / 255f;
+	}
+
+	public static float hsvGetV(int color)
 	{
 		return (color & 0xFF) / 255f;
 	}

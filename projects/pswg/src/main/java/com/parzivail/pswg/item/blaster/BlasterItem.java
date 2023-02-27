@@ -48,9 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
@@ -75,10 +73,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
 	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
 
-	private static final ImmutableMultimap<EntityAttribute, EntityAttributeModifier> ATTRIB_MODS_ADS =
-			ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
-			                 .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, ADS_SPEED_PENALTY_MODIFIER)
-			                 .build();
+	private static final HashSet<Float> requestedSpeedModifiers = new HashSet<>();
+	private static final HashMap<Float, ImmutableMultimap<EntityAttribute, EntityAttributeModifier>> ATTRIB_MODS_ADS = new HashMap<>();
 
 	private static final HashMap<BlasterAttachmentFunction, Float> SPREAD_MAP = Util.make(new HashMap<>(), (h) -> {
 		h.put(BlasterAttachmentFunction.REDUCE_SPREAD, 0.4f);
@@ -87,6 +83,21 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	private static final HashMap<BlasterAttachmentFunction, Float> RECOIL_MAP = Util.make(new HashMap<>(), (h) -> {
 		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 0.7f);
 	});
+
+	public static void bakeAttributeModifiers(Map<Identifier, BlasterDescriptor> blasterPresets)
+	{
+		for (var d : blasterPresets.values())
+		{
+			if (ATTRIB_MODS_ADS.containsKey(d.adsSpeedModifier))
+				continue;
+
+			var modifierId = UUID.nameUUIDFromBytes(String.format("pswg:ads_speed_penalty/%f", d.adsSpeedModifier).getBytes());
+			var modifier = new EntityAttributeModifier(modifierId, "pswg:ads_speed_penalty", d.adsSpeedModifier, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+			ATTRIB_MODS_ADS.put(d.adsSpeedModifier, ImmutableMultimap.<EntityAttribute, EntityAttributeModifier>builder()
+			                                        .put(EntityAttributes.GENERIC_MOVEMENT_SPEED, modifier)
+			                                        .build());
+		}
+	}
 
 	private final Identifier model;
 	private final BlasterDescriptor descriptor;
@@ -101,6 +112,31 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public static TranslatableTextContent getAttachmentTranslation(Identifier model, BlasterAttachmentDescriptor descriptor)
 	{
 		return new TranslatableTextContent(String.format("blaster.%s.%s.attachment.%s", model.getNamespace(), model.getPath(), descriptor.id));
+	}
+
+	public static boolean areBothHandsOccupied(LivingEntity entity)
+	{
+		if (entity == null)
+			return false;
+
+		var mainHandStack = entity.getMainHandStack();
+		var offHandStack = entity.getOffHandStack();
+
+		var occupiedHands = 0;
+
+		if (mainHandStack.getItem() instanceof BlasterItem)
+		{
+			var mainBd = getBlasterDescriptor(mainHandStack);
+			occupiedHands += mainBd.type.isOneHanded() ? 1 : 2;
+		}
+
+		if (offHandStack.getItem() instanceof BlasterItem)
+		{
+			var offBd = getBlasterDescriptor(offHandStack);
+			occupiedHands += offBd.type.isOneHanded() ? 1 : 2;
+		}
+
+		return occupiedHands > 1;
 	}
 
 	@Override
@@ -350,11 +386,30 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			return TypedActionResult.fail(stack);
 		}
 
+		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
+
+		if (burst)
+		{
+			if (bt.burstCounter == 0)
+			{
+				if (bt.timeSinceLastShot < bd.burstRepeatTime * bd.burstGap)
+				{
+					bt.serializeAsSubtag(stack);
+					return TypedActionResult.fail(stack);
+				}
+
+				bt.burstCounter = (short)bd.burstSize;
+			}
+
+			bt.burstCounter--;
+			bt.shotTimer = (short)bd.burstRepeatTime;
+		}
+
 		bt.passiveCooldownTimer = (short)bd.heat.passiveCooldownDelay;
 		bt.shotsRemaining--;
 
 		if (bt.overchargeTimer == 0)
-			bt.heat += bd.heat.perRound;
+			bt.heat += (int)(bd.heat.perRound * bt.stackWithAttachment(bd, BlasterAttachmentFunction.IMPROVE_COOLING, 0.6f));
 
 		if (bt.heat > bd.heat.capacity)
 		{
@@ -363,17 +418,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			bt.coolingMode = BlasterTag.COOLING_MODE_OVERHEAT;
 			bt.canBypassCooling = true;
 			bt.heat = 0;
-		}
 
-		var burst = bd.firingModes.contains(BlasterFiringMode.BURST) && bt.getFiringMode() == BlasterFiringMode.BURST;
-
-		if (burst)
-		{
-			if (bt.burstCounter == 0)
-				bt.burstCounter = (short)bd.burstSize;
-
-			bt.burstCounter--;
-			bt.shotTimer = (short)bd.burstRepeatTime;
+			bt.burstCounter = 0;
 		}
 
 		bt.timeSinceLastShot = 0;
@@ -389,7 +435,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
 
 			// TODO: custom spread reduction?
-			var spread = bt.mapWithAttachment(bd, SPREAD_MAP).orElse(1f);
+			var spread = bt.stackWithAttachment(bd, SPREAD_MAP);
 			float horizontalSpreadCoef = spread;
 			float verticalSpreadCoef = spread;
 
@@ -408,7 +454,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, Matrix4fUtil.transform(MathUtil.POSZ, m).normalize());
 
 			var range = bd.range;
-			Function<Double, Double> damage = (x) -> bd.damage * bd.damageFalloff.apply(x / range);
+			var damageRange = range * bt.stackWithAttachment(bd, BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, 1.5f);
+			Function<Double, Double> damage = (x) -> bd.damage * bd.damageFalloff.apply(x / damageRange);
 
 			var shouldRecoil = true;
 
@@ -419,13 +466,19 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			switch (bt.getFiringMode())
 			{
-				case SEMI_AUTOMATIC, BURST, AUTOMATIC ->
+				case SEMI_AUTOMATIC, BURST, AUTOMATIC, SLUGTHROWER ->
 				{
 					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_A280), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 30 + heatPitchIncrease);
 					BlasterUtil.fireBolt(world, player, fromDir, range, damage, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
-						entity.setHue(bd.boltColor);
+						entity.setColor(bd.boltColor);
+
+						entity.setLength(bd.boltLength);
+						entity.setRadius(bd.boltRadius);
+
+						if (bt.getFiringMode() == BlasterFiringMode.SLUGTHROWER)
+							entity.setSmoldering(true);
 					});
 				}
 				case STUN ->
@@ -434,13 +487,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					BlasterUtil.fireStun(world, player, fromDir, range * 0.10f, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 1.25f, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
+
+						entity.setLength(bd.boltLength);
+						entity.setRadius(bd.boltRadius);
 					});
 					shouldRecoil = false;
-				}
-				case SLUGTHROWER ->
-				{
-					world.playSound(null, player.getBlockPos(), SwgSounds.getOrDefault(modelIdToSoundId(bd.sound), SwgSounds.Blaster.FIRE_CYCLER), SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 40 + heatPitchIncrease);
-					BlasterUtil.fireSlug(world, player, fromDir, range, damage, passThroughWater);
 				}
 				case ION ->
 				{
@@ -448,7 +499,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 					BlasterUtil.fireIon(world, player, range, passThroughWater, entity -> {
 						entity.setVelocity(player, player.getPitch() + entityPitch, player.getYaw() + entityYaw, 0.0F, 5.0F, 0);
 						entity.setPosition(player.getPos().add(GravityChangerCompat.vecPlayerToWorld(player, new Vec3d(0, player.getStandingEyeHeight() - entity.getHeight() / 2f, 0))));
-						entity.setHue(bd.boltColor);
+						entity.setColor(bd.boltColor);
+						entity.setLength(0.04f);
 					});
 				}
 			}
@@ -459,7 +511,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				var horizNoise = world.random.nextGaussian();
 				horizNoise = horizNoise * 0.3 + 0.7 * Math.signum(horizNoise);
 
-				var recoilAmount = bt.mapWithAttachment(bd, RECOIL_MAP).orElse(1f);
+				var recoilAmount = bt.stackWithAttachment(bd, RECOIL_MAP);
 
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.horizontal * horizNoise));
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
@@ -575,7 +627,21 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		}
 
 		if (!world.isClient)
-			BlasterTag.mutate(stack, blasterTag -> blasterTag.tick(bd));
+		{
+			var shouldContinueBurst = false;
+
+			var bt = new BlasterTag(stack.getOrCreateNbt());
+
+			if (bt.burstCounter > 0)
+				shouldContinueBurst = true;
+
+			bt.tick(bd);
+
+			bt.serializeAsSubtag(stack);
+
+			if (shouldContinueBurst && entity instanceof PlayerEntity player && slot == player.getInventory().selectedSlot)
+				useLeft(world, player, Hand.MAIN_HAND, true);
+		}
 	}
 
 	@Override
@@ -614,7 +680,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var bt = new BlasterTag(stack.getOrCreateNbt());
 
 			if (bt.isAimingDownSights)
-				return ATTRIB_MODS_ADS;
+			{
+				var bd = getBlasterDescriptor(stack);
+				return ATTRIB_MODS_ADS.get(bd.adsSpeedModifier);
+			}
 		}
 
 		return ImmutableMultimap.of();

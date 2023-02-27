@@ -1,6 +1,7 @@
 package com.parzivail.pswg.item.lightsaber.data;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.item.ItemStack;
@@ -18,9 +19,7 @@ public class LightsaberTag extends TagSerializer
 
 	public byte transition;
 
-	public float bladeHue;
-	public float bladeSaturation;
-	public float bladeValue;
+	public int bladeColor;
 
 	public boolean unstable;
 
@@ -41,9 +40,7 @@ public class LightsaberTag extends TagSerializer
 		active = false;
 		transition = 0;
 
-		bladeHue = 0.33f;
-		bladeSaturation = 1;
-		bladeValue = 1;
+		bladeColor = ColorUtil.packHsv(0.33f, 1, 1);
 
 		unstable = false;
 

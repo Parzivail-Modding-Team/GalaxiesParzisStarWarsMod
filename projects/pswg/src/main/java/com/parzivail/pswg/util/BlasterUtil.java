@@ -1,9 +1,7 @@
 package com.parzivail.pswg.util;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.container.SwgEntities;
-import com.parzivail.pswg.container.SwgPackets;
 import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.BlasterIonBoltEntity;
@@ -12,8 +10,6 @@ import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.PProjectileEntityDamageSource;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
@@ -25,7 +21,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -78,95 +73,6 @@ public class BlasterUtil
 		// TODO: ion effects
 
 		world.spawnEntity(bolt);
-	}
-
-	public static void handleSlugFired(MinecraftClient client, ClientPlayNetworkHandler clientPlayNetworkHandler, PacketByteBuf buf, PacketSender packetSender)
-	{
-		var start = PacketByteBufHelper.readVec3d(buf);
-		var fromDir = PacketByteBufHelper.readVec3d(buf);
-
-		var distance = buf.readDouble();
-
-		var shouldScorch = buf.readBoolean();
-		Vec3d scorchPos = null;
-		Vec3d scorchNormal = null;
-
-		if (shouldScorch)
-		{
-			scorchPos = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-			scorchNormal = new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
-		}
-
-		var finalScorchPos = scorchPos;
-		var finalScorchNormal = scorchNormal;
-		client.execute(() -> {
-			if (distance > 1e5 || distance < 2)
-				return;
-
-			var sqrtDistance = Math.sqrt(distance);
-			for (var d = 2; d < sqrtDistance; d++)
-			{
-				var vec = start.add(fromDir.multiply(d));
-
-				var dx = 0.01 * client.world.random.nextGaussian();
-				var dy = 0.01 * client.world.random.nextGaussian();
-				var dz = 0.01 * client.world.random.nextGaussian();
-
-				client.world.addParticle(SwgParticles.SLUG_TRAIL, vec.x, vec.y, vec.z, dx, dy, dz);
-			}
-
-			if (shouldScorch)
-				createScorchParticles(client, finalScorchPos, fromDir, finalScorchNormal, true);
-		});
-	}
-
-	public static void fireSlug(World world, PlayerEntity player, Vec3d fromDir, float range, Function<Double, Double> damage, boolean ignoreWater)
-	{
-		var start = player.getEyePos();
-
-		var hit = EntityUtil.raycastEntities(getTargetedEntityClass(), start, fromDir, range, player, new Entity[] { player });
-		var blockHit = EntityUtil.raycastBlocks(start, fromDir, range, player, RaycastContext.ShapeType.VISUAL, ignoreWater ? RaycastContext.FluidHandling.NONE : RaycastContext.FluidHandling.ANY);
-
-		var entityDistance = hit == null ? Double.MAX_VALUE : hit.hit().squaredDistanceTo(player.getPos());
-		var blockDistance = blockHit.getType() == HitResult.Type.MISS ? Double.MAX_VALUE : blockHit.squaredDistanceTo(player);
-		BlockPos end;
-
-		if (hit != null && entityDistance < blockDistance)
-		{
-			hit.entity().damage(getSlugDamageSource(player), (float)(double)damage.apply(entityDistance));
-			end = new BlockPos(hit.hit());
-		}
-		else if (blockHit.getType() == HitResult.Type.BLOCK)
-		{
-			end = new BlockPos(blockHit.getPos());
-			// TODO: smoke puff, blaster burn mark, etc server-side stuff
-		}
-		else
-			end = player.getBlockPos();
-
-		var distance = Math.min(entityDistance, blockDistance);
-
-		if (hit == null && blockHit.getType() == HitResult.Type.MISS)
-			distance = range;
-
-		var passedData = WorldEvent.createBuffer(WorldEvent.SLUG_FIRED);
-		PacketByteBufHelper.writeVec3d(passedData, start);
-		PacketByteBufHelper.writeVec3d(passedData, fromDir);
-		passedData.writeDouble(distance);
-		passedData.writeBoolean(blockHit.getType() == HitResult.Type.BLOCK);
-
-		if (blockHit.getType() == HitResult.Type.BLOCK)
-		{
-			var normal = new Vec3d(blockHit.getSide().getUnitVector());
-
-			var pos = blockHit.getPos();
-
-			PacketByteBufHelper.writeVec3d(passedData, pos);
-			PacketByteBufHelper.writeVec3d(passedData, normal);
-		}
-
-		for (var trackingPlayer : PlayerLookup.tracking((ServerWorld)world, end))
-			ServerPlayNetworking.send(trackingPlayer, SwgPackets.S2C.WorldEvent, passedData);
 	}
 
 	private static Class<? extends Entity> getTargetedEntityClass()

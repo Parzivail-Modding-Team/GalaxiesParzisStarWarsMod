@@ -17,7 +17,7 @@ public class EnergyRenderer
 	public static final RenderLayer LAYER_ENERGY = RenderLayer.of("pswg:energy", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().program(RenderPhase.LIGHTNING_PROGRAM).transparency(RenderPhase.TRANSLUCENT_TRANSPARENCY).layering(RenderPhase.VIEW_OFFSET_Z_LAYERING).build(true));
 	private static final RenderLayer LAYER_ENERGY_ADDITIVE = RenderLayer.of("pswg:energy_add", VertexFormats.POSITION_COLOR, VertexFormat.DrawMode.QUADS, 256, false, true, RenderLayer.MultiPhaseParameters.builder().program(RenderPhase.LIGHTNING_PROGRAM).transparency(RenderPhase.LIGHTNING_TRANSPARENCY).layering(RenderPhase.VIEW_OFFSET_Z_LAYERING).build(true));
 
-	public static void renderDarksaber(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient, float glowHue, float glowSat, float glowVal)
+	public static void renderDarksaber(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient, int glowHsv)
 	{
 		VertexConsumer vc;
 
@@ -31,10 +31,10 @@ public class EnergyRenderer
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderDarksaberGlow(totalLength, glowHue, glowSat, glowVal);
+		renderDarksaberGlow(totalLength, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv));
 	}
 
-	public static void renderBrick(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient, float glowHue, float glowSat, float glowVal)
+	public static void renderBrick(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float baseLength, float lengthCoefficient, int glowHsv)
 	{
 		VertexConsumer vc;
 
@@ -51,7 +51,7 @@ public class EnergyRenderer
 
 		var thickness = 0.018f;
 
-		var color = ColorUtil.hsvToRgbInt(glowHue, glowSat, glowVal);
+		var color = ColorUtil.hsvToRgbInt(ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv));
 		VertexConsumerBuffer.Instance.setColor(color, 128);
 
 		// glow layers
@@ -76,7 +76,7 @@ public class EnergyRenderer
 		RenderShapes.invertCull(false);
 	}
 
-	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, boolean cap, float glowHue, float glowSat, float glowVal)
+	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, float radiusCoefficient, boolean cap, int glowHsv)
 	{
 		VertexConsumer vc;
 
@@ -93,7 +93,7 @@ public class EnergyRenderer
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
 		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
-		renderGlow(totalLength, glowHue, glowSat, glowVal, unstable, cap);
+		renderGlow(totalLength, radiusCoefficient, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv), unstable, cap);
 	}
 
 	public static void renderStunEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, float size, Vec3d normal, float glowHue)
@@ -174,18 +174,18 @@ public class EnergyRenderer
 		return (float)MathHelper.clamp(-0.06 * Math.exp(-0.011 * Math.pow(x - 6, 2)) + h, 0, 1);
 	}
 
-	public static void renderGlow(float bladeLength, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
+	public static void renderGlow(float bladeLength, float radiusCoefficient, float glowHue, float glowSat, float glowVal, boolean unstable, boolean cap)
 	{
 		if (bladeLength == 0)
 			return;
 
-		var thicknessBottom = 0.018f;
-		var thicknessTop = cap ? 0.012f : thicknessBottom;
+		var thicknessBottom = radiusCoefficient * 0.018f;
+		var thicknessTop = radiusCoefficient * (cap ? 0.012f : thicknessBottom);
 
 		var mL = 0;
 		var xL = 14;
 
-		var deltaThickness = 0.0028f;
+		var deltaThickness = radiusCoefficient * 0.0028f;
 
 		var minOutputLayer = mL * thicknessBottom / deltaThickness;
 

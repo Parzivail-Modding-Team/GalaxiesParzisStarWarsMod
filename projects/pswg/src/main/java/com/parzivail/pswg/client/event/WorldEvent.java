@@ -9,8 +9,8 @@ import java.util.HashMap;
 
 public enum WorldEvent
 {
-	SLUG_FIRED((byte)0),
-	BLASTER_BOLT_HIT((byte)1);
+	BLASTER_BOLT_HIT((byte)0),
+	;
 
 	public static final HashMap<Byte, WorldEvent> ID_LOOKUP = new HashMap<>();
 	public static final SingleConsumerEventBus<WorldEvent, ClientPlayNetworking.PlayChannelHandler> EVENT_BUS = new SingleConsumerEventBus<>();
