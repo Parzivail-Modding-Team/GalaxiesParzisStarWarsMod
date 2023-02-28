@@ -53,4 +53,7 @@ dependencies {
 
 	// Iris
 	//	"modImplementation"("maven.modrinth:iris:${iris_version}")
+
+	// IMGUI
+	"modImplementation"("io.github.spair:imgui-java-binding:1.86.6")
 }
