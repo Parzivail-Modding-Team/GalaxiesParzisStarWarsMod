@@ -89,7 +89,7 @@ public class CameraHelper
 			return;
 		}
 
-		if (minecraft.getCameraEntity() instanceof MutableCameraEntity || minecraft.getCameraEntity() instanceof ShipEntity)
+		if ((minecraft.getCameraEntity() instanceof MutableCameraEntity mce && !mce.shouldForce()) || minecraft.getCameraEntity() instanceof ShipEntity)
 			minecraft.setCameraEntity(player);
 	}
 

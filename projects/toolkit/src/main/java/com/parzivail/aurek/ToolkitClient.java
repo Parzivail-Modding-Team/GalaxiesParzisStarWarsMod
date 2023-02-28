@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.parzivail.aurek.editor.BlasterEditor;
 import com.parzivail.aurek.imgui.ToolkitHomeScreen;
 import com.parzivail.aurek.ui.DirectItemEditorImguiScreen;
+import com.parzivail.aurek.ui.GlobalControlsImguiScreen;
 import com.parzivail.aurek.ui.NemiCompilerScreen;
 import com.parzivail.aurek.ui.ToolkitWorldgenScreen;
 import com.parzivail.aurek.util.LangUtil;
@@ -60,7 +61,8 @@ public class ToolkitClient implements PswgClientAddon
 	public static final String MODID = "aurek";
 	public static final Lumberjack LOG = new Lumberjack(MODID);
 
-	public static final KeyBinding KEY_INGAME_UI = new KeyBinding("key.aurek.ingame_ui", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F8, "key.category.aurek");
+	public static final KeyBinding KEY_OPEN_CONTEXT_CONTROLS = new KeyBinding("key.aurek.context_controls", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F8, "key.category.aurek");
+	public static final KeyBinding KEY_OPEN_GLOBAL_CONTROLS = new KeyBinding("key.aurek.global_controls", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F9, "key.category.aurek");
 
 	public static final String I18N_TOOLKIT = Resources.screen("toolkit");
 	public static final Identifier TEX_TOOLKIT = id("textures/gui/toolkit_button.png");
@@ -92,14 +94,17 @@ public class ToolkitClient implements PswgClientAddon
 	@Override
 	public void onPswgClientReady()
 	{
-		KeyBindingHelper.registerKeyBinding(KEY_INGAME_UI);
+		KeyBindingHelper.registerKeyBinding(KEY_OPEN_CONTEXT_CONTROLS);
 
 		ClientTickEvents.START_CLIENT_TICK.register(client -> {
 			if (client.player == null)
 				return;
 
-			if (KEY_INGAME_UI.wasPressed())
+			if (KEY_OPEN_CONTEXT_CONTROLS.wasPressed())
 				client.setScreen(new DirectItemEditorImguiScreen());
+
+			if (KEY_OPEN_GLOBAL_CONTROLS.wasPressed())
+				client.setScreen(new GlobalControlsImguiScreen());
 		});
 
 		BlasterTransformer.register(BlasterEditor.TRANSFORMER);
