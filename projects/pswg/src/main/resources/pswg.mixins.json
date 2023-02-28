@@ -32,7 +32,6 @@
 		"EntityRenderDispatcherAccessor",
 		"EntityRenderDispatcherMixin",
 		"EntityRenderersMixin",
-		"GameRendererAccessor",
 		"GameRendererMixin",
 		"HeldItemRendererMixin",
 		"InGameHudMixin",
