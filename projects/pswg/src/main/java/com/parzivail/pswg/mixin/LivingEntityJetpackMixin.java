@@ -24,7 +24,7 @@ public abstract class LivingEntityJetpackMixin extends Entity implements IJetpac
 	@Shadow
 	public abstract boolean isFallFlying();
 
-	@Shadow public abstract void updateLimbs(LivingEntity entity, boolean flutter);
+	@Shadow public abstract void updateLimbs(boolean flutter);
 
 	@Unique
 	public short jetpackControls;
@@ -70,7 +70,7 @@ public abstract class LivingEntityJetpackMixin extends Entity implements IJetpac
 		}
 	}
 
-	@Inject(method = "Lnet/minecraft/entity/LivingEntity;travel(Lnet/minecraft/util/math/Vec3d;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getRotationVector()Lnet/minecraft/util/math/Vec3d;", shift = At.Shift.AFTER), cancellable = true)
+	@Inject(method = "travel(Lnet/minecraft/util/math/Vec3d;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;getRotationVector()Lnet/minecraft/util/math/Vec3d;", shift = At.Shift.AFTER), cancellable = true)
 	public void travel(Vec3d movementInput, CallbackInfo ci)
 	{
 		var jetpack = JetpackItem.getEquippedJetpack((LivingEntity)(Object)this);
@@ -78,7 +78,7 @@ public abstract class LivingEntityJetpackMixin extends Entity implements IJetpac
 		{
 			if (JetpackItem.travel((LivingEntity)(Object)this, jetpack))
 			{
-				this.updateLimbs((LivingEntity)(Object)this, this instanceof Flutterer);
+				this.updateLimbs(this instanceof Flutterer);
 				ci.cancel();
 			}
 		}

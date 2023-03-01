@@ -110,11 +110,6 @@ allprojects {
 
 		// Fabric API
 		modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
-		constraints {
-			// TODO: remove once REI gets their stuff together
-			modCompileClasspath("dev.architectury:architectury-fabric:7.0.52")
-			modRuntimeOnly("dev.architectury:architectury-fabric:7.0.52")
-		}
 	}
 
 	tasks.processResources {

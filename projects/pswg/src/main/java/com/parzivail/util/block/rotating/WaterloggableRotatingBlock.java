@@ -22,7 +22,7 @@ public class WaterloggableRotatingBlock extends WaterloggableBlock
 	@Override
 	public BlockState getPlacementState(ItemPlacementContext ctx)
 	{
-		return super.getPlacementState(ctx).with(FACING, ctx.getPlayerFacing().getOpposite());
+		return super.getPlacementState(ctx).with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
 	}
 
 	public BlockState getPlacementStateBlockBased(ItemPlacementContext ctx)

@@ -112,7 +112,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 		if (outputStack.isEmpty())
 			return true;
 
-		var resultStack = recipe.getOutput();
+		var resultStack = recipe.getOutput(world.getRegistryManager());
 
 		if (resultStack.getCount() + outputStack.getCount() > outputStack.getMaxCount())
 			return false;
@@ -143,7 +143,7 @@ public class MoistureVaporatorBlockEntity extends InventoryBlockEntity implement
 			else if (t.collectionTimer <= 0)
 			{
 				var outputStack = t.getStack(1).copy();
-				var resultStack = recipe.getOutput();
+				var resultStack = recipe.getOutput(world.getRegistryManager());
 
 				stack.decrement(1);
 				t.setStack(0, stack.copy());

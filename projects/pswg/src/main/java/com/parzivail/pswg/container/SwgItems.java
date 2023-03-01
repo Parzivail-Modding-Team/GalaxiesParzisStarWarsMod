@@ -20,7 +20,6 @@ import com.parzivail.util.item.*;
 import com.parzivail.util.registry.*;
 import dev.emi.trinkets.api.TrinketItem;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.fluid.Fluids;
@@ -68,31 +67,31 @@ public class SwgItems
 		public static final TrinketItem JumptrooperJetpack = new JetpackItem(new Item.Settings().maxCount(1), new JetpackItem.Stats());
 		@RegistryName("imperial_pilot_helmet")
 		@TarkinItem
-		public static final ArmorItem ImperialPilotHelmet = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1));
+		public static final ArmorItem ImperialPilotHelmet = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("imperial_pilot_kit")
 		@TarkinItem
-		public static final ArmorItem ImperialPilotKit = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.CHEST, new Item.Settings().maxCount(1));
+		public static final ArmorItem ImperialPilotKit = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.CHESTPLATE, new Item.Settings().maxCount(1));
 		@RegistryName("rebel_pilot_helmet")
 		@TarkinItem
-		public static final ArmorItem RebelPilot = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1));
+		public static final ArmorItem RebelPilot = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("rebel_forest_helmet")
 		@TarkinItem
-		public static final ArmorItem RebelForest = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1));
+		public static final ArmorItem RebelForest = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("rebel_tropical_helmet")
 		@TarkinItem
-		public static final ArmorItem RebelTropical = new ArmorItem(ArmorMaterials.DIAMOND, EquipmentSlot.HEAD, new Item.Settings().maxCount(1));
+		public static final ArmorItem RebelTropical = new ArmorItem(ArmorMaterials.DIAMOND, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("black_imperial_officer_hat")
 		@TarkinItem
-		public static final ArmorItem BlackImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1));
+		public static final ArmorItem BlackImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("gray_imperial_officer_hat")
 		@TarkinItem
-		public static final ArmorItem GrayImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1));
+		public static final ArmorItem GrayImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("light_gray_imperial_officer_hat")
 		@TarkinItem
-		public static final ArmorItem LightGrayImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1));
+		public static final ArmorItem LightGrayImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 		@RegistryName("khaki_imperial_officer_hat")
 		@TarkinItem
-		public static final ArmorItem KhakiImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, EquipmentSlot.HEAD, new Item.Settings().maxCount(1));
+		public static final ArmorItem KhakiImperialOfficer = new ArmorItem(ArmorMaterials.LEATHER, ArmorItem.Type.HELMET, new Item.Settings().maxCount(1));
 	}
 
 	@RegistryOrder(2)

@@ -28,9 +28,9 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -170,7 +170,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 		if (vehicle instanceof ShipEntity ship)
 		{
-			if (ship.getPrimaryPassenger() == player)
+			if (ship.getControllingPassenger() == player)
 				return ship;
 		}
 
@@ -254,7 +254,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 	public boolean isPilot(PlayerEntity player)
 	{
-		return getPrimaryPassenger() == player;
+		return getControllingPassenger() == player;
 	}
 
 	public boolean useMouseInput(PlayerEntity player)
@@ -294,7 +294,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 		var throttle = getThrottle();
 
-		var pilot = getPrimaryPassenger();
+		var pilot = getControllingPassenger();
 		if (pilot instanceof PlayerEntity)
 		{
 			var controls = getControls();
@@ -386,10 +386,11 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 	@Override
 	@Nullable
-	public Entity getPrimaryPassenger()
+	public LivingEntity getControllingPassenger()
 	{
-		var list = this.getPassengerList();
-		return list.isEmpty() ? null : list.get(0);
+		if (getFirstPassenger() instanceof LivingEntity livingEntity)
+			return livingEntity;
+		return null;
 	}
 
 	//	public Rotation getRotation(float t)
@@ -405,7 +406,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 		var anim = dataTracker.get(data);
 		anim = TrackedAnimationValue.tick(anim);
 
-		if (getPrimaryPassenger() instanceof PlayerEntity)
+		if (getControllingPassenger() instanceof PlayerEntity)
 		{
 			if (keyInput && TrackedAnimationValue.isStopped(anim))
 				anim = TrackedAnimationValue.startToggled(anim, animLength);

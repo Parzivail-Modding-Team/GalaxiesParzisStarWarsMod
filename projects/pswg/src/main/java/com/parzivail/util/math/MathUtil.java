@@ -66,6 +66,10 @@ public class MathUtil
 		return new Vec3d(Math.floor(v.x), Math.floor(v.y), Math.floor(v.z));
 	}
 
+	public static Vec3i floorInt(Vec3d v) {
+		return new Vec3i(MathHelper.floor(v.x), MathHelper.floor(v.y), MathHelper.floor(v.z));
+	}
+
 	public static Vec3d lerp(float tickDelta, Vec3d a, Vec3d b)
 	{
 		return new Vec3d(MathHelper.lerp(tickDelta, a.x, b.x), MathHelper.lerp(tickDelta, a.y, b.y), MathHelper.lerp(tickDelta, a.z, b.z));

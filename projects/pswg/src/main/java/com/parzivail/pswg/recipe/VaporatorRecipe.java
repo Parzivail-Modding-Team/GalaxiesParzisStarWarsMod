@@ -16,6 +16,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
@@ -35,9 +36,9 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 	}
 
 	@Override
-	public ItemStack craft(Inventory inv)
+	public ItemStack craft(Inventory inv, DynamicRegistryManager registryManager)
 	{
-		return this.getOutput().copy();
+		return this.getOutput(registryManager).copy();
 	}
 
 	@Override
@@ -48,7 +49,7 @@ public record VaporatorRecipe(Identifier id, Ingredient base, int duration,
 	}
 
 	@Override
-	public ItemStack getOutput()
+	public ItemStack getOutput(DynamicRegistryManager registryManager)
 	{
 		return this.result;
 	}

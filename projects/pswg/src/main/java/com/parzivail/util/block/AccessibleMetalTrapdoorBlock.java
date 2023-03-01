@@ -1,11 +1,11 @@
 package com.parzivail.util.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSetType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.TrapdoorBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -16,7 +16,7 @@ public class AccessibleMetalTrapdoorBlock extends TrapdoorBlock
 {
 	public AccessibleMetalTrapdoorBlock(Settings settings)
 	{
-		super(settings, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+		super(settings, BlockSetType.IRON);
 	}
 
 	@Override

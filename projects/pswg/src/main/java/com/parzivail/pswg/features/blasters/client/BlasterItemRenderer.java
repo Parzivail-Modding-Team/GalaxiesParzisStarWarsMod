@@ -25,7 +25,7 @@ import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -154,7 +154,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 	}
 
 	@Override
-	public void render(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
+	public void render(ItemStack stack, ModelTransformationMode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model)
 	{
 		var bdId = BlasterItem.getBlasterModel(stack);
 		if (bdId == null)
@@ -194,14 +194,14 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		for (var t : BlasterTransformer.REGISTRY)
 			t.preTransform(matrices, m, bt, bd, attachmentSet, renderMode, light, d, opacity);
 
-		if (renderMode == ModelTransformation.Mode.GROUND)
+		if (renderMode == ModelTransformationMode.GROUND)
 			matrices.translate(-0.4f, 0.9f, -0.4f);
 
-		if (renderMode == ModelTransformation.Mode.GUI || renderMode == ModelTransformation.Mode.FIXED)
+		if (renderMode == ModelTransformationMode.GUI || renderMode == ModelTransformationMode.FIXED)
 		{
 			matrices.multiply(new Quaternionf().rotationY((float)(Math.PI / 2)));
 
-			if (renderMode == ModelTransformation.Mode.FIXED)
+			if (renderMode == ModelTransformationMode.FIXED)
 				MathUtil.scalePos(matrices, 2f, 2f, 2f);
 			else
 				matrices.multiply(new Quaternionf().rotationY((float)Math.PI));
@@ -212,7 +212,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var yi = m.bounds().getYLength() * Math.abs(Math.sin(angle)) + m.bounds().getZLength() * Math.abs(Math.cos(angle));
 			var zi = m.bounds().getYLength() * Math.abs(Math.cos(angle)) + m.bounds().getZLength() * Math.abs(Math.sin(angle));
 
-			if (renderMode != ModelTransformation.Mode.FIXED)
+			if (renderMode != ModelTransformationMode.FIXED)
 			{
 				var f = (float)(5 / Math.max(yi, zi));
 				MathUtil.scalePos(matrices, f, f, f);
@@ -321,7 +321,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		for (var t : BlasterTransformer.REGISTRY)
 			t.postTransform(matrices, m, bt, bd, attachmentSet, renderMode, light, d, opacity);
 
-		if (renderMode != ModelTransformation.Mode.GUI && renderMode != ModelTransformation.Mode.FIXED && renderMode != ModelTransformation.Mode.GROUND)
+		if (renderMode != ModelTransformationMode.GUI && renderMode != ModelTransformationMode.FIXED && renderMode != ModelTransformationMode.GROUND)
 		{
 			var muzzleFlashSocket = "muzzle_flash";
 
@@ -396,7 +396,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		return new AttachmentSuperset(nameSet, visSet);
 	}
 
-	private void renderMuzzleFlash(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, BlasterTag bt, BlasterDescriptor bd, float shotTime, float opacity, int light, int overlay, float tickDelta)
+	private void renderMuzzleFlash(ModelTransformationMode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, BlasterTag bt, BlasterDescriptor bd, float shotTime, float opacity, int light, int overlay, float tickDelta)
 	{
 		shotTime *= 1.2f;
 

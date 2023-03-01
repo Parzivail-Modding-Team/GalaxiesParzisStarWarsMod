@@ -4,6 +4,7 @@ import com.parzivail.util.entity.IFlyingVehicle;
 import com.parzivail.util.entity.collision.ComplexCollisionManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -24,10 +25,12 @@ public abstract class EntityMixin
 	@Nullable
 	public abstract Entity getVehicle();
 
+	@Shadow public abstract boolean damage(DamageSource source, float amount);
+
 	@Inject(method = "isInvulnerableTo", at = @At("HEAD"), cancellable = true)
 	private void noShipFallDamage(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir)
 	{
-		if (damageSource == DamageSource.FALL && getVehicle() instanceof IFlyingVehicle)
+		if (damageSource.isIn(DamageTypeTags.IS_FALL) && getVehicle() instanceof IFlyingVehicle)
 			cir.setReturnValue(true);
 	}
 

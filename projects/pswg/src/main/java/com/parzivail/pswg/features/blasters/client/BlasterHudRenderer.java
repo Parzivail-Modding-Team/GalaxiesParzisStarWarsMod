@@ -212,7 +212,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		bufferBuilder.vertex(k, l, -90.0D).color(255, 255, 255, opacity).texture(0.0F, 0.0F).next();
 		tessellator.draw();
 		RenderSystem.setShader(GameRenderer::getPositionColorProgram);
-		RenderSystem.disableTexture();
+		// TODO: review possibility of using fill()
 		bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
 		bufferBuilder.vertex(0.0D, scaledHeight, -90.0D).color(0, 0, 0, opacity).next();
 		bufferBuilder.vertex(scaledWidth, scaledHeight, -90.0D).color(0, 0, 0, opacity).next();
@@ -231,7 +231,6 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		bufferBuilder.vertex(scaledWidth, l, -90.0D).color(0, 0, 0, opacity).next();
 		bufferBuilder.vertex(m, l, -90.0D).color(0, 0, 0, opacity).next();
 		tessellator.draw();
-		RenderSystem.enableTexture();
 		RenderSystem.depthMask(true);
 		RenderSystem.enableDepthTest();
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

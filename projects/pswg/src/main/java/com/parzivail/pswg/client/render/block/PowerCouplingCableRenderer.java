@@ -79,11 +79,11 @@ public class PowerCouplingCableRenderer implements BlockEntityRenderer<PowerCoup
 		var size = 0.04f;
 		var vertexConsumer = provider.getBuffer(RenderLayer.getLeash());
 		var matrix4f = matrices.peek().getPositionMatrix();
-		var n = MathHelper.fastInverseSqrt(dX * dX + dZ * dZ) * size / 2.0F;
+		var n = MathHelper.inverseSqrt(dX * dX + dZ * dZ) * size / 2.0F;
 		var o = dZ * n;
 		var p = dX * n;
-		var srcPos = new BlockPos(source);
-		var dstPos = new BlockPos(dest);
+		var srcPos = new BlockPos(MathUtil.floorInt(source));
+		var dstPos = new BlockPos(MathUtil.floorInt(dest));
 		int srcBlockLight = world.getLightLevel(LightType.BLOCK, srcPos);
 		int dstBlockLight = world.getLightLevel(LightType.BLOCK, dstPos);
 		int srcSkyLight = world.getLightLevel(LightType.SKY, srcPos);

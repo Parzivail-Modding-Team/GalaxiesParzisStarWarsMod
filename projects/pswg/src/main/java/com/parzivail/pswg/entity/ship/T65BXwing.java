@@ -108,7 +108,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 	@Override
 	public void acceptFireInput()
 	{
-		var passenger = getPrimaryPassenger();
+		var passenger = getControllingPassenger();
 		if (!(passenger instanceof PlayerEntity player))
 			return;
 

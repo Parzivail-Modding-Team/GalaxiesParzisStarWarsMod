@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
+import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.pswg.features.blasters.BlasterItem;
-import com.parzivail.util.entity.PProjectileEntityDamageSource;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,7 +19,7 @@ public class LivingEntityMixin
 	@Inject(method = "damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/damage/DamageSource;getAttacker()Lnet/minecraft/entity/Entity;"))
 	public void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir)
 	{
-		if (source instanceof PProjectileEntityDamageSource && ((PProjectileEntityDamageSource)source).ignoresInvulnerableFrames())
+		if (source.isIn(SwgTags.DamageType.IS_IGNORES_INVULNERABLE_FRAMES))
 			lastDamageTaken = 0;
 	}
 

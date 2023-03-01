@@ -15,7 +15,8 @@ public class SwgTags
 		public static final TagKey<net.minecraft.block.Block> SLIDING_DOORS = register("sliding_doors");
 		public static final TagKey<net.minecraft.block.Block> TATOOINE_LOG = register("tatooine_log");
 
-		private static TagKey<net.minecraft.block.Block> register(String id) {
+		private static TagKey<net.minecraft.block.Block> register(String id)
+		{
 			return TagKey.of(RegistryKeys.BLOCK, Resources.id(id));
 		}
 	}
@@ -28,8 +29,19 @@ public class SwgTags
 		public static final TagKey<net.minecraft.item.Item> SEQUOIA_LOG = register("sequoia_log");
 		public static final TagKey<net.minecraft.item.Item> TATOOINE_LOG = register("tatooine_log");
 
-		private static TagKey<net.minecraft.item.Item> register(String id) {
+		private static TagKey<net.minecraft.item.Item> register(String id)
+		{
 			return TagKey.of(RegistryKeys.ITEM, Resources.id(id));
+		}
+	}
+
+	public static class DamageType
+	{
+		public static final TagKey<net.minecraft.entity.damage.DamageType> IS_IGNORES_INVULNERABLE_FRAMES = register("is_ignores_invulnerable_frames");
+
+		private static TagKey<net.minecraft.entity.damage.DamageType> register(String id)
+		{
+			return TagKey.of(RegistryKeys.DAMAGE_TYPE, Resources.id(id));
 		}
 	}
 }

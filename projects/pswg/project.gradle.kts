@@ -32,12 +32,11 @@ dependencies {
 	"modImplementation"("com.terraformersmc:modmenu:${modmenu_version}")
 
 	// LambDynamicLights
-	"modImplementation"("dev.lambdaurora:lambdynamiclights:${lambdynamiclights_version}")
+	/*"modImplementation"*/"modCompileOnly"("dev.lambdaurora:lambdynamiclights:${lambdynamiclights_version}")
 
 	// Roughly Enough Items
 	"modCompileOnly"("me.shedaniel:RoughlyEnoughItems-api-fabric:${rei_version}")
 	"modRuntimeOnly"("me.shedaniel:RoughlyEnoughItems-fabric:${rei_version}")
-	"modRuntimeOnly"("dev.architectury:architectury-fabric:7.0.52") // TODO: remove once REI gets their stuff together
 
 	// LibZoomer
 	"modImplementation"("com.parzivail.internal:LibZoomer:${libzoomer_version}")
@@ -49,10 +48,6 @@ dependencies {
 
 	// Gravity Changer
 	"modCompileOnly"("maven.modrinth:gravity-api:${gravity_changer_version}")
-	//include("maven.modrinth:fusions-gravity-api:${gravity_changer_version}")
-
-	// Iris
-	//	"modImplementation"("maven.modrinth:iris:${iris_version}")
 
 	// IMGUI
 	"modImplementation"("io.github.spair:imgui-java-binding:1.86.6")

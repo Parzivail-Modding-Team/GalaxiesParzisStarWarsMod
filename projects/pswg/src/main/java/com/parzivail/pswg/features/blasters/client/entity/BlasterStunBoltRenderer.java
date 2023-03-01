@@ -6,7 +6,7 @@ import com.parzivail.pswg.entity.BlasterBoltEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.joml.Quaternionf;
@@ -49,7 +49,7 @@ public class BlasterStunBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 
 		size = (float)Math.pow(size, 0.75f);
 
-		EnergyRenderer.renderStunEnergy(ModelTransformation.Mode.NONE, matrices, consumerProvider, light, 0xFFFFFF, size, velocity, 0.6f);
+		EnergyRenderer.renderStunEnergy(ModelTransformationMode.NONE, matrices, consumerProvider, light, 0xFFFFFF, size, velocity, 0.6f);
 
 		matrices.pop();
 	}

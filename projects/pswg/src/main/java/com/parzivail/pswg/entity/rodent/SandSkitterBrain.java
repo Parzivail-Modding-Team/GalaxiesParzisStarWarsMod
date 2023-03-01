@@ -32,7 +32,7 @@ public class SandSkitterBrain
 				0,
 				ImmutableList.of(
 						new StayAboveWaterTask(0.8F),
-						new WalkTask(2.5F),
+						new FleeTask(2.5F),
 						new LookAroundTask(45, 90),
 						new WanderAroundTask(),
 						new TemptationCooldownTask(MemoryModuleType.LIKED_NOTEBLOCK_COOLDOWN_TICKS),

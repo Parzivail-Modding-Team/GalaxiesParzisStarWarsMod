@@ -15,7 +15,7 @@ import imgui.flag.ImGuiDataType;
 import imgui.internal.ImGui;
 import imgui.type.*;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
@@ -42,13 +42,13 @@ public class BlasterEditor implements IDirectItemEditor
 		public float handScale = 1;
 
 		@Override
-		public void transformHand(MatrixStack matrices, P3dModel model, BlasterTag bt, BlasterDescriptor bd, BlasterItemRenderer.AttachmentSuperset attachments, ModelTransformation.Mode renderMode, int light, float tickDelta, float opacity)
+		public void transformHand(MatrixStack matrices, P3dModel model, BlasterTag bt, BlasterDescriptor bd, BlasterItemRenderer.AttachmentSuperset attachments, ModelTransformationMode renderMode, int light, float tickDelta, float opacity)
 		{
 			MathUtil.scalePos(matrices, handScale, handScale, handScale);
 		}
 
 		@Override
-		public void preTransform(MatrixStack matrices, P3dModel model, BlasterTag bt, BlasterDescriptor bd, BlasterItemRenderer.AttachmentSuperset attachmentSet, ModelTransformation.Mode mode, int light, float tickDelta, float opacity)
+		public void preTransform(MatrixStack matrices, P3dModel model, BlasterTag bt, BlasterDescriptor bd, BlasterItemRenderer.AttachmentSuperset attachmentSet, ModelTransformationMode mode, int light, float tickDelta, float opacity)
 		{
 			matrices.translate(x, y, z);
 			matrices.multiply(new Quaternionf().rotationYXZ(
@@ -60,7 +60,7 @@ public class BlasterEditor implements IDirectItemEditor
 		}
 
 		@Override
-		public void postTransform(MatrixStack matrices, P3dModel model, BlasterTag bt, BlasterDescriptor bd, BlasterItemRenderer.AttachmentSuperset attachments, ModelTransformation.Mode mode, int light, float tickDelta, float opacity)
+		public void postTransform(MatrixStack matrices, P3dModel model, BlasterTag bt, BlasterDescriptor bd, BlasterItemRenderer.AttachmentSuperset attachments, ModelTransformationMode mode, int light, float tickDelta, float opacity)
 		{
 
 		}
@@ -87,7 +87,7 @@ public class BlasterEditor implements IDirectItemEditor
 				originalPresets.put(entry.getKey(), CLONER.shallowClone(entry.getValue()));
 		}
 
-		if (!(stack.getItem() instanceof BlasterItem blaster))
+		if (!(stack.getItem() instanceof BlasterItem))
 			return;
 
 		if (ImGui.beginTabBar("scopes"))

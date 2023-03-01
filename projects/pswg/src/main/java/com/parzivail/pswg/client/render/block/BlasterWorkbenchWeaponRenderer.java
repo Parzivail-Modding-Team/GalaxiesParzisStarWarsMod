@@ -11,7 +11,7 @@ import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class BlasterWorkbenchWeaponRenderer implements BlockEntityRenderer<BlasterWorkbenchBlockEntity>
@@ -54,7 +54,7 @@ public class BlasterWorkbenchWeaponRenderer implements BlockEntityRenderer<Blast
 		matrices.multiply(QuatUtil.ROT_Y_POS10);
 		matrices.multiply(QuatUtil.ROT_Z_POS80);
 
-		BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformation.Mode.NONE, false, matrices, vertexConsumers, light, overlay, null);
+		BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformationMode.NONE, false, matrices, vertexConsumers, light, overlay, null);
 
 		matrices.pop();
 	}

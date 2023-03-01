@@ -28,6 +28,7 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -1225,7 +1226,7 @@ public class PswgTarkin
 			lang.entry(BlasterItem.getTranslationKeyForModel(blasterId)).build(assets);
 
 			for (var attachment : blasterDescriptor.attachmentMap.values())
-				lang.entry(BlasterItem.getAttachmentTranslation(blasterId, attachment).getKey()).build(assets);
+				lang.entry(((TranslatableTextContent)BlasterItem.getAttachmentTranslation(blasterId, attachment).getContent()).getKey()).build(assets);
 		}
 
 		for (var value : BlasterArchetype.values())

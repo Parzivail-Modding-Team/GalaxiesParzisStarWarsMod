@@ -254,7 +254,7 @@ public class Sliding1x2DoorBlock extends WaterloggableRotatingBlockWithEntity
 			return null;
 
 		boolean bl = world.isReceivingRedstonePower(blockPos) || world.isReceivingRedstonePower(blockPos.up());
-		return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(HALF, DoubleBlockHalf.LOWER).with(POWERED, bl);
+		return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing()).with(HALF, DoubleBlockHalf.LOWER).with(POWERED, bl);
 	}
 
 	@Override

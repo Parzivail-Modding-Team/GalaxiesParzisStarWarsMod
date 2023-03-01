@@ -66,7 +66,7 @@ public class SparkParticle extends CrossPointingParticle
 				this.setAlpha(1.0F - ((float)this.age - (float)(this.maxAge / 2)) / (float)this.maxAge);
 			}
 
-			if (this.world.getBlockState(new BlockPos(this.x, this.y, this.z)).isAir())
+			if (this.world.getBlockState(new BlockPos(MathHelper.floor(this.x), MathHelper.floor(this.y), MathHelper.floor(this.z))).isAir())
 			{
 				this.velocityY -= 0.0245;
 			}
