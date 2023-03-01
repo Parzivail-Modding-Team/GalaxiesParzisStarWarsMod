@@ -8,9 +8,9 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.joml.Quaternionf;
-import org.joml.Vector3d;
 
 public class MutableCameraEntity extends Entity
 {
@@ -50,7 +50,7 @@ public class MutableCameraEntity extends Entity
 		return forceEnable;
 	}
 
-	public MutableCameraEntity with(World world, Vector3d position, Quaternionf rotation, boolean forceEnable)
+	public MutableCameraEntity with(World world, Vec3d position, Quaternionf rotation, boolean forceEnable)
 	{
 		this.world = world;
 
@@ -58,7 +58,7 @@ public class MutableCameraEntity extends Entity
 		this.prevX = pos.x;
 		this.prevY = pos.y;
 		this.prevZ = pos.z;
-		setPosition(position.x, position.y, position.z);
+		setPosition(position);
 
 		this.prevPitch = this.getPitch();
 		this.prevYaw = this.getYaw();

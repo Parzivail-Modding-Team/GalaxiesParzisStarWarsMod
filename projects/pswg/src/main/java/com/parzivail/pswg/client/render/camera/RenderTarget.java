@@ -9,13 +9,15 @@ import net.minecraft.client.option.GraphicsMode;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import org.joml.Quaternionf;
 
 public class RenderTarget
 {
 	public static final SimpleFramebuffer FRAMEBUFFER = new SimpleFramebuffer(512, 512, true, MinecraftClient.IS_SYSTEM_MAC);
 	public static final Camera CAMERA = new Camera();
+	public static final MutableCameraEntity CAMERA_ENTITY = new MutableCameraEntity();
 
 	public static void capture(float tickDelta, long startTime, boolean tick)
 	{
@@ -23,6 +25,9 @@ public class RenderTarget
 			return;
 
 		var client = MinecraftClient.getInstance();
+
+		if (client.player == null || client.player.age < 10)
+			return;
 
 		int windowFboWidth = client.getWindow().getFramebufferWidth();
 		int windowFboHeight = client.getWindow().getFramebufferHeight();
@@ -39,11 +44,13 @@ public class RenderTarget
 
 		RenderSystem.clear(GlConst.GL_DEPTH_BUFFER_BIT | GlConst.GL_COLOR_BUFFER_BIT, MinecraftClient.IS_SYSTEM_MAC);
 
+		CAMERA.update(client.world, CAMERA_ENTITY.with(client.world, new Vec3d(-153, 67, 122), new Quaternionf(), true), false, false, tickDelta);
 		CAMERA.updateEyeHeight();
 
 		var matrices = new MatrixStack();
 
-		matrices.multiply(new Quaternionf().rotationXYZ(12 * MathHelper.RADIANS_PER_DEGREE, 132 * MathHelper.RADIANS_PER_DEGREE, 0));
+		matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(0)); // pitch
+		matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(client.player.age + tickDelta)); // yaw
 
 		var projMat = client.gameRenderer.getBasicProjectionMatrix(90);
 		RenderSystem.setProjectionMatrix(projMat);
