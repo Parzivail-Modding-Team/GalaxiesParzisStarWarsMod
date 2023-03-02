@@ -10,6 +10,7 @@ import com.parzivail.pswg.entity.collision.SweptTriangleVolume;
 import com.parzivail.pswg.entity.rigs.RigT65B;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.entity.EntityUtil;
+import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import com.parzivail.util.math.Transform;
@@ -128,6 +129,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		BlasterUtil.fireBolt(world, player, pDir.normalize(), 100, distance -> (double)50, true, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
 			blasterBoltEntity.setPos(p.x, p.y, p.z);
+			blasterBoltEntity.setColor(ColorUtil.packHsv(0.98f, 1, 1));
 		});
 
 		world.playSound(null, player.getBlockPos(), SwgSounds.Ship.XWINGT65B_FIRE, SoundCategory.PLAYERS, 1, 1 + (float)world.random.nextGaussian() / 10);
