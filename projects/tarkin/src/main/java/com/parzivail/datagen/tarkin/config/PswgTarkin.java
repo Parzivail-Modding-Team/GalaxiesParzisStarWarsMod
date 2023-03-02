@@ -706,8 +706,13 @@ public class PswgTarkin
 		ItemGenerator.tool(SwgItems.Material.BeskarAxe)
 		             .build(assets);
 
-		for (var blasterId : PswgContent.getBlasterPresets().keySet())
-			ItemGenerator.empty(Registries.ITEM.get(SwgItems.getBlasterRegistrationId(blasterId))).build(assets);
+		PswgContent.getBlasterPresets().keySet().stream()
+		           .filter(id -> id.getNamespace().equals(Resources.MODID))
+		           .forEach(id -> ItemGenerator
+				           .empty(Registries.ITEM.get(SwgItems.getBlasterRegistrationId(id)))
+				           .lang(LanguageProvider::empty)
+				           .build(assets)
+		           );
 
 		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
 

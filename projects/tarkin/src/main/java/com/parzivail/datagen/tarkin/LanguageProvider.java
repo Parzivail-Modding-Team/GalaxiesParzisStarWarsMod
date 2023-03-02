@@ -33,6 +33,11 @@ public class LanguageProvider
 		return new LanguageProvider(new Identifier(reg.getNamespace(), OUTPUT_LOCALE), "item." + reg.getNamespace() + "." + reg.getPath(), generateDefaultLang(reg));
 	}
 
+	public static LanguageProvider empty(Item item)
+	{
+		return null;
+	}
+
 	private final Identifier locale;
 	private final String key;
 	private final String defaultValue;
