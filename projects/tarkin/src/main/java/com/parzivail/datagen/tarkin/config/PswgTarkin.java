@@ -715,15 +715,9 @@ public class PswgTarkin
 		ItemGenerator.armor(SwgItems.Armor.Stormtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Purgetrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Sandtrooper, assets);
-		ItemGenerator.basic(SwgItems.Armor.SandtrooperBackpack)
-		             .tag(TAG_TRINKETS_CHEST_BACK)
-		             .build(assets);
 		ItemGenerator.armor(SwgItems.Armor.Deathtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Scouttrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Jumptrooper, assets);
-		ItemGenerator.basic(SwgItems.Armor.JumptrooperJetpack)
-		             .tag(TAG_TRINKETS_CHEST_BACK)
-		             .build(assets);
 
 		for (var entry : SwgItems.FoodPrep.Cups.entrySet())
 			ItemGenerator.basic(entry.getValue()).build(assets);

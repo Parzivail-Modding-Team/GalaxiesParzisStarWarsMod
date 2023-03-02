@@ -14,6 +14,7 @@ import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
 import com.parzivail.pswg.item.material.TitaniumToolMaterial;
 import com.parzivail.tarkin.api.TarkinItem;
+import com.parzivail.tarkin.api.TarkinItemTagPreset;
 import com.parzivail.tarkin.api.TarkinModelFilePreset;
 import com.parzivail.util.item.*;
 import com.parzivail.util.registry.*;
@@ -54,6 +55,7 @@ public class SwgItems
 		@RegistryName("sandtrooper")
 		public static final ArmorItems Sandtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("sandtrooper_backpack")
+		@TarkinItem(tags = { TarkinItemTagPreset.TrinketsChestBack })
 		public static final TrinketItem SandtrooperBackpack = new TrinketItem(new Item.Settings().maxCount(1));
 		@RegistryName("deathtrooper")
 		public static final ArmorItems Deathtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
@@ -62,6 +64,7 @@ public class SwgItems
 		@RegistryName("jumptrooper")
 		public static final ArmorItems Jumptrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("jumptrooper_jetpack")
+		@TarkinItem(tags = { TarkinItemTagPreset.TrinketsChestBack })
 		public static final TrinketItem JumptrooperJetpack = new JetpackItem(new Item.Settings().maxCount(1), new JetpackItem.Stats());
 		@RegistryName("imperial_pilot_helmet")
 		@TarkinItem

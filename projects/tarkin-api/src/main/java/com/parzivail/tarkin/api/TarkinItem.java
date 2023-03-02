@@ -12,4 +12,6 @@ public @interface TarkinItem
 	TarkinModelFilePreset model() default TarkinModelFilePreset.Item;
 
 	TarkinLangPreset lang() default TarkinLangPreset.Item;
+
+	TarkinItemTagPreset[] tags() default {};
 }

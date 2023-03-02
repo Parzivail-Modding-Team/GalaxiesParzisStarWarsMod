@@ -8,6 +8,8 @@ import com.parzivail.util.Lumberjack;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 import net.minecraft.item.Item;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 import java.lang.annotation.Annotation;
@@ -122,6 +124,8 @@ public class Tarkin
 
 	public static void registerItemFields(Class<?> rootClazz, List<BuiltAsset> assets)
 	{
+		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
+
 		consumeFields(TarkinItem.class, rootClazz, Item.class, (item, a) -> {
 			var gen = new ItemGenerator(item);
 
@@ -129,6 +133,12 @@ public class Tarkin
 			{
 				case Item -> gen.lang(LanguageProvider::item);
 			}
+
+			for (var tag : a.tags())
+				switch (tag)
+				{
+					case TrinketsChestBack -> gen.tag(TAG_TRINKETS_CHEST_BACK);
+				}
 
 			switch (a.model())
 			{
