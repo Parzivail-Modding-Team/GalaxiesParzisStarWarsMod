@@ -2,13 +2,15 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.datagen.tarkin.config.PswgTarkin;
 import com.parzivail.datagen.tarkin.config.TcwTarkin;
-import com.parzivail.tarkin.api.TarkinItem;
-import com.parzivail.tarkin.api.TarkinLang;
+import com.parzivail.tarkin.api.*;
 import com.parzivail.util.Lumberjack;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.minecraft.block.Block;
+import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
@@ -122,23 +124,37 @@ public class Tarkin
 		consumeFields(TarkinLang.class, rootClazz, String.class, (s, a) -> languageBuilder.entry(s).build(assets));
 	}
 
+	private static TagKey<Item> getTagKey(TarkinItemTagPreset preset)
+	{
+		return switch (preset)
+				{
+					case TrinketsChestBack -> TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
+					default -> throw new RuntimeException("Unsupported value " + preset);
+				};
+	}
+
+	private static TagKey<Block> getTagKey(TarkinBlockTagPreset preset)
+	{
+		return switch (preset)
+				{
+					case PickaxeMineable -> BlockTags.PICKAXE_MINEABLE;
+					default -> throw new RuntimeException("Unsupported value " + preset);
+				};
+	}
+
 	public static void registerItemFields(Class<?> rootClazz, List<BuiltAsset> assets)
 	{
-		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
-
 		consumeFields(TarkinItem.class, rootClazz, Item.class, (item, a) -> {
 			var gen = new ItemGenerator(item);
 
 			switch (a.lang())
 			{
 				case Item -> gen.lang(LanguageProvider::item);
+				default -> throw new RuntimeException("Unsupported value " + a.lang());
 			}
 
 			for (var tag : a.tags())
-				switch (tag)
-				{
-					case TrinketsChestBack -> gen.tag(TAG_TRINKETS_CHEST_BACK);
-				}
+				gen.tag(getTagKey(tag));
 
 			switch (a.model())
 			{
@@ -146,7 +162,63 @@ public class Tarkin
 				case Item -> gen.model(ModelFile::item);
 				case SpawnEgg -> gen.model(ModelFile::spawn_egg);
 				case HandheldItem -> gen.model(ModelFile::handheld_item);
+				default -> throw new RuntimeException("Unsupported value " + a.model());
 			}
+
+			gen.build(assets);
+		});
+	}
+
+	public static void registerBlockFields(Class<?> rootClazz, List<BuiltAsset> assets)
+	{
+		consumeFields(TarkinBlock.class, rootClazz, Block.class, (block, a) -> {
+			var gen = new BlockGenerator(block);
+
+			switch (a.lang())
+			{
+				case Block -> gen.lang(LanguageProvider::block);
+				default -> throw new RuntimeException("Unsupported value " + a.lang());
+			}
+
+			switch (a.state())
+			{
+				case None ->
+				{
+				}
+				case Singleton -> gen.state(BlockStateModelGenerator::createSingletonBlockState);
+				default -> throw new RuntimeException("Unsupported value " + a.state());
+			}
+
+			switch (a.model())
+			{
+				case None ->
+				{
+				}
+				case Cube -> gen.model(ModelFile::cube);
+				default -> throw new RuntimeException("Unsupported value " + a.model());
+			}
+
+			switch (a.itemModel())
+			{
+				case None ->
+				{
+				}
+				case Block -> gen.itemModel(ModelFile::ofBlock);
+				default -> throw new RuntimeException("Unsupported value " + a.itemModel());
+			}
+
+			switch (a.loot())
+			{
+				case SingleSelf -> gen.lootTable(LootTableFile::singleSelf);
+				case MultiOnlyCenter -> gen.lootTable(LootTableFile::multiBlockOnlyCenter);
+				default -> throw new RuntimeException("Unsupported value " + a.loot());
+			}
+
+			for (var tag : a.tags())
+				gen.blockTag(getTagKey(tag));
+
+			for (var tag : a.itemTags())
+				gen.itemTag(getTagKey(tag));
 
 			gen.build(assets);
 		});

@@ -731,38 +731,8 @@ public class PswgTarkin
 
 	public static void generateBlocks(List<BuiltAsset> assets)
 	{
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Barrel.Desh)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
+		Tarkin.registerBlockFields(SwgBlocks.class, assets);
 
-		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Crate.OrangeKyber)
-		              .lootTable(LootTableFile::multiBlockOnlyCenter)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Crate.GrayKyber)
-		              .lootTable(LootTableFile::multiBlockOnlyCenter)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelLangEntry(SwgBlocks.Crate.BlackKyber)
-		              .lootTable(LootTableFile::multiBlockOnlyCenter)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.Toolbox)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.BrownSegmented)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.GraySegmented)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.GrayPanel)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
-
-		BlockGenerator.blockNoModelDefaultDrops(SwgBlocks.Crate.ImperialCorrugatedCrate)
-		              .blockTag(BlockTags.PICKAXE_MINEABLE)
-		              .build(assets);
 		for (var block : SwgBlocks.Crate.CorrugatedCrate.values())
 			BlockGenerator.blockNoModelDefaultDrops(block)
 			              .blockTag(BlockTags.PICKAXE_MINEABLE)
