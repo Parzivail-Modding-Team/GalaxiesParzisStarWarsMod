@@ -71,6 +71,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 						.heat(new BlasterHeatInfo(1008, 42, 12, 20, 14, 100, 80))
 						.cooling(new BlasterCoolingBypassProfile(0.7f, 0.1f, 0.3f, 0.05f)),
 				new BlasterDescriptor(Resources.id("dc15a"), BlasterArchetype.RIFLE)
+						.sound(Resources.id("dc15"))
 						.firingBehavior(List.of(BlasterFiringMode.SEMI_AUTOMATIC, BlasterFiringMode.AUTOMATIC, BlasterFiringMode.STUN), BlasterWaterBehavior.NONE)
 						.mechanicalProperties(6.7f, -0.5f, 10, 400)
 						.damage(3.06f, 188f, Falloff.cliff(0.5))
