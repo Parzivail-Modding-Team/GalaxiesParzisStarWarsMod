@@ -2,15 +2,19 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.datagen.tarkin.config.PswgTarkin;
 import com.parzivail.datagen.tarkin.config.TcwTarkin;
+import com.parzivail.pswg.container.SwgTags;
 import com.parzivail.tarkin.api.*;
 import com.parzivail.util.Lumberjack;
+import com.parzivail.util.block.IPicklingBlock;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.minecraft.block.Block;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
@@ -124,20 +128,27 @@ public class Tarkin
 		consumeFields(TarkinLang.class, rootClazz, String.class, (s, a) -> languageBuilder.entry(s).build(assets));
 	}
 
-	private static TagKey<Item> getTagKey(TarkinItemTagPreset preset)
+	private static TagKey<Item> getTagKey(TrItemTag preset)
 	{
 		return switch (preset)
 				{
 					case TrinketsChestBack -> TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
+					case Leaves -> ItemTags.LEAVES;
 					default -> throw new RuntimeException("Unsupported value " + preset);
 				};
 	}
 
-	private static TagKey<Block> getTagKey(TarkinBlockTagPreset preset)
+	private static TagKey<Block> getTagKey(TrBlockTag preset)
 	{
 		return switch (preset)
 				{
 					case PickaxeMineable -> BlockTags.PICKAXE_MINEABLE;
+					case ShearsMineable -> FabricMineableTags.SHEARS_MINEABLE;
+					case SlidingDoor -> SwgTags.Block.SLIDING_DOORS;
+					case DesertSand -> SwgTags.Block.DESERT_SAND;
+					case DesertSandstone -> SwgTags.Block.DESERT_SANDSTONE;
+					case Leaves -> BlockTags.LEAVES;
+					case DeadBushSubstrate -> BlockTags.DEAD_BUSH_MAY_PLACE_ON;
 					default -> throw new RuntimeException("Unsupported value " + preset);
 				};
 	}
@@ -186,6 +197,8 @@ public class Tarkin
 				{
 				}
 				case Singleton -> gen.state(BlockStateModelGenerator::createSingletonBlockState);
+				case TangentRotating -> gen.state(BlockStateGenerator::tangentRotating);
+				case RandomRotation -> gen.state(BlockStateModelGenerator::createBlockStateWithRandomHorizontalRotations);
 				default -> throw new RuntimeException("Unsupported value " + a.state());
 			}
 
@@ -195,6 +208,9 @@ public class Tarkin
 				{
 				}
 				case Cube -> gen.model(ModelFile::cube);
+				case CubeNoCull -> gen.model(ModelFile::cube_no_cull);
+				case Leaves -> gen.model(ModelFile::leaves);
+				case Fan -> gen.model(ModelFile::fan);
 				default -> throw new RuntimeException("Unsupported value " + a.model());
 			}
 
@@ -204,6 +220,7 @@ public class Tarkin
 				{
 				}
 				case Block -> gen.itemModel(ModelFile::ofBlock);
+				case Item -> gen.itemModel(ModelFile::item);
 				default -> throw new RuntimeException("Unsupported value " + a.itemModel());
 			}
 
@@ -211,6 +228,8 @@ public class Tarkin
 			{
 				case SingleSelf -> gen.lootTable(LootTableFile::singleSelf);
 				case MultiOnlyCenter -> gen.lootTable(LootTableFile::multiBlockOnlyCenter);
+				case Door -> gen.lootTable(LootTableFile::door);
+				case Pickling -> gen.lootTable(block1 -> LootTableFile.pickling((Block & IPicklingBlock)block1));
 				default -> throw new RuntimeException("Unsupported value " + a.loot());
 			}
 

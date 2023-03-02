@@ -14,8 +14,8 @@ import com.parzivail.pswg.item.material.BeskarToolMaterial;
 import com.parzivail.pswg.item.material.DurasteelToolMaterial;
 import com.parzivail.pswg.item.material.TitaniumToolMaterial;
 import com.parzivail.tarkin.api.TarkinItem;
-import com.parzivail.tarkin.api.TarkinItemTagPreset;
-import com.parzivail.tarkin.api.TarkinModelFilePreset;
+import com.parzivail.tarkin.api.TrItemTag;
+import com.parzivail.tarkin.api.TrModel;
 import com.parzivail.util.item.*;
 import com.parzivail.util.registry.*;
 import dev.emi.trinkets.api.TrinketItem;
@@ -55,7 +55,7 @@ public class SwgItems
 		@RegistryName("sandtrooper")
 		public static final ArmorItems Sandtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("sandtrooper_backpack")
-		@TarkinItem(tags = { TarkinItemTagPreset.TrinketsChestBack })
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
 		public static final TrinketItem SandtrooperBackpack = new TrinketItem(new Item.Settings().maxCount(1));
 		@RegistryName("deathtrooper")
 		public static final ArmorItems Deathtrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
@@ -64,7 +64,7 @@ public class SwgItems
 		@RegistryName("jumptrooper")
 		public static final ArmorItems Jumptrooper = new ArmorItems(ArmorMaterials.DIAMOND, new Item.Settings().maxCount(1));
 		@RegistryName("jumptrooper_jetpack")
-		@TarkinItem(tags = { TarkinItemTagPreset.TrinketsChestBack })
+		@TarkinItem(tags = { TrItemTag.TrinketsChestBack })
 		public static final TrinketItem JumptrooperJetpack = new JetpackItem(new Item.Settings().maxCount(1), new JetpackItem.Stats());
 		@RegistryName("imperial_pilot_helmet")
 		@TarkinItem
@@ -155,16 +155,16 @@ public class SwgItems
 		@TarkinItem
 		public static final Item BeskarIngot = new Item(new Item.Settings());
 		@RegistryName("beskar_shovel")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem BeskarShovel = new ShovelItem(BeskarToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings());
 		@RegistryName("beskar_pickaxe")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem BeskarPickaxe = new PPickaxeItem(BeskarToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings());
 		@RegistryName("beskar_axe")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem BeskarAxe = new PAxeItem(BeskarToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings());
 		@RegistryName("beskar_hoe")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem BeskarHoe = new PHoeItem(BeskarToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings());
 
 		@RegistryName("raw_chromium")
@@ -211,16 +211,16 @@ public class SwgItems
 		@TarkinItem
 		public static final Item DurasteelNugget = new Item(new Item.Settings());
 		@RegistryName("durasteel_shovel")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem DurasteelShovel = new ShovelItem(DurasteelToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings());
 		@RegistryName("durasteel_axe")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem DurasteelAxe = new PAxeItem(DurasteelToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings());
 		@RegistryName("durasteel_hoe")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem DurasteelHoe = new PHoeItem(DurasteelToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings());
 		@RegistryName("durasteel_pickaxe")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem DurasteelPickaxe = new PPickaxeItem(DurasteelToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings());
 
 		@RegistryName("exonium")
@@ -289,16 +289,16 @@ public class SwgItems
 		@TarkinItem
 		public static final Item TitaniumNugget = new Item(new Item.Settings());
 		@RegistryName("titanium_shovel")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem TitaniumShovel = new ShovelItem(TitaniumToolMaterial.INSTANCE, 1.5F, -3.0F, new Item.Settings());
 		@RegistryName("titanium_pickaxe")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem TitaniumPickaxe = new PPickaxeItem(TitaniumToolMaterial.INSTANCE, 1, -2.8F, new Item.Settings());
 		@RegistryName("titanium_axe")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem TitaniumAxe = new PAxeItem(TitaniumToolMaterial.INSTANCE, 5, -3.0F, new Item.Settings());
 		@RegistryName("titanium_hoe")
-		@TarkinItem(model = TarkinModelFilePreset.HandheldItem)
+		@TarkinItem(model = TrModel.HandheldItem)
 		public static final ToolItem TitaniumHoe = new PHoeItem(TitaniumToolMaterial.INSTANCE, 0, 0.0F, new Item.Settings());
 
 		@RegistryName("transparisteel_ingot")
@@ -608,23 +608,23 @@ public class SwgItems
 		public static final Item ZephyrJ = new SpawnEntityItem(SwgEntities.Speeder.ZephyrJ, new Item.Settings(), 0);
 
 		@RegistryName("spawn_faa")
-		@TarkinItem(model = TarkinModelFilePreset.SpawnEgg)
+		@TarkinItem(model = TrModel.SpawnEgg)
 		public static final Item Faa = new SpawnEggItem(SwgEntities.Fish.Faa, 0xE9933E, 0x9471EB, new Item.Settings());
 
 		@RegistryName("spawn_laa")
-		@TarkinItem(model = TarkinModelFilePreset.SpawnEgg)
+		@TarkinItem(model = TrModel.SpawnEgg)
 		public static final Item Laa = new SpawnEggItem(SwgEntities.Fish.Laa, 0x2F5747, 0xD5BC92, new Item.Settings());
 
 		@RegistryName("spawn_worrt")
-		@TarkinItem(model = TarkinModelFilePreset.SpawnEgg)
+		@TarkinItem(model = TrModel.SpawnEgg)
 		public static final Item Worrt = new SpawnEggItem(SwgEntities.Amphibian.Worrt, 0x5B482C, 0x635735, new Item.Settings());
 
 		@RegistryName("spawn_bantha")
-		@TarkinItem(model = TarkinModelFilePreset.SpawnEgg)
+		@TarkinItem(model = TrModel.SpawnEgg)
 		public static final Item Bantha = new SpawnEggItem(SwgEntities.Mammal.Bantha, 0x362318, 0xD1B693, new Item.Settings());
 
 		@RegistryName("spawn_sand_skitter")
-		@TarkinItem(model = TarkinModelFilePreset.SpawnEgg)
+		@TarkinItem(model = TrModel.SpawnEgg)
 		public static final Item SandSkitter = new SpawnEggItem(SwgEntities.Rodent.SandSkitter, 0x4F3733, 0xE2946E, new Item.Settings());
 	}
 
@@ -633,7 +633,7 @@ public class SwgItems
 	{
 		@RegistryName("lightsaber")
 		@TabInclude("pswg:lightsabers")
-		@TarkinItem(model = TarkinModelFilePreset.Empty)
+		@TarkinItem(model = TrModel.Empty)
 		public static final LightsaberItem Lightsaber = new LightsaberItem(new Item.Settings().maxCount(1));
 	}
 

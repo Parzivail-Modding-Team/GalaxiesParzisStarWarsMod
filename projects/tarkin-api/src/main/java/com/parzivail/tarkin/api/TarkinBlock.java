@@ -9,17 +9,17 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TarkinBlock
 {
-	TarkinLangPreset lang() default TarkinLangPreset.Block;
+	TrLang lang() default TrLang.Block;
 
-	TarkinBlockStatePreset state() default TarkinBlockStatePreset.Singleton;
+	TrState state() default TrState.Singleton;
 
-	TarkinModelFilePreset model() default TarkinModelFilePreset.Cube;
+	TrModel model() default TrModel.Cube;
 
-	TarkinModelFilePreset itemModel() default TarkinModelFilePreset.Block;
+	TrModel itemModel() default TrModel.Block;
 
-	TarkinLootTablePreset loot() default TarkinLootTablePreset.SingleSelf;
+	TrLoot loot() default TrLoot.SingleSelf;
 
-	TarkinBlockTagPreset[] tags() default { TarkinBlockTagPreset.PickaxeMineable };
+	TrBlockTag[] tags() default { TrBlockTag.PickaxeMineable };
 
-	TarkinItemTagPreset[] itemTags() default {};
+	TrItemTag[] itemTags() default {};
 }

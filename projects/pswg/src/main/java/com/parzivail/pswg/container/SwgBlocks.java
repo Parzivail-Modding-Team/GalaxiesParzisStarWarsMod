@@ -5,10 +5,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.block.crop.*;
 import com.parzivail.pswg.blockentity.*;
-import com.parzivail.tarkin.api.TarkinBlock;
-import com.parzivail.tarkin.api.TarkinBlockStatePreset;
-import com.parzivail.tarkin.api.TarkinLootTablePreset;
-import com.parzivail.tarkin.api.TarkinModelFilePreset;
+import com.parzivail.tarkin.api.*;
 import com.parzivail.util.block.*;
 import com.parzivail.util.block.connecting.SelfConnectingBlock;
 import com.parzivail.util.block.connecting.SelfConnectingGlassBlock;
@@ -59,10 +56,13 @@ public class SwgBlocks
 		@RegistryName("canyon_stone")
 		public static final StoneProducts Canyon = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F)));
 		@RegistryName("canyon_stone_bricks")
+		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
 		public static final Block CanyonBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("polished_canyon_stone")
+		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
 		public static final Block PolishedCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("chiseled_canyon_stone")
+		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
 		public static final Block ChiseledCanyon = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 
 		@RegistryName("canyon_cobblestone")
@@ -85,6 +85,7 @@ public class SwgBlocks
 		@RegistryName("massassi_stone")
 		public static final StoneProducts Massassi = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_massassi_stone")
+		@TarkinBlock
 		public static final Block MassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_massassi_stone_slab")
 		public static final VerticalSlabBlock MassassiSmoothSlab = new VerticalSlabBlock(AbstractBlock.Settings.copy(MassassiSmooth));
@@ -94,6 +95,7 @@ public class SwgBlocks
 		//public static final Block MassassiChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 
 		@RegistryName("mossy_smooth_massassi_stone")
+		@TarkinBlock
 		public static final Block MossyMassassiSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("mossy_smooth_massassi_stone_slab")
 		public static final VerticalSlabBlock MossyMassassiSmoothSlab = new VerticalSlabBlock(AbstractBlock.Settings.copy(MossyMassassiSmooth));
@@ -103,12 +105,14 @@ public class SwgBlocks
 		@RegistryName("ilum_stone")
 		public static final StoneProducts Ilum = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("smooth_ilum_stone")
+		@TarkinBlock
 		public static final Block IlumSmooth = new Block(FabricBlockSettings.of(Material.STONE).strength(2.0F).requiresTool());
 		@RegistryName("smooth_ilum_stone_slab")
 		public static final VerticalSlabBlock IlumSmoothSlab = new VerticalSlabBlock(AbstractBlock.Settings.copy(IlumSmooth));
 		@RegistryName("ilum_stone_bricks")
 		public static final StoneProducts IlumBricks = new StoneProducts(new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool()));
 		@RegistryName("chiseled_ilum_stone_bricks")
+		@TarkinBlock
 		public static final Block IlumChiseledBricks = new Block(FabricBlockSettings.of(Material.STONE).strength(1.5F).requiresTool());
 	}
 
@@ -120,10 +124,13 @@ public class SwgBlocks
 		@RegistryName("dunestone")
 		public static final Block Dunestone = new Block(FabricBlockSettings.of(Material.STONE).strength(1.25F).requiresTool());
 		@RegistryName("smooth_desert_sandstone")
+		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
 		public static final Block SmoothDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("polished_desert_sandstone")
+		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
 		public static final Block PolishedDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 		@RegistryName("chiseled_desert_sandstone")
+		@TarkinBlock(tags = { TrBlockTag.DesertSandstone, TrBlockTag.PickaxeMineable }, itemTags = { TrItemTag.DesertSandstone })
 		public static final Block ChiseledDesert = new Block(FabricBlockSettings.of(Material.STONE).strength(0.5F));
 	}
 
@@ -153,6 +160,7 @@ public class SwgBlocks
 	public static class Gravel
 	{
 		@RegistryName("jundland_gravel")
+		@TarkinBlock(state = TrState.RandomRotation)
 		public static final FallingBlock Jundland = new PFallingBlock(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F), 0xFF7A5346);
 	}
 
@@ -160,18 +168,21 @@ public class SwgBlocks
 	public static class Dirt
 	{
 		@RegistryName("wet_pourstone")
+		@TarkinBlock
 		public static final Block WetPourstone = new RuiningDryingBlock(Stone.Pourstone.block, 10, () -> Dirt.RuinedWetPourstone, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F).noCollision(), 0xFF9E6E3B);
 		@RegistryName("wet_pourstone_stairs")
 		public static final Block WetPourstoneStairs = new RuiningDryingStairsBlock(WetPourstone.getDefaultState(), Stone.Pourstone.stairs, 10, () -> Dirt.RuinedWetPourstoneStairs, AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("wet_pourstone_slab")
 		public static final Block WetPourstoneSlab = new RuiningDryingSlabBlock(Stone.Pourstone.slab, 10, () -> Dirt.RuinedWetPourstoneSlab, AbstractBlock.Settings.copy(WetPourstone));
 		@RegistryName("ruined_wet_pourstone")
+		@TarkinBlock
 		public static final Block RuinedWetPourstone = new DryingBlock(Stone.CrackedPourstone.block, 10, FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).noCollision().strength(0.5F), 0xFF986A39);
 		@RegistryName("ruined_wet_pourstone_stairs")
 		public static final StairsBlock RuinedWetPourstoneStairs = new DryingStairsBlock(RuinedWetPourstone.getDefaultState(), Stone.CrackedPourstone.stairs, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
 		@RegistryName("ruined_wet_pourstone_slab")
 		public static final VerticalSlabBlock RuinedWetPourstoneSlab = new DryingSlabBlock(Stone.CrackedPourstone.slab, 10, AbstractBlock.Settings.copy(RuinedWetPourstone));
 		@RegistryName("desert_loam")
+		@TarkinBlock(state = TrState.RandomRotation, tags = { TrBlockTag.PickaxeMineable, TrBlockTag.DeadBushSubstrate })
 		public static final Block DesertLoam = new Block(FabricBlockSettings.of(Material.AGGREGATE).sounds(BlockSoundGroup.GRAVEL).strength(0.5F));
 	}
 
@@ -222,6 +233,7 @@ public class SwgBlocks
 		@RegistryName("sequoia_leaves")
 		@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(model = TrModel.Leaves, tags = { TrBlockTag.Leaves, TrBlockTag.ShearsMineable }, itemTags = { TrItemTag.Leaves })
 		public static final LeavesBlock SequoiaLeaves = createLeavesBlock();
 		@RegistryName("sequoia_wood")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
@@ -242,6 +254,7 @@ public class SwgBlocks
 		@RegistryName("japor_leaves")
 		@ServerBlockRegistryData(fireBurn = 30, fireSpread = 60)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.TangentRotating, model = TrModel.Fan, itemModel = TrModel.Item, tags = { TrBlockTag.Leaves, TrBlockTag.ShearsMineable }, itemTags = { TrItemTag.Leaves })
 		public static final BushLeavesBlock JaporLeaves = createBushLeavesBlock();
 		@RegistryName("japor_wood")
 		@ServerBlockRegistryData(fireBurn = 5, fireSpread = 5)
@@ -283,56 +296,67 @@ public class SwgBlocks
 		@RegistryName("beskar_ore")
 		public static final Block BeskarOre = new Block(FabricBlockSettings.of(Material.STONE).strength(5.0F).requiresTool());
 		@RegistryName("beskar_block")
+		@TarkinBlock
 		public static final Block BeskarBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 
 		@RegistryName("chromium_ore")
 		public static final Block ChromiumOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
 		@RegistryName("chromium_block")
+		@TarkinBlock
 		public static final Block ChromiumBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
 
 		@RegistryName("cortosis_ore")
 		public static final Block CortosisOre = new Block(FabricBlockSettings.of(Material.STONE).strength(5.0F).requiresTool());
 		@RegistryName("cortosis_block")
+		@TarkinBlock
 		public static final Block CortosisBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 
 		@RegistryName("desh_ore")
 		public static final Block DeshOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
 		@RegistryName("desh_block")
+		@TarkinBlock
 		public static final Block DeshBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(3.0F).requiresTool());
 
 		@RegistryName("diatium_ore")
 		public static final Block DiatiumOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
 		@RegistryName("diatium_block")
+		@TarkinBlock
 		public static final Block DiatiumBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 
 		@RegistryName("ionite_ore")
 		public static final Block IoniteOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
 		@RegistryName("ionite_block")
+		@TarkinBlock
 		public static final Block IoniteBlock = new Block(FabricBlockSettings.of(Material.STONE).sounds(BlockSoundGroup.METAL).strength(5.0F).luminance(3).requiresTool());
 
 		@RegistryName("lommite_ore")
 		public static final Block LommiteOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
 		@RegistryName("lommite_block")
+		@TarkinBlock
 		public static final Block LommiteBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 
 		@RegistryName("titanium_ore")
 		public static final Block TitaniumOre = new Block(FabricBlockSettings.of(Material.STONE).strength(4.0F).requiresTool());
 		@RegistryName("titanium_block")
+		@TarkinBlock
 		public static final Block TitaniumBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 
 		@RegistryName("zersium_ore")
 		public static final Block ZersiumOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
 		@RegistryName("zersium_block")
+		@TarkinBlock
 		public static final Block ZersiumBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 
 		@RegistryName("thorilide_ore")
 		public static final Block ThorilideOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
 		@RegistryName("thorilide_block")
+		@TarkinBlock
 		public static final Block ThorilideBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 
 		@RegistryName("helicite_ore")
 		public static final Block HeliciteOre = new Block(FabricBlockSettings.of(Material.STONE).strength(3.0F).requiresTool());
 		@RegistryName("helicite_block")
+		@TarkinBlock
 		public static final Block HeliciteBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(5.0F).requiresTool());
 	}
 
@@ -340,9 +364,11 @@ public class SwgBlocks
 	public static class Composite
 	{
 		@RegistryName("durasteel_block")
+		@TarkinBlock
 		public static final Block DurasteelBlock = new Block(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).strength(5.0F).requiresTool());
 		@RegistryName("plasteel_block")
 		@ClientBlockRegistryData(isConnected = true)
+		@TarkinBlock
 		public static final SelfConnectingBlock PlasteelBlock = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).strength(3.0F).requiresTool());
 	}
 
@@ -351,54 +377,71 @@ public class SwgBlocks
 	{
 		@RegistryName("imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.CUTOUT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingGlassBlock Imperial = createSelfConnectingGlass();
 		@RegistryName("white_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock WhiteStainedImperial = createSelfConnectingStainedGlass(DyeColor.WHITE);
 		@RegistryName("orange_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock OrangeStainedImperial = createSelfConnectingStainedGlass(DyeColor.ORANGE);
 		@RegistryName("magenta_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock MagentaStainedImperial = createSelfConnectingStainedGlass(DyeColor.MAGENTA);
 		@RegistryName("light_blue_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock LightBlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_BLUE);
 		@RegistryName("yellow_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock YellowStainedImperial = createSelfConnectingStainedGlass(DyeColor.YELLOW);
 		@RegistryName("lime_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock LimeStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIME);
 		@RegistryName("pink_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock PinkStainedImperial = createSelfConnectingStainedGlass(DyeColor.PINK);
 		@RegistryName("gray_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock GrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.GRAY);
 		@RegistryName("light_gray_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock LightGrayStainedImperial = createSelfConnectingStainedGlass(DyeColor.LIGHT_GRAY);
 		@RegistryName("cyan_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock CyanStainedImperial = createSelfConnectingStainedGlass(DyeColor.CYAN);
 		@RegistryName("purple_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock PurpleStainedImperial = createSelfConnectingStainedGlass(DyeColor.PURPLE);
 		@RegistryName("blue_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock BlueStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLUE);
 		@RegistryName("brown_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock BrownStainedImperial = createSelfConnectingStainedGlass(DyeColor.BROWN);
 		@RegistryName("green_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock GreenStainedImperial = createSelfConnectingStainedGlass(DyeColor.GREEN);
 		@RegistryName("red_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock RedStainedImperial = createSelfConnectingStainedGlass(DyeColor.RED);
 		@RegistryName("black_stained_imperial_glass")
 		@ClientBlockRegistryData(isConnected = true, renderLayer = RenderLayerHint.TRANSLUCENT)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final SelfConnectingStainedGlassBlock BlackStainedImperial = createSelfConnectingStainedGlass(DyeColor.BLACK);
 
 		private static SelfConnectingGlassBlock createSelfConnectingGlass()
@@ -419,6 +462,7 @@ public class SwgBlocks
 
 		@RegistryName("rusted_metal")
 		@ClientBlockRegistryData(isConnected = true)
+		@TarkinBlock
 		public static final SelfConnectingBlock RustedMetal = new SelfConnectingBlock(FabricBlockSettings.of(Material.METAL).mapColor(MapColor.BROWN).sounds(BlockSoundGroup.COPPER).strength(1.5F).requiresTool());
 
 		@RegistryName("imperial_cutout_pipes")
@@ -439,52 +483,73 @@ public class SwgBlocks
 		@RegistryName("white_imperial_panel_blank")
 		public static final StoneProducts WhiteImperialPanelBlank = new StoneProducts(new Block(IMPERIAL_PANEL_SETTINGS));
 		@RegistryName("black_imperial_panel_tile")
+		@TarkinBlock
 		public static final Block BlackImperialPanelTile = createPanel(MapColor.GRAY);
 		@RegistryName("black_imperial_panel_sectional")
+		@TarkinBlock
 		public static final SelfConnectingBlock BlackImperialPanelSectional = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("black_imperial_panel_sectional_1")
+		@TarkinBlock
 		public static final SelfConnectingBlock BlackImperialPanelSectional1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("black_imperial_panel_sectional_2")
+		@TarkinBlock
 		public static final SelfConnectingBlock BlackImperialPanelSectional2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("gray_imperial_panel_sectional")
+		@TarkinBlock
 		public static final SelfConnectingBlock GrayImperialPanelSectional = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("gray_imperial_panel_sectional_1")
+		@TarkinBlock
 		public static final SelfConnectingBlock GrayImperialPanelSectional1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("gray_imperial_panel_sectional_2")
+		@TarkinBlock
 		public static final SelfConnectingBlock GrayImperialPanelSectional2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("light_gray_imperial_panel_sectional")
+		@TarkinBlock
 		public static final SelfConnectingBlock LightGrayImperialPanelSectional = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("light_gray_imperial_panel_sectional_1")
+		@TarkinBlock
 		public static final SelfConnectingBlock LightGrayImperialPanelSectional1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("light_gray_imperial_panel_sectional_2")
+		@TarkinBlock
 		public static final SelfConnectingBlock LightGrayImperialPanelSectional2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("white_imperial_panel_sectional")
+		@TarkinBlock
 		public static final SelfConnectingBlock WhiteImperialPanelSectional = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
 		@RegistryName("white_imperial_panel_sectional_1")
+		@TarkinBlock
 		public static final SelfConnectingBlock WhiteImperialPanelSectional1 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
 		@RegistryName("white_imperial_panel_sectional_2")
+		@TarkinBlock
 		public static final SelfConnectingBlock WhiteImperialPanelSectional2 = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.OFF_WHITE));
 		@RegistryName("black_imperial_panel_bordered")
+		@TarkinBlock
 		public static final SelfConnectingBlock BlackImperialPanelBordered = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("black_imperial_panel_split")
+		@TarkinBlock
 		public static final SelfConnectingBlock BlackImperialPanelSplit = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("black_imperial_panel_thin_bordered")
+		@TarkinBlock
 		public static final SelfConnectingBlock BlackImperialPanelThinBordered = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.BLACK));
 		@RegistryName("external_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
+		@TarkinBlock
 		public static final SelfConnectingBlock ExternalImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 
 		@RegistryName("large_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
+		@TarkinBlock
 		public static final SelfConnectingBlock LargeImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("rusted_large_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
+		@TarkinBlock
 		public static final SelfConnectingBlock RustedLargeImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("mossy_large_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
+		@TarkinBlock
 		public static final SelfConnectingBlock MossyLargeImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 		@RegistryName("large_light_gray_imperial_plating")
 		@ClientBlockRegistryData(isConnected = true)
+		@TarkinBlock
 		public static final SelfConnectingBlock LargeLightGrayImperialPlatingConnected = new SelfConnectingBlock(IMPERIAL_PANEL_SETTINGS.mapColor(MapColor.GRAY));
 
 		@RegistryName("black_imperial_panel_pattern_a")
@@ -517,24 +582,34 @@ public class SwgBlocks
 		@RegistryName("mossy_gray_imperial_panel_pattern_5")
 		public static final Block MossyGrayImperialPanelPattern5 = createPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_panel_pattern_6")
+		@TarkinBlock
 		public static final Block GrayImperialPanelPattern6 = createPanel(MapColor.GRAY);
 		@RegistryName("rusted_gray_imperial_panel_pattern_6")
+		@TarkinBlock
 		public static final Block RustedGrayImperialPanelPattern6 = createPanel(MapColor.GRAY);
 		@RegistryName("mossy_gray_imperial_panel_pattern_6")
+		@TarkinBlock
 		public static final Block MossyGrayImperialPanelPattern6 = createPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_panel_pattern_7")
+		@TarkinBlock
 		public static final Block GrayImperialPanelPattern7 = createPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_panel_pattern_8")
+		@TarkinBlock
 		public static final Block GrayImperialPanelPattern8 = createPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_panel_pattern_9")
+		@TarkinBlock
 		public static final Block GrayImperialPanelPattern9 = createPanel(MapColor.GRAY);
 		@RegistryName("rusted_gray_imperial_panel_pattern_9")
+		@TarkinBlock
 		public static final Block RustedGrayImperialPanelPattern9 = createPanel(MapColor.GRAY);
 		@RegistryName("mossy_gray_imperial_panel_pattern_9")
+		@TarkinBlock
 		public static final Block MossyGrayImperialPanelPattern9 = createPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_panel_pattern_10")
+		@TarkinBlock
 		public static final Block GrayImperialPanelPattern10 = createPanel(MapColor.GRAY);
 		@RegistryName("gray_imperial_panel_pattern_11")
+		@TarkinBlock
 		public static final Block GrayImperialPanelPattern11 = createPanel(MapColor.GRAY);
 
 		@RegistryName("gray_imperial_light_on_1")
@@ -572,6 +647,7 @@ public class SwgBlocks
 
 		@RegistryName("lab_wall")
 		@TabIgnore
+		@TarkinBlock
 		public static final Block LabWall = new Block(FabricBlockSettings.of(Material.STONE));
 
 		private static PillarBlock createLitPanel(MapColor topMapColor, int luminance)
@@ -643,14 +719,18 @@ public class SwgBlocks
 
 		@RegistryName("red_hangar_light")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final Block RedHangar = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("blue_hangar_light")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final Block BlueHangar = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(12, 10, 5), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).noCollision().nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("wall_cluster_light")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.Pickling)
 		public static final ClusterLightBlock WallCluster = new ClusterLightBlock(WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 		@RegistryName("tall_lamp")
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
 		public static final Block TallLamp = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCentered(6, 6, 24), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().luminance(15).strength(0.5F));
 	}
@@ -659,6 +739,7 @@ public class SwgBlocks
 	public static class Door
 	{
 		@RegistryName("sliding_door")
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.Door, tags = { TrBlockTag.PickaxeMineable, TrBlockTag.SlidingDoor })
 		public static final Block Sliding1x2 = new Sliding1x2DoorBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(3.5F).requiresTool());
 		@RegistryName("sliding_door")
 		public static final BlockEntityType<SlidingDoorBlockEntity> SlidingBlockEntityType = FabricBlockEntityTypeBuilder.create(SlidingDoorBlockEntity::new, Sliding1x2).build();
@@ -672,44 +753,44 @@ public class SwgBlocks
 		public static final DyedBlocks CorrugatedCrate = new DyedBlocks(color -> new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new));
 		@RegistryName("imperial_corrugated_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TarkinBlockStatePreset.None, model = TarkinModelFilePreset.None, itemModel = TarkinModelFilePreset.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final Block ImperialCorrugatedCrate = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCenteredCube(14, 16), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateCorrugatedBlockEntity::new);
 		@RegistryName("corrugated_crate")
 		public static final BlockEntityType<CrateCorrugatedBlockEntity> CorrugatedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateCorrugatedBlockEntity::new, BlockUtil.concat(CorrugatedCrate, ImperialCorrugatedCrate)).build();
 
 		@RegistryName("orange_kyber_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TarkinBlockStatePreset.None, model = TarkinModelFilePreset.None, itemModel = TarkinModelFilePreset.None, loot = TarkinLootTablePreset.MultiOnlyCenter)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.MultiOnlyCenter)
 		public static final WaterloggableRotating3BlockWithGuiEntity OrangeKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("gray_kyber_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TarkinBlockStatePreset.None, model = TarkinModelFilePreset.None, itemModel = TarkinModelFilePreset.None, loot = TarkinLootTablePreset.MultiOnlyCenter)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.MultiOnlyCenter)
 		public static final WaterloggableRotating3BlockWithGuiEntity GrayKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("black_kyber_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TarkinBlockStatePreset.None, model = TarkinModelFilePreset.None, itemModel = TarkinModelFilePreset.None, loot = TarkinLootTablePreset.MultiOnlyCenter)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None, loot = TrLoot.MultiOnlyCenter)
 		public static final WaterloggableRotating3BlockWithGuiEntity BlackKyber = new WaterloggableRotating3BlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateOctagonBlockEntity::new);
 		@RegistryName("kyber_crate")
 		public static final BlockEntityType<CrateOctagonBlockEntity> KyberCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateOctagonBlockEntity::new, OrangeKyber, GrayKyber, BlackKyber).build();
 
 		@RegistryName("toolbox")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TarkinBlockStatePreset.None, model = TarkinModelFilePreset.None, itemModel = TarkinModelFilePreset.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final WaterloggableRotatingBlockWithGuiEntity Toolbox = new WaterloggableRotatingBlockWithGuiEntity(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateMosEisleyBlockEntity::new);
 		@RegistryName("toolbox")
 		public static final BlockEntityType<CrateMosEisleyBlockEntity> ToolboxBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateMosEisleyBlockEntity::new, Toolbox).build();
 
 		@RegistryName("segmented_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TarkinBlockStatePreset.None, model = TarkinModelFilePreset.None, itemModel = TarkinModelFilePreset.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final WaterloggableRotatingBlockWithBoundsGuiEntity BrownSegmented = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
 		@RegistryName("gray_segmented_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TarkinBlockStatePreset.None, model = TarkinModelFilePreset.None, itemModel = TarkinModelFilePreset.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final WaterloggableRotatingBlockWithBoundsGuiEntity GraySegmented = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
 		@RegistryName("gray_panel_crate")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TarkinBlockStatePreset.None, model = TarkinModelFilePreset.None, itemModel = TarkinModelFilePreset.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final WaterloggableRotatingBlockWithBoundsGuiEntity GrayPanel = new WaterloggableRotatingBlockWithBoundsGuiEntity(VoxelShapeUtil.getCentered(14, 28, 14), FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.METAL).nonOpaque().strength(2.5F), CrateSegmentedBlockEntity::new);
 		@RegistryName("segmented_crate")
 		public static final BlockEntityType<CrateSegmentedBlockEntity> SegmentedCrateBlockEntityType = FabricBlockEntityTypeBuilder.create(CrateSegmentedBlockEntity::new, BrownSegmented, GraySegmented, GrayPanel).build();
@@ -720,7 +801,7 @@ public class SwgBlocks
 	{
 		@RegistryName("desh_barrel")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
-		@TarkinBlock(state = TarkinBlockStatePreset.None, model = TarkinModelFilePreset.None, itemModel = TarkinModelFilePreset.None)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final Block Desh = new DeshBarrelBlock(FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(2.5F).requiresTool());
 	}
 
@@ -729,9 +810,11 @@ public class SwgBlocks
 	{
 		@RegistryName("spoked_machine")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final WaterloggableRotatingBlock Spoked = new WaterloggableRotatingBlockWithBounds(VoxelShapeUtil.getCenteredCube(10, 20), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 		@RegistryName("electrostatic_repeller")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT_MIPPED)
+		@TarkinBlock(state = TrState.None, model = TrModel.None, itemModel = TrModel.None)
 		public static final WaterloggableRotatingBlock ElectrostaticRepeller = new RepellerBlock(VoxelShapes.cuboid(0, 5.5f / 16, 5.5f / 16, 4 / 16f, 10.5f / 16, 10.5f / 16), WaterloggableRotatingBlockWithBounds.Substrate.NONE, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().strength(5.0F).requiresTool());
 	}
 
@@ -779,8 +862,10 @@ public class SwgBlocks
 	{
 		@RegistryName("creature_cage")
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
+		@TarkinBlock(model = TrModel.CubeNoCull)
 		public static final Block Creature = new WaterloggableCreatureCageBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
 		@RegistryName("creature_terrarium")
+		@TarkinBlock(model = TrModel.CubeNoCull)
 		@ClientBlockRegistryData(renderLayer = RenderLayerHint.CUTOUT)
 		public static final Block CreatureTerrarium = new TerrariumBlock(null, FabricBlockSettings.of(Material.METAL).sounds(BlockSoundGroup.COPPER).nonOpaque().allowsSpawning(BlockUtil::never).solidBlock(BlockUtil::never).suffocates(BlockUtil::never).blockVision(BlockUtil::never).strength(3.5F).requiresTool());
 		@RegistryName("stained_creature_terrarium")

@@ -9,9 +9,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TarkinItem
 {
-	TarkinModelFilePreset model() default TarkinModelFilePreset.Item;
+	TrModel model() default TrModel.Item;
 
-	TarkinLangPreset lang() default TarkinLangPreset.Item;
+	TrLang lang() default TrLang.Item;
 
-	TarkinItemTagPreset[] tags() default {};
+	TrItemTag[] tags() default {};
 }

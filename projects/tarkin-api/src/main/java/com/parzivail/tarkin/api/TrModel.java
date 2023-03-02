@@ -1,6 +1,6 @@
 package com.parzivail.tarkin.api;
 
-public enum TarkinModelFilePreset
+public enum TrModel
 {
 	None,
 	Empty,
@@ -8,5 +8,8 @@ public enum TarkinModelFilePreset
 	Block,
 	Cube,
 	SpawnEgg,
-	HandheldItem
+	HandheldItem,
+	CubeNoCull,
+	Leaves,
+	Fan
 }

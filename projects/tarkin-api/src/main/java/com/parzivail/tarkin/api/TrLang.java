@@ -1,6 +1,6 @@
 package com.parzivail.tarkin.api;
 
-public enum TarkinLangPreset
+public enum TrLang
 {
 	Item,
 	Block
