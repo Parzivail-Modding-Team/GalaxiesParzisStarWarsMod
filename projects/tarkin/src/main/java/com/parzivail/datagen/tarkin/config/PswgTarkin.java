@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.mininglevel.v1.FabricMineableTags;
 import net.minecraft.data.client.BlockStateModelGenerator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.ItemTags;
@@ -705,8 +706,9 @@ public class PswgTarkin
 		ItemGenerator.tool(SwgItems.Material.BeskarAxe)
 		             .build(assets);
 
-		// TODO: move to addons
-		//		ItemGenerator.empty(SwgItems.Blaster.Blaster).build(assets);
+		for (var blasterId : PswgContent.getBlasterPresets().keySet())
+			ItemGenerator.empty(Registries.ITEM.get(SwgItems.getBlasterRegistrationId(blasterId))).build(assets);
+
 		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
 
 		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);

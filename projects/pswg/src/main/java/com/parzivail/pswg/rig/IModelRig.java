@@ -3,6 +3,7 @@ package com.parzivail.pswg.rig;
 import com.parzivail.util.math.Transform;
 import net.minecraft.util.math.Vec3d;
 
+@Deprecated
 public interface IModelRig<T, P extends Enum<P>>
 {
 	void transform(Transform stack, T target, P part);

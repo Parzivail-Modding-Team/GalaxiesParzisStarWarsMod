@@ -11,6 +11,7 @@ import org.joml.Matrix4f;
 import java.io.IOException;
 import java.util.HashMap;
 
+@Deprecated
 public record PR3RFile(HashMap<String, Matrix4f> objects)
 {
 	private static final String MAGIC = "PR3R";

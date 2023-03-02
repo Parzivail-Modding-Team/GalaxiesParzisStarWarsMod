@@ -26,6 +26,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -537,11 +538,17 @@ public class SwgItems
 		{
 			var id = blaster.getKey();
 			registerWithTab(
-					new Identifier(id.getNamespace(), "blaster_" + id.getPath()),
+					getBlasterRegistrationId(id),
 					new BlasterItem(new Item.Settings().maxCount(1), id, blaster.getValue()),
 					false,
 					Galaxies.TabBlasters.getId().toString()
 			);
 		}
+	}
+
+	@NotNull
+	public static Identifier getBlasterRegistrationId(Identifier id)
+	{
+		return new Identifier(id.getNamespace(), "blaster_" + id.getPath());
 	}
 }
