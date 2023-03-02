@@ -37,7 +37,7 @@ public class BlockGenerator
 	public static BlockGenerator blockNoModelLangEntry(Block block)
 	{
 		return new BlockGenerator(block)
-				.lang(LanguageProvider::ofBlock);
+				.lang(LanguageProvider::block);
 	}
 
 	public static BlockGenerator blockNoModel(Block block)

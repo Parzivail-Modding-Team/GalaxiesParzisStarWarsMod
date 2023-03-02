@@ -2,10 +2,12 @@ package com.parzivail.datagen.tarkin;
 
 import com.parzivail.datagen.tarkin.config.PswgTarkin;
 import com.parzivail.datagen.tarkin.config.TcwTarkin;
+import com.parzivail.tarkin.api.TarkinItem;
 import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.Lumberjack;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 
 import java.lang.annotation.Annotation;
@@ -14,7 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * T.A.R.K.I.N. - Text Asset Record-Keeping, Integration, and Normalization
@@ -91,7 +93,7 @@ public class Tarkin
 		}
 	}
 
-	public static <T> void consumeFields(Class<? extends Annotation> annotationClazz, Class<?> rootClazz, Class<T> registryType, Consumer<T> consumer)
+	public static <T, TA extends Annotation> void consumeFields(Class<TA> annotationClazz, Class<?> rootClazz, Class<T> registryType, BiConsumer<T, TA> consumer)
 	{
 		for (var field : rootClazz.getFields())
 		{
@@ -101,7 +103,7 @@ public class Tarkin
 
 			try
 			{
-				consumer.accept((T)field.get(null));
+				consumer.accept((T)field.get(null), annotation);
 			}
 			catch (IllegalAccessException e)
 			{
@@ -115,6 +117,28 @@ public class Tarkin
 
 	public static void registerLangFields(Class<?> rootClazz, LanguageBuilder languageBuilder, List<BuiltAsset> assets)
 	{
-		consumeFields(TarkinLang.class, rootClazz, String.class, s -> languageBuilder.entry(s).build(assets));
+		consumeFields(TarkinLang.class, rootClazz, String.class, (s, a) -> languageBuilder.entry(s).build(assets));
+	}
+
+	public static void registerItemFields(Class<?> rootClazz, List<BuiltAsset> assets)
+	{
+		consumeFields(TarkinItem.class, rootClazz, Item.class, (item, a) -> {
+			var gen = new ItemGenerator(item);
+
+			switch (a.lang())
+			{
+				case Item -> gen.lang(LanguageProvider::item);
+			}
+
+			switch (a.model())
+			{
+				case Empty -> gen.model(ModelFile::empty);
+				case Item -> gen.model(ModelFile::item);
+				case SpawnEgg -> gen.model(ModelFile::spawn_egg);
+				case HandheldItem -> gen.model(ModelFile::handheld_item);
+			}
+
+			gen.build(assets);
+		});
 	}
 }

@@ -697,14 +697,9 @@ public class PswgTarkin
 
 	public static void generateItems(List<BuiltAsset> assets)
 	{
-		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
+		Tarkin.registerItemFields(SwgItems.class, assets);
 
-		ItemGenerator.tool(SwgItems.Material.DurasteelAxe)
-		             .build(assets);
-		ItemGenerator.tool(SwgItems.Material.TitaniumAxe)
-		             .build(assets);
-		ItemGenerator.tool(SwgItems.Material.BeskarAxe)
-		             .build(assets);
+		final var TAG_TRINKETS_CHEST_BACK = TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
 
 		PswgContent.getBlasterPresets().keySet().stream()
 		           .filter(id -> id.getNamespace().equals(Resources.MODID))
@@ -714,33 +709,8 @@ public class PswgTarkin
 				           .build(assets)
 		           );
 
-		ItemGenerator.basic(SwgItems.Blaster.SmallPowerPack).build(assets);
-
-		ItemGenerator.basic(SwgItems.CraftingComponents.ElectricMotor).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.LightPanel).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.DisplayPanel).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.Turbine).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.BallBearing).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.DeshWire).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.DeshCoil).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.PlasteelRod).build(assets);
-		ItemGenerator.basic(SwgItems.CraftingComponents.DurasteelRod).build(assets);
 		for (var entry : SwgItems.Door.DoorInsert.entrySet())
 			ItemGenerator.basic(entry.getValue()).build(assets);
-
-		ItemGenerator.basic(SwgItems.Natural.StrippedJaporBranch).build(assets);
-		ItemGenerator.basic(SwgItems.Natural.MoloFlower).build(assets);
-		ItemGenerator.basic(SwgItems.Natural.SaltPile).build(assets);
-
-		ItemGenerator.basic(SwgItems.Material.ExoniumCrystal).build(assets);
-		ItemGenerator.basic(SwgItems.Material.HeliciteCrystal).build(assets);
-		ItemGenerator.basic(SwgItems.Material.LommiteCrystal).build(assets);
-		ItemGenerator.basic(SwgItems.Material.ThorilideCrystal).build(assets);
-		ItemGenerator.basic(SwgItems.Material.ZersiumCrystal).build(assets);
-
-		ItemGenerator.basic(SwgItems.Material.RubindumShard).build(assets);
-
-		ItemGenerator.basic(SwgItems.Debug.Debug).build(assets);
 
 		ItemGenerator.armor(SwgItems.Armor.Stormtrooper, assets);
 		ItemGenerator.armor(SwgItems.Armor.Purgetrooper, assets);
@@ -754,27 +724,7 @@ public class PswgTarkin
 		ItemGenerator.basic(SwgItems.Armor.JumptrooperJetpack)
 		             .tag(TAG_TRINKETS_CHEST_BACK)
 		             .build(assets);
-		ItemGenerator.basic(SwgItems.Armor.ImperialPilotHelmet)
-		             .build(assets);
-		ItemGenerator.basic(SwgItems.Armor.ImperialPilotKit)
-		             .build(assets);
-		ItemGenerator.basic(SwgItems.Armor.RebelPilot).build(assets);
-		ItemGenerator.basic(SwgItems.Armor.RebelForest).build(assets);
-		ItemGenerator.basic(SwgItems.Armor.RebelTropical).build(assets);
-		ItemGenerator.basic(SwgItems.Armor.BlackImperialOfficer).build(assets);
-		ItemGenerator.basic(SwgItems.Armor.GrayImperialOfficer).build(assets);
-		ItemGenerator.basic(SwgItems.Armor.LightGrayImperialOfficer).build(assets);
-		ItemGenerator.basic(SwgItems.Armor.KhakiImperialOfficer).build(assets);
 
-		ItemGenerator.basic(SwgItems.Cable.Power).build(assets);
-
-		ItemGenerator.basic(SwgItems.Material.HeliciteDust).build(assets);
-		ItemGenerator.basic(SwgItems.Material.LommiteDust).build(assets);
-		ItemGenerator.basic(SwgItems.Material.ThorilideDust).build(assets);
-		ItemGenerator.basic(SwgItems.Material.ZersiumDust).build(assets);
-
-		ItemGenerator.basic(SwgItems.FoodPrep.DurasteelCup).build(assets);
-		ItemGenerator.basic(SwgItems.FoodPrep.DeshCup).build(assets);
 		for (var entry : SwgItems.FoodPrep.Cups.entrySet())
 			ItemGenerator.basic(entry.getValue()).build(assets);
 		for (var entry : SwgItems.FoodPrep.Glasses)
@@ -783,152 +733,6 @@ public class PswgTarkin
 			ItemGenerator.basic(entry).build(assets);
 		for (var entry : SwgItems.FoodPrep.PlasticBottles)
 			ItemGenerator.basic(entry).build(assets);
-
-		ItemGenerator.basic(SwgItems.Food.JoganFruit).build(assets);
-		ItemGenerator.basic(SwgItems.Food.ChasukaLeaf).build(assets);
-		ItemGenerator.basic(SwgItems.Food.Meiloorun).build(assets);
-		ItemGenerator.basic(SwgItems.Food.MynockWing).build(assets);
-		ItemGenerator.basic(SwgItems.Food.FriedMynockWing).build(assets);
-		ItemGenerator.basic(SwgItems.Food.BanthaChop).build(assets);
-		ItemGenerator.basic(SwgItems.Food.BanthaSteak).build(assets);
-		ItemGenerator.basic(SwgItems.Food.NerfChop).build(assets);
-		ItemGenerator.basic(SwgItems.Food.NerfSteak).build(assets);
-		ItemGenerator.basic(SwgItems.Food.GizkaChop).build(assets);
-		ItemGenerator.basic(SwgItems.Food.GizkaSteak).build(assets);
-
-		ItemGenerator.basic(SwgItems.Food.FlangthTakeout).build(assets);
-		ItemGenerator.basic(SwgItems.Food.FlangthPlate).build(assets);
-
-		ItemGenerator.basic(SwgItems.Food.DeathStickRed).build(assets);
-		ItemGenerator.basic(SwgItems.Food.DeathStickYellow).build(assets);
-
-		ItemGenerator.basic(SwgItems.Food.MysteriousSmoothie).build(assets);
-		ItemGenerator.basic(SwgItems.Food.Kreetlejuice).build(assets);
-		ItemGenerator.basic(SwgItems.Food.AbsynthesizedMalt).build(assets);
-		ItemGenerator.basic(SwgItems.Food.CoronetCocktail).build(assets);
-
-		ItemGenerator.basic(SwgItems.Food.ClassicSoda).build(assets);
-		ItemGenerator.basic(SwgItems.Food.DietSoda).build(assets);
-		ItemGenerator.basic(SwgItems.Food.CitrusSoda).build(assets);
-
-		ItemGenerator.basic(SwgItems.Food.BottledWater).build(assets);
-
-		ItemGenerator.basic(SwgItems.Food.BlueMilk).build(assets);
-		ItemGenerator.basic(SwgItems.Food.BlueMilkGlass).build(assets);
-		ItemGenerator.basic(SwgItems.Food.BlueYogurt).build(assets);
-		ItemGenerator.basic(SwgItems.Food.BanthaCookie).build(assets);
-
-		ItemGenerator.basic(SwgItems.Food.QrikkiBread).build(assets);
-		ItemGenerator.basic(SwgItems.Food.QrikkiWaffle).build(assets);
-
-		ItemGenerator.basic(SwgItems.Food.AhrisaBowl).build(assets);
-		ItemGenerator.basic(SwgItems.Food.BlackMelon).build(assets);
-		ItemGenerator.basic(SwgItems.Seeds.ChasukaSeeds).build(assets);
-		ItemGenerator.basic(SwgItems.Food.DesertPlums).build(assets);
-		ItemGenerator.basic(SwgItems.Food.DriedPoontenGrass).build(assets);
-		ItemGenerator.basic(SwgItems.Food.HarounBread).build(assets);
-		ItemGenerator.basic(SwgItems.Food.HkakBean).build(assets);
-		ItemGenerator.basic(SwgItems.Food.PallieFruit).build(assets);
-		ItemGenerator.basic(SwgItems.Food.PikaFruit).build(assets);
-		ItemGenerator.basic(SwgItems.Food.Tuber).build(assets);
-		ItemGenerator.basic(SwgItems.Food.CookedEopieLoin).build(assets);
-		ItemGenerator.basic(SwgItems.Food.CrispyGorg).build(assets);
-		ItemGenerator.basic(SwgItems.Food.DebDeb).build(assets);
-		ItemGenerator.basic(SwgItems.Food.DewbackEgg).build(assets);
-		ItemGenerator.basic(SwgItems.Food.DewbackOmelette).build(assets);
-		ItemGenerator.basic(SwgItems.Food.EopieLoin).build(assets);
-		ItemGenerator.basic(SwgItems.Food.HubbaGourd).build(assets);
-		ItemGenerator.basic(SwgItems.Food.JerbaRack).build(assets);
-		ItemGenerator.basic(SwgItems.Food.JerbaRib).build(assets);
-		ItemGenerator.basic(SwgItems.Food.KraytMeat).build(assets);
-		ItemGenerator.basic(SwgItems.Food.RawSkettoNugget).build(assets);
-		ItemGenerator.basic(SwgItems.Food.RoastKrayt).build(assets);
-		ItemGenerator.basic(SwgItems.Food.RontoChuck).build(assets);
-		ItemGenerator.basic(SwgItems.Food.TuberMash).build(assets);
-		ItemGenerator.basic(SwgItems.Food.VaporatorMushroom).build(assets);
-		ItemGenerator.basic(SwgItems.Food.WorrtEgg).build(assets);
-
-		ItemGenerator.basic(SwgItems.MobDrops.FaaBucket).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.LaaBucket).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.CorpseOfGorg).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.BanthaHorn).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.DewbackBone).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.DewbackBoneShard).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.EyeOfSketto).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.Hide).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.KraytPearl).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.KraytTooth).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.KreetleHusk).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.LizardGizzard).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.SquillLiver).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.TongueOfWorrt).build(assets);
-		ItemGenerator.basic(SwgItems.MobDrops.ToughHide).build(assets);
-
-		ItemGenerator.tool(SwgItems.Material.DurasteelHoe)
-		             .build(assets);
-		ItemGenerator.tool(SwgItems.Material.TitaniumHoe)
-		             .build(assets);
-		ItemGenerator.tool(SwgItems.Material.BeskarHoe)
-		             .build(assets);
-
-		ItemGenerator.basic(SwgItems.Material.BeskarIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.ChromiumIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.CortosisIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.DeshIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.KeleriumIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.IoniteIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.DiatiumIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.DurasteelIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.PlasteelIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.TitaniumIngot).build(assets);
-		ItemGenerator.basic(SwgItems.Material.TransparisteelIngot).build(assets);
-
-		ItemGenerator.empty(SwgItems.Lightsaber.Lightsaber).build(assets);
-
-		// TODO: ItemGenerator.basic(SwgItems.Nugget.Beskar).build(assets);
-		ItemGenerator.basic(SwgItems.Material.ChromiumNugget).build(assets);
-		// TODO: ItemGenerator.basic(SwgItems.Nugget.Cortosis).build(assets);
-		ItemGenerator.basic(SwgItems.Material.DeshNugget).build(assets);
-		ItemGenerator.basic(SwgItems.Material.DiatiumNugget).build(assets);
-		ItemGenerator.basic(SwgItems.Material.DurasteelNugget).build(assets);
-		ItemGenerator.basic(SwgItems.Material.PlasteelNugget).build(assets);
-		ItemGenerator.basic(SwgItems.Material.TitaniumNugget).build(assets);
-		ItemGenerator.basic(SwgItems.Material.IoniteNugget).build(assets);
-		// TODO: ItemGenerator.basic(SwgItems.Nugget.Transparisteel).build(assets);
-
-		ItemGenerator.basic(SwgItems.Material.BeskarRaw).build(assets);
-		ItemGenerator.basic(SwgItems.Material.IoniteRaw).build(assets);
-		ItemGenerator.basic(SwgItems.Material.ChromiumRaw).build(assets);
-		ItemGenerator.basic(SwgItems.Material.CortosisRaw).build(assets);
-		ItemGenerator.basic(SwgItems.Material.DeshRaw).build(assets);
-		ItemGenerator.basic(SwgItems.Material.DiatiumRaw).build(assets);
-		ItemGenerator.basic(SwgItems.Material.KeleriumRaw).build(assets);
-		ItemGenerator.basic(SwgItems.Material.RubindumRaw).build(assets);
-		ItemGenerator.basic(SwgItems.Material.TitaniumRaw).build(assets);
-
-		ItemGenerator.tool(SwgItems.Material.DurasteelPickaxe)
-		             .build(assets);
-		ItemGenerator.tool(SwgItems.Material.TitaniumPickaxe)
-		             .build(assets);
-		ItemGenerator.tool(SwgItems.Material.BeskarPickaxe)
-		             .build(assets);
-
-		ItemGenerator.tool(SwgItems.Material.DurasteelShovel)
-		             .build(assets);
-		ItemGenerator.tool(SwgItems.Material.TitaniumShovel)
-		             .build(assets);
-		ItemGenerator.tool(SwgItems.Material.BeskarShovel)
-		             .build(assets);
-
-		ItemGenerator.basic(SwgItems.Spawners.XwingT65b).build(assets);
-		ItemGenerator.basic(SwgItems.Spawners.LandspeederX34).build(assets);
-		ItemGenerator.basic(SwgItems.Spawners.ZephyrJ).build(assets);
-
-		ItemGenerator.spawn_egg(SwgItems.Spawners.Faa).build(assets);
-		ItemGenerator.spawn_egg(SwgItems.Spawners.Laa).build(assets);
-		ItemGenerator.spawn_egg(SwgItems.Spawners.Worrt).build(assets);
-		ItemGenerator.spawn_egg(SwgItems.Spawners.Bantha).build(assets);
-		ItemGenerator.spawn_egg(SwgItems.Spawners.SandSkitter).build(assets);
 	}
 
 	public static void generateBlocks(List<BuiltAsset> assets)

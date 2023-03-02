@@ -21,13 +21,13 @@ public class LanguageProvider
 		                         .collect(Collectors.joining(" "));
 	}
 
-	public static LanguageProvider ofBlock(Block block)
+	public static LanguageProvider block(Block block)
 	{
 		var reg = AssetGenerator.getRegistryName(block);
 		return new LanguageProvider(new Identifier(reg.getNamespace(), OUTPUT_LOCALE), "block." + reg.getNamespace() + "." + reg.getPath(), generateDefaultLang(reg));
 	}
 
-	public static LanguageProvider ofItem(Item item)
+	public static LanguageProvider item(Item item)
 	{
 		var reg = AssetGenerator.getRegistryName(item);
 		return new LanguageProvider(new Identifier(reg.getNamespace(), OUTPUT_LOCALE), "item." + reg.getNamespace() + "." + reg.getPath(), generateDefaultLang(reg));

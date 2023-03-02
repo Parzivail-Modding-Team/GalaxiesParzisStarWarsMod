@@ -28,7 +28,7 @@ public class ItemGenerator
 	public static ItemGenerator itemNoModelLangEntry(Item block)
 	{
 		return itemNoModel(block)
-				.lang(LanguageProvider::ofItem);
+				.lang(LanguageProvider::item);
 	}
 
 	public static ItemGenerator basic(Item item)
