@@ -118,7 +118,6 @@ public class PswgTarkin
 
 		lang.message("tip").dot("customize_character").build(assets);
 
-		lang.entry(BlasterItem.I18N_MESSAGE_MODE_CHANGED).build(assets);
 		for (var value : BlasterFiringMode.values())
 			lang.entry(value.getTranslation()).build(assets);
 

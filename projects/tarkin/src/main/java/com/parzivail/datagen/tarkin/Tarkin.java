@@ -134,6 +134,8 @@ public class Tarkin
 				{
 					case TrinketsChestBack -> TagKey.of(RegistryKeys.ITEM, new Identifier("trinkets", "chest/back"));
 					case Leaves -> ItemTags.LEAVES;
+					case DesertSand -> SwgTags.Item.DESERT_SAND;
+					case DesertSandstone -> SwgTags.Item.DESERT_SANDSTONE;
 					default -> throw new RuntimeException("Unsupported value " + preset);
 				};
 	}
