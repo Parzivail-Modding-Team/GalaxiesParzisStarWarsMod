@@ -399,9 +399,9 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			final var flashradius = 0.45f;
 
 			VertexConsumerBuffer.Instance.vertex(-flashradius, -flashradius, 0, 0, 0, 1, 0, 0);
-			VertexConsumerBuffer.Instance.vertex(flashradius, -flashradius, 0, 0, 0, 1, 1, 0);
-			VertexConsumerBuffer.Instance.vertex(flashradius, flashradius, 0, 0, 0, 1, 1, 1);
-			VertexConsumerBuffer.Instance.vertex(-flashradius, flashradius, 0, 0, 0, 1, 0, 1);
+			VertexConsumerBuffer.Instance.vertex(flashradius, -flashradius, 0, 0, 0, 1, 15 / 16f, 0);
+			VertexConsumerBuffer.Instance.vertex(flashradius, flashradius, 0, 0, 0, 1, 15 / 16f, 15 / 16f);
+			VertexConsumerBuffer.Instance.vertex(-flashradius, flashradius, 0, 0, 0, 1, 0, 15 / 16f);
 
 			if (!renderMode.isFirstPerson())
 			{
@@ -409,17 +409,20 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
 				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 
+				final var maxU = 30 / 32f;
+				final var maxV = 15 / 32f;
+
 				// vertical
-				VertexConsumerBuffer.Instance.vertex(0, -flashradius, -0.2f, 0, 0, 1, 1, 0);
+				VertexConsumerBuffer.Instance.vertex(0, -flashradius, -0.2f, 0, 0, 1, maxU, 0);
 				VertexConsumerBuffer.Instance.vertex(0, -flashradius, -0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
-				VertexConsumerBuffer.Instance.vertex(0, flashradius, -0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
-				VertexConsumerBuffer.Instance.vertex(0, flashradius, -0.2f, 0, 0, 1, 1, 1);
+				VertexConsumerBuffer.Instance.vertex(0, flashradius, -0.2f + 3 * flashradius, 0, 0, 1, 0, maxV);
+				VertexConsumerBuffer.Instance.vertex(0, flashradius, -0.2f, 0, 0, 1, maxU, maxV);
 
 				// horizontal
-				VertexConsumerBuffer.Instance.vertex(-flashradius, 0, -0.2f, 0, 0, 1, 1, 0);
+				VertexConsumerBuffer.Instance.vertex(-flashradius, 0, -0.2f, 0, 0, 1, maxU, 0);
 				VertexConsumerBuffer.Instance.vertex(-flashradius, 0, -0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
-				VertexConsumerBuffer.Instance.vertex(flashradius, 0, -0.2f + 3 * flashradius, 0, 0, 1, 0, 1);
-				VertexConsumerBuffer.Instance.vertex(flashradius, 0, -0.2f, 0, 0, 1, 1, 1);
+				VertexConsumerBuffer.Instance.vertex(flashradius, 0, -0.2f + 3 * flashradius, 0, 0, 1, 0, maxV);
+				VertexConsumerBuffer.Instance.vertex(flashradius, 0, -0.2f, 0, 0, 1, maxU, maxV);
 			}
 		}
 	}
