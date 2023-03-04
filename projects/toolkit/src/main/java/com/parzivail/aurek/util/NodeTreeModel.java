@@ -1,5 +1,6 @@
 package com.parzivail.aurek.util;
 
+import com.parzivail.aurek.imgui.ImGuiHelper;
 import imgui.flag.ImGuiTreeNodeFlags;
 import imgui.internal.ImGui;
 
@@ -9,13 +10,15 @@ public class NodeTreeModel<TValue>
 {
 	public static class Node<TValue>
 	{
+		private final String icon;
 		private final String title;
 
 		public final ArrayList<Node<TValue>> children = new ArrayList<>();
 		public final TValue value;
 
-		public Node(String title, TValue value)
+		public Node(String icon, String title, TValue value)
 		{
+			this.icon = icon;
 			this.title = title;
 			this.value = value;
 		}
@@ -34,17 +37,48 @@ public class NodeTreeModel<TValue>
 
 		public void render()
 		{
+			ImGui.pushID(title);
+
 			if (children.isEmpty())
 			{
-				ImGui.treeNodeEx(LangUtil.translate(title), ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.NoTreePushOnOpen | ImGuiTreeNodeFlags.SpanFullWidth);
+				if (icon == null)
+				{
+					ImGui.treeNodeEx(LangUtil.translate(title), ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen | ImGuiTreeNodeFlags.SpanFullWidth);
+				}
+				else
+				{
+					ImGui.pushFont(ImGuiHelper.getIconFont());
+					ImGui.treeNodeEx(icon, ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.NoTreePushOnOpen | ImGuiTreeNodeFlags.SpanFullWidth);
+					ImGui.popFont();
+					ImGui.sameLine();
+					ImGui.text(LangUtil.translate(title));
+				}
+
+				ImGui.popID();
 				return;
 			}
 
-			if (ImGui.treeNodeEx(LangUtil.translate(title), ImGuiTreeNodeFlags.SpanFullWidth))
+			boolean isOpen;
+			if (icon == null)
+			{
+				isOpen = ImGui.treeNodeEx(LangUtil.translate(title), ImGuiTreeNodeFlags.SpanFullWidth);
+			}
+			else
+			{
+				ImGui.pushFont(ImGuiHelper.getIconFont());
+				isOpen = ImGui.treeNodeEx(icon, ImGuiTreeNodeFlags.SpanFullWidth);
+				ImGui.popFont();
+				ImGui.sameLine();
+				ImGui.text(LangUtil.translate(title));
+			}
+
+			if (isOpen)
 			{
 				children.forEach(Node::render);
 				ImGui.treePop();
 			}
+
+			ImGui.popID();
 		}
 	}
 

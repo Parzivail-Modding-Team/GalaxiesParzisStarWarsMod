@@ -1,6 +1,6 @@
 package com.parzivail.aurek.mixin;
 
-import com.parzivail.aurek.util.ImGuiHelper;
+import com.parzivail.aurek.imgui.ImGuiHelper;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,6 +1,6 @@
-package com.parzivail.aurek.ui;
+package com.parzivail.aurek.ui.view;
 
-import com.parzivail.aurek.imgui.ImguiScreen;
+import com.parzivail.aurek.ui.ImguiScreen;
 import com.parzivail.aurek.util.DialogUtil;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.camera.RenderTarget;

@@ -1,19 +1,23 @@
 package com.parzivail.aurek.ui.model;
 
+import imgui.internal.ImGui;
+import imgui.type.ImBoolean;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
+import java.util.function.Consumer;
 
 public class TabModelController<TModel extends TabModel> implements Collection<TModel>
 {
+	private final String id;
 	private final ArrayList<TModel> models = new ArrayList<>();
+	private final Stack<TModel> removeQueue = new Stack<>();
 
 	public TabModelController()
 	{
+		id = UUID.randomUUID().toString();
 	}
 
 	@Override
@@ -120,5 +124,37 @@ public class TabModelController<TModel extends TabModel> implements Collection<T
 		}
 
 		this.models.removeAll(discarded);
+	}
+
+	public TModel render(Consumer<TModel> renderer)
+	{
+		TModel selected = null;
+
+		if (ImGui.beginTabBar(String.format("tabs/%s", id)))
+		{
+			for (var model : this)
+			{
+				ImGui.pushID(String.format("tab/%s", model.getId()));
+
+				var isTabOpen = new ImBoolean(true);
+				if (ImGui.beginTabItem(model.getTitle(), isTabOpen))
+				{
+					selected = model;
+					renderer.accept(model);
+					ImGui.endTabItem();
+				}
+				ImGui.popID();
+
+				if (!isTabOpen.get())
+					removeQueue.push(model);
+			}
+
+			ImGui.endTabBar();
+		}
+
+		while (!removeQueue.empty())
+			remove(removeQueue.pop());
+
+		return selected;
 	}
 }

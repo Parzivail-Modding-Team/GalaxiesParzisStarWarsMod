@@ -2,11 +2,8 @@ package com.parzivail.aurek;
 
 import com.google.common.collect.ImmutableList;
 import com.parzivail.aurek.editor.BlasterEditor;
-import com.parzivail.aurek.imgui.ToolkitHomeScreen;
-import com.parzivail.aurek.ui.DirectItemEditorImguiScreen;
-import com.parzivail.aurek.ui.GlobalControlsImguiScreen;
-import com.parzivail.aurek.ui.NemiCompilerScreen;
-import com.parzivail.aurek.ui.ToolkitWorldgenScreen;
+import com.parzivail.aurek.imgui.Notifier;
+import com.parzivail.aurek.ui.view.*;
 import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.BlasterTransformer;
@@ -40,12 +37,12 @@ public class ToolkitClient implements PswgClientAddon
 
 		public String getTitle()
 		{
-			return LangUtil.translate("tool.title." + id);
+			return LangUtil.translate(toolLang(id));
 		}
 
 		public String getDescription()
 		{
-			return LangUtil.translate("tool.description." + id);
+			return LangUtil.translate(toolDescLang(id));
 		}
 
 		public Screen getScreen()
@@ -61,6 +58,8 @@ public class ToolkitClient implements PswgClientAddon
 	public static final String MODID = "aurek";
 	public static final Lumberjack LOG = new Lumberjack(MODID);
 
+	public static final Notifier NOTIFIER = new Notifier();
+
 	public static final KeyBinding KEY_OPEN_CONTEXT_CONTROLS = new KeyBinding("key.aurek.context_controls", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F8, "key.category.aurek");
 	public static final KeyBinding KEY_OPEN_GLOBAL_CONTROLS = new KeyBinding("key.aurek.global_controls", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F9, "key.category.aurek");
 
@@ -74,7 +73,7 @@ public class ToolkitClient implements PswgClientAddon
 	{
 		TOOLS.put(LangUtil.translate("tool.category.modeling"), ImmutableList.of(
 				new Tool("nemi_compiler", NemiCompilerScreen::new),
-				new Tool("p3di_compiler", null)
+				new Tool("p3di_compiler", P3diCompilerScreen::new)
 		));
 		TOOLS.put(LangUtil.translate("tool.category.worldgen"), ImmutableList.of(
 				new Tool("worldgen_visualizer", ToolkitWorldgenScreen::new)
@@ -89,6 +88,16 @@ public class ToolkitClient implements PswgClientAddon
 	public static Identifier id(String path)
 	{
 		return new Identifier(MODID, path);
+	}
+
+	public static String toolLang(String tool)
+	{
+		return "tool.title." + tool;
+	}
+
+	public static String toolDescLang(String tool)
+	{
+		return "tool.description." + tool;
 	}
 
 	@Override

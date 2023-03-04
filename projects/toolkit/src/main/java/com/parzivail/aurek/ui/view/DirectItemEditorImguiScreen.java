@@ -1,7 +1,7 @@
-package com.parzivail.aurek.ui;
+package com.parzivail.aurek.ui.view;
 
 import com.parzivail.aurek.editor.IDirectItemEditor;
-import com.parzivail.aurek.imgui.ImguiScreen;
+import com.parzivail.aurek.ui.ImguiScreen;
 import com.parzivail.pswg.Resources;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;

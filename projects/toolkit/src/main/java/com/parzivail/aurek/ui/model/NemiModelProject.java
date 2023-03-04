@@ -1,5 +1,6 @@
 package com.parzivail.aurek.ui.model;
 
+import com.parzivail.aurek.imgui.AurekIconFont;
 import com.parzivail.aurek.model.nemi.NemiModel;
 import com.parzivail.aurek.util.NodeTreeModel;
 import com.parzivail.pswg.client.loader.NemManager;
@@ -10,6 +11,7 @@ import net.minecraft.nbt.NbtElement;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.UUID;
 
 public class NemiModelProject implements TabModel
 {
@@ -24,6 +26,7 @@ public class NemiModelProject implements TabModel
 		Cuboid
 	}
 
+	private final String id;
 	private final String filename;
 	private final NbtCompound compiledModel;
 	private final ModelPart modelPart;
@@ -37,14 +40,26 @@ public class NemiModelProject implements TabModel
 
 	public NemiModelProject(String filename, NbtCompound nem)
 	{
+		this.id = UUID.randomUUID().toString();
 		this.filename = filename;
 		this.compiledModel = nem;
 		this.modelPart = NemManager.buildModel(this.compiledModel).createModel();
 
 		var uniqueNames = new HashMap<PartHash<NbtCompound>, String>();
-		var node = new NodeTreeModel.Node<>("[root]", NodeType.Root);
+		var node = new NodeTreeModel.Node<>(AurekIconFont.file_3d, "[root]", NodeType.Root);
 		buildNode(uniqueNames, nem, "parts", node);
 		this.treeModel = new NodeTreeModel<>(node);
+	}
+
+	public String getFilename()
+	{
+		return filename;
+	}
+
+	@Override
+	public String getId()
+	{
+		return id;
 	}
 
 	private static void buildNode(HashMap<PartHash<NbtCompound>, String> uniqueNames, NbtCompound root, String childKey, NodeTreeModel.Node<NodeType> parent)
@@ -55,7 +70,7 @@ public class NemiModelProject implements TabModel
 			var child = children.getCompound(childName);
 			var uniqueName = NemiModel.getUniqueName(uniqueNames, childName, new PartHash<>(childName, child));
 
-			var node = new NodeTreeModel.Node<>(childName.equals(uniqueName) ? childName : childName + " → " + uniqueName, NodeType.Part);
+			var node = new NodeTreeModel.Node<>(AurekIconFont.empty_axis, childName.equals(uniqueName) ? childName : childName + " → " + uniqueName, NodeType.Part);
 			buildNode(uniqueNames, child, "children", node);
 
 			for (var boxElement : child.getList("cuboids", NbtElement.COMPOUND_TYPE))
@@ -65,7 +80,7 @@ public class NemiModelProject implements TabModel
 				var x = size.getInt("x");
 				var y = size.getInt("y");
 				var z = size.getInt("z");
-				node.child(new NodeTreeModel.Node<>("(" + x + ", " + y + ", " + z + ")", NodeType.Cuboid));
+				node.child(new NodeTreeModel.Node<>(AurekIconFont.cube, "(" + x + ", " + y + ", " + z + ")", NodeType.Cuboid));
 			}
 
 			parent.child(node);

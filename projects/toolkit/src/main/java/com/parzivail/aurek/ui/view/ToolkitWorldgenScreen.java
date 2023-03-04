@@ -1,7 +1,9 @@
-package com.parzivail.aurek.ui;
+package com.parzivail.aurek.ui.view;
 
-import com.parzivail.aurek.imgui.ImguiScreen;
 import com.parzivail.aurek.render.ChunkedWorldMesh;
+import com.parzivail.aurek.ui.ImguiScreen;
+import com.parzivail.aurek.ui.ViewportController;
+import com.parzivail.aurek.ui.WorldgenControls;
 import com.parzivail.aurek.world.GeneratingBlockRenderView;
 import com.parzivail.pswg.Resources;
 import net.minecraft.client.gui.screen.Screen;

@@ -1,7 +1,6 @@
-package com.parzivail.aurek.util;
+package com.parzivail.aurek.imgui;
 
 import com.parzivail.aurek.ToolkitClient;
-import com.parzivail.aurek.imgui.AurekIconFont;
 import imgui.ImFont;
 import imgui.ImFontConfig;
 import imgui.ImGuiIO;

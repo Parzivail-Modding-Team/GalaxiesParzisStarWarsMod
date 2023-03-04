@@ -1,17 +1,17 @@
-package com.parzivail.aurek.ui;
+package com.parzivail.aurek.ui.view;
 
 import com.google.gson.Gson;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.parzivail.aurek.ToolkitClient;
-import com.parzivail.aurek.imgui.ImguiScreen;
+import com.parzivail.aurek.imgui.ImGuiHelper;
 import com.parzivail.aurek.model.nemi.NemiModel;
+import com.parzivail.aurek.ui.ImguiScreen;
+import com.parzivail.aurek.ui.Viewport;
 import com.parzivail.aurek.ui.model.NemiModelProject;
 import com.parzivail.aurek.ui.model.TabModelController;
 import com.parzivail.aurek.util.DialogUtil;
 import com.parzivail.aurek.util.FileUtil;
-import com.parzivail.aurek.util.ImGuiHelper;
 import com.parzivail.aurek.util.LangUtil;
-import com.parzivail.pswg.Resources;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.MatrixStackUtil;
 import imgui.flag.ImGuiDir;
@@ -39,7 +39,7 @@ import java.nio.file.Path;
 public class NemiCompilerScreen extends ImguiScreen
 {
 	private static final Gson gson = new Gson();
-	private static final String I18N_TOOLKIT_NEMI_COMPILER = Resources.screen("nemi_compiler");
+	private static final String I18N_TOOLKIT_NEMI_COMPILER = ToolkitClient.toolLang("nemi_compiler");
 	private static final ImInt INT_NULL = new ImInt(0);
 
 	private final TabModelController<NemiModelProject> tabController;
@@ -228,52 +228,7 @@ public class NemiCompilerScreen extends ImguiScreen
 			NemiModelProject selectedProject = null;
 
 			if (ImGui.begin("Viewport", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoScrollWithMouse))
-			{
-				if (ImGui.beginTabBar("open_projects"))
-				{
-					for (var model : tabController)
-					{
-						if (ImGui.beginTabItem(model.getTitle()))
-						{
-							selectedProject = model;
-
-							assert this.client != null;
-							var tickDelta = client.getTickDelta();
-
-							viewport.capture(false, true);
-
-							RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
-
-							var ms = new MatrixStack();
-
-							var f = 1 / (float)client.getWindow().getScaleFactor();
-							MatrixStackUtil.scalePos(ms, f, f, f);
-							viewport.translateAndZoom(ms, tickDelta);
-							MatrixStackUtil.scalePos(ms, 16, 16, 16);
-							MatrixStackUtil.scalePos(ms, 10, 10, 10);
-
-							viewport.rotate(ms, tickDelta);
-							var immediate = client.getBufferBuilders().getEntityVertexConsumers();
-
-							ms.push();
-							ms.translate(-0.5f, -1, -0.5f);
-							client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
-							ms.pop();
-
-							ms.multiply(new Quaternionf().rotationZ(MathUtil.fPI));
-							ms.translate(0, -1.5f, 0);
-							model.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
-							immediate.draw();
-
-							viewport.draw();
-
-							ImGui.endTabItem();
-						}
-					}
-
-					ImGui.endTabBar();
-				}
-			}
+				selectedProject = tabController.render(this::renderTab);
 			ImGui.end();
 
 			if (ImGui.begin("Model Tree", ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove))
@@ -291,5 +246,38 @@ public class NemiCompilerScreen extends ImguiScreen
 		else
 			ImGui.popStyleVar();
 		ImGui.end();
+	}
+
+	private void renderTab(NemiModelProject model)
+	{
+		assert this.client != null;
+		var tickDelta = client.getTickDelta();
+
+		viewport.capture(false, true);
+
+		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
+
+		var ms = new MatrixStack();
+
+		var f = 1 / (float)client.getWindow().getScaleFactor();
+		MatrixStackUtil.scalePos(ms, f, f, f);
+		viewport.translateAndZoom(ms, tickDelta);
+		MatrixStackUtil.scalePos(ms, 16, 16, 16);
+		MatrixStackUtil.scalePos(ms, 10, 10, 10);
+
+		viewport.rotate(ms, tickDelta);
+		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
+
+		ms.push();
+		ms.translate(-0.5f, -1, -0.5f);
+		client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
+		ms.pop();
+
+		ms.multiply(new Quaternionf().rotationZ(MathUtil.fPI));
+		ms.translate(0, -1.5f, 0);
+		model.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
+		immediate.draw();
+
+		viewport.draw();
 	}
 }

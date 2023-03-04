@@ -1,4 +1,4 @@
-package com.parzivail.aurek.imgui;
+package com.parzivail.aurek.ui;
 
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;

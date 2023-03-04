@@ -55,6 +55,11 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		Sprite provideLayer(T target, String objectName);
 	}
 
+	public static final int MAT_ID_DIFFUSE_OPAQUE = 0;
+	public static final int MAT_ID_DIFFUSE_CUTOUT = 1;
+	public static final int MAT_ID_DIFFUSE_TRANSLUCENT = 2;
+	public static final int MAT_ID_EMISSIVE = 3;
+
 	private static final String MODEL_MAGIC = "P3D";
 	private static final String RIG_MAGIC = "P3DR";
 	private static final int[] ACCEPTED_VERSIONS = { 0x02 };
@@ -206,13 +211,13 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 	{
 		switch (material)
 		{
-			case 0:
+			case MAT_ID_DIFFUSE_OPAQUE:
 				return AbstractModel.MAT_DIFFUSE_OPAQUE;
-			case 1:
+			case MAT_ID_DIFFUSE_CUTOUT:
 				return AbstractModel.MAT_DIFFUSE_CUTOUT;
-			case 2:
+			case MAT_ID_DIFFUSE_TRANSLUCENT:
 				return AbstractModel.MAT_DIFFUSE_TRANSLUCENT;
-			case 3:
+			case MAT_ID_EMISSIVE:
 				return AbstractModel.MAT_EMISSIVE;
 			default:
 			{

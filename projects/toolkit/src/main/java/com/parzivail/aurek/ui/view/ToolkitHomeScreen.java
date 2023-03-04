@@ -1,6 +1,8 @@
-package com.parzivail.aurek.imgui;
+package com.parzivail.aurek.ui.view;
 
 import com.parzivail.aurek.ToolkitClient;
+import com.parzivail.aurek.imgui.AurekIconFont;
+import com.parzivail.aurek.ui.ImguiScreen;
 import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.pswg.Resources;
 import imgui.flag.*;
@@ -93,7 +95,7 @@ public class ToolkitHomeScreen extends ImguiScreen
 						{
 							for (var tool : tools)
 							{
-								ImGui.pushID(name);
+								ImGui.pushID(tool.getTitle());
 								ImGui.tableNextRow();
 
 								ImGui.tableNextColumn();

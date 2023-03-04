@@ -1,7 +1,7 @@
 package com.parzivail.aurek.ui;
 
+import com.parzivail.aurek.imgui.ImGuiHelper;
 import com.parzivail.aurek.util.AnimatedFloat;
-import com.parzivail.aurek.util.ImGuiHelper;
 import com.parzivail.util.math.MathUtil;
 import imgui.flag.ImGuiMouseButton;
 import imgui.internal.ImGui;
