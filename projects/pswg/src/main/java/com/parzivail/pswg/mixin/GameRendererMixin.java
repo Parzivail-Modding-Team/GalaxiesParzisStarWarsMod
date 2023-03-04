@@ -1,7 +1,6 @@
 package com.parzivail.pswg.mixin;
 
 import com.parzivail.pswg.client.render.camera.CameraHelper;
-import com.parzivail.pswg.client.render.camera.RenderTarget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.Camera;
@@ -55,6 +54,6 @@ public abstract class GameRendererMixin
 	@Inject(method = "render(FJZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/GameRenderer;renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V", shift = At.Shift.BEFORE))
 	void render(float tickDelta, long startTime, boolean tick, CallbackInfo ci)
 	{
-		RenderTarget.capture(tickDelta, startTime, tick);
+//		RenderTarget.capture(tickDelta, startTime, tick);
 	}
 }

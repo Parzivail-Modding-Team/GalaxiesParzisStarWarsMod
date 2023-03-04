@@ -34,8 +34,8 @@ import java.util.function.Supplier;
 public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRenderer<SlidingDoorBlockEntity>
 {
 	private static final Identifier MODEL = Resources.id("block/tatooine_home_door");
-	private static final Identifier TEX_FRAME = Resources.id("textures/model/door/sliding_1x2/frame.png");
-	private static final Dyed<Identifier> TEX_DOORS = new Dyed<>(color -> Resources.id("textures/model/door/sliding_1x2/door_" + color.getName() + ".png"));
+	private static final Identifier TEX_FRAME = Resources.id("textures/block/model/door/sliding_1x2/frame.png");
+	private static final Dyed<Identifier> TEX_DOORS = new Dyed<>(color -> Resources.id("textures/block/model/door/sliding_1x2/door_" + color.getName() + ".png"));
 
 	private static Matrix4f transformBlockState(P3DBlockRenderTarget target, String objectName, float tickDelta)
 	{
