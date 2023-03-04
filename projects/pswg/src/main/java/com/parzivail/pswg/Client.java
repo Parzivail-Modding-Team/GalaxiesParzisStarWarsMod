@@ -183,7 +183,7 @@ public class Client implements ClientModInitializer
 								DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY,
 								Resources.id("block/tatooine_home_door"),
 								Resources.id("block/model/door/sliding_1x2/frame"),
-								Resources.id("block/model/workbench_particle")
+								new Identifier("block/stone")
 						),
 						(model, color) -> model.withTexture("door_" + color.getName(), Resources.id("block/model/door/sliding_1x2/door_" + color.getName()))
 				)
