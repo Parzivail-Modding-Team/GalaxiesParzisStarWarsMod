@@ -81,6 +81,10 @@ public class Config implements ConfigData
 	@Comment("Disable update checker")
 	public boolean disableUpdateCheck = false;
 
+	@Comment("Ask to send PSWG crash reports to the developers")
+	@ConfigEntry.Gui.Tooltip
+	public boolean askToSendCrashReports = true;
+
 	public void reload()
 	{
 		// TODO: change priority with keybind

@@ -12,7 +12,7 @@ import java.io.File;
 @Mixin(CrashReport.class)
 public class CrashReportMixin
 {
-	@Inject(method = "writeToFile(Ljava/io/File;)Z", at = @At(value = "INVOKE", target = "Ljava/io/Writer;write(Ljava/lang/String;)V", shift = At.Shift.AFTER))
+	@Inject(method = "writeToFile(Ljava/io/File;)Z", at = @At(value = "INVOKE", target = "Ljava/io/Writer;write(Ljava/lang/String;)V", shift = At.Shift.BEFORE))
 	private void writeToFile(File file, CallbackInfoReturnable<Boolean> cir)
 	{
 		try

@@ -3,9 +3,9 @@
 	"package": "com.parzivail.errorman.mixin",
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
-		"CrashReportMixin"
 	],
 	"client": [
+		"CrashReportMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
