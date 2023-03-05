@@ -1,11 +1,11 @@
-package com.parzivail.pswg.util;
+package com.parzivail.errorman;
 
 import net.minecraft.util.crash.CrashReport;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 
 import java.util.Arrays;
 
-public class ErrorHandler
+public class ErrorManager
 {
 	public static void onCrash(CrashReport report)
 	{

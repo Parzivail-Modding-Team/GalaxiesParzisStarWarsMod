@@ -1,6 +1,6 @@
-package com.parzivail.pswg.mixin;
+package com.parzivail.errorman.mixin;
 
-import com.parzivail.pswg.util.ErrorHandler;
+import com.parzivail.errorman.ErrorManager;
 import net.minecraft.util.crash.CrashReport;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -17,7 +17,7 @@ public class CrashReportMixin
 	{
 		try
 		{
-			ErrorHandler.onCrash(((CrashReport)(Object)this));
+			ErrorManager.onCrash(((CrashReport)(Object)this));
 		}
 		catch (Exception e)
 		{

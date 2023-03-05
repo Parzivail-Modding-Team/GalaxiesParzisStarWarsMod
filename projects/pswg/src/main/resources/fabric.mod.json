@@ -48,7 +48,8 @@
 	},
 	"accessWidener": "pswg.accesswidener",
 	"mixins": [
-		"pswg.mixins.json"
+		"pswg.mixins.json",
+		"errorman.mixins.json"
 	],
 	"depends": {
 		"cardinal-components-base": "*",
