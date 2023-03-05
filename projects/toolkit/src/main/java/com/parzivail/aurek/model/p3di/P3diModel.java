@@ -31,7 +31,7 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 				bw.write(socket.name().getBytes(StandardCharsets.US_ASCII));
 				bw.writeByte(0);
 
-				bw.writeBoolean(socket.parent() == null);
+				bw.writeBoolean(socket.parent() != null);
 				if (socket.parent() != null)
 				{
 					bw.write(socket.parent().getBytes(StandardCharsets.US_ASCII));
@@ -57,18 +57,16 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 				t[3][0], t[3][1], t[3][2], t[3][3]
 		);
 
-		var rot = new Matrix4f(
+		mat = mat.mul(new Matrix4f(
 				1, 0, 0, 0,
 				0, 0, 1, 0,
 				0, -1, 0, 0,
 				0, 0, 0, 1
-		);
-
-		mat = rot.mul(mat);
-		mat = mat.rotate(new Quaternionf().rotationX(-MathHelper.PI / 2));
+		));
+		mat = new Matrix4f().rotation(new Quaternionf().rotationX(-MathHelper.PI / 2)).mul(mat);
 
 		// TODO: wrong?
-		mat = mat.scale(1, 1, -1);
+		mat = new Matrix4f().scale(1, 1, -1).mul(mat);
 
 		bw.writeFloat(mat.m00());
 		bw.writeFloat(mat.m01());
