@@ -146,8 +146,6 @@ public class Client implements ClientModInitializer
 	@Override
 	public void onInitializeClient()
 	{
-		if (1 < 1 + 1)
-			throw new NullPointerException();
 		Galaxies.LOG.debug("onInitializeClient");
 
 		KeyBindingHelper.registerKeyBinding(KEY_PRIMARY_ITEM_ACTION);
