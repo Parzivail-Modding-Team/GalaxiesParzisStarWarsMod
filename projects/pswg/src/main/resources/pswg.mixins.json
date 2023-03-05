@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_17",
 	"mixins": [
 		"CactusBlockMixin",
+		"CrashReportMixin",
 		"EntityMixin",
 		"EntityTrackerEntryMixin",
 		"FarmlandBlockMixin",

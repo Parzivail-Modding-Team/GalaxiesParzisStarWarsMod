@@ -7,7 +7,8 @@
     </option>
     <option name="DO_NOT_FORMAT">
       <list>
-        <fileSet type="globPattern" pattern="*/src/main/**/*.json" />
+        <fileSet type="globPattern" pattern="*/src/main/resources/assets/**/*.json" />
+        <fileSet type="globPattern" pattern="*/src/main/resources/data/**/*.json" />
       </list>
     </option>
     <JavaCodeStyleSettings>
