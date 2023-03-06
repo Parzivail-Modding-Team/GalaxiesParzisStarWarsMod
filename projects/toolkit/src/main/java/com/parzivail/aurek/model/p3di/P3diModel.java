@@ -10,17 +10,23 @@ import org.joml.Quaternionf;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 {
-	@SuppressWarnings("UnstableApiUsage")
 	public void compile(File filename, boolean writeVertexData) throws IOException, P3diCompileException
 	{
-		try (
-				var f = new FileOutputStream(filename);
-				var bw = new LittleEndianDataOutputStream(f)
-		)
+		try (var f = new FileOutputStream(filename))
+		{
+			compile(f, writeVertexData);
+		}
+	}
+
+	@SuppressWarnings("UnstableApiUsage")
+	public void compile(OutputStream f, boolean writeVertexData) throws IOException, P3diCompileException
+	{
+		try (var bw = new LittleEndianDataOutputStream(f))
 		{
 			bw.write((writeVertexData ? "P3D" : "P3DR").getBytes(StandardCharsets.US_ASCII));
 			bw.writeInt(version);

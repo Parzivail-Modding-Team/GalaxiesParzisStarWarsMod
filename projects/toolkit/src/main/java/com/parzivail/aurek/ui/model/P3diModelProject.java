@@ -1,10 +1,16 @@
 package com.parzivail.aurek.ui.model;
 
+import com.parzivail.aurek.ToolkitClient;
 import com.parzivail.aurek.imgui.AurekIconFont;
+import com.parzivail.aurek.model.p3di.P3diCompileException;
 import com.parzivail.aurek.model.p3di.P3diMesh;
 import com.parzivail.aurek.model.p3di.P3diModel;
 import com.parzivail.aurek.util.NodeTreeModel;
+import com.parzivail.pswg.client.render.p3d.P3dModel;
 
+import java.io.IOException;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.UUID;
@@ -21,6 +27,7 @@ public class P3diModelProject implements TabModel
 	private final String id;
 	private final String filename;
 	private final P3diModel model;
+	private P3dModel compiledModel = null;
 
 	private final NodeTreeModel<NodeType> treeModel;
 
@@ -38,6 +45,29 @@ public class P3diModelProject implements TabModel
 
 		buildNode(model, model.meshes(), node);
 		this.treeModel = new NodeTreeModel<>(node);
+
+		try (final var out = new PipedOutputStream(); var in = new PipedInputStream(out))
+		{
+			new Thread(() -> {
+				try
+				{
+					model.compile(out, true);
+				}
+				catch (IOException e)
+				{
+					ToolkitClient.NOTIFIER.error("Could not generate preview", e);
+				}
+				catch (P3diCompileException e)
+				{
+					ToolkitClient.NOTIFIER.error(String.format("Invalid P3Di file: %s", e.getMessage()));
+				}
+			}).start();
+			compiledModel = P3dModel.read(in, true);
+		}
+		catch (IOException e)
+		{
+			ToolkitClient.NOTIFIER.error("Could not generate preview", e);
+		}
 	}
 
 	private void buildNode(P3diModel model, P3diMesh[] objects, NodeTreeModel.Node<NodeType> parent)
@@ -70,6 +100,11 @@ public class P3diModelProject implements TabModel
 	public P3diModel getModel()
 	{
 		return model;
+	}
+
+	public P3dModel getCompiledModel()
+	{
+		return compiledModel;
 	}
 
 	@Override

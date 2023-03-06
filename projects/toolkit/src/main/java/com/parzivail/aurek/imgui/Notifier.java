@@ -17,4 +17,8 @@ public class Notifier
 	public void error(String message)
 	{
 	}
+
+	public void error(String message, Exception cause)
+	{
+	}
 }
