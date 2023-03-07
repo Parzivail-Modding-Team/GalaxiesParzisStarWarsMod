@@ -23,14 +23,7 @@ public abstract class ModelRig<T>
 
 		mat.rotate(orientation);
 
-		var socket = RIG.transformables().get(socketName);
-		for (var part : socket.ancestry)
-		{
-			mat.mul(part.transform);
-			mat.mul(getPartTransformation(target, part.name, tickDelta));
-		}
-
-		mat.mul(socket.transform);
+		RIG.getSocketGlobalTransform(mat, socketName, target, tickDelta, this::getPartTransformation);
 
 		return mat;
 	}

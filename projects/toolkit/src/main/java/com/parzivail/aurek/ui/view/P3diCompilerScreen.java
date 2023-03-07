@@ -13,6 +13,7 @@ import com.parzivail.aurek.util.DialogUtil;
 import com.parzivail.aurek.util.FileUtil;
 import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
+import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.client.render.p3d.P3dObject;
 import com.parzivail.util.client.RenderShapes;
 import com.parzivail.util.client.VertexConsumerBuffer;
@@ -240,9 +241,9 @@ public class P3diCompilerScreen extends ImguiScreen
 		ms.translate(-0.5f, -1, -0.5f);
 		client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 		ms.pop();
-		immediate.draw();
 
 		model.getCompiledModel().render(ms, immediate, null, null, (vcp, t, o) -> vcp.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, 1, 255, 255, 255, 255);
+		immediate.draw();
 
 		VertexConsumerBuffer.Instance.init(immediate2.getBuffer(EnergyRenderer.LAYER_ENERGY), ms.peek(), 1, 1, 1, 1, OverlayTexture.DEFAULT_UV, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 		for (var entry : model.getCompiledModel().transformables().entrySet())
@@ -253,7 +254,8 @@ public class P3diCompilerScreen extends ImguiScreen
 			if (socket instanceof P3dObject)
 				continue;
 
-			ms.multiplyPositionMatrix(socket.transform);
+			var m = ms.peek().getPositionMatrix();
+			model.getCompiledModel().getSocketGlobalTransform(m, socket.name, null, 0, P3dModel::identityTransformer);
 
 			VertexConsumerBuffer.Instance.setMatrices(ms.peek());
 

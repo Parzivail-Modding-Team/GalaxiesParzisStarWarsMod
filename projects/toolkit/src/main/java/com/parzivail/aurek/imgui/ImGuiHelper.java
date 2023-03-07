@@ -4,6 +4,7 @@ import com.parzivail.aurek.ToolkitClient;
 import imgui.ImFont;
 import imgui.ImFontConfig;
 import imgui.ImGuiIO;
+import imgui.extension.imguizmo.ImGuizmo;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
@@ -118,6 +119,7 @@ public class ImGuiHelper
 	{
 		imGuiGlfw.newFrame();
 		ImGui.newFrame();
+		ImGuizmo.beginFrame();
 
 		frameDrawn = false;
 	}

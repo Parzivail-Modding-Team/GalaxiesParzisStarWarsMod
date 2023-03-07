@@ -64,6 +64,11 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 	private static final String RIG_MAGIC = "P3DR";
 	private static final int[] ACCEPTED_VERSIONS = { 0x02 };
 
+	public static <T> Matrix4f identityTransformer(T instance, String socket, float tickDelta)
+	{
+		return new Matrix4f();
+	}
+
 	public void renderBlock(MatrixStack matrix, QuadEmitter quadEmitter, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, SpriteSupplier<P3DBlockRenderTarget> spriteSupplier, Supplier<Random> randomSupplier, RenderContext context)
 	{
 		for (var mesh : rootObjects)
@@ -140,6 +145,17 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 			renderMesh(matrix, target, light, vertexConsumer, mesh, tickDelta, transformer, r, g, b, a);
 
 		matrix.pop();
+	}
+
+	public <T> void getSocketGlobalTransform(Matrix4f mat, String socketName, T target, float tickDelta, PartTransformer<T> transformer)
+	{
+		var socket = transformables().get(socketName);
+		for (var part : socket.ancestry)
+		{
+			mat.mul(part.transform);
+			mat.mul(transformer.transform(target, part.name, tickDelta));
+		}
+		mat.mul(socket.transform);
 	}
 
 	@Nullable
