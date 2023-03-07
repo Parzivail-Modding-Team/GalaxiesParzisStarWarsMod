@@ -23,7 +23,6 @@ modrinth {
 	projectId.set("9rBI0wQz")
 	versionType.set("alpha")
 	uploadFile.set(tasks.remapJar as Any)
-	debugMode.set(true)
 	required.project("P7dR8mSH") // Fabric API
 	optional.project("mOgUt4GM") // Mod Menu
 	optional.project("nfn13YXA") // REI
