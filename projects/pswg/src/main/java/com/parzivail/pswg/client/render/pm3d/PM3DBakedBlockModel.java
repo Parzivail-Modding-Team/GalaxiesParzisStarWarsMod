@@ -27,6 +27,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,10 +83,10 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 		var tC = uvs[c.texture()];
 		var tD = uvs[d.texture()];
 
-		vA = transformation.transformPosition(vA);
-		vB = transformation.transformPosition(vB);
-		vC = transformation.transformPosition(vC);
-		vD = transformation.transformPosition(vD);
+		vA = transformation.transformPosition(vA, new Vector3f());
+		vB = transformation.transformPosition(vB, new Vector3f());
+		vC = transformation.transformPosition(vC, new Vector3f());
+		vD = transformation.transformPosition(vD, new Vector3f());
 
 		quadEmitter.pos(0, vA).normal(0, nA).sprite(0, 0, tA.x, 1 - tA.y);
 		quadEmitter.pos(1, vB).normal(1, nB).sprite(1, 0, tB.x, 1 - tB.y);

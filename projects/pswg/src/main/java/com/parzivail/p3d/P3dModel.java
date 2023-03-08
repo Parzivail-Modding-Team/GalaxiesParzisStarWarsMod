@@ -201,10 +201,10 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		{
 			quadEmitter.colorIndex(1).spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF).material(getBlockMaterial(o.material));
 
-			var vA = modelMat.transformPosition(face.positions[0]);
-			var vB = modelMat.transformPosition(face.positions[1]);
-			var vC = modelMat.transformPosition(face.positions[2]);
-			var vD = modelMat.transformPosition(face.positions[3]);
+			var vA = modelMat.transformPosition(face.positions[0], new Vector3f());
+			var vB = modelMat.transformPosition(face.positions[1], new Vector3f());
+			var vC = modelMat.transformPosition(face.positions[2], new Vector3f());
+			var vD = modelMat.transformPosition(face.positions[3], new Vector3f());
 
 			var n = new Vector3f(face.normal.x, face.normal.y, face.normal.z);
 			n.mul(normalMat);
