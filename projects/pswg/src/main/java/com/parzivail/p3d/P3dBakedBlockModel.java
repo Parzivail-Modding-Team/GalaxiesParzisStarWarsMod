@@ -61,24 +61,6 @@ public class P3dBakedBlockModel extends DynamicBakedModel
 	{
 		if (state != null)
 		{
-			// TODO: find better way to bake connecting models
-			//			if (state.getBlock() instanceof ConnectingNodeBlock)
-			//			{
-			//				var meshBuilder = createMeshBuilder();
-			//				var quadEmitter = meshBuilder.getEmitter();
-			//
-			//				for (var o : container.objects())
-			//				{
-			//					if (!"NODE_CENTER".equals(o.objName()) && !state.get(ConnectingNodeBlock.FACING_PROPERTIES.get(FACING_SUBMODELS.get(o.objName()))))
-			//						continue;
-			//
-			//					for (var face : o.faces())
-			//						emitFace(transformation, quadEmitter, face);
-			//				}
-			//
-			//				return meshBuilder.build();
-			//			}
-
 			if (state.getBlock() instanceof DisplacingBlock db)
 			{
 				var shape = db.getOutlineShape(state, blockView, pos, ShapeContext.absent());

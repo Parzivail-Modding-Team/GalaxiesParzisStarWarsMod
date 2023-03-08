@@ -9,10 +9,7 @@ import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
-import com.parzivail.pswg.client.render.block.BlasterWorkbenchWeaponRenderer;
-import com.parzivail.pswg.client.render.block.PowerCouplingCableRenderer;
-import com.parzivail.pswg.client.render.block.SlidingDoorRenderer;
-import com.parzivail.pswg.client.render.block.TerrariumRenderer;
+import com.parzivail.pswg.client.render.block.*;
 import com.parzivail.pswg.client.render.entity.BlasterBoltRenderer;
 import com.parzivail.pswg.client.render.entity.BlasterStunBoltRenderer;
 import com.parzivail.pswg.client.render.entity.ThrownLightsaberRenderer;
@@ -231,7 +228,8 @@ public class Client implements ClientModInitializer
 		ModelRegistry.register(SwgBlocks.Machine.Spoked, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.SINGLETON, Resources.id("block/spoked_machine"), Resources.id("block/model/spoked_machine"), new Identifier("block/stone")));
 		ModelRegistry.register(SwgBlocks.Machine.ElectrostaticRepeller, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/electrostatic_repeller"), Resources.id("block/model/electrostatic_repeller"), Resources.id("block/model/electrostatic_repeller_particle")));
 
-		ModelRegistry.register(SwgBlocks.Pipe.Large, false, ModelLoader.loadPM3D(Resources.id("models/block/pipe_thick.pm3d"), Resources.id("block/model/pipe_thick"), new Identifier("block/stone")));
+		ModelRegistry.register(SwgBlocks.Pipe.Large, false, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/pipe_thick"), Resources.id("block/model/pipe_thick"), new Identifier("block/stone")));
+		P3dBlockRendererRegistry.register(SwgBlocks.Pipe.Large, new LargePipeRenderer());
 
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialPanelTall1, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
 		ModelRegistry.registerConnected(SwgBlocks.Panel.ImperialPanelTall2, false, true, false, Resources.id("block/gray_imperial_panel_pattern_3"));
