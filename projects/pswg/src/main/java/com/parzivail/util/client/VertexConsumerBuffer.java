@@ -110,10 +110,10 @@ public enum VertexConsumerBuffer
 	public void axes(float scale)
 	{
 		setColor(1, 0, 0, 1);
-		line(Vec3d.ZERO, MathUtil.POSX.multiply(scale));
+		line(Vec3d.ZERO, MathUtil.V3D_POS_X.multiply(scale));
 		setColor(0, 1, 0, 1);
-		line(Vec3d.ZERO, MathUtil.POSY.multiply(scale));
+		line(Vec3d.ZERO, MathUtil.V3D_POS_Y.multiply(scale));
 		setColor(0, 0, 1, 1);
-		line(Vec3d.ZERO, MathUtil.POSZ.multiply(scale));
+		line(Vec3d.ZERO, MathUtil.V3D_POS_Z.multiply(scale));
 	}
 }

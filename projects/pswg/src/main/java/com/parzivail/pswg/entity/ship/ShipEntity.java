@@ -320,7 +320,7 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 
 	protected Vec3d getThrottleVelocity(float throttle)
 	{
-		return QuatUtil.rotate(MathUtil.NEGZ, getRotation()).multiply(throttle);
+		return QuatUtil.rotate(MathUtil.V3D_NEG_Z, getRotation()).multiply(throttle);
 	}
 
 	@Override

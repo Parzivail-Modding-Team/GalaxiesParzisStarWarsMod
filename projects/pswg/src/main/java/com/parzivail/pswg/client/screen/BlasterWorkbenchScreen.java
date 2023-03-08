@@ -12,8 +12,6 @@ import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
 import com.parzivail.util.client.screen.AreaButtonWidget;
 import com.parzivail.util.client.screen.LocalTextureButtonWidget;
 import com.parzivail.util.math.MathUtil;
-import com.parzivail.util.math.Matrix4fUtil;
-import com.parzivail.util.math.MatrixStackUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -324,7 +322,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			matrices.translate(x + 105, y + 48, 10);
 
-			DiffuseLighting.enableForLevel(Matrix4fUtil.IDENTITY);
+			DiffuseLighting.enableForLevel(MathUtil.MAT4_IDENTITY);
 
 			var immediate = minecraft.getBufferBuilders().getEntityVertexConsumers();
 			var modelEntry = BlasterItemRenderer.INSTANCE.getModel(blasterModel);
@@ -332,14 +330,14 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 			var ratio = (float)Math.max(model.bounds().getZLength() / BLASTER_VIEWPORT_WIDTH, model.bounds().getYLength() / (BLASTER_VIEWPORT_HEIGHT * 0.6));
 
-			MatrixStackUtil.scalePos(matrices, -1 / ratio, 1 / ratio, 1);
+			MathUtil.scalePos(matrices, -1 / ratio, 1 / ratio, 1);
 
 			matrices.multiply(new Quaternionf().rotationX(MathUtil.toRadians(180 - blasterViewportRotation.y)));
 			matrices.multiply(new Quaternionf().rotationY(MathUtil.toRadians(90 + blasterViewportRotation.x)));
 
 			matrices.translate(0, 0, -model.bounds().maxZ + model.bounds().getZLength() / 2);
 
-			MatrixStackUtil.scalePos(matrices, 5, 5, 5);
+			MathUtil.scalePos(matrices, 5, 5, 5);
 
 			BlasterItemRenderer.INSTANCE.render(blaster, ModelTransformation.Mode.NONE, false, matrices, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV, null);
 			immediate.draw();

@@ -1,5 +1,6 @@
 package com.parzivail.util.registry;
 
+import com.parzivail.util.generics.Dyed;
 import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
 

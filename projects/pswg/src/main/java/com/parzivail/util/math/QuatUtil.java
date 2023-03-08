@@ -28,7 +28,7 @@ public class QuatUtil
 
 	public static EulerAngle toEulerAngles(Quaternionf q)
 	{
-		var forward = rotate(MathUtil.NEGZ, q);
+		var forward = rotate(MathUtil.V3D_NEG_Z, q);
 
 		return MathUtil.lookToAngles(forward);
 	}

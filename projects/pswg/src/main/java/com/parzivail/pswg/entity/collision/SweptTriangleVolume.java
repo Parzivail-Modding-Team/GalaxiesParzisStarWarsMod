@@ -1,7 +1,7 @@
 package com.parzivail.pswg.entity.collision;
 
 import com.parzivail.util.math.CollisionUtil;
-import com.parzivail.util.math.Matrix4fUtil;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.mutable.MutableObject;
@@ -19,7 +19,7 @@ public record SweptTriangleVolume(Vec3d a, Vec3d b, Vec3d c, double radius) impl
 	@Override
 	public ICollisionVolume transform(Matrix4f m)
 	{
-		return new SweptTriangleVolume(Matrix4fUtil.transform(a, m), Matrix4fUtil.transform(b, m), Matrix4fUtil.transform(c, m), radius);
+		return new SweptTriangleVolume(MathUtil.transform(a, m), MathUtil.transform(b, m), MathUtil.transform(c, m), radius);
 	}
 
 	@Override

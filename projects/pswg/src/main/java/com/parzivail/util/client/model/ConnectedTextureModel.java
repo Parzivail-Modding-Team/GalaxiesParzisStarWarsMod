@@ -3,8 +3,8 @@ package com.parzivail.util.client.model;
 import com.mojang.datafixers.util.Pair;
 import com.parzivail.util.client.ConnectedTextureHelper;
 import com.parzivail.util.client.SubSprite;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.SpriteSheetPoint;
-import com.parzivail.util.math.Vec3fUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -49,23 +49,23 @@ public class ConnectedTextureModel extends DynamicBakedModel
 		ORIGINS[Direction.NORTH.getId()] = new Vector3f(1, 1, 0);
 		ORIGINS[Direction.SOUTH.getId()] = new Vector3f(0, 1, 1);
 
-		DELTAU[Direction.UP.getId()] = Vec3fUtil.POSITIVE_X;
-		DELTAV[Direction.UP.getId()] = Vec3fUtil.POSITIVE_Z;
+		DELTAU[Direction.UP.getId()] = MathUtil.V3F_POS_X;
+		DELTAV[Direction.UP.getId()] = MathUtil.V3F_POS_Z;
 
-		DELTAU[Direction.DOWN.getId()] = Vec3fUtil.NEGATIVE_X;
-		DELTAV[Direction.DOWN.getId()] = Vec3fUtil.POSITIVE_Z;
+		DELTAU[Direction.DOWN.getId()] = MathUtil.V3F_NEG_X;
+		DELTAV[Direction.DOWN.getId()] = MathUtil.V3F_POS_Z;
 
-		DELTAU[Direction.SOUTH.getId()] = Vec3fUtil.POSITIVE_X;
-		DELTAV[Direction.SOUTH.getId()] = Vec3fUtil.NEGATIVE_Y;
+		DELTAU[Direction.SOUTH.getId()] = MathUtil.V3F_POS_X;
+		DELTAV[Direction.SOUTH.getId()] = MathUtil.V3F_NEG_Y;
 
-		DELTAU[Direction.NORTH.getId()] = Vec3fUtil.NEGATIVE_X;
-		DELTAV[Direction.NORTH.getId()] = Vec3fUtil.NEGATIVE_Y;
+		DELTAU[Direction.NORTH.getId()] = MathUtil.V3F_NEG_X;
+		DELTAV[Direction.NORTH.getId()] = MathUtil.V3F_NEG_Y;
 
-		DELTAU[Direction.WEST.getId()] = Vec3fUtil.POSITIVE_Z;
-		DELTAV[Direction.WEST.getId()] = Vec3fUtil.NEGATIVE_Y;
+		DELTAU[Direction.WEST.getId()] = MathUtil.V3F_POS_Z;
+		DELTAV[Direction.WEST.getId()] = MathUtil.V3F_NEG_Y;
 
-		DELTAU[Direction.EAST.getId()] = Vec3fUtil.NEGATIVE_Z;
-		DELTAV[Direction.EAST.getId()] = Vec3fUtil.NEGATIVE_Y;
+		DELTAU[Direction.EAST.getId()] = MathUtil.V3F_NEG_Z;
+		DELTAV[Direction.EAST.getId()] = MathUtil.V3F_NEG_Y;
 	}
 
 	private final boolean hConnect;

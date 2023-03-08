@@ -1,4 +1,4 @@
-package com.parzivail.util.registry;
+package com.parzivail.util.generics;
 
 import net.minecraft.util.DyeColor;
 

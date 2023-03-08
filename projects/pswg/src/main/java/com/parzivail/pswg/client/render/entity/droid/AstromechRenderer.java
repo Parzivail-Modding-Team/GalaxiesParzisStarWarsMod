@@ -5,7 +5,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.entity.rigs.RigR2;
-import com.parzivail.util.math.MatrixStackUtil;
+import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
@@ -42,7 +42,7 @@ public class AstromechRenderer<T extends AstromechEntity> extends EntityRenderer
 
 		matrix.push();
 
-		MatrixStackUtil.scalePos(matrix, 10 / 16f, 10 / 16f, 10 / 16f);
+		MathUtil.scalePos(matrix, 10 / 16f, 10 / 16f, 10 / 16f);
 		matrix.multiply(new Quaternionf().rotationY(Math.toRadians(180 - yaw)));
 
 		//		var r = entity.getViewRotation(tickDelta);

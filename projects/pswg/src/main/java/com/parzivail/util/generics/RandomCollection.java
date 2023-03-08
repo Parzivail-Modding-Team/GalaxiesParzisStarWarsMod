@@ -1,4 +1,4 @@
-package com.parzivail.util.math;
+package com.parzivail.util.generics;
 
 import java.util.NavigableMap;
 import java.util.Random;

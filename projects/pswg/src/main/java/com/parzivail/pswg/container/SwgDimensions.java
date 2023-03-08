@@ -1,10 +1,10 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.util.Consumers;
 import com.parzivail.util.gen.biome.TerrainBiomes;
 import com.parzivail.util.gen.mc.GalaxiesBiomeSource;
 import com.parzivail.util.gen.mc.GalaxiesChunkGenerator;
+import com.parzivail.util.generics.Consumers;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;

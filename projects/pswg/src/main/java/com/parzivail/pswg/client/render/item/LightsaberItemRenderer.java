@@ -9,8 +9,7 @@ import com.parzivail.pswg.item.lightsaber.data.LightsaberBladeType;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
-import com.parzivail.util.math.Matrix4fUtil;
-import com.parzivail.util.math.MatrixStackUtil;
+import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -78,12 +77,12 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 			case FIXED:
 				matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / 4)));
 				matrices.multiply(new Quaternionf().rotationY((float)(135 * Math.PI / 180)));
-				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
+				MathUtil.scalePos(matrices, 2f, 2f, 2f);
 				break;
 			case GUI:
 				matrices.multiply(new Quaternionf().rotationZ((float)(Math.PI / -4)));
 				matrices.multiply(new Quaternionf().rotationY((float)(Math.PI / -4)));
-				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
+				MathUtil.scalePos(matrices, 2f, 2f, 2f);
 				break;
 		}
 
@@ -95,7 +94,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 	public void renderDirect(ItemStack stack, ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean forceBlade, boolean useHandPos)
 	{
 		matrices.push();
-		MatrixStackUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
+		MathUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
 
 		var lt = new LightsaberTag(stack.getOrCreateNbt());
 
@@ -119,7 +118,7 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		if (useHandPos)
 		{
 			if (handSocket != null)
-				handPos = Matrix4fUtil.transform(handPos, handSocket.transform);
+				handPos = MathUtil.transform(handPos, handSocket.transform);
 			else
 				handPos = new Vec3d(0, -0.85f, 0);
 		}

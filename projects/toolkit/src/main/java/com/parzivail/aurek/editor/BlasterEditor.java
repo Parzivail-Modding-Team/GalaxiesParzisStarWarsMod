@@ -8,7 +8,7 @@ import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.math.ColorUtil;
-import com.parzivail.util.math.MatrixStackUtil;
+import com.parzivail.util.math.MathUtil;
 import com.rits.cloning.Cloner;
 import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiDataType;
@@ -44,7 +44,7 @@ public class BlasterEditor implements IDirectItemEditor
 		@Override
 		public void transformHand(MatrixStack matrices, P3dModel model, BlasterTag bt, BlasterDescriptor bd, BlasterItemRenderer.AttachmentSuperset attachments, ModelTransformation.Mode renderMode, int light, float tickDelta, float opacity)
 		{
-			MatrixStackUtil.scalePos(matrices, handScale, handScale, handScale);
+			MathUtil.scalePos(matrices, handScale, handScale, handScale);
 		}
 
 		@Override
@@ -56,7 +56,7 @@ public class BlasterEditor implements IDirectItemEditor
 					pitch * MathHelper.RADIANS_PER_DEGREE,
 					roll * MathHelper.RADIANS_PER_DEGREE
 			));
-			MatrixStackUtil.scalePos(matrices, scale, scale, scale);
+			MathUtil.scalePos(matrices, scale, scale, scale);
 		}
 
 		@Override

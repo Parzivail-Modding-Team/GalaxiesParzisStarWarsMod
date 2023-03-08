@@ -5,7 +5,7 @@ import com.parzivail.pswg.client.render.entity.ShipRenderer;
 import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.entity.rigs.RigZephyrJ;
 import com.parzivail.pswg.entity.ship.SpeederEntity;
-import com.parzivail.util.math.Matrix4fUtil;
+import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -26,7 +26,7 @@ public class ZephyrJRenderer extends ShipRenderer<SpeederEntity>
 		var vertexConsumer = vertexConsumers.getBuffer(RenderLayer.getEntityCutout(getTexture(entity)));
 
 		matrix.push();
-		matrix.multiplyPositionMatrix(Matrix4fUtil.SCALE_10_16THS);
+		matrix.multiplyPositionMatrix(MathUtil.MAT4_SCALE_10_16THS);
 		modelRef.render(matrix, vertexConsumer, entity, RigZephyrJ.INSTANCE::getPartTransformation, light, tickDelta, 255, 255, 255, 255);
 		matrix.pop();
 	}

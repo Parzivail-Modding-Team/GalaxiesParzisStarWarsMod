@@ -13,7 +13,6 @@ import com.parzivail.aurek.util.DialogUtil;
 import com.parzivail.aurek.util.FileUtil;
 import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.util.math.MathUtil;
-import com.parzivail.util.math.MatrixStackUtil;
 import imgui.flag.ImGuiDir;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
@@ -260,10 +259,10 @@ public class NemiCompilerScreen extends ImguiScreen
 		var ms = new MatrixStack();
 
 		var f = 1 / (float)client.getWindow().getScaleFactor();
-		MatrixStackUtil.scalePos(ms, f, f, f);
+		MathUtil.scalePos(ms, f, f, f);
 		viewport.translateAndZoom(ms, tickDelta);
-		MatrixStackUtil.scalePos(ms, 16, 16, 16);
-		MatrixStackUtil.scalePos(ms, 10, 10, 10);
+		MathUtil.scalePos(ms, 16, 16, 16);
+		MathUtil.scalePos(ms, 10, 10, 10);
 
 		viewport.rotate(ms, tickDelta);
 		var immediate = client.getBufferBuilders().getEntityVertexConsumers();

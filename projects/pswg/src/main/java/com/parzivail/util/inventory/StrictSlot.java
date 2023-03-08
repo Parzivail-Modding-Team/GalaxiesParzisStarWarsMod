@@ -1,6 +1,6 @@
 package com.parzivail.util.inventory;
 
-import com.parzivail.util.Consumers;
+import com.parzivail.util.generics.Consumers;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;

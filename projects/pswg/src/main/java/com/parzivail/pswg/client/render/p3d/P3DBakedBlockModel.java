@@ -5,9 +5,8 @@ import com.parzivail.util.block.IPicklingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.rotating.WaterloggableRotating3BlockWithGuiEntity;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
-import com.parzivail.util.client.math.ClientMathUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
-import com.parzivail.util.math.MatrixStackUtil;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
@@ -124,7 +123,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		ms.translate(0.5f, 0, 0.5f);
 
 		// one pixel in P3D models is 1.6 game pixels
-		MatrixStackUtil.scalePos(ms, 0.625f, 0.625f, 0.625f);
+		MathUtil.scalePos(ms, 0.625f, 0.625f, 0.625f);
 
 		// P3D models are +Z forward
 		ms.multiply(new Quaternionf().rotationY((float)(Math.PI / -2)));
@@ -172,7 +171,7 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		{
 			mat.translate(0.5f, 0.5f, 0.5f);
 
-			mat.rotate(ClientMathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
+			mat.rotate(MathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
 
 			mat.translate(-0.5f, -0.5f, -0.5f);
 		}

@@ -16,7 +16,9 @@ import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.data.TintedIdentifier;
-import com.parzivail.util.math.*;
+import com.parzivail.util.math.ColorUtil;
+import com.parzivail.util.math.Ease;
+import com.parzivail.util.math.MathUtil;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
@@ -176,7 +178,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		// TODO
 		//		var mainHandSocket = m.transformables.get("main_hand");
 
-		MatrixStackUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
+		MathUtil.scalePos(matrices, 0.2f, 0.2f, 0.2f);
 
 		var d = Client.getTickDelta();
 		var opacity = 1f;
@@ -196,7 +198,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			matrices.multiply(new Quaternionf().rotationY((float)(Math.PI / 2)));
 
 			if (renderMode == ModelTransformation.Mode.FIXED)
-				MatrixStackUtil.scalePos(matrices, 2f, 2f, 2f);
+				MathUtil.scalePos(matrices, 2f, 2f, 2f);
 			else
 				matrices.multiply(new Quaternionf().rotationY((float)Math.PI));
 
@@ -209,7 +211,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			if (renderMode != ModelTransformation.Mode.FIXED)
 			{
 				var f = (float)(5 / Math.max(yi, zi));
-				MatrixStackUtil.scalePos(matrices, f, f, f);
+				MathUtil.scalePos(matrices, f, f, f);
 			}
 
 			matrices.translate(0, (float)-m.bounds().minY - m.bounds().getYLength() / 2f, (float)-m.bounds().minZ - m.bounds().getZLength() / 2f);
@@ -277,10 +279,10 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 					matrices.multiplyPositionMatrix(foreGripTransform.transform);
 
-					MatrixStackUtil.scalePos(matrices, 1, 1, -1);
+					MathUtil.scalePos(matrices, 1, 1, -1);
 
 					// TODO: datapack
-					MatrixStackUtil.scalePos(matrices, 4, 4, 4);
+					MathUtil.scalePos(matrices, 4, 4, 4);
 
 					for (var t : BlasterTransformer.REGISTRY)
 						t.transformHand(matrices, m, bt, bd, attachmentSet, renderMode, light, d, opacity);
@@ -350,7 +352,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			if (attachmentSet.visuals.containsKey(objectName) && !attachmentSet.visuals.get(objectName).visible)
 				return null;
 
-			return Matrix4fUtil.IDENTITY;
+			return MathUtil.MAT4_IDENTITY;
 		};
 	}
 

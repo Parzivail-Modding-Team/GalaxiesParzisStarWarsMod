@@ -42,7 +42,6 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 	private static final CapsuleVolume VOL_FUSELAGE = new CapsuleVolume(new Vec3d(0, 0.12, 1), new Vec3d(0, 0.12, -4.65), 0.3);
 	private static final CapsuleVolume VOL_MECHANICS = new CapsuleVolume(new Vec3d(0, 0, 3.7), new Vec3d(0, 0, 1), 0.8);
 
-	// Root model is in Y-up space when rendered but all sub-parts stay in Z-up space
 	private static final CapsuleVolume VOL_CANNON_TOP_RIGHT = new CapsuleVolume(new Vec3d(4.2, 0.27, 0.3), new Vec3d(4.2, 0.27, -5.5), 0.2);
 	private static final CapsuleVolume VOL_CANNON_BOTTOM_RIGHT = new CapsuleVolume(new Vec3d(4.2, -0.27, 0.3), new Vec3d(4.2, -0.27, -5.5), 0.2);
 	private static final CapsuleVolume VOL_CANNON_TOP_LEFT = new CapsuleVolume(new Vec3d(-4.2, 0.27, 0.3), new Vec3d(-4.2, 0.27, -5.5), 0.2);
@@ -68,7 +67,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 	private static final TrackedData<Byte> CANNON_BITS = DataTracker.registerData(T65BXwing.class, TrackedDataHandlerRegistry.BYTE);
 	private static final int CANNON_STATE_MASK = 0b00000011;
 
-	private static final String[] CANNON_ORDER = { "CannonTopLeft", "CannonBottomLeft", "CannonTopRight", "CannonBottomRight" };
+	private static final String[] CANNON_ORDER = { RigT65B.CANNON_TOP_LEFT, RigT65B.CANNON_BOTTOM_LEFT, RigT65B.CANNON_TOP_RIGHT, RigT65B.CANNON_BOTTOM_RIGHT };
 
 	public static final int WING_ANIM_LENGTH = 40;
 	public static final int COCKPIT_ANIM_LENGTH = 20;
@@ -121,10 +120,10 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 		var p = RigT65B.INSTANCE.getWorldPosition(stack, this, rotation, CANNON_ORDER[cannonState], 0).add(pos);
 
 		var convergenceDistance = 40;
-		var forward = QuatUtil.rotate(MathUtil.NEGZ.multiply(convergenceDistance), rotation);
+		var forward = QuatUtil.rotate(MathUtil.V3D_NEG_Z.multiply(convergenceDistance), rotation);
 		var boltRotation = QuatUtil.lookAt(p, pos.add(forward));
 
-		var pDir = QuatUtil.rotate(MathUtil.POSZ.multiply(5f), boltRotation);
+		var pDir = QuatUtil.rotate(MathUtil.V3D_POS_Z.multiply(5f), boltRotation);
 
 		BlasterUtil.fireBolt(world, player, pDir.normalize(), 100, distance -> (double)50, true, blasterBoltEntity -> {
 			blasterBoltEntity.setVelocity(pDir);
@@ -166,7 +165,7 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 
 			float maxDistance = 10;
 			var velocityLength = getVelocity().length();
-			var rayDir = MathUtil.NEGY;
+			var rayDir = MathUtil.V3D_NEG_Y;
 			int maxParticles = (int)(15 * velocityLength * velocityLength);
 			var steps = (5 * velocityLength + 1);
 
@@ -253,10 +252,10 @@ public class T65BXwing extends ShipEntity implements IComplexEntityHitbox
 
 		var posMat = new Matrix4f().translate((float)pos.x, (float)pos.y, (float)pos.z);
 
-		var transformTopRight = getWingCollisionTransform(rot, posMat, "WingTopRight");
-		var transformBottomRight = getWingCollisionTransform(rot, posMat, "WingBottomRight");
-		var transformTopLeft = getWingCollisionTransform(rot, posMat, "WingTopLeft");
-		var transformBottomLeft = getWingCollisionTransform(rot, posMat, "WingBottomLeft");
+		var transformTopRight = getWingCollisionTransform(rot, posMat, RigT65B.WING_TOP_RIGHT);
+		var transformBottomRight = getWingCollisionTransform(rot, posMat, RigT65B.WING_BOTTOM_RIGHT);
+		var transformTopLeft = getWingCollisionTransform(rot, posMat, RigT65B.WING_TOP_LEFT);
+		var transformBottomLeft = getWingCollisionTransform(rot, posMat, RigT65B.WING_BOTTOM_LEFT);
 
 		return new ICollisionVolume[] {
 				VOL_FUSELAGE.transform(rot).transform(posMat),

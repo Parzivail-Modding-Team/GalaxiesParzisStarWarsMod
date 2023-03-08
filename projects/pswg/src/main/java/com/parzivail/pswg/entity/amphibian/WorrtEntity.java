@@ -167,7 +167,7 @@ public class WorrtEntity extends AnimalEntity
 	public float getAirborneLerp(float tickDelta)
 	{
 		var pos = this.getLerpedPos(tickDelta);
-		var hit = EntityUtil.raycastBlocks(pos, MathUtil.NEGY, 1f, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE);
+		var hit = EntityUtil.raycastBlocks(pos, MathUtil.V3D_NEG_Y, 1f, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE);
 		if (hit.getType() == HitResult.Type.MISS)
 			return 1;
 

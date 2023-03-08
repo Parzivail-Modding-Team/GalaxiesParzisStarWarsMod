@@ -1,7 +1,7 @@
 package com.parzivail.pswg.entity.rigs;
 
 import com.parzivail.pswg.client.render.p3d.P3dModel;
-import com.parzivail.util.math.Matrix4fUtil;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Transform;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
@@ -23,7 +23,7 @@ public abstract class ModelRig<T>
 
 		mat.rotate(orientation);
 
-		RIG.getSocketGlobalTransform(mat, socketName, target, tickDelta, this::getPartTransformation);
+		RIG.transformToSocket(mat, socketName, target, tickDelta, this::getPartTransformation);
 
 		return mat;
 	}
@@ -35,7 +35,7 @@ public abstract class ModelRig<T>
 
 		var entry = stack.value();
 		var parent = entry.getModel();
-		var vec = Matrix4fUtil.transform(Vec3d.ZERO, parent);
+		var vec = MathUtil.transform(Vec3d.ZERO, parent);
 		stack.restore();
 
 		return vec;

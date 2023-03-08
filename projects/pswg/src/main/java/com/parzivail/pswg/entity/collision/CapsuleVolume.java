@@ -1,7 +1,7 @@
 package com.parzivail.pswg.entity.collision;
 
 import com.parzivail.util.math.CollisionUtil;
-import com.parzivail.util.math.Matrix4fUtil;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
@@ -52,7 +52,7 @@ public record CapsuleVolume(Vec3d start, Vec3d end, double radius) implements IC
 	@Override
 	public ICollisionVolume transform(Matrix4f m)
 	{
-		return new CapsuleVolume(Matrix4fUtil.transform(start, m), Matrix4fUtil.transform(end, m), radius);
+		return new CapsuleVolume(MathUtil.transform(start, m), MathUtil.transform(end, m), radius);
 	}
 
 	@Override

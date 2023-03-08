@@ -1,5 +1,6 @@
 package com.parzivail.util.registry;
 
+import com.parzivail.util.generics.Numbered;
 import net.minecraft.block.Block;
 
 import java.util.function.Function;

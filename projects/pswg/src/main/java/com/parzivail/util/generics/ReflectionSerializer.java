@@ -1,4 +1,4 @@
-package com.parzivail.util.data;
+package com.parzivail.util.generics;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -12,12 +12,12 @@ public abstract class ReflectionSerializer<TContainer>
 {
 	public interface Reader<TContainer, T>
 	{
-		T read(TContainer nbt, String name);
+		T read(TContainer container, String key);
 	}
 
 	public interface Writer<TContainer, T>
 	{
-		void write(TContainer nbt, String name, T t);
+		void write(TContainer container, String key, T value);
 	}
 
 	protected static final HashMap<Class<?>, Field[]> FIELD_CACHE = new HashMap<>();

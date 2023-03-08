@@ -15,7 +15,6 @@ import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.TooltipUtil;
 import com.parzivail.util.item.*;
 import com.parzivail.util.math.MathUtil;
-import com.parzivail.util.math.Matrix4fUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -451,7 +450,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			m.rotateY(MathUtil.toRadians(entityYaw));
 			m.rotateX(MathUtil.toRadians(entityPitch));
 
-			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, Matrix4fUtil.transform(MathUtil.POSZ, m).normalize());
+			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, MathUtil.transform(MathUtil.V3D_POS_Z, m).normalize());
 
 			var range = bd.range;
 			var damageRange = range * bt.stackWithAttachment(bd, BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, 1.5f);

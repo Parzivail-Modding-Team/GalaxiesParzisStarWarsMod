@@ -7,7 +7,6 @@ import com.parzivail.aurek.imgui.ImGuiHelper;
 import com.parzivail.aurek.render.TextureFramebuffer;
 import com.parzivail.aurek.util.AnimatedFloat;
 import com.parzivail.util.math.MathUtil;
-import com.parzivail.util.math.MatrixStackUtil;
 import imgui.flag.ImGuiMouseButton;
 import imgui.internal.ImGui;
 import net.minecraft.client.util.math.MatrixStack;
@@ -149,7 +148,7 @@ public class Viewport
 	{
 		ms.translate(renderTarget.textureWidth / 2f + this.x.getValue(tickDelta), renderTarget.textureHeight / 2f + this.y.getValue(tickDelta), 50);
 		var f = (float)Math.pow(10, zoomExponent.getValue() / 10);
-		MatrixStackUtil.scalePos(ms, f, -f, 1);
+		MathUtil.scalePos(ms, f, -f, 1);
 	}
 
 	public void rotate(MatrixStack ms, float tickDelta)

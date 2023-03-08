@@ -2,7 +2,6 @@ package com.parzivail.pswg.client.render.p3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.pswg.util.PIO;
-import com.parzivail.util.client.math.ClientMathUtil;
 import com.parzivail.util.client.model.AbstractModel;
 import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.data.DataReader;
@@ -147,7 +146,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		matrix.pop();
 	}
 
-	public <T> void getSocketGlobalTransform(Matrix4f mat, String socketName, T target, float tickDelta, PartTransformer<T> transformer)
+	public <T> void transformToSocket(Matrix4f mat, String socketName, T target, float tickDelta, PartTransformer<T> transformer)
 	{
 		var socket = transformables().get(socketName);
 		for (var part : socket.ancestry)
@@ -203,10 +202,10 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		{
 			quadEmitter.colorIndex(1).spriteColor(0, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF).material(getBlockMaterial(o.material));
 
-			var vA = ClientMathUtil.transform(face.positions[0], modelMat);
-			var vB = ClientMathUtil.transform(face.positions[1], modelMat);
-			var vC = ClientMathUtil.transform(face.positions[2], modelMat);
-			var vD = ClientMathUtil.transform(face.positions[3], modelMat);
+			var vA = modelMat.transformPosition(face.positions[0]);
+			var vB = modelMat.transformPosition(face.positions[1]);
+			var vC = modelMat.transformPosition(face.positions[2]);
+			var vD = modelMat.transformPosition(face.positions[3]);
 
 			var n = new Vector3f(face.normal.x, face.normal.y, face.normal.z);
 			n.mul(normalMat);

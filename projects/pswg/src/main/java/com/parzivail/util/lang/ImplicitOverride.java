@@ -1,4 +1,4 @@
-package com.parzivail.util.meta;
+package com.parzivail.util.lang;
 
 import org.spongepowered.asm.mixin.Mixin;
 

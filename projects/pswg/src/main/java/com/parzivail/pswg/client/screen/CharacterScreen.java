@@ -21,7 +21,6 @@ import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.screen.blit.*;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.MathUtil;
-import com.parzivail.util.math.MatrixStackUtil;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -919,7 +918,7 @@ public class CharacterScreen extends Screen
 		matrixStack.push();
 
 		AbstractClientPlayerEntity entity = client.player;
-		MatrixStackUtil.scalePos(matrixStack, size, size, -size);
+		MathUtil.scalePos(matrixStack, size, size, -size);
 		RenderSystem.applyModelViewMatrix();
 
 		var matrixStack2 = new MatrixStack();

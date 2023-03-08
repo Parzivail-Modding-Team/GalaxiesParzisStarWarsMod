@@ -9,11 +9,10 @@ import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
-import com.parzivail.util.client.math.ClientMathUtil;
+import com.parzivail.util.generics.Dyed;
 import com.parzivail.util.math.Ease;
-import com.parzivail.util.math.Matrix4fUtil;
+import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
-import com.parzivail.util.registry.Dyed;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.enums.DoubleBlockHalf;
@@ -95,7 +94,7 @@ public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRender
 
 		var m = new Matrix4f();
 
-		m.mul(Matrix4fUtil.SCALE_10_16THS);
+		m.mul(MathUtil.MAT4_SCALE_10_16THS);
 
 		var state = target.getOccupiedState();
 		if (Sliding1x2DoorBlock.getDoorColor(state).isEmpty())
@@ -142,7 +141,7 @@ public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRender
 		matrices.push();
 
 		matrices.translate(0.5, 0, 0.5);
-		matrices.multiply(ClientMathUtil.getRotation(rotation));
+		matrices.multiply(MathUtil.getRotation(rotation));
 
 		model.render(matrices, vertexConsumers, entity, SlidingDoorRenderer::transformBlockEntity, SlidingDoorRenderer::provideLayer, light, tickDelta, 255, 255, 255, 255);
 		matrices.pop();

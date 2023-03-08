@@ -61,7 +61,7 @@ public class SpeederEntity extends ShipEntity
 
 		var rotation = new Quaternionf(getRotation());
 
-		var v = QuatUtil.project(MathUtil.POSY, rotation);
+		var v = QuatUtil.project(MathUtil.V3D_POS_Y, rotation);
 		rotation.rotateAxis(MathUtil.toRadians(yawVelocity), v.toVector3f());
 
 		setRotation(rotation);
@@ -111,7 +111,7 @@ public class SpeederEntity extends ShipEntity
 				if (!world.isAir(new BlockPos(pos)))
 					continue;
 
-				var blockHit = EntityUtil.raycastBlocks(pos, MathUtil.NEGY, range * 2, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.SOURCE_ONLY);
+				var blockHit = EntityUtil.raycastBlocks(pos, MathUtil.V3D_NEG_Y, range * 2, this, RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.SOURCE_ONLY);
 				var blockDistance = blockHit.getType() == HitResult.Type.MISS ? -range : (blockHit.getPos().y - start.y);
 
 				if (blockDistance > d)
@@ -134,7 +134,7 @@ public class SpeederEntity extends ShipEntity
 	@Override
 	protected Vec3d getThrottleVelocity(float throttle)
 	{
-		var d = QuatUtil.rotate(MathUtil.NEGZ, getRotation());
+		var d = QuatUtil.rotate(MathUtil.V3D_NEG_Z, getRotation());
 		d = new Vec3d(d.x, 0.02f, d.z);
 		return d.multiply(throttle / 2);
 	}

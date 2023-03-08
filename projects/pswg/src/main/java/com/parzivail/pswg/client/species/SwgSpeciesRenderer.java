@@ -8,7 +8,6 @@ import com.parzivail.pswg.character.SwgSpecies;
 import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
-import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.entity.player.PlayerEntity;
@@ -79,7 +78,7 @@ public class SwgSpeciesRenderer
 		if (!model.head.hasChild("TailBaseL"))
 			return;
 
-		var h = entity.getPitch(tickDelta) / MathUtil.toDegreesf;
+		var h = entity.getPitch(tickDelta) * MathHelper.RADIANS_PER_DEGREE;
 		var h2 = (float)Math.pow(h, 2);
 		var h3 = (float)Math.pow(h, 3);
 		var h4 = (float)Math.pow(h, 4);
@@ -93,11 +92,11 @@ public class SwgSpeciesRenderer
 		var tailLowerR = tailMidR.getChild("TailLowerR");
 
 		// https://www.desmos.com/calculator/52kcd69qgc
-		tailBaseL.pitch = tailBaseR.pitch = (-2.34f * h3 + 11.05f * h2 + 3.4f * h + 7.06f) / MathUtil.toDegreesf;
-		tailMidL.pitch = tailMidR.pitch = (5.11f * h4 + 2.01f * h3 - 10.2f * h2 - 26.38f * h - 1.48f) / MathUtil.toDegreesf;
-		tailLowerL.pitch = tailLowerR.pitch = (-3.15f * h4 + 2.57f * h2 - 23.03f * h - 2.93f) / MathUtil.toDegreesf;
+		tailBaseL.pitch = tailBaseR.pitch = (-2.34f * h3 + 11.05f * h2 + 3.4f * h + 7.06f) * MathHelper.RADIANS_PER_DEGREE;
+		tailMidL.pitch = tailMidR.pitch = (5.11f * h4 + 2.01f * h3 - 10.2f * h2 - 26.38f * h - 1.48f) * MathHelper.RADIANS_PER_DEGREE;
+		tailLowerL.pitch = tailLowerR.pitch = (-3.15f * h4 + 2.57f * h2 - 23.03f * h - 2.93f) * MathHelper.RADIANS_PER_DEGREE;
 
-		var y = MathHelper.wrapDegrees(entity.getYaw(tickDelta) - MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)) / MathUtil.toDegreesf;
+		var y = MathHelper.wrapDegrees(entity.getYaw(tickDelta) - MathHelper.lerp(tickDelta, entity.prevBodyYaw, entity.bodyYaw)) * MathHelper.RADIANS_PER_DEGREE;
 		tailBaseL.roll = Math.max(0, y / 3f);
 		tailBaseR.roll = Math.min(0, y / 3f);
 	}

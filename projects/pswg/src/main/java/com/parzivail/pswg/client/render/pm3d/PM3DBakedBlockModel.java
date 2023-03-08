@@ -4,8 +4,8 @@ import com.parzivail.util.block.DisplacingBlock;
 import com.parzivail.util.block.VoxelShapeUtil;
 import com.parzivail.util.block.connecting.ConnectingNodeBlock;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
-import com.parzivail.util.client.math.ClientMathUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
+import com.parzivail.util.math.MathUtil;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
@@ -81,10 +81,10 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 		var tC = uvs[c.texture()];
 		var tD = uvs[d.texture()];
 
-		vA = ClientMathUtil.transform(vA, transformation);
-		vB = ClientMathUtil.transform(vB, transformation);
-		vC = ClientMathUtil.transform(vC, transformation);
-		vD = ClientMathUtil.transform(vD, transformation);
+		vA = transformation.transformPosition(vA);
+		vB = transformation.transformPosition(vB);
+		vC = transformation.transformPosition(vC);
+		vD = transformation.transformPosition(vD);
 
 		quadEmitter.pos(0, vA).normal(0, nA).sprite(0, 0, tA.x, 1 - tA.y);
 		quadEmitter.pos(1, vB).normal(1, nB).sprite(1, 0, tB.x, 1 - tB.y);
@@ -200,7 +200,7 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 		{
 			mat.translate(0.5f, 0, 0.5f);
 
-			mat.rotate(ClientMathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
+			mat.rotate(MathUtil.getRotation(state.get(WaterloggableRotatingBlock.FACING)));
 
 			mat.translate(-0.5f, 0, -0.5f);
 		}

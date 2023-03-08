@@ -17,7 +17,7 @@ import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.client.render.p3d.P3dObject;
 import com.parzivail.util.client.RenderShapes;
 import com.parzivail.util.client.VertexConsumerBuffer;
-import com.parzivail.util.math.MatrixStackUtil;
+import com.parzivail.util.math.MathUtil;
 import imgui.flag.ImGuiDir;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
@@ -228,10 +228,10 @@ public class P3diCompilerScreen extends ImguiScreen
 		var ms = new MatrixStack();
 
 		var f = 1 / (float)client.getWindow().getScaleFactor();
-		MatrixStackUtil.scalePos(ms, f, f, f);
+		MathUtil.scalePos(ms, f, f, f);
 		viewport.translateAndZoom(ms, tickDelta);
-		MatrixStackUtil.scalePos(ms, 16, 16, 16);
-		MatrixStackUtil.scalePos(ms, 10, 10, 10);
+		MathUtil.scalePos(ms, 16, 16, 16);
+		MathUtil.scalePos(ms, 10, 10, 10);
 
 		viewport.rotate(ms, tickDelta);
 		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
@@ -255,7 +255,7 @@ public class P3diCompilerScreen extends ImguiScreen
 				continue;
 
 			var m = ms.peek().getPositionMatrix();
-			model.getCompiledModel().getSocketGlobalTransform(m, socket.name, null, 0, P3dModel::identityTransformer);
+			model.getCompiledModel().transformToSocket(m, socket.name, null, 0, P3dModel::identityTransformer);
 
 			VertexConsumerBuffer.Instance.setMatrices(ms.peek());
 

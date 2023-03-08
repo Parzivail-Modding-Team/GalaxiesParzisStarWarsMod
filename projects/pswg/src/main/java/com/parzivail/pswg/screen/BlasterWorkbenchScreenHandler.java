@@ -4,7 +4,7 @@ import com.parzivail.pswg.blockentity.BlasterWorkbenchBlockEntity;
 import com.parzivail.pswg.container.SwgScreenTypes;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
-import com.parzivail.util.Consumers;
+import com.parzivail.util.generics.Consumers;
 import com.parzivail.util.inventory.StrictSlot;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.entity.player.PlayerEntity;

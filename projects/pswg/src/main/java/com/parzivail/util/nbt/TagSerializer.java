@@ -1,6 +1,6 @@
 package com.parzivail.util.nbt;
 
-import com.parzivail.util.data.ReflectionSerializer;
+import com.parzivail.util.generics.ReflectionSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
