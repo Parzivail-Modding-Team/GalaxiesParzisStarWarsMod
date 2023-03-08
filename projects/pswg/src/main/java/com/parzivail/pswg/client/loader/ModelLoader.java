@@ -3,9 +3,6 @@ package com.parzivail.pswg.client.loader;
 import com.parzivail.p3d.P3dBakedBlockModel;
 import com.parzivail.p3d.P3dUnbakedBlockModel;
 import com.parzivail.pswg.Galaxies;
-import com.parzivail.pswg.client.render.pm3d.PM3DBakedBlockModel;
-import com.parzivail.pswg.client.render.pm3d.PM3DFile;
-import com.parzivail.pswg.client.render.pm3d.PM3DUnbakedBlockModel;
 import com.parzivail.util.client.model.ClonableUnbakedModel;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import net.minecraft.util.DyeColor;
@@ -15,28 +12,6 @@ import java.util.function.BiFunction;
 
 public class ModelLoader
 {
-	@Deprecated(since = "0.0.60-alpha", forRemoval = true)
-	public static PM3DUnbakedBlockModel loadPM3D(Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
-	{
-		return loadPM3D(DynamicBakedModel.CacheMethod.SINGLETON, modelFile, baseTexture, particleTexture);
-	}
-
-	@Deprecated(since = "0.0.60-alpha", forRemoval = true)
-	public static PM3DUnbakedBlockModel loadPM3D(DynamicBakedModel.CacheMethod cacheMethod, Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
-	{
-		return new PM3DUnbakedBlockModel(
-				baseTexture,
-				particleTexture,
-				(m, spriteMap) -> PM3DBakedBlockModel.create(
-						cacheMethod,
-						PM3DFile.tryLoad(modelFile, true).getLevelOfDetail(0),
-						baseTexture,
-						particleTexture,
-						spriteMap
-				)
-		);
-	}
-
 	public static P3dUnbakedBlockModel loadP3D(DynamicBakedModel.CacheMethod cacheMethod, Identifier modelFile, Identifier baseTexture, Identifier particleTexture)
 	{
 		if (particleTexture.equals(new Identifier("block/stone")))
