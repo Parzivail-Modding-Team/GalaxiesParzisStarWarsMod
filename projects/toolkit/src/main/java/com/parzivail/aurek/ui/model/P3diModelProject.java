@@ -6,7 +6,7 @@ import com.parzivail.aurek.model.p3di.P3diCompileException;
 import com.parzivail.aurek.model.p3di.P3diMesh;
 import com.parzivail.aurek.model.p3di.P3diModel;
 import com.parzivail.aurek.util.NodeTreeModel;
-import com.parzivail.pswg.client.render.p3d.P3dModel;
+import com.parzivail.p3d.P3dModel;
 
 import java.io.IOException;
 import java.io.PipedInputStream;

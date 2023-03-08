@@ -2,7 +2,7 @@ package com.parzivail.aurek.model.p3di;
 
 import com.google.common.io.LittleEndianDataOutputStream;
 import com.parzivail.aurek.ToolkitClient;
-import com.parzivail.pswg.client.render.p3d.P3dModel;
+import com.parzivail.p3d.P3dModel;
 import net.minecraft.util.math.MathHelper;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;

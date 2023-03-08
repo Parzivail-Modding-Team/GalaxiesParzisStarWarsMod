@@ -1,6 +1,6 @@
 package com.parzivail.pswg.entity.rigs;
 
-import com.parzivail.pswg.client.render.p3d.P3dModel;
+import com.parzivail.p3d.P3dModel;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.Transform;
 import net.minecraft.util.Identifier;

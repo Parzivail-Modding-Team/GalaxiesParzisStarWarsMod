@@ -3,7 +3,7 @@ package com.parzivail.aurek.ui.model;
 import com.parzivail.aurek.imgui.AurekIconFont;
 import com.parzivail.aurek.model.nemi.NemiModel;
 import com.parzivail.aurek.util.NodeTreeModel;
-import com.parzivail.pswg.client.loader.NemManager;
+import com.parzivail.nem.NemManager;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;

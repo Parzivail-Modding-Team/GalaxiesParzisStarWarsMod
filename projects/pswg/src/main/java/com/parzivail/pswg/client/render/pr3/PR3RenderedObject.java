@@ -4,6 +4,7 @@ import com.parzivail.pswg.rig.pr3r.PR3Object;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
+@Deprecated
 public class PR3RenderedObject extends PR3Object
 {
 	public final Vector3f[] vertices;

@@ -5,7 +5,6 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.character.SpeciesGender;
 import com.parzivail.pswg.character.SwgSpecies;
-import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.player.PlayerSpeciesModelRenderer;
 import com.parzivail.pswg.container.SwgSpeciesRegistry;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -42,7 +41,7 @@ public class SwgSpeciesRenderer
 
 	private static Supplier<PlayerEntityModel<AbstractClientPlayerEntity>> nemSource(Identifier id)
 	{
-		return NemManager.INSTANCE.getPlayerModel(id, true);
+		return Client.NEM_MANAGER.getPlayerModel(id, true);
 	}
 
 	private static void register(SwgSpeciesModel model)

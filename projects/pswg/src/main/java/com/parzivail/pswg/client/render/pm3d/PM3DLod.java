@@ -1,23 +1,24 @@
 package com.parzivail.pswg.client.render.pm3d;
 
-import com.parzivail.util.client.VertexConsumerBuffer;
+import com.parzivail.util.client.ImmediateBuffer;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Box;
 import org.joml.Vector3f;
 
+@Deprecated
 public record PM3DLod(Identifier identifier, Vector3f[] verts,
                       Vector3f[] normals, Vector3f[] uvs,
                       PM3DObject[] objects, Box bounds)
 {
 
-	public void render(VertexConsumerBuffer vcb)
+	public void render(ImmediateBuffer vcb)
 	{
 		for (var o : objects)
 			for (PM3DFace face : o.faces())
 				emitFace(vcb, face);
 	}
 
-	private void emitFace(VertexConsumerBuffer vcb, PM3DFace face)
+	private void emitFace(ImmediateBuffer vcb, PM3DFace face)
 	{
 		var a = face.verts.get(0);
 		var b = face.verts.get(1);

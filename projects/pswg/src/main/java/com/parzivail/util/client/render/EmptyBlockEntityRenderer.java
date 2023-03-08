@@ -1,4 +1,4 @@
-package com.parzivail.util.client;
+package com.parzivail.util.client.render;
 
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.MinecraftClient;

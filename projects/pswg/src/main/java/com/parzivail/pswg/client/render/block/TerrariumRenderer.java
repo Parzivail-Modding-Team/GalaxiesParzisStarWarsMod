@@ -3,7 +3,7 @@ package com.parzivail.pswg.client.render.block;
 import com.parzivail.pswg.block.CreatureCageBlock;
 import com.parzivail.pswg.block.TerrariumBlock;
 import com.parzivail.pswg.blockentity.CreatureCageBlockEntity;
-import com.parzivail.util.client.StatelessWaterRenderer;
+import com.parzivail.util.client.render.StatelessWaterRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.RenderLayers;

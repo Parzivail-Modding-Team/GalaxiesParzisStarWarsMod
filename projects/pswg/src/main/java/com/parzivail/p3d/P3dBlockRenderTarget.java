@@ -1,13 +1,13 @@
-package com.parzivail.pswg.client.render.p3d;
+package com.parzivail.p3d;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 
-public class P3DBlockRenderTarget
+public class P3dBlockRenderTarget
 {
-	public static class Item extends P3DBlockRenderTarget
+	public static class Item extends P3dBlockRenderTarget
 	{
 		private final ItemStack stack;
 
@@ -22,7 +22,7 @@ public class P3DBlockRenderTarget
 		}
 	}
 
-	public static class Block extends P3DBlockRenderTarget
+	public static class Block extends P3dBlockRenderTarget
 	{
 		private final BlockRenderView world;
 		private final BlockState state;

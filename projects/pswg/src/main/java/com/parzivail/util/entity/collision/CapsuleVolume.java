@@ -1,4 +1,4 @@
-package com.parzivail.pswg.entity.collision;
+package com.parzivail.util.entity.collision;
 
 import com.parzivail.util.math.CollisionUtil;
 import com.parzivail.util.math.MathUtil;

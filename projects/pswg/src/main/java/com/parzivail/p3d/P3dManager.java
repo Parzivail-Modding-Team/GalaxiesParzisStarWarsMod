@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.render.p3d;
+package com.parzivail.p3d;
 
 import com.parzivail.pswg.Resources;
 import com.parzivail.util.data.KeyedReloadableLoader;

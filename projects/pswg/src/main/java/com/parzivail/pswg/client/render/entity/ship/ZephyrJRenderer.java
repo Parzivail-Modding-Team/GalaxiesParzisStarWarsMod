@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.render.entity.ship;
 
+import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.client.render.entity.ShipRenderer;
-import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.entity.rigs.RigZephyrJ;
 import com.parzivail.pswg.entity.ship.SpeederEntity;
 import com.parzivail.util.math.MathUtil;

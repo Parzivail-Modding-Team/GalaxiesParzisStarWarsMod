@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.render.p3d;
+package com.parzivail.p3d;
 
 import com.parzivail.util.block.DisplacingBlock;
 import com.parzivail.util.block.IPicklingBlock;
@@ -34,14 +34,14 @@ import java.util.HashMap;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class P3DBakedBlockModel extends DynamicBakedModel
+public class P3dBakedBlockModel extends DynamicBakedModel
 {
 	private final CacheMethod cacheMethod;
 	private final Sprite baseSprite;
 	private final HashMap<String, Sprite> additionalSprites;
 	private final Identifier[] modelIds;
 
-	private P3DBakedBlockModel(CacheMethod cacheMethod, Sprite baseSprite, Sprite particleSprite, HashMap<String, Sprite> additionalSprites, Identifier[] modelIds)
+	private P3dBakedBlockModel(CacheMethod cacheMethod, Sprite baseSprite, Sprite particleSprite, HashMap<String, Sprite> additionalSprites, Identifier[] modelIds)
 	{
 		super(particleSprite, ModelHelper.MODEL_TRANSFORM_BLOCK);
 		this.cacheMethod = cacheMethod;
@@ -93,23 +93,23 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 			}
 		}
 
-		return createMesh(new P3DBlockRenderTarget.Block(blockView, state, pos), randomSupplier, context, transformation);
+		return createMesh(new P3dBlockRenderTarget.Block(blockView, state, pos), randomSupplier, context, transformation);
 	}
 
 	@Override
 	protected Mesh createItemMesh(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
-		return createMesh(new P3DBlockRenderTarget.Item(stack), randomSupplier, context, transformation);
+		return createMesh(new P3dBlockRenderTarget.Item(stack), randomSupplier, context, transformation);
 	}
 
-	private Mesh createMesh(P3DBlockRenderTarget target, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
+	private Mesh createMesh(P3dBlockRenderTarget target, Supplier<Random> randomSupplier, RenderContext context, Matrix4f transformation)
 	{
 		var meshBuilder = createMeshBuilder();
 		var quadEmitter = meshBuilder.getEmitter();
 
 		var modelId = modelIds[0];
 
-		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget)
+		if (target instanceof P3dBlockRenderTarget.Block blockRenderTarget)
 			modelId = getPickleModel(modelId, blockRenderTarget.getState());
 
 		var model = P3dManager.INSTANCE.get(modelId);
@@ -129,12 +129,12 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		ms.multiply(new Quaternionf().rotationY((float)(Math.PI / -2)));
 
 		Block block = null;
-		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget && blockRenderTarget.getState() != null)
+		if (target instanceof P3dBlockRenderTarget.Block blockRenderTarget && blockRenderTarget.getState() != null)
 			block = blockRenderTarget.getState().getBlock();
-		else if (target instanceof P3DBlockRenderTarget.Item itemRenderTarget && itemRenderTarget.getStack().getItem() instanceof BlockItem blockItem)
+		else if (target instanceof P3dBlockRenderTarget.Item itemRenderTarget && itemRenderTarget.getStack().getItem() instanceof BlockItem blockItem)
 			block = blockItem.getBlock();
 
-		P3DBlockRendererRegistry.get(block).renderBlock(ms, quadEmitter, target, randomSupplier, context, model, baseSprite, additionalSprites);
+		P3dBlockRendererRegistry.get(block).renderBlock(ms, quadEmitter, target, randomSupplier, context, model, baseSprite, additionalSprites);
 
 		return meshBuilder.build();
 	}
@@ -228,14 +228,14 @@ public class P3DBakedBlockModel extends DynamicBakedModel
 		return mat;
 	}
 
-	public static P3DBakedBlockModel create(Function<SpriteIdentifier, Sprite> spriteMap, CacheMethod cacheMethod, Identifier baseTexture, Identifier particleTexture, HashMap<String, Identifier> additionalTextures, Identifier... models)
+	public static P3dBakedBlockModel create(Function<SpriteIdentifier, Sprite> spriteMap, CacheMethod cacheMethod, Identifier baseTexture, Identifier particleTexture, HashMap<String, Identifier> additionalTextures, Identifier... models)
 	{
 		HashMap<String, Sprite> additionalSprites = new HashMap<>();
 
 		for (var entry : additionalTextures.entrySet())
 			additionalSprites.put(entry.getKey(), spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, entry.getValue())));
 
-		return new P3DBakedBlockModel(
+		return new P3dBakedBlockModel(
 				cacheMethod,
 				spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, baseTexture)),
 				spriteMap.apply(new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, particleTexture)),

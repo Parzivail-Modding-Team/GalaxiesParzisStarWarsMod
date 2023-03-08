@@ -2,6 +2,7 @@ package com.parzivail.pswg.client.render.pm3d;
 
 import java.util.ArrayList;
 
+@Deprecated
 public class PM3DFace
 {
 	public final ArrayList<PM3DVertPointer> verts;

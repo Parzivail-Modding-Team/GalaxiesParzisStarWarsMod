@@ -1,8 +1,7 @@
 package com.parzivail.pswg.client.render.entity;
 
 import com.parzivail.pswg.Resources;
-import com.parzivail.util.client.RenderShapes;
-import com.parzivail.util.client.VertexConsumerBuffer;
+import com.parzivail.util.client.ImmediateBuffer;
 import com.parzivail.util.math.ColorUtil;
 import com.parzivail.util.math.Ease;
 import com.parzivail.util.math.MathUtil;
@@ -30,7 +29,7 @@ public class EnergyRenderer
 
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
-		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+		ImmediateBuffer.A.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		renderDarksaberGlow(totalLength, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv));
 	}
 
@@ -47,33 +46,31 @@ public class EnergyRenderer
 
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
-		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+		ImmediateBuffer.A.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 
 		var thickness = 0.018f;
 
 		var color = ColorUtil.hsvToRgbInt(ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv));
-		VertexConsumerBuffer.Instance.setColor(color, 128);
+		ImmediateBuffer.A.setColor(color, 128);
 
 		// glow layers
-		RenderShapes.invertCull(true);
-		RenderShapes.drawSolidBoxSkewTaper(
-				VertexConsumerBuffer.Instance,
+		ImmediateBuffer.A.invertCull(true);
+		ImmediateBuffer.A.drawSolidBoxSkewTaper(
 				thickness,
 				thickness,
 				0, totalLength, 0,
 				0, 0, 0
 		);
-		RenderShapes.invertCull(false);
+		ImmediateBuffer.A.invertCull(false);
 
-		RenderShapes.invertCull(true);
-		RenderShapes.drawSolidBoxSkewTaper(
-				VertexConsumerBuffer.Instance,
+		ImmediateBuffer.A.invertCull(true);
+		ImmediateBuffer.A.drawSolidBoxSkewTaper(
 				thickness * 0.6f,
 				thickness * 0.6f,
 				0, 0.3f * totalLength, 0,
 				0, 0.35f * totalLength, 0
 		);
-		RenderShapes.invertCull(false);
+		ImmediateBuffer.A.invertCull(false);
 	}
 
 	public static void renderEnergy(ModelTransformation.Mode renderMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean unstable, float baseLength, float lengthCoefficient, float radiusCoefficient, boolean cap, int glowHsv)
@@ -92,7 +89,7 @@ public class EnergyRenderer
 
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY);
 
-		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
+		ImmediateBuffer.A.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 		renderGlow(totalLength, radiusCoefficient, ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv), unstable, cap);
 	}
 
@@ -102,7 +99,7 @@ public class EnergyRenderer
 
 		vc = vertexConsumers.getBuffer(LAYER_ENERGY_ADDITIVE);
 
-		VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 0.1f, 0.2f, 1, 1.0f, overlay, light);
+		ImmediateBuffer.A.init(vc, matrices.peek(), 0.1f, 0.2f, 1, 1.0f, overlay, light);
 
 		size /= 2;
 		var nx = 0f;
@@ -111,46 +108,46 @@ public class EnergyRenderer
 		var d = 0.8f * size;
 
 		// front cull
-		VertexConsumerBuffer.Instance.vertex(-size, size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(size, size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(d, d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-d, d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-size, size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(size, size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(d, d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-d, d, 0, nx, ny, nz, 0, 0);
 
-		VertexConsumerBuffer.Instance.vertex(size, size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(size, -size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(d, -d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(d, d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(size, size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(size, -size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(d, -d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(d, d, 0, nx, ny, nz, 0, 0);
 
-		VertexConsumerBuffer.Instance.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(d, -d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(size, -size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(d, -d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(size, -size, 0, nx, ny, nz, 0, 0);
 
-		VertexConsumerBuffer.Instance.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-size, size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-d, d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-size, size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-d, d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
 
 		// back cull
-		VertexConsumerBuffer.Instance.vertex(-d, d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(d, d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(size, size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-size, size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-d, d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(d, d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(size, size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-size, size, 0, nx, ny, nz, 0, 0);
 
-		VertexConsumerBuffer.Instance.vertex(d, d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(d, -d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(size, -size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(size, size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(d, d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(d, -d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(size, -size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(size, size, 0, nx, ny, nz, 0, 0);
 
-		VertexConsumerBuffer.Instance.vertex(size, -size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(d, -d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(size, -size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(d, -d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
 
-		VertexConsumerBuffer.Instance.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-d, d, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-size, size, 0, nx, ny, nz, 0, 0);
-		VertexConsumerBuffer.Instance.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-d, -d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-d, d, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-size, size, 0, nx, ny, nz, 0, 0);
+		ImmediateBuffer.A.vertex(-size, -size, 0, nx, ny, nz, 0, 0);
 	}
 
 	private static float getAlpha(double layer)
@@ -208,21 +205,20 @@ public class EnergyRenderer
 					getSaturation(x, glowSat),
 					getValue(x, glowVal)
 			);
-			VertexConsumerBuffer.Instance.setColor(color, (int)(255 * alpha));
+			ImmediateBuffer.A.setColor(color, (int)(255 * alpha));
 			var layerThickness = deltaThickness * layer;
 
 			if (layer > 0)
 			{
 				// glow layers
-				RenderShapes.invertCull(true);
-				RenderShapes.drawSolidBoxSkewTaper(
-						VertexConsumerBuffer.Instance,
+				ImmediateBuffer.A.invertCull(true);
+				ImmediateBuffer.A.drawSolidBoxSkewTaper(
 						thicknessTop + layerThickness,
 						thicknessBottom + layerThickness,
 						0, bladeLength + layerThickness, 0,
 						0, -layerThickness, 0
 				);
-				RenderShapes.invertCull(false);
+				ImmediateBuffer.A.invertCull(false);
 			}
 			else
 			{
@@ -247,9 +243,9 @@ public class EnergyRenderer
 							(unstable ? (0.07f - noise * 0.07f) : 0) * glowSat,
 							getValue(x, glowVal)
 					);
-					VertexConsumerBuffer.Instance.setColor(color, (int)(255 * getAlpha(x)));
+					ImmediateBuffer.A.setColor(color, (int)(255 * getAlpha(x)));
 
-					RenderShapes.drawSolidBoxSkewTaper(VertexConsumerBuffer.Instance, topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
+					ImmediateBuffer.A.drawSolidBoxSkewTaper(topThicknessLerp + dTTop, bottomThicknessLerp + dTBottom, 0, dLength * (i + 1), 0, 0, dLength * i, 0);
 				}
 			}
 		}
@@ -270,7 +266,7 @@ public class EnergyRenderer
 
 		var minOutputLayer = mL * thicknessBottom / deltaThickness;
 
-		RenderShapes.setScale(0.5f, 1, 1);
+		ImmediateBuffer.A.setScale(0.5f, 1, 1);
 
 		for (var layer = mL; layer <= xL; layer++)
 		{
@@ -288,41 +284,37 @@ public class EnergyRenderer
 						getSaturation(x, glowSat),
 						getValue(x, glowVal)
 				);
-				VertexConsumerBuffer.Instance.setColor(color, (int)(255 * alpha));
+				ImmediateBuffer.A.setColor(color, (int)(255 * alpha));
 
 				// glow layers
-				RenderShapes.invertCull(true);
-				RenderShapes.skipFace(1);
-				RenderShapes.drawSolidBoxSkewTaper(
-						VertexConsumerBuffer.Instance,
+				ImmediateBuffer.A.invertCull(true);
+				ImmediateBuffer.A.skipFace(1);
+				ImmediateBuffer.A.drawSolidBoxSkewTaper(
 						thicknessTop + layerThickness,
 						thicknessBottom + layerThickness,
 						0, bladeLength * 0.6f + layerThickness, 0,
 						0, -layerThickness, 0
 				);
-				RenderShapes.skipFace(3);
-				RenderShapes.drawSolidBoxSkewTaper(
-						VertexConsumerBuffer.Instance,
+				ImmediateBuffer.A.skipFace(3);
+				ImmediateBuffer.A.drawSolidBoxSkewTaper(
 						thicknessTop / 4f + layerThickness,
 						thicknessTop + layerThickness,
 						0, bladeLength + layerThickness, thicknessTop * 0.75f,
 						0, bladeLength * 0.6f + layerThickness, 0
 				);
-				RenderShapes.skipFace(-1);
-				RenderShapes.invertCull(false);
+				ImmediateBuffer.A.skipFace(-1);
+				ImmediateBuffer.A.invertCull(false);
 			}
 			else
 			{
-				VertexConsumerBuffer.Instance.setColor(0x101010, (int)(255 * getAlpha(x)));
-				RenderShapes.drawSolidBoxSkewTaper(
-						VertexConsumerBuffer.Instance,
+				ImmediateBuffer.A.setColor(0x101010, (int)(255 * getAlpha(x)));
+				ImmediateBuffer.A.drawSolidBoxSkewTaper(
 						thicknessTop,
 						thicknessBottom,
 						0, bladeLength * 0.6f, 0,
 						0, 0, 0
 				);
-				RenderShapes.drawSolidBoxSkewTaper(
-						VertexConsumerBuffer.Instance,
+				ImmediateBuffer.A.drawSolidBoxSkewTaper(
 						thicknessTop / 4f,
 						thicknessTop,
 						0, bladeLength, thicknessTop * 0.75f,
@@ -331,7 +323,7 @@ public class EnergyRenderer
 			}
 		}
 
-		RenderShapes.resetScale();
+		ImmediateBuffer.A.resetScale();
 	}
 
 	public static void renderLayer(BufferBuilderStorage bufferBuilders)

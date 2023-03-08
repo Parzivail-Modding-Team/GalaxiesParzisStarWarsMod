@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.render.entity.rodent;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.entity.rodent.SandSkitterEntity;
 import com.parzivail.util.client.render.MutableAnimatedModel;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -13,7 +13,7 @@ public class SandSkitterEntityRenderer extends MobEntityRenderer<SandSkitterEnti
 {
 	public SandSkitterEntityRenderer(EntityRendererFactory.Context ctx)
 	{
-		super(ctx, NemManager.INSTANCE.getModel(Resources.id("mob/rodent/sand_skitter"), SandSkitterEntityRenderer::setAngles), 0.5f);
+		super(ctx, Client.NEM_MANAGER.getModel(Resources.id("mob/rodent/sand_skitter"), SandSkitterEntityRenderer::setAngles), 0.5f);
 	}
 
 	private static void setAngles(MutableAnimatedModel<SandSkitterEntity> model, SandSkitterEntity entity, float v, float v1, float v2, float v3, float v4, float tickDelta)

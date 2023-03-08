@@ -2,7 +2,7 @@ package com.parzivail.pswg.container;
 
 import com.google.common.base.Suppliers;
 import com.parzivail.pswg.Resources;
-import com.parzivail.util.scarif.ScarifStructure;
+import com.parzivail.scarif.ScarifStructure;
 import net.fabricmc.loader.api.FabricLoader;
 
 import java.io.IOException;

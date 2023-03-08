@@ -1,4 +1,4 @@
-package com.parzivail.util.client;
+package com.parzivail.util.client.render;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;

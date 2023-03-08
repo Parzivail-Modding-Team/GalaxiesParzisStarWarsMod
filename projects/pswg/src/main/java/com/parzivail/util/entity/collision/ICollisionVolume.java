@@ -1,4 +1,4 @@
-package com.parzivail.pswg.entity.collision;
+package com.parzivail.util.entity.collision;
 
 import net.minecraft.util.math.Vec3d;
 import org.apache.commons.lang3.mutable.MutableObject;

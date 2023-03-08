@@ -1,9 +1,9 @@
 package com.parzivail.aurek.editor;
 
+import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.api.BlasterTransformer;
 import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
-import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;

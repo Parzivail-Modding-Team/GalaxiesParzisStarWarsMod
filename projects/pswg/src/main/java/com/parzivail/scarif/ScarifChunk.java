@@ -1,4 +1,4 @@
-package com.parzivail.util.scarif;
+package com.parzivail.scarif;
 
 import com.google.common.io.LittleEndianDataInputStream;
 import com.parzivail.util.data.DataReader;

@@ -1,12 +1,12 @@
 package com.parzivail.pswg.client.render.block;
 
+import com.parzivail.p3d.IP3dBlockRenderer;
+import com.parzivail.p3d.P3dBlockRenderTarget;
+import com.parzivail.p3d.P3dManager;
+import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.block.Sliding1x2DoorBlock;
 import com.parzivail.pswg.blockentity.SlidingDoorBlockEntity;
-import com.parzivail.pswg.client.render.p3d.IP3DBlockRenderer;
-import com.parzivail.pswg.client.render.p3d.P3DBlockRenderTarget;
-import com.parzivail.pswg.client.render.p3d.P3dManager;
-import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.container.SwgBlocks;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.generics.Dyed;
@@ -30,17 +30,17 @@ import org.joml.Matrix4f;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRenderer<SlidingDoorBlockEntity>
+public class SlidingDoorRenderer implements IP3dBlockRenderer, BlockEntityRenderer<SlidingDoorBlockEntity>
 {
 	private static final Identifier MODEL = Resources.id("block/tatooine_home_door");
 	private static final Identifier TEX_FRAME = Resources.id("textures/block/model/door/sliding_1x2/frame.png");
 	private static final Dyed<Identifier> TEX_DOORS = new Dyed<>(color -> Resources.id("textures/block/model/door/sliding_1x2/door_" + color.getName() + ".png"));
 
-	private static Matrix4f transformBlockState(P3DBlockRenderTarget target, String objectName, float tickDelta)
+	private static Matrix4f transformBlockState(P3dBlockRenderTarget target, String objectName, float tickDelta)
 	{
 		var m = new Matrix4f();
 
-		if (!(target instanceof P3DBlockRenderTarget.Block blockRenderTarget))
+		if (!(target instanceof P3dBlockRenderTarget.Block blockRenderTarget))
 		{
 			if (objectName.equals("door"))
 				// Only draw the frame in items
@@ -65,14 +65,14 @@ public class SlidingDoorRenderer implements IP3DBlockRenderer, BlockEntityRender
 	}
 
 	@Override
-	public void renderBlock(MatrixStack matrices, QuadEmitter quadEmitter, P3DBlockRenderTarget target, Supplier<Random> randomSupplier, RenderContext renderContext, P3dModel model, Sprite baseSprite, HashMap<String, Sprite> additionalSprites)
+	public void renderBlock(MatrixStack matrices, QuadEmitter quadEmitter, P3dBlockRenderTarget target, Supplier<Random> randomSupplier, RenderContext renderContext, P3dModel model, Sprite baseSprite, HashMap<String, Sprite> additionalSprites)
 	{
-		if (target instanceof P3DBlockRenderTarget.Block b && b.getState().get(Sliding1x2DoorBlock.HALF) != DoubleBlockHalf.LOWER)
+		if (target instanceof P3dBlockRenderTarget.Block b && b.getState().get(Sliding1x2DoorBlock.HALF) != DoubleBlockHalf.LOWER)
 			return;
 
 		var doorColor = DyeColor.BROWN;
 
-		if (target instanceof P3DBlockRenderTarget.Block blockRenderTarget)
+		if (target instanceof P3dBlockRenderTarget.Block blockRenderTarget)
 			doorColor = Sliding1x2DoorBlock.getDoorColor(blockRenderTarget.getState()).orElse(DyeColor.BROWN);
 
 		DyeColor finalDoorColor = doorColor;

@@ -3,16 +3,16 @@ package com.parzivail.pswg.client.render.item;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.parzivail.p3d.P3dManager;
+import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.BlasterTransformer;
-import com.parzivail.pswg.client.render.p3d.P3dManager;
-import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
+import com.parzivail.util.client.ImmediateBuffer;
 import com.parzivail.util.client.NativeImageUtil;
-import com.parzivail.util.client.VertexConsumerBuffer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
 import com.parzivail.util.data.TintedIdentifier;
@@ -396,35 +396,35 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			var flash = Client.tintedTextureProvider.getId("muzzleflash/" + ColorUtil.toResourceId(color) + "/" + frame, () -> ID_MUZZLE_FLASHES[frame], () -> tintedId);
 
 			vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(flash));
-			VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
+			ImmediateBuffer.A.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 
 			final var flashradius = 0.45f;
 
-			VertexConsumerBuffer.Instance.vertex(-flashradius, -flashradius, 0, 0, 0, 1, 0, 0);
-			VertexConsumerBuffer.Instance.vertex(flashradius, -flashradius, 0, 0, 0, 1, 15 / 16f, 0);
-			VertexConsumerBuffer.Instance.vertex(flashradius, flashradius, 0, 0, 0, 1, 15 / 16f, 15 / 16f);
-			VertexConsumerBuffer.Instance.vertex(-flashradius, flashradius, 0, 0, 0, 1, 0, 15 / 16f);
+			ImmediateBuffer.A.vertex(-flashradius, -flashradius, 0, 0, 0, 1, 0, 0);
+			ImmediateBuffer.A.vertex(flashradius, -flashradius, 0, 0, 0, 1, 15 / 16f, 0);
+			ImmediateBuffer.A.vertex(flashradius, flashradius, 0, 0, 0, 1, 15 / 16f, 15 / 16f);
+			ImmediateBuffer.A.vertex(-flashradius, flashradius, 0, 0, 0, 1, 0, 15 / 16f);
 
 			if (!renderMode.isFirstPerson())
 			{
 				var forwardFlash = Client.tintedTextureProvider.getId("muzzleflash_forward/" + ColorUtil.toResourceId(color) + "/" + frame, () -> ID_MUZZLE_FLASHES_FORWARD[frame], () -> tintedForwardId);
 				vc = vertexConsumers.getBuffer(getMuzzleFlashLayer(forwardFlash));
-				VertexConsumerBuffer.Instance.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
+				ImmediateBuffer.A.init(vc, matrices.peek(), 1, 1, 1, opacity, overlay, light);
 
 				final var maxU = 30 / 32f;
 				final var maxV = 15 / 32f;
 
 				// vertical
-				VertexConsumerBuffer.Instance.vertex(0, -flashradius, -0.2f, 0, 0, 1, maxU, 0);
-				VertexConsumerBuffer.Instance.vertex(0, -flashradius, -0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
-				VertexConsumerBuffer.Instance.vertex(0, flashradius, -0.2f + 3 * flashradius, 0, 0, 1, 0, maxV);
-				VertexConsumerBuffer.Instance.vertex(0, flashradius, -0.2f, 0, 0, 1, maxU, maxV);
+				ImmediateBuffer.A.vertex(0, -flashradius, -0.2f, 0, 0, 1, maxU, 0);
+				ImmediateBuffer.A.vertex(0, -flashradius, -0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
+				ImmediateBuffer.A.vertex(0, flashradius, -0.2f + 3 * flashradius, 0, 0, 1, 0, maxV);
+				ImmediateBuffer.A.vertex(0, flashradius, -0.2f, 0, 0, 1, maxU, maxV);
 
 				// horizontal
-				VertexConsumerBuffer.Instance.vertex(-flashradius, 0, -0.2f, 0, 0, 1, maxU, 0);
-				VertexConsumerBuffer.Instance.vertex(-flashradius, 0, -0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
-				VertexConsumerBuffer.Instance.vertex(flashradius, 0, -0.2f + 3 * flashradius, 0, 0, 1, 0, maxV);
-				VertexConsumerBuffer.Instance.vertex(flashradius, 0, -0.2f, 0, 0, 1, maxU, maxV);
+				ImmediateBuffer.A.vertex(-flashradius, 0, -0.2f, 0, 0, 1, maxU, 0);
+				ImmediateBuffer.A.vertex(-flashradius, 0, -0.2f + 3 * flashradius, 0, 0, 1, 0, 0);
+				ImmediateBuffer.A.vertex(flashradius, 0, -0.2f + 3 * flashradius, 0, 0, 1, 0, maxV);
+				ImmediateBuffer.A.vertex(flashradius, 0, -0.2f, 0, 0, 1, maxU, maxV);
 			}
 		}
 	}

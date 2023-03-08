@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.entity.collision.ComplexCollisionManager;
 import com.parzivail.util.entity.IFlyingVehicle;
+import com.parzivail.util.entity.collision.ComplexCollisionManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.util.math.Vec3d;

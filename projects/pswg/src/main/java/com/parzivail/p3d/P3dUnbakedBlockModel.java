@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.render.p3d;
+package com.parzivail.p3d;
 
 import com.mojang.datafixers.util.Pair;
 import com.parzivail.util.client.model.BaseUnbakedBlockModel;
@@ -13,22 +13,22 @@ import java.util.HashMap;
 import java.util.Set;
 import java.util.function.Function;
 
-public class P3DUnbakedBlockModel extends BaseUnbakedBlockModel<P3DBakedBlockModel>
+public class P3dUnbakedBlockModel extends BaseUnbakedBlockModel<P3dBakedBlockModel>
 {
 	private final HashMap<String, Identifier> additionalTextures = new HashMap<>();
 
-	public P3DUnbakedBlockModel(Identifier baseTexture, Identifier particleTexture, BakerFunction<BaseUnbakedBlockModel<P3DBakedBlockModel>, P3DBakedBlockModel> baker)
+	public P3dUnbakedBlockModel(Identifier baseTexture, Identifier particleTexture, BakerFunction<BaseUnbakedBlockModel<P3dBakedBlockModel>, P3dBakedBlockModel> baker)
 	{
 		super(baseTexture, particleTexture, baker);
 	}
 
-	public P3DUnbakedBlockModel withTexture(String id, Identifier texture)
+	public P3dUnbakedBlockModel withTexture(String id, Identifier texture)
 	{
 		this.additionalTextures.put(id, texture);
 		return this;
 	}
 
-	public P3DUnbakedBlockModel withTextures(HashMap<String, Identifier> textures)
+	public P3dUnbakedBlockModel withTextures(HashMap<String, Identifier> textures)
 	{
 		this.additionalTextures.putAll(textures);
 		return this;
@@ -48,7 +48,7 @@ public class P3DUnbakedBlockModel extends BaseUnbakedBlockModel<P3DBakedBlockMod
 	@Override
 	public ClonableUnbakedModel copy()
 	{
-		return new P3DUnbakedBlockModel(baseTexture, particleTexture, baker)
+		return new P3dUnbakedBlockModel(baseTexture, particleTexture, baker)
 				.withTextures(additionalTextures);
 	}
 

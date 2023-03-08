@@ -1,4 +1,4 @@
-package com.parzivail.pswg.entity.collision;
+package com.parzivail.util.entity.collision;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Box;

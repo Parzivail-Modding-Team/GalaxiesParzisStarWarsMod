@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.render.entity.mammal;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.entity.mammal.BanthaEntity;
 import com.parzivail.util.client.render.MutableAnimatedModel;
 import com.parzivail.util.math.TwoJointIk;
@@ -19,7 +19,7 @@ public class BanthaEntityRenderer extends MobEntityRenderer<BanthaEntity, Single
 
 	public BanthaEntityRenderer(EntityRendererFactory.Context ctx)
 	{
-		super(ctx, NemManager.INSTANCE.getModel(Resources.id("mob/mammal/bantha"), BanthaEntityRenderer::setAngles), 0.5f);
+		super(ctx, Client.NEM_MANAGER.getModel(Resources.id("mob/mammal/bantha"), BanthaEntityRenderer::setAngles), 0.5f);
 		//		model = NemManager.INSTANCE.getModel(Resources.id("mob/mammal/bantha"), BanthaEntityRenderer::setAngles);
 	}
 

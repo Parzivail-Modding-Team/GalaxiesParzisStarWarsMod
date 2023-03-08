@@ -1,7 +1,7 @@
 package com.parzivail.pswg.api;
 
+import com.parzivail.p3d.P3dModel;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
-import com.parzivail.pswg.client.render.p3d.P3dModel;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import net.minecraft.client.render.model.json.ModelTransformation;

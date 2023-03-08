@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.render.entity.droid;
 
+import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.entity.rigs.RigR2;
 import com.parzivail.util.math.MathUtil;

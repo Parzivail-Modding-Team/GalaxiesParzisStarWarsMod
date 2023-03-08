@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Deprecated
 public record PM3DFile(PM3DLod[] lods)
 {
 	private static final String MAGIC = "Pm3D";

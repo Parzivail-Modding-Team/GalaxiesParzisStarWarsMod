@@ -1,11 +1,13 @@
 package com.parzivail.pswg;
 
+import com.parzivail.nem.NemManager;
+import com.parzivail.p3d.P3dBlockRendererRegistry;
+import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.api.PswgClientAddon;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
-import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.client.render.block.BlasterWorkbenchWeaponRenderer;
 import com.parzivail.pswg.client.render.block.PowerCouplingCableRenderer;
@@ -26,8 +28,6 @@ import com.parzivail.pswg.client.render.entity.ship.ZephyrJRenderer;
 import com.parzivail.pswg.client.render.hud.BlasterHudRenderer;
 import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
 import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
-import com.parzivail.pswg.client.render.p3d.P3DBlockRendererRegistry;
-import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.client.render.sky.SpaceSkyRenderer;
 import com.parzivail.pswg.client.screen.*;
 import com.parzivail.pswg.client.weapon.RecoilManager;
@@ -44,13 +44,13 @@ import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
 import com.parzivail.pswg.util.BlasterUtil;
 import com.parzivail.util.block.BlockEntityClientSerializable;
-import com.parzivail.util.client.StatelessWaterRenderer;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
 import com.parzivail.util.client.model.ModelRegistry;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import com.parzivail.util.client.render.ICustomItemRenderer;
 import com.parzivail.util.client.render.ICustomPoseItem;
+import com.parzivail.util.client.render.StatelessWaterRenderer;
 import com.parzivail.util.client.texture.remote.RemoteTextureProvider;
 import com.parzivail.util.client.texture.stacked.StackedTextureProvider;
 import com.parzivail.util.client.texture.tinted.TintedTextureProvider;
@@ -107,6 +107,8 @@ public class Client implements ClientModInitializer
 	public static final KeyBinding KEY_SPECIES_SELECT = new KeyBinding(Resources.keyBinding("species_select"), InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_K, "key.category.pswg");
 
 	public static final Identifier TEX_TRANSPARENT = Resources.id("textures/effect/transparent.png");
+
+	public static final NemManager NEM_MANAGER = new NemManager(Resources.id("nem_manager"));
 
 	public static RemoteTextureProvider remoteSkinTextureProvider;
 	public static StackedTextureProvider stackedTextureProvider;
@@ -189,7 +191,7 @@ public class Client implements ClientModInitializer
 				)
 		);
 		var slidingDoorRenderer = new SlidingDoorRenderer();
-		P3DBlockRendererRegistry.register(SwgBlocks.Door.Sliding1x2, slidingDoorRenderer);
+		P3dBlockRendererRegistry.register(SwgBlocks.Door.Sliding1x2, slidingDoorRenderer);
 		BlockEntityRendererFactories.register(SwgBlocks.Door.SlidingBlockEntityType, ctx -> slidingDoorRenderer);
 
 		ModelRegistry.register(SwgBlocks.Workbench.Blaster, true, ModelLoader.loadP3D(DynamicBakedModel.CacheMethod.BLOCKSTATE_KEY, Resources.id("block/blaster_workbench"), Resources.id("block/model/blaster_workbench"), Resources.id("block/model/workbench_particle")));
@@ -261,7 +263,7 @@ public class Client implements ClientModInitializer
 
 		DimensionEffectsAccessor.get_BY_IDENTIFIER().put(SwgDimensions.TATOOINE.getValue(), new SpaceSkyRenderer.Effect());
 
-		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NemManager.INSTANCE);
+		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(NEM_MANAGER);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(P3dManager.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(BlasterItemRenderer.INSTANCE);
 		ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(StatelessWaterRenderer.INSTANCE);

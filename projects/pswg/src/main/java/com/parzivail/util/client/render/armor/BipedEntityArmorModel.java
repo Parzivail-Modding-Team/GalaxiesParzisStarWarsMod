@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.render.armor;
+package com.parzivail.util.client.render.armor;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.model.ModelPart;

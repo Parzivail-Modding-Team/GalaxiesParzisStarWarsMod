@@ -1,7 +1,6 @@
-package com.parzivail.pswg.client.render.p3d;
+package com.parzivail.p3d;
 
 import com.google.common.io.LittleEndianDataInputStream;
-import com.parzivail.pswg.util.PIO;
 import com.parzivail.util.client.model.AbstractModel;
 import com.parzivail.util.client.model.ModelUtil;
 import com.parzivail.util.data.DataReader;
@@ -68,7 +67,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		return new Matrix4f();
 	}
 
-	public void renderBlock(MatrixStack matrix, QuadEmitter quadEmitter, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, SpriteSupplier<P3DBlockRenderTarget> spriteSupplier, Supplier<Random> randomSupplier, RenderContext context)
+	public void renderBlock(MatrixStack matrix, QuadEmitter quadEmitter, P3dBlockRenderTarget target, PartTransformer<P3dBlockRenderTarget> transformer, SpriteSupplier<P3dBlockRenderTarget> spriteSupplier, Supplier<Random> randomSupplier, RenderContext context)
 	{
 		for (var mesh : rootObjects)
 			renderMesh(matrix, quadEmitter, mesh, target, transformer, spriteSupplier, randomSupplier, context);
@@ -101,7 +100,7 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 		matrix.pop();
 	}
 
-	private void renderMesh(MatrixStack matrix, QuadEmitter quadEmitter, P3dObject o, P3DBlockRenderTarget target, PartTransformer<P3DBlockRenderTarget> transformer, SpriteSupplier<P3DBlockRenderTarget> spriteSupplier, Supplier<Random> randomSupplier, RenderContext context)
+	private void renderMesh(MatrixStack matrix, QuadEmitter quadEmitter, P3dObject o, P3dBlockRenderTarget target, PartTransformer<P3dBlockRenderTarget> transformer, SpriteSupplier<P3dBlockRenderTarget> spriteSupplier, Supplier<Random> randomSupplier, RenderContext context)
 	{
 		matrix.push();
 
@@ -254,11 +253,16 @@ public record P3dModel(int version, HashMap<String, P3dSocket> transformables, P
 				.next();
 	}
 
+	public static InputStream getStream(String domain, Identifier resourceLocation)
+	{
+		return P3dModel.class.getClassLoader().getResourceAsStream(domain + "/" + resourceLocation.getNamespace() + "/" + resourceLocation.getPath());
+	}
+
 	public static P3dModel tryLoad(Identifier modelFile, boolean hasVertexData)
 	{
 		try
 		{
-			var reader = PIO.getStream("data", modelFile);
+			var reader = getStream("data", modelFile);
 			return read(reader, hasVertexData);
 		}
 		catch (IOException ex)

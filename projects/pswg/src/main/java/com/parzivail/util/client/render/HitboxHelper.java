@@ -1,9 +1,9 @@
-package com.parzivail.pswg.client.render;
+package com.parzivail.util.client.render;
 
-import com.parzivail.pswg.entity.collision.CapsuleVolume;
-import com.parzivail.pswg.entity.collision.ICollisionVolume;
-import com.parzivail.pswg.entity.collision.IComplexEntityHitbox;
-import com.parzivail.pswg.entity.collision.SweptTriangleVolume;
+import com.parzivail.util.entity.collision.CapsuleVolume;
+import com.parzivail.util.entity.collision.ICollisionVolume;
+import com.parzivail.util.entity.collision.IComplexEntityHitbox;
+import com.parzivail.util.entity.collision.SweptTriangleVolume;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.util.math.MatrixStack;

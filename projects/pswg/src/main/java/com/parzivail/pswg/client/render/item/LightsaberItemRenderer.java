@@ -1,10 +1,10 @@
 package com.parzivail.pswg.client.render.item;
 
+import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.api.PswgContent;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
-import com.parzivail.pswg.client.render.p3d.P3dManager;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberBladeType;
 import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
 import com.parzivail.util.client.render.ICustomItemRenderer;

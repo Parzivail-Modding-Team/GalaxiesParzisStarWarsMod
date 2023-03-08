@@ -6,6 +6,7 @@ import net.minecraft.util.math.MathHelper;
 
 import java.util.function.Supplier;
 
+@Deprecated
 public record PM3DTexturedModel(Supplier<PM3DFile> file,
                                 Identifier... lodTextures)
 {

@@ -1,4 +1,4 @@
-package com.parzivail.pswg.mixin;
+package com.parzivail.nem.mixin;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

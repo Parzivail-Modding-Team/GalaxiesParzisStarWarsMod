@@ -1,7 +1,7 @@
 package com.parzivail.pswg.client.render.entity.fish;
 
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.loader.NemManager;
 import com.parzivail.util.math.MathUtil;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
@@ -16,7 +16,7 @@ public class LaaEntityRenderer extends MobEntityRenderer<FishEntity, SinglePartE
 {
 	public LaaEntityRenderer(EntityRendererFactory.Context context)
 	{
-		super(context, NemManager.INSTANCE.getModel(Resources.id("mob/fish/laa"), LaaEntityRenderer::setAngles), 0.5f);
+		super(context, Client.NEM_MANAGER.getModel(Resources.id("mob/fish/laa"), LaaEntityRenderer::setAngles), 0.5f);
 	}
 
 	@Override

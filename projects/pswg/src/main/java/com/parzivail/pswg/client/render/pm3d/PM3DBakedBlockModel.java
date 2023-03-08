@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+@Deprecated
 public class PM3DBakedBlockModel extends DynamicBakedModel
 {
 	private final CacheMethod cacheMethod;
@@ -99,17 +100,17 @@ public class PM3DBakedBlockModel extends DynamicBakedModel
 	private RenderMaterial getMaterial(PM3DFace face)
 	{
 		return switch (face.material)
-		{
-			case 0 -> MAT_DIFFUSE_OPAQUE;
-			case 1 -> MAT_DIFFUSE_CUTOUT;
-			case 2 -> MAT_DIFFUSE_TRANSLUCENT;
-			case 3 -> MAT_EMISSIVE;
-			default ->
-			{
-				var crashReport = CrashReport.create(null, String.format("Unknown material ID: %s", face.material));
-				throw new CrashException(crashReport);
-			}
-		};
+				{
+					case 0 -> MAT_DIFFUSE_OPAQUE;
+					case 1 -> MAT_DIFFUSE_CUTOUT;
+					case 2 -> MAT_DIFFUSE_TRANSLUCENT;
+					case 3 -> MAT_EMISSIVE;
+					default ->
+					{
+						var crashReport = CrashReport.create(null, String.format("Unknown material ID: %s", face.material));
+						throw new CrashException(crashReport);
+					}
+				};
 	}
 
 	public static final Map<String, Direction> FACING_SUBMODELS;

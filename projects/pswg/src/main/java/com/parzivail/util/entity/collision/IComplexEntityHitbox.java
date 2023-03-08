@@ -1,4 +1,4 @@
-package com.parzivail.pswg.entity.collision;
+package com.parzivail.util.entity.collision;
 
 import org.joml.Quaternionf;
 

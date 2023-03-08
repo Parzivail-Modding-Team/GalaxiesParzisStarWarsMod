@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.render.p3d;
+package com.parzivail.p3d;
 
 import org.joml.Vector3f;
 

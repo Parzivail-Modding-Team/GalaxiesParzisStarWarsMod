@@ -2,6 +2,7 @@ package com.parzivail.pswg.rig.pr3r;
 
 import org.joml.Matrix4f;
 
+@Deprecated
 public class PR3Object
 {
 	public final String name;

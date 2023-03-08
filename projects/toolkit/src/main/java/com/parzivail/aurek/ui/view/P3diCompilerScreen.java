@@ -12,11 +12,10 @@ import com.parzivail.aurek.ui.model.TabModelController;
 import com.parzivail.aurek.util.DialogUtil;
 import com.parzivail.aurek.util.FileUtil;
 import com.parzivail.aurek.util.LangUtil;
+import com.parzivail.p3d.P3dModel;
+import com.parzivail.p3d.P3dObject;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
-import com.parzivail.pswg.client.render.p3d.P3dModel;
-import com.parzivail.pswg.client.render.p3d.P3dObject;
-import com.parzivail.util.client.RenderShapes;
-import com.parzivail.util.client.VertexConsumerBuffer;
+import com.parzivail.util.client.ImmediateBuffer;
 import com.parzivail.util.math.MathUtil;
 import imgui.flag.ImGuiDir;
 import imgui.flag.ImGuiStyleVar;
@@ -245,7 +244,7 @@ public class P3diCompilerScreen extends ImguiScreen
 		model.getCompiledModel().render(ms, immediate, null, null, (vcp, t, o) -> vcp.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, 1, 255, 255, 255, 255);
 		immediate.draw();
 
-		VertexConsumerBuffer.Instance.init(immediate2.getBuffer(EnergyRenderer.LAYER_ENERGY), ms.peek(), 1, 1, 1, 1, OverlayTexture.DEFAULT_UV, LightmapTextureManager.MAX_LIGHT_COORDINATE);
+		ImmediateBuffer.A.init(immediate2.getBuffer(EnergyRenderer.LAYER_ENERGY), ms.peek(), 1, 1, 1, 1, OverlayTexture.DEFAULT_UV, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 		for (var entry : model.getCompiledModel().transformables().entrySet())
 		{
 			ms.push();
@@ -257,29 +256,28 @@ public class P3diCompilerScreen extends ImguiScreen
 			var m = ms.peek().getPositionMatrix();
 			model.getCompiledModel().transformToSocket(m, socket.name, null, 0, P3dModel::identityTransformer);
 
-			VertexConsumerBuffer.Instance.setMatrices(ms.peek());
-
-			RenderShapes.invertCull(true);
+			ImmediateBuffer.A.setMatrices(ms.peek());
+			ImmediateBuffer.A.invertCull(true);
 
 			var thickness = 0.005f;
 
-			VertexConsumerBuffer.Instance.setColor(0xFFFFFFFF);
-			RenderShapes.drawSolidBoxSkew(VertexConsumerBuffer.Instance, thickness, 0, thickness, 0, 0, -thickness, 0);
+			ImmediateBuffer.A.setColor(0xFFFFFFFF);
+			ImmediateBuffer.A.drawSolidBoxSkew(thickness, 0, thickness, 0, 0, -thickness, 0);
 
-			VertexConsumerBuffer.Instance.setColor(0xFF00FF00);
-			RenderShapes.drawSolidBoxSkew(VertexConsumerBuffer.Instance, thickness, 0, 1, 0, 0, thickness, 0);
+			ImmediateBuffer.A.setColor(0xFF00FF00);
+			ImmediateBuffer.A.drawSolidBoxSkew(thickness, 0, 1, 0, 0, thickness, 0);
 
 			ms.multiply(new Quaternionf().rotationX(MathHelper.PI / 2));
 
-			VertexConsumerBuffer.Instance.setColor(0xFF0000FF);
-			RenderShapes.drawSolidBoxSkew(VertexConsumerBuffer.Instance, thickness, 0, 1, 0, 0, thickness, 0);
+			ImmediateBuffer.A.setColor(0xFF0000FF);
+			ImmediateBuffer.A.drawSolidBoxSkew(thickness, 0, 1, 0, 0, thickness, 0);
 
 			ms.multiply(new Quaternionf().rotationZ(-MathHelper.PI / 2));
 
-			VertexConsumerBuffer.Instance.setColor(0xFFFF0000);
-			RenderShapes.drawSolidBoxSkew(VertexConsumerBuffer.Instance, thickness, 0, 1, 0, 0, thickness, 0);
+			ImmediateBuffer.A.setColor(0xFFFF0000);
+			ImmediateBuffer.A.drawSolidBoxSkew(thickness, 0, 1, 0, 0, thickness, 0);
 
-			RenderShapes.invertCull(false);
+			ImmediateBuffer.A.invertCull(false);
 
 			ms.pop();
 		}

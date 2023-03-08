@@ -1,11 +1,10 @@
-package com.parzivail.pswg.client.loader;
+package com.parzivail.nem;
 
 import com.google.common.collect.ImmutableList;
-import com.parzivail.pswg.Resources;
-import com.parzivail.pswg.client.render.armor.BipedEntityArmorModel;
-import com.parzivail.pswg.mixin.ModelPartAccessor;
+import com.parzivail.nem.mixin.ModelPartAccessor;
 import com.parzivail.util.client.render.ModelAngleAnimator;
 import com.parzivail.util.client.render.MutableAnimatedModel;
+import com.parzivail.util.client.render.armor.BipedEntityArmorModel;
 import com.parzivail.util.data.KeyedReloadableLoader;
 import net.minecraft.client.model.*;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -34,17 +33,16 @@ import java.util.function.Supplier;
 
 public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 {
-	public static final Identifier ID = Resources.id("nem_manager");
-	public static final NemManager INSTANCE = new NemManager();
-
+	private final Identifier id;
 	private final Map<Identifier, TexturedModelData> modelData;
 	private final ArrayList<Pair<Identifier, Consumer<ModelPart>>> models;
 	private final HashMap<Identifier, PlayerEntityModel<AbstractClientPlayerEntity>> playerModels;
 	private final HashMap<Identifier, BipedEntityModel<LivingEntity>> bipedModels;
 
-	private NemManager()
+	public NemManager(Identifier id)
 	{
 		super("models", "nem");
+		this.id = id;
 		modelData = new HashMap<>();
 		models = new ArrayList<>();
 		playerModels = new HashMap<>();
@@ -209,6 +207,6 @@ public class NemManager extends KeyedReloadableLoader<TexturedModelData>
 	@Override
 	public Identifier getFabricId()
 	{
-		return ID;
+		return this.id;
 	}
 }

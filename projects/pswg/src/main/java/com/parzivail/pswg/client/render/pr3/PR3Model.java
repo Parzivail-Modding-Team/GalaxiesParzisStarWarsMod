@@ -12,6 +12,7 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
+@Deprecated
 public record PR3Model<T, PT extends Enum<PT>>(PR3File container,
                                                Class<PT> partClass,
                                                PR3Model.TransformerFunction<T, PT> transformer)

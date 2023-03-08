@@ -1,4 +1,4 @@
-package com.parzivail.pswg.client.render.p3d;
+package com.parzivail.p3d;
 
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -9,7 +9,7 @@ import net.minecraft.util.math.random.Random;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
-public interface IP3DBlockRenderer
+public interface IP3dBlockRenderer
 {
-	void renderBlock(MatrixStack matrices, QuadEmitter quadEmitter, P3DBlockRenderTarget target, Supplier<Random> randomSupplier, RenderContext renderContext, P3dModel model, Sprite baseSprite, HashMap<String, Sprite> additionalSprites);
+	void renderBlock(MatrixStack matrices, QuadEmitter quadEmitter, P3dBlockRenderTarget target, Supplier<Random> randomSupplier, RenderContext renderContext, P3dModel model, Sprite baseSprite, HashMap<String, Sprite> additionalSprites);
 }

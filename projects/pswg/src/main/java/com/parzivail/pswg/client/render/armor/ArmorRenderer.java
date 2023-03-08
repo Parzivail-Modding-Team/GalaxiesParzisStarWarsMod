@@ -1,7 +1,8 @@
 package com.parzivail.pswg.client.render.armor;
 
-import com.parzivail.pswg.client.loader.NemManager;
+import com.parzivail.pswg.Client;
 import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.util.client.render.armor.BipedEntityArmorModel;
 import com.parzivail.util.registry.ArmorItems;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -114,7 +115,7 @@ public class ArmorRenderer
 	public static void register(Item item, Identifier id, Assets assets)
 	{
 		if (!MODELKEY_MODEL_MAP.containsKey(id))
-			MODELKEY_MODEL_MAP.put(id, new Entry(NemManager.INSTANCE.getBipedArmorModel(assets.defaultModelId), NemManager.INSTANCE.getBipedArmorModel(assets.slimModelId), assets.defaultTextureId, assets.slimTextureId));
+			MODELKEY_MODEL_MAP.put(id, new Entry(Client.NEM_MANAGER.getBipedArmorModel(assets.defaultModelId), Client.NEM_MANAGER.getBipedArmorModel(assets.slimModelId), assets.defaultTextureId, assets.slimTextureId));
 		ITEM_MODELKEY_MAP.put(item, id);
 	}
 

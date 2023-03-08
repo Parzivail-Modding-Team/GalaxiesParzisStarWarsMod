@@ -10,6 +10,7 @@ import org.joml.Vector3f;
 
 import java.io.IOException;
 
+@Deprecated
 public record PR3File(PR3RenderedObject[] objects)
 {
 	private static final String MAGIC = "PR3";

@@ -1,4 +1,4 @@
-package com.parzivail.util.client;
+package com.parzivail.util.client.render;
 
 import com.parzivail.util.ParziUtil;
 import net.fabricmc.api.EnvType;

@@ -1,7 +1,7 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.client.render.HitboxHelper;
 import com.parzivail.pswg.component.SwgEntityComponents;
+import com.parzivail.util.client.render.HitboxHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.VertexConsumer;

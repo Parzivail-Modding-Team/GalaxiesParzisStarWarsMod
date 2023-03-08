@@ -1,4 +1,4 @@
-package com.parzivail.util.scarif;
+package com.parzivail.scarif;
 
 import net.minecraft.block.BlockState;
 
