@@ -1,6 +1,7 @@
 package com.parzivail.pswg.client.zoom;
 
 import com.parzivail.pswg.Client;
+import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterAttachmentFunction;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
@@ -26,18 +27,26 @@ public class ZoomHandler
 		var stack = mc.player.getMainHandStack();
 
 		var blasterZoomInstance = Client.blasterZoomInstance;
+		var forceFirstPersonAds = Resources.CONFIG.get().view.forceFirstPersonAds;
+		var isFirstPerson = mc.options.getPerspective().isFirstPerson();
 
 		if (stack.getItem() instanceof BlasterItem b)
 		{
 			var bt = new BlasterTag(stack.getOrCreateNbt());
 			var bd = BlasterItem.getBlasterDescriptor(stack);
 
-			blasterZoomInstance.setZoom(bt.isAimingDownSights);
+			if (bt.isAimingDownSights && !isFirstPerson && forceFirstPersonAds)
+			{
+				mc.options.setPerspective(Perspective.FIRST_PERSON);
+				isFirstPerson = true;
+			}
+
+			blasterZoomInstance.setZoom(bt.isAimingDownSights && isFirstPerson);
 			blasterZoomInstance.setZoomDivisor(b.getFovMultiplier(stack, mc.world, mc.player));
 
 			ZoomOverlay overlay = null;
 
-			if (mc.options.getPerspective() == Perspective.FIRST_PERSON)
+			if (isFirstPerson)
 				overlay = bt.mapWithAttachment(bd, ZOOM_OVERLAYS).orElse(null);
 
 			blasterZoomInstance.setZoomOverlay(overlay);
