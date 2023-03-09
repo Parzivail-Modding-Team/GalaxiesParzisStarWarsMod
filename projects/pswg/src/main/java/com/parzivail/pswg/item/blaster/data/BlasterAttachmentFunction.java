@@ -2,37 +2,25 @@ package com.parzivail.pswg.item.blaster.data;
 
 public enum BlasterAttachmentFunction
 {
-	NONE("none"),
-	DEFAULT_SCOPE("scope"),
-	SNIPER_SCOPE("sniper_scope"),
-	IMPROVE_COOLING("improve_cooling"),
-	REDUCE_RECOIL("reduce_recoil"),
-	REDUCE_SPREAD("reduce_spread"),
-	INCREASE_RATE("increase_fire_rate"),
-	ALLOW_AUTO("allow_auto_fire"),
-	ALLOW_BURST("allow_burst_fire"),
-	ION_TO_GAS_CONVERSION("ion_to_gas_conversion"),
-	ION_TO_REPULSOR_CONVERSION("ion_to_repulsor_conversion"),
-	INCREASE_DAMAGE("increase_damage"),
-	INCREASE_RANGE("increase_range"),
-	WATERPROOF_BOLTS("waterproof_bolts"),
-	WATERPROOF_FIRING("waterproof_firing"),
-	INCREASE_DAMAGE_RANGE("increase_damage_range"),
-	INCREASE_ZOOM_2X("increase_zoom_2x"),
-	INCREASE_ZOOM_3X("increase_zoom_3x"),
-	INCREASE_ZOOM_5X("increase_zoom_5x"),
-	INCREASE_ZOOM_8X("increase_zoom_8x"),
+	NONE,
+	DEFAULT_SCOPE,
+	SNIPER_SCOPE,
+	IMPROVE_COOLING,
+	REDUCE_RECOIL,
+	REDUCE_SPREAD,
+	INCREASE_RATE,
+	ALLOW_AUTO,
+	ALLOW_BURST,
+	ION_TO_GAS_CONVERSION,
+	ION_TO_REPULSOR_CONVERSION,
+	INCREASE_DAMAGE,
+	INCREASE_RANGE,
+	WATERPROOF_BOLTS,
+	WATERPROOF_FIRING,
+	INCREASE_DAMAGE_RANGE,
+	INCREASE_ZOOM_2X,
+	INCREASE_ZOOM_3X,
+	INCREASE_ZOOM_5X,
+	INCREASE_ZOOM_8X,
 	;
-
-	private final String value;
-
-	BlasterAttachmentFunction(String value)
-	{
-		this.value = value;
-	}
-
-	public String getValue()
-	{
-		return value;
-	}
 }
