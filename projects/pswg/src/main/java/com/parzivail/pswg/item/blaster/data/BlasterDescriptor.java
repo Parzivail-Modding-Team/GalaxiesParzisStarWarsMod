@@ -28,7 +28,7 @@ public class BlasterDescriptor
 	public int burstRepeatTime = 1;
 
 	// TODO: datapack/archetype? (requires re-calculating first person ADS positions)
-	public float adsZoom = 5;
+	public float baseZoom = 5;
 
 	public int burstSize;
 

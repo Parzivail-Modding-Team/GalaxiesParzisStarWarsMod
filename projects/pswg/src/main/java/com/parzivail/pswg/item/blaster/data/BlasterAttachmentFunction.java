@@ -18,6 +18,10 @@ public enum BlasterAttachmentFunction
 	WATERPROOF_BOLTS("waterproof_bolts"),
 	WATERPROOF_FIRING("waterproof_firing"),
 	INCREASE_DAMAGE_RANGE("increase_damage_range"),
+	INCREASE_ZOOM_2X("increase_zoom_2x"),
+	INCREASE_ZOOM_3X("increase_zoom_3x"),
+	INCREASE_ZOOM_5X("increase_zoom_5x"),
+	INCREASE_ZOOM_8X("increase_zoom_8x"),
 	;
 
 	private final String value;

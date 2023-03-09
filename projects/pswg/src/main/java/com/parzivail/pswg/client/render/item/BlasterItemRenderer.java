@@ -164,6 +164,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		if (bd == null)
 			return;
 
+		var b = (BlasterItem)stack.getItem();
+
 		var modelEntry = getModel(bdId);
 		if (modelEntry.model == null)
 			return;
@@ -220,7 +222,8 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 		{
 			var z = Client.blasterZoomInstance;
 
-			var adsZoom = 1 / bd.adsZoom;
+			// TODO: why does this function break when using BlasterItem::getFovMultiplier?
+			var adsZoom = (1 / bd.baseZoom);
 			var adsLerp = 1 - (float)(z.getTransitionMode().applyZoom(1, d) - adsZoom) / (1 - adsZoom);
 
 			opacity = 1;

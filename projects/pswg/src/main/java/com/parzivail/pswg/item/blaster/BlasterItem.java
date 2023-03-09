@@ -47,7 +47,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Function;
 
 public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisualItemEquality, IZoomingItem, IDefaultNbtProvider, ICooldownItem, IItemActionListener, IItemHotbarListener, IItemEntityTickListener
@@ -69,10 +72,6 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	@TarkinLang
 	public static final String I18N_MESSAGE_MODE_CHANGED = Resources.msg("blaster_mode_changed");
 
-	private static final UUID ADS_SPEED_PENALTY_MODIFIER_ID = UUID.fromString("57b2e25d-1a79-44e7-8968-6d0dbbb7f997");
-	private static final EntityAttributeModifier ADS_SPEED_PENALTY_MODIFIER = new EntityAttributeModifier(ADS_SPEED_PENALTY_MODIFIER_ID, "ADS speed penalty", -0.5f, EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
-
-	private static final HashSet<Float> requestedSpeedModifiers = new HashSet<>();
 	private static final HashMap<Float, ImmutableMultimap<EntityAttribute, EntityAttributeModifier>> ATTRIB_MODS_ADS = new HashMap<>();
 
 	private static final HashMap<BlasterAttachmentFunction, Float> SPREAD_MAP = Util.make(new HashMap<>(), (h) -> {
@@ -81,6 +80,13 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	private static final HashMap<BlasterAttachmentFunction, Float> RECOIL_MAP = Util.make(new HashMap<>(), (h) -> {
 		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 0.7f);
+	});
+
+	private static final HashMap<BlasterAttachmentFunction, Float> ZOOM_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_2X, 2f);
+		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_3X, 3f);
+		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_5X, 5f);
+		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_8X, 8f);
 	});
 
 	public static void bakeAttributeModifiers(Map<Identifier, BlasterDescriptor> blasterPresets)
@@ -666,7 +672,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			return 1;
 
 		if (bt.isAimingDownSights)
-			return bd.adsZoom;
+			return bd.baseZoom * bt.stackWithAttachment(bd, ZOOM_MAP);
 
 		return 1;
 	}

@@ -156,7 +156,7 @@ public class BlasterTag extends TagSerializer
 			if ((attachment.bit & attachmentBitmask) != 0)
 			{
 				if (attachment.function == function)
-					multiplier *= coefficient;
+					coefficient *= multiplier;
 			}
 		}
 
