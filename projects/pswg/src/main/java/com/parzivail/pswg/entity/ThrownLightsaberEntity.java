@@ -45,6 +45,12 @@ public class ThrownLightsaberEntity extends ThrownEntity implements IPrecisionEn
 	}
 
 	@Override
+	public boolean shouldRender(double distance)
+	{
+		return true;
+	}
+
+	@Override
 	public void onSpawnPacket(EntitySpawnS2CPacket packet)
 	{
 		super.onSpawnPacket(packet);

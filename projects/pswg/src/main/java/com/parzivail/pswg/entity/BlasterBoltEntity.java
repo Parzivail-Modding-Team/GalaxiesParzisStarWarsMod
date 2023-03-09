@@ -97,6 +97,12 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	}
 
 	@Override
+	public boolean shouldRender(double distance)
+	{
+		return true;
+	}
+
+	@Override
 	public boolean hasNoGravity()
 	{
 		return true;

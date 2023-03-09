@@ -117,6 +117,12 @@ public abstract class ShipEntity extends Entity implements IFlyingVehicle, IPrec
 	}
 
 	@Override
+	public boolean shouldRender(double distance)
+	{
+		return true;
+	}
+
+	@Override
 	protected void playStepSound(BlockPos pos, BlockState state)
 	{
 	}
