@@ -1,0 +1,7 @@
+{
+	"gui.button.press": {
+		"sounds": [
+			"random/click"
+		]
+	}
+}

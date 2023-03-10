@@ -1,0 +1,47 @@
+
+language.name=English
+language.region=US
+language.code=en_US
+
+container.inventory= 
+container.hopper= 
+container.crafting= 
+container.dispenser= 
+container.dropper= 
+container.furnace= 
+container.enchant= 
+container.repair= 
+container.creative= 
+container.brewing= 
+container.chest= 
+container.chestDouble= 
+container.minecart= 
+container.enderchest= 
+
+entity.Villager.name=§f Villager
+
+entity.Pig.name=§f Pig
+entity.EntityHorse.name=§f Horse
+entity.horse.name=§f Horse
+entity.donkey.name=§f Donkey
+entity.mule.name=§f Mule
+entity.skeletonhorse.name=§f Skeleton Horse
+entity.zombiehorse.name=§f Zombie Horse
+
+gui.achievements=§6 Achievements
+gui.stats=§6 Statistics
+
+itemGroup.buildingBlocks=§f Building Blocks
+itemGroup.decorations=§f Decoration Blocks
+itemGroup.redstone=§f Redstone
+itemGroup.transportation=§f Transportation
+itemGroup.misc=§f Miscellaneous
+itemGroup.search=§f Search Items
+itemGroup.food=§f Foodstuffs
+itemGroup.tools=§f Tools
+itemGroup.combat=§f Combat
+itemGroup.brewing=§f Brewing
+itemGroup.materials=§f Materials
+itemGroup.inventory=§f Survival Inventory
+
+inventory.binSlot=§4 Destroy Item
