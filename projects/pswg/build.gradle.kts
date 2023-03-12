@@ -44,16 +44,20 @@ curseforge {
 	}
 }
 
-
+tasks.curseforge {
+	group = "publishing"
+}
 
 val github by tasks.register("github") {
 	inputs.files(tasks.remapJar)
+
+	group = "publishing"
 
 	doFirst {
 		val version = version as String
 		val gson = Gson()
 		val token = rootProject.findProperty("githubToken") as String
-		val file = file(tasks.remapJar)
+		val file = tasks.remapJar.get().archiveFile.get().asFile
 		val createResponse = JsonParser.parseString(
 			Request.post("https://api.github.com/repos/Parzivail-Modding-Team/GalaxiesParzisStarWarsMod/releases")
 				.addHeader("Authorization", "Bearer $token")
@@ -98,4 +102,5 @@ fun jsonObject(f: JsonObjectDsl.() -> Unit) = JsonObjectDsl().apply(f).jsonObjec
 
 tasks.register("modPublish") {
 	dependsOn(tasks.modrinth, tasks.curseforge, github)
+	group = "publishing"
 }
