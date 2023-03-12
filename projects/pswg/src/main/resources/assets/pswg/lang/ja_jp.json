@@ -16,7 +16,6 @@
 	"blaster.pswg.rt97c": "RT-97C重ブラスター・ライフル",
 	"blaster.pswg.se14c": "SE-14Cブラスター・ピストル",
 	"blaster.pswg.t21": "T-21軽連射式ブラスター・ライフル",
-	"screen.pswg.species_select.use_female_model": "女性のモデルを使う",
 	"species.pswg.aqualish": "アクアリッシュ",
 	"species.pswg.aqualish.body.green": "緑",
 	"species.pswg.bith": "ビス",
@@ -57,6 +56,5 @@
 	"species.pswg.twilek.body.red": "赤",
 	"species.pswg.twilek.body.white": "白",
 	"species.pswg.twilek.body.yellow": "黄",
-	"species.pswg.twilek.eyebrows.black": "黒",
-	"tooltip.pswg.blaster.info": "ブラスター"
+	"species.pswg.twilek.eyebrows.black": "黒"
 }
