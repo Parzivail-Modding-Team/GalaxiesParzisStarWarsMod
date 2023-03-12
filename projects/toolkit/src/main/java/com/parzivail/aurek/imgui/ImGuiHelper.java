@@ -117,6 +117,9 @@ public class ImGuiHelper
 	 */
 	public static void startFrame()
 	{
+		if (!frameDrawn)
+			return;
+
 		imGuiGlfw.newFrame();
 		ImGui.newFrame();
 		ImGuizmo.beginFrame();
