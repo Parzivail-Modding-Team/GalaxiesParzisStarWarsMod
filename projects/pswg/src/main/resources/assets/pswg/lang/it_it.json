@@ -1,4 +1,5 @@
 {
+	"blaster.pswg.t21.attachment.long_barrel": "Canna Lunga",
 	"block.pswg.air_vent": "Ventola dell'aria",
 	"block.pswg.beskar_block": "Blocco di Beskar",
 	"block.pswg.beskar_ore": "Minerale di Beskar",
@@ -60,7 +61,6 @@
 	"container.pswg.kyber_crate": "Cassa di Kyber",
 	"container.pswg.lightsaber_forge": "Forgia delle spade laser",
 	"container.pswg.mos_eisley_crate": "Cassa di Mos Eisley",
-	"container.pswg.segmented_crate": "Cassa Segmentata",
 	"death.attack.pswg.blaster": "%2$s ha sparato prima, %1$s ha sparato dopo",
 	"entity.pswg.faa": "Faa",
 	"entity.pswg.laa": "Laa",
@@ -79,7 +79,6 @@
 	"item.pswg.beskar_pickaxe": "Piccone di Beskar",
 	"item.pswg.beskar_shovel": "Pala di Beskar",
 	"item.pswg.black_melon": "Melone Nero",
-	"item.pswg.blaster": "Blaster (Modello Sconosciuto)",
 	"item.pswg.blue_yogurt": "Yogurt Blu",
 	"item.pswg.chasuka_leaf": "Foglie di Chasuka",
 	"item.pswg.chasuka_seeds": "Semi di Chasuka",
@@ -166,8 +165,6 @@
 	"msg.pswg.blaster_mode_changed": "Modalità di Fuoco: %s",
 	"msg.pswg.update": "Un nuovo aggiornamento PSWG, %s, è disponibile su %s!",
 	"screen.pswg.apply": "Applica",
-	"screen.pswg.species_select": "Personalizzazione Specie",
-	"screen.pswg.species_select.use_female_model": "Usa Modello Femminile",
 	"species.pswg.aqualish": "Aqualish",
 	"species.pswg.aqualish.body": "Pelle",
 	"species.pswg.aqualish.body.beige": "Beige",
@@ -246,6 +243,5 @@
 	"species.pswg.twilek.body.yellow": "Giallo",
 	"text.autoconfig.pswg.option.input": "Input",
 	"text.autoconfig.pswg.option.input.@Tooltip": "Qui puoi cambiare i tuoi metodi di input preferiti.",
-	"text.autoconfig.pswg.title": "Galaxies: Parzi's Star Wars Mod",
-	"tooltip.pswg.blaster.info": "Blaster"
+	"text.autoconfig.pswg.title": "Galaxies: Parzi's Star Wars Mod"
 }
