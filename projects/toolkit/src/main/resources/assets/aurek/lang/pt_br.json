@@ -1,1 +1,14 @@
-{}
+{
+	"screen.pswg.toolkit": "Aurek Toolkit",
+	"screen.pswg.toolkit_home": "Aurek Toolkit: Página Inicial",
+	"screen.pswg.toolkit_worldgen": "Aurek Toolkit: GenDeMundo",
+	"tool.category.tools": "Ferramentas",
+	"tool.category.modeling": "Modelagem",
+	"tool.category.worldgen": "Geração de Mundo",
+	"tool.title.worldgen_visualizer": "Visualizador de GenDeMundo",
+	"tool.description.worldgen_visualizer": "Rapidamente crie, inspecione, e regenere chunks sem carregar um mundo.",
+	"tool.title.nemi_compiler": "Compilador NEMi",
+	"tool.description.nemi_compiler": "Veja e compile arquivos intermediários de Modelo de Entidade NBT (NEMi), produzidos pelo plugin PSWG para o software de modelagem de entidades, para arquivos de Modelo de Entidade NBT (NEM), e veja modelos NEM existentes.",
+	"tool.title.p3di_compiler": "Compilador P3Di",
+	"tool.description.p3di_compiler": "Compile arquivos intermediários de modelo P3D (P3Di), produzidos pelo plugin PSWG para o Blender, em arquivos de modelo P3D (P3D)."
+}
