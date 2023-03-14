@@ -159,10 +159,18 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			return TypedActionResult.pass(stack);
 
 		if (!world.isClient)
-			BlasterTag.mutate(stack, BlasterTag::toggleAds);
+			BlasterTag.mutate(stack, blasterTag -> tryToggleAds(blasterTag, world, player, hand));
 
 		player.setCurrentHand(hand);
 		return TypedActionResult.pass(stack);
+	}
+
+	private void tryToggleAds(BlasterTag blasterTag, World world, PlayerEntity player, Hand hand)
+	{
+		if (areBothHandsOccupied(player))
+			return;
+
+		blasterTag.toggleAds();
 	}
 
 	@Override
@@ -290,7 +298,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		if (!world.isClient && user.getItemUseTime() > 3 && bt.isAimingDownSights)
-			BlasterTag.mutate(stack, BlasterTag::toggleAds);
+			BlasterTag.mutate(stack, BlasterTag::stopAds);
 	}
 
 	@Override

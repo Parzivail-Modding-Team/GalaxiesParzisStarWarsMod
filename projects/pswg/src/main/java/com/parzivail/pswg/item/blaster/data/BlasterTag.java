@@ -183,6 +183,11 @@ public class BlasterTag extends TagSerializer
 		setAimingDownSights(!isAimingDownSights);
 	}
 
+	public void stopAds()
+	{
+		setAimingDownSights(false);
+	}
+
 	public boolean isReady()
 	{
 		return shotTimer == 0 && readyTimer == 0;
