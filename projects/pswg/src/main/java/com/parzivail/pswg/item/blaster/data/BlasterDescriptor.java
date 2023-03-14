@@ -4,6 +4,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class BlasterDescriptor
@@ -45,6 +46,8 @@ public class BlasterDescriptor
 	public int attachmentDefault;
 	public int attachmentMinimum;
 	public HashMap<Integer, BlasterAttachmentDescriptor> attachmentMap = new HashMap<>();
+
+	private BlasterAttachmentBuilder attachmentBuilder = new BlasterAttachmentBuilder();
 
 	public BlasterDescriptor(Identifier id, BlasterArchetype type)
 	{
@@ -136,11 +139,20 @@ public class BlasterDescriptor
 		return this;
 	}
 
-	public BlasterDescriptor attachments(BlasterAttachmentMap attachmentMap)
+	public BlasterDescriptor attachments(Consumer<BlasterAttachmentBuilder> b)
 	{
-		this.attachmentDefault = attachmentMap.attachmentDefault();
-		this.attachmentMinimum = attachmentMap.attachmentMinimum();
-		this.attachmentMap = attachmentMap.attachmentMap();
+		b.accept(attachmentBuilder);
 		return this;
+	}
+
+	public void build()
+	{
+		var map = attachmentBuilder.build();
+
+		this.attachmentDefault = map.attachmentDefault();
+		this.attachmentMinimum = map.attachmentMinimum();
+		this.attachmentMap = map.attachmentMap();
+
+		this.attachmentBuilder = null;
 	}
 }
