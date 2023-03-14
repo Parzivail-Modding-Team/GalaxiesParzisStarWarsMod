@@ -316,7 +316,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		if (!bt.isReady())
 			return TypedActionResult.fail(stack);
 
-		bt.shotTimer = (short)bd.automaticRepeatTime;
+		bt.shotTimer = (short)Math.ceil(bd.automaticRepeatTime * getShotTimerMultiplier(bd, bt.attachmentBitmask));
 
 		if (bt.isCooling())
 		{
@@ -418,7 +418,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			}
 
 			bt.burstCounter--;
-			bt.shotTimer = (short)bd.burstRepeatTime;
+			bt.shotTimer = (short)Math.ceil(bd.burstRepeatTime * getShotTimerMultiplier(bd, bt.attachmentBitmask));
 		}
 
 		bt.passiveCooldownTimer = (short)bd.heat.passiveCooldownDelay;
@@ -553,6 +553,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public static float getRangeMultiplier(BlasterDescriptor bd, int attachmentBitmask)
 	{
 		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, 1.5f);
+	}
+
+	public static float getShotTimerMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.INCREASE_RATE, 0.6f);
 	}
 
 	public static boolean hasWaterproofBolts(BlasterDescriptor bd, int attachmentBitmask)

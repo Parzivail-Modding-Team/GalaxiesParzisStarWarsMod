@@ -361,7 +361,10 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			drawStackedStatBar(matrices, newCooling / maxCooling, oldCooling / maxCooling, 20, 155);
 
 			// speed
-			drawStackedStatBar(matrices, 1, 0.75f, 103, 155);
+			var oldRate = BlasterItem.getShotTimerMultiplier(blasterDescriptor, originalBitmask);
+			var newRate = BlasterItem.getShotTimerMultiplier(blasterDescriptor, bt.attachmentBitmask);
+			var maxRate = Math.max(oldRate, newRate);
+			drawStackedStatBar(matrices, newRate / maxRate, oldRate / maxRate, 103, 155);
 
 			drawAttachmentList(matrices, blasterModel, bt, attachmentList, this::getAttachmentError, tooltip::setValue, mouseX, mouseY);
 		}
