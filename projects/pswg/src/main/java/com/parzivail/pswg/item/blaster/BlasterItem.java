@@ -547,7 +547,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	public static float getHeatMultiplier(BlasterDescriptor bd, int attachmentBitmask)
 	{
-		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.IMPROVE_COOLING, 0.6f);
+		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.REDUCE_HEAT, 0.6f);
 	}
 
 	public static float getRangeMultiplier(BlasterDescriptor bd, int attachmentBitmask)
