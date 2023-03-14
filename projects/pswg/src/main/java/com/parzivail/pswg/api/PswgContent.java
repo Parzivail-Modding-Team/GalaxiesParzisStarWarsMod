@@ -113,6 +113,9 @@ public class PswgContent
 	public static void bake()
 	{
 		lightsaberPresets = ImmutableMap.copyOf(lightsaberPresets);
+
+		for (var preset : blasterPresets.values())
+			preset.build();
 		blasterPresets = ImmutableMap.copyOf(blasterPresets);
 
 		BlasterItem.bakeAttributeModifiers(blasterPresets);
