@@ -32,6 +32,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
@@ -50,6 +51,8 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 {
 	@TarkinLang
 	public static final String I18N_INCOMPAT_ATTACHMENT = Resources.screen("blaster.incompatible_attachment");
+	@TarkinLang
+	public static final String I18N_STAT_MULT_ENTRY = Resources.screen("blaster.stat_multiplier_entry");
 	@TarkinLang
 	public static final String I18N_DAMAGE_RATIO = Resources.screen("blaster.damage_ratio");
 	@TarkinLang
@@ -361,38 +364,50 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			// damage
 			var oldDamage = BlasterItem.getDamageMultiplier(blasterDescriptor, originalBitmask);
 			var newDamage = BlasterItem.getDamageMultiplier(blasterDescriptor, bt.attachmentBitmask);
-			var maxDamage = Math.max(oldDamage, newDamage);
-			drawStackedStatBar(matrices, newDamage / maxDamage, oldDamage / maxDamage, 20, 142);
+			drawStackedStatBar(matrices, newDamage, oldDamage, 20, 142);
 
 			if (MathUtil.rectContains(x + 20, y + 142, 67, 4, mouseX, mouseY))
-				tooltip.setValue(List.of(Text.translatable(I18N_DAMAGE_RATIO, oldDamage, newDamage)));
+				tooltip.setValue(List.of(Text.translatable(
+						I18N_DAMAGE_RATIO,
+						Text.translatable(I18N_STAT_MULT_ENTRY, oldDamage).formatted(Formatting.BLUE),
+						Text.translatable(I18N_STAT_MULT_ENTRY, newDamage).formatted(Formatting.GOLD)
+				)));
 
 			// range
 			var oldRange = BlasterItem.getRangeMultiplier(blasterDescriptor, originalBitmask);
 			var newRange = BlasterItem.getRangeMultiplier(blasterDescriptor, bt.attachmentBitmask);
-			var maxRange = Math.max(oldRange, newRange);
-			drawStackedStatBar(matrices, newRange / maxRange, oldRange / maxRange, 103, 142);
+			drawStackedStatBar(matrices, newRange, oldRange, 103, 142);
 
 			if (MathUtil.rectContains(x + 103, y + 142, 67, 4, mouseX, mouseY))
-				tooltip.setValue(List.of(Text.translatable(I18N_RANGE_RATIO, oldRange, newRange)));
+				tooltip.setValue(List.of(Text.translatable(
+						I18N_RANGE_RATIO,
+						Text.translatable(I18N_STAT_MULT_ENTRY, oldRange).formatted(Formatting.BLUE),
+						Text.translatable(I18N_STAT_MULT_ENTRY, newRange).formatted(Formatting.GOLD)
+				)));
 
 			// cooling
 			var oldCooling = BlasterItem.getCoolingMultiplier(blasterDescriptor, originalBitmask);
 			var newCooling = BlasterItem.getCoolingMultiplier(blasterDescriptor, bt.attachmentBitmask);
-			var maxCooling = Math.max(oldCooling, newCooling);
-			drawStackedStatBar(matrices, newCooling / maxCooling, oldCooling / maxCooling, 20, 155);
+			drawStackedStatBar(matrices, newCooling, oldCooling, 20, 155);
 
 			if (MathUtil.rectContains(x + 20, y + 155, 67, 4, mouseX, mouseY))
-				tooltip.setValue(List.of(Text.translatable(I18N_COOLING_RATIO, oldCooling, newCooling)));
+				tooltip.setValue(List.of(Text.translatable(
+						I18N_COOLING_RATIO,
+						Text.translatable(I18N_STAT_MULT_ENTRY, newCooling).formatted(Formatting.BLUE),
+						Text.translatable(I18N_STAT_MULT_ENTRY, newCooling).formatted(Formatting.GOLD)
+				)));
 
 			// speed
 			var oldRate = 1 / BlasterItem.getShotTimerMultiplier(blasterDescriptor, originalBitmask);
 			var newRate = 1 / BlasterItem.getShotTimerMultiplier(blasterDescriptor, bt.attachmentBitmask);
-			var maxRate = Math.max(oldRate, newRate);
-			drawStackedStatBar(matrices, newRate / maxRate, oldRate / maxRate, 103, 155);
+			drawStackedStatBar(matrices, newRate, oldRate, 103, 155);
 
 			if (MathUtil.rectContains(x + 103, y + 155, 67, 4, mouseX, mouseY))
-				tooltip.setValue(List.of(Text.translatable(I18N_RANGE_RATIO, oldRate, newRate)));
+				tooltip.setValue(List.of(Text.translatable(
+						I18N_RATE_RATIO,
+						Text.translatable(I18N_STAT_MULT_ENTRY, oldRate).formatted(Formatting.BLUE),
+						Text.translatable(I18N_STAT_MULT_ENTRY, newRate).formatted(Formatting.GOLD)
+				)));
 
 			drawAttachmentList(matrices, blasterModel, bt, attachmentList, this::getAttachmentError, tooltip::setValue, mouseX, mouseY);
 		}
@@ -477,15 +492,20 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 
 	private void drawStackedStatBar(MatrixStack matrices, float newValue, float oldValue, int targetX, int targetY)
 	{
-		if (newValue > oldValue)
+		var divisor = Math.max(2, Math.max(newValue, oldValue));
+
+		newValue /= divisor;
+		oldValue /= divisor;
+
+		if (newValue < oldValue)
 		{
-			drawTexture(matrices, x + targetX, y + targetY, 179, 142, Math.round(67 * newValue), 4, 256, 256);
-			drawTexture(matrices, x + targetX, y + targetY, 179, 147, Math.round(67 * oldValue), 4, 256, 256);
+			drawTexture(matrices, x + targetX, y + targetY, 179, 142, Math.round(67 * oldValue), 4, 256, 256);
+			drawTexture(matrices, x + targetX, y + targetY, 179, 147, Math.round(67 * newValue), 4, 256, 256);
 		}
 		else
 		{
-			drawTexture(matrices, x + targetX, y + targetY, 179, 147, Math.round(67 * oldValue), 4, 256, 256);
-			drawTexture(matrices, x + targetX, y + targetY, 179, 142, Math.round(67 * newValue), 4, 256, 256);
+			drawTexture(matrices, x + targetX, y + targetY, 179, 147, Math.round(67 * newValue), 4, 256, 256);
+			drawTexture(matrices, x + targetX, y + targetY, 179, 142, Math.round(67 * oldValue), 4, 256, 256);
 		}
 	}
 
@@ -494,7 +514,8 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	{
 		switch (slotId)
 		{
-			case 0 -> {
+			case 0 ->
+			{
 				blaster = stack.copy();
 				onBlasterChanged();
 			}
