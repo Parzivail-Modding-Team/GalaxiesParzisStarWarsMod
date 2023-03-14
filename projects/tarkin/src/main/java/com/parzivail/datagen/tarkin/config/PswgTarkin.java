@@ -55,7 +55,6 @@ public class PswgTarkin
 
 		// Containers
 		lang.container("blaster_workbench").build(assets);
-		lang.entry(BlasterWorkbenchScreen.I18N_INCOMPAT_ATTACHMENT).build(assets);
 
 		lang.container("corrugated_crate").build(assets);
 		lang.container("kyber_crate").build(assets);
@@ -90,6 +89,7 @@ public class PswgTarkin
 		Tarkin.registerLangFields(CharacterScreen.class, lang, assets);
 		Tarkin.registerLangFields(BlasterItem.class, lang, assets);
 		Tarkin.registerLangFields(LightsaberItem.class, lang, assets);
+		Tarkin.registerLangFields(BlasterWorkbenchScreen.class, lang, assets);
 
 		// Item
 		lang.item("lightsaber").dot("darksaber").build(assets);

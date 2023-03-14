@@ -9,6 +9,7 @@ import com.parzivail.pswg.item.blaster.data.BlasterAttachmentDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.pswg.screen.BlasterWorkbenchScreenHandler;
+import com.parzivail.tarkin.api.TarkinLang;
 import com.parzivail.util.client.screen.AreaButtonWidget;
 import com.parzivail.util.client.screen.LocalTextureButtonWidget;
 import com.parzivail.util.math.MathUtil;
@@ -47,7 +48,16 @@ import java.util.function.Consumer;
 @Environment(EnvType.CLIENT)
 public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreenHandler> implements ScreenHandlerListener
 {
+	@TarkinLang
 	public static final String I18N_INCOMPAT_ATTACHMENT = Resources.screen("blaster.incompatible_attachment");
+	@TarkinLang
+	public static final String I18N_DAMAGE_RATIO = Resources.screen("blaster.damage_ratio");
+	@TarkinLang
+	public static final String I18N_COOLING_RATIO = Resources.screen("blaster.cooling_ratio");
+	@TarkinLang
+	public static final String I18N_RATE_RATIO = Resources.screen("blaster.rate_ratio");
+	@TarkinLang
+	public static final String I18N_RANGE_RATIO = Resources.screen("blaster.range_ratio");
 
 	private static final Identifier TEXTURE = Resources.id("textures/gui/container/blaster_workbench.png");
 	private static final int NUM_VISIBLE_ATTACHMENT_ROWS = 3;
@@ -354,8 +364,17 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			var maxDamage = Math.max(oldDamage, newDamage);
 			drawStackedStatBar(matrices, newDamage / maxDamage, oldDamage / maxDamage, 20, 142);
 
-			// accuracy
-			drawStackedStatBar(matrices, 0.5f, 0.25f, 103, 142);
+			if (MathUtil.rectContains(x + 20, y + 142, 67, 4, mouseX, mouseY))
+				tooltip.setValue(List.of(Text.translatable(I18N_DAMAGE_RATIO, oldDamage, newDamage)));
+
+			// range
+			var oldRange = BlasterItem.getRangeMultiplier(blasterDescriptor, originalBitmask);
+			var newRange = BlasterItem.getRangeMultiplier(blasterDescriptor, bt.attachmentBitmask);
+			var maxRange = Math.max(oldRange, newRange);
+			drawStackedStatBar(matrices, newRange / maxRange, oldRange / maxRange, 103, 142);
+
+			if (MathUtil.rectContains(x + 103, y + 142, 67, 4, mouseX, mouseY))
+				tooltip.setValue(List.of(Text.translatable(I18N_RANGE_RATIO, oldRange, newRange)));
 
 			// cooling
 			var oldCooling = BlasterItem.getCoolingMultiplier(blasterDescriptor, originalBitmask);
@@ -363,11 +382,17 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			var maxCooling = Math.max(oldCooling, newCooling);
 			drawStackedStatBar(matrices, newCooling / maxCooling, oldCooling / maxCooling, 20, 155);
 
+			if (MathUtil.rectContains(x + 20, y + 155, 67, 4, mouseX, mouseY))
+				tooltip.setValue(List.of(Text.translatable(I18N_COOLING_RATIO, oldCooling, newCooling)));
+
 			// speed
-			var oldRate = BlasterItem.getShotTimerMultiplier(blasterDescriptor, originalBitmask);
-			var newRate = BlasterItem.getShotTimerMultiplier(blasterDescriptor, bt.attachmentBitmask);
+			var oldRate = 1 / BlasterItem.getShotTimerMultiplier(blasterDescriptor, originalBitmask);
+			var newRate = 1 / BlasterItem.getShotTimerMultiplier(blasterDescriptor, bt.attachmentBitmask);
 			var maxRate = Math.max(oldRate, newRate);
 			drawStackedStatBar(matrices, newRate / maxRate, oldRate / maxRate, 103, 155);
+
+			if (MathUtil.rectContains(x + 103, y + 155, 67, 4, mouseX, mouseY))
+				tooltip.setValue(List.of(Text.translatable(I18N_RANGE_RATIO, oldRate, newRate)));
 
 			drawAttachmentList(matrices, blasterModel, bt, attachmentList, this::getAttachmentError, tooltip::setValue, mouseX, mouseY);
 		}
