@@ -355,7 +355,10 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			drawStackedStatBar(matrices, 0.5f, 0.25f, 103, 142);
 
 			// cooling
-			drawStackedStatBar(matrices, 0.5f, 0.75f, 20, 155);
+			var oldCooling = BlasterItem.getCoolingMultiplier(blasterDescriptor, originalBitmask);
+			var newCooling = BlasterItem.getCoolingMultiplier(blasterDescriptor, bt.attachmentBitmask);
+			var maxCooling = Math.max(oldCooling, newCooling);
+			drawStackedStatBar(matrices, newCooling / maxCooling, oldCooling / maxCooling, 20, 155);
 
 			// speed
 			drawStackedStatBar(matrices, 1, 0.75f, 103, 155);
