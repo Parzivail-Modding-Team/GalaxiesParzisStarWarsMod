@@ -469,9 +469,9 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, MathUtil.transform(MathUtil.V3D_POS_Z, m).normalize());
 
-			var range = bd.range;
+			var range = getRange(bd, bt);
 			var damageRange = range * getRangeMultiplier(bd, bt.attachmentBitmask);
-			Function<Double, Double> damage = (x) -> bd.damage * bd.damageFalloff.apply(x / damageRange);
+			Function<Double, Double> damage = (x) -> getDamage(bd, bt) * bd.damageFalloff.apply(x / damageRange);
 
 			var shouldRecoil = true;
 
@@ -560,6 +560,11 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.INCREASE_RATE, 0.6f);
 	}
 
+	public static float getDamageMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.INCREASE_DAMAGE, 1.5f);
+	}
+
 	public static boolean hasWaterproofBolts(BlasterDescriptor bd, int attachmentBitmask)
 	{
 		return bd.mapWithAttachment(attachmentBitmask, BlasterAttachmentFunction.WATERPROOF_BOLTS, true)
@@ -635,13 +640,25 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_NO_STATS)));
 		else
 		{
+			var bt = new BlasterTag(stack.getOrCreateNbt());
+
 			tooltip.add(TooltipUtil.note(Text.translatable(bd.type.getLangKey())));
 			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_HEAT, bd.heat.capacity, bd.heat.drainSpeed)));
 			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_RECOIL, bd.recoil.horizontal, bd.recoil.vertical)));
 			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_SPREAD, bd.spread.horizontal, bd.spread.vertical)));
-			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_DAMAGE, bd.damage)));
-			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_RANGE, bd.range)));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_DAMAGE, getDamage(bd, bt))));
+			tooltip.add(TooltipUtil.note(Text.translatable(I18N_TOOLTIP_BLASTER_STATS_RANGE, getRange(bd, bt))));
 		}
+	}
+
+	private float getRange(BlasterDescriptor bd, BlasterTag bt)
+	{
+		return bd.range * getRangeMultiplier(bd, bt.attachmentBitmask);
+	}
+
+	private float getDamage(BlasterDescriptor bd, BlasterTag bt)
+	{
+		return bd.damage * getDamageMultiplier(bd, bt.attachmentBitmask);
 	}
 
 	private ItemStack forType(BlasterDescriptor descriptor)

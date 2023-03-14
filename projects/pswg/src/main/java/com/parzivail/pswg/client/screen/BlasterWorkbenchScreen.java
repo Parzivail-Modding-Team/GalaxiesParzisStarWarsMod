@@ -349,7 +349,10 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 			RenderSystem.setShaderTexture(0, TEXTURE);
 
 			// damage
-			drawStackedStatBar(matrices, 0.25f, 0.3f, 20, 142);
+			var oldDamage = BlasterItem.getDamageMultiplier(blasterDescriptor, originalBitmask);
+			var newDamage = BlasterItem.getDamageMultiplier(blasterDescriptor, bt.attachmentBitmask);
+			var maxDamage = Math.max(oldDamage, newDamage);
+			drawStackedStatBar(matrices, newDamage / maxDamage, oldDamage / maxDamage, 20, 142);
 
 			// accuracy
 			drawStackedStatBar(matrices, 0.5f, 0.25f, 103, 142);
