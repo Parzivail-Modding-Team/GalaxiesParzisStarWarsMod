@@ -1,13 +1,12 @@
 package com.parzivail.pswg.item.blaster.data;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.util.nbt.TagSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
-import java.util.HashMap;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class BlasterTag extends TagSerializer
@@ -81,86 +80,13 @@ public class BlasterTag extends TagSerializer
 
 		if (ventingHeat > 0)
 		{
-			ventingHeat -= bd.heat.overheatDrainSpeed;
+			ventingHeat -= (int)Math.ceil(bd.heat.overheatDrainSpeed * BlasterItem.getCoolingMultiplier(bd, attachmentBitmask));
 			if (ventingHeat == 0)
 				coolingMode = BlasterTag.COOLING_MODE_NONE;
 		}
 
 		if (heat > 0 && passiveCooldownTimer == 0)
 			heat -= bd.heat.drainSpeed;
-	}
-
-	public <T> Optional<T> mapWithAttachment(BlasterDescriptor bd, HashMap<BlasterAttachmentFunction, T> map)
-	{
-		for (var attachment : bd.attachmentMap.values())
-		{
-			if (attachment.function == BlasterAttachmentFunction.NONE)
-				continue;
-
-			if ((attachment.bit & attachmentBitmask) != 0)
-			{
-				if (map.containsKey(attachment.function))
-					return Optional.of(map.get(attachment.function));
-			}
-		}
-
-		return Optional.empty();
-	}
-
-
-	public <T> Optional<T> mapWithAttachment(BlasterDescriptor bd, BlasterAttachmentFunction function, T value)
-	{
-		for (var attachment : bd.attachmentMap.values())
-		{
-			if (attachment.function == BlasterAttachmentFunction.NONE)
-				continue;
-
-			if ((attachment.bit & attachmentBitmask) != 0)
-			{
-				if (attachment.function == function)
-					return Optional.of(value);
-			}
-		}
-
-		return Optional.empty();
-	}
-
-	public float stackWithAttachment(BlasterDescriptor bd, HashMap<BlasterAttachmentFunction, Float> map)
-	{
-		var coefficient = 1f;
-
-		for (var attachment : bd.attachmentMap.values())
-		{
-			if (attachment.function == BlasterAttachmentFunction.NONE)
-				continue;
-
-			if ((attachment.bit & attachmentBitmask) != 0)
-			{
-				if (map.containsKey(attachment.function))
-					coefficient *= map.get(attachment.function);
-			}
-		}
-
-		return coefficient;
-	}
-
-	public float stackWithAttachment(BlasterDescriptor bd, BlasterAttachmentFunction function, float multiplier)
-	{
-		var coefficient = 1f;
-
-		for (var attachment : bd.attachmentMap.values())
-		{
-			if (attachment.function == BlasterAttachmentFunction.NONE)
-				continue;
-
-			if ((attachment.bit & attachmentBitmask) != 0)
-			{
-				if (attachment.function == function)
-					coefficient *= multiplier;
-			}
-		}
-
-		return coefficient;
 	}
 
 	public void setAimingDownSights(boolean isAimingDownSights)

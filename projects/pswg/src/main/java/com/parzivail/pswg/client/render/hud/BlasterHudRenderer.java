@@ -7,6 +7,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
 import com.parzivail.pswg.item.blaster.data.BlasterAttachmentFunction;
+import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import com.parzivail.util.client.render.ICustomHudRenderer;
 import net.minecraft.client.MinecraftClient;
@@ -59,7 +60,7 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		var bt = new BlasterTag(stack.getOrCreateNbt());
 
 		var profile = bd.cooling;
-		final var crosshairIdx = bt.mapWithAttachment(bd, CROSSHAIR_ATTACHMENT_MAP).orElse(bd.defaultCrosshair);
+		final var crosshairIdx = getCrosshairIndex(bd, bt.attachmentBitmask);
 
 		var tickDelta = Client.getTickDelta();
 
@@ -168,6 +169,11 @@ public class BlasterHudRenderer extends DrawableHelper implements ICustomHudRend
 		RenderSystem.setShaderTexture(0, GUI_ICONS_TEXTURE);
 
 		return bt.isAimingDownSights;
+	}
+
+	public static int getCrosshairIndex(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.mapWithAttachment(attachmentBitmask, CROSSHAIR_ATTACHMENT_MAP).orElse(bd.defaultCrosshair);
 	}
 
 	@Override

@@ -82,6 +82,10 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		h.put(BlasterAttachmentFunction.REDUCE_RECOIL, 0.7f);
 	});
 
+	private static final HashMap<BlasterAttachmentFunction, Float> COOLING_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.IMPROVE_COOLING, 1.5f);
+	});
+
 	private static final HashMap<BlasterAttachmentFunction, Float> ZOOM_MAP = Util.make(new HashMap<>(), (h) -> {
 		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_2X, 2f);
 		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_3X, 3f);
@@ -387,8 +391,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			}
 		}
 
-		boolean canFireUnderwater = bt.mapWithAttachment(bd, BlasterAttachmentFunction.WATERPROOF_FIRING, true)
-		                              .orElse(bd.waterBehavior == BlasterWaterBehavior.CAN_FIRE_UNDERWATER);
+		boolean canFireUnderwater = canFireUnderwater(bd, bt.attachmentBitmask);
 
 		if (!canFireUnderwater && player.isSubmergedInWater())
 		{
@@ -422,7 +425,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		bt.shotsRemaining--;
 
 		if (bt.overchargeTimer == 0)
-			bt.heat += (int)(bd.heat.perRound * bt.stackWithAttachment(bd, BlasterAttachmentFunction.IMPROVE_COOLING, 0.6f));
+			bt.heat += (int)(bd.heat.perRound * getHeatMultiplier(bd, bt.attachmentBitmask));
 
 		if (bt.heat > bd.heat.capacity)
 		{
@@ -448,7 +451,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
 
 			// TODO: custom spread reduction?
-			var spread = bt.stackWithAttachment(bd, SPREAD_MAP);
+			var spread = getSpread(bd, bt.attachmentBitmask);
 			float horizontalSpreadCoef = spread;
 			float verticalSpreadCoef = spread;
 
@@ -467,15 +470,14 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var fromDir = GravityChangerCompat.vecPlayerToWorld(player, MathUtil.transform(MathUtil.V3D_POS_Z, m).normalize());
 
 			var range = bd.range;
-			var damageRange = range * bt.stackWithAttachment(bd, BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, 1.5f);
+			var damageRange = range * getRangeMultiplier(bd, bt.attachmentBitmask);
 			Function<Double, Double> damage = (x) -> bd.damage * bd.damageFalloff.apply(x / damageRange);
 
 			var shouldRecoil = true;
 
 			var heatPitchIncrease = 0.15f * (bt.heat / (float)bd.heat.capacity);
 
-			boolean passThroughWater = bt.mapWithAttachment(bd, BlasterAttachmentFunction.WATERPROOF_BOLTS, true)
-			                             .orElse(bd.waterBehavior != BlasterWaterBehavior.NONE);
+			boolean passThroughWater = hasWaterproofBolts(bd, bt.attachmentBitmask);
 
 			switch (bt.getFiringMode())
 			{
@@ -524,7 +526,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 				var horizNoise = world.random.nextGaussian();
 				horizNoise = horizNoise * 0.3 + 0.7 * Math.signum(horizNoise);
 
-				var recoilAmount = bt.stackWithAttachment(bd, RECOIL_MAP);
+				var recoilAmount = getRecoilAmount(bd, bt.attachmentBitmask);
 
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.horizontal * horizNoise));
 				passedData.writeFloat(recoilAmount * (float)(bd.recoil.vertical * (0.7 + 0.3 * (world.random.nextGaussian() + 1) / 2)));
@@ -535,6 +537,48 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		}
 
 		return TypedActionResult.success(stack);
+	}
+
+	public static boolean canFireUnderwater(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.mapWithAttachment(attachmentBitmask, BlasterAttachmentFunction.WATERPROOF_FIRING, true)
+		         .orElse(bd.waterBehavior == BlasterWaterBehavior.CAN_FIRE_UNDERWATER);
+	}
+
+	public static float getHeatMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.IMPROVE_COOLING, 0.6f);
+	}
+
+	public static float getRangeMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, 1.5f);
+	}
+
+	public static boolean hasWaterproofBolts(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.mapWithAttachment(attachmentBitmask, BlasterAttachmentFunction.WATERPROOF_BOLTS, true)
+		         .orElse(bd.waterBehavior != BlasterWaterBehavior.NONE);
+	}
+
+	public static float getSpread(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, SPREAD_MAP);
+	}
+
+	public static float getRecoilAmount(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, RECOIL_MAP);
+	}
+
+	public static float getCoolingMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, COOLING_MAP);
+	}
+
+	public static float getZoomMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, ZOOM_MAP);
 	}
 
 	public static Identifier modelIdToSoundId(Identifier id)
@@ -680,7 +724,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			return 1;
 
 		if (bt.isAimingDownSights)
-			return bd.baseZoom * bt.stackWithAttachment(bd, ZOOM_MAP);
+			return bd.baseZoom * getZoomMultiplier(bd, bt.attachmentBitmask);
 
 		return 1;
 	}

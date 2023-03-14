@@ -4,6 +4,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -154,5 +155,77 @@ public class BlasterDescriptor
 		this.attachmentMap = map.attachmentMap();
 
 		this.attachmentBuilder = null;
+	}
+
+	public <T> Optional<T> mapWithAttachment(int attachmentBitmask, HashMap<BlasterAttachmentFunction, T> map)
+	{
+		for (var attachment : attachmentMap.values())
+		{
+			if (attachment.function == BlasterAttachmentFunction.NONE)
+				continue;
+
+			if ((attachment.bit & attachmentBitmask) != 0)
+			{
+				if (map.containsKey(attachment.function))
+					return Optional.of(map.get(attachment.function));
+			}
+		}
+
+		return Optional.empty();
+	}
+
+	public <T> Optional<T> mapWithAttachment(int attachmentBitmask, BlasterAttachmentFunction function, T value)
+	{
+		for (var attachment : attachmentMap.values())
+		{
+			if (attachment.function == BlasterAttachmentFunction.NONE)
+				continue;
+
+			if ((attachment.bit & attachmentBitmask) != 0)
+			{
+				if (attachment.function == function)
+					return Optional.of(value);
+			}
+		}
+
+		return Optional.empty();
+	}
+
+	public float stackWithAttachment(int attachmentBitmask, HashMap<BlasterAttachmentFunction, Float> map)
+	{
+		var coefficient = 1f;
+
+		for (var attachment : attachmentMap.values())
+		{
+			if (attachment.function == BlasterAttachmentFunction.NONE)
+				continue;
+
+			if ((attachment.bit & attachmentBitmask) != 0)
+			{
+				if (map.containsKey(attachment.function))
+					coefficient *= map.get(attachment.function);
+			}
+		}
+
+		return coefficient;
+	}
+
+	public float stackWithAttachment(int attachmentBitmask, BlasterAttachmentFunction function, float multiplier)
+	{
+		var coefficient = 1f;
+
+		for (var attachment : attachmentMap.values())
+		{
+			if (attachment.function == BlasterAttachmentFunction.NONE)
+				continue;
+
+			if ((attachment.bit & attachmentBitmask) != 0)
+			{
+				if (attachment.function == function)
+					coefficient *= multiplier;
+			}
+		}
+
+		return coefficient;
 	}
 }

@@ -4,11 +4,13 @@ import com.parzivail.pswg.Client;
 import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.item.blaster.BlasterItem;
 import com.parzivail.pswg.item.blaster.data.BlasterAttachmentFunction;
+import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
 import com.parzivail.pswg.item.blaster.data.BlasterTag;
 import io.github.ennuil.libzoomer.api.ZoomOverlay;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.Perspective;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 
@@ -47,11 +49,17 @@ public class ZoomHandler
 			ZoomOverlay overlay = null;
 
 			if (isFirstPerson)
-				overlay = bt.mapWithAttachment(bd, ZOOM_OVERLAYS).orElse(null);
+				overlay = getZoomOverlay(bd, bt.attachmentBitmask);
 
 			blasterZoomInstance.setZoomOverlay(overlay);
 		}
 		else
 			blasterZoomInstance.setZoom(false);
+	}
+
+	@Nullable
+	public static ZoomOverlay getZoomOverlay(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.mapWithAttachment(attachmentBitmask, ZOOM_OVERLAYS).orElse(null);
 	}
 }
