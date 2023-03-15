@@ -719,7 +719,7 @@
 	"screen.pswg.blaster.stat_multiplier_entry": "[%.2fx]",
 	"screen.pswg.blaster.cooling_ratio": "Cooling: %s to %s",
 	"screen.pswg.blaster.damage_ratio": "Damage: %s to %s",
-	"screen.pswg.blaster.incompatible_attachment": "Incompatible with:",
+	"screen.pswg.blaster.incompatible_attachment": "Equipping this attachment will remove:",
 	"screen.pswg.blaster.accuracy_ratio": "Accuracy: %s to %s",
 	"screen.pswg.blaster.rate_ratio": "Rate: %s to %s",
 	"screen.pswg.character": "Create a Character",
