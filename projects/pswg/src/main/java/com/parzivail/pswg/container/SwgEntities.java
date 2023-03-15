@@ -4,7 +4,7 @@ import com.parzivail.pswg.Resources;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
 import com.parzivail.pswg.entity.BlasterIonBoltEntity;
 import com.parzivail.pswg.entity.BlasterStunBoltEntity;
-import com.parzivail.pswg.entity.ThrownLightsaberEntity;
+import com.parzivail.pswg.features.lightsabers.client.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.amphibian.WorrtEntity;
 import com.parzivail.pswg.entity.droid.AstromechEntity;
 import com.parzivail.pswg.entity.mammal.BanthaEntity;

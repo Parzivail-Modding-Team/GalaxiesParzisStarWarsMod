@@ -4,7 +4,7 @@ import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.container.SwgParticles;
 import com.parzivail.pswg.container.SwgSounds;
 import com.parzivail.pswg.entity.rigs.RigT65B;
-import com.parzivail.pswg.util.BlasterUtil;
+import com.parzivail.pswg.features.blasters.BlasterUtil;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.collision.CapsuleVolume;
 import com.parzivail.util.entity.collision.ICollisionVolume;

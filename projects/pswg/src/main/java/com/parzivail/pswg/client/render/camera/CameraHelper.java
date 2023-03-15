@@ -1,10 +1,10 @@
 package com.parzivail.pswg.client.render.camera;
 
 import com.parzivail.pswg.Client;
-import com.parzivail.pswg.client.weapon.RecoilManager;
+import com.parzivail.pswg.features.blasters.client.BlasterRecoilManager;
 import com.parzivail.pswg.component.SwgEntityComponents;
 import com.parzivail.pswg.entity.ship.ShipEntity;
-import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
 import net.minecraft.client.MinecraftClient;
@@ -130,6 +130,6 @@ public class CameraHelper
 	{
 		var minecraft = MinecraftClient.getInstance();
 
-		RecoilManager.applyCameraShake(minecraft, matrix, camera, tickDelta, fov);
+		BlasterRecoilManager.applyCameraShake(minecraft, matrix, camera, tickDelta, fov);
 	}
 }

@@ -6,7 +6,7 @@ import com.parzivail.pswg.client.input.ShipControls;
 import com.parzivail.pswg.client.render.camera.ChaseCam;
 import com.parzivail.pswg.client.sound.SoundHelper;
 import com.parzivail.pswg.container.SwgPackets;
-import com.parzivail.pswg.entity.data.TrackedDataHandlers;
+import com.parzivail.util.entity.TrackedDataHandlers;
 import com.parzivail.util.data.PacketByteBufHelper;
 import com.parzivail.util.entity.EntityUtil;
 import com.parzivail.util.entity.IFlyingVehicle;

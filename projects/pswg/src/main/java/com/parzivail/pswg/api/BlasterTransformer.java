@@ -1,9 +1,9 @@
 package com.parzivail.pswg.api;
 
 import com.parzivail.p3d.P3dModel;
-import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
-import com.parzivail.pswg.item.blaster.data.BlasterDescriptor;
-import com.parzivail.pswg.item.blaster.data.BlasterTag;
+import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
+import com.parzivail.pswg.features.blasters.data.BlasterDescriptor;
+import com.parzivail.pswg.features.blasters.data.BlasterTag;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 

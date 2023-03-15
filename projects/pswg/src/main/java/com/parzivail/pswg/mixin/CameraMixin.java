@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.client.weapon.RecoilManager;
+import com.parzivail.pswg.features.blasters.client.BlasterRecoilManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -50,6 +50,6 @@ public abstract class CameraMixin
 		var minecraft = MinecraftClient.getInstance();
 
 		if (focusedEntity == minecraft.player)
-			this.setRotation(this.yaw + RecoilManager.getHorizontalRecoilMovement(tickDelta), this.pitch + RecoilManager.getVerticalRecoilMovement(tickDelta));
+			this.setRotation(this.yaw + BlasterRecoilManager.getHorizontalRecoilMovement(tickDelta), this.pitch + BlasterRecoilManager.getVerticalRecoilMovement(tickDelta));
 	}
 }

@@ -2,9 +2,13 @@ package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Galaxies;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlock;
+import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlockEntity;
 import com.parzivail.pswg.block.*;
 import com.parzivail.pswg.block.crop.*;
 import com.parzivail.pswg.blockentity.*;
+import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeBlock;
+import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeBlockEntity;
 import com.parzivail.tarkin.api.*;
 import com.parzivail.util.block.*;
 import com.parzivail.util.block.connecting.SelfConnectingBlock;

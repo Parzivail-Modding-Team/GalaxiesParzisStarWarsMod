@@ -1,6 +1,6 @@
 package com.parzivail.pswg.mixin;
 
-import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.features.blasters.BlasterItem;
 import com.parzivail.util.entity.PProjectileEntityDamageSource;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;

@@ -2,6 +2,9 @@ package com.parzivail.pswg.container;
 
 import com.mojang.serialization.Codec;
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.features.blasters.client.particle.ScorchParticle;
+import com.parzivail.pswg.features.blasters.client.particle.SlugTrailParticle;
+import com.parzivail.pswg.features.blasters.client.particle.SparkParticle;
 import com.parzivail.pswg.client.particle.*;
 import com.parzivail.util.client.particle.PParticleType;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;

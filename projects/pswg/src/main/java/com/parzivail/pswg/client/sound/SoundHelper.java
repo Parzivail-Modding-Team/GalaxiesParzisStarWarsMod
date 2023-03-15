@@ -1,7 +1,8 @@
 package com.parzivail.pswg.client.sound;
 
+import com.parzivail.pswg.features.blasters.client.BlasterBoltHissSoundInstance;
 import com.parzivail.pswg.entity.BlasterBoltEntity;
-import com.parzivail.pswg.entity.ThrownLightsaberEntity;
+import com.parzivail.pswg.features.lightsabers.client.ThrownLightsaberEntity;
 import com.parzivail.pswg.entity.ship.ShipEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.sound.SoundInstance;

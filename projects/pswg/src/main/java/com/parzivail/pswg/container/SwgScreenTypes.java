@@ -1,6 +1,8 @@
 package com.parzivail.pswg.container;
 
 import com.parzivail.pswg.Resources;
+import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchScreenHandler;
+import com.parzivail.pswg.features.lightsabers.forge.LightsaberForgeScreenHandler;
 import com.parzivail.pswg.screen.*;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;

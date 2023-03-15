@@ -1,8 +1,8 @@
 package com.parzivail.pswg.client.sound;
 
 import com.parzivail.pswg.container.SwgSounds;
-import com.parzivail.pswg.item.lightsaber.LightsaberItem;
-import com.parzivail.pswg.item.lightsaber.data.LightsaberTag;
+import com.parzivail.pswg.features.lightsabers.LightsaberItem;
+import com.parzivail.pswg.features.lightsabers.data.LightsaberTag;
 import com.parzivail.util.sound.DopplerSoundInstance;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

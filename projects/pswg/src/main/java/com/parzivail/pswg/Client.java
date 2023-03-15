@@ -4,14 +4,19 @@ import com.parzivail.nem.NemManager;
 import com.parzivail.p3d.P3dBlockRendererRegistry;
 import com.parzivail.p3d.P3dManager;
 import com.parzivail.pswg.api.PswgClientAddon;
+import com.parzivail.pswg.features.blasters.client.BlasterHudRenderer;
+import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
+import com.parzivail.pswg.features.blasters.client.BlasterZoomHandler;
+import com.parzivail.pswg.features.blasters.client.BlasterRecoilManager;
+import com.parzivail.pswg.features.blasters.client.workbench.BlasterWorkbenchScreen;
 import com.parzivail.pswg.client.event.PlayerEvent;
 import com.parzivail.pswg.client.event.WorldEvent;
 import com.parzivail.pswg.client.input.KeyHandler;
 import com.parzivail.pswg.client.loader.ModelLoader;
 import com.parzivail.pswg.client.render.armor.ArmorRenderer;
 import com.parzivail.pswg.client.render.block.*;
-import com.parzivail.pswg.client.render.entity.BlasterBoltRenderer;
-import com.parzivail.pswg.client.render.entity.BlasterStunBoltRenderer;
+import com.parzivail.pswg.features.blasters.client.entity.BlasterBoltRenderer;
+import com.parzivail.pswg.features.blasters.client.entity.BlasterStunBoltRenderer;
 import com.parzivail.pswg.client.render.entity.ThrownLightsaberRenderer;
 import com.parzivail.pswg.client.render.entity.amphibian.WorrtEntityRenderer;
 import com.parzivail.pswg.client.render.entity.droid.AstromechRenderer;
@@ -22,24 +27,21 @@ import com.parzivail.pswg.client.render.entity.rodent.SandSkitterEntityRenderer;
 import com.parzivail.pswg.client.render.entity.ship.T65BXwingRenderer;
 import com.parzivail.pswg.client.render.entity.ship.X34LandspeederRenderer;
 import com.parzivail.pswg.client.render.entity.ship.ZephyrJRenderer;
-import com.parzivail.pswg.client.render.hud.BlasterHudRenderer;
-import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
-import com.parzivail.pswg.client.render.item.LightsaberItemRenderer;
+import com.parzivail.pswg.features.lightsabers.client.LightsaberItemRenderer;
 import com.parzivail.pswg.client.render.sky.SpaceSkyRenderer;
 import com.parzivail.pswg.client.screen.*;
-import com.parzivail.pswg.client.weapon.RecoilManager;
-import com.parzivail.pswg.client.zoom.ZoomHandler;
 import com.parzivail.pswg.container.*;
 import com.parzivail.pswg.data.SwgSpeciesManager;
 import com.parzivail.pswg.entity.ship.ShipEntity;
-import com.parzivail.pswg.item.blaster.BlasterItem;
+import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.lightsabers.client.forge.LightsaberForgeScreen;
 import com.parzivail.pswg.item.jetpack.JetpackItem;
-import com.parzivail.pswg.item.lightsaber.LightsaberItem;
+import com.parzivail.pswg.features.lightsabers.LightsaberItem;
 import com.parzivail.pswg.mixin.BufferBuilderStorageAccessor;
 import com.parzivail.pswg.mixin.DimensionEffectsAccessor;
 import com.parzivail.pswg.mixin.MinecraftClientAccessor;
 import com.parzivail.pswg.network.OpenEntityInventoryS2CPacket;
-import com.parzivail.pswg.util.BlasterUtil;
+import com.parzivail.pswg.features.blasters.BlasterUtil;
 import com.parzivail.util.block.BlockEntityClientSerializable;
 import com.parzivail.util.client.TextUtil;
 import com.parzivail.util.client.model.DynamicBakedModel;
@@ -153,9 +155,9 @@ public class Client implements ClientModInitializer
 		KeyBindingHelper.registerKeyBinding(KEY_SPECIES_SELECT);
 
 		ClientTickEvents.START_CLIENT_TICK.register(KeyHandler::tick);
-		ClientTickEvents.START_CLIENT_TICK.register(RecoilManager::tick);
+		ClientTickEvents.START_CLIENT_TICK.register(BlasterRecoilManager::tick);
 
-		ClientTickEvents.END_CLIENT_TICK.register(ZoomHandler::tick);
+		ClientTickEvents.END_CLIENT_TICK.register(BlasterZoomHandler::tick);
 
 		ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> 0x8AB534, SwgBlocks.Tree.SequoiaLeaves);
 		ColorProviderRegistry.ITEM.register((stack, tintIndex) -> 0x8AB534, SwgBlocks.Tree.SequoiaLeaves);
@@ -448,7 +450,7 @@ public class Client implements ClientModInitializer
 
 		SwgParticles.register();
 
-		PlayerEvent.EVENT_BUS.subscribe(PlayerEvent.ACCUMULATE_RECOIL, RecoilManager::handleAccumulateRecoil);
+		PlayerEvent.EVENT_BUS.subscribe(PlayerEvent.ACCUMULATE_RECOIL, BlasterRecoilManager::handleAccumulateRecoil);
 
 		WorldEvent.EVENT_BUS.subscribe(WorldEvent.BLASTER_BOLT_HIT, BlasterUtil::handleBoltHit);
 

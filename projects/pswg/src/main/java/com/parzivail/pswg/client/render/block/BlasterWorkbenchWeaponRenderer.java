@@ -1,10 +1,10 @@
 package com.parzivail.pswg.client.render.block;
 
-import com.parzivail.pswg.blockentity.BlasterWorkbenchBlockEntity;
-import com.parzivail.pswg.client.render.item.BlasterItemRenderer;
+import com.parzivail.pswg.features.blasters.workbench.BlasterWorkbenchBlockEntity;
+import com.parzivail.pswg.features.blasters.client.BlasterItemRenderer;
 import com.parzivail.pswg.container.SwgBlocks;
-import com.parzivail.pswg.item.blaster.BlasterItem;
-import com.parzivail.pswg.item.blaster.data.BlasterArchetype;
+import com.parzivail.pswg.features.blasters.BlasterItem;
+import com.parzivail.pswg.features.blasters.data.BlasterArchetype;
 import com.parzivail.util.block.rotating.WaterloggableRotatingBlock;
 import com.parzivail.util.math.MathUtil;
 import com.parzivail.util.math.QuatUtil;
