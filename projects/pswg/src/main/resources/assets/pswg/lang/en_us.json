@@ -720,7 +720,7 @@
 	"screen.pswg.blaster.cooling_ratio": "Cooling: %s to %s",
 	"screen.pswg.blaster.damage_ratio": "Damage: %s to %s",
 	"screen.pswg.blaster.incompatible_attachment": "Incompatible with:",
-	"screen.pswg.blaster.range_ratio": "Range: %s to %s",
+	"screen.pswg.blaster.accuracy_ratio": "Accuracy: %s to %s",
 	"screen.pswg.blaster.rate_ratio": "Rate: %s to %s",
 	"screen.pswg.character": "Create a Character",
 	"screen.pswg.character.choose_option": "Choose one of the categories on the left to fine-tune your style!",

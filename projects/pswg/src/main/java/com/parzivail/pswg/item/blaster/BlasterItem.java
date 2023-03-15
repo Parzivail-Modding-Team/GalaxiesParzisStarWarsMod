@@ -451,7 +451,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 			var vS = (world.random.nextFloat() * 2 - 1) * bd.spread.vertical;
 
 			// TODO: custom spread reduction?
-			var spread = getSpread(bd, bt.attachmentBitmask);
+			var spread = getSpreadAmount(bd, bt.attachmentBitmask);
 			float horizontalSpreadCoef = spread;
 			float verticalSpreadCoef = spread;
 
@@ -571,7 +571,23 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		         .orElse(bd.waterBehavior != BlasterWaterBehavior.NONE);
 	}
 
-	public static float getSpread(BlasterDescriptor bd, int attachmentBitmask)
+	public static float getAccuracyStatistic(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		var spread = getSpreadAmount(bd, attachmentBitmask);
+		var recoil = getRecoilAmount(bd, attachmentBitmask);
+
+		return getRangeStatistic(bd, attachmentBitmask) * 3 / (recoil * 2 + spread);
+	}
+
+	public static float getRangeStatistic(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		var spread = getSpreadAmount(bd, attachmentBitmask);
+		var range = getRangeMultiplier(bd, attachmentBitmask);
+
+		return range - spread / 5;
+	}
+
+	public static float getSpreadAmount(BlasterDescriptor bd, int attachmentBitmask)
 	{
 		return bd.stackWithAttachment(attachmentBitmask, SPREAD_MAP);
 	}

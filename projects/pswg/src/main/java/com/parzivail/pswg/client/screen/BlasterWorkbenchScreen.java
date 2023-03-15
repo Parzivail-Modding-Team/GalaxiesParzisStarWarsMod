@@ -60,7 +60,7 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 	@TarkinLang
 	public static final String I18N_RATE_RATIO = Resources.screen("blaster.rate_ratio");
 	@TarkinLang
-	public static final String I18N_RANGE_RATIO = Resources.screen("blaster.range_ratio");
+	public static final String I18N_ACCURACY_RATIO = Resources.screen("blaster.accuracy_ratio");
 
 	private static final Identifier TEXTURE = Resources.id("textures/gui/container/blaster_workbench.png");
 	private static final int NUM_VISIBLE_ATTACHMENT_ROWS = 3;
@@ -373,16 +373,16 @@ public class BlasterWorkbenchScreen extends HandledScreen<BlasterWorkbenchScreen
 						Text.translatable(I18N_STAT_MULT_ENTRY, newDamage).formatted(Formatting.GOLD)
 				)));
 
-			// range
-			var oldRange = BlasterItem.getRangeMultiplier(blasterDescriptor, originalBitmask);
-			var newRange = BlasterItem.getRangeMultiplier(blasterDescriptor, bt.attachmentBitmask);
-			drawStackedStatBar(matrices, newRange, oldRange, 103, 142);
+			// accuracy
+			var oldAccuracy = BlasterItem.getAccuracyStatistic(blasterDescriptor, originalBitmask);
+			var newAccuracy = BlasterItem.getAccuracyStatistic(blasterDescriptor, bt.attachmentBitmask);
+			drawStackedStatBar(matrices, newAccuracy, oldAccuracy, 103, 142);
 
 			if (MathUtil.rectContains(x + 103, y + 142, 67, 4, mouseX, mouseY))
 				tooltip.setValue(List.of(Text.translatable(
-						I18N_RANGE_RATIO,
-						Text.translatable(I18N_STAT_MULT_ENTRY, oldRange).formatted(Formatting.BLUE),
-						Text.translatable(I18N_STAT_MULT_ENTRY, newRange).formatted(Formatting.GOLD)
+						I18N_ACCURACY_RATIO,
+						Text.translatable(I18N_STAT_MULT_ENTRY, oldAccuracy).formatted(Formatting.BLUE),
+						Text.translatable(I18N_STAT_MULT_ENTRY, newAccuracy).formatted(Formatting.GOLD)
 				)));
 
 			// cooling
