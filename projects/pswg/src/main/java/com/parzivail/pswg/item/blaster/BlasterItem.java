@@ -86,6 +86,22 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		h.put(BlasterAttachmentFunction.IMPROVE_COOLING, 1.5f);
 	});
 
+	private static final HashMap<BlasterAttachmentFunction, Float> HEAT_GENERATION_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.REDUCE_HEAT, 0.6f);
+	});
+
+	private static final HashMap<BlasterAttachmentFunction, Float> DAMAGE_RANGE_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, 1.5f);
+	});
+
+	private static final HashMap<BlasterAttachmentFunction, Float> RATE_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.INCREASE_RATE, 0.6f);
+	});
+
+	private static final HashMap<BlasterAttachmentFunction, Float> DAMAGE_MAP = Util.make(new HashMap<>(), (h) -> {
+		h.put(BlasterAttachmentFunction.INCREASE_DAMAGE, 1.5f);
+	});
+
 	private static final HashMap<BlasterAttachmentFunction, Float> ZOOM_MAP = Util.make(new HashMap<>(), (h) -> {
 		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_2X, 2f);
 		h.put(BlasterAttachmentFunction.INCREASE_ZOOM_3X, 3f);
@@ -545,46 +561,30 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		         .orElse(bd.waterBehavior == BlasterWaterBehavior.CAN_FIRE_UNDERWATER);
 	}
 
-	public static float getHeatMultiplier(BlasterDescriptor bd, int attachmentBitmask)
-	{
-		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.REDUCE_HEAT, 0.6f);
-	}
-
-	public static float getRangeMultiplier(BlasterDescriptor bd, int attachmentBitmask)
-	{
-		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.INCREASE_DAMAGE_RANGE, 1.5f);
-	}
-
-	public static float getShotTimerMultiplier(BlasterDescriptor bd, int attachmentBitmask)
-	{
-		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.INCREASE_RATE, 0.6f);
-	}
-
-	public static float getDamageMultiplier(BlasterDescriptor bd, int attachmentBitmask)
-	{
-		return bd.stackWithAttachment(attachmentBitmask, BlasterAttachmentFunction.INCREASE_DAMAGE, 1.5f);
-	}
-
 	public static boolean hasWaterproofBolts(BlasterDescriptor bd, int attachmentBitmask)
 	{
 		return bd.mapWithAttachment(attachmentBitmask, BlasterAttachmentFunction.WATERPROOF_BOLTS, true)
 		         .orElse(bd.waterBehavior != BlasterWaterBehavior.NONE);
 	}
 
-	public static float getAccuracyStatistic(BlasterDescriptor bd, int attachmentBitmask)
+	public static float getHeatMultiplier(BlasterDescriptor bd, int attachmentBitmask)
 	{
-		var spread = getSpreadAmount(bd, attachmentBitmask);
-		var recoil = getRecoilAmount(bd, attachmentBitmask);
-
-		return getRangeStatistic(bd, attachmentBitmask) * 3 / (recoil * 2 + spread);
+		return bd.stackWithAttachment(attachmentBitmask, HEAT_GENERATION_MAP);
 	}
 
-	public static float getRangeStatistic(BlasterDescriptor bd, int attachmentBitmask)
+	public static float getRangeMultiplier(BlasterDescriptor bd, int attachmentBitmask)
 	{
-		var spread = getSpreadAmount(bd, attachmentBitmask);
-		var range = getRangeMultiplier(bd, attachmentBitmask);
+		return bd.stackWithAttachment(attachmentBitmask, DAMAGE_RANGE_MAP);
+	}
 
-		return range - spread / 5;
+	public static float getShotTimerMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, RATE_MAP);
+	}
+
+	public static float getDamageMultiplier(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		return bd.stackWithAttachment(attachmentBitmask, DAMAGE_MAP);
 	}
 
 	public static float getSpreadAmount(BlasterDescriptor bd, int attachmentBitmask)
@@ -605,6 +605,22 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 	public static float getZoomMultiplier(BlasterDescriptor bd, int attachmentBitmask)
 	{
 		return bd.stackWithAttachment(attachmentBitmask, ZOOM_MAP);
+	}
+
+	public static float getAccuracyStatistic(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		var spread = getSpreadAmount(bd, attachmentBitmask);
+		var recoil = getRecoilAmount(bd, attachmentBitmask);
+
+		return getRangeStatistic(bd, attachmentBitmask) * 3 / (recoil * 2 + spread);
+	}
+
+	public static float getRangeStatistic(BlasterDescriptor bd, int attachmentBitmask)
+	{
+		var spread = getSpreadAmount(bd, attachmentBitmask);
+		var range = getRangeMultiplier(bd, attachmentBitmask);
+
+		return range - spread / 5;
 	}
 
 	public static Identifier modelIdToSoundId(Identifier id)
