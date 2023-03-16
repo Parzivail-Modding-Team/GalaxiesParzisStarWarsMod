@@ -10,6 +10,7 @@ import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.internal.ImGui;
+import imgui.internal.ImGuiContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -30,8 +31,11 @@ public class ImGuiHelper
 			glslVersion = "#version 130";
 	}
 
+	public static final int ImGuiWindowFlags_Tooltip = 1 << 25;
+
 	private static String glslVersion = null;
 
+	private static ImGuiContext context;
 	private static final ImGuiImplGlfw imGuiGlfw = new ImGuiImplGlfw();
 	private static final ImGuiImplGl3 imGuiGl3 = new ImGuiImplGl3();
 
@@ -55,7 +59,7 @@ public class ImGuiHelper
 
 	private static void initImgui()
 	{
-		ImGui.createContext();
+		context = ImGui.createContext();
 		setupDefaultFonts();
 	}
 

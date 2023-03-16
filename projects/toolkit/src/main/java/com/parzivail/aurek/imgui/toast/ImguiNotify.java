@@ -1,5 +1,6 @@
 package com.parzivail.aurek.imgui.toast;
 
+import com.parzivail.aurek.imgui.ImGuiHelper;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiStyleVar;
@@ -10,11 +11,13 @@ import java.util.ArrayList;
 
 public class ImguiNotify
 {
-	public static final int NOTIFY_MAX_MSG_LENGTH = 4096;
 	public static final float NOTIFY_PADDING_X = 20;
 	public static final float NOTIFY_PADDING_Y = 20;
 	public static final float NOTIFY_PADDING_MESSAGE_Y = 10;
-	public static final int NOTIFY_TOAST_FLAGS = ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoFocusOnAppearing;
+	public static final int NOTIFY_TOAST_FLAGS =
+			ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs
+			| ImGuiWindowFlags.NoNav | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoFocusOnAppearing
+			| ImGuiHelper.ImGuiWindowFlags_Tooltip;
 	public static final boolean NOTIFY_USE_SEPARATOR = true;
 
 	private static final ArrayList<ImguiToast> notifications = new ArrayList<>();
@@ -76,8 +79,6 @@ public class ImguiNotify
 			ImGui.setNextWindowPos(vp_size.x - NOTIFY_PADDING_X, vp_size.y - NOTIFY_PADDING_Y - height, ImGuiCond.Always, 1, 1);
 			ImGui.begin(window_name, NOTIFY_TOAST_FLAGS);
 
-			// TODO: move to draw list to force always-on-top?
-
 			// Here we render the toast content
 			{
 				ImGui.pushTextWrapPos(vp_size.x / 3); // We want to support multi-line text, this will wrap the text after 1/3 of the screen width
@@ -130,7 +131,7 @@ public class ImguiNotify
 			ImGui.popStyleColor(3);
 
 			// Save height for next toasts
-			height += ImGui.getWindowHeight() + NOTIFY_PADDING_MESSAGE_Y;
+			height += (ImGui.getWindowHeight() + NOTIFY_PADDING_MESSAGE_Y) * opacity;
 
 			// End
 			ImGui.end();
