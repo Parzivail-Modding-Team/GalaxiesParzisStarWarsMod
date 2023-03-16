@@ -55,18 +55,18 @@ public class P3diModelProject implements TabModel
 				}
 				catch (IOException e)
 				{
-					ToolkitClient.NOTIFIER.error("Could not generate preview", e);
+					ToolkitClient.NOTIFIER.error("P3Di Compiler", "Could not generate preview", e);
 				}
 				catch (P3diCompileException e)
 				{
-					ToolkitClient.NOTIFIER.error(String.format("Invalid P3Di file: %s", e.getMessage()));
+					ToolkitClient.NOTIFIER.error("P3Di Compiler", String.format("Invalid P3Di file: %s", e.getMessage()));
 				}
 			}).start();
 			compiledModel = P3dModel.read(in, true);
 		}
 		catch (IOException e)
 		{
-			ToolkitClient.NOTIFIER.error("Could not generate preview", e);
+			ToolkitClient.NOTIFIER.error("P3Di Compiler", "Could not generate preview", e);
 		}
 	}
 

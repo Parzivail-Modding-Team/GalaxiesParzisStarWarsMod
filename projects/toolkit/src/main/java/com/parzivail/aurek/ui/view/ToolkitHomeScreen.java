@@ -67,6 +67,9 @@ public class ToolkitHomeScreen extends ImguiScreen
 
 			if (ImGui.begin("Tools"))
 			{
+				if (ImGui.button("Show"))
+					ToolkitClient.NOTIFIER.info("Title", "Some longer content to see if text wrapping works.");
+
 				var tableFlags = ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable | ImGuiTableFlags.Hideable | ImGuiTableFlags.ScrollY
 				                 | ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV | ImGuiTableFlags.NoBordersInBody;
 				if (ImGui.beginTable("available_tools", 3, tableFlags))

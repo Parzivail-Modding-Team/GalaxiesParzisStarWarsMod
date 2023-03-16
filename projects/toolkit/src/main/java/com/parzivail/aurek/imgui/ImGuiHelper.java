@@ -1,6 +1,7 @@
 package com.parzivail.aurek.imgui;
 
 import com.parzivail.aurek.ToolkitClient;
+import com.parzivail.aurek.imgui.toast.ImguiNotify;
 import imgui.ImFont;
 import imgui.ImFontConfig;
 import imgui.ImGuiIO;
@@ -136,6 +137,7 @@ public class ImGuiHelper
 		if (frameDrawn)
 			return;
 
+		ImguiNotify.render();
 		ImGui.render();
 
 		if (ImGui.getIO().hasConfigFlags(ImGuiConfigFlags.ViewportsEnable))
