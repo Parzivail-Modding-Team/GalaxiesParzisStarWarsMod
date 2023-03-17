@@ -48,7 +48,7 @@ public class EnergyRenderer
 
 		ImmediateBuffer.A.init(vc, matrices.peek(), 1, 1, 1, 1, overlay, light);
 
-		var thickness = 0.018f;
+		var thickness = 0.036f;
 
 		var color = ColorUtil.hsvToRgbInt(ColorUtil.hsvGetH(glowHsv), ColorUtil.hsvGetS(glowHsv), ColorUtil.hsvGetV(glowHsv));
 		ImmediateBuffer.A.setColor(color, 128);

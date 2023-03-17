@@ -238,6 +238,7 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 				new LightsaberDescriptor(Resources.id("bob"), "Jedi Bob", ColorUtil.packHsv(0.33f, 1, 1), LightsaberBladeType.BRICK),
 				new LightsaberDescriptor(Resources.id("kestis"), "Cal Kestis", ColorUtil.packHsv(0.73f, 1, 1), LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("maul_half"), "Darth Maul", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("maul"), "Darth Maul", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("darksaber"), null, ColorUtil.packHsv(0, 0, 1), LightsaberBladeType.DARKSABER),
 				new LightsaberDescriptor(Resources.id("vader"), "Darth Vader", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT)
 		);
