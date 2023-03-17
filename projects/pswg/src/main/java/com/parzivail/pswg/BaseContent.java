@@ -240,7 +240,9 @@ public class BaseContent implements PswgAddon, PswgClientAddon
 				new LightsaberDescriptor(Resources.id("maul_half"), "Darth Maul", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("maul"), "Darth Maul", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT),
 				new LightsaberDescriptor(Resources.id("darksaber"), null, ColorUtil.packHsv(0, 0, 1), LightsaberBladeType.DARKSABER),
-				new LightsaberDescriptor(Resources.id("vader"), "Darth Vader", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT)
+				new LightsaberDescriptor(Resources.id("vader"), "Darth Vader", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("dooku"), "Count Dooku", ColorUtil.packHsv(0, 1, 1), LightsaberBladeType.DEFAULT),
+				new LightsaberDescriptor(Resources.id("revan"), "Darth Revan", ColorUtil.packHsv(0.81f, 1, 1), LightsaberBladeType.DEFAULT)
 		);
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment())

@@ -118,6 +118,8 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 		if (useHandPos)
 		{
 			if (handSocket != null)
+				// TODO: directly use transformation to allow for
+				//       rotated holding (e.g. Dooku etc.)?
 				handPos = MathUtil.transform(handPos, handSocket.transform);
 			else
 				handPos = new Vec3d(0, -0.85f, 0);
@@ -149,8 +151,6 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 				matrices.scale(0.2f, 0.2f, 0.2f);
 				matrices.translate(-handPos.x, -handPos.y, -handPos.z);
 				matrices.multiplyPositionMatrix(o.transform);
-				// TODO: Can this -Z scale be moved into client code instead of compiled?
-				// https://github.com/Parzivail-Modding-Team/P3diTools/blob/master/P3diTools/Program.cs#L439
 				matrices.scale(5, 5, -5);
 
 				var length = baseLength;
