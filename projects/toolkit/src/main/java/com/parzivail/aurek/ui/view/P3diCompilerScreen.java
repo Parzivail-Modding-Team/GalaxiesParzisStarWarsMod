@@ -217,6 +217,12 @@ public class P3diCompilerScreen extends ImguiScreen
 
 	private void renderTab(P3diModelProject model)
 	{
+		if (model.getCompiledModel() == null)
+		{
+			ImGui.textDisabled("No preview available");
+			return;
+		}
+
 		assert this.client != null;
 		var tickDelta = client.getTickDelta();
 
@@ -241,11 +247,8 @@ public class P3diCompilerScreen extends ImguiScreen
 		client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
 		ms.pop();
 
-		if (model.getCompiledModel() != null)
-		{
-			model.getCompiledModel().render(ms, immediate, null, null, (vcp, t, o) -> vcp.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, 1, 255, 255, 255, 255);
-			immediate.draw();
-		}
+		model.getCompiledModel().render(ms, immediate, null, null, (vcp, t, o) -> vcp.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, 1, 255, 255, 255, 255);
+		immediate.draw();
 
 		ImmediateBuffer.A.init(immediate2.getBuffer(EnergyRenderer.LAYER_ENERGY), ms.peek(), 1, 1, 1, 1, OverlayTexture.DEFAULT_UV, LightmapTextureManager.MAX_LIGHT_COORDINATE);
 		for (var entry : model.getCompiledModel().transformables().entrySet())

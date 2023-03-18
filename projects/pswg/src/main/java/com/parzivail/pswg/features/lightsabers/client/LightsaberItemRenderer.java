@@ -154,8 +154,9 @@ public class LightsaberItemRenderer implements ICustomItemRenderer, ICustomPoseI
 				matrices.scale(5, 5, -5);
 
 				var length = baseLength;
-				if (o.name.startsWith("blade_cross"))
-					length = 0.3f;
+
+				if (ld != null)
+					length *= ld.getBladeLength(o.name);
 
 				renderBlade(renderMode, matrices, vertexConsumers, light, overlay, lt, unstable, lengthCoefficient, bladeType, length);
 
