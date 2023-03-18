@@ -163,6 +163,22 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 		return occupiedHands > 1;
 	}
 
+	public static boolean isDualWielding(LivingEntity entity)
+	{
+		if (entity == null)
+			return false;
+
+		var occupiedHands = 0;
+
+		if (entity.getMainHandStack().getItem() instanceof BlasterItem)
+			occupiedHands++;
+
+		if (entity.getOffHandStack().getItem() instanceof BlasterItem)
+			occupiedHands++;
+
+		return occupiedHands > 1;
+	}
+
 	@Override
 	public boolean canMine(BlockState state, World world, BlockPos pos, PlayerEntity miner)
 	{
@@ -186,7 +202,7 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 
 	private void tryToggleAds(BlasterTag blasterTag, World world, PlayerEntity player, Hand hand)
 	{
-		if (areBothHandsOccupied(player))
+		if (isDualWielding(player))
 			return;
 
 		blasterTag.toggleAds();
