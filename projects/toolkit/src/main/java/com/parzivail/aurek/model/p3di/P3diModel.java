@@ -167,8 +167,8 @@ public record P3diModel(int version, P3diSocket[] sockets, P3diMesh[] meshes)
 			case "MAT_EMISSIVE":
 				return P3dModel.MAT_ID_EMISSIVE;
 			default:
-				ToolkitClient.NOTIFIER.warn("P3Di Compiler", String.format("Unsupported material \"%s\" for object \"%s\", defaulting to DIFFUSE_OPAQUE", materialName, objectName));
-				return P3dModel.MAT_ID_DIFFUSE_OPAQUE;
+				ToolkitClient.NOTIFIER.warn("P3Di Compiler", String.format("Unsupported material \"%s\" for object \"%s\", defaulting to DIFFUSE_CUTOUT", materialName, objectName));
+				return P3dModel.MAT_ID_DIFFUSE_CUTOUT;
 		}
 	}
 
