@@ -58,7 +58,7 @@ public class ToolkitClient implements PswgClientAddon
 	public static final String MODID = "aurek";
 	public static final Lumberjack LOG = new Lumberjack(MODID);
 
-	public static final Notifier NOTIFIER = new Notifier();
+	public static final Notifier NOTIFIER = new Notifier(MODID);
 
 	public static final KeyBinding KEY_OPEN_CONTEXT_CONTROLS = new KeyBinding("key.aurek.context_controls", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F8, "key.category.aurek");
 	public static final KeyBinding KEY_OPEN_GLOBAL_CONTROLS = new KeyBinding("key.aurek.global_controls", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_F9, "key.category.aurek");
