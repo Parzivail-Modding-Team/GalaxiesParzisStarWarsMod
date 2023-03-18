@@ -37,13 +37,19 @@ public class ErrorManager
 		if (!Resources.CONFIG.get().askToSendCrashReports)
 			return;
 
-		LOG.warn("Passed config check");
+		LOG.warn("Crash report system enabled");
+
+		// Do not report errors if a new version of PSWG is known
+		if (Resources.REMOTE_VERSION != null)
+			return;
+
+		LOG.warn("Running on latest version");
 
 		// Do not ask to report errors in development environments
 		if (FabricLoader.getInstance().isDevelopmentEnvironment())
 			return;
 
-		LOG.warn("Passed devenv check");
+		LOG.warn("Not in a development environment");
 
 		var cause = report.getCause();
 		var atFault = false;
