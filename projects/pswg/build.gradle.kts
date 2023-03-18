@@ -63,7 +63,6 @@ val github by tasks.register("github") {
 				.addHeader("Authorization", "Bearer $token")
 				.bodyString(gson.toJson(jsonObject {
 					"tag_name"(version)
-					"target_commitish"(version)
 					"name"(version)
 					"body"(rootProject.file("CHANGELOG.md").readText())
 					"draft"(true)
@@ -84,7 +83,7 @@ val github by tasks.register("github") {
 			.addHeader("Authorization", "Bearer $token")
 			.bodyString(gson.toJson(jsonObject {
 				"draft"(false)
-				"make_latest"(true)
+				//"make_latest"(true) // not allowed for pre-releases
 			}), ContentType.APPLICATION_JSON)
 			.execute()
 			.returnContent()
