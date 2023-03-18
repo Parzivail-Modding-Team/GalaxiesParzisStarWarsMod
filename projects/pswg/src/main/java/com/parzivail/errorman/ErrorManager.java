@@ -173,8 +173,13 @@ public class ErrorManager
 
 		LOG.warn("Creating Rollbar request");
 
+		var indexOfDelimiter = pswgVersion.indexOf('+');
+		if (indexOfDelimiter < 0)
+			indexOfDelimiter = pswgVersion.length();
+
 		var request = new RollbarRequest(new RollbarData(
-				pswgVersion,
+				pswgVersion.contains("-dev-") ? "dev" : "prod",
+				pswgVersion.substring(0, indexOfDelimiter),
 				"client",
 				"java",
 				new RollbarBody(traceChain),
