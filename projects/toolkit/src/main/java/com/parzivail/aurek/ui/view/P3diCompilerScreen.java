@@ -60,8 +60,6 @@ public class P3diCompilerScreen extends ImguiScreen
 	private final TabModelController<P3diModelProject> tabController;
 	private final Viewport viewport = new Viewport();
 
-	private static boolean firstFrame = true;
-
 	public P3diCompilerScreen(Screen parent)
 	{
 		super(parent, Text.translatable(I18N_TOOLKIT_P3DI_COMPILER));

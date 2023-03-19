@@ -16,7 +16,6 @@ import com.parzivail.util.math.MathUtil;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
-import imgui.type.ImInt;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
@@ -38,23 +37,13 @@ public class NemiCompilerScreen extends ImguiScreen
 {
 	private static final Gson gson = new Gson();
 	private static final String I18N_TOOLKIT_NEMI_COMPILER = ToolkitClient.toolLang("nemi_compiler");
-	private static final ImInt INT_NULL = new ImInt(0);
 
 	private final TabModelController<NemiModelProject> tabController;
 	private final Viewport viewport = new Viewport();
 
-	private static boolean firstFrame = true;
-
 	public NemiCompilerScreen(Screen parent)
 	{
 		super(parent, Text.translatable(I18N_TOOLKIT_NEMI_COMPILER));
-
-		//		var menu = new JMenu("File");
-		//		menu.setMnemonic(KeyEvent.VK_F);
-		//		menu.add(EventHelper.action(new JMenuItem("Open...", KeyEvent.VK_O), EventHelper.ctrl(KeyEvent.VK_O), this::openModel));
-		//		menu.add(new JSeparator());
-		//		menu.add(EventHelper.action(new JMenuItem("Export NEM..."), this::exportNem));
-		//		menuBar.add(menu);
 
 		tabController = new TabModelController<>();
 	}
@@ -64,43 +53,6 @@ public class NemiCompilerScreen extends ImguiScreen
 	{
 		viewport.tick();
 	}
-
-	//	@Override
-	//	protected void renderContent(MatrixStack matrices)
-	//	{
-	//		if (selectedModel == null)
-	//			return;
-	//
-	//		assert this.client != null;
-	//		var tickDelta = this.client.getTickDelta();
-	//
-	//		RenderSystem.setShader(GameRenderer::getPositionTexColorProgram);
-	//
-	//		var rsm = RenderSystem.getModelViewStack();
-	//		rsm.push();
-	//
-	//		MatrixStackUtil.scalePos(rsm, 1, -1, 1);
-	//		viewportController.setup(rsm, tickDelta);
-	//		MatrixStackUtil.scalePos(rsm, 16, 16, 16);
-	//		RenderSystem.applyModelViewMatrix();
-	//
-	//		var ms = new MatrixStack();
-	//		viewportController.rotate(ms, tickDelta);
-	//		var immediate = client.getBufferBuilders().getEntityVertexConsumers();
-	//
-	//		ms.push();
-	//		ms.translate(-0.5f, -1, -0.5f);
-	//		client.getBlockRenderManager().renderBlockAsEntity(Blocks.FURNACE.getDefaultState(), ms, immediate, LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
-	//		ms.pop();
-	//
-	//		ms.multiply(new Quaternionf().rotationZ(MathHelper.PI));
-	//		ms.translate(0, -1.5f, 0);
-	//		selectedModel.getModelPart().render(ms, immediate.getBuffer(RenderLayer.getEntitySolid(ToolkitClient.TEX_DEBUG)), LightmapTextureManager.MAX_LIGHT_COORDINATE, OverlayTexture.DEFAULT_UV);
-	//		immediate.draw();
-	//
-	//		rsm.pop();
-	//		RenderSystem.applyModelViewMatrix();
-	//	}
 
 	private void openModel()
 	{
