@@ -17,11 +17,9 @@ import com.parzivail.p3d.P3dObject;
 import com.parzivail.pswg.client.render.entity.EnergyRenderer;
 import com.parzivail.util.client.ImmediateBuffer;
 import com.parzivail.util.math.MathUtil;
-import imgui.flag.ImGuiDir;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
-import imgui.type.ImInt;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.render.GameRenderer;
@@ -58,12 +56,11 @@ public class P3diCompilerScreen extends ImguiScreen
 
 	private static final Gson gson = new Gson();
 	private static final String I18N_TOOLKIT_P3DI_COMPILER = ToolkitClient.toolLang("p3di_compiler");
-	private static final ImInt INT_NULL = new ImInt(0);
 
 	private final TabModelController<P3diModelProject> tabController;
 	private final Viewport viewport = new Viewport();
 
-	private boolean firstFrame = true;
+	private static boolean firstFrame = true;
 
 	public P3diCompilerScreen(Screen parent)
 	{
@@ -164,23 +161,11 @@ public class P3diCompilerScreen extends ImguiScreen
 
 		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
 
-		ImGui.popStyleVar();
 		if (ImGui.begin(LangUtil.translate(I18N_TOOLKIT_P3DI_COMPILER), ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoBackground))
 		{
-			var dockspaceId = ImGui.getID("p3di_dockspace");
-			ImGui.dockSpace(dockspaceId);
+			ImGui.popStyleVar();
 
-			if (firstFrame)
-			{
-				firstFrame = false;
-
-				var outId = new ImInt(dockspaceId);
-				var dockLeftId = ImGui.dockBuilderSplitNode(dockspaceId, ImGuiDir.Left, 0.3f, INT_NULL, outId);
-
-				ImGui.dockBuilderDockWindow("Model Tree", dockLeftId);
-				ImGui.dockBuilderDockWindow("Viewport", outId.get());
-				ImGui.dockBuilderFinish(dockspaceId);
-			}
+			ImGuiHelper.leftSplitDockspace("p3di_dockspace", "Model Tree", "Viewport");
 
 			P3diModelProject selectedProject = null;
 
@@ -212,6 +197,8 @@ public class P3diCompilerScreen extends ImguiScreen
 				}
 			}
 		}
+		else
+			ImGui.popStyleVar();
 		ImGui.end();
 	}
 

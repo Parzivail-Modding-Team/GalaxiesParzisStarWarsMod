@@ -36,15 +36,8 @@ public class ToolkitHomeScreen extends ImguiScreen
 		ImGui.setNextWindowPos(0, 0);
 		ImGui.setNextWindowSize(v.getSizeX(), v.getSizeY());
 
-		ImGui.pushStyleVar(ImGuiStyleVar.WindowPadding, 0, 0);
-
 		if (ImGui.begin("Aurek Toolkit", new ImBoolean(true), flags))
 		{
-			ImGui.popStyleVar();
-
-			var dockspaceId = ImGui.getID("home_dockspace");
-			ImGui.dockSpace(dockspaceId, 0, 0, ImGuiDockNodeFlags.PassthruCentralNode);
-
 			if (ImGui.beginMenuBar())
 			{
 				if (ImGui.beginMenu(AurekIconFont.aurek + " Aurek"))
@@ -58,75 +51,59 @@ public class ToolkitHomeScreen extends ImguiScreen
 				ImGui.endMenuBar();
 			}
 
-			if (setupDock)
+			var tableFlags = ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable | ImGuiTableFlags.Hideable | ImGuiTableFlags.ScrollY
+			                 | ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV | ImGuiTableFlags.NoBordersInBody;
+			if (ImGui.beginTable("available_tools", 3, tableFlags))
 			{
-				setupDock = false;
-				ImGui.dockBuilderDockWindow("Tools", dockspaceId);
-				ImGui.dockBuilderFinish(dockspaceId);
-			}
+				ImGui.tableSetupColumn("Tool", ImGuiTableColumnFlags.WidthFixed, 200);
+				ImGui.tableSetupColumn("Actions", ImGuiTableColumnFlags.WidthFixed);
+				ImGui.tableSetupColumn("Description", ImGuiTableColumnFlags.WidthStretch);
+				ImGui.tableSetupScrollFreeze(0, 1);
+				ImGui.tableHeadersRow();
 
-			if (ImGui.begin("Tools"))
-			{
-				if (ImGui.button("Show"))
-					ToolkitClient.NOTIFIER.info("Title", "Some longer content to see if text wrapping works.");
-
-				var tableFlags = ImGuiTableFlags.Resizable | ImGuiTableFlags.Reorderable | ImGuiTableFlags.Hideable | ImGuiTableFlags.ScrollY
-				                 | ImGuiTableFlags.RowBg | ImGuiTableFlags.BordersOuter | ImGuiTableFlags.BordersV | ImGuiTableFlags.NoBordersInBody;
-				if (ImGui.beginTable("available_tools", 3, tableFlags))
+				for (var category : ToolkitClient.TOOLS.entrySet())
 				{
-					ImGui.tableSetupColumn("Tool", ImGuiTableColumnFlags.WidthFixed, 200);
-					ImGui.tableSetupColumn("Actions", ImGuiTableColumnFlags.WidthFixed);
-					ImGui.tableSetupColumn("Description", ImGuiTableColumnFlags.WidthStretch);
-					ImGui.tableSetupScrollFreeze(0, 1);
-					ImGui.tableHeadersRow();
+					var name = category.getKey();
+					var tools = category.getValue();
 
-					for (var category : ToolkitClient.TOOLS.entrySet())
+					ImGui.pushID(name);
+
+					ImGui.tableNextRow();
+					ImGui.tableNextColumn();
+
+					var expanded = ImGui.treeNodeEx(LangUtil.translate(name), ImGuiTreeNodeFlags.SpanFullWidth);
+					ImGui.tableNextColumn();
+					ImGui.tableNextColumn();
+
+					if (expanded)
 					{
-						var name = category.getKey();
-						var tools = category.getValue();
-
-						ImGui.pushID(name);
-
-						ImGui.tableNextRow();
-						ImGui.tableNextColumn();
-
-						var expanded = ImGui.treeNodeEx(LangUtil.translate(name), ImGuiTreeNodeFlags.SpanFullWidth);
-						ImGui.tableNextColumn();
-						ImGui.tableNextColumn();
-
-						if (expanded)
+						for (var tool : tools)
 						{
-							for (var tool : tools)
-							{
-								ImGui.pushID(tool.getTitle());
-								ImGui.tableNextRow();
+							ImGui.pushID(tool.getTitle());
+							ImGui.tableNextRow();
 
-								ImGui.tableNextColumn();
-								ImGui.treeNodeEx(LangUtil.translate(tool.getTitle()), ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.NoTreePushOnOpen | ImGuiTreeNodeFlags.SpanFullWidth);
+							ImGui.tableNextColumn();
+							ImGui.treeNodeEx(LangUtil.translate(tool.getTitle()), ImGuiTreeNodeFlags.Leaf | ImGuiTreeNodeFlags.Bullet | ImGuiTreeNodeFlags.NoTreePushOnOpen | ImGuiTreeNodeFlags.SpanFullWidth);
 
-								ImGui.tableNextColumn();
-								if (ImGui.button("Run"))
-									client.setScreen(tool.getScreen());
+							ImGui.tableNextColumn();
+							if (ImGui.button("Run"))
+								client.setScreen(tool.getScreen());
 
-								ImGui.tableNextColumn();
-								ImGui.textWrapped(LangUtil.translate(tool.getDescription()));
+							ImGui.tableNextColumn();
+							ImGui.textWrapped(LangUtil.translate(tool.getDescription()));
 
-								ImGui.popID();
-							}
-
-							ImGui.treePop();
+							ImGui.popID();
 						}
 
-						ImGui.popID();
+						ImGui.treePop();
 					}
 
-					ImGui.endTable();
+					ImGui.popID();
 				}
+
+				ImGui.endTable();
 			}
-			ImGui.end();
 		}
-		else
-			ImGui.popStyleVar();
 		ImGui.end();
 	}
 }

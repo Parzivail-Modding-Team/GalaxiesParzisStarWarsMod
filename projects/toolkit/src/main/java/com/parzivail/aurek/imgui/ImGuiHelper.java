@@ -7,10 +7,12 @@ import imgui.ImFontConfig;
 import imgui.ImGuiIO;
 import imgui.extension.imguizmo.ImGuizmo;
 import imgui.flag.ImGuiConfigFlags;
+import imgui.flag.ImGuiDir;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.internal.ImGui;
 import imgui.internal.ImGuiContext;
+import imgui.type.ImInt;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
 
 public class ImGuiHelper
 {
@@ -44,6 +47,38 @@ public class ImGuiHelper
 	private static ImFont iconFont;
 
 	private static boolean frameDrawn = true;
+
+	private static final HashSet<String> dockspaces = new HashSet<>();
+
+	public static void leftSplitDockspace(String id, String leftWindow, String rightWindow)
+	{
+		var dockspaceId = ImGui.dockSpaceOverViewport();
+		if (!dockspaces.contains(id))
+		{
+			ImGui.dockBuilderRemoveNode(dockspaceId);
+
+			var dockIdMain = ImGui.dockBuilderAddNode(dockspaceId);
+
+			var viewport = ImGui.getMainViewport();
+			ImGui.dockBuilderSetNodeSize(dockIdMain, viewport.getWorkSizeX(), viewport.getWorkSizeY());
+
+			var outId = new ImInt(dockspaceId);
+			var leftNodeId = ImGui.dockBuilderSplitNode(dockspaceId, ImGuiDir.Left, 0.3f, new ImInt(0), outId);
+			var rightNodeId = outId.get();
+
+			ImGui.dockBuilderDockWindow(leftWindow, leftNodeId);
+			ImGui.dockBuilderDockWindow(rightWindow, rightNodeId);
+			ImGui.dockBuilderFinish(dockspaceId);
+
+			dockspaces.add(id);
+		}
+	}
+
+	public static void destroyDockspace(String id)
+	{
+		var dockspaceId = ImGui.getID(id);
+		ImGui.dockBuilderRemoveNode(dockspaceId);
+	}
 
 	public static void init()
 	{

@@ -13,7 +13,6 @@ import com.parzivail.aurek.util.DialogUtil;
 import com.parzivail.aurek.util.FileUtil;
 import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.util.math.MathUtil;
-import imgui.flag.ImGuiDir;
 import imgui.flag.ImGuiStyleVar;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
@@ -44,7 +43,7 @@ public class NemiCompilerScreen extends ImguiScreen
 	private final TabModelController<NemiModelProject> tabController;
 	private final Viewport viewport = new Viewport();
 
-	private boolean firstFrame = true;
+	private static boolean firstFrame = true;
 
 	public NemiCompilerScreen(Screen parent)
 	{
@@ -209,20 +208,7 @@ public class NemiCompilerScreen extends ImguiScreen
 		{
 			ImGui.popStyleVar();
 
-			var dockspaceId = ImGui.getID("nemi_dockspace");
-			ImGui.dockSpace(dockspaceId);
-
-			if (firstFrame)
-			{
-				firstFrame = false;
-
-				var outId = new ImInt(dockspaceId);
-				var dockLeftId = ImGui.dockBuilderSplitNode(dockspaceId, ImGuiDir.Left, 0.3f, INT_NULL, outId);
-
-				ImGui.dockBuilderDockWindow("Model Tree", dockLeftId);
-				ImGui.dockBuilderDockWindow("Viewport", outId.get());
-				ImGui.dockBuilderFinish(dockspaceId);
-			}
+			ImGuiHelper.leftSplitDockspace("nemi_dockspace", "Model Tree", "Viewport");
 
 			NemiModelProject selectedProject = null;
 

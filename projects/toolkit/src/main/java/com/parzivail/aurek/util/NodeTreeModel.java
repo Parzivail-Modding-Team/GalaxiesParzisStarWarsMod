@@ -60,17 +60,9 @@ public class NodeTreeModel<TValue>
 
 			boolean isOpen;
 			if (icon == null)
-			{
 				isOpen = ImGui.treeNodeEx(LangUtil.translate(title), ImGuiTreeNodeFlags.SpanFullWidth);
-			}
 			else
-			{
-				ImGui.pushFont(ImGuiHelper.getIconFont());
-				isOpen = ImGui.treeNodeEx(icon, ImGuiTreeNodeFlags.SpanFullWidth);
-				ImGui.popFont();
-				ImGui.sameLine();
-				ImGui.text(LangUtil.translate(title));
-			}
+				isOpen = ImGui.treeNodeEx(icon + " " + LangUtil.translate(title), ImGuiTreeNodeFlags.SpanFullWidth);
 
 			if (isOpen)
 			{
