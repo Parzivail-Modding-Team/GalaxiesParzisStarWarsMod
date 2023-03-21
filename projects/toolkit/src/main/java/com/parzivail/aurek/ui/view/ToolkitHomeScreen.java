@@ -5,7 +5,10 @@ import com.parzivail.aurek.imgui.AurekIconFont;
 import com.parzivail.aurek.ui.ImguiScreen;
 import com.parzivail.aurek.util.LangUtil;
 import com.parzivail.pswg.Resources;
-import imgui.flag.*;
+import imgui.flag.ImGuiTableColumnFlags;
+import imgui.flag.ImGuiTableFlags;
+import imgui.flag.ImGuiTreeNodeFlags;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.internal.ImGui;
 import imgui.type.ImBoolean;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,10 +17,6 @@ import net.minecraft.text.Text;
 public class ToolkitHomeScreen extends ImguiScreen
 {
 	public static final String I18N_TOOLKIT_HOME = Resources.screen("toolkit.home");
-
-	private Screen parent;
-
-	private boolean setupDock = true;
 
 	public ToolkitHomeScreen(Screen parent)
 	{

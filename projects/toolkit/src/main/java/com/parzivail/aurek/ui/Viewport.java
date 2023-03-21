@@ -60,7 +60,7 @@ public class Viewport
 
 		renderTarget.resizeIfRequired((int)ImGui.getContentRegionAvailX(), (int)ImGui.getContentRegionAvailY());
 
-		pollInput();
+		pollInput(renderTarget.textureWidth, renderTarget.textureHeight);
 
 		renderTarget.beginWrite(setViewport);
 
@@ -73,10 +73,10 @@ public class Viewport
 		ImGui.image(renderTarget.getColorAttachment(), renderTarget.textureWidth, renderTarget.textureHeight, 0, 1, 1, 0);
 	}
 
-	public void pollInput()
+	public void pollInput(int viewportWidth, int viewportHeight)
 	{
 		var cursorPos = ImGui.getCursorPos();
-		ImGui.invisibleButton("viewport_input", renderTarget.textureWidth, renderTarget.textureHeight);
+		ImGui.invisibleButton("viewport_input", viewportWidth, viewportHeight);
 		ImGui.setCursorPos(cursorPos.x, cursorPos.y);
 		var hovered = ImGui.isItemHovered();
 
@@ -146,9 +146,19 @@ public class Viewport
 
 	public void translateAndZoom(MatrixStack ms, float tickDelta)
 	{
-		ms.translate(renderTarget.textureWidth / 2f + this.x.getValue(tickDelta), renderTarget.textureHeight / 2f + this.y.getValue(tickDelta), 50);
+		translate(ms, tickDelta);
+		zoom(ms, tickDelta);
+	}
+
+	public void zoom(MatrixStack ms, float tickDelta)
+	{
 		var f = (float)Math.pow(10, zoomExponent.getValue() / 10);
 		MathUtil.scalePos(ms, f, -f, 1);
+	}
+
+	public void translate(MatrixStack ms, float tickDelta)
+	{
+		ms.translate(renderTarget.textureWidth / 2f + this.x.getValue(tickDelta), renderTarget.textureHeight / 2f + this.y.getValue(tickDelta), 50);
 	}
 
 	public void rotate(MatrixStack ms, float tickDelta)
