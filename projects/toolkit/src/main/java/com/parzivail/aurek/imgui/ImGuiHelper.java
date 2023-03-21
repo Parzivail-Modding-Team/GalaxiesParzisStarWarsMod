@@ -5,6 +5,7 @@ import com.parzivail.aurek.imgui.toast.ImguiNotify;
 import imgui.ImFont;
 import imgui.ImFontConfig;
 import imgui.ImGuiIO;
+import imgui.ImVec2;
 import imgui.extension.imguizmo.ImGuizmo;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.flag.ImGuiDir;
@@ -12,6 +13,8 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
 import imgui.internal.ImGui;
 import imgui.internal.ImGuiContext;
+import imgui.internal.flag.ImGuiAxis;
+import imgui.type.ImFloat;
 import imgui.type.ImInt;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
@@ -21,7 +24,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.HashSet;
 
 public class ImGuiHelper
 {
@@ -48,12 +50,12 @@ public class ImGuiHelper
 
 	private static boolean frameDrawn = true;
 
-	private static final HashSet<String> dockspaces = new HashSet<>();
+	private static String lastDockspace;
 
 	public static void leftSplitDockspace(String id, String leftWindow, String rightWindow)
 	{
-		var dockspaceId = ImGui.dockSpaceOverViewport();
-		if (!dockspaces.contains(id))
+		var dockspaceId = ImGui.dockSpace(ImGui.getID(id));
+		if (!id.equals(lastDockspace))
 		{
 			ImGui.dockBuilderRemoveNode(dockspaceId);
 
@@ -70,7 +72,7 @@ public class ImGuiHelper
 			ImGui.dockBuilderDockWindow(rightWindow, rightNodeId);
 			ImGui.dockBuilderFinish(dockspaceId);
 
-			dockspaces.add(id);
+			lastDockspace = id;
 		}
 	}
 
@@ -196,5 +198,15 @@ public class ImGuiHelper
 	public static boolean isCtrlDown()
 	{
 		return ImGui.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) || ImGui.isKeyDown(GLFW.GLFW_KEY_RIGHT_CONTROL);
+	}
+
+	public static boolean splitter(boolean split_vertically, float thickness, ImFloat size1, ImFloat size2, float min_size1, float min_size2, float splitter_long_axis_size)
+	{
+		var cursorPos = ImGui.getCursorPos();
+		var id = ImGui.getID("##splitter");
+		var min = new ImVec2(cursorPos.x + (split_vertically ? size1.get() : 0), cursorPos.y + (split_vertically ? 0 : size1.get()));
+		var itemSizeX = ImGui.calcItemSizeX(split_vertically ? thickness : splitter_long_axis_size, split_vertically ? splitter_long_axis_size : thickness, 0, 0);
+		var itemSizeY = ImGui.calcItemSizeY(split_vertically ? thickness : splitter_long_axis_size, split_vertically ? splitter_long_axis_size : thickness, 0, 0);
+		return ImGui.splitterBehavior(min.x, min.y, min.x + itemSizeX, min.y + itemSizeY, id, split_vertically ? ImGuiAxis.X : ImGuiAxis.Y, size1, size2, min_size1, min_size2, 0);
 	}
 }

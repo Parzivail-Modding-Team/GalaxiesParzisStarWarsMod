@@ -41,7 +41,7 @@ public class ChunkedWorldMesh
 			this.renderMap.put(
 					pos.toLong(),
 					new WorldMesh.Builder(world, pos.getStartPos().add(0, minY, 0), pos.getStartPos().add(15, maxY, 15))
-							// TODO: .enableGlobalNeighbors()
+							.useGlobalNeighbors()
 							.build()
 			);
 		});
@@ -134,7 +134,6 @@ public class ChunkedWorldMesh
 
 	public void render(MatrixStack matrixStack)
 	{
-
 		for (var entry : renderMap.long2ObjectEntrySet())
 		{
 			var mesh = entry.getValue();
