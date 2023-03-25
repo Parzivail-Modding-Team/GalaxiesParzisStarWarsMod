@@ -523,6 +523,8 @@ public class BlasterItem extends Item implements ILeftClickConsumer, ICustomVisu
 						entity.setLength(bd.boltLength);
 						entity.setRadius(bd.boltRadius);
 
+						entity.setSourceArm(hand == Hand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite());
+
 						if (bt.getFiringMode() == BlasterFiringMode.SLUGTHROWER)
 							entity.setSmoldering(true);
 					});

@@ -20,10 +20,13 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Arm;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+
+import java.util.Optional;
 
 public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 {
@@ -32,6 +35,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	private static final TrackedData<Float> LENGTH = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Float> RADIUS = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.FLOAT);
 	private static final TrackedData<Boolean> SMOLDERING = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+	private static final TrackedData<Byte> ARM = DataTracker.registerData(BlasterBoltEntity.class, TrackedDataHandlerRegistry.BYTE);
 
 	private boolean ignoreWater;
 
@@ -44,6 +48,26 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 	{
 		super(type, owner, world);
 		this.ignoreWater = ignoreWater;
+	}
+
+	public void setSourceArm(Arm arm)
+	{
+		this.dataTracker.set(ARM, (byte)(switch (arm)
+				{
+					case LEFT -> 1;
+					case RIGHT -> 2;
+				}));
+	}
+
+	public Optional<Arm> getSourceArm()
+	{
+		var arm = this.dataTracker.get(ARM);
+		return switch (arm)
+				{
+					case 1 -> Optional.of(Arm.LEFT);
+					case 2 -> Optional.of(Arm.RIGHT);
+					default -> Optional.empty();
+				};
 	}
 
 	protected boolean shouldCreateScorch()
@@ -116,6 +140,7 @@ public class BlasterBoltEntity extends ThrownEntity implements IPrecisionEntity
 		dataTracker.startTracking(LENGTH, 1f);
 		dataTracker.startTracking(RADIUS, 1f);
 		dataTracker.startTracking(SMOLDERING, false);
+		dataTracker.startTracking(ARM, (byte)0);
 	}
 
 	private int getLife()
