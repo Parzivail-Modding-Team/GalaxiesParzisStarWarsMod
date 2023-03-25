@@ -49,6 +49,7 @@
 	"accessWidener": "pswg.accesswidener",
 	"mixins": [
 		"pswg.mixins.json",
+		"blasters.pswg.mixins.json",
 		"errorman.mixins.json",
 		"nem.mixins.json"
 	],

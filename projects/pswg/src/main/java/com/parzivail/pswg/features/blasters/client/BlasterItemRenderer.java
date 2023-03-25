@@ -31,6 +31,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceReloader;
+import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
@@ -244,18 +246,21 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			// recoil
 			var recoilKick = recoilKickDecay(shotTime / 4.5f);
 
+			var leftHand = renderMode == ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND;
+			var leftCoef = leftHand ? -1 : 1;
+
 			matrices.translate(
-					MathHelper.lerp(adsLerp, -0.75, adsVec.x),
+					leftCoef * MathHelper.lerp(adsLerp, -0.75, adsVec.x),
 					MathHelper.lerp(adsLerp, 1.2f, adsVec.y),
 					MathHelper.lerp(adsLerp, 0, adsVec.z)
 			);
 			matrices.multiply(new Quaternionf().rotationXYZ(
 					MathUtil.toRadians(MathHelper.lerp(adsLerp, 0, 3) + recoilKick * bd.recoil.vertical * (0.1f + 0.05f * adsLerp)),
-					MathUtil.toRadians(MathHelper.lerp(adsLerp, 172, 182) - recoilKick * bd.recoil.horizontal),
+					MathUtil.toRadians(MathHelper.lerp(adsLerp, 172, 182) - leftCoef * recoilKick * bd.recoil.horizontal),
 					0
 			));
 			matrices.translate(
-					MathHelper.lerp(adsLerp, 0.2f, 0),
+					leftCoef * MathHelper.lerp(adsLerp, 0.2f, 0),
 					MathHelper.lerp(adsLerp, -0.2f, 0),
 					MathHelper.lerp(adsLerp, -1.2f, 0) - recoilKick * (0.4 + 0.55 * adsLerp)
 			);
@@ -263,22 +268,26 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			// TODO: recalculate first person placement again without this
 			matrices.multiply(new Quaternionf().rotationY((float)Math.PI));
 
-			// TODO: left handed hold
-
 			var foreGripTransform = m.transformables().get("off_hand");
-			if (renderMode == ModelTransformation.Mode.FIRST_PERSON_RIGHT_HAND && foreGripTransform != null)
+			if (foreGripTransform != null)
 			{
 				var client = MinecraftClient.getInstance();
 				var player = client.player;
 
 				assert player != null;
 
-				var altStack = player.getOffHandStack();
+				var playerLeftHand = player.getMainArm() == Arm.LEFT ? Hand.MAIN_HAND : Hand.OFF_HAND;
+				var playerRightHand = player.getMainArm() == Arm.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND;
+
+				var altStack = player.getStackInHand(leftHand ? playerRightHand : playerLeftHand);
 				if (altStack.isEmpty())
 				{
 					RenderSystem.setShaderTexture(0, player.getSkinTexture());
 					var playerEntityRenderer = (PlayerEntityRenderer)client.getEntityRenderDispatcher().getRenderer(client.player);
 					matrices.push();
+
+					if (leftHand)
+						MathUtil.scalePos(matrices, -1, 1, 1);
 
 					matrices.multiplyPositionMatrix(foreGripTransform.transform);
 
@@ -292,8 +301,14 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 
 					matrices.translate(0, -0.625f, 0);
 
+					if (leftHand)
+						MathUtil.scalePos(matrices, -1, 1, 1);
+
 					skipPose = true;
-					playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
+					if (leftHand)
+						playerEntityRenderer.renderRightArm(matrices, vertexConsumers, light, client.player);
+					else
+						playerEntityRenderer.renderLeftArm(matrices, vertexConsumers, light, client.player);
 					skipPose = false;
 
 					matrices.pop();
