@@ -246,7 +246,7 @@ public class BlasterItemRenderer implements ICustomItemRenderer, ICustomPoseItem
 			// recoil
 			var recoilKick = recoilKickDecay(shotTime / 4.5f);
 
-			var leftHand = renderMode == ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND;
+			var leftHand = renderMode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND;
 			var leftCoef = leftHand ? -1 : 1;
 
 			matrices.translate(
