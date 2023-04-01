@@ -1,0 +1,12 @@
+{
+	"ui.button.click": {
+		"sounds": [
+			"random/click_stereo"
+		]
+	},
+	"ui.stonecutter.select_recipe": {
+		"sounds": [
+			"random/click_stereo"
+		]
+	}
+}
