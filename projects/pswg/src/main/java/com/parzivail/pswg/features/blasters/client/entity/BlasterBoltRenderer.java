@@ -34,7 +34,8 @@ public class BlasterBoltRenderer extends EntityRenderer<BlasterBoltEntity>
 	@Override
 	public void render(BlasterBoltEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider consumerProvider, int light)
 	{
-		//		super.render(entity, yaw, tickDelta, matrices, consumerProvider, light);
+		if (entity.age == 0)
+			return;
 
 		var velocity = entity.getVelocity();
 		velocity = velocity.normalize();
